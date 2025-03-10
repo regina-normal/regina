@@ -251,6 +251,8 @@
 		052909532AE5EA0A0028990D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 052909522AE5EA0A0028990D /* Preview Assets.xcassets */; };
 		052942DA1C5CDFBE0011C1E6 /* snappeaalgebra.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CBF19B2F1AB0099C617 /* snappeaalgebra.h */; };
 		052AB7131C6304C900C44D54 /* facetspec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052AB7111C6304C500C44D54 /* facetspec.cpp */; };
+		052BE46E2D7FA92D00F431A9 /* moves-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052BE46D2D7FA92D00F431A9 /* moves-impl.h */; };
+		052BE4702D7FA94300F431A9 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052BE46F2D7FA94300F431A9 /* homologicaldata.cpp */; };
 		052F9E93180600FB00FAE4DF /* closedprimemin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C13180600FA00FAE4DF /* closedprimemin.cpp */; };
 		052F9E94180600FB00FAE4DF /* compact.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C15180600FA00FAE4DF /* compact.cpp */; };
 		052F9E9B180600FB00FAE4DF /* gluingpermsearcher2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C1C180600FA00FAE4DF /* gluingpermsearcher2.cpp */; };
@@ -1599,7 +1601,6 @@
 		05D322E41FA923FB00E5F9B8 /* linkmovedialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D322E11FA923F000E5F9B8 /* linkmovedialog.cpp */; };
 		05D322E51FA9241E00E5F9B8 /* linkmovedialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 05D322E01FA923ED00E5F9B8 /* linkmovedialog.h */; };
 		05DADB1821928EC400DC80E1 /* binom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DADB1621928EBF00DC80E1 /* binom.cpp */; };
-		05DC137E1FEB869200171D66 /* pachner-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05DC137C1FEB869100171D66 /* pachner-impl.h */; };
 		05DC13811FEB86E900171D66 /* retriangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DC13801FEB86E900171D66 /* retriangulate.cpp */; };
 		05E0EFFE2582420A00965440 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
 		05E0F01D2582421200965440 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
@@ -2633,6 +2634,10 @@
 		052909522AE5EA0A0028990D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		052909542AE5EA0A0028990D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		052AB7111C6304C500C44D54 /* facetspec.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetspec.cpp; sourceTree = "<group>"; };
+		052BE46C2D7FA89500F431A9 /* packetlistener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = packetlistener.h; sourceTree = "<group>"; };
+		052BE46D2D7FA92D00F431A9 /* moves-impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "moves-impl.h"; sourceTree = "<group>"; };
+		052BE46F2D7FA94300F431A9 /* homologicaldata.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
+		052BE4712D7FA98100F431A9 /* iteration.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = iteration.py; sourceTree = "<group>"; };
 		052F9BFF180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C0B180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C13180600FA00FAE4DF /* closedprimemin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = closedprimemin.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
@@ -4388,7 +4393,6 @@
 		05D6CFA31A01D0A60039150F /* Tri3Graph.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri3Graph.mm; sourceTree = "<group>"; };
 		05D81A8B1C66B0E500DDCE64 /* output.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
 		05DADB1621928EBF00DC80E1 /* binom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = binom.cpp; sourceTree = "<group>"; };
-		05DC137C1FEB869100171D66 /* pachner-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "pachner-impl.h"; sourceTree = "<group>"; };
 		05DC13801FEB86E900171D66 /* retriangulate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = retriangulate.cpp; sourceTree = "<group>"; };
 		05E0EFEC258241E100965440 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		05E0EFED258241E100965440 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
@@ -6778,6 +6782,7 @@
 				054131142AFA26E4006AAD75 /* graphviz.h */,
 				054131102AF9F246006AAD75 /* link.h */,
 				0541310E2AF9F246006AAD75 /* packet.h */,
+				052BE46C2D7FA89500F431A9 /* packetlistener.h */,
 				05A9A1922B00FDC900508F17 /* spatiallink.h */,
 				0541310C2AF9F246006AAD75 /* text.h */,
 			);
@@ -6865,7 +6870,7 @@
 				05431F1A1C40F260009BC072 /* facetpairing-impl.h */,
 				05431F1B1C40F260009BC072 /* facetpairing.h */,
 				05431F1D1C40F260009BC072 /* isosig-impl.h */,
-				05DC137C1FEB869100171D66 /* pachner-impl.h */,
+				052BE46D2D7FA92D00F431A9 /* moves-impl.h */,
 				059D023825BB08B6004150F7 /* retriangulate-impl.h */,
 				059D023725BB08B6004150F7 /* retriangulate.h */,
 				05431F1E1C40F260009BC072 /* simplex.h */,
@@ -7552,6 +7557,7 @@
 				056AECD42A431AE200EAF4FA /* CMakeLists.txt */,
 				056AEDA12A465B4E00EAF4FA /* decomposition.cpp */,
 				056AECD52A431AE200EAF4FA /* facetpairing3.cpp */,
+				052BE46F2D7FA94300F431A9 /* homologicaldata.cpp */,
 				056AED9F2A45A22900EAF4FA /* isomorphism3.cpp */,
 				056AEDC12A4BC66A00EAF4FA /* links3.cpp */,
 				056AEDC32A4CFFDE00EAF4FA /* triangulation3.cpp */,
@@ -8132,6 +8138,7 @@
 		059D015A25B6A6E3004150F7 /* timing */ = {
 			isa = PBXGroup;
 			children = (
+				052BE4712D7FA98100F431A9 /* iteration.py */,
 				059D017925B6A715004150F7 /* shell.cpp */,
 				054DF93E28CABBC300EC3D81 /* sizes.cpp */,
 				054DF93F28CABBC300EC3D81 /* tree.cpp */,
@@ -8554,6 +8561,7 @@
 				054208851DF0D0B50018AB24 /* state.h in Headers */,
 				054C6A821DCC2127005373F0 /* example.h in Headers */,
 				054C6A7F1DCC20DA005373F0 /* strings.h in Headers */,
+				052BE46E2D7FA92D00F431A9 /* moves-impl.h in Headers */,
 				05A067411DFA68190047872E /* txicore.h in Headers */,
 				0583656518DB8876008B08D9 /* real_type.h in Headers */,
 				055114FF1DCDF63000EC753C /* facetpairing.h in Headers */,
@@ -8643,7 +8651,6 @@
 				05B7002125AC2305003BAF5C /* nmz_nauty.h in Headers */,
 				059802E026683C6D002D5D57 /* xmllinkreader.h in Headers */,
 				05431F751C40F3C9009BC072 /* libnormaliz.h in Headers */,
-				05DC137E1FEB869200171D66 /* pachner-impl.h in Headers */,
 				05431F251C40F260009BC072 /* facetpairing.h in Headers */,
 				05F0A04C1DBF0B5E00117BFC /* triangle3.h in Headers */,
 				05B7002725AC2305003BAF5C /* input.h in Headers */,
@@ -10006,6 +10013,7 @@
 				056AED722A431AE200EAF4FA /* gtest-filepath.cc in Sources */,
 				056AED7D2A431AE200EAF4FA /* numbertheory.cpp in Sources */,
 				056AED902A431AE200EAF4FA /* markedabeliangroup.cpp in Sources */,
+				052BE4702D7FA94300F431A9 /* homologicaldata.cpp in Sources */,
 				056AED752A431AE200EAF4FA /* snappea.cpp in Sources */,
 				056AED802A431AE200EAF4FA /* polynomial.cpp in Sources */,
 				056AED732A431AE200EAF4FA /* gtest-matchers.cc in Sources */,
