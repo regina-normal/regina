@@ -47,7 +47,7 @@ namespace regina {
  * Represents different types of filter classes that can be used to filter
  * lists of normal surfaces in 3-manifold triangulations.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 enum class SurfaceFilterType {
     /**

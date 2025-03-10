@@ -77,7 +77,7 @@ template <typename TetData> class DiscSpecIterator;
  * in a particular tetrahedron can be represented by a long integer.
  * \pre This class should only be used with \a embedded normal surfaces.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 struct DiscSpec {
     size_t tetIndex;
@@ -139,7 +139,7 @@ struct DiscSpec {
  * \param spec the disc specifier to write.
  * \return a reference to \a out.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 std::ostream& operator << (std::ostream& out, const DiscSpec& spec);
 
@@ -156,7 +156,7 @@ std::ostream& operator << (std::ostream& out, const DiscSpec& spec);
  * numbered away from the given vertex, or \c false if they are
  * numbered towards the given vertex.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 bool numberDiscsAwayFromVertex(int discType, int vertex);
 
@@ -177,7 +177,7 @@ bool numberDiscsAwayFromVertex(int discType, int vertex);
  * \param edgeEnd the end vertex of the edge to which the normal arc is
  * parallel.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 bool discOrientationFollowsEdge(int discType, int vertex,
         int edgeStart, int edgeEnd);
@@ -203,7 +203,7 @@ bool discOrientationFollowsEdge(int discType, int vertex,
  * of normal discs of a given type does not fit into an `unsigned long`.
  * See how this affects DiscSetTetData also.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 class DiscSetTet {
     public:
@@ -373,7 +373,7 @@ class DiscSetTet {
  *
  * \nopython
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 template <class T>
 class DiscSetTetData : public DiscSetTet {
@@ -625,7 +625,7 @@ class DiscSetTetData : public DiscSetTet {
  * \param a the first disc set whose contents should be swapped.
  * \param b the second disc set whose contents should be swapped.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 template <class T>
 void swap(DiscSetTetData<T>& a, DiscSetTetData<T>& b) noexcept {
@@ -660,7 +660,7 @@ void swap(DiscSetTetData<T>& a, DiscSetTetData<T>& b) noexcept {
  * through python is DiscSetSurface (i.e., the "vanilla" case where
  * \a TetData is the type DiscSetTet).
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 template <class TetData>
 class DiscSetSurfaceDataImpl {
@@ -1055,7 +1055,7 @@ class DiscSetSurfaceDataImpl {
  * \param a the first disc set whose contents should be swapped.
  * \param b the second disc set whose contents should be swapped.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 template <class T>
 void swap(DiscSetSurfaceDataImpl<T>& a, DiscSetSurfaceDataImpl<T>& b) noexcept {
@@ -1068,7 +1068,7 @@ void swap(DiscSetSurfaceDataImpl<T>& a, DiscSetSurfaceDataImpl<T>& b) noexcept {
  *
  * \nopython
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 template <typename T>
 using DiscSetSurfaceData = DiscSetSurfaceDataImpl<DiscSetTetData<T>>;
@@ -1080,7 +1080,7 @@ using DiscSetSurfaceData = DiscSetSurfaceDataImpl<DiscSetTetData<T>>;
  * This structure can be used for iterating through disc types, and for
  * moving between adjacent disc types within a surface.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 using DiscSetSurface = DiscSetSurfaceDataImpl<DiscSetTet>;
 
@@ -1115,7 +1115,7 @@ using DiscSetSurface = DiscSetSurfaceDataImpl<DiscSetTet>;
  * either returns the next normal disc in the set or else throws a
  * `StopException` if there are no more discs to return.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 template <class TetData>
 class DiscSpecIterator {

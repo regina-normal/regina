@@ -52,7 +52,7 @@ namespace regina {
  * Regina to include your own coordinate system, you should choose
  * an ID ≥ 10000.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 enum class NormalCoords {
     /**
@@ -340,7 +340,7 @@ enum class NormalCoords {
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 class NormalEncoding {
     private:
@@ -762,7 +762,7 @@ class NormalEncoding {
  * Much of the functionality that was available in this class in Regina 6.0.1
  * and earlier can now be accessed through the new NormalEncoding class.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 class NormalInfo {
     public:

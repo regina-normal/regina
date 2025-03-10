@@ -60,7 +60,7 @@ namespace regina {
  * constants `(flag1 | flag2)`, or empty braces `{}` to indicate no flags at
  * all (which is equivalent to passing `NormalList::Default`).
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 enum class NormalList {
     /**
@@ -137,7 +137,7 @@ enum class NormalList {
  * have the type `Flags<NormalList>`, though there is usually no need for end
  * users to explicitly refer to the flags type by name.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 using NormalListFlags [[deprecated]] = NormalList;
 
@@ -218,7 +218,7 @@ using NormalListFlags [[deprecated]] = NormalList;
  * \param rhs the second flag to combine.
  * \return the combination of both flags.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 inline Flags<NormalList> operator | (NormalList lhs, NormalList rhs) {
     return Flags<NormalList>(lhs) | rhs;
@@ -237,7 +237,7 @@ inline Flags<NormalList> operator | (NormalList lhs, NormalList rhs) {
  * constants `(flag1 | flag2)`, or empty braces `{}` to indicate no flags at
  * all (which is equivalent to passing `NormalAlg::Default`).
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 enum class NormalAlg {
     /**
@@ -430,7 +430,7 @@ enum class NormalAlg {
  * have the type `Flags<NormalAlg>`, though there is usually no need for end
  * users to explicitly refer to the flags type by name.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 using NormalAlgFlags [[deprecated]] = NormalAlg;
 
@@ -551,7 +551,7 @@ using NormalAlgFlags [[deprecated]] = NormalAlg;
  * \param rhs the second flag to combine.
  * \return the combination of both flags.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 inline Flags<NormalAlg> operator | (NormalAlg lhs, NormalAlg rhs) {
     return Flags<NormalAlg>(lhs) | rhs;
@@ -565,7 +565,7 @@ inline Flags<NormalAlg> operator | (NormalAlg lhs, NormalAlg rhs) {
  * original normal surface list and/or its underlying triangulation; these
  * preconditions are documented alongside the individual enumeration values.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 enum class NormalTransform {
     /**

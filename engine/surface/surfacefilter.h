@@ -70,7 +70,7 @@ class SurfaceFilterProperties;
  * \param id the corresponding SurfaceFilterType constant.
  * \param name a human-readable name for this filter type.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 #define REGINA_SURFACE_FILTER(id, name) \
     public: \
@@ -109,7 +109,7 @@ class SurfaceFilterProperties;
  * filter content, not the packet infrastructure (e.g., they do not touch
  * packet labels, or the packet tree, or event listeners).
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 class SurfaceFilter : public Packet {
     REGINA_PACKET(PacketType::SurfaceFilter, "Surface filter")
@@ -174,7 +174,7 @@ class SurfaceFilter : public Packet {
  * infrastructure (e.g., they do not touch packet labels, or the packet
  * tree, or event listeners).
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 class SurfaceFilterCombination : public SurfaceFilter {
     REGINA_SURFACE_FILTER(SurfaceFilterType::Combination, "Combination filter")
@@ -269,7 +269,7 @@ class SurfaceFilterCombination : public SurfaceFilter {
  * \param a the first filter whose contents should be swapped.
  * \param b the second filter whose contents should be swapped.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 void swap(SurfaceFilterCombination& a, SurfaceFilterCombination& b);
 
@@ -291,7 +291,7 @@ void swap(SurfaceFilterCombination& a, SurfaceFilterCombination& b);
  * infrastructure (e.g., they do not touch packet labels, or the packet
  * tree, or event listeners).
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 class SurfaceFilterProperties : public SurfaceFilter {
     REGINA_SURFACE_FILTER(SurfaceFilterType::Properties,
@@ -511,7 +511,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
  * \param a the first filter whose contents should be swapped.
  * \param b the second filter whose contents should be swapped.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 void swap(SurfaceFilterProperties& a, SurfaceFilterProperties& b);
 

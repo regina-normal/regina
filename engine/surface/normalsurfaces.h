@@ -81,7 +81,7 @@ class SurfaceFilter;
  *
  * The list of available fields may grow with future releases of Regina.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 enum class SurfaceExport {
     /**
@@ -170,7 +170,7 @@ enum class SurfaceExport {
  * will have the type `Flags<SurfaceExport>`, though there is usually no need
  * for end users to explicitly refer to the flags type by name.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 using SurfaceExportFields [[deprecated]] = SurfaceExport;
 
@@ -281,7 +281,7 @@ using SurfaceExportFields [[deprecated]] = SurfaceExport;
  * \param rhs the second flag to combine.
  * \return the combination of both flags.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 inline Flags<SurfaceExport> operator | (SurfaceExport lhs, SurfaceExport rhs) {
     return Flags<SurfaceExport>(lhs) | rhs;
@@ -342,7 +342,7 @@ inline Flags<SurfaceExport> operator | (SurfaceExport lhs, SurfaceExport rhs) {
  * \todo \feature Generate facets of the solution space representing
  * embedded surfaces.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 class NormalSurfaces :
         public PacketData<NormalSurfaces>, public Output<NormalSurfaces> {
@@ -1405,7 +1405,7 @@ class NormalSurfaces :
  * \param lhs the list whose contents should be swapped with \a rhs.
  * \param rhs the list whose contents should be swapped with \a lhs.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 void swap(NormalSurfaces& lhs, NormalSurfaces& rhs);
 
@@ -1450,7 +1450,7 @@ void swap(NormalSurfaces& lhs, NormalSurfaces& rhs);
  * \param coords the coordinate system to be used.
  * \return the resulting set of matching equations.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
     NormalCoords coords);
@@ -1476,7 +1476,7 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
  * \param coords the coordinate system to be used.
  * \return the set of validity constraints.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 ValidityConstraints makeEmbeddedConstraints(
     const Triangulation<3>& triangulation, NormalCoords coords);

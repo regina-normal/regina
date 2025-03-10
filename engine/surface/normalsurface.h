@@ -58,7 +58,7 @@ namespace regina {
 class NormalSurfaces;
 
 /**
- * \defgroup surfaces Normal Surfaces
+ * \defgroup surface Normal Surfaces
  * Normal surfaces in 3-manifold triangulations.
  */
 
@@ -75,7 +75,7 @@ class NormalSurfaces;
  * edge \a i together (and will therefore also keep the vertices of edge
  * \a 5-i together).
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 inline constexpr int quadSeparating[4][4] = {
     { -1, 0, 1, 2 }, {  0,-1, 2, 1 }, {  1, 2,-1, 0 }, {  2, 1, 0,-1 }
@@ -90,7 +90,7 @@ inline constexpr int quadSeparating[4][4] = {
  * quadrilateral types that meet the edge joining tetrahedron vertices
  * `i` and `j`.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 inline constexpr int quadMeeting[4][4][2] = {
     { {-1,-1}, { 1, 2}, { 0, 2}, { 0, 1} },
@@ -119,7 +119,7 @@ inline constexpr int quadMeeting[4][4][2] = {
  * this will give the same results for \a j = 0 and 1, but it might
  * switch the results for \a j = 2 and 3.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 inline constexpr int quadDefn[3][4] = {
     { 0, 1, 2, 3 }, { 0, 2, 1, 3 }, { 0, 3, 1, 2 }
@@ -134,7 +134,7 @@ inline constexpr int quadDefn[3][4] = {
  * Quadrilateral type \c i pairs vertex \c v with
  * vertex `quadPartner[i][v]`.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 inline constexpr int quadPartner[3][4] = {
     { 1, 0, 3, 2}, { 2, 3, 0, 1}, { 3, 2, 1, 0}
@@ -154,7 +154,7 @@ inline constexpr int quadPartner[3][4] = {
  * strings.  In such cases, this constant will be marked `inline const`
  * but not `constexpr`.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 #if defined(__APIDOCS) || __cpp_lib_constexpr_string >= 201907L
 inline constexpr std::string quadString[3] = { "01/23", "02/13", "03/12" };
@@ -175,7 +175,7 @@ inline const std::string quadString[3] = { "01/23", "02/13", "03/12" };
  *
  * Note that every permutation in this array is even.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 inline constexpr Perm<4> triDiscArcs[4][3] = {
     Perm<4>(0,1,2,3), Perm<4>(0,2,3,1), Perm<4>(0,3,1,2),
@@ -197,7 +197,7 @@ inline constexpr Perm<4> triDiscArcs[4][3] = {
  * Note that permutation `quadDiscArcs[i][j]` will be even
  * precisely when `j` is even.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 inline constexpr Perm<4> quadDiscArcs[3][4] = {
     Perm<4>(0,2,3,1), Perm<4>(3,0,1,2), Perm<4>(1,3,2,0), Perm<4>(2,1,0,3),
@@ -218,7 +218,7 @@ inline constexpr Perm<4> quadDiscArcs[3][4] = {
  * Note that permutation `octDiscArcs[i][j]` will be even
  * precisely when `j` is 0, 1, 4 or 5.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 inline constexpr Perm<4> octDiscArcs[3][8] = {
     Perm<4>(0,3,1,2), Perm<4>(0,1,2,3), Perm<4>(2,0,3,1), Perm<4>(2,3,1,0),
@@ -283,7 +283,7 @@ using MatrixInt = Matrix<Integer, true>;
  * \todo \featurelong Determine which faces in the solution space a
  * normal surface belongs to.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 class NormalSurface : public ShortOutput<NormalSurface> {
     protected:
@@ -1946,7 +1946,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
  * \param a the first normal surface whose contents should be swapped.
  * \param b the second normal surface whose contents should be swapped.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 void swap(NormalSurface& a, NormalSurface& b) noexcept;
 

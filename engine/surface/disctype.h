@@ -70,7 +70,7 @@ namespace regina {
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 struct DiscType {
     size_t tetIndex;
@@ -155,7 +155,7 @@ struct DiscType {
  * \param type the disc type to write.
  * \return a reference to the given output stream.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 std::ostream& operator << (std::ostream& out, const DiscType& type);
 

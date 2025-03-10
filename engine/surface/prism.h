@@ -60,7 +60,7 @@ class NormalSurface;
  *
  * \pre This class should only be used with \a embedded normal surfaces.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 struct PrismSpec {
     size_t tetIndex;
@@ -114,7 +114,7 @@ struct PrismSpec {
  * \param spec the prism specifier to write.
  * \return a reference to \a out.
  *
- * \ingroup surfaces
+ * \ingroup surface
  */
 std::ostream& operator << (std::ostream& out, const PrismSpec& spec);
 
