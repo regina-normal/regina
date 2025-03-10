@@ -140,3 +140,23 @@ index 28cb6e008..4879810be 100644
 +#endif
  
  }  // namespace libnormaliz
+diff --git a/engine/libnormaliz/full_cone.cpp b/engine/libnormaliz/full_cone.cpp
+index 074c78768..ba8368ceb 100644
+--- a/engine/libnormaliz/full_cone.cpp
++++ b/engine/libnormaliz/full_cone.cpp
+@@ -3693,6 +3693,7 @@ void Full_Cone<Integer>::compute_multiplicity_or_integral_by_signed_dec() {
+ 
+     MeasureTime(verbose, "Generic");
+ 
++#if 0 // regina does not use distributed computation
+     if (block_size_hollow_tri > 0) {
+         string file_name = project_name + ".basic.data";
+         ofstream out(file_name.c_str());
+@@ -3775,6 +3776,7 @@ void Full_Cone<Integer>::compute_multiplicity_or_integral_by_signed_dec() {
+ 
+         throw InterruptException("");
+     }
++#endif // regina does not use distributed computation
+ 
+     if (do_integral_by_signed_dec || do_virtual_multiplicity_by_signed_dec) {
+         SignedDec<mpz_class> SDInt(Triangulation_ind, Generators_mpz, GradingOnPrimal_mpz, omp_start_level);
