@@ -3,7 +3,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2023, Ben Burton                                   *
+ *  Copyright (c) 1999-2025, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This file is modified from the KDE syntax-highlighting framework,     *
