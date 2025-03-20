@@ -95,7 +95,6 @@
   <!ENTITY csv "<acronym>CSV</acronym>">
   <!ENTITY cython "<application>Cython</application>">
   <!ENTITY debian "<application>Debian</application>">
-  <!ENTITY dgt "<application><acronym>DGT</acronym></application>">
   <!ENTITY dmanifold "<replaceable>d</replaceable>-manifold">
   <!ENTITY doxygen "<application>Doxygen</application>">
   <!ENTITY dsimplex "<replaceable>d</replaceable>-simplex">
@@ -122,6 +121,7 @@
   <!ENTITY java "<application>Java</application>">
   <!ENTITY json "<acronym>JSON</acronym>">
   <!ENTITY jython "<application>Jython</application>">
+  <!ENTITY katie "<application>Katie</application>">
   <!ENTITY kde3 "&kde;&nbsp;3">
   <!ENTITY kde4 "&kde;&nbsp;4">
   <!ENTITY latex "<application>LaTeX</application>">

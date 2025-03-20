@@ -3,7 +3,7 @@ SET(man1dir ${CMAKE_INSTALL_FULL_MANDIR}/man1)
 
 SET(man1_files
   censuslookup.1
-  dgt.1
+  katie.1
   regconcat.1
   regconvert.1
   regfiledump.1

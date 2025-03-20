@@ -40,8 +40,8 @@
       dehydration strings <xref linkend="bib-cuspedcensus"/>;
      </para></listitem>
      <listitem><para>
-      building triangulations from framed links, using the command-line
-      <link linkend="man-dgt">&dgt;</link> tool;
+      building triangulations from framed links, using the command-line tool
+      <link linkend="man-katie">&katie;</link>;
      </para></listitem>
      <listitem><para>
       importing triangulations from &snappeapylink; (which now preserves

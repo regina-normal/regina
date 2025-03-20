@@ -3,7 +3,7 @@ include_directories("${CMAKE_BINARY_DIR}/engine")
 
 set(UTILS
   censuslookup
-  dgt
+  katie
   regconcat
   regconvert
   regfiledump

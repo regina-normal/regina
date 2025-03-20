@@ -1147,8 +1147,7 @@
 		057B0CBD26A506B20017F5EA /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
 		057B0CBE26A506B20017F5EA /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		057B0CBF26A506B20017F5EA /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
-		057B0CC426A506D90017F5EA /* dgt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057B0CB326A5064A0017F5EA /* dgt.cpp */; };
-		057B0CC826A507C50017F5EA /* dgt in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 057B0CC326A506B20017F5EA /* dgt */; };
+		057B0CC826A507C50017F5EA /* katie in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 057B0CC326A506B20017F5EA /* katie */; };
 		057ED8EE2581B49E004F0068 /* QtSvg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E72581B49E004F0068 /* QtSvg.framework */; };
 		057ED8EF2581B49E004F0068 /* QtSvg.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E72581B49E004F0068 /* QtSvg.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057ED8F02581B49E004F0068 /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E82581B49E004F0068 /* QtCore.framework */; };
@@ -1635,6 +1634,7 @@
 		05EDDA4F27E3102A001743C1 /* signed_dec.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EDDA4927E3102A001743C1 /* signed_dec.h */; };
 		05EDDA5027E3102A001743C1 /* chunk.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EDDA4A27E3102A001743C1 /* chunk.h */; };
 		05EDDA5527E31061001743C1 /* nmz_hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EDDA5227E31060001743C1 /* nmz_hash.h */; };
+		05EE4AEC2D8BA962006D1495 /* katie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EE4AEB2D8BA962006D1495 /* katie.cpp */; };
 		05F09FBF1DBEF01800117BFC /* dim2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBC1DBEF01800117BFC /* dim2.h */; };
 		05F09FC01DBEF01800117BFC /* dim3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBD1DBEF01800117BFC /* dim3.h */; };
 		05F09FC11DBEF01800117BFC /* dim4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBE1DBEF01800117BFC /* dim4.h */; };
@@ -1779,7 +1779,7 @@
 			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 057B0CB926A506B20017F5EA;
-			remoteInfo = "Utils - DGT";
+			remoteInfo = "Utils - Katie";
 		};
 		058FC8741FE18904006D04B4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1892,7 +1892,7 @@
 			dstSubfolderSpec = 6;
 			files = (
 				05EBB418259DB49A00362FA5 /* censuslookup in Copy Engine and Utilities */,
-				057B0CC826A507C50017F5EA /* dgt in Copy Engine and Utilities */,
+				057B0CC826A507C50017F5EA /* katie in Copy Engine and Utilities */,
 				05EBB419259DB49E00362FA5 /* regconcat in Copy Engine and Utilities */,
 				05EBB41A259DB4A100362FA5 /* regconvert in Copy Engine and Utilities */,
 				05EBB41B259DB4A400362FA5 /* regfiledump in Copy Engine and Utilities */,
@@ -3728,9 +3728,8 @@
 		057B0CAD26A2AC4E0017F5EA /* tightencode.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tightencode.test; sourceTree = "<group>"; };
 		057B0CAE26A2AC4E0017F5EA /* tightencode.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tightencode.out; sourceTree = "<group>"; };
 		057B0CB126A2B8B60017F5EA /* sighandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sighandler.h; sourceTree = "<group>"; };
-		057B0CB326A5064A0017F5EA /* dgt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dgt.cpp; sourceTree = "<group>"; };
 		057B0CB526A5067B0017F5EA /* covers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = covers.cpp; sourceTree = "<group>"; };
-		057B0CC326A506B20017F5EA /* dgt */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = dgt; sourceTree = BUILT_PRODUCTS_DIR; };
+		057B0CC326A506B20017F5EA /* katie */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = katie; sourceTree = BUILT_PRODUCTS_DIR; };
 		057ED8E72581B49E004F0068 /* QtSvg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtSvg.framework; path = ../../Qt/current/macos/lib/QtSvg.framework; sourceTree = "<group>"; };
 		057ED8E82581B49E004F0068 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../Qt/current/macos/lib/QtCore.framework; sourceTree = "<group>"; };
 		057ED8E92581B49E004F0068 /* QtPrintSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtPrintSupport.framework; path = ../../Qt/current/macos/lib/QtPrintSupport.framework; sourceTree = "<group>"; };
@@ -4428,6 +4427,7 @@
 		05EDDA4A27E3102A001743C1 /* chunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = chunk.h; sourceTree = "<group>"; };
 		05EDDA5127E31060001743C1 /* nmz_hash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nmz_hash.cpp; sourceTree = "<group>"; };
 		05EDDA5227E31060001743C1 /* nmz_hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nmz_hash.h; sourceTree = "<group>"; };
+		05EE4AEB2D8BA962006D1495 /* katie.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = katie.cpp; sourceTree = "<group>"; };
 		05F09FBC1DBEF01800117BFC /* dim2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2.h; sourceTree = "<group>"; };
 		05F09FBD1DBEF01800117BFC /* dim3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim3.h; sourceTree = "<group>"; };
 		05F09FBE1DBEF01800117BFC /* dim4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4.h; sourceTree = "<group>"; };
@@ -7106,7 +7106,7 @@
 			isa = PBXGroup;
 			children = (
 				05617AE41D9DC02900B1E33B /* censuslookup.cpp */,
-				057B0CB326A5064A0017F5EA /* dgt.cpp */,
+				05EE4AEB2D8BA962006D1495 /* katie.cpp */,
 				05617AE51D9DC02900B1E33B /* regconcat.cpp */,
 				05617AE61D9DC02900B1E33B /* regconvert.cpp */,
 				05617AE71D9DC02900B1E33B /* regfiledump.cpp */,
@@ -7934,7 +7934,7 @@
 				05617B431D9DC55B00B1E33B /* trisetcmp */,
 				058FC8721FE188A0006D04B4 /* retriangulate */,
 				059D01A325B6A72C004150F7 /* Timing */,
-				057B0CC326A506B20017F5EA /* dgt */,
+				057B0CC326A506B20017F5EA /* katie */,
 				052909472AE5EA090028990D /* Regina.app */,
 			);
 			name = Products;
@@ -9042,9 +9042,9 @@
 			productReference = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
-		057B0CB926A506B20017F5EA /* Utils - DGT */ = {
+		057B0CB926A506B20017F5EA /* Utils - Katie */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 057B0CC026A506B20017F5EA /* Build configuration list for PBXNativeTarget "Utils - DGT" */;
+			buildConfigurationList = 057B0CC026A506B20017F5EA /* Build configuration list for PBXNativeTarget "Utils - Katie" */;
 			buildPhases = (
 				057B0CBA26A506B20017F5EA /* Sources */,
 				057B0CBC26A506B20017F5EA /* Frameworks */,
@@ -9053,9 +9053,9 @@
 			);
 			dependencies = (
 			);
-			name = "Utils - DGT";
-			productName = "Utils - DGT";
-			productReference = 057B0CC326A506B20017F5EA /* dgt */;
+			name = "Utils - Katie";
+			productName = "Utils - Katie";
+			productReference = 057B0CC326A506B20017F5EA /* katie */;
 			productType = "com.apple.product-type.tool";
 		};
 		058FC8671FE188A0006D04B4 /* Utils - Retriangulate */ = {
@@ -9205,7 +9205,7 @@
 				052909462AE5EA090028990D /* Regina for iOS */,
 				05B14EA219B423A0002138C0 /* Census Tools */,
 				05617B001D9DC51600B1E33B /* Utils - CensusLookup */,
-				057B0CB926A506B20017F5EA /* Utils - DGT */,
+				057B0CB926A506B20017F5EA /* Utils - Katie */,
 				05617B0B1D9DC52200B1E33B /* Utils - RegConcat */,
 				05617B161D9DC52B00B1E33B /* Utils - RegConvert */,
 				05617B211D9DC53400B1E33B /* Utils - RegFileDump */,
@@ -9291,7 +9291,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in regina-testsuite censuslookup dgt regconcat regconvert regfiledump regfiletype retriangulate sigcensus tricensus trisetcmp; do\n/usr/bin/codesign --force --options runtime --sign 'Apple Development:' --entitlements \"${SRCROOT}\"/utils/bundle/Utils.entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/MacOS/$i\ndone\n";
+			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in regina-testsuite censuslookup katie regconcat regconvert regfiledump regfiletype retriangulate sigcensus tricensus trisetcmp; do\n/usr/bin/codesign --force --options runtime --sign 'Apple Development:' --entitlements \"${SRCROOT}\"/utils/bundle/Utils.entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/MacOS/$i\ndone\n";
 		};
 		052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -10682,7 +10682,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				057B0CC426A506D90017F5EA /* dgt.cpp in Sources */,
+				05EE4AEC2D8BA962006D1495 /* katie.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10735,7 +10735,7 @@
 		};
 		057B0CC626A506F70017F5EA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 057B0CB926A506B20017F5EA /* Utils - DGT */;
+			target = 057B0CB926A506B20017F5EA /* Utils - Katie */;
 			targetProxy = 057B0CC526A506F70017F5EA /* PBXContainerItemProxy */;
 		};
 		058FC8751FE18904006D04B4 /* PBXTargetDependency */ = {
@@ -11900,7 +11900,7 @@
 					__info_plist,
 					"$(SRCROOT)/utils/bundle/censuslookup.plist",
 				);
-				PRODUCT_NAME = dgt;
+				PRODUCT_NAME = katie;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -11927,7 +11927,7 @@
 					__info_plist,
 					"$(SRCROOT)/utils/bundle/censuslookup.plist",
 				);
-				PRODUCT_NAME = dgt;
+				PRODUCT_NAME = katie;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -12277,7 +12277,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		057B0CC026A506B20017F5EA /* Build configuration list for PBXNativeTarget "Utils - DGT" */ = {
+		057B0CC026A506B20017F5EA /* Build configuration list for PBXNativeTarget "Utils - Katie" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				057B0CC126A506B20017F5EA /* Debug */,

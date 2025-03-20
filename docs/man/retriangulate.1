@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "RETRIANGULATE" "1" "24 April 2023" "" "The Regina Handbook"
+.TH "RETRIANGULATE" "1" "20 March 2025" "" "The Regina Handbook"
 
 .SH NAME
 retriangulate \- Exhaustively search through triangulations or knot diagrams using local moves
@@ -58,22 +58,23 @@ will not be output at all.
 .PP
 All triangulations or knot diagrams, both input and output, are described
 using \fIisomorphism signatures\fR and
-\fIknot signatures\fR respectively.  These are short text
-strings that identify a triangulation or knot diagram uniquely up to
+\fIknot/link signatures\fR respectively.  These are short
+text strings that identify a triangulation or link diagram uniquely up to
 combinatorial isomorphism (which includes relabellings of
 tetrahedra/pentachora/crossings, relabellings of the vertices of
-tetrahedra/pentachora vertices, and reflection/reversal of knot diagrams).
+tetrahedra/pentachora vertices, and various rotation/reflection/reversal
+operations on link diagrams).
 .PP
 To view the isomorphism signature of a triangulation:
 in Regina's graphical user interface you can find this in the
 Composition tab in the triangulation viewer,
 and in Python you can call \fBt.isoSig()\fR
 for a triangulation \fBt\fR\&.
-To view a knot signature:
+To view a knot/link signature:
 in Regina's graphical user interface this is available through the
 Codes tab in the knot/link viewer,
-and in Python you can call \fBk.knotSig()\fR
-for a knot \fBk\fR\&.
+and in Python you can call \fBd.sig()\fR
+for a knot or link diagram \fBd\fR\&.
 .PP
 For a full and precise specification of isomorphism signatures for
 3-manifolds, see
@@ -83,7 +84,7 @@ arXiv:1110.6080.
 .sp
 .RS
 .B "Tip:"
-Very large triangulations or knots have signatures that begin with a dash
+Very large triangulations or links have signatures that begin with a dash
 (-).  Such a signature could be mistaken for an option
 when passing it on the command line.  To avoid this, you can pass the
 special option \fB--\fR immediately before it: this indicates
@@ -159,7 +160,7 @@ Indicates that the given signature is the isomorphism signature of a
 4-2 and 5-1 Pachner moves.
 .TP
 \fB-k, --knot\fR
-Indicates that the given signature is a knot signature.
+Indicates that the given signature is a knot/link signature.
 The local moves used will be the Reidemeister moves.
 .TP
 \fB-a, --anysig\fR
@@ -200,7 +201,7 @@ Regina you are using.
 .RS
 .B "Note:"
 Currently Regina only uses alternate signature types with
-triangulations.  For knot signatures, it still uses
+triangulations.  For knot/link signatures, it still uses
 classic signatures, though again this is subject to change in
 future version of Regina.
 .RE

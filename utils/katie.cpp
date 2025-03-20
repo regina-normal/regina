@@ -1,6 +1,6 @@
 //
 //  main.cpp
-//  DGT2: Diagrams to Graphs and Triangulations
+//  Katie: Diagrams to Graphs and Triangulations
 //
 //  Created by Rhuaidi Antonio Burke on 12/3/21.
 //

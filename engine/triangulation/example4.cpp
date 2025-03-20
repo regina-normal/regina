@@ -37,7 +37,7 @@
 namespace regina {
 
 Triangulation<4> Example<4>::cp2() {
-    // Built by Rhuaidi Burke using DGT from a Kirby diagram of the
+    // Built by Rhuaidi Burke using Katie from a Kirby diagram of the
     // standard CP^2, then oriented in a way that ensures our
     // intersection form matches CP^2 and not the reflection \overline{CP^2}.
     return Triangulation<4>::fromGluings(4, {
@@ -49,7 +49,7 @@ Triangulation<4> Example<4>::cp2() {
 }
 
 Triangulation<4> Example<4>::s2xs2() {
-    // Built by Rhuaidi Burke using DGT from a Kirby diagram of the
+    // Built by Rhuaidi Burke using Katie from a Kirby diagram of the
     // standard S2 x S2.
     return Triangulation<4>::fromGluings(6, {
         { 0, 0, 0, {4,1,2,3,0} }, { 0, 1, 0, {0,2,1,3,4} },
@@ -137,7 +137,7 @@ Triangulation<4> Example<4>::k3() {
     //Triangulation<4> ans = Triangulation<4>::fromIsoSig("8ALLAvvzwwLQAMzwvQAQMvAzLvwQPMwPwQQQQQAQQQLAAvQQQQQaaddeekkpttjjppvwxyopCDrCszzzuAwBOISRIRQUUWFFYZHHSSJJKKLLMMOOQW0P0RWSTTVXXXZ011223344556677qbGanbLbLbLbaaeanbDbDb2aKafavavbUaaaVbnafaIaIaqb0aBb0aDb0a2bWagbRaVbJadaaaCb3aVbIaIaPaPb2bWbSbGacaVbWaqb6aPbTbrafaibgaJaTboajatafataBaNaBbqb6ava2abbbayagaqbSaPbJaPbJa2boaGacaNabaqbub");
 
     // This triangulation is derived from a Kirby diagram of the standard K3 surface, 
-    // constructed and simplified by Rhuaidi Burke using DGT and the "Up-Down-Simplify" heuristic.
+    // constructed and simplified by Rhuaidi Burke using Katie and the "Up-Down-Simplify" heuristic.
     Triangulation<4> ans = Triangulation<4>::fromIsoSig("2ALAMMvAwvPLQwvPwLQPMvPQQQQLQPAwwALQQAAQPPzQPPaaddceffggikqpmllsorsquxwuttvxxFyyzzAABBCCDDJKIIGGHHMKLLNNOOPPQQSSUUTTVVWWXZZZ0011TbgaiaiakaqaaaMbaawaUbjbabPa5ayaGauara3bmagaNaUbybNa2aRa2aibbawboaraPbJa2aKaya1aqbub2afbPaZaUbcayaGawaca-aLb+aoatbfaNabagajaya1axbybrbebubgaubFbtbfaFbFbFbqbzaoaPboa");
     ans.orient();
     ans.reflect(); // so sig = -16, not 16

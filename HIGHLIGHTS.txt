@@ -8,6 +8,8 @@ Regina - A Normal Surface Theory Calculator
 
 Version 7.4  [ (to be announced) ]
 
+    Overview:
+        - The DGT utility has been renamed to Katie.
     Python / C++:
         - Regina now uses the C++20 standard.
 
