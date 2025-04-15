@@ -265,6 +265,7 @@ Version 7.4  [ (to be announced) ]
         Class Link:
             - New routine makeAlternating().
             - New routine seifertCircles().
+            - New routine whiteheadDouble().
             - New routines isConnected() and diagramComponents().
             - New routines insertLink() and moveContentsTo().
             - New routines countTrivialComponents() and pdAmbiguous(), to help

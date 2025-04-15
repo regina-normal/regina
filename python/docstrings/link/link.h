@@ -4239,6 +4239,32 @@ Parameter ``td``:
     a tree decomposition of the planar 4-valent multigraph formed by
     this link diagram.)doc";
 
+// Docstring regina::python::doc::Link_::whiteheadDouble
+static const char *whiteheadDouble =
+R"doc(Returns the untwisted positive Whitehead double of this knot.
+
+This routine works only with knots, not multiple-component links. It
+creates a new link by (i) creating two parallel copies of the original
+knot using the Seifert framing, and then (ii) cutting open these two
+copies and re-connecting them using a clasp with two positive
+crossings.
+
+The two parallel copies of the original link will be oriented as
+follows: when following the orientation of the original knot, the left
+copy will have the same orientation, and the right copy will have the
+reverse orientation.
+
+This link will not be modified.
+
+Precondition:
+    This link has exactly one component (i.e., it is a knot).
+
+Exception ``FailedPrecondition``:
+    This link is empty or has multiple components.
+
+Returns:
+    the untwisted positive Whitehead double of this knot.)doc";
+
 // Docstring regina::python::doc::Link_::withR1
 static const char *withR1 =
 R"doc(If possible, returns the diagram obtained by performing a type I

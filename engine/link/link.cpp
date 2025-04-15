@@ -1204,6 +1204,175 @@ void Link::composeWith(const Link& other) {
     }
 }
 
+namespace {
+    // Data to support whiteheadDouble().
+    // This array identifies the crossing numbers in the double's 2x2 grid
+    // that correspond to various incoming/outgoing strands in the original
+    // crossing.
+    //
+    // The four arguments:
+    // - sign of the original crossing (negative, positive)
+    // - original strand (lower, upper)
+    // - direction of the new strand (forward, reverse)
+    // - end of the new strand (in, out)
+    //
+    // This is most easily accessed via dblOffset().
+
+    constexpr int dblGrid[2][2][2][2] = {
+        {
+            { // original: negative crossing, lower strand
+                { 0, 2 /* forward */ }, { 3, 1 /* reverse */ }
+            },
+            { // original: negative crossing, upper strand
+                { 1, 0 /* forward */ }, { 2, 3 /* reverse */ }
+            }
+        },
+        {
+            { // original: positive crossing, lower strand
+                { 0, 2 /* forward */ }, { 3, 1 /* reverse */ }
+            },
+            { // original: positive crossing, upper strand
+                { 2, 3 /* forward */ }, { 1, 0 /* reverse */ }
+            }
+        }
+    };
+
+    int dblOffset(StrandRef s, int dir, int end) {
+        return dblGrid[s.crossing()->sign() < 0 ? 0 : 1][s.strand()][dir][end];
+    }
+}
+
+Link Link::whiteheadDouble() const {
+    if (components_.size() != 1)
+        throw FailedPrecondition("The Whitehead double requires the link "
+            "to have exactly one component");
+
+    Link ans;
+
+    // Crossing i of the original knot:
+    //
+    // +ve:    |                 -ve:    ^
+    //     --- | --->                --- | --->
+    //         v                         |
+    //
+    // Crossings (4i, ..., 4i+3) of the Whitehead double:
+    //
+    //  4i   ^     | 4i+2
+    //   --- | --- | -->
+    //       |     |
+    //   <-- | --- | ---
+    //  4i+1 |     v 4i+3
+    //
+    // The signs of these crossings:
+    //
+    //       - +
+    //       + -
+
+    // Create the four crossings for each original, and join them
+    // together internally.
+    Crossing* tmp[4]; // Used to build grids of crossings
+    for (Crossing* c : crossings_) {
+        ans.crossings_.push_back(tmp[0] = new Crossing(-1));
+        ans.crossings_.push_back(tmp[1] = new Crossing(1));
+        ans.crossings_.push_back(tmp[2] = new Crossing(1));
+        ans.crossings_.push_back(tmp[3] = new Crossing(-1));
+
+        Link::join(tmp[1]->upper(), tmp[0]->upper());
+        Link::join(tmp[2]->upper(), tmp[3]->upper());
+        Link::join(tmp[0]->lower(), tmp[2]->lower());
+        Link::join(tmp[3]->lower(), tmp[1]->lower());
+    }
+
+    // Connect the different grids together, building two parallel copies
+    // (one oriented in reverse).  We will later break these open to add the
+    // twists (if necessary) and clasp.
+    long writhe = 0;
+    for (Crossing* c : crossings_) {
+        size_t base = 4 * c->index();
+
+        for (int s = 0; s < 2; ++s) {
+            StrandRef next = c->next(s);
+            size_t nextBase = 4 * next.crossing()->index();
+
+            Link::join(
+                ans.crossings_[base + dblOffset(c->strand(s), 0, 1)]->
+                    strand(s),
+                ans.crossings_[nextBase + dblOffset(next, 0, 0)]->
+                    strand(next.strand()));
+            Link::join(
+                ans.crossings_[nextBase + dblOffset(next, 1, 1)]->
+                    strand(next.strand()),
+                ans.crossings_[base + dblOffset(c->strand(s), 1, 0)]->
+                    strand(s));
+        }
+
+        writhe += c->sign();
+    }
+
+    // Identify the endpoints where we need to break the link open and insert
+    // the clasp.  The indices:
+    // - start vs end of the traversal of the original knot;
+    // - forward vs reverse direction.
+    StrandRef start = components_.front();
+    size_t startBase = 4 * start.crossing()->index();
+
+    StrandRef breakpoint[2][2];
+    breakpoint[0][0] = ans.crossing(startBase + dblOffset(start, 0, 0))->
+        strand(start.strand());
+    breakpoint[0][1] = ans.crossing(startBase + dblOffset(start, 1, 1))->
+        strand(start.strand());
+    breakpoint[1][0] = breakpoint[0][0].prev();
+    breakpoint[1][1] = breakpoint[0][1].next();
+
+    // Add twists to compensate for the writhe.
+    if (writhe > 0) {
+        while (writhe) {
+            Crossing* twist[2];
+            ans.crossings_.push_back(twist[0] = new Crossing(1));
+            ans.crossings_.push_back(twist[1] = new Crossing(1));
+
+            Link::join(breakpoint[1][0], twist[0]->lower());
+            Link::join(twist[0]->lower(), twist[1]->upper());
+            breakpoint[1][0] = twist[1]->upper();
+
+            Link::join(twist[1]->lower(), twist[0]->upper());
+            Link::join(twist[0]->upper(), breakpoint[1][1]);
+            breakpoint[1][1] = twist[1]->lower();
+        }
+    } else if (writhe < 0) {
+        while (writhe) {
+            Crossing* twist[2];
+            ans.crossings_.push_back(twist[0] = new Crossing(-1));
+            ans.crossings_.push_back(twist[1] = new Crossing(-1));
+
+            Link::join(breakpoint[1][0], twist[0]->upper());
+            Link::join(twist[0]->upper(), twist[1]->lower());
+            breakpoint[1][0] = twist[1]->lower();
+
+            Link::join(twist[1]->upper(), twist[0]->lower());
+            Link::join(twist[0]->lower(), breakpoint[1][1]);
+            breakpoint[1][1] = twist[1]->upper();
+        }
+    }
+
+    // Add the clasp.
+    Crossing* clasp[2];
+    ans.crossings_.push_back(clasp[0] = new Crossing(1));
+    ans.crossings_.push_back(clasp[1] = new Crossing(1));
+
+    Link::join(breakpoint[1][0], clasp[0]->upper());
+    Link::join(clasp[0]->upper(), clasp[1]->lower());
+    Link::join(clasp[1]->lower(), breakpoint[1][1]);
+
+    Link::join(breakpoint[0][1], clasp[1]->upper());
+    Link::join(clasp[1]->upper(), clasp[0]->lower());
+    Link::join(clasp[0]->lower(), breakpoint[0][0]);
+
+    // And we're done.
+    ans.components_.push_back(breakpoint[0][0]);
+    return ans;
+}
+
 Link Link::parallel(int k, Framing framing) const {
     // Get the special cases out of the way.
     if (k == 0 || components_.empty())
@@ -1216,13 +1385,13 @@ Link Link::parallel(int k, Framing framing) const {
     Link ans;
     auto* tmp = new Crossing*[k*k]; // Used to build grids of crossings
 
-    // Crossing i of knot:
+    // Crossing i of the original link:
     //
     // +ve:    |                 -ve:    ^
     //     --- | --->                --- | --->
     //         v                         |
     //
-    // Crossings (k^2 i, ..., k^2 (i+1) - 1) of this tangle:
+    // Crossings (k^2 i, ..., k^2 (i+1) - 1) of the new link:
     //
     //  k^2 i       | ... | k^2 (i+1) - k     k^2 i + k-1 ^ ... ^ k^2 (i+1) - 1
     //          --- | --- | --->                      --- | --- | --->

@@ -2889,6 +2889,31 @@ class Link :
         Triangulation<3> complement(bool simplify = true) const;
 
         /**
+         * Returns the untwisted positive Whitehead double of this knot.
+         *
+         * This routine works only with knots, not multiple-component links.
+         * It creates a new link by (i) creating two parallel copies of the
+         * original knot using the Seifert framing, and then (ii) cutting open
+         * these two copies and re-connecting them using a clasp with
+         * two positive crossings.
+         *
+         * The two parallel copies of the original link will be oriented as
+         * follows: when following the orientation of the original knot, the
+         * left copy will have the same orientation, and the right copy will
+         * have the reverse orientation.
+         *
+         * This link will not be modified.
+         *
+         * \pre This link has exactly one component (i.e., it is a knot).
+         *
+         * \exception FailedPrecondition This link is empty or has multiple
+         * components.
+         *
+         * \return the untwisted positive Whitehead double of this knot.
+         */
+        Link whiteheadDouble() const;
+
+        /**
          * Returns \a k cables of this link, all parallel to each
          * other using the given framing.
          *

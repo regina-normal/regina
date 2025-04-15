@@ -235,6 +235,7 @@ void addLink(pybind11::module_& m) {
         .def("seifertCircles", &Link::seifertCircles, rdoc::seifertCircles)
         .def("complement", &Link::complement,
             pybind11::arg("simplify") = true, rdoc::complement)
+        .def("whiteheadDouble", &Link::whiteheadDouble, rdoc::whiteheadDouble)
         .def("parallel", &Link::parallel,
             pybind11::arg(), pybind11::arg("framing") = Framing::Seifert,
             rdoc::parallel)
