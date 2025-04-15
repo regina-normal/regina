@@ -628,7 +628,7 @@ inline LightweightSequence<T>& LightweightSequence<T>::operator = (
 template <typename T>
 inline void LightweightSequence<T>::swap(LightweightSequence<T>& other)
         noexcept {
-    std::swap(size_, other.size);
+    std::swap(size_, other.size_);
     std::swap(data_, other.data_);
 }
 
