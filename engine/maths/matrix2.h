@@ -38,6 +38,7 @@
 #include <array>
 #include <iostream>
 #include "regina-core.h"
+#include "maths/ring.h"
 
 /*! \file maths/matrix2.h
  *  \brief Deals with 2x2 integer matrices.
@@ -262,6 +263,15 @@ class Matrix2 {
 
     friend std::ostream& operator << (std::ostream& out, const Matrix2& mat);
 };
+
+#ifndef __DOXYGEN
+// Don't confuse doxygen with specialisations.
+template <>
+struct RingTraits<Matrix2> {
+    inline static const Matrix2 zero;
+    inline static const Matrix2 one { 1, 0, 0, 1 };
+};
+#endif // __DOXYGEN
 
 /**
  * Swaps the contents of the two given matrices.

@@ -443,6 +443,15 @@ class Rational {
     friend std::ostream& operator << (std::ostream& out, const Rational& rat);
 };
 
+#ifndef __DOXYGEN
+// Don't confuse doxygen with specialisations.
+template <>
+struct RingTraits<Rational> {
+    inline static const Rational zero;
+    inline static const Rational one { 1 };
+};
+#endif // __DOXYGEN
+
 /**
  * Swaps the contents of the given rationals.
  *

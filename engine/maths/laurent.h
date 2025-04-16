@@ -696,6 +696,15 @@ class Laurent :
     friend Laurent<U> operator * (const Laurent<U>&, const Laurent<U>&);
 };
 
+#ifndef __DOXYGEN
+// Don't confuse doxygen with specialisations.
+template <typename T>
+struct RingTraits<Laurent<T>> {
+    inline static const Laurent<T> zero;
+    inline static const Laurent<T> one { 0 }; // x^0
+};
+#endif // __DOXYGEN
+
 /**
  * Swaps the contents of the given polynomials.
  *

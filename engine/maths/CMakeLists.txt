@@ -40,6 +40,7 @@ if (${REGINA_INSTALL_DEV})
     polynomial.h
     primes.h
     rational.h
+    ring.h
     vector.h
     DESTINATION "${PKGINCLUDEDIR}/maths" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

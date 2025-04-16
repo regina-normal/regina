@@ -51,8 +51,8 @@ namespace regina {
 
 class XMLAngleStructureReader;
 
-template <typename, bool> class Matrix;
-using MatrixInt = Matrix<Integer, true>;
+template <typename> class Matrix;
+using MatrixInt = Matrix<Integer>;
 
 /**
  * \defgroup angle Angle Structures

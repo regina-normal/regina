@@ -229,8 +229,8 @@ inline constexpr Perm<4> octDiscArcs[3][8] = {
     Perm<4>(3,1,0,2), Perm<4>(3,0,2,1), Perm<4>(2,3,1,0), Perm<4>(2,1,0,3)
 };
 
-template <typename, bool> class Matrix;
-using MatrixInt = Matrix<Integer, true>;
+template <typename> class Matrix;
+using MatrixInt = Matrix<Integer>;
 
 /**
  * Represents a single normal surface in a 3-manifold triangulation.

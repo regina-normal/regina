@@ -45,8 +45,8 @@
 #include <tuple>
 #include <gmp.h>
 #include "regina-core.h"
+#include "maths/ring.h"
 #include "utilities/exception.h"
-#include "utilities/intutils.h"
 #include "utilities/tightencoding.h"
 
 /**
@@ -1667,6 +1667,15 @@ class IntegerBase : private InfinityBase<withInfinity> {
         const IntegerBase<withInfinity_>& large);
 };
 
+#ifndef __DOXYGEN
+// Don't confuse doxygen with specialisations.
+template <bool withInfinity>
+struct RingTraits<IntegerBase<withInfinity>> {
+    inline static const IntegerBase<withInfinity> zero;
+    inline static const IntegerBase<withInfinity> one { 1 };
+};
+#endif // __DOXYGEN
+
 /**
  * LargeInteger is a type alias for IntegerBase<true>, which offers
  * arbitrary precision integers with support for infinity.
@@ -2352,6 +2361,15 @@ class NativeInteger {
         const NativeInteger<bytes_>& large);
 #endif
 };
+
+#ifndef __DOXYGEN
+// Don't confuse doxygen with specialisations.
+template <int bytes>
+struct RingTraits<NativeInteger<bytes>> {
+    static constexpr NativeInteger<bytes> zero;
+    static constexpr NativeInteger<bytes> one = 1;
+};
+#endif // __DOXYGEN
 
 /**
  * Swaps the contents of the given integers.

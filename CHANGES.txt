@@ -327,9 +327,13 @@ Version 7.4  [ (to be announced) ]
             - Renamed initialise() to fill(), to make it clear that this has
               nothing to do with initialised vs uninitialised matrices.
               The old name is kept but deprecated.
-            - The ring template argument now defaults to true for matrices over
-              native C++ floating-point types, and Python now has a new binding
-              MatrixReal to represent the C++ type Matrix<double>.
+            - The extra ring template argument is gone; instead those matrix
+              functions that work with rings now require the specialisation
+              RingTraits<T> to be available.  This expands the scope of those
+              member functions to now include native C++ floating-point types
+              and Regina's various polynomial types.
+            - Python now has a new binding MatrixReal to represent the
+              C++ type Matrix<double>.
         Class ModelLinkGraph:
             - New routines isSimple() and isConnected().
             - New routine generateAnyLink().
@@ -477,6 +481,9 @@ Version 7.4  [ (to be announced) ]
         Class Rational:
             - New function str().
             - Added a spaceship operator (<=>) for comparisons.
+        Class RingTraits:
+            - New traits class to support generic mathematical code that works
+              with any ring type (integers, rationals, polynomials, etc.).
         Class Rotation3D:
             - New class to support floating-point 3-D geometry.
         Class SatAnnulus:

@@ -53,8 +53,8 @@
 
 namespace regina {
 
-template <typename, bool> class Matrix;
-using MatrixInt = Matrix<Integer, true>;
+template <typename> class Matrix;
+using MatrixInt = Matrix<Integer>;
 
 /**
  * A matrix class for use with linear programming.

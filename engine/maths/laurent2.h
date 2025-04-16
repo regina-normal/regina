@@ -578,6 +578,15 @@ class Laurent2 :
     friend class Link;
 };
 
+#ifndef __DOXYGEN
+// Don't confuse doxygen with specialisations.
+template <typename T>
+struct RingTraits<Laurent2<T>> {
+    inline static const Laurent2<T> zero;
+    inline static const Laurent2<T> one { 0, 0 }; // x^0 y^0
+};
+#endif // __DOXYGEN
+
 /**
  * Swaps the contents of the given polynomials.
  *

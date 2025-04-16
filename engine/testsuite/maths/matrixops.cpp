@@ -37,7 +37,7 @@
 
 using regina::MatrixInt;
 
-class MatrixTest : public testing::Test {
+class MatrixOpsTest : public testing::Test {
     protected:
         MatrixInt zero34 { 3, 4 };
         MatrixInt zero43 { 4, 3 };
@@ -94,7 +94,7 @@ static void verifySNF(const MatrixInt& m, std::initializer_list<long> diag) {
     }
 }
 
-TEST_F(MatrixTest, smithNormalForm) {
+TEST_F(MatrixOpsTest, smithNormalForm) {
     verifySNF(zero34, { });
     verifySNF(zero43, { });
     verifySNF(identity3, { 1, 1, 1 });
@@ -145,7 +145,7 @@ static void verifySNFBasis(const MatrixInt& m, bool metrical) {
     EXPECT_EQ((invC * snfBasis * invR), m);
 }
 
-TEST_F(MatrixTest, smithNormalFormBasis) {
+TEST_F(MatrixOpsTest, smithNormalFormBasis) {
     verifySNFBasis(zero34, false);
     verifySNFBasis(zero43, false);
     verifySNFBasis(identity3, false);
@@ -158,7 +158,7 @@ TEST_F(MatrixTest, smithNormalFormBasis) {
     verifySNFBasis(duplicate43, false);
 }
 
-TEST_F(MatrixTest, metricalSmithNormalForm) {
+TEST_F(MatrixOpsTest, metricalSmithNormalForm) {
     verifySNFBasis(zero34, true);
     verifySNFBasis(zero43, true);
     verifySNFBasis(identity3, true);
@@ -229,7 +229,7 @@ static void verifyEchelonForm(const MatrixInt& m) {
     EXPECT_EQ(copy, m1);
 }
 
-TEST_F(MatrixTest, echelonForm) {
+TEST_F(MatrixOpsTest, echelonForm) {
     verifyEchelonForm(zero34);
     verifyEchelonForm(zero43);
     verifyEchelonForm(identity3);
