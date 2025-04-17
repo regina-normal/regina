@@ -1247,10 +1247,16 @@ namespace {
     }
 }
 
-Link Link::whiteheadDouble() const {
+Link Link::whiteheadDouble(bool positive) const {
     if (components_.size() != 1)
         throw FailedPrecondition("The Whitehead double requires the link "
             "to have exactly one component");
+    if (size() == 0) {
+        if (positive)
+            return fromData({ 1, 1 }, { 1, -2, 2, -1 });
+        else
+            return fromData({ -1, -1 }, { -1, 2, -2, 1 });
+    }
 
     Link ans;
 
@@ -1362,16 +1368,29 @@ Link Link::whiteheadDouble() const {
 
     // Add the clasp.
     Crossing* clasp[2];
-    ans.crossings_.push_back(clasp[0] = new Crossing(1));
-    ans.crossings_.push_back(clasp[1] = new Crossing(1));
+    if (positive) {
+        ans.crossings_.push_back(clasp[0] = new Crossing(1));
+        ans.crossings_.push_back(clasp[1] = new Crossing(1));
 
-    Link::join(breakpoint[1][0], clasp[0]->upper());
-    Link::join(clasp[0]->upper(), clasp[1]->lower());
-    Link::join(clasp[1]->lower(), breakpoint[1][1]);
+        Link::join(breakpoint[1][0], clasp[0]->upper());
+        Link::join(clasp[0]->upper(), clasp[1]->lower());
+        Link::join(clasp[1]->lower(), breakpoint[1][1]);
 
-    Link::join(breakpoint[0][1], clasp[1]->upper());
-    Link::join(clasp[1]->upper(), clasp[0]->lower());
-    Link::join(clasp[0]->lower(), breakpoint[0][0]);
+        Link::join(breakpoint[0][1], clasp[1]->upper());
+        Link::join(clasp[1]->upper(), clasp[0]->lower());
+        Link::join(clasp[0]->lower(), breakpoint[0][0]);
+    } else {
+        ans.crossings_.push_back(clasp[0] = new Crossing(-1));
+        ans.crossings_.push_back(clasp[1] = new Crossing(-1));
+
+        Link::join(breakpoint[1][0], clasp[0]->lower());
+        Link::join(clasp[0]->lower(), clasp[1]->upper());
+        Link::join(clasp[1]->upper(), breakpoint[1][1]);
+
+        Link::join(breakpoint[0][1], clasp[1]->lower());
+        Link::join(clasp[1]->lower(), clasp[0]->upper());
+        Link::join(clasp[0]->upper(), breakpoint[0][0]);
+    }
 
     // And we're done.
     ans.components_.push_back(breakpoint[0][0]);

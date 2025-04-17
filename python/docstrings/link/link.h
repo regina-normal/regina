@@ -390,7 +390,7 @@ multiple-component links. If this link is empty or has more than one
 component, then this routine will throw an exception.
 
 To pretty-print the Alexander polynomial for human consumption, you
-can call ``Laurent::str(Link::alexanderVar)``.
+can call ``Polynomial::str(Link::alexanderVar)``.
 
 Bear in mind that each time a link changes, all of its polynomials
 will be deleted. Thus the reference that is returned from this routine
@@ -4286,7 +4286,8 @@ Parameter ``td``:
 
 // Docstring regina::python::doc::Link_::whiteheadDouble
 static const char *whiteheadDouble =
-R"doc(Returns the untwisted positive Whitehead double of this knot.
+R"doc(Returns the untwisted positive or negative Whitehead double of this
+knot.
 
 This routine works only with knots, not multiple-component links. If
 this link is empty or has more than one component, then this routine
@@ -4294,8 +4295,9 @@ will throw an exception.
 
 This routine creates a new link by (i) creating two parallel copies of
 the original knot using the Seifert framing, and then (ii) cutting
-open these two copies and re-connecting them using a clasp with two
-positive crossings.
+open these two copies and re-connecting them using a clasp. The signs
+of the two crossings in the clasp are determined by the optional
+argument *positive* (the default is to use two positive crossings).
 
 The two parallel copies of the original link will be oriented as
 follows: when following the orientation of the original knot, the left
@@ -4310,8 +4312,14 @@ Precondition:
 Exception ``FailedPrecondition``:
     This link is empty or has multiple components.
 
+Parameter ``positive``:
+    ``True`` if the clasp should use positive crossings (which builds
+    the _positive_ Whitehead double), or ``False`` if the clasp should
+    use negative crossings (which builds the _negative_ Whitehead
+    double).
+
 Returns:
-    the untwisted positive Whitehead double of this knot.)doc";
+    the requested untwisted Whitehead double of this knot.)doc";
 
 // Docstring regina::python::doc::Link_::withR1
 static const char *withR1 =
