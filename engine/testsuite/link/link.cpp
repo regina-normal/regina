@@ -516,6 +516,37 @@ TEST_F(LinkTest, selfFrame) {
     testManualCases(verifySelfFrame);
 }
 
+static void verifyWhiteheadDouble(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    if (link.countComponents() != 1) {
+        EXPECT_THROW({ link.whiteheadDouble(); }, regina::FailedPrecondition);
+        return;
+    }
+
+    long writhe = link.writhe();
+
+    Link pos = link.whiteheadDouble();
+    Link neg = link.whiteheadDouble(false);
+
+    EXPECT_EQ(pos.countComponents(), 1);
+    EXPECT_EQ(neg.countComponents(), 1);
+    EXPECT_EQ(pos.size(), 4 * link.size() + 2 * std::abs(writhe) + 2);
+    EXPECT_EQ(neg.size(), 4 * link.size() + 2 * std::abs(writhe) + 2);
+    EXPECT_EQ(pos.writhe(), 2 * writhe + 2);
+    EXPECT_EQ(neg.writhe(), 2 * writhe - 2);
+
+    if (link.size() < 20) {
+        using P = regina::Polynomial<regina::Integer>;
+        EXPECT_EQ(pos.alexander(), regina::RingTraits<P>::one);
+        EXPECT_EQ(neg.alexander(), regina::RingTraits<P>::one);
+    }
+}
+
+TEST_F(LinkTest, whiteheadDouble) {
+    testManualCases(verifyWhiteheadDouble);
+}
+
 static void verifyParallel(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
