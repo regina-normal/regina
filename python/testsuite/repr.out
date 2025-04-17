@@ -74,9 +74,9 @@ Cyclotomic
 -2/5 x^3 + 2/5 x^2 + 7/10
 <regina.Cyclotomic: -2/5 x^3 + 2/5 x^2 + 7/10>
 
-Polynomial
+PolynomialRational
 -2/5 x^3 + 2/5 x^2 + 7/10
-<regina.Polynomial: -2/5 x^3 + 2/5 x^2 + 7/10>
+<regina.PolynomialRational: -2/5 x^3 + 2/5 x^2 + 7/10>
 
 Laurent
 x^4 - x^2 + 1 - x^-2 + x^-4
