@@ -450,7 +450,9 @@ PermSubSn5_4_Sign : class -> EqualityType.BY_VALUE
 PillowTwoSphere : class -> EqualityType.BY_VALUE
 PlugTriSolidTorus : class -> EqualityType.BY_VALUE
 PluggedTorusBundle : class -> EqualityType.BY_VALUE
-Polynomial : class -> EqualityType.BY_VALUE
+Polynomial : alias -> PolynomialRational
+PolynomialInt : class -> EqualityType.BY_VALUE
+PolynomialRational : class -> EqualityType.BY_VALUE
 PosOrder : class -> EqualityType.DISABLED
 Primes : class -> EqualityType.NEVER_INSTANTIATED
 PrismSpec : class -> EqualityType.BY_VALUE
