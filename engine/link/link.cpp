@@ -1331,7 +1331,7 @@ Link Link::whiteheadDouble() const {
 
     // Add twists to compensate for the writhe.
     if (writhe > 0) {
-        while (writhe) {
+        for ( ; writhe; --writhe) {
             Crossing* twist[2];
             ans.crossings_.push_back(twist[0] = new Crossing(1));
             ans.crossings_.push_back(twist[1] = new Crossing(1));
@@ -1345,7 +1345,7 @@ Link Link::whiteheadDouble() const {
             breakpoint[1][1] = twist[1]->lower();
         }
     } else if (writhe < 0) {
-        while (writhe) {
+        for ( ; writhe; ++writhe) {
             Crossing* twist[2];
             ans.crossings_.push_back(twist[0] = new Crossing(-1));
             ans.crossings_.push_back(twist[1] = new Crossing(-1));
