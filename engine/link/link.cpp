@@ -1425,16 +1425,15 @@ Link Link::parallel(int k, Framing framing) const {
 
     // Create the k^2 crossings for each original, and join them
     // together internally.
-    int i, j;
     for (Crossing* c : crossings_) {
-        for (i = 0; i < k * k; ++i)
+        for (int i = 0; i < k * k; ++i)
             ans.crossings_.push_back(tmp[i] = new Crossing(c->sign()));
 
-        for (i = 0; i < k; ++i)
-            for (j = 0; j < k - 1; ++j)
+        for (int i = 0; i < k; ++i)
+            for (int j = 0; j < k - 1; ++j)
                 Link::join(tmp[k*i + j]->upper(), tmp[k*i + j+1]->upper());
-        for (i = 0; i < k - 1; ++i)
-            for (j = 0; j < k; ++j)
+        for (int i = 0; i < k - 1; ++i)
+            for (int j = 0; j < k; ++j)
                 Link::join(tmp[k*i + j]->lower(), tmp[k*(i+1) + j]->lower());
     }
 
@@ -1449,14 +1448,14 @@ Link Link::parallel(int k, Framing framing) const {
     ssize_t startL;
     int startStrand;
 
-    int writhe;
+    long writhe;
     bool* seen = new bool[crossings_.size()];
     std::fill(seen, seen + crossings_.size(), false);
 
     for (const StrandRef& start : components_) {
         if (! start) {
             // This component is a 0-crossing unknot.
-            for (i = 0; i < k; ++i)
+            for (int i = 0; i < k; ++i)
                 ans.components_.emplace_back();
             continue;
         }
@@ -1487,7 +1486,7 @@ Link Link::parallel(int k, Framing framing) const {
 
             // Connect the previous grid to this.
             if (exitL >= 0) {
-                for (i = 0; i < k; ++i)
+                for (int i = 0; i < k; ++i)
                     Link::join(
                         ans.crossings_[exitL + i * exitDelta]->
                             strand(exitStrand),
@@ -1519,7 +1518,7 @@ Link Link::parallel(int k, Framing framing) const {
 
         if (writhe == 0 || framing == Framing::Blackboard) {
             // Close up the k new parallel link components.
-            for (i = 0; i < k; ++i)
+            for (int i = 0; i < k; ++i)
                 Link::join(
                     ans.crossings_[exitL + i * exitDelta]->
                         strand(exitStrand),
@@ -1529,18 +1528,18 @@ Link Link::parallel(int k, Framing framing) const {
             // We want the Seifert framing, and the writhe is positive.
             // Insert the requisite number of negative twists
             // before closing off the k parallel link components.
-            for (i = 0; i < writhe * k; ++i) {
-                for (j = 0; j < k - 1; ++j)
+            for (long w = 0; w < writhe * k; ++w) {
+                for (int j = 0; j < k - 1; ++j)
                     ans.crossings_.push_back(tmp[j] = new Crossing(-1));
 
-                for (j = 0; j < k - 2; ++j)
+                for (int j = 0; j < k - 2; ++j)
                     Link::join(tmp[j]->lower(), tmp[j + 1]->lower());
 
-                if (i == 0) {
+                if (w == 0) {
                     Link::join(
                         ans.crossings_[exitL]->strand(exitStrand),
                         tmp[0]->lower());
-                    for (j = 1; j < k; ++j)
+                    for (int j = 1; j < k; ++j)
                         Link::join(
                             ans.crossings_[exitL + j * exitDelta]->
                                 strand(exitStrand),
@@ -1548,7 +1547,7 @@ Link Link::parallel(int k, Framing framing) const {
                 } else {
                     Link::join(
                         ans.crossings_[exitL]->upper(), tmp[0]->lower());
-                    for (j = 1; j < k - 1; ++j)
+                    for (int j = 1; j < k - 1; ++j)
                         Link::join(
                             ans.crossings_[exitL + j]->upper(),
                             tmp[j - 1]->upper());
@@ -1560,7 +1559,7 @@ Link Link::parallel(int k, Framing framing) const {
                 exitL = tmp[0]->index();
             }
 
-            for (j = 0; j < k - 1; ++j)
+            for (int j = 0; j < k - 1; ++j)
                 Link::join(
                     ans.crossings_[exitL + j]->upper(),
                     ans.crossings_[startL + j * startDelta]->
@@ -1573,18 +1572,18 @@ Link Link::parallel(int k, Framing framing) const {
             // We want the Seifert framing, and the writhe is negative.
             // Insert the requisite number of positive twists
             // before closing off the k parallel link components.
-            for (i = 0; i < (-writhe) * k; ++i) {
-                for (j = 0; j < k - 1; ++j)
+            for (long w = 0; w < (-writhe) * k; ++w) {
+                for (int j = 0; j < k - 1; ++j)
                     ans.crossings_.push_back(tmp[j] = new Crossing(1));
 
-                for (j = 0; j < k - 2; ++j)
+                for (int j = 0; j < k - 2; ++j)
                     Link::join(tmp[j]->upper(), tmp[j + 1]->upper());
 
-                if (i == 0) {
+                if (w == 0) {
                     Link::join(
                         ans.crossings_[exitL]->strand(exitStrand),
                         tmp[0]->upper());
-                    for (j = 1; j < k; ++j)
+                    for (int j = 1; j < k; ++j)
                         Link::join(
                             ans.crossings_[exitL + j * exitDelta]->
                                 strand(exitStrand),
@@ -1592,7 +1591,7 @@ Link Link::parallel(int k, Framing framing) const {
                 } else {
                     Link::join(
                         ans.crossings_[exitL]->lower(), tmp[0]->upper());
-                    for (j = 1; j < k - 1; ++j)
+                    for (int j = 1; j < k - 1; ++j)
                         Link::join(
                             ans.crossings_[exitL + j]->lower(),
                             tmp[j - 1]->lower());
@@ -1604,7 +1603,7 @@ Link Link::parallel(int k, Framing framing) const {
                 exitL = tmp[0]->index();
             }
 
-            for (j = 0; j < k - 1; ++j)
+            for (int j = 0; j < k - 1; ++j)
                 Link::join(
                     ans.crossings_[exitL + j]->lower(),
                     ans.crossings_[startL + j * startDelta]->
@@ -1616,7 +1615,7 @@ Link Link::parallel(int k, Framing framing) const {
         }
 
         // Take note of the k new link components.
-        for (i = 0; i < k; ++i)
+        for (int i = 0; i < k; ++i)
             ans.components_.push_back(
                 ans.crossings_[startL + i * startDelta]->
                     strand(startStrand));
