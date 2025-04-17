@@ -554,6 +554,41 @@ TEST_F(LinkTest, parallel) {
     testManualCases(verifyParallel);
 }
 
+static void verifyAlexander(const TestCase& test,
+        const regina::Polynomial<regina::Integer>& expected) {
+    SCOPED_TRACE_CSTRING(test.name);
+
+    // In case we later modify this code to compute the Alexander polynomial
+    // multiple times using different algorithms, we will work with clones of
+    // the link that do not clone any already-computed properties.
+
+    EXPECT_EQ(Link(test.link, false).alexander(), expected);
+}
+
+TEST_F(LinkTest, alexander) {
+    verifyAlexander(unknot0, {1});
+    verifyAlexander(unknot1, {1});
+    verifyAlexander(unknot3, {1});
+    verifyAlexander(unknotMonster, {1});
+    // Let's not attempt this with the (enormous) Gordian unknot.
+
+    verifyAlexander(trefoilLeft, {1,-1,1});
+    verifyAlexander(trefoilRight, {1,-1,1});
+    verifyAlexander(trefoil_r1x2, {1,-1,1});
+    verifyAlexander(trefoil_r1x6, {1,-1,1});
+    verifyAlexander(figureEight, {1,-3,1});
+    verifyAlexander(figureEight_r1x2, {1,-3,1});
+
+    verifyAlexander(conway, {1});
+    verifyAlexander(kinoshitaTerasaka, {1});
+    // The Alexander polynomial of the GST knot was computed using Regina.
+    // At some point it would be good to confirm this from an external source.
+    verifyAlexander(gst, {1,-2,1,0,2,-5,2,7,-13,7,2,-5,2,0,1,-2,1});
+
+    verifyAlexander(rht_rht, {1,-2,3,-2,1});
+    verifyAlexander(rht_lht, {1,-2,3,-2,1});
+}
+
 static void verifyJones(const TestCase& test,
         const regina::Laurent<regina::Integer>& expected) {
     SCOPED_TRACE_CSTRING(test.name);

@@ -701,7 +701,7 @@ class Laurent :
 template <typename T>
 struct RingTraits<Laurent<T>> {
     inline static const Laurent<T> zero;
-    inline static const Laurent<T> one { 0 }; // x^0
+    inline static const Laurent<T> one { 0, { 1 } };
 };
 #endif // __DOXYGEN
 

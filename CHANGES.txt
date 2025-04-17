@@ -263,6 +263,7 @@ Version 7.4  [ (to be announced) ]
               effect of implementing all comparison operators, not just
               less-than (<) as before.
         Class Link:
+            - New routine alexander() and class constant alexanderVar.
             - New routine makeAlternating().
             - New routine seifertCircles().
             - New routine whiteheadDouble().
@@ -475,9 +476,12 @@ Version 7.4  [ (to be announced) ]
         Class PermSubSn<n, m>:
             - New internal type to support Perm<n>::Sm where n > m.  This
               supports array-like access only, not iteration.
-        Struct Unprotected:
-            - New C++-only type that allows in-built safety checks to be
-              disabled in some specific circumstances.
+        Class Polynomial<T>:
+            - New routine shift().
+            - Python now has new bindings PolynomialInt and PolynomialRational
+              to represent the C++ types Polynomial<Integer> and
+              Polynomial<Rational> respectively.  The old Python class name
+              Polynomial has been kept as an alias for PolynomialRational.
         Class Rational:
             - New function str().
             - Added a spaceship operator (<=>) for comparisons.
@@ -711,6 +715,9 @@ Version 7.4  [ (to be announced) ]
               throw an exception when called on an empty triangulation.
             - Routine simplifyExhaustive() now ensures that any change to the
               triangulation happens on the calling thread.
+        Struct Unprotected:
+            - New C++-only type that allows in-built safety checks to be
+              disabled in some specific circumstances.
         Class Vector<T>:
             - Added a copy constructor that takes a vector whose elements are
               of a different type.

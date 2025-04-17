@@ -39,8 +39,10 @@ Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.
 
 Python:
-    In Python, the class Polynomial refers to the specific template
-    class Polynomial<Rational>.)doc";
+    The C++ types Polynomial<Integer> and Polynomial<Rational> are
+    available using the Python names PolynomialInt and
+    PolynomialRational respectively. The alias Polynomial is also
+    provided for the type Polynomial<Rational>.)doc";
 
 // Docstring regina::python::doc::__add
 static const char *__add =
@@ -629,7 +631,7 @@ Returns:
     the leading coefficient of this polynomial.)doc";
 
 // Docstring regina::python::doc::Polynomial_::negate
-static const char *negate = R"doc(Negates this polynomial. This field element is changed directly.)doc";
+static const char *negate = R"doc(Negates this polynomial. This polynomial is changed directly.)doc";
 
 // Docstring regina::python::doc::Polynomial_::set
 static const char *set =
@@ -653,6 +655,18 @@ Parameter ``exp``:
 
 Parameter ``value``:
     the new value of this coefficient.)doc";
+
+// Docstring regina::python::doc::Polynomial_::shift
+static const char *shift =
+R"doc(Multiplies this polynomial by ``x^s`` for some integer *s*. This
+polynomial is changed directly.
+
+If *s* is negative and this polynomial has lower-degree terms of the
+form ``x^k`` where ``k < |s|``, then these lower-degree terms will
+simply disappear.
+
+Parameter ``s``:
+    the power of *x* to multiply by.)doc";
 
 // Docstring regina::python::doc::Polynomial_::str
 static const char *str =

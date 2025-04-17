@@ -210,7 +210,7 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
     loopPoly.set(4, -1);
     loopPoly.shift(-2);
 
-    Laurent<Integer> loopPow(0); // Initialises to x^0 == 1.
+    Laurent<Integer> loopPow = RingTraits<Laurent<Integer>>::one;
     for (loops = 0; loops < maxLoops; ++loops) {
         // std::cerr << "count[" << loops << "] = " << count[loops] << std::endl;
         if (! count[loops].isZero()) {
@@ -324,7 +324,7 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
             std::fill(k.begin(), k.end(), -2);
 
             partial[index]->emplace(std::move(k),
-                Laurent<Integer>(0) /* x^0 = 1 */);
+                RingTraits<Laurent<Integer>>::one);
         } else if (bag->niceType() == NiceType::Introduce) {
             // Introduce bag.
             child = bag->children();

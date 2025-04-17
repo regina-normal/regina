@@ -55,8 +55,8 @@ namespace regina {
  * In particular, it must:
  *
  * - support basic arithmetic operations;
- * - support assignments of the form `x = int` and
- *   tests of the form `x == int` and `x < int`;
+ * - support construction of the form `x(int)`, assignments of the form
+ *   `x = int`, and tests of the form `x == int` and `x < int`;
  * - have a default constructor that assigns an explicit value of zero.
  *
  * This means that Regina's numerical types such as Integer and Rational
@@ -70,8 +70,10 @@ namespace regina {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \python In Python, the class Polynomial refers to the specific
- * template class Polynomial<Rational>.
+ * \python The C++ types Polynomial<Integer> and Polynomial<Rational>
+ * are available using the Python names PolynomialInt and PolynomialRational
+ * respectively.  The alias Polynomial is also provided for the type
+ * Polynomial<Rational>.
  *
  * \ingroup maths
  */
@@ -381,9 +383,21 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
 
         /**
          * Negates this polynomial.
-         * This field element is changed directly.
+         * This polynomial is changed directly.
          */
         void negate();
+
+        /**
+         * Multiplies this polynomial by `x^s` for some integer \a s.
+         * This polynomial is changed directly.
+         *
+         * If \a s is negative and this polynomial has lower-degree terms
+         * of the form `x^k` where `k < |s|`, then these lower-degree terms
+         * will simply disappear.
+         *
+         * \param s the power of \a x to multiply by.
+         */
+        void shift(long s);
 
         /**
          * Multiplies this polynomial by the given constant.
@@ -642,7 +656,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
 template <typename T>
 struct RingTraits<Polynomial<T>> {
     inline static const Polynomial<T> zero;
-    inline static const Polynomial<T> one { 0 }; // x^0
+    inline static const Polynomial<T> one { 1 };
 };
 #endif // __DOXYGEN
 
@@ -1097,6 +1111,29 @@ inline void Polynomial<T>::negate() {
     for (size_t i = 0; i <= degree_; ++i)
         if (coeff_[i] != 0)
             coeff_[i] = - coeff_[i];
+}
+
+template <typename T>
+void Polynomial<T>::shift(long s) {
+    if (isZero())
+        return;
+
+    if (s > 0) {
+        T* c = new T[degree_ + s + 1]; // all initialised to zero
+        std::move(coeff_, coeff_ + degree_ + 1, c + s);
+        delete[] coeff_;
+        coeff_ = c;
+        degree_ += s;
+    } else if (s < 0) {
+        if (degree_ < -s) {
+            // The leading term does not survive.
+            init();
+        } else {
+            // The leading term does survive.
+            std::move(coeff_ - s, coeff_ + degree_ + 1, coeff_);
+            degree_ += s;
+        }
+    }
 }
 
 template <typename T>

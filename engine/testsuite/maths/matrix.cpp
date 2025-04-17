@@ -52,12 +52,16 @@ TEST(MatrixTest, determinant) {
 
     using L = Laurent<Integer>;
     using L2 = Laurent2<Integer>;
+    using P = Polynomial<Integer>;
 
     EXPECT_EQ(Matrix<Integer>(2).det(), 0);
     EXPECT_EQ(Matrix<Rational>(2).det(), 0);
     EXPECT_EQ(Matrix<Laurent<Integer>>(2).det(), Laurent<Integer>());
     EXPECT_EQ(Matrix<Laurent2<Integer>>(2).det(), Laurent2<Integer>());
     EXPECT_EQ(Matrix<Polynomial<Integer>>(2).det(), Polynomial<Integer>());
+
+    // [ 1, 2, -3, 4 ] -> 10
+    EXPECT_EQ(Matrix<Integer>({ { 1, 2 }, { -3, 4 } }).det(), 10);
 
     // [ 1, 1/4 | 2, -1 ] -> -3/2
     EXPECT_EQ(Matrix<Rational>({ { 1, {1,4} }, { 2, -1 } }).det(),
@@ -71,5 +75,14 @@ TEST(MatrixTest, determinant) {
             { L(0, { 1 }), L(-1, { 1, 0, 1 }) },
             { L(-1, { -1, 0, 1 }), L(0, { -1 }) }
         }).det(), L(-2, { 1, 0, -1, 0, -1 }));
+
+    // [ xy, y^-1, -y^2x, x^-1 ] -> y + xy
+    EXPECT_EQ(Matrix<L2>({
+            { L2(1, 1), L2(0, -1) },
+            { L2({ {1, 2, -1} }), L2(-1, 0) }
+        }).det(), L2({ {0, 1, 1}, {1, 1, 1} }));
+
+    // [ 1, x | -x, 1 ] -> x^2 + 1
+    EXPECT_EQ(Matrix<P>({ { {1}, {0,1} }, { {0,-1}, {1} } }).det(), P({1,0,1}));
 }
 

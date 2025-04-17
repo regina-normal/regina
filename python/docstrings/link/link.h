@@ -381,6 +381,36 @@ Exception ``InvalidArgument``:
 Parameter ``description``:
     a string that describes a knot or link.)doc";
 
+// Docstring regina::python::doc::Link_::alexander
+static const char *alexander =
+R"doc(Returns the Alexander polynomial of this knot.
+
+At present, Regina only computes Alexander polynomials for knots, not
+multiple-component links. If this link is empty or has more than one
+component, then this routine will throw an exception.
+
+To pretty-print the Alexander polynomial for human consumption, you
+can call ``Laurent::str(Link::alexanderVar)``.
+
+Bear in mind that each time a link changes, all of its polynomials
+will be deleted. Thus the reference that is returned from this routine
+should not be kept for later use. Instead, alexander() should be
+called again; this will be instantaneous if the Alexander polynomial
+has already been calculated.
+
+If this polynomial has already been computed, then the result will be
+cached and so this routine will be instantaneous (since it just
+returns the previously computed result).
+
+Precondition:
+    This link has exactly one component (i.e., it is a knot).
+
+Exception ``FailedPrecondition``:
+    This link is empty or has multiple components.
+
+Returns:
+    the Alexander polynomial of this knot.)doc";
+
 // Docstring regina::python::doc::Link_::bracket
 static const char *bracket =
 R"doc(Returns the Kauffman bracket polynomial of this link diagram.
@@ -391,7 +421,7 @@ under Reidemeister moves II and III, but not I.
 If this is the empty link, then this routine will return the zero
 polynomial.
 
-Bear in mind that each time the link changes, all of its polynomials
+Bear in mind that each time a link changes, all of its polynomials
 will be deleted. Thus the reference that is returned from this routine
 should not be kept for later use. Instead, bracket() should be called
 again; this will be instantaneous if the bracket polynomial has
@@ -2030,7 +2060,7 @@ for homflyAZ() for further details.
 To pretty-print this polynomial for human consumption, you can call
 ``Laurent2::str(Link::homflyVarX, Link::homflyVarY)``.
 
-Bear in mind that each time the link changes, all of its polynomials
+Bear in mind that each time a link changes, all of its polynomials
 will be deleted. Thus the reference that is returned from this routine
 should not be kept for later use. Instead, homfly() should be called
 again; this will be instantaneous if the HOMFLY polynomial has already
@@ -2094,7 +2124,7 @@ summary see G. Gouesbet et al., "Computer evaluation of Homfly
 polynomials by using Gauss codes, with a skein-template algorithm",
 Applied Mathematics and Computation 105 (1999), 271-289.
 
-Bear in mind that each time the link changes, all of its polynomials
+Bear in mind that each time a link changes, all of its polynomials
 will be deleted. Thus the reference that is returned from this routine
 should not be kept for later use. Instead, homflyAZ() should be called
 again; this will be instantaneous if the HOMFLY polynomial has already
@@ -2189,7 +2219,7 @@ summary see G. Gouesbet et al., "Computer evaluation of Homfly
 polynomials by using Gauss codes, with a skein-template algorithm",
 Applied Mathematics and Computation 105 (1999), 271-289.
 
-Bear in mind that each time the link changes, all of its polynomials
+Bear in mind that each time a link changes, all of its polynomials
 will be deleted. Thus the reference that is returned from this routine
 should not be kept for later use. Instead, homflyLM() should be called
 again; this will be instantaneous if the HOMFLY polynomial has already
@@ -2478,7 +2508,7 @@ polynomial returned by this routine and replace the variable *x*
 To pretty-print this polynomial for human consumption, you can call
 ``Laurent::str(Link::jonesVar)``.
 
-Bear in mind that each time the link changes, all of its polynomials
+Bear in mind that each time a link changes, all of its polynomials
 will be deleted. Thus the reference that is returned from this routine
 should not be kept for later use. Instead, jones() should be called
 again; this will be instantaneous if the Jones polynomial has already
@@ -2562,6 +2592,21 @@ Parameter ``allowReversal``:
 Returns:
     the signature for this link diagram.)doc";
 
+// Docstring regina::python::doc::Link_::knowsAlexander
+static const char *knowsAlexander =
+R"doc(Is the Alexander polynomial of this knot already known? See
+alexander() for further details.
+
+If this property is already known, future calls to alexander() will be
+very fast (simply returning the precalculated value).
+
+At present, Regina only computes Alexander polynomials for knots. If
+this link is empty or has multiple components, this routine is safe to
+call, and will simply return ``False``.
+
+Returns:
+    ``True`` if and only if this property is already known.)doc";
+
 // Docstring regina::python::doc::Link_::knowsBracket
 static const char *knowsBracket =
 R"doc(Is the Kauffman bracket polynomial of this link diagram already known?
@@ -2575,8 +2620,8 @@ Returns:
 
 // Docstring regina::python::doc::Link_::knowsHomfly
 static const char *knowsHomfly =
-R"doc(Is the HOMFLY polynomial of this link diagram already known? See
-homflyAZ() and homflyLM() for further details.
+R"doc(Is the HOMFLY polynomial of this link already known? See homflyAZ()
+and homflyLM() for further details.
 
 If this property is already known, future calls to homfly(),
 homflyAZ() and homflyLM() will all be very fast (simply returning the
@@ -2587,8 +2632,8 @@ Returns:
 
 // Docstring regina::python::doc::Link_::knowsJones
 static const char *knowsJones =
-R"doc(Is the Jones polynomial of this link diagram already known? See
-jones() for further details.
+R"doc(Is the Jones polynomial of this link already known? See jones() for
+further details.
 
 If this property is already known, future calls to jones() will be
 very fast (simply returning the precalculated value).
@@ -4243,11 +4288,14 @@ Parameter ``td``:
 static const char *whiteheadDouble =
 R"doc(Returns the untwisted positive Whitehead double of this knot.
 
-This routine works only with knots, not multiple-component links. It
-creates a new link by (i) creating two parallel copies of the original
-knot using the Seifert framing, and then (ii) cutting open these two
-copies and re-connecting them using a clasp with two positive
-crossings.
+This routine works only with knots, not multiple-component links. If
+this link is empty or has more than one component, then this routine
+will throw an exception.
+
+This routine creates a new link by (i) creating two parallel copies of
+the original knot using the Seifert framing, and then (ii) cutting
+open these two copies and re-connecting them using a clasp with two
+positive crossings.
 
 The two parallel copies of the original link will be oriented as
 follows: when following the orientation of the original knot, the left

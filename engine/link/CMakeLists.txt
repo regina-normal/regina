@@ -2,6 +2,7 @@
 
 # Files to compile
 SET ( FILES
+  alexander.cpp
   algebra.cpp
   dt.cpp
   examplelink.cpp

@@ -1530,6 +1530,8 @@
 		05BDA5842CB6648D006F4738 /* spatiallinkui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5832CB6648D006F4738 /* spatiallinkui.cpp */; };
 		05BDA5852CB664BE006F4738 /* spatiallinkui.h in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5822CB6648D006F4738 /* spatiallinkui.h */; };
 		05BF6FD02DB0001D0093D7A2 /* matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BF6FCF2DB0001D0093D7A2 /* matrix.cpp */; };
+		05BF6FD22DB0116A0093D7A2 /* alexander.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BF6FD12DB0116A0093D7A2 /* alexander.cpp */; };
+		05BF6FD32DB0116A0093D7A2 /* alexander.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BF6FD12DB0116A0093D7A2 /* alexander.cpp */; };
 		05C1BE981DCA7C77007C946B /* boundarycomponent-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C1BE961DCA7C77007C946B /* boundarycomponent-impl.h */; };
 		05C1BE991DCA7C77007C946B /* skeleton-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C1BE971DCA7C77007C946B /* skeleton-impl.h */; };
 		05C1BEAA1DCA7CA9007C946B /* boundary2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C1BE9B1DCA7CA9007C946B /* boundary2.cpp */; };
@@ -4206,6 +4208,7 @@
 		05BEB0BF19CCE0B0006AB2C8 /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+Toast.h"; path = "Toast/UIView+Toast.h"; sourceTree = "<group>"; };
 		05BEB0C019CCE0B0006AB2C8 /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+Toast.m"; path = "Toast/UIView+Toast.m"; sourceTree = "<group>"; };
 		05BF6FCF2DB0001D0093D7A2 /* matrix.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = matrix.cpp; sourceTree = "<group>"; };
+		05BF6FD12DB0116A0093D7A2 /* alexander.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = alexander.cpp; sourceTree = "<group>"; };
 		05C0643D1C55921E006E6483 /* HyperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HyperViewController.h; sourceTree = "<group>"; };
 		05C0643E1C55921E006E6483 /* HyperViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HyperViewController.mm; sourceTree = "<group>"; };
 		05C064421C55925B006E6483 /* HyperCompat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HyperCompat.h; sourceTree = "<group>"; };
@@ -7851,6 +7854,7 @@
 			isa = PBXGroup;
 			children = (
 				05721ED01F97153C00A83FFC /* CMakeLists.txt */,
+				05BF6FD12DB0116A0093D7A2 /* alexander.cpp */,
 				0568742020C5D868001C435B /* algebra.cpp */,
 				05721ECF1F97153C00A83FFC /* data-impl.h */,
 				05F2033120A17C1E00FC74ED /* dt-impl.h */,
@@ -9816,6 +9820,7 @@
 				0553FB3B2AEBE74B00BE89A7 /* orientable.cpp in Sources */,
 				0553FB512AEBE7CD00BE89A7 /* abelian_group.cpp in Sources */,
 				0553FB7F2AEBE7F700BE89A7 /* triangulations.cpp in Sources */,
+				05BF6FD22DB0116A0093D7A2 /* alexander.cpp in Sources */,
 				0553FAA32AEBE3B500BE89A7 /* subdivide.cpp in Sources */,
 				0553FB2B2AEBE73A00BE89A7 /* spiralsolidtorus.cpp in Sources */,
 				0553FADB2AEBE6B500BE89A7 /* gluingperms6.cpp in Sources */,
@@ -10581,6 +10586,7 @@
 				0512E09C26DF354500DDB222 /* triangles.cpp in Sources */,
 				05C265B4282C948700232420 /* facetpairing2.cpp in Sources */,
 				05F0A03E1DBF0B5E00117BFC /* homology.cpp in Sources */,
+				05BF6FD32DB0116A0093D7A2 /* alexander.cpp in Sources */,
 				05FEA07A19C1890900A31924 /* examplesnappea.cpp in Sources */,
 				05772EC0270CF98F00D26D8A /* xmlsnappeawriter.cpp in Sources */,
 				05B7FF9225AC22AA003BAF5C /* face_lattice.cpp in Sources */,

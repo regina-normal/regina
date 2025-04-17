@@ -660,6 +660,10 @@ class Link :
                  crossings, then it is represented in this array by a
                  null reference. */
 
+        mutable std::optional<Polynomial<Integer>> alexander_;
+            /**< The Alexander polynomial of the link.
+                 This is std::nullopt if it has not yet been computed,
+                 or if this link does not have exactly one component. */
         mutable std::optional<Laurent<Integer>> jones_;
             /**< The Jones polynomial of the link.
                  This is std::nullopt if it has not yet been computed. */
@@ -683,6 +687,16 @@ class Link :
                  This is std::nullopt if it has not yet been computed. */
 
     public:
+        /**
+         * The name of the variable used in the Alexander polynomial, as
+         * returned by alexander().  This is provided to help with
+         * pretty-printing Alexander polynomials for human consumption.
+         *
+         * To pretty-print the Alexander polynomial for human consumption,
+         * you can call `Laurent::str(Link::alexanderVar)`.
+         */
+        static constexpr const char* alexanderVar = "t";
+
         /**
          * The name of the variable used in the Jones polynomial, as returned
          * by jones().  This is provided to help with pretty-printing
@@ -2892,9 +2906,12 @@ class Link :
          * Returns the untwisted positive Whitehead double of this knot.
          *
          * This routine works only with knots, not multiple-component links.
-         * It creates a new link by (i) creating two parallel copies of the
-         * original knot using the Seifert framing, and then (ii) cutting open
-         * these two copies and re-connecting them using a clasp with
+         * If this link is empty or has more than one component, then this
+         * routine will throw an exception.
+         *
+         * This routine creates a new link by (i) creating two parallel copies
+         * of the original knot using the Seifert framing, and then (ii) cutting
+         * open these two copies and re-connecting them using a clasp with
          * two positive crossings.
          *
          * The two parallel copies of the original link will be oriented as
@@ -2935,6 +2952,49 @@ class Link :
         Link parallel(int k, Framing framing = Framing::Seifert) const;
 
         /**
+         * Returns the Alexander polynomial of this knot.
+         *
+         * At present, Regina only computes Alexander polynomials for knots,
+         * not multiple-component links.  If this link is empty or has more
+         * than one component, then this routine will throw an exception.
+         *
+         * To pretty-print the Alexander polynomial for human consumption, you
+         * can call `Polynomial::str(Link::alexanderVar)`.
+         *
+         * Bear in mind that each time a link changes, all of its
+         * polynomials will be deleted.  Thus the reference that is returned
+         * from this routine should not be kept for later use.  Instead,
+         * alexander() should be called again; this will be instantaneous if
+         * the Alexander polynomial has already been calculated.
+         *
+         * If this polynomial has already been computed, then the result will
+         * be cached and so this routine will be instantaneous (since it just
+         * returns the previously computed result).
+         *
+         * \pre This link has exactly one component (i.e., it is a knot).
+         *
+         * \exception FailedPrecondition This link is empty or has multiple
+         * components.
+         *
+         * \return the Alexander polynomial of this knot.
+         */
+        const Polynomial<Integer>& alexander() const;
+        /**
+         * Is the Alexander polynomial of this knot already known?
+         * See alexander() for further details.
+         *
+         * If this property is already known, future calls to alexander() will
+         * be very fast (simply returning the precalculated value).
+         *
+         * At present, Regina only computes Alexander polynomials for knots.
+         * If this link is empty or has multiple components, this routine is
+         * safe to call, and will simply return \c false.
+         *
+         * \return \c true if and only if this property is already known.
+         */
+        bool knowsAlexander() const;
+
+        /**
          * Returns the Kauffman bracket polynomial of this link diagram.
          *
          * Note that the bracket polynomial is not an invariant - it is
@@ -2943,7 +3003,7 @@ class Link :
          * If this is the empty link, then this routine will return the zero
          * polynomial.
          *
-         * Bear in mind that each time the link changes, all of its
+         * Bear in mind that each time a link changes, all of its
          * polynomials will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
          * Instead, bracket() should be called again; this will be
@@ -3033,7 +3093,7 @@ class Link :
          * To pretty-print this polynomial for human consumption, you can
          * call `Laurent::str(Link::jonesVar)`.
          *
-         * Bear in mind that each time the link changes, all of its
+         * Bear in mind that each time a link changes, all of its
          * polynomials will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
          * Instead, jones() should be called again; this will be
@@ -3082,7 +3142,7 @@ class Link :
         const Laurent<Integer>& jones(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
-         * Is the Jones polynomial of this link diagram already known?
+         * Is the Jones polynomial of this link already known?
          * See jones() for further details.
          *
          * If this property is already known, future calls to jones() will be
@@ -3123,7 +3183,7 @@ class Link :
          * polynomials by using Gauss codes, with a skein-template algorithm",
          * Applied Mathematics and Computation 105 (1999), 271-289.
          *
-         * Bear in mind that each time the link changes, all of its
+         * Bear in mind that each time a link changes, all of its
          * polynomials will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
          * Instead, homflyAZ() should be called again; this will be
@@ -3193,7 +3253,7 @@ class Link :
          * polynomials by using Gauss codes, with a skein-template algorithm",
          * Applied Mathematics and Computation 105 (1999), 271-289.
          *
-         * Bear in mind that each time the link changes, all of its
+         * Bear in mind that each time a link changes, all of its
          * polynomials will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
          * Instead, homflyLM() should be called again; this will be
@@ -3244,7 +3304,7 @@ class Link :
          * To pretty-print this polynomial for human consumption, you can call
          * `Laurent2::str(Link::homflyVarX, Link::homflyVarY)`.
          *
-         * Bear in mind that each time the link changes, all of its
+         * Bear in mind that each time a link changes, all of its
          * polynomials will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
          * Instead, homfly() should be called again; this will be
@@ -3274,7 +3334,7 @@ class Link :
         const Laurent2<Integer>& homfly(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
-         * Is the HOMFLY polynomial of this link diagram already known?
+         * Is the HOMFLY polynomial of this link already known?
          * See homflyAZ() and homflyLM() for further details.
          *
          * If this property is already known, future calls to homfly(),
@@ -5696,6 +5756,7 @@ namespace regina {
 
 inline void Link::clearAllProperties() {
     if (! topologyLocked()) {
+        alexander_.reset();
         jones_.reset();
         homflyAZ_.reset();
         homflyLM_.reset();
@@ -5913,6 +5974,9 @@ inline const Laurent2<Integer>& Link::homfly(Algorithm alg,
 
 inline bool Link::knowsBracket() const {
     return bracket_.has_value();
+}
+inline bool Link::knowsAlexander() const {
+    return alexander_.has_value();
 }
 inline bool Link::knowsJones() const {
     return jones_.has_value();

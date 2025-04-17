@@ -61,6 +61,7 @@ Link::Link(const Link& cloneMe, bool cloneProps) {
         return;
 
     // Clone properties:
+    alexander_ = cloneMe.alexander_;
     jones_ = cloneMe.jones_;
     homflyAZ_ = cloneMe.homflyAZ_;
     homflyLM_ = cloneMe.homflyLM_;
@@ -70,6 +71,7 @@ Link::Link(const Link& cloneMe, bool cloneProps) {
 
 Link::Link(Link&& src) noexcept :
         components_(std::move(src.components_)),
+        alexander_(std::move(src.alexander_)),
         jones_(std::move(src.jones_)),
         homflyLM_(std::move(src.homflyLM_)),
         homflyAZ_(std::move(src.homflyAZ_)),
@@ -115,6 +117,7 @@ Link& Link::operator = (const Link& src) {
     // Do not touch TopologyLockable members.  (See TopologyLockable for why.)
 
     // Clone properties:
+    alexander_ = src.alexander_;
     jones_ = src.jones_;
     homflyAZ_ = src.homflyAZ_;
     homflyLM_ = src.homflyLM_;
@@ -167,6 +170,7 @@ Link& Link::operator = (Link&& src) {
 
     // Do not touch TopologyLockable members.  (See TopologyLockable for why.)
 
+    alexander_ = std::move(src.alexander_);
     jones_ = std::move(src.jones_);
     homflyLM_ = std::move(src.homflyLM_);
     homflyAZ_ = std::move(src.homflyAZ_);
@@ -702,6 +706,7 @@ void Link::swap(Link& other) {
     components_.swap(other.components_);
 
     // Swap properties:
+    alexander_.swap(other.alexander_);
     jones_.swap(other.jones_);
     homflyAZ_.swap(other.homflyAZ_);
     homflyLM_.swap(other.homflyLM_);

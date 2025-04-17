@@ -15,69 +15,29 @@ namespace regina::python::doc {
 static const char *Matrix =
 R"doc(Represents a matrix of elements of the given type *T*.
 
-As of Regina 5.96, the old subclasses of Matrix have now been merged
-into a single Matrix class. The additional member functions that the
-old subclasses MatrixRing and MatrixIntDomain used to provide are now
-part of Matrix, and are enabled or disabled according to the Matrix
-template parameters.
+As of Regina 7.4, the extra boolean *ring* template parameter is gone;
+instead the relevant functions are only enabled in scenarios where *T*
+is a ring type (in particular, when the specialisation
+``RingTraits<T>`` is available). Nowadays you should always just use
+the type ``Matrix<T>``.
 
-It is generally safe to just use the type Matrix<T>, since the
-``ring`` argument has a sensible default. At present, ``ring``
-defaults to ``True`` (thereby enabling member functions designed for
-matrices over rings) when *T* is one of the following types:
-
-* native C++ integer types (i.e., where std::is_integral_v<T> is
-  ``True`` and *T* is not bool);
-
-* native C++ floating-point types (i.e., where
-  std::is_floating_point_v<T> is ``True``); or
-
-* Regina's own types Integer, LargeInteger, NativeInteger<...>, and
-  Rational.
-
-Other types may be added to this list in future versions of Regina.
-
-There are several requirements for the underlying type *T*. For all
-matrix types:
-
-* *T* must have a default constructor and an assignment operator.
-
-* An element *t* of type *T* must be writable to an output stream
-  using the standard stream operator ``<<``.
-
-If *ring* is ``True``, then in addition to this:
-
-* *T* must support binary operators ``+``, ``-`` and ``*``, and unary
-  operators ``+=``, ``-=`` and ``*=``.
-
-* *T* must be able to be constructed or assigned to from the integers
-  0 and 1 (representing the additive and multiplicative identities in
-  the ring respectively). Likewise, *T* must be able to be tested for
-  equality or inequality against 0 or 1 also.
-
-In particular, all of Regina's integer and rational types (Integer,
-LargeInteger, NativeInteger<...> and Rational) satisfy all of these
-requirements, and will set *ring* to ``True`` by default.
-
-The header maths/matrixops.h contains several other algorithms that
-work with the specific class Matrix<Integer>.
+The header maths/matrixops.h contains several additional algorithms
+that work with the specific class Matrix<Integer>.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.
 
 Python:
-    Only the specific types Matrix<Integer>, Matrix<bool> and
-    Matrix<double> are available, under the names MatrixInt,
-    MatrixBool and MatrixReal respectively.
+    The C++ types Matrix<Integer>, Matrix<bool> and Matrix<double> are
+    available using the Python names MatrixInt, MatrixBool and
+    MatrixReal respectively.
 
 Template parameter ``T``:
-    the type of each individual matrix element.
-
-Template parameter ``ring``:
-    ``True`` if we should enable member functions that only work when
-    T represents an element of a ring. This has a sensible default;
-    see above in the class documentation for details.)doc";
+    the type of each individual matrix element. This type should have
+    a default constructor and an assignment operator, and should be
+    writeable to an output stream using the standard stream operator
+    ``<<``.)doc";
 
 namespace Matrix_ {
 
@@ -197,7 +157,10 @@ the type obtained by multiplying objects of types *T* and *U* using
 the binary multiplication operator).
 
 Precondition:
-    The template argument *ring* is ``True``.
+    The element type *E* for the matrix that is returned is a ring
+    type; in particular, the specialisation ``RingTraits<E>`` is
+    available. (In many cases, *E* will just be the matrix element
+    type *T*.)
 
 Precondition:
     The number of columns in this matrix equals the number of rows in
@@ -222,7 +185,10 @@ obtained by multiplying objects of types *T* and *U* using the binary
 multiplication operator).
 
 Precondition:
-    The template argument *ring* is ``True``.
+    The element type *E* for the vector that is returned is a ring
+    type; in particular, the specialisation ``RingTraits<E>`` is
+    available. (In many cases, *E* will just be the matrix element
+    type *T*.)
 
 Precondition:
     The length of the given vector is precisely the number of columns
@@ -247,7 +213,8 @@ R"doc(Adds the given source column to the given destination column.
     you will need to call addColFrom().
 
 Precondition:
-    The template argument *ring* is ``True``.
+    *T* is a ring type; in particular, the specialisation
+    ``RingTraits<T>`` is available.
 
 Precondition:
     The two given columns are distinct and between 0 and columns()-1
@@ -272,7 +239,8 @@ only be performed for the elements from that row down to the bottom of
 the column (inclusive).
 
 Precondition:
-    The template argument *ring* is ``True``.
+    *T* is a ring type; in particular, the specialisation
+    ``RingTraits<T>`` is available.
 
 Precondition:
     The two given columns are distinct and between 0 and columns()-1
@@ -304,7 +272,8 @@ performed for the elements from the row *fromRow* down to the bottom
 of the column (inclusive).
 
 Precondition:
-    The template argument *ring* is ``True``.
+    *T* is a ring type; in particular, the specialisation
+    ``RingTraits<T>`` is available.
 
 Precondition:
     The two given columns are distinct and between 0 and columns()-1
@@ -328,7 +297,8 @@ static const char *addRow =
 R"doc(Adds the given source row to the given destination row.
 
 Precondition:
-    The template argument *ring* is ``True``.
+    *T* is a ring type; in particular, the specialisation
+    ``RingTraits<T>`` is available.
 
 Precondition:
     The two given rows are distinct and between 0 and rows()-1
@@ -360,7 +330,8 @@ only be performed for the elements from that column to the rightmost
 end of the row (inclusive).
 
 Precondition:
-    The template argument *ring* is ``True``.
+    *T* is a ring type; in particular, the specialisation
+    ``RingTraits<T>`` is available.
 
 Precondition:
     The two given rows are distinct and between 0 and rows()-1
@@ -391,7 +362,8 @@ performed for the elements from the column *fromCol* to the rightmost
 end of the row (inclusive).
 
 Precondition:
-    The template argument *ring* is ``True``.
+    *T* is a ring type; in particular, the specialisation
+    ``RingTraits<T>`` is available.
 
 Precondition:
     The two given rows are distinct and between 0 and rows()-1
@@ -468,7 +440,8 @@ only be performed for the elements from that column down to the bottom
 of each column (inclusive).
 
 Precondition:
-    The template argument *ring* is ``True``.
+    *T* is a ring type; in particular, the specialisation
+    ``RingTraits<T>`` is available.
 
 Precondition:
     The two given columns are distinct and between 0 and columns()-1
@@ -522,7 +495,8 @@ only be performed for the elements from that column to the rightmost
 end of each row (inclusive).
 
 Precondition:
-    The template argument *ring* is ``True``.
+    *T* is a ring type; in particular, the specialisation
+    ``RingTraits<T>`` is available.
 
 Precondition:
     The two given rows are distinct and between 0 and rows()-1
@@ -567,7 +541,8 @@ this _is_ found to be a 0-by-0 matrix then the determinant returned
 will be 1.
 
 Precondition:
-    The template argument *ring* is ``True``.
+    *T* is a ring type; in particular, the specialisation
+    ``RingTraits<T>`` is available.
 
 Precondition:
     This is a square matrix.
@@ -738,7 +713,8 @@ R"doc(Returns an identity matrix of the given size. The matrix returned will
 have *size* rows and *size* columns.
 
 Precondition:
-    The template argument *ring* is ``True``.
+    *T* is a ring type; in particular, the specialisation
+    ``RingTraits<T>`` is available.
 
 Parameter ``size``:
     the number of rows and columns of the matrix to build.
@@ -786,7 +762,8 @@ If this matrix is not square, isIdentity() will always return
 ``False`` (even if makeIdentity() was called earlier).
 
 Precondition:
-    The template argument *ring* is ``True``.
+    *T* is a ring type; in particular, the specialisation
+    ``RingTraits<T>`` is available.
 
 Returns:
     ``True`` if and only if this is a square identity matrix.)doc";
@@ -796,7 +773,8 @@ static const char *isZero =
 R"doc(Determines whether this is the zero matrix.
 
 Precondition:
-    The template argument *ring* is ``True``.
+    *T* is a ring type; in particular, the specialisation
+    ``RingTraits<T>`` is available.
 
 Returns:
     ``True`` if and only if all entries in the matrix are zero.)doc";
@@ -808,7 +786,8 @@ square; after this routine it will have ``entry(r,c)`` equal to 1 if
 ``r == c`` and 0 otherwise.
 
 Precondition:
-    The template argument *ring* is ``True``.)doc";
+    *T* is a ring type; in particular, the specialisation
+    ``RingTraits<T>`` is available.)doc";
 
 // Docstring regina::python::doc::Matrix_::multCol
 static const char *multCol =
@@ -822,7 +801,8 @@ only be performed for the elements from that row down to the bottom of
 the column (inclusive).
 
 Precondition:
-    The template argument *ring* is ``True``.
+    *T* is a ring type; in particular, the specialisation
+    ``RingTraits<T>`` is available.
 
 Precondition:
     The given column is between 0 and columns()-1 inclusive.
@@ -852,7 +832,8 @@ only be performed for the elements from that column to the rightmost
 end of the row (inclusive).
 
 Precondition:
-    The template argument *ring* is ``True``.
+    *T* is a ring type; in particular, the specialisation
+    ``RingTraits<T>`` is available.
 
 Precondition:
     The given row is between 0 and rows()-1 inclusive.

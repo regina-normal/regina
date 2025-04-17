@@ -243,6 +243,9 @@ void addLink(pybind11::module_& m) {
         .def("connected", &Link::connected, rdoc::connected)
         .def("diagramComponents", &Link::diagramComponents,
             rdoc::diagramComponents)
+        .def("alexander", &Link::alexander,
+            pybind11::return_value_policy::reference_internal,
+            rdoc::alexander)
         .def("bracket", &Link::bracket,
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("alg") = regina::Algorithm::Default,
@@ -273,6 +276,7 @@ void addLink(pybind11::module_& m) {
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::homflyLM)
+        .def("knowsAlexander", &Link::knowsAlexander, rdoc::knowsAlexander)
         .def("knowsBracket", &Link::knowsBracket, rdoc::knowsBracket)
         .def("knowsJones", &Link::knowsJones, rdoc::knowsJones)
         .def("knowsHomfly", &Link::knowsHomfly, rdoc::knowsHomfly)
@@ -413,6 +417,7 @@ void addLink(pybind11::module_& m) {
             pybind11::arg(),
             pybind11::arg("positive") = true,
             rdoc::insertTorusLink)
+        .def_readonly_static("alexanderVar", Link::alexanderVar)
         .def_readonly_static("jonesVar", Link::jonesVar)
         .def_readonly_static("homflyVarX", Link::homflyVarX)
         .def_readonly_static("homflyVarY", Link::homflyVarY)

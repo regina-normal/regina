@@ -68,9 +68,9 @@ template <class> class Vector;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \python Only the specific types Matrix<Integer>, Matrix<bool> and
- * Matrix<double> are available, under the names MatrixInt, MatrixBool and
- * MatrixReal respectively.
+ * \python The C++ types Matrix<Integer>, Matrix<bool> and Matrix<double>
+ * are available using the Python names MatrixInt, MatrixBool and MatrixReal
+ * respectively.
  *
  * \tparam T the type of each individual matrix element.  This type should
  * have a default constructor and an assignment operator, and should be
