@@ -115,13 +115,20 @@ class Laurent2 :
         Laurent2() = default;
 
         /**
-         * Creates the polynomial `x^d y^e` for the given exponents
-         * \a d and \a e.
+         * Deprecated constructor that creates the polynomial `x^d y^e` for
+         * the given exponents \a d and \a e.
+         *
+         * \deprecated This will be removed in a future version of Regina
+         * for consistency with the single-variable polynomial classes
+         * Laurent and Polynomial, since for those classes it is too easy for
+         * a casual reader to misread what such an "exponent-based constructor"
+         * actually does.  You can still create `x^d y^e` by calling
+         * `initExp(d, e)` instead.
          *
          * \param xExp the exponent \a d, which is attached to \a x.
          * \param yExp the exponent \a e, which is attached to \a y.
          */
-        explicit Laurent2(long xExp, long yExp);
+        [[deprecated]] explicit Laurent2(long xExp, long yExp);
 
         /**
          * Creates a new copy of the given polynomial.
@@ -254,7 +261,21 @@ class Laurent2 :
          * \param xExp the new exponent \a d, which is attached to \a x.
          * \param yExp the new exponent \a e, which is attached to \a y.
          */
-        void init(long xExp, long yExp);
+        void initExp(long xExp, long yExp);
+
+        /**
+         * Deprecated function that sets this to become the polynomial `x^d y^e`
+         * for the given exponents \a d and \a e.
+         *
+         * \deprecated This has been renamed to initExp() for consistency with
+         * the single-variable polynomial classes Laurent and Polynomial,
+         * since for those classes it is too easy for a casual reader to
+         * misread what such an "exponent-based initialisation" actually does.
+         *
+         * \param xExp the new exponent \a d, which is attached to \a x.
+         * \param yExp the new exponent \a e, which is attached to \a y.
+         */
+        [[deprecated]] void init(long xExp, long yExp);
 
         /**
          * Returns whether this is the zero polynomial.
@@ -583,7 +604,7 @@ class Laurent2 :
 template <typename T>
 struct RingTraits<Laurent2<T>> {
     inline static const Laurent2<T> zero;
-    inline static const Laurent2<T> one { 0, 0 }; // x^0 y^0
+    inline static const Laurent2<T> one { { 0, 0, 1 } };
 };
 #endif // __DOXYGEN
 
@@ -852,9 +873,14 @@ inline void Laurent2<T>::init() {
 }
 
 template <typename T>
-inline void Laurent2<T>::init(long xExp, long yExp) {
+inline void Laurent2<T>::initExp(long xExp, long yExp) {
     coeff_.clear();
     coeff_.emplace(Exponents(xExp, yExp), 1);
+}
+
+template <typename T>
+inline void Laurent2<T>::init(long xExp, long yExp) {
+    initExp(xExp, yExp);
 }
 
 template <typename T>

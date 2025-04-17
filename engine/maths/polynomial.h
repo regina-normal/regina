@@ -104,11 +104,17 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         Polynomial();
 
         /**
-         * Creates the polynomial `x^d` for the given degree \a d.
+         * Deprecated constructor that creates the polynomial `x^d` for the
+         * given degree \a d.
+         *
+         * \deprecated This will be removed in a future version of Regina,
+         * since in casual reading of code it is too easy to misread this as
+         * creating a polynomial with only a constant term.  You can still
+         * create `x^d` by calling `initExp(d)` instead.
          *
          * \param degree the degree of the new polynomial.
          */
-        explicit Polynomial(size_t degree);
+        [[deprecated]] explicit Polynomial(size_t degree);
 
         /**
          * Creates a new copy of the given polynomial.
@@ -206,7 +212,19 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * \param degree the new degree of this polynomial.
          */
-        void init(size_t degree);
+        void initExp(size_t degree);
+
+        /**
+         * Deprecated function that sets this to become the polynomial `x^d`
+         * for the given degree \a d.
+         *
+         * \deprecated This has been renamed to initExp(), since in casual
+         * reading of code it is too easy to misread this as setting this
+         * polynomial to have only a constant term.
+         *
+         * \param degree the new degree of this polynomial.
+         */
+        [[deprecated]] void init(size_t degree);
 
         /**
          * Sets this to become the polynomial described by the given
@@ -965,11 +983,16 @@ inline void Polynomial<T>::init() {
 }
 
 template <typename T>
-inline void Polynomial<T>::init(size_t degree) {
+inline void Polynomial<T>::initExp(size_t degree) {
     delete[] coeff_;
     degree_ = degree;
     coeff_ = new T[degree + 1];
     coeff_[degree] = 1;
+}
+
+template <typename T>
+inline void Polynomial<T>::init(size_t degree) {
+    initExp(degree);
 }
 
 template <typename T>
@@ -1235,7 +1258,7 @@ Polynomial<T>& Polynomial<T>::operator /= (const Polynomial<T>& other) {
     // The code below breaks if other and *this are the same object, so
     // treat this case specially.
     if (&other == this) {
-        init(0);
+        initExp(0); // x^0 = 1
         return *this;
     }
 
@@ -1336,7 +1359,7 @@ void Polynomial<T>::gcdWithCoeffs(const Polynomial<U>& other,
         // gcd(this, 0) = this / this.leading()
         gcd = *this;
         gcd /= coeff_[degree_];
-        u.init(0);
+        u.initExp(0); // x^0 = 1
         u.coeff_[0] /= coeff_[degree_];
         v.init();
         return;
@@ -1346,7 +1369,7 @@ void Polynomial<T>::gcdWithCoeffs(const Polynomial<U>& other,
         gcd = other;
         gcd /= other[other.degree()];
         u.init();
-        v.init(0);
+        v.initExp(0); // x^0 = 1
         v.coeff_[0] /= other[other.degree()];
         return;
     }
@@ -1371,10 +1394,10 @@ void Polynomial<T>::gcdWithCoeffs(const Polynomial<U>& other,
 
     gcd = *this;
     Polynomial<T> y(other);
-    u.init(0);
+    u.initExp(0); // x^0 = 1
     v.init();
     Polynomial<T> uu;
-    Polynomial<T> vv(0);
+    Polynomial<T> vv = RingTraits<Polynomial<T>>::one;
 
     if (gcd.degree() < y.degree()) {
         gcd.swap(y);

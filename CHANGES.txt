@@ -255,6 +255,11 @@ Version 7.4  [ (to be announced) ]
         Class Laurent<T>, Laurent2<T>:
             - New routine hash(), which uses the tight encoding.
             - Added a spaceship operator (<=>) for comparisons.
+            - Deprecated the exponent-based constructors Laurent(exp) and
+              Laurent2(xExp, yExp).
+            - Renamed the exponent-based initialisers init(exp) and
+              init(xExp, yExp) to initExp(exp) and initExp(xExp, yExp).
+              The old names are kept but deprecated.
         Class LensSpace:
             - Added a spaceship operator (<=>) for aesthetic comparisons, which
               also adds comparison operators (<, <=, >, >=) to this class.
@@ -482,6 +487,9 @@ Version 7.4  [ (to be announced) ]
               to represent the C++ types Polynomial<Integer> and
               Polynomial<Rational> respectively.  The old Python class name
               Polynomial has been kept as an alias for PolynomialRational.
+            - Deprecated the exponent-based constructor Polynomial(exp).
+            - Renamed the exponent-based initialiser init(exp) to initExp(exp).
+              The old name is kept but deprecated.
         Class Rational:
             - New function str().
             - Added a spaceship operator (<=>) for comparisons.

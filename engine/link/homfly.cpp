@@ -1049,7 +1049,7 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
                 //     delta^(#components-1).
                 // Note that delta^(#components-1) will be computed later;
                 // here we just store the rest of the term in coeff[comp-1].
-                term.init(writheAdj, splices);
+                term.initExp(writheAdj, splices);
                 if (splicesNeg % 2)
                     term.negate();
 
@@ -1236,10 +1236,8 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
 
     Laurent2<Integer> ans;
 
-    Laurent2<Integer> delta(1, -1);
-    delta.set(-1, -1, -1);
-
-    Laurent2<Integer> deltaPow(0, 0); // Initialises to delta^0 == 1.
+    Laurent2<Integer> delta { { 1, -1, 1 }, { -1, -1, -1 } };
+    Laurent2<Integer> deltaPow = RingTraits<Laurent2<Integer>>::one;
     for (size_t i = 0; i < unknots; ++i)
         deltaPow *= delta;
     for (size_t i = 0; i < maxComp; ++i) {
@@ -1257,8 +1255,7 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
 Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
     // We know from the precondition that there is at least one crossing.
 
-    Laurent2<Integer> delta(1, -1);
-    delta.set(-1, -1, -1);
+    Laurent2<Integer> delta { { 1, -1, 1 }, { -1, -1, -1 } };
 
     // Build a nice tree decomposition.
     if (tracker)
@@ -1346,7 +1343,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
             }
 
             partial[index] = new SolnSet;
-            partial[index]->emplace(Key(), Laurent2<Integer>(0, 0));
+            partial[index]->emplace(Key(), RingTraits<Laurent2<Integer>>::one);
         } else if (bag->niceType() == NiceType::Introduce) {
             // Introduce bag.
             child = bag->children();
@@ -2977,11 +2974,9 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
 
         // We have an unlink with no crossings.
         // The HOMFLY polynomial is delta^(#components - 1).
-        Laurent2<Integer> delta(1, -1);
-        delta.set(-1, -1, -1);
+        Laurent2<Integer> delta { { 1, -1, 1 }, { -1, -1, -1 } };
 
-        // The following constructor initialises ans to 1.
-        Laurent2<Integer> ans(0, 0);
+        Laurent2<Integer> ans = RingTraits<Laurent2<Integer>>::one;
         for (size_t i = 1; i < components_.size(); ++i)
             ans *= delta;
 
