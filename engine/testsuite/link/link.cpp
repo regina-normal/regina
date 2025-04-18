@@ -612,8 +612,6 @@ TEST_F(LinkTest, alexander) {
 
     verifyAlexander(conway, {1});
     verifyAlexander(kinoshitaTerasaka, {1});
-    // The Alexander polynomial of the GST knot was computed using Regina.
-    // At some point it would be good to confirm this from an external source.
     verifyAlexander(gst, {1,-2,1,0,2,-5,2,7,-13,7,2,-5,2,0,1,-2,1});
 
     verifyAlexander(rht_rht, {1,-2,3,-2,1});
