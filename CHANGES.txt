@@ -268,6 +268,8 @@ Version 7.4  [ (to be announced) ]
               effect of implementing all comparison operators, not just
               less-than (<) as before.
         Class Link:
+            - Added initial support for virtual knots and links, with new
+              routine makeVirtual().
             - New routine alexander() and class constant alexanderVar.
             - New routine makeAlternating().
             - New routine seifertCircles().

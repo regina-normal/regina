@@ -1125,6 +1125,54 @@ GroupPresentation Link::group(bool simplify) const {
     return g;
 }
 
+void Link::makeVirtual(Crossing* crossing) {
+    if (! crossing)
+        return;
+
+    ChangeAndClearSpan<> span(*this);
+
+    StrandRef upper = crossing->upper();
+    StrandRef lower = crossing->lower();
+
+    // Plan how we will adjust any components that begin at the given
+    // crossing.
+    StrandRef upperBecomes, lowerBecomes;
+
+    // If upper.next() == upper, then the upper strand will become a
+    // zero-crossing unknot.
+    if (upper.next() != upper) {
+        upperBecomes = upper.next(); // Note: this _could_ be equal to lower.
+        Link::join(upper.prev(), upper.next());
+    }
+
+    if (lower.next() == lower) {
+        // lowerBecomes is already (correctly) a null reference, but we might
+        // need to adjust upperBecomes also in case the crossing had
+        // originally formed a 1-crossing unknot.
+        if (upperBecomes == lower)
+            upperBecomes = StrandRef();
+    } else {
+        lowerBecomes = lower.next(); // This will _not_ be equal to upper.
+        Link::join(lower.prev(), lower.next());
+    }
+
+    // Update any components that started at the original crossing.
+    int found = 0;
+    for (StrandRef& c : components_)
+        if (c.crossing() == crossing) {
+            if (c.strand() == 0)
+                c = lowerBecomes;
+            else
+                c = upperBecomes;
+            if (++found == 2)
+                break;
+        }
+
+    // Finally, delete the original crossing.
+    crossings_.erase(crossings_.begin() + crossing->index());
+    delete crossing;
+}
+
 std::string Link::brief() const {
     if (components_.empty())
         return std::string();

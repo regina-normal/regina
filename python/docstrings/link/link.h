@@ -2673,6 +2673,25 @@ Returns:
     ``True`` if the link diagram was changed, or *false* if it was
     already alternating to begin with.)doc";
 
+// Docstring regina::python::doc::Link_::makeVirtual
+static const char *makeVirtual =
+R"doc(Converts the given classical crossing into a virtual crossing.
+
+This has the effect of removing the crossing entirely from the link
+diagram, since Regina does not store virtual crossings explicitly. The
+incoming and outgoing upper strands will become one, and the incoming
+and outgoing lower strands will become one.
+
+This routine is safe to call if *crossing* is ``None`` (in which case
+this routine does nothing).
+
+Precondition:
+    The given crossing is either a null pointer, or else some crossing
+    in this link.
+
+Parameter ``crossing``:
+    the (classical) crossing that should be made virtual.)doc";
+
 // Docstring regina::python::doc::Link_::moveContentsTo
 static const char *moveContentsTo =
 R"doc(Moves the contents of this link into the given destination link,

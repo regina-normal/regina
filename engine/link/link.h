@@ -3459,6 +3459,30 @@ class Link :
 
         /*@}*/
         /**
+         * \name Virtual Knots and Links
+         */
+        /*@{*/
+
+        /**
+         * Converts the given classical crossing into a virtual crossing.
+         *
+         * This has the effect of removing the crossing entirely from the link
+         * diagram, since Regina does not store virtual crossings explicitly.
+         * The incoming and outgoing upper strands will become one, and the
+         * incoming and outgoing lower strands will become one.
+         *
+         * This routine is safe to call if \a crossing is \c null (in which
+         * case this routine does nothing).
+         *
+         * \pre The given crossing is either a null pointer, or else some
+         * crossing in this link.
+         *
+         * \param crossing the (classical) crossing that should be made virtual.
+         */
+        void makeVirtual(Crossing* crossing);
+
+        /*@}*/
+        /**
          * \name Exporting Links
          */
         /*@{*/

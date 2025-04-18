@@ -413,6 +413,7 @@ void addLink(pybind11::module_& m) {
             pybind11::arg("threads"),
             pybind11::arg("action"),
             rdoc::rewrite)
+        .def("makeVirtual", &Link::makeVirtual, rdoc::makeVirtual)
         .def("insertTorusLink", &Link::insertTorusLink,
             pybind11::arg(),
             pybind11::arg(),
