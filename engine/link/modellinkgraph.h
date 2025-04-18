@@ -215,7 +215,7 @@ class ModelLinkGraphArc {
         ModelLinkGraphArc next() const;
         /**
          * Returns the previous arc before this when walking through the graph
-         * as though it were a link, in a direction away from the* current node.
+         * as though it were a link, in a direction away from the current node.
          *
          * This routine will jump to the opposite arc at the current node,
          * and then move to the other endpoint of the graph edge described by
