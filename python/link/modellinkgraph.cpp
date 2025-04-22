@@ -99,6 +99,7 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("reflect", &ModelLinkGraph::reflect, rdoc::reflect)
         .def("isConnected", &ModelLinkGraph::isConnected, rdoc::isConnected)
         .def("isSimple", &ModelLinkGraph::isSimple, rdoc::isSimple)
+        .def("genus", &ModelLinkGraph::genus, rdoc::genus)
         .def("cells", &ModelLinkGraph::cells,
             pybind11::return_value_policy::reference_internal, rdoc::cells)
         .def("findFlype", &ModelLinkGraph::findFlype, rdoc::findFlype)

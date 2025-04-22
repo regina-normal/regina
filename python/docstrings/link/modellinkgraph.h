@@ -1254,6 +1254,23 @@ Parameter ``args``:
     any additional arguments that should be passed to *action*,
     following the initial link diagram argument.)doc";
 
+// Docstring regina::python::doc::ModelLinkGraph_::genus
+static const char *genus =
+R"doc(Returns the genus of the closed orientable surface in which this graph
+embeds.
+
+As described in the class notes, this surface is chosen to have the
+smallest possible genus: it is built from a collection of discs whose
+boundaries follow the nodes and arcs of this graph according to the
+local embedding.
+
+If this graph is disconnected (and therefore the surface is also
+disconnected), then this routine will return the sum of the genus over
+all components.
+
+Returns:
+    the genus of the surface in which this graph embeds.)doc";
+
 // Docstring regina::python::doc::ModelLinkGraph_::global_swap
 static const char *global_swap =
 R"doc(Swaps the contents of the two given graphs.

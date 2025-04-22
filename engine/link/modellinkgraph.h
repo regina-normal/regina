@@ -746,6 +746,23 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         bool isSimple() const;
 
         /**
+         * Returns the genus of the closed orientable surface in which this
+         * graph embeds.
+         *
+         * As described in the class notes, this surface is chosen to have the
+         * smallest possible genus: it is built from a collection of discs
+         * whose boundaries follow the nodes and arcs of this graph according
+         * to the local embedding.
+         *
+         * If this graph is disconnected (and therefore the surface is also
+         * disconnected), then this routine will return the sum of the genus
+         * over all components.
+         *
+         * \return the genus of the surface in which this graph embeds.
+         */
+        size_t genus() const;
+
+        /**
          * Identifies the smallest flype that can be performed on this
          * graph from the given starting location.
          *
@@ -1935,6 +1952,10 @@ inline bool ModelLinkGraph::isConnected() const {
     if (nComponents_ < 0)
         computeComponents();
     return nComponents_ <= 1;
+}
+
+inline size_t ModelLinkGraph::genus() const {
+    return cells().genus();
 }
 
 inline ModelLinkGraph ModelLinkGraph::flype(const ModelLinkGraphArc& from)
