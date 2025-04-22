@@ -343,10 +343,35 @@ Version 7.4  [ (to be announced) ]
             - Python now has a new binding MatrixReal to represent the
               C++ type Matrix<double>.
         Class ModelLinkGraph:
-            - New routines isSimple() and isConnected().
-            - New routine generateAnyLink().
+            - Now supports non-planar graphs (as used with virtual links), as
+              well as disconnected and/or empty graphs.
+            - New routines countComponents(), isSimple() and isConnected().
             - Routine generateMinimalLinks() now supports multiple-component
-              links.
+              links.  Moreover, it has a new precondition requiring no 1-gons
+              in the induced cell decomposition, and throws an exception if
+              this precondition fails.
+            - New routine generateAnyLink().
+            - All plantri import/export routines now support disconnected
+              and/or non-planar graphs, though they still require graphs to
+              be dual to simple quadrangulations.  The exception is
+              canonicalPlantri(), which still requires connectedness.
+            - Routines plantri() and canonicalPlantri() now throw an exception
+              if the graph is empty.
+            - New routines extendedPlantri() and fromExtendedPlantri(), which
+              are better-suited than the plantri format for non-planar graphs.
+            - The flype-related routines no longer require the graph to be
+              connected.
+        Class ModelLinkGraphCells:
+            - Now supports non-planar graphs (as used with virtual links), as
+              well as disconnected and/or empty graphs.  In particular:
+                + The routine countCells() will now return the number of cells
+                  even when the graph is non-planar (as opposed to the previous
+                  behaviour of returning zero).
+                + Added new routines countComponents() and genus().
+                + Removed isValid() completely, since those cases where
+                  isValid() returned false in older versions of Regina are now
+                  fully supported.
+            - New routines countEdges(), countArcs() and countNodes().
         Class ModelLinkGraphNode:
             - New routines loops(), bigons() and triangles().
         Enum NamedPermGroup:

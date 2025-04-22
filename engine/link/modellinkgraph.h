@@ -31,7 +31,7 @@
  **************************************************************************/
 
 /*! \file link/modellinkgraph.h
- *  \brief Deals with model 4-valent planar graphs for knots and links.
+ *  \brief Deals with model 4-valent graphs for knots and links.
  */
 
 #ifndef __REGINA_MODELLINKGRAPH_H
@@ -42,6 +42,7 @@
 #include <vector>
 #include "core/output.h"
 #include "utilities/exception.h"
+#include "utilities/fixedarray.h"
 #include "utilities/listview.h"
 #include "utilities/markedvector.h"
 
@@ -76,7 +77,7 @@ class StrandRef;
 class ModelLinkGraphArc {
     private:
         ModelLinkGraphNode* node_;
-            /**< The node from which this arc exits.  This may be null. */
+            /**< The node from which this arc exits.  This may be \c null. */
         int arc_;
             /**< An integer between 0 and 3 inclusive to indicate which
                  of the four outgoing arcs of \a node_ this represents. */
@@ -481,20 +482,33 @@ class ModelLinkGraphNode : public MarkedElement,
 };
 
 /**
- * Represents an undirected 4-valent planar graph with a specific planar
- * embedding.  This can be used as the model graph for a knot or link diagram,
- * where each node of the graph becomes a crossing.
+ * Represents an undirected 4-valent graph with a specific embedding in some
+ * closed orientable surface.  This class only stores the graph and a local
+ * description of the embedding (i.e., a cyclic ordering of arcs around each
+ * node).  It does not store the surface explicitly, though the surface is
+ * implied from the embedding - if you need it you can always access a full
+ * description of the surface by calling cells().
  *
- * Current this class does not support circular graph components (which,
+ * In particular, the surface is assumed to be the minimal genus surface in
+ * which the graph embeds.  Each connected component of the graph is embedded
+ * in a separate connected component of the surface, and each component of the
+ * surface is formed from a collection of discs (or _cells_) whose boundaries
+ * follow the nodes and arcs of the graph according to the local embedding.
+ *
+ * Regina uses graphs like these as model graphs for classical or virtual link
+ * diagrams, where each node of the graph becomes a classical crossing.
+ * If the surface is a collection of 2-spheres, then the graph is planar and
+ * models a _classical_ link diagram.  If the surface has genus, then the
+ * graph is non-planar and instead models a _virtual_ link diagram.
+ *
+ * Currently this class does not support circular graph components (which,
  * in a link diagram, would correspond to zero-crossing unknot components
  * of the link).
  *
- * This class is primarily designed for _enumerating_ knots and links.
- * If you wish to study the underlying graph of an existing link, you do
- * not need to create a ModelLinkGraph - instead the Link class already
- * gives you direct access to the graph structure.  In particular, if
- * you include link/graph.h, you can use a Link directly as a directed graph
- * type with the Boost Graph Library.
+ * For Boost users: if you wish to study the underlying graph of an existing
+ * link, you do not need to create a ModelLinkGraph - instead you can include
+ * link/graph.h and then use Link directly as a directed graph type with the
+ * Boost Graph Library.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -506,9 +520,13 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
     private:
         MarkedVector<ModelLinkGraphNode> nodes_;
             /**< The nodes of this graph. */
+        ssize_t nComponents_;
+            /**< The number of connected components of this graph, or -1 if
+                 this has not yet been computed. */
         ModelLinkGraphCells* cells_;
-            /**< The induced cellular decomposition of the sphere, or \c null
-                 if this has not yet been computed. */
+            /**< The induced cellular decomposition of the surface in which
+                 the graph embeds, or \c null if this has not yet been
+                 computed. */
 
     public:
         /**
@@ -563,6 +581,20 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * \return the number of nodes.
          */
         size_t size() const;
+
+        /**
+         * Returns the number of connected components in this graph.
+         *
+         * \warning This routine is not thread-safe, since it caches the
+         * number of components after computing it for the first time.
+         *
+         * \note These are components in the graph theoretical sense, not link
+         * components. So, for example, the graph that models the Hopf link is
+         * considered to be connected with just one component.
+         *
+         * \return the number of connected components.
+         */
+        size_t countComponents() const;
 
         /**
          * Returns the node at the given index within this graph.
@@ -668,17 +700,27 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         void reflect();
 
         /**
-         * Returns details of the cellular decomposition of the sphere
-         * that is induced by this graph.
+         * Returns the cellular decomposition of the closed orientable surface
+         * in which this graph embeds.  This will be the decomposition induced
+         * by this graph; in particular, it will be formed from discs bounded
+         * by the nodes and arcs of this graph.
          *
          * This cellular decomposition will only be computed on demand.
          * This means that the first call to this function will take
          * linear time (as the decomposition is computed), but subsequent
          * calls will be constant time (since the decomposition is cached).
          *
-         * \pre This graph is connected.
+         * Note that, as of Regina 7.4, you can call this routine even if the
+         * graph is non-planar and/or disconnected.
          *
-         * \return the induced cellular decomposition of the sphere.
+         * \warning This routine is not thread-safe.
+         *
+         * \exception InvalidArgument This graph induces more cells than
+         * should ever be possible.  This should never occur unless the graph
+         * is malformed in some way.
+         *
+         * \return the induced cellular decomposition of the surface in which
+         * this graph embeds.
          */
         const ModelLinkGraphCells& cells() const;
 
@@ -687,6 +729,9 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * For the purposes of this routine, an empty graph is considered to
          * be connected.
+         *
+         * \warning This routine is not thread-safe, since it caches the
+         * number of components after computing it for the first time.
          *
          * \return \c true if and only if this graph is connected.
          */
@@ -742,7 +787,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * composition of non-trivial knot diagrams, _any_ suitable flype
          * can be expressed as a composition of minimal flypes in this sense.
          *
-         * \pre This graph is connected.
+         * \pre This graph is planar.
          *
          * \param from the arc that indicates where the flype disc should
          * begin.  This is the arc labelled \a from in the diagrams for the
@@ -819,7 +864,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * \a left and \a right must be given as arcs of their respective
          * nodes \a inside the disc.
          *
-         * \pre This graph is connected.
+         * \pre This graph is planar.
          *
          * \pre The arcs \a from, \a left and \a right are laid out as
          * in the diagram above.  In particular: \a from and \a right
@@ -843,11 +888,11 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * contains one or more nodes, and the graph does not model a
          * composition of two non-trivial knot diagrams).
          *
-         * \exception InvalidArgument One or more of the preconditions
-         * above fails to hold.  Be warned that the connectivity precondition
-         * will not be checked - this is the user's responsibility - but all
-         * other preconditions _will_ be checked, and an exception will
-         * be thrown if any of them fails.
+         * \exception InvalidArgument One or more of the preconditions above
+         * fails to hold.  Be warned that the connectivity and planarity
+         * preconditions will not be checked - these are the user's
+         * responsibility - but all other preconditions _will_ be checked,
+         * and an exception will be thrown if any of them fails.
          *
          * \param from the first arc that indicates where the flype should
          * take place, as labelled on the diagram above.  This should be
@@ -878,7 +923,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * details on the flype operation, and see findFlype() for a
          * discussion on what is meant by "smallest possible".
          *
-         * \pre This graph is connected.
+         * \pre This graph is planar.
          *
          * \exception InvalidArgument There is no suitable flype on this
          * graph from the given starting location (that is, findFlype()
@@ -910,7 +955,8 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * move.
          *
          * In the link diagram that is generated, crossing \a k will always
-         * correspond to node \a k of this graph.
+         * correspond to node \a k of this graph.  If this graph is non-planar,
+         * then the resulting link diagram will be virtual.
          */
         Link generateAnyLink() const;
 
@@ -944,7 +990,8 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * crossing at node 0 (always positive).
          *
          * In each link diagram that is generated, crossing \a k will always
-         * correspond to node \a k of this graph.
+         * correspond to node \a k of this graph.  If this graph is non-planar,
+         * then the resulting link diagrams will all be virtual.
          *
          * For each link diagram that is generated, this routine will call
          * \a action (which must be a function or some other callable object).
@@ -962,11 +1009,18 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * \apinotfinal
          *
+         * \pre The cell decomposition induced by this graph has no 1-gons
+         * (which, in any link diagram that the graph models, would yield a
+         * reducing type I Reidemeister move).
+         *
          * \python This function is available in Python, and the
          * \a action argument may be a pure Python function.  However, its
          * form is more restricted: the argument \a args is removed, so you
          * simply call it as generateMinimalLinks(action).  Moreover,
          * \a action must take exactly one argument (the link diagram).
+         *
+         * \exception FailedPrecondition There is a 1-gon in the cell
+         * decomposition induced by this graph.
          *
          * \param action a function (or other callable object) to call
          * for each link diagram that is generated.
@@ -978,13 +1032,13 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
 
         /**
          * Outputs this graph in a variant of the ASCII text format used
-         * by \e plantri.
+         * by _plantri_.
          *
-         * The software \e plantri, by Gunnar Brinkmann and Brendan McKay,
+         * The software _plantri_, by Gunnar Brinkmann and Brendan McKay,
          * can be used to enumerate 4-valent planar graphs (amongst many
          * other things).  This routine outputs this graph in a format
-         * that mimics \e plantri's own dual ASCII format (i.e., the format
-         * that \e plantri outputs when run with the flags `-adq`).
+         * that mimics _plantri_'s own dual ASCII format (i.e., the format
+         * that _plantri_ outputs when run with the flags `-adq`).
          *
          * Specifically, the output will be a comma-separated sequence
          * of alphabetical strings.  The <i>i</i>th such string will consist
@@ -999,59 +1053,85 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
            \endverbatim
          *
          * For graphs with at most 26 nodes, this is identical to
-         * \e plantri's own dual ASCII format.  For larger graphs, this
-         * format differs: \e plantri uses punctuation to represent
+         * _plantri_'s own dual ASCII format.  For larger graphs, this
+         * format differs: _plantri_ uses punctuation to represent
          * higher-index nodes, whereas Regina uses upper-case letters.
          *
-         * This routine is an inverse to fromPlantri(): for any graph \a g
-         * that satisfies the preconditions below,
-         * `fromPlantri(g.plantri())` is identical to \a g.  Likewise,
-         * for any string \a s that satisfies the preconditions for
-         * fromPlantri(), calling `fromPlantri(s).plantri()` will
-         * recover the original string \a s.
+         * Although _plantri_ is designed to work with graphs that are
+         * connected and planar, this routine will happily produce output for
+         * disconnected and/or non-planar graphs.  However, there remains an
+         * unavoidable requirement: the graph must be dual to a _simple_
+         * quadrangulation.  In detail:
          *
-         * It is important to note the preconditions below: in particular,
-         * that this graph must be dual to a _simple_ quadrangulation of
-         * the sphere.  This is because the planar embeddings for more general
-         * graphs (i.e., the duals of non-simple quadrangulations) cannot
-         * always be uniquely reconstructed from their \e plantri output.
+         * - The dual to this 4-valent graph will be a quadrangulation of the
+         *   surface in which it embeds.  The _plantri_ format inherently
+         *   requires that this quadrangulation is _simple_: that is,
+         *   the dual must have no loops or parallel edges.
+         *
+         * - This requirement exists because, if the dual is _not_ simple, the
+         *   embedding of the original graph cannot be uniquely reconstructed
+         *   from its _plantri_ output.  In particular, the embedding becomes
+         *   ambiguous around parallel edges in the original 4-valent graph.
+         *
+         * - For _planar_ graphs, this requirement is relatively harmless:
+         *   a parity condition shows that loops in the dual are impossible,
+         *   and parallel edges in the dual mean that any link diagram that
+         *   this graph models is an "obvious" connected sum.
+         *
+         * - For _non-planar_ graphs, this requirement is more problematic.
+         *   For example, consider the graph that models the virtual trefoil:
+         *   the dual quadrangulation of the torus contains both loops and
+         *   parallel edges.  This makes the _plantri_ format unusable in
+         *   practice for graps that model virtual links.
+         *
+         * If this constraint is too onerous (e.g., you are working with
+         * virtual links), you could use extendedPlantri() instead, which is
+         * not compatible with the Brinkmann-McKay _plantri_ software but which
+         * removes this requirement for the dual quadrangulation to be simple.
+         *
+         * For graphs that the _plantri_ format _does_ support, this routine
+         * is an inverse to fromPlantri().  That is, for any graph \a g that
+         * satisfies the preconditions below, `fromPlantri(g.plantri())` is
+         * identical to \a g.  Likewise, for any string \a s that satisfies
+         * the preconditions for fromPlantri(), calling
+         * `fromPlantri(s).plantri()` will recover the original string \a s.
          *
          * \note The output of this function might not correspond to any
-         * possible output from the program \e plantri itself, even if only
-         * lower-case letters are used.  This is because \e plantri only
+         * possible output from the program _plantri_ itself, even if the graph
+         * is connected and planar, the dual quadrangulation is simple, and
+         * only lower-case letters are used.  This is because _plantri_ only
          * outputs graphs with a certain canonical labelling.  In contrast,
          * plantri() can be called on any graph that satisfies the
          * preconditions below, and it will preserve the labels of the nodes
          * and the order of the arcs around each node.
          *
-         * \pre This graph is connected.
          * \pre This graph has between 1 and 52 nodes inclusive.
          * \pre The dual to this graph is a _simple_ quadrangulation of the
-         * sphere.  In particular, the dual must not have any parallel edges.
-         * Note that any graph that fails this condition will the model
-         * graph for a link diagram that is an "obvious" connected sum.
+         * surface in which it embeds.
          *
-         * \exception FailedPrecondition This graph has more than 52 nodes.
+         * \exception FailedPrecondition This graph is empty or has more
+         * than 52 nodes.
          *
-         * \return a \e plantri format ASCII representation of this graph.
+         * \return a _plantri_ format ASCII representation of this graph.
          */
         std::string plantri() const;
 
         /**
          * Outputs a text representation of this graph in a variant of the
-         * \e plantri ASCII format, using a canonical relabelling of nodes
+         * _plantri_ ASCII format, using a canonical relabelling of nodes
          * and arcs, and with optional compression.
          *
          * This routine is similar to plantri(), but with two
          * significant differences:
          *
-         * - This routine does not preserve the labelling of nodes and
-         *   the order of arcs around each node.  Instead it reorders the
-         *   nodes and arcs so that any two relabellings of the "same"
-         *   planar embedding will produce the same canonicalPlantri() output.
-         *   By "same" we allow for relabelling and isotopy (sliding the
-         *   graph around the sphere); if the argument \a useReflection is
-         *   \c true then we allow for reflection also.
+         * - This routine does not preserve the labelling of nodes and the
+         *   order of arcs around each node.  Instead it reorders the nodes
+         *   and arcs so that any two relabellings of the "same" embedded
+         *   graph will produce the same canonicalPlantri() output.  By "same"
+         *   we allow for relabelling as well as orientation-preserving
+         *   homeomorphisms of the surface in which the graph embeds;
+         *   if the argument \a useReflection is \c true then we allow for
+         *   orientation-reversing homeomorphisms also.
          *
          * - If the argument \a tight is \c true, then this routine uses
          *   an abbreviated output format.  The resulting compression is
@@ -1070,8 +1150,8 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * of the original, if \a useReflection was passed as \c true).
          *
          * See plantri() for further details on the ASCII format itself,
-         * including the ways in which Regina's implementation of this format
-         * differs from \e plantri's for graphs with more than 26 nodes.
+         * including how Regina's implementation differs from _plantri_'s for
+         * graphs with more than 26 nodes.
          *
          * The running time for this routine is quadratic in the size of
          * the graph.
@@ -1079,11 +1159,11 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * \pre This graph is connected.
          * \pre This graph has between 1 and 52 nodes inclusive.
          * \pre The dual to this graph is a _simple_ quadrangulation of the
-         * sphere.  In particular, the dual must not have any parallel edges.
-         * Note that any graph that fails this condition will the model
-         * graph for a link diagram that is an "obvious" connected sum.
+         * surface in which it embeds; see plantri() for a discussion on why
+         * this condition is needed.
          *
-         * \exception FailedPrecondition This graph has more than 52 nodes.
+         * \exception FailedPrecondition This graph is empty or has more
+         * than 52 nodes.
          *
          * \param useReflection \c true if a graph and its reflection
          * should be considered the same (i.e., produce the same canonical
@@ -1091,14 +1171,63 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * Of course, if a graph is symmetric under reflection then the
          * graph and its reflection will produce the same canonical
          * output regardless of this parameter.
-         * \param tight \c false if the usual \e plantri ASCII format should
+         * \param tight \c false if the usual _plantri_ ASCII format should
          * be used (as described by plantri() and fromPlantri()), or \c true
          * if the abbreviated format should be used as described above.
-         * \return an optionally compressed \e plantri ASCII representation
+         * \return an optionally compressed _plantri_ ASCII representation
          * of this graph.
          */
         std::string canonicalPlantri(bool useReflection = true,
             bool tight = false) const;
+
+        /**
+         * Outputs this graph using Regina's extended variant of the _plantri_
+         * text format, which is better suited for non-planar graphs.
+         *
+         * See plantri() for a discussion of the _plantri_ text format.
+         * A limitation of the _plantri_ format is that it requires the graph
+         * to be dual to a _simple_ quadrangulation of the surface in which it
+         * embeds.  This is a reasonable requirement for planar graphs, but
+         * not so for non-planar graphs (which, in particular, are used to
+         * model virtual link diagrams).
+         *
+         * This routine extends the _plantri_ format to more explicitly encode
+         * the embedding of the graph, which means we can remove the problematic
+         * requirement on the dual quadrangulation.  The format is Regina's
+         * own (i.e., it is not compatible with the Brinkmann-McKay _plantri_
+         * software).
+         *
+         * The output will be a comma-separated sequence of alphanumeric
+         * strings.  The <i>i</i>th such string will consist of four
+         * letter-number pairs, encoding the endpoints of the four edges in
+         * clockwise order that leave node \a i.  The letters represent nodes
+         * (with `a..zA..Z` representing nodes 0 to 51 respectively).
+         * The numbers represent arcs (with `0..3` representing the four arcs
+         * around each node in clockwise order).
+         * An example of such a string (describing a genus one graph that
+         * models the virtual trefoil) is:
+         *
+           \verbatim
+           b3b2b0b1,a2a3a1a0
+           \endverbatim
+         *
+         * This routine is an inverse to fromExtendedPlantri().  That is, for
+         * any graph \a g of a supported size,
+         * `fromExtendedPlantri(g.extendedPlantri())` will be identical to \a g.
+         * Likewise, for any string \a s that satisfies
+         * the preconditions for fromExtendedPlantri(), calling
+         * `fromExtendedPlantri(s).extendedPlantri()` will recover the
+         * original string \a s.
+         *
+         * \pre This graph has between 1 and 52 nodes inclusive.
+         *
+         * \exception FailedPrecondition This graph is empty or has more
+         * than 52 nodes.
+         *
+         * \return a representation of this graph in the extended _plantri_
+         * format.
+         */
+        std::string extendedPlantri() const;
 
         /**
          * Writes a short text representation of this graph to the
@@ -1120,24 +1249,34 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         void writeTextLong(std::ostream& out) const;
 
         /**
-         * Builds a graph from a line of \e plantri output, using
-         * Regina's variant of the \e plantri ASCII format.
+         * Builds a graph from a line of _plantri_ output, using
+         * Regina's variant of the _plantri_ ASCII format.
          *
-         * The software \e plantri, by Gunnar Brinkmann and Brendan McKay,
+         * The software _plantri_, by Gunnar Brinkmann and Brendan McKay,
          * can be used to enumerate 4-valent planar graphs (amongst many
          * other things).  This routine converts a piece of output from
-         * \e plantri, or the encoding of a graph using Regina's own plantri()
-         * or canonicalPlantri() functions, into a ModelLinkGraph object
-         * that Regina can work with directly.
+         * _plantri_, or the encoding of a graph using Regina's more general
+         * plantri() or canonicalPlantri() functions, into a ModelLinkGraph
+         * object that Regina can work with directly.
          *
-         * If you are converting output from \e plantri, this output must be
-         * in ASCII format, and must be the dual graph of a simple
-         * quadrangulation of the sphere.  The corresponding flags that must
-         * be passed to \e plantri to obtain such output are `-adq`
-         * (although you will may wish to pass additional flags to expand or
-         * restrict the classes of graphs that \e plantri builds).
+         * Graphs encoded using Regina's plantri() or canonicalPlantri()
+         * functions may be disconnected and/or non-planar.  However, such a
+         * graph must be dual to a simple quadrangulation of the surface in
+         * which it embeds - otherwise the _plantri_ format does not contain
+         * enough information to recover the embedding of the graph.  This in
+         * particular is a problem for non-planar graphs (which model virtual
+         * links).  If this is an issue for you, you can use Regina's
+         * extended _plantri_ format instead; see extendedPlantri() and
+         * fromExtendedPlantri().
          *
-         * When run with these flags, \e plantri produces output in the
+         * If you are working with output directly from the software _plantri_,
+         * this output must be in ASCII format, and must likewise be the dual
+         * graph of a simple quadrangulation of the sphere.  The flags that
+         * must be passed to _plantri_ to obtain such output are `-adq`
+         * (although you may wish to pass additional flags to expand or
+         * restrict the classes of graphs that _plantri_ builds).
+         *
+         * When run with these flags, _plantri_ produces output in the
          * following form:
          *
            \verbatim
@@ -1158,62 +1297,83 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * fromPlantri("bcdd,aeec,abfd,acfa,bffb,ceed");
          * \endcode
          *
-         * Regina uses its own variant of \e plantri's output format, which is
-         * identical for smaller graphs but which differs from \e plantri's
+         * Regina uses its own variant of _plantri_'s output format, which is
+         * identical for smaller graphs but which differs from _plantri_'s
          * own output format for larger graphs.  In particular:
          *
-         * - For graphs with ≤ 26 nodes, Regina and \e plantri use identical
+         * - For graphs with ≤ 26 nodes, Regina and _plantri_ use identical
          *   formats.  Here Regina can happily recognise the output from
-         *   \e plantri as described above, as well as the output from
+         *   _plantri_ as described above, as well as the output from
          *   Regina's own plantri() and canonicalPlantri() functions.
          *
-         * - For graphs with 27-52 nodes, Regina's and \e plantri's formats
-         *   differ: whereas \e plantri uses punctuation for higher-index
-         *   nodes, Regina uses the upper-case letters \c A,...,\c Z.
+         * - For graphs with 27-52 nodes, Regina's and _plantri_'s formats
+         *   differ: whereas _plantri_ uses punctuation for higher-index
+         *   nodes, Regina uses the upper-case letters `A,...,Z`.
          *   For these larger graphs, Regina can only recognise Regina's own
-         *   plantri() and canonicalPlantri() output, not \e plantri's
+         *   plantri() and canonicalPlantri() output, not _plantri_'s
          *   punctuation-based encodings.
          *
          * - For graphs with 53 nodes or more, Regina cannot encode or
-         *   decode such graphs using \e plantri format at all.
+         *   decode such graphs using _plantri_ format at all.
          *
-         * Even for graphs with at most 26 nodes, the given string does not
-         * _need_ to be come from the program \e plantri itself.  Whereas
-         * \e plantri always outputs graphs with a particular canonical
-         * labelling, this function can accept an arbitrary ordering of nodes
-         * and arcs - in particular, it can accept the string
-         * `g.plantri()` for any graph \a g that meets the preconditions
-         * below.  Nevertheless, the graph must still meet these preconditions,
-         * since otherwise the \e plantri format might not be enough to
-         * uniquely reconstruct the graph and its planar embedding.
+         * Note that, whilst the software _plantri_ always outputs graphs using
+         * a particular canonical labelling, this function has no such
+         * restriction: it can accept an arbitrary ordering of nodes and arcs -
+         * in particular, it can accept the string `g.plantri()` for any graph
+         * \a g that meets the preconditions below.
          *
          * This routine can also interpret the "tight" format that is
          * optionally produced by the member function canonicalPlantri()
          * (even though such output would certainly _not_ be produced by
-         * the program \e plantri).
+         * the software _plantri_).  Note that, by design, the tight format
+         * can only represented connected graphs.
          *
          * \warning While this routine does some basic error checking on the
          * input, these checks are not exhaustive.  In particular, it does
-         * _not_ test for planarity of the graph.  (Of course \e plantri
-         * does not output non-planar graphs, but a user could still construct
-         * one by hand and passes it to this routine, in which case the
-         * resulting behaviour is undefined.)
+         * _not_ test that the graph is dual to a simple quadrangulation.
          *
-         * \pre The graph being described is connected.
          * \pre The graph being described is dual to a _simple_ quadrangulation
-         * of the sphere.  In particular, the dual must not have any parallel
-         * edges.  Note that any graph that fails this condition will the model
-         * graph for a link diagram that is an "obvious" connected sum.
+         * of the surface in which it embeds; see plantri() for further
+         * discussion on why this condition is needed.
          *
          * \exception InvalidArgument The input was not a valid
-         * representation of a graph using the \e plantri output format.
-         * As noted above, the checks performed here are not exhaustive.
+         * representation of a graph using the _plantri_ output format.
          *
          * \param plantri a string containing the comma-separated sequence of
-         * alphabetical strings in \e plantri format, as described above.
+         * alphabetical strings in _plantri_ format, as described above.
          * \return the resulting graph.
          */
         static ModelLinkGraph fromPlantri(const std::string& plantri);
+
+        /**
+         * Builds a graph from a text representation using Regina's extended
+         * variant of the _plantri_ format, which is better suited for
+         * non-planar graphs.
+         *
+         * See extendedPlantri() for a detailed description of Regina's
+         * extended _plantri_ text format.  In essence, this extends the
+         * original Brinkmann-McKay _plantri_ format to more explicitly encode
+         * the embedding of the graph, thereby removing the original _plantri_
+         * requirement that the graph be dual to a simple quadrangulation of
+         * the surface in which it embeds.  Removing this requirement is
+         * important for non-planar graphs (which are used to model virtual
+         * link diagrams).
+         *
+         * As an example, the string below is the extended _plantri_
+         * representation of a genus one graph that models the virtual trefoil:
+         *
+           \verbatim
+           b3b2b0b1,a2a3a1a0
+           \endverbatim
+         *
+         * \exception InvalidArgument The input was not a valid representation
+         * of a graph using Regina's extended _plantri_ format.
+         *
+         * \param text the representation of a graph using Regina's extended
+         * _plantri_ format, as described in extendedPlantri().
+         * \return the resulting graph.
+         */
+        static ModelLinkGraph fromExtendedPlantri(const std::string& text);
 
     private:
         /**
@@ -1238,6 +1398,12 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * corresponds to the incoming upper/lower strand at the given crossing.
          */
         ModelLinkGraphArc incomingArc(const StrandRef& s);
+
+        /**
+         * Computes the number of connected components in this graph.
+         * The result will be stored in the data member \a nComponents_.
+         */
+        void computeComponents() const;
 };
 
 /**
@@ -1256,17 +1422,21 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
 void swap(ModelLinkGraph& lhs, ModelLinkGraph& rhs) noexcept;
 
 /**
- * Describes the cellular decomposition of the sphere that is induced by a
- * given planar 4-valent graph.
+ * Describes the cellular decomposition of a closed orientable surface induced
+ * by a 4-valent graph embedded within it.
  *
- * The graph is represented by an object of type ModelLinkGraph, which
- * also encodes a specific planar embedding of the graph.  The nodes
- * and arcs of this graph then form the vertices and edges of a cellular
- * decomposition; the main purpose of this class is to deduce and
- * describe the resulting 2-cells.
+ * The graph is represented by an object of type ModelLinkGraph, which encodes
+ * a local embedding of the graph within the surface (i.e., a cyclic ordering
+ * of arcs around each graph node).  The nodes and arcs of this graph form the
+ * vertices and edges of the cellular decomposition, and the 2-cells are
+ * topological discs whose boundaries follow these nodes and arcs according to
+ * their local embeddings.  The main purpose of this class is to deduce and
+ * describe those 2-cells.
  *
- * At present, this class insists that each 2-cell is a topological disc.
- * As a consequence, this class cannot work with empty or disconnected graphs.
+ * As of Regina 7.4, this class can now work with graphs that are non-planar
+ * (resulting in a surface with positive genus), disconnected (resulting in a
+ * surface that is likewise disconnected), and/or empty (resulting in an empty
+ * surface).
  *
  * Cellular decompositions do not support value semantics: they cannot be
  * copied, swapped, or manually constructed.  Instead they are computed
@@ -1283,7 +1453,13 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
         using ArcIterator = const ModelLinkGraphArc*;
 
     private:
-        ModelLinkGraphArc* arcs_;
+        size_t nCells_;
+            /**< The total number of cells. */
+        size_t nComponents_;
+            /**< The total number of connected components.  This should always
+                 be known (i.e., unlike ModelLinkGraph::nComponents_, it is
+                 not computed on demand). */
+        FixedArray<ModelLinkGraphArc> arcs_;
             /**< Stores the boundary of each cell.  Specifically, for cell
                  number \a i, positions start_[i], ..., (start_[i+1]-1) of
                  this array store the arcs in order as they would appear if
@@ -1292,84 +1468,83 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
                  Each arc is described as an _outgoing_ arc as you exit each
                  node in turn.  Note that this array contains every arc of the
                  underlying graph exactly once. */
-        size_t* start_;
+        FixedArray<size_t> start_;
             /**< Indicates where in the \a arcs_ array the boundary of each
-                 cell begins and end.  This array has length (nCells_+1). */
-        size_t* cell_;
+                 cell begins and end.  This array has length (nCells_+1).
+                 In particular, start_[nCells_] is the total number of arcs. */
+        FixedArray<size_t> cell_;
             /**< For the <i>k</i>th arc exiting node \a n of the underlying
                  graph, cell_[4n+k] identifies which cell sits to the left
                  of the arc as you walk along it away from node \a n. */
-        size_t* step_;
+        FixedArray<size_t> step_;
             /**< Let \a a be the <i>k</i>th arc exiting node \a n of the
                  underlying graph, and let \a c be the cell to the left
                  of the arc (as stored in the \a cell_ array).  Then
                  step_[4n+k] identifies where in the boundary of cell \a c
                  the arc \a a appears.  Specifically, arc \a a appears in the
                  \a arcs_ array as element arcs_[start_[c]+step_[4n+k]]. */
-        size_t nCells_;
-            /**< The number of cells, or 0 if the underlying graph either
-                 has a non-planar embedding or is empty. */
 
     public:
         /**
-         * Destroys this cellular decomposition.
-         */
-        ~ModelLinkGraphCells();
-
-        /**
-         * Determines whether the underlying graph is non-empty with a
-         * planar embedding, assuming that it is already known to be connected.
+         * Returns the total number of 2-cells in this cellular decomposition.
          *
-         * As described in the class notes, this class can only work
-         * with non-empty connected graphs where the corresponding
-         * ModelLinkGraph object also describes a planar embedding.
+         * In the common case where this surface is the 2-sphere (i.e., the
+         * underlying graph models a knot diagram), this will be exactly
+         * two more than the number of nodes in the underlying graph.
          *
-         * The constructor for this class requires you to pass a graph
-         * that is already known to be connected.  However, _assuming_
-         * the graph is connected, the constructor then tests for the
-         * remaining conditions.  This routine returns the results of these
-         * tests: if the underlying graph is empty or does not describe a
-         * planar embedding, then this routine will return \c false.
+         * \note As of Regina 7.4, this routine will only return 0 when the
+         * underlying graph is empty (and so this surface is empty also).
+         * In previous versions of Regina, this routine also returned 0 if the
+         * graph was non-planar (a scenario that was previously unsupported).
          *
-         * This routine is constant time, since the necessary work will
-         * have already been completed by the class constructor.
-         *
-         * \warning Most of the routines in this class require isValid() to
-         * return \c true.  Essentially, if isValid() returns \c false, you
-         * should not attempt to query the details of the cell decomposition.
-         * See the preconditions on individual routines for further details.
-         *
-         * \return \c true if and only if the underlying ModelLinkGraph
-         * describes a planar embedding of a non-empty graph.
-         */
-        bool isValid() const;
-        /**
-         * Returns the number of 2-cells in this cellular decomposition.
-         *
-         * If isValid() returns \c false (i.e., the underlying ModelLinkGraph
-         * is either empty or does not describe a planar embedding), then
-         * this routine will return 0 instead.  Note that this routine
-         * _cannot_ be used to test for connectivity, which is a
-         * non-negotiable precondition required by the class constructor.
-         *
-         * Note that, if isValid() returns \c true, then countCells()
-         * will always return <i>n</i>+2 where \a n is the number of
-         * nodes in the underlying graph.
-         *
-         * \return a strictly positive number of 2-cells if isValid()
-         * returns \c true, or 0 if isValid() returns \c false.
+         * \return the total number of 2-cells.
          */
         size_t countCells() const;
+        /**
+         * Returns the total number of (undirected) edges in this cellular
+         * decomposition.  This is always twice the number of nodes in the
+         * underlying graph.
+         *
+         * \return the total number of edges.
+         */
+        size_t countEdges() const;
+        /**
+         * Returns the total number of directed arcs in the underlying graph.
+         * This is always four times the number of nodes in the graph.
+         *
+         * Recall that each undirected edge of the graph corresponds to
+         * two directed arcs (one exiting each endpoint of the edge).
+         *
+         * \return the total number of directed arcs.
+         */
+        size_t countArcs() const;
+        /**
+         * Returns the total number of vertices in this cellular decomposition;
+         * that is, the total number of nodes in the underlying graph.
+         *
+         * \return the total number of nodes.
+         */
+        size_t countNodes() const;
+        /**
+         * Returns the number of connected components in this surface.  This
+         * will be the same as the number of components of the underlying graph.
+         *
+         * \return the number of connected components.
+         */
+        size_t countComponents() const;
+        /**
+         * Returns the genus of this closed orientable surface.  If the
+         * surface has multiple components then this will sum the genus over
+         * each component.
+         *
+         * \return the genus of this surface.
+         */
+        size_t genus() const;
 
         /**
          * Returns the number of arcs aloung the boundary of the given 2-cell.
          * If the given cell is a <i>k</i>-gon, then this routine returns the
          * integer \a k.
-         *
-         * \pre The underlying ModelLinkGraph is non-empty, connected,
-         * and describes a planar graph embedding.  Note that connectivity
-         * is already required by the class constructor, and you can test
-         * the remaining conditions by calling isValid().
          *
          * \param cell indicates which cell to query; this must be
          * between 0 and countCells()-1 inclusive.
@@ -1390,11 +1565,6 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * each of the 4<i>n</i> possible ModelLinkGraphArc values
          * appears exactly once as `arc(cell, which)` for some
          * integers \a cell and \a which.
-         *
-         * \pre The underlying ModelLinkGraph is non-empty, connected,
-         * and describes a planar graph embedding.  Note that connectivity
-         * is already required by the class constructor, and you can test
-         * the remaining conditions by calling isValid().
          *
          * \param cell indicates which cell to query; this must be
          * between 0 and countCells()-1 inclusive.
@@ -1455,13 +1625,10 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * over the entire range (`begin(cell)`, `end(cell)`)
          * is equivalent to iterating over `arcs(cell)`.
          *
-         * \pre The underlying ModelLinkGraph is non-empty, connected,
-         * and describes a planar graph embedding.  Note that connectivity
-         * is already required by the class constructor, and you can test
-         * the remaining conditions by calling isValid().
-         *
          * \nopython Python users can iterate over arcs(\a cell) instead.
          *
+         * \param cell indicates which cell to walk around; this must be
+         * between 0 and countCells()-1 inclusive.
          * \return the beginning of an iterator range for the boundary
          * of the given cell.
          */
@@ -1484,13 +1651,10 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * over the entire range (`begin(cell)`, `end(cell)`)
          * is equivalent to iterating over `arcs(cell)`.
          *
-         * \pre The underlying ModelLinkGraph is non-empty, connected,
-         * and describes a planar graph embedding.  Note that connectivity
-         * is already required by the class constructor, and you can test
-         * the remaining conditions by calling isValid().
-         *
          * \nopython Python users can iterate over arcs(\a cell) instead.
          *
+         * \param cell indicates which cell to walk around; this must be
+         * between 0 and countCells()-1 inclusive.
          * \return the end of an iterator range for the boundary
          * of the given cell.
          */
@@ -1505,11 +1669,6 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          *
          * For any arc \a a, calling `arc(cell(a), cellPos(a))`
          * will return the same arc \a a again.
-         *
-         * \pre The underlying ModelLinkGraph is non-empty, connected,
-         * and describes a planar graph embedding.  Note that connectivity
-         * is already required by the class constructor, and you can test
-         * the remaining conditions by calling isValid().
          *
          * \param arc the given arc of the underlying graph.
          * \return the number of the cell that lies to the left of the
@@ -1530,11 +1689,6 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          *
          * For any arc \a a, calling `arc(cell(a), cellPos(a))`
          * will return the same arc \a a again.
-         *
-         * \pre The underlying ModelLinkGraph is non-empty, connected,
-         * and describes a planar graph embedding.  Note that connectivity
-         * is already required by the class constructor, and you can test
-         * the remaining conditions by calling isValid().
          *
          * \param arc the given arc of the underlying graph.
          * \return the position of the given arc on the boundary of the
@@ -1584,53 +1738,34 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
 
     private:
         /**
-         * Creates a new cellular decomposition for the given planar
-         * 4-valent graph.
-         *
-         * As described in the class notes: this class can only work
-         * with graphs that are non-empty and connected (so that each
-         * resulting 2-cell is a topological disc).
-         *
-         * The caller of this routine must ensure beforehand that the graph
-         * \a g is connected.  However, this constructor will detect if \a g
-         * is empty or does not describe a planar embedding, and isValid()
-         * will return \c false in such cases.
+         * Creates a new cellular decomposition for the given 4-valent graph.
          *
          * \warning This object contains references into the graph \a g,
          * and so \a g must not be destroyed until after this cellular
          * decomposition is destroyed.
          *
+         * \warning This routine is not thread-safe for the graph \a g,
+         * since it will compute and cache the number of components in \a g
+         * if this information is not already known.
+         *
          * \pre The graph \a g must be connected.
          *
-         * \param g the 4-valent graph, including its planar embedding, that
+         * \exception InvalidArgument The given graph induces more cells than
+         * should ever be possible.  This should never occur unless the graph
+         * is malformed in some way.
+         *
+         * \param g the 4-valent graph (including its local embedding) that
          * defines this new cellular decomposition.
          */
         ModelLinkGraphCells(const ModelLinkGraph& g);
         /**
          * Creates a duplicate copy of the given cellular decomposition.
          * Both decompositions will refer to the same underlying ModelLinkGraph.
-         *
-         * It is allowed for `cloneMe.isValid()` to return \c false;
-         * in this case, the validity data will be carried across to the
-         * new decomposition and `this->isValid()` will return
-         * \c false also.
-         *
-         * \param cloneMe the cellular decomposition to clone.
          */
-        ModelLinkGraphCells(const ModelLinkGraphCells& cloneMe);
+        ModelLinkGraphCells(const ModelLinkGraphCells&) = default;
 
     friend class ModelLinkGraph;
 };
-
-// Inline functions that need to be defined before *other* inline funtions
-// that use them (this fixes DLL-related warnings in the windows port)
-
-inline ModelLinkGraphCells::~ModelLinkGraphCells() {
-    delete[] arcs_;
-    delete[] start_;
-    delete[] cell_;
-    delete[] step_;
-}
 
 // Inline functions for ModelLinkGraphArc
 
@@ -1738,11 +1873,12 @@ inline void ModelLinkGraphNode::writeTextShort(std::ostream& out) const {
 
 // Inline functions for ModelLinkGraph
 
-inline ModelLinkGraph::ModelLinkGraph() : cells_(nullptr) {
+inline ModelLinkGraph::ModelLinkGraph() : nComponents_(-1), cells_(nullptr) {
 }
 
 inline ModelLinkGraph::ModelLinkGraph(ModelLinkGraph&& src) noexcept :
         nodes_(std::move(src.nodes_)),
+        nComponents_(src.nComponents_),
         cells_(src.cells_) {
     src.cells_ = nullptr;
 }
@@ -1757,6 +1893,12 @@ inline size_t ModelLinkGraph::size() const {
     return nodes_.size();
 }
 
+inline size_t ModelLinkGraph::countComponents() const {
+    if (nComponents_ < 0)
+        computeComponents();
+    return nComponents_;
+}
+
 inline ModelLinkGraphNode* ModelLinkGraph::node(size_t index) const {
     return nodes_[index];
 }
@@ -1768,6 +1910,7 @@ inline auto ModelLinkGraph::nodes() const {
 inline ModelLinkGraph& ModelLinkGraph::operator = (ModelLinkGraph&& src)
         noexcept {
     nodes_.swap(src.nodes_);
+    nComponents_ = src.nComponents_;
     std::swap(cells_, src.cells_);
     // Leave src to dispose of the original contents.
     return *this;
@@ -1776,6 +1919,7 @@ inline ModelLinkGraph& ModelLinkGraph::operator = (ModelLinkGraph&& src)
 inline void ModelLinkGraph::swap(ModelLinkGraph& other) noexcept {
     if (&other != this) {
         nodes_.swap(other.nodes_);
+        std::swap(nComponents_, other.nComponents_);
         std::swap(cells_, other.cells_);
     }
 }
@@ -1785,6 +1929,12 @@ inline const ModelLinkGraphCells& ModelLinkGraph::cells() const {
         const_cast<ModelLinkGraph*>(this)->cells_ =
             new ModelLinkGraphCells(*this);
     return *cells_;
+}
+
+inline bool ModelLinkGraph::isConnected() const {
+    if (nComponents_ < 0)
+        computeComponents();
+    return nComponents_ <= 1;
 }
 
 inline ModelLinkGraph ModelLinkGraph::flype(const ModelLinkGraphArc& from)
@@ -1806,8 +1956,29 @@ inline size_t ModelLinkGraphCells::countCells() const {
     return nCells_;
 }
 
-inline bool ModelLinkGraphCells::isValid() const {
-    return (nCells_ > 0);
+inline size_t ModelLinkGraphCells::countEdges() const {
+    return start_[nCells_] >> 1;
+}
+
+inline size_t ModelLinkGraphCells::countArcs() const {
+    return start_[nCells_];
+}
+
+inline size_t ModelLinkGraphCells::countNodes() const {
+    return start_[nCells_] >> 2;
+}
+
+inline size_t ModelLinkGraphCells::countComponents() const {
+    return nComponents_;
+}
+
+inline size_t ModelLinkGraphCells::genus() const {
+    // Per component:
+    //   euler = V - E + F = #cells - #nodes
+    //   genus = (2 - euler) / 2 = (#nodes + 2 - #cells) / 2
+    //
+    // Also: start_[nCells_] = #arcs = 4 * #nodes
+    return ((start_[nCells_] >> 2) + (nComponents_ << 1) - nCells_) >> 1;
 }
 
 inline size_t ModelLinkGraphCells::size(size_t cell) const {
@@ -1820,17 +1991,18 @@ inline const ModelLinkGraphArc& ModelLinkGraphCells::arc(size_t cell,
 }
 
 inline auto ModelLinkGraphCells::arcs(size_t cell) const {
-    return ListView(arcs_ + start_[cell], arcs_ + start_[cell + 1]);
+    return ListView(arcs_.begin() + start_[cell],
+        arcs_.begin() + start_[cell + 1]);
 }
 
 inline ModelLinkGraphCells::ArcIterator ModelLinkGraphCells::begin(size_t cell)
         const {
-    return arcs_ + start_[cell];
+    return arcs_.begin() + start_[cell];
 }
 
 inline ModelLinkGraphCells::ArcIterator ModelLinkGraphCells::end(size_t cell)
         const {
-    return arcs_ + start_[cell + 1];
+    return arcs_.begin() + start_[cell + 1];
 }
 
 inline size_t ModelLinkGraphCells::cell(const ModelLinkGraphArc& arc) const {

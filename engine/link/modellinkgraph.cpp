@@ -128,7 +128,8 @@ int ModelLinkGraphNode::triangles() const {
     return ans;
 }
 
-ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& copy) : cells_(nullptr) {
+ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& copy) :
+        nComponents_(copy.nComponents_), cells_(nullptr) {
     nodes_.reserve(copy.nodes_.size());
     for (size_t i = 0; i < copy.nodes_.size(); ++i)
         nodes_.push_back(new ModelLinkGraphNode());
@@ -147,7 +148,8 @@ ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& copy) : cells_(nullptr) {
     // to copy it here.
 }
 
-ModelLinkGraph::ModelLinkGraph(const Link& link) : cells_(nullptr) {
+ModelLinkGraph::ModelLinkGraph(const Link& link) :
+        nComponents_(-1), cells_(nullptr) {
     nodes_.reserve(link.size());
     for (size_t i = 0; i < link.size(); ++i)
         nodes_.push_back(new ModelLinkGraphNode());
@@ -182,6 +184,8 @@ ModelLinkGraph& ModelLinkGraph::operator = (const ModelLinkGraph& src) {
         }
         ++it;
     }
+
+    nComponents_ = src.nComponents_;
 
     // The cellular decomposition takes linear time to copy and linear
     // time to compute, so just recompute it on demand and don't attempt
@@ -227,37 +231,44 @@ void ModelLinkGraph::reflect() {
     }
 }
 
-bool ModelLinkGraph::isConnected() const {
-    if (nodes_.size() <= 1)
-        return true;
+void ModelLinkGraph::computeComponents() const {
+    if (nodes_.size() <= 1) {
+        const_cast<ModelLinkGraph*>(this)->nComponents_ = nodes_.size();
+        return;
+    }
 
     // Just another depth-first search.
 
     FixedArray<bool> seen(nodes_.size(), false);
     FixedArray<const ModelLinkGraphNode*> stack(nodes_.size());
+    size_t stackSize = 0;
 
-    size_t stackSize = 1;
-    stack[0] = nodes_.front();
-    seen[0] = true;
-    size_t nFound = 1;
+    auto nextComponent = nodes_.begin();
+    size_t foundComponents = 0;
 
-    while (stackSize > 0) {
-        auto curr = stack[--stackSize];
+    while (nextComponent != nodes_.end()) {
+        stack[0] = *nextComponent++;
+        stackSize = 1;
+        seen[stack[0]->index()] = true;
+        ++foundComponents;
 
-        for (int i = 0; i < 4; ++i) {
-            auto adj = curr->adj_[i].node_;
-            if (! seen[adj->index()]) {
-                ++nFound;
-                if (nFound == nodes_.size())
-                    return true;
+        while (stackSize > 0) {
+            auto curr = stack[--stackSize];
 
-                seen[adj->index()] = true;
-                stack[stackSize++] = adj;
+            for (int i = 0; i < 4; ++i) {
+                auto adj = curr->adj_[i].node_;
+                if (! seen[adj->index()]) {
+                    seen[adj->index()] = true;
+                    stack[stackSize++] = adj;
+                }
             }
         }
+
+        while (nextComponent != nodes_.end() && seen[(*nextComponent)->index()])
+            ++nextComponent;
     }
 
-    return false;
+    const_cast<ModelLinkGraph*>(this)->nComponents_ = foundComponents;
 }
 
 bool ModelLinkGraph::isSimple() const {
@@ -357,7 +368,11 @@ void ModelLinkGraph::writeTextShort(std::ostream& out) const {
         return;
     }
 
-    out << nodes_.size() << "-node graph: ";
+    size_t g = cells().genus();
+    if (g == 0)
+        out << nodes_.size() << "-node planar graph: ";
+    else
+        out << nodes_.size() << "-node genus " << g << " graph: ";
     for (size_t i = 0; i < nodes_.size(); ++i) {
         if (i > 0)
             out << ' ';
@@ -379,7 +394,11 @@ void ModelLinkGraph::writeTextLong(std::ostream& out) const {
         return;
     }
 
-    out << nodes_.size() << "-node model link graph\n\n";
+    size_t g = cells().genus();
+    if (g == 0)
+        out << nodes_.size() << "-node planar model link graph\n\n";
+    else
+        out << nodes_.size() << "-node genus " << g << " model link graph: ";
 
     out << "Outgoing arcs:\n";
     out << "  Node  |  adjacent:      (0)      (1)      (2)      (3)\n";
@@ -399,9 +418,9 @@ void ModelLinkGraph::writeTextLong(std::ostream& out) const {
 }
 
 std::string ModelLinkGraph::plantri() const {
-    if (size() > 52)
+    if (size() == 0 || size() > 52)
         throw FailedPrecondition("plantri() can only work with "
-            "graphs with at most 52 nodes");
+            "graphs with between 1 and 52 nodes inclusive");
 
     std::string ans;
     for (auto it = nodes_.begin(); it != nodes_.end(); ++it) {
@@ -420,9 +439,9 @@ std::string ModelLinkGraph::plantri() const {
 
 std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
         bool tight) const {
-    if (size() > 52)
+    if (size() == 0 || size() > 52)
         throw FailedPrecondition("canonicalPlantri() can only work with "
-            "graphs with at most 52 nodes");
+            "graphs with between 1 and 52 nodes inclusive");
 
     std::string best;
 
@@ -619,11 +638,11 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
             if (src == dest && count % 2 != 0)
                 throw InvalidArgument("fromPlantri(): invalid loop");
 
-            // In the code below, we use the fact that plantri only produces
-            // 4-valent graphs whose dual quadrangulations are simple.
+            // In the code below, we use the precondition that the graph is
+            // dual to a simple quadrangulation of the surface in which it
+            // embeds.
             if (count == 1) {
-                // This is just a single edge.  Find the matching arc
-                // from dest.
+                // This is just a single edge.  Find the matching arc from dest.
                 for (k = 0; k < 4; ++k)
                     if (dest->adj_[k].node_ == src) {
                         if (dest->adj_[k].arc_ >= 0)
@@ -637,61 +656,56 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
                     throw InvalidArgument("fromPlantri(): single edge "
                         "has no endpoint");
             } else if (count == 2) {
-                if (src->adj_[j ^ 2].node_ == dest) {
-                    // We have two parallel edges that are not adjacent
-                    // around src.
-                    //
-                    // Because the dual quadrangulation must be simple,
-                    // it follows that any double edge of this type must
-                    // actually be part of a quadruple edge.
+                // We have a double edge.
+                // The only configuration dual to a simple quadrangulation is
+                // the one that produces a bigon.  In particular, the two
+                // endpoints of the parallel edges must be adjacent at both
+                // src and dest.
+                if (src->adj_[j ^ 2].node_ == dest)
                     throw InvalidArgument("fromPlantri(): invalid "
                         "non-adjacent double edge");
-                } else {
-                    // We have two parallel edges that are adjacent around src.
-                    //
-                    // Because the dual quadrangulation must be simple,
-                    // these parallel edges must bound a bigon.
-                    // This means that we follow them clockwise around one node
-                    // and anticlockwise around the other.
 
-                    // We already have j as the first of the two arcs
-                    // around src.
-                    // Find the "clockwise first" arc around dest.
-                    for (k = 0; k < 4; ++k)
-                        if (dest->adj_[k].node_ == src &&
-                                dest->adj_[(k + 1) % 4].node_ == src) {
-                            if (dest->adj_[k].arc_ >= 0 ||
-                                    dest->adj_[(k + 1) % 4].arc_ >= 0)
-                                throw InvalidArgument("fromPlantri(): "
-                                    "double edge has too many endpoints");
-                            break;
-                        }
-                    if (k == 4)
-                        throw InvalidArgument("fromPlantri(): double edge "
-                            "missing its endpoints");
+                // Since our two parallel edges must bound a bigon, we can
+                // follow the corresponding arcs clockwise around one node
+                // and anticlockwise around the other.
 
-                    if (j < 3 && src->adj_[j + 1].node_ == dest) {
-                        src->adj_[j].arc_ = (k + 1) % 4;
-                        src->adj_[j + 1].arc_ = k;
-                        dest->adj_[k].arc_ = j + 1;
-                        dest->adj_[(k + 1) % 4].arc_ = j;
-                    } else {
-                        // The arcs from src must be 0 and 3.
-                        src->adj_[3].arc_ = (k + 1) % 4;
-                        src->adj_[0].arc_ = k;
-                        dest->adj_[k].arc_ = 0;
-                        dest->adj_[(k + 1) % 4].arc_ = 3;
+                // We already have j as the first of the two arcs around src.
+                // Find the "clockwise first" arc around dest.
+                for (k = 0; k < 4; ++k)
+                    if (dest->adj_[k].node_ == src &&
+                            dest->adj_[(k + 1) % 4].node_ == src) {
+                        if (dest->adj_[k].arc_ >= 0 ||
+                                dest->adj_[(k + 1) % 4].arc_ >= 0)
+                            throw InvalidArgument("fromPlantri(): "
+                                "double edge has too many endpoints");
+                        break;
                     }
+                if (k == 4)
+                    throw InvalidArgument("fromPlantri(): double edge "
+                        "missing its endpoints");
+
+                if (j < 3 && src->adj_[j + 1].node_ == dest) {
+                    src->adj_[j].arc_ = (k + 1) % 4;
+                    src->adj_[j + 1].arc_ = k;
+                    dest->adj_[k].arc_ = j + 1;
+                    dest->adj_[(k + 1) % 4].arc_ = j;
+                } else {
+                    // The arcs from src must be 0 and 3.
+                    src->adj_[3].arc_ = (k + 1) % 4;
+                    src->adj_[0].arc_ = k;
+                    dest->adj_[k].arc_ = 0;
+                    dest->adj_[(k + 1) % 4].arc_ = 3;
                 }
             } else if (count == 3) {
-                // Because the dual quadrangulation must be simple, it
-                // follows that any triple edge must actually be part
-                // of a quadruple edge.
+                // A triple edge will never appear in a graph whose dual
+                // quadrangulation is simple.
                 throw InvalidArgument("fromPlantri(): invalid triple edge");
             } else {
                 // A quadruple edge.
-                // As we walk clockwise around one node, we must walk
-                // anticlockwise around the other.
+                // The only configuration whose dual quadrangulation is simple
+                // is the one in which, as we walk clockwise around one node,
+                // we walk anticlockwise around the other.  (This is a
+                // standalone graph component that models the Hopf link.)
                 //
                 // We will match up (0,1,2,3) <-> (3,2,1,0).
                 // Note that this scheme also works if src == dest.
@@ -706,6 +720,76 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
                     dest->adj_[3 - k].arc_ = k;
                 }
             }
+        }
+    }
+
+    return g;
+}
+
+std::string ModelLinkGraph::extendedPlantri() const {
+    if (size() == 0 || size() > 52)
+        throw FailedPrecondition("extendedPlantri() can only work with "
+            "graphs with between 1 and 52 nodes inclusive");
+
+    std::string ans;
+    for (auto it = nodes_.begin(); it != nodes_.end(); ++it) {
+        if (it != nodes_.begin())
+            ans += ',';
+        for (const auto& arc : (*it)->adj_) {
+            auto idx = arc.node()->index();
+            if (idx < 26)
+                ans += static_cast<char>('a' + idx);
+            else
+                ans += static_cast<char>('A' + idx - 26);
+            ans += static_cast<char>('0' + arc.arc());
+        }
+    }
+    return ans;
+}
+
+ModelLinkGraph ModelLinkGraph::fromExtendedPlantri(const std::string& text) {
+    // Extract the graph size and run some basic sanity checks.
+    if (text.size() % 9 != 8)
+        throw InvalidArgument("fromExtendedPlantri(): "
+            "invalid string length for a standard encoding");
+    size_t n = (text.size() + 1) / 9;
+    if (n > 52)
+        throw InvalidArgument("fromExtendedPlantri(): more than 52 nodes");
+
+    size_t i;
+    for (i = 0; i < text.size(); ++i) {
+        size_t offset = i % 9;
+        if (offset == 8) {
+            if (text[i] != ',')
+                throw InvalidArgument("fromExtendedPlantri(): missing comma");
+        } else if (offset % 2 == 0) {
+            if (! encInRange(text[i], n))
+                throw InvalidArgument("fromExtendedPlantri(): "
+                    "invalid node letter");
+        } else {
+            if (text[i] < '0' || text[i] > '3')
+                throw InvalidArgument("fromExtendedPlantri(): "
+                    "invalid arc number");
+        }
+    }
+
+    ModelLinkGraph g;
+    for (i = 0; i < n; ++i)
+        g.nodes_.push_back(new ModelLinkGraphNode());
+
+    for (i = 0; i < n; ++i) {
+        auto srcNode = g.nodes_[i];
+        for (int j = 0; j < 4; ++j) {
+            ModelLinkGraphArc src(srcNode, j);
+            ModelLinkGraphArc dest(
+                g.nodes_[encToIndex(text[9 * i + 2 * j])],
+                text[9 * i + 2 * j + 1] - '0');
+            srcNode->adj_[j] = dest;
+
+            if (auto back = dest.node()->adj_[dest.arc()])
+                if (back.node() != srcNode || back.arc() != j)
+                    throw InvalidArgument("fromExtendedPlantri(): "
+                        "mismatched connections between arcs");
         }
     }
 
@@ -730,77 +814,48 @@ ModelLinkGraphArc ModelLinkGraph::incomingArc(const StrandRef& s) {
         return { nodes_[s.crossing()->index()], 1 };
 }
 
-ModelLinkGraphCells::ModelLinkGraphCells(const ModelLinkGraphCells& c) :
-        arcs_(new ModelLinkGraphArc[4 * (c.nCells_ == 0 ? 0 : c.nCells_ - 2)]),
-        start_(new size_t[1 + c.nCells_]),
-        cell_(new size_t[4 * (c.nCells_ == 0 ? 0 : c.nCells_ - 2)]),
-        step_(new size_t[4 * (c.nCells_ == 0 ? 0 : c.nCells_ - 2)]),
-        nCells_(c.nCells_) {
-    if (nCells_ == 0) {
-        start_[0] = 0;
-        return;
-    }
-
-    size_t nArcs = 4 * (nCells_ - 2);
-    std::copy(c.arcs_, c.arcs_ + nArcs, arcs_);
-    std::copy(c.start_, c.start_ + nCells_ + 1, start_);
-    std::copy(c.cell_, c.cell_ + nArcs, cell_);
-    std::copy(c.step_, c.step_ + nArcs, step_);
-}
-
-
 ModelLinkGraphCells::ModelLinkGraphCells(const ModelLinkGraph& g) :
-        arcs_(new ModelLinkGraphArc[4 * g.size()]),
-        start_(new size_t[3 + g.size()]),
-        cell_(new size_t[4 * g.size()]),
-        step_(new size_t[4 * g.size()]),
-        nCells_(2 + g.size()) {
+        nCells_(0),
+        nComponents_(g.countComponents()),
+        arcs_(4 * g.size()),
+        start_(1 + g.size() + 2 * nComponents_), // 1 + upper bound on #cells
+        cell_(4 * g.size()),
+        step_(4 * g.size()) {
     if (g.size() == 0) {
-        nCells_ = 0;
         start_[0] = 0;
         return;
     }
 
-    // Euler characteristic: vertices - arcs + cells = 2
-    // Since arcs = 2 * vertices, we have cells = 2 + vertices.
+    // We need a value for the cell number that means "not yet computed".
+    // For this we will use the maximum possible number of cells, which is
+    // what we would get in the planar case:
+    const size_t maxCells = g.size() + 2 * nComponents_;
+    std::fill(cell_.begin(), cell_.end(), maxCells);
 
-    std::fill(cell_, cell_ + 4 * g.size(), nCells_);
-
-    size_t cell = 0;
     size_t nextArc = 0;
     size_t nextPos = 0;
     start_[0] = 0;
-    while (nextArc < 4 * g.size() && cell < nCells_) {
+    while (nextArc < 4 * g.size()) {
+        // Explore the boundary of the next cell.
+        if (nCells_ == maxCells)
+            throw InvalidArgument("ModelLinkGraph has more cells than should "
+                "be possible");
+
         ModelLinkGraphArc from(g.node(nextArc >> 2), nextArc & 3);
         ModelLinkGraphArc curr(from);
         do {
-            cell_[(curr.node()->index() << 2) | curr.arc()] = cell;
+            cell_[(curr.node()->index() << 2) | curr.arc()] = nCells_;
             step_[(curr.node()->index() << 2) | curr.arc()] =
-                nextPos - start_[cell];
+                nextPos - start_[nCells_];
             arcs_[nextPos++] = curr;
             curr = curr.traverse();
             ++curr;
         } while (curr != from);
 
-        while (nextArc < 4 * g.size() && cell_[nextArc] != nCells_)
+        while (nextArc < 4 * g.size() && cell_[nextArc] != maxCells)
             ++nextArc;
 
-        start_[++cell] = nextPos;
-    }
-    if (nextArc < 4 * g.size()) {
-        // We found too many cells.
-        nCells_ = 0;
-        /*
-        while (next < 4 * g.size())
-            step_[next++] = -1;
-        */
-    } else if (cell < nCells_) {
-        // We did not find enough cells.
-        nCells_ = 0;
-        /*
-        while (cell < 2 + g.size())
-            start_[++cell] = 4 * g.size();
-        */
+        start_[++nCells_] = nextPos;
     }
 }
 
@@ -808,7 +863,11 @@ bool ModelLinkGraphCells::operator == (const ModelLinkGraphCells& other) const {
     if (nCells_ != other.nCells_)
         return false;
 
-    if (! std::equal(start_, start_ + nCells_ + 1, other.start_))
+    // Don't compare the full start_ arrays, since these might contain unused
+    // space at the end.  Instead just compare the sections of the arrays that
+    // are used.
+    if (! std::equal(start_.begin(), start_.begin() + nCells_ + 1,
+            other.start_.begin()))
         return false;
 
     for (size_t i = 0; i < start_[nCells_]; ++i) {
@@ -823,10 +882,12 @@ bool ModelLinkGraphCells::operator == (const ModelLinkGraphCells& other) const {
 
 void ModelLinkGraphCells::writeTextShort(std::ostream& out) const {
     if (nCells_ == 0)
-        out << "Invalid cell structure";
+        out << "Empty cell structure";
     else {
-        // Must have nCells_ >= 3, so use the plural.
-        out << nCells_ << " cells:";
+        if (nCells_ == 1)
+            out << "1 cell:";
+        else
+            out << nCells_ << " cells:";
 
         for (size_t i = 0; i < nCells_; ++i) {
             out << " (";
@@ -847,12 +908,9 @@ void ModelLinkGraphCells::writeTextShort(std::ostream& out) const {
 
 void ModelLinkGraphCells::writeTextLong(std::ostream& out) const {
     if (nCells_ == 0) {
-        out << "Invalid cell structure" << std::endl;
+        out << "Empty cell structure" << std::endl;
         return;
     }
-
-    // Must have nCells_ >= 3, so use the plural.
-    // out << "Cell structure with " << nCells_ << " cells\n\n";
 
     out << "Cell boundaries:\n";
     out << "  Cell  |  node (arc) - (arc) node (arc) - ... - (arc) node\n";
@@ -876,7 +934,7 @@ void ModelLinkGraphCells::writeTextLong(std::ostream& out) const {
     out << "  ------+----------------------------------------\n";
 
     int j;
-    for (i = 0; i < nCells_ - 2; ++i) {
+    for (i = 0; i < countNodes(); ++i) {
         out << std::setw(6) << i << "  |";
         j = 0;
         do {

@@ -89,6 +89,8 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def(pybind11::init<const regina::Link&>(), rdoc::__init)
         .def(pybind11::init<const ModelLinkGraph&>(), rdoc::__copy)
         .def("size", &ModelLinkGraph::size, rdoc::size)
+        .def("countComponents", &ModelLinkGraph::countComponents,
+            rdoc::countComponents)
         .def("node", &ModelLinkGraph::node,
             pybind11::return_value_policy::reference_internal, rdoc::node)
         .def("nodes", &ModelLinkGraph::nodes,
@@ -110,8 +112,12 @@ void addModelLinkGraph(pybind11::module_& m) {
             pybind11::arg("useReflection") = true,
             pybind11::arg("tight") = false,
             rdoc::canonicalPlantri)
+        .def("extendedPlantri", &ModelLinkGraph::extendedPlantri,
+            rdoc::extendedPlantri)
         .def_static("fromPlantri", &ModelLinkGraph::fromPlantri,
             rdoc::fromPlantri)
+        .def_static("fromExtendedPlantri", &ModelLinkGraph::fromExtendedPlantri,
+            rdoc::fromExtendedPlantri)
         .def("generateAnyLink", &ModelLinkGraph::generateAnyLink,
             rdoc::generateAnyLink)
         .def("generateMinimalLinks", &ModelLinkGraph::generateMinimalLinks<
@@ -129,8 +135,13 @@ void addModelLinkGraph(pybind11::module_& m) {
 
     auto c = pybind11::class_<ModelLinkGraphCells>(m, "ModelLinkGraphCells",
             rdoc_scope)
-        .def("isValid", &ModelLinkGraphCells::isValid, rdoc::isValid)
         .def("countCells", &ModelLinkGraphCells::countCells, rdoc::countCells)
+        .def("countEdges", &ModelLinkGraphCells::countEdges, rdoc::countEdges)
+        .def("countArcs", &ModelLinkGraphCells::countArcs, rdoc::countArcs)
+        .def("countNodes", &ModelLinkGraphCells::countNodes, rdoc::countNodes)
+        .def("countComponents", &ModelLinkGraphCells::countComponents,
+            rdoc::countComponents)
+        .def("genus", &ModelLinkGraphCells::genus, rdoc::genus)
         .def("size", &ModelLinkGraphCells::size, rdoc::size)
         .def("arc", &ModelLinkGraphCells::arc, rdoc::arc)
         .def("arcs", &ModelLinkGraphCells::arcs, rdoc::arcs)

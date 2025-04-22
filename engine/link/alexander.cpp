@@ -80,16 +80,9 @@ const Polynomial<Integer>& Link::alexander() const {
 
     ModelLinkGraph graph(*this);
     const auto& cells = graph.cells();
-    if (! cells.isValid()) {
-        // We know the graph is non-empty and connected, so the problem must
-        // be that the graph does not have a planar embedding.
-        // This should of course never happen, but isValid() is constant time
-        // and so, if the user did supply a bad knot diagram, it is better to
-        // test this and fail now with a clear exception rather than to fail
-        // mysteriously later on.
+    if (cells.genus() > 0)
         throw FailedPrecondition("Regina can only compute Alexander "
             "polynomials for knots in the 3-sphere");
-    }
 
     // We can start traversing the knot from any point, so we will start at
     // the lower strand from crossing 0.

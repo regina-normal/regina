@@ -96,13 +96,21 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
         return;
     }
 
-    // Next work out which relationships we may assume between different
+    // Force computation of the cell structure (which we will need below),
+    // and enforce our precondition (since otherwise this may corrupt the
+    // structure of our union-find-like tree).
+
+    cells();
+    for (size_t i = 0; i < cells_->nCells_; ++i)
+        if (cells_->size(i) == 1)
+            throw FailedPrecondition("generateMinimalLinks() requires the "
+                 "induced cell decomposition to have no 1-gons");
+
+    // Now work out which relationships we may assume between different
     // crossing signs.  This will be a quadratic-time "poor man's union-find" -
     // the criterion for how to join subtrees is not depth (to keep the
     // worst-case depth logarithmic), but rather the insistence that
     // parent[i] < i (so we can easily choose the parent sign before the child).
-
-    cells(); // force computation of cell structure
 
     // If parent[i] >= 0, then the sign of crossing i is tied to the
     // sign of crossing parent[i].  The signs are the same if flip[i] is false,
@@ -110,6 +118,11 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
     // We guarantee for all nodes that parent[i] < i.
     FixedArray<ssize_t> parent(size(), -1);
     FixedArray<bool> flip(size());
+
+    // The relationships that we deduce all happen around bigons and/or
+    // triangles.  Because of the precondition that the cell decomposition
+    // has no 1-gons, we can safely assume that any bigon or triangle is
+    // embedded (i.e., does not contain the same node more than once).
 
     for (size_t i = 0; i < cells_->nCells_; ++i)
         if (cells_->size(i) == 2) {
@@ -136,6 +149,12 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
             } else if (n2 < n1) {
                 parent[n1] = n2;
                 flip[n1] = (flip1 != flip2);
+            } else if (flip1 != flip2) {
+                // A simplifying R2 is unavoidable.
+                // I _think_ one can argue that this never occurs, even for
+                // non-planar graphs, but until I write the argument down
+                // properly let's keep this test here.
+                return;
             }
 
             // At this point we will modify arcs a1 and a2, but not their nodes.
@@ -159,6 +178,11 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
                 } else if (n3 < n1) {
                     parent[n1] = n3;
                     flip[n1] = (flip1 != flip3);
+                } else if (flip1 != flip3) {
+                    // A simplifying R2 is unavoidable.
+                    // Again, I _think_ this can never occur, even for
+                    // non-planar graphs, but we keep the test here for now.
+                    return;
                 }
             }
             if (cells_->size(cells_->cell(a2)) == 3) {
@@ -179,6 +203,11 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
                 } else if (n3 < n2) {
                     parent[n2] = n3;
                     flip[n2] = (flip2 != flip3);
+                } else if (flip2 != flip3) {
+                    // A simplifying R2 is unavoidable.
+                    // Again, I _think_ this can never occur, even for
+                    // non-planar graphs, but we keep the test here for now.
+                    return;
                 }
             }
         }
