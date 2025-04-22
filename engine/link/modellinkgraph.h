@@ -1048,6 +1048,38 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         void generateMinimalLinks(Action&& action, Args&&... args) const;
 
         /**
+         * Returns the canonical relabelling of this graph.
+         *
+         * Here "relabelling" allows for any combination of:
+         *
+         * - a relabelling of the nodes;
+         *
+         * - a relabelling of the arcs around each node, whilst preserving the
+         *   cyclic order;
+         *
+         * - if \a useReflection is \c true, a reversal of the cyclic order
+         *   of the arcs around _every_ node (i.e., a reflection of the
+         *   surface in which the graph embeds).
+         *
+         * Two graphs are related under such a relabelling if and only if
+         * their canonical relabellings are identical.
+         *
+         * There is no promise that this will be the same canonical labelling
+         * as used by canonicalPlantri().
+         *
+         * The running time for this routine is quadratic in the size of
+         * the graph.
+         *
+         * \pre This graph is connected.
+         *
+         * \param useReflection \c true if we allow reflection of the surface
+         * in which the graph embeds; that is, a graph and its reflection
+         * should produce the same canonical relabelling.
+         * \return the canonical relabelling of this graph.
+         */
+        ModelLinkGraph canonical(bool useReflection = true) const;
+
+        /**
          * Outputs this graph in a variant of the ASCII text format used
          * by _plantri_.
          *

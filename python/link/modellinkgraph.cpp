@@ -124,6 +124,9 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("generateMinimalLinks", &ModelLinkGraph::generateMinimalLinks<
             const std::function<void(regina::Link&&)>&>,
             pybind11::arg("action"), rdoc::generateMinimalLinks)
+        .def("canonical", &ModelLinkGraph::canonical,
+            pybind11::arg("useReflection") = true,
+            rdoc::canonical)
     ;
     regina::python::add_output(g);
     regina::python::add_eq_operators(g, rdoc::__eq);

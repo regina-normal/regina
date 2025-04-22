@@ -659,6 +659,41 @@ Using this constructor is identical to calling Link::graph().
 Parameter ``link``:
     the link that this new graph will model.)doc";
 
+// Docstring regina::python::doc::ModelLinkGraph_::canonical
+static const char *canonical =
+R"doc(Returns the canonical relabelling of this graph.
+
+Here "relabelling" allows for any combination of:
+
+* a relabelling of the nodes;
+
+* a relabelling of the arcs around each node, whilst preserving the
+  cyclic order;
+
+* if *useReflection* is ``True``, a reversal of the cyclic order of
+  the arcs around _every_ node (i.e., a reflection of the surface in
+  which the graph embeds).
+
+Two graphs are related under such a relabelling if and only if their
+canonical relabellings are identical.
+
+There is no promise that this will be the same canonical labelling as
+used by canonicalPlantri().
+
+The running time for this routine is quadratic in the size of the
+graph.
+
+Precondition:
+    This graph is connected.
+
+Parameter ``useReflection``:
+    ``True`` if we allow reflection of the surface in which the graph
+    embeds; that is, a graph and its reflection should produce the
+    same canonical relabelling.
+
+Returns:
+    the canonical relabelling of this graph.)doc";
+
 // Docstring regina::python::doc::ModelLinkGraph_::canonicalPlantri
 static const char *canonicalPlantri =
 R"doc(Outputs a text representation of this graph in a variant of the

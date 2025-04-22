@@ -352,6 +352,7 @@ Version 7.4  [ (to be announced) ]
               in the induced cell decomposition, and throws an exception if
               this precondition fails.
             - New routine generateAnyLink().
+            - New routine canonical().
             - All plantri import/export routines now support disconnected
               and/or non-planar graphs, though they still require graphs to
               be dual to simple quadrangulations.  The exception is

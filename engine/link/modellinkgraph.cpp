@@ -519,5 +519,109 @@ void ModelLinkGraphCells::writeTextLong(std::ostream& out) const {
     out << std::endl;
 }
 
+ModelLinkGraph ModelLinkGraph::canonical(bool useReflection) const {
+    if (size() == 0)
+        return *this;
+
+    // The image and preimage for each node, and the image of arc 0
+    // for each node:
+    FixedArray<ssize_t> image(size());
+    FixedArray<ssize_t> preimage(size());
+    FixedArray<int> arcOffset(size());
+
+    // The destination (node, arc) pairs for the best relabelling seen so far:
+    FixedArray<std::pair<size_t, int>> best(4 * size());
+    bool notStarted = true;
+
+    size_t nextUnusedNode, nodeImg, nodeSrc, adjSrcNode;
+    int arcImg;
+    ModelLinkGraphArc adjSrc;
+    bool currBetter;
+    for (int reflect = 0; reflect < 2; ++reflect) {
+        for (auto start : nodes_)
+            for (int offset = 0; offset < 4; ++offset) {
+                FixedArray<std::pair<size_t, int>> curr(4 * size());
+                currBetter = notStarted;
+                notStarted = false;
+
+                // Map arc (start, offset) -> (0, 0).
+                std::fill(image.begin(), image.end(), -1);
+                std::fill(preimage.begin(), preimage.end(), -1);
+                nextUnusedNode = 1;
+
+                image[start->index()] = 0;
+                preimage[0] = start->index();
+                arcOffset[start->index()] = (offset == 0 ? 0 : 4 - offset);
+
+                size_t pos = 0;
+                for (nodeImg = 0; nodeImg < size(); ++nodeImg) {
+                    // In the image, work out who the neighbours of nodeImg are.
+                    nodeSrc = preimage[nodeImg];
+
+                    for (arcImg = 0; arcImg < 4; ++arcImg) {
+                        adjSrc = (reflect ?
+                            nodes_[nodeSrc]->
+                                adj_[(8 - arcOffset[nodeSrc] - arcImg) % 4] :
+                            nodes_[nodeSrc]->
+                                adj_[(arcImg + 4 - arcOffset[nodeSrc]) % 4]);
+                        adjSrcNode = adjSrc.node()->index();
+
+                        // Is it a new node?
+                        if (image[adjSrcNode] < 0) {
+                            // Yes.
+                            // Map it to the next available image node, and
+                            // make the corresponding source arc map to 0.
+                            image[adjSrcNode] = nextUnusedNode++;
+                            preimage[image[adjSrcNode]] = adjSrcNode;
+                            arcOffset[adjSrcNode] =
+                                (adjSrc.arc() == 0 ? 0 : 4 - adjSrc.arc());
+                        }
+
+                        curr[pos] = { image[adjSrcNode],
+                            (reflect ?
+                                8 - adjSrc.arc() - arcOffset[adjSrcNode] :
+                                adjSrc.arc() + arcOffset[adjSrcNode]) % 4 };
+
+                        if (! currBetter) {
+                            // curr == best for the arcs seen so far.
+                            if (curr[pos] < best[pos])
+                                currBetter = true;
+                            else if (best[pos] < curr[pos]) {
+                                // There is no chance of this being canonical.
+                                goto noncanonical;
+                            }
+                        }
+
+                        ++pos;
+                    }
+                }
+
+                if (currBetter)
+                    best.swap(curr);
+
+                noncanonical:
+                    ;
+            }
+
+        if (! useReflection)
+            break;
+    }
+
+    ModelLinkGraph ans;
+    ans.nComponents_ = nComponents_;
+    for (size_t i = 0; i < size(); ++i)
+        ans.nodes_.push_back(new ModelLinkGraphNode());
+
+    size_t pos = 0;
+    for (size_t i = 0; i < size(); ++i)
+        for (int j = 0; j < 4; ++j) {
+            ans.nodes_[i]->adj_[j] = ModelLinkGraphArc(
+                ans.nodes_[best[pos].first], best[pos].second);
+            ++pos;
+        }
+
+    return ans;
+}
+
 } // namespace regina
 
