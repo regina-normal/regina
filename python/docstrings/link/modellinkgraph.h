@@ -659,6 +659,27 @@ Using this constructor is identical to calling Link::graph().
 Parameter ``link``:
     the link that this new graph will model.)doc";
 
+// Docstring regina::python::doc::ModelLinkGraph_::__init_2
+static const char *__init_2 =
+R"doc("Magic" constructor that tries to find some way to interpret the given
+string as a 4-valent graph with embedding.
+
+At present, Regina understands the following types of strings (and
+attempts to parse them in the following order):
+
+* Regina's variants of the _plantri_ format, including the default
+  format as well as the tight and extended variants, as produced by
+  plantri(), canonicalPlantri() and extendedPlantri().
+
+This list may grow in future versions of Regina.
+
+Exception ``InvalidArgument``:
+    Regina could not interpret the given string as representing a
+    graph using any of the supported string types.
+
+Parameter ``description``:
+    a string that describes a 4-valent graph with embedding.)doc";
+
 // Docstring regina::python::doc::ModelLinkGraph_::canonical
 static const char *canonical =
 R"doc(Returns the canonical relabelling of this graph.

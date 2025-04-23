@@ -114,6 +114,32 @@ ModelLinkGraph::ModelLinkGraph(const Link& link) :
     }
 }
 
+ModelLinkGraph::ModelLinkGraph(const std::string& description) :
+        cells_(nullptr) {
+    // At the moment we only support variants of the plantri format.
+    // Detect which variant we (hopefully) have.
+    try {
+        // Default (non-tight) plantri formats have length 4,9,14,...
+        // Tight plantri formats have length 3,6,9,...
+        // Extended plantri formats have length 8,17,26,...
+        if (description.length() < 8) {
+            // Cannot be extended plantri.
+            *this = fromPlantri(description);
+        } else if (description.length() == 8 || description[8] == ',') {
+            // Must be extended plantri.
+            *this = fromExtendedPlantri(description);
+        } else {
+            // Cannot be extended plantri.
+            *this = fromPlantri(description);
+        }
+        return;
+    } catch (const InvalidArgument&) {
+    }
+
+    throw InvalidArgument("The given string could not be interpreted as "
+        "representing a 4-valent graph with embedding");
+}
+
 ModelLinkGraph& ModelLinkGraph::operator = (const ModelLinkGraph& src) {
     if (std::addressof(src) == this)
         return *this;

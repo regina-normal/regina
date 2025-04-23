@@ -362,6 +362,7 @@ Version 7.4  [ (to be announced) ]
               if the graph is empty.
             - New routines extendedPlantri() and fromExtendedPlantri(), which
               are better-suited than the plantri format for non-planar graphs.
+            - New string-based "magic" constructor.
             - The flype-related routines no longer require the graph to be
               connected.
         Class ModelLinkGraphCells:

@@ -87,6 +87,7 @@ void addModelLinkGraph(pybind11::module_& m) {
     auto g = pybind11::class_<ModelLinkGraph>(m, "ModelLinkGraph", rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const regina::Link&>(), rdoc::__init)
+        .def(pybind11::init<const std::string&>(), rdoc::__init_2)
         .def(pybind11::init<const ModelLinkGraph&>(), rdoc::__copy)
         .def("size", &ModelLinkGraph::size, rdoc::size)
         .def("countComponents", &ModelLinkGraph::countComponents,

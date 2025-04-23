@@ -566,6 +566,27 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * \param src the graph to move.
          */
         ModelLinkGraph(ModelLinkGraph&& src) noexcept;
+        /**
+         * "Magic" constructor that tries to find some way to interpret
+         * the given string as a 4-valent graph with embedding.
+         *
+         * At present, Regina understands the following types of strings
+         * (and attempts to parse them in the following order):
+         *
+         * - Regina's variants of the _plantri_ format, including the default
+         *   format as well as the tight and extended variants, as produced by
+         *   plantri(), canonicalPlantri() and extendedPlantri().
+         *
+         * This list may grow in future versions of Regina.
+         *
+         * \exception InvalidArgument Regina could not interpret the given
+         * string as representing a graph using any of the supported string
+         * types.
+         *
+         * \param description a string that describes a 4-valent graph with
+         * embedding.
+         */
+        ModelLinkGraph(const std::string& description);
 
         /**
          * Destroys this graph.
