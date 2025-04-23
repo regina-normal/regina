@@ -116,6 +116,19 @@ of the Conway knot. It has trivial Alexander polynomial.
 Returns:
     the kinoshita-Terasaka knot.)doc";
 
+// Docstring regina::python::doc::ExampleLink_::kishino
+static const char *kishino =
+R"doc(Returns a four-crossing diagram of the Kishino knot. This is a non-
+trivial virtual knot that is the composition of two virtual unknots.
+
+This is the mirror image of virtual knot 4.77 in the Jeremy Green
+tables (where by "mirror image" we mean switching the upper and lower
+strands in each crossing - Green calls this a _vertical_ mirror
+image).
+
+Returns:
+    the Kishino knot.)doc";
+
 // Docstring regina::python::doc::ExampleLink_::monster
 static const char *monster =
 R"doc(Returns the monster unknot, a 10-crossing diagram of the unknot that
@@ -196,6 +209,19 @@ R"doc(Returns a zero-crossing diagram of the unknot.
 
 Returns:
     the unknot.)doc";
+
+// Docstring regina::python::doc::ExampleLink_::virtualTrefoil
+static const char *virtualTrefoil =
+R"doc(Returns a two-crossing diagram of the virtual trefoil. Both crossings
+will be positive.
+
+This is the mirror image of virtual knot 2.1 in the Jeremy Green
+tables (where by "mirror image" we mean switching the upper and lower
+strands in each crossing - Green calls this a _vertical_ mirror
+image).
+
+Returns:
+    the virtual trefoil.)doc";
 
 // Docstring regina::python::doc::ExampleLink_::whitehead
 static const char *whitehead =

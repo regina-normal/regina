@@ -204,6 +204,33 @@ class ExampleLink {
         static Link chen();
 
         /**
+         * Returns a two-crossing diagram of the virtual trefoil.
+         * Both crossings will be positive.
+         *
+         * This is the mirror image of virtual knot 2.1 in the Jeremy Green
+         * tables (where by "mirror image" we mean switching the upper and
+         * lower strands in each crossing - Green calls this a _vertical_
+         * mirror image).
+         *
+         * \return the virtual trefoil.
+         */
+        static Link virtualTrefoil();
+
+        /**
+         * Returns a four-crossing diagram of the Kishino knot.
+         * This is a non-trivial virtual knot that is the composition of two
+         * virtual unknots.
+         *
+         * This is the mirror image of virtual knot 4.77 in the Jeremy Green
+         * tables (where by "mirror image" we mean switching the upper and
+         * lower strands in each crossing - Green calls this a _vertical_
+         * mirror image).
+         *
+         * \return the Kishino knot.
+         */
+        static Link kishino();
+
+        /**
          * Returns a simple and symmetric embedding in 3-space of the
          * right-hand trefoil.
          *
