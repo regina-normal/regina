@@ -231,6 +231,20 @@ class ExampleLink {
         static Link kishino();
 
         /**
+         * Returns a four-crossing diagram of the Goussarov-Polyak-Viro virtual
+         * knot.  This is a knot whose group changes when we switch the upper
+         * and lower strands at each crossing (a behaviour that is impossible
+         * for classical knots and links).
+         *
+         * Specifically, if we denote this knot \a K, then `K.group()` is
+         * isomorphic to the trefoil group, whereas `K.rotate().group()` is
+         * isomorphic to the unknot group (i.e., the infinite cyclic group).
+         *
+         * \return the Goussarov-Polyak-Viro virtual knot.
+         */
+        static Link gpv();
+
+        /**
          * Returns a simple and symmetric embedding in 3-space of the
          * right-hand trefoil.
          *

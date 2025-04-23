@@ -63,6 +63,7 @@ void addExampleLink(pybind11::module_& m) {
         .def_static("virtualTrefoil", &ExampleLink::virtualTrefoil,
             rdoc::virtualTrefoil)
         .def_static("kishino", &ExampleLink::kishino, rdoc::kishino)
+        .def_static("gpv", &ExampleLink::gpv, rdoc::gpv)
         .def_static("spatialTrefoil", &ExampleLink::spatialTrefoil,
             rdoc::spatialTrefoil)
         .def_static("spatialHopf", &ExampleLink::spatialHopf, rdoc::spatialHopf)

@@ -86,6 +86,20 @@ that is difficult to untangle.
 Returns:
     the Gordian unknot.)doc";
 
+// Docstring regina::python::doc::ExampleLink_::gpv
+static const char *gpv =
+R"doc(Returns a four-crossing diagram of the Goussarov-Polyak-Viro virtual
+knot. This is a knot whose group changes when we switch the upper and
+lower strands at each crossing (a behaviour that is impossible for
+classical knots and links).
+
+Specifically, if we denote this knot *K*, then ``K.group()`` is
+isomorphic to the trefoil group, whereas ``K.rotate().group()`` is
+isomorphic to the unknot group (i.e., the infinite cyclic group).
+
+Returns:
+    the Goussarov-Polyak-Viro virtual knot.)doc";
+
 // Docstring regina::python::doc::ExampleLink_::gst
 static const char *gst =
 R"doc(Returns a 48-crossing potential counterexample to the slice-ribbon

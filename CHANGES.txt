@@ -132,7 +132,7 @@ Version 7.4  [ (to be announced) ]
             - New routine fourTorus(), thanks to Rhuaidi Burke.
         Class ExampleLink:
             - New routine chen().
-            - New routines virtualTrefoil() and kishino().
+            - New routines virtualTrefoil(), kishino(), and gpv().
             - Added several new routines that return 3-dimensional embeddings
               of links (i.e., SpatialLink objects).
         Class Face<dim, 1>, FaceNumbering<dim, 1>:

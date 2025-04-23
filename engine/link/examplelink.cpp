@@ -175,6 +175,10 @@ Link ExampleLink::kishino() {
     return Link::fromData({ -1, +1, -1, +1 }, { 1, -2, -1, 2, 3, -4, -3, 4 });
 }
 
+Link ExampleLink::gpv() {
+    return Link::fromData({ -1, -1, -1, -1 }, { 1, -2, -1, 2, 3, -4, -3, 4 });
+}
+
 SpatialLink ExampleLink::spatialTrefoil() {
     // Note: we could happily remove the second and fourth columns; the
     // reason we keep them is to add a bend to the arcs and make everything
