@@ -181,7 +181,7 @@ class LinkTest : public testing::Test {
             "Adams Fig. 6.28" };
 
         /**
-         * Run the given test over all of the example triangulations stored in
+         * Run the given test over all of the example links stored in
          * this test fixture.
          */
         void testManualCases(void (*f)(const Link&, const char*),

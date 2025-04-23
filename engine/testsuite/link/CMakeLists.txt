@@ -1,6 +1,7 @@
 # Files to compile
 SET ( FILES
   link.cpp
+  modellinkgraph.cpp
   )
 
 # Prepend folder name
