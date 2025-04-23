@@ -104,7 +104,7 @@ std::string ModelLinkGraph::plantri() const {
     return ans;
 }
 
-std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
+std::string ModelLinkGraph::canonicalPlantri(bool allowReflection,
         bool tight) const {
     if (size() == 0 || size() > 52)
         throw FailedPrecondition("canonicalPlantri() can only work with "
@@ -198,7 +198,7 @@ std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
                     ;
             }
 
-        if (! useReflection)
+        if (! allowReflection)
             break;
     }
 

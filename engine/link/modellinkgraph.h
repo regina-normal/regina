@@ -1057,7 +1057,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * - a relabelling of the arcs around each node, whilst preserving the
          *   cyclic order;
          *
-         * - if \a useReflection is \c true, a reversal of the cyclic order
+         * - if \a allowReflection is \c true, a reversal of the cyclic order
          *   of the arcs around _every_ node (i.e., a reflection of the
          *   surface in which the graph embeds).
          *
@@ -1072,12 +1072,12 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * \pre This graph is connected.
          *
-         * \param useReflection \c true if we allow reflection of the surface
+         * \param allowReflection \c true if we allow reflection of the surface
          * in which the graph embeds; that is, a graph and its reflection
          * should produce the same canonical relabelling.
          * \return the canonical relabelling of this graph.
          */
-        ModelLinkGraph canonical(bool useReflection = true) const;
+        ModelLinkGraph canonical(bool allowReflection = true) const;
 
         /**
          * Outputs this graph in a variant of the ASCII text format used
@@ -1173,14 +1173,19 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * This routine is similar to plantri(), but with two
          * significant differences:
          *
-         * - This routine does not preserve the labelling of nodes and the
-         *   order of arcs around each node.  Instead it reorders the nodes
-         *   and arcs so that any two relabellings of the "same" embedded
-         *   graph will produce the same canonicalPlantri() output.  By "same"
-         *   we allow for relabelling as well as orientation-preserving
-         *   homeomorphisms of the surface in which the graph embeds;
-         *   if the argument \a useReflection is \c true then we allow for
-         *   orientation-reversing homeomorphisms also.
+         * - This routine uses a canonical relabelling of the graph.
+         *   Specifically, two graphs will have the same canonicalPlantri()
+         *   output if and only if they are related under some combination of:
+         *   (i) relabelling nodes; (ii) relabelling the arcs around each node
+         *   whilst preserving their cyclic order; and (iii) if
+         *   \a allowReflection is \c true, optionally reversing the cyclic
+         *   order of the arcs around _every_ node.  This corresponds to a
+         *   homeomorphism between the surfaces in which the graphs embed that
+         *   maps one graph to the other; the argument \a allowReflection
+         *   indicates whether this homeomorphism is allowed to reverse
+         *   orientation.  While this has a similar aim to canonical(), there
+         *   is no promise that both routines will use the same "canonical
+         *   relabelling".
          *
          * - If the argument \a tight is \c true, then this routine uses
          *   an abbreviated output format.  The resulting compression is
@@ -1196,7 +1201,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * reconstruct the original graph.  Note however that, due to
          * the canonical labelling, the resulting graph might be a
          * relabelling of the original (and might even be a reflection
-         * of the original, if \a useReflection was passed as \c true).
+         * of the original, if \a allowReflection was passed as \c true).
          *
          * See plantri() for further details on the ASCII format itself,
          * including how Regina's implementation differs from _plantri_'s for
@@ -1214,7 +1219,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * \exception FailedPrecondition This graph is empty or has more
          * than 52 nodes.
          *
-         * \param useReflection \c true if a graph and its reflection
+         * \param allowReflection \c true if a graph and its reflection
          * should be considered the same (i.e., produce the same canonical
          * output), or \c false if they should be considered different.
          * Of course, if a graph is symmetric under reflection then the
@@ -1226,7 +1231,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * \return an optionally compressed _plantri_ ASCII representation
          * of this graph.
          */
-        std::string canonicalPlantri(bool useReflection = true,
+        std::string canonicalPlantri(bool allowReflection = true,
             bool tight = false) const;
 
         /**

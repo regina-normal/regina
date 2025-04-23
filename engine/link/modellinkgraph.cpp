@@ -519,7 +519,7 @@ void ModelLinkGraphCells::writeTextLong(std::ostream& out) const {
     out << std::endl;
 }
 
-ModelLinkGraph ModelLinkGraph::canonical(bool useReflection) const {
+ModelLinkGraph ModelLinkGraph::canonical(bool allowReflection) const {
     if (size() == 0)
         return *this;
 
@@ -603,7 +603,7 @@ ModelLinkGraph ModelLinkGraph::canonical(bool useReflection) const {
                     ;
             }
 
-        if (! useReflection)
+        if (! allowReflection)
             break;
     }
 
