@@ -97,6 +97,12 @@ Specifically, if we denote this knot *K*, then ``K.group()`` is
 isomorphic to the trefoil group, whereas ``K.rotate().group()`` is
 isomorphic to the unknot group (i.e., the infinite cyclic group).
 
+This is the rotation of virtual knot 4.73 in the Jeremy Green tables
+(where by "rotation" we mean flipping the diagram upside-down so that
+each crossing keeps its sign but switches its upper vs lower strands -
+in Green's terminology, this is the composition of both a vertical and
+a horizontal mirror image).
+
 Returns:
     the Goussarov-Polyak-Viro virtual knot.)doc";
 

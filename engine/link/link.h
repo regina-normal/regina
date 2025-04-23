@@ -1459,7 +1459,7 @@ class Link :
 
         /**
          * Rotates this link diagram, effectively flipping the surface that
-         * contains the it "upside-down".
+         * contains it "upside-down".
          *
          * This routine keeps the sign of each crossing fixed, but
          * switches the upper and lower strands.
