@@ -52,6 +52,8 @@ class ModelLinkGraphTest : public testing::Test {
         TestCase empty { {}, "Empty" };
         TestCase hopf { std::string("bbbb,aaaa"), "Hopf link" };
         TestCase trefoil { std::string("bbcc,ccaa,aabb"), "Trefoil" };
+        TestCase virtualTrefoil { std::string("b3b2b0b1,a2a3a1a0"),
+            "Virtual trefoil" };
 
         /**
          * Run the given test over all of the example triangulations stored in
@@ -68,12 +70,64 @@ TEST_F(ModelLinkGraphTest, connected) {
     EXPECT_TRUE(empty.graph.isConnected());
     EXPECT_TRUE(hopf.graph.isConnected());
     EXPECT_TRUE(trefoil.graph.isConnected());
+    EXPECT_TRUE(virtualTrefoil.graph.isConnected());
 }
 
 TEST_F(ModelLinkGraphTest, components) {
     EXPECT_EQ(empty.graph.countComponents(), 0);
     EXPECT_EQ(hopf.graph.countComponents(), 1);
     EXPECT_EQ(trefoil.graph.countComponents(), 1);
+    EXPECT_EQ(virtualTrefoil.graph.countComponents(), 1);
+}
+
+TEST_F(ModelLinkGraphTest, genus) {
+    EXPECT_EQ(empty.graph.genus(), 0);
+    EXPECT_EQ(hopf.graph.genus(), 0);
+    EXPECT_EQ(trefoil.graph.genus(), 0);
+    EXPECT_EQ(virtualTrefoil.graph.genus(), 1);
+}
+
+TEST_F(ModelLinkGraphTest, simple) {
+    EXPECT_TRUE(empty.graph.isSimple());
+    EXPECT_FALSE(hopf.graph.isSimple());
+    EXPECT_FALSE(trefoil.graph.isSimple());
+    EXPECT_FALSE(virtualTrefoil.graph.isSimple());
+}
+
+// TODO: Isomorphism testing via canonicalPlantri and canonical
+
+static void verifyReflect(const TestCase& test, bool symmetricUnderReflection) {
+    SCOPED_TRACE_CSTRING(test.name);
+
+    const ModelLinkGraph& g = test.graph;
+    ModelLinkGraph alt = g;
+    alt.reflect();
+
+    EXPECT_EQ(g.isConnected(), alt.isConnected());
+    EXPECT_EQ(g.countComponents(), alt.countComponents());
+    EXPECT_EQ(g.genus(), alt.genus());
+    EXPECT_EQ(g.isSimple(), alt.isSimple());
+
+    if (g.countComponents() == 1) {
+        if (symmetricUnderReflection) {
+            // We don't know if g == alt (i.e., whether they use the same
+            // labelling).
+            EXPECT_EQ(g.canonical(), alt.canonical());
+        } else {
+            EXPECT_NE(g, alt);
+            EXPECT_NE(g.canonical(), alt.canonical());
+        }
+    }
+
+    alt.reflect();
+    EXPECT_EQ(alt, g);
+}
+
+TEST_F(ModelLinkGraphTest, reflect) {
+    verifyReflect(empty, true);
+    verifyReflect(hopf, true);
+    verifyReflect(trefoil, true);
+    verifyReflect(virtualTrefoil, true);
 }
 
 static void verifyExtendedPlantri(const ModelLinkGraph& g, const char* name) {
