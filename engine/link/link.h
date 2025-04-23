@@ -1444,19 +1444,39 @@ class Link :
          * Converts this link into its reflection.
          *
          * This routine changes the sign of every crossing, but leaves
-         * the upper and lower strands the same.  This operation
-         * corresponds to reflecting the link diagram about some axis in
-         * the plane.
+         * the upper and lower strands the same.
+         *
+         * - For classical links, this operation corresponds to reflecting the
+         *   link diagram about some axis in the plane.
+         *
+         * - For virtual links, this operation performs an orientation-reversing
+         *   homeomorphism of the surface in which the link diagram embeds.
+         *
+         * In the language of Jeremy Green's virtual knot tables, this is a
+         * _horizontal_ mirror image.
          */
         void reflect();
 
         /**
-         * Rotates this link diagram, converting it into a different
-         * diagram of the same link.
+         * Rotates this link diagram, effectively flipping the surface that
+         * contains the it "upside-down".
          *
          * This routine keeps the sign of each crossing fixed, but
-         * switches the upper and lower strands.  This operation corresponds
-         * to a 3-dimensional rotation about some axis in the plane.
+         * switches the upper and lower strands.
+         *
+         * - For classical links, this operation corresponds to a 3-dimensional
+         *   rotation about some axis in the plane; the result will be a
+         *   different diagram of the same link.
+         *
+         * - For virtual links, let \a S denote the closed orientable surface
+         *   in which the link diagram embeds, and think of this as a link in
+         *   the thickened surface `S x I`: then this operation performs an
+         *   orientation-preserving homeomorphism of `S x I` that switches the
+         *   boundaries `S x {0}` and `S x {1}`.
+         *
+         * Some authors refer to this operation as a _flip_.  In the language
+         * of Jeremy Green's virtual knot tables, this is the composition of
+         * both a vertical and a horizontal mirror image.
          */
         void rotate();
 
