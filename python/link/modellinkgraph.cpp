@@ -110,7 +110,7 @@ void addModelLinkGraph(pybind11::module_& m) {
             &ModelLinkGraph::flype, pybind11::const_), rdoc::flype_2)
         .def("plantri", &ModelLinkGraph::plantri, rdoc::plantri)
         .def("canonicalPlantri", &ModelLinkGraph::canonicalPlantri,
-            pybind11::arg("useReflection") = true,
+            pybind11::arg("allowReflection") = true,
             pybind11::arg("tight") = false,
             rdoc::canonicalPlantri)
         .def("extendedPlantri", &ModelLinkGraph::extendedPlantri,
@@ -125,7 +125,7 @@ void addModelLinkGraph(pybind11::module_& m) {
             const std::function<void(regina::Link&&)>&>,
             pybind11::arg("action"), rdoc::generateMinimalLinks)
         .def("canonical", &ModelLinkGraph::canonical,
-            pybind11::arg("useReflection") = true,
+            pybind11::arg("allowReflection") = true,
             rdoc::canonical)
     ;
     regina::python::add_output(g);

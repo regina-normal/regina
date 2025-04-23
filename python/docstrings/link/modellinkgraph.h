@@ -670,7 +670,7 @@ Here "relabelling" allows for any combination of:
 * a relabelling of the arcs around each node, whilst preserving the
   cyclic order;
 
-* if *useReflection* is ``True``, a reversal of the cyclic order of
+* if *allowReflection* is ``True``, a reversal of the cyclic order of
   the arcs around _every_ node (i.e., a reflection of the surface in
   which the graph embeds).
 
@@ -686,7 +686,7 @@ graph.
 Precondition:
     This graph is connected.
 
-Parameter ``useReflection``:
+Parameter ``allowReflection``:
     ``True`` if we allow reflection of the surface in which the graph
     embeds; that is, a graph and its reflection should produce the
     same canonical relabelling.
@@ -703,14 +703,18 @@ arcs, and with optional compression.
 This routine is similar to plantri(), but with two significant
 differences:
 
-* This routine does not preserve the labelling of nodes and the order
-  of arcs around each node. Instead it reorders the nodes and arcs so
-  that any two relabellings of the "same" embedded graph will produce
-  the same canonicalPlantri() output. By "same" we allow for
-  relabelling as well as orientation-preserving homeomorphisms of the
-  surface in which the graph embeds; if the argument *useReflection*
-  is ``True`` then we allow for orientation-reversing homeomorphisms
-  also.
+* This routine uses a canonical relabelling of the graph.
+  Specifically, two graphs will have the same canonicalPlantri()
+  output if and only if they are related under some combination of:
+  (i) relabelling nodes; (ii) relabelling the arcs around each node
+  whilst preserving their cyclic order; and (iii) if *allowReflection*
+  is ``True``, optionally reversing the cyclic order of the arcs
+  around _every_ node. This corresponds to a homeomorphism between the
+  surfaces in which the graphs embed that maps one graph to the other;
+  the argument *allowReflection* indicates whether this homeomorphism
+  is allowed to reverse orientation. While this has a similar aim to
+  canonical(), there is no promise that both routines will use the
+  same "canonical relabelling".
 
 * If the argument *tight* is ``True``, then this routine uses an
   abbreviated output format. The resulting compression is only trivial
@@ -724,7 +728,7 @@ Regardless of whether *tight* is ``True`` or ``False``, the resulting
 string can be parsed by fromPlantri() to reconstruct the original
 graph. Note however that, due to the canonical labelling, the
 resulting graph might be a relabelling of the original (and might even
-be a reflection of the original, if *useReflection* was passed as
+be a reflection of the original, if *allowReflection* was passed as
 ``True``).
 
 See plantri() for further details on the ASCII format itself,
@@ -748,7 +752,7 @@ Precondition:
 Exception ``FailedPrecondition``:
     This graph is empty or has more than 52 nodes.
 
-Parameter ``useReflection``:
+Parameter ``allowReflection``:
     ``True`` if a graph and its reflection should be considered the
     same (i.e., produce the same canonical output), or ``False`` if
     they should be considered different. Of course, if a graph is
