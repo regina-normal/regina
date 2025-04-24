@@ -31,7 +31,7 @@
  **************************************************************************/
 
 /*! \file link/link.h
- *  \brief Deals with knots and links in the 3-sphere.
+ *  \brief Deals with classical and virtual knots and links.
  */
 
 #ifndef __REGINA_LINK_H
@@ -75,7 +75,7 @@ template <int> class Triangulation;
 
 /**
  * \defgroup link Knots and Links
- * Knots and links in the 3-sphere
+ * Classical and virtual knots and links
  */
 
 /**
@@ -88,17 +88,25 @@ template <int> class Triangulation;
  */
 enum class Framing {
     /**
-     * Indicates the _Seifert framing_, which is defined
-     * algebraically and is independent of the knot/link projection.
+     * Indicates the _Seifert framing_, which is defined algebraically and is
+     * independent of the knot/link projection.
      *
-     * For each component of the link, draw a Seifert surface (i.e., an
-     * orientable surface embedded in the 3-sphere that is bounded by the
-     * corresponding knot).  The Seifert framing is the vector field
-     * that points into the corresponding surface.
+     * There are several ways in which the Seifert framing can be defined.
+     * One simple definition that works for both classical and virtual links
+     * is this: for each component of the link, the Seifert framing chooses
+     * the unique longitude for the corresponding knot that has linking number
+     * zero with the knot itself.
      *
-     * Equivalently, for each component of the link, the Seifert framing
-     * chooses the unique longitude for the corresponding knot that is
-     * trivial in the homology of the knot complement.
+     * Some alternative definitions for classical links:
+     *
+     * - For each component of the link, draw a Seifert surface (i.e., an
+     *   orientable surface embedded in the 3-sphere that is bounded by the
+     *   corresponding knot).  The Seifert framing is the vector field
+     *   that points into the corresponding surface.
+     *
+     * - For each component of the link, the Seifert framing chooses the
+     *   unique longitude for the corresponding knot that is trivial in the
+     *   homology of the knot complement.
      */
     Seifert = 1,
     /**
@@ -106,7 +114,7 @@ enum class Framing {
      * knot/link projection.
      *
      * For the blackboard framing, the normal vector field stays within
-     * the projection plane.  Equivalently, the blackboard framing chooses
+     * the projection surface.  Equivalently, the blackboard framing chooses
      * longitudes whose projections do not intersect the original link diagram.
      */
     Blackboard = 2
@@ -599,21 +607,46 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
 };
 
 /**
- * Represents a combinatorial diagram of a directed knot or link in the
- * 3-sphere.
+ * Represents a combinatorial diagram of a directed knot or link.
  *
- * This class Link is a "purely combinatorial" representation of a link, as
- * it represents the combinatorics of a 2-dimensional link diagram, with no
- * geometric information about the specific placement of strands or crossings.
- * This is as opposed to the SpatialLink class, which is "purely geometric"
- * (storing a specific embedding of the link in 3-dimensional space).
+ * Regina uses the word _link_ to refer to links with any number of components,
+ * including knots (which have exactly one component) and the empty link
+ * (which has no components at all).
  *
- * - For most purposes, you should use the Link class, which has a rich
- *   set of mathematical features and uses exact discrete algorithms.
+ * Since Regina 7.4, this class supports both classical and virtual links:
  *
- * - For visualisation, you may wish to use SpatialLink instead, with the
- *   caveat that SpatialLink is based on floating-point arithmetic and is
- *   therefore susceptible to floating-point errors.
+ * - A _classical_ link is a link in the 3-sphere (i.e., the type of link that
+ *   one might typically read about in an undergraduate topology course).
+ *   Classical links are considered equivalent under ambient isotopy.
+ *
+ * - A _virtual_ link is a link in some thickened orientable surface \a S.
+ *   Virtual links are considered equivalent under ambient isotopy,
+ *   orientation-preserving homeomorphisms of \a S, and the addition and/or
+ *   removal of empty handles from \a S.
+ *
+ * This class stores a purely combinatorial representation of a 2-dimensional
+ * link diagram, using just the combinatorics of the classical crossings and
+ * the connections between them.  In particular:
+ *
+ * - The Link class does not store any geometric information about the
+ *   specific placement of strands or crossings in the ambient 3-dimensional
+ *   space.
+ *
+ * - For classical links, you can visualise a link using the SpatialLink class,
+ *   which stores a specific embedding of the link in 3-dimensional Euclidean
+ *   space, but which is based on floating-point arithmetic (and is therefore
+ *   susceptible to floating-point errors).  For most mathematical purposes
+ *   however, you should use this Link class, which has a rich set of
+ *   mathematical features and uses exact discrete algorithms.
+ *
+ * - For virtual links, some authors like to use diagrams in the plane with
+ *   "virtual crossings".  Regina does not use virtual crossings at all;
+ *   instead it stores only the classical crossings in the thickened surface
+ *   (where one strand passes over another).  Regina also does not store the
+ *   surface itself; instead it assumes that there are no empty handles (so,
+ *   for each connected component of the link diagram, the crossings and
+ *   strands in the diagram carve up the corresponding connected component of
+ *   the surface into topological discs).
  *
  * This Link class supports links with any number of components (including
  * zero), and it also supports components with no crossings (which form
@@ -660,6 +693,9 @@ class Link :
                  crossings, then it is represented in this array by a
                  null reference. */
 
+        mutable ssize_t virtualGenus_;
+            /**< The virtual genus of the link diagram, or -1 if this has not
+                 yet been computed. */
         mutable std::optional<Polynomial<Integer>> alexander_;
             /**< The Alexander polynomial of the link.
                  This is std::nullopt if it has not yet been computed,
@@ -792,7 +828,7 @@ class Link :
         /**
          * Constructs an empty link.  This will have zero components.
          */
-        Link() = default;
+        Link();
         /**
          * Constructs the unlink with the given number of components.
          *
@@ -5813,6 +5849,7 @@ inline void Link::clearAllProperties() {
         homflyLM_.reset();
     }
 
+    virtualGenus_ = -1;
     bracket_.reset();
     niceTreeDecomposition_.reset();
 }
@@ -5941,6 +5978,9 @@ inline Crossing::Crossing(int sign) : sign_(sign) {
 }
 
 // Inline functions for Link
+
+inline Link::Link() : virtualGenus_(0) {
+}
 
 inline Link::Link(size_t unknots) {
     components_.resize(unknots);
