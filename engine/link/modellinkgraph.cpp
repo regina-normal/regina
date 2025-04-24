@@ -293,7 +293,7 @@ void ModelLinkGraph::reflect() {
 
 void ModelLinkGraph::computeComponents() const {
     if (nodes_.size() <= 1) {
-        const_cast<ModelLinkGraph*>(this)->nComponents_ = nodes_.size();
+        nComponents_ = nodes_.size();
         return;
     }
 
@@ -328,7 +328,7 @@ void ModelLinkGraph::computeComponents() const {
             ++nextComponent;
     }
 
-    const_cast<ModelLinkGraph*>(this)->nComponents_ = foundComponents;
+    nComponents_ = foundComponents;
 }
 
 bool ModelLinkGraph::isSimple() const {

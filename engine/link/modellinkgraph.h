@@ -520,7 +520,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
     private:
         MarkedVector<ModelLinkGraphNode> nodes_;
             /**< The nodes of this graph. */
-        ssize_t nComponents_;
+        mutable ssize_t nComponents_;
             /**< The number of connected components of this graph, or -1 if
                  this has not yet been computed. */
         ModelLinkGraphCells* cells_;
