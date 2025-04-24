@@ -59,14 +59,21 @@ class ModelLinkGraphTest : public testing::Test {
         // Connected non-planar graphs:
         TestCase virtualTrefoil { std::string("b3b2b0b1,a2a3a1a0"),
             "Virtual trefoil" };
+        TestCase genus2 { std::string("b0b1b2d0,a0a1a2c0,b3c2c1d2,a3d3c3d1"),
+            "Genus two graph" };
 
         // Disconnected graphs:
         TestCase disconnected2 {
             std::string("c3c2c0c1,d3d2d1d0,a2a3a1a0,b3b2b1b0"),
             "Virtual trefoil U Hopf link" };
+        TestCase disconnected3 { {},
+            "Virtual trefoil U genus two graph U Borromean rings" };
 
-        // TODO: More disconnected; something non-symmetric; something simple
-        // TODO: Something with a loop
+        ModelLinkGraphTest() {
+            disconnected3.graph.insertGraph(virtualTrefoil.graph);
+            disconnected3.graph.insertGraph(genus2.graph);
+            disconnected3.graph.insertGraph(borromean.graph);
+        }
 
         /**
          * Run the given test over all of the example triangulations stored in
@@ -79,7 +86,9 @@ class ModelLinkGraphTest : public testing::Test {
             f(trefoil.graph, trefoil.name);
             f(borromean.graph, borromean.name);
             f(virtualTrefoil.graph, virtualTrefoil.name);
+            f(genus2.graph, genus2.name);
             f(disconnected2.graph, disconnected2.name);
+            f(disconnected3.graph, disconnected3.name);
         }
 };
 
@@ -90,7 +99,9 @@ TEST_F(ModelLinkGraphTest, connected) {
     EXPECT_TRUE(trefoil.graph.isConnected());
     EXPECT_TRUE(borromean.graph.isConnected());
     EXPECT_TRUE(virtualTrefoil.graph.isConnected());
+    EXPECT_TRUE(genus2.graph.isConnected());
     EXPECT_FALSE(disconnected2.graph.isConnected());
+    EXPECT_FALSE(disconnected3.graph.isConnected());
 }
 
 TEST_F(ModelLinkGraphTest, components) {
@@ -100,7 +111,9 @@ TEST_F(ModelLinkGraphTest, components) {
     EXPECT_EQ(trefoil.graph.countComponents(), 1);
     EXPECT_EQ(borromean.graph.countComponents(), 1);
     EXPECT_EQ(virtualTrefoil.graph.countComponents(), 1);
+    EXPECT_EQ(genus2.graph.countComponents(), 1);
     EXPECT_EQ(disconnected2.graph.countComponents(), 2);
+    EXPECT_EQ(disconnected3.graph.countComponents(), 3);
 }
 
 TEST_F(ModelLinkGraphTest, genus) {
@@ -110,7 +123,9 @@ TEST_F(ModelLinkGraphTest, genus) {
     EXPECT_EQ(trefoil.graph.genus(), 0);
     EXPECT_EQ(borromean.graph.genus(), 0);
     EXPECT_EQ(virtualTrefoil.graph.genus(), 1);
+    EXPECT_EQ(genus2.graph.genus(), 2);
     EXPECT_EQ(disconnected2.graph.genus(), 1);
+    EXPECT_EQ(disconnected3.graph.genus(), 3);
 }
 
 TEST_F(ModelLinkGraphTest, simple) {
@@ -120,7 +135,9 @@ TEST_F(ModelLinkGraphTest, simple) {
     EXPECT_FALSE(trefoil.graph.isSimple());
     EXPECT_TRUE(borromean.graph.isSimple());
     EXPECT_FALSE(virtualTrefoil.graph.isSimple());
+    EXPECT_FALSE(genus2.graph.isSimple());
     EXPECT_FALSE(disconnected2.graph.isSimple());
+    EXPECT_FALSE(disconnected3.graph.isSimple());
 }
 
 static void verifyReflect(const TestCase& test, bool symmetricUnderReflection) {
@@ -139,10 +156,12 @@ static void verifyReflect(const TestCase& test, bool symmetricUnderReflection) {
         if (symmetricUnderReflection) {
             // We don't know if g == alt (i.e., whether they use the same
             // labelling).
-            EXPECT_EQ(g.canonical(), alt.canonical());
+            EXPECT_EQ(g.canonical(true), alt.canonical(true));
+            EXPECT_EQ(g.canonical(false), alt.canonical(false));
         } else {
             EXPECT_NE(g, alt);
-            EXPECT_NE(g.canonical(), alt.canonical());
+            EXPECT_EQ(g.canonical(true), alt.canonical(true));
+            EXPECT_NE(g.canonical(false), alt.canonical(false));
         }
     }
 
@@ -152,10 +171,14 @@ static void verifyReflect(const TestCase& test, bool symmetricUnderReflection) {
 
 TEST_F(ModelLinkGraphTest, reflect) {
     verifyReflect(empty, true);
+    verifyReflect(twist, true);
     verifyReflect(hopf, true);
     verifyReflect(trefoil, true);
+    verifyReflect(borromean, true);
     verifyReflect(virtualTrefoil, true);
+    verifyReflect(genus2, false);
     verifyReflect(disconnected2, true);
+    verifyReflect(disconnected3, true);
 }
 
 static void verifyRandomise(const ModelLinkGraph& g, const char* name) {

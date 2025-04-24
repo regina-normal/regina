@@ -604,6 +604,14 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         size_t size() const;
 
         /**
+         * Determines whether this graph is empty.
+         * An empty graph is one with no nodes at all.
+         *
+         * \return \c true if and only if this graph is empty.
+         */
+        bool isEmpty() const;
+
+        /**
          * Returns the number of connected components in this graph.
          *
          * \warning This routine is not thread-safe, since it caches the
@@ -697,6 +705,78 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * \param other the graph whose contents should be swapped with this.
          */
         void swap(ModelLinkGraph& other) noexcept;
+
+        /**
+         * Inserts a copy of the given graph into this graph.
+         *
+         * The nodes of \a source will be copied into this graph, and placed
+         * after any pre-existing nodes.  Specifically, if the original number
+         * of nodes in this graph was \a N, then node \a i of \a source will be
+         * copied to a new node `N+i` of this graph.
+         *
+         * This routine behaves correctly when \a source is this graph.
+         *
+         * \param source the graph whose copy will be inserted.
+         */
+        void insertGraph(const ModelLinkGraph& source);
+
+        /**
+         * Moves the contents of the given graph into this graph.
+         *
+         * The nodes of \a source will be moved directly into this graph, and
+         * placed after any pre-existing nodes.  Specifically, if the original
+         * number of nodes in this graph was \a N, then node \a i of \a source
+         * will become node `N+i` of this graph.
+         *
+         * As is normal for an rvalue reference, after calling this function
+         * \a source will be unusable.  Any arc references or node pointers
+         * that referred to either this graph or \a source will remain
+         * valid (and will all now refer to this graph), though if they
+         * originally referred to \a source then they will now return
+         * different numerical node indices.
+         *
+         * Calling `graph.insertGraph(source)` (where \a source is an rvalue
+         * reference) is similar to calling `source.moveContentsTo(graph)`,
+         * but it is a little faster since it does not need to leave
+         * \a source in a usable state.
+         *
+         * \pre \a source is not this graph.
+         *
+         * \nopython Only the copying version of this function is available
+         * (i.e., the version that takes \a source as a const reference).
+         * If you want a fast move operation, call
+         * `source.moveContentsTo(this)`.
+         *
+         * \param source the graph whose contents should be moved.
+         */
+        void insertGraph(ModelLinkGraph&& source);
+
+        /**
+         * Moves the contents of this graph into the given destination graph,
+         * leaving this graph empty but otherwise usable.
+         *
+         * The nodes of this graph will be moved directly into \a dest, and
+         * placed after any pre-existing nodes.  Specifically, if the original
+         * number of nodes in \a dest was \a N, then node \a i of this graph
+         * will become node `N+i` of \a dest.
+         *
+         * This graph will become empty as a result, but it will otherwise
+         * remain a valid and usable ModelLinkGraph object.  Any arc references
+         * or node pointers that referred to either this graph or \a dest will
+         * remain valid (and will all now refer to \a dest), though if they
+         * originally referred to this graph then they will now return
+         * different numerical node indices.
+         *
+         * Calling `graph.moveContentsTo(dest)` is similar to calling
+         * `dest.insertGraph(std::move(graph))`; it is a little slower but it
+         * comes with the benefit of leaving this graph in a usable state.
+         *
+         * \pre \a dest is not this graph.
+         *
+         * \param dest the graph into which the contents of this graph should be
+         * moved.
+         */
+        void moveContentsTo(ModelLinkGraph& dest);
 
         /**
          * Determines if this graph is combinatorially identical to the
@@ -1979,6 +2059,10 @@ inline ModelLinkGraph::~ModelLinkGraph() {
 
 inline size_t ModelLinkGraph::size() const {
     return nodes_.size();
+}
+
+inline bool ModelLinkGraph::isEmpty() const {
+    return nodes_.empty();
 }
 
 inline size_t ModelLinkGraph::countComponents() const {

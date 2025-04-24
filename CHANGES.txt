@@ -348,8 +348,8 @@ Version 7.4  [ (to be announced) ]
         Class ModelLinkGraph:
             - Now supports non-planar graphs (as used with virtual links), as
               well as disconnected and/or empty graphs.
-            - New routines countComponents(), isSimple(), isConnected(), and
-              genus().
+            - New routines countComponents(), isEmpty(), isSimple(),
+              isConnected(), genus(), insertGraph(), and moveContentsTo().
             - Routine generateMinimalLinks() now supports multiple-component
               links.  Moreover, it has a new precondition requiring no 1-gons
               in the induced cell decomposition, and throws an exception if

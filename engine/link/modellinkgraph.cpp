@@ -175,6 +175,89 @@ ModelLinkGraph& ModelLinkGraph::operator = (const ModelLinkGraph& src) {
     return *this;
 }
 
+void ModelLinkGraph::insertGraph(const ModelLinkGraph& source) {
+    if (source.isEmpty())
+        return;
+    if (isEmpty()) {
+        *this = source;
+        return;
+    }
+
+    // From here we can assume source is non-empty.
+    // Clone its nodes, and transfer them directly into this link.
+    // This abuses the MarkedVector API slightly (since an object must
+    // not belong to more than one MarkedVector at a time), but the
+    // implementation of MarkedVector does make it correct.
+    ModelLinkGraph clone(source);
+    for (auto* n : clone.nodes_)
+        nodes_.push_back(n);
+    clone.nodes_.clear();
+
+    nComponents_ += source.nComponents_;
+
+    if (cells_) {
+        delete cells_;
+        cells_ = nullptr;
+    }
+}
+
+void ModelLinkGraph::insertGraph(ModelLinkGraph&& source) {
+    if (source.isEmpty())
+        return;
+    if (isEmpty()) {
+        *this = std::move(source);
+        return;
+    }
+
+    // The following code abuses the MarkedVector API slightly, but it's fine;
+    // see the comments in moveContentsTo() below.
+    for (auto* n : source.nodes_)
+        nodes_.push_back(n);
+    source.nodes_.clear();
+
+    nComponents_ += source.nComponents_;
+
+    if (cells_) {
+        delete cells_;
+        cells_ = nullptr;
+    }
+    // It should be harmless to leave junk in source.cells_, but let's
+    // not risk someone abusing what might become dangling node pointers.
+    if (source.cells_) {
+        delete source.cells_;
+        source.cells_ = nullptr;
+    }
+}
+
+void ModelLinkGraph::moveContentsTo(ModelLinkGraph& dest) {
+    if (isEmpty())
+        return;
+    if (dest.isEmpty()) {
+        swap(dest);
+        return;
+    }
+
+    // The following code abuses MarkedVector, since for a brief moment each
+    // node belongs to both nodes_ and dest.nodes_.  However, the subsequent
+    // clear() operation does not touch the markings (indices), and so we end
+    // up with the correct result (i.e., markings correct for dest).
+    for (auto* n : nodes_)
+        dest.nodes_.push_back(n);
+    nodes_.clear();
+
+    dest.nComponents_ += nComponents_;
+    nComponents_ = 0;
+
+    if (cells_) {
+        delete cells_;
+        cells_ = nullptr;
+    }
+    if (dest.cells_) {
+        delete dest.cells_;
+        dest.cells_ = nullptr;
+    }
+}
+
 bool ModelLinkGraph::operator == (const ModelLinkGraph& other) const {
     if (nodes_.size() != other.nodes_.size())
         return false;

@@ -1346,6 +1346,20 @@ Parameter ``lhs``:
 Parameter ``rhs``:
     the graph whose contents should be swapped with *lhs*.)doc";
 
+// Docstring regina::python::doc::ModelLinkGraph_::insertGraph
+static const char *insertGraph =
+R"doc(Inserts a copy of the given graph into this graph.
+
+The nodes of *source* will be copied into this graph, and placed after
+any pre-existing nodes. Specifically, if the original number of nodes
+in this graph was *N*, then node *i* of *source* will be copied to a
+new node ``N+i`` of this graph.
+
+This routine behaves correctly when *source* is this graph.
+
+Parameter ``source``:
+    the graph whose copy will be inserted.)doc";
+
 // Docstring regina::python::doc::ModelLinkGraph_::isConnected
 static const char *isConnected =
 R"doc(Identifies whether this graph is connected.
@@ -1360,6 +1374,14 @@ connected.
 Returns:
     ``True`` if and only if this graph is connected.)doc";
 
+// Docstring regina::python::doc::ModelLinkGraph_::isEmpty
+static const char *isEmpty =
+R"doc(Determines whether this graph is empty. An empty graph is one with no
+nodes at all.
+
+Returns:
+    ``True`` if and only if this graph is empty.)doc";
+
 // Docstring regina::python::doc::ModelLinkGraph_::isSimple
 static const char *isSimple =
 R"doc(Identifies whether this graph is simple; that is, has no loops or
@@ -1367,6 +1389,33 @@ multiple edges.
 
 Returns:
     ``True`` if and only if this graph is simple.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraph_::moveContentsTo
+static const char *moveContentsTo =
+R"doc(Moves the contents of this graph into the given destination graph,
+leaving this graph empty but otherwise usable.
+
+The nodes of this graph will be moved directly into *dest*, and placed
+after any pre-existing nodes. Specifically, if the original number of
+nodes in *dest* was *N*, then node *i* of this graph will become node
+``N+i`` of *dest*.
+
+This graph will become empty as a result, but it will otherwise remain
+a valid and usable ModelLinkGraph object. Any arc references or node
+pointers that referred to either this graph or *dest* will remain
+valid (and will all now refer to *dest*), though if they originally
+referred to this graph then they will now return different numerical
+node indices.
+
+Calling ``graph.moveContentsTo(dest)`` is similar to calling
+``dest.insertGraph(std::move(graph))``; it is a little slower but it
+comes with the benefit of leaving this graph in a usable state.
+
+Precondition:
+    *dest* is not this graph.
+
+Parameter ``dest``:
+    the graph into which the contents of this graph should be moved.)doc";
 
 // Docstring regina::python::doc::ModelLinkGraph_::node
 static const char *node =

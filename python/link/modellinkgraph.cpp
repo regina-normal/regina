@@ -90,6 +90,7 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def(pybind11::init<const std::string&>(), rdoc::__init_2)
         .def(pybind11::init<const ModelLinkGraph&>(), rdoc::__copy)
         .def("size", &ModelLinkGraph::size, rdoc::size)
+        .def("isEmpty", &ModelLinkGraph::isEmpty, rdoc::isEmpty)
         .def("countComponents", &ModelLinkGraph::countComponents,
             rdoc::countComponents)
         .def("node", &ModelLinkGraph::node,
@@ -97,6 +98,11 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("nodes", &ModelLinkGraph::nodes,
             pybind11::keep_alive<0, 1>(), rdoc::nodes)
         .def("swap", &ModelLinkGraph::swap, rdoc::swap)
+        .def("insertGraph",
+            overload_cast<const ModelLinkGraph&>(&ModelLinkGraph::insertGraph),
+            rdoc::insertGraph)
+        .def("moveContentsTo", &ModelLinkGraph::moveContentsTo,
+            rdoc::moveContentsTo)
         .def("reflect", &ModelLinkGraph::reflect, rdoc::reflect)
         .def("isConnected", &ModelLinkGraph::isConnected, rdoc::isConnected)
         .def("isSimple", &ModelLinkGraph::isSimple, rdoc::isSimple)

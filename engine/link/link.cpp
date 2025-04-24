@@ -827,7 +827,7 @@ void Link::moveContentsTo(Link& dest) {
     ChangeAndClearSpan<> span(*this);
     ChangeAndClearSpan<> span2(dest);
 
-    // The following code abuse MarkedVector, since for a brief moment each
+    // The following code abuses MarkedVector, since for a brief moment each
     // crossing belongs to both crossings_ and dest.crossings_.  However, the
     // subsequent clear() operation does not touch the markings (indices), and
     // so we end up with the correct result (i.e., markings correct for dest).
