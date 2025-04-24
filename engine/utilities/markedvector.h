@@ -276,6 +276,29 @@ class MarkedVector : private std::vector<T*> {
         }
 
         /**
+         * Randomly permutes the elements of this vector.
+         * All permutations are obtained with equal probability.
+         *
+         * The thread safety of this routine is dependent on the thread safety
+         * of your uniform random bit generator \a gen.
+         *
+         * \tparam URBG A type which, once any references are removed, must
+         * adhere to the C++ \a UniformRandomBitGenerator concept.
+         *
+         * \param gen the source of randomness to use (e.g., one of the
+         * many options provided in the C++ standard \c random header).
+         */
+        template <class URBG>
+        void shuffle(URBG&& gen) {
+            std::shuffle(std::vector<T*>::begin(), std::vector<T*>::end(),
+                std::forward<URBG>(gen));
+
+            size_t i = 0;
+            for (auto obj : *this)
+                obj->marking_ = i++;
+        }
+
+        /**
          * Empties this vector and refills it with the given range of items.
          *
          * Calling this routine is equivalent to calling clear() followed by

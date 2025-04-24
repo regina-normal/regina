@@ -327,6 +327,8 @@ Version 7.4  [ (to be announced) ]
             - Added a spaceship operator (<=>) for aesthetic comparisons.
               This has the effect of implementing all comparison operators,
               not just less-than (<) as before.
+        Class MarkedVector<T>:
+            - New routine shuffle().
         Class Matrix<T>:
             - Added a copy constructor that takes a matrix whose elements are
               of a different type.
@@ -354,6 +356,7 @@ Version 7.4  [ (to be announced) ]
               this precondition fails.
             - New routine generateAnyLink().
             - New routine canonical().
+            - New routine randomise().
             - All plantri import/export routines now support disconnected
               and/or non-planar graphs, though they still require graphs to
               be dual to simple quadrangulations.  The exception is

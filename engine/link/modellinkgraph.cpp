@@ -32,6 +32,7 @@
 
 #include "link.h"
 #include "modellinkgraph.h"
+#include "utilities/randutils.h"
 #include <iomanip>
 #include <sstream>
 
@@ -647,6 +648,40 @@ ModelLinkGraph ModelLinkGraph::canonical(bool allowReflection) const {
         }
 
     return ans;
+}
+
+void ModelLinkGraph::randomise() {
+    {
+        // Keep the scope of engine as small as possible, since it grabs a
+        // mutex lock.
+        RandomEngine engine;
+
+        nodes_.shuffle(engine.engine());
+
+        std::uniform_int_distribution<int> distrib(0, 3);
+        for (auto n : nodes_) {
+            int offset = distrib(engine.engine());
+            if (offset == 0)
+                continue;
+
+            std::array<ModelLinkGraphArc, 4> orig(n->adj_);
+
+            for (int i = 0; i < 4; ++i) {
+                ModelLinkGraphArc dest = orig[(i + 4 - offset) % 4];
+                if (dest.node_ == n) {
+                    n->adj_[i] = ModelLinkGraphArc(n, (dest.arc_ + offset) % 4);
+                } else {
+                    n->adj_[i] = dest;
+                    dest.node_->adj_[dest.arc_].arc_ = i;
+                }
+            }
+        }
+    }
+
+    if (cells_) {
+        delete cells_;
+        cells_ = nullptr;
+    }
 }
 
 } // namespace regina

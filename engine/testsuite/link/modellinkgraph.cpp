@@ -49,11 +49,24 @@ struct TestCase {
 
 class ModelLinkGraphTest : public testing::Test {
     protected:
+        // Connected planar graphs:
         TestCase empty { {}, "Empty" };
+        TestCase twist { std::string("a1a0a3a2"), "Single twist" };
         TestCase hopf { std::string("bbbb,aaaa"), "Hopf link" };
         TestCase trefoil { std::string("bbcc,ccaa,aabb"), "Trefoil" };
+        TestCase borromean { ExampleLink::borromean(), "Borromean rings" };
+
+        // Connected non-planar graphs:
         TestCase virtualTrefoil { std::string("b3b2b0b1,a2a3a1a0"),
             "Virtual trefoil" };
+
+        // Disconnected graphs:
+        TestCase disconnected2 {
+            std::string("c3c2c0c1,d3d2d1d0,a2a3a1a0,b3b2b1b0"),
+            "Virtual trefoil U Hopf link" };
+
+        // TODO: More disconnected; something non-symmetric; something simple
+        // TODO: Something with a loop
 
         /**
          * Run the given test over all of the example triangulations stored in
@@ -61,40 +74,54 @@ class ModelLinkGraphTest : public testing::Test {
          */
         void testManualCases(void (*f)(const ModelLinkGraph&, const char*)) {
             f(empty.graph, empty.name);
+            f(twist.graph, twist.name);
             f(hopf.graph, hopf.name);
             f(trefoil.graph, trefoil.name);
+            f(borromean.graph, borromean.name);
+            f(virtualTrefoil.graph, virtualTrefoil.name);
+            f(disconnected2.graph, disconnected2.name);
         }
 };
 
 TEST_F(ModelLinkGraphTest, connected) {
     EXPECT_TRUE(empty.graph.isConnected());
+    EXPECT_TRUE(twist.graph.isConnected());
     EXPECT_TRUE(hopf.graph.isConnected());
     EXPECT_TRUE(trefoil.graph.isConnected());
+    EXPECT_TRUE(borromean.graph.isConnected());
     EXPECT_TRUE(virtualTrefoil.graph.isConnected());
+    EXPECT_FALSE(disconnected2.graph.isConnected());
 }
 
 TEST_F(ModelLinkGraphTest, components) {
     EXPECT_EQ(empty.graph.countComponents(), 0);
+    EXPECT_EQ(twist.graph.countComponents(), 1);
     EXPECT_EQ(hopf.graph.countComponents(), 1);
     EXPECT_EQ(trefoil.graph.countComponents(), 1);
+    EXPECT_EQ(borromean.graph.countComponents(), 1);
     EXPECT_EQ(virtualTrefoil.graph.countComponents(), 1);
+    EXPECT_EQ(disconnected2.graph.countComponents(), 2);
 }
 
 TEST_F(ModelLinkGraphTest, genus) {
     EXPECT_EQ(empty.graph.genus(), 0);
+    EXPECT_EQ(twist.graph.genus(), 0);
     EXPECT_EQ(hopf.graph.genus(), 0);
     EXPECT_EQ(trefoil.graph.genus(), 0);
+    EXPECT_EQ(borromean.graph.genus(), 0);
     EXPECT_EQ(virtualTrefoil.graph.genus(), 1);
+    EXPECT_EQ(disconnected2.graph.genus(), 1);
 }
 
 TEST_F(ModelLinkGraphTest, simple) {
     EXPECT_TRUE(empty.graph.isSimple());
+    EXPECT_FALSE(twist.graph.isSimple());
     EXPECT_FALSE(hopf.graph.isSimple());
     EXPECT_FALSE(trefoil.graph.isSimple());
+    EXPECT_TRUE(borromean.graph.isSimple());
     EXPECT_FALSE(virtualTrefoil.graph.isSimple());
+    EXPECT_FALSE(disconnected2.graph.isSimple());
 }
-
-// TODO: Isomorphism testing via canonicalPlantri and canonical
 
 static void verifyReflect(const TestCase& test, bool symmetricUnderReflection) {
     SCOPED_TRACE_CSTRING(test.name);
@@ -108,7 +135,7 @@ static void verifyReflect(const TestCase& test, bool symmetricUnderReflection) {
     EXPECT_EQ(g.genus(), alt.genus());
     EXPECT_EQ(g.isSimple(), alt.isSimple());
 
-    if (g.countComponents() == 1) {
+    if (g.countComponents() <= 1) {
         if (symmetricUnderReflection) {
             // We don't know if g == alt (i.e., whether they use the same
             // labelling).
@@ -128,6 +155,40 @@ TEST_F(ModelLinkGraphTest, reflect) {
     verifyReflect(hopf, true);
     verifyReflect(trefoil, true);
     verifyReflect(virtualTrefoil, true);
+    verifyReflect(disconnected2, true);
+}
+
+static void verifyRandomise(const ModelLinkGraph& g, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    for (int i = 0; i < 20; ++i) {
+        ModelLinkGraph alt = g;
+        alt.randomise();
+
+        // Ensure that the connections are consistent.
+        for (auto n : alt.nodes())
+            for (int j = 0; j < 4; ++j) {
+                ModelLinkGraphArc arc = n->arc(j);
+                EXPECT_EQ(arc.traverse().traverse(), arc);
+            }
+    }
+
+    if (g.countComponents() <= 1) {
+        ModelLinkGraph c0 = g.canonical(true);
+        ModelLinkGraph c1 = g.canonical(false);
+
+        for (int i = 0; i < 20; ++i) {
+            ModelLinkGraph alt = g;
+            alt.randomise();
+
+            EXPECT_EQ(alt.canonical(true), c0);
+            EXPECT_EQ(alt.canonical(false), c1);
+        }
+    }
+}
+
+TEST_F(ModelLinkGraphTest, randomise) {
+    testManualCases(verifyRandomise);
 }
 
 static void verifyExtendedPlantri(const ModelLinkGraph& g, const char* name) {

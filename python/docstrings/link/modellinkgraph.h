@@ -1505,6 +1505,18 @@ Exception ``FailedPrecondition``:
 Returns:
     a _plantri_ format ASCII representation of this graph.)doc";
 
+// Docstring regina::python::doc::ModelLinkGraph_::randomise
+static const char *randomise =
+R"doc(Randomly relabels this graph in an orientation-preserving manner.
+
+The nodes will be relabelled arbitrarily. Around each node, the four
+outgoing arcs will be relabelled in a random way that preserves their
+cyclic order (thereby preserving the local embedding of the graph,
+without reflection).
+
+This routine is thread-safe, and uses RandomEngine for its random
+number generation.)doc";
+
 // Docstring regina::python::doc::ModelLinkGraph_::reflect
 static const char *reflect =
 R"doc(Converts this graph into its reflection.

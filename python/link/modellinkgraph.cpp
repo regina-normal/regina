@@ -128,6 +128,7 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("canonical", &ModelLinkGraph::canonical,
             pybind11::arg("allowReflection") = true,
             rdoc::canonical)
+        .def("randomise", &ModelLinkGraph::randomise, rdoc::randomise)
     ;
     regina::python::add_output(g);
     regina::python::add_eq_operators(g, rdoc::__eq);

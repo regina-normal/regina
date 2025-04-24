@@ -350,7 +350,7 @@ std::ostream& operator << (std::ostream& out, const ModelLinkGraphArc& a);
 class ModelLinkGraphNode : public MarkedElement,
         public ShortOutput<ModelLinkGraphNode> {
     private:
-        ModelLinkGraphArc adj_[4];
+        std::array<ModelLinkGraphArc, 4> adj_;
             /**< Stores the arcs at the _other_ endpoints of the four
                  graph edges that exit this node.  The four arc references
                  are stored in a clockwise order around this node. */
@@ -1099,6 +1099,19 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * \return the canonical relabelling of this graph.
          */
         ModelLinkGraph canonical(bool allowReflection = true) const;
+
+        /**
+         * Randomly relabels this graph in an orientation-preserving manner.
+         *
+         * The nodes will be relabelled arbitrarily.  Around each node, the
+         * four outgoing arcs will be relabelled in a random way that
+         * preserves their cyclic order (thereby preserving the local
+         * embedding of the graph, without reflection).
+         *
+         * This routine is thread-safe, and uses RandomEngine for its random
+         * number generation.
+         */
+        void randomise();
 
         /**
          * Outputs this graph in a variant of the ASCII text format used
