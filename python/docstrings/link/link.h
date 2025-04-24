@@ -61,22 +61,52 @@ torus bounding each component of the link.)doc";
 
 // Docstring regina::python::doc::Link
 static const char *Link =
-R"doc(Represents a combinatorial diagram of a directed knot or link in the
-3-sphere.
+R"doc(Represents a combinatorial diagram of a directed knot or link.
 
-This class Link is a "purely combinatorial" representation of a link,
-as it represents the combinatorics of a 2-dimensional link diagram,
-with no geometric information about the specific placement of strands
-or crossings. This is as opposed to the SpatialLink class, which is
-"purely geometric" (storing a specific embedding of the link in
-3-dimensional space).
+Regina uses the word _link_ to refer to links with any number of
+components, including knots (which have exactly one component) and the
+empty link (which has no components at all).
 
-* For most purposes, you should use the Link class, which has a rich
-  set of mathematical features and uses exact discrete algorithms.
+Since Regina 7.4, this class supports both classical and virtual
+links:
 
-* For visualisation, you may wish to use SpatialLink instead, with the
-  caveat that SpatialLink is based on floating-point arithmetic and is
-  therefore susceptible to floating-point errors.
+* A _classical_ link is a link in the 3-sphere (i.e., the type of link
+  that one might typically read about in an undergraduate topology
+  course). Classical links are considered equivalent under ambient
+  isotopy.
+
+* A _virtual_ link is a link in some thickened orientable surface *S*.
+  Virtual links are considered equivalent under ambient isotopy,
+  orientation-preserving homeomorphisms of *S*, and the addition
+  and/or removal of empty handles from *S*.
+
+This class stores a purely combinatorial representation of a
+2-dimensional link diagram, using just the combinatorics of the
+classical crossings and the connections between them. In particular:
+
+* The Link class does not store any geometric information about the
+  specific placement of strands or crossings in the ambient
+  3-dimensional space.
+
+* For classical links, you can visualise a link using the SpatialLink
+  class, which stores a specific embedding of the link in
+  3-dimensional Euclidean space, but which is based on floating-point
+  arithmetic (and is therefore susceptible to floating-point errors).
+  For most mathematical purposes however, you should use this Link
+  class, which has a rich set of mathematical features and uses exact
+  discrete algorithms.
+
+* For virtual links, some authors like to use diagrams in the plane
+  with "virtual crossings". Regina does not use virtual crossings at
+  all; instead it stores only the classical crossings in the thickened
+  surface (where one strand passes over another). Regina also does not
+  store the surface itself; instead it uses the (unique) surface of
+  smallest possible genus in which this diagram embeds (i.e., the
+  surface in which the diagram embeds with no empty handles). Put
+  differently: Regina treats the crossings and strands of this diagram
+  as defining a local embedding of the 1-skeleton of some polygonal
+  decomposition of the surface; the 2-cells of this decomposition are
+  then assumed to be topological discs.
 
 This Link class supports links with any number of components
 (including zero), and it also supports components with no crossings
@@ -270,7 +300,7 @@ R"doc(Indicates the _blackboard framing_, which is specific to the knot/link
 projection.
 
 For the blackboard framing, the normal vector field stays within the
-projection plane. Equivalently, the blackboard framing chooses
+projection surface. Equivalently, the blackboard framing chooses
 longitudes whose projections do not intersect the original link
 diagram.)doc";
 
@@ -279,14 +309,22 @@ static const char *Seifert =
 R"doc(Indicates the _Seifert framing_, which is defined algebraically and is
 independent of the knot/link projection.
 
-For each component of the link, draw a Seifert surface (i.e., an
-orientable surface embedded in the 3-sphere that is bounded by the
-corresponding knot). The Seifert framing is the vector field that
-points into the corresponding surface.
+There are several ways in which the Seifert framing can be defined.
+One simple definition that works for both classical and virtual links
+is this: for each component of the link, the Seifert framing chooses
+the unique longitude for the corresponding knot that has linking
+number zero with the knot itself.
 
-Equivalently, for each component of the link, the Seifert framing
-chooses the unique longitude for the corresponding knot that is
-trivial in the homology of the knot complement.)doc";
+Some alternative definitions for classical links:
+
+* For each component of the link, draw a Seifert surface (i.e., an
+  orientable surface embedded in the 3-sphere that is bounded by the
+  corresponding knot). The Seifert framing is the vector field that
+  points into the corresponding surface.
+
+* For each component of the link, the Seifert framing chooses the
+  unique longitude for the corresponding knot that is trivial in the
+  homology of the knot complement.)doc";
 
 }
 
@@ -565,6 +603,10 @@ Returns:
 static const char *component =
 R"doc(Returns a strand in the given component of this link.
 
+Components are individual circles embedded in the ambient 3-manifold
+(they have nothing to do with the connectivity of the link diagram).
+So, for example, the Hopf link has two components.
+
 For each component of the link, this routine returns a "starting
 strand". You can traverse the entire component by beginning at this
 starting strand and repeatedly incrementing it through a routine such
@@ -587,6 +629,10 @@ Returns:
 static const char *components =
 R"doc(Returns an object that allows iteration through and random access to
 all components of this link.
+
+Components are individual circles embedded in the ambient 3-manifold
+(they have nothing to do with the connectivity of the link diagram).
+So, for example, the Hopf link has two components.
 
 The object that is returned is lightweight, and can be happily copied
 by value. The C++ type of the object is subject to change, so C++
@@ -701,6 +747,10 @@ Returns:
 // Docstring regina::python::doc::Link_::countComponents
 static const char *countComponents =
 R"doc(Returns the number of components in this link.
+
+This is the number of circles embedded in the ambient 3-manifold (it
+has nothing to do with the connectivity of the link diagram). So, for
+example, the number of components in the Hopf link is two.
 
 Returns:
     the number of components.)doc";
@@ -1807,16 +1857,24 @@ Parameter ``rhs``:
 
 // Docstring regina::python::doc::Link_::graph
 static const char *graph =
-R"doc(Returns the 4-valent planar graph that models this link.
+R"doc(Returns the 4-valent graph that models this link diagram, along with
+the local embedding of the graph into the surface that contains the
+diagram.
 
 Any zero-component unknot components of this link will be ignored.
+
+For classical links, the result will be a planar graph with a specific
+planar embedding. For virtual links, this may be an embedding of the
+graph into some higher genus closed orientable surface, depending on
+the virtual genus of the link. See ModelLinkGraph for further
+discussion on local embeddings.
 
 The nodes of the resulting graph will be numbered in the same way as
 the crossings of this link. For each node, arc 0 will represent the
 outgoing lower strand of the corresponding crossing.
 
-Calling graph() is identical to passing this link to the
-ModelLinkGraph constructor.
+Calling ``link.graph()`` is identical to creating a graph via
+``ModelLinkGraph(link)``.
 
 Returns:
     the graph that models this link.)doc";
@@ -2337,6 +2395,35 @@ Returns:
     ``True`` if this is an alternating diagram, or ``False`` if this
     is a non-alternating diagram.)doc";
 
+// Docstring regina::python::doc::Link_::isClassical
+static const char *isClassical =
+R"doc(Determines whether this link diagram is classical (that is, planar). A
+link diagram that is _not_ classical cannot be drawn in the plane
+without the addition of virtual crossings.
+
+Some notes:
+
+* Calling isClassical() is equivalent to testing whether
+  virtualGenus() is zero.
+
+* This is a property of the link _diagram_, not the link itself. In
+  particular, it is possible for a classical link to be represented
+  using a non-classical diagram (i.e., a diagram that requires virtual
+  crossings when drawn in the plane).
+
+* As mentioned in the class notes, the Link class does not actually
+  store virtual crossings; instead it treats the link diagram as
+  living within some closed orientable surface. Any discussion of
+  virtual crossings in the notes above is for exposition only.
+
+This routine runs in time linear in the size of the link diagram.
+However, the virtual genus is cached, and so subsequent calls to
+isClassical() or virtualGenus() will be instantaneous.
+
+Returns:
+    ``True`` if and only if this link diagram is classical. (i.e.,
+    planar).)doc";
+
 // Docstring regina::python::doc::Link_::isConnected
 static const char *isConnected =
 R"doc(Determines whether this link diagram is connected, if we treat each
@@ -2677,10 +2764,21 @@ Returns:
 static const char *makeVirtual =
 R"doc(Converts the given classical crossing into a virtual crossing.
 
-This has the effect of removing the crossing entirely from the link
-diagram, since Regina does not store virtual crossings explicitly. The
-incoming and outgoing upper strands will become one, and the incoming
-and outgoing lower strands will become one.
+This essentially adds a handle to the surface in which the diagram is
+embedded, so that the old upper and lower strands can use this handle
+to pass by one another without actually crossing in the link diagram.
+
+Note that the virtual genus of this link might actually go _down_ as a
+result of this operation, since the operation might generate more
+empty handles (which Regina implicitly removes, as explained in the
+class notes). A virtual link could even become classical as a result
+of this operation.
+
+For the combinatorics of the link diagram, this operation simply
+removes the given crossing entirely (recall that Regina does not store
+virtual crossings explicitly). The incoming and outgoing upper strands
+will merge into one, and the incoming and outgoing lower strands will
+merge into one.
 
 This routine is safe to call if *crossing* is ``None`` (in which case
 this routine does nothing).
@@ -2845,9 +2943,9 @@ Parameter ``component``:
 
 Returns:
     an over-crossing in the same link component, or a null reference
-    if the given link component contains only under-crossings (i.e.,
-    it is a zero-crossing unknot placed beneath the rest of the
-    diagram).)doc";
+    if the given link component contains only under-crossings (which
+    for classical links means it is a zero-crossing unknot placed
+    beneath the rest of the diagram).)doc";
 
 // Docstring regina::python::doc::Link_::pace
 static const char *pace =
@@ -3722,8 +3820,8 @@ and lower strands the same.
 * For virtual links, this operation performs an orientation-reversing
   homeomorphism of the surface in which the link diagram embeds.
 
-In the language of Jeremy Green's virtual knot tables, this is a
-_horizontal_ mirror image.)doc";
+In the language of Jeremy Green's virtual knot tables, this operation
+is a _horizontal_ mirror image.)doc";
 
 // Docstring regina::python::doc::Link_::resolve
 static const char *resolve =
@@ -3732,8 +3830,8 @@ connections with the two outgoing strands, with the result that the
 given crossing is removed entirely.
 
 .. note::
-    The number of components in the link _will_ change as a result of
-    this operation.
+    The number of components in the link may change as a result of
+    this operation (and for classical links, it _will_ change).
 
 Parameter ``c``:
     the crossing to resolve.)doc";
@@ -3907,7 +4005,7 @@ upper and lower strands.
 
 * For virtual links, let *S* denote the closed orientable surface in
   which the link diagram embeds, and think of this as a link in the
-  thickened surface `S x I`: then this operation performs an
+  thickened surface ``S x I``. Then this operation performs an
   orientation-preserving homeomorphism of ``S x I`` that switches the
   boundaries ``S x {0}`` and ``S x {1}``.
 
@@ -4292,8 +4390,9 @@ Parameter ``component``:
 
 Returns:
     an under-crossing in the same link component, or a null reference
-    if the given link component contains only over-crossings (i.e., it
-    is a zero-crossing unknot placed above the rest of the diagram).)doc";
+    if the given link component contains only over-crossings (which
+    for classical links means it is a zero-crossing unknot placed
+    above the rest of the diagram).)doc";
 
 // Docstring regina::python::doc::Link_::useTreeDecomposition
 static const char *useTreeDecomposition =
@@ -4323,6 +4422,25 @@ a nice tree decomposition from it if *td* is not nice already.
 Parameter ``td``:
     a tree decomposition of the planar 4-valent multigraph formed by
     this link diagram.)doc";
+
+// Docstring regina::python::doc::Link_::virtualGenus
+static const char *virtualGenus =
+R"doc(Determines the virtual genus of this link diagram. The virtual genus
+is the smallest genus of closed orientable surface in which the
+diagram embeds.
+
+Note that this is a property of the link _diagram_, not the link
+itself.
+
+For classical link diagrams, the virtual genus will always be zero
+(since classical link diagrams are by definition planar).
+
+This routine runs in time linear in the size of the link diagram.
+However, the virtual genus is cached, and so subsequent calls to
+virtualGenus() or isClassical() will be instantaneous.
+
+Returns:
+    the virtual genus of this link diagram.)doc";
 
 // Docstring regina::python::doc::Link_::whiteheadDouble
 static const char *whiteheadDouble =

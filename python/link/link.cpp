@@ -221,6 +221,7 @@ void addLink(pybind11::module_& m) {
         .def("change", &Link::change, rdoc::change)
         .def("changeAll", &Link::changeAll, rdoc::changeAll)
         .def("resolve", &Link::resolve, rdoc::resolve)
+        .def("makeVirtual", &Link::makeVirtual, rdoc::makeVirtual)
         .def("composeWith", &Link::composeWith, rdoc::composeWith)
         .def("makeAlternating", &Link::makeAlternating, rdoc::makeAlternating)
         .def("isAlternating", &Link::isAlternating, rdoc::isAlternating)
@@ -232,6 +233,8 @@ void addLink(pybind11::module_& m) {
         .def("writheOfComponent", overload_cast<size_t>(
             &Link::writheOfComponent, pybind11::const_),
             rdoc::writheOfComponent_2)
+        .def("isClassical", &Link::isClassical, rdoc::isClassical)
+        .def("virtualGenus", &Link::virtualGenus, rdoc::virtualGenus)
         .def("seifertCircles", &Link::seifertCircles, rdoc::seifertCircles)
         .def("complement", &Link::complement,
             pybind11::arg("simplify") = true, rdoc::complement)
@@ -413,7 +416,6 @@ void addLink(pybind11::module_& m) {
             pybind11::arg("threads"),
             pybind11::arg("action"),
             rdoc::rewrite)
-        .def("makeVirtual", &Link::makeVirtual, rdoc::makeVirtual)
         .def("insertTorusLink", &Link::insertTorusLink,
             pybind11::arg(),
             pybind11::arg(),

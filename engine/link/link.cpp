@@ -39,7 +39,7 @@
 
 namespace regina {
 
-Link::Link(const Link& cloneMe, bool cloneProps) {
+Link::Link(const Link& cloneMe, bool cloneProps) : virtualGenus_(-1) {
     crossings_.reserve(cloneMe.crossings_.size());
     for (Crossing* c : cloneMe.crossings_)
         crossings_.push_back(new Crossing(c->sign()));
@@ -333,6 +333,9 @@ std::vector<Link> Link::diagramComponents() const {
     // Like moveContentsTo(), we abuse MarkedVector by having crossings
     // temporarily belong to two marked vectors at once; see moveContentsTo()
     // for why this is fine.
+    //
+    // Note: the new links in ans[...] will have virtual genus 0; we need
+    // to unset this as we move crossings around.
 
     Link clone(*this);
     std::vector<Link> ans(nComp + nTrivial);
@@ -350,7 +353,10 @@ std::vector<Link> Link::diagramComponents() const {
         ans[comp[i]].crossings_.push_back(clone.crossings_[i]);
     clone.crossings_.clear();
 
-    // Finally add the trivial (0-crossing) diagram components.
+    // Finally clear the virtual genus for non-empty components and add in the
+    // trivial (0-crossing) diagram components.
+    for (size_t i = 0; i < nComp; ++i)
+        ans[i].virtualGenus_ = -1;
     for (size_t i = 0; i < nTrivial; ++i)
         ans[nComp + i].components_.emplace_back();
 
@@ -720,22 +726,37 @@ void Link::swap(Link& other) {
 }
 
 void Link::reflect() {
+    // Properties that are preserved under this operation:
+    ssize_t tmpGenus = virtualGenus_;
+
     ChangeAndClearSpan<> span(*this);
     for (Crossing* cross : crossings_)
         cross->sign_ = -cross->sign_;
+
+    // Restore properties that did not change:
+    virtualGenus_ = tmpGenus;
 }
 
 void Link::reverse() {
+    // Properties that are preserved under this operation:
+    ssize_t tmpGenus = virtualGenus_;
+
     ChangeAndClearSpan<> span(*this);
     for (Crossing* cross : crossings_) {
         std::swap(cross->next_[0], cross->prev_[0]);
         std::swap(cross->next_[1], cross->prev_[1]);
     }
+
+    // Restore properties that did not change:
+    virtualGenus_ = tmpGenus;
 }
 
 void Link::reverse(StrandRef component) {
     if (! component)
         return;
+
+    // Properties that are preserved under this operation:
+    ssize_t tmpGenus = virtualGenus_;
 
     ChangeAndClearSpan<> span(*this);
 
@@ -747,9 +768,15 @@ void Link::reverse(StrandRef component) {
         cross->sign_ = -cross->sign_;
         --s; // because we just reversed s
     } while (s != component);
+
+    // Restore properties that did not change:
+    virtualGenus_ = tmpGenus;
 }
 
 void Link::rotate() {
+    // Properties that are preserved under this operation:
+    ssize_t tmpGenus = virtualGenus_;
+
     ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
 
     for (StrandRef& s : components_)
@@ -763,6 +790,9 @@ void Link::rotate() {
         cross->prev_[0].strand_ ^= 1;
         cross->prev_[1].strand_ ^= 1;
     }
+
+    // Restore properties that did not change:
+    virtualGenus_ = tmpGenus;
 }
 
 void Link::insertLink(const Link& source) {
@@ -846,6 +876,9 @@ void Link::moveContentsTo(Link& dest) {
 }
 
 void Link::change(Crossing* c) {
+    // Properties that are preserved under this operation:
+    ssize_t tmpGenus = virtualGenus_;
+
     ChangeAndClearSpan<> span(*this);
 
     for (StrandRef& s : components_)
@@ -881,9 +914,15 @@ void Link::change(Crossing* c) {
 
     // Finally: the crossing sign will change.
     c->sign_ = -c->sign_;
+
+    // Restore properties that did not change:
+    virtualGenus_ = tmpGenus;
 }
 
 void Link::changeAll() {
+    // Properties that are preserved under this operation:
+    ssize_t tmpGenus = virtualGenus_;
+
     ChangeAndClearSpan<> span(*this);
 
     for (StrandRef& s : components_)
@@ -899,6 +938,9 @@ void Link::changeAll() {
         }
         c->sign_ = - c->sign_;
     }
+
+    // Restore properties that did not change:
+    virtualGenus_ = tmpGenus;
 }
 
 void Link::resolve(Crossing* c) {
@@ -1019,6 +1061,54 @@ void Link::resolve(Crossing* c) {
     }
 }
 
+void Link::makeVirtual(Crossing* crossing) {
+    if (! crossing)
+        return;
+
+    ChangeAndClearSpan<> span(*this);
+
+    StrandRef upper = crossing->upper();
+    StrandRef lower = crossing->lower();
+
+    // Plan how we will adjust any components that begin at the given
+    // crossing.
+    StrandRef upperBecomes, lowerBecomes;
+
+    // If upper.next() == upper, then the upper strand will become a
+    // zero-crossing unknot.
+    if (upper.next() != upper) {
+        upperBecomes = upper.next(); // Note: this _could_ be equal to lower.
+        Link::join(upper.prev(), upper.next());
+    }
+
+    if (lower.next() == lower) {
+        // lowerBecomes is already (correctly) a null reference, but we might
+        // need to adjust upperBecomes also in case the crossing had
+        // originally formed a 1-crossing unknot.
+        if (upperBecomes == lower)
+            upperBecomes = StrandRef();
+    } else {
+        lowerBecomes = lower.next(); // This will _not_ be equal to upper.
+        Link::join(lower.prev(), lower.next());
+    }
+
+    // Update any components that started at the original crossing.
+    int found = 0;
+    for (StrandRef& c : components_)
+        if (c.crossing() == crossing) {
+            if (c.strand() == 0)
+                c = lowerBecomes;
+            else
+                c = upperBecomes;
+            if (++found == 2)
+                break;
+        }
+
+    // Finally, delete the original crossing.
+    crossings_.erase(crossings_.begin() + crossing->index());
+    delete crossing;
+}
+
 GroupPresentation Link::group(bool simplify) const {
     if (crossings_.empty()) {
         // This is a zero-crossing unlink.
@@ -1128,54 +1218,6 @@ GroupPresentation Link::group(bool simplify) const {
     if (simplify)
         g.simplify();
     return g;
-}
-
-void Link::makeVirtual(Crossing* crossing) {
-    if (! crossing)
-        return;
-
-    ChangeAndClearSpan<> span(*this);
-
-    StrandRef upper = crossing->upper();
-    StrandRef lower = crossing->lower();
-
-    // Plan how we will adjust any components that begin at the given
-    // crossing.
-    StrandRef upperBecomes, lowerBecomes;
-
-    // If upper.next() == upper, then the upper strand will become a
-    // zero-crossing unknot.
-    if (upper.next() != upper) {
-        upperBecomes = upper.next(); // Note: this _could_ be equal to lower.
-        Link::join(upper.prev(), upper.next());
-    }
-
-    if (lower.next() == lower) {
-        // lowerBecomes is already (correctly) a null reference, but we might
-        // need to adjust upperBecomes also in case the crossing had
-        // originally formed a 1-crossing unknot.
-        if (upperBecomes == lower)
-            upperBecomes = StrandRef();
-    } else {
-        lowerBecomes = lower.next(); // This will _not_ be equal to upper.
-        Link::join(lower.prev(), lower.next());
-    }
-
-    // Update any components that started at the original crossing.
-    int found = 0;
-    for (StrandRef& c : components_)
-        if (c.crossing() == crossing) {
-            if (c.strand() == 0)
-                c = lowerBecomes;
-            else
-                c = upperBecomes;
-            if (++found == 2)
-                break;
-        }
-
-    // Finally, delete the original crossing.
-    crossings_.erase(crossings_.begin() + crossing->index());
-    delete crossing;
 }
 
 std::string Link::brief() const {

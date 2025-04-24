@@ -643,10 +643,12 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
  *   "virtual crossings".  Regina does not use virtual crossings at all;
  *   instead it stores only the classical crossings in the thickened surface
  *   (where one strand passes over another).  Regina also does not store the
- *   surface itself; instead it assumes that there are no empty handles (so,
- *   for each connected component of the link diagram, the crossings and
- *   strands in the diagram carve up the corresponding connected component of
- *   the surface into topological discs).
+ *   surface itself; instead it uses the (unique) surface of smallest possible
+ *   genus in which this diagram embeds (i.e., the surface in which the diagram
+ *   embeds with no empty handles).  Put differently: Regina treats the
+ *   crossings and strands of this diagram as defining a local embedding of the
+ *   1-skeleton of some polygonal decomposition of the surface; the 2-cells of
+ *   this decomposition are then assumed to be topological discs.
  *
  * This Link class supports links with any number of components (including
  * zero), and it also supports components with no crossings (which form
@@ -935,6 +937,10 @@ class Link :
         /**
          * Returns the number of components in this link.
          *
+         * This is the number of circles embedded in the ambient 3-manifold
+         * (it has nothing to do with the connectivity of the link diagram).
+         * So, for example, the number of components in the Hopf link is two.
+         *
          * \return the number of components.
          */
         size_t countComponents() const;
@@ -987,6 +993,10 @@ class Link :
         /**
          * Returns a strand in the given component of this link.
          *
+         * Components are individual circles embedded in the ambient 3-manifold
+         * (they have nothing to do with the connectivity of the link diagram).
+         * So, for example, the Hopf link has two components.
+         *
          * For each component of the link, this routine returns a
          * "starting strand".  You can traverse the entire component by
          * beginning at this starting strand and repeatedly incrementing
@@ -1008,6 +1018,10 @@ class Link :
         /**
          * Returns an object that allows iteration through and random access
          * to all components of this link.
+         *
+         * Components are individual circles embedded in the ambient 3-manifold
+         * (they have nothing to do with the connectivity of the link diagram).
+         * So, for example, the Hopf link has two components.
          *
          * The object that is returned is lightweight, and can be happily
          * copied by value.  The C++ type of the object is subject to change,
@@ -1253,8 +1267,8 @@ class Link :
          * null reference (indicating a zero-crossing component).
          * \return an over-crossing in the same link component, or a null
          * reference if the given link component contains only under-crossings
-         * (i.e., it is a zero-crossing unknot placed beneath the rest of the
-         * diagram).
+         * (which for classical links means it is a zero-crossing unknot placed
+         * beneath the rest of the diagram).
          */
         StrandRef overForComponent(StrandRef component) const;
         /**
@@ -1266,8 +1280,8 @@ class Link :
          * null reference (indicating a zero-crossing component).
          * \return an under-crossing in the same link component, or a null
          * reference if the given link component contains only over-crossings
-         * (i.e., it is a zero-crossing unknot placed above the rest of the
-         * diagram).
+         * (which for classical links means it is a zero-crossing unknot placed
+         * above the rest of the diagram).
          */
         StrandRef underForComponent(StrandRef component) const;
 
@@ -1297,16 +1311,24 @@ class Link :
         bool operator == (const Link& other) const;
 
         /**
-         * Returns the 4-valent planar graph that models this link.
+         * Returns the 4-valent graph that models this link diagram, along with
+         * the local embedding of the graph into the surface that contains the
+         * diagram.
          *
          * Any zero-component unknot components of this link will be ignored.
+         *
+         * For classical links, the result will be a planar graph with a
+         * specific planar embedding.  For virtual links, this may be an
+         * embedding of the graph into some higher genus closed orientable
+         * surface, depending on the virtual genus of the link.  See
+         * ModelLinkGraph for further discussion on local embeddings.
          *
          * The nodes of the resulting graph will be numbered in the same way
          * as the crossings of this link.  For each node, arc 0 will represent
          * the outgoing lower strand of the corresponding crossing.
          *
-         * Calling graph() is identical to passing this link to the
-         * ModelLinkGraph constructor.
+         * Calling `link.graph()` is identical to creating a graph via
+         * `ModelLinkGraph(link)`.
          *
          * \return the graph that models this link.
          */
@@ -1469,12 +1491,42 @@ class Link :
          * switch connections with the two outgoing strands, with the
          * result that the given crossing is removed entirely.
          *
-         * \note The number of components in the link _will_ change
-         * as a result of this operation.
+         * \note The number of components in the link may change as a result
+         * of this operation (and for classical links, it _will_ change).
          *
          * \param c the crossing to resolve.
          */
         void resolve(Crossing* c);
+
+        /**
+         * Converts the given classical crossing into a virtual crossing.
+         *
+         * This essentially adds a handle to the surface in which the diagram
+         * is embedded, so that the old upper and lower strands can use this
+         * handle to pass by one another without actually crossing in the link
+         * diagram.
+         *
+         * Note that the virtual genus of this link might actually go _down_ as
+         * a result of this operation, since the operation might generate more
+         * empty handles (which Regina implicitly removes, as explained in
+         * the class notes).  A virtual link could even become classical as a
+         * result of this operation.
+         *
+         * For the combinatorics of the link diagram, this operation simply
+         * removes the given crossing entirely (recall that Regina does not
+         * store virtual crossings explicitly).  The incoming and outgoing
+         * upper strands will merge into one, and the incoming and outgoing
+         * lower strands will merge into one.
+         *
+         * This routine is safe to call if \a crossing is \c null (in which
+         * case this routine does nothing).
+         *
+         * \pre The given crossing is either a null pointer, or else some
+         * crossing in this link.
+         *
+         * \param crossing the (classical) crossing that should be made virtual.
+         */
+        void makeVirtual(Crossing* crossing);
 
         /**
          * Converts this link into its reflection.
@@ -1488,8 +1540,8 @@ class Link :
          * - For virtual links, this operation performs an orientation-reversing
          *   homeomorphism of the surface in which the link diagram embeds.
          *
-         * In the language of Jeremy Green's virtual knot tables, this is a
-         * _horizontal_ mirror image.
+         * In the language of Jeremy Green's virtual knot tables, this
+         * operation is a _horizontal_ mirror image.
          */
         void reflect();
 
@@ -1506,7 +1558,7 @@ class Link :
          *
          * - For virtual links, let \a S denote the closed orientable surface
          *   in which the link diagram embeds, and think of this as a link in
-         *   the thickened surface `S x I`: then this operation performs an
+         *   the thickened surface `S x I`.  Then this operation performs an
          *   orientation-preserving homeomorphism of `S x I` that switches the
          *   boundaries `S x {0}` and `S x {1}`.
          *
@@ -2920,6 +2972,54 @@ class Link :
         long writheOfComponent(size_t index) const;
 
         /**
+         * Determines whether this link diagram is classical (that is, planar).
+         * A link diagram that is _not_ classical cannot be drawn in the plane
+         * without the addition of virtual crossings.
+         *
+         * Some notes:
+         *
+         * - Calling isClassical() is equivalent to testing whether
+         *   virtualGenus() is zero.
+         *
+         * - This is a property of the link _diagram_, not the link itself.
+         *   In particular, it is possible for a classical link to be
+         *   represented using a non-classical diagram (i.e., a diagram that
+         *   requires virtual crossings when drawn in the plane).
+         *
+         * - As mentioned in the class notes, the Link class does not actually
+         *   store virtual crossings; instead it treats the link diagram as
+         *   living within some closed orientable surface.  Any discussion of
+         *   virtual crossings in the notes above is for exposition only.
+         *
+         * This routine runs in time linear in the size of the link diagram.
+         * However, the virtual genus is cached, and so subsequent calls to
+         * isClassical() or virtualGenus() will be instantaneous.
+         *
+         * \return \c true if and only if this link diagram is classical.
+         * (i.e., planar).
+         */
+        bool isClassical() const;
+
+        /**
+         * Determines the virtual genus of this link diagram.  The virtual
+         * genus is the smallest genus of closed orientable surface in which
+         * the diagram embeds.
+         *
+         * Note that this is a property of the link _diagram_, not the link
+         * itself.
+         *
+         * For classical link diagrams, the virtual genus will always be zero
+         * (since classical link diagrams are by definition planar).
+         *
+         * This routine runs in time linear in the size of the link diagram.
+         * However, the virtual genus is cached, and so subsequent calls to
+         * virtualGenus() or isClassical() will be instantaneous.
+         *
+         * \return the virtual genus of this link diagram.
+         */
+        size_t virtualGenus() const;
+
+        /**
          * Returns the number of Seifert circles for this link diagram.
          * This is the number of circles obtained when we smooth every
          * crossing in a way that respects the orientations of the strands.
@@ -3512,30 +3612,6 @@ class Link :
          * multigraph formed by this link diagram.
          */
         void useTreeDecomposition(TreeDecomposition td);
-
-        /*@}*/
-        /**
-         * \name Virtual Knots and Links
-         */
-        /*@{*/
-
-        /**
-         * Converts the given classical crossing into a virtual crossing.
-         *
-         * This has the effect of removing the crossing entirely from the link
-         * diagram, since Regina does not store virtual crossings explicitly.
-         * The incoming and outgoing upper strands will become one, and the
-         * incoming and outgoing lower strands will become one.
-         *
-         * This routine is safe to call if \a crossing is \c null (in which
-         * case this routine does nothing).
-         *
-         * \pre The given crossing is either a null pointer, or else some
-         * crossing in this link.
-         *
-         * \param crossing the (classical) crossing that should be made virtual.
-         */
-        void makeVirtual(Crossing* crossing);
 
         /*@}*/
         /**
@@ -4478,7 +4554,7 @@ class Link :
          *   in order, where each sign is either +1 or -1.
          *
          * - Each subsequent list describes a single component of the link.
-         *   The list identifies which crossings you visit in order when 
+         *   The list identifies which crossings you visit in order when
          *   traversing the component; a positive entry \a i indicates
          *   that you pass over crossing \a i, and a negative entry -\a i
          *   indicates that you pass under crossing \a i.  Empty lists
@@ -5982,7 +6058,7 @@ inline Crossing::Crossing(int sign) : sign_(sign) {
 inline Link::Link() : virtualGenus_(0) {
 }
 
-inline Link::Link(size_t unknots) {
+inline Link::Link(size_t unknots) : virtualGenus_(0) {
     components_.resize(unknots);
     std::fill(components_.begin(), components_.end(), StrandRef());
 }
@@ -6056,6 +6132,16 @@ inline long Link::writhe() const {
 
 inline long Link::writheOfComponent(size_t index) const {
     return writheOfComponent(components_[index]);
+}
+
+inline size_t Link::virtualGenus() const {
+    if (virtualGenus_ < 0)
+        virtualGenus_ = graph().genus();
+    return virtualGenus_;
+}
+
+inline bool Link::isClassical() const {
+    return virtualGenus() == 0;
 }
 
 inline const Laurent2<Integer>& Link::homfly(Algorithm alg,
