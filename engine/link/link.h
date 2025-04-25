@@ -1598,17 +1598,24 @@ class Link :
          * upper and lower strands (so this operation may change this into
          * a topologically different link).
          *
-         * The empty diagram and any zero-crossing unknot components
-         * will be considered alternating.
+         * This is always possible for classical link diagrams; however, for
+         * virtual link diagrams it might or might not be possibe.
          *
-         * For each connected piece of the link diagram (which may incorporate
-         * several link components), there is a unique alternating diagram up
-         * to reflection through the plane in which the diagram is drawn.
-         * The reflection that is chosen will be the one that preserves the
-         * sign of the lowest-index crossing in that piece of the diagram.
+         * Any zero-crossing unknot components will be considered alternating;
+         * likewise, the empty link is considered alternating.
          *
-         * \return \c true if the link diagram was changed, or \a false if it
-         * was already alternating to begin with.
+         * Assuming the diagram _can_ be made alternating, for each connected
+         * piece of the link diagram (which may incorporate several link
+         * components), one must choose between two possible alternating
+         * diagrams.  Regina will choose the option that preserves the sign of
+         * the lowest-index crossing in that connected piece of the diagram.
+         *
+         * If this diagram cannot be made alternating, or if it was already
+         * alternating to begin with, then it will be left unchanged.
+         *
+         * \return \c true if this link diagram was successfully made
+         * alternating (or was already alternating to begin with), or \c false
+         * if this is a virtual link diagram that cannot be made alternating.
          */
         bool makeAlternating();
 

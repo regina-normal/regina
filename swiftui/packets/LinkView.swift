@@ -252,9 +252,8 @@ struct LinkView: View {
                     Button {
                         var p = wrapper.packet
                         if !p.makeAlternating() {
-                            // TODO: Notify this in the Qt UI also.
                             errorGeneral = true
-                            errorDetail = .init("Already alternating", detail: "This link diagram is already alternating.")
+                            errorDetail = .init("Cannot make alternating", detail: "This is a virtual link diagram that cannot be made alternating.")
                         }
                     } label: {
                         Label("Make Alternating", image: "Act-Alternating")

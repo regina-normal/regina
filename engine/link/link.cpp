@@ -456,49 +456,81 @@ size_t Link::countTrivialComponents() const {
 
 bool Link::makeAlternating() {
     if (crossings_.empty())
-        return false;
-
-    ChangeAndClearSpan<> span(*this);
+        return true;
 
     // Run a breadth-first search through each connected piece of the diagram.
+    // Here status[i] takes one of the following values for each crossing i:
+    //   * 0 means crossing not yet visited;
+    //   * 1 means crossing will be preserved;
+    //   * -1 means crossing will be changed.
+
     size_t n = crossings_.size();
+    FixedArray<int> status(n, 0);
+    bool needsChange = false;
 
-    auto* fixed = new bool[n];
-    std::fill(fixed, fixed + n, false);
-
-    auto* queue = new size_t[n];
+    FixedArray<size_t> queue(n);
     size_t queueStart = 0, queueEnd = 0;
 
-    bool changed = false;
     for (size_t i = 0; i < n; ++i) {
-        if (fixed[i])
+        // Find a starting point for the next connected component of this
+        // link diagram.
+        if (status[i])
             continue;
 
         // This crossing will be preserved, and will act as a starting point
         // for the next breadth-first search.
         queue[queueEnd++] = i;
-        fixed[i] = true;
+        status[i] = 1;
 
         while (queueStart < queueEnd) {
-            Crossing* from = crossings_[queue[queueStart++]];
+            size_t srcIndex = queue[queueStart++];
+            Crossing* from = crossings_[srcIndex];
 
             // The search only needs to consider forward arrows, since this is
             // enough to reach the entire connected piece of the diagram.
             for (int j = 0; j < 2; ++j) {
                 StrandRef next = from->next_[j];
                 size_t nextIndex = next.crossing_->index();
-                if (! fixed[nextIndex]) {
-                    if (next.strand_ == j) {
-                        change(next.crossing_);
-                        changed = true;
+
+                if (status[nextIndex]) {
+                    // We have already chosen what to do with next.crossing_.
+                    bool sameAction = (status[nextIndex] == status[srcIndex]);
+                    if ((next.strand_ == j && sameAction) ||
+                            (next.strand_ != j && ! sameAction)) {
+                        // The diagram cannot be made alternating.
+                        return false;
                     }
+                } else {
+                    // Here is where we decide what to do with next.crossing_.
+                    if (next.strand_ == j) {
+                        status[nextIndex] = -status[srcIndex];
+                        // The first time we see a crossing that needs
+                        // changing, we will hit this point in the code.
+                        // (Possibly we hit this point again many times
+                        // after that also, but this is not relevant.)
+                        needsChange = true;
+                    } else
+                        status[nextIndex] = status[srcIndex];
+
+                    // Propagate our search through next.crossing_.
                     queue[queueEnd++] = nextIndex;
-                    fixed[nextIndex] = true;
                 }
             }
         }
     }
-    return changed;
+
+    // The diagram can be made alternating, and we know how to do it.
+    if (! needsChange)
+        return true;
+
+    // There will be changes: go ahead and make them.
+    ChangeAndClearSpan<> span(*this);
+
+    for (size_t i = 0; i < n; ++i)
+        if (status[i] < 0)
+            change(crossings_[i]);
+
+    return true;
 }
 
 bool Link::isAlternating() const {
