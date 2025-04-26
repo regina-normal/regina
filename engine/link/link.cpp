@@ -337,9 +337,6 @@ std::vector<Link> Link::diagramComponents() const {
     // Like moveContentsTo(), we abuse MarkedVector by having crossings
     // temporarily belong to two marked vectors at once; see moveContentsTo()
     // for why this is fine.
-    //
-    // Note: the new links in ans[...] will have virtual genus 0; we need
-    // to unset this as we move crossings around.
 
     Link clone(*this);
     std::vector<Link> ans(nComp + nTrivial);
@@ -357,10 +354,7 @@ std::vector<Link> Link::diagramComponents() const {
         ans[comp[i]].crossings_.push_back(clone.crossings_[i]);
     clone.crossings_.clear();
 
-    // Finally clear the virtual genus for non-empty components and add in the
-    // trivial (0-crossing) diagram components.
-    for (size_t i = 0; i < nComp; ++i)
-        ans[i].virtualGenus_ = -1;
+    // Finally add in the trivial (0-crossing) diagram components.
     for (size_t i = 0; i < nTrivial; ++i)
         ans[nComp + i].components_.emplace_back();
 

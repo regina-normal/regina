@@ -6095,10 +6095,10 @@ inline Crossing::Crossing(int sign) : sign_(sign) {
 
 // Inline functions for Link
 
-inline Link::Link() : virtualGenus_(0) {
+inline Link::Link() : virtualGenus_(-1) {
 }
 
-inline Link::Link(size_t unknots) : virtualGenus_(0) {
+inline Link::Link(size_t unknots) : virtualGenus_(-1) {
     components_.resize(unknots);
     std::fill(components_.begin(), components_.end(), StrandRef());
 }
