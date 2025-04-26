@@ -980,27 +980,92 @@ void Link::changeAll() {
 void Link::resolve(Crossing* c) {
     ChangeAndClearSpan<> span(*this);
 
-    if (c->next_[0].crossing() == c) {
-        if (c->prev_[0].crossing() == c) {
-            // This is a 1-crossing unknot component, and it resolves
-            // into two 0-crossing unknot component.
-            for (StrandRef& s : components_)
-                if (s.crossing_ == c) {
-                    // 0-crossing component #1:
-                    s.crossing_ = nullptr;
-                    s.strand_ = 0;
-                    break;
-                }
-            // 0-crossing component #2:
-            components_.emplace_back();
+    // Note: we remove and destroy c at the end of this list of cases.
 
-            crossings_.erase(crossings_.begin() + c->index());
-            delete c;
+    if (c->next_[0].crossing() == c) {
+        if (c->next_[1].crossing() == c) {
+            if (c->next_[0].strand() == 1) {
+                // This is a 1-crossing unknot component, and it resolves
+                // into two 0-crossing unknot components.
+                for (StrandRef& s : components_)
+                    if (s.crossing_ == c) {
+                        // 0-crossing component #1:
+                        s.crossing_ = nullptr;
+                        s.strand_ = 0;
+                        break;
+                    }
+                // 0-crossing component #2:
+                components_.emplace_back();
+            } else {
+                // This is a 1-crossing 2-component virtual link, and it
+                // resolves into a single 0-crossing unknot component.
+
+                // Find the first component at c and make it a 0-crossing
+                // unknot.
+                auto it = components_.begin();
+                while (it->crossing_ != c)
+                    ++it;
+                it->crossing_ = nullptr;
+                it->strand_ = 0;
+
+                // Continue on to find the other component at c and remove it
+                // entirely.
+                ++it;
+                while (it->crossing_ != c)
+                    ++it;
+                components_.erase(it);
+            }
         } else {
-            // This is a twist: prev_[0] should connect to next_[1], and
+            if (c->next_[0].strand() == 1) {
+                // This is a twist: prev_[0] should connect to next_[1], and
+                // we spin off a new 0-crossing unknot component.
+                StrandRef from = c->prev_[0];
+                StrandRef to = c->next_[1];
+                from.crossing()->next_[from.strand()] = to;
+                to.crossing()->prev_[to.strand()] = from;
+
+                // Ensure that no component uses c as its starting point.
+                for (StrandRef& s : components_)
+                    if (s.crossing_ == c) {
+                        s = to;
+                        break;
+                    }
+
+                components_.emplace_back();
+            } else {
+                // This is a virtual link, with a 1-crossing component that
+                // runs from c->lower() back to itself.  This short component
+                // will be lost when we resolve the crossing (it merges into
+                // the other longer component that runs through c->upper()).
+                StrandRef from = c->prev_[1];
+                StrandRef to = c->next_[1];
+                from.crossing()->next_[from.strand()] = to;
+                to.crossing()->prev_[to.strand()] = from;
+
+                // Fix the components.
+                auto drop = components_.end();
+                for (auto it = components_.begin(); it != components_.end();
+                        ++it)
+                    if (it->crossing_ == c) {
+                        if (it->strand_ == 0) {
+                            // This component will be removed entirely.
+                            drop = it;
+                        } else {
+                            // This component needs a new starting point.
+                            *it = to;
+                        }
+                    }
+                // We should have found drop, since that component only has
+                // one possible starting point (i.e., c->lower()).
+                components_.erase(drop);
+            }
+        }
+    } else if (c->next_[1].crossing() == c) {
+        if (c->next_[1].strand() == 0) {
+            // This is again a twist: prev_[1] should connect to next_[0], and
             // we spin off a new 0-crossing unknot component.
-            StrandRef from = c->prev_[0];
-            StrandRef to = c->next_[1];
+            StrandRef from = c->prev_[1];
+            StrandRef to = c->next_[0];
             from.crossing()->next_[from.strand()] = to;
             to.crossing()->prev_[to.strand()] = from;
 
@@ -1012,31 +1077,35 @@ void Link::resolve(Crossing* c) {
                 }
 
             components_.emplace_back();
-            crossings_.erase(crossings_.begin() + c->index());
-            delete c;
+        } else {
+            // This is again a virtual link, with a 1-crossing component that
+            // runs from c->upper() back to itself.  This short component
+            // will be lost when we resolve the crossing (it merges into
+            // the other longer component that runs through c->lower()).
+            StrandRef from = c->prev_[0];
+            StrandRef to = c->next_[0];
+            from.crossing()->next_[from.strand()] = to;
+            to.crossing()->prev_[to.strand()] = from;
+
+            // Fix the components.
+            auto drop = components_.end();
+            for (auto it = components_.begin(); it != components_.end();
+                    ++it)
+                if (it->crossing_ == c) {
+                    if (it->strand_ == 1) {
+                        // This component will be removed entirely.
+                        drop = it;
+                    } else {
+                        // This component needs a new starting point.
+                        *it = to;
+                    }
+                }
+            // We should have found drop, since that component only has
+            // one possible starting point (i.e., c->upper()).
+            components_.erase(drop);
         }
-    } else if (c->prev_[0].crossing() == c) {
-        // This is again a twist: prev_[1] should connect to next_[0], and
-        // we spin off a new 0-crossing unknot component.
-        StrandRef from = c->prev_[1];
-        StrandRef to = c->next_[0];
-        from.crossing()->next_[from.strand()] = to;
-        to.crossing()->prev_[to.strand()] = from;
-
-        // Ensure that no component uses c as its starting point.
-        for (StrandRef& s : components_)
-            if (s.crossing_ == c) {
-                s = to;
-                break;
-            }
-
-        components_.emplace_back();
-        crossings_.erase(crossings_.begin() + c->index());
-        delete c;
     } else {
         // This crossing does not connect to itself at all.
-        // Depending on whether next_[0] is connected with next_[1], we either
-        // break one component into two, or merge two components into one.
 
         // Ensure that no component uses c as its starting point.
         // Note that this could potentially happen twice.
@@ -1088,11 +1157,11 @@ void Link::resolve(Crossing* c) {
         to = c->next_[0];
         from.crossing()->next_[from.strand()] = to;
         to.crossing()->prev_[to.strand()] = from;
-
-        // Finally, remove and delete the crossing.
-        crossings_.erase(crossings_.begin() + c->index());
-        delete c;
     }
+
+    // In all cases, we finish by destroying the original crossing.
+    crossings_.erase(crossings_.begin() + c->index());
+    delete c;
 }
 
 void Link::makeVirtual(Crossing* crossing) {

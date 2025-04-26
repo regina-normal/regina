@@ -1758,6 +1758,37 @@ static void verifyResolve(Link link, int crossing, const char* briefResult) {
     EXPECT_EQ(link.brief(), briefResult);
 }
 
+static void verifyResolveViaJones(const Link& link, const char* name) {
+    // Keep this test very fast, since for a link of size n we are computing
+    // 3n Jones polynomials, each of which takes exponential time.
+    if (link.size() > 10)
+        return;
+
+    SCOPED_TRACE_CSTRING(name);
+
+    regina::Laurent<regina::Integer> minusCoeff { 2, { -1 } };
+    regina::Laurent<regina::Integer> plusCoeff { -2, { 1 } };
+    regina::Laurent<regina::Integer> resolveCoeff { -1, { -1, 0, 1 } };
+
+    for (size_t i = 0; i < link.size(); ++i) {
+        SCOPED_TRACE_NUMERIC(i);
+
+        // Verify the skein relation for the Jones polynomial around crossing i.
+        Link minus = link;
+        Link plus = link;
+        Link resolve = link;
+
+        if (link.crossing(i)->sign() > 0)
+            minus.change(minus.crossing(i));
+        else
+            plus.change(plus.crossing(i));
+        resolve.resolve(resolve.crossing(i));
+
+        EXPECT_EQ(resolveCoeff * resolve.jones(),
+            plusCoeff * plus.jones() + minusCoeff * minus.jones());
+    }
+}
+
 TEST_F(LinkTest, resolve) {
     // Single twists:
     verifyResolve(Link::fromData({ +1 }, { 1, -1 }), 0, "( ) ( )");
@@ -1816,6 +1847,8 @@ TEST_F(LinkTest, resolve) {
         Link::fromData({ +1, +1, +1, +1, -1, -1 },
             { 3, -4, -6, 5, -1, 2, -5, 6, -2, 1 }, { 4, -3 }),
         2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )");
+
+    testManualCases(verifyResolveViaJones);
 }
 
 static void verifyKnotSig(const Link& link, bool reflect, bool reverse) {
