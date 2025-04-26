@@ -3157,9 +3157,10 @@ class Link :
         /**
          * Returns the Alexander polynomial of this knot.
          *
-         * At present, Regina only computes Alexander polynomials for knots,
-         * not multiple-component links.  If this link is empty or has more
-         * than one component, then this routine will throw an exception.
+         * At present, Regina only computes Alexander polynomials for classical
+         * knots, not multiple-component links or virtual knots.  If this link
+         * is empty, has more than one component or is virtual, then this
+         * routine will throw an exception.
          *
          * To pretty-print the Alexander polynomial for human consumption, you
          * can call `Polynomial::str(Link::alexanderVar)`.
@@ -3174,10 +3175,11 @@ class Link :
          * be cached and so this routine will be instantaneous (since it just
          * returns the previously computed result).
          *
-         * \pre This link has exactly one component (i.e., it is a knot).
+         * \pre This link is classical (not virtual), and has exactly one
+         * component (i.e., it is a knot).
          *
-         * \exception FailedPrecondition This link is empty or has multiple
-         * components.
+         * \exception FailedPrecondition This link is empty, has multiple
+         * components, and/or is virtual.
          *
          * \return the Alexander polynomial of this knot.
          */

@@ -61,6 +61,9 @@ const Polynomial<Integer>& Link::alexander() const {
     if (components_.size() != 1)
         throw FailedPrecondition("Regina can only compute Alexander "
             "polynomials for links with exactly one component");
+    if (! isClassical())
+        throw FailedPrecondition("Regina can only compute Alexander "
+            "polynomials for classical knots, not virtual knots");
 
     if (alexander_.has_value())
         return *alexander_;

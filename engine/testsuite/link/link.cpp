@@ -654,7 +654,7 @@ static void verifyWhiteheadDouble(const Link& link, const char* name) {
     EXPECT_EQ(pos.writhe(), 2 * writhe + 2);
     EXPECT_EQ(neg.writhe(), 2 * writhe - 2);
 
-    if (link.size() < 20) {
+    if (link.size() < 20 && link.isClassical()) {
         using P = regina::Polynomial<regina::Integer>;
         EXPECT_EQ(pos.alexander(), regina::RingTraits<P>::one);
         EXPECT_EQ(neg.alexander(), regina::RingTraits<P>::one);
