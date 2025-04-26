@@ -229,8 +229,12 @@ bool Link::isConnected() const {
         if (! c)
             return false; // since we already know there are other components
 
+    // Every component contains at least one crossing.
+    if (crossings_.size() <= 1)
+        return true;
+
     // Run a depth-first search.
-    // We know there is at least one crossing from the tests above.
+    // We know there are at least two crossings from the tests above.
     size_t n = crossings_.size();
 
     FixedArray<bool> visited(n, false);
