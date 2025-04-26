@@ -2300,19 +2300,15 @@ static void verifySmallCells(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     const regina::ModelLinkGraph graph(link);
-    if (! graph.isConnected()) {
-        // We cannot build the dual cell decomposition.
-        // Don't test this link.
-        return;
-    }
     const auto& cells = graph.cells();
 
-    // Verify that loops(), bigons() and triangles() match what we see from
-    // the dual cell decomposition.
+    // Verify that loops(), monogons(), bigons() and triangles() match what we
+    // see from the dual cell decomposition.
     for (auto n : graph.nodes()) {
         SCOPED_TRACE_NUMERIC(n->index());
 
         int foundLoops = 0;
+        int foundMonogons = 0;
         int foundBigons = 0;
         int foundTriangles = 0;
 
@@ -2321,6 +2317,7 @@ static void verifySmallCells(const Link& link, const char* name) {
             switch (cells.size(cell)) {
                 case 1:
                     ++foundLoops;
+                    ++foundMonogons;
                     break;
                 case 2:
                     {
@@ -2344,7 +2341,14 @@ static void verifySmallCells(const Link& link, const char* name) {
             }
         }
 
+        // Account for any loops at n that do not bound 1-gons:
+        if (n->adj(0) == n->arc(2))
+            ++foundLoops;
+        if (n->adj(1) == n->arc(3))
+            ++foundLoops;
+
         EXPECT_EQ(foundLoops, n->loops());
+        EXPECT_EQ(foundMonogons, n->monogons());
         EXPECT_EQ(foundBigons, n->bigons());
         EXPECT_EQ(foundTriangles, n->triangles());
     }

@@ -380,7 +380,7 @@ Version 7.4  [ (to be announced) ]
                   fully supported.
             - New routines countEdges(), countArcs() and countNodes().
         Class ModelLinkGraphNode:
-            - New routines loops(), bigons() and triangles().
+            - New routines loops(), monogons(), bigons(), and triangles().
         Enum NamedPermGroup:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., PERM_GROUP_TRIVIAL) have been

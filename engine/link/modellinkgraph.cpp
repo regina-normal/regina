@@ -38,6 +38,14 @@
 
 namespace regina {
 
+int ModelLinkGraphNode::monogons() const {
+    int ans = 0;
+    for (int i = 0; i < 4; ++i)
+        if (adj_[i].node() == this && adj_[i].arc() == ((i + 1) % 4))
+            ++ans;
+    return ans;
+}
+
 int ModelLinkGraphNode::loops() const {
     int ans = 0;
     for (int i = 0; i < 4; ++i)

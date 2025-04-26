@@ -76,6 +76,7 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("arc", &ModelLinkGraphNode::arc, rdoc::arc)
         .def("adj", &ModelLinkGraphNode::adj, rdoc::adj)
         .def("loops", &ModelLinkGraphNode::loops, rdoc::loops)
+        .def("monogons", &ModelLinkGraphNode::monogons, rdoc::monogons)
         .def("bigons", &ModelLinkGraphNode::bigons, rdoc::bigons)
         .def("triangles", &ModelLinkGraphNode::triangles, rdoc::triangles)
     ;

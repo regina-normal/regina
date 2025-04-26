@@ -42,6 +42,17 @@ using regina::ModelLinkGraphNode;
 using regina::ExampleLink;
 using regina::Link;
 
+// Consistency checks for low-level manipulation of graphs:
+static bool isConsistent(const ModelLinkGraph& graph) {
+    for (auto* n : graph.nodes())
+        for (int i = 0; i < 4; ++i) {
+            ModelLinkGraphArc arc = n->arc(i);
+            if (arc.traverse().traverse() != arc)
+                return false;
+        }
+    return true;
+}
+
 struct TestCase {
     ModelLinkGraph graph;
     const char* name;
@@ -147,6 +158,7 @@ static void verifyReflect(const TestCase& test, bool symmetricUnderReflection) {
     ModelLinkGraph alt = g;
     alt.reflect();
 
+    EXPECT_TRUE(isConsistent(alt));
     EXPECT_EQ(g.isConnected(), alt.isConnected());
     EXPECT_EQ(g.countComponents(), alt.countComponents());
     EXPECT_EQ(g.genus(), alt.genus());
@@ -188,17 +200,14 @@ static void verifyRandomise(const ModelLinkGraph& g, const char* name) {
         ModelLinkGraph alt = g;
         alt.randomise();
 
-        // Ensure that the connections are consistent.
-        for (auto n : alt.nodes())
-            for (int j = 0; j < 4; ++j) {
-                ModelLinkGraphArc arc = n->arc(j);
-                EXPECT_EQ(arc.traverse().traverse(), arc);
-            }
+        EXPECT_TRUE(isConsistent(alt));
     }
 
     if (g.countComponents() <= 1) {
         ModelLinkGraph c0 = g.canonical(true);
         ModelLinkGraph c1 = g.canonical(false);
+        EXPECT_TRUE(isConsistent(c0));
+        EXPECT_TRUE(isConsistent(c1));
 
         for (int i = 0; i < 20; ++i) {
             ModelLinkGraph alt = g;

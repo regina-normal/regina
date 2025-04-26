@@ -405,19 +405,43 @@ class ModelLinkGraphNode : public MarkedElement,
         /**
          * Returns the number of loops incident with this node.
          *
-         * For a connected 4-valent graph, this is equivalent to the
-         * number of 1-gons in the dual cell decomposition that are incident
-         * with this node.
+         * Regarding loops versus 1-gons:
          *
-         * If the underlying graph is disconnected, this routine will
-         * ignore the presence of any other connected components.  In
-         * particular, it will not worry about whether other disjoint
-         * components have been placed inside or outside any 1-gons.
+         * - For a planar 4-valent graph (i.e., a graph that models a classical
+         *   link diagram), every loop bounds a 1-gon in the dual cell
+         *   decomposition, and vice versa.  In particular, for a planar graph,
+         *   at every node we have `0 ≤ monogons() == loops() ≤ 2`.
+         *
+         * - For a non-planar graph (which could be used to model a virtual
+         *   link diagram), there could be loops that do not bound 1-gons.
+         *   So, for a non-planar graph, the only guarantee we have at each
+         *   node is that `0 ≤ monogons() ≤ loops() ≤ 2`.
          *
          * \return The number of incident loops, which will be between 0 and 2
          * inclusive.
          */
         int loops() const;
+
+        /**
+         * Returns the number of 1-gons in the dual cell decomposition that
+         * are incident with this node.
+         *
+         * Regarding loops versus 1-gons:
+         *
+         * - For a planar 4-valent graph (i.e., a graph that models a classical
+         *   link diagram), every loop bounds a 1-gon in the dual cell
+         *   decomposition, and vice versa.  In particular, for a planar graph,
+         *   at every node we have `0 ≤ monogons() == loops() ≤ 2`.
+         *
+         * - For a non-planar graph (which could be used to model a virtual
+         *   link diagram), there could be loops that do not bound 1-gons.
+         *   So, for a non-planar graph, the only guarantee we have at each
+         *   node is that `0 ≤ monogons() ≤ loops() ≤ 2`.
+         *
+         * \return The number of incident 1-gons, which will be between 0 and 2
+         * inclusive.
+         */
+        int monogons() const;
 
         /**
          * Returns the number of embedded bigons in the dual cell
@@ -428,11 +452,6 @@ class ModelLinkGraphNode : public MarkedElement,
          * would imply that all four arcs at this node were joined together to
          * form two loops, each bounding its own 1-gon (which models a
          * 1-crossing unknot component of a link diagram).
-         *
-         * If the underlying graph is disconnected, this routine will
-         * ignore the presence of any other connected components.  In
-         * particular, it will not worry about whether other disjoint
-         * components have been placed inside or outside any bigons.
          *
          * \return The number of incident embedded bigons, which will be
          * between 0 and 4 inclusive.
@@ -447,11 +466,6 @@ class ModelLinkGraphNode : public MarkedElement,
          * vertices are the same.  Note that a _non-embedded_ incident triangle
          * would imply that the underlying graph contains a loop bounding a
          * 1-gon (which models a trivial twist in a link diagram).
-         *
-         * If the underlying graph is disconnected, this routine will
-         * ignore the presence of any other connected components.  In
-         * particular, it will not worry about whether other disjoint
-         * components have been placed inside or outside any triangles.
          *
          * \return The number of incident embedded triangles, which will be
          * between 0 and 4 inclusive.
