@@ -180,12 +180,24 @@ class LinkTest : public testing::Test {
                 { -2, 1, -5, 6 }, { 2, -3, 4, -6, 5, -4, 3, -1 }),
             "Adams Fig. 6.28" };
 
+        // Virtual knots:
+        TestCase virtualTrefoil { ExampleLink::virtualTrefoil(),
+            "Virtual trefoil" };
+        TestCase kishino { ExampleLink::kishino(), "Kishino virtual knot" };
+        TestCase gpv { ExampleLink::gpv(),
+            "Goussarov-Polyak-Viro virtual knot" };
+
+        // Virtual multiple-component links:
+        TestCase virtualLink2_1 {
+            Link::fromData({ +1 }, { 1 }, { -1 }),
+            "1-crossing, 2-component virtual link" };
+
         /**
          * Run the given test over all of the example links stored in
          * this test fixture.
          */
         void testManualCases(void (*f)(const Link&, const char*),
-                bool includeGordian = true) {
+                bool includeGordian = true, bool includeVirtual = true) {
             f(empty.link, empty.name);
 
             f(unknot0.link, unknot0.name);
@@ -220,6 +232,13 @@ class LinkTest : public testing::Test {
             f(trefoil_unknot1.link, trefoil_unknot1.name);
             f(trefoil_unknot_overlap.link, trefoil_unknot_overlap.name);
             f(adams6_28.link, adams6_28.name);
+
+            if (includeVirtual) {
+                f(virtualTrefoil.link, virtualTrefoil.name);
+                f(kishino.link, kishino.name);
+                f(gpv.link, gpv.name);
+                f(virtualLink2_1.link, virtualLink2_1.name);
+            }
         }
 };
 
@@ -282,6 +301,15 @@ TEST_F(LinkTest, connected) {
     EXPECT_TRUE(trefoil_unknot_overlap.link.isConnected());
     EXPECT_TRUE(trefoil_unknot_overlap.link.graph().isConnected());
 
+    EXPECT_TRUE(virtualTrefoil.link.isConnected());
+    EXPECT_TRUE(virtualTrefoil.link.graph().isConnected());
+    EXPECT_TRUE(kishino.link.isConnected());
+    EXPECT_TRUE(kishino.link.graph().isConnected());
+    EXPECT_TRUE(gpv.link.isConnected());
+    EXPECT_TRUE(gpv.link.graph().isConnected());
+    EXPECT_TRUE(virtualLink2_1.link.isConnected());
+    EXPECT_TRUE(virtualLink2_1.link.graph().isConnected());
+
     // These links are disconnected, but since their graphs ignore
     // zero-crossing components the graphs _are_ connected.
     EXPECT_FALSE(unlink2_0.link.isConnected());
@@ -324,6 +352,11 @@ TEST_F(LinkTest, components) {
     EXPECT_EQ(trefoil_unknot0.link.countComponents(), 2);
     EXPECT_EQ(trefoil_unknot1.link.countComponents(), 2);
     EXPECT_EQ(trefoil_unknot_overlap.link.countComponents(), 2);
+
+    EXPECT_EQ(virtualTrefoil.link.countComponents(), 1);
+    EXPECT_EQ(kishino.link.countComponents(), 1);
+    EXPECT_EQ(gpv.link.countComponents(), 1);
+    EXPECT_EQ(virtualLink2_1.link.countComponents(), 2);
 }
 
 static void verifyDiagramComponents(const Link& link, const char* name,
@@ -374,6 +407,10 @@ TEST_F(LinkTest, diagramComponents) {
             { "-++++ ( ^1 _2 _3 _0 ^4 _1 ^2 _4 ) ( ^3 ^0 )" });
     }
     {
+        verifyDiagramComponents(virtualLink2_1.link, virtualLink2_1.name,
+            { "+ ( ^0 ) ( _0 )" });
+    }
+    {
         Link link = ExampleLink::whitehead();
         link.insertLink(Link(2));
         link.insertLink(ExampleLink::figureEight());
@@ -384,38 +421,56 @@ TEST_F(LinkTest, diagramComponents) {
     }
 }
 
+static void verifyLinking(const TestCase& test, long expect) {
+    SCOPED_TRACE_CSTRING(test.name);
+    EXPECT_EQ(test.link.linking(), expect);
+    EXPECT_EQ(test.link.linking2(), 2 * expect);
+}
+
+static void verifyOnlyLinking2(const TestCase& test, long expect) {
+    SCOPED_TRACE_CSTRING(test.name);
+    EXPECT_NE(expect % 2, 0);
+    EXPECT_THROW({ test.link.linking(); }, regina::NotImplemented);
+    EXPECT_EQ(test.link.linking2(), expect);
+}
+
 TEST_F(LinkTest, linking) {
-    EXPECT_EQ(empty.link.linking(), 0);
+    verifyLinking(empty, 0);
 
-    EXPECT_EQ(unknot0.link.linking(), 0);
-    EXPECT_EQ(unknot1.link.linking(), 0);
-    EXPECT_EQ(unknot3.link.linking(), 0);
-    EXPECT_EQ(unknotMonster.link.linking(), 0);
-    EXPECT_EQ(unknotGordian.link.linking(), 0);
+    verifyLinking(unknot0, 0);
+    verifyLinking(unknot1, 0);
+    verifyLinking(unknot3, 0);
+    verifyLinking(unknotMonster, 0);
+    verifyLinking(unknotGordian, 0);
 
-    EXPECT_EQ(trefoilLeft.link.linking(), 0);
-    EXPECT_EQ(trefoilRight.link.linking(), 0);
-    EXPECT_EQ(trefoil_r1x2.link.linking(), 0);
-    EXPECT_EQ(trefoil_r1x6.link.linking(), 0);
-    EXPECT_EQ(figureEight.link.linking(), 0);
-    EXPECT_EQ(figureEight_r1x2.link.linking(), 0);
-    EXPECT_EQ(conway.link.linking(), 0);
-    EXPECT_EQ(kinoshitaTerasaka.link.linking(), 0);
-    EXPECT_EQ(gst.link.linking(), 0);
+    verifyLinking(trefoilLeft, 0);
+    verifyLinking(trefoilRight, 0);
+    verifyLinking(trefoil_r1x2, 0);
+    verifyLinking(trefoil_r1x6, 0);
+    verifyLinking(figureEight, 0);
+    verifyLinking(figureEight_r1x2, 0);
+    verifyLinking(conway, 0);
+    verifyLinking(kinoshitaTerasaka, 0);
+    verifyLinking(gst, 0);
 
-    EXPECT_EQ(rht_rht.link.linking(), 0);
-    EXPECT_EQ(rht_lht.link.linking(), 0);
+    verifyLinking(rht_rht, 0);
+    verifyLinking(rht_lht, 0);
 
-    EXPECT_EQ(unlink2_0.link.linking(), 0);
-    EXPECT_EQ(unlink3_0.link.linking(), 0);
-    EXPECT_EQ(unlink2_r2.link.linking(), 0);
-    EXPECT_EQ(unlink2_r1r1.link.linking(), 0);
-    EXPECT_EQ(hopf.link.linking(), 1);
-    EXPECT_EQ(whitehead.link.linking(), 0);
-    EXPECT_EQ(borromean.link.linking(), 0);
-    EXPECT_EQ(trefoil_unknot0.link.linking(), 0);
-    EXPECT_EQ(trefoil_unknot1.link.linking(), 0);
-    EXPECT_EQ(trefoil_unknot_overlap.link.linking(), 0);
+    verifyLinking(unlink2_0, 0);
+    verifyLinking(unlink3_0, 0);
+    verifyLinking(unlink2_r2, 0);
+    verifyLinking(unlink2_r1r1, 0);
+    verifyLinking(hopf, 1);
+    verifyLinking(whitehead, 0);
+    verifyLinking(borromean, 0);
+    verifyLinking(trefoil_unknot0, 0);
+    verifyLinking(trefoil_unknot1, 0);
+    verifyLinking(trefoil_unknot_overlap, 0);
+
+    verifyLinking(virtualTrefoil, 0);
+    verifyLinking(kishino, 0);
+    verifyLinking(gpv, 0);
+    verifyOnlyLinking2(virtualLink2_1, 1);
 }
 
 static void verifyUnderOverForComponent(const Link& link, const char* name) {
@@ -478,7 +533,7 @@ static void verifyWrithe(const Link& link, const char* name) {
     long sum = 0;
     for (size_t c = 0; c < link.countComponents(); ++c)
         sum += link.writheOfComponent(c);
-    EXPECT_EQ(sum + 2 * link.linking(), link.writhe());
+    EXPECT_EQ(sum + link.linking2(), link.writhe());
 }
 
 TEST_F(LinkTest, writhe) {
@@ -551,7 +606,7 @@ static void verifyParallel(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     long writhe = link.writhe();
-    long linking = link.linking();
+    long linking2 = link.linking2();
 
     // Compute the sum of writhe and |writhe| for each individual component.
     // We do this in quadratic time, so the code is simple enough to be sure
@@ -571,13 +626,13 @@ static void verifyParallel(const Link& link, const char* name) {
         EXPECT_EQ(p.countComponents(), k * link.countComponents());
         EXPECT_EQ(p.size(), k * k * link.size());
         EXPECT_EQ(p.writhe(), k * k * writhe);
-        EXPECT_EQ(p.linking(), k * k * linking + (k * (k-1) * writheSame) / 2);
+        EXPECT_EQ(p.linking2(), k * k * linking2 + k * (k-1) * writheSame);
 
         p = link.parallel(k, regina::Framing::Seifert);
         EXPECT_EQ(p.countComponents(), k * link.countComponents());
         EXPECT_EQ(p.size(), k * k * link.size() + k * (k-1) * absWritheSame);
         EXPECT_EQ(p.writhe(), k * k * writhe - k * (k-1) * writheSame);
-        EXPECT_EQ(p.linking(), k * k * linking);
+        EXPECT_EQ(p.linking2(), k * k * linking2);
     }
 }
 
@@ -2090,7 +2145,7 @@ static void verifyPDCode(const Link& link, const char* name) {
     EXPECT_EQ(recon.size(), link.size());
     EXPECT_EQ(recon.countComponents() + lost, link.countComponents());
     EXPECT_EQ(recon.writhe(), link.writhe());
-    EXPECT_EQ(recon.linking(), link.linking());
+    EXPECT_EQ(recon.linking2(), link.linking2());
 
     {
         size_t i = 0;
@@ -2293,7 +2348,7 @@ static void verifyGroup(const Link& link, const char* name) {
 }
 
 TEST_F(LinkTest, group) {
-    testManualCases(verifyGroup, false);
+    testManualCases(verifyGroup, false /* gordian */, false /* virtual */);
 }
 
 static void verifySmallCells(const Link& link, const char* name) {

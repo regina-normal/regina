@@ -1491,8 +1491,8 @@ class Link :
          * switch connections with the two outgoing strands, with the
          * result that the given crossing is removed entirely.
          *
-         * \note The number of components in the link may change as a result
-         * of this operation (and for classical links, it _will_ change).
+         * \note The number of components in the link will change as a result
+         * of this operation.
          *
          * \param c the crossing to resolve.
          */
@@ -2914,16 +2914,49 @@ class Link :
         bool isAlternating() const;
 
         /**
-         * Returns the linking number of this link.
+         * Returns the linking number of this link, or throws an exception
+         * if it is not an integer.
          *
-         * This is an invariant of the link, computed as half the sum of the
-         * signs of all crossings that involve different link components.
+         * The linking number is an invariant of the link, computed as half
+         * the sum of the signs of all crossings that involve different link
+         * components.
+         *
+         * For classical links, the linking number is always an integer, and
+         * so linking() will always return successfully.
+         *
+         * For virtual links, the linking number might have a fractional part;
+         * if this happens then linking() will throw an exception.  If you are
+         * working with virtual links then you should use linking2() instead,
+         * which always returns successfully.
          *
          * The algorithm to compute linking number is linear time.
+         *
+         * \exception NotImplemented This is a virtual link whose linking
+         * number is not an integer.
          *
          * \return the linking number.
          */
         long linking() const;
+
+        /**
+         * Returns twice the linking number of this link, which is always an
+         * integer for both classical and virtual links.
+         *
+         * The linking number is an invariant of a link, computed as half
+         * the sum of the signs of all crossings that involve different link
+         * components.  For classical links the linking number is always an
+         * integer, whereas for virtual links it might have a fractional part.
+         *
+         * This routine returns _twice_ the linking number, which is always
+         * guaranteed to be an integer.  If you are working with virtual links
+         * then you should use linking2() instead of linking(), since linking()
+         * will throw an exception if its result has a fractional part.
+         *
+         * The algorithm to compute linking number is linear time.
+         *
+         * \return twice the linking number.
+         */
+        long linking2() const;
 
         /**
          * Returns the writhe of this link diagram.
@@ -6149,6 +6182,15 @@ inline size_t Link::virtualGenus() const {
 
 inline bool Link::isClassical() const {
     return virtualGenus() == 0;
+}
+
+inline long Link::linking() const {
+    long twice = linking2();
+    if (twice & 1)
+        throw NotImplemented("This is a virtual link whose linking number "
+            "is not an integer: use linking2() instead");
+    else
+        return twice >> 1;
 }
 
 inline const Laurent2<Integer>& Link::homfly(Algorithm alg,

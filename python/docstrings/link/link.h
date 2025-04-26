@@ -2730,15 +2730,48 @@ Returns:
 
 // Docstring regina::python::doc::Link_::linking
 static const char *linking =
-R"doc(Returns the linking number of this link.
+R"doc(Returns the linking number of this link, or throws an exception if it
+is not an integer.
 
-This is an invariant of the link, computed as half the sum of the
-signs of all crossings that involve different link components.
+The linking number is an invariant of the link, computed as half the
+sum of the signs of all crossings that involve different link
+components.
+
+For classical links, the linking number is always an integer, and so
+linking() will always return successfully.
+
+For virtual links, the linking number might have a fractional part; if
+this happens then linking() will throw an exception. If you are
+working with virtual links then you should use linking2() instead,
+which always returns successfully.
+
+The algorithm to compute linking number is linear time.
+
+Exception ``NotImplemented``:
+    This is a virtual link whose linking number is not an integer.
+
+Returns:
+    the linking number.)doc";
+
+// Docstring regina::python::doc::Link_::linking2
+static const char *linking2 =
+R"doc(Returns twice the linking number of this link, which is always an
+integer for both classical and virtual links.
+
+The linking number is an invariant of a link, computed as half the sum
+of the signs of all crossings that involve different link components.
+For classical links the linking number is always an integer, whereas
+for virtual links it might have a fractional part.
+
+This routine returns _twice_ the linking number, which is always
+guaranteed to be an integer. If you are working with virtual links
+then you should use linking2() instead of linking(), since linking()
+will throw an exception if its result has a fractional part.
 
 The algorithm to compute linking number is linear time.
 
 Returns:
-    the linking number.)doc";
+    twice the linking number.)doc";
 
 // Docstring regina::python::doc::Link_::makeAlternating
 static const char *makeAlternating =
@@ -2747,18 +2780,25 @@ diagram. Here, "changing" a crossing means switching its upper and
 lower strands (so this operation may change this into a topologically
 different link).
 
-The empty diagram and any zero-crossing unknot components will be
-considered alternating.
+This is always possible for classical link diagrams; however, for
+virtual link diagrams it might or might not be possibe.
 
-For each connected piece of the link diagram (which may incorporate
-several link components), there is a unique alternating diagram up to
-reflection through the plane in which the diagram is drawn. The
-reflection that is chosen will be the one that preserves the sign of
-the lowest-index crossing in that piece of the diagram.
+Any zero-crossing unknot components will be considered alternating;
+likewise, the empty link is considered alternating.
+
+Assuming the diagram _can_ be made alternating, for each connected
+piece of the link diagram (which may incorporate several link
+components), one must choose between two possible alternating
+diagrams. Regina will choose the option that preserves the sign of the
+lowest-index crossing in that connected piece of the diagram.
+
+If this diagram cannot be made alternating, or if it was already
+alternating to begin with, then it will be left unchanged.
 
 Returns:
-    ``True`` if the link diagram was changed, or *false* if it was
-    already alternating to begin with.)doc";
+    ``True`` if this link diagram was successfully made alternating
+    (or was already alternating to begin with), or ``False`` if this
+    is a virtual link diagram that cannot be made alternating.)doc";
 
 // Docstring regina::python::doc::Link_::makeVirtual
 static const char *makeVirtual =
@@ -3830,8 +3870,8 @@ connections with the two outgoing strands, with the result that the
 given crossing is removed entirely.
 
 .. note::
-    The number of components in the link may change as a result of
-    this operation (and for classical links, it _will_ change).
+    The number of components in the link will change as a result of
+    this operation.
 
 Parameter ``c``:
     the crossing to resolve.)doc";

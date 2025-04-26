@@ -559,7 +559,7 @@ bool Link::isAlternating() const {
     return true;
 }
 
-long Link::linking() const {
+long Link::linking2() const {
     if (crossings_.empty())
         return 0;
 
@@ -572,8 +572,7 @@ long Link::linking() const {
 
     // Now work through each component, and subtract off crossings that
     // involve that component twice.
-    bool* seen = new bool[crossings_.size()];
-    std::fill(seen, seen + crossings_.size(), false);
+    FixedArray<bool> seen(crossings_.size(), false);
 
     StrandRef s;
     for (StrandRef start : components_) {
@@ -596,9 +595,8 @@ long Link::linking() const {
             ++s;
         } while (s != start);
     }
-    delete[] seen;
 
-    return ans / 2;
+    return ans;
 }
 
 long Link::writheOfComponent(StrandRef strand) const {

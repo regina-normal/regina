@@ -226,6 +226,7 @@ void addLink(pybind11::module_& m) {
         .def("makeAlternating", &Link::makeAlternating, rdoc::makeAlternating)
         .def("isAlternating", &Link::isAlternating, rdoc::isAlternating)
         .def("linking", &Link::linking, rdoc::linking)
+        .def("linking2", &Link::linking2, rdoc::linking2)
         .def("writhe", &Link::writhe, rdoc::writhe)
         .def("writheOfComponent", overload_cast<StrandRef>(
             &Link::writheOfComponent, pybind11::const_),
