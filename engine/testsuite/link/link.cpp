@@ -366,6 +366,57 @@ TEST_F(LinkTest, components) {
     EXPECT_EQ(virtualLink3.link.countComponents(), 3);
 }
 
+static void verifyVirtualGenus(const TestCase& test, size_t expect) {
+    SCOPED_TRACE_CSTRING(test.name);
+
+    EXPECT_EQ(test.link.virtualGenus(), expect);
+    EXPECT_EQ(regina::ModelLinkGraph(test.link).genus(), expect);
+    if (expect == 0)
+        EXPECT_TRUE(test.link.isClassical());
+    else
+        EXPECT_FALSE(test.link.isClassical());
+}
+
+TEST_F(LinkTest, virtualGenus) {
+    verifyVirtualGenus(empty, 0);
+
+    verifyVirtualGenus(unknot0, 0);
+    verifyVirtualGenus(unknot1, 0);
+    verifyVirtualGenus(unknot3, 0);
+    verifyVirtualGenus(unknotMonster, 0);
+    verifyVirtualGenus(unknotGordian, 0);
+
+    verifyVirtualGenus(trefoilLeft, 0);
+    verifyVirtualGenus(trefoilRight, 0);
+    verifyVirtualGenus(trefoil_r1x2, 0);
+    verifyVirtualGenus(trefoil_r1x6, 0);
+    verifyVirtualGenus(figureEight, 0);
+    verifyVirtualGenus(figureEight_r1x2, 0);
+    verifyVirtualGenus(conway, 0);
+    verifyVirtualGenus(kinoshitaTerasaka, 0);
+    verifyVirtualGenus(gst, 0);
+
+    verifyVirtualGenus(rht_rht, 0);
+    verifyVirtualGenus(rht_lht, 0);
+
+    verifyVirtualGenus(unlink2_0, 0);
+    verifyVirtualGenus(unlink3_0, 0);
+    verifyVirtualGenus(unlink2_r2, 0);
+    verifyVirtualGenus(unlink2_r1r1, 0);
+    verifyVirtualGenus(hopf, 0);
+    verifyVirtualGenus(whitehead, 0);
+    verifyVirtualGenus(borromean, 0);
+    verifyVirtualGenus(trefoil_unknot0, 0);
+    verifyVirtualGenus(trefoil_unknot1, 0);
+    verifyVirtualGenus(trefoil_unknot_overlap, 0);
+
+    verifyVirtualGenus(virtualTrefoil, 1);
+    verifyVirtualGenus(kishino, 2);
+    verifyVirtualGenus(gpv, 1);
+    verifyVirtualGenus(virtualLink2, 1);
+    verifyVirtualGenus(virtualLink3, 1);
+}
+
 static void verifyDiagramComponents(const Link& link, const char* name,
         std::initializer_list<std::string> expectBrief) {
     SCOPED_TRACE_CSTRING(name);
