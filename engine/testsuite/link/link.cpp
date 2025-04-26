@@ -188,9 +188,12 @@ class LinkTest : public testing::Test {
             "Goussarov-Polyak-Viro virtual knot" };
 
         // Virtual multiple-component links:
-        TestCase virtualLink2_1 {
+        TestCase virtualLink2 {
             Link::fromData({ +1 }, { 1 }, { -1 }),
             "1-crossing, 2-component virtual link" };
+        TestCase virtualLink3 {
+            Link::fromData({ +1, +1 }, { 1 }, { -2 }, { -1, 2 }),
+            "2-crossing, 3-component virtual link" };
 
         /**
          * Run the given test over all of the example links stored in
@@ -237,7 +240,8 @@ class LinkTest : public testing::Test {
                 f(virtualTrefoil.link, virtualTrefoil.name);
                 f(kishino.link, kishino.name);
                 f(gpv.link, gpv.name);
-                f(virtualLink2_1.link, virtualLink2_1.name);
+                f(virtualLink2.link, virtualLink2.name);
+                f(virtualLink3.link, virtualLink3.name);
             }
         }
 };
@@ -307,8 +311,10 @@ TEST_F(LinkTest, connected) {
     EXPECT_TRUE(kishino.link.graph().isConnected());
     EXPECT_TRUE(gpv.link.isConnected());
     EXPECT_TRUE(gpv.link.graph().isConnected());
-    EXPECT_TRUE(virtualLink2_1.link.isConnected());
-    EXPECT_TRUE(virtualLink2_1.link.graph().isConnected());
+    EXPECT_TRUE(virtualLink2.link.isConnected());
+    EXPECT_TRUE(virtualLink2.link.graph().isConnected());
+    EXPECT_TRUE(virtualLink3.link.isConnected());
+    EXPECT_TRUE(virtualLink3.link.graph().isConnected());
 
     // These links are disconnected, but since their graphs ignore
     // zero-crossing components the graphs _are_ connected.
@@ -356,7 +362,8 @@ TEST_F(LinkTest, components) {
     EXPECT_EQ(virtualTrefoil.link.countComponents(), 1);
     EXPECT_EQ(kishino.link.countComponents(), 1);
     EXPECT_EQ(gpv.link.countComponents(), 1);
-    EXPECT_EQ(virtualLink2_1.link.countComponents(), 2);
+    EXPECT_EQ(virtualLink2.link.countComponents(), 2);
+    EXPECT_EQ(virtualLink3.link.countComponents(), 3);
 }
 
 static void verifyDiagramComponents(const Link& link, const char* name,
@@ -407,8 +414,12 @@ TEST_F(LinkTest, diagramComponents) {
             { "-++++ ( ^1 _2 _3 _0 ^4 _1 ^2 _4 ) ( ^3 ^0 )" });
     }
     {
-        verifyDiagramComponents(virtualLink2_1.link, virtualLink2_1.name,
+        verifyDiagramComponents(virtualLink2.link, virtualLink2.name,
             { "+ ( ^0 ) ( _0 )" });
+    }
+    {
+        verifyDiagramComponents(virtualLink3.link, virtualLink3.name,
+            { "++ ( ^0 ) ( _1 ) ( _0 ^1 )" });
     }
     {
         Link link = ExampleLink::whitehead();
@@ -470,7 +481,8 @@ TEST_F(LinkTest, linking) {
     verifyLinking(virtualTrefoil, 0);
     verifyLinking(kishino, 0);
     verifyLinking(gpv, 0);
-    verifyOnlyLinking2(virtualLink2_1, 1);
+    verifyOnlyLinking2(virtualLink2, 1);
+    verifyLinking(virtualLink3, 1);
 }
 
 static void verifyUnderOverForComponent(const Link& link, const char* name) {
