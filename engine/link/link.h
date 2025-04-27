@@ -1482,7 +1482,10 @@ class Link :
          * diagram.
          *
          * This operation corresponds to reflecting the link diagram
-         * through the plane on which it is drawn.
+         * through the surface on which it is drawn.
+         *
+         * In the language of Jeremy Green's virtual knot tables, this
+         * operation is a _vertical_ mirror image.
          */
         void changeAll();
 
@@ -3010,6 +3013,25 @@ class Link :
          * \return the writhe of the given component.
          */
         long writheOfComponent(size_t index) const;
+
+        /**
+         * Returns the self-linking number of this knot.
+         *
+         * The self-linking number is an invariant of virtual knots.  It sums
+         * the signs of all crossings \a c for which, when traversing the knot,
+         * we pass through an odd number of crossings between the over-strand
+         * and the under-strand of \a c.
+         *
+         * For a classical knot, the self-linking number will always be zero.
+         *
+         * \pre This link has exactly one component (i.e., it is a knot).
+         *
+         * \exception FailedPrecondition This link is empty or has multiple
+         * components.
+         *
+         * \return the self-linking number of this knot.
+         */
+        long selfLinking() const;
 
         /**
          * Determines whether this link diagram is classical (that is, planar).

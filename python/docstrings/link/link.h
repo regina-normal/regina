@@ -4080,6 +4080,26 @@ Returns:
     ``True`` if the link diagram was changed, or ``False`` if every
     component already had zero writhe to begin with.)doc";
 
+// Docstring regina::python::doc::Link_::selfLinking
+static const char *selfLinking =
+R"doc(Returns the self-linking number of this knot.
+
+The self-linking number is an invariant of virtual knots. It sums the
+signs of all crossings *c* for which, when traversing the knot, we
+pass through an odd number of crossings between the over-strand and
+the under-strand of *c*.
+
+For a classical knot, the self-linking number will always be zero.
+
+Precondition:
+    This link has exactly one component (i.e., it is a knot).
+
+Exception ``FailedPrecondition``:
+    This link is empty or has multiple components.
+
+Returns:
+    the self-linking number of this knot.)doc";
+
 // Docstring regina::python::doc::Link_::sig
 static const char *sig =
 R"doc(Constructs the _signature_ for this knot or link diagram.

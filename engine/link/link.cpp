@@ -538,6 +538,34 @@ long Link::writheOfComponent(StrandRef strand) const {
     return ans;
 }
 
+long Link::selfLinking() const {
+    if (components_.size() != 1)
+        throw FailedPrecondition("Self-linking number requires the link "
+            "to have exactly one component");
+
+    if (crossings_.empty())
+        return 0;
+
+    FixedArray<ssize_t> firstSeen(crossings_.size(), -1);
+    long ans = 0;
+
+    StrandRef start = components_.front();
+    StrandRef s = start;
+    ssize_t pos = 0;
+    do {
+        size_t i = s.crossing()->index();
+        if (firstSeen[i] < 0)
+            firstSeen[i] = pos;
+        else if (! ((pos ^ firstSeen[i]) & 1))
+            ans += s.crossing()->sign();
+
+        ++pos;
+        ++s;
+    } while (s != start);
+
+    return ans;
+}
+
 size_t Link::seifertCircles() const {
     if (crossings_.empty())
         return components_.size();

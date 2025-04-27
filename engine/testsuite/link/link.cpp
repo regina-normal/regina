@@ -40,6 +40,7 @@
 using regina::Algorithm;
 using regina::Crossing;
 using regina::ExampleLink;
+using regina::FailedPrecondition;
 using regina::Link;
 using regina::Triangulation;
 using regina::StrandRef;
@@ -536,6 +537,51 @@ TEST_F(LinkTest, linking) {
     verifyLinking(virtualLink3, 1);
 }
 
+TEST_F(LinkTest, selfLinking) {
+    // Classical knots:
+    EXPECT_EQ(unknot0.link.selfLinking(), 0);
+    EXPECT_EQ(unknot1.link.selfLinking(), 0);
+    EXPECT_EQ(unknot3.link.selfLinking(), 0);
+    EXPECT_EQ(unknotMonster.link.selfLinking(), 0);
+    EXPECT_EQ(unknotGordian.link.selfLinking(), 0);
+
+    EXPECT_EQ(trefoilLeft.link.selfLinking(), 0);
+    EXPECT_EQ(trefoilRight.link.selfLinking(), 0);
+    EXPECT_EQ(trefoil_r1x2.link.selfLinking(), 0);
+    EXPECT_EQ(trefoil_r1x6.link.selfLinking(), 0);
+    EXPECT_EQ(figureEight.link.selfLinking(), 0);
+    EXPECT_EQ(figureEight_r1x2.link.selfLinking(), 0);
+    EXPECT_EQ(conway.link.selfLinking(), 0);
+    EXPECT_EQ(kinoshitaTerasaka.link.selfLinking(), 0);
+    EXPECT_EQ(gst.link.selfLinking(), 0);
+
+    EXPECT_EQ(rht_rht.link.selfLinking(), 0);
+    EXPECT_EQ(rht_lht.link.selfLinking(), 0);
+
+    // Virtual knots:
+    EXPECT_EQ(virtualTrefoil.link.selfLinking(), 2);
+    EXPECT_EQ(kishino.link.selfLinking(), 0);
+    EXPECT_EQ(gpv.link.selfLinking(), -4);
+
+    // Links with ≠ 1 component:
+    EXPECT_THROW({ empty.link.selfLinking(); }, FailedPrecondition);
+
+    EXPECT_THROW({ unlink2_0.link.selfLinking(); }, FailedPrecondition);
+    EXPECT_THROW({ unlink3_0.link.selfLinking(); }, FailedPrecondition);
+    EXPECT_THROW({ unlink2_r2.link.selfLinking(); }, FailedPrecondition);
+    EXPECT_THROW({ unlink2_r1r1.link.selfLinking(); }, FailedPrecondition);
+    EXPECT_THROW({ hopf.link.selfLinking(); }, FailedPrecondition);
+    EXPECT_THROW({ whitehead.link.selfLinking(); }, FailedPrecondition);
+    EXPECT_THROW({ borromean.link.selfLinking(); }, FailedPrecondition);
+    EXPECT_THROW({ trefoil_unknot0.link.selfLinking(); }, FailedPrecondition);
+    EXPECT_THROW({ trefoil_unknot1.link.selfLinking(); }, FailedPrecondition);
+    EXPECT_THROW({ trefoil_unknot_overlap.link.selfLinking(); },
+        FailedPrecondition);
+
+    EXPECT_THROW({ virtualLink2.link.selfLinking(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualLink3.link.selfLinking(); }, FailedPrecondition);
+}
+
 static void verifyUnderOverForComponent(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
@@ -638,7 +684,7 @@ static void verifyWhiteheadDouble(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     if (link.countComponents() != 1) {
-        EXPECT_THROW({ link.whiteheadDouble(); }, regina::FailedPrecondition);
+        EXPECT_THROW({ link.whiteheadDouble(); }, FailedPrecondition);
         return;
     }
 
