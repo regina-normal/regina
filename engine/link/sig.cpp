@@ -362,7 +362,7 @@ namespace {
         // Output strands and signs, each as a packed sequence of bits.
         // Note: both the strands and the signs could be written using n bits
         // each, not 2n bits each (we are basically writing everything twice) -
-        // however, the old knot signatured wrote 2n bits and it would be bad
+        // however, the old knot signatures wrote 2n bits and it would be bad
         // to break compatibility with those.  Ah well.  An extra 2n bits ~ n/3
         // chars is not the end of the world: it only multiplies the length of
         // the signature by 7/6 (or less, if ints require more than one char).
@@ -493,7 +493,7 @@ Link Link::fromSig(const std::string& sig) {
 
     try {
         while (! dec.done()) {
-            // Read one component of the link diagram at a time.
+            // Read one connected component of the link diagram at a time.
             // Note: the call to dec.done() ignores whitespace, but if there
             // _is_ internal whitespace between components then this will be
             // caught by decodeSize() below.
@@ -508,11 +508,11 @@ Link Link::fromSig(const std::string& sig) {
             FixedArray<int> sign(2 * n);
             FixedArray<int> strand(2 * n);
 
-            // A connected diagram with n ≥ 1 crossings can have at most n
-            // link components, since each component uses ≥ 2 strands.  Here
-            // compStart[i] is the index into crossing[] at which component i
-            // begins, and we terminate compStart[] with an extra value of 2n.
-            FixedArray<size_t> compStart(n + 1);
+            // A connected _virtual_ diagram with n ≥ 1 crossings can have up
+            // to n+1 link components.  Here compStart[i] is the index into
+            // crossing[] at which component i begins, and we terminate
+            // compStart[] with an extra value of 2n.
+            FixedArray<size_t> compStart(n + 2);
 
             size_t i = 0;    // next index into crossing[] to read
             size_t comp = 0; // current component being read

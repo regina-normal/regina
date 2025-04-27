@@ -879,7 +879,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
             TreeDecompositionAlg alg = TreeDecompositionAlg::Upper);
 
         /**
-         * Builds a tree decomposition of the planar multigraph
+         * Builds a tree decomposition of the 4-valent multigraph
          * corresponding to the given knot or link diagram.
          *
          * The nodes of the graph will be numbered in the same way as

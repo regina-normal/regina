@@ -2160,8 +2160,8 @@ TEST_F(LinkTest, gaussAndDT) {
     // We test Gauss and D-T codes together, since they both have the same
     // ambiguity with knot composition.
 
-    // The following cases are precisely those single-component knots without
-    // ambiguous Gauss/D-T codes.
+    // The following cases are precisely those single-component classical
+    // knots without ambiguous Gauss/D-T codes.
     verifyGaussAndDT(unknot0);
     verifyGaussAndDT(unknot1);
     verifyGaussAndDT(unknot3);

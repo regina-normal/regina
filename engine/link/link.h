@@ -720,7 +720,7 @@ class Link :
                  This is std::nullopt if it has not yet been computed. */
 
         mutable std::optional<TreeDecomposition> niceTreeDecomposition_;
-            /**< A nice tree decomposition of the planar 4-valent multigraph
+            /**< A nice tree decomposition of the 4-valent multigraph
                  formed by the link diagram.
                  This is std::nullopt if it has not yet been computed. */
 
@@ -3597,10 +3597,10 @@ class Link :
         GroupPresentation group(bool simplify = true) const;
 
         /**
-         * Returns a nice tree decomposition of the planar 4-valent
-         * multigraph formed by this link diagram.  This can (for example)
-         * be used in implementing algorithms that are fixed-parameter
-         * tractable in the treewidth of this graph.
+         * Returns a nice tree decomposition of the 4-valent multigraph formed
+         * by this link diagram.  This can (for example) be used in
+         * implementing algorithms that are fixed-parameter tractable in the
+         * treewidth of this graph.
          *
          * See TreeDecomposition for further details on tree decompositions,
          * and see TreeDecomposition::makeNice() for details on what it
@@ -3631,7 +3631,7 @@ class Link :
          * For some link routines, including niceTreeDecomposition() as
          * well as computations such as jones() that support the option
          * Algorithm::Treewidth, Regina needs a tree decomposition of the
-         * planar 4-valent multigraph formed by this link diagram.
+         * 4-valent multigraph formed by this link diagram.
          *
          * By default, Regina will compute (and then cache) such a tree
          * decomposition itself, using in-built greedy heuristics.  This
@@ -3650,8 +3650,8 @@ class Link :
          * Regina will automatically create a nice tree decomposition
          * from it if \e td is not nice already.
          *
-         * \param td a tree decomposition of the planar 4-valent
-         * multigraph formed by this link diagram.
+         * \param td a tree decomposition of the 4-valent multigraph formed
+         * by this link diagram.
          */
         void useTreeDecomposition(TreeDecomposition td);
 
@@ -4328,8 +4328,8 @@ class Link :
          * _entirely_ of over-crossings.  These are essentially unknotted
          * loops that are "placed on top of" the remainder of the link diagram.
          *
-         * Note that planar diagrams have another limitation, which is that
-         * they cannot represent zero-crossing components at all (any such
+         * Note that planar diagram codes have another limitation, which is
+         * that they cannot represent zero-crossing components at all (any such
          * components are omitted from planar diagram codes entirely).
          * Zero-crossing components are _not_ recognised by this routine, but
          * can be recognised instead by calling countTrivialComponents().
@@ -4340,8 +4340,8 @@ class Link :
         bool pdAmbiguous() const;
 
         /**
-         * Outputs the underlying planar 4-valent multigraph using the
-         * PACE text format.  This text format is described in detail at
+         * Outputs the underlying 4-valent multigraph for this link diagram
+         * using the PACE text format.  This format is described in detail at
          * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/,
          * and is documented in detail by the routine pace().
          *
@@ -4359,9 +4359,9 @@ class Link :
          */
         void writePACE(std::ostream& out) const;
         /**
-         * Returns a text representation of the underlying planar
-         * 4-valent multigraph, using the PACE text format.
-         * This text format is described in detail at
+         * Returns a text representation of the underlying 4-valent multigraph
+         * for this link diagram, using the PACE text format.
+         * This format is described in detail at
          * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/.
          *
          * In summary, the PACE text representation will consist of several
