@@ -35,25 +35,22 @@
 namespace regina {
 
 bool Link::internalR1(Crossing* crossing, bool check, bool perform) {
-    // Note that, for a planar knot projection, if crossing->next(1)
-    // returns to the same crossing then it must be the lower strand.
-
     if (! crossing) {
         // The move cannot be performed.
         // We should just return false, but only if check is true.
         return ! check;
     }
 
-    if (crossing->next(1).crossing() == crossing) {
+    if (crossing->next(1) == crossing->lower()) {
         // The move is legal.
         if (! perform)
             return true;
 
         ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
 
-        if (crossing->prev(1).crossing() == crossing) {
-            // This is a 1-crossing component, and we will convert it to a
-            // zero-crossing unknot component.
+        if (crossing->next(0).crossing() == crossing) {
+            // This is a 1-crossing unknot component, and we will convert it
+            // to a zero-crossing unknot component.
             for (StrandRef& c : components_)
                 if (c.crossing() == crossing) {
                     // We found the component!
@@ -79,7 +76,7 @@ bool Link::internalR1(Crossing* crossing, bool check, bool perform) {
         // This has to happen before the ChangeAndClearSpan goes out of scope.
         crossings_.erase(crossings_.begin() + crossing->index());
         delete crossing;
-    } else if (crossing->prev(1).crossing() == crossing) {
+    } else if (crossing->next(0) == crossing->upper()) {
         // The move is legal.
         if (! perform)
             return true;

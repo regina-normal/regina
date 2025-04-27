@@ -1409,10 +1409,11 @@ static void verifyR1Down(const Link& link, const char* name) {
             EXPECT_EQ(alt, link);
         }
     }
-
-    Link alt(link, false);
-    EXPECT_FALSE(alt.r1(nullptr));
-    EXPECT_EQ(alt, link);
+    {
+        Link alt(link, false);
+        EXPECT_FALSE(alt.r1(nullptr));
+        EXPECT_EQ(alt, link);
+    }
 }
 
 static void verifyR1Up(const Link& link, const char* name) {
@@ -1420,8 +1421,8 @@ static void verifyR1Up(const Link& link, const char* name) {
 
     for (int side = 0; side <= 1; ++side)
         for (int sign = -1; sign <= 1; sign += 2) {
-            for (int strand = 0; strand <= 1; ++strand)
-                for (size_t i = 0; i < link.size(); ++i) {
+            for (size_t i = 0; i < link.size(); ++i) {
+                for (int strand = 0; strand <= 1; ++strand) {
                     Link alt(link, false);
                     EXPECT_TRUE(alt.r1(alt.crossing(i)->strand(strand),
                         side, sign));
@@ -1429,21 +1430,64 @@ static void verifyR1Up(const Link& link, const char* name) {
                     EXPECT_EQ(alt.size(), link.size() + 1);
                     verifyTopologicallySame(alt, link);
                 }
+            }
+            {
+                Link alt(link, false);
+                if (alt.r1(StrandRef(), side, sign)) {
+                    EXPECT_TRUE(isConsistent(alt));
+                    EXPECT_EQ(alt.size(), link.size() + 1);
+                    verifyTopologicallySame(alt, link);
+                } else {
+                    EXPECT_EQ(alt, link);
+                }
+            }
+        }
+}
+
+static void verifyR3(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    for (int side = 0; side <= 1; ++side) {
+        for (size_t i = 0; i < link.size(); ++i) {
+            for (int strand = 0; strand <= 1; ++strand) {
+                Link alt(link, false);
+                if (alt.r3(alt.crossing(i), side)) {
+                    EXPECT_TRUE(isConsistent(alt));
+                    EXPECT_NE(alt, link);
+                    EXPECT_EQ(alt.size(), link.size());
+                    verifyTopologicallySame(alt, link);
+                } else {
+                    EXPECT_EQ(alt, link);
+                }
+            }
 
             Link alt(link, false);
-            if (alt.r1(StrandRef(), side, sign)) {
+            if (alt.r3(alt.crossing(i), side)) {
                 EXPECT_TRUE(isConsistent(alt));
-                EXPECT_EQ(alt.size(), link.size() + 1);
+                EXPECT_NE(alt, link);
+                EXPECT_EQ(alt.size(), link.size());
                 verifyTopologicallySame(alt, link);
             } else {
                 EXPECT_EQ(alt, link);
             }
         }
+        {
+            Link alt(link, false);
+            EXPECT_FALSE(alt.r3(nullptr, side));
+            EXPECT_EQ(alt, link);
+        }
+        {
+            Link alt(link, false);
+            EXPECT_FALSE(alt.r3(StrandRef(), side));
+            EXPECT_EQ(alt, link);
+        }
+    }
 }
 
 TEST_F(LinkTest, reidemeister) {
     testManualCases(verifyR1Down, false /* gordian */);
     testManualCases(verifyR1Up, false /* gordian */);
+    testManualCases(verifyR3, false /* gordian */);
 
     // Single twist:
     verifyR1Down(Link::fromData({ -1 }, { 1, -1 }), 0, "( )");
