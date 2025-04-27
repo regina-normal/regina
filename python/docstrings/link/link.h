@@ -423,9 +423,10 @@ Parameter ``description``:
 static const char *alexander =
 R"doc(Returns the Alexander polynomial of this knot.
 
-At present, Regina only computes Alexander polynomials for knots, not
-multiple-component links. If this link is empty or has more than one
-component, then this routine will throw an exception.
+At present, Regina only computes Alexander polynomials for classical
+knots, not multiple-component links or virtual knots. If this link is
+empty, has more than one component or is virtual, then this routine
+will throw an exception.
 
 To pretty-print the Alexander polynomial for human consumption, you
 can call ``Polynomial::str(Link::alexanderVar)``.
@@ -441,10 +442,11 @@ cached and so this routine will be instantaneous (since it just
 returns the previously computed result).
 
 Precondition:
-    This link has exactly one component (i.e., it is a knot).
+    This link is classical (not virtual), and has exactly one
+    component (i.e., it is a knot).
 
 Exception ``FailedPrecondition``:
-    This link is empty or has multiple components.
+    This link is empty, has multiple components, and/or is virtual.
 
 Returns:
     the Alexander polynomial of this knot.)doc";
@@ -571,7 +573,10 @@ static const char *changeAll =
 R"doc(Switches the upper and lower strands of every crossing in the diagram.
 
 This operation corresponds to reflecting the link diagram through the
-plane on which it is drawn.)doc";
+surface on which it is drawn.
+
+In the language of Jeremy Green's virtual knot tables, this operation
+is a _vertical_ mirror image.)doc";
 
 // Docstring regina::python::doc::Link_::complement
 static const char *complement =
@@ -2860,10 +2865,10 @@ Parameter ``dest``:
 
 // Docstring regina::python::doc::Link_::niceTreeDecomposition
 static const char *niceTreeDecomposition =
-R"doc(Returns a nice tree decomposition of the planar 4-valent multigraph
-formed by this link diagram. This can (for example) be used in
-implementing algorithms that are fixed-parameter tractable in the
-treewidth of this graph.
+R"doc(Returns a nice tree decomposition of the 4-valent multigraph formed by
+this link diagram. This can (for example) be used in implementing
+algorithms that are fixed-parameter tractable in the treewidth of this
+graph.
 
 See TreeDecomposition for further details on tree decompositions, and
 see TreeDecomposition::makeNice() for details on what it means to be a
@@ -3013,10 +3018,10 @@ Returns:
 
 // Docstring regina::python::doc::Link_::pace
 static const char *pace =
-R"doc(Returns a text representation of the underlying planar 4-valent
-multigraph, using the PACE text format. This text format is described
-in detail at https://pacechallenge.wordpress.com/pace-2016/track-a-
-treewidth/.
+R"doc(Returns a text representation of the underlying 4-valent multigraph
+for this link diagram, using the PACE text format. This format is
+described in detail at
+https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/.
 
 In summary, the PACE text representation will consist of several lines
 of text:
@@ -3175,11 +3180,11 @@ Such components must have at least one crossing, and must consist
 _entirely_ of over-crossings. These are essentially unknotted loops
 that are "placed on top of" the remainder of the link diagram.
 
-Note that planar diagrams have another limitation, which is that they
-cannot represent zero-crossing components at all (any such components
-are omitted from planar diagram codes entirely). Zero-crossing
-components are _not_ recognised by this routine, but can be recognised
-instead by calling countTrivialComponents().
+Note that planar diagram codes have another limitation, which is that
+they cannot represent zero-crossing components at all (any such
+components are omitted from planar diagram codes entirely). Zero-
+crossing components are _not_ recognised by this routine, but can be
+recognised instead by calling countTrivialComponents().
 
 Returns:
     ``True`` if and only if some component of this link has at least
@@ -3217,8 +3222,8 @@ which indicates the crossing that will be removed. Specifically, this
 move involves undoing a trivial twist at the given crossing.
 
 You may pass a null pointer for *crossing*. However, in this case the
-move cannot be performed, which means (i) *check* must be ``True``,
-and therefore (ii) this routine will do nothing and return ``False``.
+move cannot be performed, which means this routine will do nothing and
+simply return ``False``.
 
 .. warning::
     A side-effect of this move is that, because one crossing is being
@@ -3399,8 +3404,8 @@ See the StrandRef documentation for the convention on how arcs are
 represented using StrandRef objects.
 
 You may pass a null reference for *arc*. However, in this case the
-move cannot be performed, which means (i) *check* must be ``True``,
-and therefore (ii) this routine will do nothing and return ``False``.
+move cannot be performed, which means this routine will do nothing and
+simply return ``False``.
 
 .. warning::
     A side-effect of this move is that, because two crossings are
@@ -3445,8 +3450,8 @@ be the first of the two crossings that we encounter. Note that
 move.
 
 You may pass a null pointer for *crossing*. However, in this case the
-move cannot be performed, which means (i) *check* must be ``True``,
-and therefore (ii) this routine will do nothing and return ``False``.
+move cannot be performed, which means this routine will do nothing and
+simply return ``False``.
 
 .. warning::
     A side-effect of this move is that, because two crossings are
@@ -3708,8 +3713,8 @@ is located. See the StrandRef documentation for the convention on how
 arcs are represented using StrandRef objects.
 
 You may pass a null reference for *arc*. However, in this case the
-move cannot be performed, which means (i) *check* must be ``True``,
-and therefore (ii) this routine will do nothing and return ``False``.
+move cannot be performed, which means this routine will do nothing and
+simply return ``False``.
 
 All crossings in this link will keep the same indices, and no
 crossings will be created or destroyed. Instead, the three crossings
@@ -3758,8 +3763,8 @@ The additional argument *side* indicates on which side of the
 uppermost arc the third crossing is located.
 
 You may pass a null pointer for *crossing*. However, in this case the
-move cannot be performed, which means (i) *check* must be ``True``,
-and therefore (ii) this routine will do nothing and return ``False``.
+move cannot be performed, which means this routine will do nothing and
+simply return ``False``.
 
 All crossings in this link will keep the same indices, and no
 crossings will be created or destroyed. Instead, the three crossings
@@ -4465,7 +4470,7 @@ point whenever it needs a tree decomposition for this link.
 
 For some link routines, including niceTreeDecomposition() as well as
 computations such as jones() that support the option
-Algorithm::Treewidth, Regina needs a tree decomposition of the planar
+Algorithm::Treewidth, Regina needs a tree decomposition of the
 4-valent multigraph formed by this link diagram.
 
 By default, Regina will compute (and then cache) such a tree
@@ -4484,8 +4489,8 @@ definition of a tree decomposition). Regina will automatically create
 a nice tree decomposition from it if *td* is not nice already.
 
 Parameter ``td``:
-    a tree decomposition of the planar 4-valent multigraph formed by
-    this link diagram.)doc";
+    a tree decomposition of the 4-valent multigraph formed by this
+    link diagram.)doc";
 
 // Docstring regina::python::doc::Link_::virtualGenus
 static const char *virtualGenus =
