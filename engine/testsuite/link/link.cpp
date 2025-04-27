@@ -422,6 +422,8 @@ static void verifyDiagramComponents(const Link& link, const char* name,
         std::initializer_list<std::string> expectBrief) {
     SCOPED_TRACE_CSTRING(name);
 
+    size_t totalGenus = link.virtualGenus();
+
     auto foundComponents = link.diagramComponents();
     EXPECT_EQ(foundComponents.size(), expectBrief.size());
 
@@ -430,6 +432,11 @@ static void verifyDiagramComponents(const Link& link, const char* name,
     for ( ; found != foundComponents.end() && expect != expectBrief.end();
             ++found, ++expect)
         EXPECT_EQ(found->brief(), *expect);
+
+    size_t foundGenus = 0;
+    for (const Link& c : foundComponents)
+        foundGenus += c.virtualGenus();
+    EXPECT_EQ(totalGenus, foundGenus);
 }
 
 TEST_F(LinkTest, diagramComponents) {
