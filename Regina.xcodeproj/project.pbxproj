@@ -1701,6 +1701,8 @@
 		05FE04F92DB7F6C8001432AC /* plantri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FE04F82DB7F6C8001432AC /* plantri.cpp */; };
 		05FE04FA2DB7F6C8001432AC /* plantri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FE04F82DB7F6C8001432AC /* plantri.cpp */; };
 		05FE04FC2DB84665001432AC /* modellinkgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FE04FB2DB84665001432AC /* modellinkgraph.cpp */; };
+		05FE04FE2DBEB3E1001432AC /* operations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FE04FD2DBEB3E1001432AC /* operations.cpp */; };
+		05FE04FF2DBEB3E1001432AC /* operations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FE04FD2DBEB3E1001432AC /* operations.cpp */; };
 		05FEA07A19C1890900A31924 /* examplesnappea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07819C1890900A31924 /* examplesnappea.cpp */; };
 		05FEA07C19C1890900A31924 /* examplesnappea.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FEA07919C1890900A31924 /* examplesnappea.h */; };
 		05FFD26A2900C75900E0F61C /* facenumbering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FFD2692900C75900E0F61C /* facenumbering.cpp */; };
@@ -4521,6 +4523,7 @@
 		05FC5CF91F98061000F732E0 /* NewLinkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewLinkController.h; sourceTree = "<group>"; };
 		05FE04F82DB7F6C8001432AC /* plantri.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = plantri.cpp; sourceTree = "<group>"; };
 		05FE04FB2DB84665001432AC /* modellinkgraph.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = modellinkgraph.cpp; sourceTree = "<group>"; };
+		05FE04FD2DBEB3E1001432AC /* operations.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = operations.cpp; sourceTree = "<group>"; };
 		05FEA07819C1890900A31924 /* examplesnappea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = examplesnappea.cpp; sourceTree = "<group>"; };
 		05FEA07919C1890900A31924 /* examplesnappea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = examplesnappea.h; sourceTree = "<group>"; };
 		05FEA07D19C2B96000A31924 /* PacketPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketPicker.h; sourceTree = "<group>"; };
@@ -7882,6 +7885,7 @@
 				05870CB11FAD250900835F9E /* modellinkgraph.cpp */,
 				05870CB01FAD250900835F9E /* modellinkgraph.h */,
 				0512E08C26DF34AF00DDB222 /* modellinkgraph-impl.h */,
+				05FE04FD2DBEB3E1001432AC /* operations.cpp */,
 				0568742420C5D86B001C435B /* pass.cpp */,
 				055BC3EC265338FC00E5E34C /* pd.cpp */,
 				052121BF2662F50A0041FD89 /* pd-impl.h */,
@@ -9797,6 +9801,7 @@
 				0553FB772AEBE7F700BE89A7 /* tables.cpp in Sources */,
 				0553FB1C2AEBE71C00BE89A7 /* signature.cpp in Sources */,
 				0553FB632AEBE7E100BE89A7 /* fundamental_group.cpp in Sources */,
+				05FE04FE2DBEB3E1001432AC /* operations.cpp in Sources */,
 				0553FB152AEBE70800BE89A7 /* fundgroup.cpp in Sources */,
 				0553FA902AEBE3AC00BE89A7 /* homology.cpp in Sources */,
 				0553FB452AEBE74B00BE89A7 /* csv.cpp in Sources */,
@@ -10693,6 +10698,7 @@
 				052F9F5B180600FB00FAE4DF /* script.cpp in Sources */,
 				05F09FD81DBF01B600117BFC /* skeleton.cpp in Sources */,
 				0518B9E529D595680020ADC1 /* homology.cpp in Sources */,
+				05FE04FF2DBEB3E1001432AC /* operations.cpp in Sources */,
 				05A0671C1DFA68190047872E /* layeredsolidtorus.cpp in Sources */,
 				0518B9B129D5952A0020ADC1 /* change_peripheral_curves.cpp in Sources */,
 				0518B9CC29D595490020ADC1 /* cusp_shapes.cpp in Sources */,

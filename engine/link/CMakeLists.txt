@@ -14,6 +14,7 @@ SET ( FILES
   knotplot.cpp
   link.cpp
   modellinkgraph.cpp
+  operations.cpp
   pass.cpp
   pd.cpp
   plantri.cpp
