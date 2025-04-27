@@ -271,7 +271,7 @@ Version 7.4  [ (to be announced) ]
         Class Link:
             - Added initial support for virtual knots and links, with new
               routines isClassical(), virtualGenus(), makeVirtual(), and
-              selfLinking().
+              oddWrithe().
             - New routine alexander() and class constant alexanderVar.
             - New routine makeAlternating().
             - New routine seifertCircles().

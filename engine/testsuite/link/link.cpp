@@ -544,49 +544,49 @@ TEST_F(LinkTest, linking) {
     verifyLinking(virtualLink3, 1);
 }
 
-TEST_F(LinkTest, selfLinking) {
+TEST_F(LinkTest, oddWrithe) {
     // Classical knots:
-    EXPECT_EQ(unknot0.link.selfLinking(), 0);
-    EXPECT_EQ(unknot1.link.selfLinking(), 0);
-    EXPECT_EQ(unknot3.link.selfLinking(), 0);
-    EXPECT_EQ(unknotMonster.link.selfLinking(), 0);
-    EXPECT_EQ(unknotGordian.link.selfLinking(), 0);
+    EXPECT_EQ(unknot0.link.oddWrithe(), 0);
+    EXPECT_EQ(unknot1.link.oddWrithe(), 0);
+    EXPECT_EQ(unknot3.link.oddWrithe(), 0);
+    EXPECT_EQ(unknotMonster.link.oddWrithe(), 0);
+    EXPECT_EQ(unknotGordian.link.oddWrithe(), 0);
 
-    EXPECT_EQ(trefoilLeft.link.selfLinking(), 0);
-    EXPECT_EQ(trefoilRight.link.selfLinking(), 0);
-    EXPECT_EQ(trefoil_r1x2.link.selfLinking(), 0);
-    EXPECT_EQ(trefoil_r1x6.link.selfLinking(), 0);
-    EXPECT_EQ(figureEight.link.selfLinking(), 0);
-    EXPECT_EQ(figureEight_r1x2.link.selfLinking(), 0);
-    EXPECT_EQ(conway.link.selfLinking(), 0);
-    EXPECT_EQ(kinoshitaTerasaka.link.selfLinking(), 0);
-    EXPECT_EQ(gst.link.selfLinking(), 0);
+    EXPECT_EQ(trefoilLeft.link.oddWrithe(), 0);
+    EXPECT_EQ(trefoilRight.link.oddWrithe(), 0);
+    EXPECT_EQ(trefoil_r1x2.link.oddWrithe(), 0);
+    EXPECT_EQ(trefoil_r1x6.link.oddWrithe(), 0);
+    EXPECT_EQ(figureEight.link.oddWrithe(), 0);
+    EXPECT_EQ(figureEight_r1x2.link.oddWrithe(), 0);
+    EXPECT_EQ(conway.link.oddWrithe(), 0);
+    EXPECT_EQ(kinoshitaTerasaka.link.oddWrithe(), 0);
+    EXPECT_EQ(gst.link.oddWrithe(), 0);
 
-    EXPECT_EQ(rht_rht.link.selfLinking(), 0);
-    EXPECT_EQ(rht_lht.link.selfLinking(), 0);
+    EXPECT_EQ(rht_rht.link.oddWrithe(), 0);
+    EXPECT_EQ(rht_lht.link.oddWrithe(), 0);
 
     // Virtual knots:
-    EXPECT_EQ(virtualTrefoil.link.selfLinking(), 2);
-    EXPECT_EQ(kishino.link.selfLinking(), 0);
-    EXPECT_EQ(gpv.link.selfLinking(), -4);
+    EXPECT_EQ(virtualTrefoil.link.oddWrithe(), 2);
+    EXPECT_EQ(kishino.link.oddWrithe(), 0);
+    EXPECT_EQ(gpv.link.oddWrithe(), -4);
 
     // Links with ≠ 1 component:
-    EXPECT_THROW({ empty.link.selfLinking(); }, FailedPrecondition);
+    EXPECT_THROW({ empty.link.oddWrithe(); }, FailedPrecondition);
 
-    EXPECT_THROW({ unlink2_0.link.selfLinking(); }, FailedPrecondition);
-    EXPECT_THROW({ unlink3_0.link.selfLinking(); }, FailedPrecondition);
-    EXPECT_THROW({ unlink2_r2.link.selfLinking(); }, FailedPrecondition);
-    EXPECT_THROW({ unlink2_r1r1.link.selfLinking(); }, FailedPrecondition);
-    EXPECT_THROW({ hopf.link.selfLinking(); }, FailedPrecondition);
-    EXPECT_THROW({ whitehead.link.selfLinking(); }, FailedPrecondition);
-    EXPECT_THROW({ borromean.link.selfLinking(); }, FailedPrecondition);
-    EXPECT_THROW({ trefoil_unknot0.link.selfLinking(); }, FailedPrecondition);
-    EXPECT_THROW({ trefoil_unknot1.link.selfLinking(); }, FailedPrecondition);
-    EXPECT_THROW({ trefoil_unknot_overlap.link.selfLinking(); },
+    EXPECT_THROW({ unlink2_0.link.oddWrithe(); }, FailedPrecondition);
+    EXPECT_THROW({ unlink3_0.link.oddWrithe(); }, FailedPrecondition);
+    EXPECT_THROW({ unlink2_r2.link.oddWrithe(); }, FailedPrecondition);
+    EXPECT_THROW({ unlink2_r1r1.link.oddWrithe(); }, FailedPrecondition);
+    EXPECT_THROW({ hopf.link.oddWrithe(); }, FailedPrecondition);
+    EXPECT_THROW({ whitehead.link.oddWrithe(); }, FailedPrecondition);
+    EXPECT_THROW({ borromean.link.oddWrithe(); }, FailedPrecondition);
+    EXPECT_THROW({ trefoil_unknot0.link.oddWrithe(); }, FailedPrecondition);
+    EXPECT_THROW({ trefoil_unknot1.link.oddWrithe(); }, FailedPrecondition);
+    EXPECT_THROW({ trefoil_unknot_overlap.link.oddWrithe(); },
         FailedPrecondition);
 
-    EXPECT_THROW({ virtualLink2.link.selfLinking(); }, FailedPrecondition);
-    EXPECT_THROW({ virtualLink3.link.selfLinking(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualLink2.link.oddWrithe(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualLink3.link.oddWrithe(); }, FailedPrecondition);
 }
 
 static void verifyUnderOverForComponent(const Link& link, const char* name) {

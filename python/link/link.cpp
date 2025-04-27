@@ -234,7 +234,7 @@ void addLink(pybind11::module_& m) {
         .def("writheOfComponent", overload_cast<size_t>(
             &Link::writheOfComponent, pybind11::const_),
             rdoc::writheOfComponent_2)
-        .def("selfLinking", &Link::selfLinking, rdoc::selfLinking)
+        .def("oddWrithe", &Link::oddWrithe, rdoc::oddWrithe)
         .def("isClassical", &Link::isClassical, rdoc::isClassical)
         .def("virtualGenus", &Link::virtualGenus, rdoc::virtualGenus)
         .def("seifertCircles", &Link::seifertCircles, rdoc::seifertCircles)

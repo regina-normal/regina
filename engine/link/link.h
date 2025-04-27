@@ -3010,23 +3010,27 @@ class Link :
         long writheOfComponent(size_t index) const;
 
         /**
-         * Returns the self-linking number of this knot.
+         * Returns the odd writhe, or self-linking number, of this knot.
          *
-         * The self-linking number is an invariant of virtual knots.  It sums
-         * the signs of all crossings \a c for which, when traversing the knot,
-         * we pass through an odd number of crossings between the over-strand
-         * and the under-strand of \a c.
+         * The _odd writhe_ is an invariant of virtual knots, which sums the
+         * signs of all odd crossings.  A crossing \a c is _odd_ if, when
+         * traversing the knot, we pass through an odd number of crossings
+         * between the over-strand and the under-strand of \a c.
          *
-         * For a classical knot, the self-linking number will always be zero.
+         * Some authors call this invariant the _self-linking number_ of the
+         * knot.
+         *
+         * For a classical knot, all crossings will always be even, and so the
+         * odd writhe will always be zero.
          *
          * \pre This link has exactly one component (i.e., it is a knot).
          *
          * \exception FailedPrecondition This link is empty or has multiple
          * components.
          *
-         * \return the self-linking number of this knot.
+         * \return the odd writhe of this knot.
          */
-        long selfLinking() const;
+        long oddWrithe() const;
 
         /**
          * Determines whether this link diagram is classical (that is, planar).

@@ -538,7 +538,7 @@ long Link::writheOfComponent(StrandRef strand) const {
     return ans;
 }
 
-long Link::selfLinking() const {
+long Link::oddWrithe() const {
     if (components_.size() != 1)
         throw FailedPrecondition("Self-linking number requires the link "
             "to have exactly one component");

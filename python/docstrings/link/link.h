@@ -2884,6 +2884,30 @@ supply it by calling useTreeDecomposition().
 Returns:
     a nice tree decomposition of this link diagram.)doc";
 
+// Docstring regina::python::doc::Link_::oddWrithe
+static const char *oddWrithe =
+R"doc(Returns the odd writhe, or self-linking number, of this knot.
+
+The _odd writhe_ is an invariant of virtual knots, which sums the
+signs of all odd crossings. A crossing *c* is _odd_ if, when
+traversing the knot, we pass through an odd number of crossings
+between the over-strand and the under-strand of *c*.
+
+Some authors call this invariant the _self-linking number_ of the
+knot.
+
+For a classical knot, all crossings will always be even, and so the
+odd writhe will always be zero.
+
+Precondition:
+    This link has exactly one component (i.e., it is a knot).
+
+Exception ``FailedPrecondition``:
+    This link is empty or has multiple components.
+
+Returns:
+    the odd writhe of this knot.)doc";
+
 // Docstring regina::python::doc::Link_::orientedGauss
 static const char *orientedGauss =
 R"doc(Returns an oriented Gauss code for this knot, presented as a string.
@@ -4079,26 +4103,6 @@ This link will be modified directly.
 Returns:
     ``True`` if the link diagram was changed, or ``False`` if every
     component already had zero writhe to begin with.)doc";
-
-// Docstring regina::python::doc::Link_::selfLinking
-static const char *selfLinking =
-R"doc(Returns the self-linking number of this knot.
-
-The self-linking number is an invariant of virtual knots. It sums the
-signs of all crossings *c* for which, when traversing the knot, we
-pass through an odd number of crossings between the over-strand and
-the under-strand of *c*.
-
-For a classical knot, the self-linking number will always be zero.
-
-Precondition:
-    This link has exactly one component (i.e., it is a knot).
-
-Exception ``FailedPrecondition``:
-    This link is empty or has multiple components.
-
-Returns:
-    the self-linking number of this knot.)doc";
 
 // Docstring regina::python::doc::Link_::sig
 static const char *sig =
