@@ -1516,9 +1516,8 @@ class Link :
          * this move involves undoing a trivial twist at the given crossing.
          *
          * You may pass a null pointer for \a crossing.  However, in this case
-         * the move cannot be performed, which means (i) \a check must be
-         * \c true, and therefore (ii) this routine will do nothing and return
-         * \c false.
+         * the move cannot be performed, which means this routine will do
+         * nothing and simply return \c false.
          *
          * \warning A side-effect of this move is that, because one crossing
          * is being removed, the other crossings in the link may be reindexed.
@@ -1597,9 +1596,8 @@ class Link :
          * convention on how arcs are represented using StrandRef objects.
          *
          * You may pass a null reference for \a arc.  However, in this case
-         * the move cannot be performed, which means (i) \a check must be
-         * \c true, and therefore (ii) this routine will do nothing and return
-         * \c false.
+         * the move cannot be performed, which means this routine will do
+         * nothing and simply return \c false.
          *
          * \warning A side-effect of this move is that, because two crossings
          * are being removed, the other crossings in the link may be reindexed.
@@ -1639,9 +1637,8 @@ class Link :
          * will be removed by this move.
          *
          * You may pass a null pointer for \a crossing.  However, in this case
-         * the move cannot be performed, which means (i) \a check must be
-         * \c true, and therefore (ii) this routine will do nothing and return
-         * \c false.
+         * the move cannot be performed, which means this routine will do
+         * nothing and simply return \c false.
          *
          * \warning A side-effect of this move is that, because two crossings
          * are being removed, the other crossings in the link may be reindexed.
@@ -1797,9 +1794,8 @@ class Link :
          * objects.
          *
          * You may pass a null reference for \a arc.  However, in this case
-         * the move cannot be performed, which means (i) \a check must be
-         * \c true, and therefore (ii) this routine will do nothing and return
-         * \c false.
+         * the move cannot be performed, which means this routine will do
+         * nothing and simply return \c false.
          *
          * All crossings in this link will keep the same indices, and
          * no crossings will be created or destroyed.  Instead, the three
@@ -1844,9 +1840,8 @@ class Link :
          * located.
          *
          * You may pass a null pointer for \a crossing.  However, in this case
-         * the move cannot be performed, which means (i) \a check must be
-         * \c true, and therefore (ii) this routine will do nothing and return
-         * \c false.
+         * the move cannot be performed, which means this routine will do
+         * nothing and simply return \c false.
          *
          * All crossings in this link will keep the same indices, and
          * no crossings will be created or destroyed.  Instead, the three
