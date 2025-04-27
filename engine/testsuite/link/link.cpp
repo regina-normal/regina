@@ -97,6 +97,17 @@ static bool isConsistent(const Link& link) {
     return true;
 }
 
+static void verifyTopologicallySame(const Link& a, const Link& b) {
+    // Used (for example) when testing Reidemeister moves.
+    EXPECT_EQ(a.countComponents(), b.countComponents());
+    EXPECT_EQ(a.virtualGenus(), b.virtualGenus());
+    EXPECT_EQ(a.linking2(), b.linking2());
+    if (a.countComponents() == 1 && b.countComponents() == 1)
+        EXPECT_EQ(a.oddWrithe(), b.oddWrithe());
+    if (a.size() <= JONES_THRESHOLD && b.size() <= JONES_THRESHOLD)
+        EXPECT_EQ(a.jones(), b.jones());
+}
+
 struct TestCase {
     Link link;
     const char* name;
@@ -1385,7 +1396,55 @@ static void verifyR3(Link link, int crossing, int strand, int side,
     EXPECT_EQ(link.brief(), briefResult);
 }
 
+static void verifyR1Down(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    for (size_t i = 0; i < link.size(); ++i) {
+        Link alt(link, false);
+        if (alt.r1(alt.crossing(i))) {
+            EXPECT_TRUE(isConsistent(alt));
+            EXPECT_EQ(alt.size(), link.size() - 1);
+            verifyTopologicallySame(alt, link);
+        } else {
+            EXPECT_EQ(alt, link);
+        }
+    }
+
+    Link alt(link, false);
+    EXPECT_FALSE(alt.r1(nullptr));
+    EXPECT_EQ(alt, link);
+}
+
+static void verifyR1Up(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    for (int side = 0; side <= 1; ++side)
+        for (int sign = -1; sign <= 1; sign += 2) {
+            for (int strand = 0; strand <= 1; ++strand)
+                for (size_t i = 0; i < link.size(); ++i) {
+                    Link alt(link, false);
+                    EXPECT_TRUE(alt.r1(alt.crossing(i)->strand(strand),
+                        side, sign));
+                    EXPECT_TRUE(isConsistent(alt));
+                    EXPECT_EQ(alt.size(), link.size() + 1);
+                    verifyTopologicallySame(alt, link);
+                }
+
+            Link alt(link, false);
+            if (alt.r1(StrandRef(), side, sign)) {
+                EXPECT_TRUE(isConsistent(alt));
+                EXPECT_EQ(alt.size(), link.size() + 1);
+                verifyTopologicallySame(alt, link);
+            } else {
+                EXPECT_EQ(alt, link);
+            }
+        }
+}
+
 TEST_F(LinkTest, reidemeister) {
+    testManualCases(verifyR1Down, false /* gordian */);
+    testManualCases(verifyR1Up, false /* gordian */);
+
     // Single twist:
     verifyR1Down(Link::fromData({ -1 }, { 1, -1 }), 0, "( )");
 
