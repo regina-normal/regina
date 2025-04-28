@@ -1444,6 +1444,43 @@ static void verifyR1Up(const Link& link, const char* name) {
         }
 }
 
+static void verifyR2Down(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    for (size_t i = 0; i < link.size(); ++i) {
+        for (int strand = 0; strand <= 1; ++strand) {
+            Link alt(link, false);
+            if (alt.r2(alt.crossing(i)->strand(strand))) {
+                EXPECT_TRUE(isConsistent(alt));
+                EXPECT_NE(alt, link);
+                EXPECT_EQ(alt.size(), link.size() - 2);
+                verifyTopologicallySame(alt, link);
+            } else {
+                EXPECT_EQ(alt, link);
+            }
+        }
+
+        Link alt(link, false);
+        if (alt.r2(alt.crossing(i))) {
+            EXPECT_TRUE(isConsistent(alt));
+            EXPECT_EQ(alt.size(), link.size() - 2);
+            verifyTopologicallySame(alt, link);
+        } else {
+            EXPECT_EQ(alt, link);
+        }
+    }
+    {
+        Link alt(link, false);
+        EXPECT_FALSE(alt.r2(nullptr));
+        EXPECT_EQ(alt, link);
+    }
+    {
+        Link alt(link, false);
+        EXPECT_FALSE(alt.r2(StrandRef()));
+        EXPECT_EQ(alt, link);
+    }
+}
+
 static void verifyR3(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
@@ -1451,7 +1488,7 @@ static void verifyR3(const Link& link, const char* name) {
         for (size_t i = 0; i < link.size(); ++i) {
             for (int strand = 0; strand <= 1; ++strand) {
                 Link alt(link, false);
-                if (alt.r3(alt.crossing(i), side)) {
+                if (alt.r3(alt.crossing(i)->strand(strand), side)) {
                     EXPECT_TRUE(isConsistent(alt));
                     EXPECT_NE(alt, link);
                     EXPECT_EQ(alt.size(), link.size());
@@ -1487,6 +1524,7 @@ static void verifyR3(const Link& link, const char* name) {
 TEST_F(LinkTest, reidemeister) {
     testManualCases(verifyR1Down, false /* gordian */);
     testManualCases(verifyR1Up, false /* gordian */);
+    testManualCases(verifyR2Down, false /* gordian */);
     testManualCases(verifyR3, false /* gordian */);
 
     // Single twist:

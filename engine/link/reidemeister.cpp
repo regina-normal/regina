@@ -180,20 +180,20 @@ bool Link::internalR2(StrandRef arc, bool check, bool perform) {
 
     StrandRef to = arc.next();
 
-    // The following test also ensures (by planarity) that [arc] and [to]
-    // represent different crossings.
-    if (arc.strand() != to.strand())
+    // Note: by testing that the two crossings have different signs, we also
+    // ensure that they are indeed different crossings.
+    if (arc.strand() != to.strand() ||
+            arc.crossing()->sign() == to.crossing()->sign())
         return ! check;
 
     StrandRef arc2 = arc;
     arc2.jump();
+    StrandRef to2 = to;
+    to2.jump();
 
-    // Does the second arc run forwards or backwards?
-    // Note that, for a planar knot diagram, we are guaranteed that if
-    // the other strand of [arc] *does* also connect with [to], then it does
-    // so on the other strand of [to].
-    bool forward = (arc2.next().crossing() == to.crossing());
-    bool backward = (arc2.prev().crossing() == to.crossing());
+    // Does the second arc run forwards or backwards (or both)?
+    bool forward = (arc2.next() == to2);
+    bool backward = (arc2.prev() == to2);
 
     if (! (forward || backward)) {
         // The move cannot be performed.
@@ -208,7 +208,6 @@ bool Link::internalR2(StrandRef arc, bool check, bool perform) {
 
     // The situation: (arc, arc2) represent opposite strands of one crossing,
     // and (to, to2) represent opposite strands of another crossing.
-    // (The variable to2 has not yet been set, but we will do this shortly.)
     //
     // If forward is true, then we have:
     //
@@ -228,102 +227,142 @@ bool Link::internalR2(StrandRef arc, bool check, bool perform) {
     // where it's not just (essentially) pulling two items out of a linked
     // list:
     //
-    // (i)   Both arcs represent different components and the first arc
-    //       becomes a zero-crossing component; i.e., we have to -> arc.
-    //       By planarity, this is true iff
-    //       arc.prev().crossing() == to.crossing().
+    // (i)    Both arcs represent different components and the first arc
+    //        becomes a zero-crossing component; i.e., arc -> to -> arc.
+    //        This case has two variants: either arc2 -> to2, or to2 -> arc2.
     //
-    // (ii)  Both arcs represent different components and the second arc
-    //       becomes a zero-crossing component; i.e., we have to2 -> arc2.
-    //       Again by planarity, this is true iff (forward && backward).
+    // (ii)   Both arcs represent different components and the second arc
+    //        becomes a zero-crossing component; i.e., arc2 -> to2 -> arc2.
+    //        This is true iff (forward && backward).
     //
-    // (iii) Both (i) and (ii) occur simultaneously; i.e., we have two
-    //       two-crossing components that both become zero-crossing components.
+    // (iii)  Both (i) and (ii) occur simultaneously; i.e., we have two
+    //        two-crossing components that both become zero-crossing components.
     //
-    // (iv)  Both arcs represent the same component, and are directly
-    //       linked together as arc -> to -> to2 -> arc2.
-    //       By planarity, this is true iff
-    //       to.next().crossing() == to.crossing().
+    // (iv)   Both arcs represent the same component, and are directly
+    //        linked together as arc -> to -> to2 -> arc2.
+    //        This is true iff to.next().crossing() == to.crossing().
     //
-    // (v)   Both arcs represent the same component, and are directly
-    //       linked together as to2 -> arc2 -> arc -> to.
-    //       By planarity, this is true iff
-    //       arc.prev().crossing() == arc.crossing().
+    // (v)    Both arcs represent the same component, and are directly
+    //        linked together as to2 -> arc2 -> arc -> to.
+    //        This is true iff arc.prev().crossing() == arc.crossing().
     //
-    // (vi)  Both (iv) and (v) occur simultaneously; i.e., we have a
-    //       four-crossing component that becomes a zero-crossing component.
+    // (vi)   Both (iv) and (v) occur simultaneously; i.e., we have a
+    //        four-crossing component that becomes a zero-crossing component.
     //
-    // Note that, again by planarity, the only way to link both arcs
-    // together directly is by method (iv) or (v) above.  That is, we
-    // cannot have to joined with arc2, or to2 joined with arc.
+    // (vii)  Both arcs represent the same component, and are directly
+    //        linked together as arc -> to -> arc2 -> to2.
+    //        This can only occur with virtual link diagrams.
+    //
+    // (viii) Both arcs represent the same component, and are directly
+    //        linked together as arc2 -> to2 -> arc -> to.
+    //        This can only occur with virtual link diagrams.
+    //
+    // (ix)   Both (vii) and (viii) occur simultaneously, so we have a
+    //        four-crossing virtual component that becomes a zero-crossing
+    //        component.
 
-    // The following booleans track whether the first and/or second arcs
-    // become unknot components.  This is needed so that we can do the
-    // right thing when we update components_ later on.
+    // The boolean unknot1 tracks whether the component involving arc and to
+    // becomes a zero-crossing unknot.
+    // The boolean unknot2 tracks whether the component involving arc2 and to2
+    // becomes a zero-crossing unknot.
+    // Note that these could both be the same link component (which is fine).
+    // We keep this information for when we update components_ later on.
     bool unknot1 = false;
     bool unknot2 = false;
 
     // Strip the two crossings out of the link.
-    StrandRef x, y;
+    // In the tests below, recall that we already know that arc -> to, and we
+    // know that either arc2 -> to2 or to2 -> arc2.
 
     // First we handle cases (iv, v, vi) separately.
     if (to.next().crossing() == to.crossing()) {
+        // We have arc -> to -> to2, and therefore arc -> to -> to2 -> arc2.
+        // This means we have case (iv) or (vi).
         if (arc.prev().crossing() == arc.crossing()) {
-            // Case (vi) == (iv) && (v)
-            // Nothing to do here - the entire component disappears.
+            // Case (vi): arc2 -> arc -> to -> to2 -> arc2
             unknot1 = unknot2 = true;
         } else {
-            // Case (iv) only
-            // x -> arc -> to -> to2 -> arc2 -> y
-            x = arc.prev();
-            y = arc2.next();
-            x.crossing()->next_[x.strand()] = y;
-            y.crossing()->prev_[y.strand()] = x;
+            // Case (iv): ... -> arc -> to -> to2 -> arc2 -> ...
+            Link::join(arc.prev(), arc2.next());
         }
     } else if (arc.prev().crossing() == arc.crossing()) {
-        // Case (v) only
-        // x -> to2 -> arc2 -> arc -> to -> y
-        x = arc2.prev().prev();
-        y = to.next();
-        x.crossing()->next_[x.strand()] = y;
-        y.crossing()->prev_[y.strand()] = x;
+        // We have arc2 -> arc -> to, and therefore to2 -> arc2 -> arc -> to.
+        // This means case (v) or (vi), but we have already handled (vi).
+        // Therefore we have case (v): ... -> to2 -> arc2 -> arc -> to -> ...
+        Link::join(to2.prev(), to.next());
     } else {
-        // We are not in any of cases (iv, v, vi).
-
-        // In the code below, we don't handle case (iii) separately.
-        // Instead we just process both cases (i) and (ii), since these
-        // can be dealt with independently.
-
-        // Strip the two crossings out of the first arc.
-        // x -> arc -> to -> y
-        x = arc.prev();
-        if (x.crossing() == to.crossing()) {
-            // Case (i)
-            unknot1 = true;
-        } else {
-            y = to.next();
-            x.crossing()->next_[x.strand()] = y;
-            y.crossing()->prev_[y.strand()] = x;
-        }
-
-        // Now strip the two crossings out of the second arc.
-        if (forward) {
+        // We do not have to -> to2, and we do not have arc2 -> arc.
+        // In particular, we are not in any of cases (iv, v, vi).
+        if (arc.prev().crossing() == to.crossing()) {
+            // Either to -> arc -> to, or to2 -> arc -> to, which means
+            // either to -> arc -> to, or arc2 -> to2 -> arc -> to.
+            // This means we have case (i), (iii), (viii), or (ix).
             if (backward) {
-                // Case (ii)
-                unknot2 = true;
+                // We have to2 -> arc2, which from the information above
+                // means to -> arc -> to && to2 -> arc2.
+                unknot1 = true;
+                if (forward) {
+                    // Case (iii): to -> arc -> to && to2 -> arc2 -> to2
+                    unknot2 = true;
+                } else {
+                    // Case (i): to -> arc -> to && ... -> to2 -> arc2 -> ...
+                    Link::join(to2.prev(), arc2.next());
+                }
             } else {
-                // x -> arc2 -> to2 -> y
-                x = arc2.prev();
-                y = arc2.next().next();
-                x.crossing()->next_[x.strand()] = y;
-                y.crossing()->prev_[y.strand()] = x;
+                // We have arc2 -> to2, and to2 -/-> arc2.  This means
+                // either to -> arc -> to && ... -> arc2 -> to2 -> ...,
+                // or arc2 -> to2 -> arc -> to.
+                // This means case (i), (viii) or (ix).
+                if (arc2.prev().crossing() == to.crossing()) {
+                    // This means to -> arc2, and therefore
+                    // case (ix): arc2 -> to2 -> arc -> to -> arc2.
+                    unknot1 = unknot2 = true;
+                } else {
+                    // This means to -/-> arc2 and to2 -/-> arc2.  That is,
+                    // either to -> arc -> to && ... -> arc2 -> to2 -> ...,
+                    // or ... -> arc2 -> to2 -> arc -> to -> ... .
+                    if (to2.next().crossing() == arc.crossing()) {
+                        // Case (viii): ... -> arc2 -> to2 -> arc -> to -> ...
+                        Link::join(arc2.prev(), to.next());
+                    } else {
+                        // Case (i): to -> arc -> to && ... -> arc2 -> to2 -> ...
+                        unknot1 = true;
+                        Link::join(arc2.prev(), to2.next());
+                    }
+                }
             }
         } else {
-            // x -> to2 -> arc2 -> y
-            x = arc2.prev().prev();
-            y = arc2.next();
-            x.crossing()->next_[x.strand()] = y;
-            y.crossing()->prev_[y.strand()] = x;
+            // We have to -/-> to2, arc2 -/-> arc, to -/-> arc, to2 -/-> arc.
+            // In particular, we are not in any of cases
+            // (i), (iii), (iv), (v), (vi), (viii), (ix).
+            // Therefore we have case (ii), (vii), or nothing.
+            if (forward) {
+                if (backward) {
+                    // We have arc -> to && arc2 -> to2 -> arc2, which means
+                    // case (ii): ... -> arc -> to -> ... && arc2 -> to2 -> arc2
+                    unknot2 = true;
+                    Link::join(arc.prev(), to.next());
+                } else {
+                    // We have arc -> to, arc2 -> to2 && to2 -/-> arc2.
+                    // This means case (vii) or nothing:
+                    // ... -> arc -> to && arc2 -> to2 -> ...
+                    if (to.next().crossing() == arc.crossing()) {
+                        // Case (vii): ... -> arc -> to -> arc2 -> to2 -> ...
+                        Link::join(arc.prev(), to2.next());
+                    } else {
+                        // No special case (forward version):
+                        // ... -> arc -> to -> ... && ... -> arc2 -> to2 -> ...
+                        Link::join(arc.prev(), to.next());
+                        Link::join(arc2.prev(), to2.next());
+                    }
+                }
+            } else {
+                // We have arc -> to, to2 -> arc2 && arc2 -/-> to2.  This means
+                // ... -> arc -> to -> ... && ... -> to2 -> arc2 -> ...;
+                // that is, no special case (backward version).
+                Link::join(arc.prev(), to.next());
+                Link::join(to2.prev(), arc2.next());
+            }
         }
     }
 
