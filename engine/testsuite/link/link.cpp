@@ -1578,6 +1578,153 @@ TEST_F(LinkTest, reidemeister) {
         verifyR2Down(link, 1, 1, "( ) ( )");
     }
 
+    // A virtual variant of overlapping loops, with a single component and
+    // optionally an extra twist:
+    {
+        Link link = Link::fromData({ 1, -1 }, { 1, 2, -1, -2 });
+        verifyR2Down(link, 0, "( )");
+        verifyR2Down(link, 0, 0, "( )");
+        verifyR2Down(link, 0, 1, "( )");
+    }
+    {
+        Link link = Link::fromData({ -1, 1 }, { -1, 2, 1, -2 });
+        verifyR2Down(link, 1, "( )");
+        verifyR2Down(link, 1, 0, "( )");
+        verifyR2Down(link, 1, 1, "( )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { 3, 1, 2, -1, -2, -3 });
+        verifyR1Down(link, 2, "+- ( ^0 ^1 _0 _1 )");
+        verifyR2Down(link, 0, "+ ( ^0 _0 )");
+        verifyR2Down(link, 0, 0, "+ ( ^0 _0 )");
+        verifyR2Down(link, 0, 1, "+ ( ^0 _0 )");
+    }
+    {
+        Link link = Link::fromData({ -1, -1, 1 }, { -2, 1, -1, 3, 2, -3 });
+        verifyR1Down(link, 0, "-+ ( _0 ^1 ^0 _1 )");
+        verifyR2Down(link, 2, "- ( ^0 _0 )");
+        verifyR2Down(link, 2, 0, "- ( ^0 _0 )");
+        verifyR2Down(link, 2, 1, "- ( ^0 _0 )");
+    }
+    {
+        Link link = Link::fromData({ -1, -1, 1 }, { -1, -3, -2, 3, 2, 1 });
+        verifyR1Down(link, 0, "-+ ( _1 _0 ^1 ^0 )");
+        verifyR2Down(link, 2, "- ( _0 ^0 )");
+        verifyR2Down(link, 2, 0, "- ( _0 ^0 )");
+        verifyR2Down(link, 2, 1, "- ( _0 ^0 )");
+    }
+
+    // A virtual variant of overlapping loops with an extra crossing, which
+    // makes it two components:
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { 3, 1, 2 }, { -3, -1, -2 });
+        verifyR2Down(link, 0, "+ ( ^0 ) ( _0 )");
+        verifyR2Down(link, 0, 0, "+ ( ^0 ) ( _0 )");
+        verifyR2Down(link, 0, 1, "+ ( ^0 ) ( _0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { 2, 3, 1 }, { -2, -3, -1 });
+        verifyR2Down(link, 0, "+ ( ^0 ) ( _0 )");
+        verifyR2Down(link, 0, 0, "+ ( ^0 ) ( _0 )");
+        verifyR2Down(link, 0, 1, "+ ( ^0 ) ( _0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { 1, 2, 3 }, { -1, -2, -3 });
+        verifyR2Down(link, 0, "+ ( ^0 ) ( _0 )");
+        verifyR2Down(link, 0, 0, "+ ( ^0 ) ( _0 )");
+        verifyR2Down(link, 0, 1, "+ ( ^0 ) ( _0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { 1, 2, 3 }, { -3, -1, -2 });
+        verifyR2Down(link, 0, "+ ( ^0 ) ( _0 )");
+        verifyR2Down(link, 0, 0, "+ ( ^0 ) ( _0 )");
+        verifyR2Down(link, 0, 1, "+ ( ^0 ) ( _0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { 3, 1, 2 }, { -2, -3, -1 });
+        verifyR2Down(link, 0, "+ ( ^0 ) ( _0 )");
+        verifyR2Down(link, 0, 0, "+ ( ^0 ) ( _0 )");
+        verifyR2Down(link, 0, 1, "+ ( ^0 ) ( _0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { 2, 3, 1 }, { -1, -2, -3 });
+        verifyR2Down(link, 0, "+ ( ^0 ) ( _0 )");
+        verifyR2Down(link, 0, 0, "+ ( ^0 ) ( _0 )");
+        verifyR2Down(link, 0, 1, "+ ( ^0 ) ( _0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { -3, 1, 2 }, { 3, -2, -1 });
+        verifyR2Down(link, 0, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 1, 0, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 0, 1, "+ ( _0 ) ( ^0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { 2, -3, 1 }, { -1, 3, -2 });
+        verifyR2Down(link, 0, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 1, 0, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 0, 1, "+ ( _0 ) ( ^0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { 1, 2, -3 }, { -2, -1, 3 });
+        verifyR2Down(link, 0, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 1, 0, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 0, 1, "+ ( _0 ) ( ^0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { 1, 2, -3 }, { 3, -2, -1 });
+        verifyR2Down(link, 0, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 1, 0, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 0, 1, "+ ( _0 ) ( ^0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { -3, 1, 2 }, { -1, 3, -2 });
+        verifyR2Down(link, 0, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 1, 0, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 0, 1, "+ ( _0 ) ( ^0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { 2, -3, 1 }, { -2, -1, 3 });
+        verifyR2Down(link, 0, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 1, 0, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 0, 1, "+ ( _0 ) ( ^0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { -3, 2, 1 }, { 3, -1, -2 });
+        verifyR2Down(link, 1, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 0, 0, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 1, 1, "+ ( _0 ) ( ^0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { 1, -3, 2 }, { -2, 3, -1 });
+        verifyR2Down(link, 1, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 0, 0, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 1, 1, "+ ( _0 ) ( ^0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { 2, 1, -3 }, { -1, -2, 3 });
+        verifyR2Down(link, 1, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 0, 0, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 1, 1, "+ ( _0 ) ( ^0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { 2, 1, -3 }, { 3, -1, -2 });
+        verifyR2Down(link, 1, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 0, 0, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 1, 1, "+ ( _0 ) ( ^0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { -3, 2, 1 }, { -2, 3, -1 });
+        verifyR2Down(link, 1, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 0, 0, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 1, 1, "+ ( _0 ) ( ^0 )");
+    }
+    {
+        Link link = Link::fromData({ 1, -1, 1 }, { 1, -3, 2 }, { -1, -2, 3 });
+        verifyR2Down(link, 1, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 0, 0, "+ ( _0 ) ( ^0 )");
+        verifyR2Down(link, 1, 1, "+ ( _0 ) ( ^0 )");
+    }
+
     // Loop overlapping twist:
     {
         Link link = Link::fromData({ -1, 1, -1 }, { -1, 1, 3, 2 }, { -2, -3 });
