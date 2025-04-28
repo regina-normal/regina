@@ -1404,6 +1404,7 @@ static void verifyR1Down(const Link& link, const char* name) {
         if (alt.r1(alt.crossing(i))) {
             EXPECT_TRUE(isConsistent(alt));
             EXPECT_EQ(alt.size(), link.size() - 1);
+            EXPECT_EQ(alt.virtualGenus(), link.virtualGenus());
             verifyTopologicallySame(alt, link);
         } else {
             EXPECT_EQ(alt, link);
@@ -1428,6 +1429,7 @@ static void verifyR1Up(const Link& link, const char* name) {
                         side, sign));
                     EXPECT_TRUE(isConsistent(alt));
                     EXPECT_EQ(alt.size(), link.size() + 1);
+                    EXPECT_EQ(alt.virtualGenus(), link.virtualGenus());
                     verifyTopologicallySame(alt, link);
                 }
             }
@@ -1436,6 +1438,7 @@ static void verifyR1Up(const Link& link, const char* name) {
                 if (alt.r1(StrandRef(), side, sign)) {
                     EXPECT_TRUE(isConsistent(alt));
                     EXPECT_EQ(alt.size(), link.size() + 1);
+                    EXPECT_EQ(alt.virtualGenus(), link.virtualGenus());
                     verifyTopologicallySame(alt, link);
                 } else {
                     EXPECT_EQ(alt, link);
@@ -1454,6 +1457,7 @@ static void verifyR2Down(const Link& link, const char* name) {
                 EXPECT_TRUE(isConsistent(alt));
                 EXPECT_NE(alt, link);
                 EXPECT_EQ(alt.size(), link.size() - 2);
+                EXPECT_LE(alt.virtualGenus(), link.virtualGenus());
                 verifyTopologicallySame(alt, link);
             } else {
                 EXPECT_EQ(alt, link);
@@ -1464,6 +1468,7 @@ static void verifyR2Down(const Link& link, const char* name) {
         if (alt.r2(alt.crossing(i))) {
             EXPECT_TRUE(isConsistent(alt));
             EXPECT_EQ(alt.size(), link.size() - 2);
+            EXPECT_LE(alt.virtualGenus(), link.virtualGenus());
             verifyTopologicallySame(alt, link);
         } else {
             EXPECT_EQ(alt, link);
@@ -1492,6 +1497,7 @@ static void verifyR3(const Link& link, const char* name) {
                     EXPECT_TRUE(isConsistent(alt));
                     EXPECT_NE(alt, link);
                     EXPECT_EQ(alt.size(), link.size());
+                    EXPECT_EQ(alt.virtualGenus(), link.virtualGenus());
                     verifyTopologicallySame(alt, link);
                 } else {
                     EXPECT_EQ(alt, link);
@@ -1503,6 +1509,7 @@ static void verifyR3(const Link& link, const char* name) {
                 EXPECT_TRUE(isConsistent(alt));
                 EXPECT_NE(alt, link);
                 EXPECT_EQ(alt.size(), link.size());
+                EXPECT_EQ(alt.virtualGenus(), link.virtualGenus());
                 verifyTopologicallySame(alt, link);
             } else {
                 EXPECT_EQ(alt, link);
