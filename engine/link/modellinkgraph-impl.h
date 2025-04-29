@@ -472,10 +472,6 @@ void ModelLinkGraph::generateAllEmbeddings(const FacetPairing<3>& pairing,
     // This is where the algorithm becomes memory-hungry: a better solution
     // would be to take the automorphisms of the facet pairing and use those
     // to avoid duplicates before they are generated.
-    //
-    // For now, we will store the text output of the found solutions.
-    // Again, we could do better if we need to by implementing some kind of
-    // packed representation of the graph (or even just a tight encoding).
     std::set<std::string> found;
 
     // The array perm[] maps facet numbers to arc numbers.
@@ -499,7 +495,7 @@ void ModelLinkGraph::generateAllEmbeddings(const FacetPairing<3>& pairing,
                             Perm<4>::fromPermCode2(perm[dest.simp])[dest.facet]);
                 }
             ModelLinkGraph canonical = g.canonical(allowReflection);
-            if (found.insert(canonical.extendedPlantri()).second)
+            if (found.insert(canonical.tightEncoding()).second)
                 action(std::move(canonical), std::forward<Args>(args)...);
 
             // Advance to the next set of permutations.
