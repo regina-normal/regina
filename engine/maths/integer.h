@@ -2366,8 +2366,8 @@ class NativeInteger {
 // Don't confuse doxygen with specialisations.
 template <int bytes>
 struct RingTraits<NativeInteger<bytes>> {
-    static constexpr NativeInteger<bytes> zero;
-    static constexpr NativeInteger<bytes> one = 1;
+    static constexpr NativeInteger<bytes> zero { };
+    static constexpr NativeInteger<bytes> one { 1 };
 };
 #endif // __DOXYGEN
 
