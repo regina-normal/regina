@@ -642,6 +642,20 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         size_t countComponents() const;
 
         /**
+         * Returns the number of traversals in this graph.
+         *
+         * A _traversal_ is a closed path through the graph that always enters
+         * and exits a node through opposite arcs.  If this graph models a
+         * diagram for some link \a L, then the number of traversals in this
+         * graph will be precisely the number of link components in \a L.
+         *
+         * This routine runs in linear time (and the result is not cached).
+         *
+         * \return the number of traversals.
+         */
+        size_t countTraversals() const;
+
+        /**
          * Returns the node at the given index within this graph.
          *
          * For a graph with \a n nodes, the nodes are numbered

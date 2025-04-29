@@ -339,6 +339,30 @@ void ModelLinkGraph::computeComponents() const {
     nComponents_ = foundComponents;
 }
 
+size_t ModelLinkGraph::countTraversals() const {
+    if (nodes_.empty())
+        return 0;
+
+    FixedArray<bool> seen(nodes_.size() * 2, false);
+    size_t ans = 0;
+
+    for (size_t i = 0; i < nodes_.size() * 2; ++i) {
+        if (! seen[i]) {
+            // We have found a new traversal.  Follow it around.
+            ++ans;
+
+            ModelLinkGraphArc start(nodes_[i >> 1], i & 1);
+            ModelLinkGraphArc arc = start;
+            do {
+                seen[(arc.node()->index() << 1) | (arc.arc() & 1)] = true;
+                arc = arc.next();
+            } while (arc != start);
+        }
+    }
+
+    return ans;
+}
+
 bool ModelLinkGraph::isSimple() const {
     for (auto n : nodes_)
         for (int i = 0; i < 4; ++i)

@@ -94,6 +94,8 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("isEmpty", &ModelLinkGraph::isEmpty, rdoc::isEmpty)
         .def("countComponents", &ModelLinkGraph::countComponents,
             rdoc::countComponents)
+        .def("countTraversals", &ModelLinkGraph::countTraversals,
+            rdoc::countTraversals)
         .def("node", &ModelLinkGraph::node,
             pybind11::return_value_policy::reference_internal, rdoc::node)
         .def("nodes", &ModelLinkGraph::nodes,

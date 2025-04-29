@@ -845,6 +845,20 @@ R"doc(Returns the number of connected components in this graph.
 Returns:
     the number of connected components.)doc";
 
+// Docstring regina::python::doc::ModelLinkGraph_::countTraversals
+static const char *countTraversals =
+R"doc(Returns the number of traversals in this graph.
+
+A _traversal_ is a closed path through the graph that always enters
+and exits a node through opposite arcs. If this graph models a diagram
+for some link *L*, then the number of traversals in this graph will be
+precisely the number of link components in *L*.
+
+This routine runs in linear time (and the result is not cached).
+
+Returns:
+    the number of traversals.)doc";
+
 // Docstring regina::python::doc::ModelLinkGraph_::extendedPlantri
 static const char *extendedPlantri =
 R"doc(Outputs this graph using Regina's extended variant of the _plantri_
