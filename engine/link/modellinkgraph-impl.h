@@ -309,6 +309,141 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
     // All done!
 }
 
+template <typename Action, typename... Args>
+void ModelLinkGraph::generateAllLinks(Action&& action, Args&&... args)
+        const {
+    if (size() == 0) {
+        // Generate a single empty link.
+        action(Link(), std::forward<Args>(args)...);
+        return;
+    }
+
+    // First work out the orientation of the link components as they pass
+    // through each node.
+    FixedArray<char> dir(size(), 0); // Bits 0,1,2,3 are 1/0 for forward/back.
+
+    std::vector<ModelLinkGraphArc> componentArcs;
+
+    size_t steps = 0;
+    for (size_t i = 0; i < size(); ++i) {
+        auto node = nodes_[i];
+
+        // Look at the strand passing through arcs 0 and 2:
+        if ((dir[node->index()] & 5 /* 0101 */) == 0) {
+            ModelLinkGraphArc a(node, 0);
+            componentArcs.push_back(a);
+            do {
+                dir[a.node()->index()] |= (1 << a.arc());
+                a = a.next();
+                ++steps;
+            } while (a.node() != node || a.arc() != 0);
+        }
+
+        // Look at the strand passing through arcs 1 and 3:
+        if ((dir[node->index()] & 10 /* 1010 */) == 0) {
+            ModelLinkGraphArc a(node, 1);
+            componentArcs.push_back(a);
+            do {
+                dir[a.node()->index()] |= (1 << a.arc());
+                a = a.next();
+                ++steps;
+            } while (a.node() != node || a.arc() != 1);
+        }
+    }
+    if (steps != 2 * size()) {
+        // This should never happen.
+        std::cerr << "ERROR: generateAllLinks() did not identify "
+            "components correctly" << std::endl;
+        return;
+    }
+
+    // Now choose the signs of the crossings!
+    FixedArray<int> sign(size(), 0);
+
+    ssize_t curr = 0;
+    while (curr >= 0) {
+        // We have selected the signs for all crossings < curr, and we
+        // need to move to the next available sign at crossing curr.
+        if (curr == static_cast<ssize_t>(size())) {
+            // We have a complete selection of crossings.
+            Link l;
+            for (size_t i = 0; i < size(); ++i)
+                l.crossings_.push_back(new Crossing(sign[i]));
+            for (size_t i = 0; i < size(); ++i) {
+                // Upper outgoing arc:
+                ModelLinkGraphArc a =
+                    nodes_[i]->adj_[upperOutArc[sign[i] > 0 ? 1 : 0][dir[i]]];
+                size_t adj = a.node_->index();
+                int adjStrand = (a.arc_ ==
+                    (upperOutArc[sign[adj] > 0 ? 1 : 0][dir[adj]] ^ 2) ? 1 : 0);
+                l.crossings_[i]->next_[1].crossing_ = l.crossings_[adj];
+                l.crossings_[i]->next_[1].strand_ = adjStrand;
+
+                l.crossings_[adj]->prev_[adjStrand].crossing_ = l.crossings_[i];
+                l.crossings_[adj]->prev_[adjStrand].strand_ = 1;
+
+                // Lower outgoing arc:
+                a = nodes_[i]->adj_[upperOutArc[sign[i] > 0 ? 0 : 1][dir[i]]];
+                adj = a.node_->index();
+                adjStrand = (a.arc_ ==
+                    (upperOutArc[sign[adj] > 0 ? 1 : 0][dir[adj]] ^ 2) ? 1 : 0);
+                l.crossings_[i]->next_[0].crossing_ = l.crossings_[adj];
+                l.crossings_[i]->next_[0].strand_ = adjStrand;
+
+                l.crossings_[adj]->prev_[adjStrand].crossing_ = l.crossings_[i];
+                l.crossings_[adj]->prev_[adjStrand].strand_ = 0;
+            }
+
+            for (const auto& a : componentArcs) {
+                size_t i = a.node_->index();
+                // We know from above that a.arc_ is either 0 or 1,
+                // and that dir[i] sets the bit for a.arc_.
+                if (sign[i] > 0) {
+                    // If the outgoing arcs are j, j+1 then j is lower.
+                    if (dir[i] == (3 << a.arc_)) {
+                        // The outgoing arcs are a.arc_, a.arc_+1.
+                        l.components_.emplace_back(l.crossings_[i], 0);
+                    } else {
+                        // The outgoing arcs are a.arc_, a.arc_-1.
+                        l.components_.emplace_back(l.crossings_[i], 1);
+                    }
+                } else {
+                    // If the outgoing arcs are j,j+1 then j is upper.
+                    if (dir[i] == (3 << a.arc_)) {
+                        // The outgoing arcs are a.arc_, a.arc_+1.
+                        l.components_.emplace_back(l.crossings_[i], 1);
+                    } else {
+                        // The outgoing arcs are a.arc_, a.arc_-1.
+                        l.components_.emplace_back(l.crossings_[i], 0);
+                    }
+                }
+            }
+
+            action(std::move(l), std::forward<Args>(args)...);
+
+            // Backtrack!
+            --curr;
+            // Here: 0 <= curr < size (since the model graph is non-empty).
+        }
+
+        // Here: 0 <= curr < size.
+        if (sign[curr] == 0)
+            sign[curr] = 1;
+        else if (sign[curr] == 1)
+            sign[curr] = -1;
+        else {
+            // We have exhausted our options here.
+            sign[curr--] = 0;
+            continue;
+        }
+
+        // Move on to the next crossing.
+        ++curr;
+    }
+
+    // All done!
+}
+
 } // namespace regina
 
 #endif

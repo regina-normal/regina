@@ -132,6 +132,9 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("generateMinimalLinks", &ModelLinkGraph::generateMinimalLinks<
             const std::function<void(regina::Link&&)>&>,
             pybind11::arg("action"), rdoc::generateMinimalLinks)
+        .def("generateAllLinks", &ModelLinkGraph::generateAllLinks<
+            const std::function<void(regina::Link&&)>&>,
+            pybind11::arg("action"), rdoc::generateAllLinks)
         .def("canonical", &ModelLinkGraph::canonical,
             pybind11::arg("allowReflection") = true,
             rdoc::canonical)
