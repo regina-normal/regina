@@ -148,6 +148,7 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("randomise", &ModelLinkGraph::randomise, rdoc::randomise)
     ;
     regina::python::add_output(g);
+    regina::python::add_tight_encoding(g);
     regina::python::add_eq_operators(g, rdoc::__eq);
 
     regina::python::add_global_swap<ModelLinkGraph>(m, rdoc::global_swap);

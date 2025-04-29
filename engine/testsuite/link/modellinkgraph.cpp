@@ -33,7 +33,7 @@
 #include "link/examplelink.h"
 #include "link/modellinkgraph.h"
 
-#include "testhelper.h"
+#include "utilities/tightencodingtest.h"
 
 using regina::ModelLinkGraph;
 using regina::ModelLinkGraphArc;
@@ -364,3 +364,11 @@ TEST_F(ModelLinkGraphTest, copyMove) {
     testManualCases(verifyCopyMove);
 }
 
+static void verifyTightEncoding(const ModelLinkGraph& graph, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+    TightEncodingTest<ModelLinkGraph>::verifyTightEncoding(graph);
+}
+
+TEST_F(ModelLinkGraphTest, tightEncoding) {
+    testManualCases(verifyTightEncoding);
+}

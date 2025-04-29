@@ -363,6 +363,7 @@ Version 7.4  [ (to be announced) ]
               generateAllEmbeddings().
             - New routine canonical().
             - New routine randomise().
+            - Now supports tight encodings.
             - All plantri import/export routines now support disconnected
               and/or non-planar graphs, though they still require graphs to
               be dual to simple quadrangulations.  The exception is

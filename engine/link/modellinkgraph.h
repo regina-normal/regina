@@ -45,6 +45,7 @@
 #include "utilities/fixedarray.h"
 #include "utilities/listview.h"
 #include "utilities/markedvector.h"
+#include "utilities/tightencoding.h"
 
 namespace regina {
 
@@ -532,7 +533,9 @@ class ModelLinkGraphNode : public MarkedElement,
  *
  * \ingroup link
  */
-class ModelLinkGraph : public Output<ModelLinkGraph> {
+class ModelLinkGraph :
+        public Output<ModelLinkGraph>,
+        public TightEncodable<ModelLinkGraph> {
     private:
         MarkedVector<ModelLinkGraphNode> nodes_;
             /**< The nodes of this graph. */
@@ -1548,6 +1551,17 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         std::string extendedPlantri() const;
 
         /**
+         * Writes the tight encoding of this graph to the given output stream.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * \nopython Use tightEncoding() instead, which returns a string.
+         *
+         * \param out the output stream to which the encoded string will
+         * be written.
+         */
+        void tightEncode(std::ostream& out) const;
+
+        /**
          * Writes a short text representation of this graph to the
          * given output stream.
          *
@@ -1692,6 +1706,30 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * \return the resulting graph.
          */
         static ModelLinkGraph fromExtendedPlantri(const std::string& text);
+
+        /**
+         * Reconstructs a graph from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be read from the given input stream.
+         * If the input stream contains leading whitespace then it will be
+         * treated as an invalid encoding (i.e., this routine will throw an
+         * exception).  The input stream _may_ contain further data: if this
+         * routine is successful then the input stream will be left positioned
+         * immediately after the encoding, without skipping any trailing
+         * whitespace.
+         *
+         * \exception InvalidInput The given input stream does not begin with
+         * a tight encoding of a graph.
+         *
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
+         *
+         * \param input an input stream that begins with the tight encoding
+         * for a graph.
+         * \return the graph represented by the given tight encoding.
+         */
+        static ModelLinkGraph tightDecode(std::istream& input);
 
     private:
         /**

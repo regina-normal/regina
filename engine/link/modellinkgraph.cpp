@@ -593,6 +593,54 @@ bool ModelLinkGraphCells::operator == (const ModelLinkGraphCells& other) const {
     return true;
 }
 
+void ModelLinkGraph::tightEncode(std::ostream& out) const {
+    regina::detail::tightEncodeIndex(out, nodes_.size());
+    // Write each arc once only.
+    size_t curr = 0;
+    for (auto n : nodes_)
+        for (int j = 0; j < 4; ++j, ++curr) {
+            const ModelLinkGraphArc& adj = n->adj_[j];
+            size_t dest = 4 * adj.node()->index() + adj.arc();
+            if (dest >= curr)
+                regina::detail::tightEncodeIndex(out, dest);
+        }
+}
+
+ModelLinkGraph ModelLinkGraph::tightDecode(std::istream& input) {
+    size_t size = regina::detail::tightDecodeIndex<size_t>(input);
+
+    ModelLinkGraph ans;
+    for (size_t i = 0; i < size; ++i)
+        ans.nodes_.push_back(new ModelLinkGraphNode());
+
+    size_t curr = 0;
+    for (auto n : ans.nodes_)
+        for (int j = 0; j < 4; ++j, ++curr) {
+            if (n->adj_[j])
+                continue;
+
+            auto adj = regina::detail::tightDecodeIndex<size_t>(input);
+            if (adj > size * 4)
+                throw InvalidInput("The tight encoding contains "
+                    "invalid connections between nodes");
+            if (adj < curr)
+                throw InvalidInput("The tight encoding contains "
+                    "unexpected connections between nodes");
+
+            ModelLinkGraphArc adjArc(ans.nodes_[adj >> 2], adj & 3);
+            n->adj_[j] = adjArc;
+
+            // Make this connection from the other side also.
+            if (adjArc.node()->adj_[adjArc.arc()])
+                throw InvalidInput("The tight encoding contains "
+                    "inconsistent connections between nodes");
+            else
+                adjArc.node()->adj_[adjArc.arc()] = ModelLinkGraphArc(n, j);
+        }
+
+    return ans;
+}
+
 void ModelLinkGraphCells::writeTextShort(std::ostream& out) const {
     if (nCells_ == 0)
         out << "Empty cell structure";
