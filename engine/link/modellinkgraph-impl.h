@@ -44,6 +44,7 @@
 #endif
 
 #include "link/link.h"
+#include "triangulation/facetpairing3.h"
 #include "utilities/fixedarray.h"
 
 namespace regina {
@@ -442,6 +443,56 @@ void ModelLinkGraph::generateAllLinks(Action&& action, Args&&... args)
     }
 
     // All done!
+}
+
+template <typename Action, typename... Args>
+void ModelLinkGraph::generateAllEmbeddings(const FacetPairing<3>& pairing,
+        bool allowReflection, Action&& action, Args&&... args) {
+    const size_t n = pairing.size();
+    if (n == 0) {
+        // Generate a single empty graph.
+        action(ModelLinkGraph(), std::forward<Args>(args)...);
+        return;
+    }
+
+    // The array perm[] maps facet numbers to arc numbers.
+    // It stores second-generation permutation codes for Perm<4>.
+    // WLOG, we insist that perm[0] == 0 always, so the permutation codes
+    // are all in the range [0,6).
+    // If we consider reflections to be the same then for node 0 we only need
+    // codes 0,2,4.
+    FixedArray<int> perm(n, 0);
+    for (perm[0] = 0; perm[0] < 6; perm[0] += (allowReflection ? 2 : 1)) {
+        while (true) {
+            // Process this set of permutations.
+            ModelLinkGraph g;
+            for (size_t i = 0; i < n; ++i)
+                g.nodes_.push_back(new ModelLinkGraphNode());
+            for (size_t i = 0; i < n; ++i) // i == simplex == node
+                for (int j = 0; j < 4; ++j) { // j == facet
+                    const auto& dest = pairing.dest(i, j);
+                    g.nodes_[i]->adj_[Perm<4>::fromPermCode2(perm[i])[j]] =
+                        ModelLinkGraphArc(g.nodes_[dest.simp],
+                            Perm<4>::fromPermCode2(perm[dest.simp])[dest.facet]);
+                }
+            action(g.canonical(allowReflection), std::forward<Args>(args)...);
+
+            // Advance to the next set of permutations.
+            size_t pos = n - 1;
+            for ( ; pos > 0; --pos)
+                if (perm[pos] < 5) {
+                    ++perm[pos];
+                    for (size_t i = pos + 1; i < n; ++i)
+                        perm[i] = 0;
+                    break;
+                }
+            if (pos == 0) {
+                for (size_t i = 1; i < n; ++i)
+                    perm[i] = 0;
+                break;
+            }
+        }
+    }
 }
 
 } // namespace regina

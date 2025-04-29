@@ -138,6 +138,11 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("canonical", &ModelLinkGraph::canonical,
             pybind11::arg("allowReflection") = true,
             rdoc::canonical)
+        .def_static("generateAllEmbeddings",
+            &ModelLinkGraph::generateAllEmbeddings<
+                const std::function<void(regina::ModelLinkGraph&&)>&>,
+            pybind11::arg("pairing"), pybind11::arg("allowReflection"),
+            pybind11::arg("action"), rdoc::generateAllEmbeddings)
         .def("randomise", &ModelLinkGraph::randomise, rdoc::randomise)
     ;
     regina::python::add_output(g);

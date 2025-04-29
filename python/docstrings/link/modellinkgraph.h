@@ -1230,6 +1230,83 @@ Parameter ``plantri``:
 Returns:
     the resulting graph.)doc";
 
+// Docstring regina::python::doc::ModelLinkGraph_::generateAllEmbeddings
+static const char *generateAllEmbeddings =
+R"doc(Generates all possible local embeddings of the given 4-valent graph
+into some closed orientable surface.
+
+The input 4-valent graph (which does _not_ contain any embedding data)
+should be presented as a closed 3-dimensional facet pairing (since
+these can be generated efficiently using Regina).
+
+This routine will, up to canonical relabelling, generate all local
+embeddings of the given graph into a closed orientable surface (i.e.,
+all ModelLinkGraph objects corresponding to the input graph).
+
+The graphs that are generated will be labelled canonically as
+described by canonical(). In particular, the argument
+*allowReflection* will be passed through to canonical().
+
+This routine is a work in progress. Currently it is _very_
+inefficient, and moreover it may generate the same graph many times
+over (so typically the output list would need to be sorted and
+stripped, or put into a set or map). This is something that will be
+improved over time if/when it becomes important to do so.
+
+If *allowReflection* is ``False``, then if we run all possible facet
+pairings through this routine and strip out duplicate outputs, the
+combined results should be precisely those graphs described by OEIS
+sequence A292206. If *allowReflection* is ``True``, then (once we
+reach three nodes or more) the output set should be smaller.
+
+For each graph that is generated, this routine will call *action*
+(which must be a function or some other callable object).
+
+* The first argument passed to *action* will be the graph that was
+  generated (of type ModelLinkGraph). This will be passed as an
+  rvalue; a typical action could (for example) take it by const
+  reference and query it, or take it by value and modify it, or take
+  it by rvalue reference and move it into more permanent storage.
+
+* If there are any additional arguments supplied in the list *args*,
+  then these will be passed as subsequent arguments to *action*.
+
+* *action* must return ``void``.
+
+.. warning::
+    The API for this class or function has not yet been finalised.
+    This means that the interface may change in new versions of
+    Regina, without maintaining backward compatibility. If you use
+    this class directly in your own code, please check the detailed
+    changelog with each new release to see if you need to make changes
+    to your code.
+
+Precondition:
+    The given facet pairing is connected, and is closed (i.e., has no
+    unmatched facets).
+
+Python:
+    This function is available in Python, and the *action* argument
+    may be a pure Python function. However, its form is more
+    restricted: the argument *args* is removed, so you simply call it
+    as ``generateAllEmbeddings(pairing, allowReflection, action)``.
+    Moreover, *action* must take exactly one argument (the graph).
+
+Parameter ``pairing``:
+    the 4-valent graph for which we wish to produce local embeddings.
+
+Parameter ``allowReflection``:
+    ``True`` if we consider a reflection of the surface in which the
+    graph embeds to produce the same embedding.
+
+Parameter ``action``:
+    a function (or other callable object) to call for each graph that
+    is generated.
+
+Parameter ``args``:
+    any additional arguments that should be passed to *action*,
+    following the initial graph argument.)doc";
+
 // Docstring regina::python::doc::ModelLinkGraph_::generateAllLinks
 static const char *generateAllLinks =
 R"doc(Exhaustively generates all link diagrams that are modelled by this

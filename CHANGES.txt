@@ -358,7 +358,8 @@ Version 7.4  [ (to be announced) ]
               links.  Moreover, it has a new precondition requiring no 1-gons
               in the induced cell decomposition, and throws an exception if
               this precondition fails.
-            - New routines generateAnyLink() and generateAllLinks().
+            - New routines generateAnyLink(), generateAllLinks(), and
+              generateAllEmbeddings().
             - New routine canonical().
             - New routine randomise().
             - All plantri import/export routines now support disconnected
