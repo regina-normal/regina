@@ -127,6 +127,18 @@ TEST_F(ModelLinkGraphTest, components) {
     EXPECT_EQ(disconnected3.graph.countComponents(), 3);
 }
 
+TEST_F(ModelLinkGraphTest, traversals) {
+    EXPECT_EQ(empty.graph.countTraversals(), 0);
+    EXPECT_EQ(twist.graph.countTraversals(), 1);
+    EXPECT_EQ(hopf.graph.countTraversals(), 2);
+    EXPECT_EQ(trefoil.graph.countTraversals(), 1);
+    EXPECT_EQ(borromean.graph.countTraversals(), 3);
+    EXPECT_EQ(virtualTrefoil.graph.countTraversals(), 1);
+    EXPECT_EQ(genus2.graph.countTraversals(), 3);
+    EXPECT_EQ(disconnected2.graph.countTraversals(), 3);
+    EXPECT_EQ(disconnected3.graph.countTraversals(), 7);
+}
+
 TEST_F(ModelLinkGraphTest, genus) {
     EXPECT_EQ(empty.graph.genus(), 0);
     EXPECT_EQ(twist.graph.genus(), 0);
