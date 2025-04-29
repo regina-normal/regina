@@ -46,6 +46,7 @@
 #include "link/link.h"
 #include "triangulation/facetpairing3.h"
 #include "utilities/fixedarray.h"
+#include <set>
 
 namespace regina {
 
@@ -455,6 +456,28 @@ void ModelLinkGraph::generateAllEmbeddings(const FacetPairing<3>& pairing,
         return;
     }
 
+    if (n > 52)
+        throw InvalidArgument("generateAllEmbeddings() can only work with "
+            "facet pairings with ≤ 52 simplices");
+    if (! pairing.isConnected())
+        throw InvalidArgument("generateAllEmbeddings() can only work with "
+            "connected facet pairings");
+    if (! pairing.isClosed())
+        throw InvalidArgument("generateAllEmbeddings() can only work with "
+            "closed facet pairings");
+
+    // Prepare a set of found solutions, so we can avoid outputting the same
+    // canonical labelling more than once.
+    //
+    // This is where the algorithm becomes memory-hungry: a better solution
+    // would be to take the automorphisms of the facet pairing and use those
+    // to avoid duplicates before they are generated.
+    //
+    // For now, we will store the text output of the found solutions.
+    // Again, we could do better if we need to by implementing some kind of
+    // packed representation of the graph (or even just a tight encoding).
+    std::set<std::string> found;
+
     // The array perm[] maps facet numbers to arc numbers.
     // It stores second-generation permutation codes for Perm<4>.
     // WLOG, we insist that perm[0] == 0 always, so the permutation codes
@@ -475,7 +498,9 @@ void ModelLinkGraph::generateAllEmbeddings(const FacetPairing<3>& pairing,
                         ModelLinkGraphArc(g.nodes_[dest.simp],
                             Perm<4>::fromPermCode2(perm[dest.simp])[dest.facet]);
                 }
-            action(g.canonical(allowReflection), std::forward<Args>(args)...);
+            ModelLinkGraph canonical = g.canonical(allowReflection);
+            if (found.insert(canonical.extendedPlantri()).second)
+                action(std::move(canonical), std::forward<Args>(args)...);
 
             // Advance to the next set of permutations.
             size_t pos = n - 1;

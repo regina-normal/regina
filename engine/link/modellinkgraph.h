@@ -1285,23 +1285,22 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * This routine will, up to canonical relabelling, generate all
          * local embeddings of the given graph into a closed orientable surface
-         * (i.e., all ModelLinkGraph objects corresponding to the input graph).
+         * (i.e., all ModelLinkGraph objects corresponding to the input graph),
+         * each exactly once.
          *
          * The graphs that are generated will be labelled canonically as
          * described by canonical().  In particular, the argument
          * \a allowReflection will be passed through to canonical().
          *
          * This routine is a work in progress.  Currently it is _very_
-         * inefficient, and moreover it may generate the same graph many
-         * times over (so typically the output list would need to be sorted
-         * and stripped, or put into a set or map).  This is something that
-         * will be improved over time if/when it becomes important to do so.
+         * inefficient and memory-hungry; the algorithm will be improved over
+         * time if/when it becomes important to do so.
          *
          * If \a allowReflection is \c false, then if we run all possible facet
-         * pairings through this routine and strip out duplicate outputs, the
-         * combined results should be precisely those graphs described by OEIS
-         * sequence A292206.  If \a allowReflection is \c true, then (once we
-         * reach three nodes or more) the output set should be smaller.
+         * pairings through this routine, the combined results should be
+         * precisely those graphs described by OEIS sequence A292206.
+         * If \a allowReflection is \c true, then (once we reach three nodes
+         * or more) the output set should be smaller.
          *
          * For each graph that is generated, this routine will call \a action
          * (which must be a function or some other callable object).
@@ -1319,14 +1318,17 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * \apinotfinal
          *
-         * \pre The given facet pairing is connected, and is closed (i.e., has
-         * no unmatched facets).
+         * \pre The given facet pairing is connected, closed (i.e., has no
+         * unmatched facets), and has no more than 52 simplices.
          *
          * \python This function is available in Python, and the \a action
          * argument may be a pure Python function.  However, its form is more
          * restricted: the argument \a args is removed, so you simply call it
          * as `generateAllEmbeddings(pairing, allowReflection, action)`.
          * Moreover, \a action must take exactly one argument (the graph).
+         *
+         * \exception InvalidArgument The given pairing is disconnected, has
+         * unmatched facets, and/or has more than 52 simplices.
          *
          * \param pairing the 4-valent graph for which we wish to produce
          * local embeddings.
