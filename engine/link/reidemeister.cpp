@@ -446,7 +446,8 @@ bool Link::internalR2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
     // Carry out any remaining checks.
     if (check && upperArc && lowerArc) {
         // Ensure that the two given sides-of-arcs belong to the
-        // same 2-cell in the knot diagram.
+        // same 2-cell in the knot diagram, or else belong to different link
+        // components entirely.
 
         // We walk around the 2-cell from upperArc, ensuring that we
         // always turn left.
@@ -503,31 +504,23 @@ bool Link::internalR2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
 
             arc = (forward ? ref : ref.prev());
 
-            // By planarity, the 2-cell can meet one side of an arc, but
-            // never both.
-            if (arc == upperArc) {
-                // We completed the cycle and never found lowerArc.
-                // The move is still legal, however, if and only if upperArc
+            if (arc == upperArc &&
+                    ((forward && upperSide == 0) ||
+                     ((! forward) && upperSide != 0))) {
+                // We completed the cycle and never found the correct side of
+                // lowerArc.  The move is still legal, however, iff upperArc
                 // and lowerArc are in different connected components of the
                 // underlying 4-valent graph.
                 if (connected(upperArc.crossing(), lowerArc.crossing()))
-                    return false;
+                    return false; // move is illegal
                 else
-                    break;
+                    break; // move is legal
             }
-            if (arc == lowerArc) {
-                // We found lowerArc, but make sure we're on the correct side.
-                if (forward) {
-                    if (lowerSide == 0)
-                        break;
-                    else
-                        return false;
-                } else {
-                    if (lowerSide != 0)
-                        break;
-                    else
-                        return false;
-                }
+            if (arc == lowerArc &&
+                    ((forward && lowerSide == 0) ||
+                     ((! forward) && lowerSide != 0))) {
+                // We found the correct side of lowerArc - the move is legal!
+                break;
             }
         }
         // If we made it out of the while loop, then we found the

@@ -1146,6 +1146,12 @@ TEST_F(LinkTest, r1Count) {
     verifyR1Count(trefoil_unknot1, 32, 1);
     verifyR1Count(trefoil_unknot_overlap, 40, 0);
     verifyR1Count(adams6_28, 48, 0);
+
+    verifyR1Count(virtualTrefoil, 16, 0);
+    verifyR1Count(kishino, 32, 0);
+    verifyR1Count(gpv, 32, 0);
+    verifyR1Count(virtualLink2, 8, 0);
+    verifyR1Count(virtualLink3, 16, 0);
 }
 
 static void verifyR2Count(const TestCase& test, size_t up,
@@ -1233,6 +1239,12 @@ TEST_F(LinkTest, r2Count) {
     verifyR2Count(trefoil_unknot1, 116, 0, 0);
     verifyR2Count(trefoil_unknot_overlap, 46, 2, 3);
     verifyR2Count(adams6_28, 54, 0, 0);
+
+    verifyR2Count(virtualTrefoil, 32, 0, 0);
+    verifyR2Count(kishino, 144, 0, 0);
+    verifyR2Count(gpv, 64, 0, 0);
+    verifyR2Count(virtualLink2, 12, 0, 0);
+    verifyR2Count(virtualLink3, 24, 0, 0);
 }
 
 static void verifyR3Count(const TestCase& test, size_t movesByCrossing) {
@@ -1298,6 +1310,12 @@ TEST_F(LinkTest, r3Count) {
     verifyR3Count(trefoil_unknot1, 0);
     verifyR3Count(trefoil_unknot_overlap, 0);
     verifyR3Count(adams6_28, 0);
+
+    verifyR3Count(virtualTrefoil, 0);
+    verifyR3Count(kishino, 0);
+    verifyR3Count(gpv, 0);
+    verifyR3Count(virtualLink2, 0);
+    verifyR3Count(virtualLink3, 0);
 }
 
 // For each of the following Reimeister verification functions, we pass the
@@ -1486,6 +1504,67 @@ static void verifyR2Down(const Link& link, const char* name) {
     }
 }
 
+static void verifyR2Up(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    for (int uSide = 0; uSide <= 1; ++uSide)
+        for (int lSide = 0; lSide <= 1; ++lSide) {
+            for (size_t c1 = 0; c1 < link.size(); ++c1) {
+                for (int s1 = 0; s1 <= 1; ++s1) {
+                    for (size_t c2 = 0; c2 < link.size(); ++c2)
+                        for (size_t s2 = 0; s2 <= 1; ++s2) {
+                            Link alt(link, false);
+                            if (alt.r2(alt.crossing(c1)->strand(s1), uSide,
+                                    alt.crossing(c2)->strand(s2), lSide)) {
+                                EXPECT_TRUE(isConsistent(alt));
+                                EXPECT_EQ(alt.size(), link.size() + 2);
+                                EXPECT_EQ(alt.virtualGenus(),
+                                    link.virtualGenus());
+                                verifyTopologicallySame(alt, link);
+                            } else {
+                                EXPECT_EQ(alt, link);
+                            }
+                        }
+                    {
+                        Link alt(link, false);
+                        if (alt.r2(alt.crossing(c1)->strand(s1), uSide,
+                                StrandRef(), lSide)) {
+                            EXPECT_TRUE(isConsistent(alt));
+                            EXPECT_EQ(alt.size(), link.size() + 2);
+                            EXPECT_EQ(alt.virtualGenus(), link.virtualGenus());
+                            verifyTopologicallySame(alt, link);
+                        } else {
+                            EXPECT_EQ(alt, link);
+                        }
+                    }
+                    {
+                        Link alt(link, false);
+                        if (alt.r2(StrandRef(), uSide,
+                                alt.crossing(c1)->strand(s1), lSide)) {
+                            EXPECT_TRUE(isConsistent(alt));
+                            EXPECT_EQ(alt.size(), link.size() + 2);
+                            EXPECT_EQ(alt.virtualGenus(), link.virtualGenus());
+                            verifyTopologicallySame(alt, link);
+                        } else {
+                            EXPECT_EQ(alt, link);
+                        }
+                    }
+                }
+            }
+            {
+                Link alt(link, false);
+                if (alt.r2(StrandRef(), uSide, StrandRef(), lSide)) {
+                    EXPECT_TRUE(isConsistent(alt));
+                    EXPECT_EQ(alt.size(), link.size() + 2);
+                    EXPECT_EQ(alt.virtualGenus(), link.virtualGenus());
+                    verifyTopologicallySame(alt, link);
+                } else {
+                    EXPECT_EQ(alt, link);
+                }
+            }
+        }
+}
+
 static void verifyR3(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
@@ -1559,7 +1638,8 @@ TEST_F(LinkTest, reidemeister2Down) {
 }
 
 TEST_F(LinkTest, reidemeister2Up) {
-    // TODO: Fill this in.
+    testManualCases(verifyR2Up, false /* gordian */);
+    runCensusAllVirtual(verifyR2Up, true /* small */);
 }
 
 TEST_F(LinkTest, reidemeister3) {
@@ -1568,8 +1648,6 @@ TEST_F(LinkTest, reidemeister3) {
 }
 
 TEST_F(LinkTest, reidemeisterMisc) {
-    // TODO: Add more virtual cases.
-
     // Single twist:
     verifyR1Down(Link::fromData({ -1 }, { 1, -1 }), 0, "( )");
 

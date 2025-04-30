@@ -141,12 +141,10 @@ namespace detail {
             }
 
             if (t.size() + 1 < maxSize) {
-                StrandRef upperArc, lowerArc;
-                int upperSide, lowerSide;
                 for (i = 0; i < t.size(); ++i)
                     for (strand = 0; strand < 2; ++strand) {
-                        upperArc = t.crossing(i)->strand(strand);
-                        for (upperSide = 0; upperSide < 2; ++upperSide) {
+                        StrandRef upperArc = t.crossing(i)->strand(strand);
+                        for (int upperSide = 0; upperSide < 2; ++upperSide) {
                             // Walk around the 2-cell containing upperArc.
                             // This code follows the (better documented)
                             // code in reidemeister.cpp for testing r2 validity.
@@ -206,18 +204,15 @@ namespace detail {
                                         forward = (0 == ref.strand());
                                 }
 
-                                lowerArc = (forward ? ref : ref.prev());
+                                StrandRef lowerArc =
+                                    (forward ? ref : ref.prev());
+                                int lowerSide = (forward ? 0 : 1);
 
-                                // By planarity, the 2-cell can meet one side of
-                                // an arc, but never both.
-                                if (lowerArc == upperArc) {
+                                if (lowerArc == upperArc &&
+                                        lowerSide == upperSide) {
                                     // We completed the cycle.
                                     break;
                                 }
-
-                                // Try arc as the lower strand.
-                                // Make sure we're on the correct side.
-                                lowerSide = (forward ? 0 : 1);
 
                                 // The r2() check is expensive when adding
                                 // two crossings - use the variant where we

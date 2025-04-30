@@ -1773,11 +1773,18 @@ class Link :
          */
         bool r2(Crossing* crossing);
         /**
-         * If possible, performs a type II Reidemeister move to add
+         * If possible, performs a classical type II Reidemeister move to add
          * two new crossings at the given location.
          * If such a move is not allowed, then this routine does nothing.
          *
          * This link diagram will be changed directly.
+         *
+         * By a _classical_ type II move, we mean that the move can be
+         * performed without adding a handle to the surface \a S in which the
+         * link diagram is embedded.  That is: the two "sides of strands" that
+         * will be passed over one another either belong to different connected
+         * components of the link diagram, or else both bound the same 2-cell
+         * in the dual cell decomposition of \a S.
          *
          * The location of this move is specified by the arguments \a upperArc,
          * \a upperSide, \a lowerArc and \a lowerSide.  Specifically, this
@@ -1815,12 +1822,10 @@ class Link :
          * \pre Each of the given strand references is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
-         * \warning The check for this move is expensive (linear time),
-         * since it includes testing whether both sides-of-arcs belong
-         * to the same 2-cell of the knot diagram.  If you are certain that
-         * the move is legal, and you wish to circumvent this check, C++ users
-         * can call the variant of this function that takes an extra
-         * Unprotected argument.
+         * \warning The check for this move is expensive (linear time).  If you
+         * are certain that the move is legal and you wish to circumvent this
+         * check, C++ users can call the variant of this function that takes an
+         * extra Unprotected argument.
          *
          * \param upperArc identifies the arc of the link which will be
          * passed over the other, as described above.
@@ -1840,26 +1845,25 @@ class Link :
         bool r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
             int lowerSide);
         /**
-         * Performs a type II Reidemeister move at the given location to add
-         * two crossings, without any safety checks.
+         * Performs a classical type II Reidemeister move at the given location
+         * to add two crossings, without any safety checks.
          *
          * This variant of r2() is offered because it is expensive to test
-         * whether a type II move can be performed at a given location
+         * whether a classical type II move can be performed at a given location
          * (essentially one must walk around an entire 2-cell of the link
          * diagram, which takes linear time).
          *
          * This function will _always_ perform the requested Reidemeister move
          * directy on this link, _without_ first testing whether it is legal.
          * The onus is on the programmer to ensure the legality of the move
-         * beforehand.  Getting this wrong could be disastrous (essentially
-         * you could end up with a link diagram that does not actually embed
-         * in the plane).
+         * beforehand.  Getting this wrong could give very unexpected results
+         * (e.g., a classical link diagram could become virtual as a result).
          *
          * The (unnamed) Unprotected argument would typically be the constant
          * `regina::unprotected`.
          *
-         * For more detail on type II moves and when they can be performed,
-         * see r2(StrandRef, int, StrandRef, int).
+         * For more detail on classical type II moves and when they can be
+         * performed, see r2(StrandRef, int, StrandRef, int).
          *
          * \pre Each of the given strand references is either a null reference,
          * or else refers to some strand of some crossing in this link.
@@ -2051,18 +2055,16 @@ class Link :
          */
         bool hasR2(Crossing* crossing) const;
         /**
-         * Determines whether it is possible to perform a type II Reidemeister
-         * move at the given location to add two new crossings.
+         * Determines whether it is possible to perform a classical type II
+         * Reidemeister move at the given location to add two new crossings.
          *
-         * For more detail on type II moves and when they can be performed,
-         * see r2(StrandRef, int, StrandRef, int).
+         * For more detail on classical type II moves and when they can be
+         * performed, see r2(StrandRef, int, StrandRef, int).
          *
          * \pre Each of the given strand references is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
-         * \warning The check for this move is expensive (linear time),
-         * since it includes testing whether both sides-of-arcs belong
-         * to the same 2-cell of the knot diagram.
+         * \warning The check for this move is expensive (linear time).
          *
          * \param upperArc identifies which arc of the link would be passed
          * over another in this candidate move.  See
@@ -2211,21 +2213,20 @@ class Link :
          */
         std::optional<Link> withR2(Crossing* crossing) const;
         /**
-         * If possible, returns the diagram obtained by performing a type II
-         * Reidemeister move at the given location to add two new crossings.
-         * If such a move is not allowed, then this routine returns no value.
+         * If possible, returns the diagram obtained by performing a classical
+         * type II Reidemeister move at the given location to add two new
+         * crossings.  If such a move is not allowed, then this routine
+         * returns no value.
          *
          * This link diagram will not be changed.
          *
-         * For more detail on type II moves and when they can be performed,
-         * see r2(StrandRef, int, StrandRef, int).
+         * For more detail on classical type II moves and when they can be
+         * performed, see r2(StrandRef, int, StrandRef, int).
          *
          * \pre Each of the given strand references is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
-         * \warning The check for this move is expensive (linear time),
-         * since it includes testing whether both sides-of-arcs belong
-         * to the same 2-cell of the knot diagram.
+         * \warning The check for this move is expensive (linear time).
          *
          * \param upperArc identifies which arc of the link will be passed
          * over another.  See r2(StrandRef, int, StrandRef, int) for details
@@ -2435,11 +2436,11 @@ class Link :
         [[deprecated]] bool r2(Crossing* crossing,
             bool ignored, bool perform = true);
         /**
-         * Deprecated routine that tests for and optionally performs a type II
-         * Reidemeister move to add two new crossings.
+         * Deprecated routine that tests for and optionally performs a classical
+         * type II Reidemeister move to add two new crossings.
          *
-         * For more detail on type II moves and when they can be performed,
-         * see r2(StrandRef, int, StrandRef, int).
+         * For more detail on classical type II moves and when they can be
+         * performed, see r2(StrandRef, int, StrandRef, int).
          *
          * This routine will always _check_ whether the requested move is
          * allowed.  If it is, and if the argument \a perform is \c true,
@@ -2452,9 +2453,7 @@ class Link :
          * \pre Each of the given strand references is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
-         * \warning The check for this move is expensive (linear time),
-         * since it includes testing whether both sides-of-arcs belong
-         * to the same 2-cell of the knot diagram.
+         * \warning The check for this move is expensive (linear time).
          *
          * \param upperArc identifies which arc of the link would be passed
          * over another in this move.  See r2(StrandRef, int, StrandRef, int)
