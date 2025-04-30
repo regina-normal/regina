@@ -108,6 +108,16 @@ static void verifyTopologicallySame(const Link& a, const Link& b) {
         EXPECT_EQ(a.jones(), b.jones());
 }
 
+static regina::Laurent<regina::Integer> jonesModReflection(const Link& link) {
+    auto jones1 = link.jones();
+    auto jones2 = jones1;
+    jones2.invertX();
+    if (jones1 <= jones2)
+        return jones1;
+    else
+        return jones2;
+}
+
 struct TestCase {
     Link link;
     const char* name;
@@ -687,11 +697,9 @@ static void verifySelfFrame(const Link& link, const char* name) {
     Link framed(link);
     framed.selfFrame();
 
-    EXPECT_EQ(framed.countComponents(), link.countComponents());
+    verifyTopologicallySame(framed, link);
     for (size_t c = 0; c < framed.countComponents(); ++c)
         EXPECT_EQ(framed.writheOfComponent(c), 0);
-    if (link.size() <= JONES_THRESHOLD)
-        EXPECT_EQ(link.jones(), framed.jones());
 }
 
 TEST_F(LinkTest, selfFrame) {
@@ -2382,7 +2390,7 @@ TEST_F(LinkTest, resolve) {
     testManualCases(verifyResolveViaJones);
 }
 
-static void verifyKnotSig(const Link& link, bool reflect, bool reverse) {
+static void verifySig(const Link& link, bool reflect, bool reverse) {
     SCOPED_TRACE_NUMERIC(reflect);
     SCOPED_TRACE_NUMERIC(reverse);
 
@@ -2426,6 +2434,14 @@ static void verifyKnotSig(const Link& link, bool reflect, bool reverse) {
 
     EXPECT_EQ(recon.size(), link.size());
     EXPECT_EQ(recon.countComponents(), link.countComponents());
+    EXPECT_EQ(recon.virtualGenus(), link.virtualGenus());
+    EXPECT_EQ(recon.linking2(), link.linking2());
+    if (recon.countComponents() == 1 && link.countComponents() == 1) {
+        if (reflect)
+            EXPECT_EQ(std::abs(recon.oddWrithe()), std::abs(link.oddWrithe()));
+        else
+            EXPECT_EQ(recon.oddWrithe(), link.oddWrithe());
+    }
     EXPECT_EQ(recon.sig(reflect, reverse), sig);
     if (link.size() <= JONES_THRESHOLD) {
         if (reverse && link.countComponents() > 1) {
@@ -2438,20 +2454,7 @@ static void verifyKnotSig(const Link& link, bool reflect, bool reverse) {
                 linkJones.maxExp() - linkJones.minExp());
         } else if (reflect) {
             // The only possible change to the Jones polynomial is x -> x^-1.
-            auto reconJones = recon.jones();
-            auto linkJones = link.jones();
-
-            auto reconJonesAlt = recon.jones();
-            auto linkJonesAlt = link.jones();
-            reconJonesAlt.invertX();
-            linkJonesAlt.invertX();
-
-            if (reconJonesAlt < reconJones)
-                reconJones.swap(reconJonesAlt);
-            if (linkJonesAlt < linkJones)
-                linkJones.swap(linkJonesAlt);
-
-            EXPECT_EQ(reconJones, linkJones);
+            EXPECT_EQ(jonesModReflection(recon), jonesModReflection(link));
         } else {
             EXPECT_EQ(recon.jones(), link.jones());
         }
@@ -2461,17 +2464,17 @@ static void verifyKnotSig(const Link& link, bool reflect, bool reverse) {
     EXPECT_NO_THROW({ EXPECT_EQ(Link(sig), recon); });
 }
 
-static void verifyKnotSig(const Link& link, const char* name) {
+static void verifySig(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
-    verifyKnotSig(link, true, true);
-    verifyKnotSig(link, true, false);
-    verifyKnotSig(link, false, true);
-    verifyKnotSig(link, false, false);
+    verifySig(link, true, true);
+    verifySig(link, true, false);
+    verifySig(link, false, true);
+    verifySig(link, false, false);
 }
 
 TEST_F(LinkTest, sig) {
-    testManualCases(verifyKnotSig);
+    testManualCases(verifySig);
 
     // Test signatures that respect / ignore reflection:
     EXPECT_EQ(trefoilRight.link.sig(true, true),  "dabcabcv-");
@@ -2547,21 +2550,37 @@ TEST_F(LinkTest, sig) {
     EXPECT_EQ(rht_rht.link.sig(), "gabcabcdefdefvv--");
     EXPECT_EQ(rht_lht.link.sig(), "gabcabcdefdefvv-a");
 
-    // Add some hard-coded link signatures also, to ensure that nothing changes
-    // as we optimise the underlying algorithms.  For now we can only work
-    // with connected link diagrams, hence the fairly small list below.
+    // Add some hard-coded classical link signatures and virtual knot/link
+    // signatures (both of which are new to Regina 7.4), to ensure that nothing
+    // changes as we optimise the underlying algorithms in later releases.
+    // For now we can only work with connected link diagrams, hence the fairly
+    // small list below.
     EXPECT_EQ(empty.link.sig(), "_");
     EXPECT_EQ(hopf.link.sig(), "cabcabjp"); // verified by hand
     EXPECT_EQ(whitehead.link.sig(), "fabcadefbcedvfpd"); // verified by hand
     EXPECT_EQ(borromean.link.sig(), "gabcdgaecfgbfdeLwto"); // verified by hand
     EXPECT_EQ(trefoil_unknot_overlap.link.sig(), "fabcdeadefbcxb7h");
     EXPECT_EQ(adams6_28.link.sig(), "gabcadefdgbcefvv--"); // verified by hand
+
+    EXPECT_EQ(unlink2_0.link.sig(), "aa"); // verified by hand
+    EXPECT_EQ(unlink3_0.link.sig(), "aaa"); // verified by hand
+    EXPECT_EQ(unlink2_r2.link.sig(), "cabcabdf");
+    EXPECT_EQ(unlink2_r1r1.link.sig(), "baabdbaaba");
+    EXPECT_EQ(trefoil_unknot0.link.sig(), "dabcabcv-a");
+    EXPECT_EQ(trefoil_unknot1.link.sig(), "dabcabcv-baaba");
+
+    EXPECT_EQ(virtualTrefoil.link.sig(), "cababdp");
+    EXPECT_EQ(kishino.link.sig(), "eabacdcdbZavb");
+    EXPECT_EQ(gpv.link.sig(), "eabacdcdbZa-d");
+    EXPECT_EQ(virtualLink2.link.sig(), "bababd");
+    EXPECT_EQ(virtualLink3.link.sig(), "cabcacbjp");
 }
 
 static void verifyGaussAndDT(const TestCase& test,
         bool testGauss = true, bool testDT = true) {
     SCOPED_TRACE_CSTRING(test.name);
     ASSERT_EQ(test.link.countComponents(), 1);
+    ASSERT_TRUE(test.link.isClassical());
 
     // For "non-composite-like" knot diagrams, the only possible ambiguity
     // is reflection.  Use the reflection-distinguishing knot signature to
@@ -2576,6 +2595,7 @@ static void verifyGaussAndDT(const TestCase& test,
 
         EXPECT_EQ(recon.size(), test.link.size());
         EXPECT_EQ(recon.countComponents(), test.link.countComponents());
+        EXPECT_TRUE(recon.isClassical());
 
         // Verify the "magic" string constructor.
         EXPECT_NO_THROW({ EXPECT_EQ(Link(code), recon); });
@@ -2601,6 +2621,7 @@ static void verifyGaussAndDT(const TestCase& test,
 
                 EXPECT_EQ(recon.size(), test.link.size());
                 EXPECT_EQ(recon.countComponents(), test.link.countComponents());
+                EXPECT_TRUE(recon.isClassical());
 
                 // Verify the "magic" string constructor, _except_ for the
                 // special case of the one-crossing unknot whose alphabetical
@@ -2710,6 +2731,8 @@ static void verifyPDCode(const Link& link, const char* name) {
     EXPECT_EQ(recon.countComponents() + lost, link.countComponents());
     EXPECT_EQ(recon.writhe(), link.writhe());
     EXPECT_EQ(recon.linking2(), link.linking2());
+    if (recon.countComponents() == 1 && link.countComponents() == 1)
+        EXPECT_EQ(recon.oddWrithe(), link.oddWrithe());
 
     {
         size_t i = 0;
@@ -2801,14 +2824,12 @@ TEST_F(LinkTest, invalidCode) {
 
 static void verifyRewrite(const TestCase& test, int height, int threads,
         bool track, size_t count) {
-    // For now, this should only be called for knots that are
-    // equivalent to their mirror image.
     SCOPED_TRACE_CSTRING(test.name);
     SCOPED_TRACE_NUMERIC(height);
     SCOPED_TRACE_NUMERIC(threads);
 
     size_t tot = 0;
-    auto jones = test.link.jones();
+    auto jones = jonesModReflection(test.link);
 
     std::unique_ptr<regina::ProgressTrackerOpen> tracker;
     if (track)
@@ -2817,7 +2838,7 @@ static void verifyRewrite(const TestCase& test, int height, int threads,
     bool result = test.link.rewrite(height, threads, tracker.get(),
             [&tot, &jones](const Link& alt) {
         ++tot;
-        EXPECT_EQ(alt.jones(), jones);
+        EXPECT_EQ(jonesModReflection(alt), jones);
         return false;
     });
     if (track)
@@ -2835,7 +2856,7 @@ static void verifyRewrite(const TestCase& test, int height, size_t count) {
 }
 
 TEST_F(LinkTest, rewrite) {
-    // The counts here were computed using Regina 6.0 in single-threaded mode
+    // The counts below were computed using Regina 6.0 in single-threaded mode
     // (except for the zero-crossing cases, which were computed by hand).
 
     verifyRewrite(empty, 0, 1);
@@ -2864,6 +2885,27 @@ TEST_F(LinkTest, rewrite) {
     verifyRewrite(rht_lht, 0, 1);
     verifyRewrite(rht_lht, 1, 35);
     verifyRewrite(rht_lht, 2, 1131);
+
+    // The virtual counts here were computed using Regina 7.4 in
+    // single-threaded mode.
+
+    verifyRewrite(virtualTrefoil, 0, 1);
+    verifyRewrite(virtualTrefoil, 1, 8);
+    verifyRewrite(virtualTrefoil, 2, 113);
+    verifyRewrite(virtualTrefoil, 3, 1628);
+
+    // Regina currently does not merge different connected components of a
+    // link diagram when running rewrite().  Verify this:
+    {
+        Link link = ExampleLink::figureEight();
+        link.insertLink(ExampleLink::figureEight());
+        EXPECT_FALSE(link.isConnected());
+
+        link.rewrite(2, 1 /* single-threaded */, nullptr, [](const Link& alt) {
+            EXPECT_FALSE(alt.isConnected());
+            return false;
+        });
+    }
 }
 
 static void verifyGroup(const Link& link, const char* name) {
