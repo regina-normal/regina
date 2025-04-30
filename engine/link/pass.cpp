@@ -40,6 +40,13 @@ bool Link::hasReducingPass() const {
     if (crossings_.empty())
         return false;
 
+    // The planarity test is expensive (linear time), but finding a reducing
+    // pass is more expensive (cubic time), and it's best to tell users if
+    // they're doing things that will give mysteriously wrong answers.
+    if (! isClassical())
+        throw FailedPrecondition("Regina can only work with pass moves "
+            "in classical link diagrams, not virtual link diagrams");
+
     // We consider sides of arcs: for crossing i, we denote:
     // 4i   = left side of upper outgoing arc
     // 4i+1 = right side of upper outgoing arc

@@ -2549,20 +2549,28 @@ class Link :
             bool ignored, bool perform = true);
 
         /**
-         * Tests whether this link has a pass move that will reduce the
-         * number of crossings.
+         * Tests whether this classical link has a pass move that will reduce
+         * the number of crossings.
          *
-         * A _pass_ move involves taking a section of some link component
-         * that involves only over-crossings (or only under-crossings), and
-         * then lifting that section above (or beneath respectively) the
-         * diagram and placing it back again in a different location.
-         * In particular, this routine searches for a different location
-         * that will involve fewer crossings than the original location.
+         * A _pass_ move involves taking a section of some link component that
+         * involves only over-crossings (or only under-crossings), and then
+         * lifting that section above (or beneath respectively) the plane of
+         * the diagram and placing it back again in a different location.
+         * In particular, this routine searches for a different location that
+         * will involve fewer crossings than the original location.
+         *
+         * In Regina, pass moves can only be used with classical links, not
+         * the more general setting of virtual link diagrams.
          *
          * This routine does not actually _perform_ the pass move; it
          * simply determines whether one exists.
          *
          * The running time is cubic in the number of crossings.
+         *
+         * \pre This link diagram is classical (not virtual).
+         *
+         * \exception FailedPrecondition This is a virtual (not classical)
+         * link diagram.
          *
          * \return \c true if and only if there is a pass move that
          * reduces the number of crossings.
@@ -3195,11 +3203,11 @@ class Link :
          * be cached and so this routine will be instantaneous (since it just
          * returns the previously computed result).
          *
-         * \pre This link is classical (not virtual), and has exactly one
-         * component (i.e., it is a knot).
+         * \pre This link diagram is classical (not virtual), and has exactly
+         * one component (i.e., it is a knot).
          *
          * \exception FailedPrecondition This link is empty, has multiple
-         * components, and/or is virtual.
+         * components, and/or uses a virtual (not classical) link diagram.
          *
          * \return the Alexander polynomial of this knot.
          */
