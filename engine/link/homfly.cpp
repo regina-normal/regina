@@ -59,7 +59,7 @@ namespace regina {
 
 namespace {
     /**
-     * Used as a return value when the HOMFLY calculation is running in
+     * Used as a return value when the HOMFLY-PT calculation is running in
      * a new thread and we need to return immediately without a result.
      */
     const regina::Laurent2<regina::Integer> noResult;
@@ -887,7 +887,7 @@ namespace {
         }
     };
 
-    // Convenience functions for the treewidth HOMFLY algorithm:
+    // Convenience functions for the treewidth HOMFLY-PT algorithm:
 
     inline void aggregate(
             std::map<LightweightSequence<int>, Laurent2<Integer>>* solns,
@@ -1044,7 +1044,7 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
                     }
                 }
 
-                // The contribution to the HOMFLY polynomial is:
+                // The contribution to the HOMFLY-PT polynomial is:
                 //     (-1)^splicesNeg * z^splices * alpha^writheAdj *
                 //     delta^(#components-1).
                 // Note that delta^(#components-1) will be computed later;
@@ -1300,7 +1300,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
     // forgotten - crossings that are forgotten in later bags (closer to the
     // root) are considered first as potential traversal starting points.
     //
-    // Each corresponding value represents a "partial HOMFLY polynomial",
+    // Each corresponding value represents a "partial HOMFLY-PT polynomial",
     // aggregated over all "partial traversals" that follow the strands
     // seen in the key in and out of the forgotten zone in the same order.
     // Only the actions taken within the forgotten zone are factored into
@@ -1404,7 +1404,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                 // We do *not* factor in the extra unknot if this is the
                 // last crossing to ever be forgotten.  This is because
-                // the HOMFLY formula requires us to subtract 1 from the
+                // the HOMFLY-PT formula requires us to subtract 1 from the
                 // total number of loops.
                 if (index != nBags - 1)
                     for (auto& soln : *(partial[index]))
@@ -2973,7 +2973,7 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
         }
 
         // We have an unlink with no crossings.
-        // The HOMFLY polynomial is delta^(#components - 1).
+        // The HOMFLY-PT polynomial is delta^(#components - 1).
         Laurent2<Integer> delta { { 1, -1, 1 }, { -1, -1, -1 } };
 
         Laurent2<Integer> ans = RingTraits<Laurent2<Integer>>::one;

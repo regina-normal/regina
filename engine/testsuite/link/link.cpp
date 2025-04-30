@@ -977,7 +977,7 @@ static void verifyHomflyAZ(const TestCase& test,
         const regina::Laurent2<regina::Integer>& expected) {
     SCOPED_TRACE_CSTRING(test.name);
 
-    // Since we are computing the HOMFLY polynomial multiple times
+    // Since we are computing the HOMFLY-PT polynomial multiple times
     // (using different algorithms), we work with clones of the link
     // that do not clone any already-computed properties.
 
@@ -995,7 +995,7 @@ static void verifyHomflyLM(const TestCase& test,
         const regina::Laurent2<regina::Integer>& expected) {
     SCOPED_TRACE_CSTRING(test.name);
 
-    // Since we are computing the HOMFLY polynomial multiple times
+    // Since we are computing the HOMFLY-PT polynomial multiple times
     // (using different algorithms), we work with clones of the link
     // that do not clone any already-computed properties.
 
@@ -1084,15 +1084,15 @@ TEST_F(LinkTest, homfly) {
     verifyHomflyLM(trefoil_unknot_overlap,
         {{-1,1,-1}, {-1,-1,2}, {-3,1,-1}, {-3,-1,3}, {-5,-1,1}});
 
-    // This is different from Adams' claim regarding the HOMFLY polynomial of
+    // This is different from Adams' claim regarding the HOMFLY-PT polynomial of
     // this link.  But... Adams does get his arithmetic wrong elsewhere, and a
     // calculation by hand using the Skein relation agrees with the polynomial
     // below.
     verifyHomflyLM(adams6_28,
         {{1,1,1}, {-1,3,-1}, {-1,1,1}, {-3,1,2}, {-3,-1,-1}, {-5,-1,-1}});
 
-    // TODO: Verify that knot composition multiplies HOMFLY polynomials
-    // TODO: Verify that HOMFLY gives Jones by:
+    // TODO: Verify that knot composition multiplies HOMFLY-PT polynomials
+    // TODO: Verify that HOMFLY-PT gives Jones by:
     //   * l = it^-1, m = i(t^-1/2 - t^1/2)
     //   * a = t^-1, z = t^1/2 - t^-1/2
 

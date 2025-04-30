@@ -706,12 +706,12 @@ class Link :
             /**< The Jones polynomial of the link.
                  This is std::nullopt if it has not yet been computed. */
         mutable std::optional<Laurent2<Integer>> homflyLM_;
-            /**< The HOMFLY polynomial of the link, as a polynomial in
+            /**< The HOMFLY-PT polynomial of the link, as a polynomial in
                  \a l and \a m.  This property will be known if and only
                  if \a homflyAZ_ is known.
                  This is std::nullopt if it has not yet been computed. */
         mutable std::optional<Laurent2<Integer>> homflyAZ_;
-            /**< The HOMFLY polynomial of the link, as a polynomial in
+            /**< The HOMFLY-PT polynomial of the link, as a polynomial in
                  \a alpha and \a z.  This property will be known if and
                  only if \a homflyLM_ is known.
                  This is std::nullopt if it has not yet been computed. */
@@ -750,62 +750,62 @@ class Link :
         static constexpr const char* jonesVar = "\u221At"; // \u221A = root
 
         /**
-         * The name of the first variable used in the variant of the
-         * HOMFLY polynomial as returned by homflyAZ().  This is provided to
-         * help with pretty-printing HOMFLY polynomials for human consumption.
+         * The name of the first variable used in the variant of the HOMFLY-PT
+         * polynomial as returned by homflyAZ().  This is provided to help with
+         * pretty-printing HOMFLY-PT polynomials for human consumption.
          *
          * Since homflyAZ() returns a Laurent polynomial in \a alpha and \a z,
          * this string just contains the mathematical symbol \a alpha
          * (encoded in UTF-8).
          *
-         * To pretty-print this HOMFLY polynomial for human consumption, you can
-         * call `Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)`.
+         * To pretty-print this HOMFLY-PT polynomial for human consumption, you
+         * can call `Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)`.
          */
         static constexpr const char* homflyAZVarX = "\u03B1"; // alpha
 
         /**
-         * The name of the second variable used in the variant of the
-         * HOMFLY polynomial as returned by homflyAZ().  This is provided to
-         * help with pretty-printing HOMFLY polynomials for human consumption.
+         * The name of the second variable used in the variant of the HOMFLY-PT
+         * polynomial as returned by homflyAZ().  This is provided to help with
+         * pretty-printing HOMFLY-PT polynomials for human consumption.
          *
          * Since homflyAZ() returns a Laurent polynomial in \a alpha and \a z,
          * this string just contains the single character \a z.
          *
-         * To pretty-print this HOMFLY polynomial for human consumption, you can
-         * call `Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)`.
+         * To pretty-print this HOMFLY-PT polynomial for human consumption, you
+         * can call `Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)`.
          */
         static constexpr const char* homflyAZVarY = "z";
 
         /**
-         * The name of the first variable used in the variant of the
-         * HOMFLY polynomial as returned by homflyLM().  This is provided to
-         * help with pretty-printing HOMFLY polynomials for human consumption.
+         * The name of the first variable used in the variant of the HOMFLY-PT
+         * polynomial as returned by homflyLM().  This is provided to help with
+         * pretty-printing HOMFLY-PT polynomials for human consumption.
          *
          * Since homflyLM() returns a Laurent polynomial in \a l and \a m,
          * this string just contains the mathematical script symbol for \a l
          * (encoded in UTF-8).
          *
-         * To pretty-print this HOMFLY polynomial for human consumption, you can
-         * call `Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)`.
+         * To pretty-print this HOMFLY-PT polynomial for human consumption, you
+         * can call `Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)`.
          */
         static constexpr const char* homflyLMVarX = "\U0001D4C1"; // $\ell$
 
         /**
-         * The name of the second variable used in the variant of the
-         * HOMFLY polynomial as returned by homflyLM().  This is provided to
-         * help with pretty-printing HOMFLY polynomials for human consumption.
+         * The name of the second variable used in the variant of the HOMFLY-PT
+         * polynomial as returned by homflyLM().  This is provided to help with
+         * pretty-printing HOMFLY-PT polynomials for human consumption.
          *
          * Since homflyLM() returns a Laurent polynomial in \a l and \a m,
          * this string just contains the single character \a m.
          *
-         * To pretty-print this HOMFLY polynomial for human consumption, you can
-         * call `Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)`.
+         * To pretty-print this HOMFLY-PT polynomial for human consumption, you
+         * can call `Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)`.
          */
         static constexpr const char* homflyLMVarY = "m";
 
         /**
-         * The name of the first variable used in the variant of the
-         * HOMFLY polynomial as returned by homfly().
+         * The name of the first variable used in the variant of the HOMFLY-PT
+         * polynomial as returned by homfly().
          *
          * This is simply an alias for homflyAZVarX.  See the documentation
          * for homflyAZVarX for further details.
@@ -813,8 +813,8 @@ class Link :
         static constexpr const char* homflyVarX = homflyAZVarX;
 
         /**
-         * The name of the second variable used in the variant of the
-         * HOMFLY polynomial as returned by homfly().
+         * The name of the second variable used in the variant of the HOMFLY-PT
+         * polynomial as returned by homfly().
          *
          * This is simply an alias for homflyAZVarY.  See the documentation
          * for homflyAZVarY for further details.
@@ -3400,19 +3400,19 @@ class Link :
         bool knowsJones() const;
 
         /**
-         * Returns the HOMFLY polynomial of this classical link, as a polynomial
-         * in \a alpha and \a z.
+         * Returns the HOMFLY-PT polynomial of this classical link, as a
+         * polynomial in \a alpha and \a z.
          *
-         * At present, Regina only computes HOMFLY polynomials for classical
+         * At present, Regina only computes HOMFLY-PT polynomials for classical
          * links.  If this is a virtual link diagram, then this routine will
          * throw an exception.
          *
-         * This variant of the HOMFLY polynomial is described (amongst other
+         * This variant of the HOMFLY-PT polynomial is described (amongst other
          * places) in G. Gouesbet et al., "Computer evaluation of Homfly
          * polynomials by using Gauss codes, with a skein-template algorithm",
          * Applied Mathematics and Computation 105 (1999), 271-289.
          *
-         * The (\a alpha, \a z) and (\a l, \a m) variants of the HOMFLY
+         * The (\a alpha, \a z) and (\a l, \a m) variants of the HOMFLY-PT
          * polynomial are related by a simple transformation:
          * \a alpha = \a l \a i and \a z = -\a m \a i,
          * where \a i represents (as usual) a square root of -1.
@@ -3434,17 +3434,18 @@ class Link :
          * polynomials by using Gauss codes, with a skein-template algorithm",
          * Applied Mathematics and Computation 105 (1999), 271-289.
          *
-         * Bear in mind that each time a link changes, all of its
-         * polynomials will be deleted.  Thus the reference that is
-         * returned from this routine should not be kept for later use.
-         * Instead, homflyAZ() should be called again; this will be
-         * instantaneous if the HOMFLY polynomial has already been calculated.
+         * Bear in mind that each time a link changes, all of its polynomials
+         * will be deleted.  Thus the reference that is returned from this
+         * routine should not be kept for later use.  Instead, homflyAZ()
+         * should be called again; this will be instantaneous if the HOMFLY-PT
+         * polynomial has already been calculated.
          *
-         * If the HOMFLY polynomial has already been computed (either in terms
-         * of \a alpha and \a z or in terms of \a l and \a m), then the result
-         * will be cached and so this routine will be very fast (since it just
-         * returns the previously computed result).  Otherwise the computation
-         * could be quite slow, particularly for larger numbers of crossings.
+         * If the HOMFLY-PT polynomial has already been computed (either in
+         * terms of \a alpha and \a z or in terms of \a l and \a m), then the
+         * result will be cached and so this routine will be very fast (since
+         * it just returns the previously computed result).  Otherwise the
+         * computation could be quite slow, particularly for larger numbers of
+         * crossings.
          *
          * Since Regina 7.0, this routine will not return until the polynomial
          * computation is complete, regardless of whether a progress tracker
@@ -3473,23 +3474,23 @@ class Link :
          * fixed-parameter tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * \return the HOMFLY polynomial, or the zero polynomial if the
+         * \return the HOMFLY-PT polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
         const Laurent2<Integer>& homflyAZ(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
-         * Returns the HOMFLY polynomial of this classical link, as a polynomial
-         * in \a l and \a m.
+         * Returns the HOMFLY-PT polynomial of this classical link, as a
+         * polynomial in \a l and \a m.
          *
-         * At present, Regina only computes HOMFLY polynomials for classical
+         * At present, Regina only computes HOMFLY-PT polynomials for classical
          * links.  If this is a virtual link diagram, then this routine will
          * throw an exception.
          *
-         * This variant of the HOMFLY polynomial is described (amongst other
+         * This variant of the HOMFLY-PT polynomial is described (amongst other
          * places) in C. C. Adams, "The knot book", W. H. Freeman & Co., 1994.
          *
-         * The (\a alpha, \a z) and (\a l, \a m) variants of the HOMFLY
+         * The (\a alpha, \a z) and (\a l, \a m) variants of the HOMFLY-PT
          * polynomial are related by a simple transformation:
          * \a alpha = \a l \a i and \a z = -\a m \a i,
          * where \a i represents (as usual) a square root of -1.
@@ -3511,17 +3512,18 @@ class Link :
          * polynomials by using Gauss codes, with a skein-template algorithm",
          * Applied Mathematics and Computation 105 (1999), 271-289.
          *
-         * Bear in mind that each time a link changes, all of its
-         * polynomials will be deleted.  Thus the reference that is
-         * returned from this routine should not be kept for later use.
-         * Instead, homflyLM() should be called again; this will be
-         * instantaneous if the HOMFLY polynomial has already been calculated.
+         * Bear in mind that each time a link changes, all of its polynomials
+         * will be deleted.  Thus the reference that is returned from this
+         * routine should not be kept for later use.  Instead, homflyLM()
+         * should be called again; this will be instantaneous if the HOMFLY-PT
+         * polynomial has already been calculated.
          *
-         * If the HOMFLY polynomial has already been computed (either in terms
-         * of \a alpha and \a z or in terms of \a l and \a m), then the result
-         * will be cached and so this routine will be very fast (since it just
-         * returns the previously computed result).  Otherwise the computation
-         * could be quite slow, particularly for larger numbers of crossings.
+         * If the HOMFLY-PT polynomial has already been computed (either in
+         * terms of \a alpha and \a z or in terms of \a l and \a m), then the
+         * result will be cached and so this routine will be very fast (since
+         * it just returns the previously computed result).  Otherwise the
+         * computation could be quite slow, particularly for larger numbers of
+         * crossings.
          *
          * Since Regina 7.0, this routine will not return until the polynomial
          * computation is complete, regardless of whether a progress tracker
@@ -3550,30 +3552,30 @@ class Link :
          * fixed-parameter tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * \return the HOMFLY polynomial, or the zero polynomial if the
+         * \return the HOMFLY-PT polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
         const Laurent2<Integer>& homflyLM(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
-         * Returns the HOMFLY polynomial of this classical link, as a polynomial
-         * in \a alpha and \a z.
+         * Returns the HOMFLY-PT polynomial of this classical link, as a
+         * polynomial in \a alpha and \a z.
          *
          * This routine is simply an alias for homflyAZ().  See the
          * documentation for homflyAZ() for further details.
          *
-         * At present, Regina only computes HOMFLY polynomials for classical
+         * At present, Regina only computes HOMFLY-PT polynomials for classical
          * links.  If this is a virtual link diagram, then this routine will
          * throw an exception.
          *
          * To pretty-print this polynomial for human consumption, you can call
          * `Laurent2::str(Link::homflyVarX, Link::homflyVarY)`.
          *
-         * Bear in mind that each time a link changes, all of its
-         * polynomials will be deleted.  Thus the reference that is
-         * returned from this routine should not be kept for later use.
-         * Instead, homfly() should be called again; this will be
-         * instantaneous if the HOMFLY polynomial has already been calculated.
+         * Bear in mind that each time a link changes, all of its polynomials
+         * will be deleted.  Thus the reference that is returned from this
+         * routine should not be kept for later use.  Instead, homfly() should
+         * be called again; this will be instantaneous if the HOMFLY-PT
+         * polynomial has already been calculated.
          *
          * \exception FailedPrecondition This is a virtual (not classical)
          * link diagram.
@@ -3596,20 +3598,20 @@ class Link :
          * fixed-parameter tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * \return the HOMFLY polynomial, or the zero polynomial if the
+         * \return the HOMFLY-PT polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
         const Laurent2<Integer>& homfly(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
-         * Is the HOMFLY polynomial of this link already known?
+         * Is the HOMFLY-PT polynomial of this link already known?
          * See homflyAZ() and homflyLM() for further details.
          *
          * If this property is already known, future calls to homfly(),
          * homflyAZ() and homflyLM() will all be very fast (simply returning
          * the precalculated values).
          *
-         * At present, Regina only computes HOMFLY polynomials for classical
+         * At present, Regina only computes HOMFLY-PT polynomials for classical
          * links.  If this is a virtual (not classical) link diagram, then
          * this routine is still safe to call, and will simply return \c false.
          *
@@ -3619,7 +3621,7 @@ class Link :
 
         /**
          * Converts between the (\a alpha, \a z) and (\a l, \a m)
-         * representations of the HOMFLY polynomial.
+         * representations of the HOMFLY-PT polynomial.
          *
          * The (\a alpha, \a z) and (\a l, \a m) variants are related by a
          * simple transformation: \a alpha = \a l \a i and \a z = -\a m \a i,
@@ -3627,11 +3629,11 @@ class Link :
          *
          * See homflyAZ() and homflyLM() for further details.
          *
-         * \param homflyAZ the HOMFLY polynomial of a link as a polynomial in
-         * \a alpha and \a z, where (\a alpha, \a z) are represented by
+         * \param homflyAZ the HOMFLY-PT polynomial of a link as a polynomial
+         * in \a alpha and \a z, where (\a alpha, \a z) are represented by
          * (\a x, \a y) in the class Laurent2<Integer>.
-         * \return the HOMFLY polynomial of the same link as a polynomial in
-         * \a l and \a m, where (\a l, \a m) are represented by (\a x, \a y)
+         * \return the HOMFLY-PT polynomial of the same link as a polynomial
+         * in \a l and \a m, where (\a l, \a m) are represented by (\a x, \a y)
          * in the class Laurent2<Integer>.
          */
         static Laurent2<Integer> homflyAZtoLM(Laurent2<Integer> homflyAZ);
@@ -4026,7 +4028,7 @@ class Link :
          * from Jenkins' format is simple.  Moreover, the format is suitable
          * for links with any number of components.
          *
-         * Jenkins' format is described in his HOMFLY polynomial software,
+         * Jenkins' format is described in his HOMFLY-PT polynomial software,
          * which is available online from
          * http://burtleburtle.net/bob/knot/homfly.html.
          * The format consists of a sequence of integers separated by
@@ -5772,7 +5774,7 @@ class Link :
         Laurent<Integer> bracketTreewidth(ProgressTracker* tracker) const;
 
         /**
-         * Compute the HOMFLY polynomial of this link, as a polynomial
+         * Compute the HOMFLY-PT polynomial of this link, as a polynomial
          * in \a alpha and \a z, using Kauffman's skein-template algorithm.
          *
          * See homflyAZ() for further details.
@@ -5782,7 +5784,7 @@ class Link :
         Laurent2<Integer> homflyKauffman(ProgressTracker* tracker) const;
 
         /**
-         * Compute the HOMFLY polynomial of this link, as a polynomial
+         * Compute the HOMFLY-PT polynomial of this link, as a polynomial
          * in \a alpha and \a z, using a fixed-parameter tractable algorithm
          * based on a tree decomposition.
          *

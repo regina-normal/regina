@@ -69,7 +69,7 @@ LinkCodesUI::LinkCodesUI(regina::PacketOf<regina::Link>* packet,
         "The <i>planar diagram code</i> is used in the Knot Atlas, "
         "and supports multiple-component links.<p>"
         "The <i>Jenkins format</i> is the text representation used by "
-        "Bob Jenkins in his HOMFLY polynomial software.");
+        "Bob Jenkins in his HOMFLY-PT polynomial software.");
     label->setWhatsThis(msg);
     sublayout->addWidget(label);
     type = new QComboBox();
@@ -207,7 +207,7 @@ void LinkCodesUI::refresh() {
     } else if (type->currentIndex() == 4) {
         code->setWhatsThis("A description of this link using the "
             "text format of Bob Jenkins.  This format is used "
-            "in Jenkins' HOMFLY polynomial software.<p>"
+            "in Jenkins' HOMFLY-PT polynomial software.<p>"
             "You can copy this text to the clipboard if you need to send it "
             "to some other application.");
         ans = link->jenkins().c_str();
