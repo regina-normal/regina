@@ -962,6 +962,10 @@ TEST_F(LinkTest, jones) {
     verifyJones(trefoil_unknot1, {1, {-1,0,-1,0,-1,0,0,0,1}});
     verifyJones(trefoil_unknot_overlap, {1, {-1,0,-1,0,-1,0,0,0,1}});
 
+    // This polynomial was computed using Regina 7.4 (and verified using all
+    // three algorithms).
+    verifyJones(adams6_28, {-3, {-1,0,2,0,-2,0,2,0,-3,0,1,0,-1}});
+
     verifyJones(virtualTrefoil, {2, {1,1,0,-1}});
     verifyJones(kishino, {0, {1}});
     verifyJones(gpv, {-10, {1,0,-2,-2,1,2,1}});
