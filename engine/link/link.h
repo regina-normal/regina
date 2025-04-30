@@ -2674,8 +2674,8 @@ class Link :
          * reflect or reverse the link**.
          *
          * As of Regina 7.4, this routine is now available for any connected
-         * link diagram with fewer than 64 link components.
-         * If this link has 64 or more components then this
+         * link diagram (classical or virtual) with fewer than 64 link
+         * components.  If this link has 64 or more components then this
          * routine will throw an exception (as described below).
          *
          * This routine will iterate through all link diagrams that can be
@@ -2757,8 +2757,8 @@ class Link :
          * crossings.
          *
          * As of Regina 7.4, this routine is now available for any connected
-         * link diagram with fewer than 64 link components.
-         * If this link has 64 or more components then this
+         * link diagram (classical or virtual) with fewer than 64 link
+         * components.  If this link has 64 or more components then this
          * routine will throw an exception (as described below).
          *
          * This routine iterates through all link diagrams that can be reached
