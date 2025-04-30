@@ -2941,10 +2941,11 @@ class Link :
          * For classical links, the linking number is always an integer, and
          * so linking() will always return successfully.
          *
-         * For virtual links, the linking number might have a fractional part;
+         * For virtual links, the linking number might have a half-integer part;
          * if this happens then linking() will throw an exception.  If you are
          * working with virtual links then you should use linking2() instead,
-         * which always returns successfully.
+         * which does not halve the sum of signs, and which therefore always
+         * returns successfully with an integer result.
          *
          * The algorithm to compute linking number is linear time.
          *
@@ -2962,7 +2963,7 @@ class Link :
          * The linking number is an invariant of a link, computed as half
          * the sum of the signs of all crossings that involve different link
          * components.  For classical links the linking number is always an
-         * integer, whereas for virtual links it might have a fractional part.
+         * integer, whereas for virtual links it might have a half-integer part.
          *
          * This routine returns _twice_ the linking number, which is always
          * guaranteed to be an integer.  If you are working with virtual links
@@ -3039,7 +3040,7 @@ class Link :
          * Some authors call this invariant the _self-linking number_ of the
          * knot.
          *
-         * For a classical knot, all crossings will always be even, and so the
+         * For a classical knot, every crossing will be even, and so the
          * odd writhe will always be zero.
          *
          * \pre This link has exactly one component (i.e., it is a knot).

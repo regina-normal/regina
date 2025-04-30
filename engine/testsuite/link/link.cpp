@@ -326,6 +326,8 @@ TEST_F(LinkTest, connected) {
     EXPECT_FALSE(trefoil_unknot1.link.graph().isConnected());
     EXPECT_TRUE(trefoil_unknot_overlap.link.isConnected());
     EXPECT_TRUE(trefoil_unknot_overlap.link.graph().isConnected());
+    EXPECT_TRUE(adams6_28.link.isConnected());
+    EXPECT_TRUE(adams6_28.link.graph().isConnected());
 
     EXPECT_TRUE(virtualTrefoil.link.isConnected());
     EXPECT_TRUE(virtualTrefoil.link.graph().isConnected());
@@ -380,6 +382,7 @@ TEST_F(LinkTest, components) {
     EXPECT_EQ(trefoil_unknot0.link.countComponents(), 2);
     EXPECT_EQ(trefoil_unknot1.link.countComponents(), 2);
     EXPECT_EQ(trefoil_unknot_overlap.link.countComponents(), 2);
+    EXPECT_EQ(adams6_28.link.countComponents(), 2);
 
     EXPECT_EQ(virtualTrefoil.link.countComponents(), 1);
     EXPECT_EQ(kishino.link.countComponents(), 1);
@@ -431,6 +434,7 @@ TEST_F(LinkTest, virtualGenus) {
     verifyVirtualGenus(trefoil_unknot0, 0);
     verifyVirtualGenus(trefoil_unknot1, 0);
     verifyVirtualGenus(trefoil_unknot_overlap, 0);
+    verifyVirtualGenus(adams6_28, 0);
 
     verifyVirtualGenus(virtualTrefoil, 1);
     verifyVirtualGenus(kishino, 2);
@@ -512,6 +516,47 @@ TEST_F(LinkTest, diagramComponents) {
     }
 }
 
+TEST_F(LinkTest, isAlternating) {
+    EXPECT_TRUE(empty.link.isAlternating());
+
+    EXPECT_TRUE(unknot0.link.isAlternating());
+    EXPECT_TRUE(unknot1.link.isAlternating());
+    EXPECT_FALSE(unknot3.link.isAlternating());
+    EXPECT_FALSE(unknotMonster.link.isAlternating());
+    EXPECT_FALSE(unknotGordian.link.isAlternating());
+
+    EXPECT_TRUE(trefoilLeft.link.isAlternating());
+    EXPECT_TRUE(trefoilRight.link.isAlternating());
+    EXPECT_FALSE(trefoil_r1x2.link.isAlternating());
+    EXPECT_FALSE(trefoil_r1x6.link.isAlternating());
+    EXPECT_TRUE(figureEight.link.isAlternating());
+    EXPECT_FALSE(figureEight_r1x2.link.isAlternating());
+    EXPECT_FALSE(conway.link.isAlternating());
+    EXPECT_FALSE(kinoshitaTerasaka.link.isAlternating());
+    EXPECT_FALSE(gst.link.isAlternating());
+
+    EXPECT_TRUE(rht_rht.link.isAlternating());
+    EXPECT_TRUE(rht_lht.link.isAlternating());
+
+    EXPECT_TRUE(unlink2_0.link.isAlternating());
+    EXPECT_TRUE(unlink3_0.link.isAlternating());
+    EXPECT_FALSE(unlink2_r2.link.isAlternating());
+    EXPECT_TRUE(unlink2_r1r1.link.isAlternating());
+    EXPECT_TRUE(hopf.link.isAlternating());
+    EXPECT_TRUE(whitehead.link.isAlternating());
+    EXPECT_TRUE(borromean.link.isAlternating());
+    EXPECT_TRUE(trefoil_unknot0.link.isAlternating());
+    EXPECT_TRUE(trefoil_unknot1.link.isAlternating());
+    EXPECT_FALSE(trefoil_unknot_overlap.link.isAlternating());
+    EXPECT_TRUE(adams6_28.link.isAlternating());
+
+    EXPECT_FALSE(virtualTrefoil.link.isAlternating());
+    EXPECT_FALSE(kishino.link.isAlternating());
+    EXPECT_FALSE(gpv.link.isAlternating());
+    EXPECT_FALSE(virtualLink2.link.isAlternating());
+    EXPECT_FALSE(virtualLink3.link.isAlternating());
+}
+
 static void verifyLinking(const TestCase& test, long expect) {
     SCOPED_TRACE_CSTRING(test.name);
     EXPECT_EQ(test.link.linking(), expect);
@@ -557,12 +602,74 @@ TEST_F(LinkTest, linking) {
     verifyLinking(trefoil_unknot0, 0);
     verifyLinking(trefoil_unknot1, 0);
     verifyLinking(trefoil_unknot_overlap, 0);
+    verifyLinking(adams6_28, 2);
 
     verifyLinking(virtualTrefoil, 0);
     verifyLinking(kishino, 0);
     verifyLinking(gpv, 0);
     verifyOnlyLinking2(virtualLink2, 1);
     verifyLinking(virtualLink3, 1);
+}
+
+static void verifyWrithe(const TestCase& test, long expectWrithe,
+        std::initializer_list<long> expectComponents) {
+    SCOPED_TRACE_CSTRING(test.name);
+
+    EXPECT_EQ(test.link.writhe(), expectWrithe);
+
+    long sum = 0;
+    auto comp = 0;
+    auto it = expectComponents.begin();
+    while (comp < test.link.countComponents() && it != expectComponents.end()) {
+        EXPECT_EQ(test.link.writheOfComponent(comp), *it);
+        sum += *it;
+        ++comp;
+        ++it;
+    }
+    EXPECT_EQ(comp, test.link.countComponents());
+    EXPECT_TRUE(it == expectComponents.end());
+    EXPECT_EQ(sum + test.link.linking2(), test.link.writhe());
+}
+
+TEST_F(LinkTest, writhe) {
+    verifyWrithe(empty, 0, {});
+
+    verifyWrithe(unknot0, 0, {0});
+    verifyWrithe(unknot1, 1, {1});
+    verifyWrithe(unknot3, 1, {1});
+    verifyWrithe(unknotMonster, 2, {2});
+    verifyWrithe(unknotGordian, -33, {-33});
+
+    verifyWrithe(trefoilLeft, -3, {-3});
+    verifyWrithe(trefoilRight, 3, {3});
+    verifyWrithe(trefoil_r1x2, 3, {3});
+    verifyWrithe(trefoil_r1x6, 3, {3});
+    verifyWrithe(figureEight, 0, {0});
+    verifyWrithe(figureEight_r1x2, 0, {0});
+    verifyWrithe(conway, -1, {-1});
+    verifyWrithe(kinoshitaTerasaka, -1, {-1});
+    verifyWrithe(gst, 2, {2});
+
+    verifyWrithe(rht_rht, 6, {6});
+    verifyWrithe(rht_lht, 0, {0});
+
+    verifyWrithe(unlink2_0, 0, {0,0});
+    verifyWrithe(unlink3_0, 0, {0,0,0});
+    verifyWrithe(unlink2_r2, 0, {0,0});
+    verifyWrithe(unlink2_r1r1, 0, {-1,1});
+    verifyWrithe(hopf, 2, {0,0});
+    verifyWrithe(whitehead, -1, {-1,0});
+    verifyWrithe(borromean, 0, {0,0,0});
+    verifyWrithe(trefoil_unknot0, 3, {3,0});
+    verifyWrithe(trefoil_unknot1, 2, {3,-1});
+    verifyWrithe(trefoil_unknot_overlap, 3, {3,0});
+    verifyWrithe(adams6_28, 2, {0,-2});
+
+    verifyWrithe(virtualTrefoil, 2, {2});
+    verifyWrithe(kishino, 0, {0});
+    verifyWrithe(gpv, -4, {-4});
+    verifyWrithe(virtualLink2, 1, {0,0});
+    verifyWrithe(virtualLink3, 2, {0,0,0});
 }
 
 TEST_F(LinkTest, oddWrithe) {
@@ -605,6 +712,7 @@ TEST_F(LinkTest, oddWrithe) {
     EXPECT_THROW({ trefoil_unknot1.link.oddWrithe(); }, FailedPrecondition);
     EXPECT_THROW({ trefoil_unknot_overlap.link.oddWrithe(); },
         FailedPrecondition);
+    EXPECT_THROW({ adams6_28.link.oddWrithe(); }, FailedPrecondition);
 
     EXPECT_THROW({ virtualLink2.link.oddWrithe(); }, FailedPrecondition);
     EXPECT_THROW({ virtualLink3.link.oddWrithe(); }, FailedPrecondition);
@@ -662,19 +770,6 @@ static void verifyUnderOverForComponent(const Link& link, const char* name) {
 
 TEST_F(LinkTest, underOverForComponent) {
     testManualCases(verifyUnderOverForComponent);
-}
-
-static void verifyWrithe(const Link& link, const char* name) {
-    SCOPED_TRACE_CSTRING(name);
-
-    long sum = 0;
-    for (size_t c = 0; c < link.countComponents(); ++c)
-        sum += link.writheOfComponent(c);
-    EXPECT_EQ(sum + link.linking2(), link.writhe());
-}
-
-TEST_F(LinkTest, writhe) {
-    testManualCases(verifyWrithe);
 }
 
 static void verifySeifertCircles(const Link& link, const char* name) {
