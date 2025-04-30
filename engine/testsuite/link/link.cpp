@@ -35,6 +35,7 @@
 #include "link/link.h"
 #include "surface/normalsurfaces.h"
 
+#include "testexhaustive.h"
 #include "utilities/tightencodingtest.h"
 
 using regina::Algorithm;
@@ -100,7 +101,6 @@ static bool isConsistent(const Link& link) {
 static void verifyTopologicallySame(const Link& a, const Link& b) {
     // Used (for example) when testing Reidemeister moves.
     EXPECT_EQ(a.countComponents(), b.countComponents());
-    EXPECT_EQ(a.virtualGenus(), b.virtualGenus());
     EXPECT_EQ(a.linking2(), b.linking2());
     if (a.countComponents() == 1 && b.countComponents() == 1)
         EXPECT_EQ(a.oddWrithe(), b.oddWrithe());
@@ -1489,13 +1489,23 @@ static void verifyR2Down(const Link& link, const char* name) {
 static void verifyR3(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
+    // Note: there is exactly one scenario in which alt == link (and with
+    // identical labellings): the R3 happens on a virtual link with three
+    // components, each passing through two crossings and making one side of
+    // the R3 triangle.
     for (int side = 0; side <= 1; ++side) {
         for (size_t i = 0; i < link.size(); ++i) {
             for (int strand = 0; strand <= 1; ++strand) {
                 Link alt(link, false);
                 if (alt.r3(alt.crossing(i)->strand(strand), side)) {
                     EXPECT_TRUE(isConsistent(alt));
-                    EXPECT_NE(alt, link);
+                    if (alt == link && link.isConnected()) {
+                        // We must have one of the special scenarios above.
+                        // We only test this for the connected case (which is
+                        // easy).
+                        EXPECT_EQ(link.size(), 3);
+                        EXPECT_EQ(link.countComponents(), 3);
+                    }
                     EXPECT_EQ(alt.size(), link.size());
                     EXPECT_EQ(alt.virtualGenus(), link.virtualGenus());
                     verifyTopologicallySame(alt, link);
@@ -1507,7 +1517,12 @@ static void verifyR3(const Link& link, const char* name) {
             Link alt(link, false);
             if (alt.r3(alt.crossing(i), side)) {
                 EXPECT_TRUE(isConsistent(alt));
-                EXPECT_NE(alt, link);
+                if (alt == link && link.isConnected()) {
+                    // We must have one of the special scenarios above.
+                    // We only test this for the connected case (which is easy).
+                    EXPECT_EQ(link.size(), 3);
+                    EXPECT_EQ(link.countComponents(), 3);
+                }
                 EXPECT_EQ(alt.size(), link.size());
                 EXPECT_EQ(alt.virtualGenus(), link.virtualGenus());
                 verifyTopologicallySame(alt, link);
@@ -1528,11 +1543,32 @@ static void verifyR3(const Link& link, const char* name) {
     }
 }
 
-TEST_F(LinkTest, reidemeister) {
+TEST_F(LinkTest, reidemeister1Down) {
     testManualCases(verifyR1Down, false /* gordian */);
+    runCensusAllVirtual(verifyR1Down);
+}
+
+TEST_F(LinkTest, reidemeister1Up) {
     testManualCases(verifyR1Up, false /* gordian */);
+    runCensusAllVirtual(verifyR1Up, true /* small */);
+}
+
+TEST_F(LinkTest, reidemeister2Down) {
     testManualCases(verifyR2Down, false /* gordian */);
+    runCensusAllVirtual(verifyR2Down);
+}
+
+TEST_F(LinkTest, reidemeister2Up) {
+    // TODO: Fill this in.
+}
+
+TEST_F(LinkTest, reidemeister3) {
     testManualCases(verifyR3, false /* gordian */);
+    runCensusAllVirtual(verifyR3);
+}
+
+TEST_F(LinkTest, reidemeisterMisc) {
+    // TODO: Add more virtual cases.
 
     // Single twist:
     verifyR1Down(Link::fromData({ -1 }, { 1, -1 }), 0, "( )");

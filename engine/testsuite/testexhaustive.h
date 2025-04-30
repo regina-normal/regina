@@ -37,7 +37,7 @@
 
 /**
  * The functions in this header allow you to run a test over all
- * triangulations from a census.
+ * triangulations or link diagrams from a census.
  *
  * The \a small parameter indicates that a smaller census should be
  * used; this is appropriate when the corresponding test is extremely slow.
@@ -60,6 +60,7 @@ using Triangulation3TestFunction = void (*)(const regina::Triangulation<3>&,
     const char*);
 using Triangulation4TestFunction = void (*)(const regina::Triangulation<4>&,
     const char*);
+using LinkTestFunction = void (*)(const regina::Link&, const char*);
 
 void runCensusAllClosed(Triangulation2TestFunction f);
 void runCensusAllBounded(Triangulation2TestFunction f);
@@ -75,5 +76,7 @@ void runCensusAllBounded(Triangulation4TestFunction f, int size = 0);
 void runCensusAllNoBdry(Triangulation4TestFunction f, int size = 0);
 void runCensus(bool (*pairingFilter)(const regina::FacetPairing<4>&),
     Triangulation4TestFunction f, int size, bool orblOnly = false);
+
+void runCensusAllVirtual(LinkTestFunction f, bool small_ = false);
 
 #endif
