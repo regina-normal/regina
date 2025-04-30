@@ -975,8 +975,8 @@ Returns:
 
 // Docstring regina::python::doc::Link_::fromDT
 static const char *fromDT =
-R"doc(Creates a new knot from either alphabetical or numerical Dowker-
-Thistlethwaite notation, presented as a string.
+R"doc(Creates a new classical knot from either alphabetical or numerical
+Dowker-Thistlethwaite notation, presented as a string.
 
 Dowker-Thistlethwaite notation essentially describes the 4-valent
 graph of a knot but not the particular embedding in the plane. As a
@@ -996,7 +996,9 @@ bca
 ```
 
 See dt(bool) for a full description of Dowker-Thistlethwaite notation
-as it is used in Regina, as well as its limitations.
+as it is used in Regina, as well as its limitations. In particular, be
+aware that Regina can only work with Dowker-Thistlethwaite codes for
+_classical_ knots, not the more general virtual knot diagrams).
 
 There are two variants of this routine. This variant takes a single
 string, which is either (i) the alphabetical notation, in which any
@@ -1046,8 +1048,8 @@ Returns:
 
 // Docstring regina::python::doc::Link_::fromDT_2
 static const char *fromDT_2 =
-R"doc(Creates a new knot from numerical Dowker-Thistlethwaite notation,
-presented as an integer sequence.
+R"doc(Creates a new classical knot from numerical Dowker-Thistlethwaite
+notation, presented as an integer sequence.
 
 See dt(bool) for a full description of Dowker-Thistlethwaite notation
 as it is used in Regina, and see fromDT(const std::string&) for a
@@ -1113,8 +1115,8 @@ Returns:
 
 // Docstring regina::python::doc::Link_::fromData
 static const char *fromData =
-R"doc(Creates a new link from information about its crossings and
-components.
+R"doc(Creates a new classical or virtual link from information about its
+crossings and components.
 
 This routine is an analogue to the variant of fromData() that takes
 C++ initialiser lists; however, here the input data may be constructed
@@ -1157,14 +1159,6 @@ trefoil = Link.fromData([ -1, -1, -1 ], [[ 1, -2, 3, -1, 2, -3 ]])
 hopf = Link.fromData([ +1, +1 ], [[ 1, -2 ], [ -1, 2 ]])
 ```
 
-.. warning::
-    While this routine does some error checking on the input, it does
-    _not_ test for planarity of the diagram. That is, if the input
-    describes a link diagram that must be drawn on some higher-genus
-    surface as opposed to the plane, this will not be detected. Of
-    course such inputs are not allowed, and it is currently up to the
-    user to enforce this.
-
 Exception ``InvalidArgument``:
     A link could not be reconstructed from the given data.
 
@@ -1197,7 +1191,8 @@ Returns:
 
 // Docstring regina::python::doc::Link_::fromGauss
 static const char *fromGauss =
-R"doc(Creates a new knot from a classical Gauss code, presented as a string.
+R"doc(Creates a new classical knot from a classical Gauss code, presented as
+a string.
 
 Classical Gauss codes essentially describe the 4-valent graph of a
 knot but not the particular embedding in the plane. As a result, there
@@ -1218,8 +1213,9 @@ are used in Regina, as well as their limitations.
 Regina imposes the following restrictions when reconstructing a knot
 from a classical Gauss code:
 
-* This can only be done for knots (i.e., links with exactly one
-  component).
+* This can only be done for _knots_ (i.e., links with exactly one
+  component), and only for _classical_ knots (not the more general
+  virtual knot diagrams).
 
 * The crossings of the knot must be labelled 1, 2, ..., *n* (i.e.,
   they cannot be arbitrary natural numbers with "gaps", and the
@@ -1270,8 +1266,8 @@ Returns:
 
 // Docstring regina::python::doc::Link_::fromGauss_2
 static const char *fromGauss_2 =
-R"doc(Creates a new knot from a classical Gauss code, presented as an
-integer sequence.
+R"doc(Creates a new classical knot from a classical Gauss code, presented as
+an integer sequence.
 
 See gauss() for a full description of classical Gauss codes as they
 are used in Regina, and see fromGauss(const std::string&) for a
@@ -1330,7 +1326,8 @@ Returns:
 
 // Docstring regina::python::doc::Link_::fromJenkins
 static const char *fromJenkins =
-R"doc(Creates a new link from Bob Jenkins' format, presented as a string.
+R"doc(Creates a new classical or virtual link from Bob Jenkins' format,
+presented as a string.
 
 Jenkins' format overcomes the limitations of classical Gauss codes by
 encoding all of the data needed to quickly and correctly reconstruct a
@@ -1359,18 +1356,9 @@ In this variant (the string variant), the exact form of the whitespace
 does not matter, and additional whitespace at the beginning or end of
 the string is allowed.
 
-.. warning::
-    While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does _not_ test for
-    planarity of the diagram. That is, if the input describes a link
-    diagram that must be drawn on some higher-genus surface as opposed
-    to the plane, this will not be detected. Of course such inputs are
-    not allowed, and it is currently up to the user to enforce this.
-
 Exception ``InvalidArgument``:
     The given string was not a valid encoding of a link in Jenkins'
-    format. As noted above, the checks performed here are not
-    exhaustive.
+    format.
 
 Parameter ``str``:
     a string describing a link in Jenkins' format, as described above.
@@ -1380,8 +1368,8 @@ Returns:
 
 // Docstring regina::python::doc::Link_::fromJenkins_2
 static const char *fromJenkins_2 =
-R"doc(Creates a new link from Bob Jenkins' format, presented as an integer
-sequence.
+R"doc(Creates a new classical or virtual link from Bob Jenkins' format,
+presented as an integer sequence.
 
 See jenkins() for a full description of Bob Jenkins' format as it is
 used in Regina, and see fromJenkins(const std::string&) for a detailed
@@ -1397,18 +1385,9 @@ Precondition:
     iterator produces a native C++ integer. (The specific native C++
     integer type being used will be deduced from the type *Iterator*.)
 
-.. warning::
-    While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does _not_ test for
-    planarity of the diagram. That is, if the input describes a link
-    diagram that must be drawn on some higher-genus surface as opposed
-    to the plane, this will not be detected. Of course such inputs are
-    not allowed, and it is currently up to the user to enforce this.
-
 Exception ``InvalidArgument``:
     The given sequence was not a valid encoding of a link in Jenkins'
-    format. As noted above, the checks performed here are not
-    exhaustive.
+    format.
 
 Python:
     Instead of a pair of begin and past-the-end iterators, this
@@ -1427,8 +1406,8 @@ Returns:
 
 // Docstring regina::python::doc::Link_::fromKnotSig
 static const char *fromKnotSig =
-R"doc(Alias for fromSig(), to recover a link diagram from its knot/link
-signature.
+R"doc(Alias for fromSig(), to recover a classical or virtual link diagram
+from its knot/link signature.
 
 This alias fromKnotSig() has been kept to reflect the fact that, in
 older versions of Regina, these signatures were only available for
@@ -1450,8 +1429,8 @@ Returns:
 
 // Docstring regina::python::doc::Link_::fromOrientedGauss
 static const char *fromOrientedGauss =
-R"doc(Creates a new knot from an "oriented" variant of the Gauss code,
-presented as string.
+R"doc(Creates a new classical or virtual knot from an "oriented" variant of
+the Gauss code, presented as string.
 
 Oriented gauss codes overcome the limitations of classical Gauss codes
 by encoding all of the data needed to quickly and correctly
@@ -1492,17 +1471,8 @@ In this variant (the string variant), the exact form of the whitespace
 does not matter, and additional whitespace at the beginning or end of
 the string is allowed.
 
-.. warning::
-    While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does _not_ test for
-    planarity of the diagram. That is, if the input describes a knot
-    diagram that must be drawn on some higher-genus surface as opposed
-    to the plane, this will not be detected. Of course such inputs are
-    not allowed, and it is currently up to the user to enforce this.
-
 Exception ``InvalidArgument``:
     The given string was not a valid oriented Gauss code for a knot.
-    As noted above, the checks performed here are not exhaustive.
 
 Parameter ``str``:
     an "oriented" Gauss code for a knot, as described above.
@@ -1512,8 +1482,8 @@ Returns:
 
 // Docstring regina::python::doc::Link_::fromOrientedGauss_2
 static const char *fromOrientedGauss_2 =
-R"doc(Creates a new knot from an "oriented" variant of the Gauss code,
-presented as a sequence of string tokens.
+R"doc(Creates a new classical or virtual knot from an "oriented" variant of
+the Gauss code, presented as a sequence of string tokens.
 
 See orientedGauss() for a full description of oriented Gauss codes as
 they are used in Regina, and see fromOrientedGauss(const std::string&)
@@ -1547,17 +1517,8 @@ Precondition:
     (which can be cast to ``const char*``) or a C++-style string
     (which can be cast to ``const std::string&``).
 
-.. warning::
-    While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does _not_ test for
-    planarity of the diagram. That is, if the input describes a knot
-    diagram that must be drawn on some higher-genus surface as opposed
-    to the plane, this will not be detected. Of course such inputs are
-    not allowed, and it is currently up to the user to enforce this.
-
 Exception ``InvalidArgument``:
     The given sequence was not a valid oriented Gauss code for a knot.
-    As noted above, the checks performed here are not exhaustive.
 
 Python:
     Instead of a pair of begin and past-the-end iterators, this
@@ -1741,8 +1702,8 @@ Returns:
 
 // Docstring regina::python::doc::Link_::fromSig
 static const char *fromSig =
-R"doc(Recovers a link diagram from its knot/link signature. See sig() for
-more information on these signatures.
+R"doc(Recovers a classical or virtual link diagram from its knot/link
+signature. See sig() for more information on these signatures.
 
 Calling sig() followed by fromSig() is not guaranteed to produce an
 _identical_ knot diagram to the original, but it is guaranteed to
@@ -2002,20 +1963,18 @@ Returns:
 
 // Docstring regina::python::doc::Link_::hasR2_3
 static const char *hasR2_3 =
-R"doc(Determines whether it is possible to perform a type II Reidemeister
-move at the given location to add two new crossings.
+R"doc(Determines whether it is possible to perform a classical type II
+Reidemeister move at the given location to add two new crossings.
 
-For more detail on type II moves and when they can be performed, see
-r2(StrandRef, int, StrandRef, int).
+For more detail on classical type II moves and when they can be
+performed, see r2(StrandRef, int, StrandRef, int).
 
 Precondition:
     Each of the given strand references is either a null reference, or
     else refers to some strand of some crossing in this link.
 
 .. warning::
-    The check for this move is expensive (linear time), since it
-    includes testing whether both sides-of-arcs belong to the same
-    2-cell of the knot diagram.
+    The check for this move is expensive (linear time).
 
 Parameter ``upperArc``:
     identifies which arc of the link would be passed over another in
@@ -3473,11 +3432,18 @@ Returns:
 
 // Docstring regina::python::doc::Link_::r2_3
 static const char *r2_3 =
-R"doc(If possible, performs a type II Reidemeister move to add two new
-crossings at the given location. If such a move is not allowed, then
-this routine does nothing.
+R"doc(If possible, performs a classical type II Reidemeister move to add two
+new crossings at the given location. If such a move is not allowed,
+then this routine does nothing.
 
 This link diagram will be changed directly.
+
+By a _classical_ type II move, we mean that the move can be performed
+without adding a handle to the surface *S* in which the link diagram
+is embedded. That is: the two "sides of strands" that will be passed
+over one another either belong to different connected components of
+the link diagram, or else both bound the same 2-cell in the dual cell
+decomposition of *S*.
 
 The location of this move is specified by the arguments *upperArc*,
 *upperSide*, *lowerArc* and *lowerSide*. Specifically, this move
@@ -3515,12 +3481,10 @@ Precondition:
     else refers to some strand of some crossing in this link.
 
 .. warning::
-    The check for this move is expensive (linear time), since it
-    includes testing whether both sides-of-arcs belong to the same
-    2-cell of the knot diagram. If you are certain that the move is
-    legal, and you wish to circumvent this check, C++ users can call
-    the variant of this function that takes an extra Unprotected
-    argument.
+    The check for this move is expensive (linear time). If you are
+    certain that the move is legal and you wish to circumvent this
+    check, C++ users can call the variant of this function that takes
+    an extra Unprotected argument.
 
 Parameter ``upperArc``:
     identifies the arc of the link which will be passed over the
@@ -3634,11 +3598,11 @@ Returns:
 
 // Docstring regina::python::doc::Link_::r2_6
 static const char *r2_6 =
-R"doc(Deprecated routine that tests for and optionally performs a type II
-Reidemeister move to add two new crossings.
+R"doc(Deprecated routine that tests for and optionally performs a classical
+type II Reidemeister move to add two new crossings.
 
-For more detail on type II moves and when they can be performed, see
-r2(StrandRef, int, StrandRef, int).
+For more detail on classical type II moves and when they can be
+performed, see r2(StrandRef, int, StrandRef, int).
 
 This routine will always _check_ whether the requested move is
 allowed. If it is, and if the argument *perform* is ``True``, this
@@ -3654,9 +3618,7 @@ Precondition:
     else refers to some strand of some crossing in this link.
 
 .. warning::
-    The check for this move is expensive (linear time), since it
-    includes testing whether both sides-of-arcs belong to the same
-    2-cell of the knot diagram.
+    The check for this move is expensive (linear time).
 
 Parameter ``upperArc``:
     identifies which arc of the link would be passed over another in
@@ -4654,23 +4616,22 @@ Returns:
 
 // Docstring regina::python::doc::Link_::withR2_3
 static const char *withR2_3 =
-R"doc(If possible, returns the diagram obtained by performing a type II
-Reidemeister move at the given location to add two new crossings. If
-such a move is not allowed, then this routine returns no value.
+R"doc(If possible, returns the diagram obtained by performing a classical
+type II Reidemeister move at the given location to add two new
+crossings. If such a move is not allowed, then this routine returns no
+value.
 
 This link diagram will not be changed.
 
-For more detail on type II moves and when they can be performed, see
-r2(StrandRef, int, StrandRef, int).
+For more detail on classical type II moves and when they can be
+performed, see r2(StrandRef, int, StrandRef, int).
 
 Precondition:
     Each of the given strand references is either a null reference, or
     else refers to some strand of some crossing in this link.
 
 .. warning::
-    The check for this move is expensive (linear time), since it
-    includes testing whether both sides-of-arcs belong to the same
-    2-cell of the knot diagram.
+    The check for this move is expensive (linear time).
 
 Parameter ``upperArc``:
     identifies which arc of the link will be passed over another. See

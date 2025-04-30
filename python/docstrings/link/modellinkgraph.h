@@ -1255,23 +1255,22 @@ these can be generated efficiently using Regina).
 
 This routine will, up to canonical relabelling, generate all local
 embeddings of the given graph into a closed orientable surface (i.e.,
-all ModelLinkGraph objects corresponding to the input graph).
+all ModelLinkGraph objects corresponding to the input graph), each
+exactly once.
 
 The graphs that are generated will be labelled canonically as
 described by canonical(). In particular, the argument
 *allowReflection* will be passed through to canonical().
 
-This routine is a work in progress. Currently it is _very_
-inefficient, and moreover it may generate the same graph many times
-over (so typically the output list would need to be sorted and
-stripped, or put into a set or map). This is something that will be
-improved over time if/when it becomes important to do so.
+This routine is a work in progress. Currently it is _very_ inefficient
+and memory-hungry; the algorithm will be improved over time if/when it
+becomes important to do so.
 
 If *allowReflection* is ``False``, then if we run all possible facet
-pairings through this routine and strip out duplicate outputs, the
-combined results should be precisely those graphs described by OEIS
-sequence A292206. If *allowReflection* is ``True``, then (once we
-reach three nodes or more) the output set should be smaller.
+pairings through this routine, the combined results should be
+precisely those graphs described by OEIS sequence A292206. If
+*allowReflection* is ``True``, then (once we reach three nodes or
+more) the output set should be smaller.
 
 For each graph that is generated, this routine will call *action*
 (which must be a function or some other callable object).

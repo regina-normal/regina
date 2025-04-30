@@ -4601,8 +4601,8 @@ class Link :
         void insertTorusLink(int p, int q, bool positive = true);
 
         /**
-         * Creates a link from hard-coded information about its crossings
-         * and components.
+         * Creates a new classical or virtual link from hard-coded information
+         * about its crossings and components.
          *
          * This routine takes a series of C++ initialiser lists
          * (each a list of integers), which makes it useful for creating
@@ -4638,13 +4638,6 @@ class Link :
          * hopf = Link::fromData({ +1, +1 }, { 1, -2 }, { -1, 2 });
          * \endcode
          *
-         * \warning While this routine does some error checking on the
-         * input, it does _not_ test for planarity of the diagram.
-         * That is, if the input describes a link diagram that must be
-         * drawn on some higher-genus surface as opposed to the plane,
-         * this will not be detected.  Of course such inputs are not
-         * allowed, and it is currently up to the user to enforce this.
-         *
          * \note If you have an existing link that you would like to
          * hard-code, the routine source() will output source code that
          * reconstructs the link by calling this routine.
@@ -4667,8 +4660,8 @@ class Link :
             std::initializer_list<Args>... components);
 
         /**
-         * Creates a new link from information about its crossings and
-         * components.
+         * Creates a new classical or virtual link from information about its
+         * crossings and components.
          *
          * This routine is an analogue to the variant of fromData() that
          * takes C++ initialiser lists; however, here the input data may be
@@ -4711,13 +4704,6 @@ class Link :
          * hopf = Link.fromData([ +1, +1 ], [[ 1, -2 ], [ -1, 2 ]])
          * \endcode
          *
-         * \warning While this routine does some error checking on the
-         * input, it does _not_ test for planarity of the diagram.
-         * That is, if the input describes a link diagram that must be
-         * drawn on some higher-genus surface as opposed to the plane,
-         * this will not be detected.  Of course such inputs are not
-         * allowed, and it is currently up to the user to enforce this.
-         *
          * \exception InvalidArgument A link could not be reconstructed from
          * the given data.
          *
@@ -4743,8 +4729,8 @@ class Link :
             ComponentIterator beginComponents, ComponentIterator endComponents);
 
         /**
-         * Recovers a link diagram from its knot/link signature.
-         * See sig() for more information on these signatures.
+         * Recovers a classical or virtual link diagram from its knot/link
+         * signature.  See sig() for more information on these signatures.
          *
          * Calling sig() followed by fromSig() is not guaranteed to
          * produce an _identical_ knot diagram to the original, but it is
@@ -4763,8 +4749,8 @@ class Link :
         static Link fromSig(const std::string& sig);
 
         /**
-         * Alias for fromSig(), to recover a link diagram from its
-         * knot/link signature.
+         * Alias for fromSig(), to recover a classical or virtual link diagram
+         * from its knot/link signature.
          *
          * This alias fromKnotSig() has been kept to reflect the fact that, in
          * older versions of Regina, these signatures were only available for
@@ -4784,8 +4770,8 @@ class Link :
         static Link fromKnotSig(const std::string& sig);
 
         /**
-         * Reconstructs a link from its given tight encoding.
-         * See the page on \ref tight "tight encodings" for details.
+         * Reconstructs a classical or virtual link from its given tight
+         * encoding.  See the page on \ref tight "tight encodings" for details.
          *
          * The tight encoding will be read from the given input stream.
          * If the input stream contains leading whitespace then it will be
@@ -4808,8 +4794,8 @@ class Link :
         static Link tightDecode(std::istream& input);
 
         /**
-         * Creates a new knot from a classical Gauss code, presented as
-         * a string.
+         * Creates a new classical knot from a classical Gauss code, presented
+         * as a string.
          *
          * Classical Gauss codes essentially describe the 4-valent graph
          * of a knot but not the particular embedding in the plane.  As
@@ -4831,8 +4817,9 @@ class Link :
          * Regina imposes the following restrictions when reconstructing
          * a knot from a classical Gauss code:
          *
-         * - This can only be done for knots (i.e., links with exactly one
-         *   component).
+         * - This can only be done for _knots_ (i.e., links with exactly one
+         *   component), and only for _classical_ knots (not the more general
+         *   virtual knot diagrams).
          *
          * - The crossings of the knot must be labelled 1, 2, ..., \a n
          *   (i.e., they cannot be arbitrary natural numbers with "gaps",
@@ -4879,8 +4866,8 @@ class Link :
         static Link fromGauss(const std::string& str);
 
         /**
-         * Creates a new knot from a classical Gauss code, presented as
-         * an integer sequence.
+         * Creates a new classical knot from a classical Gauss code, presented
+         * as an integer sequence.
          *
          * See gauss() for a full description of classical Gauss codes as
          * they are used in Regina, and see fromGauss(const std::string&)
@@ -4932,8 +4919,8 @@ class Link :
         static Link fromGauss(Iterator begin, Iterator end);
 
         /**
-         * Creates a new knot from an "oriented" variant of the Gauss code,
-         * presented as string.
+         * Creates a new classical or virtual knot from an "oriented" variant
+         * of the Gauss code, presented as string.
          *
          * Oriented gauss codes overcome the limitations of classical Gauss
          * codes by encoding all of the data needed to quickly and correctly
@@ -4974,17 +4961,8 @@ class Link :
          * whitespace does not matter, and additional whitespace at the
          * beginning or end of the string is allowed.
          *
-         * \warning While this routine does some error checking on the
-         * input, these checks are not exhaustive.  In particular,
-         * it does _not_ test for planarity of the diagram.
-         * That is, if the input describes a knot diagram that must be
-         * drawn on some higher-genus surface as opposed to the plane,
-         * this will not be detected.  Of course such inputs are not
-         * allowed, and it is currently up to the user to enforce this.
-         *
          * \exception InvalidArgument The given string was not a valid
-         * oriented Gauss code for a knot.  As noted above, the checks
-         * performed here are not exhaustive.
+         * oriented Gauss code for a knot.
          *
          * \param str an "oriented" Gauss code for a knot, as described above.
          * \return the reconstructed knot.
@@ -4992,8 +4970,8 @@ class Link :
         static Link fromOrientedGauss(const std::string& str);
 
         /**
-         * Creates a new knot from an "oriented" variant of the Gauss code,
-         * presented as a sequence of string tokens.
+         * Creates a new classical or virtual knot from an "oriented" variant
+         * of the Gauss code, presented as a sequence of string tokens.
          *
          * See orientedGauss() for a full description of oriented Gauss codes
          * as they are used in Regina, and see
@@ -5025,17 +5003,8 @@ class Link :
          * C-style string (which can be cast to `const char*`) or a
          * C++-style string (which can be cast to `const std::string&`).
          *
-         * \warning While this routine does some error checking on the
-         * input, these checks are not exhaustive.  In particular,
-         * it does _not_ test for planarity of the diagram.
-         * That is, if the input describes a knot diagram that must be
-         * drawn on some higher-genus surface as opposed to the plane,
-         * this will not be detected.  Of course such inputs are not
-         * allowed, and it is currently up to the user to enforce this.
-         *
          * \exception InvalidArgument The given sequence was not a valid
-         * oriented Gauss code for a knot.  As noted above, the checks
-         * performed here are not exhaustive.
+         * oriented Gauss code for a knot.
          *
          * \python Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of strings.
@@ -5050,7 +5019,8 @@ class Link :
         static Link fromOrientedGauss(Iterator begin, Iterator end);
 
         /**
-         * Creates a new link from Bob Jenkins' format, presented as a string.
+         * Creates a new classical or virtual link from Bob Jenkins' format,
+         * presented as a string.
          *
          * Jenkins' format overcomes the limitations of classical Gauss
          * codes by encoding all of the data needed to quickly and correctly
@@ -5079,17 +5049,8 @@ class Link :
          * whitespace does not matter, and additional whitespace at the
          * beginning or end of the string is allowed.
          *
-         * \warning While this routine does some error checking on the
-         * input, these checks are not exhaustive.  In particular,
-         * it does _not_ test for planarity of the diagram.
-         * That is, if the input describes a link diagram that must be
-         * drawn on some higher-genus surface as opposed to the plane,
-         * this will not be detected.  Of course such inputs are not
-         * allowed, and it is currently up to the user to enforce this.
-         *
          * \exception InvalidArgument The given string was not a valid
-         * encoding of a link in Jenkins' format.  As noted above, the
-         * checks performed here are not exhaustive.
+         * encoding of a link in Jenkins' format.
          *
          * \param str a string describing a link in Jenkins' format,
          * as described above.
@@ -5098,8 +5059,8 @@ class Link :
         static Link fromJenkins(const std::string& str);
 
         /**
-         * Creates a new link from Bob Jenkins' format, read directly
-         * from an input stream.
+         * Creates a new classical or virtual link from Bob Jenkins' format,
+         * read directly from an input stream.
          *
          * See jenkins() for a full description of Bob Jenkins' format as
          * it is used in Regina, and see fromJenkins(const std::string&)
@@ -5116,17 +5077,8 @@ class Link :
          * This means that the stream may contain additional material,
          * which can be read by the user after this routine has finished.
          *
-         * \warning While this routine does some error checking on the
-         * input, these checks are not exhaustive.  In particular,
-         * it does _not_ test for planarity of the diagram.
-         * That is, if the input describes a link diagram that must be
-         * drawn on some higher-genus surface as opposed to the plane,
-         * this will not be detected.  Of course such inputs are not
-         * allowed, and it is currently up to the user to enforce this.
-         *
          * \exception InvalidArgument The given input was not a valid
-         * encoding of a link in Jenkins' format.  As noted above, the
-         * checks performed here are not exhaustive.
+         * encoding of a link in Jenkins' format.
          *
          * \nopython Instead use the variant fromJenkins(const std::string&),
          * which takes the input as a string.
@@ -5138,8 +5090,8 @@ class Link :
         static Link fromJenkins(std::istream& in);
 
         /**
-         * Creates a new link from Bob Jenkins' format, presented as an
-         * integer sequence.
+         * Creates a new classical or virtual link from Bob Jenkins' format,
+         * presented as an integer sequence.
          *
          * See jenkins() for a full description of Bob Jenkins' format as
          * it is used in Regina, and see fromJenkins(const std::string&)
@@ -5156,17 +5108,8 @@ class Link :
          * (The specific native C++ integer type being used will be deduced
          * from the type \a Iterator.)
          *
-         * \warning While this routine does some error checking on the
-         * input, these checks are not exhaustive.  In particular,
-         * it does _not_ test for planarity of the diagram.
-         * That is, if the input describes a link diagram that must be
-         * drawn on some higher-genus surface as opposed to the plane,
-         * this will not be detected.  Of course such inputs are not
-         * allowed, and it is currently up to the user to enforce this.
-         *
          * \exception InvalidArgument The given sequence was not a valid
-         * encoding of a link in Jenkins' format.  As noted above, the
-         * checks performed here are not exhaustive.
+         * encoding of a link in Jenkins' format.
          *
          * \python Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of integers.
@@ -5181,7 +5124,7 @@ class Link :
         static Link fromJenkins(Iterator begin, Iterator end);
 
         /**
-         * Creates a new knot from either alphabetical or numerical
+         * Creates a new classical knot from either alphabetical or numerical
          * Dowker-Thistlethwaite notation, presented as a string.
          *
          * Dowker-Thistlethwaite notation essentially describes the 4-valent
@@ -5204,6 +5147,9 @@ class Link :
          *
          * See dt(bool) for a full description of Dowker-Thistlethwaite
          * notation as it is used in Regina, as well as its limitations.
+         * In particular, be aware that Regina can only work with
+         * Dowker-Thistlethwaite codes for _classical_ knots, not the more
+         * general virtual knot diagrams).
          *
          * There are two variants of this routine.  This variant takes a single
          * string, which is either (i) the alphabetical notation, in which any
@@ -5248,8 +5194,8 @@ class Link :
         static Link fromDT(const std::string& str);
 
         /**
-         * Creates a new knot from numerical Dowker-Thistlethwaite notation,
-         * presented as an integer sequence.
+         * Creates a new classical knot from numerical Dowker-Thistlethwaite
+         * notation, presented as an integer sequence.
          *
          * See dt(bool) for a full description of Dowker-Thistlethwaite
          * notation as it is used in Regina, and see fromDT(const std::string&)
