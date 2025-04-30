@@ -1295,8 +1295,8 @@ For each graph that is generated, this routine will call *action*
     to your code.
 
 Precondition:
-    The given facet pairing is connected, and is closed (i.e., has no
-    unmatched facets).
+    The given facet pairing is connected, and is also closed (i.e.,
+    has no unmatched facets).
 
 Python:
     This function is available in Python, and the *action* argument
@@ -1304,6 +1304,9 @@ Python:
     restricted: the argument *args* is removed, so you simply call it
     as ``generateAllEmbeddings(pairing, allowReflection, action)``.
     Moreover, *action* must take exactly one argument (the graph).
+
+Exception ``InvalidArgument``:
+    The given pairing is disconnected and/or has unmatched facets.
 
 Parameter ``pairing``:
     the 4-valent graph for which we wish to produce local embeddings.

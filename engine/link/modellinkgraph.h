@@ -1321,8 +1321,8 @@ class ModelLinkGraph :
          *
          * \apinotfinal
          *
-         * \pre The given facet pairing is connected, closed (i.e., has no
-         * unmatched facets), and has no more than 52 simplices.
+         * \pre The given facet pairing is connected, and is also closed
+         * (i.e., has no unmatched facets).
          *
          * \python This function is available in Python, and the \a action
          * argument may be a pure Python function.  However, its form is more
@@ -1330,8 +1330,8 @@ class ModelLinkGraph :
          * as `generateAllEmbeddings(pairing, allowReflection, action)`.
          * Moreover, \a action must take exactly one argument (the graph).
          *
-         * \exception InvalidArgument The given pairing is disconnected, has
-         * unmatched facets, and/or has more than 52 simplices.
+         * \exception InvalidArgument The given pairing is disconnected and/or
+         * has unmatched facets.
          *
          * \param pairing the 4-valent graph for which we wish to produce
          * local embeddings.

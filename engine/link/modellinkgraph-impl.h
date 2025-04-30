@@ -456,9 +456,6 @@ void ModelLinkGraph::generateAllEmbeddings(const FacetPairing<3>& pairing,
         return;
     }
 
-    if (n > 52)
-        throw InvalidArgument("generateAllEmbeddings() can only work with "
-            "facet pairings with ≤ 52 simplices");
     if (! pairing.isConnected())
         throw InvalidArgument("generateAllEmbeddings() can only work with "
             "connected facet pairings");
