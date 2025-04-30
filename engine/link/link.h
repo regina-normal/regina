@@ -2556,13 +2556,16 @@ class Link :
          * This routine will iterate through all link diagrams that can be
          * reached from this via Reidemeister moves, without ever exceeding
          * \a height additional crossings beyond the original number.
+         * (If this link diagram is disconnected, then there is an exception:
+         * this routine will never use a type II move to merge distinct
+         * diagram components together, which would never help with
+         * simplification).
          *
-         * If at any stage it finds a diagram with _fewer_
-         * crossings than the original, then this routine will call
-         * simplify() to simplify the diagram further if
-         * possible and will then return \c true.  If it cannot find a
-         * diagram with fewer crossings then it will leave this
-         * link diagram unchanged and return \c false.
+         * If at any stage this routine finds a diagram with _fewer_ crossings
+         * than the original, then it will call simplify() to simplify the
+         * diagram further if possible and will then return \c true.
+         * If it cannot find a diagram with fewer crossings then it will leave
+         * this link diagram unchanged and return \c false.
          *
          * This routine can be very slow and very memory-intensive: the
          * number of link diagrams it visits may be exponential in
@@ -2637,7 +2640,8 @@ class Link :
          * routine will throw an exception (as described below).
          *
          * This routine iterates through all link diagrams that can be reached
-         * from this via Reidemeister moves, without ever exceeding
+         * from this via Reidemeister moves (with an important exception
+         * involving disconnected diagrams), without ever exceeding
          * \a height additional crossings beyond the original number.
          * With the current implementation, these diagrams **could become
          * reflected and/or reversed**, and moreover each diagram will only be
@@ -2680,6 +2684,14 @@ class Link :
          *   (including this starting diagram).  In other words, no
          *   link diagram will be revisited a second time in a single call
          *   to rewrite().
+         *
+         * The exception for disconnected diagrams is this: if this link
+         * diagram has more than one connected component, then this routine
+         * will never use a type II move to merge those components together
+         * (i.e., the diagram will always remain disconnected).  Of course, if
+         * your link diagram is disconnected, then it will be _much_ more
+         * efficient to call diagramComponents() and run rewrite() on each
+         * component independently.
          *
          * This routine can be very slow and very memory-intensive, since the
          * number of link diagrams it visits may be exponential in

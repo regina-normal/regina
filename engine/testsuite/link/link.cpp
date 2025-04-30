@@ -2231,10 +2231,10 @@ TEST_F(LinkTest, rewrite) {
     verifyRewrite(unknot3, 2, 998);
     verifyRewrite(unlink2_0, 0, 1);
     verifyRewrite(unlink2_0, 1, 2);
-    verifyRewrite(unlink2_0, 2, 9);
+    verifyRewrite(unlink2_0, 2, 8); // not 9, because we don't merge components
     verifyRewrite(unlink3_0, 0, 1);
     verifyRewrite(unlink3_0, 1, 2);
-    verifyRewrite(unlink3_0, 2, 9);
+    verifyRewrite(unlink3_0, 2, 8); // not 9, because we don't merge components
     verifyRewrite(figureEight, 0, 1);
     verifyRewrite(figureEight, 1, 8);
     verifyRewrite(figureEight, 2, 137);
