@@ -65,8 +65,7 @@ size_t Link::resolutionLoops(uint64_t mask, size_t* loopIDs,
 
     // found[0..n-1] : seen the half of the upper strand that exits the crossing
     // found[n..2n-1] : seen the half of the upper strand that enters the crossing
-    bool* found = new bool[2 * n];
-    std::fill(found, found + 2 * n, false);
+    FixedArray<bool> found(2 * n, false);
 
     size_t loops = 0;
     size_t len;
@@ -127,7 +126,6 @@ size_t Link::resolutionLoops(uint64_t mask, size_t* loopIDs,
         }
     }
 
-    delete[] found;
     return loops;
 }
 
@@ -140,8 +138,8 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
      * O^k  ->  (-A^2 - A^-2)^(k-1)
      */
 
-    if (components_.size() == 0)
-        return Laurent<Integer>();
+    if (components_.empty())
+        return {};
 
     size_t n = crossings_.size();
     if (n >= 64) {
@@ -162,7 +160,7 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
     // In count[i-1], the coefficient of A^k reflects the number of
     // resolutions with i loops and multiplier A^k.
     // We will always have 1 <= i <= #components + #crossings.
-    auto* count = new Laurent<Integer>[n + components_.size()];
+    FixedArray<Laurent<Integer>> count(n + components_.size());
 
     size_t maxLoops = 0;
 
@@ -199,8 +197,7 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
     }
 
     if (tracker && tracker->isCancelled()) {
-        delete[] count;
-        return Laurent<Integer>();
+        return {};
     }
 
     Laurent<Integer> ans;
@@ -221,7 +218,6 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
         loopPow *= loopPoly;
     }
 
-    delete[] count;
     return ans;
 }
 

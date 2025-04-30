@@ -920,6 +920,12 @@ static void verifyJones(const TestCase& test,
         EXPECT_EQ(Link(test.link, false).jones(Algorithm::Naive), expected);
 }
 
+static void verifyJonesConsistent(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+    EXPECT_EQ(Link(link, false).jones(Algorithm::Treewidth),
+        Link(link, false).jones(Algorithm::Naive));
+}
+
 TEST_F(LinkTest, jones) {
     verifyJones(empty, {});
 
@@ -962,8 +968,8 @@ TEST_F(LinkTest, jones) {
     verifyJones(trefoil_unknot1, {1, {-1,0,-1,0,-1,0,0,0,1}});
     verifyJones(trefoil_unknot_overlap, {1, {-1,0,-1,0,-1,0,0,0,1}});
 
-    // This polynomial was computed using Regina 7.4 (and verified using all
-    // three algorithms).
+    // This polynomial was computed using Regina 7.4 (and verified using
+    // both algorithms).
     verifyJones(adams6_28, {-3, {-1,0,2,0,-2,0,2,0,-3,0,1,0,-1}});
 
     verifyJones(virtualTrefoil, {2, {1,1,0,-1}});
@@ -971,6 +977,10 @@ TEST_F(LinkTest, jones) {
     verifyJones(gpv, {-10, {1,0,-2,-2,1,2,1}});
     verifyJones(virtualLink2, {1, {-1,-1}});
     verifyJones(virtualLink3, {2, {1,2,1}});
+
+    // Run through a small census and ensure that both algorithms give
+    // the same Jones polynomial in both cases.
+    runCensusAllVirtual(verifyJonesConsistent);
 }
 
 static void verifyHomflyAZ(const TestCase& test,
