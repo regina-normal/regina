@@ -2991,6 +2991,9 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
     if (size() > (INT_MAX >> 1))
         throw NotImplemented("This link has so many crossings that "
             "the largest strand ID cannot fit into a native C++ int");
+    if (! isClassical())
+        throw FailedPrecondition("Regina can only compute HOMFLY-PT "
+            "polynomials for classical links, not virtual links");
 
     Laurent2<Integer> ans;
     switch (alg) {

@@ -3196,12 +3196,12 @@ class Link :
         Link parallel(int k, Framing framing = Framing::Seifert) const;
 
         /**
-         * Returns the Alexander polynomial of this knot.
+         * Returns the Alexander polynomial of this classical knot.
          *
          * At present, Regina only computes Alexander polynomials for classical
          * knots, not multiple-component links or virtual knots.  If this link
-         * is empty, has more than one component or is virtual, then this
-         * routine will throw an exception.
+         * is empty, has more than one component, or uses a virtual diagram,
+         * then this routine will throw an exception.
          *
          * To pretty-print the Alexander polynomial for human consumption, you
          * can call `Polynomial::str(Link::alexanderVar)`.
@@ -3232,9 +3232,10 @@ class Link :
          * If this property is already known, future calls to alexander() will
          * be very fast (simply returning the precalculated value).
          *
-         * At present, Regina only computes Alexander polynomials for knots.
-         * If this link is empty or has multiple components, this routine is
-         * safe to call, and will simply return \c false.
+         * At present, Regina only computes Alexander polynomials for classical
+         * knots.  If this link is empty, has multiple components, or uses a
+         * virtual diagram, then this routine is still safe to call, and will
+         * simply return \c false.
          *
          * \return \c true if and only if this property is already known.
          */
@@ -3399,8 +3400,12 @@ class Link :
         bool knowsJones() const;
 
         /**
-         * Returns the HOMFLY polynomial of this link, as a polynomial
+         * Returns the HOMFLY polynomial of this classical link, as a polynomial
          * in \a alpha and \a z.
+         *
+         * At present, Regina only computes HOMFLY polynomials for classical
+         * links.  If this is a virtual link diagram, then this routine will
+         * throw an exception.
          *
          * This variant of the HOMFLY polynomial is described (amongst other
          * places) in G. Gouesbet et al., "Computer evaluation of Homfly
@@ -3447,6 +3452,9 @@ class Link :
          * tracker caused the computation to start in the background), simply
          * call this routine in a new detached thread.
          *
+         * \exception FailedPrecondition This is a virtual (not classical)
+         * link diagram.
+         *
          * \exception NotImplemented This link is \e so large that the maximum
          * possible strand ID cannot fit into an \c int.  (On a typical machine
          * where \c int is 32-bit, this would require over a _billion_
@@ -3471,8 +3479,12 @@ class Link :
         const Laurent2<Integer>& homflyAZ(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
-         * Returns the HOMFLY polynomial of this link, as a polynomial
+         * Returns the HOMFLY polynomial of this classical link, as a polynomial
          * in \a l and \a m.
+         *
+         * At present, Regina only computes HOMFLY polynomials for classical
+         * links.  If this is a virtual link diagram, then this routine will
+         * throw an exception.
          *
          * This variant of the HOMFLY polynomial is described (amongst other
          * places) in C. C. Adams, "The knot book", W. H. Freeman & Co., 1994.
@@ -3517,6 +3529,9 @@ class Link :
          * tracker caused the computation to start in the background), simply
          * call this routine in a new detached thread.
          *
+         * \exception FailedPrecondition This is a virtual (not classical)
+         * link diagram.
+         *
          * \exception NotImplemented This link is \e so large that the maximum
          * possible strand ID cannot fit into an \c int.  (On a typical machine
          * where \c int is 32-bit, this would require over a _billion_
@@ -3541,11 +3556,15 @@ class Link :
         const Laurent2<Integer>& homflyLM(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
-         * Returns the HOMFLY polynomial of this link, as a polynomial
+         * Returns the HOMFLY polynomial of this classical link, as a polynomial
          * in \a alpha and \a z.
          *
          * This routine is simply an alias for homflyAZ().  See the
          * documentation for homflyAZ() for further details.
+         *
+         * At present, Regina only computes HOMFLY polynomials for classical
+         * links.  If this is a virtual link diagram, then this routine will
+         * throw an exception.
          *
          * To pretty-print this polynomial for human consumption, you can call
          * `Laurent2::str(Link::homflyVarX, Link::homflyVarY)`.
@@ -3555,6 +3574,9 @@ class Link :
          * returned from this routine should not be kept for later use.
          * Instead, homfly() should be called again; this will be
          * instantaneous if the HOMFLY polynomial has already been calculated.
+         *
+         * \exception FailedPrecondition This is a virtual (not classical)
+         * link diagram.
          *
          * \exception NotImplemented This link is \e so large that the maximum
          * possible strand ID cannot fit into an \c int.  (On a typical machine
@@ -3586,6 +3608,10 @@ class Link :
          * If this property is already known, future calls to homfly(),
          * homflyAZ() and homflyLM() will all be very fast (simply returning
          * the precalculated values).
+         *
+         * At present, Regina only computes HOMFLY polynomials for classical
+         * links.  If this is a virtual (not classical) link diagram, then
+         * this routine is still safe to call, and will simply return \c false.
          *
          * \return \c true if and only if this property is already known.
          */

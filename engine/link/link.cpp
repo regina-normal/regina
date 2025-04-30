@@ -571,10 +571,7 @@ size_t Link::seifertCircles() const {
         return components_.size();
 
     size_t ans = 0;
-
-    auto seen = new bool[crossings_.size() * 2];
-    std::fill(seen, seen + crossings_.size() * 2, false);
-
+    FixedArray<bool> seen(crossings_.size() * 2, false);
     for (size_t i = 0; i < crossings_.size() * 2; ++i)
         if (! seen[i]) {
             // Follow the Seifert circle starting at the strand with this ID.
@@ -588,13 +585,10 @@ size_t Link::seifertCircles() const {
             } while (s != start);
         }
 
-    delete[] seen;
-
     // Finish by adding in any zero-crossing components.
     for (auto c : components_)
         if (! c)
             ++ans;
-
     return ans;
 }
 

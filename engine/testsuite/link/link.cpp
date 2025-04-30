@@ -1095,6 +1095,18 @@ TEST_F(LinkTest, homfly) {
     // TODO: Verify that HOMFLY gives Jones by:
     //   * l = it^-1, m = i(t^-1/2 - t^1/2)
     //   * a = t^-1, z = t^1/2 - t^-1/2
+
+    // Verify that Regina will refuse to work with virtual link diagrams.
+    EXPECT_THROW({ virtualTrefoil.link.homflyAZ(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualTrefoil.link.homflyLM(); }, FailedPrecondition);
+    EXPECT_THROW({ kishino.link.homflyAZ(); }, FailedPrecondition);
+    EXPECT_THROW({ kishino.link.homflyLM(); }, FailedPrecondition);
+    EXPECT_THROW({ gpv.link.homflyAZ(); }, FailedPrecondition);
+    EXPECT_THROW({ gpv.link.homflyLM(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualLink2.link.homflyAZ(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualLink2.link.homflyLM(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualLink3.link.homflyAZ(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualLink3.link.homflyLM(); }, FailedPrecondition);
 }
 
 static void verifyComplementBasic(const Link& link, const char* name) {
