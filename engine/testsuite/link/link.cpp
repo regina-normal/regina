@@ -858,6 +858,12 @@ TEST_F(LinkTest, jones) {
     verifyJones(trefoil_unknot0, {1, {-1,0,-1,0,-1,0,0,0,1}});
     verifyJones(trefoil_unknot1, {1, {-1,0,-1,0,-1,0,0,0,1}});
     verifyJones(trefoil_unknot_overlap, {1, {-1,0,-1,0,-1,0,0,0,1}});
+
+    verifyJones(virtualTrefoil, {2, {1,1,0,-1}});
+    verifyJones(kishino, {0, {1}});
+    verifyJones(gpv, {-10, {1,0,-2,-2,1,2,1}});
+    verifyJones(virtualLink2, {1, {-1,-1}});
+    verifyJones(virtualLink3, {2, {1,2,1}});
 }
 
 static void verifyHomflyAZ(const TestCase& test,
