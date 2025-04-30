@@ -54,7 +54,7 @@ namespace regina {
 // - For more than one connected component:
 //
 //   * Build the sequence for each connected component, with each sequence
-//     treated as a standalong link diagram (so we reuse crossing numbers).
+//     treated as a standalone link diagram (so we reuse crossing numbers).
 //   * Sort these sequences, then concatenate the corresponding signatures.
 //     The ordering (which seems natural for describing a link diagram) is by:
 //     + the number of crossings, descending;
