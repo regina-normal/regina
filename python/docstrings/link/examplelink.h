@@ -93,9 +93,10 @@ knot. This is a knot whose group changes when we switch the upper and
 lower strands at each crossing (a behaviour that is impossible for
 classical knots and links).
 
-Specifically, if we denote this knot *K*, then ``K.group()`` is
-isomorphic to the trefoil group, whereas ``K.rotate().group()`` is
-isomorphic to the unknot group (i.e., the infinite cyclic group).
+Specifically: if we denote this knot *K*, then ``K.group()`` is
+isomorphic to the trefoil group; however, if we call ``K.changeAll()``
+or ``K.rotate()`` then ``K.group()`` becomes isomorphic to the unknot
+group (i.e., the infinite cyclic group).
 
 This is the rotation of virtual knot 4.73 in the Jeremy Green tables
 (where by "rotation" we mean flipping the diagram upside-down so that
@@ -140,11 +141,10 @@ Returns:
 static const char *kishino =
 R"doc(Returns a four-crossing diagram of the Kishino knot. This is a non-
 trivial virtual knot that is the composition of two virtual unknots.
+It is a non-trivial virtual knot; however, it has the same group as
+the unknot, and it has trivial Jones polynomial.
 
-This is the mirror image of virtual knot 4.77 in the Jeremy Green
-tables (where by "mirror image" we mean switching the upper and lower
-strands in each crossing - Green calls this a _vertical_ mirror
-image).
+This is virtual knot 4.55 in the Jeremy Green tables.
 
 Returns:
     the Kishino knot.)doc";

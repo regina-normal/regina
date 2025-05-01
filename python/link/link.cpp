@@ -289,6 +289,8 @@ void addLink(pybind11::module_& m) {
         .def_static("homflyAZtoLM", &Link::homflyAZtoLM, rdoc::homflyAZtoLM)
         .def("group", &Link::group,
             pybind11::arg("simplify") = true, rdoc::group)
+        .def("groups", &Link::groups,
+            pybind11::arg("simplify") = true, rdoc::groups)
         .def("niceTreeDecomposition", &Link::niceTreeDecomposition,
             pybind11::return_value_policy::reference_internal,
                 rdoc::niceTreeDecomposition)

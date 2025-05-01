@@ -34,10 +34,10 @@
 
 namespace regina {
 
-GroupPresentation Link::group(bool simplify) const {
+GroupPresentation Link::internalGroup(bool flip, bool simplify) const {
     if (crossings_.empty()) {
         // This is a zero-crossing unlink.
-        return GroupPresentation(components_.size());
+        return { components_.size() };
     }
 
     // We have a non-zero number of crossings.
@@ -49,12 +49,16 @@ GroupPresentation Link::group(bool simplify) const {
     // link shortly.
     GroupPresentation g(crossings_.size());
 
-    // We will need to number the "over-segments" - coniguous sections
-    // of the knot that consist entirely of over-crossings.
-    // Construct a map from arc IDs to "over-segment" IDs, by traversing
-    // each component one at a time.
-    int* strandToSection = new int[2 * crossings_.size()];
-    int currSegment = 0;
+    // We will need to number the "segments" - contiguous sections of the link
+    // that consist entirely of over-crossings (if flip is false), or entirely
+    // of under-crossings (if flip is true).
+    // Construct a map from arc IDs to segment IDs, by traversing each
+    // component one at a time.
+    FixedArray<size_t> strandToSegment(2 * crossings_.size());
+    size_t currSegment = 0;
+
+    // The kind of strand at which we start a new segment as we traverse.
+    int breakAt = (flip ? 1 : 0);
 
     for (StrandRef comp : components_) {
         if (! comp) {
@@ -63,30 +67,30 @@ GroupPresentation Link::group(bool simplify) const {
             continue;
         }
 
-        // Start our traversal of each component from an under-crossing,
-        // so we are guaranteed that this is the beginning of an over-segment.
+        // Start our traversal of each component at the beginning of a segment.
         StrandRef start = comp;
-        if (start.strand() > 0) {
+        if (start.strand() != breakAt) {
             if (components_.size() == 1) {
-                // Just jump immediately to the under-strand at this crossing.
+                // Just jump immediately to the other strand at this crossing.
                 start.jump();
             } else {
-                // There is no guarantee that the under-strand is part
-                // of the same component.  Instead, walk along the component
-                // until we find an under-strand.
+                // There is no guarantee that the other strand is part of the
+                // same component.  Instead, walk along the component until we
+                // find a viable starting point.
                 StrandRef s = start;
                 do {
                     ++s;
-                } while (s.strand() > 0 && s != start);
+                } while (s.strand() != breakAt && s != start);
 
                 start = s;
 
-                // It is possible that we never found an under-strand.
-                // This happens when the entire component is an unknot
-                // with no self-crossings that is overlaid onto the diagram.
+                // It is possible that we never found a good starting point.
+                // This happens when the entire component is an knot with
+                // no self-crossings that is overlaid above the diagram
+                // (if flip is false) or under the diagram (if flip is true).
                 //
                 // How this affects us now is that the total number of
-                // "over-segments" (i.e., the number of generators in our
+                // segments (i.e., the number of generators in our
                 // group presentation) goes up by one.
                 //
                 // We will adjust this later.
@@ -95,17 +99,17 @@ GroupPresentation Link::group(bool simplify) const {
 
         StrandRef s = start;
         do {
-            strandToSection[s.id()] = currSegment;
+            strandToSegment[s.id()] = currSegment;
             ++s;
-            if (s.strand() == 0) {
-                // We just passed under a crossing.
+            if (s.strand() == breakAt) {
+                // We just passed through a crossing that ended a segment.
                 ++currSegment;
             }
         } while (s != start);
 
-        if (start.strand() > 0) {
+        if (start.strand() != breakAt) {
             // This is the scenario noted above where some component
-            // consists entirely of over-crossings.
+            // consists entirely of a closed segment that never gets broken.
             // We need to make two adjustments:
             //
             // - increment currSegment, since we are about to move to a new
@@ -114,7 +118,7 @@ GroupPresentation Link::group(bool simplify) const {
             //
             // - increment the total number of group generators, since we
             //   based our original count on the number of crossings, which
-            //   only counts those over-segments with start and end points.
+            //   only counts those segments with start and end points.
 
             ++currSegment;
             g.addGenerator();
@@ -124,21 +128,33 @@ GroupPresentation Link::group(bool simplify) const {
     // Now build the presentation.
     for (Crossing* c : crossings_) {
         GroupExpression exp;
-        if (c->sign() > 0) {
-            exp.addTermLast(strandToSection[c->upper().id()], 1);
-            exp.addTermLast(strandToSection[c->lower().id()], 1);
-            exp.addTermLast(strandToSection[c->upper().id()], -1);
-            exp.addTermLast(strandToSection[c->lower().prev().id()], -1);
+        if (flip) {
+            if (c->sign() < 0) {
+                exp.addTermLast(strandToSegment[c->lower().id()], 1);
+                exp.addTermLast(strandToSegment[c->upper().id()], 1);
+                exp.addTermLast(strandToSegment[c->lower().id()], -1);
+                exp.addTermLast(strandToSegment[c->upper().prev().id()], -1);
+            } else {
+                exp.addTermLast(strandToSegment[c->lower().id()], 1);
+                exp.addTermLast(strandToSegment[c->upper().prev().id()], 1);
+                exp.addTermLast(strandToSegment[c->lower().id()], -1);
+                exp.addTermLast(strandToSegment[c->upper().id()], -1);
+            }
         } else {
-            exp.addTermLast(strandToSection[c->upper().id()], 1);
-            exp.addTermLast(strandToSection[c->lower().prev().id()], 1);
-            exp.addTermLast(strandToSection[c->upper().id()], -1);
-            exp.addTermLast(strandToSection[c->lower().id()], -1);
+            if (c->sign() > 0) {
+                exp.addTermLast(strandToSegment[c->upper().id()], 1);
+                exp.addTermLast(strandToSegment[c->lower().id()], 1);
+                exp.addTermLast(strandToSegment[c->upper().id()], -1);
+                exp.addTermLast(strandToSegment[c->lower().prev().id()], -1);
+            } else {
+                exp.addTermLast(strandToSegment[c->upper().id()], 1);
+                exp.addTermLast(strandToSegment[c->lower().prev().id()], 1);
+                exp.addTermLast(strandToSegment[c->upper().id()], -1);
+                exp.addTermLast(strandToSegment[c->lower().id()], -1);
+            }
         }
         g.addRelation(std::move(exp));
     }
-
-    delete[] strandToSection;
 
     if (simplify)
         g.simplify();

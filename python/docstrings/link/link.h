@@ -421,12 +421,12 @@ Parameter ``description``:
 
 // Docstring regina::python::doc::Link_::alexander
 static const char *alexander =
-R"doc(Returns the Alexander polynomial of this knot.
+R"doc(Returns the Alexander polynomial of this classical knot.
 
 At present, Regina only computes Alexander polynomials for classical
 knots, not multiple-component links or virtual knots. If this link is
-empty, has more than one component or is virtual, then this routine
-will throw an exception.
+empty, has more than one component, or uses a virtual diagram, then
+this routine will throw an exception.
 
 To pretty-print the Alexander polynomial for human consumption, you
 can call ``Polynomial::str(Link::alexanderVar)``.
@@ -442,11 +442,12 @@ cached and so this routine will be instantaneous (since it just
 returns the previously computed result).
 
 Precondition:
-    This link is classical (not virtual), and has exactly one
+    This link diagram is classical (not virtual), and has exactly one
     component (i.e., it is a knot).
 
 Exception ``FailedPrecondition``:
-    This link is empty, has multiple components, and/or is virtual.
+    This link is empty, has multiple components, and/or uses a virtual
+    (not classical) link diagram.
 
 Returns:
     the Alexander polynomial of this knot.)doc";
@@ -571,6 +572,7 @@ Parameter ``c``:
 // Docstring regina::python::doc::Link_::changeAll
 static const char *changeAll =
 R"doc(Switches the upper and lower strands of every crossing in the diagram.
+As a result, the sign of every crossing will also change.
 
 This operation corresponds to reflecting the link diagram through the
 surface on which it is drawn.
@@ -1847,31 +1849,98 @@ Returns:
 
 // Docstring regina::python::doc::Link_::group
 static const char *group =
-R"doc(Returns the group of this link; that is, the fundamental group of the
-link exterior.
+R"doc(Returns the group of this link, as constructed from the Wirtinger
+presentation.
 
-This routine builds the Wirtinger presentation, where all relations
-are some variant of the form ``xy=yz``.
+In the Wirtinger presentation, each relation is some variant of the
+form ``xy=yz``, where *y* corresponds to the upper strand at some
+crossing, and *x* and *z* correspond to the two sides of the lower
+strand at that same crossing.
 
-If you pass *simplify* as ``False``, it will leave the presentation in
-exactly this form (i.e., the Wirtinger presentation), and not simplify
-it further. If you pass *simplify* as ``True`` (the default), this
-routine will attempt to simplify the group presentation before
-returning.
+* For classical links, this group will always be isomorphic to the
+  fundamental group of the link exterior.
+
+* For a virtual link whose diagram is embedded in some closed
+  orientable surface *S*, the group _could_ change depending upon
+  which side of *S* you view the diagram from. That is, switching the
+  upper and lower strands at every crossing could yield non-isomorphic
+  groups. As a result, you may wish to call groups() instead, which
+  builds _both_ group presentations. See the groups() documentation
+  for further discussion, or ExampleLink::gpv() for an example of a
+  virtual knot for which these two groups are indeed non-isomorphic.
+
+If you pass *simplify* as ``False``, this routine will keep the
+Wirtinger presentation and not try to simplify it further. If you pass
+*simplify* as ``True`` (the default), this routine will attempt to
+simplify the group presentation before returning.
 
 .. note::
-    If you are finding the resulting group presentation too large for
-    your liking even after simplification, then you could also try
-    calling complement() and computing the fundamental group of the
-    resulting 3-manifold triangulation. Sometimes the presentation
-    obtained via the complement is better, and sometimes it is worse.
+    If you have a classical link and you are finding the resulting
+    group presentation too large even after simplification, you could
+    also try calling complement() and computing the fundamental group
+    of the resulting 3-manifold triangulation instead. Sometimes the
+    presentation obtained via the complement is better, and sometimes
+    it is worse.
 
-Currently this group is _not_ cached; instead it is reconstructed
-every time this function is called. This behaviour may change in
-future versions of Regina.
+This group is _not_ cached; instead it is reconstructed every time
+this function is called. This behaviour may change in future versions
+of Regina.
+
+Parameter ``simplify``:
+    ``True`` if we should attempt to simplify the group presentation
+    before returning.
 
 Returns:
     the group of this link.)doc";
+
+// Docstring regina::python::doc::Link_::groups
+static const char *groups =
+R"doc(Returns the two groups constructed from the Wirtinger presentation for
+this link and its mirror image. This function is intended for use with
+virtual links, where these two groups might not be isomorphic.
+
+As with group(), each Wirtinger presentation builds a group using
+relations of the form `xy=yz`:
+
+* In first group that is returned, *y* corresponds to the upper strand
+  at some crossing, and *x* and *z* correspond to the two sides of the
+  lower strand at that same crossing. This is exactly the same
+  presentation constructed by group().
+
+* In the second group that is returned, we conceptually reflect the
+  link diagram through the surface in which it is embedded (as though
+  we had called changeAll(), though this link diagram will not
+  actually be changed). This means that *y* will correspond to the
+  _lower_ strand at some crossing, and *x* and *z* correspond to the
+  two sides of the _upper_ strand at that same crossing.
+
+For classical links, both groups will always be isomorphic, and so
+there is little value in calling this function; you should just use
+group() instead.
+
+For virtual links, these groups might _not_ be isomorphic, and so this
+pair gives more information than you would obtain by just calling
+group(). See ExampleLink::gpv() for an example of a virtual knot whose
+"native" Wirtinger presentation (the first group) gives the trefoil
+group, but whose "reflected" Wirtinger presentation (the second group)
+gives the unknot group.
+
+If you pass *simplify* as ``False``, this routine will keep both
+Wirtinger presentations and not try to simplify them further. If you
+pass *simplify* as ``True`` (the default), this routine will attempt
+to simplify both group presentations before returning.
+
+These groups are _not_ cached; instead they are reconstructed every
+time this function is called. This behaviour may change in future
+versions of Regina.
+
+Parameter ``simplify``:
+    ``True`` if we should attempt to simplify the group presentations
+    before returning.
+
+Returns:
+    the groups of this link obtained by the "native" and "reflected"
+    Wirtinger presentations, as described above.)doc";
 
 // Docstring regina::python::doc::Link_::hasR1
 static const char *hasR1 =
@@ -2052,20 +2121,29 @@ Returns:
 
 // Docstring regina::python::doc::Link_::hasReducingPass
 static const char *hasReducingPass =
-R"doc(Tests whether this link has a pass move that will reduce the number of
-crossings.
+R"doc(Tests whether this classical link has a pass move that will reduce the
+number of crossings.
 
 A _pass_ move involves taking a section of some link component that
 involves only over-crossings (or only under-crossings), and then
-lifting that section above (or beneath respectively) the diagram and
-placing it back again in a different location. In particular, this
-routine searches for a different location that will involve fewer
-crossings than the original location.
+lifting that section above (or beneath respectively) the plane of the
+diagram and placing it back again in a different location. In
+particular, this routine searches for a different location that will
+involve fewer crossings than the original location.
+
+In Regina, pass moves can only be used with classical links, not the
+more general setting of virtual link diagrams.
 
 This routine does not actually _perform_ the pass move; it simply
 determines whether one exists.
 
 The running time is cubic in the number of crossings.
+
+Precondition:
+    This link diagram is classical (not virtual).
+
+Exception ``FailedPrecondition``:
+    This is a virtual (not classical) link diagram.
 
 Returns:
     ``True`` if and only if there is a pass move that reduces the
@@ -2073,11 +2151,15 @@ Returns:
 
 // Docstring regina::python::doc::Link_::homfly
 static const char *homfly =
-R"doc(Returns the HOMFLY polynomial of this link, as a polynomial in *alpha*
-and *z*.
+R"doc(Returns the HOMFLY-PT polynomial of this classical link, as a
+polynomial in *alpha* and *z*.
 
 This routine is simply an alias for homflyAZ(). See the documentation
 for homflyAZ() for further details.
+
+At present, Regina only computes HOMFLY-PT polynomials for classical
+links. If this is a virtual link diagram, then this routine will throw
+an exception.
 
 To pretty-print this polynomial for human consumption, you can call
 ``Laurent2::str(Link::homflyVarX, Link::homflyVarY)``.
@@ -2085,8 +2167,11 @@ To pretty-print this polynomial for human consumption, you can call
 Bear in mind that each time a link changes, all of its polynomials
 will be deleted. Thus the reference that is returned from this routine
 should not be kept for later use. Instead, homfly() should be called
-again; this will be instantaneous if the HOMFLY polynomial has already
-been calculated.
+again; this will be instantaneous if the HOMFLY-PT polynomial has
+already been calculated.
+
+Exception ``FailedPrecondition``:
+    This is a virtual (not classical) link diagram.
 
 Exception ``NotImplemented``:
     This link is *so* large that the maximum possible strand ID cannot
@@ -2112,20 +2197,24 @@ Parameter ``tracker``:
     ``None`` if no progress reporting is required.
 
 Returns:
-    the HOMFLY polynomial, or the zero polynomial if the calculation
-    was cancelled via the given progress tracker.)doc";
+    the HOMFLY-PT polynomial, or the zero polynomial if the
+    calculation was cancelled via the given progress tracker.)doc";
 
 // Docstring regina::python::doc::Link_::homflyAZ
 static const char *homflyAZ =
-R"doc(Returns the HOMFLY polynomial of this link, as a polynomial in *alpha*
-and *z*.
+R"doc(Returns the HOMFLY-PT polynomial of this classical link, as a
+polynomial in *alpha* and *z*.
 
-This variant of the HOMFLY polynomial is described (amongst other
+At present, Regina only computes HOMFLY-PT polynomials for classical
+links. If this is a virtual link diagram, then this routine will throw
+an exception.
+
+This variant of the HOMFLY-PT polynomial is described (amongst other
 places) in G. Gouesbet et al., "Computer evaluation of Homfly
 polynomials by using Gauss codes, with a skein-template algorithm",
 Applied Mathematics and Computation 105 (1999), 271-289.
 
-The (*alpha*, *z*) and (*l*, *m*) variants of the HOMFLY polynomial
+The (*alpha*, *z*) and (*l*, *m*) variants of the HOMFLY-PT polynomial
 are related by a simple transformation: *alpha* = *l* *i* and *z* =
 -*m* *i*, where *i* represents (as usual) a square root of -1.
 
@@ -2149,12 +2238,12 @@ Applied Mathematics and Computation 105 (1999), 271-289.
 Bear in mind that each time a link changes, all of its polynomials
 will be deleted. Thus the reference that is returned from this routine
 should not be kept for later use. Instead, homflyAZ() should be called
-again; this will be instantaneous if the HOMFLY polynomial has already
-been calculated.
+again; this will be instantaneous if the HOMFLY-PT polynomial has
+already been calculated.
 
-If the HOMFLY polynomial has already been computed (either in terms of
-*alpha* and *z* or in terms of *l* and *m*), then the result will be
-cached and so this routine will be very fast (since it just returns
+If the HOMFLY-PT polynomial has already been computed (either in terms
+of *alpha* and *z* or in terms of *l* and *m*), then the result will
+be cached and so this routine will be very fast (since it just returns
 the previously computed result). Otherwise the computation could be
 quite slow, particularly for larger numbers of crossings.
 
@@ -2163,6 +2252,9 @@ computation is complete, regardless of whether a progress tracker was
 passed. If you need the old behaviour (where passing a progress
 tracker caused the computation to start in the background), simply
 call this routine in a new detached thread.
+
+Exception ``FailedPrecondition``:
+    This is a virtual (not classical) link diagram.
 
 Exception ``NotImplemented``:
     This link is *so* large that the maximum possible strand ID cannot
@@ -2188,13 +2280,13 @@ Parameter ``tracker``:
     ``None`` if no progress reporting is required.
 
 Returns:
-    the HOMFLY polynomial, or the zero polynomial if the calculation
-    was cancelled via the given progress tracker.)doc";
+    the HOMFLY-PT polynomial, or the zero polynomial if the
+    calculation was cancelled via the given progress tracker.)doc";
 
 // Docstring regina::python::doc::Link_::homflyAZtoLM
 static const char *homflyAZtoLM =
 R"doc(Converts between the (*alpha*, *z*) and (*l*, *m*) representations of
-the HOMFLY polynomial.
+the HOMFLY-PT polynomial.
 
 The (*alpha*, *z*) and (*l*, *m*) variants are related by a simple
 transformation: *alpha* = *l* *i* and *z* = -*m* *i*, where *i*
@@ -2203,24 +2295,28 @@ represents (as usual) a square root of -1.
 See homflyAZ() and homflyLM() for further details.
 
 Parameter ``homflyAZ``:
-    the HOMFLY polynomial of a link as a polynomial in *alpha* and
+    the HOMFLY-PT polynomial of a link as a polynomial in *alpha* and
     *z*, where (*alpha*, *z*) are represented by (*x*, *y*) in the
     class Laurent2<Integer>.
 
 Returns:
-    the HOMFLY polynomial of the same link as a polynomial in *l* and
-    *m*, where (*l*, *m*) are represented by (*x*, *y*) in the class
-    Laurent2<Integer>.)doc";
+    the HOMFLY-PT polynomial of the same link as a polynomial in *l*
+    and *m*, where (*l*, *m*) are represented by (*x*, *y*) in the
+    class Laurent2<Integer>.)doc";
 
 // Docstring regina::python::doc::Link_::homflyLM
 static const char *homflyLM =
-R"doc(Returns the HOMFLY polynomial of this link, as a polynomial in *l* and
-*m*.
+R"doc(Returns the HOMFLY-PT polynomial of this classical link, as a
+polynomial in *l* and *m*.
 
-This variant of the HOMFLY polynomial is described (amongst other
+At present, Regina only computes HOMFLY-PT polynomials for classical
+links. If this is a virtual link diagram, then this routine will throw
+an exception.
+
+This variant of the HOMFLY-PT polynomial is described (amongst other
 places) in C. C. Adams, "The knot book", W. H. Freeman & Co., 1994.
 
-The (*alpha*, *z*) and (*l*, *m*) variants of the HOMFLY polynomial
+The (*alpha*, *z*) and (*l*, *m*) variants of the HOMFLY-PT polynomial
 are related by a simple transformation: *alpha* = *l* *i* and *z* =
 -*m* *i*, where *i* represents (as usual) a square root of -1.
 
@@ -2244,12 +2340,12 @@ Applied Mathematics and Computation 105 (1999), 271-289.
 Bear in mind that each time a link changes, all of its polynomials
 will be deleted. Thus the reference that is returned from this routine
 should not be kept for later use. Instead, homflyLM() should be called
-again; this will be instantaneous if the HOMFLY polynomial has already
-been calculated.
+again; this will be instantaneous if the HOMFLY-PT polynomial has
+already been calculated.
 
-If the HOMFLY polynomial has already been computed (either in terms of
-*alpha* and *z* or in terms of *l* and *m*), then the result will be
-cached and so this routine will be very fast (since it just returns
+If the HOMFLY-PT polynomial has already been computed (either in terms
+of *alpha* and *z* or in terms of *l* and *m*), then the result will
+be cached and so this routine will be very fast (since it just returns
 the previously computed result). Otherwise the computation could be
 quite slow, particularly for larger numbers of crossings.
 
@@ -2258,6 +2354,9 @@ computation is complete, regardless of whether a progress tracker was
 passed. If you need the old behaviour (where passing a progress
 tracker caused the computation to start in the background), simply
 call this routine in a new detached thread.
+
+Exception ``FailedPrecondition``:
+    This is a virtual (not classical) link diagram.
 
 Exception ``NotImplemented``:
     This link is *so* large that the maximum possible strand ID cannot
@@ -2283,8 +2382,8 @@ Parameter ``tracker``:
     ``None`` if no progress reporting is required.
 
 Returns:
-    the HOMFLY polynomial, or the zero polynomial if the calculation
-    was cancelled via the given progress tracker.)doc";
+    the HOMFLY-PT polynomial, or the zero polynomial if the
+    calculation was cancelled via the given progress tracker.)doc";
 
 // Docstring regina::python::doc::Link_::insertLink
 static const char *insertLink =
@@ -2453,10 +2552,10 @@ ambiguities in the format, and reconstructing a link from Jenkins'
 format is simple. Moreover, the format is suitable for links with any
 number of components.
 
-Jenkins' format is described in his HOMFLY polynomial software, which
-is available online from http://burtleburtle.net/bob/knot/homfly.html.
-The format consists of a sequence of integers separated by whitespace,
-constructed as follows:
+Jenkins' format is described in his HOMFLY-PT polynomial software,
+which is available online from
+http://burtleburtle.net/bob/knot/homfly.html. The format consists of a
+sequence of integers separated by whitespace, constructed as follows:
 
 * Label the crossings arbitrarily as 0, 1, ..., *n*-1.
 
@@ -2651,9 +2750,10 @@ alexander() for further details.
 If this property is already known, future calls to alexander() will be
 very fast (simply returning the precalculated value).
 
-At present, Regina only computes Alexander polynomials for knots. If
-this link is empty or has multiple components, this routine is safe to
-call, and will simply return ``False``.
+At present, Regina only computes Alexander polynomials for classical
+knots. If this link is empty, has multiple components, or uses a
+virtual diagram, then this routine is still safe to call, and will
+simply return ``False``.
 
 Returns:
     ``True`` if and only if this property is already known.)doc";
@@ -2671,12 +2771,16 @@ Returns:
 
 // Docstring regina::python::doc::Link_::knowsHomfly
 static const char *knowsHomfly =
-R"doc(Is the HOMFLY polynomial of this link already known? See homflyAZ()
+R"doc(Is the HOMFLY-PT polynomial of this link already known? See homflyAZ()
 and homflyLM() for further details.
 
 If this property is already known, future calls to homfly(),
 homflyAZ() and homflyLM() will all be very fast (simply returning the
 precalculated values).
+
+At present, Regina only computes HOMFLY-PT polynomials for classical
+links. If this is a virtual (not classical) link diagram, then this
+routine is still safe to call, and will simply return ``False``.
 
 Returns:
     ``True`` if and only if this property is already known.)doc";
@@ -2704,10 +2808,11 @@ components.
 For classical links, the linking number is always an integer, and so
 linking() will always return successfully.
 
-For virtual links, the linking number might have a fractional part; if
-this happens then linking() will throw an exception. If you are
+For virtual links, the linking number might have a half-integer part;
+if this happens then linking() will throw an exception. If you are
 working with virtual links then you should use linking2() instead,
-which always returns successfully.
+which does not halve the sum of signs, and which therefore always
+returns successfully with an integer result.
 
 The algorithm to compute linking number is linear time.
 
@@ -2725,7 +2830,7 @@ integer for both classical and virtual links.
 The linking number is an invariant of a link, computed as half the sum
 of the signs of all crossings that involve different link components.
 For classical links the linking number is always an integer, whereas
-for virtual links it might have a fractional part.
+for virtual links it might have a half-integer part.
 
 This routine returns _twice_ the linking number, which is always
 guaranteed to be an integer. If you are working with virtual links
@@ -2860,8 +2965,8 @@ between the over-strand and the under-strand of *c*.
 Some authors call this invariant the _self-linking number_ of the
 knot.
 
-For a classical knot, all crossings will always be even, and so the
-odd writhe will always be zero.
+For a classical knot, every crossing will be even, and so the odd
+writhe will always be zero.
 
 Precondition:
     This link has exactly one component (i.e., it is a knot).
@@ -3897,12 +4002,13 @@ Reidemeister moves, without exceeding a given number of additional
 crossings.
 
 As of Regina 7.4, this routine is now available for any connected link
-diagram with fewer than 64 link components. If this link has 64 or
-more components then this routine will throw an exception (as
-described below).
+diagram (classical or virtual) with fewer than 64 link components. If
+this link has 64 or more components then this routine will throw an
+exception (as described below).
 
 This routine iterates through all link diagrams that can be reached
-from this via Reidemeister moves, without ever exceeding *height*
+from this via Reidemeister moves (with an important exception
+involving disconnected diagrams), without ever exceeding *height*
 additional crossings beyond the original number. With the current
 implementation, these diagrams **could become reflected and/or
 reversed**, and moreover each diagram will only be considered once up
@@ -3941,6 +4047,13 @@ callable object).
 * *action* will only be called once for each link diagram (including
   this starting diagram). In other words, no link diagram will be
   revisited a second time in a single call to rewrite().
+
+The exception for disconnected diagrams is this: if this link diagram
+has more than one connected component, then this routine will never
+use a type II move to merge those components together (i.e., the
+diagram will always remain disconnected). Of course, if your link
+diagram is disconnected, then it will be _much_ more efficient to call
+diagramComponents() and run rewrite() on each component independently.
 
 This routine can be very slow and very memory-intensive, since the
 number of link diagrams it visits may be exponential in the number of
@@ -4175,16 +4288,19 @@ Unlike simplify(), this routine **could potentially reflect or reverse
 the link**.
 
 As of Regina 7.4, this routine is now available for any connected link
-diagram with fewer than 64 link components. If this link has 64 or
-more components then this routine will throw an exception (as
-described below).
+diagram (classical or virtual) with fewer than 64 link components. If
+this link has 64 or more components then this routine will throw an
+exception (as described below).
 
 This routine will iterate through all link diagrams that can be
 reached from this via Reidemeister moves, without ever exceeding
-*height* additional crossings beyond the original number.
+*height* additional crossings beyond the original number. (If this
+link diagram is disconnected, then there is an exception: this routine
+will never use a type II move to merge distinct diagram components
+together, which would never help with simplification).
 
-If at any stage it finds a diagram with _fewer_ crossings than the
-original, then this routine will call simplify() to simplify the
+If at any stage this routine finds a diagram with _fewer_ crossings
+than the original, then it will call simplify() to simplify the
 diagram further if possible and will then return ``True``. If it
 cannot find a diagram with fewer crossings then it will leave this
 link diagram unchanged and return ``False``.

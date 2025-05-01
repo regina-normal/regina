@@ -3081,21 +3081,25 @@ static void verifyClassicalGroup(const Link& link, const char* name) {
 static void verifyGroup(const TestCase& test, const GroupPresentation& expect) {
     SCOPED_TRACE_CSTRING(test.name);
 
-    verifyIsomorphic(test.link.group(), expect);
+    auto found = test.link.groups();
+    verifyIsomorphic(found.first, expect);
+    verifyIsomorphic(found.second, expect);
 
     Link flip(test.link);
-    flip.rotate();
+    flip.changeAll();
     verifyIsomorphic(flip.group(), expect);
 }
 
-static void verifyGroup(const TestCase& test,
+static void verifyGroups(const TestCase& test,
         const GroupPresentation& expect, const GroupPresentation& expectFlip) {
     SCOPED_TRACE_CSTRING(test.name);
 
-    verifyIsomorphic(test.link.group(), expect);
+    auto found = test.link.groups();
+    verifyIsomorphic(found.first, expect);
+    verifyIsomorphic(found.second, expectFlip);
 
     Link flip(test.link);
-    flip.rotate();
+    flip.changeAll();
     verifyIsomorphic(flip.group(), expectFlip);
 }
 
@@ -3136,7 +3140,7 @@ TEST_F(LinkTest, group) {
 
     verifyGroup(virtualTrefoil, { 1 });
     verifyGroup(kishino, { 1 });
-    verifyGroup(gpv, { 2, { "aabbb" }}, { 1 });
+    verifyGroups(gpv, { 2, { "aabbb" }}, { 1 });
     verifyGroup(virtualLink2, { 2, { "abAB" }});
     verifyGroup(virtualLink3, { 3, { "abAB", "acAC" }});
 }

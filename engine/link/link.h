@@ -3640,19 +3640,25 @@ class Link :
 
         /**
          * Returns the group of this link, as constructed from the Wirtinger
-         * presentation.  In the Wirtinger presentation, all relations are
-         * some variant of the form `xy=yz`.
+         * presentation.
          *
-         * - For classical links, this is isomorphic to the fundamental group
-         *   of the link exterior.
+         * In the Wirtinger presentation, each relation is some variant of the
+         * form `xy=yz`, where \a y corresponds to the upper strand at some
+         * crossing, and \a x and \a z correspond to the two sides of the
+         * lower strand at that same crossing.
+         *
+         * - For classical links, this group will always be isomorphic to the
+         *   fundamental group of the link exterior.
          *
          * - For a virtual link whose diagram is embedded in some closed
-         *   orientable surface \a S, the isomorphism type of the group _could_
-         *   change depending upon which side of \a S you view the diagram
-         *   from.  That is, calling rotate() could change the group.
-         *   See ExampleLink::gpv() for an example of a virtual knot with this
-         *   property: out-of-the-box it has the same group as the trefoil,
-         *   but after rotation it has the same group as the unknot.
+         *   orientable surface \a S, the group _could_ change depending upon
+         *   which side of \a S you view the diagram from.  That is, switching
+         *   the upper and lower strands at every crossing could yield
+         *   non-isomorphic groups.  As a result, you may wish to call groups()
+         *   instead, which builds _both_ group presentations.  See the groups()
+         *   documentation for further discussion, or ExampleLink::gpv() for
+         *   an example of a virtual knot for which these two groups are indeed
+         *   non-isomorphic.
          *
          * If you pass \a simplify as \c false, this routine will keep the
          * Wirtinger presentation and not try to simplify it further.
@@ -3666,13 +3672,64 @@ class Link :
          * presentation obtained via the complement is better, and sometimes
          * it is worse.
          *
-         * Currently this group is _not_ cached; instead it is reconstructed
-         * every time this function is called.  This behaviour may change in
-         * future versions of Regina.
+         * This group is _not_ cached; instead it is reconstructed every time
+         * this function is called.  This behaviour may change in future
+         * versions of Regina.
          *
+         * \param simplify \c true if we should attempt to simplify the group
+         * presentation before returning.
          * \return the group of this link.
          */
         GroupPresentation group(bool simplify = true) const;
+
+        /**
+         * Returns the two groups constructed from the Wirtinger presentation
+         * for this link and its mirror image.  This function is intended for
+         * use with virtual links, where these two groups might not be
+         * isomorphic.
+         *
+         * As with group(), each Wirtinger presentation builds a group using
+         * relations of the form `xy=yz`:
+         *
+         * - In first group that is returned, \a y corresponds to the upper
+         *   strand at some crossing, and \a x and \a z correspond to the two
+         *   sides of the lower strand at that same crossing.  This is exactly
+         *   the same presentation constructed by group().
+         *
+         * - In the second group that is returned, we conceptually reflect the
+         *   link diagram through the surface in which it is embedded (as
+         *   though we had called changeAll(), though this link diagram will
+         *   not actually be changed).  This means that \a y will correspond to
+         *   the _lower_ strand at some crossing, and \a x and \a z correspond
+         *   to the two sides of the _upper_ strand at that same crossing.
+         *
+         * For classical links, both groups will always be isomorphic, and so
+         * there is little value in calling this function; you should just use
+         * group() instead.
+         *
+         * For virtual links, these groups might _not_ be isomorphic, and so
+         * this pair gives more information than you would obtain by just
+         * calling group().  See ExampleLink::gpv() for an example of a virtual
+         * knot whose "native" Wirtinger presentation (the first group) gives
+         * the trefoil group, but whose "reflected" Wirtinger presentation
+         * (the second group) gives the unknot group.
+         *
+         * If you pass \a simplify as \c false, this routine will keep both
+         * Wirtinger presentations and not try to simplify them further.
+         * If you pass \a simplify as \c true (the default), this routine will
+         * attempt to simplify both group presentations before returning.
+         *
+         * These groups are _not_ cached; instead they are reconstructed
+         * every time this function is called.  This behaviour may change in
+         * future versions of Regina.
+         *
+         * \param simplify \c true if we should attempt to simplify the group
+         * presentations before returning.
+         * \return the groups of this link obtained by the "native" and
+         * "reflected" Wirtinger presentations, as described above.
+         */
+        std::pair<GroupPresentation, GroupPresentation> groups(
+            bool simplify = true) const;
 
         /**
          * Returns a nice tree decomposition of the 4-valent multigraph formed
@@ -5826,6 +5883,22 @@ class Link :
         void optimiseForJones(TreeDecomposition& td) const;
 
         /**
+         * Returns the group of this link as constructed from the Wirtinger
+         * presentation, possibly switching the roles of the upper and lower
+         * strands at every crossing.
+         *
+         * \param flip \c false if we should build the "native" Wirtinger
+         * presentation, as constructed by the public function group(), or
+         * \c true if we should build the "reflection" Wirtinger presentation,
+         * which would be obtained by group() if we had called changeAll()
+         * beforehand.
+         * \param simplify \c true if we should attempt to simplify the group
+         * presentation before returning.
+         * \return the requested link group.
+         */
+        GroupPresentation internalGroup(bool flip, bool simplify) const;
+
+        /**
          * Takes an arbitrary tree decomposition for this link, and
          * modifies and optimises it so that it is ready for use as a
          * nice tree decomposition for the internal treewidth-based
@@ -6411,6 +6484,15 @@ inline bool Link::internalR3(Crossing* crossing, int side, bool check,
     }
 
     return internalR3(s, side, check, perform);
+}
+
+inline GroupPresentation Link::group(bool simplify) const {
+    return internalGroup(false, simplify);
+}
+
+inline std::pair<GroupPresentation, GroupPresentation> Link::groups(
+        bool simplify) const {
+    return { internalGroup(false, simplify), internalGroup(true, simplify) };
 }
 
 inline const TreeDecomposition& Link::niceTreeDecomposition() const {
