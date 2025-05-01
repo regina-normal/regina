@@ -8,6 +8,7 @@ SET ( FILES
   examplelink.cpp
   flype.cpp
   gauss.cpp
+  group.cpp
   homfly.cpp
   jenkins.cpp
   jones.cpp
