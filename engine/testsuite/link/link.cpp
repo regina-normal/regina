@@ -2692,7 +2692,7 @@ TEST_F(LinkTest, sig) {
     EXPECT_EQ(trefoil_unknot1.link.sig(), "dabcabcv-baaba");
 
     EXPECT_EQ(virtualTrefoil.link.sig(), "cababdp");
-    EXPECT_EQ(kishino.link.sig(), "eabacdcdbZavb");
+    EXPECT_EQ(kishino.link.sig(), "eabacdcdblbTa");
     EXPECT_EQ(gpv.link.sig(), "eabacdcdbZa-d");
     EXPECT_EQ(virtualLink2.link.sig(), "bababd");
     EXPECT_EQ(virtualLink3.link.sig(), "cabcacbjp");
@@ -3131,7 +3131,8 @@ TEST_F(LinkTest, group) {
     verifyGroup(trefoil_unknot_overlap, { 3, { "aabbb" }});
     // TODO: Add group for adams6_28
 
-    // TODO: Add group for virtualTrefoil, kishino
+    // TODO: Add group for virtualTrefoil
+    verifyGroup(kishino, { 1 });
     verifyGroup(gpv, { 2, { "aabbb" }}, { 1 });
     // TODO: Add groups for virtualLink2, virtualLink3.
 }

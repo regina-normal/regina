@@ -219,12 +219,10 @@ class ExampleLink {
         /**
          * Returns a four-crossing diagram of the Kishino knot.
          * This is a non-trivial virtual knot that is the composition of two
-         * virtual unknots.
+         * virtual unknots.  It is a non-trivial virtual knot; however, it has
+         * the same group as the unknot, and it has trivial Jones polynomial.
          *
-         * This is the mirror image of virtual knot 4.77 in the Jeremy Green
-         * tables (where by "mirror image" we mean switching the upper and
-         * lower strands in each crossing - Green calls this a _vertical_
-         * mirror image).
+         * This is virtual knot 4.55 in the Jeremy Green tables.
          *
          * \return the Kishino knot.
          */
