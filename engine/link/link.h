@@ -3647,7 +3647,7 @@ class Link :
          *   of the link exterior.
          *
          * - For a virtual link whose diagram is embedded in some closed
-         *   orientable surface \a S, the isomorphism type of the group could
+         *   orientable surface \a S, the isomorphism type of the group _could_
          *   change depending upon which side of \a S you view the diagram
          *   from.  That is, calling rotate() could change the group.
          *   See ExampleLink::gpv() for an example of a virtual knot with this
