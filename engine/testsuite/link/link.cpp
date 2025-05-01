@@ -42,6 +42,7 @@ using regina::Algorithm;
 using regina::Crossing;
 using regina::ExampleLink;
 using regina::FailedPrecondition;
+using regina::GroupPresentation;
 using regina::Link;
 using regina::Triangulation;
 using regina::StrandRef;
@@ -3029,7 +3030,42 @@ TEST_F(LinkTest, rewrite) {
     }
 }
 
-static void verifyGroup(const Link& link, const char* name) {
+static void verifyIsomorphic(const GroupPresentation& a,
+        const GroupPresentation& b) {
+    if (a.countGenerators() <= 1 || b.countGenerators() <= 1 ||
+            a.countRelations() == 0 || b.countRelations() == 0) {
+        // For trivial, cyclic or free groups, we expect Regina should be
+        // able to simplif both groups to the same canonical presentation.
+        EXPECT_EQ(a.countGenerators(), b.countGenerators());
+        EXPECT_EQ(a.relations(), b.relations());
+        return;
+    }
+
+    // Both groups have ≥ 2 generators and ≥ 1 relation.
+    // In general we can't reliably test isomorphism, but we *can* reliably
+    // test abelian invariants and low-index covers.
+    EXPECT_EQ(a.abelianisation(), b.abelianisation());
+
+    regina::for_constexpr<2, 6>([&a, &b](auto index) {
+        SCOPED_TRACE_NUMERIC(index);
+
+        std::vector<std::string> coversA;
+        a.enumerateCovers<index>([&coversA](const GroupPresentation& c) {
+            coversA.push_back(c.abelianisation().str());
+        });
+        std::sort(coversA.begin(), coversA.end());
+
+        std::vector<std::string> coversB;
+        b.enumerateCovers<index>([&coversB](const GroupPresentation& c) {
+            coversB.push_back(c.abelianisation().str());
+        });
+        std::sort(coversB.begin(), coversB.end());
+
+        EXPECT_EQ(coversA, coversB);
+    });
+}
+
+static void verifyClassicalGroup(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     regina::GroupPresentation fromLink = link.group();
@@ -3039,43 +3075,65 @@ static void verifyGroup(const Link& link, const char* name) {
 
     // Verify (as far as possible) that the two groups are isomorphic.
     // We assume here that both groups have been simplified.
+    verifyIsomorphic(fromLink, fromComp);
+}
 
-    if (fromLink.countGenerators() <= 1 || fromComp.countGenerators() <= 1 ||
-            fromLink.countRelations() == 0 || fromComp.countRelations() == 0) {
-        // For trivial, cyclic or free groups, we expect both groups to
-        // simplify to the same canonical presentation.
-        EXPECT_EQ(fromLink.countGenerators(), fromComp.countGenerators());
-        EXPECT_EQ(fromLink.relations(), fromComp.relations());
-    } else {
-        // Both groups have ≥ 2 generators and ≥ 1 relation.
-        // We can't reliably test isomorphism, but we *can* reliably test
-        // abelian invariants and low-index covers.
-        EXPECT_EQ(fromLink.abelianisation(), fromComp.abelianisation());
+static void verifyGroup(const TestCase& test, const GroupPresentation& expect) {
+    SCOPED_TRACE_CSTRING(test.name);
 
-        regina::for_constexpr<2, 6>([&fromLink, &fromComp](auto index) {
-            SCOPED_TRACE_NUMERIC(index);
+    verifyIsomorphic(test.link.group(), expect);
 
-            std::vector<std::string> coversLink;
-            fromLink.enumerateCovers<index>([&coversLink](
-                    const regina::GroupPresentation& c) {
-                coversLink.push_back(c.abelianisation().str());
-            });
-            std::sort(coversLink.begin(), coversLink.end());
+    Link flip(test.link);
+    flip.rotate();
+    verifyIsomorphic(flip.group(), expect);
+}
 
-            std::vector<std::string> coversComp;
-            fromComp.enumerateCovers<index>([&coversComp](
-                    const regina::GroupPresentation& c) {
-                coversComp.push_back(c.abelianisation().str());
-            });
-            std::sort(coversComp.begin(), coversComp.end());
+static void verifyGroup(const TestCase& test,
+        const GroupPresentation& expect, const GroupPresentation& expectFlip) {
+    SCOPED_TRACE_CSTRING(test.name);
 
-            EXPECT_EQ(coversLink, coversComp);
-        });
-    }
+    verifyIsomorphic(test.link.group(), expect);
+
+    Link flip(test.link);
+    flip.rotate();
+    verifyIsomorphic(flip.group(), expectFlip);
 }
 
 TEST_F(LinkTest, group) {
-    testManualCases(verifyGroup, false /* gordian */, false /* virtual */);
+    // Note: the Gordian unknot is too slow for the test suite.
+    testManualCases(verifyClassicalGroup, false /* gordian */,
+        false /* virtual */);
+
+    verifyGroup(unknot0, { 1 });
+    verifyGroup(unknot1, { 1 });
+    verifyGroup(unknot3, { 1 });
+    verifyGroup(unknotMonster, { 1 });
+    // verifyGroup(unknotGordian, { 1 });
+    verifyGroup(trefoilLeft, { 2, { "aabbb" }});
+    verifyGroup(trefoilRight, { 2, { "aabbb" }});
+    verifyGroup(trefoil_r1x2, { 2, { "aabbb" }});
+    verifyGroup(trefoil_r1x6, { 2, { "aabbb" }});
+    verifyGroup(figureEight, { 2, { "AbaBabABaB" }});
+    verifyGroup(figureEight_r1x2, { 2, { "AbaBabABaB" }});
+    // TODO: Add groups for conway, kinoshitaTerasaka, gst.
+
+    verifyGroup(rht_rht, { 3, { "abaBAB", "acaCAC" }});
+    verifyGroup(rht_lht, { 3, { "abaBAB", "acaCAC" }});
+
+    verifyGroup(unlink2_0, { 2 });
+    verifyGroup(unlink3_0, { 3 });
+    verifyGroup(unlink2_r2, { 2 });
+    verifyGroup(unlink2_r1r1, { 2 });
+    verifyGroup(hopf, { 2, { "abAB" }});
+    // TODO: Add groups for whitehead, borromean
+    verifyGroup(trefoil_unknot0, { 3, { "aabbb" }});
+    verifyGroup(trefoil_unknot1, { 3, { "aabbb" }});
+    verifyGroup(trefoil_unknot_overlap, { 3, { "aabbb" }});
+    // TODO: Add group for adams6_28
+
+    // TODO: Add group for virtualTrefoil, kishino
+    verifyGroup(gpv, { 2, { "aabbb" }}, { 1 });
+    // TODO: Add groups for virtualLink2, virtualLink3.
 }
 
 static void verifySmallCells(const Link& link, const char* name) {

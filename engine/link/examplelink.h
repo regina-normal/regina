@@ -237,8 +237,9 @@ class ExampleLink {
          * for classical knots and links).
          *
          * Specifically, if we denote this knot \a K, then `K.group()` is
-         * isomorphic to the trefoil group, whereas `K.rotate().group()` is
-         * isomorphic to the unknot group (i.e., the infinite cyclic group).
+         * isomorphic to the trefoil group, whereas if we call `K.rotate()`
+         * then `K.group()` becomes isomorphic to the unknot group (i.e., the
+         * infinite cyclic group).
          *
          * This is the rotation of virtual knot 4.73 in the Jeremy Green
          * tables (where by "rotation" we mean flipping the diagram upside-down

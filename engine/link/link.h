@@ -1479,7 +1479,7 @@ class Link :
 
         /**
          * Switches the upper and lower strands of every crossing in the
-         * diagram.
+         * diagram.  As a result, the sign of every crossing will also change.
          *
          * This operation corresponds to reflecting the link diagram
          * through the surface on which it is drawn.
@@ -3639,23 +3639,32 @@ class Link :
         static Laurent2<Integer> homflyAZtoLM(Laurent2<Integer> homflyAZ);
 
         /**
-         * Returns the group of this link; that is, the fundamental group of
-         * the link exterior.
+         * Returns the group of this link, as constructed from the Wirtinger
+         * presentation.  In the Wirtinger presentation, all relations are
+         * some variant of the form `xy=yz`.
          *
-         * This routine builds the Wirtinger presentation, where all relations
-         * are some variant of the form `xy=yz`.
+         * - For classical links, this is isomorphic to the fundamental group
+         *   of the link exterior.
          *
-         * If you pass \a simplify as \c false, it will leave the presentation
-         * in exactly this form (i.e., the Wirtinger presentation), and not
-         * simplify it further.  If you pass \a simplify as \c true (the
-         * default), this routine will attempt to simplify the group
-         * presentation before returning.
+         * - For a virtual link whose diagram is embedded in some closed
+         *   orientable surface \a S, the isomorphism type of the group could
+         *   change depending upon which side of \a S you view the diagram
+         *   from.  That is, calling rotate() could change the group.
+         *   See ExampleLink::gpv() for an example of a virtual knot with this
+         *   property: out-of-the-box it has the same group as the trefoil,
+         *   but after rotation it has the same group as the unknot.
          *
-         * \note If you are finding the resulting group presentation too large
-         * for your liking even after simplification, then you could also try
-         * calling complement() and computing the fundamental group of the
-         * resulting 3-manifold triangulation.  Sometimes the presentation
-         * obtained via the complement is better, and sometimes it is worse.
+         * If you pass \a simplify as \c false, this routine will keep the
+         * Wirtinger presentation and not try to simplify it further.
+         * If you pass \a simplify as \c true (the default), this routine will
+         * attempt to simplify the group presentation before returning.
+         *
+         * \note If you have a classical link and you are finding the resulting
+         * group presentation too large even after simplification, you could
+         * also try calling complement() and computing the fundamental group of
+         * the resulting 3-manifold triangulation instead.  Sometimes the
+         * presentation obtained via the complement is better, and sometimes
+         * it is worse.
          *
          * Currently this group is _not_ cached; instead it is reconstructed
          * every time this function is called.  This behaviour may change in
