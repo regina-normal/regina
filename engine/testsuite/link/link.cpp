@@ -3104,6 +3104,12 @@ TEST_F(LinkTest, group) {
     testManualCases(verifyClassicalGroup, false /* gordian */,
         false /* virtual */);
 
+    // In the tests below, we are currently missing group presentations for:
+    // - conway, kinoshitaTerasaka, gst;
+    // - whitehead, borromean, adams6_28.
+    // We should hunt down independent confirmations of these and then include
+    // them in the test suite.
+
     verifyGroup(unknot0, { 1 });
     verifyGroup(unknot1, { 1 });
     verifyGroup(unknot3, { 1 });
@@ -3115,7 +3121,6 @@ TEST_F(LinkTest, group) {
     verifyGroup(trefoil_r1x6, { 2, { "aabbb" }});
     verifyGroup(figureEight, { 2, { "AbaBabABaB" }});
     verifyGroup(figureEight_r1x2, { 2, { "AbaBabABaB" }});
-    // TODO: Add groups for conway, kinoshitaTerasaka, gst.
 
     verifyGroup(rht_rht, { 3, { "abaBAB", "acaCAC" }});
     verifyGroup(rht_lht, { 3, { "abaBAB", "acaCAC" }});
@@ -3125,16 +3130,15 @@ TEST_F(LinkTest, group) {
     verifyGroup(unlink2_r2, { 2 });
     verifyGroup(unlink2_r1r1, { 2 });
     verifyGroup(hopf, { 2, { "abAB" }});
-    // TODO: Add groups for whitehead, borromean
     verifyGroup(trefoil_unknot0, { 3, { "aabbb" }});
     verifyGroup(trefoil_unknot1, { 3, { "aabbb" }});
     verifyGroup(trefoil_unknot_overlap, { 3, { "aabbb" }});
-    // TODO: Add group for adams6_28
 
-    // TODO: Add group for virtualTrefoil
+    verifyGroup(virtualTrefoil, { 1 });
     verifyGroup(kishino, { 1 });
     verifyGroup(gpv, { 2, { "aabbb" }}, { 1 });
-    // TODO: Add groups for virtualLink2, virtualLink3.
+    verifyGroup(virtualLink2, { 2, { "abAB" }});
+    verifyGroup(virtualLink3, { 3, { "abAB", "acAC" }});
 }
 
 static void verifySmallCells(const Link& link, const char* name) {
