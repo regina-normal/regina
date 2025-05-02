@@ -3869,21 +3869,27 @@ class Link :
          *
          * Classical Gauss codes essentially describe the 4-valent graph
          * of a knot but not the particular embedding in the plane.
-         * These codes come with two major restrictions:
+         * These codes come with major restrictions:
          *
          * - In general, they do not carry enough information to uniquely
-         *   reconstruct a knot.  For instance, both a knot and its reflection
-         *   can be described by the same Gauss code; moreover, for composite
-         *   knots, the Gauss code can describe inequivalent knots (even when
-         *   allowing for reflections).
+         *   reconstruct a classical knot.  For instance, both a classical
+         *   knot and its reflection can be described by the same Gauss code;
+         *   moreover, for _composite_ knots, the same Gauss code can describe
+         *   inequivalent knots even when allowing for reflections.
          *
-         * - Parsing a Gauss code is complex, since it requires an embedding
-         *   to be deduced using some variant of a planarity testing algorithm.
+         * - Parsing a Gauss code to reconstruct a classical knot is complex,
+         *   since it requires an embedding to be deduced using some variant
+         *   of a planarity testing algorithm.
          *
-         * If you need a code that specifies the knot uniquely and/or that
-         * is fast to parse, consider using the _oriented_ Gauss code instead,
-         * which resolves both of these issues.
+         * - Because Gauss codes rely on planarity, they are not suitable at
+         *   all for working with virtual knots.
          *
+         * If you need a code that specifies the knot uniquely, and/or is fast
+         * to parse, and/or can work with both classical and virtual knots,
+         * you should use the _oriented_ Gauss code instead, which resolves
+         * all of these issues.
+         *
+         * The contents of a classical Gauss code are as follows.
          * A Gauss code for an <i>n</i>-crossing knot is described by
          * a sequence of 2<i>n</i> positive and negative integers,
          * representing strands that pass over and under crossings
@@ -3915,6 +3921,12 @@ class Link :
          * format (as a C++ vector), instead of the human-readable format
          * used here (a string).  There is also another variant of gauss()
          * that writes directly to an output stream.
+         *
+         * Although classical Gauss codes do not support virtual knots, if
+         * this is a virtual link diagram then gauss() will still produce
+         * correct output; the problem is simply that too much information is
+         * lost, and you cannot _reconstruct_ your virtual link from this
+         * output.
          *
          * \exception NotImplemented This link is empty or has multiple
          * components.
@@ -3954,9 +3966,10 @@ class Link :
          * would be returned by gauss().  In particular, the output does
          * not contain any newlines.
          *
-         * See also gauss(), which returns the Gauss code as a
-         * human-readable string, and gaussData(), which returns it
-         * as a machine-readable sequence of integers.
+         * For a function that _returns_ the Gauss code (as opposed to writing
+         * it to an output stream), you could use gauss() (which returns the
+         * Gauss code as a human-readable string), or gaussData() (which
+         * returns it as a machine-readable sequence of integers).
          *
          * \exception NotImplemented This link is empty or has multiple
          * components.
@@ -3976,7 +3989,8 @@ class Link :
          * characters to describe the orientation of the other strand
          * passing by at each crossing.  This extra information removes
          * both the topological ambiguities and the complexity in the
-         * reconstruction procedure for classical Gauss codes.
+         * reconstruction procedure for classical Gauss codes.  It also makes
+         * the code suitable for both virtual and classical knots.
          *
          * This "oriented" format is described at
          * http://www.javaview.de/services/knots/doc/description.html#gc,
@@ -4070,9 +4084,11 @@ class Link :
          * would be returned by orientedGauss().  In particular, the output
          * does not contain any newlines.
          *
-         * See also orientedGauss(), which returns the oriented Gauss code as
-         * a human-readable string, and orientedGaussData(), which returns it
-         * as a machine-readable sequence of tokens.
+         * For a function that _returns_ the oriented Gauss code (as opposed to
+         * writing it to an output stream), you could use orientedGauss()
+         * (which returns the oriented Gauss code as a human-readable string),
+         * or orientedGaussData() (which returns it as a machine-readable
+         * sequence of tokens).
          *
          * \exception NotImplemented This link is empty or has multiple
          * components.
@@ -4092,7 +4108,8 @@ class Link :
          * Gauss codes or Dowker-Thistlethwaite notation, there are no
          * topological ambiguities in the format, and reconstructing a link
          * from Jenkins' format is simple.  Moreover, the format is suitable
-         * for links with any number of components.
+         * for links with any number of components, and can be used with both
+         * virtual and classical links.
          *
          * Jenkins' format is described in his HOMFLY-PT polynomial software,
          * which is available online from
@@ -4179,9 +4196,11 @@ class Link :
          * would be returned by jenkins().  In particular, the output will
          * typically span multiple lines, and will finish with a newline.
          *
-         * See also jenkins(), which exports this link in Jenkins' format
-         * as a human-readable string, and jenkinsData(), which exports it
-         * as a machine-readable sequence of integers.
+         * For a function that _returns_ the link in Jenkins' format (as
+         * opposed to writing it to an output stream), you could use jenkins()
+         * (which returns the description as a human-readable string), or
+         * jenkinsData() (which returns it as a machine-readable sequence of
+         * integers).
          *
          * \nopython Instead use the variants jenkins() or jenkinsData() that
          * take no arguments.
@@ -4196,22 +4215,26 @@ class Link :
          *
          * Like classical Gauss codes, Dowker-Thistlethwaite notation
          * essentially describes the 4-valent graph of a knot but not the
-         * particular embedding in the plane.  It comes with two major
-         * restrictions:
+         * particular embedding in the plane.  It comes with major restrictions:
          *
          * - In general, it does not carry enough information to uniquely
-         *   reconstruct a knot.  For instance, both a knot and its reflection
-         *   can be described by the same Dowker-Thistlethwaite notation;
-         *   moreover, for composite knots, the same notation can describe
-         *   inequivalent knots (even when allowing for reflections).
+         *   reconstruct a classical knot.  For instance, both a classical
+         *   knot and its reflection can be described by the same
+         *   Dowker-Thistlethwaite notation; moreover, for _composite_ knots,
+         *   the same notation can describe inequivalent knots even when
+         *   allowing for reflections.
          *
-         * - Parsing Dowker-Thistlethwaite notation is complex, since it
-         *   requires an embedding to be deduced using some variant of a
-         *   planarity testing algorithm.
+         * - Parsing Dowker-Thistlethwaite notation to reconstruct a classical
+         *   knot is complex, since it requires an embedding to be deduced
+         *   using some variant of a planarity testing algorithm.
          *
-         * If you need a code that specifies the knot uniquely and/or that
-         * is fast to parse, consider using the _oriented_ Gauss code instead,
-         * which resolves both of these issues.
+         * - Because Dowker-Thistlethwaite notation relies on planarity, it is
+         *   not suitable at all for working with virtual knots.
+         *
+         * If you need a code that specifies the knot uniquely, and/or is fast
+         * to parse, and/or can work with both classical and virtual knots,
+         * you should use the _oriented_ Gauss code instead, which resolves
+         * all of these issues.
          *
          * For an <i>n</i>-crossing knot, Regina supports two variants
          * of Dowker-Thistlethwaite notation:
@@ -4263,6 +4286,12 @@ class Link :
          * variant of dt() that can write either the numerical or the
          * alphabetical variant directly to an output stream.
          *
+         * Although Dowker-Thistlethwaite notation does not support virtual
+         * knots, if this is a virtual link diagram then dt() will still
+         * produce correct output; the problem is simply that too much
+         * information is lost, and you cannot _reconstruct_ your virtual link
+         * from this output.
+         *
          * \exception NotImplemented Either this link is empty or has multiple
          * components, or \a alpha is true and it has more than 26 crossings.
          *
@@ -4312,10 +4341,12 @@ class Link :
          * would be returned by dt(bool).  In particular, the output does
          * not contain any newlines.
          *
-         * See also dtBool(bool), which can export either the numerical
-         * or alphabetical variant of Dowker-Thistlethwaite notation as a
-         * human-readable string, and dtData(), which exports the numerical
-         * variant only as a machine-readable sequence of integers.
+         * For a function that _returns_ the Dowker-Thistlethwaite notation
+         * (as opposed to writing it to an output stream), you could use
+         * dt(bool) (which returns the Dowker-Thistlethwaite notation as a
+         * human-readable string), or dtData() (which returns the numerical
+         * Dowker-Thistlethwaite notation as a machine-readable sequence of
+         * integers).
          *
          * \exception NotImplemented Either this link is empty or has multiple
          * components, or \a alpha is true and it has more than 26 crossings.
@@ -4444,9 +4475,10 @@ class Link :
          * would be returned by pd().  In particular, the output does
          * not contain any newlines.
          *
-         * See also pd(), which returns the planar diagram code as a
-         * human-readable string, and pdData(), which returns it
-         * as a machine-readable sequence of 4-tuples of integers.
+         * For a function that _returns_ the planar diagram code (as opposed to
+         * writing it to an output stream), you could use pd() (which returns
+         * the code as a human-readable string), or pdData() (which returns it
+         * as a machine-readable sequence of 4-tuples of integers).
          *
          * \nopython Instead use the variants pd() or pdData() that take no
          * arguments.
