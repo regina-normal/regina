@@ -4363,10 +4363,11 @@ class Link :
         /**
          * Returns a planar diagram code for this link, presented as a string.
          *
-         * Planar diagram codes encode the local information at each
-         * crossing, and present this information as a list of 4-tuples.
-         * These codes are available for links as well as knots, but they do
-         * come with some minor restrictions:
+         * Planar diagram codes encode the local information at each crossing,
+         * and present this information as a list of 4-tuples.  These codes
+         * are available for links as well as knots.  Moreover (despite their
+         * name) they are available for virtual as well as classical links.
+         * However, they do come with some minor restrictions:
          *
          * - They cannot encode zero-crossing unknot components (i.e.,
          *   components for which the component() function returns a null
@@ -4374,12 +4375,16 @@ class Link :
          *   You can detect such components by calling countTrivialComponents().
          *
          * - If a link has any components that consist entirely of
-         *   over-crossings (which must be unknots "placed on top of" the link
-         *   diagram), a planar diagram code does not carry enough data to
-         *   reconstruct the _orientation_ of these components.  The topology
-         *   will be preserved, but in general the combinatorics of such a link
-         *   diagram cannot be reconstructed faithfully.  You can detect such
-         *   components by calling pdAmbiguous().
+         *   over-crossings (that is, zero-crossing components that are "placed
+         *   on top of" the rest of the link diagram), then a planar diagram
+         *   code does not carry enough data to reconstruct the _orientation_
+         *   of these components.  For classical links, the topology will still
+         *   be preserved (since such components must be topological unknots),
+         *   but in general the combinatorics of such a link diagram cannot be
+         *   reconstructed faithfully.  For virtual links, the problems are
+         *   more serious (since such components may traverse handles in the
+         *   surface in which the link diagram is embedded).  In all cases,
+         *   you can detect such components by calling pdAmbiguous().
          *
          * If you need a text code that can work with these types of
          * link diagrams, you can always use Jenkins' format instead.
@@ -4450,8 +4455,8 @@ class Link :
          * Returns a planar diagram code for this link, presented as
          * vector of 4-tuples.
          *
-         * See pd() for a full description of planar diagram codes as
-         * they are used in Regina, as well as their limitations.
+         * See pd() for a full description of planar diagram codes as they are
+         * used in Regina, as well as their limitations.
          *
          * This routine returns machine-readable data (as a C++ vector);
          * in contrast, pd() returns the same data in human-readable format
@@ -4468,12 +4473,12 @@ class Link :
          * Writes a planar diagram code for this link to the given output
          * stream.
          *
-         * See pd() for a full description of planar diagram codes as
-         * they are used in Regina, as well as their limitations.
+         * See pd() for a full description of planar diagram codes as they are
+         * used in Regina, as well as their limitations.
          *
-         * The output from this routine is precisely the string that
-         * would be returned by pd().  In particular, the output does
-         * not contain any newlines.
+         * The output from this routine is precisely the string that would be
+         * returned by pd().  In particular, the output does not contain any
+         * newlines.
          *
          * For a function that _returns_ the planar diagram code (as opposed to
          * writing it to an output stream), you could use pd() (which returns
@@ -4492,8 +4497,9 @@ class Link :
          * cannot be recovered from a planar diagram code.
          *
          * Such components must have at least one crossing, and must consist
-         * _entirely_ of over-crossings.  These are essentially unknotted
-         * loops that are "placed on top of" the remainder of the link diagram.
+         * _entirely_ of over-crossings.  See pd() for a detailed discussion
+         * on such components (which must be trivial for classical links,
+         * but which could be more interesting for virtual links).
          *
          * Note that planar diagram codes have another limitation, which is
          * that they cannot represent zero-crossing components at all (any such

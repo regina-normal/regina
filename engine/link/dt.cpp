@@ -75,10 +75,10 @@ void Link::dt(std::ostream& out, bool alpha) const {
     using Int = std::make_signed_t<size_t>;
 
     // Odd steps in traversal -> crossing index
-    auto* oddCrossing = new size_t[n];
+    FixedArray<size_t> oddCrossing(n);
 
     // Crossing index -> even steps in traversal, negated if passing under
-    auto* evenStep = new Int[n];
+    FixedArray<Int> evenStep(n);
 
     StrandRef s = start;
     Int step = 0;
@@ -107,9 +107,6 @@ void Link::dt(std::ostream& out, bool alpha) const {
             out << evenStep[oddCrossing[i]];
         }
     }
-
-    delete[] evenStep;
-    delete[] oddCrossing;
 }
 
 std::vector<int> Link::dtData() const {
@@ -130,10 +127,10 @@ std::vector<int> Link::dtData() const {
     int n = static_cast<int>(size());
 
     // Odd steps in traversal -> crossing index
-    int* oddCrossing = new int[n];
+    FixedArray<int> oddCrossing(n);
 
     // Crossing index -> even steps in traversal, negated if passing under
-    int* evenStep = new int[n];
+    FixedArray<int> evenStep(n);
 
     StrandRef s = start;
     int step = 0;
@@ -154,8 +151,6 @@ std::vector<int> Link::dtData() const {
     for (int i = 0; i < n; ++i)
         ans.push_back(evenStep[oddCrossing[i]]);
 
-    delete[] evenStep;
-    delete[] oddCrossing;
     return ans;
 }
 
