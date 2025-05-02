@@ -63,6 +63,9 @@ void Link::dt(std::ostream& out, bool alpha) const {
     if (alpha && size() > 26)
         throw NotImplemented("Alphabetical Dowker-Thistlethwaite notation is "
             "only implemented for links with at most 26 crossings");
+    if (! isClassical())
+        throw NotImplemented("Dowker-Thistlethwaite notation is only "
+            "implemented for classical link diagrams, not virtual diagrams");
 
     // Dowker-Thistlethwaite notation requires us to start on the lower strand.
     StrandRef start = components_.front();

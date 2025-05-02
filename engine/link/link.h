@@ -4210,26 +4210,26 @@ class Link :
         void jenkins(std::ostream& out) const;
 
         /**
-         * Exports this knot in either numerical or alphabetical
+         * Exports this classical knot in either numerical or alphabetical
          * Dowker-Thistlethwaite notation, returning a string.
          *
          * Like classical Gauss codes, Dowker-Thistlethwaite notation
          * essentially describes the 4-valent graph of a knot but not the
          * particular embedding in the plane.  It comes with major restrictions:
          *
-         * - In general, it does not carry enough information to uniquely
-         *   reconstruct a classical knot.  For instance, both a classical
-         *   knot and its reflection can be described by the same
-         *   Dowker-Thistlethwaite notation; moreover, for _composite_ knots,
-         *   the same notation can describe inequivalent knots even when
-         *   allowing for reflections.
+         * - It relies on parity properties that only hold for classical knots.
+         *   As a result, Dowker-Thistlethwaite notation cannot be used with
+         *   virtual knots at all.
+         *
+         * - Even for classical knots, it does not carry enough information to
+         *   uniquely reconstruct a knot.  For instance, both a knot and its
+         *   reflection can be described by the same Dowker-Thistlethwaite
+         *   notation; moreover, for _composite_ knots, the same notation can
+         *   describe inequivalent knots even when allowing for reflections.
          *
          * - Parsing Dowker-Thistlethwaite notation to reconstruct a classical
          *   knot is complex, since it requires an embedding to be deduced
          *   using some variant of a planarity testing algorithm.
-         *
-         * - Because Dowker-Thistlethwaite notation relies on planarity, it is
-         *   not suitable at all for working with virtual knots.
          *
          * If you need a code that specifies the knot uniquely, and/or is fast
          * to parse, and/or can work with both classical and virtual knots,
@@ -4286,14 +4286,9 @@ class Link :
          * variant of dt() that can write either the numerical or the
          * alphabetical variant directly to an output stream.
          *
-         * Although Dowker-Thistlethwaite notation does not support virtual
-         * knots, if this is a virtual link diagram then dt() will still
-         * produce correct output; the problem is simply that too much
-         * information is lost, and you cannot _reconstruct_ your virtual link
-         * from this output.
-         *
          * \exception NotImplemented Either this link is empty or has multiple
-         * components, or \a alpha is true and it has more than 26 crossings.
+         * components, or this is a virtual (not classical) link diagram, or
+         * \a alpha is true and this link diagram has more than 26 crossings.
          *
          * \param alpha \c true to use alphabetical notation, or \c false
          * (the default) to use numerical notation.
@@ -4302,8 +4297,8 @@ class Link :
         std::string dt(bool alpha = false) const;
 
         /**
-         * Exports this knot in numerical Dowker-Thistlethwaite notation,
-         * returning a vector of integers.
+         * Exports this classical knot in numerical Dowker-Thistlethwaite
+         * notation, returning a vector of integers.
          *
          * See dt(bool) for a full description of Dowker-Thistlethwaite
          * notation as it is used in Regina, as well as its limitations.
@@ -4317,8 +4312,9 @@ class Link :
          * in contrast, calling `dt()` returns the same integer
          * sequence in human-readable format (as a string).
          *
-         * \exception NotImplemented This link is empty, or has multiple
-         * components, or has so many crossings that the Dowker-Thistlethwaite
+         * \exception NotImplemented Either this link is empty or has multiple
+         * components, or this is a virtual (not classical) link diagram, or
+         * this diagram has so many crossings that the Dowker-Thistlethwaite
          * notation cannot be expressed using native C++ integers.
          *
          * \return the numerical Dowker-Thistlethwaite notation in
@@ -4327,7 +4323,7 @@ class Link :
         std::vector<int> dtData() const;
 
         /**
-         * Writes this knot to the given output stream using
+         * Writes this classical knot to the given output stream using
          * Dowker-Thistlethwaite notation.
          *
          * See dt(bool) for a full description of Dowker-Thistlethwaite
@@ -4349,7 +4345,8 @@ class Link :
          * integers).
          *
          * \exception NotImplemented Either this link is empty or has multiple
-         * components, or \a alpha is true and it has more than 26 crossings.
+         * components, or this is a virtual (not classical) link diagram, or
+         * \a alpha is true and this link diagram has more than 26 crossings.
          *
          * \nopython Instead use the variants dt(bool) or dtData() that take
          * no arguments.

@@ -2792,6 +2792,13 @@ TEST_F(LinkTest, gaussAndDT) {
     verifyGaussAndDT(figureEight_r1x2, true, false);
     verifyGaussAndDT(rht_rht, true, false);
     verifyGaussAndDT(rht_lht, false, true);
+
+    // Virtual links do not play well with Gauss / D-T codes.
+    EXPECT_THROW({ virtualTrefoil.link.dt(); }, regina::NotImplemented);
+    EXPECT_THROW({ kishino.link.dt(); }, regina::NotImplemented);
+    EXPECT_THROW({ gpv.link.dt(); }, regina::NotImplemented);
+    EXPECT_THROW({ virtualLink2.link.dt(); }, regina::NotImplemented);
+    EXPECT_THROW({ virtualLink3.link.dt(); }, regina::NotImplemented);
 }
 
 static void verifyOrientedGauss(const Link& link, const char* name) {
