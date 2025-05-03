@@ -598,11 +598,19 @@ void Link::writeTextShort(std::ostream& out) const {
         return;
     }
 
-    if (components_.size() == 1)
-        out << crossings_.size() << "-crossing knot: ";
-    else
-        out << crossings_.size() << "-crossing, "
-            << components_.size() << "-component link: ";
+    if (isClassical()) {
+        if (components_.size() == 1)
+            out << crossings_.size() << "-crossing knot: ";
+        else
+            out << crossings_.size() << "-crossing, "
+                << components_.size() << "-component link: ";
+    } else {
+        if (components_.size() == 1)
+            out << crossings_.size() << "-crossing virtual knot: ";
+        else
+            out << crossings_.size() << "-crossing, "
+                << components_.size() << "-component virtual link: ";
+    }
 
     brief(out);
 }
@@ -613,11 +621,19 @@ void Link::writeTextLong(std::ostream& out) const {
         return;
     }
 
-    if (components_.size() == 1)
-        out << crossings_.size() << "-crossing knot";
-    else
-        out << crossings_.size() << "-crossing, "
-            << components_.size() << "-component link";
+    if (isClassical()) {
+        if (components_.size() == 1)
+            out << crossings_.size() << "-crossing knot";
+        else
+            out << crossings_.size() << "-crossing, "
+                << components_.size() << "-component link";
+    } else {
+        if (components_.size() == 1)
+            out << crossings_.size() << "-crossing virtual knot";
+        else
+            out << crossings_.size() << "-crossing, "
+                << components_.size() << "-component virtual link";
+    }
     out << "\n\n";
 
     int comp = 0;

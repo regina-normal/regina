@@ -197,7 +197,8 @@ namespace {
      * and fewer than 64 link components.
      */
     SigSequence sigSequenceConnected(const Link& link,
-            BoolSet reflectionOptions, bool allowReversal) {
+            BoolSet reflectionOptions, bool allowReversal,
+            BoolSet rotationOptions) {
         const size_t n = link.size();
         Symmetries sym(link);
 
@@ -255,7 +256,9 @@ namespace {
                     if (startPositive && startSign < 0)
                         continue;
 
-                    for (sym.rotate = 0; sym.rotate < 2; ++sym.rotate) {
+                    for (sym.rotate = (rotationOptions.hasFalse() ? 0 : 1);
+                            sym.rotate < (rotationOptions.hasTrue() ? 2 : 1);
+                            ++sym.rotate) {
                         // Follow the link around from this starting point,
                         // using the chosen set of component orientations.
 
@@ -400,7 +403,8 @@ namespace {
     }
 }
 
-std::string Link::sig(bool allowReflection, bool allowReversal) const {
+std::string Link::sig(bool allowReflection, bool allowReversal,
+        bool allowRotation) const {
     if (components_.size() >= 64)
         throw NotImplemented("Signatures are only implemented for "
             "fewer than 64 link components");
@@ -427,14 +431,16 @@ std::string Link::sig(bool allowReflection, bool allowReversal) const {
         encodeSigSequence(enc, sigSequenceConnected(*this,
             allowReflection ? BoolSet(true, true) /* both options */ :
                 BoolSet(false) /* false only */,
-            allowReversal));
+            allowReversal,
+            allowRotation ? BoolSet(true, true) /* both options */ :
+                BoolSet(false) /* false only */));
     } else {
         // We need to build a sequence for each connected component.
         // For now we will not worry too much about overhead since people
         // should not be doing intense work with disconnected link diagrams
         // in practice (?).
         //
-        // Do this first without reflection.
+        // Do this first without reflection or rotation.
         auto components = diagramComponents();
         size_t nTrivial = 0;
 
@@ -444,19 +450,41 @@ std::string Link::sig(bool allowReflection, bool allowReversal) const {
                 // This is a zero-crossing unknot component.
                 ++nTrivial;
             } else {
-                bits.push_back(sigSequenceConnected(c, { false },
-                    allowReversal));
+                bits.push_back(sigSequenceConnected(c,
+                    { false }, allowReversal, { false }));
             }
         }
         std::sort(bits.begin(), bits.end());
 
+        // ... and again with reflection and/or rotation.
         if (allowReflection) {
-            // ... and again with reflection.
             std::vector<SigSequence> alt;
             for (auto c : components) {
                 if (c.size() > 0)
-                    alt.push_back(sigSequenceConnected(c, { true },
-                        allowReversal));
+                    alt.push_back(sigSequenceConnected(c,
+                        { true }, allowReversal, { false }));
+            }
+            std::sort(alt.begin(), alt.end());
+            if (alt < bits)
+                alt.swap(bits);
+        }
+        if (allowRotation) {
+            std::vector<SigSequence> alt;
+            for (auto c : components) {
+                if (c.size() > 0)
+                    alt.push_back(sigSequenceConnected(c,
+                        { false }, allowReversal, { true }));
+            }
+            std::sort(alt.begin(), alt.end());
+            if (alt < bits)
+                alt.swap(bits);
+        }
+        if (allowReflection && allowRotation) {
+            std::vector<SigSequence> alt;
+            for (auto c : components) {
+                if (c.size() > 0)
+                    alt.push_back(sigSequenceConnected(c,
+                        { true }, allowReversal, { true }));
             }
             std::sort(alt.begin(), alt.end());
             if (alt < bits)

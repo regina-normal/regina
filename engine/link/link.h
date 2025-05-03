@@ -4604,11 +4604,18 @@ class Link :
         /**
          * Constructs the _signature_ for this knot or link diagram.
          *
-         * A _signature_ is a compact text representation of a link
-         * diagram that uniquely determines the diagram up to: relabelling;
-         * rotating connected components of the diagram; and (optionally)
-         * reflecting the entire diagram and/or reversing some or all link
-         * components.
+         * A _signature_ is a compact text representation of a link diagram
+         * that uniquely determines the diagram up to any combination of:
+         *
+         * - relabelling;
+         *
+         * - (optionally) reflecting the entire diagram, which changes the sign
+         *   of every crossing but leaves the upper and lower strands the same;
+         *
+         * - (optionally) reversing some or all link components;
+         *
+         * - (optionally) rotating the entire diagram, which preserves the sign
+         *   of every crossing but switches the upper and lower strands.
          *
          * Signatures are now supported for all link diagrams with fewer than
          * 64 link components.  Specifically:
@@ -4633,9 +4640,8 @@ class Link :
          * The routine fromSig() can be used to recover a link diagram from
          * its signature.  The resulting diagram might not be identical to
          * the original, but it will be related by zero or more applications
-         * of relabelling, rotating connected components of the diagram, and/or
-         * (according to the arguments) reflection of the entire diagram and/or
-         * reversal of individual link components.
+         * of relabelling, and (according to the arguments) reflection,
+         * rotation, and/or reversal of individual link components.
          *
          * The running time is quadratic in the number of crossings and (if we
          * allow reversal, which is the default) exponential in the number of
@@ -4655,10 +4661,14 @@ class Link :
          * should preserve the signature, or \c false if the signature should
          * distinguish between different orientations (again, unless of course
          * there are symmetries).
+         * \param allowRotation \c true if rotating the entire link diagram
+         * should preserve the signature, or \c false if the signature should
+         * distinguish between a diagram and its rotation (again, unless there
+         * is a symmetry).
          * \return the signature for this link diagram.
          */
-        std::string sig(
-            bool allowReflection = true, bool allowReversal = true) const;
+        std::string sig(bool allowReflection = true, bool allowReversal = true,
+            bool allowRotation = true) const;
 
         /**
          * Alias for sig(), which constructs the signature for this
@@ -4683,10 +4693,14 @@ class Link :
          * should preserve the signature, or \c false if the signature should
          * distinguish between different orientations (again, unless of course
          * there are symmetries).
+         * \param allowRotation \c true if rotating the entire link diagram
+         * should preserve the signature, or \c false if the signature should
+         * distinguish between a diagram and its rotation (again, unless there
+         * is a symmetry).
          * \return the signature for this link diagram.
          */
-        std::string knotSig(
-            bool allowReflection = true, bool allowReversal = true) const;
+        std::string knotSig(bool allowReflection = true,
+            bool allowReversal = true, bool allowRotation = true) const;
 
         /**
          * Writes the tight encoding of this link to the given output stream.
@@ -6608,8 +6622,9 @@ inline void Link::join(const StrandRef& s, const StrandRef& t) {
     t.crossing_->prev_[t.strand_] = s;
 }
 
-inline std::string Link::knotSig(bool allowReflection, bool allowReversal) const {
-    return sig(allowReflection, allowReversal);
+inline std::string Link::knotSig(bool allowReflection, bool allowReversal,
+        bool allowRotation) const {
+    return sig(allowReflection, allowReversal, allowRotation);
 }
 
 inline Link Link::fromKnotSig(const std::string& sig) {

@@ -296,16 +296,21 @@ Version 7.4  [ (to be announced) ]
               + New routines hasR1(), hasR2() and hasR3() for checking only.
               + New read-only routines withR1(), withR2() and withR3() that (if
                 possible) return a new link with the relevant moves performed.
-            - Extended knotSig(), rewrite() and simplifyExhaustive() to work
-              with all link diagrams with fewer than 64 link components.
-              It is now recommended to use sig() and fromSig() instead of
-              knotSig() and fromKnotSig() since these names better reflect the
-              scope of these routines.  The original names knotSig() and
-              fromKnotSig() have been kept (and are _not_ deprecated).
+            - Regarding knot signatures:
+              + Signatures now support not just knots but any link diagrams
+                with fewer than 64 link components.
+              + Added an alias sig() for knotSig().  It is now recommended to
+                use sig() and fromSig() instead of knotSig() and fromKnotSig(),
+                since these names better reflect the scope of these routines.
+                The original names knotSig() and fromKnotSig() have been kept
+                (and are _not_ deprecated).
+              + Routines sig() and knotSig() now take an additional argument to
+                specify whether rotations should be considered equivalent.
+            - Extended rewrite() and simplifyExhaustive() to work with all
+              link diagrams with fewer than 64 link components.
             - Routine hasReducingPass() can now handle multiple-component links.
             - Added a variant of translate() that takes crossings instead of
               strand references.
-            - Added an alias sig() for knotSig().
             - Renamed intelligentSimplify() to simplify().  The old name is
               kept as a deprecated alias.
             - Fixed a bug where calling resolve() would not clear out any
