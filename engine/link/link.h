@@ -4640,8 +4640,9 @@ class Link :
          * The routine fromSig() can be used to recover a link diagram from
          * its signature.  The resulting diagram might not be identical to
          * the original, but it will be related by zero or more applications
-         * of relabelling, and (according to the arguments) reflection,
-         * rotation, and/or reversal of individual link components.
+         * of relabelling, and (according to the arguments) reflection of the
+         * diagram, rotation of the diagram, and/or reversal of individual
+         * link components.
          *
          * The running time is quadratic in the number of crossings and (if we
          * allow reversal, which is the default) exponential in the number of
@@ -4896,12 +4897,12 @@ class Link :
          * Recovers a classical or virtual link diagram from its knot/link
          * signature.  See sig() for more information on these signatures.
          *
-         * Calling sig() followed by fromSig() is not guaranteed to
-         * produce an _identical_ knot diagram to the original, but it is
-         * guaranteed to produce one that is related by relabelling, rotating
-         * connected components of the diagram, and optionally (according to
-         * the arguments that were passed to sig()) reflection of the
-         * entire diagram and/or reversal of individual link components.
+         * Calling sig() followed by fromSig() is not guaranteed to produce
+         * an _identical_ link diagram to the original, but it is guaranteed
+         * to produce one that is related by zero or more applications of
+         * relabelling, and (according to the arguments that were passed
+         * to sig()) reflection of the diagram, rotation of the diagram,
+         * and/or reversal of individual link components.
          *
          * \exception InvalidArgument The given string was not a valid
          * knot/link signature.
