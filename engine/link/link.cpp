@@ -522,9 +522,7 @@ long Link::writheOfComponent(StrandRef strand) const {
 
     long ans = 0;
 
-    bool* seen = new bool[crossings_.size()];
-    std::fill(seen, seen + crossings_.size(), false);
-
+    FixedArray<bool> seen(crossings_.size(), false);
     StrandRef s = strand;
     do {
         if (seen[s.crossing()->index()])
@@ -534,7 +532,6 @@ long Link::writheOfComponent(StrandRef strand) const {
         ++s;
     } while (s != strand);
 
-    delete[] seen;
     return ans;
 }
 
@@ -1043,7 +1040,7 @@ Link Link::parallel(int k, Framing framing) const {
         return Link(components_.size() * k);
 
     Link ans;
-    auto* tmp = new Crossing*[k*k]; // Used to build grids of crossings
+    FixedArray<Crossing*> tmp(k * k); // Used to build grids of crossings
 
     // Crossing i of the original link:
     //
@@ -1085,8 +1082,7 @@ Link Link::parallel(int k, Framing framing) const {
     int startStrand;
 
     long writhe;
-    bool* seen = new bool[crossings_.size()];
-    std::fill(seen, seen + crossings_.size(), false);
+    FixedArray<bool> seen(crossings_.size(), false);
 
     for (const StrandRef& start : components_) {
         if (! start) {
@@ -1257,8 +1253,6 @@ Link Link::parallel(int k, Framing framing) const {
                     strand(startStrand));
     }
 
-    delete[] seen;
-    delete[] tmp;
     return ans;
 }
 
