@@ -61,7 +61,7 @@ Link Link::fromPD(Iterator begin, Iterator end) {
     if (n == 0) {
         // PD codes do not handle zero-crossing unknots.
         // Just return nothing at all.
-        return Link();
+        return {};
     }
 
     if constexpr (sizeof(InputInt) <= sizeof(size_t)) {

@@ -61,7 +61,7 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
     n = n / 2;
 
     if (n == 0)
-        return Link(1);
+        return { 1 };
 
     // Run Adam's code to determine the handedness of each crossing.
 
@@ -336,7 +336,7 @@ Link Link::fromOrientedGauss(Iterator begin, Iterator end) {
     n = n / 2;
 
     if (n == 0)
-        return Link(1);
+        return { 1 };
 
     Link ans;
 

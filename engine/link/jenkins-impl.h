@@ -64,7 +64,7 @@ Link Link::fromJenkins(Iterator begin, Iterator end) {
     auto nComp = static_cast<size_t>(val);
 
     if (nComp == 0)
-        return Link();
+        return {};
 
     Link ans;
     ans.components_.resize(nComp);

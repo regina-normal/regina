@@ -164,7 +164,7 @@ Link Link::fromDT(const std::string& s) {
         ++it;
     if (it == s.end()) {
         // Empty string, so return the unknot.
-        return Link(1);
+        return { 1 };
     }
 
     // Work with the largest integer type that we could possibly need.

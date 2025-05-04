@@ -47,7 +47,7 @@ static constexpr regina::SpatialLink::Node orth[3] = {
 namespace regina {
 
 Link ExampleLink::unknot() {
-    return Link(1);
+    return { 1 };
 }
 
 Link ExampleLink::trefoilLeft() {
