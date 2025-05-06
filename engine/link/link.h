@@ -4987,8 +4987,7 @@ class Link :
          *   virtual knot diagrams).
          *
          * - The crossings of the knot must be labelled 1, 2, ..., \a n
-         *   (i.e., they cannot be arbitrary natural numbers with "gaps",
-         *   and the numbering cannot use a different starting point).
+         *   in some order.
          *
          * Be aware that, once the knot has been constructed, the crossings
          * 1, ..., \a n will have been reindexed as 0, ..., <i>n</i>-1
@@ -5107,11 +5106,10 @@ class Link :
          * a knot from an oriented Gauss code:
          *
          * - This can only be done for knots (i.e., links with exactly one
-         *   component).
+         *   component).  Both classical and virtual knots are supported.
          *
          * - The crossings of the knot must be labelled 1, 2, ..., \a n
-         *   (i.e., they cannot be arbitrary natural numbers with "gaps",
-         *   and the numbering cannot use a different starting point).
+         *   in some order.
          *
          * Be aware that, once the knot has been constructed, the crossings
          * 1, ..., \a n will have been reindexed as 0, ..., <i>n</i>-1
@@ -5127,7 +5125,7 @@ class Link :
          * beginning or end of the string is allowed.
          *
          * \exception InvalidArgument The given string was not a valid
-         * oriented Gauss code for a knot.
+         * oriented Gauss code for a classical or virtual knot.
          *
          * \param str an "oriented" Gauss code for a knot, as described above.
          * \return the reconstructed knot.
@@ -5169,7 +5167,7 @@ class Link :
          * C++-style string (which can be cast to `const std::string&`).
          *
          * \exception InvalidArgument The given sequence was not a valid
-         * oriented Gauss code for a knot.
+         * oriented Gauss code for a classical or virtual knot.
          *
          * \python Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of strings.
@@ -5215,7 +5213,7 @@ class Link :
          * beginning or end of the string is allowed.
          *
          * \exception InvalidArgument The given string was not a valid
-         * encoding of a link in Jenkins' format.
+         * encoding of a classical or virtual link in Jenkins' format.
          *
          * \param str a string describing a link in Jenkins' format,
          * as described above.
@@ -5243,7 +5241,7 @@ class Link :
          * which can be read by the user after this routine has finished.
          *
          * \exception InvalidArgument The given input was not a valid
-         * encoding of a link in Jenkins' format.
+         * encoding of a classical or virtual link in Jenkins' format.
          *
          * \nopython Instead use the variant fromJenkins(const std::string&),
          * which takes the input as a string.
@@ -5274,7 +5272,7 @@ class Link :
          * from the type \a Iterator.)
          *
          * \exception InvalidArgument The given sequence was not a valid
-         * encoding of a link in Jenkins' format.
+         * encoding of a classical or virtual link in Jenkins' format.
          *
          * \python Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of integers.
@@ -5420,14 +5418,16 @@ class Link :
         static Link fromDT(Iterator begin, Iterator end);
 
         /**
-         * Creates a new link from a planar diagram code, presented as a string.
+         * Creates a new classical or virtual link from a planar diagram code,
+         * presented as a string.
          *
          * Planar diagram codes overcome the limitations of classical Gauss
          * codes by encoding the local information at each crossing, though
          * they do introduce their own (less severe) ambiguities and
          * computational difficulties, as described in the warnings below.
          * They can work with links as well as knots, though they cannot
-         * encode zero-crossing unknot components.
+         * encode zero-crossing unknot components.  They can also (despite
+         * their name) work with virtual links as well as classical links.
          *
          * A planar diagram code for an <i>n</i>-crossing link is formed
          * from a sequence of \a n 4-tuples of integers.  An example,
@@ -5445,9 +5445,7 @@ class Link :
          *
          * - The integers used in the input sequence (which denote the
          *   2<i>n</i> strands in the link diagram) must be in the range
-         *   1, 2, ..., 2<i>n</i>.  That is, they cannot be arbitrary natural
-         *   numbers with "gaps", and the numbering of strands cannot use a
-         *   different starting point.
+         *   `1,2,...,2n`, with each of these numbers used exactly twice.
          *
          * When Regina builds the resulting link, it numbers the crossings
          * and components (but not the strands).  It will do this as follows:
@@ -5497,24 +5495,15 @@ class Link :
          * tuples.  Regina does _not_ attribute any meaning to these symbols,
          * and will treat them as nothing more than separators.
          *
-         * \warning If the link contains an unknotted loop that sits
-         * completely above all other link components (in other words,
-         * a link components that consists entirely of over-crossings), then
-         * the orientation of this loop might not be reconstructed correctly.
+         * \warning If the link contains any components that sit completely
+         * above all other link components (in other words, link components
+         * that consist entirely of over-crossings), then the orientations of
+         * these components might not be reconstructed correctly.
          * This is unavoidable: the planar diagram code simply does not
          * contain this information.
          *
-         * \warning While this routine does some error checking on the
-         * input, these checks are not exhaustive.  In particular,
-         * it does _not_ test for planarity of the diagram.
-         * That is, if the input describes a link diagram that must be
-         * drawn on some higher-genus surface as opposed to the plane,
-         * this will not be detected.  Of course such inputs are not
-         * allowed, and it is currently up to the user to enforce this.
-         *
          * \exception InvalidArgument The given string was not a valid
-         * planar diagram code.  As noted above, the checks performed here
-         * are not exhaustive.
+         * planar diagram code for a classical or virtual link.
          *
          * \param str a planar diagram code for a link, as described above.
          * \return the reconstructed link.
@@ -5522,8 +5511,8 @@ class Link :
         static Link fromPD(const std::string& str);
 
         /**
-         * Creates a new link from a planar diagram code, presented as a
-         * sequence of 4-tuples.
+         * Creates a new classical or virtual link from a planar diagram code,
+         * presented as a sequence of 4-tuples.
          *
          * See pd() for a full description of planar diagram codes as
          * they are used in Regina, and see fromPD(const std::string&)
@@ -5544,24 +5533,15 @@ class Link :
          * C++ integer type being used will be deduced from the type
          * \a Iterator.)
          *
-         * \warning If the link contains an unknotted loop that sits
-         * completely above all other link components (in other words,
-         * a link components that consists entire of over-crossings), then
-         * the orientation of this loop might not be reconstructed correctly.
+         * \warning If the link contains any components that sit completely
+         * above all other link components (in other words, link components
+         * that consist entirely of over-crossings), then the orientations of
+         * these components might not be reconstructed correctly.
          * This is unavoidable: the planar diagram code simply does not
          * contain this information.
          *
-         * \warning While this routine does some error checking on the
-         * input, these checks are not exhaustive.  In particular,
-         * it does _not_ test for planarity of the diagram.
-         * That is, if the input describes a link diagram that must be
-         * drawn on some higher-genus surface as opposed to the plane,
-         * this will not be detected.  Of course such inputs are not
-         * allowed, and it is currently up to the user to enforce this.
-         *
          * \exception InvalidArgument The given sequence was not a valid
-         * planar diagram code.  As noted above, the checks performed here
-         * are not exhaustive.
+         * planar diagram code for a classical or virtual link.
          *
          * \python Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list.  Each element
