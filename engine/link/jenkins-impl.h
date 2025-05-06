@@ -73,8 +73,8 @@ Link Link::fromJenkins(Iterator begin, Iterator end) {
     // Alas, these appear last in the input.
     // Skip through (and remember) the link components, which appear first.
     using CompStep = std::pair<size_t, int>; // (crossing, side)
-    auto* compLen = new size_t[nComp];
-    auto* compInput = new CompStep*[nComp];
+    FixedArray<size_t> compLen(nComp);
+    FixedArray<CompStep*> compInput(nComp, nullptr);
     size_t foundCrossings = 0;
 
     size_t c;
@@ -133,8 +133,6 @@ Link Link::fromJenkins(Iterator begin, Iterator end) {
     } catch (const InvalidArgument&) {
         for (size_t i = 0; i < c; ++i)
             delete[] compInput[i];
-        delete[] compInput;
-        delete[] compLen;
         throw;
     }
 
@@ -143,14 +141,11 @@ Link Link::fromJenkins(Iterator begin, Iterator end) {
         // Invalid input.
         for (size_t i = 0; i < nComp; ++i)
             delete[] compInput[i];
-        delete[] compInput;
-        delete[] compLen;
         throw InvalidArgument("fromJenkins(): odd number of total steps");
     }
-    size_t nCross = foundCrossings / 2;
 
-    auto* tmpCross = new Crossing*[nCross];
-    std::fill(tmpCross, tmpCross + nCross, nullptr);
+    size_t nCross = foundCrossings / 2;
+    FixedArray<Crossing*> tmpCross(nCross, nullptr);
 
     try {
         for (size_t i = 0; i < nCross; ++i) {
@@ -180,17 +175,13 @@ Link Link::fromJenkins(Iterator begin, Iterator end) {
     } catch (const InvalidArgument&) {
         for (size_t i = 0; i < nCross; ++i)
             delete tmpCross[i];
-        delete[] tmpCross;
         for (size_t i = 0; i < nComp; ++i)
             delete[] compInput[i];
-        delete[] compInput;
-        delete[] compLen;
         throw;
     }
 
     for (size_t i = 0; i < nCross; ++i)
         ans.crossings_.push_back(tmpCross[i]);
-    delete[] tmpCross;
 
     // Finally, we can connect the crossings together by following the
     // individual link components.
@@ -210,8 +201,6 @@ Link Link::fromJenkins(Iterator begin, Iterator end) {
             if (ans.crossings_[startCross]->next_[startStrand]) {
                 for (i = 0; i < nComp; ++i)
                     delete[] compInput[i];
-                delete[] compInput;
-                delete[] compLen;
                 throw InvalidArgument(
                     "fromJenkins(): multiple visits to the same strand");
             }
@@ -226,8 +215,6 @@ Link Link::fromJenkins(Iterator begin, Iterator end) {
     // Start cleaning up.
     for (size_t i = 0; i < nComp; ++i)
         delete[] compInput[i];
-    delete[] compInput;
-    delete[] compLen;
 
     // Set up prev links to match next links.
     StrandRef next;
