@@ -723,7 +723,7 @@ namespace {
             // Have we found an admissible colouring?
             if (curr >= static_cast<ssize_t>(nEdges)) {
 #ifdef TV_BACKTRACK_DUMP_COLOURINGS
-                for (i = 0; i < nEdges; ++i) {
+                for (size_t i = 0; i < nEdges; ++i) {
                     if (i > 0)
                         std::cout << ' ';
                     std::cout << colour[i];
@@ -1228,8 +1228,8 @@ namespace {
 
 #ifdef TV_BACKTRACK_DUMP_COLOURINGS
             std::cout << "Bag " << bag->index() << ":" << std::endl;
-            for (const auto& soln : partial[index])
-                std::cout << soln.first << " -> " soln.second << std::endl;
+            for (const auto& soln : *(partial[index]))
+                std::cout << soln.first << " -> " << soln.second << std::endl;
 #endif
         }
 
