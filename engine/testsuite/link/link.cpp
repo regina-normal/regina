@@ -2902,12 +2902,9 @@ TEST_F(LinkTest, gaussAndDT) {
 
     // The following cases _should_ be ambiguous, but by sheer luck work with
     // at least one of our codes:
-    verifyGaussAndDT(trefoil_r1x2, true, false);
-    verifyGaussAndDT(figureEight_r1x2, true, false);
-    verifyGaussAndDT(rht_rht, true, false);
-    verifyGaussAndDT(rht_lht, false, true);
-
-    verifyGaussAndDT(virtualTrefoil, true, false);
+    verifyGaussAndDT(trefoil_r1x2, true, true);
+    verifyGaussAndDT(figureEight_r1x2, true, true);
+    verifyGaussAndDT(rht_rht, true, true);
 
     // Virtual knots do not play well with Gauss / D-T codes, but we should
     // verify this.

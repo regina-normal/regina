@@ -313,6 +313,13 @@ Version 7.4  [ (to be announced) ]
               strand references.
             - Renamed intelligentSimplify() to simplify().  The old name is
               kept as a deprecated alias.
+            - Fixed a bug in fromDT() that was producing non-planar diagrams
+              for some non-minimal encodings with spurious R1 twists.  The
+              solution was to drop the old code completely (which was imported
+              from elsewhere) and instead to piggy-back on Regina's own Gauss
+              code reconstruction routine.  As a result, fromDT() might now
+              make different choices when resolving the inherent ambiguities
+              in Dowker-Thistlethwaite notation.
             - Fixed a bug where calling resolve() would not clear out any
               cached link polynomials that had already been computed.
             - Overhaul of the internal change span classes, including a new
