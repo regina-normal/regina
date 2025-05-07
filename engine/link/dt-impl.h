@@ -64,7 +64,109 @@ namespace regina {
 // -----------------------------------------------------------------------
 
 template <typename Iterator>
+FixedArray<int> Link::gaussFromDT(Iterator begin, Iterator end) {
+    using InputInt = std::remove_cv_t<std::remove_reference_t<decltype(*begin)>>;
+    static_assert(std::is_integral_v<InputInt> &&
+        ! std::is_unsigned_v<InputInt>, "gaussFromDT(): the iterator type "
+        "needs to dereference to give a native signed C++ integer type.");
+
+    // Extract the number of crossings.
+    size_t n = end - begin;
+    if (n == 0)
+        return { 0 }; // empty array
+
+    // Some basic sanity checking.
+    // We ensure that the integers are in range, but we do not yet check
+    // that their absolute values are distinct (that will come later).
+
+    if constexpr (sizeof(InputInt) <= sizeof(size_t)) {
+        if (2 * n > static_cast<size_t>(std::numeric_limits<InputInt>::max()))
+            throw InvalidArgument("gaussFromDT(): too many crossings for "
+                "the given integer type");
+    }
+    const auto maxEntry = static_cast<InputInt>(2 * n);
+
+    Iterator it;
+    for (it = begin; it != end; ++it) {
+        if (*it % 2 != 0)
+            throw InvalidArgument("gaussFromDT(): code contains odd integer");
+        if (*it == 0 || *it > maxEntry || *it < -maxEntry)
+            throw InvalidArgument("gaussFromDT(): integer out of range in code");
+    }
+
+    // Cache the absolute values of the entries in the DT code, and switch
+    // from 1-based indexing to 0-based indexing.
+
+    size_t i;
+    FixedArray<size_t> abs(n);
+    for (it = begin, i = 0; it != end; ++it, ++i)
+        abs[i] = std::abs(*it) - 1;
+
+    // Build the involution that relates the odd and even passes over the same
+    // crossing.
+
+    FixedArray<size_t> inv(2 * n, 1 /* does not appear in abs[] */);
+    for (i = 0; i < n; i++) {
+        if (inv[abs[i]] != 1 /* the initial value */)
+            throw InvalidArgument("gaussFromDT(): repeated |entry| in code");
+        inv[2*i] = abs[i];
+        inv[abs[i]] = 2*i;
+    }
+
+    // For each crossing, identify the two position in inv[] where it occurs.
+
+    FixedArray<size_t> oddPos(n);
+    FixedArray<size_t> evenPos(n);
+    FixedArray<size_t> crossingForPos(2 * n);
+
+    size_t nextUnused = 0;
+    for (i = 0; i < 2 * n; ++i) {
+        // Examine position i from the involution.
+        if (inv[i] > i) {
+            // First time we see this crossing.
+            crossingForPos[i] = nextUnused++;
+        } else {
+            // Second time we see this crossing.
+            crossingForPos[i] = crossingForPos[inv[i]];
+        }
+        if (i % 2)
+            oddPos[crossingForPos[i]] = i;
+        else
+            evenPos[crossingForPos[i]] = i;
+    }
+
+    // Use this data to build the classical Gauss code.
+
+    FixedArray<int> ans(2 * n);
+
+    for (i = 0; i < 2 * n; ++i) {
+        int cr = crossingForPos[i] + 1; // back to 1-based indexing
+
+        if (i % 2 == 0) {
+            // This is an odd position in the original 1-based indexing.
+            if (*(begin + (i / 2)) > 0)
+                ans[i] = -cr;
+            else
+                ans[i] = cr;
+        } else {
+            // This is an even position in the original 1-based indexing.
+            if (*(begin + (inv[i] / 2)) > 0)
+                ans[i] = cr;
+            else
+                ans[i] = -cr;
+        }
+    }
+
+    return ans;
+}
+
+template <typename Iterator>
 Link Link::fromDT(Iterator begin, Iterator end) {
+    // TODO: Remove this.
+    auto tmp = gaussFromDT(begin, end);
+    return fromGauss(tmp.begin(), tmp.end());
+
+#if 0
     using InputInt = std::remove_cv_t<std::remove_reference_t<decltype(*begin)>>;
     static_assert(std::is_integral_v<InputInt> &&
         ! std::is_unsigned_v<InputInt>, "fromDT(): the iterator type "
@@ -244,6 +346,7 @@ Link Link::fromDT(Iterator begin, Iterator end) {
 
     // All done!
     return ans;
+#endif
 }
 
 } // namespace regina

@@ -5612,6 +5612,14 @@ class Link :
             FixedArray<bool>& aRealization, size_t aNumCrossings);
 
         /**
+         * Converts Dowker-Thistlethwaite notation directly into a classical
+         * Gauss code, without making any attempt to reconstruct the link
+         * diagram.
+         */
+        template <typename Iterator>
+        static FixedArray<int> gaussFromDT(Iterator begin, Iterator end);
+
+        /**
          * Internal to fromData().
          *
          * This routine processes one link component, and then recursively
