@@ -2853,13 +2853,31 @@ static void verifyDTPlanarity(const Link& link, const char* name) {
 
 static void verifyDTPlanarityPermuting(std::string code) {
     // The input code should be alphabetical and sorted (i.e., "abcd..").
+    // Currently this test only supports ≤ 5 crossings.
+    ASSERT_LE(code.length(), 5);
+
+    // All of the non-planar D-T codes with ≤ 5 crossings (here we ignore
+    // upper/lower strands and always use lower-case letters):
+    const std::array<std::string, 7> nonPlanar {
+        // These five are relabellings of the same 4-valent graph:
+        "bdaec", "bedac", "cedba", "dcaeb", "dceba",
+        // These two are relabellings of the same 4-valent graph:
+        "bcdea", "deabc"
+    };
+
     do {
         SCOPED_TRACE_STDSTRING(code);
-        EXPECT_NO_THROW({
-            Link recon = Link::fromDT(code);
-            EXPECT_TRUE(recon.isClassical());
-            EXPECT_EQ(recon.dt(true), code);
-        });
+        bool expectPlanar = (std::find(nonPlanar.begin(), nonPlanar.end(), code)
+            == nonPlanar.end());
+        if (expectPlanar) {
+            EXPECT_NO_THROW({
+                Link recon = Link::fromDT(code);
+                EXPECT_TRUE(recon.isClassical());
+                EXPECT_EQ(recon.dt(true), code);
+            });
+        } else {
+            EXPECT_THROW({ Link::fromDT(code); }, regina::InvalidArgument);
+        }
     } while (std::next_permutation(code.begin(), code.end()));
 }
 
