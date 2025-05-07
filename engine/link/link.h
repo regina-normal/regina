@@ -4959,14 +4959,17 @@ class Link :
         static Link tightDecode(std::istream& input);
 
         /**
-         * Creates a new classical knot from a classical Gauss code, presented
-         * as a string.
+         * Creates a new classical knot from a classical Gauss code,
+         * presented as a string.
          *
          * Classical Gauss codes essentially describe the 4-valent graph
-         * of a knot but not the particular embedding in the plane.  As
-         * a result, there can be topological ambiguities when a knot is
-         * reconstructed from a gauss code; these are described in the
-         * warnings below.
+         * of a knot but not the particular embedding in the plane.  As a
+         * result, there can be topological ambiguities when a classical knot
+         * is reconstructed from a Gauss code; these are described in the
+         * warnings below.  For virtual (not classical) knots, the ambiguities
+         * inherent in classical Gauss codes are even more severe, and so
+         * Regina will not attempt to reconstruct a virtual knot from its
+         * classical Gauss code at all.
          *
          * The Gauss code for an <i>n</i>-crossing knot is described by
          * a sequence of 2<i>n</i> positive and negative integers.
@@ -5003,39 +5006,31 @@ class Link :
          * beginning or end of the string is allowed.
          *
          * \warning In general, the classical Gauss code does not contain
-         * enough information to uniquely reconstruct a knot.  For prime knots,
-         * both a knot and its reflection can be described by the same Gauss
-         * code; for composite knots, the same Gauss code can describe
-         * knots that are topologically inequivalent, even when allowing for
-         * reflection.  If you need to reconstruct a knot uniquely, consider
-         * using the _oriented_ Gauss code instead.
-         *
-         * \warning While this routine does some error checking on the
-         * input, these checks are not exhaustive.  In particular,
-         * it does _not_ test for planarity of the diagram.
-         * That is, if the input describes a knot diagram that must be
-         * drawn on some higher-genus surface as opposed to the plane,
-         * this will not be detected.  Of course such inputs are not
-         * allowed, and it is currently up to the user to enforce this.
+         * enough information to uniquely reconstruct a classical knot.
+         * For prime knots, both a knot and its reflection can be described by
+         * the same Gauss code; for composite knots, the same Gauss code can
+         * describe knots that are topologically inequivalent, even when
+         * allowing for reflection.  If you need to reconstruct a knot uniquely,
+         * consider using the _oriented_ Gauss code instead.
          *
          * \exception InvalidArgument The given string was not a valid
-         * classical Gauss code for a knot.  As noted above, the checks
-         * performed here are not exhaustive.
+         * classical Gauss code for a classical knot.
          *
          * \author Adam Gowty
          *
-         * \param str a classical Gauss code for a knot, as described above.
+         * \param str a classical Gauss code for a classical knot, as
+         * described above.
          * \return the reconstructed knot.
          */
         static Link fromGauss(const std::string& str);
 
         /**
-         * Creates a new classical knot from a classical Gauss code, presented
-         * as an integer sequence.
+         * Creates a new classical knot from a classical Gauss code,
+         * presented as an integer sequence.
          *
          * See gauss() for a full description of classical Gauss codes as
          * they are used in Regina, and see fromGauss(const std::string&)
-         * for a detailed discussion of how Regina reconstructs knots
+         * for a detailed discussion of how Regina reconstructs classical knots
          * from such codes.
          *
          * This routine is a variant of fromGauss(const std::string&) which,
@@ -5049,24 +5044,15 @@ class Link :
          * from the type \a Iterator.)
          *
          * \warning In general, the classical Gauss code does not contain
-         * enough information to uniquely reconstruct a knot.  For prime knots,
-         * both a knot and its reflection can be described by the same Gauss
-         * code; for composite knots, the same Gauss code can describe
-         * knots that are topologically inequivalent, even when allowing for
-         * reflection.  If you need to reconstruct a knot uniquely, consider
-         * using the _oriented_ Gauss code instead.
-         *
-         * \warning While this routine does some error checking on the
-         * input, these checks are not exhaustive.  In particular,
-         * it does _not_ test for planarity of the diagram.
-         * That is, if the input describes a knot diagram that must be
-         * drawn on some higher-genus surface as opposed to the plane,
-         * this will not be detected.  Of course such inputs are not
-         * allowed, and it is currently up to the user to enforce this.
+         * enough information to uniquely reconstruct a classical knot.
+         * For prime knots, both a knot and its reflection can be described by
+         * the same Gauss code; for composite knots, the same Gauss code can
+         * describe knots that are topologically inequivalent, even when
+         * allowing for reflection.  If you need to reconstruct a knot uniquely,
+         * consider using the _oriented_ Gauss code instead.
          *
          * \exception InvalidArgument The given sequence was not a valid
-         * classical Gauss code for a knot.  As noted above, the checks
-         * performed here are not exhaustive.
+         * classical Gauss code for a classical knot.
          *
          * \python Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of integers.
@@ -5291,10 +5277,11 @@ class Link :
          * Dowker-Thistlethwaite notation, presented as a string.
          *
          * Dowker-Thistlethwaite notation essentially describes the 4-valent
-         * graph of a knot but not the particular embedding in the plane.
-         * As a result, there can be topological ambiguities when a knot is
-         * reconstructed from Dowker-Thistlethwaite notation; these are
-         * described in the warnings below.
+         * graph of a knot but not its particular embedding in the plane.
+         * As a result, there can be topological ambiguities when a
+         * classical knot is reconstructed from Dowker-Thistlethwaite notation;
+         * these are described in the warnings below.  Dowker-Thistlethwaite
+         * notation cannot be used with virtual (not classical) knots at all.
          *
          * Dowker-Thistlethwaite notation comes in two forms: numerical
          * and alphabetical.  For an <i>n</i>-crossing knot, the numerical
@@ -5310,9 +5297,6 @@ class Link :
          *
          * See dt(bool) for a full description of Dowker-Thistlethwaite
          * notation as it is used in Regina, as well as its limitations.
-         * In particular, be aware that Regina can only work with
-         * Dowker-Thistlethwaite codes for _classical_ knots, not the more
-         * general virtual knot diagrams).
          *
          * There are two variants of this routine.  This variant takes a single
          * string, which is either (i) the alphabetical notation, in which any
@@ -5328,30 +5312,22 @@ class Link :
          * of the whitespace that separates the integers does not matter.
          *
          * \warning In general, Dowker-Thistlethwaite notation does not contain
-         * enough information to uniquely reconstruct a knot.  For prime knots,
-         * both a knot and its reflection can be described by the same notation;
-         * for composite knots, the same notation can describe knots that are
-         * topologically inequivalent, even when allowing for reflection.
-         * If you need to reconstruct a knot uniquely, consider
-         * using the oriented Gauss code instead.
-         *
-         * \warning While this routine does some error checking on the
-         * input, these checks are not exhaustive.  In particular,
-         * it does _not_ test for planarity of the diagram.
-         * That is, if the input describes a knot diagram that must be
-         * drawn on some higher-genus surface as opposed to the plane,
-         * this will not be detected.  Of course such inputs are not
-         * allowed, and it is currently up to the user to enforce this.
+         * enough information to uniquely reconstruct a classical knot.i
+         * For prime knots, both a knot and its reflection can be described by
+         * the same notation; for composite knots, the same notation can
+         * describe knots that are topologically inequivalent, even when
+         * allowing for reflection.  If you need to reconstruct a knot uniquely,
+         * consider using the oriented Gauss code instead.
          *
          * \exception InvalidArgument The given string was not a valid
-         * Dowker-Thistlethwaite code for a knot.  As noted above, the checks
-         * performed here are not exhaustive.
+         * Dowker-Thistlethwaite code for a classical knot.
          *
          * \author Much of the code for this routine is based on the
          * Dowker-Thistlethwaite implementation in the SnapPea/SnapPy kernel.
          *
          * \param str either the alphabetical or numerical
-         * Dowker-Thistlethwaite notation for a knot, as described above.
+         * Dowker-Thistlethwaite notation for a classical knot, as described
+         * above.
          * \return the reconstructed knot.
          */
         static Link fromDT(const std::string& str);
@@ -5362,7 +5338,7 @@ class Link :
          *
          * See dt(bool) for a full description of Dowker-Thistlethwaite
          * notation as it is used in Regina, and see fromDT(const std::string&)
-         * for a detailed discussion of how Regina reconstructs knots
+         * for a detailed discussion of how Regina reconstructs classical knots
          * from such notation.
          *
          * This routine is a variant of fromDT(const std::string&) which,
@@ -5381,24 +5357,15 @@ class Link :
          * from the type \a Iterator.)
          *
          * \warning In general, Dowker-Thistlethwaite notation does not contain
-         * enough information to uniquely reconstruct a knot.  For prime knots,
-         * both a knot and its reflection can be described by the same notation;
-         * for composite knots, the same notation can describe knots that are
-         * topologically inequivalent, even when allowing for reflection.
-         * If you need to reconstruct a knot uniquely, consider
-         * using the oriented Gauss code instead.
-         *
-         * \warning While this routine does some error checking on the
-         * input, these checks are not exhaustive.  In particular,
-         * it does _not_ test for planarity of the diagram.
-         * That is, if the input describes a knot diagram that must be
-         * drawn on some higher-genus surface as opposed to the plane,
-         * this will not be detected.  Of course such inputs are not
-         * allowed, and it is currently up to the user to enforce this.
+         * enough information to uniquely reconstruct a classical knot.
+         * For prime knots, both a knot and its reflection can be described by
+         * the same notation; for composite knots, the same notation can
+         * describe knots that are topologically inequivalent, even when
+         * allowing for reflection.  If you need to reconstruct a knot uniquely,
+         * consider using the oriented Gauss code instead.
          *
          * \exception InvalidArgument The given sequence was not a valid
-         * Dowker-Thistlethwaite code for a knot.  As noted above, the checks
-         * performed here are not exhaustive.
+         * Dowker-Thistlethwaite code for a classical knot.
          *
          * \python Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of integers.
@@ -5408,10 +5375,10 @@ class Link :
          *
          * \param begin an iterator that points to the beginning of the
          * sequence of integers for the Dowker-Thistlethwaite notation
-         * for a knot.
+         * for a classical knot.
          * \param end an iterator that points past the end of the
          * sequence of integers for the Dowker-Thistlethwaite notation
-         * for a knot.
+         * for a classical knot.
          * \return the reconstructed knot.
          */
         template <typename Iterator>
@@ -5641,8 +5608,8 @@ class Link :
          * \author This routine is based on the Dowker-Thistlethwaite
          * implementation from the SnapPea/SnapPy kernel.
          */
-        static bool realizeDT(size_t* anInvolution, bool* aRealization,
-            size_t aNumCrossings);
+        static bool realizeDT(const FixedArray<size_t>& anInvolution,
+            FixedArray<bool>& aRealization, size_t aNumCrossings);
 
         /**
          * Internal to fromData().

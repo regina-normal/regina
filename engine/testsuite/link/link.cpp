@@ -2737,7 +2737,17 @@ static void verifyGaussAndDT(const TestCase& test,
         bool testGauss = true, bool testDT = true) {
     SCOPED_TRACE_CSTRING(test.name);
     ASSERT_EQ(test.link.countComponents(), 1);
-    ASSERT_TRUE(test.link.isClassical());
+
+    if (! test.link.isClassical()) {
+        // Verify that Gauss and D-T codes both fail as expected.
+        EXPECT_THROW({ test.link.dt(); }, regina::NotImplemented);
+
+        std::string code = test.link.gauss();
+        EXPECT_THROW({ Link::fromGauss(code); }, regina::InvalidArgument);
+        EXPECT_THROW({ Link link(code); }, regina::InvalidArgument);
+
+        return;
+    }
 
     // For "non-composite-like" knot diagrams, the only possible ambiguity
     // is reflection.  Use the reflection-distinguishing knot signature to
@@ -2802,6 +2812,57 @@ static void verifyGaussAndDT(const TestCase& test,
     }
 }
 
+static void verifyGaussPlanarity(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    if (link.countComponents() != 1) {
+        EXPECT_THROW({ link.gauss(); }, regina::NotImplemented);
+    } else {
+        // Note: a non-classical diagram _could_ have the same Gauss code as a
+        // classical diagram (same order of crossings but different crossing
+        // signs).
+        std::string code = link.gauss();
+        SCOPED_TRACE_STDSTRING(code);
+        try {
+            Link recon = Link::fromGauss(code);
+            EXPECT_EQ(recon.gauss(), code);
+            EXPECT_TRUE(recon.isClassical());
+        } catch (const regina::InvalidArgument&) {
+            EXPECT_FALSE(link.isClassical());
+        }
+    }
+}
+
+static void verifyDTPlanarity(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    if (link.countComponents() != 1) {
+        EXPECT_THROW({ link.dt(); }, regina::NotImplemented);
+    } else if (! link.isClassical()) {
+        EXPECT_THROW({ link.dt(); }, regina::NotImplemented);
+    } else {
+        std::string code = link.dt();
+        SCOPED_TRACE_STDSTRING(code);
+        EXPECT_NO_THROW({
+            Link recon = Link::fromDT(code);
+            EXPECT_EQ(recon.dt(), code);
+            EXPECT_TRUE(recon.isClassical());
+        });
+    }
+}
+
+static void verifyDTPlanarityPermuting(std::string code) {
+    // The input code should be alphabetical and sorted (i.e., "abcd..").
+    do {
+        SCOPED_TRACE_STDSTRING(code);
+        EXPECT_NO_THROW({
+            Link recon = Link::fromDT(code);
+            EXPECT_TRUE(recon.isClassical());
+            EXPECT_EQ(recon.dt(true), code);
+        });
+    } while (std::next_permutation(code.begin(), code.end()));
+}
+
 TEST_F(LinkTest, gaussAndDT) {
     // We test Gauss and D-T codes together, since they both have the same
     // ambiguity with knot composition.
@@ -2828,12 +2889,22 @@ TEST_F(LinkTest, gaussAndDT) {
     verifyGaussAndDT(rht_rht, true, false);
     verifyGaussAndDT(rht_lht, false, true);
 
-    // Virtual links do not play well with Gauss / D-T codes.
-    EXPECT_THROW({ virtualTrefoil.link.dt(); }, regina::NotImplemented);
-    EXPECT_THROW({ kishino.link.dt(); }, regina::NotImplemented);
-    EXPECT_THROW({ gpv.link.dt(); }, regina::NotImplemented);
-    EXPECT_THROW({ virtualLink2.link.dt(); }, regina::NotImplemented);
-    EXPECT_THROW({ virtualLink3.link.dt(); }, regina::NotImplemented);
+    verifyGaussAndDT(virtualTrefoil, true, false);
+
+    // Virtual knots do not play well with Gauss / D-T codes, but we should
+    // verify this.
+    verifyGaussAndDT(virtualTrefoil);
+    verifyGaussAndDT(kishino);
+    verifyGaussAndDT(gpv);
+
+    // Verify that Gauss and D-T codes behave as expect wrt planarity.
+    runCensusAllVirtual(verifyGaussPlanarity);
+    runCensusAllVirtual(verifyDTPlanarity);
+    verifyDTPlanarityPermuting("a");
+    verifyDTPlanarityPermuting("ab");
+    verifyDTPlanarityPermuting("abc");
+    verifyDTPlanarityPermuting("abcd");
+    verifyDTPlanarityPermuting("abcde");
 }
 
 static void verifyOrientedGauss(const Link& link, const char* name) {

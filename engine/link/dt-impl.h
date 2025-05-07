@@ -103,11 +103,7 @@ Link Link::fromDT(Iterator begin, Iterator end) {
 
     ans.components_.emplace_back(ans.crossings_.front(), 0);
 
-    // Here starts the SnapPea code!
-
-    size_t          *theAlternatingDT,
-                    *theInvolution;
-    bool            *theRealization;
+    // Here starts the (slightly modified) SnapPea code!
 
     /*
      *  Let theAlternatingDT contain the absolute values of the
@@ -116,7 +112,7 @@ Link Link::fromDT(Iterator begin, Iterator end) {
      *  eight knot example, theAlternatingDT and the DT code are the same,
      *  because the figure eight knot is already alternating.
      */
-    theAlternatingDT = new size_t[aNumCrossings];
+    FixedArray<size_t> theAlternatingDT(aNumCrossings);
     for (it = begin, i = 0; it != end; ++it, ++i)
         theAlternatingDT[i] = std::abs(*it);
 
@@ -140,16 +136,12 @@ Link Link::fromDT(Iterator begin, Iterator end) {
      *
      *  As an array, theInvolution = {3, 6, 5, 0, 7, 2, 1, 4}.
      */
-    theInvolution = new size_t[2 * aNumCrossings];
-    std::fill(theInvolution, theInvolution + 2 * aNumCrossings,
+    FixedArray<size_t> theInvolution(2 * aNumCrossings,
         1 /* a value that does not appear in theAlternatingDT[] */);
     for (i = 0; i < aNumCrossings; i++)
     {
-        if (theInvolution[theAlternatingDT[i]] != 1 /* the initial value */) {
-            delete[] theAlternatingDT;
-            delete[] theInvolution;
+        if (theInvolution[theAlternatingDT[i]] != 1 /* the initial value */)
             throw InvalidArgument("fromDT(): repeated |entry| in code");
-        }
         theInvolution[2*i]                  = theAlternatingDT[i];
         theInvolution[theAlternatingDT[i]]  = 2*i;
     }
@@ -172,14 +164,9 @@ Link Link::fromDT(Iterator begin, Iterator end) {
      *  or vice versa, because DT codes don't record chirality
      *  to begin with.
      */
-    theRealization = new bool[2 * aNumCrossings];
-    if (! realizeDT(theInvolution, theRealization, aNumCrossings)) {
-        // The sequence could not be realized.
-        delete[] theAlternatingDT;
-        delete[] theInvolution;
-        delete[] theRealization;
+    FixedArray<bool> theRealization(2 * aNumCrossings);
+    if (! realizeDT(theInvolution, theRealization, aNumCrossings))
         throw InvalidArgument("fromDT(): sequence is not realisable");
-    }
 
     /*
      *  For each crossing, we now identify the two positions in the
@@ -188,9 +175,9 @@ Link Link::fromDT(Iterator begin, Iterator end) {
      *  For each position in the involution, we also identify which
      *  crossing it represents.
      */
-    auto* oddPos = new size_t[aNumCrossings];
-    auto* evenPos = new size_t[aNumCrossings];
-    auto* crossingForPos = new size_t[2 * aNumCrossings];
+    FixedArray<size_t> oddPos(aNumCrossings);
+    FixedArray<size_t> evenPos(aNumCrossings);
+    FixedArray<size_t> crossingForPos(2 * aNumCrossings);
 
     size_t nextUnused = 0;
     for (i = 0; i < 2 * aNumCrossings; ++i) {
@@ -256,13 +243,6 @@ Link Link::fromDT(Iterator begin, Iterator end) {
             ans.change(ans.crossings_[crossingForPos[-(*it) - 1]]);
 
     // All done!
-    delete[] oddPos;
-    delete[] evenPos;
-    delete[] crossingForPos;
-    delete[] theAlternatingDT;
-    delete[] theInvolution;
-    delete[] theRealization;
-
     return ans;
 }
 

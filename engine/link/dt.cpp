@@ -216,11 +216,8 @@ Link Link::fromDT(const std::string& s) {
 //
 // -----------------------------------------------------------------------
 
-bool Link::realizeDT(
-    size_t  *anInvolution,
-    bool    *aRealization,
-    size_t  aNumCrossings)
-{
+bool Link::realizeDT(const FixedArray<size_t>& anInvolution,
+    FixedArray<bool>& aRealization, size_t aNumCrossings) {
     /*
      *  Returns true iff the sequence was realizable.  If so, then
      *  aRealization will be filled with a realization.  If not, then
