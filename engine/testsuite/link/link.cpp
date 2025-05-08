@@ -109,6 +109,48 @@ static void verifyTopologicallySame(const Link& a, const Link& b) {
         EXPECT_EQ(a.jones(), b.jones());
 }
 
+static void verifyIsomorphic(const GroupPresentation& a,
+        const GroupPresentation& b) {
+    if (a.countGenerators() <= 1 || b.countGenerators() <= 1 ||
+            a.countRelations() == 0 || b.countRelations() == 0) {
+        // For trivial, cyclic or free groups, we expect Regina should be
+        // able to simplif both groups to the same canonical presentation.
+        EXPECT_EQ(a.countGenerators(), b.countGenerators());
+        EXPECT_EQ(a.relations(), b.relations());
+        return;
+    }
+
+    // Both groups have ≥ 2 generators and ≥ 1 relation.
+    // In general we can't reliably test isomorphism, but we *can* reliably
+    // test abelian invariants and low-index covers.
+    EXPECT_EQ(a.abelianisation(), b.abelianisation());
+
+    auto compareGroups = [&a, &b](auto index) {
+        SCOPED_TRACE_NUMERIC(index);
+
+        std::vector<std::string> coversA;
+        a.enumerateCovers<index>([&coversA](const GroupPresentation& c) {
+            coversA.push_back(c.abelianisation().str());
+        });
+        std::sort(coversA.begin(), coversA.end());
+
+        std::vector<std::string> coversB;
+        b.enumerateCovers<index>([&coversB](const GroupPresentation& c) {
+            coversB.push_back(c.abelianisation().str());
+        });
+        std::sort(coversB.begin(), coversB.end());
+
+        EXPECT_EQ(coversA, coversB);
+    };
+
+    if (a.countGenerators() <= 5 && b.countGenerators() <= 5) {
+        regina::for_constexpr<2, 6>(compareGroups);
+    } else {
+        // Be a little more conservative, since this could get slow.
+        regina::for_constexpr<2, 4>(compareGroups);
+    }
+}
+
 static regina::Laurent<regina::Integer> jonesModReflection(const Link& link) {
     auto jones1 = link.jones();
     auto jones2 = jones1;
@@ -1137,18 +1179,57 @@ static void verifyComplementBasic(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     Triangulation<3> c = link.complement();
+    size_t virtualGenus = link.virtualGenus();
 
     EXPECT_EQ(c.countComponents(), 1);
+    EXPECT_TRUE(c.isOrientable());
+    EXPECT_TRUE(c.isOriented());
+    EXPECT_FALSE(c.hasBoundaryFacets());
 
-    size_t ideal = 0;
+    // Verify that we have the right number (and genus) of ideal vertices.
+    size_t torus = 0;
+    ssize_t higherGenus[2] = { -1, -1 };
     for (auto v : c.vertices()) {
-        auto t = v->linkType();
-        if (t == regina::Vertex<3>::Link::Torus)
-            ++ideal;
-        else
-            EXPECT_EQ(t, regina::Vertex<3>::Link::Sphere);
+        EXPECT_TRUE(v->isLinkClosed());
+        if (v->isIdeal()) {
+            long euler = v->linkEulerChar();
+            EXPECT_TRUE(euler <= 0);
+            EXPECT_TRUE(euler % 2 == 0);
+            // We already tested orientability of the overall triangulation,
+            // which is enough to ensure orientability of the vertex link.
+            if (euler == 0)
+                ++torus;
+            else {
+                // We don't expect more than two higher genus vertices.
+                ssize_t genus = (2 - euler) / 2;
+                EXPECT_EQ(higherGenus[1], -1);
+                if (higherGenus[0] == -1)
+                    higherGenus[0] = genus;
+                else
+                    higherGenus[1] = genus;
+            }
+        }
     }
-    EXPECT_EQ(ideal, link.countComponents());
+    switch (virtualGenus) {
+        case 0:
+            EXPECT_EQ(torus, link.countComponents());
+            EXPECT_EQ(higherGenus[0], -1);
+            break;
+        case 1:
+            EXPECT_EQ(torus, link.countComponents() + 2);
+            EXPECT_EQ(higherGenus[0], -1);
+            break;
+        default:
+            EXPECT_EQ(torus, link.countComponents());
+            EXPECT_EQ(higherGenus[0], virtualGenus);
+            EXPECT_EQ(higherGenus[1], virtualGenus);
+            break;
+    }
+
+    // For classical links, verify that the link groups look the same also.
+    // Don't do this for enormous link diagrams.
+    if (link.size() <= 20 && virtualGenus == 0)
+        verifyIsomorphic(link.group(), c.group());
 }
 
 static void verifyComplementTrefoilUnknot(const TestCase& test) {
@@ -3172,48 +3253,6 @@ TEST_F(LinkTest, rewrite) {
             EXPECT_FALSE(alt.isConnected());
             return false;
         });
-    }
-}
-
-static void verifyIsomorphic(const GroupPresentation& a,
-        const GroupPresentation& b) {
-    if (a.countGenerators() <= 1 || b.countGenerators() <= 1 ||
-            a.countRelations() == 0 || b.countRelations() == 0) {
-        // For trivial, cyclic or free groups, we expect Regina should be
-        // able to simplif both groups to the same canonical presentation.
-        EXPECT_EQ(a.countGenerators(), b.countGenerators());
-        EXPECT_EQ(a.relations(), b.relations());
-        return;
-    }
-
-    // Both groups have ≥ 2 generators and ≥ 1 relation.
-    // In general we can't reliably test isomorphism, but we *can* reliably
-    // test abelian invariants and low-index covers.
-    EXPECT_EQ(a.abelianisation(), b.abelianisation());
-
-    auto compareGroups = [&a, &b](auto index) {
-        SCOPED_TRACE_NUMERIC(index);
-
-        std::vector<std::string> coversA;
-        a.enumerateCovers<index>([&coversA](const GroupPresentation& c) {
-            coversA.push_back(c.abelianisation().str());
-        });
-        std::sort(coversA.begin(), coversA.end());
-
-        std::vector<std::string> coversB;
-        b.enumerateCovers<index>([&coversB](const GroupPresentation& c) {
-            coversB.push_back(c.abelianisation().str());
-        });
-        std::sort(coversB.begin(), coversB.end());
-
-        EXPECT_EQ(coversA, coversB);
-    };
-
-    if (a.countGenerators() <= 5 && b.countGenerators() <= 5) {
-        regina::for_constexpr<2, 6>(compareGroups);
-    } else {
-        // Be a little more conservative, since this could get slow.
-        regina::for_constexpr<2, 4>(compareGroups);
     }
 }
 
