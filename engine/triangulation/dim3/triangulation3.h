@@ -287,28 +287,29 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         Triangulation(Triangulation&& src) noexcept = default;
         /**
-         * Creates a new ideal triangulation representing the complement
-         * of the given link in the 3-sphere.
-         *
-         * The triangulation will have one ideal vertex for each link
-         * component.  Assuming you pass \a simplify as \c true (the default),
-         * there will typically be no internal vertices; however, this
-         * is not guaranteed.
-         *
-         * Initially, each tetrahedron will be oriented according to a
-         * right-hand rule: the thumb of the right hand points from vertices
-         * 0 to 1, and the fingers curl around to point from vertices 2 to 3.
-         * If you pass \a simplify as \c true, then Regina will attempt to
-         * simplify the triangulation to as few tetrahedra as possible:
-         * this may relabel the tetrahedra, though their orientations will
-         * be preserved.
+         * Creates a new ideal triangulation representing the complement of the
+         * given link diagram.  For a classical link diagram, the triangulation
+         * will represent the complement of the given link in the 3-sphere,
+         * which is a topological invariant of the link.  For a virtual
+         * (non-classical) link diagram, it will represent the complement of
+         * the given diagram in a thickened closed orientable surface, which
+         * is a property of the specific link diagram.
          *
          * This is the same triangulation that is produced by
-         * Link::complement().
+         * Link::complement().  See Link::complement() for further details on
+         * how the triangulation is constructed, including how the tetrahedra
+         * will be oriented, and how the construction deals with disconnected
+         * link diagrams.
          *
-         * \param link the link whose complement we should build.
-         * \param simplify \c true if and only if the triangulation
+         * If you pass \a simplify as \c true (the default), then the
+         * resulting triangulation will typically have no internal vertices;
+         * however, this is not guaranteed.
+         *
+         * \param link the link diagram whose complement we should build.
+         * \param simplify \c true if and only if the resulting triangulation
          * should be simplified to use as few tetrahedra as possible.
+         * This simplification process will preserve the orientations of
+         * the tetrahedra.
          */
         Triangulation(const Link& link, bool simplify = true);
         /**

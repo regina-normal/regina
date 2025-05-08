@@ -3115,12 +3115,36 @@ class Link :
 
         /**
          * Returns an ideal triangulation of the complement of this link
-         * in the 3-sphere.
+         * diagram.  The triangulation will have one ideal vertex for each
+         * link component.
          *
-         * The triangulation will have one ideal vertex for each link
-         * component.  Assuming you pass \a simplify as \c true (the default),
-         * there will typically be no internal vertices; however, this
-         * is not guaranteed.
+         * If this is a classical link diagram:
+         *
+         * - The triangulation will represent the complement of this link in
+         *   the 3-sphere.  If the link diagram is disconnected, then the
+         *   resulting 3-manifold will be the connected sum of the complements
+         *   of each connected diagram component.
+         *
+         * If this is a virtual (non-classical) diagram:
+         *
+         * - A virtual link diagram is embedded in some closed orientable
+         *   surface \a S with positive genus.  The triangulation that is
+         *   returned will represent the complement of this link diagram in
+         *   the thickened surface `S x I`.  There will be two additional
+         *   ideal vertices, one for each copy of \a S on the boundary.
+         *   If the link diagram is disconnected, then the surface \a S that
+         *   is used will be the connected sum of the individual closed
+         *   orientable surfaces that host each connected diagram component
+         *   (i.e., the resulting triangulation will be connected).
+         *
+         * Note that for classical links, the complement is a topological
+         * invariant of the link; however, for virtual (non-classical) links,
+         * the complement (and indeed the genus of the surface \a S) is a
+         * property of the specific link diagram.
+         *
+         * Assuming you pass \a simplify as \c true (the default), the
+         * resulting triangulation will typically be no internal vertices;
+         * however, this is not guaranteed.
          *
          * Initially, each tetrahedron will be oriented according to a
          * right-hand rule: the thumb of the right hand points from vertices
@@ -3135,7 +3159,7 @@ class Link :
          *
          * \param simplify \c true if and only if the triangulation of the
          * complement should be simplified to use as few tetrahedra as possible.
-         * \return the complement of this link.
+         * \return the complement of this link diagram.
          */
         Triangulation<3> complement(bool simplify = true) const;
 
