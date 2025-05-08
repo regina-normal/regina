@@ -218,6 +218,16 @@ class LinkTest : public testing::Test {
             Link::fromData({ +1, +1 }, { 1 }, { -2 }, { -1, 2 }),
             "2-crossing, 3-component virtual link" };
 
+        // A virtual disconnected diagram, constructed as
+        // (virtualLink3 U virtualTrefoil U hopf):
+        TestCase virtualDisconnected {
+            Link::fromData(
+                { +1, +1, +1, +1, +1, +1 },
+                { 1 }, { -2 }, { -1, 2 },
+                { 3, -4, -3, 4 },
+                { 5, -6 }, { -5, 6 }),
+            "Disconnected virtual link diagram" };
+
         /**
          * Run the given test over all of the example links stored in
          * this test fixture.
@@ -265,6 +275,7 @@ class LinkTest : public testing::Test {
                 f(gpv.link, gpv.name);
                 f(virtualLink2.link, virtualLink2.name);
                 f(virtualLink3.link, virtualLink3.name);
+                f(virtualDisconnected.link, virtualDisconnected.name);
             }
         }
 };
@@ -340,6 +351,8 @@ TEST_F(LinkTest, connected) {
     EXPECT_TRUE(virtualLink2.link.graph().isConnected());
     EXPECT_TRUE(virtualLink3.link.isConnected());
     EXPECT_TRUE(virtualLink3.link.graph().isConnected());
+    EXPECT_FALSE(virtualDisconnected.link.isConnected());
+    EXPECT_FALSE(virtualDisconnected.link.graph().isConnected());
 
     // These links are disconnected, but since their graphs ignore
     // zero-crossing components the graphs _are_ connected.
@@ -390,6 +403,7 @@ TEST_F(LinkTest, components) {
     EXPECT_EQ(gpv.link.countComponents(), 1);
     EXPECT_EQ(virtualLink2.link.countComponents(), 2);
     EXPECT_EQ(virtualLink3.link.countComponents(), 3);
+    EXPECT_EQ(virtualDisconnected.link.countComponents(), 6);
 }
 
 static void verifyVirtualGenus(const TestCase& test, size_t expect) {
@@ -442,6 +456,7 @@ TEST_F(LinkTest, virtualGenus) {
     verifyVirtualGenus(gpv, 1);
     verifyVirtualGenus(virtualLink2, 1);
     verifyVirtualGenus(virtualLink3, 1);
+    verifyVirtualGenus(virtualDisconnected, 2);
 }
 
 static void verifyDiagramComponents(const Link& link, const char* name,
@@ -467,45 +482,32 @@ static void verifyDiagramComponents(const Link& link, const char* name,
 
 TEST_F(LinkTest, diagramComponents) {
     // Just test a few things manually.
-    {
-        verifyDiagramComponents(empty.link, empty.name, {});
-    }
-    {
-        verifyDiagramComponents(unknot0.link, unknot0.name, { "( )" });
-    }
-    {
-        verifyDiagramComponents(unlink2_0.link, unlink2_0.name,
-            { "( )", "( )" });
-    }
-    {
-        verifyDiagramComponents(figureEight.link, figureEight.name,
-            { "++-- ( _0 ^1 _2 ^3 _1 ^0 _3 ^2 )" });
-    }
-    {
-        verifyDiagramComponents(whitehead.link, whitehead.name,
-            { "--++- ( ^0 _1 ^4 _3 ^2 _4 ) ( _0 ^1 _2 ^3 )" });
-    }
-    {
-        verifyDiagramComponents(trefoil_unknot0.link, trefoil_unknot0.name,
-            { "+++ ( ^0 _1 ^2 _0 ^1 _2 )", "( )" });
-    }
-    {
-        verifyDiagramComponents(trefoil_unknot1.link, trefoil_unknot1.name,
-            { "+++ ( ^0 _1 ^2 _0 ^1 _2 )", "- ( _0 ^0 )" });
-    }
-    {
-        verifyDiagramComponents(trefoil_unknot_overlap.link,
-            trefoil_unknot_overlap.name,
-            { "-++++ ( ^1 _2 _3 _0 ^4 _1 ^2 _4 ) ( ^3 ^0 )" });
-    }
-    {
-        verifyDiagramComponents(virtualLink2.link, virtualLink2.name,
-            { "+ ( ^0 ) ( _0 )" });
-    }
-    {
-        verifyDiagramComponents(virtualLink3.link, virtualLink3.name,
-            { "++ ( ^0 ) ( _1 ) ( _0 ^1 )" });
-    }
+    verifyDiagramComponents(empty.link, empty.name, {});
+    verifyDiagramComponents(unknot0.link, unknot0.name, { "( )" });
+    verifyDiagramComponents(unlink2_0.link, unlink2_0.name,
+        { "( )",
+          "( )" });
+    verifyDiagramComponents(figureEight.link, figureEight.name,
+        { "++-- ( _0 ^1 _2 ^3 _1 ^0 _3 ^2 )" });
+    verifyDiagramComponents(whitehead.link, whitehead.name,
+        { "--++- ( ^0 _1 ^4 _3 ^2 _4 ) ( _0 ^1 _2 ^3 )" });
+    verifyDiagramComponents(trefoil_unknot0.link, trefoil_unknot0.name,
+        { "+++ ( ^0 _1 ^2 _0 ^1 _2 )",
+          "( )" });
+    verifyDiagramComponents(trefoil_unknot1.link, trefoil_unknot1.name,
+        { "+++ ( ^0 _1 ^2 _0 ^1 _2 )",
+          "- ( _0 ^0 )" });
+    verifyDiagramComponents(trefoil_unknot_overlap.link,
+        trefoil_unknot_overlap.name,
+        { "-++++ ( ^1 _2 _3 _0 ^4 _1 ^2 _4 ) ( ^3 ^0 )" });
+    verifyDiagramComponents(virtualLink2.link, virtualLink2.name,
+        { "+ ( ^0 ) ( _0 )" });
+    verifyDiagramComponents(virtualLink3.link, virtualLink3.name,
+        { "++ ( ^0 ) ( _1 ) ( _0 ^1 )" });
+    verifyDiagramComponents(virtualDisconnected.link, virtualLink3.name,
+        { "++ ( ^0 ) ( _1 ) ( _0 ^1 )",
+          "++ ( ^0 _1 _0 ^1 )",
+          "++ ( ^0 _1 ) ( _0 ^1 )" });
     {
         Link link = ExampleLink::whitehead();
         link.insertLink(Link(2));
@@ -513,7 +515,10 @@ TEST_F(LinkTest, diagramComponents) {
         link.insertLink(Link(1));
         verifyDiagramComponents(link, "Whitehead U Figure_Eight U 3x()",
             { "--++- ( ^0 _1 ^4 _3 ^2 _4 ) ( _0 ^1 _2 ^3 )",
-              "++-- ( _0 ^1 _2 ^3 _1 ^0 _3 ^2 )", "( )", "( )", "( )" });
+              "++-- ( _0 ^1 _2 ^3 _1 ^0 _3 ^2 )",
+              "( )",
+              "( )",
+              "( )" });
     }
 }
 
@@ -556,6 +561,7 @@ TEST_F(LinkTest, isAlternating) {
     EXPECT_FALSE(gpv.link.isAlternating());
     EXPECT_FALSE(virtualLink2.link.isAlternating());
     EXPECT_FALSE(virtualLink3.link.isAlternating());
+    EXPECT_FALSE(virtualDisconnected.link.isAlternating());
 }
 
 static void verifyLinking(const TestCase& test, long expect) {
@@ -610,6 +616,7 @@ TEST_F(LinkTest, linking) {
     verifyLinking(gpv, 0);
     verifyOnlyLinking2(virtualLink2, 1);
     verifyLinking(virtualLink3, 1);
+    verifyLinking(virtualDisconnected, 2);
 }
 
 static void verifyWrithe(const TestCase& test, long expectWrithe,
@@ -671,6 +678,7 @@ TEST_F(LinkTest, writhe) {
     verifyWrithe(gpv, -4, {-4});
     verifyWrithe(virtualLink2, 1, {0,0});
     verifyWrithe(virtualLink3, 2, {0,0,0});
+    verifyWrithe(virtualDisconnected, 6, {0,0,0,2,0,0});
 }
 
 TEST_F(LinkTest, oddWrithe) {
@@ -717,6 +725,7 @@ TEST_F(LinkTest, oddWrithe) {
 
     EXPECT_THROW({ virtualLink2.link.oddWrithe(); }, FailedPrecondition);
     EXPECT_THROW({ virtualLink3.link.oddWrithe(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualDisconnected.link.oddWrithe(); }, FailedPrecondition);
 }
 
 static void verifyUnderOverForComponent(const Link& link, const char* name) {
@@ -978,6 +987,8 @@ TEST_F(LinkTest, jones) {
     verifyJones(gpv, {-10, {1,0,-2,-2,1,2,1}});
     verifyJones(virtualLink2, {1, {-1,-1}});
     verifyJones(virtualLink3, {2, {1,2,1}});
+    verifyJones(virtualDisconnected,
+        {3, {-1,-3,-5,-6,-6,-5,-4,-4,-3,-1,1,2,2,1}});
 
     // Run through a small census and ensure that both algorithms give
     // the same Jones polynomial in both cases.
@@ -1118,6 +1129,8 @@ TEST_F(LinkTest, homfly) {
     EXPECT_THROW({ virtualLink2.link.homflyLM(); }, FailedPrecondition);
     EXPECT_THROW({ virtualLink3.link.homflyAZ(); }, FailedPrecondition);
     EXPECT_THROW({ virtualLink3.link.homflyLM(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualDisconnected.link.homflyAZ(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualDisconnected.link.homflyLM(); }, FailedPrecondition);
 }
 
 static void verifyComplementBasic(const Link& link, const char* name) {
@@ -1288,6 +1301,7 @@ TEST_F(LinkTest, r1Count) {
     verifyR1Count(gpv, 32, 0);
     verifyR1Count(virtualLink2, 8, 0);
     verifyR1Count(virtualLink3, 16, 0);
+    verifyR1Count(virtualDisconnected, 48, 0);
 }
 
 static void verifyR2Count(const TestCase& test, size_t up,
@@ -1381,6 +1395,7 @@ TEST_F(LinkTest, r2Count) {
     verifyR2Count(gpv, 64, 0, 0);
     verifyR2Count(virtualLink2, 12, 0, 0);
     verifyR2Count(virtualLink3, 24, 0, 0);
+    verifyR2Count(virtualDisconnected, 24 + 32 + 8 + 8*8*6, 0, 0);
 }
 
 static void verifyR3Count(const TestCase& test, size_t movesByCrossing) {
@@ -1452,6 +1467,7 @@ TEST_F(LinkTest, r3Count) {
     verifyR3Count(gpv, 0);
     verifyR3Count(virtualLink2, 0);
     verifyR3Count(virtualLink3, 0);
+    verifyR3Count(virtualDisconnected, 0);
 }
 
 // For each of the following Reimeister verification functions, we pass the
@@ -2731,6 +2747,7 @@ TEST_F(LinkTest, sig) {
     EXPECT_EQ(gpv.link.sig(), "eabacdcdbZa-d");
     EXPECT_EQ(virtualLink2.link.sig(), "bababd");
     EXPECT_EQ(virtualLink3.link.sig(), "cabcacbjp");
+    EXPECT_EQ(virtualDisconnected.link.sig(), "cabcacbjpcabcabjpcababdp");
 }
 
 static void verifyGaussAndDT(const TestCase& test,
@@ -3174,7 +3191,7 @@ static void verifyIsomorphic(const GroupPresentation& a,
     // test abelian invariants and low-index covers.
     EXPECT_EQ(a.abelianisation(), b.abelianisation());
 
-    regina::for_constexpr<2, 6>([&a, &b](auto index) {
+    auto compareGroups = [&a, &b](auto index) {
         SCOPED_TRACE_NUMERIC(index);
 
         std::vector<std::string> coversA;
@@ -3190,7 +3207,14 @@ static void verifyIsomorphic(const GroupPresentation& a,
         std::sort(coversB.begin(), coversB.end());
 
         EXPECT_EQ(coversA, coversB);
-    });
+    };
+
+    if (a.countGenerators() <= 5 && b.countGenerators() <= 5) {
+        regina::for_constexpr<2, 6>(compareGroups);
+    } else {
+        // Be a little more conservative, since this could get slow.
+        regina::for_constexpr<2, 4>(compareGroups);
+    }
 }
 
 static void verifyClassicalGroup(const Link& link, const char* name) {
@@ -3271,6 +3295,7 @@ TEST_F(LinkTest, group) {
     verifyGroups(gpv, { 2, { "aabbb" }}, { 1 });
     verifyGroup(virtualLink2, { 2, { "abAB" }});
     verifyGroup(virtualLink3, { 3, { "abAB", "acAC" }});
+    verifyGroup(virtualDisconnected, { 6, { "abAB", "acAC", "efEF" }});
 }
 
 static void verifySmallCells(const Link& link, const char* name) {
