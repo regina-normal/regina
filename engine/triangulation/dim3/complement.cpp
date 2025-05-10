@@ -44,7 +44,7 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
     // Our algorithm follows Jeff Weeks' method, which is described in
     // marvellous detail in the comments of link_complement.c from the
     // SnapPea kernel (which you can find in Regina's source tree as
-    // engine/snappea/kernel/unused/link_complement.c).
+    // engine/snappea/kernel/link_complement.c).
     //
     // We do however make some changes:
     //
@@ -52,34 +52,22 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
     //   connect sum with the appropriate number of unknot complements before
     //   we return the final triangulation.
     //
-    // - Jeff's documentation insists that each component has an over- and
-    //   under-crossing, and he fixes this in his code by adding spurious
-    //   crossings where necessary.
-    //
-    //   We take a different approach here - we leave the link unchanged,
-    //   which has the following side-effect: for each link component with
-    //   only over-crossings or only under-crossings, the component (which
-    //   must be a separated unknot) is effectively forgotten, and our
-    //   triangulation obtains two additional internal vertices instead.
-    //   We fix this immediately before returning the final triangulation
-    //   by connect summing with additional unknot complements as required.
-    //
-    // - Jeff's documentation also insists that the underlying 4-valent
-    //   graph is connected, and he performs spurious R2 moves where it is
-    //   necessary to ensure this.  Again we ignore the issue here; the
-    //   side-effect is that our triangulation might be disconnected, and
-    //   we fix this before returning by connect summing the pieces together.
+    // - Jeff's documentation insists that the underlying 4-valent graph is
+    //   connected, and he performs spurious R2 moves where it is necessary
+    //   to ensure this.  We ignore the issue here; the side-effect is that
+    //   our triangulation might be disconnected, and we fix this before
+    //   returning by joining the pieces together.
 
     // Empty link?  Just return the 3-sphere.
     if (link.isEmpty()) {
         Tetrahedron<3>* t = newSimplexRaw();
-        t->joinRaw(0, t, Perm<4>(0,1));
-        t->joinRaw(2, t, Perm<4>(2,3));
+        t->joinRaw(0, t, {0,1});
+        t->joinRaw(2, t, {2,3});
         return;
     }
 
     size_t n = link.size();
-    auto* ctet = new std::array<Tetrahedron<3>*, 4>[n];
+    FixedArray<std::array<Tetrahedron<3>*, 4>> ctet(n);
 
     /**
      *
@@ -102,15 +90,15 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
     for (size_t i = 0; i < n; ++i) {
         ctet[i] = newSimplicesRaw<4>();
         if (link.crossing(i)->sign() > 0) {
-            ctet[i][0]->joinRaw(0, ctet[i][1], Perm<4>(2,3));
-            ctet[i][1]->joinRaw(1, ctet[i][2], Perm<4>(2,3));
-            ctet[i][2]->joinRaw(0, ctet[i][3], Perm<4>(2,3));
-            ctet[i][3]->joinRaw(1, ctet[i][0], Perm<4>(2,3));
+            ctet[i][0]->joinRaw(0, ctet[i][1], {2,3});
+            ctet[i][1]->joinRaw(1, ctet[i][2], {2,3});
+            ctet[i][2]->joinRaw(0, ctet[i][3], {2,3});
+            ctet[i][3]->joinRaw(1, ctet[i][0], {2,3});
         } else {
-            ctet[i][0]->joinRaw(1, ctet[i][1], Perm<4>(2,3));
-            ctet[i][1]->joinRaw(0, ctet[i][2], Perm<4>(2,3));
-            ctet[i][2]->joinRaw(1, ctet[i][3], Perm<4>(2,3));
-            ctet[i][3]->joinRaw(0, ctet[i][0], Perm<4>(2,3));
+            ctet[i][0]->joinRaw(1, ctet[i][1], {2,3});
+            ctet[i][1]->joinRaw(0, ctet[i][2], {2,3});
+            ctet[i][2]->joinRaw(1, ctet[i][3], {2,3});
+            ctet[i][3]->joinRaw(0, ctet[i][0], {2,3});
         }
     }
 
@@ -131,96 +119,155 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
         const Crossing* adj = s.crossing();
         if ((adj->sign() > 0 && s.strand() == 1) ||
                 (adj->sign() < 0 && s.strand() == 0)) {
-            ctet[i][3]->joinRaw(2, ctet[adj->index()][3], Perm<4>(2,3));
-            ctet[i][0]->joinRaw(3, ctet[adj->index()][2], Perm<4>(2,3));
+            ctet[i][3]->joinRaw(2, ctet[adj->index()][3], {2,3});
+            ctet[i][0]->joinRaw(3, ctet[adj->index()][2], {2,3});
         } else {
-            ctet[i][3]->joinRaw(2, ctet[adj->index()][2], Perm<4>(2,3));
-            ctet[i][0]->joinRaw(3, ctet[adj->index()][1], Perm<4>(2,3));
+            ctet[i][3]->joinRaw(2, ctet[adj->index()][2], {2,3});
+            ctet[i][0]->joinRaw(3, ctet[adj->index()][1], {2,3});
         }
 
         adj = t.crossing();
         if ((adj->sign() > 0 && t.strand() == 1) ||
                 (adj->sign() < 0 && t.strand() == 0)) {
-            ctet[i][0]->joinRaw(2, ctet[adj->index()][3], Perm<4>(2,3));
-            ctet[i][1]->joinRaw(3, ctet[adj->index()][2], Perm<4>(2,3));
+            ctet[i][0]->joinRaw(2, ctet[adj->index()][3], {2,3});
+            ctet[i][1]->joinRaw(3, ctet[adj->index()][2], {2,3});
         } else {
-            ctet[i][0]->joinRaw(2, ctet[adj->index()][2], Perm<4>(2,3));
-            ctet[i][1]->joinRaw(3, ctet[adj->index()][1], Perm<4>(2,3));
+            ctet[i][0]->joinRaw(2, ctet[adj->index()][2], {2,3});
+            ctet[i][1]->joinRaw(3, ctet[adj->index()][1], {2,3});
         }
     }
 
-    delete[] ctet;
+    // Identify any link components that consist entirely of over-crossings, or
+    // entirely of under-crossings.  (We ignore zero-crossing components here.)
+    for (StrandRef c : link.components()) {
+        if (! c)
+            continue;
 
-    // Fix any issues involving missing unknot complements and/or
-    // disconnected triangluations, as discussed in the comments at the
-    // beginning of this routine.
+        bool missing[2] = { true, true }; // [ missing under, missing over ]
+        StrandRef s = c;
+        do {
+            if (missing[s.strand()]) {
+                missing[s.strand()] = false;
+                if (! missing[s.strand() ^ 1])
+                    break;
+            }
+            ++s;
+        } while (s != c);
 
-    if (isEmpty()) {
-        // We seem to have lost all our components (which therefore means
-        // our link is a k-component unlink for some k).
-        // Build a 3-sphere for now; we will pick up the missing unknot
-        // components shortly.
-        Tetrahedron<3>* tet = newSimplexRaw();
-        tet->joinRaw(0, tet, Perm<4>(0,1));
-        tet->joinRaw(2, tet, Perm<4>(2,3));
+        if (missing[0] || missing[1]) {
+            // This component consists entirely of over-crossings or entirely
+            // of under-crossings.  As described in Jeff's documentation, we
+            // need to add an R1 twist to avoid unintentionally breaking the
+            // topology by collapsing a cycle of bigons in the complement.
+            // Here we do this by splicing in the four tetrahedra that would
+            // come from such a twist.
+            Tetrahedron<3> *left, *right;
+            if ((c.crossing()->sign() > 0 && c.strand() == 0) ||
+                    (c.crossing()->sign() < 0 && c.strand() == 1)) {
+                left = ctet[c.crossing()->index()][3];
+                right = ctet[c.crossing()->index()][0];
+            } else {
+                left = ctet[c.crossing()->index()][0];
+                right = ctet[c.crossing()->index()][1];
+            }
+
+            Tetrahedron<3>* adjLeft = left->adjacentSimplex(2);
+            Tetrahedron<3>* adjRight = right->adjacentSimplex(3);
+            // We already know both gluing permutations must be 2 <-> 3.
+
+            auto [t0, t1, t2, t3] = newTetrahedra<4>();
+
+            t0->joinRaw(0, t1, {2,3});
+            t0->joinRaw(1, t3, {2,3});
+            t0->joinRaw(3, t2, {2,3});
+            t1->joinRaw(1, t2, {2,3});
+            t2->joinRaw(0, t3, {2,3});
+            t3->joinRaw(2, t3, {2,3});
+
+            left->unjoinRaw(2);
+            right->unjoinRaw(3);
+            left->joinRaw(2, t2, {2,3});
+            right->joinRaw(3, t1, {2,3});
+            adjLeft->joinRaw(3, t0, {2,3});
+            adjRight->joinRaw(2, t1, {2,3});
+        }
     }
 
-    // The following call to isConnected() has the side-effect of computing
+    // Account for any zero-crossing unknot components.
+    for (size_t i = 0; i < link.countTrivialComponents(); ++i) {
+        // Insert a separate unknot complement.
+        //
+        // We use the same tetrahedron vertex numbering as before:
+        // vertices 0,1 are the north/south poles, and vertices 2,3 are on
+        // the ideal boundary (i.e., they represent the unknot itself).
+        //
+        // The following gluings were obtained by running the above complement
+        // code on the unknot diagram with one positive crossing: + ( ^0 _0 ).
+
+        auto [t0, t1, t2, t3] = newTetrahedra<4>();
+        t0->joinRaw(0, t1, {2,3}); t0->joinRaw(1, t3, {2,3});
+        t0->joinRaw(2, t2, {2,3}); t0->joinRaw(3, t2, {2,3});
+        t1->joinRaw(1, t2, {2,3}); t1->joinRaw(2, t1, {2,3});
+        t2->joinRaw(0, t3, {2,3}); t3->joinRaw(2, t3, {2,3});
+    }
+
+    // At this point we have one triangulation component for every connected
+    // diagram component (including any zero-crossing unknot components).
+    // As a side effect, this means our triangulation is not empty (since we
+    // dealt with the empty link earlier).
+
+    // The following call to countComponents() has the side-effect of computing
     // the full skeleton.  Therefore we will stop using joinRaw() / unjoinRaw(),
     // since we want join() and unjoin() to do their extra work of clearing
     // computed properties (amongst other things).
 
-    if (! isConnected()) {
-        // Replace ans with the connected sum of its components.
-        auto comp = triangulateComponents();
+    while (countComponents() > 1) {
+        // Join two of our components together.  (We will keep doing this
+        // until the entire triangulation is connected.)
+        //
+        // When joining two components, we do this in such a way that the two
+        // north poles become identified, and likewise for the two south poles.
+        // If we imagine truncating the north and south poles (as we would for
+        // a virtual link diagram), then this operation essentially drills out
+        // a tube from each component connecting the two poles and then joins
+        // the two resulting annulus boundaries together.  If either component
+        // is classical then the north and south poles of that component will
+        // become finite vertices, and this entire operation reduces to just a
+        // connected sum.
+        //
+        // Remember: in all of the tetrahedra we have inserted, vertex 0 is
+        // the north pole, vertex 1 is the south pole, and vertices 2,3
+        // represent the link itself.
+        //
+        // Our strategy will be to pry open triangle 012 on tetrahedron 0 of
+        // each component.  Note that these triangles are always embedded,
+        // since their three vertices are distinct.
 
-        auto it = comp.begin();
-        *this = std::move(*it);
-        for (++it; it != comp.end(); ++it)
-            connectedSumWith(*it);
-    }
+        // In tet[] and adj[], the array index is the component number.
+        Tetrahedron<3>* tet[2];
+        Tetrahedron<3>* adj[2];
 
-    size_t idealVertices = 0;
-    for (auto v : vertices())
-        if (v->isIdeal())
-            ++idealVertices;
+        for (int i = 0; i < 2; ++i) {
+            tet[i] = component(i)->tetrahedron(0);
+            adj[i] = tet[i]->adjacentSimplex(3);
+            // Again, we already know that the gluing permutation is 2 <-> 3.
+        }
 
-    if (idealVertices > link.countComponents())
-        std::cerr << "ERROR: The complement of this link contains "
-            "too many ideal vertices.\nThis usually means that the "
-            "knot diagram has no planar embedding." << std::endl;
+        tet[0]->unjoin(3);
+        tet[1]->unjoin(3);
 
-    while (idealVertices < link.countComponents()) {
-        // We're still missing one or more unknot complements.
+        // We need to join the components in a way that identifies the poles
+        // (vertices 0,1) in each component but keeps separate the links
+        // (vertices 2,3) in each component.
 
-        // Connect sum with an unknot complement.
-        // We do this by prying open a face and inserting a punctured
-        // unknot complement with a triangular pillow boundary.
+        auto [t0, t1] = newTetrahedra<2>();
 
-        Triangle<3>* f = triangle(0);
-        Tetrahedron<3>* tet0 = f->embedding(0).simplex();
-        Perm<4> vert0 = f->embedding(0).vertices();
-        Tetrahedron<3>* tet1 = f->embedding(1).simplex();
-        Perm<4> vert1 = f->embedding(1).vertices();
-
-        // The following gluings describe a punctured ideal unknot complement.
-        // The real 2-sphere boundary is a triangular pillow, formed from
-        // faces p5 (013) and p5 (213).
-
-        auto [p0, p1, p2, p3, p4, p5] = newTetrahedra<6>();
-
-        p0->join(0, p1, {1,3,0,2}); p0->join(1, p1, {3,0,1,2});
-        p0->join(2, p1, {0,1,3,2}); p0->join(3, p3, {1,2,3,0});
-        p1->join(2, p3, {0,2,1,3}); p2->join(0, p2, {1,0,2,3});
-        p2->join(2, p5, {0,2,1,3}); p2->join(3, p3, {0,1,3,2});
-        p3->join(3, p4, {0,3,2,1}); p4->join(0, p4, {3,1,2,0});
-        p4->join(2, p5, {0,1,3,2});
-
-        tet0->unjoin(vert0[3]);
-        p5->join(2, tet0, vert0 * Perm<4>(3,2));
-        p5->join(0, tet1, vert1 * Perm<4>(3,1,0,2));
-
-        ++idealVertices;
+        t0->join(0, t1, {2,3});
+        t0->join(1, t1, {2,3});
+        tet[0]->join(3, t0, {2,3});
+        adj[0]->join(2, t1, {2,3});
+        tet[1]->join(3, t1, {2,3});
+        adj[1]->join(2, t0, {2,3});
     }
 
     // Done!
