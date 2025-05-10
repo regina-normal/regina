@@ -2807,9 +2807,9 @@ TEST_F(LinkTest, sig) {
     // Add some hard-coded classical link signatures and virtual knot/link
     // signatures (both of which are new to Regina 7.4), to ensure that nothing
     // changes as we optimise the underlying algorithms in later releases.
-    // For now we can only work with connected link diagrams, hence the fairly
-    // small list below.
-    EXPECT_EQ(empty.link.sig(), "_");
+    // Unless indicated otherwise, all signatures below were computed using
+    // Regina 7.4.
+    EXPECT_EQ(empty.link.sig(), "_"); // verified by hand
     EXPECT_EQ(hopf.link.sig(), "cabcabjp"); // verified by hand
     EXPECT_EQ(whitehead.link.sig(), "fabcadefbcedvfpd"); // verified by hand
     EXPECT_EQ(borromean.link.sig(), "gabcdgaecfgbfdeLwto"); // verified by hand
