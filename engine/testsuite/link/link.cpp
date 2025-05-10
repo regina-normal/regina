@@ -2782,6 +2782,108 @@ TEST_F(LinkTest, sig) {
         EXPECT_EQ(hopfNegative.sig(false, false), "cabcabja");
     }
 
+    // The virtual trefoil is the same under rotation but not reflection.
+    {
+        Link link = ExampleLink::virtualTrefoil();
+        Link rot = link;
+        rot.rotate();
+        Link ref = link;
+        ref.reflect();
+        Link both = rot;
+        both.reflect();
+
+        EXPECT_EQ(link.sig(true, true, true), "cababdp");
+        EXPECT_EQ(rot.sig(true, true, true), "cababdp");
+        EXPECT_EQ(ref.sig(true, true, true), "cababdp");
+        EXPECT_EQ(both.sig(true, true, true), "cababdp");
+
+        EXPECT_EQ(link.sig(true, true, false), "cababdp");
+        EXPECT_EQ(rot.sig(true, true, false), "cababdp");
+        EXPECT_EQ(ref.sig(true, true, false), "cababdp");
+        EXPECT_EQ(both.sig(true, true, false), "cababdp");
+
+        EXPECT_EQ(link.sig(false, true, true), "cababdp");
+        EXPECT_EQ(rot.sig(false, true, true), "cababdp");
+        EXPECT_EQ(ref.sig(false, true, true), "cababda"); // different
+        EXPECT_EQ(both.sig(false, true, true), "cababda"); // different
+
+        EXPECT_EQ(link.sig(false, true, false), "cababdp");
+        EXPECT_EQ(rot.sig(false, true, false), "cababdp");
+        EXPECT_EQ(ref.sig(false, true, false), "cababda"); // different
+        EXPECT_EQ(both.sig(false, true, false), "cababda"); // different
+    }
+
+    // The GPV virtual knot gives four different sigs under all four
+    // reflection/rotation options:
+    {
+        Link link = ExampleLink::gpv();
+        Link rot = link;
+        rot.rotate();
+        Link ref = link;
+        ref.reflect();
+        Link both = rot;
+        both.reflect();
+
+        EXPECT_EQ(link.sig(true, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(rot.sig(true, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(ref.sig(true, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(both.sig(true, true, true), "eabacdcdbZa-d");
+
+        EXPECT_EQ(link.sig(true, true, false), "eabcbcdadZa-d"); // different
+        EXPECT_EQ(rot.sig(true, true, false), "eabacdcdbZa-d");
+        EXPECT_EQ(ref.sig(true, true, false), "eabcbcdadZa-d"); // different
+        EXPECT_EQ(both.sig(true, true, false), "eabacdcdbZa-d");
+
+        EXPECT_EQ(link.sig(false, true, true), "eabacdcdbZaaa"); // different
+        EXPECT_EQ(rot.sig(false, true, true), "eabacdcdbZaaa"); // different
+        EXPECT_EQ(ref.sig(false, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(both.sig(false, true, true), "eabacdcdbZa-d");
+
+        // Four different signatures here:
+        EXPECT_EQ(link.sig(false, true, false), "eabcbcdadZaaa");
+        EXPECT_EQ(rot.sig(false, true, false), "eabacdcdbZaaa");
+        EXPECT_EQ(ref.sig(false, true, false), "eabcbcdadZa-d");
+        EXPECT_EQ(both.sig(false, true, false), "eabacdcdbZa-d");
+    }
+
+    // The Kishino knot is symmetric under both reflection and rotation, if we
+    // allow reversal.  If we do not allow reversal, then each of the three
+    // reflection/reversal/rotation operations are equivalent to the others.
+    {
+        Link link = ExampleLink::kishino();
+        Link rot = link;
+        rot.rotate();
+        Link ref = link;
+        ref.reflect();
+        Link both = rot;
+        both.reflect();
+
+        EXPECT_EQ(link.sig(true, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(rot.sig(true, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(ref.sig(true, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(both.sig(true, true, true), "eabacdcdblbTa");
+
+        EXPECT_EQ(link.sig(true, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(rot.sig(true, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(ref.sig(true, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(both.sig(true, true, false), "eabacdcdblbTa");
+
+        EXPECT_EQ(link.sig(false, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(rot.sig(false, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(ref.sig(false, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(both.sig(false, true, true), "eabacdcdblbTa");
+
+        EXPECT_EQ(link.sig(false, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(rot.sig(false, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(ref.sig(false, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(both.sig(false, true, false), "eabacdcdblbTa");
+
+        EXPECT_EQ(link.sig(false, false, false), "eabcbcdadTalb"); // different
+        EXPECT_EQ(rot.sig(false, false, false), "eabacdcdblbTa");
+        EXPECT_EQ(ref.sig(false, false, false), "eabacdcdblbTa");
+        EXPECT_EQ(both.sig(false, false, false), "eabcbcdadTalb"); // different
+    }
+
     // Verify some signatures against actual hard-coded strings, to ensure
     // that the single-component knot signature format from Regina ≤ 7.3
     // matches the more general format in Regina ≥ 7.4.
