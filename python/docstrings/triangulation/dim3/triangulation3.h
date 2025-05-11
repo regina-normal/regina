@@ -91,27 +91,30 @@ Parameter ``cloneLocks``:
 // Docstring regina::python::doc::Triangulation_::__init_2
 static const char *__init_2 =
 R"doc(Creates a new ideal triangulation representing the complement of the
-given link in the 3-sphere.
-
-The triangulation will have one ideal vertex for each link component.
-Assuming you pass *simplify* as ``True`` (the default), there will
-typically be no internal vertices; however, this is not guaranteed.
-
-Initially, each tetrahedron will be oriented according to a right-hand
-rule: the thumb of the right hand points from vertices 0 to 1, and the
-fingers curl around to point from vertices 2 to 3. If you pass
-*simplify* as ``True``, then Regina will attempt to simplify the
-triangulation to as few tetrahedra as possible: this may relabel the
-tetrahedra, though their orientations will be preserved.
+given link diagram. For a classical link diagram, the triangulation
+will represent the complement of the given link in the 3-sphere, which
+is a topological invariant of the link. For a virtual (non-classical)
+link diagram, it will represent the complement of the given diagram in
+a thickened closed orientable surface, which is a property of the
+specific link diagram.
 
 This is the same triangulation that is produced by Link::complement().
+See Link::complement() for further details on how the triangulation is
+constructed, including how the tetrahedra will be oriented, and how
+the construction deals with disconnected link diagrams.
+
+If you pass *simplify* as ``True`` (the default), then the resulting
+triangulation will typically have no internal vertices; however, this
+is not guaranteed.
 
 Parameter ``link``:
-    the link whose complement we should build.
+    the link diagram whose complement we should build.
 
 Parameter ``simplify``:
-    ``True`` if and only if the triangulation should be simplified to
-    use as few tetrahedra as possible.)doc";
+    ``True`` if and only if the resulting triangulation should be
+    simplified to use as few tetrahedra as possible. This
+    simplification process will preserve the orientations of the
+    tetrahedra.)doc";
 
 // Docstring regina::python::doc::Triangulation_::__init_3
 static const char *__init_3 =

@@ -582,12 +582,36 @@ is a _vertical_ mirror image.)doc";
 
 // Docstring regina::python::doc::Link_::complement
 static const char *complement =
-R"doc(Returns an ideal triangulation of the complement of this link in the
-3-sphere.
-
+R"doc(Returns an ideal triangulation of the complement of this link diagram.
 The triangulation will have one ideal vertex for each link component.
-Assuming you pass *simplify* as ``True`` (the default), there will
-typically be no internal vertices; however, this is not guaranteed.
+
+If this is a classical link diagram:
+
+* The triangulation will represent the complement of this link in the
+  3-sphere. If the link diagram is disconnected, then the resulting
+  3-manifold will be the connected sum of the complements of each
+  connected diagram component.
+
+If this is a virtual (non-classical) diagram:
+
+* A virtual link diagram is embedded in some closed orientable surface
+  *S* with positive genus. The triangulation that is returned will
+  represent the complement of this link diagram in the thickened
+  surface ``S x I``. There will be two additional ideal vertices, one
+  for each copy of *S* on the boundary. If the link diagram is
+  disconnected, then the surface *S* that is used will be the
+  connected sum of the individual closed orientable surfaces that host
+  each connected diagram component (i.e., the resulting triangulation
+  will be connected).
+
+Note that for classical links, the complement is a topological
+invariant of the link; however, for virtual (non-classical) links, the
+complement (and indeed the genus of the surface *S*) is a property of
+the specific link diagram.
+
+Assuming you pass *simplify* as ``True`` (the default), the resulting
+triangulation will typically be no internal vertices; however, this is
+not guaranteed.
 
 Initially, each tetrahedron will be oriented according to a right-hand
 rule: the thumb of the right hand points from vertices 0 to 1, and the
@@ -604,7 +628,7 @@ Parameter ``simplify``:
     be simplified to use as few tetrahedra as possible.
 
 Returns:
-    the complement of this link.)doc";
+    the complement of this link diagram.)doc";
 
 // Docstring regina::python::doc::Link_::component
 static const char *component =
@@ -699,22 +723,26 @@ Returns:
 // Docstring regina::python::doc::Link_::composeWith
 static const char *composeWith =
 R"doc(Forms the composition of this with the given link. This link will be
-altered directly.
+altered directly, and the given link will be left unchanged.
 
-Specifically, the first component of the given link will be grafted
-into the first component of this link, in a way that preserves
-orientations and crossing signs. If the given link has any additional
-components, then they will be copied into this link directly with no
-modification.
-
-This routine may be expanded in future versions of Regina to allow
-more flexibility (in particular, to allow you to choose which
-components of the two links to graft together, and/or at which strands
-to graft them).
+Specifically, this routine will insert a copy of the given link into
+this link, and will graft its first component into the first component
+of this link in a way that preserves orientations and crossing signs.
+If either this and/or the given link has more than one component, then
+any additional components will be left alone (i.e., they will remain
+as different components in the final result).
 
 If either link is empty (i.e., contains no components at all), then
 the result will simply be a clone of the other link (with no
 composition operation performed).
+
+.. note::
+    If you need to specify which components of the two links to graft
+    together, or if you need to choose the specific arcs at which the
+    graft takes place (which is important when working with _virtual_
+    links), you should use graft() instead. Note that graft() assumes
+    that both components being grafted together already belong to this
+    link; you can use insertLink() to arrange this.
 
 It is allowed to pass this link as *other*.
 
@@ -856,26 +884,31 @@ Returns:
 
 // Docstring regina::python::doc::Link_::dt
 static const char *dt =
-R"doc(Exports this knot in either numerical or alphabetical Dowker-
-Thistlethwaite notation, returning a string.
+R"doc(Exports this classical knot in either numerical or alphabetical
+Dowker-Thistlethwaite notation, returning a string.
 
 Like classical Gauss codes, Dowker-Thistlethwaite notation essentially
 describes the 4-valent graph of a knot but not the particular
-embedding in the plane. It comes with two major restrictions:
+embedding in the plane. It comes with major restrictions:
 
-* In general, it does not carry enough information to uniquely
-  reconstruct a knot. For instance, both a knot and its reflection can
-  be described by the same Dowker-Thistlethwaite notation; moreover,
-  for composite knots, the same notation can describe inequivalent
-  knots (even when allowing for reflections).
+* It relies on parity properties that only hold for classical knots.
+  As a result, Dowker-Thistlethwaite notation cannot be used with
+  virtual knots at all.
 
-* Parsing Dowker-Thistlethwaite notation is complex, since it requires
-  an embedding to be deduced using some variant of a planarity testing
-  algorithm.
+* Even for classical knots, it does not carry enough information to
+  uniquely reconstruct a knot. For instance, both a knot and its
+  reflection can be described by the same Dowker-Thistlethwaite
+  notation; moreover, for _composite_ knots, the same notation can
+  describe inequivalent knots even when allowing for reflections.
 
-If you need a code that specifies the knot uniquely and/or that is
-fast to parse, consider using the _oriented_ Gauss code instead, which
-resolves both of these issues.
+* Parsing Dowker-Thistlethwaite notation to reconstruct a classical
+  knot is complex, since it requires an embedding to be deduced using
+  some variant of a planarity testing algorithm.
+
+If you need a code that specifies the knot uniquely, and/or is fast to
+parse, and/or can work with both classical and virtual knots, you
+should use the _oriented_ Gauss code instead, which resolves all of
+these issues.
 
 For an *n*-crossing knot, Regina supports two variants of Dowker-
 Thistlethwaite notation:
@@ -925,8 +958,9 @@ dt() that can write either the numerical or the alphabetical variant
 directly to an output stream.
 
 Exception ``NotImplemented``:
-    Either this link is empty or has multiple components, or *alpha*
-    is true and it has more than 26 crossings.
+    Either this link is empty or has multiple components, or this is a
+    virtual (not classical) link diagram, or *alpha* is true and this
+    link diagram has more than 26 crossings.
 
 Parameter ``alpha``:
     ``True`` to use alphabetical notation, or ``False`` (the default)
@@ -937,8 +971,8 @@ Returns:
 
 // Docstring regina::python::doc::Link_::dtData
 static const char *dtData =
-R"doc(Exports this knot in numerical Dowker-Thistlethwaite notation,
-returning a vector of integers.
+R"doc(Exports this classical knot in numerical Dowker-Thistlethwaite
+notation, returning a vector of integers.
 
 See dt(bool) for a full description of Dowker-Thistlethwaite notation
 as it is used in Regina, as well as its limitations.
@@ -953,7 +987,8 @@ contrast, calling ``dt()`` returns the same integer sequence in human-
 readable format (as a string).
 
 Exception ``NotImplemented``:
-    This link is empty, or has multiple components, or has so many
+    Either this link is empty or has multiple components, or this is a
+    virtual (not classical) link diagram, or this diagram has so many
     crossings that the Dowker-Thistlethwaite notation cannot be
     expressed using native C++ integers.
 
@@ -981,10 +1016,11 @@ R"doc(Creates a new classical knot from either alphabetical or numerical
 Dowker-Thistlethwaite notation, presented as a string.
 
 Dowker-Thistlethwaite notation essentially describes the 4-valent
-graph of a knot but not the particular embedding in the plane. As a
-result, there can be topological ambiguities when a knot is
+graph of a knot but not its particular embedding in the plane. As a
+result, there can be topological ambiguities when a classical knot is
 reconstructed from Dowker-Thistlethwaite notation; these are described
-in the warnings below.
+in the warnings below. Dowker-Thistlethwaite notation cannot be used
+with virtual (not classical) knots at all.
 
 Dowker-Thistlethwaite notation comes in two forms: numerical and
 alphabetical. For an *n*-crossing knot, the numerical form is a
@@ -998,9 +1034,7 @@ bca
 ```
 
 See dt(bool) for a full description of Dowker-Thistlethwaite notation
-as it is used in Regina, as well as its limitations. In particular, be
-aware that Regina can only work with Dowker-Thistlethwaite codes for
-_classical_ knots, not the more general virtual knot diagrams).
+as it is used in Regina, as well as its limitations.
 
 There are two variants of this routine. This variant takes a single
 string, which is either (i) the alphabetical notation, in which any
@@ -1017,33 +1051,20 @@ separates the integers does not matter.
 
 .. warning::
     In general, Dowker-Thistlethwaite notation does not contain enough
-    information to uniquely reconstruct a knot. For prime knots, both
-    a knot and its reflection can be described by the same notation;
-    for composite knots, the same notation can describe knots that are
-    topologically inequivalent, even when allowing for reflection. If
-    you need to reconstruct a knot uniquely, consider using the
-    oriented Gauss code instead.
-
-.. warning::
-    While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does _not_ test for
-    planarity of the diagram. That is, if the input describes a knot
-    diagram that must be drawn on some higher-genus surface as opposed
-    to the plane, this will not be detected. Of course such inputs are
-    not allowed, and it is currently up to the user to enforce this.
+    information to uniquely reconstruct a classical knot.i For prime
+    knots, both a knot and its reflection can be described by the same
+    notation; for composite knots, the same notation can describe
+    knots that are topologically inequivalent, even when allowing for
+    reflection. If you need to reconstruct a knot uniquely, consider
+    using the oriented Gauss code instead.
 
 Exception ``InvalidArgument``:
     The given string was not a valid Dowker-Thistlethwaite code for a
-    knot. As noted above, the checks performed here are not
-    exhaustive.
-
-Author:
-    Much of the code for this routine is based on the Dowker-
-    Thistlethwaite implementation in the SnapPea/SnapPy kernel.
+    classical knot.
 
 Parameter ``str``:
     either the alphabetical or numerical Dowker-Thistlethwaite
-    notation for a knot, as described above.
+    notation for a classical knot, as described above.
 
 Returns:
     the reconstructed knot.)doc";
@@ -1055,8 +1076,8 @@ notation, presented as an integer sequence.
 
 See dt(bool) for a full description of Dowker-Thistlethwaite notation
 as it is used in Regina, and see fromDT(const std::string&) for a
-detailed discussion of how Regina reconstructs knots from such
-notation.
+detailed discussion of how Regina reconstructs classical knots from
+such notation.
 
 This routine is a variant of fromDT(const std::string&) which, instead
 of taking a human-readable string, takes a machine-readable sequence
@@ -1076,41 +1097,29 @@ Precondition:
 
 .. warning::
     In general, Dowker-Thistlethwaite notation does not contain enough
-    information to uniquely reconstruct a knot. For prime knots, both
-    a knot and its reflection can be described by the same notation;
-    for composite knots, the same notation can describe knots that are
-    topologically inequivalent, even when allowing for reflection. If
-    you need to reconstruct a knot uniquely, consider using the
-    oriented Gauss code instead.
-
-.. warning::
-    While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does _not_ test for
-    planarity of the diagram. That is, if the input describes a knot
-    diagram that must be drawn on some higher-genus surface as opposed
-    to the plane, this will not be detected. Of course such inputs are
-    not allowed, and it is currently up to the user to enforce this.
+    information to uniquely reconstruct a classical knot. For prime
+    knots, both a knot and its reflection can be described by the same
+    notation; for composite knots, the same notation can describe
+    knots that are topologically inequivalent, even when allowing for
+    reflection. If you need to reconstruct a knot uniquely, consider
+    using the oriented Gauss code instead.
 
 Exception ``InvalidArgument``:
     The given sequence was not a valid Dowker-Thistlethwaite code for
-    a knot. As noted above, the checks performed here are not
-    exhaustive.
+    a classical knot.
 
 Python:
     Instead of a pair of begin and past-the-end iterators, this
     routine takes a Python list of integers.
 
-Author:
-    Much of the code for this routine is based on the Dowker-
-    Thistlethwaite implementation in the SnapPea/SnapPy kernel.
-
 Parameter ``begin``:
     an iterator that points to the beginning of the sequence of
-    integers for the Dowker-Thistlethwaite notation for a knot.
+    integers for the Dowker-Thistlethwaite notation for a classical
+    knot.
 
 Parameter ``end``:
     an iterator that points past the end of the sequence of integers
-    for the Dowker-Thistlethwaite notation for a knot.
+    for the Dowker-Thistlethwaite notation for a classical knot.
 
 Returns:
     the reconstructed knot.)doc";
@@ -1198,8 +1207,11 @@ a string.
 
 Classical Gauss codes essentially describe the 4-valent graph of a
 knot but not the particular embedding in the plane. As a result, there
-can be topological ambiguities when a knot is reconstructed from a
-gauss code; these are described in the warnings below.
+can be topological ambiguities when a classical knot is reconstructed
+from a Gauss code; these are described in the warnings below. For
+virtual (not classical) knots, the ambiguities inherent in classical
+Gauss codes are even more severe, and so Regina will not attempt to
+reconstruct a virtual knot from its classical Gauss code at all.
 
 The Gauss code for an *n*-crossing knot is described by a sequence of
 2*n* positive and negative integers. As an example, you can construct
@@ -1219,9 +1231,8 @@ from a classical Gauss code:
   component), and only for _classical_ knots (not the more general
   virtual knot diagrams).
 
-* The crossings of the knot must be labelled 1, 2, ..., *n* (i.e.,
-  they cannot be arbitrary natural numbers with "gaps", and the
-  numbering cannot use a different starting point).
+* The crossings of the knot must be labelled 1, 2, ..., *n* in some
+  order.
 
 Be aware that, once the knot has been constructed, the crossings 1,
 ..., *n* will have been reindexed as 0, ..., *n*-1 (since every Link
@@ -1238,30 +1249,22 @@ the string is allowed.
 
 .. warning::
     In general, the classical Gauss code does not contain enough
-    information to uniquely reconstruct a knot. For prime knots, both
-    a knot and its reflection can be described by the same Gauss code;
-    for composite knots, the same Gauss code can describe knots that
-    are topologically inequivalent, even when allowing for reflection.
-    If you need to reconstruct a knot uniquely, consider using the
-    _oriented_ Gauss code instead.
-
-.. warning::
-    While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does _not_ test for
-    planarity of the diagram. That is, if the input describes a knot
-    diagram that must be drawn on some higher-genus surface as opposed
-    to the plane, this will not be detected. Of course such inputs are
-    not allowed, and it is currently up to the user to enforce this.
+    information to uniquely reconstruct a classical knot. For prime
+    knots, both a knot and its reflection can be described by the same
+    Gauss code; for composite knots, the same Gauss code can describe
+    knots that are topologically inequivalent, even when allowing for
+    reflection. If you need to reconstruct a knot uniquely, consider
+    using the _oriented_ Gauss code instead.
 
 Exception ``InvalidArgument``:
-    The given string was not a valid classical Gauss code for a knot.
-    As noted above, the checks performed here are not exhaustive.
+    The given string was not a valid classical Gauss code for a
+    classical knot.
 
 Author:
     Adam Gowty
 
 Parameter ``str``:
-    a classical Gauss code for a knot, as described above.
+    a classical Gauss code for a classical knot, as described above.
 
 Returns:
     the reconstructed knot.)doc";
@@ -1273,7 +1276,8 @@ an integer sequence.
 
 See gauss() for a full description of classical Gauss codes as they
 are used in Regina, and see fromGauss(const std::string&) for a
-detailed discussion of how Regina reconstructs knots from such codes.
+detailed discussion of how Regina reconstructs classical knots from
+such codes.
 
 This routine is a variant of fromGauss(const std::string&) which,
 instead of taking a human-readable string, takes a machine-readable
@@ -1288,25 +1292,16 @@ Precondition:
 
 .. warning::
     In general, the classical Gauss code does not contain enough
-    information to uniquely reconstruct a knot. For prime knots, both
-    a knot and its reflection can be described by the same Gauss code;
-    for composite knots, the same Gauss code can describe knots that
-    are topologically inequivalent, even when allowing for reflection.
-    If you need to reconstruct a knot uniquely, consider using the
-    _oriented_ Gauss code instead.
-
-.. warning::
-    While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does _not_ test for
-    planarity of the diagram. That is, if the input describes a knot
-    diagram that must be drawn on some higher-genus surface as opposed
-    to the plane, this will not be detected. Of course such inputs are
-    not allowed, and it is currently up to the user to enforce this.
+    information to uniquely reconstruct a classical knot. For prime
+    knots, both a knot and its reflection can be described by the same
+    Gauss code; for composite knots, the same Gauss code can describe
+    knots that are topologically inequivalent, even when allowing for
+    reflection. If you need to reconstruct a knot uniquely, consider
+    using the _oriented_ Gauss code instead.
 
 Exception ``InvalidArgument``:
     The given sequence was not a valid classical Gauss code for a
-    knot. As noted above, the checks performed here are not
-    exhaustive.
+    classical knot.
 
 Python:
     Instead of a pair of begin and past-the-end iterators, this
@@ -1359,8 +1354,8 @@ does not matter, and additional whitespace at the beginning or end of
 the string is allowed.
 
 Exception ``InvalidArgument``:
-    The given string was not a valid encoding of a link in Jenkins'
-    format.
+    The given string was not a valid encoding of a classical or
+    virtual link in Jenkins' format.
 
 Parameter ``str``:
     a string describing a link in Jenkins' format, as described above.
@@ -1388,8 +1383,8 @@ Precondition:
     integer type being used will be deduced from the type *Iterator*.)
 
 Exception ``InvalidArgument``:
-    The given sequence was not a valid encoding of a link in Jenkins'
-    format.
+    The given sequence was not a valid encoding of a classical or
+    virtual link in Jenkins' format.
 
 Python:
     Instead of a pair of begin and past-the-end iterators, this
@@ -1454,11 +1449,10 @@ Regina imposes the following restrictions when reconstructing a knot
 from an oriented Gauss code:
 
 * This can only be done for knots (i.e., links with exactly one
-  component).
+  component). Both classical and virtual knots are supported.
 
-* The crossings of the knot must be labelled 1, 2, ..., *n* (i.e.,
-  they cannot be arbitrary natural numbers with "gaps", and the
-  numbering cannot use a different starting point).
+* The crossings of the knot must be labelled 1, 2, ..., *n* in some
+  order.
 
 Be aware that, once the knot has been constructed, the crossings 1,
 ..., *n* will have been reindexed as 0, ..., *n*-1 (since every Link
@@ -1474,7 +1468,8 @@ does not matter, and additional whitespace at the beginning or end of
 the string is allowed.
 
 Exception ``InvalidArgument``:
-    The given string was not a valid oriented Gauss code for a knot.
+    The given string was not a valid oriented Gauss code for a
+    classical or virtual knot.
 
 Parameter ``str``:
     an "oriented" Gauss code for a knot, as described above.
@@ -1520,7 +1515,8 @@ Precondition:
     (which can be cast to ``const std::string&``).
 
 Exception ``InvalidArgument``:
-    The given sequence was not a valid oriented Gauss code for a knot.
+    The given sequence was not a valid oriented Gauss code for a
+    classical or virtual knot.
 
 Python:
     Instead of a pair of begin and past-the-end iterators, this
@@ -1539,14 +1535,16 @@ Returns:
 
 // Docstring regina::python::doc::Link_::fromPD
 static const char *fromPD =
-R"doc(Creates a new link from a planar diagram code, presented as a string.
+R"doc(Creates a new classical or virtual link from a planar diagram code,
+presented as a string.
 
 Planar diagram codes overcome the limitations of classical Gauss codes
 by encoding the local information at each crossing, though they do
 introduce their own (less severe) ambiguities and computational
 difficulties, as described in the warnings below. They can work with
 links as well as knots, though they cannot encode zero-crossing unknot
-components.
+components. They can also (despite their name) work with virtual links
+as well as classical links.
 
 A planar diagram code for an *n*-crossing link is formed from a
 sequence of *n* 4-tuples of integers. An example, you can construct
@@ -1563,9 +1561,8 @@ Regina imposes the following restrictions when reconstructing a link
 from a planar diagram code:
 
 * The integers used in the input sequence (which denote the 2*n*
-  strands in the link diagram) must be in the range 1, 2, ..., 2*n*.
-  That is, they cannot be arbitrary natural numbers with "gaps", and
-  the numbering of strands cannot use a different starting point.
+  strands in the link diagram) must be in the range ``1,2,...,2n``,
+  with each of these numbers used exactly twice.
 
 When Regina builds the resulting link, it numbers the crossings and
 components (but not the strands). It will do this as follows:
@@ -1618,23 +1615,16 @@ Regina does _not_ attribute any meaning to these symbols, and will
 treat them as nothing more than separators.
 
 .. warning::
-    If the link contains an unknotted loop that sits completely above
-    all other link components (in other words, a link components that
-    consists entirely of over-crossings), then the orientation of this
-    loop might not be reconstructed correctly. This is unavoidable:
-    the planar diagram code simply does not contain this information.
-
-.. warning::
-    While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does _not_ test for
-    planarity of the diagram. That is, if the input describes a link
-    diagram that must be drawn on some higher-genus surface as opposed
-    to the plane, this will not be detected. Of course such inputs are
-    not allowed, and it is currently up to the user to enforce this.
+    If the link contains any components that sit completely above all
+    other link components (in other words, link components that
+    consist entirely of over-crossings), then the orientations of
+    these components might not be reconstructed correctly. This is
+    unavoidable: the planar diagram code simply does not contain this
+    information.
 
 Exception ``InvalidArgument``:
-    The given string was not a valid planar diagram code. As noted
-    above, the checks performed here are not exhaustive.
+    The given string was not a valid planar diagram code for a
+    classical or virtual link.
 
 Parameter ``str``:
     a planar diagram code for a link, as described above.
@@ -1644,8 +1634,8 @@ Returns:
 
 // Docstring regina::python::doc::Link_::fromPD_2
 static const char *fromPD_2 =
-R"doc(Creates a new link from a planar diagram code, presented as a sequence
-of 4-tuples.
+R"doc(Creates a new classical or virtual link from a planar diagram code,
+presented as a sequence of 4-tuples.
 
 See pd() for a full description of planar diagram codes as they are
 used in Regina, and see fromPD(const std::string&) for a detailed
@@ -1667,23 +1657,16 @@ Precondition:
     deduced from the type *Iterator*.)
 
 .. warning::
-    If the link contains an unknotted loop that sits completely above
-    all other link components (in other words, a link components that
-    consists entire of over-crossings), then the orientation of this
-    loop might not be reconstructed correctly. This is unavoidable:
-    the planar diagram code simply does not contain this information.
-
-.. warning::
-    While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does _not_ test for
-    planarity of the diagram. That is, if the input describes a link
-    diagram that must be drawn on some higher-genus surface as opposed
-    to the plane, this will not be detected. Of course such inputs are
-    not allowed, and it is currently up to the user to enforce this.
+    If the link contains any components that sit completely above all
+    other link components (in other words, link components that
+    consist entirely of over-crossings), then the orientations of
+    these components might not be reconstructed correctly. This is
+    unavoidable: the planar diagram code simply does not contain this
+    information.
 
 Exception ``InvalidArgument``:
-    The given sequence was not a valid planar diagram code. As noted
-    above, the checks performed here are not exhaustive.
+    The given sequence was not a valid planar diagram code for a
+    classical or virtual link.
 
 Python:
     Instead of a pair of begin and past-the-end iterators, this
@@ -1708,10 +1691,10 @@ R"doc(Recovers a classical or virtual link diagram from its knot/link
 signature. See sig() for more information on these signatures.
 
 Calling sig() followed by fromSig() is not guaranteed to produce an
-_identical_ knot diagram to the original, but it is guaranteed to
-produce one that is related by relabelling, rotating connected
-components of the diagram, and optionally (according to the arguments
-that were passed to sig()) reflection of the entire diagram and/or
+_identical_ link diagram to the original, but it is guaranteed to
+produce one that is related by zero or more applications of
+relabelling, and (according to the arguments that were passed to
+sig()) reflection of the diagram, rotation of the diagram, and/or
 reversal of individual link components.
 
 Exception ``InvalidArgument``:
@@ -1730,25 +1713,30 @@ R"doc(Returns a classical Gauss code for this knot, presented as a string.
 
 Classical Gauss codes essentially describe the 4-valent graph of a
 knot but not the particular embedding in the plane. These codes come
-with two major restrictions:
+with major restrictions:
 
 * In general, they do not carry enough information to uniquely
-  reconstruct a knot. For instance, both a knot and its reflection can
-  be described by the same Gauss code; moreover, for composite knots,
-  the Gauss code can describe inequivalent knots (even when allowing
-  for reflections).
+  reconstruct a classical knot. For instance, both a classical knot
+  and its reflection can be described by the same Gauss code;
+  moreover, for _composite_ knots, the same Gauss code can describe
+  inequivalent knots even when allowing for reflections.
 
-* Parsing a Gauss code is complex, since it requires an embedding to
-  be deduced using some variant of a planarity testing algorithm.
+* Parsing a Gauss code to reconstruct a classical knot is complex,
+  since it requires an embedding to be deduced using some variant of a
+  planarity testing algorithm.
 
-If you need a code that specifies the knot uniquely and/or that is
-fast to parse, consider using the _oriented_ Gauss code instead, which
-resolves both of these issues.
+* Because Gauss codes rely on planarity, they are not suitable at all
+  for working with virtual knots.
 
-A Gauss code for an *n*-crossing knot is described by a sequence of
-2*n* positive and negative integers, representing strands that pass
-over and under crossings respectively. The code is constructed as
-follows:
+If you need a code that specifies the knot uniquely, and/or is fast to
+parse, and/or can work with both classical and virtual knots, you
+should use the _oriented_ Gauss code instead, which resolves all of
+these issues.
+
+The contents of a classical Gauss code are as follows. A Gauss code
+for an *n*-crossing knot is described by a sequence of 2*n* positive
+and negative integers, representing strands that pass over and under
+crossings respectively. The code is constructed as follows:
 
 * Label the crossings arbitrarily as 1, 2, ..., *n*.
 
@@ -1776,6 +1764,11 @@ The routine gaussData() returns this same data in machine-readable
 format (as a C++ vector), instead of the human-readable format used
 here (a string). There is also another variant of gauss() that writes
 directly to an output stream.
+
+Although classical Gauss codes do not support virtual knots, if this
+is a virtual link diagram then gauss() will still produce correct
+output; the problem is simply that too much information is lost, and
+you cannot _reconstruct_ your virtual link from this output.
 
 Exception ``NotImplemented``:
     This link is empty or has multiple components.
@@ -1822,6 +1815,70 @@ Parameter ``lhs``:
 
 Parameter ``rhs``:
     the link whose contents should be swapped with *lhs*.)doc";
+
+// Docstring regina::python::doc::Link_::graft
+static const char *graft =
+R"doc(Grafts the two given arcs of this link together, possibly making this
+a virtual link in the process.
+
+This routine is intended for use with virtual links and, unlike
+composeWith(), it offers a way to build a composite knot with full
+control over exactly which arcs are grafted together.
+
+This operation is simple: it reroutes the part of the link that enters
+along the first arc to exit along the second, and it reroutes the part
+of the link that enters along the second arc to exit along the first.
+As a result:
+
+* If *first* and *second* belong to _different_ components of this
+  link then it will effectively combine those two components in an
+  operation akin to knot composition. The main difference is that, if
+  the two components are already part of the same connected diagram
+  component (e.g., they are already linked together), then this
+  operation will make no attempt to separate them beforehand.
+
+* If *first* and *second* belong to the _same_ component of this link
+  then this operation will effectively split that component into two.
+  It will not make any attempt to separate and/or unlink the two
+  resulting components.
+
+The operation will never add or remove any crossings. Therefore, if
+the two given arcs belong to the same connected component of the
+diagram but do not bound the same dual 2-cell with the same
+orientation, this operation may increase the virtual genus.
+
+Regarding the two arguments:
+
+* It is allowed for *first* and *second* to refer to the same arc (in
+  which case this operation will just split off a new zero-crossing
+  component).
+
+* It is allowed for either *first* or *second* to be a null reference.
+  In this case it will be taken to refer to a zero-crossing component,
+  and so this operation will effectively absorb the zero-crossing
+  component into the other link component.
+
+* If *first* and *second* are both null references, then they will be
+  assumed to refer to _different_ zero-crossing components.
+
+See the StrandRef documentation for the convention on how arcs are
+represented using StrandRef objects.
+
+Precondition:
+    Each of the given strand references is either a null reference, or
+    else refers to some strand of some crossing in this link.
+
+Exception ``InvalidArgument``:
+    Either one of *first* or *second* is a null reference but this
+    link does not contain any zero-crossing components, or _both_
+    *first* and *second* are null references but this link does not
+    contain at least two zero-crossing components.
+
+Parameter ``first``:
+    the first of the two arcs to graft together.
+
+Parameter ``second``:
+    the second of the two arcs to graft together.)doc";
 
 // Docstring regina::python::doc::Link_::graph
 static const char *graph =
@@ -2550,7 +2607,8 @@ Jenkins' format is lengthy. However, in contrast to classical Gauss
 codes or Dowker-Thistlethwaite notation, there are no topological
 ambiguities in the format, and reconstructing a link from Jenkins'
 format is simple. Moreover, the format is suitable for links with any
-number of components.
+number of components, and can be used with both virtual and classical
+links.
 
 Jenkins' format is described in his HOMFLY-PT polynomial software,
 which is available online from
@@ -2738,6 +2796,12 @@ Parameter ``allowReversal``:
     the signature, or ``False`` if the signature should distinguish
     between different orientations (again, unless of course there are
     symmetries).
+
+Parameter ``allowRotation``:
+    ``True`` if rotating the entire link diagram should preserve the
+    signature, or ``False`` if the signature should distinguish
+    between a diagram and its rotation (again, unless there is a
+    symmetry).
 
 Returns:
     the signature for this link diagram.)doc";
@@ -2986,7 +3050,8 @@ an extension of the classical Gauss code with additional characters to
 describe the orientation of the other strand passing by at each
 crossing. This extra information removes both the topological
 ambiguities and the complexity in the reconstruction procedure for
-classical Gauss codes.
+classical Gauss codes. It also makes the code suitable for both
+virtual and classical knots.
 
 This "oriented" format is described at
 http://www.javaview.de/services/knots/doc/description.html#gc, and it
@@ -3155,8 +3220,9 @@ R"doc(Returns a planar diagram code for this link, presented as a string.
 
 Planar diagram codes encode the local information at each crossing,
 and present this information as a list of 4-tuples. These codes are
-available for links as well as knots, but they do come with some minor
-restrictions:
+available for links as well as knots. Moreover (despite their name)
+they are available for virtual as well as classical links. However,
+they do come with some minor restrictions:
 
 * They cannot encode zero-crossing unknot components (i.e., components
   for which the component() function returns a null strand). Any such
@@ -3164,12 +3230,16 @@ restrictions:
   components by calling countTrivialComponents().
 
 * If a link has any components that consist entirely of over-crossings
-  (which must be unknots "placed on top of" the link diagram), a
-  planar diagram code does not carry enough data to reconstruct the
-  _orientation_ of these components. The topology will be preserved,
-  but in general the combinatorics of such a link diagram cannot be
-  reconstructed faithfully. You can detect such components by calling
-  pdAmbiguous().
+  (that is, zero-crossing components that are "placed on top of" the
+  rest of the link diagram), then a planar diagram code does not carry
+  enough data to reconstruct the _orientation_ of these components.
+  For classical links, the topology will still be preserved (since
+  such components must be topological unknots), but in general the
+  combinatorics of such a link diagram cannot be reconstructed
+  faithfully. For virtual links, the problems are more serious (since
+  such components may traverse handles in the surface in which the
+  link diagram is embedded). In all cases, you can detect such
+  components by calling pdAmbiguous().
 
 If you need a text code that can work with these types of link
 diagrams, you can always use Jenkins' format instead.
@@ -3241,8 +3311,9 @@ R"doc(Determines whether this link has any components whose orientations
 cannot be recovered from a planar diagram code.
 
 Such components must have at least one crossing, and must consist
-_entirely_ of over-crossings. These are essentially unknotted loops
-that are "placed on top of" the remainder of the link diagram.
+_entirely_ of over-crossings. See pd() for a detailed discussion on
+such components (which must be trivial for classical links, but which
+could be more interesting for virtual links).
 
 Note that planar diagram codes have another limitation, which is that
 they cannot represent zero-crossing components at all (any such
@@ -4189,9 +4260,17 @@ static const char *sig =
 R"doc(Constructs the _signature_ for this knot or link diagram.
 
 A _signature_ is a compact text representation of a link diagram that
-uniquely determines the diagram up to: relabelling; rotating connected
-components of the diagram; and (optionally) reflecting the entire
-diagram and/or reversing some or all link components.
+uniquely determines the diagram up to any combination of:
+
+* relabelling;
+
+* (optionally) reflecting the entire diagram, which changes the sign
+  of every crossing but leaves the upper and lower strands the same;
+
+* (optionally) reversing some or all link components;
+
+* (optionally) rotating the entire diagram, which preserves the sign
+  of every crossing but switches the upper and lower strands.
 
 Signatures are now supported for all link diagrams with fewer than 64
 link components. Specifically:
@@ -4216,9 +4295,9 @@ crossings.
 The routine fromSig() can be used to recover a link diagram from its
 signature. The resulting diagram might not be identical to the
 original, but it will be related by zero or more applications of
-relabelling, rotating connected components of the diagram, and/or
-(according to the arguments) reflection of the entire diagram and/or
-reversal of individual link components.
+relabelling, and (according to the arguments) reflection of the
+diagram, rotation of the diagram, and/or reversal of individual link
+components.
 
 The running time is quadratic in the number of crossings and (if we
 allow reversal, which is the default) exponential in the number of
@@ -4241,6 +4320,12 @@ Parameter ``allowReversal``:
     the signature, or ``False`` if the signature should distinguish
     between different orientations (again, unless of course there are
     symmetries).
+
+Parameter ``allowRotation``:
+    ``True`` if rotating the entire link diagram should preserve the
+    signature, or ``False`` if the signature should distinguish
+    between a diagram and its rotation (again, unless there is a
+    symmetry).
 
 Returns:
     the signature for this link diagram.)doc";
