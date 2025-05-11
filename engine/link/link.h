@@ -1532,6 +1532,66 @@ class Link :
         void makeVirtual(Crossing* crossing);
 
         /**
+         * Grafts the two given arcs of this link together, possibly making
+         * this a virtual link in the process.
+         *
+         * This routine is intended for use with virtual links and, unlike
+         * composeWith(), it offers a way to build a composite knot with full
+         * control over exactly which arcs are grafted together.
+         *
+         * This operation is simple: it reroutes the part of the link that
+         * enters along the first arc to exit along the second, and it reroutes
+         * the part of the link that enters along the second arc to exit along
+         * the first.  As a result:
+         *
+         * - If \a first and \a second belong to _different_ components of this
+         *   link then it will effectively combine those two components in an
+         *   operation akin to knot composition.  The main difference is that,
+         *   if the two components are already part of the same connected
+         *   diagram component (e.g., they are already linked together), then
+         *   this operation will make no attempt to separate them beforehand.
+         *
+         * - If \a first and \a second belong to the _same_ component of this
+         *   link then this operation will effectively split that component
+         *   into two.  It will not make any attempt to separate and/or unlink
+         *   the two resulting components.
+         *
+         * The operation will never add or remove any crossings.  Therefore,
+         * if the two given arcs belong to the same connected component of the
+         * diagram but do not bound the same dual 2-cell with the same
+         * orientation, this operation may increase the virtual genus.
+         *
+         * Regarding the two arguments:
+         *
+         * - It is allowed for \a first and \a second to refer to the same arc
+         *   (in which case this operation will just split off a new
+         *   zero-crossing component).
+         *
+         * - It is allowed for either \a first or \a second to be a null
+         *   reference.  In this case it will be taken to refer to a
+         *   zero-crossing component, and so this operation will effectively
+         *   absorb the zero-crossing component into the other link component.
+         *
+         * - If \a first and \a second are both null references, then they will
+         *   be assumed to refer to _different_ zero-crossing components.
+         *
+         * See the StrandRef documentation for the convention on how arcs are
+         * represented using StrandRef objects.
+         *
+         * \pre Each of the given strand references is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * \exception InvalidArgument Either one of \a first or \a second is a
+         * null reference but this link does not contain any zero-crossing
+         * components, or _both_ \a first and \a second are null references but
+         * this link does not contain at least two zero-crossing components.
+         *
+         * \param first the first of the two arcs to graft together.
+         * \param second the second of the two arcs to graft together.
+         */
+        void graft(StrandRef first, StrandRef second);
+
+        /**
          * Converts this link into its reflection.
          *
          * This routine changes the sign of every crossing, but leaves
@@ -2884,23 +2944,26 @@ class Link :
             Action&& action, Args&&... args) const;
 
         /**
-         * Forms the composition of this with the given link.
-         * This link will be altered directly.
+         * Forms the composition of this with the given link.  This link will
+         * be altered directly, and the given link will be left unchanged.
          *
-         * Specifically, the first component of the given link will be
-         * grafted into the first component of this link, in a way that
-         * preserves orientations and crossing signs.  If the given link
-         * has any additional components, then they will be copied into
-         * this link directly with no modification.
-         *
-         * This routine may be expanded in future versions of Regina to
-         * allow more flexibility (in particular, to allow you to choose
-         * which components of the two links to graft together, and/or
-         * at which strands to graft them).
+         * Specifically, this routine will insert a copy of the given link
+         * into this link, and will graft its first component into the first
+         * component of this link in a way that preserves orientations and
+         * crossing signs.  If either this and/or the given link has more than
+         * one component, then any additional components will be left alone
+         * (i.e., they will remain as different components in the final result).
          *
          * If either link is empty (i.e., contains no components at all),
          * then the result will simply be a clone of the other link
          * (with no composition operation performed).
+         *
+         * \note If you need to specify which components of the two links to
+         * graft together, or if you need to choose the specific arcs at which
+         * the graft takes place (which is important when working with _virtual_
+         * links), you should use graft() instead.  Note that graft() assumes
+         * that both components being grafted together already belong to this
+         * link; you can use insertLink() to arrange this.
          *
          * It is allowed to pass this link as \a other.
          *

@@ -270,7 +270,7 @@ Version 7.4  [ (to be announced) ]
               less-than (<) as before.
         Class Link:
             - Added initial support for virtual knots and links, with new
-              routines isClassical(), virtualGenus(), makeVirtual(),
+              routines isClassical(), virtualGenus(), makeVirtual(), graft(),
               oddWrithe(), and groups().
             - New routine alexander() and class constant alexanderVar.
             - New routine makeAlternating().
