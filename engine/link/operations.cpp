@@ -518,5 +518,64 @@ void Link::makeVirtual(Crossing* crossing) {
     delete crossing;
 }
 
+void Link::graft(StrandRef first, StrandRef second) {
+    ChangeAndClearSpan<> span(*this);
+
+    if (first && ! second)
+        std::swap(first, second);
+
+    if (! first) {
+        // Find the first zero-crossing component.
+        auto trivial = componentFor(first);
+        if (trivial == components_.end())
+            throw InvalidArgument("graft(): a null reference was given "
+                "but this link has no zero-crossing components");
+
+        if (! second) {
+            // Continue to find the second zero-crossing component.
+            auto next = trivial;
+            for (++next; *next && next != components_.end(); ++next)
+                ;
+            if (next == components_.end())
+                throw InvalidArgument("graft(): two null references were given "
+                    "but this link only has one zero-crossing component");
+        }
+
+        // Absorb the first zero-crossing component into the other component.
+        components_.erase(trivial);
+        return;
+    }
+
+    if (first == second) {
+        // Split off a new zero-crossing component.
+        components_.emplace_back();
+        return;
+    }
+
+    // We know now that first and second are distinct and both non-null.
+
+    // We need to know which link component they each belong to before the
+    // graft takes place.
+    auto firstComp = componentFor(first);
+    auto secondComp = componentFor(second);
+
+    // Perform the graft.
+    StrandRef tmp = second.next();
+    join(second, first.next()); // changes second.next()
+    join(first, tmp);
+
+    // Update the list of components.
+    if (firstComp == secondComp) {
+        // We have just split one component into two.
+        if (componentFor(first) == components_.end())
+            components_.push_back(first);
+        else
+            components_.push_back(second);
+    } else {
+        // We have just merged two components into one.
+        components_.erase(secondComp);
+    }
+}
+
 } // namespace regina
 

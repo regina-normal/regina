@@ -1553,5 +1553,20 @@ void Link::insertTorusLink(int p, int q, bool positive) {
     delete[] c;
 }
 
+std::vector<StrandRef>::iterator Link::componentFor(const StrandRef& s) {
+    if (! s)
+        return std::find(components_.begin(), components_.end(), StrandRef());
+
+    auto tmp = s;
+    do {
+        auto it = std::find(components_.begin(), components_.end(), tmp);
+        if (it != components_.end())
+            return it;
+        ++tmp;
+    } while (tmp != s);
+
+    return components_.end();
+}
+
 } // namespace regina
 

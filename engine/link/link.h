@@ -5635,6 +5635,16 @@ class Link :
         static void join(const StrandRef& s, const StrandRef& t);
 
         /**
+         * Returns the location in \a components_ of the link component
+         * containing \a s, or `components_.end()` if \a s does not belong to
+         * any component of this link.
+         *
+         * The given strand may be a null strand reference (in which case this
+         * routine will look for a zero-crossing component).
+         */
+        std::vector<StrandRef>::iterator componentFor(const StrandRef& s);
+
+        /**
          * Internal to fromOrientedGauss().
          *
          * This routine parses a single token in an "oriented" Gauss code.
