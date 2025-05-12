@@ -41,7 +41,7 @@ if (not (-e 'LICENSE.txt' and -d 'engine')) {
     exit 1;
 }
 
-my @ext = qw(cpp cc c h hpp tcc m mm py);
+my @ext = qw(cpp cc c h hpp tcc m mm py swift);
 my $types = '\\( -name "*.' . join('" -o -name "*.', @ext) . '" \\)';
 
 # Find any builddirs that should be ignored.
