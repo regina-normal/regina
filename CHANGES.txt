@@ -288,6 +288,7 @@ Version 7.4  [ (to be announced) ]
             - New routine linking2(), which returns twice the linking number;
               linking() will now throw an exception when called on a virtual
               link whose linking number is not an integer.
+            - New routines signedGauss() and fromSignedGauss().
             - Regarding Reidemeister moves:
               + The (check, perform) variants of r1(), r2() and r3() are
                 deprecated.  You should now use these routines _without_ extra

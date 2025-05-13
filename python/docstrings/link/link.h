@@ -403,6 +403,8 @@ attempts to parse them in the following order):
 
 * oriented Gauss codes, as used by fromOrientedGauss();
 
+* signed Gauss codes, as used by fromSignedGauss();
+
 * classical Gauss codes, as used by fromGauss();
 
 * numeric or alphabetical Dowker-Thistlethwaite strings, as used by
@@ -1443,7 +1445,9 @@ left-hand trefoil using the code:
 
 See orientedGauss() for a full description of oriented Gauss codes as
 they are used in Regina (and in particular, what these tokens
-represent).
+represent). Also note that _oriented_ Gauss codes are different from
+_signed_ Gauss codes: see orientedGauss() versus signedGauss() for
+details.
 
 Regina imposes the following restrictions when reconstructing a knot
 from an oriented Gauss code:
@@ -1706,6 +1710,119 @@ Parameter ``sig``:
 
 Returns:
     the reconstructed link diagram.)doc";
+
+// Docstring regina::python::doc::Link_::fromSignedGauss
+static const char *fromSignedGauss =
+R"doc(Creates a new classical or virtual knot from a "signed" variant of the
+Gauss code, presented as string.
+
+Signed gauss codes overcome the limitations of classical Gauss codes
+by encoding all of the data needed to quickly and correctly
+reconstruct a knot diagram.
+
+The signed Gauss code for an *n*-crossing knot is described by a
+sequence of 2*n* string tokens, all concatenated together with no
+internal whitespace. As an example, you can construct the figure eight
+knot using the code:
+
+```
+U1+O2+U3-O4-U2+O1+U4-O3-
+```
+
+See signedGauss() for a full description of signed Gauss codes as they
+are used in Regina (and in particular, what these tokens represent).
+Also note that _signed_ Gauss codes are different from _oriented_
+Gauss codes: see signedGauss() versus orientedGauss() for details.
+
+Regina imposes the following restrictions when reconstructing a knot
+from a signed Gauss code:
+
+* This can only be done for knots (i.e., links with exactly one
+  component). Both classical and virtual knots are supported.
+
+* The crossings of the knot must be labelled 1, 2, ..., *n* in some
+  order.
+
+Be aware that, once the knot has been constructed, the crossings 1,
+..., *n* will have been reindexed as 0, ..., *n*-1 (since every Link
+object numbers its crossings starting from 0).
+
+There are two variants of this routine. This variant takes a single
+string, where the tokens have been concatenated together with no
+internal whitespace. The other variant takes a sequence of 2*n*
+individual tokens, defined by a pair of iterators.
+
+In this variant (the string variant), the code should not contain any
+internal whitespace; however, whitespace at the beginning or end of
+the string is allowed. The symbols ``U`` and ``O`` may be either
+upper-case or lower-case (or you may use some mix of both).
+
+Exception ``InvalidArgument``:
+    The given string was not a valid signed Gauss code for a classical
+    or virtual knot.
+
+Parameter ``str``:
+    a "signed" Gauss code for a knot, as described above.
+
+Returns:
+    the reconstructed knot.)doc";
+
+// Docstring regina::python::doc::Link_::fromSignedGauss_2
+static const char *fromSignedGauss_2 =
+R"doc(Creates a new classical or virtual knot from a "signed" variant of the
+Gauss code, presented as a sequence of string tokens.
+
+See signedGauss() for a full description of signed Gauss codes as they
+are used in Regina, and see fromSignedGauss(const std::string&) for a
+detailed discussion of how Regina reconstructs knots from such codes.
+
+This routine is a variant of fromSignedGauss(const std::string&)
+which, instead of taking a human-readable string, takes a machine-
+readable sequence of smaller string tokens (one for each crossing that
+you pass through when traversing the knot). This sequence is given by
+passing a pair of begin/end iterators.
+
+The tokens in the input sequence should be the individual tokens of
+the form ``Ok+``, ``Ok-``, ``Uk+`` or ``Uk-`` that would normally be
+concatenated together to form a complete signed Gauss code. For
+example, to describe the figure eight knot, the input sequence could
+be a vector containing the eight tokens:
+
+```
+{ "U1+", "O2+", "U3-", "O4-", "U2+", "O1+", "U4-", "O3-" }
+```
+
+None of the tokens should contain any whitespace; otherwise this
+routine may fail to parse the token(s) and could throw an exception as
+a result. The symbols ``U`` and ``O`` that begin each token may be
+either upper-case or lower-case (or you may use some mix of both).
+
+Precondition:
+    *Iterator* is a random access iterator type.
+
+Precondition:
+    Dereferencing such an iterator produces either a C-style string
+    (which can be cast to ``const char*``) or a C++-style string
+    (which can be cast to ``const std::string&``).
+
+Exception ``InvalidArgument``:
+    The given sequence was not a valid signed Gauss code for a
+    classical or virtual knot.
+
+Python:
+    Instead of a pair of begin and past-the-end iterators, this
+    routine takes a Python list of strings.
+
+Parameter ``begin``:
+    an iterator that points to the beginning of the sequence of tokens
+    for a "signed" Gauss code.
+
+Parameter ``end``:
+    an iterator that points past the end of the sequence of tokens for
+    a "signed" Gauss code.
+
+Returns:
+    the reconstructed knot.)doc";
 
 // Docstring regina::python::doc::Link_::gauss
 static const char *gauss =
@@ -3079,6 +3196,11 @@ As an example, you can represent the left-hand trefoil using the code:
 +>1 -<2 +>3 -<1 +>2 -<3
 ```
 
+Note that _oriented_ Gauss codes are different from _signed_ Gauss
+codes. Both formats improve upon classical Gauss codes by resolving
+the topological ambiguities and making reconstruction easy; however,
+they do so in different ways.
+
 Currently Regina only supports Gauss codes for knots, not empty or
 multiple component links. If this link does not have precisely one
 component, then this routine will throw an exception. It is possible
@@ -4329,6 +4451,102 @@ Parameter ``allowRotation``:
 
 Returns:
     the signature for this link diagram.)doc";
+
+// Docstring regina::python::doc::Link_::signedGauss
+static const char *signedGauss =
+R"doc(Returns a signed Gauss code for this knot, presented as a string.
+
+The signed Gauss code, as described by Kauffman, modifies the
+classical Gauss code to indicate which crossings are positive and
+which are negative. This extra information removes both the
+topological ambiguities and the complexity in the reconstruction
+procedure for classical Gauss codes. It also makes the code suitable
+for both virtual and classical knots.
+
+Be warned that for signed Gauss codes, the signs ``+/-`` play a very
+different role from classical Gauss codes: in signed Gauss codes they
+indicate positive versus negative crossings, whereas in classical
+Gauss codes they indicate upper versus lower strands.
+
+This format is used in Louis H. Kauffman, "Virtual knot theory",
+European J. Combin. 20 (1999), no. 7, 663-690. It works as follows:
+
+* Label the crossings arbitrarily as 1, 2, ..., *n*.
+
+* Start at some point on the knot and follow it around. At every
+  crossing that you pass, write symbols of the form ``Ok+``, ``Ok-``,
+  ``Uk+`` or ``Uk-``, where:
+
+* the symbol ``O`` indicates that you are passing over the crossing
+  labelled *k*, and the symbol ``U`` indicates that you are passing
+  under the crossing labelled *k*;
+
+* the symbol ``+`` indicates that the crossing labelled *k* is
+  positive, and the symbol ``-`` indicates that the crossing labelled
+  *k* is negative;
+
+* *k* is replaced with the integer crossing label.
+
+* All of the symbols should be concatenated together, without any
+  separation by whitespace.
+
+As an example, you can represent the figure eight knot using the code:
+
+```
+U1+O2+U3-O4-U2+O1+U4-O3-
+```
+
+Note that _signed_ Gauss codes are different from _oriented_ Gauss
+codes. Both formats improve upon classical Gauss codes by resolving
+the topological ambiguities and making reconstruction easy; however,
+they do so in different ways.
+
+Currently Regina only supports Gauss codes for knots, not empty or
+multiple component links. If this link does not have precisely one
+component, then this routine will throw an exception. It is possible
+that in future versions of Regina, Gauss codes will be expanded to
+cover all possible link diagrams (hence the choice of NotImplemented
+as the exception type).
+
+The routine signedGaussData() returns this same data in machine-
+readable format (as a C++ vector of shorter string tokens, one for
+each crossing that you pass), instead of the single long string that
+is returned here. There is also another variant of signedGauss() that
+writes directly to an output stream.
+
+Exception ``NotImplemented``:
+    This link is empty or has multiple components.
+
+Returns:
+    a signed Gauss code as described above.)doc";
+
+// Docstring regina::python::doc::Link_::signedGaussData
+static const char *signedGaussData =
+R"doc(Returns a signed Gauss code for this knot, presented as a vector of
+string tokens.
+
+See signedGauss() for a full description of signed Gauss codes as they
+are used in Regina, as well as their limitations.
+
+For an *n*-crossing knot, the elements of the returned vector will be
+the 2*n* individual tokens of the form ``Ok+``, ``Ok-``, ``Uk+`` or
+``Uk-`` that would normally be concatenated together to form a
+complete signed Gauss code. For example, for the figure eight knot,
+the vector might contain the eight tokens:
+
+```
+{ "U1+", "O2+", "U3-", "O4-", "U2+", "O1+", "U4-", "O3-" }
+```
+
+This routine returns machine-readable data (as a C++ vector); in
+contrast, signedGauss() returns the same data in human-readable format
+(as a single long string).
+
+Exception ``NotImplemented``:
+    This link is empty or has multiple components.
+
+Returns:
+    a signed Gauss code for this knot in machine-readable form.)doc";
 
 // Docstring regina::python::doc::Link_::simplify
 static const char *simplify =

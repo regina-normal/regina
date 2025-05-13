@@ -32,6 +32,7 @@
 
 #include "link/tangle.h"
 #include "utilities/stringutils.h"
+#include <cctype>
 #include <climits>
 #include <iterator>
 
@@ -86,6 +87,45 @@ Link Link::fromOrientedGauss(const std::string& s) {
     return fromOrientedGauss(terms.begin(), terms.end());
 }
 
+Link Link::fromSignedGauss(const std::string& s) {
+    // TODO: Make this a vector of substrings, now we have C++20.
+    std::vector<std::string> terms;
+
+    std::string::size_type len = s.length();
+    std::string::size_type pos = 0;
+
+    // Skip initial whitespace.
+    while (pos < len && isspace(s[pos]))
+        ++pos;
+    if (pos == len)
+        return { 1 }; // Zero-crossing unknot
+
+    // Extract each token.
+    std::string::size_type tokStart;
+    while (pos < len) {
+        // Find the characters making up this token.
+        tokStart = pos;
+        while (pos < len && s[pos] != '+' && s[pos] != '-')
+            ++pos;
+        if (pos == len) {
+            // We never found the terminating sign.
+            // The only scenario where this is acceptable is if the leftover
+            // characters are entirely whitespace.
+            for ( ; tokStart < len; ++tokStart)
+                if (! isspace(s[tokStart]))
+                    throw InvalidArgument("fromSignedGauss(): unexpected "
+                        "characters at the end of the code");
+            // We're fine; this was legitimately the end of the list of terms.
+            break;
+        }
+        ++pos;
+        terms.push_back(s.substr(tokStart, pos - tokStart));
+    }
+
+    // Now build the link!
+    return fromSignedGauss(terms.begin(), terms.end());
+}
+
 bool Link::parseOrientedGaussTerm(const std::string& s,
         size_t nCross, size_t& crossing, int& strand, int& sign) {
     if (s.length() < 3)
@@ -133,6 +173,63 @@ bool Link::parseOrientedGaussTerm(const char* s,
     char* endPtr;
     crossing = static_cast<size_t>(strtol(s + 2, &endPtr, 10));
     return (*endPtr == 0 && crossing > 0 && crossing <= nCross);
+}
+
+bool Link::parseSignedGaussTerm(const std::string& s,
+        size_t nCross, size_t& crossing, int& strand, int& sign) {
+    size_t len = s.length();
+    if (len < 3)
+        return false;
+
+    if (s[0] == 'U' || s[0] == 'u')
+        strand = 0;
+    else if (s[0] == 'O' || s[0] == 'o')
+        strand = 1;
+    else
+        return false;
+
+    if (s[len - 1] == '+')
+        sign = 1;
+    else if (s[len - 1] == '-')
+        sign = -1;
+    else
+        return false;
+
+    if (! valueOf(s.substr(1, len - 2), crossing))
+        return false;
+
+    return (crossing > 0 && crossing <= nCross);
+}
+
+bool Link::parseSignedGaussTerm(const char* s,
+        size_t nCross, size_t& crossing, int& strand, int& sign) {
+    if (! (s[0] && s[1] && s[2]))
+        return false;
+
+    if (s[0] == 'U' || s[0] == 'u')
+        strand = 0;
+    else if (s[0] == 'O' || s[0] == 'o')
+        strand = 1;
+    else
+        return false;
+
+    char* endPtr;
+    crossing = static_cast<size_t>(strtol(s + 1, &endPtr, 10));
+    if (crossing <= 0 || crossing > nCross)
+        return false;
+
+    // In theory, endPtr should now be pointing to the crossing sign, which
+    // was the first invalid character that strtol() found.
+    if (*endPtr == '+')
+        sign = 1;
+    else if (*endPtr == '-')
+        sign = -1;
+    else
+        return false;
+
+    // We should now be at the end of the token.
+    ++endPtr;
+    return (*endPtr == 0);
 }
 
 std::string Link::gauss() const {
@@ -311,6 +408,94 @@ void Tangle::orientedGauss(std::ostream& out) const {
 Tangle Tangle::fromOrientedGauss(const std::string& s) {
     std::vector<std::string> terms = basicTokenise(s);
     return fromOrientedGauss(terms.begin(), terms.end());
+}
+
+std::string Link::signedGauss() const {
+    std::ostringstream out;
+    signedGauss(out);
+    return out.str();
+}
+
+void Link::signedGauss(std::ostream& out) const {
+    if (components_.size() != 1)
+        throw NotImplemented(
+            "Gauss codes are only implemented for single-component links");
+    if (crossings_.empty())
+        return;
+
+    StrandRef start = components_.front();
+    StrandRef s = start;
+    do {
+        if (s.strand() == 0)
+            out << 'U';
+        else
+            out << 'O';
+
+        out << (s.crossing()->index() + 1);
+
+        if (s.crossing()->sign() > 0)
+            out << '+';
+        else
+            out << '-';
+
+        ++s;
+    } while (s != start);
+}
+
+std::vector<std::string> Link::signedGaussData() const {
+    if (components_.size() != 1)
+        throw NotImplemented(
+            "Gauss codes are only implemented for single-component links");
+    if (crossings_.empty())
+        return {};
+
+    std::vector<std::string> ans;
+    ans.reserve(2 * crossings_.size());
+
+    // It seems safe to use 2^64 as an upper bound on the number of crossings.
+    // On typical machines, size_t should not exceed this; moreover, even if
+    // we did have more crossings than this, none of Regina's algorithms
+    // would ever finish for a knot of this size.
+    //
+    // Since 2^64 is a 20-digit number in base 10, this gives a maximum token
+    // length of 22 (allowing for the prefix U/O and the suffix +/-).
+    static constexpr int maxTokenLen = 22;
+    char token[maxTokenLen + 1]; // allow for null termination
+
+    StrandRef start = components_.front();
+    StrandRef s = start;
+    do {
+        token[0] = (s.strand() == 0 ? 'U' : 'O');
+#if __regina_has_to_chars
+        auto result = std::to_chars(token + 1, token + maxTokenLen - 1,
+            s.crossing()->index() + 1);
+        if (result.ec != std::errc()) {
+            std::cerr << "ERROR: signedGaussData(): could not convert "
+                "crossing index " << (s.crossing()->index() + 1)
+                << " to a string via std::to_chars().";
+            return std::vector<std::string>();
+        }
+        *(result.ptr++) = (s.crossing()->sign() > 0 ? '+' : '-');
+        *result.ptr = 0;
+#else
+        int result = snprintf(token + 1,
+            maxTokenLen - 2 /* includes null terminator */, "%zu",
+            s.crossing()->index() + 1);
+        if (result < 0 || result >= maxTokenLen - 1) {
+            std::cerr << "ERROR: signedGaussData(): could not convert "
+                "crossing index " << (s.crossing()->index() + 1)
+                << " to a string via snprintf().";
+            return std::vector<std::string>();
+        }
+        token[result + 1] = (s.crossing()->sign() > 0 ? '+' : '-');
+        token[result + 2] = 0;
+#endif
+        ans.emplace_back(token);
+
+        ++s;
+    } while (s != start);
+
+    return ans;
 }
 
 } // namespace regina

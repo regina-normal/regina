@@ -3145,6 +3145,29 @@ TEST_F(LinkTest, orientedGauss) {
     testManualCases(verifyOrientedGauss);
 }
 
+static void verifySignedGauss(const Link& link, const char* name) {
+    if (link.countComponents() != 1)
+        return;
+
+    SCOPED_TRACE_CSTRING(name);
+
+    std::string code = link.signedGauss();
+
+    Link recon;
+    ASSERT_NO_THROW({ recon = Link::fromSignedGauss(code); });
+
+    // Signed gauss codes reconstruct the labelling precisely.
+    EXPECT_EQ(recon, link);
+    EXPECT_EQ(recon.signedGauss(), code);
+
+    // Verify the "magic" string constructor.
+    EXPECT_NO_THROW({ EXPECT_EQ(Link(code), recon); });
+}
+
+TEST_F(LinkTest, signedGauss) {
+    testManualCases(verifySignedGauss);
+}
+
 static void verifyJenkins(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 

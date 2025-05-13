@@ -199,6 +199,12 @@ Link::Link(const std::string& description) {
     }
 
     try {
+        *this = fromSignedGauss(description);
+        return;
+    } catch (const InvalidArgument&) {
+    }
+
+    try {
         *this = fromGauss(description);
         return;
     } catch (const InvalidArgument&) {

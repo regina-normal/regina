@@ -287,12 +287,12 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
     return ans;
 }
 
-template <typename Iterator>
-Link Link::fromOrientedGauss(Iterator begin, Iterator end) {
+template <Link::GaussEnhancement type_, typename Iterator>
+Link Link::fromEnhancedGauss(Iterator begin, Iterator end) {
     // Extract the number of crossings.
     size_t n = end - begin;
     if (n % 2)
-        throw InvalidArgument("fromOrientedGauss(): odd number of terms");
+        throw InvalidArgument("Enhanced Gauss code has odd number of terms");
     n = n / 2;
 
     if (n == 0)
@@ -309,8 +309,15 @@ Link Link::fromOrientedGauss(Iterator begin, Iterator end) {
 
     size_t tmpCross;
     int tmpStrand, tmpSign;
-    if (! parseOrientedGaussTerm(*it, n, tmpCross, tmpStrand, tmpSign))
-        throw InvalidArgument("fromOrientedGauss(): could not parse term");
+    if constexpr (type_ == GaussEnhancement::Oriented) {
+        if (! parseOrientedGaussTerm(*it, n, tmpCross, tmpStrand, tmpSign))
+            throw InvalidArgument(
+                "Could not parse term in oriented Gauss code");
+    } else {
+        if (! parseSignedGaussTerm(*it, n, tmpCross, tmpStrand, tmpSign))
+            throw InvalidArgument(
+                "Could not parse term in signed Gauss code");
+    }
 
     Crossing* cr = ans.crossings_[tmpCross - 1];
     cr->sign_ = tmpSign;
@@ -320,26 +327,33 @@ Link Link::fromOrientedGauss(Iterator begin, Iterator end) {
     for (++it; it != end; ++it) {
         prev = curr;
 
-        if (! parseOrientedGaussTerm(*it, n, tmpCross, tmpStrand, tmpSign))
-            throw InvalidArgument("fromOrientedGauss(): could not parse term");
+        if constexpr (type_ == GaussEnhancement::Oriented) {
+            if (! parseOrientedGaussTerm(*it, n, tmpCross, tmpStrand, tmpSign))
+                throw InvalidArgument(
+                    "Could not parse term in oriented Gauss code");
+        } else {
+            if (! parseSignedGaussTerm(*it, n, tmpCross, tmpStrand, tmpSign))
+                throw InvalidArgument(
+                    "Could not parse term in signed Gauss code");
+        }
 
         cr = ans.crossings_[tmpCross - 1];
         if (cr->sign_ == 0)
             cr->sign_ = tmpSign;
         else if (cr->sign_ != tmpSign)
             throw InvalidArgument(
-                "fromOrientedGauss(): crossing has inconsistent signs");
+                "Crossing has inconsistent signs in enhanced Gauss code");
 
         curr = cr->strand(tmpStrand);
 
         if (prev.crossing()->next_[prev.strand()])
             throw InvalidArgument(
-                "fromOrientedGauss(): multiple passes out of the same strand");
+                "Multiple passes out of the same strand in enhanced Gauss code");
         prev.crossing()->next_[prev.strand()] = curr;
 
         if (curr.crossing()->prev_[curr.strand()])
             throw InvalidArgument(
-                "fromOrientedGauss(): multiple passes into the same strand");
+                "Multiple passes into the same strand in enhanced Gauss code");
         curr.crossing()->prev_[curr.strand()] = prev;
     }
 
@@ -348,12 +362,12 @@ Link Link::fromOrientedGauss(Iterator begin, Iterator end) {
 
     if (prev.crossing()->next_[prev.strand()])
         throw InvalidArgument(
-            "fromOrientedGauss(): multiple passes out of the same strand");
+            "Multiple passes out of the same strand in enhanced Gauss code");
     prev.crossing()->next_[prev.strand()] = curr;
 
     if (curr.crossing()->prev_[curr.strand()])
         throw InvalidArgument(
-            "fromOrientedGauss(): multiple passes into the same strand");
+            "Multiple passes into the same strand in enhanced Gauss code");
     curr.crossing()->prev_[curr.strand()] = prev;
 
     // All done!

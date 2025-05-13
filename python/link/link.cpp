@@ -151,6 +151,12 @@ void addLink(pybind11::module_& m) {
         .def_static("fromOrientedGauss", [](const std::vector<std::string>& v) {
             return Link::fromOrientedGauss(v.begin(), v.end());
         }, pybind11::arg("tokens"), rdoc::fromOrientedGauss_2)
+        .def_static("fromSignedGauss", [](const std::string& s) {
+            return Link::fromSignedGauss(s);
+        }, rdoc::fromSignedGauss)
+        .def_static("fromSignedGauss", [](const std::vector<std::string>& v) {
+            return Link::fromSignedGauss(v.begin(), v.end());
+        }, pybind11::arg("tokens"), rdoc::fromSignedGauss_2)
         .def_static("fromJenkins", [](const std::string& s) {
             return Link::fromJenkins(s);
         }, rdoc::fromJenkins)
@@ -307,6 +313,10 @@ void addLink(pybind11::module_& m) {
             rdoc::orientedGauss)
         .def("orientedGaussData", &Link::orientedGaussData,
             rdoc::orientedGaussData)
+        .def("signedGauss",
+            overload_cast<>(&Link::signedGauss, pybind11::const_),
+            rdoc::signedGauss)
+        .def("signedGaussData", &Link::signedGaussData, rdoc::signedGaussData)
         .def("jenkins",
             overload_cast<>(&Link::jenkins, pybind11::const_), rdoc::jenkins)
         .def("jenkinsData", &Link::jenkinsData, rdoc::jenkinsData)
