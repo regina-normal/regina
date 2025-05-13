@@ -5366,9 +5366,8 @@ class Link :
          *
          * \pre \a Iterator is a random access iterator type.
          *
-         * \pre Dereferencing such an iterator produces either a
-         * C-style string (which can be cast to `const char*`) or a
-         * C++-style string (which can be cast to `const std::string&`).
+         * \pre Dereferencing such an iterator produces a C++-style string
+         * (i.e., something that can be cast to `const std::string&`).
          *
          * \exception InvalidArgument The given sequence was not a valid
          * oriented Gauss code for a classical or virtual knot.
@@ -5471,9 +5470,8 @@ class Link :
          *
          * \pre \a Iterator is a random access iterator type.
          *
-         * \pre Dereferencing such an iterator produces either a
-         * C-style string (which can be cast to `const char*`) or a
-         * C++-style string (which can be cast to `const std::string&`).
+         * \pre Dereferencing such an iterator produces a C++-style string
+         * (i.e., something that can be cast to `const std::string&`).
          *
          * \exception InvalidArgument The given sequence was not a valid
          * signed Gauss code for a classical or virtual knot.
@@ -5880,10 +5878,13 @@ class Link :
          */
         std::vector<StrandRef>::iterator componentFor(const StrandRef& s);
 
+        /**
+         * Used with fromEnhancedGauss() to indicate which kind of Gauss code
+         * we are reconstructing a knot from.
+         */
         enum class GaussEnhancement {
             Oriented = 1, Signed = 2
         };
-
         /**
          * Implements either fromOrientedGauss() or fromSignedGauss(),
          * depending on the value of \a type_.  See fromOrientedGauss() and
@@ -5894,7 +5895,6 @@ class Link :
          */
         template <GaussEnhancement type_, typename Iterator>
         static Link fromEnhancedGauss(Iterator begin, Iterator end);
-
         /**
          * Internal to fromOrientedGauss().
          *
@@ -5916,27 +5916,6 @@ class Link :
         static bool parseOrientedGaussTerm(const std::string& s,
             size_t nCross, size_t& crossing, int& strand, int& sign);
         /**
-         * Internal to fromOrientedGauss().
-         *
-         * This routine parses a single token in an "oriented" Gauss code.
-         * The token must not contain any whitespace.
-         *
-         * \param s the token to parse.
-         * \param nCross the total number of crossings in the knot.
-         * \param crossing used to return the label of the crossing
-         * described by this token.
-         * \param strand used to return either 1 or 0 according to
-         * whether this token describes the upper or lower strand of the
-         * crossing respectively.
-         * \param sign used to return the sign of this crossing (either
-         * +1 or -1).
-         * \return \c true if and only if no errors were detected when
-         * parsing the token.
-         */
-        static bool parseOrientedGaussTerm(const char* s,
-            size_t nCross, size_t& crossing, int& strand, int& sign);
-
-        /**
          * Internal to fromSignedGauss().
          *
          * This routine parses a single token in a "signed" Gauss code.
@@ -5955,26 +5934,6 @@ class Link :
          * parsing the token.
          */
         static bool parseSignedGaussTerm(const std::string& s,
-            size_t nCross, size_t& crossing, int& strand, int& sign);
-        /**
-         * Internal to fromSignedGauss().
-         *
-         * This routine parses a single token in a "signed" Gauss code.
-         * The token must not contain any whitespace.
-         *
-         * \param s the token to parse.
-         * \param nCross the total number of crossings in the knot.
-         * \param crossing used to return the label of the crossing
-         * described by this token.
-         * \param strand used to return either 1 or 0 according to
-         * whether this token describes the upper or lower strand of the
-         * crossing respectively.
-         * \param sign used to return the sign of this crossing (either
-         * +1 or -1).
-         * \return \c true if and only if no errors were detected when
-         * parsing the token.
-         */
-        static bool parseSignedGaussTerm(const char* s,
             size_t nCross, size_t& crossing, int& strand, int& sign);
 
         /**

@@ -151,30 +151,6 @@ bool Link::parseOrientedGaussTerm(const std::string& s,
     return (crossing > 0 && crossing <= nCross);
 }
 
-bool Link::parseOrientedGaussTerm(const char* s,
-        size_t nCross, size_t& crossing, int& strand, int& sign) {
-    if (! (s[0] && s[1] && s[2]))
-        return false;
-
-    if (s[0] == '+')
-        strand = 1;
-    else if (s[0] == '-')
-        strand = 0;
-    else
-        return false;
-
-    if (s[1] == '<')
-        sign = (strand == 1 ? 1 : -1);
-    else if (s[1] == '>')
-        sign = (strand == 1 ? -1 : 1);
-    else
-        return false;
-
-    char* endPtr;
-    crossing = static_cast<size_t>(strtol(s + 2, &endPtr, 10));
-    return (*endPtr == 0 && crossing > 0 && crossing <= nCross);
-}
-
 bool Link::parseSignedGaussTerm(const std::string& s,
         size_t nCross, size_t& crossing, int& strand, int& sign) {
     size_t len = s.length();
@@ -199,37 +175,6 @@ bool Link::parseSignedGaussTerm(const std::string& s,
         return false;
 
     return (crossing > 0 && crossing <= nCross);
-}
-
-bool Link::parseSignedGaussTerm(const char* s,
-        size_t nCross, size_t& crossing, int& strand, int& sign) {
-    if (! (s[0] && s[1] && s[2]))
-        return false;
-
-    if (s[0] == 'U' || s[0] == 'u')
-        strand = 0;
-    else if (s[0] == 'O' || s[0] == 'o')
-        strand = 1;
-    else
-        return false;
-
-    char* endPtr;
-    crossing = static_cast<size_t>(strtol(s + 1, &endPtr, 10));
-    if (crossing <= 0 || crossing > nCross)
-        return false;
-
-    // In theory, endPtr should now be pointing to the crossing sign, which
-    // was the first invalid character that strtol() found.
-    if (*endPtr == '+')
-        sign = 1;
-    else if (*endPtr == '-')
-        sign = -1;
-    else
-        return false;
-
-    // We should now be at the end of the token.
-    ++endPtr;
-    return (*endPtr == 0);
 }
 
 std::string Link::gauss() const {

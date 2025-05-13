@@ -337,6 +337,9 @@ Version 7.4  [ (to be announced) ]
               anything changed.
             - Routine simplifyExhaustive() now ensures that any change to the
               link diagram happens on the calling thread.
+            - The iterator-based variant of fromOrientedGaussData() now
+              insists that the iterators point to C++-style strings (not
+              C-style character pointers).
         Class LockViolation:
             - New exception class used when the user attempts to change a
               locked simplex or facet.
