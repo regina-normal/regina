@@ -293,23 +293,17 @@ std::vector<std::string> Link::orientedGaussData() const {
 #if __regina_has_to_chars
         auto result = std::to_chars(token + 2, token + maxTokenLen,
             s.crossing()->index() + 1);
-        if (result.ec != std::errc()) {
-            std::cerr << "ERROR: orientedGaussData(): could not convert "
-                "crossing index " << (s.crossing()->index() + 1)
-                << " to a string via std::to_chars().";
-            return std::vector<std::string>();
-        }
+        if (result.ec != std::errc())
+            throw ImpossibleScenario("Could not convert crossing index "
+                " to a string via std::to_chars()");
         *result.ptr = 0;
 #else
         int result = snprintf(token + 2,
             maxTokenLen - 1 /* includes null terminator */, "%zu",
             s.crossing()->index() + 1);
-        if (result < 0 || result >= maxTokenLen - 1) {
-            std::cerr << "ERROR: orientedGaussData(): could not convert "
-                "crossing index " << (s.crossing()->index() + 1)
-                << " to a string via snprintf().";
-            return std::vector<std::string>();
-        }
+        if (result < 0 || result >= maxTokenLen - 1)
+            throw ImpossibleScenario("Could not convert crossing index "
+                " to a string via snprintf()");
 #endif
         ans.emplace_back(token);
 
@@ -414,24 +408,18 @@ std::vector<std::string> Link::signedGaussData() const {
 #if __regina_has_to_chars
         auto result = std::to_chars(token + 1, token + maxTokenLen - 1,
             s.crossing()->index() + 1);
-        if (result.ec != std::errc()) {
-            std::cerr << "ERROR: signedGaussData(): could not convert "
-                "crossing index " << (s.crossing()->index() + 1)
-                << " to a string via std::to_chars().";
-            return std::vector<std::string>();
-        }
+        if (result.ec != std::errc())
+            throw ImpossibleScenario("Could not convert crossing index "
+                " to a string via std::to_chars()");
         *(result.ptr++) = (s.crossing()->sign() > 0 ? '+' : '-');
         *result.ptr = 0;
 #else
         int result = snprintf(token + 1,
             maxTokenLen - 2 /* includes null terminator */, "%zu",
             s.crossing()->index() + 1);
-        if (result < 0 || result >= maxTokenLen - 1) {
-            std::cerr << "ERROR: signedGaussData(): could not convert "
-                "crossing index " << (s.crossing()->index() + 1)
-                << " to a string via snprintf().";
-            return std::vector<std::string>();
-        }
+        if (result < 0 || result >= maxTokenLen - 1)
+            throw ImpossibleScenario("Could not convert crossing index "
+                " to a string via snprintf()");
         token[result + 1] = (s.crossing()->sign() > 0 ? '+' : '-');
         token[result + 2] = 0;
 #endif

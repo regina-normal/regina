@@ -235,6 +235,9 @@ Version 7.4  [ (to be announced) ]
               just Flags<HyperList>, and this should all be happening
               automatically behind the scenes.  HyperListFlags is now
               just a deprecated alias for HyperList.
+        Class ImpossibleScenario:
+            - New exception class for scenarios that should never occur, and
+              which should be reported to the Regina developers.
         Class Integer:
             - New routine hash(), which hashes the integer down to a size_t.
             - New routine str(), which is an alias for stringValue().
