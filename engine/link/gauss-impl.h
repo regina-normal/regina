@@ -61,7 +61,7 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
     n = n / 2;
 
     if (n == 0)
-        return { 1 };
+        return { 1 }; // Zero-crossing unknot
 
     // Run Adam's code to determine the handedness of each crossing.
 
@@ -296,7 +296,7 @@ Link Link::fromEnhancedGauss(Iterator begin, Iterator end) {
     n = n / 2;
 
     if (n == 0)
-        return { 1 };
+        return { 1 }; // Zero-crossing unknot
 
     Link ans;
 
