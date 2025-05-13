@@ -118,6 +118,9 @@ std::vector<int> Link::dtData() const {
     if (2 * size() > INT_MAX)
         throw NotImplemented("This Dowker-Thistlethwaite notation has "
             "entries that cannot fit into a C++ int");
+    if (! isClassical())
+        throw NotImplemented("Dowker-Thistlethwaite notation is only "
+            "implemented for classical link diagrams, not virtual diagrams");
 
     // Dowker-Thistlethwaite notation requires us to start on the lower strand.
     StrandRef start = components_.front();

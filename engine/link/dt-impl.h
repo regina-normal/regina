@@ -61,7 +61,7 @@ Link Link::fromDT(Iterator begin, Iterator end) {
     // Extract the number of crossings.
     size_t n = end - begin;
     if (n == 0)
-        return { 0 }; // empty array
+        return { 1 }; // zero-crossing unknot
 
     // Some basic sanity checking.
     // We ensure that the integers are in range, but we do not yet check

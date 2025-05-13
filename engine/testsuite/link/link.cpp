@@ -2941,10 +2941,15 @@ static void verifyGaussAndDT(const TestCase& test,
     if (! test.link.isClassical()) {
         // Verify that Gauss and D-T codes both fail as expected.
         EXPECT_THROW({ test.link.dt(); }, regina::NotImplemented);
+        EXPECT_THROW({ test.link.dtData(); }, regina::NotImplemented);
 
         std::string code = test.link.gauss();
         EXPECT_THROW({ Link::fromGauss(code); }, regina::InvalidArgument);
         EXPECT_THROW({ Link link(code); }, regina::InvalidArgument);
+
+        auto data = test.link.gaussData();
+        EXPECT_THROW({ Link::fromGauss(data.begin(), data.end()); },
+            regina::InvalidArgument);
 
         return;
     }
@@ -2956,9 +2961,14 @@ static void verifyGaussAndDT(const TestCase& test,
 
     if (testGauss) {
         std::string code = test.link.gauss();
+        auto data = test.link.gaussData();
 
         Link recon;
         ASSERT_NO_THROW({ recon = Link::fromGauss(code); });
+        Link reconData;
+        ASSERT_NO_THROW({ reconData = Link::fromGauss(
+            data.begin(), data.end()); });
+        EXPECT_EQ(recon, reconData);
 
         EXPECT_EQ(recon.size(), test.link.size());
         EXPECT_EQ(recon.countComponents(), test.link.countComponents());
@@ -2980,34 +2990,40 @@ static void verifyGaussAndDT(const TestCase& test,
         for (int alpha = 0; alpha <= 1; ++alpha) {
             if (alpha && test.link.size() > 26) {
                 EXPECT_THROW({ test.link.dt(alpha); }, regina::NotImplemented);
-            } else {
-                std::string code = test.link.dt(alpha);
-
-                Link recon;
-                ASSERT_NO_THROW({ recon = Link::fromDT(code); });
-
-                EXPECT_EQ(recon.size(), test.link.size());
-                EXPECT_EQ(recon.countComponents(), test.link.countComponents());
-                EXPECT_TRUE(recon.isClassical());
-
-                // Verify the "magic" string constructor, _except_ for the
-                // special case of the one-crossing unknot whose alphabetical
-                // D-T code "a" is also a valid knot signature.
-                EXPECT_NO_THROW({
-                    if (alpha && test.link.size() == 1)
-                        EXPECT_EQ(Link(code), Link(1));
-                    else
-                        EXPECT_EQ(Link(code), recon);
-                });
-
-                // If we reflected, undo this for our subsequent tests.
-                if (recon.sig(false) != targetSig)
-                    recon.reflect();
-
-                EXPECT_EQ(recon.sig(false), targetSig);
-                if (test.link.size() <= JONES_THRESHOLD)
-                    EXPECT_EQ(recon.jones(), test.link.jones());
+                continue;
             }
+
+            std::string code = test.link.dt(alpha);
+            auto data = test.link.dtData();
+
+            Link recon;
+            ASSERT_NO_THROW({ recon = Link::fromDT(code); });
+            Link reconData;
+            ASSERT_NO_THROW({ reconData = Link::fromDT(
+                data.begin(), data.end()); });
+            EXPECT_EQ(recon, reconData);
+
+            EXPECT_EQ(recon.size(), test.link.size());
+            EXPECT_EQ(recon.countComponents(), test.link.countComponents());
+            EXPECT_TRUE(recon.isClassical());
+
+            // Verify the "magic" string constructor, _except_ for the
+            // special case of the one-crossing unknot whose alphabetical
+            // D-T code "a" is also a valid knot signature.
+            EXPECT_NO_THROW({
+                if (alpha && test.link.size() == 1)
+                    EXPECT_EQ(Link(code), Link(1));
+                else
+                    EXPECT_EQ(Link(code), recon);
+            });
+
+            // If we reflected, undo this for our subsequent tests.
+            if (recon.sig(false) != targetSig)
+                recon.reflect();
+
+            EXPECT_EQ(recon.sig(false), targetSig);
+            if (test.link.size() <= JONES_THRESHOLD)
+                EXPECT_EQ(recon.jones(), test.link.jones());
         }
     }
 }
@@ -3129,13 +3145,19 @@ static void verifyOrientedGauss(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     std::string code = link.orientedGauss();
+    auto data = link.orientedGaussData();
 
     Link recon;
     ASSERT_NO_THROW({ recon = Link::fromOrientedGauss(code); });
+    Link reconData;
+    ASSERT_NO_THROW({ reconData = Link::fromOrientedGauss(
+        data.begin(), data.end()); });
 
     // Oriented gauss codes reconstruct the labelling precisely.
     EXPECT_EQ(recon, link);
     EXPECT_EQ(recon.orientedGauss(), code);
+    EXPECT_EQ(reconData, link);
+    EXPECT_EQ(reconData.orientedGaussData(), data);
 
     // Verify the "magic" string constructor.
     EXPECT_NO_THROW({ EXPECT_EQ(Link(code), recon); });
@@ -3152,13 +3174,33 @@ static void verifySignedGauss(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     std::string code = link.signedGauss();
+    auto data = link.signedGaussData();
 
     Link recon;
     ASSERT_NO_THROW({ recon = Link::fromSignedGauss(code); });
+    Link reconData;
+    ASSERT_NO_THROW({ reconData = Link::fromSignedGauss(
+        data.begin(), data.end()); });
 
     // Signed gauss codes reconstruct the labelling precisely.
     EXPECT_EQ(recon, link);
     EXPECT_EQ(recon.signedGauss(), code);
+    EXPECT_EQ(reconData, link);
+    EXPECT_EQ(reconData.signedGaussData(), data);
+
+    // Verify that lower-case signed Gauss codes are handled also.
+    std::string lower = code;
+    for (char& c : lower)
+        c = ::tolower(c);
+    if (link.size() == 0)
+        EXPECT_EQ(lower, code); // no crossings, so no letters at all
+    else
+        EXPECT_NE(lower, code);
+
+    Link reconLower;
+    ASSERT_NO_THROW({ reconLower = Link::fromSignedGauss(lower); });
+    EXPECT_EQ(reconLower, link);
+    EXPECT_EQ(reconLower.signedGauss(), code);
 
     // Verify the "magic" string constructor.
     EXPECT_NO_THROW({ EXPECT_EQ(Link(code), recon); });
@@ -3172,13 +3214,19 @@ static void verifyJenkins(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     std::string code = link.jenkins();
+    auto data = link.jenkinsData();
 
     Link recon;
     ASSERT_NO_THROW({ recon = Link::fromJenkins(code); });
+    Link reconData;
+    ASSERT_NO_THROW({ reconData = Link::fromJenkins(
+        data.begin(), data.end()); });
 
     // Jenkins format reconstructs the labelling precisely.
     EXPECT_EQ(recon, link);
     EXPECT_EQ(recon.jenkins(), code);
+    EXPECT_EQ(reconData, link);
+    EXPECT_EQ(reconData.jenkinsData(), data);
 }
 
 TEST_F(LinkTest, jenkins) {
@@ -3196,9 +3244,13 @@ static void verifyPDCode(const Link& link, const char* name) {
             ++lost;
 
     std::string code = link.pd();
+    auto data = link.pdData();
 
     Link recon;
     ASSERT_NO_THROW({ recon = Link::fromPD(code); });
+    Link reconData;
+    ASSERT_NO_THROW({ reconData = Link::fromPD(data.begin(), data.end()); });
+    EXPECT_EQ(recon, reconData);
 
     EXPECT_EQ(recon.size(), link.size());
     EXPECT_EQ(recon.countComponents() + lost, link.countComponents());
