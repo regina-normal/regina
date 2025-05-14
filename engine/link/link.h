@@ -2128,12 +2128,22 @@ class Link :
          * Reidemeister move at the given location to add two new crossings.
          *
          * For more detail on classical type II moves and when they can be
-         * performed, see r2(StrandRef, int, StrandRef, int).
+         * performed, see r2(StrandRef, int, StrandRef, int).  Note that a
+         * classical type II move on a classical link diagram will always
+         * result in a classical link diagram.
+         *
+         * If you are working with virtual links, you may wish to use
+         * hasR2Virtual() instead, which (unlike this routine) allow moves
+         * that could change the surface in which the link diagram is embedded,
+         * and in particular which could convert a classical link diagram into
+         * a virtual diagram with positive virtual genus.
          *
          * \pre Each of the given strand references is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
-         * \warning The check for this move is expensive (linear time).
+         * \warning The check for classical type II moves is expensive
+         * (linear time).  This is in contrast to the check for _virtual_
+         * type II moves, which is extremely fast.
          *
          * \param upperArc identifies which arc of the link would be passed
          * over another in this candidate move.  See
@@ -2154,6 +2164,42 @@ class Link :
          * \return \c true if and only if the requested move can be performed.
          */
         bool hasR2(StrandRef upperArc, int upperSide,
+            StrandRef lowerArc, int lowerSide) const;
+        /**
+         * Determines whether it is possible to perform a virtual type II
+         * Reidemeister move at the given location to add two new crossings.
+         *
+         * For more detail on virtual type II moves and when they can be
+         * performed, see r2Virtual().  Note that a virtual type II move could
+         * potentially change the virtual genus of the link diagram; in
+         * particular, it could convert a classical link diagram into a
+         * virtual diagram with positive virtual genus.
+         *
+         * \pre Each of the given strand references is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * The check for virtual type II moves is extremely fast (as opposed
+         * to _classical_ type II moves, where the check takes linear time).
+         *
+         * \param upperArc identifies which arc of the link would be passed
+         * over another in this candidate move.  See
+         * r2(StrandRef, int, StrandRef, int) for details on exactly how this
+         * will be interpreted.
+         * \param upperSide 0 if the new overlap would take place on the left
+         * of \a upperArc (when walking along \a upperArc in the forward
+         * direction), or 1 if the new overlap would take place on the right
+         * of \a upperArc.
+         * \param lowerArc identifies which arc of the link would be passed
+         * beneath another in this candidate move.  See
+         * r2(StrandRef, int, StrandRef, int) for details on exactly how this
+         * will be interpreted.
+         * \param lowerSide 0 if the new overlap would take place on the left
+         * of \a lowerArc (when walking along \a lowerArc in the forward
+         * direction), or 1 if the new overlap would take place on the right
+         * of \a lowerArc.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool hasR2Virtual(StrandRef upperArc, int upperSide,
             StrandRef lowerArc, int lowerSide) const;
         /**
          * Determines whether it is possible to perform a type III Reidemeister
@@ -6711,7 +6757,13 @@ inline bool Link::hasR2(Crossing* crossing) const {
 inline bool Link::hasR2(StrandRef upperArc, int upperSide,
         StrandRef lowerArc, int lowerSide) const {
     return const_cast<Link*>(this)->internalR2(upperArc, upperSide,
-        lowerArc, lowerSide, true, false);
+        lowerArc, lowerSide, true /* classical only */, false);
+}
+
+inline bool Link::hasR2Virtual(StrandRef upperArc, int upperSide,
+        StrandRef lowerArc, int lowerSide) const {
+    return const_cast<Link*>(this)->internalR2(upperArc, upperSide,
+        lowerArc, lowerSide, false /* allow virtual */, false);
 }
 
 inline bool Link::hasR3(StrandRef arc, int side) const {

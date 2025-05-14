@@ -2208,14 +2208,65 @@ R"doc(Determines whether it is possible to perform a classical type II
 Reidemeister move at the given location to add two new crossings.
 
 For more detail on classical type II moves and when they can be
-performed, see r2(StrandRef, int, StrandRef, int).
+performed, see r2(StrandRef, int, StrandRef, int). Note that a
+classical type II move on a classical link diagram will always result
+in a classical link diagram.
+
+If you are working with virtual links, you may wish to use
+hasR2Virtual() instead, which (unlike this routine) allow moves that
+could change the surface in which the link diagram is embedded, and in
+particular which could convert a classical link diagram into a virtual
+diagram with positive virtual genus.
 
 Precondition:
     Each of the given strand references is either a null reference, or
     else refers to some strand of some crossing in this link.
 
 .. warning::
-    The check for this move is expensive (linear time).
+    The check for classical type II moves is expensive (linear time).
+    This is in contrast to the check for _virtual_ type II moves,
+    which is extremely fast.
+
+Parameter ``upperArc``:
+    identifies which arc of the link would be passed over another in
+    this candidate move. See r2(StrandRef, int, StrandRef, int) for
+    details on exactly how this will be interpreted.
+
+Parameter ``upperSide``:
+    0 if the new overlap would take place on the left of *upperArc*
+    (when walking along *upperArc* in the forward direction), or 1 if
+    the new overlap would take place on the right of *upperArc*.
+
+Parameter ``lowerArc``:
+    identifies which arc of the link would be passed beneath another
+    in this candidate move. See r2(StrandRef, int, StrandRef, int) for
+    details on exactly how this will be interpreted.
+
+Parameter ``lowerSide``:
+    0 if the new overlap would take place on the left of *lowerArc*
+    (when walking along *lowerArc* in the forward direction), or 1 if
+    the new overlap would take place on the right of *lowerArc*.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::Link_::hasR2Virtual
+static const char *hasR2Virtual =
+R"doc(Determines whether it is possible to perform a virtual type II
+Reidemeister move at the given location to add two new crossings.
+
+For more detail on virtual type II moves and when they can be
+performed, see r2Virtual(). Note that a virtual type II move could
+potentially change the virtual genus of the link diagram; in
+particular, it could convert a classical link diagram into a virtual
+diagram with positive virtual genus.
+
+Precondition:
+    Each of the given strand references is either a null reference, or
+    else refers to some strand of some crossing in this link.
+
+The check for virtual type II moves is extremely fast (as opposed to
+_classical_ type II moves, where the check takes linear time).
 
 Parameter ``upperArc``:
     identifies which arc of the link would be passed over another in
