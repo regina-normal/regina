@@ -206,13 +206,14 @@ namespace detail {
                                 }
 
                                 // The r2() check is expensive when adding
-                                // two crossings - use the variant where we
-                                // promise that it's going to be legal.
+                                // two crossings.  We already know this move
+                                // is legal (in the sense of classical links),
+                                // so use r2Virtual() instead which avoids the
+                                // expensive planarity test.
                                 Link alt(t, false);
-                                alt.r2(
+                                alt.r2Virtual(
                                     alt.translate(upperArc), upperSide,
-                                    alt.translate(lowerArc), lowerSide,
-                                    regina::unprotected);
+                                    alt.translate(lowerArc), lowerSide);
                                 if (retriang->candidate(std::move(alt), sig))
                                     return;
                             }
