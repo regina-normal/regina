@@ -1514,9 +1514,8 @@ Precondition:
     *Iterator* is a random access iterator type.
 
 Precondition:
-    Dereferencing such an iterator produces either a C-style string
-    (which can be cast to ``const char*``) or a C++-style string
-    (which can be cast to ``const std::string&``).
+    Dereferencing such an iterator produces a C++-style string (i.e.,
+    something that can be cast to ``const std::string&``).
 
 Exception ``InvalidArgument``:
     The given sequence was not a valid oriented Gauss code for a
@@ -1801,9 +1800,8 @@ Precondition:
     *Iterator* is a random access iterator type.
 
 Precondition:
-    Dereferencing such an iterator produces either a C-style string
-    (which can be cast to ``const char*``) or a C++-style string
-    (which can be cast to ``const std::string&``).
+    Dereferencing such an iterator produces a C++-style string (i.e.,
+    something that can be cast to ``const std::string&``).
 
 Exception ``InvalidArgument``:
     The given sequence was not a valid signed Gauss code for a
@@ -3562,7 +3560,7 @@ allowed. If it is, and if the argument *perform* is ``True``, this
 routine will also _perform_ the move.
 
 .. deprecated::
-    If you just wish to test whether a such move is possible, call
+    If you just wish to test whether such a move is possible, call
     hasR1(). If you wish to both check and perform the move, call r1()
     without the two additional boolean arguments.
 
@@ -3605,7 +3603,7 @@ allowed. If it is, and if the argument *perform* is ``True``, this
 routine will also _perform_ the move.
 
 .. deprecated::
-    If you just wish to test whether a such move is possible, call
+    If you just wish to test whether such a move is possible, call
     hasR1(). If you wish to both check and perform the move, call r1()
     without the two additional boolean arguments.
 
@@ -3828,7 +3826,7 @@ allowed. If it is, and if the argument *perform* is ``True``, this
 routine will also _perform_ the move.
 
 .. deprecated::
-    If you just wish to test whether a such move is possible, call
+    If you just wish to test whether such a move is possible, call
     hasR2(). If you wish to both check and perform the move, call r2()
     without the two additional boolean arguments.
 
@@ -3872,7 +3870,7 @@ allowed. If it is, and if the argument *perform* is ``True``, this
 routine will also _perform_ the move.
 
 .. deprecated::
-    If you just wish to test whether a such move is possible, call
+    If you just wish to test whether such a move is possible, call
     hasR2(). If you wish to both check and perform the move, call r2()
     without the two additional boolean arguments.
 
@@ -3909,14 +3907,16 @@ R"doc(Deprecated routine that tests for and optionally performs a classical
 type II Reidemeister move to add two new crossings.
 
 For more detail on classical type II moves and when they can be
-performed, see r2(StrandRef, int, StrandRef, int).
+performed, see r2(StrandRef, int, StrandRef, int). This deprecated
+routine will not perform virtual type II moves; for that you should
+use the new routine r2Virtual() instead.
 
 This routine will always _check_ whether the requested move is
 allowed. If it is, and if the argument *perform* is ``True``, this
 routine will also _perform_ the move.
 
 .. deprecated::
-    If you just wish to test whether a such move is possible, call
+    If you just wish to test whether such a move is possible, call
     hasR2(). If you wish to both check and perform the move, call r2()
     without the two additional boolean arguments.
 
@@ -4124,7 +4124,7 @@ allowed. If it is, and if the argument *perform* is ``True``, this
 routine will also _perform_ the move.
 
 .. deprecated::
-    If you just wish to test whether a such move is possible, call
+    If you just wish to test whether such a move is possible, call
     hasR3(). If you wish to both check and perform the move, call r3()
     without the two additional boolean arguments.
 
@@ -4167,7 +4167,7 @@ allowed. If it is, and if the argument *perform* is ``True``, this
 routine will also _perform_ the move.
 
 .. deprecated::
-    If you just wish to test whether a such move is possible, call
+    If you just wish to test whether such a move is possible, call
     hasR3(). If you wish to both check and perform the move, call r3()
     without the two additional boolean arguments.
 

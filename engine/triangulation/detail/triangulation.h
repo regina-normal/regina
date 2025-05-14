@@ -2440,7 +2440,7 @@ class TriangulationBase :
          * details on locks).  If the move _is_ allowed, and if the argument
          * \a perform is \c true, this routine will also _perform_ the move.
          *
-         * \deprecated If you just wish to test whether a such move is
+         * \deprecated If you just wish to test whether such a move is
          * possible, call hasPachner().  If you wish to both check and perform
          * the move, call pachner() without the two extra boolean arguments.
          *
@@ -2475,7 +2475,7 @@ class TriangulationBase :
          * details on locks).  If the move _is_ allowed, and if the argument
          * \a perform is \c true, this routine will also _perform_ the move.
          *
-         * \deprecated If you just wish to test whether a such move is possible,
+         * \deprecated If you just wish to test whether such a move is possible,
          * call has20().  If you wish to both check and perform the move, call
          * move20(), which does not take the two extra boolean arguments.
          *
@@ -2516,7 +2516,7 @@ class TriangulationBase :
          * need to solve undecidable problems).  See Face::isValid() for
          * further discussion.
          *
-         * \deprecated If you just wish to test whether a such move is possible,
+         * \deprecated If you just wish to test whether such a move is possible,
          * call hasShellBoundary().  If you wish to both check and perform the
          * move, call shellBoundary() without the two extra boolean arguments.
          *

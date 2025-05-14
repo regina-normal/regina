@@ -665,7 +665,7 @@ class Tangle : public Output<Tangle> {
          * allowed.  If it is, and if the argument \a perform is \c true,
          * this routine will also _perform_ the move.
          *
-         * \deprecated If you just wish to test whether a such move is possible,
+         * \deprecated If you just wish to test whether such a move is possible,
          * call hasR1().  If you wish to both check and perform the move,
          * call r1() without the two additional boolean arguments.
          *
@@ -695,7 +695,7 @@ class Tangle : public Output<Tangle> {
          * allowed.  If it is, and if the argument \a perform is \c true,
          * this routine will also _perform_ the move.
          *
-         * \deprecated If you just wish to test whether a such move is possible,
+         * \deprecated If you just wish to test whether such a move is possible,
          * call hasR2().  If you wish to both check and perform the move,
          * call r2() without the two additional boolean arguments.
          *
@@ -725,7 +725,7 @@ class Tangle : public Output<Tangle> {
          * allowed.  If it is, and if the argument \a perform is \c true,
          * this routine will also _perform_ the move.
          *
-         * \deprecated If you just wish to test whether a such move is possible,
+         * \deprecated If you just wish to test whether such a move is possible,
          * call hasR2().  If you wish to both check and perform the move,
          * call r2() without the two additional boolean arguments.
          *

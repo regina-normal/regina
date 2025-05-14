@@ -680,7 +680,7 @@ allowed. If it is, and if the argument *perform* is ``True``, this
 routine will also _perform_ the move.
 
 .. deprecated::
-    If you just wish to test whether a such move is possible, call
+    If you just wish to test whether such a move is possible, call
     hasR1(). If you wish to both check and perform the move, call r1()
     without the two additional boolean arguments.
 
@@ -773,7 +773,7 @@ allowed. If it is, and if the argument *perform* is ``True``, this
 routine will also _perform_ the move.
 
 .. deprecated::
-    If you just wish to test whether a such move is possible, call
+    If you just wish to test whether such a move is possible, call
     hasR2(). If you wish to both check and perform the move, call r2()
     without the two additional boolean arguments.
 
@@ -811,7 +811,7 @@ allowed. If it is, and if the argument *perform* is ``True``, this
 routine will also _perform_ the move.
 
 .. deprecated::
-    If you just wish to test whether a such move is possible, call
+    If you just wish to test whether such a move is possible, call
     hasR2(). If you wish to both check and perform the move, call r2()
     without the two additional boolean arguments.
 
