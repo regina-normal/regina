@@ -6135,10 +6135,17 @@ class Link :
         bool internalR2(StrandRef arc, bool check, bool perform);
 
         /**
-         * Implements testing for and/or performing Reidemeister moves.
+         * Implements testing for and/or performing both classical and virtual
+         * type II Reidemeister moves.
          * See r2() for details on what the location arguments mean.
          *
-         * The argument \a classicalOnly controls what kinds of checks are made:
+         * If \a classicalOnly is \c true, then this routine works with
+         * classical type II moves, as described by r2().  If \a classicalOnly
+         * is \c false, then this routine works with the more general virtual
+         * type II Reidemeister moves, as described by r2Virtual().
+         *
+         * This routine has no "checking" argument; instead checks will always
+         * be performed.  In particular:
          *
          * - This routine will always check that any null strand reference
          *   that is passed has a corresponding zero-crossing unknot component
@@ -6151,17 +6158,13 @@ class Link :
          *   different connected components of the link diagram.  This check is
          *   more expensive (linear in the number of crossings).
          *
-         * Be aware that, if \a classicalOnly is \c false, this move could
-         * potentially convert a classical link diagram into a virtual link
-         * diagram.
-         *
          * \param classicalOnly indicates whether we should ensure that the
          * requested move is planar.
          * \param perform indicates whether we should actually perform the
          * move, assuming any requested checks are successful.
          * \return \c true if and only if the all of the checks pass.
          */
-        bool internalR2(StrandRef upperArc, int upperSide,
+        bool internalR2General(StrandRef upperArc, int upperSide,
             StrandRef lowerArc, int lowerSide,
             bool classicalOnly, bool perform);
 
@@ -6762,13 +6765,13 @@ inline bool Link::r2(Crossing* crossing) {
 
 inline bool Link::r2(StrandRef upperArc, int upperSide,
         StrandRef lowerArc, int lowerSide) {
-    return internalR2(upperArc, upperSide, lowerArc, lowerSide,
+    return internalR2General(upperArc, upperSide, lowerArc, lowerSide,
         true /* classical only */, true);
 }
 
 inline bool Link::r2Virtual(StrandRef upperArc, int upperSide,
         StrandRef lowerArc, int lowerSide) {
-    return internalR2(upperArc, upperSide, lowerArc, lowerSide,
+    return internalR2General(upperArc, upperSide, lowerArc, lowerSide,
         false /* allow virtual */, true);
 }
 
@@ -6799,13 +6802,13 @@ inline bool Link::hasR2(Crossing* crossing) const {
 
 inline bool Link::hasR2(StrandRef upperArc, int upperSide,
         StrandRef lowerArc, int lowerSide) const {
-    return const_cast<Link*>(this)->internalR2(upperArc, upperSide,
+    return const_cast<Link*>(this)->internalR2General(upperArc, upperSide,
         lowerArc, lowerSide, true /* classical only */, false);
 }
 
 inline bool Link::hasR2Virtual(StrandRef upperArc, int upperSide,
         StrandRef lowerArc, int lowerSide) const {
-    return const_cast<Link*>(this)->internalR2(upperArc, upperSide,
+    return const_cast<Link*>(this)->internalR2General(upperArc, upperSide,
         lowerArc, lowerSide, false /* allow virtual */, false);
 }
 
@@ -6862,7 +6865,7 @@ inline std::optional<Link> Link::withR2(StrandRef upperArc, int upperSide,
     std::optional<Link> ans(std::in_place, *this);
     // We already know that the move will be planar.
     // There is no need to run the expensive planarity check again.
-    ans->internalR2(ans->translate(upperArc), upperSide,
+    ans->internalR2General(ans->translate(upperArc), upperSide,
         ans->translate(lowerArc), lowerSide,
             false /* allow non-planar moves */, true);
     return ans;
@@ -6874,7 +6877,7 @@ inline std::optional<Link> Link::withR2Virtual(StrandRef upperArc,
         return {};
 
     std::optional<Link> ans(std::in_place, *this);
-    ans->internalR2(ans->translate(upperArc), upperSide,
+    ans->internalR2General(ans->translate(upperArc), upperSide,
         ans->translate(lowerArc), lowerSide, false /* allow virtual */, true);
     return ans;
 }
@@ -6915,7 +6918,7 @@ inline bool Link::r2(Crossing* crossing, bool, bool perform) {
 
 inline bool Link::r2(StrandRef upperArc, int upperSide,
         StrandRef lowerArc, int lowerSide, bool, bool perform) {
-    return internalR2(upperArc, upperSide, lowerArc, lowerSide,
+    return internalR2General(upperArc, upperSide, lowerArc, lowerSide,
         true /* classical only */, perform);
 }
 

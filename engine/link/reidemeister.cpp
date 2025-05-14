@@ -408,8 +408,8 @@ bool Link::internalR2(StrandRef arc, bool check, bool perform) {
     return true;
 }
 
-bool Link::internalR2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
-        int lowerSide, bool classicalOnly, bool perform) {
+bool Link::internalR2General(StrandRef upperArc, int upperSide,
+        StrandRef lowerArc, int lowerSide, bool classicalOnly, bool perform) {
     std::vector<StrandRef>::iterator upperUnknot, lowerUnknot;
 
     if (! (upperArc && lowerArc)) {
