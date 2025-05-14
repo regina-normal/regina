@@ -42,11 +42,14 @@ def testDump(obj):
 	# For Python, print it _and_ test that it works.
 	code = obj.source()
 	print(code)
-	exec(code, globals(), locals())
+	# As of Python 3.13 we need to set up our own locals dictionary (a result
+	# of PEP 667).  See also: https://github.com/python/cpython/issues/118888
+	loc = {}
+	exec(code, globals(), loc)
 	if obj.__class__ == regina.Link:
-		print(locals()['link'])
+		print(loc['link'])
 	else:
-		print(locals()['tri'])
+		print(loc['tri'])
 
 testDump(Link())
 testDump(Link(1))
