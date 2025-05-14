@@ -227,14 +227,13 @@ enum class ChangeType {
  * that they promise the checks will succeed, and there is no need to perform
  * them.
  *
- * An example is type II Reidemeister moves for links that add crossings,
- * where the legality check is linear time (since it must essentially walk
- * around a 2-cell of the link diagram).
+ * An example is Pachner moves on triangulations, where the legality check
+ * becomes expensive when operating on a face of large codimension.
  *
  * Functions that offer an unprotected variant are rare, and are typically
- * functions that are used in speed-critical scenarios (such as Reidemeister
- * moves being used as atomic operations within the exponential-time
- * Link::rewrite()).
+ * functions that are used in speed-critical scenarios (such as Pachner
+ * moves being used as atomic operations within larger composite moves and/or
+ * simplification algorithms).
  *
  * The Unprotected type itself is an empty type.  Typically you would just
  * use the constant `regina::unprotected`.
