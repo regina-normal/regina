@@ -599,8 +599,8 @@ Parameter ``alg``:
 
 // Docstring regina::python::doc::TreeDecomposition_::__init_3
 static const char *__init_3 =
-R"doc(Builds a tree decomposition of the planar multigraph corresponding to
-the given knot or link diagram.
+R"doc(Builds a tree decomposition of the 4-valent multigraph corresponding
+to the given knot or link diagram.
 
 The nodes of the graph will be numbered in the same way as the
 crossings of the given knot / link.
