@@ -399,6 +399,7 @@ void addLink(pybind11::module_& m) {
             overload_cast<StrandRef, int, StrandRef, int>(&Link::withR2,
                 pybind11::const_),
             rdoc::withR2_3)
+        .def("withR2Virtual", &Link::withR2Virtual, rdoc::withR2Virtual)
         .def("withR3",
             overload_cast<StrandRef, int>(&Link::withR3, pybind11::const_),
             rdoc::withR3)

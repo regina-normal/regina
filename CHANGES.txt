@@ -297,8 +297,8 @@ Version 7.4  [ (to be announced) ]
                 deprecated.  You should now use these routines _without_ extra
                 check/perform arguments: they will always check for and (if
                 possible) perform the relevant moves.
-              + New routines r2Virtual() and hasR2Virtual(), which support
-                type II moves that change the virtual genus.
+              + New routines r2Virtual(), hasR2Virtual() and withR2Virtual(),
+                which support type II moves that change the virtual genus.
               + New routines hasR1(), hasR2() and hasR3() for checking only.
               + New read-only routines withR1(), withR2() and withR3() that (if
                 possible) return a new link with the relevant moves performed.
