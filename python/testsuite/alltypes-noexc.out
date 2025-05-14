@@ -220,6 +220,7 @@ HyperInfo : class -> EqualityType.NEVER_INSTANTIATED
 HyperList : enum
 HyperListFlags : alias -> enum HyperList
 HyperbolicMinSearcher : class -> EqualityType.BY_REFERENCE
+ImpossibleScenario : exception
 Integer : class -> EqualityType.BY_VALUE
 IntersectionForm : class -> EqualityType.BY_VALUE
 InvalidArgument : exception
