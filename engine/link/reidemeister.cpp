@@ -409,7 +409,7 @@ bool Link::internalR2(StrandRef arc, bool check, bool perform) {
 }
 
 bool Link::internalR2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
-        int lowerSide, bool check, bool perform) {
+        int lowerSide, bool classicalOnly, bool perform) {
     std::vector<StrandRef>::iterator upperUnknot, lowerUnknot;
 
     if (! (upperArc && lowerArc)) {
@@ -424,7 +424,7 @@ bool Link::internalR2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
                     break;
                 }
             if (it == components_.end()) {
-                return ! check;
+                return false;
             }
 
             // Step forwards so we can search for lowerUnknot if need be.
@@ -438,13 +438,13 @@ bool Link::internalR2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
                     break;
                 }
             if (it == components_.end()) {
-                return ! check;
+                return false;
             }
         }
     }
 
     // Carry out any remaining checks.
-    if (check && upperArc && lowerArc) {
+    if (classicalOnly && upperArc && lowerArc) {
         // Ensure that the two given sides-of-arcs belong to the
         // same 2-cell in the knot diagram, or else belong to different link
         // components entirely.
@@ -536,8 +536,6 @@ bool Link::internalR2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
     auto* pos = new Crossing(1);
     auto* neg = new Crossing(-1);
 
-    StrandRef to;
-
     // Graft the new crossings into the upper arc.
     if (lowerSide == 0) {
         // Upper strand: pos -> neg
@@ -545,7 +543,7 @@ bool Link::internalR2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
         neg->prev_[1] = pos->strand(1);
 
         if (upperArc) {
-            to = upperArc.next();
+            StrandRef to = upperArc.next();
             upperArc.crossing()->next_[upperArc.strand()] = pos->strand(1);
             pos->prev_[1] = upperArc;
             to.crossing()->prev_[to.strand()] = neg->strand(1);
@@ -562,7 +560,7 @@ bool Link::internalR2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
         pos->prev_[1] = neg->strand(1);
 
         if (upperArc) {
-            to = upperArc.next();
+            StrandRef to = upperArc.next();
             upperArc.crossing()->next_[upperArc.strand()] = neg->strand(1);
             neg->prev_[1] = upperArc;
             to.crossing()->prev_[to.strand()] = pos->strand(1);
@@ -582,7 +580,7 @@ bool Link::internalR2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
         neg->prev_[0] = pos->strand(0);
 
         if (lowerArc) {
-            to = lowerArc.next();
+            StrandRef to = lowerArc.next();
             lowerArc.crossing()->next_[lowerArc.strand()] = pos->strand(0);
             pos->prev_[0] = lowerArc;
             to.crossing()->prev_[to.strand()] = neg->strand(0);
@@ -599,7 +597,7 @@ bool Link::internalR2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
         pos->prev_[0] = neg->strand(0);
 
         if (lowerArc) {
-            to = lowerArc.next();
+            StrandRef to = lowerArc.next();
             lowerArc.crossing()->next_[lowerArc.strand()] = neg->strand(0);
             neg->prev_[0] = lowerArc;
             to.crossing()->prev_[to.strand()] = pos->strand(0);

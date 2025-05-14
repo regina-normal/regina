@@ -6039,20 +6039,32 @@ class Link :
          * Implements testing for and/or performing Reidemeister moves.
          * See r2() for details on what the location arguments mean.
          *
-         * \pre The arguments \a check and \a perform are not both \c false.
-         * \pre If \a perform is \c true but \a check is \c false, then
-         * it must be known in advance that this move can be performed
-         * at the given location.
+         * The argument \a classicalOnly controls what kinds of checks are made:
          *
-         * \param check indicates whether we should check whether the move can
-         * be performed.
+         * - This routine will always check that any null strand reference
+         *   that is passed has a corresponding zero-crossing unknot component
+         *   to operate upon.  This check is extremely fast (linear in the
+         *   number of link components).
+         *
+         * - If \a classicalOnly is \c true, this routine will also ensure that
+         *   the move is planar; that is, the two strands being moved over one
+         *   another either both push into the same dual 2-cell, or belong to
+         *   different connected components of the link diagram.  This check is
+         *   more expensive (linear in the number of crossings).
+         *
+         * Be aware that, if \a classicalOnly is \c false, this move could
+         * potentially convert a classical link diagram into a virtual link
+         * diagram.
+         *
+         * \param classicalOnly indicates whether we should ensure that the
+         * requested move is planar.
          * \param perform indicates whether we should actually perform the
          * move, assuming any requested checks are successful.
-         * \return \c true if the requested checks pass, or if \a check was
-         * \c false (which means no checks were performed at all).
+         * \return \c true if and only if the all of the checks pass.
          */
         bool internalR2(StrandRef upperArc, int upperSide,
-            StrandRef lowerArc, int lowerSide, bool check, bool perform);
+            StrandRef lowerArc, int lowerSide,
+            bool classicalOnly, bool perform);
 
         /**
          * Implements testing for and/or performing Reidemeister moves.
@@ -6741,8 +6753,11 @@ inline std::optional<Link> Link::withR2(StrandRef upperArc, int upperSide,
         return {};
 
     std::optional<Link> ans(std::in_place, *this);
+    // We already know that the move will be planar.
+    // There is no need to run the expensive planarity check again.
     ans->internalR2(ans->translate(upperArc), upperSide,
-        ans->translate(lowerArc), lowerSide, false, true);
+        ans->translate(lowerArc), lowerSide,
+            false /* allow non-planar moves */, true);
     return ans;
 }
 
