@@ -357,6 +357,7 @@ void addLink(pybind11::module_& m) {
         .def("r2", overload_cast<Crossing*>(&Link::r2), rdoc::r2_2)
         .def("r2", overload_cast<StrandRef, int, StrandRef, int>(&Link::r2),
             rdoc::r2_3)
+        .def("r2Virtual", &Link::r2Virtual, rdoc::r2Virtual)
         .def("r3", overload_cast<StrandRef, int>(&Link::r3), rdoc::r3)
         .def("r3", overload_cast<Crossing*, int>(&Link::r3), rdoc::r3_2)
         .def("hasR1",

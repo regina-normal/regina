@@ -1842,10 +1842,17 @@ class Link :
          *
          * By a _classical_ type II move, we mean that the move can be
          * performed without adding a handle to the surface \a S in which the
-         * link diagram is embedded.  That is: the two "sides of strands" that
-         * will be passed over one another either belong to different connected
-         * components of the link diagram, or else both bound the same 2-cell
-         * in the dual cell decomposition of \a S.
+         * link diagram is embedded.  More precisely: the two "sides of strands"
+         * that will be passed over one another either belong to different
+         * connected components of the link diagram, or else both bound the same
+         * 2-cell in the dual cell decomposition of \a S.  Performing a
+         * classical type II move on a classical link diagram will always
+         * result in a classical link diagram.
+         *
+         * If you are working with virtual links, you may wish to use
+         * r2Virtual() instead, which does allow changing the surface \a S
+         * (and which could therefore convert a classical link diagram into a
+         * virtual diagram with positive virtual genus).
          *
          * The location of this move is specified by the arguments \a upperArc,
          * \a upperSide, \a lowerArc and \a lowerSide.  Specifically, this
@@ -1883,10 +1890,12 @@ class Link :
          * \pre Each of the given strand references is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
-         * \warning The check for this move is expensive (linear time).  If you
-         * are certain that the move is legal and you wish to circumvent this
-         * check, C++ users can call the variant of this function that takes an
-         * extra Unprotected argument.
+         * \warning The checks for this move are expensive (linear time).  If
+         * you are certain that the move is legal and you wish to circumvent
+         * this check, you can always call r2Virtual() instead.  If the move you
+         * wish to perform is indeed classical and legal, then r2Virtual()
+         * will have the same effect but will avoid the expensive planarity
+         * check.
          *
          * \param upperArc identifies the arc of the link which will be
          * passed over the other, as described above.
@@ -1906,36 +1915,33 @@ class Link :
         bool r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
             int lowerSide);
         /**
-         * Performs a classical type II Reidemeister move at the given location
-         * to add two crossings, without any safety checks.
+         * If possible, performs a virtual type II Reidemeister move to add
+         * two new crossings at the given location.
+         * If such a move is not allowed, then this routine does nothing.
          *
-         * This variant of r2() is offered because it is expensive to test
-         * whether a classical type II move can be performed at a given location
-         * (essentially one must walk around an entire 2-cell of the link
-         * diagram, which takes linear time).
+         * This link diagram will be changed directly.
          *
-         * This function will _always_ perform the requested Reidemeister move
-         * directy on this link, _without_ first testing whether it is legal.
-         * The onus is on the programmer to ensure the legality of the move
-         * beforehand.  Getting this wrong could give very unexpected results
-         * (e.g., a classical link diagram could become virtual as a result).
+         * By a _virtual_ type II move, we mean that the move can be performed
+         * upon _any_ two "sides of strands", even if this requires adding a
+         * handle to the surface in which the link diagram is embedded.
+         * As a result, a virtual type II move could potentially change the
+         * virtual genus of the link diagram; in particular, it could convert a
+         * classical link diagram into a virtual diagram with positive virtual
+         * genus.
          *
-         * The (unnamed) Unprotected argument would typically be the constant
-         * `regina::unprotected`.
+         * The location of this move is specified by passing two "sides of
+         * strands", in the same way as for classical type II moves.
+         * See r2(StrandRef, int, StrandRef, int) for details on how the
+         * location arguments are interpreted, and in particular how this move
+         * works with zero-crossing unknot components when passing null strand
+         * references.
          *
-         * For more detail on classical type II moves and when they can be
-         * performed, see r2(StrandRef, int, StrandRef, int).
+         * The existing crossings in this link will keep the same indices,
+         * and the two new crossings will be given the next two indices
+         * that are available.
          *
          * \pre Each of the given strand references is either a null reference,
          * or else refers to some strand of some crossing in this link.
-         * \pre It is known in advance that this move is in fact legal
-         * (i.e., the given sides of the given arcs bound the same 2-cell of
-         * the link diagram, _and_ \a upperArc and \a lowerArc do not represent
-         * the same arc (or the same zero-crossing unknot component).
-         *
-         * \nopython By design, Python users are not able to circumvent the
-         * legality checks for Reidemeister moves.  If speed is essential, you
-         * should be using C++.
          *
          * \param upperArc identifies the arc of the link which will be
          * passed over the other.  See r2(StrandRef, int, StrandRef, int)
@@ -1951,9 +1957,11 @@ class Link :
          * of \a lowerArc (when walking along \a lowerArc in the forward
          * direction), or 1 if the new overlap should take place on the right
          * of \a lowerArc.
+         * \return \c true if and only if the requested move was able to
+         * be performed.
          */
-        void r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
-            int lowerSide, Unprotected);
+        bool r2Virtual(StrandRef upperArc, int upperSide, StrandRef lowerArc,
+            int lowerSide);
         /**
          * If possible, performs a type III Reidemeister move at the given
          * location.
@@ -2501,13 +2509,15 @@ class Link :
          * type II Reidemeister move to add two new crossings.
          *
          * For more detail on classical type II moves and when they can be
-         * performed, see r2(StrandRef, int, StrandRef, int).
+         * performed, see r2(StrandRef, int, StrandRef, int).  This deprecated
+         * routine will not perform virtual type II moves; for that you should
+         * use the new routine r2Virtual() instead.
          *
          * This routine will always _check_ whether the requested move is
          * allowed.  If it is, and if the argument \a perform is \c true,
          * this routine will also _perform_ the move.
          *
-         * \deprecated If you just wish to test whether a such move is possible,
+         * \deprecated If you just wish to test whether such a move is possible,
          * call hasR2().  If you wish to both check and perform the move,
          * call r2() without the two additional boolean arguments.
          *
@@ -6663,12 +6673,14 @@ inline bool Link::r2(Crossing* crossing) {
 
 inline bool Link::r2(StrandRef upperArc, int upperSide,
         StrandRef lowerArc, int lowerSide) {
-    return internalR2(upperArc, upperSide, lowerArc, lowerSide, true, true);
+    return internalR2(upperArc, upperSide, lowerArc, lowerSide,
+        true /* classical only */, true);
 }
 
-inline void Link::r2(StrandRef upperArc, int upperSide,
-        StrandRef lowerArc, int lowerSide, Unprotected) {
-    internalR2(upperArc, upperSide, lowerArc, lowerSide, false, true);
+inline bool Link::r2Virtual(StrandRef upperArc, int upperSide,
+        StrandRef lowerArc, int lowerSide) {
+    return internalR2(upperArc, upperSide, lowerArc, lowerSide,
+        false /* allow virtual */, true);
 }
 
 inline bool Link::r3(StrandRef arc, int side) {
@@ -6797,7 +6809,8 @@ inline bool Link::r2(Crossing* crossing, bool, bool perform) {
 
 inline bool Link::r2(StrandRef upperArc, int upperSide,
         StrandRef lowerArc, int lowerSide, bool, bool perform) {
-    return internalR2(upperArc, upperSide, lowerArc, lowerSide, true, perform);
+    return internalR2(upperArc, upperSide, lowerArc, lowerSide,
+        true /* classical only */, perform);
 }
 
 inline bool Link::r3(StrandRef arc, int side, bool, bool perform) {

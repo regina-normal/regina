@@ -3738,10 +3738,17 @@ This link diagram will be changed directly.
 
 By a _classical_ type II move, we mean that the move can be performed
 without adding a handle to the surface *S* in which the link diagram
-is embedded. That is: the two "sides of strands" that will be passed
-over one another either belong to different connected components of
-the link diagram, or else both bound the same 2-cell in the dual cell
-decomposition of *S*.
+is embedded. More precisely: the two "sides of strands" that will be
+passed over one another either belong to different connected
+components of the link diagram, or else both bound the same 2-cell in
+the dual cell decomposition of *S*. Performing a classical type II
+move on a classical link diagram will always result in a classical
+link diagram.
+
+If you are working with virtual links, you may wish to use r2Virtual()
+instead, which does allow changing the surface *S* (and which could
+therefore convert a classical link diagram into a virtual diagram with
+positive virtual genus).
 
 The location of this move is specified by the arguments *upperArc*,
 *upperSide*, *lowerArc* and *lowerSide*. Specifically, this move
@@ -3779,10 +3786,12 @@ Precondition:
     else refers to some strand of some crossing in this link.
 
 .. warning::
-    The check for this move is expensive (linear time). If you are
+    The checks for this move are expensive (linear time). If you are
     certain that the move is legal and you wish to circumvent this
-    check, C++ users can call the variant of this function that takes
-    an extra Unprotected argument.
+    check, you can always call r2Virtual() instead. If the move you
+    wish to perform is indeed classical and legal, then r2Virtual()
+    will have the same effect but will avoid the expensive planarity
+    check.
 
 Parameter ``upperArc``:
     identifies the arc of the link which will be passed over the
@@ -3949,6 +3958,59 @@ Parameter ``perform``:
 
 Returns:
     ``True`` if and only if the requested move could be performed.)doc";
+
+// Docstring regina::python::doc::Link_::r2Virtual
+static const char *r2Virtual =
+R"doc(If possible, performs a virtual type II Reidemeister move to add two
+new crossings at the given location. If such a move is not allowed,
+then this routine does nothing.
+
+This link diagram will be changed directly.
+
+By a _virtual_ type II move, we mean that the move can be performed
+upon _any_ two "sides of strands", even if this requires adding a
+handle to the surface in which the link diagram is embedded. As a
+result, a virtual type II move could potentially change the virtual
+genus of the link diagram; in particular, it could convert a classical
+link diagram into a virtual diagram with positive virtual genus.
+
+The location of this move is specified by passing two "sides of
+strands", in the same way as for classical type II moves. See
+r2(StrandRef, int, StrandRef, int) for details on how the location
+arguments are interpreted, and in particular how this move works with
+zero-crossing unknot components when passing null strand references.
+
+The existing crossings in this link will keep the same indices, and
+the two new crossings will be given the next two indices that are
+available.
+
+Precondition:
+    Each of the given strand references is either a null reference, or
+    else refers to some strand of some crossing in this link.
+
+Parameter ``upperArc``:
+    identifies the arc of the link which will be passed over the
+    other. See r2(StrandRef, int, StrandRef, int) for details on how
+    this will be interpreted.
+
+Parameter ``upperSide``:
+    0 if the new overlap should take place on the left of *upperArc*
+    (when walking along *upperArc* in the forward direction), or 1 if
+    the new overlap should take place on the right of *upperArc*.
+
+Parameter ``lowerArc``:
+    identifies the arc of the link which will be passed beneath the
+    other. See r2(StrandRef, int, StrandRef, int) for details on how
+    this will be interpreted.
+
+Parameter ``lowerSide``:
+    0 if the new overlap should take place on the left of *lowerArc*
+    (when walking along *lowerArc* in the forward direction), or 1 if
+    the new overlap should take place on the right of *lowerArc*.
+
+Returns:
+    ``True`` if and only if the requested move was able to be
+    performed.)doc";
 
 // Docstring regina::python::doc::Link_::r3
 static const char *r3 =
