@@ -1385,7 +1385,8 @@ TEST_F(LinkTest, r1Count) {
     verifyR1Count(virtualDisconnected, 48, 0);
 }
 
-static void verifyR2Count(const TestCase& test, size_t up,
+static void verifyR2Count(const TestCase& test,
+        size_t upClassical, size_t upVirtual,
         size_t downByCrossing, size_t downByStrand) {
     // Most of the time, downByStrand == downByCrossing * 2.
     // However, this can differ in the case of an unknotted loop placed on top
@@ -1394,27 +1395,42 @@ static void verifyR2Count(const TestCase& test, size_t up,
 
     SCOPED_TRACE_CSTRING(test.name);
 
-    size_t foundUp = 0, foundDownByCrossing = 0, foundDownByStrand = 0;
+    size_t foundUpClassical = 0, foundUpVirtual = 0;
+    size_t foundDownByCrossing = 0, foundDownByStrand = 0;
 
     for (int side1 = 0; side1 < 2; ++side1)
-        for (int side2 = 0; side2 < 2; ++side2)
+        for (int side2 = 0; side2 < 2; ++side2) {
             if (test.link.hasR2({}, side1, {}, side2))
-                ++foundUp;
+                ++foundUpClassical;
+            if (test.link.hasR2Virtual({}, side1, {}, side2))
+                ++foundUpVirtual;
+        }
 
     for (auto c : test.link.crossings()) {
         for (int side1 = 0; side1 < 2; ++side1)
             for (int side2 = 0; side2 < 2; ++side2)
                 for (int str1 = 0; str1 < 2; ++str1) {
                     if (test.link.hasR2({}, side1, c->strand(str1), side2))
-                        ++foundUp;
+                        ++foundUpClassical;
                     if (test.link.hasR2(c->strand(str1), side1, {}, side2))
-                        ++foundUp;
+                        ++foundUpClassical;
+
+                    if (test.link.hasR2Virtual({}, side1,
+                            c->strand(str1), side2))
+                        ++foundUpVirtual;
+                    if (test.link.hasR2Virtual(c->strand(str1), side1,
+                            {}, side2))
+                        ++foundUpVirtual;
 
                     for (auto c2 : test.link.crossings())
-                        for (int str2 = 0; str2 < 2; ++str2)
+                        for (int str2 = 0; str2 < 2; ++str2) {
                             if (test.link.hasR2(c->strand(str1), side1,
                                     c2->strand(str2), side2))
-                                ++foundUp;
+                                ++foundUpClassical;
+                            if (test.link.hasR2Virtual(c->strand(str1), side1,
+                                    c2->strand(str2), side2))
+                                ++foundUpVirtual;
+                        }
                 }
 
         if (test.link.hasR2(c))
@@ -1431,52 +1447,55 @@ static void verifyR2Count(const TestCase& test, size_t up,
     if (test.link.hasR2(StrandRef()))
         ++foundDownByStrand;
 
-    EXPECT_EQ(foundUp, up);
+    EXPECT_EQ(foundUpClassical, upClassical);
+    EXPECT_EQ(foundUpVirtual, upVirtual);
     EXPECT_EQ(foundDownByCrossing, downByCrossing);
     EXPECT_EQ(foundDownByStrand, downByStrand);
 }
 
 TEST_F(LinkTest, r2Count) {
-    verifyR2Count(empty, 0, 0, 0);
+    // Note: for an n-crossing link with no zero-crossing components, the
+    // number of _virtual_ increasing R2 moves should always be 4*2n(2n-1).
+    verifyR2Count(empty, 0, 0, 0, 0);
 
-    verifyR2Count(unknot0, 0, 0, 0);
-    verifyR2Count(unknot1, 2, 0, 0);
-    verifyR2Count(unknot3, 18, 2, 4);
-    verifyR2Count(unknotMonster, 116, 0, 0); // computed using Regina 7.3
-    verifyR2Count(unknotGordian, 2046, 0, 0); // computed using Regina 7.3
+    verifyR2Count(unknot0, 0, 0, 0, 0);
+    verifyR2Count(unknot1, 2, 8, 0, 0);
+    verifyR2Count(unknot3, 18, 120, 2, 4);
+    verifyR2Count(unknotMonster, 116, 1520, 0, 0); // computed w/ Regina 7.3
+    verifyR2Count(unknotGordian, 2046, 316968, 0, 0); // computed w/ Regina 7.3
 
-    verifyR2Count(trefoilLeft, 18, 0, 0);
-    verifyR2Count(trefoilRight, 18, 0, 0);
-    verifyR2Count(trefoil_r1x2, 58, 0, 0);
-    verifyR2Count(trefoil_r1x6, 160, 0, 0);
-    verifyR2Count(figureEight, 28, 0, 0);
-    verifyR2Count(figureEight_r1x2, 66, 0, 0);
-    verifyR2Count(conway, 120, 0, 0);
-    verifyR2Count(kinoshitaTerasaka, 118, 0, 0);
-    verifyR2Count(gst, 612, 0, 0);
+    verifyR2Count(trefoilLeft, 18, 120, 0, 0);
+    verifyR2Count(trefoilRight, 18, 120, 0, 0);
+    verifyR2Count(trefoil_r1x2, 58, 360, 0, 0);
+    verifyR2Count(trefoil_r1x6, 160, 1224, 0, 0);
+    verifyR2Count(figureEight, 28, 224, 0, 0);
+    verifyR2Count(figureEight_r1x2, 66, 528, 0, 0);
+    verifyR2Count(conway, 120, 1848, 0, 0);
+    verifyR2Count(kinoshitaTerasaka, 118, 1848, 0, 0);
+    verifyR2Count(gst, 612, 36480, 0, 0);
 
-    verifyR2Count(rht_rht, 62, 0, 0); // merges bigon-bigon, triangle-triangle
-    verifyR2Count(rht_lht, 60, 0, 0); // merges bigon-triangle, bigon-triangle
+    verifyR2Count(rht_rht, 62, 528, 0, 0); // merges bigon-bigon, triangle-triangle
+    verifyR2Count(rht_lht, 60, 528, 0, 0); // merges bigon-triangle, bigon-triangle
 
-    verifyR2Count(unlink2_0, 4, 0, 0);
-    verifyR2Count(unlink3_0, 4, 0, 0);
-    verifyR2Count(unlink2_r2, 8, 2, 4);
-    verifyR2Count(unlink2_r1r1, 36, 0, 0);
+    verifyR2Count(unlink2_0, 4, 4, 0, 0);
+    verifyR2Count(unlink3_0, 4, 4, 0, 0);
+    verifyR2Count(unlink2_r2, 8, 48, 2, 4);
+    verifyR2Count(unlink2_r1r1, 36, 48, 0, 0);
 
-    verifyR2Count(hopf, 8, 0, 0);
-    verifyR2Count(whitehead, 40, 0, 0);
-    verifyR2Count(borromean, 48, 0, 0);
-    verifyR2Count(trefoil_unknot0, 66, 0, 0);
-    verifyR2Count(trefoil_unknot1, 116, 0, 0);
-    verifyR2Count(trefoil_unknot_overlap, 46, 2, 3);
-    verifyR2Count(adams6_28, 54, 0, 0);
+    verifyR2Count(hopf, 8, 48, 0, 0);
+    verifyR2Count(whitehead, 40, 360, 0, 0);
+    verifyR2Count(borromean, 48, 528, 0, 0);
+    verifyR2Count(trefoil_unknot0, 66, 120 + 2*6*4, 0, 0);
+    verifyR2Count(trefoil_unknot1, 116, 224, 0, 0);
+    verifyR2Count(trefoil_unknot_overlap, 46, 360, 2, 3);
+    verifyR2Count(adams6_28, 54, 528, 0, 0);
 
-    verifyR2Count(virtualTrefoil, 32, 0, 0);
-    verifyR2Count(kishino, 144, 0, 0);
-    verifyR2Count(gpv, 64, 0, 0);
-    verifyR2Count(virtualLink2, 12, 0, 0);
-    verifyR2Count(virtualLink3, 24, 0, 0);
-    verifyR2Count(virtualDisconnected, 24 + 32 + 8 + 8*8*6, 0, 0);
+    verifyR2Count(virtualTrefoil, 28, 48, 0, 0);
+    verifyR2Count(kishino, 136, 224, 0, 0);
+    verifyR2Count(gpv, 60, 224, 0, 0);
+    verifyR2Count(virtualLink2, 8, 8, 0, 0);
+    verifyR2Count(virtualLink3, 20, 48, 0, 0);
+    verifyR2Count(virtualDisconnected, 20 + 28 + 8 + 8*8*6, 528, 0, 0);
 }
 
 static void verifyR3Count(const TestCase& test, size_t movesByCrossing) {
@@ -1754,45 +1773,104 @@ static void verifyR2Up(const Link& link, const char* name) {
                                 EXPECT_EQ(alt.virtualGenus(),
                                     link.virtualGenus());
                                 verifyTopologicallySame(alt, link);
+
+                                Link virt(link, false);
+                                EXPECT_TRUE(virt.r2Virtual(
+                                    virt.crossing(c1)->strand(s1), uSide,
+                                    virt.crossing(c2)->strand(s2), lSide));
+                                EXPECT_EQ(virt, alt);
                             } else {
                                 EXPECT_EQ(alt, link);
+
+                                // Although a classical R2 is not possible,
+                                // a virtual R2 should still be possible
+                                // unless both strands are the same.
+                                if (c1 == c2 && s1 == s2) {
+                                    Link virt(link, false);
+                                    EXPECT_FALSE(virt.r2Virtual(
+                                        virt.crossing(c1)->strand(s1), uSide,
+                                        virt.crossing(c2)->strand(s2), lSide));
+                                    EXPECT_EQ(virt, link);
+                                } else {
+                                    Link virt(link, false);
+                                    EXPECT_TRUE(virt.r2Virtual(
+                                        virt.crossing(c1)->strand(s1), uSide,
+                                        virt.crossing(c2)->strand(s2), lSide));
+                                    EXPECT_TRUE(isConsistent(virt));
+                                    EXPECT_EQ(virt.size(), link.size() + 2);
+                                    // This is the only case where the virtual
+                                    // genus of the diagram might change.
+                                    EXPECT_GE(virt.virtualGenus(),
+                                        link.virtualGenus());
+                                    verifyTopologicallySame(virt, link);
+                                }
                             }
                         }
                     {
                         Link alt(link, false);
                         if (alt.r2(alt.crossing(c1)->strand(s1), uSide,
-                                StrandRef(), lSide)) {
+                                {}, lSide)) {
                             EXPECT_TRUE(isConsistent(alt));
                             EXPECT_EQ(alt.size(), link.size() + 2);
                             EXPECT_EQ(alt.virtualGenus(), link.virtualGenus());
                             verifyTopologicallySame(alt, link);
+
+                            Link virt(link, false);
+                            EXPECT_TRUE(virt.r2Virtual(
+                                virt.crossing(c1)->strand(s1), uSide,
+                                {}, lSide));
+                            EXPECT_EQ(virt, alt);
                         } else {
                             EXPECT_EQ(alt, link);
+
+                            Link virt(link, false);
+                            EXPECT_FALSE(virt.r2Virtual(
+                                virt.crossing(c1)->strand(s1), uSide,
+                                {}, lSide));
+                            EXPECT_EQ(virt, link);
                         }
                     }
                     {
                         Link alt(link, false);
-                        if (alt.r2(StrandRef(), uSide,
+                        if (alt.r2({}, uSide,
                                 alt.crossing(c1)->strand(s1), lSide)) {
                             EXPECT_TRUE(isConsistent(alt));
                             EXPECT_EQ(alt.size(), link.size() + 2);
                             EXPECT_EQ(alt.virtualGenus(), link.virtualGenus());
                             verifyTopologicallySame(alt, link);
+
+                            Link virt(link, false);
+                            EXPECT_TRUE(virt.r2Virtual({}, uSide,
+                                virt.crossing(c1)->strand(s1), lSide));
+                            EXPECT_EQ(virt, alt);
                         } else {
                             EXPECT_EQ(alt, link);
+
+                            Link virt(link, false);
+                            EXPECT_FALSE(virt.r2Virtual({}, uSide,
+                                virt.crossing(c1)->strand(s1), lSide));
+                            EXPECT_EQ(virt, link);
                         }
                     }
                 }
             }
             {
                 Link alt(link, false);
-                if (alt.r2(StrandRef(), uSide, StrandRef(), lSide)) {
+                if (alt.r2({}, uSide, {}, lSide)) {
                     EXPECT_TRUE(isConsistent(alt));
                     EXPECT_EQ(alt.size(), link.size() + 2);
                     EXPECT_EQ(alt.virtualGenus(), link.virtualGenus());
                     verifyTopologicallySame(alt, link);
+
+                    Link virt(link, false);
+                    EXPECT_TRUE(virt.r2Virtual({}, uSide, {}, lSide));
+                    EXPECT_EQ(virt, alt);
                 } else {
                     EXPECT_EQ(alt, link);
+
+                    Link virt(link, false);
+                    EXPECT_FALSE(virt.r2Virtual({}, uSide, {}, lSide));
+                    EXPECT_EQ(virt, link);
                 }
             }
         }

@@ -412,9 +412,14 @@ bool Link::internalR2General(StrandRef upperArc, int upperSide,
         StrandRef lowerArc, int lowerSide, bool classicalOnly, bool perform) {
     std::vector<StrandRef>::iterator upperUnknot, lowerUnknot;
 
-    if (! (upperArc && lowerArc)) {
-        // We have references to one or two zero-crossing components.
-        // Find them.
+    if (upperArc && lowerArc) {
+        // This routine explicitly will not handle the case where
+        // upperArc == lowerArc.  Get this out of the way now.
+        if (upperArc == lowerArc)
+            return false;
+    } else {
+        // One or both of our arcs represents a zero-crossing component.
+        // Find it/them.
         auto it = components_.begin();
 
         if (! upperArc) {
