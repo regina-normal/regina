@@ -357,7 +357,12 @@ void addLink(pybind11::module_& m) {
         .def("r2", overload_cast<Crossing*>(&Link::r2), rdoc::r2_2)
         .def("r2", overload_cast<StrandRef, int, StrandRef, int>(&Link::r2),
             rdoc::r2_3)
-        .def("r2Virtual", &Link::r2Virtual, rdoc::r2Virtual)
+        .def("r2Virtual",
+            overload_cast<StrandRef, int, StrandRef, int>(&Link::r2Virtual),
+            rdoc::r2Virtual)
+        .def("r2Virtual",
+            overload_cast<StrandRef, int, int>(&Link::r2Virtual),
+            rdoc::r2Virtual_2)
         .def("r3", overload_cast<StrandRef, int>(&Link::r3), rdoc::r3)
         .def("r3", overload_cast<Crossing*, int>(&Link::r3), rdoc::r3_2)
         .def("hasR1",
@@ -376,7 +381,14 @@ void addLink(pybind11::module_& m) {
             overload_cast<StrandRef, int, StrandRef, int>(&Link::hasR2,
                 pybind11::const_),
             rdoc::hasR2_3)
-        .def("hasR2Virtual", &Link::hasR2Virtual, rdoc::hasR2Virtual)
+        .def("hasR2Virtual",
+            overload_cast<StrandRef, int, StrandRef, int>(&Link::hasR2Virtual,
+                pybind11::const_),
+            rdoc::hasR2Virtual)
+        .def("hasR2Virtual",
+            overload_cast<StrandRef, int, int>(&Link::hasR2Virtual,
+                pybind11::const_),
+            rdoc::hasR2Virtual_2)
         .def("hasR3",
             overload_cast<StrandRef, int>(&Link::hasR3, pybind11::const_),
             rdoc::hasR3)
@@ -399,7 +411,14 @@ void addLink(pybind11::module_& m) {
             overload_cast<StrandRef, int, StrandRef, int>(&Link::withR2,
                 pybind11::const_),
             rdoc::withR2_3)
-        .def("withR2Virtual", &Link::withR2Virtual, rdoc::withR2Virtual)
+        .def("withR2Virtual",
+            overload_cast<StrandRef, int, StrandRef, int>(&Link::withR2Virtual,
+                pybind11::const_),
+            rdoc::withR2Virtual)
+        .def("withR2Virtual",
+            overload_cast<StrandRef, int, int>(&Link::withR2Virtual,
+                pybind11::const_),
+            rdoc::withR2Virtual_2)
         .def("withR3",
             overload_cast<StrandRef, int>(&Link::withR3, pybind11::const_),
             rdoc::withR3)

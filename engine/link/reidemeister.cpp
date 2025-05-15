@@ -622,6 +622,72 @@ bool Link::internalR2General(StrandRef upperArc, int upperSide,
     return true;
 }
 
+bool Link::internalR2Virtual(StrandRef arc, int firstSide, int firstStrand,
+        bool check, bool perform) {
+    if (! arc) {
+        // We are operating on a zero-crossing unknot component.
+        // Find it.
+        auto it = componentFor(arc);
+        if (it == components_.end())
+            return false;
+
+        // Insert the relevant two-crossing virtual unknot.
+        ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
+
+        Crossing *a, *b;
+        if (firstSide == firstStrand) {
+            a = new Crossing(1);
+            b = new Crossing(-1);
+        } else {
+            a = new Crossing(-1);
+            b = new Crossing(1);
+        }
+        Link::join(a->upper(), b->upper());
+        Link::join(b->upper(), a->lower());
+        Link::join(a->lower(), b->lower());
+        Link::join(b->lower(), a->upper());
+        crossings_.push_back(a);
+        crossings_.push_back(b);
+
+        *it = a->strand(firstStrand);
+        return true;
+    }
+
+    // We are operating on a non-null arc.
+    // The move is always going to be possible.
+    if (! perform)
+        return true;
+
+    ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
+
+    // Graft the new section into the given arc.
+    StrandRef next = arc.next();
+
+    Crossing *a, *b;
+    if (firstSide == firstStrand) {
+        a = new Crossing(1);
+        b = new Crossing(-1);
+    } else {
+        a = new Crossing(-1);
+        b = new Crossing(1);
+    }
+    Link::join(a->upper(), b->upper());
+    Link::join(a->lower(), b->lower());
+    if (firstStrand == 0) {
+        Link::join(arc, a->lower());
+        Link::join(b->lower(), a->upper());
+        Link::join(b->upper(), next);
+    } else {
+        Link::join(arc, a->upper());
+        Link::join(b->upper(), a->lower());
+        Link::join(b->lower(), next);
+    }
+    crossings_.push_back(a);
+    crossings_.push_back(b);
+
+    return true;
+}
+
 bool Link::internalR3(StrandRef arc, int side, bool check, bool perform) {
     if (! arc) {
         // The move cannot be performed.

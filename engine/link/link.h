@@ -1835,7 +1835,7 @@ class Link :
         bool r2(Crossing* crossing);
         /**
          * If possible, performs a classical type II Reidemeister move to add
-         * two new crossings at the given location.
+         * two new crossings by pushing two different strands over one another.
          * If such a move is not allowed, then this routine does nothing.
          *
          * This link diagram will be changed directly.
@@ -1862,6 +1862,13 @@ class Link :
          * the overlap takes place.  See the StrandRef documentation for the
          * convention on how arcs are represented using StrandRef objects.
          *
+         * If \a upperArc and \a lowerArc are identical and non-null, then this
+         * routine will declare that the move cannot be performed.  This is
+         * because passing the same strand over itself requires additional
+         * information (it is unclear whether the upper arc comes before or
+         * after the lower arc).  You can achieve the same effect by adding
+         * two twists instead (i.e., performing two type I Reidemeister moves).
+         *
          * If either \a upperArc or \a lowerArc is a null reference, then
          * the move will be performed upon a zero-crossing unknot component;
          * it will be assumed that this unknot component is oriented clockwise.
@@ -1870,18 +1877,13 @@ class Link :
          * and if there are multiple zero-crossing components then the first
          * such component will be used.
          *
-         * Likewise, if _both_ arcs are null references, then the move
-         * will be performed upon two _different_ zero-crossing unknot
-         * components.  In this case, if there are fewer than two such
-         * components then the move cannot be performed, and otherwise
-         * \a upperArc will be the first such component and \a lowerArc
-         * will be the second.
-         *
-         * Currently, Regina cannot perform the move when \a upperArc and
-         * \a lowerArc represent the same arc (or the same zero-crossing unknot
-         * component).  In this case there is a workaround: you can achieve
-         * the same effect by performing two type I Reidemeister moves
-         * (i.e., by adding two twists).
+         * If _both_ arcs are null references, then the move will be performed
+         * upon two _different_ zero-crossing unknot components.  In this case,
+         * if there are fewer than two such components then the move cannot be
+         * performed, and otherwise \a upperArc will be the first such component
+         * and \a lowerArc will be the second.  As before, this routine will
+         * refuse to pass the same zero-crossing unknot component over itself,
+         * but you can achieve the same effect by adding two twists.
          *
          * The existing crossings in this link will keep the same indices,
          * and the two new crossings will be given the next two indices
@@ -1916,7 +1918,7 @@ class Link :
             int lowerSide);
         /**
          * If possible, performs a virtual type II Reidemeister move to add
-         * two new crossings at the given location.
+         * two new crossings by pushing two different strands over one another.
          * If such a move is not allowed, then this routine does nothing.
          *
          * This link diagram will be changed directly.
@@ -1935,6 +1937,15 @@ class Link :
          * location arguments are interpreted, and in particular how this move
          * works with zero-crossing unknot components when passing null strand
          * references.
+         *
+         * Just like r2(), this routine cannot pass a strand over itself, since
+         * this requires additional information (it is unclear whether the
+         * upper arc comes before or after the lower arc).  To do this in the
+         * classical way (using the same side of the same strand), you can add
+         * two twists (type I moves) instead.  To do this in the virtual way
+         * (using opposite sides of the same strand), you can can call the
+         * function r2Virtual(StrandRef, int, int) which is designed precisely
+         * for this purpose.
          *
          * The existing crossings in this link will keep the same indices,
          * and the two new crossings will be given the next two indices
@@ -1962,6 +1973,67 @@ class Link :
          */
         bool r2Virtual(StrandRef upperArc, int upperSide, StrandRef lowerArc,
             int lowerSide);
+        /**
+         * If possible, performs a virtual type II Reidemeister move to add
+         * two new crossings by pushing the same strand over itself from
+         * opposite sides.
+         * If such a move is not allowed, then this routine does nothing.
+         *
+         * This link diagram will be changed directly.
+         *
+         * This move only makes sense when working with virtual links; in a
+         * classical setting it is never possible (since opposite sides of the
+         * same strand cannot bound the same dual 2-cell on the sphere).
+         * For a virtual link diagram, if both sides of the given strand already
+         * bound the same 2-cell then this move will not change the virtual
+         * genus; otherwise it will add a handle to the surface in which the
+         * diagram is embedded, and the virtual genus will increase as a result.
+         * In particular, if the original link diagram is classical, then this
+         * move will always convert it into a virtual diagram with positive
+         * virtual genus.
+         *
+         * The location of this move is specified by the arguments \a arc,
+         * \a firstSide, and \a firstStrand.  Specifically, this move involves:
+         *
+         * - taking two portions of the given arc and pushing these away from
+         *   the arc in opposite directions, with the first portion (when
+         *   following the orientation of the link) pushing out on \a firstSide,
+         *   and with the second portion pushing out on the opposite side;
+         *
+         * - passing those two portions over each other, where the first portion
+         *   moves either over or under the second portion according to whether
+         *   \a firstStrand is 1 or 0.
+         *
+         * See the StrandRef documentation for the convention on how arcs are
+         * represented using StrandRef objects.
+         *
+         * If \a arc is a null reference, then the move will be performed upon
+         * a zero-crossing unknot component; it will be assumed that this unknot
+         * component is oriented clockwise.  If \a arc is a null reference but
+         * there is no zero-crossing component then the move cannot be
+         * performed, and if there are multiple zero-crossing components then
+         * the first such component will be used.
+         *
+         * The existing crossings in this link will keep the same indices,
+         * and the two new crossings will be given the next two indices
+         * that are available.
+         *
+         * \pre The given strand reference is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * \param arc identifies the arc of the link which will be passed over
+         * itself, as described above.
+         * \param firstSide 0 if the first portion of the arc should push out
+         * to the left of the arc (when walking along the arc in the forward
+         * direction), or 1 if the first portion should push out to the right
+         * of the arc.
+         * \param firstStrand 0 if the first portion of the arc should be
+         * pushed under the second, or 1 if the first portion should be pushed
+         * over the second.
+         * \return \c true if and only if the requested move was able to
+         * be performed.
+         */
+        bool r2Virtual(StrandRef arc, int firstSide, int firstStrand);
         /**
          * If possible, performs a type III Reidemeister move at the given
          * location.
@@ -2125,7 +2197,8 @@ class Link :
         bool hasR2(Crossing* crossing) const;
         /**
          * Determines whether it is possible to perform a classical type II
-         * Reidemeister move at the given location to add two new crossings.
+         * Reidemeister move at the given location to add two new crossings
+         * by pushing two different strands over one another.
          *
          * For more detail on classical type II moves and when they can be
          * performed, see r2(StrandRef, int, StrandRef, int).  Note that a
@@ -2167,13 +2240,15 @@ class Link :
             StrandRef lowerArc, int lowerSide) const;
         /**
          * Determines whether it is possible to perform a virtual type II
-         * Reidemeister move at the given location to add two new crossings.
+         * Reidemeister move at the given location to add two new crossings
+         * by pushing two different strands over one another.
          *
-         * For more detail on virtual type II moves and when they can be
-         * performed, see r2Virtual().  Note that a virtual type II move could
-         * potentially change the virtual genus of the link diagram; in
-         * particular, it could convert a classical link diagram into a
-         * virtual diagram with positive virtual genus.
+         * For more detail on these kinds of virtual type II moves and when
+         * they can be performed, see r2Virtual(StrandRef, int, StrandRef, int).
+         * Note that a virtual type II move could potentially change the
+         * virtual genus of the link diagram; in particular, it could convert
+         * a classical link diagram into a virtual diagram with positive
+         * virtual genus.
          *
          * \pre Each of the given strand references is either a null reference,
          * or else refers to some strand of some crossing in this link.
@@ -2201,6 +2276,34 @@ class Link :
          */
         bool hasR2Virtual(StrandRef upperArc, int upperSide,
             StrandRef lowerArc, int lowerSide) const;
+        /**
+         * Determines whether it is possible to perform a virtual type II
+         * Reidemeister move at the given location to add two new crossings
+         * by pushing the same strand over itself from opposite sides.
+         *
+         * For more detail on these kinds of virtual type II moves and when
+         * they can be performed, see r2Virtual(StrandRef, int, int).
+         * Note that a virtual type II move could potentially change the
+         * virtual genus of the link diagram; in particular, it could convert
+         * a classical link diagram into a virtual diagram with positive
+         * virtual genus.
+         *
+         * \pre The given strand reference is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * \param arc identifies which arc of the link would be passed over
+         * itself in this candidate move.  See r2(StrandRef, int, int) for
+         * details on exactly how this will be interpreted.
+         * \param firstSide 0 if the first portion of the arc would push out
+         * to the left of the arc (when walking along the arc in the forward
+         * direction), or 1 if the first portion would push out to the right
+         * of the arc.
+         * \param firstStrand 0 if the first portion of the arc would be
+         * pushed under the second, or 1 if the first portion would be pushed
+         * over the second.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool hasR2Virtual(StrandRef arc, int firstSide, int firstStrand) const;
         /**
          * Determines whether it is possible to perform a type III Reidemeister
          * move at the given location.
@@ -2330,8 +2433,8 @@ class Link :
         /**
          * If possible, returns the diagram obtained by performing a classical
          * type II Reidemeister move at the given location to add two new
-         * crossings.  If such a move is not allowed, then this routine
-         * returns no value.
+         * crossings by pushing two different strands over one another.
+         * If such a move is not allowed, then this routine returns no value.
          *
          * This link diagram will not be changed.
          *
@@ -2369,16 +2472,17 @@ class Link :
         /**
          * If possible, returns the diagram obtained by performing a virtual
          * type II Reidemeister move at the given location to add two new
-         * crossings.  If such a move is not allowed, then this routine
-         * returns no value.
+         * crossings by pushing two different strands over one another.
+         * If such a move is not allowed, then this routine returns no value.
          *
          * This link diagram will not be changed.
          *
-         * For more detail on virtual type II moves and when they can be
-         * performed, see r2Virtual().  Note that a virtual type II move could
-         * potentially change the virtual genus of the link diagram; in
-         * particular, it could convert a classical link diagram into a
-         * virtual diagram with positive virtual genus.
+         * For more detail on these kinds of virtual type II moves and when
+         * they can be performed, see r2Virtual(StrandRef, int, StrandRef, int).
+         * Note that a virtual type II move could potentially change the
+         * virtual genus of the link diagram; in particular, it could convert
+         * a classical link diagram into a virtual diagram with positive
+         * virtual genus.
          *
          * \pre Each of the given strand references is either a null reference,
          * or else refers to some strand of some crossing in this link.
@@ -2405,6 +2509,39 @@ class Link :
          */
         std::optional<Link> withR2Virtual(StrandRef upperArc, int upperSide,
             StrandRef lowerArc, int lowerSide) const;
+        /**
+         * If possible, returns the diagram obtained by performing a virtual
+         * type II Reidemeister move at the given location to add two new
+         * crossings by pushing the same strand over itself from opposite sides.
+         * If such a move is not allowed, then this routine returns no value.
+         *
+         * This link diagram will not be changed.
+         *
+         * For more detail on these kinds of virtual type II moves and when
+         * they can be performed, see r2Virtual(StrandRef, int, int).
+         * Note that a virtual type II move could potentially change the
+         * virtual genus of the link diagram; in particular, it could convert
+         * a classical link diagram into a virtual diagram with positive
+         * virtual genus.
+         *
+         * \pre The given strand reference is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * \param arc identifies which arc of the link will be passed over
+         * itself.  See r2(StrandRef, int, int) for details on exactly how
+         * this will be interpreted.
+         * \param firstSide 0 if the first portion of the arc should push out
+         * to the left of the arc (when walking along the arc in the forward
+         * direction), or 1 if the first portion should push out to the right
+         * of the arc.
+         * \param firstStrand 0 if the first portion of the arc should be
+         * pushed under the second, or 1 if the first portion should be pushed
+         * over the second.
+         * \return The new link diagram obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Link> withR2Virtual(StrandRef arc, int firstSide,
+            int firstStrand) const;
         /**
          * If possible, returns the diagram obtained by performing a type III
          * Reidemeister move at the given location.
@@ -2595,7 +2732,8 @@ class Link :
             bool ignored, bool perform = true);
         /**
          * Deprecated routine that tests for and optionally performs a classical
-         * type II Reidemeister move to add two new crossings.
+         * type II Reidemeister move to add two new crossings by pushing two
+         * different strands over one another.
          *
          * For more detail on classical type II moves and when they can be
          * performed, see r2(StrandRef, int, StrandRef, int).  This deprecated
@@ -6169,6 +6307,26 @@ class Link :
             bool classicalOnly, bool perform);
 
         /**
+         * Implements testing for and/or performing virtual type II Reidemeister
+         * moves that pass the same strand over itself from opposite sides.
+         * See r2Virtual() for details on what the location arguments mean.
+         *
+         * \pre The arguments \a check and \a perform are not both \c false.
+         * \pre If \a perform is \c true but \a check is \c false, then
+         * it must be known in advance that this move can be performed
+         * at the given location.
+         *
+         * \param check indicates whether we should check whether the move can
+         * be performed.
+         * \param perform indicates whether we should actually perform the
+         * move, assuming any requested checks are successful.
+         * \return \c true if the requested checks pass, or if \a check was
+         * \c false (which means no checks were performed at all).
+         */
+        bool internalR2Virtual(StrandRef arc, int firstSide, int firstStrand,
+            bool check, bool perform);
+
+        /**
          * Implements testing for and/or performing Reidemeister moves.
          * See r3() for details on what the location arguments mean.
          *
@@ -6775,6 +6933,10 @@ inline bool Link::r2Virtual(StrandRef upperArc, int upperSide,
         false /* allow virtual */, true);
 }
 
+inline bool Link::r2Virtual(StrandRef arc, int firstSide, int firstStrand) {
+    return internalR2Virtual(arc, firstSide, firstStrand, true, true);
+}
+
 inline bool Link::r3(StrandRef arc, int side) {
     return internalR3(arc, side, true, true);
 }
@@ -6810,6 +6972,12 @@ inline bool Link::hasR2Virtual(StrandRef upperArc, int upperSide,
         StrandRef lowerArc, int lowerSide) const {
     return const_cast<Link*>(this)->internalR2General(upperArc, upperSide,
         lowerArc, lowerSide, false /* allow virtual */, false);
+}
+
+inline bool Link::hasR2Virtual(StrandRef arc, int firstSide, int firstStrand)
+        const {
+    return const_cast<Link*>(this)->internalR2Virtual(arc, firstSide,
+        firstStrand, true, false);
 }
 
 inline bool Link::hasR3(StrandRef arc, int side) const {
@@ -6879,6 +7047,17 @@ inline std::optional<Link> Link::withR2Virtual(StrandRef upperArc,
     std::optional<Link> ans(std::in_place, *this);
     ans->internalR2General(ans->translate(upperArc), upperSide,
         ans->translate(lowerArc), lowerSide, false /* allow virtual */, true);
+    return ans;
+}
+
+inline std::optional<Link> Link::withR2Virtual(StrandRef arc, int firstSide,
+        int firstStrand) const {
+    if (! hasR2Virtual(arc, firstSide, firstStrand))
+        return {};
+
+    std::optional<Link> ans(std::in_place, *this);
+    ans->internalR2Virtual(ans->translate(arc), firstSide, firstStrand,
+        false, true);
     return ans;
 }
 
