@@ -3485,12 +3485,12 @@ TEST_F(LinkTest, invalidCode) {
 }
 
 static void verifyRewrite(const TestCase& test, int height, int threads,
-        bool track, size_t count) {
+        bool track, size_t expectCount) {
     SCOPED_TRACE_CSTRING(test.name);
     SCOPED_TRACE_NUMERIC(height);
     SCOPED_TRACE_NUMERIC(threads);
 
-    size_t tot = 0;
+    size_t count = 0;
     auto jones = jonesModReflection(test.link);
 
     std::unique_ptr<regina::ProgressTrackerOpen> tracker;
@@ -3498,23 +3498,24 @@ static void verifyRewrite(const TestCase& test, int height, int threads,
         tracker.reset(new regina::ProgressTrackerOpen());
 
     bool result = test.link.rewrite(height, threads, tracker.get(),
-            [&tot, &jones](const Link& alt) {
-        ++tot;
+            [&count, &jones](const Link& alt) {
+        ++count;
         EXPECT_EQ(jonesModReflection(alt), jones);
         return false;
     });
     if (track)
         EXPECT_TRUE(tracker->isFinished());
     EXPECT_FALSE(result);
-    EXPECT_EQ(tot, count);
+    EXPECT_EQ(count, expectCount);
 }
 
-static void verifyRewrite(const TestCase& test, int height, size_t count) {
+static void verifyRewrite(const TestCase& test, int height,
+        size_t expectCount) {
     // Single-threaded, no tracker:
-    verifyRewrite(test, height, 1, false, count);
+    verifyRewrite(test, height, 1, false, expectCount);
     // Multi-threaded, with and without tracker:
-    verifyRewrite(test, height, 2, false, count);
-    verifyRewrite(test, height, 2, true, count);
+    verifyRewrite(test, height, 2, false, expectCount);
+    verifyRewrite(test, height, 2, true, expectCount);
 }
 
 TEST_F(LinkTest, rewrite) {
