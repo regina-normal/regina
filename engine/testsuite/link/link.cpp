@@ -3554,7 +3554,7 @@ TEST_F(LinkTest, rewrite) {
 
     verifyRewrite(virtualTrefoil, 0, 1);
     verifyRewrite(virtualTrefoil, 1, 8);
-    verifyRewrite(virtualTrefoil, 2, 113);
+    verifyRewrite(virtualTrefoil, 2, 111);
     verifyRewrite(virtualTrefoil, 3, 1628);
 
     // Regina currently does not merge different connected components of a
