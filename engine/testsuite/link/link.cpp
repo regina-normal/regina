@@ -1643,6 +1643,45 @@ static void verifyR2Up(Link link, int upperCrossing, int upperStrand,
     EXPECT_EQ(link.brief(), briefResult);
 }
 
+static void verifyR2UpVirtual(Link link, int upperCrossing, int upperStrand,
+        int upperSide, int lowerCrossing, int lowerStrand, int lowerSide,
+        const char* briefResult) {
+    SCOPED_TRACE_CSTRING(briefResult);
+    SCOPED_TRACE_NUMERIC(upperCrossing);
+    SCOPED_TRACE_NUMERIC(upperStrand);
+    SCOPED_TRACE_NUMERIC(upperSide);
+    SCOPED_TRACE_NUMERIC(lowerCrossing);
+    SCOPED_TRACE_NUMERIC(lowerStrand);
+    SCOPED_TRACE_NUMERIC(lowerSide);
+
+    StrandRef upper, lower;
+    if (upperCrossing >= 0)
+        upper = link.crossing(upperCrossing)->strand(upperStrand);
+    if (lowerCrossing >= 0)
+        lower = link.crossing(lowerCrossing)->strand(lowerStrand);
+
+    EXPECT_TRUE(link.r2Virtual(upper, upperSide, lower, lowerSide));
+    EXPECT_TRUE(isConsistent(link));
+    EXPECT_EQ(link.brief(), briefResult);
+}
+
+static void verifyR2UpVirtual(Link link, int crossing, int strand,
+        int firstSide, int firstStrand, const char* briefResult) {
+    SCOPED_TRACE_CSTRING(briefResult);
+    SCOPED_TRACE_NUMERIC(crossing);
+    SCOPED_TRACE_NUMERIC(strand);
+    SCOPED_TRACE_NUMERIC(firstSide);
+    SCOPED_TRACE_NUMERIC(firstStrand);
+
+    StrandRef arc;
+    if (crossing >= 0)
+        arc = link.crossing(crossing)->strand(strand);
+
+    EXPECT_TRUE(link.r2Virtual(arc, firstSide, firstStrand));
+    EXPECT_TRUE(isConsistent(link));
+    EXPECT_EQ(link.brief(), briefResult);
+}
+
 static void verifyR3(Link link, int crossing, int side,
         const char* briefResult) {
     SCOPED_TRACE_CSTRING(briefResult);
@@ -2579,6 +2618,26 @@ TEST_F(LinkTest, reidemeisterMisc) {
             "( ) ( _0 ^1 _6 _5 _3 ^2 _1 ^0 _2 ^6 ^5 ^3 ^4 _4 ) ( ) ( )");
         verifyR2Up(link, 1, 1, 1, 2, 0, 0, "++---+- "
             "( ) ( _0 ^1 ^5 ^6 _3 ^2 _1 ^0 _2 _5 _6 ^3 ^4 _4 ) ( ) ( )");
+    }
+
+    // Virtual R2 moves that operate on the same strand:
+    {
+        Link link = Link(2);
+        verifyR2UpVirtual(link, -1, 0, 0, 0, "+- ( _0 _1 ^0 ^1 ) ( )");
+        verifyR2UpVirtual(link, -1, 0, 0, 1, "-+ ( ^0 ^1 _0 _1 ) ( )");
+        verifyR2UpVirtual(link, -1, 0, 1, 0, "-+ ( _0 _1 ^0 ^1 ) ( )");
+        verifyR2UpVirtual(link, -1, 0, 1, 1, "+- ( ^0 ^1 _0 _1 ) ( )");
+    }
+    {
+        Link link = ExampleLink::trefoil();
+        verifyR2UpVirtual(link, 0, 1, 0, 0,
+            "++++- ( ^0 _3 _4 ^3 ^4 _1 ^2 _0 ^1 _2 )");
+        verifyR2UpVirtual(link, 0, 1, 0, 1,
+            "+++-+ ( ^0 ^3 ^4 _3 _4 _1 ^2 _0 ^1 _2 )");
+        verifyR2UpVirtual(link, 0, 1, 1, 0,
+            "+++-+ ( ^0 _3 _4 ^3 ^4 _1 ^2 _0 ^1 _2 )");
+        verifyR2UpVirtual(link, 0, 1, 1, 1,
+            "++++- ( ^0 ^3 ^4 _3 _4 _1 ^2 _0 ^1 _2 )");
     }
 }
 
