@@ -4418,7 +4418,7 @@ Parameter ``component``:
 
 // Docstring regina::python::doc::Link_::rewrite
 static const char *rewrite =
-R"doc(Explores all link diagrams that can be reached from this via
+R"doc(Explores all link diagrams that can be reached from this via classical
 Reidemeister moves, without exceeding a given number of additional
 crossings.
 
@@ -4428,17 +4428,34 @@ this link has 64 or more components then this routine will throw an
 exception (as described below).
 
 This routine iterates through all link diagrams that can be reached
-from this via Reidemeister moves (with an important exception
-involving disconnected diagrams), without ever exceeding *height*
-additional crossings beyond the original number. With the current
-implementation, these diagrams **could become reflected and/or
+from this one via classical Reidemeister moves (with an important
+exception involving disconnected diagrams), without ever exceeding
+*height* additional crossings beyond the original number. With the
+current implementation, these diagrams **could become reflected and/or
 reversed**, and moreover each diagram will only be considered once up
 to reflection and/or reversal; be aware that this behaviour could
 change and/or become configurable in a future version of Regina.
 
-For every such link diagram (including this starting diagram), this
-routine will call *action* (which must be a function or some other
-callable object).
+By _classical_ Reidemeister moves, we mean that we avoid any moves
+that could require adding a handle to the surface *S* in which the
+link diagram is embedded. That is, we allow ourselves to use the
+classical type I, II and III moves as implemented by r1(), r2() and
+r3(), but not the _virtual_ type II move as implemented by
+r2Virtual(). If this link diagram is classical then every link diagram
+that this routine produces will also be classical; indeed, this
+routine uses exactly the Reidemeister moves as they would be taught in
+a standard (classical) knot theory text.
+
+If you are working with _virtual_ links, you may wish to use
+rewriteVirtual() instead. The routine rewriteVirtual() uses the same
+classical moves as above, but also allows the virtual type II move,
+which could change the genus of the surface containing the link
+diagram. Indeed, calling rewriteVirtual() on a classical link diagram
+could easily produce virtual diagrams with positive virtual genus.
+
+For every link diagram that this routine encounters (including this
+starting diagram), this routine will call *action* (which must be a
+function or some other callable object).
 
 * *action* must take the following initial argument(s). Either (a) the
   first argument must be a link (the precise type is discussed below),
@@ -4459,11 +4476,11 @@ callable object).
   then this indicates that processing should stop immediately (i.e.,
   no more link diagrams will be processed).
 
-* *action* may, if it chooses, make changes to this link (i.e., the
-  original link upon which rewrite() was called). This will not affect
-  the search: all link diagrams that this routine visits will be
-  obtained via Reidemeister moves from the original link diagram,
-  before any subsequent changes (if any) were made.
+* *action* may, if it chooses, make changes to this link diagram
+  (i.e., the original link upon which rewrite() was called). This will
+  not affect the search: all link diagrams that this routine visits
+  will be obtained via Reidemeister moves from the original link
+  diagram, before any subsequent changes (if any) were made.
 
 * *action* will only be called once for each link diagram (including
   this starting diagram). In other words, no link diagram will be
@@ -4529,6 +4546,75 @@ Python:
     *action* must take exactly two arguments (const std::string&,
     Link&&) representing the signature and the link diagram, as
     described in option (b) above.
+
+Parameter ``height``:
+    the maximum number of _additional_ crossings to allow beyond the
+    number of crossings originally present in this link diagram, or a
+    negative number if this should not be bounded.
+
+Parameter ``threads``:
+    the number of threads to use. If this is 1 or smaller then the
+    routine will run single-threaded.
+
+Parameter ``tracker``:
+    a progress tracker through which progress will be reported, or
+    ``None`` if no progress reporting is required.
+
+Parameter ``action``:
+    a function (or other callable object) to call for each link
+    diagram that is found.
+
+Parameter ``args``:
+    any additional arguments that should be passed to *action*,
+    following the initial link argument(s).
+
+Returns:
+    ``True`` if some call to *action* returned ``True`` (thereby
+    terminating the search early), or ``False`` if the search ran to
+    completion.)doc";
+
+// Docstring regina::python::doc::Link_::rewriteVirtual
+static const char *rewriteVirtual =
+R"doc(Explores all link diagrams that can be reached from this via classical
+and/or virtual Reidemeister moves, without exceeding a given number of
+additional crossings.
+
+This routine works in a similar manner to rewrite(); you should read
+the rewrite() documentation to learn about what it does, how it works,
+and how the callable *action* argument is expected to behave.
+
+The main difference is that, in addition to supporting all three
+classical Reidemeister moves, this routine also uses the virtual type
+II Reidemeister move, as implemented by r2Virtual(). As a result, this
+routine could produce link diagrams with a different virtual genus to
+the original; in particular, even if the original link diagram is
+classical, this routine could (and typically will) produce diagrams
+with positive virtual genus as a result.
+
+Precondition:
+    This link has fewer than 64 link components.
+
+Exception ``FailedPrecondition``:
+    This link has 64 or more link components. If a progress tracker
+    was passed, it will be marked as finished before the exception is
+    thrown.
+
+.. warning::
+    The API for this class or function has not yet been finalised.
+    This means that the interface may change in new versions of
+    Regina, without maintaining backward compatibility. If you use
+    this class directly in your own code, please check the detailed
+    changelog with each new release to see if you need to make changes
+    to your code.
+
+Python:
+    This function is available in Python, and the *action* argument
+    may be a pure Python function. However, its form is more
+    restricted: the arguments *tracker* and *args* are removed, so you
+    simply call it as rewriteVirtual(height, threads, action).
+    Moreover, *action* must take exactly two arguments (const
+    std::string&, Link&&) representing the signature and the link
+    diagram, as described in option (b) above.
 
 Parameter ``height``:
     the maximum number of _additional_ crossings to allow beyond the
@@ -4835,6 +4921,15 @@ than the original, then it will call simplify() to simplify the
 diagram further if possible and will then return ``True``. If it
 cannot find a diagram with fewer crossings then it will leave this
 link diagram unchanged and return ``False``.
+
+If this is a _classical_ link diagram then only classical Reidemeister
+moves will be used, as implemented by r1(), r2() and r3(); in
+particular, this routine will never consider link diagrams with
+positive virtual genus. If this is a _virtual_ link diagram, then both
+classical and virtual Reidemeister moves will be used, including r1(),
+r2(), r3(), and r2Virtual(); this means that the exploration through
+the Reidemeister graph might pass through diagrams with smaller and/or
+greater virtual genus than the original.
 
 This routine can be very slow and very memory-intensive: the number of
 link diagrams it visits may be exponential in the number of crossings,

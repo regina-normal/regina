@@ -455,6 +455,22 @@ void addLink(pybind11::module_& m) {
             pybind11::arg("threads"),
             pybind11::arg("action"),
             rdoc::rewrite)
+        .def("rewriteVirtual", [](const Link& link, int height, int threads,
+                const std::function<bool(const std::string&, Link&&)>& action) {
+            if (threads == 1) {
+                return link.rewriteVirtual(height, 1, nullptr, action);
+            } else {
+                GILCallbackManager manager;
+                return link.rewriteVirtual(height, threads, nullptr,
+                    [&](const std::string& sig, Link&& link) -> bool {
+                        GILCallbackManager<>::ScopedAcquire acquire(manager);
+                        return action(sig, std::move(link));
+                    });
+            }
+        }, pybind11::arg("height"),
+            pybind11::arg("threads"),
+            pybind11::arg("action"),
+            rdoc::rewriteVirtual)
         .def("insertTorusLink", &Link::insertTorusLink,
             pybind11::arg(),
             pybind11::arg(),

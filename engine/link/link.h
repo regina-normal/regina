@@ -2990,6 +2990,15 @@ class Link :
          * If it cannot find a diagram with fewer crossings then it will leave
          * this link diagram unchanged and return \c false.
          *
+         * If this is a _classical_ link diagram then only classical
+         * Reidemeister moves will be used, as implemented by r1(), r2() and
+         * r3(); in particular, this routine will never consider link diagrams
+         * with positive virtual genus.  If this is a _virtual_ link diagram,
+         * then both classical and virtual Reidemeister moves will be used,
+         * including r1(), r2(), r3(), and r2Virtual(); this means that the
+         * exploration through the Reidemeister graph might pass through
+         * diagrams with smaller and/or greater virtual genus than the original.
+         *
          * This routine can be very slow and very memory-intensive: the
          * number of link diagrams it visits may be exponential in
          * the number of crossings, and it records every diagram
@@ -3054,8 +3063,8 @@ class Link :
 
         /**
          * Explores all link diagrams that can be reached from this via
-         * Reidemeister moves, without exceeding a given number of additional
-         * crossings.
+         * classical Reidemeister moves, without exceeding a given number of
+         * additional crossings.
          *
          * As of Regina 7.4, this routine is now available for any connected
          * link diagram (classical or virtual) with fewer than 64 link
@@ -3063,8 +3072,8 @@ class Link :
          * routine will throw an exception (as described below).
          *
          * This routine iterates through all link diagrams that can be reached
-         * from this via Reidemeister moves (with an important exception
-         * involving disconnected diagrams), without ever exceeding
+         * from this one via classical Reidemeister moves (with an important
+         * exception involving disconnected diagrams), without ever exceeding
          * \a height additional crossings beyond the original number.
          * With the current implementation, these diagrams **could become
          * reflected and/or reversed**, and moreover each diagram will only be
@@ -3072,9 +3081,27 @@ class Link :
          * behaviour could change and/or become configurable in a future version
          * of Regina.
          *
-         * For every such link diagram (including this starting diagram), this
-         * routine will call \a action (which must be a function or some other
-         * callable object).
+         * By _classical_ Reidemeister moves, we mean that we avoid any moves
+         * that could require adding a handle to the surface \a S in which the
+         * link diagram is embedded.  That is, we allow ourselves to use the
+         * classical type I, II and III moves as implemented by r1(), r2() and
+         * r3(), but not the _virtual_ type II move as implemented by
+         * r2Virtual().  If this link diagram is classical then every link
+         * diagram that this routine produces will also be classical; indeed,
+         * this routine uses exactly the Reidemeister moves as they would be
+         * taught in a standard (classical) knot theory text.
+         *
+         * If you are working with _virtual_ links, you may wish to use
+         * rewriteVirtual() instead.  The routine rewriteVirtual() uses the
+         * same classical moves as above, but also allows the virtual type II
+         * move, which could change the genus of the surface containing the
+         * link diagram.  Indeed, calling rewriteVirtual() on a classical link
+         * diagram could easily produce virtual diagrams with positive virtual
+         * genus.
+         *
+         * For every link diagram that this routine encounters (including this
+         * starting diagram), this routine will call \a action (which must be
+         * a function or some other callable object).
          *
          * - \a action must take the following initial argument(s).
          *   Either (a) the first argument must be a link (the precise type
@@ -3096,12 +3123,12 @@ class Link :
          *   \c true, then this indicates that processing should stop
          *   immediately (i.e., no more link diagrams will be processed).
          *
-         * - \a action may, if it chooses, make changes to this link
+         * - \a action may, if it chooses, make changes to this link diagram
          *   (i.e., the original link upon which rewrite() was called).
-         *   This will not affect the search: all link diagrams
-         *   that this routine visits will be obtained via Reidemeister moves
-         *   from the original link diagram, before any subsequent changes
-         *   (if any) were made.
+         *   This will not affect the search: all link diagrams that this
+         *   routine visits will be obtained via Reidemeister moves from the
+         *   original link diagram, before any subsequent changes (if any)
+         *   were made.
          *
          * - \a action will only be called once for each link diagram
          *   (including this starting diagram).  In other words, no
@@ -3178,6 +3205,60 @@ class Link :
          */
         template <typename Action, typename... Args>
         bool rewrite(int height, unsigned threads,
+            ProgressTrackerOpen* tracker,
+            Action&& action, Args&&... args) const;
+
+        /**
+         * Explores all link diagrams that can be reached from this via
+         * classical and/or virtual Reidemeister moves, without exceeding a
+         * given number of additional crossings.
+         *
+         * This routine works in a similar manner to rewrite(); you should
+         * read the rewrite() documentation to learn about what it does,
+         * how it works, and how the callable \a action argument is expected
+         * to behave.
+         *
+         * The main difference is that, in addition to supporting all three
+         * classical Reidemeister moves, this routine also uses the virtual
+         * type II Reidemeister move, as implemented by r2Virtual().  As a
+         * result, this routine could produce link diagrams with a different
+         * virtual genus to the original; in particular, even if the original
+         * link diagram is classical, this routine could (and typically will)
+         * produce diagrams with positive virtual genus as a result.
+         *
+         * \pre This link has fewer than 64 link components.
+         *
+         * \exception FailedPrecondition This link has 64 or more link
+         * components.  If a progress tracker was passed, it will be marked as
+         * finished before the exception is thrown.
+         *
+         * \apinotfinal
+         *
+         * \python This function is available in Python, and the \a action
+         * argument may be a pure Python function.  However, its form is more
+         * restricted: the arguments \a tracker and \a args are removed, so you
+         * simply call it as rewriteVirtual(height, threads, action).
+         * Moreover, \a action must take exactly two arguments
+         * (const std::string&, Link&&) representing the signature and
+         * the link diagram, as described in option (b) above.
+         *
+         * \param height the maximum number of _additional_ crossings to
+         * allow beyond the number of crossings originally present in this
+         * link diagram, or a negative number if this should not be bounded.
+         * \param threads the number of threads to use.  If this is
+         * 1 or smaller then the routine will run single-threaded.
+         * \param tracker a progress tracker through which progress will
+         * be reported, or \c null if no progress reporting is required.
+         * \param action a function (or other callable object) to call
+         * for each link diagram that is found.
+         * \param args any additional arguments that should be passed to
+         * \a action, following the initial link argument(s).
+         * \return \c true if some call to \a action returned \c true (thereby
+         * terminating the search early), or \c false if the search ran to
+         * completion.
+         */
+        template <typename Action, typename... Args>
+        bool rewriteVirtual(int height, unsigned threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
 
@@ -7178,14 +7259,49 @@ inline bool Link::rewrite(int height, unsigned threads,
     using Traits = regina::detail::RetriangulateActionTraits<Link, Action>;
     static_assert(Traits::valid,
         "The action that is passed to rewrite() does not take the correct initial argument type(s).");
+
+    // The template option std::true_type means allow classical moves only.
     if constexpr (Traits::withSig) {
-        return regina::detail::retriangulateInternal<Link, true>(
+        return detail::retriangulateInternal<Link, true, std::true_type>(
             *this, height, threads, tracker,
             [&](const std::string& sig, Link&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     } else {
-        return regina::detail::retriangulateInternal<Link, false>(
+        return detail::retriangulateInternal<Link, false, std::true_type>(
+            *this, height, threads, tracker,
+            [&](Link&& obj) {
+                return action(std::move(obj), std::forward<Args>(args)...);
+            });
+    }
+}
+
+template <typename Action, typename... Args>
+inline bool Link::rewriteVirtual(int height, unsigned threads,
+        ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
+    if (components_.size() >= 64) {
+        if (tracker)
+            tracker->setFinished();
+        throw FailedPrecondition(
+            "rewriteVirtual() requires fewer than 64 link components");
+    }
+
+    // Use RetriangulateActionTraits to deduce whether the given action takes
+    // a link or both a signature and link as its initial argument(s).
+    using Traits = regina::detail::RetriangulateActionTraits<Link, Action>;
+    static_assert(Traits::valid,
+        "The action that is passed to rewriteVirtual() does not take the correct initial argument type(s).");
+
+    // The template option std::false_type means allow both classical and
+    // virtual moves.
+    if constexpr (Traits::withSig) {
+        return detail::retriangulateInternal<Link, true, std::false_type>(
+            *this, height, threads, tracker,
+            [&](const std::string& sig, Link&& obj) {
+                return action(sig, std::move(obj), std::forward<Args>(args)...);
+            });
+    } else {
+        return detail::retriangulateInternal<Link, false, std::false_type>(
             *this, height, threads, tracker,
             [&](Link&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
@@ -7202,8 +7318,14 @@ inline bool Link::simplifyExhaustive(int height, unsigned threads,
             "simplifyExhaustive() requires fewer than 64 link components");
     }
 
-    return regina::detail::simplifyExhaustiveInternal<Link>(
-        *this, height, threads, tracker);
+    // The template option std::true_type means allow classical moves only,
+    // and std::false_type means allow both classical and virtual moves.
+    if (isClassical())
+        return detail::simplifyExhaustiveInternal<Link, std::true_type>(
+            *this, height, threads, tracker);
+    else
+        return detail::simplifyExhaustiveInternal<Link, std::false_type>(
+            *this, height, threads, tracker);
 }
 
 inline void Link::join(const StrandRef& s, const StrandRef& t) {

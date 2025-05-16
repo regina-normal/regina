@@ -313,7 +313,9 @@ Version 7.4  [ (to be announced) ]
               + Routines sig() and knotSig() now take an additional argument to
                 specify whether rotations should be considered equivalent.
             - Extended rewrite() and simplifyExhaustive() to work with all
-              link diagrams with fewer than 64 link components.
+              link diagrams with fewer than 64 link components, and added a
+              new routine rewriteVirtual() for working with virtual link
+              diagrams.
             - Routine hasReducingPass() can now handle multiple-component links.
             - Added a variant of translate() that takes crossings instead of
               strand references.

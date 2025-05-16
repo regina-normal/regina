@@ -103,6 +103,9 @@ namespace regina::detail {
  * examine all possible moves from \a obj that do not exceed size \a max; and
  * for each resulting triangulation/link \a alt, it should call
  * `retriangulator->candidate(std::move(alt), sig)`.
+ * If \a Object uses options to control what moves are allowed (e.g., the link
+ * type indicating whether to allow virtual as well as classical moves), then
+ * these options can be accessed through the type `T::Options`.
  *
  * The function should also check the return value each time it calls
  * `retriangulator->candidate(...)`.  If the \a candidate
@@ -356,8 +359,11 @@ class RetriangulateSigGraph<false> : private std::set<std::string> {
  * text signature as its initial argument (in addition to the
  * triangulation/link which is passed in all cases).
  */
-template <class Object, bool threading, bool withSig>
+template <class Object, bool threading, bool withSig, typename Options_>
 class Retriangulator : public RetriangulateThreadSync<threading> {
+    public:
+        using Options = Options_;
+
     private:
         // To switch on backtracing, just change the following type alias to
         // RetriangulateSigGraph<true>.
@@ -426,8 +432,8 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
         bool candidate(Object&& alt, const std::string& derivedFrom);
 };
 
-template <class Object, bool threading, bool withSig>
-inline bool Retriangulator<Object, threading, withSig>::seed(
+template <class Object, bool threading, bool withSig, typename Options>
+inline bool Retriangulator<Object, threading, withSig, Options>::seed(
         const Object& obj) {
     // We have to pass a *copy* of obj to action_, since action_ is
     // allowed to change the object that is passed to it.
@@ -454,8 +460,8 @@ inline bool Retriangulator<Object, threading, withSig>::seed(
     return false;
 }
 
-template <class Object, bool threading, bool withSig>
-void Retriangulator<Object, threading, withSig>::processQueue(
+template <class Object, bool threading, bool withSig, typename Options>
+void Retriangulator<Object, threading, withSig, Options>::processQueue(
         ProgressTrackerOpen* tracker) {
     SigSet::iterator next;
 
@@ -491,8 +497,8 @@ void Retriangulator<Object, threading, withSig>::processQueue(
     }
 }
 
-template <class Object, bool threading, bool withSig>
-bool Retriangulator<Object, threading, withSig>::candidate(
+template <class Object, bool threading, bool withSig, typename Options>
+bool Retriangulator<Object, threading, withSig, Options>::candidate(
         Object&& alt, const std::string& derivedFrom) {
     const std::string sig = RetriangulateParams<Object>::sig(alt);
 
@@ -530,7 +536,7 @@ bool Retriangulator<Object, threading, withSig>::candidate(
     return false;
 }
 
-template <class Object, bool threading, bool withSig>
+template <class Object, bool threading, bool withSig, typename Options>
 bool enumerateDetail(const Object& obj, int height, unsigned nThreads,
         ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action) {
@@ -550,7 +556,7 @@ bool enumerateDetail(const Object& obj, int height, unsigned nThreads,
         return result;
     }
 
-    using T = Retriangulator<Object, threading, withSig>;
+    using T = Retriangulator<Object, threading, withSig, Options>;
 
     T bfs((height >= 0 ? obj.size() + height :
         std::numeric_limits<std::size_t>::max()), std::move(action));
@@ -566,15 +572,15 @@ bool enumerateDetail(const Object& obj, int height, unsigned nThreads,
     return bfs.done();
 }
 
-template <class Object, bool withSig>
+template <class Object, bool withSig, typename Options>
 bool retriangulateInternal(const Object& obj, int height, unsigned nThreads,
         ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action) {
     if (nThreads <= 1) {
-        return enumerateDetail<Object, false, withSig>(
+        return enumerateDetail<Object, false, withSig, Options>(
             obj, height, nThreads, tracker, std::move(action));
     } else {
-        return enumerateDetail<Object, true, withSig>(
+        return enumerateDetail<Object, true, withSig, Options>(
             obj, height, nThreads, tracker, std::move(action));
     }
 }

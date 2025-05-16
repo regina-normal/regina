@@ -107,6 +107,10 @@ using RetriangulateActionFunc = std::conditional_t<withSig,
  * text signature and a triangulation in its initial argument(s),
  * or \c false if we are storing an action whose argument list begins with
  * just a triangulation/link.
+ * \tparam Options Any options needed to specify exactly how objects should be
+ * propagated to produce "nearby" objects.  The domain-specific propagation
+ * function `RetriangulationParams<Object>::propagateFrom<Retriangulator>`
+ * can access this parameter via the type `Retriangulator::Options`.
  *
  * \param obj the object being retriangulated or rewritten.
  * \param height the maximum number of top-dimensional simplices or crossings
@@ -122,7 +126,7 @@ using RetriangulateActionFunc = std::conditional_t<withSig,
  *
  * \ingroup detail
  */
-template <class Object, bool withSig>
+template <class Object, bool withSig, typename Options = void>
 bool retriangulateInternal(const Object& obj, int height, unsigned nThreads,
         ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action);
@@ -178,6 +182,10 @@ struct RetriangulateActionTraits;
  *
  * \tparam Object the class providing the exhaustive simplification function,
  * such as regina::Triangulation<dim> or regina::Link.
+ * \tparam Options Any options needed to specify exactly how objects should be
+ * propagated to produce "nearby" objects.  This will be passed directly through
+ * to retriangulateInternal(), and is ultimately used by the domain-specific
+ * function `RetriangulationParams<Object>::propagateFrom<Retriangulator>`.
  *
  * \param obj the object being simplified.
  * \param height the maximum number of top-dimensional simplices or crossings
@@ -191,7 +199,7 @@ struct RetriangulateActionTraits;
  *
  * \ingroup detail
  */
-template <class Object>
+template <class Object, typename Options = void>
 bool simplifyExhaustiveInternal(Object& obj, int height,
         unsigned threads, ProgressTrackerOpen* tracker) {
     // Make a place for the callback to put a simplified object, if it finds
@@ -202,7 +210,7 @@ bool simplifyExhaustiveInternal(Object& obj, int height,
     std::unique_ptr<Object> simplified;
 
     size_t initSize = obj.size();
-    if (regina::detail::retriangulateInternal<Object, false>(
+    if (regina::detail::retriangulateInternal<Object, false, Options>(
             obj, height, threads, tracker,
             [&simplified, initSize](Object&& alt) {
                 if (alt.size() < initSize) {

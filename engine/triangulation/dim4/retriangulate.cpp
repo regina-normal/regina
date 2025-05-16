@@ -39,6 +39,12 @@
 namespace regina {
 
 namespace detail {
+    /**
+     * Provides domain-specific details for the 4-D retriangulation process.
+     *
+     * For propagation of 4-D triangulations, we do not make use of the
+     * options type `Retriangulator::Options`.
+     */
     template <>
     struct RetriangulateParams<Triangulation<4>> {
         static std::string sig(const Triangulation<4>& tri) {
