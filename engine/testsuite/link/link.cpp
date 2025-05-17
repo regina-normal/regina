@@ -2771,6 +2771,43 @@ TEST_F(LinkTest, resolve) {
     testManualCases(verifyResolveViaJones);
 }
 
+static void verifyMakeVirtual(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    for (size_t i = 0; i < link.size(); ++i) {
+        Link alt(link, false);
+        alt.makeVirtual(alt.crossing(i));
+
+        EXPECT_TRUE(isConsistent(alt));
+        EXPECT_EQ(alt.size(), link.size() - 1);
+        EXPECT_EQ(alt.countComponents(), link.countComponents());
+
+        if (auto untwist = link.withR1(link.crossing(i))) {
+            // This operation just undoes the twist.
+            EXPECT_EQ(alt, untwist);
+        } else if (link.isClassical()) {
+            // For classical diagrams, this operation should break the
+            // checkerboard colouring - this means we add a new handle to the
+            // surface in which the diagram is embedded.
+            EXPECT_FALSE(alt.isClassical());
+            EXPECT_EQ(alt.virtualGenus(), 1);
+        }
+        // I have no idea how we expect the virtual genus to change when the
+        // input is already a virtual link diagram.
+    }
+
+    Link alt(link, false);
+    alt.makeVirtual(nullptr);
+    EXPECT_EQ(alt, link);
+}
+
+TEST_F(LinkTest, makeVirtual) {
+    testManualCases(verifyMakeVirtual);
+}
+
+// TODO: Some tests for graft() would be nice.
+// Maybe verify component counts, crossing counts, and virtual genus.
+
 static void verifySig(const Link& link, bool reflect, bool reverse,
         bool rotate) {
     SCOPED_TRACE_NUMERIC(reflect);
