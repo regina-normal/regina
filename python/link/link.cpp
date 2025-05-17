@@ -256,6 +256,8 @@ void addLink(pybind11::module_& m) {
         .def("connected", &Link::connected, rdoc::connected)
         .def("diagramComponents", &Link::diagramComponents,
             rdoc::diagramComponents)
+        .def("countDiagramComponents", &Link::countDiagramComponents,
+            rdoc::countDiagramComponents)
         .def("diagramComponentIndices", [](const Link& link) {
             auto [ map, count ] = link.diagramComponentIndices();
             pybind11::list ans;

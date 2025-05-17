@@ -769,8 +769,12 @@ they involve entirely different components of the link.
 See isConnected() for further discussion on the connectivity of link
 diagrams.
 
-Note: for knots and empty links, this routine is constant time. For
-multiple-component links, it is linear in the link size.
+In general this routine requires time linear in the link size (though
+it is constant time for knots and empty links). If you are planning to
+call this routine frequently, you might wish to consider using
+diagramComponentIndices() instead. That routine returns a lookup table
+with which you can then test pairwise connectivity via constant-time
+lookup.
 
 Parameter ``a``:
     the first of the two crossings to examine.
@@ -791,6 +795,21 @@ example, the number of components in the Hopf link is two.
 
 Returns:
     the number of components.)doc";
+
+// Docstring regina::python::doc::Link_::countDiagramComponents
+static const char *countDiagramComponents =
+R"doc(Returns the total number of connected diagram components.
+
+As with diagramComponents(), this routine is interested in connected
+components of the link diagram (i.e., components that are connected in
+the graph theoretical sense if we treat each crossing as a 4-way
+intersection). See diagramComponents() for further discussion on this.
+
+This routine simply computes the total number of connected components
+(including trivial zero-crossing components).
+
+Returns:
+    the total number of connected diagram components.)doc";
 
 // Docstring regina::python::doc::Link_::countTrivialComponents
 static const char *countTrivialComponents =
@@ -877,7 +896,9 @@ crossing) components entirely.
 Returns:
     A pair containing (i) the array as described above; and (ii) the
     total number of non-trivial diagram components (so again, ignoring
-    zero-crossing components).)doc";
+    zero-crossing components). Note that this latter number may be
+    different from countDiagramComponents(), which counts _all_
+    diagram components (including the trivial ones).)doc";
 
 // Docstring regina::python::doc::Link_::diagramComponents
 static const char *diagramComponents =
@@ -914,11 +935,17 @@ In the list that is returned, any zero-crossing diagram components
 will all appear at the end, after all of the components that do
 involve crossings.
 
-If you just need to know which crossings belong to which diagram
-components (without building new Link objects), you might want to use
-diagramComponentIndices(), which is less heavyweight than this
-routine. If you simply wish to know whether this diagram is connected,
-you should call isConnected() instead, which is even more lightweight.
+If you do not need a collection of fully-formed link objects, you
+could instead try one of the lightweight variants of this routine:
+
+* isConnected() simply tests whether or not there are multiple diagram
+  components;
+
+* countDiagramComponents() returns the total number of diagram
+  components;
+
+* diagramComponentIndices() returns a table of integers indicating
+  which crossings belong to which diagram components.
 
 Returns:
     a list containing the individual connected components of this link
@@ -2825,8 +2852,9 @@ connected.
 Note: for knots and empty links, this routine is constant time. For
 multiple-component links, it is linear in the link size.
 
-See also diagramComponents(), which extracts the connected components
-of a link diagram as individual Link objects.
+See also countDiagramComponents() which returns an integer count
+instead of a boolean, and diagramComponents() which extracts the
+diagra components as individual Link objects.
 
 Returns:
     ``True`` if and only if this link diagram is connected.)doc";

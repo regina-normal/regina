@@ -1187,8 +1187,9 @@ class Link :
          * Note: for knots and empty links, this routine is constant time.
          * For multiple-component links, it is linear in the link size.
          *
-         * See also diagramComponents(), which extracts the connected
-         * components of a link diagram as individual Link objects.
+         * See also countDiagramComponents() which returns an integer count
+         * instead of a boolean, and diagramComponents() which extracts the
+         * diagra components as individual Link objects.
          *
          * \return \c true if and only if this link diagram is connected.
          */
@@ -1210,8 +1211,12 @@ class Link :
          * See isConnected() for further discussion on the connectivity of
          * link diagrams.
          *
-         * Note: for knots and empty links, this routine is constant time.
-         * For multiple-component links, it is linear in the link size.
+         * In general this routine requires time linear in the link size
+         * (though it is constant time for knots and empty links).
+         * If you are planning to call this routine frequently, you might wish
+         * to consider using diagramComponentIndices() instead.  That routine
+         * returns a lookup table with which you can then test pairwise
+         * connectivity via constant-time lookup.
          *
          * \param a the first of the two crossings to examine.
          * \param b the second of the two crossings to examine.
@@ -1255,17 +1260,38 @@ class Link :
          * will all appear at the end, after all of the components that do
          * involve crossings.
          *
-         * If you just need to know which crossings belong to which diagram
-         * components (without building new Link objects), you might want to
-         * use diagramComponentIndices(), which is less heavyweight than this
-         * routine.  If you simply wish to know whether this diagram is
-         * connected, you should call isConnected() instead, which is even
-         * more lightweight.
+         * If you do not need a collection of fully-formed link objects, you
+         * could instead try one of the lightweight variants of this routine:
+         *
+         * - isConnected() simply tests whether or not there are multiple
+         *   diagram components;
+         *
+         * - countDiagramComponents() returns the total number of diagram
+         *   components;
+         *
+         * - diagramComponentIndices() returns a table of integers indicating
+         *   which crossings belong to which diagram components.
          *
          * \return a list containing the individual connected components of
          * this link diagram.
          */
         std::vector<Link> diagramComponents() const;
+
+        /**
+         * Returns the total number of connected diagram components.
+         *
+         * As with diagramComponents(), this routine is interested in connected
+         * components of the link diagram (i.e., components that are connected
+         * in the graph theoretical sense if we treat each crossing as a 4-way
+         * intersection).  See diagramComponents() for further discussion on
+         * this.
+         *
+         * This routine simply computes the total number of connected
+         * components (including trivial zero-crossing components).
+         *
+         * \return the total number of connected diagram components.
+         */
+        size_t countDiagramComponents() const;
 
         /**
          * Returns an array that maps crossing numbers to connected diagram
@@ -1297,7 +1323,9 @@ class Link :
          *
          * \return A pair containing (i) the array as described above; and
          * (ii) the total number of non-trivial diagram components (so again,
-         * ignoring zero-crossing components).
+         * ignoring zero-crossing components).  Note that this latter number
+         * may be different from countDiagramComponents(), which counts _all_
+         * diagram components (including the trivial ones).
          */
         std::pair<FixedArray<size_t>, size_t> diagramComponentIndices() const;
 

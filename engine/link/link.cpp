@@ -272,6 +272,56 @@ bool Link::isConnected() const {
     return false;
 }
 
+size_t Link::countDiagramComponents() const {
+    if (crossings_.empty())
+        return components_.size(); // all components must be trivial
+    if (components_.size() == 1)
+        return 1; // the diagram must be connected
+
+    // We have multiple link components (some of which might be trivial),
+    // and at least one crossing.  Perform a depth-first search.
+
+    size_t n = crossings_.size();
+    FixedArray<bool> seen(n, false);
+    FixedArray<const Crossing*> stack(n);
+
+    size_t ans = 0;
+
+    for (const auto& comp : components_) {
+        if (! comp) {
+            // We have a zero-crossing component.
+            ++ans;
+            continue;
+        }
+        if (seen[comp.crossing()->index()])
+            continue;
+
+        // We have a new diagram component to explore.
+        size_t stackSize = 1;
+        stack[0] = comp.crossing();
+        seen[comp.crossing()->index()] = true;
+
+        while (stackSize > 0) {
+            auto curr = stack[--stackSize];
+
+            for (int i = 0; i < 2; ++i) {
+                // We only need to look at next, not prev, since anything we
+                // can reach via prev can also be reached via a sequence of
+                // next steps.
+                auto adj = curr->next_[i].crossing();
+                if (! seen[adj->index()]) {
+                    stack[stackSize++] = adj;
+                    seen[adj->index()] = true;
+                }
+            }
+        }
+
+        ++ans;
+    }
+
+    return ans;
+}
+
 std::pair<FixedArray<size_t>, size_t> Link::diagramComponentIndices() const {
     if (crossings_.empty())
         return { FixedArray<size_t>(0), 0 }; // empty array

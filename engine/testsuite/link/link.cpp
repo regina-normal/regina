@@ -514,6 +514,7 @@ static void verifyDiagramComponents(const Link& link, const char* name,
     EXPECT_EQ(foundComponents.size(), expectBrief.size());
     EXPECT_EQ(foundIndices.second,
         expectBrief.size() - link.countTrivialComponents());
+    EXPECT_EQ(foundComponents.size(), link.countDiagramComponents());
 
     auto found = foundComponents.begin();
     auto expect = expectBrief.begin();
@@ -3516,15 +3517,17 @@ static void verifyRewriteClassical(const TestCase& test, int height,
 
     size_t count = 0;
     auto jones = jonesModReflection(test.link);
+    size_t initComp = test.link.countDiagramComponents();
 
     std::unique_ptr<regina::ProgressTrackerOpen> tracker;
     if (track)
         tracker.reset(new regina::ProgressTrackerOpen());
 
     bool result = test.link.rewrite(height, threads, tracker.get(),
-            [&count, &jones](const Link& alt) {
+            [&count, &jones, initComp](const Link& alt) {
         ++count;
         EXPECT_EQ(jonesModReflection(alt), jones);
+        EXPECT_GE(alt.countDiagramComponents(), initComp);
         return false;
     });
     if (track)
@@ -3541,15 +3544,17 @@ static void verifyRewriteVirtual(const TestCase& test, int height,
 
     size_t count = 0;
     auto jones = jonesModReflection(test.link);
+    size_t initComp = test.link.countDiagramComponents();
 
     std::unique_ptr<regina::ProgressTrackerOpen> tracker;
     if (track)
         tracker.reset(new regina::ProgressTrackerOpen());
 
     bool result = test.link.rewriteVirtual(height, threads, tracker.get(),
-            [&count, &jones](const Link& alt) {
+            [&count, &jones, initComp](const Link& alt) {
         ++count;
         EXPECT_EQ(jonesModReflection(alt), jones);
+        EXPECT_GE(alt.countDiagramComponents(), initComp);
         return false;
     });
     if (track)
@@ -3590,6 +3595,8 @@ TEST_F(LinkTest, rewrite) {
     verifyRewrite(unlink2_0, 0, 1, 1);
     verifyRewrite(unlink2_0, 1, 2, 2);
     verifyRewrite(unlink2_0, 2, 8, 9);
+    verifyRewrite(unlink2_r2, 0, 9, 10);
+    verifyRewrite(unlink2_r2, 1, 32, 40);
     verifyRewrite(unlink3_0, 0, 1, 1);
     verifyRewrite(unlink3_0, 1, 2, 2);
     verifyRewrite(unlink3_0, 2, 8, 9);
