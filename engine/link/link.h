@@ -1251,6 +1251,10 @@ class Link :
          * equal size(), and the total number of _link_ components across all
          * of the links that are returned will equal countComponents().
          *
+         * In the list that is returned, any zero-crossing diagram components
+         * will all appear at the end, after all of the components that do
+         * involve crossings.
+         *
          * If you simply wish to know whether this diagram is connected, you
          * should call isConnected() instead which is much more lightweight.
          *
@@ -6195,6 +6199,17 @@ class Link :
          * routine will look for a zero-crossing component).
          */
         std::vector<StrandRef>::iterator componentFor(const StrandRef& s);
+
+        /**
+         * Returns an array that maps crossing numbers to diagram components.
+         * Diagram components are represented by integer indices, numbered
+         * from 0 upwards.  Trivial (zero-crossing) diagram components will be
+         * ignored completely.
+         *
+         * \return The array as described above, along with the total number
+         * of non-trivial diagram components.
+         */
+        std::pair<FixedArray<size_t>, size_t> diagramComponentIndices() const;
 
         /**
          * Used with fromEnhancedGauss() to indicate which kind of Gauss code

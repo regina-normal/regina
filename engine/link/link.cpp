@@ -272,48 +272,35 @@ bool Link::isConnected() const {
     return false;
 }
 
-std::vector<Link> Link::diagramComponents() const {
-    if (components_.empty())
-        return {};
+std::pair<FixedArray<size_t>, size_t> Link::diagramComponentIndices() const {
+    if (crossings_.empty())
+        return { 0, 0 }; // empty array, no non-trivial diagram components
     if (components_.size() == 1)
-        return { Link(*this) };
+        return { { crossings_.size(), 0 }, 1 }; // [ 0, 0, ..., 0 ]
 
-    // We have multiple link components.
-    // Work out how many of these are zero-crossing unknots.
-    size_t nTrivial = 0;
-    for (auto c : components_)
-        if (! c)
-            ++nTrivial;
-
-    if (crossings_.empty()) {
-        std::vector<Link> ans(nTrivial); // all empty links
-        for (auto& link : ans)
-            link.components_.emplace_back(); // make them 0-crossing unknots
-        return ans;
-    }
-
-    // We have at least one crossing.
-    // Run a depth-first search to work out which crossings belong to the same
-    // components.
+    // We have multiple link components (some of which might be trivial),
+    // and at least one crossing.  Run a depth-first search to work out
+    // which crossings belong to the same components.
 
     size_t n = crossings_.size();
 
-    FixedArray<ssize_t> comp(n, -1);
+    FixedArray<size_t> comp(n, n); // a value of n means "not seen"
     FixedArray<const Crossing*> stack(n);
 
-    size_t next = 0;
-    size_t nComp = 0; // only incremented _after_ finishing the component
-    size_t nFound = 0;
+    auto nextStart = components_.begin(); // the next link component to examine
+    size_t currComp = 0; // the current _diagram_ component
+    size_t nFound = 0; // the total number of crossings seen so far
 
     while (nFound < n) {
-        // Find a starting point to explore the next connected component.
-        while (comp[next] >= 0)
-            ++next;
+        // There are still crossings to be found.
+        // Find a starting point to explore the next diagram component.
+        while (! (*nextStart && comp[nextStart->crossing()->index()] == n))
+            ++nextStart;
 
         size_t stackSize = 1;
-        stack[0] = crossings_[next];
-        comp[next] = nComp;
-        ++next;
+        stack[0] = nextStart->crossing();
+        comp[nextStart->crossing()->index()] = currComp;
+        ++nextStart;
         ++nFound;
 
         while (stackSize > 0) {
@@ -324,16 +311,36 @@ std::vector<Link> Link::diagramComponents() const {
                 // can reach via prev can also be reached via a sequence of
                 // next steps.
                 auto adj = curr->next_[i].crossing();
-                if (comp[adj->index()] < 0) {
+                if (comp[adj->index()] == n) {
                     stack[stackSize++] = adj;
-                    comp[adj->index()] = nComp;
+                    comp[adj->index()] = currComp;
                     ++nFound;
                 }
             }
         }
 
-        ++nComp;
+        ++currComp;
     }
+
+    return { std::move(comp), currComp };
+}
+
+std::vector<Link> Link::diagramComponents() const {
+    if (components_.empty())
+        return {};
+    if (components_.size() == 1)
+        return { Link(*this) };
+    if (crossings_.empty()) {
+        std::vector<Link> ans(components_.size()); // all empty links
+        for (auto& link : ans)
+            link.components_.emplace_back(); // make them 0-crossing unknots
+        return ans;
+    }
+
+    // We have at least one crossing, and multiple link components.
+
+    size_t nTrivial = countTrivialComponents();
+    auto [ comp, nComp ] = diagramComponentIndices();
 
     // Extract the components into individual links.
     //
@@ -356,11 +363,12 @@ std::vector<Link> Link::diagramComponents() const {
 
     // Now distribute crossings, which will change their indices and make our
     // comp[] array useless.
-    for (size_t i = 0; i < n; ++i)
+    for (size_t i = 0; i < crossings_.size(); ++i)
         ans[comp[i]].crossings_.push_back(clone.crossings_[i]);
     clone.crossings_.clear();
 
     // Finally add in the trivial (0-crossing) diagram components.
+    // We promise that these will appear at the end of the list.
     for (size_t i = 0; i < nTrivial; ++i)
         ans[nComp + i].components_.emplace_back();
 
