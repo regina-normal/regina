@@ -3577,10 +3577,10 @@ static void verifyRewrite(const TestCase& test, int height,
 
 TEST_F(LinkTest, rewrite) {
     // The classical rewrite counts below were computed using Regina 6.0 in
-    // single-threaded mode (except for the zero-crossing cases, which were
-    // computed by hand).  All virtual rewrite counts were computed using
-    // Regina 7.4 in single-threaded mode (again except for the zero-crossing
-    // cases, which were computed by hand).
+    // single-threaded mode (except for the zero-crossing and multiple-component
+    // cases, which were computed by hand).  All virtual rewrite counts were
+    // computed using Regina 7.4 in single-threaded mode (again except for the
+    // zero-crossing and multiple component cases, which were computed by hand).
 
     verifyRewrite(empty, 0, 1, 1);
     verifyRewrite(empty, 1, 1, 1);
@@ -3611,9 +3611,10 @@ TEST_F(LinkTest, rewrite) {
     verifyRewrite(rht_lht, 1, 35, 35);
     verifyRewrite(rht_lht, 2, 1131, 1404);
 
-    // All counts below for virtual links were computed using Regina 7.4 in
-    // single-threaded mode.
+    // All counts below were computed using Regina 7.4 in single-threaded mode.
 
+    verifyRewrite(trefoil_unknot_overlap, 0, 90, 103);
+    verifyRewrite(trefoil_unknot_overlap, 1, 1200, 1818);
     verifyRewrite(virtualTrefoil, 0, 1, 1);
     verifyRewrite(virtualTrefoil, 1, 8, 8);
     verifyRewrite(virtualTrefoil, 2, 111, 120);
