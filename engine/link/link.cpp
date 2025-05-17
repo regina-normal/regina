@@ -274,7 +274,7 @@ bool Link::isConnected() const {
 
 std::pair<FixedArray<size_t>, size_t> Link::diagramComponentIndices() const {
     if (crossings_.empty())
-        return { 0, 0 }; // empty array, no non-trivial diagram components
+        return { FixedArray<size_t>(0), 0 }; // empty array
     if (components_.size() == 1)
         return { FixedArray<size_t>(crossings_.size(), 0), 1 }; // [ 0, ..., 0 ]
 
