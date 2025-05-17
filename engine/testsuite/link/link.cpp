@@ -3508,8 +3508,8 @@ TEST_F(LinkTest, invalidCode) {
     EXPECT_THROW({ Link l(code); }, regina::InvalidArgument);
 }
 
-static void verifyRewrite(const TestCase& test, int height, int threads,
-        bool track, size_t expectCount) {
+static void verifyRewriteClassical(const TestCase& test, int height,
+        int threads, bool track, size_t expectCount) {
     SCOPED_TRACE_CSTRING(test.name);
     SCOPED_TRACE_NUMERIC(height);
     SCOPED_TRACE_NUMERIC(threads);
@@ -3533,53 +3533,84 @@ static void verifyRewrite(const TestCase& test, int height, int threads,
     EXPECT_EQ(count, expectCount);
 }
 
+static void verifyRewriteVirtual(const TestCase& test, int height,
+        int threads, bool track, size_t expectCount) {
+    SCOPED_TRACE_CSTRING(test.name);
+    SCOPED_TRACE_NUMERIC(height);
+    SCOPED_TRACE_NUMERIC(threads);
+
+    size_t count = 0;
+    auto jones = jonesModReflection(test.link);
+
+    std::unique_ptr<regina::ProgressTrackerOpen> tracker;
+    if (track)
+        tracker.reset(new regina::ProgressTrackerOpen());
+
+    bool result = test.link.rewriteVirtual(height, threads, tracker.get(),
+            [&count, &jones](const Link& alt) {
+        ++count;
+        EXPECT_EQ(jonesModReflection(alt), jones);
+        return false;
+    });
+    if (track)
+        EXPECT_TRUE(tracker->isFinished());
+    EXPECT_FALSE(result);
+    EXPECT_EQ(count, expectCount);
+}
+
 static void verifyRewrite(const TestCase& test, int height,
-        size_t expectCount) {
+        size_t expectClassical, size_t expectVirtual) {
     // Single-threaded, no tracker:
-    verifyRewrite(test, height, 1, false, expectCount);
+    verifyRewriteClassical(test, height, 1, false, expectClassical);
+    verifyRewriteVirtual(test, height, 1, false, expectVirtual);
     // Multi-threaded, with and without tracker:
-    verifyRewrite(test, height, 2, false, expectCount);
-    verifyRewrite(test, height, 2, true, expectCount);
+    verifyRewriteClassical(test, height, 2, false, expectClassical);
+    verifyRewriteVirtual(test, height, 2, false, expectVirtual);
+    verifyRewriteClassical(test, height, 2, true, expectClassical);
+    verifyRewriteVirtual(test, height, 2, true, expectVirtual);
 }
 
 TEST_F(LinkTest, rewrite) {
-    // The counts below were computed using Regina 6.0 in single-threaded mode
-    // (except for the zero-crossing cases, which were computed by hand).
+    // The classical rewrite counts below were computed using Regina 6.0 in
+    // single-threaded mode (except for the zero-crossing cases, which were
+    // computed by hand).  All virtual rewrite counts were computed using
+    // Regina 7.4 in single-threaded mode (again except for the zero-crossing
+    // cases, which were computed by hand).
 
-    verifyRewrite(empty, 0, 1);
-    verifyRewrite(empty, 1, 1);
-    verifyRewrite(empty, 2, 1);
-    verifyRewrite(unknot0, 0, 1);
-    verifyRewrite(unknot0, 1, 2);
-    verifyRewrite(unknot0, 2, 6);
-    verifyRewrite(unknot0, 3, 22);
-    verifyRewrite(unknot3, 0, 22);
-    verifyRewrite(unknot3, 1, 131);
-    verifyRewrite(unknot3, 2, 998);
-    verifyRewrite(unlink2_0, 0, 1);
-    verifyRewrite(unlink2_0, 1, 2);
-    verifyRewrite(unlink2_0, 2, 8); // not 9, because we don't merge components
-    verifyRewrite(unlink3_0, 0, 1);
-    verifyRewrite(unlink3_0, 1, 2);
-    verifyRewrite(unlink3_0, 2, 8); // not 9, because we don't merge components
-    verifyRewrite(figureEight, 0, 1);
-    verifyRewrite(figureEight, 1, 8);
-    verifyRewrite(figureEight, 2, 137);
-    verifyRewrite(figureEight_r1x2, 0, 137);
-    verifyRewrite(figureEight, 3, 2401);
-    verifyRewrite(figureEight_r1x2, 1, 2401);
+    verifyRewrite(empty, 0, 1, 1);
+    verifyRewrite(empty, 1, 1, 1);
+    verifyRewrite(empty, 2, 1, 1);
+    verifyRewrite(unknot0, 0, 1, 1);
+    verifyRewrite(unknot0, 1, 2, 2);
+    verifyRewrite(unknot0, 2, 6, 7);
+    verifyRewrite(unknot0, 3, 22, 29);
+    verifyRewrite(unknot3, 0, 22, 29);
+    verifyRewrite(unknot3, 1, 131, 270);
+    verifyRewrite(unknot3, 2, 998, 3585);
+    verifyRewrite(unlink2_0, 0, 1, 1);
+    verifyRewrite(unlink2_0, 1, 2, 2);
+    verifyRewrite(unlink2_0, 2, 8, 9);
+    verifyRewrite(unlink3_0, 0, 1, 1);
+    verifyRewrite(unlink3_0, 1, 2, 2);
+    verifyRewrite(unlink3_0, 2, 8, 9);
+    verifyRewrite(figureEight, 0, 1, 1);
+    verifyRewrite(figureEight, 1, 8, 8);
+    verifyRewrite(figureEight, 2, 137, 172);
+    verifyRewrite(figureEight_r1x2, 0, 137, 172);
+    verifyRewrite(figureEight, 3, 2401, 4184);
+    verifyRewrite(figureEight_r1x2, 1, 2401, 4184);
     // verifyRewrite(figureEight_r1x2, 2, 44985);
-    verifyRewrite(rht_lht, 0, 1);
-    verifyRewrite(rht_lht, 1, 35);
-    verifyRewrite(rht_lht, 2, 1131);
+    verifyRewrite(rht_lht, 0, 1, 1);
+    verifyRewrite(rht_lht, 1, 35, 35);
+    verifyRewrite(rht_lht, 2, 1131, 1404);
 
-    // The virtual counts here were computed using Regina 7.4 in
+    // All counts below for virtual links were computed using Regina 7.4 in
     // single-threaded mode.
 
-    verifyRewrite(virtualTrefoil, 0, 1);
-    verifyRewrite(virtualTrefoil, 1, 8);
-    verifyRewrite(virtualTrefoil, 2, 111);
-    verifyRewrite(virtualTrefoil, 3, 1628);
+    verifyRewrite(virtualTrefoil, 0, 1, 1);
+    verifyRewrite(virtualTrefoil, 1, 8, 8);
+    verifyRewrite(virtualTrefoil, 2, 111, 120);
+    verifyRewrite(virtualTrefoil, 3, 1628, 2028);
 
     // Regina currently does not merge different connected components of a
     // link diagram when running rewrite().  Verify this:
@@ -3588,7 +3619,11 @@ TEST_F(LinkTest, rewrite) {
         link.insertLink(ExampleLink::figureEight());
         EXPECT_FALSE(link.isConnected());
 
-        link.rewrite(2, 1 /* single-threaded */, nullptr, [](const Link& alt) {
+        link.rewrite(2, 1, nullptr, [](const Link& alt) {
+            EXPECT_FALSE(alt.isConnected());
+            return false;
+        });
+        link.rewriteVirtual(2, 1, nullptr, [](const Link& alt) {
             EXPECT_FALSE(alt.isConnected());
             return false;
         });
