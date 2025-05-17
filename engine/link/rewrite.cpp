@@ -162,17 +162,23 @@ namespace detail {
                 if constexpr (! classicalOnly) {
                     // Testing for virtual R2 moves is very fast, and these
                     // moves (as enumerated below) are always valid.
+                    // However, we do have to be sure not to mix different
+                    // diagram components.
 
                     // Moves that work on different strands:
-                    for (size_t cr1 = 0; cr1 < t.size(); ++cr1)
-                        for (int str1 = 0; str1 < 2; ++str1)
-                            for (size_t cr2 = 0; cr2 < t.size(); ++cr2)
+                    auto [ comp, nComp ] = t.diagramComponentIndices();
+                    for (size_t cr1 = 0; cr1 < t.size(); ++cr1) {
+                        for (size_t cr2 = 0; cr2 < t.size(); ++cr2) {
+                            if (comp[cr1] != comp[cr2])
+                                continue;
+
+                            for (int str1 = 0; str1 < 2; ++str1) {
                                 for (int str2 = 0; str2 < 2; ++str2) {
                                     // Do not operate on the same strand.
                                     if (cr1 == cr2 && str1 == str2)
                                         continue;
 
-                                    for (int side1 = 0; side1 < 2; ++side1)
+                                    for (int side1 = 0; side1 < 2; ++side1) {
                                         for (int side2 = 0; side2 < 2; ++side2) {
                                             Link alt(t, false);
                                             alt.r2Virtual(
@@ -184,7 +190,11 @@ namespace detail {
                                                     std::move(alt), sig))
                                                 return;
                                         }
+                                    }
                                 }
+                            }
+                        }
+                    }
 
                     // Moves that work on the same strand:
                     for (size_t cr = 0; cr < t.size(); ++cr)
