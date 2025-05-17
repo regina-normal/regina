@@ -846,6 +846,39 @@ only, and to call crossings() again each time you need it.
 Returns:
     access to the list of all crossings.)doc";
 
+// Docstring regina::python::doc::Link_::diagramComponentIndices
+static const char *diagramComponentIndices =
+R"doc(Returns an array that maps crossing numbers to connected diagram
+components.
+
+This routine performs a similar function to diagramComponents(), but
+returns its results as just a list of numbers (not a list of links),
+and thereby involves less overhead. This could (for example) be useful
+as a part of some larger algorithm that needs access to a lookup table
+for testing pairwise connectivity between crossings.
+
+As with diagramComponents(), this routine is interested in connected
+components of the link diagram (i.e., components that are connected in
+the graph theoretical sense if we treat each crossing as a 4-way
+intersection). See diagramComponents() for further discussion on this.
+
+This routine returns a mapping from crossing indices to diagram
+components, where both are represented by integer indices. For
+crossings we use the usual crossing index; for diagram components, we
+number the diagram components from 0 upwards and ignore trivial (zero-
+crossing) components entirely.
+
+.. warning::
+    It is possible that the data type used for the array will change
+    in a subsequent version of Regina. C++ users should use ``auto``
+    to collect the return value from this routine. (For Python users,
+    the array will be converted into a Python list.)
+
+Returns:
+    A pair containing (i) the array as described above; and (ii) the
+    total number of non-trivial diagram components (so again, ignoring
+    zero-crossing components).)doc";
+
 // Docstring regina::python::doc::Link_::diagramComponents
 static const char *diagramComponents =
 R"doc(Returns the connected components of this link diagram as individual
@@ -877,8 +910,15 @@ number of crossings across all of the links that are returned will
 equal size(), and the total number of _link_ components across all of
 the links that are returned will equal countComponents().
 
-If you simply wish to know whether this diagram is connected, you
-should call isConnected() instead which is much more lightweight.
+In the list that is returned, any zero-crossing diagram components
+will all appear at the end, after all of the components that do
+involve crossings.
+
+If you just need to know which crossings belong to which diagram
+components (without building new Link objects), you might want to use
+diagramComponentIndices(), which is less heavyweight than this
+routine. If you simply wish to know whether this diagram is connected,
+you should call isConnected() instead, which is even more lightweight.
 
 Returns:
     a list containing the individual connected components of this link

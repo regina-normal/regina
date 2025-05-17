@@ -279,7 +279,8 @@ Version 7.4  [ (to be announced) ]
             - New routine makeAlternating().
             - New routine seifertCircles().
             - New routine whiteheadDouble().
-            - New routines isConnected() and diagramComponents().
+            - New routines isConnected(), diagramComponents(), and
+              diagramComponentIndices().
             - New routines insertLink() and moveContentsTo().
             - New routines countTrivialComponents() and pdAmbiguous(), to help
               understand the limitations of planar diagram codes.

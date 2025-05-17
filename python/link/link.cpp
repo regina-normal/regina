@@ -256,6 +256,13 @@ void addLink(pybind11::module_& m) {
         .def("connected", &Link::connected, rdoc::connected)
         .def("diagramComponents", &Link::diagramComponents,
             rdoc::diagramComponents)
+        .def("diagramComponentIndices", [](const Link& link) {
+            auto [ map, count ] = link.diagramComponentIndices();
+            pybind11::list ans;
+            for (auto i : map)
+                ans.append(i);
+            return pybind11::make_tuple(std::move(ans), count);
+        }, rdoc::diagramComponentIndices)
         .def("alexander", &Link::alexander,
             pybind11::return_value_policy::reference_internal,
             rdoc::alexander)
