@@ -502,19 +502,33 @@ TEST_F(LinkTest, virtualGenus) {
 }
 
 static void verifyDiagramComponents(const Link& link, const char* name,
-        std::initializer_list<std::string> expectBrief) {
+        std::initializer_list<std::string> expectBrief,
+        std::initializer_list<size_t> expectIndices) {
     SCOPED_TRACE_CSTRING(name);
 
     size_t totalGenus = link.virtualGenus();
 
     auto foundComponents = link.diagramComponents();
+    auto foundIndices = link.diagramComponentIndices();
+
     EXPECT_EQ(foundComponents.size(), expectBrief.size());
+    EXPECT_EQ(foundIndices.second,
+        expectBrief.size() - link.countTrivialComponents());
 
     auto found = foundComponents.begin();
     auto expect = expectBrief.begin();
     for ( ; found != foundComponents.end() && expect != expectBrief.end();
             ++found, ++expect)
         EXPECT_EQ(found->brief(), *expect);
+
+    EXPECT_EQ(foundIndices.first.size(), link.size());
+    auto expectIndex = expectIndices.begin();
+    for (size_t crossing = 0;
+            crossing < link.size() && expectIndex != expectIndices.end();
+            ++crossing, ++expectIndex) {
+        SCOPED_TRACE_NUMERIC(crossing);
+        EXPECT_EQ(foundIndices.first[crossing], *expectIndex);
+    }
 
     size_t foundGenus = 0;
     for (const Link& c : foundComponents)
@@ -524,32 +538,41 @@ static void verifyDiagramComponents(const Link& link, const char* name,
 
 TEST_F(LinkTest, diagramComponents) {
     // Just test a few things manually.
-    verifyDiagramComponents(empty.link, empty.name, {});
-    verifyDiagramComponents(unknot0.link, unknot0.name, { "( )" });
+    verifyDiagramComponents(empty.link, empty.name, {}, {});
+    verifyDiagramComponents(unknot0.link, unknot0.name, { "( )" }, {});
     verifyDiagramComponents(unlink2_0.link, unlink2_0.name,
         { "( )",
-          "( )" });
+          "( )" },
+        { });
     verifyDiagramComponents(figureEight.link, figureEight.name,
-        { "++-- ( _0 ^1 _2 ^3 _1 ^0 _3 ^2 )" });
+        { "++-- ( _0 ^1 _2 ^3 _1 ^0 _3 ^2 )" },
+        { 0, 0, 0, 0 });
     verifyDiagramComponents(whitehead.link, whitehead.name,
-        { "--++- ( ^0 _1 ^4 _3 ^2 _4 ) ( _0 ^1 _2 ^3 )" });
+        { "--++- ( ^0 _1 ^4 _3 ^2 _4 ) ( _0 ^1 _2 ^3 )" },
+        { 0, 0, 0, 0, 0 });
     verifyDiagramComponents(trefoil_unknot0.link, trefoil_unknot0.name,
         { "+++ ( ^0 _1 ^2 _0 ^1 _2 )",
-          "( )" });
+          "( )" },
+        { 0, 0, 0 });
     verifyDiagramComponents(trefoil_unknot1.link, trefoil_unknot1.name,
         { "+++ ( ^0 _1 ^2 _0 ^1 _2 )",
-          "- ( _0 ^0 )" });
+          "- ( _0 ^0 )" },
+        { 0, 0, 1, 0 });
     verifyDiagramComponents(trefoil_unknot_overlap.link,
         trefoil_unknot_overlap.name,
-        { "-++++ ( ^1 _2 _3 _0 ^4 _1 ^2 _4 ) ( ^3 ^0 )" });
+        { "-++++ ( ^1 _2 _3 _0 ^4 _1 ^2 _4 ) ( ^3 ^0 )" },
+        { 0, 0, 0, 0, 0 });
     verifyDiagramComponents(virtualLink2.link, virtualLink2.name,
-        { "+ ( ^0 ) ( _0 )" });
+        { "+ ( ^0 ) ( _0 )" },
+        { 0, 0 });
     verifyDiagramComponents(virtualLink3.link, virtualLink3.name,
-        { "++ ( ^0 ) ( _1 ) ( _0 ^1 )" });
+        { "++ ( ^0 ) ( _1 ) ( _0 ^1 )" },
+        { 0, 0 });
     verifyDiagramComponents(virtualDisconnected.link, virtualLink3.name,
         { "++ ( ^0 ) ( _1 ) ( _0 ^1 )",
           "++ ( ^0 _1 _0 ^1 )",
-          "++ ( ^0 _1 ) ( _0 ^1 )" });
+          "++ ( ^0 _1 ) ( _0 ^1 )" },
+        { 0, 0, 1, 1, 2, 2 });
     {
         Link link = ExampleLink::whitehead();
         link.insertLink(Link(2));
@@ -560,7 +583,8 @@ TEST_F(LinkTest, diagramComponents) {
               "++-- ( _0 ^1 _2 ^3 _1 ^0 _3 ^2 )",
               "( )",
               "( )",
-              "( )" });
+              "( )" },
+            { 0, 0, 0, 0, 0, 1, 1, 1, 1 });
     }
 }
 

@@ -146,6 +146,19 @@ class FixedArray {
         }
 
         /**
+         * Creates a new array containing a hard-coded sequence of values.
+         *
+         * \pre The type \a T has a copy assignment operator.
+         *
+         * \param values the sequence of values to copy into this new list.
+         */
+        FixedArray(std::initializer_list<T> values) :
+                size_(values.end() - values.begin()) {
+            data_ = new T[size_];
+            std::copy(values.begin(), values.end(), data_);
+        }
+
+        /**
          * Destroys this array.
          */
         ~FixedArray() {

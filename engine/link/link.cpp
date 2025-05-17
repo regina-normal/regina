@@ -276,7 +276,7 @@ std::pair<FixedArray<size_t>, size_t> Link::diagramComponentIndices() const {
     if (crossings_.empty())
         return { 0, 0 }; // empty array, no non-trivial diagram components
     if (components_.size() == 1)
-        return { { crossings_.size(), 0 }, 1 }; // [ 0, 0, ..., 0 ]
+        return { FixedArray<size_t>(crossings_.size(), 0), 1 }; // [ 0, ..., 0 ]
 
     // We have multiple link components (some of which might be trivial),
     // and at least one crossing.  Run a depth-first search to work out
