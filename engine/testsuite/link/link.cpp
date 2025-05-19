@@ -43,6 +43,7 @@ using regina::Crossing;
 using regina::ExampleLink;
 using regina::FailedPrecondition;
 using regina::GroupPresentation;
+using regina::InvalidArgument;
 using regina::Link;
 using regina::Triangulation;
 using regina::StrandRef;
@@ -159,6 +160,12 @@ static regina::Laurent<regina::Integer> jonesModReflection(const Link& link) {
         return jones1;
     else
         return jones2;
+}
+
+static Link addTrivialComponents(const Link& link, size_t nTrivial) {
+    Link ans(link);
+    ans.insertLink(Link(nTrivial));
+    return ans;
 }
 
 struct TestCase {
@@ -2872,8 +2879,80 @@ TEST_F(LinkTest, makeVirtual) {
     testManualCases(verifyMakeVirtual);
 }
 
-// TODO: Some tests for graft() would be nice.
-// Maybe verify component counts, crossing counts, and virtual genus.
+static void verifyGraft(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    size_t nTrivial = link.countTrivialComponents();
+
+    if (nTrivial < 2) {
+        Link mod(link, false);
+        EXPECT_THROW({ mod.graft({}, {}); }, InvalidArgument);
+        EXPECT_EQ(mod, link);
+    } else {
+        // In theory the trivial components could be reordered in the
+        // comparison below, but this doesn't happen in our test suite.
+        Link mod(link, false);
+        mod.graft({}, {});
+        EXPECT_EQ(addTrivialComponents(mod, 1), link);
+    }
+
+    for (size_t i = 0; i < 2 * link.size(); ++i) {
+        if (nTrivial == 0) {
+            Link mod(link, false);
+            EXPECT_THROW({ mod.graft(mod.strand(i), {}); }, InvalidArgument);
+            EXPECT_EQ(mod, link);
+            EXPECT_THROW({ mod.graft({}, mod.strand(i)); }, InvalidArgument);
+            EXPECT_EQ(mod, link);
+        } else {
+            // In theory the trivial components could be reordered in the
+            // comparisons below, but this doesn't happen in our test suite.
+            Link mod1(link, false);
+            mod1.graft(mod1.strand(i), {});
+            EXPECT_EQ(addTrivialComponents(mod1, 1), link);
+
+            Link mod2(link, false);
+            mod2.graft({}, mod1.strand(i));
+            EXPECT_EQ(mod2, mod1);
+        }
+
+        {
+            Link mod(link, false);
+            mod.graft(mod.strand(i), mod.strand(i));
+            EXPECT_EQ(addTrivialComponents(link, 1), mod);
+        }
+
+        StrandRef comp1 = link.component(link.strand(i));
+
+        for (size_t j = 0; j < 2 * link.size(); ++j) {
+            if (j == i)
+                continue;
+
+            StrandRef comp2 = link.component(link.strand(j));
+
+            Link mod(link, false);
+            mod.graft(mod.strand(i), mod.strand(j));
+            EXPECT_TRUE(isConsistent(mod));
+            EXPECT_EQ(mod.size(), link.size());
+            if (comp1 == comp2)
+                EXPECT_EQ(mod.countComponents(), link.countComponents() + 1);
+            else
+                EXPECT_EQ(mod.countComponents() + 1, link.countComponents());
+
+            // When undoing the graft, we should get back the original link
+            // diagram but possibly with different starting points for the
+            // link components.
+            Link undo(mod, false);
+            undo.graft(undo.strand(i), undo.strand(j));
+            EXPECT_TRUE(isConsistent(undo));
+            EXPECT_EQ(undo.sig(false, false, false),
+                link.sig(false, false, false));;
+        }
+    }
+}
+
+TEST_F(LinkTest, graft) {
+    testManualCases(verifyGraft, false /* gordian */);
+}
 
 static void verifySig(const Link& link, bool reflect, bool reverse,
         bool rotate) {
@@ -3210,12 +3289,12 @@ static void verifyGaussAndDT(const TestCase& test,
         EXPECT_THROW({ test.link.dtData(); }, regina::NotImplemented);
 
         std::string code = test.link.gauss();
-        EXPECT_THROW({ Link::fromGauss(code); }, regina::InvalidArgument);
-        EXPECT_THROW({ Link link(code); }, regina::InvalidArgument);
+        EXPECT_THROW({ Link::fromGauss(code); }, InvalidArgument);
+        EXPECT_THROW({ Link link(code); }, InvalidArgument);
 
         auto data = test.link.gaussData();
         EXPECT_THROW({ Link::fromGauss(data.begin(), data.end()); },
-            regina::InvalidArgument);
+            InvalidArgument);
 
         return;
     }
@@ -3309,7 +3388,7 @@ static void verifyGaussPlanarity(const Link& link, const char* name) {
             Link recon = Link::fromGauss(code);
             EXPECT_EQ(recon.gauss(), code);
             EXPECT_TRUE(recon.isClassical());
-        } catch (const regina::InvalidArgument&) {
+        } catch (const InvalidArgument&) {
             EXPECT_FALSE(link.isClassical());
         }
     }
@@ -3358,7 +3437,7 @@ static void verifyDTPlanarityPermuting(std::string code) {
                 EXPECT_EQ(recon.dt(true), code);
             });
         } else {
-            EXPECT_THROW({ Link::fromDT(code); }, regina::InvalidArgument);
+            EXPECT_THROW({ Link::fromDT(code); }, InvalidArgument);
         }
     } while (std::next_permutation(code.begin(), code.end()));
 }
@@ -3602,15 +3681,15 @@ TEST_F(LinkTest, pdCode) {
 TEST_F(LinkTest, invalidCode) {
     static const char* code = "INVALID";
 
-    EXPECT_THROW({ Link::fromSig(code); }, regina::InvalidArgument);
-    EXPECT_THROW({ Link::fromGauss(code); }, regina::InvalidArgument);
-    EXPECT_THROW({ Link::fromDT(code); }, regina::InvalidArgument);
-    EXPECT_THROW({ Link::fromOrientedGauss(code); }, regina::InvalidArgument);
-    EXPECT_THROW({ Link::fromJenkins(code); }, regina::InvalidArgument);
-    EXPECT_THROW({ Link::fromPD(code); }, regina::InvalidArgument);
+    EXPECT_THROW({ Link::fromSig(code); }, InvalidArgument);
+    EXPECT_THROW({ Link::fromGauss(code); }, InvalidArgument);
+    EXPECT_THROW({ Link::fromDT(code); }, InvalidArgument);
+    EXPECT_THROW({ Link::fromOrientedGauss(code); }, InvalidArgument);
+    EXPECT_THROW({ Link::fromJenkins(code); }, InvalidArgument);
+    EXPECT_THROW({ Link::fromPD(code); }, InvalidArgument);
 
     // Finally, the "magic" constructor:
-    EXPECT_THROW({ Link l(code); }, regina::InvalidArgument);
+    EXPECT_THROW({ Link l(code); }, InvalidArgument);
 }
 
 static void verifyRewriteClassical(const TestCase& test, int height,
