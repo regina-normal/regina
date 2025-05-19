@@ -53,3 +53,5 @@ retriangulate -k kabcdefghijbefgdcjahixfvbdwGd
 # --- showing all signatures visited:
 retriangulate -l -k -h 2 a
 retriangulate -l -k -V -h 2 a
+retriangulate -l -k -h 2 aa
+retriangulate -l -k -V -h 2 aa

@@ -245,3 +245,32 @@ Found 7 link(s).
 --------------------
 Exit code: 0
 ============================================================
+TEST: retriangulate -l -k -h 2 aa
+--------------------
+aa
+baabda
+caabbfda
+caabbjpa
+caabbjda
+caabbfpa
+baabdbaaba
+baabdbaabd
+Found 8 link(s).
+--------------------
+Exit code: 0
+============================================================
+TEST: retriangulate -l -k -V -h 2 aa
+--------------------
+aa
+baabda
+cababdfa
+caabbfda
+caabbjpa
+caabbjda
+caabbfpa
+baabdbaaba
+baabdbaabd
+Found 9 link(s).
+--------------------
+Exit code: 0
+============================================================
