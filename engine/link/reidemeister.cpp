@@ -627,7 +627,7 @@ bool Link::internalR2Virtual(StrandRef arc, int firstSide, int firstStrand,
     if (! arc) {
         // We are operating on a zero-crossing unknot component.
         // Find it.
-        auto it = componentFor(arc);
+        auto it = componentIterator(arc);
         if (it == components_.end())
             return false;
 

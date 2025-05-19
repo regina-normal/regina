@@ -1058,6 +1058,39 @@ class Link :
         size_t countTrivialComponents() const;
 
         /**
+         * Returns the starting strand for the link component containing the
+         * given strand.
+         *
+         * By the _starting strand_ for a link component, we mean the strand
+         * that is returned by `component(i)` for the appropriate index \a i,
+         * or equivalently the strand representing that component in the list
+         * `components()`.  In particular:
+         *
+         * - If \a s and \a t are two strands of the same link component,
+         *   then `component(s)` and `component(t)` will always be equal.
+         *
+         * - If \a s and \a t come from different link components, and at
+         *   least one of them is not a null strand reference, then
+         *   `component(s)` and `component(t)` will be different.
+         *
+         * - If \a s is a null strand reference and this link diagram contains
+         *   one or more zero-crossing unknot components, then `component(s)`
+         *   will return a null strand reference to indicate this.
+         *
+         * If the strand \a s does not belong to this link diagram at all
+         * (including the case where \a s is a null reference but this link
+         * diagram has no zero-crossing unknot components), then `component(s)`
+         * will thrown an exception.
+         *
+         * \exception NoSolution The given strand \a s does not belong to this
+         * link diagram.
+         *
+         * \param s the strand to query.
+         * \return the starting strand for the link component containing \a s.
+         */
+        StrandRef component(const StrandRef& s) const;
+
+        /**
          * Returns the strand in the link with the given integer ID.
          *
          * Each strand ID is of the form 2<i>c</i>+<i>s</i>, where \e c is the
@@ -6264,7 +6297,7 @@ class Link :
          * The given strand may be a null strand reference (in which case this
          * routine will look for a zero-crossing component).
          */
-        std::vector<StrandRef>::iterator componentFor(const StrandRef& s);
+        std::vector<StrandRef>::iterator componentIterator(const StrandRef& s);
 
         /**
          * Used with fromEnhancedGauss() to indicate which kind of Gauss code

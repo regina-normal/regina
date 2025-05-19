@@ -115,11 +115,16 @@ void addLink(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal, rdoc::crossing)
         .def("crossings", &Link::crossings,
             pybind11::keep_alive<0, 1>(), rdoc::crossings)
-        .def("component", &Link::component, rdoc::component)
+        .def("component",
+            overload_cast<size_t>(&Link::component, pybind11::const_),
+            rdoc::component)
         .def("components", &Link::components,
             pybind11::keep_alive<0, 1>(), rdoc::components)
         .def("countTrivialComponents", &Link::countTrivialComponents,
             rdoc::countTrivialComponents)
+        .def("component",
+            overload_cast<const StrandRef&>(&Link::component, pybind11::const_),
+            rdoc::component_2)
         .def("strand", &Link::strand, rdoc::strand)
         .def("componentsByStrand", [](const Link& link) {
             pybind11::list ans;

@@ -658,6 +658,41 @@ Returns:
     index, or a null reference if the requested component has no
     crossings.)doc";
 
+// Docstring regina::python::doc::Link_::component_2
+static const char *component_2 =
+R"doc(Returns the starting strand for the link component containing the
+given strand.
+
+By the _starting strand_ for a link component, we mean the strand that
+is returned by ``component(i)`` for the appropriate index *i*, or
+equivalently the strand representing that component in the list
+``components()``. In particular:
+
+* If *s* and *t* are two strands of the same link component, then
+  ``component(s)`` and ``component(t)`` will always be equal.
+
+* If *s* and *t* come from different link components, and at least one
+  of them is not a null strand reference, then ``component(s)`` and
+  ``component(t)`` will be different.
+
+* If *s* is a null strand reference and this link diagram contains one
+  or more zero-crossing unknot components, then ``component(s)`` will
+  return a null strand reference to indicate this.
+
+If the strand *s* does not belong to this link diagram at all
+(including the case where *s* is a null reference but this link
+diagram has no zero-crossing unknot components), then ``component(s)``
+will thrown an exception.
+
+Exception ``NoSolution``:
+    The given strand *s* does not belong to this link diagram.
+
+Parameter ``s``:
+    the strand to query.
+
+Returns:
+    the starting strand for the link component containing *s*.)doc";
+
 // Docstring regina::python::doc::Link_::components
 static const char *components =
 R"doc(Returns an object that allows iteration through and random access to

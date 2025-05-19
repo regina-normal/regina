@@ -526,7 +526,7 @@ void Link::graft(StrandRef first, StrandRef second) {
 
     if (! first) {
         // Find the first zero-crossing component.
-        auto trivial = componentFor(first);
+        auto trivial = componentIterator(first);
         if (trivial == components_.end())
             throw InvalidArgument("graft(): a null reference was given "
                 "but this link has no zero-crossing components");
@@ -556,8 +556,8 @@ void Link::graft(StrandRef first, StrandRef second) {
 
     // We need to know which link component they each belong to before the
     // graft takes place.
-    auto firstComp = componentFor(first);
-    auto secondComp = componentFor(second);
+    auto firstComp = componentIterator(first);
+    auto secondComp = componentIterator(second);
 
     // Perform the graft.
     StrandRef tmp = second.next();
@@ -567,7 +567,7 @@ void Link::graft(StrandRef first, StrandRef second) {
     // Update the list of components.
     if (firstComp == secondComp) {
         // We have just split one component into two.
-        if (componentFor(first) == components_.end())
+        if (componentIterator(first) == components_.end())
             components_.push_back(first);
         else
             components_.push_back(second);

@@ -226,6 +226,47 @@ Link::Link(const std::string& description) {
         "as representing a link");
 }
 
+StrandRef Link::component(const StrandRef& s) const {
+    // Follow the implementation of componentIterator().
+
+    if (! s) {
+        if (std::find(components_.begin(), components_.end(), StrandRef())
+                != components_.end())
+            return {}; // the link contains a zero-crossing component
+        else
+            throw NoSolution(); // the link has no zero-crossing components
+    }
+
+    auto tmp = s;
+    do {
+        auto it = std::find(components_.begin(), components_.end(), tmp);
+        if (it != components_.end())
+            return *it;
+        ++tmp;
+    } while (tmp != s);
+
+    throw NoSolution();
+}
+
+std::vector<StrandRef>::iterator Link::componentIterator(const StrandRef& s) {
+    // Note: this private routine needs to be non-const, since we use the
+    // resulting iterator to modify the component list in implementations
+    // of local operations (e.g., Reidemeister moves).
+
+    if (! s)
+        return std::find(components_.begin(), components_.end(), StrandRef());
+
+    auto tmp = s;
+    do {
+        auto it = std::find(components_.begin(), components_.end(), tmp);
+        if (it != components_.end())
+            return it;
+        ++tmp;
+    } while (tmp != s);
+
+    return components_.end();
+}
+
 bool Link::isConnected() const {
     if (components_.size() <= 1)
         return true;
@@ -1615,21 +1656,6 @@ void Link::insertTorusLink(int p, int q, bool positive) {
     }
 
     delete[] c;
-}
-
-std::vector<StrandRef>::iterator Link::componentFor(const StrandRef& s) {
-    if (! s)
-        return std::find(components_.begin(), components_.end(), StrandRef());
-
-    auto tmp = s;
-    do {
-        auto it = std::find(components_.begin(), components_.end(), tmp);
-        if (it != components_.end())
-            return it;
-        ++tmp;
-    } while (tmp != s);
-
-    return components_.end();
 }
 
 } // namespace regina

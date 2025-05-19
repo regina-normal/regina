@@ -288,7 +288,7 @@ Version 7.4  [ (to be announced) ]
             - New routines overForComponent() and underForComponent().
             - New variant of reverse() to reverse just one component of a
               multiple-component link.
-            - New routine componentsByStrand().
+            - New routines component(const StrandRef&) and componentsByStrand().
             - New routine linking2(), which returns twice the linking number;
               linking() will now throw an exception when called on a virtual
               link whose linking number is not an integer.
