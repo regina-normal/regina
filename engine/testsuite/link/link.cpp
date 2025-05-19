@@ -631,6 +631,73 @@ TEST_F(LinkTest, isAlternating) {
     EXPECT_FALSE(virtualDisconnected.link.isAlternating());
 }
 
+static void verifyMakeAlternating(const TestCase& test, bool isPossible) {
+    SCOPED_TRACE_CSTRING(test.name);
+
+    Link alt(test.link, false);
+    bool success = alt.makeAlternating();
+
+    if (test.link.isAlternating()) {
+        EXPECT_TRUE(success);
+        EXPECT_EQ(alt, test.link);
+    } else if (isPossible) {
+        EXPECT_TRUE(success);
+        EXPECT_NE(alt, test.link);
+        EXPECT_TRUE(alt.isAlternating());
+        EXPECT_EQ(alt.size(), test.link.size());
+
+        // The model graph may change labelling, because the ordering of arcs
+        // is based on which strands are over/under at each crossing.
+        EXPECT_EQ(alt.graph().canonical(false /* no reflections */),
+            test.link.graph().canonical(false /* no reflections */));
+    } else {
+        EXPECT_FALSE(success);
+        EXPECT_EQ(alt, test.link);
+    }
+}
+
+TEST_F(LinkTest, makeAlternating) {
+    verifyMakeAlternating(empty, true);
+
+    verifyMakeAlternating(unknot0, true);
+    verifyMakeAlternating(unknot1, true);
+    verifyMakeAlternating(unknot3, true);
+    verifyMakeAlternating(unknotMonster, true);
+    verifyMakeAlternating(unknotGordian, true);
+
+    verifyMakeAlternating(trefoilLeft, true);
+    verifyMakeAlternating(trefoilRight, true);
+    verifyMakeAlternating(trefoil_r1x2, true);
+    verifyMakeAlternating(trefoil_r1x6, true);
+    verifyMakeAlternating(figureEight, true);
+    verifyMakeAlternating(figureEight_r1x2, true);
+    verifyMakeAlternating(conway, true);
+    verifyMakeAlternating(kinoshitaTerasaka, true);
+    verifyMakeAlternating(gst, true);
+
+    verifyMakeAlternating(rht_rht, true);
+    verifyMakeAlternating(rht_lht, true);
+
+    verifyMakeAlternating(unlink2_0, true);
+    verifyMakeAlternating(unlink3_0, true);
+    verifyMakeAlternating(unlink2_r2, true);
+    verifyMakeAlternating(unlink2_r1r1, true);
+    verifyMakeAlternating(hopf, true);
+    verifyMakeAlternating(whitehead, true);
+    verifyMakeAlternating(borromean, true);
+    verifyMakeAlternating(trefoil_unknot0, true);
+    verifyMakeAlternating(trefoil_unknot1, true);
+    verifyMakeAlternating(trefoil_unknot_overlap, true);
+    verifyMakeAlternating(adams6_28, true);
+
+    verifyMakeAlternating(virtualTrefoil, false);
+    verifyMakeAlternating(kishino, false);
+    verifyMakeAlternating(gpv, false);
+    verifyMakeAlternating(virtualLink2, false);
+    verifyMakeAlternating(virtualLink3, false);
+    verifyMakeAlternating(virtualDisconnected, false);
+}
+
 static void verifyLinking(const TestCase& test, long expect) {
     SCOPED_TRACE_CSTRING(test.name);
     EXPECT_EQ(test.link.linking(), expect);
