@@ -3675,6 +3675,64 @@ TEST_F(LinkTest, rewrite) {
     }
 }
 
+static void verifySimplifyExhaustive(const char* sig, int heightNeeded) {
+    SCOPED_TRACE_CSTRING(sig);
+
+    for (int threads = 1; threads <= 2; ++threads) {
+        SCOPED_TRACE_NUMERIC(threads);
+
+        Link link = Link::fromSig(sig);
+        size_t initSize = link.size();
+        auto initJones = jonesModReflection(link);
+
+        for (int height = 0; height < heightNeeded; ++height) {
+            SCOPED_TRACE_NUMERIC(height);
+            EXPECT_FALSE(link.simplifyExhaustive(height, threads));
+            EXPECT_EQ(link.size(), initSize);
+            EXPECT_EQ(jonesModReflection(link), initJones);
+        }
+
+        EXPECT_TRUE(link.simplifyExhaustive(heightNeeded, threads));
+        EXPECT_LT(link.size(), initSize);
+        EXPECT_EQ(jonesModReflection(link), initJones);
+    }
+}
+
+TEST_F(LinkTest, simplifyExhaustive) {
+    // Note: For all of these cases, it does not seem to matter whether or not
+    // we allow the virtual R2 move.
+
+    // Classical unknot diagrams:
+    verifySimplifyExhaustive("kabcdefghijbefgdcjahixfvbdwGd", 0); // Monster
+
+    // Virtual trefoil:
+    verifySimplifyExhaustive("gabacdefcdfbelLDp", 1);
+    verifySimplifyExhaustive("gabacdefbfcdetPhc", 1);
+    verifySimplifyExhaustive("habacdefgedbcfgJQb1pd", 1);
+    verifySimplifyExhaustive("habcdefadgbcgfeBubh9a", 1);
+    verifySimplifyExhaustive("habacdefbgfgcdetXchla", 1);
+    verifySimplifyExhaustive("habacdefgbgdefcBPapec", 1);
+    verifySimplifyExhaustive("habacdefgbcfedgtRafcc", 1);
+
+    // GPV virtual knot:
+    verifySimplifyExhaustive("habacdbefgedfgcBkbVVd", 1);
+    verifySimplifyExhaustive("iabacdedfgchfgheb7sbx3l", 1);
+    verifySimplifyExhaustive("iabacdbefghdhefgcBncVhp", 1);
+    verifySimplifyExhaustive("iabacdbefghdfghecBKgVUl", 1);
+    verifySimplifyExhaustive("iabacdefghgdefchbBPe37j", 1);
+    verifySimplifyExhaustive("iabacbdefghchefgdRLcxVh", 1);
+    verifySimplifyExhaustive("iabacdefghchefgdbBXc3Jp", 1);
+    verifySimplifyExhaustive("iabacdbcefghdhefgBAeVpo", 1);
+    verifySimplifyExhaustive("iabacbdefghchefgdlnk3hp", 1);
+
+    // Virtual diagrams of the Hopf link:
+    verifySimplifyExhaustive("eabcdadebclcxd", 2);
+    verifySimplifyExhaustive("fabacdebefcdtgFn", 2);
+    verifySimplifyExhaustive("fabacdebefcdlkFn", 2);
+    verifySimplifyExhaustive("fabcdeabefcdxiVn", 2);
+    verifySimplifyExhaustive("fabcabdecfdeNi7n", 2);
+}
+
 static void verifyClassicalGroup(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
