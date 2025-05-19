@@ -455,7 +455,7 @@ R"help(Usage: tricensus <output-file>
   -P, --usepairs            Only use facet pairings read from standard input.
       --threads=<threads>   Number of parallel threads (default = 1).
   -v, --version             Show which version of Regina is being used.
-      --help                Show this help message
+      --help                Show this help message.
 )help";
 }
 

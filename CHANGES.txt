@@ -889,6 +889,8 @@ Version 7.4  [ (to be announced) ]
               and the option to set --prefix to a custom directory).
         regina-helper:
             - New command-line tool for performing miscellaneous tasks.
+        retriangulate:
+            - New command-line options --all, --classical and --virtual.
         tricensus:
             - Renamed option --tetrahedra to --top, with aliases --triangles,
               --tetrahedra and --pentachora.

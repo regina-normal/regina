@@ -864,7 +864,7 @@
 
   <refnamediv>
    <refname>retriangulate</refname>
-   <refpurpose>Exhaustively search through triangulations or knot diagrams using local moves</refpurpose>
+   <refpurpose>Exhaustively search through triangulations or knot/link diagrams using local moves</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -877,7 +877,12 @@
      <arg><option>-4, --dim4</option></arg>
      <arg><option>-k, --knot</option></arg>
     </group>
+    <arg><option>-l, --all</option></arg>
     <arg><option>-a, --anysig</option></arg>
+    <group>
+     <arg><option>-c, --classical</option></arg>
+     <arg><option>-V, --virtual</option></arg>
+    </group>
     <arg><option>--</option></arg>
     <arg choice="req"><replaceable>signature</replaceable></arg>
    </cmdsynopsis>
@@ -890,19 +895,19 @@
   <refsect1>
    <title>Description</title>
    <para>
-    Given a 3-manifold triangulation, 4-manifold triangulation or knot diagram,
+    Given a 3-manifold triangulation, 4-manifold triangulation or link diagram,
     this utility uses local moves to exhaustively search for other
-    triangulations/diagrams of the same manifold/knot that are the
+    triangulations/diagrams of the same manifold/link that are the
     same size or smaller.
     Here &ldquo;local moves&rdquo; means Pachner moves for
-    triangulations, or Reidemeister moves for knots.
+    triangulations, or Reidemeister moves for links.
    </para>
    <para>
-    Specifically, suppose the input triangulation or knot diagram contains
+    Specifically, suppose the input triangulation or link diagram contains
     <replaceable>n</replaceable> tetrahedra/pentachora/crossings
-    (for a 3-manifold, 4-manifold or knot respectively).
+    (for a 3-manifold, 4-manifold or link respectively).
     Then this utility will
-    exhaustively modify the triangulation or knot diagram using local moves,
+    exhaustively modify the triangulation or link diagram using local moves,
     without ever exceeding
     <replaceable>n</replaceable>&nbsp;+&nbsp;<replaceable>height</replaceable>
     tetrahedra/pentachora/crossings in total.
@@ -911,10 +916,38 @@
     combinatorial isomorphism).
    </para>
    <para>
-    For 3-manifold triangulations, this utility will only attempt 2-3
-    and 2-3 Pachner moves, never 1-4 or 4-1 moves.
-    For 4-manifold triangulations or knot diagrams, it will use all types of
-    Pachner moves or Reidemeister moves respectively.
+    Regarding what constitutes a &ldquo;local move&rdquo;:
+   </para>
+   <para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       For 3-manifold triangulations, this utility will only attempt 2-3
+       and 2-3 Pachner moves, never 1-4 or 4-1 moves.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       For 4-manifold triangulations, this utility will use all types of
+       Pachner moves.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       For link diagrams, this utility will use all of the classical
+       (planar) Reidemeister moves.
+       There is also the option to use the <firstterm>virtual</firstterm>
+       (non-planar) type&nbsp;II move, which adds two crossings by pushing
+       <emphasis>any</emphasis> two strands over one another from any direction,
+       and which could thereby add a handle to the surface in which the diagram
+       is embedded.
+       By default, the virtual type&nbsp;II move is considered only if the input
+       diagram has positive virtual genus (i.e., is not a classical diagram);
+       this behaviour can be modified using the options
+       <option>--classical</option> and <option>--virtual</option>.
+      </para>
+     </listitem>
+    </itemizedlist>
    </para>
    <para>
     The input is assumed to represent a 3-manifold
@@ -922,7 +955,7 @@
     <option>--knot</option> is passed.
    </para>
    <para>
-    The program will output each triangulation or knot diagram that it finds
+    The program will output each triangulation or link diagram that it finds
     of the same size <replaceable>n</replaceable> (including the original input
     triangulation/diagram).  If it ever finds a
     <emphasis>smaller</emphasis> triangulation or diagram (thereby proving the
@@ -932,10 +965,10 @@
     until no more can be found.  Although the program also finds larger
     triangulations/diagrams as part of its exhaustive search using local moves,
     these larger triangulations/diagrams (of which there are typically many)
-    will not be output at all.
+    will not be output unless the option <option>--all</option> is passed.
    </para>
    <para>
-    All triangulations or knot diagrams, both input and output, are described
+    All triangulations or link diagrams, both input and output, are described
     using <firstterm>isomorphism signatures</firstterm> and
     <firstterm>knot/link signatures</firstterm> respectively.  These are short
     text strings that identify a triangulation or link diagram uniquely up to
@@ -954,7 +987,7 @@
     in &regina;'s graphical user interface this is available through the
     <guilabel>Codes</guilabel> tab in the knot/link viewer,
     and in &python; you can call <userinput>d.sig()</userinput>
-    for a knot or link diagram <userinput>d</userinput>.
+    for a link diagram <userinput>d</userinput>.
    </para>
    <para>
     For a full and precise specification of isomorphism signatures for
@@ -988,12 +1021,12 @@
      <listitem>
       <para>
        Specifies the number of additional tetrahedra, pentachora or
-       crossings (for a 3-manifold, 4-manifold or knot respectively)
+       crossings (for a 3-manifold, 4-manifold or link respectively)
        that we allow during intermediate stages of retriangulation.
-       That is, if the input triangulation or knot diagram
+       That is, if the input triangulation or link diagram
        has <replaceable>n</replaceable> tetrahedra/pentachora/crossings, then
        this utility will exhaustively search through all triangulations
-       or knot diagrams that it can reach via local moves that do not exceed
+       or link diagrams that it can reach via local moves that do not exceed
        <replaceable>n</replaceable>&nbsp;+&nbsp;<replaceable>height</replaceable>
        tetrahedra/pentachora/crossings in total.
       </para>
@@ -1010,7 +1043,7 @@
       </para>
       <para>
        If not specified, this option defaults to 1 when working with
-       3-manifolds or knot diagrams, and it defaults to 2 when working
+       3-manifolds or link diagrams, and it defaults to 2 when working
        with 4-manifolds.
       </para>
       <warning>
@@ -1034,7 +1067,7 @@
        Specifically, this program will use
        <replaceable>threads</replaceable> simultaneous threads of execution
        as it works its way through the different retriangulations or diagrams
-       of the input manifold or knot.
+       of the input manifold or link.
       </para>
       <para>
        This program is typically able to use parallelism effectively,
@@ -1077,7 +1110,22 @@
      <listitem>
       <para>
        Indicates that the given signature is a knot/link signature.
-       The local moves used will be the Reidemeister moves.
+       The local moves used will be the Reidemeister moves, possibly including
+       the virtual type&nbsp;II move; see <option>--classical</option> and
+       <option>--virtual</option> for details.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-l, --all</option></term>
+     <listitem>
+      <para>
+       Output the signatures of all triangulations or link diagrams that are
+       visited, including those that are larger than the original.
+      </para>
+      <para>
+       By default, larger triangulations or link diagrams (of which there may
+       be very many) are not included in the output.
       </para>
      </listitem>
     </varlistentry>
@@ -1126,6 +1174,38 @@
        classic signatures, though again this is subject to change in
        future version of &regina;.
       </para></note>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-c, --classical</option></term>
+     <listitem>
+      <para>
+       For link diagrams, only use the classical type&nbsp;I, II and III
+       Reidemeister moves.  This is the default behaviour when the input is a
+       classical (planar) link diagram.
+      </para>
+      <para>
+       This option can only be used with <option>--knot</option>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-V, --virtual</option></term>
+     <listitem>
+      <para>
+       For link diagrams, use the classical type&nbsp;I, II and III
+       Reidemeister moves as well as the virtual type&nbsp;II move.
+       The virtual type&nbsp;II move is like the classical type&nbsp;II move
+       to add two crossings, except that we are allowed to push
+       <emphasis>any</emphasis> two strands over one another from any direction;
+       as a consequence, this could add a handle to the surface in which the
+       link diagram is embedded.
+       This option is the default behaviour when the input is a link diagram
+       with positive virtual genus (i.e., a non-classical link diagram).
+      </para>
+      <para>
+       This option can only be used with <option>--knot</option>.
+      </para>
      </listitem>
     </varlistentry>
     <varlistentry>
@@ -1487,9 +1567,6 @@
        See each individual option for details on how it interacts with
        <option>--dim2</option>.
       </para>
-      <para>
-       This option cannot be used with <option>--dim4</option>.
-      </para>
      </listitem>
     </varlistentry>
     <varlistentry>
@@ -1504,9 +1581,6 @@
        simply translates the relevant constraint into four dimensions.
        See each individual option for details on how it interacts with
        <option>--dim4</option>.
-      </para>
-      <para>
-       This option cannot be used with <option>--dim2</option>.
       </para>
      </listitem>
     </varlistentry>

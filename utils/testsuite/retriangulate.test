@@ -38,6 +38,7 @@ retriangulate cPcbbbadu hLLMAkacdefeggjkaknkxn
 retriangulate -h -1 cPcbbbadu
 retriangulate -t 0 cPcbbbadu
 retriangulate -4 -h 3 eLMQcbcddcddaaaa8a8a8a8a8a
+retriangulate -c -V a
 # --- retriangulate when successful:
 retriangulate fLAMcbcbdeehhjqqs
 retriangulate cPcbbbadu
@@ -49,3 +50,6 @@ retriangulate -h 2 -t 2 hLLAAkbdceefggdonxdjxn
 # testutil retriangulate -h 3 -t 2 hLLAAkbdceefggdonxdjxn
 retriangulate -4 eLMQcbcddcddaaaa8a8a8a8a8a
 retriangulate -k kabcdefghijbefgdcjahixfvbdwGd
+# --- showing all signatures visited:
+retriangulate -l -k -h 2 a
+retriangulate -l -k -V -h 2 a
