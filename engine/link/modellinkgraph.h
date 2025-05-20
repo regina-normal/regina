@@ -43,6 +43,7 @@
 #include "core/output.h"
 #include "utilities/exception.h"
 #include "utilities/fixedarray.h"
+#include "utilities/flags.h"
 #include "utilities/listview.h"
 #include "utilities/markedvector.h"
 #include "utilities/tightencoding.h"
@@ -57,6 +58,62 @@ class ModelLinkGraphNode;
 class StrandRef;
 
 template <int> class FacetPairing;
+
+/**
+ * Represents different classes of graph embeddings that one might want to
+ * generate.  Specifically, this enumeration type is used with the routine
+ * ModelLinkGraph::generateAllEmbeddings().
+ *
+ * These values can be combined using the bitwise OR operator, resulting in an
+ * object of type `Flags<GraphConstraint>`.  If a graph generation function
+ * takes an argument of type `Flags<GraphConstraint>`, then it will only
+ * generate those graphs that satisfy _all_ of the constraints that have been
+ * ORed together.  For such an argument, you can pass a single GraphConstraint
+ * constant, or a bitwise combination of such constants `(flag1 | flag2)`, or
+ * empty braces `{}` to indicate no flags at all (which is equivalent to
+ * passing `GraphConstraint::All`).
+ *
+ * \ingroup link
+ */
+enum class GraphConstraint {
+    /**
+     * Indicates that all graph embeddings should be generated.
+     */
+    All = 0x00,
+    /**
+     * Indicates that only graph embeddings without twists should be generated.
+     *
+     * By a _twist_, we mean that the embedding has some node with two
+     * adjacent arcs connected together.  An embedding that fails this
+     * constraint must always model knot or links with twists that can be
+     * undone using type I Reidemeister moves.
+     */
+    NoTwists = 0x01,
+    /**
+     * Indicates that only graph embeddings with a single traversal should be
+     * generated.  That is, for every embedding \a e that is generated,
+     * `e.countTraversals()` should be precisely 1.
+     *
+     * An embedding that satisfies this constraint must always model knots
+     * (classical or virtual).  An embedding that fails this constraint
+     * must either be empty, or must always model multiple-component links.
+     */
+    SingleTraversal = 0x02
+};
+
+/**
+ * Returns the bitwise OR of the two given flags.
+ *
+ * \param lhs the first flag to combine.
+ * \param rhs the second flag to combine.
+ * \return the combination of both flags.
+ *
+ * \ingroup link
+ */
+inline Flags<GraphConstraint> operator | (GraphConstraint lhs,
+        GraphConstraint rhs) {
+    return Flags<GraphConstraint>(lhs) | rhs;
+}
 
 /**
  * A reference to an outgoing edge from a node of a model graph for a
@@ -1292,8 +1349,10 @@ class ModelLinkGraph :
          * each exactly once.
          *
          * The graphs that are generated will be labelled canonically as
-         * described by canonical().  In particular, the argument
-         * \a allowReflection will be passed through to canonical().
+         * described by canonical().  This means that the nodes of the graph
+         * might use a different labelling from the simplices of the given
+         * facet pairing.  The argument \a allowReflection will be passed
+         * through to canonical().
          *
          * This routine is a work in progress.  Currently it is _very_
          * inefficient and memory-hungry; the algorithm will be improved over
@@ -1337,6 +1396,13 @@ class ModelLinkGraph :
          * local embeddings.
          * \param allowReflection \c true if we consider a reflection of the
          * surface in which the graph embeds to produce the same embedding.
+         * \param constraints indicates any constraints that the embeddings
+         * that we generate must satisfy.  This should be a bitwise OR of
+         * constants from the GraphConstraint enumeration, or else
+         * `GraphConstraint::All` (or just empty braces `{}`) if we should
+         * generate every possible embedding.  If several constraints are ORed
+         * together, then only embeddings that satisfy _all_ of the these
+         * constraints will be produced.
          * \param action a function (or other callable object) to call
          * for each graph that is generated.
          * \param args any additional arguments that should be passed to
@@ -1344,7 +1410,8 @@ class ModelLinkGraph :
          */
         template <typename Action, typename... Args>
         static void generateAllEmbeddings(const FacetPairing<3>& pairing,
-            bool allowReflection, Action&& action, Args&&... args);
+            bool allowReflection, Flags<GraphConstraint> constraints,
+            Action&& action, Args&&... args);
 
         /**
          * Outputs this graph in a variant of the ASCII text format used

@@ -227,7 +227,7 @@ void runCensusAllVirtual(LinkTestFunction f, bool small_) {
             n <= (small_ ? LINK_SMALL_CENSUS_SIZE : LINK_CENSUS_SIZE); ++n) {
         FacetPairing<3>::findAllPairings(n, false, -1,
                 [](const FacetPairing<3>& p, LinkTestFunction f) {
-            ModelLinkGraph::generateAllEmbeddings(p, false,
+            ModelLinkGraph::generateAllEmbeddings(p, false, {},
                     [](const ModelLinkGraph& g, LinkTestFunction f) {
                 g.generateAllLinks([](const Link& link, LinkTestFunction f) {
                     f(link, link.brief().c_str());

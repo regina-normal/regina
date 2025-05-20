@@ -448,11 +448,13 @@ void ModelLinkGraph::generateAllLinks(Action&& action, Args&&... args)
 
 template <typename Action, typename... Args>
 void ModelLinkGraph::generateAllEmbeddings(const FacetPairing<3>& pairing,
-        bool allowReflection, Action&& action, Args&&... args) {
+        bool allowReflection, Flags<GraphConstraint> constraints,
+        Action&& action, Args&&... args) {
     const size_t n = pairing.size();
     if (n == 0) {
-        // Generate a single empty graph.
-        action(ModelLinkGraph(), std::forward<Args>(args)...);
+        // Generate a single empty graph, unless we require a single traversal.
+        if (! constraints.has(GraphConstraint::SingleTraversal))
+            action(ModelLinkGraph(), std::forward<Args>(args)...);
         return;
     }
 
@@ -469,17 +471,115 @@ void ModelLinkGraph::generateAllEmbeddings(const FacetPairing<3>& pairing,
     // This is where the algorithm becomes memory-hungry: a better solution
     // would be to take the automorphisms of the facet pairing and use those
     // to avoid duplicates before they are generated.
+
     std::set<std::string> found;
 
-    // The array perm[] maps facet numbers to arc numbers.
-    // It stores second-generation permutation codes for Perm<4>.
-    // WLOG, we insist that perm[0] == 0 always, so the permutation codes
-    // are all in the range [0,6).
-    // If we consider reflections to be the same then for node 0 we only need
-    // codes 0,2,4.
-    FixedArray<int> perm(n, 0);
-    for (perm[0] = 0; perm[0] < 6; perm[0] += (allowReflection ? 2 : 1)) {
-        while (true) {
+    // We will build maps from facet numbers to arc numbers.  Each such map
+    // will be stored using a second-generation permutation code for Perm<4>.
+    // WLOG, we insist that p[0] == 0 for each such permutation, so the
+    // permutation codes will all be in the range [0,6).
+    //
+    // We use two arrays for this.  The array cand[] stores the possible
+    // candidate permutation codes with a -1 terminator for each simplex/node.
+    // The array use[] stores indices into cand[] representing which candidates
+    // have been chosen, with -1 indicating a choice that is yet to be made.
+
+    FixedArray<std::array<int, 7>> cand(n);
+    FixedArray<int> use(n, -1);
+
+    // Build the candidate permutations:
+    for (size_t i = 0; i < n; ++i) {
+        int pos = 0;
+        for (int code = 0; code < 6; ++code) {
+            // If we consider reflections to be the same, then for node 0 we
+            // only need to consider codes 0, 2 and 4 (at most).
+            if (i == 0 && allowReflection && (code & 1))
+                continue;
+
+            if (pairing.dest(i, 0) == FacetSpec<3>(i, 1)) {
+                if (code == 2 || code == 3) { // facets {0,1} map to arcs {0,2}
+                    if (constraints.has(GraphConstraint::SingleTraversal))
+                        continue;
+                } else {
+                    if (constraints.has(GraphConstraint::NoTwists))
+                        continue;
+                }
+            }
+            if (pairing.dest(i, 0) == FacetSpec<3>(i, 2)) {
+                if (code == 0 || code == 5) { // facets {0,2} map to arcs {0,2}
+                    if (constraints.has(GraphConstraint::SingleTraversal))
+                        continue;
+                } else {
+                    if (constraints.has(GraphConstraint::NoTwists))
+                        continue;
+                }
+            }
+            if (pairing.dest(i, 0) == FacetSpec<3>(i, 3)) {
+                if (code == 1 || code == 4) { // facets {0,3} map to arcs {0,2}
+                    if (constraints.has(GraphConstraint::SingleTraversal))
+                        continue;
+                } else {
+                    if (constraints.has(GraphConstraint::NoTwists))
+                        continue;
+                }
+            }
+            if (pairing.dest(i, 1) == FacetSpec<3>(i, 2)) {
+                if (code == 1 || code == 4) { // facets {1,2} map to arcs {1,3}
+                    if (constraints.has(GraphConstraint::SingleTraversal))
+                        continue;
+                } else {
+                    if (constraints.has(GraphConstraint::NoTwists))
+                        continue;
+                }
+            }
+            if (pairing.dest(i, 1) == FacetSpec<3>(i, 3)) {
+                if (code == 0 || code == 5) { // facets {1,3} map to arcs {1,3}
+                    if (constraints.has(GraphConstraint::SingleTraversal))
+                        continue;
+                } else {
+                    if (constraints.has(GraphConstraint::NoTwists))
+                        continue;
+                }
+            }
+            if (pairing.dest(i, 2) == FacetSpec<3>(i, 3)) {
+                if (code == 2 || code == 3) { // facets {2,3} map to arcs {1,3}
+                    if (constraints.has(GraphConstraint::SingleTraversal))
+                        continue;
+                } else {
+                    if (constraints.has(GraphConstraint::NoTwists))
+                        continue;
+                }
+            }
+            cand[i][pos++] = code;
+        }
+        if (pos == 0) {
+            // There are no valid candidates for this permutation.
+            return;
+        }
+        cand[i][pos] = -1;
+    }
+
+    // For each free arc, we will store the opposite endpoint of its current
+    // partially-formed traversal.  For each arc that is already connected to
+    // some partner, we store what _was_ the opposite endpoint just before that
+    // connection was made.
+    //
+    // Specifically, opp[node_index, arc] encodes the opposite endpoint as
+    // another (node_index, arc) pair.
+    //
+    // We only maintain opp[] if the graph constraints include SingleTraversal
+    // (otherwise it is irrelevant).
+
+    FixedArray<std::array<std::pair<size_t, int>, 4>> opp(n);
+    for (size_t i = 0; i < n; ++i)
+        for (int j = 0; j < 4; ++j)
+            opp[i][j] = std::pair<size_t, int>(i, j ^ 2);
+
+    ssize_t pos = 0;
+    while (pos >= 0) {
+        // INV: We have chosen use[i] for i < pos, and each use[i] for i >= pos
+        // is positioned _before_ the next candidate value.
+        if (pos == n) {
             // Process this set of permutations.
             ModelLinkGraph g;
             for (size_t i = 0; i < n; ++i)
@@ -487,28 +587,84 @@ void ModelLinkGraph::generateAllEmbeddings(const FacetPairing<3>& pairing,
             for (size_t i = 0; i < n; ++i) // i == simplex == node
                 for (int j = 0; j < 4; ++j) { // j == facet
                     const auto& dest = pairing.dest(i, j);
-                    g.nodes_[i]->adj_[Perm<4>::fromPermCode2(perm[i])[j]] =
-                        ModelLinkGraphArc(g.nodes_[dest.simp],
-                            Perm<4>::fromPermCode2(perm[dest.simp])[dest.facet]);
+                    Perm<4> p = Perm<4>::fromPermCode2(cand[i][use[i]]);
+                    Perm<4> q = Perm<4>::fromPermCode2(
+                        cand[dest.simp][use[dest.simp]]);
+                    g.nodes_[i]->adj_[p[j]] =
+                        ModelLinkGraphArc(g.nodes_[dest.simp], q[dest.facet]);
                 }
             ModelLinkGraph canonical = g.canonical(allowReflection);
             if (found.insert(canonical.tightEncoding()).second)
                 action(std::move(canonical), std::forward<Args>(args)...);
 
-            // Advance to the next set of permutations.
-            size_t pos = n - 1;
-            for ( ; pos > 0; --pos)
-                if (perm[pos] < 5) {
-                    ++perm[pos];
-                    for (size_t i = pos + 1; i < n; ++i)
-                        perm[i] = 0;
-                    break;
+            // Prepare to advance to the next choice.
+            --pos;
+            continue;
+        }
+
+        // Advance use[pos] to the next choice.
+        if (use[pos] >= 0) {
+            if (constraints.has(GraphConstraint::SingleTraversal)) {
+                // Undo the adjustment that we make to opp[] in the block below.
+                for (int j = 3; j >= 0; --j) {
+                    FacetSpec<3> src(pos, j);
+                    const auto& dest = pairing.dest(src);
+                    if (dest >= src)
+                        continue;
+
+                    Perm<4> p = Perm<4>::fromPermCode2(cand[pos][use[pos]]);
+                    Perm<4> q = Perm<4>::fromPermCode2(
+                        cand[dest.simp][use[dest.simp]]);
+
+                    auto oppSrc = opp[pos][p[j]];
+                    auto oppDest = opp[dest.simp][q[dest.facet]];
+                    opp[oppSrc.first][oppSrc.second] = { pos, p[j] };
+                    opp[oppDest.first][oppDest.second] =
+                        { dest.simp, q[dest.facet] };
                 }
-            if (pos == 0) {
-                for (size_t i = 1; i < n; ++i)
-                    perm[i] = 0;
-                break;
             }
+        }
+        if (cand[pos][++use[pos]] >= 0) {
+            // This is a valid option.
+            if (constraints.has(GraphConstraint::SingleTraversal)) {
+                bool singleTraversal = true;
+                for (int j = 0; j < 4; ++j) {
+                    FacetSpec<3> src(pos, j);
+                    const auto& dest = pairing.dest(src);
+                    if (dest >= src) {
+                        // We do not yet have the complete connection between
+                        // dest and src.
+                        continue;
+                    }
+
+                    Perm<4> p = Perm<4>::fromPermCode2(cand[pos][use[pos]]);
+                    Perm<4> q = Perm<4>::fromPermCode2(
+                        cand[dest.simp][use[dest.simp]]);
+
+                    // We are connecting arcs (pos, p[j]) and
+                    // (dest.simp, q[dest.facet]).
+                    auto oppSrc = opp[pos][p[j]];
+                    auto oppDest = opp[dest.simp][q[dest.facet]];
+                    opp[oppSrc.first][oppSrc.second] = oppDest;
+                    opp[oppDest.first][oppDest.second] = oppSrc;
+
+                    if (oppSrc.first == dest.simp &&
+                            oppSrc.second == q[dest.facet] &&
+                            (pos != n - 1 || j != 3))
+                        singleTraversal = false;
+                }
+                // If we have closed off a traversal prematurely then leave
+                // pos unchanged, which will have the effect of pruning this
+                // branch of the search tree and immediately moving on to the
+                // next possibility.
+                if (singleTraversal)
+                    ++pos;
+            } else
+                ++pos;
+        } else {
+            // We are out of options for use[pos].  Backtrack.
+            use[pos] = -1;
+            --pos;
         }
     }
 }

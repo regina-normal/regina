@@ -182,6 +182,7 @@ FileFormat : enum
 FileInfo : class -> EqualityType.BY_VALUE
 Flags_AngleAlg : class -> EqualityType.BY_VALUE
 Flags_CensusPurge : class -> EqualityType.BY_VALUE
+Flags_GraphConstraint : class -> EqualityType.BY_VALUE
 Flags_HyperAlg : class -> EqualityType.BY_VALUE
 Flags_HyperList : class -> EqualityType.BY_VALUE
 Flags_NormalAlg : class -> EqualityType.BY_VALUE
@@ -199,6 +200,7 @@ GluingPerms5 : class -> EqualityType.BY_VALUE
 GluingPerms6 : class -> EqualityType.BY_VALUE
 GluingPerms7 : class -> EqualityType.BY_VALUE
 GluingPerms8 : class -> EqualityType.BY_VALUE
+GraphConstraint : enum
 GraphLoop : class -> EqualityType.BY_VALUE
 GraphPair : class -> EqualityType.BY_VALUE
 GraphTriple : class -> EqualityType.BY_VALUE

@@ -11,6 +11,22 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::GraphConstraint
+static const char *GraphConstraint =
+R"doc(Represents different classes of graph embeddings that one might want
+to generate. Specifically, this enumeration type is used with the
+routine ModelLinkGraph::generateAllEmbeddings().
+
+These values can be combined using the bitwise OR operator, resulting
+in an object of type ``Flags<GraphConstraint>``. If a graph generation
+function takes an argument of type ``Flags<GraphConstraint>``, then it
+will only generate those graphs that satisfy _all_ of the constraints
+that have been ORed together. For such an argument, you can pass a
+single GraphConstraint constant, or a bitwise combination of such
+constants ``(flag1 | flag2)``, or empty braces ``{}`` to indicate no
+flags at all (which is equivalent to passing
+``GraphConstraint::All``).)doc";
+
 // Docstring regina::python::doc::ModelLinkGraph
 static const char *ModelLinkGraph =
 R"doc(Represents an undirected 4-valent graph with a specific embedding in
@@ -104,6 +120,46 @@ swapped, or manually constructed. Their location in memory defines
 them, and they are often passed and compared by pointer. End users are
 never responsible for their memory management; this is all taken care
 of by the ModelLinkGraph to which they belong.)doc";
+
+// Docstring regina::python::doc::__bor
+static const char *__bor =
+R"doc(Returns the bitwise OR of the two given flags.
+
+Parameter ``lhs``:
+    the first flag to combine.
+
+Parameter ``rhs``:
+    the second flag to combine.
+
+Returns:
+    the combination of both flags.)doc";
+
+namespace GraphConstraint_ {
+
+// Docstring regina::python::doc::GraphConstraint_::All
+static const char *All = R"doc(Indicates that all graph embeddings should be generated.)doc";
+
+// Docstring regina::python::doc::GraphConstraint_::NoTwists
+static const char *NoTwists =
+R"doc(Indicates that only graph embeddings without twists should be
+generated.
+
+By a _twist_, we mean that the embedding has some node with two
+adjacent arcs connected together. An embedding that fails this
+constraint must always model knot or links with twists that can be
+undone using type I Reidemeister moves.)doc";
+
+// Docstring regina::python::doc::GraphConstraint_::SingleTraversal
+static const char *SingleTraversal =
+R"doc(Indicates that only graph embeddings with a single traversal should be
+generated. That is, for every embedding *e* that is generated,
+``e.countTraversals()`` should be precisely 1.
+
+An embedding that satisfies this constraint must always model knots
+(classical or virtual). An embedding that fails this constraint must
+either be empty, or must always model multiple-component links.)doc";
+
+}
 
 namespace ModelLinkGraphArc_ {
 
@@ -1314,6 +1370,15 @@ Parameter ``pairing``:
 Parameter ``allowReflection``:
     ``True`` if we consider a reflection of the surface in which the
     graph embeds to produce the same embedding.
+
+Parameter ``constraints``:
+    indicates any constraints that the embeddings that we generate
+    must satisfy. This should be a bitwise OR of constants from the
+    GraphConstraint enumeration, or else ``GraphConstraint::All`` (or
+    just empty braces ``{}``) if we should generate every possible
+    embedding. If several constraints are ORed together, then only
+    embeddings that satisfy _all_ of the these constraints will be
+    produced.
 
 Parameter ``action``:
     a function (or other callable object) to call for each graph that

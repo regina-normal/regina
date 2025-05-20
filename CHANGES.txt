@@ -191,6 +191,8 @@ Version 7.4  [ (to be announced) ]
               renamed as scoped enum values (e.g., Framing::Seifert).
               The old names have been kept as deprecated compile-time constants
               in the regina:: namespace.
+        Enum GraphConstraint:
+            - New flag type for use with the enumeration of model link graphs.
         Class GraphLoop, GraphPair, GraphTriple:
             - Added a spaceship operator (<=>) for aesthetic comparisons.
               This has the effect of implementing all comparison operators,

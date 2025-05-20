@@ -34,6 +34,7 @@
 #include <pybind11/functional.h>
 #include "link/modellinkgraph.h"
 #include "../helpers.h"
+#include "../helpers/flags.h"
 #include "../docstrings/link/modellinkgraph.h"
 
 using pybind11::overload_cast;
@@ -43,7 +44,17 @@ using regina::ModelLinkGraph;
 using regina::ModelLinkGraphCells;
 
 void addModelLinkGraph(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(ModelLinkGraphArc)
+    RDOC_SCOPE_BEGIN(GraphConstraint)
+
+    regina::python::add_flags<regina::GraphConstraint, 2 /* hex digits */>(
+        m, "GraphConstraint", {
+            { "All", regina::GraphConstraint::All, rdoc::All },
+            { "NoTwists", regina::GraphConstraint::NoTwists, rdoc::NoTwists },
+            { "SingleTraversal", regina::GraphConstraint::SingleTraversal,
+                rdoc::SingleTraversal }
+        }, rdoc_scope, rdoc_global::__bor);
+
+    RDOC_SCOPE_SWITCH(ModelLinkGraphArc)
 
     auto a = pybind11::class_<ModelLinkGraphArc>(m, "ModelLinkGraphArc",
             rdoc_scope)
@@ -144,7 +155,8 @@ void addModelLinkGraph(pybind11::module_& m) {
             &ModelLinkGraph::generateAllEmbeddings<
                 const std::function<void(regina::ModelLinkGraph&&)>&>,
             pybind11::arg("pairing"), pybind11::arg("allowReflection"),
-            pybind11::arg("action"), rdoc::generateAllEmbeddings)
+            pybind11::arg("constraints"), pybind11::arg("action"),
+            rdoc::generateAllEmbeddings)
         .def("randomise", &ModelLinkGraph::randomise, rdoc::randomise)
     ;
     regina::python::add_output(g);
