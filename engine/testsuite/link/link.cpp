@@ -1720,7 +1720,7 @@ static void verifyR2Down(Link link, int crossing, int strand,
     EXPECT_EQ(link.brief(), briefResult);
 }
 
-static void verifyR2Up(Link link, int upperCrossing, int upperStrand,
+static void verifyR2UpClassical(Link link, int upperCrossing, int upperStrand,
         int upperSide, int lowerCrossing, int lowerStrand, int lowerSide,
         const char* briefResult) {
     SCOPED_TRACE_CSTRING(briefResult);
@@ -1731,18 +1731,28 @@ static void verifyR2Up(Link link, int upperCrossing, int upperStrand,
     SCOPED_TRACE_NUMERIC(lowerStrand);
     SCOPED_TRACE_NUMERIC(lowerSide);
 
+    // Every classical R2 is also a virtual R2, so we test both R2 variants.
+
     StrandRef upper, lower;
     if (upperCrossing >= 0)
         upper = link.crossing(upperCrossing)->strand(upperStrand);
     if (lowerCrossing >= 0)
         lower = link.crossing(lowerCrossing)->strand(lowerStrand);
+
+    Link copy(link, false);
+    StrandRef upperCopy = copy.translate(upper);
+    StrandRef lowerCopy = copy.translate(lower);
 
     EXPECT_TRUE(link.r2(upper, upperSide, lower, lowerSide));
     EXPECT_TRUE(isConsistent(link));
     EXPECT_EQ(link.brief(), briefResult);
+
+    EXPECT_TRUE(copy.r2Virtual(upperCopy, upperSide, lowerCopy, lowerSide));
+    EXPECT_TRUE(isConsistent(copy));
+    EXPECT_EQ(copy.brief(), briefResult);
 }
 
-static void verifyR2UpVirtual(Link link, int upperCrossing, int upperStrand,
+static void verifyR2UpVirtualOnly(Link link, int upperCrossing, int upperStrand,
         int upperSide, int lowerCrossing, int lowerStrand, int lowerSide,
         const char* briefResult) {
     SCOPED_TRACE_CSTRING(briefResult);
@@ -1758,6 +1768,14 @@ static void verifyR2UpVirtual(Link link, int upperCrossing, int upperStrand,
         upper = link.crossing(upperCrossing)->strand(upperStrand);
     if (lowerCrossing >= 0)
         lower = link.crossing(lowerCrossing)->strand(lowerStrand);
+
+    Link copy(link, false);
+    StrandRef upperCopy = copy.translate(upper);
+    StrandRef lowerCopy = copy.translate(lower);
+
+    EXPECT_FALSE(copy.r2(upperCopy, upperSide, lowerCopy, lowerSide));
+    EXPECT_TRUE(isConsistent(copy));
+    EXPECT_EQ(copy, link);
 
     EXPECT_TRUE(link.r2Virtual(upper, upperSide, lower, lowerSide));
     EXPECT_TRUE(isConsistent(link));
@@ -2679,44 +2697,112 @@ TEST_F(LinkTest, reidemeisterMisc) {
             "++---- ( ) ( _0 ^1 _3 ^2 _1 _5 ^5 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
         verifyR1Up(link, 1, 0, 1, 1,
             "++---+ ( ) ( _0 ^1 _3 ^2 _1 ^5 _5 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
-        // Note: for R2, the implementation always adds the two new
-        // crossings in the order (+, -).
-        verifyR2Up(link, -1, 0, 0, -1, 0, 0, "++---+- "
+
+        // Note: for R2 with two different strands, the implementation always
+        // adds the two new crossings in the order (+, -).
+
+        verifyR2UpClassical(link, -1, 0, 0, -1, 0, 0, "++---+- "
             "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _6 _5 ) ( )");
-        verifyR2Up(link, -1, 0, 0, -1, 0, 1, "++---+- "
+        verifyR2UpClassical(link, -1, 0, 0, -1, 0, 1, "++---+- "
             "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _6 _5 ) ( )");
-        verifyR2Up(link, -1, 0, 1, -1, 0, 0, "++---+- "
+        verifyR2UpClassical(link, -1, 0, 1, -1, 0, 0, "++---+- "
             "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _5 _6 ) ( )");
-        verifyR2Up(link, -1, 0, 1, -1, 0, 1, "++---+- "
+        verifyR2UpClassical(link, -1, 0, 1, -1, 0, 1, "++---+- "
             "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _5 _6 ) ( )");
-        verifyR2Up(link, -1, 0, 0, 4, 0, 0, "++---+- "
+        verifyR2UpClassical(link, -1, 0, 0, 4, 0, 0, "++---+- "
             "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 _6 _5 ) ( ) ( )");
-        verifyR2Up(link, -1, 0, 1, 4, 0, 0, "++---+- "
+        verifyR2UpClassical(link, -1, 0, 1, 4, 0, 0, "++---+- "
             "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 _5 _6 ) ( ) ( )");
-        verifyR2Up(link, 4, 0, 0, -1, 0, 0, "++---+- "
+        verifyR2UpClassical(link, 4, 0, 0, -1, 0, 0, "++---+- "
             "( _6 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ^5 ^6 ) ( ) ( )");
-        verifyR2Up(link, 4, 0, 0, -1, 0, 1, "++---+- "
+        verifyR2UpClassical(link, 4, 0, 0, -1, 0, 1, "++---+- "
             "( _6 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ^6 ^5 ) ( ) ( )");
-        verifyR2Up(link, -1, 0, 0, 4, 1, 1, "++---+- "
+        verifyR2UpClassical(link, -1, 0, 0, 4, 1, 1, "++---+- "
             "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _6 _5 _4 ) ( ) ( )");
-        verifyR2Up(link, -1, 0, 1, 4, 1, 1, "++---+- "
+        verifyR2UpClassical(link, -1, 0, 1, 4, 1, 1, "++---+- "
             "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _5 _6 _4 ) ( ) ( )");
-        verifyR2Up(link, 4, 1, 1, -1, 0, 0, "++---+- "
+        verifyR2UpClassical(link, 4, 1, 1, -1, 0, 0, "++---+- "
             "( _5 _6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^5 ^6 _4 ) ( ) ( )");
-        verifyR2Up(link, 4, 1, 1, -1, 0, 1, "++---+- "
+        verifyR2UpClassical(link, 4, 1, 1, -1, 0, 1, "++---+- "
             "( _5 _6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^6 ^5 _4 ) ( ) ( )");
-        verifyR2Up(link, 4, 0, 0, 3, 1, 0, "++---+- "
-            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 _6 _5 ^4 _4 ^5 ^6 ) ( ) ( )");
-        verifyR2Up(link, 3, 1, 0, 4, 0, 0, "++---+- "
-            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^5 ^6 ^4 _4 _6 _5 ) ( ) ( )");
-        verifyR2Up(link, 4, 1, 1, 1, 0, 1, "++---+- "
+
+        verifyR2UpClassical(link, 4, 1, 1, 1, 0, 1, "++---+- "
             "( ) ( _0 ^1 _3 ^2 _1 _5 _6 ^0 _2 ^3 ^4 ^6 ^5 _4 ) ( ) ( )");
-        verifyR2Up(link, 1, 0, 1, 4, 1, 1, "++---+- "
+        verifyR2UpClassical(link, 1, 0, 1, 4, 1, 1, "++---+- "
             "( ) ( _0 ^1 _3 ^2 _1 ^6 ^5 ^0 _2 ^3 ^4 _5 _6 _4 ) ( ) ( )");
-        verifyR2Up(link, 2, 0, 0, 1, 1, 1, "++---+- "
+
+        verifyR2UpClassical(link, 2, 0, 0, 1, 1, 1, "++---+- "
             "( ) ( _0 ^1 _6 _5 _3 ^2 _1 ^0 _2 ^6 ^5 ^3 ^4 _4 ) ( ) ( )");
-        verifyR2Up(link, 1, 1, 1, 2, 0, 0, "++---+- "
+        verifyR2UpClassical(link, 1, 1, 1, 2, 0, 0, "++---+- "
             "( ) ( _0 ^1 ^5 ^6 _3 ^2 _1 ^0 _2 _5 _6 ^3 ^4 _4 ) ( ) ( )");
+
+        verifyR2UpClassical(link, 4, 0, 0, 3, 1, 0, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 _6 _5 ^4 _4 ^5 ^6 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 4, 0, 0, 3, 1, 1, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 _6 _5 ^4 _4 ^6 ^5 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 4, 0, 1, 3, 1, 0, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 _5 _6 ^4 _4 ^5 ^6 ) ( ) ( )");
+        verifyR2UpClassical(link, 4, 0, 1, 3, 1, 1, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 _5 _6 ^4 _4 ^6 ^5 ) ( ) ( )");
+        verifyR2UpClassical(link, 3, 1, 0, 4, 0, 0, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^5 ^6 ^4 _4 _6 _5 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 3, 1, 0, 4, 0, 1, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^6 ^5 ^4 _4 _6 _5 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 3, 1, 1, 4, 0, 0, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^5 ^6 ^4 _4 _5 _6 ) ( ) ( )");
+        verifyR2UpClassical(link, 3, 1, 1, 4, 0, 1, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^6 ^5 ^4 _4 _5 _6 ) ( ) ( )");
+
+        verifyR2UpVirtualOnly(link, 4, 1, 0, 2, 0, 0, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 _6 _5 ^3 ^4 ^5 ^6 _4 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 4, 1, 0, 2, 0, 1, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 _6 _5 ^3 ^4 ^6 ^5 _4 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 4, 1, 1, 2, 0, 0, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 _5 _6 ^3 ^4 ^5 ^6 _4 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 4, 1, 1, 2, 0, 1, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 _5 _6 ^3 ^4 ^6 ^5 _4 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 2, 0, 0, 4, 1, 0, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^5 ^6 ^3 ^4 _6 _5 _4 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 2, 0, 0, 4, 1, 1, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^6 ^5 ^3 ^4 _6 _5 _4 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 2, 0, 1, 4, 1, 0, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^5 ^6 ^3 ^4 _5 _6 _4 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 2, 0, 1, 4, 1, 1, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^6 ^5 ^3 ^4 _5 _6 _4 ) ( ) ( )");
+
+        verifyR2UpVirtualOnly(link, 4, 1, 0, 3, 1, 0, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 _6 _5 ^4 ^5 ^6 _4 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 4, 1, 0, 3, 1, 1, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 _6 _5 ^4 ^6 ^5 _4 ) ( ) ( )");
+        verifyR2UpClassical(link, 4, 1, 1, 3, 1, 0, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 _5 _6 ^4 ^5 ^6 _4 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 4, 1, 1, 3, 1, 1, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 _5 _6 ^4 ^6 ^5 _4 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 3, 1, 0, 4, 1, 0, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^5 ^6 ^4 _6 _5 _4 ) ( ) ( )");
+        verifyR2UpClassical(link, 3, 1, 0, 4, 1, 1, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^6 ^5 ^4 _6 _5 _4 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 3, 1, 1, 4, 1, 0, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^5 ^6 ^4 _5 _6 _4 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 3, 1, 1, 4, 1, 1, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^6 ^5 ^4 _5 _6 _4 ) ( ) ( )");
+
+        verifyR2UpVirtualOnly(link, 4, 1, 0, 4, 0, 0, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^5 ^6 _4 _6 _5 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 4, 1, 0, 4, 0, 1, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^6 ^5 _4 _6 _5 ) ( ) ( )");
+        verifyR2UpClassical(link, 4, 1, 1, 4, 0, 0, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^5 ^6 _4 _5 _6 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 4, 1, 1, 4, 0, 1, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^6 ^5 _4 _5 _6 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 4, 0, 0, 4, 1, 0, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _6 _5 _4 ^5 ^6 ) ( ) ( )");
+        verifyR2UpClassical(link, 4, 0, 0, 4, 1, 1, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _6 _5 _4 ^6 ^5 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 4, 0, 1, 4, 1, 0, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _5 _6 _4 ^5 ^6 ) ( ) ( )");
+        verifyR2UpVirtualOnly(link, 4, 0, 1, 4, 1, 1, "++---+- "
+            "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _5 _6 _4 ^6 ^5 ) ( ) ( )");
     }
 
     // Virtual R2 moves that operate on the same strand:
@@ -2737,6 +2823,28 @@ TEST_F(LinkTest, reidemeisterMisc) {
             "+++-+ ( ^0 _3 _4 ^3 ^4 _1 ^2 _0 ^1 _2 )");
         verifyR2UpVirtual(link, 0, 1, 1, 1,
             "++++- ( ^0 ^3 ^4 _3 _4 _1 ^2 _0 ^1 _2 )");
+    }
+    {
+        Link link = Link::fromData({ 1 }, { 1, -1 });
+        verifyR2UpVirtual(link, 0, 1, 0, 0, "++- ( ^0 _1 _2 ^1 ^2 _0 )");
+        verifyR2UpVirtual(link, 0, 1, 0, 1, "+-+ ( ^0 ^1 ^2 _1 _2 _0 )");
+        verifyR2UpVirtual(link, 0, 1, 1, 0, "+-+ ( ^0 _1 _2 ^1 ^2 _0 )");
+        verifyR2UpVirtual(link, 0, 1, 1, 1, "++- ( ^0 ^1 ^2 _1 _2 _0 )");
+        verifyR2UpVirtual(link, 0, 0, 0, 0, "++- ( ^0 _0 _1 _2 ^1 ^2 )");
+        verifyR2UpVirtual(link, 0, 0, 0, 1, "+-+ ( ^0 _0 ^1 ^2 _1 _2 )");
+        verifyR2UpVirtual(link, 0, 0, 1, 0, "+-+ ( ^0 _0 _1 _2 ^1 ^2 )");
+        verifyR2UpVirtual(link, 0, 0, 1, 1, "++- ( ^0 _0 ^1 ^2 _1 _2 )");
+    }
+    {
+        Link link = Link::fromData({ 1 }, { 1 }, { -1 });
+        verifyR2UpVirtual(link, 0, 1, 0, 0, "++- ( ^0 _1 _2 ^1 ^2 ) ( _0 )");
+        verifyR2UpVirtual(link, 0, 1, 0, 1, "+-+ ( ^0 ^1 ^2 _1 _2 ) ( _0 )");
+        verifyR2UpVirtual(link, 0, 1, 1, 0, "+-+ ( ^0 _1 _2 ^1 ^2 ) ( _0 )");
+        verifyR2UpVirtual(link, 0, 1, 1, 1, "++- ( ^0 ^1 ^2 _1 _2 ) ( _0 )");
+        verifyR2UpVirtual(link, 0, 0, 0, 0, "++- ( ^0 ) ( _0 _1 _2 ^1 ^2 )");
+        verifyR2UpVirtual(link, 0, 0, 0, 1, "+-+ ( ^0 ) ( _0 ^1 ^2 _1 _2 )");
+        verifyR2UpVirtual(link, 0, 0, 1, 0, "+-+ ( ^0 ) ( _0 _1 _2 ^1 ^2 )");
+        verifyR2UpVirtual(link, 0, 0, 1, 1, "++- ( ^0 ) ( _0 ^1 ^2 _1 _2 )");
     }
 }
 
