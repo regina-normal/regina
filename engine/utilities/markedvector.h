@@ -39,6 +39,7 @@
 #define __REGINA_MARKEDVECTOR_H
 #endif
 
+#include <algorithm>
 #include <vector>
 #include "regina-core.h"
 
