@@ -39,6 +39,7 @@
 #define __REGINA_MODELLINKGRAPH_H
 #endif
 
+#include <array>
 #include <vector>
 #include "core/output.h"
 #include "utilities/exception.h"
