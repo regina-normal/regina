@@ -1,11 +1,11 @@
 0 True
 --------
-(1) K_1^3 K_3 K_4^2 False
+K_1^3 K_3 K_4^2 False
 Exception caught
 Exception caught
-(1) K_1^3 K_3 K_4^2 False
-(2) K_1^3 K_3 K_4^2 False (1) K_1^3 K_3 K_4^2 False
-0 True (1) K_1^3 K_3 K_4^2 False
+K_1^3 K_3 K_4^2 False
+2 K_1^3 K_3 K_4^2 False K_1^3 K_3 K_4^2 False
+0 True K_1^3 K_3 K_4^2 False
 --------
 Exception caught
 Exception caught
@@ -56,20 +56,20 @@ M
 0
 --------
 1-crossing, 2-component virtual link: - ( ^0 ) ( _0 )
-(-A^2) + (-A^4) K_1
+-A^2 - A^4 K_1
 3-crossing virtual knot: ++- ( ^0 _1 ^2 _0 ^1 _2 )
-(A^-8) + (1 - A^-8) K_1^2
+A^-8 + (1 - A^-8) K_1^2
 4-crossing virtual knot: +-+- ( ^0 _1 ^3 _2 _3 ^2 _0 ^1 )
-(A^4 + 1 + A^-4) + (2) K_2 + (-A^4 - 2 - A^-4) K_1^2
+(A^4 + 1 + A^-4) + 2 K_2 + (-A^4 - 2 - A^-4) K_1^2
 5-crossing virtual knot: ++--- ( ^0 _2 ^3 _0 ^1 _4 ^2 _3 ^4 _1 )
-(1)
+1
 4-crossing virtual knot: +-++ ( ^0 _1 _2 _0 ^2 ^3 ^1 _3 )
 (2 A^-4 + A^-8) + (A^-4 + A^-8) K_2 + (A^-6 - A^-10) K_1 + (-2 A^-4 - 2 A^-8) K_1^2
 4-crossing virtual knot: ---+ ( ^0 ^1 ^2 ^3 _0 _2 _1 _3 )
-(A^8) + (A^10) K_3 + (A^6) K_1 + (-A^10 - A^6) K_1 K_2 + (-A^8 + 1) K_1^2
+A^8 + A^10 K_3 + A^6 K_1 + (-A^10 - A^6) K_1 K_2 + (-A^8 + 1) K_1^2
 4-crossing virtual knot: ---+ ( ^0 ^1 _2 ^3 _1 _0 ^2 _3 )
-(A^8) + (A^6) K_3 + (A^10) K_1 + (-A^10 - A^6) K_1 K_2 + (-A^8 + 1) K_1^2
+A^8 + A^6 K_3 + A^10 K_1 + (-A^10 - A^6) K_1 K_2 + (-A^8 + 1) K_1^2
 3-crossing, 2-component virtual link: +++ ( ^0 _1 ^2 ) ( _0 ^1 _2 )
-(-A^-6) + (-A^-8 + A^-12 - A^-16) K_1
+-A^-6 + (-A^-8 + A^-12 - A^-16) K_1
 3-crossing, 2-component virtual link: --- ( ^2 _1 ^0 ) ( _0 ^1 _2 )
-(-A^10 + A^6 - A^2) + (-A^12) K_1
+(-A^10 + A^6 - A^2) - A^12 K_1
