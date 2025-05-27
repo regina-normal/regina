@@ -244,6 +244,10 @@ class Laurent2 :
          * \nopython Instead, use the Python constructor that takes a list
          * of coefficients (which need not be constant).
          *
+         * \exception InvalidArgument Two of the given tuples share the same
+         * pair of exponents (\a d, \a e), and/or one of the given tuples has
+         * its value \a v equal to zero.
+         *
          * \param coefficients the set of all non-zero coefficients, as
          * outlined above.
          */
@@ -862,9 +866,15 @@ inline Laurent2<T>::Laurent2(iterator begin, iterator end) {
 template <typename T>
 inline Laurent2<T>::Laurent2(
         std::initializer_list<std::tuple<long, long, T>> coefficients) {
-    for (const auto& c : coefficients)
-        coeff_.emplace(Exponents(std::get<0>(c), std::get<1>(c)),
-            std::get<2>(c));
+    for (const auto& c : coefficients) {
+        if (std::get<2>(c) == 0)
+            throw InvalidArgument("One of the given tuples has a value of "
+                "zero");
+        if (! coeff_.emplace(Exponents(std::get<0>(c), std::get<1>(c)),
+                std::get<2>(c)).second)
+            throw InvalidArgument("Two of the given tuples share the "
+                "same pair of exponents");
+    }
 }
 
 template <typename T>
