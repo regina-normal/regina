@@ -38,14 +38,17 @@ print('--------')
 
 a.initDiagram(3, 0, 1, 2)
 print(a, a.isZero())
+
 try:
     a.initDiagram(3, 0, 'a')
 except InvalidArgument:
     print('Exception caught')
+
 try:
     a.initDiagram(1, 1, 0)
 except InvalidArgument:
     print('Exception caught')
+
 print(a, a.isZero())
 b = Arrow(a)
 a += a
@@ -57,14 +60,17 @@ print('--------')
 
 a.set(Laurent(-1, [2, 0, 0, -1]))
 a.set(1, Laurent(-2, [3, -1]))
+
 try:
     a.set(3, 0)
 except InvalidArgument:
     print('Exception caught')
+
 try:
     a.set(2, 0, Laurent(-2, [3, -1]))
 except InvalidArgument:
     print('Exception caught')
+
 print(a, a.isZero())
 
 print('--------')
@@ -112,10 +118,12 @@ print(a[[0, 1]])
 a[[0, 1]] = Laurent(3, [2, 0, -5])
 print(a)
 print(a[[0, 1]])
+
 try:
     print(a[[0, 1, 0]])
 except InvalidArgument:
     print('Exception caught')
+
 a[[0, 1]] = Laurent()
 print(a)
 
