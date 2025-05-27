@@ -1470,6 +1470,7 @@
 		05B22D1022D486200099008B /* registerIntFromPyIndex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D0B22D485ED0099008B /* registerIntFromPyIndex.cpp */; };
 		05B22D1522D543E80099008B /* pythoninterpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D1322D543E70099008B /* pythoninterpreter.cpp */; };
 		05B22D1922D54C980099008B /* pythonoutputstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D1722D54C970099008B /* pythonoutputstream.cpp */; };
+		05B2A0822DE66AA600D4B377 /* arrow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2A0812DE66AA600D4B377 /* arrow.cpp */; };
 		05B44D1521914FA300B1D343 /* binom.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B44D1321914FA200B1D343 /* binom.h */; };
 		05B4D2BA229F376B00B7B11C /* project_and_lift.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B4D2A8229F376700B7B11C /* project_and_lift.h */; };
 		05B4D2BB229F376B00B7B11C /* nmz_integrate.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B4D2A9229F376800B7B11C /* nmz_integrate.h */; };
@@ -4162,6 +4163,7 @@
 		05B22D1422D543E80099008B /* pythoninterpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythoninterpreter.h; sourceTree = "<group>"; };
 		05B22D1722D54C970099008B /* pythonoutputstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pythonoutputstream.cpp; sourceTree = "<group>"; };
 		05B22D1822D54C970099008B /* pythonoutputstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythonoutputstream.h; sourceTree = "<group>"; };
+		05B2A0812DE66AA600D4B377 /* arrow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = arrow.cpp; sourceTree = "<group>"; };
 		05B44D1321914FA200B1D343 /* binom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = binom.h; sourceTree = "<group>"; };
 		05B4D2A7229F376700B7B11C /* descent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descent.cpp; sourceTree = "<group>"; };
 		05B4D2A8229F376700B7B11C /* project_and_lift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = project_and_lift.h; sourceTree = "<group>"; };
@@ -7773,6 +7775,7 @@
 		056AED292A431AE200EAF4FA /* maths */ = {
 			isa = PBXGroup;
 			children = (
+				05B2A0812DE66AA600D4B377 /* arrow.cpp */,
 				056AED332A431AE200EAF4FA /* binom.cpp */,
 				056AED2E2A431AE200EAF4FA /* CMakeLists.txt */,
 				056AED2D2A431AE200EAF4FA /* cyclotomic.cpp */,
@@ -10104,6 +10107,7 @@
 				056AED592A431AE200EAF4FA /* callbacks.cpp in Sources */,
 				056AED872A431AE200EAF4FA /* facenumbering.cpp in Sources */,
 				056AED8C2A431AE200EAF4FA /* disctype.cpp in Sources */,
+				05B2A0822DE66AA600D4B377 /* arrow.cpp in Sources */,
 				056AED792A431AE200EAF4FA /* cyclotomic.cpp in Sources */,
 				056AED652A431AE200EAF4FA /* tightencoding.cpp in Sources */,
 				056AED672A431AE200EAF4FA /* bitmask.cpp in Sources */,
