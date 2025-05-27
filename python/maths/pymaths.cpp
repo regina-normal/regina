@@ -33,6 +33,7 @@
 namespace pybind11 { class module_; }
 
 void add3D(pybind11::module_& m);
+void addArrow(pybind11::module_& m);
 void addBinom(pybind11::module_& m);
 void addMatrixOps(pybind11::module_& m);
 void addCyclotomic(pybind11::module_& m);
@@ -83,5 +84,6 @@ void addMathsClasses(pybind11::module_& m) {
     addCyclotomic(m);
     addLaurent(m);
     addLaurent2(m);
+    addArrow(m);
 }
 

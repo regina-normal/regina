@@ -49,8 +49,8 @@ namespace regina {
 
 namespace {
     /**
-     * Used as a return value when the Jones/bracket calculation is running in
-     * a new thread and we need to return immediately without a result.
+     * Used as a return value when the Jones/bracket calculation has been
+     * cancelled.
      */
     const regina::Laurent<regina::Integer> noResult;
 }
@@ -59,21 +59,16 @@ size_t Link::resolutionLoops(uint64_t mask, size_t* loopIDs,
         size_t* loopLengths) const {
     size_t n = crossings_.size();
 
-    size_t pos;
-    int dirInit, dir;
-    StrandRef s;
-
-    // found[0..n-1] : seen the half of the upper strand that exits the crossing
-    // found[n..2n-1] : seen the half of the upper strand that enters the crossing
+    // found[0..n) : seen the half of the upper strand that exits the crossing
+    // found[n..2n) : seen the half of the upper strand that enters the crossing
     FixedArray<bool> found(2 * n, false);
 
     size_t loops = 0;
-    size_t len;
 
     // The following two loops iterate through indices of found[] in
     // increasing order.
-    for (dirInit = 0; dirInit < 2; ++dirInit) {
-        for (pos = 0; pos < n; ++pos) {
+    for (int dirInit = 0; dirInit < 2; ++dirInit) {
+        for (size_t pos = 0; pos < n; ++pos) {
             // dirInit: 1 = with arrows, 0 = against arrows.
             // This refers to the direction along the strand as you
             // approach the crossing (before you jump to the other strand).
@@ -82,9 +77,9 @@ size_t Link::resolutionLoops(uint64_t mask, size_t* loopIDs,
                 if (loopIDs)
                     loopIDs[loops] = pos + (dirInit ? n : 0);
 
-                s = crossings_[pos]->upper();
-                dir = dirInit;
-                len = 0;
+                StrandRef s = crossings_[pos]->upper();
+                int dir = dirInit;
+                size_t len = 0;
 
                 do {
                     //std::cerr << "At: " << s <<
@@ -152,10 +147,7 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
     // might have zero crossings.
 
     // How many zero-crossing components do we start with?
-    size_t initLoops = 0;
-    for (StrandRef s : components_)
-        if (! s)
-            ++initLoops;
+    size_t trivialLoops = countTrivialComponents();
 
     // In count[i-1], the coefficient of A^k reflects the number of
     // resolutions with i loops and multiplier A^k.
@@ -170,8 +162,6 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
     if (tracker)
         tracker->newStage("Enumerating resolutions");
 
-    size_t loops;
-    long shift;
     const uint64_t maskEnd = ((uint64_t)1 << n);
     for (uint64_t mask = 0; mask != maskEnd; ++mask) {
         // std::cerr << "Mask: " << mask << std::endl;
@@ -182,14 +172,14 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
                 break;
         }
 
-        loops = initLoops + resolutionLoops(mask);
+        size_t loops = trivialLoops + resolutionLoops(mask);
         if (loops > maxLoops)
             maxLoops = loops;
 
         --loops;
 
         // Set shift = #(0 bits) - #(1 bits) in mask.
-        shift = n - 2 * BitManipulator<uint64_t>::bits(mask);
+        long shift = n - 2 * BitManipulator<uint64_t>::bits(mask);
         if (shift > count[loops].maxExp() || shift < count[loops].minExp())
             count[loops].set(shift, 1);
         else
@@ -208,7 +198,7 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
     loopPoly.shift(-2);
 
     Laurent<Integer> loopPow = RingTraits<Laurent<Integer>>::one;
-    for (loops = 0; loops < maxLoops; ++loops) {
+    for (size_t loops = 0; loops < maxLoops; ++loops) {
         // std::cerr << "count[" << loops << "] = " << count[loops] << std::endl;
         if (! count[loops].isZero()) {
             count[loops] *= loopPow;

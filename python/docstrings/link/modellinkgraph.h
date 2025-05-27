@@ -1315,8 +1315,10 @@ all ModelLinkGraph objects corresponding to the input graph), each
 exactly once.
 
 The graphs that are generated will be labelled canonically as
-described by canonical(). In particular, the argument
-*allowReflection* will be passed through to canonical().
+described by canonical(). This means that the nodes of the graph might
+use a different labelling from the simplices of the given facet
+pairing. The argument *allowReflection* will be passed through to
+canonical().
 
 This routine is a work in progress. Currently it is _very_ inefficient
 and memory-hungry; the algorithm will be improved over time if/when it

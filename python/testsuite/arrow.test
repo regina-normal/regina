@@ -1,0 +1,193 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2007-2025, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Provides some simple tests for arrow polynomials.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+a = Arrow()
+print(a, a.isZero())
+
+print('--------')
+
+a.initDiagram(3, 0, 1, 2)
+print(a, a.isZero())
+try:
+    a.initDiagram(3, 0, 'a')
+except InvalidArgument:
+    print('Exception caught')
+try:
+    a.initDiagram(1, 1, 0)
+except InvalidArgument:
+    print('Exception caught')
+print(a, a.isZero())
+b = Arrow(a)
+a += a
+print(a, a.isZero(), b, b.isZero())
+a -= a
+print(a, a.isZero(), b, b.isZero())
+
+print('--------')
+
+a.set(Laurent(-1, [2, 0, 0, -1]))
+a.set(1, Laurent(-2, [3, -1]))
+try:
+    a.set(3, 0)
+except InvalidArgument:
+    print('Exception caught')
+try:
+    a.set(2, 0, Laurent(-2, [3, -1]))
+except InvalidArgument:
+    print('Exception caught')
+print(a, a.isZero())
+
+print('--------')
+
+b = Arrow()
+b.set(1, Laurent(-2, [3, -1]))
+print(b)
+print(a + b)
+print(a - b)
+print(b + a)
+print(b - a)
+print(- a)
+
+print('--------')
+
+a += b
+print(a)
+a -= b
+print(a)
+a -= b
+print(a)
+
+print('--------')
+
+a += b
+print(a, 'vs', b)
+a.swap(b)
+print(a, 'vs', b)
+swap(b, a)
+print(a, 'vs', b)
+
+print('--------')
+
+print(a * -3)
+print(-3 * a)
+print(a * Laurent(2, [1]))
+print(Laurent(2, [1]) * a)
+
+print('--------')
+
+print(a[[]])
+print(a[[1]])
+print(a[[2]])
+print(a[[0, 1]])
+a[[0, 1]] = Laurent(3, [2, 0, -5])
+print(a)
+print(a[[0, 1]])
+try:
+    print(a[[0, 1, 0]])
+except InvalidArgument:
+    print('Exception caught')
+a[[0, 1]] = Laurent()
+print(a)
+
+print('--------')
+
+a *= -3
+print(a)
+a *= Laurent(2, [1])
+print(a)
+
+print('--------')
+
+a.shift(-2)
+print(a)
+a.negate()
+print(a)
+a.invertA()
+print(a)
+a.scaleUp(2)
+print(a)
+a.scaleDown(-2)
+print(a)
+
+print('--------')
+
+print(a.tightEncoding())
+print(Arrow.tightDecoding(a.tightEncoding()))
+a.init()
+print(a, a.isZero())
+print(a.tightEncoding())
+print(Arrow.tightDecoding(a.tightEncoding()))
+
+print('--------')
+
+# Compute some actual arrow polynomials.
+# The following examples are all taken from Dye & Kauffman, JKTR 18 (2009).
+
+# Section 3.1: Virtual Hopf link
+l = Link.fromData([-1], [[1], [-1]])
+print(l); print(l.arrow())
+
+# Section 3.2: Virtualised trefoil (not the virtual trefoil!)
+l = Link.fromData([+1, +1, -1], [1, -2, 3, -1, 2, -3])
+print(l); print(l.arrow())
+
+# Section 3.3: Kishino's knot
+l = Link.fromData([+1, -1, +1, -1], [1, -2, 4, -3, -4, 3, -1, 2])
+print(l); print(l.arrow())
+
+# Section 3.4: Slavik's knot
+l = Link.fromData([+1, +1, -1, -1, -1], [1, -3, 4, -1, 2, -5, 3, -4, 5, -2])
+print(l); print(l.arrow())
+
+# Section 3.5: Miyazawa's knot
+# Note: our answer differs by sign (+/-) for the coefficient of K_1^2 A^-4.
+# However: our answer is consistent with the Jones polynomial for that same
+# knot, and so it seems likely that the sign error is in the Dye-Kauffman paper.
+l = Link.fromData([+1, -1, +1, +1], [1, -2, -3, -1, 3, 4, 2, -4])
+print(l); print(l.arrow())
+
+# Section 3.6: Two knots differentiated only by K_1 and K_3
+l1 = Link.fromSignedGauss('O1-O2-O3-O4+U1-U3-U2-U4+') # knot 4.93
+l2 = Link.fromSignedGauss('O1-O2-U3-O4+U2-U1-O3-U4+') # knot 4.103
+print(l1); print(l1.arrow());
+print(l2); print(l2.arrow());
+
+# Section 3.8: Two virtual torus links
+# Note: In the Dye-Kauffman paper, the polynomials for these links do not
+# appear to be normalised using the writhe (though this is perhaps explicitly
+# noted in the paper since they use the subscript <..>_A instead of <..>_NA.
+l1 = Link.fromData([+1, +1, +1], [[1, -2, 3], [-1, 2, -3]])
+l2 = Link.fromData([-1, -1, -1], [[3, -2, 1], [-1, 2, -3]])
+print(l1); print(l1.arrow());
+print(l2); print(l2.arrow());
+

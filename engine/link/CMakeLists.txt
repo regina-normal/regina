@@ -4,6 +4,7 @@
 SET ( FILES
   alexander.cpp
   algebra.cpp
+  arrow.cpp
   dt.cpp
   examplelink.cpp
   flype.cpp

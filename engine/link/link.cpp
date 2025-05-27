@@ -67,6 +67,7 @@ Link::Link(const Link& cloneMe, bool cloneProps) : virtualGenus_(-1) {
     homflyAZ_ = cloneMe.homflyAZ_;
     homflyLM_ = cloneMe.homflyLM_;
     bracket_ = cloneMe.bracket_;
+    arrow_ = cloneMe.arrow_;
     niceTreeDecomposition_ = cloneMe.niceTreeDecomposition_;
 }
 
@@ -78,6 +79,7 @@ Link::Link(Link&& src) noexcept :
         homflyLM_(std::move(src.homflyLM_)),
         homflyAZ_(std::move(src.homflyAZ_)),
         bracket_(std::move(src.bracket_)),
+        arrow_(std::move(src.arrow_)),
         niceTreeDecomposition_(std::move(src.niceTreeDecomposition_)) {
     // We need src.crossings_ to be empty, so that src's destructor does not
     // do anything unexpected.  Ensure this by using a swap instead of a move.
@@ -125,6 +127,7 @@ Link& Link::operator = (const Link& src) {
     homflyAZ_ = src.homflyAZ_;
     homflyLM_ = src.homflyLM_;
     bracket_ = src.bracket_;
+    arrow_ = src.arrow_;
     niceTreeDecomposition_ = src.niceTreeDecomposition_;
 
     return *this;
@@ -179,6 +182,7 @@ Link& Link::operator = (Link&& src) {
     homflyLM_ = std::move(src.homflyLM_);
     homflyAZ_ = std::move(src.homflyAZ_);
     bracket_ = std::move(src.bracket_);
+    arrow_ = std::move(src.arrow_);
     niceTreeDecomposition_ = std::move(src.niceTreeDecomposition_);
 
     // Let src dispose of the original crossings in its own destructor.
@@ -780,6 +784,7 @@ void Link::swap(Link& other) {
     homflyAZ_.swap(other.homflyAZ_);
     homflyLM_.swap(other.homflyLM_);
     bracket_.swap(other.bracket_);
+    arrow_.swap(other.arrow_);
     niceTreeDecomposition_.swap(other.niceTreeDecomposition_);
 }
 

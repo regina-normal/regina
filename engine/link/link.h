@@ -45,6 +45,7 @@
 #include <vector>
 #include "regina-core.h"
 #include "algebra/grouppresentation.h"
+#include "maths/arrow.h"
 #include "maths/integer.h"
 #include "maths/laurent.h"
 #include "maths/laurent2.h"
@@ -717,6 +718,9 @@ class Link :
                  This is std::nullopt if it has not yet been computed. */
         mutable std::optional<Laurent<Integer>> bracket_;
             /**< The Kauffman bracket polynomial of the link diagram.
+                 This is std::nullopt if it has not yet been computed. */
+        mutable std::optional<Arrow> arrow_;
+            /**< The arrow polynomial of the link.
                  This is std::nullopt if it has not yet been computed. */
 
         mutable std::optional<TreeDecomposition> niceTreeDecomposition_;
@@ -4148,6 +4152,67 @@ class Link :
         static Laurent2<Integer> homflyAZtoLM(Laurent2<Integer> homflyAZ);
 
         /**
+         * Returns the arrow polynomial of this link.
+         *
+         * The arrow polynomial is a generalisation of the Kauffman bracket for
+         * virtual knots and links.  The polynomial will be normalised using
+         * the writhe of the diagram to obtain a topological invariant, in a
+         * similar way to how the Kauffman bracket can be normalised to obtain
+         * the Jones polynomial.  Regina follows the description in H.A. Dye and
+         * L.H. Kauffman, "Virtual crossing number and the arrow polynomial",
+         * J. Knot Theory Ramifications 18 (2009), no. 10, 1335-1357.
+         *
+         * If this is the empty link, then this routine will return the zero
+         * polynomial.
+         *
+         * Bear in mind that each time a link changes, all of its
+         * polynomials will be deleted.  Thus the reference that is
+         * returned from this routine should not be kept for later use.
+         * Instead, arrow() should be called again; this will be
+         * instantaneous if the arrow polynomial has already been calculated.
+         *
+         * If this polynomial has already been computed, then the result will
+         * be cached and so this routine will be very fast (since it just
+         * returns the previously computed result).  Otherwise the computation
+         * could be quite slow, particularly for larger numbers of crossings.
+         *
+         * \warning Currently this routine uses a naive algorithm that resolves
+         * crossings in all `2^n` possible ways.  As a result, it can only
+         * handle a limited number of crosings at present (the maximum is 63).
+         * If this link has 64 or more crossings then this routine will throw
+         * an exception.  The hope is to implement a better algorithm (which is
+         * faster and can handle more crossings) in a future version of Regina.
+         *
+         * \exception NotImplemented This link has 64 or more crossings.
+         *
+         * \python The global interpreter lock will be released while
+         * this function runs, so you can use it with Python-based
+         * multithreading.
+         *
+         * \param alg the algorithm with which to compute the polynomial.
+         * At present this argument is ignored (since only the naive algorithm
+         * is available); this argument is kept as a placeholder for if/when
+         * more sophisticated algorithms become available.  In the meantime,
+         * just use the default (Algorithm::Default).
+         * \param tracker a progress tracker through which progress will
+         * be reported, or \c null if no progress reporting is required.
+         * \return the arrow polynomial, or the zero polynomial if the
+         * calculation was cancelled via the given progress tracker.
+         */
+        const Arrow& arrow(Algorithm alg = Algorithm::Default,
+            ProgressTracker* tracker = nullptr) const;
+        /**
+         * Is the arrow polynomial of this link already known?
+         * See arrow() for further details.
+         *
+         * If this property is already known, future calls to arrow() will be
+         * very fast (simply returning the precalculated value).
+         *
+         * \return \c true if and only if this property is already known.
+         */
+        bool knowsArrow() const;
+
+        /**
          * Returns the group of this link, as constructed from the Wirtinger
          * presentation.
          *
@@ -6661,6 +6726,52 @@ class Link :
         void optimiseForJones(TreeDecomposition& td) const;
 
         /**
+         * Compute the arrow polynomial using a naive algorithm that sums over
+         * all resolutions of all crossings.
+         *
+         * The given progress tracker may be \c null.
+         * This routine does _not_ mark the tracker as finished.
+         *
+         * See arrow() for further details.
+         */
+        Arrow arrowNaive(ProgressTracker* tracker) const;
+
+        /**
+         * Internal to arrowNaive().
+         *
+         * Returns information about the loops in the link that are produced
+         * by resolving each crossing according to the given bitmask:
+         *
+         * - If the <i>i</i>th bit in \a mask is 0, this indicates that
+         *   crossing \a i should be resolved by turning _left_ when
+         *   entering along the upper strand.
+         *
+         * - If the <i>i</i>th bit in \a mask is 1, this indicates that
+         *   crossing \a i should be resolved by turning _right_ when
+         *   entering along the upper strand.
+         *
+         * The information returned consists of:
+         *
+         * - the number of loops obtained by the given resolution;
+         *
+         * - a sequence indicating how many loops there are with each possible
+         *   number of cusp pairs.
+         *
+         * For details on what is meant by a cusp pair, see H.A. Dye and
+         * L.H. Kauffman, "Virtual crossing number and the arrow polynomial",
+         * J. Knot Theory Ramifications 18 (2009), no. 10, 1335-1357.
+         *
+         * If \a seq is the sequence that is returned, then `seq[i]` holds the
+         * number of loops with `i+1` cusp pairs; moreover, if \a seq is
+         * non-empty then its final entry will be strictly positive.
+         *
+         * \pre The number of crossings is less than 64 (the length of
+         * the bitmask type).
+         */
+        std::pair<size_t, Arrow::DiagramSequence> resolutionCuspedLoops(
+            uint64_t mask) const;
+
+        /**
          * Returns the group of this link as constructed from the Wirtinger
          * presentation, possibly switching the roles of the upper and lower
          * strands at every crossing.
@@ -6840,6 +6951,7 @@ inline void Link::clearAllProperties() {
         jones_.reset();
         homflyAZ_.reset();
         homflyLM_.reset();
+        arrow_.reset();
     }
 
     virtualGenus_ = -1;
@@ -7087,6 +7199,9 @@ inline bool Link::knowsJones() const {
 inline bool Link::knowsHomfly() const {
     // Either both homflyAZ_ and homflyLM_ are known, or neither are known.
     return homflyAZ_.has_value();
+}
+inline bool Link::knowsArrow() const {
+    return arrow_.has_value();
 }
 
 inline bool Link::r1(Crossing* crossing) {

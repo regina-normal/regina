@@ -454,6 +454,63 @@ Exception ``FailedPrecondition``:
 Returns:
     the Alexander polynomial of this knot.)doc";
 
+// Docstring regina::python::doc::Link_::arrow
+static const char *arrow =
+R"doc(Returns the arrow polynomial of this link.
+
+The arrow polynomial is a generalisation of the Kauffman bracket for
+virtual knots and links. The polynomial will be normalised using the
+writhe of the diagram to obtain a topological invariant, in a similar
+way to how the Kauffman bracket can be normalised to obtain the Jones
+polynomial. Regina follows the description in H.A. Dye and L.H.
+Kauffman, "Virtual crossing number and the arrow polynomial", J. Knot
+Theory Ramifications 18 (2009), no. 10, 1335-1357.
+
+If this is the empty link, then this routine will return the zero
+polynomial.
+
+Bear in mind that each time a link changes, all of its polynomials
+will be deleted. Thus the reference that is returned from this routine
+should not be kept for later use. Instead, arrow() should be called
+again; this will be instantaneous if the arrow polynomial has already
+been calculated.
+
+If this polynomial has already been computed, then the result will be
+cached and so this routine will be very fast (since it just returns
+the previously computed result). Otherwise the computation could be
+quite slow, particularly for larger numbers of crossings.
+
+.. warning::
+    Currently this routine uses a naive algorithm that resolves
+    crossings in all ``2^n`` possible ways. As a result, it can only
+    handle a limited number of crosings at present (the maximum is
+    63). If this link has 64 or more crossings then this routine will
+    throw an exception. The hope is to implement a better algorithm
+    (which is faster and can handle more crossings) in a future
+    version of Regina.
+
+Exception ``NotImplemented``:
+    This link has 64 or more crossings.
+
+Python:
+    The global interpreter lock will be released while this function
+    runs, so you can use it with Python-based multithreading.
+
+Parameter ``alg``:
+    the algorithm with which to compute the polynomial. At present
+    this argument is ignored (since only the naive algorithm is
+    available); this argument is kept as a placeholder for if/when
+    more sophisticated algorithms become available. In the meantime,
+    just use the default (Algorithm::Default).
+
+Parameter ``tracker``:
+    a progress tracker through which progress will be reported, or
+    ``None`` if no progress reporting is required.
+
+Returns:
+    the arrow polynomial, or the zero polynomial if the calculation
+    was cancelled via the given progress tracker.)doc";
+
 // Docstring regina::python::doc::Link_::bracket
 static const char *bracket =
 R"doc(Returns the Kauffman bracket polynomial of this link diagram.
@@ -3122,6 +3179,17 @@ At present, Regina only computes Alexander polynomials for classical
 knots. If this link is empty, has multiple components, or uses a
 virtual diagram, then this routine is still safe to call, and will
 simply return ``False``.
+
+Returns:
+    ``True`` if and only if this property is already known.)doc";
+
+// Docstring regina::python::doc::Link_::knowsArrow
+static const char *knowsArrow =
+R"doc(Is the arrow polynomial of this link already known? See arrow() for
+further details.
+
+If this property is already known, future calls to arrow() will be
+very fast (simply returning the precalculated value).
 
 Returns:
     ``True`` if and only if this property is already known.)doc";

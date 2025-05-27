@@ -4,6 +4,7 @@ ADD_SUBDIRECTORY("spec")
 
 # Files to compile
 SET ( FILES
+  arrow.cpp
   cyclotomic.cpp
   integer.cpp
   matrix2.cpp
@@ -25,6 +26,7 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL( FILES
     3d.h
+    arrow.h
     binom.h
     cyclotomic.h
     integer.h

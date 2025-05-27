@@ -45,7 +45,7 @@
 namespace regina {
 
 /**
- * A fixed-size array whose size can be computed at runtime.
+ * A fixed-size array whose size can be provided at runtime.
  *
  * This is essentially a wrapper around `new[]` and `delete[]` that allows the
  * array object to live on the stack, avoiding the need to worry about memory

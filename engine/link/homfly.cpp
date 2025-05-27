@@ -59,8 +59,7 @@ namespace regina {
 
 namespace {
     /**
-     * Used as a return value when the HOMFLY-PT calculation is running in
-     * a new thread and we need to return immediately without a result.
+     * Used as a return value when the HOMFLY-PT calculation has been cancelled.
      */
     const regina::Laurent2<regina::Integer> noResult;
 

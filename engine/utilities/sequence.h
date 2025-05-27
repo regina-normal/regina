@@ -105,6 +105,12 @@ class LightweightSequence {
          */
         explicit LightweightSequence(size_t size);
         /**
+         * Create a new sequence containing the given elements.
+         *
+         * \param elements the elements to place in the new sequence.
+         */
+        LightweightSequence(std::initializer_list<T> elements);
+        /**
          * Create a new sequence containing the given elements, which
          * may be given through a combination of individual elements and
          * iterator pairs.
@@ -188,6 +194,15 @@ class LightweightSequence {
          * changed (in a destructive way) by calling init().
          */
         size_t size() const;
+
+        /**
+         * Determines whether this sequence is empty.
+         *
+         * This is true if and only if `size() == 0`.
+         *
+         * \return \c true if and only if this sequence is empty.
+         */
+        bool empty() const;
 
         /**
          * Returns a copy of the element at the given index in the sequence.
@@ -530,6 +545,13 @@ inline LightweightSequence<T>::LightweightSequence(size_t size) :
 }
 
 template <typename T>
+inline LightweightSequence<T>::LightweightSequence(
+        std::initializer_list<T> elements) :
+        data_(new T[elements.size()]), size_(elements.size()) {
+    std::copy(elements.begin(), elements.end(), data_);
+}
+
+template <typename T>
 template <typename... Args>
 inline LightweightSequence<T>::LightweightSequence(size_t size,
         Args&&... args) : data_(new T[size]), size_(size) {
@@ -565,6 +587,11 @@ inline void LightweightSequence<T>::init(size_t size) {
 template <typename T>
 inline size_t LightweightSequence<T>::size() const {
     return size_;
+}
+
+template <typename T>
+inline bool LightweightSequence<T>::empty() const {
+    return size_ == 0;
 }
 
 template <typename T>

@@ -903,8 +903,10 @@ void Laurent2<T>::set(long xExp, long yExp, const T& value) {
         coeff_.erase(Exponents(xExp, yExp));
     } else {
         auto result = coeff_.emplace(Exponents(xExp, yExp), value);
-        if (! result.second)
+        if (! result.second) {
+            // A coefficient was already present.  Change it.
             result.first->second = value;
+        }
     }
 }
 

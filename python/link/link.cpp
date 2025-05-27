@@ -303,11 +303,18 @@ void addLink(pybind11::module_& m) {
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::homflyLM)
+        .def("arrow", &Link::arrow,
+            pybind11::return_value_policy::reference_internal,
+            pybind11::arg("alg") = regina::Algorithm::Default,
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
+            rdoc::arrow)
         .def("knowsAlexander", &Link::knowsAlexander, rdoc::knowsAlexander)
         .def("knowsBracket", &Link::knowsBracket, rdoc::knowsBracket)
         .def("knowsJones", &Link::knowsJones, rdoc::knowsJones)
         .def("knowsHomfly", &Link::knowsHomfly, rdoc::knowsHomfly)
         .def_static("homflyAZtoLM", &Link::homflyAZtoLM, rdoc::homflyAZtoLM)
+        .def("knowsArrow", &Link::knowsArrow, rdoc::knowsArrow)
         .def("group", &Link::group,
             pybind11::arg("simplify") = true, rdoc::group)
         .def("groups", &Link::groups,
