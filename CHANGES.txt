@@ -273,7 +273,7 @@ Version 7.4  [ (to be announced) ]
               also adds comparison operators (<, <=, >, >=) to this class.
         Class LightweightSequence<T>:
             - New constructor that takes a std::initializer_list.
-            - New routine empty().
+            - New routines empty(), front(), and back().
             - Added a spaceship operator (<=>) for comparisons.  This has the
               effect of implementing all comparison operators, not just
               less-than (<) as before.

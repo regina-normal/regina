@@ -111,6 +111,41 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
         Arrow(Arrow&&) noexcept = default;
 
         /**
+         * Creates a new polynomial from a hard-coded collection of diagram
+         * sequences and non-zero Laurent polynomials in \a A.
+         *
+         * The data should be presented as a collection of pairs of the form
+         * `(seq, laurent)`, where `seq` is a diagram sequence and `laurent`
+         * is the associated Laurent polynomial in `A`.
+         *
+         * The pairs may be given in any order.  An empty sequence will be
+         * treated as the zero polynomial.
+         *
+         * So, for example, you can create the arrow polynomial
+         * `A^-4 + (A^-6 - A^-10) K_1` using the syntax:
+         *
+         * \code
+         * Arrow a = { {{}, {-4, {1}}}, {{1}, {-10, {-1,0,0,0,1}}} };
+         * \endcode
+         *
+         * \pre The diagram sequences are all distinct, no diagram sequence
+         * ends in zero, and each associated Laurent polynomial is non-zero.
+         *
+         * \nopython Instead, use the Python constructor that takes a list of
+         * pairs (which need not be constant).
+         *
+         * \exception InvalidArgument Two of the given diagram sequences are
+         * identical, and/or one of the given diagram sequences is non-empty
+         * and ends in zero, and/or one of the given Laurent polynomials is
+         * zero.
+         *
+         * \param pairs the diagram sequences and Laurent polynomials, as
+         * outlined above.
+         */
+        Arrow(std::initializer_list<
+            std::pair<DiagramSequence, Laurent<Integer>>> pairs);
+
+        /**
          * Sets this to become the zero polynomial.
          */
         void init();
@@ -592,6 +627,22 @@ Arrow operator - (const Arrow& lhs, Arrow&& rhs);
  * \ingroup maths
  */
 Arrow operator - (Arrow&& lhs, Arrow&& rhs);
+
+inline Arrow::Arrow(
+        std::initializer_list<std::pair<DiagramSequence, Laurent<Integer>>>
+        pairs) {
+    for (const auto& p : pairs) {
+        if (p.second.isZero())
+            throw InvalidArgument("One of the given Laurent polynomials "
+                "is zero");
+        if ((! p.first.empty()) && p.first.back() == 0)
+            throw InvalidArgument("One of the given diagram sequences "
+                "ends in zero");
+        if (! terms_.insert(p).second)
+            throw InvalidArgument("Two of the given diagram sequences "
+                "are identical");
+    }
+}
 
 inline void Arrow::init() {
     terms_.clear();

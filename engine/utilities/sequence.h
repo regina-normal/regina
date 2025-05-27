@@ -264,6 +264,38 @@ class LightweightSequence {
          * \return a read-only past-the-end iterator.
          */
         const_iterator end() const;
+        /**
+         * Returns a copy of the first element in this sequence.
+         *
+         * \pre This sequence is non-empty.
+         *
+         * \return a copy of the first element.
+         */
+        T front() const;
+        /**
+         * Returns a reference to the first element in this sequence.
+         *
+         * \pre This sequence is non-empty.
+         *
+         * \return a reference to the first element.
+         */
+        T& front();
+        /**
+         * Returns a copy of the last element in this sequence.
+         *
+         * \pre This sequence is non-empty.
+         *
+         * \return a copy of the last element.
+         */
+        T back() const;
+        /**
+         * Returns a reference to the last element in this sequence.
+         *
+         * \pre This sequence is non-empty.
+         *
+         * \return a reference to the last element.
+         */
+        T& back();
 
         /**
          * Converts this into a copy of the given sequence.
@@ -602,6 +634,26 @@ inline T LightweightSequence<T>::operator [] (size_t pos) const {
 template <typename T>
 inline T& LightweightSequence<T>::operator [] (size_t pos) {
     return data_[pos];
+}
+
+template <typename T>
+inline T LightweightSequence<T>::front() const {
+    return *data_;
+}
+
+template <typename T>
+inline T& LightweightSequence<T>::front() {
+    return *data_;
+}
+
+template <typename T>
+inline T LightweightSequence<T>::back() const {
+    return data_[size_ - 1];
+}
+
+template <typename T>
+inline T& LightweightSequence<T>::back() {
+    return data_[size_ - 1];
 }
 
 template <typename T>
