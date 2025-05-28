@@ -285,6 +285,20 @@ Parameter ``rhs``:
 Returns:
     ``True`` if and only if this and the given polynomial are equal.)doc";
 
+// Docstring regina::python::doc::Arrow_::__eq_2
+static const char *__eq_2 =
+R"doc(Tests whether this is equal to the given Laurent polynomial in *A*.
+
+For this to be true, this polynomial must not use any of the diagram
+variables ``K_i`` at all.
+
+Parameter ``rhs``:
+    the Laurent polynomial in *A* to compare this with.
+
+Returns:
+    ``True`` if and only if this and the given Laurent polynomial are
+    equal.)doc";
+
 // Docstring regina::python::doc::Arrow_::__iadd
 static const char *__iadd =
 R"doc(Adds the given polynomial to this.

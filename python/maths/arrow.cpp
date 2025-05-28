@@ -132,6 +132,7 @@ void addArrow(pybind11::module_& m) {
             arrow.set(sequenceArg(arg, arg.size()), std::move(value));
         }, pybind11::return_value_policy::copy, // to enforce constness
             rdoc::__array)
+        .def(pybind11::self == Laurent<Integer>(), rdoc::__eq_2)
         .def(pybind11::self *= Integer(), rdoc::__imul)
         .def(pybind11::self *= Laurent<Integer>(), rdoc::__imul_2)
         .def(pybind11::self += pybind11::self, rdoc::__iadd)

@@ -171,6 +171,12 @@ try:
 except InvalidArgument:
     print('Exception caught')
 
+laurent = Laurent(-2, [4,0,0,-1])
+print(Arrow([([], laurent)]) == laurent)
+print(Arrow([([1], laurent)]) == laurent)
+print(Arrow([([], laurent), ([1], laurent)]) == laurent)
+print(Arrow([([], laurent), ([1], laurent)])[[1]] == laurent)
+
 print('--------')
 
 # Compute some actual arrow polynomials.

@@ -59,6 +59,10 @@ A^-4 + (A^-6 - A^-10) K_1
 A^-4 + (A^-6 - A^-10) K_1
 Exception caught
 Exception caught
+True
+False
+False
+True
 --------
 1-crossing, 2-component virtual link: - ( ^0 ) ( _0 )
 -A^2 - A^4 K_1

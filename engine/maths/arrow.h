@@ -338,6 +338,18 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
         bool operator == (const Arrow& rhs) const;
 
         /**
+         * Tests whether this is equal to the given Laurent polynomial in \a A.
+         *
+         * For this to be true, this polynomial must not use any of the
+         * diagram variables `K_i` at all.
+         *
+         * \param rhs the Laurent polynomial in \a A to compare this with.
+         * \return \c true if and only if this and the given Laurent
+         * polynomial are equal.
+         */
+        bool operator == (const Laurent<Integer>& rhs) const;
+
+        /**
          * Compares this against the given polynomial under a total
          * ordering of all arrow polynomials.
          *
@@ -755,6 +767,18 @@ inline bool Arrow::isZero() const {
 
 inline bool Arrow::operator == (const Arrow& rhs) const {
     return terms_ == rhs.terms_;
+}
+
+inline bool Arrow::operator == (const Laurent<Integer>& rhs) const {
+    if (rhs.isZero())
+        return isZero();
+    else {
+        if (terms_.size() != 1)
+            return false;
+        if (! terms_.begin()->first.empty())
+            return false;
+        return terms_.begin()->second == rhs;
+    }
 }
 
 inline std::strong_ordering Arrow::operator <=> (const Arrow& rhs) const {
