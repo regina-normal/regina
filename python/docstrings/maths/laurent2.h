@@ -450,7 +450,9 @@ Template parameter ``deref``:
     a dummy argument that should be ignored. This is present to ensure
     that *iterator* can be dereferenced, so that a call such as
     Laurent2(int, int) falls through to the (long, long) constructor,
-    and not this iterator-based constructor instead.
+    and not this iterator-based constructor instead. Once we support a
+    greater subset of C++20, this will be enforced through concepts
+    instead.
 
 Parameter ``begin``:
     the beginning of the set of coefficients, as outlined above.

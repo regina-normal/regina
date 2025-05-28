@@ -317,6 +317,68 @@ Parameter ``laurent``:
 Returns:
     a reference to this arrow polynomial.)doc";
 
+// Docstring regina::python::doc::Arrow_::__init
+static const char *__init =
+R"doc(Creates a new polynomial from the given collection of diagram
+sequences and non-zero Laurent polynomials in *A*.
+
+The data should be presented as a collection of pairs of the form
+``(seq, laurent)``, where ``seq`` is a diagram sequence and
+``laurent`` is the associated Laurent polynomial in ``A``.
+
+The pairs may be given in any order. An empty sequence will be treated
+as the zero polynomial.
+
+Unlike the std::initializer_list constructor, zero Laurent polynomials
+are allowed (these will be silently ignored), and multiple pairs with
+the same diagram sequences are also allowed (these will be summed
+together).
+
+This routine is targeted more towards Python users (since in C++ it is
+often easier to hard-code arrow polynomials using the
+std::initializer_list constructor). As an example, Python users can
+create the arrow polynomial ``A^-4 + (A^-6 - A^-10) K_1`` using either
+of the expressions:
+
+```
+Arrow([([], Laurent(-4, [1])), ([1], Laurent(-10, [-1,0,0,0,1]))])
+Arrow([([], (-4, [1])), ([1], (-10, [-1,0,0,0,1]))])
+```
+
+Python:
+    Instead of the iterators *begin* and *end*, this routine takes a
+    python list of pairs ``(seq, laurent)``, where *seq* is a python
+    list of integers representing a diagram sequence, and where
+    *laurent* is either (i) a Laurent polynomial, or (ii) a pair
+    ``(minExp, coefficients)`` which could be used to construct a
+    Laurent polynomial. In the latter case, *minExp* would an integer,
+    and *coefficients* would be a python list of integers.
+
+Precondition:
+    No diagram sequence ends in zero.
+
+Exception ``InvalidArgument``:
+    At least one of the given diagram sequences is non-empty and ends
+    in zero.
+
+Template parameter ``iterator``:
+    an iterator type which, when dereferenced, gives a std::pair of
+    the form ``(seq, laurent)``, where *seq* and *laurent* can be used
+    to construct objects of types DiagramSequence and Laurent<Integer>
+    respectively.
+
+Template parameter ``deref``:
+    a dummy argument that should be ignored. This is present to ensure
+    that *iterator* can be dereferenced. Once we support a greater
+    subset of C++20, this will be enforced through concepts instead.
+
+Parameter ``begin``:
+    the beginning of the collection of pairs, as outlined above.
+
+Parameter ``end``:
+    a past-the-end iterator indicating the end of the collection of
+    pairs.)doc";
+
 // Docstring regina::python::doc::Arrow_::__isub
 static const char *__isub =
 R"doc(Subtracts the given polynomial from this.
@@ -351,8 +413,14 @@ deep copy.
 If *d* is the sequence ``a_1,a_2,...``, then this polynomial will be
 set to ``(K_1)^(a_1) (K_2)^(a_2) ...``.
 
+Exception ``InvalidArgument``:
+    The given sequence of integers is non-empty and its last entry is
+    zero.
+
 Parameter ``d``:
-    a sequence representing a product of diagram variables.)doc";
+    a sequence of integers representing some product of diagram
+    variables. If this sequence is non-empty, then its last entry
+    should be strictly positive.)doc";
 
 // Docstring regina::python::doc::Arrow_::invertA
 static const char *invertA =

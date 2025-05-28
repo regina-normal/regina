@@ -42,27 +42,63 @@ using regina::Arrow;
 using regina::Integer;
 using regina::Laurent;
 
+namespace {
+    // PythonType should be pybind11::list, pybind11::tuple, or pybind11::args.
+    //
+    // Only nElements will be extracted from arg.  Typically nElements would be
+    // arg.size(); it may be smaller but it must not be larger.
+    template <typename PythonType>
+    Arrow::DiagramSequence sequenceArg(PythonType arg, size_t nElements) {
+        Arrow::DiagramSequence seq(nElements);
+        auto it = arg.begin();
+        try {
+            for (size_t i = 0; i < nElements; ++i)
+                seq[i] = pybind11::cast<size_t>(*it++);
+        } catch (pybind11::cast_error const&) {
+            throw regina::InvalidArgument("Diagram sequence contains an "
+                "element that is not convertible to a non-negative integer");
+        }
+        return seq;
+    }
+}
+
 void addArrow(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Arrow)
 
     auto c = pybind11::class_<Arrow>(m, "Arrow", rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Arrow&>(), rdoc::__copy)
+        .def(pybind11::init([](pybind11::list arg) {
+            std::vector<std::pair<Arrow::DiagramSequence, Laurent<Integer>>>
+                data;
+            for (auto a : arg) {
+                try {
+                    auto pair = pybind11::cast<std::pair<pybind11::list,
+                        Laurent<Integer>>>(a);
+                    data.emplace_back(
+                        sequenceArg(pair.first, pair.first.size()),
+                        std::move(pair.second));
+                } catch (pybind11::cast_error const&) {
+                    try {
+                        auto pair = pybind11::cast<std::pair<pybind11::list,
+                            std::pair<long, std::vector<Integer>>>>(a);
+                        data.emplace_back(
+                            sequenceArg(pair.first, pair.first.size()),
+                            Laurent<Integer>(pair.second.first,
+                                pair.second.second.begin(),
+                                pair.second.second.end()));
+                    } catch (pybind11::cast_error const&) {
+                        throw regina::InvalidArgument("Each element of the "
+                            "given list should be a pair describing a diagram "
+                            "sequence and a Laurent polynomial");
+                    }
+                }
+            }
+            return Arrow(data.begin(), data.end());
+        }), rdoc::__init)
         .def("init", overload_cast<>(&Arrow::init), rdoc::init)
         .def("initDiagram", [](Arrow& arrow, pybind11::args args) {
-            size_t n = args.size();
-
-            Arrow::DiagramSequence seq(n);
-            auto it = args.begin();
-            try {
-                for (size_t i = 0; i < n; ++i)
-                    seq[i] = pybind11::cast<size_t>(*it++);
-            } catch (pybind11::cast_error const&) {
-                throw regina::InvalidArgument("Element of the diagram "
-                    "sequence given to initDiagram() not convertible to an "
-                    "integer");
-            }
-            arrow.initDiagram(std::move(seq));
+            arrow.initDiagram(sequenceArg(args, args.size()));
         }, rdoc::initDiagram)
         .def("isZero", &Arrow::isZero, rdoc::isZero)
         .def("set", [](Arrow& arrow, pybind11::args args) {
@@ -73,21 +109,11 @@ void addArrow(pybind11::module_& m) {
                     "followed by a Laurent polynomial argument "
                     "representing the desired value");
 
-            Arrow::DiagramSequence seq(n - 1);
-            auto it = args.begin();
             try {
-                for (size_t i = 0; i < n - 1; ++i)
-                    seq[i] = pybind11::cast<size_t>(*it++);
+                arrow.set(sequenceArg(args, n - 1),
+                    pybind11::cast<Laurent<Integer>>(args[n - 1]));
             } catch (pybind11::cast_error const&) {
-                throw regina::InvalidArgument("Element of the diagram "
-                    "sequence given to set() not convertible to an "
-                    "integer");
-            }
-            try {
-                arrow.set(std::move(seq),
-                    pybind11::cast<Laurent<Integer>>(*it));
-            } catch (pybind11::cast_error const&) {
-                throw regina::InvalidArgument("Value given to set() "
+                throw regina::InvalidArgument("Final argument to set() "
                     "not convertible to a Laurent polynomial");
             }
         }, rdoc::set)
@@ -98,37 +124,12 @@ void addArrow(pybind11::module_& m) {
         .def("negate", &Arrow::negate, rdoc::negate)
         .def("invertA", &Arrow::invertA, rdoc::invertA)
         .def("__getitem__", [](const Arrow& arrow, pybind11::list arg) {
-            size_t n = arg.size();
-
-            Arrow::DiagramSequence seq(n);
-            auto it = arg.begin();
-            try {
-                for (size_t i = 0; i < n; ++i)
-                    seq[i] = pybind11::cast<size_t>(*it++);
-            } catch (pybind11::cast_error const&) {
-                throw regina::InvalidArgument("Element of the diagram "
-                    "sequence given to __getitem__ not convertible to an "
-                    "integer");
-            }
-            return arrow[seq];
+            return arrow[sequenceArg(arg, arg.size())];
         }, pybind11::return_value_policy::copy, // to enforce constness
             rdoc::__array)
         .def("__setitem__", [](Arrow& arrow, pybind11::list arg,
                 regina::Laurent<Integer> value) {
-            size_t n = arg.size();
-
-            Arrow::DiagramSequence seq(n);
-            auto it = arg.begin();
-            try {
-                for (size_t i = 0; i < n; ++i)
-                    seq[i] = pybind11::cast<size_t>(*it++);
-            } catch (pybind11::cast_error const&) {
-                throw regina::InvalidArgument("Element of the diagram "
-                    "sequence given to __getitem__ not convertible to an "
-                    "integer");
-            }
-
-            arrow.set(seq, std::move(value));
+            arrow.set(sequenceArg(arg, arg.size()), std::move(value));
         }, pybind11::return_value_policy::copy, // to enforce constness
             rdoc::__array)
         .def(pybind11::self *= Integer(), rdoc::__imul)
