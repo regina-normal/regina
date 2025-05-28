@@ -111,6 +111,64 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
         Arrow(Arrow&&) noexcept = default;
 
         /**
+         * Creates a new polynomial from the given collection of diagram
+         * sequences and non-zero Laurent polynomials in \a A.
+         *
+         * The data should be presented as a collection of pairs of the form
+         * `(seq, laurent)`, where `seq` is a diagram sequence and `laurent`
+         * is the associated Laurent polynomial in `A`.
+         *
+         * The pairs may be given in any order.  An empty sequence will be
+         * treated as the zero polynomial.
+         *
+         * Unlike the std::initializer_list constructor, zero Laurent
+         * polynomials are allowed (these will be silently ignored), and
+         * multiple pairs with the same diagram sequences are also allowed
+         * (these will be summed together).
+         *
+         * This routine is targeted more towards Python users (since in C++
+         * it is often easier to hard-code arrow polynomials using the
+         * std::initializer_list constructor).  As an example, Python users
+         * can create the arrow polynomial `A^-4 + (A^-6 - A^-10) K_1` using
+         * either of the expressions:
+         *
+         * \code{.py}
+         * Arrow([([], Laurent(-4, [1])), ([1], Laurent(-10, [-1,0,0,0,1]))])
+         * Arrow([([], (-4, [1])), ([1], (-10, [-1,0,0,0,1]))])
+         * \endcode
+         *
+         * \python Instead of the iterators \a begin and \a end, this routine
+         * takes a python list of pairs `(seq, laurent)`, where \a seq is a
+         * python list of integers representing a diagram sequence, and where
+         * \a laurent is either (i) a Laurent polynomial, or (ii) a pair
+         * `(minExp, coefficients)` which could be used to construct a Laurent
+         * polynomial.  In the latter case, \a minExp would an integer, and
+         * \a coefficients would be a python list of integers.
+         *
+         * \pre No diagram sequence ends in zero.
+         *
+         * \exception InvalidArgument At least one of the given diagram
+         * sequences is non-empty and ends in zero.
+         *
+         * \tparam iterator an iterator type which, when dereferenced, gives a
+         * std::pair of the form `(seq, laurent)`, where \a seq and \a laurent
+         * can be used to construct objects of types DiagramSequence and
+         * Laurent<Integer> respectively.
+         *
+         * \tparam deref a dummy argument that should be ignored.  This is
+         * present to ensure that \a iterator can be dereferenced.  Once we
+         * support a greater subset of C++20, this will be enforced through
+         * concepts instead.
+         *
+         * \param begin the beginning of the collection of pairs, as outlined
+         * above.
+         * \param end a past-the-end iterator indicating the end of the
+         * collection of pairs.
+         */
+        template <typename iterator, typename deref = decltype(*iterator())>
+        Arrow(iterator begin, iterator end);
+
+        /**
          * Creates a new polynomial from a hard-coded collection of diagram
          * sequences and non-zero Laurent polynomials in \a A.
          *
@@ -627,6 +685,30 @@ Arrow operator - (const Arrow& lhs, Arrow&& rhs);
  * \ingroup maths
  */
 Arrow operator - (Arrow&& lhs, Arrow&& rhs);
+
+template <typename iterator, typename deref>
+inline Arrow::Arrow(iterator begin, iterator end) {
+    for (auto it = begin; it != end; ++it) {
+        DiagramSequence seq = it->first;
+        Laurent<Integer> laurent = it->second;
+
+        if ((! seq.empty()) && seq.back() == 0)
+            throw InvalidArgument("One of the given diagram sequences "
+                "ends in zero");
+        if (laurent.isZero())
+            continue;
+
+        auto result = terms_.try_emplace(std::move(seq), std::move(laurent));
+        if (! result.second) {
+            // This diagram sequence is already present.
+            // Accumulate, and erase if the resulting coefficient is zero.
+            // Note: Laurent's += operator does not support rvalue refs,
+            // so it does not help to use std::move() here.
+            if ((result.first->second += laurent).isZero())
+                terms_.erase(result.first);
+        }
+    }
+}
 
 inline Arrow::Arrow(
         std::initializer_list<std::pair<DiagramSequence, Laurent<Integer>>>

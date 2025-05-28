@@ -211,6 +211,8 @@ class Laurent2 :
          * present to ensure that \a iterator can be dereferenced, so that
          * a call such as Laurent2(int, int) falls through to the (long, long)
          * constructor, and not this iterator-based constructor instead.
+         * Once we support a greater subset of C++20, this will be enforced
+         * through concepts instead.
          *
          * \param begin the beginning of the set of coefficients, as outlined
          * above.
