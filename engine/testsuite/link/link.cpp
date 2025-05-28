@@ -1274,6 +1274,186 @@ TEST_F(LinkTest, homfly) {
     EXPECT_THROW({ virtualDisconnected.link.homflyLM(); }, FailedPrecondition);
 }
 
+static void verifyArrow(Link link, const char* name,
+        const regina::Arrow& expected) {
+    // Note: passing link by value is deliberate - we do not want to cache the
+    // arrow polynomial in the source link.
+
+    SCOPED_TRACE_CSTRING(name);
+
+    // Once we support multiple algorithms for arrow polynomials, we should
+    // compare them all here.
+
+    EXPECT_EQ(link.arrow(), expected);
+}
+
+static void verifyArrowClassical(const TestCase& test) {
+    SCOPED_TRACE_CSTRING(test.name);
+
+    // For classical links, the arrow and Jones polynomials should be the same
+    // (once we rewrite them using the same variable A).
+
+    regina::Arrow arrow = Link(test.link, false).arrow();
+
+    regina::Laurent<regina::Integer> jones = Link(test.link, false).jones();
+    jones.scaleUp(-2);
+
+    EXPECT_EQ(arrow, jones);
+}
+
+TEST_F(LinkTest, arrow) {
+    verifyArrowClassical(empty);
+
+    verifyArrowClassical(unknot0);
+    verifyArrowClassical(unknot1);
+    verifyArrowClassical(unknot3);
+    verifyArrowClassical(unknotMonster);
+    // Let's not attempt this with the (enormous) Gordian unknot.
+
+    verifyArrowClassical(trefoilLeft);
+    verifyArrowClassical(trefoilRight);
+    verifyArrowClassical(trefoil_r1x2);
+    verifyArrowClassical(trefoil_r1x6);
+    verifyArrowClassical(figureEight);
+    verifyArrowClassical(figureEight_r1x2);
+    verifyArrowClassical(conway);
+    verifyArrowClassical(kinoshitaTerasaka);
+    // GST is also too large for arrow polynomials right now.
+    verifyArrowClassical(rht_rht);
+    verifyArrowClassical(rht_lht);
+
+    verifyArrowClassical(unlink2_0);
+    verifyArrowClassical(unlink3_0);
+    verifyArrowClassical(unlink2_r2);
+    verifyArrowClassical(unlink2_r1r1);
+    verifyArrowClassical(hopf);
+    verifyArrowClassical(whitehead);
+    verifyArrowClassical(borromean);
+    verifyArrowClassical(trefoil_unknot0);
+    verifyArrowClassical(trefoil_unknot1);
+    verifyArrowClassical(trefoil_unknot_overlap);
+    verifyArrowClassical(adams6_28);
+
+    // This was computed using Regina 7.4.  It should be possible to find a
+    // source that can independently verify this polynomial..?
+    verifyArrow(virtualTrefoil.link, virtualTrefoil.name,
+        { {{}, {-4, {1}}},
+          {{1}, {-10, {-1,0,0,0,1}}}
+        });
+
+    // Our Kishino diagram is identical to the one in Dye-Kauffman (see below)
+    // except for relabelling, and so its arrow polynomial is independently
+    // verified by Dye-Kauffman.
+    verifyArrow(kishino.link, kishino.name,
+        { {{}, {-4, {1,0,0,0,1,0,0,0,1}}},
+          {{0,1}, {0, {2}}},
+          {{2}, {-4, {-1,0,0,0,-2,0,0,0,-1}}}
+        });
+
+    // This was computed using Regina 7.4.
+    verifyArrow(gpv.link, gpv.name,
+        { {{}, {8, {1}}},
+          {{0,1}, {12, {1,0,0,0,-2,0,0,0,1}}},
+          {{1}, {10, {2,0,0,0,-2}}}
+        });
+
+    // This is a reflection of the virtual Hopf link in Dye-Kauffman (see
+    // below).  The expected polynomial below is therefore the polynomial from
+    // Dye-Kauffman but replacing A <-> A^-1.
+    verifyArrow(virtualLink2.link, virtualLink2.name,
+        { {{}, {-2, {-1}}},
+          {{1}, {-4, {-1}}} });
+
+    // This was computed using Regina 7.4.
+    verifyArrow(virtualLink3.link, virtualLink3.name,
+        { {{}, {-8, {1,0,0,0,1}}},
+          {{1}, {-6, {2}}} });
+
+    // The following link is the disjoint union
+    // (virtualLink3 U virtualTrefoil U hopf), and so the expected polynomial
+    // below is the product of the three individual polynomials for those
+    // three individual links, along with two factors of (-A^2 - A^-2).
+    verifyArrow(virtualDisconnected.link, virtualDisconnected.name,
+        { {{}, {-26, {-1,0,0,0,-3,0,0,0,-4,0,0,0,-4,0,0,0,-3,0,0,0,-1}}},
+          {{1}, {-32, {1,0,0,0,2,0,0,0,-1,0,0,0,-4,0,0,0,-5,0,0,0,-6,0,0,0,-3}}},
+          {{2}, {-30, {2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,-2,0,0,0,-2}}}
+        });
+
+    // Verify all of the examples from Dye & Kauffman, JKTR 18 (2009).
+
+    // Section 3.1: Virtual Hopf link
+    verifyArrow(Link::fromData({-1}, {1}, {-1}), "Virtual Hopf link",
+        { {{}, {2, {-1}}},
+          {{1}, {4, {-1}}} });
+
+    // Section 3.2: Virtualised trefoil (this is _not_ the virtual trefoil!)
+    verifyArrow(Link::fromData({+1,+1,-1}, {1,-2,3,-1,2,-3}),
+        "Virtualised trefoil",
+        { {{}, {-8, {1}}},
+          {{2}, {-8, {-1,0,0,0,0,0,0,0,1}}} });
+
+    // Section 3.3: Kishino's knot
+    verifyArrow(Link::fromData({+1,-1,+1,-1}, {1,-2,4,-3,-4,3,-1,2}),
+        "Kishino's knot",
+        { {{}, {-4, {1,0,0,0,1,0,0,0,1}}},
+          {{0,1}, {0, {2}}},
+          {{2}, {-4, {-1,0,0,0,-2,0,0,0,-1}}}
+        });
+
+    // Section 3.4: Slavik's knot
+    verifyArrow(
+        Link::fromData({+1,+1,-1,-1,-1}, {1,-3,4,-1,2,-5,3,-4,5,-2}),
+        "Slavik's knot",
+        { {{}, {0, {1}}} });
+
+    // Section 3.5: Miyazawa's knot
+    // Note: our answer differs from Dye-Kauffman by sign (+/-) for the
+    // coefficient of K_1^2 A^-4.  However, our answer is consistent with the
+    // Jones polynomial for that same knot, and so it seems likely that the
+    // sign error is in the Dye-Kauffman paper.
+    verifyArrow(Link::fromData({+1,-1,+1,+1}, {1,-2,-3,-1,3,4,2,-4}),
+        "Miyazawa's knot",
+        { {{}, {-8, {1,0,0,0,2}}},
+          {{0,1}, {-8, {1,0,0,0,1}}},
+          {{1}, {-10, {-1,0,0,0,1}}},
+          {{2}, {-8, {-2,0,0,0,-2}}}
+        });
+
+    // Section 3.6: Two knots differentiated only by K_1 and K_3
+    verifyArrow(Link::fromSignedGauss("O1-O2-O3-O4+U1-U3-U2-U4+"),
+        "Knot 4.93",
+        { {{}, {8, {1}}},
+          {{0,0,1}, {10, {1}}},
+          {{1}, {6, {1}}},
+          {{1,1}, {6, {-1,0,0,0,-1}}},
+          {{2}, {0, {1,0,0,0,0,0,0,0,-1}}}
+        });
+    verifyArrow(Link::fromSignedGauss("O1-O2-U3-O4+U2-U1-O3-U4+"),
+        "Knot 4.103",
+        { {{}, {8, {1}}},
+          {{0,0,1}, {6, {1}}},
+          {{1}, {10, {1}}},
+          {{1,1}, {6, {-1,0,0,0,-1}}},
+          {{2}, {0, {1,0,0,0,0,0,0,0,-1}}}
+        });
+
+    // Section 3.8: Two virtual torus links
+    // Note: In the Dye-Kauffman paper, the polynomials for these links do not
+    // appear to be normalised using the writhe (though this is probably
+    // deliberate, since in the paper they use the subscript <..>_A instead of
+    // <..>_NA when writing these two polynomials).
+    verifyArrow(Link::fromData({+1,+1,+1}, {1,-2,3}, {-1,2,-3}),
+        "Virtual torus link VT",
+        { {{}, {-6, {-1}}},
+          {{1}, {-16, {-1,0,0,0,1,0,0,0,-1}}}
+        });
+    verifyArrow(Link::fromData({-1,-1,-1}, {3,-2,1}, {-1,2,-3}),
+        "Virtual torus link RV",
+        { {{}, {2, {-1,0,0,0,1,0,0,0,-1}}},
+          {{1}, {12, {-1}}}
+        });
+}
+
 static void verifyComplementBasic(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 

@@ -181,6 +181,8 @@ print('--------')
 
 # Compute some actual arrow polynomials.
 # The following examples are all taken from Dye & Kauffman, JKTR 18 (2009).
+# These are also in the C++ test suite; see there for further discussion
+# (including the reasons why some of our answers differ from Dye-Kauffman).
 
 # Section 3.1: Virtual Hopf link
 l = Link.fromData([-1], [[1], [-1]])
