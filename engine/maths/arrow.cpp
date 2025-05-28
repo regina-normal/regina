@@ -120,28 +120,85 @@ void Arrow::writeTextShort(std::ostream& out, bool utf8) const {
     for (auto it = terms_.begin(); it != terms_.end(); ++it) {
         const auto& laurent = it->second;
 
-        if (it != terms_.begin())
-            out << " + ";
+        if (laurent.minExp() == laurent.maxExp()) {
+            // We are just adding some multiple of a single power of A.
+            long exp = laurent.minExp();
+            auto coeff = laurent[exp];
 
-        out << '(';
-        it->second.writeTextShort(out, utf8, "A");
-        out << ')';
-
-        if (! it->first.empty()) {
-            for (size_t i = 0; i < it->first.size(); ++i) {
-                size_t exp = it->first[i];
-                if (exp == 0)
-                    continue;
-
-                if (utf8) {
-                    out << " K" << regina::subscript(i + 1);
-                    if (exp != 1)
-                        out << regina::superscript(exp);
+            if (coeff < 0) {
+                if (it == terms_.begin()) {
+                    if (utf8)
+                        out << "\u2212";
+                    else
+                        out << '-';
                 } else {
-                    out << " K_" << (i + 1);
-                    if (exp != 1)
+                    if (utf8)
+                        out << " \u2212 ";
+                    else
+                        out << " - ";
+                }
+
+                coeff.negate();
+            } else {
+                if (it != terms_.begin())
+                    out << " + ";
+            }
+
+            if (it->first.empty() && exp == 0) {
+                // There are no variables to write at all.
+                out << coeff;
+                continue;
+            }
+
+            // There are some variables (A and/or K_i) to write.
+            if (coeff != 1)
+                out << coeff << ' ';
+            if (exp != 0) {
+                out << 'A';
+                if (exp != 1) {
+                    if (utf8)
+                        out << regina::superscript(exp);
+                    else
                         out << '^' << exp;
                 }
+
+                if (it->first.empty())
+                    continue;
+                out << ' ';
+            }
+            // All that's left is to write the sequence of K_i (with no
+            // leading space).  We do this below.
+        } else {
+            if (it != terms_.begin())
+                out << " + ";
+
+            out << '(';
+            it->second.writeTextShort(out, utf8, "A");
+            out << ')';
+
+            if (it->first.empty())
+                continue;
+            out << ' ';
+        }
+
+        bool firstK = true;
+        for (size_t i = 0; i < it->first.size(); ++i) {
+            size_t exp = it->first[i];
+            if (exp == 0)
+                continue;
+
+            if (firstK)
+                firstK = false;
+            else
+                out << ' ';
+            if (utf8) {
+                out << 'K' << regina::subscript(i + 1);
+                if (exp != 1)
+                    out << regina::superscript(exp);
+            } else {
+                out << "K_" << (i + 1);
+                if (exp != 1)
+                    out << '^' << exp;
             }
         }
     }

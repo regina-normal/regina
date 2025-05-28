@@ -1,5 +1,6 @@
 # Files to compile
 SET ( FILES
+  arrow.cpp
   binom.cpp
   cyclotomic.cpp
   integer.cpp

@@ -4,6 +4,7 @@ AngleAlg : enum
 AngleAlgFlags : alias -> enum AngleAlg
 AngleStructure : class -> EqualityType.BY_VALUE
 AngleStructures : class -> EqualityType.BY_VALUE
+Arrow : class -> EqualityType.BY_VALUE
 Attachment : class -> EqualityType.BY_VALUE
 AugTriSolidTorus : class -> EqualityType.BY_VALUE
 BagComparison : enum
