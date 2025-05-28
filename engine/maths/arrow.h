@@ -611,6 +611,7 @@ inline void Arrow::initDiagram(DiagramSequence&& d) {
         throw InvalidArgument("The given diagram sequence should not "
             "end with a zero");
 
+    // Verified: the code below does indeed move d (not copy it).
     terms_.clear();
     terms_.emplace(std::move(d), RingTraits<Laurent<Integer>>::one);
 }

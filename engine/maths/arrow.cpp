@@ -70,6 +70,7 @@ void Arrow::set(const DiagramSequence& d, Laurent<Integer>&& value) {
     if (value.isZero()) {
         terms_.erase(d);
     } else {
+        // Verified: the code below does indeed move value (not copy it).
         auto result = terms_.try_emplace(d, std::move(value));
         if (! result.second) {
             // A coefficient was already present.  Change it.
