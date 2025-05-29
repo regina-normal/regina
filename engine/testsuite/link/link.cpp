@@ -111,7 +111,7 @@ static void verifyTopologicallySame(const Link& a, const Link& b) {
 }
 
 static void verifyIsomorphic(const GroupPresentation& a,
-        const GroupPresentation& b) {
+        const GroupPresentation& b, bool fastTestsOnly = false) {
     if (a.countGenerators() <= 1 || b.countGenerators() <= 1 ||
             a.countRelations() == 0 || b.countRelations() == 0) {
         // For trivial, cyclic or free groups, we expect Regina should be
@@ -144,12 +144,10 @@ static void verifyIsomorphic(const GroupPresentation& a,
         EXPECT_EQ(coversA, coversB);
     };
 
-    if (a.countGenerators() <= 5 && b.countGenerators() <= 5) {
-        regina::for_constexpr<2, 6>(compareGroups);
-    } else {
-        // Be a little more conservative, since this could get slow.
+    if (fastTestsOnly || a.countGenerators() > 5 || b.countGenerators() > 5)
         regina::for_constexpr<2, 4>(compareGroups);
-    }
+    else
+        regina::for_constexpr<2, 6>(compareGroups);
 }
 
 static regina::Laurent<regina::Integer> jonesModReflection(const Link& link) {
@@ -4262,6 +4260,14 @@ static void verifyExtendedGroupBasic(const Link& link, const char* name) {
 
     EXPECT_EQ(groups.first.abelianRank(), link.countComponents() + 1);
     EXPECT_EQ(groups.second.abelianRank(), link.countComponents() + 1);
+
+    if (link.isClassical()) {
+        // I cannot yet locate a reference stating that the extended groups
+        // of a classical link and its mirror image are isomorphic.
+        // However, it is certainly true for all of the tests that we run here.
+        verifyIsomorphic(groups.first, groups.second,
+            true /* fast tests only */);
+    }
 }
 
 // Use this when we should get the same group when viewing from
