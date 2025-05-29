@@ -115,7 +115,7 @@ static void verifyIsomorphic(const GroupPresentation& a,
     if (a.countGenerators() <= 1 || b.countGenerators() <= 1 ||
             a.countRelations() == 0 || b.countRelations() == 0) {
         // For trivial, cyclic or free groups, we expect Regina should be
-        // able to simplif both groups to the same canonical presentation.
+        // able to simplify both groups to the same canonical presentation.
         EXPECT_EQ(a.countGenerators(), b.countGenerators());
         EXPECT_EQ(a.relations(), b.relations());
         return;
@@ -4248,6 +4248,56 @@ TEST_F(LinkTest, group) {
     verifyGroup(virtualLink2, { 2, { "abAB" }});
     verifyGroup(virtualLink3, { 3, { "abAB", "acAC" }});
     verifyGroup(virtualDisconnected, { 6, { "abAB", "acAC", "efEF" }});
+}
+
+static void verifyExtendedGroup(const Link& link, const char* name) {
+    // For now, some very basic tests.
+    SCOPED_TRACE_CSTRING(name);
+
+    auto groups = link.extendedGroups();
+
+    EXPECT_EQ(groups.first.abelianRank(), link.countComponents() + 1);
+    EXPECT_EQ(groups.second.abelianRank(), link.countComponents() + 1);
+}
+
+static void verifyExtendedGroup(const TestCase& test,
+        const GroupPresentation& expect) {
+    SCOPED_TRACE_CSTRING(test.name);
+
+    auto found = test.link.extendedGroups();
+    verifyIsomorphic(found.first, expect);
+    verifyIsomorphic(found.second, expect);
+
+    Link flip(test.link);
+    flip.changeAll();
+    verifyIsomorphic(flip.extendedGroup(), expect);
+}
+
+TEST_F(LinkTest, extendedGroup) {
+    testManualCases(verifyExtendedGroup, false /* gordian */);
+
+    // Some groups for which we know what the answers should be:
+
+    verifyExtendedGroup(unknot0, { 2 });
+    verifyExtendedGroup(unknot1, { 2 });
+    verifyExtendedGroup(unknot3, { 2 });
+    verifyExtendedGroup(unknotMonster, { 2 });
+
+    verifyExtendedGroup(unlink2_0, { 3 });
+    verifyExtendedGroup(unlink3_0, { 4 });
+    verifyExtendedGroup(unlink2_r2, { 3 });
+    verifyExtendedGroup(unlink2_r1r1, { 3 });
+
+    // Example 2.1 of Boden et al., "Alexander invariants for virtual knots",
+    // JKTR 24 (2015) gives a presentation of the virtual knot group for the
+    // virtual trefoil.  The extended group is obtained from this presentation
+    // by setting q=1.
+    verifyExtendedGroup(virtualTrefoil, { 2, { "ABBAbABabbaBab" }});
+
+    // Boden et al. also note that the Kishino knot has trivial virtual knot
+    // group, which implies a trivial extended knot group.  Here "trivial"
+    // means the same as for the unknot, i.e., free on two generators.
+    verifyExtendedGroup(kishino, { 2 });
 }
 
 static void verifySmallCells(const Link& link, const char* name) {
