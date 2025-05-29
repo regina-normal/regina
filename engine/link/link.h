@@ -4213,7 +4213,7 @@ class Link :
         bool knowsArrow() const;
 
         /**
-         * Returns the group of this link, as constructed from the Wirtinger
+         * Returns the link group, as constructed from the Wirtinger
          * presentation.
          *
          * In the Wirtinger presentation, each relation is some variant of the
@@ -4221,18 +4221,25 @@ class Link :
          * crossing, and \a x and \a z correspond to the two sides of the
          * lower strand at that same crossing.
          *
-         * - For classical links, this group will always be isomorphic to the
-         *   fundamental group of the link exterior.
+         * If you are working with virtual links, there are some points to note:
          *
-         * - For a virtual link whose diagram is embedded in some closed
-         *   orientable surface \a S, the group _could_ change depending upon
-         *   which side of \a S you view the diagram from.  That is, switching
-         *   the upper and lower strands at every crossing could yield
-         *   non-isomorphic groups.  As a result, you may wish to call groups()
-         *   instead, which builds _both_ group presentations.  See the groups()
-         *   documentation for further discussion, or ExampleLink::gpv() for
-         *   an example of a virtual knot for which these two groups are indeed
-         *   non-isomorphic.
+         * - The group _could_ change depending upon whether you view the link
+         *   from above or below the diagram.  That is, switching the upper and
+         *   lower strands at every crossing could yield non-isomorphic groups.
+         *   As a result, you may wish to call groups() instead, which builds
+         *   _both_ group presentations.  See the groups() documentation for
+         *   further discussion, or ExampleLink::gpv() for an example of a
+         *   virtual knot for which these two groups are indeed non-isomorphic.
+         *
+         * - The link group is not a particularly strong invariant for virtual
+         *   links.  You might instead wish to use the _extended_ group, which
+         *   is stronger (but which yields larger group presentations).  See
+         *   extendedGroup() and extendedGroups() for further details.
+         *
+         * For classical links, the link group will always be isomorphic to the
+         * fundamental group of the link exterior (and in particular, the
+         * isomorphism type will not depend upon whether you view the diagram
+         * from above or below).
          *
          * If you pass \a simplify as \c false, this routine will keep the
          * Wirtinger presentation and not try to simplify it further.
@@ -4288,6 +4295,11 @@ class Link :
          * the trefoil group, but whose "reflected" Wirtinger presentation
          * (the second group) gives the unknot group.
          *
+         * A further note, however: if you are working with virtual links then
+         * the link group is not a particularly strong invariant.  You might
+         * wish to consider using the _extended_ link group instead; see
+         * extendedGroup() and extendedGroups() for further details.
+         *
          * If you pass \a simplify as \c false, this routine will keep both
          * Wirtinger presentations and not try to simplify them further.
          * If you pass \a simplify as \c true (the default), this routine will
@@ -4303,6 +4315,81 @@ class Link :
          * "reflected" Wirtinger presentations, as described above.
          */
         std::pair<GroupPresentation, GroupPresentation> groups(
+            bool simplify = true) const;
+
+        /**
+         * Returns the extended group of this link, as defined by Silver and
+         * Williams.
+         *
+         * The extended group is defined by Daniel S. Silver and Susan G.
+         * Williams in "Crowell's derived group and twisted polynomials",
+         * J. Knot Theory Ramifications 15 (2006), no. 8, 1079-1094.
+         * It is intended for use with virtual links, where the (ordinary)
+         * link group is not a particularly strong invariant.  As an invariant,
+         * the extended group is stronger, though it also yields more complex
+         * group presentations.
+         *
+         * As with the ordinary link group, the extended group of a virtual
+         * link _could_ change its isomorphism type depending upon whether you
+         * view the link from above or below the diagram, and so you may wish
+         * to call extendedGroups() instead, which builds both group
+         * presentations.  Again, as with the ordinary link group,
+         * ExampleLink::gpv() provides an example for which these two groups
+         * are non-isomorphic.
+         *
+         * If you pass \a simplify as \c false, this routine will keep the
+         * presentation in the form described by Silver and Williams, and will
+         * not try to simplify it further.  If you pass \a simplify as \c true
+         * (the default), this routine will attempt to simplify the group
+         * presentation before returning.
+         *
+         * This group is _not_ cached; instead it is reconstructed every time
+         * this function is called.  This behaviour may change in future
+         * versions of Regina.
+         *
+         * \param simplify \c true if we should attempt to simplify the group
+         * presentation before returning.
+         * \return the extended group of this link.
+         */
+        GroupPresentation extendedGroup(bool simplify = true) const;
+
+        /**
+         * Returns the extended groups of this link and its mirror image.
+         *
+         * The extended group is defined by Silver and Williams for use with
+         * virtual links (see extendedGroup() for details).  This routine is
+         * provided because viewing a virtual link diagram from below instead
+         * of above can change the isomorphism type of the extended group, and
+         * so this routine returns _both_ groups.  Specifically:
+         *
+         * - In first group that is returned, we use the presentation exactly
+         *   as described by Silver and Williams.  This is the same presentation
+         *   that is constructed by extendedGroup().
+         *
+         * - In the second group that is returned, we conceptually reflect the
+         *   link diagram through the surface in which it is embedded (as
+         *   though we had called changeAll(), though this link diagram will
+         *   not actually be changed).
+         *
+         * See ExampleLink::gpv() for an example of a virtual knot for which
+         * these two extended link groups are not isomorphic.
+         *
+         * If you pass \a simplify as \c false, this routine will keep both
+         * presentations in the form described by Silver and Williams, and
+         * will not try to simplify them further.  If you pass \a simplify as
+         * \c true (the default), this routine will attempt to simplify both
+         * group presentations before returning.
+         *
+         * These groups are _not_ cached; instead they are reconstructed
+         * every time this function is called.  This behaviour may change in
+         * future versions of Regina.
+         *
+         * \param simplify \c true if we should attempt to simplify the group
+         * presentations before returning.
+         * \return the groups of this link obtained by the "native" and
+         * "reflected" Silver-Williams presentations, as described above.
+         */
+        std::pair<GroupPresentation, GroupPresentation> extendedGroups(
             bool simplify = true) const;
 
         /**
@@ -6788,6 +6875,22 @@ class Link :
         GroupPresentation internalGroup(bool flip, bool simplify) const;
 
         /**
+         * Returns the extended group of this link as constructed from the
+         * Silver-Williams presentation, possibly switching the roles of the
+         * upper and lower strands at every crossing.
+         *
+         * \param flip \c false if we should build the "native" Silver-Williams
+         * presentation, as constructed by the public function extendedGroup(),
+         * or \c true if we should build the "reflection" presentation, which
+         * would be obtained by extendedGroup() if we had called changeAll()
+         * beforehand.
+         * \param simplify \c true if we should attempt to simplify the group
+         * presentation before returning.
+         * \return the requested extended group.
+         */
+        GroupPresentation internalExtendedGroup(bool flip, bool simplify) const;
+
+        /**
          * Takes an arbitrary tree decomposition for this link, and
          * modifies and optimises it so that it is ready for use as a
          * nice tree decomposition for the internal treewidth-based
@@ -7430,6 +7533,16 @@ inline GroupPresentation Link::group(bool simplify) const {
 inline std::pair<GroupPresentation, GroupPresentation> Link::groups(
         bool simplify) const {
     return { internalGroup(false, simplify), internalGroup(true, simplify) };
+}
+
+inline GroupPresentation Link::extendedGroup(bool simplify) const {
+    return internalExtendedGroup(false, simplify);
+}
+
+inline std::pair<GroupPresentation, GroupPresentation> Link::extendedGroups(
+        bool simplify) const {
+    return { internalExtendedGroup(false, simplify),
+        internalExtendedGroup(true, simplify) };
 }
 
 inline const TreeDecomposition& Link::niceTreeDecomposition() const {

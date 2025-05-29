@@ -456,11 +456,11 @@ Returns:
 
 // Docstring regina::python::doc::Link_::arrow
 static const char *arrow =
-R"doc(Returns the arrow polynomial of this link.
+R"doc(Returns the normalised arrow polynomial of this link.
 
 The arrow polynomial is a generalisation of the Kauffman bracket for
 virtual knots and links. The polynomial will be normalised using the
-writhe of the diagram to obtain a topological invariant, in a similar
+writhe of the diagram to obtain a virtual link invariant, in a similar
 way to how the Kauffman bracket can be normalised to obtain the Jones
 polynomial. Regina follows the description in H.A. Dye and L.H.
 Kauffman, "Virtual crossing number and the arrow polynomial", J. Knot
@@ -508,8 +508,8 @@ Parameter ``tracker``:
     ``None`` if no progress reporting is required.
 
 Returns:
-    the arrow polynomial, or the zero polynomial if the calculation
-    was cancelled via the given progress tracker.)doc";
+    the normalised arrow polynomial, or the zero polynomial if the
+    calculation was cancelled via the given progress tracker.)doc";
 
 // Docstring regina::python::doc::Link_::bracket
 static const char *bracket =
@@ -1170,6 +1170,82 @@ R"doc(Deprecated routine that returns C++ code to reconstruct this link.
 
 Returns:
     the C++ code that was generated.)doc";
+
+// Docstring regina::python::doc::Link_::extendedGroup
+static const char *extendedGroup =
+R"doc(Returns the extended group of this link, as defined by Silver and
+Williams.
+
+The extended group is defined by Daniel S. Silver and Susan G.
+Williams in "Crowell's derived group and twisted polynomials", J. Knot
+Theory Ramifications 15 (2006), no. 8, 1079-1094. It is intended for
+use with virtual links, where the (ordinary) link group is not a
+particularly strong invariant. As an invariant, the extended group is
+stronger, though it also yields more complex group presentations.
+
+As with the ordinary link group, the extended group of a virtual link
+_could_ change its isomorphism type depending upon whether you view
+the link from above or below the diagram, and so you may wish to call
+extendedGroups() instead, which builds both group presentations.
+Again, as with the ordinary link group, ExampleLink::gpv() provides an
+example for which these two groups are non-isomorphic.
+
+If you pass *simplify* as ``False``, this routine will keep the
+presentation in the form described by Silver and Williams, and will
+not try to simplify it further. If you pass *simplify* as ``True``
+(the default), this routine will attempt to simplify the group
+presentation before returning.
+
+This group is _not_ cached; instead it is reconstructed every time
+this function is called. This behaviour may change in future versions
+of Regina.
+
+Parameter ``simplify``:
+    ``True`` if we should attempt to simplify the group presentation
+    before returning.
+
+Returns:
+    the extended group of this link.)doc";
+
+// Docstring regina::python::doc::Link_::extendedGroups
+static const char *extendedGroups =
+R"doc(Returns the extended groups of this link and its mirror image.
+
+The extended group is defined by Silver and Williams for use with
+virtual links (see extendedGroup() for details). This routine is
+provided because viewing a virtual link diagram from below instead of
+above can change the isomorphism type of the extended group, and so
+this routine returns _both_ groups. Specifically:
+
+* In first group that is returned, we use the presentation exactly as
+  described by Silver and Williams. This is the same presentation that
+  is constructed by extendedGroup().
+
+* In the second group that is returned, we conceptually reflect the
+  link diagram through the surface in which it is embedded (as though
+  we had called changeAll(), though this link diagram will not
+  actually be changed).
+
+See ExampleLink::gpv() for an example of a virtual knot for which
+these two extended link groups are not isomorphic.
+
+If you pass *simplify* as ``False``, this routine will keep both
+presentations in the form described by Silver and Williams, and will
+not try to simplify them further. If you pass *simplify* as ``True``
+(the default), this routine will attempt to simplify both group
+presentations before returning.
+
+These groups are _not_ cached; instead they are reconstructed every
+time this function is called. This behaviour may change in future
+versions of Regina.
+
+Parameter ``simplify``:
+    ``True`` if we should attempt to simplify the group presentations
+    before returning.
+
+Returns:
+    the groups of this link obtained by the "native" and "reflected"
+    Silver-Williams presentations, as described above.)doc";
 
 // Docstring regina::python::doc::Link_::fromDT
 static const char *fromDT =
@@ -2180,7 +2256,7 @@ Returns:
 
 // Docstring regina::python::doc::Link_::group
 static const char *group =
-R"doc(Returns the group of this link, as constructed from the Wirtinger
+R"doc(Returns the link group, as constructed from the Wirtinger
 presentation.
 
 In the Wirtinger presentation, each relation is some variant of the
@@ -2188,17 +2264,25 @@ form ``xy=yz``, where *y* corresponds to the upper strand at some
 crossing, and *x* and *z* correspond to the two sides of the lower
 strand at that same crossing.
 
-* For classical links, this group will always be isomorphic to the
-  fundamental group of the link exterior.
+If you are working with virtual links, there are some points to note:
 
-* For a virtual link whose diagram is embedded in some closed
-  orientable surface *S*, the group _could_ change depending upon
-  which side of *S* you view the diagram from. That is, switching the
-  upper and lower strands at every crossing could yield non-isomorphic
-  groups. As a result, you may wish to call groups() instead, which
-  builds _both_ group presentations. See the groups() documentation
-  for further discussion, or ExampleLink::gpv() for an example of a
+* The group _could_ change depending upon whether you view the link
+  from above or below the diagram. That is, switching the upper and
+  lower strands at every crossing could yield non-isomorphic groups.
+  As a result, you may wish to call groups() instead, which builds
+  _both_ group presentations. See the groups() documentation for
+  further discussion, or ExampleLink::gpv() for an example of a
   virtual knot for which these two groups are indeed non-isomorphic.
+
+* The link group is not a particularly strong invariant for virtual
+  links. You might instead wish to use the _extended_ group, which is
+  stronger (but which yields larger group presentations). See
+  extendedGroup() and extendedGroups() for further details.
+
+For classical links, the link group will always be isomorphic to the
+fundamental group of the link exterior (and in particular, the
+isomorphism type will not depend upon whether you view the diagram
+from above or below).
 
 If you pass *simplify* as ``False``, this routine will keep the
 Wirtinger presentation and not try to simplify it further. If you pass
@@ -2255,6 +2339,11 @@ group(). See ExampleLink::gpv() for an example of a virtual knot whose
 "native" Wirtinger presentation (the first group) gives the trefoil
 group, but whose "reflected" Wirtinger presentation (the second group)
 gives the unknot group.
+
+A further note, however: if you are working with virtual links then
+the link group is not a particularly strong invariant. You might wish
+to consider using the _extended_ link group instead; see
+extendedGroup() and extendedGroups() for further details.
 
 If you pass *simplify* as ``False``, this routine will keep both
 Wirtinger presentations and not try to simplify them further. If you
@@ -3185,8 +3274,8 @@ Returns:
 
 // Docstring regina::python::doc::Link_::knowsArrow
 static const char *knowsArrow =
-R"doc(Is the arrow polynomial of this link already known? See arrow() for
-further details.
+R"doc(Is the normalised arrow polynomial of this link already known? See
+arrow() for further details.
 
 If this property is already known, future calls to arrow() will be
 very fast (simply returning the precalculated value).

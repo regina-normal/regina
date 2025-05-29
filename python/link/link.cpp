@@ -319,6 +319,10 @@ void addLink(pybind11::module_& m) {
             pybind11::arg("simplify") = true, rdoc::group)
         .def("groups", &Link::groups,
             pybind11::arg("simplify") = true, rdoc::groups)
+        .def("extendedGroup", &Link::extendedGroup,
+            pybind11::arg("simplify") = true, rdoc::extendedGroup)
+        .def("extendedGroups", &Link::extendedGroups,
+            pybind11::arg("simplify") = true, rdoc::extendedGroups)
         .def("niceTreeDecomposition", &Link::niceTreeDecomposition,
             pybind11::return_value_policy::reference_internal,
                 rdoc::niceTreeDecomposition)

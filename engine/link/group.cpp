@@ -161,5 +161,71 @@ GroupPresentation Link::internalGroup(bool flip, bool simplify) const {
     return g;
 }
 
+GroupPresentation Link::internalExtendedGroup(bool flip, bool simplify) const {
+    if (crossings_.empty()) {
+        // This is a zero-crossing unlink.
+        return { components_.size() + 1 };
+    }
+
+    // We have a non-zero number of crossings.
+    // Build the Wirtinger-like presentation as given by Silver and Williams.
+    //
+    // For strand s, we use generator number s.id() + 1.
+    // For the special generator x, we use generator number 0.
+    // For zero-crossing unknot components, we use additional generators
+    // beyond these indices (which will never appear in any relations).
+    GroupPresentation g(2 * crossings_.size() + 1 + countTrivialComponents());
+
+    for (Crossing* c : crossings_) {
+        // The first relation is the same regardless of whether we flip.
+        GroupExpression r1;
+        if (c->sign() > 0) {
+            r1.addTermLast(c->upper().id() + 1, 1);
+            r1.addTermLast(c->lower().id() + 1, 1);
+            r1.addTermLast(c->upper().prev().id() + 1, -1);
+            r1.addTermLast(c->lower().prev().id() + 1, -1);
+        } else {
+            r1.addTermLast(c->upper().prev().id() + 1, 1);
+            r1.addTermLast(c->lower().prev().id() + 1, 1);
+            r1.addTermLast(c->upper().id() + 1, -1);
+            r1.addTermLast(c->lower().id() + 1, -1);
+        }
+        g.addRelation(std::move(r1));
+
+        // The second relation changes.
+        GroupExpression r2;
+        if (flip) {
+            if (c->sign() > 0) {
+                r2.addTermLast(c->lower().id() + 1, 1);
+                r2.addTermLast(0, 1);
+                r2.addTermLast(c->lower().prev().id() + 1, -1);
+                r2.addTermLast(0, -1);
+            } else {
+                r2.addTermLast(c->lower().prev().id() + 1, 1);
+                r2.addTermLast(0, 1);
+                r2.addTermLast(c->lower().id() + 1, -1);
+                r2.addTermLast(0, -1);
+            }
+        } else {
+            if (c->sign() > 0) {
+                r2.addTermLast(c->upper().prev().id() + 1, 1);
+                r2.addTermLast(0, 1);
+                r2.addTermLast(c->upper().id() + 1, -1);
+                r2.addTermLast(0, -1);
+            } else {
+                r2.addTermLast(c->upper().id() + 1, 1);
+                r2.addTermLast(0, 1);
+                r2.addTermLast(c->upper().prev().id() + 1, -1);
+                r2.addTermLast(0, -1);
+            }
+        }
+        g.addRelation(std::move(r2));
+    }
+
+    if (simplify)
+        g.simplify();
+    return g;
+}
+
 } // namespace regina
 
