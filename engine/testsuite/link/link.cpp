@@ -1334,8 +1334,10 @@ TEST_F(LinkTest, arrow) {
     verifyArrowClassical(trefoil_unknot_overlap);
     verifyArrowClassical(adams6_28);
 
-    // This was computed using Regina 7.4.  It should be possible to find a
-    // source that can independently verify this polynomial..?
+    // Our virtual trefoil diagram is identical to Figure 22 from Kauffman,
+    // "Introduction to virtual knot theory", JKTR 21 (2012).  We therefore
+    // treat Kauffman's example as an independent verification.  Note that
+    // Kauffman does not normalise his arrow polynomial using the writhe.
     verifyArrow(virtualTrefoil.link, virtualTrefoil.name,
         { {{}, {-4, {1}}},
           {{1}, {-10, {-1,0,0,0,1}}}

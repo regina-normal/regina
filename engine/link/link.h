@@ -4152,11 +4152,11 @@ class Link :
         static Laurent2<Integer> homflyAZtoLM(Laurent2<Integer> homflyAZ);
 
         /**
-         * Returns the arrow polynomial of this link.
+         * Returns the normalised arrow polynomial of this link.
          *
          * The arrow polynomial is a generalisation of the Kauffman bracket for
          * virtual knots and links.  The polynomial will be normalised using
-         * the writhe of the diagram to obtain a topological invariant, in a
+         * the writhe of the diagram to obtain a virtual link invariant, in a
          * similar way to how the Kauffman bracket can be normalised to obtain
          * the Jones polynomial.  Regina follows the description in H.A. Dye and
          * L.H. Kauffman, "Virtual crossing number and the arrow polynomial",
@@ -4196,13 +4196,13 @@ class Link :
          * just use the default (Algorithm::Default).
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * \return the arrow polynomial, or the zero polynomial if the
-         * calculation was cancelled via the given progress tracker.
+         * \return the normalised arrow polynomial, or the zero polynomial if
+         * the calculation was cancelled via the given progress tracker.
          */
         const Arrow& arrow(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
-         * Is the arrow polynomial of this link already known?
+         * Is the normalised arrow polynomial of this link already known?
          * See arrow() for further details.
          *
          * If this property is already known, future calls to arrow() will be
