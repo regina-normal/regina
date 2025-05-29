@@ -4182,6 +4182,8 @@ static void verifyClassicalGroup(const Link& link, const char* name) {
     verifyIsomorphic(fromLink, fromComp);
 }
 
+// Use this when we should get the same group when viewing from
+// above and below the diagram.
 static void verifyGroup(const TestCase& test, const GroupPresentation& expect) {
     SCOPED_TRACE_CSTRING(test.name);
 
@@ -4194,6 +4196,8 @@ static void verifyGroup(const TestCase& test, const GroupPresentation& expect) {
     verifyIsomorphic(flip.group(), expect);
 }
 
+// Use this when we should get different groups when viewing from
+// above and below the diagram.
 static void verifyGroups(const TestCase& test,
         const GroupPresentation& expect, const GroupPresentation& expectFlip) {
     SCOPED_TRACE_CSTRING(test.name);
@@ -4250,7 +4254,7 @@ TEST_F(LinkTest, group) {
     verifyGroup(virtualDisconnected, { 6, { "abAB", "acAC", "efEF" }});
 }
 
-static void verifyExtendedGroup(const Link& link, const char* name) {
+static void verifyExtendedGroupBasic(const Link& link, const char* name) {
     // For now, some very basic tests.
     SCOPED_TRACE_CSTRING(name);
 
@@ -4260,44 +4264,63 @@ static void verifyExtendedGroup(const Link& link, const char* name) {
     EXPECT_EQ(groups.second.abelianRank(), link.countComponents() + 1);
 }
 
-static void verifyExtendedGroup(const TestCase& test,
+// Use this when we should get the same group when viewing from
+// above and below the diagram.
+static void verifyExtendedGroupTwoSided(Link link, const char* name,
         const GroupPresentation& expect) {
-    SCOPED_TRACE_CSTRING(test.name);
+    SCOPED_TRACE_CSTRING(name);
 
-    auto found = test.link.extendedGroups();
+    auto found = link.extendedGroups();
     verifyIsomorphic(found.first, expect);
     verifyIsomorphic(found.second, expect);
 
-    Link flip(test.link);
-    flip.changeAll();
-    verifyIsomorphic(flip.extendedGroup(), expect);
+    link.changeAll();
+    verifyIsomorphic(link.extendedGroup(), expect);
+}
+
+// Use this when we might different groups when viewing from above and below
+// the diagram, and we do not actually know what to expect from below.
+static void verifyExtendedGroupOneSided(const Link& link, const char* name,
+        const GroupPresentation& expect) {
+    SCOPED_TRACE_CSTRING(name);
+
+    verifyIsomorphic(link.extendedGroup(), expect);
 }
 
 TEST_F(LinkTest, extendedGroup) {
-    testManualCases(verifyExtendedGroup, false /* gordian */);
+    testManualCases(verifyExtendedGroupBasic, false /* gordian */);
 
     // Some groups for which we know what the answers should be:
 
-    verifyExtendedGroup(unknot0, { 2 });
-    verifyExtendedGroup(unknot1, { 2 });
-    verifyExtendedGroup(unknot3, { 2 });
-    verifyExtendedGroup(unknotMonster, { 2 });
+    verifyExtendedGroupTwoSided(unknot0.link, unknot0.name, { 2 });
+    verifyExtendedGroupTwoSided(unknot1.link, unknot1.name, { 2 });
+    verifyExtendedGroupTwoSided(unknot3.link, unknot3.name, { 2 });
+    verifyExtendedGroupTwoSided(unknotMonster.link, unknotMonster.name, { 2 });
 
-    verifyExtendedGroup(unlink2_0, { 3 });
-    verifyExtendedGroup(unlink3_0, { 4 });
-    verifyExtendedGroup(unlink2_r2, { 3 });
-    verifyExtendedGroup(unlink2_r1r1, { 3 });
+    verifyExtendedGroupTwoSided(unlink2_0.link, unlink2_0.name, { 3 });
+    verifyExtendedGroupTwoSided(unlink3_0.link, unlink3_0.name, { 4 });
+    verifyExtendedGroupTwoSided(unlink2_r2.link, unlink2_r2.name, { 3 });
+    verifyExtendedGroupTwoSided(unlink2_r1r1.link, unlink2_r1r1.name, { 3 });
 
     // Example 2.1 of Boden et al., "Alexander invariants for virtual knots",
     // JKTR 24 (2015) gives a presentation of the virtual knot group for the
     // virtual trefoil.  The extended group is obtained from this presentation
     // by setting q=1.
-    verifyExtendedGroup(virtualTrefoil, { 2, { "ABBAbABabbaBab" }});
+    verifyExtendedGroupTwoSided(virtualTrefoil.link, kishino.name,
+        { 2, { "ABBAbABabbaBab" }});
 
     // Boden et al. also note that the Kishino knot has trivial virtual knot
     // group, which implies a trivial extended knot group.  Here "trivial"
     // means the same as for the unknot, i.e., free on two generators.
-    verifyExtendedGroup(kishino, { 2 });
+    verifyExtendedGroupTwoSided(kishino.link, kishino.name, { 2 });
+
+    // The next group is example 4.5 of Silver and Williams.
+    // Regina's computations suggest that the mirror image has a different
+    // group, and so we use a one-sided test only.  (Silver and Williams say
+    // nothing about mirror images.)
+    verifyExtendedGroupOneSided(
+        Link::fromData({-1,+1,-1,-1}, {1,-2,-3,4,-1,3,-4,2}),
+        "Silver-Williams ex. 4.5", { 3, { "bacBABabbabCABAC", "abcabCABAC" }});
 }
 
 static void verifySmallCells(const Link& link, const char* name) {
