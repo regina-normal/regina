@@ -45,11 +45,17 @@
 namespace regina {
 
 /**
- * A fixed-size array whose size can be provided at runtime.
+ * A lightweight fixed-size random-access array whose size can be provided at
+ * runtime.  After construction, the size of the array cannot be changed.
  *
- * This is essentially a wrapper around `new[]` and `delete[]` that allows the
- * array object to live on the stack, avoiding the need to worry about memory
- * management (particularly in the presence of exceptions).
+ * This class is intended to be used for temporary working arrays within the
+ * implementations of algorithms: it is lightweight and provides the speed of
+ * C-style arrays, but avoids the pitfalls of `new[]` and `delete[]`, instead
+ * offering safe and simple stack-based memory mangement and exception safety.
+ *
+ * This class is very similar in nature to LightweightSequence, but was born
+ * from different needs.  It is possible that these two classes will be unified
+ * in some future version of Regina.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -75,11 +81,13 @@ class FixedArray {
          */
         using const_reference = T const&;
         /**
-         * A random-access iterator over this array.
+         * A random-access iterator that gives read-write access to the
+         * elements of this array.
          */
         using iterator = T*;
         /**
-         * A constant random-access iterator over this array.
+         * A random-access iterator that gives read-only access to the
+         * elements of this array.
          */
         using const_iterator = T const*;
         /**
@@ -130,11 +138,12 @@ class FixedArray {
          */
         FixedArray(const FixedArray& src) :
                 data_(new T[src.size_]), size_(src.size_) {
-            std::copy(src.begin(), src.end(), data_);
+            std::copy(src.data_, src.data_ + src.size_, data_);
         }
 
         /**
          * Moves the contents of the given array into this new array.
+         * This is a fast (constant time) operation.
          *
          * The array \a src that was passed will no longer be usable.
          *
@@ -153,13 +162,17 @@ class FixedArray {
          * \param values the sequence of values to copy into this new list.
          */
         FixedArray(std::initializer_list<T> values) :
-                size_(values.end() - values.begin()) {
-            data_ = new T[size_];
+                data_(new T[values.size()]), size_(values.size()) {
             std::copy(values.begin(), values.end(), data_);
         }
 
         /**
          * Destroys this array.
+         *
+         * All elements of this array will be destroyed using the destructor
+         * for type \a T.  If the elements are pointers whose pointee objects
+         * need to be deleted also, you must do this separately before
+         * destroying the array itself.
          */
         ~FixedArray() {
             delete[] data_;
@@ -202,6 +215,8 @@ class FixedArray {
 
         /**
          * Determines whether this array is empty.
+         *
+         * This is true if and only if `size() == 0`.
          *
          * \return \c true if and only if this array is empty.
          */
@@ -276,6 +291,47 @@ class FixedArray {
          */
         const_iterator cend() const {
             return data_ + size_;
+        }
+
+        /**
+         * Returns a read-only reference to the first element of this array.
+         *
+         * \pre This array is non-empty.
+         *
+         * \return a reference to the first element.
+         */
+        const T& front() const {
+            return *data_;
+        }
+        /**
+         * Returns a read-write reference to the first element of this array.
+         *
+         * \pre This array is non-empty.
+         *
+         * \return a reference to the first element.
+         */
+        T& front() {
+            return *data_;
+        }
+        /**
+         * Returns a read-only reference to the last element of this array.
+         *
+         * \pre This array is non-empty.
+         *
+         * \return a reference to the last element.
+         */
+        const T& back() const {
+            return data_[size_ - 1];
+        }
+        /**
+         * Returns a read-write reference to the last element of this array.
+         *
+         * \pre This array is non-empty.
+         *
+         * \return a reference to the last element.
+         */
+        T& back() {
+            return data_[size_ - 1];
         }
 
         /**

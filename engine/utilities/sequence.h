@@ -49,15 +49,20 @@ namespace regina {
  *
  * This class is intended as a lightweight substitute for std::vector,
  * especially when working with temporary sequences that are frequently
- * created and destroyed.  The underlying storage just uses a native
- * C-style array, and the C++ class wrapper provides the usual mechanisms
- * for safe and simple memory management.
+ * created and destroyed, such as sequence-valued keys or values in maps.
+ * The underlying storage just uses a native C-style array, and the
+ * C++ class wrapper provides the usual mechanisms for safe and simple
+ * memory management.
  *
  * The size (number of elements) of a sequence can be changed, but this
  * should not be done lightly.  Unlike std::vector, resizing a sequence
  * is an expensive operation that deletes all existing contents of the
  * sequence and forces a reallocation of the underlying storage.
  * See init() for details.
+ *
+ * This class is very similar in nature to FixedArray, but was born from
+ * different needs.  It is possible that these two classes will be unified in
+ * some future version of Regina.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
