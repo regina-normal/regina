@@ -31,10 +31,8 @@
  **************************************************************************/
 
 #include "link/link.h"
-#include "maths/laurent.h"
 #include "progress/progresstracker.h"
 #include "utilities/bitmanip.h"
-#include "utilities/sequence.h"
 #include <thread>
 
 // #define DUMP_STAGES
