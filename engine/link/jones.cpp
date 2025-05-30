@@ -136,7 +136,7 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
 
     size_t n = crossings_.size();
     if (n >= 64) {
-        // We cannot use the backtracking algorithm, since our bitmask
+        // We cannot use the naive algorithm, since our bitmask
         // type (uint64_t) does not contain enough bits.
         return bracketTreewidth(tracker);
     }
