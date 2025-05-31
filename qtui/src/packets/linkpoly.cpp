@@ -191,6 +191,34 @@ LinkPolynomialUI::LinkPolynomialUI(regina::PacketOf<regina::Link>* packet,
     connect(btnBracket, SIGNAL(clicked()), this, SLOT(calculateBracket()));
     layout->addLayout(sublayout);
 
+    layout->addSpacing(10);
+
+    label = new QLabel(tr("<b>Arrow polynomial</b>"), ui);
+    msg = tr("The arrow polynomial of this link.");
+    label->setWhatsThis(msg);
+    layout->addWidget(label);
+
+    layout->addSpacing(5);
+
+    sublayout = new QHBoxLayout();
+    sublayout->setContentsMargins(0, 0, 0, 0);
+    sublayout->setSpacing(0);
+    arrow = new QLabel(ui);
+    arrow->setWordWrap(true);
+    arrow->setWhatsThis(msg);
+    sublayout->addWidget(arrow, 1);
+    btnArrow = new QPushButton(ReginaSupport::themeIcon("system-run"),
+        tr("Calculate"), ui);
+    btnArrow->setToolTip(tr("Calculate the arrow polynomial"));
+    btnArrow->setWhatsThis(tr("<qt>Calculate the arrow polynomial "
+        "of this link.<p>"
+        "<b>Warning:</b> This calculation may be slow for "
+        "larger links (which is why the arrow polynomial is not "
+        "always computed automatically).</qt>"));
+    sublayout->addWidget(btnArrow);
+    connect(btnArrow, SIGNAL(clicked()), this, SLOT(calculateArrow()));
+    layout->addLayout(sublayout);
+
     layout->addStretch(1);
 
     updateLabels();
@@ -201,6 +229,7 @@ LinkPolynomialUI::LinkPolynomialUI(regina::PacketOf<regina::Link>* packet,
     jones->setContextMenuPolicy(Qt::CustomContextMenu);
     homfly->setContextMenuPolicy(Qt::CustomContextMenu);
     bracket->setContextMenuPolicy(Qt::CustomContextMenu);
+    arrow->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(jones, SIGNAL(customContextMenuRequested(const QPoint&)),
         this, SLOT(contextJones(const QPoint&)));
@@ -208,6 +237,8 @@ LinkPolynomialUI::LinkPolynomialUI(regina::PacketOf<regina::Link>* packet,
         this, SLOT(contextHomfly(const QPoint&)));
     connect(bracket, SIGNAL(customContextMenuRequested(const QPoint&)),
         this, SLOT(contextBracket(const QPoint&)));
+    connect(arrow, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(contextArrow(const QPoint&)));
 }
 
 regina::Packet* LinkPolynomialUI::getPacket() {
@@ -224,21 +255,21 @@ void LinkPolynomialUI::refresh() {
     if (link->knowsJones() || link->size() <= MAX_LINK_AUTO_POLYNOMIALS) {
         btnJones->setVisible(false);
 
-        const auto& polySqrtT = link->jones();
-        if (polySqrtT.isZero() || polySqrtT.minExp() % 2 == 0) {
-            // We can express this as a polynomial in t.
-            regina::Laurent<regina::Integer> scaled(polySqrtT);
-            scaled.scaleDown(2);
+        auto poly = link->jones();
+
+        // Currently this is a polynomial in \sqrt{t}.
+        // Try to express it as a polynomial in t.
+        try {
+            poly.scaleDown(2);
             if (unicode)
-                jones->setText(scaled.utf8("t").c_str());
+                jones->setText(poly.utf8("t").c_str());
             else
-                jones->setText(scaled.str("t").c_str());
-        } else {
-            // Keep it as a polynomial in sqrt(t).
+                jones->setText(poly.str("t").c_str());
+        } catch (const regina::FailedPrecondition&) {
             if (unicode)
-                jones->setText(polySqrtT.utf8(regina::Link::jonesVar).c_str());
+                jones->setText(poly.utf8(regina::Link::jonesVar).c_str());
             else
-                jones->setText(polySqrtT.str("sqrt_t").c_str());
+                jones->setText(poly.str("sqrt_t").c_str());
         }
 
         QPalette pal = jones->palette();
@@ -252,7 +283,13 @@ void LinkPolynomialUI::refresh() {
         btnJones->setVisible(true);
     }
 
-    if (link->knowsHomfly() || link->size() <= MAX_LINK_AUTO_POLYNOMIALS) {
+    if (! link->isClassical()) {
+        btnHomfly->setVisible(false);
+        homfly->setText("Not available for virtual links");
+        QPalette pal = homfly->palette();
+        pal.setColor(homfly->foregroundRole(), Qt::darkGray);
+        homfly->setPalette(pal);
+    } else if (link->knowsHomfly() || link->size() <= MAX_LINK_AUTO_POLYNOMIALS) {
         btnHomfly->setVisible(false);
         if (! btnLM->isChecked()) {
             if (unicode)
@@ -297,6 +334,25 @@ void LinkPolynomialUI::refresh() {
         bracket->setPalette(pal);
         btnBracket->setVisible(true);
     }
+
+    if (link->knowsArrow() || link->size() <= MAX_LINK_AUTO_POLYNOMIALS) {
+        btnArrow->setVisible(false);
+        if (unicode)
+            arrow->setText(link->arrow().utf8().c_str());
+        else
+            arrow->setText(link->arrow().str().c_str());
+        QPalette pal = arrow->palette();
+        pal.setColor(arrow->foregroundRole(), Qt::black);
+        arrow->setPalette(pal);
+        arrow->setVisible(true);
+    } else {
+        arrow->setText(tr("Unknown"));
+        QPalette pal = arrow->palette();
+        pal.setColor(arrow->foregroundRole(), Qt::darkGray);
+        arrow->setPalette(pal);
+        arrow->setVisible(true);
+        btnArrow->setVisible(true);
+    }
 }
 
 void LinkPolynomialUI::calculateJones() {
@@ -333,6 +389,18 @@ void LinkPolynomialUI::calculateBracket() {
     dlg.hide();
 
     // Now calling jones() should be instantaneous.
+    refresh();
+}
+
+void LinkPolynomialUI::calculateArrow() {
+    regina::ProgressTracker tracker;
+    ProgressDialogNumeric dlg(&tracker, tr("Computing arrow polynomial"), ui);
+    std::thread(&Link::arrow, link, regina::Algorithm::Default, &tracker).detach();
+    if (! dlg.run())
+        return;
+    dlg.hide();
+
+    // Now calling arrow() should be instantaneous.
     refresh();
 }
 
@@ -384,6 +452,22 @@ void LinkPolynomialUI::contextBracket(const QPoint& pos) {
     m.exec(bracket->mapToGlobal(pos));
 }
 
+void LinkPolynomialUI::contextArrow(const QPoint& pos) {
+    if (! link->knowsArrow())
+        return;
+
+    QMenu m(tr("Context menu"), arrow);
+
+    QAction copy("Copy", this);
+    QAction copyPlain("Copy plain text", this);
+    connect(&copy, SIGNAL(triggered()), this, SLOT(copyArrow()));
+    connect(&copyPlain, SIGNAL(triggered()), this, SLOT(copyArrowPlain()));
+    m.addAction(&copy);
+    m.addAction(&copyPlain);
+
+    m.exec(arrow->mapToGlobal(pos));
+}
+
 void LinkPolynomialUI::copyJones() {
     QApplication::clipboard()->setText(jones->text());
 }
@@ -394,6 +478,10 @@ void LinkPolynomialUI::copyHomfly() {
 
 void LinkPolynomialUI::copyBracket() {
     QApplication::clipboard()->setText(bracket->text());
+}
+
+void LinkPolynomialUI::copyArrow() {
+    QApplication::clipboard()->setText(arrow->text());
 }
 
 void LinkPolynomialUI::copyJonesPlain() {
@@ -420,6 +508,10 @@ void LinkPolynomialUI::copyHomflyPlain() {
 
 void LinkPolynomialUI::copyBracketPlain() {
     QApplication::clipboard()->setText(link->bracket().str("A").c_str());
+}
+
+void LinkPolynomialUI::copyArrowPlain() {
+    QApplication::clipboard()->setText(link->arrow().str().c_str());
 }
 
 void LinkPolynomialUI::homflyTypeChanged(bool checked) {

@@ -67,9 +67,11 @@ class LinkPolynomialUI : public QObject, public PacketViewerTab {
         QLabel* jones;
         QLabel* homfly;
         QLabel* bracket;
+        QLabel* arrow;
         QAbstractButton* btnJones;
         QAbstractButton* btnHomfly;
         QAbstractButton* btnBracket;
+        QAbstractButton* btnArrow;
         QRadioButton* btnAZ;
         QRadioButton* btnLM;
 
@@ -94,6 +96,7 @@ class LinkPolynomialUI : public QObject, public PacketViewerTab {
         void calculateJones();
         void calculateHomfly();
         void calculateBracket();
+        void calculateArrow();
 
         /**
          * Change the display style.
@@ -111,12 +114,15 @@ class LinkPolynomialUI : public QObject, public PacketViewerTab {
         void contextJones(const QPoint& pos);
         void contextHomfly(const QPoint& pos);
         void contextBracket(const QPoint& pos);
+        void contextArrow(const QPoint& pos);
         void copyJones();
         void copyHomfly();
         void copyBracket();
+        void copyArrow();
         void copyJonesPlain();
         void copyHomflyPlain();
         void copyBracketPlain();
+        void copyArrowPlain();
 
     private:
         /**
