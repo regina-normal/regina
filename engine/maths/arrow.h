@@ -204,6 +204,16 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
             std::pair<DiagramSequence, Laurent<Integer>>> pairs);
 
         /**
+         * Creates the given Laurent polynomial in \a A.
+         *
+         * This polynomial will have no diagram variables at all.
+         *
+         * \param laurent the value of this new polynomial, given as a
+         * Laurent polynomial in \a A.
+         */
+        Arrow(Laurent<Integer> laurent);
+
+        /**
          * Sets this to become the zero polynomial.
          */
         void init();
@@ -389,6 +399,17 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
          * \return a reference to this polynomial.
          */
         Arrow& operator = (Arrow&& value) noexcept = default;
+
+        /**
+         * Sets this to be the given Laurent polynomial in \a A.
+         *
+         * This polynomial will have no diagram variables at all.
+         *
+         * \param laurent the new value of this polynomial, given as a
+         * Laurent polynomial in \a A.
+         * \return a reference to this polynomial.
+         */
+        Arrow& operator = (Laurent<Integer> laurent);
 
         /**
          * Swaps the contents of this and the given polynomial.
@@ -741,6 +762,11 @@ inline Arrow::Arrow(
     }
 }
 
+inline Arrow::Arrow(Laurent<Integer> laurent) {
+    if (! laurent.isZero())
+        terms_.emplace(DiagramSequence(), std::move(laurent));
+}
+
 inline void Arrow::init() {
     terms_.clear();
 }
@@ -786,6 +812,13 @@ inline bool Arrow::operator == (const Laurent<Integer>& rhs) const {
 
 inline std::strong_ordering Arrow::operator <=> (const Arrow& rhs) const {
     return terms_ <=> rhs.terms_;
+}
+
+inline Arrow& Arrow::operator = (Laurent<Integer> laurent) {
+    terms_.clear();
+    if (! laurent.isZero())
+        terms_.emplace(DiagramSequence(), std::move(laurent));
+    return *this;
 }
 
 inline void Arrow::swap(Arrow& other) noexcept {

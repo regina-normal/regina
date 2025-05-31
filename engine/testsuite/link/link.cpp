@@ -1297,6 +1297,17 @@ static void verifyArrowClassical(const TestCase& test) {
     jones.scaleUp(-2);
 
     EXPECT_EQ(arrow, jones);
+
+    {
+        // Check that deducing the arrow polynomial from the bracket gives the
+        // same answer as computing the arrow polynomial directly.
+        // (This deduction is only made for classical links.)
+        Link tmp(test.link, false);
+        EXPECT_FALSE(tmp.knowsArrow());
+        tmp.jones();
+        EXPECT_TRUE(tmp.knowsArrow());
+        EXPECT_EQ(tmp.arrow(), arrow);
+    }
 }
 
 TEST_F(LinkTest, arrow) {

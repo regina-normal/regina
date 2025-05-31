@@ -626,18 +626,26 @@ const Laurent<Integer>& Link::jones(Algorithm alg, ProgressTracker* tracker)
 void Link::setPropertiesFromBracket(Laurent<Integer>&& bracket) const {
     bracket_ = std::move(bracket);
 
-    // Convert bracket into jones:
-    // (-A^3)^(-w) * bracket, then multiply all exponents by -1/4.
-    Laurent<Integer> jones(*bracket_);
+    // Normalise the bracket using the writhe: multiply by (-A^3)^(-w).
+    Laurent<Integer> normalised(*bracket_);
     long w = writhe();
-    jones.shift(-3 * w);
+    normalised.shift(-3 * w);
     if (w % 2)
-        jones.negate();
+        normalised.negate();
 
+    if (isClassical()) {
+        // The arrow polynomial for a _classical_ link is just the normalised
+        // bracket.
+        arrow_ = normalised;
+    }
+
+    // The Jones polynomial is obtained from the normalised bracket by
+    // multiplying all exponents by -1/4.
+    //
     // We only scale exponents by -1/2, since we are returning a Laurent
     // polynomial in sqrt(t).
-    jones.scaleDown(-2);
-    jones_ = std::move(jones);
+    normalised.scaleDown(-2);
+    jones_ = std::move(normalised);
 }
 
 void Link::optimiseForJones(TreeDecomposition& td) const {
