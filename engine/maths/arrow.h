@@ -430,6 +430,9 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
          * \pre All exponents of `A` that appear in this polynomial with
          * non-zero coefficients are multiples of \a k.
          *
+         * \exception FailedPrecondition Either \a k is zero, or some exponent
+         * of `A` with a non-zero coefficient is not a multiple of \a k.
+         *
          * \param k the scaling factor to divide exponents by.
          */
         void scaleDown(long k);

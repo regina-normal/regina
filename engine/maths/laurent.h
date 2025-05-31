@@ -469,6 +469,9 @@ class Laurent :
          * \pre All exponents in this polynomial with non-zero coefficients
          * are multiples of \a k.
          *
+         * \exception FailedPrecondition Either \a k is zero, or some exponent
+         * with a non-zero coefficient is not a multiple of \a k.
+         *
          * \param k the scaling factor to divide exponents by.
          */
         void scaleDown(long k);
@@ -1270,8 +1273,15 @@ void Laurent<T>::scaleUp(long k) {
 
 template <typename T>
 void Laurent<T>::scaleDown(long k) {
+    if (k == 0)
+        throw FailedPrecondition("scaleDown() requires a non-zero "
+            "scaling factor");
     if (k == 1)
         return;
+
+    if (minExp_ % k != 0)
+        throw FailedPrecondition("scaleDown(k) requires every exponent "
+            "with a non-zero coefficient to be divisible by k");
 
     if (minExp_ == maxExp_ && base_ == minExp_) {
         minExp_ /= k;
@@ -1280,21 +1290,44 @@ void Laurent<T>::scaleDown(long k) {
         return;
     }
 
+    if (maxExp_ % k != 0)
+        throw FailedPrecondition("scaleDown(k) requires every exponent "
+            "with a non-zero coefficient to be divisible by k");
+
     T* newCoeff;
     if (k > 0) {
         newCoeff = new T[(maxExp_ - minExp_) / k + 1];
-        for (long i = 0; i <= (maxExp_ - minExp_) / k; ++i)
-            newCoeff[i] = coeff_[minExp_ - base_ + k * i];
-        minExp_ /= k;
-        maxExp_ /= k;
+        const T* src = coeff_ + (minExp_ - base_);
+        const T* srcEnd = coeff_ + (maxExp_ - base_);
+        T* dest = newCoeff;
+        while (src != srcEnd) {
+            *dest++ = *src++;
+            for (long i = 1; i < k; ++i)
+                if ((*src++) != 0)
+                    throw FailedPrecondition("scaleDown(k) requires every "
+                        "exponent with a non-zero coefficient to be "
+                        "divisible by k");
+        }
+        *dest = *src;
     } else {
         newCoeff = new T[(minExp_ - maxExp_) / k + 1];
-        for (long i = (minExp_ - maxExp_) / k; i >= 0; --i)
-            newCoeff[i] = coeff_[maxExp_ - base_ + k * i];
-        minExp_ /= k;
-        maxExp_ /= k;
+        const T* src = coeff_ + (maxExp_ - base_);
+        const T* srcEnd = coeff_ + (minExp_ - base_);
+        T* dest = newCoeff;
+        while (src != srcEnd) {
+            *dest++ = *src--;
+            for (long i = -1; i > k; --i)
+                if ((*src--) != 0)
+                    throw FailedPrecondition("scaleDown(k) requires every "
+                        "exponent with a non-zero coefficient to be "
+                        "divisible by k");
+        }
+        *dest = *src;
         std::swap(minExp_, maxExp_);
     }
+
+    minExp_ /= k;
+    maxExp_ /= k;
 
     base_ = minExp_;
     delete[] coeff_;

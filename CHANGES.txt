@@ -268,6 +268,8 @@ Version 7.4  [ (to be announced) ]
             - Renamed the exponent-based initialisers init(exp) and
               init(xExp, yExp) to initExp(exp) and initExp(xExp, yExp).
               The old names are kept but deprecated.
+            - Laurent::scaleDown() now throws an exception if the preconditions
+              are violated.
             - The std::initializer_list constructor for Laurent2 now throws an
               exception if the preconditions are violated.
         Class LensSpace:
