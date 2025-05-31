@@ -6699,51 +6699,6 @@ class Link :
         bool internalR3(Crossing* crossing, int side, bool check, bool perform);
 
         /**
-         * Internal to bracketNaive().
-         *
-         * Returns the number of loops in the link produced by resolving
-         * each crossing according to the given bitmask:
-         *
-         * - If the <i>i</i>th bit in \a mask is 0, this indicates that
-         *   crossing \a i should be resolved by turning _left_ when
-         *   entering along the upper strand.
-         *
-         * - If the <i>i</i>th bit in \a mask is 1, this indicates that
-         *   crossing \a i should be resolved by turning _right_ when
-         *   entering along the upper strand.
-         *
-         * If the array \a loopIDs is non-null, then it will be filled
-         * with an identifier for each loop.  Each identifier will be
-         * the minimum of the following values that are computed as you
-         * follow the loop: when passing through crossing \a i, if we
-         * encounter the half of the upper strand that _exits_ the crossing
-         * then we take the value \a i, and if we encounter the half of
-         * the upper strand that _enters_ the crossing then we take the
-         * value (\a i + \a n).  These identifiers will be returned in the
-         * array \a loopIDs in sorted order.
-         *
-         * If the array \a loopLengths is non-null, then it will be
-         * filled with the number of strands in each loop (so these
-         * should sum to twice the number of crossings).  These loop
-         * lengths will be placed in the array in the same order as the
-         * loop IDs as described above.
-         *
-         * \pre The number of crossings is less than 64 (the length of
-         * the bitmask type).
-         *
-         * \pre If either or both the arrays \a loopIDs and \a loopLengths
-         * are not null, then they are arrays whose size is at least the
-         * return value (i.e., the number of loops).  This typically means
-         * that the caller must put an upper bound on the number of loops
-         * in advance, before calling this routine.
-         *
-         * \return the resulting number of loops after all crossings are
-         * resolved.
-         */
-        size_t resolutionLoops(uint64_t mask, size_t* loopIDs = nullptr,
-            size_t* loopLengths = nullptr) const;
-
-        /**
          * Compute the Kauffman bracket polynomial using a naive
          * algorithm that sums over all resolutions of all crossings.
          *
@@ -6822,41 +6777,6 @@ class Link :
          * See arrow() for further details.
          */
         Arrow arrowNaive(ProgressTracker* tracker) const;
-
-        /**
-         * Internal to arrowNaive().
-         *
-         * Returns information about the loops in the link that are produced
-         * by resolving each crossing according to the given bitmask:
-         *
-         * - If the <i>i</i>th bit in \a mask is 0, this indicates that
-         *   crossing \a i should be resolved by turning _left_ when
-         *   entering along the upper strand.
-         *
-         * - If the <i>i</i>th bit in \a mask is 1, this indicates that
-         *   crossing \a i should be resolved by turning _right_ when
-         *   entering along the upper strand.
-         *
-         * The information returned consists of:
-         *
-         * - the number of loops obtained by the given resolution;
-         *
-         * - a sequence indicating how many loops there are with each possible
-         *   number of cusp pairs.
-         *
-         * For details on what is meant by a cusp pair, see H.A. Dye and
-         * L.H. Kauffman, "Virtual crossing number and the arrow polynomial",
-         * J. Knot Theory Ramifications 18 (2009), no. 10, 1335-1357.
-         *
-         * If \a seq is the sequence that is returned, then `seq[i]` holds the
-         * number of loops with `i+1` cusp pairs; moreover, if \a seq is
-         * non-empty then its final entry will be strictly positive.
-         *
-         * \pre The number of crossings is less than 64 (the length of
-         * the bitmask type).
-         */
-        std::pair<size_t, Arrow::DiagramSequence> resolutionCuspedLoops(
-            uint64_t mask) const;
 
         /**
          * Returns the group of this link as constructed from the Wirtinger

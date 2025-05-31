@@ -51,75 +51,111 @@ namespace {
      * cancelled.
      */
     const regina::Laurent<regina::Integer> noResult;
-}
 
-size_t Link::resolutionLoops(uint64_t mask, size_t* loopIDs,
-        size_t* loopLengths) const {
-    size_t n = crossings_.size();
+    /**
+     * Internal to bracketNaive().
+     *
+     * This function returns the number of loops in the given link that are
+     * produced by resolving each crossing according to the given bitmask:
+     *
+     * - If the <i>i</i>th bit in \a mask is 0, crossing \a i should be
+     *   resolved by turning _left_ when entering along the upper strand.
+     *
+     * - If the <i>i</i>th bit in \a mask is 1, crossing \a i should be
+     *   resolved by turning _right_ when entering along the upper strand.
+     *
+     * If the array \a loopIDs is non-null, then it will be filled with an
+     * identifier for each loop.  Each identifier will be the minimum of the
+     * following values that are computed as you follow the loop: when passing
+     * through crossing \a i, if we encounter the half of the upper strand that
+     * _exits_ the crossing then we take the value `i`, and if we encounter the
+     * half of the upper strand that _enters_ the crossing then we take the
+     * value `i + n`.  These identifiers will be returned in the array
+     * \a loopIDs in sorted order.
+     *
+     * If the array \a loopLengths is non-null, then it will be filled with the
+     * number of strands in each loop (so these should sum to twice the number
+     * of crossings).  These loop lengths will be placed in the array in the
+     * same order as the loop IDs as described above.
+     *
+     * \pre `link.size() < 64` (here 64 is the length of the bitmask type).
+     *
+     * \pre If either or both arrays \a loopIDs and \a loopLengths are not null,
+     * then they are arrays whose size is at least the return value (i.e., the
+     * number of loops).  This typically means that the caller must put an upper
+     * bound on the number of loops in advance, before calling this routine.
+     */
+    size_t resolutionLoops(const Link& link, uint64_t mask,
+            size_t* loopIDs = nullptr, size_t* loopLengths = nullptr) {
+        size_t n = link.size();
 
-    // found[0..n) : seen the half of the upper strand that exits the crossing
-    // found[n..2n) : seen the half of the upper strand that enters the crossing
-    FixedArray<bool> found(2 * n, false);
+        // Here we store whether we have seen the half of the upper strand
+        // at each crossing...
+        // found[0..n) : ... that exits the crossing
+        // found[n..2n) : ... that enters the crossing
+        FixedArray<bool> found(2 * n, false);
 
-    size_t loops = 0;
+        size_t loops = 0;
 
-    // The following two loops iterate through indices of found[] in
-    // increasing order.
-    for (int dirInit = 0; dirInit < 2; ++dirInit) {
-        for (size_t pos = 0; pos < n; ++pos) {
-            // dirInit: 1 = with arrows, 0 = against arrows.
-            // This refers to the direction along the strand as you
-            // approach the crossing (before you jump to the other strand).
-            if (! found[pos + (dirInit ? n : 0)]) {
-                //std::cerr << "LOOP\n";
-                if (loopIDs)
-                    loopIDs[loops] = pos + (dirInit ? n : 0);
+        // The following two loops iterate through indices of found[] in
+        // increasing order.
+        for (int dirInit = 0; dirInit < 2; ++dirInit) {
+            for (size_t pos = 0; pos < n; ++pos) {
+                // dirInit: 1 = with arrows, 0 = against arrows.
+                // This refers to the direction along the strand as you
+                // approach the crossing (before you jump to the other strand).
+                if (! found[pos + (dirInit ? n : 0)]) {
+                    //std::cerr << "LOOP\n";
+                    if (loopIDs)
+                        loopIDs[loops] = pos + (dirInit ? n : 0);
 
-                StrandRef s = crossings_[pos]->upper();
-                int dir = dirInit;
-                size_t len = 0;
+                    StrandRef s = link.crossing(pos)->upper();
+                    int dir = dirInit;
+                    size_t len = 0;
 
-                do {
-                    //std::cerr << "At: " << s <<
-                    //    (dir == 1 ? " ->" : " <-") << std::endl;
-                    const uint64_t bit = (uint64_t)1 << s.crossing()->index();
+                    do {
+                        //std::cerr << "At: " << s <<
+                        //    (dir == 1 ? " ->" : " <-") << std::endl;
+                        const uint64_t bit =
+                            uint64_t(1) << s.crossing()->index();
 
-                    if (    ((mask & bit) && s.crossing()->sign() < 0) ||
-                            ((mask & bit) == 0 && s.crossing()->sign() > 0)) {
-                        // Turn in a way that is consistent with the arrows.
-                        if (dir == 1) {
-                            found[s.crossing()->index() +
-                                (s.strand() ? n : 0)] = true;
-                            s = s.crossing()->next(s.strand() ^ 1);
+                        if (    ((mask & bit) && s.crossing()->sign() < 0) ||
+                                ((mask & bit) == 0 && s.crossing()->sign() > 0)) {
+                            // Turn in a way consistent with the arrows.
+                            if (dir == 1) {
+                                found[s.crossing()->index() +
+                                    (s.strand() ? n : 0)] = true;
+                                s = s.crossing()->next(s.strand() ^ 1);
+                            } else {
+                                found[s.crossing()->index() +
+                                    (s.strand() ? 0 : n)] = true;
+                                s = s.crossing()->prev(s.strand() ^ 1);
+                            }
                         } else {
-                            found[s.crossing()->index() +
-                                (s.strand() ? 0 : n)] = true;
-                            s = s.crossing()->prev(s.strand() ^ 1);
+                            // Turn in a way inconsistent with the arrows.
+                            if (dir == 1) {
+                                found[s.crossing()->index() + n] = true;
+                                s = s.crossing()->prev(s.strand() ^ 1);
+                            } else {
+                                found[s.crossing()->index()] = true;
+                                s = s.crossing()->next(s.strand() ^ 1);
+                            }
+                            dir ^= 1;
                         }
-                    } else {
-                        // Turn in a way that is inconsistent with the arrows.
-                        if (dir == 1) {
-                            found[s.crossing()->index() + n] = true;
-                            s = s.crossing()->prev(s.strand() ^ 1);
-                        } else {
-                            found[s.crossing()->index()] = true;
-                            s = s.crossing()->next(s.strand() ^ 1);
-                        }
-                        dir ^= 1;
-                    }
 
-                    ++len;
-                } while (! (dir == dirInit &&
-                    s.crossing()->index() == pos && s.strand() == 1));
+                        ++len;
+                    } while (! (dir == dirInit &&
+                        s.crossing()->index() == pos && s.strand() == 1));
 
-                if (loopLengths)
-                    loopLengths[loops] = len;
-                ++loops;
+                    if (loopLengths)
+                        loopLengths[loops] = len;
+                    ++loops;
+                }
             }
         }
-    }
 
-    return loops;
+        return loops;
+    }
 }
 
 Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
@@ -170,7 +206,7 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
                 break;
         }
 
-        size_t loops = trivialLoops + resolutionLoops(mask);
+        size_t loops = trivialLoops + resolutionLoops(*this, mask);
         if (loops > maxLoops)
             maxLoops = loops;
 
