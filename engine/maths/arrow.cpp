@@ -117,6 +117,16 @@ void Arrow::writeTextShort(std::ostream& out, bool utf8) const {
         return;
     }
 
+    if (terms_.size() == 1) {
+        auto it = terms_.begin();
+        if (it->first.empty()) {
+            // This polynomial does not use any diagram variables at all.
+            // Just write the Laurent polynomial, without the usual brackets.
+            it->second.writeTextShort(out, utf8, "A");
+            return;
+        }
+    }
+
     for (auto it = terms_.begin(); it != terms_.end(); ++it) {
         const auto& laurent = it->second;
 

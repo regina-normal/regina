@@ -48,6 +48,8 @@ class ArrowTest : public testing::Test {
         Arrow minusTwo { {{}, {0, {-2}}} };
         Arrow k1 { {{1}, {0, {1}}} };
         Arrow k2 { {{0,1}, {0, {1}}} };
+        Arrow trefoil { {{}, {-16, {-1,0,0,0,1,0,0,0,0,0,0,0,1}}} };
+        Arrow shiftedTrefoil { {{0,1}, {-16, {-1,0,0,0,1,0,0,0,0,0,0,0,1}}} };
         Arrow virtualTrefoil {
             {{}, {-4, {1}}},
             {{1}, {-10, {-1,0,0,0,1}}} };
@@ -74,6 +76,8 @@ TEST_F(ArrowTest, output) {
     EXPECT_EQ(minusTwo.str(), "-2");
     EXPECT_EQ(k1.str(), "K_1");
     EXPECT_EQ(k2.str(), "K_2");
+    EXPECT_EQ(trefoil.str(), "A^-4 + A^-12 - A^-16");
+    EXPECT_EQ(shiftedTrefoil.str(), "(A^-4 + A^-12 - A^-16) K_2");
     EXPECT_EQ(virtualTrefoil.str(), "A^-4 + (A^-6 - A^-10) K_1");
     EXPECT_EQ(kishino.str(),
         "(A^4 + 1 + A^-4) + 2 K_2 + (-A^4 - 2 - A^-4) K_1^2");
@@ -87,6 +91,8 @@ TEST_F(ArrowTest, tightEncoding) {
     TightEncodingTest<Arrow>::verifyTightEncoding(minusTwo);
     TightEncodingTest<Arrow>::verifyTightEncoding(k1);
     TightEncodingTest<Arrow>::verifyTightEncoding(k2);
+    TightEncodingTest<Arrow>::verifyTightEncoding(trefoil);
+    TightEncodingTest<Arrow>::verifyTightEncoding(shiftedTrefoil);
     TightEncodingTest<Arrow>::verifyTightEncoding(virtualTrefoil);
     TightEncodingTest<Arrow>::verifyTightEncoding(kishino);
 }
