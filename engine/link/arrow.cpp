@@ -39,6 +39,11 @@ namespace regina {
 
 namespace {
     /**
+     * The polynomial -A^-2 - A^2.
+     */
+    const Laurent<Integer> loopPoly { -2, { -1, 0, 0, 0, -1 } };
+
+    /**
      * Used as a return value when the arrow polynomial calculation has been
      * cancelled.
      */
@@ -217,6 +222,75 @@ namespace {
             ans.second.begin());
         return ans;
     }
+
+    class ArrowAccumulator {
+        private:
+            const Link& link_;
+
+            // The number of trivial zero-crossing unknot components.
+            const size_t trivialLoops_;
+
+            // The polynomial count_[i-1] is a "partial" arrow polynomial:
+            // it only accounts for resolutions with exactly i loops, and it has
+            // not yet multiplied through by loopPoly^(i-1).  Our aim is to
+            // save the expensive multiplication operations until the very end.
+            //
+            // Note: we will always have 1 <= i <= #components + #crossings.
+            FixedArray<Arrow> count_;
+
+            // The largest number of loops that this accumulator has seen.
+            // It is guaranteed that count_[i] == 0 for all i > maxLoops_.
+            size_t maxLoops_;
+
+        public:
+            ArrowAccumulator(const Link& link, size_t trivialLoops) :
+                    link_(link), trivialLoops_(trivialLoops),
+                    count_(link.size() + link.countComponents()), maxLoops_(0) {
+            }
+
+            void accumulate(uint64_t maskBegin, uint64_t maskEnd) {
+                for (uint64_t mask = maskBegin; mask != maskEnd; ++mask) {
+                    auto [ loops, diagramSequence ] =
+                        resolutionCuspedLoops(link_, mask);
+                    loops += trivialLoops_;
+                    if (loops > maxLoops_)
+                        maxLoops_ = loops;
+
+                    --loops;
+
+                    // Set shift = #(0 bits) - #(1 bits) in mask.
+                    long shift = link_.size() -
+                        2 * BitManipulator<uint64_t>::bits(mask);
+
+                    Arrow diagramTerm;
+                    diagramTerm.initDiagram(std::move(diagramSequence));
+                    diagramTerm.shift(shift);
+                    count_[loops] += diagramTerm;
+                }
+            }
+
+            Arrow finalise() {
+                Arrow ans;
+
+                Laurent<Integer> loopPow = RingTraits<Laurent<Integer>>::one;
+                for (size_t loops = 0; loops < maxLoops_; ++loops) {
+                    if (! count_[loops].isZero()) {
+                        count_[loops] *= loopPow;
+                        ans += count_[loops];
+                    }
+
+                    loopPow *= loopPoly;
+                }
+
+                // Normalise the polynomial using the writhe of the diagram.
+                long w = link_.writhe();
+                ans.shift(-3 * w);
+                if (w % 2)
+                    ans.negate();
+
+                return ans;
+            }
+    };
 }
 
 Arrow Link::arrowNaive(ProgressTracker* tracker) const {
@@ -234,74 +308,28 @@ Arrow Link::arrowNaive(ProgressTracker* tracker) const {
     // It is guaranteed that we have at least one strand, though we
     // might have zero crossings.
 
-    // How many zero-crossing components do we start with?
-    size_t trivialLoops = countTrivialComponents();
-
-    // The polynomial count[i-1] is a "partial" arrow polynomial:
-    // it only accounts for resolutions with exactly i loops, and it has not
-    // yet multiplied through by (-A - A^{-2})^{i-1}.  Our aim is to save the
-    // (expensive) multiplication operations until the very end.
-    //
-    // Note: we will always have 1 <= i <= #components + #crossings.
-    FixedArray<Arrow> count(n + components_.size());
-
-    size_t maxLoops = 0;
-
     static_assert(BitManipulator<uint64_t>::specialised,
         "BitManipulator is not specialised for the mask type.");
 
     if (tracker)
         tracker->newStage("Enumerating resolutions");
 
-    const uint64_t maskEnd = ((uint64_t)1 << n);
-    for (uint64_t mask = 0; mask != maskEnd; ++mask) {
-        // Check for cancellation every 1024 steps.
-        if (tracker && ((mask & 1023) == 0)) {
-            if (! tracker->setPercent(double(mask) * 100.0 / double(maskEnd)))
-                break;
-        }
-
-        auto [ loops, diagramSequence ] = resolutionCuspedLoops(*this, mask);
-        loops += trivialLoops;
-        if (loops > maxLoops)
-            maxLoops = loops;
-
-        --loops;
-
-        // Set shift = #(0 bits) - #(1 bits) in mask.
-        long shift = n - 2 * BitManipulator<uint64_t>::bits(mask);
-
-        Arrow diagramTerm;
-        diagramTerm.initDiagram(std::move(diagramSequence));
-        diagramTerm.shift(shift);
-        count[loops] += diagramTerm;
+    #if 0
+    // TODO: We still need to check for cancellation.
+    // Check for cancellation every 1024 steps.
+    if (tracker && ((mask & 1023) == 0)) {
+        if (! tracker->setPercent(double(mask) * 100.0 / double(maskEnd)))
+            break;
     }
+    #endif
 
-    if (tracker && tracker->isCancelled()) {
+    ArrowAccumulator acc(*this, countTrivialComponents());
+    acc.accumulate(0, uint64_t(1) << n);
+
+    if (tracker && tracker->isCancelled())
         return {};
-    }
 
-    Arrow ans;
-
-    Laurent<Integer> loopPoly { -2, { -1, 0, 0, 0, -1 } }; // -A^{-2} - A^2
-
-    Laurent<Integer> loopPow = RingTraits<Laurent<Integer>>::one;
-    for (size_t loops = 0; loops < maxLoops; ++loops) {
-        if (! count[loops].isZero()) {
-            count[loops] *= loopPow;
-            ans += count[loops];
-        }
-
-        loopPow *= loopPoly;
-    }
-
-    // Normalise the polynomial using the writhe of the diagram.
-    long w = writhe();
-    ans.shift(-3 * w);
-    if (w % 2)
-        ans.negate();
-
-    return ans;
+    return acc.finalise();
 }
 
 const Arrow& Link::arrow(Algorithm, ProgressTracker* tracker) const {

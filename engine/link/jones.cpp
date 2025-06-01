@@ -43,9 +43,24 @@
 // dwarf them in the weightings.)
 #define HARD_BAG_WEIGHT(bag) (double(bag->size())*(bag->size())*(bag->size()))
 
+/**
+ * Bracket skein relation:
+ *
+ * \ /         \ /            \_/
+ *  /   ->   A | |   +   A^-1  _
+ * / \         / \            / \
+ *
+ * O^k  ->  (-A^2 - A^-2)^(k-1)
+ */
+
 namespace regina {
 
 namespace {
+    /**
+     * The polynomial -A^-2 - A^2.
+     */
+    const Laurent<Integer> loopPoly { -2, { -1, 0, 0, 0, -1 } };
+
     /**
      * Used as a return value when the Jones/bracket calculation has been
      * cancelled.
@@ -156,17 +171,71 @@ namespace {
 
         return loops;
     }
+
+    class BracketAccumulator {
+        private:
+            const Link& link_;
+
+            // The number of trivial zero-crossing unknot components.
+            const size_t trivialLoops_;
+
+            // In count[i-1], the coefficient of A^k reflects the number of
+            // resolutions with i loops and multiplier A^k.
+            //
+            // Note: we will always have 1 <= i <= #components + #crossings.
+            FixedArray<Laurent<Integer>> count_;
+
+            // The largest number of loops that this accumulator has seen.
+            // It is guaranteed that count_[i] == 0 for all i > maxLoops_.
+            size_t maxLoops_;
+
+        public:
+            BracketAccumulator(const Link& link, size_t trivialLoops) :
+                    link_(link), trivialLoops_(trivialLoops),
+                    count_(link.size() + link.countComponents()), maxLoops_(0) {
+            }
+
+            void accumulate(uint64_t maskBegin, uint64_t maskEnd) {
+                for (uint64_t mask = maskBegin; mask != maskEnd; ++mask) {
+                    size_t loops = trivialLoops_ + resolutionLoops(link_, mask);
+                    if (loops > maxLoops_)
+                        maxLoops_ = loops;
+
+                    --loops;
+
+                    // Set shift = #(0 bits) - #(1 bits) in mask.
+                    long shift = link_.size() -
+                        2 * BitManipulator<uint64_t>::bits(mask);
+
+                    if (shift > count_[loops].maxExp() ||
+                            shift < count_[loops].minExp())
+                        count_[loops].set(shift, 1);
+                    else
+                        count_[loops].set(shift, count_[loops][shift] + 1);
+                }
+            }
+
+            Laurent<Integer> finalise() {
+                Laurent<Integer> ans;
+
+                Laurent<Integer> loopPow = RingTraits<Laurent<Integer>>::one;
+                for (size_t loops = 0; loops < maxLoops_; ++loops) {
+                    // std::cerr << "count[" << loops << "] = "
+                    //     << count[loops] << std::endl;
+                    if (! count_[loops].isZero()) {
+                        count_[loops] *= loopPow;
+                        ans += count_[loops];
+                    }
+
+                    loopPow *= loopPoly;
+                }
+
+                return ans;
+            }
+    };
 }
 
 Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
-    /**
-     * \ /         \ /            \_/
-     *  /   ->   A | |   +   A^-1  _
-     * / \         / \            / \
-     *
-     * O^k  ->  (-A^2 - A^-2)^(k-1)
-     */
-
     if (components_.empty())
         return {};
 
@@ -180,69 +249,29 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
     // It is guaranteed that we have at least one strand, though we
     // might have zero crossings.
 
-    // How many zero-crossing components do we start with?
-    size_t trivialLoops = countTrivialComponents();
-
-    // In count[i-1], the coefficient of A^k reflects the number of
-    // resolutions with i loops and multiplier A^k.
-    // We will always have 1 <= i <= #components + #crossings.
-    FixedArray<Laurent<Integer>> count(n + components_.size());
-
-    size_t maxLoops = 0;
-
     static_assert(BitManipulator<uint64_t>::specialised,
         "BitManipulator is not specialised for the mask type.");
 
     if (tracker)
         tracker->newStage("Enumerating resolutions");
 
-    const uint64_t maskEnd = ((uint64_t)1 << n);
-    for (uint64_t mask = 0; mask != maskEnd; ++mask) {
-        // std::cerr << "Mask: " << mask << std::endl;
-
-        // Check for cancellation every 1024 steps.
-        if (tracker && ((mask & 1023) == 0)) {
-            if (! tracker->setPercent(double(mask) * 100.0 / double(maskEnd)))
-                break;
-        }
-
-        size_t loops = trivialLoops + resolutionLoops(*this, mask);
-        if (loops > maxLoops)
-            maxLoops = loops;
-
-        --loops;
-
-        // Set shift = #(0 bits) - #(1 bits) in mask.
-        long shift = n - 2 * BitManipulator<uint64_t>::bits(mask);
-        if (shift > count[loops].maxExp() || shift < count[loops].minExp())
-            count[loops].set(shift, 1);
-        else
-            count[loops].set(shift, count[loops][shift] + 1);
+    #if 0
+    // TODO: We still need to check for cancellation.
+    // Check for cancellation every 1024 steps.
+    if (tracker && ((mask & 1023) == 0)) {
+        if (! tracker->setPercent(double(mask) * 100.0 / double(maskEnd)))
+            break;
     }
+    #endif
+
+    BracketAccumulator acc(*this, countTrivialComponents());
+    acc.accumulate(0, uint64_t(1) << n);
 
     if (tracker && tracker->isCancelled()) {
         return {};
     }
 
-    Laurent<Integer> ans;
-
-    Laurent<Integer> loopPoly;
-    loopPoly.set(0, -1);
-    loopPoly.set(4, -1);
-    loopPoly.shift(-2);
-
-    Laurent<Integer> loopPow = RingTraits<Laurent<Integer>>::one;
-    for (size_t loops = 0; loops < maxLoops; ++loops) {
-        // std::cerr << "count[" << loops << "] = " << count[loops] << std::endl;
-        if (! count[loops].isZero()) {
-            count[loops] *= loopPow;
-            ans += count[loops];
-        }
-
-        loopPow *= loopPoly;
-    }
-
-    return ans;
+    return acc.finalise();
 }
 
 Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
@@ -250,11 +279,6 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
         return bracketNaive(tracker);
 
     // We are guaranteed >= 1 crossing and >= 1 component.
-
-    Laurent<Integer> loopPoly;
-    loopPoly.set(0, -1);
-    loopPoly.set(4, -1);
-    loopPoly.shift(-2);
 
     // Build a nice tree decomposition.
     if (tracker)
