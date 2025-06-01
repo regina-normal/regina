@@ -3806,11 +3806,16 @@ class Link :
          * tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
+         * \param threads the number of threads to use.  If this is 1 or
+         * smaller then the computation will run single-threaded.  Currently
+         * only the naive algorithm supports multithreading; if you use the
+         * treewidth-based algorithm then it will run single-threaded
+         * regardless of the value of \a threads.
          * \return the bracket polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
         const Laurent<Integer>& bracket(Algorithm alg = Algorithm::Default,
-            ProgressTracker* tracker = nullptr) const;
+            ProgressTracker* tracker = nullptr, int threads = 1) const;
         /**
          * Is the Kauffman bracket polynomial of this link diagram
          * already known?  See bracket() for further details.
@@ -3896,11 +3901,16 @@ class Link :
          * tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
+         * \param threads the number of threads to use.  If this is 1 or
+         * smaller then the computation will run single-threaded.  Currently
+         * only the naive algorithm supports multithreading; if you use the
+         * treewidth-based algorithm then it will run single-threaded
+         * regardless of the value of \a threads.
          * \return the Jones polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
         const Laurent<Integer>& jones(Algorithm alg = Algorithm::Default,
-            ProgressTracker* tracker = nullptr) const;
+            ProgressTracker* tracker = nullptr, int threads = 1) const;
         /**
          * Is the Jones polynomial of this link already known?
          * See jones() for further details.
@@ -4196,11 +4206,13 @@ class Link :
          * just use the default (Algorithm::Default).
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
+         * \param threads the number of threads to use.  If this is 1 or
+         * smaller then the computation will run single-threaded.
          * \return the normalised arrow polynomial, or the zero polynomial if
          * the calculation was cancelled via the given progress tracker.
          */
         const Arrow& arrow(Algorithm alg = Algorithm::Default,
-            ProgressTracker* tracker = nullptr) const;
+            ProgressTracker* tracker = nullptr, int threads = 1) const;
         /**
          * Is the normalised arrow polynomial of this link already known?
          * See arrow() for further details.
@@ -6707,7 +6719,8 @@ class Link :
          *
          * See bracket() for further details.
          */
-        Laurent<Integer> bracketNaive(ProgressTracker* tracker) const;
+        Laurent<Integer> bracketNaive(ProgressTracker* tracker, int threads)
+            const;
 
         /**
          * Compute the Kauffman bracket polynomial using a fixed-parameter
@@ -6776,7 +6789,7 @@ class Link :
          *
          * See arrow() for further details.
          */
-        Arrow arrowNaive(ProgressTracker* tracker) const;
+        Arrow arrowNaive(ProgressTracker* tracker, int threads) const;
 
         /**
          * Returns the group of this link as constructed from the Wirtinger

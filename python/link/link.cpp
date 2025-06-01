@@ -277,12 +277,14 @@ void addLink(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("alg") = regina::Algorithm::Default,
             pybind11::arg("tracker") = nullptr,
+            pybind11::arg("threads") = 1,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::bracket)
         .def("jones", &Link::jones,
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("alg") = regina::Algorithm::Default,
             pybind11::arg("tracker") = nullptr,
+            pybind11::arg("threads") = 1,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::jones)
         .def("homfly", &Link::homfly,
@@ -307,6 +309,7 @@ void addLink(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("alg") = regina::Algorithm::Default,
             pybind11::arg("tracker") = nullptr,
+            pybind11::arg("threads") = 1,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::arrow)
         .def("knowsAlexander", &Link::knowsAlexander, rdoc::knowsAlexander)

@@ -39,6 +39,12 @@ namespace regina {
 
 namespace {
     /**
+     * Defines the granularity of how the naive algorithm allocates bitmasks
+     * (resolutions of crossings) to the working threads.
+     */
+    constexpr int sliceBits = 10;
+
+    /**
      * The polynomial -A^-2 - A^2.
      */
     const Laurent<Integer> loopPoly { -2, { -1, 0, 0, 0, -1 } };
@@ -239,7 +245,7 @@ namespace {
             FixedArray<Arrow> count_;
 
             // The largest number of loops that this accumulator has seen.
-            // It is guaranteed that count_[i] == 0 for all i > maxLoops_.
+            // It is guaranteed that count_[i] == 0 for all i >= maxLoops_.
             size_t maxLoops_;
 
         public:
@@ -269,6 +275,23 @@ namespace {
                 }
             }
 
+            /**
+             * Precondition: this and \a other use the same link, which in
+             * particular means that their internal \a count_ arrays have the
+             * same size.
+             */
+            void accumulate(ArrowAccumulator&& other) {
+                if (maxLoops_ >= other.maxLoops_) {
+                    for (size_t i = 0; i < other.maxLoops_; ++i)
+                        count_[i] += std::move(other.count_[i]);
+                } else {
+                    count_.swap(other.count_);
+                    for (size_t i = 0; i < maxLoops_; ++i)
+                        count_[i] += std::move(other.count_[i]);
+                    maxLoops_ = other.maxLoops_;
+                }
+            }
+
             Arrow finalise() {
                 Arrow ans;
 
@@ -293,7 +316,7 @@ namespace {
     };
 }
 
-Arrow Link::arrowNaive(ProgressTracker* tracker) const {
+Arrow Link::arrowNaive(ProgressTracker* tracker, int threads) const {
     if (components_.empty())
         return {};
 
@@ -314,17 +337,44 @@ Arrow Link::arrowNaive(ProgressTracker* tracker) const {
     if (tracker)
         tracker->newStage("Enumerating resolutions");
 
-    #if 0
-    // TODO: We still need to check for cancellation.
-    // Check for cancellation every 1024 steps.
-    if (tracker && ((mask & 1023) == 0)) {
-        if (! tracker->setPercent(double(mask) * 100.0 / double(maskEnd)))
-            break;
+    size_t nTrivial = countTrivialComponents();
+    ArrowAccumulator acc(*this, nTrivial);
+    if (threads <= 1 || n <= sliceBits) {
+        acc.accumulate(0, uint64_t(1) << n);
+    } else {
+        uint64_t nextSlice = 0;
+        uint64_t endSlice = (uint64_t(1) << (n - sliceBits));
+        std::mutex mutex;
+        FixedArray<std::thread> thread(threads);
+        for (int i = 0; i < threads; ++i) {
+            thread[i] = std::thread([=, this, &mutex, &nextSlice, &acc]() {
+                ArrowAccumulator sub(*this, nTrivial);
+                uint64_t currSlice;
+                while (true) {
+                    {
+                        std::scoped_lock lock(mutex);
+                        if (tracker) {
+                            // Check for cancellation.
+                            if (! tracker->setPercent(
+                                    double(nextSlice) * 100.0 /
+                                    double(endSlice)))
+                                break;
+                        }
+                        if (nextSlice == endSlice) {
+                            acc.accumulate(std::move(sub));
+                            return;
+                        }
+                        currSlice = nextSlice++;
+                    }
+                    sub.accumulate(currSlice << sliceBits,
+                        (currSlice + 1) << sliceBits);
+                }
+            });
+        }
+        for (int i = 0; i < threads; ++i) {
+            thread[i].join();
+        }
     }
-    #endif
-
-    ArrowAccumulator acc(*this, countTrivialComponents());
-    acc.accumulate(0, uint64_t(1) << n);
 
     if (tracker && tracker->isCancelled())
         return {};
@@ -332,7 +382,8 @@ Arrow Link::arrowNaive(ProgressTracker* tracker) const {
     return acc.finalise();
 }
 
-const Arrow& Link::arrow(Algorithm, ProgressTracker* tracker) const {
+const Arrow& Link::arrow(Algorithm, ProgressTracker* tracker, int threads)
+        const {
     if (arrow_.has_value()) {
         if (tracker)
             tracker->setFinished();
@@ -340,7 +391,7 @@ const Arrow& Link::arrow(Algorithm, ProgressTracker* tracker) const {
     }
 
     // For now we only support the naive algorithm.
-    Arrow ans = arrowNaive(tracker);
+    Arrow ans = arrowNaive(tracker, threads);
 
     if (tracker && tracker->isCancelled()) {
         tracker->setFinished();

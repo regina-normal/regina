@@ -57,6 +57,12 @@ namespace regina {
 
 namespace {
     /**
+     * Defines the granularity of how the naive algorithm allocates bitmasks
+     * (resolutions of crossings) to the working threads.
+     */
+    constexpr int sliceBits = 10;
+
+    /**
      * The polynomial -A^-2 - A^2.
      */
     const Laurent<Integer> loopPoly { -2, { -1, 0, 0, 0, -1 } };
@@ -186,7 +192,7 @@ namespace {
             FixedArray<Laurent<Integer>> count_;
 
             // The largest number of loops that this accumulator has seen.
-            // It is guaranteed that count_[i] == 0 for all i > maxLoops_.
+            // It is guaranteed that count_[i] == 0 for all i >= maxLoops_.
             size_t maxLoops_;
 
         public:
@@ -215,6 +221,23 @@ namespace {
                 }
             }
 
+            /**
+             * Precondition: this and \a other use the same link, which in
+             * particular means that their internal \a count_ arrays have the
+             * same size.
+             */
+            void accumulate(BracketAccumulator&& other) {
+                if (maxLoops_ >= other.maxLoops_) {
+                    for (size_t i = 0; i < other.maxLoops_; ++i)
+                        count_[i] += std::move(other.count_[i]);
+                } else {
+                    count_.swap(other.count_);
+                    for (size_t i = 0; i < maxLoops_; ++i)
+                        count_[i] += std::move(other.count_[i]);
+                    maxLoops_ = other.maxLoops_;
+                }
+            }
+
             Laurent<Integer> finalise() {
                 Laurent<Integer> ans;
 
@@ -235,7 +258,8 @@ namespace {
     };
 }
 
-Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
+Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker, int threads)
+        const {
     if (components_.empty())
         return {};
 
@@ -255,17 +279,44 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
     if (tracker)
         tracker->newStage("Enumerating resolutions");
 
-    #if 0
-    // TODO: We still need to check for cancellation.
-    // Check for cancellation every 1024 steps.
-    if (tracker && ((mask & 1023) == 0)) {
-        if (! tracker->setPercent(double(mask) * 100.0 / double(maskEnd)))
-            break;
+    size_t nTrivial = countTrivialComponents();
+    BracketAccumulator acc(*this, nTrivial);
+    if (threads <= 1 || n <= sliceBits) {
+        acc.accumulate(0, uint64_t(1) << n);
+    } else {
+        uint64_t nextSlice = 0;
+        uint64_t endSlice = (uint64_t(1) << (n - sliceBits));
+        std::mutex mutex;
+        FixedArray<std::thread> thread(threads);
+        for (int i = 0; i < threads; ++i) {
+            thread[i] = std::thread([=, this, &mutex, &nextSlice, &acc]() {
+                BracketAccumulator sub(*this, nTrivial);
+                uint64_t currSlice;
+                while (true) {
+                    {
+                        std::scoped_lock lock(mutex);
+                        if (tracker) {
+                            // Check for cancellation.
+                            if (! tracker->setPercent(
+                                    double(nextSlice) * 100.0 /
+                                    double(endSlice)))
+                                break;
+                        }
+                        if (nextSlice == endSlice) {
+                            acc.accumulate(std::move(sub));
+                            return;
+                        }
+                        currSlice = nextSlice++;
+                    }
+                    sub.accumulate(currSlice << sliceBits,
+                        (currSlice + 1) << sliceBits);
+                }
+            });
+        }
+        for (int i = 0; i < threads; ++i) {
+            thread[i].join();
+        }
     }
-    #endif
-
-    BracketAccumulator acc(*this, countTrivialComponents());
-    acc.accumulate(0, uint64_t(1) << n);
 
     if (tracker && tracker->isCancelled()) {
         return {};
@@ -276,7 +327,7 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
 
 Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
     if (crossings_.empty())
-        return bracketNaive(tracker);
+        return bracketNaive(tracker, 1);
 
     // We are guaranteed >= 1 crossing and >= 1 component.
 
@@ -634,8 +685,8 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
     return ans;
 }
 
-const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker)
-        const {
+const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker,
+        int threads) const {
     if (bracket_.has_value()) {
         if (tracker)
             tracker->setFinished();
@@ -649,7 +700,7 @@ const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker)
     Laurent<Integer> ans;
     switch (alg) {
         case Algorithm::Naive:
-            ans = bracketNaive(tracker);
+            ans = bracketNaive(tracker, threads);
             break;
         default:
             ans = bracketTreewidth(tracker);
@@ -668,8 +719,8 @@ const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker)
     return *bracket_;
 }
 
-const Laurent<Integer>& Link::jones(Algorithm alg, ProgressTracker* tracker)
-        const {
+const Laurent<Integer>& Link::jones(Algorithm alg, ProgressTracker* tracker,
+        int threads) const {
     if (jones_.has_value()) {
         if (tracker)
             tracker->setFinished();
@@ -677,7 +728,7 @@ const Laurent<Integer>& Link::jones(Algorithm alg, ProgressTracker* tracker)
     }
 
     // Computing bracket_ will also set jones_.
-    bracket(alg, tracker); // this marks tracker as finished
+    bracket(alg, tracker, threads); // this marks tracker as finished
     if (tracker && tracker->isCancelled())
         return noResult;
     return *jones_;

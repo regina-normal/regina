@@ -329,6 +329,8 @@ Version 7.4  [ (to be announced) ]
               new routine rewriteVirtual() for working with virtual link
               diagrams.
             - Routine hasReducingPass() can now handle multiple-component links.
+            - Routines bracket() and jones() now support multithreading when
+              using the naive algorithm.
             - Added a variant of translate() that takes crossings instead of
               strand references.
             - Renamed intelligentSimplify() to simplify().  The old name is

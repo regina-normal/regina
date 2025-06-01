@@ -507,6 +507,10 @@ Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
     ``None`` if no progress reporting is required.
 
+Parameter ``threads``:
+    the number of threads to use. If this is 1 or smaller then the
+    computation will run single-threaded.
+
 Returns:
     the normalised arrow polynomial, or the zero polynomial if the
     calculation was cancelled via the given progress tracker.)doc";
@@ -569,6 +573,13 @@ Parameter ``alg``:
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
     ``None`` if no progress reporting is required.
+
+Parameter ``threads``:
+    the number of threads to use. If this is 1 or smaller then the
+    computation will run single-threaded. Currently only the naive
+    algorithm supports multithreading; if you use the treewidth-based
+    algorithm then it will run single-threaded regardless of the value
+    of *threads*.
 
 Returns:
     the bracket polynomial, or the zero polynomial if the calculation
@@ -3214,6 +3225,13 @@ Parameter ``alg``:
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
     ``None`` if no progress reporting is required.
+
+Parameter ``threads``:
+    the number of threads to use. If this is 1 or smaller then the
+    computation will run single-threaded. Currently only the naive
+    algorithm supports multithreading; if you use the treewidth-based
+    algorithm then it will run single-threaded regardless of the value
+    of *threads*.
 
 Returns:
     the Jones polynomial, or the zero polynomial if the calculation
