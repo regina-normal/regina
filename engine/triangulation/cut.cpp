@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "link/link.h"
 #include "triangulation/cut.h"
 
 namespace regina {
@@ -41,6 +42,44 @@ bool Cut::isTrivial() const {
         if (side_[i] != side_[0])
             return false;
     return true;
+}
+
+size_t Cut::weight(const Link& link) const {
+    if (link.size() != size_)
+        throw InvalidArgument("Cut::weight() requires a link diagram "
+            "with the same size as the cut.");
+
+    size_t ans = 0;
+    for (size_t i = 0; i < size_; ++i)
+        if (side(i) == 0) {
+            auto c = link.crossing(i);
+            for (int j = 0; j < 2; ++j) {
+                if (side_[c->next(j).crossing()->index()] == 1)
+                    ++ans;
+                if (side_[c->prev(j).crossing()->index()] == 1)
+                    ++ans;
+            }
+        }
+
+    return ans;
+}
+
+size_t Cut::weight(const ModelLinkGraph& graph) const {
+    if (graph.size() != size_)
+        throw InvalidArgument("Cut::weight() requires a model link graph "
+            "with the same size as the cut.");
+
+    size_t ans = 0;
+    for (size_t i = 0; i < size_; ++i)
+        if (side(i) == 0) {
+            auto n = graph.node(i);
+            for (int j = 0; j < 4; ++j) {
+                if (side_[n->adj(j).node()->index()] == 1)
+                    ++ans;
+            }
+        }
+
+    return ans;
 }
 
 bool Cut::inc() {

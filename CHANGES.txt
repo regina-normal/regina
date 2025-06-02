@@ -109,6 +109,9 @@ Version 7.4  [ (to be announced) ]
               just a deprecated alias for CensusPurge.
         Enum ChangeType:
             - New enum for internal use with triangulation/link change spans.
+        Class Cut:
+            - Routine weight() can now work with links and model link graphs,
+              as well as triangulations and facet pairings.
         Class DiscSpecIterator:
             - This class no longer provides its iterator-related type aliases
               (value_type, etc.) as members, since these confused pybind11.

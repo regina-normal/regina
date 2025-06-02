@@ -31,7 +31,8 @@
  **************************************************************************/
 
 /*! \file triangulation/cut.h
- *  \brief Supports cuts in triangulations and facet pairings.
+ *  \brief Supports cuts in objects that can be modelled by graphs, such as
+ *  triangulations, facet pairings, and links.
  */
 
 #ifndef __REGINA_CUT_H
@@ -48,6 +49,8 @@
 
 namespace regina {
 
+class Link;
+class ModelLinkGraph;
 template <int dim> class FacetPairing;
 template <int dim> struct FacetSpec;
 template <int dim> class Isomorphism;
@@ -55,24 +58,39 @@ template <int dim> class Triangulation;
 template <int n> class Perm;
 
 /**
- * A cut that separates a triangulation or facet pairing into two pieces.
- * This is essentially the same concept as a cut in graph theory.
+ * A cut that separates a triangulation, facet pairing or link diagram into
+ * two pieces.  This is essentially the same concept as a cut in graph theory.
  *
- * Specifically, a _cut_ in a triangulation or facet pairing partitions
- * the top-dimensional simplices into two _sides_.  This effectively splits
- * the triangulation or facet pairing into two pieces, by removing all
- * gluings between simplices on opposite sides.  The two sides of a cut are
- * numbered 0 and 1.
+ * Specifically:
  *
- * In Regina, a cut has a _size_ and a _weight:_
+ * - A _cut_ in a triangulation or facet pairing partitions the top-dimensional
+ *   simplices into two _sides_.  This describes how to split the triangulation
+ *   or facet pairing into two pieces, by removing all gluings between simplices
+ *   on opposite sides.
  *
- * - The _size_ refers to the size of the underlying triangulation or
- *   facet pairing (i.e., it indicates the total number of top-dimensional
- *   simplices).
+ * - A cut in a link diagram or a model link graph likewise partitions the
+ *   crossings or nodes into two sides.  However, since links in Regina cannot
+ *   have free ends, cuts cannot be used to divide a link diagram into two
+ *   smaller pieces (and likewise for model link graphs).
  *
- * - The _weight_ refers to the number of gluings that are undone by the cut.
- *   This is the usual concept of weight from graph theory (i.e., the number
- *   of edges in the underlying graph that cross the partition).
+ * In general, we will use the word _nodes_ to refer to the objects that are
+ * partitioned by the cut (e.g., the top-dimensional simplices of a
+ * triangulation, or the crossings of a link diagram), and we will use the
+ * word _arcs_ to refer to the connections between these objects (e.g., the
+ * individual gluings between top-dimensional simplices, or the arcs between
+ * crossings in a link diagram).
+ *
+ * The two sides of a cut are numbered 0 and 1.  In Regina, a cut has a _size_
+ * and a _weight:_
+ *
+ * - The _size_ refers to the size of the underlying graph-like object; that is,
+ *   the total number of nodes (using the terminology above).
+ *
+ * - The _weight_ is the usual concept of weight from graph theory; that is,
+ *   the number of arcs that cross between the two sides of the partition.
+ *   In particular, for triangulations and facet pairings, it counts the
+ *   number of gluings between top-dimensional simplices that would be undone
+ *   when using the cut to subdivide the object into two pieces.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -83,37 +101,30 @@ template <int n> class Perm;
 class Cut : public ShortOutput<Cut> {
     private:
         size_t size_;
-            /**< The total number of top-dimensional simplices in the
-                 underlying triangulation or facet pairing. */
+            /**< The total number of nodes. */
         int* side_;
-            /**< Indicates which side of the cut each top-dimensional
-                 simplex lies on.  This array has size \a size_, and
-                 every element is either 0 or 1. */
+            /**< Indicates which side of the cut each node lies on.  This array
+                 has size \a size_, and every element is either 0 or 1. */
 
     public:
         /**
-         * Creates a new trivial cut on the given number of top-dimensional
-         * simplices.
+         * Creates a new trivial cut on the given number of nodes.
          *
-         * All simplices will be on side 0.
+         * All nodes will be on side 0.
          *
-         * \param size the number of top-dimensional simplices in the
-         * underlying triangulation or facet pairing.
+         * \param size the number of nodes in the underlying graph-like object.
          */
         Cut(size_t size);
 
         /**
          * Creates a new cut with the given partition sizes.
          *
-         * The total number of top-dimensional simplices under consideration
-         * will be (\a side0 + \a side1); the first \a side0 simplices will
-         * be on side 0, and the remaining \a side1 simplices will be on
-         * side 1.
+         * The total number of nodes under consideration will be
+         * `side0 + side1`; the first \a side0 nodes will be on side 0,
+         * and the remaining \a side1 nodes will be on side 1.
          *
-         * \param side0 the number of top-dimensional simplices on side 0
-         * of the partition.
-         * \param side1 the number of top-dimensional simplices on side 1
-         * of the partition.
+         * \param side0 the number of nodes on side 0 of the partition.
+         * \param side1 the number of nodes on side 1 of the partition.
          */
         Cut(size_t side0, size_t side1);
 
@@ -137,17 +148,16 @@ class Cut : public ShortOutput<Cut> {
         /**
          * Creates a new cut using the given partition.
          *
-         * Here a cut on \a n top-dimensional simplices is described by
-         * a sequence of \a n integers, each equal to 0 or 1, indicating
-         * which side of the partition each top-dimensional simplex lies on.
+         * Here a cut on \a n nodes is described by a sequence of \a n integers,
+         * each equal to 0 or 1, indicating which side of the partition each
+         * node lies on.
          *
          * \pre The type \a iterator, when dereferenced, can be cast to
          * an \c int.
          *
-         * \warning This routine computes the number of top-dimensional
-         * simplices by subtracting `end - begin`, and so ideally
-         * \a iterator should be a random access iterator type for which
-         * this operation is constant time.
+         * \warning This routine computes the number of nodes by subtracting
+         * `end - begin`, and so ideally \a iterator should be a random access
+         * iterator type for which this operation is constant time.
          *
          * \exception InvalidArgument Some element of the given sequence
          * is neither 0 nor 1.
@@ -169,19 +179,19 @@ class Cut : public ShortOutput<Cut> {
         ~Cut();
 
         /**
-         * Returns the total number of top-dimensional simplices in the
-         * underlying triangulation or facet pairing.
+         * Returns the total number of nodes in the underlying graph-like
+         * object.
          *
-         * In other words, this returns the size of the underlying
-         * triangulation or facet pairing.
+         * In particular, if you are working with a triangulation or facet
+         * pairing, then this returns the number of top-dimensional simplices.
          *
-         * \return the total number of top-dimensional simplices.
+         * \return the total number of nodes.
          */
         size_t size() const;
 
         /**
-         * Returns the number of top-dimensional simplices on the given
-         * side of the partition described by this cut.
+         * Returns the number of nodes on the given side of the partition
+         * described by this cut.
          *
          * It will always be true that `size(0) + size(1) == size()`.
          *
@@ -194,40 +204,39 @@ class Cut : public ShortOutput<Cut> {
          *
          * \param whichSide the side of the partition to query; this
          * must be either 0 or 1.
-         * \return the number of top-dimensional simplices on the given side.
+         * \return the number of nodes on the given side.
          */
         size_t size(int whichSide) const;
 
         /**
-         * Indicates which side of the partition the given simplex lies on.
+         * Indicates which side of the partition the given node lies on.
          *
-         * \param simplex the simplex being queried; this must be
+         * \param node the node being queried; this must be
          * between 0 and size()-1 inclusive.
          * \return the corresponding side of the partition; this will be
          * either 0 or 1.
          */
-        int side(size_t simplex) const;
+        int side(size_t node) const;
 
         /**
-         * Allows you to set which side of the partition the given simplex
+         * Allows you to set which side of the partition the given node
          * lies on.
          *
          * \exception InvalidArgument The given side is not 0 or 1.
          *
-         * \param simplex the simplex being changed; this must be
+         * \param node the node being changed; this must be
          * between 0 and size()-1 inclusive.
-         * \param newSide the side of the partition that the given simplex
+         * \param newSide the side of the partition that the given node
          * should lie on; this must be either 0 or 1.
          */
-        void set(size_t simplex, int newSide);
+        void set(size_t node, int newSide);
 
         /**
-         * Determines whether this cut places all top-dimensional simplices
-         * on the same side of the partition.
+         * Determines whether this cut places all nodes on the same side of
+         * the partition.
          *
-         * \return \c true if all simplices are on side 0 or all simplices
-         * are on side 1, or \c false if both sides of the partition are
-         * non-empty.
+         * \return \c true if all nodes are on side 0 or all nodes are on
+         * side 1, or \c false if both sides of the partition are non-empty.
          */
         bool isTrivial() const;
 
@@ -275,11 +284,41 @@ class Cut : public ShortOutput<Cut> {
         size_t weight(const FacetPairing<dim>& pairing) const;
 
         /**
+         * Returns the weight of this cut with respect to the given link
+         * diagram.  This is the number of arcs in the link diagram that cross
+         * the partition described by this cut.
+         *
+         * \pre The given link diagram has precisely size() crossings.
+         *
+         * \exception InvalidArgument The given link diagram does not
+         * have precisely size() crossings.
+         *
+         * \param link the link diagram under consideration.
+         * \return the weight of this cut with respect to \a link.
+         */
+        size_t weight(const Link& link) const;
+
+        /**
+         * Returns the weight of this cut with respect to the given model link
+         * graph.  This is the number of arcs in the graph that cross the
+         * partition described by this cut.
+         *
+         * \pre The given graph has precisely size() nodes.
+         *
+         * \exception InvalidArgument The given graph does not have precisely
+         * size() nodes.
+         *
+         * \param graph the model link graph under consideration.
+         * \return the weight of this cut with respect to \a graph.
+         */
+        size_t weight(const ModelLinkGraph& graph) const;
+
+        /**
          * Sets this to be a copy of the given cut.
          *
-         * It does not matter if this and the given cut have different
-         * sizes (i.e., work with different number of top-dimensional
-         * simplices); if they do then this cut will be resized as a result.
+         * It does not matter if this and the given cut have different sizes
+         * (i.e., work with different numbers of nodes); if they do then this
+         * cut will be resized as a result.
          *
          * \param src the cut to copy.
          * \return a reference to this cut.
@@ -290,9 +329,9 @@ class Cut : public ShortOutput<Cut> {
          * Moves the given cut into this cut.
          * This is a fast (constant time) operation.
          *
-         * It does not matter if this and the given cut have different
-         * sizes (i.e., work with different number of top-dimensional
-         * simplices); if they do then this cut will be resized as a result.
+         * It does not matter if this and the given cut have different sizes
+         * (i.e., work with different numbers of nodes); if they do then this
+         * cut will be resized as a result.
          *
          * The cut that is passed (\a src) will no longer be usable.
          *
@@ -312,7 +351,7 @@ class Cut : public ShortOutput<Cut> {
          * Determines if this and the given cut are identical.
          *
          * Two cuts are considered identical if they describe the same
-         * partition of simplices into sides 0 and 1.
+         * partition of nodes into sides 0 and 1.
          *
          * It does not matter if this and the given cut have different
          * sizes; in this case they will be considered different.
@@ -426,16 +465,15 @@ class Cut : public ShortOutput<Cut> {
         /**
          * Converts this into the next cut of the same size.
          *
-         * The total number of top-dimensional simplices will stay the
-         * same, but the number on each side of the partition may change.
+         * The total number of nodes will stay the same, but the number on
+         * each side of the partition may change.
          *
          * To iterate through all cuts of the given size, you should create
          * a new `Cut(size)` and then make repeated calls to inc().
          *
          * If this is already the last partition in such an iteration
-         * (i.e., all top-dimensional simplices are already on side 1),
-         * then this routine will return \c false and convert this into
-         * the \a first such partition.
+         * (i.e., all nodes are already on side 1), then this routine will
+         * return \c false and convert this into the \a first such partition.
          *
          * The order of iteration using inc() is lexicographical in the
          * sequence of sides.  In particular, if you wish to avoid
@@ -451,8 +489,8 @@ class Cut : public ShortOutput<Cut> {
         /**
          * Converts this into the next cut with the same partition sizes.
          *
-         * Specifically, the number of top-dimensional simplices on each side
-         * of the partition will remain the same.
+         * Specifically, the number of nodes on each side of the partition
+         * will remain the same.
          *
          * To iterate through all cuts with the given parititon sizes, you
          * should create a new `Cut(side0, side1)` and then make
@@ -543,14 +581,14 @@ inline size_t Cut::size(int whichSide) const {
     return std::count(side_, side_ + size_, whichSide);
 }
 
-inline int Cut::side(size_t simplex) const {
-    return side_[simplex];
+inline int Cut::side(size_t node) const {
+    return side_[node];
 }
 
-inline void Cut::set(size_t simplex, int newSide) {
+inline void Cut::set(size_t node, int newSide) {
     if (newSide != 0 && newSide != 1)
         throw InvalidArgument("Cut::set() requires the side to be 0 or 1.");
-    side_[simplex] = newSide;
+    side_[node] = newSide;
 }
 
 template <int dim>

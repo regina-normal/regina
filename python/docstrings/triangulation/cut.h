@@ -13,25 +13,42 @@ namespace regina::python::doc {
 
 // Docstring regina::python::doc::Cut
 static const char *Cut =
-R"doc(A cut that separates a triangulation or facet pairing into two pieces.
-This is essentially the same concept as a cut in graph theory.
+R"doc(A cut that separates a triangulation, facet pairing or link diagram
+into two pieces. This is essentially the same concept as a cut in
+graph theory.
 
-Specifically, a _cut_ in a triangulation or facet pairing partitions
-the top-dimensional simplices into two _sides_. This effectively
-splits the triangulation or facet pairing into two pieces, by removing
-all gluings between simplices on opposite sides. The two sides of a
-cut are numbered 0 and 1.
+Specifically:
 
-In Regina, a cut has a _size_ and a _weight:_
+* A _cut_ in a triangulation or facet pairing partitions the top-
+  dimensional simplices into two _sides_. This describes how to split
+  the triangulation or facet pairing into two pieces, by removing all
+  gluings between simplices on opposite sides.
 
-* The _size_ refers to the size of the underlying triangulation or
-  facet pairing (i.e., it indicates the total number of top-
-  dimensional simplices).
+* A cut in a link diagram or a model link graph likewise partitions
+  the crossings or nodes into two sides. However, since links in
+  Regina cannot have free ends, cuts cannot be used to divide a link
+  diagram into two smaller pieces (and likewise for model link
+  graphs).
 
-* The _weight_ refers to the number of gluings that are undone by the
-  cut. This is the usual concept of weight from graph theory (i.e.,
-  the number of edges in the underlying graph that cross the
-  partition).
+In general, we will use the word _nodes_ to refer to the objects that
+are partitioned by the cut (e.g., the top-dimensional simplices of a
+triangulation, or the crossings of a link diagram), and we will use
+the word _arcs_ to refer to the connections between these objects
+(e.g., the individual gluings between top-dimensional simplices, or
+the arcs between crossings in a link diagram).
+
+The two sides of a cut are numbered 0 and 1. In Regina, a cut has a
+_size_ and a _weight:_
+
+* The _size_ refers to the size of the underlying graph-like object;
+  that is, the total number of nodes (using the terminology above).
+
+* The _weight_ is the usual concept of weight from graph theory; that
+  is, the number of arcs that cross between the two sides of the
+  partition. In particular, for triangulations and facet pairings, it
+  counts the number of gluings between top-dimensional simplices that
+  would be undone when using the cut to subdivide the object into two
+  pieces.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
@@ -125,7 +142,7 @@ static const char *__eq =
 R"doc(Determines if this and the given cut are identical.
 
 Two cuts are considered identical if they describe the same partition
-of simplices into sides 0 and 1.
+of nodes into sides 0 and 1.
 
 It does not matter if this and the given cut have different sizes; in
 this case they will be considered different.
@@ -138,47 +155,42 @@ Returns:
 
 // Docstring regina::python::doc::Cut_::__init
 static const char *__init =
-R"doc(Creates a new trivial cut on the given number of top-dimensional
-simplices.
+R"doc(Creates a new trivial cut on the given number of nodes.
 
-All simplices will be on side 0.
+All nodes will be on side 0.
 
 Parameter ``size``:
-    the number of top-dimensional simplices in the underlying
-    triangulation or facet pairing.)doc";
+    the number of nodes in the underlying graph-like object.)doc";
 
 // Docstring regina::python::doc::Cut_::__init_2
 static const char *__init_2 =
 R"doc(Creates a new cut with the given partition sizes.
 
-The total number of top-dimensional simplices under consideration will
-be (*side0* + *side1*); the first *side0* simplices will be on side 0,
-and the remaining *side1* simplices will be on side 1.
+The total number of nodes under consideration will be ``side0 +
+side1``; the first *side0* nodes will be on side 0, and the remaining
+*side1* nodes will be on side 1.
 
 Parameter ``side0``:
-    the number of top-dimensional simplices on side 0 of the
-    partition.
+    the number of nodes on side 0 of the partition.
 
 Parameter ``side1``:
-    the number of top-dimensional simplices on side 1 of the
-    partition.)doc";
+    the number of nodes on side 1 of the partition.)doc";
 
 // Docstring regina::python::doc::Cut_::__init_3
 static const char *__init_3 =
 R"doc(Creates a new cut using the given partition.
 
-Here a cut on *n* top-dimensional simplices is described by a sequence
-of *n* integers, each equal to 0 or 1, indicating which side of the
-partition each top-dimensional simplex lies on.
+Here a cut on *n* nodes is described by a sequence of *n* integers,
+each equal to 0 or 1, indicating which side of the partition each node
+lies on.
 
 Precondition:
     The type *iterator*, when dereferenced, can be cast to an ``int``.
 
 .. warning::
-    This routine computes the number of top-dimensional simplices by
-    subtracting ``end - begin``, and so ideally *iterator* should be a
-    random access iterator type for which this operation is constant
-    time.
+    This routine computes the number of nodes by subtracting ``end -
+    begin``, and so ideally *iterator* should be a random access
+    iterator type for which this operation is constant time.
 
 Exception ``InvalidArgument``:
     Some element of the given sequence is neither 0 nor 1.
@@ -212,16 +224,15 @@ Parameter ``b``:
 static const char *inc =
 R"doc(Converts this into the next cut of the same size.
 
-The total number of top-dimensional simplices will stay the same, but
-the number on each side of the partition may change.
+The total number of nodes will stay the same, but the number on each
+side of the partition may change.
 
 To iterate through all cuts of the given size, you should create a new
 ``Cut(size)`` and then make repeated calls to inc().
 
 If this is already the last partition in such an iteration (i.e., all
-top-dimensional simplices are already on side 1), then this routine
-will return ``False`` and convert this into the *first* such
-partition.
+nodes are already on side 1), then this routine will return ``False``
+and convert this into the *first* such partition.
 
 The order of iteration using inc() is lexicographical in the sequence
 of sides. In particular, if you wish to avoid seeing each cut again
@@ -238,8 +249,8 @@ Returns:
 static const char *incFixedSizes =
 R"doc(Converts this into the next cut with the same partition sizes.
 
-Specifically, the number of top-dimensional simplices on each side of
-the partition will remain the same.
+Specifically, the number of nodes on each side of the partition will
+remain the same.
 
 To iterate through all cuts with the given parititon sizes, you should
 create a new ``Cut(side0, side1)`` and then make repeated calls to
@@ -294,35 +305,34 @@ Returns:
 
 // Docstring regina::python::doc::Cut_::isTrivial
 static const char *isTrivial =
-R"doc(Determines whether this cut places all top-dimensional simplices on
-the same side of the partition.
+R"doc(Determines whether this cut places all nodes on the same side of the
+partition.
 
 Returns:
-    ``True`` if all simplices are on side 0 or all simplices are on
-    side 1, or ``False`` if both sides of the partition are non-empty.)doc";
+    ``True`` if all nodes are on side 0 or all nodes are on side 1, or
+    ``False`` if both sides of the partition are non-empty.)doc";
 
 // Docstring regina::python::doc::Cut_::set
 static const char *set =
-R"doc(Allows you to set which side of the partition the given simplex lies
-on.
+R"doc(Allows you to set which side of the partition the given node lies on.
 
 Exception ``InvalidArgument``:
     The given side is not 0 or 1.
 
-Parameter ``simplex``:
-    the simplex being changed; this must be between 0 and size()-1
+Parameter ``node``:
+    the node being changed; this must be between 0 and size()-1
     inclusive.
 
 Parameter ``newSide``:
-    the side of the partition that the given simplex should lie on;
-    this must be either 0 or 1.)doc";
+    the side of the partition that the given node should lie on; this
+    must be either 0 or 1.)doc";
 
 // Docstring regina::python::doc::Cut_::side
 static const char *side =
-R"doc(Indicates which side of the partition the given simplex lies on.
+R"doc(Indicates which side of the partition the given node lies on.
 
-Parameter ``simplex``:
-    the simplex being queried; this must be between 0 and size()-1
+Parameter ``node``:
+    the node being queried; this must be between 0 and size()-1
     inclusive.
 
 Returns:
@@ -331,19 +341,18 @@ Returns:
 
 // Docstring regina::python::doc::Cut_::size
 static const char *size =
-R"doc(Returns the total number of top-dimensional simplices in the
-underlying triangulation or facet pairing.
+R"doc(Returns the total number of nodes in the underlying graph-like object.
 
-In other words, this returns the size of the underlying triangulation
-or facet pairing.
+In particular, if you are working with a triangulation or facet
+pairing, then this returns the number of top-dimensional simplices.
 
 Returns:
-    the total number of top-dimensional simplices.)doc";
+    the total number of nodes.)doc";
 
 // Docstring regina::python::doc::Cut_::size_2
 static const char *size_2 =
-R"doc(Returns the number of top-dimensional simplices on the given side of
-the partition described by this cut.
+R"doc(Returns the number of nodes on the given side of the partition
+described by this cut.
 
 It will always be true that ``size(0) + size(1) == size()``.
 
@@ -360,7 +369,7 @@ Parameter ``whichSide``:
     the side of the partition to query; this must be either 0 or 1.
 
 Returns:
-    the number of top-dimensional simplices on the given side.)doc";
+    the number of nodes on the given side.)doc";
 
 // Docstring regina::python::doc::Cut_::swap
 static const char *swap =
@@ -416,6 +425,42 @@ Parameter ``pairing``:
 
 Returns:
     the weight of this cut with respect to *pairing*.)doc";
+
+// Docstring regina::python::doc::Cut_::weight_3
+static const char *weight_3 =
+R"doc(Returns the weight of this cut with respect to the given link diagram.
+This is the number of arcs in the link diagram that cross the
+partition described by this cut.
+
+Precondition:
+    The given link diagram has precisely size() crossings.
+
+Exception ``InvalidArgument``:
+    The given link diagram does not have precisely size() crossings.
+
+Parameter ``link``:
+    the link diagram under consideration.
+
+Returns:
+    the weight of this cut with respect to *link*.)doc";
+
+// Docstring regina::python::doc::Cut_::weight_4
+static const char *weight_4 =
+R"doc(Returns the weight of this cut with respect to the given model link
+graph. This is the number of arcs in the graph that cross the
+partition described by this cut.
+
+Precondition:
+    The given graph has precisely size() nodes.
+
+Exception ``InvalidArgument``:
+    The given graph does not have precisely size() nodes.
+
+Parameter ``graph``:
+    the model link graph under consideration.
+
+Returns:
+    the weight of this cut with respect to *graph*.)doc";
 
 }
 
