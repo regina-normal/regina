@@ -96,11 +96,11 @@ namespace detail {
 // so the full implementation can stay out of the headers.
 
 template bool regina::detail::retriangulateInternal<Triangulation<4>, true>(
-    const Triangulation<4>&, int, unsigned, ProgressTrackerOpen*,
+    const Triangulation<4>&, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Triangulation<4>, true>&&);
 
 template bool regina::detail::retriangulateInternal<Triangulation<4>, false>(
-    const Triangulation<4>&, int, unsigned, ProgressTrackerOpen*,
+    const Triangulation<4>&, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Triangulation<4>, false>&&);
 
 } // namespace regina

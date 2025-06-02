@@ -321,19 +321,19 @@ namespace detail {
 // so the full implementation can stay out of the headers.
 
 template bool detail::retriangulateInternal<Link, true, std::true_type>(
-    const Link&, int, unsigned, ProgressTrackerOpen*,
+    const Link&, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Link, true>&&);
 
 template bool detail::retriangulateInternal<Link, false, std::true_type>(
-    const Link&, int, unsigned, ProgressTrackerOpen*,
+    const Link&, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Link, false>&&);
 
 template bool detail::retriangulateInternal<Link, true, std::false_type>(
-    const Link&, int, unsigned, ProgressTrackerOpen*,
+    const Link&, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Link, true>&&);
 
 template bool detail::retriangulateInternal<Link, false, std::false_type>(
-    const Link&, int, unsigned, ProgressTrackerOpen*,
+    const Link&, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Link, false>&&);
 
 } // namespace regina

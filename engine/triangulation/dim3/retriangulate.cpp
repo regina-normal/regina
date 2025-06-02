@@ -76,11 +76,11 @@ namespace detail {
 // so the full implementation can stay out of the headers.
 
 template bool regina::detail::retriangulateInternal<Triangulation<3>, true>(
-    const Triangulation<3>&, int, unsigned, ProgressTrackerOpen*,
+    const Triangulation<3>&, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Triangulation<3>, true>&&);
 
 template bool regina::detail::retriangulateInternal<Triangulation<3>, false>(
-    const Triangulation<3>&, int, unsigned, ProgressTrackerOpen*,
+    const Triangulation<3>&, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Triangulation<3>, false>&&);
 
 // This could be inlined, but we pull it out of the header because otherwise
