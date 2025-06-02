@@ -3787,7 +3787,7 @@ class Link :
          * will ignore your choice of algorithm and use the treewidth-based
          * algorithm regardless.
          *
-         * \exception NotImplemented This link is \e so large that the maximum
+         * \exception NotImplemented This link is _so_ large that the maximum
          * possible strand ID cannot fit into an \c int.  (On a typical machine
          * where \c int is 32-bit, this would require over a _billion_
          * crossings).  Note that, if you have such a link, then this function
@@ -3914,7 +3914,7 @@ class Link :
          * will ignore your choice of algorithm and use the treewidth-based
          * algorithm regardless.
          *
-         * \exception NotImplemented This link is \e so large that the maximum
+         * \exception NotImplemented This link is _so_ large that the maximum
          * possible strand ID cannot fit into an \c int.  (On a typical machine
          * where \c int is 32-bit, this would require over a _billion_
          * crossings).  Note that, if you have such a link, then this function
@@ -4043,7 +4043,7 @@ class Link :
          * \exception FailedPrecondition This is a virtual (not classical)
          * link diagram.
          *
-         * \exception NotImplemented This link is \e so large that the maximum
+         * \exception NotImplemented This link is _so_ large that the maximum
          * possible strand ID cannot fit into an \c int.  (On a typical machine
          * where \c int is 32-bit, this would require over a _billion_
          * crossings).  Note that, if you have such a link, then this function
@@ -4121,7 +4121,7 @@ class Link :
          * \exception FailedPrecondition This is a virtual (not classical)
          * link diagram.
          *
-         * \exception NotImplemented This link is \e so large that the maximum
+         * \exception NotImplemented This link is _so_ large that the maximum
          * possible strand ID cannot fit into an \c int.  (On a typical machine
          * where \c int is 32-bit, this would require over a _billion_
          * crossings).  Note that, if you have such a link, then this function
@@ -4167,7 +4167,7 @@ class Link :
          * \exception FailedPrecondition This is a virtual (not classical)
          * link diagram.
          *
-         * \exception NotImplemented This link is \e so large that the maximum
+         * \exception NotImplemented This link is _so_ large that the maximum
          * possible strand ID cannot fit into an \c int.  (On a typical machine
          * where \c int is 32-bit, this would require over a _billion_
          * crossings).  Note that, if you have such a link, then this function
