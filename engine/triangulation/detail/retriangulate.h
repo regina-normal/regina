@@ -127,7 +127,7 @@ using RetriangulateActionFunc = std::conditional_t<withSig,
  * \ingroup detail
  */
 template <class Object, bool withSig, typename Options = void>
-bool retriangulateInternal(const Object& obj, int height, unsigned nThreads,
+bool retriangulateInternal(const Object& obj, int height, int nThreads,
         ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action);
 
@@ -201,7 +201,7 @@ struct RetriangulateActionTraits;
  */
 template <class Object, typename Options = void>
 bool simplifyExhaustiveInternal(Object& obj, int height,
-        unsigned threads, ProgressTrackerOpen* tracker) {
+        int threads, ProgressTrackerOpen* tracker) {
     // Make a place for the callback to put a simplified object, if it finds
     // one.  Afterwards we will move this into obj, since the change to obj
     // must happen on the calling thread.  The upshot is that we end up moving

@@ -3165,7 +3165,7 @@ class Link :
          * \return \c true if and only if this diagram was successfully
          * simplified to fewer crossings.
          */
-        bool simplifyExhaustive(int height = 1, unsigned threads = 1,
+        bool simplifyExhaustive(int height = 1, int threads = 1,
             ProgressTrackerOpen* tracker = nullptr);
 
         /**
@@ -3311,7 +3311,7 @@ class Link :
          * completion.
          */
         template <typename Action, typename... Args>
-        bool rewrite(int height, unsigned threads,
+        bool rewrite(int height, int threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
 
@@ -3365,7 +3365,7 @@ class Link :
          * completion.
          */
         template <typename Action, typename... Args>
-        bool rewriteVirtual(int height, unsigned threads,
+        bool rewriteVirtual(int height, int threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
 
@@ -7509,7 +7509,7 @@ inline bool Link::intelligentSimplify() {
 }
 
 template <typename Action, typename... Args>
-inline bool Link::rewrite(int height, unsigned threads,
+inline bool Link::rewrite(int height, int threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (components_.size() >= 64) {
         if (tracker)
@@ -7541,7 +7541,7 @@ inline bool Link::rewrite(int height, unsigned threads,
 }
 
 template <typename Action, typename... Args>
-inline bool Link::rewriteVirtual(int height, unsigned threads,
+inline bool Link::rewriteVirtual(int height, int threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (components_.size() >= 64) {
         if (tracker)
@@ -7573,7 +7573,7 @@ inline bool Link::rewriteVirtual(int height, unsigned threads,
     }
 }
 
-inline bool Link::simplifyExhaustive(int height, unsigned threads,
+inline bool Link::simplifyExhaustive(int height, int threads,
         ProgressTrackerOpen* tracker) {
     if (components_.size() >= 64) {
         if (tracker)

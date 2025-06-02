@@ -173,21 +173,18 @@ class RetriangulateThreadSync<true> {
         }
 
         template <class RetriangulatorType>
-        void startThreads(unsigned nThreads, ProgressTrackerOpen* tracker) {
+        void startThreads(int nThreads, ProgressTrackerOpen* tracker) {
             nRunning_ = nThreads;
 
-            auto* t = new std::thread[nThreads];
-            unsigned i;
+            FixedArray<std::thread> t(nThreads);
 
             // In the std::thread constructor, we _must_ pass \c this as a
             // pointer - otherwise we may end up making deep copies instead.
-            for (i = 0; i < nThreads; ++i)
+            for (int i = 0; i < nThreads; ++i)
                 t[i] = std::thread(&RetriangulatorType::processQueue,
                     static_cast<RetriangulatorType*>(this), tracker);
-            for (i = 0; i < nThreads; ++i)
+            for (int i = 0; i < nThreads; ++i)
                 t[i].join();
-
-            delete[] t;
         }
 
         /**
@@ -537,7 +534,7 @@ bool Retriangulator<Object, threading, withSig, Options>::candidate(
 }
 
 template <class Object, bool threading, bool withSig, typename Options>
-bool enumerateDetail(const Object& obj, int height, unsigned nThreads,
+bool enumerateDetail(const Object& obj, int height, int nThreads,
         ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action) {
     if (tracker)
@@ -573,7 +570,7 @@ bool enumerateDetail(const Object& obj, int height, unsigned nThreads,
 }
 
 template <class Object, bool withSig, typename Options>
-bool retriangulateInternal(const Object& obj, int height, unsigned nThreads,
+bool retriangulateInternal(const Object& obj, int height, int nThreads,
         ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action) {
     if (nThreads <= 1) {

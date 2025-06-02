@@ -93,7 +93,7 @@ template bool regina::detail::retriangulateInternal<Triangulation<3>, false>(
 // This would not have been a problem if link.h did not have to include
 // triangulation/dim3.h (which is included just to inline Link::complement()).
 //
-bool Triangulation<3>::simplifyExhaustive(int height, unsigned threads,
+bool Triangulation<3>::simplifyExhaustive(int height, int threads,
         ProgressTrackerOpen* tracker) {
     if (countComponents() > 1) {
         if (tracker)

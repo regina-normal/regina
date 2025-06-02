@@ -746,7 +746,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \return \c true if and only if the triangulation was successfully
          * simplified to fewer pentachora.
          */
-        bool simplifyExhaustive(int height = 1, unsigned threads = 1,
+        bool simplifyExhaustive(int height = 1, int threads = 1,
             ProgressTrackerOpen* tracker = nullptr);
 
         /**
@@ -871,7 +871,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * completion.
          */
         template <typename Action, typename... Args>
-        bool retriangulate(int height, unsigned threads,
+        bool retriangulate(int height, int threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
 
@@ -1671,7 +1671,7 @@ inline bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
 }
 
 template <typename Action, typename... Args>
-inline bool Triangulation<4>::retriangulate(int height, unsigned threads,
+inline bool Triangulation<4>::retriangulate(int height, int threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (countComponents() > 1) {
         if (tracker)
@@ -1702,7 +1702,7 @@ inline bool Triangulation<4>::retriangulate(int height, unsigned threads,
     }
 }
 
-inline bool Triangulation<4>::simplifyExhaustive(int height, unsigned threads,
+inline bool Triangulation<4>::simplifyExhaustive(int height, int threads,
         ProgressTrackerOpen* tracker) {
     if (countComponents() > 1) {
         if (tracker)
