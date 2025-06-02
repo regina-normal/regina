@@ -258,7 +258,7 @@ namespace {
     };
 }
 
-Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker, int threads)
+Laurent<Integer> Link::bracketNaive(int threads, ProgressTracker* tracker)
         const {
     if (components_.empty())
         return {};
@@ -327,7 +327,7 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker, int threads)
 
 Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
     if (crossings_.empty())
-        return bracketNaive(tracker, 1);
+        return bracketNaive(1 /* single-threaded */, tracker);
 
     // We are guaranteed >= 1 crossing and >= 1 component.
 
@@ -685,8 +685,8 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
     return ans;
 }
 
-const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker,
-        int threads) const {
+const Laurent<Integer>& Link::bracket(Algorithm alg, int threads,
+        ProgressTracker* tracker) const {
     if (bracket_.has_value()) {
         if (tracker)
             tracker->setFinished();
@@ -700,7 +700,7 @@ const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker,
     Laurent<Integer> ans;
     switch (alg) {
         case Algorithm::Naive:
-            ans = bracketNaive(tracker, threads);
+            ans = bracketNaive(threads, tracker);
             break;
         default:
             ans = bracketTreewidth(tracker);
@@ -719,8 +719,8 @@ const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker,
     return *bracket_;
 }
 
-const Laurent<Integer>& Link::jones(Algorithm alg, ProgressTracker* tracker,
-        int threads) const {
+const Laurent<Integer>& Link::jones(Algorithm alg, int threads,
+        ProgressTracker* tracker) const {
     if (jones_.has_value()) {
         if (tracker)
             tracker->setFinished();
@@ -728,7 +728,7 @@ const Laurent<Integer>& Link::jones(Algorithm alg, ProgressTracker* tracker,
     }
 
     // Computing bracket_ will also set jones_.
-    bracket(alg, tracker, threads); // this marks tracker as finished
+    bracket(alg, threads, tracker); // this marks tracker as finished
     if (tracker && tracker->isCancelled())
         return noResult;
     return *jones_;

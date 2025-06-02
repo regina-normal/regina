@@ -3815,7 +3815,7 @@ class Link :
          * calculation was cancelled via the given progress tracker.
          */
         const Laurent<Integer>& bracket(Algorithm alg = Algorithm::Default,
-            ProgressTracker* tracker = nullptr, int threads = 1) const;
+            int threads = 1, ProgressTracker* tracker = nullptr) const;
         /**
          * Is the Kauffman bracket polynomial of this link diagram
          * already known?  See bracket() for further details.
@@ -3910,7 +3910,7 @@ class Link :
          * calculation was cancelled via the given progress tracker.
          */
         const Laurent<Integer>& jones(Algorithm alg = Algorithm::Default,
-            ProgressTracker* tracker = nullptr, int threads = 1) const;
+            int threads = 1, ProgressTracker* tracker = nullptr) const;
         /**
          * Is the Jones polynomial of this link already known?
          * See jones() for further details.
@@ -4212,7 +4212,7 @@ class Link :
          * the calculation was cancelled via the given progress tracker.
          */
         const Arrow& arrow(Algorithm alg = Algorithm::Default,
-            ProgressTracker* tracker = nullptr, int threads = 1) const;
+            int threads = 1, ProgressTracker* tracker = nullptr) const;
         /**
          * Is the normalised arrow polynomial of this link already known?
          * See arrow() for further details.
@@ -6719,7 +6719,7 @@ class Link :
          *
          * See bracket() for further details.
          */
-        Laurent<Integer> bracketNaive(ProgressTracker* tracker, int threads)
+        Laurent<Integer> bracketNaive(int threads, ProgressTracker* tracker)
             const;
 
         /**
@@ -6789,7 +6789,7 @@ class Link :
          *
          * See arrow() for further details.
          */
-        Arrow arrowNaive(ProgressTracker* tracker, int threads) const;
+        Arrow arrowNaive(int threads, ProgressTracker* tracker) const;
 
         /**
          * Returns the group of this link as constructed from the Wirtinger

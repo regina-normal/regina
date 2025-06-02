@@ -316,7 +316,7 @@ namespace {
     };
 }
 
-Arrow Link::arrowNaive(ProgressTracker* tracker, int threads) const {
+Arrow Link::arrowNaive(int threads, ProgressTracker* tracker) const {
     if (components_.empty())
         return {};
 
@@ -382,7 +382,7 @@ Arrow Link::arrowNaive(ProgressTracker* tracker, int threads) const {
     return acc.finalise();
 }
 
-const Arrow& Link::arrow(Algorithm, ProgressTracker* tracker, int threads)
+const Arrow& Link::arrow(Algorithm, int threads, ProgressTracker* tracker)
         const {
     if (arrow_.has_value()) {
         if (tracker)
@@ -391,7 +391,7 @@ const Arrow& Link::arrow(Algorithm, ProgressTracker* tracker, int threads)
     }
 
     // For now we only support the naive algorithm.
-    Arrow ans = arrowNaive(tracker, threads);
+    Arrow ans = arrowNaive(threads, tracker);
 
     if (tracker && tracker->isCancelled()) {
         tracker->setFinished();
