@@ -1132,6 +1132,13 @@ TEST_F(LinkTest, jones) {
     // Run through a small census and ensure that both algorithms give
     // the same Jones polynomial in both cases.
     runCensusAllVirtual(verifyJonesConsistent);
+
+    // Check that the multithreaded naive algorithm gives the same answers as
+    // the single-threaded treewidth algorithm.
+    EXPECT_EQ(ExampleLink::borromean().jones(Algorithm::Naive, 4),
+        ExampleLink::borromean().jones());
+    EXPECT_EQ(ExampleLink::borromean().parallel(2).jones(Algorithm::Naive, 4),
+        ExampleLink::borromean().parallel(2).jones());
 }
 
 static void verifyHomflyAZ(const TestCase& test,
@@ -1463,6 +1470,30 @@ TEST_F(LinkTest, arrow) {
         { {{}, {2, {-1,0,0,0,1,0,0,0,-1}}},
           {{1}, {12, {-1}}}
         });
+
+    // Check that the multithreaded algorithm gives the same answers as the
+    // single-threaded algorithm.  All polynomials below were computing using
+    // Reging 7.4 in single-threaded mode.
+    EXPECT_EQ(ExampleLink::gpv().arrow(Algorithm::Default, 2),
+        regina::Arrow({
+            {{}, {8, {1}}},
+            {{0,1}, {12, {1,0,0,0,-2,0,0,0,1}}},
+            {{1}, {10, {2,0,0,0,-2}}}
+        }));
+    EXPECT_EQ(ExampleLink::gpv().parallel(2).arrow(Algorithm::Default, 4),
+        regina::Arrow({
+            {{}, {2, {-1,0,0,0,1,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,2,0,0,0,
+                -4,0,0,0,-7,0,0,0,-1,0,0,0,11,0,0,0,-1,0,0,0,-5,0,0,0,1}}},
+            {{0,0,0,2}, {30, {-1,0,0,0,1,0,0,0,3,0,0,0,-3,0,0,0,-3,0,0,0,
+                3,0,0,0,1,0,0,0,-1}}},
+            {{0,0,2}, {26, {-2,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,
+                -6,0,0,0,0,0,0,0,2}}},
+            {{0,2}, {22, {-3,0,0,0,-1,0,0,0,6,0,0,0,2,0,0,0,-3,0,0,0,-1}}},
+            {{2}, {18, {-2,0,0,0,0,0,0,0,2,0,0,0,-2,0,0,0,0,0,0,0,0,0,0,0,
+                -2,0,0,0,2,0,0,0,2}}},
+            {{4}, {18, {-1,0,0,0,-3,0,0,0,-1,0,0,0,5,0,0,0,5,0,0,0,-1,0,0,0,
+                -3,0,0,0,-1}}}
+        }));
 }
 
 static void verifyComplementBasic(const Link& link, const char* name) {
