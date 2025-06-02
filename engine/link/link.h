@@ -3817,6 +3817,38 @@ class Link :
         const Laurent<Integer>& bracket(Algorithm alg = Algorithm::Default,
             int threads = 1, ProgressTracker* tracker = nullptr) const;
         /**
+         * Deprecated routine that returns the Kauffman bracket polynomial of
+         * this link diagram, using a single thread and an explicit
+         * progress tracker.
+         *
+         * This routine is provided for backward compatibility: its only
+         * purpose is to offer a syntax that was supported in old versions of
+         * Regina but is not consistent with the new form of bracket() that
+         * supports multithreading.
+         *
+         * See bracket(Algorithm, int, ProgressTracker*) for further details
+         * on what this routine does and relevant warnings that you should be
+         * aware of.
+         *
+         * \deprecated If you need to use this form of bracket() (i.e.,
+         * single-threaded with an explicit progress tracker), you should call
+         * `bracket(alg, 1, tracker)` instead.
+         *
+         * \exception NotImplemented This link is _so_ large that the maximum
+         * possible strand ID cannot fit into an \c int.
+         *
+         * \python The global interpreter lock will be released while this
+         * function runs, so you can use it with Python-based multithreading.
+         *
+         * \param alg the algorithm with which to compute the polynomial.
+         * \param tracker a progress tracker through which progress will
+         * be reported, or \c null if no progress reporting is required.
+         * \return the bracket polynomial, or the zero polynomial if the
+         * calculation was cancelled via the given progress tracker.
+         */
+        [[deprecated]] const Laurent<Integer>& bracket(
+            Algorithm alg, ProgressTracker* tracker) const;
+        /**
          * Is the Kauffman bracket polynomial of this link diagram
          * already known?  See bracket() for further details.
          *
@@ -3911,6 +3943,38 @@ class Link :
          */
         const Laurent<Integer>& jones(Algorithm alg = Algorithm::Default,
             int threads = 1, ProgressTracker* tracker = nullptr) const;
+        /**
+         * Deprecated routine that returns the Jones polynomial of this link
+         * with all exponents doubled, using a single thread and an explicit
+         * progress tracker.
+         *
+         * This routine is provided for backward compatibility: its only
+         * purpose is to offer a syntax that was supported in old versions of
+         * Regina but is not consistent with the new form of jones() that
+         * supports multithreading.
+         *
+         * See jones(Algorithm, int, ProgressTracker*) for further details
+         * on what this routine does and relevant warnings that you should be
+         * aware of.
+         *
+         * \deprecated If you need to use this form of jones() (i.e.,
+         * single-threaded with an explicit progress tracker), you should call
+         * `jones(alg, 1, tracker)` instead.
+         *
+         * \exception NotImplemented This link is _so_ large that the maximum
+         * possible strand ID cannot fit into an \c int.
+         *
+         * \python The global interpreter lock will be released while this
+         * function runs, so you can use it with Python-based multithreading.
+         *
+         * \param alg the algorithm with which to compute the polynomial.
+         * \param tracker a progress tracker through which progress will
+         * be reported, or \c null if no progress reporting is required.
+         * \return the Jones polynomial, or the zero polynomial if the
+         * calculation was cancelled via the given progress tracker.
+         */
+        [[deprecated]] const Laurent<Integer>& jones(
+            Algorithm alg, ProgressTracker* tracker) const;
         /**
          * Is the Jones polynomial of this link already known?
          * See jones() for further details.
@@ -7218,6 +7282,14 @@ inline long Link::linking() const {
         return twice >> 1;
 }
 
+inline const Laurent<Integer>& Link::bracket(Algorithm alg,
+        ProgressTracker* tracker) const {
+    return bracket(alg, 1 /* single-threaded */, tracker);
+}
+inline const Laurent<Integer>& Link::jones(Algorithm alg,
+        ProgressTracker* tracker) const {
+    return jones(alg, 1 /* single-threaded */, tracker);
+}
 inline const Laurent2<Integer>& Link::homfly(Algorithm alg,
         ProgressTracker* tracker) const {
     return homflyAZ(alg, tracker);

@@ -44,6 +44,7 @@ using pybind11::overload_cast;
 using regina::python::GILCallbackManager;
 using regina::Crossing;
 using regina::Framing;
+using regina::ProgressTracker;
 using regina::StrandRef;
 using regina::Link;
 
@@ -273,20 +274,38 @@ void addLink(pybind11::module_& m) {
         .def("alexander", &Link::alexander,
             pybind11::return_value_policy::reference_internal,
             rdoc::alexander)
-        .def("bracket", &Link::bracket,
+        .def("bracket",
+            overload_cast<regina::Algorithm, int, regina::ProgressTracker*>(
+                &Link::bracket, pybind11::const_),
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("alg") = regina::Algorithm::Default,
             pybind11::arg("threads") = 1,
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::bracket)
-        .def("jones", &Link::jones,
+        .def("bracket", // deprecated
+            [](const Link& link, regina::Algorithm alg, ProgressTracker* t) {
+                return link.bracket(alg, 1 /* single-threaded */, t);
+            },
+            pybind11::return_value_policy::reference_internal,
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
+            rdoc::bracket_2)
+        .def("jones",
+            overload_cast<regina::Algorithm, int, regina::ProgressTracker*>(
+                &Link::jones, pybind11::const_),
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("alg") = regina::Algorithm::Default,
             pybind11::arg("threads") = 1,
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::jones)
+        .def("jones", // deprecated
+            [](const Link& link, regina::Algorithm alg, ProgressTracker* t) {
+                return link.jones(alg, 1 /* single-threaded */, t);
+            },
+            pybind11::return_value_policy::reference_internal,
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
+            rdoc::jones_2)
         .def("homfly", &Link::homfly,
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("alg") = regina::Algorithm::Default,

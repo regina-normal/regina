@@ -585,6 +585,45 @@ Returns:
     the bracket polynomial, or the zero polynomial if the calculation
     was cancelled via the given progress tracker.)doc";
 
+// Docstring regina::python::doc::Link_::bracket_2
+static const char *bracket_2 =
+R"doc(Deprecated routine that returns the Kauffman bracket polynomial of
+this link diagram, using a single thread and an explicit progress
+tracker.
+
+This routine is provided for backward compatibility: its only purpose
+is to offer a syntax that was supported in old versions of Regina but
+is not consistent with the new form of bracket() that supports
+multithreading.
+
+See bracket(Algorithm, int, ProgressTracker*) for further details on
+what this routine does and relevant warnings that you should be aware
+of.
+
+.. deprecated::
+    If you need to use this form of bracket() (i.e., single-threaded
+    with an explicit progress tracker), you should call ``bracket(alg,
+    1, tracker)`` instead.
+
+Exception ``NotImplemented``:
+    This link is _so_ large that the maximum possible strand ID cannot
+    fit into an ``int``.
+
+Python:
+    The global interpreter lock will be released while this function
+    runs, so you can use it with Python-based multithreading.
+
+Parameter ``alg``:
+    the algorithm with which to compute the polynomial.
+
+Parameter ``tracker``:
+    a progress tracker through which progress will be reported, or
+    ``None`` if no progress reporting is required.
+
+Returns:
+    the bracket polynomial, or the zero polynomial if the calculation
+    was cancelled via the given progress tracker.)doc";
+
 // Docstring regina::python::doc::Link_::brief
 static const char *brief =
 R"doc(Outputs this link in Regina's own brief write-only format. This format
@@ -3232,6 +3271,45 @@ Parameter ``threads``:
     algorithm supports multithreading; if you use the treewidth-based
     algorithm then it will run single-threaded regardless of the value
     of *threads*.
+
+Returns:
+    the Jones polynomial, or the zero polynomial if the calculation
+    was cancelled via the given progress tracker.)doc";
+
+// Docstring regina::python::doc::Link_::jones_2
+static const char *jones_2 =
+R"doc(Deprecated routine that returns the Jones polynomial of this link with
+all exponents doubled, using a single thread and an explicit progress
+tracker.
+
+This routine is provided for backward compatibility: its only purpose
+is to offer a syntax that was supported in old versions of Regina but
+is not consistent with the new form of jones() that supports
+multithreading.
+
+See jones(Algorithm, int, ProgressTracker*) for further details on
+what this routine does and relevant warnings that you should be aware
+of.
+
+.. deprecated::
+    If you need to use this form of jones() (i.e., single-threaded
+    with an explicit progress tracker), you should call ``jones(alg,
+    1, tracker)`` instead.
+
+Exception ``NotImplemented``:
+    This link is _so_ large that the maximum possible strand ID cannot
+    fit into an ``int``.
+
+Python:
+    The global interpreter lock will be released while this function
+    runs, so you can use it with Python-based multithreading.
+
+Parameter ``alg``:
+    the algorithm with which to compute the polynomial.
+
+Parameter ``tracker``:
+    a progress tracker through which progress will be reported, or
+    ``None`` if no progress reporting is required.
 
 Returns:
     the Jones polynomial, or the zero polynomial if the calculation

@@ -56,8 +56,10 @@
 
 #define MAX_LINK_AUTO_POLYNOMIALS 6
 
+using regina::Algorithm;
 using regina::Link;
 using regina::Packet;
+using regina::ProgressTracker;
 
 LinkPolynomialUI::LinkPolynomialUI(regina::PacketOf<regina::Link>* packet,
         PacketTabbedUI* useParentUI) :
@@ -356,10 +358,12 @@ void LinkPolynomialUI::refresh() {
 }
 
 void LinkPolynomialUI::calculateJones() {
-    regina::ProgressTracker tracker;
+    ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing Jones polynomial"), ui);
-    std::thread(&Link::jones, link, regina::Algorithm::Default,
-        ReginaPrefSet::threads(), std::addressof(tracker)).detach();
+    std::thread(static_cast<const regina::Laurent<regina::Integer>& (Link::*)(
+            Algorithm, int, ProgressTracker*) const>(&Link::jones),
+        link, Algorithm::Default, ReginaPrefSet::threads(),
+        std::addressof(tracker)).detach();
     if (! dlg.run())
         return;
     dlg.hide();
@@ -369,10 +373,10 @@ void LinkPolynomialUI::calculateJones() {
 }
 
 void LinkPolynomialUI::calculateHomfly() {
-    regina::ProgressTracker tracker;
+    ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing HOMFLY-PT polynomial"),
         ui);
-    std::thread(&Link::homfly, link, regina::Algorithm::Default,
+    std::thread(&Link::homfly, link, Algorithm::Default,
         std::addressof(tracker)).detach();
     if (! dlg.run())
         return;
@@ -383,10 +387,12 @@ void LinkPolynomialUI::calculateHomfly() {
 }
 
 void LinkPolynomialUI::calculateBracket() {
-    regina::ProgressTracker tracker;
+    ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing Kauffman bracket"), ui);
-    std::thread(&Link::jones, link, regina::Algorithm::Default,
-        ReginaPrefSet::threads(), std::addressof(tracker)).detach();
+    std::thread(static_cast<const regina::Laurent<regina::Integer>& (Link::*)(
+            Algorithm, int, ProgressTracker*) const>(&Link::jones),
+        link, Algorithm::Default, ReginaPrefSet::threads(),
+        std::addressof(tracker)).detach();
     if (! dlg.run())
         return;
     dlg.hide();
@@ -396,9 +402,9 @@ void LinkPolynomialUI::calculateBracket() {
 }
 
 void LinkPolynomialUI::calculateArrow() {
-    regina::ProgressTracker tracker;
+    ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing arrow polynomial"), ui);
-    std::thread(&Link::arrow, link, regina::Algorithm::Default,
+    std::thread(&Link::arrow, link, Algorithm::Default,
         ReginaPrefSet::threads(), std::addressof(tracker)).detach();
     if (! dlg.run())
         return;

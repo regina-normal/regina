@@ -330,7 +330,9 @@ Version 7.4  [ (to be announced) ]
               diagrams.
             - Routine hasReducingPass() can now handle multiple-component links.
             - Routines bracket() and jones() now support multithreading when
-              using the naive algorithm.
+              using the naive algorithm.  These functions now take a new
+              number-of-threads argument; all variants of the old syntax that
+              do not match the new syntax have been kept but deprecated.
             - Added a variant of translate() that takes crossings instead of
               strand references.
             - Renamed intelligentSimplify() to simplify().  The old name is
