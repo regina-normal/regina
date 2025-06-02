@@ -73,13 +73,16 @@ namespace {
         EXAMPLE_CONWAY,
         EXAMPLE_FIGURE_EIGHT,
         EXAMPLE_GST,
+        EXAMPLE_GPV,
         EXAMPLE_HOPF,
         EXAMPLE_KT,
+        EXAMPLE_KISHINO,
         EXAMPLE_TREFOIL_LEFT,
         EXAMPLE_TREFOIL_RIGHT,
         EXAMPLE_UNKNOT,
         EXAMPLE_MONSTER,
         EXAMPLE_GORDIAN,
+        EXAMPLE_VIRTUAL_TREFOIL,
         EXAMPLE_WHITEHEAD
     };
 
@@ -214,13 +217,16 @@ LinkCreator::LinkCreator(ReginaMain*) {
     exampleWhich->addItem(QObject::tr("Conway knot"));
     exampleWhich->addItem(QObject::tr("Figure eight knot"));
     exampleWhich->addItem(QObject::tr("Gompf-Scharlemann-Thompson"));
+    exampleWhich->addItem(QObject::tr("Goussarov-Polyak-Viro"));
     exampleWhich->addItem(QObject::tr("Hopf link"));
     exampleWhich->addItem(QObject::tr("Kinoshita-Terasaka knot"));
+    exampleWhich->addItem(QObject::tr("Kishino knot"));
     exampleWhich->addItem(QObject::tr("Trefoil (left)"));
     exampleWhich->addItem(QObject::tr("Trefoil (right)"));
     exampleWhich->addItem(QObject::tr("Unknot (no crossings)"));
     exampleWhich->addItem(QObject::tr("Unknot (10-crossing monster)"));
     exampleWhich->addItem(QObject::tr("Unknot (141-crossing Gordian)"));
+    exampleWhich->addItem(QObject::tr("Virtual trefoil"));
     exampleWhich->addItem(QObject::tr("Whitehead link"));
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
@@ -313,11 +319,16 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
             case EXAMPLE_GST:
                 return make_packet(ExampleLink::gst(),
                     "Gompf-Scharlemann-Thompson");
+            case EXAMPLE_GPV:
+                return make_packet(ExampleLink::gpv(), "Goussarov-Polyak-Viro");
             case EXAMPLE_HOPF:
                 return make_packet(ExampleLink::hopf(), "Hopf link");
             case EXAMPLE_KT:
                 return make_packet(ExampleLink::kinoshitaTerasaka(),
                     "Kinoshita-Terasaka knot");
+            case EXAMPLE_KISHINO:
+                return make_packet(ExampleLink::kishino(),
+                    "Kishino knot");
             case EXAMPLE_TREFOIL_LEFT:
                 return make_packet(ExampleLink::trefoilLeft(),
                     "Left-hand trefoil");
@@ -330,6 +341,9 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
                 return make_packet(ExampleLink::monster(), "Monster unknot");
             case EXAMPLE_GORDIAN:
                 return make_packet(ExampleLink::gordian(), "Gordian unknot");
+            case EXAMPLE_VIRTUAL_TREFOIL:
+                return make_packet(ExampleLink::virtualTrefoil(),
+                    "Virtual trefoil");
             case EXAMPLE_WHITEHEAD:
                 return make_packet(ExampleLink::whitehead(), "Whitehead link");
         }
