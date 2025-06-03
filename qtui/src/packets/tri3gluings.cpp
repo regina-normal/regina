@@ -1353,7 +1353,7 @@ void Tri3GluingsUI::connectedSumDecomposition() {
                     if (small->isOrientable())
                         ReginaSupport::info(ui,
                             tr("<qt>This is the prime manifold "
-                            "S<sup>2</sup> x S<sup>1</sup>.</qt>"),
+                            "S<sup>2</sup> × S<sup>1</sup>.</qt>"),
                             tr("I cannot decompose it further.  "
                             "However, I have constructed a new minimal "
                             "(but not 0-efficient) triangulation."));
@@ -1473,11 +1473,11 @@ void Tri3GluingsUI::makeZeroEfficient() {
                 } else if (h1.isZ()) {
                     ReginaSupport::info(ui,
                         tr("<qt>This is the 3-manifold "
-                        "S<sup>2</sup> x S<sup>1</sup>, which does not have "
+                        "S<sup>2</sup> × S<sup>1</sup>, which does not have "
                         "a 0-efficient triangulation."),
                         tr("<qt>I have instead converted it to a minimal "
                         "two-tetrahedron triangulation of "
-                        "S<sup>2</sup> x S<sup>1</sup>.</qt>"));
+                        "S<sup>2</sup> × S<sup>1</sup>.</qt>"));
                 }
             }
         } else {
@@ -1525,7 +1525,7 @@ void Tri3GluingsUI::makeZeroEfficient() {
                     // No way to improve this case.
                     ReginaSupport::info(ui,
                         tr("<qt>This is the 3-manifold "
-                        "S<sup>2</sup> x S<sup>1</sup>, which does not have "
+                        "S<sup>2</sup> × S<sup>1</sup>, which does not have "
                         "a 0-efficient triangulation."),
                         tr("I have left the triangulation unchanged."));
                 }

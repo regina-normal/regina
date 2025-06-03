@@ -271,10 +271,10 @@ Returns:
 // Docstring regina::python::doc::Example_::rp2xs1
 static const char *rp2xs1 =
 R"doc(Returns a three-tetrahedron triangulation of the non-orientable
-product space ``RP² x S¹``.
+product space ``RP² × S¹``.
 
 Returns:
-    the product space ``RP² x S¹``.)doc";
+    the product space ``RP² × S¹``.)doc";
 
 // Docstring regina::python::doc::Example_::rp3rp3
 static const char *rp3rp3 =
@@ -285,11 +285,11 @@ Returns:
 
 // Docstring regina::python::doc::Example_::s2xs1
 static const char *s2xs1 =
-R"doc(Returns a two-tetrahedron triangulation of the product space ``S² x
+R"doc(Returns a two-tetrahedron triangulation of the product space ``S² ×
 S¹``. This is identical to calling the generic routine sphereBundle().
 
 Returns:
-    the product space ``S² x S¹``.)doc";
+    the product space ``S² × S¹``.)doc";
 
 // Docstring regina::python::doc::Example_::sfsOverSphere
 static const char *sfsOverSphere =
@@ -398,10 +398,10 @@ Returns:
 // Docstring regina::python::doc::Example_::threeTorus
 static const char *threeTorus =
 R"doc(Returns a six-tetrahedron triangulation of the 3-torus; that is, the
-product space ``S¹ x S¹ x S¹``.
+product space ``S¹ × S¹ × S¹``.
 
 Returns:
-    the product space ``S¹ x S¹ x S¹``.)doc";
+    the product space ``S¹ × S¹ × S¹``.)doc";
 
 // Docstring regina::python::doc::Example_::trefoil
 static const char *trefoil =

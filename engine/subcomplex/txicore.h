@@ -48,7 +48,7 @@
 namespace regina {
 
 /**
- * Provides a triangulation of the product `T x I` (the
+ * Provides a triangulation of the product `T × I` (the
  * product of the torus and the interval).  Generally these
  * triangulations are only one tetrahedron thick (i.e., a "thin I-bundle"),
  * though this is not a strict requirement of this class.  Triangulations of
@@ -81,7 +81,7 @@ namespace regina {
 class TxICore : public Output<TxICore> {
     protected:
         Triangulation<3> core_;
-            /**< A full copy of the `T x I` triangulation that is
+            /**< A full copy of the `T × I` triangulation that is
                  described. */
         std::array<std::array<size_t, 2>, 2> bdryTet_;
             /**< The tetrahedra that provide the upper and lower
@@ -106,7 +106,7 @@ class TxICore : public Output<TxICore> {
          */
         virtual ~TxICore() = default;
         /**
-         * Returns a full copy of the `T x I` triangulation that
+         * Returns a full copy of the `T × I` triangulation that
          * this object describes.
          *
          * Successive calls to this routine will return a reference to the
@@ -120,7 +120,7 @@ class TxICore : public Output<TxICore> {
          * Determines which tetrahedron provides the requested boundary
          * triangle.
          *
-         * Recall that the `T x I` triangulation has two torus
+         * Recall that the `T × I` triangulation has two torus
          * boundaries, each consisting of two boundary triangles.  This
          * routine returns the specific tetrahedron that provides the
          * given triangle of the given torus boundary.
@@ -240,14 +240,14 @@ class TxICore : public Output<TxICore> {
 
         /**
          * Returns the name of this specific triangulation of
-         * `T x I` as a human-readable string.
+         * `T × I` as a human-readable string.
          *
          * \return the name of this triangulation.
          */
         std::string name() const;
         /**
          * Returns the name of this specific triangulation of
-         * `T x I` in TeX format.  No leading or trailing dollar
+         * `T × I` in TeX format.  No leading or trailing dollar
          * signs will be included.
          *
          * \return the name of this triangulation in TeX format.
@@ -255,13 +255,13 @@ class TxICore : public Output<TxICore> {
         std::string texName() const;
 
         /**
-         * Determines if this and the given `T x I` triangulation
+         * Determines if this and the given `T × I` triangulation
          * are of the same type and have the same parameters.
          *
          * If this returns \c true, then the triangulations returned
          * by core() should also be combinatorially identical.
          *
-         * \param other the `T x I` triangulation to compare with this.
+         * \param other the `T × I` triangulation to compare with this.
          * \return \c true if and only if this and the given triangulation
          * are of the same type and have the same parameters.
          */
@@ -269,7 +269,7 @@ class TxICore : public Output<TxICore> {
 
         /**
          * Writes the name of this specific triangulation of
-         * `T x I` to the given output stream.  The name will be
+         * `T × I` to the given output stream.  The name will be
          * written as a human-readable string.
          *
          * \nopython Instead use the variant name() that takes no arguments
@@ -281,7 +281,7 @@ class TxICore : public Output<TxICore> {
         virtual std::ostream& writeName(std::ostream& out) const = 0;
         /**
          * Writes the name of this specific triangulation of
-         * `T x I` in TeX format to the given output stream.
+         * `T × I` in TeX format to the given output stream.
          * No leading or trailing dollar signs will be written.
          *
          * \nopython Instead use the variant texName() that takes no arguments
@@ -363,7 +363,7 @@ class TxICore : public Output<TxICore> {
 };
 
 /**
- * One of a family of thin `T x I` triangulations that typically
+ * One of a family of thin `T × I` triangulations that typically
  * appear at the centres of layered torus bundles.  Different
  * triangulations in this family use different numbers of tetrahedra,
  * with the larger triangulations producing more complicated
@@ -429,7 +429,7 @@ class TxICore : public Output<TxICore> {
 class TxIDiagonalCore : public TxICore {
     private:
         size_t size_;
-            /**< The number of tetrahedra in this `T x I`
+            /**< The number of tetrahedra in this `T × I`
                  triangulation. */
         size_t k_;
             /**< The additional parameter \a k as described in the
@@ -437,7 +437,7 @@ class TxIDiagonalCore : public TxICore {
 
     public:
         /**
-         * Creates a new `T x I` triangulation with the given
+         * Creates a new `T × I` triangulation with the given
          * parameters.
          *
          * \param size the number of tetrahedra in this
@@ -448,12 +448,12 @@ class TxIDiagonalCore : public TxICore {
         TxIDiagonalCore(size_t size, size_t k);
 
         /**
-         * Creates a new copy of the given `T x I` triangulation.
+         * Creates a new copy of the given `T × I` triangulation.
          */
         TxIDiagonalCore(const TxIDiagonalCore&) = default;
 
         /**
-         * Moves the contents of the given `T x I` triangulation
+         * Moves the contents of the given `T × I` triangulation
          * into this new triangulation.
          *
          * The triangulation that was passed will no longer be usable.
@@ -461,7 +461,7 @@ class TxIDiagonalCore : public TxICore {
         TxIDiagonalCore(TxIDiagonalCore&&) noexcept = default;
 
         /**
-         * Sets this to be a copy of the given `T x I` triangulation.
+         * Sets this to be a copy of the given `T × I` triangulation.
          * This will induce a deep copy.
          *
          * \return a reference to this triangulation.
@@ -469,7 +469,7 @@ class TxIDiagonalCore : public TxICore {
         TxIDiagonalCore& operator = (const TxIDiagonalCore& src) = default;
 
         /**
-         * Moves the contents of the given `T x I` triangulation
+         * Moves the contents of the given `T × I` triangulation
          * into this triangulation.
          *
          * The triangulation that was passed will no longer be usable.
@@ -479,7 +479,7 @@ class TxIDiagonalCore : public TxICore {
         TxIDiagonalCore& operator = (TxIDiagonalCore&& src) noexcept = default;
 
         /**
-         * Returns the total number of tetrahedra in this `T x I`
+         * Returns the total number of tetrahedra in this `T × I`
          * triangulation.
          *
          * \return the total number of tetrahedra.
@@ -496,7 +496,7 @@ class TxIDiagonalCore : public TxICore {
 
         /**
          * Swaps the contents of this and the given
-         * `T x I` triangulation.
+         * `T × I` triangulation.
          *
          * \param other the triangulation whose contents should be swapped
          * with this.
@@ -509,7 +509,7 @@ class TxIDiagonalCore : public TxICore {
 };
 
 /**
- * Swaps the contents of the two given `T x I` triangulations.
+ * Swaps the contents of the two given `T × I` triangulations.
  *
  * This global routine simply calls TxIDiagonalCore::swap(); it is
  * provided so that TxIDiagonalCore meets the C++ Swappable requirements.
@@ -559,12 +559,12 @@ void swap(TxIDiagonalCore& lhs, TxIDiagonalCore& rhs);
 class TxIParallelCore : public TxICore {
     public:
         /**
-         * Creates a new copy of this `T x I` triangulation.
+         * Creates a new copy of this `T × I` triangulation.
          */
         TxIParallelCore();
 
         /**
-         * Creates a new copy of the given `T x I` triangulation.
+         * Creates a new copy of the given `T × I` triangulation.
          *
          * Since there is only one triangulation of this type, the copy
          * constructor will give the same end result as the default constructor
@@ -573,7 +573,7 @@ class TxIParallelCore : public TxICore {
         TxIParallelCore(const TxIParallelCore&) = default;
 
         /**
-         * Moves the contents of the given `T x I` triangulation
+         * Moves the contents of the given `T × I` triangulation
          * into this new triangulation.
          *
          * The triangulation that was passed will no longer be usable.
@@ -581,7 +581,7 @@ class TxIParallelCore : public TxICore {
         TxIParallelCore(TxIParallelCore&&) noexcept = default;
 
         /**
-         * Sets this to be a copy of the given `T x I` triangulation.
+         * Sets this to be a copy of the given `T × I` triangulation.
          * This will induce a deep copy.
          *
          * \return a reference to this triangulation.
@@ -589,7 +589,7 @@ class TxIParallelCore : public TxICore {
         TxIParallelCore& operator = (const TxIParallelCore& src) = default;
 
         /**
-         * Moves the contents of the given `T x I` triangulation
+         * Moves the contents of the given `T × I` triangulation
          * into this triangulation.
          *
          * The triangulation that was passed will no longer be usable.
@@ -600,7 +600,7 @@ class TxIParallelCore : public TxICore {
 
         /**
          * Swaps the contents of this and the given
-         * `T x I` triangulation.
+         * `T × I` triangulation.
          *
          * \param other the triangulation whose contents should be swapped
          * with this.
@@ -613,7 +613,7 @@ class TxIParallelCore : public TxICore {
 };
 
 /**
- * Swaps the contents of the two given `T x I` triangulations.
+ * Swaps the contents of the two given `T × I` triangulations.
  *
  * This global routine simply calls TxIParallelCore::swap(); it is
  * provided so that TxIParallelCore meets the C++ Swappable requirements.

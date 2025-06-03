@@ -47,11 +47,11 @@ namespace regina {
 /**
  * Represents a general lens space.
  *
- * The lens space L(\a p,\a q) is the 3-manifold you get by
- * \a p/q Dehn surgery on the unknot.  For instance, L(1,0) and L(1,1)
- * are the 3-sphere, L(0,1) is the product S¹ x S², and L(\a p,1) is the
- * circle bundle over S² with Euler class \a p.  In L(\a p,\a q) if you
- * take a generator \a g of H_1 and evaluate the torsion linking form on it,
+ * The lens space `L(p,q)` is the 3-manifold you get by
+ * `p/q` Dehn surgery on the unknot.  For instance, `L(1,0)` and `L(1,1)`
+ * are the 3-sphere, `L(0,1)` is the product `S¹ × S²`, and `L(p,1)` is the
+ * circle bundle over `S²` with Euler class \a p.  In `L(p,q)` if you
+ * take a generator \a g of `H_1` and evaluate the torsion linking form on it,
  * then `<g,g> = [± r² q/p]` in Q/Z where \a r is an integer.
  *
  * All optional Manifold routines are implemented for this class.

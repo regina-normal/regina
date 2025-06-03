@@ -633,7 +633,7 @@ void Tri3CompositionUI::findBlockedTriangulations() {
             arg(matrixString(bundle->core().parallelReln())));
 
         (new QTreeWidgetItem(id))->setText(0,
-            tr("Core T x I triangulation: %1").
+            tr("Core T × I triangulation: %1").
             arg(bundle->core().name().c_str()));
     }
 
@@ -650,7 +650,7 @@ void Tri3CompositionUI::findBlockedTriangulations() {
             arg(matrixString(pBundle->matchingReln())));
 
         (new QTreeWidgetItem(id))->setText(0,
-            tr("Thin I-bundle (T x I): %1").
+            tr("Thin I-bundle (T × I): %1").
             arg(pBundle->bundle().name().c_str()));
     }
 }

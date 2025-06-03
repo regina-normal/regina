@@ -92,26 +92,26 @@ class Example<3> : public detail::ExampleBase<3> {
 
         /**
          * Returns a two-tetrahedron triangulation of the product space
-         * `S² x S¹`.
+         * `S² × S¹`.
          * This is identical to calling the generic routine sphereBundle().
          *
-         * \return the product space `S² x S¹`.
+         * \return the product space `S² × S¹`.
          */
         static Triangulation<3> s2xs1();
 
         /**
          * Returns a three-tetrahedron triangulation of the non-orientable
-         * product space `RP² x S¹`.
+         * product space `RP² × S¹`.
          *
-         * \return the product space `RP² x S¹`.
+         * \return the product space `RP² × S¹`.
          */
         static Triangulation<3> rp2xs1();
 
         /**
          * Returns a six-tetrahedron triangulation of the 3-torus; that is,
-         * the product space `S¹ x S¹ x S¹`.
+         * the product space `S¹ × S¹ × S¹`.
          *
-         * \return the product space `S¹ x S¹ x S¹`.
+         * \return the product space `S¹ × S¹ × S¹`.
          */
         static Triangulation<3> threeTorus();
 

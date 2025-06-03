@@ -187,7 +187,7 @@ tri ::= (&xml-simplex;*,
    along with some pre-computed homology groups.
   </para>
   <programlisting>
-&lt;tri dim=&quot;3&quot; size=&quot;3&quot; perm=&quot;index&quot; label=&quot;RP² x S¹&quot;&gt;
+&lt;tri dim=&quot;3&quot; size=&quot;3&quot; perm=&quot;index&quot; label=&quot;RP² × S¹&quot;&gt;
   &lt;simplex&gt; 1 0 1 0 2 11 2 2 &lt;/simplex&gt;
   &lt;simplex&gt; 0 0 0 0 2 21 2 12 &lt;/simplex&gt;
   &lt;simplex&gt; 0 13 0 4 1 21 1 8 &lt;/simplex&gt;

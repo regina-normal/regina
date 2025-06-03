@@ -72,7 +72,7 @@ class ExampleFromLowDim {
          * triangulation.
          *
          * If the given triangulation represents the manifold `M`, then
-         * this returns an ideal triangulation of the product `M x I`
+         * this returns an ideal triangulation of the product `M × I`
          * (with two ideal boundary components).  A copy of the original
          * triangulation \a base can be found at the centre of this
          * construction, formed from the <i>dim</i>-simplices that sit
@@ -86,7 +86,7 @@ class ExampleFromLowDim {
          * This construction is essentially the suspension of the
          * triangulation \a base.  We do not call it this however, since
          * from a topological point of view, to form the ideal triangulation
-         * of `M x I` we "remove" the vertices at the apex of each cone.
+         * of `M × I` we "remove" the vertices at the apex of each cone.
          *
          * If the given 3-dimensional triangulation is oriented, then the
          * resulting 4-dimensional triangulation will be oriented also.
@@ -105,7 +105,7 @@ class ExampleFromLowDim {
          * triangulation.
          *
          * If the given triangulation represents the manifold `M`, then
-         * this returns a triangulation of the product `M x I` that has
+         * this returns a triangulation of the product `M × I` that has
          * one real boundary component and one ideal boundary component.
          * The triangulation of the real boundary component will be identical
          * to the original (<i>dim-1</i>)-dimensional triangulation \a base.
@@ -200,13 +200,13 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
 
         /**
          * Returns a two-simplex triangulation of the product space
-         * `S^(dim-1) x S¹`.
+         * `S^(dim-1) × S¹`.
          *
          * Note that the current construction does _not_ give an oriented
          * triangulation (due to the specific choice of labelling); this may
          * change in a future version of Regina.
          *
-         * \return the product `S^(dim-1) x S¹`.
+         * \return the product `S^(dim-1) × S¹`.
          */
         static Triangulation<dim> sphereBundle();
 
@@ -232,7 +232,7 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
         static Triangulation<dim> ball();
 
         /**
-         * Returns a triangulation of the product space `B^(dim-1) x S¹`.
+         * Returns a triangulation of the product space `B^(dim-1) × S¹`.
          *
          * - In odd dimensions this will use one simplex, and will therefore
          *   be oriented.
@@ -243,7 +243,7 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
          *   though the space is orientable, the resulting triangulation will
          *   _not_ be oriented.
          *
-         * \return the product `B^(dim-1) x S¹`.
+         * \return the product `B^(dim-1) × S¹`.
          */
         static Triangulation<dim> ballBundle();
 
@@ -494,7 +494,7 @@ Triangulation<dim> ExampleBase<dim>::twistedBallBundle() {
     // This is the higher-dimensional analogy of a layered solid torus.
     // In even dimensions the corresponding construction is non-orientable.
     // In odd dimensions the construction is orientable, and so we
-    // double it (giving a two-vertex, two-simplex Bn x S1) but fiddle
+    // double it (giving a two-vertex, two-simplex Bn × S1) but fiddle
     // with the second map to make it non-orientable.
     Triangulation<dim> ans;
 

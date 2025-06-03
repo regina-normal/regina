@@ -1729,9 +1729,9 @@ class Link :
          *
          * - For virtual links, let \a S denote the closed orientable surface
          *   in which the link diagram embeds, and think of this as a link in
-         *   the thickened surface `S x I`.  Then this operation performs an
-         *   orientation-preserving homeomorphism of `S x I` that switches the
-         *   boundaries `S x {0}` and `S x {1}`.
+         *   the thickened surface `S × I`.  Then this operation performs an
+         *   orientation-preserving homeomorphism of `S × I` that switches the
+         *   boundaries `S × {0}` and `S × {1}`.
          *
          * Some authors refer to this operation as a _flip_.  In the language
          * of Jeremy Green's virtual knot tables, this is the composition of
@@ -3619,7 +3619,7 @@ class Link :
          * - A virtual link diagram is embedded in some closed orientable
          *   surface \a S with positive genus.  The triangulation that is
          *   returned will represent the complement of this link diagram in
-         *   the thickened surface `S x I`.  There will be two additional
+         *   the thickened surface `S × I`.  There will be two additional
          *   ideal vertices, one for each copy of \a S on the boundary.
          *   If the link diagram is disconnected, then the surface \a S that
          *   is used will be the connected sum of the individual closed

@@ -72,7 +72,7 @@ static const char *bundleWithMonodromy =
 R"doc(Returns a bundle formed from a given 3-manifold and a given monodromy.
 
 Specifically, let *M* be the given 3-manifold triangulation. This
-routine builds the bundle ``M x I``, and then identifies the two
+routine builds the bundle ``M × I``, and then identifies the two
 copies of *M* on the boundary according to the given homeomorphism
 from *M* to itself. The homeomorphism must be expressed as a
 combinatorial automorphism, which means that for a non-trivial
@@ -139,14 +139,14 @@ Returns:
 // Docstring regina::python::doc::Example_::fourTorus
 static const char *fourTorus =
 R"doc(Returns a triangulation of the standard 4-torus; that is, the product
-space ``T² x T²``.
+space ``T² × T²``.
 
 Returns:
-    the product space ``T² x T²``.)doc";
+    the product space ``T² × T²``.)doc";
 
 // Docstring regina::python::doc::Example_::iBundle
 static const char *iBundle =
-R"doc(Returns a triangulation of the product ``M x I``, where *M* is the
+R"doc(Returns a triangulation of the product ``M × I``, where *M* is the
 given 3-manifold triangulation.
 
 The boundary of this product will consist of two copies of *M*, both
@@ -174,7 +174,7 @@ Parameter ``base``:
     the 3-manifold triangulation *M*, as described above.
 
 Returns:
-    the product ``M x I``.)doc";
+    the product ``M × I``.)doc";
 
 // Docstring regina::python::doc::Example_::k3
 static const char *k3 =
@@ -194,7 +194,7 @@ Returns:
 
 // Docstring regina::python::doc::Example_::s1Bundle
 static const char *s1Bundle =
-R"doc(Returns a triangulation of the product ``M x S1``, where *M* is the
+R"doc(Returns a triangulation of the product ``M × S1``, where *M* is the
 given 3-manifold triangulation. This simply calls iBundle() and then
 glues together the two copies of *M* on the boundary.
 
@@ -215,11 +215,11 @@ Parameter ``base``:
     the 3-manifold triangulation *M*, as described above.
 
 Returns:
-    the product ``M x S1``.)doc";
+    the product ``M × S1``.)doc";
 
 // Docstring regina::python::doc::Example_::s2xs2
 static const char *s2xs2 =
-R"doc(Returns a six-pentachoron triangulation of the standard product ``S² x
+R"doc(Returns a six-pentachoron triangulation of the standard product ``S² ×
 S²``. This triangulation is minimal.
 
 Returns:
@@ -237,11 +237,11 @@ Returns:
 
 // Docstring regina::python::doc::Example_::s3xs1
 static const char *s3xs1 =
-R"doc(Returns a two-pentachoron triangulation of the product space ``S³ x
+R"doc(Returns a two-pentachoron triangulation of the product space ``S³ ×
 S¹``. This is identical to calling the generic routine sphereBundle().
 
 Returns:
-    the product ``S³ x S¹``.)doc";
+    the product ``S³ × S¹``.)doc";
 
 // Docstring regina::python::doc::Example_::s3xs1Twisted
 static const char *s3xs1Twisted =

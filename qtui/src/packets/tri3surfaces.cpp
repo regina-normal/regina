@@ -110,7 +110,7 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* tri,
     titleHandlebody->setWhatsThis(msg);
     handlebody->setWhatsThis(msg);
 
-    titleTxI = new QLabel(tr("T x I?"), ui);
+    titleTxI = new QLabel(tr("T × I?"), ui);
     grid->addWidget(titleTxI, row, 1);
     TxI = new QLabel(ui);
     grid->addWidget(TxI, row++, 3);
@@ -500,7 +500,7 @@ void Tri3SurfacesUI::refresh() {
 
                 isHyp = false;
                 if (name.empty())
-                    name = "T x I";
+                    name = "T × I";
             } else {
                 TxI->setText(tr("False"));
                 QPalette pal = TxI->palette();
@@ -766,7 +766,7 @@ void Tri3SurfacesUI::calculateHandlebody() {
 
 void Tri3SurfacesUI::calculateTxI() {
     PatienceDialog* dlg = PatienceDialog::warn(tr(
-        "(T x I) recognition can be quite slow\n"
+        "(T × I) recognition can be quite slow\n"
         "for larger triangulations.\n\n"
         "Please be patient."), ui);
     tri_->isTxI();

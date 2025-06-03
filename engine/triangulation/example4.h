@@ -108,7 +108,7 @@ class Example<4> : public detail::ExampleBase<4> {
 
         /**
          * Returns a six-pentachoron triangulation of the standard product
-         * `S² x S²`.  This triangulation is minimal.
+         * `S² × S²`.  This triangulation is minimal.
          *
          * \return the standard product of two 2-spheres.
          */
@@ -127,10 +127,10 @@ class Example<4> : public detail::ExampleBase<4> {
 
         /**
          * Returns a two-pentachoron triangulation of the product space
-         * `S³ x S¹`.  This is identical to calling the
+         * `S³ × S¹`.  This is identical to calling the
          * generic routine sphereBundle().
          *
-         * \return the product `S³ x S¹`.
+         * \return the product `S³ × S¹`.
          */
         static Triangulation<4> s3xs1();
 
@@ -145,9 +145,9 @@ class Example<4> : public detail::ExampleBase<4> {
 
         /**
          * Returns a triangulation of the standard 4-torus; that is, the
-         * product space `T² x T²`.
+         * product space `T² × T²`.
          *
-         * \return the product space `T² x T²`.
+         * \return the product space `T² × T²`.
          */
         static Triangulation<4> fourTorus();
 
@@ -192,7 +192,7 @@ class Example<4> : public detail::ExampleBase<4> {
         /*@{*/
 
         /**
-         * Returns a triangulation of the product `M x I`,
+         * Returns a triangulation of the product `M × I`,
          * where \a M is the given 3-manifold triangulation.
          *
          * The boundary of this product will consist of two copies of \a M,
@@ -217,12 +217,12 @@ class Example<4> : public detail::ExampleBase<4> {
          * then you will obtain an invalid 4-manifold triangulation as a result.
          *
          * \param base the 3-manifold triangulation \a M, as described above.
-         * \return the product `M x I`.
+         * \return the product `M × I`.
          */
         static Triangulation<4> iBundle(const Triangulation<3>& base);
 
         /**
-         * Returns a triangulation of the product `M x S1`,
+         * Returns a triangulation of the product `M × S1`,
          * where \a M is the given 3-manifold triangulation.
          * This simply calls iBundle() and then glues together the
          * two copies of \a M on the boundary.
@@ -240,7 +240,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * then you will obtain an invalid 4-manifold triangulation as a result.
          *
          * \param base the 3-manifold triangulation \a M, as described above.
-         * \return the product `M x S1`.
+         * \return the product `M × S1`.
          */
         static Triangulation<4> s1Bundle(const Triangulation<3>& base);
 
@@ -286,7 +286,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * monodromy.
          *
          * Specifically, let \a M be the given 3-manifold triangulation.
-         * This routine builds the bundle `M x I`, and then
+         * This routine builds the bundle `M × I`, and then
          * identifies the two copies of \a M on the boundary according
          * to the given homeomorphism from \a M to itself.
          * The homeomorphism must be expressed as a combinatorial

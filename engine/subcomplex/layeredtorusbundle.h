@@ -52,7 +52,7 @@ namespace regina {
  * torus bundle over the circle formed as follows.
  *
  * We begin with a thin I-bundle over the torus, i.e,. a triangulation
- * of the product `T x I` that is only one tetrahedron thick.
+ * of the product `T × I` that is only one tetrahedron thick.
  * This is referred to as the \a core, and is described by an object
  * of type TxICore.
  *
@@ -63,7 +63,7 @@ namespace regina {
  * boundary edges accordingly.  Layerings are described in more detail
  * in the Layering class.
  *
- * Given the parameters of the core `T x I` and the specific layering,
+ * Given the parameters of the core `T × I` and the specific layering,
  * the monodromy for this torus bundle over the circle can be calculated.
  * The manifold() routine returns details of the corresponding 3-manifold.
  *
@@ -81,13 +81,13 @@ namespace regina {
 class LayeredTorusBundle : public StandardTriangulation {
     private:
         const TxICore* core_;
-            /**< The core `T x I` triangulation whose boundaries
+            /**< The core `T × I` triangulation whose boundaries
                  are joined (possibly via a layering of tetrahedra).
                  This is never \c null; we keep it as a pointer (not a
                  reference) mainly to support the assignment operator. */
         Isomorphism<3> coreIso_;
             /**< Describes how the tetrahedra and vertices of the core
-                 `T x I` triangulation returned by TxICore::core()
+                 `T × I` triangulation returned by TxICore::core()
                  map to the tetrahedra and vertices of the larger layered
                  torus bundle under consideration. */
         Matrix2 reln_;
@@ -117,8 +117,8 @@ class LayeredTorusBundle : public StandardTriangulation {
         void swap(LayeredTorusBundle& other) noexcept;
 
         /**
-         * Returns the `T x I` triangulation at the core of this
-         * layered torus bundle.  This is the product `T x I`
+         * Returns the `T × I` triangulation at the core of this
+         * layered torus bundle.  This is the product `T × I`
          * whose boundaries are joined (possibly via some layering of
          * tetrahedra).
          *
@@ -130,25 +130,25 @@ class LayeredTorusBundle : public StandardTriangulation {
          * been permuted.  For a precise mapping from the TxICore::core()
          * triangulation to this triangulation, see the routine coreIso().
          *
-         * \return the core `T x I` triangulation.
+         * \return the core `T × I` triangulation.
          */
         const TxICore& core() const;
 
         /**
-         * Returns the isomorphism describing how the core `T x I`
+         * Returns the isomorphism describing how the core `T × I`
          * appears as a subcomplex of this layered torus bundle.
          *
-         * As described in the core() notes, the core `T x I`
+         * As described in the core() notes, the core `T × I`
          * triangulation returned by TxICore::core() appears within this
          * layered torus bundle, but not necessarily with the same
          * tetrahedron or vertex numbers.
          *
          * This routine returns an isomorphism that maps the tetrahedra
-         * and vertices of the core `T x I` triangulation (as
+         * and vertices of the core `T × I` triangulation (as
          * returned by LayeredTorusBundle::core().core()) to the
          * tetrahedra and vertices of this overall layered torus bundle.
          *
-         * \return the isomorphism from the core `T x I` to this
+         * \return the isomorphism from the core `T × I` to this
          * layered torus bundle.
          */
         const Isomorphism<3>& coreIso() const;
@@ -156,10 +156,10 @@ class LayeredTorusBundle : public StandardTriangulation {
         /**
          * Returns a 2-by-2 matrix describing how the layering of
          * tetrahedra relates curves on the two torus boundaries of the
-         * core `T x I`.
+         * core `T × I`.
          *
          * The TxICore class documentation describes generating α and β curves
-         * on the two torus boundaries of the core `T x I` (which are
+         * on the two torus boundaries of the core `T × I` (which are
          * referred to as the _upper_ and _lower_ boundaries).  The two
          * boundary tori are parallel in two directions: through the core,
          * and through the layering.  It is desirable to know the parallel
@@ -210,7 +210,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          * and lower boundary tori.
          *
          * \return the relationship through the layering between the
-         * upper and lower boundary curves of the core `T x I`.
+         * upper and lower boundary curves of the core `T × I`.
          */
         const Matrix2& layeringReln() const;
 
@@ -219,7 +219,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          * the same type of layered torus bundle.
          *
          * Specifically, two layered torus bundles will compare as equal if
-         * and only if their core `T x I` triangulations have the same
+         * and only if their core `T × I` triangulations have the same
          * combinatorial parameters, and their layering relations are the same.
          *
          * In particular, if you invert a layered torus bundle (which means
@@ -232,7 +232,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          * only if they have the same combinatorial parameters (which for this
          * subclass is more specific than combinatorial isomorphism, since
          * this test does not recognise inversion and also does not recognise
-         * symmetries within the `T x I` core).
+         * symmetries within the `T × I` core).
          *
          * \param other the structure with which this will be compared.
          * \return \c true if and only if this and the given structure
@@ -262,17 +262,17 @@ class LayeredTorusBundle : public StandardTriangulation {
 
     private:
         /**
-         * Creates a new structure based upon the given core `T x I`
+         * Creates a new structure based upon the given core `T × I`
          * triangulation, and initialised with the given additional data.
          *
-         * \warning Only a pointer to the core `T x I` is stored.
+         * \warning Only a pointer to the core `T × I` is stored.
          * This class does not manage the life span of the core; it is
          * assumed that the core will remain in existence for at least
          * as long as this object (and any objects copied or moved from it).
          * Typically the core would be a static or global variable that is
          * not destroyed until the program exits.
          *
-         * \param whichCore a reference to the core `T x I`
+         * \param whichCore a reference to the core `T × I`
          * triangulation upon which this layered torus bundle is based.
          */
         LayeredTorusBundle(const TxICore& whichCore,
@@ -291,7 +291,7 @@ class LayeredTorusBundle : public StandardTriangulation {
         /**
          * Internal to recognise().  Determines if the given
          * triangulation is a layered torus bundle with the given core
-         * `T x I` triangulation (up to isomorphism).
+         * `T × I` triangulation (up to isomorphism).
          *
          * \warning If this routine is successful and a value is returned,
          * this returned object (and any objects copied or moved from it)
@@ -299,10 +299,10 @@ class LayeredTorusBundle : public StandardTriangulation {
          * will in fact contain a direct reference to this core).
          *
          * \param tri the triangulation to examine.
-         * \param core the core `T x I` to search for.
+         * \param core the core `T × I` to search for.
          * \return a structure containing details of the layered torus bundle,
          * or \c null if the given triangulation is
-         * not a layered torus bundle with the given `T x I` core.
+         * not a layered torus bundle with the given `T × I` core.
          */
         static std::unique_ptr<LayeredTorusBundle> hunt(
             const Triangulation<3>& tri, const TxICore& core);
