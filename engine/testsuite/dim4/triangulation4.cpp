@@ -45,6 +45,7 @@
 
 using regina::AbelianGroup;
 using regina::Example;
+using regina::GroupPresentation;
 using regina::Triangulation;
 
 // Large examples of some specific manifolds, created from framed links.
@@ -1378,6 +1379,90 @@ static void verifyS1Bundle(const Triangulation<3>& tri, const char* name) {
 TEST_F(Dim4Test, s1Bundle) {
     runCensusAllClosed(verifyS1Bundle);
     runCensusAllBounded(verifyS1Bundle);
+}
+
+static void verifyBoundarySpin(const Triangulation<3>& tri, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    Triangulation<4> spin = Example<4>::boundarySpin(tri);
+
+    if (! tri.isValid()) {
+        // Not much we can say here.
+        EXPECT_FALSE(spin.isValid());
+        return;
+    }
+
+    if (tri.isClosed()) {
+        // This should just be an S1-bundle.
+        verifyS1Bundle(tri, name);
+        return;
+    }
+
+    if (tri.isIdeal()) {
+        EXPECT_FALSE(spin.isValid());
+        EXPECT_FALSE(spin.isClosed());
+
+        // Each tetrahedron becomes a prism whose vertical edges are
+        // subdivided into two pieces.  This means that each original ideal
+        // vertex spins around to become two bad edges.
+        size_t badEdgeLinks = 0;
+        for (auto e : spin.edges()) {
+            if (e->hasBadLink())
+                ++badEdgeLinks;
+            EXPECT_FALSE(e->hasBadIdentification());
+        }
+        EXPECT_EQ(badEdgeLinks, 2 * tri.countBoundaryComponents());
+    } else {
+        EXPECT_TRUE(spin.isValid());
+        EXPECT_TRUE(spin.isClosed());
+    }
+    EXPECT_EQ(spin.isOrientable(), tri.isOrientable());
+    EXPECT_EQ(spin.countComponents(), tri.countComponents());
+    EXPECT_FALSE(spin.hasBoundaryFacets());
+    // TODO: What can we say about Euler characteristic?
+}
+
+TEST_F(Dim4Test, boundarySpin) {
+    // Bounded triangulations are the interesting case for this routine.
+    runCensusAllBounded(verifyBoundarySpin);
+
+    // A few closed and ideal examples:
+    verifyBoundarySpin(Example<3>::lens(2, 1), "RP^3");
+    verifyBoundarySpin(Example<3>::poincare(), "Poincare homology sphere");
+    verifyBoundarySpin(Example<3>::smallClosedNonOrblHyperbolic(),
+        "Closed non-orientable hyperbolic");
+    verifyBoundarySpin(Example<3>::figureEight(), "Figure eight complement");
+    verifyBoundarySpin(Example<3>::gieseking(), "Gieseking manifold");
+    verifyBoundarySpin(Example<3>::whitehead(), "Whitehead link complement");
+
+    // Some specific cases where we know exactly what the manifold should be:
+    {
+        // The 3-ball becomes the 4-sphere.
+        auto spin = Example<4>::boundarySpin(Example<3>::ball());
+        spin.simplify();
+        EXPECT_EQ(spin.group(), GroupPresentation());
+        EXPECT_EQ(spin.homology<1>(), AbelianGroup());
+        EXPECT_EQ(spin.homology<2>(), AbelianGroup());
+        EXPECT_TRUE(spin.isOrientable());
+    }
+    {
+        // The solid torus becomes S3 x S1.
+        auto spin = Example<4>::boundarySpin(Example<3>::ballBundle());
+        spin.simplify();
+        EXPECT_EQ(spin.group(), GroupPresentation(1));
+        EXPECT_EQ(spin.homology<1>(), AbelianGroup(1));
+        EXPECT_EQ(spin.homology<2>(), AbelianGroup());
+        EXPECT_TRUE(spin.isOrientable());
+    }
+    {
+        // The solid Klein bottle becomes S3 x~ S1.
+        auto spin = Example<4>::boundarySpin(Example<3>::twistedBallBundle());
+        spin.simplify();
+        EXPECT_EQ(spin.group(), GroupPresentation(1));
+        EXPECT_EQ(spin.homology<1>(), AbelianGroup(1));
+        EXPECT_EQ(spin.homology<2>(), AbelianGroup());
+        EXPECT_FALSE(spin.isOrientable());
+    }
 }
 
 static void verifyBundleWithMonodromy(const Triangulation<3>& tri,
