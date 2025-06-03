@@ -120,8 +120,10 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("cloneProps"),
             pybind11::arg("cloneLocks") = true,
             rdoc::__init)
-        .def(pybind11::init<const regina::Link&, bool>(),
-            pybind11::arg(), pybind11::arg("simplify") = true, rdoc::__init_2)
+        .def(pybind11::init([](const regina::Link& link, bool simplify) {
+            return link.complement(simplify); // deprecated constructor
+        }), pybind11::arg("link"), pybind11::arg("simplify") = true,
+            rdoc::__init_2)
         .def(pybind11::init<const std::string&>(), rdoc::__init_3)
         .def(pybind11::init([](const regina::python::SnapPyObject& obj) {
             return new Triangulation<3>(obj.string_);
@@ -898,8 +900,10 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
         pybind11::arg("cloneProps"),
         pybind11::arg("cloneLocks") = true,
         rdoc::__init);
-    regina::python::add_packet_constructor<const regina::Link&, bool>(wrap,
-        pybind11::arg(), pybind11::arg("simplify") = true,
+    wrap.def(pybind11::init([](const regina::Link& link, bool simplify) {
+        // deprecated constructor
+        return regina::make_packet(link.complement(simplify));
+    }), pybind11::arg("link"), pybind11::arg("simplify") = true,
         rdoc::__init_2);
     regina::python::add_packet_constructor<const std::string&>(wrap,
         rdoc::__init_3);
