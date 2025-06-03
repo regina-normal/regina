@@ -3643,9 +3643,6 @@ class Link :
          * this may relabel the tetrahedra, though their orientations will
          * be preserved.
          *
-         * This is the same triangulation that would be produced by passing
-         * this link to the Triangulation<3> constructor.
-         *
          * \param simplify \c true if and only if the triangulation of the
          * complement should be simplified to use as few tetrahedra as possible.
          * \return the complement of this link diagram.
@@ -7246,10 +7243,6 @@ inline auto Link::componentsByStrand() const {
 
 inline ModelLinkGraph Link::graph() const {
     return ModelLinkGraph(*this);
-}
-
-inline Triangulation<3> Link::complement(bool simplify) const {
-    return Triangulation<3>(*this, simplify);
 }
 
 inline long Link::writhe() const {

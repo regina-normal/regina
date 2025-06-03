@@ -1,7 +1,6 @@
 # Files to compile
 SET ( FILES
   angle.cpp
-  complement.cpp
   crushtri.cpp
   decompose.cpp
   homology.cpp

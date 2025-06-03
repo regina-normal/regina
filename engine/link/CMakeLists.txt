@@ -5,6 +5,7 @@ SET ( FILES
   alexander.cpp
   algebra.cpp
   arrow.cpp
+  complement.cpp
   dt.cpp
   examplelink.cpp
   flype.cpp

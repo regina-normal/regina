@@ -45,6 +45,11 @@
 
 namespace regina {
 
+Triangulation<3>::Triangulation(const Link& link, bool simplify) :
+        Triangulation(link.complement(simplify)) {
+    // Note: This constructor is deprecated now.
+}
+
 Triangulation<3>::Triangulation(const std::string& description) {
     try {
         *this = fromIsoSig(description);

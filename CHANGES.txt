@@ -760,6 +760,8 @@ Version 7.4  [ (to be announced) ]
             - Routines layerOn(), pinchEdge(), puncture(), turaevViro() and
               turaevViroApprox() now throw an exception if their preconditions
               fail.
+            - The constructor that takes a link is now deprecated; just call
+              Link::complement() instead.
             - Routine reorderTetrahedraBFS() is now a deprecated alias for
               reorderBFS() (which is available in all dimensions).
             - Routine idealToFinite() no longer subdivides the triangulation

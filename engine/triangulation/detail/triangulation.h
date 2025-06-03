@@ -3690,8 +3690,7 @@ class TriangulationBase :
          * scenarios:
          *
          * - triangulation constructors, but only in settings where no
-         *   properties (including the skeleton) have been computed yet
-         *   (as an example, see the constructor that builds a link complement);
+         *   properties (including the skeleton) have been computed yet;
          *
          * - routines that create a "staging" triangulation, without computing
          *   its skeleton or any other properties, and then swap or move this

@@ -287,23 +287,14 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         Triangulation(Triangulation&& src) noexcept = default;
         /**
-         * Creates a new ideal triangulation representing the complement of the
-         * given link diagram.  For a classical link diagram, the triangulation
-         * will represent the complement of the given link in the 3-sphere,
-         * which is a topological invariant of the link.  For a virtual
-         * (non-classical) link diagram, it will represent the complement of
-         * the given diagram in a thickened closed orientable surface, which
-         * is a property of the specific link diagram.
+         * Deprecated constructor that creates a new ideal triangulation
+         * representing the complement of the given link diagram.
          *
-         * This is the same triangulation that is produced by
-         * Link::complement().  See Link::complement() for further details on
-         * how the triangulation is constructed, including how the tetrahedra
-         * will be oriented, and how the construction deals with disconnected
-         * link diagrams.
-         *
-         * If you pass \a simplify as \c true (the default), then the
-         * resulting triangulation will typically have no internal vertices;
-         * however, this is not guaranteed.
+         * \deprecated The preferred way of building the complement of a link
+         * diagram is to call `Link::complement()`.  See that routine for
+         * further details on exactly what this routine does, including how
+         * the tetrahedra will be oriented, and how the construction deals
+         * with virtual and/or disconnected link diagrams.
          *
          * \param link the link diagram whose complement we should build.
          * \param simplify \c true if and only if the resulting triangulation
@@ -311,7 +302,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * This simplification process will preserve the orientations of
          * the tetrahedra.
          */
-        Triangulation(const Link& link, bool simplify = true);
+        [[deprecated]] Triangulation(const Link& link, bool simplify = true);
         /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.

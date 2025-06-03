@@ -256,6 +256,8 @@
 		052909502AE5EA0A0028990D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0529094F2AE5EA0A0028990D /* Assets.xcassets */; };
 		052909532AE5EA0A0028990D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 052909522AE5EA0A0028990D /* Preview Assets.xcassets */; };
 		052942DA1C5CDFBE0011C1E6 /* snappeaalgebra.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CBF19B2F1AB0099C617 /* snappeaalgebra.h */; };
+		0529AB8F2DEF98CF00F02D9C /* complement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0529AB8E2DEF98CF00F02D9C /* complement.cpp */; };
+		0529AB902DEF98CF00F02D9C /* complement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0529AB8E2DEF98CF00F02D9C /* complement.cpp */; };
 		052AB7131C6304C900C44D54 /* facetspec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052AB7111C6304C500C44D54 /* facetspec.cpp */; };
 		052BE46E2D7FA92D00F431A9 /* moves-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052BE46D2D7FA92D00F431A9 /* moves-impl.h */; };
 		052BE4702D7FA94300F431A9 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052BE46F2D7FA94300F431A9 /* homologicaldata.cpp */; };
@@ -640,7 +642,6 @@
 		0553FA882AEBE3AC00BE89A7 /* retriangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0271DBF0B5E00117BFC /* retriangulate.cpp */; };
 		0553FA892AEBE3AC00BE89A7 /* knot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F2033620A17C6000FC74ED /* knot.cpp */; };
 		0553FA8A2AEBE3AC00BE89A7 /* reorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0261DBF0B5E00117BFC /* reorder.cpp */; };
-		0553FA8B2AEBE3AC00BE89A7 /* complement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA382759B41600B01C09 /* complement.cpp */; };
 		0553FA8C2AEBE3AC00BE89A7 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA332758760100B01C09 /* homologicaldata.cpp */; };
 		0553FA8D2AEBE3AC00BE89A7 /* crushtri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A01E1DBF0B5E00117BFC /* crushtri.cpp */; };
 		0553FA8E2AEBE3AC00BE89A7 /* skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A02A1DBF0B5E00117BFC /* skeleton.cpp */; };
@@ -1633,7 +1634,6 @@
 		05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA2E2753A06100B01C09 /* algebra-impl.h */; };
 		05E7DA352758760200B01C09 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA332758760100B01C09 /* homologicaldata.cpp */; };
 		05E7DA372758760200B01C09 /* homologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA342758760100B01C09 /* homologicaldata.h */; };
-		05E7DA392759B41700B01C09 /* complement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA382759B41600B01C09 /* complement.cpp */; };
 		05EBB418259DB49A00362FA5 /* censuslookup in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B011D9DC51600B1E33B /* censuslookup */; };
 		05EBB419259DB49E00362FA5 /* regconcat in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B0C1D9DC52200B1E33B /* regconcat */; };
 		05EBB41A259DB4A100362FA5 /* regconvert in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B171D9DC52B00B1E33B /* regconvert */; };
@@ -2655,6 +2655,7 @@
 		0529094F2AE5EA0A0028990D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		052909522AE5EA0A0028990D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		052909542AE5EA0A0028990D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0529AB8E2DEF98CF00F02D9C /* complement.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = complement.cpp; sourceTree = "<group>"; };
 		052AB7111C6304C500C44D54 /* facetspec.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetspec.cpp; sourceTree = "<group>"; };
 		052BE46C2D7FA89500F431A9 /* packetlistener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = packetlistener.h; sourceTree = "<group>"; };
 		052BE46D2D7FA92D00F431A9 /* moves-impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "moves-impl.h"; sourceTree = "<group>"; };
@@ -4444,7 +4445,6 @@
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
-		05E7DA382759B41600B01C09 /* complement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = complement.cpp; sourceTree = "<group>"; };
 		05E7DA3B2766D42600B01C09 /* repr.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = repr.test; sourceTree = "<group>"; };
 		05E7DA3C2766D42600B01C09 /* repr.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = repr.out; sourceTree = "<group>"; };
 		05EA195519F30A0100D37501 /* EltMoves3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EltMoves3.h; sourceTree = "<group>"; };
@@ -7889,6 +7889,7 @@
 				05BF6FD12DB0116A0093D7A2 /* alexander.cpp */,
 				0568742020C5D868001C435B /* algebra.cpp */,
 				051CBE822DE561370019D73D /* arrow.cpp */,
+				0529AB8E2DEF98CF00F02D9C /* complement.cpp */,
 				05721ECF1F97153C00A83FFC /* data-impl.h */,
 				05F2033120A17C1E00FC74ED /* dt-impl.h */,
 				05F2033220A17C1E00FC74ED /* dt.cpp */,
@@ -8414,7 +8415,6 @@
 				05FF74E31DCB12F700FC2CB4 /* 600cell.py */,
 				05F0A0191DBF0B5E00117BFC /* angle.cpp */,
 				05F0A01C1DBF0B5E00117BFC /* CMakeLists.txt */,
-				05E7DA382759B41600B01C09 /* complement.cpp */,
 				05F0A01D1DBF0B5E00117BFC /* component3.h */,
 				05F0A01E1DBF0B5E00117BFC /* crushtri.cpp */,
 				05F0A01F1DBF0B5E00117BFC /* decompose.cpp */,
@@ -9891,7 +9891,6 @@
 				0553FAF12AEBE6D800BE89A7 /* normalhypersurfaces.cpp in Sources */,
 				0553FAE72AEBE6B500BE89A7 /* gluingperms4.cpp in Sources */,
 				0553FB382AEBE73A00BE89A7 /* pluggedtorusbundle.cpp in Sources */,
-				0553FA8B2AEBE3AC00BE89A7 /* complement.cpp in Sources */,
 				05A628292AE9217D0049739E /* trieset.cpp in Sources */,
 				0553FAD92AEBE6B500BE89A7 /* gluingperms5.cpp in Sources */,
 				0553FAFC2AEBE6ED00BE89A7 /* reidemeister.cpp in Sources */,
@@ -10033,6 +10032,7 @@
 				0553FAA12AEBE3B500BE89A7 /* retriangulate.cpp in Sources */,
 				0553FB7E2AEBE7F700BE89A7 /* transcendentals.cpp in Sources */,
 				05A628192AE9214A0049739E /* perm5.cpp in Sources */,
+				0529AB8F2DEF98CF00F02D9C /* complement.cpp in Sources */,
 				0553FAEB2AEBE6C400BE89A7 /* treelp.cpp in Sources */,
 				0553FB392AEBE73A00BE89A7 /* snappedball.cpp in Sources */,
 				05A628202AE921580049739E /* numbertheory.cpp in Sources */,
@@ -10536,7 +10536,6 @@
 				0518B9C629D595490020ADC1 /* current_curve_basis.cpp in Sources */,
 				052F9FE0180600FB00FAE4DF /* sigcensus.cpp in Sources */,
 				05B9EC1B18245F2100DCACF3 /* euler.cpp in Sources */,
-				05E7DA392759B41700B01C09 /* complement.cpp in Sources */,
 				054208BD1DF0D2740018AB24 /* sfs.cpp in Sources */,
 				05A067141DFA68190047872E /* layeredchain.cpp in Sources */,
 				05EDDA4D27E3102A001743C1 /* signed_dec.cpp in Sources */,
@@ -10707,6 +10706,7 @@
 				05098A6628F24CBC005E4716 /* typeutils.cpp in Sources */,
 				052F9EF3180600FB00FAE4DF /* treeconstraint.cpp in Sources */,
 				0518BA1029D595940020ADC1 /* peripheral_curves.cpp in Sources */,
+				0529AB902DEF98CF00F02D9C /* complement.cpp in Sources */,
 				0518BA0429D595940020ADC1 /* positioned_tet.cpp in Sources */,
 				059802E326683C6D002D5D57 /* xmlsnappeareader.cpp in Sources */,
 				05A067101DFA68190047872E /* blockedsfstriple.cpp in Sources */,

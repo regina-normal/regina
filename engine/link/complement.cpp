@@ -36,7 +36,7 @@
 
 namespace regina {
 
-Triangulation<3>::Triangulation(const Link& link, bool simplify) {
+Triangulation<3> Link::complement(bool simplify) const {
     // This implementation produces an oriented triangluation.
     // The orientation follows a right-hand rule, where the thumb points
     // from vertices 0 to 1, and the fingers point from vertice 2 to 3.
@@ -58,15 +58,17 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
     //   our triangulation might be disconnected, and we fix this before
     //   returning by joining the pieces together.
 
+    Triangulation<3> ans;
+
     // Empty link?  Just return the 3-sphere.
-    if (link.isEmpty()) {
-        Tetrahedron<3>* t = newSimplexRaw();
+    if (isEmpty()) {
+        Tetrahedron<3>* t = ans.newSimplexRaw();
         t->joinRaw(0, t, {0,1});
         t->joinRaw(2, t, {2,3});
-        return;
+        return ans;
     }
 
-    size_t n = link.size();
+    size_t n = size();
     FixedArray<std::array<Tetrahedron<3>*, 4>> ctet(n);
 
     /**
@@ -88,8 +90,8 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
 
     // Create the local structure around each crossing:
     for (size_t i = 0; i < n; ++i) {
-        ctet[i] = newSimplicesRaw<4>();
-        if (link.crossing(i)->sign() > 0) {
+        ctet[i] = ans.newSimplicesRaw<4>();
+        if (crossing(i)->sign() > 0) {
             ctet[i][0]->joinRaw(0, ctet[i][1], {2,3});
             ctet[i][1]->joinRaw(1, ctet[i][2], {2,3});
             ctet[i][2]->joinRaw(0, ctet[i][3], {2,3});
@@ -105,7 +107,7 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
     // Connect the structures for adjacent crossings:
     StrandRef s, t;
     for (size_t i = 0; i < n; ++i) {
-        const Crossing* cr = link.crossing(i);
+        const Crossing* cr = crossing(i);
         // Make s the strand that follows forwards on the left, and
         // make t the strand that follows forwards on the right.
         if (cr->sign() > 0) {
@@ -139,7 +141,7 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
 
     // Identify any link components that consist entirely of over-crossings, or
     // entirely of under-crossings.  (We ignore zero-crossing components here.)
-    for (StrandRef c : link.components()) {
+    for (StrandRef c : components_) {
         if (! c)
             continue;
 
@@ -175,7 +177,7 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
             Tetrahedron<3>* adjRight = right->adjacentSimplex(3);
             // We already know both gluing permutations must be 2 <-> 3.
 
-            auto [t0, t1, t2, t3] = newTetrahedra<4>();
+            auto [t0, t1, t2, t3] = ans.newTetrahedra<4>();
 
             t0->joinRaw(0, t1, {2,3});
             t0->joinRaw(1, t3, {2,3});
@@ -194,7 +196,7 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
     }
 
     // Account for any zero-crossing unknot components.
-    for (size_t i = 0; i < link.countTrivialComponents(); ++i) {
+    for (size_t i = 0; i < countTrivialComponents(); ++i) {
         // Insert a separate unknot complement.
         //
         // We use the same tetrahedron vertex numbering as before:
@@ -204,7 +206,7 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
         // The following gluings were obtained by running the above complement
         // code on the unknot diagram with one positive crossing: + ( ^0 _0 ).
 
-        auto [t0, t1, t2, t3] = newTetrahedra<4>();
+        auto [t0, t1, t2, t3] = ans.newTetrahedra<4>();
         t0->joinRaw(0, t1, {2,3}); t0->joinRaw(1, t3, {2,3});
         t0->joinRaw(2, t2, {2,3}); t0->joinRaw(3, t2, {2,3});
         t1->joinRaw(1, t2, {2,3}); t1->joinRaw(2, t1, {2,3});
@@ -216,12 +218,12 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
     // As a side effect, this means our triangulation is not empty (since we
     // dealt with the empty link earlier).
 
-    // The following call to countComponents() has the side-effect of computing
-    // the full skeleton.  Therefore we will stop using joinRaw() / unjoinRaw(),
-    // since we want join() and unjoin() to do their extra work of clearing
-    // computed properties (amongst other things).
+    // The following call to ans.countComponents() has the side-effect of
+    // computing the full skeleton of the triangulation.  Therefore we will stop
+    // using joinRaw() / unjoinRaw(), since we want join() and unjoin() to do
+    // their extra work of clearing computed properties (amongst other things).
 
-    while (countComponents() > 1) {
+    while (ans.countComponents() > 1) {
         // Join two of our components together.  (We will keep doing this
         // until the entire triangulation is connected.)
         //
@@ -248,7 +250,7 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
         Tetrahedron<3>* adj[2];
 
         for (int i = 0; i < 2; ++i) {
-            tet[i] = component(i)->tetrahedron(0);
+            tet[i] = ans.component(i)->tetrahedron(0);
             adj[i] = tet[i]->adjacentSimplex(3);
             // Again, we already know that the gluing permutation is 2 <-> 3.
         }
@@ -260,7 +262,7 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
         // (vertices 0,1) in each component but keeps separate the links
         // (vertices 2,3) in each component.
 
-        auto [t0, t1] = newTetrahedra<2>();
+        auto [t0, t1] = ans.newTetrahedra<2>();
 
         t0->join(0, t1, {2,3});
         t0->join(1, t1, {2,3});
@@ -272,7 +274,8 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
 
     // Done!
     if (simplify)
-        Triangulation<3>::simplify();
+        ans.simplify();
+    return ans;
 }
 
 } // namespace regina
