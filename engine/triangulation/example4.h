@@ -203,11 +203,11 @@ class Example<4> : public detail::ExampleBase<4> {
          * and the second copy is obtained by mapping vertices 0,1,2,3 of
          * tetrahedron \a i of \a M to vertices 0,1,2,3 of pentachoron \a n+i.
          *
-         * The product itself will contain 82 pentachora for each
-         * original tetrahedron of \a M, and will contain many internal
-         * vertices.  It is highly recommended that you call
-         * Triangulation<4>::simplify() afterwards if you do
-         * not need to preserve the combinatorial structure.
+         * The product itself will contain 82 pentachora for each original
+         * tetrahedron of \a M, and will contain many internal vertices.
+         * It is highly recommended that you call Triangulation<4>::simplify()
+         * afterwards if you do not need to preserve the combinatorial
+         * structure.
          *
          * Note that the current construction does _not_ give an oriented
          * triangulation (due to the specific choice of labelling); this may
@@ -227,11 +227,10 @@ class Example<4> : public detail::ExampleBase<4> {
          * This simply calls iBundle() and then glues together the
          * two copies of \a M on the boundary.
          *
-         * The product will contain 82 pentachora for each
-         * original tetrahedron of \a M, and will contain many internal
-         * vertices.  It is highly recommended that you call
-         * Triangulation<4>::simplify() afterwards if you do
-         * not need to preserve the combinatorial structure.
+         * The product will contain 82 pentachora for each original tetrahedron
+         * of \a M, and will contain many internal vertices.  It is highly
+         * recommended that you call Triangulation<4>::simplify() afterwards
+         * if you do not need to preserve the combinatorial structure.
          *
          * Note that the current construction does _not_ give an oriented
          * triangulation (due to the specific choice of labelling); this may
@@ -246,6 +245,43 @@ class Example<4> : public detail::ExampleBase<4> {
         static Triangulation<4> s1Bundle(const Triangulation<3>& base);
 
         /**
+         * Returns a triangulation of the given 3-manifold spun around its
+         * boundary.
+         *
+         * Let `M` be the given 3-manifold, with real boundary `∂M`.  This
+         * constructs a 4-manifold from `M` as follows:
+         *
+         * - First we build the product `M × S1`.
+         *
+         * - Then, for each point `b` on the real boundary `∂M`, we collapse
+         *   the fibre `b × S1` to a single point.  (Equivalently, we attach a
+         *   copy of `∂M × D2` to the product `M × S1` so that, for each point
+         *   `b` on the boundary `∂M`, the fibre `b × S1` becomes the boundary
+         *   of the corresponding disc `b × D2`.)
+         *
+         * The second step only acts on real boundary; that is, points `b`
+         * that lie on boundary triangles of `M`.  It ignores ideal boundary,
+         * in the sense that ideal vertices will just be transformed as part
+         * of the product `M × S1` (the first step), without the subsequent
+         * collapse/filling operation (the second step).  This means that any
+         * ideal vertices of `M` will become invalid edges of the resulting
+         * 4-maifold triangulation.
+         *
+         * The product will contain 82 pentachora for each original tetrahedron
+         * of \a M, and will contain many internal vertices.  It is highly
+         * recommended that you call Triangulation<4>::simplify() afterwards
+         * if you do not need to preserve the combinatorial structure.
+         *
+         * Note that the current construction does _not_ give an oriented
+         * triangulation (due to the specific choice of labelling); this may
+         * change in a future version of Regina.
+         *
+         * \param base the 3-manifold triangulation \a M, as described above.
+         * \return the 4-manifold obtained by spinning \a M around its boundary.
+         */
+        static Triangulation<4> boundarySpin(const Triangulation<3>& base);
+
+        /**
          * Returns a bundle formed from a given 3-manifold and a given
          * monodromy.
          *
@@ -258,11 +294,11 @@ class Example<4> : public detail::ExampleBase<4> {
          * may need to do some work to find a sufficiently symmetric
          * 3-manifold triangulation to begin with.
          *
-         * The resulting manifold will contain 82 pentachora for each
-         * original tetrahedron of \a M, and will contain many internal
-         * vertices.  It is highly recommended that you call
-         * Triangulation<4>::simplify() afterwards if you do
-         * not need to preserve the combinatorial structure.
+         * The resulting manifold will contain 82 pentachora for each original
+         * tetrahedron of \a M, and will contain many internal vertices.
+         * It is highly recommended that you call Triangulation<4>::simplify()
+         * afterwards if you do not need to preserve the combinatorial
+         * structure.
          *
          * Note that the current construction does _not_ give an oriented
          * triangulation (due to the specific choice of labelling); this may

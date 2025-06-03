@@ -135,6 +135,7 @@ Version 7.4  [ (to be announced) ]
               The old name has been kept as a deprecated alias.
         Class Example<4>:
             - New routine fourTorus(), thanks to Rhuaidi Burke.
+            - New routine boundarySpin().
         Class ExampleLink:
             - New routine chen().
             - New routines virtualTrefoil(), kishino(), and gpv().

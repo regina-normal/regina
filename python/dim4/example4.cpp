@@ -76,6 +76,8 @@ void addExample4(pybind11::module_& m) {
             rdoc::cappellShaneson)
         .def_static("iBundle", &Example<4>::iBundle, rdoc::iBundle)
         .def_static("s1Bundle", &Example<4>::s1Bundle, rdoc::s1Bundle)
+        .def_static("boundarySpin", &Example<4>::boundarySpin,
+            rdoc::boundarySpin)
         .def_static("bundleWithMonodromy", &Example<4>::bundleWithMonodromy,
             rdoc::bundleWithMonodromy)
     ;
