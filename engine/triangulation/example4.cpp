@@ -182,7 +182,7 @@ namespace {
                  3-dimensional prism "wall" between facet j of bdry[0] and
                  facet j of bdry[1].  Specifically, this triangle is contained
                  in the rectangular 2-face of the prism that does not
-                 meet vertex k, meets wallBase[i][j[k], and does not meet
+                 meet vertex k, meets wallBase[i][j][k], and does not meet
                  vertex l.  Requires j,k,l distinct. */
 
         /**
@@ -197,21 +197,20 @@ namespace {
          * Create all remaining pentachora (80 of 82) within this prism.
          */
         inline void buildWalls(Triangulation<4>& tri) {
-            int i, j, k, l;
-            for (i = 0; i < 2; ++i)
-                for (j = 0; j < 4; ++j)
+            for (int i = 0; i < 2; ++i)
+                for (int j = 0; j < 4; ++j)
                     wallBase3[i][j] = tri.newPentachoron();
-            for (i = 0; i < 2; ++i)
-                for (j = 0; j < 4; ++j)
-                    for (k = 0; k < 4; ++k)
+            for (int i = 0; i < 2; ++i)
+                for (int j = 0; j < 4; ++j)
+                    for (int k = 0; k < 4; ++k)
                         if (j != k)
                             wallBase2[i][j][k] = tri.newPentachoron();
                         else
                             wallBase2[i][j][k] = nullptr;
-            for (i = 0; i < 2; ++i)
-                for (j = 0; j < 4; ++j)
-                    for (k = 0; k < 4; ++k)
-                        for (l = 0; l < 4; ++l)
+            for (int i = 0; i < 2; ++i)
+                for (int j = 0; j < 4; ++j)
+                    for (int k = 0; k < 4; ++k)
+                        for (int l = 0; l < 4; ++l)
                             if (j != k && k != l && j != l)
                                 wallSide[i][j][k][l] = tri.newPentachoron();
                             else
@@ -224,16 +223,15 @@ namespace {
         void glueInternally() {
             Perm<5> id;
 
-            int i, j, k, l;
-            for (i = 0; i < 2; ++i) {
-                for (j = 0; j < 4; ++j) {
+            for (int i = 0; i < 2; ++i) {
+                for (int j = 0; j < 4; ++j) {
                     wallBase3[i][j]->join(j, bdry[i], id);
-                    for (k = 0; k < 4; ++k) {
+                    for (int k = 0; k < 4; ++k) {
                         if (k == j)
                             continue;
                         wallBase3[i][j]->join(k, wallBase2[i][j][k], id);
 
-                        for (l = 0; l < 4; ++l) {
+                        for (int l = 0; l < 4; ++l) {
                             if (l == j || l == k)
                                 continue;
                             wallBase2[i][j][k]->join(l,
@@ -250,12 +248,12 @@ namespace {
                     }
                 }
 
-                for (j = 0; j < 4; ++j)
-                    for (k = j + 1; k < 4; ++k) {
+                for (int j = 0; j < 4; ++j)
+                    for (int k = j + 1; k < 4; ++k) {
                         wallBase2[i][j][k]->join(j,
                             wallBase2[i][k][j], Perm<5>(j, k));
 
-                        for (l = 0; l < 4; ++l) {
+                        for (int l = 0; l < 4; ++l) {
                             if (l == j || l == k)
                                 continue;
                             wallSide[i][j][k][l]->join(j,
@@ -306,7 +304,7 @@ Triangulation<4> Example<4>::iBundle(const Triangulation<3>& base) {
         return ans;
 
     // We have at least one tetrahedron.  Off we go.
-    auto* prism = new Prism[n];
+    FixedArray<Prism> prism(n);
 
     // Build the boundaries first so we get the relevant pentachora
     // numbered correctly within the final triangulation.
@@ -323,17 +321,15 @@ Triangulation<4> Example<4>::iBundle(const Triangulation<3>& base) {
     }
 
     // Glue adjacent prisms together.
-    size_t adjIndex;
-    const Tetrahedron<3> *tet, *adj;
     for (i = 0; i < n; ++i) {
-        tet = base.tetrahedron(i);
+        const Tetrahedron<3>* tet = base.tetrahedron(i);
         for (int face = 0; face < 4; ++face) {
-            adj = tet->adjacentTetrahedron(face);
+            const Tetrahedron<3>* adj = tet->adjacentTetrahedron(face);
             if (! adj)
                 continue;
 
             // Make sure we haven't already glued this from the other side.
-            adjIndex = adj->index();
+            size_t adjIndex = adj->index();
             if (adjIndex < i ||
                     (adjIndex == i && tet->adjacentFace(face) < face))
                 continue;
@@ -344,7 +340,6 @@ Triangulation<4> Example<4>::iBundle(const Triangulation<3>& base) {
         }
     }
 
-    delete[] prism;
     return ans;
 }
 
