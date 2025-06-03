@@ -194,6 +194,17 @@ namespace {
         }
 
         /**
+         * Create both pentachora that provide the upper and lower tetrahedron
+         * boundaries of this prism, and glue those tetrahedron boundaries
+         * together.
+         */
+        inline void buildAndIdentifyEnds(Triangulation<4>& tri) {
+            bdry[0] = tri.newPentachoron();
+            bdry[1] = tri.newPentachoron();
+            bdry[0]->join(4, bdry[1], {});
+        }
+
+        /**
          * Create all remaining pentachora (80 of 82) within this prism.
          */
         inline void buildWalls(Triangulation<4>& tri) {
@@ -221,25 +232,23 @@ namespace {
          * Glue the pentachora of this prism together.
          */
         void glueInternally() {
-            Perm<5> id;
-
             for (int i = 0; i < 2; ++i) {
                 for (int j = 0; j < 4; ++j) {
-                    wallBase3[i][j]->join(j, bdry[i], id);
+                    wallBase3[i][j]->join(j, bdry[i], {});
                     for (int k = 0; k < 4; ++k) {
                         if (k == j)
                             continue;
-                        wallBase3[i][j]->join(k, wallBase2[i][j][k], id);
+                        wallBase3[i][j]->join(k, wallBase2[i][j][k], {});
 
                         for (int l = 0; l < 4; ++l) {
                             if (l == j || l == k)
                                 continue;
                             wallBase2[i][j][k]->join(l,
-                                wallSide[i][j][k][l], id);
+                                wallSide[i][j][k][l], {});
 
                             if (i == 0)
                                 wallSide[0][j][k][l]->join(6 - j - k - l,
-                                    wallSide[1][j][k][l], id);
+                                    wallSide[1][j][k][l], {});
 
                             if (k < l)
                                 wallSide[i][j][k][l]->join(k,
@@ -268,13 +277,12 @@ namespace {
          */
         void glueAdjacent(Prism& adj, int face, const Perm<4>& gluing) {
             Perm<5> gluing5 = Perm<5>::extend(gluing);
-            int i, k, l;
-            for (i = 0; i < 2; ++i) {
+            for (int i = 0; i < 2; ++i) {
                 wallBase3[i][face]->join(4,
                     adj.wallBase3[i][gluing[face]],
                     gluing5);
 
-                for (k = 0; k < 4; ++k) {
+                for (int k = 0; k < 4; ++k) {
                     if (k == face)
                         continue;
 
@@ -282,7 +290,7 @@ namespace {
                         adj.wallBase2[i][gluing[face]][gluing[k]],
                         gluing5);
 
-                    for (l = 0; l < 4; ++l) {
+                    for (int l = 0; l < 4; ++l) {
                         if (l == face || l == k)
                             continue;
 
@@ -290,6 +298,30 @@ namespace {
                             adj.wallSide[i][gluing[face]][gluing[k]][gluing[l]],
                             gluing5);
                     }
+                }
+            }
+        }
+
+        /**
+         * Fold the given wall of this prism onto itself, so that the upper
+         * half (ending in the upper boundary tetrahedron) folds onto the
+         * lower half (ending in the lower boundary tetrahedron).
+         */
+        void foldWall(int face) {
+            wallBase3[0][face]->join(4, wallBase3[1][face], {});
+
+            for (int k = 0; k < 4; ++k) {
+                if (k == face)
+                    continue;
+
+                wallBase2[0][face][k]->join(4, wallBase2[1][face][k], {});
+
+                for (int l = 0; l < 4; ++l) {
+                    if (l == face || l == k)
+                        continue;
+
+                    wallSide[0][face][k][l]->join(4, wallSide[1][face][k][l],
+                        {});
                 }
             }
         }
@@ -346,10 +378,54 @@ Triangulation<4> Example<4>::iBundle(const Triangulation<3>& base) {
 Triangulation<4> Example<4>::s1Bundle(const Triangulation<3>& base) {
     Triangulation<4> ans = iBundle(base);
 
-    Perm<5> id;
     size_t n = base.size();
     for (size_t i = 0; i < n; ++i)
-        ans.pentachoron(i)->join(4, ans.pentachoron(i + n), id);
+        ans.pentachoron(i)->join(4, ans.pentachoron(i + n), {});
+
+    return ans;
+}
+
+Triangulation<4> Example<4>::boundarySpin(const Triangulation<3>& base) {
+    // This largely follows the code from iBundle(), but with additional
+    // top/bottom gluings and boundary fillings.
+    Triangulation<4> ans;
+
+    size_t n = base.size();
+    if (n == 0)
+        return ans;
+
+    // We have at least one tetrahedron.  Off we go.
+    FixedArray<Prism> prism(n);
+
+    // Build the prisms and sort out their internal gluings.
+    for (size_t i = 0; i < n; ++i) {
+        prism[i].buildAndIdentifyEnds(ans);
+        prism[i].buildWalls(ans);
+        prism[i].glueInternally();
+    }
+
+    // Glue adjacent prisms together.
+    for (size_t i = 0; i < n; ++i) {
+        const Tetrahedron<3>* tet = base.tetrahedron(i);
+        for (int face = 0; face < 4; ++face) {
+            if (auto adj = tet->adjacentTetrahedron(face)) {
+                // Make sure we haven't already glued this from the other side.
+                size_t adjIndex = adj->index();
+                if (adjIndex < i ||
+                        (adjIndex == i && tet->adjacentFace(face) < face))
+                    continue;
+
+                // Glue the prisms together!
+                prism[i].glueAdjacent(prism[adjIndex], face,
+                    tet->adjacentGluing(face));
+            } else {
+                // We have a boundary face of the 3-manifold: fold the
+                // corresponding wall of the prism onto itself to produce the
+                // required filling effect.
+                prism[i].foldWall(face);
+            }
+        }
+    }
 
     return ans;
 }
