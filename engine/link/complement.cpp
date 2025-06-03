@@ -62,9 +62,9 @@ Triangulation<3> Link::complement(bool simplify) const {
 
     // Empty link?  Just return the 3-sphere.
     if (isEmpty()) {
-        Tetrahedron<3>* t = ans.newSimplexRaw();
-        t->joinRaw(0, t, {0,1});
-        t->joinRaw(2, t, {2,3});
+        Tetrahedron<3>* t = ans.newSimplex();
+        t->join(0, t, {0,1});
+        t->join(2, t, {2,3});
         return ans;
     }
 
@@ -90,17 +90,17 @@ Triangulation<3> Link::complement(bool simplify) const {
 
     // Create the local structure around each crossing:
     for (size_t i = 0; i < n; ++i) {
-        ctet[i] = ans.newSimplicesRaw<4>();
+        ctet[i] = ans.newSimplices<4>();
         if (crossing(i)->sign() > 0) {
-            ctet[i][0]->joinRaw(0, ctet[i][1], {2,3});
-            ctet[i][1]->joinRaw(1, ctet[i][2], {2,3});
-            ctet[i][2]->joinRaw(0, ctet[i][3], {2,3});
-            ctet[i][3]->joinRaw(1, ctet[i][0], {2,3});
+            ctet[i][0]->join(0, ctet[i][1], {2,3});
+            ctet[i][1]->join(1, ctet[i][2], {2,3});
+            ctet[i][2]->join(0, ctet[i][3], {2,3});
+            ctet[i][3]->join(1, ctet[i][0], {2,3});
         } else {
-            ctet[i][0]->joinRaw(1, ctet[i][1], {2,3});
-            ctet[i][1]->joinRaw(0, ctet[i][2], {2,3});
-            ctet[i][2]->joinRaw(1, ctet[i][3], {2,3});
-            ctet[i][3]->joinRaw(0, ctet[i][0], {2,3});
+            ctet[i][0]->join(1, ctet[i][1], {2,3});
+            ctet[i][1]->join(0, ctet[i][2], {2,3});
+            ctet[i][2]->join(1, ctet[i][3], {2,3});
+            ctet[i][3]->join(0, ctet[i][0], {2,3});
         }
     }
 
@@ -121,21 +121,21 @@ Triangulation<3> Link::complement(bool simplify) const {
         const Crossing* adj = s.crossing();
         if ((adj->sign() > 0 && s.strand() == 1) ||
                 (adj->sign() < 0 && s.strand() == 0)) {
-            ctet[i][3]->joinRaw(2, ctet[adj->index()][3], {2,3});
-            ctet[i][0]->joinRaw(3, ctet[adj->index()][2], {2,3});
+            ctet[i][3]->join(2, ctet[adj->index()][3], {2,3});
+            ctet[i][0]->join(3, ctet[adj->index()][2], {2,3});
         } else {
-            ctet[i][3]->joinRaw(2, ctet[adj->index()][2], {2,3});
-            ctet[i][0]->joinRaw(3, ctet[adj->index()][1], {2,3});
+            ctet[i][3]->join(2, ctet[adj->index()][2], {2,3});
+            ctet[i][0]->join(3, ctet[adj->index()][1], {2,3});
         }
 
         adj = t.crossing();
         if ((adj->sign() > 0 && t.strand() == 1) ||
                 (adj->sign() < 0 && t.strand() == 0)) {
-            ctet[i][0]->joinRaw(2, ctet[adj->index()][3], {2,3});
-            ctet[i][1]->joinRaw(3, ctet[adj->index()][2], {2,3});
+            ctet[i][0]->join(2, ctet[adj->index()][3], {2,3});
+            ctet[i][1]->join(3, ctet[adj->index()][2], {2,3});
         } else {
-            ctet[i][0]->joinRaw(2, ctet[adj->index()][2], {2,3});
-            ctet[i][1]->joinRaw(3, ctet[adj->index()][1], {2,3});
+            ctet[i][0]->join(2, ctet[adj->index()][2], {2,3});
+            ctet[i][1]->join(3, ctet[adj->index()][1], {2,3});
         }
     }
 
@@ -179,19 +179,19 @@ Triangulation<3> Link::complement(bool simplify) const {
 
             auto [t0, t1, t2, t3] = ans.newTetrahedra<4>();
 
-            t0->joinRaw(0, t1, {2,3});
-            t0->joinRaw(1, t3, {2,3});
-            t0->joinRaw(3, t2, {2,3});
-            t1->joinRaw(1, t2, {2,3});
-            t2->joinRaw(0, t3, {2,3});
-            t3->joinRaw(2, t3, {2,3});
+            t0->join(0, t1, {2,3});
+            t0->join(1, t3, {2,3});
+            t0->join(3, t2, {2,3});
+            t1->join(1, t2, {2,3});
+            t2->join(0, t3, {2,3});
+            t3->join(2, t3, {2,3});
 
-            left->unjoinRaw(2);
-            right->unjoinRaw(3);
-            left->joinRaw(2, t2, {2,3});
-            right->joinRaw(3, t1, {2,3});
-            adjLeft->joinRaw(3, t0, {2,3});
-            adjRight->joinRaw(2, t1, {2,3});
+            left->unjoin(2);
+            right->unjoin(3);
+            left->join(2, t2, {2,3});
+            right->join(3, t1, {2,3});
+            adjLeft->join(3, t0, {2,3});
+            adjRight->join(2, t1, {2,3});
         }
     }
 
@@ -207,21 +207,16 @@ Triangulation<3> Link::complement(bool simplify) const {
         // code on the unknot diagram with one positive crossing: + ( ^0 _0 ).
 
         auto [t0, t1, t2, t3] = ans.newTetrahedra<4>();
-        t0->joinRaw(0, t1, {2,3}); t0->joinRaw(1, t3, {2,3});
-        t0->joinRaw(2, t2, {2,3}); t0->joinRaw(3, t2, {2,3});
-        t1->joinRaw(1, t2, {2,3}); t1->joinRaw(2, t1, {2,3});
-        t2->joinRaw(0, t3, {2,3}); t3->joinRaw(2, t3, {2,3});
+        t0->join(0, t1, {2,3}); t0->join(1, t3, {2,3});
+        t0->join(2, t2, {2,3}); t0->join(3, t2, {2,3});
+        t1->join(1, t2, {2,3}); t1->join(2, t1, {2,3});
+        t2->join(0, t3, {2,3}); t3->join(2, t3, {2,3});
     }
 
     // At this point we have one triangulation component for every connected
     // diagram component (including any zero-crossing unknot components).
     // As a side effect, this means our triangulation is not empty (since we
     // dealt with the empty link earlier).
-
-    // The following call to ans.countComponents() has the side-effect of
-    // computing the full skeleton of the triangulation.  Therefore we will stop
-    // using joinRaw() / unjoinRaw(), since we want join() and unjoin() to do
-    // their extra work of clearing computed properties (amongst other things).
 
     while (ans.countComponents() > 1) {
         // Join two of our components together.  (We will keep doing this
