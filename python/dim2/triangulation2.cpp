@@ -315,6 +315,8 @@ void addTriangulation2(pybind11::module_& m) {
         .def("makeDoubleCover", [](Triangulation<2>& tri) { // deprecated
             tri = tri.doubleCover();
         }, rbase::makeDoubleCover)
+        .def("doubleOverBoundary", &Triangulation<2>::doubleOverBoundary,
+            rbase::doubleOverBoundary)
         .def("subdivide", &Triangulation<2>::subdivide, rbase::subdivide)
         .def("barycentricSubdivision", // deprecated
             &Triangulation<2>::subdivide, rbase::barycentricSubdivision)

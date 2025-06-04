@@ -739,6 +739,10 @@ TEST_F(Dim4Test, doubleCover) {
     testManualCases(TriangulationTest<4>::verifyDoubleCover);
 }
 
+TEST_F(Dim4Test, doubleOverBoundary) {
+    testManualCases(TriangulationTest<4>::verifyDoubleOverBoundary);
+}
+
 TEST_F(Dim4Test, makeCanonical) {
     testManualCases(TriangulationTest<4>::verifyMakeCanonical);
 }

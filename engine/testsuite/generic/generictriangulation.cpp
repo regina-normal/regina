@@ -73,6 +73,9 @@ TEST_F(Dim5Test, reordering) {
 TEST_F(Dim5Test, doubleCover) {
     testGenericCases(TriangulationTest<5>::verifyDoubleCover);
 }
+TEST_F(Dim5Test, doubleOverBoundary) {
+    testGenericCases(TriangulationTest<5>::verifyDoubleOverBoundary);
+}
 TEST_F(Dim5Test, makeCanonical) {
     testGenericCases(TriangulationTest<5>::verifyMakeCanonical);
 }
@@ -140,6 +143,9 @@ TEST_F(Dim6Test, reordering) {
 }
 TEST_F(Dim6Test, doubleCover) {
     testGenericCases(TriangulationTest<6>::verifyDoubleCover);
+}
+TEST_F(Dim6Test, doubleOverBoundary) {
+    testGenericCases(TriangulationTest<6>::verifyDoubleOverBoundary);
 }
 TEST_F(Dim6Test, makeCanonical) {
     testGenericCases(TriangulationTest<6>::verifyMakeCanonical);
@@ -219,6 +225,9 @@ TEST_F(Dim8Test, reordering) {
 }
 TEST_F(Dim8Test, doubleCover) {
     testGenericCases(TriangulationTest<8>::verifyDoubleCover);
+}
+TEST_F(Dim8Test, doubleOverBoundary) {
+    testGenericCases(TriangulationTest<8>::verifyDoubleOverBoundary);
 }
 TEST_F(Dim8Test, tightEncoding) {
     testGenericCases(TriangulationTest<8>::verifyTightEncoding);

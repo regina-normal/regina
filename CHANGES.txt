@@ -678,6 +678,7 @@ Version 7.4  [ (to be announced) ]
         Class Triangulation<dim>:
             - New routines hasLocks(), lockBoundary(), and unlockAll(), to
               work with locked top-dimensional simplices and their facets.
+            - New routine doubleOverBoundary().
             - New routine reorderBFS(), which essentially makes the old
               Triangulation<3>::reorderTetrahedraBFS() available in all
               dimensions.

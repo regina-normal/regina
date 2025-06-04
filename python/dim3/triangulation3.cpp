@@ -647,6 +647,8 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
         .def("makeDoubleCover", [](Triangulation<3>& tri) { // deprecated
             tri = tri.doubleCover();
         }, rbase::makeDoubleCover)
+        .def("doubleOverBoundary", &Triangulation<3>::doubleOverBoundary,
+            rbase::doubleOverBoundary)
         .def("idealToFinite", &Triangulation<3>::idealToFinite,
             rdoc::idealToFinite)
         .def("finiteToIdeal", &Triangulation<3>::finiteToIdeal,

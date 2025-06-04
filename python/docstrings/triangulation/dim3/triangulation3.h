@@ -90,22 +90,15 @@ Parameter ``cloneLocks``:
 
 // Docstring regina::python::doc::Triangulation_::__init_2
 static const char *__init_2 =
-R"doc(Creates a new ideal triangulation representing the complement of the
-given link diagram. For a classical link diagram, the triangulation
-will represent the complement of the given link in the 3-sphere, which
-is a topological invariant of the link. For a virtual (non-classical)
-link diagram, it will represent the complement of the given diagram in
-a thickened closed orientable surface, which is a property of the
-specific link diagram.
+R"doc(Deprecated constructor that creates a new ideal triangulation
+representing the complement of the given link diagram.
 
-This is the same triangulation that is produced by Link::complement().
-See Link::complement() for further details on how the triangulation is
-constructed, including how the tetrahedra will be oriented, and how
-the construction deals with disconnected link diagrams.
-
-If you pass *simplify* as ``True`` (the default), then the resulting
-triangulation will typically have no internal vertices; however, this
-is not guaranteed.
+.. deprecated::
+    The preferred way of building the complement of a link diagram is
+    to call ``Link::complement()``. See that routine for further
+    details on exactly what this routine does, including how the
+    tetrahedra will be oriented, and how the construction deals with
+    virtual and/or disconnected link diagrams.
 
 Parameter ``link``:
     the link diagram whose complement we should build.

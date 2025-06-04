@@ -174,6 +174,9 @@ TEST_F(Dim2Test, reordering) {
 TEST_F(Dim2Test, doubleCover) {
     testManualCases(TriangulationTest<2>::verifyDoubleCover);
 }
+TEST_F(Dim2Test, doubleOverBoundary) {
+    testManualCases(TriangulationTest<2>::verifyDoubleOverBoundary);
+}
 TEST_F(Dim2Test, makeCanonical) {
     testManualCases(TriangulationTest<2>::verifyMakeCanonical);
 }

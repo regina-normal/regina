@@ -516,7 +516,36 @@ component will be converted into its orientable double cover.
 If this triangulation has locks on any top-dimensional simplices
 and/or their facets, then these locks will be duplicated alongside
 their corresponding simplices and/or facets (i.e., they will appear in
-both sheets of the double cover).)doc";
+both sheets of the double cover).
+
+Returns:
+    the orientable double cover.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::doubleOverBoundary
+constexpr const char *doubleOverBoundary =
+R"doc(Returns two copies of this triangulation joined together along their
+boundary facets.
+
+Specifically: the resulting triangulation is obtained by taking two
+copies *S* and *T* of this triangulation, and then gluing each
+boundary facet of *S* to the corresponding boundary facet of *T* using
+the identity permutation.
+
+Any ideal vertices will be left alone (i.e., the ideal boundary
+components of *S* and *T* will _not_ be joined together).
+
+The resulting triangulation will not have any boundary facets. It will
+also not be oriented, even if this original triangulation _is_
+oriented, since *S* and *T* will be reflections of each other through
+the original triangulation boundary.
+
+If this triangulation has no boundary facets (even if it _does_ have
+ideal boundary components, then the result will simply be two disjoint
+copies of this original triangulation.
+
+Returns:
+    two copies of this triangulation joined along their boundary
+    facets.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::dualBoundaryMap
 constexpr const char *dualBoundaryMap =

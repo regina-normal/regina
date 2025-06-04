@@ -79,6 +79,7 @@ template void TriangulationBase<2>::writeTextLong(std::ostream&) const;
 
 template void TriangulationBase<2>::reorderBFS(bool);
 template Triangulation<2> TriangulationBase<2>::doubleCover() const;
+template Triangulation<2> TriangulationBase<2>::doubleOverBoundary() const;
 template void TriangulationBase<2>::subdivide();
 template bool TriangulationBase<2>::finiteToIdeal();
 

@@ -2552,8 +2552,44 @@ class TriangulationBase :
          * and/or their facets, then these locks will be duplicated alongside
          * their corresponding simplices and/or facets (i.e., they will appear
          * in both sheets of the double cover).
+         *
+         * \return the orientable double cover.
          */
         Triangulation<dim> doubleCover() const;
+
+        /**
+         * Returns two copies of this triangulation joined together along
+         * their boundary facets.
+         *
+         * Specifically: the resulting triangulation is obtained by taking two
+         * copies \a S and \a T of this triangulation, and then gluing each
+         * boundary facet of \a S to the corresponding boundary facet of \a T
+         * using the identity permutation.
+         *
+         * Any ideal vertices will be left alone (i.e., the ideal boundary
+         * components of \a S and \a T will _not_ be joined together).
+         *
+         * The resulting triangulation will not have any boundary facets.
+         * It will also not be oriented, even if this original triangulation
+         * _is_ oriented, since \a S and \a T will be reflections of each
+         * other through the original triangulation boundary.
+         *
+         * If this triangulation has no boundary facets (even if it _does_
+         * have ideal boundary components, then the result will simply be
+         * two disjoint copies of this original triangulation.
+         *
+         * If this triangulation has locks on any top-dimensional simplices
+         * and/or their facets, then these locks will be duplicated alongside
+         * their corresponding simplices and/or facets (i.e., they will appear
+         * in both copies of the original triangulation).  Any locks on
+         * boundary facets will _not_ prevent this operation from completing
+         * successfully (i.e., they will not prevent the two copies \a S and
+         * \a T from being glued together).
+         *
+         * \return two copies of this triangulation joined along their
+         * boundary facets.
+         */
+        Triangulation<dim> doubleOverBoundary() const;
 
         /**
          * Deprecated routine that converts this triangulation into its

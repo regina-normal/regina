@@ -1027,6 +1027,78 @@ class TriangulationTest : public testing::Test {
             }
         }
 
+        static void verifyDoubleOverBoundary(const Triangulation<dim>& tri,
+                const char* name) {
+            SCOPED_TRACE_CSTRING(name);
+
+            Triangulation<dim> dbl = tri.doubleOverBoundary();
+
+            if (tri.isEmpty()) {
+                EXPECT_TRUE(dbl.isEmpty());
+                return;
+            }
+
+            if (! tri.hasBoundaryFacets()) {
+                // We should simply come away with two identical copies of tri.
+                auto components = dbl.triangulateComponents();
+                EXPECT_EQ(components.size(), 2 * tri.countComponents());
+                if (tri.isConnected())
+                    for (const Triangulation<dim>& c : components)
+                        EXPECT_TRUE(tri.isIsomorphicTo(c));
+                return;
+            }
+
+            if (tri.isConnected())
+                EXPECT_EQ(dbl.countComponents(), 1);
+            else {
+                EXPECT_GE(dbl.countComponents(), 1);
+                EXPECT_LT(dbl.countComponents(), 2 * tri.countComponents());
+            }
+            EXPECT_EQ(dbl.isOrientable(), tri.isOrientable());
+            EXPECT_FALSE(dbl.isOriented());
+            EXPECT_FALSE(dbl.hasBoundaryFacets());
+            EXPECT_EQ(dbl.size(), 2 * tri.size());
+
+            if constexpr (regina::standardDim(dim)) {
+                if (tri.isValid()) {
+                    size_t nIdeal = 0;
+                    long bdryEuler = 0;
+                    for (auto b : tri.boundaryComponents()) {
+                        if (b->isReal())
+                            bdryEuler += b->eulerChar();
+                        else
+                            ++nIdeal;
+                    }
+                    EXPECT_EQ(dbl.countBoundaryComponents(), 2 * nIdeal);
+                    EXPECT_EQ(dbl.eulerCharTri(),
+                        2 * tri.eulerCharTri() - bdryEuler);
+                    if constexpr (dim > 2) {
+                        EXPECT_EQ(dbl.eulerCharManifold(),
+                            2 * tri.eulerCharManifold() - bdryEuler);
+                    }
+                }
+            }
+
+            // Note: invalid vertices will become ideal vertices.
+            // Any other invalid face will remain invalid.
+            if (tri.isValid())
+                EXPECT_TRUE(dbl.isValid());
+            else {
+                bool expectValid = true;
+                regina::for_constexpr<1, dim-1>([&tri, &expectValid](
+                        auto subdim) {
+                    if (! expectValid)
+                        return;
+                    for (auto f : tri.template faces<subdim>())
+                        if (! f->isValid()) {
+                            expectValid = false;
+                            break;
+                        }
+                });
+                EXPECT_EQ(dbl.isValid(), expectValid);
+            }
+        }
+
         static void verifyMakeCanonical(const Triangulation<dim>& tri,
                 const char* name) {
             SCOPED_TRACE_CSTRING(name);

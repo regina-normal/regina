@@ -412,7 +412,7 @@ Triangulation<dim> TriangulationBase<dim>::doubleCover() const {
     // We use a breadth-first search to propagate orientations.
     // The underlying queue is implemented using a plain C array - since each
     // simplex is processed only once, an array of size sheetSize is enough.
-    auto* queue = new size_t[sheetSize];
+    FixedArray<size_t> queue(sheetSize);
     size_t queueStart = 0, queueEnd = 0;
 
     for (size_t i = 0; i < sheetSize; i++)
@@ -471,8 +471,48 @@ Triangulation<dim> TriangulationBase<dim>::doubleCover() const {
             }
         }
 
-    // Tidy up.
-    delete[] queue;
+    return ans;
+}
+
+template <int dim>
+Triangulation<dim> TriangulationBase<dim>::doubleOverBoundary() const {
+    size_t origSize = simplices_.size();
+    if (origSize == 0)
+        return {};
+
+    Triangulation<dim> ans;
+
+    // Create two blocks of simplices, cloning simplex descriptions and locks.
+    for (size_t i = 0; i < origSize; i++)
+        ans.simplices_.push_back(new Simplex<dim>(*simplices_[i],
+            std::addressof(ans)));
+    for (size_t i = 0; i < origSize; i++)
+        ans.simplices_.push_back(new Simplex<dim>(*simplices_[i],
+            std::addressof(ans)));
+
+    // Recreate the gluings.
+    auto src = simplices_.begin();
+    auto dest0 = ans.simplices_.begin();
+    auto dest1 = dest0 + origSize;
+    size_t idx = 0;
+    for ( ; src != simplices_.end(); ++src, ++dest0, ++dest1, ++idx) {
+        for (int f = 0; f <= dim; ++f) {
+            if (auto adj = (*src)->adjacentSimplex(f)) {
+                // We have an internal facet.  Mirror the gluing in each block.
+                Perm<dim+1> gluing = (*src)->adjacentGluing(f);
+                (*dest0)->adj_[f] = ans.simplices_[adj->index()];
+                (*dest0)->gluing_[f] = gluing;
+                (*dest1)->adj_[f] = ans.simplices_[adj->index() + origSize];
+                (*dest1)->gluing_[f] = gluing;
+            } else {
+                // We have a boundary facet.  Connect the two blocks.
+                (*dest0)->adj_[f] = *dest1;
+                (*dest1)->adj_[f] = *dest0;
+                (*dest0)->gluing_[f] = (*dest1)->gluing_[f] = Perm<dim+1>();
+            }
+        }
+    }
+
     return ans;
 }
 

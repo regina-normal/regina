@@ -243,6 +243,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("makeDoubleCover", [](Triangulation<dim>& tri) { // deprecated
             tri = tri.doubleCover();
         }, rbase::makeDoubleCover)
+        .def("doubleOverBoundary", &Triangulation<dim>::doubleOverBoundary,
+            rbase::doubleOverBoundary)
         .def("isIsomorphicTo", &Triangulation<dim>::isIsomorphicTo,
             rbase::isIsomorphicTo)
         .def("isContainedIn", &Triangulation<dim>::isContainedIn,
