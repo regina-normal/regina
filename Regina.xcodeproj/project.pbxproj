@@ -258,6 +258,8 @@
 		052942DA1C5CDFBE0011C1E6 /* snappeaalgebra.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CBF19B2F1AB0099C617 /* snappeaalgebra.h */; };
 		0529AB8F2DEF98CF00F02D9C /* complement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0529AB8E2DEF98CF00F02D9C /* complement.cpp */; };
 		0529AB902DEF98CF00F02D9C /* complement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0529AB8E2DEF98CF00F02D9C /* complement.cpp */; };
+		0529AB922DF0445500F02D9C /* truncate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0529AB912DF0445500F02D9C /* truncate.cpp */; };
+		0529AB932DF0445500F02D9C /* truncate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0529AB912DF0445500F02D9C /* truncate.cpp */; };
 		052AB7131C6304C900C44D54 /* facetspec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052AB7111C6304C500C44D54 /* facetspec.cpp */; };
 		052BE46E2D7FA92D00F431A9 /* moves-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052BE46D2D7FA92D00F431A9 /* moves-impl.h */; };
 		052BE4702D7FA94300F431A9 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052BE46F2D7FA94300F431A9 /* homologicaldata.cpp */; };
@@ -2656,6 +2658,7 @@
 		052909522AE5EA0A0028990D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		052909542AE5EA0A0028990D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0529AB8E2DEF98CF00F02D9C /* complement.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = complement.cpp; sourceTree = "<group>"; };
+		0529AB912DF0445500F02D9C /* truncate.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = truncate.cpp; sourceTree = "<group>"; };
 		052AB7111C6304C500C44D54 /* facetspec.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetspec.cpp; sourceTree = "<group>"; };
 		052BE46C2D7FA89500F431A9 /* packetlistener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = packetlistener.h; sourceTree = "<group>"; };
 		052BE46D2D7FA92D00F431A9 /* moves-impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "moves-impl.h"; sourceTree = "<group>"; };
@@ -8437,6 +8440,7 @@
 				05F0A0301DBF0B5E00117BFC /* triangle3.h */,
 				05F0A0311DBF0B5E00117BFC /* triangulation3.cpp */,
 				05F0A0321DBF0B5E00117BFC /* triangulation3.h */,
+				0529AB912DF0445500F02D9C /* truncate.cpp */,
 				05F0A0331DBF0B5E00117BFC /* turaevviro.cpp */,
 				05F0A0341DBF0B5E00117BFC /* vertex3.cpp */,
 				05F0A0351DBF0B5E00117BFC /* vertex3.h */,
@@ -10032,6 +10036,7 @@
 				0553FAA12AEBE3B500BE89A7 /* retriangulate.cpp in Sources */,
 				0553FB7E2AEBE7F700BE89A7 /* transcendentals.cpp in Sources */,
 				05A628192AE9214A0049739E /* perm5.cpp in Sources */,
+				0529AB922DF0445500F02D9C /* truncate.cpp in Sources */,
 				0529AB8F2DEF98CF00F02D9C /* complement.cpp in Sources */,
 				0553FAEB2AEBE6C400BE89A7 /* treelp.cpp in Sources */,
 				0553FB392AEBE73A00BE89A7 /* snappedball.cpp in Sources */,
@@ -10535,6 +10540,7 @@
 				05C1BED51DCA89DA007C946B /* triangulation3.cpp in Sources */,
 				0518B9C629D595490020ADC1 /* current_curve_basis.cpp in Sources */,
 				052F9FE0180600FB00FAE4DF /* sigcensus.cpp in Sources */,
+				0529AB932DF0445500F02D9C /* truncate.cpp in Sources */,
 				05B9EC1B18245F2100DCACF3 /* euler.cpp in Sources */,
 				054208BD1DF0D2740018AB24 /* sfs.cpp in Sources */,
 				05A067141DFA68190047872E /* layeredchain.cpp in Sources */,

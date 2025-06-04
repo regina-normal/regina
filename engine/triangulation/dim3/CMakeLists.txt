@@ -17,6 +17,7 @@ SET ( FILES
   subdivide.cpp
   surfaces.cpp
   triangulation3.cpp
+  truncate.cpp
   turaevviro.cpp
   vertex3.cpp
   )
