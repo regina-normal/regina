@@ -1287,7 +1287,8 @@ R"doc(Converts an ideal triangulation into a finite triangulation. All ideal
 or invalid vertices are truncated and thus converted into real
 boundary components made from unglued faces of tetrahedra.
 
-Note that this operation is a loose converse of finiteToIdeal().
+This operation is equivalent to calling truncate() on every ideal or
+invalid vertex. It also serves as a loose converse to finiteToIdeal().
 
 If this triangulation has any invalid edges, then these will remain
 invalid after this operation (in contrast to barycentric subdivision,
@@ -1308,10 +1309,7 @@ Exception ``LockViolation``:
     and what their implications are.
 
 Returns:
-    ``True`` if and only if the triangulation was changed.
-
-Author:
-    David Letscher)doc";
+    ``True`` if and only if the triangulation was changed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::inAnyPacket
 static const char *inAnyPacket =
@@ -3859,6 +3857,32 @@ triangulation.
 
 Parameter ``other``:
     the triangulation whose contents should be swapped with this.)doc";
+
+// Docstring regina::python::doc::Triangulation_::truncate
+static const char *truncate =
+R"doc(Truncates the given vertex.
+
+If the vertex is internal (its link is a sphere), then this will
+create a new real 2-sphere boundary component. If the vertex is ideal,
+then this will effectively convert the ideal boundary component into a
+real boundary component made from triangles.
+
+If you wish to truncate _all_ ideal (and/or invalid) vertices of the
+triangulation, you can call idealToFinite() instead.
+
+This routine induces a subdivision of the entire triangulation,
+followed by a simplification. Therefore _any_ simplex and/or facet
+locks will prevent the operation from taking place.
+
+Exception ``LockViolation``:
+    This triangulation contains at least one locked top-dimensional
+    simplex and/or facet. This exception will be thrown before any
+    changes are made. See Simplex<3>::lock() and
+    Simplex<3>::lockFacet() for further details on how such locks work
+    and what their implications are.
+
+Parameter ``v``:
+    the vertex to truncate.)doc";
 
 // Docstring regina::python::doc::Triangulation_::turaevViro
 static const char *turaevViro =

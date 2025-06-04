@@ -503,6 +503,19 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     triActionList.push_back(actIdealToFinite);
     connect(actIdealToFinite, SIGNAL(triggered()), this, SLOT(idealToFinite()));
 
+    auto* actTruncateVertex = new QAction(this);
+    actTruncateVertex->setText(tr("Truncate Vertex..."));
+    // actTruncateVertex->setIcon(ReginaSupport::regIcon("finite"));
+    actTruncateVertex->setToolTip(tr("Truncate a single vertex"));
+    actTruncateVertex->setWhatsThis(tr("Truncates a single chosen vertex.  "
+        "This triangulation will be modified directly.<p>"
+        "If the chosen vertex is internal, this will create a new 2-sphere "
+        "boundary component.  If the chosen vertex is ideal, this will "
+        "convert it into a real boundary component."));
+    triActionList.push_back(actTruncateVertex);
+    connect(actTruncateVertex, SIGNAL(triggered()), this,
+        SLOT(truncateVertex()));
+
     auto* actFiniteToIdeal = new QAction(this);
     actFiniteToIdeal->setText(tr("Make &Ideal"));
     actFiniteToIdeal->setIcon(ReginaSupport::regIcon("cone"));
@@ -977,6 +990,28 @@ void Tri3GluingsUI::idealToFinite() {
     else {
         regina::Packet::PacketChangeGroup span(*tri);
         tri->idealToFinite();
+        tri->simplify();
+    }
+}
+
+void Tri3GluingsUI::truncateVertex() {
+    endEdit();
+
+    if (tri->isEmpty()) {
+        ReginaSupport::sorry(ui,
+            tr("This triangulation does not have any vertices."));
+        return;
+    }
+
+    regina::Vertex<3>* v =
+        FaceDialog<3, 0>::choose(ui, tri, nullptr /* filter */,
+        tr("Truncate Vertex"),
+        tr("Truncate which vertex?"),
+        tr("Regina will truncate whichever vertex you choose."));
+
+    if (v) {
+        regina::Packet::PacketChangeGroup span(*tri);
+        tri->truncate(v);
         tri->simplify();
     }
 }

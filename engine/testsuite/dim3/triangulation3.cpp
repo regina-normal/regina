@@ -1928,8 +1928,7 @@ TEST_F(Dim3Test, connectedSumWithSelf) {
     testManualCases(verifyConnectedSumWithSelf, false);
 }
 
-static void verifyIdealToFinite(const Triangulation<3>& tri,
-        const char* name) {
+static void verifyIdealToFinite(const Triangulation<3>& tri, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     bool shouldTruncate = false;

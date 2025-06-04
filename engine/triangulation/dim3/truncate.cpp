@@ -30,158 +30,158 @@
  *                                                                        *
  **************************************************************************/
 
-#include <vector>
-
 #include "triangulation/dim3.h"
 
 namespace regina {
 
-bool Triangulation<3>::idealToFinite() {
-    // The call to isIdeal() ensures the skeleton has been calculated.
-    if (! isIdeal()) {
-        // Note: this test also picks up the empty triangulation.
-        if (isValid())
-            return false; // Nothing to do.
-        else {
+namespace {
+    /**
+     * A collection of 32 "inner" tetrahedra that together subdivide a single
+     * "outer" tetrahedron, in a way that allows us to truncate vertices of
+     * the outer tetrahedron by removing the "tips" of this subdivision.
+     */
+    struct SubTet {
+        bool keepTip[4] = { true, true, true, true };
+            /**< Indicates whether vertex i of the outer tetrahedron should be
+                 kept (as opposed to being truncated). */
+
+        Tetrahedron<3>* tip[4];
+            /**< tip[i] sits between vertex i of the outer tetrahedron and a
+                 small triangle that truncates vertex i.  If keepTip[i] is
+                 false then the inner tetrahedron tip[i] will not be created. */
+        Tetrahedron<3>* interior[4];
+            /**< interior[i] sits between tip[i] and the centroid of the outer
+                 tetrahedron. */
+        Tetrahedron<3>* edge[4][4];
+            /**< edge[i][j] is one of the six inner tetrahedra that has an
+                 edge running from the centroid of the outer tetrahedron to
+                 the centroid of face i of the outer tetrahedron.  It also
+                 runs along a section of the edge of face i that does not meet
+                 vertex j of the outer tetrahedron.  Requires i != j. */
+        Tetrahedron<3>* vertex[4][4];
+            /**< vertex[i][j] is one of the six inner tetrahedra that has an
+                 edge running from the centroid of the outer tetrahedron to
+                 the centroid of face i of the outer tetrahedron.  It is also
+                 adjacent to interior[j].  Requires i != j. */
+
+        /**
+         * Creates all of the inner tetrahedra, adds them to the given
+         * triangulation, and glues them together so that they completely
+         * triangulate a single outer tetrahedron.
+         */
+        inline void build(Triangulation<3>& tri) {
+            // Create the inner tetrahedra.
+            for (int i = 0; i < 4; ++i) {
+                if (keepTip[i])
+                    tip[i] = tri.newSimplex();
+                interior[i] = tri.newSimplex();
+
+                for (int j = 0; j < 4; ++j)
+                    if (i != j) {
+                        edge[i][j] = tri.newSimplex();
+                        vertex[i][j] = tri.newSimplex();
+                    }
+            }
+
+            // Glue the inner tetrahedra together.
+            for (int i = 0; i < 4; ++i)
+                if (keepTip[i])
+                    tip[i]->join(i, interior[i], {});
+
+            for (int i = 0; i < 4; ++i)
+                for (int j = 0; j < 4; ++j)
+                    if (i != j)
+                        interior[i]->join(j, vertex[j][i], {});
+
+            for (int i = 0; i < 4; ++i)
+                for (int j = 0; j < 4; ++j) {
+                    if (i == j)
+                        continue;
+                    if (i < j)
+                        edge[i][j]->join(i, edge[j][i], { i, j });
+                    for (int k = 0; k < 4; ++k)
+                        if (k != i && k != j)
+                            edge[i][j]->join(k, vertex[i][k], { j, k });
+                }
+        }
+    };
+}
+
+bool Triangulation<3>::truncateInternal(Vertex<3>* vertex) {
+    // subTet manages the subdivision of each original (outer) tetrahedron
+    // into many smaller (inner) tetrahedra.  It also records which of these
+    // inner tetrahedra should _not_ be created because the corresponding
+    // vertices of the outer tetrahedra are being truncated.
+    FixedArray<SubTet> subTet(simplices_.size());
+
+    // Begin by working out which vertices need to be truncated.
+    if (vertex) {
+        for (auto& emb : *vertex)
+            subTet[emb.simplex()->index()].keepTip[emb.face()] = false;
+    } else {
+        // The call to vertices() ensures the skeleton has been calculated.
+        bool found = false;
+        for (auto v : vertices())
             // We know all vertex links are 2-spheres or have boundary.
             // Only subdivide if there are invalid _vertices_; that is,
             // vertex links that have boundary but are not discs.
             // In particular, invalid edges are not something we care about.
-            bool subdivide = false;
-            for (auto v : vertices())
-                if (! v->isValid()) {
-                    subdivide = true;
-                    break;
-                }
-            if (! subdivide)
-                return false;
-        }
+            if (v->isIdeal() || ! v->isValid()) {
+                found = true;
+                for (auto& emb : *v)
+                    subTet[emb.simplex()->index()].keepTip[emb.face()] = false;
+            }
+
+        // If are no vertices to truncate, then there is nothing to do.
+        if (! found)
+            return false;
     }
 
-    size_t numOldTet = simplices_.size();
-
-    // Any simplex or facet locks at all will be a problem here.
+    // We need to subdivide and truncate.
+    // Any simplex or facet locks at all will be a problem.
     if (hasLocks())
         throw LockViolation("An attempt was made to subdivide a "
             "triangulation with one or more locked tetrahedra or triangles");
 
-    // Since staging is new here, we will use the "raw" simplex routines
-    // that do not generate change events / snapshots, check locks, etc.
+    // Since staging is a new triangulation here, we will (where possible) use
+    // "raw" simplex gluing routines that do not generate change events and
+    // snapshots, check locks, and so on.
     Triangulation<3> staging;
 
-    auto* newTet = new Tetrahedron<3>*[32*numOldTet];
-    for (size_t i=0; i<32*numOldTet; i++)
-        newTet[i] = staging.newSimplexRaw();
+    // Go ahead and create the inner tetrahedra that subdivide each outer
+    // tetrahedron, and glue them together within each outer tetrahedron.
+    // The truncation happens at this point, since the "tip" tetrahedra around
+    // each truncated vertex will not be created.
+    for (auto& sub : subTet)
+        sub.build(staging);
 
-    int tip[4];
-    int interior[4];
-    int edge[4][4];
-    int vertex[4][4];
+    // Glue the inner tetrahedra where necessary across the facet gluings of
+    // the outer tetrahedra.
+    for (size_t index = 0; index < simplices_.size(); ++index) {
+        auto outer = simplices_[index];
+        for (int f = 0; f < 4; ++f)
+            if (auto adj = outer->adjacentSimplex(f)) {
+                size_t adjIndex = adj->index();
+                Perm<4> g = outer->adjacentGluing(f);
 
-    int nDiv = 0;
-    for (int j=0; j<4; j++) {
-        tip[j] = nDiv++;
-        interior[j] = nDiv++;
-
-        for (int k=0; k<4; k++)
-            if (j != k) {
-                edge[j][k] = nDiv++;
-                vertex[j][k] = nDiv++;
-            }
-    }
-
-    // First glue all of the tetrahedra inside the same
-    // old tetrahedron together.
-    for (size_t i=0; i<numOldTet; i++) {
-        // Glue the tip tetrahedra to the others.
-        for (int j=0; j<4; j++)
-            newTet[tip[j] + i * nDiv]->joinRaw(j,
-                newTet[interior[j] + i * nDiv], Perm<4>());
-
-        // Glue the interior tetrahedra to the others.
-        for (int j=0; j<4; j++) {
-            for (int k=0; k<4; k++)
-                if (j != k) {
-                    newTet[interior[j] + i * nDiv]->joinRaw(k,
-                        newTet[vertex[k][j] + i * nDiv], Perm<4>());
-                }
-        }
-
-        // Glue the edge tetrahedra to the others.
-        for (int j=0; j<4; j++)
-            for (int k=0; k<4; k++)
-                if (j != k) {
-                    if (j < k)
-                        newTet[edge[j][k] + i * nDiv]->joinRaw(j,
-                            newTet[edge[k][j] + i * nDiv], Perm<4>(j,k));
-
-                    for (int l=0; l<4; l++)
-                        if ( (l != j) && (l != k) )
-                            newTet[edge[j][k] + i * nDiv]->joinRaw(l,
-                                newTet[vertex[j][l] + i * nDiv], Perm<4>(k,l));
-                }
-    }
-
-    // Now deal with the gluings between the pieces inside adjacent tetrahedra.
-    for (size_t i=0; i<numOldTet; i++) {
-        Tetrahedron<3>* ot = tetrahedron(i);
-        for (int j=0; j<4; j++)
-            if (ot->adjacentTetrahedron(j)) {
-                 size_t oppTet = ot->adjacentTetrahedron(j)->index();
-                 Perm<4> p = ot->adjacentGluing(j);
-
-                 // Do each gluing from one side only.
-                 if (oppTet < i || (oppTet == i && p[j] < j))
+                // Do each gluing from one side only.
+                if (adjIndex < index || (adjIndex == index && g[f] < f))
                     continue;
 
-                 // First deal with the tip tetrahedra.
-                 for (int k=0; k<4; k++)
-                     if (j != k)
-                          newTet[tip[k] + i * nDiv]->joinRaw(j,
-                              newTet[tip[p[k]] + oppTet * nDiv], p);
-
-                 // Next the edge tetrahedra.
-                 for (int k=0; k<4; k++)
-                     if (j != k)
-                         newTet[edge[j][k] + i * nDiv]->joinRaw(k,
-                             newTet[edge[p[j]][p[k]] + oppTet * nDiv], p);
-
-                 // Finally, the vertex tetrahedra.
-                 for (int k=0; k<4; k++)
-                     if (j != k)
-                         newTet[vertex[j][k] + i * nDiv]->joinRaw(k,
-                             newTet[vertex[p[j]][p[k]] + oppTet * nDiv], p);
-
+                for (int k = 0; k < 4; ++k)
+                    if (k != f) {
+                        if (subTet[index].keepTip[k])
+                            subTet[index].tip[k]->joinRaw(f,
+                                subTet[adjIndex].tip[g[k]], g);
+                        subTet[index].edge[f][k]->joinRaw(k,
+                            subTet[adjIndex].edge[g[f]][g[k]], g);
+                        subTet[index].vertex[f][k]->joinRaw(k,
+                            subTet[adjIndex].vertex[g[f]][g[k]], g);
+                    }
             }
     }
 
-    delete[] newTet;
-
-    // Now remove any new tetrahedra that touch an ideal or invalid vertex.
-    // We do this by making a list first, then actually doing the deletion
-    // (since the first deletion will destroy the skeleton).
-
-    staging.ensureSkeleton();
-
-    std::vector<Tetrahedron<3>*> tetList;
-    for (Vertex<3>* v : staging.vertices())
-        if (v->isIdeal() || ! v->isValid())
-            for (auto& emb : *v)
-                tetList.push_back(emb.tetrahedron());
-
-    // Just above, we computed the skeleton for staging so we could query
-    // its vertices.  We need to delete this computed property now, since
-    // we are about to edit the staging triangulation further using
-    // removeSimplexRaw() with no surrounding ChangeAndClearSpan.
-    // This means the skeleton will become incorrect, and we do not want
-    // this incorrect skeleton to be moved into this triangulation as
-    // part of the final swap().
-    staging.clearAllProperties();
-
-    for (auto t : tetList)
-        staging.removeSimplexRaw(t);
-
-    // We are now ready to change the main triangulation.
+    // We are now ready to move everything into the main triangulation.
     // This is where the change event and snapshot will be fired.
     swap(staging);
     return true;

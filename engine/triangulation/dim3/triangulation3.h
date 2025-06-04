@@ -3751,7 +3751,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * converted into real boundary components made from unglued
          * faces of tetrahedra.
          *
-         * Note that this operation is a loose converse of finiteToIdeal().
+         * This operation is equivalent to calling truncate() on every ideal
+         * or invalid vertex.  It also serves as a loose converse to
+         * finiteToIdeal().
          *
          * If this triangulation has any invalid edges, then these will remain
          * invalid after this operation (in contrast to barycentric subdivision,
@@ -3773,9 +3775,33 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * as are necessary, leaving finite vertices alone.
          *
          * \return \c true if and only if the triangulation was changed.
-         * \author David Letscher
          */
         bool idealToFinite();
+
+        /**
+         * Truncates the given vertex.
+         *
+         * If the vertex is internal (its link is a sphere), then this will
+         * create a new real 2-sphere boundary component.  If the vertex is
+         * ideal, then this will effectively convert the ideal boundary
+         * component into a real boundary component made from triangles.
+         *
+         * If you wish to truncate _all_ ideal (and/or invalid) vertices of
+         * the triangulation, you can call idealToFinite() instead.
+         *
+         * This routine induces a subdivision of the entire triangulation.
+         * Therefore _any_ simplex and/or facet locks will prevent the
+         * operation from taking place.
+         *
+         * \exception LockViolation This triangulation contains at least one
+         * locked top-dimensional simplex and/or facet.  This exception will be
+         * thrown before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how such locks work
+         * and what their implications are.
+         *
+         * \param v the vertex to truncate.
+         */
+        void truncate(Vertex<3>* v);
 
         /**
          * Pinches an internal edge to a point.  Topologically, this collapses
@@ -4689,6 +4715,16 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         bool internalCollapseEdge(Edge<3>* e, bool check, bool perform);
 
+        /**
+         * Implements truncate() and idealToFinite().
+         *
+         * If \a v is non-null, this truncates just the given vertex.
+         * If \a v is null, this truncates all ideal and/or invalid vertices.
+         *
+         * \return \c true if and only if the triangulation was changed.
+         */
+        bool truncateInternal(Vertex<3>* v);
+
         void stretchBoundaryForestFromVertex(Vertex<3>*, std::set<Edge<3>*>&,
                 std::set<Vertex<3>*>&) const;
             /**< Internal to maximalForestInBoundary(). */
@@ -5319,6 +5355,14 @@ inline bool Triangulation<3>::closeBook(Edge<3>* e, bool, bool perform) {
 
 inline bool Triangulation<3>::collapseEdge(Edge<3>* e, bool, bool perform) {
     return internalCollapseEdge(e, true, perform);
+}
+
+inline bool Triangulation<3>::idealToFinite() {
+    return truncateInternal(nullptr);
+}
+
+inline void Triangulation<3>::truncate(Vertex<3>* v) {
+    truncateInternal(v);
 }
 
 inline void Triangulation<3>::puncture(Tetrahedron<3>* tet) {
