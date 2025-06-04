@@ -1423,7 +1423,23 @@ static void verifyBoundarySpin(const Triangulation<3>& tri, const char* name) {
     EXPECT_EQ(spin.isOrientable(), tri.isOrientable());
     EXPECT_EQ(spin.countComponents(), tri.countComponents());
     EXPECT_FALSE(spin.hasBoundaryFacets());
-    // TODO: What can we say about Euler characteristic?
+
+    // Verify Euler characteristics.
+    //
+    // Things are simple where tri is compact.
+    //
+    // In the case where tri is ideal, it is still easy to work out what
+    // eulerCharTri() should be; however, I'm honestly not sure what should
+    // happen to eulerCharManifold(), since each ideal vertex of tri creates
+    // invalid edges and invalid vertices in the result.  For now we just skip
+    // the eulerCharManifold() test in the case where tri is ideal.
+    long bdryEuler = 0;
+    for (auto b : tri.boundaryComponents())
+        if (b->isReal())
+            bdryEuler += b->eulerChar();
+    EXPECT_EQ(spin.eulerCharTri(), bdryEuler);
+    if (! tri.isIdeal())
+        EXPECT_EQ(spin.eulerCharManifold(), bdryEuler);
 }
 
 TEST_F(Dim4Test, boundarySpin) {
@@ -1438,6 +1454,8 @@ TEST_F(Dim4Test, boundarySpin) {
     verifyBoundarySpin(Example<3>::figureEight(), "Figure eight complement");
     verifyBoundarySpin(Example<3>::gieseking(), "Gieseking manifold");
     verifyBoundarySpin(Example<3>::whitehead(), "Whitehead link complement");
+    verifyBoundarySpin(Example<3>::idealGenusTwoHandlebody(),
+        "Ideal genus two handlebody");
 
     // Some specific cases where we know exactly what the manifold should be:
     {
