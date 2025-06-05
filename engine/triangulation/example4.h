@@ -203,11 +203,18 @@ class Example<4> : public detail::ExampleBase<4> {
          * and the second copy is obtained by mapping vertices 0,1,2,3 of
          * tetrahedron \a i of \a M to vertices 0,1,2,3 of pentachoron \a n+i.
          *
-         * The product itself will contain 82 pentachora for each original
-         * tetrahedron of \a M, and will contain many internal vertices.
-         * It is highly recommended that you call Triangulation<4>::simplify()
-         * afterwards if you do not need to preserve the combinatorial
-         * structure.
+         * The product is created as follows: for each original tetrahedron of
+         * \a M we build a tetrahedral prism containing 82 pentachora, and we
+         * then glue these prisms together in a manner that follows the
+         * gluings of the original tetrahedra.  It is highly recommended that
+         * you call Triangulation<4>::simplify() afterwards if you do not need
+         * to preserve the combinatorial structure.
+         *
+         * For any simplex in \a base that is locked, all of the pentachora
+         * and internal facets of the corresponding prism will also be locked.
+         * For any triangular facet of \a base that is locked, all of the
+         * tetrahedral facets on the corresponding prism wall(s) will likewise
+         * be locked.
          *
          * Note that the current construction does _not_ give an oriented
          * triangulation (due to the specific choice of labelling); this may
@@ -227,10 +234,20 @@ class Example<4> : public detail::ExampleBase<4> {
          * This simply calls iBundle() and then glues together the
          * two copies of \a M on the boundary.
          *
-         * The product will contain 82 pentachora for each original tetrahedron
-         * of \a M, and will contain many internal vertices.  It is highly
-         * recommended that you call Triangulation<4>::simplify() afterwards
-         * if you do not need to preserve the combinatorial structure.
+         * The product is created as follows.  For each original tetrahedron of
+         * \a M, we build a tetrahedral prism containing 82 pentachora.  We then
+         * glue these prisms together in a manner that follows the gluings of
+         * the original tetrahedra, and we also glue together the two
+         * tetrahedra at each end of every prism.  It is highly recommended
+         * that you call Triangulation<4>::simplify() afterwards if you do not
+         * need to preserve the combinatorial structure.
+         *
+         * For any simplex in \a base that is locked, all of the pentachora
+         * and internal facets of the corresponding prism will also be locked,
+         * as well as the two tetrahedra at each end of the prism (which will
+         * be glued together, as explained above).  For any triangular facet of
+         * \a base that is locked, all of the tetrahedral facets on the
+         * corresponding prism wall(s) will likewise be locked.
          *
          * Note that the current construction does _not_ give an oriented
          * triangulation (due to the specific choice of labelling); this may
@@ -294,11 +311,23 @@ class Example<4> : public detail::ExampleBase<4> {
          * may need to do some work to find a sufficiently symmetric
          * 3-manifold triangulation to begin with.
          *
-         * The resulting manifold will contain 82 pentachora for each original
-         * tetrahedron of \a M, and will contain many internal vertices.
-         * It is highly recommended that you call Triangulation<4>::simplify()
+         * The product is created as follows.  For each original tetrahedron of
+         * \a M, we build a tetrahedral prism containing 82 pentachora.  We then
+         * glue these prisms together in a manner that follows the gluings of
+         * the original tetrahedra.  Moreover, we take the two copies of \a M
+         * that are formed from the tetrahedra at the two ends of these prisms,
+         * and glue these together according to the given monodromy.  It is
+         * highly recommended that you call Triangulation<4>::simplify()
          * afterwards if you do not need to preserve the combinatorial
          * structure.
+         *
+         * For any simplex in \a base that is locked, all of the pentachora
+         * and internal facets of the corresponding prism will also be locked.
+         * For any triangular facet of \a base that is locked, all of the
+         * tetrahedral facets on the corresponding prism wall(s) will likewise
+         * be locked.  The two tetrahedra at the ends of each prism will _not_
+         * be locked (these are the tetrahedra along which the two copies of
+         * \a M are identified using the given monodromy).
          *
          * Note that the current construction does _not_ give an oriented
          * triangulation (due to the specific choice of labelling); this may

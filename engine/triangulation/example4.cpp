@@ -327,9 +327,10 @@ namespace {
         }
 
         /**
-         * Locks all pentachora in this prism.
+         * Locks all pentachora and internal facets in this prism.
          */
-        void lockPentachora() {
+        void lockPrism() {
+            // Lock the pentachora.
             for (int half = 0; half < 2; ++half) {
                 bdry[half]->lock();
                 for (int face = 0; face < 4; ++face) {
@@ -343,6 +344,23 @@ namespace {
                         }
                 }
             }
+
+            // Lock the internal facets.
+            // At the moment many of these locks are redundant, in that we are
+            // locking the same facets from both sides.  This can be improved.
+            for (int i = 0; i < 4; ++i)
+                for (int half = 0; half < 2; ++half)
+                    for (int face = 0; face < 4; ++face) {
+                        wallBase3[half][face]->lockFacet(i);
+                        for (int k = 0; k < 4; ++k)
+                            if (k != face) {
+                                wallBase2[half][face][k]->lockFacet(i);
+                                for (int l = 0; l < 4; ++l)
+                                    if (l != face && l != k)
+                                        wallSide[half][face][k][l]->
+                                            lockFacet(i);
+                            }
+                    }
         }
 
         /**
@@ -387,24 +405,28 @@ Triangulation<4> Example<4>::iBundle(const Triangulation<3>& base) {
         prism[i].glueInternally();
     }
 
-    // Glue adjacent prisms together.
+    // Glue adjacent prisms together, and sort out locks.
     for (i = 0; i < n; ++i) {
         const Tetrahedron<3>* tet = base.tetrahedron(i);
         for (int face = 0; face < 4; ++face) {
-            const Tetrahedron<3>* adj = tet->adjacentTetrahedron(face);
-            if (! adj)
-                continue;
+            if (auto adj = tet->adjacentTetrahedron(face)) {
+                // Make sure we haven't already glued this from the other side.
+                size_t adjIndex = adj->index();
+                if (adjIndex < i ||
+                        (adjIndex == i && tet->adjacentFace(face) < face))
+                    continue;
 
-            // Make sure we haven't already glued this from the other side.
-            size_t adjIndex = adj->index();
-            if (adjIndex < i ||
-                    (adjIndex == i && tet->adjacentFace(face) < face))
-                continue;
+                prism[i].glueAdjacent(prism[adjIndex], face,
+                    tet->adjacentGluing(face));
 
-            // Glue the prisms together!
-            prism[i].glueAdjacent(prism[adjIndex], face,
-                tet->adjacentGluing(face));
+                if (tet->isFacetLocked(face))
+                    prism[i].lockWall(face);
+            } else if (tet->isFacetLocked(face)) {
+                prism[i].lockWall(face);
+            }
         }
+        if (tet->isLocked())
+            prism[i].lockPrism();
     }
 
     return ans;
@@ -414,8 +436,11 @@ Triangulation<4> Example<4>::s1Bundle(const Triangulation<3>& base) {
     Triangulation<4> ans = iBundle(base);
 
     size_t n = base.size();
-    for (size_t i = 0; i < n; ++i)
+    for (size_t i = 0; i < n; ++i) {
         ans.pentachoron(i)->join(4, ans.pentachoron(i + n), {});
+        if (base.tetrahedron(i)->isLocked())
+            ans.pentachoron(i)->lockFacet(4);
+    }
 
     return ans;
 }
