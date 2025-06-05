@@ -36,11 +36,35 @@
 
 namespace regina {
 
-Triangulation<3> Link::complement(bool simplify) const {
+Triangulation<3> Link::longComplement(StrandRef breakOpen, bool simplify)
+        const {
+    if (isEmpty())
+        throw FailedPrecondition("longComplement() requires a non-empty knot");
+    if (countComponents() > 1)
+        throw FailedPrecondition("longComplement() only works with knots, "
+            "not multiple component links");
+    if (! isClassical())
+        throw FailedPrecondition("longComplement() only works with classical "
+            "knots, not virtual knots");
+
+    if (size() == 0) {
+        // We have a zero-crossing unknot.  We need at least one crossing.
+        return Link::fromData({ 1 }, { 1, -1 }).longComplement({}, simplify);
+    }
+
+    if (breakOpen) {
+        return internalComplement(breakOpen);
+    } else {
+        // Choose an arbitrary crossing at which to break the knot open.
+        return internalComplement(crossings_.front()->upper());
+    }
+}
+
+Triangulation<3> Link::internalComplement(StrandRef breakOpen) const {
     // This implementation produces an oriented triangluation.
     // The orientation follows a right-hand rule, where the thumb points
     // from vertices 0 to 1, and the fingers point from vertice 2 to 3.
-
+    //
     // Our algorithm follows Jeff Weeks' method, which is described in
     // marvellous detail in the comments of link_complement.c from the
     // SnapPea kernel (which you can find in Regina's source tree as
@@ -57,10 +81,18 @@ Triangulation<3> Link::complement(bool simplify) const {
     //   to ensure this.  We ignore the issue here; the side-effect is that
     //   our triangulation might be disconnected, and we fix this before
     //   returning by joining the pieces together.
+    //
+    // As for breakOpen: if this is non-null then we are guaranteed that we
+    // have a classical knot diagram with exactly one component and at least
+    // one crossing.  This means that none of the special cases above apply,
+    // and so we can produce the mixed real/ideal boundary long knot
+    // complement by just failing to glue together the triangles that meet the
+    // given arc.
 
     Triangulation<3> ans;
 
     // Empty link?  Just return the 3-sphere.
+    // Note: breakOpen must be null in this case.
     if (isEmpty()) {
         Tetrahedron<3>* t = ans.newSimplex();
         t->join(0, t, {0,1});
@@ -108,94 +140,130 @@ Triangulation<3> Link::complement(bool simplify) const {
     StrandRef s, t;
     for (size_t i = 0; i < n; ++i) {
         const Crossing* cr = crossing(i);
-        // Make s the strand that follows forwards on the left, and
-        // make t the strand that follows forwards on the right.
+
+        // We will connect the structure for this crossing to the structures
+        // for the adjacent crossings that we reach by moving away from this
+        // crossing in the forwards direction.
+        //
+        // Make s the next strand after this crossing when stepping forwards
+        // on the left, and make t the next strand after this crossing when
+        // stepping forwards on the right.
+        //
+        // If breakOpen is non-null, then when stepping forward along that
+        // particular arc, we will set the corresponding strand (s or t) to
+        // null.  This is our indication that the corresponding connection
+        // should _not_ be made.
+
         if (cr->sign() > 0) {
             s = cr->next(0);
             t = cr->next(1);
+
+            if (cr == breakOpen.crossing()) {
+                if (breakOpen.strand() == 0)
+                    s = StrandRef();
+                else
+                    t = StrandRef();
+            }
         } else {
             s = cr->next(1);
             t = cr->next(0);
+
+            if (cr == breakOpen.crossing()) {
+                if (breakOpen.strand() == 0)
+                    t = StrandRef();
+                else
+                    s = StrandRef();
+            }
         }
 
         const Crossing* adj = s.crossing();
-        if ((adj->sign() > 0 && s.strand() == 1) ||
-                (adj->sign() < 0 && s.strand() == 0)) {
-            ctet[i][3]->join(2, ctet[adj->index()][3], {2,3});
-            ctet[i][0]->join(3, ctet[adj->index()][2], {2,3});
-        } else {
-            ctet[i][3]->join(2, ctet[adj->index()][2], {2,3});
-            ctet[i][0]->join(3, ctet[adj->index()][1], {2,3});
+        if (adj) {
+            if ((adj->sign() > 0 && s.strand() == 1) ||
+                    (adj->sign() < 0 && s.strand() == 0)) {
+                ctet[i][3]->join(2, ctet[adj->index()][3], {2,3});
+                ctet[i][0]->join(3, ctet[adj->index()][2], {2,3});
+            } else {
+                ctet[i][3]->join(2, ctet[adj->index()][2], {2,3});
+                ctet[i][0]->join(3, ctet[adj->index()][1], {2,3});
+            }
         }
 
         adj = t.crossing();
-        if ((adj->sign() > 0 && t.strand() == 1) ||
-                (adj->sign() < 0 && t.strand() == 0)) {
-            ctet[i][0]->join(2, ctet[adj->index()][3], {2,3});
-            ctet[i][1]->join(3, ctet[adj->index()][2], {2,3});
-        } else {
-            ctet[i][0]->join(2, ctet[adj->index()][2], {2,3});
-            ctet[i][1]->join(3, ctet[adj->index()][1], {2,3});
+        if (adj) {
+            if ((adj->sign() > 0 && t.strand() == 1) ||
+                    (adj->sign() < 0 && t.strand() == 0)) {
+                ctet[i][0]->join(2, ctet[adj->index()][3], {2,3});
+                ctet[i][1]->join(3, ctet[adj->index()][2], {2,3});
+            } else {
+                ctet[i][0]->join(2, ctet[adj->index()][2], {2,3});
+                ctet[i][1]->join(3, ctet[adj->index()][1], {2,3});
+            }
         }
     }
 
     // Identify any link components that consist entirely of over-crossings, or
     // entirely of under-crossings.  (We ignore zero-crossing components here.)
-    for (StrandRef c : components_) {
-        if (! c)
-            continue;
+    // Note: such components can only exist if we have a link with two or more
+    // components (which also means that breakOpen must be null).
+    if (components_.size() > 1) {
+        for (StrandRef c : components_) {
+            if (! c)
+                continue;
 
-        bool missing[2] = { true, true }; // [ missing under, missing over ]
-        StrandRef s = c;
-        do {
-            if (missing[s.strand()]) {
-                missing[s.strand()] = false;
-                if (! missing[s.strand() ^ 1])
-                    break;
+            bool missing[2] = { true, true }; // [ missing under, missing over ]
+            StrandRef s = c;
+            do {
+                if (missing[s.strand()]) {
+                    missing[s.strand()] = false;
+                    if (! missing[s.strand() ^ 1])
+                        break;
+                }
+                ++s;
+            } while (s != c);
+
+            if (missing[0] || missing[1]) {
+                // This component contains entirely over-crossings or entirely
+                // under-crossings.  As described in Jeff's documentation, we
+                // need to add an R1 twist to avoid unintentionally breaking the
+                // topology by collapsing a cycle of bigons in the complement.
+                // Here we do this by splicing in the four tetrahedra that would
+                // come from such a twist.
+                Tetrahedron<3> *left, *right;
+                if ((c.crossing()->sign() > 0 && c.strand() == 0) ||
+                        (c.crossing()->sign() < 0 && c.strand() == 1)) {
+                    left = ctet[c.crossing()->index()][3];
+                    right = ctet[c.crossing()->index()][0];
+                } else {
+                    left = ctet[c.crossing()->index()][0];
+                    right = ctet[c.crossing()->index()][1];
+                }
+
+                Tetrahedron<3>* adjLeft = left->adjacentSimplex(2);
+                Tetrahedron<3>* adjRight = right->adjacentSimplex(3);
+                // We already know both gluing permutations must be 2 <-> 3.
+
+                auto [t0, t1, t2, t3] = ans.newTetrahedra<4>();
+
+                t0->join(0, t1, {2,3});
+                t0->join(1, t3, {2,3});
+                t0->join(3, t2, {2,3});
+                t1->join(1, t2, {2,3});
+                t2->join(0, t3, {2,3});
+                t3->join(2, t3, {2,3});
+
+                left->unjoin(2);
+                right->unjoin(3);
+                left->join(2, t2, {2,3});
+                right->join(3, t1, {2,3});
+                adjLeft->join(3, t0, {2,3});
+                adjRight->join(2, t1, {2,3});
             }
-            ++s;
-        } while (s != c);
-
-        if (missing[0] || missing[1]) {
-            // This component consists entirely of over-crossings or entirely
-            // of under-crossings.  As described in Jeff's documentation, we
-            // need to add an R1 twist to avoid unintentionally breaking the
-            // topology by collapsing a cycle of bigons in the complement.
-            // Here we do this by splicing in the four tetrahedra that would
-            // come from such a twist.
-            Tetrahedron<3> *left, *right;
-            if ((c.crossing()->sign() > 0 && c.strand() == 0) ||
-                    (c.crossing()->sign() < 0 && c.strand() == 1)) {
-                left = ctet[c.crossing()->index()][3];
-                right = ctet[c.crossing()->index()][0];
-            } else {
-                left = ctet[c.crossing()->index()][0];
-                right = ctet[c.crossing()->index()][1];
-            }
-
-            Tetrahedron<3>* adjLeft = left->adjacentSimplex(2);
-            Tetrahedron<3>* adjRight = right->adjacentSimplex(3);
-            // We already know both gluing permutations must be 2 <-> 3.
-
-            auto [t0, t1, t2, t3] = ans.newTetrahedra<4>();
-
-            t0->join(0, t1, {2,3});
-            t0->join(1, t3, {2,3});
-            t0->join(3, t2, {2,3});
-            t1->join(1, t2, {2,3});
-            t2->join(0, t3, {2,3});
-            t3->join(2, t3, {2,3});
-
-            left->unjoin(2);
-            right->unjoin(3);
-            left->join(2, t2, {2,3});
-            right->join(3, t1, {2,3});
-            adjLeft->join(3, t0, {2,3});
-            adjRight->join(2, t1, {2,3});
         }
     }
 
     // Account for any zero-crossing unknot components.
+    // Note: if breakOpen is non-null, it is guaranteed that there will be
+    // no such components.
     for (size_t i = 0; i < countTrivialComponents(); ++i) {
         // Insert a separate unknot complement.
         //
@@ -268,8 +336,6 @@ Triangulation<3> Link::complement(bool simplify) const {
     }
 
     // Done!
-    if (simplify)
-        ans.simplify();
     return ans;
 }
 

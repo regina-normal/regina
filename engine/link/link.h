@@ -3632,7 +3632,7 @@ class Link :
          * property of the specific link diagram.
          *
          * Assuming you pass \a simplify as \c true (the default), the
-         * resulting triangulation will typically be no internal vertices;
+         * resulting triangulation will typically have no internal vertices;
          * however, this is not guaranteed.
          *
          * Initially, each tetrahedron will be oriented according to a
@@ -3648,6 +3648,65 @@ class Link :
          * \return the complement of this link diagram.
          */
         Triangulation<3> complement(bool simplify = true) const;
+
+        /**
+         * Treats this as a long knot, and returns a triangulation of the
+         * complement with mixed real/ideal boundary.
+         *
+         * Conceptually, one can think of this routine as doing the following:
+         *
+         * - Break this knot open at the given arc, and embed the knot inside a
+         *   3-ball with the two free ends on the boundary of the ball (thus
+         *   turning this into a _long knot_);
+         *
+         * - Drill out the long knot from the 3-ball;
+         *
+         * - Triangulate the resulting space so that:
+         *
+         *   - the sphere bounding the ball is represented using four boundary
+         *     triangles with two points pinched together at some vertex \a v;
+         *
+         *   - this vertex \a v has annulus link;
+         *
+         *   - if we trunate \a v, then the resulting annulus follows the
+         *     part of boundary where the long knot was drilled out of the ball.
+         *
+         * The vertex \a v as described above will be invalid, since its link
+         * is an annulus.  Essentially, the real part of the boundary (the
+         * four boundary triangles) describes the sphere bounding the 3-ball,
+         * and the ideal part of the boundary (the link of \a v) describes the
+         * annulus bounding the long knot inside this ball.
+         *
+         * If you truncate \a v (e.g., by calling `complement.truncate(v)` or
+         * `complement.idealToFinite()`), then the result will be a valid
+         * triangulation of the knot complement with real boundary.
+         *
+         * As with complement(), each tetrahedron will be oriented according
+         * to a right-hand rule: the thumb of the right hand points from
+         * vertices 0 to 1, and the fingers curl around to point from vertices
+         * 2 to 3.  If you pass \a simplify as \c true, then Regina will
+         * attempt to simplify the triangulation to as few tetrahedra as
+         * possible: this may relabel the tetrahedra, though their
+         * orientations will be preserved.
+         *
+         * \pre This is a classical knot.  That is, the link diagram is not
+         * virtual, and has exactly one link component.
+         *
+         * \exception FailedPrecondition This link is empty, has multiple
+         * components, and/or is virtual (as opposed to classical).
+         *
+         * \param breakOpen indicates where to break open this knot diagram to
+         * produce a long knot.  See the StrandRef documentation for the
+         * convention on how arcs are represented using StrandRef objects.
+         * This may be a null reference (the default), in which case this
+         * routine will choose an arbitrary location to break the knot open.
+         * \param simplify \c true if and only if the resulting triangulation
+         * should be simplified to use as few tetrahedra as possible.
+         * \return the long knot complement with mixed real/ideal boundary,
+         * as described above.
+         */
+        Triangulation<3> longComplement(StrandRef breakOpen = {},
+            bool simplify = true) const;
 
         /**
          * Returns the untwisted positive or negative Whitehead double of this
@@ -6772,6 +6831,23 @@ class Link :
         bool internalR3(Crossing* crossing, int side, bool check, bool perform);
 
         /**
+         * A joint implementation of complement() and longComplement().
+         *
+         * If \a breakOpen is a null reference, then this routine will build
+         * the complement as described by complement(), without simplifying
+         * the resulting triangulation.
+         *
+         * If \a breakOpen is not a null reference, then this routine will
+         * build the long knot complement, as described by longComplement().
+         *
+         * \pre If \a breakOpen is non-null, then this is a classical knot
+         * diagram (not a link, not virtual) with at least one crossing.
+         *
+         * See complement() and longComplement() for further details.
+         */
+        Triangulation<3> internalComplement(StrandRef breakOpen) const;
+
+        /**
          * Compute the Kauffman bracket polynomial using a naive
          * algorithm that sums over all resolutions of all crossings.
          *
@@ -7273,6 +7349,13 @@ inline long Link::linking() const {
             "is not an integer: use linking2() instead");
     else
         return twice >> 1;
+}
+
+inline Triangulation<3> Link::complement(bool simplify) const {
+    Triangulation<3> ans = internalComplement({});
+    if (simplify)
+        ans.simplify();
+    return ans;
 }
 
 inline const Laurent<Integer>& Link::bracket(Algorithm alg,

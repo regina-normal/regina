@@ -551,7 +551,7 @@ call this routine in a new detached thread.
     regardless.
 
 Exception ``NotImplemented``:
-    This link is *so* large that the maximum possible strand ID cannot
+    This link is _so_ large that the maximum possible strand ID cannot
     fit into an ``int``. (On a typical machine where ``int`` is
     32-bit, this would require over a _billion_ crossings). Note that,
     if you have such a link, then this function (which is exponential
@@ -706,7 +706,7 @@ If this is a virtual (non-classical) diagram:
 * A virtual link diagram is embedded in some closed orientable surface
   *S* with positive genus. The triangulation that is returned will
   represent the complement of this link diagram in the thickened
-  surface ``S x I``. There will be two additional ideal vertices, one
+  surface ``S × I``. There will be two additional ideal vertices, one
   for each copy of *S* on the boundary. If the link diagram is
   disconnected, then the surface *S* that is used will be the
   connected sum of the individual closed orientable surfaces that host
@@ -719,8 +719,8 @@ complement (and indeed the genus of the surface *S*) is a property of
 the specific link diagram.
 
 Assuming you pass *simplify* as ``True`` (the default), the resulting
-triangulation will typically be no internal vertices; however, this is
-not guaranteed.
+triangulation will typically have no internal vertices; however, this
+is not guaranteed.
 
 Initially, each tetrahedron will be oriented according to a right-hand
 rule: the thumb of the right hand points from vertices 0 to 1, and the
@@ -728,9 +728,6 @@ fingers curl around to point from vertices 2 to 3. If you pass
 *simplify* as ``True``, then Regina will attempt to simplify the
 triangulation to as few tetrahedra as possible: this may relabel the
 tetrahedra, though their orientations will be preserved.
-
-This is the same triangulation that would be produced by passing this
-link to the Triangulation<3> constructor.
 
 Parameter ``simplify``:
     ``True`` if and only if the triangulation of the complement should
@@ -2730,7 +2727,7 @@ Exception ``FailedPrecondition``:
     This is a virtual (not classical) link diagram.
 
 Exception ``NotImplemented``:
-    This link is *so* large that the maximum possible strand ID cannot
+    This link is _so_ large that the maximum possible strand ID cannot
     fit into an ``int``. (On a typical machine where ``int`` is
     32-bit, this would require over a _billion_ crossings). Note that,
     if you have such a link, then this function (which is exponential
@@ -2813,7 +2810,7 @@ Exception ``FailedPrecondition``:
     This is a virtual (not classical) link diagram.
 
 Exception ``NotImplemented``:
-    This link is *so* large that the maximum possible strand ID cannot
+    This link is _so_ large that the maximum possible strand ID cannot
     fit into an ``int``. (On a typical machine where ``int`` is
     32-bit, this would require over a _billion_ crossings). Note that,
     if you have such a link, then this function (which is exponential
@@ -2915,7 +2912,7 @@ Exception ``FailedPrecondition``:
     This is a virtual (not classical) link diagram.
 
 Exception ``NotImplemented``:
-    This link is *so* large that the maximum possible strand ID cannot
+    This link is _so_ large that the maximum possible strand ID cannot
     fit into an ``int``. (On a typical machine where ``int`` is
     32-bit, this would require over a _billion_ crossings). Note that,
     if you have such a link, then this function (which is exponential
@@ -3242,7 +3239,7 @@ call this routine in a new detached thread.
     regardless.
 
 Exception ``NotImplemented``:
-    This link is *so* large that the maximum possible strand ID cannot
+    This link is _so_ large that the maximum possible strand ID cannot
     fit into an ``int``. (On a typical machine where ``int`` is
     32-bit, this would require over a _billion_ crossings). Note that,
     if you have such a link, then this function (which is exponential
@@ -3462,6 +3459,69 @@ The algorithm to compute linking number is linear time.
 
 Returns:
     twice the linking number.)doc";
+
+// Docstring regina::python::doc::Link_::longComplement
+static const char *longComplement =
+R"doc(Treats this as a long knot, and returns a triangulation of the
+complement with mixed real/ideal boundary.
+
+Conceptually, one can think of this routine as doing the following:
+
+* Break this knot open at the given arc, and embed the knot inside a
+  3-ball with the two free ends on the boundary of the ball (thus
+  turning this into a _long knot_);
+
+* Drill out the long knot from the 3-ball;
+
+* Triangulate the resulting space so that:
+
+* the sphere bounding the ball is represented using four boundary
+  triangles with two points pinched together at some vertex *v*;
+
+* this vertex *v* has annulus link;
+
+* if we trunate *v*, then the resulting annulus follows the part of
+  boundary where the long knot was drilled out of the ball.
+
+The vertex *v* as described above will be invalid, since its link is
+an annulus. Essentially, the real part of the boundary (the four
+boundary triangles) describes the sphere bounding the 3-ball, and the
+ideal part of the boundary (the link of *v*) describes the annulus
+bounding the long knot inside this ball.
+
+If you truncate *v* (e.g., by calling ``complement.truncate(v)`` or
+``complement.idealToFinite()``), then the result will be a valid
+triangulation of the knot complement with real boundary.
+
+As with complement(), each tetrahedron will be oriented according to a
+right-hand rule: the thumb of the right hand points from vertices 0 to
+1, and the fingers curl around to point from vertices 2 to 3. If you
+pass *simplify* as ``True``, then Regina will attempt to simplify the
+triangulation to as few tetrahedra as possible: this may relabel the
+tetrahedra, though their orientations will be preserved.
+
+Precondition:
+    This is a classical knot. That is, the link diagram is not
+    virtual, and has exactly one link component.
+
+Exception ``FailedPrecondition``:
+    This link is empty, has multiple components, and/or is virtual (as
+    opposed to classical).
+
+Parameter ``breakOpen``:
+    indicates where to break open this knot diagram to produce a long
+    knot. See the StrandRef documentation for the convention on how
+    arcs are represented using StrandRef objects. This may be a null
+    reference (the default), in which case this routine will choose an
+    arbitrary location to break the knot open.
+
+Parameter ``simplify``:
+    ``True`` if and only if the resulting triangulation should be
+    simplified to use as few tetrahedra as possible.
+
+Returns:
+    the long knot complement with mixed real/ideal boundary, as
+    described above.)doc";
 
 // Docstring regina::python::doc::Link_::makeAlternating
 static const char *makeAlternating =
@@ -5012,9 +5072,9 @@ upper and lower strands.
 
 * For virtual links, let *S* denote the closed orientable surface in
   which the link diagram embeds, and think of this as a link in the
-  thickened surface ``S x I``. Then this operation performs an
-  orientation-preserving homeomorphism of ``S x I`` that switches the
-  boundaries ``S x {0}`` and ``S x {1}``.
+  thickened surface ``S × I``. Then this operation performs an
+  orientation-preserving homeomorphism of ``S × I`` that switches the
+  boundaries ``S × {0}`` and ``S × {1}``.
 
 Some authors refer to this operation as a _flip_. In the language of
 Jeremy Green's virtual knot tables, this is the composition of both a

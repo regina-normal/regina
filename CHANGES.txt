@@ -294,6 +294,7 @@ Version 7.4  [ (to be announced) ]
             - New routine makeAlternating().
             - New routine seifertCircles().
             - New routine whiteheadDouble().
+            - New routine longComplement().
             - New routines isConnected(), diagramComponents(),
               countDiagramComponents(), and diagramComponentIndices().
             - New routines insertLink() and moveContentsTo().
