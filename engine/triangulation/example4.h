@@ -268,33 +268,77 @@ class Example<4> : public detail::ExampleBase<4> {
          * Let `M` be the given 3-manifold, with real boundary `∂M`.  This
          * constructs a 4-manifold from `M` as follows:
          *
-         * - First we build the product `M × S1`.
+         * - First we build the product `M × S1` in a similar way to s1Bundle().
+         *   That is: we build a tetrahedral prism for each original tetrahedron
+         *   of \a M, glue the top and bottom tetrahedra of each prism together,
+         *   and glue the walls of the prisms together according to the gluings
+         *   between the original tetrahedra of \a M.
          *
          * - Then, for each point `b` on the real boundary `∂M`, we collapse
          *   the fibre `b × S1` to a single point.  (Equivalently, we attach a
          *   copy of `∂M × D2` to the product `M × S1` so that, for each point
          *   `b` on the boundary `∂M`, the fibre `b × S1` becomes the boundary
-         *   of the corresponding disc `b × D2`.)
+         *   of the corresponding disc `b × D2`.)  We implement this as follows:
+         *   for each boundary facet of \a M, we fold the corresponding prism
+         *   wall in half, so that the top half folds onto the bottom.
          *
-         * The second step only acts on real boundary; that is, points `b`
-         * that lie on boundary triangles of `M`.  It ignores ideal boundary,
-         * in the sense that ideal vertices will just be transformed as part
-         * of the product `M × S1` (the first step), without the subsequent
-         * collapse/filling operation (the second step).  This means that any
-         * ideal vertices of `M` will become invalid edges of the resulting
-         * 4-maifold triangulation.
+         * - If one or more of boundary facets of \a M are locked, then the
+         *   corresponding prism walls will _not_ folded onto themselves;
+         *   that is, the fibres over those parts of the boundary will _not_ be
+         *   collapsed.  See the section below on locks for further details.
          *
-         * The product will contain 82 pentachora for each original tetrahedron
-         * of \a M, and will contain many internal vertices.  It is highly
-         * recommended that you call Triangulation<4>::simplify() afterwards
-         * if you do not need to preserve the combinatorial structure.
+         * Regarding real versus ideal boundary:
+         *
+         * - The second step (collapsing fibres) only acts on _real_ boundary;
+         *   that is, points `b` that lie on boundary triangles of `M`.  It
+         *   ignores ideal boundary, in the sense that ideal vertices will just
+         *   be transformed as part of the product `M × S1` (the first step),
+         *   without the subsequent collapse/filling operation.
+         *
+         * - As a result, any ideal vertices of `M` will produce invalid edges
+         *   in the resulting 4-maifold triangulation (i.e., edges whose links
+         *   are the same surfaces as the links of the original ideal vertices
+         *   of `M`).
+         *
+         * Like s1Bundle(), the resulting triangulation will be very large:
+         * it creates 82 pentachora for each original tetrahedron of \a M.
+         * It is highly recommended that you call Triangulation<4>::simplify()
+         * afterwards if you do not need to preserve the combinatorial
+         * structure.
+         *
+         * This routine handles locks as follows:
+         *
+         * - For any simplex in \a base that is locked, all of the pentachora
+         *   and internal facets of the corresponding prism will also be locked,
+         *   as well as the two tetrahedra at each end of the prism (which will
+         *   be glued together, as explained above).
+         *
+         * - For any internal triangular facet of \a base that is locked, all
+         *   of the tetrahedral facets on the corresponding prism wall(s) will
+         *   be locked.
+         *
+         * - For any boundary facet of \a base that is locked, the corresponding
+         *   prism wall will _not_ be folded onto itself (i.e, the corresponding
+         *   fibres will _not_ be collapsed).  Instead, all of the tetrahedral
+         *   facets on that prism wall will be locked, and will remain as
+         *   boundary facets of the final 4-dimensional triangulation.
+         *
+         * - If \a base has a mix of locked and unlocked boundary facets, you
+         *   should aim to ensure that the locked and unlocked regions are
+         *   separated by embedded curves in the boundary of \a M (i.e., there
+         *   are no "pinch points" where the local picture has two or more
+         *   locked regions meeting two or more unlocked regions).  Otherwise
+         *   you may find that these pinch points create invalid edges in the
+         *   resulting 4-manifold triangulation (specifically, edges whose
+         *   links are 2-spheres with two or more punctures).
          *
          * Note that the current construction does _not_ give an oriented
          * triangulation (due to the specific choice of labelling); this may
          * change in a future version of Regina.
          *
          * \param base the 3-manifold triangulation \a M, as described above.
-         * \return the 4-manifold obtained by spinning \a M around its boundary.
+         * \return the 4-manifold obtained by spinning \a M around its boundary,
+         * as described above.
          */
         static Triangulation<4> boundarySpin(const Triangulation<3>& base);
 

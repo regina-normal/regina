@@ -464,7 +464,7 @@ Triangulation<4> Example<4>::boundarySpin(const Triangulation<3>& base) {
         prism[i].glueInternally();
     }
 
-    // Glue adjacent prisms together.
+    // Glue adjacent prisms together, and sort out locks.
     for (size_t i = 0; i < n; ++i) {
         const Tetrahedron<3>* tet = base.tetrahedron(i);
         for (int face = 0; face < 4; ++face) {
@@ -475,9 +475,13 @@ Triangulation<4> Example<4>::boundarySpin(const Triangulation<3>& base) {
                         (adjIndex == i && tet->adjacentFace(face) < face))
                     continue;
 
-                // Glue the prisms together!
                 prism[i].glueAdjacent(prism[adjIndex], face,
                     tet->adjacentGluing(face));
+
+                if (tet->isFacetLocked(face))
+                    prism[i].lockWall(face);
+            } else if (tet->isFacetLocked(face)) {
+                prism[i].lockWall(face);
             } else {
                 // We have a boundary face of the 3-manifold: fold the
                 // corresponding wall of the prism onto itself to produce the
@@ -485,6 +489,8 @@ Triangulation<4> Example<4>::boundarySpin(const Triangulation<3>& base) {
                 prism[i].foldWall(face);
             }
         }
+        if (tet->isLocked())
+            prism[i].lockPrism();
     }
 
     return ans;
