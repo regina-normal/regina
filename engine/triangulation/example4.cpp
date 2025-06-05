@@ -325,6 +325,41 @@ namespace {
                 }
             }
         }
+
+        /**
+         * Locks all pentachora in this prism.
+         */
+        void lockPentachora() {
+            for (int half = 0; half < 2; ++half) {
+                bdry[half]->lock();
+                for (int face = 0; face < 4; ++face) {
+                    wallBase3[half][face]->lock();
+                    for (int k = 0; k < 4; ++k)
+                        if (k != face) {
+                            wallBase2[half][face][k]->lock();
+                            for (int l = 0; l < 4; ++l)
+                                if (l != face && l != k)
+                                    wallSide[half][face][k][l]->lock();
+                        }
+                }
+            }
+        }
+
+        /**
+         * Locks all facets on the given wall of this prism.
+         */
+        void lockWall(int face) {
+            for (int half = 0; half < 2; ++half) {
+                wallBase3[half][face]->lockFacet(4);
+                for (int k = 0; k < 4; ++k)
+                    if (k != face) {
+                        wallBase2[half][face][k]->lockFacet(4);
+                        for (int l = 0; l < 4; ++l)
+                            if (l != face && l != k)
+                                wallSide[half][face][k][l]->lockFacet(4);
+                    }
+            }
+        }
     };
 }
 
