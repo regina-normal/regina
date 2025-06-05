@@ -653,7 +653,10 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
             rdoc::idealToFinite)
         .def("finiteToIdeal", &Triangulation<3>::finiteToIdeal,
             rbase::finiteToIdeal)
-        .def("truncate", &Triangulation<3>::truncate, rdoc::truncate)
+        .def("truncate", &Triangulation<3>::truncate,
+            pybind11::arg("vertex"),
+            pybind11::arg("lockBoundary") = false,
+            rdoc::truncate)
         .def("subdivide", &Triangulation<3>::subdivide, rbase::subdivide)
         .def("barycentricSubdivision", // deprecated
             &Triangulation<3>::subdivide, rbase::barycentricSubdivision)

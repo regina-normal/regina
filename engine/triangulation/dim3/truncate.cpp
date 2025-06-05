@@ -69,7 +69,7 @@ namespace {
          * triangulation, and glues them together so that they completely
          * triangulate a single outer tetrahedron.
          */
-        inline void build(Triangulation<3>& tri) {
+        inline void build(Triangulation<3>& tri, bool lockBoundary) {
             // Create the inner tetrahedra.
             for (int i = 0; i < 4; ++i) {
                 if (keepTip[i])
@@ -87,6 +87,8 @@ namespace {
             for (int i = 0; i < 4; ++i)
                 if (keepTip[i])
                     tip[i]->join(i, interior[i], {});
+                else if (lockBoundary)
+                    interior[i]->lockFacet(i);
 
             for (int i = 0; i < 4; ++i)
                 for (int j = 0; j < 4; ++j)
@@ -107,7 +109,7 @@ namespace {
     };
 }
 
-bool Triangulation<3>::truncateInternal(Vertex<3>* vertex) {
+bool Triangulation<3>::truncateInternal(Vertex<3>* vertex, bool lockBoundary) {
     // subTet manages the subdivision of each original (outer) tetrahedron
     // into many smaller (inner) tetrahedra.  It also records which of these
     // inner tetrahedra should _not_ be created because the corresponding
@@ -153,7 +155,7 @@ bool Triangulation<3>::truncateInternal(Vertex<3>* vertex) {
     // The truncation happens at this point, since the "tip" tetrahedra around
     // each truncated vertex will not be created.
     for (auto& sub : subTet)
-        sub.build(staging);
+        sub.build(staging, lockBoundary);
 
     // Glue the inner tetrahedra where necessary across the facet gluings of
     // the outer tetrahedra.
