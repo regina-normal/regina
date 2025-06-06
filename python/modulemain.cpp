@@ -366,6 +366,7 @@ Returns:
     addPacketClasses(m);
     addDim2Classes(m);
     addTriangulationClasses(m);
+    addLinkClasses(m); // Needs to come _before_ dim4 classes
     addDim4Classes(m);
     addGenericClasses(m);
     addCensusClasses(m);
@@ -378,7 +379,6 @@ Returns:
     addSurfaceClasses(m);
     addHypersurfaceClasses(m);
     addTreewidthClasses(m);
-    addLinkClasses(m);
     addEnumerateClasses(m);
 
     // This routine allows the user to import sage-related hacks, which

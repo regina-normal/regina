@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "link/link.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "triangulation/example4.h"
@@ -505,6 +506,29 @@ Triangulation<4> Example<4>::bundleWithMonodromy(
         ans.pentachoron(i)->join(4, ans.pentachoron(monodromy.simpImage(i) + n),
             Perm<5>::extend(monodromy.facetPerm(i)));
 
+    return ans;
+}
+
+Triangulation<4> Example<4>::spun(const Link& knot, StrandRef breakOpen) {
+    Triangulation<3> c = knot.longComplement();
+
+    // Locate the invalid vertex in c.
+    Vertex<3>* invalid = nullptr;
+    for (auto v : c.vertices())
+        if (! v->isValid()) {
+            invalid = v;
+            break;
+        }
+    if (! invalid)
+        throw ImpossibleScenario("longComplement() did not produce an "
+            "invalid vertex");
+
+    c.truncate(invalid, true /* lock the truncation surface */);
+
+    Triangulation<4> ans = boundarySpin(c);
+    ans.unlockAll();
+    ans.finiteToIdeal();
+    // Do not simplify (for now).  Let the user worry about this.
     return ans;
 }
 

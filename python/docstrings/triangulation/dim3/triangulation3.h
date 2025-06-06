@@ -3870,9 +3870,20 @@ real boundary component made from triangles.
 If you wish to truncate _all_ ideal (and/or invalid) vertices of the
 triangulation, you can call idealToFinite() instead.
 
-This routine induces a subdivision of the entire triangulation,
-followed by a simplification. Therefore _any_ simplex and/or facet
-locks will prevent the operation from taking place.
+Regarding locks:
+
+* This routine induces a subdivision of the entire triangulation.
+  Therefore any simplex and/or facet locks that exist _before_ this
+  routine is run will prevent the operation from taking place, instead
+  causing a LockViolation to be thrown.
+
+* If the optional argument *lockBoundary* is passed as ``True``, then
+  this routine will lock all boundary facets along the surface where
+  the truncation took place (i.e., the link of the original vertex).
+  This may be useful if you wish to distinguish between "old" boundary
+  (real boundary that existed before the truncation) and "new"
+  boundary (real boundary that was created as a result of the
+  truncation).
 
 Exception ``LockViolation``:
     This triangulation contains at least one locked top-dimensional
@@ -3881,7 +3892,7 @@ Exception ``LockViolation``:
     Simplex<3>::lockFacet() for further details on how such locks work
     and what their implications are.
 
-Parameter ``v``:
+Parameter ``vertex``:
     the vertex to truncate.)doc";
 
 // Docstring regina::python::doc::Triangulation_::turaevViro

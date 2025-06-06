@@ -41,6 +41,7 @@
 #endif
 
 #include "regina-core.h"
+#include "link/link.h"
 #include "triangulation/dim4.h"
 #include "triangulation/detail/example.h"
 
@@ -187,7 +188,7 @@ class Example<4> : public detail::ExampleBase<4> {
          */
 
         /**
-         * \name Constructions from 3-Manifold Triangulations
+         * \name Constructions from 3-Manifold Triangulations and Links
          */
         /*@{*/
 
@@ -392,9 +393,49 @@ class Example<4> : public detail::ExampleBase<4> {
             const Triangulation<3>& base,
             const Isomorphism<3>& monodromy);
 
+        /**
+         * Returns an ideal triangulation of the complement of the 2-knot obtained by
+         * spinning the given 1-knot (without twisting).
+         * The knot to be spun is passed as the first
+         * argument; the second (optional) argument allows you to specify
+         * where the knot should be broken open when carrying out the
+         * spinning construction.
+         *
+         * The spinning construction is described by Artin in "Zur Isotopie
+         * zweidimensionaler Flächen im R_4", Abh. Math. Sem. Univ. Hamburg 4
+         * (1925), no. 1, 174-177.
+         *
+         * \warning The resulting triangulation will typically contain
+         * thousands, or even tens of thousands, of pentachora, even when
+         * \a knot has very few crossings.  It will also typically contain
+         * many internal vertices, as well as the one ideal vertex representing
+         * the 2-knot itself.  You will therefore certainly want to simplify
+         * the resulting 4-manifold triangulation; moreover, this simplification
+         * could well take some time.  In the end you might well reach a very
+         * small number of pentachora (e.g., for the trefoil you can get the
+         * number of pentachora down to six); however, this will _not_ be fast.
+         *
+         * \pre The argument \a knot is a classical knot diagram.  That is, the
+         * link diagram is not virtual, and has exactly one link component.
+         *
+         * \exception FailedPrecondition The given link diagram is empty, has
+         * multiple components, and/or is virtual (as opposed to classical).
+         *
+         * \param knot the knot to be spun.
+         * \param breakOpen indicates where to break open the given knot diagram
+         * when performing the spinning construction.  See the StrandRef
+         * documentation for the convention on how arcs are represented using
+         * StrandRef objects.  This may be a null reference (the default), in
+         * which case this routine will choose an arbitrary location to break
+         * the knot open.
+         * \return an ideal triangulation of the resulting 2-knot.
+         */
+        static Triangulation<4> spun(const Link& knot,
+            StrandRef breakOpen = {});
+
         /*@}*/
         /**
-         * (end: Constructions from 3-Manifold Triangulations)
+         * (end: Constructions from 3-Manifold Triangulations and Links)
          */
 };
 
