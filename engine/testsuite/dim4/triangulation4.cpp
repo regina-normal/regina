@@ -1081,9 +1081,9 @@ static void verifyMove44(const Triangulation<4>& tri, const char* name) {
         EXPECT_EQ(alt.isClosed(), tri.isClosed());
         EXPECT_EQ(alt.countBoundaryComponents(), tri.countBoundaryComponents());
         EXPECT_EQ(alt.eulerCharTri(), tri.eulerCharTri());
-        EXPECT_EQ(alt.eulerCharManifold(), tri.eulerCharManifold());
 
         if (tri.isValid()) {
+            EXPECT_EQ(alt.eulerCharManifold(), tri.eulerCharManifold());
             EXPECT_EQ(alt.homology<1>(), tri.homology<1>());
             EXPECT_EQ(alt.homology<2>(), tri.homology<2>());
         }
@@ -1148,11 +1148,14 @@ static void verifySnapEdge(const Triangulation<4>& tri, const char* name) {
         EXPECT_EQ(alt.isClosed(), tri.isClosed());
         EXPECT_EQ(alt.countBoundaryComponents(), tri.countBoundaryComponents());
         EXPECT_EQ(alt.eulerCharTri(), tri.eulerCharTri());
-        EXPECT_EQ(alt.eulerCharManifold(), tri.eulerCharManifold());
 
-        if (tri.size() <= HOMOLOGY_THRESHOLD && tri.isValid()) {
-            EXPECT_EQ(alt.homology<1>(), tri.homology<1>());
-            EXPECT_EQ(alt.homology<2>(), tri.homology<2>());
+        if (tri.isValid()) {
+            EXPECT_EQ(alt.eulerCharManifold(), tri.eulerCharManifold());
+
+            if (tri.size() <= HOMOLOGY_THRESHOLD) {
+                EXPECT_EQ(alt.homology<1>(), tri.homology<1>());
+                EXPECT_EQ(alt.homology<2>(), tri.homology<2>());
+            }
         }
     }
 }
@@ -1215,11 +1218,13 @@ static void verifyIdealToFinite(const Triangulation<4>& tri, const char* name) {
 
             // Subdivisions can change these properties for
             // invalid triangulations.
-            EXPECT_EQ(other.eulerCharManifold(), tri.eulerCharManifold());
             EXPECT_EQ(other.countBoundaryComponents(),
                     tri.countBoundaryComponents());
 
-            // Homology can only be computed for valid triangulations.
+            // The following properties (Euler characteristic of the manifold
+            // and homology groups) can only be computed for valid triangulations.
+            EXPECT_EQ(other.eulerCharManifold(), tri.eulerCharManifold());
+
             other.simplify();
 
             EXPECT_EQ(other.homology<1>(), tri.homology<1>());
