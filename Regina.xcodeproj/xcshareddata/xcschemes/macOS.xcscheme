@@ -75,7 +75,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
-      debugDocumentVersioning = "YES">
+      debugDocumentVersioning = "NO">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
