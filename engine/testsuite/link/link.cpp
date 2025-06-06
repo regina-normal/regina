@@ -1632,6 +1632,66 @@ TEST_F(LinkTest, complement) {
     verifyComplementTrefoilUnknot(trefoil_unknot_overlap);
 }
 
+static void verifyLongComplement(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    if (link.countComponents() != 1 || ! link.isClassical()) {
+        EXPECT_THROW(link.longComplement(), regina::FailedPrecondition);
+        return;
+    }
+
+    Triangulation<3> comp = link.longComplement();
+
+    EXPECT_EQ(comp.countComponents(), 1);
+    EXPECT_TRUE(comp.isOrientable());
+    EXPECT_TRUE(comp.isOriented());
+    EXPECT_FALSE(comp.isValid());
+    EXPECT_TRUE(comp.hasBoundaryFacets());
+    EXPECT_FALSE(comp.isIdeal());
+
+    // Ensure there is a single invalid vertex, and that its link is an annulus.
+    regina::Vertex<3>* invalid = nullptr;
+    for (auto v : comp.vertices()) {
+        if (invalid)
+            EXPECT_TRUE(v->isValid());
+        else if (! v->isValid())
+            invalid = v;
+    }
+    EXPECT_TRUE(invalid);
+    if (invalid) {
+        // For an invalid vertex (whose link must be a surface with one or
+        // more punctures), the following tests are enough to ensure that the
+        // link is an annulus.
+        EXPECT_TRUE(invalid->isLinkOrientable());
+        EXPECT_EQ(invalid->linkEulerChar(), 0);
+    }
+
+    // Verify that the link groups look the same also.
+    // Don't do this for enormous link diagrams.
+    if (link.size() <= 20)
+        verifyIsomorphic(link.group(), comp.group());
+
+    // Truncating the invalid vertex should give us back the ordinary
+    // complement.
+    if (invalid) {
+        comp.truncate(invalid); // may break orientedness
+        comp.simplify();
+
+        EXPECT_EQ(comp.countComponents(), 1);
+        EXPECT_TRUE(comp.isOrientable());
+        EXPECT_TRUE(comp.isValid());
+        EXPECT_FALSE(comp.isIdeal());
+        EXPECT_TRUE(comp.hasBoundaryFacets());
+        EXPECT_EQ(comp.countBoundaryComponents(), 1);
+        EXPECT_TRUE(comp.boundaryComponent(0)->isOrientable());
+        EXPECT_EQ(comp.boundaryComponent(0)->eulerChar(), 0);
+    }
+}
+
+TEST_F(LinkTest, longComplement) {
+    testManualCases(verifyLongComplement);
+}
+
 static void verifyR1Count(const TestCase& test, size_t up, size_t down) {
     // Most of the time, up == #crossings * 8.  However, there will be more
     // moves available if the link has any zero-crossing unknot components.
