@@ -74,14 +74,14 @@ template <>
 class Face<4, 0> : public detail::FaceBase<4, 0> {
     private:
         Triangulation<3>* link_;
-            /**< The link of this vertex, given as a full-blown
-                 3-manifold triangulation.  It is guaranteed that 3-sphere
-                 recognition has already been run over this triangulation
-                 (and so future 3-sphere queries will be very fast).
+            /**< A triangulation of the vertex link.  This will only be
+                 constructed on demand; until then it will be null.
                  We keep this as a pointer to avoid instantiating the
                  lower-dimensional triangulation classes here in the header. */
         bool ideal_;
             /**< Is this vertex ideal? */
+        bool realBoundary_;
+            /**< Is this vertex contained in one or more boundary tetrahedra? */
 
     public:
         /**
@@ -207,11 +207,8 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
 // Inline functions for Vertex<4>
 
 inline Face<4, 0>::Face(Component<4>* component) :
-        detail::FaceBase<4, 0>(component), link_(nullptr), ideal_(false) {
-}
-
-inline const Triangulation<3>& Face<4, 0>::buildLink() const {
-    return *link_;
+        detail::FaceBase<4, 0>(component), link_(nullptr),
+        ideal_(false), realBoundary_(false) {
 }
 
 inline bool Face<4, 0>::isIdeal() const {

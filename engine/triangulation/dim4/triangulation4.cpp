@@ -72,7 +72,7 @@ long Triangulation<4>::eulerCharManifold() const {
                 // vertex links in the 3-manifold boundary must be
                 // spheres or discs.  We can therefore use V - E + F - T
                 // on this boundary component.
-                ans += bc->vertex(0)->link_->eulerCharTri() - 1;
+                ans += bc->vertex(0)->buildLink().eulerCharTri() - 1;
             }
     }
 

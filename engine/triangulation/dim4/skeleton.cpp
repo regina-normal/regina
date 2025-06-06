@@ -51,7 +51,8 @@ void Triangulation<4>::calculateSkeleton() {
 
     calculateVertexLinks();
         // Sets:
-        // - Vertex<4>::link_
+        // - Vertex<4>::realBoundary_
+        // - Vertex<4>::link_, but only where necessary
         // - valid_ and Vertex<4>::valid_ in the case of bad vertex links
         // - valid_ and Edge<4>::invalid_ in the case of bad edge links
         // - Vertex<4>::ideal_ and Component<4>::ideal_
@@ -78,71 +79,22 @@ void Triangulation<4>::calculateVertexLinks() {
     if (n == 0)
         return;
 
-    // Construct the vertex linking tetrahedra, and insert them into each
-    // vertex link in the correct order as described by the
-    // Vertex<4>::buildLink() docs.
-    auto* tet = new Tetrahedron<3>*[5 * n];
-
-    for (Vertex<4>* vertex : vertices()) {
-        vertex->link_ = new Triangulation<3>();
-        for (auto& emb : *vertex)
-            tet[5 * emb.pentachoron()->index() + emb.vertex()]
-                = vertex->link_->newTetrahedron();
-    }
-
-    // Now glue the tetrahedra together correctly.
-    Pentachoron<4> *pent, *adjPent;
-    long pentIdx, adjPentIdx;
-    int vertexIdx, adjVertexIdx;
-    int exitFacet, adjFacet;
-
-    long index = 0; // Index into the tet[] array.
-    for (pentIdx = 0; pentIdx < n; ++pentIdx) {
-        pent = simplices_[pentIdx];
-        for (vertexIdx = 0; vertexIdx < 5; ++vertexIdx) {
-            // Glue this piece of vertex link to any adjacent pieces of
-            // vertex link.
-            for (exitFacet = 0; exitFacet < 5; ++exitFacet) {
-                if (exitFacet == vertexIdx)
-                    continue;
-
-                adjPent = pent->adjacentPentachoron(exitFacet);
-                if (! adjPent)
-                    continue;
-
-                // Make sure we perform each gluing in one direction only.
-                adjPentIdx = adjPent->markedIndex();
-                if (adjPentIdx > pentIdx)
-                    continue;
-                adjFacet = pent->adjacentFacet(exitFacet);
-                if (adjPentIdx == pentIdx && adjFacet > exitFacet)
-                    continue;
-
-                // This tetrahedron is adjacent to a previously-seen
-                // tetrahedron.  Make the gluing.
-                adjVertexIdx = pent->adjacentGluing(exitFacet)[vertexIdx];
-                tet[index]->join(
-                    std::get<3>(pent->mappings_)[vertexIdx].pre(exitFacet),
-                    tet[5 * adjPentIdx + adjVertexIdx],
-                    Perm<4>::contract(
-                        std::get<3>(adjPent->mappings_)[adjVertexIdx].inverse() *
-                        pent->adjacentGluing(exitFacet) *
-                        std::get<3>(pent->mappings_)[vertexIdx]));
-            }
-            ++index;
-        }
-    }
+    for (auto bc : boundaryComponents())
+        if (bc->isReal())
+            for (auto v : bc->vertices())
+                v->realBoundary_ = true;
 
     // Look at each vertex link and see what it says about this 4-manifold
     // triangulation.
     long foundIdeal = 0; // -1 if we ever find an invalid vertex
     long remaining = countVertices();
     for (Vertex<4>* vertex : vertices()) {
-        if (vertex->link_->hasBoundaryTriangles()) {
-            // It's a 3-ball or nothing.
-            // In particular, if vertexLinkSummary_ >= 0 then the
-            // triangulation is valid and therefore this must be a 3-ball.
-            if (vertexLinkSummary_ < 0 && ! vertex->link_->isBall()) {
+        if (vertex->realBoundary_) {
+            // This vertex belongs to one or more boundary tetrahedra.
+            // If the link is not a 3-ball then this vertex is invalid.
+            // In particular, if vertexLinkSummary_ >= 0 then all vertices
+            // are valid and therefore this must be a 3-ball.
+            if (vertexLinkSummary_ < 0 && ! vertex->buildLink().isBall()) {
                 valid_ = vertex->component_->valid_ =  false;
                 vertex->whyInvalid_.value |= Vertex<4>::INVALID_LINK;
                 foundIdeal = -1;
@@ -150,10 +102,13 @@ void Triangulation<4>::calculateVertexLinks() {
                 // tetrahedra, and so already belongs to a boundary component.
             }
         } else {
-            // The vertex link has no boundary triangles, which means this
-            // vertex is not part of any boundary tetrahedra.
+            // This vertex is not part of any boundary tetrahedra.
             // Let's see what we've got.
-            if ((! vertex->link_->isValid()) || vertex->link_->isIdeal()) {
+            // Note: the first test below is for invalid vertices, and so
+            // if vertexLinkSummary_ >= 0 we can skip that test entirely.
+            if (vertexLinkSummary_ < 0 &&
+                    ((! vertex->buildLink().isValid()) ||
+                     vertex->buildLink().isIdeal())) {
                 // Bapow.
                 valid_ = vertex->component_->valid_ =  false;
                 vertex->whyInvalid_.value |= Vertex<4>::INVALID_LINK;
@@ -184,7 +139,7 @@ void Triangulation<4>::calculateVertexLinks() {
                         // case we must explicitly test isSphere()):
                         ((vertexLinkSummary_ < 0 ||
                                 foundIdeal < vertexLinkSummary_) &&
-                            ! vertex->link_->isSphere())) {
+                            ! vertex->buildLink().isSphere())) {
                     // We have an ideal vertex.
                     vertex->component()->ideal_ = vertex->ideal_ = true;
                     if (foundIdeal >= 0)
@@ -212,7 +167,7 @@ void Triangulation<4>::calculateVertexLinks() {
         // spherical double cover at the vertex link).  We detect these
         // cases separately under calculateEdgeLinks() below.
         if (! vertex->isValid()) {
-            for (Vertex<3>* v : vertex->link_->vertices()) {
+            for (Vertex<3>* v : vertex->buildLink().vertices()) {
                 auto type = v->linkType();
                 if (type != Vertex<3>::Link::Sphere &&
                         type != Vertex<3>::Link::Disc) {
@@ -245,8 +200,6 @@ void Triangulation<4>::calculateVertexLinks() {
         --remaining;
     }
 
-    delete[] tet;
-
     vertexLinkSummary_ = foundIdeal;
 }
 
@@ -265,19 +218,16 @@ void Triangulation<4>::calculateEdgeLinks() {
 void Triangulation<4>::cloneSkeleton(const Triangulation& src) {
     TriangulationBase<4>::cloneSkeleton(src);
 
-    vertexLinkSummary_ = src.vertexLinkSummary_;
+    // Leave Vertex::link_ and Edge::link_ as built-on-demand for now.
 
+    vertexLinkSummary_ = src.vertexLinkSummary_;
     {
         auto me = vertices().begin();
         auto you = src.vertices().begin();
         for ( ; me != vertices().end(); ++me, ++you) {
-            (*me)->link_ = new Triangulation<3>(*((*you)->link_));
             (*me)->ideal_ = (*you)->ideal_;
         }
     }
-
-    // Leave Edge::link_ as built-on-demand for now.
-
     {
         auto me = components_.begin();
         auto you = src.components_.begin();

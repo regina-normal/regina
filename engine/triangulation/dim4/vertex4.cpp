@@ -41,6 +41,67 @@ Face<4, 0>::~Face() {
     delete link_;
 }
 
+const Triangulation<3>& Face<4, 0>::buildLink() const {
+    if (! link_) {
+        // Note: we need to insert tetrahedra in the correct order, as
+        // specified in the buildLink() documentation.
+
+        // Build a map from (pentachoron, vertex) pairs to indices into
+        // embeddings().
+        FixedArray<size_t> map(5 * triangulation().size());
+        {
+            size_t i = 0;
+            for (const auto& emb : embeddings())
+                map[5 * emb.simplex()->index() + emb.face()] = i++;
+        }
+
+        // Now build the triangulation.
+        auto* ans = new Triangulation<3>();
+        ans->newTetrahedra(degree());
+        for (const auto& emb : embeddings()) {
+            // Glue this piece of vertex link to any adjacent pieces of
+            // vertex link.
+            size_t pentIdx = emb.simplex()->index();
+            for (int f = 0; f < 5; ++f) {
+                if (f == emb.face())
+                    continue;
+
+                auto adjPent = emb.simplex()->adjacentPentachoron(f);
+                if (! adjPent)
+                    continue;
+
+                // Make sure we perform each gluing in one direction only.
+                size_t adjPentIdx = adjPent->index();
+                if (adjPentIdx > pentIdx)
+                    continue;
+                int adjFacet = emb.simplex()->adjacentFacet(f);
+                if (adjPentIdx == pentIdx && adjFacet > f)
+                    continue;
+
+                // This tetrahedron is adjacent to a previously-seen
+                // tetrahedron.  Make the gluing.
+                int adjVertexIdx = emb.simplex()->adjacentGluing(f)[emb.face()];
+                Perm<5> tetVertices =
+                    emb.simplex()->tetrahedronMapping(emb.face());
+                Perm<5> adjTetVertices =
+                    adjPent->tetrahedronMapping(adjVertexIdx);
+                ans->tetrahedron(map[5 * pentIdx + emb.face()])->join(
+                    tetVertices.pre(f),
+                    ans->tetrahedron(map[5 * adjPentIdx + adjVertexIdx]),
+                    Perm<4>::contract(
+                        adjTetVertices.inverse() *
+                        emb.simplex()->adjacentGluing(f) *
+                        tetVertices));
+            }
+        }
+
+        // This is a construct-on-demand member; cast away constness to
+        // set it here.
+        const_cast<Vertex<4>*>(this)->link_ = ans;
+    }
+    return *link_;
+}
+
 Isomorphism<4> Face<4, 0>::buildLinkInclusion() const {
     Isomorphism<4> inclusion(degree());
 
