@@ -52,12 +52,15 @@ Triangulation<3> Link::longComplement(StrandRef breakOpen, bool simplify)
         return Link::fromData({ 1 }, { 1, -1 }).longComplement({}, simplify);
     }
 
-    if (breakOpen) {
-        return internalComplement(breakOpen);
-    } else {
+    if (! breakOpen) {
         // Choose an arbitrary crossing at which to break the knot open.
-        return internalComplement(crossings_.front()->upper());
+        breakOpen = crossings_.front()->upper();
     }
+
+    Triangulation<3> ans = internalComplement(breakOpen);
+    if (simplify)
+        ans.simplify();
+    return ans;
 }
 
 Triangulation<3> Link::internalComplement(StrandRef breakOpen) const {
