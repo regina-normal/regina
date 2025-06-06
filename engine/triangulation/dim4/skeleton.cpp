@@ -51,11 +51,10 @@ void Triangulation<4>::calculateSkeleton() {
 
     calculateVertexLinks();
         // Sets:
-        // - Vertex<4>::realBoundary_
         // - Vertex<4>::link_, but only where necessary
         // - valid_ and Vertex<4>::valid_ in the case of bad vertex links
         // - valid_ and Edge<4>::invalid_ in the case of bad edge links
-        // - Vertex<4>::ideal_ and Component<4>::ideal_
+        // - Vertex<4>::flags_ and Component<4>::ideal_
         // - vertexLinkSummary_
 
     if (! valid_)
@@ -82,14 +81,14 @@ void Triangulation<4>::calculateVertexLinks() {
     for (auto bc : boundaryComponents())
         if (bc->isReal())
             for (auto v : bc->vertices())
-                v->realBoundary_ = true;
+                v->flags_ |= Vertex<4>::FLAG_REAL_BOUNDARY;
 
     // Look at each vertex link and see what it says about this 4-manifold
     // triangulation.
     long foundIdeal = 0; // -1 if we ever find an invalid vertex
     long remaining = countVertices();
     for (Vertex<4>* vertex : vertices()) {
-        if (vertex->realBoundary_) {
+        if (vertex->flags_ & Vertex<4>::FLAG_REAL_BOUNDARY) {
             // This vertex belongs to one or more boundary tetrahedra.
             // If the link is not a 3-ball then this vertex is invalid.
             // In particular, if vertexLinkSummary_ >= 0 then all vertices
@@ -141,7 +140,8 @@ void Triangulation<4>::calculateVertexLinks() {
                                 foundIdeal < vertexLinkSummary_) &&
                             ! vertex->buildLink().isSphere())) {
                     // We have an ideal vertex.
-                    vertex->component()->ideal_ = vertex->ideal_ = true;
+                    vertex->component()->ideal_ = true;
+                    vertex->flags_ |= Vertex<4>::FLAG_IDEAL;
                     if (foundIdeal >= 0)
                         ++foundIdeal;
                     vertex->boundaryComponent_ = new BoundaryComponent<4>();
@@ -224,9 +224,8 @@ void Triangulation<4>::cloneSkeleton(const Triangulation& src) {
     {
         auto me = vertices().begin();
         auto you = src.vertices().begin();
-        for ( ; me != vertices().end(); ++me, ++you) {
-            (*me)->ideal_ = (*you)->ideal_;
-        }
+        for ( ; me != vertices().end(); ++me, ++you)
+            (*me)->flags_ = (*you)->flags_;
     }
     {
         auto me = components_.begin();

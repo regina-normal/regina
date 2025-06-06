@@ -78,10 +78,17 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
                  constructed on demand; until then it will be null.
                  We keep this as a pointer to avoid instantiating the
                  lower-dimensional triangulation classes here in the header. */
-        bool ideal_;
-            /**< Is this vertex ideal? */
-        bool realBoundary_;
-            /**< Is this vertex contained in one or more boundary tetrahedra? */
+
+        static constexpr int FLAG_IDEAL = 1;
+            /**< A bit of \a flags_ that is set if and only if this vertex
+                 is ideal. */
+        static constexpr int FLAG_REAL_BOUNDARY = 2;
+            /**< A bit of \a flags_ that is set if and only if this vertex
+                 is contained in one or more boundary tetrahedra. */
+
+        int flags_;
+            /**< A bitwise combination of `FLAG_...` constants that together
+                 hold various properties of this vertex. */
 
     public:
         /**
@@ -207,12 +214,11 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
 // Inline functions for Vertex<4>
 
 inline Face<4, 0>::Face(Component<4>* component) :
-        detail::FaceBase<4, 0>(component), link_(nullptr),
-        ideal_(false), realBoundary_(false) {
+        detail::FaceBase<4, 0>(component), link_(nullptr), flags_(0) {
 }
 
 inline bool Face<4, 0>::isIdeal() const {
-    return ideal_;
+    return (flags_ & FLAG_IDEAL);
 }
 
 inline NormalHypersurface Face<4, 0>::linkingSurface() const {
