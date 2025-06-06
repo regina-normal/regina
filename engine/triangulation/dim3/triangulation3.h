@@ -3761,6 +3761,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Regina 7.4, the presence of invalid edges will no longer cause the
          * triangulation to be subdivided if there are no vertices to truncate.
          *
+         * A note: this operation does _not_ preserve orientedness.  That is,
+         * regardless of whether this triangulation was oriented before calling
+         * this function, it will not be oriented after.  This is due to the
+         * specific choice of tetrahedron vertex labelling in the subdivision,
+         * and this behaviour may change in a future version of Regina.
+         *
          * \warning Currently, this routine subdivides all tetrahedra as
          * if <i>all</i> vertices (not just some) were ideal.
          * This may lead to more tetrahedra than are necessary.
@@ -3803,6 +3809,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   "old" boundary (real boundary that existed before the truncation)
          *   and "new" boundary (real boundary that was created as a result of
          *   the truncation).
+         *
+         * A note: this operation does _not_ preserve orientedness.  That is,
+         * regardless of whether this triangulation was oriented before calling
+         * this function, it will not be oriented after.  This is due to the
+         * specific choice of tetrahedron vertex labelling in the subdivision,
+         * and this behaviour may change in a future version of Regina.
          *
          * \exception LockViolation This triangulation contains at least one
          * locked top-dimensional simplex and/or facet.  This exception will be
