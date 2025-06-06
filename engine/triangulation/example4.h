@@ -394,26 +394,24 @@ class Example<4> : public detail::ExampleBase<4> {
             const Isomorphism<3>& monodromy);
 
         /**
-         * Returns an ideal triangulation of the complement of the 2-knot obtained by
-         * spinning the given 1-knot (without twisting).
-         * The knot to be spun is passed as the first
-         * argument; the second (optional) argument allows you to specify
-         * where the knot should be broken open when carrying out the
-         * spinning construction.
+         * Returns an ideal triangulation of the complement of the 2-knot
+         * obtained by spinning the given 1-knot (without twisting).  The knot
+         * to be spun is passed as the first argument; the second (optional)
+         * argument allows you to specify where the knot should be broken open
+         * when carrying out the spinning construction.
          *
          * The spinning construction is described by Artin in "Zur Isotopie
-         * zweidimensionaler Flächen im R_4", Abh. Math. Sem. Univ. Hamburg 4
-         * (1925), no. 1, 174-177.
+         * zweidimensionaler Flächen im R_4", Abh. Math. Sem. Univ. Hamburg
+         * 4 (1925), no. 1, 174-177.
          *
-         * \warning The resulting triangulation will typically contain
-         * thousands, or even tens of thousands, of pentachora, even when
-         * \a knot has very few crossings.  It will also typically contain
-         * many internal vertices, as well as the one ideal vertex representing
-         * the 2-knot itself.  You will therefore certainly want to simplify
-         * the resulting 4-manifold triangulation; moreover, this simplification
-         * could well take some time.  In the end you might well reach a very
-         * small number of pentachora (e.g., for the trefoil you can get the
-         * number of pentachora down to six); however, this will _not_ be fast.
+         * The final triangulation might (or might not) still contain internal
+         * vertices, in addition to the one ideal vertex that represents the
+         * 2-knot itself.
+         *
+         * \warning This routine could be slow, even when \a knot has very few
+         * crossings.  This is because it typically goes via intermediate
+         * triangulations with thousands or even tens of thousands of
+         * pentachora, and simplifying such triangulations takes time.
          *
          * \pre The argument \a knot is a classical knot diagram.  That is, the
          * link diagram is not virtual, and has exactly one link component.

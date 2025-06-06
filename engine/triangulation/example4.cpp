@@ -527,8 +527,21 @@ Triangulation<4> Example<4>::spun(const Link& knot, StrandRef breakOpen) {
 
     Triangulation<4> ans = boundarySpin(c);
     ans.unlockAll();
+
+    // We need to simplify _before_ calling finiteToIdeal().
+    // This is because, when simplifying an ideal triangulation, we need to
+    // repeatedly run 3-sphere recognition in order to work out which is the
+    // ideal vertex.  If we have thousands of vertices, this takes time.
+    // When simplifying a compact triangulation OTOH, regina caches the fact
+    // that all vertex links are balls or spheres, and does not need to run
+    // 3-sphere recognition at all during the simplification process.
+    ans.simplify();
+
+    // Now it's hopefully small, we can be brave enough to simplify again
+    // but this time using an ideal triangulation.
     ans.finiteToIdeal();
-    // Do not simplify (for now).  Let the user worry about this.
+    ans.simplify();
+
     return ans;
 }
 
