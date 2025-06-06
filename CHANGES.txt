@@ -814,6 +814,10 @@ Version 7.4  [ (to be announced) ]
               throw an exception when called on an empty triangulation.
             - Routine simplifyExhaustive() now ensures that any change to the
               triangulation happens on the calling thread.
+            - Simplifying closed 4-manifolds and 4-manifolds with real boundary
+              is now much faster.
+            - Routine eulerCharManifold() now throws an exception when called
+              on an invalid triangulation.
         Struct Unprotected:
             - New C++-only type that allows in-built safety checks to be
               disabled in some specific circumstances.

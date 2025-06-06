@@ -45,6 +45,7 @@
 
 using regina::AbelianGroup;
 using regina::Example;
+using regina::FailedPrecondition;
 using regina::GroupPresentation;
 using regina::Triangulation;
 
@@ -429,10 +430,17 @@ TEST_F(Dim4Test, eulerChar) {
     EXPECT_EQ(mixedPoincareProduct.tri.eulerCharManifold(), 0);
 
     EXPECT_EQ(idealFigEightProduct.tri.eulerCharTri(), 1);
+    EXPECT_THROW(idealFigEightProduct.tri.eulerCharManifold(),
+        FailedPrecondition);
     EXPECT_EQ(mixedFigEightProduct.tri.eulerCharTri(), 1);
+    EXPECT_THROW(mixedFigEightProduct.tri.eulerCharManifold(),
+        FailedPrecondition);
     EXPECT_EQ(pillow_twoCycle.tri.eulerCharTri(), 2);
+    EXPECT_THROW(pillow_twoCycle.tri.eulerCharManifold(), FailedPrecondition);
     EXPECT_EQ(pillow_threeCycle.tri.eulerCharTri(), 2);
+    EXPECT_THROW(pillow_threeCycle.tri.eulerCharManifold(), FailedPrecondition);
     EXPECT_EQ(pillow_fourCycle.tri.eulerCharTri(), 0);
+    EXPECT_THROW(pillow_fourCycle.tri.eulerCharManifold(), FailedPrecondition);
 
     EXPECT_EQ(disjoint2.tri.eulerCharTri(), 1);
     EXPECT_EQ(disjoint2.tri.eulerCharManifold(), 1);

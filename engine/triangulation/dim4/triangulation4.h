@@ -451,6 +451,8 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre This triangulation is valid.
          *
+         * \exception FailedPrecondition This triangulation is not valid.
+         *
          * \return the Euler characteristic of the corresponding compact
          * manifold.
          */

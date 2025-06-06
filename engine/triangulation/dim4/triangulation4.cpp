@@ -53,6 +53,10 @@ Triangulation<4>::Triangulation(const std::string& description) {
 }
 
 long Triangulation<4>::eulerCharManifold() const {
+    if (! isValid())
+        throw FailedPrecondition("eulerCharManifold() requires a valid "
+            "triangulation");
+
     // Begin with V - E + F - T + P.
     // This call to eulerCharTri() also ensures that the skeleton has
     // been calculated.
@@ -68,11 +72,12 @@ long Triangulation<4>::eulerCharManifold() const {
         // we actually need here.)
         for (auto bc : boundaryComponents())
             if (bc->isIdeal()) {
-                // Because our 4-manifold triangulation is valid, all
-                // vertex links in the 3-manifold boundary must be
-                // spheres or discs.  We can therefore use V - E + F - T
-                // on this boundary component.
-                ans += bc->vertex(0)->buildLink().eulerCharTri() - 1;
+                // This boundary component consists of a single _valid_ ideal
+                // vertex, which must therefore have a link that is a valid
+                // closed 3-manifold triangulation.  It follows that the Euler
+                // characteristic of the vertex link is zero, and so truncating
+                // the vertex has exactly the following effect:
+                --ans;
             }
     }
 
