@@ -389,8 +389,7 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
     using Value = Laurent<Integer>;
     using SolnSet = std::map<Key, Value>;
 
-    auto* partial = new SolnSet*[nBags];
-    std::fill(partial, partial + nBags, nullptr);
+    FixedArray<SolnSet*> partial(nBags, nullptr);
 
     for (bag = d.first(); bag; bag = bag->next()) {
         size_t index = bag->index();
@@ -496,17 +495,8 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
             for (auto& soln : *(partial[child->index()])) {
                 if (tracker) {
                     percent += increment;
-                    if (! tracker->setPercent(percent)) {
-                        // In normal processing, the loop through solutions
-                        // deletes the child keys and values as it goes.
-                        // Therefore we need to finish the loop to ensure that
-                        // all remaining child keys and values are deleted,
-                        // even if we do not want to process them.
-                        //
-                        // TODO: Now that keys and values are stored by
-                        // value, not by pointer, do we still need this?
-                        continue;
-                    }
+                    if (! tracker->setPercent(percent))
+                        break;
                 }
 
                 const Key& kChild = soln.first;
@@ -641,14 +631,13 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
                         else if (soln2.first[strand] == -2)
                             kNew[strand] = soln1.first[strand];
                         else
-                            std::cerr <<
-                                "ERROR: Incompatible keys in join bag"
-                                << std::endl;
+                            throw ImpossibleScenario(
+                                "Incompatible keys in join bag");
 
                     if (! partial[index]->emplace(std::move(kNew),
                             soln1.second * soln2.second).second)
-                        std::cerr << "ERROR: Combined keys in join bag "
-                            "are not unique" << std::endl;
+                        throw ImpossibleScenario(
+                            "Combined keys in join bag are not unique");
                 }
             }
 
@@ -663,7 +652,6 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
         // deallocated, so check them all.
         for (size_t i = 0; i < nBags; ++i)
             delete partial[i];
-        delete[] partial;
         return Value();
     }
 
@@ -675,7 +663,6 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
     Value ans = std::move(partial[nBags - 1]->begin()->second);
 
     delete partial[nBags - 1];
-    delete[] partial;
 
     // Finally, factor in any zero-crossing components.
     for (StrandRef s : components_)
