@@ -788,13 +788,10 @@ Arrow Link::arrowTreewidth(ProgressTracker* tracker) const {
                             throw ImpossibleScenario(
                                 "Incompatible keys in join bag");
 
-                    // TODO: Fix this
-                    #if 0
                     if (! partial[index]->emplace(std::move(kNew),
                             soln1.second * soln2.second).second)
                         throw ImpossibleScenario(
                             "Combined keys in join bag are not unique");
-                    #endif
                 }
             }
 

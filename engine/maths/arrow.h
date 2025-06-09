@@ -521,6 +521,14 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
         Arrow& operator -= (const Arrow& other);
 
         /**
+         * Multiplies this by the given polynomial.
+         *
+         * \param other the polynomial to multiply this by.
+         * \return a reference to this polynomial.
+         */
+        Arrow& operator *= (const Arrow& other);
+
+        /**
          * Writes this polynomial to the given output stream.
          *
          * If \a utf8 is passed as \c true then unicode subscript and
@@ -577,6 +585,8 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
          * polynomials are zero.
          */
         void removeZeroes();
+
+    friend Arrow operator * (const Arrow&, const Arrow&);
 };
 
 /**
@@ -736,6 +746,17 @@ Arrow operator - (const Arrow& lhs, Arrow&& rhs);
  */
 Arrow operator - (Arrow&& lhs, Arrow&& rhs);
 
+/**
+ * Multiplies the two given polynomials.
+ *
+ * \param lhs the first polynomial to multiply.
+ * \param rhs the second polynomial to multiply.
+ * \return the product of the two given polynomials.
+ *
+ * \ingroup maths
+ */
+Arrow operator * (const Arrow& lhs, const Arrow& rhs);
+
 template <typename iterator, typename deref>
 inline Arrow::Arrow(iterator begin, iterator end) {
     for (auto it = begin; it != end; ++it) {
@@ -881,6 +902,11 @@ inline Arrow& Arrow::operator *= (const Laurent<Integer>& laurent) {
         for (auto& term : terms_)
             term.second *= laurent;
     }
+    return *this;
+}
+
+inline Arrow& Arrow::operator *= (const Arrow& other) {
+    terms_ = std::move((*this * other).terms_);
     return *this;
 }
 

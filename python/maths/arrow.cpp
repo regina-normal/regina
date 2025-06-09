@@ -138,12 +138,14 @@ void addArrow(pybind11::module_& m) {
         .def(pybind11::self *= Laurent<Integer>(), rdoc::__imul_2)
         .def(pybind11::self += pybind11::self, rdoc::__iadd)
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
+        .def(pybind11::self *= pybind11::self, rdoc::__imul_3)
         .def(pybind11::self * Integer(), rdoc_global::__mul)
         .def(Integer() * pybind11::self, rdoc_global::__mul_2)
         .def(pybind11::self * Laurent<Integer>(), rdoc_global::__mul_3)
         .def(Laurent<Integer>() * pybind11::self, rdoc_global::__mul_4)
         .def(pybind11::self + pybind11::self, rdoc_global::__add)
         .def(pybind11::self - pybind11::self, rdoc_global::__sub_2)
+        .def(pybind11::self * pybind11::self, rdoc_global::__mul_5)
         .def(- pybind11::self, rdoc_global::__sub)
     ;
     regina::python::add_output(c);

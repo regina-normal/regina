@@ -150,6 +150,19 @@ Parameter ``arrow``:
 Returns:
     the product of the given arrow and Laurent polynomials.)doc";
 
+// Docstring regina::python::doc::__mul_5
+static const char *__mul_5 =
+R"doc(Multiplies the two given polynomials.
+
+Parameter ``lhs``:
+    the first polynomial to multiply.
+
+Parameter ``rhs``:
+    the second polynomial to multiply.
+
+Returns:
+    the product of the two given polynomials.)doc";
+
 // Docstring regina::python::doc::__sub
 static const char *__sub =
 R"doc(Returns the negative of the given polynomial.
@@ -330,6 +343,16 @@ Parameter ``laurent``:
 
 Returns:
     a reference to this arrow polynomial.)doc";
+
+// Docstring regina::python::doc::Arrow_::__imul_3
+static const char *__imul_3 =
+R"doc(Multiplies this by the given polynomial.
+
+Parameter ``other``:
+    the polynomial to multiply this by.
+
+Returns:
+    a reference to this polynomial.)doc";
 
 // Docstring regina::python::doc::Arrow_::__init
 static const char *__init =

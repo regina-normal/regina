@@ -34,6 +34,39 @@
 
 namespace regina {
 
+namespace {
+    void incEntry(Arrow::DiagramSequence& d, size_t pos) {
+        if (d.size() > pos) {
+            ++d[pos];
+        } else {
+            Arrow::DiagramSequence seq(pos + 1);
+            std::copy(d.begin(), d.end(), seq.begin());
+            std::fill(seq.begin() + d.size(), seq.end() - 1, 0);
+            seq[pos] = 1;
+            d = std::move(seq);
+        }
+    }
+
+    Arrow::DiagramSequence sum(const Arrow::DiagramSequence& a,
+            const Arrow::DiagramSequence& b) {
+        // Note: no entries will be zeroed out, because entries in a diagram
+        // sequence are non-negative.
+        if (a.size() >= b.size()) {
+            Arrow::DiagramSequence ans(a.size());
+            for (size_t i = 0; i < b.size(); ++i)
+                ans[i] = a[i] + b[i];
+            std::copy(a.begin() + b.size(), a.end(), ans.begin() + b.size());
+            return ans;
+        } else {
+            Arrow::DiagramSequence ans(b.size());
+            for (size_t i = 0; i < a.size(); ++i)
+                ans[i] = a[i] + b[i];
+            std::copy(b.begin() + a.size(), b.end(), ans.begin() + a.size());
+            return ans;
+        }
+    }
+}
+
 const Laurent<Integer>& Arrow::operator [] (const DiagramSequence& d) const {
     if ((! d.empty()) && d[d.size() - 1] == 0)
         throw InvalidArgument("The given diagram sequence should not "
@@ -91,16 +124,10 @@ void Arrow::multDiagram(size_t index) {
     auto it = terms_.begin();
     while (it != terms_.end()) {
         auto h = terms_.extract(it++);
-        if (h.key().size() >= index) {
-            ++h.key()[index - 1];
-        } else {
-            DiagramSequence seq(index);
-            std::copy(h.key().begin(), h.key().end(), seq.begin());
-            std::fill(seq.begin() + h.key().size(), seq.end() - 1, 0);
-            seq[index - 1] = 1;
-            h.key() = std::move(seq);
-        }
-        staging.insert(std::move(h));
+        incEntry(h.key(), index - 1);
+        // Give an insertion hint: we are extracting elements in sorted order,
+        // and so we will be inserting them in sorted order also.
+        staging.insert(staging.end(), std::move(h));
     }
 
     staging.swap(terms_);
@@ -134,6 +161,26 @@ Arrow& Arrow::operator -= (const Arrow& other) {
     // We might have zeroed out some terms.
     removeZeroes();
     return *this;
+}
+
+Arrow operator * (const Arrow& lhs, const Arrow& rhs) {
+    if (lhs.isZero() || rhs.isZero())
+        return {};
+
+    Arrow ans;
+    for (const auto& x : lhs.terms_)
+        for (const auto& y : rhs.terms_) {
+            auto key = sum(x.first, y.first);
+            auto value = x.second * y.second;
+            auto result = ans.terms_.try_emplace(std::move(key),
+                std::move(value));
+            if (! result.second) {
+                // We might have zeroed out this term.
+                if ((result.first->second += std::move(value)).isZero())
+                    ans.terms_.erase(result.first);
+            }
+        }
+    return ans;
 }
 
 void Arrow::writeTextShort(std::ostream& out, bool utf8) const {
