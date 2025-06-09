@@ -1304,7 +1304,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
     using Value = Laurent2<Integer>;
     using SolnSet = std::map<Key, Value>;
 
-    FixedArray<SolnSet*> partial(nBags, nullptr)
+    FixedArray<SolnSet*> partial(nBags, nullptr);
 
     ViabilityData vData(this, d);
 
