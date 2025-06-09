@@ -88,7 +88,7 @@ class Flags {
         /**
          * Creates an empty flag set, with no flags set at all.
          */
-        inline Flags() : value_(0) {
+        inline constexpr Flags() : value_(0) {
         }
 
         /**
@@ -96,13 +96,13 @@ class Flags {
          *
          * \param init the initial value of this flag set.
          */
-        inline Flags(T init) : value_(static_cast<int>(init)) {
+        inline constexpr Flags(T init) : value_(static_cast<int>(init)) {
         }
 
         /**
          * Creates a clone of the given flag set.
          */
-        inline Flags(const Flags<T>&) = default;
+        inline constexpr Flags(const Flags<T>&) = default;
 
         /**
          * Returns the integer representation of this set.
@@ -113,7 +113,7 @@ class Flags {
          *
          * \return the integer value of this set.
          */
-        int intValue() const {
+        constexpr int intValue() const {
             return static_cast<int>(value_);
         }
 
@@ -126,7 +126,7 @@ class Flags {
          *
          * \return the set corresponding to the given integer value.
          */
-        inline static Flags<T> fromInt(int value) {
+        inline constexpr static Flags<T> fromInt(int value) {
             return Flags<T>(value);
         }
 
@@ -137,7 +137,7 @@ class Flags {
          *
          * \return \c true if and only if this flag set is non-empty.
          */
-        operator bool() const {
+        constexpr operator bool() const {
             return value_;
         }
 
@@ -151,7 +151,7 @@ class Flags {
          * \return \c true if and only if all of the bits of the given
          * flag are set.
          */
-        bool has(T flag) const {
+        constexpr bool has(T flag) const {
             return (value_ & static_cast<int>(flag)) == static_cast<int>(flag);
         }
 
@@ -166,7 +166,7 @@ class Flags {
          * \return \c true if and only if all of the bits of the given
          * set are present in this set.
          */
-        bool has(const Flags<T>& rhs) const {
+        constexpr bool has(const Flags<T>& rhs) const {
             return (value_ & rhs.value_) == rhs.value_;
         }
 
@@ -176,7 +176,7 @@ class Flags {
          * \param rhs the flag to test this against.
          * \return \c true if and only if this and the given flag are identical.
          */
-        inline bool operator == (T rhs) const {
+        inline constexpr bool operator == (T rhs) const {
             return (value_ == static_cast<int>(rhs));
         }
 
@@ -188,7 +188,7 @@ class Flags {
          * \return \c true if and only if this and the given flag set are
          * identical.
          */
-        bool operator == (const Flags<T>&) const = default;
+        constexpr bool operator == (const Flags<T>&) const = default;
 
         /**
          * Sets this flag set to contain precisely the given flag only.
@@ -196,7 +196,7 @@ class Flags {
          * \param rhs the new value of this flag set.
          * \return a reference to this flag set.
          */
-        inline Flags<T>& operator = (T rhs) {
+        inline constexpr Flags<T>& operator = (T rhs) {
             value_ = static_cast<int>(rhs);
             return *this;
         }
@@ -206,7 +206,7 @@ class Flags {
          *
          * \return a reference to this flag set.
          */
-        Flags<T>& operator = (const Flags<T>&) = default;
+        constexpr Flags<T>& operator = (const Flags<T>&) = default;
 
         /**
          * Changes this flag set by taking a bitwise OR with the given
@@ -215,7 +215,7 @@ class Flags {
          * \param rhs the flag to combine with this set.
          * \return a reference to this flag set.
          */
-        inline Flags<T>& operator |= (T rhs) {
+        inline constexpr Flags<T>& operator |= (T rhs) {
             value_ |= static_cast<int>(rhs);
             return *this;
         }
@@ -227,7 +227,7 @@ class Flags {
          * \param rhs the flag set to combine with this set.
          * \return a reference to this flag set.
          */
-        inline Flags<T>& operator |= (const Flags<T>& rhs) {
+        inline constexpr Flags<T>& operator |= (const Flags<T>& rhs) {
             value_ |= rhs.value_;
             return *this;
         }
@@ -239,7 +239,7 @@ class Flags {
          * \param rhs the flag to combine with this set.
          * \return a reference to this flag set.
          */
-        inline Flags<T>& operator &= (T rhs) {
+        inline constexpr Flags<T>& operator &= (T rhs) {
             value_ &= static_cast<int>(rhs);
             return *this;
         }
@@ -251,7 +251,7 @@ class Flags {
          * \param rhs the flag set to combine with this set.
          * \return a reference to this flag set.
          */
-        inline Flags<T>& operator &= (const Flags<T>& rhs) {
+        inline constexpr Flags<T>& operator &= (const Flags<T>& rhs) {
             value_ &= rhs.value_;
             return *this;
         }
@@ -263,7 +263,7 @@ class Flags {
          * \param rhs the flag to combine with this set.
          * \return a reference to this flag set.
          */
-        inline Flags<T>& operator ^= (T rhs) {
+        inline constexpr Flags<T>& operator ^= (T rhs) {
             value_ ^= static_cast<int>(rhs);
             return *this;
         }
@@ -275,7 +275,7 @@ class Flags {
          * \param rhs the flag set to combine with this set.
          * \return a reference to this flag set.
          */
-        inline Flags<T>& operator ^= (const Flags<T>& rhs) {
+        inline constexpr Flags<T>& operator ^= (const Flags<T>& rhs) {
             value_ ^= rhs.value_;
             return *this;
         }
@@ -287,7 +287,7 @@ class Flags {
          * \param rhs the flag to combine with this set.
          * \return the combination of this set and the given flag.
          */
-        inline Flags<T> operator | (T rhs) const {
+        inline constexpr Flags<T> operator | (T rhs) const {
             return Flags(value_ | static_cast<int>(rhs));
         }
 
@@ -298,7 +298,7 @@ class Flags {
          * \param rhs the flag set to combine with this set.
          * \return the combination of this and the given flag set.
          */
-        inline Flags<T> operator | (const Flags<T>& rhs) const {
+        inline constexpr Flags<T> operator | (const Flags<T>& rhs) const {
             return Flags(value_ | rhs.value_);
         }
 
@@ -309,7 +309,7 @@ class Flags {
          * \param rhs the flag to combine with this set.
          * \return the combination of this set and the given flag.
          */
-        inline Flags<T> operator & (T rhs) const {
+        inline constexpr Flags<T> operator & (T rhs) const {
             return Flags(value_ & static_cast<int>(rhs));
         }
 
@@ -320,7 +320,7 @@ class Flags {
          * \param rhs the flag set to combine with this set.
          * \return the combination of this and the given flag set.
          */
-        inline Flags<T> operator & (const Flags<T>& rhs) const {
+        inline constexpr Flags<T> operator & (const Flags<T>& rhs) const {
             return Flags(value_ & rhs.value_);
         }
 
@@ -331,7 +331,7 @@ class Flags {
          * \param rhs the flag to combine with this set.
          * \return the combination of this set and the given flag.
          */
-        inline Flags<T> operator ^ (T rhs) const {
+        inline constexpr Flags<T> operator ^ (T rhs) const {
             return Flags(value_ ^ static_cast<int>(rhs));
         }
 
@@ -342,7 +342,7 @@ class Flags {
          * \param rhs the flag set to combine with this set.
          * \return the combination of this and the given flag set.
          */
-        inline Flags<T> operator ^ (const Flags<T>& rhs) const {
+        inline constexpr Flags<T> operator ^ (const Flags<T>& rhs) const {
             return Flags(value_ ^ rhs.value_);
         }
 
@@ -351,7 +351,7 @@ class Flags {
          *
          * \param rhs the flag to clear from this set.
          */
-        inline void clear(T rhs) {
+        inline constexpr void clear(T rhs) {
             value_ |= static_cast<int>(rhs);
             value_ ^= static_cast<int>(rhs);
         }
@@ -361,7 +361,7 @@ class Flags {
          *
          * \param rhs identifies the bits to clear from this set.
          */
-        inline void clear(const Flags<T>& rhs) {
+        inline constexpr void clear(const Flags<T>& rhs) {
             value_ |= rhs.value_;
             value_ ^= rhs.value_;
         }
@@ -381,7 +381,7 @@ class Flags {
          * \param other the flag that will be cleared if any adjustments
          * need to be made.
          */
-        inline void ensureOne(T default_, T other) {
+        inline constexpr void ensureOne(T default_, T other) {
             if (! ((value_ & static_cast<int>(default_)) ||
                     (value_ & static_cast<int>(other))))
                 value_ |= static_cast<int>(default_);
@@ -404,7 +404,7 @@ class Flags {
          * \param second the second-highest-priority flag.
          * \param last the lowest-priority flag.
          */
-        inline void ensureOne(T default_, T second, T last) {
+        inline constexpr void ensureOne(T default_, T second, T last) {
             // Cast to int, because (T | T) is overloaded to return Flags<T>.
             if (! (value_ & (static_cast<int>(default_) |
                     static_cast<int>(second) | static_cast<int>(last))))
@@ -430,7 +430,7 @@ class Flags {
          * \param third the third-highest-priority flag.
          * \param last the lowest-priority flag.
          */
-        inline void ensureOne(T default_, T second, T third, T last) {
+        inline constexpr void ensureOne(T default_, T second, T third, T last) {
             // Cast to int, because (T | T) is overloaded to return Flags<T>.
             if (! (value_ & (static_cast<int>(default_) |
                     static_cast<int>(second) | static_cast<int>(third) |
@@ -450,7 +450,7 @@ class Flags {
          *
          * \param init the new internal value.
          */
-        inline Flags(int init) : value_(init) {
+        inline constexpr Flags(int init) : value_(init) {
         }
 };
 

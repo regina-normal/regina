@@ -192,6 +192,7 @@ Version 7.4  [ (to be announced) ]
               an explicit Hilbert basis algorithm, the algorithm flag could
               have been ignored (thereby using the default vertex enumeration
               algorithm as the first phase of the primal Hilbert basis method).
+            - Everything in this class is now constexpr.
         Enum Framing:
             - This is now a scoped enumeration, for better type safety.
               The old enum constants (e.g., FRAMING_SEIFERT) have been
