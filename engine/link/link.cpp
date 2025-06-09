@@ -1366,6 +1366,25 @@ Link Link::parallel(int k, Framing framing) const {
     return ans;
 }
 
+std::pair<bool, size_t> Link::improveTreewidth(ssize_t maxAttempts, int height,
+        int threads, ProgressTrackerOpen* tracker) {
+    if (components_.size() >= 64) {
+        if (tracker)
+            tracker->setFinished();
+        throw FailedPrecondition(
+            "improveTreewidth() requires fewer than 64 link components");
+    }
+
+    // The template option std::true_type means allow classical moves only,
+    // and std::false_type means allow both classical and virtual moves.
+    if (isClassical())
+        return detail::improveTreewidthInternal<Link, std::true_type>(
+            *this, maxAttempts, height, threads, tracker);
+    else
+        return detail::improveTreewidthInternal<Link, std::false_type>(
+            *this, maxAttempts, height, threads, tracker);
+}
+
 void Link::tightEncode(std::ostream& out) const {
     regina::detail::tightEncodeIndex(out, size());
 

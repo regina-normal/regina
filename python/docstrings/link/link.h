@@ -481,27 +481,32 @@ the previously computed result). Otherwise the computation could be
 quite slow, particularly for larger numbers of crossings.
 
 .. warning::
-    Currently this routine uses a naive algorithm that resolves
-    crossings in all ``2^n`` possible ways. As a result, it can only
-    handle a limited number of crosings at present (the maximum is
-    63). If this link has 64 or more crossings then this routine will
-    throw an exception. The hope is to implement a better algorithm
-    (which is faster and can handle more crossings) in a future
-    version of Regina.
+    The naive algorithm can only handle a limited number of crossings
+    (currently at most 63). If you pass Algorithm::Naive and you have
+    too many crossings (which is not advised, since the naive
+    algorithm requires 2^*n* time), then this routine will ignore your
+    choice of algorithm and use the treewidth-based algorithm
+    regardless.
 
 Exception ``NotImplemented``:
-    This link has 64 or more crossings.
+    This link is *so* large that the total number of strands cannot
+    fit into a signed ``int``. (On a typical machine where ``int`` is
+    32-bit, this would require over a _billion_ crossings). Note that,
+    if you have such a link, then this function (which is exponential
+    time) would be intractably slow anyway.
 
 Python:
     The global interpreter lock will be released while this function
     runs, so you can use it with Python-based multithreading.
 
 Parameter ``alg``:
-    the algorithm with which to compute the polynomial. At present
-    this argument is ignored (since only the naive algorithm is
-    available); this argument is kept as a placeholder for if/when
-    more sophisticated algorithms become available. In the meantime,
-    just use the default (Algorithm::Default).
+    the algorithm with which to compute the polynomial. If you are not
+    sure, the default (Algorithm::Default) is a safe choice. If you
+    wish to specify a particular algorithm, there are currently two
+    choices: Algorithm::Naive is a slow algorithm that computes the
+    arrow polynomial by resolving all crossings in all possible ways,
+    and Algorithm::Treewidth uses a fixed-parameter tractable
+    treewidth-based algorithm.
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
@@ -509,7 +514,10 @@ Parameter ``tracker``:
 
 Parameter ``threads``:
     the number of threads to use. If this is 1 or smaller then the
-    computation will run single-threaded.
+    computation will run single-threaded. Currently only the naive
+    algorithm supports multithreading; if you use the treewidth-based
+    algorithm then it will run single-threaded regardless of the value
+    of *threads*.
 
 Returns:
     the normalised arrow polynomial, or the zero polynomial if the
@@ -551,8 +559,8 @@ call this routine in a new detached thread.
     regardless.
 
 Exception ``NotImplemented``:
-    This link is _so_ large that the maximum possible strand ID cannot
-    fit into an ``int``. (On a typical machine where ``int`` is
+    This link is *so* large that the total number of strands cannot
+    fit into a signed ``int``. (On a typical machine where ``int`` is
     32-bit, this would require over a _billion_ crossings). Note that,
     if you have such a link, then this function (which is exponential
     time) would be intractably slow anyway.
@@ -606,8 +614,8 @@ of.
     1, tracker)`` instead.
 
 Exception ``NotImplemented``:
-    This link is _so_ large that the maximum possible strand ID cannot
-    fit into an ``int``.
+    This link is *so* large that the total number of strands cannot
+    fit into a signed ``int``.
 
 Python:
     The global interpreter lock will be released while this function
@@ -2727,8 +2735,8 @@ Exception ``FailedPrecondition``:
     This is a virtual (not classical) link diagram.
 
 Exception ``NotImplemented``:
-    This link is _so_ large that the maximum possible strand ID cannot
-    fit into an ``int``. (On a typical machine where ``int`` is
+    This link is *so* large that the total number of strands cannot
+    fit into a signed ``int``. (On a typical machine where ``int`` is
     32-bit, this would require over a _billion_ crossings). Note that,
     if you have such a link, then this function (which is exponential
     time) would be intractably slow anyway.
@@ -2810,8 +2818,8 @@ Exception ``FailedPrecondition``:
     This is a virtual (not classical) link diagram.
 
 Exception ``NotImplemented``:
-    This link is _so_ large that the maximum possible strand ID cannot
-    fit into an ``int``. (On a typical machine where ``int`` is
+    This link is *so* large that the total number of strands cannot
+    fit into a signed ``int``. (On a typical machine where ``int`` is
     32-bit, this would require over a _billion_ crossings). Note that,
     if you have such a link, then this function (which is exponential
     time) would be intractably slow anyway.
@@ -2912,8 +2920,8 @@ Exception ``FailedPrecondition``:
     This is a virtual (not classical) link diagram.
 
 Exception ``NotImplemented``:
-    This link is _so_ large that the maximum possible strand ID cannot
-    fit into an ``int``. (On a typical machine where ``int`` is
+    This link is *so* large that the total number of strands cannot
+    fit into a signed ``int``. (On a typical machine where ``int`` is
     32-bit, this would require over a _billion_ crossings). Note that,
     if you have such a link, then this function (which is exponential
     time) would be intractably slow anyway.
@@ -2937,6 +2945,123 @@ Parameter ``tracker``:
 Returns:
     the HOMFLY-PT polynomial, or the zero polynomial if the
     calculation was cancelled via the given progress tracker.)doc";
+
+// Docstring regina::python::doc::Link_::improveTreewidth
+static const char *improveTreewidth =
+R"doc(Attempts to rewrite this link diagram to become one with a smaller
+width tree decomposition. Regina does not compute treewidth precisely
+(and indeed, this is an NP-hard problem); instead what it tries to
+minimise is the width of the greedy tree decomposition produced by
+``TreeDecomposition(link)``.
+
+Much like simplifyExhaustive(), this routine searches for a better
+diagram by performing a slow but exhaustive search through the
+Reidemeister graph. As a result, this routine **could potentially
+reflect the diagram, rotate the diagram, and/or reverse individual
+link components**. Be warned.
+
+This routine is only available for connected link diagrams (classical
+or virtual) with fewer than 64 link components. If this link has 64 or
+more components then this routine will throw an exception (as
+described below).
+
+This routine will iterate through all link diagrams that can be
+reached from this via Reidemeister moves, without ever exceeding
+*height* additional crossings beyond the original number. (If this
+link diagram is disconnected, then there is an exception: this routine
+will never use a type II move to merge distinct diagram components
+together, which would never help with improving treewidth).
+
+If at any stage this routine finds a diagram with a smaller-width
+greedy tree decomposition than the original, it will stop and return
+``(true, ...)`` without attempting to simplify the width any further.
+You may therefore find it useful to call improveTreewidth() repeatedly
+to reduce the width of the tree decomposition even further. If this
+routine cannot produce a smaller-width tree decomposition within the
+bounds given via the *maxAttempts* and/or *height* arguments, then it
+will leave this link diagram unchanged and return ``(false, ...)``.
+
+This routine can be very slow and very memory-intensive: the number of
+link diagrams it visits may be exponential in the number of crossings,
+and it records every diagram that it visits (so as to avoid revisiting
+the same diagram again). You can limit the cost of this search in two
+ways:
+
+* You can pass a *maxAttempts* argument, which means this return will
+  give up after visiting *maxAttempts* distinct link diagrams (up to
+  the kind of combinatorial equivalence described by sig()). If
+  *maxAttempts* is negative, the number of attempts will not be
+  limited.
+
+* You can pass a *height* argument to limit the number of extra
+  crossings. Again, if *height* is negative, the number of additional
+  crossings will not be limited.
+
+* The defaults for *maxAttempts* and *height* are both non-negative,
+  and have been chosen to keep the default invocation of this routine
+  relatively fast.
+
+* If _both_ *maxAttempts* and *height* are negative, this routine will
+  not terminate until a smaller-width diagram is found. If no such
+  diagram exists then the only way to terminate this routine is to
+  cancel the operation via a progress tracker (read on for details).
+
+If this is a _classical_ link diagram then only classical Reidemeister
+moves will be used, as implemented by r1(), r2() and r3(); in
+particular, this routine will never consider link diagrams with
+positive virtual genus. If this is a _virtual_ link diagram, then both
+classical and virtual Reidemeister moves will be used, including r1(),
+r2(), r3(), and r2Virtual(); this means that the exploration through
+the Reidemeister graph might pass through diagrams with smaller and/or
+greater virtual genus than the original.
+
+To assist with performance, this routine can run in parallel
+(multithreaded) mode; simply pass the number of parallel threads in
+the argument *threads*. Even in multithreaded mode, this routine will
+not return until processing has finished (i.e., either a better link
+diagram was found or the search was exhausted), and any change to this
+link diagram will happen in the calling thread.
+
+If this routine is unable to improve the width of the greedy tree
+decomposition of this the link diagram, then this link diagram will
+not be changed.
+
+Precondition:
+    This link has at most 64 link components.
+
+Exception ``FailedPrecondition``:
+    This link has 64 or more link components. If a progress tracker
+    was passed, it will be marked as finished before the exception is
+    thrown.
+
+Python:
+    The global interpreter lock will be released while this function
+    runs, so you can use it with Python-based multithreading.
+
+Parameter ``maxAttempts``:
+    the maximum number of distinct link diagrams to examine before we
+    give up and return ``False``, or a negative number if this should
+    not be bounded.
+
+Parameter ``height``:
+    the maximum number of _additional_ crossings to allow beyond the
+    number of crossings originally present in this diagram, or a
+    negative number if this should not be bounded.
+
+Parameter ``threads``:
+    the number of threads to use. If this is 1 or smaller then the
+    routine will run single-threaded.
+
+Parameter ``tracker``:
+    a progress tracker through which progress will be reported, or
+    ``None`` if no progress reporting is required.
+
+Returns:
+    a pair consisting of: (i) ``True`` if and only if this diagram was
+    successfully changed to give a smaller-width greedy tree
+    decomposition; and (ii) the number of distinct link diagrams that
+    were examined. Note that this could be slightly greater than
+    *maxAttempts*, particularly when running in multithreaded mode.)doc";
 
 // Docstring regina::python::doc::Link_::insertLink
 static const char *insertLink =
@@ -3239,8 +3364,8 @@ call this routine in a new detached thread.
     regardless.
 
 Exception ``NotImplemented``:
-    This link is _so_ large that the maximum possible strand ID cannot
-    fit into an ``int``. (On a typical machine where ``int`` is
+    This link is *so* large that the total number of strands cannot
+    fit into a signed ``int``. (On a typical machine where ``int`` is
     32-bit, this would require over a _billion_ crossings). Note that,
     if you have such a link, then this function (which is exponential
     time) would be intractably slow anyway.
@@ -3294,8 +3419,8 @@ of.
     1, tracker)`` instead.
 
 Exception ``NotImplemented``:
-    This link is _so_ large that the maximum possible strand ID cannot
-    fit into an ``int``.
+    This link is *so* large that the total number of strands cannot
+    fit into a signed ``int``.
 
 Python:
     The global interpreter lock will be released while this function
@@ -5293,7 +5418,7 @@ this link is a knot (i.e., it has precisely one component), then in
 such cases you can try the more powerful but (much) slower
 simplifyExhaustive() instead.
 
-This routine will never reflect or reverse the link.
+This routine will never reflect, rotate or reverse the link.
 
 .. warning::
     Running this routine multiple times upon the same link may return
@@ -5317,8 +5442,9 @@ R"doc(Attempts to simplify this link diagram using a slow but exhaustive
 search through the Reidemeister graph. This routine is more powerful
 but much slower than simplify().
 
-Unlike simplify(), this routine **could potentially reflect or reverse
-the link**.
+Unlike simplify(), this routine **could potentially reflect the
+diagram, rotate the diagram, and/or reverse individual link
+components**.
 
 As of Regina 7.4, this routine is now available for any connected link
 diagram (classical or virtual) with fewer than 64 link components. If
@@ -5429,7 +5555,7 @@ Type III Reidemeister moves (which do not reduce the number of
 crossings) are not used in this routine. Such moves do however feature
 in simplify().
 
-This routine will never reflect or reverse the link.
+This routine will never reflect, rotate or reverse the link.
 
 .. warning::
     The implementation of this routine (and therefore its results) may

@@ -354,6 +354,13 @@ void addLink(pybind11::module_& m) {
                 rdoc::niceTreeDecomposition)
         .def("useTreeDecomposition", &Link::useTreeDecomposition,
             rdoc::useTreeDecomposition)
+        .def("improveTreewidth", &Link::improveTreewidth,
+            pybind11::arg("maxAttempts") = 1000,
+            pybind11::arg("height") = 1,
+            pybind11::arg("threads") = 1,
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
+            rdoc::improveTreewidth)
         .def("brief",
             overload_cast<>(&Link::brief, pybind11::const_), rdoc::brief)
         .def("gauss",

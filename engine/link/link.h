@@ -4593,6 +4593,118 @@ class Link :
          */
         void useTreeDecomposition(TreeDecomposition td);
 
+        /**
+         * Attempts to rewrite this link diagram to become one with a smaller
+         * width tree decomposition.  Regina does not compute treewidth
+         * precisely (and indeed, this is an NP-hard problem); instead what it
+         * tries to minimise is the width of the greedy tree decomposition
+         * produced by `TreeDecomposition(link)`.
+         *
+         * Much like simplifyExhaustive(), this routine searches for a better
+         * diagram by performing a slow but exhaustive search through the
+         * Reidemeister graph.  As a result, this routine **could potentially
+         * reflect the diagram, rotate the diagram, and/or reverse individual
+         * link components**.  Be warned.
+         *
+         * This routine is only available for connected link diagrams (classical
+         * or virtual) with fewer than 64 link components.  If this link has
+         * 64 or more components then this routine will throw an exception
+         * (as described below).
+         *
+         * This routine will iterate through all link diagrams that can be
+         * reached from this via Reidemeister moves, without ever exceeding
+         * \a height additional crossings beyond the original number.
+         * (If this link diagram is disconnected, then there is an exception:
+         * this routine will never use a type II move to merge distinct
+         * diagram components together, which would never help with
+         * improving treewidth).
+         *
+         * If at any stage this routine finds a diagram with a smaller-width
+         * greedy tree decomposition than the original, it will stop and return
+         * `(true, ...)` without attempting to simplify the width any further.
+         * You may therefore find it useful to call improveTreewidth()
+         * repeatedly to reduce the width of the tree decomposition even
+         * further.  If this routine cannot produce a smaller-width tree
+         * decomposition within the bounds given via the \a maxAttempts and/or
+         * \a height arguments, then it will leave this link diagram unchanged
+         * and return `(false, ...)`.
+         *
+         * This routine can be very slow and very memory-intensive: the number
+         * of link diagrams it visits may be exponential in the number of
+         * crossings, and it records every diagram that it visits (so as to
+         * avoid revisiting the same diagram again).  You can limit the cost
+         * of this search in two ways:
+         *
+         * - You can pass a \a maxAttempts argument, which means this return
+         *   will give up after visiting \a maxAttempts distinct link diagrams
+         *   (up to the kind of combinatorial equivalence described by sig()).
+         *   If \a maxAttempts is negative, the number of attempts will not be
+         *   limited.
+         *
+         * - You can pass a \a height argument to limit the number of extra
+         *   crossings.  Again, if \a height is negative, the number of
+         *   additional crossings will not be limited.
+         *
+         * - The defaults for \a maxAttempts and \a height are both
+         *   non-negative, and have been chosen to keep the default invocation
+         *   of this routine relatively fast.
+         *
+         * - If _both_ \a maxAttempts and \a height are negative, this routine
+         *   will not terminate until a smaller-width diagram is found.  If no
+         *   such diagram exists then the only way to terminate this routine
+         *   is to cancel the operation via a progress tracker (read on for
+         *   details).
+         *
+         * If this is a _classical_ link diagram then only classical
+         * Reidemeister moves will be used, as implemented by r1(), r2() and
+         * r3(); in particular, this routine will never consider link diagrams
+         * with positive virtual genus.  If this is a _virtual_ link diagram,
+         * then both classical and virtual Reidemeister moves will be used,
+         * including r1(), r2(), r3(), and r2Virtual(); this means that the
+         * exploration through the Reidemeister graph might pass through
+         * diagrams with smaller and/or greater virtual genus than the original.
+         *
+         * To assist with performance, this routine can run in parallel
+         * (multithreaded) mode; simply pass the number of parallel threads
+         * in the argument \a threads.  Even in multithreaded mode, this
+         * routine will not return until processing has finished (i.e., either
+         * a better link diagram was found or the search was exhausted), and
+         * any change to this link diagram will happen in the calling thread.
+         *
+         * If this routine is unable to improve the width of the greedy tree
+         * decomposition of this the link diagram, then this link diagram will
+         * not be changed.
+         *
+         * \pre This link has at most 64 link components.
+         *
+         * \exception FailedPrecondition This link has 64 or more link
+         * components.  If a progress tracker was passed, it will be marked as
+         * finished before the exception is thrown.
+         *
+         * \python The global interpreter lock will be released while
+         * this function runs, so you can use it with Python-based
+         * multithreading.
+         *
+         * \param maxAttempts the maximum number of distinct link diagrams to
+         * examine before we give up and return \c false, or a negative number
+         * if this should not be bounded.
+         * \param height the maximum number of _additional_ crossings to
+         * allow beyond the number of crossings originally present in this
+         * diagram, or a negative number if this should not be bounded.
+         * \param threads the number of threads to use.  If this is
+         * 1 or smaller then the routine will run single-threaded.
+         * \param tracker a progress tracker through which progress will
+         * be reported, or \c null if no progress reporting is required.
+         * \return a pair consisting of: (i) \c true if and only if this
+         * diagram was successfully changed to give a smaller-width greedy
+         * tree decomposition; and (ii) the number of distinct link diagrams
+         * that were examined.  Note that this could be slightly greater than
+         * \a maxAttempts, particularly when running in multithreaded mode.
+         */
+        std::pair<bool, size_t> improveTreewidth(ssize_t maxAttempts = 1000,
+            int height = 1, int threads = 1,
+            ProgressTrackerOpen* tracker = nullptr);
+
         /*@}*/
         /**
          * \name Exporting Links

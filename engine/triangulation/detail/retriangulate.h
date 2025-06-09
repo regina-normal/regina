@@ -227,6 +227,84 @@ bool simplifyExhaustiveInternal(Object& obj, int height,
         return false;
 }
 
+/**
+ * The common implementation of all exhaustive treewidth improvement functions,
+ * which aim to rewrite/retriangulate the given link diagram or triangulation
+ * to become one with a smaller-width greedy tree decomposition.
+ *
+ * This routine performs exactly the task described by
+ * Link::improveTreewidth() or Triangluation<dim>::improveTreewidth()
+ * (for those dimensions where it is defined), with the following differences:
+ *
+ * - This routine assumes any preconditions have already been checked, and
+ *   exceptions thrown if they failed.
+ *
+ * See Triangulation<dim>::improveTreewidth() or Link::improveTreewidth()
+ * for full details on what this routine actually does.
+ *
+ * \tparam Object the class providing the exhaustive treewidth improvement
+ * function, such as regina::Triangulation<dim> or regina::Link.
+ * \tparam Options Any options needed to specify exactly how objects should be
+ * propagated to produce "nearby" objects.  This will be passed directly through
+ * to retriangulateInternal(), and is ultimately used by the domain-specific
+ * function `RetriangulationParams<Object>::propagateFrom<Retriangulator>`.
+ *
+ * \param obj the object whose greedy tree decomposition we hope to improve.
+ * \param maxAttempts the maximum number of combinatorially distinct objects
+ * to examine before we give up and return \c false, or a negative number if
+ * this should not be bounded.
+ * \param height the maximum number of top-dimensional simplices or crossings
+ * to allow beyond the initial number in \a obj, or a negative number if
+ * this should not be bounded.
+ * \param threads the number of threads to use.  If this is 1 or smaller then
+ * the routine will run single-threaded.
+ * \param tracker a progress tracker through which progress will be reported,
+ * or \c null if no progress reporting is required.
+ * \return a pair consisting of: (i) \c true if and only if an object with a
+ * smaller-width greedy tree decomposition was found; and (ii) the number of
+ * combinatorially distinct objects that were examined.
+ *
+ * \ingroup detail
+ */
+template <class Object, typename Options = void>
+std::pair<bool, size_t> improveTreewidthInternal(Object& obj,
+        ssize_t maxAttempts, int height, int threads,
+        ProgressTrackerOpen* tracker) {
+    // Make a place for the callback to put an improved object, if it finds
+    // one.  Afterwards we will move this into obj, since the change to obj
+    // must happen on the calling thread.  The upshot is that we end up moving
+    // the result twice (not once), but moves are cheap and thread safety
+    // matters.
+    std::unique_ptr<Object> improved;
+    size_t attempts = 0;
+
+    size_t initWidth = TreeDecomposition(obj).width();
+    if (regina::detail::retriangulateInternal<Object, false, Options>(
+            obj, height, threads, tracker,
+            [&improved, &attempts, initWidth, maxAttempts](Object&& alt) {
+                ++attempts;
+                if (TreeDecomposition(alt).width() < initWidth) {
+                    improved.reset(new Object(std::move(alt)));
+                    return true;
+                } else if (maxAttempts >= 0 && attempts >= maxAttempts) {
+                    return true;
+                } else
+                    return false;
+            })) {
+        if (improved) {
+            obj = std::move(*improved);
+            return { true, attempts };
+        } else {
+            // We exhausted our budgeted number of attempts.
+            return { false, attempts };
+        }
+    } else {
+        // We exhausted the entire flip graph (up to the given height) and did
+        // not find any improvement.
+        return { false, attempts };
+    }
+}
+
 #ifndef __DOXYGEN
 
 template <class Object, typename Action, typename FirstArg>
