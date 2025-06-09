@@ -562,6 +562,10 @@ Precondition:
     All exponents in this polynomial with non-zero coefficients are
     multiples of *k*.
 
+Exception ``FailedPrecondition``:
+    Either *k* is zero, or some exponent with a non-zero coefficient
+    is not a multiple of *k*.
+
 Parameter ``k``:
     the scaling factor to divide exponents by.)doc";
 

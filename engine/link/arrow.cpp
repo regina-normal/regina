@@ -35,6 +35,14 @@
 #include "utilities/bitmanip.h"
 #include <thread>
 
+// #define DUMP_STAGES
+
+// When tracking progress, try to give much more weight to larger bags.
+// (Of course, this should *really* be exponential, but it's nice to see
+// some visual progress for smaller bags, so we try not to completely
+// dwarf them in the weightings.)
+#define HARD_BAG_WEIGHT(bag) (double(bag->size())*(bag->size())*(bag->size()))
+
 namespace regina {
 
 namespace {
@@ -229,6 +237,12 @@ namespace {
         return ans;
     }
 
+    /**
+     * Computes a partial sum in the naive algorithm for a subset of possible
+     * resolutions.  This is used by arrowNaive(), and is designed to support
+     * multithreading - each thread uses its own ArrowAccumulator, and works
+     * over a different subset of resolutions.
+     */
     class ArrowAccumulator {
         private:
             const Link& link_;
@@ -322,10 +336,9 @@ Arrow Link::arrowNaive(int threads, ProgressTracker* tracker) const {
 
     size_t n = crossings_.size();
     if (n >= 64) {
-        // We cannot use this naive algorithm, since our bitmask type
-        // (uint64_t) does not contain enough bits.
-        throw NotImplemented("At present, Regina can only compute arrow "
-            "polynomials for diagrams with < 64 crossings");
+        // We cannot use the naive algorithm, since our bitmask
+        // type (uint64_t) does not contain enough bits.
+        return arrowTreewidth(tracker);
     }
 
     // It is guaranteed that we have at least one strand, though we
@@ -382,7 +395,447 @@ Arrow Link::arrowNaive(int threads, ProgressTracker* tracker) const {
     return acc.finalise();
 }
 
-const Arrow& Link::arrow(Algorithm, int threads, ProgressTracker* tracker)
+Arrow Link::arrowTreewidth(ProgressTracker* tracker) const {
+    if (crossings_.empty())
+        return arrowNaive(1 /* single-threaded */, tracker);
+
+    // We are guaranteed >= 1 crossing and >= 1 component.
+
+    // Build a nice tree decomposition.
+    if (tracker)
+        tracker->newStage("Building tree decomposition", 0.05);
+
+    const TreeDecomposition& d = niceTreeDecomposition();
+    size_t nBags = d.size();
+
+    const TreeBag *bag, *child, *sibling;
+
+    size_t nEasyBags = 0;
+    double hardBagWeightSum = 0;
+    double increment, percent;
+    if (tracker) {
+        // Estimate processing stages.
+        for (bag = d.first(); bag; bag = bag->next()) {
+            switch (bag->niceType()) {
+                case NiceType::Forget:
+                case NiceType::Join:
+                    hardBagWeightSum += HARD_BAG_WEIGHT(bag);
+                    break;
+                default:
+                    ++nEasyBags;
+                    break;
+            }
+        }
+    }
+
+    // Each partial solution is a key-value map.
+    //
+    // Each key pairs off strands that connect a crossing in the bag with a
+    // crossing that has been forgotten. Strands are numbered 0..(2n-1),
+    // where strand i of crossing c is numbered 2c+i.
+    //
+    // The key is stored as a sequence x[0 .. 2n-1], where each x[i] is a pair:
+    // - if strand k is being paired off then x[k] = (s, a), where s is its
+    //   partner strand and a is the number of nodal arrows on the path from k
+    //   to s through the forgotten region, with the sign of a indicating
+    //   whether the first arrow on this path is forwards or backwards;
+    // - if strand k connects two forgotten crossings then x[k] = (-1, 0);
+    // - otherwise x[k] = (-2, 0).
+    //
+    // Each value is essentially a partially computed arrow polynomial that
+    // accounts for those crossings that have already been forgotten.
+    //
+    // We ignore any 0-crossing unknot components throughout this
+    // calculation, and only factor them in at the very end when we
+    // extract the final arrow polynomial.
+    //
+    // We will be using ints for strand IDs and nodal arrow counts, since we
+    // will be storing exponentially many keys in our key-value map and so
+    // space is at a premium.  Having strand IDs and arrow counts that fit
+    // into an int is enforced through our preconditions (note that the number
+    // of arrows is never more than the number of strands).
+
+    size_t nStrands = 2 * size();
+    size_t loops;
+
+    using Dest = std::pair<int, int>;
+    using Key = LightweightSequence<Dest>;
+    using Value = Arrow;
+    using SolnSet = std::map<Key, Value>;
+
+    FixedArray<SolnSet*> partial(nBags, nullptr);
+
+    for (bag = d.first(); bag; bag = bag->next()) {
+        size_t index = bag->index();
+#ifdef DUMP_STAGES
+        if (! tracker)
+            std::cerr << "Bag " << index << " [" << bag->size() << "] ";
+#endif
+        if (bag->isLeaf()) {
+            // Leaf bag.
+
+            if (tracker) {
+                if (tracker->isCancelled())
+                    break;
+                tracker->newStage(
+                    "Processing leaf bag (" + std::to_string(index) +
+                        '/' + std::to_string(nBags) + ')',
+                    0.05 / nEasyBags);
+            }
+#ifdef DUMP_STAGES
+            else
+                std::cerr << "LEAF" << std::endl;
+#endif
+            partial[index] = new SolnSet;
+
+            Key k(nStrands);
+            std::fill(k.begin(), k.end(), Dest(-2, 0));
+
+            partial[index]->emplace(std::move(k),
+                RingTraits<Laurent<Integer>>::one);
+        } else if (bag->niceType() == NiceType::Introduce) {
+            // Introduce bag.
+            child = bag->children();
+
+            if (tracker) {
+                if (tracker->isCancelled())
+                    break;
+                tracker->newStage(
+                    "Processing introduce bag (" + std::to_string(index) +
+                        '/' + std::to_string(nBags) + ')',
+                    0.05 / nEasyBags);
+            }
+#ifdef DUMP_STAGES
+            else
+                std::cerr << "INTRODUCE" << std::endl;
+#endif
+            // When introducing a new crossing, all of its arcs must
+            // lead to unseen crossings or crossings already in the bag.
+            // Therefore the keys and values remain unchanged.
+
+            partial[index] = partial[child->index()];
+            partial[child->index()] = nullptr;
+        } else if (bag->niceType() == NiceType::Forget) {
+            // Forget bag.
+            child = bag->children();
+
+            if (tracker) {
+                if (tracker->isCancelled())
+                    break;
+                tracker->newStage(
+                    "Processing forget bag (" + std::to_string(index) +
+                        '/' + std::to_string(nBags) + ')',
+                    0.9 * HARD_BAG_WEIGHT(bag) / hardBagWeightSum);
+
+                percent = 0;
+                if (partial[child->index()]->empty())
+                    increment = 0;
+                else
+                    increment = 100.0 / partial[child->index()]->size();
+            }
+#ifdef DUMP_STAGES
+            else
+                std::cerr << "FORGET -> 2 x " <<
+                    partial[child->index()]->size() << std::endl;
+#endif
+            Crossing* forget = crossings_[child->element(bag->niceIndex())];
+
+            // The A resolution connects strands conn[0][0][0-1], and
+            // connects strands conn[0][1][0-1].
+            // The A^{-1} resolution connects strands conn[1][0][0-1], and
+            // connects strands conn[1][1][0-1].
+            // The resolution conn[nodal][...] has nodal arrows pointing in
+            // the direction conn[nodal][i][0 -> 1].  The other resolution has
+            // no nodal arrows.
+            StrandRef conn[2][2][2];
+            int nodal;
+            if (forget->sign() > 0) {
+                // No nodal arrows, A resolution:
+                conn[0][0][0] = forget->upper().prev();
+                conn[0][0][1] = forget->lower();
+                conn[0][1][0] = forget->lower().prev();
+                conn[0][1][1] = forget->upper();
+                // Nodal arrows, A^{-1} resolution:
+                conn[1][0][0] = forget->upper().prev();
+                conn[1][0][1] = forget->lower().prev();
+                conn[1][1][0] = forget->upper();
+                conn[1][1][1] = forget->lower();
+                nodal = 1;
+            } else {
+                // Nodal arrows, A resolution:
+                conn[0][0][0] = forget->lower().prev();
+                conn[0][0][1] = forget->upper().prev();
+                conn[0][1][0] = forget->lower();
+                conn[0][1][1] = forget->upper();
+                // No nodal arrows, A^{-1} resolution:
+                conn[1][0][0] = forget->upper().prev();
+                conn[1][0][1] = forget->lower();
+                conn[1][1][0] = forget->lower().prev();
+                conn[1][1][1] = forget->upper();
+                nodal = 0;
+            }
+
+            int connIdx[2][2][2];
+            int i, j, k;
+            for (i = 0; i < 2; ++i)
+                for (j = 0; j < 2; ++j)
+                    for (k = 0; k < 2; ++k)
+                        connIdx[i][j][k] = 2 * static_cast<int>(
+                            conn[i][j][k].crossing()->index()) +
+                            conn[i][j][k].strand();
+
+            partial[index] = new SolnSet;
+
+            for (auto& soln : *(partial[child->index()])) {
+                if (tracker) {
+                    percent += increment;
+                    if (! tracker->setPercent(percent))
+                        break;
+                }
+
+                const Key& kChild = soln.first;
+                const Value& vChild = soln.second;
+
+                // Adjust the key and value to reflect the fact the newly
+                // forgotten crossing, under both possible resolutions.
+                for (i = 0; i < 2; ++i) {
+                    // i = 0: A resolution
+                    // i = 1: A^{-1} resolution
+
+                    Key kNew = kChild;
+
+                    // The number of _pairs_ of nodal arrows on each of the
+                    // one or two loops that we create (if any).
+                    int newLoopPairs[2] = { -1, -1 };
+                    for (j = 0; j < 2; ++j) {
+                        // Connect strands conn[i][j][0-1].
+                        if (kNew[connIdx[i][j][0]].first == -2 &&
+                                kNew[connIdx[i][j][1]].first == -2) {
+                            // Both strands stay in or above the bag.
+                            if (connIdx[i][j][0] == connIdx[i][j][1]) {
+                                // The two strands form a loop with no nodal
+                                // arrows.  Bury them in the forgotten region.
+                                kNew[connIdx[i][j][0]] = Dest(-1, 0);
+                                kNew[connIdx[i][j][1]] = Dest(-1, 0);
+                                if (nodal == i)
+                                    throw ImpossibleScenario("Nodal arrow "
+                                        "found in a 1-crossing loop");
+                                if (newLoopPairs[0] < 0)
+                                    newLoopPairs[0] = 0;
+                                else
+                                    newLoopPairs[1] = 0;
+                            } else {
+                                // The two strands go separate ways.
+                                // Make them the endponts of a new path that
+                                // enters and exits the forgotten region.
+                                kNew[connIdx[i][j][0]].first = connIdx[i][j][1];
+                                kNew[connIdx[i][j][1]].first = connIdx[i][j][0];
+                                if (nodal == i) {
+                                    kNew[connIdx[i][j][0]].second = 1;
+                                    kNew[connIdx[i][j][1]].second = -1;
+                                } else {
+                                    kNew[connIdx[i][j][0]].second = 0;
+                                    kNew[connIdx[i][j][1]].second = 0;
+                                }
+                            }
+                        } else if (kNew[connIdx[i][j][0]].first == -2) {
+                            // We cannot have one strand as -2 and the
+                            // other as -1, since -2 means neither end
+                            // of the strand is forgotten and -1 means
+                            // both ends are forgotten.
+
+                            // In this case we lengthen a section of the link
+                            // that passes through the forgotten region.
+                            kNew[connIdx[i][j][0]] = kNew[connIdx[i][j][1]];
+                            kNew[kNew[connIdx[i][j][1]].first].first =
+                                connIdx[i][j][0];
+                            if (nodal == i) {
+                                int arr = 1 - kNew[connIdx[i][j][0]].second;
+                                kNew[connIdx[i][j][0]].second = arr;
+                                kNew[kNew[connIdx[i][j][1]].first].second =
+                                    (arr % 2 == 0 ? arr : -arr);
+                            }
+                            kNew[connIdx[i][j][1]] = Dest(-1, 0);
+                        } else if (kNew[connIdx[i][j][1]].first == -2) {
+                            // As before, we lengthen a section of the link
+                            // that passes through the forgotten region.
+                            kNew[connIdx[i][j][1]] = kNew[connIdx[i][j][0]];
+                            kNew[kNew[connIdx[i][j][0]].first].first =
+                                connIdx[i][j][1];
+                            if (nodal == i) {
+                                int arr = -(1 + kNew[connIdx[i][j][1]].second);
+                                kNew[connIdx[i][j][1]].second = arr;
+                                kNew[kNew[connIdx[i][j][0]].first].second =
+                                    (arr % 2 == 0 ? arr : -arr);
+                            }
+                            kNew[connIdx[i][j][0]] = Dest(-1, 0);
+                        } else {
+                            // Both strands head down into the forgotten region.
+                            if (kNew[connIdx[i][j][0]].first ==
+                                    connIdx[i][j][1]) {
+                                // We have closed off a loop.
+                                int arr = kNew[connIdx[i][j][0]].second;
+                                if (nodal == i)
+                                    ++arr;
+                                if (arr < 0)
+                                    arr = -arr;
+                                if (arr % 2)
+                                    throw ImpossibleScenario("Loop found with "
+                                        "an odd number of nodal arrows");
+                                if (newLoopPairs[0] < 0)
+                                    newLoopPairs[0] = arr >> 1;
+                                else
+                                    newLoopPairs[1] = arr >> 1;
+                            } else {
+                                // We connect two sections of the link
+                                // that pass through the forgotten region.
+                                kNew[kNew[connIdx[i][j][0]].first].first =
+                                    kNew[connIdx[i][j][1]].first;
+                                kNew[kNew[connIdx[i][j][1]].first].first =
+                                    kNew[connIdx[i][j][0]].first;
+                                int arr1 = kNew[kNew[connIdx[i][j][0]].first].
+                                    second;
+                                int arr2 = kNew[connIdx[i][j][1]].second;
+                                if (nodal == i)
+                                    arr2 = 1 - arr2;
+                                if (arr1 % 2 == 0)
+                                    arr1 += arr2;
+                                else
+                                    arr1 -= arr2;
+                                kNew[kNew[connIdx[i][j][0]].first].second =
+                                    arr1;
+                                kNew[kNew[connIdx[i][j][1]].first].second =
+                                    (arr1 % 2 == 0 ? arr1 : -arr1);
+                            }
+                            kNew[connIdx[i][j][0]] = Dest(-1, 0);
+                            kNew[connIdx[i][j][1]] = Dest(-1, 0);
+                        }
+                    }
+
+                    // We start at each leaf with the polynomial 1, which
+                    // effectively adds one closed loop that we didn't have.
+                    // So in the very last iteration (which is guaranteed to
+                    // close off at least one loop), skip one factor of
+                    // loopPoly to compensate.
+                    Value vNew = vChild;
+                    vNew.shift(i == 0 ? 1 : -1);
+                    if (newLoopPairs[0] >= 0) {
+                        if (index != nBags - 1)
+                            vNew *= loopPoly;
+                        if (newLoopPairs[0] > 0)
+                            vNew.multDiagram(newLoopPairs[0]);
+                    }
+                    if (newLoopPairs[1] >= 0) {
+                        vNew *= loopPoly;
+                        if (newLoopPairs[1] > 0)
+                            vNew.multDiagram(newLoopPairs[1]);
+                    }
+
+                    // Insert the new key/value into our partial
+                    // solution, aggregating if need be.
+                    auto existingSoln = partial[index]->try_emplace(
+                        std::move(kNew), std::move(vNew));
+                    if (! existingSoln.second)
+                        existingSoln.first->second += vNew;
+                }
+            }
+
+            delete partial[child->index()];
+            partial[child->index()] = nullptr;
+        } else {
+            // Join bag.
+            child = bag->children();
+            sibling = child->sibling();
+
+            if (tracker) {
+                if (tracker->isCancelled())
+                    break;
+                tracker->newStage(
+                    "Processing join bag (" + std::to_string(index) +
+                        '/' + std::to_string(nBags) + ')',
+                    0.9 * HARD_BAG_WEIGHT(bag) / hardBagWeightSum);
+
+                percent = 0;
+                if (partial[child->index()]->empty())
+                    increment = 0;
+                else
+                    increment = 100.0 / partial[child->index()]->size();
+            }
+#ifdef DUMP_STAGES
+            else
+                std::cerr << "JOIN -> " <<
+                    partial[child->index()]->size() << " x " <<
+                    partial[sibling->index()]->size() << std::endl;
+#endif
+            partial[index] = new SolnSet;
+
+            for (auto& soln1 : *(partial[child->index()])) {
+                if (tracker) {
+                    percent += increment;
+                    if (! tracker->setPercent(percent))
+                        break;
+                }
+
+                for (auto& soln2 : *(partial[sibling->index()])) {
+                    // Combine the two child keys and values.
+                    Key kNew(nStrands);
+                    for (size_t strand = 0; strand < nStrands; ++strand)
+                        if (soln1.first[strand].first == -2)
+                            kNew[strand] = soln2.first[strand];
+                        else if (soln2.first[strand].first == -2)
+                            kNew[strand] = soln1.first[strand];
+                        else
+                            throw ImpossibleScenario(
+                                "Incompatible keys in join bag");
+
+                    // TODO: Fix this
+                    #if 0
+                    if (! partial[index]->emplace(std::move(kNew),
+                            soln1.second * soln2.second).second)
+                        throw ImpossibleScenario(
+                            "Combined keys in join bag are not unique");
+                    #endif
+                }
+            }
+
+            delete partial[child->index()];
+            delete partial[sibling->index()];
+            partial[child->index()] = partial[sibling->index()] = nullptr;
+        }
+    }
+
+    if (tracker && tracker->isCancelled()) {
+        // We don't know which elements of partial[] have been
+        // deallocated, so check them all.
+        for (size_t i = 0; i < nBags; ++i)
+            delete partial[i];
+        return {};
+    }
+
+    // Collect the final answer from partial[nBags - 1].
+#ifdef DUMP_STAGES
+    if (! tracker)
+        std::cerr << "FINISH" << std::endl;
+#endif
+    Value ans = std::move(partial[nBags - 1]->begin()->second);
+
+    delete partial[nBags - 1];
+
+    // Normalise the polynomial using the writhe of the diagram.
+    long w = writhe();
+    ans.shift(-3 * w);
+    if (w % 2)
+        ans.negate();
+
+    // Finally, factor in any zero-crossing components.
+    for (StrandRef s : components_)
+        if (! s)
+            ans *= loopPoly;
+
+    return ans;
+}
+
+const Arrow& Link::arrow(Algorithm alg, int threads, ProgressTracker* tracker)
         const {
     if (arrow_.has_value()) {
         if (tracker)
@@ -390,8 +843,19 @@ const Arrow& Link::arrow(Algorithm, int threads, ProgressTracker* tracker)
         return *arrow_;
     }
 
-    // For now we only support the naive algorithm.
-    Arrow ans = arrowNaive(threads, tracker);
+    if (size() > (INT_MAX >> 1))
+        throw NotImplemented("This link has so many crossings that the total "
+            "number of strands cannot fit into a native C++ signed int");
+
+    Arrow ans;
+    switch (alg) {
+        case Algorithm::Naive:
+            ans = arrowNaive(threads, tracker);
+            break;
+        default:
+            ans = arrowTreewidth(tracker);
+            break;
+    }
 
     if (tracker && tracker->isCancelled()) {
         tracker->setFinished();

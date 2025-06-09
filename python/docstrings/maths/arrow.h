@@ -393,6 +393,16 @@ Parameter ``end``:
     a past-the-end iterator indicating the end of the collection of
     pairs.)doc";
 
+// Docstring regina::python::doc::Arrow_::__init_2
+static const char *__init_2 =
+R"doc(Creates the given Laurent polynomial in *A*.
+
+This polynomial will have no diagram variables at all.
+
+Parameter ``laurent``:
+    the value of this new polynomial, given as a Laurent polynomial in
+    *A*.)doc";
+
 // Docstring regina::python::doc::Arrow_::__isub
 static const char *__isub =
 R"doc(Subtracts the given polynomial from this.
@@ -450,6 +460,21 @@ R"doc(Returns whether this is the zero polynomial.
 Returns:
     ``True`` if and only if this is the zero polynomial.)doc";
 
+// Docstring regina::python::doc::Arrow_::multDiagram
+static const char *multDiagram =
+R"doc(Multiplies this polynomial by the given diagram variable.
+
+Specifically, if the given index is *i*, then this polynomial will be
+multiplied by the diagram variable ``K_i``. Note that this requires
+*i* to be strictly positive.
+
+Exception ``InvalidArgument``:
+    The given index is zero.
+
+Parameter ``index``:
+    the index of the diagram variable to multiply by; this must be
+    strictly positive.)doc";
+
 // Docstring regina::python::doc::Arrow_::negate
 static const char *negate = R"doc(Negates this polynomial. This polynomial is changed directly.)doc";
 
@@ -466,6 +491,10 @@ Precondition:
 Precondition:
     All exponents of ``A`` that appear in this polynomial with non-
     zero coefficients are multiples of *k*.
+
+Exception ``FailedPrecondition``:
+    Either *k* is zero, or some exponent of ``A`` with a non-zero
+    coefficient is not a multiple of *k*.
 
 Parameter ``k``:
     the scaling factor to divide exponents by.)doc";

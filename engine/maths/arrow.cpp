@@ -81,6 +81,31 @@ void Arrow::set(const DiagramSequence& d, Laurent<Integer>&& value) {
     }
 }
 
+void Arrow::multDiagram(size_t index) {
+    if (index == 0)
+        throw InvalidArgument("The index of a diagram variable must be "
+            "strictly positive");
+
+    // Awkwardly, this operation changes the _keys_ in our map.
+    std::map<DiagramSequence, Laurent<Integer>> staging;
+    auto it = terms_.begin();
+    while (it != terms_.end()) {
+        auto h = terms_.extract(it++);
+        if (h.key().size() >= index) {
+            ++h.key()[index - 1];
+        } else {
+            DiagramSequence seq(index);
+            std::copy(h.key().begin(), h.key().end(), seq.begin());
+            std::fill(seq.begin() + h.key().size(), seq.end() - 1, 0);
+            seq[index - 1] = 1;
+            h.key() = std::move(seq);
+        }
+        staging.insert(std::move(h));
+    }
+
+    staging.swap(terms_);
+}
+
 Arrow& Arrow::operator += (const Arrow& other) {
     // This works even if &other == this, since in this case there are
     // no insertions or deletions.

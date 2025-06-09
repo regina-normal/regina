@@ -178,6 +178,12 @@ namespace {
         return loops;
     }
 
+    /**
+     * Computes a partial sum in the naive algorithm for a subset of possible
+     * resolutions.  This is used by bracketNaive(), and is designed to support
+     * multithreading - each thread uses its own BracketAccumulator, and works
+     * over a different subset of resolutions.
+     */
     class BracketAccumulator {
         private:
             const Link& link_;
@@ -652,7 +658,7 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
         // deallocated, so check them all.
         for (size_t i = 0; i < nBags; ++i)
             delete partial[i];
-        return Value();
+        return {};
     }
 
     // Collect the final answer from partial[nBags - 1].
@@ -681,8 +687,8 @@ const Laurent<Integer>& Link::bracket(Algorithm alg, int threads,
     }
 
     if (size() > (INT_MAX >> 1))
-        throw NotImplemented("This link has so many crossings that "
-            "the largest strand ID cannot fit into a native C++ int");
+        throw NotImplemented("This link has so many crossings that the total "
+            "number of strands cannot fit into a native C++ signed int");
 
     Laurent<Integer> ans;
     switch (alg) {

@@ -3843,9 +3843,9 @@ class Link :
          * will ignore your choice of algorithm and use the treewidth-based
          * algorithm regardless.
          *
-         * \exception NotImplemented This link is _so_ large that the maximum
-         * possible strand ID cannot fit into an \c int.  (On a typical machine
-         * where \c int is 32-bit, this would require over a _billion_
+         * \exception NotImplemented This link is \e so large that the total
+         * number of strands cannot fit into a signed \c int.  (On a typical
+         * machine where \c int is 32-bit, this would require over a _billion_
          * crossings).  Note that, if you have such a link, then this function
          * (which is exponential time) would be intractably slow anyway.
          *
@@ -3890,8 +3890,8 @@ class Link :
          * single-threaded with an explicit progress tracker), you should call
          * `bracket(alg, 1, tracker)` instead.
          *
-         * \exception NotImplemented This link is _so_ large that the maximum
-         * possible strand ID cannot fit into an \c int.
+         * \exception NotImplemented This link is \e so large that the total
+         * number of strands cannot fit into a signed \c int.
          *
          * \python The global interpreter lock will be released while this
          * function runs, so you can use it with Python-based multithreading.
@@ -3970,9 +3970,9 @@ class Link :
          * will ignore your choice of algorithm and use the treewidth-based
          * algorithm regardless.
          *
-         * \exception NotImplemented This link is _so_ large that the maximum
-         * possible strand ID cannot fit into an \c int.  (On a typical machine
-         * where \c int is 32-bit, this would require over a _billion_
+         * \exception NotImplemented This link is \e so large that the total
+         * number of strands cannot fit into a signed \c int.  (On a typical
+         * machine where \c int is 32-bit, this would require over a _billion_
          * crossings).  Note that, if you have such a link, then this function
          * (which is exponential time) would be intractably slow anyway.
          *
@@ -4017,8 +4017,8 @@ class Link :
          * single-threaded with an explicit progress tracker), you should call
          * `jones(alg, 1, tracker)` instead.
          *
-         * \exception NotImplemented This link is _so_ large that the maximum
-         * possible strand ID cannot fit into an \c int.
+         * \exception NotImplemented This link is \e so large that the total
+         * number of strands cannot fit into a signed \c int.
          *
          * \python The global interpreter lock will be released while this
          * function runs, so you can use it with Python-based multithreading.
@@ -4099,9 +4099,9 @@ class Link :
          * \exception FailedPrecondition This is a virtual (not classical)
          * link diagram.
          *
-         * \exception NotImplemented This link is _so_ large that the maximum
-         * possible strand ID cannot fit into an \c int.  (On a typical machine
-         * where \c int is 32-bit, this would require over a _billion_
+         * \exception NotImplemented This link is \e so large that the total
+         * number of strands cannot fit into a signed \c int.  (On a typical
+         * machine where \c int is 32-bit, this would require over a _billion_
          * crossings).  Note that, if you have such a link, then this function
          * (which is exponential time) would be intractably slow anyway.
          *
@@ -4177,9 +4177,9 @@ class Link :
          * \exception FailedPrecondition This is a virtual (not classical)
          * link diagram.
          *
-         * \exception NotImplemented This link is _so_ large that the maximum
-         * possible strand ID cannot fit into an \c int.  (On a typical machine
-         * where \c int is 32-bit, this would require over a _billion_
+         * \exception NotImplemented This link is \e so large that the total
+         * number of strands cannot fit into a signed \c int.  (On a typical
+         * machine where \c int is 32-bit, this would require over a _billion_
          * crossings).  Note that, if you have such a link, then this function
          * (which is exponential time) would be intractably slow anyway.
          *
@@ -4223,9 +4223,9 @@ class Link :
          * \exception FailedPrecondition This is a virtual (not classical)
          * link diagram.
          *
-         * \exception NotImplemented This link is _so_ large that the maximum
-         * possible strand ID cannot fit into an \c int.  (On a typical machine
-         * where \c int is 32-bit, this would require over a _billion_
+         * \exception NotImplemented This link is \e so large that the total
+         * number of strands cannot fit into a signed \c int.  (On a typical
+         * machine where \c int is 32-bit, this would require over a _billion_
          * crossings).  Note that, if you have such a link, then this function
          * (which is exponential time) would be intractably slow anyway.
          *
@@ -4306,28 +4306,37 @@ class Link :
          * returns the previously computed result).  Otherwise the computation
          * could be quite slow, particularly for larger numbers of crossings.
          *
-         * \warning Currently this routine uses a naive algorithm that resolves
-         * crossings in all `2^n` possible ways.  As a result, it can only
-         * handle a limited number of crosings at present (the maximum is 63).
-         * If this link has 64 or more crossings then this routine will throw
-         * an exception.  The hope is to implement a better algorithm (which is
-         * faster and can handle more crossings) in a future version of Regina.
+         * \warning The naive algorithm can only handle a limited number of
+         * crossings (currently at most 63).  If you pass Algorithm::Naive and
+         * you have too many crossings (which is not advised, since the
+         * naive algorithm requires 2^<i>n</i> time), then this routine
+         * will ignore your choice of algorithm and use the treewidth-based
+         * algorithm regardless.
          *
-         * \exception NotImplemented This link has 64 or more crossings.
+         * \exception NotImplemented This link is \e so large that the total
+         * number of strands cannot fit into a signed \c int.  (On a typical
+         * machine where \c int is 32-bit, this would require over a _billion_
+         * crossings).  Note that, if you have such a link, then this function
+         * (which is exponential time) would be intractably slow anyway.
          *
          * \python The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
          * \param alg the algorithm with which to compute the polynomial.
-         * At present this argument is ignored (since only the naive algorithm
-         * is available); this argument is kept as a placeholder for if/when
-         * more sophisticated algorithms become available.  In the meantime,
-         * just use the default (Algorithm::Default).
+         * If you are not sure, the default (Algorithm::Default) is a safe
+         * choice.  If you wish to specify a particular algorithm, there are
+         * currently two choices: Algorithm::Naive is a slow algorithm that
+         * computes the arrow polynomial by resolving all crossings in all
+         * possible ways, and Algorithm::Treewidth uses a fixed-parameter
+         * tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * \param threads the number of threads to use.  If this is 1 or
-         * smaller then the computation will run single-threaded.
+         * smaller then the computation will run single-threaded.  Currently
+         * only the naive algorithm supports multithreading; if you use the
+         * treewidth-based algorithm then it will run single-threaded
+         * regardless of the value of \a threads.
          * \return the normalised arrow polynomial, or the zero polynomial if
          * the calculation was cancelled via the given progress tracker.
          */
@@ -6868,9 +6877,9 @@ class Link :
          *
          * See bracket() for further details.
          *
-         * \pre The maximum possible strand ID can fit into an \c int.
+         * \pre The total number of strands can fit into a signed \c int.
          * In other words, if an \c int contains \a b bits, then the
-         * number of crossings is less than 2^(<i>b</i>-2).
+         * number of crossings is less than `2^(b-2)`.
          */
         Laurent<Integer> bracketTreewidth(ProgressTracker* tracker) const;
 
@@ -6893,9 +6902,9 @@ class Link :
          *
          * \pre This link contains at least one crossing.
          *
-         * \pre The maximum possible strand ID can fit into an \c int.
+         * \pre The total number of strands can fit into a signed \c int.
          * In other words, if an \c int contains \a b bits, then the
-         * number of crossings is less than 2^(<i>b</i>-2).
+         * number of crossings is less than `2^(b-2)`.
          */
         Laurent2<Integer> homflyTreewidth(ProgressTracker* tracker) const;
 
@@ -6927,6 +6936,21 @@ class Link :
          * See arrow() for further details.
          */
         Arrow arrowNaive(int threads, ProgressTracker* tracker) const;
+
+        /**
+         * Compute the arrow polynomial using a fixed-parameter tractable
+         * algorithm based on a tree decomposition.
+         *
+         * The given progress tracker may be \c null.
+         * This routine does _not_ mark the tracker as finished.
+         *
+         * See arrow() for further details.
+         *
+         * \pre The total number of strands can fit into a signed \c int.
+         * In other words, if an \c int contains \a b bits, then the
+         * number of crossings is less than `2^(b-2)`.
+         */
+        Arrow arrowTreewidth(ProgressTracker* tracker) const;
 
         /**
          * Returns the group of this link as constructed from the Wirtinger

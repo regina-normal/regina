@@ -473,6 +473,20 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
         void invertA();
 
         /**
+         * Multiplies this polynomial by the given diagram variable.
+         *
+         * Specifically, if the given index is \a i, then this polynomial will
+         * be multiplied by the diagram variable `K_i`.  Note that this
+         * requires \a i to be strictly positive.
+         *
+         * \exception InvalidArgument The given index is zero.
+         *
+         * \param index the index of the diagram variable to multiply by; this
+         * must be strictly positive.
+         */
+        void multDiagram(size_t index);
+
+        /**
          * Multiplies this polynomial by the given integer constant.
          *
          * \param scalar the scalar factor to multiply by.
