@@ -141,9 +141,7 @@ startAgain:
             }
 
         // We should never reach this point.
-        std::cerr << "ERROR: minimiseBoundary() could not continue."
-            << std::endl;
-        break;
+        throw ImpossibleScenario("minimiseBoundary() could not continue");
     }
 
     // If we fell out of the boundary component loop then all boundary

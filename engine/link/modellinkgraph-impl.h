@@ -93,9 +93,8 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
     }
     if (steps != 2 * size()) {
         // This should never happen.
-        std::cerr << "ERROR: generateMinimalLinks() did not identify "
-            "components correctly" << std::endl;
-        return;
+        throw ImpossibleScenario("generateMinimalLinks() did not identify "
+            "components correctly");
     }
 
     // Force computation of the cell structure (which we will need below),
@@ -354,9 +353,8 @@ void ModelLinkGraph::generateAllLinks(Action&& action, Args&&... args)
     }
     if (steps != 2 * size()) {
         // This should never happen.
-        std::cerr << "ERROR: generateAllLinks() did not identify "
-            "components correctly" << std::endl;
-        return;
+        throw ImpossibleScenario("generateAllLinks() did not identify "
+            "components correctly");
     }
 
     // Now choose the signs of the crossings!

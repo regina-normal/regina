@@ -984,17 +984,12 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
     // Since we are assured at least one crossing at this point,
     // we have 0 <= i <= #components + #crossings - 1.
     size_t maxComp = 0;
-    auto* coeff = new Laurent2<Integer>[n + components_.size()];
+    FixedArray<Laurent2<Integer>> coeff(n + components_.size());
 
     // Iterate through a tree of states:
-    auto* state = new CrossingState[n];
-    std::fill(state, state + n, CrossingState::Unseen);
-
-    auto* first = new StrandRef[n + components_.size()];
-    std::fill(first, first + n + components_.size(), StrandRef());
-
-    bool* seen = new bool[2 * n]; // index = strand ID
-    std::fill(seen, seen + 2 * n, false);
+    FixedArray<CrossingState> state(n, CrossingState::Unseen);
+    FixedArray<StrandRef> first(n + components_.size(), StrandRef());
+    FixedArray<bool> seen(2 * n, false); // index = strand ID
 
     Laurent2<Integer> term;
     s = start;
@@ -1133,10 +1128,9 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
                         case CrossingState::Unseen:
                         case CrossingState::Tried:
                             // Should never happen.
-                            std::cerr << "ERROR: homfly() is backtracking "
+                            throw ImpossibleScenario("homfly() is backtracking "
                                 "through a crossing that does not seem to have "
-                                "been visited." << std::endl;
-                            break;
+                                "been visited");
                     }
                 }
 
@@ -1215,21 +1209,15 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
             case CrossingState::Switch2:
             case CrossingState::Splice2:
                 // Should never happen.
-                std::cerr << "ERROR: homfly() is visiting a "
-                    "crossing for the third time." << std::endl;
-                break;
+                throw ImpossibleScenario("homfly() is visiting a "
+                    "crossing for the third time");
         }
         ++s;
         ++pos;
     }
-    delete[] seen;
-    delete[] first;
-    delete[] state;
 
-    if (tracker && tracker->isCancelled()) {
-        delete[] coeff;
-        return Laurent2<Integer>();
-    }
+    if (tracker && tracker->isCancelled())
+        return {};
 
     // Piece together the final polynomial.
 
@@ -1247,7 +1235,6 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
         deltaPow *= delta;
     }
 
-    delete[] coeff;
     return ans;
 }
 
@@ -1317,8 +1304,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
     using Value = Laurent2<Integer>;
     using SolnSet = std::map<Key, Value>;
 
-    auto* partial = new SolnSet*[nBags];
-    std::fill(partial, partial + nBags, nullptr);
+    FixedArray<SolnSet*> partial(nBags, nullptr)
 
     ViabilityData vData(this, d);
 
@@ -2847,9 +2833,14 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 // which is unavoidable since we need to
                                 // do this many times for the same value.
                                 if (! partial[index]->emplace(
-                                        kNew, val).second)
-                                    std::cerr << "ERROR: Combined keys in join "
-                                        "bag are not unique" << std::endl;
+                                        kNew, val).second) {
+                                    // This exception leaks memory - we have not
+                                    // deallocated the individual solution sets
+                                    // in partial[] - however, this situation is
+                                    // also impossible, so don't fret over it.
+                                    throw ImpossibleScenario("Combined keys in "
+                                        "join bag are not unique");
+                                }
                             }
                             // Fall through to the backtrack step.
                         } else if (! choice.get(idx)) {
@@ -2934,7 +2925,6 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
         // deallocated, so check them all.
         for (size_t i = 0; i < nBags; ++i)
             delete partial[i];
-        delete[] partial;
         return Value();
     }
 
@@ -2943,9 +2933,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
     std::cerr << "FINISH" << std::endl;
 #endif
     Value ans = std::move(partial[nBags - 1]->begin()->second);
-
     delete partial[nBags - 1];
-    delete[] partial;
 
     // Finally, factor in any zero-crossing components.
     for (StrandRef s : components_)
