@@ -264,6 +264,8 @@ class LinkTest : public testing::Test {
         TestCase virtualLink3 {
             Link::fromData({ +1, +1 }, { 1 }, { -2 }, { -1, 2 }),
             "2-crossing, 3-component virtual link" };
+        TestCase virtualTrefoilx2 { ExampleLink::virtualTrefoil().parallel(2),
+            "Parallel virtual trefoils" };
 
         // A virtual disconnected diagram, constructed as
         // (virtualLink3 U virtualTrefoil U hopf):
@@ -322,6 +324,7 @@ class LinkTest : public testing::Test {
                 f(gpv.link, gpv.name);
                 f(virtualLink2.link, virtualLink2.name);
                 f(virtualLink3.link, virtualLink3.name);
+                f(virtualTrefoilx2.link, virtualTrefoilx2.name);
                 f(virtualDisconnected.link, virtualDisconnected.name);
             }
         }
@@ -398,6 +401,8 @@ TEST_F(LinkTest, connected) {
     EXPECT_TRUE(virtualLink2.link.graph().isConnected());
     EXPECT_TRUE(virtualLink3.link.isConnected());
     EXPECT_TRUE(virtualLink3.link.graph().isConnected());
+    EXPECT_TRUE(virtualTrefoilx2.link.isConnected());
+    EXPECT_TRUE(virtualTrefoilx2.link.graph().isConnected());
     EXPECT_FALSE(virtualDisconnected.link.isConnected());
     EXPECT_FALSE(virtualDisconnected.link.graph().isConnected());
 
@@ -450,6 +455,7 @@ TEST_F(LinkTest, components) {
     EXPECT_EQ(gpv.link.countComponents(), 1);
     EXPECT_EQ(virtualLink2.link.countComponents(), 2);
     EXPECT_EQ(virtualLink3.link.countComponents(), 3);
+    EXPECT_EQ(virtualTrefoilx2.link.countComponents(), 2);
     EXPECT_EQ(virtualDisconnected.link.countComponents(), 6);
 }
 
@@ -503,6 +509,7 @@ TEST_F(LinkTest, virtualGenus) {
     verifyVirtualGenus(gpv, 1);
     verifyVirtualGenus(virtualLink2, 1);
     verifyVirtualGenus(virtualLink3, 1);
+    verifyVirtualGenus(virtualTrefoilx2, 1);
     verifyVirtualGenus(virtualDisconnected, 2);
 }
 
@@ -633,6 +640,7 @@ TEST_F(LinkTest, isAlternating) {
     EXPECT_FALSE(gpv.link.isAlternating());
     EXPECT_FALSE(virtualLink2.link.isAlternating());
     EXPECT_FALSE(virtualLink3.link.isAlternating());
+    EXPECT_FALSE(virtualTrefoilx2.link.isAlternating());
     EXPECT_FALSE(virtualDisconnected.link.isAlternating());
 }
 
@@ -700,6 +708,7 @@ TEST_F(LinkTest, makeAlternating) {
     verifyMakeAlternating(gpv, false);
     verifyMakeAlternating(virtualLink2, false);
     verifyMakeAlternating(virtualLink3, false);
+    verifyMakeAlternating(virtualTrefoilx2, true);
     verifyMakeAlternating(virtualDisconnected, false);
 }
 
@@ -755,6 +764,7 @@ TEST_F(LinkTest, linking) {
     verifyLinking(gpv, 0);
     verifyOnlyLinking2(virtualLink2, 1);
     verifyLinking(virtualLink3, 1);
+    verifyLinking(virtualTrefoilx2, 0);
     verifyLinking(virtualDisconnected, 2);
 }
 
@@ -817,6 +827,7 @@ TEST_F(LinkTest, writhe) {
     verifyWrithe(gpv, -4, {-4});
     verifyWrithe(virtualLink2, 1, {0,0});
     verifyWrithe(virtualLink3, 2, {0,0,0});
+    verifyWrithe(virtualTrefoilx2, 4, {2, 2});
     verifyWrithe(virtualDisconnected, 6, {0,0,0,2,0,0});
 }
 
@@ -864,6 +875,7 @@ TEST_F(LinkTest, oddWrithe) {
 
     EXPECT_THROW({ virtualLink2.link.oddWrithe(); }, FailedPrecondition);
     EXPECT_THROW({ virtualLink3.link.oddWrithe(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualTrefoilx2.link.oddWrithe(); }, FailedPrecondition);
     EXPECT_THROW({ virtualDisconnected.link.oddWrithe(); }, FailedPrecondition);
 }
 
@@ -1129,6 +1141,10 @@ TEST_F(LinkTest, jones) {
     verifyJones(virtualDisconnected,
         {3, {-1,-3,-5,-6,-6,-5,-4,-4,-3,-1,1,2,2,1}});
 
+    // This polynomial was computed using Regina 7.4 (and verified using
+    // both algorithms).
+    verifyJones(virtualTrefoilx2, {1, {-1,0,0,0,-2,0,-1,0,1,0,1,0,1,0,-1}});
+
     // Run through a small census and ensure that both algorithms give
     // the same Jones polynomial in both cases.
     runCensusAllVirtual(verifyJonesConsistent);
@@ -1275,21 +1291,33 @@ TEST_F(LinkTest, homfly) {
     EXPECT_THROW({ virtualLink2.link.homflyLM(); }, FailedPrecondition);
     EXPECT_THROW({ virtualLink3.link.homflyAZ(); }, FailedPrecondition);
     EXPECT_THROW({ virtualLink3.link.homflyLM(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualTrefoilx2.link.homflyAZ(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualTrefoilx2.link.homflyLM(); }, FailedPrecondition);
     EXPECT_THROW({ virtualDisconnected.link.homflyAZ(); }, FailedPrecondition);
     EXPECT_THROW({ virtualDisconnected.link.homflyLM(); }, FailedPrecondition);
 }
 
-static void verifyArrow(Link link, const char* name,
+static void verifyArrow(const Link& link, const char* name,
         const regina::Arrow& expected) {
-    // Note: passing link by value is deliberate - we do not want to cache the
-    // arrow polynomial in the source link.
-
     SCOPED_TRACE_CSTRING(name);
 
-    // Once we support multiple algorithms for arrow polynomials, we should
-    // compare them all here.
+    // Since we are computing the arrow polynomial multiple times
+    // (using different algorithms), we work with clones of the link
+    // that do not clone any already-computed properties.
 
-    EXPECT_EQ(link.arrow(), expected);
+    // Always try the treewidth-based algorithm.
+    EXPECT_EQ(Link(link, false).arrow(Algorithm::Treewidth), expected);
+
+    // Only try the naive algorithm if the link is small enough, since this
+    // algorithm iterates through 2^n states.
+    if (link.size() <= 40)
+        EXPECT_EQ(Link(link, false).arrow(Algorithm::Naive), expected);
+}
+
+static void verifyArrowConsistent(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+    EXPECT_EQ(Link(link, false).arrow(Algorithm::Treewidth),
+        Link(link, false).arrow(Algorithm::Naive));
 }
 
 static void verifyArrowClassical(const TestCase& test) {
@@ -1382,10 +1410,15 @@ TEST_F(LinkTest, arrow) {
         { {{}, {-2, {-1}}},
           {{1}, {-4, {-1}}} });
 
-    // This was computed using Regina 7.4.
+    // These were computed using Regina 7.4.
     verifyArrow(virtualLink3.link, virtualLink3.name,
         { {{}, {-8, {1,0,0,0,1}}},
           {{1}, {-6, {2}}} });
+    verifyArrow(virtualTrefoilx2.link, virtualTrefoilx2.name,
+        { {{}, {-26, {1,0,0,0,-3,0,0,0,-1,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,-1}}},
+          {{0,2}, {-30, {-1,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,-1}}},
+          {{2}, {-22, {2,0,0,0,2,0,0,0,-2,0,0,0,-2}}}
+        });
 
     // The following link is the disjoint union
     // (virtualLink3 U virtualTrefoil U hopf), and so the expected polynomial
@@ -1470,6 +1503,10 @@ TEST_F(LinkTest, arrow) {
         { {{}, {2, {-1,0,0,0,1,0,0,0,-1}}},
           {{1}, {12, {-1}}}
         });
+
+    // Run through a small census and ensure that both algorithms give
+    // the same arrow polynomial in both cases.
+    runCensusAllVirtual(verifyArrowConsistent);
 
     // Check that the multithreaded algorithm gives the same answers as the
     // single-threaded algorithm.  All polynomials below were computing using
@@ -1763,6 +1800,7 @@ TEST_F(LinkTest, r1Count) {
     verifyR1Count(gpv, 32, 0);
     verifyR1Count(virtualLink2, 8, 0);
     verifyR1Count(virtualLink3, 16, 0);
+    verifyR1Count(virtualTrefoilx2, 96, 0);
     verifyR1Count(virtualDisconnected, 48, 0);
 }
 
@@ -1876,6 +1914,7 @@ TEST_F(LinkTest, r2Count) {
     verifyR2Count(gpv, 60, 224, 0, 0);
     verifyR2Count(virtualLink2, 8, 8, 0, 0);
     verifyR2Count(virtualLink3, 20, 48, 0, 0);
+    verifyR2Count(virtualTrefoilx2, 262, 2208, 0, 0);
     verifyR2Count(virtualDisconnected, 20 + 28 + 8 + 8*8*6, 528, 0, 0);
 }
 
@@ -1948,6 +1987,7 @@ TEST_F(LinkTest, r3Count) {
     verifyR3Count(gpv, 0);
     verifyR3Count(virtualLink2, 0);
     verifyR3Count(virtualLink3, 0);
+    verifyR3Count(virtualTrefoilx2, 2);
     verifyR3Count(virtualDisconnected, 0);
 }
 
@@ -3665,6 +3705,8 @@ TEST_F(LinkTest, sig) {
     EXPECT_EQ(gpv.link.sig(), "eabacdcdbZa-d");
     EXPECT_EQ(virtualLink2.link.sig(), "bababd");
     EXPECT_EQ(virtualLink3.link.sig(), "cabcacbjp");
+    EXPECT_EQ(virtualTrefoilx2.link.sig(),
+        "mabcadefghcijmbkldkijlefghNI8OF4-d");
     EXPECT_EQ(virtualDisconnected.link.sig(), "cabcacbjpcabcabjpcababdp");
 }
 
@@ -4318,7 +4360,8 @@ TEST_F(LinkTest, group) {
 
     // In the tests below, we are currently missing group presentations for:
     // - conway, kinoshitaTerasaka, gst;
-    // - whitehead, borromean, adams6_28.
+    // - whitehead, borromean, adams6_28;
+    // - virtualTrefoilx2.
     // We should hunt down independent confirmations of these and then include
     // them in the test suite.
 
