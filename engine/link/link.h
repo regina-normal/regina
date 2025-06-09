@@ -3011,7 +3011,7 @@ class Link :
          * component), then in such cases you can try the more powerful but
          * (much) slower simplifyExhaustive() instead.
          *
-         * This routine will never reflect or reverse the link.
+         * This routine will never reflect, rotate or reverse the link.
          *
          * \warning Running this routine multiple times upon the same link may
          * return different results, since the implementation makes random
@@ -3054,7 +3054,7 @@ class Link :
          * crossings) are not used in this routine.  Such moves do however
          * feature in simplify().
          *
-         * This routine will never reflect or reverse the link.
+         * This routine will never reflect, rotate or reverse the link.
          *
          * \warning The implementation of this routine (and therefore
          * its results) may change between different releases of Regina.
@@ -3075,8 +3075,9 @@ class Link :
          * exhaustive search through the Reidemeister graph.  This routine is
          * more powerful but much slower than simplify().
          *
-         * Unlike simplify(), this routine **could potentially
-         * reflect or reverse the link**.
+         * Unlike simplify(), this routine **could potentially reflect the
+         * diagram, rotate the diagram, and/or reverse individual link
+         * components**.
          *
          * As of Regina 7.4, this routine is now available for any connected
          * link diagram (classical or virtual) with fewer than 64 link
