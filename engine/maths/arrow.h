@@ -65,11 +65,6 @@ namespace regina {
  * variables at all we use the empty sequence.  In the notes below we call
  * such a sequence a _diagram sequence_.
  *
- * At present, this class does _not_ support multiplying arrow polynomials
- * together (though you can multiply an arrow polynomial by a Laurent
- * polynomial in `A`).  This also means that, at present, the Arrow class does
- * not have its own specialisation of RingTraits.
- *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
@@ -588,6 +583,15 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
 
     friend Arrow operator * (const Arrow&, const Arrow&);
 };
+
+#ifndef __DOXYGEN
+// Don't confuse doxygen with specialisations.
+template <>
+struct RingTraits<Arrow> {
+    inline static const Arrow zero;
+    inline static const Arrow one { Laurent<Integer>(0, {1}) };
+};
+#endif // __DOXYGEN
 
 /**
  * Swaps the contents of the given polynomials.

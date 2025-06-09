@@ -305,6 +305,12 @@ TEST_F(LaurentTest, arithmetic) {
     }
 }
 
+TEST_F(LaurentTest, ringConstants) {
+    // Verify that the RingTraits constants looks correct.
+    EXPECT_EQ(regina::RingTraits<Laurent<Integer>>::zero.str(), "0");
+    EXPECT_EQ(regina::RingTraits<Laurent<Integer>>::one.str(), "1");
+}
+
 TEST_F(LaurentTest, tightEncoding) {
     TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(zero);
     TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(zero2);

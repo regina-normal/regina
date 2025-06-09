@@ -62,8 +62,6 @@ namespace regina {
  *
  * The type `RingTraits<T>` should then provide:
  *
- * - a boolean class constant `isRing` which is `true`;
- *
  * - class constants `zero` and `one`, which are objects of type \a T that
  *   hold the additive and multiplicative identities respectively.
  *

@@ -68,6 +68,12 @@ class ArrowTest : public testing::Test {
 // tests, where we verify computations of many different arrow polynomials of
 // classical and virtual links.
 
+TEST_F(ArrowTest, ringConstants) {
+    // Verify that the RingTraits constants looks correct.
+    EXPECT_EQ(regina::RingTraits<Arrow>::zero.str(), "0");
+    EXPECT_EQ(regina::RingTraits<Arrow>::one.str(), "1");
+}
+
 TEST_F(ArrowTest, output) {
     EXPECT_EQ(zero.str(), "0");
     EXPECT_EQ(one.str(), "1");
