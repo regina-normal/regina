@@ -3011,7 +3011,7 @@ class Link :
          * component), then in such cases you can try the more powerful but
          * (much) slower simplifyExhaustive() instead.
          *
-         * This routine will never reflect, rotate or reverse the link.
+         * This routine will never reflect, rotate or reverse the link diagram.
          *
          * \warning Running this routine multiple times upon the same link may
          * return different results, since the implementation makes random
@@ -3054,7 +3054,7 @@ class Link :
          * crossings) are not used in this routine.  Such moves do however
          * feature in simplify().
          *
-         * This routine will never reflect, rotate or reverse the link.
+         * This routine will never reflect, rotate or reverse the link diagram.
          *
          * \warning The implementation of this routine (and therefore
          * its results) may change between different releases of Regina.
@@ -3075,13 +3075,12 @@ class Link :
          * exhaustive search through the Reidemeister graph.  This routine is
          * more powerful but much slower than simplify().
          *
-         * Unlike simplify(), this routine **could potentially reflect the
-         * diagram, rotate the diagram, and/or reverse individual link
-         * components**.
+         * As of Regina 7.4, this routine will never reflect, rotate or
+         * reverse the link diagram.
          *
-         * As of Regina 7.4, this routine is now available for any connected
-         * link diagram (classical or virtual) with fewer than 64 link
-         * components.  If this link has 64 or more components then this
+         * Also, as of Regina 7.4, this routine is now available for any
+         * connected link diagram (classical or virtual) with fewer than 64
+         * link components.  If this link has 64 or more components then this
          * routine will throw an exception (as described below).
          *
          * This routine will iterate through all link diagrams that can be
@@ -7811,14 +7810,16 @@ inline bool Link::rewrite(int height, int threads,
 
     // The template option std::true_type means allow classical moves only.
     if constexpr (Traits::withSig) {
-        return detail::retriangulateInternal<Link, true, std::true_type>(
-            *this, height, threads, tracker,
+        return detail::retriangulateInternal<Link, true,
+            detail::RetriangulateDefault, std::true_type>(
+            *this, false /* rigid */, height, threads, tracker,
             [&](const std::string& sig, Link&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     } else {
-        return detail::retriangulateInternal<Link, false, std::true_type>(
-            *this, height, threads, tracker,
+        return detail::retriangulateInternal<Link, false,
+            detail::RetriangulateDefault, std::true_type>(
+            *this, false /* rigid */, height, threads, tracker,
             [&](Link&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
             });
@@ -7844,14 +7845,16 @@ inline bool Link::rewriteVirtual(int height, int threads,
     // The template option std::false_type means allow both classical and
     // virtual moves.
     if constexpr (Traits::withSig) {
-        return detail::retriangulateInternal<Link, true, std::false_type>(
-            *this, height, threads, tracker,
+        return detail::retriangulateInternal<Link, true,
+            detail::RetriangulateDefault, std::false_type>(
+            *this, false /* rigid */, height, threads, tracker,
             [&](const std::string& sig, Link&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     } else {
-        return detail::retriangulateInternal<Link, false, std::false_type>(
-            *this, height, threads, tracker,
+        return detail::retriangulateInternal<Link, false,
+            detail::RetriangulateDefault, std::false_type>(
+            *this, false /* rigid */, height, threads, tracker,
             [&](Link&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
             });

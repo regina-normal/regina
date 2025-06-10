@@ -85,6 +85,12 @@ namespace regina::detail {
  *   returns the text signature that is used to identify a triangulation
  *   or link up to the appropriate notion of combinatorial equivalence.
  *
+ * - a function `static std::string rigidSig(const Object&)`, which returns
+ *   the same kind of text signature, but without allowing reflection, reversal
+ *   and/or rotation of link diagrams.  For triangulations, rigidity options
+ *   are currently ignored and so rigidSig() should return the same text
+ *   signature as sig().
+ *
  * The function `static void propagateFrom<T>(sig, max, retriangulator)`
  * takes the following arguments:
  *
@@ -105,7 +111,7 @@ namespace regina::detail {
  * `retriangulator->candidate(std::move(alt), sig)`.
  * If \a Object uses options to control what moves are allowed (e.g., the link
  * type indicating whether to allow virtual as well as classical moves), then
- * these options can be accessed through the type `T::Options`.
+ * these options can be accessed through the type `T::PropagationOptions`.
  *
  * The function should also check the return value each time it calls
  * `retriangulator->candidate(...)`.  If the \a candidate
@@ -356,16 +362,18 @@ class RetriangulateSigGraph<false> : private std::set<std::string> {
  * text signature as its initial argument (in addition to the
  * triangulation/link which is passed in all cases).
  */
-template <class Object, bool threading, bool withSig, typename Options_>
+template <class Object, bool threading, bool withSig,
+    typename PropagationOptions_>
 class Retriangulator : public RetriangulateThreadSync<threading> {
     public:
-        using Options = Options_;
+        using PropagationOptions = PropagationOptions_;
 
     private:
         // To switch on backtracing, just change the following type alias to
         // RetriangulateSigGraph<true>.
         using SigSet = RetriangulateSigGraph<false>;
 
+        const bool rigid_;
         const size_t maxSize_;
         RetriangulateActionFunc<Object, withSig> action_;
 
@@ -394,9 +402,10 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
         }
 
     public:
-        Retriangulator(size_t maxSize,
+        Retriangulator(bool rigid, size_t maxSize,
                 RetriangulateActionFunc<Object, withSig>&& action) :
-            maxSize_(maxSize), action_(action), process_(lowerPriority) {
+            rigid_(rigid), maxSize_(maxSize), action_(action),
+            process_(lowerPriority) {
         }
 
         // Make this class non-copyable.
@@ -429,13 +438,16 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
         bool candidate(Object&& alt, const std::string& derivedFrom);
 };
 
-template <class Object, bool threading, bool withSig, typename Options>
-inline bool Retriangulator<Object, threading, withSig, Options>::seed(
-        const Object& obj) {
+template <class Object, bool threading, bool withSig,
+    typename PropagationOptions>
+inline bool Retriangulator<Object, threading, withSig,
+        PropagationOptions>::seed(const Object& obj) {
     // We have to pass a *copy* of obj to action_, since action_ is
     // allowed to change the object that is passed to it.
     // This is inefficient, but at least it only happens once.
-    const std::string sig = RetriangulateParams<Object>::sig(obj);
+    const std::string sig = (rigid_ ?
+        RetriangulateParams<Object>::rigidSig(obj) :
+        RetriangulateParams<Object>::sig(obj));
     {
         // Note: for triangulations, this constructor clones locks also.
         Object copy(obj, false);
@@ -457,9 +469,10 @@ inline bool Retriangulator<Object, threading, withSig, Options>::seed(
     return false;
 }
 
-template <class Object, bool threading, bool withSig, typename Options>
-void Retriangulator<Object, threading, withSig, Options>::processQueue(
-        ProgressTrackerOpen* tracker) {
+template <class Object, bool threading, bool withSig,
+    typename PropagationOptions>
+void Retriangulator<Object, threading, withSig,
+        PropagationOptions>::processQueue(ProgressTrackerOpen* tracker) {
     SigSet::iterator next;
 
     typename RetriangulateThreadSync<threading>::Lock lock(*this);
@@ -494,10 +507,13 @@ void Retriangulator<Object, threading, withSig, Options>::processQueue(
     }
 }
 
-template <class Object, bool threading, bool withSig, typename Options>
-bool Retriangulator<Object, threading, withSig, Options>::candidate(
+template <class Object, bool threading, bool withSig,
+    typename PropagationOptions>
+bool Retriangulator<Object, threading, withSig, PropagationOptions>::candidate(
         Object&& alt, const std::string& derivedFrom) {
-    const std::string sig = RetriangulateParams<Object>::sig(alt);
+    const std::string sig = (rigid_ ?
+        RetriangulateParams<Object>::rigidSig(alt) :
+        RetriangulateParams<Object>::sig(alt));
 
     typename RetriangulateThreadSync<threading>::Lock lock(*this);
 
@@ -533,8 +549,9 @@ bool Retriangulator<Object, threading, withSig, Options>::candidate(
     return false;
 }
 
-template <class Object, bool threading, bool withSig, typename Options>
-bool enumerateDetail(const Object& obj, int height, int nThreads,
+template <class Object, bool threading, bool withSig,
+    typename PropagationOptions>
+bool enumerateDetail(const Object& obj, bool rigid, int height, int nThreads,
         ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action) {
     if (tracker)
@@ -544,18 +561,21 @@ bool enumerateDetail(const Object& obj, int height, int nThreads,
         // There are no moves possible on empty links or empty triangulations.
         // However, we should still visit the original (empty) object.
         bool result;
-        if constexpr (withSig)
+        if constexpr (withSig) {
+            // There is only one empty link diagram and/or triangulation, so
+            // we can ignore the value of rigid_ here.
             result = action(obj.sig(), Object(obj));
-        else
+        } else {
             result = action(Object(obj));
+        }
         if (tracker)
             tracker->setFinished();
         return result;
     }
 
-    using T = Retriangulator<Object, threading, withSig, Options>;
+    using T = Retriangulator<Object, threading, withSig, PropagationOptions>;
 
-    T bfs((height >= 0 ? obj.size() + height :
+    T bfs(rigid, (height >= 0 ? obj.size() + height :
         std::numeric_limits<std::size_t>::max()), std::move(action));
     if (bfs.seed(obj)) {
         if (tracker)
@@ -569,16 +589,16 @@ bool enumerateDetail(const Object& obj, int height, int nThreads,
     return bfs.done();
 }
 
-template <class Object, bool withSig, typename Options>
-bool retriangulateInternal(const Object& obj, int height, int nThreads,
-        ProgressTrackerOpen* tracker,
+template <class Object, bool withSig, int flags, typename PropagationOptions>
+bool retriangulateInternal(const Object& obj, bool rigid, int height,
+        int nThreads, ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action) {
     if (nThreads <= 1) {
-        return enumerateDetail<Object, false, withSig, Options>(
-            obj, height, nThreads, tracker, std::move(action));
+        return enumerateDetail<Object, false, withSig, PropagationOptions>(
+            obj, rigid, height, nThreads, tracker, std::move(action));
     } else {
-        return enumerateDetail<Object, true, withSig, Options>(
-            obj, height, nThreads, tracker, std::move(action));
+        return enumerateDetail<Object, true, withSig, PropagationOptions>(
+            obj, rigid, height, nThreads, tracker, std::move(action));
     }
 }
 

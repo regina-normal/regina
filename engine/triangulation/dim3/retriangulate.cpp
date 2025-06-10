@@ -43,11 +43,16 @@ namespace detail {
      * Provides domain-specific details for the 3-D retriangulation process.
      *
      * For propagation of 3-D triangulations, we do not make use of the
-     * options type `Retriangulator::Options`.
+     * options type `Retriangulator::PropagationOptions`.
      */
     template <>
     struct RetriangulateParams<Triangulation<3>> {
         static std::string sig(const Triangulation<3>& tri) {
+            return tri.isoSig<IsoSigEdgeDegrees<3>>();
+        }
+
+        static std::string rigidSig(const Triangulation<3>& tri) {
+            // Currently rigidity is not supported for triangulations.
             return tri.isoSig<IsoSigEdgeDegrees<3>>();
         }
 
@@ -76,11 +81,11 @@ namespace detail {
 // so the full implementation can stay out of the headers.
 
 template bool regina::detail::retriangulateInternal<Triangulation<3>, true>(
-    const Triangulation<3>&, int, int, ProgressTrackerOpen*,
+    const Triangulation<3>&, bool, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Triangulation<3>, true>&&);
 
 template bool regina::detail::retriangulateInternal<Triangulation<3>, false>(
-    const Triangulation<3>&, int, int, ProgressTrackerOpen*,
+    const Triangulation<3>&, bool, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Triangulation<3>, false>&&);
 
 // This could be inlined, but we pull it out of the header because otherwise

@@ -335,6 +335,8 @@ Version 7.4  [ (to be announced) ]
               link diagrams with fewer than 64 link components, and added a
               new routine rewriteVirtual() for working with virtual link
               diagrams.
+            - Routine simplifyExhaustive() now promises to never reflect,
+              rotate and/or reverse the link diagram.
             - New routine improveTreewidth().
             - Routine hasReducingPass() can now handle multiple-component links.
             - Routines bracket() and jones() now support multithreading when

@@ -41,7 +41,7 @@ namespace detail {
      * Provides domain-specific details for the link rewriting process.
      *
      * For link propagation, we do make use of the options type
-     * `Retriangulator::Options`.  This type should be one of:
+     * `Retriangulator::PropagationOptions`.  This type should be one of:
      *
      * - `std::true_type`, to indicate that only classical Reidemeister moves
      *   should be allowed;
@@ -55,12 +55,18 @@ namespace detail {
             return link.sig();
         }
 
+        static std::string rigidSig(const Link& link) {
+            // Do not allow reflection, reversal and/or rotation.
+            return link.sig(false, false, false);
+        }
+
         static constexpr const char* progressStage = "Exploring diagrams";
 
         template <class Retriangulator>
         static void propagateFrom(const std::string& sig, size_t maxSize,
                 Retriangulator* retri) {
-            constexpr bool classicalOnly = Retriangulator::Options::value;
+            constexpr bool classicalOnly =
+                Retriangulator::PropagationOptions::value;
 
             Link t = Link::fromSig(sig);
 
@@ -320,20 +326,34 @@ namespace detail {
 // Instantiate all necessary rewriting/retriangulation template functions
 // so the full implementation can stay out of the headers.
 
-template bool detail::retriangulateInternal<Link, true, std::true_type>(
-    const Link&, int, int, ProgressTrackerOpen*,
+template bool detail::retriangulateInternal<Link, true,
+    detail::RetriangulateDefault, std::true_type>(
+    const Link&, bool, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Link, true>&&);
 
-template bool detail::retriangulateInternal<Link, false, std::true_type>(
-    const Link&, int, int, ProgressTrackerOpen*,
+template bool detail::retriangulateInternal<Link, false,
+    detail::RetriangulateDefault, std::true_type>(
+    const Link&, bool, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Link, false>&&);
 
-template bool detail::retriangulateInternal<Link, true, std::false_type>(
-    const Link&, int, int, ProgressTrackerOpen*,
+template bool detail::retriangulateInternal<Link, true,
+    detail::RetriangulateDefault, std::false_type>(
+    const Link&, bool, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Link, true>&&);
 
-template bool detail::retriangulateInternal<Link, false, std::false_type>(
-    const Link&, int, int, ProgressTrackerOpen*,
+template bool detail::retriangulateInternal<Link, false,
+    detail::RetriangulateDefault, std::false_type>(
+    const Link&, bool, int, int, ProgressTrackerOpen*,
+    regina::detail::RetriangulateActionFunc<Link, false>&&);
+
+template bool detail::retriangulateInternal<Link, false,
+    detail::RetriangulateNoLocks, std::true_type>(
+    const Link&, bool, int, int, ProgressTrackerOpen*,
+    regina::detail::RetriangulateActionFunc<Link, false>&&);
+
+template bool detail::retriangulateInternal<Link, false,
+    detail::RetriangulateNoLocks, std::false_type>(
+    const Link&, bool, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Link, false>&&);
 
 } // namespace regina

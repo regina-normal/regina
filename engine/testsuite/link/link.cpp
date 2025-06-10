@@ -4261,18 +4261,18 @@ static void verifySimplifyExhaustive(const char* sig, int heightNeeded) {
 
         Link link = Link::fromSig(sig);
         size_t initSize = link.size();
-        auto initJones = jonesModReflection(link);
+        auto initJones = link.jones();
 
         for (int height = 0; height < heightNeeded; ++height) {
             SCOPED_TRACE_NUMERIC(height);
             EXPECT_FALSE(link.simplifyExhaustive(height, threads));
             EXPECT_EQ(link.size(), initSize);
-            EXPECT_EQ(jonesModReflection(link), initJones);
+            EXPECT_EQ(link.jones(), initJones);
         }
 
         EXPECT_TRUE(link.simplifyExhaustive(heightNeeded, threads));
         EXPECT_LT(link.size(), initSize);
-        EXPECT_EQ(jonesModReflection(link), initJones);
+        EXPECT_EQ(link.jones(), initJones);
     }
 }
 

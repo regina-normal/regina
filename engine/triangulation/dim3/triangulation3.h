@@ -5165,13 +5165,13 @@ inline bool Triangulation<3>::retriangulate(int height, int threads,
         "The action that is passed to retriangulate() does not take the correct initial argument type(s).");
     if constexpr (Traits::withSig) {
         return regina::detail::retriangulateInternal<Triangulation<3>, true>(
-            *this, height, threads, tracker,
+            *this, false /* rigid */, height, threads, tracker,
             [&](const std::string& sig, Triangulation<3>&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     } else {
         return regina::detail::retriangulateInternal<Triangulation<3>, false>(
-            *this, height, threads, tracker,
+            *this, false /* rigid */, height, threads, tracker,
             [&](Triangulation<3>&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
             });
