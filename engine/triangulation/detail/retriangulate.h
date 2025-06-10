@@ -310,12 +310,21 @@ std::pair<bool, size_t> improveTreewidthInternal(Object& obj,
     std::unique_ptr<Object> improved;
     size_t attempts = 0;
 
-    size_t initWidth = TreeDecomposition(obj).width();
+    // Since computing tree decompositions is non-trivial, we will run our
+    // action outside the usual retriangulate/rewrite locks and instead manage
+    // the locks ourselves.
+    // This mutex protects the variables improved and attempts.
+    std::mutex mutex_;
+
+    size_t init = TreeDecomposition(obj).width();
     if (retriangulateInternal<Object, false, RetriangulateNoLocks,
             PropagationOptions>(obj, true /* rigid */, height, threads, tracker,
-            [&improved, &attempts, initWidth, maxAttempts](Object&& alt) {
+            [&improved, &attempts, &mutex_, init, maxAttempts](Object&& alt) {
+                bool found = (TreeDecomposition(alt).width() < init);
+
+                std::unique_lock lock(mutex_);
                 ++attempts;
-                if (TreeDecomposition(alt).width() < initWidth) {
+                if (found) {
                     improved.reset(new Object(std::move(alt)));
                     return true;
                 } else if (maxAttempts >= 0 && attempts >= maxAttempts) {
