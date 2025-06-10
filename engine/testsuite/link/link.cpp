@@ -1619,8 +1619,11 @@ TEST_F(LinkTest, affineIndex) {
     verifyAffineIndex(Link::fromData({+1,+1,+1,+1}, {-1,2,-3,-2,4,1,3,-4}),
         "Kauffman JKTR 2018 Figure 31a", {-1, {2,-3,0,1}});
     // For the next example, Kauffman says t^2-1 but I get t^2-t-1+t^-1.
-    // Kauffman's papers have other mistakes in them, so I'm calling this as
-    // correct here in Regina.
+    // Kauffman's papers have other mistakes in them; moreover, he shows his
+    // working in the figure and it seems clear that he forgot to change the
+    // weight of B from w+(B) to w-(B) when switching crossing B (the only
+    // change between the two examples in the figure).
+    // I'm calling this as correct here in Regina.
     verifyAffineIndex(Link::fromData({+1,-1,+1,+1}, {-1,-2,-3,2,4,1,3,-4}),
         "Kauffman JKTR 2018 Figure 31b", {-1, {1,-1,-1,1}});
 
