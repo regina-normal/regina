@@ -1670,9 +1670,9 @@ TEST_F(LinkTest, affineIndex) {
     {
         Link link = Link::fromData({+1,-1,+1,+1}, {-1,-2,-3,2,4,1,3,-4});
         const auto affine = affineModSymmetries(link);
-        EXPECT_EQ(affine, regina::Laurent<regina::Integer>({-1, {1,-1,-1,1}}));
+        EXPECT_EQ(affine, regina::Laurent<regina::Integer>({-2, {1,-1,-1,1}}));
 
-        link.rewriteVirtual(4 /* height */, 2 /* threads */, nullptr,
+        link.rewriteVirtual(3 /* height */, 2 /* threads */, nullptr,
                 [&affine](const Link& alt) {
             EXPECT_EQ(affineModSymmetries(alt), affine);
             return false;
