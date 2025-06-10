@@ -4311,6 +4311,56 @@ TEST_F(LinkTest, simplifyExhaustive) {
     verifySimplifyExhaustive("fabcabdecfdeNi7n", 2);
 }
 
+static void verifyImproveTreewidth(const Link& link, const char* name,
+        int bestPossible) {
+    SCOPED_TRACE_CSTRING(name);
+
+    auto initJones = link.jones();
+
+    for (int threads = 1; threads <= 2; ++threads) {
+        SCOPED_TRACE_NUMERIC(threads);
+
+        Link working(link, false);
+        size_t currWidth = regina::TreeDecomposition(working).width();
+
+        while (working.improveTreewidth().first) {
+            SCOPED_TRACE_NUMERIC(currWidth);
+
+            size_t newWidth = regina::TreeDecomposition(working).width();
+            SCOPED_TRACE_NUMERIC(newWidth);
+            EXPECT_LT(newWidth, currWidth);
+            currWidth = newWidth;
+
+            EXPECT_EQ(Link(working, false).jones(), initJones);
+        }
+
+        EXPECT_EQ(currWidth, bestPossible);
+        EXPECT_EQ(Link(working, false).jones(), initJones);
+    }
+}
+
+TEST_F(LinkTest, improveTreewidth) {
+    // All of the target widths here were found with Regina 7.4.
+
+    // Unknot diagrams should be able to get down to an empty loop.
+    verifyImproveTreewidth(ExampleLink::monster(), "Monster", 0);
+
+    // We are able to drop the doubled trefoil's width from 5 down to 4.
+    // We use both the right and left trefoil to ensure that reflections
+    // (which should not occur) are detected.
+    verifyImproveTreewidth(ExampleLink::trefoilRight().parallel(2),
+        "Right trefoil (2-cabled)", 4);
+    verifyImproveTreewidth(ExampleLink::trefoilLeft().parallel(2),
+        "Left trefoil (2-cabled)", 4);
+
+    // The following example is the 3-cabled virtual knot 3.2 from
+    // Jeremy Green's tables.  We use it because it is virtual, its
+    // Jones polynomial detects reflection, and it supports a reduction of
+    // width from 8 down to 7.
+    verifyImproveTreewidth(Link::fromSignedGauss("O1-O2+U1-O3-U2+U3-").
+        parallel(3), "3-cabled virtual knot 3.2", 7);
+}
+
 static void verifyClassicalGroup(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
