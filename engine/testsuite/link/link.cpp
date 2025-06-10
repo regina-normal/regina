@@ -160,6 +160,22 @@ static regina::Laurent<regina::Integer> jonesModReflection(const Link& link) {
         return jones2;
 }
 
+static regina::Laurent<regina::Integer> affineModSymmetries(const Link& link) {
+    auto affine1 = link.affineIndex();
+    if (affine1[affine1.minExp()] < 0)
+        affine1.negate();
+
+    auto affine2 = affine1;
+    affine2.invertX();
+    if (affine2[affine2.minExp()] < 0)
+        affine2.negate();
+
+    if (affine1 <= affine2)
+        return affine1;
+    else
+        return affine2;
+}
+
 static Link addTrivialComponents(const Link& link, size_t nTrivial) {
     Link ans(link);
     ans.insertLink(Link(nTrivial));
@@ -1648,6 +1664,20 @@ TEST_F(LinkTest, affineIndex) {
     EXPECT_THROW({ virtualTrefoilx2.link.affineIndex(); }, FailedPrecondition);
     EXPECT_THROW({ virtualDisconnected.link.affineIndex(); },
         FailedPrecondition);
+
+    // Verify that the affine index polynomial is invariant under Reidemeister
+    // moves.  For this we use Kauffman JKTR 2018 Figure 31b from above.
+    {
+        Link link = Link::fromData({+1,-1,+1,+1}, {-1,-2,-3,2,4,1,3,-4});
+        const auto affine = affineModSymmetries(link);
+        EXPECT_EQ(affine, regina::Laurent<regina::Integer>({-1, {1,-1,-1,1}}));
+
+        link.rewriteVirtual(4 /* height */, 2 /* threads */, nullptr,
+                [&affine](const Link& alt) {
+            EXPECT_EQ(affineModSymmetries(alt), affine);
+            return false;
+        });
+    }
 }
 
 static void verifyComplementBasic(const Link& link, const char* name) {
