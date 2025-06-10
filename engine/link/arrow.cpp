@@ -456,7 +456,6 @@ Arrow Link::arrowTreewidth(ProgressTracker* tracker) const {
     // of arrows is never more than the number of strands).
 
     size_t nStrands = 2 * size();
-    size_t loops;
 
     using Dest = std::pair<int, int>;
     using Key = LightweightSequence<Dest>;

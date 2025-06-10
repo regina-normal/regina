@@ -97,7 +97,6 @@ const Polynomial<Integer>& Link::alexander() const {
 
     for (size_t i = 0; i < size(); ++i) {
         ModelLinkGraphNode* n = graph.node(i);
-        const Crossing* c = crossings_[i];
 
         for (int j = 0; j < 4; ++j) {
             size_t cell = cells.cell(n->arc(j));

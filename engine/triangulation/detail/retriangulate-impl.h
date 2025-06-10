@@ -536,14 +536,14 @@ bool Retriangulator<Object, threading, withSig, flags,
             process_.push(result.first);
 
         if constexpr (flags & RetriangulateNoLocks) {
-            bool result;
+            bool shouldStop;
             lock.unlock();
             if constexpr (withSig)
-                result = action_(sig, std::move(alt));
+                shouldStop = action_(sig, std::move(alt));
             else
-                result = action_(std::move(alt));
+                shouldStop = action_(std::move(alt));
             lock.lock();
-            if (result) {
+            if (shouldStop) {
                 sigs_.backtrace(sig);
                 RetriangulateThreadSync<threading>::setDone();
                 return true;

@@ -150,7 +150,7 @@ Arrow& Arrow::operator += (const Arrow& other) {
 Arrow& Arrow::operator -= (const Arrow& other) {
     // This works even if &other == this, since in this case there are
     // no insertions or deletions.
-    for (const auto entry : other.terms_) {
+    for (const auto& entry : other.terms_) {
         auto result = terms_.emplace(entry);
         if (result.second)
             result.first->second.negate();
