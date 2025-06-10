@@ -482,6 +482,15 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
         void multDiagram(size_t index);
 
         /**
+         * Returns the sum of all Laurent polynomials in `A` that are attached
+         * to each diagram sequence.  This is the Laurent polynomial in `A`
+         * that would be obtained if we set each diagram variable `K_i = 1`.
+         *
+         * \return the sum of all attached Laurent polynomials in `A`.
+         */
+        Laurent<Integer> sumLaurent() const;
+
+        /**
          * Multiplies this polynomial by the given integer constant.
          *
          * \param scalar the scalar factor to multiply by.
@@ -887,6 +896,13 @@ inline void Arrow::negate() {
 inline void Arrow::invertA() {
     for (auto& term : terms_)
         term.second.invertX();
+}
+
+inline Laurent<Integer> Arrow::sumLaurent() const {
+    Laurent<Integer> ans;
+    for (const auto& term : terms_)
+        ans += term.second;
+    return ans;
 }
 
 inline Arrow& Arrow::operator *= (const Integer& scalar) {

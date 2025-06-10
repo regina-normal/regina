@@ -1331,9 +1331,23 @@ static void verifyArrow(const Link& link, const char* name,
 }
 
 static void verifyArrowConsistent(const Link& link, const char* name) {
+    // Ensure that both algorithms give the same arrow polynomial.
     SCOPED_TRACE_CSTRING(name);
     EXPECT_EQ(Link(link, false).arrow(Algorithm::Treewidth),
         Link(link, false).arrow(Algorithm::Naive));
+}
+
+static void verifyArrowToJones(const Link& link, const char* name) {
+    // Check that deducing the Jones polynomial from the arrow polynomial
+    // gives the same answer as computing the Jones polynomial directly.
+    Link tmp(link, false);
+    EXPECT_FALSE(tmp.knowsJones());
+    EXPECT_FALSE(tmp.knowsBracket());
+    tmp.arrow();
+    EXPECT_TRUE(tmp.knowsJones());
+    EXPECT_TRUE(tmp.knowsBracket());
+    EXPECT_EQ(tmp.jones(), Link(link, false).jones());
+    EXPECT_EQ(tmp.bracket(), Link(link, false).bracket());
 }
 
 static void verifyArrowClassical(const TestCase& test) {
@@ -1520,9 +1534,8 @@ TEST_F(LinkTest, arrow) {
           {{1}, {12, {-1}}}
         });
 
-    // Run through a small census and ensure that both algorithms give
-    // the same arrow polynomial in both cases.
     runCensusAllVirtual(verifyArrowConsistent);
+    runCensusAllVirtual(verifyArrowToJones);
 
     // Check that the multithreaded algorithm gives the same answers as the
     // single-threaded algorithm.  All polynomials below were computing using

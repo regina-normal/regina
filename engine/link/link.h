@@ -7540,14 +7540,18 @@ inline const Laurent2<Integer>& Link::homfly(Algorithm alg,
     return homflyAZ(alg, tracker);
 }
 
-inline bool Link::knowsBracket() const {
-    return bracket_.has_value();
-}
 inline bool Link::knowsAlexander() const {
     return alexander_.has_value();
 }
+inline bool Link::knowsBracket() const {
+    // If we know the arrow polynomial, then the Kauffman bracket and
+    // Jones polynomial are trivial to deduce.
+    return bracket_.has_value() || arrow_.has_value();
+}
 inline bool Link::knowsJones() const {
-    return jones_.has_value();
+    // If we know the arrow polynomial, then the Kauffman bracket and
+    // Jones polynomial are trivial to deduce.
+    return jones_.has_value() || arrow_.has_value();
 }
 inline bool Link::knowsHomfly() const {
     // Either both homflyAZ_ and homflyLM_ are known, or neither are known.

@@ -33,11 +33,6 @@ trivial product with no diagram variables at all we use the empty
 sequence. In the notes below we call such a sequence a _diagram
 sequence_.
 
-At present, this class does _not_ support multiplying arrow
-polynomials together (though you can multiply an arrow polynomial by a
-Laurent polynomial in ``A``). This also means that, at present, the
-Arrow class does not have its own specialisation of RingTraits.
-
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
@@ -568,6 +563,15 @@ R"doc(Multiplies this polynomial by ``A^s`` for some integer *s*.
 
 Parameter ``s``:
     the power of *A* to multiply by.)doc";
+
+// Docstring regina::python::doc::Arrow_::sumLaurent
+static const char *sumLaurent =
+R"doc(Returns the sum of all Laurent polynomials in ``A`` that are attached
+to each diagram sequence. This is the Laurent polynomial in ``A`` that
+would be obtained if we set each diagram variable ``K_i = 1``.
+
+Returns:
+    the sum of all attached Laurent polynomials in ``A``.)doc";
 
 // Docstring regina::python::doc::Arrow_::swap
 static const char *swap =

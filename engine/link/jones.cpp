@@ -686,6 +686,26 @@ const Laurent<Integer>& Link::bracket(Algorithm alg, int threads,
         return *bracket_;
     }
 
+    if (arrow_.has_value()) {
+        // It is trivial to deduce the Kauffman bracket and Jones polynomial
+        // from the arrow polynomial.
+        bracket_ = arrow_->sumLaurent();
+
+        // Set jones_ while the Kauffman bracket is still normalised.
+        jones_ = bracket_;
+        jones_->scaleDown(-2);
+
+        // Now de-normalise the Kauffman bracket.
+        long w = writhe();
+        bracket_->shift(3 * w);
+        if (w % 2)
+            bracket_->negate();
+
+        if (tracker)
+            tracker->setFinished();
+        return *bracket_;
+    }
+
     if (size() > (INT_MAX >> 1))
         throw NotImplemented("This link has so many crossings that the total "
             "number of strands cannot fit into a native C++ signed int");
@@ -737,7 +757,7 @@ void Link::setPropertiesFromBracket(Laurent<Integer>&& bracket) const {
     if (w % 2)
         normalised.negate();
 
-    if (isClassical()) {
+    if ((! arrow_.has_value()) && isClassical()) {
         // The arrow polynomial for a _classical_ link is just the normalised
         // bracket.
         arrow_ = normalised;

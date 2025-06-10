@@ -124,6 +124,7 @@ void addArrow(pybind11::module_& m) {
         .def("negate", &Arrow::negate, rdoc::negate)
         .def("invertA", &Arrow::invertA, rdoc::invertA)
         .def("multDiagram", &Arrow::multDiagram, rdoc::multDiagram)
+        .def("sumLaurent", &Arrow::sumLaurent, rdoc::sumLaurent)
         .def("__getitem__", [](const Arrow& arrow, pybind11::list arg) {
             return arrow[sequenceArg(arg, arg.size())];
         }, pybind11::return_value_policy::copy, // to enforce constness

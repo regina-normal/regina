@@ -861,6 +861,10 @@ const Arrow& Link::arrow(Algorithm alg, int threads, ProgressTracker* tracker)
 
     arrow_ = std::move(ans);
 
+    // The Kauffman bracket and Jones polynomial are easy to deduce from the
+    // arrow polynomial; however, we won't do the (trivial) computation until
+    // someone asks for it, since caching the result takes up space.
+
     if (tracker)
         tracker->setFinished();
     return *arrow_;
