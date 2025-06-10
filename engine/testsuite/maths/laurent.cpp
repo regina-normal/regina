@@ -218,6 +218,10 @@ TEST_F(LaurentTest, set) {
     verifyEqual<Integer>(x, 0, {});
     x.set(-1, 0);
     verifyEqual<Integer>(x, 0, {});
+    x.set(-1, 3);
+    verifyEqual<Integer>(x, -1, {3});
+    x.set(-1, 0);
+    verifyEqual<Integer>(x, 0, {});
     x.set(2, 1);
     verifyEqual<Integer>(x, 2, {1});
 
@@ -225,6 +229,10 @@ TEST_F(LaurentTest, set) {
     y.set(-1, 0);
     verifyEqual<Integer>(y, 0, {2, 1});
     y.set(0, 0);
+    verifyEqual<Integer>(y, 1, {1});
+    y.set(-2, 3);
+    verifyEqual<Integer>(y, -2, {3, 0, 0, 1});
+    y.set(-2, 0);
     verifyEqual<Integer>(y, 1, {1});
     y.set(-2, 3);
     verifyEqual<Integer>(y, -2, {3, 0, 0, 1});
