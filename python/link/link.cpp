@@ -335,6 +335,7 @@ void addLink(pybind11::module_& m) {
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::arrow)
+        .def("affineIndex", &Link::affineIndex, rdoc::affineIndex)
         .def("knowsAlexander", &Link::knowsAlexander, rdoc::knowsAlexander)
         .def("knowsBracket", &Link::knowsBracket, rdoc::knowsBracket)
         .def("knowsJones", &Link::knowsJones, rdoc::knowsJones)
@@ -542,6 +543,7 @@ void addLink(pybind11::module_& m) {
         .def_readonly_static("homflyAZVarY", Link::homflyAZVarY)
         .def_readonly_static("homflyLMVarX", Link::homflyLMVarX)
         .def_readonly_static("homflyLMVarY", Link::homflyLMVarY)
+        .def_readonly_static("affineIndexVar", Link::affineIndexVar)
     ;
     #if defined(__GNUC__)
     // The following routines are deprecated, but we still need to bind

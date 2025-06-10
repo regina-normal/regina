@@ -421,6 +421,28 @@ Exception ``InvalidArgument``:
 Parameter ``description``:
     a string that describes a knot or link.)doc";
 
+// Docstring regina::python::doc::Link_::affineIndex
+static const char *affineIndex =
+R"doc(Returns the affine index polynomial of this knot. This polynomial
+invariant is described in L.H. Kauffman, "An affine index polynomial
+invariant of virtual knots", J. Knot Theory Ramifications 22 (2013),
+no. 4, 1340007.
+
+At present, Regina only computes affine index polynomials for knots,
+not multiple-component links. Virtual knots are supported (and indeed
+are the only meaningful case, since the affine index polynomial of a
+classical knot is always zero). If this link is empty or has more than
+one component, then this routine will throw an exception.
+
+To pretty-print the affine index polynomial for human consumption, you
+can call ``Polynomial::str(Link::affineIndexVar)``.
+
+Unlike most polynomial invariants, computing the affine index
+polynomial is extremely fast, and so this polynomial is not cached.
+
+Returns:
+    the affine index polynomial.)doc";
+
 // Docstring regina::python::doc::Link_::alexander
 static const char *alexander =
 R"doc(Returns the Alexander polynomial of this classical knot.
@@ -5418,7 +5440,7 @@ this link is a knot (i.e., it has precisely one component), then in
 such cases you can try the more powerful but (much) slower
 simplifyExhaustive() instead.
 
-This routine will never reflect, rotate or reverse the link.
+This routine will never reflect, rotate or reverse the link diagram.
 
 .. warning::
     Running this routine multiple times upon the same link may return
@@ -5442,14 +5464,13 @@ R"doc(Attempts to simplify this link diagram using a slow but exhaustive
 search through the Reidemeister graph. This routine is more powerful
 but much slower than simplify().
 
-Unlike simplify(), this routine **could potentially reflect the
-diagram, rotate the diagram, and/or reverse individual link
-components**.
+As of Regina 7.4, this routine will never reflect, rotate or reverse
+the link diagram.
 
-As of Regina 7.4, this routine is now available for any connected link
-diagram (classical or virtual) with fewer than 64 link components. If
-this link has 64 or more components then this routine will throw an
-exception (as described below).
+Also, as of Regina 7.4, this routine is now available for any
+connected link diagram (classical or virtual) with fewer than 64 link
+components. If this link has 64 or more components then this routine
+will throw an exception (as described below).
 
 This routine will iterate through all link diagrams that can be
 reached from this via Reidemeister moves, without ever exceeding
@@ -5555,7 +5576,7 @@ Type III Reidemeister moves (which do not reduce the number of
 crossings) are not used in this routine. Such moves do however feature
 in simplify().
 
-This routine will never reflect, rotate or reverse the link.
+This routine will never reflect, rotate or reverse the link diagram.
 
 .. warning::
     The implementation of this routine (and therefore its results) may

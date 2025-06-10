@@ -2,6 +2,7 @@
 
 # Files to compile
 SET ( FILES
+  affineindex.cpp
   alexander.cpp
   algebra.cpp
   arrow.cpp

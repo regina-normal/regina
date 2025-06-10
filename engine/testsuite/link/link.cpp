@@ -1533,6 +1533,120 @@ TEST_F(LinkTest, arrow) {
         }));
 }
 
+static void verifyAffineIndex(const Link& link, const char* name,
+        const regina::Laurent<regina::Integer>& expected) {
+    // The affine index polynomial is not cached.
+    // No need to fuss about cloning the given link.
+    SCOPED_TRACE_CSTRING(name);
+
+    EXPECT_EQ(link.affineIndex(), expected);
+
+    // Verify that the polynomial behaves as expected under simple knot
+    // transformations.
+    // See Kauffman, JKTR (2018), Proposition 4.7.
+    regina::Laurent<regina::Integer> expectInverted = expected;
+    expectInverted.invertX();
+
+    {
+        // Reverse the orientation of the knot.
+        Link reverse(link);
+        reverse.reverse();
+        EXPECT_EQ(reverse.affineIndex(), expectInverted);
+    }
+    {
+        // Switch upper/lower at each crossing.
+        // Kauffman in JKTR (2013) says P(t) becomes -P(t).
+        // However, I get -P(t^-1), and curiously _this_ is what Kauffman
+        // says in JKTR (2018) and also in his 2021 paper for Turaev.
+        // The latter papers cite the 2013 paper for the proof, so it would
+        // have been nice if he'd at least _mentioned_ that the source paper
+        // got the formula wrong.
+        Link changeAll(link);
+        changeAll.changeAll();
+        EXPECT_EQ(changeAll.affineIndex(), -expectInverted);
+    }
+    {
+        // Switch +/- at each crossing.
+        Link reflect(link);
+        reflect.reflect();
+        EXPECT_EQ(reflect.affineIndex(), -expectInverted);
+    }
+}
+
+static void verifyAffineIndex(const TestCase& test,
+        const regina::Laurent<regina::Integer>& expected) {
+    verifyAffineIndex(test.link, test.name, expected);
+}
+
+TEST_F(LinkTest, affineIndex) {
+    // For classical knots, the affine index polynomial is always zero.
+    verifyAffineIndex(unknot0, {});
+    verifyAffineIndex(unknot1, {});
+    verifyAffineIndex(unknot3, {});
+    verifyAffineIndex(unknotMonster, {});
+    verifyAffineIndex(unknotGordian, {});
+
+    verifyAffineIndex(trefoilLeft, {});
+    verifyAffineIndex(trefoilRight, {});
+    verifyAffineIndex(trefoil_r1x2, {});
+    verifyAffineIndex(trefoil_r1x6, {});
+    verifyAffineIndex(figureEight, {});
+    verifyAffineIndex(figureEight_r1x2, {});
+
+    verifyAffineIndex(conway, {});
+    verifyAffineIndex(kinoshitaTerasaka, {});
+    verifyAffineIndex(gst, {});
+
+    verifyAffineIndex(rht_rht, {});
+    verifyAffineIndex(rht_lht, {});
+
+    // For virtual knots, this polynomial is meaningful.
+    // Note: The polynomial for GPV has not been independently verified, and
+    // instead was computed using Regina 7.4.
+    verifyAffineIndex(virtualTrefoil, {-1, {1,-2,1}});
+    verifyAffineIndex(kishino, {});
+    verifyAffineIndex(gpv, {-1, {-2,4,-2}});
+
+    // Some more examples from Kauffman's papers:
+    verifyAffineIndex(Link::fromData({+1,+1,+1}, {-1,2,3,1,-2,-3}),
+        "Kauffman JKTR 2013 Figure 4", {-2, {1,0,-2,0,1}});
+    verifyAffineIndex(Link::fromData({-1,+1,+1,-1}, {-1,-2,4,-3,-4,1,3,2}),
+        "Kauffman JKTR 2013 Figure 17", {-1, {-1,1,1,-1}});
+    verifyAffineIndex(Link::fromData({+1,+1,-1,-1}, {-1,2,1,-2,-3,4,3,-4}),
+        "Kauffman JKTR 2018 Figure 22", {});
+    verifyAffineIndex(Link::fromData({-1,+1,-1,-1}, {1,-2,4,-3,2,-1,3,-4}),
+        "Kauffman JKTR 2018 Figure 29", {-2, {-1,0,2,0,-1}});
+    verifyAffineIndex(Link::fromData({+1,+1,+1,+1}, {-1,2,-3,-2,4,1,3,-4}),
+        "Kauffman JKTR 2018 Figure 31a", {-1, {2,-3,0,1}});
+    // For the next example, Kauffman says t^2-1 but I get t^2-t-1+t^-1.
+    // Kauffman's papers have other mistakes in them, so I'm calling this as
+    // correct here in Regina.
+    verifyAffineIndex(Link::fromData({+1,-1,+1,+1}, {-1,-2,-3,2,4,1,3,-4}),
+        "Kauffman JKTR 2018 Figure 31b", {-1, {1,-1,-1,1}});
+
+    // The affine index polynomial is not available for empty or
+    // multiple-component links.
+    EXPECT_THROW({ empty.link.affineIndex(); }, FailedPrecondition);
+    EXPECT_THROW({ unlink2_0.link.affineIndex(); }, FailedPrecondition);
+    EXPECT_THROW({ unlink3_0.link.affineIndex(); }, FailedPrecondition);
+    EXPECT_THROW({ unlink2_r2.link.affineIndex(); }, FailedPrecondition);
+    EXPECT_THROW({ unlink2_r1r1.link.affineIndex(); }, FailedPrecondition);
+    EXPECT_THROW({ hopf.link.affineIndex(); }, FailedPrecondition);
+    EXPECT_THROW({ whitehead.link.affineIndex(); }, FailedPrecondition);
+    EXPECT_THROW({ borromean.link.affineIndex(); }, FailedPrecondition);
+    EXPECT_THROW({ trefoil_unknot0.link.affineIndex(); }, FailedPrecondition);
+    EXPECT_THROW({ trefoil_unknot1.link.affineIndex(); }, FailedPrecondition);
+    EXPECT_THROW({ trefoil_unknot_overlap.link.affineIndex(); },
+        FailedPrecondition);
+    EXPECT_THROW({ adams6_28.link.affineIndex(); }, FailedPrecondition);
+
+    EXPECT_THROW({ virtualLink2.link.affineIndex(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualLink3.link.affineIndex(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualTrefoilx2.link.affineIndex(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualDisconnected.link.affineIndex(); },
+        FailedPrecondition);
+}
+
 static void verifyComplementBasic(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 

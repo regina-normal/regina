@@ -825,6 +825,16 @@ class Link :
          */
         static constexpr const char* homflyVarY = homflyAZVarY;
 
+        /**
+         * The name of the variable used in the affine index polynomial, as
+         * returned by affineIndex().  This is provided to help with
+         * pretty-printing affine index polynomials for human consumption.
+         *
+         * To pretty-print the affine index polynomial for human consumption,
+         * you can call `Laurent::str(Link::affineIndexVar)`.
+         */
+        static constexpr const char* affineIndexVar = "t";
+
     public:
         /**
          * \name Constructors and Destructors
@@ -4352,6 +4362,29 @@ class Link :
          * \return \c true if and only if this property is already known.
          */
         bool knowsArrow() const;
+
+        /**
+         * Returns the affine index polynomial of this knot.  This polynomial
+         * invariant is described in L.H. Kauffman, "An affine index polynomial
+         * invariant of virtual knots", J. Knot Theory Ramifications 22 (2013),
+         * no. 4, 1340007.
+         *
+         * At present, Regina only computes affine index polynomials for knots,
+         * not multiple-component links.  Virtual knots are supported (and
+         * indeed are the only meaningful case, since the affine index
+         * polynomial of a classical knot is always zero).  If this link is
+         * empty or has more than one component, then this routine will throw
+         * an exception.
+         *
+         * To pretty-print the affine index polynomial for human consumption,
+         * you can call `Polynomial::str(Link::affineIndexVar)`.
+         *
+         * Unlike most polynomial invariants, computing the affine index
+         * polynomial is extremely fast, and so this polynomial is not cached.
+         *
+         * \return the affine index polynomial.
+         */
+        Laurent<Integer> affineIndex() const;
 
         /**
          * Returns the link group, as constructed from the Wirtinger

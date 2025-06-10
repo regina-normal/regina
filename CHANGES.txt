@@ -293,6 +293,7 @@ Version 7.4  [ (to be announced) ]
               oddWrithe(), arrow(), groups(), extendedGroup(), and
               extendedGroups().
             - New routine alexander() and class constant alexanderVar.
+            - New routine affineIndex() and class constant affineIndexVar.
             - New routine makeAlternating().
             - New routine seifertCircles().
             - New routine whiteheadDouble().
