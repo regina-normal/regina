@@ -705,7 +705,9 @@ class Link :
                  or if this link does not have exactly one component. */
         mutable std::optional<Laurent<Integer>> jones_;
             /**< The Jones polynomial of the link.
-                 This is std::nullopt if it has not yet been computed. */
+                 This is std::nullopt if it has not yet been computed.
+                 We insist that jones_ is non-null if and only if bracket_
+                 is non-null. */
         mutable std::optional<Laurent2<Integer>> homflyLM_;
             /**< The HOMFLY-PT polynomial of the link, as a polynomial in
                  \a l and \a m.  This property will be known if and only
@@ -718,7 +720,9 @@ class Link :
                  This is std::nullopt if it has not yet been computed. */
         mutable std::optional<Laurent<Integer>> bracket_;
             /**< The Kauffman bracket polynomial of the link diagram.
-                 This is std::nullopt if it has not yet been computed. */
+                 This is std::nullopt if it has not yet been computed.
+                 We insist that bracket_ is non-null if and only if jones_
+                 is non-null. */
         mutable std::optional<Arrow> arrow_;
             /**< The arrow polynomial of the link.
                  This is std::nullopt if it has not yet been computed. */
