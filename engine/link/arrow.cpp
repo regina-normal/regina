@@ -843,26 +843,74 @@ const Arrow& Link::arrow(Algorithm alg, int threads, ProgressTracker* tracker)
         throw NotImplemented("This link has so many crossings that the total "
             "number of strands cannot fit into a native C++ signed int");
 
-    Arrow ans;
-    switch (alg) {
-        case Algorithm::Naive:
-            ans = arrowNaive(threads, tracker);
-            break;
-        default:
-            ans = arrowTreewidth(tracker);
-            break;
+    if (isClassical()) {
+        // In this case the arrow polynomial is just the normalised bracket
+        // polynomial.  Compute the bracket instead, which is faster.
+        Laurent<Integer> laurent;
+        if (bracket_.has_value())
+            laurent = *bracket_;
+        else {
+            switch (alg) {
+                case Algorithm::Naive:
+                    laurent = bracketNaive(threads, tracker);
+                    break;
+                default:
+                    laurent = bracketTreewidth(tracker);
+                    break;
+            }
+        }
+
+        if (tracker && tracker->isCancelled()) {
+            tracker->setFinished();
+            return noResult;
+        }
+
+        // We have essentially computed three polynomials (bracket, Jones,
+        // arrow) - cache them all.  (This is in contrast with our decision
+        // to _not_ deduce bracket/Jones from arrow in the non-classical case
+        // below; however, in the non-classical case the deduction requires
+        // a little bit of work, and also in the non-classical case it makes
+        // much more sense to compute arrow and not care about bracket/Jones
+        // at all.)
+
+        if (! bracket_.has_value())
+            bracket_ = laurent;
+
+        // Normalise using the writhe: multiply by (-A^3)^(-w).
+        long w = writhe();
+        laurent.shift(-3 * w);
+        if (w % 2)
+            laurent.negate();
+
+        if (! jones_.has_value()) {
+            Laurent<Integer> rescaled = laurent;
+            rescaled.scaleDown(-2);
+            jones_ = std::move(rescaled);
+        }
+
+        arrow_ = std::move(laurent);
+    } else {
+        Arrow ans;
+        switch (alg) {
+            case Algorithm::Naive:
+                ans = arrowNaive(threads, tracker);
+                break;
+            default:
+                ans = arrowTreewidth(tracker);
+                break;
+        }
+
+        if (tracker && tracker->isCancelled()) {
+            tracker->setFinished();
+            return noResult;
+        }
+
+        arrow_ = std::move(ans);
+
+        // The Kauffman bracket and Jones polynomial are easy to deduce from the
+        // arrow polynomial; however, we won't do the (trivial) computation
+        // until someone asks for it, since caching the result takes up space.
     }
-
-    if (tracker && tracker->isCancelled()) {
-        tracker->setFinished();
-        return noResult;
-    }
-
-    arrow_ = std::move(ans);
-
-    // The Kauffman bracket and Jones polynomial are easy to deduce from the
-    // arrow polynomial; however, we won't do the (trivial) computation until
-    // someone asks for it, since caching the result takes up space.
 
     if (tracker)
         tracker->setFinished();
