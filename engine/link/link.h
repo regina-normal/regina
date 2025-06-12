@@ -4638,9 +4638,8 @@ class Link :
          *
          * Much like simplifyExhaustive(), this routine searches for a better
          * diagram by performing a slow but exhaustive search through the
-         * Reidemeister graph.  As a result, this routine **could potentially
-         * reflect the diagram, rotate the diagram, and/or reverse individual
-         * link components**.  Be warned.
+         * Reidemeister graph, and it does this in a way that will never
+         * reflect, rotate or reverse the link diagram.
          *
          * This routine is only available for connected link diagrams (classical
          * or virtual) with fewer than 64 link components.  If this link has
