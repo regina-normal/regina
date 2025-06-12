@@ -285,23 +285,20 @@ bool simplifyExhaustiveInternal(Object& obj, int height,
  * \param maxAttempts the maximum number of combinatorially distinct objects
  * to examine before we give up and return \c false, or a negative number if
  * this should not be bounded.
- * \param height the maximum number of top-dimensional simplices or crossings
- * to allow beyond the initial number in \a obj, or a negative number if
- * this should not be bounded.
+ * \param height the maximum number of additional top-dimensional simplices or
+ * crossings to allow, or a negative number if this should not be bounded.
  * \param threads the number of threads to use.  If this is 1 or smaller then
  * the routine will run single-threaded.
  * \param tracker a progress tracker through which progress will be reported,
  * or \c null if no progress reporting is required.
- * \return a pair consisting of: (i) \c true if and only if an object with a
- * smaller-width greedy tree decomposition was found; and (ii) the number of
- * combinatorially distinct objects that were examined.
+ * \return \c true if and only if an object with a smaller-width greedy
+ * tree decomposition was found.
  *
  * \ingroup detail
  */
 template <class Object, typename PropagationOptions = void>
-std::pair<bool, size_t> improveTreewidthInternal(Object& obj,
-        ssize_t maxAttempts, int height, int threads,
-        ProgressTrackerOpen* tracker) {
+bool improveTreewidthInternal(Object& obj, ssize_t maxAttempts, int height,
+        int threads, ProgressTrackerOpen* tracker) {
     // Make a place for the callback to put an improved object, if it finds
     // one.  Afterwards we will move this into obj, since the change to obj
     // must happen on the calling thread.  The upshot is that we end up moving
@@ -310,40 +307,86 @@ std::pair<bool, size_t> improveTreewidthInternal(Object& obj,
     std::unique_ptr<Object> improved;
     size_t attempts = 0;
 
+    size_t init = TreeDecomposition(obj).width();
+    size_t curr = init;
+
     // Since computing tree decompositions is non-trivial, we will run our
     // action outside the usual retriangulate/rewrite locks and instead manage
     // the locks ourselves.
-    // This mutex protects the variables improved and attempts.
+    // This mutex protects the variables: improved, attempts, curr.
     std::mutex mutex_;
 
-    size_t init = TreeDecomposition(obj).width();
+    // Make a first attempt to reduce treewidth.
     if (retriangulateInternal<Object, false, RetriangulateNoLocks,
             PropagationOptions>(obj, true /* rigid */, height, threads, tracker,
-            [&improved, &attempts, &mutex_, init, maxAttempts](Object&& alt) {
-                bool found = (TreeDecomposition(alt).width() < init);
+            [&improved, &attempts, &mutex_, &curr, init,
+            maxAttempts](Object&& alt) {
+                size_t w = TreeDecomposition(alt).width();
 
                 std::unique_lock lock(mutex_);
                 ++attempts;
-                if (found) {
+                if (w < init) {
                     improved.reset(new Object(std::move(alt)));
+                    curr = w;
                     return true;
                 } else if (maxAttempts >= 0 && attempts >= maxAttempts) {
                     return true;
                 } else
                     return false;
             })) {
-        if (improved) {
-            obj = std::move(*improved);
-            return { true, attempts };
-        } else {
-            // We exhausted our budgeted number of attempts.
-            return { false, attempts };
-        }
+        // We explicitly asked the search to stop.
+        // Either we improved the treewidth (in which case we fall through and
+        // continue searching below), or we exhausted our budgeted number of
+        // attempts (in which case we return now).
+        if (! improved)
+            return false;
     } else {
         // We exhausted the entire flip graph (up to the given height) and did
         // not find any improvement.
-        return { false, attempts };
+        return false;
     }
+
+    // We improved the treewidth, and so we will definitely be changing obj.
+    // See how much further we can reduce it now.
+    while (true) {
+        attempts = 0;
+        init = curr;
+
+        if (retriangulateInternal<Object, false, RetriangulateNoLocks,
+                PropagationOptions>(*improved, true /* rigid */, height,
+                threads, tracker, [&improved, &attempts, &mutex_, &curr,
+                init, maxAttempts](Object&& alt) {
+                    size_t w = TreeDecomposition(alt).width();
+
+                    std::unique_lock lock(mutex_);
+                    ++attempts;
+                    if (w < init) {
+                        // Note: we are explicitly allowed to change the object
+                        // that we are retriangulating/rewriting.
+                        *improved = std::move(alt);
+                        curr = w;
+                        return true;
+                    } else if (maxAttempts >= 0 && attempts >= maxAttempts) {
+                        return true;
+                    } else
+                        return false;
+                })) {
+            // We explicitly asked the search to stop.
+            // Either we improved the treewidth (in which case we loop around
+            // and try again), or we exhausted our budgeted number of attempts
+            // (in which case we finish and return what we've got).
+            if (curr == init)
+                break;
+        } else {
+            // We exhausted the entire flip graph (up to the given height) and
+            // did not find any improvement.
+            break;
+        }
+    }
+
+    // Return with whatever improvement we managed to make.
+    obj = std::move(*improved);
+    return true;
 }
 
 #ifndef __DOXYGEN

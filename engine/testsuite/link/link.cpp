@@ -4476,25 +4476,17 @@ static void verifyImproveTreewidth(const Link& link, const char* name,
     SCOPED_TRACE_CSTRING(name);
 
     auto initJones = link.jones();
+    size_t initWidth = regina::TreeDecomposition(link).width();
 
     for (int threads = 1; threads <= 2; ++threads) {
         SCOPED_TRACE_NUMERIC(threads);
 
         Link working(link, false);
-        size_t currWidth = regina::TreeDecomposition(working).width();
+        bool result = working.improveTreewidth();
+        size_t newWidth = regina::TreeDecomposition(working).width();
 
-        while (working.improveTreewidth().first) {
-            SCOPED_TRACE_NUMERIC(currWidth);
-
-            size_t newWidth = regina::TreeDecomposition(working).width();
-            SCOPED_TRACE_NUMERIC(newWidth);
-            EXPECT_LT(newWidth, currWidth);
-            currWidth = newWidth;
-
-            EXPECT_EQ(Link(working, false).jones(), initJones);
-        }
-
-        EXPECT_EQ(currWidth, bestPossible);
+        EXPECT_EQ(newWidth, bestPossible);
+        EXPECT_EQ(result, newWidth < initWidth);
         EXPECT_EQ(Link(working, false).jones(), initJones);
     }
 }

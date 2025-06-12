@@ -1366,8 +1366,8 @@ Link Link::parallel(int k, Framing framing) const {
     return ans;
 }
 
-std::pair<bool, size_t> Link::improveTreewidth(ssize_t maxAttempts, int height,
-        int threads, ProgressTrackerOpen* tracker) {
+bool Link::improveTreewidth(ssize_t maxAttempts, int height, int threads,
+        ProgressTrackerOpen* tracker) {
     if (components_.size() >= 64) {
         if (tracker)
             tracker->setFinished();
