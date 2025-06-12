@@ -757,6 +757,7 @@ Version 7.4  [ (to be announced) ]
                 withOpenBook(), withCloseBook(), withCollapseEdge() that
                 (if possible) return a new triangulation with the relevant
                 move performed.
+            - New routine improveTreewidth().
             - New routines isOneEfficient() and knowsOneEfficient().  For now,
               1-efficiency testing is only available for ideal triangulations.
             - New routine truncate(), which allows you to truncate a single
@@ -813,6 +814,7 @@ Version 7.4  [ (to be announced) ]
               + New read-only routines with44(), withOpenBook(),
                 withCollapseEdge(), withSnapEdge() that (if possible) return
                 a new triangulation with the relevant move performed.
+            - New routine improveTreewidth().
             - Renamed intelligentSimplify() to simplify().  The old name is
               kept as a deprecated alias.
             - Routines retriangulate() and simplifyExhaustive() no longer
