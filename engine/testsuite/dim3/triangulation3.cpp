@@ -1684,7 +1684,8 @@ static void verifyImproveTreewidth(const Triangulation<3>& tri,
         const char* name, int height, int bestPossible) {
     SCOPED_TRACE_CSTRING(name);
 
-    AbelianGroup initHomology = tri.homology();
+    // Try not to cache the original homology group.
+    AbelianGroup initHomology = Triangulation<3>(tri).homology();
     size_t initWidth = regina::TreeDecomposition(tri).width();
 
     for (int threads = 1; threads <= 2; ++threads) {
@@ -1698,7 +1699,14 @@ static void verifyImproveTreewidth(const Triangulation<3>& tri,
 
         EXPECT_EQ(newWidth, bestPossible);
         EXPECT_EQ(result, newWidth < initWidth);
-        EXPECT_EQ(Triangulation<3>(working, false).homology(), initHomology);
+        if (newWidth == initWidth)
+            EXPECT_EQ(working, tri);
+
+        EXPECT_EQ(working.isValid(), tri.isValid());
+        EXPECT_EQ(working.isOrientable(), tri.isOrientable());
+        EXPECT_EQ(working.countBoundaryComponents(),
+            tri.countBoundaryComponents());
+        EXPECT_EQ(working.homology(), initHomology);
     }
 }
 

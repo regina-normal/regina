@@ -4475,7 +4475,8 @@ static void verifyImproveTreewidth(const Link& link, const char* name,
         int bestPossible) {
     SCOPED_TRACE_CSTRING(name);
 
-    auto initJones = link.jones();
+    // Try not to cache the original Jones polynomial.
+    auto initJones = Link(link).jones();
     size_t initWidth = regina::TreeDecomposition(link).width();
 
     for (int threads = 1; threads <= 2; ++threads) {
@@ -4487,7 +4488,9 @@ static void verifyImproveTreewidth(const Link& link, const char* name,
 
         EXPECT_EQ(newWidth, bestPossible);
         EXPECT_EQ(result, newWidth < initWidth);
-        EXPECT_EQ(Link(working, false).jones(), initJones);
+        if (newWidth == initWidth)
+            EXPECT_EQ(working, link);
+        EXPECT_EQ(working.jones(), initJones);
     }
 }
 
