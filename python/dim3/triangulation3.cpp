@@ -643,6 +643,13 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
         .def("niceTreeDecomposition", &Triangulation<3>::niceTreeDecomposition,
             pybind11::return_value_policy::reference_internal,
             rdoc::niceTreeDecomposition)
+        .def("improveTreewidth", &Triangulation<3>::improveTreewidth,
+            pybind11::arg("maxAttempts") = 5000,
+            pybind11::arg("height") = 2,
+            pybind11::arg("threads") = 1,
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
+            rdoc::improveTreewidth)
         .def("doubleCover", &Triangulation<3>::doubleCover, rbase::doubleCover)
         .def("makeDoubleCover", [](Triangulation<3>& tri) { // deprecated
             tri = tri.doubleCover();

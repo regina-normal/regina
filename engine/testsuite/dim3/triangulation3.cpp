@@ -1680,6 +1680,33 @@ TEST_F(Dim3Test, simplifyExhaustive) {
     verifySimplifyExhaustive("hLALPkbcbefgfghxwnxark", 3, 2);
 }
 
+static void verifyImproveTreewidth(const Triangulation<3>& tri,
+        const char* name, int height, int bestPossible) {
+    SCOPED_TRACE_CSTRING(name);
+
+    AbelianGroup initHomology = tri.homology();
+    size_t initWidth = regina::TreeDecomposition(tri).width();
+
+    for (int threads = 1; threads <= 2; ++threads) {
+        SCOPED_TRACE_NUMERIC(threads);
+
+        Triangulation<3> working(tri, false);
+        bool result = working.improveTreewidth(5000, height);
+        size_t newWidth = regina::TreeDecomposition(working).width();
+
+        EXPECT_EQ(newWidth, bestPossible);
+        EXPECT_EQ(result, newWidth < initWidth);
+        EXPECT_EQ(Triangulation<3>(working, false).homology(), initHomology);
+    }
+}
+
+TEST_F(Dim3Test, improveTreewidth) {
+    // All of the target widths here were found with Regina 7.4.
+
+    verifyImproveTreewidth(Example<3>::poincare(), "Poincare", 1, 4);
+    verifyImproveTreewidth(Example<3>::poincare(), "Poincare", 2, 3);
+}
+
 static void verifyMinimiseBoundaryDoesNothing(const Triangulation<3>& tri,
         const char* name) {
     SCOPED_TRACE_CSTRING(name);

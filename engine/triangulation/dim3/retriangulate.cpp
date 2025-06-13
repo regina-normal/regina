@@ -88,8 +88,8 @@ template bool regina::detail::retriangulateInternal<Triangulation<3>, false>(
     const Triangulation<3>&, bool, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Triangulation<3>, false>&&);
 
-// This could be inlined, but we pull it out of the header because otherwise
-// it interferes with Link's rewrite() implementation.
+// These could be inlined, but we pull them out of the header because otherwise
+// they interfere with Link's rewrite() implementation.
 //
 // Basically the problem is that link/rewrite.cpp includes retriangulate-impl.h,
 // which then complains about the inlined Triangulation<3> code using an
@@ -97,7 +97,7 @@ template bool regina::detail::retriangulateInternal<Triangulation<3>, false>(
 //
 // This would not have been a problem if link.h did not have to include
 // triangulation/dim3.h (which is included just to inline Link::complement()).
-//
+
 bool Triangulation<3>::simplifyExhaustive(int height, int threads,
         ProgressTrackerOpen* tracker) {
     if (countComponents() > 1) {
@@ -109,6 +109,19 @@ bool Triangulation<3>::simplifyExhaustive(int height, int threads,
 
     return regina::detail::simplifyExhaustiveInternal<Triangulation<3>>(
         *this, height, threads, tracker);
+}
+
+bool Triangulation<3>::improveTreewidth(ssize_t maxAttempts, int height,
+        int threads, ProgressTrackerOpen* tracker) {
+    if (countComponents() > 1) {
+        if (tracker)
+            tracker->setFinished();
+        throw FailedPrecondition(
+            "improveTreewidth() requires a connected triangulation");
+    }
+
+    return regina::detail::improveTreewidthInternal<Triangulation<3>>(
+        *this, maxAttempts, height, threads, tracker);
 }
 
 } // namespace regina

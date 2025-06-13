@@ -2976,11 +2976,6 @@ width tree decomposition. Regina does not compute treewidth precisely
 minimise is the width of the greedy tree decomposition produced by
 ``TreeDecomposition(link)``.
 
-This routine is only available for connected link diagrams (classical
-or virtual) with fewer than 64 link components. If this link has 64 or
-more components then this routine will throw an exception (as
-described below).
-
 Much like simplifyExhaustive(), this routine searches for a better
 diagram by performing an exhaustive search through all link diagrams
 that can be reached from this via Reidemeister moves, within certain
@@ -2988,7 +2983,8 @@ user-supplied limits as described below. (If this link diagram is
 disconnected, then there is an exception: this routine will never use
 a type II move to merge distinct diagram components together, which
 would never help with improving treewidth). It does this in a way that
-will never reflect, rotate or reverse the link diagram.
+will never reflect, rotate or reverse the link diagram. Both classical
+and virtual link diagrams are supported.
 
 This routine can be very slow and very memory-intensive: the number of
 link diagrams it visits may be exponential in the number of crossings,
@@ -4977,9 +4973,9 @@ R"doc(Explores all link diagrams that can be reached from this via classical
 Reidemeister moves, without exceeding a given number of additional
 crossings.
 
-As of Regina 7.4, this routine is now available for any connected link
-diagram (classical or virtual) with fewer than 64 link components. If
-this link has 64 or more components then this routine will throw an
+As of Regina 7.4, this routine is now available for any link diagram
+(classical or virtual) with fewer than 64 link components. If this
+link has 64 or more components then this routine will throw an
 exception (as described below).
 
 This routine iterates through all link diagrams that can be reached
@@ -5459,10 +5455,10 @@ but much slower than simplify().
 As of Regina 7.4, this routine will never reflect, rotate or reverse
 the link diagram.
 
-Also, as of Regina 7.4, this routine is now available for any
-connected link diagram (classical or virtual) with fewer than 64 link
-components. If this link has 64 or more components then this routine
-will throw an exception (as described below).
+Also, as of Regina 7.4, this routine is now available for any link
+diagram (classical or virtual) with fewer than 64 link components. If
+this link has 64 or more components then this routine will throw an
+exception (as described below).
 
 This routine will iterate through all link diagrams that can be
 reached from this via Reidemeister moves, without ever exceeding

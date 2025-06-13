@@ -3739,6 +3739,97 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         const TreeDecomposition& niceTreeDecomposition() const;
 
+        /**
+         * Attempts to retriangulate this to have a smaller width tree
+         * decomposition.  Regina does not compute treewidth precisely
+         * (and indeed, this is an NP-hard problem); instead what it
+         * tries to minimise is the width of the greedy tree decomposition
+         * produced by `TreeDecomposition(triangulation)`.
+         *
+         * Much like simplifyExhaustive(), this routine searches for a better
+         * triangulation by performing an exhaustive search through all
+         * triangulations that can be reached from this via 2-3 and 3-2 Pachner
+         * moves, within certain user-supplied limits as described below.
+         *
+         * This routine can be very slow and very memory-intensive: the number
+         * of triangulations it visits may be superexponential in the number of
+         * tetrahedra, and it records every triangulation that it visits
+         * (so as to avoid revisiting the same triangulation again).
+         * You can limit the cost of this search in two ways:
+         *
+         * - You can pass a \a maxAttempts argument, which means this return
+         *   will give up after visiting \a maxAttempts distinct triangulations
+         *   (up to the kind of combinatorial equivalence described by sig()).
+         *   If \a maxAttempts is negative, the number of attempts will not be
+         *   limited.
+         *
+         * - You can pass a \a height argument to limit the number of extra
+         *   tetrahedra.  Again, if \a height is negative, the number of
+         *   additional tetrahedra will not be limited.
+         *
+         * - The defaults for \a maxAttempts and \a height are both
+         *   non-negative, and have been chosen to keep the default invocation
+         *   of this routine relatively fast.
+         *
+         * - If _both_ \a maxAttempts and \a height are negative, this routine
+         *   will not terminate until a smaller-width triangulation is found
+         *   (unless there are so many locks that the number of reachable
+         *   triangulations is finite).  This means that, if no such
+         *   triangulation exists, the only way to terminate this routine is to
+         *   cancel the operation via a progress tracker (read on for details).
+         *
+         * If any tetrahedra and/or triangles are locked, these locks will be
+         * respected: that is, the retriangulation will avoid any moves that
+         * would violate these locks (and in particular, no LockViolation
+         * exceptions should be thrown).  Of course, however, having locks may
+         * reduce the number of distinct triangulations that can be reached.
+         *
+         * If this routine finds a triangulation with a smaller-width greedy
+         * tree decomposition, it will restart the search from this better
+         * triangulation (i.e., it uses a "greedy descent").  The \a height
+         * argument will now be treated with respect to this _new_
+         * triangulation, and the number of attempts (which is limited by
+         * \a maxAttempts) will be reset to zero.  This means that overall you
+         * may end up with more than \a height extra tetrahedra, and you may
+         * have visited more than \a maxAttempts distinct triangulations (but
+         * this is good news: it means that a better triangulation was found).
+         *
+         * If this routine cannot produce a smaller-width tree decomposition
+         * within the bounds given via \a maxAttempts and/or \a height, then
+         * it will leave this triangulation unchanged.
+         *
+         * To assist with performance, this routine can run in parallel
+         * (multithreaded) mode; simply pass the number of parallel threads
+         * in the argument \a threads.  Even in multithreaded mode, this
+         * routine will not return until processing has finished (i.e., either
+         * a better triangulation was found or the search was exhausted), and
+         * any change to this triangulation will happen in the calling thread.
+         *
+         * \pre This triangulation is connected.
+         *
+         * \exception FailedPrecondition This triangulation has more
+         * than one connected component.  If a progress tracker was passed,
+         * it will be marked as finished before the exception is thrown.
+         *
+         * \python The global interpreter lock will be released while
+         * this function runs, so you can use it with Python-based
+         * multithreading.
+         *
+         * \param maxAttempts the maximum number of distinct triangulations to
+         * examine before we give up and return \c false, or a negative number
+         * if this should not be bounded.
+         * \param height the maximum number of _additional_ tetrahedra to allow,
+         * or a negative number if this should not be bounded.
+         * \param threads the number of threads to use.  If this is
+         * 1 or smaller then the routine will run single-threaded.
+         * \param tracker a progress tracker through which progress will
+         * be reported, or \c null if no progress reporting is required.
+         * \return \c true if and only if this triangulation was successfully
+         * changed to give a smaller-width greedy tree decomposition.
+         */
+        bool improveTreewidth(ssize_t maxAttempts = 5000, int height = 2,
+            int threads = 1, ProgressTrackerOpen* tracker = nullptr);
+
         /*@}*/
         /**
          * \name Subdivisions, Extensions and Covers
