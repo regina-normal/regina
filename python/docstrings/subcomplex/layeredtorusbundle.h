@@ -17,7 +17,7 @@ R"doc(Describes a layered torus bundle. This is a triangulation of a torus
 bundle over the circle formed as follows.
 
 We begin with a thin I-bundle over the torus, i.e,. a triangulation of
-the product ``T x I`` that is only one tetrahedron thick. This is
+the product ``T × I`` that is only one tetrahedron thick. This is
 referred to as the *core*, and is described by an object of type
 TxICore.
 
@@ -28,7 +28,7 @@ tetrahedra over one of the boundari tori in order to adjust the
 boundary edges accordingly. Layerings are described in more detail in
 the Layering class.
 
-Given the parameters of the core ``T x I`` and the specific layering,
+Given the parameters of the core ``T × I`` and the specific layering,
 the monodromy for this torus bundle over the circle can be calculated.
 The manifold() routine returns details of the corresponding
 3-manifold.
@@ -55,7 +55,7 @@ R"doc(Determines whether this and the given structure represent the same
 type of layered torus bundle.
 
 Specifically, two layered torus bundles will compare as equal if and
-only if their core ``T x I`` triangulations have the same
+only if their core ``T × I`` triangulations have the same
 combinatorial parameters, and their layering relations are the same.
 
 In particular, if you invert a layered torus bundle (which means the
@@ -68,7 +68,7 @@ and TriSolidTorus): two objects compare as equal if and only if they
 have the same combinatorial parameters (which for this subclass is
 more specific than combinatorial isomorphism, since this test does not
 recognise inversion and also does not recognise symmetries within the
-``T x I`` core).
+``T × I`` core).
 
 Parameter ``other``:
     the structure with which this will be compared.
@@ -79,8 +79,8 @@ Returns:
 
 // Docstring regina::python::doc::LayeredTorusBundle_::core
 static const char *core =
-R"doc(Returns the ``T x I`` triangulation at the core of this layered torus
-bundle. This is the product ``T x I`` whose boundaries are joined
+R"doc(Returns the ``T × I`` triangulation at the core of this layered torus
+bundle. This is the product ``T × I`` whose boundaries are joined
 (possibly via some layering of tetrahedra).
 
 Note that the triangulation returned by TxICore::core() (that is,
@@ -91,24 +91,24 @@ may have been permuted. For a precise mapping from the TxICore::core()
 triangulation to this triangulation, see the routine coreIso().
 
 Returns:
-    the core ``T x I`` triangulation.)doc";
+    the core ``T × I`` triangulation.)doc";
 
 // Docstring regina::python::doc::LayeredTorusBundle_::coreIso
 static const char *coreIso =
-R"doc(Returns the isomorphism describing how the core ``T x I`` appears as a
+R"doc(Returns the isomorphism describing how the core ``T × I`` appears as a
 subcomplex of this layered torus bundle.
 
-As described in the core() notes, the core ``T x I`` triangulation
+As described in the core() notes, the core ``T × I`` triangulation
 returned by TxICore::core() appears within this layered torus bundle,
 but not necessarily with the same tetrahedron or vertex numbers.
 
 This routine returns an isomorphism that maps the tetrahedra and
-vertices of the core ``T x I`` triangulation (as returned by
+vertices of the core ``T × I`` triangulation (as returned by
 LayeredTorusBundle::core().core()) to the tetrahedra and vertices of
 this overall layered torus bundle.
 
 Returns:
-    the isomorphism from the core ``T x I`` to this layered torus
+    the isomorphism from the core ``T × I`` to this layered torus
     bundle.)doc";
 
 // Docstring regina::python::doc::LayeredTorusBundle_::global_swap
@@ -128,10 +128,10 @@ Parameter ``b``:
 // Docstring regina::python::doc::LayeredTorusBundle_::layeringReln
 static const char *layeringReln =
 R"doc(Returns a 2-by-2 matrix describing how the layering of tetrahedra
-relates curves on the two torus boundaries of the core ``T x I``.
+relates curves on the two torus boundaries of the core ``T × I``.
 
 The TxICore class documentation describes generating α and β curves on
-the two torus boundaries of the core ``T x I`` (which are referred to
+the two torus boundaries of the core ``T × I`` (which are referred to
 as the _upper_ and _lower_ boundaries). The two boundary tori are
 parallel in two directions: through the core, and through the
 layering. It is desirable to know the parallel relationship between
@@ -183,7 +183,7 @@ a direct identification between the upper and lower boundary tori.
 
 Returns:
     the relationship through the layering between the upper and lower
-    boundary curves of the core ``T x I``.)doc";
+    boundary curves of the core ``T × I``.)doc";
 
 // Docstring regina::python::doc::LayeredTorusBundle_::recognise
 static const char *recognise =

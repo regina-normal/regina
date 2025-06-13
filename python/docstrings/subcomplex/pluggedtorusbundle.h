@@ -18,7 +18,7 @@ bounded saturated region with a thin I-bundle over the torus, possibly
 with layerings in between.
 
 The thin I-bundle must be untwisted, so that it forms the product ``T
-x I`` with two boundary tori. Moreover, it must be isomorphic to some
+× I`` with two boundary tori. Moreover, it must be isomorphic to some
 existing instance of the class TxICore.
 
 The saturated region is described by an object of the class SatRegion.
@@ -125,7 +125,7 @@ static const char *bundle =
 R"doc(Returns an isomorphic copy of the thin I-bundle that forms part of
 this triangulation. Like all objects of class TxICore, the thin
 I-bundle that is returned is an external object with its own separate
-triangulation of the product ``T x I``. For information on how the
+triangulation of the product ``T × I``. For information on how the
 thin I-bundle is embedded within this triangulation, see the routine
 bundleIso().
 

@@ -13,7 +13,7 @@ namespace regina::python::doc {
 
 // Docstring regina::python::doc::TxICore
 static const char *TxICore =
-R"doc(Provides a triangulation of the product ``T x I`` (the product of the
+R"doc(Provides a triangulation of the product ``T × I`` (the product of the
 torus and the interval). Generally these triangulations are only one
 tetrahedron thick (i.e., a "thin I-bundle"), though this is not a
 strict requirement of this class. Triangulations of this type are
@@ -44,7 +44,7 @@ details.)doc";
 
 // Docstring regina::python::doc::TxIDiagonalCore
 static const char *TxIDiagonalCore =
-R"doc(One of a family of thin ``T x I`` triangulations that typically appear
+R"doc(One of a family of thin ``T × I`` triangulations that typically appear
 at the centres of layered torus bundles. Different triangulations in
 this family use different numbers of tetrahedra, with the larger
 triangulations producing more complicated relationships between the
@@ -144,14 +144,14 @@ namespace TxICore_ {
 
 // Docstring regina::python::doc::TxICore_::__eq
 static const char *__eq =
-R"doc(Determines if this and the given ``T x I`` triangulation are of the
+R"doc(Determines if this and the given ``T × I`` triangulation are of the
 same type and have the same parameters.
 
 If this returns ``True``, then the triangulations returned by core()
 should also be combinatorially identical.
 
 Parameter ``other``:
-    the ``T x I`` triangulation to compare with this.
+    the ``T × I`` triangulation to compare with this.
 
 Returns:
     ``True`` if and only if this and the given triangulation are of
@@ -239,7 +239,7 @@ Returns:
 static const char *bdryTet =
 R"doc(Determines which tetrahedron provides the requested boundary triangle.
 
-Recall that the ``T x I`` triangulation has two torus boundaries, each
+Recall that the ``T × I`` triangulation has two torus boundaries, each
 consisting of two boundary triangles. This routine returns the
 specific tetrahedron that provides the given triangle of the given
 torus boundary.
@@ -261,7 +261,7 @@ Parameter ``whichTri``:
 
 // Docstring regina::python::doc::TxICore_::core
 static const char *core =
-R"doc(Returns a full copy of the ``T x I`` triangulation that this object
+R"doc(Returns a full copy of the ``T × I`` triangulation that this object
 describes.
 
 Successive calls to this routine will return a reference to the same
@@ -273,7 +273,7 @@ Returns:
 
 // Docstring regina::python::doc::TxICore_::name
 static const char *name =
-R"doc(Returns the name of this specific triangulation of ``T x I`` as a
+R"doc(Returns the name of this specific triangulation of ``T × I`` as a
 human-readable string.
 
 Returns:
@@ -308,7 +308,7 @@ Returns:
 
 // Docstring regina::python::doc::TxICore_::texName
 static const char *texName =
-R"doc(Returns the name of this specific triangulation of ``T x I`` in TeX
+R"doc(Returns the name of this specific triangulation of ``T × I`` in TeX
 format. No leading or trailing dollar signs will be included.
 
 Returns:
@@ -319,11 +319,11 @@ Returns:
 namespace TxIDiagonalCore_ {
 
 // Docstring regina::python::doc::TxIDiagonalCore_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given ``T x I`` triangulation.)doc";
+static const char *__copy = R"doc(Creates a new copy of the given ``T × I`` triangulation.)doc";
 
 // Docstring regina::python::doc::TxIDiagonalCore_::__init
 static const char *__init =
-R"doc(Creates a new ``T x I`` triangulation with the given parameters.
+R"doc(Creates a new ``T × I`` triangulation with the given parameters.
 
 Parameter ``size``:
     the number of tetrahedra in this triangulation. This must be at
@@ -335,7 +335,7 @@ Parameter ``k``:
 
 // Docstring regina::python::doc::TxIDiagonalCore_::global_swap
 static const char *global_swap =
-R"doc(Swaps the contents of the two given ``T x I`` triangulations.
+R"doc(Swaps the contents of the two given ``T × I`` triangulations.
 
 This global routine simply calls TxIDiagonalCore::swap(); it is
 provided so that TxIDiagonalCore meets the C++ Swappable requirements.
@@ -357,7 +357,7 @@ Returns:
 
 // Docstring regina::python::doc::TxIDiagonalCore_::size
 static const char *size =
-R"doc(Returns the total number of tetrahedra in this ``T x I``
+R"doc(Returns the total number of tetrahedra in this ``T × I``
 triangulation.
 
 Returns:
@@ -365,7 +365,7 @@ Returns:
 
 // Docstring regina::python::doc::TxIDiagonalCore_::swap
 static const char *swap =
-R"doc(Swaps the contents of this and the given ``T x I`` triangulation.
+R"doc(Swaps the contents of this and the given ``T × I`` triangulation.
 
 Parameter ``other``:
     the triangulation whose contents should be swapped with this.)doc";
@@ -376,18 +376,18 @@ namespace TxIParallelCore_ {
 
 // Docstring regina::python::doc::TxIParallelCore_::__copy
 static const char *__copy =
-R"doc(Creates a new copy of the given ``T x I`` triangulation.
+R"doc(Creates a new copy of the given ``T × I`` triangulation.
 
 Since there is only one triangulation of this type, the copy
 constructor will give the same end result as the default constructor
 (but using a different algorithm).)doc";
 
 // Docstring regina::python::doc::TxIParallelCore_::__default
-static const char *__default = R"doc(Creates a new copy of this ``T x I`` triangulation.)doc";
+static const char *__default = R"doc(Creates a new copy of this ``T × I`` triangulation.)doc";
 
 // Docstring regina::python::doc::TxIParallelCore_::global_swap
 static const char *global_swap =
-R"doc(Swaps the contents of the two given ``T x I`` triangulations.
+R"doc(Swaps the contents of the two given ``T × I`` triangulations.
 
 This global routine simply calls TxIParallelCore::swap(); it is
 provided so that TxIParallelCore meets the C++ Swappable requirements.
@@ -402,7 +402,7 @@ Parameter ``rhs``:
 
 // Docstring regina::python::doc::TxIParallelCore_::swap
 static const char *swap =
-R"doc(Swaps the contents of this and the given ``T x I`` triangulation.
+R"doc(Swaps the contents of this and the given ``T × I`` triangulation.
 
 Parameter ``other``:
     the triangulation whose contents should be swapped with this.)doc";

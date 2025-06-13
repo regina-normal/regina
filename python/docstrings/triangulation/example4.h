@@ -345,17 +345,15 @@ The spinning construction is described by Artin in "Zur Isotopie
 zweidimensionaler Flächen im R_4", Abh. Math. Sem. Univ. Hamburg 4
 (1925), no. 1, 174-177.
 
+The final triangulation might (or might not) still contain internal
+vertices, in addition to the one ideal vertex that represents the
+2-knot itself.
+
 .. warning::
-    The resulting triangulation will typically contain thousands, or
-    even tens of thousands, of pentachora, even when *knot* has very
-    few crossings. It will also typically contain many internal
-    vertices, as well as the one ideal vertex representing the 2-knot
-    itself. You will therefore certainly want to simplify the
-    resulting 4-manifold triangulation; moreover, this simplification
-    could well take some time. In the end you might well reach a very
-    small number of pentachora (e.g., for the trefoil you can get the
-    number of pentachora down to six); however, this will _not_ be
-    fast.
+    This routine could be slow, even when *knot* has very few
+    crossings. This is because it typically goes via intermediate
+    triangulations with thousands or even tens of thousands of
+    pentachora, and simplifying such triangulations takes time.
 
 Precondition:
     The argument *knot* is a classical knot diagram. That is, the link

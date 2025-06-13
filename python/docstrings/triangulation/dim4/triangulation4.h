@@ -236,6 +236,9 @@ triangulation as a precondition.
 Precondition:
     This triangulation is valid.
 
+Exception ``FailedPrecondition``:
+    This triangulation is not valid.
+
 Returns:
     the Euler characteristic of the corresponding compact manifold.)doc";
 
