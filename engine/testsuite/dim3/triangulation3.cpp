@@ -1691,7 +1691,9 @@ static void verifyImproveTreewidth(const Triangulation<3>& tri,
         SCOPED_TRACE_NUMERIC(threads);
 
         Triangulation<3> working(tri, false);
-        bool result = working.improveTreewidth(5000, height);
+        // We only allow 1000 attempts - this is smaller than the default
+        // but we want to keep the test suite fast.
+        bool result = working.improveTreewidth(1000, height);
         size_t newWidth = regina::TreeDecomposition(working).width();
 
         EXPECT_EQ(newWidth, bestPossible);
@@ -1703,8 +1705,14 @@ static void verifyImproveTreewidth(const Triangulation<3>& tri,
 TEST_F(Dim3Test, improveTreewidth) {
     // All of the target widths here were found with Regina 7.4.
 
+    // Poincare homology sphere: initial width = 4
     verifyImproveTreewidth(Example<3>::poincare(), "Poincare", 1, 4);
     verifyImproveTreewidth(Example<3>::poincare(), "Poincare", 2, 3);
+
+    // Weber-Seifert dodecahedral space: initial width = 8
+    verifyImproveTreewidth(Example<3>::weberSeifert(), "Weber-Seifert", 1, 7);
+
+    // TODO: It would be nice to have more tests here.
 }
 
 static void verifyMinimiseBoundaryDoesNothing(const Triangulation<3>& tri,
