@@ -23,6 +23,11 @@ add_executable(basic
   ../gui/pythoninterpreter.cpp
   ../gui/pythonoutputstream.cpp)
 target_link_libraries(basic ${ENGINE_LIBRARY} ${Python_LIBRARIES})
+add_executable(basic_alltypes
+  basic_alltypes.cpp
+  ../gui/pythoninterpreter.cpp
+  ../gui/pythonoutputstream.cpp)
+target_link_libraries(basic_alltypes ${ENGINE_LIBRARY} ${Python_LIBRARIES})
 
 IF (WIN32)
   ADD_TEST(python-test bash testall)
