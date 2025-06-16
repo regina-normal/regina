@@ -3850,6 +3850,7 @@
 		0588C2A11FD8D1340093C2C9 /* rewrite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rewrite.cpp; sourceTree = "<group>"; };
 		0588C2A21FD8D1340093C2C9 /* sig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sig.cpp; sourceTree = "<group>"; };
 		0588F1171808D43B006BDC79 /* packettype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packettype.h; sourceTree = "<group>"; };
+		0589B32E2E00432E007A8F64 /* basic_alltypes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = basic_alltypes.cpp; sourceTree = "<group>"; };
 		0589FAC1181484860064CD57 /* Tri3Gluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3Gluings.h; sourceTree = "<group>"; };
 		0589FAC2181484860064CD57 /* Tri3Gluings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri3Gluings.mm; sourceTree = "<group>"; };
 		0589FACA1814BECF0064CD57 /* PacketListenerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketListenerIOS.h; sourceTree = "<group>"; };
@@ -5563,6 +5564,7 @@
 				051806AE2C2CF65D001470F1 /* base64.out */,
 				051806AF2C2CF65D001470F1 /* base64.test */,
 				054DF94028CABC2800EC3D81 /* basic.cpp */,
+				0589B32E2E00432E007A8F64 /* basic_alltypes.cpp */,
 				05E221DD2CEC2545009D5D4E /* binom.out */,
 				05E221DE2CEC2545009D5D4E /* binom.test */,
 				054F7DF1278EA2970036B923 /* bool.out */,
