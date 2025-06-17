@@ -36,7 +36,7 @@
 
 #include <sstream>
 #include <type_traits>
-#include "../pybind11/operators.h"
+#include "pybind11/operators.h"
 
 namespace regina {
 
