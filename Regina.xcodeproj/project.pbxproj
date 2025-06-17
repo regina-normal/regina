@@ -11845,6 +11845,7 @@
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/python\"",
+					"\"$(SRCROOT)/python/pybind11_v2\"",
 					/usr/include/libxml2,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
@@ -11906,6 +11907,7 @@
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/python\"",
+					"\"$(SRCROOT)/python/pybind11_v2\"",
 					/usr/include/libxml2,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
