@@ -119,7 +119,7 @@ int main(int argc, char* argv[]) {
     regina::python::PythonInterpreter py(out, err, false);
     if (! py.importRegina(false)) {
         std::cerr << "ERROR: Could not import regina" << std::endl;
-        exit(2);
+        return 2;
     }
 
     py.executeLine("from regina import *");
