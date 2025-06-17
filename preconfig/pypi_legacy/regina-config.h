@@ -14,13 +14,24 @@
    This macro is for internal use only; end users should use the macro
    INT128_AVAILABLE and the type aliases from IntOfSize<16>, all of which
    are found in utilities/intutils.h. */
-#define INTERNAL___INT128_T_FOUND
+/* #undef INTERNAL___INT128_T_FOUND */
 
 /* Define if 64-bit integer literals are available with no suffix */
-#define NUMERIC_64_FOUND
+/* #undef NUMERIC_64_FOUND */
 
 /* Define if 64-bit integer literals are available using the LL suffix */
+/* #undef NUMERIC_64_LL_FOUND */
+
+// For the PyPI/SageMath build we attempt to guess these flags at compile-time:
+#if ULONG_MAX > 4294967295
+#if __GNUC__
+#define INTERNAL___INT128_T_FOUND
+#else
+#define INTERNAL___INT128_FOUND
+#endif
+#define NUMERIC_64_FOUND
 #define NUMERIC_64_LL_FOUND
+#endif
 
 /* Define if std::lexicographical_compare_three_way is available */
 #define LEXCMP_FOUND
@@ -35,7 +46,7 @@
 #define REGINA_PYBIND11_VERSION 2
 
 /* Define if the Graphviz libraries are available. */
-#define LIBGVC_FOUND
+/* #undef LIBGVC_FOUND */
 
 /* Define if langinfo.h and nl_langinfo() are available. */
 #define LANGINFO_FOUND
@@ -55,7 +66,7 @@
 /* Define if we are building a standard freedesktop.org installation in
    a fixed location on the filesystem.
    Exactly one of REGINA_INSTALL_{XDG,HPC,BUNDLE,WINDOWS} should be defined. */
-/* #undef REGINA_INSTALL_XDG */
+#define REGINA_INSTALL_XDG
 
 /* Define if we are building a local installation in a fixed location suitable
    for an HPC system (typically in a user's home area, and with no GUI).
@@ -65,7 +76,7 @@
 /* Define if we are building a self-contained macOS app bundle that users can
    drag and drop.
    Exactly one of REGINA_INSTALL_{XDG,HPC,BUNDLE,WINDOWS} should be defined. */
-#define REGINA_INSTALL_BUNDLE
+/* #undef REGINA_INSTALL_BUNDLE */
 
 /* Define if we are building a self-contained movable install directory
    for MS Windows.
@@ -110,10 +121,10 @@
 
 /* Optional additional information about this specific build.
    This will always be defined, but it may be the empty string. */
-#define BUILD_INFO "Xcode build"
+#define BUILD_INFO "Self-contained Python wheel"
 
 /* A nicely formatted combination of PACKAGE_STRING and BUILD_INFO. */
-#define PACKAGE_BUILD_STRING "Regina 7.4 (Xcode build)"
+#define PACKAGE_BUILD_STRING "Regina 7.4 (Self-contained Python wheel)"
 
 /* Define to the version of SnapPy that is bundled with Regina. */
 #define SNAPPY_VERSION "3.0.3"
