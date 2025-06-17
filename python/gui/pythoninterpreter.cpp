@@ -170,17 +170,6 @@ PythonInterpreter::PythonInterpreter(
         // meantime, since this is only relevant when the program is exiting,
         // this should be relatively harmless.
         pybind11::initialize_interpreter();
-
-        // Subinterpreters are supposed to share extension modules
-        // without repeatedly calling the modules' init functions.
-        // In python 3, this seems to fail if all subinterpreters are
-        // destroyed, unless we keep the extension module loaded here in
-        // the main interpreter also.
-        //
-        // If this import fails, do so silently; we'll see the same error
-        // again immediately in the first subinterpreter.
-        importReginaIntoNamespace(PyModule_GetDict(PyImport_AddModule(
-            "__main__")), fixPythonPath);
     }
 
     subInterpreter = pybind11::subinterpreter::create();
