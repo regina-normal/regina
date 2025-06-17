@@ -557,17 +557,18 @@ bool PythonInterpreter::importReginaIntoNamespace(PyObject* useNamespace,
 
 #if REGINA_PYBIND11_VERSION == 3
     try {
-        std::cerr << "Attempting import..." << std::endl;
-        auto regina = pybind11::module_::import("regina");
-        if (regina) {
-            std::cerr << "Setting in namespace..." << std::endl;
+        if (auto regina = pybind11::module_::import("regina")) {
             PyDict_SetItemString(useNamespace, "regina", regina.ptr());
             return true;
         } else {
-            std::cerr << "Import returned None" << std::endl;
+            // Is this actually possible?
+            // What I'm observing is that when the import fails, pybind11
+            // throws an exception (which we catch below).
             return false;
         }
     } catch (const pybind11::error_already_set& err) {
+        // Keep this diagnostic message here for now, so that we can see the
+        // details of the Python exception.
         std::cerr << "Import failed: " << err.what() << std::endl;
         return false;
     }
