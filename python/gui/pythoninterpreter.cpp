@@ -91,12 +91,12 @@ static PyCompilerFlags pyCompFlags =
 static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
 #endif
 
+bool PythonInterpreter::pythonInitialised = false;
+
 #if REGINA_PYBIND11_VERSION == 3
 std::mutex PythonInterpreter::initMutex;
-std::optional<pybind11::scoped_interpreter> PythonInterpreter::mainInterpreter;
 #elif REGINA_PYBIND11_VERSION == 2
 std::mutex PythonInterpreter::interpreterMutex;
-bool PythonInterpreter::pythonInitialised = false;
 PyThreadState* mainState;
 #endif
 
@@ -111,8 +111,7 @@ PythonInterpreter::PythonInterpreter(
     std::lock_guard<std::mutex> lock(initMutex);
 
     // Acquire the global interpreter lock.
-    bool initialising = ! mainInterpreter.has_value();
-    if (initialising) {
+    if (! pythonInitialised) {
 #ifdef PYTHON_CORE_IN_ZIP
         if (fixPythonPath) {
             // Regina is shipping its own copy of python, which means the
@@ -157,7 +156,20 @@ PythonInterpreter::PythonInterpreter(
 #endif
 
         // Create the main interpreter.
-        mainInterpreter.emplace();
+        //
+        // Currently we _never_ call pybind11::finalize_interpreter(), even
+        // when the entire program is exiting and static variables are being
+        // destroyed.  This is because, at present, this is causing a crash
+        // somewhere inside the pybind11 internals.  (It appears as a
+        // UnicodeDecodeError - "'utf-8' codec can't decode byte 0xe9 in
+        // position 0: invalid continuation byte" - however, it looks like a
+        // bad pointer access within pybind11::detail::internals_pp_manager.)
+        //
+        // At some point it would be good to understand whether the crash is
+        // due to pybind11 or due to my own misuse of pybind11.  In the
+        // meantime, since this is only relevant when the program is exiting,
+        // this should be relatively harmless.
+        pybind11::initialize_interpreter();
 
         // Subinterpreters are supposed to share extension modules
         // without repeatedly calling the modules' init functions.
@@ -180,7 +192,7 @@ PythonInterpreter::PythonInterpreter(
 
     // Redirect stdout and stderr if appropriate.
     try {
-        if (initialising)
+        if (! pythonInitialised)
             regina::python::PythonOutputStream::addBindings();
         pyStdOut.install("stdout");
         pyStdErr.install("stderr");
@@ -190,6 +202,8 @@ PythonInterpreter::PythonInterpreter(
         pyStdErr.write("\n");
         pyStdErr.flush();
     }
+
+    pythonInitialised = true;
 }
 
 PythonInterpreter::~PythonInterpreter() {
@@ -554,9 +568,18 @@ bool PythonInterpreter::importReginaIntoNamespace(PyObject* useNamespace,
 
 #if REGINA_PYBIND11_VERSION == 3
     try {
+        std::cerr << "Attempting import..." << std::endl;
         auto regina = pybind11::module_::import("regina");
-        return true;
+        if (regina) {
+            std::cerr << "Setting in namespace..." << std::endl;
+            PyDict_SetItemString(useNamespace, "regina", regina.ptr());
+            return true;
+        } else {
+            std::cerr << "Import returned None" << std::endl;
+            return false;
+        }
     } catch (const pybind11::error_already_set& err) {
+        std::cerr << "Import failed: " << err.what() << std::endl;
         return false;
     }
 #elif REGINA_PYBIND11_VERSION == 2

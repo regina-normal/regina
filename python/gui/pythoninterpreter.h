@@ -137,21 +137,20 @@ class PrefixCompleter : public PythonCompleter {
  */
 class PythonInterpreter {
     private:
+        static bool pythonInitialised;
+            /**< Has the python system (i.e., the main interpreter) been
+                 initialised yet?  This is only done on demand. */
+
 #if REGINA_PYBIND11_VERSION == 3
         static std::mutex initMutex;
             /**< A mutual exclusion device to protect the creation of the main
-                 interpreter (which happens only on demand). */
-        static std::optional<pybind11::scoped_interpreter> mainInterpreter;
-            /**< The main python interpreter, or std::nullopt if the python
-                 system has not yet been initialised. */
+                 interpreter. */
         pybind11::subinterpreter subInterpreter;
             /**< This specific subinterpreter. */
 #elif REGINA_PYBIND11_VERSION == 2
         static std::mutex interpreterMutex;
-            /**< A mutual exclusion device for the creation and
-                 destruction of subinterpreters. */
-        static bool pythonInitialised;
-            /**< Has the python system been initialised yet? */
+            /**< A mutual exclusion device to protect the creation and/or
+                 destruction of the main interpreter and subinterpreters. */
         std::thread::id thread;
             /**< The ID of the C++ thread to be used exclusively with this
                  subinterpreter. */
