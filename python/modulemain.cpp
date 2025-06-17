@@ -207,13 +207,27 @@ namespace {
 // regina/engine.so, which is loaded at runtime from regina/__init__.py.
 // All of regina's classes live in the module regina.engine, and are
 // automatically imported into the module regina by regina/__init__.py.
+#if REGINA_PYBIND11_VERSION == 3
+PYBIND11_MODULE(engine, m,
+        pybind11::multiple_interpreters::per_interpreter_gil()) {
+#elif REGINA_PYBIND11_VERSION == 2
 PYBIND11_MODULE(engine, m) {
+#else
+    #error "Unsupported pybind11 version"
+#endif
 #else
 // This is a special case where the C++ module is linked into Regina's main
 // executable at compile time (specifically, this happens on iOS).
 // Nothing is loaded at runtime from the filesystem; there is no __init__.py,
 // and all of Regina's classes live directly in the module regina.
+#if REGINA_PYBIND11_VERSION == 3
+PYBIND11_MODULE(regina, m
+        pybind11::multiple_interpreters::per_interpreter_gil()) {
+#elif REGINA_PYBIND11_VERSION == 2
 PYBIND11_MODULE(regina, m) {
+#else
+#error "Unsupported pybind11 version"
+#endif
 #endif
     // Welcome string:
 

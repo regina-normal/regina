@@ -101,3 +101,16 @@ index e747e274d..8f23dc60c 100644
          } catch (...) {
              try_translate_exceptions();
              return nullptr;
+diff --git a/python/pybind11_v3/pybind11/subinterpreter.h b/python/pybind11_v3/pybind11/subinterpreter.h
+index 9f2f704c5..cb666cf28 100644
+--- a/python/pybind11_v3/pybind11/subinterpreter.h
++++ b/python/pybind11_v3/pybind11/subinterpreter.h
+@@ -21,7 +21,7 @@
+ 
+ PYBIND11_NAMESPACE_BEGIN(PYBIND11_NAMESPACE)
+ PYBIND11_NAMESPACE_BEGIN(detail)
+-PyInterpreterState *get_interpreter_state_unchecked() {
++inline PyInterpreterState *get_interpreter_state_unchecked() {
+     auto cur_tstate = get_thread_state_unchecked();
+     if (cur_tstate)
+         return cur_tstate->interp;

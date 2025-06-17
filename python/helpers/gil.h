@@ -34,92 +34,102 @@
  *  \brief Assists with managing the Python global interpreter lock (GIL).
  */
 
+#include "regina-config.h"
 #include <map>
 #include <mutex>
 #include <thread>
 
 namespace regina::python {
 
-/**
- * An object that acquires the GIL on construction, and releases it
- * on destruction.
- *
- * This works similar to pybind11::gil_scoped_acquire.  The advantage of
- * this class is that it works correctly with subinterpreters (which
- * pybind11's GIL-related classes do not).
- *
- * An object of this type cannot be copied or moved.
- */
-class GILScopedAcquire {
-    public:
-        /**
-         * Acquires the GIL in order to work with the given Python
-         * thread state.
-         *
-         * \pre The GIL is not held when this constructor is called.
-         * \pre The argument \a state is a Python thread state that has
-         * already been created, and this constructor is called from the
-         * corresponding C++ thread.
-         */
-        GILScopedAcquire(PyThreadState* state) {
-            PyEval_RestoreThread(state);
-        }
+#if REGINA_PYBIND11_VERSION == 3
+    // pybind11 3.x.y supports subinterpreters natively, so there is no need
+    // for us to make our own GIL scoped acquire/release classes.
+    using GILScopedAcquire = pybind11::gil_scoped_acquire;
+    using GILScopedRelease = pybind11::gil_scoped_release;
+#elif REGINA_PYBIND11_VERSION == 2
+    /**
+     * An object that acquires the GIL on construction, and releases it
+     * on destruction.
+     *
+     * This works similar to pybind11::gil_scoped_acquire.  The advantage of
+     * this class is that it works correctly with subinterpreters (which
+     * pybind11's GIL-related classes do not).
+     *
+     * An object of this type cannot be copied or moved.
+     */
+    class GILScopedAcquire {
+        public:
+            /**
+             * Acquires the GIL in order to work with the given Python
+             * thread state.
+             *
+             * \pre The GIL is not held when this constructor is called.
+             * \pre The argument \a state is a Python thread state that has
+             * already been created, and this constructor is called from the
+             * corresponding C++ thread.
+             */
+            GILScopedAcquire(PyThreadState* state) {
+                PyEval_RestoreThread(state);
+            }
 
-        /**
-         * Releases the GIL.
-         *
-         * \pre The GIL is held when this destructor is called.
-         */
-        ~GILScopedAcquire() {
-            PyEval_SaveThread();
-        }
+            /**
+             * Releases the GIL.
+             *
+             * \pre The GIL is held when this destructor is called.
+             */
+            ~GILScopedAcquire() {
+                PyEval_SaveThread();
+            }
 
-        GILScopedAcquire(const GILScopedAcquire&) = delete;
-        GILScopedAcquire& operator = (const GILScopedAcquire&) = delete;
-};
+            GILScopedAcquire(const GILScopedAcquire&) = delete;
+            GILScopedAcquire& operator = (const GILScopedAcquire&) = delete;
+    };
 
-/**
- * An object that releases the GIL on construction, and re-acquires it
- * on destruction.
- *
- * This works similar to pybind11::gil_scoped_release.  The advantage of
- * this class is that it works correctly with subinterpreters (which
- * pybind11's GIL-related classes do not).  The disadvantage is that it
- * insists that the same C++ thread be used for construction and destruction
- * (which for a stack variable is typically true anyway).
- *
- * An object of this type cannot be copied or moved.
- */
-class GILScopedRelease {
-    private:
-        PyThreadState *state;
-            /**< The Python thread state that was current when this
-                 object was created. */
+    /**
+     * An object that releases the GIL on construction, and re-acquires it
+     * on destruction.
+     *
+     * This works similar to pybind11::gil_scoped_release.  The advantage of
+     * this class is that it works correctly with subinterpreters (which
+     * pybind11's GIL-related classes do not).  The disadvantage is that it
+     * insists that the same C++ thread be used for construction and destruction
+     * (which for a stack variable is typically true anyway).
+     *
+     * An object of this type cannot be copied or moved.
+     */
+    class GILScopedRelease {
+        private:
+            PyThreadState *state;
+                /**< The Python thread state that was current when this
+                     object was created. */
 
-    public:
-        /**
-         * Releases the GIL.
-         *
-         * \pre The GIL is held when this constructor is called.
-         */
-        GILScopedRelease() {
-            state = PyEval_SaveThread();
-        }
+        public:
+            /**
+             * Releases the GIL.
+             *
+             * \pre The GIL is held when this constructor is called.
+             */
+            GILScopedRelease() {
+                state = PyEval_SaveThread();
+            }
 
-        /**
-         * Re-acquires the GIL.
-         *
-         * \pre The GIL is not held when this destructor is called.
-         * \pre This destructor is being called from the same C++ thread
-         * as the corresponding constructor.
-         */
-        ~GILScopedRelease() {
-            PyEval_RestoreThread(state);
-        }
+            /**
+             * Re-acquires the GIL.
+             *
+             * \pre The GIL is not held when this destructor is called.
+             * \pre This destructor is being called from the same C++ thread
+             * as the corresponding constructor.
+             */
+            ~GILScopedRelease() {
+                PyEval_RestoreThread(state);
+            }
 
-        GILScopedRelease(const GILScopedRelease&) = delete;
-        GILScopedRelease& operator = (const GILScopedRelease&) = delete;
-};
+            GILScopedRelease(const GILScopedRelease&) = delete;
+            GILScopedRelease& operator = (const GILScopedRelease&) = delete;
+    };
+#else
+    #error "Unsupported pybind11 version"
+#endif
 
 /**
  * An object designed for use with C++ callback functions, which releases the

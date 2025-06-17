@@ -44,8 +44,6 @@
 #include <iostream>
 
 // Python includes:
-#include <pybind11/pybind11.h>
-#include <pybind11/embed.h>
 #include <compile.h>
 #include <sysmodule.h>
 
@@ -93,10 +91,16 @@ static PyCompilerFlags pyCompFlags =
 static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
 #endif
 
-std::mutex PythonInterpreter::globalMutex;
+#if REGINA_PYBIND11_VERSION == 3
+std::mutex PythonInterpreter::initMutex;
+std::optional<pybind11::scoped_interpreter> PythonInterpreter::mainInterpreter;
+#elif REGINA_PYBIND11_VERSION == 2
+std::mutex PythonInterpreter::interpreterMutex;
 bool PythonInterpreter::pythonInitialised = false;
 PyThreadState* mainState;
+#endif
 
+#if REGINA_PYBIND11_VERSION == 3
 PythonInterpreter::PythonInterpreter(
         regina::python::PythonOutputStream& pyStdOut,
         regina::python::PythonOutputStream& pyStdErr,
@@ -104,7 +108,105 @@ PythonInterpreter::PythonInterpreter(
         caughtSystemExit(false),
         output(pyStdOut), errors(pyStdErr),
         completer(nullptr), completerFunc(nullptr) {
-    std::lock_guard<std::mutex> lock(globalMutex);
+    std::lock_guard<std::mutex> lock(initMutex);
+
+    // Acquire the global interpreter lock.
+    bool initialising = ! mainInterpreter.has_value();
+    if (initialising) {
+#ifdef PYTHON_CORE_IN_ZIP
+        if (fixPythonPath) {
+            // Regina is shipping its own copy of python, which means the
+            // core python libraries are bundled as a zip file.
+            //
+            // We need to manually include the python zip and the path to
+            // zlib.pyd on the python path, *before* the first interpreter
+            // is initialised.
+            //
+            // Here we assume that pythonXY.zip and zlib.pyd are installed
+            // in the same directory as the regina python module.
+
+            const char* oldPath = getenv("PYTHONPATH");
+            std::string newPath("PYTHONPATH=");
+            newPath += regina::GlobalDirs::pythonModule();
+            #if defined(REGINA_INSTALL_WINDOWS)
+                newPath += ";";
+                newPath += regina::GlobalDirs::pythonModule();
+                newPath += "/python" REGINA_PY_VERSION ".zip;";
+            #else
+                newPath += ":";
+                newPath += regina::GlobalDirs::pythonModule();
+                newPath += "/python" REGINA_PY_VERSION ".zip:";
+            #endif
+
+            if (oldPath)
+                newPath += oldPath;
+
+            putenv(strdup(newPath.c_str()));
+        }
+#endif
+
+#ifdef PYTHON_STATIC_LINK
+        // Regina's python module is statically linked into the GUI; it
+        // is not shipped as a separate module on the filesystem.
+        // Tell python how to find it.
+        if (PyImport_AppendInittab("regina", &PyInit_regina) == -1) {
+            errors.write("ERROR: PyImport_AppendInittab(\"regina\", ...) "
+                "failed.\n");
+            errors.flush();
+        }
+#endif
+
+        // Create the main interpreter.
+        mainInterpreter.emplace();
+
+        // Subinterpreters are supposed to share extension modules
+        // without repeatedly calling the modules' init functions.
+        // In python 3, this seems to fail if all subinterpreters are
+        // destroyed, unless we keep the extension module loaded here in
+        // the main interpreter also.
+        //
+        // If this import fails, do so silently; we'll see the same error
+        // again immediately in the first subinterpreter.
+        importReginaIntoNamespace(PyModule_GetDict(PyImport_AddModule(
+            "__main__")), fixPythonPath);
+    }
+
+    subInterpreter = pybind11::subinterpreter::create();
+    pybind11::subinterpreter_scoped_activate guard(subInterpreter);
+
+    // Record the main module.
+    mainModule = PyImport_AddModule("__main__"); // Borrowed ref.
+    mainNamespace = PyModule_GetDict(mainModule); // Borrowed ref.
+
+    // Redirect stdout and stderr if appropriate.
+    try {
+        if (initialising)
+            regina::python::PythonOutputStream::addBindings();
+        pyStdOut.install("stdout");
+        pyStdErr.install("stderr");
+    } catch (std::runtime_error& e) {
+        pyStdErr.write("ERROR: Could not redirect output streams: ");
+        pyStdErr.write(e.what());
+        pyStdErr.write("\n");
+        pyStdErr.flush();
+    }
+}
+
+PythonInterpreter::~PythonInterpreter() {
+    pybind11::subinterpreter_scoped_activate guard(subInterpreter);
+
+    Py_XDECREF(completer);
+    Py_XDECREF(completerFunc);
+}
+#elif REGINA_PYBIND11_VERSION == 2
+PythonInterpreter::PythonInterpreter(
+        regina::python::PythonOutputStream& pyStdOut,
+        regina::python::PythonOutputStream& pyStdErr,
+        bool fixPythonPath) :
+        caughtSystemExit(false),
+        output(pyStdOut), errors(pyStdErr),
+        completer(nullptr), completerFunc(nullptr) {
+    std::lock_guard<std::mutex> lock(interpreterMutex);
 
     // Acquire the global interpreter lock.
     if (pythonInitialised)
@@ -212,7 +314,7 @@ PythonInterpreter::PythonInterpreter(
 }
 
 PythonInterpreter::~PythonInterpreter() {
-    std::lock_guard<std::mutex> lock(globalMutex);
+    std::lock_guard<std::mutex> lock(interpreterMutex);
 
     // Acquire the global interpreter lock.
     PyEval_RestoreThread(state);
@@ -228,6 +330,7 @@ PythonInterpreter::~PythonInterpreter() {
     PyThreadState_Swap(mainState);
     PyEval_ReleaseThread(mainState);
 }
+#endif
 
 bool PythonInterpreter::executeLine(const std::string& command) {
     /**
@@ -253,8 +356,12 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     char* cmdBuffer = new char[fullCommand.length() + 3];
     strcpy(cmdBuffer, fullCommand.c_str());
 
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::subinterpreter_scoped_activate guard(subInterpreter);
+#elif REGINA_PYBIND11_VERSION == 2
     // Acquire the global interpreter lock.
     ScopedThreadRestore pyThread(*this);
+#endif
 
     // Attempt to compile the command with no additional newlines.
     PyObject* code = Py_CompileStringFlags(
@@ -406,7 +513,11 @@ void PythonInterpreter::prependReginaToSysPath() {
 }
 
 bool PythonInterpreter::importRegina(bool fixPythonPath) {
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::subinterpreter_scoped_activate guard(subInterpreter);
+#elif REGINA_PYBIND11_VERSION == 2
     ScopedThreadRestore pyThread(*this);
+#endif
 
     bool ok = importReginaIntoNamespace(mainNamespace, fixPythonPath);
 
@@ -441,6 +552,14 @@ bool PythonInterpreter::importReginaIntoNamespace(PyObject* useNamespace,
 #endif
     }
 
+#if REGINA_PYBIND11_VERSION == 3
+    try {
+        auto regina = pybind11::module_::import("regina");
+        return true;
+    } catch (const pybind11::error_already_set& err) {
+        return false;
+    }
+#elif REGINA_PYBIND11_VERSION == 2
     // Import the module.
     PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
     if (regModule) {
@@ -450,11 +569,16 @@ bool PythonInterpreter::importReginaIntoNamespace(PyObject* useNamespace,
     } else {
         return false;
     }
+#endif
 }
 
 bool PythonInterpreter::setVar(const char* name,
         std::shared_ptr<Packet> value) {
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::subinterpreter_scoped_activate guard(subInterpreter);
+#elif REGINA_PYBIND11_VERSION == 2
     ScopedThreadRestore pyThread(*this);
+#endif
 
     bool ok = false;
     try {
@@ -483,7 +607,11 @@ bool PythonInterpreter::setVar(const char* name,
 }
 
 bool PythonInterpreter::runCode(const char* code) {
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::subinterpreter_scoped_activate guard(subInterpreter);
+#elif REGINA_PYBIND11_VERSION == 2
     ScopedThreadRestore pyThread(*this);
+#endif
 
     PyObject* ans = PyRun_String(const_cast<char*>(code), Py_file_input,
         mainNamespace, mainNamespace);
@@ -552,7 +680,11 @@ int PythonInterpreter::complete(const std::string& text, PythonCompleter& c) {
     if (! completerFunc)
         return -1;
 
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::subinterpreter_scoped_activate guard(subInterpreter);
+#elif REGINA_PYBIND11_VERSION == 2
     ScopedThreadRestore pyThread(*this);
+#endif
 
     try {
         pybind11::handle func(completerFunc);

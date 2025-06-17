@@ -42,7 +42,13 @@
 #ifndef __PYTHONINTERPRETER_H
 #define __PYTHONINTERPRETER_H
 
-#include <Python.h>
+#include "regina-config.h" // Required for REGINA_PYBIND11_VERSION
+
+#include <pybind11/pybind11.h>
+#include <pybind11/embed.h>
+#if REGINA_PYBIND11_VERSION == 3
+#include <pybind11/subinterpreter.h>
+#endif
 #include <iostream>
 #include <memory>
 #include <mutex>
@@ -131,18 +137,30 @@ class PrefixCompleter : public PythonCompleter {
  */
 class PythonInterpreter {
     private:
-        static std::mutex globalMutex;
+#if REGINA_PYBIND11_VERSION == 3
+        static std::mutex initMutex;
+            /**< A mutual exclusion device to protect the creation of the main
+                 interpreter (which happens only on demand). */
+        static std::optional<pybind11::scoped_interpreter> mainInterpreter;
+            /**< The main python interpreter, or std::nullopt if the python
+                 system has not yet been initialised. */
+        pybind11::subinterpreter subInterpreter;
+            /**< This specific subinterpreter. */
+#elif REGINA_PYBIND11_VERSION == 2
+        static std::mutex interpreterMutex;
             /**< A mutual exclusion device for the creation and
                  destruction of subinterpreters. */
         static bool pythonInitialised;
             /**< Has the python system been initialised yet? */
-
         std::thread::id thread;
             /**< The ID of the C++ thread to be used exclusively with this
                  subinterpreter. */
         PyThreadState* state;
             /**< The first thread state created in this particular
                  subinterpreter. */
+#else
+        #error "Unsupported pybind11 version"
+#endif
 
         PyObject* mainModule;
             /**< The __main__ module. */
@@ -305,6 +323,7 @@ class PythonInterpreter {
         int complete(const std::string& text, PythonCompleter& completer);
 
     private:
+#if REGINA_PYBIND11_VERSION == 2
         /**
          * Ensures that the current C++ thread is in fact the thread that
          * created this subinterpreter.
@@ -316,6 +335,7 @@ class PythonInterpreter {
          * never happen).
          */
         void verifyThread() const;
+#endif
 
         /**
          * Run the given Python code in Python's main namespace.
@@ -363,6 +383,7 @@ class PythonInterpreter {
         static bool importReginaIntoNamespace(PyObject* useNamespace,
             bool fixPythonPath = true);
 
+#if REGINA_PYBIND11_VERSION == 2
         /**
          * An object that calls PyEval_RestoreThread() on construction
          * and PyEval_SaveThread() on destruction.  This manages both
@@ -408,6 +429,7 @@ class PythonInterpreter {
                 ScopedThreadRestore& operator = (const ScopedThreadRestore&)
                     = delete;
         };
+#endif
 };
 
 inline PrefixCompleter::PrefixCompleter() : initialised_(false) {
@@ -421,6 +443,7 @@ inline bool PythonInterpreter::exitAttempted() const {
     return caughtSystemExit;
 }
 
+#if REGINA_PYBIND11_VERSION == 2
 inline void PythonInterpreter::verifyThread() const {
     if (std::this_thread::get_id() != thread) {
         /*
@@ -433,6 +456,7 @@ inline void PythonInterpreter::verifyThread() const {
             "PythonInterpreter used from the wrong C++ thread");
     }
 }
+#endif
 
 } // namespace regina::python
 
