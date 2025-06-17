@@ -67,6 +67,11 @@ export REGINA_HOME=../../engine
 # Cases that expect the python/testsuite directory as an argument:
 blacklist="file i18n memory1 orb pdf repr snappea"
 
+# The following cases implicitly import the threading module, which leads to a
+# harmless but noisy ignored exception upon shutdown under python 3.12 and
+# above.  See: https://github.com/pybind/pybind11/issues/2197
+blacklist="$blacklist docstrings"
+
 echo "----------------------------------------------------------------"
 echo "Test suite for python bindings with a basic embedded interpreter"
 echo "----------------------------------------------------------------"
