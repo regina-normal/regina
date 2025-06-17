@@ -13,7 +13,7 @@ set -e
 # Note that BSD sed does not support \+, which is why we use \{1,\} instead.
 # BSD sed also seems to have issues with \s and \S, so we avoid them too.
 
-sed -e 's#\( \)__pybind11_module_local_\([a-zA-Z0-9_-]\{1,\}\) = <capsule.*\.\.\.#\1__pybind11_module_local__ = ...#' \
+sed -e 's#\( \)__pybind11_module_local_\([a-zA-Z0-9_-]\{1,\}\) = .*\.\.\.#\1__pybind11_module_local__ = ...#' \
     -e 's#\( \)Methods\( inherited from pybind11_object:\)$#\1Static methods\2#' \
     -e 's# \{1,\}$##' \
     -e 's# class method of pybind11_builtins\.pybind11_object# from pybind11_builtins\.pybind11_type#'
