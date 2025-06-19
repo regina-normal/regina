@@ -2131,7 +2131,6 @@
 		05098A6528F24CBC005E4716 /* typeutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = typeutils.cpp; sourceTree = "<group>"; };
 		05098A6828F24CD8005E4716 /* globals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = globals.h; sourceTree = "<group>"; };
 		05098A6928F24D3C005E4716 /* docstrings.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = docstrings.test; sourceTree = "<group>"; };
-		05098A6A28F24D3C005E4716 /* docstrings.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = docstrings.out; sourceTree = "<group>"; };
 		05098A7128F24D98005E4716 /* engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = engine.h; sourceTree = "<group>"; };
 		05098A7228F24D98005E4716 /* output.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
 		05098A7328F24D98005E4716 /* regina-core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "regina-core.h"; sourceTree = "<group>"; };
@@ -2362,6 +2361,12 @@
 		050C64931DA12FBD00C9420F /* examplesnappea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = examplesnappea.cpp; sourceTree = "<group>"; };
 		050EA57925A2BDBC000E94F5 /* knot-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "knot-census.rga"; sourceTree = "<group>"; };
 		050EA59925A2BDF2000E94F5 /* knot-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "knot-census.rga"; sourceTree = "<group>"; };
+		050EC0002E04D38A006755ED /* exception.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = exception.h; sourceTree = "<group>"; };
+		050EC0012E04D39F006755ED /* basic_sub.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = basic_sub.cpp; sourceTree = "<group>"; };
+		050EC0022E04D39F006755ED /* basic_sub.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = basic_sub.out; sourceTree = "<group>"; };
+		050EC0032E04D3BB006755ED /* docstrings.out.v2 */ = {isa = PBXFileReference; lastKnownFileType = text; path = docstrings.out.v2; sourceTree = "<group>"; };
+		050EC0042E04D3BB006755ED /* docstrings.out.v3 */ = {isa = PBXFileReference; lastKnownFileType = text; path = docstrings.out.v3; sourceTree = "<group>"; };
+		050EC0052E04D3CF006755ED /* testsub.in */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = testsub.in; sourceTree = "<group>"; };
 		050F5CDD1B9BAAAA00C1F681 /* engine.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = engine.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		050F5D011B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D061B9BAB9C00C1F681 /* pyalgebra.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pyalgebra.cpp; sourceTree = "<group>"; };
@@ -5620,6 +5625,8 @@
 				051806AF2C2CF65D001470F1 /* base64.test */,
 				054DF94028CABC2800EC3D81 /* basic.cpp */,
 				0589B32E2E00432E007A8F64 /* basic_alltypes.cpp */,
+				050EC0012E04D39F006755ED /* basic_sub.cpp */,
+				050EC0022E04D39F006755ED /* basic_sub.out */,
 				05E221DD2CEC2545009D5D4E /* binom.out */,
 				05E221DE2CEC2545009D5D4E /* binom.test */,
 				054F7DF1278EA2970036B923 /* bool.out */,
@@ -5643,7 +5650,8 @@
 				05CAE60F2743F1ED007C93F3 /* discs.out */,
 				05CAE6102743F1ED007C93F3 /* discs.test */,
 				05098B0628FECBD8005E4716 /* docstrings.filter */,
-				05098A6A28F24D3C005E4716 /* docstrings.out */,
+				050EC0032E04D3BB006755ED /* docstrings.out.v2 */,
+				050EC0042E04D3BB006755ED /* docstrings.out.v3 */,
 				05098A6928F24D3C005E4716 /* docstrings.test */,
 				050F5D871B9BAB9C00C1F681 /* dodec.orb */,
 				0577E6DF1F97087A00CBDF15 /* embeddings.out */,
@@ -5753,6 +5761,7 @@
 				059802802667067C002D5D57 /* swapping.test */,
 				050F5DA21B9BAB9C00C1F681 /* testall.in */,
 				054DF94128CABC2900EC3D81 /* testbasic.in */,
+				050EC0052E04D3CF006755ED /* testsub.in */,
 				050F5DA31B9BAB9C00C1F681 /* theta_in_solid_torus.orb */,
 				057B0CAE26A2AC4E0017F5EA /* tightencode.out */,
 				057B0CAD26A2AC4E0017F5EA /* tightencode.test */,
@@ -7098,6 +7107,7 @@
 			children = (
 				05098A6428EA891E005E4716 /* docstrings.h */,
 				05431FC81C40F607009BC072 /* equality.h */,
+				050EC0002E04D38A006755ED /* exception.h */,
 				05098B0228FC110B005E4716 /* flags.h */,
 				055CF2B728C817E000CA9034 /* gil.h */,
 				05098A6828F24CD8005E4716 /* globals.h */,
