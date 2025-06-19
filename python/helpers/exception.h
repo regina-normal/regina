@@ -30,53 +30,52 @@
  *                                                                        *
  **************************************************************************/
 
+/*! \file python/helpers/exception.h
+ *  \brief Assists with wrapping Regina's exception classes.
+ *
+ *  This header is _not_ included automatically by python/helpers.h.
+ *  If you need it, you will need to include it yourself.
+ */
+
 #include <pybind11/pybind11.h>
-#include "snappea/snappeatriangulation.h"
 #include "utilities/exception.h"
-#include "utilities/snapshot.h"
-#include "../helpers.h"
-#include "../helpers/exception.h"
-#include "../docstrings/utilities/exception.h"
-#include "../docstrings/utilities/snapshot.h"
+#include "../helpers/docstrings.h"
 
-// Bring in all of the exception classes defined in utilities/*.h.
-//
-// The SnapPea kernel exceptions are added elsewhere (since they are
-// defined in snappea/*.h).
+namespace regina::python {
 
-void addException(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN_MAIN
+/**
+ * Adds Python bindings for one of Regina's C++ exception types.
+ *
+ * This routine will create a corresponding Python exception type (using
+ * PyExc_RuntimeError as its base), and will register a translator between
+ * the two.
+ *
+ * Conceptually, this does a similar job to `pybind11::register_exception()`;
+ * however, it is also safe to use with subinterpreters (which, as of
+ * pybind11 3.0.0rc3, `pybind11::register_exception()` is not).
+ */
+template <typename ReginaExceptionType>
+void registerReginaException(pybind11::module_& m, const char* className,
+        const char* docstring) {
+#if REGINA_PYBIND11_VERSION == 3
+    // In pybind11 v3 (at least in 3.0.0rc3), the implementation of
+    // register_exception() uses a global singleton Python exception object,
+    // which breaks things when we load the module multiple times in different
+    // subinterpreters.  We will need to implement things manually ourselves.
 
-    // Derived from ReginaException:
-    regina::python::registerReginaException<regina::ReginaException>(m,
-        "ReginaException", rdoc::ReginaException);
-    regina::python::registerReginaException<regina::FailedPrecondition>(m,
-        "FailedPrecondition", rdoc::FailedPrecondition);
-    regina::python::registerReginaException<regina::InvalidArgument>(m,
-        "InvalidArgument", rdoc::InvalidArgument);
-    regina::python::registerReginaException<regina::InvalidInput>(m,
-        "InvalidInput", rdoc::InvalidInput);
-    regina::python::registerReginaException<regina::NotImplemented>(m,
-        "NotImplemented", rdoc::NotImplemented);
-    regina::python::registerReginaException<regina::FileError>(m,
-        "FileError", rdoc::FileError);
-    regina::python::registerReginaException<regina::NoSolution>(m,
-        "NoSolution", rdoc::NoSolution);
-    regina::python::registerReginaException<regina::UnsolvedCase>(m,
-        "UnsolvedCase", rdoc::UnsolvedCase);
-    regina::python::registerReginaException<regina::LockViolation>(m,
-        "LockViolation", rdoc::LockViolation);
-    regina::python::registerReginaException<regina::ImpossibleScenario>(m,
-        "ImpossibleScenario", rdoc::ImpossibleScenario);
-    regina::python::registerReginaException<regina::SnapPeaUnsolvedCase>(m,
-        "SnapPeaUnsolvedCase", rdoc::SnapPeaUnsolvedCase);
-    regina::python::registerReginaException<regina::SnapPeaIsNull>(m,
-        "SnapPeaIsNull", rdoc::SnapPeaIsNull);
-
-    // Snapshotting machinery:
-    regina::python::registerReginaException<regina::SnapshotWriteError>(m,
-        "SnapshotWriteError", rdoc::SnapshotWriteError);
-
-    RDOC_SCOPE_END
+    // TODO: Write this.  Note: PyErr_NewExceptionWithDoc(name, doc, base, null)
+    pybind11::register_exception<ReginaExceptionType>(m, className,
+        PyExc_RuntimeError).doc() = docstring;
+#elif REGINA_PYBIND11_VERSION == 2
+    // pybind11 v2 does not support subinterpreters properly, and
+    // register_exception() appears to work perfectly fine with the
+    // subinterpreter hacks that we are using.
+    pybind11::register_exception<ReginaExceptionType>(m, className,
+        PyExc_RuntimeError).doc() = docstring;
+#else
+    #error "Unsupported pybind11 version"
+#endif
 }
+
+} // namespace regina::python
 

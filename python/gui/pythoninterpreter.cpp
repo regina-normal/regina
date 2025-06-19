@@ -181,8 +181,9 @@ PythonInterpreter::PythonInterpreter(
 
     // Redirect stdout and stderr if appropriate.
     try {
-        if (! pythonInitialised)
-            regina::python::PythonOutputStream::addBindings();
+        // For pybind11 v3, we need to bind PythonOutputStream in every
+        // subinterpreter.
+        regina::python::PythonOutputStream::addBindings();
         pyStdOut.install("stdout");
         pyStdErr.install("stderr");
     } catch (std::runtime_error& e) {
@@ -299,6 +300,7 @@ PythonInterpreter::PythonInterpreter(
 
     // Redirect stdout and stderr if appropriate.
     try {
+        // For pybind11 v2, we only need to bind PythonOutputStream once.
         if (! pythonInitialised)
             regina::python::PythonOutputStream::addBindings();
         pyStdOut.install("stdout");

@@ -38,6 +38,7 @@
 #include "maths/matrix.h"
 #include "snappea/snappeatriangulation.h"
 #include "../helpers.h"
+#include "../helpers/exception.h"
 #include "../docstrings/snappea/snappeatriangulation.h"
 #include "../docstrings/triangulation/detail/triangulation.h" // for global_swap
 
@@ -49,12 +50,10 @@ using regina::Triangulation;
 void addSnapPeaTriangulation(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN_MAIN
 
-    pybind11::register_exception<regina::SnapPeaFatalError>(m,
-        "SnapPeaFatalError", PyExc_RuntimeError)
-        .doc() = rdoc::SnapPeaFatalError;
-    pybind11::register_exception<regina::SnapPeaMemoryFull>(m,
-        "SnapPeaMemoryFull", PyExc_RuntimeError)
-        .doc() = rdoc::SnapPeaMemoryFull;
+    regina::python::registerReginaException<regina::SnapPeaFatalError>(m,
+        "SnapPeaFatalError", rdoc::SnapPeaFatalError);
+    regina::python::registerReginaException<regina::SnapPeaMemoryFull>(m,
+        "SnapPeaMemoryFull", rdoc::SnapPeaMemoryFull);
 
     RDOC_SCOPE_SWITCH(Cusp)
 
