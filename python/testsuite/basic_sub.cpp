@@ -90,10 +90,28 @@ int main(int argc, char* argv[]) {
         s.executeLine("print(ExampleLink.virtualTrefoil().jones())");
     }
     {
+        // Verify that exceptions are behaving properly.
+        Session s(argv[0]);
+        s.executeLine("try:");
+        s.executeLine("    print(Link().alexander())");
+        s.executeLine("except FailedPrecondition:");
+        s.executeLine("    print('Caught exception!')");
+        s.executeLine("");
+    }
+    {
         Session s1(argv[0]);
         Session s2(argv[0]);
         s1.executeLine("print(ExampleLink.figureEight().jones())");
         s2.executeLine("print(ExampleLink.whitehead().jones())");
+    }
+    {
+        // Verify that exceptions are still behaving properly.
+        Session s(argv[0]);
+        s.executeLine("try:");
+        s.executeLine("    print(Link().alexander())");
+        s.executeLine("except FailedPrecondition:");
+        s.executeLine("    print('Caught exception!')");
+        s.executeLine("");
     }
     return 0;
 }
