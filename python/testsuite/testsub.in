@@ -1,0 +1,150 @@
+#!/bin/bash
+#
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Runner
+#
+# Copyright (c) 2007-2025, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Usage: testsub
+#
+# Runs some simple tests to ensure that Regina's Python module is playing
+# nicely with Python subinterpreters.
+#
+# This script MUST be run from the python/testsuite directory in the
+# build tree.  It runs everything directly out of the build tree.
+# It does not require regina to be installed on the system (and indeed
+# it ignores any installation that it might find).
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+set -e
+
+# To see the output, you need to run:
+#     make test ARGS="-V"
+
+executable=./basic_sub
+testdir='@BASH_CMAKE_SOURCE_DIR@/python/testsuite'
+testoutdir=`mktemp -d -t regina.XXX`
+
+# REGINA_HOME can be deduced from the executable path, but on Windows this
+# deduction gives the wrong style of path (windows vs unix style) for use
+# with the embedded basic Python interpreter.  Fix it explicitly here.
+export REGINA_HOME=../../engine
+
+echo "---------------------------------------------------"
+echo "Testing python bindings in embedded subinterpreters"
+echo "---------------------------------------------------"
+echo
+
+if ! test -f ../../CMakeCache.txt -a -f "$executable"; then
+	echo "ERROR: You do not appear to be within the python/testsuite directory"
+	echo "       in the build tree.  This script must be run from directly"
+	echo "       within the build tree (where you ran cmake)."
+	echo "       Please change into the python/testsuite directory in the"
+	echo "       build tree and try again."
+	exit 1
+fi
+
+# Make sure Python will be able to import regina.
+os='@CMAKE_SYSTEM_NAME@'
+case "$os" in
+	Darwin )
+		export DYLD_LIBRARY_PATH="../../engine:$DYLD_LIBRARY_PATH"
+		export PYTHONPATH="..:$PYTHONPATH"
+		;;
+	Windows )
+		# The PYTHONHOME directory is incorrectly hard-coded in msys2.
+		# Work out the correct value by asking the python interpreter directly.
+		PYTHON='@BASH_Python_EXECUTABLE@'
+		if [ ! -e "$PYTHON" ]; then
+			echo "ERROR: Python interpreter not found: $PYTHON"
+			exit 1
+		fi
+		export PYTHONHOME="`"$PYTHON" -c 'import sys; print(sys.prefix)'`"
+		if [ ! -d "$PYTHONHOME" ]; then
+			echo "ERROR: Python home not found: $PYTHONHOME"
+			exit 1
+		fi
+
+		export PATH="../../engine:$PATH"
+		export PYTHONPATH="..;$PYTHONPATH"
+		;;
+	* )
+		export LD_LIBRARY_PATH="../../engine:$LD_LIBRARY_PATH"
+		export PYTHONPATH="..:$PYTHONPATH"
+		;;
+esac
+
+expected="$testdir/basic_sub.out"
+observed="$testoutdir/basic_sub.out"
+
+# Since we have "set -e", we need "&& dummy=" to prevent this line to
+# just exit the bash script when the test has non-zero exit code.
+# We use && as opposed to || in order to preserve the exit code from
+# the first command.
+#
+# The code that unsets TERM fixes an issue seen some years ago on
+# Fedora, where (as a result of a more exotic TERM setting) unprintable
+# characters were being dumped at the beginning of the python output.
+#
+echo -n "Running subinterpreter test ... "
+TERM= PYTHONIOENCODING=utf8 "$executable" > "$observed" 2>&1 && dummy=
+
+# Catch exitcode.
+exitcode=$?
+
+# Branch based on exit code.
+broken=
+if [ "$exitcode" -ne 0 ];  then
+	echo "FAILED (exit code $exitcode)"
+	echo "    Output was:"
+	echo "        ..."
+	tail -n 5 $observed | sed -e 's/^/        /'
+	broken=1
+else
+	if ! ( diff --strip-trailing-cr "$expected" "$observed" > /dev/null ); then
+		echo "FAILED (output differs from expected)"
+		echo "    Diff was:"
+		diff --strip-trailing-cr -u \
+			--label 'Expected output' --label 'Actual output' \
+			"$expected" "$observed" | head -n200 | sed -e 's/^/        /'
+		echo "        ..."
+		broken=1
+	else
+		echo "ok"
+		rm -f "$observed"
+	fi
+fi
+
+if test -n "$broken"; then
+	echo
+	echo "The full output file(s) produced by Regina are in the directory:"
+	echo "    $testoutdir"
+	exit 1
+else
+	rmdir "$testoutdir"
+fi
+
+echo
+echo "Test passed!"
+exit 0

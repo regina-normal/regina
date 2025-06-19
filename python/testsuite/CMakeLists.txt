@@ -10,12 +10,17 @@ CONFIGURE_FILE(
   @ONLY
 )
 CONFIGURE_FILE(
+  testsub.in
+  "${PROJECT_BINARY_DIR}/python/testsuite/testsub"
+  @ONLY
+)
+CONFIGURE_FILE(
   runbasic.in
   "${PROJECT_BINARY_DIR}/python/testsuite/runbasic"
   @ONLY
 )
 
-# A very basic interpreter to use for testing:
+# A very basic interpreter (and related code) to use for testing:
 INCLUDE_DIRECTORIES(${Python_INCLUDE_DIRS} ${ENGINE_INCLUDES} "${PROJECT_BINARY_DIR}/engine")
 ADD_LINK_OPTIONS(${Python_LINK_OPTIONS})
 add_executable(basic
@@ -28,13 +33,20 @@ add_executable(basic_alltypes
   ../gui/pythoninterpreter.cpp
   ../gui/pythonoutputstream.cpp)
 target_link_libraries(basic_alltypes ${ENGINE_LIBRARY} ${Python_LIBRARIES})
+add_executable(basic_sub
+  basic_sub.cpp
+  ../gui/pythoninterpreter.cpp
+  ../gui/pythonoutputstream.cpp)
+target_link_libraries(basic_sub ${ENGINE_LIBRARY} ${Python_LIBRARIES})
 
 IF (WIN32)
   ADD_TEST(python-test bash testall)
   ADD_TEST(python-basic bash testbasic)
+  ADD_TEST(python-sub bash testsub)
   # We do not need to add the engine DLL location to the path, since
   # regina-python (used in testall) and testbasic (directly) do this for us.
 ELSE (WIN32)
   ADD_TEST(python-test ./testall)
   ADD_TEST(python-basic ./testbasic)
+  ADD_TEST(python-sub ./testsub)
 ENDIF (WIN32)
