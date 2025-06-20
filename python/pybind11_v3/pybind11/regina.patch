@@ -101,6 +101,19 @@ index e747e274d..8f23dc60c 100644
          } catch (...) {
              try_translate_exceptions();
              return nullptr;
+@@ -3254,10 +3254,10 @@ template <typename type>
+ class exception : public object {
+ public:
+     exception() = default;
+-    exception(handle scope, const char *name, handle base = PyExc_Exception) {
++    exception(handle scope, const char *name, const char* doc, handle base) {
+         std::string full_name
+             = scope.attr("__name__").cast<std::string>() + std::string(".") + name;
+-        m_ptr = PyErr_NewException(const_cast<char *>(full_name.c_str()), base.ptr(), nullptr);
++        m_ptr = PyErr_NewExceptionWithDoc(const_cast<char *>(full_name.c_str()), doc, base.ptr(), nullptr);
+         if (hasattr(scope, "__dict__") && scope.attr("__dict__").contains(name)) {
+             pybind11_fail("Error during initialization: multiple incompatible "
+                           "definitions with name \""
 diff --git a/python/pybind11_v3/pybind11/subinterpreter.h b/python/pybind11_v3/pybind11/subinterpreter.h
 index 9f2f704c5..cb666cf28 100644
 --- a/python/pybind11_v3/pybind11/subinterpreter.h

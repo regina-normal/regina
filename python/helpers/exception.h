@@ -63,9 +63,21 @@ void registerReginaException(pybind11::module_& m, const char* className,
     // which breaks things when we load the module multiple times in different
     // subinterpreters.  We will need to implement things manually ourselves.
 
-    // TODO: Write this.  Note: PyErr_NewExceptionWithDoc(name, doc, base, null)
-    pybind11::register_exception<ReginaExceptionType>(m, className,
-        PyExc_RuntimeError).doc() = docstring;
+    // TODO: Rewrite this.
+    constinit static pybind11::gil_safe_call_once_and_store<pybind11::exception<ReginaExceptionType>> exc_storage;
+    exc_storage.call_once_and_store_result(
+        [&]() { return pybind11::exception<ReginaExceptionType>(m, className, docstring, PyExc_RuntimeError); });
+
+    pybind11::register_exception_translator([](std::exception_ptr p) {
+        if (!p) {
+            return;
+        }
+        try {
+            std::rethrow_exception(p);
+        } catch (const ReginaExceptionType &e) {
+            set_error(exc_storage.get_stored(), e.what());
+        }
+    });
 #elif REGINA_PYBIND11_VERSION == 2
     // pybind11 v2 does not support subinterpreters properly, and
     // register_exception() appears to work perfectly fine with the

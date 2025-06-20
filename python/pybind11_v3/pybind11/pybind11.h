@@ -3254,10 +3254,10 @@ template <typename type>
 class exception : public object {
 public:
     exception() = default;
-    exception(handle scope, const char *name, handle base = PyExc_Exception) {
+    exception(handle scope, const char *name, const char* doc, handle base) {
         std::string full_name
             = scope.attr("__name__").cast<std::string>() + std::string(".") + name;
-        m_ptr = PyErr_NewException(const_cast<char *>(full_name.c_str()), base.ptr(), nullptr);
+        m_ptr = PyErr_NewExceptionWithDoc(const_cast<char *>(full_name.c_str()), doc, base.ptr(), nullptr);
         if (hasattr(scope, "__dict__") && scope.attr("__dict__").contains(name)) {
             pybind11_fail("Error during initialization: multiple incompatible "
                           "definitions with name \""
