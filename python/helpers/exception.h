@@ -38,6 +38,7 @@
  */
 
 #include <pybind11/pybind11.h>
+#include <pybind11/subinterpreter.h>
 #include "utilities/exception.h"
 #include "../helpers/docstrings.h"
 
@@ -61,12 +62,18 @@ void registerReginaException(pybind11::module_& m, const char* className,
     // In pybind11 v3 (at least in 3.0.0rc3), the implementation of
     // register_exception() uses a global singleton Python exception object,
     // which breaks things when we load the module multiple times in different
-    // subinterpreters.  We will need to implement things manually ourselves.
+    // subinterpreters.  We will need to implement things manually ourselves,
+    // with a different Python exception object for each subinterpreter.
 
-    // TODO: Rewrite this.
-    constinit static pybind11::gil_safe_call_once_and_store<pybind11::exception<ReginaExceptionType>> exc_storage;
-    exc_storage.call_once_and_store_result(
-        [&]() { return pybind11::exception<ReginaExceptionType>(m, className, docstring, PyExc_RuntimeError); });
+    // TODO: Check what happens when we load the module multiple times within
+    // the same subinterpreter.
+    // TODO: Lock access to cached.
+    // TODO: Find a way to clean up these exceptions when the subinterpreter
+    // is destroyed.
+    static std::map<int64_t, PyObject*> cached;
+    int64_t id = pybind11::subinterpreter::current().id();
+    cached.emplace(id, (new pybind11::exception<ReginaExceptionType>(
+        m, className, docstring, PyExc_RuntimeError))->ptr());
 
     pybind11::register_exception_translator([](std::exception_ptr p) {
         if (!p) {
@@ -75,7 +82,15 @@ void registerReginaException(pybind11::module_& m, const char* className,
         try {
             std::rethrow_exception(p);
         } catch (const ReginaExceptionType &e) {
-            set_error(exc_storage.get_stored(), e.what());
+            int64_t id = pybind11::subinterpreter::current().id();
+            auto it = cached.find(id);
+            if (it != cached.end())
+                PyErr_SetString(it->second, e.what());
+            else {
+                // This should never happen.  But.. just in case, translate
+                // this to a standard python RuntimeError instead.
+                PyErr_SetString(PyExc_RuntimeError, e.what());
+            }
         }
     });
 #elif REGINA_PYBIND11_VERSION == 2
