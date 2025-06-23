@@ -2,7 +2,7 @@ pybind11 Library
 ----------------
 
 This directory contains a copy of the pybind11 header-only library.
-This is currently synced with pybind11 version 3.0.0rc3 (4 Jun 2025).
+This is currently synced with pybind11 version 3.0.0rc4 (19 Jun 2025).
 
 pybind11 is distributed under a BSD-style license that can be found in the
 LICENSE file in this directory.

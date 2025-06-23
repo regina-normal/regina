@@ -1,5 +1,5 @@
 diff --git a/python/pybind11_v3/pybind11/pybind11.h b/python/pybind11_v3/pybind11/pybind11.h
-index e747e274d..8f23dc60c 100644
+index 06be7f1d4..ccf3c02e0 100644
 --- a/python/pybind11_v3/pybind11/pybind11.h
 +++ b/python/pybind11_v3/pybind11/pybind11.h
 @@ -33,6 +33,10 @@
@@ -101,7 +101,7 @@ index e747e274d..8f23dc60c 100644
          } catch (...) {
              try_translate_exceptions();
              return nullptr;
-@@ -3254,10 +3254,10 @@ template <typename type>
+@@ -3213,10 +3265,10 @@ template <typename type>
  class exception : public object {
  public:
      exception() = default;
