@@ -109,6 +109,16 @@ inline std::string replace_newlines_and_squash(const char *text) {
     return result.substr(str_begin, str_range);
 }
 
+/* Regina-specific tweak to generate_function_signature */
+inline std::string fix_regina(const std::string& modulename, const std::string& qualname) {
+    if (modulename == "regina.engine")
+        return "regina." + qualname;
+    else if (modulename == "regina.engine.internal")
+        return "regina.internal." + qualname;
+    else
+        return modulename + "." + qualname;
+}
+
 /* Generate a proper function signature */
 inline std::string generate_function_signature(const char *type_caster_name_field,
                                                detail::function_record *func_rec,
@@ -179,10 +189,7 @@ inline std::string generate_function_signature(const char *type_caster_name_fiel
                     qualname = "<unknown>";
                 }
                 const auto m = th.attr("__module__").cast<std::string>();
-                if (m == "regina.engine")
-                    signature += "regina." + qualname;
-                else
-                    signature += m + "." + qualname;
+                signature += fix_regina(m, qualname);
             } else if (auto th = detail::global_internals_native_enum_type_map_get_item(*t)) {
                 std::string qualname;
                 try {
@@ -192,10 +199,7 @@ inline std::string generate_function_signature(const char *type_caster_name_fiel
                     qualname = "<unknown>";
                 }
                 const auto m = th.attr("__module__").cast<std::string>();
-                if (m == "regina.engine")
-                    signature += "regina." + qualname;
-                else
-                    signature += m + "." + qualname;
+                signature += fix_regina(m, qualname);
             } else if (func_rec->is_new_style_constructor && arg_index == 0) {
                 // A new-style `__init__` takes `self` as `value_and_holder`.
                 // Rewrite it to the proper class type.
@@ -207,10 +211,7 @@ inline std::string generate_function_signature(const char *type_caster_name_fiel
                     qualname = "<unknown>";
                 }
                 const auto m = func_rec->scope.attr("__module__").cast<std::string>();
-                if (m == "regina.engine")
-                    signature += "regina." + qualname;
-                else
-                    signature += m + "." + qualname;
+                signature += fix_regina(m, qualname);
             } else {
                 signature += detail::quote_cpp_type_name(detail::clean_type_id(t->name()));
             }

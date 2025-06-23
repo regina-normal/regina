@@ -1,7 +1,7 @@
-diff --git a/python/pybind11/functional.h b/python/pybind11/functional.h
+diff --git a/python/pybind11_v2/pybind11/functional.h b/python/pybind11_v2/pybind11/functional.h
 index 4b3610117..64e6a7acf 100644
---- a/python/pybind11/functional.h
-+++ b/python/pybind11/functional.h
+--- a/python/pybind11_v2/pybind11/functional.h
++++ b/python/pybind11_v2/pybind11/functional.h
 @@ -31,12 +31,18 @@ struct func_handle {
      }
      func_handle(const func_handle &f_) { operator=(f_); }
@@ -35,10 +35,10 @@ index 4b3610117..64e6a7acf 100644
          // casts the returned object as a rvalue to the return type
          return hfunc.f(std::forward<Args>(args)...).template cast<Return>();
      }
-diff --git a/python/pybind11/gil.h b/python/pybind11/gil.h
+diff --git a/python/pybind11_v2/pybind11/gil.h b/python/pybind11_v2/pybind11/gil.h
 index 6b0edaee4..739c888a4 100644
---- a/python/pybind11/gil.h
-+++ b/python/pybind11/gil.h
+--- a/python/pybind11_v2/pybind11/gil.h
++++ b/python/pybind11_v2/pybind11/gil.h
 @@ -216,4 +216,30 @@ public:
  
  #endif // PYBIND11_SIMPLE_GIL_MANAGEMENT
@@ -70,10 +70,10 @@ index 6b0edaee4..739c888a4 100644
 +};
 +
  PYBIND11_NAMESPACE_END(PYBIND11_NAMESPACE)
-diff --git a/python/pybind11/iostream.h b/python/pybind11/iostream.h
+diff --git a/python/pybind11_v2/pybind11/iostream.h b/python/pybind11_v2/pybind11/iostream.h
 index 1878089e3..60586b9d7 100644
---- a/python/pybind11/iostream.h
-+++ b/python/pybind11/iostream.h
+--- a/python/pybind11_v2/pybind11/iostream.h
++++ b/python/pybind11_v2/pybind11/iostream.h
 @@ -93,7 +93,7 @@ private:
      // This function must be non-virtual to be called in a destructor.
      int _sync() {
@@ -83,10 +83,10 @@ index 1878089e3..60586b9d7 100644
              // This subtraction cannot be negative, so dropping the sign.
              auto size = static_cast<size_t>(pptr() - pbase());
              size_t remainder = utf8_remainder();
-diff --git a/python/pybind11/pybind11.h b/python/pybind11/pybind11.h
-index 5219c0ff8..66bd96adb 100644
---- a/python/pybind11/pybind11.h
-+++ b/python/pybind11/pybind11.h
+diff --git a/python/pybind11_v2/pybind11/pybind11.h b/python/pybind11_v2/pybind11/pybind11.h
+index 5219c0ff8..101de3b20 100644
+--- a/python/pybind11_v2/pybind11/pybind11.h
++++ b/python/pybind11_v2/pybind11/pybind11.h
 @@ -26,6 +26,10 @@
  #include <utility>
  #include <vector>
@@ -109,7 +109,24 @@ index 5219c0ff8..66bd96adb 100644
  PYBIND11_NAMESPACE_BEGIN(PYBIND11_NAMESPACE)
  
  /* https://stackoverflow.com/questions/46798456/handling-gccs-noexcept-type-warning
-@@ -464,15 +472,39 @@ protected:
+@@ -363,6 +371,16 @@ protected:
+         std::vector<char *> strings;
+     };
+ 
++    /* Regina-specific tweak to generation of function signatures */
++    inline std::string fix_regina(const std::string& modulename, const std::string& qualname) {
++        if (modulename == "regina.engine")
++            return "regina." + qualname;
++        else if (modulename == "regina.engine.internal")
++            return "regina.internal." + qualname;
++        else
++            return modulename + "." + qualname;
++    }
++
+     /// Register a function call with Python (generic non-templated code goes here)
+     void initialize_generic(unique_function_record &&unique_rec,
+                             const char *text,
+@@ -464,15 +482,33 @@ protected:
                  if (!t) {
                      pybind11_fail("Internal error while parsing type signature (1)");
                  }
@@ -130,10 +147,7 @@ index 5219c0ff8..66bd96adb 100644
 +                        qualname = "<unknown>";
 +                    }
 +                    const auto m = th.attr("__module__").cast<std::string>();
-+                    if (m == "regina.engine")
-+                        signature += "regina." + qualname;
-+                    else
-+                        signature += m + "." + qualname;
++                    signature += fix_regina(m, qualname);
                  } else if (rec->is_new_style_constructor && arg_index == 0) {
                      // A new-style `__init__` takes `self` as `value_and_holder`.
                      // Rewrite it to the proper class type.
@@ -147,14 +161,11 @@ index 5219c0ff8..66bd96adb 100644
 +                        qualname = "<unknown>";
 +                    }
 +                    const auto m = rec->scope.attr("__module__").cast<std::string>();
-+                    if (m == "regina.engine")
-+                        signature += "regina." + qualname;
-+                    else
-+                        signature += m + "." + qualname;
++                    signature += fix_regina(m, qualname);
                  } else {
                      signature += detail::quote_cpp_type_name(detail::clean_type_id(t->name()));
                  }
-@@ -1021,6 +1053,16 @@ protected:
+@@ -1021,6 +1057,16 @@ protected:
          } catch (abi::__forced_unwind &) {
              throw;
  #endif
@@ -171,7 +182,7 @@ index 5219c0ff8..66bd96adb 100644
          } catch (...) {
              try_translate_exceptions();
              return nullptr;
-@@ -2726,13 +2768,13 @@ void print(Args &&...args) {
+@@ -2726,13 +2772,13 @@ void print(Args &&...args) {
  
  inline void
  error_already_set::m_fetched_error_deleter(detail::error_fetch_and_normalize *raw_ptr) {
@@ -187,7 +198,7 @@ index 5219c0ff8..66bd96adb 100644
      error_scope scope;
      return m_fetched_error->error_string().c_str();
  }
-@@ -2862,7 +2904,7 @@ function get_override(const T *this_ptr, const char *name) {
+@@ -2862,7 +2908,7 @@ function get_override(const T *this_ptr, const char *name) {
  
  #define PYBIND11_OVERRIDE_IMPL(ret_type, cname, name, ...)                                        \
      do {                                                                                          \

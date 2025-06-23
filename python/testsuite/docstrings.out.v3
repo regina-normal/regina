@@ -692,7 +692,7 @@ class ListView_Triangulation3_vertices(pybind11_builtins.pybind11_object)
  |          the (*index*)th element in this list.
  |
  |  __init__(...)
- |      __init__(self: pybind11_builtins.ListView, arg0: <internal>.ListView[regina.Vertex3]) -> None
+ |      __init__(self: regina.internal.ListView_Triangulation3_vertices, arg0: <internal>.ListView[regina.Vertex3]) -> None
  |
  |      Creates a new copy of the given list view.
  |

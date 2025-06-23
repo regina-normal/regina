@@ -371,6 +371,16 @@ protected:
         std::vector<char *> strings;
     };
 
+    /* Regina-specific tweak to generation of function signatures */
+    inline std::string fix_regina(const std::string& modulename, const std::string& qualname) {
+        if (modulename == "regina.engine")
+            return "regina." + qualname;
+        else if (modulename == "regina.engine.internal")
+            return "regina.internal." + qualname;
+        else
+            return modulename + "." + qualname;
+    }
+
     /// Register a function call with Python (generic non-templated code goes here)
     void initialize_generic(unique_function_record &&unique_rec,
                             const char *text,
@@ -486,10 +496,7 @@ protected:
                         qualname = "<unknown>";
                     }
                     const auto m = th.attr("__module__").cast<std::string>();
-                    if (m == "regina.engine")
-                        signature += "regina." + qualname;
-                    else
-                        signature += m + "." + qualname;
+                    signature += fix_regina(m, qualname);
                 } else if (rec->is_new_style_constructor && arg_index == 0) {
                     // A new-style `__init__` takes `self` as `value_and_holder`.
                     // Rewrite it to the proper class type.
@@ -501,10 +508,7 @@ protected:
                         qualname = "<unknown>";
                     }
                     const auto m = rec->scope.attr("__module__").cast<std::string>();
-                    if (m == "regina.engine")
-                        signature += "regina." + qualname;
-                    else
-                        signature += m + "." + qualname;
+                    signature += fix_regina(m, qualname);
                 } else {
                     signature += detail::quote_cpp_type_name(detail::clean_type_id(t->name()));
                 }
