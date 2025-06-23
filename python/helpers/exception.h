@@ -94,8 +94,8 @@ void registerReginaException(pybind11::module_& m, const char* className,
         }
     });
 #elif REGINA_PYBIND11_VERSION == 2
-    // pybind11 v2 does not support subinterpreters properly, and
-    // register_exception() appears to work perfectly fine with the
+    // pybind11 v2 does not support subinterpreters properly; however,
+    // register_exception() does appear to work perfectly fine with the
     // subinterpreter hacks that we are using.
     pybind11::register_exception<ReginaExceptionType>(m, className,
         PyExc_RuntimeError).doc() = docstring;
