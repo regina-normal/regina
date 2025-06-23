@@ -36,11 +36,11 @@
 #include "isosig-bindings.h"
 #include "simplex-bindings.h"
 
-void addTriangulations10(pybind11::module_& m) {
+void addTriangulations10(pybind11::module_& m, pybind11::module_& internal) {
     addSimplex<10>(m, "Simplex10");
-    addComponent<10>(m, "Component10");
-    addBoundaryComponent<10>(m, "BoundaryComponent10");
-    addTriangulation<10>(m, "Triangulation10");
+    addComponent<10>(m, internal, "Component10");
+    addBoundaryComponent<10>(m, internal, "BoundaryComponent10");
+    addTriangulation<10>(m, internal, "Triangulation10");
 
     addIsoSigClassic<10>(m, "IsoSigClassic10");
     addIsoSigEdgeDegrees<10>(m, "IsoSigEdgeDegrees10");

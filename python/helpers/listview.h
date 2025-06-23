@@ -52,9 +52,11 @@ namespace regina::python {
  * Regina); instead you would access the type using an appropriate decltype()
  * statement.
  *
- * The Python class corresponding to \a T will not be given a unique name;
- * instead all such types will be called \c ListView, and will be put into
- * their own unique namespaces to avoid clashes.
+ * The Python class corresponding to \a T will be given a name that is derived
+ * from the C++ type \a T; this name might not be easy for humans to type or
+ * remember.  Because of this, and because of the internal nature of the
+ * ListView class, the Python module that is passed to addListView() should be
+ * `regina.internal`.
  *
  * It is assumed that the ListView type \a T has not yet been wrapped in
  * Python.  If it has, then this routine will throw an exception.
@@ -86,12 +88,10 @@ template <class T, pybind11::return_value_policy Policy =
     (std::is_pointer<typename T::value_type>::value ?
         pybind11::return_value_policy::reference_internal :
         pybind11::return_value_policy::copy)>
-void addListView(pybind11::module_& m) {
-    // Instead of naming these classes uniquely, just call them all ListView
-    // and make them all local to their own unique Python namespaces.
-    // End users should not be constructing them anyway.
-    auto c = pybind11::class_<T>(pybind11::handle(), "ListView",
-            pybind11::module_local(), doc::ListView)
+void addListView(pybind11::module_& internal) {
+    auto c = pybind11::class_<T>(internal,
+            (std::string("ListView_") + typeid(T).name()).c_str(),
+            doc::ListView)
         .def(pybind11::init<const T&>(), doc::ListView_::__copy)
         .def("__iter__", [](const T& view) {
             return pybind11::make_iterator<Policy>(view.begin(), view.end());

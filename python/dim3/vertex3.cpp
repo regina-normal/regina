@@ -47,7 +47,7 @@ using regina::FaceEmbedding;
 using regina::Vertex;
 using regina::VertexEmbedding;
 
-void addVertex3(pybind11::module_& m) {
+void addVertex3(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
     RDOC_SCOPE_BASE_3(detail::FaceEmbeddingBase, alias::FaceNumber,
         alias::SimplexVoid)
@@ -138,7 +138,7 @@ being reserved for a different purpose in a future release.)doc")
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<
-        decltype(std::declval<Vertex<3>>().embeddings())>(m);
+        decltype(std::declval<Vertex<3>>().embeddings())>(internal);
 
     RDOC_SCOPE_INNER_BEGIN(Link)
 

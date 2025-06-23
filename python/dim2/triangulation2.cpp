@@ -54,7 +54,7 @@ using regina::MatrixInt;
 using regina::Simplex;
 using regina::Triangulation;
 
-void addTriangulation2(pybind11::module_& m) {
+void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(Triangulation)
     RDOC_SCOPE_BASE_2(detail::TriangulationBase, Snapshottable)
 
@@ -421,12 +421,12 @@ void addTriangulation2(pybind11::module_& m) {
     regina::python::packet_eq_operators(c, rbase::__eq);
     regina::python::add_packet_data(c);
 
-    regina::python::addListView<decltype(Triangulation<2>().vertices())>(m);
-    regina::python::addListView<decltype(Triangulation<2>().edges())>(m);
-    regina::python::addListView<decltype(Triangulation<2>().triangles())>(m);
-    regina::python::addListView<decltype(Triangulation<2>().components())>(m);
+    regina::python::addListView<decltype(Triangulation<2>().vertices())>(internal);
+    regina::python::addListView<decltype(Triangulation<2>().edges())>(internal);
+    regina::python::addListView<decltype(Triangulation<2>().triangles())>(internal);
+    regina::python::addListView<decltype(Triangulation<2>().components())>(internal);
     regina::python::addListView<
-        decltype(Triangulation<2>().boundaryComponents())>(m);
+        decltype(Triangulation<2>().boundaryComponents())>(internal);
 
     auto wrap = regina::python::add_packet_wrapper<Triangulation<2>>(
         m, "PacketOfTriangulation2");

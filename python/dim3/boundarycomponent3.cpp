@@ -41,7 +41,7 @@
 
 using regina::BoundaryComponent;
 
-void addBoundaryComponent3(pybind11::module_& m) {
+void addBoundaryComponent3(pybind11::module_& m, pybind11::module_& internal) {
     // We use the global scope here because all of BoundaryComponent's members
     // are inherited, and so BoundaryComponent's own docstring namespace
     // does not exist.
@@ -106,10 +106,10 @@ void addBoundaryComponent3(pybind11::module_& m) {
     RDOC_SCOPE_END
 
     regina::python::addListView<
-        decltype(std::declval<BoundaryComponent<3>>().vertices())>(m);
+        decltype(std::declval<BoundaryComponent<3>>().vertices())>(internal);
     regina::python::addListView<
-        decltype(std::declval<BoundaryComponent<3>>().edges())>(m);
+        decltype(std::declval<BoundaryComponent<3>>().edges())>(internal);
     regina::python::addListView<
-        decltype(std::declval<BoundaryComponent<3>>().triangles())>(m);
+        decltype(std::declval<BoundaryComponent<3>>().triangles())>(internal);
 }
 

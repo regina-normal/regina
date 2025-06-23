@@ -40,7 +40,7 @@
 
 using regina::Component;
 
-void addComponent2(pybind11::module_& m) {
+void addComponent2(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(Component)
     RDOC_SCOPE_BASE(detail::ComponentBase)
 
@@ -97,8 +97,8 @@ void addComponent2(pybind11::module_& m) {
     // No need for lower-dimensional faces here, since these reuse the same
     // ListView classes as Triangulation2.
     regina::python::addListView<
-        decltype(std::declval<Component<2>>().triangles())>(m);
+        decltype(std::declval<Component<2>>().triangles())>(internal);
     regina::python::addListView<
-        decltype(std::declval<Component<2>>().boundaryComponents())>(m);
+        decltype(std::declval<Component<2>>().boundaryComponents())>(internal);
 }
 

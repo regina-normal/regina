@@ -48,7 +48,7 @@ using regina::ProgressTracker;
 using regina::StrandRef;
 using regina::Link;
 
-void addLink(pybind11::module_& m) {
+void addLink(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(Framing)
 
     pybind11::enum_<regina::Framing>(m, "Framing", rdoc_scope)
@@ -607,8 +607,8 @@ void addLink(pybind11::module_& m) {
     regina::python::packet_eq_operators(l, rdoc::__eq);
     regina::python::add_packet_data(l);
 
-    regina::python::addListView<decltype(Link().crossings())>(m);
-    regina::python::addListView<decltype(Link().components())>(m);
+    regina::python::addListView<decltype(Link().crossings())>(internal);
+    regina::python::addListView<decltype(Link().components())>(internal);
 
     auto wrap = regina::python::add_packet_wrapper<Link>(m, "PacketOfLink");
     regina::python::add_packet_constructor<>(wrap, rdoc::__default);

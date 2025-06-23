@@ -46,7 +46,7 @@ using regina::EdgeEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
 
-void addEdge2(pybind11::module_& m) {
+void addEdge2(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
     RDOC_SCOPE_BASE_3(detail::FaceEmbeddingBase, alias::FaceNumber,
         alias::SimplexVoid)
@@ -131,7 +131,7 @@ void addEdge2(pybind11::module_& m) {
     RDOC_SCOPE_END
 
     regina::python::addListView<
-        decltype(std::declval<Edge<2>>().embeddings())>(m);
+        decltype(std::declval<Edge<2>>().embeddings())>(internal);
 
     m.attr("EdgeEmbedding2") = m.attr("FaceEmbedding2_1");
     m.attr("Edge2") = m.attr("Face2_1");

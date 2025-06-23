@@ -39,7 +39,7 @@
 using pybind11::overload_cast;
 using regina::SpatialLink;
 
-void addSpatialLink(pybind11::module_& m) {
+void addSpatialLink(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(SpatialLink)
 
     auto l = pybind11::class_<SpatialLink, std::shared_ptr<SpatialLink>>(
@@ -87,7 +87,7 @@ void addSpatialLink(pybind11::module_& m) {
     regina::python::packet_eq_operators(l, rdoc::__eq);
     regina::python::add_packet_data(l);
 
-    regina::python::addListView<decltype(SpatialLink().components())>(m);
+    regina::python::addListView<decltype(SpatialLink().components())>(internal);
 
     auto wrap = regina::python::add_packet_wrapper<SpatialLink>(m,
         "PacketOfSpatialLink");

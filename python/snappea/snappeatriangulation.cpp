@@ -47,7 +47,7 @@ using regina::Cusp;
 using regina::SnapPeaTriangulation;
 using regina::Triangulation;
 
-void addSnapPeaTriangulation(pybind11::module_& m) {
+void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN_MAIN
 
     regina::python::registerReginaException<regina::SnapPeaFatalError>(m,
@@ -184,7 +184,7 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
     regina::python::add_packet_data(c2);
     regina::python::packet_eq_operators(c2, rdoc::__eq);
 
-    regina::python::addListView<decltype(SnapPeaTriangulation().cusps())>(m);
+    regina::python::addListView<decltype(SnapPeaTriangulation().cusps())>(internal);
 
     auto wrap = regina::python::add_packet_wrapper<SnapPeaTriangulation>(
         m, "PacketOfSnapPeaTriangulation");

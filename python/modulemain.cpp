@@ -172,24 +172,24 @@ about this omission.)doc";
 void addAlgebraClasses(pybind11::module_& m);
 void addAngleClasses(pybind11::module_& m);
 void addCensusClasses(pybind11::module_& m);
-void addDim2Classes(pybind11::module_& m);
-void addDim4Classes(pybind11::module_& m);
+void addDim2Classes(pybind11::module_& m, pybind11::module_& internal);
+void addDim4Classes(pybind11::module_& m, pybind11::module_& internal);
 void addEnumerateClasses(pybind11::module_& m);
 void addFileClasses(pybind11::module_& m);
 void addForeignClasses(pybind11::module_& m);
-void addGenericClasses(pybind11::module_& m);
+void addGenericClasses(pybind11::module_& m, pybind11::module_& internal);
 void addHypersurfaceClasses(pybind11::module_& m);
-void addLinkClasses(pybind11::module_& m);
+void addLinkClasses(pybind11::module_& m, pybind11::module_& internal);
 void addManifoldClasses(pybind11::module_& m);
 void addMathsClasses(pybind11::module_& m);
 void addPacketClasses(pybind11::module_& m);
 void addProgressClasses(pybind11::module_& m);
-void addSnapPeaClasses(pybind11::module_& m);
+void addSnapPeaClasses(pybind11::module_& m, pybind11::module_& internal);
 void addSplitClasses(pybind11::module_& m);
 void addSubcomplexClasses(pybind11::module_& m);
-void addSurfaceClasses(pybind11::module_& m);
+void addSurfaceClasses(pybind11::module_& m, pybind11::module_& internal);
 void addTreewidthClasses(pybind11::module_& m);
-void addTriangulationClasses(pybind11::module_& m);
+void addTriangulationClasses(pybind11::module_& m, pybind11::module_& internal);
 void addUtilitiesClasses(pybind11::module_& m);
 
 void addSageHacks();
@@ -229,6 +229,13 @@ PYBIND11_MODULE(regina, m) {
 #error "Unsupported pybind11 version"
 #endif
 #endif
+
+    auto internal = m.def_submodule("internal",
+R"doc(Implementation details for Regina.
+
+End users should not need to explicitly refer to any of the classes
+or functions within the submodule regina.internal.)doc");
+
     // Welcome string:
 
     m.def("welcome", welcome,
@@ -378,19 +385,19 @@ Returns:
     addProgressClasses(m);
     addAlgebraClasses(m);
     addPacketClasses(m);
-    addDim2Classes(m);
-    addTriangulationClasses(m);
-    addLinkClasses(m); // Needs to come _before_ dim4 classes
-    addDim4Classes(m);
-    addGenericClasses(m);
+    addDim2Classes(m, internal);
+    addTriangulationClasses(m, internal);
+    addLinkClasses(m, internal); // Needs to come _before_ dim4 classes
+    addDim4Classes(m, internal);
+    addGenericClasses(m, internal);
     addCensusClasses(m);
     addForeignClasses(m);
     addSplitClasses(m);
-    addSnapPeaClasses(m);
+    addSnapPeaClasses(m, internal);
     addSubcomplexClasses(m);
     addManifoldClasses(m);
     addAngleClasses(m);
-    addSurfaceClasses(m);
+    addSurfaceClasses(m, internal);
     addHypersurfaceClasses(m);
     addTreewidthClasses(m);
     addEnumerateClasses(m);

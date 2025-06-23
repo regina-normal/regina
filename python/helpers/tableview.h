@@ -53,9 +53,11 @@ namespace regina::python {
  * The element type and the table dimensions must be explicitly specified
  * in the template arguments for addTableView().
  *
- * The corresponding Python class will not be given a unique name;
- * instead all such types will be called \c TableView, and will be put into
- * their own unique namespaces to avoid clashes.
+ * The Python class corresponding to \a T will be given a name that is derived
+ * from the C++ type \a T; this name might not be easy for humans to type or
+ * remember.  Because of this, and because of the internal nature of the
+ * TableView class, the Python module that is passed to addTableView() should
+ * be `regina.internal`.
  *
  * If this TableView class has already been wrapped in Python, then this
  * routine will do nothing (i.e., it is safe to call this routine
@@ -81,7 +83,7 @@ namespace regina::python {
  *   discussion on this issue you can see the addListView() documentation.
  */
 template <typename Element, int dim1, int... dim>
-void addTableView(pybind11::module_& m) {
+void addTableView(pybind11::module_& internal) {
     static constexpr pybind11::return_value_policy Policy =
         (std::is_pointer<Element>::value ?
             pybind11::return_value_policy::reference_internal :
@@ -90,20 +92,18 @@ void addTableView(pybind11::module_& m) {
     using T = regina::TableView<Element, dim1, dim...>;
 
     // Do not wrap T if this has been done already.
-    if (pybind11::detail::get_local_type_info(typeid(T)))
+    if (pybind11::detail::get_type_info(typeid(T)))
         return;
 
     // Wrap any subtables as necessary.
     if constexpr (T::dimension > 1)
-        addTableView<Element, dim...>(m);
+        addTableView<Element, dim...>(internal);
 
     RDOC_SCOPE_BEGIN(TableView)
 
-    // Instead of naming these classes uniquely, just call them all TableView
-    // and make them all local to their own unique Python namespaces.
-    // End users should not be constructing them anyway.
-    auto c = pybind11::class_<T>(pybind11::handle(), "TableView",
-            pybind11::module_local(), rdoc_scope)
+    auto c = pybind11::class_<T>(internal,
+            (std::string("TableView_") + typeid(T).name()).c_str(),
+            rdoc_scope)
         .def(pybind11::init<const T&>(), rdoc::__copy)
         .def("size", &T::size, rdoc::size)
         .def("__len__", [](const T& view) {

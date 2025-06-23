@@ -40,7 +40,8 @@
 using regina::Component;
 
 template <int dim>
-void addComponent(pybind11::module_& m, const char* name) {
+void addComponent(pybind11::module_& m, pybind11::module_& internal,
+        const char* name) {
     // We use the global scope here because all of Component's members are
     // inherited, and so Component's own docstring namespace does not exist.
     RDOC_SCOPE_BEGIN_MAIN
@@ -71,9 +72,9 @@ void addComponent(pybind11::module_& m, const char* name) {
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<
-        decltype(std::declval<Component<dim>>().simplices())>(m);
+        decltype(std::declval<Component<dim>>().simplices())>(internal);
     regina::python::addListView<
-        decltype(std::declval<Component<dim>>().boundaryComponents())>(m);
+        decltype(std::declval<Component<dim>>().boundaryComponents())>(internal);
 
     RDOC_SCOPE_END
 }

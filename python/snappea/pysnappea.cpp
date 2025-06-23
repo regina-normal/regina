@@ -33,10 +33,10 @@
 namespace pybind11 { class module_; }
 
 void addExampleSnapPea(pybind11::module_& m);
-void addSnapPeaTriangulation(pybind11::module_& m);
+void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal);
 
-void addSnapPeaClasses(pybind11::module_& m) {
+void addSnapPeaClasses(pybind11::module_& m, pybind11::module_& internal) {
     addExampleSnapPea(m);
-    addSnapPeaTriangulation(m);
+    addSnapPeaTriangulation(m, internal);
 }
 

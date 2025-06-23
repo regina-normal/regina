@@ -44,7 +44,8 @@ using regina::Face;
 using regina::FaceEmbedding;
 
 template <int dim, int subdim>
-void addFace(pybind11::module_& m, const char* name, const char* embName) {
+void addFace(pybind11::module_& m, pybind11::module_& internal,
+        const char* name, const char* embName) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
     RDOC_SCOPE_BASE_2(detail::FaceEmbeddingBase, alias::FaceNumber)
 
@@ -191,8 +192,8 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
     RDOC_SCOPE_END
 
     regina::python::addListView<
-        decltype(std::declval<Face<dim, subdim>>().embeddings())>(m);
+        decltype(std::declval<Face<dim, subdim>>().embeddings())>(internal);
     regina::python::addListView<
-        decltype(regina::Triangulation<dim>().template faces<subdim>())>(m);
+        decltype(regina::Triangulation<dim>().template faces<subdim>())>(internal);
 }
 

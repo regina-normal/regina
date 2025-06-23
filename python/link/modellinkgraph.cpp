@@ -43,7 +43,7 @@ using regina::ModelLinkGraphArc;
 using regina::ModelLinkGraph;
 using regina::ModelLinkGraphCells;
 
-void addModelLinkGraph(pybind11::module_& m) {
+void addModelLinkGraph(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(GraphConstraint)
 
     regina::python::add_flags<regina::GraphConstraint, 2 /* hex digits */>(
@@ -165,7 +165,7 @@ void addModelLinkGraph(pybind11::module_& m) {
 
     regina::python::add_global_swap<ModelLinkGraph>(m, rdoc::global_swap);
 
-    regina::python::addListView<decltype(ModelLinkGraph().nodes())>(m);
+    regina::python::addListView<decltype(ModelLinkGraph().nodes())>(internal);
 
     RDOC_SCOPE_SWITCH(ModelLinkGraphCells)
 
@@ -187,7 +187,7 @@ void addModelLinkGraph(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    regina::python::addListView<decltype(ModelLinkGraph().cells().arcs(0))>(m);
+    regina::python::addListView<decltype(ModelLinkGraph().cells().arcs(0))>(internal);
 
     RDOC_SCOPE_END
 }

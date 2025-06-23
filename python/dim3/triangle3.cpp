@@ -48,7 +48,7 @@ using regina::Triangle;
 using regina::TriangleEmbedding;
 using regina::TriangleType;
 
-void addTriangle3(pybind11::module_& m) {
+void addTriangle3(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
     RDOC_SCOPE_BASE_3(detail::FaceEmbeddingBase, alias::FaceNumber,
         alias::SimplexVoid)
@@ -142,7 +142,7 @@ void addTriangle3(pybind11::module_& m) {
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<
-        decltype(std::declval<Triangle<3>>().embeddings())>(m);
+        decltype(std::declval<Triangle<3>>().embeddings())>(internal);
 
     // Deprecated types and constants:
     c.attr("Type") = m.attr("TriangleType");

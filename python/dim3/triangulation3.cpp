@@ -107,7 +107,7 @@ namespace pybind11::detail {
     };
 } // namespace pybind11::detail
 
-void addTriangulation3(pybind11::module_& m) {
+void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(Triangulation)
     RDOC_SCOPE_BASE_2(detail::TriangulationBase, Snapshottable)
 
@@ -896,13 +896,13 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
     regina::python::packet_eq_operators(c, rbase::__eq);
     regina::python::add_packet_data(c);
 
-    regina::python::addListView<decltype(Triangulation<3>().vertices())>(m);
-    regina::python::addListView<decltype(Triangulation<3>().edges())>(m);
-    regina::python::addListView<decltype(Triangulation<3>().triangles())>(m);
-    regina::python::addListView<decltype(Triangulation<3>().tetrahedra())>(m);
-    regina::python::addListView<decltype(Triangulation<3>().components())>(m);
+    regina::python::addListView<decltype(Triangulation<3>().vertices())>(internal);
+    regina::python::addListView<decltype(Triangulation<3>().edges())>(internal);
+    regina::python::addListView<decltype(Triangulation<3>().triangles())>(internal);
+    regina::python::addListView<decltype(Triangulation<3>().tetrahedra())>(internal);
+    regina::python::addListView<decltype(Triangulation<3>().components())>(internal);
     regina::python::addListView<
-        decltype(Triangulation<3>().boundaryComponents())>(m);
+        decltype(Triangulation<3>().boundaryComponents())>(internal);
 
     auto wrap = regina::python::add_packet_wrapper<Triangulation<3>>(
         m, "PacketOfTriangulation3");
