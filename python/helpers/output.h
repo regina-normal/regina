@@ -99,7 +99,8 @@ enum class ReprStyle {
  */
 template <class C, typename... options>
 void add_output(pybind11::class_<C, options...>& c,
-        ReprStyle style = ReprStyle::Detailed) {
+        ReprStyle style = ReprStyle::Detailed,
+        bool internalModule = false) {
     // The messy std::conditional below is to resolve packets of type
     // PacketOf<...>, which inherit from Output<...> via both Packet and Held.
     using BaseType = std::conditional_t<std::is_base_of_v<regina::Packet, C>,
@@ -118,9 +119,9 @@ void add_output(pybind11::class_<C, options...>& c,
 
     switch (style) {
         case ReprStyle::Detailed:
-            c.def("__repr__", [](const C& c) {
+            c.def("__repr__", [internalModule](const C& c) {
                 std::ostringstream s;
-                s << "<regina.";
+                s << (internalModule ? "<regina.internal." : "<regina.");
                 s << pybind11::str(pybind11::type::handle_of<C>().attr(
                         "__qualname__")).cast<std::string_view>() << ": ";
                 c.writeTextShort(s);
@@ -158,7 +159,8 @@ void add_output(pybind11::class_<C, options...>& c,
  */
 template <class C, typename... options>
 void add_output_basic(pybind11::class_<C, options...>& c,
-        const char* doc, ReprStyle style = ReprStyle::Detailed) {
+        const char* doc, ReprStyle style = ReprStyle::Detailed,
+        bool internalModule = false) {
     using BaseType = typename regina::OutputBase<C>::type;
     using OutputFunctionType = std::string (BaseType::*)() const;
 
@@ -167,9 +169,9 @@ void add_output_basic(pybind11::class_<C, options...>& c,
 
     switch (style) {
         case ReprStyle::Detailed:
-            c.def("__repr__", [](const C& c) {
+            c.def("__repr__", [internalModule](const C& c) {
                 std::ostringstream s;
-                s << "<regina."
+                s << (internalModule ? "<regina.internal." : "<regina.")
                     << pybind11::str(pybind11::type::handle_of<C>().attr(
                         "__qualname__")).cast<std::string_view>()
                     << ": " << c.str() << '>';
@@ -205,7 +207,8 @@ void add_output_basic(pybind11::class_<C, options...>& c,
  */
 template <class C, typename... options>
 void add_output_ostream(pybind11::class_<C, options...>& c,
-        ReprStyle style = ReprStyle::Detailed) {
+        ReprStyle style = ReprStyle::Detailed,
+        bool internalModule = false) {
     auto func = [](const C& x) {
         std::ostringstream s;
         s << x;
@@ -216,9 +219,9 @@ void add_output_ostream(pybind11::class_<C, options...>& c,
 
     switch (style) {
         case ReprStyle::Detailed:
-            c.def("__repr__", [](const C& c) {
+            c.def("__repr__", [internalModule](const C& c) {
                 std::ostringstream s;
-                s << "<regina."
+                s << (internalModule ? "<regina.internal." : "<regina.")
                     << pybind11::str(pybind11::type::handle_of<C>().attr(
                         "__qualname__")).cast<std::string_view>()
                     << ": " << c << '>';
@@ -253,7 +256,8 @@ void add_output_ostream(pybind11::class_<C, options...>& c,
  */
 template <class C, typename Function, typename... options>
 void add_output_custom(pybind11::class_<C, options...>& c,
-        Function&& outputFunction) {
+        Function&& outputFunction,
+        bool internalModule = false) {
     // We make local copies of outputFunction, since this may have been
     // passed as a temporary.
 
@@ -263,9 +267,9 @@ void add_output_custom(pybind11::class_<C, options...>& c,
         return s.str();
     });
 
-    c.def("__repr__", [outputFunction](const C& c) {
+    c.def("__repr__", [outputFunction, internalModule](const C& c) {
         std::ostringstream s;
-        s << "<regina."
+        s << (internalModule ? "<regina.internal." : "<regina.")
             << pybind11::str(pybind11::type::handle_of<C>().attr(
                 "__qualname__")).cast<std::string_view>() << ": ";
         outputFunction(c, s);

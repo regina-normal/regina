@@ -144,7 +144,7 @@ void addListView(pybind11::module_& internal, const char* suffix) {
             out << ' ';
         }
         out << ']';
-    });
+    }, true /* internal module */);
     regina::python::add_eq_operators(c, doc::ListView_::__eq);
 }
 
