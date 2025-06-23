@@ -184,7 +184,8 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
     regina::python::add_packet_data(c2);
     regina::python::packet_eq_operators(c2, rdoc::__eq);
 
-    regina::python::addListView<decltype(SnapPeaTriangulation().cusps())>(internal);
+    regina::python::addListView<decltype(SnapPeaTriangulation().cusps())>(
+        internal, "SnapPea_cusps");
 
     auto wrap = regina::python::add_packet_wrapper<SnapPeaTriangulation>(
         m, "PacketOfSnapPeaTriangulation");

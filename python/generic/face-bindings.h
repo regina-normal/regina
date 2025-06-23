@@ -192,8 +192,13 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
     RDOC_SCOPE_END
 
     regina::python::addListView<
-        decltype(std::declval<Face<dim, subdim>>().embeddings())>(internal);
+        decltype(std::declval<Face<dim, subdim>>().embeddings())>(internal,
+        (std::string(name) + "_embeddings").c_str());
+    // The name we give to the next ListView class is not in the typical form
+    // Triangulation<dim>_faces<subdim>; however, this is an internal class,
+    // and the name we do use is easy to build from what we already know.
     regina::python::addListView<
-        decltype(regina::Triangulation<dim>().template faces<subdim>())>(internal);
+        decltype(regina::Triangulation<dim>().template faces<subdim>())>(
+        internal, (std::string(name) + "_faces").c_str());
 }
 

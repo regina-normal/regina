@@ -896,13 +896,19 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
     regina::python::packet_eq_operators(c, rbase::__eq);
     regina::python::add_packet_data(c);
 
-    regina::python::addListView<decltype(Triangulation<3>().vertices())>(internal);
-    regina::python::addListView<decltype(Triangulation<3>().edges())>(internal);
-    regina::python::addListView<decltype(Triangulation<3>().triangles())>(internal);
-    regina::python::addListView<decltype(Triangulation<3>().tetrahedra())>(internal);
-    regina::python::addListView<decltype(Triangulation<3>().components())>(internal);
+    regina::python::addListView<decltype(Triangulation<3>().vertices())>(
+        internal, "Triangulation3_vertices");
+    regina::python::addListView<decltype(Triangulation<3>().edges())>(
+        internal, "Triangulation3_edges");
+    regina::python::addListView<decltype(Triangulation<3>().triangles())>(
+        internal, "Triangulation3_triangles");
+    regina::python::addListView<decltype(Triangulation<3>().tetrahedra())>(
+        internal, "Triangulation3_tetrahedra");
+    regina::python::addListView<decltype(Triangulation<3>().components())>(
+        internal, "Triangulation3_components");
     regina::python::addListView<
-        decltype(Triangulation<3>().boundaryComponents())>(internal);
+        decltype(Triangulation<3>().boundaryComponents())>(
+        internal, "Triangulation3_boundaryComponents");
 
     auto wrap = regina::python::add_packet_wrapper<Triangulation<3>>(
         m, "PacketOfTriangulation3");

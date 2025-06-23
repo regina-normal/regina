@@ -161,7 +161,8 @@ versions of Regina.)doc")
     RDOC_SCOPE_END
 
     regina::python::addListView<
-        decltype(std::declval<Edge<3>>().embeddings())>(internal);
+        decltype(std::declval<Edge<3>>().embeddings())>(internal,
+        "Face3_1_embeddings");
 
     m.attr("EdgeEmbedding3") = m.attr("FaceEmbedding3_1");
     m.attr("Edge3") = m.attr("Face3_1");

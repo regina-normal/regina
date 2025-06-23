@@ -138,7 +138,8 @@ being reserved for a different purpose in a future release.)doc")
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<
-        decltype(std::declval<Vertex<3>>().embeddings())>(internal);
+        decltype(std::declval<Vertex<3>>().embeddings())>(internal,
+        "Face3_0_embeddings");
 
     RDOC_SCOPE_INNER_BEGIN(Link)
 

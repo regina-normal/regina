@@ -593,14 +593,21 @@ void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::packet_eq_operators(c, rbase::__eq);
     regina::python::add_packet_data(c);
 
-    regina::python::addListView<decltype(Triangulation<4>().vertices())>(internal);
-    regina::python::addListView<decltype(Triangulation<4>().edges())>(internal);
-    regina::python::addListView<decltype(Triangulation<4>().triangles())>(internal);
-    regina::python::addListView<decltype(Triangulation<4>().tetrahedra())>(internal);
-    regina::python::addListView<decltype(Triangulation<4>().pentachora())>(internal);
-    regina::python::addListView<decltype(Triangulation<4>().components())>(internal);
+    regina::python::addListView<decltype(Triangulation<4>().vertices())>(
+        internal, "Triangulation4_vertices");
+    regina::python::addListView<decltype(Triangulation<4>().edges())>(
+        internal, "Triangulation4_edges");
+    regina::python::addListView<decltype(Triangulation<4>().triangles())>(
+        internal, "Triangulation4_triangles");
+    regina::python::addListView<decltype(Triangulation<4>().tetrahedra())>(
+        internal, "Triangulation4_tetrahedra");
+    regina::python::addListView<decltype(Triangulation<4>().pentachora())>(
+        internal, "Triangulation4_pentachora");
+    regina::python::addListView<decltype(Triangulation<4>().components())>(
+        internal, "Triangulation4_components");
     regina::python::addListView<
-        decltype(Triangulation<4>().boundaryComponents())>(internal);
+        decltype(Triangulation<4>().boundaryComponents())>(
+        internal, "Triangulation4_boundaryComponents");
 
     auto wrap = regina::python::add_packet_wrapper<Triangulation<4>>(
         m, "PacketOfTriangulation4");

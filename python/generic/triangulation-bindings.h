@@ -405,9 +405,11 @@ void addTriangulation(pybind11::module_& m, pybind11::module_& internal,
 
     // The ListView classes for faces() are wrapped in face-bindings.h,
     // since this needs to be done for each subdimension.
-    regina::python::addListView<decltype(Triangulation<dim>().components())>(internal);
+    regina::python::addListView<decltype(Triangulation<dim>().components())>(
+        internal, (std::string(name) + "_components").c_str());
     regina::python::addListView<
-        decltype(Triangulation<dim>().boundaryComponents())>(internal);
+        decltype(Triangulation<dim>().boundaryComponents())>(internal,
+        (std::string(name) + "_boundaryComponents").c_str());
 
     auto wrap = regina::python::add_packet_wrapper<Triangulation<dim>>(
         m, (std::string("PacketOf") + name).c_str());

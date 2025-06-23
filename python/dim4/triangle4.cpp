@@ -138,7 +138,8 @@ void addTriangle4(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_END
 
     regina::python::addListView<
-        decltype(std::declval<Triangle<4>>().embeddings())>(internal);
+        decltype(std::declval<Triangle<4>>().embeddings())>(internal,
+        "Face4_2_embeddings");
 
     m.attr("TriangleEmbedding4") = m.attr("FaceEmbedding4_2");
     m.attr("Triangle4") = m.attr("Face4_2");

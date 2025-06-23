@@ -137,7 +137,8 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_END
 
     regina::python::addListView<
-        decltype(std::declval<Tetrahedron<4>>().embeddings())>(internal);
+        decltype(std::declval<Tetrahedron<4>>().embeddings())>(internal,
+        "Face4_3_embeddings");
 
     m.attr("TetrahedronEmbedding4") = m.attr("FaceEmbedding4_3");
     m.attr("Tetrahedron4") = m.attr("Face4_3");

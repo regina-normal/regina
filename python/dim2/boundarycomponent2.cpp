@@ -94,8 +94,10 @@ void addBoundaryComponent2(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_END
 
     regina::python::addListView<
-        decltype(std::declval<BoundaryComponent<2>>().vertices())>(internal);
+        decltype(std::declval<BoundaryComponent<2>>().vertices())>(internal,
+        "BoundaryComponent2_vertices");
     regina::python::addListView<
-        decltype(std::declval<BoundaryComponent<2>>().edges())>(internal);
+        decltype(std::declval<BoundaryComponent<2>>().edges())>(internal,
+        "BoundaryComponent2_edges");
 }
 

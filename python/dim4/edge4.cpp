@@ -139,7 +139,8 @@ void addEdge4(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_END
 
     regina::python::addListView<
-        decltype(std::declval<Edge<4>>().embeddings())>(internal);
+        decltype(std::declval<Edge<4>>().embeddings())>(internal,
+        "Face4_1_embeddings");
 
     m.attr("EdgeEmbedding4") = m.attr("FaceEmbedding4_1");
     m.attr("Edge4") = m.attr("Face4_1");

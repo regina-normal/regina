@@ -142,7 +142,8 @@ void addTriangle3(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<
-        decltype(std::declval<Triangle<3>>().embeddings())>(internal);
+        decltype(std::declval<Triangle<3>>().embeddings())>(internal,
+        "Face3_2_embeddings");
 
     // Deprecated types and constants:
     c.attr("Type") = m.attr("TriangleType");
