@@ -38,7 +38,9 @@
  */
 
 #include <pybind11/pybind11.h>
+#if REGINA_PYBIND11_VERSION == 3
 #include <pybind11/subinterpreter.h>
+#endif
 #include "utilities/exception.h"
 #include "../helpers/docstrings.h"
 

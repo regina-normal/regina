@@ -583,9 +583,9 @@ __init__(...)
     Parameter ``base``:
         the base in which *value* is given.
 
-Help on ListView object:
+Help on ListView_Triangulation3_vertices in module regina.engine.internal object:
 
-class ListView(pybind11_object)
+class ListView_Triangulation3_vertices(pybind11_builtins.pybind11_object)
  |  A lightweight object that can be used for iteration and random access
  |  to all elements of a given list.
  |
@@ -651,8 +651,8 @@ class ListView(pybind11_object)
  |      standard container types) are suitable.
  |
  |  Method resolution order:
- |      ListView
- |      pybind11_object
+ |      ListView_Triangulation3_vertices
+ |      pybind11_builtins.pybind11_object
  |      builtins.object
  |
  |  Methods defined here:
@@ -789,12 +789,10 @@ class ListView(pybind11_object)
  |
  |  __hash__ = None
  |
- |  __pybind11_module_local__ = ...
- |
  |  equalityType = <EqualityType.BY_VALUE: 1>
  |
  |  ----------------------------------------------------------------------
- |  Static methods inherited from pybind11_object:
+ |  Static methods inherited from pybind11_builtins.pybind11_object:
  |
  |  __new__(*args, **kwargs) from pybind11_builtins.pybind11_type
  |      Create and return a new object.  See help(type) for accurate signature.
