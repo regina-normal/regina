@@ -30,7 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include <pybind11/pybind11.h>
+#include "regina-config.h" // for REGINA_PYBIND11_VERSION
+#include "pybind11/pybind11.h"
+#if REGINA_PYBIND11_VERSION == 3
+#include <pybind11/native_enum.h>
+#endif
 #include <pybind11/stl.h>
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
@@ -143,7 +147,14 @@ being reserved for a different purpose in a future release.)doc")
 
     RDOC_SCOPE_INNER_BEGIN(Link)
 
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<regina::Vertex<3>::Link>(c, "Link", "enum.Enum",
+            rdoc_inner_scope)
+#elif REGINA_PYBIND11_VERSION == 2
     pybind11::enum_<regina::Vertex<3>::Link>(c, "Link", rdoc_inner_scope)
+#else
+    #error "Unsupported pybind11 version"
+#endif
         .value("Sphere", regina::Vertex<3>::Link::Sphere, rdoc_inner::Sphere)
         .value("Disc", regina::Vertex<3>::Link::Disc, rdoc_inner::Disc)
         .value("Torus", regina::Vertex<3>::Link::Torus, rdoc_inner::Torus)
@@ -153,6 +164,9 @@ being reserved for a different purpose in a future release.)doc")
             rdoc_inner::NonStandardCusp)
         .value("Invalid", regina::Vertex<3>::Link::Invalid,
             rdoc_inner::Invalid)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
         ;
 
     // Deprecated type alias and constants:

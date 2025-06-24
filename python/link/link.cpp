@@ -30,7 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include <pybind11/pybind11.h>
+#include "regina-config.h" // for REGINA_PYBIND11_VERSION
+#include "pybind11/pybind11.h"
+#if REGINA_PYBIND11_VERSION == 3
+#include <pybind11/native_enum.h>
+#endif
 #include <pybind11/functional.h>
 #include <pybind11/stl.h>
 #include "link/link.h"
@@ -51,9 +55,19 @@ using regina::Link;
 void addLink(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(Framing)
 
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<regina::Framing>(m, "Framing", "enum.Enum",
+            rdoc_scope)
+#elif REGINA_PYBIND11_VERSION == 2
     pybind11::enum_<regina::Framing>(m, "Framing", rdoc_scope)
+#else
+    #error "Unsupported pybind11 version"
+#endif
         .value("Seifert", Framing::Seifert, rdoc::Seifert)
         .value("Blackboard", Framing::Blackboard, rdoc::Blackboard)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
         ;
 
     // Deprecated constants:

@@ -30,8 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-#include <iomanip>
-#include <pybind11/pybind11.h>
+#include <iomanip> // This had to come first, now I don't remember why.. :/
+#include "regina-config.h" // for REGINA_PYBIND11_VERSION
+#include "pybind11/pybind11.h"
+#if REGINA_PYBIND11_VERSION == 3
+#include <pybind11/native_enum.h>
+#endif
 #include <pybind11/operators.h>
 #include "hypersurface/hypercoords.h"
 #include "../helpers.h"
@@ -44,10 +48,20 @@ using regina::HyperInfo;
 void addHyperCoords(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(HyperCoords)
 
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<HyperCoords>(m, "HyperCoords", "enum.Enum",
+            rdoc_scope)
+#elif REGINA_PYBIND11_VERSION == 2
     pybind11::enum_<HyperCoords>(m, "HyperCoords", rdoc_scope)
+#else
+    #error "Unsupported pybind11 version"
+#endif
         .value("Standard", HyperCoords::Standard, rdoc::Standard)
         .value("Prism", HyperCoords::Prism, rdoc::Prism)
         .value("Edge", HyperCoords::Edge, rdoc::Edge)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
         ;
 
     // Deprecated constants:

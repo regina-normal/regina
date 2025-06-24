@@ -30,7 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include <pybind11/pybind11.h>
+#include "regina-config.h" // for REGINA_PYBIND11_VERSION
+#include "pybind11/pybind11.h"
+#if REGINA_PYBIND11_VERSION == 3
+#include <pybind11/native_enum.h>
+#endif
 #include <pybind11/stl.h>
 #include "link/link.h"
 #include "treewidth/treedecomposition-impl.h"
@@ -49,12 +53,22 @@ using regina::TreeDecomposition;
 void addTreeDecomposition(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(TreeDecompositionAlg)
 
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<regina::TreeDecompositionAlg>(m,
+            "TreeDecompositionAlg", "enum.Enum", rdoc_scope)
+#elif REGINA_PYBIND11_VERSION == 2
     pybind11::enum_<regina::TreeDecompositionAlg>(m, "TreeDecompositionAlg",
             rdoc_scope)
+#else
+    #error "Unsupported pybind11 version"
+#endif
         .value("Upper", regina::TreeDecompositionAlg::Upper, rdoc::Upper)
         .value("UpperGreedyFillIn",
             regina::TreeDecompositionAlg::UpperGreedyFillIn,
             rdoc::UpperGreedyFillIn)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
         ;
 
     // Deprecated constants:
@@ -64,11 +78,21 @@ void addTreeDecomposition(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(BagComparison)
 
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<regina::BagComparison>(m, "BagComparison",
+            "enum.Enum", rdoc_scope)
+#elif REGINA_PYBIND11_VERSION == 2
     pybind11::enum_<regina::BagComparison>(m, "BagComparison", rdoc_scope)
+#else
+    #error "Unsupported pybind11 version"
+#endif
         .value("Equal", regina::BagComparison::Equal, rdoc::Equal)
         .value("Subset", regina::BagComparison::Subset, rdoc::Subset)
         .value("Superset", regina::BagComparison::Superset, rdoc::Superset)
         .value("Unrelated", regina::BagComparison::Unrelated, rdoc::Unrelated)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
         ;
 
     // Deprecated constants:
@@ -79,10 +103,20 @@ void addTreeDecomposition(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(NiceType)
 
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<regina::NiceType>(m, "NiceType", "enum.Enum",
+            rdoc_scope)
+#elif REGINA_PYBIND11_VERSION == 2
     pybind11::enum_<regina::NiceType>(m, "NiceType", rdoc_scope)
+#else
+    #error "Unsupported pybind11 version"
+#endif
         .value("Introduce", regina::NiceType::Introduce, rdoc::Introduce)
         .value("Forget", regina::NiceType::Forget, rdoc::Forget)
         .value("Join", regina::NiceType::Join, rdoc::Join)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
         ;
 
     // Deprecated constants:

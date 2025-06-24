@@ -30,7 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include <pybind11/pybind11.h>
+#include "regina-config.h" // for REGINA_PYBIND11_VERSION
+#include "pybind11/pybind11.h"
+#if REGINA_PYBIND11_VERSION == 3
+#include <pybind11/native_enum.h>
+#endif
 #include "surface/surfacefiltertype.h"
 #include "../helpers.h"
 #include "../docstrings/surface/surfacefiltertype.h"
@@ -40,12 +44,22 @@ using regina::SurfaceFilterType;
 void addSurfaceFilterType(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SurfaceFilterType)
 
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<regina::SurfaceFilterType>(m, "SurfaceFilterType",
+            "enum.Enum", rdoc_scope)
+#elif REGINA_PYBIND11_VERSION == 2
     pybind11::enum_<regina::SurfaceFilterType>(m, "SurfaceFilterType",
             rdoc_scope)
+#else
+    #error "Unsupported pybind11 version"
+#endif
         .value("LegacyDefault", SurfaceFilterType::LegacyDefault,
             rdoc::LegacyDefault)
         .value("Properties", SurfaceFilterType::Properties, rdoc::Properties)
         .value("Combination", SurfaceFilterType::Combination, rdoc::Combination)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
         ;
 
     // Deprecated constants:

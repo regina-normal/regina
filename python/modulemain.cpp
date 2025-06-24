@@ -30,9 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
+#include "regina-config.h" // for REGINA_PYBIND11_VERSION
 #include "pybind11/pybind11.h"
+#if REGINA_PYBIND11_VERSION == 3
+#include <pybind11/native_enum.h>
+#endif
 
-#include "regina-config.h"
 #include "core/engine.h"
 #include "triangulation/generic.h" // for TriangleType
 
@@ -247,12 +250,20 @@ a new Python session.)doc");
     RDOC_SCOPE_BEGIN(python::EqualityType)
 
     using EqualityType = regina::python::EqualityType;
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<EqualityType>(m, "EqualityType", "enum.Enum",
+        rdoc_scope)
+#elif REGINA_PYBIND11_VERSION == 2
     pybind11::enum_<EqualityType>(m, "EqualityType", rdoc_scope)
+#endif
         .value("BY_VALUE", EqualityType::BY_VALUE, rdoc::BY_VALUE)
         .value("BY_REFERENCE", EqualityType::BY_REFERENCE, rdoc::BY_REFERENCE)
         .value("NEVER_INSTANTIATED", EqualityType::NEVER_INSTANTIATED,
             rdoc::NEVER_INSTANTIATED)
         .value("DISABLED", EqualityType::DISABLED, rdoc::DISABLED)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
         ;
 
     // Core engine routines:
@@ -271,6 +282,9 @@ a new Python session.)doc");
     m.def("versionUsesUTF8", regina::versionUsesUTF8, rdoc::versionUsesUTF8);
     m.def("versionSnapPy", regina::versionSnapPy, rdoc::versionSnapPy);
     m.def("versionSnapPea", regina::versionSnapPea, rdoc::versionSnapPea);
+    m.def("versionPybind11Major", []() {
+        return REGINA_PYBIND11_VERSION;
+    }, rdoc::versionPybind11Major);
     m.def("hasInt128", regina::hasInt128, rdoc::hasInt128);
     m.def("politeThreads", regina::politeThreads, rdoc::politeThreads);
     m.def("testEngine", regina::testEngine, rdoc::testEngine);
@@ -322,11 +336,19 @@ Returns:
 
     RDOC_SCOPE_SWITCH(Algorithm)
 
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<regina::Algorithm>(m, "Algorithm", "enum.Enum",
+        rdoc_scope)
+#elif REGINA_PYBIND11_VERSION == 2
     pybind11::enum_<regina::Algorithm>(m, "Algorithm", rdoc_scope)
+#endif
         .value("Default", regina::Algorithm::Default, rdoc::Default)
         .value("Backtrack", regina::Algorithm::Backtrack, rdoc::Backtrack)
         .value("Treewidth", regina::Algorithm::Treewidth, rdoc::Treewidth)
         .value("Naive", regina::Algorithm::Naive, rdoc::Naive)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
         ;
 
     // Deprecated constants:
@@ -337,7 +359,12 @@ Returns:
 
     RDOC_SCOPE_SWITCH(Language)
 
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<regina::Language>(m, "Language", "enum.Enum",
+        rdoc_scope)
+#elif REGINA_PYBIND11_VERSION == 2
     pybind11::enum_<regina::Language>(m, "Language", rdoc_scope)
+#endif
         .value("Cxx", regina::Language::Cxx, rdoc::Cxx)
         .value("Python", regina::Language::Python, rdoc::Python)
         .value("Current",
@@ -346,11 +373,19 @@ Returns:
             // We therefore hard-code its value as Language::Python below.
             regina::Language::Python,
             rdoc::Current)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
         ;
 
     RDOC_SCOPE_SWITCH(TriangleType)
 
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<regina::TriangleType>(m, "TriangleType",
+        "enum.Enum", rdoc_scope)
+#elif REGINA_PYBIND11_VERSION == 2
     pybind11::enum_<regina::TriangleType>(m, "TriangleType", rdoc_scope)
+#endif
         .value("Unknown", regina::TriangleType::Unknown, rdoc::Unknown)
         .value("Triangle", regina::TriangleType::Triangle, rdoc::Triangle)
         .value("Scarf", regina::TriangleType::Scarf, rdoc::Scarf)
@@ -360,6 +395,9 @@ Returns:
         .value("Horn", regina::TriangleType::Horn, rdoc::Horn)
         .value("DunceHat", regina::TriangleType::DunceHat, rdoc::DunceHat)
         .value("L31", regina::TriangleType::L31, rdoc::L31)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
         ;
 
     RDOC_SCOPE_END

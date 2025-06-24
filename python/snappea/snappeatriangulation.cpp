@@ -30,7 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include <pybind11/pybind11.h>
+#include "regina-config.h" // for REGINA_PYBIND11_VERSION
+#include "pybind11/pybind11.h"
+#if REGINA_PYBIND11_VERSION == 3
+#include <pybind11/native_enum.h>
+#endif
 #include <pybind11/complex.h>
 #include <pybind11/functional.h>
 #include <pybind11/stl.h>
@@ -200,8 +204,15 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
 
     RDOC_SCOPE_INNER_BEGIN(Solution)
 
-    auto st = pybind11::enum_<SnapPeaTriangulation::Solution>(c2, "Solution",
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<SnapPeaTriangulation::Solution>(c2, "Solution",
+            "enum.Enum", rdoc_inner_scope)
+#elif REGINA_PYBIND11_VERSION == 2
+    pybind11::enum_<SnapPeaTriangulation::Solution>(c2, "Solution",
             rdoc_inner_scope)
+#else
+    #error "Unsupported pybind11 version"
+#endif
         .value("NotAttempted", SnapPeaTriangulation::Solution::NotAttempted,
             rdoc_inner::NotAttempted)
         .value("Geometric", SnapPeaTriangulation::Solution::Geometric,
@@ -217,6 +228,9 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
         .value("Nil", SnapPeaTriangulation::Solution::None, rdoc_inner::None)
         .value("External", SnapPeaTriangulation::Solution::External,
             rdoc_inner::External)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
     ;
 
     // Deprecated type alias and constants:
@@ -233,12 +247,22 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
 
     RDOC_SCOPE_INNER_SWITCH(CoverEnumeration)
 
-    auto cet = pybind11::enum_<SnapPeaTriangulation::CoverEnumeration>(
-            c2, "CoverEnumeration", rdoc_inner_scope)
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<SnapPeaTriangulation::CoverEnumeration>(c2,
+            "CoverEnumeration", "enum.Enum", rdoc_inner_scope)
+#elif REGINA_PYBIND11_VERSION == 2
+    pybind11::enum_<SnapPeaTriangulation::CoverEnumeration>(c2,
+            "CoverEnumeration", rdoc_inner_scope)
+#else
+    #error "Unsupported pybind11 version"
+#endif
         .value("Cyclic", SnapPeaTriangulation::CoverEnumeration::Cyclic,
             rdoc_inner::Cyclic)
         .value("All", SnapPeaTriangulation::CoverEnumeration::All,
             rdoc_inner::All)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
     ;
 
     // Deprecated type alias and constants:
@@ -248,8 +272,14 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
 
     RDOC_SCOPE_INNER_SWITCH(Cover)
 
-    auto ct = pybind11::enum_<SnapPeaTriangulation::Cover>(c2, "Cover",
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<SnapPeaTriangulation::Cover>(c2, "Cover", "enum.Enum",
             rdoc_inner_scope)
+#elif REGINA_PYBIND11_VERSION == 2
+    pybind11::enum_<SnapPeaTriangulation::Cover>(c2, "Cover", rdoc_inner_scope)
+#else
+    #error "Unsupported pybind11 version"
+#endif
         .value("Unknown", SnapPeaTriangulation::Cover::Unknown,
             rdoc_inner::Unknown)
         .value("Irregular", SnapPeaTriangulation::Cover::Irregular,
@@ -258,6 +288,9 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
             rdoc_inner::Regular)
         .value("Cyclic", SnapPeaTriangulation::Cover::Cyclic,
             rdoc_inner::Cyclic)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
     ;
 
     // Deprecated type alias and constants:

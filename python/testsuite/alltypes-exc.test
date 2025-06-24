@@ -31,6 +31,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+import enum
+
 def classInfo(name, object):
     realName = object.__name__
     if realName == name:
@@ -74,11 +76,18 @@ for i in keys:
             # This caught exception has caused problems with the bindings
             # under python3.12 in the past, which is why we keep this test.
             pass
-        if '__members__' in object.__dict__:
-            # Exists for enums, not classes
-            enumInfo(i, object)
+        if versionPybind11Major() == 2:
+            if '__members__' in object.__dict__:
+                # Exists for enums, not classes
+                enumInfo(i, object)
+            else:
+                classInfo(i, object)
         else:
-            classInfo(i, object)
+            # pybind11v3 provides native Python enum types.
+            if object.__base__ == enum.Enum:
+                enumInfo(i, object)
+            else:
+                classInfo(i, object)
     elif 'builtin_function_or_method' in str(object.__class__):
         functionInfo(i, object)
     else:

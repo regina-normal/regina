@@ -30,8 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-#include <iomanip>
-#include <pybind11/pybind11.h>
+#include <iomanip> // This had to come first, now I don't remember why.. :/
+#include "regina-config.h" // for REGINA_PYBIND11_VERSION
+#include "pybind11/pybind11.h"
+#if REGINA_PYBIND11_VERSION == 3
+#include <pybind11/native_enum.h>
+#endif
 #include <pybind11/operators.h>
 #include "surface/normalcoords.h"
 #include "../helpers.h"
@@ -44,7 +48,14 @@ using regina::NormalInfo;
 void addNormalCoords(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(NormalCoords)
 
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<NormalCoords>(m, "NormalCoords", "enum.Enum",
+            rdoc_scope)
+#elif REGINA_PYBIND11_VERSION == 2
     pybind11::enum_<NormalCoords>(m, "NormalCoords", rdoc_scope)
+#else
+    #error "Unsupported pybind11 version"
+#endif
         .value("Standard", NormalCoords::Standard, rdoc::Standard)
         .value("Quad", NormalCoords::Quad, rdoc::Quad)
         .value("QuadClosed", NormalCoords::QuadClosed, rdoc::QuadClosed)
@@ -57,6 +68,9 @@ void addNormalCoords(pybind11::module_& m) {
         .value("Edge", NormalCoords::Edge, rdoc::Edge)
         .value("Arc", NormalCoords::Arc, rdoc::Arc)
         .value("Angle", NormalCoords::Angle, rdoc::Angle)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
         ;
 
     // Deprecated constants:

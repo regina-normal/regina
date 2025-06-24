@@ -680,6 +680,7 @@ torsionAutInverse : function
 utf8ValidTo : function
 versionMajor : function
 versionMinor : function
+versionPybind11Major : function
 versionSnapPea : function
 versionSnapPy : function
 versionString : function

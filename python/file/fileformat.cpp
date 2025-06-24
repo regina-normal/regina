@@ -30,7 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include <pybind11/pybind11.h>
+#include "regina-config.h" // for REGINA_PYBIND11_VERSION
+#include "pybind11/pybind11.h"
+#if REGINA_PYBIND11_VERSION == 3
+#include <pybind11/native_enum.h>
+#endif
 #include "file/fileformat.h"
 #include "../helpers.h"
 #include "../docstrings/file/fileformat.h"
@@ -38,11 +42,21 @@
 void addFileFormat(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(FileFormat)
 
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<regina::FileFormat>(m, "FileFormat", "enum.Enum",
+            rdoc_scope)
+#elif REGINA_PYBIND11_VERSION == 2
     pybind11::enum_<regina::FileFormat>(m, "FileFormat", rdoc_scope)
+#else
+    #error "Unsupported pybind11 version"
+#endif
         .value("BinaryGen1", regina::FileFormat::BinaryGen1, rdoc::BinaryGen1)
         .value("XmlGen2", regina::FileFormat::XmlGen2, rdoc::XmlGen2)
         .value("XmlGen3", regina::FileFormat::XmlGen3, rdoc::XmlGen3)
         .value("Current", regina::FileFormat::Current, rdoc::Current)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
         ;
 
     // Deprecated constants:

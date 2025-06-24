@@ -901,19 +901,25 @@ Version 7.4  [ (to be announced) ]
           This fixes problems with subinterpreters in newer Python versions,
           and thereby means that Regina now supports Python 3.12 and later
           properly for the first time.
+        - Added a new python-only function regina.versionPybind11Major() that
+          indicates which of the two above scenarios is in use.
         - Improved the speed of iteration (specifically, throwing/catching
           StopIteration exceptions).
-        - Rich flag types based on regina::Flags<...> (such as NormalAlg,
-          CensusPurge, etc.) now support a bool() operator that tests for
-          a non-empty flag set.
-        - The underlying enum types for rich flags (e.g., NormalAlgFlags,
-          CensusPurgeFlags, etc.) likewise now have a bool() operator that
-          tests for a zero flag.  This is because zero flags play a special
-          role here (they have no effect when ORed or XORed into a flag set).
-        - All other enum types (i.e., those that are _not_ intended to be
-          combined bitwise into flag sets) do not have a bool() operator,
-          since their underying integer values are irrelevant.  All of their
-          enum values will be treated as True by python.
+        - Regardinging enums and flags:
+          + Rich flag types based on regina::Flags<...> (such as NormalAlg,
+            CensusPurge, etc.) now support a bool() operator that tests for
+            a non-empty flag set.
+          + The underlying enum types for rich flags (e.g., NormalAlgFlags,
+            CensusPurgeFlags, etc.) likewise now have a bool() operator that
+            tests for a zero flag.  This is because zero flags play a special
+            role here (they have no effect when ORed or XORed into a flag set).
+          + All other enum types (i.e., those that are _not_ intended to be
+            combined bitwise into flag sets) do not have a bool() operator,
+            since their underying integer values are irrelevant.  All of their
+            enum values will be treated as True by python.
+          + When using Python 3.12 or newer (and hence pybind11 v3), all
+            non-flag enum types are now native Python enum types based on
+            enum.Enum.
     USER INTERFACE:
         - Now uses multithreading for those long computations that support it.
         - No longer reads the syntax highlighting theme from file; instead

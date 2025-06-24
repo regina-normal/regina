@@ -30,7 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include <pybind11/pybind11.h>
+#include "regina-config.h" // for REGINA_PYBIND11_VERSION
+#include "pybind11/pybind11.h"
+#if REGINA_PYBIND11_VERSION == 3
+#include <pybind11/native_enum.h>
+#endif
 #include "surface/normalflags.h"
 #include "../helpers.h"
 #include "../helpers/flags.h"
@@ -104,7 +108,14 @@ void addNormalFlags(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(NormalTransform)
 
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<NormalTransform>(m, "NormalTransform", "enum.Enum",
+            rdoc_scope)
+#elif REGINA_PYBIND11_VERSION == 2
     pybind11::enum_<NormalTransform>(m, "NormalTransform", rdoc_scope)
+#else
+    #error "Unsupported pybind11 version"
+#endif
         .value("ConvertReducedToStandard",
             NormalTransform::ConvertReducedToStandard,
             rdoc::ConvertReducedToStandard)
@@ -117,6 +128,9 @@ void addNormalFlags(pybind11::module_& m) {
             rdoc::FilterDisjoint)
         .value("FilterIncompressible", NormalTransform::FilterIncompressible,
             rdoc::FilterIncompressible)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
         ;
 
     // Deprecated constants:
