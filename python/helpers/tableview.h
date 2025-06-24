@@ -167,7 +167,7 @@ void addTableView(pybind11::module_& internal) {
             out << ' ';
         }
         out << ']';
-    }, true /* internal module */);
+    }, "<internal>.TableView");
     regina::python::add_eq_operators(c, rdoc::__eq);
 
     RDOC_SCOPE_END
