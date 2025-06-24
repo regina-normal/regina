@@ -37,9 +37,13 @@
  *  If you need it, you will need to include it yourself.
  */
 
+#include "regina-config.h" // for REGINA_PYBIND11_VERSION
 #include <iomanip>
 #include <sstream>
 #include "../helpers.h"
+#if REGINA_PYBIND11_VERSION == 3
+#include <pybind11/native_enum.h>
+#endif
 #include <pybind11/operators.h>
 #include "utilities/flags.h"
 #include "../helpers/docstrings.h"
@@ -72,12 +76,22 @@ void add_flags(pybind11::module_& m, const std::string& enumName,
         const char* enumDoc, const char* borDoc) {
     using Flags = regina::Flags<Enum>;
 
+#if REGINA_PYBIND11_VERSION == 3
+    auto e = pybind11::native_enum<Enum>(m, enumName.c_str(), "enum.Flag",
+        enumDoc);
+#elif REGINA_PYBIND11_VERSION == 2
     auto e = pybind11::enum_<Enum>(m, enumName.c_str(), enumDoc);
+#else
+    #error "Unsupported pybind11 version"
+#endif
     for (const auto& v : values) {
         // This should be a job for std::apply, except that e.value() is
         // a non-static member function.
         e.value(std::get<0>(v), std::get<1>(v), std::get<2>(v));
     }
+#if REGINA_PYBIND11_VERSION == 3
+    e.finalize();
+#endif
 
     // We define some additional operators on the enum type later,
     // once we have bound Flags<Enum>.  (This means that docstrings will
@@ -130,12 +144,16 @@ void add_flags(pybind11::module_& m, const std::string& enumName,
     RDOC_SCOPE_END
 
     // Additional operators for Enum:
+#if REGINA_PYBIND11_VERSION == 3
+    // Logical operations are provided on the Python side by enum.Flag.
+#elif REGINA_PYBIND11_VERSION == 2
     e.def("__or__", [](Enum lhs, Enum rhs) {
         return Flags(lhs) | rhs;
     }, borDoc);
     e.def("__bool__", [](Enum val) {
         return static_cast<int>(val) != 0;
     }, doc::common::bool_enum_for_flags);
+#endif
 
     // Type conversions:
     pybind11::implicitly_convertible<Enum, Flags>();

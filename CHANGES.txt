@@ -917,9 +917,9 @@ Version 7.4  [ (to be announced) ]
             combined bitwise into flag sets) do not have a bool() operator,
             since their underying integer values are irrelevant.  All of their
             enum values will be treated as True by python.
-          + When using Python 3.12 or newer (and hence pybind11 v3), all
-            non-flag enum types are now native Python enum types based on
-            enum.Enum.
+          + When using Python 3.12 or newer (and hence pybind11 v3), all enum
+            types are now native Python enum types, based on either enum.Enum
+            (for non-flag enum types) or enum.Flag (for flag enum types).
     USER INTERFACE:
         - Now uses multithreading for those long computations that support it.
         - No longer reads the syntax highlighting theme from file; instead

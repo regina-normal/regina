@@ -84,7 +84,7 @@ for i in keys:
                 classInfo(i, object)
         else:
             # pybind11v3 provides native Python enum types.
-            if object.__base__ == enum.Enum:
+            if object.__base__ in [ enum.Enum, enum.Flag ]:
                 enumInfo(i, object)
             else:
                 classInfo(i, object)
