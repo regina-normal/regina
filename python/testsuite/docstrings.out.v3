@@ -790,6 +790,9 @@ class ListView_Triangulation3_vertices(pybind11_builtins.pybind11_object)
  |  __hash__ = None
  |
  |  equalityType = <EqualityType.BY_VALUE: 1>
+ |      The objects are compared by value. This means that the underlying C++
+ |      operators == and != for the class *C* are used.
+ |
  |
  |  ----------------------------------------------------------------------
  |  Static methods inherited from pybind11_builtins.pybind11_object:
