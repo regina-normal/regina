@@ -35,6 +35,9 @@
  */
 
 #include "regina-config.h"
+#if REGINA_PYBIND11_VERSION == 3
+#include <pybind11/subinterpreter.h>
+#endif
 #include <map>
 #include <mutex>
 #include <thread>
@@ -47,25 +50,31 @@ namespace regina::python {
     using GILScopedAcquire = pybind11::gil_scoped_acquire;
     using GILScopedRelease = pybind11::gil_scoped_release;
 
-    // Likewise, with pybind11 3.x.y there is very little need for
-    // GILCallbackManager; see the pybind11 2.x.y code below for what this
-    // class is intended to do.
+    // See the pybind11 2.x.y code below for what this class is intended to do.
     template <bool multithreaded = true>
     class GILCallbackManager {
         private:
-            pybind11::gil_scoped_release outerGuard;
+            pybind11::subinterpreter sub_;
+            pybind11::gil_scoped_release gil_;
 
         public:
-            GILCallbackManager() = default;
+            GILCallbackManager() : sub_(pybind11::subinterpreter::current()) {
+            }
+            ~GILCallbackManager() {
+            }
             GILCallbackManager(const GILCallbackManager&) = delete;
             GILCallbackManager& operator = (const GILCallbackManager&) = delete;
 
             class ScopedAcquire {
                 private:
-                    pybind11::gil_scoped_acquire innerGuard;
+                    std::optional<pybind11::subinterpreter_scoped_activate>
+                        guard_;
 
                 public:
-                    ScopedAcquire(GILCallbackManager&) {}
+                    ScopedAcquire(GILCallbackManager& m) : guard_(m.sub_) {
+                        // Note: guard_ will reactivate the subinterpreter and
+                        // re-acquire the GIL.
+                    }
                     ScopedAcquire(const ScopedAcquire&) = delete;
                     ScopedAcquire& operator = (const ScopedAcquire&) = delete;
             };
