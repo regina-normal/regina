@@ -3521,7 +3521,7 @@ function get_override(const T *this_ptr, const char *name) {
 
 #define PYBIND11_OVERRIDE_IMPL(ret_type, cname, name, ...)                                        \
     do {                                                                                          \
-        pybind11::gil_scoped_acquire gil;                                                         \
+        pybind11::safe_gil_scoped_acquire gil;                                                    \
         pybind11::function override                                                               \
             = pybind11::get_override(static_cast<const cname *>(this), name);                     \
         if (override) {                                                                           \

@@ -35,6 +35,41 @@ index 8f59f5fe5..5a554abad 100644
          // casts the returned object as a rvalue to the return type
          return hfunc.f(std::forward<Args>(args)...).template cast<Return>();
      }
+diff --git a/python/pybind11_v3/pybind11/gil.h b/python/pybind11_v3/pybind11/gil.h
+index 4222a035f..fef69b641 100644
+--- a/python/pybind11_v3/pybind11/gil.h
++++ b/python/pybind11_v3/pybind11/gil.h
+@@ -197,3 +197,30 @@ private:
+ PYBIND11_NAMESPACE_END(PYBIND11_NAMESPACE)
+ 
+ #endif // !PYBIND11_SIMPLE_GIL_MANAGEMENT
++
++PYBIND11_NAMESPACE_BEGIN(PYBIND11_NAMESPACE)
++
++/**
++ * A less lightweight version of gil_scoped_acquire that actually checks
++ * whether we are already holding the GIL before trying to acquire it.
++ *
++ * This is needed (for example) in PacketListener callbacks in the GUI, since
++ * we do not know whether listener methods are reacting to some action in the
++ * C++ GUI (where the GIL will not be held) or in a Python console (where the
++ * GIL will be held).
++ *
++ * - Ben Burton, 25/06/2025.
++ */
++class safe_gil_scoped_acquire {
++    std::optional<gil_scoped_acquire> gil;
++public:
++    safe_gil_scoped_acquire() {
++        if (! PyGILState_Check())
++            gil.emplace();
++    }
++    safe_gil_scoped_acquire(const safe_gil_scoped_acquire&) = delete;
++    safe_gil_scoped_acquire& operator = (const safe_gil_scoped_acquire&) =
++        delete;
++};
++
++PYBIND11_NAMESPACE_END(PYBIND11_NAMESPACE)
 diff --git a/python/pybind11_v3/pybind11/pybind11.h b/python/pybind11_v3/pybind11/pybind11.h
 index 06be7f1d4..d20de7ecc 100644
 --- a/python/pybind11_v3/pybind11/pybind11.h
@@ -159,6 +194,15 @@ index 06be7f1d4..d20de7ecc 100644
          if (hasattr(scope, "__dict__") && scope.attr("__dict__").contains(name)) {
              pybind11_fail("Error during initialization: multiple incompatible "
                            "definitions with name \""
+@@ -3521,7 +3521,7 @@ function get_override(const T *this_ptr, const char *name) {
+ 
+ #define PYBIND11_OVERRIDE_IMPL(ret_type, cname, name, ...)                                        \
+     do {                                                                                          \
+-        pybind11::gil_scoped_acquire gil;                                                         \
++        pybind11::safe_gil_scoped_acquire gil;                                                    \
+         pybind11::function override                                                               \
+             = pybind11::get_override(static_cast<const cname *>(this), name);                     \
+         if (override) {                                                                           \
 diff --git a/python/pybind11_v3/pybind11/subinterpreter.h b/python/pybind11_v3/pybind11/subinterpreter.h
 index 9f2f704c5..cb666cf28 100644
 --- a/python/pybind11_v3/pybind11/subinterpreter.h

@@ -228,14 +228,11 @@ public:
  * - Ben Burton, 30/09/2022.
  */
 class safe_gil_scoped_acquire {
-    gil_scoped_acquire* gil { nullptr };
+    std::optional<gil_scoped_acquire> gil;
 public:
     safe_gil_scoped_acquire() {
         if (! PyGILState_Check())
-            gil = new gil_scoped_acquire();
-    }
-    ~safe_gil_scoped_acquire() {
-        delete gil;
+            gil.emplace();
     }
     safe_gil_scoped_acquire(const safe_gil_scoped_acquire&) = delete;
     safe_gil_scoped_acquire& operator = (const safe_gil_scoped_acquire&) =

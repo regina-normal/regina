@@ -36,10 +36,10 @@ index 4b3610117..64e6a7acf 100644
          return hfunc.f(std::forward<Args>(args)...).template cast<Return>();
      }
 diff --git a/python/pybind11_v2/pybind11/gil.h b/python/pybind11_v2/pybind11/gil.h
-index 6b0edaee4..739c888a4 100644
+index 6b0edaee4..d5bb7d7b0 100644
 --- a/python/pybind11_v2/pybind11/gil.h
 +++ b/python/pybind11_v2/pybind11/gil.h
-@@ -216,4 +216,30 @@ public:
+@@ -216,4 +216,27 @@ public:
  
  #endif // PYBIND11_SIMPLE_GIL_MANAGEMENT
  
@@ -55,14 +55,11 @@ index 6b0edaee4..739c888a4 100644
 + * - Ben Burton, 30/09/2022.
 + */
 +class safe_gil_scoped_acquire {
-+    gil_scoped_acquire* gil { nullptr };
++    std::optional<gil_scoped_acquire> gil;
 +public:
 +    safe_gil_scoped_acquire() {
 +        if (! PyGILState_Check())
-+            gil = new gil_scoped_acquire();
-+    }
-+    ~safe_gil_scoped_acquire() {
-+        delete gil;
++            gil.emplace();
 +    }
 +    safe_gil_scoped_acquire(const safe_gil_scoped_acquire&) = delete;
 +    safe_gil_scoped_acquire& operator = (const safe_gil_scoped_acquire&) =
@@ -203,7 +200,7 @@ index 5219c0ff8..101de3b20 100644
  #define PYBIND11_OVERRIDE_IMPL(ret_type, cname, name, ...)                                        \
      do {                                                                                          \
 -        pybind11::gil_scoped_acquire gil;                                                         \
-+        pybind11::safe_gil_scoped_acquire gil;                                                         \
++        pybind11::safe_gil_scoped_acquire gil;                                                    \
          pybind11::function override                                                               \
              = pybind11::get_override(static_cast<const cname *>(this), name);                     \
          if (override) {                                                                           \

@@ -197,3 +197,30 @@ private:
 PYBIND11_NAMESPACE_END(PYBIND11_NAMESPACE)
 
 #endif // !PYBIND11_SIMPLE_GIL_MANAGEMENT
+
+PYBIND11_NAMESPACE_BEGIN(PYBIND11_NAMESPACE)
+
+/**
+ * A less lightweight version of gil_scoped_acquire that actually checks
+ * whether we are already holding the GIL before trying to acquire it.
+ *
+ * This is needed (for example) in PacketListener callbacks in the GUI, since
+ * we do not know whether listener methods are reacting to some action in the
+ * C++ GUI (where the GIL will not be held) or in a Python console (where the
+ * GIL will be held).
+ *
+ * - Ben Burton, 25/06/2025.
+ */
+class safe_gil_scoped_acquire {
+    std::optional<gil_scoped_acquire> gil;
+public:
+    safe_gil_scoped_acquire() {
+        if (! PyGILState_Check())
+            gil.emplace();
+    }
+    safe_gil_scoped_acquire(const safe_gil_scoped_acquire&) = delete;
+    safe_gil_scoped_acquire& operator = (const safe_gil_scoped_acquire&) =
+        delete;
+};
+
+PYBIND11_NAMESPACE_END(PYBIND11_NAMESPACE)
