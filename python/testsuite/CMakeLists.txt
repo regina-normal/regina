@@ -15,6 +15,11 @@ CONFIGURE_FILE(
   @ONLY
 )
 CONFIGURE_FILE(
+  testcallback.in
+  "${PROJECT_BINARY_DIR}/python/testsuite/testcallback"
+  @ONLY
+)
+CONFIGURE_FILE(
   runbasic.in
   "${PROJECT_BINARY_DIR}/python/testsuite/runbasic"
   @ONLY
@@ -38,15 +43,22 @@ add_executable(basic_sub
   ../gui/pythoninterpreter.cpp
   ../gui/pythonoutputstream.cpp)
 target_link_libraries(basic_sub ${ENGINE_LIBRARY} ${Python_LIBRARIES})
+add_executable(basic_callback
+  basic_callback.cpp
+  ../gui/pythoninterpreter.cpp
+  ../gui/pythonoutputstream.cpp)
+target_link_libraries(basic_callback ${ENGINE_LIBRARY} ${Python_LIBRARIES})
 
 IF (WIN32)
   ADD_TEST(python-test bash testall)
   ADD_TEST(python-basic bash testbasic)
   ADD_TEST(python-sub bash testsub)
+  ADD_TEST(python-callback bash testcallback)
   # We do not need to add the engine DLL location to the path, since
   # regina-python (used in testall) and testbasic (directly) do this for us.
 ELSE (WIN32)
   ADD_TEST(python-test ./testall)
   ADD_TEST(python-basic ./testbasic)
   ADD_TEST(python-sub ./testsub)
+  ADD_TEST(python-callback ./testcallback)
 ENDIF (WIN32)
