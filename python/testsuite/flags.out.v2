@@ -30,3 +30,9 @@ NormalCoords.Standard -> True
 NormalCoords.Quad -> True
 TriangleType.Unknown -> True
 TriangleType.Parachute -> True
+9 embedded, vertex surfaces (Standard normal (tri-quad))
+9 embedded, vertex surfaces (Standard normal (tri-quad))
+9 embedded, vertex surfaces (Standard normal (tri-quad))
+9 embedded, fundamental surfaces (Standard normal (tri-quad))
+39 embedded / immersed / singular, vertex surfaces (Standard normal (tri-quad))
+59 embedded / immersed / singular, fundamental surfaces (Standard normal (tri-quad))
