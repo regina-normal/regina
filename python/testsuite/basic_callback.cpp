@@ -81,6 +81,7 @@ struct Session {
 };
 
 int main(int argc, char* argv[]) {
+    // Tests that do not use GILCallbackManager under the hood:
     {
         Session s(argv[0]);
         s.executeLine("def sortInc(a, b):");
@@ -127,5 +128,29 @@ int main(int argc, char* argv[]) {
         s1.executeLine("print(s.detail())");
         s2.executeLine("print(s.detail())");
     }
+
+    // Tests that do use GILCallbackManager under the hood:
+    {
+        Session s(argv[0]);
+        s.executeLine("ans = None");
+        s.executeLine("def store(vec):");
+        s.executeLine("    global ans");
+        s.executeLine("    ans.append(vec)");
+        s.executeLine("");
+        s.executeLine("def dump():");
+        s.executeLine("    global ans");
+        s.executeLine("    ans.sort(key = str)");
+        s.executeLine("    for v in ans:");
+        s.executeLine("        print(v)");
+        s.executeLine("    print()");
+        s.executeLine("");
+        s.executeLine("tri = Example3.lens(3, 1)");
+        s.executeLine("m = makeMatchingEquations(tri, NormalCoords.Standard)");
+        s.executeLine("c = ValidityConstraints(7, tri.size())");
+        s.executeLine("ans = []");
+        s.executeLine("DoubleDescription.enumerate(store, m, c)");
+        s.executeLine("dump()");
+    }
+
     return 0;
 }
