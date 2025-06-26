@@ -40,11 +40,55 @@
 #include <pybind11/pybind11.h>
 #if REGINA_PYBIND11_VERSION == 3
 #include <pybind11/subinterpreter.h>
+#include <mutex>
 #endif
 #include "utilities/exception.h"
 #include "../helpers/docstrings.h"
 
 namespace regina::python {
+
+#if REGINA_PYBIND11_VERSION == 3
+/**
+ * For a single C++ exception type, holds a corresponding Python exception
+ * type for each subinterpreter.
+ *
+ * All insertion and lookup operations are thread-safe.
+ */
+class ExceptionCache {
+    private:
+        std::map<int64_t, PyObject*> cache_;
+            /**< A map from subinterpreter IDs to Python exception types. */
+        std::mutex mutex_;
+            /**< Protects cache_. */
+
+    public:
+        ExceptionCache() = default;
+
+        void insert(PyObject* exc) {
+            int64_t id = pybind11::subinterpreter::current().id();
+
+            std::scoped_lock lock(mutex_);
+            auto result = cache_.emplace(id, exc);
+            if (! result.second) {
+                // An exception is already registered for this subinterpreter.
+                // This should only happen if regina's module was loaded,
+                // unloaded, and is now being loaded again.  We definitely
+                // want the new value -- the old value is a stale pointer
+                // which we can safely discard.
+                result.first->second = exc;
+            }
+        }
+
+        PyObject* lookup() {
+            // This function is non-const because we need to lock mutex_.
+            int64_t id = pybind11::subinterpreter::current().id();
+
+            std::scoped_lock lock(mutex_);
+            auto it = cache_.find(id);
+            return (it == cache_.end() ? nullptr : it->second);
+        }
+};
+#endif
 
 /**
  * Adds Python bindings for one of Regina's C++ exception types.
@@ -66,16 +110,23 @@ void registerReginaException(pybind11::module_& m, const char* className,
     // which breaks things when we load the module multiple times in different
     // subinterpreters.  We will need to implement things manually ourselves,
     // with a different Python exception object for each subinterpreter.
+    //
+    // TODO: This code does come with a small memory leak, in that once a
+    // subinterpreter is destroyed, the corresponding entry in cache is not
+    // removed (although the Python exception type should be destroyed).
+    // For now, we live with this memory leak: it is only relevant when using
+    // subinterpreters in the GUI, and these are created manually by the user
+    // when opening a new python console -- this means there should never be
+    // so many that this becomes a serious problem.
 
-    // TODO: Check what happens when we load the module multiple times within
-    // the same subinterpreter.
-    // TODO: Lock access to cached.
-    // TODO: Find a way to clean up these exceptions when the subinterpreter
-    // is destroyed.
-    static std::map<int64_t, PyObject*> cached;
-    int64_t id = pybind11::subinterpreter::current().id();
-    cached.emplace(id, (new pybind11::exception<ReginaExceptionType>(
-        m, className, docstring, PyExc_RuntimeError))->ptr());
+    static ExceptionCache cache;
+
+    // The following exception type should live for only as long as the module
+    // is loaded, since it is the reference in m.__dict__ that keeps it alive
+    // on the python side.  In our own cache we just keep a borrowed reference.
+    pybind11::exception<ReginaExceptionType> exc(m, className, docstring,
+        PyExc_RuntimeError);
+    cache.insert(exc.ptr());
 
     pybind11::register_exception_translator([](std::exception_ptr p) {
         if (!p) {
@@ -84,10 +135,8 @@ void registerReginaException(pybind11::module_& m, const char* className,
         try {
             std::rethrow_exception(p);
         } catch (const ReginaExceptionType &e) {
-            int64_t id = pybind11::subinterpreter::current().id();
-            auto it = cached.find(id);
-            if (it != cached.end())
-                PyErr_SetString(it->second, e.what());
+            if (PyObject* exc = cache.lookup())
+                PyErr_SetString(exc, e.what());
             else {
                 // This should never happen.  But.. just in case, translate
                 // this to a standard python RuntimeError instead.
