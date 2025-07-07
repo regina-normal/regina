@@ -37,7 +37,7 @@
 namespace regina {
 
 std::vector<NormalSurface> NormalSurface::components() const {
-    if (connected_.has_value()) {
+    if (connected_.has_value() && *connected_) {
         // We already know that either the surface is empty or it is a
         // single connected component.
         if (isEmpty())
@@ -187,7 +187,7 @@ bool NormalSurface::disjoint(const NormalSurface& other) const {
     // Form the sum, pull it apart into connected components, and see
     // whether we get our original two surfaces back.
     //
-    // Note: splitIntoComponents() may return surfaces that use
+    // Note: components() may return surfaces that use
     // different vector encodings, but equality testing can handle this.
     std::vector<NormalSurface> bits = ((*this) + other).components();
     return (bits.size() == 2 && ((*this) == bits[0] || (*this) == bits[1]));
