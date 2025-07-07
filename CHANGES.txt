@@ -7,6 +7,25 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Version 7.3.1  [ TODO ]
+
+    GENERAL:
+        - Service release to fix a couple of important bugs, and to support
+          Python 3.12 and later.
+        - Other minor fixes and compatibility updates.
+    ENGINE:
+        Class Link:
+            - Fixed a bug where calling resolve() would not clear out any
+              cached link polynomials that had already been computed.
+        Class NormalSurface, NormalHypersurface:
+            - Fixed a bug where, if a surface was a normalised triangle link
+              but not a thin triangle link, then calling isThinTriangleLink()
+              _before_ isNormalTriangleLink() would make the latter return
+              an empty list of results.  Likewise with tetrahedron links in
+              4-dimensional triangulations.
+        Class Triangulation<dim>:
+            - Fixed a memory leak in the move constructor.
+
 Version 7.3  [ 18 March, 2023 ]
 
     ENGINE:
