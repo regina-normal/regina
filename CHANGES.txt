@@ -7,24 +7,66 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 7.3.1  [ TODO ]
+Version 7.3.1  [ 11 July, 2025 ]
 
     GENERAL:
-        - Service release to fix a couple of important bugs, and to support
+        - Service release to fix some important bugs, and to support
           Python 3.12 and later.
-        - Other minor fixes and compatibility updates.
+        - This release requires Python 3.7 or newer (i.e., Python 3.6 is
+          no longer supported).
     ENGINE:
+        Class Laurent<T>:
+            - Fixed a bug where, in special circumstances, set() could have no
+              effect.  This did not affect any past Jones polynomial code.
+              See: https://regina-normal.github.io/bugs.html#laurentset
         Class Link:
             - Fixed a bug where calling resolve() would not clear out any
               cached link polynomials that had already been computed.
+            - Fixed a problem with dumpConstruction() where the C++ initialiser
+              lists were empty (instead of containing a single 0) for
+              zero-crossing components.
+            - Fixed a bug in fromDT() that was producing non-planar diagrams
+              for some non-minimal encodings with spurious R1 twists.  The
+              solution was to drop the old code completely (which was imported
+              from elsewhere) and instead to piggy-back on Regina's own Gauss
+              code reconstruction routine.  As a result, fromDT() might now
+              make different choices when resolving the inherent ambiguities
+              in Dowker-Thistlethwaite notation.
         Class NormalSurface, NormalHypersurface:
             - Fixed a bug where, if a surface was a normalised triangle link
               but not a thin triangle link, then calling isThinTriangleLink()
               _before_ isNormalTriangleLink() would make the latter return
               an empty list of results.  Likewise with tetrahedron links in
               4-dimensional triangulations.
+              See: https://regina-normal.github.io/bugs.html#tritetlinks
+            - Fix a bug in components() when used on disconnected surfaces,
+              where if it were called _after_ connectedness has already been
+              established (i.e., after isOrientable(), isTwoSided(),
+              isConnected(), or an earlier call to components()), then it would
+              return the entire surface as a single component.
+              See: https://regina-normal.github.io/bugs.html#surfacecomp
         Class Triangulation<dim>:
             - Fixed a memory leak in the move constructor.
+        Class Triangulation<3>:
+            - Fixed an issue with zeroTwoMove(edge, t0, t1) where: if the given
+              edge was valid and boundary, and if t0 and/or t1 was exactly the
+              edge degree, and if the routine was asked to check legality, then
+              the move would be incorrectly reported as illegal.  (This was
+              essentially harmless, since it effectively made the routine
+              over-cautious by not performing moves that it could have, and
+              since if the routine was _not_ asked to check legality then the
+              move was still being performed correctly.)
+    PYTHON:
+        - For Python 3.11 and earlier, updated the included pybind11 library
+          from 2.10.0 to 2.13.6.  This drops support for Python 3.6.
+        - For Python 3.12 and later, use the pre-release pybind11 3.0.0rc4.
+          This fixes problems with subinterpreters in newer Python versions,
+          and thereby means that Regina now supports Python 3.12 and later
+          properly for the first time.
+        - Added a new python-only function regina.versionPybind11Major() that
+          indicates which of the two above scenarios is in use.
+        - Improved the speed of iteration (specifically, throwing/catching
+          StopIteration exceptions).
 
 Version 7.3  [ 18 March, 2023 ]
 
