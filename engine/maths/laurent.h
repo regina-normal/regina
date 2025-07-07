@@ -1138,9 +1138,8 @@ void Laurent<T>::set(long exp, const T& value) {
     } else if (exp < minExp_) {
         // The minimum exponent decreases, but we need not reallocate.
         coeff_[exp - base_] = value;
-        for (++exp; exp < minExp_; ++exp)
-            coeff_[exp - base_] = 0;
-        minExp_ = exp;
+        for (--minExp_; minExp_ > exp; --minExp_)
+            coeff_[minExp_ - base_] = 0;
     } else {
         // The maximum exponent increases, and we must reallocate.
         T* newCoeff = new T[exp - minExp_ + 1];
