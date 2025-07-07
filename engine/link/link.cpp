@@ -1185,7 +1185,7 @@ std::string Link::dumpConstruction() const {
     for (StrandRef start : components_) {
         out << ", { ";
         if (! start)
-            out << '}';
+            out << "0 }";
         else {
             s = start;
             if (s.strand() == 0)
