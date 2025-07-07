@@ -197,21 +197,21 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
         }
 
         void homologyH1() {
-            TriangulationTest<dim>::template verifyHomology(empty,
+            TriangulationTest<dim>::template verifyHomology<>(empty,
                 "0", "Empty");
-            TriangulationTest<dim>::template verifyHomology(sphere,
+            TriangulationTest<dim>::template verifyHomology<>(sphere,
                 "0", "Sphere");
-            TriangulationTest<dim>::template verifyHomology(simplicialSphere,
+            TriangulationTest<dim>::template verifyHomology<>(simplicialSphere,
                 "0", "Simplicial sphere");
-            TriangulationTest<dim>::template verifyHomology(sphereBundle,
+            TriangulationTest<dim>::template verifyHomology<>(sphereBundle,
                 "Z", "Sphere bundle");
-            TriangulationTest<dim>::template verifyHomology(twistedSphereBundle,
+            TriangulationTest<dim>::template verifyHomology<>(twistedSphereBundle,
                 "Z", "Twisted sphere bundle");
-            TriangulationTest<dim>::template verifyHomology(ball,
+            TriangulationTest<dim>::template verifyHomology<>(ball,
                 "0", "Ball");
-            TriangulationTest<dim>::template verifyHomology(ballBundle,
+            TriangulationTest<dim>::template verifyHomology<>(ballBundle,
                 "Z", "Ball bundle");
-            TriangulationTest<dim>::template verifyHomology(twistedBallBundle,
+            TriangulationTest<dim>::template verifyHomology<>(twistedBallBundle,
                 "Z", "Twisted ball bundle");
         }
 
