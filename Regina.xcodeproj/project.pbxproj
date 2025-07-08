@@ -1951,13 +1951,6 @@
 		05EDDA4F27E3102A001743C1 /* signed_dec.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EDDA4927E3102A001743C1 /* signed_dec.h */; };
 		05EDDA5027E3102A001743C1 /* chunk.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EDDA4A27E3102A001743C1 /* chunk.h */; };
 		05EDDA5527E31061001743C1 /* nmz_hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EDDA5227E31060001743C1 /* nmz_hash.h */; };
-		05EDF2A92E1CC37F0040F824 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 05EDF2622E1CC37F0040F824 /* README.txt */; };
-		05EDF2AB2E1CC37F0040F824 /* regina.patch in Resources */ = {isa = PBXBuildFile; fileRef = 05EDF2632E1CC37F0040F824 /* regina.patch */; };
-		05EDF2AD2E1CC37F0040F824 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 05EDF25C2E1CC37F0040F824 /* LICENSE */; };
-		05EDF2EB2E1CC3A40040F824 /* regina.patch in Resources */ = {isa = PBXBuildFile; fileRef = 05EDF2E12E1CC3A40040F824 /* regina.patch */; };
-		05EDF2EC2E1CC3A40040F824 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 05EDF2E02E1CC3A40040F824 /* README.txt */; };
-		05EDF2ED2E1CC3A40040F824 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 05EDF2B02E1CC3A40040F824 /* README.txt */; };
-		05EDF2EE2E1CC3A40040F824 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 05EDF2D92E1CC3A40040F824 /* LICENSE */; };
 		05F02FFB276FFDFC00FB24D8 /* txicore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F02FFA276FFDF600FB24D8 /* txicore.cpp */; };
 		05F02FFC276FFDFD00FB24D8 /* txicore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F02FFA276FFDF600FB24D8 /* txicore.cpp */; };
 		05F09FBF1DBEF01800117BFC /* dim2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBC1DBEF01800117BFC /* dim2.h */; };
@@ -9555,15 +9548,8 @@
 			files = (
 				0514CAEF1D9CE54200EDB2E6 /* docs.conf.in in Resources */,
 				051806D4181202BD008EBB01 /* icons in Resources */,
-				05EDF2A92E1CC37F0040F824 /* README.txt in Resources */,
-				05EDF2AB2E1CC37F0040F824 /* regina.patch in Resources */,
-				05EDF2AD2E1CC37F0040F824 /* LICENSE in Resources */,
 				05754ECF25900DBA00236ED7 /* x-regina.icns in Resources */,
 				05617AD61D9D3C5A00B1E33B /* regina-python.in in Resources */,
-				05EDF2EB2E1CC3A40040F824 /* regina.patch in Resources */,
-				05EDF2EC2E1CC3A40040F824 /* README.txt in Resources */,
-				05EDF2ED2E1CC3A40040F824 /* README.txt in Resources */,
-				05EDF2EE2E1CC3A40040F824 /* LICENSE in Resources */,
 				05754E74258F92CA00236ED7 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
