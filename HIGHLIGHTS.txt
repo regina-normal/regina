@@ -13,6 +13,34 @@ Version 7.4  [ (to be announced) ]
     Python / C++:
         - Regina now uses the C++20 standard.
 
+Version 7.3.1  [ 11 July, 2025 ]
+
+    Overview:
+        - This is a service release to fix some important bugs, and to support
+          Python 3.12 and later.  Python 3.6 is no longer supported.
+    Bugs fixed:
+        - Manually resolving a crossing in a link would not clear out cached
+          polynomials that had already been computed for that link.
+          See: https://regina-normal.github.io/bugs.html#resolve
+        - Manually setting a coefficient in a Laurent polynomial in C++/Python
+          would, in special circumstances, have no effect.  This did not affect
+          the GUI or any Jones polynomial computations.
+          See: https://regina-normal.github.io/bugs.html#laurentset
+        - If a normal surface was a normalised triangle link but not a thin
+          triangle link, then using C++/Python to call isThinTriangleLink()
+          _before_ isNormalTriangleLink() would make the latter return an
+          empty list of results.  Likewise with tetrahedron links in
+          4-dimensional triangulations.  This did not affect the GUI.
+          See: https://regina-normal.github.io/bugs.html#tritetlinks
+        - If the connectness of a normal surface had already been computed, then
+          calling NormalSurface.components() in C++/Python would return the
+          entire surface as a single component.  This did not affect the GUI.
+          See: https://regina-normal.github.io/bugs.html#surfacecomp
+        - Fixed some less important problems also: see CHANGES.txt for details.
+    Other improvements:
+        - Improved the speed of iteration in Python (specifically,
+          throwing/catching StopIteration exceptions).
+
 Version 7.3  [ 18 March, 2023 ]
 
     Overview:
