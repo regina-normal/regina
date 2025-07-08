@@ -9,13 +9,11 @@ Regina - A Normal Surface Theory Calculator
 Version 7.3.1  [ 11 July, 2025 ]
 
     Overview:
-        - This is a service release to fix some important bugs, and to add
-          support for Python 3.12 and later.
-        - Regina now requires Python 3.7 or newer (i.e., Python 3.6 is
-          no longer supported).
+        - This is a service release to fix some important bugs, and to support
+          Python 3.12 and later.  Python 3.6 is no longer supported.
     Bugs fixed:
-        - Manually resolving a crossing in a link would not clear out any
-          cached polynomials that had already been computed for that link.
+        - Manually resolving a crossing in a link would not clear out cached
+          polynomials that had already been computed for that link.
           See: https://regina-normal.github.io/bugs.html#resolve
         - Manually setting a coefficient in a Laurent polynomial in C++/Python
           would, in special circumstances, have no effect.  This did not affect
@@ -31,8 +29,7 @@ Version 7.3.1  [ 11 July, 2025 ]
           calling NormalSurface.components() in C++/Python would return the
           entire surface as a single component.  This did not affect the GUI.
           See: https://regina-normal.github.io/bugs.html#surfacecomp
-        - Fixed some less important problems also: see the full changelog for
-          details.
+        - Fixed some less important problems also: see CHANGES.txt for details.
     Other improvements:
         - Improved the speed of iteration in Python (specifically,
           throwing/catching StopIteration exceptions).
