@@ -158,9 +158,9 @@ INSTALL(TARGETS ${REGINA_APP_NAME} DESTINATION "${APPDIR}" COMPONENT Runtime)
 
 if (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
   # Install desktop files and mimetype handling.
-  install(FILES regina.desktop DESTINATION "${XDG_APPS_INSTALL_DIR}"
+  install(FILES org.computop.Regina.desktop DESTINATION "${XDG_APPS_INSTALL_DIR}"
     COMPONENT Runtime)
-  install(FILES regina.metainfo.xml DESTINATION "${XDG_METAINFO_DIR}"
+  install(FILES org.computop.regina.metainfo.xml DESTINATION "${XDG_METAINFO_DIR}"
     COMPONENT Runtime)
   install(FILES regina.xml DESTINATION "${XDG_MIME_INSTALL_DIR}"
     COMPONENT Runtime)
