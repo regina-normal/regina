@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "triangulation/dim2.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
@@ -49,7 +49,7 @@ using regina::Face;
 using regina::FaceEmbedding;
 using regina::python::wrapTableView;
 
-void addEdge4(pybind11::module_& m) {
+void addEdge4(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
     RDOC_SCOPE_BASE_3(detail::FaceEmbeddingBase, alias::FaceNumber,
         alias::SimplexVoid)
@@ -126,8 +126,8 @@ void addEdge4(pybind11::module_& m) {
         .def_readonly_static("subdimension", &Edge<4>::subdimension)
     ;
 
-    c.attr("edgeNumber") = wrapTableView(m, Edge<4>::edgeNumber);
-    c.attr("edgeVertex") = wrapTableView(m, Edge<4>::edgeVertex);
+    c.attr("edgeNumber") = wrapTableView(internal, Edge<4>::edgeNumber);
+    c.attr("edgeVertex") = wrapTableView(internal, Edge<4>::edgeVertex);
 
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
@@ -135,7 +135,8 @@ void addEdge4(pybind11::module_& m) {
     RDOC_SCOPE_END
 
     regina::python::addListView<
-        decltype(std::declval<Edge<4>>().embeddings())>(m);
+        decltype(std::declval<Edge<4>>().embeddings())>(internal,
+        "Face4_1_embeddings");
 
     m.attr("EdgeEmbedding4") = m.attr("FaceEmbedding4_1");
     m.attr("Edge4") = m.attr("Face4_1");

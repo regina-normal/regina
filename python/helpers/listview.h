@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2023, Ben Burton                                   *
+ *  Copyright (c) 1999-2025, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -52,9 +52,14 @@ namespace regina::python {
  * Regina); instead you would access the type using an appropriate decltype()
  * statement.
  *
- * The Python class corresponding to \a T will not be given a unique name;
- * instead all such types will be called \c ListView, and will be put into
- * their own unique namespaces to avoid clashes.
+ * The Python class corresponding to \a T will be named `ListView_suffix`.
+ * The \a suffix argument should not be overly long, and does not need to
+ * accurately reflect the specific internal data types used by Regina's
+ * calculation engine; however, it is important that these suffixes be unique
+ * across all ListView types.
+ *
+ * Note that the Python module that is passed to addListView() should be
+ * the submodule `regina.internal`, not the main module `regina`.
  *
  * It is assumed that the ListView type \a T has not yet been wrapped in
  * Python.  If it has, then this routine will throw an exception.
@@ -86,12 +91,9 @@ template <class T, pybind11::return_value_policy Policy =
     (std::is_pointer<typename T::value_type>::value ?
         pybind11::return_value_policy::reference_internal :
         pybind11::return_value_policy::copy)>
-void addListView(pybind11::module_& m) {
-    // Instead of naming these classes uniquely, just call them all ListView
-    // and make them all local to their own unique Python namespaces.
-    // End users should not be constructing them anyway.
-    auto c = pybind11::class_<T>(pybind11::handle(), "ListView",
-            pybind11::module_local(), doc::ListView)
+void addListView(pybind11::module_& internal, const char* suffix) {
+    auto c = pybind11::class_<T>(internal,
+            (std::string("ListView_") + suffix).c_str(), doc::ListView)
         .def(pybind11::init<const T&>(), doc::ListView_::__copy)
         .def("__iter__", [](const T& view) {
             return pybind11::make_iterator<Policy>(view.begin(), view.end());
@@ -142,7 +144,7 @@ void addListView(pybind11::module_& m) {
             out << ' ';
         }
         out << ']';
-    });
+    }, "<internal>.ListView");
     regina::python::add_eq_operators(c,
         doc::ListView_::__eq, doc::ListView_::__ne);
 }

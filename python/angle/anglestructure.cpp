@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/iostream.h"
-#include "../pybind11/operators.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/iostream.h>
+#include <pybind11/operators.h>
 #include "angle/anglestructure.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"

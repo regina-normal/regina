@@ -107,7 +107,7 @@ QVariant AngleModel::data(const QModelIndex& index, int role) const {
         else
             return tr("Tetrahedron %1, edges %2").
                 arg((index.column() - 1) / 3).
-                arg(regina::quadString[(index.column() - 1) % 3]);
+                arg(regina::quadString[(index.column() - 1) % 3].c_str());
     } else if (role == Qt::TextAlignmentRole) {
         if (index.column() == 0)
             return Qt::AlignLeft;
@@ -127,13 +127,13 @@ QVariant AngleModel::headerData(int section, Qt::Orientation orientation,
             return tr("Type");
         else
             return QString::number((section - 1) / 3) + ": " + 
-                regina::quadString[(section - 1) % 3];
+                regina::quadString[(section - 1) % 3].c_str();
     } else if (role == Qt::ToolTipRole) {
         if (section == 0)
             return tr("Strict, taut and/or veering?");
         else
             return tr("Tetrahedron %1, edges %2").arg((section - 1) / 3).
-                arg(regina::quadString[(section - 1) % 3]);
+                arg(regina::quadString[(section - 1) % 3].c_str());
     } else if (role == Qt::TextAlignmentRole)
         return Qt::AlignCenter;
     else

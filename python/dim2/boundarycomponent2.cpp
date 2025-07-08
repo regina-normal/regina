@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/stl.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include "triangulation/dim2.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
@@ -40,7 +40,7 @@
 
 using regina::BoundaryComponent;
 
-void addBoundaryComponent2(pybind11::module_& m) {
+void addBoundaryComponent2(pybind11::module_& m, pybind11::module_& internal) {
     // We use the global scope here because all of BoundaryComponent's members
     // are inherited, and so BoundaryComponent's own docstring namespace
     // does not exist.
@@ -94,8 +94,10 @@ void addBoundaryComponent2(pybind11::module_& m) {
     RDOC_SCOPE_END
 
     regina::python::addListView<
-        decltype(std::declval<BoundaryComponent<2>>().vertices())>(m);
+        decltype(std::declval<BoundaryComponent<2>>().vertices())>(internal,
+        "BoundaryComponent2_vertices");
     regina::python::addListView<
-        decltype(std::declval<BoundaryComponent<2>>().edges())>(m);
+        decltype(std::declval<BoundaryComponent<2>>().edges())>(internal,
+        "BoundaryComponent2_edges");
 }
 

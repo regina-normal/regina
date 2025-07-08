@@ -28,6 +28,9 @@
 /* Define if we are building the Python bindings. */
 #cmakedefine BUILD_PYTHON_BINDINGS
 
+/* Indicates which major version of pybind11 we should build against. */
+#cmakedefine REGINA_PYBIND11_VERSION @REGINA_PYBIND11_VERSION@
+
 /* Define if the Graphviz libraries are available. */
 #cmakedefine LIBGVC_FOUND
 

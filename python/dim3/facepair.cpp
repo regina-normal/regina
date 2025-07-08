@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/operators.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/operators.h>
 #include "triangulation/facepair.h"
 #include "../helpers.h"
 #include "../python/docstrings/triangulation/facepair.h"

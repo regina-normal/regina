@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "file/globaldirs.h"
 #include "../helpers.h"
 #include "../docstrings/file/globaldirs.h"

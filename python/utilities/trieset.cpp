@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "utilities/intutils.h"
 #include "utilities/trieset.h"
 #include "../helpers.h"

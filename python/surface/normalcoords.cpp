@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #include <iomanip>
-#include "../pybind11/pybind11.h"
-#include "../pybind11/operators.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/operators.h>
 #include "surface/normalcoords.h"
 #include "../helpers.h"
 #include "../docstrings/surface/normalcoords.h"

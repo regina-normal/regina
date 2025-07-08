@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "progress/progresstracker.h"
 #include "../helpers.h"
 #include "../docstrings/progress/progresstracker.h"

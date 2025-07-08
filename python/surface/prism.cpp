@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "surface/prism.h"
 #include "surface/normalsurface.h"
 #include "triangulation/dim3.h"

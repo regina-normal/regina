@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/functional.h"
-#include "../pybind11/stl.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/functional.h>
+#include <pybind11/stl.h>
 #include "link/link.h"
 #include "maths/laurent.h"
 #include "maths/laurent2.h"
@@ -46,7 +46,7 @@ using regina::Crossing;
 using regina::StrandRef;
 using regina::Link;
 
-void addLink(pybind11::module_& m) {
+void addLink(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(Framing)
 
     pybind11::enum_<regina::Framing>(m, "Framing", rdoc_scope)
@@ -372,8 +372,10 @@ void addLink(pybind11::module_& m) {
     regina::python::packet_eq_operators(l, rdoc::__eq, rdoc::__ne);
     regina::python::add_packet_data(l);
 
-    regina::python::addListView<decltype(Link().crossings())>(m);
-    regina::python::addListView<decltype(Link().components())>(m);
+    regina::python::addListView<decltype(Link().crossings())>(internal,
+        "Link_crossings");
+    regina::python::addListView<decltype(Link().components())>(internal,
+        "Link_components");
 
     auto wrap = regina::python::add_packet_wrapper<Link>(m, "PacketOfLink");
     regina::python::add_packet_constructor<>(wrap, rdoc::__default);

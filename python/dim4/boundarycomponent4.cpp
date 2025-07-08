@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/stl.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include "triangulation/dim4.h"
 #include "triangulation/dim3.h" // for build()
 #include "../helpers.h"
@@ -41,7 +41,7 @@
 
 using regina::BoundaryComponent;
 
-void addBoundaryComponent4(pybind11::module_& m) {
+void addBoundaryComponent4(pybind11::module_& m, pybind11::module_& internal) {
     // We use the global scope here because all of BoundaryComponent's members
     // are inherited, and so BoundaryComponent's own docstring namespace
     // does not exist.
@@ -111,12 +111,16 @@ void addBoundaryComponent4(pybind11::module_& m) {
     RDOC_SCOPE_END
 
     regina::python::addListView<
-        decltype(std::declval<BoundaryComponent<4>>().vertices())>(m);
+        decltype(std::declval<BoundaryComponent<4>>().vertices())>(internal,
+        "BoundaryComponent4_vertices");
     regina::python::addListView<
-        decltype(std::declval<BoundaryComponent<4>>().edges())>(m);
+        decltype(std::declval<BoundaryComponent<4>>().edges())>(internal,
+        "BoundaryComponent4_edges");
     regina::python::addListView<
-        decltype(std::declval<BoundaryComponent<4>>().triangles())>(m);
+        decltype(std::declval<BoundaryComponent<4>>().triangles())>(internal,
+        "BoundaryComponent4_triangles");
     regina::python::addListView<
-        decltype(std::declval<BoundaryComponent<4>>().tetrahedra())>(m);
+        decltype(std::declval<BoundaryComponent<4>>().tetrahedra())>(internal,
+        "BoundaryComponent4_tetrahedra");
 }
 

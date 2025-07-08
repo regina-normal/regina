@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "subcomplex/layeredsolidtorus.h"
 #include "subcomplex/satblocktypes.h"
 #include "triangulation/dim3.h"

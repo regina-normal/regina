@@ -30,10 +30,10 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/iostream.h"
-#include "../pybind11/operators.h"
-#include "../pybind11/stl.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/iostream.h>
+#include <pybind11/operators.h>
+#include <pybind11/stl.h>
 #include "maths/matrix.h"
 #include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
@@ -45,7 +45,7 @@ using regina::NormalSurface;
 using regina::Triangulation;
 using regina::python::wrapTableView;
 
-void addNormalSurface(pybind11::module_& m) {
+void addNormalSurface(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(NormalSurface)
 
     auto c = pybind11::class_<NormalSurface>(m, "NormalSurface", rdoc_scope)
@@ -175,17 +175,13 @@ void addNormalSurface(pybind11::module_& m) {
     RDOC_SCOPE_END
 
     // Global arrays:
-    m.attr("quadSeparating") = wrapTableView(m, regina::quadSeparating);
-    m.attr("quadMeeting") = wrapTableView(m, regina::quadMeeting);
-    m.attr("quadDefn") = wrapTableView(m, regina::quadDefn);
-    m.attr("quadPartner") = wrapTableView(m, regina::quadPartner);
-    m.attr("triDiscArcs") = wrapTableView(m, regina::triDiscArcs);
-    m.attr("quadDiscArcs") = wrapTableView(m, regina::quadDiscArcs);
-    m.attr("octDiscArcs") = wrapTableView(m, regina::octDiscArcs);
-
-    // Make sure that quadString is treated as a 1-D array of strings, not
-    // a 2-D array of chars.
-    regina::python::addTableView<char[6], 3>(m);
-    m.attr("quadString") = regina::TableView<char[6], 3>(regina::quadString);
+    m.attr("quadSeparating") = wrapTableView(internal, regina::quadSeparating);
+    m.attr("quadMeeting") = wrapTableView(internal, regina::quadMeeting);
+    m.attr("quadDefn") = wrapTableView(internal, regina::quadDefn);
+    m.attr("quadPartner") = wrapTableView(internal, regina::quadPartner);
+    m.attr("triDiscArcs") = wrapTableView(internal, regina::triDiscArcs);
+    m.attr("quadDiscArcs") = wrapTableView(internal, regina::quadDiscArcs);
+    m.attr("octDiscArcs") = wrapTableView(internal, regina::octDiscArcs);
+    m.attr("quadString") = wrapTableView(internal, regina::quadString);
 }
 

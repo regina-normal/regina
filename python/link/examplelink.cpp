@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "link/examplelink.h"
 #include "link/link.h"
 #include "../helpers.h"

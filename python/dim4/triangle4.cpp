@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "triangulation/dim4.h"
 #include "../helpers.h"
 #include "../helpers/tableview.h"
@@ -48,7 +48,7 @@ using regina::Face;
 using regina::FaceEmbedding;
 using regina::python::wrapTableView;
 
-void addTriangle4(pybind11::module_& m) {
+void addTriangle4(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
     RDOC_SCOPE_BASE_3(detail::FaceEmbeddingBase, alias::FaceNumber,
         alias::SimplexVoid)
@@ -121,8 +121,10 @@ void addTriangle4(pybind11::module_& m) {
         .def_readonly_static("subdimension", &Triangle<4>::subdimension)
     ;
 
-    c.attr("triangleNumber") = wrapTableView(m, Triangle<4>::triangleNumber);
-    c.attr("triangleVertex") = wrapTableView(m, Triangle<4>::triangleVertex);
+    c.attr("triangleNumber") = wrapTableView(internal,
+        Triangle<4>::triangleNumber);
+    c.attr("triangleVertex") = wrapTableView(internal,
+        Triangle<4>::triangleVertex);
 
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
@@ -130,7 +132,8 @@ void addTriangle4(pybind11::module_& m) {
     RDOC_SCOPE_END
 
     regina::python::addListView<
-        decltype(std::declval<Triangle<4>>().embeddings())>(m);
+        decltype(std::declval<Triangle<4>>().embeddings())>(internal,
+        "Face4_2_embeddings");
 
     m.attr("TriangleEmbedding4") = m.attr("FaceEmbedding4_2");
     m.attr("Triangle4") = m.attr("Face4_2");

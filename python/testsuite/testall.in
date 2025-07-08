@@ -14,6 +14,11 @@
 # corresponding *.out files.  Any mismatches are considered to be test
 # failures.
 #
+# If the output is expected to differ between pybind11 2.x.y (used with
+# Python 3.11 and earlier) vs pybind11 3.x.y (used with Python 3.12 and
+# later), there should instead be two output files: *.out.v2 and *.out.v3.
+# If *.out is present, this will take priority over *.out.v2 and/or *.out.v3.
+#
 # This script MUST be run from the python/testsuite directory in the
 # build tree.  It runs regina-python directly out of the build tree.
 # It does not require regina to be installed on the system (and indeed
@@ -53,6 +58,7 @@ set -e
 executable=../regina-python
 testdir='@BASH_CMAKE_SOURCE_DIR@/python/testsuite'
 testoutdir=`mktemp -d -t regina.XXX`
+pybind11_version='@REGINA_PYBIND11_VERSION@'
 
 echo "---------------------------------------"
 echo "Test suite for Regina's python bindings"
@@ -88,6 +94,9 @@ while IFS= read -r -d $'\0' i; do
 	found=1
 	testname=`basename "$i"`
 	expected="${i/.test/.out}"
+	if [ ! -e "$expected" ]; then
+		expected="$expected.v$pybind11_version"
+	fi
 	observed="$testoutdir/${testname/.test/.out}"
 	filter="$testdir/${testname/.test/.filter}"
 

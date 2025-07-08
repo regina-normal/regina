@@ -162,6 +162,17 @@ const char* versionSnapPy();
 const char* versionSnapPea();
 
 /**
+ * Returns the major version of pybind11 that is used with Regina's python
+ * bindings.  Currently this will return either 2 or 3 (according to whether
+ * you are building against Python ≤ 3.11 or Python ≥ 3.12 respectively).
+ *
+ * \nocpp
+ *
+ * \return the major pybind11 version.
+ */
+int versionPybind11Major();
+
+/**
  * Does this particular build of Regina support native 128-bit arithmetic?
  *
  * On those platforms that do support native 128-bit arithmetic, some

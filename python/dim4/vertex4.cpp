@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
@@ -46,7 +46,7 @@ using regina::VertexEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
 
-void addVertex4(pybind11::module_& m) {
+void addVertex4(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
     RDOC_SCOPE_BASE_3(detail::FaceEmbeddingBase, alias::FaceNumber,
         alias::SimplexVoid)
@@ -120,7 +120,8 @@ void addVertex4(pybind11::module_& m) {
     RDOC_SCOPE_END
 
     regina::python::addListView<
-        decltype(std::declval<Vertex<4>>().embeddings())>(m);
+        decltype(std::declval<Vertex<4>>().embeddings())>(internal,
+        "Face4_0_embeddings");
 
     m.attr("VertexEmbedding4") = m.attr("FaceEmbedding4_0");
     m.attr("Vertex4") = m.attr("Face4_0");

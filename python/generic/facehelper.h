@@ -33,7 +33,7 @@
 #ifndef __REGINA_PYTHON_FACEHELPER_H
 #define __REGINA_PYTHON_FACEHELPER_H
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "triangulation/generic.h"
 #include "../helpers.h"
 

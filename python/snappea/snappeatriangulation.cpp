@@ -30,14 +30,15 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/complex.h"
-#include "../pybind11/functional.h"
-#include "../pybind11/stl.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/complex.h>
+#include <pybind11/functional.h>
+#include <pybind11/stl.h>
 #include "link/link.h"
 #include "maths/matrix.h"
 #include "snappea/snappeatriangulation.h"
 #include "../helpers.h"
+#include "../helpers/exception.h"
 #include "../docstrings/snappea/snappeatriangulation.h"
 #include "../docstrings/triangulation/detail/triangulation.h" // for global_swap
 
@@ -46,15 +47,13 @@ using regina::Cusp;
 using regina::SnapPeaTriangulation;
 using regina::Triangulation;
 
-void addSnapPeaTriangulation(pybind11::module_& m) {
+void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN_MAIN
 
-    pybind11::register_exception<regina::SnapPeaFatalError>(m,
-        "SnapPeaFatalError", PyExc_RuntimeError)
-        .doc() = rdoc::SnapPeaFatalError;
-    pybind11::register_exception<regina::SnapPeaMemoryFull>(m,
-        "SnapPeaMemoryFull", PyExc_RuntimeError)
-        .doc() = rdoc::SnapPeaMemoryFull;
+    regina::python::registerReginaException<regina::SnapPeaFatalError>(m,
+        "SnapPeaFatalError", rdoc::SnapPeaFatalError);
+    regina::python::registerReginaException<regina::SnapPeaMemoryFull>(m,
+        "SnapPeaMemoryFull", rdoc::SnapPeaMemoryFull);
 
     RDOC_SCOPE_SWITCH(Cusp)
 
@@ -185,7 +184,8 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
     regina::python::add_packet_data(c2);
     regina::python::packet_eq_operators(c2, rdoc::__eq, rdoc::__ne);
 
-    regina::python::addListView<decltype(SnapPeaTriangulation().cusps())>(m);
+    regina::python::addListView<decltype(SnapPeaTriangulation().cusps())>(
+        internal, "SnapPea_cusps");
 
     auto wrap = regina::python::add_packet_wrapper<SnapPeaTriangulation>(
         m, "PacketOfSnapPeaTriangulation");

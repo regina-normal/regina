@@ -33,14 +33,14 @@
 namespace pybind11 { class module_; }
 
 void addExampleLink(pybind11::module_& m);
-void addLink(pybind11::module_& m);
-void addModelLinkGraph(pybind11::module_& m);
+void addLink(pybind11::module_& m, pybind11::module_& internal);
+void addModelLinkGraph(pybind11::module_& m, pybind11::module_& internal);
 void addTangle(pybind11::module_& m);
 
-void addLinkClasses(pybind11::module_& m) {
+void addLinkClasses(pybind11::module_& m, pybind11::module_& internal) {
     addExampleLink(m);
-    addLink(m);
-    addModelLinkGraph(m);
+    addLink(m, internal);
+    addModelLinkGraph(m, internal);
     addTangle(m);
 }
 

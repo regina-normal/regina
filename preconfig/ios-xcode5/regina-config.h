@@ -30,6 +30,9 @@
 /* Define if we are building the Python bindings. */
 /* #undef BUILD_PYTHON_BINDINGS */
 
+/* Indicates which major version of pybind11 we should build against. */
+/* #undef REGINA_PYBIND11_VERSION */
+
 /* Define if the Graphviz libraries are available. */
 #define LIBGVC_FOUND
 

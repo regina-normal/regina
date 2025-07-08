@@ -82,6 +82,16 @@ instance, version 2.3.1 would have minor version 3.
 Returns:
     the minor version number of this calculation engine.)doc";
 
+// Docstring regina::python::doc::versionPybind11Major
+static const char *versionPybind11Major =
+R"doc(Returns the major version of pybind11 that is used with Regina's
+python bindings. Currently this will return either 2 or 3 (according
+to whether you are building against Python ≤ 3.11 or Python ≥ 3.12
+respectively).
+
+Returns:
+    the major pybind11 version.)doc";
+
 // Docstring regina::python::doc::versionSnapPea
 static const char *versionSnapPea =
 R"doc(An alias for versionSnapPy(), which returns the version of SnapPy

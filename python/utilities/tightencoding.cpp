@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "maths/integer.h"
 #include "utilities/tightencoding.h"
 #include "../helpers/docstrings.h"

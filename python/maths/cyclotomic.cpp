@@ -30,10 +30,10 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/complex.h"
-#include "../pybind11/operators.h"
-#include "../pybind11/stl.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/complex.h>
+#include <pybind11/operators.h>
+#include <pybind11/stl.h>
 #include "maths/cyclotomic.h"
 #include "../helpers.h"
 #include "../docstrings/maths/cyclotomic.h"

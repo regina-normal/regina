@@ -32,13 +32,13 @@
 
 #include "face-bindings.h"
 
-void addFace6(pybind11::module_& m) {
-    addFace<6, 0>(m, "Face6_0", "FaceEmbedding6_0");
-    addFace<6, 1>(m, "Face6_1", "FaceEmbedding6_1");
-    addFace<6, 2>(m, "Face6_2", "FaceEmbedding6_2");
-    addFace<6, 3>(m, "Face6_3", "FaceEmbedding6_3");
-    addFace<6, 4>(m, "Face6_4", "FaceEmbedding6_4");
-    addFace<6, 5>(m, "Face6_5", "FaceEmbedding6_5");
+void addFace6(pybind11::module_& m, pybind11::module_& internal) {
+    addFace<6, 0>(m, internal, "Face6_0", "FaceEmbedding6_0");
+    addFace<6, 1>(m, internal, "Face6_1", "FaceEmbedding6_1");
+    addFace<6, 2>(m, internal, "Face6_2", "FaceEmbedding6_2");
+    addFace<6, 3>(m, internal, "Face6_3", "FaceEmbedding6_3");
+    addFace<6, 4>(m, internal, "Face6_4", "FaceEmbedding6_4");
+    addFace<6, 5>(m, internal, "Face6_5", "FaceEmbedding6_5");
 
     m.attr("VertexEmbedding6") = m.attr("FaceEmbedding6_0");
     m.attr("EdgeEmbedding6") = m.attr("FaceEmbedding6_1");

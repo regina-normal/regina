@@ -35,6 +35,8 @@ import re
 
 regex = re.compile("^<class 'regina\\.engine\\.(.+)'>$")
 
+import enum
+
 def classInfo(name, object):
     m = regex.match(str(object))
     if not m:
@@ -77,11 +79,18 @@ keys = sorted(regina.__dict__)
 for i in keys:
     object = regina.__dict__[i]
     if isinstance(object, type):
-        try:
-            tmp = object.__members__ # Exists for enums, not classes
-            enumInfo(i, object)
-        except AttributeError:
-            classInfo(i, object)
+        if versionPybind11Major() == 2:
+            try:
+                tmp = object.__members__ # Exists for enums, not classes
+                enumInfo(i, object)
+            except AttributeError:
+                classInfo(i, object)
+        else:
+            # pybind11v3 provides native Python enum types.
+            if object.__base__ in [ enum.Enum, enum.Flag ]:
+                enumInfo(i, object)
+            else:
+                classInfo(i, object)
     elif 'builtin_function_or_method' in str(object.__class__):
         functionInfo(i, object)
     else:

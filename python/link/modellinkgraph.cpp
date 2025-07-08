@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/functional.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/functional.h>
 #include "link/modellinkgraph.h"
 #include "../helpers.h"
 #include "../docstrings/link/modellinkgraph.h"
@@ -42,7 +42,7 @@ using regina::ModelLinkGraphArc;
 using regina::ModelLinkGraph;
 using regina::ModelLinkGraphCells;
 
-void addModelLinkGraph(pybind11::module_& m) {
+void addModelLinkGraph(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(ModelLinkGraphArc)
 
     auto a = pybind11::class_<ModelLinkGraphArc>(m, "ModelLinkGraphArc",
@@ -116,7 +116,8 @@ void addModelLinkGraph(pybind11::module_& m) {
 
     regina::python::add_global_swap<ModelLinkGraph>(m, rdoc::global_swap);
 
-    regina::python::addListView<decltype(ModelLinkGraph().nodes())>(m);
+    regina::python::addListView<decltype(ModelLinkGraph().nodes())>(internal,
+        "ModelLinkGraph_nodes");
 
     RDOC_SCOPE_SWITCH(ModelLinkGraphCells)
 
@@ -133,7 +134,8 @@ void addModelLinkGraph(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::addListView<decltype(ModelLinkGraph().cells().arcs(0))>(m);
+    regina::python::addListView<decltype(ModelLinkGraph().cells().arcs(0))>(
+        internal, "ModelLinkGraphCells_arcs");
 
     RDOC_SCOPE_END
 }

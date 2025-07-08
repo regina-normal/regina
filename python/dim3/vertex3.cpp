@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/stl.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
@@ -47,7 +47,7 @@ using regina::FaceEmbedding;
 using regina::Vertex;
 using regina::VertexEmbedding;
 
-void addVertex3(pybind11::module_& m) {
+void addVertex3(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
     RDOC_SCOPE_BASE_3(detail::FaceEmbeddingBase, alias::FaceNumber,
         alias::SimplexVoid)
@@ -138,7 +138,8 @@ being reserved for a different purpose in a future release.)doc")
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<
-        decltype(std::declval<Vertex<3>>().embeddings())>(m);
+        decltype(std::declval<Vertex<3>>().embeddings())>(internal,
+        "Face3_0_embeddings");
 
     RDOC_SCOPE_INNER_BEGIN(LinkType)
 

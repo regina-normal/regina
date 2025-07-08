@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "snappea/examplesnappea.h"
 #include "snappea/snappeatriangulation.h"
 #include "../helpers.h"

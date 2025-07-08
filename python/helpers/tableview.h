@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2023, Ben Burton                                   *
+ *  Copyright (c) 1999-2025, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,11 +39,27 @@
  */
 
 #include "../helpers.h"
-#include "../pybind11/stl.h"
+#include <pybind11/stl.h>
 #include "utilities/tableview.h"
 #include "../docstrings/utilities/tableview.h"
 
 namespace regina::python {
+
+/**
+ * A helper class used for building Python class names that wrap Regina's
+ * C++ TableView classes.  This is internal to addTableView().
+ */
+template <typename Element>
+inline constexpr const char* tableViewElementName = nullptr;
+
+template <>
+inline constexpr const char* tableViewElementName<int> = "int";
+
+template <>
+inline constexpr const char* tableViewElementName<std::string> = "str";
+
+template <>
+inline constexpr const char* tableViewElementName<regina::Perm<4>> = "Perm4";
 
 /**
  * Adds Python bindings for one of Regina's TableView classes, if this
@@ -53,9 +69,14 @@ namespace regina::python {
  * The element type and the table dimensions must be explicitly specified
  * in the template arguments for addTableView().
  *
- * The corresponding Python class will not be given a unique name;
- * instead all such types will be called \c TableView, and will be put into
- * their own unique namespaces to avoid clashes.
+ * The Python class corresponding to \a T will be given a name that is derived
+ * from the template variable `tableViewElementName<Element>`.  This means that
+ * `tableViewElementName<Element>` _must_ have a corresponding specialisation.
+ * Otherwise this routine will crash (since the default value of
+ * `tableViewElementName<Element>` is a null pointer).
+ *
+ * Note that the Python module that is passed to addTableView() should be
+ * the submodule `regina.internal`, not the main module `regina`.
  *
  * If this TableView class has already been wrapped in Python, then this
  * routine will do nothing (i.e., it is safe to call this routine
@@ -81,7 +102,7 @@ namespace regina::python {
  *   discussion on this issue you can see the addListView() documentation.
  */
 template <typename Element, int dim1, int... dim>
-void addTableView(pybind11::module_& m) {
+void addTableView(pybind11::module_& internal) {
     static constexpr pybind11::return_value_policy Policy =
         (std::is_pointer<Element>::value ?
             pybind11::return_value_policy::reference_internal :
@@ -90,20 +111,20 @@ void addTableView(pybind11::module_& m) {
     using T = regina::TableView<Element, dim1, dim...>;
 
     // Do not wrap T if this has been done already.
-    if (pybind11::detail::get_local_type_info(typeid(T)))
+    if (pybind11::detail::get_type_info(typeid(T)))
         return;
 
     // Wrap any subtables as necessary.
     if constexpr (T::dimension > 1)
-        addTableView<Element, dim...>(m);
+        addTableView<Element, dim...>(internal);
 
     RDOC_SCOPE_BEGIN(TableView)
 
-    // Instead of naming these classes uniquely, just call them all TableView
-    // and make them all local to their own unique Python namespaces.
-    // End users should not be constructing them anyway.
-    auto c = pybind11::class_<T>(pybind11::handle(), "TableView",
-            pybind11::module_local(), rdoc_scope)
+    std::string prefix = std::string("TableView_") +
+        tableViewElementName<Element> + "_" + std::to_string(dim1);
+    auto c = pybind11::class_<T>(internal,
+            (prefix + ... + ("_" + std::to_string(dim))).c_str(),
+            rdoc_scope)
         .def(pybind11::init<const T&>(), rdoc::__copy)
         .def("size", &T::size, rdoc::size)
         .def("__len__", [](const T& view) {
@@ -146,7 +167,7 @@ void addTableView(pybind11::module_& m) {
             out << ' ';
         }
         out << ']';
-    });
+    }, "<internal>.TableView");
     regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
     RDOC_SCOPE_END
@@ -170,11 +191,14 @@ void addTableView(pybind11::module_& m) {
  * The default return value policies supplied by addTableView() will be used,
  * and it is not possible to override them here.  See addTableView() for
  * further details.
+ *
+ * Note that the Python module that is passed to addTableView() should be
+ * the submodule `regina.internal`, not the main module `regina`.
  */
 template <typename Element, int dim1>
-regina::TableView<Element, dim1> wrapTableView(pybind11::module_& m,
+regina::TableView<Element, dim1> wrapTableView(pybind11::module_& internal,
         const Element (&array)[dim1]) {
-    addTableView<Element, dim1>(m);
+    addTableView<Element, dim1>(internal);
     // Remember: TableView is lightweight and cheap to pass by value.
     return regina::TableView(array);
 }
@@ -199,11 +223,14 @@ regina::TableView<Element, dim1> wrapTableView(pybind11::module_& m,
  * The default return value policies supplied by addTableView() will be used,
  * and it is not possible to override them here.  See addTableView() for
  * further details.
+ *
+ * Note that the Python module that is passed to addTableView() should be
+ * the submodule `regina.internal`, not the main module `regina`.
  */
 template <typename Element, int dim1, int dim2>
-regina::TableView<Element, dim1, dim2> wrapTableView(pybind11::module_& m,
-        const Element (&array)[dim1][dim2]) {
-    addTableView<Element, dim1, dim2>(m);
+regina::TableView<Element, dim1, dim2> wrapTableView(
+        pybind11::module_& internal, const Element (&array)[dim1][dim2]) {
+    addTableView<Element, dim1, dim2>(internal);
     // Remember: TableView is lightweight and cheap to pass by value.
     return regina::TableView(array);
 }
@@ -228,11 +255,14 @@ regina::TableView<Element, dim1, dim2> wrapTableView(pybind11::module_& m,
  * The default return value policies supplied by addTableView() will be used,
  * and it is not possible to override them here.  See addTableView() for
  * further details.
+ *
+ * Note that the Python module that is passed to addTableView() should be
+ * the submodule `regina.internal`, not the main module `regina`.
  */
 template <typename Element, int dim1, int dim2, int dim3>
-regina::TableView<Element, dim1, dim2, dim3> wrapTableView(pybind11::module_& m,
-        const Element (&array)[dim1][dim2][dim3]) {
-    addTableView<Element, dim1, dim2, dim3>(m);
+regina::TableView<Element, dim1, dim2, dim3> wrapTableView(
+        pybind11::module_& internal, const Element (&array)[dim1][dim2][dim3]) {
+    addTableView<Element, dim1, dim2, dim3>(internal);
     // Remember: TableView is lightweight and cheap to pass by value.
     return regina::TableView(array);
 }

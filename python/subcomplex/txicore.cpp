@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "subcomplex/txicore.h"
 #include "../helpers.h"
 #include "../docstrings/subcomplex/txicore.h"

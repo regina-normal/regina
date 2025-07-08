@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "triangulation/dim4.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
@@ -46,7 +46,7 @@ using regina::TetrahedronEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
 
-void addTetrahedron4(pybind11::module_& m) {
+void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
     RDOC_SCOPE_BASE_3(detail::FaceEmbeddingBase, alias::FaceNumber,
         alias::SimplexVoid)
@@ -133,7 +133,8 @@ void addTetrahedron4(pybind11::module_& m) {
     RDOC_SCOPE_END
 
     regina::python::addListView<
-        decltype(std::declval<Tetrahedron<4>>().embeddings())>(m);
+        decltype(std::declval<Tetrahedron<4>>().embeddings())>(internal,
+        "Face4_3_embeddings");
 
     m.attr("TetrahedronEmbedding4") = m.attr("FaceEmbedding4_3");
     m.attr("Tetrahedron4") = m.attr("Face4_3");

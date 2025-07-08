@@ -34,7 +34,7 @@ namespace pybind11 { class module_; }
 
 void addDisc(pybind11::module_& m);
 void addDiscType(pybind11::module_& m);
-void addNormalSurface(pybind11::module_& m);
+void addNormalSurface(pybind11::module_& m, pybind11::module_& internal);
 void addNormalSurfaces(pybind11::module_& m);
 void addNormalCoords(pybind11::module_& m);
 void addNormalFlags(pybind11::module_& m);
@@ -42,7 +42,7 @@ void addPrism(pybind11::module_& m);
 void addSurfaceFilter(pybind11::module_& m);
 void addSurfaceFilterType(pybind11::module_& m);
 
-void addSurfaceClasses(pybind11::module_& m) {
+void addSurfaceClasses(pybind11::module_& m, pybind11::module_& internal) {
     // Enum types must go first.
     addNormalCoords(m);
     addSurfaceFilterType(m);
@@ -50,7 +50,7 @@ void addSurfaceClasses(pybind11::module_& m) {
     addNormalFlags(m);
     addDisc(m);
     addDiscType(m);
-    addNormalSurface(m);
+    addNormalSurface(m, internal);
     addNormalSurfaces(m);
     addPrism(m);
     addSurfaceFilter(m);

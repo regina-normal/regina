@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "regina-config.h" // for REGINA_PYBIND11_VERSION
 #include "pybind11/pybind11.h"
 
 #include "regina-config.h"
@@ -149,24 +150,24 @@ about this omission.)doc";
 void addAlgebraClasses(pybind11::module_& m);
 void addAngleClasses(pybind11::module_& m);
 void addCensusClasses(pybind11::module_& m);
-void addDim2Classes(pybind11::module_& m);
-void addDim4Classes(pybind11::module_& m);
+void addDim2Classes(pybind11::module_& m, pybind11::module_& internal);
+void addDim4Classes(pybind11::module_& m, pybind11::module_& internal);
 void addEnumerateClasses(pybind11::module_& m);
 void addFileClasses(pybind11::module_& m);
 void addForeignClasses(pybind11::module_& m);
-void addGenericClasses(pybind11::module_& m);
+void addGenericClasses(pybind11::module_& m, pybind11::module_& internal);
 void addHypersurfaceClasses(pybind11::module_& m);
-void addLinkClasses(pybind11::module_& m);
+void addLinkClasses(pybind11::module_& m, pybind11::module_& internal);
 void addManifoldClasses(pybind11::module_& m);
 void addMathsClasses(pybind11::module_& m);
 void addPacketClasses(pybind11::module_& m);
 void addProgressClasses(pybind11::module_& m);
-void addSnapPeaClasses(pybind11::module_& m);
+void addSnapPeaClasses(pybind11::module_& m, pybind11::module_& internal);
 void addSplitClasses(pybind11::module_& m);
 void addSubcomplexClasses(pybind11::module_& m);
-void addSurfaceClasses(pybind11::module_& m);
+void addSurfaceClasses(pybind11::module_& m, pybind11::module_& internal);
 void addTreewidthClasses(pybind11::module_& m);
-void addTriangulationClasses(pybind11::module_& m);
+void addTriangulationClasses(pybind11::module_& m, pybind11::module_& internal);
 void addUtilitiesClasses(pybind11::module_& m);
 
 void addSageHacks();
@@ -184,14 +185,35 @@ namespace {
 // regina/engine.so, which is loaded at runtime from regina/__init__.py.
 // All of regina's classes live in the module regina.engine, and are
 // automatically imported into the module regina by regina/__init__.py.
+#if REGINA_PYBIND11_VERSION == 3
+PYBIND11_MODULE(engine, m,
+        pybind11::multiple_interpreters::per_interpreter_gil()) {
+#elif REGINA_PYBIND11_VERSION == 2
 PYBIND11_MODULE(engine, m) {
+#else
+    #error "Unsupported pybind11 version"
+#endif
 #else
 // This is a special case where the C++ module is linked into Regina's main
 // executable at compile time (specifically, this happens on iOS).
 // Nothing is loaded at runtime from the filesystem; there is no __init__.py,
 // and all of Regina's classes live directly in the module regina.
+#if REGINA_PYBIND11_VERSION == 3
+PYBIND11_MODULE(regina, m
+        pybind11::multiple_interpreters::per_interpreter_gil()) {
+#elif REGINA_PYBIND11_VERSION == 2
 PYBIND11_MODULE(regina, m) {
+#else
+#error "Unsupported pybind11 version"
 #endif
+#endif
+
+    auto internal = m.def_submodule("internal",
+R"doc(Implementation details for Regina.
+
+End users should not need to explicitly refer to any of the classes
+or functions within the submodule regina.internal.)doc");
+
     // Welcome string:
 
     m.def("welcome", welcome,
@@ -226,6 +248,9 @@ a new Python session.)doc");
     m.def("versionUsesUTF8", regina::versionUsesUTF8, rdoc::versionUsesUTF8);
     m.def("versionSnapPy", regina::versionSnapPy, rdoc::versionSnapPy);
     m.def("versionSnapPea", regina::versionSnapPea, rdoc::versionSnapPea);
+    m.def("versionPybind11Major", []() {
+        return REGINA_PYBIND11_VERSION;
+    }, rdoc::versionPybind11Major);
     m.def("hasInt128", regina::hasInt128, rdoc::hasInt128);
     m.def("politeThreads", regina::politeThreads, rdoc::politeThreads);
     m.def("testEngine", regina::testEngine, rdoc::testEngine);
@@ -308,21 +333,21 @@ Returns:
     addProgressClasses(m);
     addAlgebraClasses(m);
     addPacketClasses(m);
-    addDim2Classes(m);
-    addTriangulationClasses(m);
-    addDim4Classes(m);
-    addGenericClasses(m);
+    addDim2Classes(m, internal);
+    addTriangulationClasses(m, internal);
+    addDim4Classes(m, internal);
+    addGenericClasses(m, internal);
     addCensusClasses(m);
     addForeignClasses(m);
     addSplitClasses(m);
-    addSnapPeaClasses(m);
+    addSnapPeaClasses(m, internal);
     addSubcomplexClasses(m);
     addManifoldClasses(m);
     addAngleClasses(m);
-    addSurfaceClasses(m);
+    addSurfaceClasses(m, internal);
     addHypersurfaceClasses(m);
     addTreewidthClasses(m);
-    addLinkClasses(m);
+    addLinkClasses(m, internal);
     addEnumerateClasses(m);
 
     // This routine allows the user to import sage-related hacks, which

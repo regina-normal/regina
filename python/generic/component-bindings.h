@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/stl.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include "triangulation/generic.h"
 #include "../helpers.h"
 #include "../docstrings/triangulation/generic/component.h"
@@ -40,7 +40,8 @@
 using regina::Component;
 
 template <int dim>
-void addComponent(pybind11::module_& m, const char* name) {
+void addComponent(pybind11::module_& m, pybind11::module_& internal,
+        const char* name) {
     // We use the global scope here because all of Component's members are
     // inherited, and so Component's own docstring namespace does not exist.
     RDOC_SCOPE_BEGIN_MAIN
@@ -71,9 +72,11 @@ void addComponent(pybind11::module_& m, const char* name) {
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<
-        decltype(std::declval<Component<dim>>().simplices())>(m);
+        decltype(std::declval<Component<dim>>().simplices())>(internal,
+        (std::string(name) + "_simplices").c_str());
     regina::python::addListView<
-        decltype(std::declval<Component<dim>>().boundaryComponents())>(m);
+        decltype(std::declval<Component<dim>>().boundaryComponents())>(internal,
+        (std::string(name) + "_boundaryComponents").c_str());
 
     RDOC_SCOPE_END
 }

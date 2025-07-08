@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 #include "../helpers/tableview.h"
@@ -48,7 +48,7 @@ using regina::Face;
 using regina::FaceEmbedding;
 using regina::python::wrapTableView;
 
-void addEdge3(pybind11::module_& m) {
+void addEdge3(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
     RDOC_SCOPE_BASE_3(detail::FaceEmbeddingBase, alias::FaceNumber,
         alias::SimplexVoid)
@@ -148,8 +148,8 @@ edges (e.g., as returned by Triangulation3.maximalForestInBoundary()).
 The precise hash function that is used is subject to change in future
 versions of Regina.)doc")
     ;
-    c.attr("edgeNumber") = wrapTableView(m, Edge<3>::edgeNumber);
-    c.attr("edgeVertex") = wrapTableView(m, Edge<3>::edgeVertex);
+    c.attr("edgeNumber") = wrapTableView(internal, Edge<3>::edgeNumber);
+    c.attr("edgeVertex") = wrapTableView(internal, Edge<3>::edgeVertex);
 
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
@@ -157,7 +157,8 @@ versions of Regina.)doc")
     RDOC_SCOPE_END
 
     regina::python::addListView<
-        decltype(std::declval<Edge<3>>().embeddings())>(m);
+        decltype(std::declval<Edge<3>>().embeddings())>(internal,
+        "Face3_1_embeddings");
 
     m.attr("EdgeEmbedding3") = m.attr("FaceEmbedding3_1");
     m.attr("Edge3") = m.attr("Face3_1");

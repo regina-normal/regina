@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #include <iomanip>
-#include "../pybind11/pybind11.h"
-#include "../pybind11/operators.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/operators.h>
 #include "hypersurface/hypercoords.h"
 #include "../helpers.h"
 #include "../docstrings/hypersurface/hypercoords.h"

@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/functional.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/functional.h>
 #include "maths/permgroup.h"
 #include "../helpers.h"
 #include "../docstrings/maths/permgroup.h"

@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/stl.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include "triangulation/generic.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
@@ -42,7 +42,8 @@ using regina::BoundaryComponent;
 using regina::python::invalidFaceDimension;
 
 template <int dim>
-void addBoundaryComponent(pybind11::module_& m, const char* name) {
+void addBoundaryComponent(pybind11::module_& m, pybind11::module_& internal,
+        const char* name) {
     // In higher dimensions:
     // - we do not store lower-dimensional faces;
     // - we do not recognise ideal or invalid vertices;
@@ -126,6 +127,7 @@ void addBoundaryComponent(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 
     regina::python::addListView<
-        decltype(std::declval<BoundaryComponent<dim>>().facets())>(m);
+        decltype(std::declval<BoundaryComponent<dim>>().facets())>(internal,
+        (std::string(name) + "_facets").c_str());
 }
 

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "foreign/dehydration.h"
 #include "packet/container.h"
 #include "../helpers.h"

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2023, Ben Burton                                   *
+ *  Copyright (c) 1999-2025, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,7 +40,7 @@
 #include <iomanip>
 #include <sstream>
 #include "../helpers.h"
-#include "../pybind11/operators.h"
+#include <pybind11/operators.h>
 #include "utilities/flags.h"
 #include "../helpers/docstrings.h"
 #include "../docstrings/utilities/flags.h"

@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/stl.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include "manifold/sfsalt.h"
 #include "../helpers.h"
 #include "../docstrings/manifold/sfsalt.h"

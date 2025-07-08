@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/functional.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/functional.h>
 #include "enumerate/treetraversal-impl.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"

@@ -1,14 +1,19 @@
 #!/bin/sh
 set -e
 
-# This filter adjusts the names of pybind11 local moduiles so that
+# This filter adjusts the names of pybind11 local modules so that
 # they are independent of the C++ compiler that was used.
 #
 # It also makes tweaks to account for differences in help() output between
-# Python 3.6 vs 3.8 and above (I'm not sure which way Python 3.7 goes).
+# Python 3.6 vs 3.8 and above (I'm not sure which way Python 3.7 goes),
+# to account for the different ways that trailing whitespace is handled in
+# Python <= 3.11 vs >= 3.12, and to account for the differerent ways that
+# the pybind11_object constructor is handled in Python <= 3.11 vs >= 3.12.
 #
 # Note that BSD sed does not support \+, which is why we use \{1,\} instead.
 # BSD sed also seems to have issues with \s and \S, so we avoid them too.
 
-sed -e 's#\( \)__pybind11_module_local_\([a-zA-Z0-9_-]\{1,\}\) = <capsule.*\.\.\.#\1__pybind11_module_local__ = ...#' \
-    -e 's#\( \)Methods\( inherited from pybind11_object:\)$#\1Static methods\2#'
+sed -e 's#\( \)__pybind11_module_local_\([a-zA-Z0-9_-]\{1,\}\) = .*\.\.\.#\1__pybind11_module_local__ = ...#' \
+    -e 's#\( \)Methods\( inherited from pybind11_builtins\.pybind11_object:\)$#\1Static methods\2#' \
+    -e 's# \{1,\}$##' \
+    -e 's# class method of pybind11_builtins\.pybind11_object# from pybind11_builtins\.pybind11_type#'

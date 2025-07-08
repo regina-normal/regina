@@ -32,15 +32,15 @@
 
 #include "face-bindings.h"
 
-void addFace8(pybind11::module_& m) {
-    addFace<8, 0>(m, "Face8_0", "FaceEmbedding8_0");
-    addFace<8, 1>(m, "Face8_1", "FaceEmbedding8_1");
-    addFace<8, 2>(m, "Face8_2", "FaceEmbedding8_2");
-    addFace<8, 3>(m, "Face8_3", "FaceEmbedding8_3");
-    addFace<8, 4>(m, "Face8_4", "FaceEmbedding8_4");
-    addFace<8, 5>(m, "Face8_5", "FaceEmbedding8_5");
-    addFace<8, 6>(m, "Face8_6", "FaceEmbedding8_6");
-    addFace<8, 7>(m, "Face8_7", "FaceEmbedding8_7");
+void addFace8(pybind11::module_& m, pybind11::module_& internal) {
+    addFace<8, 0>(m, internal, "Face8_0", "FaceEmbedding8_0");
+    addFace<8, 1>(m, internal, "Face8_1", "FaceEmbedding8_1");
+    addFace<8, 2>(m, internal, "Face8_2", "FaceEmbedding8_2");
+    addFace<8, 3>(m, internal, "Face8_3", "FaceEmbedding8_3");
+    addFace<8, 4>(m, internal, "Face8_4", "FaceEmbedding8_4");
+    addFace<8, 5>(m, internal, "Face8_5", "FaceEmbedding8_5");
+    addFace<8, 6>(m, internal, "Face8_6", "FaceEmbedding8_6");
+    addFace<8, 7>(m, internal, "Face8_7", "FaceEmbedding8_7");
 
     m.attr("VertexEmbedding8") = m.attr("FaceEmbedding8_0");
     m.attr("EdgeEmbedding8") = m.attr("FaceEmbedding8_1");

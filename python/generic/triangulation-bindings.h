@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/functional.h"
-#include "../pybind11/stl.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/functional.h>
+#include <pybind11/stl.h>
 #include "../helpers.h"
 #include "triangulation/facetpairing.h"
 #include "triangulation/generic.h"
@@ -52,7 +52,8 @@ using regina::MatrixInt;
 using regina::Triangulation;
 
 template <int dim>
-void addTriangulation(pybind11::module_& m, const char* name) {
+void addTriangulation(pybind11::module_& m, pybind11::module_& internal,
+        const char* name) {
     RDOC_SCOPE_BEGIN(Triangulation)
     RDOC_SCOPE_BASE_2(detail::TriangulationBase, Snapshottable)
 
@@ -288,9 +289,11 @@ void addTriangulation(pybind11::module_& m, const char* name) {
 
     // The ListView classes for faces() are wrapped in face-bindings.h,
     // since this needs to be done for each subdimension.
-    regina::python::addListView<decltype(Triangulation<dim>().components())>(m);
+    regina::python::addListView<decltype(Triangulation<dim>().components())>(
+        internal, (std::string(name) + "_components").c_str());
     regina::python::addListView<
-        decltype(Triangulation<dim>().boundaryComponents())>(m);
+        decltype(Triangulation<dim>().boundaryComponents())>(internal,
+        (std::string(name) + "_boundaryComponents").c_str());
 
     auto wrap = regina::python::add_packet_wrapper<Triangulation<dim>>(
         m, (std::string("PacketOf") + name).c_str());

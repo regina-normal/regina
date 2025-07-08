@@ -15,7 +15,8 @@
 # the current directory; however, unlike testall it skips those tests
 # whose names are in a hard-coded blacklist.  Similar to testall, this
 # script runs each test through the basic embedded Python interpreter and
-# compares the results byte-by-byte with the corresponding *.out files.
+# compares the results byte-by-byte with the corresponding *.out files
+# (or, if the output differs between pybind11 versions, *.out.v2 and *.out.v3).
 # Any mismatches or timeouts are considered to be test failures.
 #
 # This script MUST be run from the python/testsuite directory in the
@@ -56,6 +57,7 @@ set -e
 executable=./basic
 testdir='@BASH_CMAKE_SOURCE_DIR@/python/testsuite'
 testoutdir=`mktemp -d -t regina.XXX`
+pybind11_version='@REGINA_PYBIND11_VERSION@'
 
 # REGINA_HOME can be deduced from the executable path, but on Windows this
 # deduction gives the wrong style of path (windows vs unix style) for use
@@ -64,6 +66,11 @@ export REGINA_HOME=../../engine
 
 # Cases that expect the python/testsuite directory as an argument:
 blacklist="file i18n memory1 orb pdf repr"
+
+# The following cases implicitly import the threading module, which leads to a
+# harmless but noisy ignored exception upon shutdown under python 3.12 and
+# above.  See: https://github.com/pybind/pybind11/issues/2197
+blacklist="$blacklist docstrings"
 
 echo "----------------------------------------------------------------"
 echo "Test suite for python bindings with a basic embedded interpreter"
@@ -157,6 +164,9 @@ while IFS= read -r -d $'\0' i; do
 	found=1
 	testname=`basename "$i"`
 	expected="${i/.test/.out}"
+	if [ ! -e "$expected" ]; then
+		expected="$expected.v$pybind11_version"
+	fi
 	observed="$testoutdir/${testname/.test/.out}"
 	filter="$testdir/${testname/.test/.filter}"
 

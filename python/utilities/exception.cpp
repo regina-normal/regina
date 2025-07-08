@@ -30,11 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "snappea/snappeatriangulation.h"
 #include "utilities/exception.h"
 #include "utilities/snapshot.h"
 #include "../helpers.h"
+#include "../helpers/exception.h"
 #include "../docstrings/utilities/exception.h"
 #include "../docstrings/utilities/snapshot.h"
 
@@ -47,41 +48,30 @@ void addException(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN_MAIN
 
     // Derived from ReginaException:
-    pybind11::register_exception<regina::ReginaException>(m,
-        "ReginaException", PyExc_RuntimeError)
-        .doc() = rdoc::ReginaException;
-    pybind11::register_exception<regina::FailedPrecondition>(m,
-        "FailedPrecondition", PyExc_RuntimeError)
-        .doc() = rdoc::FailedPrecondition;
-    pybind11::register_exception<regina::InvalidArgument>(m,
-        "InvalidArgument", PyExc_RuntimeError)
-        .doc() = rdoc::InvalidArgument;
-    pybind11::register_exception<regina::InvalidInput>(m,
-        "InvalidInput", PyExc_RuntimeError)
-        .doc() = rdoc::InvalidInput;
-    pybind11::register_exception<regina::NotImplemented>(m,
-        "NotImplemented", PyExc_RuntimeError)
-        .doc() = rdoc::NotImplemented;
-    pybind11::register_exception<regina::FileError>(m,
-        "FileError", PyExc_RuntimeError)
-        .doc() = rdoc::FileError;
-    pybind11::register_exception<regina::NoSolution>(m,
-        "NoSolution", PyExc_RuntimeError)
-        .doc() = rdoc::NoSolution;
-    pybind11::register_exception<regina::UnsolvedCase>(m,
-        "UnsolvedCase", PyExc_RuntimeError)
-        .doc() = rdoc::UnsolvedCase;
-    pybind11::register_exception<regina::SnapPeaUnsolvedCase>(m,
-        "SnapPeaUnsolvedCase", PyExc_RuntimeError)
-        .doc() = rdoc::SnapPeaUnsolvedCase;
-    pybind11::register_exception<regina::SnapPeaIsNull>(m,
-        "SnapPeaIsNull", PyExc_RuntimeError)
-        .doc() = rdoc::SnapPeaIsNull;
+    regina::python::registerReginaException<regina::ReginaException>(m,
+        "ReginaException", rdoc::ReginaException);
+    regina::python::registerReginaException<regina::FailedPrecondition>(m,
+        "FailedPrecondition", rdoc::FailedPrecondition);
+    regina::python::registerReginaException<regina::InvalidArgument>(m,
+        "InvalidArgument", rdoc::InvalidArgument);
+    regina::python::registerReginaException<regina::InvalidInput>(m,
+        "InvalidInput", rdoc::InvalidInput);
+    regina::python::registerReginaException<regina::NotImplemented>(m,
+        "NotImplemented", rdoc::NotImplemented);
+    regina::python::registerReginaException<regina::FileError>(m,
+        "FileError", rdoc::FileError);
+    regina::python::registerReginaException<regina::NoSolution>(m,
+        "NoSolution", rdoc::NoSolution);
+    regina::python::registerReginaException<regina::UnsolvedCase>(m,
+        "UnsolvedCase", rdoc::UnsolvedCase);
+    regina::python::registerReginaException<regina::SnapPeaUnsolvedCase>(m,
+        "SnapPeaUnsolvedCase", rdoc::SnapPeaUnsolvedCase);
+    regina::python::registerReginaException<regina::SnapPeaIsNull>(m,
+        "SnapPeaIsNull", rdoc::SnapPeaIsNull);
 
     // Snapshotting machinery:
-    pybind11::register_exception<regina::SnapshotWriteError>(m,
-        "SnapshotWriteError", PyExc_RuntimeError)
-        .doc() = rdoc::SnapshotWriteError;
+    regina::python::registerReginaException<regina::SnapshotWriteError>(m,
+        "SnapshotWriteError", rdoc::SnapshotWriteError);
 
     RDOC_SCOPE_END
 }

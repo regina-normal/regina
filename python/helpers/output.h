@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2023, Ben Burton                                   *
+ *  Copyright (c) 1999-2025, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -82,6 +82,8 @@ enum ReprStyle {
 
 /**
  * Adds rich string output functions to the python bindings for a C++ class.
+ * The corresponding Python class should belong to the main `regina` module
+ * (not `regina.interal`).
  *
  * This will add str(), utf8() and detail() to the python class, as provided by
  * the regina::Output (templated) C++ base class.  It will also add \a __str__
@@ -140,6 +142,8 @@ void add_output(pybind11::class_<C, options...>& c,
 
 /**
  * Adds basic string output functions to the python bindings for a C++ class.
+ * The corresponding Python class should belong to the main `regina` module
+ * (not `regina.interal`).
  *
  * This will add a str() function to the python class, and will also add
  * \a __str__ as an alias for this function to provide "native" Python string
@@ -188,6 +192,8 @@ void add_output_basic(pybind11::class_<C, options...>& c,
 
 /**
  * Adds output stream functionality to the python bindings for a C++ class.
+ * The corresponding Python class should belong to the main `regina` module
+ * (not `regina.interal`).
  *
  * This will add a function \a __str__ to the python class to provide "native"
  * Python string output.  The implementation just writes the underlying C++
@@ -237,6 +243,8 @@ void add_output_ostream(pybind11::class_<C, options...>& c,
 
 /**
  * Adds custom string output functions to the python bindings for a C++ class.
+ * The corresponding Python class should belong to the main `regina` module
+ * (not `regina.interal`).
  *
  * This will add a function \a __str__ to the python class to provide "native"
  * Python string output.  The implementation will call \a outputFunction,
@@ -268,6 +276,47 @@ void add_output_custom(pybind11::class_<C, options...>& c,
         s << "<regina."
             << pybind11::str(pybind11::type::handle_of<C>().attr(
                 "__qualname__")).cast<std::string_view>() << ": ";
+        outputFunction(c, s);
+        s << '>';
+        return s.str();
+    });
+}
+
+/**
+ * Adds custom string output functions to the python bindings for a C++ class,
+ * using the given "fake" class name in the python \a __repr__ function.
+ * This is useful for internal classes (such as ListView and TableView classes)
+ * whose corresponding python class names are both unwieldy and unimportant.
+ *
+ * This will add a function \a __str__ to the python class to provide "native"
+ * Python string output.  The implementation will call \a outputFunction,
+ * which must be a callable object (typically a lambda) that can be called
+ * with arguments of the form `outputFunction(const C&, std::ostream&)`.
+ *
+ * This will also add a \a __repr__ function.  There is no choice of output
+ * style: if you use add_output_custom() then the output style will always be
+ * ReprStyle::Detailed.  The argument className will be used instead of the
+ * typical `regina.className`.
+ *
+ * To use this for some C++ class \a T in Regina, simply call
+ * `regina::python::add_output_custom(c, style)`, where \a c is the
+ * pybind11::class_ object that wraps \a T.
+ */
+template <class C, typename Function, typename... options>
+void add_output_custom(pybind11::class_<C, options...>& c,
+        Function&& outputFunction, const char* className) {
+    // We make local copies of outputFunction, since this may have been
+    // passed as a temporary.
+
+    c.def("__str__", [outputFunction](const C& x) {
+        std::ostringstream s;
+        outputFunction(x, s);
+        return s.str();
+    });
+
+    c.def("__repr__", [outputFunction, className](const C& c) {
+        std::ostringstream s;
+        s << '<' << className << ": ";
         outputFunction(c, s);
         s << '>';
         return s.str();

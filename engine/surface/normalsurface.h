@@ -150,9 +150,13 @@ inline constexpr int quadPartner[3][4] = {
  * is of the form `02/13`, which in this case is the quadrilateral type
  * that splits vertices 0,2 from vertices 1,3.
  *
+ * For Regina 7.3.1 only this is merely `inline const`, since C++17 does
+ * not support constexpr strings.  In Regina 7.4 (which moves to C++20),
+ * this array will again be `constexpr`.
+ *
  * \ingroup surfaces
  */
-inline constexpr char quadString[3][6] = { "01/23", "02/13", "03/12" };
+inline const std::string quadString[3] = { "01/23", "02/13", "03/12" };
 
 /**
  * Lists in consecutive order the directed normal arcs that form the

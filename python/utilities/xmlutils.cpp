@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "utilities/xmlutils.h"
 #include "../helpers/docstrings.h"
 #include "../docstrings/utilities/xmlutils.h"

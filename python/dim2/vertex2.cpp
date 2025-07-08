@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
+#include <pybind11/pybind11.h>
 #include "triangulation/dim2.h"
 #include "../helpers.h"
 #include "../docstrings/triangulation/alias/face.h"
@@ -45,7 +45,7 @@ using regina::VertexEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
 
-void addVertex2(pybind11::module_& m) {
+void addVertex2(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
     RDOC_SCOPE_BASE_3(detail::FaceEmbeddingBase, alias::FaceNumber,
         alias::SimplexVoid)
@@ -111,7 +111,8 @@ void addVertex2(pybind11::module_& m) {
     RDOC_SCOPE_END
 
     regina::python::addListView<
-        decltype(std::declval<Vertex<2>>().embeddings())>(m);
+        decltype(std::declval<Vertex<2>>().embeddings())>(internal,
+        "Face2_0_embeddings");
 
     m.attr("VertexEmbedding2") = m.attr("FaceEmbedding2_0");
     m.attr("Vertex2") = m.attr("Face2_0");
