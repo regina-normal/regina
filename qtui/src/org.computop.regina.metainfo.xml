@@ -62,6 +62,13 @@
   </provides>
 
   <releases>
+    <release version="7.3.1" date="2025-07-11">
+      <description>
+        <p>
+          Fixes some important bugs, and adds support for Python 3.12 and later.
+        </p>
+      </description>
+    </release>
     <release version="7.3" date="2023-03-18">
       <description>
         <p>
