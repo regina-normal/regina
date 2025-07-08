@@ -1365,7 +1365,7 @@ separates the integers does not matter.
 
 .. warning::
     In general, Dowker-Thistlethwaite notation does not contain enough
-    information to uniquely reconstruct a classical knot.i For prime
+    information to uniquely reconstruct a classical knot. For prime
     knots, both a knot and its reflection can be described by the same
     notation; for composite knots, the same notation can describe
     knots that are topologically inequivalent, even when allowing for
