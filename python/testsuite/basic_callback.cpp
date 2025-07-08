@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
         s.executeLine("def sortInc(a, b):");
         s.executeLine("    return a.str() < b.str()");
         s.executeLine("");
-        s.executeLine("s = NormalSurfaces(Example3.poincare(), NormalCoords.Standard)");
+        s.executeLine("s = NormalSurfaces(Example3.poincare(), NS_STANDARD)");
         s.executeLine("print(s.detail())");
         s.executeLine("s.sort(sortInc)");
         s.executeLine("print(s.detail())");
@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) {
         s.executeLine("def sortInc(a, b):");
         s.executeLine("    return a.str() < b.str()");
         s.executeLine("");
-        s.executeLine("s = NormalSurfaces(Example3.poincare(), NormalCoords.Standard)");
+        s.executeLine("s = NormalSurfaces(Example3.poincare(), NS_STANDARD)");
         s.executeLine("print(s.detail())");
         s.executeLine("s.sort(sortInc)");
         s.executeLine("print(s.detail())");
@@ -109,13 +109,13 @@ int main(int argc, char* argv[]) {
         s1.executeLine("def sortInc(a, b):");
         s1.executeLine("    return a.str() < b.str()");
         s1.executeLine("");
-        s1.executeLine("s = NormalSurfaces(Example3.poincare(), NormalCoords.Standard)");
+        s1.executeLine("s = NormalSurfaces(Example3.poincare(), NS_STANDARD)");
 
 
         s2.executeLine("def sortInc(a, b):");
         s2.executeLine("    return a.str() < b.str()");
         s2.executeLine("");
-        s2.executeLine("s = NormalSurfaces(Example3.poincare(), NormalCoords.Standard)");
+        s2.executeLine("s = NormalSurfaces(Example3.poincare(), NS_STANDARD)");
 
         s1.executeLine("print(s.detail())");
         s2.executeLine("print(s.detail())");
@@ -145,7 +145,7 @@ int main(int argc, char* argv[]) {
         s.executeLine("    print()");
         s.executeLine("");
         s.executeLine("tri = Example3.lens(3, 1)");
-        s.executeLine("m = makeMatchingEquations(tri, NormalCoords.Standard)");
+        s.executeLine("m = makeMatchingEquations(tri, NS_STANDARD)");
         s.executeLine("c = ValidityConstraints(7, tri.size())");
         s.executeLine("ans = []");
         s.executeLine("DoubleDescription.enumerate(store, m, c)");

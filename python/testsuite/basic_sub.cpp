@@ -87,14 +87,14 @@ int main(int argc, char* argv[]) {
     }
     {
         Session s(argv[0]);
-        s.executeLine("print(ExampleLink.virtualTrefoil().jones())");
+        s.executeLine("print(ExampleLink.figureEight().jones())");
     }
     {
         // Verify that exceptions are behaving properly.
         Session s(argv[0]);
         s.executeLine("try:");
-        s.executeLine("    print(Link().alexander())");
-        s.executeLine("except FailedPrecondition:");
+        s.executeLine("    print(Link().dt())");
+        s.executeLine("except NotImplemented:");
         s.executeLine("    print('Caught exception!')");
         s.executeLine("");
     }
@@ -108,8 +108,8 @@ int main(int argc, char* argv[]) {
         // Verify that exceptions are still behaving properly.
         Session s(argv[0]);
         s.executeLine("try:");
-        s.executeLine("    print(Link().alexander())");
-        s.executeLine("except FailedPrecondition:");
+        s.executeLine("    print(Link().dt())");
+        s.executeLine("except NotImplemented:");
         s.executeLine("    print('Caught exception!')");
         s.executeLine("");
     }
