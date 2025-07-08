@@ -4521,6 +4521,8 @@
 		05EDDA4A27E3102A001743C1 /* chunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = chunk.h; sourceTree = "<group>"; };
 		05EDDA5127E31060001743C1 /* nmz_hash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nmz_hash.cpp; sourceTree = "<group>"; };
 		05EDDA5227E31060001743C1 /* nmz_hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nmz_hash.h; sourceTree = "<group>"; };
+		05EDF2FC2E1CDA220040F824 /* regfiledump.filter */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = regfiledump.filter; sourceTree = "<group>"; };
+		05EDF2FD2E1CDA220040F824 /* trisetcmp.filter */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = trisetcmp.filter; sourceTree = "<group>"; };
 		05EE4AEB2D8BA962006D1495 /* katie.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = katie.cpp; sourceTree = "<group>"; };
 		05F09FBC1DBEF01800117BFC /* dim2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2.h; sourceTree = "<group>"; };
 		05F09FBD1DBEF01800117BFC /* dim3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim3.h; sourceTree = "<group>"; };
@@ -7549,6 +7551,7 @@
 				054DF95528CABC8500EC3D81 /* regconvert.filter */,
 				054DF95128CABC8500EC3D81 /* regconvert.out */,
 				054DF94628CABC8300EC3D81 /* regconvert.test */,
+				05EDF2FC2E1CDA220040F824 /* regfiledump.filter */,
 				054DF95228CABC8500EC3D81 /* regfiledump.out */,
 				054DF94B28CABC8400EC3D81 /* regfiledump.test */,
 				054DF95828CABC8500EC3D81 /* regfiletype.out */,
@@ -7562,6 +7565,7 @@
 				054DF94328CABC8300EC3D81 /* tricensus.filter */,
 				054DF94E28CABC8400EC3D81 /* tricensus.out */,
 				054DF94D28CABC8400EC3D81 /* tricensus.test */,
+				05EDF2FD2E1CDA220040F824 /* trisetcmp.filter */,
 				054DF94828CABC8400EC3D81 /* trisetcmp.out */,
 				054DF95028CABC8400EC3D81 /* trisetcmp.test */,
 			);

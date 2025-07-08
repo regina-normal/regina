@@ -1,0 +1,7 @@
+#!/bin/sh
+set -e
+
+# This filter compensates for the differences in error messages between
+# different versions of libxml2.
+
+sed -e 's#Start tag expected, .<. not found#Document is empty\n#'
