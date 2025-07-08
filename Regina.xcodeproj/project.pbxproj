@@ -4798,6 +4798,8 @@
 		05EDF2F72E1CC3EC0040F824 /* repr.out.v3 */ = {isa = PBXFileReference; lastKnownFileType = text; path = repr.out.v3; sourceTree = "<group>"; };
 		05EDF2F82E1CC3EC0040F824 /* testcallback.in */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = testcallback.in; sourceTree = "<group>"; };
 		05EDF2F92E1CC3EC0040F824 /* testsub.in */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = testsub.in; sourceTree = "<group>"; };
+		05EDF2FA2E1CD93E0040F824 /* regfiledump.filter */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = regfiledump.filter; sourceTree = "<group>"; };
+		05EDF2FB2E1CD93E0040F824 /* trisetcmp.filter */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = trisetcmp.filter; sourceTree = "<group>"; };
 		05F02FFA276FFDF600FB24D8 /* txicore.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = txicore.cpp; sourceTree = "<group>"; };
 		05F09FBC1DBEF01800117BFC /* dim2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2.h; sourceTree = "<group>"; };
 		05F09FBD1DBEF01800117BFC /* dim3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim3.h; sourceTree = "<group>"; };
@@ -7884,6 +7886,7 @@
 				054DF95528CABC8500EC3D81 /* regconvert.filter */,
 				054DF95128CABC8500EC3D81 /* regconvert.out */,
 				054DF94628CABC8300EC3D81 /* regconvert.test */,
+				05EDF2FA2E1CD93E0040F824 /* regfiledump.filter */,
 				054DF95228CABC8500EC3D81 /* regfiledump.out */,
 				054DF94B28CABC8400EC3D81 /* regfiledump.test */,
 				054DF95828CABC8500EC3D81 /* regfiletype.out */,
@@ -7898,6 +7901,7 @@
 				054DF94328CABC8300EC3D81 /* tricensus.filter */,
 				054DF94E28CABC8400EC3D81 /* tricensus.out */,
 				054DF94D28CABC8400EC3D81 /* tricensus.test */,
+				05EDF2FB2E1CD93E0040F824 /* trisetcmp.filter */,
 				054DF94828CABC8400EC3D81 /* trisetcmp.out */,
 				054DF95028CABC8400EC3D81 /* trisetcmp.test */,
 			);
