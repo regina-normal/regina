@@ -112,7 +112,7 @@ can use the ``auto`` type, and when constructing from a
 DiscSetSurfaceData<T> the template argument can be automatically
 deduced.
 
-As of Regina 7.4, this class no longer provides the iterator type
+As of Regina 7.3.1, this class no longer provides the iterator type
 aliases *value_type*, *iterator_category*, *difference_type*,
 *pointer* and *reference*. Instead you can access these through
 ``std::iterator_traits``.

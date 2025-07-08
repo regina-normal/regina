@@ -21,7 +21,7 @@ it is iterating over. This guarantees that the packet will not be
 destroyed mid-iteration, but it also means that you must ensure that
 you dispose of your iterators once you are finished with them.
 
-As of Regina 7.4, this class no longer provides the iterator type
+As of Regina 7.3.1, this class no longer provides the iterator type
 aliases *value_type*, *iterator_category*, *difference_type*,
 *pointer* and *reference*. Instead you can access these through
 ``std::iterator_traits``.
@@ -433,7 +433,7 @@ it is iterating over. This guarantees that the packet will not be
 destroyed mid-iteration, but it also means that you must ensure that
 you dispose of your iterators once you are finished with them.
 
-As of Regina 7.4, this class no longer provides the iterator type
+As of Regina 7.3.1, this class no longer provides the iterator type
 aliases *value_type*, *iterator_category*, *difference_type*,
 *pointer* and *reference*. Instead you can access these through
 ``std::iterator_traits``.

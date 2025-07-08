@@ -10,7 +10,7 @@ Regina - A Normal Surface Theory Calculator
 Version 7.4  [ (to be announced) ]
 
     GENERAL:
-        - Now requires C++20 (not C++17), and Python 3.7 or newer.
+        - Now requires C++20 (not C++17).
         - Added support for simplex and facet locks throughout the API.  See
           Simplex<dim>::lock() and Simplex<dim>::lockFacet() for an overview
           of how locks work.  Many routines throughout the API could now
@@ -25,11 +25,6 @@ Version 7.4  [ (to be announced) ]
           automatically generated from equality tests (==) instead.
         - Explicit comparisons (<, <=, >, >=) have been removed, and are now
           automatically generated from the new spaceship operator (<=>).
-        - For several iterator classes, the associated type aliases
-          (value_type, etc.) are no longer provided as class members, since
-          these were confusing pybind11.  Instead you can (and should) access
-          these through the C++ standard iterator library (e.g.,
-          std::iterator_traits<T>::value_type, or std::iter_value_t<T>).
         - Several build dependencies are gone: Jansson, Popt, CppUnit.
           See the individual sections below for details.
         - Updated the SnapPea kernel to the one shipped with SnapPy 3.0.3.
@@ -112,12 +107,6 @@ Version 7.4  [ (to be announced) ]
         Class Cut:
             - Routine weight() can now work with links and model link graphs,
               as well as triangulations and facet pairings.
-        Class DiscSpecIterator:
-            - This class no longer provides its iterator-related type aliases
-              (value_type, etc.) as members, since these confused pybind11.
-              Instead you should access them through the C++ standard
-              iterator library (e.g., via std::iterator_traits).  The old
-              member type aliases have been removed completely.
         Struct DiscType:
             - Added a spaceship operator (<=>) for comparisons.  This has the
               effect of implementing all comparison operators, not just
@@ -348,15 +337,6 @@ Version 7.4  [ (to be announced) ]
               strand references.
             - Renamed intelligentSimplify() to simplify().  The old name is
               kept as a deprecated alias.
-            - Fixed a bug in fromDT() that was producing non-planar diagrams
-              for some non-minimal encodings with spurious R1 twists.  The
-              solution was to drop the old code completely (which was imported
-              from elsewhere) and instead to piggy-back on Regina's own Gauss
-              code reconstruction routine.  As a result, fromDT() might now
-              make different choices when resolving the inherent ambiguities
-              in Dowker-Thistlethwaite notation.
-            - Fixed a bug where calling resolve() would not clear out any
-              cached link polynomials that had already been computed.
             - Overhaul of the internal change span classes, including a new
               inner class ChangeAndClearSpan.
             - Optimised so that computed topological properties (e.g., Jones
@@ -365,8 +345,6 @@ Version 7.4  [ (to be announced) ]
             - Renamed dumpConstruction() to source(), and extended it to produce
               either C++ and Python code via an optional language argument.
               The old C++-only dumpConstruction() is kept but deprecated.
-              Also fixed a problem where the C++ initialiser lists were empty
-              (instead of containing a single 0) for zero-crossing components.
             - Routine selfFrame() now returns a boolean indicating whether
               anything changed.
             - Routine simplifyExhaustive() now ensures that any change to the
@@ -481,28 +459,11 @@ Version 7.4  [ (to be announced) ]
               automatically behind the scenes.  NormalListFlags is now
               just a deprecated alias for NormalList.
         Class NormalSurface, NormalHypersurface:
-            - Fixed a bug where, if a surface was a normalised triangle link
-              but not a thin triangle link, then calling isThinTriangleLink()
-              _before_ isNormalTriangleLink() would make the latter return
-              an empty list of results.  Likewise with tetrahedron links in
-              4-dimensional triangulations.
-            - Fix a bug in components() when used on disconnected surfaces,
-              where if it were called _after_ connectedness has already been
-              established (i.e., after isOrientable(), isTwoSided(),
-              isConnected(), or an earlier call to components()), then it would
-              return the entire surface as a single component.
             - The vector constructors are now templated, so that you can pass a
               vector of some type other than regina::LargeInteger.
             - Added a spaceship operator (<=>) for comparisons.  This has the
               effect of implementing all comparison operators, not just
               less-than (<) as before.
-        Class NormalSurfaces, NormalHypersurfaces:
-            - The inner class VectorIterator no longer provides its
-              iterator-related type aliases (value_type, etc.) as members,
-              since these confused pybind11.  Instead you should access them
-              through the C++ standard iterator library (e.g., via
-              std::iterator_traits).  The old member type aliases have been
-              removed completely.
         Enum NormalTransform:
             - This is now a scoped enumeration, for better type safety.  The
               old enum constants (e.g., NS_FILTER_DISJOINT) are now scoped
@@ -516,12 +477,6 @@ Version 7.4  [ (to be announced) ]
             - New inner type alias PacketChangeGroup, to assist with readability
               when using a ChangeEventSpan for optimisation purposes only.
             - For Python users, added an alias makePacket() for make_packet().
-            - The inner classes ChildIterator and SubtreeIterator no longer
-              provides their iterator-related type aliases (value_type, etc.)
-              as members, since these confused pybind11.  Instead you should
-              access them through the C++ standard iterator library (e.g., via
-              std::iterator_traits).  The old member type aliases have been
-              removed completely.
         Class PacketData<Held>:
             - Renamed ChangeEventSpan to PacketChangeSpan, to make it clear
               that this only matters for objects held by packets.  The old
@@ -782,14 +737,6 @@ Version 7.4  [ (to be announced) ]
               their behaviour for the empty triangulation: they now return the
               empty angle structure as a solution (since, strictly speaking,
               the empty structure is both strict and taut).
-            - Fixed an issue with zeroTwoMove(edge, t0, t1) where: if the given
-              edge was valid and boundary, and if t0 and/or t1 was exactly the
-              edge degree, and if the routine was asked to check legality, then
-              the move would be incorrectly reported as illegal.  (This was
-              essentially harmless, since it effectively made the routine
-              over-cautious by not performing moves that it could have, and
-              since if the routine was _not_ asked to check legality then the
-              move was still being performed correctly.)
             - Routine from SnapPea() can now take either a filename or file
               contents.  It can also now handle empty lines before the manifold
               name (SnapPy does not write these, but some other tools do).
@@ -890,21 +837,10 @@ Version 7.4  [ (to be announced) ]
             - New alternatives to using std::is_integeral_v<T> and
               std::is_unsigned_v<T> that allow for 128-bit integers also.
         Global array quadString:
-            - These are now C++-style strings (std::string), not C-style
-              strings (array of char).  For newer compilers, they are still
-              inline constexpr, but for older compilers that do not support
-              constexpr strings they are instead declared as inline const.
+            - This array is once again inline constexpr for those compilers
+              that support C++20 sufficiently well.  For older compilers that
+              do not support constexpr strings, this remains inline const.
     PYTHON:
-        - For Python 3.11 and earlier, updated the included pybind11 library
-          from 2.10.0 to 2.13.6.  This drops support for Python 3.6.
-        - For Python 3.12 and later, use the pre-release pybind11 3.0.0rc4.
-          This fixes problems with subinterpreters in newer Python versions,
-          and thereby means that Regina now supports Python 3.12 and later
-          properly for the first time.
-        - Added a new python-only function regina.versionPybind11Major() that
-          indicates which of the two above scenarios is in use.
-        - Improved the speed of iteration (specifically, throwing/catching
-          StopIteration exceptions).
         - Regardinging enums and flags:
           + Rich flag types based on regina::Flags<...> (such as NormalAlg,
             CensusPurge, etc.) now support a bool() operator that tests for
@@ -953,6 +889,97 @@ Version 7.4  [ (to be announced) ]
         - Ported the C++ test suite to use the GoogleTest framework (which is
           included with Regina's sources).  This removes the build dependency
           on CppUnit.
+
+Version 7.3.1  [ 11 July, 2025 ]
+
+    GENERAL:
+        - Service release to fix some important bugs, and to support
+          Python 3.12 and later.
+        - This release requires Python 3.7 or newer (i.e., Python 3.6 is
+          no longer supported).
+        - For several iterator classes, the associated type aliases
+          (value_type, etc.) are no longer provided as class members, since
+          these were confusing pybind11.  Instead you can (and should) access
+          these through the C++ standard iterator library (e.g.,
+          std::iterator_traits<T>::value_type, or std::iter_value_t<T>).
+    ENGINE:
+        Class DiscSpecIterator:
+            - This class no longer provides its iterator-related type aliases
+              (value_type, etc.) as members, since these confused pybind11.
+              Instead you should access them through the C++ standard
+              iterator library (e.g., via std::iterator_traits).  The old
+              member type aliases have been removed completely.
+        Class Laurent<T>:
+            - Fixed a bug where, in special circumstances, set() could have no
+              effect.  This did not affect any past Jones polynomial code.
+              See: https://regina-normal.github.io/bugs.html#laurentset
+        Class Link:
+            - Fixed a bug where calling resolve() would not clear out any
+              cached link polynomials that had already been computed.
+            - Fixed a problem with dumpConstruction() where the C++ initialiser
+              lists were empty (instead of containing a single 0) for
+              zero-crossing components.
+            - Fixed a bug in fromDT() that was producing non-planar diagrams
+              for some non-minimal encodings with spurious R1 twists.  The
+              solution was to drop the old code completely (which was imported
+              from elsewhere) and instead to piggy-back on Regina's own Gauss
+              code reconstruction routine.  As a result, fromDT() might now
+              make different choices when resolving the inherent ambiguities
+              in Dowker-Thistlethwaite notation.
+        Class NormalSurface, NormalHypersurface:
+            - Fixed a bug where, if a surface was a normalised triangle link
+              but not a thin triangle link, then calling isThinTriangleLink()
+              _before_ isNormalTriangleLink() would make the latter return
+              an empty list of results.  Likewise with tetrahedron links in
+              4-dimensional triangulations.
+              See: https://regina-normal.github.io/bugs.html#tritetlinks
+            - Fix a bug in components() when used on disconnected surfaces,
+              where if it were called _after_ connectedness has already been
+              established (i.e., after isOrientable(), isTwoSided(),
+              isConnected(), or an earlier call to components()), then it would
+              return the entire surface as a single component.
+              See: https://regina-normal.github.io/bugs.html#surfacecomp
+        Class NormalSurfaces, NormalHypersurfaces:
+            - The inner class VectorIterator no longer provides its
+              iterator-related type aliases (value_type, etc.) as members,
+              since these confused pybind11.  Instead you should access them
+              through the C++ standard iterator library (e.g., via
+              std::iterator_traits).  The old member type aliases have been
+              removed completely.
+        Class Packet:
+            - The inner classes ChildIterator and SubtreeIterator no longer
+              provides their iterator-related type aliases (value_type, etc.)
+              as members, since these confused pybind11.  Instead you should
+              access them through the C++ standard iterator library (e.g., via
+              std::iterator_traits).  The old member type aliases have been
+              removed completely.
+        Class Triangulation<dim>:
+            - Fixed a memory leak in the move constructor.
+        Class Triangulation<3>:
+            - Fixed an issue with zeroTwoMove(edge, t0, t1) where: if the given
+              edge was valid and boundary, and if t0 and/or t1 was exactly the
+              edge degree, and if the routine was asked to check legality, then
+              the move would be incorrectly reported as illegal.  (This was
+              essentially harmless, since it effectively made the routine
+              over-cautious by not performing moves that it could have, and
+              since if the routine was _not_ asked to check legality then the
+              move was still being performed correctly.)
+        Global array quadString:
+            - These are now C++-style strings (std::string), not C-style
+              strings (array of char).  For Regina 7.3.1 only these are just
+              inline const, not constexpr, but in Regina 7.4 (which uses C++20)
+              they will become inline constexpr again.
+    PYTHON:
+        - For Python 3.11 and earlier, updated the included pybind11 library
+          from 2.10.0 to 2.13.6.  This drops support for Python 3.6.
+        - For Python 3.12 and later, use the pre-release pybind11 3.0.0rc4.
+          This fixes problems with subinterpreters in newer Python versions,
+          and thereby means that Regina now supports Python 3.12 and later
+          properly for the first time.
+        - Added a new python-only function regina.versionPybind11Major() that
+          indicates which of the two above scenarios is in use.
+        - Improved the speed of iteration (specifically, throwing/catching
+          StopIteration exceptions).
 
 Version 7.3  [ 18 March, 2023 ]
 
