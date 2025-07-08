@@ -256,6 +256,13 @@ individual permutations in a group are generated (not stored), based
 upon an internal group representation that is typically _much_ smaller
 than the group itself.
 
+For most iterator classes, Regina now uses specialisations of
+std::iterator_traits to provide access to their associated types
+(e.g., value_type). However, this is not possible for
+PermGroup::iterator since PermGroup is templated. Therefore, for
+PermGroup::iterator, we continue to provide these associated types
+directly as class members.
+
 Both *iterator* and *const_iterator* are the same type, since a
 PermGroup only offers read-only access to its group members.)doc";
 

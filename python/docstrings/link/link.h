@@ -883,10 +883,6 @@ Exception ``InvalidArgument``:
     knot. As noted above, the checks performed here are not
     exhaustive.
 
-Author:
-    Much of the code for this routine is based on the Dowker-
-    Thistlethwaite implementation in the SnapPea/SnapPy kernel.
-
 Parameter ``str``:
     either the alphabetical or numerical Dowker-Thistlethwaite
     notation for a knot, as described above.
@@ -945,10 +941,6 @@ Exception ``InvalidArgument``:
 Python:
     Instead of a pair of begin and past-the-end iterators, this
     routine takes a Python list of integers.
-
-Author:
-    Much of the code for this routine is based on the Dowker-
-    Thistlethwaite implementation in the SnapPea/SnapPy kernel.
 
 Parameter ``begin``:
     an iterator that points to the beginning of the sequence of
