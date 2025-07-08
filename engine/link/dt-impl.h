@@ -51,41 +51,28 @@
 
 namespace regina {
 
-// -----------------------------------------------------------------------
-//
-// The following code contains significant portions of
-// kernel/unix_kit/decode_new_DT.c from the SnapPy/SnapPea kernel.
-//
-// A full explanation of decoding Dowker-Thistlethwaite codes may be found in
-//
-//     Dowker and Thistlethwaite, Classification of knot projections,
-//     Topology and its Applications 16 (1983) 19-31.
-//
-// -----------------------------------------------------------------------
-
 template <typename Iterator>
 Link Link::fromDT(Iterator begin, Iterator end) {
-    using InputInt = std::remove_cv_t<std::remove_reference_t<decltype(*begin)>>;
+    using InputInt = typename std::iterator_traits<Iterator>::value_type;
     static_assert(std::is_integral_v<InputInt> &&
         ! std::is_unsigned_v<InputInt>, "fromDT(): the iterator type "
         "needs to dereference to give a native signed C++ integer type.");
 
     // Extract the number of crossings.
-    size_t aNumCrossings = end - begin;
-    if (aNumCrossings == 0)
-        return Link(1);
+    size_t n = end - begin;
+    if (n == 0)
+        return Link(1); // zero-crossing unknot
 
     // Some basic sanity checking.
     // We ensure that the integers are in range, but we do not yet check
     // that their absolute values are distinct (that will come later).
 
     if constexpr (sizeof(InputInt) <= sizeof(size_t)) {
-        if (2 * aNumCrossings >
-                static_cast<size_t>(std::numeric_limits<InputInt>::max()))
+        if (2 * n > static_cast<size_t>(std::numeric_limits<InputInt>::max()))
             throw InvalidArgument("fromDT(): too many crossings for "
                 "the given integer type");
     }
-    const auto maxEntry = static_cast<InputInt>(2 * aNumCrossings);
+    const auto maxEntry = static_cast<InputInt>(2 * n);
 
     Iterator it;
     for (it = begin; it != end; ++it) {
@@ -95,174 +82,74 @@ Link Link::fromDT(Iterator begin, Iterator end) {
             throw InvalidArgument("fromDT(): integer out of range in code");
     }
 
-    Link ans;
+    // First we follow the way that the SnapPea kernel converts the D-T code
+    // into a sequence of crossings.  We will then use this sequence of
+    // crossings to build a classical Gauss code, and finally we reconstruct
+    // the knot diagram from that using Regina's separate fromGauss() routine.
 
+    // 1) Cache the absolute values of the entries in the D-T code, and
+    // switch from 1-based indexing to 0-based indexing.
     size_t i;
-    for (i = 0; i < aNumCrossings; ++i)
-        ans.crossings_.push_back(new Crossing);
-
-    ans.components_.emplace_back(ans.crossings_.front(), 0);
-
-    // Here starts the SnapPea code!
-
-    size_t          *theAlternatingDT,
-                    *theInvolution;
-    bool            *theRealization;
-
-    /*
-     *  Let theAlternatingDT contain the absolute values of the
-     *  entries in the DT code.  It describes the alternating knot
-     *  with the same projection as the given knot.  For the figure
-     *  eight knot example, theAlternatingDT and the DT code are the same,
-     *  because the figure eight knot is already alternating.
-     */
-    theAlternatingDT = new size_t[aNumCrossings];
+    auto* abs = new size_t[n];
     for (it = begin, i = 0; it != end; ++it, ++i)
-        theAlternatingDT[i] = std::abs(*it);
+        abs[i] = std::abs(*it) - 1;
 
-    /*
-     *  Switch from 1-based indexing to 0-based indexing.
-     *  The involution for the figure eight knot becomes
-     *
-     *                      0  2  4  6
-     *                      3  5  7  1
-     *
-     *  and theAlternatingDT becomes {3, 5, 7, 1}.
-     */
-    for (i = 0; i < aNumCrossings; i++)
-        theAlternatingDT[i]--;
-
-    /*
-     *  Write out the full involution
-     *
-     *                      0  1  2  3  4  5  6  7
-     *                      3  6  5  0  7  2  1  4
-     *
-     *  As an array, theInvolution = {3, 6, 5, 0, 7, 2, 1, 4}.
-     */
-    theInvolution = new size_t[2 * aNumCrossings];
-    std::fill(theInvolution, theInvolution + 2 * aNumCrossings,
-        1 /* a value that does not appear in theAlternatingDT[] */);
-    for (i = 0; i < aNumCrossings; i++)
-    {
-        if (theInvolution[theAlternatingDT[i]] != 1 /* the initial value */) {
-            delete[] theAlternatingDT;
-            delete[] theInvolution;
+    // 2) Build the involution that relates the two passes through each
+    // crossing (one at an even index, and one at an odd index).
+    auto* inv = new size_t[2 * n];
+    std::fill(inv, inv + 2 * n, 1 /* does not appear in abs[] */);
+    for (i = 0; i < n; i++) {
+        if (inv[abs[i]] != 1 /* the initial value */)
             throw InvalidArgument("fromDT(): repeated |entry| in code");
-        }
-        theInvolution[2*i]                  = theAlternatingDT[i];
-        theInvolution[theAlternatingDT[i]]  = 2*i;
+        inv[2 * i] = abs[i];
+        inv[abs[i]] = 2 * i;
     }
 
-    // After the sanity checks performed so far, we now know that the
-    // input sequence contains even integers within range, and that each
-    // required absolute value appears exactly once.
+    delete[] abs;
 
-    /*
-     *  To reconstruct the knot, we need an additional bit of
-     *  information for each crossing, saying whether the odd-numbered
-     *  strand passes left-to-right across the even-numbered strand,
-     *  or vice versa.  Obtaining this "realization" of the DT code
-     *  is nontrivial.  For details, see the Dowker-Thistlethwaite
-     *  article cited at the top of this file.
-     *
-     *  Note:  theRealization is an array of booleans.  It doesn't
-     *  matter whether you interpret true as meaning the odd-numbered
-     *  strand passes left-to-right across the even-numbered strand,
-     *  or vice versa, because DT codes don't record chirality
-     *  to begin with.
-     */
-    theRealization = new bool[2 * aNumCrossings];
-    if (! realizeDT(theInvolution, theRealization, aNumCrossings)) {
-        // The sequence could not be realized.
-        delete[] theAlternatingDT;
-        delete[] theInvolution;
-        delete[] theRealization;
-        throw InvalidArgument("fromDT(): sequence is not realisable");
-    }
-
-    /*
-     *  For each crossing, we now identify the two positions in the
-     *  involution where it occurs.
-     *
-     *  For each position in the involution, we also identify which
-     *  crossing it represents.
-     */
-    auto* oddPos = new size_t[aNumCrossings];
-    auto* evenPos = new size_t[aNumCrossings];
-    auto* crossingForPos = new size_t[2 * aNumCrossings];
-
-    size_t nextUnused = 0;
-    for (i = 0; i < 2 * aNumCrossings; ++i) {
+    // 3) For each crossing, identify the two positions in inv[] where it
+    // occurs.  We will use 1-based indexing for the crossings, since that is
+    // what the Gauss code will need.
+    auto* crossingForPos = new InputInt[2 * n];
+    InputInt nextUnused = 1;
+    for (i = 0; i < 2 * n; ++i) {
         // Examine position i from the involution.
-        if (theInvolution[i] > i) {
+        if (inv[i] > i) {
             // First time we see this crossing.
             crossingForPos[i] = nextUnused++;
         } else {
             // Second time we see this crossing.
-            crossingForPos[i] = crossingForPos[theInvolution[i]];
+            crossingForPos[i] = crossingForPos[inv[i]];
         }
-        if (i % 2)
-            oddPos[crossingForPos[i]] = i;
-        else
-            evenPos[crossingForPos[i]] = i;
     }
 
-    /*
-     *  Build the alternating knot.
-     *
-     *  Since we adjusted the input sequence to be 0-based, recall that
-     *  (even, odd) positions mean (under, over)-crossings respectively.
-     */
-    Crossing* cr;
-    Crossing* adj;
-    for (i = 0; i < 2 * aNumCrossings; ++i) {
-        cr = ans.crossings_[crossingForPos[i]];
-
+    // At this point we are done following the SnapPea kernel.  Use the data
+    // we have just extracted to build the classical Gauss code.
+    auto* gauss = new InputInt[2 * n];
+    for (i = 0; i < 2 * n; ++i) {
         if (i % 2 == 0) {
-            // Pass under.
-            adj = ans.crossings_[crossingForPos[
-                i < 2 * aNumCrossings - 1 ? i + 1 : 0]];
-            cr->next_[0] = StrandRef(adj, 1);
-
-            adj = ans.crossings_[crossingForPos[
-                i > 0 ? i - 1 : 2 * aNumCrossings - 1]];
-            cr->prev_[0] = StrandRef(adj, 1);
-
-            // Set the sign of the crossing here also.
-            // Note that the original SnapPea/SnapPy code only queries
-            // theRealization[i] for even indices i.
-            cr->sign_ = (theRealization[i] ? 1 : -1);
+            // This is an odd index in the original 1-based indexing.
+            if (*(begin + (i / 2)) > 0)
+                gauss[i] = -crossingForPos[i];
+            else
+                gauss[i] = crossingForPos[i];
         } else {
-            // Pass over.
-            adj = ans.crossings_[crossingForPos[
-                i < 2 * aNumCrossings - 1 ? i + 1 : 0]];
-            cr->next_[1] = StrandRef(adj, 0);
-
-            adj = ans.crossings_[crossingForPos[
-                i > 0 ? i - 1 : 2 * aNumCrossings - 1]];
-            cr->prev_[1] = StrandRef(adj, 0);
+            // This is an even index in the original 1-based indexing.
+            if (*(begin + (inv[i] / 2)) > 0)
+                gauss[i] = crossingForPos[i];
+            else
+                gauss[i] = -crossingForPos[i];
         }
     }
 
-    /*
-     *  Now switch crossings to reflect the signs in the input sequence.
-     *
-     *  TODO: Use a streamlined verison of change() that does not worry
-     *  about multiple components, link properties and firing change events.
-     */
-    for (it = begin; it != end; ++it)
-        if (*it < 0)
-            ans.change(ans.crossings_[crossingForPos[-(*it) - 1]]);
-
-    // All done!
-    delete[] oddPos;
-    delete[] evenPos;
+    delete[] inv;
     delete[] crossingForPos;
-    delete[] theAlternatingDT;
-    delete[] theInvolution;
-    delete[] theRealization;
 
+    // Now that we have a classical Gauss code, we can reconstruct the precise
+    // planar embedding of the knot diagram using Regina's Gauss code
+    // reconstruction routine.
+    Link ans = fromGauss(gauss, gauss + 2 * n);
+    delete[] gauss;
     return ans;
 }
 

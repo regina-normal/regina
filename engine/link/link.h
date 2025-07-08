@@ -4084,9 +4084,6 @@ class Link :
          * Dowker-Thistlethwaite code for a knot.  As noted above, the checks
          * performed here are not exhaustive.
          *
-         * \author Much of the code for this routine is based on the
-         * Dowker-Thistlethwaite implementation in the SnapPea/SnapPy kernel.
-         *
          * \param str either the alphabetical or numerical
          * Dowker-Thistlethwaite notation for a knot, as described above.
          * \return the reconstructed knot.
@@ -4139,9 +4136,6 @@ class Link :
          *
          * \python Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of integers.
-         *
-         * \author Much of the code for this routine is based on the
-         * Dowker-Thistlethwaite implementation in the SnapPea/SnapPy kernel.
          *
          * \param begin an iterator that points to the beginning of the
          * sequence of integers for the Dowker-Thistlethwaite notation
@@ -4377,23 +4371,6 @@ class Link :
          */
         static bool parseOrientedGaussTerm(const char* s,
             size_t nCross, size_t& crossing, int& strand, int& sign);
-
-        /**
-         * Internal to fromDT().
-         *
-         * This routine attempts to deduce the orientation of each crossing
-         * in order to make a planar embedding of the 4-valent graph
-         * described by the Dowker-Thistlethwaite notation.
-         *
-         * See the source code for further documentation.
-         *
-         * \return \c true if and only if a planar embedding was found.
-         *
-         * \author This routine is based on the Dowker-Thistlethwaite
-         * implementation from the SnapPea/SnapPy kernel.
-         */
-        static bool realizeDT(size_t* anInvolution, bool* aRealization,
-            size_t aNumCrossings);
 
         /**
          * Internal to fromData().

@@ -2439,12 +2439,12 @@ class LinkTest : public CppUnit::TestFixture, public TightEncodingTest<Link> {
             verifyDT(kinoshitaTerasaka, "Kinoshita-Terasaka knot");
             verifyDT(gst, "GST");
             // Luckily works despite ambiguity with composite knots:
-            verifyDT(rht_lht, "RH Trefoil # LH Trefoil");
+            verifyDT(trefoil_r1x2, "Trefoil with 2 R1s");
+            verifyDT(figureEight_r1x2, "Figure eight with 2 R1s");
+            verifyDT(rht_rht, "RH Trefoil # RH Trefoil");
             // Broken by ambiguity with composite knots:
-            // verifyDT(trefoil_r1x2, "Trefoil with 2 R1s");
+            // verifyDT(rht_lht, "RH Trefoil # LH Trefoil");
             // verifyDT(trefoil_r1x6, "Trefoil with 6 R1s");
-            // verifyDT(figureEight_r1x2, "Figure eight with 2 R1s");
-            // verifyDT(rht_rht, "RH Trefoil # RH Trefoil");
         }
 
         void verifyGauss(const Link& l, const char* name) {
