@@ -74,9 +74,9 @@ Cyclotomic
 -2/5 x^3 + 2/5 x^2 + 7/10
 <regina.Cyclotomic: -2/5 x^3 + 2/5 x^2 + 7/10>
 
-PolynomialRational
+Polynomial
 -2/5 x^3 + 2/5 x^2 + 7/10
-<regina.PolynomialRational: -2/5 x^3 + 2/5 x^2 + 7/10>
+<regina.Polynomial: -2/5 x^3 + 2/5 x^2 + 7/10>
 
 Laurent
 x^4 - x^2 + 1 - x^-2 + x^-4
@@ -86,61 +86,61 @@ Laurent2
 x^2 - y^2 - 1 + x^-2
 <regina.Laurent2: x^2 - y^2 - 1 + x^-2>
 
+HyperListFlags
+HyperListFlags.HS_VERTEX
+<HyperListFlags.HS_VERTEX: 4>
+
+HyperAlgFlags
+HyperAlgFlags.HS_VERTEX_DD
+<HyperAlgFlags.HS_VERTEX_DD: 32>
+
+NormalListFlags
+NormalListFlags.NS_VERTEX
+<NormalListFlags.NS_VERTEX: 4>
+
+NormalAlgFlags
+NormalAlgFlags.NS_VERTEX_DD
+<NormalAlgFlags.NS_VERTEX_DD: 32>
+
+AngleAlgFlags
+AngleAlgFlags.AS_ALG_DD
+<AngleAlgFlags.AS_ALG_DD: 32>
+
+CensusPurgeFlags
+CensusPurgeFlags.PURGE_NON_MINIMAL
+<CensusPurgeFlags.PURGE_NON_MINIMAL: 1>
+
+SurfaceExportFields
+SurfaceExportFields.surfaceExportName
+<SurfaceExportFields.surfaceExportName: 1>
+
 HyperList
-HyperList.Vertex
-<HyperList.Vertex: 4>
+0x0004
+<regina.HyperList: 0x0004>
 
 HyperAlg
-HyperAlg.VertexDD
-<HyperAlg.VertexDD: 32>
+0x0020
+<regina.HyperAlg: 0x0020>
 
 NormalList
-NormalList.Vertex
-<NormalList.Vertex: 4>
+0x0004
+<regina.NormalList: 0x0004>
 
 NormalAlg
-NormalAlg.VertexDD
-<NormalAlg.VertexDD: 32>
+0x0020
+<regina.NormalAlg: 0x0020>
 
 AngleAlg
-AngleAlg.DD
-<AngleAlg.DD: 32>
+0x0020
+<regina.AngleAlg: 0x0020>
 
 CensusPurge
-CensusPurge.NonMinimal
-<CensusPurge.NonMinimal: 1>
+0x03
+<regina.CensusPurge: 0x03>
 
 SurfaceExport
-SurfaceExport.Name
-<SurfaceExport.Name: 1>
-
-HyperList
-HyperList.Vertex
-<HyperList.Vertex: 4>
-
-HyperAlg
-HyperAlg.VertexDD
-<HyperAlg.VertexDD: 32>
-
-NormalList
-NormalList.Vertex
-<NormalList.Vertex: 4>
-
-NormalAlg
-NormalAlg.VertexDD
-<NormalAlg.VertexDD: 32>
-
-AngleAlg
-AngleAlg.DD
-<AngleAlg.DD: 32>
-
-CensusPurge
-CensusPurge.NonMinimalPrime
-<CensusPurge.NonMinimalPrime: 3>
-
-SurfaceExport
-SurfaceExport.Name|Euler
-<SurfaceExport.Name|Euler: 3>
+0x0003
+<regina.SurfaceExport: 0x0003>
 
 NormalEncoding
 0x0203
@@ -263,8 +263,8 @@ DiscSetTet
 <regina.DiscSetTet: ( 0 1 0 1 0 1 0 0 0 0 )>
 
 ModelLinkGraph
-6-node planar graph: [1:0 2:0 3:0 3:3] [0:0 4:0 4:3 2:1] [0:1 1:3 5:0 3:1] [0:2 2:3 5:3 0:3] [1:1 5:2 5:1 1:2] [2:2 4:2 4:1 3:2]
-<regina.ModelLinkGraph: 6-node planar graph: [1:0 2:0 3:0 3:3] [0:0 4:0 4:3 2:1] [0:1 1:3 5:0 3:1] [0:2 2:3 5:3 0:3] [1:1 5:2 5:1 1:2] [2:2 4:2 4:1 3:2]>
+6-node graph: [1:0 2:0 3:0 3:3] [0:0 4:0 4:3 2:1] [0:1 1:3 5:0 3:1] [0:2 2:3 5:3 0:3] [1:1 5:2 5:1 1:2] [2:2 4:2 4:1 3:2]
+<regina.ModelLinkGraph: 6-node graph: [1:0 2:0 3:0 3:3] [0:0 4:0 4:3 2:1] [0:1 1:3 5:0 3:1] [0:2 2:3 5:3 0:3] [1:1 5:2 5:1 1:2] [2:2 4:2 4:1 3:2]>
 
 ModelLinkGraphNode
 Node 0: arcs 0, 1, 2, 3 -> 1:0, 2:0, 3:0, 3:3
@@ -431,52 +431,52 @@ Component with 5 tetrahedra: entire triangulation
 <regina.Component3: Component with 5 tetrahedra: entire triangulation>
 
 Face4_0
-Vertex 0, ideal, degree 10: 0 (0), 1 (0), 1 (1), 0 (1), 1 (2), 0 (2), 1 (4), 0 (3), 1 (3), 0 (4)
-<regina.Face4_0: Vertex 0, ideal, degree 10: 0 (0), 1 (0), 1 (1), 0 (1), 1 (2), 0 (2), 1 (4), 0 (3), 1 (3), 0 (4)>
+Vertex 0, ideal, degree 10: 0 (0), 1 (0), 1 (1), 0 (1), 0 (2), 1 (2), 0 (3), 1 (3), 1 (4), 0 (4)
+<regina.Face4_0: Vertex 0, ideal, degree 10: 0 (0), 1 (0), 1 (1), 0 (1), 0 (2), 1 (2), 0 (3), 1 (3), 1 (4), 0 (4)>
 
 FaceEmbedding4_0
 0 (0)
 <regina.FaceEmbedding4_0: 0 (0)>
 
 Face4_1
-Edge 0, internal, degree 20: 0 (01), 1 (12), 0 (12), 1 (01), 1 (24), 0 (23), 1 (14), 1 (02), 0 (02), 0 (13), 1 (43), 0 (03), 1 (23), 1 (04), 1 (13), 0 (34), 1 (03), 0 (14), 0 (04), 0 (24)
-<regina.Face4_1: Edge 0, internal, degree 20: 0 (01), 1 (12), 0 (12), 1 (01), 1 (24), 0 (23), 1 (14), 1 (02), 0 (02), 0 (13), 1 (43), 0 (03), 1 (23), 1 (04), 1 (13), 0 (34), 1 (03), 0 (14), 0 (04), 0 (24)>
+Edge 0, internal, degree 20: 0 (01), 1 (12), 0 (12), 1 (01), 0 (23), 1 (23), 1 (13), 0 (02), 1 (02), 1 (34), 0 (13), 0 (03), 1 (24), 1 (03), 0 (34), 1 (14), 1 (04), 0 (14), 0 (24), 0 (04)
+<regina.Face4_1: Edge 0, internal, degree 20: 0 (01), 1 (12), 0 (12), 1 (01), 0 (23), 1 (23), 1 (13), 0 (02), 1 (02), 1 (34), 0 (13), 0 (03), 1 (24), 1 (03), 0 (34), 1 (14), 1 (04), 0 (14), 0 (24), 0 (04)>
 
 FaceEmbedding4_1
 0 (01)
 <regina.FaceEmbedding4_1: 0 (01)>
 
 ListView_Triangulation4_edges
-[ <regina.Face4_1: Edge 0, internal, degree 20: 0 (01), 1 (12), 0 (12), 1 (01), 1 (24), 0 (23), 1 (14), 1 (02), 0 (02), 0 (13), 1 (43), 0 (03), 1 (23), 1 (04), 1 (13), 0 (34), 1 (03), 0 (14), 0 (04), 0 (24)> ]
-<<internal>.ListView: [ <regina.Face4_1: Edge 0, internal, degree 20: 0 (01), 1 (12), 0 (12), 1 (01), 1 (24), 0 (23), 1 (14), 1 (02), 0 (02), 0 (13), 1 (43), 0 (03), 1 (23), 1 (04), 1 (13), 0 (34), 1 (03), 0 (14), 0 (04), 0 (24)> ]>
+[ <regina.Face4_1: Edge 0, internal, degree 20: 0 (01), 1 (12), 0 (12), 1 (01), 0 (23), 1 (23), 1 (13), 0 (02), 1 (02), 1 (34), 0 (13), 0 (03), 1 (24), 1 (03), 0 (34), 1 (14), 1 (04), 0 (14), 0 (24), 0 (04)> ]
+<<internal>.ListView: [ <regina.Face4_1: Edge 0, internal, degree 20: 0 (01), 1 (12), 0 (12), 1 (01), 0 (23), 1 (23), 1 (13), 0 (02), 1 (02), 1 (34), 0 (13), 0 (03), 1 (24), 1 (03), 0 (34), 1 (14), 1 (04), 0 (14), 0 (24), 0 (04)> ]>
 
 Face4_2
-Triangle 0, internal, degree 4: 0 (234), 0 (124), 0 (014), 1 (123)
-<regina.Face4_2: Triangle 0, internal, degree 4: 0 (234), 0 (124), 0 (014), 1 (123)>
+Triangle 0, internal, degree 4: 0 (234), 0 (124), 0 (014), 1 (124)
+<regina.Face4_2: Triangle 0, internal, degree 4: 0 (234), 0 (124), 0 (014), 1 (124)>
 
 FaceEmbedding4_2
 0 (234)
 <regina.FaceEmbedding4_2: 0 (234)>
 
 Face4_3
-Tetrahedron 0, internal: 0 (0123), 1 (0143)
-<regina.Face4_3: Tetrahedron 0, internal: 0 (0123), 1 (0143)>
+Tetrahedron 0, internal: 0 (0123), 1 (0134)
+<regina.Face4_3: Tetrahedron 0, internal: 0 (0123), 1 (0134)>
 
 FaceEmbedding4_3
 0 (0123)
 <regina.FaceEmbedding4_3: 0 (0123)>
 
 Simplex4
-4-simplex 0: 0123 -> 1 (0143), 0124 -> 0 (1234), 0134 -> 1 (1243), 0234 -> 1 (0123), 1234 -> 0 (0124)
-<regina.Simplex4: 4-simplex 0: 0123 -> 1 (0143), 0124 -> 0 (1234), 0134 -> 1 (1243), 0234 -> 1 (0123), 1234 -> 0 (0124)>
+4-simplex 0: 0123 -> 1 (0134), 0124 -> 0 (1234), 0134 -> 1 (1234), 0234 -> 1 (0124), 1234 -> 0 (0124)
+<regina.Simplex4: 4-simplex 0: 0123 -> 1 (0134), 0124 -> 0 (1234), 0134 -> 1 (1234), 0234 -> 1 (0124), 1234 -> 0 (0124)>
 
 Component4
 Component with 2 pentachora: entire triangulation
 <regina.Component4: Component with 2 pentachora: entire triangulation>
 
 BoundaryComponent4
-Boundary component 0, ideal at vertex 0: 0 (0), 1 (0), 1 (1), 0 (1), 1 (2), 0 (2), 1 (4), 0 (3), 1 (3), 0 (4)
-<regina.BoundaryComponent4: Boundary component 0, ideal at vertex 0: 0 (0), 1 (0), 1 (1), 0 (1), 1 (2), 0 (2), 1 (4), 0 (3), 1 (3), 0 (4)>
+Boundary component 0, ideal at vertex 0: 0 (0), 1 (0), 1 (1), 0 (1), 0 (2), 1 (2), 0 (3), 1 (3), 1 (4), 0 (4)
+<regina.BoundaryComponent4: Boundary component 0, ideal at vertex 0: 0 (0), 1 (0), 1 (1), 0 (1), 0 (2), 1 (2), 0 (3), 1 (3), 1 (4), 0 (4)>
 
 Face5_0
 Vertex 0, internal, degree 2: 0 (0), 1 (0)
@@ -945,7 +945,7 @@ TreeEnumeration_NonSpun
 Level 1 of 0..1, types: 11
 <regina.TreeEnumeration_NonSpun: Level 1 of 0..1, types: 11>
 
-PermSn8_Sign
+Perm8._Sn
 [ 01234567 01234576 01234675 01234657 ... 76543201 ]
-<regina.PermSn8_Sign: [ 01234567 01234576 01234675 01234657 ... 76543201 ]>
+<regina.Perm8._Sn: [ 01234567 01234576 01234675 01234657 ... 76543201 ]>
 

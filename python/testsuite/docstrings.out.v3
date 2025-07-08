@@ -463,8 +463,8 @@ __init__(...)
     if the string begins with ``0``, the base will be assumed to be 8.
     Otherwise it will be taken as base 10.
 
-    If the template argument *withInfinity* is ``True``, then any string
-    beginning with "inf" (after any initial whitesapce) will be
+    If the template argument *supportInfinity* is ``True``, then any
+    string beginning with "inf" (after any initial whitesapce) will be
     interpreted as infinity.
 
     Whitespace may be present at the beginning or the end of the given
@@ -556,8 +556,8 @@ __init__(...)
     if the string begins with ``0``, the base will be assumed to be 8.
     Otherwise it will be taken as base 10.
 
-    If the template argument *withInfinity* is ``True``, then any string
-    beginning with "inf" (after any initial whitesapce) will be
+    If the template argument *supportInfinity* is ``True``, then any
+    string beginning with "inf" (after any initial whitesapce) will be
     interpreted as infinity.
 
     Whitespace may be present at the beginning or the end of the given
@@ -626,7 +626,7 @@ class ListView_Triangulation3_vertices(pybind11_builtins.pybind11_object)
  |
  |  End users should always store ListView objects using ``auto``, not by
  |  explicitly writing out the full ListView type. One reason for this is
- |  that, now that Regina has moved to C++20, the ListView class will most
+ |  that, if/when Regina moves to C++20, the ListView class will most
  |  likely be removed completely (in favour of the new C++20 ranges
  |  library).
  |
@@ -669,6 +669,9 @@ class ListView_Triangulation3_vertices(pybind11_builtins.pybind11_object)
  |      Here the containers are compared by _reference_ (i.e., they must be
  |      the same container object at the same location in memory; it is not
  |      enough to be two containers with identical contents).
+ |
+ |      Parameter ``other``:
+ |          the list view to compare with this.
  |
  |      Returns:
  |          ``True`` if and only if this and the given list use the same
@@ -722,14 +725,20 @@ class ListView_Triangulation3_vertices(pybind11_builtins.pybind11_object)
  |
  |      1. __ne__(self: <internal>.ListView[regina.Vertex3], arg0: <internal>.ListView[regina.Vertex3]) -> bool
  |
- |      Determines whether this and the given object have different values.
- |      This operator ``x != y`` is generated automatically, as the negation
- |      of ``x == y``.
+ |      Determines whether this and the given list view are accessing
+ |      different underlying containers.
  |
- |      This test compares the _contents_ of the two objects (i.e., it
- |      compares by value, not by reference). See the documentation for the
- |      corresponding equality test (i.e., the member function ``__eq__``)
- |      for full details on how objects of this type will be compared.
+ |      Here the containers are compared by _reference_ (i.e., to be
+ |      considered equal they must be the same container object at the same
+ |      location in memory; it is not enough to be two containers with
+ |      identical contents).
+ |
+ |      Parameter ``other``:
+ |          the list view to compare with this.
+ |
+ |      Returns:
+ |          ``True`` if and only if this and the given list use different
+ |          underlying containers.
  |
  |      2. __ne__(self: <internal>.ListView[regina.Vertex3], arg0: None) -> bool
  |
@@ -790,13 +799,10 @@ class ListView_Triangulation3_vertices(pybind11_builtins.pybind11_object)
  |  __hash__ = None
  |
  |  equalityType = <EqualityType.BY_VALUE: 1>
- |      The objects are compared by value. This means that the underlying C++
- |      operators == and != for the class *C* are used.
- |
  |
  |  ----------------------------------------------------------------------
  |  Static methods inherited from pybind11_builtins.pybind11_object:
  |
- |  __new__(*args, **kwargs) from pybind11_builtins.pybind11_type
+ |  __new__(*args, **kwargs) class method of pybind11_builtins.pybind11_object
  |      Create and return a new object.  See help(type) for accurate signature.
 
