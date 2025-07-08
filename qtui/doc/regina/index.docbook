@@ -3,9 +3,9 @@
   <!ENTITY regina "<application>Regina</application>">
   <!ENTITY kappname "&regina;">
 
-  <!ENTITY regversion "7.3">
-  <!ENTITY regdate "2023-03-18">
-  <!ENTITY copyrightyears "1999&ndash;2023">
+  <!ENTITY regversion "7.3.1">
+  <!ENTITY regdate "2025-07-11">
+  <!ENTITY copyrightyears "1999&ndash;2025">
   <!ENTITY copyrightholder "The Regina development team">
   <!ENTITY copyrightnotice
    "Copyright &copy; &copyrightyears;, &copyrightholder;">

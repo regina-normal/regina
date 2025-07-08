@@ -453,9 +453,9 @@
   </para>
   <programlisting>
 bab@ember:~$ regina-python 
-Regina 7.2
+Regina 7.3.1
 Software for low-dimensional topology
-Copyright (c) 1999-2022, The Regina development team
+Copyright (c) 1999-2025, The Regina development team
 &gt;&gt;&gt; import snappy
 &gt;&gt;&gt; m = snappy.Manifold('m001')
 &gt;&gt;&gt; t = SnapPeaTriangulation(m._to_string())

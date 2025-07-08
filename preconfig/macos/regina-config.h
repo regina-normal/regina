@@ -91,10 +91,10 @@
 #define REGINA_DB_EXT "tdb"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Regina 7.3"
+#define PACKAGE_STRING "Regina 7.3.1"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "7.3"
+#define PACKAGE_VERSION "7.3.1"
 
 /* Major version number of the package. */
 #define PACKAGE_VERSION_MAJOR 7
@@ -107,7 +107,7 @@
 #define BUILD_INFO "Xcode build"
 
 /* A nicely formatted combination of PACKAGE_STRING and BUILD_INFO. */
-#define PACKAGE_BUILD_STRING "Regina 7.3 (Xcode build)"
+#define PACKAGE_BUILD_STRING "Regina 7.3.1 (Xcode build)"
 
 /* Define to the version of SnapPy that is bundled with Regina. */
 #define SNAPPY_VERSION "2.8"

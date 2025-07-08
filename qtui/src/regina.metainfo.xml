@@ -61,7 +61,7 @@
   </provides>
 
   <releases>
-    <release version="7.3" date="2023-03-18">
+    <release version="7.3.1" date="2025-07-11">
       <description>
         <p>
           Maintenance release that fixes some bugs, cleans up some

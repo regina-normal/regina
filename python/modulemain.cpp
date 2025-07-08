@@ -175,7 +175,7 @@ namespace {
     std::string welcome() {
         return std::string(PACKAGE_STRING) +
             "\nSoftware for low-dimensional topology" +
-            "\nCopyright (c) 1999-2023, The Regina development team";
+            "\nCopyright (c) 1999-2025, The Regina development team";
     }
 }
 
