@@ -7,6 +7,7 @@ SET ( FILES
   disctype.cpp
   facenumbering.cpp
   intutils.cpp
+  iterators.cpp
   link.cpp
   perm.cpp
   snappea.cpp

@@ -14,7 +14,18 @@ Version 7.3.1  [ 11 July, 2025 ]
           Python 3.12 and later.
         - This release requires Python 3.7 or newer (i.e., Python 3.6 is
           no longer supported).
+        - For several iterator classes, the associated type aliases
+          (value_type, etc.) are no longer provided as class members, since
+          these were confusing pybind11.  Instead you can (and should) access
+          these through the C++ standard iterator library (e.g.,
+          std::iterator_traits<T>::value_type, or std::iter_value_t<T>).
     ENGINE:
+        Class DiscSpecIterator:
+            - This class no longer provides its iterator-related type aliases
+              (value_type, etc.) as members, since these confused pybind11.
+              Instead you should access them through the C++ standard
+              iterator library (e.g., via std::iterator_traits).  The old
+              member type aliases have been removed completely.
         Class Laurent<T>:
             - Fixed a bug where, in special circumstances, set() could have no
               effect.  This did not affect any past Jones polynomial code.
@@ -45,6 +56,20 @@ Version 7.3.1  [ 11 July, 2025 ]
               isConnected(), or an earlier call to components()), then it would
               return the entire surface as a single component.
               See: https://regina-normal.github.io/bugs.html#surfacecomp
+        Class NormalSurfaces, NormalHypersurfaces:
+            - The inner class VectorIterator no longer provides its
+              iterator-related type aliases (value_type, etc.) as members,
+              since these confused pybind11.  Instead you should access them
+              through the C++ standard iterator library (e.g., via
+              std::iterator_traits).  The old member type aliases have been
+              removed completely.
+        Class Packet:
+            - The inner classes ChildIterator and SubtreeIterator no longer
+              provides their iterator-related type aliases (value_type, etc.)
+              as members, since these confused pybind11.  Instead you should
+              access them through the C++ standard iterator library (e.g., via
+              std::iterator_traits).  The old member type aliases have been
+              removed completely.
         Class Triangulation<dim>:
             - Fixed a memory leak in the move constructor.
         Class Triangulation<3>:

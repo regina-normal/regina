@@ -1161,6 +1161,10 @@ using DiscSetSurface = DiscSetSurfaceDataImpl<DiscSetTet>;
  * from a DiscSetSurfaceData<T> the template argument can be automatically
  * deduced.
  *
+ * As of Regina 7.3.1, this class no longer provides the iterator type aliases
+ * \a value_type, \a iterator_category, \a difference_type, \a pointer and
+ * \a reference. Instead you can access these through `std::iterator_traits`.
+ *
  * \warning This class converts the indices of normal discs of a
  * given type from LargeInteger to `unsigned long`.  See the
  * precondition below.
@@ -1182,18 +1186,6 @@ using DiscSetSurface = DiscSetSurfaceDataImpl<DiscSetTet>;
  */
 template <class TetData>
 class DiscSpecIterator {
-    public:
-        using iterator_category = std::forward_iterator_tag;
-            /**< Declares this to be a forward iterator type. */
-        using value_type = regina::DiscSpec;
-            /**< Indicates what type the iterator points to. */
-        using difference_type = long;
-            /**< The type obtained by subtracting iterators. */
-        using pointer = const regina::DiscSpec*;
-            /**< A pointer to \a value_type. */
-        using reference = const regina::DiscSpec&;
-            /**< The type obtained when dereferencing iterators. */
-
     private:
         const DiscSetSurfaceDataImpl<TetData>* internalDiscSet;
             /**< The disc set through which we are iterating. */
@@ -1386,6 +1378,19 @@ class DiscSpecIterator {
 
     friend class DiscSetSurfaceDataImpl<TetData>;
 };
+
+#ifndef __APIDOCS
+} namespace std {
+    template <class TetData>
+    struct iterator_traits<regina::DiscSpecIterator<TetData>> {
+        using value_type = regina::DiscSpec;
+        using iterator_category = std::forward_iterator_tag;
+        using difference_type = long;
+        using pointer = const value_type*;
+        using reference = const value_type&;
+    };
+} namespace regina {
+#endif
 
 // Inline functions for DiscSpec
 

@@ -907,24 +907,16 @@ class NormalSurfaces :
          * A bidirectional iterator that runs through the raw vectors for
          * surfaces in this list.
          *
+         * As of Regina 7.3.1, this class no longer provides the iterator type
+         * aliases \a value_type, \a iterator_category, \a difference_type,
+         * \a pointer and \a reference. Instead you can access these through
+         * `std::iterator_traits`.
+         *
          * \nopython Instead NormalSurfaces::vectors() returns an object of a
          * different (hidden) class that supports the Python iterable/iterator
          * interface.
          */
         class VectorIterator {
-            public:
-                using iterator_category = std::bidirectional_iterator_tag;
-                    /**< Declares this to be a bidirectional iterator type. */
-                using value_type = Vector<LargeInteger>;
-                    /**< Indicates what type the iterator points to. */
-                using difference_type = typename
-                    std::vector<NormalSurface>::const_iterator::difference_type;
-                    /**< The type obtained by subtracting iterators. */
-                using pointer = const Vector<LargeInteger>*;
-                    /**< A pointer to \a value_type. */
-                using reference = const Vector<LargeInteger>&;
-                    /**< The type obtained when dereferencing iterators. */
-
             private:
                 std::vector<NormalSurface>::const_iterator it_;
                     /**< An iterator into the underlying list of surfaces. */
@@ -1348,6 +1340,19 @@ class NormalSurfaces :
  * \ingroup surfaces
  */
 void swap(NormalSurfaces& lhs, NormalSurfaces& rhs);
+
+#ifndef __APIDOCS
+} namespace std {
+    template <>
+    struct iterator_traits<regina::NormalSurfaces::VectorIterator> {
+        using value_type = regina::Vector<regina::LargeInteger>;
+        using iterator_category = std::bidirectional_iterator_tag;
+        using difference_type = typename std::vector<regina::NormalSurface>::const_iterator::difference_type;
+        using pointer = const value_type*;
+        using reference = const value_type&;
+    };
+} namespace regina {
+#endif
 
 /**
  * Generates the set of normal surface matching equations for the

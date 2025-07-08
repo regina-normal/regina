@@ -83,7 +83,11 @@ for a in AngleStructures(Example3.figureEight()):
     print(a)
 
 print('Normal surface iteration:')
-for s in NormalSurfaces(Example3.figureEight(), NS_QUAD):
+surfaces = NormalSurfaces(Example3.figureEight(), NS_QUAD)
+for s in surfaces:
+    print(s)
+
+for s in surfaces.vectors():
     print(s)
 
 print('Normal disc iteration:')
@@ -91,7 +95,11 @@ for d in DiscSetSurface(NormalSurfaces(Example3.poincare(), NS_STANDARD).surface
     print(d)
 
 print('Normal hypersurface iteration:')
-for s in NormalHypersurfaces(Example4.rp4(), HS_STANDARD):
+hypersurfaces = NormalHypersurfaces(Example4.rp4(), HS_STANDARD)
+for s in hypersurfaces:
+    print(s)
+
+for s in hypersurfaces.vectors():
     print(s)
 
 print('Model link graph cell arc iteration:')
@@ -111,3 +119,10 @@ print('Vector<LargeInteger> iteration:')
 for i in VectorLarge([3,5,-1]):
 	print(i)
 
+print('PermGroup iteration:')
+for i in PermGroup4(PERM_GROUP_ALTERNATING):
+	print(i)
+
+print('TableView iteration:')
+for i in quadString:
+	print(i)
