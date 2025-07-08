@@ -62,7 +62,7 @@ conjecture, as described by Gompf, Scharlemann and Thompson.
 
 Specifically, this knot is Figure 2 from their paper "Fibered knots
 and potential counterexamples to the property 2R and slice-ribbon
-conjectures", arXiv:1103.1601.
+conjectures", Geometry & Topology 14 (2010), 2305-2347.
 
 Returns:
     the Gompf-Scharlemann-Thompson knot.)doc";

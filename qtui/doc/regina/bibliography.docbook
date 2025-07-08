@@ -28,17 +28,26 @@
  </biblioentry>
 
  <biblioentry id="bib-budney-emb11">
-  <abbrev>Bud08</abbrev>
-  <authorgroup><author>
-   <firstname>Ryan</firstname>
-   <surname>Budney</surname>
-  </author></authorgroup>
+  <abbrev>Bud22</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Ryan</firstname>
+    <surname>Budney</surname>
+   </author>
+   <author>
+    <firstname>Benjamin</firstname>
+    <othername>A.</othername>
+    <surname>Burton</surname>
+   </author>
+  </authorgroup>
   <title>Embeddings of 3-manifolds in
    <replaceable>S</replaceable><superscript>4</superscript>
    from the point of view of the 11-tetrahedron census</title>
-  <edition>Preprint</edition>
-  <issuenum>arXiv:0810.2346</issuenum>
-  <date>October 2008</date>
+  <edition>Experimental Math.</edition>
+  <volumenum>vol. 31</volumenum>
+  <issuenum>no. 3</issuenum>
+  <artpagenums>pp. 988&ndash;1013</artpagenums>
+  <date>2022</date>
  </biblioentry>
 
  <biblioentry id="bib-burton-phd">
