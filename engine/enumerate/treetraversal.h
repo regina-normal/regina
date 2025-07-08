@@ -339,7 +339,7 @@ class TreeTraversal : public ShortOutput<
          *
          * This routine returns the same information that dumpTypes() writes.
          *
-         * \param the type vector in string form.
+         * \return the type vector in string form.
          */
         std::string typeString() const;
 
