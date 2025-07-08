@@ -12412,6 +12412,7 @@
 					"\"$(SRCROOT)/preconfig/macos\"",
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/python/pybind11_v2\"",
 					/usr/include/libxml2,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
@@ -12470,6 +12471,7 @@
 					"\"$(SRCROOT)/preconfig/macos\"",
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/python/pybind11_v2\"",
 					/usr/include/libxml2,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
