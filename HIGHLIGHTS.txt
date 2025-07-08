@@ -14,6 +14,9 @@ Version 7.3.1  [ 11 July, 2025 ]
         - Regina now requires Python 3.7 or newer (i.e., Python 3.6 is
           no longer supported).
     Bugs fixed:
+        - Manually resolving a crossing in a link would not clear out any
+          cached polynomials that had already been computed for that link.
+          See: https://regina-normal.github.io/bugs.html#resolve
         - Manually setting a coefficient in a Laurent polynomial in C++/Python
           would, in special circumstances, have no effect.  This did not affect
           the GUI or any Jones polynomial computations.
@@ -28,9 +31,6 @@ Version 7.3.1  [ 11 July, 2025 ]
           calling NormalSurface.components() in C++/Python would return the
           entire surface as a single component.  This did not affect the GUI.
           See: https://regina-normal.github.io/bugs.html#surfacecomp
-        - Resolving a crossing (either through the GUI or in C++/Python) would
-          not clear out any cached polynomials that had already been computed
-          for that link.
         - Fixed some less important problems also: see the full changelog for
           details.
     Other improvements:

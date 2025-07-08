@@ -33,6 +33,7 @@ Version 7.3.1  [ 11 July, 2025 ]
         Class Link:
             - Fixed a bug where calling resolve() would not clear out any
               cached link polynomials that had already been computed.
+              See: https://regina-normal.github.io/bugs.html#resolve
             - Fixed a problem with dumpConstruction() where the C++ initialiser
               lists were empty (instead of containing a single 0) for
               zero-crossing components.
