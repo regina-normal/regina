@@ -803,6 +803,6 @@ class ListView_Triangulation3_vertices(pybind11_builtins.pybind11_object)
  |  ----------------------------------------------------------------------
  |  Static methods inherited from pybind11_builtins.pybind11_object:
  |
- |  __new__(*args, **kwargs) class method of pybind11_builtins.pybind11_object
+ |  __new__(*args, **kwargs) from pybind11_builtins.pybind11_type
  |      Create and return a new object.  See help(type) for accurate signature.
 
