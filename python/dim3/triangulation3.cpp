@@ -92,8 +92,15 @@ namespace pybind11::detail {
                 if (! pybind11::hasattr(src, "_to_string"))
                     return false;
 
-                value.string_ = pybind11::str(src.attr("_to_string")());
-                return true;
+                try {
+                    value.string_ = pybind11::str(src.attr("_to_string")());
+                    return true;
+                } catch (...) {
+                    // Perhaps _to_string is not callable, or perhaps it
+                    // returns the wrong type.  Either way, this is not the
+                    // SnapPy object we are hoping for.
+                    return false;
+                }
             }
 
             static handle cast(const regina::python::SnapPyObject& /* src */,
