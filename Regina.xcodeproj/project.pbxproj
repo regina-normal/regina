@@ -11609,6 +11609,7 @@
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
+					"-headerpad_max_install_names",
 				);
 				PRODUCT_NAME = engine;
 				SKIP_INSTALL = YES;
@@ -11646,6 +11647,7 @@
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
+					"-headerpad_max_install_names",
 				);
 				PRODUCT_NAME = engine;
 				SKIP_INSTALL = YES;
