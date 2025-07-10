@@ -170,6 +170,17 @@ PythonInterpreter::PythonInterpreter(
         // meantime, since this is only relevant when the program is exiting,
         // this should be relatively harmless.
         pybind11::initialize_interpreter();
+
+        // In Python 3.13 (but not Python 3.12), the first subinterpreter
+        // (but only the first) is unable to see the pybind11 conversion table.
+        // I have no idea why, and this definitely needs looking into.
+        // In the meantime, a workaround is to load regina's extension module
+        // here in the main interpreter also.
+        //
+        // If this import fails, do so silently; we'll see the same error
+        // again immediately in the first subinterpreter.
+        importReginaIntoNamespace(PyModule_GetDict(PyImport_AddModule(
+            "__main__")), fixPythonPath);
     }
 
     subInterpreter = pybind11::subinterpreter::create();
