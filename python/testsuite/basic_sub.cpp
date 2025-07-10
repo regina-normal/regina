@@ -30,6 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
+#include "packet/packet.h"
+#include "triangulation/dim3.h"
 #include "../gui/pythoninterpreter.h"
 #include "../gui/pythonoutputstream.h"
 #include <fstream>
@@ -78,9 +80,18 @@ struct Session {
     void executeLine(const char* line) {
         py.executeLine(line);
     }
+
+    void setVar() {
+        py.setVar("tri", regina::make_packet(regina::Triangulation<3>()));
+    }
 };
 
 int main(int argc, char* argv[]) {
+    {
+        Session s(argv[0]);
+        s.setVar();
+        s.executeLine("print(tri)");
+    }
     {
         Session s(argv[0]);
         s.executeLine("print(ExampleLink.trefoil().jones())");
