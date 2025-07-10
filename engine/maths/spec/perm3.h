@@ -1149,7 +1149,7 @@ class Perm<3> {
          * \param code the internal code from which the new
          * permutation will be created.
          */
-        constexpr Perm<3>(Code code);
+        constexpr Perm(Code code);
 
     private:
         /**
