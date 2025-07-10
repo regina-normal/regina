@@ -53,6 +53,7 @@
 #endif
 
 #include "regina-core.h"
+#include <cstdint>
 #include <map>
 
 namespace regina::syntax {
