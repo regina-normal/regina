@@ -601,15 +601,9 @@ ELSE(DISABLE_GUI)
         # - This code assumes the Graphviz path does not contain semicolons.
         # - Although FindPkgConfig sets many LIBGVC_... variables, we only fix
         #   those that we use in our build system.
+        # - We do not fix LIBGVC_INCLUDE_DIRS, since this is legitimately a
+        #   semicolon-separated list.
         #
-        string(REPLACE ";" " " _TMP_STR "${LIBGVC_INCLUDEDIR}")
-        execute_process(
-          COMMAND cmd /c for %A in ("${_TMP_STR}") do @echo %~sA
-          RESULT_VARIABLE _conv_res
-          OUTPUT_VARIABLE _TMP_STR)
-        string(REGEX REPLACE "\n" "" _TMP_STR "${_TMP_STR}")
-        set(LIBGVC_INCLUDEDIR "${_TMP_STR}" CACHE INTERNAL "")
-
         string(REPLACE ";" " " _TMP_STR "${LIBGVC_LIBDIR}")
         execute_process(
           COMMAND cmd /c for %A in ("${_TMP_STR}") do @echo %~sA
