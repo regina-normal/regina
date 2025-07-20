@@ -41,9 +41,8 @@ WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 General Public License for more details.
 
-A full copy of the GNU General Public License should be included below;
-if not, write to the Free Software Foundation, Inc., 51 Franklin St,
-Fifth Floor, Boston, MA 02110-1301, USA.
+A full copy of the GNU General Public License should be included below.
+If not, see <https://www.gnu.org/licenses/>.
 
 
 ONLINE DISTRIBUTION:

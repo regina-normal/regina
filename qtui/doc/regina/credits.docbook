@@ -107,10 +107,8 @@
    </para>
    <para>
     A full copy of the GNU General Public License
-    should be <ulink url="gpl-license.html">included here</ulink>;
-    if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+    should be <ulink url="gpl-license.html">included here</ulink>.
+    If not, see &lt;https://www.gnu.org/licenses/&gt;.
    </para>
   </sect2>
 
