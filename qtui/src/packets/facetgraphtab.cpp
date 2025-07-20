@@ -31,7 +31,6 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "regina-config.h" // for LIBGVC_FOUND
 #include "treewidth/treedecomposition.h"
 #include "triangulation/facetpairing.h"
 #include "triangulation/facetpairing3.h"
@@ -43,6 +42,7 @@
 #include "facetgraphtab.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
+#include "../graphviz.h"
 #include "../messagelayer.h"
 
 #include <fstream>
@@ -58,34 +58,6 @@
 #include <QSysInfo>
 #include <QStackedWidget>
 #include <QTemporaryFile>
-
-#ifdef LIBGVC_FOUND
-#include "gvc.h"
-
-// Define LIBGVC_DYNAMIC_PLUGINS if you wish to load plugins dynamically.
-// This requires (amongst other things) the presence of the file config6,
-// which list all available plugins.
-// #define LIBGVC_DYNAMIC_PLUGINS 1
-
-#ifndef LIBGVC_DYNAMIC_PLUGINS
-#if defined(_WIN32)
-__declspec(dllimport) gvplugin_library_t gvplugin_neato_layout_LTX_library;
-__declspec(dllimport) gvplugin_library_t gvplugin_dot_layout_LTX_library;
-__declspec(dllimport) gvplugin_library_t gvplugin_core_LTX_library;
-#else
-extern gvplugin_library_t gvplugin_neato_layout_LTX_library;
-extern gvplugin_library_t gvplugin_dot_layout_LTX_library;
-extern gvplugin_library_t gvplugin_core_LTX_library;
-#endif
-
-lt_symlist_t lt_preloaded_symbols[] = {
-    { "gvplugin_neato_layout_LTX_library", &gvplugin_neato_layout_LTX_library },
-    { "gvplugin_dot_layout_LTX_library", &gvplugin_dot_layout_LTX_library },
-    { "gvplugin_core_LTX_library", &gvplugin_core_LTX_library },
-    { nullptr, nullptr }
-};
-#endif
-#endif
 
 FacetGraphTab::FacetGraphTab(FacetGraphData* useData,
         PacketTabbedViewerTab* useParentUI) :
@@ -222,13 +194,7 @@ void FacetGraphTab::refresh() {
     chooseType->setEnabled(false);
 
 #ifndef LIBGVC_FOUND
-    showError(tr("<qt>This copy of <i>Regina</i> was built without "
-        "<i>Graphviz</i> support.  Therefore I cannot draw graphs.<p>"
-        "If you downloaded <i>Regina</i> as a ready-made package, please "
-        "contact the package maintainer for a <i>Graphviz</i>-enabled build.<p>"
-        "If you compiled <i>Regina</i> yourself, try installing the "
-        "<i>Graphviz</i> libraries on your system and then compiling "
-        "<i>Regina</i> again.</qt>"));
+    showError(tr(Graphviz::notSupported));
     return;
 #else
     neverDrawn = false;
@@ -293,34 +259,9 @@ void FacetGraphTab::refresh() {
             break;
     }
 
-    char* svg;
-    unsigned svgLen;
-
-#ifdef LIBGVC_DYNAMIC_PLUGINS
-    GVC_t* gvc = gvContext();
-#else
-    // Manually specify our plugins to avoid on-demand loading.
-    GVC_t* gvc = gvContextPlugins(lt_preloaded_symbols, 0);
-
-    gvAddLibrary(gvc, &gvplugin_core_LTX_library);
-    if (chooseType->currentIndex() == 0)
-        gvAddLibrary(gvc, &gvplugin_neato_layout_LTX_library);
-    else
-        gvAddLibrary(gvc, &gvplugin_dot_layout_LTX_library);
-#endif
-
-    Agraph_t* g = agmemread(dot.c_str());
-    if (chooseType->currentIndex() == 0)
-        gvLayout(gvc, g, "neato");
-    else
-        gvLayout(gvc, g, "dot");
-    gvRenderData(gvc, g, "svg", &svg, &svgLen);
-    gvFreeLayout(gvc, g);
-    agclose(g);
-    gvFreeContext(gvc);
-
-    graph->load(QByteArray(svg, svgLen));
-    graph->resize(graph->sizeHint());
+    Graphviz::render(graph, dot,
+        chooseType->currentIndex() == 0 ? Graphviz::Renderer::Neato :
+        Graphviz::Renderer::Dot);
 
     stack->setCurrentWidget(layerGraph);
     chooseType->setEnabled(true);

@@ -1280,6 +1280,7 @@
 		057EE4E21C600A3600C4D155 /* facetpairing7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4651C600A1B00C4D155 /* facetpairing7.cpp */; };
 		057EE4E31C600A3600C4D155 /* facetpairing8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4661C600A1B00C4D155 /* facetpairing8.cpp */; };
 		057F317419B8935800D30520 /* Example.mm in Sources */ = {isa = PBXBuildFile; fileRef = 057F317319B8935800D30520 /* Example.mm */; };
+		0581D27C2E2D39500099E9E7 /* graphviz.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581D27B2E2D39500099E9E7 /* graphviz.cpp */; };
 		0582FDE62731FE0900203AE7 /* attachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0582FDE42731FE0800203AE7 /* attachment.cpp */; };
 		0582FDE72731FE0900203AE7 /* attachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0582FDE42731FE0800203AE7 /* attachment.cpp */; };
 		0582FDE82731FE0900203AE7 /* attachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 0582FDE52731FE0800203AE7 /* attachment.h */; };
@@ -4066,6 +4067,8 @@
 		057EE4A61C600A3000C4D155 /* triangulation15.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation15.cpp; sourceTree = "<group>"; };
 		057F317219B8935800D30520 /* Example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Example.h; sourceTree = "<group>"; };
 		057F317319B8935800D30520 /* Example.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Example.mm; sourceTree = "<group>"; };
+		0581D27A2E2D39500099E9E7 /* graphviz.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = graphviz.h; sourceTree = "<group>"; };
+		0581D27B2E2D39500099E9E7 /* graphviz.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = graphviz.cpp; sourceTree = "<group>"; };
 		0582FDE42731FE0800203AE7 /* attachment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = attachment.cpp; sourceTree = "<group>"; };
 		0582FDE52731FE0800203AE7 /* attachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = attachment.h; sourceTree = "<group>"; };
 		0582FDE92731FE3300203AE7 /* attachment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = attachment.cpp; sourceTree = "<group>"; };
@@ -7554,6 +7557,8 @@
 				0564A4231811D91E002CC2AE /* examplesaction.h */,
 				0564A4241811D91E002CC2AE /* exports.cpp */,
 				0564A4251811D91E002CC2AE /* foreign */,
+				0581D27B2E2D39500099E9E7 /* graphviz.cpp */,
+				0581D27A2E2D39500099E9E7 /* graphviz.h */,
 				0564A4411811D91E002CC2AE /* iconcache.cpp */,
 				0564A4421811D91E002CC2AE /* iconcache.h */,
 				0564A56F1811D91F002CC2AE /* imports.cpp */,
@@ -11042,6 +11047,7 @@
 				0564A80F1811D921002CC2AE /* pythonhandler.cpp in Sources */,
 				0564A9631811D921002CC2AE /* textui.cpp in Sources */,
 				0564A8051811D921002CC2AE /* examplesaction.cpp in Sources */,
+				0581D27C2E2D39500099E9E7 /* graphviz.cpp in Sources */,
 				0564A9471811D921002CC2AE /* packetcreator.cpp in Sources */,
 				0564A9411811D921002CC2AE /* main.cpp in Sources */,
 				0564A8031811D921002CC2AE /* coordinatechooser.cpp in Sources */,
