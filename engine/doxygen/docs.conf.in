@@ -56,6 +56,7 @@ ALIASES = \
     "tidy=<i>Tidy:</i>" \
     "tidylong=<i>Tidy (long-term):</i>" \
     "headers=\par Headers^^" \
+    "topics=@DOXYGEN_TOPICS@" \
     "apinotfinal=\warning The API for this class or function has not yet been finalised.  This means that the interface may change in new versions of Regina, without maintaining backward compatibility.  If you use this class directly in your own code, please check the detailed changelog with each new release to see if you need to make changes to your code."
 
 # Warning and progress related options:

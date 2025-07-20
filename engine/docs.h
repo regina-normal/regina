@@ -44,7 +44,7 @@
  *  entities in the C++ calculation engine, as well as how these can
  *  be accessed through Python.
  *
- *  To start: visit the <a href="modules.html">Modules</a> page and take
+ *  To start: visit the \topics page and take
  *  a look around, or browse through the classes regina::Triangulation<3>,
  *  regina::Link, and regina::NormalSurfaces.
  *
