@@ -65,6 +65,7 @@ SET(SOURCES ${SOURCES}
   columnlayout.cpp
   elidedlabel.cpp
   examplesaction.cpp
+  graphviz.cpp
   iconcache.cpp
   introdialog.cpp
   main.cpp
