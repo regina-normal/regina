@@ -24,10 +24,10 @@
 // - The release level is set to "alpha" for development versions.
 //   Use 0xA0 (LEVEL=0xA, SERIAL=0) for development versions.
 // - For stable releases, set the serial to 0.
-#define PYBIND11_VERSION_RELEASE_LEVEL PY_RELEASE_LEVEL_GAMMA
-#define PYBIND11_VERSION_RELEASE_SERIAL 4
+#define PYBIND11_VERSION_RELEASE_LEVEL PY_RELEASE_LEVEL_FINAL
+#define PYBIND11_VERSION_RELEASE_SERIAL 0
 // String version of (micro, release level, release serial), e.g.: 0a0, 0b1, 0rc1, 0
-#define PYBIND11_VERSION_PATCH 0rc4
+#define PYBIND11_VERSION_PATCH 0
 /* -- end version constants -- */
 
 #if !defined(Py_PACK_FULL_VERSION)
@@ -490,7 +490,8 @@ PyModuleDef_Init should be treated like any other PyObject (so not shared across
 
     - ``mod_gil_not_used()``
     - ``multiple_interpreters::per_interpreter_gil()``
-    - ``multiple_interpreters::per_interprshareeter_gil()``
+    - ``multiple_interpreters::shared_gil()``
+    - ``multiple_interpreters::not_supported()``
 
     .. code-block:: cpp
 
