@@ -841,6 +841,7 @@ Version 7.4  [ (to be announced) ]
               that support C++20 sufficiently well.  For older compilers that
               do not support constexpr strings, this remains inline const.
     PYTHON:
+        - For Python 3.12 and later, upgraded pybind11 from 3.0.0rc4 to 3.0.0.
         - Regardinging enums and flags:
           + Rich flag types based on regina::Flags<...> (such as NormalAlg,
             CensusPurge, etc.) now support a bool() operator that tests for
