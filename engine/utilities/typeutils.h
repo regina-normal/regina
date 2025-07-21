@@ -43,6 +43,7 @@
 
 #include <functional>
 #include <typeinfo>
+#include <stdexcept>
 #include <variant>
 #include "regina-core.h"
 
