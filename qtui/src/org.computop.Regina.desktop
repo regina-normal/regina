@@ -6,5 +6,6 @@ GenericName=3-Manifold Topology
 Comment=Mathematical software for low-dimensional topology
 Icon=regina
 Exec=regina-gui %F
+StartupWMClass=io.github.regina-normal.regina-gui
 Categories=Math;Education;Science;Qt;
 MimeType=application/x-regina;
