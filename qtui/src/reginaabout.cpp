@@ -23,10 +23,8 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
  *  General Public License for more details.                              *
  *                                                                        *
- *  You should have received a copy of the GNU General Public             *
- *  License along with this program; if not, write to the Free            *
- *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,       *
- *  MA 02110-1301, USA.                                                   *
+ *  You should have received a copy of the GNU General Public License     *
+ *  along with this program. If not, see <https://www.gnu.org/licenses/>. *
  *                                                                        *
  **************************************************************************/
 
@@ -87,8 +85,7 @@ const QString ReginaAbout::regLicense( tr(
     "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General\n"
     "Public License for more details.\n\n"
     "You should have received a copy of the GNU General Public License along\n"
-    "with this program; if not, write to the Free Software Foundation, Inc.,\n"
-    "51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.\n\n"
+    "with this program. If not, see <https://www.gnu.org/licenses/>.\n\n"
     "ONLINE DISTRIBUTION:\n\n"
     "Regina's own source code comes with the following permissions in\n"
     "addition to the GNU General Public License:\n\n"
