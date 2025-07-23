@@ -157,9 +157,16 @@ QIcon ReginaSupport::regIcon(const QString& name) {
 }
 
 QIcon ReginaSupport::themeIcon(const QString& name) {
+#if defined(Q_OS_MACOS) || defined(Q_OS_WIN)
+    // Newer versions of Qt provide QIcon::fromTheme(...) for macOS and
+    // Windows.  The visual style clashes horribly with the other icons used
+    // throughout Regina.  Don't use them.
+    QIcon icon;
+#else
     QIcon icon = QIcon::fromTheme(name);
     if (! icon.isNull())
         return icon;
+#endif
 
     QString filename = home() + "/icons/system/" + name + "-%1.png";
     for (int size : iconSizes)
