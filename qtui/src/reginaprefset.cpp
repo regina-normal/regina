@@ -60,7 +60,7 @@ namespace {
 
 ReginaPrefSet ReginaPrefSet::instance_;
 
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
     const char* ReginaPrefSet::defaultGAPExec = "gap.exe";
 #else
     const char* ReginaPrefSet::defaultGAPExec = "gap";
@@ -114,7 +114,7 @@ ReginaPrefSet::ReginaPrefSet() :
 
 QFont ReginaPrefSet::fixedWidthFont() {
     QFont ans;
-#ifdef Q_OS_MACX
+#ifdef Q_OS_MACOS
     ans.setFamily("menlo");
 #else
     ans.setFamily("monospace");
@@ -133,7 +133,7 @@ void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
     QString handbookName = (handbook ? handbook : "regina");
 
     QString home = QFile::decodeName(regina::GlobalDirs::home().c_str());
-#if defined(REGINA_INSTALL_BUNDLE) && defined(Q_OS_MACX) && defined(REGINA_XCODE_BUNDLE)
+#if defined(REGINA_INSTALL_BUNDLE) && defined(Q_OS_MACOS) && defined(REGINA_XCODE_BUNDLE)
     // The Xcode build installs the handbooks as bundle resources, at the root
     // of the Resources directory.
     QString index = home +
