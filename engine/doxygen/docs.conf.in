@@ -8,7 +8,8 @@ PROJECT_NAME         = "Regina @PACKAGE_VERSION@ Calculation Engine"
 
 OUTPUT_DIRECTORY     = "@PROJECT_BINARY_DIR@/docs/engine"
 
-DISABLE_INDEX        = NO
+# DISABLE_INDEX        = NO
+# GENERATE_TREEVIEW    = NO
 EXTRACT_ALL          = NO
 EXTRACT_PRIVATE      = NO
 EXTRACT_STATIC       = YES
