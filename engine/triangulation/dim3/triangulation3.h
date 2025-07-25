@@ -898,7 +898,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * you choose is not supported for the given parameters (\a r and
          * \a parity), then Regina will use another algorithm instead.
          * \param tracker a progress tracker through will progress will
-         * be reported, or \c nullptr if no progress reporting is required.
+         * be reported, or \c null if no progress reporting is required.
          * \return the requested Turaev-Viro invariant, or an uninitialised
          * field element if the calculation was cancelled via the given
          * progress tracker.
@@ -1781,7 +1781,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \param threads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * \param tracker a progress tracker through which progress will
-         * be reported, or \c nullptr if no progress reporting is required.
+         * be reported, or \c null if no progress reporting is required.
          * \return \c true if and only if the triangulation was successfully
          * simplified to fewer tetrahedra.
          */

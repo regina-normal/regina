@@ -408,14 +408,14 @@ struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
  * The purpose of this function is to override this default typename
  * conversion mechanism.  If the C++ type referred to by \a t has a
  * known Python name that should always be used, this function will
- * return it.  Otherwise this function returns \c nullptr, indicating
+ * return it.  Otherwise this function returns \c null, indicating
  * that the default conversion mechanism should be used.
  *
  * \nopython
  *
  * \param t an object that references the C++ type whose display name we
  * wish to obtain.
- * \return the preferred display name for this type in Python, or \c nullptr
+ * \return the preferred display name for this type in Python, or \c null
  * if the default C++-to-Python name conversion mechanism should be used.
  */
 const char* pythonTypename(const std::type_info* t);

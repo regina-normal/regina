@@ -775,18 +775,18 @@ class SnapPeaTriangulation :
     private:
         regina::snappea::Triangulation* data_;
             /**< The triangulation stored in SnapPea's native format,
-                 or \c nullptr if this is a null triangulation. */
+                 or \c null if this is a null triangulation. */
         std::complex<double>* shape_;
             /**< The array of tetrahedron shapes, in rectangular form, using a
                  fixed coordinate system (fixed alignment in SnapPea's
                  terminology).  All shapes are with respect to the Dehn filled
                  hyperbolic structure.  If this is a null triangulation, or if
                  the solution type is `None` or `NotAttempted`, then shape_ will
-                 be \c nullptr. */
+                 be \c null. */
         Cusp* cusp_;
             /**< An array that caches information about each cusp of the
                  internal SnapPea triangulation.  If this is a null
-                 triangulation then cusp_ will be \c nullptr. */
+                 triangulation then cusp_ will be \c null. */
         unsigned filledCusps_;
             /**< The number of cusps that are currently filled.
                  This has type \c unsigned (not \c size_t) to match

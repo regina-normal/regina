@@ -142,7 +142,7 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         QComboBox* type;
         std::vector<QListView*> componentLists;
             /**< One list for each component.  For a 0-crossing unknot
-                 component, the corresponding list is \c nullptr. */
+                 component, the corresponding list is \c null. */
         ssize_t useStrand;
 
         /**
