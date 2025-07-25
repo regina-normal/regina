@@ -180,6 +180,9 @@ TEST_F(Dim2Test, makeCanonical) {
 }
 TEST_F(Dim2Test, isomorphismSignature) {
     testManualCases(TriangulationTest<2>::verifyIsomorphismSignature);
+    verifyIsomorphismSignatureWithLocks(torus2.tri, torus2.name);
+    verifyIsomorphismSignatureWithLocks(s2Oct.tri, s2Oct.name);
+    verifyIsomorphismSignatureWithLocks(rp2.tri, rp2.name);
 }
 TEST_F(Dim2Test, pachner) {
     testManualCases(TriangulationTest<2>::verifyPachner);

@@ -575,6 +575,17 @@ class Base64SigEncoder {
             }
         }
 
+        /**
+         * Appends the given character verbatim to this encoding.
+         *
+         * \param c the character to append.  This need not be one of the 64
+         * characters used in this base64 encoding; however, ideally it should
+         * be printable.
+         */
+        void append(char c) {
+            base64_ += c;
+        }
+
         Base64SigEncoder(const Base64SigEncoder&) = delete;
         Base64SigEncoder& operator = (const Base64SigEncoder&) = delete;
 };

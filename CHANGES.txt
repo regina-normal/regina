@@ -248,9 +248,19 @@ Version 7.4  [ (to be announced) ]
             - New type alias to simplify arithmetic when using IntOfSize<...>.
         Class Isomorphism<dim>:
             - New routine hash(), which uses the tight encoding.
-        Class IsoSigPrintable<dim>:
-            - No longer derives from Base64SigEncoding (which is now
-              deprecated).
+        Class IsoSigPrintable<...>, IsoSigPrintableLockFree<...>:
+            - IsoSigPrintable no longer derives from Base64SigEncoding (which
+              is now deprecated).
+            - IsoSigPrintable now takes a second template argument to indicate
+              whether simplex/facet locks should be encoded.  The default is
+              to encode locks, which in practice means that triangulations
+              with locks will have an additional suffix on their isomorphism
+              signatures.
+            - New type alias IsoSigPrintableLockFree<dim>, which is the
+              variant of IsoSigPrintable that ignores locks (thus reproducing
+              the behaviour of Regina 7.3.x and earlier).
+            - The encode() function now takes an extra argument describing
+              simplex and/or facet locks.
         Enum Language:
             - New enumeration that describes supported programming languages.
         Class LargeInteger:
@@ -642,6 +652,12 @@ Version 7.4  [ (to be announced) ]
         Class Triangulation<dim>:
             - New routines hasLocks(), lockBoundary(), and unlockAll(), to
               work with locked top-dimensional simplices and their facets.
+            - Isomorphism signatures now encode simplex and facet locks, which
+              means that signatures will change in Regina 7.4 (but only if your
+              triangulation actually has locks present).  To compute a signature
+              that ignores locks (and can therefore be used with Regina 7.3.x or
+              earlier), you can use isoSig() with the encoding
+              IsoSigPrintableLockFree<dim>.
             - New routine doubleOverBoundary().
             - New routine reorderBFS(), which essentially makes the old
               Triangulation<3>::reorderTetrahedraBFS() available in all
@@ -696,6 +712,9 @@ Version 7.4  [ (to be announced) ]
               The old name is deprecated but kept for backwards compatibility.
             - Overhaul of the internal change span classes, including a new
               inner class ChangeAndClearSpan.
+            - The requirements for the encoding template parameter for isoSig()
+              have changed.  In particular, its encode() function must now
+              take an extra argument describing simplex and/or facet locks.
         Class Triangulation<3>:
             - Regarding elementary moves:
               + The (check, perform) variants of fourFourMove(), twoOneMove(),

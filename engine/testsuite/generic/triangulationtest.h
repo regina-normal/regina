@@ -1172,9 +1172,26 @@ class TriangulationTest : public testing::Test {
                 auto detail = tri.template isoSigDetail<Type<dim>>();
 
                 EXPECT_EQ(detail.first, sig);
-                EXPECT_EQ(detail.second(tri),
-                    Triangulation<dim>::fromIsoSig(detail.first));
+
+                auto relabelled = detail.second(tri);
+                auto reconstructed =
+                    Triangulation<dim>::fromIsoSig(detail.first);
+
+                EXPECT_EQ(relabelled, reconstructed);
+
+                EXPECT_EQ(tri.hasLocks(), reconstructed.hasLocks());
+                for (size_t i = 0;
+                        i < relabelled.size() && i < reconstructed.size(); ++i)
+                    EXPECT_EQ(relabelled.simplex(i)->lockMask(),
+                        reconstructed.simplex(i)->lockMask());
             }
+
+            std::string lockFree = tri.template isoSig<Type<dim>,
+                regina::IsoSigPrintableLockFree<dim>>();
+            if (tri.hasLocks())
+                EXPECT_NE(lockFree, sig);
+            else
+                EXPECT_EQ(lockFree, sig);
         }
 
         static void verifyIsomorphismSignature(const Triangulation<dim>& tri,
@@ -1183,6 +1200,13 @@ class TriangulationTest : public testing::Test {
 
             verifyIsomorphismSignatureUsing<regina::IsoSigClassic>(tri);
             verifyIsomorphismSignatureUsing<regina::IsoSigEdgeDegrees>(tri);
+        }
+
+        static void verifyIsomorphismSignatureWithLocks(
+                const Triangulation<dim>& tri, const char* name) {
+            SCOPED_TRACE_CSTRING(name);
+
+            verifyIsomorphismSignatureUsing<regina::IsoSigClassic>(tri);
         }
 
         /**

@@ -755,6 +755,8 @@ TEST_F(Dim4Test, makeCanonical) {
 
 TEST_F(Dim4Test, isomorphismSignature) {
     testManualCases(TriangulationTest<4>::verifyIsomorphismSignature);
+    verifyIsomorphismSignatureWithLocks(t4.tri, t4.name);
+    verifyIsomorphismSignatureWithLocks(rp4.tri, rp4.name);
 }
 
 TEST_F(Dim4Test, pachner) {

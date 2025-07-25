@@ -844,6 +844,9 @@ TEST_F(Dim3Test, makeCanonical) {
 
 TEST_F(Dim3Test, isomorphismSignature) {
     testManualCases(TriangulationTest<3>::verifyIsomorphismSignature);
+    verifyIsomorphismSignatureWithLocks(t3.tri, t3.name);
+    verifyIsomorphismSignatureWithLocks(rp2xs1.tri, rp2xs1.name);
+    verifyIsomorphismSignatureWithLocks(lst3_4_7.tri, lst3_4_7.name);
 }
 
 static void verifyDehydration(const Triangulation<3>& tri, const char* name) {

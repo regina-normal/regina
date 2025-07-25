@@ -82,6 +82,11 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
     FixedArray<size_t> joinDest(nFacets);
     FixedArray<typename Perm<dim+1>::Index> joinGluing(nFacets);
 
+    // The lock masks for each simplex in the component.
+    // This will remain null until actual locks are found.
+    using LockMask = typename Simplex<dim>::LockMask;
+    LockMask* lockMasks = nullptr;
+
     // ---------------------------------------------------------------------
     // Data for finding the unique canonical isomorphism from this
     // connected component that maps (simplex, vertices) -> (0, 0..dim)
@@ -125,6 +130,28 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
     for (simpImg = 0; simpImg < nSimp && preImage[simpImg] >= 0; ++simpImg) {
         simpSrc = preImage[simpImg];
         s = simplex(simpSrc);
+
+        if (LockMask mask = s->lockMask()) {
+            if (! lockMasks) {
+                lockMasks = new LockMask[nSimp];
+                std::fill(lockMasks, lockMasks + nSimp, 0);
+            }
+
+            static constexpr LockMask facetMask =
+                (LockMask(1) << (dim + 1)) - 1;
+            if (mask & facetMask) {
+                // One or more facets of this simplex are locked.
+                // We need to permute the bits of lockMask according to
+                // vertexMap[simpSrc].
+                LockMask permuted = (mask & (LockMask(1) << (dim + 1)));
+                LockMask bit = 1;
+                for (int i = 0; i <= dim; ++i, bit <<= 1)
+                    if (mask & bit)
+                        permuted |= (LockMask(1) << vertexMap[simpSrc][i]);
+                mask = permuted;
+            }
+            lockMasks[simpImg] = mask;
+        }
 
         for (facetImg = 0; facetImg <= dim; ++facetImg) {
             facetSrc = vertexMap[simpSrc].pre(facetImg);
@@ -186,7 +213,8 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
     // Encoding interface to be templated and take iterators instead.
     typename Encoding::Signature ans = Encoding::encode(simpImg,
         facetPos, facetAction.begin(),
-        joinPos, joinDest.begin(), joinGluing.begin());
+        joinPos, joinDest.begin(), joinGluing.begin(),
+        lockMasks);
 
     // Record the canonical isomorphism if required.
     if (relabelling)
@@ -196,6 +224,7 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
         }
 
     // Done!
+    delete[] lockMasks;
     return ans;
 }
 
@@ -339,10 +368,15 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
             }
 
             auto joinDest = dec.template decodeInts<size_t>(nJoins, nChars);
-            auto joinGluing = dec.template decodeInts<typename Perm<dim+1>::Index>(
+            auto joinGluing =
+                dec.template decodeInts<typename Perm<dim+1>::Index>(
                 nJoins, IsoSigPrintable<dim>::charsPerPerm);
 
-            // End of component!
+            // This ends the gluings for this component!
+            //
+            // We still need to read facet/simplex locks, if they are present.
+            // We will do this after constructing the triangulation.
+
             FixedArray<Simplex<dim>*> simp(nSimp);
             for (size_t pos = 0; pos < nSimp; ++pos)
                 simp[pos] = ans.newSimplex();
@@ -386,6 +420,42 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
 
                     ++facetPos;
                 }
+
+            // Read simplex/facet locks, if these are present.
+            if (dec.peek() == Base64SigEncoder::spare[1]) {
+                dec.skip();
+
+                using LockMask = typename Simplex<dim>::LockMask;
+                // Each lock mask encodes dim+2 bits.
+                static constexpr LockMask maskChars = (dim + 7) / 6;
+                auto lockMasks = dec.template decodeInts<LockMask>(
+                    nSimp, maskChars);
+
+                // We will set lock masks directly instead of using lock()
+                // functions.  This means we don't get change spans (but that
+                // is fine since we have computed nothing about the
+                // triangulation and nobody else has a reference to it yet).
+                // It also means that we need to run our own sanity checks,
+                // which we will do shortly.
+                for (size_t i = 0; i < nSimp; ++i) {
+                    if (lockMasks[i] >> (dim + 2) != 0)
+                        throw InvalidArgument(
+                            "fromIsoSig(): invalid lock mask");
+                    simp[i]->locks_ = lockMasks[i];
+                }
+
+                // Check facet locks for consistency.
+                for (auto s : simp)
+                    if (s->locks_)
+                        for (int facet = 0; facet <= dim; ++facet)
+                            if (auto adj = s->adjacentSimplex(facet))
+                                if (s->isFacetLocked(facet)) {
+                                    auto adjFacet = s->adjacentFacet(facet);
+                                    if (! adj->isFacetLocked(adjFacet))
+                                        throw InvalidArgument("fromIsoSig(): "
+                                            "inconsistent lock masks");
+                                }
+            }
         }
 
         return ans;

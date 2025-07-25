@@ -79,6 +79,12 @@ TEST_F(Dim5Test, makeCanonical) {
 }
 TEST_F(Dim5Test, isomorphismSignature) {
     testGenericCases(TriangulationTest<5>::verifyIsomorphismSignature);
+    verifyIsomorphismSignatureWithLocks(
+        TriangulationTest<5>::twistedSphereBundle.tri,
+        TriangulationTest<5>::twistedSphereBundle.name);
+    verifyIsomorphismSignatureWithLocks(
+        TriangulationTest<5>::twistedBallBundle.tri,
+        TriangulationTest<5>::twistedBallBundle.name);
 }
 TEST_F(Dim5Test, pachner) {
     testGenericCases(TriangulationTest<5>::verifyPachner);
@@ -150,6 +156,12 @@ TEST_F(Dim6Test, makeCanonical) {
 }
 TEST_F(Dim6Test, isomorphismSignature) {
     testGenericCases(TriangulationTest<6>::verifyIsomorphismSignature);
+    verifyIsomorphismSignatureWithLocks(
+        TriangulationTest<6>::twistedSphereBundle.tri,
+        TriangulationTest<6>::twistedSphereBundle.name);
+    verifyIsomorphismSignatureWithLocks(
+        TriangulationTest<6>::twistedBallBundle.tri,
+        TriangulationTest<6>::twistedBallBundle.name);
 }
 TEST_F(Dim6Test, pachner) {
     testGenericCases(TriangulationTest<6>::verifyPachner);

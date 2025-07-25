@@ -311,6 +311,15 @@ namespace Base64SigEncoder_ {
 // Docstring regina::python::doc::Base64SigEncoder_::__default
 static const char *__default = R"doc(Creates a new encoder, with an empty base64 string.)doc";
 
+// Docstring regina::python::doc::Base64SigEncoder_::append
+static const char *append =
+R"doc(Appends the given character verbatim to this encoding.
+
+Parameter ``c``:
+    the character to append. This need not be one of the 64 characters
+    used in this base64 encoding; however, ideally it should be
+    printable.)doc";
+
 // Docstring regina::python::doc::Base64SigEncoder_::encodeInt
 static const char *encodeInt =
 R"doc(Encodes the given non-negative integer using a fixed number of base64

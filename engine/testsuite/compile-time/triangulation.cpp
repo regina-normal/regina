@@ -29,6 +29,8 @@
  **************************************************************************/
 
 #include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
+#include "triangulation/generic.h"
 
 static_assert(regina::standardDim(4));
 static_assert(! regina::standardDim(5));

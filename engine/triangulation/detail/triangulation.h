@@ -3116,6 +3116,16 @@ class TriangulationBase :
          * isomorphic if and only if their isomorphism signatures of
          * type \a T are the same.
          *
+         * By default, isomorphism signatures support simplex and facet locks:
+         * this means that locks are encoded in the isomorphism signature, and
+         * the "combinatorial isomorphisms" mentioned above must respect not
+         * just the gluings between simplices but also any simplex and/or facet
+         * locks.  You can change this behaviour by requesting a different
+         * encoding (such as IsoSigPrintableLockFree).  Under the default
+         * encoding, if this triangulation does not have any simplex and/or
+         * facet locks then the isomorphism signature will look the same as it
+         * did in Regina 7.3.x and earlier, before locks were supported.
+         *
          * The length of an isomorphism signature is proportional to
          * `n log n`, where \a n is the number of top-dimenisonal
          * simplices.  The time required to construct it is worst-case
@@ -3157,7 +3167,8 @@ class TriangulationBase :
          *   IsoSigPrintable returns a std::string consisting entirely of
          *   printable characters in the 7-bit ASCII range.  Importantly, this
          *   default encoding is currently the only encoding from which Regina
-         *   can _reconstruct_ a triangulation from its isomorphism signature.
+         *   can _reconstruct_ a triangulation (including any simplex and/or
+         *   facet locks) from its isomorphism signature.
          *
          * You may instead pass your own type and/or encoding parameters as
          * template arguments.  Currently this facility is for internal use
@@ -3166,12 +3177,17 @@ class TriangulationBase :
          *
          * - The \a Type parameter should be a class that is constructible
          *   from a componenent reference, and that offers the member functions
-         *   simplex(), perm() and next(); see the implementation of
+         *   `simplex()`, `perm()` and `next()`; see the implementation of
          *   IsoSigClassic for details.
          *
          * - The \a Encoding parameter should be a class that offers a
-         *   \a Signature type alias, and static functions emptySig() and
-         *   encode().  See the implementation of IsoSigPrintable for details.
+         *   \a Signature type alias, and static functions `emptySig()` and
+         *   `encode()`.  See the implementation of IsoSigPrintable for details.
+         *
+         * - If you wish to produce an isomorphism signature that ignores
+         *   simplex and/or facet locks then you can use an encoding whose
+         *   `encode()` function ignores the final \a locks argument, such as
+         *   IsoSigPrintableLockFree.
          *
          * For a full and precise description of the classic isomorphism
          * signature format for 3-manifold triangulations, see
