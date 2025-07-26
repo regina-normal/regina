@@ -249,6 +249,13 @@ IsoSigPrintable5 : class -> EqualityType.NEVER_INSTANTIATED
 IsoSigPrintable6 : class -> EqualityType.NEVER_INSTANTIATED
 IsoSigPrintable7 : class -> EqualityType.NEVER_INSTANTIATED
 IsoSigPrintable8 : class -> EqualityType.NEVER_INSTANTIATED
+IsoSigPrintableLockFree2 : class -> EqualityType.NEVER_INSTANTIATED
+IsoSigPrintableLockFree3 : class -> EqualityType.NEVER_INSTANTIATED
+IsoSigPrintableLockFree4 : class -> EqualityType.NEVER_INSTANTIATED
+IsoSigPrintableLockFree5 : class -> EqualityType.NEVER_INSTANTIATED
+IsoSigPrintableLockFree6 : class -> EqualityType.NEVER_INSTANTIATED
+IsoSigPrintableLockFree7 : class -> EqualityType.NEVER_INSTANTIATED
+IsoSigPrintableLockFree8 : class -> EqualityType.NEVER_INSTANTIATED
 IsoSigRidgeDegrees2 : class -> EqualityType.DISABLED
 IsoSigRidgeDegrees3 : alias -> IsoSigEdgeDegrees3
 IsoSigRidgeDegrees4 : class -> EqualityType.DISABLED
