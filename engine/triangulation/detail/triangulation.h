@@ -3003,6 +3003,12 @@ class TriangulationBase :
          * followed by the gluing permutation (which in turn is written
          * as the images of 0,1,...,<i>dim</i> in order).
          *
+         * If this triangulation has any locks on its top-dimensional simplices
+         * and/or their facets, this routine will carry the locks through the
+         * relabelling correctly.  Locks do not play any role in determining
+         * which labelling is canonical (i.e., the canonical labelling will be
+         * the same regardles of whether or not there are locks present).
+         *
          * \pre This routine currently works only when the triangulation
          * is connected.  It may be extended to work with disconnected
          * triangulations in later versions of Regina.
