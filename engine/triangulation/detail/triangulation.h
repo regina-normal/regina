@@ -2798,16 +2798,15 @@ class TriangulationBase :
          * possible to relabel their top-dimensional simplices and the
          * (<i>dim</i>+1) vertices of each simplex in a way that makes
          * the two triangulations combinatorially identical, as returned
-         * by isIdenticalTo().
+         * by the equality test `t1 == t2`.
          *
          * Equivalently, two triangulations are isomorphic if and only if
          * there is a one-to-one and onto boundary complete combinatorial
          * isomorphism from this triangulation to \a other, as described
          * in the Isomorphism class notes.
          *
-         * In particular, note that this triangulation and \a other must
-         * contain the same number of top-dimensional simplices for such an
-         * isomorphism to exist.
+         * In particular, like the equality test, this routine does _not_
+         * examine or compare simplex/facet locks.
          *
          * If the triangulations are isomorphic, then this routine returns
          * one such boundary complete isomorphism (i.e., one such relabelling).
@@ -2820,8 +2819,8 @@ class TriangulationBase :
          *
          * If you need to ensure that top-dimensional simplices are labelled
          * the same in both triangulations (i.e., that the triangulations are
-         * related by the _identity_ isomorphism), you should call the
-         * stricter test isIdenticalTo() instead.
+         * related by the _identity_ isomorphism), you should use the
+         * stricter equality test `t1 == t2` instead.
          *
          * \warning For large dimensions, this routine can become
          * extremely slow: its running time includes a factor of
@@ -2852,6 +2851,9 @@ class TriangulationBase :
          * lie on the boundary of this triangulation need not correspond to
          * boundary facets of \a other, and that \a other may contain more
          * top-dimensional simplices than this triangulation.
+         *
+         * Like isIsomorphicTo() and the equality test, this routine does _not_
+         * examine or compare simplex/facet locks.
          *
          * If a boundary incomplete isomorphism is found, the details of
          * this isomorphism are returned.  Thus, to test whether an isomorphism
