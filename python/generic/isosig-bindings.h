@@ -40,6 +40,75 @@
 
 using regina::Perm;
 
+namespace regina::python {
+
+/**
+ * Adds all of the available variants of isoSig() to the python bindings for a
+ * C++ triangulation class.
+ *
+ * To use this for the C++ class `Triangulation<dim>`, simply call
+ * `regina::python::isosig_options<dim>(c)`, where \a c is the
+ * pybind11::class_ object that wraps `Triangulation<dim>`.
+ */
+template <int dim, typename PythonClass>
+void isosig_options(PythonClass& classWrapper) {
+    RDOC_SCOPE_BASE(detail::TriangulationBase)
+
+    using LockFree = regina::IsoSigPrintableLockFree<dim>;
+
+    classWrapper
+        .def("isoSig",
+            &Triangulation<dim>::template isoSig<>,
+            rbase::isoSig)
+        .def("isoSig_LockFree",
+            &Triangulation<dim>::template isoSig<
+                regina::IsoSigClassic<dim>, LockFree>,
+            rbase::isoSig)
+        .def("isoSig_EdgeDegrees",
+            &Triangulation<dim>::template isoSig<
+                regina::IsoSigEdgeDegrees<dim>>,
+            rbase::isoSig)
+        .def("isoSig_EdgeDegrees_LockFree",
+            &Triangulation<dim>::template isoSig<
+                regina::IsoSigEdgeDegrees<dim>, LockFree>,
+            rbase::isoSig)
+        .def("isoSig_RidgeDegrees",
+            &Triangulation<dim>::template isoSig<
+                regina::IsoSigRidgeDegrees<dim>>,
+            rbase::isoSig)
+        .def("isoSig_RidgeDegrees_LockFree",
+            &Triangulation<dim>::template isoSig<
+                regina::IsoSigRidgeDegrees<dim>, LockFree>,
+            rbase::isoSig)
+
+        .def("isoSigDetail",
+            &Triangulation<dim>::template isoSigDetail<>,
+            rbase::isoSigDetail)
+        .def("isoSigDetail_LockFree",
+            &Triangulation<dim>::template isoSigDetail<
+                regina::IsoSigClassic<dim>, LockFree>,
+            rbase::isoSigDetail)
+        .def("isoSigDetail_EdgeDegrees",
+            &Triangulation<dim>::template isoSigDetail<
+                regina::IsoSigEdgeDegrees<dim>>,
+            rbase::isoSigDetail)
+        .def("isoSigDetail_EdgeDegrees_LockFree",
+            &Triangulation<dim>::template isoSigDetail<
+                regina::IsoSigEdgeDegrees<dim>, LockFree>,
+            rbase::isoSigDetail)
+        .def("isoSigDetail_RidgeDegrees",
+            &Triangulation<dim>::template isoSigDetail<
+                regina::IsoSigRidgeDegrees<dim>>,
+            rbase::isoSigDetail)
+        .def("isoSigDetail_RidgeDegrees_LockFree",
+            &Triangulation<dim>::template isoSigDetail<
+                regina::IsoSigRidgeDegrees<dim>, LockFree>,
+            rbase::isoSigDetail)
+        ;
+}
+
+} // namespace regina::python
+
 template <int dim>
 void addIsoSigClassic(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(IsoSigClassic)
@@ -88,11 +157,11 @@ void addIsoSigRidgeDegrees(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
-template <int dim>
+template <int dim, bool supportLocks>
 void addIsoSigPrintable(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(IsoSigPrintable)
 
-    using Encoding = regina::IsoSigPrintable<dim>;
+    using Encoding = regina::IsoSigPrintable<dim, supportLocks>;
     auto s = pybind11::class_<Encoding>(m, name, rdoc_scope)
         .def_readonly_static("charsPerPerm", &Encoding::charsPerPerm)
         .def_static("emptySig", &Encoding::emptySig, rdoc::emptySig)

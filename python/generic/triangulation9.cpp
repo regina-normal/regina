@@ -31,7 +31,6 @@
 #include "triangulation-bindings.h"
 #include "boundarycomponent-bindings.h"
 #include "component-bindings.h"
-#include "isosig-bindings.h"
 #include "simplex-bindings.h"
 
 void addTriangulations9(pybind11::module_& m, pybind11::module_& internal) {
@@ -43,7 +42,8 @@ void addTriangulations9(pybind11::module_& m, pybind11::module_& internal) {
     addIsoSigClassic<9>(m, "IsoSigClassic9");
     addIsoSigEdgeDegrees<9>(m, "IsoSigEdgeDegrees9");
     addIsoSigRidgeDegrees<9>(m, "IsoSigRidgeDegrees9");
-    addIsoSigPrintable<9>(m, "IsoSigPrintable9");
+    addIsoSigPrintable<9, true>(m, "IsoSigPrintable9");
+    addIsoSigPrintable<9, false>(m, "IsoSigPrintableLockFree9");
 
     m.attr("Face9_9") = m.attr("Simplex9");
 }

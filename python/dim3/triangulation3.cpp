@@ -44,10 +44,10 @@
 #include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "../generic/facehelper.h"
-#include "../generic/isosig-bindings.h"
 #include "../docstrings/triangulation/dim3/triangulation3.h"
 #include "../docstrings/triangulation/detail/triangulation.h"
 #include "../docstrings/utilities/snapshot.h"
+#include "../generic/isosig-bindings.h" // must come after docstrings
 
 using pybind11::overload_cast;
 using regina::python::GILCallbackManager;
@@ -706,21 +706,7 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
         .def("dehydrate", &Triangulation<3>::dehydrate, rdoc::dehydrate)
         .def_static("rehydrate", &Triangulation<3>::rehydrate, rdoc::rehydrate)
         .def("sig", &Triangulation<3>::sig<>, rbase::sig)
-        .def("isoSig", &Triangulation<3>::isoSig<>, rbase::isoSig)
-        .def("isoSig_EdgeDegrees",
-            &Triangulation<3>::isoSig<regina::IsoSigEdgeDegrees<3>>,
-            rbase::isoSig)
-        .def("isoSig_RidgeDegrees",
-            &Triangulation<3>::isoSig<regina::IsoSigRidgeDegrees<3>>,
-            rbase::isoSig)
-        .def("isoSigDetail", &Triangulation<3>::isoSigDetail<>,
-            rbase::isoSigDetail)
-        .def("isoSigDetail_EdgeDegrees",
-            &Triangulation<3>::isoSigDetail<regina::IsoSigEdgeDegrees<3>>,
-            rbase::isoSigDetail)
-        .def("isoSigDetail_RidgeDegrees",
-            &Triangulation<3>::isoSigDetail<regina::IsoSigRidgeDegrees<3>>,
-            rbase::isoSigDetail)
+        // Variants of isoSig() are handled through isosig_options() below.
         .def_static("fromGluings", [](size_t size, const std::vector<
                 std::tuple<size_t, int, size_t, regina::Perm<4>>>& g) {
             return Triangulation<3>::fromGluings(size, g.begin(), g.end());
@@ -892,6 +878,7 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
     #if defined(__GNUC__)
     #pragma GCC diagnostic pop
     #endif
+    regina::python::isosig_options<3>(c);
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);
     regina::python::packet_eq_operators(c, rbase::__eq);
@@ -947,6 +934,7 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
     addIsoSigEdgeDegrees<3>(m, "IsoSigEdgeDegrees3");
     // IsoSigEdgeDegrees<3> and IsoSigRidgeDegrees<3> are the same type.
     m.attr("IsoSigRidgeDegrees3") = m.attr("IsoSigEdgeDegrees3");
-    addIsoSigPrintable<3>(m, "IsoSigPrintable3");
+    addIsoSigPrintable<3, true>(m, "IsoSigPrintable3");
+    addIsoSigPrintable<3, false>(m, "IsoSigPrintableLockFree3");
 }
 

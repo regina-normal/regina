@@ -40,10 +40,10 @@
 #include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "../generic/facehelper.h"
-#include "../generic/isosig-bindings.h"
 #include "../docstrings/triangulation/dim4/triangulation4.h"
 #include "../docstrings/triangulation/detail/triangulation.h"
 #include "../docstrings/utilities/snapshot.h"
+#include "../generic/isosig-bindings.h" // must come after docstrings
 
 using pybind11::overload_cast;
 using regina::python::GILCallbackManager;
@@ -445,21 +445,7 @@ void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
                 &Triangulation<4>::insertTriangulation),
             rbase::insertTriangulation)
         .def("sig", &Triangulation<4>::sig<>, rbase::sig)
-        .def("isoSig", &Triangulation<4>::isoSig<>, rbase::isoSig)
-        .def("isoSig_EdgeDegrees",
-            &Triangulation<4>::isoSig<regina::IsoSigEdgeDegrees<4>>,
-            rbase::isoSig)
-        .def("isoSig_RidgeDegrees",
-            &Triangulation<4>::isoSig<regina::IsoSigRidgeDegrees<4>>,
-            rbase::isoSig)
-        .def("isoSigDetail", &Triangulation<4>::isoSigDetail<>,
-            rbase::isoSigDetail)
-        .def("isoSigDetail_EdgeDegrees",
-            &Triangulation<4>::isoSigDetail<regina::IsoSigEdgeDegrees<4>>,
-            rbase::isoSigDetail)
-        .def("isoSigDetail_RidgeDegrees",
-            &Triangulation<4>::isoSigDetail<regina::IsoSigRidgeDegrees<4>>,
-            rbase::isoSigDetail)
+        // Variants of isoSig() are handled through isosig_options() below.
         .def_static("fromIsoSig", &Triangulation<4>::fromIsoSig,
             rbase::fromIsoSig)
         .def_static("fromSig", &Triangulation<4>::fromSig, rbase::fromSig)
@@ -586,6 +572,7 @@ void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
     #if defined(__GNUC__)
     #pragma GCC diagnostic pop
     #endif
+    regina::python::isosig_options<4>(c);
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);
     regina::python::packet_eq_operators(c, rbase::__eq);
@@ -629,6 +616,7 @@ void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
     addIsoSigClassic<4>(m, "IsoSigClassic4");
     addIsoSigEdgeDegrees<4>(m, "IsoSigEdgeDegrees4");
     addIsoSigRidgeDegrees<4>(m, "IsoSigRidgeDegrees4");
-    addIsoSigPrintable<4>(m, "IsoSigPrintable4");
+    addIsoSigPrintable<4, true>(m, "IsoSigPrintable4");
+    addIsoSigPrintable<4, false>(m, "IsoSigPrintableLockFree4");
 }
 

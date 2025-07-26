@@ -41,6 +41,7 @@
 #include "../docstrings/triangulation/generic/triangulation.h"
 #include "../docstrings/triangulation/detail/triangulation.h"
 #include "../docstrings/utilities/snapshot.h"
+#include "../generic/isosig-bindings.h" // must come after docstrings
 
 using pybind11::overload_cast;
 using regina::AbelianGroup;
@@ -283,19 +284,7 @@ void addTriangulation(pybind11::module_& m, pybind11::module_& internal,
                 &Triangulation<dim>::insertTriangulation),
             rbase::insertTriangulation)
         .def("sig", &Triangulation<dim>::template sig<>, rbase::sig)
-        .def("isoSig", &Triangulation<dim>::template isoSig<>, rbase::isoSig)
-        .def("isoSig_EdgeDegrees", &Triangulation<dim>::
-            template isoSig<regina::IsoSigEdgeDegrees<dim>>, rbase::isoSig)
-        .def("isoSig_RidgeDegrees", &Triangulation<dim>::
-            template isoSig<regina::IsoSigRidgeDegrees<dim>>, rbase::isoSig)
-        .def("isoSigDetail", &Triangulation<dim>::template isoSigDetail<>,
-            rbase::isoSigDetail)
-        .def("isoSigDetail_EdgeDegrees", &Triangulation<dim>::
-            template isoSigDetail<regina::IsoSigEdgeDegrees<dim>>,
-            rbase::isoSigDetail)
-        .def("isoSigDetail_RidgeDegrees", &Triangulation<dim>::
-            template isoSigDetail<regina::IsoSigRidgeDegrees<dim>>,
-            rbase::isoSigDetail)
+        // Variants of isoSig() are handled through isosig_options() below.
         .def_static("fromIsoSig", &Triangulation<dim>::fromIsoSig,
             rbase::fromIsoSig)
         .def_static("fromSig", &Triangulation<dim>::fromSig, rbase::fromSig)
@@ -396,6 +385,7 @@ void addTriangulation(pybind11::module_& m, pybind11::module_& internal,
         #pragma GCC diagnostic pop
         #endif
     });
+    regina::python::isosig_options<dim>(c);
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);
     regina::python::packet_eq_operators(c, rbase::__eq);

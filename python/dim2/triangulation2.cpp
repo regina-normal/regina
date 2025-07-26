@@ -38,10 +38,10 @@
 #include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "../generic/facehelper.h"
-#include "../generic/isosig-bindings.h"
 #include "../docstrings/triangulation/dim2/triangulation2.h"
 #include "../docstrings/triangulation/detail/triangulation.h"
 #include "../docstrings/utilities/snapshot.h"
+#include "../generic/isosig-bindings.h" // must come after docstrings
 
 using pybind11::overload_cast;
 using regina::AbelianGroup;
@@ -323,21 +323,7 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
                 &Triangulation<2>::insertTriangulation),
             rbase::insertTriangulation)
         .def("sig", &Triangulation<2>::sig<>, rbase::sig)
-        .def("isoSig", &Triangulation<2>::isoSig<>, rbase::isoSig)
-        .def("isoSig_EdgeDegrees",
-            &Triangulation<2>::isoSig<regina::IsoSigEdgeDegrees<2>>,
-            rbase::isoSig)
-        .def("isoSig_RidgeDegrees",
-            &Triangulation<2>::isoSig<regina::IsoSigRidgeDegrees<2>>,
-            rbase::isoSig)
-        .def("isoSigDetail", &Triangulation<2>::isoSigDetail<>,
-            rbase::isoSigDetail)
-        .def("isoSigDetail_EdgeDegrees",
-            &Triangulation<2>::isoSigDetail<regina::IsoSigEdgeDegrees<2>>,
-            rbase::isoSigDetail)
-        .def("isoSigDetail_RidgeDegrees",
-            &Triangulation<2>::isoSigDetail<regina::IsoSigRidgeDegrees<2>>,
-            rbase::isoSigDetail)
+        // Variants of isoSig() are handled through isosig_options() below.
         .def_static("fromIsoSig", &Triangulation<2>::fromIsoSig,
             rbase::fromIsoSig)
         .def_static("fromSig", &Triangulation<2>::fromSig, rbase::fromSig)
@@ -414,6 +400,7 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
     #if defined(__GNUC__)
     #pragma GCC diagnostic pop
     #endif
+    regina::python::isosig_options<2>(c);
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);
     regina::python::packet_eq_operators(c, rbase::__eq);
@@ -453,6 +440,7 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
     addIsoSigClassic<2>(m, "IsoSigClassic2");
     addIsoSigEdgeDegrees<2>(m, "IsoSigEdgeDegrees2");
     addIsoSigRidgeDegrees<2>(m, "IsoSigRidgeDegrees2");
-    addIsoSigPrintable<2>(m, "IsoSigPrintable2");
+    addIsoSigPrintable<2, true>(m, "IsoSigPrintable2");
+    addIsoSigPrintable<2, false>(m, "IsoSigPrintableLockFree2");
 }
 
