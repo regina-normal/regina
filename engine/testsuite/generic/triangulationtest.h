@@ -1206,7 +1206,57 @@ class TriangulationTest : public testing::Test {
                 const Triangulation<dim>& tri, const char* name) {
             SCOPED_TRACE_CSTRING(name);
 
-            verifyIsomorphismSignatureUsing<regina::IsoSigClassic>(tri);
+            Triangulation<dim> t = tri;
+
+            // Lock one simplex.
+            for (auto s : t.simplices()) {
+                s->lock();
+                verifyIsomorphismSignatureUsing<regina::IsoSigEdgeDegrees>(t);
+                s->unlock();
+            }
+
+            // Lock all simplices.
+            for (auto s : t.simplices())
+                s->lock();
+            verifyIsomorphismSignatureUsing<regina::IsoSigEdgeDegrees>(t);
+            for (auto s : t.simplices())
+                s->unlock();
+
+            // Lock one facet.
+            for (auto f : t.template faces<dim - 1>()) {
+                f->lock();
+                verifyIsomorphismSignatureUsing<regina::IsoSigEdgeDegrees>(t);
+                f->unlock();
+            }
+
+            // Lock all facets.
+            for (auto f : t.template faces<dim - 1>())
+                f->lock();
+            verifyIsomorphismSignatureUsing<regina::IsoSigEdgeDegrees>(t);
+            for (auto f : t.template faces<dim - 1>())
+                f->unlock();
+
+            // Lock one simplex and one facet.
+            for (auto s : t.simplices()) {
+                s->lock();
+                for (auto f : t.template faces<dim - 1>()) {
+                    f->lock();
+                    verifyIsomorphismSignatureUsing<regina::IsoSigEdgeDegrees>(t);
+                    f->unlock();
+                }
+                s->unlock();
+            }
+
+            // Lock all simplices and facets.
+            for (auto s : t.simplices())
+                s->lock();
+            for (auto f : t.template faces<dim - 1>())
+                f->lock();
+            verifyIsomorphismSignatureUsing<regina::IsoSigEdgeDegrees>(t);
+            for (auto f : t.template faces<dim - 1>())
+                f->unlock();
+            for (auto s : t.simplices())
+                s->unlock();
         }
 
         /**
