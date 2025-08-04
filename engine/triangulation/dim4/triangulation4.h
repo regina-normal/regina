@@ -669,7 +669,8 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * Specifically, this routine will iterate through all
          * triangulations that can be reached from this triangulation via
          * 1-5, 2-4, 3-3 and 4-2 Pachner moves, without ever exceeding
-         * \a height additional pentachora beyond the original number.
+         * \a height additional pentachora beyond the original number,
+         * and without violating any simplex and/or facet locks.
          * Note that 5-1 moves are currently not supported, though this
          * may be added in a future verson of Regina.
          *
@@ -757,7 +758,8 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * Specifically, this routine will iterate through all
          * triangulations that can be reached from this triangulation via
          * 1-5, 2-4, 3-3 and 4-2 Pachner moves, without ever exceeding
-         * \a height additional pentachora beyond the original number.
+         * \a height additional pentachora beyond the original number,
+         * and without violating any simplex and/or facet locks.
          * Note that 5-1 moves are currently not supported, though this
          * may be added in a future verson of Regina.
          *

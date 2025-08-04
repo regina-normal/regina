@@ -1710,7 +1710,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Specifically, this routine will iterate through all
          * triangulations that can be reached from this triangulation
          * via 2-3 and 3-2 Pachner moves, without ever exceeding
-         * \a height additional tetrahedra beyond the original number.
+         * \a height additional tetrahedra beyond the original number,
+         * and without violating any simplex and/or facet locks.
          *
          * If at any stage it finds a triangulation with _fewer_
          * tetrahedra than the original, then this routine will call
@@ -1796,7 +1797,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Specifically, this routine will iterate through all
          * triangulations that can be reached from this triangulation
          * via 2-3 and 3-2 Pachner moves, without ever exceeding
-         * \a height additional tetrahedra beyond the original number.
+         * \a height additional tetrahedra beyond the original number,
+         * and without violating any simplex and/or facet locks.
          *
          * For every such triangulation (including this starting
          * triangulation), this routine will call \a action (which must
