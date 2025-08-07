@@ -157,6 +157,7 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         QAction* actReflect;
         QAction* actAlternating;
         QAction* actSimplify;
+        QAction* actWhiteheadDouble;
         QAction* actComplement;
         QAction* actSnapPea;
         std::vector<QAction*> actionList;
@@ -197,6 +198,7 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         void reverse();
         void alternating();
         void moves();
+        void whiteheadDouble();
         void diagramComponents();
         void complement();
         void snapPea();

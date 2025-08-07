@@ -439,6 +439,18 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     sep->setSeparator(true);
     actionList.push_back(sep);
 
+    actWhiteheadDouble = new QAction(this);
+    actWhiteheadDouble->setText(tr("&Whitehead Double"));
+    actWhiteheadDouble->setToolTip(tr("Build the Whitehead double of this "
+        "knot"));
+    actWhiteheadDouble->setWhatsThis(tr("<qt>Build the Whitehead double "
+        "of this knot.  The original knot will not be changed &ndash; the "
+        "Whitehead double will be added as a new link beneath "
+        "it in the packet tree.</qt>"));
+    actionList.push_back(actWhiteheadDouble);
+    connect(actWhiteheadDouble, SIGNAL(triggered()), this,
+        SLOT(whiteheadDouble()));
+
     auto* actDiagramComponents = new QAction(this);
     actDiagramComponents->setText(tr("Extract Diagram C&omponents"));
     actDiagramComponents->setIcon(ReginaSupport::regIcon("components"));
@@ -651,6 +663,7 @@ void LinkCrossingsUI::refresh() {
     }
 
     actAlternating->setEnabled(! link->isAlternating());
+    actWhiteheadDouble->setEnabled(link->countComponents() == 1);
 }
 
 void LinkCrossingsUI::simplify() {
@@ -777,6 +790,21 @@ void LinkCrossingsUI::insertLink() {
 
 void LinkCrossingsUI::moves() {
     (new LinkMoveDialog(ui, link))->show();
+}
+
+void LinkCrossingsUI::whiteheadDouble() {
+    if (link->isEmpty()) {
+        ReginaSupport::info(ui, tr("This link diagram is empty."));
+    } else if (link->countComponents() > 1) {
+        ReginaSupport::info(ui, tr("This link has multiple components."),
+            tr("I can only build the Whitehead double of a knot, not a "
+                "multiple-component link."));
+    } else {
+        auto ans = regina::make_packet(link->whiteheadDouble(),
+            "Whitehead double");
+        link->append(ans);
+        enclosingPane->getMainWindow()->packetView(*ans, true, true);
+    }
 }
 
 void LinkCrossingsUI::diagramComponents() {
