@@ -744,9 +744,13 @@ void LinkCrossingsUI::reverse() {
 }
 
 void LinkCrossingsUI::alternating() {
-    if (! link->makeAlternating())
-        ReginaSupport::info(ui, "This link diagram cannot be made alternating.",
-            "This can only occur with virtual link diagrams.");
+    if (link->isAlternating())
+        ReginaSupport::info(ui,
+            tr("This link diagram is already alternating."));
+    else if (! link->makeAlternating())
+        ReginaSupport::info(ui,
+            tr("This link diagram cannot be made alternating."),
+            tr("This can only occur with virtual link diagrams."));
 }
 
 void LinkCrossingsUI::parallel() {
