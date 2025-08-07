@@ -91,6 +91,12 @@ int main(int argc, char **argv) {
     // Load preferences from file.
     ReginaPrefSet::read();
 
+#ifdef Q_OS_MACOS
+    // Newer Qt does not show icons in the menu on macOS.
+    // For now, override this.  We might want to revisit this decision.
+    app->setAttribute(Qt::AA_DontShowIconsInMenus, false);
+#endif
+
 #ifndef Q_OS_MACOS
     // Set a window icon for platforms that support it.
     // Not on macOS though, since that sets icons via Info.plist.
