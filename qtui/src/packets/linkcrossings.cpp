@@ -393,16 +393,6 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actAlternating);
     connect(actAlternating, SIGNAL(triggered()), this, SLOT(alternating()));
 
-    auto* actParallel = new QAction(this);
-    actParallel->setText(tr("Parallel Ca&bles..."));
-    actParallel->setIcon(ReginaSupport::regIcon("parallel"));
-    actParallel->setToolTip(tr("Expand into parallel cables"));
-    actParallel->setWhatsThis(tr("Expands this link into many cables, "
-        "all of which will be parallel according to a chosen framing.  "
-        "This link will be modified directly."));
-    actionList.push_back(actParallel);
-    connect(actParallel, SIGNAL(triggered()), this, SLOT(parallel()));
-
     auto* actSelfFrame = new QAction(this);
     actSelfFrame->setText(tr("Self Frame"));
     actSelfFrame->setIcon(ReginaSupport::regIcon("selfframe"));
@@ -445,12 +435,25 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actWhiteheadDouble->setToolTip(tr("Build the Whitehead double of this "
         "knot"));
     actWhiteheadDouble->setWhatsThis(tr("<qt>Build the Whitehead double "
-        "of this knot.  The original knot will not be changed &ndash; the "
+        "of this knot.  "
+        "This knot will not be changed &ndash; the "
         "Whitehead double will be added as a new link beneath "
         "it in the packet tree.</qt>"));
     actionList.push_back(actWhiteheadDouble);
     connect(actWhiteheadDouble, SIGNAL(triggered()), this,
         SLOT(whiteheadDouble()));
+
+    auto* actParallel = new QAction(this);
+    actParallel->setText(tr("Build Parallel Ca&bles..."));
+    actParallel->setIcon(ReginaSupport::regIcon("parallel"));
+    actParallel->setToolTip(tr("Expand into parallel cables"));
+    actParallel->setWhatsThis(tr("<qt>Builds a new link using <i>k</i> cables "
+        "of this link, all parallel via a chosen framing.  "
+        "Both <i>k</i> and the framing can be selected.  "
+        "This link will not be changed &ndash; the new link will be added "
+        "beneath it in the packet tree.</qt>"));
+    actionList.push_back(actParallel);
+    connect(actParallel, SIGNAL(triggered()), this, SLOT(parallel()));
 
     auto* actDiagramComponents = new QAction(this);
     actDiagramComponents->setText(tr("Extract Diagram C&omponents"));
@@ -754,11 +757,6 @@ void LinkCrossingsUI::alternating() {
             tr("This can only occur with virtual link diagrams."));
 }
 
-void LinkCrossingsUI::parallel() {
-    ParallelDialog dlg(ui, *link);
-    dlg.exec();
-}
-
 void LinkCrossingsUI::selfFrame() {
     link->selfFrame();
 }
@@ -810,6 +808,11 @@ void LinkCrossingsUI::whiteheadDouble() {
         link->append(ans);
         enclosingPane->getMainWindow()->packetView(*ans, true, true);
     }
+}
+
+void LinkCrossingsUI::parallel() {
+    ParallelDialog dlg(ui, link, enclosingPane->getMainWindow());
+    dlg.exec();
 }
 
 void LinkCrossingsUI::diagramComponents() {
@@ -943,12 +946,13 @@ void LinkCrossingsUI::updatePreferences() {
     typeChanged(1);
 }
 
-ParallelDialog::ParallelDialog(QWidget* parent, regina::Link& link) :
-        QDialog(parent), link_(link) {
+ParallelDialog::ParallelDialog(QWidget* parent,
+        regina::PacketOf<regina::Link>* link, ReginaMain* mainWindow):
+        QDialog(parent), link_(link), mainWindow_(mainWindow) {
     setWindowTitle(tr("Parallel Cables"));
-    setWhatsThis(tr("This will construct a new link that represents "
-        "several cables of the link that you are viewing., all parallel using a chosen framing.  "
-        "This link will not be modified."));
+    setWhatsThis(tr("This will build a new link using several cables of the "
+        "link that you are viewing, all parallel via the chosen framing.  "
+        "The original link will not be modified."));
     auto* layout = new QVBoxLayout(this);
 
     auto* subLayout = new QHBoxLayout();
@@ -994,7 +998,7 @@ void ParallelDialog::slotOk() {
         return;
     }
 
-    unsigned long n = match.captured(1).toULong();
+    int n = match.captured(1).toInt();
     if (n < 1) {
         ReginaSupport::sorry(this,
             tr("The number of cables should be positive."));
@@ -1002,7 +1006,8 @@ void ParallelDialog::slotOk() {
     }
     if (n == 1) {
         ReginaSupport::sorry(this,
-            tr("If there is only one cable then the link will not change."));
+            tr("If there is only one cable then the new link will be no "
+                "different."));
         return;
     }
     if (n > MAX_CABLES) {
@@ -1022,7 +1027,12 @@ void ParallelDialog::slotOk() {
             break;
     }
 
-    link_ = link_.parallel(n, f);
+    std::ostringstream label;
+    label << n << " cables";
+
+    auto ans = regina::make_packet(link_->parallel(n, f), label.str());
+    link_->append(ans);
+    mainWindow_->packetView(*ans, true, true);
 
     accept();
 }

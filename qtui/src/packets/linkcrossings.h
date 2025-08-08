@@ -233,7 +233,8 @@ class ParallelDialog : public QDialog {
     Q_OBJECT
 
     private:
-        regina::Link& link_;
+        regina::PacketOf<regina::Link>* link_;
+        ReginaMain* mainWindow_;
 
         /**
          * Internal components
@@ -245,7 +246,8 @@ class ParallelDialog : public QDialog {
         /**
          * Constructor.
          */
-        ParallelDialog(QWidget* parent, regina::Link& link);
+        ParallelDialog(QWidget* parent, regina::PacketOf<regina::Link>* link,
+            ReginaMain* mainWindow);
 
     protected slots:
         /**

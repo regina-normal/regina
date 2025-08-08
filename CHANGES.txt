@@ -883,6 +883,8 @@ Version 7.4  [ (to be announced) ]
         - No longer reads the syntax highlighting theme from file; instead
           the theme is hard-coded into the executable.  This removes the
           build dependency on the Jansson JSON library.
+        - For links, the "parallel cables" action now builds a new link
+          (instead of modifying the original link).
         - The summary tabs for normal surfaces and hypersurfaces now split out
           separate counts for non-embedded (immersed and/or singular)
           surfaces and hypersurfaces.
