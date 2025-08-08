@@ -129,7 +129,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="link-crossings">alternating links</link></primaryie>
+  <primaryie>alternating link diagrams</primaryie>
+  <secondaryie><link linkend="link-make-alternating">making a diagram
+   alternating</link></secondaryie>
+  <secondaryie><link linkend="link-crossings">testing whether a diagram is
+   alternating</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1171,7 +1175,10 @@
 
  <indexentry>
   <primaryie>links, knots and</primaryie>
-  <secondaryie><link linkend="link-crossings">alternating</link></secondaryie>
+  <secondaryie><link linkend="link-make-alternating">alternating diagram,
+   making</link></secondaryie>
+  <secondaryie><link linkend="link-crossings">alternating diagram,
+   testing for</link></secondaryie>
   <secondaryie><link linkend="link-cables">blackboard framing</link></secondaryie>
   <secondaryie><link linkend="link-cables">cabling</link></secondaryie>
   <secondaryie><link linkend="link-complement">complements</link></secondaryie>
@@ -1226,7 +1233,8 @@
   <secondaryie><link linkend="link-graphs-nice">nice tree
    decompositions</link></secondaryie>
   <secondaryie><link linkend="link-flip">orienting</link></secondaryie>
-  <secondaryie><link linkend="link-cables">parallel cables</link></secondaryie>
+  <secondaryie><link linkend="link-cables">parallel cables,
+   building</link></secondaryie>
   <secondaryie><link linkend="link-new-code">planar diagram code,
    recreating from</link></secondaryie>
   <secondaryie><link linkend="link-codes">planar diagram code,
@@ -1241,6 +1249,8 @@
   <secondaryie><link linkend="link-simplify">simplification</link></secondaryie>
   <secondaryie><link linkend="link-graphs-tree">tree
    decompositions</link></secondaryie>
+  <secondaryie><link linkend="link-whitehead-double">Whitehead double,
+   building</link></secondaryie>
  </indexentry>
 
 
@@ -2294,6 +2304,11 @@
  <indexentry>
   <primaryie><link linkend="tri-new-example">Weeks
    manifold</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-whitehead-double">Whitehead
+   double</link></primaryie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-Z'><title>&mdash; Z &mdash;</title>
