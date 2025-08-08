@@ -440,7 +440,8 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(sep);
 
     actWhiteheadDouble = new QAction(this);
-    actWhiteheadDouble->setText(tr("&Whitehead Double"));
+    actWhiteheadDouble->setText(tr("Build &Whitehead Double"));
+    actWhiteheadDouble->setIcon(ReginaSupport::regIcon("whitehead-double"));
     actWhiteheadDouble->setToolTip(tr("Build the Whitehead double of this "
         "knot"));
     actWhiteheadDouble->setWhatsThis(tr("<qt>Build the Whitehead double "
