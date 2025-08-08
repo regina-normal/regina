@@ -316,6 +316,10 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="links">classical links, overview</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="packet-clone">cloning packets</link></primaryie>
  </indexentry>
 
@@ -1181,6 +1185,8 @@
    testing for</link></secondaryie>
   <secondaryie><link linkend="link-cables">blackboard framing</link></secondaryie>
   <secondaryie><link linkend="link-cables">cabling</link></secondaryie>
+  <secondaryie><link linkend="links">classical versus
+   virtual</link></secondaryie>
   <secondaryie><link linkend="link-complement">complements</link></secondaryie>
   <secondaryie><link linkend="link-decomposition-components">components,
    decomposition</link></secondaryie>
@@ -1249,6 +1255,8 @@
   <secondaryie><link linkend="link-simplify">simplification</link></secondaryie>
   <secondaryie><link linkend="link-graphs-tree">tree
    decompositions</link></secondaryie>
+  <secondaryie><link linkend="links">virtual versus
+   classical</link></secondaryie>
   <secondaryie><link linkend="link-whitehead-double">Whitehead double,
    building</link></secondaryie>
  </indexentry>
@@ -2287,6 +2295,10 @@
 
  <indexentry>
   <primaryie><link linkend="packet-tree">viewing packets</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="links">virtual links, overview</link></primaryie>
  </indexentry>
 
  <indexentry>

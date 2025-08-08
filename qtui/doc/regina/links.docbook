@@ -15,14 +15,45 @@
   with some additional unknot components that have no crossings at all.
  </para>
  <para>
-  Link diagrams are embedded in the sphere. This means that &regina;
-  does keep track of left versus right, but it does not keep track of
-  which cell is the &ldquo;outer&rdquo; cell of the diagram.
+  &regina; supports both classical and virtual link diagrams:
  </para>
+ <itemizedlist>
+  <listitem>
+   <para>
+    <firstterm>Classical</firstterm> link diagrams are the typical planar
+    diagrams that one encounters when first studing knot theory.
+    These describe links in the 3-sphere, and such links are
+    considered to be equivalent under ambient isotopy.
+   </para>
+   <para>
+    Although classical link diagrams are planar, &regina; considers these
+    diagrams to be embedded in the &s2; (not the plane).
+    In particular, &regina; does not keep track of which cell is the
+    &ldquo;outer&rdquo; cell of the diagram.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    <firstterm>Virtual</firstterm> link diagrams remove the requirement for
+    the diagram to be planar.  Instead a virtual link diagram may be embedded
+    in some arbitrary orientable surface <replaceable>S</replaceable>.
+    This describes a link in the thickened surface
+    <replaceable>S</replaceable>&nbsp;&times;&nbsp;I, and such links are
+    considered to be equivalent under ambient isotopy, orientation-preserving
+    homeomorphisms of <replaceable>S</replaceable>, and the addition and/or
+    removal of empty handles from <replaceable>S</replaceable>.
+   </para>
+  </listitem>
+ </itemizedlist>
  <para>
   Links in &regina; are <firstterm>oriented</firstterm>.
   This means that &regina; keeps track of a &ldquo;direction of
   travel&rdquo; around each component of the link.
+  &regina; also maintains an orientation of the surface containing the link
+  diagram (i.e., &s2; for a classical diagram, or the orientable surface
+  <replaceable>S</replaceable> for a virtual diagram), which means there is a
+  well-defined notion of left versus right, and positive versus negative
+  crossings.
  </para>
 
  <sect1 id="link-creation">

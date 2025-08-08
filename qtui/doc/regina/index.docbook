@@ -153,6 +153,7 @@
    <application>Fedora</application>">
   <!ENTITY rpm "<acronym>RPM</acronym>">
   <!ENTITY s1 "S<superscript>1</superscript>">
+  <!ENTITY s2 "S<superscript>2</superscript>">
   <!ENTITY s3 "S<superscript>3</superscript>">
   <!ENTITY SFSLong "Seifert Fibred Space">
   <!ENTITY sfslong "Seifert fibred space">
@@ -164,7 +165,6 @@
    "<ulink url='http://www.math.uic.edu/t3m/SnapPy/'>&snappy;</ulink>">
   <!ENTITY snappywebsite
    "<ulink url='http://www.math.uic.edu/t3m/SnapPy/'>&snappy; website</ulink>">
-  <!ENTITY sss "S<superscript>3</superscript>">
   <!ENTITY suse "<application>SUSE</application>">
   <!ENTITY sysreq
    "<ulink url='http://regina-normal.github.io/source.html'>system

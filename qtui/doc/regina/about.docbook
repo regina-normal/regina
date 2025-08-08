@@ -328,7 +328,7 @@ True
     If you are writing &cpp; code that links against &regina;, you
     <emphasis>will</emphasis> need to change your code.  Generally the
     issues should be flagged by the compiler (not discovered at runtime),
-    and the necesssary changes should be obvious.  Some old functions
+    and the necessary changes should be obvious.  Some old functions
     have been kept but marked as deprecated to ease the transition; your
     compiler should warn you also if you are still using these.
    </para>
