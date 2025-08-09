@@ -37,6 +37,7 @@
 #include "examplecreator.h"
 #include "linkcreator.h"
 #include "packetchooser.h"
+#include "packetfilter.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 
@@ -51,15 +52,22 @@
 using regina::ExampleLink;
 using regina::Link;
 
+#define MAX_CABLES 50
+
 namespace {
     /**
-     * Triangulation type IDs that correspond to indices in the
-     * triangulation type combo box.
+     * Link type IDs that correspond to indices in the link type combo box.
+     *
+     * These _must_ be kept in sync with the order in which types are added to
+     * the combo box, and they _must_ include gaps for any separators.
      */
     enum {
-        LINK_CODE,
-        LINK_TORUS,
-        LINK_EXAMPLE
+        LINK_EXAMPLE = 0,
+        LINK_CODE = 1,
+        // --- separator ---
+        LINK_TORUS = 3,
+        LINK_WHITEHEAD_DOUBLE = 4,
+        LINK_PARALLEL_CABLES = 5
     };
 
     /**
@@ -84,35 +92,14 @@ namespace {
     };
 
     /**
-     * Example IDs that correspond to indices in the example
-     * triangulation combo box.
-     */
-    enum {
-        EXAMPLE_BORROMEAN,
-        EXAMPLE_CONWAY,
-        EXAMPLE_FIGURE_EIGHT,
-        EXAMPLE_GST,
-        EXAMPLE_GPV,
-        EXAMPLE_HOPF,
-        EXAMPLE_KT,
-        EXAMPLE_KISHINO,
-        EXAMPLE_TREFOIL_LEFT,
-        EXAMPLE_TREFOIL_RIGHT,
-        EXAMPLE_UNKNOT,
-        EXAMPLE_MONSTER,
-        EXAMPLE_GORDIAN,
-        EXAMPLE_VIRTUAL_TREFOIL,
-        EXAMPLE_WHITEHEAD
-    };
-
-    /**
      * Regular expressions describing different sets of parameters.
      */
     const QRegularExpression reTorusParams(
         R"(^[^0-9\-]*(\d+)[^0-9\-]+(\d+)[^0-9\-]*$)");
+    const QRegularExpression reCables(R"(^\s*(\d+)\s*$)");
 }
 
-LinkCreator::LinkCreator(ReginaMain*) {
+LinkCreator::LinkCreator(ReginaMain* mainWindow) {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -133,90 +120,11 @@ LinkCreator::LinkCreator(ReginaMain*) {
     layout->addWidget(details, 1);
 
     // Set up the individual types of knot/link.
-    // Note that the order in which these options are added to the combo
-    // box must correspond precisely to the type IDs defined at the head
-    // of this file.
+    // The order in which these options are added to the combo box _must_
+    // correspond precisely to the type IDs defined at the head of this file.
     QWidget* area;
     QBoxLayout* subLayout;
-
-    type->addItem(QObject::tr("From text code"));
-    area = new QWidget();
-    subLayout = new QVBoxLayout();
-    subLayout->setContentsMargins(0, 0, 0, 0);
-    area->setLayout(subLayout);
-    QBoxLayout* subSubLayout = new QHBoxLayout();
-    subSubLayout->setContentsMargins(0, 0, 0, 0);
-    expln = QObject::tr("<qt>A knot/link signature, "
-        "oriented Gauss code, classical Gauss code, "
-        "Dowker-Thistlethwaite notation, or planar diagram code "
-        "representing a knot or link.<p>"
-        "At present, only knot/link signatures and planar diagram codes "
-        "can be used for multiple-component links.<p>"
-        "See the Regina Handbook for more information on each of these "
-        "types of codes.</qt>");
-        /*
-        "To build an oriented Gauss code, number the crossings of the knot "
-        "arbitrarily with consecutive integers 1,2,3,…, and then follow "
-        "the knot along its orientation. Each time you reach a crossing, "
-        "write a token of the form <tt>+&lt;<i>k</i></tt>, "
-        "<tt>-&lt;<i>k</i></tt>, <tt>+&gt;<i>k</i></tt> or "
-        "<tt>-&gt;<i>k</i></tt>.<p>"
-        "Here <i>k</i> is the number of the crossing; "
-        "<tt>+</tt> indicates that you are passing over the crossing, "
-        "and <tt>-</tt> indicates that you are passing under; and "
-        "<tt>&lt;</tt> indicates that the other strand passes from right "
-        "to left, and <tt>&gt;</tt> indicates that the it passes from "
-        "left to right.<p>"
-        "Be aware that, after the knot is constructed, Regina will "
-        "reindex the crossings as 0,1,2,….<p>"
-        "As an example, the left-hand trefoil can be described using "
-        "the oriented Gauss code:<p>"
-        "<tt>+&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3</tt></qt>");
-        */
-    label = new QLabel(QObject::tr("Text code:"));
-    label->setWhatsThis(expln);
-    subSubLayout->addWidget(label);
-    code = new QLineEdit(area);
-    code->setWhatsThis(expln);
-    subSubLayout->addWidget(code, 1);
-    label = new QLabel("<qt>Here you can enter:<p>"
-        "<ul><li>a knot/link signature;</li>"
-        "<li>an oriented or classical Gauss code;</li>"
-        "<li>numerical or alphabetical Dowker-Thistlethwaite notation;</li>"
-        "<li>a planar diagram code.</li></ul><p>"
-        "Examples for the trefoil include:<p>"
-        "<ul><li><tt>dabcabcv-</tt></li>"
-        "<li><tt>+&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3</tt></li>"
-        "<li><tt>1 -2 3 -1 2 -3</tt></li>"
-        "<li><tt>4 6 2</tt></li>"
-        "<li><tt>bca</tt></li>"
-        "<li><tt>[[1,4,2,5], [3,6,4,1], [5,2,6,3]]</tt></li></ul><p>"
-        "At present, only knot/link signatures and planar diagram codes "
-        "are able to represent multiple-component links.</qt>");
-    label->setWordWrap(true);
-    label->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-    subLayout->addLayout(subSubLayout);
-    subLayout->addWidget(label, 1);
-    details->addWidget(area);//, LINK_CODE);
-
-    type->addItem(QObject::tr("Torus link"));
-    area = new QWidget();
-    subLayout = new QHBoxLayout();
-    subLayout->setContentsMargins(0, 0, 0, 0);
-    area->setLayout(subLayout);
-    expln = QObject::tr("<qt>The (<i>p</i>,<i>q</i>) parameters of the new "
-        "torus knot/link.  These must be non-negative, but do not need to be "
-        "relatively prime.  Example parameters are <i>6,4</i>, which "
-        "will produce a pair of interlinked trefoils.</qt>");
-    label = new QLabel(QObject::tr("<qt>Parameters (<i>p</i>,<i>q</i>):</qt>"));
-    label->setWhatsThis(expln);
-    subLayout->addWidget(label);
-    torusParams = new QLineEdit();
-    torusParams->setValidator(new QRegularExpressionValidator(
-        reTorusParams, area));
-    torusParams->setWhatsThis(expln);
-    subLayout->addWidget(torusParams, 1);
-    details->addWidget(area);//, LINK_TORUS);
+    QBoxLayout* lineLayout;
 
     type->addItem(QObject::tr("Example knot/link"));
     area = new QWidget();
@@ -237,7 +145,141 @@ LinkCreator::LinkCreator(ReginaMain*) {
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     subLayout->addWidget(exampleWhich, 1);
-    details->addWidget(area);//, LINK_EXAMPLE);
+    details->addWidget(area);
+
+    type->addItem(QObject::tr("From text code"));
+    area = new QWidget();
+    subLayout = new QVBoxLayout();
+    subLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(subLayout);
+    QBoxLayout* subSubLayout = new QHBoxLayout();
+    subSubLayout->setContentsMargins(0, 0, 0, 0);
+    expln = QObject::tr("<qt>A knot/link signature, "
+        "oriented/signed/classical Gauss code, "
+        "Dowker-Thistlethwaite notation, or planar diagram code "
+        "representing a knot or link.<p>"
+        "At present, only knot/link signatures and planar diagram codes "
+        "can be used for multiple-component links.<p>"
+        "See the Regina Handbook for more information on each of these "
+        "types of codes.</qt>");
+    label = new QLabel(QObject::tr("Text code:"));
+    label->setWhatsThis(expln);
+    subSubLayout->addWidget(label);
+    code = new QLineEdit(area);
+    code->setWhatsThis(expln);
+    subSubLayout->addWidget(code, 1);
+    label = new QLabel("<qt>Here you can enter:<p>"
+        "<ul><li>a knot/link signature;</li>"
+        "<li>an oriented, signed or classical Gauss code;</li>"
+        "<li>numerical or alphabetical Dowker-Thistlethwaite notation;</li>"
+        "<li>a planar diagram code.</li></ul><p>"
+        "Examples for the trefoil include:<p>"
+        "<ul><li><tt>dabcabcv-</tt></li>"
+        "<li><tt>+&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3</tt></li>"
+        "<li><tt>O1-U2-O3-U1-O2-U3-</tt></li>"
+        "<li><tt>1 -2 3 -1 2 -3</tt></li>"
+        "<li><tt>4 6 2</tt></li>"
+        "<li><tt>bca</tt></li>"
+        "<li><tt>[[1,4,2,5], [3,6,4,1], [5,2,6,3]]</tt></li></ul><p>"
+        "At present, only knot/link signatures and planar diagram codes "
+        "are able to represent multiple-component links.</qt>");
+    label->setWordWrap(true);
+    label->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    subLayout->addLayout(subSubLayout);
+    subLayout->addWidget(label, 1);
+    details->addWidget(area);
+
+    type->insertSeparator(type->count());
+    details->addWidget(new QWidget()); // keep indices for type/details in sync
+
+    type->addItem(QObject::tr("Torus link"));
+    area = new QWidget();
+    subLayout = new QVBoxLayout();
+    subLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(subLayout);
+    lineLayout = new QHBoxLayout();
+    subLayout->addLayout(lineLayout);
+    expln = QObject::tr("<qt>The (<i>p</i>,<i>q</i>) parameters of the new "
+        "torus knot/link.  These must be non-negative, but do not need to be "
+        "relatively prime.  Example parameters are <i>6,4</i>, which "
+        "will produce a pair of interlinked trefoils.</qt>");
+    label = new QLabel(QObject::tr("<qt>Parameters (<i>p</i>,<i>q</i>):</qt>"));
+    label->setWhatsThis(expln);
+    lineLayout->addWidget(label);
+    torusParams = new QLineEdit();
+    torusParams->setValidator(new QRegularExpressionValidator(
+        reTorusParams, area));
+    torusParams->setWhatsThis(expln);
+    lineLayout->addWidget(torusParams);
+    subLayout->addStretch(); // avoids awkward stretching around labels
+    details->addWidget(area);
+
+    type->addItem(QObject::tr("Whitehead double of…"));
+    area = new QWidget();
+    subLayout = new QVBoxLayout();
+    subLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(subLayout);
+    lineLayout = new QHBoxLayout();
+    subLayout->addLayout(lineLayout);
+    expln = QObject::tr("Select the source knot that you wish to build the "
+        "Whitehead double of.  "
+        "This must be a knot, not a multiple-component link.");
+    label = new QLabel(QObject::tr("Source:"));
+    label->setWhatsThis(expln);
+    lineLayout->addWidget(label);
+    whiteheadDoubleFrom = new PacketChooser(mainWindow->getPacketTree(),
+        new SubclassFilter<regina::Link>(), PacketChooser::RootRole::Packet);
+    whiteheadDoubleFrom->setWhatsThis(expln);
+    whiteheadDoubleFrom->selectPacket(mainWindow->selectedPacket());
+    lineLayout->addWidget(whiteheadDoubleFrom, 1);
+    subLayout->addStretch(); // avoids awkward stretching around labels
+    details->addWidget(area);
+
+    type->addItem(QObject::tr("Parallel cables of…"));
+    area = new QWidget();
+    subLayout = new QVBoxLayout();
+    subLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(subLayout);
+    lineLayout = new QHBoxLayout();
+    subLayout->addLayout(lineLayout);
+    expln = QObject::tr("Select the source knot or link that you wish to build "
+        "parallel cables of.");
+    label = new QLabel(QObject::tr("Source:"));
+    label->setWhatsThis(expln);
+    lineLayout->addWidget(label);
+    parallelCablesFrom = new PacketChooser(mainWindow->getPacketTree(),
+        new SubclassFilter<regina::Link>(), PacketChooser::RootRole::Packet);
+    parallelCablesFrom->setWhatsThis(expln);
+    parallelCablesFrom->selectPacket(mainWindow->selectedPacket());
+    lineLayout->addWidget(parallelCablesFrom, 1);
+    subLayout->addSpacing(5);
+    lineLayout = new QHBoxLayout();
+    subLayout->addLayout(lineLayout);
+    expln = QObject::tr("Choose the number of parallel cables to create.  "
+        "This must be a positive integer.");
+    label = new QLabel(QObject::tr("Number of cables:"));
+    label->setWhatsThis(expln);
+    lineLayout->addWidget(label);
+    nCables = new QLineEdit();
+    nCables->setValidator(new QRegularExpressionValidator(reCables));
+    nCables->setWhatsThis(expln);
+    lineLayout->addWidget(nCables, 1);
+    subLayout->addSpacing(5);
+    lineLayout = new QHBoxLayout();
+    subLayout->addLayout(lineLayout);
+    expln = QObject::tr("Choose the framing in which the cables will be "
+        "parallel.");
+    label = new QLabel(QObject::tr("Framing:"));
+    label->setWhatsThis(expln);
+    lineLayout->addWidget(label);
+    framing = new QComboBox();
+    framing->addItem(QObject::tr("Seifert framing"));
+    framing->addItem(QObject::tr("Blackboard framing"));
+    framing->setCurrentIndex(0);
+    framing->setWhatsThis(expln);
+    lineLayout->addWidget(framing, 1);
+    subLayout->addStretch(); // avoids awkward stretching around labels
+    details->addWidget(area);
 
     // Tidy up.
     {
@@ -265,7 +307,9 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
     // Remember our selection for next time.
     ReginaPrefSet::global().linkCreationType = typeId;
 
-    if (typeId == LINK_CODE) {
+    if (typeId == LINK_EXAMPLE) {
+        return examples[exampleWhich->currentIndex()].create();
+    } else if (typeId == LINK_CODE) {
         std::string use = regina::stripWhitespace(
             code->text().toUtf8().constData());
         if (use.empty()) {
@@ -314,8 +358,86 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
         label << "Torus(" << p << ", " << q << ')';
         return regina::make_packet(ExampleLink::torus(p, q),
             label.str().c_str());
-    } else if (typeId == LINK_EXAMPLE) {
-        return examples[exampleWhich->currentIndex()].create();
+    } else if (typeId == LINK_WHITEHEAD_DOUBLE) {
+        auto fromPacket = whiteheadDoubleFrom->selectedPacket();
+        if (! fromPacket) {
+            ReginaSupport::info(parentWidget, QObject::tr(
+                "Please select a source knot to build the "
+                "Whitehead double of."));
+            return nullptr;
+        }
+        auto& from = regina::static_packet_cast<Link>(*fromPacket);
+        if (from.isEmpty()) {
+            ReginaSupport::info(ui,
+                QObject::tr("The source link is empty."));
+            return nullptr;
+        }
+        if (from.countComponents() > 1) {
+            ReginaSupport::info(ui,
+                QObject::tr("The source link has multiple components."),
+                QObject::tr("I can only build the Whitehead double of a knot, "
+                    "not a multiple-component link."));
+            return nullptr;
+        }
+        auto ans = regina::make_packet(from.whiteheadDouble());
+        if (fromPacket->label().empty())
+            ans->setLabel("Whitehead double");
+        else
+            ans->setLabel("Whitehead double of " + fromPacket->label());
+        return ans;
+    } else if (typeId == LINK_PARALLEL_CABLES) {
+        auto fromPacket = parallelCablesFrom->selectedPacket();
+        if (! fromPacket) {
+            ReginaSupport::info(parentWidget, QObject::tr(
+                "Please select a source link to build parallel cables of."));
+            return nullptr;
+        }
+        auto& from = regina::static_packet_cast<Link>(*fromPacket);
+
+        auto match = reCables.match(nCables->text());
+        if (! match.hasMatch()) {
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("Please enter a positive integer number of "
+                    "cables."));
+            return nullptr;
+        }
+
+        int n = match.captured(1).toInt();
+        if (n < 1) {
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("The number of cables should be positive."));
+            return nullptr;
+        }
+        if (n == 1) {
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("If there is only one cable then the new link "
+                    "will be the same as the source link."));
+            return nullptr;
+        }
+        if (n > MAX_CABLES) {
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("I am not brave enough to create more than "
+                    "%1 cables.").arg(MAX_CABLES));
+            return nullptr;
+        }
+
+        regina::Framing f;
+        switch (framing->currentIndex()) {
+            case 1:
+                f = regina::Framing::Blackboard;
+                break;
+            default:
+                f = regina::Framing::Seifert;
+                break;
+        }
+
+        std::ostringstream label;
+        if (fromPacket->label().empty())
+            label << n << " cables";
+        else
+            label << n << "-cabled " << fromPacket->label();
+
+        return regina::make_packet(from.parallel(n, f), label.str());
     }
 
     ReginaSupport::info(parentWidget,

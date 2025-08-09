@@ -60,9 +60,13 @@ class LinkCreator : public PacketCreator {
         /**
          * Details for specific link types
          */
+        QComboBox* exampleWhich;
         QLineEdit* code;
         QLineEdit* torusParams;
-        QComboBox* exampleWhich;
+        PacketChooser* whiteheadDoubleFrom;
+        PacketChooser* parallelCablesFrom;
+        QLineEdit* nCables;
+        QComboBox* framing;
 
     public:
         /**

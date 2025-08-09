@@ -252,7 +252,7 @@ void ReginaPrefSet::readInternal() {
         settings.value("CreationList", 0 /* HyperList.Default */).toInt());
 
     settings.beginGroup("Link");
-    linkCreationType = settings.value("CreationType", 0).toInt();
+    linkCreationType = settings.value("CreationTypeV2", 0).toInt();
     str = settings.value("CodeType").toString();
     if (str == "DowkerThistlethwaite")
         linkCodeType = ReginaPrefSet::LinkCode::DowkerThistlethwaite;
@@ -412,7 +412,7 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("CreationList", hypersurfacesCreationList.intValue());
 
     settings.beginGroup("Link");
-    settings.setValue("CreationType", linkCreationType);
+    settings.setValue("CreationTypeV2", linkCreationType);
     switch (linkCodeType) {
         case ReginaPrefSet::LinkCode::DowkerThistlethwaite:
             settings.setValue("CodeType", "DowkerThistlethwaite"); break;
