@@ -420,11 +420,20 @@
     To do this, select <replaceable>K</replaceable> in the
     <guilabel>Source</guilabel> drop-down box.  This should be some knot that
     you already have in your data file.
-   </para>
-   <para>
-    &regina; can only build the Whitehead double of a knot, not a
+    Note that &regina; can only build the Whitehead double of a knot, not a
     multiple-component link.
    </para>
+   <tip><para>
+    If you already have the source knot <replaceable>K</replaceable> open for
+    viewing, another way to create its Whitehead double is to select
+    <menuchoice>
+     <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+     <guimenuitem>Build Whitehead Double</guimenuitem>
+    </menuchoice>
+    from the menu.
+    The Whitehead double will be added as a new knot directly beneath
+    <replaceable>K</replaceable> in the packet tree.
+   </para></tip>
   </sect2>
 
   <sect2 id="link-new-cables">
@@ -509,6 +518,18 @@
     crossings due to twists in the ribbons.
     Use a large &vark; at your peril!
    </para></warning>
+   <tip><para>
+    If you already have the source link <replaceable>L</replaceable> open for
+    viewing, another way to create parallel cables of
+    <replaceable>L</replaceable> is to select
+    <menuchoice>
+     <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+     <guimenuitem>Build Parallel Cables&hellip;</guimenuitem>
+    </menuchoice>
+    from the menu.
+    The parallel cables will be added as a new link directly beneath
+    <replaceable>L</replaceable> in the packet tree.
+   </para></tip>
   </sect2>
  </sect1>
 

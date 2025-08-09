@@ -359,6 +359,9 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
         return regina::make_packet(ExampleLink::torus(p, q),
             label.str().c_str());
     } else if (typeId == LINK_WHITEHEAD_DOUBLE) {
+        // Note: There are two ways to create Whitehead doubles.
+        // This packet creator code should be kept in sync with the code that
+        // manages "Build Whitehead Double" from the Knot/Link menu.
         auto fromPacket = whiteheadDoubleFrom->selectedPacket();
         if (! fromPacket) {
             ReginaSupport::info(parentWidget, QObject::tr(
@@ -386,6 +389,9 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
             ans->setLabel("Whitehead double of " + fromPacket->label());
         return ans;
     } else if (typeId == LINK_PARALLEL_CABLES) {
+        // Note: There are two ways to create parallel cables.
+        // This packet creator code should be kept in sync with the code that
+        // manages "Build Parallel Cables..." from the Knot/Link menu.
         auto fromPacket = parallelCablesFrom->selectedPacket();
         if (! fromPacket) {
             ReginaSupport::info(parentWidget, QObject::tr(

@@ -796,6 +796,9 @@ void LinkCrossingsUI::moves() {
 }
 
 void LinkCrossingsUI::whiteheadDouble() {
+    // Note: There are two ways to create Whitehead doubles.
+    // This menu action code should be kept in sync with the code that
+    // creates Whitehead doubles via "New Knot/Link".
     if (link->isEmpty()) {
         ReginaSupport::info(ui, tr("This link diagram is empty."));
     } else if (link->countComponents() > 1) {
@@ -803,6 +806,10 @@ void LinkCrossingsUI::whiteheadDouble() {
             tr("I can only build the Whitehead double of a knot, not a "
                 "multiple-component link."));
     } else {
+        // Unlike the "New Knot/Link" method of creating Whitehead doubles,
+        // we don't incorporate the source packet label into the new packet
+        // label here since the new packet will appear directly beneath the
+        // source in the packet tree.
         auto ans = regina::make_packet(link->whiteheadDouble(),
             "Whitehead double");
         link->append(ans);
@@ -991,6 +998,9 @@ ParallelDialog::ParallelDialog(QWidget* parent,
 }
 
 void ParallelDialog::slotOk() {
+    // Note: There are two ways to create parallel cables.
+    // This menu action code should be kept in sync with the code that
+    // creates parallel cables via "New Knot/Link".
     auto match = reCables.match(nCables->text());
     if (! match.hasMatch()) {
         ReginaSupport::sorry(this,
@@ -1027,6 +1037,10 @@ void ParallelDialog::slotOk() {
             break;
     }
 
+    // Unlike the "New Knot/Link" method of creating parallel cables,
+    // we don't incorporate the source packet label into the new packet
+    // label here since the new packet will appear directly beneath the
+    // source in the packet tree.
     std::ostringstream label;
     label << n << " cables";
 
