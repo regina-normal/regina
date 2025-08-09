@@ -76,27 +76,27 @@ namespace {
     /**
      * The list of ready-made example triangulations.
      */
-    std::vector<ExampleCreator<3>> examples = {
-        ExampleCreator<3>(QObject::tr("3-sphere (minimal)"), &regina::Example<3>::threeSphere),
-        ExampleCreator<3>(QObject::tr("3-sphere (dual to Bing's house)"), &regina::Example<3>::bingsHouse),
-        ExampleCreator<3>(QObject::tr("3-sphere (simplex boundary)"), &regina::Example<3>::simplicialSphere),
-        ExampleCreator<3>(QObject::tr("3-sphere (600-cell)"), &regina::Example<3>::sphere600),
-        ExampleCreator<3>(QObject::tr("3-torus"), &regina::Example<3>::threeTorus),
-        ExampleCreator<3>(QObject::tr("Connected sum ℝP³ # ℝP³"), &regina::Example<3>::rp3rp3),
-        ExampleCreator<3>(QObject::tr("Figure eight knot complement"), &regina::Example<3>::figureEight),
-        ExampleCreator<3>(QObject::tr("Gieseking manifold"), &regina::Example<3>::gieseking),
-        ExampleCreator<3>(QObject::tr("Lens space L(8,3)"), [](){ return regina::Example<3>::lens(8, 3); }),
-        ExampleCreator<3>(QObject::tr("Poincaré homology sphere"), &regina::Example<3>::poincare),
-        ExampleCreator<3>(QObject::tr("Product ℝP² × S¹"), &regina::Example<3>::rp2xs1),
-        ExampleCreator<3>(QObject::tr("Product S² × S¹"), &regina::Example<3>::s2xs1),
-        ExampleCreator<3>(QObject::tr("ℝP³"), [](){ return regina::Example<3>::lens(2, 1); }),
-        ExampleCreator<3>(QObject::tr("Solid Klein bottle (B² ×~ S¹)"), &regina::Example<3>::solidKleinBottle),
-        ExampleCreator<3>(QObject::tr("Solid Torus (B² × S¹)"), &regina::Example<3>::ballBundle),
-        ExampleCreator<3>(QObject::tr("Trefoil knot complement"), &regina::Example<3>::trefoil),
-        ExampleCreator<3>(QObject::tr("Twisted product S² ×~ S¹"), &regina::Example<3>::twistedSphereBundle),
-        ExampleCreator<3>(QObject::tr("Weeks manifold"), &regina::Example<3>::weeks),
-        ExampleCreator<3>(QObject::tr("Weber-Seifert dodecahedral space"), &regina::Example<3>::weberSeifert),
-        ExampleCreator<3>(QObject::tr("Whitehead link complement"), &regina::Example<3>::whitehead),
+    std::vector<ExampleCreator<Triangulation<3>>> examples = {
+        { QObject::tr("3-sphere (minimal)"), &regina::Example<3>::threeSphere },
+        { QObject::tr("3-sphere (dual to Bing's house)"), &regina::Example<3>::bingsHouse },
+        { QObject::tr("3-sphere (simplex boundary)"), &regina::Example<3>::simplicialSphere },
+        { QObject::tr("3-sphere (600-cell)"), &regina::Example<3>::sphere600 },
+        { QObject::tr("3-torus"), &regina::Example<3>::threeTorus },
+        { QObject::tr("Connected sum ℝP³ # ℝP³"), &regina::Example<3>::rp3rp3 },
+        { QObject::tr("Figure eight knot complement"), &regina::Example<3>::figureEight },
+        { QObject::tr("Gieseking manifold"), &regina::Example<3>::gieseking },
+        { QObject::tr("Lens space L(8,3)"), [](){ return regina::Example<3>::lens(8, 3); } },
+        { QObject::tr("Poincaré homology sphere"), &regina::Example<3>::poincare },
+        { QObject::tr("Product ℝP² × S¹"), &regina::Example<3>::rp2xs1 },
+        { QObject::tr("Product S² × S¹"), &regina::Example<3>::s2xs1 },
+        { QObject::tr("ℝP³"), [](){ return regina::Example<3>::lens(2, 1); } },
+        { QObject::tr("Solid Klein bottle (B² ×~ S¹)"), &regina::Example<3>::solidKleinBottle },
+        { QObject::tr("Solid Torus (B² × S¹)"), &regina::Example<3>::ballBundle },
+        { QObject::tr("Trefoil knot complement"), &regina::Example<3>::trefoil },
+        { QObject::tr("Twisted product S² ×~ S¹"), &regina::Example<3>::twistedSphereBundle },
+        { QObject::tr("Weeks manifold"), &regina::Example<3>::weeks },
+        { QObject::tr("Weber-Seifert dodecahedral space"), &regina::Example<3>::weberSeifert },
+        { QObject::tr("Whitehead link complement"), &regina::Example<3>::whitehead }
     };
 
     /**

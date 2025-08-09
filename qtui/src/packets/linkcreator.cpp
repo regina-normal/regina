@@ -34,6 +34,7 @@
 #include "utilities/stringutils.h"
 
 // UI includes:
+#include "examplecreator.h"
 #include "linkcreator.h"
 #include "packetchooser.h"
 #include "reginamain.h"
@@ -49,7 +50,6 @@
 
 using regina::ExampleLink;
 using regina::Link;
-using regina::make_packet;
 
 namespace {
     /**
@@ -60,6 +60,27 @@ namespace {
         LINK_CODE,
         LINK_TORUS,
         LINK_EXAMPLE
+    };
+
+    /**
+     * The list of ready-made example knots and links.
+     */
+    std::vector<ExampleCreator<Link>> examples = {
+        { QObject::tr("Borromean rings"), &ExampleLink::borromean },
+        { QObject::tr("Conway knot"), &ExampleLink::conway },
+        { QObject::tr("Figure eight knot"), &ExampleLink::figureEight },
+        { QObject::tr("Gompf-Scharlemann-Thompson"), &ExampleLink::gst },
+        { QObject::tr("Goussarov-Polyak-Viro"), &ExampleLink::gpv },
+        { QObject::tr("Hopf link"), &ExampleLink::hopf },
+        { QObject::tr("Kinoshita-Terasaka knot"), &ExampleLink::kinoshitaTerasaka },
+        { QObject::tr("Kishino knot"), &ExampleLink::kishino },
+        { QObject::tr("Trefoil (left)"), &ExampleLink::trefoilLeft },
+        { QObject::tr("Trefoil (right)"), &ExampleLink::trefoilRight },
+        { QObject::tr("Unknot (no crossings)"), &ExampleLink::unknot },
+        { QObject::tr("Unknot (10-crossing monster)"), &ExampleLink::monster },
+        { QObject::tr("Unknot (141-crossing Gordian)"), &ExampleLink::gordian },
+        { QObject::tr("Virtual trefoil"), &ExampleLink::virtualTrefoil },
+        { QObject::tr("Whitehead link"), &ExampleLink::whitehead }
     };
 
     /**
@@ -211,21 +232,8 @@ LinkCreator::LinkCreator(ReginaMain*) {
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
     exampleWhich = new QComboBox(area);
-    exampleWhich->addItem(QObject::tr("Borromean rings"));
-    exampleWhich->addItem(QObject::tr("Conway knot"));
-    exampleWhich->addItem(QObject::tr("Figure eight knot"));
-    exampleWhich->addItem(QObject::tr("Gompf-Scharlemann-Thompson"));
-    exampleWhich->addItem(QObject::tr("Goussarov-Polyak-Viro"));
-    exampleWhich->addItem(QObject::tr("Hopf link"));
-    exampleWhich->addItem(QObject::tr("Kinoshita-Terasaka knot"));
-    exampleWhich->addItem(QObject::tr("Kishino knot"));
-    exampleWhich->addItem(QObject::tr("Trefoil (left)"));
-    exampleWhich->addItem(QObject::tr("Trefoil (right)"));
-    exampleWhich->addItem(QObject::tr("Unknot (no crossings)"));
-    exampleWhich->addItem(QObject::tr("Unknot (10-crossing monster)"));
-    exampleWhich->addItem(QObject::tr("Unknot (141-crossing Gordian)"));
-    exampleWhich->addItem(QObject::tr("Virtual trefoil"));
-    exampleWhich->addItem(QObject::tr("Whitehead link"));
+    for (const auto& e : examples)
+        exampleWhich->addItem(e.name());
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     subLayout->addWidget(exampleWhich, 1);
@@ -266,7 +274,7 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
             return nullptr;
         }
         try {
-            auto ans = make_packet<Link>(std::in_place, use);
+            auto ans = regina::make_packet<Link>(std::in_place, use);
             ans->setLabel(use);
             return ans;
         } catch (const regina::InvalidArgument&) {
@@ -304,51 +312,10 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
 
         std::ostringstream label;
         label << "Torus(" << p << ", " << q << ')';
-        return make_packet(ExampleLink::torus(p, q), label.str().c_str());
+        return regina::make_packet(ExampleLink::torus(p, q),
+            label.str().c_str());
     } else if (typeId == LINK_EXAMPLE) {
-        switch (exampleWhich->currentIndex()) {
-            case EXAMPLE_BORROMEAN:
-                return make_packet(ExampleLink::borromean(), "Borromean rings");
-            case EXAMPLE_CONWAY:
-                return make_packet(ExampleLink::conway(), "Conway knot");
-            case EXAMPLE_FIGURE_EIGHT:
-                return make_packet(ExampleLink::figureEight(),
-                    "Figure eight knot");
-            case EXAMPLE_GST:
-                return make_packet(ExampleLink::gst(),
-                    "Gompf-Scharlemann-Thompson");
-            case EXAMPLE_GPV:
-                return make_packet(ExampleLink::gpv(), "Goussarov-Polyak-Viro");
-            case EXAMPLE_HOPF:
-                return make_packet(ExampleLink::hopf(), "Hopf link");
-            case EXAMPLE_KT:
-                return make_packet(ExampleLink::kinoshitaTerasaka(),
-                    "Kinoshita-Terasaka knot");
-            case EXAMPLE_KISHINO:
-                return make_packet(ExampleLink::kishino(),
-                    "Kishino knot");
-            case EXAMPLE_TREFOIL_LEFT:
-                return make_packet(ExampleLink::trefoilLeft(),
-                    "Left-hand trefoil");
-            case EXAMPLE_TREFOIL_RIGHT:
-                return make_packet(ExampleLink::trefoilRight(),
-                    "Right-hand trefoil");
-            case EXAMPLE_UNKNOT:
-                return make_packet(ExampleLink::unknot(), "Unknot");
-            case EXAMPLE_MONSTER:
-                return make_packet(ExampleLink::monster(), "Monster unknot");
-            case EXAMPLE_GORDIAN:
-                return make_packet(ExampleLink::gordian(), "Gordian unknot");
-            case EXAMPLE_VIRTUAL_TREFOIL:
-                return make_packet(ExampleLink::virtualTrefoil(),
-                    "Virtual trefoil");
-            case EXAMPLE_WHITEHEAD:
-                return make_packet(ExampleLink::whitehead(), "Whitehead link");
-        }
-
-        ReginaSupport::info(parentWidget,
-            QObject::tr("Please select an example knot or link."));
-        return nullptr;
+        return examples[exampleWhich->currentIndex()].create();
     }
 
     ReginaSupport::info(parentWidget,

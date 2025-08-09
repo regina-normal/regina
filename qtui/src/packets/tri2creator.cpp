@@ -66,16 +66,16 @@ namespace {
     /**
      * The list of ready-made example triangulations.
      */
-    std::vector<ExampleCreator<2>> examples = {
-        ExampleCreator<2>(QObject::tr("2-sphere (minimal)"), &regina::Example<2>::sphere),
-        ExampleCreator<2>(QObject::tr("2-sphere (simplex boundary)"), &regina::Example<2>::sphereTetrahedron),
-        ExampleCreator<2>(QObject::tr("2-sphere (octahedron boundary)"), &regina::Example<2>::sphereOctahedron),
-        ExampleCreator<2>(QObject::tr("Annulus"), &regina::Example<2>::annulus),
-        ExampleCreator<2>(QObject::tr("Disc"), &regina::Example<2>::disc),
-        ExampleCreator<2>(QObject::tr("Klein bottle"), &regina::Example<2>::kb),
-        ExampleCreator<2>(QObject::tr("Möbius band"), &regina::Example<2>::mobius),
-        ExampleCreator<2>(QObject::tr("Projective plane"), &regina::Example<2>::rp2),
-        ExampleCreator<2>(QObject::tr("Torus"), &regina::Example<2>::torus)
+    std::vector<ExampleCreator<Triangulation<2>>> examples = {
+        { QObject::tr("2-sphere (minimal)"), &regina::Example<2>::sphere },
+        { QObject::tr("2-sphere (simplex boundary)"), &regina::Example<2>::sphereTetrahedron },
+        { QObject::tr("2-sphere (octahedron boundary)"), &regina::Example<2>::sphereOctahedron },
+        { QObject::tr("Annulus"), &regina::Example<2>::annulus },
+        { QObject::tr("Disc"), &regina::Example<2>::disc },
+        { QObject::tr("Klein bottle"), &regina::Example<2>::kb },
+        { QObject::tr("Möbius band"), &regina::Example<2>::mobius },
+        { QObject::tr("Projective plane"), &regina::Example<2>::rp2 },
+        { QObject::tr("Torus"), &regina::Example<2>::torus }
     };
 
     /**
