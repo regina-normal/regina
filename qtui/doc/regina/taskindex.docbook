@@ -871,13 +871,15 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>Gauss code, classical or oriented</primaryie>
+  <primaryie>Gauss code</primaryie>
   <secondaryie><link linkend="link-new-classical-gauss">classical Gauss codes,
    described</link></secondaryie>
   <secondaryie><link linkend="link-new-oriented-gauss">oriented Gauss codes,
    described</link></secondaryie>
   <secondaryie><link linkend="link-new-code">reconstructing knots
    from Gauss codes</link></secondaryie>
+  <secondaryie><link linkend="link-new-signed-gauss">signed Gauss codes,
+   described</link></secondaryie>
   <secondaryie><link linkend="link-codes">viewing
    the Gauss codes for a knot</link></secondaryie>
  </indexentry>
@@ -1216,9 +1218,9 @@
    from censuses</link></secondaryie>
   <secondaryie><link linkend="link-cables">framings</link></secondaryie>
   <secondaryie><link linkend="link-new-code">Gauss code
-   (classical or oriented), recreating from</link></secondaryie>
+   (classical, oriented or signed), recreating from</link></secondaryie>
   <secondaryie><link linkend="link-codes">Gauss code
-   (classical or oriented), viewing</link></secondaryie>
+   (classical, oriented or signed), viewing</link></secondaryie>
   <secondaryie><link linkend="link-algebra">group</link></secondaryie>
   <secondaryie><link linkend="link-polynomials">&homflypt;
    polynomial</link></secondaryie>
@@ -1767,6 +1769,11 @@
  <indexentry>
   <primaryie>signatures, splitting surface</primaryie>
   <seeie>See: splitting surfaces</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>signed Gauss code</primaryie>
+  <seeie>See: Gauss code</seeie>
  </indexentry>
 
  <indexentry>

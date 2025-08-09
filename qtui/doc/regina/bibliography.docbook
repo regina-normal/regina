@@ -28,7 +28,7 @@
  </biblioentry>
 
  <biblioentry id="bib-budney-emb11">
-  <abbrev>Bud22</abbrev>
+  <abbrev>BB22</abbrev>
   <authorgroup>
    <author>
     <firstname>Ryan</firstname>
@@ -714,6 +714,23 @@
   <volumenum>vol. 5</volumenum>
   <artpagenums>pp. 1505&ndash;1533</artpagenums>
   <date>2005</date>
+ </biblioentry>
+
+ <biblioentry id="bib-kauffman-virtual">
+  <abbrev>Kau99</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Louis</firstname>
+    <othername>H.</othername>
+    <surname>Kauffman</surname>
+   </author>
+  </authorgroup>
+  <title>Virtual knot theory</title>
+  <edition>European J. Combin.</edition>
+  <volumenum>vol. 20</volumenum>
+  <issuenum>no. 7</issuenum>
+  <artpagenums>pp. 663&ndash;690</artpagenums>
+  <date>1999</date>
  </biblioentry>
 
  <biblioentry id="bib-kktorsionlinkingform">

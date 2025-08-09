@@ -91,11 +91,17 @@
    <title>Text Codes</title>
 
    <para>
-    This will reconstruct a link from one of several common text codes.
-    At present, &regina; can only reconstruct single-component knots
-    from most types of codes;
-    the exception is <link linkend="link-new-pd">planar diagram codes</link>,
-    which support links with multiple components.
+    This will reconstruct a link diagram from one of several common text codes.
+   </para>
+   <para>
+    Be aware: some types of codes only support single-component knots
+    (not multiple-component links), and some types of codes only support
+    classical link diagrams (not virtual link diagrams) &ndash; see below
+    for details.
+    If you need all of these features (multiple components and/or virtual
+    diagrams), then good choices are
+    <link linkend="link-new-knotsig">knot/link signatures</link> or
+    <link linkend="link-new-pd">planar diagram codes</link>.
    </para>
    <para>
     <inlinemediaobject>
@@ -108,13 +114,13 @@
     The codes that &regina; understands include:
     <itemizedlist>
      <listitem id="link-new-knotsig">
-      <para>&regina;'s own <firstterm>knot/link signatures</firstterm>,
-       which are compact sequences of letters, digits and/or punctuation
+      <para>&regina;'s own <firstterm>knot/link signatures</firstterm>:
+       These are compact sequences of letters, digits and/or punctuation
        that uniquely identify a link diagram up to combinatorial isomorphism.
        Here <firstterm>combinatorial isomorphism</firstterm>
        includes relabelling the crossings and/or components,
-       reflecting the entire diagram, rotating connected components of the
-       diagram, and/or reversing individual link components.
+       reflecting the entire diagram, rotating the entire diagram,
+       and/or reversing individual link components.
       </para>
       <para>
        An example is <literal>dabcabcv-</literal>, which represents the trefoil.
@@ -122,13 +128,14 @@
       <para>
        Knot/link signatures played a significant role in the 19-crossing
        knot tabulation <xref linkend="bib-burton-knots"/>.
-       They are supported for all links with fewer than 64 components.
+       They support both classical and virtual link diagrams, and they support
+       all links with fewer than 64 components.
       </para>
      </listitem>
      <listitem id="link-new-classical-gauss">
       <para>
-       <firstterm>Classical Gauss codes</firstterm>,
-       which are sequences of integers that encode the crossings that you
+       <firstterm>Classical Gauss codes</firstterm>:
+       These are sequences of integers that encode the crossings that you
        pass through as you traverse the knot from an arbitrary starting point.
        Crossings are numbered consecutively from 1 to
        <replaceable>n</replaceable> (but in any order),
@@ -146,19 +153,27 @@
        (more importantly) for composite knots they may not even uniquely
        define the topology of the knot.
        If this is a problem, consider using either
-       <emphasis>oriented</emphasis> Gauss codes or knot/link signatures
-       instead.
+       <emphasis>oriented</emphasis> or <emphasis>signed</emphasis>
+       Gauss codes, or knot/link signatures instead.
+      </para>
+      <para>
+       In &regina;, classical Gauss codes only support knots (not
+       multiple-component links), and they only support classical (not virtual)
+       knot diagrams.
       </para>
      </listitem>
      <listitem id="link-new-oriented-gauss">
       <para>
-       <firstterm>Oriented Gauss codes</firstterm>,
-       which likewise encode the crossings that you pass through as you
-       traverse the knot, but this time with more precise information.
+       <firstterm>Oriented Gauss codes</firstterm>:
+       These likewise encode the crossings that you pass through as you
+       traverse the knot, but with more precise information than a
+       classical Gauss code.
        Again the crossings are numbered consecutively from 1 to
        <replaceable>n</replaceable> (but in any order);
-       each crossing is then written with a sign (plus or minus),
-       an arrow (either less-than or greater-than), and an integer.
+       each crossing is then written with a sign
+       (<literal>+</literal> or <literal>-</literal>),
+       an arrow (either less-than or greater-than), and a positive integer
+       (which identifies the crossing).
        The sign indicates whether you pass over (<literal>+</literal>)
        or under (<literal>-</literal>) the crossing, and
        the arrow indicates whether the other strand of the crossing
@@ -177,12 +192,51 @@
        Unlike classical Gauss codes, they preserve the orientation of the
        diagram, and they correctly identify the topology of composite knots.
       </para>
+      <para>
+       In &regina;, oriented Gauss codes support both classical and virtual
+       diagrams.  However, they only support knots (not multiple-component
+       links).
+      </para>
+     </listitem>
+     <listitem id="link-new-signed-gauss">
+      <para>
+       <firstterm>Signed Gauss codes</firstterm>:
+       Like oriented Gauss codes, these encode the crossings that you pass
+       through as you traverse the knot but with more precise information than
+       a classical Gauss code.
+       Once more the crossings are numbered consecutively from 1 to
+       <replaceable>n</replaceable> (but in any order);
+       each crossing is then written with a letter (<literal>O</literal> or
+       <literal>U</literal>), a positive integer (which identifies the
+       crossing), and a sign (<literal>+</literal> or <literal>-</literal>).
+       This time the letter indicates whether you pass over
+       (<literal>O</literal>) or under (<literal>U</literal>) the crossing,
+       and the sign indicates whether the crossing is positive or negative.
+       There are no spaces in the code at all.
+      </para>
+      <para>
+       An example is
+       <literal>U1+O2+U3-O4-U2+O1+U4-O3-</literal>,
+       which represents the figure eight knot.
+      </para>
+      <para>
+       Oriented Gauss codes were introduced by Kauffman
+       <xref linkend="bib-kauffman-virtual"/>.
+       Like oriented Gauss codes (and <emphasis>unlike</emphasis> classical
+       Gauss codes), they preserve the orientation of the diagram, and they
+       correctly identify the topology of composite knots.
+      </para>
+      <para>
+       In &regina;, signed Gauss codes support both classical and virtual
+       diagrams.  However, they only support knots (not multiple-component
+       links).
+      </para>
      </listitem>
      <listitem id="link-new-dt">
       <para>
-       <firstterm>Dowker-Thistlethwaite notation</firstterm>,
-       which is essentially a more streamlined variant of
-       classical Gauss codes.  They have played an important historical
+       <firstterm>Dowker-Thistlethwaite notation</firstterm>:
+       This is essentially a more streamlined variant of
+       classical Gauss codes.  It has played an important historical
        role in knot tabulation; see Adams <xref linkend="bib-adams-knotbook"/>
        for some history and also a precise description of the format.
       </para>
@@ -212,14 +266,19 @@
        does not specify the orientation of the diagram, and
        (more importantly) for composite knots may not uniquely
        define the topology of the knot.
-       If this is a problem, consider using either oriented Gauss codes
-       or knot/link signatures instead.
+       If this is a problem, consider using either oriented or signed
+       Gauss codes, or knot/link signatures instead.
+      </para>
+      <para>
+       In &regina;, Dowker-Thistlethwaite notation only supports knots (not
+       multiple-component links), and only supports classical (not virtual)
+       knot diagrams.
       </para>
      </listitem>
      <listitem id="link-new-pd">
       <para>
-       <firstterm>Planar diagram codes</firstterm>,
-       which are sequences of 4-tuples that encode the local connections
+       <firstterm>Planar diagram codes</firstterm>:
+       These are sequences of 4-tuples that encode the local connections
        around each crossing.  Unlike the other code types described
        here, planar diagram codes can encode multiple-component links.
       </para>
@@ -257,6 +316,10 @@
        the link has a component that consists entirely of over-crossings
        (i.e., an unknot placed &ldquo;on top&rdquo; of the diagram) then
        the orientation of that component is not uniquely determined.
+      </para>
+      <para>
+       In &regina;, planar diagram codes support both classical and virtual
+       link diagrams, and they support both knots and multiple-component links.
       </para>
      </listitem>
     </itemizedlist>
