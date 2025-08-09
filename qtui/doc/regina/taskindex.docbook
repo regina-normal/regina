@@ -840,7 +840,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="link-cables">framings, for links</link></primaryie>
+  <primaryie><link linkend="link-new-cables">framings,
+   for links</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1185,8 +1186,9 @@
    making</link></secondaryie>
   <secondaryie><link linkend="link-crossings">alternating diagram,
    testing for</link></secondaryie>
-  <secondaryie><link linkend="link-cables">blackboard framing</link></secondaryie>
-  <secondaryie><link linkend="link-cables">cabling</link></secondaryie>
+  <secondaryie><link linkend="link-new-cables">blackboard
+   framing</link></secondaryie>
+  <secondaryie><link linkend="link-new-cables">cabling</link></secondaryie>
   <secondaryie><link linkend="links">classical versus
    virtual</link></secondaryie>
   <secondaryie><link linkend="link-complement">complements</link></secondaryie>
@@ -1216,7 +1218,7 @@
    creating</link></secondaryie>
   <secondaryie><link linkend="link-census-examples">examples,
    from censuses</link></secondaryie>
-  <secondaryie><link linkend="link-cables">framings</link></secondaryie>
+  <secondaryie><link linkend="link-new-cables">framings</link></secondaryie>
   <secondaryie><link linkend="link-new-code">Gauss code
    (classical, oriented or signed), recreating from</link></secondaryie>
   <secondaryie><link linkend="link-codes">Gauss code
@@ -1241,7 +1243,7 @@
   <secondaryie><link linkend="link-graphs-nice">nice tree
    decompositions</link></secondaryie>
   <secondaryie><link linkend="link-flip">orienting</link></secondaryie>
-  <secondaryie><link linkend="link-cables">parallel cables,
+  <secondaryie><link linkend="link-new-cables">parallel cables,
    building</link></secondaryie>
   <secondaryie><link linkend="link-new-code">planar diagram code,
    recreating from</link></secondaryie>
@@ -1252,14 +1254,15 @@
    moves</link></secondaryie>
   <secondaryie><link linkend="link-flip">reversing</link></secondaryie>
   <secondaryie><link linkend="link-flip">rotating</link></secondaryie>
-  <secondaryie><link linkend="link-cables">Seifert framing</link></secondaryie>
+  <secondaryie><link linkend="link-new-cables">Seifert
+   framing</link></secondaryie>
   <secondaryie><link linkend="link-selfframe">self framing</link></secondaryie>
   <secondaryie><link linkend="link-simplify">simplification</link></secondaryie>
   <secondaryie><link linkend="link-graphs-tree">tree
    decompositions</link></secondaryie>
   <secondaryie><link linkend="links">virtual versus
    classical</link></secondaryie>
-  <secondaryie><link linkend="link-whitehead-double">Whitehead double,
+  <secondaryie><link linkend="link-new-whitehead-double">Whitehead double,
    building</link></secondaryie>
  </indexentry>
 
@@ -1502,7 +1505,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="link-cables">parallel cables</link></primaryie>
+  <primaryie><link linkend="link-new-cables">parallel cables</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -2326,7 +2329,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="link-whitehead-double">Whitehead
+  <primaryie><link linkend="link-new-whitehead-double">Whitehead
    double</link></primaryie>
  </indexentry>
 

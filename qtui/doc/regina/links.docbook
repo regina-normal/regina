@@ -87,6 +87,36 @@
    </inlinemediaobject>
   </para>
 
+  <sect2 id="link-new-example">
+   <title>Example Knots and Links</title>
+
+   <para>
+    Like triangulations,
+    &regina; offers a selection of ready-made sample knots and links
+    which you can use to experiment with &regina;.
+    Simply select an example from the list provided and &regina; will
+    build the corresponding link for you.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="newlink-example"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <tip id="link-census-examples"><para>
+    You can see many more examples by looking through the prime knot census,
+    which is shipped as one of &regina;'s example data files.
+    Select
+    <menuchoice>
+     <guimenu>File</guimenu>
+     <guisubmenu>Open Example</guisubmenu>
+     <guimenuitem>Prime Knots</guimenuitem>
+    </menuchoice>
+    from the menu.
+   </para></tip>
+  </sect2>
+
   <sect2 id="link-new-code">
    <title>Text Codes</title>
 
@@ -367,132 +397,75 @@
     any punctuation, or even just spaces, will suffice.
    </para></tip>
   </sect2>
-  <sect2 id="link-new-example">
-   <title>Example Knots and Links</title>
 
+  <sect2 id="link-new-whitehead-double">
+   <title>Whitehead Doubles</title>
    <para>
-    Like triangulations,
-    &regina; offers a selection of ready-made sample knots and links
-    which you can use to experiment with &regina;.
-    Simply select an example from the list provided and &regina; will
-    build the corresponding link for you.
+    &regina; can build the Whitehead double of some other knot
+    <replaceable>K</replaceable>.
+    This involves creating two parallel copies of <replaceable>K</replaceable>
+    using the <link linkend="seifert-framing">Seifert framing</link>,
+    and then cutting open these two copies and
+    re-connecting them using a clasp.  &regina; will use positive crossings
+    for the clasp.
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="newlink-example"/>
+      <imagedata multires="newlink-whitehead-double"/>
      </imageobject>
     </inlinemediaobject>
    </para>
-   <tip id="link-census-examples"><para>
-    You can see many more examples by looking through the prime knot census,
-    which is shipped as one of &regina;'s example data files.
-    Select
-    <menuchoice>
-     <guimenu>File</guimenu>
-     <guisubmenu>Open Example</guisubmenu>
-     <guimenuitem>Prime Knots</guimenuitem>
-    </menuchoice>
-    from the menu.
-   </para></tip>
+   <para>
+    To do this, select <replaceable>K</replaceable> in the
+    <guilabel>Source</guilabel> drop-down box.  This should be some knot that
+    you already have in your data file.
+   </para>
+   <para>
+    &regina; can only build the Whitehead double of a knot, not a
+    multiple-component link.
+   </para>
   </sect2>
 
-  <sect2>
-   <title>New Links from Old</title>
-
+  <sect2 id="link-new-cables">
+   <title>Parallel Cables</title>
    <para>
-    Instead of building a new link from scratch via
-    <menuchoice>
-     <guimenu>Packet Tree</guimenu>
-     <guimenuitem>New Knot or Link</guimenuitem>
-    </menuchoice>,
-    you can instead open an existing link in your data file and use it to
-    create a new link in various ways.
+    &regina; can build a new link containing &vark; cables of some other
+    link <replaceable>L</replaceable>, all parallel to each
+    other via a chosen framing.  This will effectively:
+    <itemizedlist>
+     <listitem><para>
+      treat each component of the original link <replaceable>L</replaceable>
+      as a ribbon, using the chosen framing;
+     </para></listitem>
+     <listitem><para>
+      create &vark; parallel copies of <replaceable>L</replaceable>, following
+      each other side-by-side along these ribbons.
+     </para></listitem>
+    </itemizedlist>
    </para>
-
-   <sect3 id="link-whitehead-double">
-    <title>Whitehead Double</title>
-    <para>
-     &regina; can build the Whitehead double of a pre-existing knot
-     <replaceable>K</replaceable>.
-     This involves creating two parallel copies of <replaceable>K</replaceable>
-     using the <link linkend="seifert-framing">Seifert framing</link>,
-     and then cutting open these two copies and
-     re-connecting them using a clasp.  &regina; will use positive crossings
-     for the clasp.
-    </para>
-    <para>
-     To do this, open the knot <replaceable>K</replaceable> for viewing
-     and select
-     <menuchoice>
-      <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
-      <guimenuitem>Build Whitehead Double</guimenuitem>
-     </menuchoice>
-     from the menu.
-     The Whitehead double will be added beneath the original knot
-     <replaceable>K</replaceable> in the packet tree.
-    </para>
-    <para>
-     <inlinemediaobject>
-      <imageobject>
-       <imagedata multires="link-whitehead-double"/>
-      </imageobject>
-     </inlinemediaobject>
-    </para>
-    <para>
-     &regina; can only build the Whitehead double of a knot, not a
-     multiple-component link.
-    </para>
-   </sect3>
-
-   <sect3 id="link-cables">
-    <title>Parallel Cables</title>
-    <para>
-     &regina; can also build a new link containing &vark; cables of a
-     pre-existing link <replaceable>L</replaceable>, all parallel to each
-     other via a chosen framing.  This will effectively:
-     <itemizedlist>
-      <listitem><para>
-       treat each component of the original link <replaceable>L</replaceable>
-       as a ribbon, using the chosen framing;
-      </para></listitem>
-      <listitem><para>
-       create &vark; parallel copies of <replaceable>L</replaceable>, following
-       each other side-by-side along these ribbons.
-      </para></listitem>
-     </itemizedlist>
-    </para>
-    <para>
-     To do this, open the link <replaceable>L</replaceable> for viewing
-     and select
-     <menuchoice>
-      <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
-      <guimenuitem>Build Parallel Cables&hellip;</guimenuitem>
-     </menuchoice>
-     from the menu.
-    </para>
-    <para>
-     <inlinemediaobject>
-      <imageobject>
-       <imagedata multires="link-cabling"/>
-      </imageobject>
-     </inlinemediaobject>
-    </para>
-    <para>
-     You will be asked to choose the number of cables &vark;,
-     as well as the framing to use.
-    </para>
-    <para>
-     <inlinemediaobject>
-      <imageobject>
-       <imagedata multires="link-cablingbox"/>
-       </imageobject>
-     </inlinemediaobject>
-    </para>
-    <para>
-     The number of cables should be an integer greater than one
-     (but not too large&mdash;see the warning below).
-     The framing may be one of:
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="newlink-parallel-cables"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    To do this:
+   </para>
+   <itemizedlist>
+    <listitem><para>
+     Select <replaceable>L</replaceable> in the <guilabel>Source</guilabel>
+     drop-down box.  This should be some knot or link that you already have
+     in your data file.
+    </para></listitem>
+    <listitem><para>
+     Enter the number of cables &vark;, which should be an integer greater
+     than one (but not too large&mdash;see the warning below).
+    </para></listitem>
+    <listitem><para>
+     Choose the framing to use.  The options are:
      <glosslist>
       <glossentry>
        <glossterm id="seifert-framing"><guilabel>Seifert
@@ -525,21 +498,17 @@
        </glossdef>
       </glossentry>
      </glosslist>
-    </para>
-    <para>
-     The new link will be added beneath the original link
-     <replaceable>L</replaceable> in the packet tree.
-    </para>
-    <warning><para>
-     This operation can increase the number of crossings enormously.
-     If you create &vark; cables then you will
-     multiply the number of crossings by
-     &vark;<superscript>2</superscript>,
-     and if you chose the Seifert framing then there may be even more
-     crossings due to twists in the ribbons.
-     Use a large &vark; at your peril!
-    </para></warning>
-   </sect3>
+    </para></listitem>
+   </itemizedlist>
+   <warning><para>
+    The parallel cables construction can generate an enormous number of
+    crossings.  If you create &vark; cables then you will
+    multiply the number of crossings in the source link by
+    &vark;<superscript>2</superscript>,
+    and if you chose the Seifert framing then there may be even more
+    crossings due to twists in the ribbons.
+    Use a large &vark; at your peril!
+   </para></warning>
   </sect2>
  </sect1>
 
