@@ -826,21 +826,24 @@
       <glossterm><guilabel>Gauss codes</guilabel></glossterm>
       <glossdef>
        <para>
-        This displays both the classical and oriented Gauss codes.
+        This displays the classical, oriented and signed Gauss codes.
         Classical Gauss codes are common in the literature, but they
         suffer from ambiguities related to orientation; for
         composite knots they may not even uniquely define the topology.
-        Oriented Gauss codes solve this problem by adding a little more
-        information.
+        Oriented and signed Gauss codes solve this problem by adding a little
+        more information.
        </para>
        <para>
-        For a more detailed description of both formats, see the
+        For a more detailed description of these formats, see the
         section on <link linkend="link-new-classical-gauss">creating
         knots from Gauss codes</link>.
        </para>
        <para>
-        Currently &regina; only displays Gauss codes for knots, not
-        multiple component links.
+        Currently &regina; only displays Gauss codes for knots (not
+        multiple component links).  If your knot diagram is virtual (not
+        classical), then &regina; will still display all three Gauss codes;
+        however, only the oriented and signed variants contain enough
+        informtion to reconstruct the diagram.
        </para>
       </glossdef>
      </glossentry>
@@ -862,7 +865,8 @@
        </para>
        <para>
         Currently &regina; only displays Dowker-Thistlethwaite notation
-        for knots, not multiple component links.
+        for knots (not multiple component links), and only for classical
+        (not virtual) knot diagrams.
         Be aware that alphabetical Dowker-Thistlethwaite notation is
         case-sensitive (i.e., upper-case and lower-case matters).
        </para>
@@ -877,8 +881,8 @@
         two link diagrams have the same signature
         if and only if they are combinatorially isomorphic
         (which includes relabelling crossings and/or components,
-        reflecting the entire diagram, rotating connected components of the
-        diagram, and/or reversing individual link components).
+        reflecting the entire diagram, rotating the entire diagram,
+        and/or reversing individual link components).
        </para>
        <para>
         For a more detailed discussion of knot/link signatures,
@@ -887,7 +891,8 @@
        </para>
        <para>
         These signatures are supported for all links with fewer than
-        64 components.  Be aware that they are case-sensitive
+        64 components, and they support both classical and virtual link
+        diagrams.  Be aware that knot/link signatures are case-sensitive
         (i.e., upper-case and lower-case matters).
        </para>
       </glossdef>
@@ -896,9 +901,9 @@
       <glossterm><guilabel>Planar diagram codes</guilabel></glossterm>
       <glossdef>
        <para>
-        This displays the planar diagram code for the link.  Unlike most
-        of the codes here, planar diagram codes support
-        multiple-component links.
+        This displays the planar diagram code for the link.
+        Planar diagram codes support multiple-component links,
+        as well as both classical and virtual link diagrams.
         Their main limitations are that they cannot represent zero-crossing
         unknot components, and they cannot fix the orientation of a link
         component that consists entirely of over-crossings.
@@ -919,7 +924,8 @@
         <ulink url="http://burtleburtle.net/bob/knot/homfly.html">&homflypt;
         polynomial software</ulink>.
         &regina; can happily display the
-        Jenkins format for multiple-component links.
+        Jenkins format for multiple-component links, and for both classical
+        and virtual link diagrams.
        </para>
        <para>
         In this format, a link is described by a sequence of integers

@@ -127,6 +127,12 @@ void LinkCodesUI::refresh() {
             "is only available for knots of 26 or fewer crossings.<p>"
             "You can copy this text to the clipboard if you need to send it "
             "to some other application.");
+        if (! link->isClassical()) {
+            code->setPlainText(tr("Dowker-Thistlethwaite notation is only "
+                "available for classical (not virtual) knot diagrams."));
+            code->setWordWrapMode(QTextOption::WordWrap);
+            return;
+        }
         if (link->countComponents() != 1) {
             code->setPlainText(tr("Dowker-Thistlethwaite notation is currently "
                 "only available for knots."));
@@ -176,7 +182,7 @@ void LinkCodesUI::refresh() {
                 code->setWordWrapMode(QTextOption::WordWrap);
                 return;
             }
-            
+
             bool allOver = true;
             regina::StrandRef s = c;
             do {
@@ -186,13 +192,13 @@ void LinkCodesUI::refresh() {
                 }
                 ++s;
             } while (allOver && s != c);
-            
+
             if (allOver) {
                 hasAllOver = true;
                 break;
             }
         }
-        
+
         if (hasAllOver) {
             ans = (link->pd() + "\n\nThis link has a component that "
                 "consists entirely of over-crossings. A planar diagram code "
@@ -213,12 +219,12 @@ void LinkCodesUI::refresh() {
         code->setWordWrapMode(QTextOption::WordWrap);
     } else {
         code->setWhatsThis(
-            "The classical and oriented Gauss codes of the link.  "
+            "The classical, oriented and signed Gauss codes of the link.  "
             "The classical Gauss code is widely used but ambiguous for "
-            "non-prime knots, whereas the oriented Gauss code (based on "
-            "a format of Andreeva et al.) describes a knot diagram exactly "
-            "using additional symbols that describe the orientation of the "
-            "other strand passing by at each crossing.<p>"
+            "non-prime knots, whereas the oriented and signed Gauss codes "
+            "(based on formats of Andreeva et al. and Kauffman) describe a "
+            "knot diagram precisely using additional symbols that specify "
+            "exactly what happens at each crossing.<p>"
             "You can copy this text to the clipboard if you need to send it "
             "to some other application.");
         if (link->countComponents() != 1) {
@@ -228,7 +234,8 @@ void LinkCodesUI::refresh() {
             return;
         }
         ans = (std::string("Classical:\n") + link->gauss() +
-            "\n\nOriented:\n" + link->orientedGauss() + "\n").c_str();
+            "\n\nOriented:\n" + link->orientedGauss() +
+            "\n\nSigned:\n" + link->signedGauss() + "\n").c_str();
 
         code->setWordWrapMode(QTextOption::WordWrap);
     }
