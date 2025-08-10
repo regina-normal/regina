@@ -568,7 +568,7 @@
     contain a second line indicating:
    </para>
    <itemizedlist>
-    <listitem>
+    <listitem id="link-virtual-genus">
      <para>
       The <firstterm>virtual genus</firstterm> of the diagram.  This is
       the smallest genus of orientable surface in which the diagram embeds.
@@ -576,7 +576,7 @@
       not an invariant of the link itself.
      </para>
     </listitem>
-    <listitem>
+    <listitem id="link-odd-writhe">
      <para>
       The <firstterm>odd writhe</firstterm>, or <firstterm>self-linking
       number</firstterm>.  This is an invariant of virtual knots
@@ -1118,49 +1118,118 @@
   <sect2 id="link-complement">
    <title>Link Complements</title>
    <para>
-    &regina; can do a lot more with 3-manifold triangulations
-    than with knots and links directly. If you want access to these more
-    powerful 3-manifold tools, you can build a triangulation of the
-    link complement.
+    &regina; includes many tools for working with 3-manifold triangulations,
+    as well as working directly with knots and links. If you want access to
+    these 3-manifold tools, you can build a triangulation of the link
+    complement.
    </para>
    <para>
-    The result will be an ideal 3-manifold triangulation,
-    describing the complement of your link in the 3-sphere.
+    The meaning of &ldquo;complement&rdquo; in this setting depends upon
+    whether you are working with a classical or virtual link diagram.
+    <itemizedlist>
+     <listitem>
+      <para>
+       If you have a <emphasis>classical</emphasis> link diagram, then &regina;
+       will build an ideal 3-manifold triangulation representing the complement
+       of your link in the 3-sphere.
+      </para>
+      <para>
+       The resulting triangulation will have exactly one ideal vertex
+       for each link component.
+      </para>
+      <para>
+       If your link diagram is
+       <link linkend="link-decomposition-components">disconnected (in the
+       graph-theoretical sense)</link>,
+       then the resulting 3-manifold will be the connected sum of the
+       complements of each connected diagram component.
+       In particular, the resulting triangulation will always be connected.
+      </para>
+      <para>
+       For classical links, the complement is a topological invariant of the
+       link.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       If you have a <emphasis>virtual</emphasis> (non-classical) link diagram,
+       let <replaceable>S</replaceable> be the smallest genus closed
+       orientable surface in which the diagram embeds (this corresponds to the
+       <link linkend="link-virtual-genus">virtual genus</link> of the diagram).
+       Then &regina; will build the complement of your link diagram in
+       the thickened surface
+       <replaceable>S</replaceable>&nbsp;&times;&nbsp;I.
+      </para>
+      <para>
+       The resulting triangulation will have one ideal vertex for each link
+       component, plus an additional two ideal vertices for the two copies of
+       <replaceable>S</replaceable> on the boundary of
+       <replaceable>S</replaceable>&nbsp;&times;&nbsp;I.
+      </para>
+      <para>
+       If your link diagram is
+       <link linkend="link-decomposition-components">disconnected (in the
+       graph-theoretical sense)</link>, then the surface
+       <replaceable>S</replaceable> that is used will be the connected sum of
+       the individual closed orientable surfaces that host each connected
+       diagram component.  In particular, as in the classical case,
+       the resulting triangulation will always be connected.
+      </para>
+      <para>
+       For virtual links, the complement (and indeed the genus of the
+       surface <replaceable>S</replaceable>) is not a topological invariant,
+       but instead depends upon the specific link diagram.
+      </para>
+     </listitem>
+    </itemizedlist>
    </para>
    <para>
     There are two ways you can build a link complement:
     <itemizedlist>
-     <listitem><para>
-      If you select
-      <menuchoice>
-       <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
-       <guimenuitem>Complement</guimenuitem>
-      </menuchoice>
-      from the menu, or press the <guilabel>Complement</guilabel>
-      toolbar button (circled below),
-      &regina; will use its own implementation to create a native
-      &regina; triangulation of the complement.
-      The triangulation will have access to the full suite of
-      <link linkend="triangulations">&regina;'s tools for triangulations</link>,
-      but the meridian and longitude curves from the diagram will be forgotten.
-     </para></listitem>
-     <listitem><para>
-      If you select
-      <menuchoice>
-       <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
-       <guimenuitem>&snappea;</guimenuitem>
-      </menuchoice>
-      from the menu, or press the <guilabel>&snappea;</guilabel>
-      toolbar button (also circled below),
-      &regina; will pass the link to the &snappea; kernel to triangulate
-      instead; the result will be a hybrid <link linkend="snappea">&snappea;
-      triangulation</link>.
-      The peripheral curves from the diagram will be preserved in
-      &snappea;'s data structures; however, the available tools for
-      working with the triangulation combinatorially will be more limited.
-      See the introduction to the chapter on <link linkend="snappea">&snappea;
-      triangulations</link> for more information on these limitations.
-     </para></listitem>
+     <listitem>
+      <para>
+       If you select
+       <menuchoice>
+        <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+        <guimenuitem>Complement</guimenuitem>
+       </menuchoice>
+       from the menu, or press the <guilabel>Complement</guilabel>
+       toolbar button (circled below),
+       &regina; will use its own implementation to create a native
+       &regina; triangulation of the complement.
+       The triangulation will have access to the full suite of
+       <link linkend="triangulations">&regina;'s tools for
+       triangulations</link>, but the meridian and longitude curves from the
+       diagram will be forgotten.
+      </para>
+      <para>
+       The <guilabel>Complement</guilabel> option is available for all link
+       diagrams, both classical and virtual.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       If you select
+       <menuchoice>
+        <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+        <guimenuitem>&snappea;</guimenuitem>
+       </menuchoice>
+       from the menu, or press the <guilabel>&snappea;</guilabel>
+       toolbar button (also circled below),
+       &regina; will pass the link to the &snappea; kernel to triangulate
+       instead; the result will be a hybrid <link linkend="snappea">&snappea;
+       triangulation</link>.
+       The peripheral curves from the diagram will be preserved in
+       &snappea;'s data structures; however, the available tools for
+       working with the triangulation combinatorially will be more limited.
+       See the introduction to the chapter on <link linkend="snappea">&snappea;
+       triangulations</link> for more information on these limitations.
+      </para>
+      <para>
+       The <guilabel>&snappea;</guilabel> option is only available for
+       classical link diagrams, not virtual diagrams.
+      </para>
+     </listitem>
     </itemizedlist>
    </para>
    <para>

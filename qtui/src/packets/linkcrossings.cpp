@@ -668,6 +668,7 @@ void LinkCrossingsUI::refresh() {
 
     actAlternating->setEnabled(! link->isAlternating());
     actWhiteheadDouble->setEnabled(link->countComponents() == 1);
+    actSnapPea->setEnabled(link->isClassical());
 }
 
 void LinkCrossingsUI::simplify() {
@@ -870,8 +871,16 @@ void LinkCrossingsUI::complement() {
 void LinkCrossingsUI::snapPea() {
     if (link->isEmpty()) {
         ReginaSupport::sorry(ui,
+            tr("This link diagram is empty."),
             tr("The SnapPea kernel cannot triangulate the complement "
                 "of an empty link."));
+        return;
+    }
+    if (! link->isClassical()) {
+        ReginaSupport::sorry(ui,
+            tr("This link diagram is virtual."),
+            tr("The SnapPea kernel can only triangulate the complement "
+                "of a classical link diagram, not a virtual link diagram."));
         return;
     }
     auto ans = regina::make_packet<regina::SnapPeaTriangulation>(

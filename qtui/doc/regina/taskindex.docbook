@@ -1242,6 +1242,7 @@
    viewing</link></secondaryie>
   <secondaryie><link linkend="link-graphs-nice">nice tree
    decompositions</link></secondaryie>
+  <secondaryie><link linkend="link-odd-writhe">odd writhe</link></secondaryie>
   <secondaryie><link linkend="link-flip">orienting</link></secondaryie>
   <secondaryie><link linkend="link-new-cables">parallel cables,
    building</link></secondaryie>
@@ -1257,10 +1258,13 @@
   <secondaryie><link linkend="link-new-cables">Seifert
    framing</link></secondaryie>
   <secondaryie><link linkend="link-selfframe">self framing</link></secondaryie>
+  <secondaryie><link linkend="link-odd-writhe">self-linking
+   number</link></secondaryie>
   <secondaryie><link linkend="link-simplify">simplification</link></secondaryie>
   <secondaryie><link linkend="link-graphs-tree">tree
    decompositions</link></secondaryie>
-  <secondaryie><link linkend="link-crossings">virtual genus</link></secondaryie>
+  <secondaryie><link linkend="link-virtual-genus">virtual
+   genus</link></secondaryie>
   <secondaryie><link linkend="links">virtual versus
    classical</link></secondaryie>
   <secondaryie><link linkend="link-new-whitehead-double">Whitehead double,
@@ -1411,6 +1415,10 @@
  <indexentry>
   <primaryie>octagonal almost normal surfaces</primaryie>
   <seeie>See: normal surfaces</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-odd-writhe">odd writhe</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1741,6 +1749,11 @@
  <indexentry>
   <primaryie><link linkend="link-selfframe">self framing of
    links</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-odd-writhe">self-linking
+   number</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -2311,7 +2324,8 @@
  <indexentry>
   <primaryie>virtual links</primaryie>
   <secondaryie><link linkend="links">overview</link></secondaryie>
-  <secondaryie><link linkend="link-crossings">virtual genus</link></secondaryie>
+  <secondaryie><link linkend="link-virtual-genus">virtual
+   genus</link></secondaryie>
  </indexentry>
 
  <indexentry>
