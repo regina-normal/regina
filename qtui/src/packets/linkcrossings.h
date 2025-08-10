@@ -215,6 +215,7 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         void changeCrossing();
         void resolveCrossing();
         void reverseComponent();
+        void makeVirtual();
 
         /**
          * Notify that preferences have changed.

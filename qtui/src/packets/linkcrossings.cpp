@@ -916,12 +916,16 @@ void LinkCrossingsUI::contextStrand(const QPoint& pos) {
             QAction change(tr("Change crossing %1").arg(useCrossing), this);
             QAction resolve(tr("Resolve crossing %1").arg(useCrossing), this);
             QAction reverse(tr("Reverse component"), this);
+            QAction makeVirtual(tr("Make crossing %1 virtual").arg(useCrossing),
+                this);
             connect(&change, SIGNAL(triggered()), this, SLOT(changeCrossing()));
             connect(&resolve, SIGNAL(triggered()), this, SLOT(resolveCrossing()));
             connect(&reverse, SIGNAL(triggered()), this, SLOT(reverseComponent()));
+            connect(&makeVirtual, SIGNAL(triggered()), this, SLOT(makeVirtual()));
             m.addAction(&change);
             m.addAction(&resolve);
             m.addAction(&reverse);
+            m.addAction(&makeVirtual);
 
             m.exec(ui->mapToGlobal(pos));
             return;
@@ -945,6 +949,12 @@ void LinkCrossingsUI::resolveCrossing() {
 void LinkCrossingsUI::reverseComponent() {
     if (useStrand >= 0 && useStrand < 2 * link->size())
         link->reverse(link->strand(useStrand));
+    useStrand = -1;
+}
+
+void LinkCrossingsUI::makeVirtual() {
+    if (useStrand >= 0 && useStrand < 2 * link->size())
+        link->makeVirtual(link->crossing(useStrand >> 1));
     useStrand = -1;
 }
 
