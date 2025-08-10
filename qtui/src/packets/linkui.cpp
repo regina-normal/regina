@@ -185,6 +185,10 @@ QString LinkHeaderUI::summaryInfo(const regina::Link& link) {
 
     if (link.isClassical())
         return mainText;
+    else if (link.countComponents() == 1)
+        return QObject::tr("<qt>%1<br>Virtual diagram of genus %2, "
+            "odd writhe %3</qt>")
+            .arg(mainText).arg(link.virtualGenus()).arg(link.oddWrithe());
     else
         return QObject::tr("<qt>%1<br>Virtual diagram of genus %2</qt>")
             .arg(mainText).arg(link.virtualGenus());
