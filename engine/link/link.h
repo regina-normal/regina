@@ -4390,6 +4390,11 @@ class Link :
          * Unlike most polynomial invariants, computing the affine index
          * polynomial is extremely fast, and so this polynomial is not cached.
          *
+         * \pre This link has exactly one component (i.e., it is a knot).
+         *
+         * \exception FailedPrecondition This link is empty or has multiple
+         * components.
+         *
          * \return the affine index polynomial.
          */
         Laurent<Integer> affineIndex() const;
