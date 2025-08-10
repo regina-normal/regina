@@ -145,40 +145,48 @@ QString LinkHeaderUI::summaryInfo(const regina::Link& link) {
                 "−ve</span>");
     }
 
+    QString mainText;
     if (link.countComponents() == 1) {
         // Knot:
         if (link.size() == 0) {
-            return QObject::tr("Unknot with no crossings");
+            mainText = QObject::tr("Unknot with no crossings");
         } else if (link.size() == 1) {
             // Must be alternating.
-            return QObject::tr("Alternating knot with 1 crossing (%1)")
+            mainText = QObject::tr("Alternating knot with 1 crossing (%1)")
                 .arg(signs);
         } else if (link.isAlternating()) {
-            return QObject::tr("Alternating knot with %1 crossings (%2)")
+            mainText = QObject::tr("Alternating knot with %1 crossings (%2)")
                 .arg(link.size()).arg(signs);
         } else {
-            return QObject::tr("Non-alternating knot with %1 crossings (%2)")
+            mainText = QObject::tr(
+                "Non-alternating knot with %1 crossings (%2)")
                 .arg(link.size()).arg(signs);
         }
     } else {
         // Multiple component link:
         if (link.size() == 0) {
-            return QObject::tr("Unlink with %1 components, no crossings")
+            mainText = QObject::tr("Unlink with %1 components, no crossings")
                 .arg(link.countComponents());
         } else if (link.size() == 1) {
             // Must be alternating.
-            return QObject::tr(
+            mainText = QObject::tr(
                 "Alternating link with %1 components, 1 crossing (%2)")
                 .arg(link.countComponents()).arg(signs);
         } else if (link.isAlternating()) {
-            return QObject::tr(
+            mainText = QObject::tr(
                 "Alternating link with %1 components, %2 crossings (%3)")
                 .arg(link.countComponents()).arg(link.size()).arg(signs);
         } else {
-            return QObject::tr(
+            mainText = QObject::tr(
                 "Non-alternating link with %1 components, %2 crossings (%3)")
                 .arg(link.countComponents()).arg(link.size()).arg(signs);
         }
     }
+
+    if (link.isClassical())
+        return mainText;
+    else
+        return QObject::tr("<qt>%1<br>Virtual diagram of genus %2</qt>")
+            .arg(mainText).arg(link.virtualGenus());
 }
 

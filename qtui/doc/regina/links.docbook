@@ -547,7 +547,7 @@
   <sect2 id="link-crossings">
    <title>Crossings and Components</title>
    <para>
-    At the top of each link viewer is a header listing: whether the knot
+    At the top of each link viewer is a header listing: whether the link
     is alternating; the number of link components (or the word
     &ldquo;knot&rdquo; to indicate just one); and the number of crossings,
     including how many are positive and negative.
@@ -557,6 +557,19 @@
     <inlinemediaobject>
      <imageobject>
       <imagedata multires="link-header"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    If the link diagram is virtual (not classical), then the header will
+    contain a second line indicating the genus of the orientable surface in
+    which the diagram is embedded.  Note that this is a property of the link
+    <emphasis>diagram</emphasis>, not an invariant of the link itself.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="link-header-virtual"/>
      </imageobject>
     </inlinemediaobject>
    </para>

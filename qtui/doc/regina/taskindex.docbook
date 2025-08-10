@@ -1260,6 +1260,7 @@
   <secondaryie><link linkend="link-simplify">simplification</link></secondaryie>
   <secondaryie><link linkend="link-graphs-tree">tree
    decompositions</link></secondaryie>
+  <secondaryie><link linkend="link-crossings">virtual genus</link></secondaryie>
   <secondaryie><link linkend="links">virtual versus
    classical</link></secondaryie>
   <secondaryie><link linkend="link-new-whitehead-double">Whitehead double,
@@ -2308,7 +2309,9 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="links">virtual links, overview</link></primaryie>
+  <primaryie>virtual links</primaryie>
+  <secondaryie><link linkend="links">overview</link></secondaryie>
+  <secondaryie><link linkend="link-crossings">virtual genus</link></secondaryie>
  </indexentry>
 
  <indexentry>
