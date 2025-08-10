@@ -4108,6 +4108,8 @@ class Link :
          * tracker caused the computation to start in the background), simply
          * call this routine in a new detached thread.
          *
+         * \pre This link diagram is classical (not virtual).
+         *
          * \exception FailedPrecondition This is a virtual (not classical)
          * link diagram.
          *
@@ -4186,6 +4188,8 @@ class Link :
          * tracker caused the computation to start in the background), simply
          * call this routine in a new detached thread.
          *
+         * \pre This link diagram is classical (not virtual).
+         *
          * \exception FailedPrecondition This is a virtual (not classical)
          * link diagram.
          *
@@ -4231,6 +4235,8 @@ class Link :
          * routine should not be kept for later use.  Instead, homfly() should
          * be called again; this will be instantaneous if the HOMFLY-PT
          * polynomial has already been calculated.
+         *
+         * \pre This link diagram is classical (not virtual).
          *
          * \exception FailedPrecondition This is a virtual (not classical)
          * link diagram.

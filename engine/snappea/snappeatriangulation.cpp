@@ -325,6 +325,9 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Link& link) :
     if (link.isEmpty())
         throw InvalidArgument("The SnapPeaTriangulation constructor "
             "requires a non-empty link");
+    if (! link.isClassical())
+        throw InvalidArgument("The SnapPeaTriangulation constructor "
+            "requires a classical (not virtual) link diagram");
 
     // SnapPea uses int (not size_t) to index crossings and components.
     if (link.size() > INT_MAX || link.countComponents() > INT_MAX)

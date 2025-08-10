@@ -980,7 +980,7 @@ class SnapPeaTriangulation :
          *
          * This is _not_ the same triangulation that would be produced by
          * calling `SnapPeaTriangulation(link.complement())`.
-         * By calling `link.complement()`, you through Regina's
+         * By calling `link.complement()`, you go through Regina's
          * Triangulation<3> class and therefore lose the peripheral curves.
          * Although the SnapPeaTriangulation constructor will install new
          * peripheral curves, there is no guarantee that these are the same
@@ -992,8 +992,11 @@ class SnapPeaTriangulation :
          * not by Regina.  As a result, the peripheral curves installed by
          * SnapPea will be precisely the curves from the link diagram.
          *
-         * \exception InvalidArgument The given link is empty, or it has
-         * so many crossings and/or components that SnapPea cannot handle it.
+         * \pre The given link diagram is classical (not virtual).
+         *
+         * \exception InvalidArgument The given link diagram is empty, or it
+         * is virtual (not classical), or it has so many crossings and/or
+         * components that SnapPea cannot handle it.
          * (The latter problem will only occur if the number of crossings
          * and/or components does not fit into a native C++ \c int.)
          *
