@@ -66,7 +66,7 @@ class GroupWidget : public QWidget {
         /**
          * Constructor.
          */
-        GroupWidget(bool allowSimplify, bool paddingStretch);
+        GroupWidget(bool allowSimplify = true, bool paddingStretch = false);
 
         /**
          * Changes the group presentation currently being displayed.
@@ -93,17 +93,9 @@ class GroupWidget : public QWidget {
 
     public slots:
         /**
-         * Group simplification via GAP.
+         * Group simplification.
          */
-        void simplifyGAP();
-        /**
-         * Regina's own simplification code.
-         */
-        void simplifyInternal();
-        /**
-         * Search for more potentially useful relators.
-         */
-        void proliferateRelators();
+        void simplify();
 
     private:
         /**

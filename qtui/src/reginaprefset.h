@@ -104,6 +104,8 @@ class ReginaPrefSet : public QObject {
                  normal surface list. */
         enum class CrossingStyle { Pictorial, Text };
             /**< Possible styles for displaying crossings for links. */
+        enum class GroupSimplification { Regina, GAP };
+            /**< Available methods for simplifying group presentations. */
         enum class HomflyStyle { AZ, LM };
             /**< Possible flavours of the HOMFLY-PT polynomial to display. */
         enum class LinkCode { Gauss, DowkerThistlethwaite, KnotSig, Jenkins,
@@ -126,6 +128,8 @@ class ReginaPrefSet : public QObject {
             /**< Should we use unicode liberally throughout the GUI? */
         QByteArray fileImportExportCodec;
             /**< The codec to use for imports and exports. */
+        GroupSimplification groupSimplification;
+            /**< The preferred method for simplifying group presentations. */
         bool helpIntroOnStartup;
             /**< Should we display introductory help on startup? */
         regina::HyperCoords hypersurfacesCreationCoords;
@@ -201,6 +205,9 @@ class ReginaPrefSet : public QObject {
         int tabLink;
             /**< The index of the initial sub-tab to open in a knot/link
                  viewer. */
+        int tabLinkAlgebra;
+            /**< The index of the initial sub-tab to open in a knot/link
+                 algebra viewer. */
         int tabSnapPeaTri;
             /**< The index of the initial tab to open in a SnapPea
                  triangulation viewer. */

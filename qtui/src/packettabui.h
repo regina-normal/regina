@@ -351,6 +351,9 @@ class PacketTabbedViewerTab : public QObject, public PacketViewerTab {
          * Notification that a new tab has been selected.
          */
         void notifyTabSelected(int newTab);
+
+    protected:
+        void renameTab(int index, const QString& label);
 };
 
 inline PacketPane* PacketTabbedUI::getEnclosingPane() {
@@ -396,6 +399,10 @@ inline PacketPane* PacketTabbedViewerTab::getEnclosingPane() {
 
 inline unsigned PacketTabbedViewerTab::tabCount() {
     return tabs->count();
+}
+
+inline void PacketTabbedViewerTab::renameTab(int index, const QString& label) {
+    tabs->setTabText(index, label);
 }
 
 #endif

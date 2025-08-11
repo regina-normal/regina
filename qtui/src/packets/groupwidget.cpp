@@ -46,7 +46,6 @@
 #include <QMessageBox>
 #include <QPushButton>
 
-#define MAX_RELATIONS_FOR_PROLIFERATION 8
 #define MAX_RELATIONS_FOR_RECOGNITION 50
 
 GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) : QWidget() {
@@ -72,66 +71,24 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) : QWidget() {
     if (allowSimplify) {
         layout->addStretch(1);
 
-        auto* label = new QLabel(tr("Try to simplify:"));
-        label->setAlignment(Qt::AlignCenter);
-        layout->addWidget(label);
+        auto* sublayout = new QHBoxLayout();
+        sublayout->setContentsMargins(0, 0, 0, 0);
+        sublayout->setSpacing(0);
 
-        QBoxLayout* buttonBox = new QVBoxLayout();
-        buttonBox->setSpacing(0);
+        auto* btn = new QPushButton(tr("Simplify"));
+        btn->setToolTip(tr("Attempt to simplify the group presentation"));
+        btn->setWhatsThis(tr("Attempt to simplify the group presentation. "
+            "You can choose the simplification method in Regina's settings."));
+        connect(btn, SIGNAL(clicked()), this, SLOT(simplify()));
 
-        QBoxLayout* hLayout;
-        QPushButton* btn;
+        sublayout->addStretch();
+        sublayout->addWidget(btn);
+        sublayout->addStretch();
 
-        btn = new QPushButton(tr("Using Regina"));
-        btn->setToolTip(tr("Simplify the group presentation using Regina"));
-        btn->setWhatsThis(tr("<qt>Simplify the group presentation using "
-            "Regina's own code, which is based on small cancellation theory "
-            "and Nielsen moves.<p>"
-            "Pressing this button a second time should have no effect.</qt>"));
-        connect(btn, SIGNAL(clicked()), this, SLOT(simplifyInternal()));
-        hLayout = new QHBoxLayout();
-        hLayout->addStretch(1);
-        hLayout->addWidget(btn);
-        hLayout->addStretch(1);
-        buttonBox->addLayout(hLayout);
-
-        btn = new QPushButton(tr("Using GAP"));
-        btn->setToolTip(tr("Simplify the group presentation using "
-            "GAP (Groups, Algorithms and Programming)"));
-        btn->setWhatsThis(tr("<qt>Simplify the group presentation "
-            "using the program GAP (Groups, Algorithms and "
-            "Programming).<p>Note that GAP will need to be installed "
-            "separately on your system.</qt>"));
-        connect(btn, SIGNAL(clicked()), this, SLOT(simplifyGAP()));
-        hLayout = new QHBoxLayout();
-        hLayout->addStretch(1);
-        hLayout->addWidget(btn);
-        hLayout->addStretch(1);
-        buttonBox->addLayout(hLayout);
-
-        btn = new QPushButton(tr("Relator explosion"));
-        btn->setToolTip(tr("Generate new relators from old (can be "
-            "memory-intensive)"));
-        btn->setWhatsThis(tr("<qt>Generate new relators from old.  "
-            "This attempts to multiply all the relators "
-            "together in a moderately intelligent way to create new, hopefully "
-            "useful relators.  You should alternate this "
-            "with one of the simplification buttons above.<p>"
-            "This routine has been found particularly useful when trying to "
-            "prove that a group is trivial.<p>"
-            "<b>Warning:</b> If the presentation is already large then "
-            "this computation might easily exceed the memory of your "
-            "computer.</qt>"));
-        connect(btn, SIGNAL(clicked()), this, SLOT(proliferateRelators()));
-        hLayout = new QHBoxLayout();
-        hLayout->addStretch(1);
-        hLayout->addWidget(btn);
-        hLayout->addStretch(1);
-        buttonBox->addLayout(hLayout);
-
-        layout->addLayout(buttonBox);
-    } else if (paddingStretch)
+        layout->addLayout(sublayout);
+    } else if (paddingStretch) {
         layout->addStretch(1);
+    }
 }
 
 void GroupWidget::refresh() {
@@ -193,52 +150,44 @@ void GroupWidget::refresh() {
             new QListWidgetItem(QString(r.str(alphabetic).c_str()), rels_);
 }
 
-void GroupWidget::simplifyInternal() {
-    // This *should* block the UI, which means we don't need to worry
-    // about race conditons with group_.
-    group_.simplify();
-    refresh();
-    emit simplified();
-}
+void GroupWidget::simplify() {
+    switch (ReginaPrefSet::global().groupSimplification) {
+        // Regina is the default if all else fails, so this will come last.
+        case ReginaPrefSet::GroupSimplification::GAP:
+            {
+                // Can we actually run GAP?
+                QString useExec = verifyGAPExec();
+                if (useExec.isNull())
+                    return;
 
-void GroupWidget::proliferateRelators() {
-    if (group_.countRelations() > MAX_RELATIONS_FOR_PROLIFERATION)
-        if (! ReginaSupport::warnYesNo(this,
-                tr("This group presentation is already large."),
-                tr("A relator explosion on a large group presentation "
-                    "could easily exceed the memory of your machine.  "
-                    "Are you sure you wish to do this?")))
-            return;
-
-    // This *should* block the UI, which means we don't need to worry
-    // about race conditons with group_.
-    group_.proliferateRelators(1);
-    refresh();
-    emit simplified();
-}
-
-void GroupWidget::simplifyGAP() {
-    // Can we actually run GAP?
-    QString useExec = verifyGAPExec();
-    if (useExec.isNull())
-        return;
-
-    GAPRunner dlg(this, useExec, group_);
-    if (dlg.exec() == GAPRunner::Accepted) {
-        if (auto ans = dlg.simplifiedGroup()) {
-            group_ = *ans;
+                GAPRunner dlg(this, useExec, group_);
+                if (dlg.exec() == GAPRunner::Accepted) {
+                    if (auto ans = dlg.simplifiedGroup()) {
+                        group_ = *ans;
+                        refresh();
+                        emit simplified();
+                    } else {
+                        ReginaSupport::sorry(this,
+                            tr("An unexpected error occurred whilst "
+                                "attempting to simplify the group presentation "
+                                "using GAP."),
+                            tr("<qt>Please verify that GAP "
+                                "(Groups, Algorithms and Programming) "
+                                "is correctly installed on your system, and "
+                                "that Regina has been correctly configured to "
+                                "use it (see the <i>Tools</i> section in "
+                                "Regina's settings).</qt>"));
+                    }
+                }
+            }
+            break;
+        default:
+            // This *should* block the UI, which means we don't need to worry
+            // about race conditons with group_.
+            group_.simplify();
             refresh();
             emit simplified();
-        } else {
-            ReginaSupport::sorry(this,
-                tr("An unexpected error occurred whilst "
-                "attempting to simplify the group presentation using GAP."),
-                tr("<qt>Please verify that GAP "
-                "(Groups, Algorithms and Programming) "
-                "is correctly installed on your system, and that Regina "
-                "has been correctly configured to use it (see the "
-                "<i>Tools</i> section in Regina's settings).</qt>"));
-        }
+            break;
     }
 }
 

@@ -881,6 +881,8 @@ Version 7.4  [ (to be announced) ]
             (for non-flag enum types) or enum.Flag (for flag enum types).
     USER INTERFACE:
         - Now uses multithreading for those long computations that support it.
+        - Group simplification no longer offers "relator explosion" as an
+          option; however, this remains available via Python if you need it.
         - No longer reads the syntax highlighting theme from file; instead
           the theme is hard-coded into the executable.  This removes the
           build dependency on the Jansson JSON library.

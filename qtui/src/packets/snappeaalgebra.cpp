@@ -77,7 +77,7 @@ SnapPeaAlgebraUI::SnapPeaAlgebraUI(
     filledFundGroupTitle->setAlignment(Qt::AlignCenter);
     layout->addWidget(filledFundGroupTitle);
 
-    filledFundGroup = new GroupWidget(false, false);
+    filledFundGroup = new GroupWidget(false /* no simplification */);
     filledFundGroup->setWhatsThis(tr("The fundamental group of the "
         "manifold, with all Dehn fillings applied."));
     layout->addWidget(filledFundGroup, 8);
@@ -106,7 +106,7 @@ SnapPeaAlgebraUI::SnapPeaAlgebraUI(
     unfilledFundGroupTitle->setAlignment(Qt::AlignCenter);
     layout->addWidget(unfilledFundGroupTitle);
 
-    unfilledFundGroup = new GroupWidget(false, false);
+    unfilledFundGroup = new GroupWidget(false /* no simplification */);
     unfilledFundGroup->setWhatsThis(tr("The fundamental group of the "
         "manifold, ignoring all Dehn fillings."));
     layout->addWidget(unfilledFundGroup, 8);

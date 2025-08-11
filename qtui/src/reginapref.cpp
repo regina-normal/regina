@@ -110,6 +110,16 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
             generalPrefs->chooserThreadCount->setCurrentIndex(1);
             break;
     }
+    switch (prefSet.groupSimplification) {
+        // These indices must be kept in sync with the combo box
+        // construction in the ReginaPrefGeneral class constructor.
+        case ReginaPrefSet::GroupSimplification::GAP:
+            generalPrefs->chooserGroupSimplification->setCurrentIndex(1);
+            break;
+        default: /* Regina */
+            generalPrefs->chooserGroupSimplification->setCurrentIndex(0);
+            break;
+    }
     generalPrefs->editTreeJumpSize->setText(
         QString::number(prefSet.treeJumpSize));
     generalPrefs->cbGraphvizLabels->setChecked(prefSet.triGraphvizLabels);
@@ -174,6 +184,19 @@ void ReginaPreferences::slotApply() {
             break;
         default:
             prefSet.threadCount = ReginaPrefSet::ThreadCount::Polite;
+            break;
+    }
+
+    switch (generalPrefs->chooserGroupSimplification->currentIndex()) {
+        // These indices must be kept in sync with the combo box
+        // construction in the ReginaPrefGeneral class constructor.
+        case 1:
+            prefSet.groupSimplification =
+                ReginaPrefSet::GroupSimplification::GAP;
+            break;
+        default:
+            prefSet.groupSimplification =
+                ReginaPrefSet::GroupSimplification::Regina;
             break;
     }
 
@@ -326,7 +349,7 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
         "face pairing graph with the corresponding tetrahedron number."));
     layout->addWidget(cbGraphvizLabels);
 
-    // The combo box indices must be kept in sync with the switch statements
+    // These combo box indices must be kept in sync with the switch statements
     // in the ReginaPreferences constructor and slotApply().
     auto* box = new QHBoxLayout();
     auto* label = new QLabel(tr("Multithreading:"));
@@ -340,6 +363,22 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
         "used for long computations that support it.");
     label->setWhatsThis(msg);
     chooserThreadCount->setWhatsThis(msg);
+    layout->addLayout(box);
+
+    // These combo box indices must be kept in sync with the switch statements
+    // in the ReginaPreferences constructor and slotApply().
+    box = new QHBoxLayout();
+    label = new QLabel(tr("Group simplification:"));
+    box->addWidget(label);
+    chooserGroupSimplification = new QComboBox();
+    chooserGroupSimplification->addItem(tr("Use Regina"));
+    chooserGroupSimplification->addItem(tr("Use GAP"));
+    box->addWidget(chooserGroupSimplification, 1);
+    msg = tr("The preferred method for simplifying group "
+        "presentations.  If you choose GAP, you can visit the <i>Tools</i> "
+        "tab to tell Regina how to find the GAP executable.");
+    label->setWhatsThis(msg);
+    chooserGroupSimplification->setWhatsThis(msg);
     layout->addLayout(box);
 
     // Set up the tree jump size.

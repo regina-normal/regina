@@ -72,6 +72,7 @@ ReginaPrefSet::ReginaPrefSet() :
         displayTagsInTree(false),
         displayUnicode(true),
         fileImportExportCodec("UTF-8"),
+        groupSimplification(GroupSimplification::Regina),
         helpIntroOnStartup(true),
         hypersurfacesCreationCoords(regina::HyperCoords::Standard),
         hypersurfacesCreationList(regina::HyperList::Default),
@@ -100,6 +101,7 @@ ReginaPrefSet::ReginaPrefSet() :
         tabDim4TriSkeleton(0),
         tabHypersurfaceList(0),
         tabLink(0),
+        tabLinkAlgebra(0),
         tabSnapPeaTri(0),
         tabSnapPeaTriAlgebra(0),
         tabSurfaceList(0),
@@ -326,6 +328,7 @@ void ReginaPrefSet::readInternal() {
     tabDim4TriSkeleton = settings.value("Tri4Skeleton", 0).toInt();
     tabHypersurfaceList = settings.value("HypersurfaceList", 0).toInt();
     tabLink = settings.value("Link", 0).toInt();
+    tabLinkAlgebra = settings.value("LinkAlgebra", 0).toInt();
     tabSnapPeaTri = settings.value("SnapPeaTri", 0).toInt();
     tabSnapPeaTriAlgebra = settings.value("SnapPeaTriAlgebra", 0).toInt();
     tabSurfaceList = settings.value("SurfaceList", 0).toInt();
@@ -350,6 +353,11 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("Tools");
+    str = settings.value("GroupSimplification").toString();
+    if (str == "GAP")
+        groupSimplification = GroupSimplification::GAP;
+    else
+        groupSimplification = GroupSimplification::Regina; /* default */
     triGAPExec = settings.value("GAPExec", defaultGAPExec).toString().trimmed();
     settings.endGroup();
 
@@ -481,6 +489,7 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("Dim3TriSkeleton", tabDim3TriSkeleton);
     settings.setValue("Dim4Tri", tabDim4Tri);
     settings.setValue("Link", tabLink);
+    settings.setValue("LinkAlgebra", tabLinkAlgebra);
     settings.setValue("Tri4Algebra", tabDim4TriAlgebra);
     settings.setValue("Tri4Skeleton", tabDim4TriSkeleton);
     settings.setValue("HypersurfaceList", tabHypersurfaceList);
@@ -512,6 +521,12 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 
     settings.beginGroup("Tools");
+    switch (groupSimplification) {
+        case ReginaPrefSet::GroupSimplification::GAP:
+            settings.setValue("GroupSimplification", "GAP"); break;
+        default:
+            settings.setValue("GroupSimplification", "Regina"); break;
+    }
     settings.setValue("GAPExec", triGAPExec);
     settings.endGroup();
 

@@ -99,6 +99,7 @@ class ReginaPrefGeneral : public QWidget {
         // QCheckBox* cbDisplayTagsInTree;
         QCheckBox* cbUnicode;
         QComboBox* chooserThreadCount;
+        QComboBox* chooserGroupSimplification;
         QCheckBox* cbWarnOnNonEmbedded;
         QCheckBox* cbGraphvizLabels;
         QLineEdit* editTreeJumpSize;

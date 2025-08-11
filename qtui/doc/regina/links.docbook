@@ -886,10 +886,8 @@
   <sect2 id="link-algebra">
    <title>Algebraic Invariants</title>
    <para>
-    On the <guilabel>Algebra</guilabel> tab, you can view
-    other algebraic invariants of the link.
-    Currently this shows the link group (i.e., the fundamental
-    group of the link complement).
+    The <guilabel>Algebra</guilabel> tab holds several smaller tabs
+    that describe different groups associated with the link.
    </para>
    <para>
     <inlinemediaobject>
@@ -899,23 +897,53 @@
     </inlinemediaobject>
    </para>
    <para>
-    The link group is presented in the same format as the fundamental group
-    of a triangulation, and you are given the same tools to simplify it.
+    Currently this shows the following groups:
+    <glosslist>
+     <glossentry>
+      <glossterm><guilabel>Knot/Link Group</guilabel></glossterm>
+      <glossdef>
+       <para>
+        Currently this shows the link group (i.e., the fundamental
+        group of the link complement).
+        TODO: Update this, and describe the differences in the virtual case.
+       </para>
+       <para>
+        Note that, although the link group is isomorphic to the fundamental
+        group of the link complement, it is constructed differently and so
+        will often have a different presentation.
+        If you are having difficulty simplifying it, you could perhaps try
+        working with the triangulated
+        <link linkend="link-complement">link complement</link> instead.
+       </para>
+       <para>
+        <inlinemediaobject>
+         <imageobject>
+          <imagedata multires="link-algebra-virtual"/>
+         </imageobject>
+        </inlinemediaobject>
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Extended Group</guilabel></glossterm>
+      <glossdef>
+       <para>
+        TODO: Describe this.
+       </para>
+      </glossdef>
+     </glossentry>
+    </glosslist>
+   </para>
+   <para>
+    All groups will be presented in the same format as the fundamental group
+    of a triangulation, and you are given the same tools to simplify them.
     See the section on
     <link linkend="tri-algebra-fund">fundamental groups</link>
     for further discussion of this.
    </para>
-   <para>
-    Note that, although the link group is isomorphic to the fundamental
-    group of the link complement, it is constructed differently and so
-    will often have a different presentation.
-    If you are having difficulty simplifying it, you could perhaps try
-    working with the triangulated
-    <link linkend="link-complement">link complement</link> instead.
-   </para>
    <tip>
     <para>
-     If you find the exponents in the group presentation hard to read
+     If you find the exponents in the group presentations hard to read
      (due to the superscripts being very small),
      you can visit &regina;'s settings and
      <link linkend="options-unicode">disable unicode symbols</link>.
