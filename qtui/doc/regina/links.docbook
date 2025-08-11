@@ -697,6 +697,8 @@
    <para>
     On the <guilabel>Polynomials</guilabel> tab, you can view
     several polynomial invariants of the link and of the link diagram.
+    Which polynomials you see will depend upon whether your link diagram is
+    classical or virtual.
    </para>
    <para>
     <inlinemediaobject>
@@ -704,18 +706,38 @@
       <imagedata multires="link-polynomials"/>
      </imageobject>
     </inlinemediaobject>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="link-polynomials-virtual"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
    <para>
-    The invariants include:
+    The polynomials that you might see include:
     <glosslist>
      <glossentry>
-      <glossterm><guilabel>Jones</guilabel></glossterm>
+      <glossterm><guilabel>Alexander</guilabel> (classical only)</glossterm>
+      <glossdef>
+       <para>
+        The Alexander polynomial is a single-variable polynomial invariant.
+        It is relatively weak, but (unlike many of the other invariants listed
+        here) it can be computed in polynomial time.
+       </para>
+       <para>
+        &regina; will only compute Alexander polynomials for knots
+        (not multiple-component links).
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Jones</guilabel> (classical and virtual)</glossterm>
       <glossdef>
        <para>
         The Jones polynomial is a single-variable polynomial in the variable
-        <replaceable>t</replaceable>, whose exponents are integers for knots,
-        but whose exponents may be half-integers for some links
-        (depending on the parity of the number of link components).
+        <replaceable>t</replaceable>, whose exponents are integers for
+        classical knots, but whose exponents may be half-integers in other cases
+        (depending on the number of link components and/or whether the link is
+        virtual).
         You may therefore see this presented either as a polynomial in
         <replaceable>t</replaceable> or as a polynomial in
         &radic;<replaceable>t</replaceable>.
@@ -726,10 +748,14 @@
         in either <replaceable>t</replaceable> or
         <replaceable>sqrt_t</replaceable>.
        </para>
+       <para>
+        &regina; can compute Jones polynomials for link diagrams
+        with any number of components.
+       </para>
       </glossdef>
      </glossentry>
      <glossentry>
-      <glossterm><guilabel>&homflypt;</guilabel></glossterm>
+      <glossterm><guilabel>&homflypt;</guilabel> (classical only)</glossterm>
       <glossdef>
        <para>
         The &homflypt; polynomial is a two-variable polynomial with two
@@ -742,10 +768,15 @@
         &regina; offers a pair of buttons beside the &homflypt;
         polynomial for you to choose which formulation is displayed.
        </para>
+       <para>
+        &regina; can compute &homflypt; polynomials for link diagrams
+        with any number of components.
+       </para>
       </glossdef>
      </glossentry>
      <glossentry>
-      <glossterm><guilabel>Kauffman bracket</guilabel></glossterm>
+      <glossterm><guilabel>Kauffman bracket</guilabel>
+       (classical and virtual)</glossterm>
       <glossdef>
        <para>
         The Kauffman bracket is a property of the link diagram, not an
@@ -755,17 +786,68 @@
         combinatorial introduction to the Kauffman bracket and the
         Jones polynomial.
        </para>
+       <para>
+        &regina; can compute Kauffman brackets for link diagrams
+        with any number of components.
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Affine index</guilabel> (virtual only)</glossterm>
+      <glossdef>
+       <para>
+        The affine index polynomial is a single-variable polynomial invariant
+        that is relatively weak, but which nevertheless provides some useful
+        information for virtual knots.  Its main advantage is that it is
+        extremey fast to compute even for large knot diagrams (the computation
+        runs in very small polynomial time).
+       </para>
+       <para>
+        &regina; will only compute affine index polynomials for virtual knots
+        (not multiple-component virtual links).
+       </para>
+       <para>
+        The affine index polynomial is not shown at all for classical link
+        diagrams, since in the classical case the affine index polynomial is
+        always zero.
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Arrow</guilabel> (virtual only)</glossterm>
+      <glossdef>
+       <para>
+        The arrow polynomial enhances the Kauffman bracket in a way that
+        makes it more powerful for virtual links, and that makes it a
+        true link invariant.  Whereas the Kauffman bracket is a polynomial
+        in the single variable <replaceable>A</replaceable>,
+        the arrow polynomial is a polynomial in many variables
+        (<replaceable>A</replaceable>,
+        <replaceable>K</replaceable><subscript>1</subscript>,
+        <replaceable>K</replaceable><subscript>2</subscript>,
+        <replaceable>K</replaceable><subscript>3</subscript>,
+        &hellip;).
+       </para>
+       <para>
+        &regina; can compute arrow polynomials for virtual link diagrams
+        with any number of components.
+       </para>
+       <para>
+        The arrow polynomial is not shown at all for classical link diagrams,
+        since in the classical case the arrow polynomial is just the
+        Kauffman bracket with some normalisation applied.
+       </para>
       </glossdef>
      </glossentry>
     </glosslist>
    </para>
    <para>
     For larger links, you may see a <guilabel>Calculate</guilabel> button
-    instead of a polynomial. This is because all of these polynomials
+    instead of a polynomial. This is because many of these polynomials
     require exponential time to compute.  In this case you will need to
     press the <guilabel>Calculate</guilabel> button and be prepared
-    to wait (you will see the progress displayed, and you will have the
-    opportunity to cancel the computation if you like).
+    to wait&mdash;for most polynomials you will see the progress displayed, and
+    you can cancel the computation if you like.
    </para>
    <para>
     For smaller links, all of the polynomials will be computed automatically.

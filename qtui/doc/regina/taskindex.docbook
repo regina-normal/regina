@@ -124,6 +124,11 @@
  </indexdiv><indexdiv id='taskindex-A'><title>&mdash; A &mdash;</title>
 
  <indexentry>
+  <primaryie><link linkend="link-polynomials">affine index
+   polynomial</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>almost normal surfaces</primaryie>
   <seeie>See: normal surfaces</seeie>
  </indexentry>
@@ -159,6 +164,11 @@
  <indexentry>
   <primaryie>&api; documentation</primaryie>
   <seeie>See: documentation</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-polynomials">arrow
+   polynomial</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1182,10 +1192,14 @@
 
  <indexentry>
   <primaryie>links, knots and</primaryie>
+  <secondaryie><link linkend="link-polynomials">affine index
+   polynomial</link></secondaryie>
   <secondaryie><link linkend="link-make-alternating">alternating diagram,
    making</link></secondaryie>
   <secondaryie><link linkend="link-crossings">alternating diagram,
    testing for</link></secondaryie>
+  <secondaryie><link linkend="link-polynomials">arrow
+   polynomial</link></secondaryie>
   <secondaryie><link linkend="link-new-cables">blackboard
    framing</link></secondaryie>
   <secondaryie><link linkend="link-new-cables">cabling</link></secondaryie>
