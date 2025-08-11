@@ -276,6 +276,10 @@ LinkPolynomialUI::LinkPolynomialUI(regina::PacketOf<regina::Link>* packet,
     affineIndex->setWhatsThis(msg);
     blockLayout->addWidget(affineIndex);
 
+    // Make this block invisible so the initial layout (before refresh()
+    // is called) does not grossly overestimate the required size.
+    affineIndexBlock->setVisible(false);
+
     blockLayout->addSpacing(10);
     layout->addWidget(affineIndexBlock);
 
@@ -312,6 +316,10 @@ LinkPolynomialUI::LinkPolynomialUI(regina::PacketOf<regina::Link>* packet,
     connect(btnArrow, SIGNAL(clicked()), this, SLOT(calculateArrow()));
     blockLayout->addLayout(sublayout);
 
+    // Make this block invisible so the initial layout (before refresh()
+    // is called) does not grossly overestimate the required size.
+    arrowBlock->setVisible(false);
+
     blockLayout->addSpacing(10);
     layout->addWidget(arrowBlock);
 
@@ -324,17 +332,23 @@ LinkPolynomialUI::LinkPolynomialUI(regina::PacketOf<regina::Link>* packet,
     connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
         this, SLOT(updatePreferences()));
 
+    alexander->setContextMenuPolicy(Qt::CustomContextMenu);
     jones->setContextMenuPolicy(Qt::CustomContextMenu);
     homfly->setContextMenuPolicy(Qt::CustomContextMenu);
     bracket->setContextMenuPolicy(Qt::CustomContextMenu);
+    affineIndex->setContextMenuPolicy(Qt::CustomContextMenu);
     arrow->setContextMenuPolicy(Qt::CustomContextMenu);
 
+    connect(alexander, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(contextAlexander(const QPoint&)));
     connect(jones, SIGNAL(customContextMenuRequested(const QPoint&)),
         this, SLOT(contextJones(const QPoint&)));
     connect(homfly, SIGNAL(customContextMenuRequested(const QPoint&)),
         this, SLOT(contextHomfly(const QPoint&)));
     connect(bracket, SIGNAL(customContextMenuRequested(const QPoint&)),
         this, SLOT(contextBracket(const QPoint&)));
+    connect(affineIndex, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(contextAffineIndex(const QPoint&)));
     connect(arrow, SIGNAL(customContextMenuRequested(const QPoint&)),
         this, SLOT(contextArrow(const QPoint&)));
 }
