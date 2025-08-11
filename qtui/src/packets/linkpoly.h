@@ -62,10 +62,17 @@ class LinkPolynomialUI : public QObject, public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
+        QWidget* alexanderBlock;
+        QWidget* homflyBlock;
+        QWidget* affineIndexBlock;
+        QWidget* arrowBlock;
+        QLabel* alexander;
         QLabel* jones;
         QLabel* homfly;
         QLabel* bracket;
+        QLabel* affineIndex;
         QLabel* arrow;
+        QAbstractButton* btnAlexander;
         QAbstractButton* btnJones;
         QAbstractButton* btnHomfly;
         QAbstractButton* btnBracket;
@@ -91,6 +98,7 @@ class LinkPolynomialUI : public QObject, public PacketViewerTab {
         /**
          * Calculate properties.
          */
+        void calculateAlexander();
         void calculateJones();
         void calculateHomfly();
         void calculateBracket();
@@ -109,17 +117,23 @@ class LinkPolynomialUI : public QObject, public PacketViewerTab {
         /**
          * Support clipboard actions.
          */
+        void contextAlexander(const QPoint& pos);
         void contextJones(const QPoint& pos);
         void contextHomfly(const QPoint& pos);
         void contextBracket(const QPoint& pos);
+        void contextAffineIndex(const QPoint& pos);
         void contextArrow(const QPoint& pos);
+        void copyAlexander();
         void copyJones();
         void copyHomfly();
         void copyBracket();
+        void copyAffineIndex();
         void copyArrow();
+        void copyAlexanderPlain();
         void copyJonesPlain();
         void copyHomflyPlain();
         void copyBracketPlain();
+        void copyAffineIndexPlain();
         void copyArrowPlain();
 
     private:

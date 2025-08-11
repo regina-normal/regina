@@ -756,6 +756,16 @@ class Link :
         static constexpr const char* jonesVar = "\u221At"; // \u221A = root
 
         /**
+         * The name of the variable used in the Kauffman bracket, as returned
+         * by bracket().  This is provided to help with pretty-printing
+         * Kauffman brackets for human consumption.
+         *
+         * To pretty-print the Kauffman bracket for human consumption,
+         * you can call `Laurent::str(Link::bracketVar)`.
+         */
+        static constexpr const char* bracketVar = "A";
+
+        /**
          * The name of the first variable used in the variant of the HOMFLY-PT
          * polynomial as returned by homflyAZ().  This is provided to help with
          * pretty-printing HOMFLY-PT polynomials for human consumption.
@@ -3831,6 +3841,9 @@ class Link :
          * If this is the empty link, then this routine will return the zero
          * polynomial.
          *
+         * To pretty-print this polynomial for human consumption, you can
+         * call `Laurent::str(Link::bracketVar)`.
+         *
          * Bear in mind that each time a link changes, all of its
          * polynomials will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
@@ -4385,7 +4398,7 @@ class Link :
          * an exception.
          *
          * To pretty-print the affine index polynomial for human consumption,
-         * you can call `Polynomial::str(Link::affineIndexVar)`.
+         * you can call `Laurent::str(Link::affineIndexVar)`.
          *
          * Unlike most polynomial invariants, computing the affine index
          * polynomial is extremely fast, and so this polynomial is not cached.

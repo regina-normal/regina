@@ -549,6 +549,7 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
             rdoc::insertTorusLink)
         .def_readonly_static("alexanderVar", Link::alexanderVar)
         .def_readonly_static("jonesVar", Link::jonesVar)
+        .def_readonly_static("bracketVar", Link::bracketVar)
         .def_readonly_static("homflyVarX", Link::homflyVarX)
         .def_readonly_static("homflyVarY", Link::homflyVarY)
         .def_readonly_static("homflyAZVarX", Link::homflyAZVarX)

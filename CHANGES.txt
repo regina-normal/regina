@@ -295,6 +295,7 @@ Version 7.4  [ (to be announced) ]
               extendedGroups().
             - New routine alexander() and class constant alexanderVar.
             - New routine affineIndex() and class constant affineIndexVar.
+            - New class constant bracketVar, for use with bracket().
             - New routine makeAlternating().
             - New routine seifertCircles().
             - New routine whiteheadDouble().
