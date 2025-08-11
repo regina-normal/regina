@@ -4441,6 +4441,11 @@ class Link :
          * isomorphism type will not depend upon whether you view the diagram
          * from above or below).
          *
+         * Note that, regardless of whether your link diagram is classical or
+         * virtual, _reflecting_ the diagram (i.e., changing the sign of every
+         * crossing but keeping the upper/lower strands the same) will never
+         * change the isomorphism type of the link group.
+         *
          * If you pass \a simplify as \c false, this routine will keep the
          * Wirtinger presentation and not try to simplify it further.
          * If you pass \a simplify as \c true (the default), this routine will
@@ -4536,6 +4541,11 @@ class Link :
          * presentations.  Again, as with the ordinary link group,
          * ExampleLink::gpv() provides an example for which these two groups
          * are non-isomorphic.
+         *
+         * Note that, regardless of whether your link diagram is classical or
+         * virtual, _reflecting_ the diagram (i.e., changing the sign of every
+         * crossing but keeping the upper/lower strands the same) will never
+         * change the isomorphism type of the extended link group.
          *
          * If you pass \a simplify as \c false, this routine will keep the
          * presentation in the form described by Silver and Williams, and will
