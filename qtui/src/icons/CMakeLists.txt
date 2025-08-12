@@ -74,6 +74,7 @@ set (IMGS
   snappea
   thicker
   thinner
+  treewidth
   troubleshoot
   vtxlinks
   welcome

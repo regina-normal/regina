@@ -193,6 +193,7 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
          */
         void simplify();
         void simplifyExhaustive(int height);
+        void improveTreewidth(int attempt = 0);
         void reflect();
         void rotate();
         void reverse();

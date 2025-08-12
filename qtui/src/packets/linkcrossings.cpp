@@ -345,6 +345,19 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actMoves);
     connect(actMoves, SIGNAL(triggered()), this, SLOT(moves()));
 
+    auto* actTreewidth = new QAction(this);
+    actTreewidth->setText(tr("Improve &Treewidth"));
+    actTreewidth->setIcon(ReginaSupport::regIcon("treewidth"));
+    actTreewidth->setToolTip(tr(
+        "Attempt to reduce the treewidth of the link diagram"));
+    actTreewidth->setWhatsThis(tr("Explore nearby diagrams via "
+        "Reidemeister moves in an attempt to reduce the treewidth "
+        "of the link diagram.  This might increase the number of crossings, "
+        "but it should improve the performance of treewidth-based algorithms "
+        "(e.g., for computing knot/link polynomials)."));
+    actionList.push_back(actTreewidth);
+    connect(actTreewidth, SIGNAL(triggered()), this, SLOT(improveTreewidth()));
+
     auto* sep = new QAction(this);
     sep->setSeparator(true);
     actionList.push_back(sep);
@@ -726,7 +739,7 @@ void LinkCrossingsUI::simplifyExhaustive(int height) {
         msgBox.setIcon(QMessageBox::Information);
         msgBox.setText(tr("I still could not simplify the %1.")
             .arg(knot ? "knot" : "link"));
-        msgBox.setInformativeText(tr("<qt>I have exhaustively searched "
+        msgBox.setInformativeText(tr("I have exhaustively searched "
             "the Reidemeister graph up to %1 crossings.<p>"
             "I can look further, but be warned: the time and memory "
             "required could grow <i>very</i> rapidly.").arg(initSize + height));
@@ -737,6 +750,48 @@ void LinkCrossingsUI::simplifyExhaustive(int height) {
         msgBox.exec();
         if (msgBox.clickedButton() == work)
             simplifyExhaustive(height + 1);
+    }
+}
+
+void LinkCrossingsUI::improveTreewidth(int attempt) {
+    Link orig(*link, false);
+
+    regina::ProgressTrackerOpen tracker;
+    ProgressDialogOpen dlg(&tracker, tr("Searching Reidemeister graph..."),
+        tr("Tried %1 diagrams"), ui);
+
+    // Choose sensible bounds for the search.
+    // We will allow the number of diagrams to grow at a cubic rate,
+    // while the height steps up incrementally.  We might want to revisit
+    // these decisions after more experience in the wild.
+    size_t maxAttempts = attempt + 2;
+    maxAttempts = maxAttempts * maxAttempts * maxAttempts * 1000;
+    int height = attempt + 2;
+
+    std::thread(&Link::improveTreewidth, link, maxAttempts, height,
+        ReginaPrefSet::threads(), std::addressof(tracker)).detach();
+
+    if (dlg.run() && *link == orig) {
+        // Nothing changed.
+        dlg.hide();
+
+        QMessageBox msgBox(ui);
+        msgBox.setWindowTitle(tr("Information"));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setText(tr("I could not find a smaller treewidth diagram."));
+        msgBox.setInformativeText(tr("I limited my search through the "
+            "Reidemeister graph to ≤ %1 nearby diagrams, allowing %2 "
+            "extra crossings.<p>"
+            "I can look further, but be warned: the time and memory "
+            "required could grow <i>very</i> rapidly.").
+            arg(maxAttempts).arg(height));
+        msgBox.setStandardButtons(QMessageBox::Close);
+        QAbstractButton* work = msgBox.addButton(
+            tr("Keep trying"), QMessageBox::ActionRole);
+        msgBox.setDefaultButton(QMessageBox::Close);
+        msgBox.exec();
+        if (msgBox.clickedButton() == work)
+            improveTreewidth(attempt + 1);
     }
 }
 
