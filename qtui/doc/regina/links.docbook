@@ -895,6 +895,11 @@
       <imagedata multires="link-algebra"/>
      </imageobject>
     </inlinemediaobject>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="link-algebra-virtual"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
    <para>
     Currently this shows the following groups:
@@ -903,32 +908,64 @@
       <glossterm><guilabel>Knot/Link Group</guilabel></glossterm>
       <glossdef>
        <para>
-        Currently this shows the link group (i.e., the fundamental
-        group of the link complement).
-        TODO: Update this, and describe the differences in the virtual case.
+        This is the link group as constructed from the Wirtinger presentation
+        (though &regina; will typically simplify the presentation before
+        showing it here).
+        Each relation is some variant of the form <literal>xy=yz</literal>,
+        where <replaceable>y</replaceable> corresponds to the upper strand at
+        some crossing, and <replaceable>x</replaceable> and
+        <replaceable>z</replaceable> correspond to the two sides of the lower
+        strand at that same crossing.
        </para>
-       <para>
-        Note that, although the link group is isomorphic to the fundamental
-        group of the link complement, it is constructed differently and so
-        will often have a different presentation.
-        If you are having difficulty simplifying it, you could perhaps try
-        working with the triangulated
-        <link linkend="link-complement">link complement</link> instead.
-       </para>
-       <para>
-        <inlinemediaobject>
-         <imageobject>
-          <imagedata multires="link-algebra-virtual"/>
-         </imageobject>
-        </inlinemediaobject>
-       </para>
+       <itemizedlist>
+        <listitem>
+         <para>
+          For classical links, this is isomorphic to the fundamental group of
+          the link complement.  However, it is constructed differently, and so
+          it may have a different presentation.
+          If you are having difficulty simplifying it, you could perhaps try
+          working with the triangulated
+          <link linkend="link-complement">link complement</link> instead.
+         </para>
+        </listitem>
+        <listitem>
+         <para>
+          For virtual links, the link group <emphasis>could</emphasis> change
+          depending upon whether you view the link from above or below the
+          diagram (i.e., <link linkend="link-flip">rotating</link> the link
+          may change the isomorphism class).  For this reason, if the link
+          diagram is virtual then you will see <emphasis>two</emphasis> groups:
+          one as seen from above (using the classical Wirtinger presentation),
+          and one as seen from below (obtained by switching the upper and
+          lower strands at every crossing).
+          The Goussarov-Polyak-Viro knot (which is one of &regina;'s
+          <link linkend="link-new-example">ready-made examples</link> is a
+          nice example of where these two groups differ.
+         </para>
+         <para>
+          Note however that, for virtual links, the link group is not a
+          particularly strong invariant.  You might wish to work with the
+          extended group instead (see below).
+         </para>
+        </listitem>
+       </itemizedlist>
       </glossdef>
      </glossentry>
      <glossentry>
       <glossterm><guilabel>Extended Group</guilabel></glossterm>
       <glossdef>
        <para>
-        TODO: Describe this.
+        This is the extended group of the link, as defined by
+        Silver and Williams <xref linkend="bib-silver-extgrp"/>.
+        This invariant is particularly useful for virtual links, where the
+        ordinary link group is a fairly weak invariant.  However, it also
+        yields more complex group presentations.
+       </para>
+       <para>
+        Like the ordinary link group, the extended group of a virtual link may
+        change depending upon whether you view the link from above or below
+        the diagram, and so for virtual link diagrams &regina; will display
+        both variants.
        </para>
       </glossdef>
      </glossentry>

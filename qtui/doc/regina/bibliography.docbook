@@ -877,6 +877,28 @@
   <date>1997</date>
  </biblioentry>
 
+ <biblioentry id="bib-silver-extgrp">
+  <abbrev>SW06</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Daniel</firstname>
+    <othername>S.</othername>
+    <surname>Silver</surname>
+   </author>
+   <author>
+    <firstname>Susan</firstname>
+    <othername>G.</othername>
+    <surname>Williams</surname>
+   </author>
+  </authorgroup>
+  <title>Crowell's derived group and twisted polynomials</title>
+  <edition>J. Knot Theory Ramifications</edition>
+  <volumenum>vol. 15</volumenum>
+  <issuenum>no. 8</issuenum>
+  <artpagenums>pp. 1079&ndash;1094</artpagenums>
+  <date>2006</date>
+ </biblioentry>
+
  <biblioentry id="bib-thinposition">
   <abbrev>Tho94</abbrev>
   <authorgroup><author>

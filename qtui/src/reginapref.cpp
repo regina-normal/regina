@@ -344,9 +344,9 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     layout->addWidget(cbWarnOnNonEmbedded);
 
     // Set up Graphviz options.
-    cbGraphvizLabels = new QCheckBox(tr("Labels on face pairing graphs"));
-    cbGraphvizLabels->setWhatsThis(tr("Labels each node in a "
-        "face pairing graph with the corresponding tetrahedron number."));
+    cbGraphvizLabels = new QCheckBox(tr("Labels on facet pairing graphs"));
+    cbGraphvizLabels->setWhatsThis(tr("Labels each node in a facet pairing "
+        "graph with the corresponding top-dimensional simplex number."));
     layout->addWidget(cbGraphvizLabels);
 
     // These combo box indices must be kept in sync with the switch statements

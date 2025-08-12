@@ -63,26 +63,91 @@
     </glossdef>
    </glossentry>
    <glossentry>
-    <glossterm><guilabel>Warn before generating non-embedded
+    <glossterm><guilabel>Warn before generating immersed and/or singular
     surfaces</guilabel></glossterm>
     <glossdef><para>
      If checked, &regina; will ask for confirmation whenever you try to
      <link linkend="surfaces-creation">enumerate normal surfaces</link>
      <emphasis>without</emphasis> selecting
      <link linkend="surfaces-embeddedonly">embedded surfaces only</link>.
-     &regina; asks for confirmation because non-embedded surfaces are
-     typically much slower to generate, far more numerous, and &regina;
-     only offers very basic support for them.
+     &regina; asks for confirmation because non-embedded (immersed and/or
+     singular) surfaces are typically much slower to generate, far more
+     numerous, and &regina; only offers very basic support for them.
     </para></glossdef>
    </glossentry>
    <glossentry id="options-fpg-labels">
-    <glossterm><guilabel>Labels on face pairing graphs</guilabel></glossterm>
+    <glossterm><guilabel>Labels on facet pairing graphs</guilabel></glossterm>
     <glossdef><para>
      If checked, &regina; will label each node in the
      <link linkend="tri-graphs-dual">dual graph</link>
      of a triangulation with the number of the corresponding
      top-dimensional simplex.
     </para></glossdef>
+   </glossentry>
+   <glossentry id="options-multithreading">
+    <glossterm><guilabel>Multithreading</guilabel></glossterm>
+    <glossdef>
+     <para>
+      &regina; offers multithreaded (i.e., parallel) algorithms for some tasks
+      that are computationally intensive, such as
+      <link linkend="tri-simplify-exhaustive">exhaustive simplification</link>.
+      In this drop-down box, you can select how many of the cores on your
+      machine &regina; will use for such tasks.
+     </para>
+     <para>
+      The options include:
+      <itemizedlist>
+       <listitem><para>
+        <guilabel>None</guilabel>, which instructs &regina; not to use
+        multithreading at all;
+       </para></listitem>
+       <listitem><para>
+        <guilabel>Polite</guilabel>, which instructs &regina; to use half of
+        the available cores, leaving half free for other purposes;
+       </para></listitem>
+       <listitem><para>
+        <guilabel>Aggressive</guilabel>, which instructs &regina; to use all
+        of the available cores on your system.
+       </para></listitem>
+      </itemizedlist>
+     </para>
+     <para>
+      Of course, this is a trade-off: more cores means faster algorithms,
+      but it also may degrade the performance of your computer if you are
+      doing other intensive tasks on your machine at the same time.
+      If you are not sure which option to use, the polite option is usually a
+      sensible compromise.
+     </para>
+    </glossdef>
+   </glossentry>
+   <glossentry id="options-group-simplification">
+    <glossterm><guilabel>Group simplification</guilabel></glossterm>
+    <glossdef>
+     <para>
+      &regina; includes tools for simplifying group presentations (such as
+      <link linkend="tri-algebra-fund">fundamental groups of
+      triangulations</link>
+      and various <link linkend="link-algebra">knot/link groups</link>.
+      By default &regina; will use its own internal simplification algorithms;
+      however, here you can configure it to use external tools instead.
+     </para>
+     <para>
+      The following options are available:
+      <itemizedlist>
+       <listitem><para>
+        <guilabel>Use Regina</guilabel> indicates that &regina; should
+        use its own internal algorithms, based on small cancellation theory
+        and Nielsen moves.
+       </para></listitem>
+       <listitem><para>
+        <guilabel>Use GAP</guilabel> indicates that &regina; should
+        use &gaplongurl; for group simplification.  This requires you to have
+        &gap; installed on your system; you can tell &regina; how to find it
+        via the <link linkend="options-tools">tools options</link>.
+       </para></listitem>
+      </itemizedlist>
+     </para>
+    </glossdef>
    </glossentry>
    <glossentry>
     <glossterm><guilabel>Packet tree jump size</guilabel></glossterm>

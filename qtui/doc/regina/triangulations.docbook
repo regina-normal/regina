@@ -1494,50 +1494,30 @@
     </para>
     <para>
      &regina; attempts to simplify the presentation as far as it can
-     (using small cancellation theory and Nielsen moves).
-     However, if this is not satisfactory then there are further things
-     you can try:
+     automatically (using small cancellation theory and Nielsen moves).
+     However, if this is not satisfactory then
+     you can try harder by pressing the <guilabel>Simplify</guilabel> button.
+     By default this will run &regina;'s algorithms again; however, you can
+     configure this button to use other tools instead (such as &gap;) via the
+     <link linkend="options-group-simplification"><guilabel>General</guilabel>
+     options panel</link>.
+    </para>
+    <para>
+     Some further notes regarding simplification:
      <itemizedlist>
-      <listitem>
-       <para>
-        If you have &gaplongurl; installed on your system,
-        then you can use &gap; to simplify the group presentation
-        by pressing the <guibutton>Using GAP</guibutton> button.
-        You can try this more than once if you like: sometimes
-        &gap; finds a better presentation when run a second or third time.
-       </para>
-      </listitem>
-      <listitem>
-       <para>
-        If you seem to be stuck in a local &ldquo;well&rdquo;, you can
-        try to escape by pressing the
-        <guibutton>Relator explosion</guibutton> button.
-        This will attempt to multiply old relators together in a
-        moderately intelligent way to build new relators, which might be
-        more useful for later simplifications.
-        This process has been found particularly useful when trying
-        to prove that a group is trivial.
-       </para>
-       <para>
-        The <guibutton>Relator explosion</guibutton> button
-        will make the group presentation larger&mdash;sometimes
-        <emphasis>much</emphasis> larger.
-        After pressing this button, you should simplify the presentation
-        again before trying anything else.
-        You can press the <guibutton>Using Regina</guibutton> button
-        to simplify the presentation using &regina;'s own code,
-        or you can press <guibutton>Using GAP</guibutton> as described above.
-       </para>
-      </listitem>
+      <listitem><para>
+       If you are using &gap;, it sometimes helps to try simplifying a
+       presentation more than once&mdash;sometimes &gap; finds a better
+       presentation when run a second or third time.
+      </para></listitem>
+      <listitem><para>
+       Past versions of &regina; used to offer a <guibutton>Relator
+       explosion</guibutton> button to help escape local wells.  This is no
+       longer available through the &gui;, but you can still access it through
+       <link linkend="python">&python;</link>.
+      </para></listitem>
      </itemizedlist>
     </para>
-    <warning><para>
-     If you press the <guibutton>Relator explosion</guibutton> button
-     for a group presentation that is already very large, then
-     the increase in size could be enormous&mdash;so enormous that it
-     could crash &regina; entirely by exceeding the available memory on
-     your machine.
-    </para></warning>
     <tip><para>
      If you cannot read the superscript digits in the fundamental group
      presentation, or if you cannot read the blackboard-bold Z symbols
@@ -1547,15 +1527,10 @@
     </para></tip>
     <tip>
      <para>
-      If &regina; is having trouble starting &gap;, you can tell it how
-      to start &gap; in the
-      <link linkend="options-tools">tools options</link>.
-     </para>
-     <para>
-      If you wish to see a full transcript of the conversation between
-      &regina; and &gap;, start &regina; from the command-line by running
-      <command>regina-gui</command>.  The entire conversation
-      will be shown in the text console where you ran
+      If you are using &gap; for simplification and you wish to see a full
+      transcript of the conversation between &regina; and &gap;, start &regina;
+      from the command-line by running <command>regina-gui</command>.
+      The entire conversation will be shown in the text console where you ran
       <command>regina-gui</command> command.
      </para>
     </tip>

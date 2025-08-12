@@ -439,7 +439,6 @@
 
  <indexentry id="idx-configuration">
   <primaryie>configuration</primaryie>
-  <secondaryie><link linkend="options-tools">&gaplong;</link></secondaryie>
   <secondaryie><link linkend="options-general">general</link></secondaryie>
   <secondaryie><link linkend="options-python">&python;
    scripting</link></secondaryie>
@@ -881,8 +880,9 @@
 
  <indexentry>
   <primaryie>&gaplong;</primaryie>
-  <secondaryie><link linkend="options-tools">configuration</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-fund">using to
+  <secondaryie><link linkend="options-tools">configuring path to
+   executable</link></secondaryie>
+  <secondaryie><link linkend="options-group-simplification">using to
    simplify group presentations</link></secondaryie>
  </indexentry>
 
@@ -942,6 +942,13 @@
  <indexentry>
   <primaryie>group, knot/link</primaryie>
   <seeie>See: link groups</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>group presentations</primaryie>
+  <secondaryie><link linkend="options-group-simplification">configuring
+   tools for simplifying</link></secondaryie>
+  <secondaryie><link linkend="tri-algebra-fund">simplifying</link></secondaryie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-H'><title>&mdash; H &mdash;</title>
@@ -1347,6 +1354,11 @@
    packet tree</link></primaryie>
  </indexentry>
 
+ <indexentry>
+  <primaryie><link linkend="options-multithreading">multithreading,
+   configuration</link></primaryie>
+ </indexentry>
+
  </indexdiv><indexdiv id='taskindex-N'><title>&mdash; N &mdash;</title>
 
  <indexentry>
@@ -1531,6 +1543,11 @@
    tree</link></secondaryie>
   <secondaryie><link linkend="packet-tree">viewing and
    editing</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="options-multithreading">parallel algorithms,
+   configuration</link></primaryie>
  </indexentry>
 
  <indexentry>
