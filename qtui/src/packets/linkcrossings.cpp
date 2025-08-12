@@ -332,19 +332,6 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actSimplify);
     connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
 
-    auto* actMoves = new QAction(this);
-    actMoves->setText(tr("Reidemeister &Moves..."));
-    actMoves->setToolTip(tr(
-        "Modify the link diagram using Reidemeister moves"));
-    actMoves->setWhatsThis(tr("Perform Reidemeister moves upon this "
-        "link diagram.  <i>Reidemeister moves</i> are modifications "
-        "local to a small number of crossings that do not change "
-        "the underlying link.<p>"
-        "A dialog will be presented for you to select which "
-        "Reidemeister moves to apply."));
-    actionList.push_back(actMoves);
-    connect(actMoves, SIGNAL(triggered()), this, SLOT(moves()));
-
     auto* actTreewidth = new QAction(this);
     actTreewidth->setText(tr("Improve &Treewidth"));
     actTreewidth->setIcon(ReginaSupport::regIcon("treewidth"));
@@ -357,6 +344,19 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
         "(e.g., for computing knot/link polynomials)."));
     actionList.push_back(actTreewidth);
     connect(actTreewidth, SIGNAL(triggered()), this, SLOT(improveTreewidth()));
+
+    auto* actMoves = new QAction(this);
+    actMoves->setText(tr("Reidemeister &Moves..."));
+    actMoves->setToolTip(tr(
+        "Modify the link diagram using Reidemeister moves"));
+    actMoves->setWhatsThis(tr("Perform Reidemeister moves upon this "
+        "link diagram.  <i>Reidemeister moves</i> are modifications "
+        "local to a small number of crossings that do not change "
+        "the underlying link.<p>"
+        "A dialog will be presented for you to select which "
+        "Reidemeister moves to apply."));
+    actionList.push_back(actMoves);
+    connect(actMoves, SIGNAL(triggered()), this, SLOT(moves()));
 
     auto* sep = new QAction(this);
     sep->setSeparator(true);
