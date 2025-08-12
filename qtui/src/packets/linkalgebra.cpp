@@ -99,7 +99,7 @@ LinkGroupUI::LinkGroupUI(regina::PacketOf<regina::Link>* packet,
     ui = new QWidget();
     auto* master = new ColumnLayout(ui);
 
-    groupLayout = new QVBoxLayout(ui);
+    groupLayout = new QVBoxLayout();
     groupAbove = new GroupWidget();
     groupAbove->setWhatsThis(tr("The generators and relations for the group "
         "obtained when viewing the link diagram from above the surface "
@@ -107,7 +107,7 @@ LinkGroupUI::LinkGroupUI(regina::PacketOf<regina::Link>* packet,
     groupLayout->addWidget(groupAbove, 1);
     master->addLayout(groupLayout, tr("From above"));
 
-    groupLayout = new QVBoxLayout(ui);
+    groupLayout = new QVBoxLayout();
     groupBelow = new GroupWidget();
     groupBelow->setWhatsThis(tr("The generators and relations for the group "
         "obtained when viewing the link diagram from beneath the surface "
