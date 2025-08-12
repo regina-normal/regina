@@ -622,6 +622,8 @@ void LinkCrossingsUI::refresh() {
                 crossings->setMovement(QListView::Static);
                 crossings->setWrapping(true);
                 crossings->setResizeMode(QListView::Adjust);
+                crossings->setSizeAdjustPolicy(
+                    QAbstractScrollArea::AdjustToContents);
                 crossings->setSelectionMode(QListView::NoSelection);
                 crossings->setUniformItemSizes(true);
                 crossings->setItemDelegate(new CrossingDelegate(crossings));
@@ -643,6 +645,8 @@ void LinkCrossingsUI::refresh() {
             crossings->setMovement(QListView::Static);
             crossings->setWrapping(true);
             crossings->setResizeMode(QListView::Adjust);
+            crossings->setSizeAdjustPolicy(
+                QAbstractScrollArea::AdjustToContents);
             crossings->setSelectionMode(QListView::NoSelection);
             crossings->setUniformItemSizes(true);
             crossings->setItemDelegate(new CrossingDelegate(crossings));

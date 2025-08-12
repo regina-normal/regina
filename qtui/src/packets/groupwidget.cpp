@@ -65,6 +65,7 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) : QWidget() {
     layout->addWidget(relCount_);
     rels_ = new QListWidget();
     rels_->setSelectionMode(QListWidget::NoSelection);
+    rels_->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
     if (paddingStretch)
         layout->addWidget(rels_, 3);
     else
