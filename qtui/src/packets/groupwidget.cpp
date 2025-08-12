@@ -187,12 +187,15 @@ void GroupWidget::simplify() {
                             tr("An unexpected error occurred whilst "
                                 "attempting to simplify the group presentation "
                                 "using GAP."),
-                            tr("<qt>Please verify that GAP "
-                                "(Groups, Algorithms and Programming) "
-                                "is correctly installed on your system, and "
-                                "that Regina has been correctly configured to "
-                                "use it (see the <i>Tools</i> section in "
-                                "Regina's settings).</qt>"));
+                            tr("Please verify that GAP "
+                                "(Groups, Algorithms and Programming) is "
+                                "correctly installed on your system, and that "
+                                "Regina has been correctly configured to use "
+                                "it (see the <i>Tools</i> section in Regina's "
+                                "settings).<p>"
+                                "If you prefer, you can edit Regina's settings "
+                                "to use other tools for group simplification "
+                                "(such as Regina's own algorithms) instead."));
                     }
                 }
             }
@@ -203,9 +206,10 @@ void GroupWidget::simplify() {
             if (! group_.simplify()) {
                 ReginaSupport::info(this,
                     tr("I could not simplify the group presentation."),
-                    tr("If you prefer, you can edit Regina's settings "
-                        "to use external tools (such as GAP) for group "
-                        "simplification."));
+                    tr("I tried Regina's own internal simplification "
+                        "algorithm.  If you prefer, you can edit Regina's "
+                        "settings to use external tools for group "
+                        "simplification (such as GAP) instead."));
                 return;
             }
             refresh();
@@ -240,13 +244,16 @@ QString GroupWidget::verifyGAPExec() {
         }
         if (! found) {
             ReginaSupport::sorry(this,
-                tr("<qt>I could not find the GAP executable <i>%1</i> "
-                "on the default search path.</qt>").
+                tr("I could not find the GAP executable <i>%1</i> "
+                   "on the default search path.").
                     arg(useExec.toHtmlEscaped()),
-                tr("<qt>If you have GAP (Groups, Algorithms and Programming) "
-                "installed on your system, please go into Regina's "
-                "settings (<i>Tools</i> section) and tell Regina "
-                "where it can find GAP.</qt>"));
+                tr("If you have GAP (Groups, Algorithms and Programming) "
+                   "installed on your system, please go into Regina's "
+                   "settings (<i>Tools</i> section) and tell Regina "
+                   "where it can find GAP.<p>"
+                   "If you prefer, you can edit Regina's settings "
+                   "to use other tools for group simplification "
+                   "(such as Regina's own algorithms) instead."));
             return QString();
         }
     }
@@ -255,21 +262,27 @@ QString GroupWidget::verifyGAPExec() {
     QFileInfo info(useExec);
     if (! info.exists()) {
         ReginaSupport::sorry(this,
-            tr("<qt>The GAP executable <i>%1</i> does not exist.</qt>").
+            tr("The GAP executable <i>%1</i> does not exist.").
                 arg(useExec.toHtmlEscaped()),
-            tr("<qt>If you have GAP (Groups, Algorithms and Programming) "
-            "installed on your system, please go into Regina's "
-            "settings (<i>Tools</i> section) and tell Regina "
-            "where it can find GAP.</qt>"));
+            tr("If you have GAP (Groups, Algorithms and Programming) "
+               "installed on your system, please go into Regina's "
+               "settings (<i>Tools</i> section) and tell Regina "
+               "where it can find GAP.<p>"
+               "If you prefer, you can edit Regina's settings "
+               "to use other tools for group simplification "
+               "(such as Regina's own algorithms) instead."));
         return QString();
     } else if (! (info.isFile() && info.isExecutable())) {
         ReginaSupport::sorry(this,
-            tr("<qt>The GAP executable <i>%1</i> does not appear to be "
-            "an executable program.</qt>").arg(useExec.toHtmlEscaped()),
-            tr("<qt>If you have GAP (Groups, Algorithms and Programming) "
-            "installed on your system, please go into Regina's "
-            "settings (<i>Tools</i> section) and tell Regina "
-            "where it can find GAP.</qt>"));
+            tr("The GAP executable <i>%1</i> does not appear to be "
+               "an executable program.").arg(useExec.toHtmlEscaped()),
+            tr("If you have GAP (Groups, Algorithms and Programming) "
+               "installed on your system, please go into Regina's "
+               "settings (<i>Tools</i> section) and tell Regina "
+               "where it can find GAP.<p>"
+               "If you prefer, you can edit Regina's settings "
+               "to use other tools for group simplification "
+               "(such as Regina's own algorithms) instead."));
         return QString();
     }
 
