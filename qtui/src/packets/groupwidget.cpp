@@ -65,11 +65,15 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) : QWidget() {
     layout->addWidget(relCount_);
     rels_ = new QListWidget();
     rels_->setSelectionMode(QListWidget::NoSelection);
-    layout->addWidget(rels_, 3);
+    if (paddingStretch)
+        layout->addWidget(rels_, 3);
+    else
+        layout->addWidget(rels_);
 
     // The simplification buttons:
     if (allowSimplify) {
-        layout->addStretch(1);
+        if (paddingStretch)
+            layout->addStretch(1);
 
         auto* sublayout = new QHBoxLayout();
         sublayout->setContentsMargins(0, 0, 0, 0);
