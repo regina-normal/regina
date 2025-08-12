@@ -200,7 +200,14 @@ void GroupWidget::simplify() {
         default:
             // This *should* block the UI, which means we don't need to worry
             // about race conditons with group_.
-            group_.simplify();
+            if (! group_.simplify()) {
+                ReginaSupport::info(this,
+                    tr("I could not simplify the group presentation."),
+                    tr("If you prefer, you can edit Regina's settings "
+                        "to use external tools (such as GAP) for group "
+                        "simplification."));
+                return;
+            }
             refresh();
             emit simplified();
             break;
