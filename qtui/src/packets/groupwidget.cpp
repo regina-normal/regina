@@ -181,7 +181,7 @@ void GroupWidget::simplify() {
                 }
             }
             break;
-        default:
+        default: /* use regina */
             // This *should* block the UI, which means we don't need to worry
             // about race conditons with group_.
             group_.simplify();
