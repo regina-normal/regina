@@ -66,10 +66,15 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) : QWidget() {
     rels_ = new QListWidget();
     rels_->setSelectionMode(QListWidget::NoSelection);
     rels_->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
-    if (paddingStretch)
+    if (paddingStretch) {
         layout->addWidget(rels_, 3);
-    else
+        noRels_ = nullptr;
+    } else {
         layout->addWidget(rels_);
+        noRels_ = new QWidget();
+        noRels_->hide();
+        layout->addWidget(noRels_, 1);
+    }
 
     // The simplification buttons:
     if (allowSimplify) {
@@ -137,13 +142,19 @@ void GroupWidget::refresh() {
     unsigned long nRels = group_.countRelations();
     if (nRels == 0) {
         relCount_->setText(tr("No relations"));
+        if (noRels_)
+            noRels_->show();
         rels_->hide();
     } else if (nRels == 1) {
         relCount_->setText(tr("1 relation:"));
         rels_->show();
+        if (noRels_)
+            noRels_->hide();
     } else {
         relCount_->setText(tr("%1 relations:").arg(nRels));
         rels_->show();
+        if (noRels_)
+            noRels_->hide();
     }
 
     rels_->clear();
