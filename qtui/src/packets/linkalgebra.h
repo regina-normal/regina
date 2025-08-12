@@ -83,7 +83,6 @@ class LinkGroupUI : public QObject, public PacketViewerTab {
         /**
          * Internal components
          */
-        QWidget* ui;
         QStackedWidget* pages;
         GroupWidget* group;
         GroupWidget* groupAbove;

@@ -65,11 +65,21 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) : QWidget() {
     layout->addWidget(relCount_);
     rels_ = new QListWidget();
     rels_->setSelectionMode(QListWidget::NoSelection);
-    layout->addWidget(rels_, 3);
+    rels_->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+    if (paddingStretch) {
+        layout->addWidget(rels_, 3);
+        noRels_ = nullptr;
+    } else {
+        layout->addWidget(rels_);
+        noRels_ = new QWidget();
+        noRels_->hide();
+        layout->addWidget(noRels_, 1);
+    }
 
     // The simplification buttons:
     if (allowSimplify) {
-        layout->addStretch(1);
+        if (paddingStretch)
+            layout->addStretch(1);
 
         auto* sublayout = new QHBoxLayout();
         sublayout->setContentsMargins(0, 0, 0, 0);
@@ -132,13 +142,19 @@ void GroupWidget::refresh() {
     unsigned long nRels = group_.countRelations();
     if (nRels == 0) {
         relCount_->setText(tr("No relations"));
+        if (noRels_)
+            noRels_->show();
         rels_->hide();
     } else if (nRels == 1) {
         relCount_->setText(tr("1 relation:"));
         rels_->show();
+        if (noRels_)
+            noRels_->hide();
     } else {
         relCount_->setText(tr("%1 relations:").arg(nRels));
         rels_->show();
+        if (noRels_)
+            noRels_->hide();
     }
 
     rels_->clear();
@@ -184,7 +200,14 @@ void GroupWidget::simplify() {
         default: /* use regina */
             // This *should* block the UI, which means we don't need to worry
             // about race conditons with group_.
-            group_.simplify();
+            if (! group_.simplify()) {
+                ReginaSupport::info(this,
+                    tr("I could not simplify the group presentation."),
+                    tr("If you prefer, you can edit Regina's settings "
+                        "to use external tools (such as GAP) for group "
+                        "simplification."));
+                return;
+            }
             refresh();
             emit simplified();
             break;

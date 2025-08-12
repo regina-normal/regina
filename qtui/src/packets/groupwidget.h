@@ -61,6 +61,7 @@ class GroupWidget : public QWidget {
         QLabel* gens_;
         QLabel* relCount_;
         QListWidget* rels_;
+        QWidget* noRels_;
 
     public:
         /**
