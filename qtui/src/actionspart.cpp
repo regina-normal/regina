@@ -641,16 +641,14 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("C&lone Packet"));
-    act->setIcon(ReginaSupport::themeIcon("edit-copy"));
+    act->setIcon(ReginaSupport::regIcon("clone-packet"));
     act->setShortcut(tr("Alt+l"));
     act->setToolTip(tr("Clone the selected packet only"));
-    act->setWhatsThis(tr("Clone the packet currently selected in "
-        "the tree.  The new clone will be placed alongside the original "
-        "packet."));
+    act->setWhatsThis(tr("Clone the packet currently selected in the tree.  "
+        "The new clone will be placed alongside the original packet."));
     connect(act, SIGNAL(triggered()), this, SLOT(clonePacket()) );
     treePacketEditActions.push_back(act);
     treeMenu->addAction(act);
-
 
     act = new QAction(this);
     act->setText(tr("Clone Su&btree"));
