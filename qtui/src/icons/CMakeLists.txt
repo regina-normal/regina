@@ -5,6 +5,7 @@ set (IMGS
   barycentric
   boundaries
   canonical
+  clone-packet
   clone-subtree
   components
   cone
