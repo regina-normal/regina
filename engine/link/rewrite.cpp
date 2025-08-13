@@ -345,13 +345,13 @@ template bool detail::retriangulateInternal<Link, false,
     regina::detail::RetriangulateActionFunc<Link, false>&&);
 
 template bool detail::retriangulateInternal<Link, false,
-    detail::RetriangulateNoLocks, std::true_type>(
-    const Link&, bool, int, int, ProgressTrackerOpen*,
+    detail::RetriangulateNoLocks | detail::RetriangulateNotFinished,
+    std::true_type>(const Link&, bool, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Link, false>&&);
 
 template bool detail::retriangulateInternal<Link, false,
-    detail::RetriangulateNoLocks, std::false_type>(
-    const Link&, bool, int, int, ProgressTrackerOpen*,
+    detail::RetriangulateNoLocks | detail::RetriangulateNotFinished,
+    std::false_type>(const Link&, bool, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Link, false>&&);
 
 } // namespace regina

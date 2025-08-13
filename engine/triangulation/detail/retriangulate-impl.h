@@ -584,25 +584,33 @@ bool enumerateDetail(const Object& obj, bool rigid, int height, int nThreads,
         } else {
             result = action(Object(obj));
         }
-        if (tracker)
-            tracker->setFinished();
+        if constexpr (! (flags & RetriangulateNotFinished)) {
+            if (tracker)
+                tracker->setFinished();
+        }
         return result;
     }
 
-    using T = Retriangulator<Object, threading, withSig, flags,
-        PropagationOptions>;
+    // The flag RetriangulateNotFinished is of no use to us inside the
+    // Retriangulator class.
+    using T = Retriangulator<Object, threading, withSig,
+        (flags & ~RetriangulateNotFinished), PropagationOptions>;
 
     T bfs(rigid, (height >= 0 ? obj.size() + height :
         std::numeric_limits<std::size_t>::max()), std::move(action));
     if (bfs.seed(obj)) {
-        if (tracker)
-            tracker->setFinished();
+        if constexpr (! (flags & RetriangulateNotFinished)) {
+            if (tracker)
+                tracker->setFinished();
+        }
         return true;
     }
     bfs.template startThreads<T>(nThreads, tracker);
 
-    if (tracker)
-        tracker->setFinished();
+    if constexpr (! (flags & RetriangulateNotFinished)) {
+        if (tracker)
+            tracker->setFinished();
+    }
     return bfs.done();
 }
 

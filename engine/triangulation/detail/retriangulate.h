@@ -72,6 +72,14 @@ enum {
      * locks to prevent race conditions when running in multithreaded mode.
      */
     RetriangulateNoLocks = 0x0001,
+
+    /**
+     * Indicates that, if a progress tracker is used, it should _not_ be marked
+     * as finished once the retriangulation process is completed.  Instead the
+     * caller is responsible for calling `ProgressTracker::setFinished()`
+     * themselves at an appropriate time.
+     */
+    RetriangulateNotFinished = 0x0002
 };
 
 /**
@@ -315,7 +323,8 @@ bool improveTreewidthInternal(Object& obj, ssize_t maxAttempts, int height,
     std::mutex mutex_;
 
     // Make a first attempt to reduce treewidth.
-    if (retriangulateInternal<Object, false, RetriangulateNoLocks,
+    if (retriangulateInternal<Object, false,
+            RetriangulateNoLocks | RetriangulateNotFinished,
             PropagationOptions>(obj, true /* rigid */, height, threads, tracker,
             [&improved, &attempts, &mutex_, &curr, init,
             maxAttempts](Object&& alt) {
@@ -336,11 +345,16 @@ bool improveTreewidthInternal(Object& obj, ssize_t maxAttempts, int height,
         // Either we improved the treewidth (in which case we fall through and
         // continue searching below), or we exhausted our budgeted number of
         // attempts (in which case we return now).
-        if (! improved)
+        if (! improved) {
+            if (tracker)
+                tracker->setFinished();
             return false;
+        }
     } else {
         // We exhausted the entire flip graph (up to the given height) and did
         // not find any improvement.
+        if (tracker)
+            tracker->setFinished();
         return false;
     }
 
@@ -350,7 +364,8 @@ bool improveTreewidthInternal(Object& obj, ssize_t maxAttempts, int height,
         attempts = 0;
         init = curr;
 
-        if (retriangulateInternal<Object, false, RetriangulateNoLocks,
+        if (retriangulateInternal<Object, false,
+                RetriangulateNoLocks | RetriangulateNotFinished,
                 PropagationOptions>(*improved, true /* rigid */, height,
                 threads, tracker, [&improved, &attempts, &mutex_, &curr,
                 init, maxAttempts](Object&& alt) {
@@ -384,6 +399,8 @@ bool improveTreewidthInternal(Object& obj, ssize_t maxAttempts, int height,
 
     // Return with whatever improvement we managed to make.
     obj = std::move(*improved);
+    if (tracker)
+        tracker->setFinished();
     return true;
 }
 
