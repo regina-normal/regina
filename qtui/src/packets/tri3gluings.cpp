@@ -487,7 +487,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     auto* actIdealToFinite = new QAction(this);
     actIdealToFinite->setText(tr("&Truncate Ideal Vertices"));
-    actIdealToFinite->setIcon(ReginaSupport::regIcon("finite"));
+    actIdealToFinite->setIcon(ReginaSupport::regIcon("truncate"));
     actIdealToFinite->setToolTip(tr(
         "Truncate any ideal vertices"));
     actIdealToFinite->setWhatsThis(tr("Convert this from an ideal "
@@ -502,8 +502,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     connect(actIdealToFinite, SIGNAL(triggered()), this, SLOT(idealToFinite()));
 
     auto* actTruncateVertex = new QAction(this);
-    actTruncateVertex->setText(tr("Truncate Vertex..."));
-    // actTruncateVertex->setIcon(ReginaSupport::regIcon("finite"));
+    actTruncateVertex->setText(tr("Truncate Single Vertex..."));
+    actTruncateVertex->setIcon(ReginaSupport::regIcon("truncate-single"));
     actTruncateVertex->setToolTip(tr("Truncate a single vertex"));
     actTruncateVertex->setWhatsThis(tr("Truncates a single chosen vertex.  "
         "This triangulation will be modified directly.<p>"

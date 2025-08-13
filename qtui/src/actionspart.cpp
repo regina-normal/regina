@@ -46,7 +46,6 @@
 
 // TODO: Undo/redo are not yet implemented.
 
-
 void ReginaMain::setupActions() {
     QAction* act;
 
@@ -530,6 +529,7 @@ void ReginaMain::setupActions() {
     treeMenu->addAction(actDelete);
 
     QMenu* treeNavMenu = treeMenu->addMenu(tr("&Move"));
+    treeNavMenu->setIcon(ReginaSupport::regIcon("move"));
 
     // Tree reorganisation:
     act = new QAction(this);
@@ -654,6 +654,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("Clone Su&btree"));
+    act->setIcon(ReginaSupport::regIcon("clone-subtree"));
     act->setToolTip(tr("Clone the subtree beneath the selected packet"));
     act->setWhatsThis(tr("Clone the packet currently selected in "
         "the tree, as well as all of its descendants in the tree.  The new "

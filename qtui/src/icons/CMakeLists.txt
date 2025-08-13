@@ -5,6 +5,7 @@ set (IMGS
   barycentric
   boundaries
   canonical
+  clone-subtree
   components
   cone
   connectedsum
@@ -23,9 +24,9 @@ set (IMGS
   fill
   filter_comb
   filter_prop
-  finite
   insert
   lock
+  move
   orb
   orient
   packet_angles
@@ -76,6 +77,8 @@ set (IMGS
   thinner
   treewidth
   troubleshoot
+  truncate
+  truncate-single
   vtxlinks
   welcome
   whitehead-double

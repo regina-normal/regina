@@ -477,7 +477,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
 
     auto* actIdealToFinite = new QAction(this);
     actIdealToFinite->setText(tr("&Truncate Ideal Vertices"));
-    actIdealToFinite->setIcon(ReginaSupport::regIcon("finite"));
+    actIdealToFinite->setIcon(ReginaSupport::regIcon("truncate"));
 
     actIdealToFinite->setToolTip(tr(
         "Truncate any ideal vertices"));
