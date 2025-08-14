@@ -578,6 +578,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     auto* actZeroEff = new QAction(this);
     actZeroEff->setText(tr("Make &0-Efficient"));
+    actZeroEff->setIcon(ReginaSupport::regIcon("simplify-0eff"));
     actZeroEff->setToolTip(tr(
         "Convert this into a 0-efficient triangulation if possible"));
     actZeroEff->setWhatsThis(tr("<qt>Convert this into a 0-efficient "
