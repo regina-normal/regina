@@ -428,6 +428,19 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
     triActionList.push_back(actSimplify);
 
+    auto* actTreewidth = new QAction(this);
+    actTreewidth->setText(tr("Improve &Treewidth"));
+    actTreewidth->setIcon(ReginaSupport::regIcon("treewidth"));
+    actTreewidth->setToolTip(tr(
+        "Attempt to reduce the treewidth of the triangulation"));
+    actTreewidth->setWhatsThis(tr("Explore nearby triangulations via "
+        "Pachner moves in an attempt to reduce the treewidth of the "
+        "triangulation.  This might increase the number of tetrahedra, "
+        "but it should improve the performance of treewidth-based algorithms "
+        "(e.g., for computing Turaev-Viro invariants)."));
+    connect(actTreewidth, SIGNAL(triggered()), this, SLOT(improveTreewidth()));
+    triActionList.push_back(actTreewidth);
+
     auto* actEltMove = new QAction(this);
     actEltMove->setText(tr("&Elementary Moves..."));
     actEltMove->setToolTip(tr(
@@ -928,6 +941,64 @@ void Tri3GluingsUI::simplifyExhaustive(int height) {
         msgBox.exec();
         if (msgBox.clickedButton() == work)
             simplifyExhaustive(height + 1);
+    }
+}
+
+void Tri3GluingsUI::improveTreewidth(int attempt) {
+    // No need to clone properties or locks here.
+    Triangulation<3> orig(*tri, false, false);
+
+    regina::ProgressTrackerOpen tracker;
+    ProgressDialogOpen dlg(&tracker, tr("Searching Pachner graph..."),
+        tr("Tried %1 triangulations"), ui);
+
+    // Choose sensible bounds for the search.
+    // For now we limit the height but leave the number of attempts unlimited.
+    // The user can always cancel if they need to.
+    int height = attempt + 2;
+
+    std::thread(&Triangulation<3>::improveTreewidth, tri, -1 /* maxAttempts */,
+        height, ReginaPrefSet::threads(), std::addressof(tracker)).detach();
+
+    if (dlg.run()) {
+        dlg.hide();
+
+        if (*tri == orig) {
+            // Nothing changed.
+            QMessageBox msgBox(ui);
+            msgBox.setWindowTitle(tr("Information"));
+            msgBox.setIcon(QMessageBox::Information);
+            msgBox.setText(tr("I could not find a smaller treewidth "
+                "triangulation."));
+            msgBox.setInformativeText(tr("I limited my search through the "
+                "Pachner graph to ≤ %1 extra tetrahedra.<p>"
+                "I can look further, but be warned: the time and memory "
+                "required could grow <i>very</i> rapidly.").arg(height));
+            msgBox.setStandardButtons(QMessageBox::Close);
+            QAbstractButton* work = msgBox.addButton(
+                tr("Keep trying"), QMessageBox::ActionRole);
+            msgBox.setDefaultButton(QMessageBox::Close);
+            msgBox.exec();
+            if (msgBox.clickedButton() == work)
+                improveTreewidth(attempt + 1);
+        } else {
+            // We did manage to improve the treewidth.
+            QMessageBox msgBox(ui);
+            msgBox.setWindowTitle(tr("Information"));
+            msgBox.setIcon(QMessageBox::Information);
+            msgBox.setText(tr("Success! I improved the treewidth."));
+            msgBox.setInformativeText(tr("If you like, I can keep searching "
+                "and try to improve the treewidth even further.  However, "
+                "be warned: the time and memory required could grow "
+                "<i>very</i> rapidly."));
+            msgBox.setStandardButtons(QMessageBox::Close);
+            QAbstractButton* work = msgBox.addButton(
+                tr("Keep trying"), QMessageBox::ActionRole);
+            msgBox.setDefaultButton(QMessageBox::Close);
+            msgBox.exec();
+            if (msgBox.clickedButton() == work)
+                improveTreewidth(attempt + 1);
+        }
     }
 }
 

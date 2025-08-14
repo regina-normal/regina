@@ -202,6 +202,7 @@ class Tri3GluingsUI : public QObject, public PacketEditorTab {
          */
         void simplify();
         void simplifyExhaustive(int height);
+        void improveTreewidth(int attempt = 0);
         void orient();
         void reflect();
         void barycentricSubdivide();
