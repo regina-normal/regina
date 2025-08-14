@@ -359,41 +359,45 @@ bool improveTreewidthInternal(Object& obj, ssize_t maxAttempts, int height,
     }
 
     // We improved the treewidth, and so we will definitely be changing obj.
-    // See how much further we can reduce it now.
-    while (true) {
-        attempts = 0;
-        init = curr;
+    // If max #attempts was limited, then we will be finishing soon anyway,
+    // so see how much further we can reduce it now.
+    if (maxAttempts >= 0) {
+        while (true) {
+            attempts = 0;
+            init = curr;
 
-        if (retriangulateInternal<Object, false,
-                RetriangulateNoLocks | RetriangulateNotFinished,
-                PropagationOptions>(*improved, true /* rigid */, height,
-                threads, tracker, [&improved, &attempts, &mutex_, &curr,
-                init, maxAttempts](Object&& alt) {
-                    size_t w = TreeDecomposition(alt).width();
+            if (retriangulateInternal<Object, false,
+                    RetriangulateNoLocks | RetriangulateNotFinished,
+                    PropagationOptions>(*improved, true /* rigid */, height,
+                    threads, tracker, [&improved, &attempts, &mutex_, &curr,
+                    init, maxAttempts](Object&& alt) {
+                        size_t w = TreeDecomposition(alt).width();
 
-                    std::unique_lock lock(mutex_);
-                    ++attempts;
-                    if (w < init) {
-                        // Note: we are explicitly allowed to change the object
-                        // that we are retriangulating/rewriting.
-                        *improved = std::move(alt);
-                        curr = w;
-                        return true;
-                    } else if (maxAttempts >= 0 && attempts >= maxAttempts) {
-                        return true;
-                    } else
-                        return false;
-                })) {
-            // We explicitly asked the search to stop.
-            // Either we improved the treewidth (in which case we loop around
-            // and try again), or we exhausted our budgeted number of attempts
-            // (in which case we finish and return what we've got).
-            if (curr == init)
+                        std::unique_lock lock(mutex_);
+                        ++attempts;
+                        if (w < init) {
+                            // Note: we are explicitly allowed to change the
+                            // object that we are retriangulating/rewriting.
+                            *improved = std::move(alt);
+                            curr = w;
+                            return true;
+                        } else if (maxAttempts >= 0 &&
+                                attempts >= maxAttempts) {
+                            return true;
+                        } else
+                            return false;
+                    })) {
+                // We explicitly asked the search to stop.
+                // Either we improved the treewidth (in which case we loop
+                // around and try again), or we exhausted our budgeted number
+                // of attempts (in which case stop and return what we've got).
+                if (curr == init)
+                    break;
+            } else {
+                // We exhausted the entire flip graph (up to the given height)
+                // and did not find any improvement.
                 break;
-        } else {
-            // We exhausted the entire flip graph (up to the given height) and
-            // did not find any improvement.
-            break;
+            }
         }
     }
 

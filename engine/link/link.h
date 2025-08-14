@@ -4705,14 +4705,24 @@ class Link :
          *   details).
          *
          * If this routine finds a diagram with a smaller-width greedy tree
-         * decomposition, it will restart the search from this better diagram
-         * (i.e., it uses a "greedy descent").  The \a height argument will
-         * now be treated with respect to this _new_ diagram, and the number
-         * of attempts (which is limited by \a maxAttempts) will be reset to
-         * zero.  This means that overall you may end up with more than
-         * \a height extra crossings, and you may have visited more than
-         * \a maxAttempts distinct diagrams (but this is good news: it means
-         * that a better diagram was found).
+         * decomposition, then:
+         *
+         * - If \a maxAttempts was negative (i.e., unlimited), it will stop
+         *   the search at this point and leave you with this better diagram.
+         *   You may wish to try calling improveTreewidth() again, since it is
+         *   possible that another search will be able to improve the diagram
+         *   even further.
+         *
+         * - If \a maxAttempts was non-negative (i.e., limited), it will keep
+         *   going by restarting the search again from this better diagram.
+         *   In other words, this routine will proceed with a kind of "greedy
+         *   descent".  The \a height argument will now be treated with respect
+         *   to this _new_ diagram, and the number of attempts (which is limited
+         *   by \a maxAttempts) will be reset to zero.  This means that overall
+         *   you may end up with more than \a height extra crossings, and you
+         *   may have visited more than \a maxAttempts distinct diagrams;
+         *   however, if this happens then you know you are getting a better
+         *   diagram.
          *
          * If this routine cannot produce a smaller-width tree decomposition
          * within the bounds given via \a maxAttempts and/or \a height, then

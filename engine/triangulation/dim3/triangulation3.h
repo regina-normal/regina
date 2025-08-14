@@ -3785,14 +3785,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * reduce the number of distinct triangulations that can be reached.
          *
          * If this routine finds a triangulation with a smaller-width greedy
-         * tree decomposition, it will restart the search from this better
-         * triangulation (i.e., it uses a "greedy descent").  The \a height
-         * argument will now be treated with respect to this _new_
-         * triangulation, and the number of attempts (which is limited by
-         * \a maxAttempts) will be reset to zero.  This means that overall you
-         * may end up with more than \a height extra tetrahedra, and you may
-         * have visited more than \a maxAttempts distinct triangulations (but
-         * this is good news: it means that a better triangulation was found).
+         * tree decomposition, then:
+         *
+         * - If \a maxAttempts was negative (i.e., unlimited), it will stop
+         *   the search at this point and leave you with this better
+         *   triangulation.  You may wish to try calling improveTreewidth()
+         *   again, since it is possible that another search will be able to
+         *   improve the triangulation even further.
+         *
+         * - If \a maxAttempts was non-negative (i.e., limited), it will keep
+         *   going by restarting the search again from this better
+         *   triangulation.  In other words, this routine will proceed with a
+         *   kind of "greedy descent".  The \a height argument will now be
+         *   treated with respect to this _new_ triangulation, and the number
+         *   of attempts (which is limited by \a maxAttempts) will be reset to
+         *   zero.  This means that overall you may end up with more than
+         *   \a height extra tetrahedra, and you may have visited more than
+         *   \a maxAttempts distinct triangulations; however, if this happens
+         *   then you know you are getting a better triangulation.
          *
          * If this routine cannot produce a smaller-width tree decomposition
          * within the bounds given via \a maxAttempts and/or \a height, then
