@@ -376,6 +376,7 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
         const bool rigid_;
         const size_t maxSize_;
         RetriangulateActionFunc<Object, withSig> action_;
+        ProgressTrackerOpen* tracker_;
 
         SigSet sigs_;
         std::priority_queue<SigSet::iterator,
@@ -403,9 +404,10 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
 
     public:
         Retriangulator(bool rigid, size_t maxSize,
-                RetriangulateActionFunc<Object, withSig>&& action) :
+                RetriangulateActionFunc<Object, withSig>&& action,
+                ProgressTrackerOpen* tracker) :
             rigid_(rigid), maxSize_(maxSize), action_(action),
-            process_(lowerPriority) {
+            tracker_(tracker), process_(lowerPriority) {
         }
 
         // Make this class non-copyable.
@@ -495,9 +497,6 @@ void Retriangulator<Object, threading, withSig, flags,
             RetriangulateParams<Object>::template propagateFrom<Retriangulator>(
                 SigSet::sigAt(next), maxSize_, this);
             lock.lock();
-
-            if (tracker)
-                tracker->incSteps();
         }
 
         // It looks like we're finished.  Tell the other threads we're done,
@@ -532,6 +531,9 @@ bool Retriangulator<Object, threading, withSig, flags,
             RetriangulateThreadSync<threading>::wakeAllThreads();
         } else
             process_.push(result.first);
+
+        if (tracker_)
+            tracker_->incSteps();
 
         if constexpr (flags & RetriangulateNoLocks) {
             bool shouldStop;
@@ -597,7 +599,7 @@ bool enumerateDetail(const Object& obj, bool rigid, int height, int nThreads,
         (flags & ~RetriangulateNotFinished), PropagationOptions>;
 
     T bfs(rigid, (height >= 0 ? obj.size() + height :
-        std::numeric_limits<std::size_t>::max()), std::move(action));
+        std::numeric_limits<std::size_t>::max()), std::move(action), tracker);
     if (bfs.seed(obj)) {
         if constexpr (! (flags & RetriangulateNotFinished)) {
             if (tracker)
