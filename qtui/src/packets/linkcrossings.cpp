@@ -761,37 +761,51 @@ void LinkCrossingsUI::improveTreewidth(int attempt) {
         tr("Tried %1 diagrams"), ui);
 
     // Choose sensible bounds for the search.
-    // We will allow the number of diagrams to grow at a cubic rate,
-    // while the height steps up incrementally.  We might want to revisit
-    // these decisions after more experience in the wild.
-    size_t maxAttempts = attempt + 2;
-    maxAttempts = maxAttempts * maxAttempts * maxAttempts * 1000;
+    // For now we limit the height but leave the number of attempts unlimited.
+    // The user can always cancel if they need to.
     int height = attempt + 2;
 
-    std::thread(&Link::improveTreewidth, link, maxAttempts, height,
+    std::thread(&Link::improveTreewidth, link, -1 /* maxAttempts */, height,
         ReginaPrefSet::threads(), std::addressof(tracker)).detach();
 
-    if (dlg.run() && *link == orig) {
-        // Nothing changed.
+    if (dlg.run()) {
         dlg.hide();
 
-        QMessageBox msgBox(ui);
-        msgBox.setWindowTitle(tr("Information"));
-        msgBox.setIcon(QMessageBox::Information);
-        msgBox.setText(tr("I could not find a smaller treewidth diagram."));
-        msgBox.setInformativeText(tr("I limited my search through the "
-            "Reidemeister graph to ≤ %1 nearby diagrams, allowing %2 "
-            "extra crossings.<p>"
-            "I can look further, but be warned: the time and memory "
-            "required could grow <i>very</i> rapidly.").
-            arg(maxAttempts).arg(height));
-        msgBox.setStandardButtons(QMessageBox::Close);
-        QAbstractButton* work = msgBox.addButton(
-            tr("Keep trying"), QMessageBox::ActionRole);
-        msgBox.setDefaultButton(QMessageBox::Close);
-        msgBox.exec();
-        if (msgBox.clickedButton() == work)
-            improveTreewidth(attempt + 1);
+        if (*link == orig) {
+            // Nothing changed.
+            QMessageBox msgBox(ui);
+            msgBox.setWindowTitle(tr("Information"));
+            msgBox.setIcon(QMessageBox::Information);
+            msgBox.setText(tr("I could not find a smaller treewidth diagram."));
+            msgBox.setInformativeText(tr("I limited my search through the "
+                "Reidemeister graph to ≤ %1 extra crossings.<p>"
+                "I can look further, but be warned: the time and memory "
+                "required could grow <i>very</i> rapidly.").arg(height));
+            msgBox.setStandardButtons(QMessageBox::Close);
+            QAbstractButton* work = msgBox.addButton(
+                tr("Keep trying"), QMessageBox::ActionRole);
+            msgBox.setDefaultButton(QMessageBox::Close);
+            msgBox.exec();
+            if (msgBox.clickedButton() == work)
+                improveTreewidth(attempt + 1);
+        } else {
+            // We did manage to improve the treewidth.
+            QMessageBox msgBox(ui);
+            msgBox.setWindowTitle(tr("Information"));
+            msgBox.setIcon(QMessageBox::Information);
+            msgBox.setText(tr("Success! I improved the treewidth."));
+            msgBox.setInformativeText(tr("If you like, I can keep searching "
+                "and try to improve the treewidth even further.  However, "
+                "be warned: the time and memory required could grow "
+                "<i>very</i> rapidly."));
+            msgBox.setStandardButtons(QMessageBox::Close);
+            QAbstractButton* work = msgBox.addButton(
+                tr("Keep trying"), QMessageBox::ActionRole);
+            msgBox.setDefaultButton(QMessageBox::Close);
+            msgBox.exec();
+            if (msgBox.clickedButton() == work)
+                improveTreewidth(attempt + 1);
+        }
     }
 }
 
