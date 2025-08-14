@@ -518,7 +518,7 @@ bool Retriangulator<Object, threading, withSig, flags,
     typename RetriangulateThreadSync<threading>::Lock lock(*this);
 
     if (RetriangulateThreadSync<threading>::done())
-        return false;
+        return false; // return value irrelevant - the queues are shutting down
 
     auto result = sigs_.insertDerived(sig, derivedFrom);
     if (result.second) {
@@ -533,7 +533,8 @@ bool Retriangulator<Object, threading, withSig, flags,
             process_.push(result.first);
 
         if (tracker_)
-            tracker_->incSteps();
+            if (! tracker_->incSteps())
+                return true; // stop propagating (the operation was cancelled)
 
         if constexpr (flags & RetriangulateNoLocks) {
             bool shouldStop;
@@ -546,25 +547,25 @@ bool Retriangulator<Object, threading, withSig, flags,
             if (shouldStop) {
                 sigs_.backtrace(sig);
                 RetriangulateThreadSync<threading>::setDone();
-                return true;
+                return true; // stop propagating (action says we are done)
             }
         } else {
             if constexpr (withSig) {
                 if (action_(sig, std::move(alt))) {
                     sigs_.backtrace(sig);
                     RetriangulateThreadSync<threading>::setDone();
-                    return true;
+                    return true; // stop propagating (action says we are done)
                 }
             } else {
                 if (action_(std::move(alt))) {
                     sigs_.backtrace(sig);
                     RetriangulateThreadSync<threading>::setDone();
-                    return true;
+                    return true; // stop propagating (action says we are done)
                 }
             }
         }
     }
-    return false;
+    return false; // keep propagating
 }
 
 template <class Object, bool threading, bool withSig, int flags,
