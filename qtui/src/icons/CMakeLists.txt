@@ -4,6 +4,7 @@ set (IMGS
   alternating
   barycentric
   boundaries
+  boundary-double
   canonical
   clone-packet
   clone-subtree

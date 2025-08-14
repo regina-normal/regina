@@ -639,7 +639,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
 
     auto* actDoubleCover = new QAction(this);
-    actDoubleCover->setText(tr("&Double Cover"));
+    actDoubleCover->setText(tr("Build &Double Cover"));
     actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
     actDoubleCover->setToolTip(tr(
         "Construct the orientable double cover of this triangulation"));
@@ -651,6 +651,22 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "disconnected, containing two copies of the original triangulation."));
     triActionList.push_back(actDoubleCover);
     connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
+
+    actDoubleOverBoundary = new QAction(this);
+    actDoubleOverBoundary->setText(tr("Build Double Over Boundary"));
+    actDoubleOverBoundary->setIcon(ReginaSupport::regIcon("boundary-double"));
+    actDoubleOverBoundary->setToolTip(tr(
+        "Builds two copies of this triangulation joined along their "
+        "boundary triangles"));
+    actDoubleOverBoundary->setWhatsThis(tr("Builds a new triangulation by "
+        "gluing two copies of this triangulation along their boundary "
+        "triangles.  The boundaries will be glued using the identity map.  "
+        "Any ideal vertices will be left alone.<p>"
+        "The original triangulation will not be changed &ndash; the result "
+        "will be added as a new triangulation beneath it in the packet tree."));
+    triActionList.push_back(actDoubleOverBoundary);
+    connect(actDoubleOverBoundary, SIGNAL(triggered()), this,
+        SLOT(doubleOverBoundary()));
 
     auto* actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
@@ -1122,6 +1138,15 @@ void Tri3GluingsUI::doubleCover() {
     endEdit();
 
     auto ans = regina::make_packet(tri->doubleCover(), "Double cover");
+    tri->append(ans);
+    enclosingPane->getMainWindow()->packetView(*ans, true, true);
+}
+
+void Tri3GluingsUI::doubleOverBoundary() {
+    endEdit();
+
+    auto ans = regina::make_packet(tri->doubleOverBoundary(),
+        "Doubled over boundary");
     tri->append(ans);
     enclosingPane->getMainWindow()->packetView(*ans, true, true);
 }
@@ -1690,5 +1715,6 @@ void Tri3GluingsUI::updateRemoveState() {
 void Tri3GluingsUI::updateActionStates() {
     actOrient->setEnabled(tri->isOrientable() && ! tri->isOriented());
     actBoundaryComponents->setEnabled(! tri->boundaryComponents().empty());
+    actDoubleOverBoundary->setEnabled(tri->hasBoundaryFacets());
 }
 

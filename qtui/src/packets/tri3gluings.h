@@ -155,6 +155,7 @@ class Tri3GluingsUI : public QObject, public PacketEditorTab {
         QAction* actRemoveTet;
         QAction* actSimplify;
         QAction* actOrient;
+        QAction* actDoubleOverBoundary;
         QAction* actBoundaryComponents;
         std::vector<QAction*> triActionList;
 
@@ -211,6 +212,7 @@ class Tri3GluingsUI : public QObject, public PacketEditorTab {
         void finiteToIdeal();
         void elementaryMove();
         void doubleCover();
+        void doubleOverBoundary();
         void puncture();
         void drillEdge();
         void connectedSumWith();

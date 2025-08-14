@@ -149,6 +149,7 @@ class Tri2GluingsUI : public QObject, public PacketEditorTab {
         QAction* actAddTri;
         QAction* actRemoveTri;
         QAction* actOrient;
+        QAction* actDoubleOverBoundary;
         std::vector<QAction*> triActionList;
 
     public:
@@ -198,6 +199,7 @@ class Tri2GluingsUI : public QObject, public PacketEditorTab {
         void barycentricSubdivide();
         void insertTriangulation();
         void doubleCover();
+        void doubleOverBoundary();
         void splitIntoComponents();
 
         /**

@@ -151,6 +151,7 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         QAction* actRemovePent;
         QAction* actSimplify;
         QAction* actOrient;
+        QAction* actDoubleOverBoundary;
         QAction* actBoundaryComponents;
         std::vector<QAction*> triActionList;
 
@@ -206,6 +207,7 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         void elementaryMove();
         void insertTriangulation();
         void doubleCover();
+        void doubleOverBoundary();
         void boundaryComponents();
         void vertexLinks();
         void splitIntoComponents();

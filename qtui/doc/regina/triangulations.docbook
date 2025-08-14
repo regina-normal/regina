@@ -2630,7 +2630,7 @@
     double cover by selecting
     <menuchoice>
      <guimenu>Triangulation</guimenu>
-     <guimenuitem>Double Cover</guimenuitem>
+     <guimenuitem>Build Double Cover</guimenuitem>
     </menuchoice>
     from the menu.  If your triangulation has any orientable components,
     they will simply be duplicated (i.e., the resulting triangulation will be
