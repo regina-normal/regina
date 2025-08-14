@@ -321,7 +321,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
 
     actSimplify = new QAction(this);
     actSimplify->setText(tr("&Simplify"));
-    actSimplify->setIcon(ReginaSupport::regIcon("simplify-link"));
+    actSimplify->setIcon(ReginaSupport::regIcon("simplify-clean"));
     actSimplify->setToolTip(tr(
         "Simplify the knot or link as far as possible"));
     actSimplify->setWhatsThis(tr("Simplify this link to use fewer "

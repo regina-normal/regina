@@ -72,6 +72,7 @@ set (IMGS
   signature-4d
   signature-knot
   simplify
+  simplify-clean
   simplify-link
   snappea
   thicker
