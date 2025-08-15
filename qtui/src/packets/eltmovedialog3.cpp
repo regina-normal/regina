@@ -111,7 +111,6 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent,
     dialogLayout->addWidget(overview);
 
     auto* layout = new QGridLayout();
-      //, 10, 2, 0 /* margin */, spacingHint());
     dialogLayout->addLayout(layout);
 
     use41 = new QRadioButton(tr("4-1"), this);

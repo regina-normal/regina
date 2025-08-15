@@ -75,7 +75,7 @@ FilterPropUI::FilterPropUI(SurfaceFilterProperties* packet,
         "filter."));
 
     // Set up the enclosing grid.
-    auto* layout = new QGridLayout(ui);//, 6, 4);
+    auto* layout = new QGridLayout(ui);
     layout->setRowStretch(0, 1);
     layout->setRowStretch(5, 1);
     layout->setColumnStretch(0, 1);

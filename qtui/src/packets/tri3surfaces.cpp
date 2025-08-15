@@ -81,7 +81,7 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* tri,
 
     layout->addStretch(1);
 
-    auto* grid = new QGridLayout();//, 4, 7, 5);
+    auto* grid = new QGridLayout();
     layout->addLayout(grid);
     grid->setColumnStretch(0, 1);
     grid->setColumnMinimumWidth(2, 5); // Horizontal gap

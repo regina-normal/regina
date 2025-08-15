@@ -52,7 +52,7 @@ namespace {
 
 FilterCreator::FilterCreator(ReginaMain*) {
     ui = new QWidget();
-    auto* layout = new QGridLayout(ui);//, 2, 2, 5);
+    auto* layout = new QGridLayout(ui);
     layout->setColumnStretch(1, 1);
 
     int iconSize = QApplication::style()->pixelMetric(

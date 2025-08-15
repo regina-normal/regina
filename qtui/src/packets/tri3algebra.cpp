@@ -127,7 +127,7 @@ Tri3HomologyFundUI::Tri3HomologyFundUI(
 
     // Homology:
 
-    auto* homologyGrid = new QGridLayout();//, 7, 4, 0, 5);
+    auto* homologyGrid = new QGridLayout();
     homologyGrid->setRowStretch(0, 1);
     homologyGrid->setRowStretch(6, 1);
     homologyGrid->setColumnStretch(0, 1);
@@ -637,7 +637,7 @@ Tri3CellularInfoUI::Tri3CellularInfoUI(
     auto* grid = new QWidget(scroller->viewport());
     scroller->setWidget(grid);
 
-    auto* homologyGrid = new QGridLayout(grid);//, 11, 4, 0, 5);
+    auto* homologyGrid = new QGridLayout(grid);
     homologyGrid->setRowStretch(0, 1);
     homologyGrid->setRowStretch(11, 1);
     homologyGrid->setColumnStretch(0, 1);
