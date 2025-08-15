@@ -48,13 +48,13 @@ void ElidedLabel::paintEvent(QPaintEvent* event) {
 }
 
 QSize ElidedLabel::sizeHint() const {
-    // Add 2 to the width, since on macOS the bounding rectangle is
+    // Add 4 to the width, since on macOS the bounding rectangle is
     // enough to trigger text elision even if there is enough room.
     //
-    // (Why +2?  Because we assume some antialiasing effect causes
+    // (Why +4?  Because we assume some antialiasing effect causes
     // the text to bleed into the adjacent pixels on either side.)
 
     QSize s = QFontMetrics(font()).boundingRect(fullText_).size();
-    return QSize(s.width() + 2, s.height());
+    return QSize(s.width() + 4, s.height());
 }
 
