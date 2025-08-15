@@ -84,6 +84,7 @@ ReginaPrefSet::ReginaPrefSet() :
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),
         pythonWordWrap(false),
+        snapPeaCreationType(0),
         surfacesCompatThreshold(100),
         surfacesCreationCoords(regina::NormalCoords::Standard),
         surfacesCreationList(regina::NormalList::Default),
@@ -290,6 +291,7 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("SnapPea");
+    snapPeaCreationType = settings.value("CreationTypeV2", 0).toInt();
     regina::SnapPeaTriangulation::enableKernelMessages(
         settings.value("KernelMessages", false).toBool());
     settings.endGroup();
@@ -335,9 +337,9 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("Triangulation");
-    triDim2CreationType = settings.value("Dim2CreationType", 0).toInt();
-    triDim3CreationType = settings.value("Dim3CreationType", 0).toInt();
-    triDim4CreationType = settings.value("Dim4CreationType", 0).toInt();
+    triDim2CreationType = settings.value("Dim2CreationTypeV2", 0).toInt();
+    triDim3CreationType = settings.value("Dim3CreationTypeV2", 0).toInt();
+    triDim4CreationType = settings.value("Dim4CreationTypeV2", 0).toInt();
     triGraphvizLabels = settings.value("GraphvizLabels", true).toBool();
 
     str = settings.value("InitialGraphType").toString();
@@ -460,6 +462,7 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 
     settings.beginGroup("SnapPea");
+    settings.setValue("CreationTypeV2", snapPeaCreationType);
     settings.setValue("KernelMessages",
         regina::SnapPeaTriangulation::kernelMessagesEnabled());
     settings.endGroup();
@@ -503,9 +506,9 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 
     settings.beginGroup("Triangulation");
-    settings.setValue("Dim2CreationType", triDim2CreationType);
-    settings.setValue("Dim3CreationType", triDim3CreationType);
-    settings.setValue("Dim4CreationType", triDim4CreationType);
+    settings.setValue("Dim2CreationTypeV2", triDim2CreationType);
+    settings.setValue("Dim3CreationTypeV2", triDim3CreationType);
+    settings.setValue("Dim4CreationTypeV2", triDim4CreationType);
     settings.setValue("GraphvizLabels", triGraphvizLabels);
 
     switch (triInitialGraphType) {

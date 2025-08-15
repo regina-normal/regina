@@ -55,12 +55,16 @@ namespace {
     /**
      * Triangulation type IDs that correspond to indices in the
      * triangulation type combo box.
+     *
+     * These _must_ be kept in sync with the order in which types are added to
+     * the combo box, and they _must_ include gaps for any separators.
      */
     enum {
-        TRI_FILE,
-        TRI_CONVERT_REGINA,
+        TRI_EXAMPLE = 0,
+        TRI_FILE = 1,
+        // --- separator ---
+        TRI_CONVERT_REGINA = 3,
         TRI_CONVERT_LINK,
-        TRI_EXAMPLE
     };
 
     /**
@@ -82,7 +86,7 @@ SnapPeaTriangulationCreator::SnapPeaTriangulationCreator(
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
-    QBoxLayout* typeArea = new QHBoxLayout();//layout, 5);
+    QBoxLayout* typeArea = new QHBoxLayout();
     layout->addLayout(typeArea);
     QString expln = QObject::tr("Specifies how to create the SnapPea triangulation.");
     auto* label = new QLabel(QObject::tr("Create how?"), ui);
@@ -98,83 +102,11 @@ SnapPeaTriangulationCreator::SnapPeaTriangulationCreator(
     layout->addWidget(details, 1);
 
     // Set up the individual types of triangulation.
-    // Note that the order in which these options are added to the combo
-    // box must correspond precisely to the type IDs defined at the head
-    // of this file.
+    // The order in which these options are added to the combo box _must_
+    // correspond precisely to the type IDs defined at the head of this file.
     QWidget* area;
     QBoxLayout* subLayout;
-
-    type->addItem(QObject::tr("Paste a SnapPea file"));
-    area = new QWidget();
-    subLayout = new QVBoxLayout();
-    subLayout->setContentsMargins(0, 0, 0, 0);
-    area->setLayout(subLayout);
-    expln = QObject::tr("<qt>Paste the contents of a SnapPea file here.  "
-        "The first line of the file should be:<p>"
-        "<tt>% Triangulation</tt></qt>");
-    label = new QLabel(QObject::tr("Paste the contents of a SnapPea file:"));
-    label->setWhatsThis(expln);
-    subLayout->addWidget(label);
-    fileContents = new QTextEdit();
-    fileContents->setAcceptRichText(false);
-    fileContents->setLineWrapMode(QTextEdit::NoWrap);
-    fileContents->setWordWrapMode(QTextOption::NoWrap);
-    fileContents->setWhatsThis(expln);
-    subLayout->addWidget(fileContents, 1);
-    details->addWidget(area);//, TRI_FILE);
-
-    type->addItem(QObject::tr("Convert a Regina triangulation"));
-    area = new QWidget();
-    subLayout = new QVBoxLayout();
-    subLayout->setContentsMargins(0, 0, 0, 0);
-    area->setLayout(subLayout);
-    expln = QObject::tr("Select the Regina triangulation that you "
-        "wish to convert to a SnapPea triangulation.");
-    label = new QLabel(QObject::tr(
-        "Select a native Regina triangulation to convert:"));
-    label->setWhatsThis(expln);
-    subLayout->addWidget(label);
-    convertFromRegina = new PacketChooser(mainWindow->getPacketTree(),
-        new SingleTypeFilter<regina::PacketOf<regina::Triangulation<3>>>(),
-        PacketChooser::RootRole::Packet);
-    convertFromRegina->setWhatsThis(expln);
-    convertFromRegina->selectPacket(mainWindow->selectedPacket());
-    subLayout->addWidget(convertFromRegina, 1);
-    label = new QLabel("<qt><b>Peripheral curves:</b><p>"
-        "Regina does not store peripheral curves with its "
-        "own triangulations.<p>"
-        "When you convert a Regina triangulation to a SnapPea triangulation, "
-        "Regina will automatically install the (shortest, second shortest) "
-        "basis on each cusp.</qt>");
-    label->setWordWrap(true);
-    label->setWhatsThis(expln);
-    subLayout->addWidget(label);
-    details->addWidget(area);//, TRI_CONVERT_REGINA);
-
-    type->addItem(QObject::tr("Link complement"));
-    area = new QWidget();
-    subLayout = new QVBoxLayout();
-    subLayout->setContentsMargins(0, 0, 0, 0);
-    area->setLayout(subLayout);
-    expln = QObject::tr("Select the link whose complement you wish to "
-        "triangulate.");
-    label = new QLabel(QObject::tr(
-        "Select a link to build the complement of:"));
-    label->setWhatsThis(expln);
-    subLayout->addWidget(label);
-    convertFromLink = new PacketChooser(mainWindow->getPacketTree(),
-        new SingleTypeFilter<regina::PacketOf<regina::Link>>(),
-        PacketChooser::RootRole::Packet);
-    convertFromLink->setWhatsThis(expln);
-    convertFromLink->selectPacket(mainWindow->selectedPacket());
-    subLayout->addWidget(convertFromLink, 1);
-    label = new QLabel("<qt><b>Peripheral curves:</b><p>"
-        "Regina will pass the link diagram directly to the SnapPea kernel, "
-        "which allows SnapPea to preserve the meridian and longitude.</qt>");
-    label->setWordWrap(true);
-    label->setWhatsThis(expln);
-    subLayout->addWidget(label);
-    details->addWidget(area);//, TRI_CONVERT_LINK);
+    QBoxLayout* lineLayout;
 
     type->addItem(QObject::tr("Example triangulation"));
     area = new QWidget();
@@ -198,11 +130,96 @@ SnapPeaTriangulationCreator::SnapPeaTriangulationCreator(
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     subLayout->addWidget(exampleWhich, 1);
-    details->addWidget(area);//, TRI_EXAMPLE);
+    details->addWidget(area);
+
+    type->addItem(QObject::tr("Paste a SnapPea file"));
+    area = new QWidget();
+    subLayout = new QVBoxLayout();
+    subLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(subLayout);
+    expln = QObject::tr("<qt>Paste the contents of a SnapPea file here.  "
+        "The first line of the file should be:<p>"
+        "<tt>% Triangulation</tt></qt>");
+    label = new QLabel(QObject::tr("Paste the contents of a SnapPea file:"));
+    label->setWhatsThis(expln);
+    subLayout->addWidget(label);
+    fileContents = new QTextEdit();
+    fileContents->setAcceptRichText(false);
+    fileContents->setLineWrapMode(QTextEdit::NoWrap);
+    fileContents->setWordWrapMode(QTextOption::NoWrap);
+    fileContents->setWhatsThis(expln);
+    subLayout->addWidget(fileContents, 1);
+    details->addWidget(area);
+
+    type->insertSeparator(type->count());
+    details->addWidget(new QWidget()); // keep indices for type/details in sync
+
+    type->addItem(QObject::tr("Convert a Regina triangulation"));
+    area = new QWidget();
+    subLayout = new QVBoxLayout();
+    subLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(subLayout);
+    lineLayout = new QHBoxLayout();
+    subLayout->addLayout(lineLayout);
+    expln = QObject::tr("Select the source Regina triangulation that you "
+        "wish to convert to a SnapPea triangulation.");
+    label = new QLabel(QObject::tr("Source:"));
+    label->setWhatsThis(expln);
+    lineLayout->addWidget(label);
+    convertFromRegina = new PacketChooser(mainWindow->getPacketTree(),
+        new SingleTypeFilter<regina::PacketOf<regina::Triangulation<3>>>(),
+        PacketChooser::RootRole::Packet);
+    convertFromRegina->setWhatsThis(expln);
+    convertFromRegina->selectPacket(mainWindow->selectedPacket());
+    lineLayout->addWidget(convertFromRegina, 1);
+    label = new QLabel("<b>Peripheral curves:</b><p>"
+        "Regina does not store peripheral curves with its "
+        "own triangulations.<p>"
+        "When you convert a Regina triangulation to a SnapPea triangulation, "
+        "Regina will automatically install the (shortest, second shortest) "
+        "basis on each cusp.");
+    label->setWordWrap(true);
+    label->setWhatsThis(expln);
+    subLayout->addWidget(label, 1);
+    details->addWidget(area);
+
+    type->addItem(QObject::tr("Link complement"));
+    area = new QWidget();
+    subLayout = new QVBoxLayout();
+    subLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(subLayout);
+    lineLayout = new QHBoxLayout();
+    subLayout->addLayout(lineLayout);
+    expln = QObject::tr("Select the source link whose complement you wish to "
+        "triangulate.");
+    label = new QLabel(QObject::tr("Source link:"));
+    label->setWhatsThis(expln);
+    lineLayout->addWidget(label);
+    convertFromLink = new PacketChooser(mainWindow->getPacketTree(),
+        new SingleTypeFilter<regina::PacketOf<regina::Link>>(),
+        PacketChooser::RootRole::Packet);
+    convertFromLink->setWhatsThis(expln);
+    convertFromLink->selectPacket(mainWindow->selectedPacket());
+    lineLayout->addWidget(convertFromLink, 1);
+    label = new QLabel("<b>Peripheral curves:</b><p>"
+        "Regina will pass the link diagram directly to the SnapPea kernel, "
+        "which allows SnapPea to preserve the meridian and longitude.");
+    label->setWordWrap(true);
+    label->setWhatsThis(expln);
+    subLayout->addWidget(label, 1);
+    details->addWidget(area);
 
     // Tidy up.
-    type->setCurrentIndex(0);
-    details->setCurrentIndex((int)0);
+    {
+        int typeId = ReginaPrefSet::global().snapPeaCreationType;
+        if (typeId >= 0 && typeId < type->count()) {
+            type->setCurrentIndex(typeId);
+            details->setCurrentIndex(typeId);
+        } else {
+            type->setCurrentIndex(0);
+            details->setCurrentIndex((int)0);
+        }
+    }
 
     QObject::connect(type, SIGNAL(activated(int)), details,
         SLOT(setCurrentIndex(int)));
@@ -215,6 +232,9 @@ QWidget* SnapPeaTriangulationCreator::getInterface() {
 std::shared_ptr<regina::Packet> SnapPeaTriangulationCreator::createPacket(
         std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
+    // Remember our selection for next time.
+    ReginaPrefSet::global().snapPeaCreationType = typeId;
+
     if (typeId == TRI_CONVERT_REGINA) {
         auto from = std::static_pointer_cast<
             regina::PacketOf<Triangulation<3>>>(

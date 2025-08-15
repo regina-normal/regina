@@ -159,6 +159,10 @@ class ReginaPrefSet : public QObject {
                  python console. */
         bool pythonWordWrap;
             /**< Should python consoles be word wrapped? */
+        int snapPeaCreationType;
+            /**< The initial option to select in the list of creation options
+                 when creating a new SnapPea triangulation.  This is given as
+                 an index into the list. */
         unsigned surfacesCompatThreshold;
             /**< The maximum number of normal surfaces in a list for which the
                  compatibility matrices will be automatically calculated. */

@@ -104,7 +104,7 @@ LinkCreator::LinkCreator(ReginaMain* mainWindow) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
-    QBoxLayout* typeArea = new QHBoxLayout();//layout, 5);
+    QBoxLayout* typeArea = new QHBoxLayout();
     layout->addLayout(typeArea);
     QString expln = QObject::tr("Specifies what type of knot or link to create.");
     auto* label = new QLabel(QObject::tr("Type of knot/link:"), ui);

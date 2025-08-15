@@ -93,7 +93,7 @@ Tri2Creator::Tri2Creator(ReginaMain*) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
-    QBoxLayout* typeArea = new QHBoxLayout();//layout, 5);
+    QBoxLayout* typeArea = new QHBoxLayout();
     layout->addLayout(typeArea);
     QString expln = QObject::tr("Specifies what type of triangulation to create.");
     auto* label = new QLabel(QObject::tr("Type of triangulation:"), ui);
@@ -109,9 +109,8 @@ Tri2Creator::Tri2Creator(ReginaMain*) {
     layout->addWidget(details, 1);
 
     // Set up the individual types of triangulation.
-    // Note that the order in which these options are added to the combo
-    // box must correspond precisely to the type IDs defined at the head
-    // of this file.
+    // The order in which these options are added to the combo box _must_
+    // correspond precisely to the type IDs defined at the head of this file.
     QWidget* hArea;
 
     type->addItem(QObject::tr("Empty"));
