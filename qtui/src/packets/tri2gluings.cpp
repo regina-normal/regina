@@ -478,11 +478,11 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     sep->setSeparator(true);
     triActionList.push_back(sep);
 
-    auto* actSplitIntoComponents = new QAction(this);
+    actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
     actSplitIntoComponents->setIcon(ReginaSupport::regIcon("components"));
     actSplitIntoComponents->setToolTip(tr(
-        "Form a new triangulation for each disconnected component"));
+        "Build a new triangulation for each connected component"));
     actSplitIntoComponents->setWhatsThis(tr("<qt>Split a disconnected "
         "triangulation into its individual connected components.  This "
         "triangulation will not be changed &ndash; each "
@@ -791,5 +791,6 @@ void Tri2GluingsUI::updateRemoveState() {
 void Tri2GluingsUI::updateActionStates() {
     actOrient->setEnabled(tri->isOrientable() && ! tri->isOriented());
     actDoubleOverBoundary->setEnabled(tri->hasBoundaryFacets());
+    actSplitIntoComponents->setEnabled(tri->countComponents() > 1);
 }
 

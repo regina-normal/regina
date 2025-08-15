@@ -448,7 +448,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     triActionList.push_back(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
-    auto* actReflect = new QAction(this);
+    actReflect = new QAction(this);
     actReflect->setText(tr("Re&flect"));
     actReflect->setIcon(ReginaSupport::regIcon("reflect"));
     actReflect->setToolTip(tr(
@@ -461,42 +461,42 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     triActionList.push_back(actReflect);
     connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
 
-    auto* actBarycentricSubdivide = new QAction(this);
-    actBarycentricSubdivide->setText(tr("&Barycentric Subdivide"));
-    actBarycentricSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
-    actBarycentricSubdivide->setToolTip(tr(
+    actSubdivide = new QAction(this);
+    actSubdivide->setText(tr("&Barycentric Subdivide"));
+    actSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
+    actSubdivide->setToolTip(tr(
         "Perform a barycentric subdivision"));
-    actBarycentricSubdivide->setWhatsThis(tr("Perform a barycentric "
+    actSubdivide->setWhatsThis(tr("Perform a barycentric "
         "subdivision on this triangulation.  The triangulation will be "
         "changed directly.<p>"
         "This operation involves subdividing each pentachoron into "
         "120 smaller pentachora."));
-    triActionList.push_back(actBarycentricSubdivide);
-    connect(actBarycentricSubdivide, SIGNAL(triggered()), this,
+    triActionList.push_back(actSubdivide);
+    connect(actSubdivide, SIGNAL(triggered()), this,
         SLOT(barycentricSubdivide()));
 
-    auto* actIdealToFinite = new QAction(this);
-    actIdealToFinite->setText(tr("&Truncate Ideal Vertices"));
-    actIdealToFinite->setIcon(ReginaSupport::regIcon("truncate"));
+    actTruncate = new QAction(this);
+    actTruncate->setText(tr("&Truncate Ideal Vertices"));
+    actTruncate->setIcon(ReginaSupport::regIcon("truncate"));
 
-    actIdealToFinite->setToolTip(tr(
+    actTruncate->setToolTip(tr(
         "Truncate all ideal vertices"));
-    actIdealToFinite->setWhatsThis(tr("Convert this from an ideal "
+    actTruncate->setWhatsThis(tr("Convert this from an ideal "
         "triangulation to a finite triangulation.  Any vertices whose "
         "links are neither 3-spheres nor 3-balls "
         "will be truncated and converted into boundary tetrahedra.<p>"
         "This triangulation will be modified directly.  If there are no "
         "vertices of this type to truncate, this operation will have no "
         "effect."));
-    triActionList.push_back(actIdealToFinite);
-    connect(actIdealToFinite, SIGNAL(triggered()), this, SLOT(idealToFinite()));
+    triActionList.push_back(actTruncate);
+    connect(actTruncate, SIGNAL(triggered()), this, SLOT(idealToFinite()));
 
-    auto* actFiniteToIdeal = new QAction(this);
-    actFiniteToIdeal->setText(tr("Make &Ideal"));
-    actFiniteToIdeal->setIcon(ReginaSupport::regIcon("cone"));
-    actFiniteToIdeal->setToolTip(tr(
+    actMakeIdeal = new QAction(this);
+    actMakeIdeal->setText(tr("Make &Ideal"));
+    actMakeIdeal->setIcon(ReginaSupport::regIcon("cone"));
+    actMakeIdeal->setToolTip(tr(
         "Convert real boundary components into ideal vertices"));
-    actFiniteToIdeal->setWhatsThis(tr("Convert this from a finite "
+    actMakeIdeal->setWhatsThis(tr("Convert this from a finite "
         "triangulation to an ideal triangulation.  Each real boundary "
         "component (formed from one or more boundary tetrahedra) will be "
         "converted into a single ideal vertex.<p>"
@@ -504,8 +504,8 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         "components will be filled in with balls.<p>"
         "This triangulation will be modified directly.  If there are no "
         "real boundary components, this operation will have no effect."));
-    triActionList.push_back(actFiniteToIdeal);
-    connect(actFiniteToIdeal, SIGNAL(triggered()), this, SLOT(finiteToIdeal()));
+    triActionList.push_back(actMakeIdeal);
+    connect(actMakeIdeal, SIGNAL(triggered()), this, SLOT(finiteToIdeal()));
 
     auto* actInsertTri = new QAction(this);
     actInsertTri->setText(tr("Insert Triangulation..."));
@@ -572,7 +572,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     connect(actBoundaryComponents, SIGNAL(triggered()), this,
         SLOT(boundaryComponents()));
 
-    auto* actVertexLinks = new QAction(this);
+    actVertexLinks = new QAction(this);
     actVertexLinks->setText(tr("&Vertex Links..."));
     actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
     actVertexLinks->setToolTip(tr(
@@ -586,11 +586,11 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     triActionList.push_back(actVertexLinks);
     connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
 
-    auto* actSplitIntoComponents = new QAction(this);
+    actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
     actSplitIntoComponents->setIcon(ReginaSupport::regIcon("components"));
     actSplitIntoComponents->setToolTip(tr(
-        "Form a new triangulation for each disconnected component"));
+        "Build a new triangulation for each connected component"));
     actSplitIntoComponents->setWhatsThis(tr("<qt>Split a disconnected "
         "triangulation into its individual connected components.  This "
         "triangulation will not be changed &ndash; each "
@@ -622,7 +622,16 @@ void Tri4GluingsUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actRemovePent);
     bar->addSeparator();
     bar->addAction(actSimplify);
+    bar->addSeparator();
     bar->addAction(actOrient);
+    bar->addAction(actReflect);
+    bar->addAction(actSubdivide);
+    bar->addAction(actTruncate);
+    bar->addAction(actMakeIdeal);
+    bar->addSeparator();
+    bar->addAction(actBoundaryComponents);
+    bar->addAction(actVertexLinks);
+    bar->addAction(actSplitIntoComponents);
 }
 
 regina::Packet* Tri4GluingsUI::getPacket() {
@@ -1083,5 +1092,6 @@ void Tri4GluingsUI::updateActionStates() {
     actOrient->setEnabled(tri->isOrientable() && ! tri->isOriented());
     actBoundaryComponents->setEnabled(! tri->boundaryComponents().empty());
     actDoubleOverBoundary->setEnabled(tri->hasBoundaryFacets());
+    actSplitIntoComponents->setEnabled(tri->countComponents() > 1);
 }
 

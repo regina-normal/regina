@@ -150,6 +150,7 @@ class Tri2GluingsUI : public QObject, public PacketEditorTab {
         QAction* actRemoveTri;
         QAction* actOrient;
         QAction* actDoubleOverBoundary;
+        QAction* actSplitIntoComponents;
         std::vector<QAction*> triActionList;
 
     public:
