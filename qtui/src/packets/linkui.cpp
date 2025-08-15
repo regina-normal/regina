@@ -90,7 +90,7 @@ LinkHeaderUI::LinkHeaderUI(regina::PacketOf<Link>* packet,
     uiLayout->setContentsMargins(0, 0, 0, 0);
 
     bar = new QToolBar(ui);
-    bar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    bar->setToolButtonStyle(Qt::ToolButtonIconOnly);
     uiLayout->addWidget(bar);
 
     header = new QLabel();

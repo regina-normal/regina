@@ -332,7 +332,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actSimplify);
     connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
 
-    auto* actTreewidth = new QAction(this);
+    actTreewidth = new QAction(this);
     actTreewidth->setText(tr("Improve &Treewidth"));
     actTreewidth->setIcon(ReginaSupport::regIcon("treewidth"));
     actTreewidth->setToolTip(tr(
@@ -374,7 +374,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actReflect);
     connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
 
-    auto* actRotate = new QAction(this);
+    actRotate = new QAction(this);
     actRotate->setText(tr("&Rotate"));
     actRotate->setIcon(ReginaSupport::regIcon("rotate"));
     actRotate->setToolTip(tr("Rotate this link"));
@@ -386,7 +386,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actRotate);
     connect(actRotate, SIGNAL(triggered()), this, SLOT(rotate()));
 
-    auto* actReverse = new QAction(this);
+    actReverse = new QAction(this);
     actReverse->setText(tr("Re&verse"));
     actReverse->setIcon(ReginaSupport::regIcon("reverse"));
     actReverse->setToolTip(tr("Reverse this link"));
@@ -406,7 +406,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actAlternating);
     connect(actAlternating, SIGNAL(triggered()), this, SLOT(alternating()));
 
-    auto* actSelfFrame = new QAction(this);
+    actSelfFrame = new QAction(this);
     actSelfFrame->setText(tr("Self Frame"));
     actSelfFrame->setIcon(ReginaSupport::regIcon("selfframe"));
     actSelfFrame->setToolTip(tr("Self-frame this link by adding twists"));
@@ -524,8 +524,14 @@ LinkCrossingsUI::~LinkCrossingsUI() {
 }
 
 void LinkCrossingsUI::fillToolBar(QToolBar* bar) {
-    bar->addAction(actReflect);
     bar->addAction(actSimplify);
+    bar->addAction(actTreewidth);
+    bar->addSeparator();
+    bar->addAction(actReflect);
+    bar->addAction(actRotate);
+    bar->addAction(actReverse);
+    bar->addAction(actAlternating);
+    bar->addAction(actSelfFrame);
     bar->addSeparator();
     bar->addAction(actComplement);
     bar->addAction(actSnapPea);
