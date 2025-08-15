@@ -54,13 +54,17 @@ namespace {
     /**
      * Triangulation type IDs that correspond to indices in the
      * triangulation type combo box.
+     *
+     * These _must_ be kept in sync with the order in which types are added to
+     * the combo box, and they _must_ include gaps for any separators.
      */
     enum {
-        TRI_EMPTY,
-        TRI_OR,
-        TRI_NOR,
-        TRI_ISOSIG,
-        TRI_EXAMPLE
+        TRI_EMPTY = 0,
+        TRI_EXAMPLE = 1,
+        TRI_ISOSIG = 2,
+        // --- separator ---
+        TRI_OR = 4,
+        TRI_NOR
     };
 
     /**
@@ -113,9 +117,57 @@ Tri2Creator::Tri2Creator(ReginaMain*) {
     type->addItem(QObject::tr("Empty"));
     details->addWidget(new QWidget());
 
-    type->addItem(QObject::tr("Orientable surface"));
+    type->addItem(QObject::tr("Example triangulation"));
     hArea = new QWidget();
     QBoxLayout* hLayout = new QHBoxLayout();
+    hLayout->setContentsMargins(0, 0, 0, 0);
+    hArea->setLayout(hLayout);
+    expln = QObject::tr("<qt>Specifies which particular example triangulation to "
+        "create.<p>"
+        "A selection of ready-made 2-manifold triangulations is offered "
+        "here to help you experiment and see how Regina works.</qt>");
+    label = new QLabel(QObject::tr("Example:"));
+    label->setWhatsThis(expln);
+    hLayout->addWidget(label);
+    exampleWhich = new QComboBox(hArea);
+    for (const auto& e : examples)
+        exampleWhich->addItem(e.name());
+    exampleWhich->setCurrentIndex(0);
+    exampleWhich->setWhatsThis(expln);
+    hLayout->addWidget(exampleWhich, 1);
+    details->addWidget(hArea);
+
+    type->addItem(QObject::tr("From isomorphism signature"));
+    hArea = new QWidget();
+    hLayout = new QHBoxLayout();
+    hLayout->setContentsMargins(0, 0, 0, 0);
+    hArea->setLayout(hLayout);
+    expln = QObject::tr("<qt>The isomorphism signature "
+        "from which the new triangulation will be created.  An example "
+        "isomorphism signature is <i>cPbbde</i>.<p>"
+        "Isomorphism signatures identify triangulations uniquely "
+        "up to combinatorial isomorphism.  "
+        "3-dimensional isomorphism signatures are described in "
+        "detail in <i>Simplification paths in the Pachner graphs "
+        "of closed orientable 3-manifold triangulations</i>, "
+        "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
+        "2-dimensional isomorphism signatures (as used here) follow an "
+        "analogous scheme.</qt>");
+    label = new QLabel(QObject::tr("Isomorphism signature:"));
+    label->setWhatsThis(expln);
+    hLayout->addWidget(label);
+    isoSig = new QLineEdit();
+    isoSig->setValidator(new QRegularExpressionValidator(reIsoSig, hArea));
+    isoSig->setWhatsThis(expln);
+    hLayout->addWidget(isoSig, 1);
+    details->addWidget(hArea);
+
+    type->insertSeparator(type->count());
+    details->addWidget(new QWidget()); // keep indices for type/details in sync
+
+    type->addItem(QObject::tr("Orientable surface"));
+    hArea = new QWidget();
+    hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
     hArea->setLayout(hLayout);
     expln = QObject::tr("The number of handles in the surface.");
@@ -140,7 +192,7 @@ Tri2Creator::Tri2Creator(ReginaMain*) {
     orPunctures->setWhatsThis(expln);
     orPunctures->setText("0");
     hLayout->addWidget(orPunctures, 1);
-    details->addWidget(hArea);//, TRI_OR);
+    details->addWidget(hArea);
 
     type->addItem(QObject::tr("Non-orientable surface"));
     hArea = new QWidget();
@@ -169,52 +221,7 @@ Tri2Creator::Tri2Creator(ReginaMain*) {
     norPunctures->setWhatsThis(expln);
     norPunctures->setText("0");
     hLayout->addWidget(norPunctures, 1);
-    details->addWidget(hArea);//, TRI_NOR);
-
-    type->addItem(QObject::tr("From isomorphism signature"));
-    hArea = new QWidget();
-    hLayout = new QHBoxLayout();
-    hLayout->setContentsMargins(0, 0, 0, 0);
-    hArea->setLayout(hLayout);
-    expln = QObject::tr("<qt>The isomorphism signature "
-        "from which the new triangulation will be created.  An example "
-        "isomorphism signature is <i>cPbbde</i>.<p>"
-        "Isomorphism signatures identify triangulations uniquely "
-        "up to combinatorial isomorphism.  "
-        "3-dimensional isomorphism signatures are described in "
-        "detail in <i>Simplification paths in the Pachner graphs "
-        "of closed orientable 3-manifold triangulations</i>, "
-        "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
-        "2-dimensional isomorphism signatures (as used here) follow an "
-        "analogous scheme.</qt>");
-    label = new QLabel(QObject::tr("Isomorphism signature:"));
-    label->setWhatsThis(expln);
-    hLayout->addWidget(label);
-    isoSig = new QLineEdit();
-    isoSig->setValidator(new QRegularExpressionValidator(reIsoSig, hArea));
-    isoSig->setWhatsThis(expln);
-    hLayout->addWidget(isoSig, 1);
-    details->addWidget(hArea);//, TRI_ISOSIG);
-
-    type->addItem(QObject::tr("Example triangulation"));
-    hArea = new QWidget();
-    hLayout = new QHBoxLayout();
-    hLayout->setContentsMargins(0, 0, 0, 0);
-    hArea->setLayout(hLayout);
-    expln = QObject::tr("<qt>Specifies which particular example triangulation to "
-        "create.<p>"
-        "A selection of ready-made 2-manifold triangulations is offered "
-        "here to help you experiment and see how Regina works.</qt>");
-    label = new QLabel(QObject::tr("Example:"));
-    label->setWhatsThis(expln);
-    hLayout->addWidget(label);
-    exampleWhich = new QComboBox(hArea);
-    for (const auto& e : examples)
-        exampleWhich->addItem(e.name());
-    exampleWhich->setCurrentIndex(0);
-    exampleWhich->setWhatsThis(expln);
-    hLayout->addWidget(exampleWhich, 1);
-    details->addWidget(hArea);//, TRI_EXAMPLE);
+    details->addWidget(hArea);
 
     // Tidy up.
     {

@@ -66,8 +66,8 @@ namespace {
         LINK_CODE = 1,
         // --- separator ---
         LINK_TORUS = 3,
-        LINK_WHITEHEAD_DOUBLE = 4,
-        LINK_PARALLEL_CABLES = 5
+        LINK_WHITEHEAD_DOUBLE,
+        LINK_PARALLEL_CABLES
     };
 
     /**

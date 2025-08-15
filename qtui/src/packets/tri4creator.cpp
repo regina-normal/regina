@@ -58,14 +58,18 @@ namespace {
     /**
      * Triangulation type IDs that correspond to indices in the
      * triangulation type combo box.
+     *
+     * These _must_ be kept in sync with the order in which types are added to
+     * the combo box, and they _must_ include gaps for any separators.
      */
     enum {
-        TRI_EMPTY,
-        TRI_IBUNDLE,
+        TRI_EMPTY = 0,
+        TRI_EXAMPLE = 1,
+        TRI_ISOSIG = 2,
+        // --- separator ---
+        TRI_IBUNDLE = 4,
         TRI_S1BUNDLE,
-        TRI_SINGLECONE,
-        TRI_ISOSIG,
-        TRI_EXAMPLE
+        TRI_SINGLECONE
     };
 
     /**
@@ -120,66 +124,29 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     // of this file.
     QWidget* area;
     QBoxLayout* subLayout;
+    QBoxLayout* lineLayout;
 
     type->addItem(QObject::tr("Empty"));
     details->addWidget(new QWidget());
 
-    type->addItem(QObject::tr("I-bundle"));
+    type->addItem(QObject::tr("Example triangulation"));
     area = new QWidget();
-    subLayout = new QVBoxLayout();
+    subLayout = new QHBoxLayout();
     subLayout->setContentsMargins(0, 0, 0, 0);
     area->setLayout(subLayout);
-    expln = QObject::tr("<qt>Select the 3-manifold triangulation <i>M</i> "
-        "that you wish to use to form the I-bundle "
-        "<i>M</i>&nbsp;×&nbsp;I.</qt>");
-    label = new QLabel(QObject::tr("Select a 3-manifold to build an "
-        "I-bundle from:"));
+    expln = QObject::tr(
+        "<qt>Specifies which particular example triangulation to create.<p>"
+        "A selection of ready-made 4-manifold triangulations is offered "
+        "here to help you experiment and see how Regina works.</qt>");
+    label = new QLabel(QObject::tr("Example:"));
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
-    iBundleFrom = new PacketChooser(mainWindow->getPacketTree(),
-        new SubclassFilter<regina::Triangulation<3>>(),
-        PacketChooser::RootRole::Packet);
-    iBundleFrom->setWhatsThis(expln);
-    iBundleFrom->selectPacket(mainWindow->selectedPacket());
-    subLayout->addWidget(iBundleFrom, 1);
-    details->addWidget(area);
-
-    type->addItem(QObject::tr("S¹-bundle"));
-    area = new QWidget();
-    subLayout = new QVBoxLayout();
-    subLayout->setContentsMargins(0, 0, 0, 0);
-    area->setLayout(subLayout);
-    expln = QObject::tr("<qt>Select the 3-manifold triangulation <i>M</i> "
-        "that you wish to use to form the S¹-bundle "
-        "<i>M</i>&nbsp;×&nbsp;S¹.</qt>");
-    label = new QLabel(QObject::tr("Select a 3-manifold to build an "
-        "S¹-bundle from:"));
-    label->setWhatsThis(expln);
-    subLayout->addWidget(label);
-    s1BundleFrom = new PacketChooser(mainWindow->getPacketTree(),
-        new SubclassFilter<regina::Triangulation<3>>(),
-        PacketChooser::RootRole::Packet);
-    s1BundleFrom->setWhatsThis(expln);
-    s1BundleFrom->selectPacket(mainWindow->selectedPacket());
-    subLayout->addWidget(s1BundleFrom, 1);
-    details->addWidget(area);
-
-    type->addItem(QObject::tr("Cone"));
-    area = new QWidget();
-    subLayout = new QVBoxLayout();
-    subLayout->setContentsMargins(0, 0, 0, 0);
-    area->setLayout(subLayout);
-    expln = QObject::tr("Select the 3-manifold triangulation that you wish "
-        "to cone over.");
-    label = new QLabel(QObject::tr("Select a 3-manifold to cone over:"));
-    label->setWhatsThis(expln);
-    subLayout->addWidget(label);
-    singleConeFrom = new PacketChooser(mainWindow->getPacketTree(),
-        new SubclassFilter<regina::Triangulation<3>>(),
-        PacketChooser::RootRole::Packet);
-    singleConeFrom->setWhatsThis(expln);
-    singleConeFrom->selectPacket(mainWindow->selectedPacket());
-    subLayout->addWidget(singleConeFrom, 1);
+    exampleWhich = new QComboBox(area);
+    for (const auto& e : examples)
+        exampleWhich->addItem(e.name());
+    exampleWhich->setCurrentIndex(0);
+    exampleWhich->setWhatsThis(expln);
+    subLayout->addWidget(exampleWhich, 1);
     details->addWidget(area);
 
     type->addItem(QObject::tr("From isomorphism signature"));
@@ -207,24 +174,72 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     subLayout->addWidget(isoSig, 1);
     details->addWidget(area);
 
-    type->addItem(QObject::tr("Example triangulation"));
+    type->insertSeparator(type->count());
+    details->addWidget(new QWidget()); // keep indices for type/details in sync
+
+    type->addItem(QObject::tr("I-bundle over…"));
     area = new QWidget();
-    subLayout = new QHBoxLayout();
+    subLayout = new QVBoxLayout();
     subLayout->setContentsMargins(0, 0, 0, 0);
     area->setLayout(subLayout);
-    expln = QObject::tr(
-        "<qt>Specifies which particular example triangulation to create.<p>"
-        "A selection of ready-made 4-manifold triangulations is offered "
-        "here to help you experiment and see how Regina works.</qt>");
-    label = new QLabel(QObject::tr("Example:"));
+    lineLayout = new QHBoxLayout();
+    subLayout->addLayout(lineLayout);
+    expln = QObject::tr("Select the source 3-manifold triangulation <i>M</i> "
+        "that you wish to use to form the I-bundle "
+        "<i>M</i>&nbsp;×&nbsp;I.");
+    label = new QLabel(QObject::tr("Source 3-manifold:"));
     label->setWhatsThis(expln);
-    subLayout->addWidget(label);
-    exampleWhich = new QComboBox(area);
-    for (const auto& e : examples)
-        exampleWhich->addItem(e.name());
-    exampleWhich->setCurrentIndex(0);
-    exampleWhich->setWhatsThis(expln);
-    subLayout->addWidget(exampleWhich, 1);
+    lineLayout->addWidget(label);
+    iBundleFrom = new PacketChooser(mainWindow->getPacketTree(),
+        new SubclassFilter<regina::Triangulation<3>>(),
+        PacketChooser::RootRole::Packet);
+    iBundleFrom->setWhatsThis(expln);
+    iBundleFrom->selectPacket(mainWindow->selectedPacket());
+    lineLayout->addWidget(iBundleFrom, 1);
+    subLayout->addStretch(); // avoids awkward stretching around labels
+    details->addWidget(area);
+
+    type->addItem(QObject::tr("S¹-bundle over…"));
+    area = new QWidget();
+    subLayout = new QVBoxLayout();
+    subLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(subLayout);
+    lineLayout = new QHBoxLayout();
+    subLayout->addLayout(lineLayout);
+    expln = QObject::tr("Select the source 3-manifold triangulation <i>M</i> "
+        "that you wish to use to form the S¹-bundle "
+        "<i>M</i>&nbsp;×&nbsp;S¹.");
+    label = new QLabel(QObject::tr("Source 3-manifold:"));
+    label->setWhatsThis(expln);
+    lineLayout->addWidget(label);
+    s1BundleFrom = new PacketChooser(mainWindow->getPacketTree(),
+        new SubclassFilter<regina::Triangulation<3>>(),
+        PacketChooser::RootRole::Packet);
+    s1BundleFrom->setWhatsThis(expln);
+    s1BundleFrom->selectPacket(mainWindow->selectedPacket());
+    lineLayout->addWidget(s1BundleFrom, 1);
+    subLayout->addStretch(); // avoids awkward stretching around labels
+    details->addWidget(area);
+
+    type->addItem(QObject::tr("Cone over…"));
+    area = new QWidget();
+    subLayout = new QVBoxLayout();
+    subLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(subLayout);
+    lineLayout = new QHBoxLayout();
+    subLayout->addLayout(lineLayout);
+    expln = QObject::tr("Select the source 3-manifold triangulation that you "
+        "wish to cone over.");
+    label = new QLabel(QObject::tr("Source 3-manifold:"));
+    label->setWhatsThis(expln);
+    lineLayout->addWidget(label);
+    singleConeFrom = new PacketChooser(mainWindow->getPacketTree(),
+        new SubclassFilter<regina::Triangulation<3>>(),
+        PacketChooser::RootRole::Packet);
+    singleConeFrom->setWhatsThis(expln);
+    singleConeFrom->selectPacket(mainWindow->selectedPacket());
+    lineLayout->addWidget(singleConeFrom, 1);
+    subLayout->addStretch(); // avoids awkward stretching around labels
     details->addWidget(area);
 
     // Tidy up.
