@@ -103,7 +103,6 @@ class ReginaPrefGeneral : public QWidget {
         QCheckBox* cbWarnOnNonEmbedded;
         QCheckBox* cbGraphvizLabels;
         QLineEdit* editTreeJumpSize;
-        QCheckBox* cbTipOfDay;
         QCheckBox* cbIntroOnStartup;
         CodecChooser* chooserImportExportCodec;
 

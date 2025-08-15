@@ -123,9 +123,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     generalPrefs->editTreeJumpSize->setText(
         QString::number(prefSet.treeJumpSize));
     generalPrefs->cbGraphvizLabels->setChecked(prefSet.triGraphvizLabels);
-//    generalPrefs->cbTipOfDay->setChecked(
-//        KConfigGroup(KGlobal::config(), "TipOfDay").
-//        readEntry("RunOnStart", true));
     generalPrefs->cbIntroOnStartup->setChecked(prefSet.helpIntroOnStartup);
     generalPrefs->chooserImportExportCodec->setCodecName(
         prefSet.fileImportExportCodec);
@@ -170,7 +167,6 @@ void ReginaPreferences::slotApply() {
 
     // prefSet.displayTagsInTree = generalPrefs->cbDisplayTagsInTree->isChecked();
     prefSet.displayUnicode = generalPrefs->cbUnicode->isChecked();
-    //KTipDialog::setShowOnStart(generalPrefs->cbTipOfDay->isChecked());
     prefSet.helpIntroOnStartup = generalPrefs->cbIntroOnStartup->isChecked();
 
     switch (generalPrefs->chooserThreadCount->currentIndex()) {
@@ -420,12 +416,6 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     layout->addWidget(cbIntroOnStartup);
 
     // More options.
-
-    // TODO: Tip of the day?
-    // cbTipOfDay = new QCheckBox(tr("Show tip of the day"));
-    // cbTipOfDay->setWhatsThis(tr("Show a tip of the day each time "
-    //     "Regina is started."));
-    // layout->addWidget(cbTipOfDay);
 
     // Add some space at the end.
     layout->addStretch(1);
