@@ -767,7 +767,9 @@ Version 7.4  [ (to be announced) ]
             - Routine simplifyExhaustive() now ensures that any change to the
               triangulation happens on the calling thread.
         Class Triangulation<4>:
-            - New routine simplifyUpDown(); thanks to Rhuaidi Burke.
+            - New routine simplifyUpDown(); thanks to Rhuaidi Burke.  The main
+              simplify() routine (previously called intelligentSimplify()) now
+              incorporates these techniques also.
             - Regarding elementary moves:
               + The (check, perform) variants of fourFourMove(), openBook(),
                 collapseEdge(), snapEdge() are all deprecated.  You should now

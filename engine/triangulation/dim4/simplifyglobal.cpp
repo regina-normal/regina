@@ -35,152 +35,6 @@
 namespace regina {
 
 template <Triangulation<4>::SimplifyContext context>
-bool Triangulation<4>::simplifyInternal() {
-    bool changed;
-
-    { // Begin scope for change event span.
-        PacketChangeGroup span(*this);
-
-        // Reduce to a local minimum.
-        changed = simplifyToLocalMinimumInternal<context>(true);
-
-        // Clone to work with when we might want to roll back changes.
-        Triangulation<4>* use;
-
-        // Variables for selecting random 3-3 moves.
-        std::vector<Triangle<4>*> threeThreeAvailable;
-        Triangle<4>* threeThreeChoice;
-
-        unsigned long threeThreeAttempts;
-        unsigned long threeThreeCap;
-
-        while (true) {
-            // --- Random 3-3 moves ---
-
-            // Clone the triangulation and start making changes that might or
-            // might not lead to a simplification.
-            // If we've already simplified then there's no need to use a
-            // separate clone since we won't need to undo further changes.
-            //
-            // If we are cloning the triangulation, ensure we clone the locks
-            // also.
-            if (changed)
-                use = this;
-            else {
-                use = new Triangulation<4>(*this, false, true);
-            }
-
-            // Make random 3-3 moves.
-            static constexpr int COEFF_3_3 =
-                (context == SimplifyContext::UpDownDescent ? 200 : 10);
-
-            threeThreeAttempts = threeThreeCap = 0;
-            while (true) {
-                // Calculate the list of available 3-3 moves.
-                threeThreeAvailable.clear();
-                // Use triangles() to ensure the skeleton has been calculated.
-                for (Triangle<4>* triangle : use->triangles())
-                    if (use->hasPachner(triangle))
-                        threeThreeAvailable.push_back(triangle);
-
-                // Increment threeThreeCap if needed.
-                if (threeThreeCap < COEFF_3_3 * threeThreeAvailable.size())
-                    threeThreeCap = COEFF_3_3 * threeThreeAvailable.size();
-
-                // Have we tried enough 3-3 moves?
-                if (threeThreeAttempts >= threeThreeCap)
-                    break;
-
-                // Perform a random 3-3 move on the clone.
-                threeThreeChoice = threeThreeAvailable[
-                    RandomEngine::rand(threeThreeAvailable.size())];
-                use->pachner(threeThreeChoice, regina::unprotected);
-
-                // See if we can simplify now.
-                if (use->simplifyToLocalMinimumInternal<context>(true)) {
-                    // We have successfully simplified!
-                    // Start all over again.
-                    threeThreeAttempts = threeThreeCap = 0;
-                } else
-                    threeThreeAttempts++;
-            }
-
-            // Sync the real triangulation with the clone if appropriate.
-            if (use != this) {
-                // At this point, changed == false.
-                if (use->size() < size()) {
-                    // The 3-3 moves were successful; accept them.
-                    swap(*use);
-                    changed = true;
-                }
-                delete use;
-            }
-
-            // At this point we have decided that 3-3 moves will help us
-            // no more.
-
-            if constexpr (context == SimplifyContext::UpDownDescent) {
-                // In this context, we are not allowed to try any other moves.
-                break;
-            }
-
-            // --- Open book moves ---
-
-            if (hasBoundaryTetrahedra()) {
-                // Clone again, always -- we don't want to create gratuitous
-                // boundary facets if they won't be of any help.
-                //
-                // Again, don't clone properties, but do clone locks.
-                use = new Triangulation<4>(*this, false, true);
-
-                // Perform every book opening move we can find.
-                bool opened = false;
-                bool openedNow = true;
-                while (openedNow) {
-                    openedNow = false;
-
-                    for (Tetrahedron<4>* tet : use->tetrahedra())
-                        if (use->openBook(tet)) {
-                            opened = openedNow = true;
-                            break;
-                        }
-                }
-
-                // If we're lucky, we can now simplify further.
-                if (opened) {
-                    if (use->simplifyToLocalMinimumInternal<context>(true)) {
-                        // Yay!
-                        swap(*use);
-                        changed = true;
-                    } else {
-                        // No good.
-                        // Ditch use and don't open anything.
-                        opened = false;
-                    }
-                }
-
-                delete use;
-
-                // If we did any book opening stuff, start all over again.
-                if (opened)
-                    continue;
-            }
-
-            // Nothing more we can do here.
-            break;
-        }
-    } // End scope for change event span.
-
-    return changed;
-}
-
-// Instantiate all variants of simplifyInternal().
-template bool Triangulation<4>::simplifyInternal<
-    Triangulation<4>::SimplifyContext::Best>();
-template bool Triangulation<4>::simplifyInternal<
-    Triangulation<4>::SimplifyContext::UpDownDescent>();
-
-template <Triangulation<4>::SimplifyContext context>
 bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
     if (! perform) {
         ensureSkeleton();
@@ -354,6 +208,152 @@ template bool Triangulation<4>::simplifyToLocalMinimumInternal<
 template bool Triangulation<4>::simplifyToLocalMinimumInternal<
     Triangulation<4>::SimplifyContext::UpDownDescent>(bool);
 
+template <Triangulation<4>::SimplifyContext context>
+bool Triangulation<4>::simplifyGreedyInternal() {
+    bool changed;
+
+    { // Begin scope for change event span.
+        PacketChangeGroup span(*this);
+
+        // Reduce to a local minimum.
+        changed = simplifyToLocalMinimumInternal<context>(true);
+
+        // Clone to work with when we might want to roll back changes.
+        Triangulation<4>* use;
+
+        // Variables for selecting random 3-3 moves.
+        std::vector<Triangle<4>*> threeThreeAvailable;
+        Triangle<4>* threeThreeChoice;
+
+        unsigned long threeThreeAttempts;
+        unsigned long threeThreeCap;
+
+        while (true) {
+            // --- Random 3-3 moves ---
+
+            // Clone the triangulation and start making changes that might or
+            // might not lead to a simplification.
+            // If we've already simplified then there's no need to use a
+            // separate clone since we won't need to undo further changes.
+            //
+            // If we are cloning the triangulation, ensure we clone the locks
+            // also.
+            if (changed)
+                use = this;
+            else {
+                use = new Triangulation<4>(*this, false, true);
+            }
+
+            // Make random 3-3 moves.
+            static constexpr int COEFF_3_3 =
+                (context == SimplifyContext::UpDownDescent ? 200 : 10);
+
+            threeThreeAttempts = threeThreeCap = 0;
+            while (true) {
+                // Calculate the list of available 3-3 moves.
+                threeThreeAvailable.clear();
+                // Use triangles() to ensure the skeleton has been calculated.
+                for (Triangle<4>* triangle : use->triangles())
+                    if (use->hasPachner(triangle))
+                        threeThreeAvailable.push_back(triangle);
+
+                // Increment threeThreeCap if needed.
+                if (threeThreeCap < COEFF_3_3 * threeThreeAvailable.size())
+                    threeThreeCap = COEFF_3_3 * threeThreeAvailable.size();
+
+                // Have we tried enough 3-3 moves?
+                if (threeThreeAttempts >= threeThreeCap)
+                    break;
+
+                // Perform a random 3-3 move on the clone.
+                threeThreeChoice = threeThreeAvailable[
+                    RandomEngine::rand(threeThreeAvailable.size())];
+                use->pachner(threeThreeChoice, regina::unprotected);
+
+                // See if we can simplify now.
+                if (use->simplifyToLocalMinimumInternal<context>(true)) {
+                    // We have successfully simplified!
+                    // Start all over again.
+                    threeThreeAttempts = threeThreeCap = 0;
+                } else
+                    threeThreeAttempts++;
+            }
+
+            // Sync the real triangulation with the clone if appropriate.
+            if (use != this) {
+                // At this point, changed == false.
+                if (use->size() < size()) {
+                    // The 3-3 moves were successful; accept them.
+                    swap(*use);
+                    changed = true;
+                }
+                delete use;
+            }
+
+            // At this point we have decided that 3-3 moves will help us
+            // no more.
+
+            if constexpr (context == SimplifyContext::UpDownDescent) {
+                // In this context, we are not allowed to try any other moves.
+                break;
+            }
+
+            // --- Open book moves ---
+
+            if (hasBoundaryTetrahedra()) {
+                // Clone again, always -- we don't want to create gratuitous
+                // boundary facets if they won't be of any help.
+                //
+                // Again, don't clone properties, but do clone locks.
+                use = new Triangulation<4>(*this, false, true);
+
+                // Perform every book opening move we can find.
+                bool opened = false;
+                bool openedNow = true;
+                while (openedNow) {
+                    openedNow = false;
+
+                    for (Tetrahedron<4>* tet : use->tetrahedra())
+                        if (use->openBook(tet)) {
+                            opened = openedNow = true;
+                            break;
+                        }
+                }
+
+                // If we're lucky, we can now simplify further.
+                if (opened) {
+                    if (use->simplifyToLocalMinimumInternal<context>(true)) {
+                        // Yay!
+                        swap(*use);
+                        changed = true;
+                    } else {
+                        // No good.
+                        // Ditch use and don't open anything.
+                        opened = false;
+                    }
+                }
+
+                delete use;
+
+                // If we did any book opening stuff, start all over again.
+                if (opened)
+                    continue;
+            }
+
+            // Nothing more we can do here.
+            break;
+        }
+    } // End scope for change event span.
+
+    return changed;
+}
+
+// Instantiate all variants of simplifyGreedyInternal().
+template bool Triangulation<4>::simplifyGreedyInternal<
+    Triangulation<4>::SimplifyContext::Best>();
+template bool Triangulation<4>::simplifyGreedyInternal<
+    Triangulation<4>::SimplifyContext::UpDownDescent>();
+
 bool Triangulation<4>::simplifyUpDown(ssize_t max24, ssize_t max33,
         bool alwaysModify) {
     if ((! alwaysModify) && size() <= 2)
@@ -382,7 +382,7 @@ bool Triangulation<4>::simplifyUpDown(ssize_t max24, ssize_t max33,
         }
 
         // Simplify using only 2-0 edge/triangle moves and 3-3 moves.
-        working.simplifyInternal<SimplifyContext::UpDownDescent>();
+        working.simplifyGreedyInternal<SimplifyContext::UpDownDescent>();
 
         if (working.countEdges() < initEdges) {
             // We simplified!
@@ -404,6 +404,16 @@ bool Triangulation<4>::simplifyUpDown(ssize_t max24, ssize_t max33,
     if (alwaysModify)
         swap(working);
     return false;
+}
+
+bool Triangulation<4>::simplify() {
+    PacketChangeGroup span(*this);
+
+    // For now, try our greedy heuristics followed by one round of up-down
+    // simplify (regardless of whether the greedy heuritics worked).
+    bool changed = simplifyGreedyInternal<SimplifyContext::Best>();
+    changed |= simplifyUpDown();
+    return changed;
 }
 
 } // namespace regina

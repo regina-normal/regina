@@ -529,16 +529,22 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
 
         /**
          * Attempts to simplify this triangulation as intelligently as possible
-         * using fast and greedy heuristics.  Specifically, this routine will
+         * using relatively fast heuristics.  Specifically, this routine will
          * attempt to reduce the number of pentachora in the triangulation.
          *
-         * Currently this routine uses simplifyToLocalMinimum() in
-         * combination with random 3-3 moves and book opening moves.
+         * As of Regina 7.4, this routine works harder than it did previous
+         * releases.  Specifically, this routine now uses:
          *
-         * If simplify() fails to improve the triangulation (which in four
-         * dimensions is likely), you may instead wish to try the well-climbing
-         * routine simplifyUpDown(), or the powerful but *much* slower
-         * simplifyExhaustive().
+         * - the greedy heuristics of simplifyToLocalMinimum(), in combination
+         *   with random 3-3 moves and book opening moves;
+         *
+         * - the well-climbing heuristics of simplifyUpDown(), which are slower
+         *   but often more effective.
+         *
+         * If simplify() still fails to improve the triangulation (which in
+         * four dimensions is likely), you may instead wish to try the powerful
+         * but _much_ slower simplifyExhaustive(), which exhaustively explores
+         * sequences of local moves in the hope of finding a simplification.
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
@@ -551,10 +557,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * the number of pentachora.
          *
          * \warning The specific behaviour of this routine will almost
-         * certainly change between releases.  At present,
-         * simplification for 4-manifold triangulations is extremely
-         * weak (as opposed to 3-manifolds, where a rich library of
-         * simplification techinques is available to call upon).
+         * certainly change between releases.
          *
          * \note For long-term users of Regina: this is the routine that was
          * for a long time called intelligentSimplify().  It was renamed to
@@ -565,7 +568,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         bool simplify();
         /**
          * Deprecated alias for simplify(), which attempts to simplify this
-         * triangulation as intelligently as possible using fast and greedy
+         * triangulation as intelligently as possible using relatively fast
          * heuristics.
          *
          * \deprecated This routine has been renamed to simplify().
@@ -578,9 +581,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * Uses all known simplification moves to reduce the triangulation
          * monotonically to some local minimum number of pentachora.
          *
-         * End users will probably not want to call this routine.
-         * You should call simplify() if you want a fast
-         * method of simplifying a triangulation.
+         * End users will typically not need to call this routine, since its
+         * techniques are already incorporated into the main simplify() routine.
+         * Just call simplify() instead.
          *
          * The moves used by this routine include collapsing edges, 4-2 moves,
          * and boundary shelling moves.
@@ -619,13 +622,16 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         /**
          * Attempts to simplify this triangulation by making increasingly long
          * sequences of 2-4 moves and then attempting to simplify back down.
+         * This is a relatively fast and powerful well-climbing heuristic that
+         * can be used when the more simplistic simplifyToLocalMinimum() fails.
+         *
+         * End users will typically not need to call this routine, since its
+         * techniques are already incorporated into the main simplify() routine.
+         * However, you might still want to call simplifyUpDown() directly if
+         * you wish to use non-default well-climbing parameters.
          *
          * This routine will _only_ perform 2-4 moves, 2-0 edge moves,
          * 2-0 triangle moves, and 3-3 moves.
-         *
-         * The main purpose of this routine is to offer a "well-climbing"
-         * technique that explores more widely than simplify(),
-         * but that is not nearly as slow as simplifyExhaustive().
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
@@ -707,8 +713,8 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * If you want a _fast_ simplification routine, you should call
          * simplify() instead.  The benefit of simplifyExhaustive()
          * is that, for very stubborn triangulations where simplify()
-         * finds itself stuck at a local minimum, simplifyExhaustive() is able
-         * to "climb out" of such wells.
+         * finds itself stuck at a local minimum, simplifyExhaustive() may be
+         * able to "climb out" of such wells.
          *
          * Since Regina 7.0, this routine will not return until either the
          * triangulation is simplified or the exhaustive search is complete,
@@ -1524,15 +1530,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         bool internalSnapEdge(Edge<4>* e, bool check, bool perform);
 
         /**
-         * Implements simplify().  The template argument indicates
-         * which individual moves we are allowed to use.
-         *
-         * See simplify() for further details.
-         */
-        template <SimplifyContext>
-        bool simplifyInternal();
-
-        /**
          * Implements simplifyToLocalMinimum().  The template argument
          * indicates which individual moves we are allowed to use.
          *
@@ -1540,6 +1537,24 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          */
         template <SimplifyContext>
         bool simplifyToLocalMinimumInternal(bool perform);
+
+        /**
+         * Implements fast and greedy simplification.  This is essentially
+         * what simplify() used to do in Regina 7.3.1 and earlier: it uses the
+         * greedy heuristics of simplifyToLocalMinimum() in combination with
+         * random 3-3 moves and book opening moves.
+         *
+         * Nowadays this fast and greedy simplification serves as just a
+         * component of more sophisticated routines such as simplify() or
+         * simplifyUpDown().
+         *
+         * The template argument \a SimplifyContext indicates which individual
+         * moves we are allowed to use.
+         *
+         * See simplify() for further details.
+         */
+        template <SimplifyContext>
+        bool simplifyGreedyInternal();
 
     friend class regina::Face<4, 4>;
     friend class regina::detail::SimplexBase<4>;
@@ -1660,12 +1675,8 @@ inline bool Triangulation<4>::isClosed() const {
     return boundaryComponents().empty();
 }
 
-inline bool Triangulation<4>::simplify() {
-    return simplifyInternal<SimplifyContext::Best>();
-}
-
 inline bool Triangulation<4>::intelligentSimplify() {
-    return simplifyInternal<SimplifyContext::Best>();
+    return simplify();
 }
 
 inline bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
