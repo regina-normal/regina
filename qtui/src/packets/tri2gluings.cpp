@@ -336,7 +336,6 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     flags ^= QAbstractItemView::CurrentChanged;
     edgeTable->setEditTriggers(flags);
 
-
     edgeTable->setWhatsThis(tr("<qt>A table specifying which triangle "
         "edges are identified with which others.<p>"
         "Triangles are numbered upwards from 0, and the three vertices of "
@@ -474,6 +473,10 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     triActionList.push_back(actDoubleOverBoundary);
     connect(actDoubleOverBoundary, SIGNAL(triggered()), this,
         SLOT(doubleOverBoundary()));
+
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    triActionList.push_back(sep);
 
     auto* actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));

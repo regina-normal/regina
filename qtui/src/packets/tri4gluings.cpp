@@ -480,7 +480,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actIdealToFinite->setIcon(ReginaSupport::regIcon("truncate"));
 
     actIdealToFinite->setToolTip(tr(
-        "Truncate any ideal vertices"));
+        "Truncate all ideal vertices"));
     actIdealToFinite->setWhatsThis(tr("Convert this from an ideal "
         "triangulation to a finite triangulation.  Any vertices whose "
         "links are neither 3-spheres nor 3-balls "
@@ -523,35 +523,6 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     sep->setSeparator(true);
     triActionList.push_back(sep);
 
-    actBoundaryComponents = new QAction(this);
-    actBoundaryComponents->setText(tr("Boundar&y Components..."));
-    actBoundaryComponents->setIcon(ReginaSupport::regIcon("boundaries"));
-    actBoundaryComponents->setToolTip(tr(
-        "Build a 3-manifold triangulation from a boundary component"));
-    actBoundaryComponents->setWhatsThis(tr("<qt>Build a 3-manifold "
-        "triangulation from a boundary component of this triangulation.<p>"
-        "If you select a real boundary component, this will construct "
-        "a 3-manifold triangulation from its boundary tetrahedra.  "
-        "If you select an ideal boundary component, this will construct "
-        "a 3-manifold triangulation from the corresponding vertex link.</qt>"));
-    triActionList.push_back(actBoundaryComponents);
-    connect(actBoundaryComponents, SIGNAL(triggered()), this,
-        SLOT(boundaryComponents()));
-
-    auto* actVertexLinks = new QAction(this);
-    actVertexLinks->setText(tr("&Vertex Links..."));
-    actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
-    actVertexLinks->setToolTip(tr(
-        "Build a 3-manifold triangulation from a vertex link"));
-    actVertexLinks->setWhatsThis(tr("<qt>Build a 3-manifold triangulation "
-        "from the link of a vertex of this triangulation.<p>"
-        "If <i>V</i> is a vertex, then the <i>link</i> of <i>V</i> is the "
-        "frontier of a small regular neighbourhood of <i>V</i>.  "
-        "The tetrahedra that make up this link sit inside "
-        "the pentachoron corners that meet together at <i>V</i>.</qt>"));
-    triActionList.push_back(actVertexLinks);
-    connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
-
     auto* actDoubleCover = new QAction(this);
     actDoubleCover->setText(tr("Build &Double Cover"));
     actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
@@ -581,6 +552,39 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     triActionList.push_back(actDoubleOverBoundary);
     connect(actDoubleOverBoundary, SIGNAL(triggered()), this,
         SLOT(doubleOverBoundary()));
+
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    triActionList.push_back(sep);
+
+    actBoundaryComponents = new QAction(this);
+    actBoundaryComponents->setText(tr("Boundar&y Components..."));
+    actBoundaryComponents->setIcon(ReginaSupport::regIcon("boundaries"));
+    actBoundaryComponents->setToolTip(tr(
+        "Build a 3-manifold triangulation from a boundary component"));
+    actBoundaryComponents->setWhatsThis(tr("<qt>Build a 3-manifold "
+        "triangulation from a boundary component of this triangulation.<p>"
+        "If you select a real boundary component, this will construct "
+        "a 3-manifold triangulation from its boundary tetrahedra.  "
+        "If you select an ideal boundary component, this will construct "
+        "a 3-manifold triangulation from the corresponding vertex link.</qt>"));
+    triActionList.push_back(actBoundaryComponents);
+    connect(actBoundaryComponents, SIGNAL(triggered()), this,
+        SLOT(boundaryComponents()));
+
+    auto* actVertexLinks = new QAction(this);
+    actVertexLinks->setText(tr("&Vertex Links..."));
+    actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
+    actVertexLinks->setToolTip(tr(
+        "Build a 3-manifold triangulation from a vertex link"));
+    actVertexLinks->setWhatsThis(tr("<qt>Build a 3-manifold triangulation "
+        "from the link of a vertex of this triangulation.<p>"
+        "If <i>V</i> is a vertex, then the <i>link</i> of <i>V</i> is the "
+        "frontier of a small regular neighbourhood of <i>V</i>.  "
+        "The tetrahedra that make up this link sit inside "
+        "the pentachoron corners that meet together at <i>V</i>.</qt>"));
+    triActionList.push_back(actVertexLinks);
+    connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
 
     auto* actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));

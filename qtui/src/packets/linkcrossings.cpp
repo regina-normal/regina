@@ -468,6 +468,32 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actParallel);
     connect(actParallel, SIGNAL(triggered()), this, SLOT(parallel()));
 
+    actComplement = new QAction(this);
+    actComplement->setText(tr("&Complement"));
+    actComplement->setIcon(ReginaSupport::regIcon("packet_triangulation3"));
+    actComplement->setToolTip(tr("Triangulate the complement of this link "
+        "within Regina."));
+    actComplement->setWhatsThis(tr("Construct the complement of this "
+        "knot or link as an ideal Regina triangulation.  "
+        "The meridinal and longitudinal curves will be forgotten."));
+    actionList.push_back(actComplement);
+    connect(actComplement, SIGNAL(triggered()), this, SLOT(complement()));
+
+    actSnapPea = new QAction(this);
+    actSnapPea->setText(tr("Complement Via S&napPea"));
+    actSnapPea->setIcon(ReginaSupport::regIcon("packet_snappea"));
+    actSnapPea->setToolTip(tr("Triangulate the complement of this link "
+        "within the SnapPea kernel."));
+    actSnapPea->setWhatsThis(tr("Construct the complement of this "
+        "knot or link as a SnapPea triangulation."
+        "The meridinal and longitudinal curves will be preserved."));
+    actionList.push_back(actSnapPea);
+    connect(actSnapPea, SIGNAL(triggered()), this, SLOT(snapPea()));
+
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    actionList.push_back(sep);
+
     auto* actDiagramComponents = new QAction(this);
     actDiagramComponents->setText(tr("Extract Diagram C&omponents"));
     actDiagramComponents->setIcon(ReginaSupport::regIcon("components"));
@@ -483,28 +509,6 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actDiagramComponents);
     connect(actDiagramComponents, SIGNAL(triggered()), this,
         SLOT(diagramComponents()));
-
-    actComplement = new QAction(this);
-    actComplement->setText(tr("&Complement"));
-    actComplement->setIcon(ReginaSupport::regIcon("packet_triangulation3"));
-    actComplement->setToolTip(tr("Triangulate the complement of this link "
-        "within Regina."));
-    actComplement->setWhatsThis(tr("Construct the complement of this "
-        "knot or link as an ideal Regina triangulation.  "
-        "The meridinal and longitudinal curves will be forgotten."));
-    actionList.push_back(actComplement);
-    connect(actComplement, SIGNAL(triggered()), this, SLOT(complement()));
-
-    actSnapPea = new QAction(this);
-    actSnapPea->setText(tr("S&napPea"));
-    actSnapPea->setIcon(ReginaSupport::regIcon("packet_snappea"));
-    actSnapPea->setToolTip(tr("Triangulate the complement of this link "
-        "within the SnapPea kernel."));
-    actSnapPea->setWhatsThis(tr("Construct the complement of this "
-        "knot or link as a SnapPea triangulation."
-        "The meridinal and longitudinal curves will be preserved."));
-    actionList.push_back(actSnapPea);
-    connect(actSnapPea, SIGNAL(triggered()), this, SLOT(snapPea()));
 
     connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
         this, SLOT(updatePreferences()));

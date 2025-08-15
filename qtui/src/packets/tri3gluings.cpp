@@ -502,7 +502,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actIdealToFinite->setText(tr("&Truncate Ideal Vertices"));
     actIdealToFinite->setIcon(ReginaSupport::regIcon("truncate"));
     actIdealToFinite->setToolTip(tr(
-        "Truncate any ideal vertices"));
+        "Truncate all ideal vertices"));
     actIdealToFinite->setWhatsThis(tr("Convert this from an ideal "
         "triangulation to a finite triangulation.  Any vertices whose "
         "links are neither 2-spheres nor discs "
@@ -566,7 +566,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     connect(actDrillEdge, SIGNAL(triggered()), this, SLOT(drillEdge()));
 
     auto* actConnectedSumWith = new QAction(this);
-    actConnectedSumWith->setText(tr("Connected Sum With..."));
+    actConnectedSumWith->setText(tr("Connect Sum With..."));
     actConnectedSumWith->setIcon(ReginaSupport::regIcon("connectedsumwith"));
     actConnectedSumWith->setToolTip(tr(
         "Make this into a connected sum with another triangulation"));
@@ -609,35 +609,6 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     sep->setSeparator(true);
     triActionList.push_back(sep);
 
-    actBoundaryComponents = new QAction(this);
-    actBoundaryComponents->setText(tr("Boundar&y Components..."));
-    actBoundaryComponents->setIcon(ReginaSupport::regIcon("boundaries"));
-    actBoundaryComponents->setToolTip(tr(
-        "Build a 2-manifold triangulation from a boundary component"));
-    actBoundaryComponents->setWhatsThis(tr("<qt>Build a 2-manifold "
-        "triangulation from a boundary component of this triangulation.<p>"
-        "If you select a real boundary component, this will construct "
-        "a 2-manifold triangulation from its boundary triangles.  "
-        "If you select an ideal boundary component, this will construct "
-        "a 2-manifold triangulation from the corresponding vertex link.</qt>"));
-    triActionList.push_back(actBoundaryComponents);
-    connect(actBoundaryComponents, SIGNAL(triggered()), this,
-        SLOT(boundaryComponents()));
-
-    auto* actVertexLinks = new QAction(this);
-    actVertexLinks->setText(tr("&Vertex Links..."));
-    actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
-    actVertexLinks->setToolTip(tr(
-        "Build a 2-manifold triangulation from a vertex link"));
-    actVertexLinks->setWhatsThis(tr("<qt>Build a 2-manifold triangulation "
-        "from the link of a vertex of this triangulation.<p>"
-        "If <i>V</i> is a vertex, then the <i>link</i> of <i>V</i> is the "
-        "frontier of a small regular neighbourhood of <i>V</i>.  "
-        "The triangles that make up this link sit inside "
-        "the tetrahedron corners that meet together at <i>V</i>.</qt>"));
-    triActionList.push_back(actVertexLinks);
-    connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
-
     auto* actDoubleCover = new QAction(this);
     actDoubleCover->setText(tr("Build &Double Cover"));
     actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
@@ -667,6 +638,52 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     triActionList.push_back(actDoubleOverBoundary);
     connect(actDoubleOverBoundary, SIGNAL(triggered()), this,
         SLOT(doubleOverBoundary()));
+
+    auto* actToSnapPea = new QAction(this);
+    actToSnapPea->setText(tr("Convert to SnapPea"));
+    actToSnapPea->setIcon(ReginaSupport::regIcon("packet_snappea"));
+    actToSnapPea->setToolTip(tr("Convert this to a SnapPea triangulation"));
+    actToSnapPea->setWhatsThis(tr("<qt>Convert this to a SnapPea "
+        "triangulation.  The original Regina triangulation will be "
+        "kept and left untouched.<p>"
+        "Using a SnapPea triangulation will give you richer access to the "
+        "SnapPea kernel.  For peripheral curves, Regina will attempt "
+        "to install the (shortest, second shortest) basis on each cusp.</qt>"));
+    triActionList.push_back(actToSnapPea);
+    connect(actToSnapPea, SIGNAL(triggered()), this, SLOT(toSnapPea()));
+
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    triActionList.push_back(sep);
+
+    actBoundaryComponents = new QAction(this);
+    actBoundaryComponents->setText(tr("Boundar&y Components..."));
+    actBoundaryComponents->setIcon(ReginaSupport::regIcon("boundaries"));
+    actBoundaryComponents->setToolTip(tr(
+        "Build a 2-manifold triangulation from a boundary component"));
+    actBoundaryComponents->setWhatsThis(tr("<qt>Build a 2-manifold "
+        "triangulation from a boundary component of this triangulation.<p>"
+        "If you select a real boundary component, this will construct "
+        "a 2-manifold triangulation from its boundary triangles.  "
+        "If you select an ideal boundary component, this will construct "
+        "a 2-manifold triangulation from the corresponding vertex link.</qt>"));
+    triActionList.push_back(actBoundaryComponents);
+    connect(actBoundaryComponents, SIGNAL(triggered()), this,
+        SLOT(boundaryComponents()));
+
+    auto* actVertexLinks = new QAction(this);
+    actVertexLinks->setText(tr("&Vertex Links..."));
+    actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
+    actVertexLinks->setToolTip(tr(
+        "Build a 2-manifold triangulation from a vertex link"));
+    actVertexLinks->setWhatsThis(tr("<qt>Build a 2-manifold triangulation "
+        "from the link of a vertex of this triangulation.<p>"
+        "If <i>V</i> is a vertex, then the <i>link</i> of <i>V</i> is the "
+        "frontier of a small regular neighbourhood of <i>V</i>.  "
+        "The triangles that make up this link sit inside "
+        "the tetrahedron corners that meet together at <i>V</i>.</qt>"));
+    triActionList.push_back(actVertexLinks);
+    connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
 
     auto* actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
@@ -698,23 +715,6 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     triActionList.push_back(actConnectedSumDecomposition);
     connect(actConnectedSumDecomposition, SIGNAL(triggered()), this,
         SLOT(connectedSumDecomposition()));
-
-    sep = new QAction(this);
-    sep->setSeparator(true);
-    triActionList.push_back(sep);
-
-    auto* actToSnapPea = new QAction(this);
-    actToSnapPea->setText(tr("Convert to SnapPea"));
-    actToSnapPea->setIcon(ReginaSupport::regIcon("packet_snappea"));
-    actToSnapPea->setToolTip(tr("Convert this to a SnapPea triangulation"));
-    actToSnapPea->setWhatsThis(tr("<qt>Convert this to a SnapPea "
-        "triangulation.  The original Regina triangulation will be "
-        "kept and left untouched.<p>"
-        "Using a SnapPea triangulation will give you richer access to the "
-        "SnapPea kernel.  For peripheral curves, Regina will attempt "
-        "to install the (shortest, second shortest) basis on each cusp.</qt>"));
-    triActionList.push_back(actToSnapPea);
-    connect(actToSnapPea, SIGNAL(triggered()), this, SLOT(toSnapPea()));
 
     // Tidy up.
 
