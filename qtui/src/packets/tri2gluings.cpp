@@ -417,7 +417,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
 
     auto* actBarycentricSubdivide = new QAction(this);
-    actBarycentricSubdivide->setText(tr("&Barycentric Subdivision"));
+    actBarycentricSubdivide->setText(tr("&Barycentric Subdivide"));
     actBarycentricSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
     actBarycentricSubdivide->setToolTip(tr(
         "Perform a barycentric subdivision"));
