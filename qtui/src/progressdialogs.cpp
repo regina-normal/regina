@@ -98,7 +98,7 @@ bool ProgressDialogNumeric::run() {
 }
 
 ProgressDialogMessage::ProgressDialogMessage(
-        regina::ProgressTracker* tracker,
+        regina::ProgressTrackerBase* tracker,
         const QString& displayText, QWidget* parent) :
         QDialog(parent), tracker_(tracker) {
     setWindowTitle(tr("Working"));

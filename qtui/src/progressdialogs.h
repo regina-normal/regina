@@ -42,6 +42,7 @@
 
 namespace regina {
     class ProgressTracker;
+    class ProgressTrackerBase;
     class ProgressTrackerOpen;
 };
 
@@ -92,8 +93,8 @@ class ProgressDialogNumeric : public QProgressDialog {
 
 /**
  * A dialog that interacts with a calculation engine progress tracker,
- * displays only status messages (no percentage progress), and does not
- * support cancellation.
+ * displays only status messages (no percentage or numerical progress),
+ * and does not support cancellation.
  *
  * Upon calling ProgressDialogMessage::run(), the dialog will be
  * displayed and it will follow the progress of the underlying
@@ -104,7 +105,7 @@ class ProgressDialogMessage : public QDialog {
     Q_OBJECT
 
     private:
-        regina::ProgressTracker* tracker_;
+        regina::ProgressTrackerBase* tracker_;
             /**< The progress tracker handling the inter-thread
                  communication. */
 
@@ -119,7 +120,7 @@ class ProgressDialogMessage : public QDialog {
          * The progress tracker must not have been started, i.e.,
          * <tt>tracker->isStarted()</tt> must return \c false.
          */
-        ProgressDialogMessage(regina::ProgressTracker* tracker,
+        ProgressDialogMessage(regina::ProgressTrackerBase* tracker,
                 const QString& displayText, QWidget* parent = nullptr);
 
         /**
