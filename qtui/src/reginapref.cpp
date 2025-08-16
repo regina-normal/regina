@@ -353,13 +353,15 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     auto* label = new QLabel(tr("Toolbars:"));
     box->addWidget(label);
     chooserToolbars = new QComboBox();
-    chooserToolbars->addItem(tr("Rich (many actions, icon-only)"));
-    chooserToolbars->addItem(tr("Simple (few actions, text labels)"));
+    chooserToolbars->addItem(tr("Detailed (new style)"));
+    chooserToolbars->addItem(tr("Simple (old style)"));
     box->addWidget(chooserToolbars, 1);
-    QString msg = tr("Indicates whether you prefer toolbars with many action "
-        "buttons (the default since Regina 7.4), or with few buttons but long "
-        "text labels (the style until Regina 7.3.1).<p>"
-        "This affects the viewers for triangulations and links.");
+    QString msg = tr("Indicates whether you prefer detailed toolbars with many "
+        "icon-only buttons (the default since Regina 7.4), or simple toolbars "
+        "with few buttons but including text labels (the style until "
+        "Regina 7.3.1).<p>"
+        "This setting is used for toolbars in the triangulation and link "
+        "viewers.");
     label->setWhatsThis(msg);
     chooserToolbars->setWhatsThis(msg);
     layout->addLayout(box);
