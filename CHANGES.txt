@@ -549,6 +549,9 @@ Version 7.4  [ (to be announced) ]
             - Deprecated the exponent-based constructor Polynomial(exp).
             - Renamed the exponent-based initialiser init(exp) to initExp(exp).
               The old name is kept but deprecated.
+        Class ProgressTrackerObjective:
+            - New progress tracking class, for use when watching an objective
+              value that might go up or down as the operation proceeds.
         Class Rational:
             - New function str().
             - Added a spaceship operator (<=>) for comparisons.

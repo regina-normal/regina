@@ -114,10 +114,26 @@ underlying object, and so they cannot be copied, moved or swapped.
     ProgressTrackerOpen (according to whether you need percentage-
     based or open-ended progress tracking respectively).)doc";
 
+// Docstring regina::python::doc::ProgressTrackerObjective
+static const char *ProgressTrackerObjective =
+R"doc(Manages objective-based progress tracking and cancellation polling for
+open-ended operations.
+
+See the ProgressTrackerBase documentation for detailed information on
+how to use a progress tracker.
+
+This class represents a progress tracker that measures progress using
+some integer objective, whose value might rise and/or fall as the
+operation progresses. (An example might be the number of top-
+dimensional simplices in a triangulation that the operation is trying
+to simplify.) The initial value of the objective must be supplied to
+the constructor, and there is no particular "end point" that we are
+aiming for.)doc";
+
 // Docstring regina::python::doc::ProgressTrackerOpen
 static const char *ProgressTrackerOpen =
-R"doc(Manages percentage-based progress tracking and cancellation polling
-for open-ended operations.
+R"doc(Manages numerical progress tracking and cancellation polling for open-
+ended operations.
 
 See the ProgressTrackerBase documentation for detailed information on
 how to use a progress tracker.
@@ -197,6 +213,76 @@ This is typically called by the writing thread.
     called (and indeed, it is declared here but not implemented). You
     should always call either ProgressTracker::setFinished() or
     ProgressTrackerOpen::setFinished().)doc";
+
+}
+
+namespace ProgressTrackerObjective_ {
+
+// Docstring regina::python::doc::ProgressTrackerObjective_::__init
+static const char *__init =
+R"doc(Creates a new progress tracker. This sets a sensible state description
+(which declares that the operation is initialising), and sets the
+objective to the given value.
+
+This is typically called by the reading thread.
+
+Parameter ``objective``:
+    the initial value for the objective.)doc";
+
+// Docstring regina::python::doc::ProgressTrackerObjective_::newStage
+static const char *newStage =
+R"doc(Used by the writing thread to indicate that it has moved on to a new
+stage of processing. The objective value will be left unchanged.
+
+This is typically called by the writing thread.
+
+Parameter ``desc``:
+    a human-readable description of the new stage. Typically this
+    begins with a capital and does not include a final period (full
+    stop).)doc";
+
+// Docstring regina::python::doc::ProgressTrackerObjective_::objective
+static const char *objective =
+R"doc(Returns the current value of the objective.
+
+This is typically called by the reading thread.
+
+Returns:
+    the current objective value.)doc";
+
+// Docstring regina::python::doc::ProgressTrackerObjective_::objectiveChanged
+static const char *objectiveChanged =
+R"doc(Queries whether the objective value has changed since the last call to
+objectiveChanged(). If this is the first time objectiveChanged() is
+called, the result will be ``True``.
+
+This is typically called by the reading thread.
+
+Returns:
+    ``True`` if and only if the objective value has changed.)doc";
+
+// Docstring regina::python::doc::ProgressTrackerObjective_::setFinished
+static const char *setFinished =
+R"doc(Used by the writing thread to indicate that it has finished all
+processing. The objective value will be left unchanged, but the stage
+description will be updated to indicate that the operation is
+finished.
+
+This is typically called by the writing thread.)doc";
+
+// Docstring regina::python::doc::ProgressTrackerObjective_::setObjective
+static const char *setObjective =
+R"doc(Used by the writing thread to indicate that a new objective value has
+been obtained.
+
+This is typically called by the writing thread.
+
+Parameter ``the``:
+    new value for the objective.
+
+Returns:
+    ``True`` if there has been no cancellation request, or ``False``
+    if cancel() has been called (typically by the reading thread).)doc";
 
 }
 

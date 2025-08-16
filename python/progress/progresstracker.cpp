@@ -36,6 +36,7 @@
 using pybind11::overload_cast;
 using regina::ProgressTracker;
 using regina::ProgressTrackerBase;
+using regina::ProgressTrackerObjective;
 using regina::ProgressTrackerOpen;
 
 void addProgressTracker(pybind11::module_& m) {
@@ -84,12 +85,29 @@ void addProgressTracker(pybind11::module_& m) {
         .def("newStage", &ProgressTrackerOpen::newStage, rdoc::newStage)
         .def("incSteps", overload_cast<>(
             &ProgressTrackerOpen::incSteps), rdoc::incSteps)
-        .def("incSteps", overload_cast<unsigned long>(
+        .def("incSteps", overload_cast<size_t>(
             &ProgressTrackerOpen::incSteps), rdoc::incSteps_2)
         .def("setFinished", &ProgressTrackerOpen::setFinished,
             rdoc::setFinished)
     ;
     regina::python::add_output(c2);
+    // We inherit equality-by-reference from the base class.
+
+    RDOC_SCOPE_SWITCH(ProgressTrackerObjective)
+
+    auto c3 = pybind11::class_<ProgressTrackerObjective, ProgressTrackerBase>(
+            m, "ProgressTrackerObjective", rdoc_scope)
+        .def(pybind11::init<long>(), rdoc::__init)
+        .def("objectiveChanged", &ProgressTrackerObjective::objectiveChanged,
+            rdoc::objectiveChanged)
+        .def("objective", &ProgressTrackerObjective::objective, rdoc::objective)
+        .def("newStage", &ProgressTrackerObjective::newStage, rdoc::newStage)
+        .def("setObjective", &ProgressTrackerObjective::setObjective,
+            rdoc::setObjective)
+        .def("setFinished", &ProgressTrackerObjective::setFinished,
+            rdoc::setFinished)
+    ;
+    regina::python::add_output(c3);
     // We inherit equality-by-reference from the base class.
 
     RDOC_SCOPE_END

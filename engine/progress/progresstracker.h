@@ -376,7 +376,7 @@ class ProgressTracker : public ProgressTrackerBase,
 class ProgressTrackerOpen : public ProgressTrackerBase,
         public ShortOutput<ProgressTrackerOpen> {
     private:
-        unsigned long steps_;
+        size_t steps_;
             /**< The number of steps completed over all stages. */
         bool stepsChanged_;
             /**< Has the number of steps completed changed since the last call
@@ -413,7 +413,7 @@ class ProgressTrackerOpen : public ProgressTrackerBase,
          *
          * \return the current number of steps completed.
          */
-        unsigned long steps() const;
+        size_t steps() const;
 
         /**
          * Used by the writing thread to indicate that it has moved on
@@ -450,12 +450,116 @@ class ProgressTrackerOpen : public ProgressTrackerBase,
          * \c false if cancel() has been called (typically by the reading
          * thread).
          */
-        bool incSteps(unsigned long add);
+        bool incSteps(size_t add);
         /**
          * Used by the writing thread to indicate that it has finished
          * all processing.  The total number of steps completed will be
          * left unchanged, but the stage description will be updated to
          * indicate that the operation is finished.
+         *
+         * This is typically called by the writing thread.
+         */
+        void setFinished();
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * Subclasses must not override this routine.  They should
+         * override writeName() instead.
+         *
+         * \nopython Use str() instead.
+         *
+         * \param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+};
+
+/**
+ * Manages objective-based progress tracking and cancellation polling for
+ * open-ended operations.
+ *
+ * See the ProgressTrackerBase documentation for detailed information on
+ * how to use a progress tracker.
+ *
+ * This class represents a progress tracker that measures progress using
+ * some integer objective, whose value might rise and/or fall as the operation
+ * progresses.  (An example might be the number of top-dimensional simplices
+ * in a triangulation that the operation is trying to simplify.)  The initial
+ * value of the objective must be supplied to the constructor, and there is no
+ * particular "end point" that we are aiming for.
+ *
+ * \ingroup progress
+ */
+class ProgressTrackerObjective : public ProgressTrackerBase,
+        public ShortOutput<ProgressTrackerObjective> {
+    private:
+        long objective_;
+            /**< The current value of the objective. */
+        bool objectiveChanged_;
+            /**< Has the objective value changed since the last call to
+                 objectiveChanged()? */
+
+    public:
+        /**
+         * Creates a new progress tracker.
+         * This sets a sensible state description (which declares that
+         * the operation is initialising), and sets the objective to the given
+         * value.
+         *
+         * This is typically called by the reading thread.
+         *
+         * \param objective the initial value for the objective.
+         */
+        ProgressTrackerObjective(long objective);
+
+        /**
+         * Queries whether the objective value has changed since the last call
+         * to objectiveChanged().  If this is the first time objectiveChanged()
+         * is called, the result will be \c true.
+         *
+         * This is typically called by the reading thread.
+         *
+         * \return \c true if and only if the objective value has changed.
+         */
+        bool objectiveChanged() const;
+        /**
+         * Returns the current value of the objective.
+         *
+         * This is typically called by the reading thread.
+         *
+         * \return the current objective value.
+         */
+        long objective() const;
+
+        /**
+         * Used by the writing thread to indicate that it has moved on to a
+         * new stage of processing.  The objective value will be left unchanged.
+         *
+         * This is typically called by the writing thread.
+         *
+         * \param desc a human-readable description of the new stage.
+         * Typically this begins with a capital and does not include a
+         * final period (full stop).
+         */
+        void newStage(std::string desc);
+        /**
+         * Used by the writing thread to indicate that a new objective value
+         * has been obtained.
+         *
+         * This is typically called by the writing thread.
+         *
+         * \param the new value for the objective.
+         * \return \c true if there has been no cancellation request, or
+         * \c false if cancel() has been called (typically by the reading
+         * thread).
+         */
+        bool setObjective(long objective);
+        /**
+         * Used by the writing thread to indicate that it has finished
+         * all processing.  The objective value will be left unchanged,
+         * but the stage description will be updated to indicate that the
+         * operation is finished.
          *
          * This is typically called by the writing thread.
          */
@@ -588,7 +692,7 @@ inline bool ProgressTrackerOpen::stepsChanged() const {
         return false;
 }
 
-inline unsigned long ProgressTrackerOpen::steps() const {
+inline size_t ProgressTrackerOpen::steps() const {
     std::lock_guard<std::mutex> lock(lock_);
     return steps_;
 }
@@ -606,7 +710,7 @@ inline bool ProgressTrackerOpen::incSteps() {
     return ! cancelled_;
 }
 
-inline bool ProgressTrackerOpen::incSteps(unsigned long add) {
+inline bool ProgressTrackerOpen::incSteps(size_t add) {
     std::lock_guard<std::mutex> lock(lock_);
     steps_ += add;
     stepsChanged_ = true;
@@ -630,6 +734,60 @@ inline void ProgressTrackerOpen::writeTextShort(std::ostream& out) const {
         out << "Finished";
     else
         out << desc_ << " - " << steps_ << " step(s)";
+}
+
+// Inline functions for ProgressTrackerObjective
+
+inline ProgressTrackerObjective::ProgressTrackerObjective(long objective) :
+        objective_(objective), objectiveChanged_(true) {
+}
+
+inline bool ProgressTrackerObjective::objectiveChanged() const {
+    std::lock_guard<std::mutex> lock(lock_);
+    if (objectiveChanged_) {
+        const_cast<ProgressTrackerObjective*>(this)->objectiveChanged_ = false;
+        return true;
+    } else
+        return false;
+}
+
+inline long ProgressTrackerObjective::objective() const {
+    std::lock_guard<std::mutex> lock(lock_);
+    return objective_;
+}
+
+inline void ProgressTrackerObjective::newStage(std::string desc) {
+    std::lock_guard<std::mutex> lock(lock_);
+    desc_ = std::move(desc);
+    descChanged_ = true;
+}
+
+inline bool ProgressTrackerObjective::setObjective(long objective) {
+    std::lock_guard<std::mutex> lock(lock_);
+    if (objective_ != objective) {
+        objective_ = objective;
+        objectiveChanged_ = true;
+    }
+    return ! cancelled_;
+}
+
+inline void ProgressTrackerObjective::setFinished() {
+    std::lock_guard<std::mutex> lock(lock_);
+    desc_ = "Finished";
+    finished_ = descChanged_ = true;
+}
+
+inline void ProgressTrackerObjective::writeTextShort(std::ostream& out) const {
+    std::lock_guard<std::mutex> lock(lock_);
+    if (cancelled_) {
+        if (finished_)
+            out << "Cancelled and finished";
+        else
+            out << "Cancelled but not finished";
+    } else if (finished_)
+        out << "Finished";
+    else
+        out << desc_ << " - objective: " << objective_;
 }
 
 } // namespace regina
