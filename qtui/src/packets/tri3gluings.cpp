@@ -386,7 +386,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
 
     actAddTet = new QAction(this);
-    actAddTet->setText(tr("&Add Tet"));
+    actAddTet->setText(tr("&Add Tetrahedron"));
+    actAddTet->setIconText(tr("Add Tet"));
     actAddTet->setIcon(ReginaSupport::regIcon("insert"));
     actAddTet->setToolTip(tr("Add a new tetrahedron"));
     actAddTet->setWhatsThis(tr("Add a new tetrahedron to this "
@@ -395,7 +396,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     connect(actAddTet, SIGNAL(triggered()), this, SLOT(addTet()));
 
     actRemoveTet = new QAction(this);
-    actRemoveTet->setText(tr("&Remove Tet"));
+    actRemoveTet->setText(tr("&Remove Tetrahedron"));
+    actRemoveTet->setIconText(tr("Remove Tet"));
     actRemoveTet->setIcon(ReginaSupport::regIcon("delete"));
     actRemoveTet->setToolTip(tr("Remove the currently selected tetrahedra"));
     actRemoveTet->setEnabled(false);

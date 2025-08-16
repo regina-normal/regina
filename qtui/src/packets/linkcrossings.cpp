@@ -480,6 +480,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
 
     actSnapPea = new QAction(this);
     actSnapPea->setText(tr("Complement Via S&napPea"));
+    actSnapPea->setIconText(tr("SnapPea"));
     actSnapPea->setIcon(ReginaSupport::regIcon("packet_snappea"));
     actSnapPea->setToolTip(tr("Build the link complement as a SnapPea "
         "triangulation"));
