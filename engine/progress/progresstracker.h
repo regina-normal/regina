@@ -358,7 +358,7 @@ class ProgressTracker : public ProgressTrackerBase,
 };
 
 /**
- * Manages percentage-based progress tracking and cancellation polling for
+ * Manages numerical progress tracking and cancellation polling for
  * open-ended operations.
  *
  * See the ProgressTrackerBase documentation for detailed information on
