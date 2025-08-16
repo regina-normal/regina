@@ -41,6 +41,7 @@
 
 class Tri3AlgebraUI;
 class Tri3GluingsUI;
+class Tri3HeaderUI;
 class Tri3SkeletonUI;
 class Tri3SurfacesUI;
 class Tri3SnapPeaUI;
@@ -57,11 +58,14 @@ class Tri3UI : public PacketTabbedUI {
         /**
          * Internal components
          */
+        Tri3HeaderUI* header;
         Tri3GluingsUI* gluings;
         Tri3SkeletonUI* skeleton;
         Tri3AlgebraUI* algebra;
         Tri3SurfacesUI* surfaces;
         Tri3SnapPeaUI* snapPea;
+
+        bool simpleToolbars;
 
     public:
         /**
@@ -75,6 +79,12 @@ class Tri3UI : public PacketTabbedUI {
          */
         const std::vector<QAction*>& getPacketTypeActions() override;
         QString getPacketMenuText() const override;
+
+    public slots:
+        /**
+         * Reflect preference changes.
+         */
+        void updatePreferences();
 };
 
 /**

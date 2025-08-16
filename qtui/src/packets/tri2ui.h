@@ -40,6 +40,7 @@
 
 class QToolBar;
 class Tri2GluingsUI;
+class Tri2HeaderUI;
 class Tri2SkeletonUI;
 class QLabel;
 
@@ -53,8 +54,11 @@ class Tri2UI : public PacketTabbedUI {
         /**
          * Internal components
          */
+        Tri2HeaderUI* header;
         Tri2GluingsUI* gluings;
         Tri2SkeletonUI* skeleton;
+
+        bool simpleToolbars;
 
     public:
         /**
@@ -68,6 +72,12 @@ class Tri2UI : public PacketTabbedUI {
          */
         const std::vector<QAction*>& getPacketTypeActions() override;
         QString getPacketMenuText() const override;
+
+    public slots:
+        /**
+         * Reflect preference changes.
+         */
+        void updatePreferences();
 };
 
 /**

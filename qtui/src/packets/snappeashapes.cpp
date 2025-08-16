@@ -268,7 +268,23 @@ SnapPeaShapesUI::SnapPeaShapesUI(
     requiresNonNull.push_back(actRandomise);
     connect(actRandomise, SIGNAL(triggered()), this, SLOT(randomise()));
 
-    auto* actCanonise = new QAction(this);
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    triActionList.push_back(sep);
+
+    actFill = new QAction(this);
+    actFill->setText(tr("Permanently &Fill Cusps..."));
+    actFill->setIcon(ReginaSupport::regIcon("fill"));
+    actFill->setToolTip(tr(
+        "Permanently fill one cusp or all cusps of this manifold"));
+    actFill->setWhatsThis(tr("<qt>Retriangulate to permanently "
+        "fill either one cusp or all cusps of this manifold.  "
+        "The original triangulation will be left untouched.</qt>"));
+    triActionList.push_back(actFill);
+    requiresNonNull.push_back(actFill);
+    connect(actFill, SIGNAL(triggered()), this, SLOT(fill()));
+
+    actCanonise = new QAction(this);
     actCanonise->setText(tr("&Canonical Retriangulation"));
     actCanonise->setIcon(ReginaSupport::regIcon("canonical"));
     actCanonise->setToolTip(tr(
@@ -289,37 +305,6 @@ SnapPeaShapesUI::SnapPeaShapesUI(
     requiresNonNull.push_back(actCanonise);
     connect(actCanonise, SIGNAL(triggered()), this, SLOT(canonise()));
 
-    auto* actVertexLinks = new QAction(this);
-    actVertexLinks->setText(tr("&Vertex Links..."));
-    actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
-    actVertexLinks->setToolTip(tr(
-        "Build a 2-manifold triangulation from a vertex link"));
-    actVertexLinks->setWhatsThis(tr("<qt>Build a 2-manifold triangulation "
-        "from the link of a vertex of this triangulation.<p>"
-        "If <i>V</i> is a vertex, then the <i>link</i> of <i>V</i> is the "
-        "frontier of a small regular neighbourhood of <i>V</i>.  "
-        "The triangles that make up this link sit inside "
-        "the tetrahedron corners that meet together at <i>V</i>.</qt>"));
-    triActionList.push_back(actVertexLinks);
-    requiresNonNull.push_back(actVertexLinks);
-    connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
-
-    actFill = new QAction(this);
-    actFill->setText(tr("Permanently &Fill Cusps..."));
-    actFill->setIcon(ReginaSupport::regIcon("fill"));
-    actFill->setToolTip(tr(
-        "Permanently fill one cusp or all cusps of this manifold"));
-    actFill->setWhatsThis(tr("<qt>Retriangulate to permanently "
-        "fill either one cusp or all cusps of this manifold.  "
-        "The original triangulation will be left untouched.</qt>"));
-    triActionList.push_back(actFill);
-    requiresNonNull.push_back(actFill);
-    connect(actFill, SIGNAL(triggered()), this, SLOT(fill()));
-
-    sep = new QAction(this);
-    sep->setSeparator(true);
-    triActionList.push_back(sep);
-
     actToRegina = new QAction(this);
     actToRegina->setText(tr("&Convert to Regina"));
     actToRegina->setIcon(ReginaSupport::regIcon("packet_triangulation3"));
@@ -336,6 +321,25 @@ SnapPeaShapesUI::SnapPeaShapesUI(
     requiresNonNull.push_back(actToRegina);
     connect(actToRegina, SIGNAL(triggered()), this, SLOT(toRegina()));
 
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    triActionList.push_back(sep);
+
+    actVertexLinks = new QAction(this);
+    actVertexLinks->setText(tr("&Vertex Links..."));
+    actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
+    actVertexLinks->setToolTip(tr(
+        "Build a 2-manifold triangulation from a vertex link"));
+    actVertexLinks->setWhatsThis(tr("<qt>Build a 2-manifold triangulation "
+        "from the link of a vertex of this triangulation.<p>"
+        "If <i>V</i> is a vertex, then the <i>link</i> of <i>V</i> is the "
+        "frontier of a small regular neighbourhood of <i>V</i>.  "
+        "The triangles that make up this link sit inside "
+        "the tetrahedron corners that meet together at <i>V</i>.</qt>"));
+    triActionList.push_back(actVertexLinks);
+    requiresNonNull.push_back(actVertexLinks);
+    connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
+
     // Tidy up.
     refresh();
 }
@@ -349,9 +353,19 @@ const std::vector<QAction*>& SnapPeaShapesUI::getPacketTypeActions() {
 }
 
 void SnapPeaShapesUI::fillToolBar(QToolBar* bar) {
-    bar->addAction(actRandomise);
-    bar->addAction(actFill);
-    bar->addAction(actToRegina);
+    if (ReginaPrefSet::global().displaySimpleToolbars) {
+        bar->addAction(actRandomise);
+        bar->addAction(actFill);
+        bar->addAction(actToRegina);
+    } else {
+        bar->addAction(actRandomise);
+        bar->addSeparator();
+        bar->addAction(actFill);
+        bar->addAction(actCanonise);
+        bar->addAction(actToRegina);
+        bar->addSeparator();
+        bar->addAction(actVertexLinks);
+    }
 }
 
 regina::Packet* SnapPeaShapesUI::getPacket() {

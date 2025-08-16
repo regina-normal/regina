@@ -40,6 +40,7 @@
 
 class SnapPeaAlgebraUI;
 class SnapPeaGluingsUI;
+class SnapPeaHeaderUI;
 class SnapPeaShapesUI;
 class Tri3SkeletonUI;
 class PacketEditIface;
@@ -60,12 +61,14 @@ class SnapPeaUI : public PacketTabbedUI {
         /**
          * Internal components
          */
+        SnapPeaHeaderUI* header;
         SnapPeaShapesUI* shapes;
         SnapPeaGluingsUI* gluings;
         Tri3SkeletonUI* skeleton;
         SnapPeaAlgebraUI* algebra;
 
         PacketEditIface* editIface;
+        bool simpleToolbars;
 
     public:
         /**
@@ -81,6 +84,12 @@ class SnapPeaUI : public PacketTabbedUI {
         PacketEditIface* getEditIface() override;
         const std::vector<QAction*>& getPacketTypeActions() override;
         QString getPacketMenuText() const override;
+
+    public slots:
+        /**
+         * Reflect preference changes.
+         */
+        void updatePreferences();
 };
 
 /**

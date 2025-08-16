@@ -154,9 +154,16 @@ class Tri3GluingsUI : public QObject, public PacketEditorTab {
         QAction* actAddTet;
         QAction* actRemoveTet;
         QAction* actSimplify;
+        QAction* actTreewidth;
         QAction* actOrient;
+        QAction* actReflect;
+        QAction* actSubdivide;
+        QAction* actTruncate;
+        QAction* actMakeIdeal;
         QAction* actDoubleOverBoundary;
+        QAction* actSnapPea;
         QAction* actBoundaryComponents;
+        QAction* actVertexLinks;
         QAction* actSplitIntoComponents;
         std::vector<QAction*> triActionList;
 

@@ -524,17 +524,25 @@ LinkCrossingsUI::~LinkCrossingsUI() {
 }
 
 void LinkCrossingsUI::fillToolBar(QToolBar* bar) {
-    bar->addAction(actSimplify);
-    bar->addAction(actTreewidth);
-    bar->addSeparator();
-    bar->addAction(actReflect);
-    bar->addAction(actRotate);
-    bar->addAction(actReverse);
-    bar->addAction(actAlternating);
-    bar->addAction(actSelfFrame);
-    bar->addSeparator();
-    bar->addAction(actComplement);
-    bar->addAction(actSnapPea);
+    if (ReginaPrefSet::global().displaySimpleToolbars) {
+        bar->addAction(actSimplify);
+        bar->addAction(actReflect);
+        bar->addSeparator();
+        bar->addAction(actComplement);
+        bar->addAction(actSnapPea);
+    } else {
+        bar->addAction(actSimplify);
+        bar->addAction(actTreewidth);
+        bar->addSeparator();
+        bar->addAction(actReflect);
+        bar->addAction(actRotate);
+        bar->addAction(actReverse);
+        bar->addAction(actAlternating);
+        bar->addAction(actSelfFrame);
+        bar->addSeparator();
+        bar->addAction(actComplement);
+        bar->addAction(actSnapPea);
+    }
 }
 
 regina::Packet* LinkCrossingsUI::getPacket() {

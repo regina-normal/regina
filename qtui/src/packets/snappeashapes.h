@@ -112,6 +112,8 @@ class SnapPeaShapesUI : public QObject, public PacketEditorTab {
          */
         QAction* actRandomise;
         QAction* actFill;
+        QAction* actCanonise;
+        QAction* actVertexLinks;
         QAction* actToRegina;
         std::vector<QAction*> triActionList;
         std::vector<QAction*> requiresNonNull;

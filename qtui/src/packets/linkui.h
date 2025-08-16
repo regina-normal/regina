@@ -38,6 +38,7 @@
 #include "../packettabui.h"
 
 class LinkCrossingsUI;
+class LinkHeaderUI;
 class PacketEditIface;
 class QLabel;
 class QToolBar;
@@ -56,9 +57,11 @@ class LinkUI : public PacketTabbedUI {
         /**
          * Internal components
          */
+        LinkHeaderUI* header;
         LinkCrossingsUI* crossings;
 
         PacketEditIface* editIface;
+        bool simpleToolbars;
 
     public:
         /**
@@ -74,6 +77,12 @@ class LinkUI : public PacketTabbedUI {
         PacketEditIface* getEditIface() override;
         const std::vector<QAction*>& getPacketTypeActions() override;
         QString getPacketMenuText() const override;
+
+    public slots:
+        /**
+         * Reflect preference changes.
+         */
+        void updatePreferences();
 };
 
 /**

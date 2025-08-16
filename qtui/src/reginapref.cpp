@@ -95,11 +95,13 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
         tr("Tools"));
 
     // Read the current preferences from the main window.
+    // Note: The chooser indices that we set here _must_ be kept in sync with
+    // the combo box construction in the ReginaPrefGeneral class constructor.
     // generalPrefs->cbDisplayTagsInTree->setChecked(prefSet.displayTagsInTree);
     generalPrefs->cbUnicode->setChecked(prefSet.displayUnicode);
+    generalPrefs->chooserToolbars->setCurrentIndex(
+        prefSet.displaySimpleToolbars ? 1 : 0);
     switch (prefSet.threadCount) {
-        // These indices must be kept in sync with the combo box
-        // construction in the ReginaPrefGeneral class constructor.
         case ReginaPrefSet::ThreadCount::Single:
             generalPrefs->chooserThreadCount->setCurrentIndex(0);
             break;
@@ -111,8 +113,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
             break;
     }
     switch (prefSet.groupSimplification) {
-        // These indices must be kept in sync with the combo box
-        // construction in the ReginaPrefGeneral class constructor.
         case ReginaPrefSet::GroupSimplification::GAP:
             generalPrefs->chooserGroupSimplification->setCurrentIndex(1);
             break;
@@ -169,9 +169,13 @@ void ReginaPreferences::slotApply() {
     prefSet.displayUnicode = generalPrefs->cbUnicode->isChecked();
     prefSet.helpIntroOnStartup = generalPrefs->cbIntroOnStartup->isChecked();
 
+    // Note: The chooser indices below _must_ be kept in sync with the
+    // combo box construction in the ReginaPrefGeneral class constructor.
+
+    prefSet.displaySimpleToolbars =
+        (generalPrefs->chooserToolbars->currentIndex() == 1);
+
     switch (generalPrefs->chooserThreadCount->currentIndex()) {
-        // These indices must be kept in sync with the combo box
-        // construction in the ReginaPrefGeneral class constructor.
         case 0:
             prefSet.threadCount = ReginaPrefSet::ThreadCount::Single;
             break;
@@ -184,8 +188,6 @@ void ReginaPreferences::slotApply() {
     }
 
     switch (generalPrefs->chooserGroupSimplification->currentIndex()) {
-        // These indices must be kept in sync with the combo box
-        // construction in the ReginaPrefGeneral class constructor.
         case 1:
             prefSet.groupSimplification =
                 ReginaPrefSet::GroupSimplification::GAP;
@@ -348,14 +350,31 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     // These combo box indices must be kept in sync with the switch statements
     // in the ReginaPreferences constructor and slotApply().
     auto* box = new QHBoxLayout();
-    auto* label = new QLabel(tr("Multithreading:"));
+    auto* label = new QLabel(tr("Toolbars:"));
+    box->addWidget(label);
+    chooserToolbars = new QComboBox();
+    chooserToolbars->addItem(tr("Rich (many actions, icon-only)"));
+    chooserToolbars->addItem(tr("Simple (few actions, text labels)"));
+    box->addWidget(chooserToolbars, 1);
+    QString msg = tr("Indicates whether you prefer toolbars with many action "
+        "buttons (the default since Regina 7.4), or with few buttons but long "
+        "text labels (the style until Regina 7.3.1).<p>"
+        "This affects the viewers for triangulations and links.");
+    label->setWhatsThis(msg);
+    chooserToolbars->setWhatsThis(msg);
+    layout->addLayout(box);
+
+    // These combo box indices must be kept in sync with the switch statements
+    // in the ReginaPreferences constructor and slotApply().
+    box = new QHBoxLayout();
+    label = new QLabel(tr("Multithreading:"));
     box->addWidget(label);
     chooserThreadCount = new QComboBox();
     chooserThreadCount->addItem(tr("None (single-threaded)"));
     chooserThreadCount->addItem(tr("Polite (50% of cores)"));
     chooserThreadCount->addItem(tr("Aggressive (all cores)"));
     box->addWidget(chooserThreadCount, 1);
-    QString msg = tr("Indicates what level of multithreading should be "
+    msg = tr("Indicates what level of multithreading should be "
         "used for long computations that support it.");
     label->setWhatsThis(msg);
     chooserThreadCount->setWhatsThis(msg);

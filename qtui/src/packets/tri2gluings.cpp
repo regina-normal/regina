@@ -402,7 +402,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     triActionList.push_back(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
-    auto* actReflect = new QAction(this);
+    actReflect = new QAction(this);
     actReflect->setText(tr("Re&flect"));
     actReflect->setIcon(ReginaSupport::regIcon("reflect"));
     actReflect->setToolTip(tr(
@@ -415,18 +415,18 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     triActionList.push_back(actReflect);
     connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
 
-    auto* actBarycentricSubdivide = new QAction(this);
-    actBarycentricSubdivide->setText(tr("&Barycentric Subdivide"));
-    actBarycentricSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
-    actBarycentricSubdivide->setToolTip(tr(
+    actSubdivide = new QAction(this);
+    actSubdivide->setText(tr("&Barycentric Subdivide"));
+    actSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
+    actSubdivide->setToolTip(tr(
         "Perform a barycentric subdivision"));
-    actBarycentricSubdivide->setWhatsThis(tr("Perform a barycentric "
+    actSubdivide->setWhatsThis(tr("Perform a barycentric "
         "subdivision on this triangulation.  The triangulation will be "
         "changed directly.<p>"
         "This operation involves subdividing each triangle into "
         "6 smaller triangles."));
-    triActionList.push_back(actBarycentricSubdivide);
-    connect(actBarycentricSubdivide, SIGNAL(triggered()), this,
+    triActionList.push_back(actSubdivide);
+    connect(actSubdivide, SIGNAL(triggered()), this,
         SLOT(barycentricSubdivide()));
 
     auto* actInsertTri = new QAction(this);
@@ -510,10 +510,21 @@ const std::vector<QAction*>& Tri2GluingsUI::getPacketTypeActions() {
 }
 
 void Tri2GluingsUI::fillToolBar(QToolBar* bar) {
-    bar->addAction(actAddTri);
-    bar->addAction(actRemoveTri);
-    bar->addSeparator();
-    bar->addAction(actOrient);
+    if (ReginaPrefSet::global().displaySimpleToolbars) {
+        bar->addAction(actAddTri);
+        bar->addAction(actRemoveTri);
+        bar->addSeparator();
+        bar->addAction(actOrient);
+    } else {
+        bar->addAction(actAddTri);
+        bar->addAction(actRemoveTri);
+        bar->addSeparator();
+        bar->addAction(actOrient);
+        bar->addAction(actReflect);
+        bar->addAction(actSubdivide);
+        bar->addSeparator();
+        bar->addAction(actSplitIntoComponents);
+    }
 }
 
 regina::Packet* Tri2GluingsUI::getPacket() {

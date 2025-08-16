@@ -122,6 +122,10 @@ class ReginaPrefSet : public QObject {
         bool anglesCreationTaut;
             /**< When enumerating angle structures, should the taut
                  structures option be enabled by default? */
+        bool displaySimpleToolbars;
+            /**< Should we use simple toolbars with few actions and text labels
+                 (as opposed to rich toolbars with many actions and icons
+                 only)? */
         bool displayTagsInTree;
             /**< Should we display packet tags in the visual tree? */
         bool displayUnicode;
@@ -318,6 +322,12 @@ class ReginaPrefSet : public QObject {
         static int threads();
 
         /**
+         * Returns the Qt tool button style corresponding to the "simple
+         * toolbars" setting.
+         */
+        static Qt::ToolButtonStyle toolButtonStyle();
+
+        /**
          * Opens the given section of an arbitrary handbook in an appropriate
          * manner.  If the handbook is in fact the users' handbook then
          * the argument \a handbook should be 0 (which enables specialised
@@ -408,6 +418,11 @@ inline void ReginaPrefSet::propagate() {
 
 inline const QList<QUrl>& ReginaPrefSet::recentFiles() {
     return instance_.fileRecent_;
+}
+
+inline Qt::ToolButtonStyle ReginaPrefSet::toolButtonStyle() {
+    return (global().displaySimpleToolbars ?
+        Qt::ToolButtonTextBesideIcon : Qt::ToolButtonIconOnly);
 }
 
 #endif

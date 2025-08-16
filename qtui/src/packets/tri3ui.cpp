@@ -42,6 +42,7 @@
 #include "tri3surfaces.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
+#include "reginaprefset.h"
 #include "reginasupport.h"
 
 #include <QApplication>
@@ -54,8 +55,9 @@ using regina::Triangulation;
 
 Tri3UI::Tri3UI(regina::PacketOf<regina::Triangulation<3>>* packet,
         PacketPane* newEnclosingPane) :
-        PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabDim3Tri) {
-    auto* header = new Tri3HeaderUI(packet, this);
+        PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabDim3Tri),
+        simpleToolbars(ReginaPrefSet::global().displaySimpleToolbars) {
+    header = new Tri3HeaderUI(packet, this);
     gluings = new Tri3GluingsUI(packet, this);
     skeleton = new Tri3SkeletonUI(packet, packet, this);
     algebra = new Tri3AlgebraUI(packet, this);
@@ -72,6 +74,9 @@ Tri3UI::Tri3UI(regina::PacketOf<regina::Triangulation<3>>* packet,
         QObject::tr("&Composition"));
     addTab(surfaces, QObject::tr("&Recognition"));
     addTab(snapPea, QObject::tr("Snap&Pea"));
+
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 }
 
 const std::vector<QAction*>& Tri3UI::getPacketTypeActions() {
@@ -82,6 +87,18 @@ QString Tri3UI::getPacketMenuText() const {
     return QObject::tr("3-D T&riangulation");
 }
 
+void Tri3UI::updatePreferences() {
+    bool newVal = ReginaPrefSet::global().displaySimpleToolbars;
+    if (newVal != simpleToolbars) {
+        simpleToolbars = newVal;
+
+        auto* toolbar = header->getToolBar();
+        toolbar->clear();
+        toolbar->setToolButtonStyle(ReginaPrefSet::toolButtonStyle());
+        gluings->fillToolBar(toolbar);
+    }
+}
+
 Tri3HeaderUI::Tri3HeaderUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
@@ -90,7 +107,7 @@ Tri3HeaderUI::Tri3HeaderUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     uiLayout->setContentsMargins(0, 0, 0, 0);
 
     bar = new QToolBar(ui);
-    bar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    bar->setToolButtonStyle(ReginaPrefSet::toolButtonStyle());
     uiLayout->addWidget(bar);
 
     header = new QLabel();

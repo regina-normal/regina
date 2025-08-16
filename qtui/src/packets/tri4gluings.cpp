@@ -618,20 +618,28 @@ const std::vector<QAction*>& Tri4GluingsUI::getPacketTypeActions() {
 }
 
 void Tri4GluingsUI::fillToolBar(QToolBar* bar) {
-    bar->addAction(actAddPent);
-    bar->addAction(actRemovePent);
-    bar->addSeparator();
-    bar->addAction(actSimplify);
-    bar->addSeparator();
-    bar->addAction(actOrient);
-    bar->addAction(actReflect);
-    bar->addAction(actSubdivide);
-    bar->addAction(actTruncate);
-    bar->addAction(actMakeIdeal);
-    bar->addSeparator();
-    bar->addAction(actBoundaryComponents);
-    bar->addAction(actVertexLinks);
-    bar->addAction(actSplitIntoComponents);
+    if (ReginaPrefSet::global().displaySimpleToolbars) {
+        bar->addAction(actAddPent);
+        bar->addAction(actRemovePent);
+        bar->addSeparator();
+        bar->addAction(actSimplify);
+        bar->addAction(actOrient);
+    } else {
+        bar->addAction(actAddPent);
+        bar->addAction(actRemovePent);
+        bar->addSeparator();
+        bar->addAction(actSimplify);
+        bar->addSeparator();
+        bar->addAction(actOrient);
+        bar->addAction(actReflect);
+        bar->addAction(actSubdivide);
+        bar->addAction(actTruncate);
+        bar->addAction(actMakeIdeal);
+        bar->addSeparator();
+        bar->addAction(actBoundaryComponents);
+        bar->addAction(actVertexLinks);
+        bar->addAction(actSplitIntoComponents);
+    }
 }
 
 regina::Packet* Tri4GluingsUI::getPacket() {

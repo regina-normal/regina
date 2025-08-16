@@ -40,6 +40,7 @@
 #include "linkui.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
+#include "reginaprefset.h"
 
 #include <QLabel>
 #include <QToolBar>
@@ -54,8 +55,9 @@ using regina::Link;
 #define RIGHT_COLOUR "#008000"
 
 LinkUI::LinkUI(regina::PacketOf<Link>* packet, PacketPane* newEnclosingPane) :
-        PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabLink) {
-    auto* header = new LinkHeaderUI(packet, this);
+        PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabLink),
+        simpleToolbars(ReginaPrefSet::global().displaySimpleToolbars) {
+    header = new LinkHeaderUI(packet, this);
     crossings = new LinkCrossingsUI(packet, this);
 
     crossings->fillToolBar(header->getToolBar());
@@ -68,6 +70,9 @@ LinkUI::LinkUI(regina::PacketOf<Link>* packet, PacketPane* newEnclosingPane) :
     addTab(new LinkGraphUI(packet, this), QObject::tr("&Graphs"));
 
     editIface = new PacketEditTabbedUI(this);
+
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 }
 
 LinkUI::~LinkUI() {
@@ -82,6 +87,18 @@ QString LinkUI::getPacketMenuText() const {
     return QObject::tr("&Knot / Link");
 }
 
+void LinkUI::updatePreferences() {
+    bool newVal = ReginaPrefSet::global().displaySimpleToolbars;
+    if (newVal != simpleToolbars) {
+        simpleToolbars = newVal;
+
+        auto* toolbar = header->getToolBar();
+        toolbar->clear();
+        toolbar->setToolButtonStyle(ReginaPrefSet::toolButtonStyle());
+        crossings->fillToolBar(toolbar);
+    }
+}
+
 LinkHeaderUI::LinkHeaderUI(regina::PacketOf<Link>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         link(packet) {
@@ -90,7 +107,7 @@ LinkHeaderUI::LinkHeaderUI(regina::PacketOf<Link>* packet,
     uiLayout->setContentsMargins(0, 0, 0, 0);
 
     bar = new QToolBar(ui);
-    bar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    bar->setToolButtonStyle(ReginaPrefSet::toolButtonStyle());
     uiLayout->addWidget(bar);
 
     header = new QLabel();

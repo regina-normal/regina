@@ -41,6 +41,7 @@
 
 class Tri4AlgebraUI;
 class Tri4GluingsUI;
+class Tri4HeaderUI;
 class Tri4SkeletonUI;
 class QLabel;
 class QToolBar;
@@ -55,9 +56,12 @@ class Tri4UI : public PacketTabbedUI {
         /**
          * Internal components
          */
+        Tri4HeaderUI* header;
         Tri4GluingsUI* gluings;
         Tri4SkeletonUI* skeleton;
         Tri4AlgebraUI* algebra;
+
+        bool simpleToolbars;
 
     public:
         /**
@@ -71,6 +75,12 @@ class Tri4UI : public PacketTabbedUI {
          */
         const std::vector<QAction*>& getPacketTypeActions() override;
         QString getPacketMenuText() const override;
+
+    public slots:
+        /**
+         * Reflect preference changes.
+         */
+        void updatePreferences();
 };
 
 /**

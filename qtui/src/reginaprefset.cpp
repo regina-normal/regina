@@ -69,6 +69,7 @@ ReginaPrefSet ReginaPrefSet::instance_;
 ReginaPrefSet::ReginaPrefSet() :
         anglesCreationTaut(false),
         fileRecentMax(10),
+        displaySimpleToolbars(false),
         displayTagsInTree(false),
         displayUnicode(true),
         fileImportExportCodec("UTF-8"),
@@ -235,6 +236,7 @@ void ReginaPrefSet::readInternal() {
     settings.beginGroup("Display");
     displayTagsInTree = settings.value("DisplayTagsInTree", false).toBool();
     displayUnicode = settings.value("DisplayUnicode", true).toBool();
+    displaySimpleToolbars = settings.value("SimpleToolbars", false).toBool();
     settings.endGroup();
 
     settings.beginGroup("File");
@@ -405,6 +407,7 @@ void ReginaPrefSet::saveInternal() const {
     settings.beginGroup("Display");
     settings.setValue("DisplayTagsInTree", displayTagsInTree);
     settings.setValue("DisplayUnicode", displayUnicode);
+    settings.setValue("SimpleToolbars", displaySimpleToolbars);
     settings.endGroup();
 
     settings.beginGroup("File");
@@ -472,14 +475,12 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("CreationCoordinates",
         static_cast<int>(surfacesCreationCoords));
     settings.setValue("CreationList", surfacesCreationList.intValue());
-
     switch (surfacesInitialCompat) {
         case ReginaPrefSet::CompatMatrix::Global:
             settings.setValue("InitialCompat", "Global"); break;
         default:
             settings.setValue("InitialCompat", "Local"); break;
     }
-
     settings.setValue("SupportOriented", surfacesSupportOriented);
     settings.setValue("WarnOnNonEmbedded", warnOnNonEmbedded);
     settings.endGroup();
@@ -510,7 +511,6 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("Dim3CreationTypeV2", triDim3CreationType);
     settings.setValue("Dim4CreationTypeV2", triDim4CreationType);
     settings.setValue("GraphvizLabels", triGraphvizLabels);
-
     switch (triInitialGraphType) {
         case ReginaPrefSet::TriGraph::TreeDecomposition:
             settings.setValue("InitialGraphType", "Tree"); break;
@@ -519,7 +519,6 @@ void ReginaPrefSet::saveInternal() const {
         default:
             settings.setValue("InitialGraphType", "Dual"); break;
     }
-
     settings.setValue("SurfacePropsThreshold", triSurfacePropsThreshold);
     settings.endGroup();
 
