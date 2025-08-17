@@ -410,8 +410,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actSimplify = new QAction(this);
     actSimplify->setText(tr("&Simplify"));
     actSimplify->setIcon(ReginaSupport::regIcon("simplify-clean"));
-    actSimplify->setToolTip(tr(
-        "Simplify the triangulation as far as possible"));
+    actSimplify->setToolTip(tr("Simplify the triangulation"));
     actSimplify->setWhatsThis(tr("Attempts to simplify this triangulation "
         "to use fewer pentachora without changing the underlying 4-manifold "
         "or its PL structure.<p>"
@@ -424,8 +423,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actMoves = new QAction(this);
     actMoves->setText(tr("&Elementary Moves..."));
     actMoves->setIcon(ReginaSupport::regIcon("eltmoves"));
-    actMoves->setToolTip(tr(
-        "Modify the triangulation using elementary moves"));
+    actMoves->setToolTip(tr("Perform individual elementary moves"));
     actMoves->setWhatsThis(tr("Allows you to perform elementary moves upon "
         "this triangulation.  <i>Elementary moves</i> are modifications local "
         "to a small number of pentachora that do not change the underlying "
@@ -442,7 +440,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actOrient = new QAction(this);
     actOrient->setText(tr("&Orient"));
     actOrient->setIcon(ReginaSupport::regIcon("orient"));
-    actOrient->setToolTip(tr("Orient this triangulation"));
+    actOrient->setToolTip(tr("Orient the triangulation"));
     actOrient->setWhatsThis(tr("Relabels the vertices of each pentachoron "
         "so that all pentachora are oriented consistently, i.e., "
         "so that orientation is preserved across adjacent facets.<p>"
@@ -454,8 +452,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actReflect = new QAction(this);
     actReflect->setText(tr("Re&flect"));
     actReflect->setIcon(ReginaSupport::regIcon("reflect"));
-    actReflect->setToolTip(tr(
-        "Reverse the orientation of each pentachoron"));
+    actReflect->setToolTip(tr("Reflect the triangulation"));
     actReflect->setWhatsThis(tr("Relabels the vertices of each pentachoron "
         "so that the orientations of all pentachora are reversed.<p>"
         "If this triangulation is oriented, then the overall effect will be "
@@ -495,8 +492,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actMakeIdeal = new QAction(this);
     actMakeIdeal->setText(tr("Make &Ideal"));
     actMakeIdeal->setIcon(ReginaSupport::regIcon("cone"));
-    actMakeIdeal->setToolTip(tr(
-        "Convert real boundary components into ideal vertices"));
+    actMakeIdeal->setToolTip(tr("Convert real boundaries into ideal vertices"));
     actMakeIdeal->setWhatsThis(tr("Converts each real boundary component "
         "of this triangulation (formed from one or more boundary tetrahedra) "
         "into an ideal vertex.<p>"
@@ -527,9 +523,9 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actDoubleCover->setText(tr("Build &Double Cover"));
     actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
     actDoubleCover->setToolTip(tr(
-        "Construct the orientable double cover of this triangulation"));
-    actDoubleCover->setWhatsThis(tr("Construct the orientable double cover "
-        "of this triangulation.  The original triangulation will not be "
+        "Build the orientable double cover of this triangulation"));
+    actDoubleCover->setWhatsThis(tr("Builds the orientable double cover "
+        "of this triangulation.  This triangulation will not be "
         "changed &ndash; the result will be added as a new triangulation "
         "beneath it in the packet tree.<p>"
         "If this triangulation is already orientable then the result will be "
@@ -541,13 +537,13 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actDoubleOverBoundary->setText(tr("Build Double Over Boundary"));
     actDoubleOverBoundary->setIcon(ReginaSupport::regIcon("boundary-double"));
     actDoubleOverBoundary->setToolTip(tr(
-        "Builds two copies of this triangulation joined along their "
+        "Build two copies of this triangulation joined along their "
         "boundary tetrahedra"));
     actDoubleOverBoundary->setWhatsThis(tr("Builds a new triangulation by "
         "gluing two copies of this triangulation along their boundary "
         "tetrahedra.  The boundaries will be glued using the identity map.  "
         "Any ideal vertices will be left alone.<p>"
-        "The original triangulation will not be changed &ndash; the result "
+        "This triangulation will not be changed &ndash; the result "
         "will be added as a new triangulation beneath it in the packet tree."));
     triActionList.push_back(actDoubleOverBoundary);
     connect(actDoubleOverBoundary, SIGNAL(triggered()), this,
@@ -561,13 +557,13 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actBoundaryComponents->setText(tr("Boundar&y Components..."));
     actBoundaryComponents->setIcon(ReginaSupport::regIcon("boundaries"));
     actBoundaryComponents->setToolTip(tr(
-        "Build a 3-manifold triangulation from a boundary component"));
-    actBoundaryComponents->setWhatsThis(tr("<qt>Build a 3-manifold "
-        "triangulation from a boundary component of this triangulation.<p>"
-        "If you select a real boundary component, this will construct "
+        "Triangulate a chosen boundary component"));
+    actBoundaryComponents->setWhatsThis(tr("Builds a 3-manifold triangulation "
+        "from a chosen boundary component of this triangulation.<p>"
+        "If you select a real boundary component, this will build "
         "a 3-manifold triangulation from its boundary tetrahedra.  "
-        "If you select an ideal boundary component, this will construct "
-        "a 3-manifold triangulation from the corresponding vertex link.</qt>"));
+        "If you select an ideal boundary component, this will build "
+        "a 3-manifold triangulation from the corresponding vertex link."));
     triActionList.push_back(actBoundaryComponents);
     connect(actBoundaryComponents, SIGNAL(triggered()), this,
         SLOT(boundaryComponents()));
@@ -576,28 +572,27 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actVertexLinks->setText(tr("&Vertex Links..."));
     actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
     actVertexLinks->setToolTip(tr(
-        "Build a 3-manifold triangulation from a vertex link"));
-    actVertexLinks->setWhatsThis(tr("<qt>Build a 3-manifold triangulation "
-        "from the link of a vertex of this triangulation.<p>"
+        "Build a chosen vertex link"));
+    actVertexLinks->setWhatsThis(tr("Builds a 3-manifold triangulation "
+        "from the link of a chosen vertex of this triangulation.<p>"
         "If <i>V</i> is a vertex, then the <i>link</i> of <i>V</i> is the "
         "frontier of a small regular neighbourhood of <i>V</i>.  "
         "The tetrahedra that make up this link sit inside "
-        "the pentachoron corners that meet together at <i>V</i>.</qt>"));
+        "the pentachoron corners that meet together at <i>V</i>."));
     triActionList.push_back(actVertexLinks);
     connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
 
     actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
     actSplitIntoComponents->setIcon(ReginaSupport::regIcon("components"));
-    actSplitIntoComponents->setToolTip(tr(
-        "Build a new triangulation for each connected component"));
-    actSplitIntoComponents->setWhatsThis(tr("<qt>Split a disconnected "
+    actSplitIntoComponents->setToolTip(tr("Extract connected components"));
+    actSplitIntoComponents->setWhatsThis(tr("Splits a disconnected "
         "triangulation into its individual connected components.  This "
         "triangulation will not be changed &ndash; each "
         "connected component will be added as a new triangulation beneath "
         "it in the packet tree.<p>"
         "If this triangulation is already connected, this operation will "
-        "do nothing.</qt>"));
+        "do nothing."));
     triActionList.push_back(actSplitIntoComponents);
     connect(actSplitIntoComponents, SIGNAL(triggered()), this,
         SLOT(splitIntoComponents()));

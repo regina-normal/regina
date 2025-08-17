@@ -322,8 +322,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actSimplify = new QAction(this);
     actSimplify->setText(tr("&Simplify"));
     actSimplify->setIcon(ReginaSupport::regIcon("simplify-clean"));
-    actSimplify->setToolTip(tr(
-        "Simplify the knot or link as far as possible"));
+    actSimplify->setToolTip(tr("Simplify the link diagram"));
     actSimplify->setWhatsThis(tr("Attempts to simplify this link diagram "
         "to use fewer crossings.<p>"
         "This procedure searches for useful combinations of Reidemeister "
@@ -335,8 +334,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actTreewidth = new QAction(this);
     actTreewidth->setText(tr("Improve &Treewidth"));
     actTreewidth->setIcon(ReginaSupport::regIcon("treewidth"));
-    actTreewidth->setToolTip(tr(
-        "Attempt to reduce the treewidth of the link diagram"));
+    actTreewidth->setToolTip(tr("Reduce the treewidth of the link diagram"));
     actTreewidth->setWhatsThis(tr("Explores nearby diagrams via "
         "Reidemeister moves in an attempt to reduce the treewidth "
         "of this link diagram.  "
@@ -349,8 +347,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actMoves = new QAction(this);
     actMoves->setText(tr("Reidemeister &Moves..."));
     actMoves->setIcon(ReginaSupport::regIcon("eltmoves"));
-    actMoves->setToolTip(tr(
-        "Modify the link diagram using Reidemeister moves"));
+    actMoves->setToolTip(tr("Perform individual Reidemeister moves"));
     actMoves->setWhatsThis(tr("Allows you to perform Reidemeister moves upon "
         "this link diagram.  <i>Reidemeister moves</i> are modifications "
         "local to a small number of crossings that do not change "
@@ -368,7 +365,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actReflect = new QAction(this);
     actReflect->setText(tr("Re&flect"));
     actReflect->setIcon(ReginaSupport::regIcon("reflect"));
-    actReflect->setToolTip(tr("Reflect this link"));
+    actReflect->setToolTip(tr("Reflect the link"));
     actReflect->setWhatsThis(tr("Reflects this link about some axis in "
         "the plane.  Every crossing will change sign, but its upper "
         "and lower strands will remain the same."));
@@ -378,7 +375,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actRotate = new QAction(this);
     actRotate->setText(tr("&Rotate"));
     actRotate->setIcon(ReginaSupport::regIcon("rotate"));
-    actRotate->setToolTip(tr("Rotate this link"));
+    actRotate->setToolTip(tr("Rotate the link"));
     actRotate->setWhatsThis(tr("Rotates this link about some axis in "
         "the plane.  Every crossing will keep the same sign, but its upper "
         "and lower strands will be switched.<p>"
@@ -390,7 +387,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actReverse = new QAction(this);
     actReverse->setText(tr("Re&verse"));
     actReverse->setIcon(ReginaSupport::regIcon("reverse"));
-    actReverse->setToolTip(tr("Reverse this link"));
+    actReverse->setToolTip(tr("Reverse the link"));
     actReverse->setWhatsThis(tr("Reverses the orientation of each component "
         "of this link.  Every crossing will keep the same sign and the "
         "same upper/lower strands, but the order in which you traverse "
@@ -410,7 +407,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actSelfFrame = new QAction(this);
     actSelfFrame->setText(tr("Self Frame"));
     actSelfFrame->setIcon(ReginaSupport::regIcon("selfframe"));
-    actSelfFrame->setToolTip(tr("Self-frame this link by adding twists"));
+    actSelfFrame->setToolTip(tr("Self-frame by adding twists"));
     actSelfFrame->setWhatsThis(tr("Adds twists to this link "
         "to ensure that each component has zero writhe."));
     actionList.push_back(actSelfFrame);
@@ -468,10 +465,10 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actComplement = new QAction(this);
     actComplement->setText(tr("&Complement"));
     actComplement->setIcon(ReginaSupport::regIcon("packet_triangulation3"));
-    actComplement->setToolTip(tr("Build the link complement as a Regina "
+    actComplement->setToolTip(tr("Build the complement as a Regina "
         "triangulation"));
-    actComplement->setWhatsThis(tr("Builds the complement of this "
-        "link as an ideal Regina triangulation, using Regina's own code.  "
+    actComplement->setWhatsThis(tr("Builds the complement of this link as an "
+        "ideal Regina triangulation, using Regina's own implementation.  "
         "The meridinal and longitudinal curves will be forgotten."));
     actionList.push_back(actComplement);
     connect(actComplement, SIGNAL(triggered()), this, SLOT(complement()));
@@ -480,7 +477,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actSnapPea->setText(tr("Complement Via S&napPea"));
     actSnapPea->setIconText(tr("SnapPea"));
     actSnapPea->setIcon(ReginaSupport::regIcon("packet_snappea"));
-    actSnapPea->setToolTip(tr("Build the link complement as a SnapPea "
+    actSnapPea->setToolTip(tr("Build the complement as a SnapPea "
         "triangulation"));
     actSnapPea->setWhatsThis(tr("Builds the complement of this "
         "link as a SnapPea triangulation, using the SnapPea kernel.  "
@@ -495,8 +492,8 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     auto* actDiagramComponents = new QAction(this);
     actDiagramComponents->setText(tr("Extract Diagram C&omponents"));
     actDiagramComponents->setIcon(ReginaSupport::regIcon("components"));
-    actDiagramComponents->setToolTip(tr("Form a new link from each "
-        "connected component of this diagram"));
+    actDiagramComponents->setToolTip(
+        tr("Extract connected diagram components"));
     actDiagramComponents->setWhatsThis(tr("Splits a disconnected "
         "link diagram into its individual connected components.  This "
         "link diagram will not be changed &ndash; each "

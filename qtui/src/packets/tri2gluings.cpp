@@ -392,7 +392,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     actOrient = new QAction(this);
     actOrient->setText(tr("&Orient"));
     actOrient->setIcon(ReginaSupport::regIcon("orient"));
-    actOrient->setToolTip(tr("Orient this triangulation"));
+    actOrient->setToolTip(tr("Orient the triangulation"));
     actOrient->setWhatsThis(tr("Relabels the vertices of each triangle "
         "so that all triangles are oriented consistently, i.e., "
         "so that orientation is preserved across adjacent edges.<p>"
@@ -404,8 +404,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     actReflect = new QAction(this);
     actReflect->setText(tr("Re&flect"));
     actReflect->setIcon(ReginaSupport::regIcon("reflect"));
-    actReflect->setToolTip(tr(
-        "Reverse the orientation of each triangle"));
+    actReflect->setToolTip(tr("Reflect the triangulation"));
     actReflect->setWhatsThis(tr("Relabels the vertices of each triangle "
         "so that the orientations of all triangles are reversed.<p>"
         "If this triangulation is oriented, then the overall effect will be "
@@ -446,9 +445,9 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     actDoubleCover->setText(tr("Build &Double Cover"));
     actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
     actDoubleCover->setToolTip(tr(
-        "Construct the orientable double cover of this triangulation"));
-    actDoubleCover->setWhatsThis(tr("Construct the orientable double cover "
-        "of this triangulation.  The original triangulation will not be "
+        "Build the orientable double cover of this triangulation"));
+    actDoubleCover->setWhatsThis(tr("Builds the orientable double cover "
+        "of this triangulation.  This triangulation will not be "
         "changed &ndash; the result will be added as a new triangulation "
         "beneath it in the packet tree.<p>"
         "If this triangulation is already orientable then the result will be "
@@ -460,12 +459,12 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     actDoubleOverBoundary->setText(tr("Build Double Over Boundary"));
     actDoubleOverBoundary->setIcon(ReginaSupport::regIcon("boundary-double"));
     actDoubleOverBoundary->setToolTip(tr(
-        "Builds two copies of this triangulation joined along their "
+        "Build two copies of this triangulation joined along their "
         "boundary edges"));
     actDoubleOverBoundary->setWhatsThis(tr("Builds a new triangulation by "
         "gluing two copies of this triangulation along their boundary edges.  "
         "The boundaries will be glued using the identity map.<p>"
-        "The original triangulation will not be changed &ndash; the result "
+        "This triangulation will not be changed &ndash; the result "
         "will be added as a new triangulation beneath it in the packet tree."));
     triActionList.push_back(actDoubleOverBoundary);
     connect(actDoubleOverBoundary, SIGNAL(triggered()), this,
@@ -478,15 +477,14 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
     actSplitIntoComponents->setIcon(ReginaSupport::regIcon("components"));
-    actSplitIntoComponents->setToolTip(tr(
-        "Build a new triangulation for each connected component"));
-    actSplitIntoComponents->setWhatsThis(tr("<qt>Split a disconnected "
+    actSplitIntoComponents->setToolTip(tr("Extract connected components"));
+    actSplitIntoComponents->setWhatsThis(tr("Splits a disconnected "
         "triangulation into its individual connected components.  This "
         "triangulation will not be changed &ndash; each "
         "connected component will be added as a new triangulation beneath "
         "it in the packet tree.<p>"
         "If this triangulation is already connected, this operation will "
-        "do nothing.</qt>"));
+        "do nothing."));
     triActionList.push_back(actSplitIntoComponents);
     connect(actSplitIntoComponents, SIGNAL(triggered()), this,
         SLOT(splitIntoComponents()));
