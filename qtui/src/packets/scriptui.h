@@ -49,6 +49,7 @@ class EditTableView;
 class QAction;
 class QSplitter;
 class QPlainTextEdit;
+class QToolBar;
 
 namespace regina {
     class Packet;
@@ -133,6 +134,7 @@ class ScriptUI : public QObject, public PacketUI,
          * Internal components
          */
         QWidget* ui;
+        QToolBar* actionBar;
         ScriptVarModel* model;
         EditTableView* varTable;
         QStyledItemDelegate* valueDelegate;

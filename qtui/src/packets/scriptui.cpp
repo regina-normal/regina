@@ -251,8 +251,8 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
 
     // --- Action Toolbar ---
 
-    auto* actionBar = new QToolBar(ui);
-    actionBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    actionBar = new QToolBar(ui);
+    actionBar->setToolButtonStyle(ReginaPrefSet::toolButtonStyle());
     layout->addWidget(actionBar);
 
     // --- Variable Table ---
@@ -309,11 +309,9 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
 
     // --- Script Actions ---
 
-    //scriptActions = new KActionCollection((QObject*)0);
-    
     actAdd = new QAction(this);
-    //scriptActions->addAction("script_add_var");
-    actAdd->setText(tr("&Add Var"));
+    actAdd->setText(tr("&Add Variable"));
+    actAdd->setIconText(tr("Add Var"));
     actAdd->setIcon(ReginaSupport::regIcon("insert"));
     actAdd->setToolTip(tr("Add a new script variable"));
     actAdd->setWhatsThis(tr("Add a new variable to this script.<p>"
@@ -326,8 +324,8 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     scriptActionList.push_back(actAdd);
 
     actRemove = new QAction(this);
-    //scriptActions->addAction("script_remove_var");
-    actRemove->setText(tr("Re&move Var"));
+    actRemove->setText(tr("Re&move Variable"));
+    actRemove->setIconText(tr("Remove Var"));
     actRemove->setIcon(ReginaSupport::regIcon("delete"));
     actRemove->setToolTip(tr(
         "Remove the currently selected script variable(s)"));
@@ -347,13 +345,11 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     scriptActionList.push_back(actRemove);
 
     auto* actSep = new QAction(this);
-    //scriptActions->addAction("script_separator");
     actSep->setSeparator(true);
     actionBar->addAction(actSep);
     scriptActionList.push_back(actSep);
 
     auto* actRun = new QAction(this);
-    //scriptActions->addAction("script_run");;
     actRun->setText(tr("&Run"));
     actRun->setIcon(ReginaSupport::regIcon("run"));
     actRun->setToolTip(tr("Execute the Python script"));
@@ -548,6 +544,7 @@ void ScriptUI::execute() {
 void ScriptUI::updatePreferences() {
     editWidget->setFont(ReginaPrefSet::fixedWidthFont());
     updateTabWidth();
+    actionBar->setToolButtonStyle(ReginaPrefSet::toolButtonStyle());
 }
 
 void ScriptUI::updateTabWidth() {
