@@ -317,7 +317,10 @@ void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
         .def("reflect", &Triangulation<4>::reflect, rbase::reflect)
         .def("triangulateComponents", &Triangulation<4>::triangulateComponents,
             rbase::triangulateComponents)
-        .def("simplify", &Triangulation<4>::simplify, rdoc::simplify)
+        .def("simplify", &Triangulation<4>::simplify,
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
+            rdoc::simplify)
         .def("intelligentSimplify", &Triangulation<4>::simplify, // deprecated
             rdoc::intelligentSimplify)
         .def("simplifyToLocalMinimum",

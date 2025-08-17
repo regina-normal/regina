@@ -772,7 +772,8 @@ Version 7.4  [ (to be announced) ]
         Class Triangulation<4>:
             - New routine simplifyUpDown(); thanks to Rhuaidi Burke.  The main
               simplify() routine (previously called intelligentSimplify()) now
-              incorporates these techniques also.
+              incorporates these techniques also; moreover, simplify() now
+              takes a progress tracker and supports cancellation.
             - Regarding elementary moves:
               + The (check, perform) variants of fourFourMove(), openBook(),
                 collapseEdge(), snapEdge() are all deprecated.  You should now

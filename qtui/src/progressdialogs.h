@@ -43,6 +43,7 @@
 namespace regina {
     class ProgressTracker;
     class ProgressTrackerBase;
+    class ProgressTrackerObjective;
     class ProgressTrackerOpen;
 };
 
@@ -170,6 +171,64 @@ class ProgressDialogOpen : public QDialog {
          * <tt>tracker->isStarted()</tt> must return \c false.
          */
         ProgressDialogOpen(regina::ProgressTrackerOpen* tracker,
+                const QString& displayText, QString detailTemplate,
+                QWidget* parent = nullptr);
+
+        /**
+         * Displays the dialog and follows the progress of the
+         * underlying operation.
+         *
+         * This routine will only return once the operation has finished.
+         * It returns \c true on successful completion, or \c false
+         * if the operation was cancelled.
+         */
+        bool run();
+
+    public slots:
+        /**
+         * Called when the user asks to cancel the operation.
+         */
+        void cancelTask();
+};
+
+/**
+ * A dialog that interacts with a calculation engine progress tracker,
+ * displays the current value of some objective, and supports cancellation.
+ *
+ * Upon calling ProgressDialogObjective::run(), the dialog will be
+ * displayed and it will follow the progress of the underlying
+ * operation in the calculation engine.  The operation itself should be
+ * running in a separate thread.
+ */
+class ProgressDialogObjective : public QDialog {
+    Q_OBJECT
+
+    private:
+        regina::ProgressTrackerObjective* tracker_;
+            /**< The progress tracker handling the inter-thread
+                 communication. */
+        QString detailTemplate_;
+            /**< The string displaying the current value of the objective.
+                 This string should contain "%1", which will be replaced with
+                 the objective value. */
+
+        QLabel* stage;
+            /**< Displays the current stage. */
+        QLabel* msg;
+            /**< The current detailed progress message.  This displays
+                 a string based on \a detailTemplate_. */
+        QDialogButtonBox* buttons;
+            /**< The box containing the cancel button. */
+
+    public:
+        /**
+         * Creates a new progress dialog linked to the given
+         * calculation engine progress tracker.
+         *
+         * The progress tracker must not have been started, i.e.,
+         * <tt>tracker->isStarted()</tt> must return \c false.
+         */
+        ProgressDialogObjective(regina::ProgressTrackerObjective* tracker,
                 const QString& displayText, QString detailTemplate,
                 QWidget* parent = nullptr);
 

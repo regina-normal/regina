@@ -805,17 +805,41 @@ void Tri4GluingsUI::simplify() {
         return;
     }
 
-    if (! tri->simplify()) {
+    size_t initSize = tri->size();
+
+    regina::ProgressTrackerObjective tracker(initSize);
+    // Don't fuss about the plural - if we ever reach 1 pentachora then the
+    // progress dialog is going to close immediately afterwards.
+    ProgressDialogObjective dlg(&tracker, tr("Simplifying..."),
+        tr("Size: %1 pentachora"), ui);
+
+    bool result;
+    {
+        // Wrap the entire computation in a PacketChangeGroup.  This means that,
+        // instead of the GUI updating via the separate simplify() thread
+        // (which can cause Qt to crash), instead the GUI will not update
+        // until this span closes, which will happen here on the main thread
+        // (thus keeping Qt happy).
+
+        regina::Packet::PacketChangeGroup span(*tri);
+        std::thread t(&Triangulation<4>::simplify, tri, &tracker);
+        result = dlg.run();
+        t.join();
+    }
+
+    if (result && tri->size() == initSize) {
+        dlg.hide();
+
         if (tri->countComponents() > 1) {
             ReginaSupport::info(ui,
                 tr("I could not simplify the triangulation."),
-                tr("<qt>I have only tried fast heuristics so far.<p>"
-                    "For connected triangulations I can try a more exaustive "
-                    "approach, but for multiple-component triangulations "
-                    "this is not yet available.<p>"
+                tr("I have only tried fast heuristics so far.<p>"
+                    "For connected triangulations I can try a more "
+                    "exhaustive approach, but for multiple-component "
+                    "triangulations this is not yet available.<p>"
                     "To use this more exhaustive approach, you could "
                     "split the triangulation into components and try to "
-                    "simplify each component independently.</qt>"));
+                    "simplify each component independently."));
             return;
         }
 

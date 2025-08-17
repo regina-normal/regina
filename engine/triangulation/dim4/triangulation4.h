@@ -556,6 +556,15 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * having locks may make the simplification less effective in reducing
          * the number of pentachora.
          *
+         * This routine might take a little time for larger triangulations,
+         * and so you can pass a progress tracker to this routine.  The
+         * objective that it tracks is the best number of pentachora found
+         * so far.  Be aware that, even if you cancel the operation via the
+         * progress tracker, this triangulation might still change as a
+         * result (e.g., perhaps the initial greedy heuristics made an
+         * improvement, but then the user cancelled the operation while the
+         * well-climbing methods were looking for an even better outcome).
+         *
          * \warning The specific behaviour of this routine will almost
          * certainly change between releases.
          *
@@ -563,13 +572,27 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * for a long time called intelligentSimplify().  It was renamed to
          * simplify() in Regina 7.4.
          *
+         * \python The global interpreter lock will be released while this
+         * function runs, so you can use it with Python-based multithreading.
+         *
+         * \param tracker a progress tracker through which progress will be
+         * reported, or \c null if no progress reporting is required.
          * \return \c true if and only if the triangulation was changed.
+         * If you do not have access to the return value (e.g., you are using
+         * multithreading and progress trackers): the triangulation will have
+         * changed if and only if the number of pentachora was reduced.
          */
-        bool simplify();
+        bool simplify(ProgressTrackerObjective* tracker = nullptr);
         /**
          * Deprecated alias for simplify(), which attempts to simplify this
          * triangulation as intelligently as possible using relatively fast
          * heuristics.
+         *
+         * Since this routine exists to support code written against older
+         * versions of Regina, it just calls simplify() with no additional
+         * arguments.  In particular, unlike simplify(), this deprecated
+         * routine does not support progress tracking, and for Python users it
+         * does not release the global interpreter lock.
          *
          * \deprecated This routine has been renamed to simplify().
          * See simplify() for further details.
@@ -1533,6 +1556,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * Implements simplifyToLocalMinimum().  The template argument
          * indicates which individual moves we are allowed to use.
          *
+         * If \a perform is \c true, then if this routine does actually change
+         * the triangulation, it is guaranteed that this change will have
+         * reduced the total number of pentachora.
+         *
          * See simplifyToLocalMinimum() for further details.
          */
         template <SimplifyContext>
@@ -1551,10 +1578,40 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * The template argument \a SimplifyContext indicates which individual
          * moves we are allowed to use.
          *
+         * If a progress tracker is passed, then this routine will create
+         * new stages, maintain the objective value as the best number of
+         * pentachora found so far, and check for cancellation.  However,
+         * it will _not_ mark the progress tracker as finished.  Be aware
+         * that, even if the operation is cancelled, the triangulation still
+         * might have changed as a result.
+         *
+         * If this routine does actually change the triangulation, it is
+         * guaranteed that this change will have reduced the total number of
+         * pentachora.
+         *
          * See simplify() for further details.
          */
         template <SimplifyContext>
-        bool simplifyGreedyInternal();
+        bool simplifyGreedyInternal(ProgressTrackerObjective* tracker);
+
+        /**
+         * Implements simplifyUpDown().
+         *
+         * If a progress tracker is passed, then this routine will create
+         * new stages, maintain the objective value as the best number of
+         * pentachora found so far, and check for cancellation.  However,
+         * it will _not_ mark the progress tracker as finished.  Be aware
+         * that, even if the operation is cancelled, the triangulation still
+         * might have changed as a result.
+         *
+         * If this routine does actually change the triangulation, and if
+         * \a alwaysModify is \c true, then it is guaranteed that this change
+         * will have reduced the total number of pentachora.
+         *
+         * See simplifyUpDown() for further details.
+         */
+        bool simplifyUpDownInternal(ssize_t max24, ssize_t max33,
+            bool alwaysModify, ProgressTrackerObjective* tracker);
 
     friend class regina::Face<4, 4>;
     friend class regina::detail::SimplexBase<4>;
@@ -1681,6 +1738,11 @@ inline bool Triangulation<4>::intelligentSimplify() {
 
 inline bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
     return simplifyToLocalMinimumInternal<SimplifyContext::Best>(perform);
+}
+
+inline bool Triangulation<4>::simplifyUpDown(ssize_t max24, ssize_t max33,
+        bool alwaysModify) {
+    return simplifyUpDownInternal(max24, max33, alwaysModify, nullptr);
 }
 
 template <typename Action, typename... Args>
