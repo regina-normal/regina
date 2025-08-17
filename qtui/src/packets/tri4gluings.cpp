@@ -625,9 +625,6 @@ void Tri4GluingsUI::fillToolBar(QToolBar* bar) {
         bar->addAction(actSimplify);
         bar->addAction(actOrient);
     } else {
-        bar->addAction(actAddPent);
-        bar->addAction(actRemovePent);
-        bar->addSeparator();
         bar->addAction(actSimplify);
         bar->addAction(actMoves);
         bar->addSeparator();

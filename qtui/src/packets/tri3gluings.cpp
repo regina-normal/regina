@@ -727,9 +727,6 @@ void Tri3GluingsUI::fillToolBar(QToolBar* bar) {
         bar->addAction(actSimplify);
         bar->addAction(actOrient);
     } else {
-        bar->addAction(actAddTet);
-        bar->addAction(actRemoveTet);
-        bar->addSeparator();
         bar->addAction(actSimplify);
         bar->addAction(actTreewidth);
         bar->addAction(actMoves);

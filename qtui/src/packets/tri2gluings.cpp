@@ -513,9 +513,6 @@ void Tri2GluingsUI::fillToolBar(QToolBar* bar) {
         bar->addSeparator();
         bar->addAction(actOrient);
     } else {
-        bar->addAction(actAddTri);
-        bar->addAction(actRemoveTri);
-        bar->addSeparator();
         bar->addAction(actOrient);
         bar->addAction(actReflect);
         bar->addAction(actSubdivide);
