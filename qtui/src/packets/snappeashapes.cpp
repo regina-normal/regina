@@ -273,6 +273,7 @@ SnapPeaShapesUI::SnapPeaShapesUI(
 
     actFill = new QAction(this);
     actFill->setText(tr("Build &Filled Manifold..."));
+    actFill->setIconText(tr("Fill"));
     actFill->setIcon(ReginaSupport::regIcon("fill"));
     actFill->setToolTip(tr("Build a new manifold that fills one or all cusps"));
     actFill->setWhatsThis(tr("Builds a new manifold that permanently "
@@ -286,6 +287,7 @@ SnapPeaShapesUI::SnapPeaShapesUI(
 
     actCanonise = new QAction(this);
     actCanonise->setText(tr("Build &Canonical Retriangulation"));
+    actCanonise->setIconText(tr("Canonical"));
     actCanonise->setIcon(ReginaSupport::regIcon("canonical"));
     actCanonise->setToolTip(tr("Build the canonical retriangulation"));
     actCanonise->setWhatsThis(tr("Builds the canonical retriangulation "
@@ -306,6 +308,7 @@ SnapPeaShapesUI::SnapPeaShapesUI(
 
     actToRegina = new QAction(this);
     actToRegina->setText(tr("&Convert to Regina"));
+    actToRegina->setIconText(tr("Regina"));
     actToRegina->setIcon(ReginaSupport::regIcon("packet_triangulation3"));
     actToRegina->setToolTip(tr("Convert this to a Regina triangulation"));
     actToRegina->setWhatsThis(tr("Converts this into one of Regina's native "
@@ -327,6 +330,7 @@ SnapPeaShapesUI::SnapPeaShapesUI(
 
     actVertexLinks = new QAction(this);
     actVertexLinks->setText(tr("&Vertex Links..."));
+    actVertexLinks->setIconText(tr("Vertex Links"));
     actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
     actVertexLinks->setToolTip(tr("Build a chosen vertex link"));
     actVertexLinks->setWhatsThis(tr("Builds a 2-manifold triangulation "

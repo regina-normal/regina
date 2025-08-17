@@ -428,6 +428,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     actTreewidth = new QAction(this);
     actTreewidth->setText(tr("Improve &Treewidth"));
+    actTreewidth->setIconText(tr("Treewidth"));
     actTreewidth->setIcon(ReginaSupport::regIcon("treewidth"));
     actTreewidth->setToolTip(tr("Reduce the treewidth of the triangulation"));
     actTreewidth->setWhatsThis(tr("Explore nearby triangulations via "
@@ -440,6 +441,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     actMoves = new QAction(this);
     actMoves->setText(tr("&Elementary Moves..."));
+    actMoves->setIconText(tr("Moves"));
     actMoves->setIcon(ReginaSupport::regIcon("eltmoves"));
     actMoves->setToolTip(tr("Perform individual elementary moves"));
     actMoves->setWhatsThis(tr("Allows you to perform elementary moves upon "
@@ -481,6 +483,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     actSubdivide = new QAction(this);
     actSubdivide->setText(tr("&Barycentric Subdivide"));
+    actSubdivide->setIconText(tr("Subdivide"));
     actSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
     actSubdivide->setToolTip(tr(
         "Perform a barycentric subdivision"));
@@ -493,6 +496,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     actTruncate = new QAction(this);
     actTruncate->setText(tr("&Truncate Ideal Vertices"));
+    actTruncate->setIconText(tr("Truncate"));
     actTruncate->setIcon(ReginaSupport::regIcon("truncate"));
     actTruncate->setToolTip(tr(
         "Truncate all ideal vertices"));
@@ -508,6 +512,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     auto* actTruncateVertex = new QAction(this);
     actTruncateVertex->setText(tr("Truncate Single Vertex..."));
+    actTruncateVertex->setIconText(tr("Truncate Single"));
     actTruncateVertex->setIcon(ReginaSupport::regIcon("truncate-single"));
     actTruncateVertex->setToolTip(tr("Truncate a single vertex"));
     actTruncateVertex->setWhatsThis(tr("Truncates a single chosen vertex.  "
@@ -543,6 +548,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     auto* actDrillEdge = new QAction(this);
     actDrillEdge->setText(tr("Drill Ed&ge..."));
+    actDrillEdge->setIconText(tr("Drill Edge"));
     actDrillEdge->setIcon(ReginaSupport::regIcon("drilledge"));
     actDrillEdge->setToolTip(tr("Drill out an edge"));
     actDrillEdge->setWhatsThis(tr("Drills out a regular neighbourhood "
@@ -552,6 +558,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     auto* actConnectedSumWith = new QAction(this);
     actConnectedSumWith->setText(tr("Connect Sum With..."));
+    actConnectedSumWith->setIconText(tr("Connect Sum"));
     actConnectedSumWith->setIcon(ReginaSupport::regIcon("connectedsumwith"));
     actConnectedSumWith->setToolTip(tr(
         "Make this into a connected sum with another triangulation"));
@@ -563,6 +570,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     auto* actInsertTri = new QAction(this);
     actInsertTri->setText(tr("Insert Triangulation..."));
+    actInsertTri->setIconText(tr("Insert"));
     actInsertTri->setIcon(ReginaSupport::regIcon("disjointunion"));
     actInsertTri->setToolTip(tr("Insert a copy of some other triangulation"));
     actInsertTri->setWhatsThis(tr("Inserts a copy of some chosen "
@@ -575,6 +583,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     auto* actZeroEff = new QAction(this);
     actZeroEff->setText(tr("Make &0-Efficient"));
+    actZeroEff->setIconText(tr("0-Efficient"));
     actZeroEff->setIcon(ReginaSupport::regIcon("simplify-0eff"));
     actZeroEff->setToolTip(tr(
         "Convert this into a 0-efficient triangulation if possible"));
@@ -594,6 +603,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     auto* actDoubleCover = new QAction(this);
     actDoubleCover->setText(tr("Build &Double Cover"));
+    actDoubleCover->setIconText(tr("Double"));
     actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
     actDoubleCover->setToolTip(tr(
         "Build the orientable double cover of this triangulation"));
@@ -608,6 +618,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     actDoubleOverBoundary = new QAction(this);
     actDoubleOverBoundary->setText(tr("Build Double Over Boundary"));
+    actDoubleOverBoundary->setIconText(tr("Double Over ∂"));
     actDoubleOverBoundary->setIcon(ReginaSupport::regIcon("boundary-double"));
     actDoubleOverBoundary->setToolTip(tr(
         "Build two copies of this triangulation joined along their "
@@ -624,6 +635,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     actSnapPea = new QAction(this);
     actSnapPea->setText(tr("Convert to SnapPea"));
+    actSnapPea->setIconText(tr("SnapPea"));
     actSnapPea->setIcon(ReginaSupport::regIcon("packet_snappea"));
     actSnapPea->setToolTip(tr("Convert this to a SnapPea triangulation"));
     actSnapPea->setWhatsThis(tr("Converts this into a new SnapPea "
@@ -642,6 +654,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     actBoundaryComponents = new QAction(this);
     actBoundaryComponents->setText(tr("Boundar&y Components..."));
+    actBoundaryComponents->setIconText(tr("Boundary Components"));
     actBoundaryComponents->setIcon(ReginaSupport::regIcon("boundaries"));
     actBoundaryComponents->setToolTip(tr(
         "Triangulate a chosen boundary component"));
@@ -657,6 +670,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     actVertexLinks = new QAction(this);
     actVertexLinks->setText(tr("&Vertex Links..."));
+    actVertexLinks->setIconText(tr("Vertex Links"));
     actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
     actVertexLinks->setToolTip(tr("Build a chosen vertex link"));
     actVertexLinks->setWhatsThis(tr("Builds a 2-manifold triangulation "
@@ -670,6 +684,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
+    actSplitIntoComponents->setIconText(tr("Components"));
     actSplitIntoComponents->setIcon(ReginaSupport::regIcon("components"));
     actSplitIntoComponents->setToolTip(tr("Extract connected components"));
     actSplitIntoComponents->setWhatsThis(tr("Splits a disconnected "
@@ -685,6 +700,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     auto* actConnectedSumDecomposition = new QAction(this);
     actConnectedSumDecomposition->setText(tr("Co&nnected Sum Decomposition"));
+    actConnectedSumDecomposition->setIconText(tr("Summands"));
     actConnectedSumDecomposition->setIcon(ReginaSupport::regIcon(
         "connectedsum"));
     actConnectedSumDecomposition->setToolTip(tr(

@@ -333,6 +333,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
 
     actTreewidth = new QAction(this);
     actTreewidth->setText(tr("Improve &Treewidth"));
+    actTreewidth->setIconText(tr("Treewidth"));
     actTreewidth->setIcon(ReginaSupport::regIcon("treewidth"));
     actTreewidth->setToolTip(tr("Reduce the treewidth of the link diagram"));
     actTreewidth->setWhatsThis(tr("Explores nearby diagrams via "
@@ -346,6 +347,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
 
     actMoves = new QAction(this);
     actMoves->setText(tr("Reidemeister &Moves..."));
+    actMoves->setIconText(tr("Moves"));
     actMoves->setIcon(ReginaSupport::regIcon("eltmoves"));
     actMoves->setToolTip(tr("Perform individual Reidemeister moves"));
     actMoves->setWhatsThis(tr("Allows you to perform Reidemeister moves upon "
@@ -397,6 +399,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
 
     actAlternating = new QAction(this);
     actAlternating->setText(tr("Make &Alternating"));
+    actAlternating->setIconText(tr("Alternate"));
     actAlternating->setIcon(ReginaSupport::regIcon("alternating"));
     actAlternating->setToolTip(tr("Make this an alternating link"));
     actAlternating->setWhatsThis(tr("Switches the upper/lower strands on "
@@ -415,6 +418,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
 
     auto* actComposeWith = new QAction(this);
     actComposeWith->setText(tr("Com&pose With..."));
+    actComposeWith->setIconText(tr("Compose"));
     actComposeWith->setIcon(ReginaSupport::regIcon("connectedsumwith"));
     actComposeWith->setToolTip(tr("Compose this with some other link"));
     actComposeWith->setWhatsThis(tr("Converts this into the composite of "
@@ -424,6 +428,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
 
     auto* actInsertLink = new QAction(this);
     actInsertLink->setText(tr("&Insert Link..."));
+    actInsertLink->setIconText(tr("Insert"));
     actInsertLink->setIcon(ReginaSupport::regIcon("disjointunion"));
     actInsertLink->setToolTip(tr("Insert a copy of some other link diagram"));
     actInsertLink->setWhatsThis(tr("Inserts a copy of some chosen link diagram "
@@ -438,6 +443,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
 
     actWhiteheadDouble = new QAction(this);
     actWhiteheadDouble->setText(tr("Build &Whitehead Double"));
+    actWhiteheadDouble->setIconText(tr("Double"));
     actWhiteheadDouble->setIcon(ReginaSupport::regIcon("whitehead-double"));
     actWhiteheadDouble->setToolTip(tr("Build the Whitehead double of this "
         "knot"));
@@ -452,6 +458,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
 
     auto* actParallel = new QAction(this);
     actParallel->setText(tr("Build Parallel Ca&bles..."));
+    actParallel->setIconText(tr("Parallel"));
     actParallel->setIcon(ReginaSupport::regIcon("parallel"));
     actParallel->setToolTip(tr("Expand into parallel cables"));
     actParallel->setWhatsThis(tr("Builds a new link using <i>k</i> cables "
@@ -495,6 +502,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     // always for now.
     auto* actDiagramComponents = new QAction(this);
     actDiagramComponents->setText(tr("Extract Diagram C&omponents"));
+    actDiagramComponents->setIconText(tr("Components"));
     actDiagramComponents->setIcon(ReginaSupport::regIcon("components"));
     actDiagramComponents->setToolTip(
         tr("Extract connected diagram components"));
