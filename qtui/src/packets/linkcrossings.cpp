@@ -324,11 +324,11 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actSimplify->setIcon(ReginaSupport::regIcon("simplify-clean"));
     actSimplify->setToolTip(tr(
         "Simplify the knot or link as far as possible"));
-    actSimplify->setWhatsThis(tr("Simplifies this link to use fewer "
-        "crossings.  "
-        "This procedure uses only fast heuristics based on Reidemeister "
-        "moves, and so there is no guarantee that the smallest possible "
-        "number of crossings will be achieved."));
+    actSimplify->setWhatsThis(tr("Attempts to simplify this link diagram "
+        "to use fewer crossings.<p>"
+        "This procedure searches for useful combinations of Reidemeister "
+        "moves.  There is no guarantee that the "
+        "smallest possible number of crossings will be achieved."));
     actionList.push_back(actSimplify);
     connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
 
@@ -339,7 +339,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
         "Attempt to reduce the treewidth of the link diagram"));
     actTreewidth->setWhatsThis(tr("Explores nearby diagrams via "
         "Reidemeister moves in an attempt to reduce the treewidth "
-        "of the link diagram.  "
+        "of this link diagram.  "
         "This operation might increase the number of crossings, "
         "but it should improve the performance of treewidth-based algorithms "
         "(e.g., for computing knot/link polynomials)."));
@@ -418,22 +418,19 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     auto* actComposeWith = new QAction(this);
     actComposeWith->setText(tr("Com&pose With..."));
     actComposeWith->setIcon(ReginaSupport::regIcon("connectedsumwith"));
-    actComposeWith->setToolTip(
-        tr("Make this into a composition with another link"));
-    actComposeWith->setWhatsThis(tr("Forms the composition of "
-        "this link with some other link.  "
-        "This link will be modified directly."));
+    actComposeWith->setToolTip(tr("Compose this with some other link"));
+    actComposeWith->setWhatsThis(tr("Converts this into the composite of "
+        "this link with some other chosen link."));
     actionList.push_back(actComposeWith);
     connect(actComposeWith, SIGNAL(triggered()), this, SLOT(composeWith()));
 
     auto* actInsertLink = new QAction(this);
     actInsertLink->setText(tr("&Insert Link..."));
     actInsertLink->setIcon(ReginaSupport::regIcon("disjointunion"));
-    actInsertLink->setToolTip(
-        tr("Insert another link as additional diagram component(s)"));
-    actInsertLink->setWhatsThis(tr("Forms the split union of "
-        "this link with some other link.  "
-        "This link will be modified directly."));
+    actInsertLink->setToolTip(tr("Insert a copy of some other link diagram"));
+    actInsertLink->setWhatsThis(tr("Inserts a copy of some chosen link diagram "
+        "into this diagram.  The effect will be to convert this into the "
+        "split union of the two original links."));
     actionList.push_back(actInsertLink);
     connect(actInsertLink, SIGNAL(triggered()), this, SLOT(insertLink()));
 

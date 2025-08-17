@@ -261,7 +261,7 @@ SnapPeaShapesUI::SnapPeaShapesUI(
     actRandomise->setIcon(ReginaSupport::regIcon("randomise"));
     actRandomise->setToolTip(tr(
         "Randomise this triangulation"));
-    actRandomise->setWhatsThis(tr("Randomise this triangulation.  "
+    actRandomise->setWhatsThis(tr("Randomises this triangulation.  "
         "The manifold will be randomly retriangulated using local moves "
         "that preserve the topology."));
     triActionList.push_back(actRandomise);

@@ -383,7 +383,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actAddPent->setIconText(tr("Add Pent"));
     actAddPent->setIcon(ReginaSupport::regIcon("insert"));
     actAddPent->setToolTip(tr("Add a new pentachoron"));
-    actAddPent->setWhatsThis(tr("Add a new pentachoron to this "
+    actAddPent->setWhatsThis(tr("Adds a new pentachoron to this "
         "triangulation."));
     triActionList.push_back(actAddPent);
     connect(actAddPent, SIGNAL(triggered()), this, SLOT(addPent()));
@@ -394,7 +394,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actRemovePent->setIcon(ReginaSupport::regIcon("delete"));
     actRemovePent->setToolTip(tr("Remove the currently selected pentachora"));
     actRemovePent->setEnabled(false);
-    actRemovePent->setWhatsThis(tr("Remove the currently selected "
+    actRemovePent->setWhatsThis(tr("Removes the currently selected "
         "pentachora from this triangulation."));
     connect(actRemovePent, SIGNAL(triggered()), this,
         SLOT(removeSelectedPents()));
@@ -412,11 +412,12 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actSimplify->setIcon(ReginaSupport::regIcon("simplify-clean"));
     actSimplify->setToolTip(tr(
         "Simplify the triangulation as far as possible"));
-    actSimplify->setWhatsThis(tr("Simplify this triangulation to use fewer "
-        "pentachora without changing the underlying 4-manifold or its "
-        "PL structure.  This triangulation will be modified directly.<p>"
-        "Note that there is no guarantee that the smallest possible number of "
-        "pentachora will be achieved."));
+    actSimplify->setWhatsThis(tr("Attempts to simplify this triangulation "
+        "to use fewer pentachora without changing the underlying 4-manifold "
+        "or its PL structure.<p>"
+        "This procedure searches for useful combinations of Pachner moves "
+        "and/or other elementary moves.  There is no guarantee that the "
+        "smallest possible number of pentachora will be achieved."));
     connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
     triActionList.push_back(actSimplify);
 
@@ -424,12 +425,12 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actEltMove->setText(tr("&Elementary Moves..."));
     actEltMove->setToolTip(tr(
         "Modify the triangulation using elementary moves"));
-    actEltMove->setWhatsThis(tr("<qt>Perform elementary moves upon this "
-        "triangulation.  <i>Elementary moves</i> are modifications local to "
-        "a small number of pentachora that do not change the underlying "
-        "4-manifold.<p>"
+    actEltMove->setWhatsThis(tr("Allows you to perform elementary moves upon "
+        "this triangulation.  <i>Elementary moves</i> are modifications local "
+        "to a small number of pentachora that do not change the underlying "
+        "4-manifold or its PL structure.<p>"
         "A dialog will be presented for you to select which "
-        "elementary moves to apply.</qt>"));
+        "elementary moves to apply."));
     triActionList.push_back(actEltMove);
     connect(actEltMove, SIGNAL(triggered()), this, SLOT(elementaryMove()));
 
@@ -440,13 +441,12 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actOrient = new QAction(this);
     actOrient->setText(tr("&Orient"));
     actOrient->setIcon(ReginaSupport::regIcon("orient"));
-    actOrient->setToolTip(tr(
-        "Relabel vertices of pentachora for consistent orientation"));
-    actOrient->setWhatsThis(tr("<qt>Relabel the vertices of each pentachoron "
+    actOrient->setToolTip(tr("Orient this triangulation"));
+    actOrient->setWhatsThis(tr("Relabels the vertices of each pentachoron "
         "so that all pentachora are oriented consistently, i.e., "
         "so that orientation is preserved across adjacent facets.<p>"
         "If this triangulation includes both orientable and non-orientable "
-        "components, only the orientable components will be relabelled.</qt>"));
+        "components, only the orientable components will be relabelled."));
     triActionList.push_back(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
@@ -455,11 +455,11 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actReflect->setIcon(ReginaSupport::regIcon("reflect"));
     actReflect->setToolTip(tr(
         "Reverse the orientation of each pentachoron"));
-    actReflect->setWhatsThis(tr("<qt>Relabel the vertices of each pentachoron "
+    actReflect->setWhatsThis(tr("Relabels the vertices of each pentachoron "
         "so that the orientations of all pentachora are reversed.<p>"
         "If this triangulation is oriented, then the overall effect will be "
         "to convert this into an isomorphic triangulation with the "
-        "opposite orientation.</qt>"));
+        "opposite orientation."));
     triActionList.push_back(actReflect);
     connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
 
@@ -468,11 +468,9 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
     actSubdivide->setToolTip(tr(
         "Perform a barycentric subdivision"));
-    actSubdivide->setWhatsThis(tr("Perform a barycentric "
-        "subdivision on this triangulation.  The triangulation will be "
-        "changed directly.<p>"
-        "This operation involves subdividing each pentachoron into "
-        "120 smaller pentachora."));
+    actSubdivide->setWhatsThis(tr("Performs a barycentric "
+        "subdivision on this triangulation.  Each pentachoron "
+        "will be subdivided into 120 smaller pentachora."));
     triActionList.push_back(actSubdivide);
     connect(actSubdivide, SIGNAL(triggered()), this,
         SLOT(barycentricSubdivide()));
@@ -483,13 +481,13 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
 
     actTruncate->setToolTip(tr(
         "Truncate all ideal vertices"));
-    actTruncate->setWhatsThis(tr("Convert this from an ideal "
-        "triangulation to a finite triangulation.  Any vertices whose "
-        "links are neither 3-spheres nor 3-balls "
-        "will be truncated and converted into boundary tetrahedra.<p>"
-        "This triangulation will be modified directly.  If there are no "
-        "vertices of this type to truncate, this operation will have no "
-        "effect."));
+    actTruncate->setWhatsThis(tr("Truncates all ideal vertices "
+        "of this triangulation.<p>"
+        "Any vertices whose links are neither 3-spheres nor 3-balls will be "
+        "truncated.  In particular, any ideal vertices will be converted into "
+        "real boundary components formed from boundary tetrahedra.<p>"
+        "If there are no vertices of this type to truncate, then this "
+        "operation will have no effect."));
     triActionList.push_back(actTruncate);
     connect(actTruncate, SIGNAL(triggered()), this, SLOT(idealToFinite()));
 
@@ -498,25 +496,24 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actMakeIdeal->setIcon(ReginaSupport::regIcon("cone"));
     actMakeIdeal->setToolTip(tr(
         "Convert real boundary components into ideal vertices"));
-    actMakeIdeal->setWhatsThis(tr("Convert this from a finite "
-        "triangulation to an ideal triangulation.  Each real boundary "
-        "component (formed from one or more boundary tetrahedra) will be "
-        "converted into a single ideal vertex.<p>"
-        "A side-effect of this operation is that any spherical boundary "
+    actMakeIdeal->setWhatsThis(tr("Converts each real boundary component "
+        "of this triangulation (formed from one or more boundary tetrahedra) "
+        "into an ideal vertex.<p>"
+        "A side-effect is that any spherical boundary "
         "components will be filled in with balls.<p>"
-        "This triangulation will be modified directly.  If there are no "
-        "real boundary components, this operation will have no effect."));
+        "If there are no real boundary components, then this "
+        "operation will have no effect."));
     triActionList.push_back(actMakeIdeal);
     connect(actMakeIdeal, SIGNAL(triggered()), this, SLOT(finiteToIdeal()));
 
     auto* actInsertTri = new QAction(this);
     actInsertTri->setText(tr("Insert Triangulation..."));
     actInsertTri->setIcon(ReginaSupport::regIcon("disjointunion"));
-    actInsertTri->setToolTip(tr(
-        "Insert another triangulation as additional connected component(s)"));
-    actInsertTri->setWhatsThis(tr("Forms the disjoint union "
-        "of this triangulation with some other triangulation.  "
-        "This triangulation will be modified directly."));
+    actInsertTri->setToolTip(tr("Insert a copy of some other triangulation"));
+    actInsertTri->setWhatsThis(tr("Inserts a copy of some chosen "
+        "triangulation into this triangulation.  The connected components of "
+        "the chosen triangulation will be become additional components of "
+        "this triangulation."));
     triActionList.push_back(actInsertTri);
     connect(actInsertTri, SIGNAL(triggered()), this,
         SLOT(insertTriangulation()));

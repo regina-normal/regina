@@ -368,7 +368,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     actAddTri->setText(tr("&Add Triangle"));
     actAddTri->setIcon(ReginaSupport::regIcon("insert"));
     actAddTri->setToolTip(tr("Add a new triangle"));
-    actAddTri->setWhatsThis(tr("Add a new triangle to this triangulation."));
+    actAddTri->setWhatsThis(tr("Adds a new triangle to this triangulation."));
     triActionList.push_back(actAddTri);
     connect(actAddTri, SIGNAL(triggered()), this, SLOT(addTri()));
 
@@ -377,7 +377,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     actRemoveTri->setIcon(ReginaSupport::regIcon("delete"));
     actRemoveTri->setToolTip(tr("Remove the currently selected triangles"));
     actRemoveTri->setEnabled(false);
-    actRemoveTri->setWhatsThis(tr("Remove the currently selected "
+    actRemoveTri->setWhatsThis(tr("Removes the currently selected "
         "triangles from this triangulation."));
     connect(actRemoveTri, SIGNAL(triggered()), this, SLOT(removeSelectedTris()));
     connect(edgeTable->selectionModel(),
@@ -392,13 +392,12 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     actOrient = new QAction(this);
     actOrient->setText(tr("&Orient"));
     actOrient->setIcon(ReginaSupport::regIcon("orient"));
-    actOrient->setToolTip(tr(
-        "Relabel vertices of triangles for consistent orientation"));
-    actOrient->setWhatsThis(tr("<qt>Relabel the vertices of each triangle "
+    actOrient->setToolTip(tr("Orient this triangulation"));
+    actOrient->setWhatsThis(tr("Relabels the vertices of each triangle "
         "so that all triangles are oriented consistently, i.e., "
         "so that orientation is preserved across adjacent edges.<p>"
         "If this triangulation includes both orientable and non-orientable "
-        "components, only the orientable components will be relabelled.</qt>"));
+        "components, only the orientable components will be relabelled."));
     triActionList.push_back(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
@@ -407,11 +406,11 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     actReflect->setIcon(ReginaSupport::regIcon("reflect"));
     actReflect->setToolTip(tr(
         "Reverse the orientation of each triangle"));
-    actReflect->setWhatsThis(tr("<qt>Relabel the vertices of each triangle "
+    actReflect->setWhatsThis(tr("Relabels the vertices of each triangle "
         "so that the orientations of all triangles are reversed.<p>"
         "If this triangulation is oriented, then the overall effect will be "
         "to convert this into an isomorphic triangulation with the "
-        "opposite orientation.</qt>"));
+        "opposite orientation."));
     triActionList.push_back(actReflect);
     connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
 
@@ -420,11 +419,9 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     actSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
     actSubdivide->setToolTip(tr(
         "Perform a barycentric subdivision"));
-    actSubdivide->setWhatsThis(tr("Perform a barycentric "
-        "subdivision on this triangulation.  The triangulation will be "
-        "changed directly.<p>"
-        "This operation involves subdividing each triangle into "
-        "6 smaller triangles."));
+    actSubdivide->setWhatsThis(tr("Performs a barycentric "
+        "subdivision on this triangulation.  Each triangle "
+        "will be subdivided into 6 smaller triangles."));
     triActionList.push_back(actSubdivide);
     connect(actSubdivide, SIGNAL(triggered()), this,
         SLOT(barycentricSubdivide()));
@@ -432,11 +429,11 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     auto* actInsertTri = new QAction(this);
     actInsertTri->setText(tr("Insert Triangulation..."));
     actInsertTri->setIcon(ReginaSupport::regIcon("disjointunion"));
-    actInsertTri->setToolTip(tr(
-        "Insert another triangulation as additional connected component(s)"));
-    actInsertTri->setWhatsThis(tr("Forms the disjoint union "
-        "of this triangulation with some other triangulation.  "
-        "This triangulation will be modified directly."));
+    actInsertTri->setToolTip(tr("Insert a copy of some other triangulation"));
+    actInsertTri->setWhatsThis(tr("Inserts a copy of some chosen "
+        "triangulation into this triangulation.  The connected components of "
+        "the chosen triangulation will be become additional components of "
+        "this triangulation."));
     triActionList.push_back(actInsertTri);
     connect(actInsertTri, SIGNAL(triggered()), this,
         SLOT(insertTriangulation()));

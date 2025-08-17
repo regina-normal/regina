@@ -384,13 +384,12 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     // Set up the triangulation actions.
     QAction* sep;
 
-
     actAddTet = new QAction(this);
     actAddTet->setText(tr("&Add Tetrahedron"));
     actAddTet->setIconText(tr("Add Tet"));
     actAddTet->setIcon(ReginaSupport::regIcon("insert"));
     actAddTet->setToolTip(tr("Add a new tetrahedron"));
-    actAddTet->setWhatsThis(tr("Add a new tetrahedron to this "
+    actAddTet->setWhatsThis(tr("Adds a new tetrahedron to this "
         "triangulation."));
     triActionList.push_back(actAddTet);
     connect(actAddTet, SIGNAL(triggered()), this, SLOT(addTet()));
@@ -401,7 +400,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actRemoveTet->setIcon(ReginaSupport::regIcon("delete"));
     actRemoveTet->setToolTip(tr("Remove the currently selected tetrahedra"));
     actRemoveTet->setEnabled(false);
-    actRemoveTet->setWhatsThis(tr("Remove the currently selected "
+    actRemoveTet->setWhatsThis(tr("Removes the currently selected "
         "tetrahedra from this triangulation."));
     connect(actRemoveTet, SIGNAL(triggered()), this, SLOT(removeSelectedTets()));
     connect(faceTable->selectionModel(),
@@ -418,15 +417,13 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actSimplify->setIcon(ReginaSupport::regIcon("simplify-clean"));
     actSimplify->setToolTip(tr(
         "Simplify the triangulation as far as possible"));
-    actSimplify->setWhatsThis(tr("Simplify this triangulation to use fewer "
-        "tetrahedra without changing the underlying 3-manifold.  This "
-        "triangulation will be modified directly.<p>"
-        "Note that there is no guarantee that the smallest possible number of "
-        "tetrahedra will be achieved.<p>"
-        "This procedure uses only elementary moves, which makes it fast but "
-        "means that sometimes only a small reduction can be obtained.  See "
-        "the <i>Make 0-Efficient</i> routine for a slower but more powerful "
-        "reduction."));
+    actSimplify->setWhatsThis(tr("Attempts to simplify this triangulation "
+        "to use fewer tetrahedra without changing the underlying 3-manifold.<p>"
+        "This procedure searches for useful combinations of Pachner moves "
+        "and/or other elementary moves.  There is no guarantee that the "
+        "smallest possible number of tetrahedra will be achieved.<p>"
+        "You can also try <i>Make 0-Efficient</i> for a slower but more "
+        "powerful reduction."));
     connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
     triActionList.push_back(actSimplify);
 
@@ -436,7 +433,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actTreewidth->setToolTip(tr(
         "Attempt to reduce the treewidth of the triangulation"));
     actTreewidth->setWhatsThis(tr("Explore nearby triangulations via "
-        "Pachner moves in an attempt to reduce the treewidth of the "
+        "Pachner moves in an attempt to reduce the treewidth of this "
         "triangulation.  This might increase the number of tetrahedra, "
         "but it should improve the performance of treewidth-based algorithms "
         "(e.g., for computing Turaev-Viro invariants)."));
@@ -447,12 +444,12 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actEltMove->setText(tr("&Elementary Moves..."));
     actEltMove->setToolTip(tr(
         "Modify the triangulation using elementary moves"));
-    actEltMove->setWhatsThis(tr("<qt>Perform elementary moves upon this "
-        "triangulation.  <i>Elementary moves</i> are modifications local to "
-        "a small number of tetrahedra that do not change the underlying "
+    actEltMove->setWhatsThis(tr("Allows you to perform elementary moves upon "
+        "this triangulation.  <i>Elementary moves</i> are modifications local "
+        "to a small number of tetrahedra that do not change the underlying "
         "3-manifold.<p>"
         "A dialog will be presented for you to select which "
-        "elementary moves to apply.</qt>"));
+        "elementary moves to apply."));
     triActionList.push_back(actEltMove);
     connect(actEltMove, SIGNAL(triggered()), this, SLOT(elementaryMove()));
 
@@ -463,13 +460,12 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actOrient = new QAction(this);
     actOrient->setText(tr("&Orient"));
     actOrient->setIcon(ReginaSupport::regIcon("orient"));
-    actOrient->setToolTip(tr(
-        "Relabel vertices of tetrahedra for consistent orientation"));
-    actOrient->setWhatsThis(tr("<qt>Relabel the vertices of each tetrahedron "
+    actOrient->setToolTip(tr("Orient this triangulation"));
+    actOrient->setWhatsThis(tr("Relabels the vertices of each tetrahedron "
         "so that all tetrahedra are oriented consistently, i.e., "
         "so that orientation is preserved across adjacent faces.<p>"
         "If this triangulation includes both orientable and non-orientable "
-        "components, only the orientable components will be relabelled.</qt>"));
+        "components, only the orientable components will be relabelled."));
     triActionList.push_back(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
@@ -478,11 +474,11 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actReflect->setIcon(ReginaSupport::regIcon("reflect"));
     actReflect->setToolTip(tr(
         "Reverse the orientation of each tetrahedron"));
-    actReflect->setWhatsThis(tr("<qt>Relabel the vertices of each tetrahedron "
+    actReflect->setWhatsThis(tr("Relabels the vertices of each tetrahedron "
         "so that the orientations of all tetrahedra are reversed.<p>"
         "If this triangulation is oriented, then the overall effect will be "
         "to convert this into an isomorphic triangulation with the "
-        "opposite orientation.</qt>"));
+        "opposite orientation."));
     triActionList.push_back(actReflect);
     connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
 
@@ -491,11 +487,9 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
     actSubdivide->setToolTip(tr(
         "Perform a barycentric subdivision"));
-    actSubdivide->setWhatsThis(tr("Perform a barycentric "
-        "subdivision on this triangulation.  The triangulation will be "
-        "changed directly.<p>"
-        "This operation involves subdividing each tetrahedron into "
-        "24 smaller tetrahedra."));
+    actSubdivide->setWhatsThis(tr("Performs a barycentric "
+        "subdivision on this triangulation.  Each tetrahedron "
+        "will be subdivided into 24 smaller tetrahedra."));
     triActionList.push_back(actSubdivide);
     connect(actSubdivide, SIGNAL(triggered()), this,
         SLOT(barycentricSubdivide()));
@@ -505,14 +499,13 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actTruncate->setIcon(ReginaSupport::regIcon("truncate"));
     actTruncate->setToolTip(tr(
         "Truncate all ideal vertices"));
-    actTruncate->setWhatsThis(tr("Convert this from an ideal "
-        "triangulation to a finite triangulation.  Any vertices whose "
-        "links are neither 2-spheres nor discs "
-        "will be truncated and converted into boundary triangles.<p>"
-        "This triangulation will be modified directly.  If there are no "
-        "vertices of this type to truncate, this operation will have no "
-        "effect.<p>"
-        "This action was previously called <i>Ideal to Finite</i>."));
+    actTruncate->setWhatsThis(tr("Truncates all ideal vertices "
+        "of this triangulation.<p>"
+        "Any vertices whose links are neither 2-spheres nor discs will be "
+        "truncated.  In particular, any ideal vertices will be converted into "
+        "real boundary components formed from boundary triangles.<p>"
+        "If there are no vertices of this type to truncate, then this "
+        "operation will have no effect."));
     triActionList.push_back(actTruncate);
     connect(actTruncate, SIGNAL(triggered()), this, SLOT(idealToFinite()));
 
@@ -521,7 +514,6 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actTruncateVertex->setIcon(ReginaSupport::regIcon("truncate-single"));
     actTruncateVertex->setToolTip(tr("Truncate a single vertex"));
     actTruncateVertex->setWhatsThis(tr("Truncates a single chosen vertex.  "
-        "This triangulation will be modified directly.<p>"
         "If the chosen vertex is internal, this will create a new 2-sphere "
         "boundary component.  If the chosen vertex is ideal, this will "
         "convert it into a real boundary component."));
@@ -534,36 +526,31 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actMakeIdeal->setIcon(ReginaSupport::regIcon("cone"));
     actMakeIdeal->setToolTip(tr(
         "Convert real boundary components into ideal vertices"));
-    actMakeIdeal->setWhatsThis(tr("Convert this from a finite "
-        "triangulation to an ideal triangulation.  Each real boundary "
-        "component (formed from two or more boundary triangles) will be "
-        "converted into a single ideal vertex.<p>"
-        "A side-effect of this operation is that any spherical boundary "
+    actMakeIdeal->setWhatsThis(tr("Converts each real boundary component "
+        "of this triangulation (formed from two or more boundary triangles) "
+        "into an ideal vertex.<p>"
+        "A side-effect is that any spherical boundary "
         "components will be filled in with balls.<p>"
-        "This triangulation will be modified directly.  If there are no "
-        "real boundary components, this operation will have no effect."));
+        "If there are no real boundary components, then this "
+        "operation will have no effect."));
     triActionList.push_back(actMakeIdeal);
     connect(actMakeIdeal, SIGNAL(triggered()), this, SLOT(finiteToIdeal()));
 
     auto* actPuncture = new QAction(this);
     actPuncture->setText(tr("Puncture"));
     actPuncture->setIcon(ReginaSupport::regIcon("puncture"));
-    actPuncture->setToolTip(tr(
-        "Remove a ball from the interior of the triangulation"));
-    actPuncture->setWhatsThis(tr("Removes a ball from the interior of "
-        "this triangulation.  "
-        "This triangulation will be modified directly."));
+    actPuncture->setToolTip(tr("Puncture the triangulation"));
+    actPuncture->setWhatsThis(tr("Removes a 3-ball from the interior of "
+        "this triangulation, creating a new 2-sphere boundary component."));
     triActionList.push_back(actPuncture);
     connect(actPuncture, SIGNAL(triggered()), this, SLOT(puncture()));
 
     auto* actDrillEdge = new QAction(this);
     actDrillEdge->setText(tr("Drill Ed&ge..."));
     actDrillEdge->setIcon(ReginaSupport::regIcon("drilledge"));
-    actDrillEdge->setToolTip(tr(
-        "Drill out a regular neighbourhood of an edge"));
-    actDrillEdge->setWhatsThis(tr("Drill out a regular neighbourhood "
-        "of an edge of this triangulation.  "
-        "This triangulation will be modified directly."));
+    actDrillEdge->setToolTip(tr("Drill out an edge"));
+    actDrillEdge->setWhatsThis(tr("Drills out a regular neighbourhood "
+        "of a chosen edge of this triangulation."));
     triActionList.push_back(actDrillEdge);
     connect(actDrillEdge, SIGNAL(triggered()), this, SLOT(drillEdge()));
 
@@ -572,9 +559,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actConnectedSumWith->setIcon(ReginaSupport::regIcon("connectedsumwith"));
     actConnectedSumWith->setToolTip(tr(
         "Make this into a connected sum with another triangulation"));
-    actConnectedSumWith->setWhatsThis(tr("Forms the connected sum "
-        "of this triangulation with some other triangulation.  "
-        "This triangulation will be modified directly."));
+    actConnectedSumWith->setWhatsThis(tr("Converts this into the connected sum "
+        "of this triangulation with some other chosen triangulation."));
     triActionList.push_back(actConnectedSumWith);
     connect(actConnectedSumWith, SIGNAL(triggered()), this,
         SLOT(connectedSumWith()));
@@ -582,11 +568,11 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     auto* actInsertTri = new QAction(this);
     actInsertTri->setText(tr("Insert Triangulation..."));
     actInsertTri->setIcon(ReginaSupport::regIcon("disjointunion"));
-    actInsertTri->setToolTip(tr(
-        "Insert another triangulation as additional connected component(s)"));
-    actInsertTri->setWhatsThis(tr("Forms the disjoint union "
-        "of this triangulation with some other triangulation.  "
-        "This triangulation will be modified directly."));
+    actInsertTri->setToolTip(tr("Insert a copy of some other triangulation"));
+    actInsertTri->setWhatsThis(tr("Inserts a copy of some chosen "
+        "triangulation into this triangulation.  The connected components of "
+        "the chosen triangulation will be become additional components of "
+        "this triangulation."));
     triActionList.push_back(actInsertTri);
     connect(actInsertTri, SIGNAL(triggered()), this,
         SLOT(insertTriangulation()));
@@ -596,14 +582,13 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actZeroEff->setIcon(ReginaSupport::regIcon("simplify-0eff"));
     actZeroEff->setToolTip(tr(
         "Convert this into a 0-efficient triangulation if possible"));
-    actZeroEff->setWhatsThis(tr("<qt>Convert this into a 0-efficient "
-        "triangulation of the same underlying 3-manifold, if possible.  "
-        "This triangulation will be modified directly.<p>"
-        "Note that this operation is currently available only for "
+    actZeroEff->setWhatsThis(tr("Attempts to convert this into a 0-efficient "
+        "triangulation of the same underlying 3-manifold.  "
+        "This operation is currently available only for "
         "closed orientable 3-manifold triangulations.<p>"
-        "Note also that some 3-manifolds (such as composite 3-manifolds) "
-        "can never have 0-efficient triangulations.  You will be notified "
-        "if this is the case.</qt>"));
+        "Some 3-manifolds (such as composite 3-manifolds) can never have "
+        "0-efficient triangulations.  You will be notified if this is the "
+        "case."));
     triActionList.push_back(actZeroEff);
     connect(actZeroEff, SIGNAL(triggered()), this, SLOT(makeZeroEfficient()));
 
