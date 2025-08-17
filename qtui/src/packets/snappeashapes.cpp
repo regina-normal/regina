@@ -259,8 +259,7 @@ SnapPeaShapesUI::SnapPeaShapesUI(
     actRandomise = new QAction(this);
     actRandomise->setText(tr("&Randomise"));
     actRandomise->setIcon(ReginaSupport::regIcon("randomise"));
-    actRandomise->setToolTip(tr(
-        "Randomise this triangulation"));
+    actRandomise->setToolTip(tr("Randomise the triangulation"));
     actRandomise->setWhatsThis(tr("Randomises this triangulation.  "
         "The manifold will be randomly retriangulated using local moves "
         "that preserve the topology."));
@@ -273,34 +272,34 @@ SnapPeaShapesUI::SnapPeaShapesUI(
     triActionList.push_back(sep);
 
     actFill = new QAction(this);
-    actFill->setText(tr("Permanently &Fill Cusps..."));
+    actFill->setText(tr("Build &Filled Manifold..."));
     actFill->setIcon(ReginaSupport::regIcon("fill"));
-    actFill->setToolTip(tr(
-        "Permanently fill one cusp or all cusps of this manifold"));
-    actFill->setWhatsThis(tr("<qt>Retriangulate to permanently "
-        "fill either one cusp or all cusps of this manifold.  "
-        "The original triangulation will be left untouched.</qt>"));
+    actFill->setToolTip(tr("Build a new manifold that fills one or all cusps"));
+    actFill->setWhatsThis(tr("Builds a new manifold that permanently "
+        "fills either all cusps or one chosen cusp, using the current "
+        "filling coefficients.<p>"
+        "This triangulation will not be changed &ndash; the filled manifold "
+        "will be added as a new triangulation beneath it in the packet tree."));
     triActionList.push_back(actFill);
     requiresNonNull.push_back(actFill);
     connect(actFill, SIGNAL(triggered()), this, SLOT(fill()));
 
     actCanonise = new QAction(this);
-    actCanonise->setText(tr("&Canonical Retriangulation"));
+    actCanonise->setText(tr("Build &Canonical Retriangulation"));
     actCanonise->setIcon(ReginaSupport::regIcon("canonical"));
-    actCanonise->setToolTip(tr(
-        "Build the canonical retriangulation of the canonical "
-        "cell decomposition"));
-    actCanonise->setWhatsThis(tr("<qt>Build the canonical retriangulation "
-        "of the canonical cell decomposition.<p>"
-        "The canonical cell decomposition is described in "
+    actCanonise->setToolTip(tr("Build the canonical retriangulation"));
+    actCanonise->setWhatsThis(tr("Builds the canonical retriangulation "
+        "of the canonical cell decomposition, as described in "
         "<i>Convex hulls and isometries of cusped hyperbolic 3-manifolds</i>, "
         "Jeffrey R. Weeks, Topology Appl. 52 (1993), 127-149.<p>"
-        "If this canonical cell decomposition contains non-tetrahedron "
+        "If the canonical cell decomposition contains non-tetrahedron "
         "cells, then SnapPea will canonically retriangulate it by introducing "
-        "internal vertices.  See the user handbook for details.<p>"
+        "internal vertices.<p>"
         "<b>Warning:</b> SnapPea might not compute the canonical "
         "cell decomposition correctly.  However, it does guarantee "
-        "that the resulting manifold is homeomorphic to the original.</qt>"));
+        "that the resulting manifold is homeomorphic to the original.<p>"
+        "This triangulation will not be changed &ndash; the canonical "
+        "retriangulation will be added beneath it in the packet tree."));
     triActionList.push_back(actCanonise);
     requiresNonNull.push_back(actCanonise);
     connect(actCanonise, SIGNAL(triggered()), this, SLOT(canonise()));
@@ -309,14 +308,15 @@ SnapPeaShapesUI::SnapPeaShapesUI(
     actToRegina->setText(tr("&Convert to Regina"));
     actToRegina->setIcon(ReginaSupport::regIcon("packet_triangulation3"));
     actToRegina->setToolTip(tr("Convert this to a Regina triangulation"));
-    actToRegina->setWhatsThis(tr("<qt>Convert this to one of Regina's native "
-        "3-manifold triangulations.  The original SnapPea triangulation "
-        "will be kept and left untouched.<p>"
-        "A native Regina triangulation will allow you to use Regina's "
+    actToRegina->setWhatsThis(tr("Converts this into one of Regina's native "
+        "3-manifold triangulations.  This original SnapPea triangulation "
+        "will be kept, and the new Regina triangulation will be added "
+        "beneath it in the packet tree.<p>"
+        "A native Regina triangulation allows you to use Regina's "
         "full suite of tools to edit and analyse the triangulation.  "
         "However, the native Regina "
         "triangulation will lose any SnapPea-specific "
-        "information (such as peripheral curves on cusps).</qt>"));
+        "information (such as peripheral curves on cusps)."));
     triActionList.push_back(actToRegina);
     requiresNonNull.push_back(actToRegina);
     connect(actToRegina, SIGNAL(triggered()), this, SLOT(toRegina()));
@@ -328,14 +328,13 @@ SnapPeaShapesUI::SnapPeaShapesUI(
     actVertexLinks = new QAction(this);
     actVertexLinks->setText(tr("&Vertex Links..."));
     actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
-    actVertexLinks->setToolTip(tr(
-        "Build a 2-manifold triangulation from a vertex link"));
-    actVertexLinks->setWhatsThis(tr("<qt>Build a 2-manifold triangulation "
-        "from the link of a vertex of this triangulation.<p>"
+    actVertexLinks->setToolTip(tr("Build a chosen vertex link"));
+    actVertexLinks->setWhatsThis(tr("Builds a 2-manifold triangulation "
+        "from the link of a chosen vertex of this triangulation.<p>"
         "If <i>V</i> is a vertex, then the <i>link</i> of <i>V</i> is the "
         "frontier of a small regular neighbourhood of <i>V</i>.  "
         "The triangles that make up this link sit inside "
-        "the tetrahedron corners that meet together at <i>V</i>.</qt>"));
+        "the tetrahedron corners that meet together at <i>V</i>."));
     triActionList.push_back(actVertexLinks);
     requiresNonNull.push_back(actVertexLinks);
     connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));

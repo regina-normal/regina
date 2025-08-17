@@ -658,8 +658,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actVertexLinks = new QAction(this);
     actVertexLinks->setText(tr("&Vertex Links..."));
     actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
-    actVertexLinks->setToolTip(tr(
-        "Build a chosen vertex link"));
+    actVertexLinks->setToolTip(tr("Build a chosen vertex link"));
     actVertexLinks->setWhatsThis(tr("Builds a 2-manifold triangulation "
         "from the link of a chosen vertex of this triangulation.<p>"
         "If <i>V</i> is a vertex, then the <i>link</i> of <i>V</i> is the "
