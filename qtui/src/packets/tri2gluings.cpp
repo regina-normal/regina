@@ -511,9 +511,6 @@ const std::vector<QAction*>& Tri2GluingsUI::getPacketTypeActions() {
 
 void Tri2GluingsUI::fillToolBar(QToolBar* bar) {
     if (ReginaPrefSet::global().displaySimpleToolbars) {
-        bar->addAction(actAddTri);
-        bar->addAction(actRemoveTri);
-        bar->addSeparator();
         bar->addAction(actOrient);
     } else {
         bar->addAction(actOrient);

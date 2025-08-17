@@ -621,11 +621,11 @@ const std::vector<QAction*>& Tri4GluingsUI::getPacketTypeActions() {
 
 void Tri4GluingsUI::fillToolBar(QToolBar* bar) {
     if (ReginaPrefSet::global().displaySimpleToolbars) {
-        bar->addAction(actAddPent);
-        bar->addAction(actRemovePent);
-        bar->addSeparator();
         bar->addAction(actSimplify);
+        bar->addAction(actMoves);
+        bar->addSeparator();
         bar->addAction(actOrient);
+        bar->addAction(actTruncate);
     } else {
         bar->addAction(actSimplify);
         bar->addAction(actMoves);

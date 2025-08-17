@@ -731,11 +731,11 @@ const std::vector<QAction*>& Tri3GluingsUI::getPacketTypeActions() {
 
 void Tri3GluingsUI::fillToolBar(QToolBar* bar) {
     if (ReginaPrefSet::global().displaySimpleToolbars) {
-        bar->addAction(actAddTet);
-        bar->addAction(actRemoveTet);
-        bar->addSeparator();
         bar->addAction(actSimplify);
+        bar->addAction(actMoves);
+        bar->addSeparator();
         bar->addAction(actOrient);
+        bar->addAction(actTruncate);
     } else {
         bar->addAction(actSimplify);
         bar->addAction(actTreewidth);
