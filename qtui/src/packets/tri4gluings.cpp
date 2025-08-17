@@ -1134,6 +1134,7 @@ void Tri4GluingsUI::updateRemoveState() {
 
 void Tri4GluingsUI::updateActionStates() {
     actOrient->setEnabled(tri->isOrientable() && ! tri->isOriented());
+    actTruncate->setEnabled(tri->isIdeal() || ! tri->isValid());
     actBoundaryComponents->setEnabled(! tri->boundaryComponents().empty());
     actDoubleOverBoundary->setEnabled(tri->hasBoundaryFacets());
     actSplitIntoComponents->setEnabled(tri->countComponents() > 1);
