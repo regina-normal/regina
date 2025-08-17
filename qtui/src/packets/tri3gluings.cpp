@@ -958,10 +958,22 @@ void Tri3GluingsUI::simplifyExhaustive(int height) {
     ProgressDialogOpen dlg(&tracker, tr("Searching Pachner graph..."),
         tr("Tried %1 triangulations"), ui);
 
-    std::thread(&Triangulation<3>::simplifyExhaustive, tri, height,
-        ReginaPrefSet::threads(), &tracker).detach();
+    bool result;
+    {
+        // We cannot have a packet change event fired from the computation
+        // thread, since this could lead to Qt crashing.  We therefore wrap
+        // the entire computation in a PacketChangeGroup, so that the change
+        // event is fired here in this thread, at the end of this braced block,
+        // after the computation thread is guaranteed to have finished.
 
-    if (dlg.run() && tri->size() == initSize) {
+        regina::Packet::PacketChangeGroup span(*tri);
+        std::thread t(&Triangulation<3>::simplifyExhaustive, tri, height,
+            ReginaPrefSet::threads(), &tracker);
+        result = dlg.run();
+        t.join();
+    }
+
+    if (result && tri->size() == initSize) {
         dlg.hide();
 
         QMessageBox msgBox(ui);
@@ -995,10 +1007,23 @@ void Tri3GluingsUI::improveTreewidth(int attempt) {
     // The user can always cancel if they need to.
     int height = attempt + 2;
 
-    std::thread(&Triangulation<3>::improveTreewidth, tri, -1 /* maxAttempts */,
-        height, ReginaPrefSet::threads(), std::addressof(tracker)).detach();
+    bool result;
+    {
+        // We cannot have a packet change event fired from the computation
+        // thread, since this could lead to Qt crashing.  We therefore wrap
+        // the entire computation in a PacketChangeGroup, so that the change
+        // event is fired here in this thread, at the end of this braced block,
+        // after the computation thread is guaranteed to have finished.
 
-    if (dlg.run()) {
+        regina::Packet::PacketChangeGroup span(*tri);
+        std::thread t(&Triangulation<3>::improveTreewidth, tri,
+            -1 /* maxAttempts */, height, ReginaPrefSet::threads(),
+            std::addressof(tracker));
+        result = dlg.run();
+        t.join();
+    }
+
+    if (result) {
         dlg.hide();
 
         if (*tri == orig) {

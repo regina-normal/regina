@@ -746,10 +746,22 @@ void LinkCrossingsUI::simplifyExhaustive(int height) {
     ProgressDialogOpen dlg(&tracker, tr("Searching Reidemeister graph..."),
         (knot ? tr("Tried %1 knots") : tr("Tried %1 links")), ui);
 
-    std::thread(&Link::simplifyExhaustive, link, height,
-        ReginaPrefSet::threads(), std::addressof(tracker)).detach();
+    bool result;
+    {
+        // We cannot have a packet change event fired from the computation
+        // thread, since this could lead to Qt crashing.  We therefore wrap
+        // the entire computation in a PacketChangeGroup, so that the change
+        // event is fired here in this thread, at the end of this braced block,
+        // after the computation thread is guaranteed to have finished.
 
-    if (dlg.run() && link->size() == initSize) {
+        regina::Packet::PacketChangeGroup span(*link);
+        std::thread t(&Link::simplifyExhaustive, link, height,
+            ReginaPrefSet::threads(), std::addressof(tracker));
+        result = dlg.run();
+        t.join();
+    }
+
+    if (result && link->size() == initSize) {
         dlg.hide();
 
         QMessageBox msgBox(ui);
@@ -783,10 +795,22 @@ void LinkCrossingsUI::improveTreewidth(int attempt) {
     // The user can always cancel if they need to.
     int height = attempt + 2;
 
-    std::thread(&Link::improveTreewidth, link, -1 /* maxAttempts */, height,
-        ReginaPrefSet::threads(), std::addressof(tracker)).detach();
+    bool result;
+    {
+        // We cannot have a packet change event fired from the computation
+        // thread, since this could lead to Qt crashing.  We therefore wrap
+        // the entire computation in a PacketChangeGroup, so that the change
+        // event is fired here in this thread, at the end of this braced block,
+        // after the computation thread is guaranteed to have finished.
 
-    if (dlg.run()) {
+        regina::Packet::PacketChangeGroup span(*link);
+        std::thread t(&Link::improveTreewidth, link, -1 /* maxAttempts */,
+            height, ReginaPrefSet::threads(), std::addressof(tracker));
+        result = dlg.run();
+        t.join();
+    }
+
+    if (result) {
         dlg.hide();
 
         if (*link == orig) {

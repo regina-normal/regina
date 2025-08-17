@@ -815,11 +815,11 @@ void Tri4GluingsUI::simplify() {
 
     bool result;
     {
-        // Wrap the entire computation in a PacketChangeGroup.  This means that,
-        // instead of the GUI updating via the separate simplify() thread
-        // (which can cause Qt to crash), instead the GUI will not update
-        // until this span closes, which will happen here on the main thread
-        // (thus keeping Qt happy).
+        // We cannot have a packet change event fired from the computation
+        // thread, since this could lead to Qt crashing.  We therefore wrap
+        // the entire computation in a PacketChangeGroup, so that the change
+        // event is fired here in this thread, at the end of this braced block,
+        // after the computation thread is guaranteed to have finished.
 
         regina::Packet::PacketChangeGroup span(*tri);
         std::thread t(&Triangulation<4>::simplify, tri, &tracker);
@@ -866,10 +866,22 @@ void Tri4GluingsUI::simplifyExhaustive(int height) {
     ProgressDialogOpen dlg(&tracker, tr("Searching Pachner graph..."),
         tr("Tried %1 triangulations"), ui);
 
-    std::thread(&Triangulation<4>::simplifyExhaustive, tri, height,
-        ReginaPrefSet::threads(), &tracker).detach();
+    bool result;
+    {
+        // We cannot have a packet change event fired from the computation
+        // thread, since this could lead to Qt crashing.  We therefore wrap
+        // the entire computation in a PacketChangeGroup, so that the change
+        // event is fired here in this thread, at the end of this braced block,
+        // after the computation thread is guaranteed to have finished.
 
-    if (dlg.run() && tri->size() == initSize) {
+        regina::Packet::PacketChangeGroup span(*tri);
+        std::thread t(&Triangulation<4>::simplifyExhaustive, tri, height,
+            ReginaPrefSet::threads(), &tracker);
+        result = dlg.run();
+        t.join();
+    }
+
+    if (result && tri->size() == initSize) {
         dlg.hide();
 
         QMessageBox msgBox(ui);

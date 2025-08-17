@@ -897,6 +897,8 @@ Version 7.4  [ (to be announced) ]
         - The summary tabs for normal surfaces and hypersurfaces now split out
           separate counts for non-embedded (immersed and/or singular)
           surfaces and hypersurfaces.
+        - Fixed the crash that sometimes occurred when using the "try harder"
+          option for simplifying triangulations in the GUI.
     UTILITIES:
         dgt, katie:
             - The DGT utility has been renamed to Katie.
