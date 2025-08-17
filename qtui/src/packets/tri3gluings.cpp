@@ -442,6 +442,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
 
     auto* actEltMove = new QAction(this);
     actEltMove->setText(tr("&Elementary Moves..."));
+    actEltMove->setIcon(ReginaSupport::regIcon("eltmoves"));
     actEltMove->setToolTip(tr(
         "Modify the triangulation using elementary moves"));
     actEltMove->setWhatsThis(tr("Allows you to perform elementary moves upon "

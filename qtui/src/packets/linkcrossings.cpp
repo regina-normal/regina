@@ -348,6 +348,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
 
     auto* actMoves = new QAction(this);
     actMoves->setText(tr("Reidemeister &Moves..."));
+    actMoves->setIcon(ReginaSupport::regIcon("eltmoves"));
     actMoves->setToolTip(tr(
         "Modify the link diagram using Reidemeister moves"));
     actMoves->setWhatsThis(tr("Allows you to perform Reidemeister moves upon "

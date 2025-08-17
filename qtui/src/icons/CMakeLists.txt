@@ -22,6 +22,7 @@ set (IMGS
   disjointunion
   doublecover
   drilledge
+  eltmoves
   examples
   fill
   filter_comb
