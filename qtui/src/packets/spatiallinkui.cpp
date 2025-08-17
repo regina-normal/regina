@@ -36,6 +36,7 @@
 #include "spatiallinkui.h"
 #include "pythonmanager.h"
 #include "reginamain.h"
+#include "reginaprefset.h"
 #include "reginasupport.h"
 
 #include <QAction>
@@ -57,8 +58,8 @@ SpatialLinkUI::SpatialLinkUI(regina::PacketOf<SpatialLink>* packet,
 
     // --- Action Toolbar ---
 
-    auto* actionBar = new QToolBar(ui);
-    actionBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    actionBar = new QToolBar(ui);
+    actionBar->setToolButtonStyle(ReginaPrefSet::toolButtonStyle());
     layout->addWidget(actionBar);
 
     // --- 3-D Link ---
@@ -147,6 +148,9 @@ SpatialLinkUI::SpatialLinkUI(regina::PacketOf<SpatialLink>* packet,
     // --- Finalising ---
 
     refresh();
+
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 }
 
 Packet* SpatialLinkUI::getPacket() {
@@ -218,5 +222,9 @@ void SpatialLinkUI::pythonConsole() {
     enclosingPane->getMainWindow()->getPythonManager().
         launchPythonConsole(enclosingPane->getMainWindow(),
         link_->root(), link_->shared_from_this());
+}
+
+void SpatialLinkUI::updatePreferences() {
+    actionBar->setToolButtonStyle(ReginaPrefSet::toolButtonStyle());
 }
 

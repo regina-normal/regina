@@ -40,6 +40,7 @@
 
 class QLabel;
 class QPushButton;
+class QToolBar;
 class QTreeView;
 
 namespace regina {
@@ -69,6 +70,7 @@ class SpatialLinkUI : public QObject, public PacketUI {
          * Internal components
          */
         QWidget* ui;
+        QToolBar* actionBar;
         QLabel* linkStats;
         QLabel* renderingStats;
 
@@ -108,6 +110,12 @@ class SpatialLinkUI : public QObject, public PacketUI {
          * Open a python console to work with this spatial link.
          */
         void pythonConsole();
+
+        /**
+         * Notify this interface that the global preferences have been
+         * updated.
+         */
+        void updatePreferences();
 };
 
 #endif
