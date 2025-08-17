@@ -489,6 +489,10 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     sep->setSeparator(true);
     actionList.push_back(sep);
 
+    // Possibly we should only enable this action when there are multiple
+    // diagram components.  However, this test is not constant-time (and
+    // connectedness is not cached for links), and so we just leave it enabled
+    // always for now.
     auto* actDiagramComponents = new QAction(this);
     actDiagramComponents->setText(tr("Extract Diagram C&omponents"));
     actDiagramComponents->setIcon(ReginaSupport::regIcon("components"));
