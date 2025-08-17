@@ -346,7 +346,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actTreewidth);
     connect(actTreewidth, SIGNAL(triggered()), this, SLOT(improveTreewidth()));
 
-    auto* actMoves = new QAction(this);
+    actMoves = new QAction(this);
     actMoves->setText(tr("Reidemeister &Moves..."));
     actMoves->setIcon(ReginaSupport::regIcon("eltmoves"));
     actMoves->setToolTip(tr(
@@ -532,6 +532,7 @@ void LinkCrossingsUI::fillToolBar(QToolBar* bar) {
     } else {
         bar->addAction(actSimplify);
         bar->addAction(actTreewidth);
+        bar->addAction(actMoves);
         bar->addSeparator();
         bar->addAction(actReflect);
         bar->addAction(actRotate);

@@ -150,6 +150,7 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         QAction* actAddPent;
         QAction* actRemovePent;
         QAction* actSimplify;
+        QAction* actMoves;
         QAction* actOrient;
         QAction* actReflect;
         QAction* actSubdivide;

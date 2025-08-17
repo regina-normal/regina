@@ -421,19 +421,19 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
     triActionList.push_back(actSimplify);
 
-    auto* actEltMove = new QAction(this);
-    actEltMove->setText(tr("&Elementary Moves..."));
-    actEltMove->setIcon(ReginaSupport::regIcon("eltmoves"));
-    actEltMove->setToolTip(tr(
+    actMoves = new QAction(this);
+    actMoves->setText(tr("&Elementary Moves..."));
+    actMoves->setIcon(ReginaSupport::regIcon("eltmoves"));
+    actMoves->setToolTip(tr(
         "Modify the triangulation using elementary moves"));
-    actEltMove->setWhatsThis(tr("Allows you to perform elementary moves upon "
+    actMoves->setWhatsThis(tr("Allows you to perform elementary moves upon "
         "this triangulation.  <i>Elementary moves</i> are modifications local "
         "to a small number of pentachora that do not change the underlying "
         "4-manifold or its PL structure.<p>"
         "A dialog will be presented for you to select which "
         "elementary moves to apply."));
-    triActionList.push_back(actEltMove);
-    connect(actEltMove, SIGNAL(triggered()), this, SLOT(elementaryMove()));
+    triActionList.push_back(actMoves);
+    connect(actMoves, SIGNAL(triggered()), this, SLOT(elementaryMove()));
 
     sep = new QAction(this);
     sep->setSeparator(true);
@@ -629,6 +629,7 @@ void Tri4GluingsUI::fillToolBar(QToolBar* bar) {
         bar->addAction(actRemovePent);
         bar->addSeparator();
         bar->addAction(actSimplify);
+        bar->addAction(actMoves);
         bar->addSeparator();
         bar->addAction(actOrient);
         bar->addAction(actReflect);

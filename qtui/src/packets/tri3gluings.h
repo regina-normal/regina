@@ -155,6 +155,7 @@ class Tri3GluingsUI : public QObject, public PacketEditorTab {
         QAction* actRemoveTet;
         QAction* actSimplify;
         QAction* actTreewidth;
+        QAction* actMoves;
         QAction* actOrient;
         QAction* actReflect;
         QAction* actSubdivide;

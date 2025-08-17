@@ -156,6 +156,7 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
          */
         QAction* actSimplify;
         QAction* actTreewidth;
+        QAction* actMoves;
         QAction* actReflect;
         QAction* actRotate;
         QAction* actReverse;
