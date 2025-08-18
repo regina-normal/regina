@@ -4,6 +4,7 @@ SET ( FILES
   attachmentui.cpp
   compatcanvas.cpp
   containerui.cpp
+  eltmovedialog2.cpp
   eltmovedialog3.cpp
   eltmovedialog4.cpp
   facetgraphtab.cpp

@@ -899,6 +899,7 @@ Version 7.4  [ (to be announced) ]
           surfaces and hypersurfaces.
         - Fixed the crash that sometimes occurred when using the "try harder"
           option for simplifying triangulations in the GUI.
+        - Elementary moves are now available in the GUI for 2-D triangulations.
     UTILITIES:
         dgt, katie:
             - The DGT utility has been renamed to Katie.

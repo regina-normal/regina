@@ -148,6 +148,7 @@ class Tri2GluingsUI : public QObject, public PacketEditorTab {
          */
         QAction* actAddTri;
         QAction* actRemoveTri;
+        QAction* actMoves;
         QAction* actOrient;
         QAction* actReflect;
         QAction* actSubdivide;
@@ -197,6 +198,7 @@ class Tri2GluingsUI : public QObject, public PacketEditorTab {
         /**
          * Triangulation actions.
          */
+        void moves();
         void orient();
         void reflect();
         void barycentricSubdivide();

@@ -1224,6 +1224,8 @@
 		0583656318DB8876008B08D9 /* end_namespace.h in Headers */ = {isa = PBXBuildFile; fileRef = 0583655F18DB8876008B08D9 /* end_namespace.h */; };
 		0583656518DB8876008B08D9 /* real_type.h in Headers */ = {isa = PBXBuildFile; fileRef = 0583656118DB8876008B08D9 /* real_type.h */; };
 		0583656D18DB8B68008B08D9 /* kernel_namespace.h in Headers */ = {isa = PBXBuildFile; fileRef = 0583656018DB8876008B08D9 /* kernel_namespace.h */; };
+		05866B7E2E52AF4C00C74465 /* eltmovedialog2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05866B7D2E52AF4C00C74465 /* eltmovedialog2.cpp */; };
+		05866B7F2E52B0E000C74465 /* eltmovedialog2.h in Sources */ = {isa = PBXBuildFile; fileRef = 05866B7C2E52AF4C00C74465 /* eltmovedialog2.h */; };
 		05870CAE1FAD24EF00835F9E /* modellinkgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05870CAC1FAD24EB00835F9E /* modellinkgraph.cpp */; };
 		05870CB21FAD250900835F9E /* modellinkgraph.h in Headers */ = {isa = PBXBuildFile; fileRef = 05870CB01FAD250900835F9E /* modellinkgraph.h */; };
 		05870CB31FAD250900835F9E /* modellinkgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05870CB11FAD250900835F9E /* modellinkgraph.cpp */; };
@@ -3823,6 +3825,8 @@
 		0586426D19D982D00019E056 /* SpreadHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SpreadHelper.mm; sourceTree = "<group>"; };
 		0586426F19DA258E0019E056 /* SurfacesCoords.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurfacesCoords.h; sourceTree = "<group>"; };
 		0586427019DA258E0019E056 /* SurfacesCoords.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SurfacesCoords.mm; sourceTree = "<group>"; };
+		05866B7C2E52AF4C00C74465 /* eltmovedialog2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = eltmovedialog2.h; sourceTree = "<group>"; };
+		05866B7D2E52AF4C00C74465 /* eltmovedialog2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = eltmovedialog2.cpp; sourceTree = "<group>"; };
 		05870CAC1FAD24EB00835F9E /* modellinkgraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modellinkgraph.cpp; sourceTree = "<group>"; };
 		05870CB01FAD250900835F9E /* modellinkgraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modellinkgraph.h; sourceTree = "<group>"; };
 		05870CB11FAD250900835F9E /* modellinkgraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modellinkgraph.cpp; sourceTree = "<group>"; };
@@ -7367,6 +7371,8 @@
 				0564A59C1811D920002CC2AE /* containerui.cpp */,
 				0564A59D1811D920002CC2AE /* containerui.h */,
 				05A73CBB19B2F1AB0099C617 /* docwidget.h */,
+				05866B7D2E52AF4C00C74465 /* eltmovedialog2.cpp */,
+				05866B7C2E52AF4C00C74465 /* eltmovedialog2.h */,
 				0564A5901811D920002CC2AE /* eltmovedialog3.cpp */,
 				0564A5911811D920002CC2AE /* eltmovedialog3.h */,
 				0507C5A31C54494E00D1C86C /* eltmovedialog4.cpp */,
@@ -10406,6 +10412,7 @@
 				0543AE9A1811E12A002758F8 /* examplesaction.h in Sources */,
 				05941EFA272A9E8600562586 /* elidedlabel.h in Sources */,
 				056F746C2767551F00F7EAC9 /* linkalgebra.h in Sources */,
+				05866B7E2E52AF4C00C74465 /* eltmovedialog2.cpp in Sources */,
 				0591E83F1C4F769100793A9C /* tri4algebra.cpp in Sources */,
 				0591E8441C4F772B00793A9C /* tri4algebra.h in Sources */,
 				05C265A4282B3B8200232420 /* tri4composition.h in Sources */,
@@ -10537,6 +10544,7 @@
 				0564A94A1811D921002CC2AE /* packettabui.cpp in Sources */,
 				0564A8141811D921002CC2AE /* iconcache.cpp in Sources */,
 				0564A9521811D921002CC2AE /* facetgraphtab.cpp in Sources */,
+				05866B7F2E52B0E000C74465 /* eltmovedialog2.h in Sources */,
 				0564A9851811D921002CC2AE /* shortrunner.cpp in Sources */,
 				0564A93F1811D921002CC2AE /* imports.cpp in Sources */,
 				0564A9441811D921002CC2AE /* newpacketdialog.cpp in Sources */,

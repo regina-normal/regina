@@ -35,6 +35,7 @@
 // UI includes:
 #include "tri2gluings.h"
 #include "edittableview.h"
+#include "eltmovedialog2.h"
 #include "packetchooser.h"
 #include "packetfilter.h"
 #include "reginamain.h"
@@ -389,6 +390,24 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     sep->setSeparator(true);
     triActionList.push_back(sep);
 
+    actMoves = new QAction(this);
+    actMoves->setText(tr("&Elementary Moves..."));
+    actMoves->setIconText(tr("Moves"));
+    actMoves->setIcon(ReginaSupport::regIcon("eltmoves"));
+    actMoves->setToolTip(tr("Perform individual elementary moves"));
+    actMoves->setWhatsThis(tr("Allows you to perform elementary moves upon "
+        "this triangulation.  <i>Elementary moves</i> are modifications local "
+        "to a small number of tetrahedra that do not change the underlying "
+        "2-manifold.<p>"
+        "A dialog will be presented for you to select which "
+        "elementary moves to apply."));
+    triActionList.push_back(actMoves);
+    connect(actMoves, SIGNAL(triggered()), this, SLOT(moves()));
+
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    triActionList.push_back(sep);
+
     actOrient = new QAction(this);
     actOrient->setText(tr("&Orient"));
     actOrient->setIcon(ReginaSupport::regIcon("orient"));
@@ -511,8 +530,12 @@ const std::vector<QAction*>& Tri2GluingsUI::getPacketTypeActions() {
 
 void Tri2GluingsUI::fillToolBar(QToolBar* bar) {
     if (ReginaPrefSet::global().displaySimpleToolbars) {
+        bar->addAction(actMoves);
+        bar->addSeparator();
         bar->addAction(actOrient);
     } else {
+        bar->addAction(actMoves);
+        bar->addSeparator();
         bar->addAction(actOrient);
         bar->addAction(actReflect);
         bar->addAction(actSubdivide);
@@ -670,6 +693,12 @@ void Tri2GluingsUI::changeLock() {
             tri->simplex(lockSimplex)->unlockFacet(lockFacet);
     }
     lockSimplex = -1;
+}
+
+void Tri2GluingsUI::moves() {
+    endEdit();
+
+    (new EltMoveDialog2(ui, tri))->show();
 }
 
 void Tri2GluingsUI::orient() {
