@@ -85,8 +85,9 @@ inline void AuxToolBar::addAction(QAction* action) {
 
 inline void AuxToolBar::addLabel(const QString& text) {
     QLabel* label = new QLabel(text);
-    // TODO: Make this font size relative (e.g., to QStyle::PM_SmallIconSize).
-    label->setStyleSheet("font-size: 12pt");
+    label->setAlignment(Qt::AlignCenter);
+    // Add some horizontal space around the label.
+    label->setContentsMargins(5, 0, 5, 0);
     bar_->addWidget(label);
 }
 
