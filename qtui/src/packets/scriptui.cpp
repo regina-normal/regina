@@ -312,7 +312,7 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     actAdd = new QAction(this);
     actAdd->setText(tr("&Add Variable"));
     actAdd->setIconText(tr("Add Var"));
-    actAdd->setIcon(ReginaSupport::regIcon("insert"));
+    actAdd->setIcon(ReginaSupport::regIcon("insert-mono"));
     actAdd->setToolTip(tr("Add a new script variable"));
     actAdd->setWhatsThis(tr("Add a new variable to this script.<p>"
         "A script may come with any number of variables, each of which "
@@ -326,7 +326,7 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     actRemove = new QAction(this);
     actRemove->setText(tr("Re&move Variable"));
     actRemove->setIconText(tr("Remove Var"));
-    actRemove->setIcon(ReginaSupport::regIcon("delete"));
+    actRemove->setIcon(ReginaSupport::regIcon("delete-mono"));
     actRemove->setToolTip(tr(
         "Remove the currently selected script variable(s)"));
     actRemove->setEnabled(false);
