@@ -3827,6 +3827,7 @@
 		0586427019DA258E0019E056 /* SurfacesCoords.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SurfacesCoords.mm; sourceTree = "<group>"; };
 		05866B7C2E52AF4C00C74465 /* eltmovedialog2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = eltmovedialog2.h; sourceTree = "<group>"; };
 		05866B7D2E52AF4C00C74465 /* eltmovedialog2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = eltmovedialog2.cpp; sourceTree = "<group>"; };
+		05866B802E52CB7900C74465 /* auxtoolbar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = auxtoolbar.h; sourceTree = "<group>"; };
 		05870CAC1FAD24EB00835F9E /* modellinkgraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modellinkgraph.cpp; sourceTree = "<group>"; };
 		05870CB01FAD250900835F9E /* modellinkgraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modellinkgraph.h; sourceTree = "<group>"; };
 		05870CB11FAD250900835F9E /* modellinkgraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modellinkgraph.cpp; sourceTree = "<group>"; };
@@ -7210,6 +7211,7 @@
 			isa = PBXGroup;
 			children = (
 				0564A4091811D91E002CC2AE /* actionspart.cpp */,
+				05866B802E52CB7900C74465 /* auxtoolbar.h */,
 				0564A40A1811D91E002CC2AE /* bigwidget.cpp */,
 				0564A40B1811D91E002CC2AE /* bigwidget.h */,
 				0564A40C1811D91E002CC2AE /* choosers */,

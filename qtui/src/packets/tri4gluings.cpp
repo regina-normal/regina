@@ -38,6 +38,7 @@
 // UI includes:
 #include "eltmovedialog4.h"
 #include "tri4gluings.h"
+#include "auxtoolbar.h"
 #include "edittableview.h"
 #include "packetchooser.h"
 #include "packetfilter.h"
@@ -50,6 +51,7 @@
 #include <memory>
 #include <thread>
 #include <QAction>
+#include <QBoxLayout>
 #include <QHeaderView>
 #include <QLabel>
 #include <QMessageBox>
@@ -372,12 +374,6 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     connect(facetTable, SIGNAL(customContextMenuRequested(const QPoint&)),
         this, SLOT(lockMenu(const QPoint&)));
 
-    ui = facetTable;
-
-    // Set up the triangulation actions.
-    QAction* sep;
-
-
     actAddPent = new QAction(this);
     actAddPent->setText(tr("&Add Pentachoron"));
     actAddPent->setIconText(tr("Add Pent"));
@@ -385,7 +381,6 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actAddPent->setToolTip(tr("Add a new pentachoron"));
     actAddPent->setWhatsThis(tr("Adds a new pentachoron to this "
         "triangulation."));
-    triActionList.push_back(actAddPent);
     connect(actAddPent, SIGNAL(triggered()), this, SLOT(addPent()));
 
     actRemovePent = new QAction(this);
@@ -401,11 +396,20 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     connect(facetTable->selectionModel(),
         SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
         this, SLOT(updateRemoveState()));
-    triActionList.push_back(actRemovePent);
 
-    sep = new QAction(this);
-    sep->setSeparator(true);
-    triActionList.push_back(sep);
+    ui = new QWidget();
+    QBoxLayout* box = new QVBoxLayout(ui);
+    box->setContentsMargins(0, 0, 0, 0);
+    box->setSpacing(0);
+    auto* sidebar = new AuxToolBar();
+    sidebar->addLabel(tr("Pentachora:"));
+    sidebar->addAction(actAddPent);
+    sidebar->addAction(actRemovePent);
+    box->addWidget(facetTable, 1);
+    box->addWidget(sidebar);
+
+    // Set up the triangulation actions.
+    QAction* sep;
 
     actSimplify = new QAction(this);
     actSimplify->setText(tr("&Simplify"));

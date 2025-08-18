@@ -34,6 +34,7 @@
 
 // UI includes:
 #include "tri2gluings.h"
+#include "auxtoolbar.h"
 #include "edittableview.h"
 #include "eltmovedialog2.h"
 #include "packetchooser.h"
@@ -43,6 +44,7 @@
 
 #include <memory>
 #include <QAction>
+#include <QBoxLayout>
 #include <QCoreApplication>
 #include <QFileInfo>
 #include <QHeaderView>
@@ -362,15 +364,11 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     connect(edgeTable, SIGNAL(customContextMenuRequested(const QPoint&)),
         this, SLOT(lockMenu(const QPoint&)));
 
-    ui = edgeTable;
-
-    // Set up the triangulation actions.
     actAddTri = new QAction(this);
     actAddTri->setText(tr("&Add Triangle"));
     actAddTri->setIcon(ReginaSupport::regIcon("insert"));
     actAddTri->setToolTip(tr("Add a new triangle"));
     actAddTri->setWhatsThis(tr("Adds a new triangle to this triangulation."));
-    triActionList.push_back(actAddTri);
     connect(actAddTri, SIGNAL(triggered()), this, SLOT(addTri()));
 
     actRemoveTri = new QAction(this);
@@ -384,11 +382,19 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     connect(edgeTable->selectionModel(),
         SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
         this, SLOT(updateRemoveState()));
-    triActionList.push_back(actRemoveTri);
 
-    auto* sep = new QAction(this);
-    sep->setSeparator(true);
-    triActionList.push_back(sep);
+    ui = new QWidget();
+    QBoxLayout* box = new QVBoxLayout(ui);
+    box->setContentsMargins(0, 0, 0, 0);
+    box->setSpacing(0);
+    auto* sidebar = new AuxToolBar();
+    sidebar->addLabel(tr("Triangles:"));
+    sidebar->addAction(actAddTri);
+    sidebar->addAction(actRemoveTri);
+    box->addWidget(edgeTable, 1);
+    box->addWidget(sidebar);
+
+    // Set up the triangulation actions.
 
     actMoves = new QAction(this);
     actMoves->setText(tr("&Elementary Moves..."));
@@ -404,7 +410,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     triActionList.push_back(actMoves);
     connect(actMoves, SIGNAL(triggered()), this, SLOT(moves()));
 
-    sep = new QAction(this);
+    auto* sep = new QAction(this);
     sep->setSeparator(true);
     triActionList.push_back(sep);
 

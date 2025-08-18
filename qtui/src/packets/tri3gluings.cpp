@@ -42,6 +42,7 @@
 #include "edittableview.h"
 #include "eltmovedialog3.h"
 #include "tri3gluings.h"
+#include "auxtoolbar.h"
 #include "packetchooser.h"
 #include "packetfilter.h"
 #include "patiencedialog.h"
@@ -55,6 +56,7 @@
 #include <memory>
 #include <thread>
 #include <QAction>
+#include <QBoxLayout>
 #include <QCoreApplication>
 #include <QFileInfo>
 #include <QHeaderView>
@@ -379,11 +381,6 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     connect(faceTable, SIGNAL(customContextMenuRequested(const QPoint&)),
         this, SLOT(lockMenu(const QPoint&)));
 
-    ui = faceTable;
-
-    // Set up the triangulation actions.
-    QAction* sep;
-
     actAddTet = new QAction(this);
     actAddTet->setText(tr("&Add Tetrahedron"));
     actAddTet->setIconText(tr("Add Tet"));
@@ -391,7 +388,6 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actAddTet->setToolTip(tr("Add a new tetrahedron"));
     actAddTet->setWhatsThis(tr("Adds a new tetrahedron to this "
         "triangulation."));
-    triActionList.push_back(actAddTet);
     connect(actAddTet, SIGNAL(triggered()), this, SLOT(addTet()));
 
     actRemoveTet = new QAction(this);
@@ -406,11 +402,20 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     connect(faceTable->selectionModel(),
         SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
         this, SLOT(updateRemoveState()));
-    triActionList.push_back(actRemoveTet);
 
-    sep = new QAction(this);
-    sep->setSeparator(true);
-    triActionList.push_back(sep);
+    ui = new QWidget();
+    QBoxLayout* box = new QVBoxLayout(ui);
+    box->setContentsMargins(0, 0, 0, 0);
+    box->setSpacing(0);
+    auto* sidebar = new AuxToolBar();
+    sidebar->addLabel(tr("Tetrahedra:"));
+    sidebar->addAction(actAddTet);
+    sidebar->addAction(actRemoveTet);
+    box->addWidget(faceTable, 1);
+    box->addWidget(sidebar);
+
+    // Set up the triangulation actions.
+    QAction* sep;
 
     actSimplify = new QAction(this);
     actSimplify->setText(tr("&Simplify"));
