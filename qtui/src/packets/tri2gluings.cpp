@@ -383,6 +383,14 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
         SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
         this, SLOT(updateRemoveState()));
 
+    actUnlock = new QAction(this);
+    actUnlock->setText(tr("&Unlock All"));
+    actUnlock->setIcon(ReginaSupport::regIcon("unlock"));
+    actUnlock->setToolTip(tr("Unlock all triangles and/or edges"));
+    actUnlock->setWhatsThis(tr("Clears all triangle and/or edge locks from "
+        "this triangulation."));
+    connect(actUnlock, SIGNAL(triggered()), this, SLOT(unlockAll()));
+
     ui = new QWidget();
     QBoxLayout* box = new QVBoxLayout(ui);
     box->setContentsMargins(0, 0, 0, 0);
@@ -391,6 +399,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     sidebar->addLabel(tr("Triangles:"));
     sidebar->addAction(actAddTri);
     sidebar->addAction(actRemoveTri);
+    sidebar->addAction(actUnlock);
     box->addWidget(edgeTable, 1);
     box->addWidget(sidebar);
 
@@ -701,6 +710,10 @@ void Tri2GluingsUI::changeLock() {
     lockSimplex = -1;
 }
 
+void Tri2GluingsUI::unlockAll() {
+    tri->unlockAll();
+}
+
 void Tri2GluingsUI::moves() {
     endEdit();
 
@@ -832,5 +845,6 @@ void Tri2GluingsUI::updateActionStates() {
     actOrient->setEnabled(tri->isOrientable() && ! tri->isOriented());
     actDoubleOverBoundary->setEnabled(tri->hasBoundaryFacets());
     actSplitIntoComponents->setEnabled(tri->countComponents() > 1);
+    actUnlock->setEnabled(tri->hasLocks());
 }
 

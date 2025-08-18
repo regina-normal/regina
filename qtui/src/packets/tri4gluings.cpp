@@ -397,6 +397,14 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
         this, SLOT(updateRemoveState()));
 
+    actUnlock = new QAction(this);
+    actUnlock->setText(tr("&Unlock All"));
+    actUnlock->setIcon(ReginaSupport::regIcon("unlock"));
+    actUnlock->setToolTip(tr("Unlock all pentachora and/or tetrahedra"));
+    actUnlock->setWhatsThis(tr("Clears all pentachoron and/or tetrahedron "
+        "locks from this triangulation."));
+    connect(actUnlock, SIGNAL(triggered()), this, SLOT(unlockAll()));
+
     ui = new QWidget();
     QBoxLayout* box = new QVBoxLayout(ui);
     box->setContentsMargins(0, 0, 0, 0);
@@ -405,6 +413,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     sidebar->addLabel(tr("Pentachora:"));
     sidebar->addAction(actAddPent);
     sidebar->addAction(actRemovePent);
+    sidebar->addAction(actUnlock);
     box->addWidget(facetTable, 1);
     box->addWidget(sidebar);
 
@@ -799,6 +808,10 @@ void Tri4GluingsUI::changeLock() {
     lockSimplex = -1;
 }
 
+void Tri4GluingsUI::unlockAll() {
+    tri->unlockAll();
+}
+
 void Tri4GluingsUI::simplify() {
     endEdit();
 
@@ -1142,5 +1155,6 @@ void Tri4GluingsUI::updateActionStates() {
     actBoundaryComponents->setEnabled(! tri->boundaryComponents().empty());
     actDoubleOverBoundary->setEnabled(tri->hasBoundaryFacets());
     actSplitIntoComponents->setEnabled(tri->countComponents() > 1);
+    actUnlock->setEnabled(tri->hasLocks());
 }
 

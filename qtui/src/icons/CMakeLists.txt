@@ -86,6 +86,7 @@ set (IMGS
   troubleshoot
   truncate
   truncate-single
+  unlock
   vtxlinks
   welcome
   whitehead-double

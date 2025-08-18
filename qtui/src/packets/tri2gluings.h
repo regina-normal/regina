@@ -148,6 +148,7 @@ class Tri2GluingsUI : public QObject, public PacketEditorTab {
          */
         QAction* actAddTri;
         QAction* actRemoveTri;
+        QAction* actUnlock;
         QAction* actMoves;
         QAction* actOrient;
         QAction* actReflect;
@@ -194,6 +195,7 @@ class Tri2GluingsUI : public QObject, public PacketEditorTab {
          */
         void lockMenu(const QPoint&);
         void changeLock();
+        void unlockAll();
 
         /**
          * Triangulation actions.

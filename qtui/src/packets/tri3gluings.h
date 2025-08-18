@@ -153,6 +153,7 @@ class Tri3GluingsUI : public QObject, public PacketEditorTab {
          */
         QAction* actAddTet;
         QAction* actRemoveTet;
+        QAction* actUnlock;
         QAction* actSimplify;
         QAction* actTreewidth;
         QAction* actMoves;
@@ -206,6 +207,7 @@ class Tri3GluingsUI : public QObject, public PacketEditorTab {
          */
         void lockMenu(const QPoint&);
         void changeLock();
+        void unlockAll();
 
         /**
          * Triangulation actions.

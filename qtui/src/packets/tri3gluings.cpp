@@ -403,6 +403,14 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
         this, SLOT(updateRemoveState()));
 
+    actUnlock = new QAction(this);
+    actUnlock->setText(tr("&Unlock All"));
+    actUnlock->setIcon(ReginaSupport::regIcon("unlock"));
+    actUnlock->setToolTip(tr("Unlock all tetrahedra and/or triangles"));
+    actUnlock->setWhatsThis(tr("Clears all tetrahedron and/or triangle locks "
+        "from this triangulation."));
+    connect(actUnlock, SIGNAL(triggered()), this, SLOT(unlockAll()));
+
     ui = new QWidget();
     QBoxLayout* box = new QVBoxLayout(ui);
     box->setContentsMargins(0, 0, 0, 0);
@@ -411,6 +419,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     sidebar->addLabel(tr("Tetrahedra:"));
     sidebar->addAction(actAddTet);
     sidebar->addAction(actRemoveTet);
+    sidebar->addAction(actUnlock);
     box->addWidget(faceTable, 1);
     box->addWidget(sidebar);
 
@@ -910,6 +919,10 @@ void Tri3GluingsUI::changeLock() {
             tri->simplex(lockSimplex)->unlockFacet(lockFacet);
     }
     lockSimplex = -1;
+}
+
+void Tri3GluingsUI::unlockAll() {
+    tri->unlockAll();
 }
 
 void Tri3GluingsUI::simplify() {
@@ -1764,5 +1777,6 @@ void Tri3GluingsUI::updateActionStates() {
     actBoundaryComponents->setEnabled(! tri->boundaryComponents().empty());
     actDoubleOverBoundary->setEnabled(tri->hasBoundaryFacets());
     actSplitIntoComponents->setEnabled(tri->countComponents() > 1);
+    actUnlock->setEnabled(tri->hasLocks());
 }
 
