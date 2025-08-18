@@ -921,7 +921,22 @@ void Tri3GluingsUI::changeLock() {
 }
 
 void Tri3GluingsUI::unlockAll() {
-    tri->unlockAll();
+    if (! tri->hasLocks()) {
+        ReginaSupport::info(ui, tr("No tetrahedra or triangles are locked "
+            "in this triangulation."));
+        return;
+    }
+
+    QMessageBox msgBox(ui);
+    msgBox.setWindowTitle(tr("Question"));
+    msgBox.setIcon(QMessageBox::Question);
+    msgBox.setText(tr("This will clear all tetrahedron and triangle locks."));
+    msgBox.setInformativeText(tr("Are you sure?"));
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+
+    if (msgBox.exec() == QMessageBox::Yes)
+        tri->unlockAll();
 }
 
 void Tri3GluingsUI::simplify() {

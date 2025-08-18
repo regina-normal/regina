@@ -808,7 +808,23 @@ void Tri4GluingsUI::changeLock() {
 }
 
 void Tri4GluingsUI::unlockAll() {
-    tri->unlockAll();
+    if (! tri->hasLocks()) {
+        ReginaSupport::info(ui, tr("No pentachora or tetrahedra are locked "
+            "in this triangulation."));
+        return;
+    }
+
+    QMessageBox msgBox(ui);
+    msgBox.setWindowTitle(tr("Question"));
+    msgBox.setIcon(QMessageBox::Question);
+    msgBox.setText(tr("This will clear all pentachoron and tetrahedron "
+        "locks."));
+    msgBox.setInformativeText(tr("Are you sure?"));
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+
+    if (msgBox.exec() == QMessageBox::Yes)
+        tri->unlockAll();
 }
 
 void Tri4GluingsUI::simplify() {

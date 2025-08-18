@@ -710,7 +710,22 @@ void Tri2GluingsUI::changeLock() {
 }
 
 void Tri2GluingsUI::unlockAll() {
-    tri->unlockAll();
+    if (! tri->hasLocks()) {
+        ReginaSupport::info(ui, tr("No triangles or edges are locked "
+            "in this triangulation."));
+        return;
+    }
+
+    QMessageBox msgBox(ui);
+    msgBox.setWindowTitle(tr("Question"));
+    msgBox.setIcon(QMessageBox::Question);
+    msgBox.setText(tr("This will clear all triangle and edge locks."));
+    msgBox.setInformativeText(tr("Are you sure?"));
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+
+    if (msgBox.exec() == QMessageBox::Yes)
+        tri->unlockAll();
 }
 
 void Tri2GluingsUI::moves() {
