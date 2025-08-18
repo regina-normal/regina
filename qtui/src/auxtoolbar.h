@@ -73,7 +73,8 @@ inline AuxToolBar::AuxToolBar(QWidget* parent) : QWidget(parent) {
     bar_->setToolButtonStyle(Qt::ToolButtonIconOnly);
     int size = QApplication::style()->pixelMetric(QStyle::PM_SmallIconSize);
     bar_->setIconSize({ size, size });
-    bar_->setStyleSheet("border: none; background-color: transparent");
+    bar_->setStyleSheet(
+        "QToolBar{border: none; background-color: transparent;}");
     layout->addWidget(bar_);
 
     layout->addStretch(1);
