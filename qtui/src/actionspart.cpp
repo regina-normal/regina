@@ -345,7 +345,7 @@ void ReginaMain::setupActions() {
     actContainer->setShortcut(tr("Alt+c"));
     actContainer->setToolTip(tr("New container"));
     actContainer->setWhatsThis(tr("Create a new container packet.  Containers "
-        "are used to help keep the packet tree organised &ndash; "
+        "are used to help keep the packet tree organised – "
         "they serve no purpose other than to store child packets."));
     connect(actContainer, SIGNAL(triggered()), this, SLOT(newContainer()) );
     treeGeneralEditActions.push_back(actContainer);

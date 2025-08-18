@@ -543,7 +543,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         "Build the orientable double cover of this triangulation"));
     actDoubleCover->setWhatsThis(tr("Builds the orientable double cover "
         "of this triangulation.  This triangulation will not be "
-        "changed &ndash; the result will be added as a new triangulation "
+        "changed – the result will be added as a new triangulation "
         "beneath it in the packet tree.<p>"
         "If this triangulation is already orientable then the result will be "
         "disconnected, containing two copies of the original triangulation."));
@@ -561,7 +561,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         "gluing two copies of this triangulation along their boundary "
         "tetrahedra.  The boundaries will be glued using the identity map.  "
         "Any ideal vertices will be left alone.<p>"
-        "This triangulation will not be changed &ndash; the result "
+        "This triangulation will not be changed – the result "
         "will be added as a new triangulation beneath it in the packet tree."));
     triActionList.push_back(actDoubleOverBoundary);
     connect(actDoubleOverBoundary, SIGNAL(triggered()), this,
@@ -608,7 +608,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actSplitIntoComponents->setToolTip(tr("Extract connected components"));
     actSplitIntoComponents->setWhatsThis(tr("Splits a disconnected "
         "triangulation into its individual connected components.  This "
-        "triangulation will not be changed &ndash; each "
+        "triangulation will not be changed – each "
         "connected component will be added as a new triangulation beneath "
         "it in the packet tree.<p>"
         "If this triangulation is already connected, this operation will "
@@ -722,8 +722,7 @@ void Tri4GluingsUI::removeSelectedPents() {
         msgBox.setText(tr("Pentachoron number %1 will be removed.").arg(first));
         msgBox.setInformativeText(tr("Are you sure?"));
     } else {
-        msgBox.setText(
-            tr("<qt>%1 pentachora (numbers %2&ndash;%3) will be removed.</qt>")
+        msgBox.setText(tr("%1 pentachora (numbers %2–%3) will be removed.")
             .arg(last - first + 1).arg(first).arg(last));
         msgBox.setInformativeText(tr("Are you sure?"));
     }

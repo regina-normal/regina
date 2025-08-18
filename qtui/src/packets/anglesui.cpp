@@ -149,7 +149,7 @@ AngleStructureUI::AngleStructureUI(regina::PacketOf<AngleStructures>* packet,
     layout->addSpacing(ANGLE_STATS_PADDING);
     stats = new QLabel(ui);
     stats->setAlignment(Qt::AlignCenter);
-    stats->setWhatsThis(tr("<qt>Displays various statistics about this "
+    stats->setWhatsThis(tr("Displays various statistics about this "
         "angle structure list, including whether the underlying triangulation "
         "supports any strict and/or taut angle structures.  A <i>strict</i> "
         "angle structure has all of its angles strictly between 0 and π, "
@@ -157,8 +157,8 @@ AngleStructureUI::AngleStructureUI(regina::PacketOf<AngleStructures>* packet,
         "to either 0 or π.<p>"
         "Note that this header might incidate that the triangulation supports "
         "a strict angle structure even if none appear in the list below "
-        "&ndash; the strict angle structure might only be found as a "
-        "combination of several different vertex angle structures.</qt>"));
+        "– the strict angle structure might only be found as a "
+        "combination of several different vertex angle structures."));
     stats->setTextInteractionFlags(Qt::TextBrowserInteraction);
     connect(stats, SIGNAL(linkActivated(QString)),
         this, SLOT(viewTriangulation()));
@@ -174,14 +174,14 @@ AngleStructureUI::AngleStructureUI(regina::PacketOf<AngleStructures>* packet,
     table->setAlternatingRowColors(true);
     table->header()->setStretchLastSection(false);
     table->setSelectionMode(QTreeView::NoSelection);
-    table->setWhatsThis(tr("<qt>Displays the vertex angle structures "
+    table->setWhatsThis(tr("Displays the vertex angle structures "
         "in this list.<p>"
         "Each row represents a single angle structure, and "
         "each entry in the table is an internal dihedral angle assigned to "
         "some pair of edges in a tetrahedron.<p>"
         "For details of which tetrahedron edges each column represents, hover "
         "the mouse over the column header (or refer to the users' "
-        "handbook).</qt>"));
+        "handbook)."));
     // Add grid lines:
     table->setStyleSheet("QTreeView::item { "
                             "border: 1px solid #d9d9d9; "

@@ -717,7 +717,7 @@ Tri3CellularInfoUI::Tri3CellularInfoUI(
     homologyGrid->addWidget(label, 7, 1);
     TorForOrders = new QLabel(grid);
     homologyGrid->addWidget(TorForOrders, 7, 2);
-    msg = QObject::tr("<qt>This is the first of the three Kawauchi-Kojima "
+    msg = QObject::tr("This is the first of the three Kawauchi-Kojima "
                "invariants.  These are invariants of the torsion linking "
                "form on the torsion subgroup of H<sub>1</sub> of an "
                "oriented manifold, and they form a complete set of "
@@ -727,7 +727,7 @@ Tri3CellularInfoUI::Tri3CellularInfoUI(
                "<p>For further information, see Kawauchi and Kojima's paper "
                "<i>Algebraic classification of linking pairings "
                "on 3-manifolds</i>, Math. Ann. <b>253</b> (1980), "
-               "no. 1, 29&ndash;42.</qt>"
+               "no. 1, 29–42."
                 );
     label->setWhatsThis(msg);
     TorForOrders->setWhatsThis(msg);
@@ -736,14 +736,14 @@ Tri3CellularInfoUI::Tri3CellularInfoUI(
     homologyGrid->addWidget(label, 8, 1);
     TorForSigma = new QLabel(grid);
     homologyGrid->addWidget(TorForSigma, 8, 2);
-    msg = QObject::tr("<qt>If H<sub>1</sub> has 2-torsion, this is the "
+    msg = QObject::tr("If H<sub>1</sub> has 2-torsion, this is the "
                "2-torsion sigma-vector.  The sigma-vector is the "
                "second of the Kawauchi-Kojima invariants, and is an "
                "orientation-sensitive invariant."
                "<p>For further information, see Kawauchi and Kojima's paper "
                "<i>Algebraic classification of linking pairings "
                "on 3-manifolds</i>, Math. Ann. <b>253</b> (1980), "
-               "no. 1, 29&ndash;42.</qt>"
+               "no. 1, 29–42."
                 );
     label->setWhatsThis(msg);
     TorForSigma->setWhatsThis(msg);
@@ -752,14 +752,14 @@ Tri3CellularInfoUI::Tri3CellularInfoUI(
     homologyGrid->addWidget(label, 9, 1);
     TorForLegendre = new QLabel(grid);
     homologyGrid->addWidget(TorForLegendre, 9, 2);
-    msg = QObject::tr("<qt>If H<sub>1</sub> has odd torsion, this is the "
+    msg = QObject::tr("If H<sub>1</sub> has odd torsion, this is the "
                "Legendre symbol vector.  The Legendre symbol vector "
                "is the last of the Kawauchi-Kojima invariants, and was "
                "originally constructed by Seifert."
                "<p>For further information, see Kawauchi and Kojima's paper "
                "<i>Algebraic classification of linking pairings "
                "on 3-manifolds</i>, Math. Ann. <b>253</b> (1980), "
-               "no. 1, 29&ndash;42.</qt>"
+               "no. 1, 29–42."
                 );
     label->setWhatsThis(msg);
     TorForLegendre->setWhatsThis(msg);

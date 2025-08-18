@@ -279,7 +279,7 @@ SnapPeaShapesUI::SnapPeaShapesUI(
     actFill->setWhatsThis(tr("Builds a new manifold that permanently "
         "fills either all cusps or one chosen cusp, using the current "
         "filling coefficients.<p>"
-        "This triangulation will not be changed &ndash; the filled manifold "
+        "This triangulation will not be changed – the filled manifold "
         "will be added as a new triangulation beneath it in the packet tree."));
     triActionList.push_back(actFill);
     requiresNonNull.push_back(actFill);
@@ -300,7 +300,7 @@ SnapPeaShapesUI::SnapPeaShapesUI(
         "<b>Warning:</b> SnapPea might not compute the canonical "
         "cell decomposition correctly.  However, it does guarantee "
         "that the resulting manifold is homeomorphic to the original.<p>"
-        "This triangulation will not be changed &ndash; the canonical "
+        "This triangulation will not be changed – the canonical "
         "retriangulation will be added beneath it in the packet tree."));
     triActionList.push_back(actCanonise);
     requiresNonNull.push_back(actCanonise);

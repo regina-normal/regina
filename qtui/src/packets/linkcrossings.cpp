@@ -449,7 +449,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
         "knot"));
     actWhiteheadDouble->setWhatsThis(tr("Builds the Whitehead double "
         "of this knot.  "
-        "This knot will not be changed &ndash; the "
+        "This knot will not be changed – the "
         "Whitehead double will be added as a new link beneath "
         "it in the packet tree."));
     actionList.push_back(actWhiteheadDouble);
@@ -464,7 +464,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actParallel->setWhatsThis(tr("Builds a new link using <i>k</i> cables "
         "of this link, all parallel via a chosen framing.  "
         "Both <i>k</i> and the framing can be selected.  "
-        "This link will not be changed &ndash; the new link will be added "
+        "This link will not be changed – the new link will be added "
         "beneath it in the packet tree."));
     actionList.push_back(actParallel);
     connect(actParallel, SIGNAL(triggered()), this, SLOT(parallel()));
@@ -508,7 +508,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
         tr("Extract connected diagram components"));
     actDiagramComponents->setWhatsThis(tr("Splits a disconnected "
         "link diagram into its individual connected components.  This "
-        "link diagram will not be changed &ndash; each "
+        "link diagram will not be changed – each "
         "connected component will be added as a new link beneath "
         "it in the packet tree.<p>"
         "If this link diagram is already connected, this operation will "

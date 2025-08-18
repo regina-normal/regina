@@ -623,7 +623,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "Build the orientable double cover of this triangulation"));
     actDoubleCover->setWhatsThis(tr("Builds the orientable double cover "
         "of this triangulation.  This triangulation will not be "
-        "changed &ndash; the result will be added as a new triangulation "
+        "changed – the result will be added as a new triangulation "
         "beneath it in the packet tree.<p>"
         "If this triangulation is already orientable then the result will be "
         "disconnected, containing two copies of the original triangulation."));
@@ -641,7 +641,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "gluing two copies of this triangulation along their boundary "
         "triangles.  The boundaries will be glued using the identity map.  "
         "Any ideal vertices will be left alone.<p>"
-        "This triangulation will not be changed &ndash; the result "
+        "This triangulation will not be changed – the result "
         "will be added as a new triangulation beneath it in the packet tree."));
     triActionList.push_back(actDoubleOverBoundary);
     connect(actDoubleOverBoundary, SIGNAL(triggered()), this,
@@ -703,7 +703,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actSplitIntoComponents->setToolTip(tr("Extract connected components"));
     actSplitIntoComponents->setWhatsThis(tr("Splits a disconnected "
         "triangulation into its individual connected components.  This "
-        "triangulation will not be changed &ndash; each "
+        "triangulation will not be changed – each "
         "connected component will be added as a new triangulation beneath "
         "it in the packet tree.<p>"
         "If this triangulation is already connected, this operation will "
@@ -721,7 +721,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "Split into a connected sum of prime 3-manifolds"));
     actConnectedSumDecomposition->setWhatsThis(tr("Breaks this "
         "triangulation down into a connected sum decomposition.  This "
-        "triangulation will not be modified &ndash; the individual prime "
+        "triangulation will not be modified – the individual prime "
         "summands will be added as new triangulations beneath it in "
         "the packet tree."));
     triActionList.push_back(actConnectedSumDecomposition);
@@ -836,8 +836,7 @@ void Tri3GluingsUI::removeSelectedTets() {
         msgBox.setText(tr("Tetrahedron number %1 will be removed.").arg(first));
         msgBox.setInformativeText(tr("Are you sure?"));
     } else {
-        msgBox.setText(
-            tr("<qt>%1 tetrahedra (numbers %2&ndash;%3) will be removed.</qt>")
+        msgBox.setText(tr("%1 tetrahedra (numbers %2–%3) will be removed.")
             .arg(last - first + 1).arg(first).arg(last));
         msgBox.setInformativeText(tr("Are you sure?"));
     }
