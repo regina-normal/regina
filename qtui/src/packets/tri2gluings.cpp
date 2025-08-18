@@ -860,5 +860,7 @@ void Tri2GluingsUI::updateActionStates() {
     actDoubleOverBoundary->setEnabled(tri->hasBoundaryFacets());
     actSplitIntoComponents->setEnabled(tri->countComponents() > 1);
     actUnlock->setEnabled(tri->hasLocks());
+
+    updateRemoveState();
 }
 
