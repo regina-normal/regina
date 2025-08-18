@@ -366,14 +366,14 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
 
     actAddTri = new QAction(this);
     actAddTri->setText(tr("&Add Triangle"));
-    actAddTri->setIcon(ReginaSupport::regIcon("insert"));
+    actAddTri->setIcon(ReginaSupport::regIcon("insert-mono"));
     actAddTri->setToolTip(tr("Add a new triangle"));
     actAddTri->setWhatsThis(tr("Adds a new triangle to this triangulation."));
     connect(actAddTri, SIGNAL(triggered()), this, SLOT(addTri()));
 
     actRemoveTri = new QAction(this);
     actRemoveTri->setText(tr("&Remove Triangle"));
-    actRemoveTri->setIcon(ReginaSupport::regIcon("delete"));
+    actRemoveTri->setIcon(ReginaSupport::regIcon("delete-mono"));
     actRemoveTri->setToolTip(tr("Remove the currently selected triangles"));
     actRemoveTri->setEnabled(false);
     actRemoveTri->setWhatsThis(tr("Removes the currently selected "

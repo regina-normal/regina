@@ -19,6 +19,7 @@ set (IMGS
   csvexport
   dehydrated
   delete
+  delete-mono
   disjointunion
   doublecover
   drilledge
@@ -28,6 +29,7 @@ set (IMGS
   filter_comb
   filter_prop
   insert
+  insert-mono
   lock
   move
   orb

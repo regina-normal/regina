@@ -377,7 +377,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actAddPent = new QAction(this);
     actAddPent->setText(tr("&Add Pentachoron"));
     actAddPent->setIconText(tr("Add Pent"));
-    actAddPent->setIcon(ReginaSupport::regIcon("insert"));
+    actAddPent->setIcon(ReginaSupport::regIcon("insert-mono"));
     actAddPent->setToolTip(tr("Add a new pentachoron"));
     actAddPent->setWhatsThis(tr("Adds a new pentachoron to this "
         "triangulation."));
@@ -386,7 +386,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actRemovePent = new QAction(this);
     actRemovePent->setText(tr("&Remove Pentachoron"));
     actRemovePent->setIconText(tr("Remove Pent"));
-    actRemovePent->setIcon(ReginaSupport::regIcon("delete"));
+    actRemovePent->setIcon(ReginaSupport::regIcon("delete-mono"));
     actRemovePent->setToolTip(tr("Remove the currently selected pentachora"));
     actRemovePent->setEnabled(false);
     actRemovePent->setWhatsThis(tr("Removes the currently selected "
