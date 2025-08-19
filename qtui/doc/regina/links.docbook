@@ -1332,6 +1332,15 @@
    </para>
    <para>
     There are two ways you can build a link complement:
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="menulinkcomplement"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
     <itemizedlist>
      <listitem>
       <para>
@@ -1341,8 +1350,8 @@
         <guimenuitem>Complement</guimenuitem>
        </menuchoice>
        from the menu, or press the <guilabel>Complement</guilabel>
-       toolbar button (circled below),
-       &regina; will use its own implementation to create a native
+       toolbar button (the first button circled below),
+       then &regina; will use its own implementation to create a native
        &regina; triangulation of the complement.
        The triangulation will have access to the full suite of
        <link linkend="triangulations">&regina;'s tools for
@@ -1359,11 +1368,11 @@
        If you select
        <menuchoice>
         <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
-        <guimenuitem>&snappea;</guimenuitem>
+        <guimenuitem>Complement Via &snappea;</guimenuitem>
        </menuchoice>
        from the menu, or press the <guilabel>&snappea;</guilabel>
-       toolbar button (also circled below),
-       &regina; will pass the link to the &snappea; kernel to triangulate
+       toolbar button (the second button circled below),
+       then &regina; will pass the link to the &snappea; kernel to triangulate
        instead; the result will be a hybrid <link linkend="snappea">&snappea;
        triangulation</link>.
        The peripheral curves from the diagram will be preserved in
@@ -1373,7 +1382,7 @@
        triangulations</link> for more information on these limitations.
       </para>
       <para>
-       The <guilabel>&snappea;</guilabel> option is only available for
+       The <guilabel>Complement Via &snappea;</guilabel> option is only available for
        classical link diagrams, not virtual diagrams.
       </para>
      </listitem>
