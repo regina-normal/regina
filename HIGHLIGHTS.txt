@@ -33,7 +33,8 @@ Version 7.4  [ (to be announced) ]
           as part of the isomorphism signature.
         - Gave the graphical user interface a general glow-up, and added
           initial support for multithreaded computations.
-        - The tool DGT is now called Katie, and can now work with 1-handles.
+        - The tool DGT is now called Katie, and can now work with 1-handles
+          (thanks again to Rhuaidi Burke).
         - New command-line tool regina-helper, which can do things like create
           Makefiles and run the test suite.
         - Many, many other smaller features and optimisations.
