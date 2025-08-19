@@ -836,7 +836,7 @@ void usage(const char* progName, const std::string& error = std::string()) {
     std::cerr << "    " << progName << " \"PD Code\" \"Framing Vector\", "
         " { -3, --dim3 | -4, --dim4 } "
 //        "[ -g, --graph ] [ -r, --real ] [ -d, --debug ]\n"
-    "[ -g, --graph ] [ -d, --debug ]\n"
+    "[ -g, --graph ] [ -V, --verbose ]\n"
         "    " << progName << " [ -v, --version | -?, --help ]\n\n";
     std::cerr << "    -3, --dim3    : Build a 3-manifold via integer "
         "Dehn surgery.\n";
@@ -850,7 +850,7 @@ void usage(const char* progName, const std::string& error = std::string()) {
 //    std::cerr << "    -r, --real    : Builds the 4-manifold triangulation with real boundary "
 //            "(not ideal or closed).\n";
     std::cerr << "                    This option is incompatible with the --dim3 flag.\n\n";
-    std::cerr << "    -d, --debug   : Display debug information.\n";
+    std::cerr << "    -V, --verbose : Display information during the construction.\n";
     std::cerr << "    -v, --version : Show which version of Regina "
         "is being used\n";
     std::cerr << "    -?, --help    : Display this help\n\n";
@@ -977,10 +977,10 @@ int main(int argc, char* argv[]) {
             else if (!strcmp(argv[i], "-g") || !strcmp(argv[i], "--graph")) {
                 outputGraph = true;
             }
-            else if (!strcmp(argv[i], "-r") || !strcmp(argv[i], "--real")) {
-                realBdry = true;
-            }
-            else if (!strcmp(argv[i], "-d") || !strcmp(argv[i], "--debug")) {
+//            else if (!strcmp(argv[i], "-r") || !strcmp(argv[i], "--real")) {
+//                realBdry = true;
+//            }
+            else if (!strcmp(argv[i], "-V") || !strcmp(argv[i], "--verbose")) {
                 printDebugInfo = true;
             }
             else {
