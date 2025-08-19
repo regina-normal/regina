@@ -772,8 +772,7 @@ Version 7.4  [ (to be announced) ]
         Class Triangulation<4>:
             - New routine simplifyUpDown(); thanks to Rhuaidi Burke.  The main
               simplify() routine (previously called intelligentSimplify()) now
-              incorporates these techniques also; moreover, simplify() now
-              takes a progress tracker and supports cancellation.
+              incorporates these techniques also.
             - Regarding elementary moves:
               + The (check, perform) variants of fourFourMove(), openBook(),
                 collapseEdge(), snapEdge() are all deprecated.  You should now
@@ -792,6 +791,8 @@ Version 7.4  [ (to be announced) ]
             - New routine improveTreewidth().
             - Renamed intelligentSimplify() to simplify().  The old name is
               kept as a deprecated alias.
+            - Routine simplify() now takes a progress tracker and supports
+              cancellation.
             - Routines retriangulate() and simplifyExhaustive() no longer
               throw an exception when called on an empty triangulation.
             - Routine simplifyExhaustive() now ensures that any change to the

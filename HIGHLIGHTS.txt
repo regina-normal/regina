@@ -8,10 +8,38 @@ Regina - A Normal Surface Theory Calculator
 
 Version 7.4  [ (to be announced) ]
 
-    Overview:
-        - The DGT utility has been renamed to Katie.
-    Python / C++:
-        - Regina now uses the C++20 standard.
+    Requirements:
+        - Regina now uses C++20 (not C++17), and the GUI now requires Qt 6.x.
+        - You no longer need Jansson, Popt or CppUnit to build Regina.
+    Features:
+        - Now supports virtual knots and links, with new invariants such as
+          odd writhe, arrow polynomials, affine index polynomials, and
+          extended groups.
+        - Several new constructions, such as Whitehead doubles over links,
+          doubling triangulations over their boundaries, and many new
+          out-of-the-box example triangulations and links.
+        - Several new operations on triangulations and link diagrams, including
+          improving treewidth, truncating vertices in 3-D, and more elementary
+          moves in more dimensions.
+        - New invariants and properties for link diagrams, including Alexander
+          polynomials, Seifert circles, and connected diagram components.
+        - Significantly better simplification for 4-D triangulations,
+          including Rhuaidi Burke's "up-side-down" simplification heuristics.
+        - Text codes for link diagrams now include signed Gauss codes, plus an
+          extension of Regina's knot signatures to multiple-component links.
+        - You can now lock top-dimensional simplices and/or their facets in a
+          triangulation, to prevent these from being modified during operations
+          such as simplification or elementary moves.  Locks are also encoded
+          as part of the isomorphism signature.
+        - Gave the graphical user interface a general glow-up, and added
+          initial support for multithreaded computations.
+        - The tool DGT is now called Katie, and can now work with 1-handles.
+        - New command-line tool regina-helper, which can do things like create
+          Makefiles and run the test suite.
+        - Many, many other smaller features and optimisations.
+    Bugs fixed:
+        - Fixed an occasional problem where the "try harder" option for
+          simplifying triangulations could make the user interface crash.
 
 Version 7.3.1  [ 11 July, 2025 ]
 
