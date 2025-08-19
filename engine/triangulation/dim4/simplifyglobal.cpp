@@ -35,8 +35,10 @@
 namespace regina {
 
 template <Triangulation<4>::SimplifyContext context>
-bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
+bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform,
+        ProgressTrackerObjective* tracker) {
     if (! perform) {
+        // In this scenario there should be no progress tracker.
         ensureSkeleton();
 
         if constexpr (context != SimplifyContext::UpDownDescent) {
@@ -92,6 +94,9 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
             changedNow = false;
             ensureSkeleton();
 
+            if (tracker && tracker->isCancelled())
+                return changed;
+
             if constexpr (context != SimplifyContext::UpDownDescent) {
                 // Crush edges if we can.
                 if (countVertices() > countComponents() &&
@@ -99,6 +104,8 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
                     for (Edge<4>* e : edges()) {
                         if (collapseEdge(e)) {
                             changedNow = changed = true;
+                            if (tracker)
+                                tracker->setObjective(size());
                             break;
                         }
                     }
@@ -122,6 +129,8 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
             for (Edge<4>* e : edges()) {
                 if (move20(e)) {
                     changedNow = changed = true;
+                    if (tracker)
+                        tracker->setObjective(size());
                     break;
                 }
             }
@@ -135,6 +144,8 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
             for (Triangle<4>* t : triangles()) {
                 if (move20(t)) {
                     changedNow = changed = true;
+                    if (tracker)
+                        tracker->setObjective(size());
                     break;
                 }
             }
@@ -153,6 +164,8 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
             for (Vertex<4>* v : vertices()) {
                 if (move20(v)) {
                     changedNow = changed = true;
+                    if (tracker)
+                        tracker->setObjective(size());
                     break;
                 }
             }
@@ -166,6 +179,8 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
             for (Edge<4>* e : edges()) {
                 if (pachner(e)) {
                     changedNow = changed = true;
+                    if (tracker)
+                        tracker->setObjective(size());
                     break;
                 }
             }
@@ -184,6 +199,8 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
                     for (Tetrahedron<4>* f : bc->facets())
                         if (shellBoundary(f->front().pentachoron())) {
                             changedNow = changed = true;
+                            if (tracker)
+                                tracker->setObjective(size());
                             break;
                         }
                     if (changedNow)
@@ -204,9 +221,11 @@ bool Triangulation<4>::simplifyToLocalMinimumInternal(bool perform) {
 
 // Instantiate all variants of simplifyToLocalMinimumInternal().
 template bool Triangulation<4>::simplifyToLocalMinimumInternal<
-    Triangulation<4>::SimplifyContext::Best>(bool);
+    Triangulation<4>::SimplifyContext::Best>(
+    bool, ProgressTrackerObjective*);
 template bool Triangulation<4>::simplifyToLocalMinimumInternal<
-    Triangulation<4>::SimplifyContext::UpDownDescent>(bool);
+    Triangulation<4>::SimplifyContext::UpDownDescent>(
+    bool, ProgressTrackerObjective*);
 
 template <Triangulation<4>::SimplifyContext context>
 bool Triangulation<4>::simplifyGreedyInternal(
@@ -219,7 +238,7 @@ bool Triangulation<4>::simplifyGreedyInternal(
 
     if (tracker)
         tracker->newStage("Reducing to local minimum");
-    if (simplifyToLocalMinimumInternal<context>(true)) {
+    if (simplifyToLocalMinimumInternal<context>(true, tracker)) {
         if (tracker)
             if (! tracker->setObjective(size()))
                 return true; // cancelled, but triangulation was improved
@@ -293,7 +312,7 @@ bool Triangulation<4>::simplifyGreedyInternal(
             use->pachner(threeThreeChoice, regina::unprotected);
 
             // See if we can simplify now.
-            if (use->simplifyToLocalMinimumInternal<context>(true)) {
+            if (use->simplifyToLocalMinimumInternal<context>(true, tracker)) {
                 // We have successfully simplified!
                 if (tracker)
                     if (! tracker->setObjective(use->size())) {
@@ -350,7 +369,8 @@ bool Triangulation<4>::simplifyGreedyInternal(
 
             // If we're lucky, we can now simplify further.
             if (opened) {
-                if (working.simplifyToLocalMinimumInternal<context>(true)) {
+                if (working.simplifyToLocalMinimumInternal<context>(
+                        true, tracker)) {
                     // Yay!
                     swap(working);
                     if (tracker)

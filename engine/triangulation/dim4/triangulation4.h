@@ -1556,6 +1556,14 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * Implements simplifyToLocalMinimum().  The template argument
          * indicates which individual moves we are allowed to use.
          *
+         * A progress tracker should only be passed if \a perform is \c true.
+         * If a tracker _is_ passed, then this routine will maintain the
+         * objective value as the best number of pentachora found so far,
+         * and will check for cancellation.  However, it will _not_ create new
+         * stages, and it will _not_ mark the progress tracker as finished.
+         * Be aware that, even if the operation is cancelled, the triangulation
+         * still might have changed as a result.
+         *
          * If \a perform is \c true, then if this routine does actually change
          * the triangulation, it is guaranteed that this change will have
          * reduced the total number of pentachora.
@@ -1563,7 +1571,8 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * See simplifyToLocalMinimum() for further details.
          */
         template <SimplifyContext>
-        bool simplifyToLocalMinimumInternal(bool perform);
+        bool simplifyToLocalMinimumInternal(bool perform,
+            ProgressTrackerObjective* tracker);
 
         /**
          * Implements fast and greedy simplification.  This is essentially
@@ -1737,7 +1746,8 @@ inline bool Triangulation<4>::intelligentSimplify() {
 }
 
 inline bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
-    return simplifyToLocalMinimumInternal<SimplifyContext::Best>(perform);
+    return simplifyToLocalMinimumInternal<SimplifyContext::Best>(
+        perform, nullptr);
 }
 
 inline bool Triangulation<4>::simplifyUpDown(ssize_t max24, ssize_t max33,
