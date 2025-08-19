@@ -37,14 +37,13 @@ namespace regina {
 
 Triangulation<4> Example<4>::cp2() {
     // Built by Rhuaidi Burke using Katie from a Kirby diagram of the
-    // standard CP^2, then oriented in a way that ensures our
-    // intersection form matches CP^2 and not the reflection \overline{CP^2}.
+    // standard CP^2.
     return Triangulation<4>::fromGluings(4, {
-        { 0, 0, 0, {1,0,2,3,4} }, { 0, 2, 0, {2,0,3,1,4} },
-        { 0, 4, 1, {0,1,2,4,3} }, { 1, 0, 2, {0,1,2,4,3} },
-        { 1, 1, 3, {0,1,2,4,3} }, { 1, 2, 1, {2,0,4,3,1} },
-        { 2, 1, 2, {0,3,2,1,4} }, { 2, 2, 3, {1,2,3,0,4} },
-        { 2, 4, 3, {1,0,2,3,4} }, { 3, 0, 3, {2,1,0,3,4} }});
+        { 0, 0, 0, {2,3,1,0,4} }, { 0, 1, 0, {0,3,2,1,4} },
+        { 0, 4, 1, {0,1,2,4,3} }, { 1, 0, 1, {2,4,1,3,0} },
+        { 1, 1, 2, {0,1,2,4,3} }, { 1, 4, 2, {1,0,3,4,2} },
+        { 2, 0, 2, {3,1,2,0,4} }, { 2, 4, 3, {0,1,2,4,3} },
+        { 3, 0, 3, {4,1,2,3,0} }, { 3, 1, 3, {1,2,4,3,0} }});
 }
 
 Triangulation<4> Example<4>::s2xs2() {
