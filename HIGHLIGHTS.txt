@@ -19,8 +19,8 @@ Version 7.4  [ (to be announced) ]
           doubling triangulations over their boundaries, and many new
           out-of-the-box example triangulations and links.
         - Several new operations on triangulations and link diagrams, including
-          improving treewidth, truncating vertices in 3-D, and more elementary
-          moves in more dimensions.
+          improving treewidth, truncating individual vertices in 3-D, and more
+          elementary moves in more dimensions.
         - New invariants and properties for link diagrams, including Alexander
           polynomials, Seifert circles, and connected diagram components.
         - Significantly better simplification for 4-D triangulations,
