@@ -902,7 +902,9 @@ Version 7.4  [ (to be announced) ]
         - Elementary moves are now available in the GUI for 2-D triangulations.
     UTILITIES:
         dgt, katie:
-            - The DGT utility has been renamed to Katie.
+            - The DGT utility has been renamed to Katie, and some of the
+              command-line options have changed.
+            - Katie can now work with 1-handles.
         regina-engine-config:
             - Made more robust, and removed obsolete options (--exec-prefix,
               and the option to set --prefix to a custom directory).
