@@ -1652,7 +1652,7 @@
 		05EDDA4F27E3102A001743C1 /* signed_dec.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EDDA4927E3102A001743C1 /* signed_dec.h */; };
 		05EDDA5027E3102A001743C1 /* chunk.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EDDA4A27E3102A001743C1 /* chunk.h */; };
 		05EDDA5527E31061001743C1 /* nmz_hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EDDA5227E31060001743C1 /* nmz_hash.h */; };
-		05EE4AEC2D8BA962006D1495 /* katie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EE4AEB2D8BA962006D1495 /* katie.cpp */; };
+		05EE4AEC2D8BA962006D1495 /* katie.cc in Sources */ = {isa = PBXBuildFile; fileRef = 05EE4AEB2D8BA962006D1495 /* katie.cc */; };
 		05F09FBF1DBEF01800117BFC /* dim2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBC1DBEF01800117BFC /* dim2.h */; };
 		05F09FC01DBEF01800117BFC /* dim3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBD1DBEF01800117BFC /* dim3.h */; };
 		05F09FC11DBEF01800117BFC /* dim4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBE1DBEF01800117BFC /* dim4.h */; };
@@ -4531,7 +4531,7 @@
 		05EDDA5227E31060001743C1 /* nmz_hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nmz_hash.h; sourceTree = "<group>"; };
 		05EDF2FC2E1CDA220040F824 /* regfiledump.filter */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = regfiledump.filter; sourceTree = "<group>"; };
 		05EDF2FD2E1CDA220040F824 /* trisetcmp.filter */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = trisetcmp.filter; sourceTree = "<group>"; };
-		05EE4AEB2D8BA962006D1495 /* katie.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = katie.cpp; sourceTree = "<group>"; };
+		05EE4AEB2D8BA962006D1495 /* katie.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = katie.cc; sourceTree = "<group>"; };
 		05F09FBC1DBEF01800117BFC /* dim2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2.h; sourceTree = "<group>"; };
 		05F09FBD1DBEF01800117BFC /* dim3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim3.h; sourceTree = "<group>"; };
 		05F09FBE1DBEF01800117BFC /* dim4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4.h; sourceTree = "<group>"; };
@@ -7176,7 +7176,7 @@
 			isa = PBXGroup;
 			children = (
 				05617AE41D9DC02900B1E33B /* censuslookup.cpp */,
-				05EE4AEB2D8BA962006D1495 /* katie.cpp */,
+				05EE4AEB2D8BA962006D1495 /* katie.cc */,
 				05617AE51D9DC02900B1E33B /* regconcat.cpp */,
 				05617AE61D9DC02900B1E33B /* regconvert.cpp */,
 				05617AE71D9DC02900B1E33B /* regfiledump.cpp */,
@@ -10954,7 +10954,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05EE4AEC2D8BA962006D1495 /* katie.cpp in Sources */,
+				05EE4AEC2D8BA962006D1495 /* katie.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
