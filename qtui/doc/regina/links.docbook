@@ -1336,7 +1336,14 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="menulinkcomplement"/>
+      <imagedata multires="link-complement-menu"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="link-complement-bar"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1350,7 +1357,7 @@
         <guimenuitem>Complement</guimenuitem>
        </menuchoice>
        from the menu, or press the <guilabel>Complement</guilabel>
-       toolbar button (the first button circled below),
+       toolbar button (the first button circled above),
        then &regina; will use its own implementation to create a native
        &regina; triangulation of the complement.
        The triangulation will have access to the full suite of
@@ -1371,7 +1378,7 @@
         <guimenuitem>Complement Via &snappea;</guimenuitem>
        </menuchoice>
        from the menu, or press the <guilabel>&snappea;</guilabel>
-       toolbar button (the second button circled below),
+       toolbar button (the second button circled above),
        then &regina; will pass the link to the &snappea; kernel to triangulate
        instead; the result will be a hybrid <link linkend="snappea">&snappea;
        triangulation</link>.
@@ -1391,13 +1398,6 @@
    <para>
     Regardless of which method you use, the new triangulation will be
     inserted immediately beneath your link in the packet tree.
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata multires="link-complement"/>
-     </imageobject>
-    </inlinemediaobject>
    </para>
   </sect2>
 
@@ -1450,7 +1450,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata multires="menulinkcomponents"/>
+       <imagedata multires="link-components-menu"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -1575,7 +1575,14 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-simplify"/>
+      <imagedata multires="link-simplify-menu"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="link-simplify-bar"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1686,7 +1693,14 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-reidemeister"/>
+      <imagedata multires="link-reidemeister-menu"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="link-reidemeister-bar"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1791,7 +1805,14 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-refrotrev"/>
+      <imagedata multires="link-refrotrev-menu"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="link-refrotrev-bar"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1869,7 +1890,14 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-make-alternating"/>
+      <imagedata multires="link-make-alternating-menu"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="link-make-alternating-bar"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1902,7 +1930,14 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-selfframe"/>
+      <imagedata multires="link-selfframe-menu"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="link-selfframe-bar"/>
      </imageobject>
     </inlinemediaobject>
    </para>
