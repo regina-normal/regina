@@ -84,6 +84,39 @@
      top-dimensional simplex.
     </para></glossdef>
    </glossentry>
+   <glossentry>
+    <glossterm><guilabel>Toolbars</guilabel></glossterm>
+    <glossdef>
+     <para>
+      &regina;&nbsp;7.4 made a significant change to toolbars in the
+      triangulation and link viewers: they now include many more actions, and
+      the buttons are now icon-only (no text labels).
+     </para>
+     <para>
+      This option allows you, if you prefer, to revert to the old behaviour
+      from &regina;&nbsp;7.3.1 and earlier.
+     </para>
+     <para>
+      If you choose <guilabel>Detailed</guilabel> (the default), you will have
+      the new behaviour (many actions and no text labels).  If you choose
+      <guilabel>Simple</guilabel>, you will have the old behaviour (few
+      actions, and text labels alongside the icons).  The two screenshots
+      below illustrate both the new and old behaviour.
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata multires="toolbars-new"/>
+       </imageobject>
+      </inlinemediaobject>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata multires="toolbars-old"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+    </glossdef>
+   </glossentry>
    <glossentry id="options-multithreading">
     <glossterm><guilabel>Multithreading</guilabel></glossterm>
     <glossdef>
