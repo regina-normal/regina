@@ -227,7 +227,6 @@ public:
         for (auto [currNode, nbrs] : adjList) {
             for (int i=0; i<4; i++) {
                 if (nbrs[i].nodeID != 0) {
-                    edge subbedEdge;
                     switch (nbrs[i].strand) {
                         case 0:
                             break;
@@ -659,7 +658,6 @@ std::vector<int> pdCodeOrientations(const pdcode& code) {
     std::array<int, 4> positive = {1,-1,-1,1};
     
     long pdLength = code.size();
-    int numberOfStrands = 2*pdLength;
 
     std::vector<std::array<int, 4>> extendedOrientationVector(pdLength,eovInit);
         
@@ -865,7 +863,7 @@ int main(int argc, char* argv[]) {
     
     int dimFlag = 4; // Default to build a 4-manifold.
     bool outputGraph = false; // Default to ouptut an isomorphism signature.
-    bool realBdry = false; // Default to build closed/ideal triangulation.
+    // bool realBdry = false; // Default to build closed/ideal triangulation.
     
     // Check for standard arguments:
     for (int i=1; i<argc; ++i) {
@@ -924,12 +922,12 @@ int main(int argc, char* argv[]) {
     }
 
     if (codeFromSnappy) {
-        for (int i=0; i<rawPDVect.size(); i++) {
+        for (size_t i=0; i<rawPDVect.size(); i++) {
             rawPDVect[i]++;
         }
     }
     
-    for (int i=0; i<rawPDVect.size(); i+=4) {
+    for (size_t i=0; i<rawPDVect.size(); i+=4) {
         std::array<int, 4> currPDTup;
         for (int j=0; j<4; j++) {
             currPDTup[j] = rawPDVect[i+j];
@@ -944,7 +942,6 @@ int main(int argc, char* argv[]) {
      START Process Framings
      */
     std::string rawFramingInput = argv[2];
-    size_t rawFramingSize = rawFramingInput.size();
     
     std::vector<int> framingVector, twoHandleFramings;
     std::vector<bool> isOneHandleVector;
@@ -1004,7 +1001,7 @@ int main(int argc, char* argv[]) {
                     errors later on down the track, so keep these ones in mind.
      */
     std::vector<regina::StrandRef> oneHandleComponentRefs, twoHandleComponentRefs;
-    for (int i=0; i<numberOfComponents; i++) {
+    for (size_t i=0; i<numberOfComponents; i++) {
         if (isOneHandleVector[i]) {
             oneHandleComponentRefs.emplace_back(linkObjWorking.component(i));
         }
@@ -1075,7 +1072,7 @@ int main(int argc, char* argv[]) {
             std::clog << x << ", ";
         }
         std::clog << std::endl;
-        for (const auto& x : isOneHandleVector) {
+        for (bool x : isOneHandleVector) {
             std::clog << x << ", ";
         }
         std::clog << std::endl;
@@ -1250,7 +1247,7 @@ int main(int argc, char* argv[]) {
     
     // Debugging stage 2
     std::clog << "Writhes:\n";
-    for (int i=0; i<numberOfComponents; i++) {
+    for (size_t i=0; i<numberOfComponents; i++) {
         std::clog << "Component " << i << ": ";
         long currentWrithe = linkObjWorking.writheOfComponent(i);
         if (isOneHandleVector[i]) {
@@ -1281,7 +1278,7 @@ int main(int argc, char* argv[]) {
     // Recompute reference vectors
     oneHandleComponentRefs.clear();
     twoHandleComponentRefs.clear();
-    for (int i=0; i<numberOfComponents; i++) {
+    for (size_t i=0; i<numberOfComponents; i++) {
         if (isOneHandleVector[i]) {
             oneHandleComponentRefs.emplace_back(linkObjWorking.component(i));
         }
@@ -1385,7 +1382,7 @@ int main(int argc, char* argv[]) {
     // Inner vector: List of quadricolours.
     // Pair: The pair of strand references which make up the quadricolour.
     std::vector<std::pair<regina::StrandRef,regina::StrandRef>> quadriPairRefs(numberOfTwoHandles);
-    for (int i=0; i<numberOfTwoHandles; i++) {
+    for (size_t i=0; i<numberOfTwoHandles; i++) {
         auto twoHandle = twoHandleComponentRefs[i];
         std::vector<std::pair<regina::StrandRef,regina::StrandRef>> currentQuadricolourList = findLinkQuadriPairs(twoHandle);
 //        std::cerr << currentQuadricolourList.size() << std::endl;
@@ -1431,7 +1428,7 @@ int main(int argc, char* argv[]) {
                 auto currQuadriX2 = currQuadri.second;
 
                 // currNeeded = oneTwoCommons - startingQuadriCrossings
-                for (int i=0; i<currNeeded.size(); i++) {
+                for (size_t i=0; i<currNeeded.size(); i++) {
                     if (currNeeded[i] == initRef) {
                         currNeeded.erase(currNeeded.begin()+i);
                     }
@@ -1646,7 +1643,7 @@ int main(int argc, char* argv[]) {
             std::clog << std::endl;
         }
         
-        for (int i=0; i<numberOfTwoHandles; i++) {
+        for (size_t i=0; i<numberOfTwoHandles; i++) {
             auto linkQuadri = quadriPairRefs[i];
             std::set<int> linkIndices;
             linkIndices.emplace(linkQuadri.first.crossing()->index());
