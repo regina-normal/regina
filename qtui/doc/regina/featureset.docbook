@@ -40,6 +40,10 @@
       dehydration strings <xref linkend="bib-cuspedcensus"/>;
      </para></listitem>
      <listitem><para>
+      building new triangulations from old, such as via orientable
+      double covers, or doubling over the boundary;
+     </para></listitem>
+     <listitem><para>
       building triangulations from framed links, using the command-line tool
       <link linkend="man-katie">&katie;</link>;
      </para></listitem>
@@ -163,14 +167,11 @@
       for closed orientable 3-manifolds <xref linkend="bib-0-efficiency"/>;
      </para></listitem>
      <listitem><para>
-      barycentric subdivision, truncating ideal vertices
-      (whose links are neither 2-spheres nor discs) to give real
-      boundary components, and conversely coning real
-      boundary components to give ideal vertices;
+      barycentric subdivision, truncating vertices, and
+      creating ideal vertices by coning boundary components;
      </para></listitem>
      <listitem><para>
-      conversion of a non-orientable triangulation to an orientable
-      double cover;
+      retriangulating in an attempt to reduce the treewidth;
      </para></listitem>
      <listitem><para>
       cutting along normal surfaces within a triangulation
@@ -244,27 +245,30 @@
  <sect2 id="features-links">
   <title>Knots and Links</title>
   <para>
-   Since version&nbsp;5.96,
-   &regina; now offers native support for knots and links.
+   &regina; offers native support for knots and links, including classical
+   as well as virtual links.
   </para>
   <para>
    You can create knots and links from Gauss, Dowker-Thistlethwaite
    or planar diagram codes, knot/link signatures,
    parameterised families of knots and links,
    or construction of ready-made examples.
+   You can also create new links from old, such as through composition,
+   Whitehead doubles, and parallel cables.
   </para>
   <para>
-   &regina; computes several link invariants including the
-   Jones and &homflypt; polynomials and the link group,
-   allows you to build and study the
+   &regina; computes several link invariants including the Alexander,
+   Jones, &homflypt;, arrow and affine index polynomials,
+   and the link group and extended link group.
+   It allows you to build and study the
    underlying 4-valent graph and its tree decompositions, offers tools
    for isomorphism testing and isomorphism signatures, and allows you to
    build the knot/link complement as a 3-manifold triangulation.
   </para>
   <para>
    To manipulate knots and links, you can edit individual crossings,
-   perform Reidemeister moves, take cablings, or run
-   sophisticated simplification tools.
+   perform individual Reidemeister moves, run sophisticated simplification
+   algorithms, and search for ways to reduce the treewidth.
   </para>
  </sect2>
 
