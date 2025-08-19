@@ -859,7 +859,7 @@ void Tri2GluingsUI::updateActionStates() {
     actOrient->setEnabled(tri->isOrientable() && ! tri->isOriented());
     actDoubleOverBoundary->setEnabled(tri->hasBoundaryFacets());
     actSplitIntoComponents->setEnabled(tri->countComponents() > 1);
-    actUnlock->setEnabled(tri->hasLocks());
+    actUnlock->setVisible(tri->hasLocks());
 
     updateRemoveState();
 }

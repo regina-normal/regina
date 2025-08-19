@@ -1791,7 +1791,7 @@ void Tri3GluingsUI::updateActionStates() {
     actBoundaryComponents->setEnabled(! tri->boundaryComponents().empty());
     actDoubleOverBoundary->setEnabled(tri->hasBoundaryFacets());
     actSplitIntoComponents->setEnabled(tri->countComponents() > 1);
-    actUnlock->setEnabled(tri->hasLocks());
+    actUnlock->setVisible(tri->hasLocks());
 
     updateRemoveState();
 }
