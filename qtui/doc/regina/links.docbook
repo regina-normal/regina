@@ -1339,8 +1339,6 @@
       <imagedata multires="link-complement-menu"/>
      </imageobject>
     </inlinemediaobject>
-   </para>
-   <para>
     <inlinemediaobject>
      <imageobject>
       <imagedata multires="link-complement-bar"/>
@@ -1578,8 +1576,6 @@
       <imagedata multires="link-simplify-menu"/>
      </imageobject>
     </inlinemediaobject>
-   </para>
-   <para>
     <inlinemediaobject>
      <imageobject>
       <imagedata multires="link-simplify-bar"/>
@@ -1696,8 +1692,6 @@
       <imagedata multires="link-reidemeister-menu"/>
      </imageobject>
     </inlinemediaobject>
-   </para>
-   <para>
     <inlinemediaobject>
      <imageobject>
       <imagedata multires="link-reidemeister-bar"/>
@@ -1808,8 +1802,6 @@
       <imagedata multires="link-refrotrev-menu"/>
      </imageobject>
     </inlinemediaobject>
-   </para>
-   <para>
     <inlinemediaobject>
      <imageobject>
       <imagedata multires="link-refrotrev-bar"/>
@@ -1893,8 +1885,6 @@
       <imagedata multires="link-make-alternating-menu"/>
      </imageobject>
     </inlinemediaobject>
-   </para>
-   <para>
     <inlinemediaobject>
      <imageobject>
       <imagedata multires="link-make-alternating-bar"/>
@@ -1933,8 +1923,6 @@
       <imagedata multires="link-selfframe-menu"/>
      </imageobject>
     </inlinemediaobject>
-   </para>
-   <para>
     <inlinemediaobject>
      <imageobject>
       <imagedata multires="link-selfframe-bar"/>
