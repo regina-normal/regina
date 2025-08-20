@@ -469,6 +469,7 @@ Primes : class -> EqualityType.NEVER_INSTANTIATED
 PrismSpec : class -> EqualityType.BY_VALUE
 ProgressTracker : class -> EqualityType.BY_REFERENCE
 ProgressTrackerBase : class -> EqualityType.BY_REFERENCE
+ProgressTrackerObjective : class -> EqualityType.BY_REFERENCE
 ProgressTrackerOpen : class -> EqualityType.BY_REFERENCE
 Qitmask128 : class -> EqualityType.BY_VALUE
 Qitmask16 : class -> EqualityType.BY_VALUE
