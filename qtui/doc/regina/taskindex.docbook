@@ -500,6 +500,8 @@
   <primaryie>crossings, in links</primaryie>
   <secondaryie><link linkend="link-edit-crossings">changing
    (or switching)</link></secondaryie>
+  <secondaryie><link linkend="link-edit-crossings">making
+   virtual</link></secondaryie>
   <secondaryie><link linkend="link-edit-crossings">resolving
    (or splicing)</link></secondaryie>
   <secondaryie><link linkend="link-crossings">viewing</link></secondaryie>
@@ -846,6 +848,10 @@
  <indexentry>
   <primaryie>flip graph</primaryie>
   <seeie>See: Pachner graph</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-flip">flipping links</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1228,6 +1234,8 @@
   <secondaryie><link linkend="link-edit-crossings">crossings,
    changing (or switching)</link></secondaryie>
   <secondaryie><link linkend="link-edit-crossings">crossings,
+   making virtual</link></secondaryie>
+  <secondaryie><link linkend="link-edit-crossings">crossings,
    resolving (or splicing)</link></secondaryie>
   <secondaryie><link linkend="link-crossings">crossings,
    viewing</link></secondaryie>
@@ -1245,6 +1253,7 @@
   <secondaryie><link linkend="link-census-examples">examples,
    from censuses</link></secondaryie>
   <secondaryie><link linkend="link-algebra">extended group</link></secondaryie>
+  <secondaryie><link linkend="link-flip">flipping</link></secondaryie>
   <secondaryie><link linkend="link-new-cables">framings</link></secondaryie>
   <secondaryie><link linkend="link-new-code">Gauss code
    (classical, oriented or signed), recreating from</link></secondaryie>
@@ -1290,6 +1299,8 @@
   <secondaryie><link linkend="link-simplify">simplification</link></secondaryie>
   <secondaryie><link linkend="link-graphs-tree">tree
    decompositions</link></secondaryie>
+  <secondaryie><link linkend="link-treewidth">treewidth,
+   improving</link></secondaryie>
   <secondaryie><link linkend="link-virtual-genus">virtual
    genus</link></secondaryie>
   <secondaryie><link linkend="links">virtual versus
@@ -2099,6 +2110,12 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>treewidth, improving</primaryie>
+  <secondaryie><link linkend="link-treewidth">for link
+   diagrams</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>triangle arc normal coordinates</primaryie>
   <seeie>See: coordinate systems</seeie>
  </indexentry>
@@ -2356,6 +2373,11 @@
 
  <indexentry>
   <primaryie><link linkend="packet-tree">viewing packets</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-edit-crossings">virtual crossings,
+   making</link></primaryie>
  </indexentry>
 
  <indexentry>

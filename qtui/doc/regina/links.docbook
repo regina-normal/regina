@@ -1227,7 +1227,7 @@
         the smallest possible width (i.e., it does not compute the precise
         <firstterm>treewidth</firstterm> of the diagram graph).
         Instead it uses fast heuristics that are found to
-        produce low-width graphs in practice.
+        produce low-width tree decompositions in practice.
        </para>
       </glossdef>
      </glossentry>
@@ -1354,8 +1354,8 @@
         <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
         <guimenuitem>Complement</guimenuitem>
        </menuchoice>
-       from the menu, or press the <guilabel>Complement</guilabel>
-       toolbar button (the first button circled above),
+       from the menu or press the corresponding toolbar button
+       (the first button circled above),
        then &regina; will use its own implementation to create a native
        &regina; triangulation of the complement.
        The triangulation will have access to the full suite of
@@ -1375,8 +1375,8 @@
         <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
         <guimenuitem>Complement Via &snappea;</guimenuitem>
        </menuchoice>
-       from the menu, or press the <guilabel>&snappea;</guilabel>
-       toolbar button (the second button circled above),
+       from the menu or press the corresponding toolbar button
+       (the second button circled above),
        then &regina; will pass the link to the &snappea; kernel to triangulate
        instead; the result will be a hybrid <link linkend="snappea">&snappea;
        triangulation</link>.
@@ -1495,7 +1495,7 @@
    <title>Editing Crossings</title>
    <para>
     You can edit a link directly by altering its individual crossings.
-    &regina; gives you two ways do this, both of which will typically
+    &regina; gives you several ways do this, all of which will typically
     change the topology of the link:
     <glosslist>
      <glossentry>
@@ -1528,12 +1528,35 @@
        <firstterm>splicing</firstterm> a crossing.
       </para></glossdef>
      </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Making a crossing virtual</guilabel></glossterm>
+      <glossdef><para>
+       If you are familiar with virtual link diagrams, this converts a
+       classical crossing into a virtual crossing (one that is often marked
+       with a small circle in diagrams on the plane).
+      </para><para>
+       From &regina;'s point
+       of view, this operation simply removes the crossing entirely, but
+       without changing the connections between the strands.  In other words,
+       the two strands that used to pass over/under each other will now avoid
+       each other entirely: instead the incoming and outgoing upper strands
+       will simply merge into one, and the incoming and outgoing lower strands
+       will likewise merge into one.
+      </para><para>
+       If applied to a classical link diagram, this operation will typically
+       make the diagram virtual (since it requires adding a new handle to the
+       surface in which the diagram embeds, which the original upper and lower
+       strands can use to pass by one another).  If applied to a virtual link
+       diagram, it could potentially change the virtual genus, or even make
+       the diagram classical again.
+      </para></glossdef>
+     </glossentry>
     </glosslist>
    </para>
    <para>
-    To change or resolve a crossing, switch to the
+    To change, resolve, or make a crossing virtual, switch to the
     <guilabel>Crossings</guilabel> tab, right-click on the crossing you
-    want to change, and choose which operation you wish to perform.
+    want to modify, and choose which operation you wish to perform.
     (You will also see an extra option to
     <link linkend="link-flip">reverse a single component</link>.)
    </para>
@@ -1557,11 +1580,11 @@
     &regina; offers a number of <link linkend="link-reidemeister">local
     moves</link> (including the well-known Reidemeister moves) for
     modifying a link diagram without changing the underlying link.
-    If you press the <guibutton>Simplify</guibutton> button (or select
+    If you select
     <menuchoice>
      <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
      <guimenuitem>Simplify</guimenuitem>
-    </menuchoice>),
+    </menuchoice> from the menu or press the corresponding toolbar button,
     then &regina; will use a combination of these moves to reduce the
     link to as few crossings as it can.
     This procedure is always fast and works well in many scenarios,
@@ -1585,7 +1608,7 @@
    <note>
     <para>
      This fast simplification process will never
-     <link linkend="link-flip">reflect or reverse</link> your link.
+     <link linkend="link-flip">reflect, rotate or reverse</link> your link.
      This is <emphasis>not</emphasis> true of the exhaustive process
      described below.
     </para>
@@ -1651,13 +1674,13 @@
       Unlike the fast simplification process when you first press the
       <guilabel>Simplify</guilabel> button, this exhaustive
       simplification process could well
-      <link linkend="link-flip">reflect your link</link>
+      <link linkend="link-flip">reflect or rotate your link</link>
       and/or <link linkend="link-flip">reverse individual components</link>.
      </para>
     </warning>
     <tip id="link-gordian">
      <para>
-      If your aim is to recognise a knot, an alternative is to
+      If your aim is to recognise a classical knot, an alternative is to
       <link linkid="link-complement">build the knot complement</link>
       and then try to recognise the resulting 3-manifold instead.
       The 3-manifold tools in &regina; are much richer, and in
@@ -1669,6 +1692,62 @@
      </para>
     </tip>
    </sect3>
+  </sect2>
+
+  <sect2 id="link-treewidth">
+   <title>Improving Treewidth</title>
+   <para>
+    Instead of trying to reduce the number of crossings, you can also ask
+    &regina; to try to reduce the treewidth of the link diagram.
+    <firstterm>Treewidth</firstterm> is a measure of how tree-like the
+    underlying 4-valent model graph is, and reducing the treewidth is
+    important because it can significantly speed up difficult computations
+    such as <link linkend="link-polynomials">Jones and &homflypt;
+    polynomials</link>.
+   </para>
+   <para>
+    To reduce the treewidth, select
+    <menuchoice>
+     <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+     <guimenuitem>Improve Treewidth</guimenuitem>
+    </menuchoice> from the menu or press the corresponding toolbar button.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="link-treewidth-menu"/>
+     </imageobject>
+    </inlinemediaobject>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="link-treewidth-bar"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    &regina; will begin to explore the Reidemeister graph in search of a
+    smaller treewidth diagram, in a similar manner to the
+    <link linkend="link-simplify-exhaustive">exhaustive simplification</link>
+    process described above.  Like exhaustive simplification, &regina; will
+    occasionally stop and offer to expand its search; also, like exhaustive
+    simplification, you can cancel the search at any time.
+   </para>
+   <para>
+    It is important to understand that &regina; does not compute the
+    <emphasis>precise</emphasis>
+    treewidth of a link diagram (i.e., the minimum width of a
+    <link linkend="link-graphs-tree">tree decomposition</link>), since this is
+    an NP-hard problem.  Instead it uses fast heuristics to find a low-width
+    tree decomposition for a given diagram, and it is
+    this &ldquo;heuristic width&rdquo; that will be reduced.
+   </para>
+   <warning><para>
+    As with exhaustive simplification, both time and memory consumption
+    grow at a super-exponential rate as the search expands.
+    Also, as with exhaustive simplification, this operation could well
+    <link linkend="link-flip">reflect or rotate your link</link>
+    and/or <link linkend="link-flip">reverse individual components</link>.
+   </para></warning>
   </sect2>
 
   <sect2 id="link-reidemeister">
@@ -1684,7 +1763,7 @@
      <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
      <guimenuitem>Reidemeister Moves&hellip;</guimenuitem>
     </menuchoice>
-   from the menu.
+    from the menu or press the corresponding toolbar button.
    </para>
    <para>
     <inlinemediaobject>
@@ -1763,6 +1842,13 @@
        This will cause the <guilabel>Under</guilabel> list to be re-filled
        with compatible strands that can be pushed under the first,
        and now you can select one of these options also.
+      </para><para>
+       These drop-down lists do not offer <firstterm>virtual</firstterm>
+       R2&nbsp;overlap moves (which do not require the two strands to border
+       the same cell, and which could therefore increase the virtual genus of
+       the diagram).  If you need to perform a virtual R2&nbsp;overlap move,
+       you can always use the function
+       <function>Link::r2Virtual()</function> in &cpppython;.
       </para></glossdef>
      </glossentry>
      <glossentry>
@@ -1815,11 +1901,17 @@
       <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
       <guimenuitem>Reflect</guimenuitem>
      </menuchoice>
-     from the menu (or press the <guilabel>Reflect</guilabel> button on
-     the toolbar), &regina; will reflect your link about an axis in the
+     from the menu or press the corresponding toolbar button,
+     &regina; will reflect your link about an axis in the
      plane.  Each crossing will change sign (positive becomes negative
      and vice versa), but over-crossings will remain over-crossings, and
      under-crossings will remain under-crossings.
+    </para><para>
+     For virtual link diagrams (which do not live in the plane), this
+     operation effectively performs an orientation-reversing homeomorphism of
+     the surface in which the diagram embeds.
+     In the language of &greentables;, this is a
+     <firstterm>horizontal</firstterm> mirror image.
     </para></listitem>
     <listitem><para>
      If you select
@@ -1827,10 +1919,24 @@
       <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
       <guimenuitem>Rotate</guimenuitem>
      </menuchoice>
-     from the menu, &regina; will rotate your link about an axis in the
+     from the menu or press the corresponding toolbar button,
+     &regina; will rotate your link about an axis in the
      plane (like turning a sheet of paper over so the back becomes visible).
      This means that over-crossings will become under-crossings
      and vice versa, but the sign of each crossing will remain the same.
+    </para><para>
+     For virtual link diagrams (which do not live in the plane), we can think
+     of the diagram as embedded in some thickened surface
+     <replaceable>S</replaceable>&nbsp;&times;&nbsp;I.  This operation
+     effectively performs an orientation-preserving homeomorphism of
+     <replaceable>S</replaceable>&nbsp;&times;&nbsp;I
+     that switches the two copies of <replaceable>S</replaceable> on the
+     boundary.
+    </para><para>
+     Some authors refer to this operation as a <firstterm>flip</firstterm>.
+     In the language of &greentables;, this is the composition of both a
+     <firstterm>vertical</firstterm> and a <firstterm>horizontal</firstterm>
+     mirror image.
     </para></listitem>
     <listitem><para>
      If you select
@@ -1838,7 +1944,8 @@
       <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
       <guimenuitem>Reverse</guimenuitem>
      </menuchoice>
-     from the menu, &regina; will reverse the orientation (i.e.,
+     from the menu or press the corresponding toolbar button,
+     &regina; will reverse the orientation (i.e.,
      direction of traversal) of every component of your link.
      Both the sign (positive or negative) and the side (under or over)
      of each crossing will remain the same, but each component will walk
@@ -1877,7 +1984,7 @@
      <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
      <guimenuitem>Make Alternating</guimenuitem>
     </menuchoice>
-    from the menu.
+    from the menu or press the corresponding toolbar button.
    </para>
    <para>
     <inlinemediaobject>
@@ -1915,7 +2022,7 @@
      <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
      <guimenuitem>Self Frame</guimenuitem>
     </menuchoice>
-    from the menu.
+    from the menu or press the corresponding toolbar button.
    </para>
    <para>
     <inlinemediaobject>
@@ -1987,6 +2094,12 @@
    <para>
     The link <replaceable>L</replaceable> will be changed directly
     into the resulting composite link.
+   </para>
+   <para>
+    If you need control over the specific arcs in each link where the
+    composition takes place (which matters with virtual links, for example),
+    you will need to use the function <function>Link::graft()</function>
+    in &cpppython;.
    </para>
   </sect2>
 

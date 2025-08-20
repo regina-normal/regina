@@ -92,6 +92,8 @@
   <!ENTITY cpp "<application>C++</application>">
   <!ENTITY cpp11 "<application>C++11</application>">
   <!ENTITY cpp17 "<application>C++17</application>">
+  <!ENTITY cpp20 "<application>C++20</application>">
+  <!ENTITY cpppython "&cpp;/&python;">
   <!ENTITY csv "<acronym>CSV</acronym>">
   <!ENTITY cython "<application>Cython</application>">
   <!ENTITY debian "<application>Debian</application>">
@@ -110,6 +112,7 @@
   <!ENTITY github "<application>GitHub</application>">
   <!ENTITY gnome "<application><acronym>GNOME</acronym></application>">
   <!ENTITY gnu "<acronym>GNU</acronym>">
+  <!ENTITY greentables "<ulink url='https://www.math.toronto.edu/drorbn/Students/GreenJ/'>Jeremy Green's virtual knot tables</ulink>">
   <!ENTITY graphviz "<application>Graphviz</application>">
   <!ENTITY graphvizurl "<ulink url='http://www.graphviz.org/'>&graphviz;</ulink>">
   <!ENTITY gtest "<application>GoogleTest</application>">
