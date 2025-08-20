@@ -50,6 +50,7 @@
   <!ENTITY api "<acronym>API</acronym>">
   <!ENTITY bzip2 "bzip2">
   <!ENTITY cpp "C++">
+  <!ENTITY gui "<acronym>GUI</acronym>">
   <!ENTITY gzip "gzip">
   <!ENTITY html "<acronym>HTML</acronym>">
   <!ENTITY katie "<application>Katie</application>">

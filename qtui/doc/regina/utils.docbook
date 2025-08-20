@@ -2448,6 +2448,17 @@
   </refsect1>
 
   <refsect1>
+   <title>Example</title>
+
+<screen>
+    <prompt>example$</prompt> <userinput>regina-engine-config --cflags</userinput>
+    -std=c++20
+    -I/usr/include/regina-normal -I/usr/include -I/usr/include/libxml2
+    <prompt>example$</prompt>
+</screen>
+  </refsect1>
+
+  <refsect1>
    <title>See Also</title>
    <para>
     <link linkend="man-regina-helper">regina-helper</link>.

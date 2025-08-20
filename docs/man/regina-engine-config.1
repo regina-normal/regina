@@ -61,6 +61,14 @@ that uses the Regina calculation engine.
 \fB--libs\fR
 Print the linker flags that are required to link a program against
 the Regina calculation engine.
+.SH "EXAMPLE"
+
+.nf
+    example$ \fBregina-engine-config --cflags\fR
+    -std=c++20
+    -I/usr/include/regina-normal -I/usr/include -I/usr/include/libxml2
+    example$
+.fi
 .SH "SEE ALSO"
 .PP
 regina-helper\&.
