@@ -108,9 +108,14 @@ class Dim3Test : public TriangulationTest<3> {
         TestCase figure8 { Example<3>::figureEight(),
             "Figure eight knot complement" };
         TestCase trefoil { Example<3>::trefoil(), "Trefoil complement" };
-        TestCase knot18 { regina::Link::fromSig(
-                "sabcdeafghidejklmnopqgcbfqhinmjrpolkrlLvnvvNdM9aE").
-                complement(),
+        TestCase knot18 { Triangulation<3>::fromSig(
+                "FLLvvvLMvvwAPPQMQQLQQkcekjkryppwvrsABAstuCzxzCxADEECDEiigcsaiccfvfkaambvvxeodxcxjjcsvf"),
+                // This is the complement of the 18-crossing link with sig:
+                // sabcdeafghidejklmnopqgcbfqhinmjrpolkrlLvnvvNdM9aE
+                // We hard-code the triangulation instead of using complement()
+                // to keep things deterministic in the test suite.  (In the
+                // past there have been cases where complement() landed on an
+                // alternate triangulation with no strict angle structure.)
             "18-crossing knot complement" };
         TestCase idealGenusTwoHandlebody {
             Example<3>::idealGenusTwoHandlebody(),
