@@ -16,7 +16,9 @@ set (IMGS
   crossing-u
   crossing+l
   crossing+u
+  crush
   csvexport
+  cutalong
   dehydrated
   delete
   delete-mono

@@ -561,6 +561,7 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(
 
     actCutAlong = new QAction(this);
     actCutAlong->setText(tr("Cu&t Along Surface"));
+    actCutAlong->setIcon(ReginaSupport::regIcon("cutalong"));
     actCutAlong->setToolTip(tr("Cut the triangulation along the "
         "selected surface"));
     actCutAlong->setEnabled(false);
@@ -578,6 +579,7 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(
 
     actCrush = new QAction(this);
     actCrush->setText("Crus&h Surface");
+    actCrush->setIcon(ReginaSupport::regIcon("crush"));
     actCrush->setToolTip(tr("Crush the selected surface to a point"));
     actCrush->setEnabled(false);
     actCrush->setWhatsThis(tr("Crushes the selected surface to a point "
