@@ -6,7 +6,7 @@
 .TH "REGINA-HELPER" "1" "20 August 2025" "" "The Regina Handbook"
 
 .SH NAME
-regina-helper \- Helper tasks for working with a Regina installation
+regina-helper \- Helper utility for working with a Regina installation
 .SH SYNOPSIS
 
 \fBregina-helper\fR \fB\fIaction\fB\fR [ \fB\fIargs\fB\fR\fI ...\fR ]
@@ -16,10 +16,223 @@ regina-helper \- Helper tasks for working with a Regina installation
 
 .SH "DESCRIPTION"
 .PP
-This utility is only included with \fBGNU/Linux\fR and \fBmacOS\fR installations.
-It is also available on any platform where you are building Regina
-yourself from sources.  It is not included in the pre-built \fBWindows\fR
-packages.
+This utility understands the layout of your Regina installation, and it
+can help you with a variety of tasks that require this knowledge.
+For example, it can create Makefiles and/or sample C++ code for you,
+or help you run Regina's test suite.
+.PP
+The first argument to \fBregina-helper\fR should be an
+action, indicating what you want the utility to do.  The available actions
+are described in detail below.
+To learn more about what an action does, you can run
+\fBregina-helper\~\fIaction\fB\~--help\fR\&.
+.PP
+This utility is available in most but not all settings:
+.TP 0.2i
+\(bu
+If you are using \fBGNU/Linux\fR and you have Regina installed in a system
+location (e.g., beneath \fI/usr/\fR or
+\fI/usr/local/\fR), then \fBregina-helper\fR
+should be included with your installation, and any output it produces
+should be relative to this system installation.
+.TP 0.2i
+\(bu
+If you are using \fBmacOS\fR and you are running Regina from an app
+bundle (which might be under \fI/Applications/\fR or
+might be somewhere else), then you can run
+\fBregina-helper\fR from within the app bundle
+(\fI\&.../Regina.app/Contents/MacOS/regina-helper\fR),
+and any output it produces should be relative to this app bundle.
+.TP 0.2i
+\(bu
+If you are building Regina yourself from the source tree (on any
+platform), then you can run \fBregina-helper\fR
+from the source tree, and any output it produces should be relative
+to this same source tree.  In particular, it will not assume that you
+have actually installed Regina.
+.TP 0.2i
+\(bu
+If you are using pre-built packages for Regina on \fBWindows\fR,
+then \fBregina-helper\fR will not be included in your
+installation.
+.SH "ACTIONS"
+.PP
+The first argument to \fBregina-helper\fR should be one of
+the following actions:
+.TP
+\fBinstalltype\fR
+Writes a single token to standard output identifying the type of
+Regina installation.
+
+.nf
+    example$ \fBregina-helper installtype\fR
+    XDG
+    example$
+.fi
+
+The output will be one of the following:
+.RS
+.TP
+\fBXDG\fR
+Indicates that you are running Regina from an installation in a
+fixed location that follows the freedesktop.org layout.
+This is seen with Regina's \fBGNU/Linux\fR packages, as well as local
+\fBCMake\fR builds with no special arguments.
+.TP
+\fBHPC\fR
+Indicates that you are running Regina from a slimmed-down
+installation (e.g., no GUI or HTML docs), which is installed
+in a fixed but possibly non-standard location, suitable
+for builds on high-performance computing systems.
+This is typically seen with local \fBCMake\fR
+builds where \fIREGINA_INSTALL_TYPE\fR
+was explicitly set to HPC\&.
+.TP
+\fBBundle\fR
+Indicates that you are running Regina from within a \fBmacOS\fR
+app bundle.
+.TP
+\fBWindows\fR
+Indicates that you are running Regina from within Regina's
+\fBWindows\fR app.  It is unlikely that you will see this of course,
+since \fBregina-helper\fR is not shipped with \fBWindows\fR
+installations.
+.TP
+\fBSource\fR
+Indicates that you are running Regina directly from the source
+tree (i.e., a local build that has not necessarily been installed).
+.RE
+
+The installtype action takes no additional arguments.
+.TP
+\fBmakefile\fR
+Creates a Makefile in the current directory, suitable for compiling
+C++ programs against Regina.  In particular, once you have your
+Makefile in place, you can (for example) compile a C++ program
+\fIfoo.cc\fR just by running
+\fBmake foo\fR\&.
+
+The main reason for using this Makefile is that it includes
+compiler and linker flags for accessing Regina's C++ calculation
+engine.  (In particular, using this Makefile is a simpler alternative
+to extracting compiler and linker flags from
+\fBregina-engine-config\fR\&.)
+
+The makefile action accepts the optional arguments
+\fB--force\fR and/or \fB--rpath\fR;
+these are described below.
+.TP
+\fBcc, cpp\fR
+Creates a Makefile in the current directory that is suitable for
+compiling C++ programs against Regina, as well as a sample C++
+program that can be used as a starting point for your own code.
+
+.nf
+    example$ \fBregina-helper cc\fR
+    Writing sample.cc...
+    Preparing Makefile...
+    example$ ls
+    Makefile  sample.cc
+    example$
+.fi
+
+See the makefile action above for further discussion
+of how you can use this Makefile.
+
+The C++ source file will be called either
+\fIsample.cc\fR or \fIsample.cpp\fR,
+depending on whether you gave
+cc or cpp as the action argument
+to \fBregina-helper\fR\&.
+
+The cc\~/\~cpp
+action accepts the optional arguments
+\fB--force\fR and/or \fB--rpath\fR;
+these are described below.
+.TP
+\fBtest\fR
+Runs Regina's detailed C++ calculation engine test suite.
+
+Regina has a large and thorough test suite, designed to guard against
+system incompatibilities and/or unforseen bugs.  This test suite
+includes several components that target the C++ calculation engine,
+the Python bindings, and the command-line utilities.  The bulk of the
+tests are for the C++ calculation engine, and those are the tests
+that will be run here.
+
+.nf
+    example$ \fBregina-helper test\fR
+    Running C++ test suite from the installation beneath /usr/local/.
+    
+    [==========] Running 522 tests from 53 test suites.
+    [----------] Global test environment set-up.
+    [----------] 2 tests from AbelianGroupTest
+    [ RUN      ] AbelianGroupTest.incrementalBuild
+    [       OK ] AbelianGroupTest.incrementalBuild (0 ms)
+    [ RUN      ] AbelianGroupTest.tightEncoding
+    [       OK ] AbelianGroupTest.tightEncoding (0 ms)
+    [----------] 2 tests from AbelianGroupTest (1 ms total)
+    
+    [----------] 6 tests from CoversTest
+    [ RUN      ] CoversTest.trivial
+    [       OK ] CoversTest.trivial (2 ms)
+    \&...
+.fi
+
+The C++ test suite uses the \fBGoogle Test\fR
+framework, which supports many different arguments to customise your
+test suite run.  Any additional arguments that you supply with the
+test action will be passed directly through to
+\fBGoogle Test\fR\&.
+You can run \fBregina-helper test --help\fR to see
+what all of these possible arguments are.
+.TP
+\fBhelp\fR
+Outputs usage information for the \fBregina-helper\fR
+utility.
+
+This action takes no additional arguments.
+.SH "OPTIONS"
+.TP
+\fB--force\fR
+Overwrites any existing files (such as \fIMakefile\fR,
+or \fIsample.cc\fR).  By default,
+\fBregina-helper\fR will not overwrite a file that already
+exists.
+
+This option is used with the makefile and
+cc\~/\~cpp actions.
+.TP
+\fB--rpath\fR
+Always uses an rpath option in the linker flags
+within the Makefile that is created.
+This is useful for when your Regina installation is not on the
+standard library path.
+
+If your program compiles and links correctly but crashes when you
+run it because it cannot find the library
+\fIlibregina-engine.so\fR, then the
+\fB--rpath\fR option might solve your problem.
+(You will of course need to rebuild your program after updating
+the Makefile.)
+
+By default, an rpath option will only be used if you are running
+Regina directly out of the source tree.
+
+This option is used with the makefile and
+cc\~/\~cpp actions.
+.TP
+\fB--help\fR
+Outputs detailed usage information for a particular
+\fBregina-helper\fR action.
+
+.nf
+    example$ \fBregina-helper test --help\fR
+    Usage: /usr/local/bin/regina-helper test [testsuite_args...]
+    
+    Runs Regina's C++ test suite.
+    \&...
+.fi
 .SH "SEE ALSO"
 .PP
 regina-engine-config\&.

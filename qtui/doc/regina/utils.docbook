@@ -2479,7 +2479,7 @@
 
   <refnamediv>
    <refname>regina-helper</refname>
-   <refpurpose>Helper tasks for working with a &regina; installation</refpurpose>
+   <refpurpose>Helper utility for working with a &regina; installation</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -2498,11 +2498,303 @@
   <refsect1>
    <title>Description</title>
    <para>
-    This utility is only included with &linux; and &macosx; installations.
-    It is also available on any platform where you are building &regina;
-    yourself from sources.  It is not included in the pre-built &windows;
-    packages.
+    This utility understands the layout of your &regina; installation, and it
+    can help you with a variety of tasks that require this knowledge.
+    For example, it can create Makefiles and/or sample &cpp; code for you,
+    or help you run &regina;'s test suite.
    </para>
+   <para>
+    The first argument to <command>regina-helper</command> should be an
+    action, indicating what you want the utility to do.  The available actions
+    are described in detail below.
+    To learn more about what an action does, you can run
+    <userinput>regina-helper&nbsp;<replaceable>action</replaceable>&nbsp;--help</userinput>.
+   </para>
+   <para>
+    This utility is available in most but not all settings:
+    <itemizedlist>
+     <listitem><para>
+      If you are using &linux; and you have &regina; installed in a system
+      location (e.g., beneath <filename>/usr/</filename> or
+      <filename>/usr/local/</filename>), then <command>regina-helper</command>
+      should be included with your installation, and any output it produces
+      should be relative to this system installation.
+     </para></listitem>
+     <listitem><para>
+      If you are using &macosx; and you are running &regina; from an app
+      bundle (which might be under <filename>/Applications/</filename> or
+      might be somewhere else), then you can run
+      <command>regina-helper</command> from within the app bundle
+      (<filename>.../Regina.app/Contents/MacOS/regina-helper</filename>),
+      and any output it produces should be relative to this app bundle.
+     </para></listitem>
+     <listitem><para>
+      If you are building &regina; yourself from the source tree (on any
+      platform), then you can run <command>regina-helper</command>
+      from the source tree, and any output it produces should be relative
+      to this same source tree.  In particular, it will not assume that you
+      have actually installed &regina;.
+     </para></listitem>
+     <listitem><para>
+      If you are using pre-built packages for &regina; on &windows;,
+      then <command>regina-helper</command> will not be included in your
+      installation.
+     </para></listitem>
+    </itemizedlist>
+   </para>
+  </refsect1>
+  <refsect1>
+   <title>Actions</title>
+   <para>
+    The first argument to <command>regina-helper</command> should be one of
+    the following actions:
+   </para>
+   <variablelist>
+    <varlistentry>
+     <term><literal>installtype</literal></term>
+     <listitem>
+      <para>
+       Writes a single token to standard output identifying the type of
+       &regina; installation.
+      </para>
+<screen>
+    <prompt>example$</prompt> <userinput>regina-helper installtype</userinput>
+    XDG
+    <prompt>example$</prompt>
+</screen>
+      <para>
+       The output will be one of the following:
+       <glosslist>
+        <glossentry>
+         <glossterm>XDG</glossterm>
+         <glossdef><para>
+          Indicates that you are running &regina; from an installation in a
+          fixed location that follows the freedesktop.org layout.
+          This is seen with &regina;'s &linux; packages, as well as local
+          <application>CMake</application> builds with no special arguments.
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm>HPC</glossterm>
+         <glossdef><para>
+          Indicates that you are running &regina; from a slimmed-down
+          installation (e.g., no &gui; or &html; docs), which is installed
+          in a fixed but possibly non-standard location, suitable
+          for builds on high-performance computing systems.
+          This is typically seen with local <application>CMake</application>
+          builds where <parameter>REGINA_INSTALL_TYPE</parameter>
+          was explicitly set to <literal>HPC</literal>.
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm>Bundle</glossterm>
+         <glossdef><para>
+          Indicates that you are running &regina; from within a &macosx;
+          app bundle.
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm>Windows</glossterm>
+         <glossdef><para>
+          Indicates that you are running &regina; from within &regina;'s
+          &windows; app.  It is unlikely that you will see this of course,
+          since <command>regina-helper</command> is not shipped with &windows;
+          installations.
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm>Source</glossterm>
+         <glossdef><para>
+          Indicates that you are running &regina; directly from the source
+          tree (i.e., a local build that has not necessarily been installed).
+         </para></glossdef>
+        </glossentry>
+       </glosslist>
+      </para>
+      <para>
+       The <literal>installtype</literal> action takes no additional arguments.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><literal>makefile</literal></term>
+     <listitem>
+      <para>
+       Creates a Makefile in the current directory, suitable for compiling
+       &cpp; programs against &regina;.  In particular, once you have your
+       Makefile in place, you can (for example) compile a &cpp; program
+       <filename>foo.cc</filename> just by running
+       <userinput>make foo</userinput>.
+      </para>
+      <para>
+       The main reason for using this Makefile is that it includes
+       compiler and linker flags for accessing &regina;'s &cpp; calculation
+       engine.  (In particular, using this Makefile is a simpler alternative
+       to extracting compiler and linker flags from
+       <link linkend="man-regina-engine-config"><command>regina-engine-config</command></link>.)
+      </para>
+      <para>
+       The <literal>makefile</literal> action accepts the optional arguments
+       <option>--force</option> and/or <option>--rpath</option>;
+       these are described below.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><literal>cc</literal>, <literal>cpp</literal></term>
+     <listitem>
+      <para>
+       Creates a Makefile in the current directory that is suitable for
+       compiling &cpp; programs against &regina;, as well as a sample &cpp;
+       program that can be used as a starting point for your own code.
+      </para>
+<screen>
+    <prompt>example$</prompt> <userinput>regina-helper cc</userinput>
+    Writing sample.cc...
+    Preparing Makefile...
+    <prompt>example$ ls</prompt>
+    Makefile  sample.cc
+    <prompt>example$</prompt>
+</screen>
+      <para>
+       See the <literal>makefile</literal> action above for further discussion
+       of how you can use this Makefile.
+      </para>
+      <para>
+       The &cpp; source file will be called either
+       <filename>sample.cc</filename> or <filename>sample.cpp</filename>,
+       depending on whether you gave
+       <literal>cc</literal> or <literal>cpp</literal> as the action argument
+       to <command>regina-helper</command>.
+      </para>
+      <para>
+       The <literal>cc</literal>&nbsp;/&nbsp;<literal>cpp</literal>
+       action accepts the optional arguments
+       <option>--force</option> and/or <option>--rpath</option>;
+       these are described below.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><literal>test</literal></term>
+     <listitem>
+      <para>
+       Runs &regina;'s detailed &cpp; calculation engine test suite.
+      </para>
+      <para>
+       &regina; has a large and thorough test suite, designed to guard against
+       system incompatibilities and/or unforseen bugs.  This test suite
+       includes several components that target the &cpp; calculation engine,
+       the &python; bindings, and the command-line utilities.  The bulk of the
+       tests are for the &cpp; calculation engine, and those are the tests
+       that will be run here.
+      </para>
+<screen>
+    <prompt>example$</prompt> <userinput>regina-helper test</userinput>
+    Running C++ test suite from the installation beneath /usr/local/.
+    
+    [==========] Running 522 tests from 53 test suites.
+    [----------] Global test environment set-up.
+    [----------] 2 tests from AbelianGroupTest
+    [ RUN      ] AbelianGroupTest.incrementalBuild
+    [       OK ] AbelianGroupTest.incrementalBuild (0 ms)
+    [ RUN      ] AbelianGroupTest.tightEncoding
+    [       OK ] AbelianGroupTest.tightEncoding (0 ms)
+    [----------] 2 tests from AbelianGroupTest (1 ms total)
+    
+    [----------] 6 tests from CoversTest
+    [ RUN      ] CoversTest.trivial
+    [       OK ] CoversTest.trivial (2 ms)
+    ...
+</screen>
+      <para>
+       The &cpp; test suite uses the <application>Google Test</application>
+       framework, which supports many different arguments to customise your
+       test suite run.  Any additional arguments that you supply with the
+       <literal>test</literal> action will be passed directly through to
+       <application>Google Test</application>.
+       You can run <userinput>regina-helper test --help</userinput> to see
+       what all of these possible arguments are.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><literal>help</literal></term>
+     <listitem>
+      <para>
+       Outputs usage information for the <command>regina-helper</command>
+       utility.
+      </para>
+      <para>
+       This action takes no additional arguments.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    <varlistentry>
+     <term><option>--force</option></term>
+     <listitem>
+      <para>
+       Overwrites any existing files (such as <filename>Makefile</filename>,
+       or <filename>sample.cc</filename>).  By default,
+       <command>regina-helper</command> will not overwrite a file that already
+       exists.
+      </para>
+      <para>
+       This option is used with the <literal>makefile</literal> and
+       <literal>cc</literal>&nbsp;/&nbsp;<literal>cpp</literal> actions.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>--rpath</option></term>
+     <listitem>
+      <para>
+       Always uses an rpath option in the linker flags
+       within the Makefile that is created.
+       This is useful for when your &regina; installation is not on the
+       standard library path.
+      </para>
+      <para>
+       If your program compiles and links correctly but crashes when you
+       run it because it cannot find the library
+       <filename>libregina-engine.so</filename>, then the
+       <option>--rpath</option> option might solve your problem.
+       (You will of course need to rebuild your program after updating
+       the Makefile.)
+      </para>
+      <para>
+       By default, an rpath option will only be used if you are running
+       &regina; directly out of the source tree.
+      </para>
+      <para>
+       This option is used with the <literal>makefile</literal> and
+       <literal>cc</literal>&nbsp;/&nbsp;<literal>cpp</literal> actions.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>--help</option></term>
+     <listitem>
+      <para>
+       Outputs detailed usage information for a particular
+       <command>regina-helper</command> action.
+      </para>
+<screen>
+    <prompt>example$</prompt> <userinput>regina-helper test --help</userinput>
+    Usage: /usr/local/bin/regina-helper test [testsuite_args...]
+    
+    Runs Regina's C++ test suite.
+    ...
+</screen>
+     </listitem>
+    </varlistentry>
+   </variablelist>
   </refsect1>
 
   <refsect1>
