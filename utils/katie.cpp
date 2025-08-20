@@ -843,8 +843,9 @@ void usage(const char* progName, const std::string& error = std::string()) {
     -3, --dim3    : Build a 3-manifold via integer Dehn surgery.
     -4, --dim4    : Build a 4-manifold by attaching 1- and 2-handles along a
                     decorated link.
-    -g, --graph   : Output an edge-coloured graph, not an isomorphism signature.
-                    This option is incompatible with --dim3.
+
+	-g, --graph   : Output an edge-coloured graph, not an isomorphism signature.
+
     -V, --verbose : Display information during the construction.
 
     -v, --version : Show which version of Regina is being used.
