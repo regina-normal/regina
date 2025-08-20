@@ -8,7 +8,10 @@
  </para>
  <para>
   &regina; also ship with several other specialised command-line utilities,
-  which are documented in the <link linkend="utils">following chapter</link>.
+  which are documented in subsequent chapters.
+  Some are for <link linkend="utils">mathematical and logistical tasks</link>,
+  and some are to help with <link linkend="utils-compilation">compiling and
+  linking your own programs against &regina;</link>.
  </para>
 
  <!-- Graphical User Interface -->

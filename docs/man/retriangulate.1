@@ -3,31 +3,31 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "RETRIANGULATE" "1" "20 March 2025" "" "The Regina Handbook"
+.TH "RETRIANGULATE" "1" "20 August 2025" "" "The Regina Handbook"
 
 .SH NAME
-retriangulate \- Exhaustively search through triangulations or knot diagrams using local moves
+retriangulate \- Exhaustively search through triangulations or knot/link diagrams using local moves
 .SH SYNOPSIS
 
-\fBretriangulate\fR [ \fB-h, --height=\fIheight\fB\fR ] [ \fB-t, --threads=\fIthreads\fB\fR ] [ \fB-3, --dim3\fR | \fB-4, --dim4\fR | \fB-k, --knot\fR ] [ \fB-a, --anysig\fR ] [ \fB--\fR ] \fB\fIsignature\fB\fR
+\fBretriangulate\fR [ \fB-h, --height=\fIheight\fB\fR ] [ \fB-t, --threads=\fIthreads\fB\fR ] [ \fB-3, --dim3\fR | \fB-4, --dim4\fR | \fB-k, --knot\fR ] [ \fB-l, --all\fR ] [ \fB-a, --anysig\fR ] [ \fB-c, --classical\fR | \fB-V, --virtual\fR ] [ \fB--\fR ] \fB\fIsignature\fB\fR
 
 
 \fBretriangulate\fR { \fB-v, --version\fR | \fB-?, --help\fR }
 
 .SH "DESCRIPTION"
 .PP
-Given a 3-manifold triangulation, 4-manifold triangulation or knot diagram,
+Given a 3-manifold triangulation, 4-manifold triangulation or link diagram,
 this utility uses local moves to exhaustively search for other
-triangulations/diagrams of the same manifold/knot that are the
+triangulations/diagrams of the same manifold/link that are the
 same size or smaller.
 Here "local moves" means Pachner moves for
-triangulations, or Reidemeister moves for knots.
+triangulations, or Reidemeister moves for links.
 .PP
-Specifically, suppose the input triangulation or knot diagram contains
+Specifically, suppose the input triangulation or link diagram contains
 \fIn\fR tetrahedra/pentachora/crossings
-(for a 3-manifold, 4-manifold or knot respectively).
+(for a 3-manifold, 4-manifold or link respectively).
 Then this utility will
-exhaustively modify the triangulation or knot diagram using local moves,
+exhaustively modify the triangulation or link diagram using local moves,
 without ever exceeding
 \fIn\fR\~+\~\fIheight\fR
 tetrahedra/pentachora/crossings in total.
@@ -35,16 +35,35 @@ Moreover, all such triangulations/diagrams are guaranteed to be found, each
 once and only once (up to an appropriate notion of
 combinatorial isomorphism).
 .PP
+Regarding what constitutes a "local move":
+.PP
+.TP 0.2i
+\(bu
 For 3-manifold triangulations, this utility will only attempt 2-3
 and 2-3 Pachner moves, never 1-4 or 4-1 moves.
-For 4-manifold triangulations or knot diagrams, it will use all types of
-Pachner moves or Reidemeister moves respectively.
+.TP 0.2i
+\(bu
+For 4-manifold triangulations, this utility will use all types of
+Pachner moves.
+.TP 0.2i
+\(bu
+For link diagrams, this utility will use all of the classical
+(planar) Reidemeister moves.
+There is also the option to use the \fIvirtual\fR
+(non-planar) type\~II move, which adds two crossings by pushing
+\fBany\fR two strands over one another from any direction,
+and which could thereby add a handle to the surface in which the diagram
+is embedded.
+By default, the virtual type\~II move is considered only if the input
+diagram has positive virtual genus (i.e., is not a classical diagram);
+this behaviour can be modified using the options
+\fB--classical\fR and \fB--virtual\fR\&.
 .PP
 The input is assumed to represent a 3-manifold
 triangulation unless one of the options \fB--dim4\fR or
 \fB--knot\fR is passed.
 .PP
-The program will output each triangulation or knot diagram that it finds
+The program will output each triangulation or link diagram that it finds
 of the same size \fIn\fR (including the original input
 triangulation/diagram).  If it ever finds a
 \fBsmaller\fR triangulation or diagram (thereby proving the
@@ -54,9 +73,9 @@ outputting triangulations or diagrams of size \fIn\fR
 until no more can be found.  Although the program also finds larger
 triangulations/diagrams as part of its exhaustive search using local moves,
 these larger triangulations/diagrams (of which there are typically many)
-will not be output at all.
+will not be output unless the option \fB--all\fR is passed.
 .PP
-All triangulations or knot diagrams, both input and output, are described
+All triangulations or link diagrams, both input and output, are described
 using \fIisomorphism signatures\fR and
 \fIknot/link signatures\fR respectively.  These are short
 text strings that identify a triangulation or link diagram uniquely up to
@@ -74,7 +93,7 @@ To view a knot/link signature:
 in Regina's graphical user interface this is available through the
 Codes tab in the knot/link viewer,
 and in Python you can call \fBd.sig()\fR
-for a knot or link diagram \fBd\fR\&.
+for a link diagram \fBd\fR\&.
 .PP
 For a full and precise specification of isomorphism signatures for
 3-manifolds, see
@@ -99,12 +118,12 @@ be treated as the input signature.
 .TP
 \fB-h, --height=\fIheight\fB\fR
 Specifies the number of additional tetrahedra, pentachora or
-crossings (for a 3-manifold, 4-manifold or knot respectively)
+crossings (for a 3-manifold, 4-manifold or link respectively)
 that we allow during intermediate stages of retriangulation.
-That is, if the input triangulation or knot diagram
+That is, if the input triangulation or link diagram
 has \fIn\fR tetrahedra/pentachora/crossings, then
 this utility will exhaustively search through all triangulations
-or knot diagrams that it can reach via local moves that do not exceed
+or link diagrams that it can reach via local moves that do not exceed
 \fIn\fR\~+\~\fIheight\fR
 tetrahedra/pentachora/crossings in total.
 
@@ -118,7 +137,7 @@ In addition, for 3-manifolds it must be strictly positive, and
 for 4-manifolds it must be even.
 
 If not specified, this option defaults to 1 when working with
-3-manifolds or knot diagrams, and it defaults to 2 when working
+3-manifolds or link diagrams, and it defaults to 2 when working
 with 4-manifolds.
 .sp
 .RS
@@ -136,7 +155,7 @@ Specifies the degree to which this utility uses parallel processing.
 Specifically, this program will use
 \fIthreads\fR simultaneous threads of execution
 as it works its way through the different retriangulations or diagrams
-of the input manifold or knot.
+of the input manifold or link.
 
 This program is typically able to use parallelism effectively,
 and so running with \fIk\fR threads should
@@ -161,7 +180,16 @@ Indicates that the given signature is the isomorphism signature of a
 .TP
 \fB-k, --knot\fR
 Indicates that the given signature is a knot/link signature.
-The local moves used will be the Reidemeister moves.
+The local moves used will be the Reidemeister moves, possibly including
+the virtual type\~II move; see \fB--classical\fR and
+\fB--virtual\fR for details.
+.TP
+\fB-l, --all\fR
+Output the signatures of all triangulations or link diagrams that are
+visited, including those that are larger than the original.
+
+By default, larger triangulations or link diagrams (of which there may
+be very many) are not included in the output.
 .TP
 \fB-a, --anysig\fR
 Indicates that the output is not required to be
@@ -205,6 +233,26 @@ triangulations.  For knot/link signatures, it still uses
 classic signatures, though again this is subject to change in
 future version of Regina.
 .RE
+.TP
+\fB-c, --classical\fR
+For link diagrams, only use the classical type\~I, II and III
+Reidemeister moves.  This is the default behaviour when the input is a
+classical (planar) link diagram.
+
+This option can only be used with \fB--knot\fR\&.
+.TP
+\fB-V, --virtual\fR
+For link diagrams, use the classical type\~I, II and III
+Reidemeister moves as well as the virtual type\~II move.
+The virtual type\~II move is like the classical type\~II move
+to add two crossings, except that we are allowed to push
+\fBany\fR two strands over one another from any direction;
+as a consequence, this could add a handle to the surface in which the
+link diagram is embedded.
+This option is the default behaviour when the input is a link diagram
+with positive virtual genus (i.e., a non-classical link diagram).
+
+This option can only be used with \fB--knot\fR\&.
 .TP
 \fB--\fR
 Indicates that all other options have finished, and whatever comes

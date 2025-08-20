@@ -64,7 +64,6 @@ SET ( ENGINE_FILENAME
   "${CMAKE_SHARED_LIBRARY_PREFIX}regina-engine${CMAKE_SHARED_LIBRARY_SUFFIX}" )
 
 SET( HEADERS ${HEADERS} docs.h regina-core.h )
-SET( MANS ${MANS} regina-engine-config.1 )
 
 # Build lists of flags for regine-engine-config (and also regina-helper).
 # Each variable should be a space-separated list of flags, suitable for passing
@@ -112,7 +111,6 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES ${HEADERS} DESTINATION "${PKGINCLUDEDIR}" COMPONENT Development)
   INSTALL(FILES "${CMAKE_BINARY_DIR}/engine/regina-config.h" DESTINATION "${PKGINCLUDEDIR}" COMPONENT Development)
   INSTALL(PROGRAMS "${PROJECT_BINARY_DIR}/engine/regina-engine-config" DESTINATION bin COMPONENT Development)
-  INSTALL(FILES regina-engine-config.1 DESTINATION "${CMAKE_INSTALL_FULL_MANDIR}/man1" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
 
 # Miscellaneous extras:

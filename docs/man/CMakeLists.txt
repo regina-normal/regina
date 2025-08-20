@@ -12,7 +12,9 @@ SET(man1_files
   sigcensus.1
   tricensus.1
   trisetcmp.1
+  regina-engine-config.1
   regina-gui.1
+  regina-helper.1
   regina-python.1
   )
 INSTALL(FILES ${man1_files} DESTINATION "${man1dir}" COMPONENT Runtime)

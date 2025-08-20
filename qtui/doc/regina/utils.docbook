@@ -5,8 +5,8 @@
   The main applications <command>regina-gui</command> and
   <command>regina-python</command> are documented in the
   <link linkend="manpages">previous chapter</link>.
-  This chapter documents the more specialised command-line
-  utilities that &regina; provides.
+  This chapter documents some additional command-line utilities that
+  &regina; provides for specialised mathematical and logistical tasks.
  </para>
 
  <!-- File Concatenator -->
@@ -2319,6 +2319,196 @@
    <para>
     <link linkend="man-censuslookup">censuslookup</link>,
     <link linkend="man-regina-gui">regina-gui</link>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    This utility was written by Benjamin Burton
+    <email>bab@maths.uq.edu.au</email>.
+    &manpageack;
+   </para>
+  </refsect1>
+ </refentry>
+</appendix>
+
+<appendix id="utils-compilation">
+ <title>Command Line: Compiling and Linking</title>
+
+ <para>
+  The main applications <command>regina-gui</command> and
+  <command>regina-python</command> are documented in a
+  <link linkend="manpages">previous chapter</link>.
+  This chapter documents some specialised command-line tools that can
+  help with compiling and linking your own programs against &regina;.
+ </para>
+
+ <refentry id="man-regina-engine-config">
+  <refmeta>
+   <refentrytitle>regina-engine-config</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regina-engine-config</refname>
+   <refpurpose>Get compiler and linker flags to build software against &regina;</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>regina-engine-config</command>
+    <arg><option>--prefix</option></arg>
+    <arg><option>--version</option></arg>
+    <arg><option>--cflags</option></arg>
+    <arg><option>--libs</option></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    This utility tells you which compiler and linker flags should be used to
+    build the mathematical engine of &regina; into your own programs.
+    &regina;'s mathematical engine is typically installed in the library
+    <filename>libregina-engine.so</filename>.
+   </para>
+   <para>
+    This utility is only available in some settings:
+    <itemizedlist>
+     <listitem><para>
+      If you are using &linux; and you have &regina; installed in a system
+      location (e.g., beneath <filename>/usr/</filename> or
+      <filename>/usr/local/</filename>), then
+      <command>regina-engine-config</command> should be included with your
+      installation, and it should output compiler/linker flags relative to
+      this system installation.
+     </para></listitem>
+     <listitem><para>
+      If you are building &regina; yourself from the source tree (on any
+      platform), then you can run <command>regina-engine-config</command>
+      from the source tree, and it should output compiler/linker flags
+      relative to the same source tree.  In particular, you do not need to
+      install &regina; for these compiler/linker flags to work.
+     </para></listitem>
+     <listitem><para>
+      If you are using pre-built packages for &regina; on &macosx; or &windows;,
+      then <command>regina-engine-config</command> will not be included in your
+      installation.
+     </para></listitem>
+    </itemizedlist>
+   </para>
+   <para>
+    Instead of using <command>regina-engine-config</command> as part of the
+    compilation process, you may find it easier to create a Makefile using
+    <link linkend="man-regina-helper"><command>regina-helper</command></link>
+    and then just use <command>make</command> instead.
+   </para>
+  </refsect1>
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    <varlistentry>
+     <term><option>--prefix</option></term>
+     <listitem>
+      <para>
+       Prints the installation prefix where &regina; has been installed.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>--version</option></term>
+     <listitem>
+      <para>
+       Prints the currently installed version of &regina;.  This will
+       include any <parameter>BUILD_INFO</parameter> string that was set
+       when &regina; was built.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>--cflags</option></term>
+     <listitem>
+      <para>
+       Print the compiler flags that are required to compile a program
+       that uses the &regina; calculation engine.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>--libs</option></term>
+     <listitem>
+      <para>
+       Print the linker flags that are required to link a program against
+       the &regina; calculation engine.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regina-helper">regina-helper</link>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    This utility was written by Benjamin Burton
+    <email>bab@maths.uq.edu.au</email>.
+    &manpageack;
+   </para>
+   <para>
+    This script was long ago based on <command>gtk-config</command>,
+    though very little of that remains nowadays.  The original
+    <command>gtk-config</command> was Copyright&nbsp;&copy;&nbsp;1998
+    Owen Taylor and used an MIT-style license; see the
+    <command>regina-engine-config</command> script for full details.
+   </para>
+  </refsect1>
+ </refentry>
+
+ <refentry id="man-regina-helper">
+  <refmeta>
+   <refentrytitle>regina-helper</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regina-helper</refname>
+   <refpurpose>Helper tasks for working with a &regina; installation</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>regina-helper</command>
+    <arg choice="req"><replaceable>action</replaceable></arg>
+    <arg rep="repeat"><replaceable>args</replaceable></arg>
+   </cmdsynopsis>
+   <cmdsynopsis>
+    <command>regina-helper</command>
+    <arg choice="req"><replaceable>action</replaceable></arg>
+    <arg><option>--help</option></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    This utility is only included with &linux; and &macosx; installations.
+    It is also available on any platform where you are building &regina;
+    yourself from sources.  It is not included in the pre-built &windows;
+    packages.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regina-engine-config">regina-engine-config</link>.
    </para>
   </refsect1>
 

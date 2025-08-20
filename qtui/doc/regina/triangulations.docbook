@@ -2847,7 +2847,7 @@
   </sect2>
 
   <sect2 id="tri-elementarymove">
-   <title>Manual Simplification: Elementary Moves (3-D and 4-D)</title>
+   <title>Manual Simplification: Elementary Moves (All Dimensions)</title>
 
    <para>
     Instead of using automatic simplification, you might wish to modify
@@ -2859,13 +2859,17 @@
     <menuchoice>
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Elementary Move</guimenuitem>
-    </menuchoice>
-   from the menu.
+    </menuchoice> from the menu or press the corresponding toolbar button.
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-eltmove"/>
+      <imagedata multires="tri-eltmove-menu"/>
+     </imageobject>
+    </inlinemediaobject>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-eltmove-bar"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2900,216 +2904,342 @@
     </para>
    </note>
    <para>
-    We only give a brief summary of the various types of move here.
+    Below we give a brief summary of the various types of move that are
+    available in each dimension.
     The full details are in the <link linkend="python-docs">&api;
     documentation</link>, and for 3-manifolds you can also read about
     them in plain English <xref linkend="bib-burton-hyamfest"/>.
    </para>
+   <sect3>
+    <title>Dimension 2</title>
+    <para>
+     For 2-manifold triangulations, &regina; offers the following selection
+     of moves:
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="tri-eltmovebox-2d"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     <glosslist>
+      <glossentry>
+       <glossterm><guilabel>3-1 Move</guilabel></glossterm>
+       <glossdef><para>
+        Replaces three triangles surrounding a degree&nbsp;3 vertex
+        with a single triangle.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>2-2 Move</guilabel></glossterm>
+       <glossdef><para>
+        Replaces two triangles joined along a common edge with two different
+        triangles joined along a new edge that crosses through the original
+        edge.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>1-3 Move</guilabel></glossterm>
+       <glossdef><para>
+        Replaces one triangle with three triangles that meet at a new
+        internal degree&nbsp;3 vertex.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>2-0 Move (Vertex)</guilabel></glossterm>
+       <glossdef><para>
+        Takes two triangles that meet at a degree&nbsp;2 vertex and
+        squashes them flat.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>Shell Boundary</guilabel></glossterm>
+       <glossdef><para>
+        Removes an &ldquo;unnecessary triangle&rdquo; that sits along
+        the boundary of the triangulation.
+       </para></glossdef>
+      </glossentry>
+     </glosslist>
+    </para>
+   </sect3>
+   <sect3>
+    <title>Dimension 3</title>
+    <para>
+     For 3-manifold triangulations, &regina; offers the following selection
+     of moves:
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="tri-eltmovebox-3d"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     <glosslist>
+      <glossentry>
+       <glossterm><guilabel>4-1 Move</guilabel></glossterm>
+       <glossdef><para>
+        Replaces four tetrahedra meeting at a degree&nbsp;4 vertex
+        with a single tetrahedron.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>3-2 Move</guilabel></glossterm>
+       <glossdef><para>
+        Replaces three tetrahedra joined along a degree&nbsp;3 edge
+        with two tetrahedra joined along a triangle.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>2-3 Move</guilabel></glossterm>
+       <glossdef><para>
+        Replaces two tetrahedra joined along a triangle
+        with three tetrahedra joined along a degree&nbsp;3 edge.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>1-4 Move</guilabel></glossterm>
+       <glossdef><para>
+        Replaces one tetrahedron
+        with four tetrahedra that meet at a new internal degree&nbsp;4 vertex.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>4-4 Move</guilabel></glossterm>
+       <glossdef><para>
+        Replaces four tetrahedra joined along a degree&nbsp;4 edge
+        with four tetrahedra joined along a new
+        degree&nbsp;4 edge that points in a different direction.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>2-0 Move (Edge)</guilabel></glossterm>
+       <glossdef><para>
+        Takes two tetrahedra joined along a degree&nbsp;2 edge and
+        squashes them flat.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>2-0 Move (Vertex)</guilabel></glossterm>
+       <glossdef><para>
+        Takes two tetrahedra that meet at a degree&nbsp;2 vertex and
+        squashes them flat.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>2-1 Move</guilabel></glossterm>
+       <glossdef><para>
+        Merges the tetrahedron containing a degree&nbsp;1 edge with an
+        adjacent tetrahedron.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>Open Book</guilabel></glossterm>
+       <glossdef><para>
+        Takes an internal triangle with two boundary edges and
+        &ldquo;unglues&rdquo; that triangle, creating two new boundary
+        triangles and exposing the tetrahedra inside to the boundary.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>Close Book</guilabel></glossterm>
+       <glossdef><para>
+        Folds together two adjacent boundary triangles around a common
+        boundary edge, with the result of simplifying the boundary.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>Shell Boundary</guilabel></glossterm>
+       <glossdef><para>
+        Removes an &ldquo;unnecessary tetrahedron&rdquo; that sits along
+        the boundary of the triangulation.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>Collapse Edge</guilabel></glossterm>
+       <glossdef><para>
+        Takes an edge between two distinct vertices and collapses it to a point.
+        Any tetrahedra that contained the edge will be &ldquo;flattened
+        away&rdquo;.
+       </para></glossdef>
+      </glossentry>
+     </glosslist>
+    </para>
+   </sect3>
+   <sect3>
+    <title>Dimension 4</title>
+    <para>
+     For 4-manifold triangulations, &regina; offers the following selection
+     of moves:
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="tri-eltmovebox-4d"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     <glosslist>
+      <glossentry>
+       <glossterm><guilabel>5-1 Move</guilabel></glossterm>
+       <glossdef><para>
+        Replaces five pentachora meeting at a degree&nbsp;5 vertex
+        with a single pentachoron.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>4-2 Move</guilabel></glossterm>
+       <glossdef><para>
+        Replaces four pentachora joined along a degree&nbsp;4 edge
+        with two pentachora glued together along a tetrahedron.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>3-3 Move</guilabel></glossterm>
+       <glossdef><para>
+        Replaces three pentachora joined along a degree&nbsp;3 triangle
+        with three pentachora joined along a new degree&nbsp;3 triangle
+        that is aligned in a different direction.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>2-4 Move</guilabel></glossterm>
+       <glossdef><para>
+        Replaces two pentachora glued together along a tetrahedron
+        with four pentachora joined along a new degree&nbsp;4 edge.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>1-5 Move</guilabel></glossterm>
+       <glossdef><para>
+        Replaces one pentachoron
+        with five pentachora that meet at a new internal degree&nbsp;5 vertex.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>4-4 Move</guilabel></glossterm>
+       <glossdef><para>
+        Replaces four pentachora joined along a degree&nbsp;4 edge
+        with four pentachora joined along a new degree&nbsp;4 edge
+        that is aligned in a different direction.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>2-0 Move (Triangle)</guilabel></glossterm>
+       <glossdef><para>
+        Takes two pentachora joined along a degree&nbsp;2 triangle and
+        squashes them flat.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>2-0 Move (Edge)</guilabel></glossterm>
+       <glossdef><para>
+        Takes two pentachora joined along a degree&nbsp;2 edge and
+        squashes them flat.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>2-0 Move (Vertex)</guilabel></glossterm>
+       <glossdef><para>
+        Takes two pentachora that meet at a degree&nbsp;2 vertex and
+        squashes them flat.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>Open Book</guilabel></glossterm>
+       <glossdef><para>
+        Takes an internal tetrahedron with one, two or three boundary
+        triangles and
+        &ldquo;unglues&rdquo; that tetrahedron, creating two new boundary
+        tetrahedra and exposing the pentachora inside to the boundary.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>Shell Boundary</guilabel></glossterm>
+       <glossdef><para>
+        Removes an &ldquo;unnecessary pentachoron&rdquo; that sits along
+        the boundary of the triangulation.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>Collapse Edge</guilabel></glossterm>
+       <glossdef><para>
+        Takes an edge between two distinct vertices and collapses it to a point.
+        Any pentachora that contained the edge will be &ldquo;flattened
+        away&rdquo;.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>Snap Edge</guilabel></glossterm>
+       <glossdef><para>
+        Takes an edge between two distinct vertices and snaps its endpoints
+        together. This involves taking a triangle that meets this edge and
+        folding the other two edges of this triangle together.
+       </para></glossdef>
+      </glossentry>
+     </glosslist>
+    </para>
+   </sect3>
+  </sect2>
+
+  <sect2 id="tri-treewidth">
+   <title>Improving Treewidth (3-D)</title>
    <para>
-    The available moves for 3-manifolds (as illustrated above) are:
-    <glosslist>
-     <glossentry>
-      <glossterm><guilabel>4-1 Move</guilabel></glossterm>
-      <glossdef><para>
-       Replaces four tetrahedra meeting at a degree&nbsp;4 vertex
-       with a single tetrahedron.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>3-2 Move</guilabel></glossterm>
-      <glossdef><para>
-       Replaces three tetrahedra joined along a degree&nbsp;3 edge
-       with two tetrahedra joined along a triangle.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>2-3 Move</guilabel></glossterm>
-      <glossdef><para>
-       Replaces two tetrahedra joined along a triangle
-       with three tetrahedra joined along a degree&nbsp;3 edge.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>1-4 Move</guilabel></glossterm>
-      <glossdef><para>
-       Replaces one tetrahedron
-       with four tetrahedra that meet at a new internal degree&nbsp;4 vertex.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>4-4 Move</guilabel></glossterm>
-      <glossdef><para>
-       Replaces four tetrahedra joined along a degree&nbsp;4 edge
-       with four tetrahedra joined along a new
-       degree&nbsp;4 edge that points in a different direction.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>2-0 Move (Edge)</guilabel></glossterm>
-      <glossdef><para>
-       Takes two tetrahedra joined along a degree&nbsp;2 edge and
-       squashes them flat.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>2-0 Move (Vertex)</guilabel></glossterm>
-      <glossdef><para>
-       Takes two tetrahedra that meet at a degree&nbsp;2 vertex and
-       squashes them flat.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>2-1 Move</guilabel></glossterm>
-      <glossdef><para>
-       Merges the tetrahedron containing a degree&nbsp;1 edge with an
-       adjacent tetrahedron.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>Open Book</guilabel></glossterm>
-      <glossdef><para>
-       Takes an internal triangle with two boundary edges and
-       &ldquo;unglues&rdquo; that triangle, creating two new boundary
-       triangles and exposing the tetrahedra inside to the boundary.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>Close Book</guilabel></glossterm>
-      <glossdef><para>
-       Folds together two adjacent boundary triangles around a common
-       boundary edge, with the result of simplifying the boundary.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>Shell Boundary</guilabel></glossterm>
-      <glossdef><para>
-       Removes an &ldquo;unnecessary tetrahedron&rdquo; that sits along
-       the boundary of the triangulation.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>Collapse Edge</guilabel></glossterm>
-      <glossdef><para>
-       Takes an edge between two distinct vertices and collapses it to a point.
-       Any tetrahedra that contained the edge will be &ldquo;flattened
-       away&rdquo;.
-      </para></glossdef>
-     </glossentry>
-    </glosslist>
+    Instead of trying to reduce the number of top-dimensional simplices,
+    you can also ask &regina; to try to reduce the treewidth of the
+    triangulation.
+    <firstterm>Treewidth</firstterm> is a measure of how tree-like the
+    dual 4-valent graph is, and reducing the treewidth is important because it
+    can significantly speed up difficult computations such as
+    <link linkend="tri-algebra-turaevviro">Turaev-Viro invariants</link>.
    </para>
    <para>
-    For 4-manifold triangulations, &regina; offers a similar selection
-    of moves, as illustrated below:
+    To reduce the treewidth, select
+    <menuchoice>
+     <guimenu>3-D&nbsp;Triangulation</guimenu>
+     <guimenuitem>Improve Treewidth</guimenuitem>
+    </menuchoice> from the menu or press the corresponding toolbar button.
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-eltmovebox-4d"/>
+      <imagedata multires="tri-treewidth-menu"/>
+     </imageobject>
+    </inlinemediaobject>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-treewidth-bar"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
-    In brief, these 4-manifold moves are:
-    <glosslist>
-     <glossentry>
-      <glossterm><guilabel>5-1 Move</guilabel></glossterm>
-      <glossdef><para>
-       Replaces five pentachora meeting at a degree&nbsp;5 vertex
-       with a single pentachoron.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>4-2 Move</guilabel></glossterm>
-      <glossdef><para>
-       Replaces four pentachora joined along a degree&nbsp;4 edge
-       with two pentachora glued together along a tetrahedron.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>3-3 Move</guilabel></glossterm>
-      <glossdef><para>
-       Replaces three pentachora joined along a degree&nbsp;3 triangle
-       with three pentachora joined along a new degree&nbsp;3 triangle
-       that is aligned in a different direction.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>2-4 Move</guilabel></glossterm>
-      <glossdef><para>
-       Replaces two pentachora glued together along a tetrahedron
-       with four pentachora joined along a new degree&nbsp;4 edge.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>1-5 Move</guilabel></glossterm>
-      <glossdef><para>
-       Replaces one pentachoron
-       with five pentachora that meet at a new internal degree&nbsp;5 vertex.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>4-4 Move</guilabel></glossterm>
-      <glossdef><para>
-       Replaces four pentachora joined along a degree&nbsp;4 edge
-       with four pentachora joined along a new degree&nbsp;4 edge
-       that is aligned in a different direction.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>2-0 Move (Triangle)</guilabel></glossterm>
-      <glossdef><para>
-       Takes two pentachora joined along a degree&nbsp;2 triangle and
-       squashes them flat.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>2-0 Move (Edge)</guilabel></glossterm>
-      <glossdef><para>
-       Takes two pentachora joined along a degree&nbsp;2 edge and
-       squashes them flat.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>2-0 Move (Vertex)</guilabel></glossterm>
-      <glossdef><para>
-       Takes two pentachora that meet at a degree&nbsp;2 vertex and
-       squashes them flat.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>Open Book</guilabel></glossterm>
-      <glossdef><para>
-       Takes an internal tetrahedron with one, two or three boundary
-       triangles and
-       &ldquo;unglues&rdquo; that tetrahedron, creating two new boundary
-       tetrahedra and exposing the pentachora inside to the boundary.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>Shell Boundary</guilabel></glossterm>
-      <glossdef><para>
-       Removes an &ldquo;unnecessary pentachoron&rdquo; that sits along
-       the boundary of the triangulation.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>Collapse Edge</guilabel></glossterm>
-      <glossdef><para>
-       Takes an edge between two distinct vertices and collapses it to a point.
-       Any pentachora that contained the edge will be &ldquo;flattened
-       away&rdquo;.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>Snap Edge</guilabel></glossterm>
-      <glossdef><para>
-       Takes an edge between two distinct vertices and snaps its endpoints
-       together. This involves taking a triangle that meets this edge and
-       folding the other two edges of this triangle together.
-      </para></glossdef>
-     </glossentry>
-    </glosslist>
+    &regina; will begin to explore the Pachner graph in search of a
+    smaller treewidth diagram, in a similar manner to the
+    <link linkend="tri-simplify-exhaustive">exhaustive simplification</link>
+    process described above.  Like exhaustive simplification, &regina; will
+    occasionally stop and offer to expand its search; also, like exhaustive
+    simplification, you can cancel the search at any time.
    </para>
+   <para>
+    It is important to understand that &regina; does not compute the
+    <emphasis>precise</emphasis>
+    treewidth of a triangulation (i.e., the minimum width of a
+    <link linkend="tri-graphs-tree">tree decomposition</link>), since this is
+    an NP-hard problem.  Instead it uses fast heuristics to find a low-width
+    tree decomposition for a given triangulation, and it is
+    this &ldquo;heuristic width&rdquo; that will be reduced.
+   </para>
+   <warning><para>
+    As with exhaustive simplification, both time and memory consumption
+    grow at a super-exponential rate as the search expands.
+    Also, as with exhaustive simplification, this operation does
+    <emphasis>not</emphasis> preserve the orientation of an oriented
+    triangulation.
+   </para></warning>
   </sect2>
 
   <sect2 id="tri-make0eff">
