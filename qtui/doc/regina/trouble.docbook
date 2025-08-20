@@ -117,21 +117,6 @@
      </para>
     </answer>
    </qandaentry>
-
-   <qandaentry>
-    <question><para>
-     On &macosx;, do I need &fink; any more?
-    </para></question>
-    <answer>
-     <para>
-      No!  As of version&nbsp;4.92, &regina; ships as a standalone app
-      bundle that you can drag and drop straight into your Applications
-      folder.  If you installed &fink; for an earlier version of
-      &regina; and you do not use it for anything else, you can remove
-      it: simply delete <filename>/sw</filename> and everything beneath it.
-     </para>
-    </answer>
-   </qandaentry>
   </qandadiv>
 
   <qandadiv id="trouble-python"><title>&python; Scripting</title>

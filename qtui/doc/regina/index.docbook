@@ -103,7 +103,6 @@
   <!ENTITY dsimplices "<replaceable>d</replaceable>-simplices">
   <!ENTITY evince "<application>Evince</application>">
   <!ENTITY fedora "<application>Fedora</application>">
-  <!ENTITY fink "<application>Fink</application>">
   <!ENTITY gap "<application><acronym>GAP</acronym></application>">
   <!ENTITY gaplong "<application><acronym>GAP</acronym>
    (Groups, Algorithms and Programming)</application>">
