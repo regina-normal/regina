@@ -173,7 +173,7 @@
 
    <qandaentry id="trouble-python-snappy">
     <question><para>
-     &snappy; has stopped working in the graphical user interface.
+     &snappy; has stopped working in &regina;'s graphical &python; consoles.
      When I import &snappy; and try to create a manifold, I receive a
      <exceptionname>TypeError</exceptionname> with the message
      &ldquo;isinstance() arg 2 must be a class, type, or tuple
