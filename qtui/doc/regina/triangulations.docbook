@@ -178,8 +178,9 @@
      menu and explore.
     </para></tip>
    </sect3>
+
    <sect3 id="tri-new-isosig">
-    <title>Isomorphism Signature</title>
+    <title>From Isomorphism Signature</title>
 
     <para>
      This will reconstruct a triangulation from an isomorphism signature.
@@ -221,6 +222,71 @@
      (or better, copy and paste the signature using the clipboard if you
      can).
     </para></caution>
+   </sect3>
+
+   <sect3 id="tri-new-dehydration">
+    <title>From Dehydration String (3-manifolds only)</title>
+
+    <para>
+     This will rehydrate a 3-manifold triangulation from the given
+     dehydration string.
+     A <firstterm>dehydration string</firstterm> is a sequence of letters
+     that contains enough information to reconstruct a triangulation
+     (though tetrahedra and their vertices might be relabelled).
+     An example is <literal>dadbcccaqhx</literal>
+     (which describes the &snappea; census triangulation
+     <literal>m025</literal>).
+     Dehydration strings appear in
+     census papers such as the hyperbolic cusped census of
+     Callahan, Hildebrand and Weeks <xref linkend="bib-cuspedcensus"/>,
+     in which the dehydration format is explicitly described.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="newtri-dehydration"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     Only some 3-manifold triangulations have dehydration strings.
+     The dehydration string (if it exists) for an existing triangulation
+     can be accessed through <link linkend="python">&python; scripting</link>
+     by calling <literal>Triangulation3.dehydrate()</literal>.
+    </para>
+   </sect3>
+
+   <sect3 id="tri-new-splitting">
+    <title>From Splitting Surface Signature (3-manifolds only)</title>
+
+    <para>
+     This will reconstruct a 3-manifold triangulation
+     from a splitting surface signature.
+     A <firstterm>splitting surface</firstterm> is a compact normal
+     surface consisting of precisely one quadrilateral per tetrahedron
+     and no other normal discs.
+     A <firstterm>splitting surface signature</firstterm> is a string of
+     letters arranged into cycles that describe how these quadrilaterals
+     are joined together.  From this signature, both the normal surface and
+     the enclosing triangulation can be reconstructed.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="newtri-splitting"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     When entering a splitting surface signature, you may use
+     any block of punctuation to separate cycles of letters.  All
+     whitespace will be ignored.  Examples of valid signatures
+     are <literal>(ab)(bC)(Ca)</literal> and <literal>AAb-bc-C</literal>.
+    </para>
+    <para>
+     The precise format of splitting surface signatures is described
+     in <xref linkend="bib-burton-phd"/>.
+    </para>
    </sect3>
 
    <sect3 id="tri-new-or-nor">
@@ -377,71 +443,6 @@
     </para>
    </sect3>
 
-   <sect3 id="tri-new-dehydration">
-    <title>Dehydration (3-manifolds only)</title>
-
-    <para>
-     This will rehydrate a 3-manifold triangulation from the given
-     dehydration string.
-     A <firstterm>dehydration string</firstterm> is a sequence of letters
-     that contains enough information to reconstruct a triangulation
-     (though tetrahedra and their vertices might be relabelled).
-     An example is <literal>dadbcccaqhx</literal>
-     (which describes the &snappea; census triangulation
-     <literal>m025</literal>).
-     Dehydration strings appear in
-     census papers such as the hyperbolic cusped census of
-     Callahan, Hildebrand and Weeks <xref linkend="bib-cuspedcensus"/>,
-     in which the dehydration format is explicitly described.
-    </para>
-    <para>
-     <inlinemediaobject>
-      <imageobject>
-       <imagedata multires="newtri-dehydration"/>
-      </imageobject>
-     </inlinemediaobject>
-    </para>
-    <para>
-     Only some 3-manifold triangulations have dehydration strings.
-     The dehydration string (if it exists) for an existing triangulation
-     can be accessed through <link linkend="python">&python; scripting</link>
-     by calling <literal>Triangulation3.dehydrate()</literal>.
-    </para>
-   </sect3>
-
-   <sect3 id="tri-new-splitting">
-    <title>Splitting Surface (3-manifolds only)</title>
-
-    <para>
-     This will reconstruct a 3-manifold triangulation
-     from a splitting surface signature.
-     A <firstterm>splitting surface</firstterm> is a compact normal
-     surface consisting of precisely one quadrilateral per tetrahedron
-     and no other normal discs.
-     A <firstterm>splitting surface signature</firstterm> is a string of
-     letters arranged into cycles that describe how these quadrilaterals
-     are joined together.  From this signature, both the normal surface and
-     the enclosing triangulation can be reconstructed.
-    </para>
-    <para>
-     <inlinemediaobject>
-      <imageobject>
-       <imagedata multires="newtri-splitting"/>
-      </imageobject>
-     </inlinemediaobject>
-    </para>
-    <para>
-     When entering a splitting surface signature, you may use
-     any block of punctuation to separate cycles of letters.  All
-     whitespace will be ignored.  Examples of valid signatures
-     are <literal>(ab)(bC)(Ca)</literal> and <literal>AAb-bc-C</literal>.
-    </para>
-    <para>
-     The precise format of splitting surface signatures is described
-     in <xref linkend="bib-burton-phd"/>.
-    </para>
-   </sect3>
-
    <sect3 id="tri-new-bundle">
     <title>I-Bundles, &s1;-Bundles, and Cones (4-manifolds only)</title>
     <para>
@@ -449,10 +450,12 @@
      triangulation, by making either an I-bundle, an &s1;-bundle, or a cone.
     </para>
     <para>
-     Choose one of <guilabel>I-bundle</guilabel>,
-     <guilabel>&s1;-bundle</guilabel> or <guilabel>Cone</guilabel>
+     Choose one of <guilabel>I-bundle over&hellip;</guilabel>,
+     <guilabel>&s1;-bundle over&hellip;</guilabel> or
+     <guilabel>Cone over&hellip;</guilabel>
      as the triangulation type, and then select your 3-manifold
-     triangulation in the drop-down box.  If your triangulation
+     triangulation in the <guilabel>Source 3-manifold</guilabel> drop-down box.
+     If your triangulation
      represents the 3-manifold <replaceable>M</replaceable>, then
      &regina; will build either the 4-manifold
      <replaceable>M</replaceable>&nbsp;&times;&nbsp;I,
