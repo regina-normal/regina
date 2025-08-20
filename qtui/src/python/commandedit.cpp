@@ -67,11 +67,7 @@ bool CommandEdit::event(QEvent* event) {
             int start, end;
             if (hasSelectedText()) {
                 start = selectionStart();
-#if QT_VERSION >= 0x051000
-                end = selectionEnd(); // Introduced in Qt 5.10.
-#else
-                end = start + selectedText().length();
-#endif
+                end = selectionEnd();
             } else
                 start = end = cursorPosition();
 

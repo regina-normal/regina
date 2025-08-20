@@ -124,16 +124,9 @@ void AttachmentUI::refresh() {
         filename->setText(tr("Filename: %1").arg(
             QFile::decodeName(attachment->filename().c_str())));
 
-#if QT_VERSION >= QT_VERSION_CHECK(5,10,0)
         QLocale locale = ui->locale();
         size->setText(locale.formattedDataSize(attachment->size(),
             2 /* precision */, QLocale::DataSizeSIFormat));
-#else
-        // Just write something brutal, since almost everyone should
-        // have Qt 5.10 or above by now.  Even debian buster had Qt 5.11.
-        // On ubuntu you have to go back to bionic (18.04 LTS) to see Qt 5.9.
-        size->setText(tr("%1 bytes").arg(attachment->size()));
-#endif
 
         viewButton->setEnabled(true);
         saveButton->setEnabled(true);

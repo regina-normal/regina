@@ -547,6 +547,9 @@ ELSEIF(DISABLE_GUI)
 ELSE(DISABLE_GUI)
   set(CMAKE_AUTOMOC ON)
 
+  # At present, regina only supports Qt6 (not Qt5).  However, we still use
+  # regina's own Qt-related variables in case at some point in the future we
+  # support multiple Qt versions again (e.g., Qt6 and Qt7?).
   FIND_PACKAGE(Qt6Widgets QUIET)
   FIND_PACKAGE(Qt6SvgWidgets QUIET)
   if (Qt6Widgets_FOUND AND Qt6SvgWidgets_FOUND)
@@ -554,18 +557,9 @@ ELSE(DISABLE_GUI)
     set(REGINA_QT 6)
     MESSAGE(STATUS "Found Qt6: ${Qt6_DIR}")
   else (Qt6Widgets_FOUND AND Qt6SvgWidgets_FOUND)
-    MESSAGE(STATUS "Qt6 not found: will look for Qt5 instead")
-    FIND_PACKAGE(Qt5Widgets QUIET)
-    FIND_PACKAGE(Qt5Svg QUIET)
-    if (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
-      set(QT_FOUND TRUE)
-      set(REGINA_QT 5)
-      MESSAGE(STATUS "Found Qt5: ${Qt5Core_DIR}")
-    else (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
-      set(QT_FOUND FALSE)
-      unset(REGINA_QT)
-      MESSAGE(STATUS "Qt5 not found")
-    endif (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
+    set(QT_FOUND FALSE)
+    unset(REGINA_QT)
+    MESSAGE(STATUS "Qt6 not found")
   endif (Qt6Widgets_FOUND AND Qt6SvgWidgets_FOUND)
 
   IF (APPLE AND GRAPHVIZ_FRAMEWORK_PATH)
@@ -649,7 +643,7 @@ ELSE(DISABLE_GUI)
   endif (QT_FOUND)
 
   MACRO_LOG_FEATURE(QT_FOUND
-    "Qt6 or Qt5"
+    "Qt6"
     "Required for Regina's graphical user interface"
     "https://www.qt.io/"
     TRUE ""

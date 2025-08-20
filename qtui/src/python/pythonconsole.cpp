@@ -35,7 +35,7 @@
 
 // In the old days, this header had to come before any Qt stuff because
 // Python 2.3 also used "slots" and Qt was redefining that word.
-// I have not yet checked if this clash still exists with Python 3 and/or Qt5.
+// I have not yet checked if this clash still exists with Python 3 and/or Qt6.
 #include "../python/gui/pythoninterpreter.h"
 
 #include "pythonmanager.h"

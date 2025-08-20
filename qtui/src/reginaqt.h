@@ -36,25 +36,12 @@
 #ifndef __REGINAQT_H
 #define __REGINAQT_H
 
-// If we are building against Qt6, then explicitly disable everything
-// from Qt5 that is now deprecated in Qt6.
+// Explicitly disable everything from Qt5 that is now deprecated in Qt6.
 //
 // A problem: we should do this *before* including QtGlobal, since QtGlobal
 // will define QT_DISABLE_DEPRECATED_BEFORE if we have not already done so.
-//
-// For this, we test for the existence of a header that is new to the Qt6 API.
 
-#if __has_include(<QStringConverter>)
-    // We are building against Qt6 (or later).
-    #define QT_DISABLE_DEPRECATED_BEFORE 0x060000
-#else
-    // We are building against Qt5.
-    // Just to be sure, check that our __has_include is checking the
-    // Qt header directory at all.
-    #if ! __has_include(<QString>)
-        #error Cannot find Qt headers!
-    #endif
-#endif
+#define QT_DISABLE_DEPRECATED_BEFORE 0x060000
 
 #endif
 

@@ -11,8 +11,7 @@ Version 7.4  [ (to be announced) ]
 
     GENERAL:
         - Now requires C++20 (not C++17).
-        - Now requires Qt 5.6 or later (including of course Qt 6.x, which most
-          people will be using nowadays).
+        - Now requires Qt6 (i.e., dropped support for Qt5).
         - Added support for simplex and facet locks throughout the API.  See
           Simplex<dim>::lock() and Simplex<dim>::lockFacet() for an overview
           of how locks work.  Many routines throughout the API could now
