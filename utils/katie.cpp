@@ -830,33 +830,34 @@ void usage(const char* progName, const std::string& error = std::string()) {
     if (!error.empty()) {
         std::cerr << error << "\n\n";
     }
-    
-    std::cerr << "Usage:" << std::endl;
-    std::cerr << "    " << progName << " \"PD Code\" \"Framing Vector\", "
-        " { -3, --dim3 | -4, --dim4 } "
-//        "[ -g, --graph ] [ -r, --real ] [ -d, --debug ]\n"
-    "[ -g, --graph ] [ -V, --verbose ]\n"
-        "    " << progName << " [ -v, --version | -?, --help ]\n\n";
-    std::cerr << "    -3, --dim3    : Build a 3-manifold via integer "
-        "Dehn surgery.\n";
-    std::cerr << "    -4, --dim4    : Build a 4-manifold by attaching "
-        "1- and 2-handles along a decorated link.\n";
-    std::cerr << "                    The PD code must be the first argument and wrapped with quotation marks.\n";
-    std::cerr << "                    The framing sequence must be the second argument and wrapped with quotation marks.\n";
-    std::cerr << "                    Use 'x' or '.' to denote 1-handles within the framing sequence.\n\n";
-    std::cerr << "    -g, --graph   : Output an edge-coloured graph, "
-        "not an isomorphism signature.\n";
-//    std::cerr << "    -r, --real    : Builds the 4-manifold triangulation with real boundary "
-//            "(not ideal or closed).\n";
-    std::cerr << "                    This option is incompatible with the --dim3 flag.\n\n";
-    std::cerr << "    -V, --verbose : Display information during the construction.\n";
-    std::cerr << "    -v, --version : Show which version of Regina "
-        "is being used\n";
-    std::cerr << "    -?, --help    : Display this help\n\n";
 
-    std::cerr << "Example usage:\n";
-    std::cerr << "./katie \"PD: [(4,8,1,9),(9,3,10,4),(1,5,2,6),(6,2,7,3),(7,5,8,10)]\" \"x 0\"\n";
-    
+    std::cerr << R"help(Usage:
+    katie <pd_code> <framing_sequence> [ -3, --dim3 | -4, --dim4 ]
+        [ -g, --graph ] [ -V, --verbose ]
+    katie [ -v, --version | -?, --help ]
+
+    The PD code and framing sequence must be the first two arguments.
+    Both must be wrapped with quotation marks.
+    Use 'x' or '.' to denote 1-handles within the framing sequence.
+
+    -3, --dim3    : Build a 3-manifold via integer Dehn surgery.
+    -4, --dim4    : Build a 4-manifold by attaching 1- and 2-handles along a
+                    decorated link.
+    -g, --graph   : Output an edge-coloured graph, not an isomorphism signature.
+                    This option is incompatible with --dim3.
+    -V, --verbose : Display information during the construction.
+
+    -v, --version : Show which version of Regina is being used.
+    -?, --help    : Show this help message.
+
+    Example usage:
+    katie 'PD: [(4,8,1,9),(9,3,10,4),(1,5,2,6),(6,2,7,3),(7,5,8,10)]' 'x 0'
+)help";
+
+    // "[ -g, --graph ] [ -r, --real ] [ -d, --debug ]\n"
+    //    std::cerr << "    -r, --real    : Builds the 4-manifold triangulation with real boundary "
+    //            "(not ideal or closed).\n";
+
     exit(1);
 }
 
