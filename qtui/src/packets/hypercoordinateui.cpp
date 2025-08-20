@@ -453,15 +453,15 @@ HyperCoordinateUI::HyperCoordinateUI(
 
     actTriangulate = new QAction(this);
     actTriangulate->setText(tr("&Triangulate Hypersurface"));
-    actTriangulate->setToolTip(tr("Builds a 3-manifold triangulation "
-        "of the selected hypersurface"));
+    actTriangulate->setIcon(ReginaSupport::regIcon("packet_triangulation3"));
+    actTriangulate->setToolTip(tr("Triangulate the selected hypersurface"));
     actTriangulate->setEnabled(false);
-    actTriangulate->setWhatsThis(tr("<qt>Builds a 3-manifold triangulation "
+    actTriangulate->setWhatsThis(tr("Builds a 3-manifold triangulation "
         "of the selected hypersurface.<p>"
         "The new triangulation will have the same <i>topology</i> as the "
         "selected hypersurface.  However, it will be simplified, "
         "which means that information about the <i>combinatorics</i> "
-        "of the hypersurface will be lost.</qt>"));
+        "of the hypersurface will be lost."));
     connect(actTriangulate, SIGNAL(triggered()), this, SLOT(triangulate()));
     surfaceActionList.push_back(actTriangulate);
 

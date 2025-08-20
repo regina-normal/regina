@@ -564,7 +564,7 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(
     actCutAlong->setToolTip(tr("Cut the triangulation along the "
         "selected surface"));
     actCutAlong->setEnabled(false);
-    actCutAlong->setWhatsThis(tr("<qt>Cuts open the surround triangulation "
+    actCutAlong->setWhatsThis(tr("Cuts open the surround triangulation "
         "along the selected surface.  This triangulation will not "
         "be changed; instead a new cut-open triangulation will be created.<p>"
         "This operation will never change the topology of the underlying "
@@ -572,7 +572,7 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(
         "the related <i>crushing</i> operation, which might).  However, "
         "because the new surface boundaries are created from real "
         "boundary triangles, the resulting number of tetrahedra might be very "
-        "large.</qt>"));
+        "large."));
     connect(actCutAlong, SIGNAL(triggered()), this, SLOT(cutAlong()));
     surfaceActionList.push_back(actCutAlong);
 
@@ -580,7 +580,7 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(
     actCrush->setText("Crus&h Surface");
     actCrush->setToolTip(tr("Crush the selected surface to a point"));
     actCrush->setEnabled(false);
-    actCrush->setWhatsThis(tr("<qt>Crushes the selected surface to a point "
+    actCrush->setWhatsThis(tr("Crushes the selected surface to a point "
         "within the surrounding triangulation.  This triangulation will not "
         "be changed; instead a new crushed triangulation will be created.<p>"
         "<b>Warning:</b> This routine simply removes all tetrahedra "
@@ -588,7 +588,7 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(
         "appropriately.  In some circumstances this might change the "
         "topology of the underlying 3-manifold beyond just slicing along "
         "the surface and shrinking the resulting boundary/boundaries "
-        "to points.</qt>"));
+        "to points."));
     surfaceActionList.push_back(actCrush);
     connect(actCrush, SIGNAL(triggered()), this, SLOT(crush()));
 
