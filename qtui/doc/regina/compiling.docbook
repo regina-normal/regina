@@ -111,50 +111,84 @@
  <sect1 id="compiling-flags">
   <title>Compiler and Linker Flags</title>
   <para>
-   &regina; comes with a small program called
-   <command>regina-engine-config</command>, which tells you how to
-   compile &regina; into your own &cpp; projects.
+   When you compile your own &cpp; code that uses &regina;'s calculation
+   engine, you will need to pass some extra flags to the compiler.
+   There are two ways to do this: a simple way using a Makefile, and a more
+   complex but more flexible way that extracts &regina;'s compiler and linker
+   flags and passes them through to &gcc;.
   </para>
-  <para>
-   When you <emphasis>compile</emphasis> your own &cpp; code, you will need
-   to pass some extra flags to the compiler.  To find these extra
-   compiler flags, run <userinput>regina-engine-config --cflags</userinput>.
-  </para>
+
+  <sect2>
+   <title>Using a Makefile</title>
+
+   <para>
+    You can use the
+    <link linkend="man-regina-helper"><command>regina-helper</command></link>
+    tool to create a Makefile.
+    This Makefile is suitable for compiling small programs that are
+    entirely contained in a single &cpp; source file.
+   </para>
+<screen>
+    <prompt>example$</prompt> <userinput>regina-helper makefile</userinput>
+    Preparing Makefile...
+    <prompt>example$ <userinput>ls</userinput></prompt>
+    Makefile
+    <prompt>example$</prompt>
+</screen>
+   <para>
+    If you have a &cpp; source file named <filename>mycode.cc</filename>
+    (for example), you can put it in the same directory as the Makefile
+    and compile it by typing <userinput>make mycode</userinput>.
+    The Makefile will ensure that the compiler receives all of the
+    necessary flags for building your program against &regina;.
+   </para>
+  </sect2>
+
+  <sect2>
+   <title>Passing Flags to &gcc;</title>
+
+   <para>
+    &regina; also ships with a utility
+    <link linkend="man-regina-engine-config"><command>regina-engine-config</command></link>,
+    which will give you the necessary flags explicitly.
+    To find the compiler and linker flags,
+    run <userinput>regina-engine-config --cflags</userinput> and
+    <userinput>regina-engine-config --libs</userinput> respectively.
+   </para>
 <screen>
     <prompt>example$</prompt> <userinput>regina-engine-config --cflags</userinput>
     -I/usr/include/regina-normal -I/usr/include -I/usr/include/libxml2
-    <prompt>example$</prompt>
-</screen>
-  <para>
-   When you <emphasis>link</emphasis> your code into a final executable,
-   you will also need to pass extra flags to the linker.  To find these
-   extra linker flags, run <userinput>regina-engine-config --libs</userinput>.
-  </para>
-<screen>
     <prompt>example$</prompt> <userinput>regina-engine-config --libs</userinput>
     -L/usr/lib -lregina-engine /usr/lib/libxml2.so /usr/lib/libgmp.so /usr/lib/libgmpxx.so /usr/lib/libz.so -lpthread
     <prompt>example$</prompt>
 </screen>
-  <para>
-   If your code is a single &cpp; source file, you can compile and
-   link a final executable in one simple step:
-  </para>
+   <para>
+    If your code is a single &cpp; source file, you can compile and
+    link a final executable in a single step:
+   </para>
 <screen>
     <prompt>example$</prompt> <userinput>g++ mycode.cc `regina-engine-config --cflags --libs`</userinput>
     <prompt>example$</prompt>
 </screen>
-  <para>
-   Compiler and linker flags will differ from system to system.  You
-   should always use <command>regina-engine-config</command> to find out
-   what they are, and not just copy the flags that appear in
-   the examples above.
-  </para>
-  <para>
-   Note that these compiler and linker flags are tailored to the
-   &gnu; &cpp; compiler
-   (<application>g++</application>).  If you use a different
-   compiler, you might need to adjust your flags accordingly.
-  </para>
+   <para>
+    If your code is spread across multiple source files, you should set up your
+    build system so that it fetches the compiler and linker flags from
+    <command>regina-engine-config</command>.
+   </para>
+   <para>
+    Note that compiler and linker flags will differ from system to system.
+    You should always use <command>regina-engine-config</command> to find out
+    what they are, and not just copy the flags that appear in
+    the examples above.
+   </para>
+   <tip><para>
+    The compiler and linker flags that <command>regina-engine-config</command>
+    outputs are tailored to the &gnu; &cpp; compiler
+    (<application>g++</application>) and <application>Clang</application>.
+    If you use a different
+    compiler, you might need to adjust your flags accordingly.
+   </para></tip>
+  </sect2>
  </sect1>
  <sect1 id="compiling-apidocs">
  <title>&api; Documentation</title>
