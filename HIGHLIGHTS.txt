@@ -1,5 +1,5 @@
 
-Regina - A Normal Surface Theory Calculator
+Regina - Software for low-dimensional topology
 
     This file describes key highlights of the changes between releases.
 
