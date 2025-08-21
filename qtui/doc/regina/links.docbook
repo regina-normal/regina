@@ -2064,7 +2064,7 @@
     Then select
     <menuchoice>
      <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
-     <guimenuitem>Compose With</guimenuitem>
+     <guimenuitem>Compose With&hellip;</guimenuitem>
     </menuchoice>
     from the menu.
    </para>
@@ -2128,7 +2128,7 @@
     Then select
     <menuchoice>
      <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
-     <guimenuitem>Insert Link</guimenuitem>
+     <guimenuitem>Insert Link&hellip;</guimenuitem>
     </menuchoice>
     from the menu.
    </para>

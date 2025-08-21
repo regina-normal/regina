@@ -2774,11 +2774,11 @@
     &regina; has a rich set of <link linkend="tri-elementarymove">fast and
     effective moves</link> for simplifying
     a triangulation without changing the underlying manifold.
-    If you press the <guibutton>Simplify</guibutton> button (or select
+    If you select
     <menuchoice>
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Simplify</guimenuitem>
-    </menuchoice>),
+    </menuchoice> from the menu or press the corresponding toolbar button,
     then &regina; will use a combination of these moves to reduce the
     triangulation to as few tetrahedra (in 3-D) or pentachora (in 4-D)
     as it can <xref linkend="bib-burton-hyamfest"/>.
@@ -2791,7 +2791,12 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-simplify"/>
+      <imagedata multires="tri-simplify-menu" align="center"/>
+     </imageobject>
+    </inlinemediaobject>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-simplify-bar" align="center"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2895,18 +2900,18 @@
     To perform elementary moves, select
     <menuchoice>
      <guimenu>Triangulation</guimenu>
-     <guimenuitem>Elementary Move</guimenuitem>
+     <guimenuitem>Elementary Moves&hellip;</guimenuitem>
     </menuchoice> from the menu or press the corresponding toolbar button.
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-eltmove-menu"/>
+      <imagedata multires="tri-eltmove-menu" align="center"/>
      </imageobject>
     </inlinemediaobject>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-eltmove-bar"/>
+      <imagedata multires="tri-eltmove-bar" align="center"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3244,12 +3249,12 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-treewidth-menu"/>
+      <imagedata multires="tri-treewidth-menu" align="center"/>
      </imageobject>
     </inlinemediaobject>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-treewidth-bar"/>
+      <imagedata multires="tri-treewidth-bar" align="center"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3302,7 +3307,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-make0eff"/>
+      <imagedata multires="tri-make0eff-menu"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3339,20 +3344,24 @@
    </para></caution>
   </sect2>
 
-  <sect2 id="tri-real-ideal">
-   <title>Switching Between Real and Ideal (3-D and 4-D)</title>
+  <sect2 id="tri-truncate">
+   <title>Truncating Vertices (3-D and 4-D)</title>
 
    <para>
-    You can convert between <firstterm>real</firstterm> boundary
-    components (formed from boundary triangles in 3-D, or boundary
-    tetrahedra in 4-D) and
-    <firstterm>ideal</firstterm> boundary components (formed from
-    individual vertices with closed non-spherical vertex links).
+    &regina; can convert <firstterm>ideal</firstterm> boundary components
+    (formed from individual vertices with closed non-spherical vertex links)
+    into <firstterm>real</firstterm> boundary components (formed from
+    boundary triangles in 3-D, or boundary tetrahedra in 4-D).
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-truncate-makeideal"/>
+      <imagedata multires="tri-truncate-menu" align="center"/>
+     </imageobject>
+    </inlinemediaobject>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-truncate-bar" align="center"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3361,7 +3370,7 @@
     <menuchoice>
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Truncate Ideal Vertices</guimenuitem>
-    </menuchoice>
+    </menuchoice> from the menu or press the corresponding toolbar button
     to convert your ideal vertices into real boundary components.
     &regina; will subdivide the triangulation and delete a small
     neighbourhood of each ideal vertex.
@@ -3374,13 +3383,33 @@
     vertices, try
     <link linkend="tri-simplification">simplifying your triangulation</link>.
    </para></tip>
+  </sect2>
+
+  <sect2 id="tri-makeideal">
+   <title>Converting Real to Ideal Boundaries (3-D and 4-D)</title>
+
    <para>
-    Conversely: if your triangulation has real boundary components and you
-    wish to convert this into an ideal triangulation, select
+    As a converse to truncation, you can also convert real boundary components
+    (formed from boundary triangles in 3-D, or boundary tetrahedra in 4-D)
+    into ideal boundary components (formed from vertices with closed
+    non-spherical vertex links).
+    To do this, select
     <menuchoice>
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Make Ideal</guimenuitem>
-    </menuchoice>.
+    </menuchoice> from the menu or press the corresponding toolbar button.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-makeideal-menu" align="center"/>
+     </imageobject>
+    </inlinemediaobject>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-makeideal-bar" align="center"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
    <para>
     Each real boundary component will be &ldquo;coned&rdquo; to a new
@@ -3413,8 +3442,8 @@
     selecting
     <menuchoice>
      <guimenu>Triangulation</guimenu>
-     <guimenuitem>Barycentric Subdivision</guimenuitem>
-    </menuchoice>.
+     <guimenuitem>Barycentric Subdivide</guimenuitem>
+    </menuchoice> from the menu or pressing the corresponding toolbar button.
     In 2-D this involves splitting each original triangle into
     6&nbsp;=&nbsp;3! smaller triangles, with new vertices added at the
     centroid of each original triangle and the centre of each original edge.
@@ -3429,14 +3458,19 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-barycentric"/>
+      <imagedata multires="tri-barycentric-menu" align="center"/>
+     </imageobject>
+    </inlinemediaobject>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-barycentric-bar" align="center"/>
      </imageobject>
     </inlinemediaobject>
    </para>
   </sect2>
 
   <sect2 id="tri-orient">
-   <title>Orienting Triangulations (All Dimensions)</title>
+   <title>Orienting and Reflecting Triangulations (All Dimensions)</title>
 
    <para>
     If your triangulation is
@@ -3444,17 +3478,22 @@
     you may wish to reorder the vertices of each top-dimensional simplex
     (e.g., vertices 0,1,2,3 of each tetrahedron in a 3-manifold) so that
     adjacent simplices have consistent orientations.
-    To do this, press the <guibutton>Orient</guibutton> button (or select
+    To do this, select
     <menuchoice>
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Orient</guimenuitem>
     </menuchoice>
-    from the menu).
+    from the menu or press the corresponding toolbar button.
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-orient"/>
+      <imagedata multires="tri-orient-menu" align="center"/>
+     </imageobject>
+    </inlinemediaobject>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-orient-bar" align="center"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3465,7 +3504,8 @@
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Reflect</guimenuitem>
     </menuchoice>
-    from the menu. Regardless of whether the triangulation is orientable
+    from the menu or pressing the corresponding toolbar button.
+    Regardless of whether the triangulation is orientable
     and/or oriented, every tetrahedron will have its orientation
     reversed. This will change the vertex numbers in each tetrahedron,
     but not the tetrahedron numbers themselves.
@@ -3473,7 +3513,12 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-reflect"/>
+      <imagedata multires="tri-reflect-menu" align="center"/>
+     </imageobject>
+    </inlinemediaobject>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-reflect-bar" align="center"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3497,12 +3542,12 @@
     <menuchoice>
      <guimenu>3-D&nbsp;Triangulation</guimenu>
      <guimenuitem>Puncture</guimenuitem>
-    </menuchoice>.
+    </menuchoice> from the menu.
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-puncture"/>
+      <imagedata multires="tri-puncture-menu"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3516,13 +3561,13 @@
     of your triangulation.  To do this, select
     <menuchoice>
      <guimenu>3-D&nbsp;Triangulation</guimenu>
-     <guimenuitem>Drill Edge</guimenuitem>
-    </menuchoice>.
+     <guimenuitem>Drill Edge&hellip;</guimenuitem>
+    </menuchoice> from the menu.
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-drilledge"/>
+      <imagedata multires="tri-drilledge-menu"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3537,7 +3582,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-drilledgebox"/>
+      <imagedata multires="tri-drilledge-box"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3612,14 +3657,14 @@
     <replaceable>X</replaceable> for editing, and then select
     <menuchoice>
      <guimenu>3-D&nbsp;Triangulation</guimenu>
-     <guimenuitem>Connected Sum With</guimenuitem>
+     <guimenuitem>Connected Sum With&hellip;</guimenuitem>
     </menuchoice>
     from the menu.
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-connsumwith"/>
+      <imagedata multires="tri-connsumwith-menu"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3676,14 +3721,14 @@
     <replaceable>X</replaceable> for editing, and then select
     <menuchoice>
      <guimenu>3-D&nbsp;Triangulation</guimenu>
-     <guimenuitem>Insert Triangulation</guimenuitem>
+     <guimenuitem>Insert Triangulation&hellip;</guimenuitem>
     </menuchoice>
     from the menu.
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-insert"/>
+      <imagedata multires="tri-insert-menu"/>
      </imageobject>
     </inlinemediaobject>
    </para>

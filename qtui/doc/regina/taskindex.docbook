@@ -213,12 +213,14 @@
  <indexentry>
   <primaryie>boundary</primaryie>
   <secondaryie><link linkend="tri-double">double over</link></secondaryie>
-  <secondaryie><link linkend="tri-real-ideal">extension from real to
+  <secondaryie><link linkend="tri-makeideal">extension from real to
    ideal</link></secondaryie>
   <secondaryie><link linkend="surfaces-boundary">of a normal surface or
    hypersurface</link></secondaryie>
   <secondaryie><link linkend="tri-propbdry">of a
    triangulation</link></secondaryie>
+  <secondaryie><link linkend="tri-truncate">truncation from ideal to
+   real</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -780,7 +782,7 @@
 
  <indexentry>
   <primaryie>extension</primaryie>
-  <secondaryie><link linkend="tri-real-ideal">of a triangulation
+  <secondaryie><link linkend="tri-makeideal">of a triangulation
    boundary</link></secondaryie>
  </indexentry>
 
@@ -1022,10 +1024,10 @@
 
  <indexentry>
   <primaryie>ideal vertices</primaryie>
-  <secondaryie><link linkend="tri-real-ideal">creating from real boundary
+  <secondaryie><link linkend="tri-makeideal">creating from real boundary
    components</link></secondaryie>
   <secondaryie><link linkend="tri-propideal">testing for</link></secondaryie>
-  <secondaryie><link linkend="tri-real-ideal">truncating / converting
+  <secondaryie><link linkend="tri-truncate">truncating / converting
    to real boundary</link></secondaryie>
   <secondaryie><link linkend="tri-faces">viewing</link></secondaryie>
  </indexentry>
@@ -2168,7 +2170,7 @@
    subdivision</link></secondaryie>
   <secondaryie><link linkend="tri-bdrycomponents">boundary components,
    viewing</link></secondaryie>
-  <secondaryie><link linkend="tri-real-ideal">boundary,
+  <secondaryie><link linkend="tri-makeideal">boundary,
    converting real to ideal</link></secondaryie>
   <secondaryie><link linkend="tri-propbdry">boundary,
    testing for</link></secondaryie>
@@ -2225,11 +2227,11 @@
    type</link></secondaryie>
   <secondaryie><link linkend="tri-hyperbolic">hyperbolicity,
    certifying</link></secondaryie>
-  <secondaryie><link linkend="tri-real-ideal">ideal vertices,
+  <secondaryie><link linkend="tri-makeideal">ideal vertices,
    creation</link></secondaryie>
   <secondaryie><link linkend="tri-propideal">ideal vertices,
    testing for</link></secondaryie>
-  <secondaryie><link linkend="tri-real-ideal">ideal vertices,
+  <secondaryie><link linkend="tri-truncate">ideal vertices,
    truncation</link></secondaryie>
   <secondaryie><link linkend="foreign-import">importing from
    external files</link></secondaryie>
@@ -2297,7 +2299,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-real-ideal">truncation of ideal
+  <primaryie><link linkend="tri-truncate">truncation of
    vertices</link></primaryie>
  </indexentry>
 
