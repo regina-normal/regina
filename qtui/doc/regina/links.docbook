@@ -1336,12 +1336,12 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-complement-menu"/>
+      <imagedata multires="link-complement-menu" align="center"/>
      </imageobject>
     </inlinemediaobject>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-complement-bar"/>
+      <imagedata multires="link-complement-bar" align="center"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1596,12 +1596,12 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-simplify-menu"/>
+      <imagedata multires="link-simplify-menu" align="center"/>
      </imageobject>
     </inlinemediaobject>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-simplify-bar"/>
+      <imagedata multires="link-simplify-bar" align="center"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1715,12 +1715,12 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-treewidth-menu"/>
+      <imagedata multires="link-treewidth-menu" align="center"/>
      </imageobject>
     </inlinemediaobject>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-treewidth-bar"/>
+      <imagedata multires="link-treewidth-bar" align="center"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1768,12 +1768,12 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-reidemeister-menu"/>
+      <imagedata multires="link-reidemeister-menu" align="center"/>
      </imageobject>
     </inlinemediaobject>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-reidemeister-bar"/>
+      <imagedata multires="link-reidemeister-bar" align="center"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1885,12 +1885,12 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-refrotrev-menu"/>
+      <imagedata multires="link-refrotrev-menu" align="center"/>
      </imageobject>
     </inlinemediaobject>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-refrotrev-bar"/>
+      <imagedata multires="link-refrotrev-bar" align="center"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1989,12 +1989,12 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-make-alternating-menu"/>
+      <imagedata multires="link-make-alternating-menu" align="center"/>
      </imageobject>
     </inlinemediaobject>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-make-alternating-bar"/>
+      <imagedata multires="link-make-alternating-bar" align="center"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2027,12 +2027,12 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-selfframe-menu"/>
+      <imagedata multires="link-selfframe-menu" align="center"/>
      </imageobject>
     </inlinemediaobject>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="link-selfframe-bar"/>
+      <imagedata multires="link-selfframe-bar" align="center"/>
      </imageobject>
     </inlinemediaobject>
    </para>

@@ -2469,12 +2469,12 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata multires="tri-components-menu"/>
+       <imagedata multires="tri-components-menu" align="center"/>
       </imageobject>
      </inlinemediaobject>
      <inlinemediaobject>
       <imageobject>
-       <imagedata multires="tri-components-bar"/>
+       <imagedata multires="tri-components-bar" align="center"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -2583,12 +2583,12 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-vertexlinks-menu"/>
+      <imagedata multires="tri-vertexlinks-menu" align="center"/>
      </imageobject>
     </inlinemediaobject>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-vertexlinks-bar"/>
+      <imagedata multires="tri-vertexlinks-bar" align="center"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2637,12 +2637,12 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-tribdry-menu"/>
+      <imagedata multires="tri-tribdry-menu" align="center"/>
      </imageobject>
     </inlinemediaobject>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-tribdry-bar"/>
+      <imagedata multires="tri-tribdry-bar" align="center"/>
      </imageobject>
     </inlinemediaobject>
    </para>

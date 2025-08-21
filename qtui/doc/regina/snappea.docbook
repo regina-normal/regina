@@ -507,12 +507,12 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata multires="tri-vertexlinks-menu"/>
+       <imagedata multires="tri-vertexlinks-menu" align="center"/>
       </imageobject>
      </inlinemediaobject>
      <inlinemediaobject>
       <imageobject>
-       <imagedata multires="tri-vertexlinks-bar"/>
+       <imagedata multires="tri-vertexlinks-bar" align="center"/>
       </imageobject>
      </inlinemediaobject>
     </para>
