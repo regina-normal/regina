@@ -212,6 +212,7 @@
 
  <indexentry>
   <primaryie>boundary</primaryie>
+  <secondaryie><link linkend="tri-double">double over</link></secondaryie>
   <secondaryie><link linkend="tri-real-ideal">extension from real to
    ideal</link></secondaryie>
   <secondaryie><link linkend="surfaces-boundary">of a normal surface or
@@ -628,8 +629,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>double cover</primaryie>
-  <seeie>See: orientable double cover</seeie>
+  <primaryie><link linkend="tri-double">double cover</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-double">double over boundary</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1503,7 +1507,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-doublecover">orientable double
+  <primaryie><link linkend="tri-double">orientable double
    cover</link></primaryie>
  </indexentry>
 
@@ -2190,6 +2194,9 @@
   <secondaryie><link linkend="tri-new-dehydration">dehydration
    string, rehydrating</link></secondaryie>
   <secondaryie><link linkend="tri-insert">disjoint union</link></secondaryie>
+  <secondaryie><link linkend="tri-double">double cover</link></secondaryie>
+  <secondaryie><link linkend="tri-double">double over
+   boundary</link></secondaryie>
   <secondaryie><link linkend="tri-puncturedrill">drilling
    edges</link></secondaryie>
   <secondaryie><link linkend="tri-graphs-dual">dual
@@ -2237,7 +2244,7 @@
   <secondaryie><link linkend="tri-graphs-nice">nice tree
    decomposition</link></secondaryie>
   <secondaryie><link linkend="tri-proporient">orientability</link></secondaryie>
-  <secondaryie><link linkend="tri-doublecover">orientable double
+  <secondaryie><link linkend="tri-double">orientable double
    cover</link></secondaryie>
   <secondaryie><link linkend="tri-orient">orienting</link></secondaryie>
   <secondaryie><link linkend="tri-puncturedrill">puncturing</link></secondaryie>
