@@ -2550,13 +2550,13 @@
      <xref linkend="bib-crushing-dcg"/>.
      If it does fail then &regina; will detect this and inform you.
     </para>
-    <!--para>
+    <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-connsum-rp2.png"/>
+       <imagedata multires="tri-connsum-rp2"/>
       </imageobject>
      </inlinemediaobject>
-    </para-->
+    </para>
     <caution><para>
      Connected sum decomposition can be very slow for larger
      triangulations, since the underlying normal surface algorithms have
