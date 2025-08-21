@@ -782,26 +782,26 @@
    <para>
     Each cell of this table represents a single facet of a single
     <replaceable>d</replaceable>-simplex.  For instance, in the
-    3-manifold example illustrated above, the cell circled in red
-    represents face&nbsp;123 of tetrahedron&nbsp;1 (that is, the
-    triangular face formed from vertices 1,2,3 of tetrahedron&nbsp;1).
+    3-manifold example illustrated above, the cell circled in orange
+    represents face&nbsp;123 of tetrahedron&nbsp;2 (that is, the
+    triangular face formed from vertices 1,2,3 of tetrahedron&nbsp;2).
    </para>
    <para>
     The contents of the cell show how the facet is glued.  In the example
-    above, the circled cell contains <literal>3&nbsp;(213)</literal>,
-    indicating that face&nbsp;123 of tetrahedron&nbsp;1 is glued to
-    face&nbsp;213 of tetrahedron&nbsp;3 using the affine map that
-    matches vertices 1,2,3 of tetrahedron&nbsp;1 with vertices
-    2,1,3 of tetrahedron&nbsp;3 respectively.
+    above, the circled cell contains <literal>7&nbsp;(213)</literal>,
+    indicating that face&nbsp;123 of tetrahedron&nbsp;2 is glued to
+    face&nbsp;213 of tetrahedron&nbsp;7 using the affine map that
+    matches vertices 1,2,3 of tetrahedron&nbsp;2 with vertices
+    2,1,3 of tetrahedron&nbsp;7 respectively.
     The same gluing can be seen from the opposite direction in the row
-    for tetrahedron&nbsp;3.
+    for tetrahedron&nbsp;7.
    </para>
    <para>
     An empty cell indicates that a facet is not glued to anything at all;
     that is, the facet forms part of the <emphasis>boundary</emphasis> of
     the manifold.  In the table above there are two boundary triangles:
-    face&nbsp;012 of tetrahedron&nbsp;0, and face&nbsp;123 of
-    tetrahedron&nbsp;2.  In our example these join together to form the torus
+    face&nbsp;012 of tetrahedron&nbsp;3, and face&nbsp;123 of
+    tetrahedron&nbsp;8.  In our example these join together to form the torus
     boundary of the figure eight knot complement.
    </para>
    <para>
@@ -1563,8 +1563,8 @@
       <listitem><para>
        Past versions of &regina; used to offer a <guibutton>Relator
        explosion</guibutton> button to help escape local wells.  This is no
-       longer available through the &gui;, but you can still access it through
-       <link linkend="python">&python;</link>.
+       longer available through the &gui;, but you can still access this
+       functionality through <link linkend="python">&python;</link>.
       </para></listitem>
      </itemizedlist>
     </para>
