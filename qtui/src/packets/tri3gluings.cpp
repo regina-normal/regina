@@ -1501,11 +1501,11 @@ void Tri3GluingsUI::connectedSumDecomposition() {
         } catch (regina::UnsolvedCase&) {
             dlg.reset();
             ReginaSupport::sorry(ui,
-                tr("<qt>This manifold contains an embedded two-sided "
-                "projective plane.<p>"
-                "Regina cannot always compute connected "
-                "sum decompositions in such cases, and this triangulation "
-                "in particular is one such case that it cannot resolve.</qt>"));
+                tr("This manifold contains an embedded two-sided "
+                    "projective plane."),
+                tr("Regina cannot always compute connected "
+                    "sum decompositions in such cases, and this triangulation "
+                    "in particular is one such case that it cannot resolve."));
             return;
         }
 

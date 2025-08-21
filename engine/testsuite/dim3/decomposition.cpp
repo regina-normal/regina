@@ -42,6 +42,14 @@ using regina::Triangulation;
 // TODO: Move these tests into Dim3Test.
 
 /**
+ * Note: the following two triangulations (given by isosigs) are cases where
+ * summands() has fallen over in the past due to 2-sided projective planes:
+ *
+ * gLALQbccffefrkjltcq
+ * gLALQbccffefrkpltcn
+ */
+
+/**
  * Determines whether the given triangulation is a minimal triangulation of
  * one of the three prime manifolds with no 0-efficient triangulation.
  */
