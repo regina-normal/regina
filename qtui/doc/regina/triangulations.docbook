@@ -2469,7 +2469,12 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata multires="menucomponents"/>
+       <imagedata multires="tri-components-menu"/>
+      </imageobject>
+     </inlinemediaobject>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="tri-components-bar"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -2482,7 +2487,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata multires="tri-extract-components"/>
+       <imagedata multires="tri-components-results"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -2506,7 +2511,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata multires="menuconnsum"/>
+       <imagedata multires="tri-connsum-menu"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -2578,7 +2583,12 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-vertexlinks"/>
+      <imagedata multires="tri-vertexlinks-menu"/>
+     </imageobject>
+    </inlinemediaobject>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-vertexlinks-bar"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2593,7 +2603,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-vertexlinksbox"/>
+      <imagedata multires="tri-vertexlinks-box"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2605,7 +2615,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-vertexlinksresult"/>
+      <imagedata multires="tri-vertexlinks-results"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2627,7 +2637,12 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-tribdry"/>
+      <imagedata multires="tri-tribdry-menu"/>
+     </imageobject>
+    </inlinemediaobject>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-tribdry-bar"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2652,7 +2667,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-tribdrybox"/>
+      <imagedata multires="tri-tribdry-box"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2666,7 +2681,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-tribdryresult"/>
+      <imagedata multires="tri-tribdry-results"/>
      </imageobject>
     </inlinemediaobject>
    </para>
