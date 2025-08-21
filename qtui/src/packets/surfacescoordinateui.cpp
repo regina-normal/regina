@@ -564,7 +564,6 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(
     actCutAlong->setIcon(ReginaSupport::regIcon("cutalong"));
     actCutAlong->setToolTip(tr("Cut the triangulation along the "
         "selected surface"));
-    actCutAlong->setEnabled(false);
     actCutAlong->setWhatsThis(tr("Cuts open the surround triangulation "
         "along the selected surface.  This triangulation will not "
         "be changed; instead a new cut-open triangulation will be created.<p>"
@@ -581,7 +580,6 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(
     actCrush->setText("Crus&h Surface");
     actCrush->setIcon(ReginaSupport::regIcon("crush"));
     actCrush->setToolTip(tr("Crush the selected surface to a point"));
-    actCrush->setEnabled(false);
     actCrush->setWhatsThis(tr("Crushes the selected surface to a point "
         "within the surrounding triangulation.  This triangulation will not "
         "be changed; instead a new crushed triangulation will be created.<p>"
@@ -593,10 +591,6 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(
         "to points."));
     surfaceActionList.push_back(actCrush);
     connect(actCrush, SIGNAL(triggered()), this, SLOT(crush()));
-
-    connect(table->selectionModel(),
-        SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
-        this, SLOT(updateActionStates()));
 
     connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
         this, SLOT(updatePreferences()));
@@ -642,7 +636,6 @@ void SurfacesCoordinateUI::refresh() {
         model->rebuild(selectedSystem); // Faster if the filter is the same.
 
     // Tidy up.
-    updateActionStates();
     if (coordsChanged) {
         currentlyResizing = true;
         table->header()->resizeSections(QHeaderView::ResizeToContents);
@@ -673,6 +666,13 @@ void SurfacesCoordinateUI::cutAlong() {
                 "(i.e., has infinitely many normal discs)."));
         return;
     }
+    if (! toCutAlong.embedded()) {
+        ReginaSupport::info(ui,
+            tr("I can only cut along properly embedded surfaces."),
+            tr("The surface you have selected is either immersed or "
+                "singular."));
+        return;
+    }
 
     // Go ahead and cut along the surface.
     // Be nice and simplify the triangulation, which could be very large.
@@ -700,21 +700,26 @@ void SurfacesCoordinateUI::crush() {
                 "(i.e., has infinitely many normal discs)."));
         return;
     }
+    if (! toCrush.embedded()) {
+        ReginaSupport::info(ui,
+            tr("I can only crush properly embedded surfaces."),
+            tr("The surface you have selected is either immersed or "
+                "singular."));
+        return;
+    }
+    if (! toCrush.normal()) {
+        ReginaSupport::info(ui,
+            tr("I cannot crush almost normal surfaces."),
+            tr("The surface you have selected contains one or more "
+                "octagonal discs."));
+        return;
+    }
 
     // Go ahead and crush it.
     auto ans = regina::make_packet(toCrush.crush(),
         "Crushed #" + std::to_string(whichSurface));
     surfaces->append(ans);
     enclosingPane->getMainWindow()->packetView(*ans, true, true);
-}
-
-void SurfacesCoordinateUI::updateActionStates() {
-    bool canCut = table->selectionModel()->hasSelection() &&
-        surfaces->isEmbeddedOnly();
-    bool canCrush = canCut && (! surfaces->allowsAlmostNormal());
-
-    actCutAlong->setEnabled(canCut);
-    actCrush->setEnabled(canCrush);
 }
 
 void SurfacesCoordinateUI::columnResized(int section, int, int newSize) {

@@ -184,11 +184,6 @@ class SurfacesCoordinateUI : public QObject, public PacketEditorTab,
         void crush();
 
         /**
-         * Update the states of internal components.
-         */
-        void updateActionStates();
-
-        /**
          * Provides auto-resizing of columns.
          */
         void columnResized(int section, int oldSize, int newSize);
