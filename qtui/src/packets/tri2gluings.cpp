@@ -477,7 +477,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     sep->setSeparator(true);
     triActionList.push_back(sep);
 
-    auto* actDoubleCover = new QAction(this);
+    actDoubleCover = new QAction(this);
     actDoubleCover->setText(tr("Build &Double Cover"));
     actDoubleCover->setIconText(tr("Double"));
     actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
@@ -857,6 +857,7 @@ void Tri2GluingsUI::updateRemoveState() {
 
 void Tri2GluingsUI::updateActionStates() {
     actOrient->setEnabled(tri->isOrientable() && ! tri->isOriented());
+    actDoubleCover->setEnabled(! tri->isOrientable());
     actDoubleOverBoundary->setEnabled(tri->hasBoundaryFacets());
     actSplitIntoComponents->setEnabled(tri->countComponents() > 1);
     actUnlock->setVisible(tri->hasLocks());

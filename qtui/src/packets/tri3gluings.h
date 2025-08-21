@@ -162,6 +162,7 @@ class Tri3GluingsUI : public QObject, public PacketEditorTab {
         QAction* actSubdivide;
         QAction* actTruncate;
         QAction* actMakeIdeal;
+        QAction* actDoubleCover;
         QAction* actDoubleOverBoundary;
         QAction* actSnapPea;
         QAction* actBoundaryComponents;

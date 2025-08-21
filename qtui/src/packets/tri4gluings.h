@@ -157,6 +157,7 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         QAction* actSubdivide;
         QAction* actTruncate;
         QAction* actMakeIdeal;
+        QAction* actDoubleCover;
         QAction* actDoubleOverBoundary;
         QAction* actBoundaryComponents;
         QAction* actVertexLinks;

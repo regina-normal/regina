@@ -535,7 +535,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     sep->setSeparator(true);
     triActionList.push_back(sep);
 
-    auto* actDoubleCover = new QAction(this);
+    actDoubleCover = new QAction(this);
     actDoubleCover->setText(tr("Build &Double Cover"));
     actDoubleCover->setIconText(tr("Double"));
     actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
@@ -1168,6 +1168,7 @@ void Tri4GluingsUI::updateActionStates() {
     actOrient->setEnabled(tri->isOrientable() && ! tri->isOriented());
     actTruncate->setEnabled(tri->isIdeal() || ! tri->isValid());
     actBoundaryComponents->setEnabled(! tri->boundaryComponents().empty());
+    actDoubleCover->setEnabled(! tri->isOrientable());
     actDoubleOverBoundary->setEnabled(tri->hasBoundaryFacets());
     actSplitIntoComponents->setEnabled(tri->countComponents() > 1);
     actUnlock->setVisible(tri->hasLocks());

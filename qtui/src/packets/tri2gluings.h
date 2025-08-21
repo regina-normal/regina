@@ -153,6 +153,7 @@ class Tri2GluingsUI : public QObject, public PacketEditorTab {
         QAction* actOrient;
         QAction* actReflect;
         QAction* actSubdivide;
+        QAction* actDoubleCover;
         QAction* actDoubleOverBoundary;
         QAction* actSplitIntoComponents;
         std::vector<QAction*> triActionList;
