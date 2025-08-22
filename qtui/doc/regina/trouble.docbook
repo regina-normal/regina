@@ -18,7 +18,7 @@
      <para>
       <inlinemediaobject>
        <imageobject>
-        <imagedata fileref="run-fedora-menu.png"/>
+        <imagedata multires="run-opensuse"/>
        </imageobject>
       </inlinemediaobject>
      </para>
@@ -47,7 +47,7 @@
      <para>
       <inlinemediaobject>
        <imageobject>
-        <imagedata fileref="run-windows.png"/>
+        <imagedata multires="run-windows"/>
        </imageobject>
       </inlinemediaobject>
      </para>
