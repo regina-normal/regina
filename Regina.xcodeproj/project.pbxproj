@@ -1276,6 +1276,7 @@
 		0591E85E1C50D28700793A9C /* enumerate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E85C1C50D28700793A9C /* enumerate.cpp */; };
 		0591E85F1C50D28700793A9C /* hyperflags.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E85D1C50D28700793A9C /* hyperflags.h */; };
 		0591E8631C50D2B000793A9C /* hyperflags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8611C50D2A900793A9C /* hyperflags.cpp */; };
+		0591FB302E591B240061D270 /* virtual-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 0591FB2E2E591AA80061D270 /* virtual-census.rga */; };
 		05941EF9272A9E3500562586 /* elidedlabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05941EF7272A9E3500562586 /* elidedlabel.cpp */; };
 		05941EFA272A9E8600562586 /* elidedlabel.h in Sources */ = {isa = PBXBuildFile; fileRef = 05941EF8272A9E3500562586 /* elidedlabel.h */; };
 		059493072920B1C300940F0D /* permgroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059493042920B1C200940F0D /* permgroup.cpp */; };
@@ -2103,6 +2104,7 @@
 				059BEC0F276CB740006DC425 /* tree.session in Copy Examples */,
 				05373B192771739C00E9418B /* triangulation.py in Copy Examples */,
 				059BEC10276CB745006DC425 /* triangulation.session in Copy Examples */,
+				0591FB302E591B240061D270 /* virtual-census.rga in Copy Examples */,
 				05B4D2EF22A0931D00B7B11C /* README.txt in Copy Examples */,
 			);
 			name = "Copy Examples";
@@ -3917,6 +3919,7 @@
 		0591E85C1C50D28700793A9C /* enumerate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = enumerate.cpp; sourceTree = "<group>"; };
 		0591E85D1C50D28700793A9C /* hyperflags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hyperflags.h; sourceTree = "<group>"; };
 		0591E8611C50D2A900793A9C /* hyperflags.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hyperflags.cpp; sourceTree = "<group>"; };
+		0591FB2E2E591AA80061D270 /* virtual-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "virtual-census.rga"; sourceTree = "<group>"; };
 		05937A9819CEC20900160F9A /* AngleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AngleViewController.h; sourceTree = "<group>"; };
 		05937A9919CEC20900160F9A /* AngleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AngleViewController.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		05937A9D19CECF4300160F9A /* MDSpreadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadView.h; sourceTree = "<group>"; };
@@ -8252,6 +8255,7 @@
 				059BEC0C276AAEA7006DC425 /* tree.session */,
 				05373B112771734D00E9418B /* triangulation.py */,
 				059BEC0B276AAEA7006DC425 /* triangulation.session */,
+				0591FB2E2E591AA80061D270 /* virtual-census.rga */,
 				05998ECA19F9360200855238 /* ios */,
 			);
 			path = examples;

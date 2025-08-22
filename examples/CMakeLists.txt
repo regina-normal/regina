@@ -16,6 +16,7 @@ SET(examples_files
   tree.session
   triangulation.py
   triangulation.session
+  virtual-census.rga
   )
 INSTALL(FILES ${examples_files} DESTINATION "${examplesdir}")
 

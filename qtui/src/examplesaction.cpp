@@ -91,5 +91,7 @@ void ExamplesAction::fillStandard() {
         tr("Hodgson-Weeks Closed Hyperbolic Census"));
     addUrl("knot-census.rga",
         tr("Prime Knots"));
+    addUrl("virtual-census.rga",
+        tr("Virtual Knots"));
 }
 
