@@ -1455,6 +1455,15 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * now handle octagons, including cases with multiple octagons in the
          * same tetrahedron and/or octagons in multiple tetrahedra.
          *
+         * This operation does _not_ preserve orientation.  That is,
+         * even if the original triangulation is oriented, there are no
+         * guarantees regarding the orientation of the tetrahedra in the
+         * cut-open triangulation.  The cut-open triangulation might have the
+         * same or opposite orientation as the original, or it might not be
+         * oriented at all.  If you need to preserve orientation, consider
+         * whether crush() (which _does_ preserve orientation) might work for
+         * you instead.
+         *
          * This routine will ignore any locks on tetrahedra and/or triangles
          * of the original triangulation (and of course the original
          * triangulation will be left safely unchanged).  The triangulation
@@ -1493,6 +1502,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * connected sum decompositions, removal of 3-spheres and
          * small Lens spaces and so on; a full list of possible changes
          * is beyond the scope of this API documentation.
+         *
+         * If the original triangulation is oriented, then the crushing
+         * operation will preserve this orientation.
          *
          * This routine will ignore any locks on tetrahedra and/or triangles
          * of the original triangulation (and of course the original

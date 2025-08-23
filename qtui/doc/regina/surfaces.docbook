@@ -1532,17 +1532,30 @@
     Your original triangulation will not be changed.
    </para>
    <para>
-    Note that you could end up with a disconnected triangulation.
-    If so, you can
-    <link linkend="tri-decomposition-component">extract connected
-    components</link> to work with one at a time.
-   </para>
-   <para>
     <inlinemediaobject>
      <imageobject>
       <imagedata multires="tri-cutcrush-results"/>
      </imageobject>
     </inlinemediaobject>
+   </para>
+   <para>
+    If your original triangulation is oriented, then crushing a surface
+    will preserve this orientation.  However, cutting along a surface will not:
+    the cut-open triangulation might have the same or opposite orientation, or
+    might not be oriented at all.
+   </para>
+   <para>
+    If your original triangulation has any
+    <link linkend="tri-locks">simplex and/or facet locks</link>, then these will
+    simply be ignored (since the original triangulation will be left unchanged).
+    The resulting crushed or cut-open triangulation will not have any locks at
+    all.
+   </para>
+   <para>
+    Note that both cutting and crushing could result in a
+    disconnected triangulation.  If this happens, you can
+    <link linkend="tri-decomposition-component">extract connected
+    components</link> to work with one at a time.
    </para>
   </sect2>
 
