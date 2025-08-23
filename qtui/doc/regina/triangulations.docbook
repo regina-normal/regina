@@ -2733,11 +2733,8 @@
    </para>
    <para>
     You can add and remove triangles, tetrahedra or pentachora using the
-    <guilabel>Add &hellip;</guilabel> and <guilabel>Remove &hellip;</guilabel>
-    buttons above the table (the Add button is marked
-    <guilabel>Add Triangle</guilabel>, <guilabel>Add Tet</guilabel>
-    or <guilabel>Add Pent</guilabel> for 2-, 3- and 4-manifolds
-    respectively, and likewise for the Remove button).
+    <guilabel>+</guilabel> and <guilabel>&minus;</guilabel> buttons
+    below the table.
     To change the gluings between existing triangles, tetrahedra or
     pentachora, just type the new gluings directly into the table.
     If you want to remove a gluing (i.e., make a facet part of the
@@ -2765,16 +2762,18 @@
      </imageobject>
     </inlinemediaobject>
    </para>
+   <para>
+    TODO: Reference locks.
+   </para>
   </sect2>
 
   <sect2 id="tri-simplification">
    <title>Automatic Simplification (3-D and 4-D)</title>
 
    <para>
-    &regina; has a rich set of <link linkend="tri-elementarymove">fast and
-    effective moves</link> for simplifying
-    a triangulation without changing the underlying manifold.
-    If you select
+    &regina; has a <link linkend="tri-elementarymove">rich set of local
+    moves</link> for simplifying a triangulation without changing the
+    underlying manifold.  If you select
     <menuchoice>
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Simplify</guimenuitem>
@@ -2782,7 +2781,7 @@
     then &regina; will use a combination of these moves to reduce the
     triangulation to as few tetrahedra (in 3-D) or pentachora (in 4-D)
     as it can <xref linkend="bib-burton-hyamfest"/>.
-    This procedure is always fast and often very effective, but there is
+    Whilst this procedure is fast and often very effective, there is
     <emphasis>no guarantee</emphasis> that this will produce the
     smallest possible triangulation:
     &regina; might get stuck at a local minimum from which it cannot
@@ -2801,10 +2800,27 @@
     </inlinemediaobject>
    </para>
    <para>
-    If your triangulation has boundary, this routine will also try to
+    If your triangulation has boundary, this process will also try to
     make the number of boundary triangles (in 3-D) or
     boundary tetrahedra (in 4-D) as small as it can, though again
     there is no guarantee of reaching a global minimum.
+   </para>
+   <para>
+    In dimension&nbsp;4, simplification is significantly more difficult
+    (indeed, finding a <emphasis>minimal</emphasis> triangulation is
+    algorithmically undecidable).  Simplification in dimension&nbsp;4
+    therefore works harder to climb out of local minima, and for larger
+    triangulations this can take some time.  Because of this,
+    in dimension&nbsp;4 &regina; will always show the current state of progress,
+    and you can cancel at any time.  If you do cancel, &regina; will use
+    whatever improvements it has already found so far.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-simplify-4d"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
    <note>
     <para>
@@ -2817,10 +2833,9 @@
    <sect3 id="tri-simplify-exhaustive">
     <title>Exhaustive Simplification</title>
     <para>
-     If &regina; cannot
-     simplify the triangulation immediately using its fast heuristics,
-     then it will offer to perform a slower, more exhaustive search.  Press
-     the <guilabel>Try harder</guilabel> button, as shown below:
+     If &regina; cannot simplify the triangulation using the fast process
+     described above, then it will offer to perform a slower, more exhaustive
+     search.  Press the <guilabel>Try harder</guilabel> button, as shown below:
     </para>
     <para>
      <inlinemediaobject>
@@ -2838,7 +2853,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata multires="tri-simplify-harder"/>
+       <imagedata multires="tri-simplify-progress"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -3376,6 +3391,13 @@
     neighbourhood of each ideal vertex.
     Any <link linkend="tri-faces-invalid">invalid vertices</link>
     will be truncated also.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-truncate-single"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
    <tip><para>
     Because of the subdivision, this operation will greatly
