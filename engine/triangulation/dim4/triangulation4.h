@@ -727,6 +727,14 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * only way to terminate this function is to cancel the operation via
          * a progress tracker (read on for details).
          *
+         * If this triangulation is currently oriented, then this operation
+         * will _not_ preserve the orientation: indeed, the resulting
+         * triangulation might not be oriented at all.  This is a consequence
+         * of the way in which this operation uses isomorphism signatures to
+         * represent nodes in the Pachner graph.  If you need a simplification
+         * routine that _preserves_ orientation, you should use simplify()
+         * instead.
+         *
          * If any pentachora and/or tetrahedra are locked, these locks will be
          * respected: that is, the retriangulation will avoid any moves that
          * would violate these locks (and in particular, no LockViolation

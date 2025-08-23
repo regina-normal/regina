@@ -525,6 +525,15 @@
     Instead the result will appear as a new triangulation beneath the original
     in the packet tree.
    </para>
+   <para>
+    Any <link linkend="tri-locks">simplex and/or facet locks</link> in the
+    source triangulation will not prevent you from making doubling
+    constructions; instead any locks will be copied across to the appropriate
+    locations in the new triangulation.  So, for example, in the orientable
+    double cover each lock will be duplicated in both sheets, and if you
+    double over the boundary then any locked boundary facets will become
+    locked internal facets of the new triangulation.
+   </para>
   </sect2>
 
   <sect2 id="tri-imported">
@@ -809,6 +818,11 @@
     into this table.  See the section on
     <link linkend="tri-editgluings">modifying triangulations</link> for
     details.
+   </para>
+   <para>
+    Any locked simplices and/or facets will appear as yellow cells in the
+    table.  See the section on
+    <link linkend="tri-locks">simplex and facet locks</link> for details.
    </para>
   </sect2>
 
@@ -1350,6 +1364,22 @@
          triangulation is always (<replaceable>d</replaceable>+1)-valent;
          for bounded triangulation some nodes may have smaller degree
          (but never larger).
+        </para>
+        <para>
+         Any locked simplices will appear as yellow nodes in the dual graph,
+         and any locked internal facets will appear as yellow arcs;
+         see the screenshot below.
+         Boundary facets (locked or unlocked) do not appear in the
+         dual graph at all.  See the section on
+         <link linkend="tri-locks">simplex and facet locks</link> for
+         further details on working with locks.
+        </para>
+        <para>
+         <inlinemediaobject>
+          <imageobject>
+           <imagedata multires="tri-graphs-dual-locks"/>
+          </imageobject>
+         </inlinemediaobject>
         </para>
        </glossdef>
       </glossentry>
@@ -1982,7 +2012,7 @@
      disconnected triangulations or triangulations with boundary).
      The main features of isomorphism signatures are that they are fast
      to compute, and that two triangulations have the same signature
-     <emphasis>if and only if</emphasis> they are isomorphic.
+     <emphasis>if and only if</emphasis> they are combinatorially isomorphic.
      See <xref linkend="bib-burton-simps3"/> and
      <xref linkend="bib-burton-pachner-orprime"/> for details.
     </para>
@@ -1994,6 +2024,18 @@
      isomorphism signatures</link>.  Be aware that the resulting
      triangulation might not use the same tetrahedron and vertex
      labels as the original.
+    </para>
+    <para>
+     If you have <link linkend="tri-locks">simplex and/or facet locks</link>
+     then these will be incorporated into the isomorphism signature.
+     If you want an
+     isomorphism signature <emphasis>without</emphasis> locks (e.g., for
+     compatibility with &regina;&nbsp;7.3.1 or earlier), then simply use the
+     part of the signature that appears before the period.  So, for example,
+     instead of <literal>cPcbbbiht.aq</literal> (the figure eight knot
+     complement with a locked tetrahedron), you would just use
+     <literal>cPcbbbiht</literal> (which represents the figure eight knot
+     complement with no locks at all).
     </para>
     <para>
      Isomorphism signatures are case-sensitive (i.e., upper-case and
@@ -2091,6 +2133,14 @@
      you can click on the <guibutton>Details</guibutton> button for
      the precise relabelling (i.e., the mapping between tetrahedron
      labels and between vertices in each tetrahedron).
+    </para>
+    <para>
+     The isomorphism and subcomplex tests here will ignore any
+     <link linkend="tri-locks">simplex and/or facet locks</link>.
+     If you want to test whether there is an isomorphism that
+     <emphasis>preserves</emphasis> locks, you can always compare the
+     <link linkend="tri-composition-isosig">isomorphism signatures</link>
+     (which do incorporate and respect locks).
     </para>
    </sect3>
   </sect2>
@@ -2491,6 +2541,10 @@
       </imageobject>
      </inlinemediaobject>
     </para>
+    <para>
+     Any <link linkend="tri-locks">simplex and/or facet locks</link> will be
+     copied across to the relevant component triangulations.
+    </para>
    </sect3>
 
    <sect3 id="tri-decomposition-connsum">
@@ -2556,6 +2610,14 @@
        <imagedata multires="tri-connsum-rp2"/>
       </imageobject>
      </inlinemediaobject>
+    </para>
+    <para>
+     If you have any
+     <link linkend="tri-locks">simplex and/or facet locks</link>, these will
+     simply be ignored (since the original triangulation will be left
+     unchanged).  The individual summands might have very different
+     combinatorial structures from the original triangulation, and so the
+     summand triangulations will not have any locks at all.
     </para>
     <caution><para>
      Connected sum decomposition can be very slow for larger
@@ -2763,7 +2825,12 @@
     </inlinemediaobject>
    </para>
    <para>
-    TODO: Reference locks.
+    If you are using simplex and/or facet locks, you can add or remove locks
+    by right-clicking on the corresponding table cells.  If your triangulation
+    <emphasis>does</emphasis> include locks, there will also be a button
+    beneath the table that can remove all locks at once.  See the section on
+    <link linkend="tri-locks">simplex and facet locks</link> for more
+    information.
    </para>
   </sect2>
 
@@ -2806,14 +2873,27 @@
     there is no guarantee of reaching a global minimum.
    </para>
    <para>
-    In dimension&nbsp;4, simplification is significantly more difficult
-    (indeed, finding a <emphasis>minimal</emphasis> triangulation is
-    algorithmically undecidable).  Simplification in dimension&nbsp;4
-    therefore works harder to climb out of local minima, and for larger
-    triangulations this can take some time.  Because of this,
-    in dimension&nbsp;4 &regina; will always show the current state of progress,
-    and you can cancel at any time.  If you do cancel, &regina; will use
-    whatever improvements it has already found so far.
+    If your triangulation is oriented, then this fast simplification process
+    will always preserve the orientation of your triangulation.
+    This is <emphasis>not</emphasis> true of the exhautive process described
+    below (when you press the
+    <link linkend="tri-simplify-exhaustive"><guibutton>Try Harder</guibutton>
+    button</link>)&mdash;that exhaustive process can have the side-effect of
+    flipping the orientations of one or more top-dimensional simplices.
+   </para>
+   <para>
+    Simplification in &regina; will always respect
+    <link linkend="tri-locks">simplex and facet locks</link>.
+   </para>
+   <para>
+    In dimension&nbsp;4, simplification is significantly more difficult than
+    it is in lower dimensions (indeed, finding a <emphasis>minimal</emphasis>
+    triangulation is algorithmically undecidable).
+    &regina; therefore works harder in dimension&nbsp;4 to climb out of
+    local minima, and for larger triangulations this can take some time.
+    Because of this, in dimension&nbsp;4 &regina; will show the current
+    state of progress, and you can cancel at any time.  If you do cancel then
+    &regina; will use whatever improvements it has already found so far.
    </para>
    <para>
     <inlinemediaobject>
@@ -2822,14 +2902,6 @@
      </imageobject>
     </inlinemediaobject>
    </para>
-   <note>
-    <para>
-     If your triangulation is oriented, then the fast simplification process
-     described above will preserve the orientation of your triangulation.
-     This is <emphasis>not</emphasis> true of the exhaustive process
-     described below.
-    </para>
-   </note>
    <sect3 id="tri-simplify-exhaustive">
     <title>Exhaustive Simplification</title>
     <para>
@@ -2846,9 +2918,8 @@
     </para>
     <para>
      At this point, &regina; will begin an exhaustive search through the
-     Pachner graph (this is essentially the graph that relates all
-     triangulations of the underlying manifold through
-     Pachner moves):
+     Pachner graph (i.e., the graph that relates all triangulations of the
+     underlying manifold through Pachner moves):
     </para>
     <para>
      <inlinemediaobject>
@@ -2860,6 +2931,12 @@
     <para>
      You can stop this search at any time by pressing the
      <guilabel>Cancel</guilabel> button.
+    </para>
+    <para>
+     For 3-manifolds, &regina; will only try 2-3 and 3-2 Pachner moves
+     in this exhaustive search.
+     For 4-manifolds, &regina; will try all possible Pachner moves
+     (1-5, 2-4, 3-3, 4-2, and 5-1).
     </para>
     <para>
      Since the Pachner graph is infinite, &regina; will only search
@@ -2881,10 +2958,18 @@
      </inlinemediaobject>
     </para>
     <para>
-     For 3-manifolds, &regina; will only try 2-3 and 3-2 Pachner moves
-     in this exhaustive search.
-     For 4-manifolds, &regina; will try all possible Pachner moves
-     (1-5, 2-4, 3-3, 4-2, and 5-1).
+     Be warned: unlike the fast simplification that happens when you first
+     press the <guilabel>Simplify</guilabel> button or menu item,
+     this exhaustive search through the Pachner graph does
+     <emphasis>not</emphasis> preserve orientation.  If your triangulation is
+     oriented, this exhaustive search can flip the orientations of one or
+     more top-dimensional simplices, and indeed the resulting triangulation
+     might not be oriented at all.
+    </para>
+    <para>
+     This exhaustive simplification will however always respect
+     <link linkend="tri-locks">simplex and facet locks</link> (like the
+     fast simplification process before it).
     </para>
     <warning><para>
      When searching the Pachner graph, both the time and memory
@@ -2892,14 +2977,6 @@
      of tetrahedra.  If you continue to press <guilabel>Keep trying</guilabel>
      over and over, you may well run out of time or memory (or both).
     </para></warning>
-    <warning>
-     <para>
-      Unlike the fast simplification process when you first press the
-      <guilabel>Simplify</guilabel> button, this exhaustive
-      simplification process does <emphasis>not</emphasis> preserve the
-      orientation of an oriented triangulation.
-     </para>
-    </warning>
    </sect3>
   </sect2>
 
@@ -2954,12 +3031,16 @@
     You may continue to apply one move after another.  When you are done,
     press <guibutton>Close</guibutton> to close the elementary move box.
    </para>
-   <note>
-    <para>
-     If your triangulation is oriented, then every move that is offered
-     will preserve the orientation of your triangulation.
-    </para>
-   </note>
+   <para>
+    If your triangulation is oriented, these moves will always preserve
+    the orientation of your triangulation.
+   </para>
+   <para>
+    These moves will also respect
+    <link linkend="tri-locks">simplex and facet locks</link>&mdash;any move
+    that would violate a lock will not be offered in the relevant drop-down
+    list.
+   </para>
    <para>
     Below we give a brief summary of the various types of move that are
     available in each dimension.
@@ -3290,12 +3371,20 @@
     tree decomposition for a given triangulation, and it is
     this &ldquo;heuristic width&rdquo; that will be reduced.
    </para>
+   <para>
+    As with exhaustive simplification, this operation does
+    <emphasis>not</emphasis> preserve the orientation of an oriented
+    triangulation: it could flip the orientations of one or more
+    top-dimensional simplices, and the resulting triangulation might not
+    be oriented at all.
+   </para>
+   <para>
+    This operation does respect
+    <link linkend="tri-locks">simplex and facet locks</link>.
+   </para>
    <warning><para>
     As with exhaustive simplification, both time and memory consumption
     grow at a super-exponential rate as the search expands.
-    Also, as with exhaustive simplification, this operation does
-    <emphasis>not</emphasis> preserve the orientation of an oriented
-    triangulation.
    </para></warning>
   </sect2>
 
@@ -3345,6 +3434,33 @@
     S<superscript>2</superscript>&times;S<superscript>1</superscript>.
     &regina; will notify you if your triangulation represents one of
     these manifolds.
+   </para>
+   <para>
+    This operation does not work well with
+    <link linkend="tri-locks">simplex and facet locks</link>, since it might
+    require large-scale changes to the triangulation (or even possibly a
+    wholesale replacement of the triangulation), as opposed to simpler
+    combinatorial moves or operations.
+    Therefore, if there <emphasis>are</emphasis> any locks in your
+    triangulation:
+    <itemizedlist>
+     <listitem><para>
+      these locks will not prevent the operation from taking place;
+     </para></listitem>
+     <listitem><para>
+      if the triangulation does change directly, then all locks will be
+      removed entirely;
+     </para></listitem>
+     <listitem><para>
+      if the triangulation represents a composite manifold, then the
+      summands that are inserted into the packet tree will likewise have no
+      locks at all;
+     </para></listitem>
+     <listitem><para>
+      in all cases where the original triangulation is
+      <emphasis>not</emphasis> changed, its locks will be kept unchanged also.
+     </para></listitem>
+    </itemizedlist>
    </para>
    <caution><para>
     The algorithm to make a triangulation 0-efficient
@@ -3772,5 +3888,15 @@
     <replaceable>X</replaceable>&nbsp;U&nbsp;<replaceable>Y</replaceable>.
    </para>
   </sect2>
+ </sect1>
+
+ <sect1 id="tri-locks">
+  <title>Simplex and Facet Locks</title>
+
+  <para>
+   TODO: Talk about simplex and facet locks.
+   Also mention how locks appear in the gluings viewer and the dual graph
+   viewer.
+  </para>
  </sect1>
 </chapter>

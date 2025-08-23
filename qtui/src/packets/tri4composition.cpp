@@ -199,19 +199,27 @@ void Tri4CompositionUI::updateIsoPanel() {
 
     // Run the isomorphism tests.
     if (compare_) {
+        QString result;
         if ((isomorphism = tri_->isIsomorphicTo(*compare_))) {
-            isoResult->setText(tr("Result: Isomorphic (this = T)"));
+            result = tr("Result: Isomorphic (this = T)");
             isoType = IsomorphismType::IsIsomorphic;
         } else if ((isomorphism = tri_->isContainedIn(*compare_))) {
-            isoResult->setText(tr("Result: Subcomplex (this < T)"));
+            result = tr("Result: Subcomplex (this < T)");
             isoType = IsomorphismType::IsSubcomplex;
         } else if ((isomorphism = compare_->isContainedIn(*tri_))) {
-            isoResult->setText(tr("Result: Subcomplex (T < this)"));
+            result = tr("Result: Subcomplex (T < this)");
             isoType = IsomorphismType::IsSupercomplex;
         } else {
-            isoResult->setText(tr("Result: No relationship"));
+            result = tr("Result: No relationship");
             isoType = IsomorphismType::NoRelationship;
         }
+
+        if (isoType == IsomorphismType::NoRelationship)
+            isoResult->setText(result);
+        else if (tri_->hasLocks() || compare_->hasLocks())
+            isoResult->setText(tr("%1; locks are ignored").arg(result));
+        else
+            isoResult->setText(result);
     } else {
         isomorphism.reset();
         isoResult->setText(tr("Result:"));
