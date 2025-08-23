@@ -2546,6 +2546,9 @@ class TriangulationBase :
          * non-orientable component will be converted into its orientable
          * double cover.
          *
+         * In general, the resulting double cover will _not_ be oriented
+         * (though of course it will always be orientable).
+         *
          * If this triangulation has locks on any top-dimensional simplices
          * and/or their facets, then these locks will be duplicated alongside
          * their corresponding simplices and/or facets (i.e., they will appear

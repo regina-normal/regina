@@ -3257,6 +3257,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Jaco-Rubinstein 0-efficiency algorithm, and works in both
          * orientable and non-orientable settings.
          *
+         * If this triangulation is oriented, be aware that the summands might
+         * _not_ inherit this orientation.  In particular, given the way that
+         * the crushing algorithm works, it is not clear how to maintain the
+         * orientations of any `L(3,1)` summands.
+         *
          * If any tetrahedra and/or triangles in this triangulation are locked,
          * this will not prevent summands() from doing its work (since the
          * original triangulation will not be changed).  The triangulations

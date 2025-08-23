@@ -526,6 +526,10 @@
     in the packet tree.
    </para>
    <para>
+    In general, these doubling constructions do not give oriented
+    triangulations.
+   </para>
+   <para>
     Any <link linkend="tri-locks">simplex and/or facet locks</link> in the
     source triangulation will not prevent you from making doubling
     constructions; instead any locks will be copied across to the appropriate
@@ -2612,6 +2616,12 @@
      </inlinemediaobject>
     </para>
     <para>
+     Be aware that, even if your triangulation is oriented, the summands
+     might not inherit this orientation.  In particular,
+     given the way that the crushing algorithm works, it is not clear how
+     to maintain the orientations of any <literal>L(3,1)</literal> summands.
+    </para>
+    <para>
      If you have any
      <link linkend="tri-locks">simplex and/or facet locks</link>, these will
      simply be ignored (since the original triangulation will be left
@@ -3436,7 +3446,14 @@
     these manifolds.
    </para>
    <para>
-    This operation does not work well with
+    Be aware that this operation might not preserve orientation.
+    In particular, given the way that the 0-efficiency algorithm works,
+    it is not clear how to maintain the orientation of the lens space
+    <literal>L(3,1)</literal> (or any <literal>L(3,1)</literal> summands
+    of a composite manifold).
+   </para>
+   <para>
+    This operation also does not work well with
     <link linkend="tri-locks">simplex and facet locks</link>, since it might
     require large-scale changes to the triangulation (or even possibly a
     wholesale replacement of the triangulation), as opposed to simpler

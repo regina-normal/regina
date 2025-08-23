@@ -160,35 +160,39 @@ std::vector<Triangulation<3>> Triangulation<3>::summands() const {
     while (finalZ++ < initZ) {
         auto [t0, t1] = primeComponents.emplace_back().newTetrahedra<2>();
         if (initOrientable) {
-            // Build S2 x S1.
-            t0->join(0, t1, Perm<4>(2, 3, 0, 1));
-            t0->join(1, t1, Perm<4>(2, 3, 0, 1));
-            t0->join(3, t0, Perm<4>(3, 0, 1, 2));
-            t1->join(0, t1, Perm<4>(1, 2, 3, 0));
+            // Build S2 x S1, using an oriented triangulation.
+            t0->join(0, t1, { 0, 2 });
+            t0->join(3, t1, { 0, 2 });
+            t0->join(1, t0, { 1, 2, 3, 0 });
+            t1->join(0, t1, { 1, 2, 3, 0 });
         } else {
             // Build S2 x~ S1.
-            t0->join(0, t1, Perm<4>(0, 1, 3, 2));
-            t0->join(1, t1, Perm<4>(0, 1, 3, 2));
-            t0->join(2, t1, Perm<4>(1, 3, 2, 0));
-            t0->join(3, t1, Perm<4>(2, 0, 1, 3));
+            t0->join(0, t1, { 0, 1, 3, 2 });
+            t0->join(1, t1, { 0, 1, 3, 2 });
+            t0->join(2, t1, { 1, 3, 2, 0 });
+            t0->join(3, t1, { 2, 0, 1, 3 });
         }
         prop_.irreducible_ = false; // Implied by the S2xS1 or S2x~S1 summand.
         prop_.zeroEfficient_ = false; // Implied by the S2xS1 or S2x~S1 summand.
     }
     while (finalZ2++ < initZ2) {
+        // Build RP3, using an oriented triangulation.
         auto [t0, t1] = primeComponents.emplace_back().newTetrahedra<2>();
-        t0->join(0, t1, Perm<4>(0, 3));
-        t0->join(1, t1, Perm<4>(1, 2));
-        t0->join(3, t0, Perm<4>(2, 3));
-        t1->join(0, t1, Perm<4>(1, 2, 3, 0));
+        t0->join(0, t1, { 0, 3 });
+        t0->join(1, t1, { 1, 2 });
+        t0->join(3, t0, { 2, 3 });
+        t1->join(0, t1, { 1, 2, 3, 0 });
         prop_.zeroEfficient_ = false; // Implied by the RP3 summand.
     }
     while (finalZ3++ < initZ3) {
+        // We cannot recover the orientations of our L(3,1) components.
+        // Deliberately use a non-oriented triangulation for L(3,1) so the
+        // user does not assume that orientation has been preserved.
         auto [t0, t1] = primeComponents.emplace_back().newTetrahedra<2>();
-        t0->join(0, t1, Perm<4>(2, 3, 0, 1));
-        t0->join(1, t1, Perm<4>(2, 3, 0, 1));
-        t0->join(3, t0, Perm<4>(1, 3, 0, 2));
-        t1->join(0, t1, Perm<4>(1, 2, 3, 0));
+        t0->join(0, t1, { 2, 3, 0, 1 });
+        t0->join(1, t1, { 2, 3, 0, 1 });
+        t0->join(3, t0, { 1, 3, 0, 2 });
+        t1->join(0, t1, { 1, 2, 3, 0 });
     }
 
     // All done!
