@@ -1605,14 +1605,10 @@
      </imageobject>
     </inlinemediaobject>
    </para>
-   <note>
-    <para>
-     This fast simplification process will never
-     <link linkend="link-flip">reflect, rotate or reverse</link> your link.
-     This is <emphasis>not</emphasis> true of the exhaustive process
-     described below.
-    </para>
-   </note>
+   <para>
+    This fast simplification process will never
+    <link linkend="link-flip">reflect, rotate or reverse</link> your link.
+   </para>
    <sect3 id="link-simplify-exhaustive">
     <title>Exhaustive Simplification</title>
     <para>
@@ -1663,21 +1659,17 @@
       </imageobject>
      </inlinemediaobject>
     </para>
+    <para>
+     As of &regina;&nbsp;7.4, this exhaustive simplification (like the fast
+     simplification before it) will never
+     <link linkend="link-flip">reflect, rotate or reverse</link> your link.
+    </para>
     <warning><para>
      When searching the Reidemeister graph, both the time and memory
      consumption grow at a super-exponential rate relative to the number
      of crossings.  If you continue to press <guilabel>Keep trying</guilabel>
      over and over, you may well run out of time or memory (or both).
     </para></warning>
-    <warning>
-     <para>
-      Unlike the fast simplification process when you first press the
-      <guilabel>Simplify</guilabel> button, this exhaustive
-      simplification process could well
-      <link linkend="link-flip">reflect or rotate your link</link>
-      and/or <link linkend="link-flip">reverse individual components</link>.
-     </para>
-    </warning>
     <tip id="link-gordian">
      <para>
       If your aim is to recognise a classical knot, an alternative is to
