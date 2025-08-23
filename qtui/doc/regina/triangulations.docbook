@@ -2875,10 +2875,10 @@
    <para>
     If your triangulation is oriented, then this fast simplification process
     will always preserve the orientation of your triangulation.
-    This is <emphasis>not</emphasis> true of the exhautive process described
-    below (when you press the
-    <link linkend="tri-simplify-exhaustive"><guibutton>Try Harder</guibutton>
-    button</link>)&mdash;that exhaustive process can have the side-effect of
+    This is <emphasis>not</emphasis> true of the
+    <link linkend="tri-simplify-exhaustive">exhautive process</link> described
+    below (when you press the <guibutton>Try Harder</guibutton>
+    button)&mdash;that exhaustive process can have the side-effect of
     flipping the orientations of one or more top-dimensional simplices.
    </para>
    <para>
@@ -3483,11 +3483,20 @@
     (formed from individual vertices with closed non-spherical vertex links)
     into <firstterm>real</firstterm> boundary components (formed from
     boundary triangles in 3-D, or boundary tetrahedra in 4-D).
+    To do this, select
+    <menuchoice>
+     <guimenu>Triangulation</guimenu>
+     <guimenuitem>Truncate Ideal Vertices</guimenuitem>
+    </menuchoice> from the menu or press the corresponding toolbar button.
+    &regina; will subdivide the triangulation and delete a small
+    neighbourhood of each ideal vertex.
+    Any <link linkend="tri-faces-invalid">invalid vertices</link>
+    will be truncated also.
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="tri-truncate-menu" align="center"/>
+      <imagedata multires="tri-truncate-ideal-menu" align="center"/>
      </imageobject>
     </inlinemediaobject>
     <inlinemediaobject>
@@ -3497,16 +3506,30 @@
     </inlinemediaobject>
    </para>
    <para>
-    If you have an ideal triangulation, you can select
+    Be aware that, after truncating ideal vertices, the triangulation will
+    <emphasis>not</emphasis> be oriented (even if it was before).
+   </para>
+   <para>
+    If your triangulation has any
+    <link linkend="tri-locks">simplex and/or facet locks</link>,
+    then &regina; will refuse to truncate ideal vertices (since every
+    top-dimensional simplex and every facet could potentially be subdivided).
+   </para>
+   <para>
+    In dimension&nbsp;3 you can also truncate individual vertices, regardless
+    of whether they are ideal or not.  To do this, select
     <menuchoice>
      <guimenu>Triangulation</guimenu>
-     <guimenuitem>Truncate Ideal Vertices</guimenuitem>
-    </menuchoice> from the menu or press the corresponding toolbar button
-    to convert your ideal vertices into real boundary components.
-    &regina; will subdivide the triangulation and delete a small
-    neighbourhood of each ideal vertex.
-    Any <link linkend="tri-faces-invalid">invalid vertices</link>
-    will be truncated also.
+     <guimenuitem>Truncate Single Vertex&hellip;</guimenuitem>
+    </menuchoice> from the menu.  You will be asked which vertex you wish to
+    truncate.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-truncate-single-menu"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
    <para>
     <inlinemediaobject>
@@ -3515,11 +3538,17 @@
      </imageobject>
     </inlinemediaobject>
    </para>
+   <para>
+    As before, the resulting triangulation will not be oriented;
+    moreover, if you have any
+    <link linkend="tri-locks">simplex and/or facet locks</link>
+    then &regina; will refuse to truncate individual vertices at all.
+   </para>
    <tip><para>
-    Because of the subdivision, this operation will greatly
-    increase the size of the triangulation.  After you truncate ideal
-    vertices, try
-    <link linkend="tri-simplification">simplifying your triangulation</link>.
+    Truncating vertices can greatly increase the size of the triangulation
+    (this is a side-effect of the subdivision).  After you truncate vertices,
+    you will probably want to
+    <link linkend="tri-simplification">simplify your triangulation</link>.
    </para></tip>
   </sect2>
 
@@ -3570,6 +3599,16 @@
      </para></listitem>
     </itemizedlist>
    </para>
+   <para>
+    Be aware that, if your triangulation is oriented, it might
+    <emphasis>not</emphasis> be oriented after this operation is complete.
+   </para>
+   <para>
+    This operation will however respect any
+    <link linkend="tri-locks">simplex and/or facet locks</link>.
+    Specifically, if any boundary facets are locked then &regina; will
+    refuse to convert real to ideal boundary.
+   </para>
   </sect2>
 
   <sect2 id="tri-barycentric">
@@ -3605,6 +3644,16 @@
      </imageobject>
     </inlinemediaobject>
    </para>
+   <para>
+    If your triangulation is oriented, then barycentric subdivision will
+    preserve the orientation of your triangulation.
+   </para>
+   <para>
+    If your triangulation has any
+    <link linkend="tri-locks">simplex and/or facet locks</link>,
+    then &regina; will refuse to subdivide (since every top-dimensional
+    simplex and every facet would be affected).
+   </para>
   </sect2>
 
   <sect2 id="tri-orient">
@@ -3636,7 +3685,7 @@
     </inlinemediaobject>
    </para>
    <para>
-    You can reorder the vertices of each tetrahedron to have the
+    You can reorder the vertices of each top-dimensional simplex to have the
     <emphasis>opposite</emphasis> orientation by selecting
     <menuchoice>
      <guimenu>Triangulation</guimenu>
@@ -3644,9 +3693,9 @@
     </menuchoice>
     from the menu or pressing the corresponding toolbar button.
     Regardless of whether the triangulation is orientable
-    and/or oriented, every tetrahedron will have its orientation
-    reversed. This will change the vertex numbers in each tetrahedron,
-    but not the tetrahedron numbers themselves.
+    and/or oriented, every top-dimensional simplex will have its orientation
+    reversed. This will change the vertex numbers within each top-dimensional
+    simplex, but not the simplex numbers themselves.
    </para>
    <para>
     <inlinemediaobject>
@@ -3661,7 +3710,14 @@
     </inlinemediaobject>
    </para>
    <para>
-    You can also create the
+    If your triangulation has any
+    <link linkend="tri-locks">simplex and/or facet locks</link>,
+    then both of these operations (orienting and reflecting) will maintain
+    these locks (i.e., the locks will be transformed correctly according to
+    whatever relabelling takes place).
+   </para>
+   <para>
+    As a note, you can also create the
     <link linkend="tri-double">orientable double cover</link>
     of a non-orientable triangulation.
     Since &regina;&nbsp;7.4, this operation no longer changes the
@@ -3670,8 +3726,8 @@
    </para>
   </sect2>
 
-  <sect2 id="tri-puncturedrill">
-   <title>Puncturing and Drilling (3-D)</title>
+  <sect2 id="tri-puncture">
+   <title>Puncturing (3-D)</title>
 
    <para>
     You can puncture a 3-manifold triangulation; that is, remove a small ball
@@ -3694,6 +3750,23 @@
     closed, ideal, and/or has real boundary triangles.  There will be
     a new 2-sphere boundary, formed from two new boundary triangles.
    </para>
+   <para>
+    If your triangulation is oriented, then puncturing will always preserve
+    the orientation of your triangulation.
+   </para>
+   <para>
+    If you have any
+    <link linkend="tri-locks">simplex and/or facet locks</link> on your
+    triangulation, these will not prevent you from puncturing the triangulation.
+    This is because the puncturing algorithm works in a safe way that preserves
+    all pre-existing top-dimensional simplices, facets and/or boundary facets,
+    which means that locks will never be violated.
+   </para>
+  </sect2>
+
+  <sect2 id="tri-drill">
+   <title>Drilling Edges (3-D)</title>
+
    <para>
     You can also drill out a small regular neighbourhood of an edge
     of your triangulation.  To do this, select
@@ -3762,6 +3835,27 @@
      </listitem>
     </itemizedlist>
    </para>
+   <para>
+    Unlike most operations on triangulations, drilling an edge will
+    <emphasis>not</emphasis> modify the original triangulation; instead the
+    resulting triangulation will be inserted beneath the original in the
+    packet tree.  This is to keep things easy to manage if (for example)
+    you wish to try drilling out several different edges from the same
+    triangulation.
+   </para>
+   <para>
+    If your triangulation is oriented, then drilling an edge
+    will always preserve the orientation of your triangulation.
+   </para>
+   <para>
+    If you have any
+    <link linkend="tri-locks">simplex and/or facet locks</link> on your
+    triangulation, these will not prevent you from drilling edges.
+    This is because, like puncturing, the drilling algorithm works in a
+    safe way that preserves all pre-existing top-dimensional simplices,
+    facets and/or boundary facets, which means that locks will never be
+    violated.
+   </para>
   </sect2>
 
   <sect2 id="tri-connsumwith">
@@ -3824,6 +3918,18 @@
     vertices, and you may wish to
     <link linkend="tri-simplification">simplify the resulting
     triangulation</link> before proceeding further.
+   </para>
+   <para>
+    If both of the triangulations that you are summing are oriented, then
+    the result will preserve the original orientations.
+   </para>
+   <para>
+    If either of the triangulations that you are summing have
+    <link linkend="tri-locks">simplex and/or facet locks</link>, these will
+    not prevent you from forming a connected sum.
+    This is because the summation algorithm works in a safe way that
+    preserves all pre-existing top-dimensional simplices, facets and/or
+    boundary facets, which means that locks will never be violated.
    </para>
   </sect2>
 
@@ -3888,6 +3994,15 @@
     <replaceable>X</replaceable>&nbsp;U&nbsp;<replaceable>Y</replaceable>.
    </para>
   </sect2>
+   <para>
+    If both of the original triangulations are oriented, then (trivially)
+    the result will preserve the original orientations.
+   </para>
+   <para>
+    Any <link linkend="tri-locks">simplex and/or facet locks</link> in the
+    original triangulations will be included in the resulting triangulation
+    also.
+   </para>
  </sect1>
 
  <sect1 id="tri-locks">

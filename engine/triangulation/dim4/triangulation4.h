@@ -1393,6 +1393,12 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * converted into real boundary components made from unglued
          * facets of pentachora.
          *
+         * A note: this operation does _not_ preserve orientedness.  That is,
+         * regardless of whether this triangulation was oriented before calling
+         * this function, it will not be oriented after.  This is due to the
+         * specific choice of pentachoron vertex labelling in the subdivision,
+         * and this behaviour may change in a future version of Regina.
+         *
          * \exception LockViolation This triangulation contains at least one
          * locked top-dimensional simplex and/or facet.  (This 4-dimensional
          * algorithm does not necessarily subdivide _every_ pentachoron,

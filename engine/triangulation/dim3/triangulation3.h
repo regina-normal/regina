@@ -4023,9 +4023,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * that you run simplify() if you do not need to preserve
          * the combinatorial structure of the new triangulation.
          *
-         * If this triangulation was originally oriented, then it will also be
-         * oriented after this routine has been called.  See isOriented() for
-         * further details on oriented triangulations.
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
          *
          * The new sphere boundary will be formed from two triangles;
          * specifically, face 0 of the last and second-last tetrahedra

@@ -2708,6 +2708,11 @@ class TriangulationBase :
          * this routine simply fills all the punctures in the underlying
          * surface.  (In dimension 2, triangulations cannot have cusps).
          *
+         * A note: this operation does _not_ preserve orientedness.  That is,
+         * even if this triangulation was oriented before calling this
+         * function, it might not be oriented after.  This behaviour may
+         * change in a future version of Regina.
+         *
          * \warning If a real boundary component contains vertices whose
          * links are not discs, this operation may have unexpected results.
          *
@@ -3037,6 +3042,9 @@ class TriangulationBase :
          * as the original simplices from \a source, and any gluings
          * between the simplices of \a source will likewise be copied
          * across as gluings between their copies in this triangulation.
+         *
+         * As a trivial consequence, if this and the given triangulation are
+         * both oriented, then the result will preserve these orientations.
          *
          * If \a source has locks on any top-dimensional simplices and/or their
          * facets, these locks will also be copied over to this triangulation.
