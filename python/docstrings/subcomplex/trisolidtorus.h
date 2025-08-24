@@ -184,7 +184,7 @@ Parameter ``index``:
 
 Returns:
     a permutation that describes the gluing of vertex roles, or
-    ``nullopt`` if the two triangles of the requested annulus are not
+    ``None`` if the two triangles of the requested annulus are not
     glued together.)doc";
 
 // Docstring regina::python::doc::TriSolidTorus_::recognise

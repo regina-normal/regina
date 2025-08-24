@@ -965,7 +965,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * and earlier, when the return type was simply \c bool.
          *
          * \return an isomorphism describing the reduction map from the
-         * original presentation to the new presentation, or \c nullopt if
+         * original presentation to the new presentation, or \nullopt if
          * this presentation was not changed.
          */
         std::optional<HomGroupPresentation> simplify();

@@ -178,7 +178,7 @@ class TriSolidTorus : public StandardTriangulation {
          * \param index specifies which annulus on the solid torus
          * boundary to examine; this must be 0, 1 or 2.
          * \return a permutation that describes the gluing of vertex roles,
-         * or \c nullopt if the two triangles of the requested annulus are
+         * or \nullopt if the two triangles of the requested annulus are
          * not glued together.
          */
         std::optional<Perm<4>> isAnnulusSelfIdentified(int index) const;
