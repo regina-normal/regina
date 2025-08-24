@@ -447,7 +447,7 @@
     self.packet->subdivide();
 }
 
-- (IBAction)idealToFinite:(id)sender
+- (IBAction)truncateIdeal:(id)sender
 {
     [self endEditing];
     if (! [self checkEditable])
@@ -474,7 +474,7 @@
     }
     
     regina::Packet::PacketChangeGroup span(self.packet);
-    self.packet->idealToFinite();
+    self.packet->truncateIdeal();
     self.packet->simplify();
 }
 
@@ -495,7 +495,7 @@
     }
 
     regina::Packet::PacketChangeGroup span(self.packet);
-    self.packet->finiteToIdeal();
+    self.packet->makeIdeal();
     self.packet->simplify();
 }
 
@@ -791,7 +791,7 @@ cleanUpGluing:
         case 1:
             [self barycentricSubdivision:nil]; break;
         case 2:
-            [self idealToFinite:nil]; break;
+            [self truncateIdeal:nil]; break;
         case 3:
             [self makeIdeal:nil]; break;
         case 4:

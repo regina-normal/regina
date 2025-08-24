@@ -1843,8 +1843,8 @@ facets. Each boundary component will thereby be pushed up through the
 new simplices and converted into a cusp formed using vertices of these
 new simplices.
 
-In Regina's standard dimensions, where triangulations also support an
-idealToFinite() operation, this routine is a loose converse of that
+In Regina's standard dimensions, where triangulations also support a
+truncateIdeal() operation, this routine is a loose converse of that
 operation.
 
 In dimension 2, every boundary component is spherical and so this

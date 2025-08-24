@@ -582,25 +582,25 @@ TEST_F(Dim3Test, eulerChar) {
 
     {
         Triangulation<3> t(idealRP2xI.tri);
-        t.idealToFinite();
+        t.truncateIdeal();
         EXPECT_EQ(t.eulerCharTri(), 1);
         EXPECT_EQ(t.eulerCharManifold(), 1);
     }
     {
         Triangulation<3> t(idealGenusTwoHandlebody.tri);
-        t.idealToFinite();
+        t.truncateIdeal();
         EXPECT_EQ(t.eulerCharTri(), -1);
         EXPECT_EQ(t.eulerCharManifold(), -1);
     }
     {
         Triangulation<3> t(pinchedSolidTorus.tri);
-        t.idealToFinite();
+        t.truncateIdeal();
         EXPECT_EQ(t.eulerCharTri(), 0);
         EXPECT_EQ(t.eulerCharManifold(), 0);
     }
     {
         Triangulation<3> t(pinchedSolidKB.tri);
-        t.idealToFinite();
+        t.truncateIdeal();
         EXPECT_EQ(t.eulerCharTri(), 0);
         EXPECT_EQ(t.eulerCharManifold(), 0);
     }
@@ -1277,7 +1277,7 @@ TEST_F(Dim3Test, pinchEdge) {
         Triangulation<3> tmp(ball);
         tmp.pinchEdge(tmp.tetrahedron(0)->edge(5));
         EXPECT_TRUE(tmp.isOriented());
-        tmp.idealToFinite(); // truncate invalid vertex
+        tmp.truncateIdeal(); // truncate invalid vertex
         EXPECT_TRUE(tmp.isSolidTorus());
     }
 }
@@ -1977,7 +1977,7 @@ TEST_F(Dim3Test, connectedSumWithSelf) {
     testManualCases(verifyConnectedSumWithSelf, false);
 }
 
-static void verifyIdealToFinite(const Triangulation<3>& tri, const char* name) {
+static void verifyTruncateIdeal(const Triangulation<3>& tri, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     bool shouldTruncate = false;
@@ -1992,15 +1992,15 @@ static void verifyIdealToFinite(const Triangulation<3>& tri, const char* name) {
     }
 
     if (! shouldTruncate) {
-        // The idealToFinite routine should leave tri unchanged.
+        // The truncateIdeal routine should leave tri unchanged.
         Triangulation<3> finite(tri);
-        finite.idealToFinite();
+        finite.truncateIdeal();
         EXPECT_EQ(finite, tri);
         return;
     }
 
     Triangulation<3> finite(tri);
-    finite.idealToFinite();
+    finite.truncateIdeal();
 
     // Ensure that properties we are about to verify are explicitly recomputed.
     clearProperties(finite);
@@ -2059,23 +2059,23 @@ static void verifyIdealToFinite(const Triangulation<3>& tri, const char* name) {
     }
 }
 
-TEST_F(Dim3Test, idealToFinite) {
-    testManualCases(verifyIdealToFinite);
+TEST_F(Dim3Test, truncateIdeal) {
+    testManualCases(verifyTruncateIdeal);
 }
 
-static void verifyFiniteToIdeal(const Triangulation<3>& tri, const char* name) {
+static void verifyMakeIdeal(const Triangulation<3>& tri, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     if (! tri.hasBoundaryFacets()) {
         // The triangulation should remain unchanged.
         Triangulation<3> other(tri);
-        other.finiteToIdeal();
+        other.makeIdeal();
         EXPECT_EQ(other, tri);
         return;
     }
 
     Triangulation<3> ideal(tri);
-    ideal.finiteToIdeal();
+    ideal.makeIdeal();
 
     // Ensure that properties we are about to verify are explicitly recomputed.
     clearProperties(ideal);
@@ -2135,8 +2135,8 @@ static void verifyFiniteToIdeal(const Triangulation<3>& tri, const char* name) {
     }
 }
 
-TEST_F(Dim3Test, finiteToIdeal) {
-    testManualCases(verifyFiniteToIdeal);
+TEST_F(Dim3Test, makeIdeal) {
+    testManualCases(verifyMakeIdeal);
 }
 
 static void verifyRetriangulate(const Triangulation<3>& tri,
@@ -2808,12 +2808,12 @@ static void verifySolidTorus(const Triangulation<3>& tri, bool expected) {
 
     Triangulation<3> bounded(tri);
     if (bounded.isIdeal())
-        bounded.idealToFinite();
+        bounded.truncateIdeal();
     clearProperties(bounded);
 
     Triangulation<3> ideal(tri);
     if (ideal.hasBoundaryTriangles())
-        ideal.finiteToIdeal();
+        ideal.makeIdeal();
     clearProperties(ideal);
 
     EXPECT_EQ(bounded.isSolidTorus(), expected);
@@ -2919,12 +2919,12 @@ static void verifyHandlebody(const Triangulation<3>& tri, ssize_t genus) {
 
     Triangulation<3> bounded(tri);
     if (bounded.isIdeal())
-        bounded.idealToFinite();
+        bounded.truncateIdeal();
     clearProperties(bounded);
 
     Triangulation<3> ideal(tri);
     if (ideal.hasBoundaryTriangles())
-        ideal.finiteToIdeal();
+        ideal.makeIdeal();
     clearProperties(ideal);
 
     EXPECT_EQ(bounded.recogniseHandlebody(), genus);
@@ -3020,12 +3020,12 @@ static void verifyTxI(const Triangulation<3>& tri, bool expected) {
 
     Triangulation<3> bounded(tri);
     if (bounded.isIdeal())
-        bounded.idealToFinite();
+        bounded.truncateIdeal();
     clearProperties(bounded);
 
     Triangulation<3> ideal(tri);
     if (ideal.hasBoundaryTriangles())
-        ideal.finiteToIdeal();
+        ideal.makeIdeal();
     clearProperties(ideal);
 
     EXPECT_EQ(bounded.isTxI(), expected);
@@ -3364,7 +3364,7 @@ static void verifyMeridian(const Triangulation<3>& tri, const char* name) {
 
     Triangulation<3> use(tri); // something we can modify
     if (use.isIdeal()) {
-        use.idealToFinite();
+        use.truncateIdeal();
         use.simplify();
     }
     ASSERT_EQ(use.countVertices(), 1);
@@ -3434,7 +3434,7 @@ static void verifyMeridianLongitude(const Triangulation<3>& tri,
 
     Triangulation<3> use(tri); // something we can modify
     if (use.isIdeal()) {
-        use.idealToFinite();
+        use.truncateIdeal();
         use.simplify();
     }
     ASSERT_EQ(use.countVertices(), 1);

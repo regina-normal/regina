@@ -100,7 +100,7 @@ template void TriangulationBase<7>::writeTextLong(std::ostream&) const;
 template void TriangulationBase<7>::reorderBFS(bool);
 template Triangulation<7> TriangulationBase<7>::doubleCover() const;
 template Triangulation<7> TriangulationBase<7>::doubleOverBoundary() const;
-template bool TriangulationBase<7>::finiteToIdeal();
+template bool TriangulationBase<7>::makeIdeal();
 
 template std::string TriangulationBase<7>::source(Language) const;
 template void TriangulationBase<7>::writeDot(std::ostream&, bool) const;

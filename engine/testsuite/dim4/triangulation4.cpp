@@ -1167,7 +1167,7 @@ TEST_F(Dim4Test, snapEdge) {
     runCensusAllNoBdry(verifySnapEdge);
 }
 
-static void verifyIdealToFinite(const Triangulation<4>& tri, const char* name) {
+static void verifyTruncateIdeal(const Triangulation<4>& tri, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     bool shouldTruncate = false;
@@ -1182,15 +1182,15 @@ static void verifyIdealToFinite(const Triangulation<4>& tri, const char* name) {
     }
 
     if (! shouldTruncate) {
-        // The idealToFinite routine should leave tri unchanged.
+        // The truncateIdeal routine should leave tri unchanged.
         Triangulation<4> other(tri);
-        other.idealToFinite();
+        other.truncateIdeal();
         EXPECT_EQ(other, tri);
         return;
     }
 
     // Test the same triangulation under some random isomorphisms,
-    // since the idealToFinite() code implements cases separately for
+    // since the truncateIdeal() code implements cases separately for
     // truncating differently-labelled vertices.
     //
     // We use just a couple of different isomorphisms here, since this
@@ -1200,7 +1200,7 @@ static void verifyIdealToFinite(const Triangulation<4>& tri, const char* name) {
         if (i > 0)
             other.randomiseLabelling(false);
 
-        other.idealToFinite();
+        other.truncateIdeal();
 
         // Ensure that properties we are about to verify are explicitly
         // recomputed.
@@ -1234,10 +1234,10 @@ static void verifyIdealToFinite(const Triangulation<4>& tri, const char* name) {
     }
 }
 
-TEST_F(Dim4Test, idealToFinite) {
-    testManualCases(verifyIdealToFinite);
-    runCensusAllBounded(verifyIdealToFinite); // Never change
-    runCensusAllNoBdry(verifyIdealToFinite); // Sometimes change
+TEST_F(Dim4Test, truncateIdeal) {
+    testManualCases(verifyTruncateIdeal);
+    runCensusAllBounded(verifyTruncateIdeal); // Never change
+    runCensusAllNoBdry(verifyTruncateIdeal); // Sometimes change
 }
 
 static void verifyIntersectionForm(const TriangulationTest<4>::TestCase& test,

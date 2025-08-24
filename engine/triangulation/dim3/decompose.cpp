@@ -365,7 +365,7 @@ bool Triangulation<3>::isBall() const {
 
     Triangulation<3> working(*this, false, false);
     working.simplify();
-    working.finiteToIdeal();
+    working.makeIdeal();
 
     // Simplify again in case our coning was inefficient.
     working.simplify();
@@ -427,7 +427,7 @@ bool Triangulation<3>::isSolidTorus() const {
     Triangulation<3> working(*this, false, false);
     working.simplify();
     if (working.isIdeal()) {
-        working.idealToFinite();
+        working.truncateIdeal();
         working.simplify();
     }
 
@@ -607,7 +607,7 @@ ssize_t Triangulation<3>::recogniseHandlebody() const {
     Triangulation<3>& start = toProcess.emplace(*this, false, false);
     start.simplify();
     if ( start.isIdeal() ) {
-        start.idealToFinite();
+        start.truncateIdeal();
         start.simplify();
     }
 
@@ -803,7 +803,7 @@ bool Triangulation<3>::isTxI() const {
 
     Triangulation<3> working(*this, false, false);
     working.simplify();
-    working.idealToFinite();
+    working.truncateIdeal();
     working.simplify();
 
     // If it's not a homology T2xI, we're done.

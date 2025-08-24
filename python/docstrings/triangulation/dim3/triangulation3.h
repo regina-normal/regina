@@ -2126,7 +2126,7 @@ Precondition:
 
 .. warning::
     If you have an _ideal_ triangulation of a knot complement, you
-    _must_ first run idealToFinite() and then simplify the resulting
+    _must_ first run truncateIdeal() and then simplify the resulting
     triangulation to have two boundary triangles.
 
 Exception ``FailedPrecondition``:
@@ -2179,7 +2179,7 @@ Precondition:
 
 .. warning::
     If you have an _ideal_ triangulation of a knot complement, you
-    _must_ first run idealToFinite() and then simplify the resulting
+    _must_ first run truncateIdeal() and then simplify the resulting
     triangulation to have two boundary triangles.
 
 Exception ``FailedPrecondition``:
@@ -2282,7 +2282,7 @@ Precondition:
 
 .. warning::
     If you have an _ideal_ triangulation of a knot complement, you
-    _must_ first run idealToFinite() and then simplify the resulting
+    _must_ first run truncateIdeal() and then simplify the resulting
     triangulation to have two boundary triangles.
 
 Exception ``FailedPrecondition``:
@@ -2357,7 +2357,7 @@ Precondition:
 
 .. warning::
     If you have an _ideal_ triangulation of a knot complement, you
-    _must_ first run idealToFinite() and then simplify the resulting
+    _must_ first run truncateIdeal() and then simplify the resulting
     triangulation to have two boundary triangles.
 
 Exception ``FailedPrecondition``:
@@ -3988,7 +3988,7 @@ then this will effectively convert the ideal boundary component into a
 real boundary component made from triangles.
 
 If you wish to truncate _all_ ideal (and/or invalid) vertices of the
-triangulation, you can call idealToFinite() instead.
+triangulation, you can call truncateIdeal() instead.
 
 Regarding locks:
 
@@ -4027,7 +4027,7 @@ R"doc(Truncates all ideal or invalid vertices, converting these into real
 boundary components made from unglued faces of tetrahedra.
 
 This operation is equivalent to calling truncate() on every ideal or
-invalid vertex. It also serves as a loose converse to finiteToIdeal().
+invalid vertex. It also serves as a loose converse to makeIdeal().
 
 If this triangulation has any invalid edges, then these will remain
 invalid after this operation (in contrast to barycentric subdivision,

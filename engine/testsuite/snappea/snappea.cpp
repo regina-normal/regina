@@ -248,7 +248,7 @@ TEST_F(SnapPeaTest, degenerate) {
     {
         Triangulation<3> cuspedTorus;
         cuspedTorus.insertLayeredSolidTorus(1, 2);
-        cuspedTorus.finiteToIdeal();
+        cuspedTorus.makeIdeal();
         testDegenerate(cuspedTorus, "Cusped solid torus with finite vertex");
     }
 }

@@ -131,7 +131,7 @@ TEST(IncompressibleTest, hasCompressingDisc) {
     // Hyperbolic manifolds:
     {
         Triangulation<3> tri = Example<3>::figureEight();
-        tri.idealToFinite();
+        tri.truncateIdeal();
         tri.simplify();
         EXPECT_FALSE(tri.hasCompressingDisc());
     }

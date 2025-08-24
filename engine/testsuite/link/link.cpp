@@ -1764,7 +1764,7 @@ static void verifyComplementTrefoilUnknot(const TestCase& test) {
         Triangulation<3> cut = s.cutAlong();
         ASSERT_EQ(cut.countComponents(), 2);
 
-        cut.finiteToIdeal(); // Fills the sphere boundaries with balls.
+        cut.makeIdeal(); // Fills the sphere boundaries with balls.
         cut.simplify();
         auto comp = cut.triangulateComponents();
 

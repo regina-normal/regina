@@ -525,7 +525,7 @@ Triangulation<4> Example<4>::spun(const Link& knot, StrandRef breakOpen) {
     Triangulation<4> ans = boundarySpin(c);
     ans.unlockAll();
 
-    // We need to simplify _before_ calling finiteToIdeal().
+    // We need to simplify _before_ calling makeIdeal().
     // This is because, when simplifying an ideal triangulation, we need to
     // repeatedly run 3-sphere recognition in order to work out which is the
     // ideal vertex.  If we have thousands of vertices, this takes time.
@@ -536,7 +536,7 @@ Triangulation<4> Example<4>::spun(const Link& knot, StrandRef breakOpen) {
 
     // Now it's hopefully small, we can be brave enough to simplify again
     // but this time using an ideal triangulation.
-    ans.finiteToIdeal();
+    ans.makeIdeal();
     ans.simplify();
 
     return ans;

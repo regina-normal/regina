@@ -1026,7 +1026,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * (unique) boundary component is formed from two triangles.
          *
          * \warning If you have an _ideal_ triangulation of a knot
-         * complement, you _must_ first run idealToFinite() and then simplify
+         * complement, you _must_ first run truncateIdeal() and then simplify
          * the resulting triangulation to have two boundary triangles.
          *
          * \exception FailedPrecondition This triangulation is not a valid
@@ -1090,7 +1090,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * invalidating any existing Vertex, Edge or Triangle references.
          *
          * \warning If you have an _ideal_ triangulation of a knot
-         * complement, you _must_ first run idealToFinite() and then simplify
+         * complement, you _must_ first run truncateIdeal() and then simplify
          * the resulting triangulation to have two boundary triangles.
          *
          * \exception FailedPrecondition This triangulation is not a valid
@@ -1158,7 +1158,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * invalidating any existing Vertex, Edge or Triangle references.
          *
          * \warning If you have an _ideal_ triangulation of a knot
-         * complement, you _must_ first run idealToFinite() and then simplify
+         * complement, you _must_ first run truncateIdeal() and then simplify
          * the resulting triangulation to have two boundary triangles.
          *
          * \exception FailedPrecondition This triangulation is not a valid
@@ -1226,7 +1226,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * invalidating any existing Vertex, Edge or Triangle references.
          *
          * \warning If you have an _ideal_ triangulation of a knot
-         * complement, you _must_ first run idealToFinite() and then simplify
+         * complement, you _must_ first run truncateIdeal() and then simplify
          * the resulting triangulation to have two boundary triangles.
          *
          * \exception FailedPrecondition This triangulation is not a valid
@@ -3872,7 +3872,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * This operation is equivalent to calling truncate() on every ideal
          * or invalid vertex.  It also serves as a loose converse to
-         * finiteToIdeal().
+         * makeIdeal().
          *
          * If this triangulation has any invalid edges, then these will remain
          * invalid after this operation (in contrast to barycentric subdivision,
@@ -3936,7 +3936,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * component into a real boundary component made from triangles.
          *
          * If you wish to truncate _all_ ideal (and/or invalid) vertices of
-         * the triangulation, you can call idealToFinite() instead.
+         * the triangulation, you can call truncateIdeal() instead.
          *
          * Regarding locks:
          *
@@ -4881,7 +4881,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         bool internalCollapseEdge(Edge<3>* e, bool check, bool perform);
 
         /**
-         * Implements truncate() and idealToFinite().
+         * Implements truncate() and truncateIdeal().
          *
          * If \a vertex is non-null, this truncates just the given vertex.
          * If \a vertex is null, this truncates all ideal and/or invalid

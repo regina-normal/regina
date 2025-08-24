@@ -3663,7 +3663,7 @@ ideal part of the boundary (the link of *v*) describes the annulus
 bounding the long knot inside this ball.
 
 If you truncate *v* (e.g., by calling ``complement.truncate(v)`` or
-``complement.idealToFinite()``), then the result will be a valid
+``complement.truncateIdeal()``), then the result will be a valid
 triangulation of the knot complement with real boundary.
 
 As with complement(), each tetrahedron will be oriented according to a

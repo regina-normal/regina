@@ -117,7 +117,7 @@ template void TriangulationBase<10>::writeTextLong(std::ostream&) const;
 template void TriangulationBase<10>::reorderBFS(bool);
 template Triangulation<10> TriangulationBase<10>::doubleCover() const;
 template Triangulation<10> TriangulationBase<10>::doubleOverBoundary() const;
-template bool TriangulationBase<10>::finiteToIdeal();
+template bool TriangulationBase<10>::makeIdeal();
 
 template std::string TriangulationBase<10>::source(Language) const;
 template void TriangulationBase<10>::writeDot(std::ostream&, bool) const;

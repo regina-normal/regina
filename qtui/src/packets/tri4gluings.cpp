@@ -1003,7 +1003,7 @@ void Tri4GluingsUI::truncateIdeal() {
             "to truncate ideal vertices."));
     else {
         regina::Packet::PacketChangeGroup span(*tri);
-        tri->idealToFinite();
+        tri->truncateIdeal();
         tri->simplify();
     }
 }
@@ -1017,11 +1017,11 @@ void Tri4GluingsUI::makeIdeal() {
             tr("Only real boundary components will be converted into "
             "ideal vertices."));
     else {
-        // We could check for locks explicitly here, but finiteToIdeal()
+        // We could check for locks explicitly here, but makeIdeal()
         // will do it again - so just catch the exception that it would throw.
         regina::Packet::PacketChangeGroup span(*tri);
         try {
-            tri->finiteToIdeal();
+            tri->makeIdeal();
         } catch (const regina::LockViolation&) {
             ReginaSupport::sorry(ui,
                 tr("This triangulation has boundary locks."),

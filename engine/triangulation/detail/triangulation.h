@@ -2704,7 +2704,7 @@ class TriangulationBase :
          * into a cusp formed using vertices of these new simplices.
          *
          * In Regina's \ref stddim "standard dimensions", where triangulations
-         * also support an idealToFinite() operation, this routine is a loose
+         * also support a truncateIdeal() operation, this routine is a loose
          * converse of that operation.
          *
          * In dimension 2, every boundary component is spherical and so
