@@ -202,13 +202,15 @@ bool GluingsModel3::setData(const QModelIndex& index, const QVariant& value,
 
     int newAdjTet;
     regina::Perm<4> newAdjPerm;
+    int newAdjFace;
 
     // Find the proposed new gluing.
     QString text = value.toString().trimmed();
+    QString tetFace;
 
     if (text.isEmpty()) {
         // Boundary face.
-        newAdjTet = -1;
+        newAdjTet = newAdjFace = -1;
     } else {
         auto match = reFaceGluing.match(text);
         if (! match.hasMatch()) {
@@ -220,7 +222,7 @@ bool GluingsModel3::setData(const QModelIndex& index, const QVariant& value,
         } else {
             // Real face.
             newAdjTet = match.captured(1).toInt();
-            QString tetFace = match.captured(2);
+            tetFace = match.captured(2);
 
             // Check explicitly for a negative tetrahedron number
             // since isFaceStringValid() takes an unsigned integer.
@@ -237,6 +239,7 @@ bool GluingsModel3::setData(const QModelIndex& index, const QVariant& value,
                 showError(err);
                 return false;
             }
+            newAdjFace = newAdjPerm[face];
         }
     }
 
@@ -250,9 +253,22 @@ bool GluingsModel3::setData(const QModelIndex& index, const QVariant& value,
         return false;
 
     // There is a change.  Will it violate a lock?
+    auto newAdj = (newAdjTet < 0 ? nullptr : tri_->simplex(newAdjTet));
+
     if (t->isFacetLocked(face)) {
-        showError(tr("This face is currently locked. "
+        ReginaSupport::info(nullptr /* should be a view */,
+            tr("This face is locked."),
+            tr("This face is currently locked. "
             "You can unlock it by right-clicking within the table cell."));
+        return false;
+    }
+    if (newAdj && newAdj->isFacetLocked(newAdjFace)) {
+        ReginaSupport::info(nullptr /* should be a view */,
+            tr("The destination face is locked."),
+            tr("The destination face %1 (%2) is currently locked. "
+            "You can unlock it by right-clicking within the corresponding "
+            "table cell.")
+            .arg(newAdjTet).arg(tetFace));
         return false;
     }
 
@@ -264,20 +280,18 @@ bool GluingsModel3::setData(const QModelIndex& index, const QVariant& value,
         t->unjoin(face);
 
     // Are we making the face boundary?
-    if (newAdjTet < 0)
+    if (! newAdj)
         return true;
 
     // We are gluing the face to a new partner.
-    int newAdjFace = newAdjPerm[face];
 
     // Does this new partner already have its own partner?
     // If so, better unglue it.
-    regina::Tetrahedron<3>* adj = tri_->simplex(newAdjTet);
-    if (adj->adjacentSimplex(newAdjFace))
-        adj->unjoin(newAdjFace);
+    if (newAdj->adjacentSimplex(newAdjFace))
+        newAdj->unjoin(newAdjFace);
 
     // Glue the two faces together.
-    t->join(face, adj, newAdjPerm);
+    t->join(face, newAdj, newAdjPerm);
     return true;
 }
 

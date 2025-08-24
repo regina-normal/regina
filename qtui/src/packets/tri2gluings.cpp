@@ -187,13 +187,15 @@ bool GluingsModel2::setData(const QModelIndex& index, const QVariant& value,
 
     int newAdjTri;
     regina::Perm<3> newAdjPerm;
+    int newAdjEdge;
 
     // Find the proposed new gluing.
     QString text = value.toString().trimmed();
+    QString triEdge;
 
     if (text.isEmpty()) {
         // Boundary edge.
-        newAdjTri = -1;
+        newAdjTri = newAdjEdge = -1;
     } else {
         auto match = reEdgeGluing.match(text);
         if (! match.hasMatch()) {
@@ -205,7 +207,7 @@ bool GluingsModel2::setData(const QModelIndex& index, const QVariant& value,
         } else {
             // Real edge.
             newAdjTri = match.captured(1).toInt();
-            QString triEdge = match.captured(2);
+            triEdge = match.captured(2);
 
             // Check explicitly for a negative triangle number
             // since isEdgeStringValid() takes an unsigned integer.
@@ -221,6 +223,7 @@ bool GluingsModel2::setData(const QModelIndex& index, const QVariant& value,
                 showError(err);
                 return false;
             }
+            newAdjEdge = newAdjPerm[edge];
         }
     }
 
@@ -234,9 +237,22 @@ bool GluingsModel2::setData(const QModelIndex& index, const QVariant& value,
         return false;
 
     // There is a change.  Will it violate a lock?
+    auto newAdj = (newAdjTri < 0 ? nullptr : tri_->simplex(newAdjTri));
+
     if (t->isFacetLocked(edge)) {
-        showError(tr("This edge is currently locked. "
+        ReginaSupport::info(nullptr /* should be a view */,
+            tr("This edge is locked."),
+            tr("This edge is currently locked. "
             "You can unlock it by right-clicking within the table cell."));
+        return false;
+    }
+    if (newAdj && newAdj->isFacetLocked(newAdjEdge)) {
+        ReginaSupport::info(nullptr /* should be a view */,
+            tr("The destination edge is locked."),
+            tr("The destination edge %1 (%2) is currently locked. "
+            "You can unlock it by right-clicking within the corresponding "
+            "table cell.")
+            .arg(newAdjTri).arg(triEdge));
         return false;
     }
 
@@ -248,20 +264,18 @@ bool GluingsModel2::setData(const QModelIndex& index, const QVariant& value,
         t->unjoin(edge);
 
     // Are we making the edge boundary?
-    if (newAdjTri < 0)
+    if (! newAdj)
         return true;
 
     // We are gluing the edge to a new partner.
-    int newAdjEdge = newAdjPerm[edge];
 
     // Does this new partner already have its own partner?
     // If so, better unglue it.
-    regina::Triangle<2>* adj = tri_->simplex(newAdjTri);
-    if (adj->adjacentSimplex(newAdjEdge))
-        adj->unjoin(newAdjEdge);
+    if (newAdj->adjacentSimplex(newAdjEdge))
+        newAdj->unjoin(newAdjEdge);
 
     // Glue the two edges together.
-    t->join(edge, adj, newAdjPerm);
+    t->join(edge, newAdj, newAdjPerm);
     return true;
 }
 

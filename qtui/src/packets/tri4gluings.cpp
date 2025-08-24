@@ -192,13 +192,15 @@ bool GluingsModel4::setData(const QModelIndex& index, const QVariant& value,
 
     int newAdjPent;
     regina::Perm<5> newAdjPerm;
+    int newAdjFacet;
 
     // Find the proposed new gluing.
     QString text = value.toString().trimmed();
+    QString pentFacet;
 
     if (text.isEmpty()) {
         // Boundary facet.
-        newAdjPent = -1;
+        newAdjPent = newAdjFacet -1;
     } else {
         auto match = reFacetGluing.match(text);
         if (! match.hasMatch()) {
@@ -210,7 +212,7 @@ bool GluingsModel4::setData(const QModelIndex& index, const QVariant& value,
         } else {
             // Real facet.
             newAdjPent = match.captured(1).toInt();
-            QString pentFacet = match.captured(2);
+            pentFacet = match.captured(2);
 
             // Check explicitly for a negative pentachoron number
             // since isFacetStringValid() takes an unsigned integer.
@@ -227,6 +229,7 @@ bool GluingsModel4::setData(const QModelIndex& index, const QVariant& value,
                 showError(err);
                 return false;
             }
+            newAdjFacet = newAdjPerm[facet];
         }
     }
 
@@ -240,9 +243,22 @@ bool GluingsModel4::setData(const QModelIndex& index, const QVariant& value,
         return false;
 
     // There is a change.  Will it violate a lock?
+    auto newAdj = (newAdjPent < 0 ? nullptr : tri_->simplex(newAdjPent));
+
     if (p->isFacetLocked(facet)) {
-        showError(tr("This facet is currently locked. "
+        ReginaSupport::info(nullptr /* should be a view */,
+            tr("This facet is locked."),
+            tr("This facet is currently locked. "
             "You can unlock it by right-clicking within the table cell."));
+        return false;
+    }
+    if (newAdj && newAdj->isFacetLocked(newAdjFacet)) {
+        ReginaSupport::info(nullptr /* should be a view */,
+            tr("The destination facet is locked."),
+            tr("The destination facet %1 (%2) is currently locked. "
+            "You can unlock it by right-clicking within the corresponding "
+            "table cell.")
+            .arg(newAdjPent).arg(pentFacet));
         return false;
     }
 
@@ -254,20 +270,18 @@ bool GluingsModel4::setData(const QModelIndex& index, const QVariant& value,
         p->unjoin(facet);
 
     // Are we making the facet boundary?
-    if (newAdjPent < 0)
+    if (! newAdj)
         return true;
 
     // We are gluing the facet to a new partner.
-    int newAdjFacet = newAdjPerm[facet];
 
     // Does this new partner already have its own partner?
     // If so, better unglue it.
-    regina::Pentachoron<4>* adj = tri_->simplex(newAdjPent);
-    if (adj->adjacentSimplex(newAdjFacet))
-        adj->unjoin(newAdjFacet);
+    if (newAdj->adjacentSimplex(newAdjFacet))
+        newAdj->unjoin(newAdjFacet);
 
     // Glue the two facets together.
-    p->join(facet, adj, newAdjPerm);
+    p->join(facet, newAdj, newAdjPerm);
     return true;
 }
 
