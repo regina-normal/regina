@@ -1927,8 +1927,8 @@ inline bool Triangulation<4>::snapEdge(Edge<4>* e, bool, bool perform) {
     return internalSnapEdge(e, true, perform);
 }
 
-inline bool Triangulation<4>::truncateIdeal() {
-    return idealToFinite();
+inline bool Triangulation<4>::idealToFinite() {
+    return truncateIdeal();
 }
 
 } // namespace regina
