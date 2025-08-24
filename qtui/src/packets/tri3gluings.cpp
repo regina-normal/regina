@@ -1159,19 +1159,24 @@ void Tri3GluingsUI::truncateVertex() {
     if (tri->isEmpty()) {
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any vertices."));
-        return;
-    }
+    } else if (tri->hasLocks()) {
+        ReginaSupport::sorry(ui,
+            tr("This triangulation has locks."),
+            tr("This triangulation has one or more locked "
+            "tetrahedra or triangles, and so cannot be subdivided "
+            "to truncate vertices."));
+    } else {
+        regina::Vertex<3>* v =
+            FaceDialog<3, 0>::choose(ui, tri, nullptr /* filter */,
+            tr("Truncate Vertex"),
+            tr("Truncate which vertex?"),
+            tr("Regina will truncate whichever vertex you choose."));
 
-    regina::Vertex<3>* v =
-        FaceDialog<3, 0>::choose(ui, tri, nullptr /* filter */,
-        tr("Truncate Vertex"),
-        tr("Truncate which vertex?"),
-        tr("Regina will truncate whichever vertex you choose."));
-
-    if (v) {
-        regina::Packet::PacketChangeGroup span(*tri);
-        tri->truncate(v);
-        tri->simplify();
+        if (v) {
+            regina::Packet::PacketChangeGroup span(*tri);
+            tri->truncate(v);
+            tri->simplify();
+        }
     }
 }
 
