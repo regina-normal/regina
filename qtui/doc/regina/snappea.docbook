@@ -99,12 +99,17 @@
        <menuchoice>
         <guimenu>3-D&nbsp;Triangulation</guimenu>
         <guimenuitem>Convert to &snappea;</guimenuitem>
-       </menuchoice> from the menu, or
+       </menuchoice> from the menu or press the corresponding toolbar button; or
       </para>
       <para>
        <inlinemediaobject>
         <imageobject>
-         <imagedata multires="menutosnappea"/>
+         <imagedata multires="tri-snappea-menu" align="center"/>
+        </imageobject>
+       </inlinemediaobject>
+       <inlinemediaobject>
+        <imageobject>
+         <imagedata multires="tri-snappea-bar" align="center"/>
         </imageobject>
        </inlinemediaobject>
       </para>
@@ -173,12 +178,18 @@
     To do this, open the link and then either select
     <menuchoice>
      <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
-     <guimenuitem>&snappea;</guimenuitem>
+     <guimenuitem>Complement Via &snappea;</guimenuitem>
     </menuchoice>
-    from the menu, or press the corresponding toolbar button
-    (circled in the picture below).
+    from the menu, or press the corresponding toolbar button.
     As before, this will create a new &snappea; triangulation immediately
     beneath your link in the packet tree.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="snappea-link-menu"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
    <para>
     <inlinemediaobject>
@@ -219,6 +230,26 @@
      </imageobject>
     </inlinemediaobject>
    </para>
+
+   <sect3 id="snappea-new-example">
+    <title>Example Triangulation</title>
+
+    <para>
+     &regina; offers a small selection of ready-made sample triangulations,
+     which you can play with to see how &snappea; triangulations work
+     within &regina;.
+     Simply select an example from the list provided and &regina; will build the
+     corresponding &snappea; triangulation for you.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="newsnappea-example"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+   </sect3>
+  </sect2>
 
    <sect3 id="snappea-new-paste">
     <title>Paste a &snappea; file</title>
@@ -293,26 +324,6 @@
     </para>
    </sect3>
 
-   <sect3 id="snappea-new-example">
-    <title>Example Triangulation</title>
-
-    <para>
-     &regina; offers a small selection of ready-made sample triangulations,
-     which you can play with to see how &snappea; triangulations work
-     within &regina;.
-     Simply select an example from the list provided and &regina; will build the
-     corresponding &snappea; triangulation for you.
-    </para>
-    <para>
-     <inlinemediaobject>
-      <imageobject>
-       <imagedata multires="newsnappea-example"/>
-      </imageobject>
-     </inlinemediaobject>
-    </para>
-   </sect3>
-  </sect2>
-
   <sect2 id="snappea-imported">
    <title>Importing Triangulations</title>
 
@@ -353,7 +364,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata multires="snappeaheader"/>
+      <imagedata multires="snappea-header"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -495,7 +506,7 @@
      triangulated vertex link), you can select
      <menuchoice>
       <guimenu>&snappea;&nbsp;Triangulation</guimenu>
-      <guimenuitem>Vertex Links</guimenuitem>
+      <guimenuitem>Vertex Links&hellip;</guimenuitem>
      </menuchoice>
      from the menu.
      This will explicitly build the chosen vertex link as a new
@@ -512,7 +523,7 @@
      </inlinemediaobject>
      <inlinemediaobject>
       <imageobject>
-       <imagedata multires="tri-vertexlinks-bar" align="center"/>
+       <imagedata multires="snappea-vertexlinks-bar" align="center"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -523,10 +534,9 @@
      You can also make your fillings permanent, by selecting
      <menuchoice>
       <guimenu>&snappea;&nbsp;Triangulation</guimenu>
-      <guimenuitem>Permanently Fill Cusps</guimenuitem>
+      <guimenuitem>Build Filled Manifold&hellip;</guimenuitem>
      </menuchoice>
-     from the menu, or by pressing the corresponding toolbar button
-     (as circled in the picture below).
+     from the menu or by pressing the corresponding toolbar button.
      If some of your cusps are complete (i.e., unfilled) then
      this will create a new &snappea; triangulation with only those
      unfilled cusps remaining.  If all of your cusps have fillings then
@@ -534,6 +544,13 @@
      closed 3-manifold.  Either way, the result will be added to the
      packet tree beneath your original &snappea; triangulation, and
      the original will be left untouched.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="snappea-fill-menu"/>
+      </imageobject>
+     </inlinemediaobject>
     </para>
     <para>
      <inlinemediaobject>
@@ -616,15 +633,19 @@
      You can do this by selecting
      <menuchoice>
       <guimenu>&snappea;&nbsp;Triangulation</guimenu>
-      <guimenuitem>Randomise;</guimenuitem>
+      <guimenuitem>Randomise</guimenuitem>
      </menuchoice>
-     from the menu, or pressing the corresponding toolbar button
-     (circled in the picture below).
+     from the menu, or by pressing the corresponding toolbar button.
     </para>
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata multires="snappea-randomise"/>
+       <imagedata multires="snappea-randomise-menu" align="center"/>
+      </imageobject>
+     </inlinemediaobject>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="snappea-randomise-bar" align="center"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -671,9 +692,9 @@
      To compute the canonical retriangulation, select
      <menuchoice>
       <guimenu>&snappea;&nbsp;Triangulation</guimenu>
-      <guimenuitem>Canonical Retriangulation</guimenuitem>
+      <guimenuitem>Build Canonical Retriangulation</guimenuitem>
      </menuchoice>
-     from the menu.
+     from the menu, or press the corresponding toolbar button.
      This will create a new &regina; triangulation immediately beneath
      the original &snappea; triangulation in the packet tree;
      the original will be left untouched.
@@ -681,7 +702,12 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata multires="snappea-canonical"/>
+       <imagedata multires="snappea-canonical-menu" align="center"/>
+      </imageobject>
+     </inlinemediaobject>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="snappea-canonical-bar" align="center"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -721,8 +747,7 @@
       <guimenu>&snappea;&nbsp;Triangulation</guimenu>
       <guimenuitem>Convert to &regina;</guimenuitem>
      </menuchoice>
-     from the menu, or press the corresponding toolbar button
-     (as circled in the picture below).
+     from the menu, or press the corresponding toolbar button.
      This will create a new &regina; triangulation immediately beneath
      the original &snappea; triangulation in the packet tree;
      the original will be left untouched.
@@ -739,7 +764,12 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata multires="snappea-toregina"/>
+       <imagedata multires="snappea-toregina-menu" align="center"/>
+      </imageobject>
+     </inlinemediaobject>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="snappea-toregina-bar" align="center"/>
       </imageobject>
      </inlinemediaobject>
     </para>
