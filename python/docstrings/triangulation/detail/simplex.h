@@ -531,8 +531,8 @@ There are some important exceptions to these rules:
   topologically. For example, we allow 2-0 moves or edge collapses
   that merge *F* with a parallel (*dim*-1)-face, even if this changes
   *F* from internal to boundary (because *F* was merged with a
-  boundary facet). Likewise, we allow boundary shellings that expose a
-  internal locked facet to the boundary (because this is a
+  boundary facet). Likewise, we allow boundary shellings that expose
+  an internal locked facet to the boundary (because this is a
   "topological flattening", not just an arbitrary ungluing). In all
   such cases, the lock "moves" with *F* to its new (possibly merged,
   possibly boundary) location.

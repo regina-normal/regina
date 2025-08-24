@@ -360,18 +360,21 @@ Returns:
 
 // Docstring regina::python::doc::Triangulation_::idealToFinite
 static const char *idealToFinite =
-R"doc(Converts an ideal triangulation into a finite triangulation. All ideal
-or invalid vertices are truncated and thus converted into real
-boundary components made from unglued facets of pentachora.
+R"doc(Alias for truncateIdeal(), which truncates all ideal or invalid
+vertices to convert these into real boundary components.
+
+This alias idealToFinite() is provided for compatibility with older
+versions of Regina. (It is _not_ deprecated, and so this alias should
+remain part of Regina for a long time.)
+
+See truncateIdeal() for further details.
 
 Exception ``LockViolation``:
     This triangulation contains at least one locked top-dimensional
-    simplex and/or facet. (This 4-dimensional algorithm does not
-    necessarily subdivide _every_ pentachoron, and so this test is
-    stronger than necessary; however, it will be enforced.) This
-    exception will be thrown before any changes are made. See
-    Simplex<4>::lock() and Simplex<4>::lockFacet() for further details
-    on how such locks work and what their implications are.
+    simplex and/or facet. This exception will be thrown before any
+    changes are made. See Simplex<4>::lock() and
+    Simplex<4>::lockFacet() for further details on how such locks work
+    and what their implications are.
 
 Returns:
     ``True`` if and only if the triangulation was changed.)doc";
@@ -379,8 +382,14 @@ Returns:
 // Docstring regina::python::doc::Triangulation_::intelligentSimplify
 static const char *intelligentSimplify =
 R"doc(Deprecated alias for simplify(), which attempts to simplify this
-triangulation as intelligently as possible using fast and greedy
+triangulation as intelligently as possible using relatively fast
 heuristics.
+
+Since this routine exists to support code written against older
+versions of Regina, it just calls simplify() with no additional
+arguments. In particular, unlike simplify(), this deprecated routine
+does not support progress tracking, and for Python users it does not
+release the global interpreter lock.
 
 .. deprecated::
     This routine has been renamed to simplify(). See simplify() for
@@ -697,8 +706,9 @@ moves, without exceeding a given number of additional pentachora.
 Specifically, this routine will iterate through all triangulations
 that can be reached from this triangulation via 1-5, 2-4, 3-3 and 4-2
 Pachner moves, without ever exceeding *height* additional pentachora
-beyond the original number. Note that 5-1 moves are currently not
-supported, though this may be added in a future verson of Regina.
+beyond the original number, and without violating any simplex and/or
+facet locks. Note that 5-1 moves are currently not supported, though
+this may be added in a future verson of Regina.
 
 For every such triangulation (including this starting triangulation),
 this routine will call *action* (which must be a function or some
@@ -831,16 +841,22 @@ Returns:
 // Docstring regina::python::doc::Triangulation_::simplify
 static const char *simplify =
 R"doc(Attempts to simplify this triangulation as intelligently as possible
-using fast and greedy heuristics. Specifically, this routine will
+using relatively fast heuristics. Specifically, this routine will
 attempt to reduce the number of pentachora in the triangulation.
 
-Currently this routine uses simplifyToLocalMinimum() in combination
-with random 3-3 moves and book opening moves.
+As of Regina 7.4, this routine works harder than it did previous
+releases. Specifically, this routine now uses:
 
-If simplify() fails to improve the triangulation (which in four
-dimensions is likely), you may instead wish to try the well-climbing
-routine simplifyUpDown(), or the powerful but *much* slower
-simplifyExhaustive().
+* the greedy heuristics of simplifyToLocalMinimum(), in combination
+  with random 3-3 moves and book opening moves;
+
+* the well-climbing heuristics of simplifyUpDown(), which are slower
+  but often more effective.
+
+If simplify() still fails to improve the triangulation (which in four
+dimensions is likely), you may instead wish to try the powerful but
+_much_ slower simplifyExhaustive(), which exhaustively explores
+sequences of local moves in the hope of finding a simplification.
 
 If this triangulation is currently oriented, then this operation will
 preserve the orientation.
@@ -852,20 +868,37 @@ exceptions should be thrown). Of course, however, having locks may
 make the simplification less effective in reducing the number of
 pentachora.
 
+This routine might take a little time for larger triangulations, and
+so you can pass a progress tracker to this routine. The objective that
+it tracks is the best number of pentachora found so far. Be aware
+that, even if you cancel the operation via the progress tracker, this
+triangulation might still change as a result (e.g., perhaps the
+initial greedy heuristics made an improvement, but then the user
+cancelled the operation while the well-climbing methods were looking
+for an even better outcome).
+
 .. warning::
     The specific behaviour of this routine will almost certainly
-    change between releases. At present, simplification for 4-manifold
-    triangulations is extremely weak (as opposed to 3-manifolds, where
-    a rich library of simplification techinques is available to call
-    upon).
+    change between releases.
 
 .. note::
     For long-term users of Regina: this is the routine that was for a
     long time called intelligentSimplify(). It was renamed to
     simplify() in Regina 7.4.
 
+Python:
+    The global interpreter lock will be released while this function
+    runs, so you can use it with Python-based multithreading.
+
+Parameter ``tracker``:
+    a progress tracker through which progress will be reported, or
+    ``None`` if no progress reporting is required.
+
 Returns:
-    ``True`` if and only if the triangulation was changed.)doc";
+    ``True`` if and only if the triangulation was changed. If you do
+    not have access to the return value (e.g., you are using
+    multithreading and progress trackers): the triangulation will have
+    changed if and only if the number of pentachora was reduced.)doc";
 
 // Docstring regina::python::doc::Triangulation_::simplifyExhaustive
 static const char *simplifyExhaustive =
@@ -876,8 +909,9 @@ much slower than simplify().
 Specifically, this routine will iterate through all triangulations
 that can be reached from this triangulation via 1-5, 2-4, 3-3 and 4-2
 Pachner moves, without ever exceeding *height* additional pentachora
-beyond the original number. Note that 5-1 moves are currently not
-supported, though this may be added in a future verson of Regina.
+beyond the original number, and without violating any simplex and/or
+facet locks. Note that 5-1 moves are currently not supported, though
+this may be added in a future verson of Regina.
 
 If at any stage it finds a triangulation with _fewer_ pentachora than
 the original, then this routine will call simplify() to shrink the
@@ -901,6 +935,13 @@ This means that, if no simpler triangulation exists, the only way to
 terminate this function is to cancel the operation via a progress
 tracker (read on for details).
 
+If this triangulation is currently oriented, then this operation will
+_not_ preserve the orientation: indeed, the resulting triangulation
+might not be oriented at all. This is a consequence of the way in
+which this operation uses isomorphism signatures to represent nodes in
+the Pachner graph. If you need a simplification routine that
+_preserves_ orientation, you should use simplify() instead.
+
 If any pentachora and/or tetrahedra are locked, these locks will be
 respected: that is, the retriangulation will avoid any moves that
 would violate these locks (and in particular, no LockViolation
@@ -910,7 +951,7 @@ reduce the number of distinct triangulations that can be reached.
 If you want a _fast_ simplification routine, you should call
 simplify() instead. The benefit of simplifyExhaustive() is that, for
 very stubborn triangulations where simplify() finds itself stuck at a
-local minimum, simplifyExhaustive() is able to "climb out" of such
+local minimum, simplifyExhaustive() may be able to "climb out" of such
 wells.
 
 Since Regina 7.0, this routine will not return until either the
@@ -964,8 +1005,9 @@ static const char *simplifyToLocalMinimum =
 R"doc(Uses all known simplification moves to reduce the triangulation
 monotonically to some local minimum number of pentachora.
 
-End users will probably not want to call this routine. You should call
-simplify() if you want a fast method of simplifying a triangulation.
+End users will typically not need to call this routine, since its
+techniques are already incorporated into the main simplify() routine.
+Just call simplify() instead.
 
 The moves used by this routine include collapsing edges, 4-2 moves,
 and boundary shelling moves.
@@ -1006,14 +1048,17 @@ Returns:
 // Docstring regina::python::doc::Triangulation_::simplifyUpDown
 static const char *simplifyUpDown =
 R"doc(Attempts to simplify this triangulation by making increasingly long
-sequences of 2-4 moves and then attempting to simplify back down.
+sequences of 2-4 moves and then attempting to simplify back down. This
+is a relatively fast and powerful well-climbing heuristic that can be
+used when the more simplistic simplifyToLocalMinimum() fails.
+
+End users will typically not need to call this routine, since its
+techniques are already incorporated into the main simplify() routine.
+However, you might still want to call simplifyUpDown() directly if you
+wish to use non-default well-climbing parameters.
 
 This routine will _only_ perform 2-4 moves, 2-0 edge moves, 2-0
 triangle moves, and 3-3 moves.
-
-The main purpose of this routine is to offer a "well-climbing"
-technique that explores more widely than simplify(), but that is not
-nearly as slow as simplifyExhaustive().
 
 If this triangulation is currently oriented, then this operation will
 preserve the orientation.
@@ -1181,6 +1226,33 @@ triangulation.
 
 Parameter ``other``:
     the triangulation whose contents should be swapped with this.)doc";
+
+// Docstring regina::python::doc::Triangulation_::truncateIdeal
+static const char *truncateIdeal =
+R"doc(Truncates all ideal or invalid vertices, converting these into real
+boundary components make from unglued facets of pentachora.
+
+A note: this operation does _not_ preserve orientedness. That is,
+regardless of whether this triangulation was oriented before calling
+this function, it will not be oriented after. This is due to the
+specific choice of pentachoron vertex labelling in the subdivision,
+and this behaviour may change in a future version of Regina.
+
+This routine was called ``idealToFinite()`` in older versions of
+Regina, since its main job is to convert an ideal triangulation into a
+finite triangulation.
+
+Exception ``LockViolation``:
+    This triangulation contains at least one locked top-dimensional
+    simplex and/or facet. (This 4-dimensional algorithm does not
+    necessarily subdivide _every_ pentachoron, and so this test is
+    stronger than necessary; however, it will be enforced.) This
+    exception will be thrown before any changes are made. See
+    Simplex<4>::lock() and Simplex<4>::lockFacet() for further details
+    on how such locks work and what their implications are.
+
+Returns:
+    ``True`` if and only if the triangulation was changed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::with44
 static const char *with44 =

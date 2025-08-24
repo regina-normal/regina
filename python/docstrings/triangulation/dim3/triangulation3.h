@@ -1283,29 +1283,14 @@ Returns:
 
 // Docstring regina::python::doc::Triangulation_::idealToFinite
 static const char *idealToFinite =
-R"doc(Converts an ideal triangulation into a finite triangulation. All ideal
-or invalid vertices are truncated and thus converted into real
-boundary components made from unglued faces of tetrahedra.
+R"doc(Alias for truncateIdeal(), which truncates all ideal or invalid
+vertices to convert these into real boundary components.
 
-This operation is equivalent to calling truncate() on every ideal or
-invalid vertex. It also serves as a loose converse to finiteToIdeal().
+This alias idealToFinite() is provided for compatibility with older
+versions of Regina. (It is _not_ deprecated, and so this alias should
+remain part of Regina for a long time.)
 
-If this triangulation has any invalid edges, then these will remain
-invalid after this operation (in contrast to barycentric subdivision,
-which converts invalid edges into projective plane cusps). As of
-Regina 7.4, the presence of invalid edges will no longer cause the
-triangulation to be subdivided if there are no vertices to truncate.
-
-A note: this operation does _not_ preserve orientedness. That is,
-regardless of whether this triangulation was oriented before calling
-this function, it will not be oriented after. This is due to the
-specific choice of tetrahedron vertex labelling in the subdivision,
-and this behaviour may change in a future version of Regina.
-
-.. warning::
-    Currently, this routine subdivides all tetrahedra as if *all*
-    vertices (not just some) were ideal. This may lead to more
-    tetrahedra than are necessary.
+See truncateIdeal() for further details.
 
 Exception ``LockViolation``:
     This triangulation contains at least one locked top-dimensional
@@ -1357,6 +1342,12 @@ cost of this search in two ways:
   only way to terminate this routine is to cancel the operation via a
   progress tracker (read on for details).
 
+If this triangulation is currently oriented, then this operation will
+_not_ preserve the orientation: indeed, the resulting triangulation
+might not be oriented at all. Like simplifyExhaustive(), this is a
+consequence of the way in which this operation uses isomorphism
+signatures to represent nodes in the Pachner graph.
+
 If any tetrahedra and/or triangles are locked, these locks will be
 respected: that is, the retriangulation will avoid any moves that
 would violate these locks (and in particular, no LockViolation
@@ -1364,14 +1355,24 @@ exceptions should be thrown). Of course, however, having locks may
 reduce the number of distinct triangulations that can be reached.
 
 If this routine finds a triangulation with a smaller-width greedy tree
-decomposition, it will restart the search from this better
-triangulation (i.e., it uses a "greedy descent"). The *height*
-argument will now be treated with respect to this _new_ triangulation,
-and the number of attempts (which is limited by *maxAttempts*) will be
-reset to zero. This means that overall you may end up with more than
-*height* extra tetrahedra, and you may have visited more than
-*maxAttempts* distinct triangulations (but this is good news: it means
-that a better triangulation was found).
+decomposition, then:
+
+* If *maxAttempts* was negative (i.e., unlimited), it will stop the
+  search at this point and leave you with this better triangulation.
+  You may wish to try calling improveTreewidth() again, since it is
+  possible that another search will be able to improve the
+  triangulation even further.
+
+* If *maxAttempts* was non-negative (i.e., limited), it will keep
+  going by restarting the search again from this better triangulation.
+  In other words, this routine will proceed with a kind of "greedy
+  descent". The *height* argument will now be treated with respect to
+  this _new_ triangulation, and the number of attempts (which is
+  limited by *maxAttempts*) will be reset to zero. This means that
+  overall you may end up with more than *height* extra tetrahedra, and
+  you may have visited more than *maxAttempts* distinct
+  triangulations; however, if this happens then you know you are
+  getting a better triangulation.
 
 If this routine cannot produce a smaller-width tree decomposition
 within the bounds given via *maxAttempts* and/or *height*, then it
@@ -3192,9 +3193,8 @@ from minimal. It is highly recommended that you run simplify() if you
 do not need to preserve the combinatorial structure of the new
 triangulation.
 
-If this triangulation was originally oriented, then it will also be
-oriented after this routine has been called. See isOriented() for
-further details on oriented triangulations.
+If this triangulation is currently oriented, then this operation will
+preserve the orientation.
 
 The new sphere boundary will be formed from two triangles;
 specifically, face 0 of the last and second-last tetrahedra of the
@@ -3393,7 +3393,8 @@ moves, without exceeding a given number of additional tetrahedra.
 Specifically, this routine will iterate through all triangulations
 that can be reached from this triangulation via 2-3 and 3-2 Pachner
 moves, without ever exceeding *height* additional tetrahedra beyond
-the original number.
+the original number, and without violating any simplex and/or facet
+locks.
 
 For every such triangulation (including this starting triangulation),
 this routine will call *action* (which must be a function or some
@@ -3651,7 +3652,8 @@ much slower than simplify().
 Specifically, this routine will iterate through all triangulations
 that can be reached from this triangulation via 2-3 and 3-2 Pachner
 moves, without ever exceeding *height* additional tetrahedra beyond
-the original number.
+the original number, and without violating any simplex and/or facet
+locks.
 
 If at any stage it finds a triangulation with _fewer_ tetrahedra than
 the original, then this routine will call simplify() to shrink the
@@ -3674,6 +3676,13 @@ many locks that the number of reachable triangulations is finite).
 This means that, if no simpler triangulation exists, the only way to
 terminate this function is to cancel the operation via a progress
 tracker (read on for details).
+
+If this triangulation is currently oriented, then this operation will
+_not_ preserve the orientation: indeed, the resulting triangulation
+might not be oriented at all. This is a consequence of the way in
+which this operation uses isomorphism signatures to represent nodes in
+the Pachner graph. If you need a simplification routine that
+_preserves_ orientation, you should use simplify() instead.
 
 If any tetrahedra and/or triangles are locked, these locks will be
 respected: that is, the retriangulation will avoid any moves that
@@ -3910,6 +3919,11 @@ The underlying algorithm appears in "A new approach to crushing
 0-efficiency algorithm, and works in both orientable and non-
 orientable settings.
 
+If this triangulation is oriented, be aware that the summands might
+_not_ inherit this orientation. In particular, given the way that the
+crushing algorithm works, it is not clear how to maintain the
+orientations of any ``L(3,1)`` summands.
+
 If any tetrahedra and/or triangles in this triangulation are locked,
 this will not prevent summands() from doing its work (since the
 original triangulation will not be changed). The triangulations that
@@ -4006,6 +4020,45 @@ Exception ``LockViolation``:
 
 Parameter ``vertex``:
     the vertex to truncate.)doc";
+
+// Docstring regina::python::doc::Triangulation_::truncateIdeal
+static const char *truncateIdeal =
+R"doc(Truncates all ideal or invalid vertices, converting these into real
+boundary components made from unglued faces of tetrahedra.
+
+This operation is equivalent to calling truncate() on every ideal or
+invalid vertex. It also serves as a loose converse to finiteToIdeal().
+
+If this triangulation has any invalid edges, then these will remain
+invalid after this operation (in contrast to barycentric subdivision,
+which converts invalid edges into projective plane cusps). As of
+Regina 7.4, the presence of invalid edges will no longer cause the
+triangulation to be subdivided if there are no vertices to truncate.
+
+A note: this operation does _not_ preserve orientedness. That is,
+regardless of whether this triangulation was oriented before calling
+this function, it will not be oriented after. This is due to the
+specific choice of tetrahedron vertex labelling in the subdivision,
+and this behaviour may change in a future version of Regina.
+
+This routine was called ``idealToFinite()`` in older versions of
+Regina, since its main job is to convert an ideal triangulation into a
+finite triangulation.
+
+.. warning::
+    Currently, this routine subdivides all tetrahedra as if *all*
+    vertices (not just some) were ideal. This may lead to more
+    tetrahedra than are necessary.
+
+Exception ``LockViolation``:
+    This triangulation contains at least one locked top-dimensional
+    simplex and/or facet. This exception will be thrown before any
+    changes are made. See Simplex<3>::lock() and
+    Simplex<3>::lockFacet() for further details on how such locks work
+    and what their implications are.
+
+Returns:
+    ``True`` if and only if the triangulation was changed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::turaevViro
 static const char *turaevViro =

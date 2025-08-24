@@ -513,6 +513,9 @@ R"doc(Returns the orientable double cover of this triangulation.
 Each orientable component will be duplicated, and each non-orientable
 component will be converted into its orientable double cover.
 
+In general, the resulting double cover will _not_ be oriented (though
+of course it will always be orientable).
+
 If this triangulation has locks on any top-dimensional simplices
 and/or their facets, then these locks will be duplicated alongside
 their corresponding simplices and/or facets (i.e., they will appear in
@@ -961,32 +964,14 @@ Returns:
 
 // Docstring regina::python::doc::detail::TriangulationBase_::finiteToIdeal
 constexpr const char *finiteToIdeal =
-R"doc(Converts each real boundary component into a cusp (i.e., an ideal
-vertex). Only boundary components formed from real (*dim*-1)-faces
-will be affected; ideal boundary components are already cusps and so
-will not be changed.
+R"doc(Alias for makeIdeal(), which converts each real boundary component
+into an ideal vertex.
 
-One side-effect of this operation is that all spherical boundary
-components will be filled in with balls.
+This alias finiteToIdeal() is provided for compatibility with older
+versions of Regina. (It is _not_ deprecated, and so this alias should
+remain part of Regina for a long time.)
 
-This operation is performed by attaching a new *dim*-simplex to each
-boundary (*dim*-1)-face, and then gluing these new simplices together
-in a way that mirrors the adjacencies of the underlying boundary
-facets. Each boundary component will thereby be pushed up through the
-new simplices and converted into a cusp formed using vertices of these
-new simplices.
-
-In Regina's standard dimensions, where triangulations also support an
-idealToFinite() operation, this routine is a loose converse of that
-operation.
-
-In dimension 2, every boundary component is spherical and so this
-routine simply fills all the punctures in the underlying surface. (In
-dimension 2, triangulations cannot have cusps).
-
-.. warning::
-    If a real boundary component contains vertices whose links are not
-    discs, this operation may have unexpected results.
+See makeIdeal() for further details.
 
 Exception ``LockViolation``:
     This triangulation contains at least one locked boundary facet.
@@ -1393,6 +1378,9 @@ original simplices from *source*, and any gluings between the
 simplices of *source* will likewise be copied across as gluings
 between their copies in this triangulation.
 
+As a trivial consequence, if this and the given triangulation are both
+oriented, then the result will preserve these orientations.
+
 If *source* has locks on any top-dimensional simplices and/or their
 facets, these locks will also be copied over to this triangulation.
 
@@ -1427,6 +1415,9 @@ In particular, note that facets of top-dimensional simplices that lie
 on the boundary of this triangulation need not correspond to boundary
 facets of *other*, and that *other* may contain more top-dimensional
 simplices than this triangulation.
+
+Like isIsomorphicTo() and the equality test, this routine does _not_
+examine or compare simplex/facet locks.
 
 If a boundary incomplete isomorphism is found, the details of this
 isomorphism are returned. Thus, to test whether an isomorphism exists,
@@ -1464,16 +1455,16 @@ given triangulation.
 Two triangulations are _isomorphic_ if and only it is possible to
 relabel their top-dimensional simplices and the (*dim*+1) vertices of
 each simplex in a way that makes the two triangulations
-combinatorially identical, as returned by isIdenticalTo().
+combinatorially identical, as returned by the equality test ``t1 ==
+t2``.
 
 Equivalently, two triangulations are isomorphic if and only if there
 is a one-to-one and onto boundary complete combinatorial isomorphism
 from this triangulation to *other*, as described in the Isomorphism
 class notes.
 
-In particular, note that this triangulation and *other* must contain
-the same number of top-dimensional simplices for such an isomorphism
-to exist.
+In particular, like the equality test, this routine does _not_ examine
+or compare simplex/facet locks.
 
 If the triangulations are isomorphic, then this routine returns one
 such boundary complete isomorphism (i.e., one such relabelling).
@@ -1486,8 +1477,8 @@ findAllIsomorphisms() instead.
 
 If you need to ensure that top-dimensional simplices are labelled the
 same in both triangulations (i.e., that the triangulations are related
-by the _identity_ isomorphism), you should call the stricter test
-isIdenticalTo() instead.
+by the _identity_ isomorphism), you should use the stricter equality
+test ``t1 == t2`` instead.
 
 .. warning::
     For large dimensions, this routine can become extremely slow: its
@@ -1580,6 +1571,16 @@ combinatorial isomorphism. That is, for any fixed signature type *T*,
 two triangulations of dimension *dim* are combinatorially isomorphic
 if and only if their isomorphism signatures of type *T* are the same.
 
+By default, isomorphism signatures support simplex and facet locks:
+this means that locks are encoded in the isomorphism signature, and
+the "combinatorial isomorphisms" mentioned above must respect not just
+the gluings between simplices but also any simplex and/or facet locks.
+You can change this behaviour by requesting a different encoding (such
+as IsoSigPrintableLockFree). Under the default encoding, if this
+triangulation does not have any simplex and/or facet locks then the
+isomorphism signature will look the same as it did in Regina 7.3.x and
+earlier, before locks were supported.
+
 The length of an isomorphism signature is proportional to ``n log n``,
 where *n* is the number of top-dimenisonal simplices. The time
 required to construct it is worst-case ``O((dim!) n² log² n)``. Whilst
@@ -1620,7 +1621,8 @@ currently determined by the template parameters *Type* and *Encoding:*
   IsoSigPrintable returns a std::string consisting entirely of
   printable characters in the 7-bit ASCII range. Importantly, this
   default encoding is currently the only encoding from which Regina
-  can _reconstruct_ a triangulation from its isomorphism signature.
+  can _reconstruct_ a triangulation (including any simplex and/or
+  facet locks) from its isomorphism signature.
 
 You may instead pass your own type and/or encoding parameters as
 template arguments. Currently this facility is for internal use only,
@@ -1629,12 +1631,17 @@ future versions of Regina. At present:
 
 * The *Type* parameter should be a class that is constructible from a
   componenent reference, and that offers the member functions
-  simplex(), perm() and next(); see the implementation of
+  ``simplex()``, ``perm()`` and ``next()``; see the implementation of
   IsoSigClassic for details.
 
 * The *Encoding* parameter should be a class that offers a *Signature*
-  type alias, and static functions emptySig() and encode(). See the
-  implementation of IsoSigPrintable for details.
+  type alias, and static functions ``emptySig()`` and ``encode()``.
+  See the implementation of IsoSigPrintable for details.
+
+* If you wish to produce an isomorphism signature that ignores simplex
+  and/or facet locks then you can use an encoding whose ``encode()``
+  function ignores the final *locks* argument, such as
+  IsoSigPrintableLockFree.
 
 For a full and precise description of the classic isomorphism
 signature format for 3-manifold triangulations, see _Simplification
@@ -1645,14 +1652,15 @@ specific adjustments.
 
 Python:
     Although this is a templated function, all of the variants
-    supplied with Regina are available to Python users. For the
-    default type and encoding, you can simply call isoSig(). For other
-    signature types, you should call the function as isoSig_*Type*,
-    where the suffix *Type* is an abbreviated version of the *Type*
-    template parameter; one such example is ``isoSig_EdgeDegrees``
-    (for the case where *Type* is the class IsoSigEdgeDegrees).
-    Currently Regina only offers one encoding (the default), and so
-    there are no suffixes for encodings.
+    supplied with Regina are available to Python users. To use the
+    default signature type and encoding, just call ``isoSig()``. To
+    use a non-default signature type, add a suffix ``_Type`` where
+    *Type* is an abbreviated version of the signature type (e.g.,
+    ``isoSig_EdgeDegrees()`` for the signature type
+    IsoSigEdgeDegrees). To use the encoding IsoSigPrintableLockFree
+    (the only non-default encoding available at present), add another
+    suffix ``_LockFree`` (e.g., ``isoSig_LockFree()``, or
+    ``isoSig_EdgeDegrees_LockFree()``).
 
 .. warning::
     Do not mix isomorphism signatures between dimensions! It is
@@ -1736,15 +1744,15 @@ this means that the triangulation reconstructed from
 
 Python:
     Although this is a templated function, all of the variants
-    supplied with Regina are available to Python users. For the
-    default type and encoding, you can simply call isoSigDetail(). For
-    other signature types, you should call the function as
-    isoSigDetail_*Type*, where the suffix *Type* is an abbreviated
-    version of the *Type* template parameter; one such example is
-    ``isoSigDetail_EdgeDegrees`` (for the case where *Type* is the
-    class IsoSigEdgeDegrees). Currently Regina only offers one
-    encoding (the default), and so there are no suffixes for
-    encodings.
+    supplied with Regina are available to Python users. To use the
+    default signature type and encoding, just call ``isoSigDetail()``.
+    To use a non-default signature type, add a suffix ``_Type`` where
+    *Type* is an abbreviated version of the signature type (e.g.,
+    ``isoSigDetail_EdgeDegrees()`` for the signature type
+    IsoSigEdgeDegrees). To use the encoding IsoSigPrintableLockFree
+    (the only non-default encoding available at present), add another
+    suffix ``_LockFree`` (e.g., ``isoSigDetail_LockFree()``, or
+    ``isoSigDetail_EdgeDegrees_LockFree()``).
 
 Precondition:
     This triangulation must be non-empty and connected. The facility
@@ -1791,6 +1799,12 @@ written as the destination simplex index followed by the gluing
 permutation (which in turn is written as the images of 0,1,...,*dim*
 in order).
 
+If this triangulation has any locks on its top-dimensional simplices
+and/or their facets, this routine will carry the locks through the
+relabelling correctly. Locks do not play any role in determining which
+labelling is canonical (i.e., the canonical labelling will be the same
+regardles of whether or not there are locks present).
+
 Precondition:
     This routine currently works only when the triangulation is
     connected. It may be extended to work with disconnected
@@ -1811,6 +1825,50 @@ orientable double cover. This triangulation wll be modified directly.
     triangulation untouched.
 
 See doubleCover() for further details.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::makeIdeal
+constexpr const char *makeIdeal =
+R"doc(Converts each real boundary component into a cusp (i.e., an ideal
+vertex). Only boundary components formed from real (*dim*-1)-faces
+will be affected; ideal boundary components are already cusps and so
+will not be changed.
+
+One side-effect of this operation is that all spherical boundary
+components will be filled in with balls.
+
+This operation is performed by attaching a new *dim*-simplex to each
+boundary (*dim*-1)-face, and then gluing these new simplices together
+in a way that mirrors the adjacencies of the underlying boundary
+facets. Each boundary component will thereby be pushed up through the
+new simplices and converted into a cusp formed using vertices of these
+new simplices.
+
+In Regina's standard dimensions, where triangulations also support an
+idealToFinite() operation, this routine is a loose converse of that
+operation.
+
+In dimension 2, every boundary component is spherical and so this
+routine simply fills all the punctures in the underlying surface. (In
+dimension 2, triangulations cannot have cusps).
+
+A note: this operation does _not_ preserve orientedness. That is, even
+if this triangulation was oriented before calling this function, it
+might not be oriented after. This behaviour may change in a future
+version of Regina.
+
+.. warning::
+    If a real boundary component contains vertices whose links are not
+    discs, this operation may have unexpected results.
+
+Exception ``LockViolation``:
+    This triangulation contains at least one locked boundary facet.
+    This exception will be thrown before any changes are made. See
+    Simplex<dim>::lockFacet() for further details on how such locks
+    work and what their implications are.
+
+Returns:
+    ``True`` if changes were made, or ``False`` if the original
+    triangulation contained no real boundary components.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::markedHomology
 constexpr const char *markedHomology =

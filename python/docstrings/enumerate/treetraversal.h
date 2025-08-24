@@ -1092,8 +1092,8 @@ spaces between the types.
 
 This routine returns the same information that dumpTypes() writes.
 
-Parameter ``the``:
-    type vector in string form.)doc";
+Returns:
+    the type vector in string form.)doc";
 
 // Docstring regina::python::doc::TreeTraversal_::visited
 static const char *visited =

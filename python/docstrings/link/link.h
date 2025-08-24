@@ -435,10 +435,16 @@ classical knot is always zero). If this link is empty or has more than
 one component, then this routine will throw an exception.
 
 To pretty-print the affine index polynomial for human consumption, you
-can call ``Polynomial::str(Link::affineIndexVar)``.
+can call ``Laurent::str(Link::affineIndexVar)``.
 
 Unlike most polynomial invariants, computing the affine index
 polynomial is extremely fast, and so this polynomial is not cached.
+
+Precondition:
+    This link has exactly one component (i.e., it is a knot).
+
+Exception ``FailedPrecondition``:
+    This link is empty or has multiple components.
 
 Returns:
     the affine index polynomial.)doc";
@@ -554,6 +560,9 @@ under Reidemeister moves II and III, but not I.
 
 If this is the empty link, then this routine will return the zero
 polynomial.
+
+To pretty-print this polynomial for human consumption, you can call
+``Laurent::str(Link::bracketVar)``.
 
 Bear in mind that each time a link changes, all of its polynomials
 will be deleted. Thus the reference that is returned from this routine
@@ -1266,6 +1275,11 @@ the link from above or below the diagram, and so you may wish to call
 extendedGroups() instead, which builds both group presentations.
 Again, as with the ordinary link group, ExampleLink::gpv() provides an
 example for which these two groups are non-isomorphic.
+
+Note that, regardless of whether your link diagram is classical or
+virtual, _reflecting_ the diagram (i.e., changing the sign of every
+crossing but keeping the upper/lower strands the same) will never
+change the isomorphism type of the extended link group.
 
 If you pass *simplify* as ``False``, this routine will keep the
 presentation in the form described by Silver and Williams, and will
@@ -2361,6 +2375,11 @@ fundamental group of the link exterior (and in particular, the
 isomorphism type will not depend upon whether you view the diagram
 from above or below).
 
+Note that, regardless of whether your link diagram is classical or
+virtual, _reflecting_ the diagram (i.e., changing the sign of every
+crossing but keeping the upper/lower strands the same) will never
+change the isomorphism type of the link group.
+
 If you pass *simplify* as ``False``, this routine will keep the
 Wirtinger presentation and not try to simplify it further. If you pass
 *simplify* as ``True`` (the default), this routine will attempt to
@@ -2753,6 +2772,9 @@ should not be kept for later use. Instead, homfly() should be called
 again; this will be instantaneous if the HOMFLY-PT polynomial has
 already been calculated.
 
+Precondition:
+    This link diagram is classical (not virtual).
+
 Exception ``FailedPrecondition``:
     This is a virtual (not classical) link diagram.
 
@@ -2835,6 +2857,9 @@ computation is complete, regardless of whether a progress tracker was
 passed. If you need the old behaviour (where passing a progress
 tracker caused the computation to start in the background), simply
 call this routine in a new detached thread.
+
+Precondition:
+    This link diagram is classical (not virtual).
 
 Exception ``FailedPrecondition``:
     This is a virtual (not classical) link diagram.
@@ -2938,6 +2963,9 @@ passed. If you need the old behaviour (where passing a progress
 tracker caused the computation to start in the background), simply
 call this routine in a new detached thread.
 
+Precondition:
+    This link diagram is classical (not virtual).
+
 Exception ``FailedPrecondition``:
     This is a virtual (not classical) link diagram.
 
@@ -3012,13 +3040,23 @@ ways:
   cancel the operation via a progress tracker (read on for details).
 
 If this routine finds a diagram with a smaller-width greedy tree
-decomposition, it will restart the search from this better diagram
-(i.e., it uses a "greedy descent"). The *height* argument will now be
-treated with respect to this _new_ diagram, and the number of attempts
-(which is limited by *maxAttempts*) will be reset to zero. This means
-that overall you may end up with more than *height* extra crossings,
-and you may have visited more than *maxAttempts* distinct diagrams
-(but this is good news: it means that a better diagram was found).
+decomposition, then:
+
+* If *maxAttempts* was negative (i.e., unlimited), it will stop the
+  search at this point and leave you with this better diagram. You may
+  wish to try calling improveTreewidth() again, since it is possible
+  that another search will be able to improve the diagram even
+  further.
+
+* If *maxAttempts* was non-negative (i.e., limited), it will keep
+  going by restarting the search again from this better diagram. In
+  other words, this routine will proceed with a kind of "greedy
+  descent". The *height* argument will now be treated with respect to
+  this _new_ diagram, and the number of attempts (which is limited by
+  *maxAttempts*) will be reset to zero. This means that overall you
+  may end up with more than *height* extra crossings, and you may have
+  visited more than *maxAttempts* distinct diagrams; however, if this
+  happens then you know you are getting a better diagram.
 
 If this routine cannot produce a smaller-width tree decomposition
 within the bounds given via *maxAttempts* and/or *height*, then it
