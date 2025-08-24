@@ -886,6 +886,9 @@ Version 7.4  [ (to be announced) ]
             types are now native Python enum types, based on either enum.Enum
             (for non-flag enum types) or enum.Flag (for flag enum types).
     USER INTERFACE:
+        - The GUI has had a bit of a glow-up.  One important change: toolbars
+          in the triangulation and link viewers are much richer now, but you
+          can configure the GUI to use the old-style toolbars if you prefer.
         - Now uses multithreading for those long computations that support it.
         - Group simplification no longer offers "relator explosion" as an
           option; however, this remains available via Python if you need it.
