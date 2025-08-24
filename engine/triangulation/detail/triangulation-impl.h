@@ -594,7 +594,7 @@ void TriangulationBase<dim>::subdivide() {
 }
 
 template <int dim>
-bool TriangulationBase<dim>::finiteToIdeal() {
+bool TriangulationBase<dim>::makeIdeal() {
     if (! hasBoundaryFacets())
         return false;
 

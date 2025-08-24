@@ -227,6 +227,7 @@ void addTriangulation(pybind11::module_& m, pybind11::module_& internal,
         .def("dualToPrimal",
             static_cast<MatrixInt (Triangulation<dim>::*)(int) const>(
             &Triangulation<dim>::dualToPrimal), rbase::dualToPrimal)
+        .def("makeIdeal", &Triangulation<dim>::makeIdeal, rbase::makeIdeal)
         .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal,
             rbase::finiteToIdeal)
         .def("move20", &Triangulation<dim>::template move20<0>, rbase::move20)

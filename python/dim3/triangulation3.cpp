@@ -657,8 +657,11 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
         }, rbase::makeDoubleCover)
         .def("doubleOverBoundary", &Triangulation<3>::doubleOverBoundary,
             rbase::doubleOverBoundary)
+        .def("truncateIdeal", &Triangulation<3>::truncateIdeal,
+            rdoc::truncateIdeal)
         .def("idealToFinite", &Triangulation<3>::idealToFinite,
             rdoc::idealToFinite)
+        .def("makeIdeal", &Triangulation<3>::makeIdeal, rbase::makeIdeal)
         .def("finiteToIdeal", &Triangulation<3>::finiteToIdeal,
             rbase::finiteToIdeal)
         .def("truncate", &Triangulation<3>::truncate,

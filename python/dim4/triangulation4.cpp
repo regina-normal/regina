@@ -422,6 +422,7 @@ void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
             rdoc::withCollapseEdge)
         .def("withSnapEdge", &Triangulation<4>::withSnapEdge,
             rdoc::withSnapEdge)
+        .def("makeIdeal", &Triangulation<4>::makeIdeal, rbase::makeIdeal)
         .def("finiteToIdeal", &Triangulation<4>::finiteToIdeal,
             rbase::finiteToIdeal)
         .def("doubleCover", &Triangulation<4>::doubleCover, rbase::doubleCover)
@@ -433,6 +434,8 @@ void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
         .def("subdivide", &Triangulation<4>::subdivide, rbase::subdivide)
         .def("barycentricSubdivision", // deprecated
             &Triangulation<4>::subdivide, rbase::barycentricSubdivision)
+        .def("truncateIdeal", &Triangulation<4>::truncateIdeal,
+            rdoc::truncateIdeal)
         .def("idealToFinite", &Triangulation<4>::idealToFinite,
             rdoc::idealToFinite)
         .def("linkingSurface", &Triangulation<4>::linkingSurface<0>,

@@ -3867,10 +3867,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /*@{*/
 
         /**
-         * Converts an ideal triangulation into a finite triangulation.
-         * All ideal or invalid vertices are truncated and thus
-         * converted into real boundary components made from unglued
-         * faces of tetrahedra.
+         * Truncates all ideal or invalid vertices, converting these into real
+         * boundary components made from unglued faces of tetrahedra.
          *
          * This operation is equivalent to calling truncate() on every ideal
          * or invalid vertex.  It also serves as a loose converse to
@@ -3888,6 +3886,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * specific choice of tetrahedron vertex labelling in the subdivision,
          * and this behaviour may change in a future version of Regina.
          *
+         * This routine was called `idealToFinite()` in older versions of
+         * Regina, since its main job is to convert an ideal triangulation
+         * into a finite triangulation.
+         *
          * \warning Currently, this routine subdivides all tetrahedra as
          * if <i>all</i> vertices (not just some) were ideal.
          * This may lead to more tetrahedra than are necessary.
@@ -3900,6 +3902,26 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \todo \optlong Have this routine only use as many tetrahedra
          * as are necessary, leaving finite vertices alone.
+         *
+         * \return \c true if and only if the triangulation was changed.
+         */
+        bool truncateIdeal();
+
+        /**
+         * Alias for truncateIdeal(), which truncates all ideal or invalid
+         * vertices to convert these into real boundary components.
+         *
+         * This alias idealToFinite() is provided for compatibility with older
+         * versions of Regina.  (It is _not_ deprecated, and so this alias
+         * should remain part of Regina for a long time.)
+         *
+         * See truncateIdeal() for further details.
+         *
+         * \exception LockViolation This triangulation contains at least one
+         * locked top-dimensional simplex and/or facet.  This exception will be
+         * thrown before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how such locks work
+         * and what their implications are.
          *
          * \return \c true if and only if the triangulation was changed.
          */
@@ -5499,6 +5521,10 @@ inline bool Triangulation<3>::closeBook(Edge<3>* e, bool, bool perform) {
 
 inline bool Triangulation<3>::collapseEdge(Edge<3>* e, bool, bool perform) {
     return internalCollapseEdge(e, true, perform);
+}
+
+inline bool Triangulation<3>::truncateIdeal() {
+    return truncateInternal(nullptr, false);
 }
 
 inline bool Triangulation<3>::idealToFinite() {

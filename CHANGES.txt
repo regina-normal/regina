@@ -700,6 +700,9 @@ Version 7.4  [ (to be announced) ]
             - Extended translate() to support top-dimensional simplices (not
               just lower-dimensional faces), and added a variant of translate()
               that takes face embeddings instead of faces.
+            - Renamed finiteToIdeal() to makeIdeal(), to better align with how
+              this is presented in the GUI.  The old name finiteToIdeal() is
+              kept as an alias (and is _not_ deprecatd).
             - Renamed dumpConstruction() to source(), and extended it to produce
               either C++ and Python code via an optional language argument.
               The old C++-only dumpConstruction() is kept but deprecated.
@@ -741,6 +744,9 @@ Version 7.4  [ (to be announced) ]
               1-efficiency testing is only available for ideal triangulations.
             - New routine truncate(), which allows you to truncate a single
               given vertex.
+            - Renamed idealToFinite() to truncateIdeal(), to better align with
+              how this is presented in the GUI.  The old name idealToFinite()
+              is kept as an alias (and is _not_ deprecatd).
             - Renamed intelligentSimplify() to simplify().  The old name is
               kept as a deprecated alias.
             - Routine puncture() now takes an optional triangle, not an
@@ -754,8 +760,9 @@ Version 7.4  [ (to be announced) ]
               Link::complement() instead.
             - Routine reorderTetrahedraBFS() is now a deprecated alias for
               reorderBFS() (which is available in all dimensions).
-            - Routine idealToFinite() no longer subdivides the triangulation
-              if there are invalid edges but no vertices to truncate.
+            - Routine truncateIdeal() (previously idealToFinite()) no longer
+              subdivides the triangulation if there are invalid edges but no
+              vertices to truncate.
             - Routines hasStrictAngleStructure(), hasGeneralAngleStructure(),
               strictAngleStructure() and generalAngleStructure() have changed
               their behaviour for the empty triangulation: they now return the
@@ -798,6 +805,9 @@ Version 7.4  [ (to be announced) ]
               triangulation happens on the calling thread.
             - Simplifying closed 4-manifolds and 4-manifolds with real boundary
               is now much faster.
+            - Renamed idealToFinite() to truncateIdeal(), to better align with
+              how this is presented in the GUI.  The old name idealToFinite()
+              is kept as an alias (and is _not_ deprecatd).
             - Routine eulerCharManifold() now throws an exception when called
               on an invalid triangulation.
         Struct Unprotected:

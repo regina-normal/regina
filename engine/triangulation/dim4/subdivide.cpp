@@ -35,7 +35,7 @@
 namespace regina {
 
 namespace {
-    // Supporting material for idealToFinite().
+    // Supporting material for truncateIdeal().
 
     // We list the types of pentachora:
     // (1) Original pentachoron, i.e. no ideal vertices.
@@ -98,7 +98,7 @@ namespace {
     }
 } // anonymous namespace
 
-bool Triangulation<4>::idealToFinite() {
+bool Triangulation<4>::truncateIdeal() {
     bool idVrts = false;
     for (auto* v : vertices())
         if (shouldTruncate(v)) {
@@ -404,7 +404,7 @@ bool Triangulation<4>::idealToFinite() {
                             incPerm0 = Perm<5>(triInc2[1],triInc2[2],triInc2[0],
                                 triInc2[3], triInc2[4] );
                         } else {
-                            std::cout<<"Triangulation<4>::idealToFinite()"<<
+                            std::cout<<"Triangulation<4>::truncateIdeal()"<<
                                         " Error 1."<<std::endl;
                             exit(1);
                         }
@@ -437,7 +437,7 @@ bool Triangulation<4>::idealToFinite() {
                             incPerm1 = Perm<5>(triInc3[1],triInc3[2],triInc3[0],
                                               triInc3[3], triInc3[4] );
                         } else {
-                            std::cout<<"Triangulation<4>::idealToFinite()"<<
+                            std::cout<<"Triangulation<4>::truncateIdeal()"<<
                                         " Error 2."<<std::endl;
                             exit(1);
                         }

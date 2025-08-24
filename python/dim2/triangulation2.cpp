@@ -307,6 +307,7 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
         .def("with20", &Triangulation<2>::with20<0>, rbase::with20)
         .def("withShellBoundary", &Triangulation<2>::withShellBoundary,
             rbase::withShellBoundary)
+        .def("makeIdeal", &Triangulation<2>::makeIdeal, rbase::makeIdeal)
         .def("finiteToIdeal", &Triangulation<2>::finiteToIdeal,
             rbase::finiteToIdeal)
         .def("doubleCover", &Triangulation<2>::doubleCover, rbase::doubleCover)

@@ -1388,16 +1388,18 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         /*@{*/
 
         /**
-         * Converts an ideal triangulation into a finite triangulation.
-         * All ideal or invalid vertices are truncated and thus
-         * converted into real boundary components made from unglued
-         * facets of pentachora.
+         * Truncates all ideal or invalid vertices, converting these into real
+         * boundary components make from unglued facets of pentachora.
          *
          * A note: this operation does _not_ preserve orientedness.  That is,
          * regardless of whether this triangulation was oriented before calling
          * this function, it will not be oriented after.  This is due to the
          * specific choice of pentachoron vertex labelling in the subdivision,
          * and this behaviour may change in a future version of Regina.
+         *
+         * This routine was called `idealToFinite()` in older versions of
+         * Regina, since its main job is to convert an ideal triangulation
+         * into a finite triangulation.
          *
          * \exception LockViolation This triangulation contains at least one
          * locked top-dimensional simplex and/or facet.  (This 4-dimensional
@@ -1407,6 +1409,26 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * made.  See Simplex<4>::lock() and Simplex<4>::lockFacet() for
          * further details on how such locks work and what their implications
          * are.
+         *
+         * \return \c true if and only if the triangulation was changed.
+         */
+        bool truncateIdeal();
+
+        /**
+         * Alias for truncateIdeal(), which truncates all ideal or invalid
+         * vertices to convert these into real boundary components.
+         *
+         * This alias idealToFinite() is provided for compatibility with older
+         * versions of Regina.  (It is _not_ deprecated, and so this alias
+         * should remain part of Regina for a long time.)
+         *
+         * See truncateIdeal() for further details.
+         *
+         * \exception LockViolation This triangulation contains at least one
+         * locked top-dimensional simplex and/or facet.  This exception will
+         * be thrown before any changes are made.  See Simplex<4>::lock() and
+         * Simplex<4>::lockFacet() for further details on how such locks work
+         * and what their implications are.
          *
          * \return \c true if and only if the triangulation was changed.
          */
@@ -1903,6 +1925,10 @@ inline bool Triangulation<4>::collapseEdge(Edge<4>* e, bool, bool perform) {
 
 inline bool Triangulation<4>::snapEdge(Edge<4>* e, bool, bool perform) {
     return internalSnapEdge(e, true, perform);
+}
+
+inline bool Triangulation<4>::truncateIdeal() {
+    return idealToFinite();
 }
 
 } // namespace regina

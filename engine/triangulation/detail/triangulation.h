@@ -2727,6 +2727,26 @@ class TriangulationBase :
          * \return \c true if changes were made, or \c false if the
          * original triangulation contained no real boundary components.
          */
+        bool makeIdeal();
+
+        /**
+         * Alias for makeIdeal(), which converts each real boundary component
+         * into an ideal vertex.
+         *
+         * This alias finiteToIdeal() is provided for compatibility with older
+         * versions of Regina.  (It is _not_ deprecated, and so this alias
+         * should remain part of Regina for a long time.)
+         *
+         * See makeIdeal() for further details.
+         *
+         * \exception LockViolation This triangulation contains at least one
+         * locked boundary facet.  This exception will be thrown before any
+         * changes are made.  See Simplex<dim>::lockFacet() for further
+         * details on how such locks work and what their implications are.
+         *
+         * \return \c true if changes were made, or \c false if the
+         * original triangulation contained no real boundary components.
+         */
         bool finiteToIdeal();
 
         /*@}*/
@@ -5699,6 +5719,11 @@ void TriangulationBase<dim>::makeDoubleCover() {
 template <int dim>
 inline void TriangulationBase<dim>::barycentricSubdivision() {
     subdivide();
+}
+
+template <int dim>
+inline bool TriangulationBase<dim>::finiteToIdeal() {
+    return makeIdeal();
 }
 
 template <int dim>
