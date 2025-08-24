@@ -2032,6 +2032,9 @@
     <para>
      If you have <link linkend="tri-locks">simplex and/or facet locks</link>
      then these will be incorporated into the isomorphism signature.
+     Specifically, two triangulations will have the same signature
+     if and only if there is a combinatorial isomorphism between them that
+     preserves all simplex and facet locks.
      If you want an
      isomorphism signature <emphasis>without</emphasis> locks (e.g., for
      compatibility with &regina;&nbsp;7.3.1 or earlier), then simply use the
@@ -4026,9 +4029,271 @@
   <title>Simplex and Facet Locks</title>
 
   <para>
-   TODO: Talk about simplex and facet locks.
-   Also mention how locks appear in the gluings viewer and the dual graph
-   viewer.
+   As of &regina;&nbsp;7.4, you now have the ability to
+   <firstterm>lock</firstterm> parts of the combinatorial structure of a
+   triangulation.  For example, you might have a 3-manifold built from
+   two different geometric pieces separated by a two-triangle torus, and you
+   might want to lock that torus so that any operations on your triangulation
+   work with the two pieces independently, without losing the clear
+   combinatorial separation between them.
   </para>
+  <para>
+   In general, a lock will prevent &regina; from modifying some part(s) of
+   your triangulation when making modifications.  In particular, these locks
+   are enforced when <link linkend="tri-editgluings">editing gluings</link>,
+   making <link linkend="tri-elementarymove">elementary moves</link>,
+   <link linkend="tri-simplification">simplifying the triangulation</link>, or
+   <link linkend="tri-treewidth">improving its treewidth</link>.
+  </para>
+  <para>
+   &regina; supports two kinds of locks: <firstterm>simplex locks</firstterm>
+   and <firstterm>facet locks</firstterm>.
+   <itemizedlist>
+    <listitem>
+     <para>
+      A <firstterm>simplex lock</firstterm> applies to a top-dimensional
+      simplex in your triangulation (e.g., a tetrahedron in a 3-manifold
+      triangulation, or a pentachoron in a 4-manifold triangulation).
+     </para>
+     <para>
+      A locked simplex cannot be removed completely (e.g., by manually
+      removing it from the gluings table, or via moves such as edge collapses
+      or 2-0 moves).  It cannot be subdivided (e.g., by a 1-4 Pachner
+      move in a 3-manifold triangulation, or via barycentric subdivision).
+      It also cannot be merged into other top-dimensional simplices
+      (e.g., by a 2-3 or 3-2 Pachner move in a 3-manifold triangulation).
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      A <firstterm>facet lock</firstterm> applies to a
+      (<replaceable>d</replaceable>-1)-simplex in a
+      <replaceable>d</replaceable>-dimensional triangulation
+      (e.g., a triangle in a 3-manifold triangulation, or a tetrahedron in
+      a 4-manifold triangulation).
+      The example above of locking a two-triangle torus in a 3-manifold
+      triangulation would require two facet locks (one for each triangle).
+     </para>
+     <para>
+      The rules for locked facets are a little more complex:
+     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+        A locked facet cannot be changed between boundary versus internal
+        due to gluing or ungluing.
+        That is, you cannot glue a locked boundary facet to some other
+        top-dimensional simplex (making it internal), and you cannot unglue
+        the top-dimensional simplices that meet on either side of a locked
+        internal facet (converting it into two new boundary facets).
+        However, see the notes below on flattening&mdash;an operation that
+        <emphasis>is</emphasis> allowed, and which might convert a locked
+        internal facet into a boundary facet.
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        A locked facet cannot be removed completely (e.g., because it is
+        internal to the region where a Pachner move takes place, or internal to
+        the region that is removed completely by a 2-0 move or edge collapse,
+        or because it is a boundary facet whose top-dimensional simplex is
+        being removed by a boundary shelling operation).
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        Finally, a locked facet cannot be subdivided (e.g., via barycentric
+        subdivision).
+       </para>
+      </listitem>
+     </itemizedlist>
+     <para>
+      However, there are some important cases where operations
+      <emphasis>are</emphasis> explicitly allowed around locked facets:
+     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+        We do allow moves on the triangulation that topologically
+        &ldquo;flatten&rdquo; a region beside a locked facet
+        <replaceable>F</replaceable>, as long as <replaceable>F</replaceable>
+        survives topologically.  For example, we allow 2-0 moves or edge
+        collapses that merge a locked facet
+        <replaceable>F</replaceable> with a parallel facet
+        <replaceable>G</replaceable>, even if this changes
+        <replaceable>F</replaceable> from internal to boundary
+        (because <replaceable>F</replaceable> was was originally internal but
+        <replaceable>G</replaceable> was originally boundary).
+        Likewise, we allow boundary shellings that expose an internal
+        locked facet to the boundary (because this is considered a
+        &ldquo;topological flattening&rdquo;, not just an arbitrary ungluing).
+        In all such cases, the lock will &ldquo;move&rdquo; with
+        <replaceable>F</replaceable> to its new (possibly merged,
+        possibly boundary) location.
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        We also allow moves that &ldquo;pry open&rdquo; a locked facet
+        <replaceable>F</replaceable> to become a pair of parallel facets
+        <replaceable>F<subscript>1</subscript></replaceable> and
+        <replaceable>F<subscript>2</subscript></replaceable> between which
+        we insert new material.  This operation is used (for example) when
+        building connected sums, or when drilling edges.
+        In such a scenario, the lock will simply move across to one of
+        <replaceable>F<subscript>1</subscript></replaceable> or
+        <replaceable>F<subscript>2</subscript></replaceable>.
+        In particular, if <replaceable>F</replaceable> was originally a
+        boundary facet then the lock will move to whichever of
+        <replaceable>F<subscript>1</subscript></replaceable> or
+        <replaceable>F<subscript>2</subscript></replaceable> is still boundary
+        after the operation is complete.
+       </para>
+      </listitem>
+     </itemizedlist>
+    </listitem>
+   </itemizedlist>
+  </para>
+  <para>
+   As noted above, locks are enforced in all operations that use local moves
+   (e.g., automated simplification or treewidth improvement).  However,
+   some operations are less easy to decompose into simple combinatorial
+   &ldquo;pieces&rdquo;, and so these might handle locks differently.
+   For example: <link linkend="tri-truncate">truncation of vertices</link>
+   will not be allowed if a triangulation has any locks at all;
+   <link linkend="tri-puncture">puncturing a triangulation</link> uses a safe
+   algorithm that will never violate a lock; and
+   <link linkend="tri-make0eff">making a triangulation 0-efficient</link>
+   cannot work with locks at all so it ignores them entirely.
+   As a general rule, if you want to know if/how some operation handles locks,
+   find the operation here in this handbook and it should be explained for you.
+  </para>
+
+  <sect2 id="tri-locks-edit">
+   <title>Adding and Removing Individual Locks</title>
+   <para>
+    You can edit locks directly through the
+    <link link="tri-editgluings">gluings table</link>.
+    Open the triangulation viewer, and switch to the
+    <guilabel>Gluings</guilabel> tab.
+   </para>
+   <para>
+    To lock or unlock a top-dimensional simplex, right-click on the simplex in
+    the first column of the table.  When a simplex is locked, the
+    corresponding cell in the first column will be coloured yellow.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-locks-simplex"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    To lock or unlock a facet, right-click on the corresponding cell in the
+    remaining columns of the table (specifically,
+    the cell that contains the gluing information for that facet).
+    For a boundary facet, this will be an empty cell.
+    For an internal facet, you can use either of the two cells that
+    describe the gluing across that facet.
+    As before, when a facet is locked, the corresponding cell
+    (for a boundary facet) or pair of cells (for an internal facet)
+    will be coloured yellow.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-locks-facet"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    If your computer does not support right-click (e.g., you have a
+    one-button mouse), then you should use the normal secondary-click
+    mechanism for bringing up a pop-up context menu.
+   </para>
+   <para>
+    Finally: if your triangulation has any simplex or facet locks, you will
+    see an extra padlock button beneath the gluings table.
+    Pressing this button is a fast way to remove <emphasis>all</emphasis>
+    simplex and facet locks from the triangulation at once.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-locks-unlock-all"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
+  <sect2 id="tri-locks-view">
+   <title>Viewing Locks</title>
+   <para>
+    You can see your locks visually in the
+    <link linkend="tri-graphs-dual">dual graph</link> of your triangulation, by
+    visiting the <guilabel>Skeleton</guilabel>&rarr;<guilabel>Graphs</guilabel>
+    tab in the triangulation viewer.
+   </para>
+   <para>
+    Locked simplices will appear as yellow nodes in the dual graph, and
+    locked internal facets will appear as yellow arcs.  You will not see
+    locked boundary facets, since these do not appear in the dual graph at all.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="tri-locks-graph"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
+  <sect2 id="tri-locks-save">
+   <title>Saving Locks</title>
+   <para>
+    Locks will be saved alongside triangulations in &regina; data files
+    from &regina;&nbsp;7.4 onwards.
+   </para>
+   <para>
+    You can still open these files in &regina;&nbsp;7.3.1 or earlier, though
+    these older versions of &regina; do not understand locks (which means that
+    if you <emphasis>save</emphasis> your file in an older version of &regina;,
+    your locks will be lost completely).
+   </para>
+   <para>
+    Locks are also encoded in a triangulation's
+    <link linkend="tri-composition-isosig">isomorphism signature</link>.
+    Specifically:
+    <itemizedlist>
+     <listitem><para>
+      If a triangulation does <emphasis>not</emphasis> have any simplex or
+      facet locks, its isomorphism signature will be the same as in
+      &regina;&nbsp;7.3.1 or earlier.  For example,
+      <literal>cPcbbbiht</literal> is the isomorphism signature of the
+      two-tetrahedron figure eight knot complement with no locks.
+     </para></listitem>
+     <listitem><para>
+      If a triangulation <emphasis>does</emphasis> have locks, then
+      its isomorphism signature will be the unlocked signature followed by a
+      period and some additional symbols encoding the locks.
+      For example, <literal>cPcbbbiht.aq</literal> encodes the
+      two-tetrahedron figure eight knot complement with one locked tetrahedron.
+     </para></listitem>
+     <listitem><para>
+      To remove locks from an isomorphism signature without opening &regina;,
+      you can just delete all symbols from the period onwards.
+     </para></listitem>
+    </itemizedlist>
+   </para>
+   <para>
+    Recall that in &regina;&nbsp;7.3.1 and earlier, two triangulations have
+    the same isomorphism signature if and only if they are combinatorially
+    isomorphic.  Now that &regina;&nbsp;7.4 and later supports locks, this
+    property is upgraded: two triangulations have the same
+    isomorphism signature if and only if there is a combinatorial isomorphism
+    between them that preserves all simplex and facet locks.
+   </para>
+  </sect2>
  </sect1>
 </chapter>

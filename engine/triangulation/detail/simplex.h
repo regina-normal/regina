@@ -442,7 +442,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          *   edge collapses that merge \a F with a parallel (\a dim-1)-face,
          *   even if this changes \a F from internal to boundary (because
          *   \a F was merged with a boundary facet).  Likewise, we allow
-         *   boundary shellings that expose a internal locked facet to the
+         *   boundary shellings that expose an internal locked facet to the
          *   boundary (because this is a "topological flattening", not just
          *   an arbitrary ungluing).  In all such cases, the lock "moves"
          *   with \a F to its new (possibly merged, possibly boundary) location.

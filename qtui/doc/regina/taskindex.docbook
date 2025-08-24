@@ -809,6 +809,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>facet locks</primaryie>
+  <seeie>See: locks</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="featureset">feature set</link></primaryie>
  </indexentry>
 
@@ -1334,6 +1339,19 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>locks, simplex and facet</primaryie>
+  <secondaryie><link linkend="tri-locks-edit">adding and
+   removing</link></secondaryie>
+  <secondaryie><link linkend="tri-locks">description and
+   properties</link></secondaryie>
+  <secondaryie><link linkend="tri-locks-save">encoding in
+   isomorphism signatures</link></secondaryie>
+  <secondaryie><link linkend="tri-locks-save">saving in
+   data files</link></secondaryie>
+  <secondaryie><link linkend="tri-locks-view">viewing</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>look up</primaryie>
   <seeie>See: search</seeie>
  </indexentry>
@@ -1855,6 +1873,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>simplex locks</primaryie>
+  <seeie>See: locks</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>simplifying</primaryie>
   <secondaryie><link linkend="tri-algebra-fund">group
    presentations</link></secondaryie>
@@ -2216,6 +2239,7 @@
    graph</link></secondaryie>
   <secondaryie><link linkend="tri-faces-shapes">faces,
    viewing shapes</link></secondaryie>
+  <secondaryie><link linkend="tri-locks">facet locks</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-fund">fundamental
    group</link></secondaryie>
   <secondaryie><link linkend="tri-prophandlebody">handlebody
@@ -2242,6 +2266,8 @@
    and subcomplex testing</link></secondaryie>
   <secondaryie><link linkend="tri-new-isosig">isomorphism signature,
    recreating from</link></secondaryie>
+  <secondaryie><link linkend="tri-locks">locks, simplex and
+   facet</link></secondaryie>
   <secondaryie><link linkend="tri-graphs-nice">nice tree
    decomposition</link></secondaryie>
   <secondaryie><link linkend="tri-proporient">orientability</link></secondaryie>
@@ -2256,6 +2282,7 @@
   <secondaryie><link linkend="tri-orient">reflecting</link></secondaryie>
   <secondaryie><link linkend="tri-censuslookup">searching for a
    triangulation across the census databases</link></secondaryie>
+  <secondaryie><link linkend="tri-locks">simplex locks</link></secondaryie>
   <secondaryie><link linkend="tri-simplification">simplification</link></secondaryie>
   <secondaryie><link linkend="tri-skeleton">skeleton,
    viewing details</link></secondaryie>
