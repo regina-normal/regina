@@ -212,8 +212,8 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         void orient();
         void reflect();
         void barycentricSubdivide();
-        void idealToFinite();
-        void finiteToIdeal();
+        void truncateIdeal();
+        void makeIdeal();
         void elementaryMove();
         void insertTriangulation();
         void doubleCover();

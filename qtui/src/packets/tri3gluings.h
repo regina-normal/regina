@@ -219,9 +219,9 @@ class Tri3GluingsUI : public QObject, public PacketEditorTab {
         void orient();
         void reflect();
         void barycentricSubdivide();
-        void idealToFinite();
+        void truncateIdeal();
         void truncateVertex();
-        void finiteToIdeal();
+        void makeIdeal();
         void elementaryMove();
         void doubleCover();
         void doubleOverBoundary();

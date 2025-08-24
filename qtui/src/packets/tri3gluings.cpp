@@ -536,7 +536,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "If there are no vertices of this type to truncate, then this "
         "operation will have no effect."));
     triActionList.push_back(actTruncate);
-    connect(actTruncate, SIGNAL(triggered()), this, SLOT(idealToFinite()));
+    connect(actTruncate, SIGNAL(triggered()), this, SLOT(truncateIdeal()));
 
     auto* actTruncateVertex = new QAction(this);
     actTruncateVertex->setText(tr("Truncate Single Vertex..."));
@@ -563,7 +563,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "If there are no real boundary components, then this "
         "operation will have no effect."));
     triActionList.push_back(actMakeIdeal);
-    connect(actMakeIdeal, SIGNAL(triggered()), this, SLOT(finiteToIdeal()));
+    connect(actMakeIdeal, SIGNAL(triggered()), this, SLOT(makeIdeal()));
 
     auto* actPuncture = new QAction(this);
     actPuncture->setText(tr("Puncture"));
@@ -1147,7 +1147,7 @@ void Tri3GluingsUI::barycentricSubdivide() {
         tri->subdivide();
 }
 
-void Tri3GluingsUI::idealToFinite() {
+void Tri3GluingsUI::truncateIdeal() {
     endEdit();
 
     if (tri->isValid() && ! tri->isIdeal())
@@ -1194,7 +1194,7 @@ void Tri3GluingsUI::truncateVertex() {
     }
 }
 
-void Tri3GluingsUI::finiteToIdeal() {
+void Tri3GluingsUI::makeIdeal() {
     endEdit();
 
     if (! tri->hasBoundaryTriangles())

@@ -516,7 +516,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         "If there are no vertices of this type to truncate, then this "
         "operation will have no effect."));
     triActionList.push_back(actTruncate);
-    connect(actTruncate, SIGNAL(triggered()), this, SLOT(idealToFinite()));
+    connect(actTruncate, SIGNAL(triggered()), this, SLOT(truncateIdeal()));
 
     actMakeIdeal = new QAction(this);
     actMakeIdeal->setText(tr("Make &Ideal"));
@@ -530,7 +530,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         "If there are no real boundary components, then this "
         "operation will have no effect."));
     triActionList.push_back(actMakeIdeal);
-    connect(actMakeIdeal, SIGNAL(triggered()), this, SLOT(finiteToIdeal()));
+    connect(actMakeIdeal, SIGNAL(triggered()), this, SLOT(makeIdeal()));
 
     auto* actInsertTri = new QAction(this);
     actInsertTri->setText(tr("Insert Triangulation..."));
@@ -988,7 +988,7 @@ void Tri4GluingsUI::barycentricSubdivide() {
         tri->subdivide();
 }
 
-void Tri4GluingsUI::idealToFinite() {
+void Tri4GluingsUI::truncateIdeal() {
     endEdit();
 
     if (tri->isValid() && ! tri->isIdeal())
@@ -1008,7 +1008,7 @@ void Tri4GluingsUI::idealToFinite() {
     }
 }
 
-void Tri4GluingsUI::finiteToIdeal() {
+void Tri4GluingsUI::makeIdeal() {
     endEdit();
 
     if (! tri->hasBoundaryFacets())
