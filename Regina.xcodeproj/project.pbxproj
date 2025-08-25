@@ -2735,7 +2735,6 @@
 		052F9D15180600FA00FAE4DF /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		052F9D16180600FA00FAE4DF /* regina-config.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "regina-config.h.in"; sourceTree = "<group>"; };
 		052F9D17180600FA00FAE4DF /* regina-core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "regina-core.h"; sourceTree = "<group>"; };
-		052F9D18180600FA00FAE4DF /* regina-engine-config.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = "regina-engine-config.1"; sourceTree = "<group>"; };
 		052F9D19180600FA00FAE4DF /* regina-engine-config.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "regina-engine-config.in"; sourceTree = "<group>"; };
 		052F9D1D180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9D20180600FA00FAE4DF /* canonize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = canonize.h; sourceTree = "<group>"; };
@@ -3143,7 +3142,6 @@
 		0553FB9B2AF2117200BE89A7 /* lst.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = lst.out; sourceTree = "<group>"; };
 		0553FB9C2AF2117300BE89A7 /* construction.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = construction.test; sourceTree = "<group>"; };
 		0553FB9D2AF2117300BE89A7 /* lst.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = lst.test; sourceTree = "<group>"; };
-		0553FB9E2AF2117300BE89A7 /* flags.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = flags.out; sourceTree = "<group>"; };
 		0553FB9F2AF2117300BE89A7 /* hash.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = hash.test; sourceTree = "<group>"; };
 		0553FBA02AF2117300BE89A7 /* hash.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = hash.out; sourceTree = "<group>"; };
 		0553FBA12AF2117300BE89A7 /* flags.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = flags.test; sourceTree = "<group>"; };
@@ -3920,6 +3918,30 @@
 		0591E85D1C50D28700793A9C /* hyperflags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hyperflags.h; sourceTree = "<group>"; };
 		0591E8611C50D2A900793A9C /* hyperflags.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hyperflags.cpp; sourceTree = "<group>"; };
 		0591FB2E2E591AA80061D270 /* virtual-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "virtual-census.rga"; sourceTree = "<group>"; };
+		0591FB312E5C38C70061D270 /* basic_callback.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = basic_callback.cpp; sourceTree = "<group>"; };
+		0591FB322E5C38C70061D270 /* basic_callback.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = basic_callback.out; sourceTree = "<group>"; };
+		0591FB332E5C38C70061D270 /* flags.out.v2 */ = {isa = PBXFileReference; lastKnownFileType = text; path = flags.out.v2; sourceTree = "<group>"; };
+		0591FB342E5C38C70061D270 /* flags.out.v3 */ = {isa = PBXFileReference; lastKnownFileType = text; path = flags.out.v3; sourceTree = "<group>"; };
+		0591FB352E5C38C70061D270 /* repr.out.v2 */ = {isa = PBXFileReference; lastKnownFileType = text; path = repr.out.v2; sourceTree = "<group>"; };
+		0591FB362E5C38C70061D270 /* repr.out.v3 */ = {isa = PBXFileReference; lastKnownFileType = text; path = repr.out.v3; sourceTree = "<group>"; };
+		0591FB372E5C38C70061D270 /* testcallback.in */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = testcallback.in; sourceTree = "<group>"; };
+		0591FB382E5C39270061D270 /* spatiallink.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spatiallink.h; sourceTree = "<group>"; };
+		0591FB392E5C393C0061D270 /* 3d.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = 3d.h; sourceTree = "<group>"; };
+		0591FB3A2E5C393C0061D270 /* arrow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = arrow.h; sourceTree = "<group>"; };
+		0591FB3B2E5C393C0061D270 /* ring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ring.h; sourceTree = "<group>"; };
+		0591FB3C2E5C39A20061D270 /* sfsnotation.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = sfsnotation.pdf; sourceTree = "<group>"; };
+		0591FB3D2E5C39C20061D270 /* boundaries.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = boundaries.pdf; sourceTree = "<group>"; };
+		0591FB3E2E5C39C20061D270 /* cut-quadprism.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "cut-quadprism.pdf"; sourceTree = "<group>"; };
+		0591FB3F2E5C39C20061D270 /* cut-triprism.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "cut-triprism.pdf"; sourceTree = "<group>"; };
+		0591FB402E5C39C20061D270 /* cut-trunchalftet.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "cut-trunchalftet.pdf"; sourceTree = "<group>"; };
+		0591FB412E5C39C20061D270 /* cut-trunctet.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "cut-trunctet.pdf"; sourceTree = "<group>"; };
+		0591FB422E5C39EC0061D270 /* cube.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = cube.pdf; sourceTree = "<group>"; };
+		0591FB432E5C39EC0061D270 /* diag92.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = diag92.pdf; sourceTree = "<group>"; };
+		0591FB442E5C39EC0061D270 /* diagbdry.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = diagbdry.pdf; sourceTree = "<group>"; };
+		0591FB452E5C39EC0061D270 /* diagdistort.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = diagdistort.pdf; sourceTree = "<group>"; };
+		0591FB462E5C39EC0061D270 /* diaginit.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = diaginit.pdf; sourceTree = "<group>"; };
+		0591FB472E5C39EC0061D270 /* parallel.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = parallel.pdf; sourceTree = "<group>"; };
+		0591FB482E5C39EC0061D270 /* reflector.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = reflector.pdf; sourceTree = "<group>"; };
 		05937A9819CEC20900160F9A /* AngleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AngleViewController.h; sourceTree = "<group>"; };
 		05937A9919CEC20900160F9A /* AngleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AngleViewController.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		05937A9D19CECF4300160F9A /* MDSpreadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadView.h; sourceTree = "<group>"; };
@@ -4523,7 +4545,6 @@
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
 		05E7DA3B2766D42600B01C09 /* repr.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = repr.test; sourceTree = "<group>"; };
-		05E7DA3C2766D42600B01C09 /* repr.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = repr.out; sourceTree = "<group>"; };
 		05EA195519F30A0100D37501 /* EltMoves3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EltMoves3.h; sourceTree = "<group>"; };
 		05EA195619F30A0100D37501 /* EltMoves3.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EltMoves3.mm; sourceTree = "<group>"; };
 		05EDDA4727E3102A001743C1 /* chunk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = chunk.cpp; sourceTree = "<group>"; };
@@ -5043,6 +5064,8 @@
 		05098A8F28F24D98005E4716 /* maths */ = {
 			isa = PBXGroup;
 			children = (
+				0591FB392E5C393C0061D270 /* 3d.h */,
+				0591FB3A2E5C393C0061D270 /* arrow.h */,
 				05098A9028F24D98005E4716 /* binom.h */,
 				05098AA728F44AAE005E4716 /* cyclotomic.h */,
 				05098A9528F24D98005E4716 /* integer.h */,
@@ -5064,6 +5087,7 @@
 				05098A9228F24D98005E4716 /* polynomial.h */,
 				05098A9328F24D98005E4716 /* primes.h */,
 				05098AA928F44AAE005E4716 /* rational.h */,
+				0591FB3B2E5C393C0061D270 /* ring.h */,
 				05098AAD28F44AAF005E4716 /* vector.h */,
 			);
 			path = maths;
@@ -5303,6 +5327,7 @@
 				05098B452900186E005E4716 /* examplelink.h */,
 				05098B442900186E005E4716 /* link.h */,
 				05098B462900186E005E4716 /* modellinkgraph.h */,
+				0591FB382E5C39270061D270 /* spatiallink.h */,
 				05098B432900186E005E4716 /* tangle.h */,
 			);
 			path = link;
@@ -5638,6 +5663,8 @@
 				051806AF2C2CF65D001470F1 /* base64.test */,
 				054DF94028CABC2800EC3D81 /* basic.cpp */,
 				0589B32E2E00432E007A8F64 /* basic_alltypes.cpp */,
+				0591FB312E5C38C70061D270 /* basic_callback.cpp */,
+				0591FB322E5C38C70061D270 /* basic_callback.out */,
 				050EC0012E04D39F006755ED /* basic_sub.cpp */,
 				050EC0022E04D39F006755ED /* basic_sub.out */,
 				05E221DD2CEC2545009D5D4E /* binom.out */,
@@ -5686,7 +5713,8 @@
 				050F5D8C1B9BAB9C00C1F681 /* file1.rga */,
 				050F5D8D1B9BAB9C00C1F681 /* file2.rga */,
 				05199A2F25C63B7F0006B8FA /* file3.rga */,
-				0553FB9E2AF2117300BE89A7 /* flags.out */,
+				0591FB332E5C38C70061D270 /* flags.out.v2 */,
+				0591FB342E5C38C70061D270 /* flags.out.v3 */,
 				0553FBA12AF2117300BE89A7 /* flags.test */,
 				05098B0A28FECBD9005E4716 /* flype.out */,
 				05098B0828FECBD9005E4716 /* flype.test */,
@@ -5746,7 +5774,8 @@
 				050F5D9E1B9BAB9C00C1F681 /* README.txt */,
 				05772F04270CFB6000D26D8A /* refs.out */,
 				05772F02270CFB6000D26D8A /* refs.test */,
-				05E7DA3C2766D42600B01C09 /* repr.out */,
+				0591FB352E5C38C70061D270 /* repr.out.v2 */,
+				0591FB362E5C38C70061D270 /* repr.out.v3 */,
 				05E7DA3B2766D42600B01C09 /* repr.test */,
 				05E221E12CEC258D009D5D4E /* runbasic.in */,
 				0577E6DE1F97087900CBDF15 /* safeheldtype_basic.out */,
@@ -5774,6 +5803,7 @@
 				059802802667067C002D5D57 /* swapping.test */,
 				050F5DA21B9BAB9C00C1F681 /* testall.in */,
 				054DF94128CABC2900EC3D81 /* testbasic.in */,
+				0591FB372E5C38C70061D270 /* testcallback.in */,
 				050EC0052E04D3CF006755ED /* testsub.in */,
 				050F5DA31B9BAB9C00C1F681 /* theta_in_solid_torus.orb */,
 				057B0CAE26A2AC4E0017F5EA /* tightencode.out */,
@@ -6134,7 +6164,6 @@
 				052F9D15180600FA00FAE4DF /* README.txt */,
 				052F9D16180600FA00FAE4DF /* regina-config.h.in */,
 				052F9D17180600FA00FAE4DF /* regina-core.h */,
-				052F9D18180600FA00FAE4DF /* regina-engine-config.1 */,
 				052F9D19180600FA00FAE4DF /* regina-engine-config.in */,
 				056AED992A4327C500EAF4FA /* regina-helper.in */,
 				052F9D1C180600FA00FAE4DF /* snappea */,
@@ -6302,6 +6331,7 @@
 				0512E08E26DF34D100DDB222 /* sfsalt.h */,
 				052F9CDA180600FA00FAE4DF /* sfsnotation.eps */,
 				052F9CDB180600FA00FAE4DF /* sfsnotation.fig */,
+				0591FB3C2E5C39A20061D270 /* sfsnotation.pdf */,
 				052F9CDC180600FA00FAE4DF /* sfsnotation.png */,
 				054208AB1DF0D2740018AB24 /* simplesurfacebundle.cpp */,
 				054208AC1DF0D2740018AB24 /* simplesurfacebundle.h */,
@@ -6528,18 +6558,23 @@
 				052F9DA3180600FB00FAE4DF /* CMakeLists.txt */,
 				052F9DA4180600FB00FAE4DF /* cube.eps */,
 				052F9DA5180600FB00FAE4DF /* cube.fig */,
+				0591FB422E5C39EC0061D270 /* cube.pdf */,
 				052F9DA6180600FB00FAE4DF /* cube.png */,
 				052F9DA7180600FB00FAE4DF /* diag92.eps */,
 				052F9DA8180600FB00FAE4DF /* diag92.fig */,
+				0591FB432E5C39EC0061D270 /* diag92.pdf */,
 				052F9DA9180600FB00FAE4DF /* diag92.png */,
 				052F9DAA180600FB00FAE4DF /* diagbdry.eps */,
 				052F9DAB180600FB00FAE4DF /* diagbdry.fig */,
+				0591FB442E5C39EC0061D270 /* diagbdry.pdf */,
 				052F9DAC180600FB00FAE4DF /* diagbdry.png */,
 				052F9DAD180600FB00FAE4DF /* diagdistort.eps */,
 				052F9DAE180600FB00FAE4DF /* diagdistort.fig */,
+				0591FB452E5C39EC0061D270 /* diagdistort.pdf */,
 				052F9DAF180600FB00FAE4DF /* diagdistort.png */,
 				052F9DB0180600FB00FAE4DF /* diaginit.eps */,
 				052F9DB1180600FB00FAE4DF /* diaginit.fig */,
+				0591FB462E5C39EC0061D270 /* diaginit.pdf */,
 				052F9DB2180600FB00FAE4DF /* diaginit.png */,
 				05A066DA1DFA68190047872E /* layeredchain.cpp */,
 				05A066DB1DFA68190047872E /* layeredchain.h */,
@@ -6557,6 +6592,7 @@
 				05A066E71DFA68190047872E /* layering.h */,
 				052F9DED180600FB00FAE4DF /* parallel.eps */,
 				052F9DEE180600FB00FAE4DF /* parallel.fig */,
+				0591FB472E5C39EC0061D270 /* parallel.pdf */,
 				052F9DEF180600FB00FAE4DF /* parallel.png */,
 				05A066E81DFA68190047872E /* pillowtwosphere.cpp */,
 				05A066E91DFA68190047872E /* pillowtwosphere.h */,
@@ -6566,6 +6602,7 @@
 				05A066ED1DFA68190047872E /* plugtrisolidtorus.h */,
 				052F9DF0180600FB00FAE4DF /* reflector.eps */,
 				052F9DF1180600FB00FAE4DF /* reflector.fig */,
+				0591FB482E5C39EC0061D270 /* reflector.pdf */,
 				052F9DF2180600FB00FAE4DF /* reflector.png */,
 				05A066EE1DFA68190047872E /* satannulus.cpp */,
 				05A066EF1DFA68190047872E /* satannulus.h */,
@@ -6601,14 +6638,19 @@
 			children = (
 				051B97F42321C91A000A2DCA /* boundaries.cpp */,
 				052F9DF4180600FB00FAE4DF /* boundaries.fig */,
+				0591FB3D2E5C39C20061D270 /* boundaries.pdf */,
 				052F9DF5180600FB00FAE4DF /* CMakeLists.txt */,
 				052F9DF6180600FB00FAE4DF /* components.cpp */,
 				052F9DF7180600FB00FAE4DF /* crushandcut.cpp */,
 				05A73C8319B2EEC50099C617 /* csv.cpp */,
 				052F9DF8180600FB00FAE4DF /* cut-quadprism.fig */,
+				0591FB3E2E5C39C20061D270 /* cut-quadprism.pdf */,
 				052F9DF9180600FB00FAE4DF /* cut-triprism.fig */,
+				0591FB3F2E5C39C20061D270 /* cut-triprism.pdf */,
 				052F9DFA180600FB00FAE4DF /* cut-trunchalftet.fig */,
+				0591FB402E5C39C20061D270 /* cut-trunchalftet.pdf */,
 				052F9DFB180600FB00FAE4DF /* cut-trunctet.fig */,
+				0591FB412E5C39C20061D270 /* cut-trunctet.pdf */,
 				052F9E03180600FB00FAE4DF /* disc.cpp */,
 				052F9E04180600FB00FAE4DF /* disc.h */,
 				052F9E06180600FB00FAE4DF /* disctype.h */,
