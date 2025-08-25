@@ -292,8 +292,7 @@ void swap(SurfaceFilterCombination& a, SurfaceFilterCombination& b);
  * \ingroup surface
  */
 class SurfaceFilterProperties : public SurfaceFilter {
-    REGINA_SURFACE_FILTER(SurfaceFilterType::Properties,
-        "Filter by basic properties")
+    REGINA_SURFACE_FILTER(SurfaceFilterType::Properties, "Filter by basic properties")
 
     private:
         std::set<LargeInteger> eulerChar_;
