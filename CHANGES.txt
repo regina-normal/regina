@@ -7,7 +7,7 @@ Regina - Software for low-dimensional topology
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 7.4  [ (to be announced) ]
+Version 7.4  [ 29 August, 2025 ] - Happy Wear it Purple day!
 
     GENERAL:
         - Now requires C++20 (not C++17).

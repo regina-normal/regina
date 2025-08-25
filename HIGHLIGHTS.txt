@@ -6,7 +6,7 @@ Regina - Software for low-dimensional topology
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
-Version 7.4  [ (to be announced) ]
+Version 7.4  [ 29 August, 2025 ] - Happy Wear it Purple day!
 
     Requirements:
         - Regina now uses C++20 (not C++17), and the GUI now requires Qt 6.x.
