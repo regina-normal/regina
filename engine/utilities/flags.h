@@ -182,7 +182,6 @@ class Flags {
          * Determines whether this set is precisely equal to the given
          * flag set.
          *
-         * \param rhs the flag set to test this against.
          * \return \c true if and only if this and the given flag set are
          * identical.
          */

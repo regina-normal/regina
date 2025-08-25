@@ -4019,7 +4019,11 @@ Exception ``LockViolation``:
     and what their implications are.
 
 Parameter ``vertex``:
-    the vertex to truncate.)doc";
+    the vertex to truncate.
+
+Parameter ``lockBoundary``:
+    ``True`` if and only if this routine should lock all boundary
+    facets along the truncation surface.)doc";
 
 // Docstring regina::python::doc::Triangulation_::truncateIdeal
 static const char *truncateIdeal =

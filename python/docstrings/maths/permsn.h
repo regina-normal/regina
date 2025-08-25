@@ -194,9 +194,6 @@ R"doc(Compares this with the given iterator for equality.
 To be considered equal, two iterators must both be dereferencable and
 pointing to the same permutation, or must both be past-the-end.
 
-Parameter ``rhs``:
-    the iterator to compare this with.
-
 Returns:
     ``True`` if and only if the two iterators are equal.)doc";
 

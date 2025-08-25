@@ -147,7 +147,7 @@ using RetriangulateActionFunc = std::conditional_t<withSig,
  * can access this parameter via the type `Retriangulator::PropagationOptions`.
  *
  * \param obj the object being retriangulated or rewritten.
- * \param bool rigid \c true if link diagrams should never be reflected,
+ * \param rigid \c true if link diagrams should never be reflected,
  * rotated and/or reversed.  This argument is currently ignored when working
  * with triangulations.
  * \param height the maximum number of top-dimensional simplices or crossings

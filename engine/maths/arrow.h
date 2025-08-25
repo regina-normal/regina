@@ -645,7 +645,7 @@ Arrow operator * (const Integer& scalar, Arrow poly);
  *
  * \ingroup maths
  */
-Arrow operator * (Arrow poly, const Laurent<Integer>& laurent);
+Arrow operator * (Arrow arrow, const Laurent<Integer>& laurent);
 
 /**
  * Multiplies the given arrow polynomial by the given Laurent polynomial in `A`.
@@ -657,7 +657,7 @@ Arrow operator * (Arrow poly, const Laurent<Integer>& laurent);
  *
  * \ingroup maths
  */
-Arrow operator * (const Laurent<Integer>& laurent, Arrow poly);
+Arrow operator * (const Laurent<Integer>& laurent, Arrow arrow);
 
 /**
  * Adds the two given polynomials.

@@ -277,8 +277,8 @@ been obtained.
 
 This is typically called by the writing thread.
 
-Parameter ``the``:
-    new value for the objective.
+Parameter ``objective``:
+    the new value for the objective.
 
 Returns:
     ``True`` if there has been no cancellation request, or ``False``

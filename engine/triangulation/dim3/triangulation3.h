@@ -3966,6 +3966,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * and what their implications are.
          *
          * \param vertex the vertex to truncate.
+         * \param lockBoundary \c true if and only if this routine should lock
+         * all boundary facets along the truncation surface.
          */
         void truncate(Vertex<3>* vertex, bool lockBoundary = false);
 

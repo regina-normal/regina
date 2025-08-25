@@ -230,7 +230,6 @@ struct PermSn {
              * dereferencable and pointing to the same permutation, or must
              * both be past-the-end.
              *
-             * \param rhs the iterator to compare this with.
              * \return \c true if and only if the two iterators are equal.
              */
             constexpr bool operator == (const iterator&) const = default;

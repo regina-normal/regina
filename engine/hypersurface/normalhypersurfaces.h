@@ -217,7 +217,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * \param coords the coordinate system to be used.  This must be
          * one of the system that Regina is able to use for enumeration;
          * this is documented alongside each HyperCoords enum value.
-         * \param which indicates which normal hypersurfaces should be
+         * \param whichList indicates which normal hypersurfaces should be
          * enumerated.
          * \param algHints passes requests to Regina for which specific
          * enumeration algorithm should be used.

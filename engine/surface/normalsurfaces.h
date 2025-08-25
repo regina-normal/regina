@@ -450,7 +450,8 @@ class NormalSurfaces :
          * \param coords the coordinate system to be used.  This must be
          * one of the system that Regina is able to use for enumeration;
          * this is documented alongside each NormalCoords enum value.
-         * \param which indicates which normal surfaces should be enumerated.
+         * \param whichList indicates which normal surfaces should be
+         * enumerated.
          * \param algHints passes requests to Regina for which specific
          * enumeration algorithm should be used.
          * \param tracker a progress tracker through which progress will

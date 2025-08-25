@@ -140,9 +140,6 @@ Returns:
 constexpr const char *__eq_2 =
 R"doc(Determines whether this set is precisely equal to the given flag set.
 
-Parameter ``rhs``:
-    the flag set to test this against.
-
 Returns:
     ``True`` if and only if this and the given flag set are identical.)doc";
 

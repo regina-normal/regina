@@ -262,7 +262,7 @@ Parameter ``coords``:
     that Regina is able to use for enumeration; this is documented
     alongside each HyperCoords enum value.
 
-Parameter ``which``:
+Parameter ``whichList``:
     indicates which normal hypersurfaces should be enumerated.
 
 Parameter ``algHints``:

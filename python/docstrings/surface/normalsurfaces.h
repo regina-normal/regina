@@ -303,7 +303,7 @@ Parameter ``coords``:
     that Regina is able to use for enumeration; this is documented
     alongside each NormalCoords enum value.
 
-Parameter ``which``:
+Parameter ``whichList``:
     indicates which normal surfaces should be enumerated.
 
 Parameter ``algHints``:

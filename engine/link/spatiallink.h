@@ -441,7 +441,7 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
         /**
          * Sets this to be a (deep) copy of the given link.
          *
-         * \arapm src the link to copy.
+         * \param src the link to copy.
          * \return a reference to this link.
          */
         SpatialLink& operator = (const SpatialLink& src);

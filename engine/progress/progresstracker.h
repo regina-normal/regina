@@ -549,7 +549,7 @@ class ProgressTrackerObjective : public ProgressTrackerBase,
          *
          * This is typically called by the writing thread.
          *
-         * \param the new value for the objective.
+         * \param objective the new value for the objective.
          * \return \c true if there has been no cancellation request, or
          * \c false if cancel() has been called (typically by the reading
          * thread).

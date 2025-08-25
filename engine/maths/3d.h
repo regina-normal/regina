@@ -1026,9 +1026,9 @@ class Rotation3D {
  * \ingroup maths
  */
 template <typename Real>
-std::ostream& operator << (std::ostream& out, const Rotation3D<Real>& r) {
-    return out << '(' << r[0] << ", " << r[1] << ", " << r[2] << ", "
-        << r[3] << ')';
+std::ostream& operator << (std::ostream& out, const Rotation3D<Real>& rot) {
+    return out << '(' << rot[0] << ", " << rot[1] << ", " << rot[2] << ", "
+        << rot[3] << ')';
 }
 
 } // namespace regina
