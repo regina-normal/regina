@@ -814,7 +814,9 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="featureset">feature set</link></primaryie>
+  <primaryie>features</primaryie>
+  <secondaryie><link linkend="featureset">overview</link></secondaryie>
+  <secondaryie><link linkend="services">requesting</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1734,6 +1736,10 @@
  <indexentry>
   <primaryie><link linkend="link-reidemeister">Reidemeister
    moves</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="services">releases, announcements</link></primaryie>
  </indexentry>
 
  <indexentry>

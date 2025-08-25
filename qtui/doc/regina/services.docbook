@@ -1,5 +1,5 @@
 <chapter id="services">
- <title>Bug Tracking and Feature Requests</title>
+ <title>Bug Tracking and Release Announcements</title>
  <para>
   Since November&nbsp;2016, &regina; is hosted at
   <ulink url="http://github.com/regina-normal">&github;</ulink>,
@@ -8,11 +8,41 @@
   tracking system</ulink> for managing both bug reports and feature requests.
  </para>
  <para>
-  The old announcements list
-  (<email>regina-announce@lists.sourceforge.net</email>) is still active;
-  this low-traffic list is used for important announcements only (mainly
-  for new releases of &regina;).  This list will transition off
-  sourceforge at a later date.
+  The old mailing list for announcements has now been decommissioned.
+  Instead, you can subscribe to releases on &github;:
+  <itemizedlist>
+   <listitem>
+    <para>
+     Log into &github; (you will need a &github; account for this);
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Visit <ulink url="https://github.com/regina-normal/regina">&regina;'s
+     &github; repository</ulink> and press <guilabel>Watch</guilabel>;
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="github-watch"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Choose <guilabel>Custom</guilabel>, and check the box to watch for
+     releases.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="github-watch-releases"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+   </listitem>
+  </itemizedlist>
  </para>
 </chapter>
 
