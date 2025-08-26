@@ -1283,6 +1283,22 @@ class TriangulationTest : public testing::Test {
                 EXPECT_EQ(clone, locked);
                 EXPECT_EQ(clone, tri); // a == b should ignore locks
                 EXPECT_EQ(clone.sig(), lockedSig);
+
+                SCOPED_TRACE("Propagating through move assignment");
+                Triangulation<dim> alt = regina::Example<dim>::sphere();
+                alt = std::move(clone);
+                EXPECT_EQ(alt, locked);
+                EXPECT_EQ(alt, tri); // a == b should ignore locks
+                EXPECT_EQ(alt.sig(), lockedSig);
+            }
+
+            {
+                SCOPED_TRACE("Propagating through copy assignment");
+                Triangulation<dim> alt = regina::Example<dim>::sphere();
+                alt = locked;
+                EXPECT_EQ(alt, locked);
+                EXPECT_EQ(alt, tri); // a == b should ignore locks
+                EXPECT_EQ(alt.sig(), lockedSig);
             }
 
             for (int i = 0; i < trials; ++i) {
