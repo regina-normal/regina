@@ -9460,7 +9460,6 @@
 						};
 					};
 					058FC8671FE188A0006D04B4 = {
-						DevelopmentTeam = 67JTSH67LZ;
 						ProvisioningStyle = Automatic;
 					};
 					05DADAFE2192535F00DC80E1 = {
@@ -11401,6 +11400,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "compiler-default";
+				CODE_SIGN_IDENTITY = "-";
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -11416,6 +11416,12 @@
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/utils/bundle/regina-testsuite.plist",
+				);
 				PRODUCT_NAME = "regina-testsuite";
 				SKIP_INSTALL = YES;
 			};
@@ -11425,6 +11431,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "compiler-default";
+				CODE_SIGN_IDENTITY = "-";
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -11440,6 +11447,12 @@
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/utils/bundle/regina-testsuite.plist",
+				);
 				PRODUCT_NAME = "regina-testsuite";
 				SKIP_INSTALL = YES;
 			};
@@ -12220,7 +12233,7 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(SRCROOT)/utils/bundle/censuslookup.plist",
+					"$(SRCROOT)/utils/bundle/katie.plist",
 				);
 				PRODUCT_NAME = katie;
 				SKIP_INSTALL = YES;
@@ -12247,7 +12260,7 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(SRCROOT)/utils/bundle/censuslookup.plist",
+					"$(SRCROOT)/utils/bundle/katie.plist",
 				);
 				PRODUCT_NAME = katie;
 				SKIP_INSTALL = YES;
@@ -12264,7 +12277,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 67JTSH67LZ;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -12299,7 +12312,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 67JTSH67LZ;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
