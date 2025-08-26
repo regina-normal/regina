@@ -184,6 +184,12 @@ TEST_F(Dim2Test, isomorphismSignature) {
     verifyIsomorphismSignatureWithLocks(s2Oct.tri, s2Oct.name);
     verifyIsomorphismSignatureWithLocks(rp2.tri, rp2.name);
 }
+TEST_F(Dim2Test, lockPropagation) {
+    testManualCases(TriangulationTest<2>::verifyLockPropagation);
+}
+TEST_F(Dim2Test, lockEnforcement) {
+    testManualCases(TriangulationTest<2>::verifyLockEnforcement);
+}
 TEST_F(Dim2Test, pachner) {
     testManualCases(TriangulationTest<2>::verifyPachner);
     TriangulationTest<2>::verifyPachnerSimplicial();

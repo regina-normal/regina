@@ -760,6 +760,14 @@ TEST_F(Dim4Test, isomorphismSignature) {
         ball_layerAndFold.name);
 }
 
+TEST_F(Dim4Test, lockPropagation) {
+    testManualCases(TriangulationTest<4>::verifyLockPropagation);
+}
+
+TEST_F(Dim4Test, lockEnforcement) {
+    testManualCases(TriangulationTest<4>::verifyLockEnforcement);
+}
+
 TEST_F(Dim4Test, pachner) {
     testManualCases(TriangulationTest<4>::verifyPachner);
     runCensusAllBounded(TriangulationTest<4>::verifyPachner);

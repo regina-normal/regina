@@ -854,6 +854,14 @@ TEST_F(Dim3Test, isomorphismSignature) {
     verifyIsomorphismSignatureWithLocks(lst3_4_7.tri, lst3_4_7.name);
 }
 
+TEST_F(Dim3Test, lockPropagation) {
+    testManualCases(TriangulationTest<3>::verifyLockPropagation);
+}
+
+TEST_F(Dim3Test, lockEnforcement) {
+    testManualCases(TriangulationTest<3>::verifyLockEnforcement);
+}
+
 static void verifyDehydration(const Triangulation<3>& tri, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 

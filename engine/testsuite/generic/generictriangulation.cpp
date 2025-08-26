@@ -86,6 +86,9 @@ TEST_F(Dim5Test, isomorphismSignature) {
         TriangulationTest<5>::twistedBallBundle.tri,
         TriangulationTest<5>::twistedBallBundle.name);
 }
+TEST_F(Dim5Test, lockEnforcement) {
+    testGenericCases(TriangulationTest<5>::verifyLockEnforcement);
+}
 TEST_F(Dim5Test, pachner) {
     testGenericCases(TriangulationTest<5>::verifyPachner);
     TriangulationTest<5>::verifyPachnerSimplicial();
@@ -163,6 +166,9 @@ TEST_F(Dim6Test, isomorphismSignature) {
         TriangulationTest<6>::twistedBallBundle.tri,
         TriangulationTest<6>::twistedBallBundle.name);
 }
+TEST_F(Dim6Test, lockEnforcement) {
+    testGenericCases(TriangulationTest<6>::verifyLockEnforcement);
+}
 TEST_F(Dim6Test, pachner) {
     testGenericCases(TriangulationTest<6>::verifyPachner);
     TriangulationTest<6>::verifyPachnerSimplicial();
@@ -238,6 +244,9 @@ TEST_F(Dim8Test, doubleCover) {
 }
 TEST_F(Dim8Test, doubleOverBoundary) {
     testGenericCases(TriangulationTest<8>::verifyDoubleOverBoundary);
+}
+TEST_F(Dim8Test, lockEnforcement) {
+    testGenericCases(TriangulationTest<8>::verifyLockEnforcement);
 }
 TEST_F(Dim8Test, tightEncoding) {
     testGenericCases(TriangulationTest<8>::verifyTightEncoding);

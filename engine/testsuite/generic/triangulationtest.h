@@ -1259,6 +1259,177 @@ class TriangulationTest : public testing::Test {
                 s->unlock();
         }
 
+        static void verifyLockPropagation(const Triangulation<dim>& tri,
+                const char* name) {
+            SCOPED_TRACE_CSTRING(name);
+
+            static constexpr int trials = 10;
+
+            // This test uses isosigs, so only do it for small triangulations.
+            // Also, locks are not relevant for the empty triangulation.
+            if (tri.isEmpty() || tri.size() > 10)
+                return;
+
+            Triangulation<dim> locked(tri, false, false);
+            locked.simplex(0)->lock();
+            locked.simplex(0)->lockFacet(dim);
+            locked.simplex(locked.size() - 1)->lockFacet(dim - 1);
+            std::string lockedSig = locked.sig();
+            EXPECT_NE(lockedSig.find_first_of('.'), std::string::npos);
+
+            {
+                SCOPED_TRACE("Propagating through direct copy");
+                Triangulation<dim> clone(locked, false, true);
+                EXPECT_EQ(clone, locked);
+                EXPECT_EQ(clone, tri); // a == b should ignore locks
+                EXPECT_EQ(clone.sig(), lockedSig);
+            }
+
+            for (int i = 0; i < trials; ++i) {
+                SCOPED_TRACE("Propagating through isomorphic copy");
+                Triangulation<dim> relabelled =
+                    Isomorphism<dim>::random(locked.size())(locked);
+                EXPECT_EQ(relabelled.sig(), lockedSig);
+
+                {
+                    SCOPED_TRACE("Propagating through reorderBFS()");
+                    for (int j = 0; j < 2; ++j) {
+                        Triangulation<dim> reordered(relabelled, false, true);
+                        reordered.reorderBFS(j == 0);
+                        EXPECT_EQ(reordered.sig(), lockedSig);
+                    }
+                }
+
+                {
+                    SCOPED_TRACE("Propagating through orient()");
+                    relabelled.orient();
+                    EXPECT_EQ(tri.isOrientable(), relabelled.isOrientable());
+                    if (tri.isOrientable())
+                        EXPECT_TRUE(relabelled.isOriented());
+                    EXPECT_EQ(relabelled.sig(), lockedSig);
+                }
+
+                {
+                    SCOPED_TRACE("Propagating through reflect()");
+                    relabelled.reflect();
+                    EXPECT_EQ(tri.isOrientable(), relabelled.isOrientable());
+                    if (tri.isOrientable())
+                        EXPECT_TRUE(relabelled.isOriented());
+                    EXPECT_EQ(relabelled.sig(), lockedSig);
+                }
+
+                {
+                    SCOPED_TRACE("Propagating through doubleCover()");
+                    Triangulation<dim> dbl = tri.doubleCover();
+                    for (size_t i = 0; i < tri.size(); ++i) {
+                        EXPECT_EQ(tri.simplex(i)->lockMask(),
+                            dbl.simplex(i)->lockMask());
+                        EXPECT_EQ(tri.simplex(i)->lockMask(),
+                            dbl.simplex(tri.size() + i)->lockMask());
+                    }
+                }
+                {
+                    SCOPED_TRACE("Propagating through doubleOverBoundary()");
+                    Triangulation<dim> dbl = tri.doubleOverBoundary();
+                    for (size_t i = 0; i < tri.size(); ++i) {
+                        EXPECT_EQ(tri.simplex(i)->lockMask(),
+                            dbl.simplex(i)->lockMask());
+                        EXPECT_EQ(tri.simplex(i)->lockMask(),
+                            dbl.simplex(tri.size() + i)->lockMask());
+                    }
+                }
+
+                if constexpr (dim == 3) {
+                    // Test the result of order() for small triangulations
+                    // only, since the order() algorithm could be slow:
+                    if (tri.size() <= 5) {
+                        SCOPED_TRACE("Propagating through order()");
+                        for (int i = 0; i < 2; ++i) {
+                            Triangulation<dim> alt(tri, false, true);
+                            alt.order(i == 0);
+                            EXPECT_EQ(alt.sig(), lockedSig);
+                        }
+                    }
+                }
+            }
+
+            // TODO: Some other things that would be nice to check here:
+            // triangulateComponents(), insertTriangulation(), makeCanonical(),
+            // application of Cut.
+            //
+            // Also, in dimension 3: connectedSumWith(), summands().
+            // Also, in dimension 4: I-bundles, S1-bundles, bundles with
+            // monodromy.
+        }
+
+        static void verifyLockEnforcement(const Triangulation<dim>& tri,
+                const char* name) {
+            SCOPED_TRACE_CSTRING(name);
+
+            // Locks are not relevant for the empty triangulation.
+            if (tri.isEmpty())
+                return;
+
+            if constexpr (regina::standardDim(dim)) {
+                SCOPED_TRACE("Trying subdivide()");
+                Triangulation<dim> alt(tri, false, false);
+
+                alt.simplex(alt.size() - 1)->lock();
+                EXPECT_THROW({ alt.subdivide(); }, regina::LockViolation);
+                alt.unlockAll();
+                alt.simplex(0)->lockFacet(dim - 1);
+                EXPECT_THROW({ alt.subdivide(); }, regina::LockViolation);
+
+                // Check that no subdivisions were performed.
+                EXPECT_EQ(alt, tri);
+            }
+
+            {
+                SCOPED_TRACE("Trying makeIdeal()");
+                {
+                    Triangulation<dim> alt(tri, false, false);
+                    for (auto f : alt.template faces<dim - 1>())
+                        if (f->isBoundary()) {
+                            f->lock();
+                            EXPECT_THROW({ alt.makeIdeal(); },
+                                regina::LockViolation);
+                            f->unlock();
+
+                            // Check that the operation was not performed.
+                            EXPECT_EQ(alt, tri);
+                            EXPECT_FALSE(alt.hasLocks());
+                        }
+                }
+                {
+                    // Locked simplices should not be a problem.
+                    // Nor should locked internal facets.
+                    Triangulation<dim> alt(tri, false, false);
+                    for (auto s : alt.simplices())
+                        s->lock();
+                    for (auto f : alt.template faces<dim - 1>())
+                        if (! f->isBoundary())
+                            f->lock();
+                    EXPECT_NO_THROW({ alt.makeIdeal(); });
+
+                    // Check that the operation was actually performed.
+                    if (tri.hasBoundaryFacets())
+                        EXPECT_NE(alt, tri);
+                    else
+                        EXPECT_EQ(alt, tri);
+                }
+            }
+
+            // TODO: We should be testing all of our local moves here.
+            // We should also test simple operations such as adding/removing
+            // simplices, or gluing/ungluing them.
+            //
+            // Also, in dimensions 3,4: simplification, improveTreewidth(),
+            // more local moves
+            //
+            // Also, in dimension 3 only: truncateIdeal(), truncate(),
+            // layerOn(), puncture(), drillEdge()
+        }
+
         /**
          * Tests all potential local moves of the form tri.move(f), where f is
          * a subdim-face of the triangulation tri.
