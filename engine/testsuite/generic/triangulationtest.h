@@ -1369,11 +1369,15 @@ class TriangulationTest : public testing::Test {
                 }
             }
 
+            // In 3-D, summands() explicitly does _not_ propagate locks.
+            // We test this elsewhere (in the connected sum decomposition
+            // tests), so no need to test it again here.
+
             // TODO: Some other things that would be nice to check here:
             // triangulateComponents(), insertTriangulation(), makeCanonical(),
             // application of Cut.
             //
-            // Also, in dimension 3: connectedSumWith(), summands().
+            // Also, in dimension 3: connectedSumWith().
             // Also, in dimension 4: I-bundles, S1-bundles, bundles with
             // monodromy.
         }
