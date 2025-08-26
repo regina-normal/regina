@@ -1358,10 +1358,10 @@ class TriangulationTest : public testing::Test {
                 if constexpr (dim == 3) {
                     // Test the result of order() for small triangulations
                     // only, since the order() algorithm could be slow:
-                    if (tri.size() <= 5) {
+                    if (tri.size() <= 5 && tri.isValid()) {
                         SCOPED_TRACE("Propagating through order()");
                         for (int i = 0; i < 2; ++i) {
-                            Triangulation<dim> alt(tri, false, true);
+                            Triangulation<dim> alt(locked, false, true);
                             alt.order(i == 0);
                             EXPECT_EQ(alt.sig(), lockedSig);
                         }
