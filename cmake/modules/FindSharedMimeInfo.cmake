@@ -32,7 +32,8 @@ else (UPDATE_MIME_DATABASE_EXECUTABLE)
 
     if (UPDATE_MIME_DATABASE_EXECUTABLE)
 
-        execute_process (COMMAND ${UPDATE_MIME_DATABASE_EXECUTABLE} -v OUTPUT_VARIABLE _smiVersionRaw)
+        execute_process (COMMAND ${UPDATE_MIME_DATABASE_EXECUTABLE} -v
+            OUTPUT_VARIABLE _smiVersionRaw ERROR_VARIABLE _smiVersionRaw)
 
         string(REGEX REPLACE "update-mime-database \\([a-zA-Z\\-]+\\) ([0-9]\\.[0-9]+).*"
                "\\1" smiVersion "${_smiVersionRaw}")
