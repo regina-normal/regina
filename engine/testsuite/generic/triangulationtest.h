@@ -1369,11 +1369,15 @@ class TriangulationTest : public testing::Test {
                 }
             }
 
+            // In 3-D, summands() explicitly does _not_ propagate locks.
+            // We test this elsewhere (in the connected sum decomposition
+            // tests), so no need to test it again here.
+
             // TODO: Some other things that would be nice to check here:
             // triangulateComponents(), insertTriangulation(), makeCanonical(),
             // application of Cut.
             //
-            // Also, in dimension 3: connectedSumWith(), summands().
+            // Also, in dimension 3: connectedSumWith().
             // Also, in dimension 4: I-bundles, S1-bundles, bundles with
             // monodromy.
         }
@@ -1395,6 +1399,62 @@ class TriangulationTest : public testing::Test {
                 alt.unlockAll();
                 alt.simplex(0)->lockFacet(dim - 1);
                 EXPECT_THROW({ alt.subdivide(); }, regina::LockViolation);
+
+                // Check that no subdivisions were performed.
+                EXPECT_EQ(alt, tri);
+            }
+
+            if constexpr (regina::standardDim(dim) && dim > 2) {
+                SCOPED_TRACE("Trying truncateIdeal()");
+                Triangulation<dim> alt(tri, false, false);
+
+                bool hasIdealOrInvalid = false;
+                for (auto v : alt.vertices())
+                    if (v->isIdeal() || ! v->isValid()) {
+                        hasIdealOrInvalid = true;
+                        break;
+                    }
+
+                if (hasIdealOrInvalid) {
+                    // There is something to truncate.
+                    alt.simplex(alt.size() - 1)->lock();
+                    EXPECT_THROW({ alt.truncateIdeal(); },
+                        regina::LockViolation);
+                    alt.unlockAll();
+                    alt.simplex(0)->lockFacet(dim - 1);
+                    EXPECT_THROW({ alt.truncateIdeal(); },
+                        regina::LockViolation);
+
+                    // Check that no subdivisions were performed.
+                    EXPECT_EQ(alt, tri);
+                } else {
+                    // There is nothing to truncate.
+                    bool result;
+                    alt.simplex(alt.size() - 1)->lock();
+                    EXPECT_NO_THROW({ result = alt.truncateIdeal(); });
+                    EXPECT_FALSE(result);
+                    EXPECT_EQ(alt, tri);
+                    EXPECT_TRUE(alt.hasLocks());
+                    alt.unlockAll();
+                    alt.simplex(0)->lockFacet(dim - 1);
+                    EXPECT_NO_THROW({ result = alt.truncateIdeal(); });
+                    EXPECT_FALSE(result);
+                    EXPECT_EQ(alt, tri);
+                    EXPECT_TRUE(alt.hasLocks());
+                }
+            }
+
+            if constexpr (dim == 3) {
+                SCOPED_TRACE("Trying truncate()");
+                Triangulation<dim> alt(tri, false, false);
+
+                alt.simplex(alt.size() - 1)->lock();
+                EXPECT_THROW({ alt.truncate(alt.vertex(0)); },
+                    regina::LockViolation);
+                alt.unlockAll();
+                alt.simplex(0)->lockFacet(dim - 1);
+                EXPECT_THROW({ alt.truncate(alt.vertex(0)); },
+                    regina::LockViolation);
 
                 // Check that no subdivisions were performed.
                 EXPECT_EQ(alt, tri);

@@ -43,7 +43,6 @@
   #include <villa.h>
   #define DB_CLOSE(x) vlclose(x);
 #elif defined(REGINA_KVSTORE_TOKYOCABINET)
-  #include <cstdbool>
   #include <cstdint>
   #include <tcbdb.h>
   #include <tcutil.h>

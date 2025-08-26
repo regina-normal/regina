@@ -52,7 +52,6 @@
   #include <cabin.h>
   #include <villa.h>
 #elif defined(REGINA_KVSTORE_TOKYOCABINET)
-  #include <cstdbool>
   #include <cstdint>
   #include <tcbdb.h>
   #include <tcutil.h>
