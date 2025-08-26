@@ -775,6 +775,9 @@ Version 7.4  [ 29 August, 2025 ] - Happy Wear it Purple day!
               throw an exception when called on an empty triangulation.
             - Routine simplifyExhaustive() now ensures that any change to the
               triangulation happens on the calling thread.
+            - Routine order() now requires a valid triangulation, and throws
+              an exception if this is not the case.  (Previously it just
+              crashed if there were invalid edges.)
         Class Triangulation<4>:
             - New routine simplifyUpDown(); thanks to Rhuaidi Burke.  The main
               simplify() routine (previously called intelligentSimplify()) now

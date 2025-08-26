@@ -3097,6 +3097,9 @@ vertices of that tetrahedron have been relabelled).
     This routine may be slow, since it backtracks through all possible
     edge orientations until a consistent one has been found.
 
+Precondition:
+    This triangulation is valid.
+
 Parameter ``forceOriented``:
     ``True`` if the triangulation must be both ordered and _oriented_,
     in which case this routine will return ``False`` if the
@@ -3106,6 +3109,9 @@ Parameter ``forceOriented``:
 Returns:
     ``True`` if the triangulation has been successfully ordered as
     described above, or ``False`` if not.
+
+Exception ``FailedPrecondition``:
+    This triangulation is invalid.
 
 Author:
     Matthias Goerner)doc";

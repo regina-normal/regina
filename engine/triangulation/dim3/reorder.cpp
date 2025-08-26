@@ -278,7 +278,9 @@ bool Triangulation<3>::isOrdered() const {
 }
 
 bool Triangulation<3>::order(bool force_oriented) {
-    ensureSkeleton();
+    // The call to isValid() also ensures we have a skeleton.
+    if (! isValid())
+        throw FailedPrecondition("order() requires a valid triangulation");
 
     if(force_oriented && !isOrientable())
         return false;

@@ -3190,12 +3190,16 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * through all possible edge orientations until a consistent one
          * has been found.
          *
+         * \pre This triangulation is valid.
+         *
          * \param forceOriented \c true if the triangulation must be
          * both ordered and _oriented_, in which case this routine will
          * return \c false if the triangulation cannot be oriented and
          * ordered at the same time.  See orient() for further details.
          * \return \c true if the triangulation has been successfully ordered
          * as described above, or \c false if not.
+         *
+         * \exception FailedPrecondition This triangulation is invalid.
          *
          * \author Matthias Goerner
          */
