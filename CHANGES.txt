@@ -10,8 +10,9 @@ Regina - Software for low-dimensional topology
 Version 7.4  [ 29 August, 2025 ] - Happy Wear it Purple day!
 
     GENERAL:
-        - Now requires C++20 (not C++17).
-        - Now requires Qt6 (i.e., dropped support for Qt5).
+        - Regina now requires C++20 (not C++17).
+        - The GUI now requires Qt6 (i.e., dropped support for Qt5).
+        - The API docs now require Doxygen ≥ 1.9.2 (not ≥ 1.8.17).
         - Added support for simplex and facet locks throughout the API.  See
           Simplex<dim>::lock() and Simplex<dim>::lockFacet() for an overview
           of how locks work.  Many routines throughout the API could now

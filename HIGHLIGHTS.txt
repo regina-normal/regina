@@ -9,7 +9,8 @@ Regina - Software for low-dimensional topology
 Version 7.4  [ 29 August, 2025 ] - Happy Wear it Purple day!
 
     Requirements:
-        - Regina now uses C++20 (not C++17), and the GUI now requires Qt 6.x.
+        - Regina now uses C++20 (not C++17), the GUI now requires Qt 6.x, and
+          the API docs now require Doxygen ≥ 1.9.2.
         - You no longer need Jansson, Popt or CppUnit to build Regina.
     Features:
         - Now supports virtual knots and links, with new invariants such as
