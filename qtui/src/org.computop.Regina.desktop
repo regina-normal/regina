@@ -2,7 +2,7 @@
 Version=1.0
 Type=Application
 Name=Regina
-GenericName=3-Manifold Topology
+GenericName=Low-Dimensional Topology
 Comment=Mathematical software for low-dimensional topology
 Icon=regina
 Exec=regina-gui %F
