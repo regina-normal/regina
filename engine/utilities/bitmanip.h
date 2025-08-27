@@ -143,7 +143,6 @@ class BitManipulatorByType<unsigned long> {
         }
 };
 
-#ifdef INT128_AVAILABLE
 template <>
 class BitManipulatorByType<unsigned long long> {
     public:
@@ -158,7 +157,6 @@ class BitManipulatorByType<unsigned long long> {
             return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctzll(x) + 1));
         }
 };
-#endif // INT128_AVAILABLE
 #endif // __GNUC__
 #endif // __DOXYGEN__
 
