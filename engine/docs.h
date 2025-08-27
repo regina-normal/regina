@@ -45,8 +45,8 @@
  *  be accessed through Python.
  *
  *  To start: visit the \topics page and take
- *  a look around, or browse through the classes regina::Triangulation<3>,
- *  regina::Link, and regina::NormalSurfaces.
+ *  a look around, or browse through the classes \ref regina::Triangulation<3>,
+ *  \ref regina::Link, and \ref regina::NormalSurfaces.
  *
  *  <h3>Python</h3>
  *
