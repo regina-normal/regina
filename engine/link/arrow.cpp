@@ -342,9 +342,6 @@ Arrow Link::arrowNaive(int threads, ProgressTracker* tracker) const {
     // It is guaranteed that we have at least one strand, though we
     // might have zero crossings.
 
-    static_assert(BitManipulator<uint64_t>::specialised,
-        "BitManipulator is not specialised for the mask type.");
-
     if (tracker)
         tracker->newStage("Enumerating resolutions");
 
