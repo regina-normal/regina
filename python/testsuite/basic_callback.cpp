@@ -60,7 +60,7 @@ struct Session {
     NativeOutputStream err;
     regina::python::PythonInterpreter py;
 
-    Session(std::string exec) :
+    Session(const char* exec) :
             out(std::cout), err(std::cerr), py(out, err, false) {
         // We do not adjust the Python path to reflect Regina's installation
         // location, since this test is designed to be run directly out of the
@@ -70,7 +70,7 @@ struct Session {
             ::exit(2);
         }
         py.executeLine("from regina import *");
-        py.executeLine("regina.GlobalDirs.deduceDirs('" + exec + "');");
+        py.deduceDirs(exec);
     }
 
     void executeLine(const char* line) {

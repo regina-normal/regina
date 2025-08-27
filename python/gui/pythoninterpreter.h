@@ -242,6 +242,17 @@ class PythonInterpreter {
         bool importRegina(bool fixPythonPath = true);
 
         /**
+         * Asks Regina to deduce where its supporting files are installed.
+         *
+         * This simply calls `regina.GlobalDirs.deduceDirs()` via Python,
+         * using a properly escaped version of \a executable.
+         *
+         * \param executable the path to an executable, which would
+         * typically be the executable currently being run.
+         */
+        bool deduceDirs(const std::string& executable);
+
+        /**
          * Set the given variable in Python's main namespace to
          * represent the given Regina packet.
          *

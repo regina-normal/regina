@@ -596,6 +596,27 @@ bool PythonInterpreter::importReginaIntoNamespace(PyObject* useNamespace,
 #endif
 }
 
+bool PythonInterpreter::deduceDirs(const std::string& executable) {
+    // Sanitise executable so that we can give it to python as a string.
+    // We need to escape backslashes (\) and single quotes (').
+    std::string sanitised;
+    auto from = executable.begin();
+    auto to = from;
+    while (to != executable.end()) {
+        if (*to == '\'' || *to == '\\') {
+            sanitised.append(from, to); // exclude the special character
+            sanitised += '\\';
+            from = to; // leave the special character to begin the next run
+            ++to;
+        } else
+            ++to;
+    }
+    if (from != to)
+        sanitised.append(from, to);
+    return executeLine("regina.GlobalDirs.deduceDirs('" +
+        sanitised + "');");
+}
+
 bool PythonInterpreter::setVar(const char* name,
         std::shared_ptr<Packet> value) {
 #if REGINA_PYBIND11_VERSION == 3
