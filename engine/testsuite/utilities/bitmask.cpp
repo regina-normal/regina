@@ -310,7 +310,10 @@ TEST(BitmaskTest, nextPermutation) {
     verifyNextPermutation<unsigned char>();
     verifyNextPermutation<unsigned int>();
     verifyNextPermutation<unsigned long>();
+    verifyNextPermutation<unsigned long long>();
     verifyNextPermutation<regina::IntOfSize<1>::utype>();
+    verifyNextPermutation<regina::IntOfSize<2>::utype>();
+    verifyNextPermutation<regina::IntOfSize<4>::utype>();
     verifyNextPermutation<regina::IntOfSize<8>::utype>();
 #ifdef INT128_AVAILABLE
     verifyNextPermutation<regina::IntOfSize<16>::utype>();
