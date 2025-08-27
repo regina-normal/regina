@@ -200,7 +200,7 @@ bool GluingsModel4::setData(const QModelIndex& index, const QVariant& value,
 
     if (text.isEmpty()) {
         // Boundary facet.
-        newAdjPent = newAdjFacet -1;
+        newAdjPent = newAdjFacet = -1;
     } else {
         auto match = reFacetGluing.match(text);
         if (! match.hasMatch()) {
