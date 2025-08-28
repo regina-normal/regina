@@ -66,6 +66,7 @@ Don't forget:
     build binary packages, with appropriate BUILD_INFO settings
     update tips for building on different platforms
     update census download file sizes if there have been changes
+    rotate current/ and release/ symlinks in www/aux repositories
     tag the git repository
     install the new handbook, file format and API docs on the website
     update other data on the website (see regina-www/mkwww)
