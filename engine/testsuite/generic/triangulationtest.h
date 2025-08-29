@@ -500,8 +500,7 @@ class TriangulationTest : public testing::Test {
                         // Access faces via the top-dimensional simplices.
                         for (auto s : c->simplices())
                             for (size_t j = 0;
-                                    j < regina::binomSmall(dim+1, subdim+1);
-                                    ++j)
+                                    j < regina::Face<dim, subdim>::nFaces; ++j)
                                 if (! s->template face<subdim>(j)->isValid()) {
                                     allValidInComponent = false;
                                     return; // from lambda
@@ -552,7 +551,7 @@ class TriangulationTest : public testing::Test {
                                     [b, f](auto subdim) {
                                 // Check all subdim-faces of f.
                                 for (size_t j = 0;
-                                        j < regina::binomSmall(dim, subdim+1);
+                                        j < regina::Face<dim-1, subdim>::nFaces;
                                         ++j) {
                                     auto sub = f->template face<subdim>(j);
                                     EXPECT_EQ(sub->boundaryComponent(), b);
@@ -625,9 +624,9 @@ class TriangulationTest : public testing::Test {
                         EXPECT_EQ(s->template faceMapping<subdim>(which), v);
                     }
                 }
+                constexpr size_t nFaces = regina::Face<dim, subdim>::nFaces;
                 EXPECT_EQ(bdry, tri.template countBoundaryFaces<subdim>());
-                EXPECT_EQ(degreeSum,
-                    tri.size() * regina::binomSmall(dim + 1, subdim + 1));
+                EXPECT_EQ(degreeSum, tri.size() * nFaces);
             });
             EXPECT_EQ(tri.isValid(), allValid);
 
@@ -815,7 +814,7 @@ class TriangulationTest : public testing::Test {
                     const auto* innerSimp = built.simplex(i);
                     const auto* outerSimp = bc->template face<dim-1>(i);
 
-                    for (size_t j = 0; j < regina::binomSmall(dim, subdim+1);
+                    for (size_t j = 0; j < regina::Face<dim-1, subdim>::nFaces;
                             ++j) {
                         auto* innerFace = innerSimp->template face<subdim>(j);
                         auto* outerFace = outerSimp->template face<subdim>(j);
