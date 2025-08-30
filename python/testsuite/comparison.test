@@ -35,3 +35,13 @@ r = [ Rational(0,0), Rational(1,3), Rational(1,2), Rational(1,0) ]
 for a in r:
 	for b in r:
 		print(a < b, a <= b, a == b, a != b, a > b, a >= b)
+
+# Note: Currently regina sorts invariant factors using the _reverse_ sequences.
+# The five groups below are presented in the order that regina should sort them.
+
+g = [ AbelianGroup(), AbelianGroup(2), AbelianGroup(2, [3]), AbelianGroup(2, [6]), AbelianGroup(2, [3, 6]) ]
+
+for a in g:
+	for b in g:
+		print(a < b, a <= b, a == b, a != b, a > b, a >= b)
+
