@@ -290,11 +290,11 @@ class XMLParser {
  * resulting C++ string will be the empty string.
  *
  * \param str the string to convert.
- * \param free \c true if the original libxml string \a str should be
+ * \param shouldFree \c true if the original libxml string \a str should be
  * deallocated, or \c false if it should be preserved.
  * \return the given string as a C++ string.
  */
-std::string xmlString(xmlChar* str, bool free = true);
+std::string xmlString(xmlChar* str, bool shouldFree = true);
 
 // Inline functions for XMLPropertyDict
 
@@ -343,12 +343,12 @@ inline void XMLParser::finish() {
 
 // Inline global functions
 
-inline std::string xmlString(xmlChar* str, bool free) {
+inline std::string xmlString(xmlChar* str, bool shouldFree) {
     if (! str)
         return std::string();
 
     std::string ans((const char*)str);
-    if (free)
+    if (shouldFree)
         xmlFree(str);
     return ans;
 }
