@@ -43,11 +43,11 @@
 		<path
    id="polygon15"
    inkscape:label="outer edges"
-   style="fill:none;stroke:#eea583;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1"
+   style="fill:none;stroke:#eea583;stroke-width:36;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1"
    d="M 337.478,51 92.098,414.204 425.728,582.723 531.197,361.869 Z" />
 	
 		<polygon
-   stroke-width="15"
+   stroke-width="18"
    stroke-linecap="round"
    stroke-linejoin="round"
    stroke-miterlimit="10"
@@ -56,7 +56,7 @@
    inkscape:label="inner square"
    style="stroke:#eea483;stroke-opacity:1;fill:#8b573f;fill-opacity:1" /><line
    fill="none"
-   stroke-width="30"
+   stroke-width="36"
    stroke-linecap="round"
    stroke-linejoin="round"
    stroke-miterlimit="10"
@@ -88,7 +88,7 @@
 			<line
    clip-path="url(#SVGID_6_)"
    fill="none"
-   stroke-width="30"
+   stroke-width="36"
    stroke-linecap="round"
    stroke-linejoin="round"
    stroke-miterlimit="10"
