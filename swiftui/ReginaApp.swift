@@ -28,12 +28,9 @@
  *                                                                        *
  **************************************************************************/
 
+// TODO: Get rid of the DocumentKit import
+
 import SwiftUI
-#if !os(macOS)
-import DocumentKit
-#endif
-// TODO: Remove this import once the nasty openWindow hack is gone.
-import ReginaEngine
 
 // TODO: Accent colour does not show when the app opens to the file browser.
 // TODO: Create a full set of dark mode assets.
@@ -58,8 +55,9 @@ struct ReginaApp: App {
                 return ReginaDocument()
             }
         } editor: { file in
-            TreeView(packet: file.document.root, title: file.document.title).toolbarRole(.automatic)
+            MainView(document: file.document)
         }
+        /*
         #if !os(macOS)
         .additionalNavigationBarButtonItems(
             leading: [],
@@ -69,6 +67,7 @@ struct ReginaApp: App {
             } ]
         )
         #endif
+         */
         // Note: To support multiple document types, add additional DocumentGroup scenes.
         #if os(visionOS)
         /*
