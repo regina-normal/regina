@@ -1713,6 +1713,7 @@
 		05FB46E91DD92D4A00BB00E5 /* homgrouppresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FB46DF1DD92D4A00BB00E5 /* homgrouppresentation.h */; };
 		05FB46EA1DD92D4A00BB00E5 /* markedabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46E01DD92D4A00BB00E5 /* markedabeliangroup.cpp */; };
 		05FB46EB1DD92D4A00BB00E5 /* markedabeliangroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FB46E11DD92D4A00BB00E5 /* markedabeliangroup.h */; };
+		05FBF8372E77ABF900E346AA /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 05FBF8362E77ABF900E346AA /* AppIcon.icon */; };
 		05FE04F92DB7F6C8001432AC /* plantri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FE04F82DB7F6C8001432AC /* plantri.cpp */; };
 		05FE04FA2DB7F6C8001432AC /* plantri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FE04F82DB7F6C8001432AC /* plantri.cpp */; };
 		05FE04FC2DB84665001432AC /* modellinkgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FE04FB2DB84665001432AC /* modellinkgraph.cpp */; };
@@ -4635,6 +4636,7 @@
 		05FB46DF1DD92D4A00BB00E5 /* homgrouppresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homgrouppresentation.h; sourceTree = "<group>"; };
 		05FB46E01DD92D4A00BB00E5 /* markedabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = markedabeliangroup.cpp; sourceTree = "<group>"; };
 		05FB46E11DD92D4A00BB00E5 /* markedabeliangroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = markedabeliangroup.h; sourceTree = "<group>"; };
+		05FBF8362E77ABF900E346AA /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		05FC5CF81F98060D00F732E0 /* NewLinkController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewLinkController.mm; sourceTree = "<group>"; };
 		05FC5CF91F98061000F732E0 /* NewLinkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewLinkController.h; sourceTree = "<group>"; };
 		05FE04F82DB7F6C8001432AC /* plantri.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = plantri.cpp; sourceTree = "<group>"; };
@@ -6123,6 +6125,7 @@
 				0553FBA22AF2544E00BE89A7 /* TreeView.swift */,
 				054131082AF9E95A006AAD75 /* Utilities.swift */,
 				0553FBB22AF6808E00BE89A7 /* packets */,
+				05FBF8362E77ABF900E346AA /* AppIcon.icon */,
 				0529094F2AE5EA0A0028990D /* Assets.xcassets */,
 				052909542AE5EA0A0028990D /* Info.plist */,
 				051AEAFD2AEB6F8F00960BBF /* Support */,
@@ -9520,6 +9523,7 @@
 			files = (
 				052909532AE5EA0A0028990D /* Preview Assets.xcassets in Resources */,
 				054131122AF9F246006AAD75 /* README.txt in Resources */,
+				05FBF8372E77ABF900E346AA /* AppIcon.icon in Resources */,
 				052909502AE5EA0A0028990D /* Assets.xcassets in Resources */,
 				051AEB022AEB6F8F00960BBF /* regina-doc-64.png in Resources */,
 				051AEB042AEB6F8F00960BBF /* regina-doc-320.png in Resources */,
