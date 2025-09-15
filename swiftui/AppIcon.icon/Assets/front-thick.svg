@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   version="1.1"
+   id="Layer_1"
+   x="0px"
+   y="0px"
+   width="640px"
+   height="640px"
+   viewBox="0 0 640 640"
+   enable-background="new 0 0 640 640"
+   xml:space="preserve"
+   sodipodi:docname="front-thick.svg"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs17" /><sodipodi:namedview
+   id="namedview17"
+   pagecolor="#86d1ff"
+   bordercolor="#000000"
+   borderopacity="0.25"
+   inkscape:showpageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   inkscape:deskcolor="#d1d1d1"
+   inkscape:zoom="0.91685813"
+   inkscape:cx="286.84918"
+   inkscape:cy="327.74973"
+   inkscape:window-width="1624"
+   inkscape:window-height="918"
+   inkscape:window-x="0"
+   inkscape:window-y="34"
+   inkscape:window-maximized="0"
+   inkscape:current-layer="Layer_1" />
+
+<linearGradient
+   id="SVGID_1_"
+   gradientUnits="userSpaceOnUse"
+   x1="218.3647"
+   y1="-58.8755"
+   x2="421.1694"
+   y2="698.002">
+	<stop
+   offset="0"
+   style="stop-color:#D6AB72"
+   id="stop1" />
+	<stop
+   offset="0.1305"
+   style="stop-color:#D09F5D"
+   id="stop2" />
+	<stop
+   offset="0.5"
+   style="stop-color:#C18026"
+   id="stop3" />
+	<stop
+   offset="0.6095"
+   style="stop-color:#B97926"
+   id="stop4" />
+	<stop
+   offset="1"
+   style="stop-color:#A26526"
+   id="stop5" />
+</linearGradient>
+
+<linearGradient
+   id="SVGID_2_"
+   gradientUnits="userSpaceOnUse"
+   x1="214.9033"
+   y1="-69.9595"
+   x2="423.3805"
+   y2="708.0881">
+	<stop
+   offset="0"
+   style="stop-color:#AC7A6C"
+   id="stop6" />
+	<stop
+   offset="0.5056"
+   style="stop-color:#945748"
+   id="stop7" />
+	<stop
+   offset="1"
+   style="stop-color:#562D22"
+   id="stop8" />
+</linearGradient>
+
+<linearGradient
+   id="SVGID_3_"
+   gradientUnits="userSpaceOnUse"
+   x1="218.3647"
+   y1="-58.8755"
+   x2="421.1694"
+   y2="698.002">
+	<stop
+   offset="0"
+   style="stop-color:#87835C"
+   id="stop9" />
+	<stop
+   offset="0.5"
+   style="stop-color:#54541F"
+   id="stop10" />
+	<stop
+   offset="1"
+   style="stop-color:#464012"
+   id="stop11" />
+</linearGradient>
+
+<linearGradient
+   id="SVGID_4_"
+   gradientUnits="userSpaceOnUse"
+   x1="214.6992"
+   y1="-68.835"
+   x2="422.842"
+   y2="707.9647">
+	<stop
+   offset="0"
+   style="stop-color:#9A6046"
+   id="stop12" />
+	<stop
+   offset="0.5"
+   style="stop-color:#6E2405"
+   id="stop13" />
+	<stop
+   offset="1"
+   style="stop-color:#4E0000"
+   id="stop14" />
+</linearGradient>
+
+<g
+   id="g17">
+	
+		<path
+   id="polygon15"
+   inkscape:label="outer edges"
+   style="fill:none;stroke:#ffffff;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10"
+   d="M 337.478,51 92.098,414.204 425.728,582.723 531.197,361.869 Z" />
+	
+		<line
+   fill="none"
+   stroke="#FFFFFF"
+   stroke-width="30"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   stroke-miterlimit="10"
+   x1="337.478"
+   y1="51"
+   x2="425.728"
+   y2="582.723"
+   id="line15"
+   inkscape:label="front edge" />
+	
+		<polygon
+   fill="#FFFFFF"
+   fill-opacity="0.4"
+   stroke="#FFFFFF"
+   stroke-width="15"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   stroke-miterlimit="10"
+   points="   204.72,247.504 376.645,286.994 483.015,462.762 291.529,390.435  "
+   id="polygon16"
+   inkscape:label="inner square" />
+	<g
+   id="g16">
+		<defs
+   id="defs16">
+			<polygon
+   id="SVGID_5_"
+   points="405.044,333.92 459.231,423.463 599,394.317 559.18,254.059 6,367.104 42.591,469.743      311.648,404.023 280.986,373.075    " />
+		</defs>
+		<clipPath
+   id="SVGID_6_">
+			<use
+   xlink:href="#SVGID_5_"
+   overflow="visible"
+   id="use16" />
+		</clipPath>
+		
+			<line
+   clip-path="url(#SVGID_6_)"
+   fill="none"
+   stroke="#FFFFFF"
+   stroke-width="30"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   stroke-miterlimit="10"
+   x1="92.098"
+   y1="414.204"
+   x2="531.197"
+   y2="361.869"
+   id="line16"
+   inkscape:label="back edge" />
+	</g>
+</g>
+</svg>

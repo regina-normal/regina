@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   version="1.1"
+   id="Layer_1"
+   x="0px"
+   y="0px"
+   width="640px"
+   height="640px"
+   viewBox="0 0 640 640"
+   enable-background="new 0 0 640 640"
+   xml:space="preserve"
+   sodipodi:docname="front-thick-dark.svg"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs17" /><sodipodi:namedview
+   id="namedview17"
+   pagecolor="#2e2e2e"
+   bordercolor="#000000"
+   borderopacity="0.25"
+   inkscape:showpageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   inkscape:deskcolor="#d1d1d1"
+   inkscape:zoom="0.91685813"
+   inkscape:cx="289.03054"
+   inkscape:cy="327.74973"
+   inkscape:window-width="1624"
+   inkscape:window-height="918"
+   inkscape:window-x="0"
+   inkscape:window-y="34"
+   inkscape:window-maximized="0"
+   inkscape:current-layer="g17" />
+
+<g
+   id="g17">
+	
+		<path
+   id="polygon15"
+   inkscape:label="outer edges"
+   style="fill:none;stroke:#eea583;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1"
+   d="M 337.478,51 92.098,414.204 425.728,582.723 531.197,361.869 Z" />
+	
+		<polygon
+   stroke-width="15"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   stroke-miterlimit="10"
+   points="   204.72,247.504 376.645,286.994 483.015,462.762 291.529,390.435  "
+   id="polygon17"
+   inkscape:label="inner square"
+   style="stroke:#eea483;stroke-opacity:1;fill:#8b573f;fill-opacity:1" /><line
+   fill="none"
+   stroke-width="30"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   stroke-miterlimit="10"
+   x1="337.478"
+   y1="51"
+   x2="425.728"
+   y2="582.723"
+   id="line15"
+   inkscape:label="front edge"
+   style="stroke:#eea483;stroke-opacity:1" />
+	
+		
+	<g
+   id="g16">
+		<defs
+   id="defs16">
+			<polygon
+   id="SVGID_5_"
+   points="405.044,333.92 459.231,423.463 599,394.317 559.18,254.059 6,367.104 42.591,469.743      311.648,404.023 280.986,373.075    " />
+		</defs>
+		<clipPath
+   id="SVGID_6_">
+			<use
+   xlink:href="#SVGID_5_"
+   overflow="visible"
+   id="use16" />
+		</clipPath>
+		
+			<line
+   clip-path="url(#SVGID_6_)"
+   fill="none"
+   stroke-width="30"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   stroke-miterlimit="10"
+   x1="92.098"
+   y1="414.204"
+   x2="531.197"
+   y2="361.869"
+   id="line16"
+   inkscape:label="back edge"
+   style="stroke:#eea483;stroke-opacity:1" />
+	</g>
+</g>
+</svg>
