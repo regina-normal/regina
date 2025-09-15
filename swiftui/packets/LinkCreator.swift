@@ -103,7 +103,10 @@ struct LinkCreator: View {
                     TextEditor(text: $inputCode)
                         .font(.system(.body, design: .monospaced))
                         .autocorrectionDisabled()
+                        #if !os(macOS)
+                        // TODO: macOS: How do we do this?
                         .textInputAutocapitalization(.never)
+                        #endif
                 case .torus:
                     TextField("Parameters (𝑝, 𝑞)", text: $inputTorusParams)
                         #if !os(macOS)

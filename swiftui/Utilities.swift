@@ -58,25 +58,6 @@ extension String {
         self.init(cString: s.__dataUnsafe())
     }
 }
-
-extension std.string: ExpressibleByStringLiteral {
-    init(_ s: String) {
-        self.init()
-        for c in s.utf8 {
-            // Convert UInt8 to CChar and append.
-            self.push_back(value_type(bitPattern: c))
-        }
-    }
-    
-    public init(stringLiteral s: String) {
-        // TODO: Can we do this differently?
-        self.init()
-        for c in s.utf8 {
-            // Convert UInt8 to CChar and append.
-            self.push_back(value_type(bitPattern: c))
-        }
-    }
-}
 #endif
 
 #if os(macOS)
