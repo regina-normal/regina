@@ -1700,7 +1700,6 @@
 		05F2033420A17C1E00FC74ED /* dt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F2033220A17C1E00FC74ED /* dt.cpp */; };
 		05F2033720A17C6000FC74ED /* knot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F2033620A17C6000FC74ED /* knot.cpp */; };
 		05F3DABE2A5CE3B3007A2CE2 /* integer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F3DABD2A5CE3B3007A2CE2 /* integer.cpp */; };
-		05FAB8302B98254800F959D1 /* DocumentKit in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, xros, ); productRef = 05FAB82F2B98254800F959D1 /* DocumentKit */; };
 		05FB46D21DD92D2800BB00E5 /* abeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46CA1DD92D2400BB00E5 /* abeliangroup.cpp */; };
 		05FB46D31DD92D2800BB00E5 /* grouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46CB1DD92D2400BB00E5 /* grouppresentation.cpp */; };
 		05FB46D41DD92D2800BB00E5 /* homgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46CC1DD92D2400BB00E5 /* homgrouppresentation.cpp */; };
@@ -4681,7 +4680,6 @@
 				05A6284B2AE9FDA50049739E /* libbz2.tbd in Frameworks */,
 				05A6284C2AE9FDA70049739E /* libiconv.tbd in Frameworks */,
 				05A6284D2AE9FDAC0049739E /* libxml2.tbd in Frameworks */,
-				05FAB8302B98254800F959D1 /* DocumentKit in Frameworks */,
 				054131162AFA2747006AAD75 /* graphviz.xcframework in Frameworks */,
 				05A6284E2AE9FDAF0049739E /* libz.tbd in Frameworks */,
 			);
@@ -9124,7 +9122,6 @@
 			);
 			name = "Regina for iOS";
 			packageProductDependencies = (
-				05FAB82F2B98254800F959D1 /* DocumentKit */,
 			);
 			productName = Regina;
 			productReference = 052909472AE5EA090028990D /* Regina.app */;
@@ -9493,7 +9490,6 @@
 			);
 			mainGroup = 0575E6501805F36D009E3FC4;
 			packageReferences = (
-				05FAB82E2B98254800F959D1 /* XCRemoteSwiftPackageReference "DocumentKit" */,
 			);
 			productRefGroup = 0575E65A1805F36D009E3FC4 /* Products */;
 			projectDirPath = "";
@@ -12681,25 +12677,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		05FAB82E2B98254800F959D1 /* XCRemoteSwiftPackageReference "DocumentKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/danielsaidi/DocumentKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.3.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		05FAB82F2B98254800F959D1 /* DocumentKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 05FAB82E2B98254800F959D1 /* XCRemoteSwiftPackageReference "DocumentKit" */;
-			productName = DocumentKit;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0575E6511805F36D009E3FC4 /* Project object */;
 }

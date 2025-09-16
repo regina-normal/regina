@@ -28,8 +28,6 @@
  *                                                                        *
  **************************************************************************/
 
-// TODO: Get rid of the DocumentKit import
-
 import SwiftUI
 
 // TODO: Accent colour does not show when the app opens to the file browser.
