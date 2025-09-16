@@ -51,6 +51,11 @@ struct PythonSettingsView: View {
 }
 
 struct SettingsView: View {
+    #if os(macOS)
+    static let width = 400.0
+    static let height = 560.0
+    #endif
+
     var body: some View {
         TabView {
             GeneralSettingsView()

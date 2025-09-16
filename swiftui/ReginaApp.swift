@@ -30,43 +30,46 @@
 
 import SwiftUI
 
-// TODO: Accent colour does not show when the app opens to the file browser.
-// TODO: Create a full set of dark mode assets.
-// In particular, the attachment icon is almost invisible on visionOS.
-// In dark mode, the crossing arrows need to be brighter to help visionOS.
-
-// TODO: Go over compact tab icons and see if they need to be a little thicker.
-
-// TODO: Possibly the toolbar actions could be a tiny bit heavier in stroke width.
+// What follows is a collected TODO list as the SwiftUI interface is put together.
+// Current these TODOs are ancient, and any or all may no longer be relevant.
+//
+// TODO: Ancient notes:
+// - Create a full set of dark mode assets.
+//   + In particular, the attachment icon is almost invisible on visionOS.
+//   + In dark mode, the crossing arrows need to be brighter to help visionOS.
+// - Go over compact tab icons and see if they need to be a little thicker.
+// - Possibly the toolbar actions could be a tiny bit heavier in stroke width.
+//
+// TODO: Modern notes:
+// - Redo the launch/accent colours, since we are no longer tied to the brown app icon.
 
 @main
 struct ReginaApp: App {
     var body: some Scene {
-        /* TODO: Return to a plain old new document, and find a better way to open example files.
         DocumentGroup(newDocument: { ReginaDocument() }) { file in
-            TreeView(packet: file.document.root).toolbarRole(.automatic)
-        */
-        DocumentGroup() { () -> ReginaDocument in
-            do {
-                return try ReginaDocument(example: "sample", title: "Introductory Examples")
-            } catch {
-                return ReginaDocument()
-            }
-        } editor: { file in
             MainView(document: file.document)
         }
-        /*
         #if !os(macOS)
-        .additionalNavigationBarButtonItems(
-            leading: [],
-            trailing: [ DocumentGroupToolbarItem(icon: UIImage(systemName: "books.vertical")) {
-                // TODO: Here is where we offer the example data files.
-                // This will _not_ work with macOS, which will need a menu item or some such instead.
-            } ]
-        )
+        DocumentGroupLaunchScene("Regina") {
+            // These buttons cannot have images - otherwise this messes up the launch view.
+            // Moreover, it looks like the system only allows two buttons before creating
+            // a "More..." sub-menu that we'd rather not have.
+            // Finally: it looks like these actions are not shown on visionOS at all. Sigh.
+            NewDocumentButton("Create Document")
+            Button("Open Example…") {
+                // TODO: Support opening example files
+            }
+        } background: {
+            Rectangle().fill(.launchBackground.gradient)
+        }
+        #if os(iOS)
+        .commands {
+            // TODO: Menus for iPadOS
+        }
         #endif
-         */
-        // Note: To support multiple document types, add additional DocumentGroup scenes.
+        #endif
+        
+        // TODO: Properly implement spatiallink-volume for visionOS
         #if os(visionOS)
         /*
         WindowGroup(for: PacketWrapper.ID.self) { link in
@@ -87,9 +90,14 @@ struct ReginaApp: App {
         .windowStyle(.volumetric)
         .defaultSize(width: 0.7, height: 0.7, depth: 0.7, in: .meters)
         #endif
+
         #if os(macOS)
         Settings {
             SettingsView()
+                .frame(width: SettingsView.width, height: SettingsView.height)
+        }
+        .commands {
+            // TODO: Menus for macOS
         }
         #endif
     }

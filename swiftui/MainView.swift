@@ -49,7 +49,8 @@ struct MainView: View {
             // TODO: Pass a proper title.
             // TODO: We get two toolbars. The first is from the DocumentGroup and
             // the second is from TreeView.
-            TreeView(packet: root, title: "Test Document")// .toolbarRole(.automatic)
+            TreeView(packet: root, title: "Test Document")
+                .toolbarRole(.editor)
         case .error(let filename):
             // TODO: Use the filename stem here.
             NavigationStack {
