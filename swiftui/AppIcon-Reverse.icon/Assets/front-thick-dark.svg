@@ -28,7 +28,7 @@
    inkscape:pagecheckerboard="0"
    inkscape:deskcolor="#d1d1d1"
    inkscape:zoom="0.91685813"
-   inkscape:cx="289.03054"
+   inkscape:cx="290.12122"
    inkscape:cy="327.74973"
    inkscape:window-width="1624"
    inkscape:window-height="918"
@@ -43,7 +43,7 @@
 		<path
    id="polygon15"
    inkscape:label="outer edges"
-   style="fill:none;stroke:#eea583;stroke-width:36;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1"
+   style="fill:none;stroke:#cc8d73;stroke-width:36;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1"
    d="M 337.478,51 92.098,414.204 425.728,582.723 531.197,361.869 Z" />
 	
 		<polygon
@@ -54,7 +54,7 @@
    points="   204.72,247.504 376.645,286.994 483.015,462.762 291.529,390.435  "
    id="polygon17"
    inkscape:label="inner square"
-   style="stroke:#eea483;stroke-opacity:1;fill:#8b573f;fill-opacity:1" /><line
+   style="stroke:#cc8d73;stroke-opacity:1;fill:#7a5445;fill-opacity:1" /><line
    fill="none"
    stroke-width="36"
    stroke-linecap="round"
@@ -66,7 +66,7 @@
    y2="582.723"
    id="line15"
    inkscape:label="front edge"
-   style="stroke:#eea483;stroke-opacity:1" />
+   style="stroke:#cc8d73;stroke-opacity:1" />
 	
 		
 	<g
@@ -98,7 +98,7 @@
    y2="361.869"
    id="line16"
    inkscape:label="back edge"
-   style="stroke:#eea483;stroke-opacity:1" />
+   style="stroke:#cc8d73;stroke-opacity:1" />
 	</g>
 </g>
 </svg>
