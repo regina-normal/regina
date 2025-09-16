@@ -37,6 +37,15 @@ extension UTType {
     static let snapPeaTriangulation = UTType(exportedAs: "org.computop.snappea-triangulation")
 }
 
+enum ReginaDocumentError: Error {
+    /// Indicates that the document is still in a loading state.
+    case documentLoading
+    /// Indicates that the document tried to load but failed.
+    case documentHasError
+    /// Indicates that the C++ engine returned a null pointer where data was expected.
+    case noData
+}
+
 // TODO: We need a way to observe changes to the packet and/or the packet tree.
 // This should happen via the ObservableObject protocol (which ReferenceFileDocument inherits),
 // and it will need to somehow communicate with Regina's packet listener interface.
@@ -131,7 +140,7 @@ final class ReginaDocument: ReferenceFileDocument {
         case .reginaData:
             // We will load the document in a background thread, since
             // files could be large.
-            // Note: To cancel a load, the user can just close the window.
+            // To cancel a load, the user can just close the window.
             // The task will finish and then throw the result away.
             Task { [weak self] in
                 let root = data.withUnsafeBytes { bytes in
@@ -161,21 +170,24 @@ final class ReginaDocument: ReferenceFileDocument {
         }
     }
     
-    // TODO: Possibly change std.string into Data here
-    
-    func snapshot(contentType: UTType) throws -> std.string {
+    func snapshot(contentType: UTType) throws -> Data {
         print("DOCUMENT SNAPSHOT")
         switch status {
-        case .loading: throw CocoaError(.fileWriteUnknown)
-        case .error: throw CocoaError(.fileWriteUnknown)
-        case .open(let root): return root.save()
+        case .loading:
+            throw ReginaDocumentError.documentLoading
+        case .error:
+            throw ReginaDocumentError.documentHasError
+        case .open(let root):
+            let save = root.save()
+            guard let bytes = save.__dataUnsafe() else {
+                throw ReginaDocumentError.noData
+            }
+            return Data(bytes: bytes, count: save.length())
         }
     }
     
-    func fileWrapper(snapshot: std.string, configuration: WriteConfiguration) throws -> FileWrapper {
+    func fileWrapper(snapshot: Data, configuration: WriteConfiguration) throws -> FileWrapper {
         print("DOCUMENT WRITE: \(configuration.existingFile?.filename ?? "New file")")
-        // TODO: Check exactly when String.data() can return null.
-        // TODO: Is there a faster way to get from std.string to Data?
-        return .init(regularFileWithContents: String(snapshot).data(using: .utf8)!)
+        return .init(regularFileWithContents: snapshot)
     }
 }
