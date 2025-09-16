@@ -30,47 +30,35 @@
 
 import SwiftUI
 
-struct GeneralSettingsView: View {
-    @AppStorage("displayUnicode") private var displayUnicode = true
-    @AppStorage("graphvizLabels") private var graphvizLabels = true
-
-    var body: some View {
-        Form {
-            Toggle("Use unicode for mathematical symbols", isOn: $displayUnicode)
-            Toggle("Labels on dual graphs and link graphs", isOn: $graphvizLabels)
-        }
-    }
-}
-
-struct PythonSettingsView: View {
-    var body: some View {
-        Form {
-            Text("Python support is not yet available.")
-        }
-    }
-}
+// TODO: Flesh this out with proper settings as we need them.
+// TODO: Remember the last visited settings page in app settings.
+// TODO: Provide a way for non-mac platforms to access settings.
 
 struct SettingsView: View {
-    #if os(macOS)
-    static let width = 400.0
-    static let height = 560.0
-    #endif
+    @AppStorage("displayUnicode") private var displayUnicode = true
+    @AppStorage("warnNonEmbedded") private var warnNonEmbedded = true
+    @AppStorage("graphvizLabels") private var graphvizLabels = true
+    @AppStorage("pythonAutoIndent") private var autoIndent = true
+    @AppStorage("pythonSpacesPerTab") private var spacesPerTab = 4
 
     var body: some View {
-        TabView {
-            GeneralSettingsView()
-                .tabItem {
-                    Label("General", systemImage: "gear")
-                }
-            PythonSettingsView()
-            // TODO: apple.terminal in SFSymbols 5.. but see "terminal"
-                .tabItem {
-                    Label("Python", systemImage: "apple.terminal")
-                }
+        Form {
+            Section("General") {
+                Toggle("Use unicode for mathematical symbols", isOn: $displayUnicode)
+                Toggle("Warn before generating immersed and/or non-singular surfaces", isOn: $warnNonEmbedded)
+                Toggle("Labels on dual graphs and link graphs", isOn: $graphvizLabels)
+            }
+            Section("Python") {
+                Toggle("Auto-indent", isOn: $autoIndent)
+                Stepper("Spaces per tab: \(spacesPerTab)", value: $spacesPerTab, in: 1...16)
+            }
         }
-        .padding(.all)
-        // TODO: What is a reasonable size here?
-        .frame(width: 375.0, height: 150.0)
+        #if os(macOS)
+        .formStyle(.grouped)
+        #else
+        .background(Color(.systemGroupedBackground))
+        #endif
+        .navigationTitle("Regina Settings")
     }
 }
 

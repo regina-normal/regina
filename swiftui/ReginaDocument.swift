@@ -73,7 +73,7 @@ final class ReginaDocument: ReferenceFileDocument {
         /**
          * There was an error attempting to open the file.
          */
-        case error(filename: String?)
+        case error
     }
     
     let origin: Origin
@@ -119,8 +119,7 @@ final class ReginaDocument: ReferenceFileDocument {
                     return
                 }
                 if root.isNull() {
-                    // TODO: Is this the best filename to use for .error?
-                    self.status = .error(filename: title)
+                    self.status = .error
                 } else {
                     self.status = .open(root: root)
                 }
@@ -156,7 +155,7 @@ final class ReginaDocument: ReferenceFileDocument {
                         return
                     }
                     if root.isNull() {
-                        self.status = .error(filename: filename)
+                        self.status = .error
                     } else {
                         self.status = .open(root: root)
                     }

@@ -130,18 +130,14 @@ struct TreeDetail: View {
 struct TreeView: View {
     // @ObservedObject var document: ReginaDocument
     @ObservedObject private var root: PacketWrapper
-    // TODO: Should the title be a binding?
-    let title: String
-
     @StateObject private var display = DisplayState()
 
     @State private var inputNewPacket = false
     @State private var inputNewPacketType: regina.PacketType = .None
     @State private var createBeneath: PacketWrapper?
 
-    init(packet: regina.SharedPacket, title: String) {
+    init(packet: regina.SharedPacket) {
         root = .init(packet: packet)
-        self.title = title
     }
 
     var body: some View {
@@ -157,7 +153,6 @@ struct TreeView: View {
                 List(root.children ?? [], selection: $display.selected) { item in
                     PacketCell(wrapper: item, depth: 0)
                 }
-                .navigationTitle(title)
                 .onChange(of: display.selected) { wrapper in
                     if let wrapper = wrapper {
                         if wrapper.packet.type() == .Container {
@@ -263,6 +258,6 @@ struct TreeView_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        TreeView(packet: simpleTree, title: "Sample")
+        TreeView(packet: simpleTree)
     }
 }

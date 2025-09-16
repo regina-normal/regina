@@ -30,7 +30,7 @@
 import SwiftUI
 
 struct MainView: View {
-    @StateObject var document: ReginaDocument
+    @ObservedObject var document: ReginaDocument
     
     @ScaledMetric private var gap = 20
     
@@ -38,26 +38,17 @@ struct MainView: View {
         switch document.status {
         case .loading:
             VStack(spacing: gap) {
-                // TODO: Possibly use a ProgressView here instead of an icon.
-                Image(systemName: "TODO").font(.largeTitle)
-                    .symbolEffect(.pulse)
+                ProgressView().progressViewStyle(.circular).controlSize(.large)
                 Text("Loading…")
             }
             .multilineTextAlignment(.center).padding(.all)
         case .open(let root):
-            // TODO: What is the toolbar role for?
-            // TODO: Pass a proper title.
-            // TODO: We get two toolbars. The first is from the DocumentGroup and
-            // the second is from TreeView.
-            TreeView(packet: root, title: "Test Document")
-                .toolbarRole(.editor)
-        case .error(let filename):
-            // TODO: Use the filename stem here.
+            TreeView(packet: root).toolbarRole(.editor)
+        case .error:
             NavigationStack {
                 VStack(spacing: gap) {
                     Image(systemName: "info.circle").font(.largeTitle)
-                    // Text("I could not open the document \(filename).")
-                    Text("I could not open the document.")
+                    Text("I could not open the requested document.")
                     Text("Either this document is inaccessible, or it is not a Regina data file.")
                 }
                 .multilineTextAlignment(.center).padding(.all)

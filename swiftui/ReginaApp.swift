@@ -42,6 +42,8 @@ import SwiftUI
 //
 // TODO: Modern notes:
 // - Redo the launch/accent colours, since we are no longer tied to the brown app icon.
+// - Have a very good at info.plist and overhaul if necessary.
+// - Documents from the file browser open the app but not the documents themselves.
 
 @main
 struct ReginaApp: App {
@@ -94,7 +96,7 @@ struct ReginaApp: App {
         #if os(macOS)
         Settings {
             SettingsView()
-                .frame(width: SettingsView.width, height: SettingsView.height)
+                .frame(width: 400, height: 560)
         }
         .commands {
             // TODO: Menus for macOS
