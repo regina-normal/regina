@@ -44,6 +44,7 @@ import SwiftUI
 // - Redo the launch/accent colours, since we are no longer tied to the brown app icon.
 // - Have a very good at info.plist and overhaul if necessary.
 // - Documents from the file browser open the app but not the documents themselves.
+// - Overhaul SvgView when we reach that point in the implementation.
 
 @main
 struct ReginaApp: App {
