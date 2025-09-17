@@ -46,6 +46,7 @@ import SwiftUI
 // - Documents from the file browser open the app but not the documents themselves.
 // - Overhaul SvgView when we reach that point in the implementation.
 // - Overhaul how we manage document icons that are registered with the OS.
+// - Flesh out the settings bundle.
 
 @main
 struct ReginaApp: App {
