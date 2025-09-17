@@ -102,6 +102,16 @@ struct ReginaApp: App {
         .commands {
             // TODO: Menus for macOS
         }
+        #else
+        // TODO: Enforce just one settings window, and make it accessible.
+        WindowGroup("Settings", id: "settings") {
+            SettingsView()
+                .navigationTitle("Settings")
+                .handlesExternalEvents(preferring: [], allowing: [])
+        }
+        #if os(visionOS)
+        .defaultSize(CGSize(width: 600, height: 720))
+        #endif
         #endif
     }
 }

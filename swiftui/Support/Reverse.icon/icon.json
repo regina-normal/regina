@@ -24,39 +24,16 @@
             }
           ],
           "hidden" : false,
-          "image-name" : "front-thick.svg",
-          "name" : "front-thick",
-          "opacity-specializations" : [
+          "image-name-specializations" : [
             {
-              "appearance" : "dark",
-              "value" : 0
+              "value" : "front-thick.svg"
             },
             {
-              "appearance" : "tinted",
-              "value" : 1
+              "appearance" : "dark",
+              "value" : "front-thick-dark.svg"
             }
           ],
-          "position" : {
-            "scale" : 1.5,
-            "translation-in-points" : [
-              0,
-              0
-            ]
-          }
-        },
-        {
-          "hidden" : false,
-          "image-name" : "front-thick-dark.svg",
           "name" : "front-thick-dark",
-          "opacity-specializations" : [
-            {
-              "value" : 0
-            },
-            {
-              "appearance" : "dark",
-              "value" : 1
-            }
-          ],
           "position" : {
             "scale" : 1.5,
             "translation-in-points" : [

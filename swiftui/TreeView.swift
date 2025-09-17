@@ -135,6 +135,8 @@ struct TreeView: View {
     @State private var inputNewPacket = false
     @State private var inputNewPacketType: regina.PacketType = .None
     @State private var createBeneath: PacketWrapper?
+    
+    @State private var showSettings = false
 
     init(packet: regina.SharedPacket) {
         root = .init(packet: packet)
@@ -170,6 +172,14 @@ struct TreeView: View {
                     }
                 }
                 .toolbar {
+                    #if !os(macOS)
+                    ToolbarItem(placement: .primaryAction) {
+                        Button("Settings", systemImage: "gear") {
+                            showSettings = true
+                        }
+                    }
+                    ToolbarSpacer(placement: .primaryAction)
+                    #endif
                     ToolbarItem(placement: .primaryAction) {
                         Menu {
                             // TODO: Should this be a static list?
@@ -232,6 +242,11 @@ struct TreeView: View {
 
             }
         }
+        #if !os(macOS)
+        .sheet(isPresented: $showSettings) {
+            SettingsView()
+        }
+        #endif
     }
 }
 

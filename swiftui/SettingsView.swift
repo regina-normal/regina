@@ -35,11 +35,38 @@ import SwiftUI
 // TODO: Provide a way for non-mac platforms to access settings.
 
 struct SettingsView: View {
+    #if !os(macOS)
+    enum AppIcon {
+        case standard
+        case reverse
+        
+        var name: String? {
+            switch self {
+            case .standard: nil
+            case .reverse: "Reverse"
+            }
+        }
+
+        static var current: AppIcon {
+            if let name = UIApplication.shared.alternateIconName {
+                if name == "Reverse" {
+                    return .reverse
+                }
+            }
+            return .standard
+        }
+    }
+    #endif
+    
     @AppStorage("displayUnicode") private var displayUnicode = true
     @AppStorage("warnNonEmbedded") private var warnNonEmbedded = true
     @AppStorage("graphvizLabels") private var graphvizLabels = true
     @AppStorage("pythonAutoIndent") private var autoIndent = true
     @AppStorage("pythonSpacesPerTab") private var spacesPerTab = 4
+    
+    #if !os(macOS)
+    @State var appIcon = AppIcon.current
+    #endif
 
     var body: some View {
         Form {
@@ -47,6 +74,18 @@ struct SettingsView: View {
                 Toggle("Use unicode for mathematical symbols", isOn: $displayUnicode)
                 Toggle("Warn before generating immersed and/or non-singular surfaces", isOn: $warnNonEmbedded)
                 Toggle("Labels on dual graphs and link graphs", isOn: $graphvizLabels)
+                #if !os(macOS)
+                Picker("App icon", selection: $appIcon) {
+                    // Users can't see these icons, but as soon as they change the icon
+                    // the system will show them the new one that they chose.
+                    // So I think this is okay.
+                    Text("Standard").tag(AppIcon.standard)
+                    Text("Reversed").tag(AppIcon.reverse)
+                }
+                .onChange(of: appIcon) { _, newValue in
+                    UIApplication.shared.setAlternateIconName(newValue.name)
+                }
+                #endif
             }
             Section("Python") {
                 Toggle("Auto-indent", isOn: $autoIndent)

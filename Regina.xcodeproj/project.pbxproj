@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -897,7 +897,7 @@
 		0553FBB12AF5F38F00BE89A7 /* sample.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05373B1B2771740800E9418B /* sample.rga */; };
 		0553FBB42AF680AE00BE89A7 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBB32AF680AE00BE89A7 /* TextView.swift */; };
 		0553FBB62AF6A4E700BE89A7 /* LinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBB52AF6A4E700BE89A7 /* LinkView.swift */; };
-		0553FBBA2AF8643D00BE89A7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBB92AF8643D00BE89A7 /* SettingsView.swift */; platformFilters = (macos, ); };
+		0553FBBA2AF8643D00BE89A7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBB92AF8643D00BE89A7 /* SettingsView.swift */; };
 		0553FBBE2AF92A3700BE89A7 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0553FBBD2AF92A3700BE89A7 /* Settings.bundle */; };
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
@@ -1712,8 +1712,8 @@
 		05FB46E91DD92D4A00BB00E5 /* homgrouppresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FB46DF1DD92D4A00BB00E5 /* homgrouppresentation.h */; };
 		05FB46EA1DD92D4A00BB00E5 /* markedabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46E01DD92D4A00BB00E5 /* markedabeliangroup.cpp */; };
 		05FB46EB1DD92D4A00BB00E5 /* markedabeliangroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FB46E11DD92D4A00BB00E5 /* markedabeliangroup.h */; };
-		05FBF83B2E77C12900E346AA /* AppIcon-Reverse.icon in Resources */ = {isa = PBXBuildFile; fileRef = 05FBF8392E77C12900E346AA /* AppIcon-Reverse.icon */; };
-		05FBF83F2E77C51D00E346AA /* AppIcon-Coloured.icon in Resources */ = {isa = PBXBuildFile; fileRef = 05FBF83E2E77C51D00E346AA /* AppIcon-Coloured.icon */; };
+		05FBF83B2E77C12900E346AA /* Reverse.icon in Resources */ = {isa = PBXBuildFile; fileRef = 05FBF8392E77C12900E346AA /* Reverse.icon */; };
+		05FBF83F2E77C51D00E346AA /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 05FBF83E2E77C51D00E346AA /* AppIcon.icon */; };
 		05FBF8462E784F4600E346AA /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FBF8452E784F4200E346AA /* MainView.swift */; };
 		05FE04F92DB7F6C8001432AC /* plantri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FE04F82DB7F6C8001432AC /* plantri.cpp */; };
 		05FE04FA2DB7F6C8001432AC /* plantri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FE04F82DB7F6C8001432AC /* plantri.cpp */; };
@@ -4637,8 +4637,8 @@
 		05FB46DF1DD92D4A00BB00E5 /* homgrouppresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homgrouppresentation.h; sourceTree = "<group>"; };
 		05FB46E01DD92D4A00BB00E5 /* markedabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = markedabeliangroup.cpp; sourceTree = "<group>"; };
 		05FB46E11DD92D4A00BB00E5 /* markedabeliangroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = markedabeliangroup.h; sourceTree = "<group>"; };
-		05FBF8392E77C12900E346AA /* AppIcon-Reverse.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "AppIcon-Reverse.icon"; sourceTree = "<group>"; };
-		05FBF83E2E77C51D00E346AA /* AppIcon-Coloured.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "AppIcon-Coloured.icon"; sourceTree = "<group>"; };
+		05FBF8392E77C12900E346AA /* Reverse.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = Reverse.icon; sourceTree = "<group>"; };
+		05FBF83E2E77C51D00E346AA /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		05FBF8452E784F4200E346AA /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		05FC5CF81F98060D00F732E0 /* NewLinkController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewLinkController.mm; sourceTree = "<group>"; };
 		05FC5CF91F98061000F732E0 /* NewLinkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewLinkController.h; sourceTree = "<group>"; };
@@ -6094,6 +6094,8 @@
 		051AEAFD2AEB6F8F00960BBF /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				05FBF83E2E77C51D00E346AA /* AppIcon.icon */,
+				05FBF8392E77C12900E346AA /* Reverse.icon */,
 				051AEB002AEB6F8F00960BBF /* regina-doc-320.png */,
 				051AEAFE2AEB6F8F00960BBF /* regina-doc-64.png */,
 				051AEAFF2AEB6F8F00960BBF /* snappea-doc-320.png */,
@@ -6129,8 +6131,6 @@
 				0553FBA22AF2544E00BE89A7 /* TreeView.swift */,
 				0553FBB22AF6808E00BE89A7 /* packets */,
 				0529094F2AE5EA0A0028990D /* Assets.xcassets */,
-				05FBF83E2E77C51D00E346AA /* AppIcon-Coloured.icon */,
-				05FBF8392E77C12900E346AA /* AppIcon-Reverse.icon */,
 				052909542AE5EA0A0028990D /* Info.plist */,
 				051AEAFD2AEB6F8F00960BBF /* Support */,
 				052909512AE5EA0A0028990D /* Preview Content */,
@@ -9523,7 +9523,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05FBF83B2E77C12900E346AA /* AppIcon-Reverse.icon in Resources */,
+				05FBF83B2E77C12900E346AA /* Reverse.icon in Resources */,
 				052909532AE5EA0A0028990D /* Preview Assets.xcassets in Resources */,
 				054131122AF9F246006AAD75 /* README.txt in Resources */,
 				052909502AE5EA0A0028990D /* Assets.xcassets in Resources */,
@@ -9531,7 +9531,7 @@
 				051AEB042AEB6F8F00960BBF /* regina-doc-320.png in Resources */,
 				051AEB032AEB6F8F00960BBF /* snappea-doc-320.png in Resources */,
 				051AEB052AEB6F8F00960BBF /* snappea-doc-64.png in Resources */,
-				05FBF83F2E77C51D00E346AA /* AppIcon-Coloured.icon in Resources */,
+				05FBF83F2E77C51D00E346AA /* AppIcon.icon in Resources */,
 				0553FBBE2AF92A3700BE89A7 /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11279,7 +11279,8 @@
 		052909562AE5EA0A0028990D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Coloured";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = Reverse;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -11345,7 +11346,8 @@
 		052909572AE5EA0A0028990D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Coloured";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = Reverse;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ANALYZER_NONNULL = YES;
