@@ -1713,7 +1713,7 @@
 		05FB46EA1DD92D4A00BB00E5 /* markedabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46E01DD92D4A00BB00E5 /* markedabeliangroup.cpp */; };
 		05FB46EB1DD92D4A00BB00E5 /* markedabeliangroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FB46E11DD92D4A00BB00E5 /* markedabeliangroup.h */; };
 		05FBF83B2E77C12900E346AA /* Reverse.icon in Resources */ = {isa = PBXBuildFile; fileRef = 05FBF8392E77C12900E346AA /* Reverse.icon */; };
-		05FBF83F2E77C51D00E346AA /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 05FBF83E2E77C51D00E346AA /* AppIcon.icon */; };
+		05FBF83F2E77C51D00E346AA /* Classic.icon in Resources */ = {isa = PBXBuildFile; fileRef = 05FBF83E2E77C51D00E346AA /* Classic.icon */; };
 		05FBF8462E784F4600E346AA /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FBF8452E784F4200E346AA /* MainView.swift */; };
 		05FE04F92DB7F6C8001432AC /* plantri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FE04F82DB7F6C8001432AC /* plantri.cpp */; };
 		05FE04FA2DB7F6C8001432AC /* plantri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FE04F82DB7F6C8001432AC /* plantri.cpp */; };
@@ -4638,7 +4638,7 @@
 		05FB46E01DD92D4A00BB00E5 /* markedabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = markedabeliangroup.cpp; sourceTree = "<group>"; };
 		05FB46E11DD92D4A00BB00E5 /* markedabeliangroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = markedabeliangroup.h; sourceTree = "<group>"; };
 		05FBF8392E77C12900E346AA /* Reverse.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = Reverse.icon; sourceTree = "<group>"; };
-		05FBF83E2E77C51D00E346AA /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
+		05FBF83E2E77C51D00E346AA /* Classic.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = Classic.icon; sourceTree = "<group>"; };
 		05FBF8452E784F4200E346AA /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		05FC5CF81F98060D00F732E0 /* NewLinkController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewLinkController.mm; sourceTree = "<group>"; };
 		05FC5CF91F98061000F732E0 /* NewLinkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewLinkController.h; sourceTree = "<group>"; };
@@ -6094,7 +6094,7 @@
 		051AEAFD2AEB6F8F00960BBF /* Support */ = {
 			isa = PBXGroup;
 			children = (
-				05FBF83E2E77C51D00E346AA /* AppIcon.icon */,
+				05FBF83E2E77C51D00E346AA /* Classic.icon */,
 				05FBF8392E77C12900E346AA /* Reverse.icon */,
 				051AEB002AEB6F8F00960BBF /* regina-doc-320.png */,
 				051AEAFE2AEB6F8F00960BBF /* regina-doc-64.png */,
@@ -9531,7 +9531,7 @@
 				051AEB042AEB6F8F00960BBF /* regina-doc-320.png in Resources */,
 				051AEB032AEB6F8F00960BBF /* snappea-doc-320.png in Resources */,
 				051AEB052AEB6F8F00960BBF /* snappea-doc-64.png in Resources */,
-				05FBF83F2E77C51D00E346AA /* AppIcon.icon in Resources */,
+				05FBF83F2E77C51D00E346AA /* Classic.icon in Resources */,
 				0553FBBE2AF92A3700BE89A7 /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11279,8 +11279,8 @@
 		052909562AE5EA0A0028990D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = Reverse;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = Classic;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Reverse;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -11346,8 +11346,8 @@
 		052909572AE5EA0A0028990D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = Reverse;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = Classic;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Reverse;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ANALYZER_NONNULL = YES;

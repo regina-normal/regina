@@ -37,23 +37,23 @@ import SwiftUI
 struct SettingsView: View {
     #if !os(macOS)
     enum AppIcon {
-        case standard
+        case classic
         case reverse
         
         var name: String? {
             switch self {
-            case .standard: nil
-            case .reverse: "Reverse"
+            case .classic: "Classic"
+            case .reverse: nil
             }
         }
 
         static var current: AppIcon {
             if let name = UIApplication.shared.alternateIconName {
-                if name == "Reverse" {
-                    return .reverse
+                if name == "Classic" {
+                    return .classic
                 }
             }
-            return .standard
+            return .reverse
         }
     }
     #endif
@@ -79,8 +79,8 @@ struct SettingsView: View {
                     // Users can't see these icons, but as soon as they change the icon
                     // the system will show them the new one that they chose.
                     // So I think this is okay.
-                    Text("Standard").tag(AppIcon.standard)
-                    Text("Reversed").tag(AppIcon.reverse)
+                    Text("Inverted").tag(AppIcon.reverse)
+                    Text("Classic").tag(AppIcon.classic)
                 }
                 .onChange(of: appIcon) { _, newValue in
                     UIApplication.shared.setAlternateIconName(newValue.name)
