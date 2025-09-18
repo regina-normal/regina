@@ -35,7 +35,7 @@ import SwiftUI
 // TODO: Provide a way for non-mac platforms to access settings.
 
 struct SettingsView: View {
-    #if !os(macOS)
+    #if os(iOS)
     enum AppIcon {
         case classic
         case reverse
@@ -64,7 +64,7 @@ struct SettingsView: View {
     @AppStorage("pythonAutoIndent") private var autoIndent = true
     @AppStorage("pythonSpacesPerTab") private var spacesPerTab = 4
     
-    #if !os(macOS)
+    #if os(iOS)
     @State var appIcon = AppIcon.current
     #endif
 
@@ -74,7 +74,7 @@ struct SettingsView: View {
                 Toggle("Use unicode for mathematical symbols", isOn: $displayUnicode)
                 Toggle("Warn before generating immersed and/or non-singular surfaces", isOn: $warnNonEmbedded)
                 Toggle("Labels on dual graphs and link graphs", isOn: $graphvizLabels)
-                #if !os(macOS)
+                #if os(iOS)
                 Picker("App icon", selection: $appIcon) {
                     // Users can't see these icons, but as soon as they change the icon
                     // the system will show them the new one that they chose.
@@ -83,7 +83,9 @@ struct SettingsView: View {
                     Text("Classic").tag(AppIcon.classic)
                 }
                 .onChange(of: appIcon) { _, newValue in
-                    UIApplication.shared.setAlternateIconName(newValue.name)
+                    UIApplication.shared.setAlternateIconName(newValue.name) {
+                        print("ERROR: Could not set alternate icon: \($0)")
+                    }
                 }
                 #endif
             }

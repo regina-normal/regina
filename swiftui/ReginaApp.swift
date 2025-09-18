@@ -44,6 +44,8 @@ import SwiftUI
 // - Redo the launch/accent colours, since we are no longer tied to the brown app icon.
 // - Have a very good look at info.plist and overhaul if necessary.
 // - Documents from the file browser open the app but not the documents themselves.
+//   .. but it works on macOS
+//   .. and the same problem occurs even without DocumentGroupLaunchScene
 // - Overhaul SvgView when we reach that point in the implementation.
 // - Overhaul how we manage document icons that are registered with the OS.
 // - Flesh out the settings bundle.
@@ -88,7 +90,7 @@ struct ReginaApp: App {
             // We need to send _some_ data, and it appears this data needs to be different each time;
             // otherwise when opening a fresh window the packet does not get reset.
             // For the moment we pass the current date/time to ensure uniqueness.
-            let link = regina.SharedSpatialLink(regina.ExampleLink.spatialTrefoil())
+            // let link = regina.SharedSpatialLink(regina.ExampleLink.spatialTrefoil())
             // TODO: SpatialLinkVolume(packet: link)
             SpatialLinkVolume()
         }

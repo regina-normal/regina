@@ -178,7 +178,9 @@ struct TreeView: View {
                             showSettings = true
                         }
                     }
+                    #if !os(visionOS)
                     ToolbarSpacer(placement: .primaryAction)
+                    #endif
                     #endif
                     ToolbarItem(placement: .primaryAction) {
                         Menu {
