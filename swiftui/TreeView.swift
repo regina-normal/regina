@@ -138,6 +138,10 @@ struct TreeView: View {
     
     @State private var showSettings = false
 
+    #if !os(macOS)
+    @Environment(\.dismiss) private var dismiss
+    #endif
+
     init(packet: regina.SharedPacket) {
         root = .init(packet: packet)
     }
@@ -246,7 +250,16 @@ struct TreeView: View {
         }
         #if !os(macOS)
         .sheet(isPresented: $showSettings) {
-            SettingsView()
+            NavigationStack {
+                SettingsView()
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Close", systemImage: "xmark") {
+                                dismiss()
+                            }
+                        }
+                    }
+            }.presentationSizing(.page)
         }
         #endif
     }
