@@ -71,4 +71,3 @@ Don't forget:
     install the new handbook, file format and API docs on the website
     update other data on the website (see regina-www/mkwww)
     update the citation years if necessary in private BibTeX databases
-    mail regina-announce
