@@ -587,33 +587,30 @@ void walkAroundLink(regina::Link lnk) {
 
 std::vector<std::pair<regina::StrandRef,regina::StrandRef>> findLinkQuadriPairs(const regina::StrandRef &twoHandle) {
     std::vector<std::pair<regina::StrandRef,regina::StrandRef>> result;
-    auto currentRef = twoHandle;
+    auto current = twoHandle;
     do {
-        auto next = currentRef.next();
-        if (isCurl(currentRef)) {
-            // The current crossing is a curl, and the next one is an undercrossing.
-            if (!isCurl(next) && (next.strand() == 0)) {
-                result.emplace_back(currentRef,next);
+        auto next = current.next();
+        if (isCurl(current)) {
+            // The current crossing is a curl, and the next crossing is a "true" undercrossing (not a curl).
+            if (!isCurl(next) && next == next.crossing()->lower()) {
+                result.emplace_back(current, next);
             }
-            // The current crossing is a curl, and the next one is a curl of the same sign.
-            if (isCurl(next)) {
-                if (next.crossing()->index() == currentRef.crossing()->index()) {
-                    auto next2 = next.next();
-                    if ((isCurl(next2)) && (next2.strand() == currentRef.strand())) {
-                        result.emplace_back(currentRef,next2);
-                    }
-                }
+            // The current crossing is a curl, and the next crossing is a curl of the same sign.
+            auto mateIsNext = (current.next().crossing()->index() == current.crossing()->index());
+            auto after = mateIsNext ? current.next().next() : current.prev().prev();
+            if (isCurl(after) && after.crossing()->sign() == current.crossing()->sign()) {
+                result.emplace_back(current, after);
             }
         }
         else {
-            // The current crossing is an undercrossing and the next one is a curl.
-            if ((currentRef.strand() == 0) && isCurl(next)) {
-                result.emplace_back(next,currentRef);
+            // The current crossing is a (true) undercrossing and the next crossing is a curl.
+            if (current == current.crossing()->lower() && isCurl(next)) {
+                result.emplace_back(next, current);
             }
         }
-        currentRef = currentRef.next();
-    } while (currentRef != twoHandle);
-    
+        current = current.next();
+    } while (current != twoHandle);
+        
     return result;
 }
 
@@ -1231,15 +1228,17 @@ int main(int argc, char* argv[]) {
     /*
      Walk around the link once more and check that every 2-handle
      has either a curl-curl pair of the same sign, or a
-     curl-undercrossing pair. If not, add in another pair of
+     curl-undercrossing pair. If not, add in some more
      cancelling curls (opposite to the ones above) to that 2-handle.
-     This is not inefficient, but will have to do for now.
+     This is not inefficient, but will do for now.
      */
     for (const auto& twoHandle : twoHandleComponentRefs) {
         std::vector<std::pair<regina::StrandRef,regina::StrandRef>> tempQuadriCheck = findLinkQuadriPairs(twoHandle);
         if (tempQuadriCheck.empty()) {
             std::clog << "Adding another pair of cancelling curls to current component...\n";
-            linkObjWorking.r1(twoHandle, 0, -1);
+			linkObjWorking.r1(twoHandle, 0, -1);
+			linkObjWorking.r1(twoHandle, 0, -1);
+            linkObjWorking.r1(twoHandle, 0, 1);
             linkObjWorking.r1(twoHandle, 0, 1);
         }
     }
