@@ -1228,16 +1228,16 @@ int main(int argc, char* argv[]) {
     /*
      Walk around the link once more and check that every 2-handle
      has either a curl-curl pair of the same sign, or a
-     curl-undercrossing pair. If not, add in some more
+     curl-undercrossing pair. If not, add in another pair of
      cancelling curls (opposite to the ones above) to that 2-handle.
-     This is not inefficient, but will do for now.
+     This is not inefficient, but will have to do for now.
      */
     for (const auto& twoHandle : twoHandleComponentRefs) {
         std::vector<std::pair<regina::StrandRef,regina::StrandRef>> tempQuadriCheck = findLinkQuadriPairs(twoHandle);
         if (tempQuadriCheck.empty()) {
             std::clog << "Adding another pair of cancelling curls to current component...\n";
-			linkObjWorking.r1(twoHandle, 0, -1);
-			linkObjWorking.r1(twoHandle, 0, -1);
+            linkObjWorking.r1(twoHandle, 0, -1);
+            linkObjWorking.r1(twoHandle, 0, -1);
             linkObjWorking.r1(twoHandle, 0, 1);
             linkObjWorking.r1(twoHandle, 0, 1);
         }
