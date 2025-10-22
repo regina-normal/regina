@@ -23,7 +23,9 @@ Version 7.4.1  [ TODO ]
         - Added missing Python bindings for Triangulation<dim>::simplices()
           for dimension dim ≥ 5.
     UTILITIES:
-        - Fixed a bug in Katie's quadricolour search.
+        - Fixed a bug in Katie's quadricolour search routine which would cause 
+          a segfault when attempting to build a triangulation of a 0-framed 
+          unknot from certain single-crossing diagrams.
 
 Version 7.4  [ 29 August, 2025 ] - Happy Wear it Purple day!
 
