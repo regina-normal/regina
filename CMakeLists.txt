@@ -535,6 +535,24 @@ IF(NOT DISABLE_GUI)
     "Disables the graphical user interface.  The calculation engine, Python bindings and other command-line utilities will still be built."
     FORCE)
 ENDIF(NOT DISABLE_GUI)
+
+IF(NOT GRAPHVIZ_DYNAMIC_PLUGINS)
+  # The flag GRAPHVIZ_DYNAMIC_PLUGINS is provided for platforms that explicitly
+  # disable linking against the graphviz plugins (e.g., openSUSE Leap 16).
+  # Note that dynamic loading requires (amongst other things) the runtime
+  # presence of the file config6, which lists all available graphviz plugins.
+  SET (GRAPHVIZ_DYNAMIC_PLUGINS OFF CACHE STRING
+    "Loads Graphviz plugins dynamically at runtime, instead of linking them directly into the GUI at compile time."
+    FORCE)
+ENDIF(NOT GRAPHVIZ_DYNAMIC_PLUGINS)
+IF(GRAPHVIZ_DYNAMIC_PLUGINS)
+  MESSAGE(STATUS "Graphviz plugins will be loaded dynamically at runtime")
+  SET(LIBGVC_DYNAMIC_PLUGINS TRUE)
+ELSE(GRAPHVIZ_DYNAMIC_PLUGINS)
+  MESSAGE(STATUS "Linking Graphviz plugins directly into the GUI")
+  SET(LIBGVC_DYNAMIC_PLUGINS FALSE)
+ENDIF(GRAPHVIZ_DYNAMIC_PLUGINS)
+
 IF(${REGINA_INSTALL_TYPE} STREQUAL HPC)
   MESSAGE(STATUS "Disabling Regina's GUI for HPC build.")
 ELSEIF(DISABLE_GUI)

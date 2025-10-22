@@ -11,6 +11,9 @@ Version 7.4.1  [ TODO ]
 
     GENERAL:
         - Now builds under clang 16 and on macOS 26.
+        - For systems that go out of their way to explicitly disable linking
+          against graphviz plugins (e.g., openSUSE Leap 16), you can now work
+          around this by passing the cmake flag -DGRAPHVIZ_DYNAMIC_PLUGINS=1 .
     ENGINE:
         Class BoundaryComponent<dim>:
             - Fixed an important bug in build() for real boundary components,
