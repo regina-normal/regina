@@ -37,6 +37,9 @@
 /* Define if the Graphviz libraries are available. */
 #cmakedefine LIBGVC_FOUND
 
+/* Define if Graphviz plugins should be loaded dynamically at runtime. */
+#cmakedefine LIBGVC_DYNAMIC_PLUGINS
+
 /* Define if langinfo.h and nl_langinfo() are available. */
 #cmakedefine LANGINFO_FOUND
 

@@ -37,10 +37,6 @@
 #endif
 
 #ifdef LIBGVC_FOUND
-// Define LIBGVC_DYNAMIC_PLUGINS if you wish to load plugins dynamically.
-// This requires (amongst other things) the presence of the file config6,
-// which lists all available plugins.
-// #define LIBGVC_DYNAMIC_PLUGINS 1
 
 #ifndef LIBGVC_DYNAMIC_PLUGINS
 #if defined(_WIN32)
@@ -51,7 +47,7 @@ __declspec(dllimport) gvplugin_library_t gvplugin_core_LTX_library;
 extern gvplugin_library_t gvplugin_neato_layout_LTX_library;
 extern gvplugin_library_t gvplugin_dot_layout_LTX_library;
 extern gvplugin_library_t gvplugin_core_LTX_library;
-#endif
+#endif // _WIN32
 
 lt_symlist_t link_lt_preloaded_symbols[] = {
     { "gvplugin_neato_layout_LTX_library", &gvplugin_neato_layout_LTX_library },
@@ -59,7 +55,7 @@ lt_symlist_t link_lt_preloaded_symbols[] = {
     { "gvplugin_core_LTX_library", &gvplugin_core_LTX_library },
     { nullptr, nullptr }
 };
-#endif
+#endif // LIBGVC_DYNAMIC_PLUGINS
 
 void Graphviz::render(QSvgWidget* widget, const std::string& dot,
         Renderer renderer) {

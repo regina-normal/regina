@@ -48,6 +48,9 @@
 /* Define if the Graphviz libraries are available. */
 /* #undef LIBGVC_FOUND */
 
+/* Define if Graphviz plugins should be loaded dynamically at runtime. */
+/* #undef LIBGVC_DYNAMIC_PLUGINS */
+
 /* Define if langinfo.h and nl_langinfo() are available. */
 #define LANGINFO_FOUND
 

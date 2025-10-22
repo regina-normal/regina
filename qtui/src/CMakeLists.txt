@@ -43,8 +43,12 @@ IF(LIBGVC_FOUND)
     # Note, however, that the graphviz plugins often live in a
     # subdirectory graphviz/ beneath the main library path.
     SET(LINK_LIBS ${LINK_LIBS} ${LIBGVC_LIBRARIES})
-    SET(LINK_LIBS ${LINK_LIBS} gvplugin_core gvplugin_dot_layout gvplugin_neato_layout)
-    LINK_DIRECTORIES("${LIBGVC_LIBDIR}" "${LIBGVC_LIBDIR}/graphviz")
+    IF(LIBGVC_DYNAMIC_PLUGINS)
+      LINK_DIRECTORIES("${LIBGVC_LIBDIR}")
+    ELSE(LIBGVC_DYNAMIC_PLUGINS)
+      SET(LINK_LIBS ${LINK_LIBS} gvplugin_core gvplugin_dot_layout gvplugin_neato_layout)
+      LINK_DIRECTORIES("${LIBGVC_LIBDIR}" "${LIBGVC_LIBDIR}/graphviz")
+    ENDIF(LIBGVC_DYNAMIC_PLUGINS)
 
     # Ubuntu focal (20.04 LTS) has an error where the graphviz plugins
     # fail to link due to missing __XXX_finite symbols from the math
