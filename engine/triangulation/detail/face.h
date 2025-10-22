@@ -117,6 +117,7 @@ enum class TriangleType {
 namespace detail {
 
 template <int dim> class TriangulationBase;
+template <int dim, int subdim> class FaceBase;
 
 /**
  * Helper class that provides core functionality for describing how a
@@ -287,6 +288,8 @@ class FaceEmbeddingBase :
          * (\a simplex, \a vertices) constructor instead.
          */
         FaceEmbeddingBase(Simplex<dim>*, int);
+
+    friend class FaceBase<dim, subdim>;
 };
 
 #ifndef __DOXYGEN
@@ -1258,8 +1261,25 @@ class FaceBase :
          */
         FaceBase(Component<dim>* component);
 
+    private:
+        /**
+         * Relabels the vertices of this face.
+         *
+         * Denote this face by \a f.  For each top-dimensional simplex \a s of
+         * the triangulation that contains \a f, if the old mapping from
+         * vertices of \a f to vertices of \a s (as returned by
+         * Simplex<dim>::faceMapping()) is given by the permutation \a p,
+         * then the new mapping will become `p * adjust`.
+         *
+         * \pre For each \a i = <i>subdim</i>+1,...,\a dim, the given
+         * permutation maps \a i to itself.
+         */
+        void relabel(const Perm<dim + 1>& adjust);
+
     friend class Triangulation<dim>;
     friend class TriangulationBase<dim>;
+    // BoundaryComponent::buildRealBoundary() calls Face::relabel().
+    template<int> friend class BoundaryComponentBase;
 };
 
 // Inline functions for FaceEmbeddingBase
@@ -1752,6 +1772,17 @@ void FaceBase<dim, subdim>::writeTextShort(std::ostream& out) const {
         else
             out << ", ";
         out << emb;
+    }
+}
+
+template <int dim, int subdim>
+void FaceBase<dim, subdim>::relabel(const Perm<dim + 1>& adjust) {
+    if (! adjust.isIdentity()) {
+        for (auto& emb : embeddings_) {
+            emb.vertices_ = emb.vertices_ * adjust;
+            std::get<subdim>(emb.simplex()->mappings_)[emb.face()] =
+                emb.vertices_;
+        }
     }
 }
 

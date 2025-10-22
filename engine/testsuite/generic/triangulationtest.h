@@ -775,6 +775,14 @@ class TriangulationTest : public testing::Test {
             regina::for_constexpr<0, dim-1>([bc, &built](auto subdim) {
                 SCOPED_TRACE_NUMERIC(subdim);
 
+                // Before doing anything else, check the consistency of the
+                // face mapping permutations.
+                for (auto f : built.template faces<subdim>())
+                    for (auto emb: *f)
+                        EXPECT_EQ(emb.vertices(),
+                            emb.simplex()->template faceMapping<subdim>(
+                                emb.face()));
+
                 // The labelling and ordering of subdim-faces is only
                 // guaranteed if no subdim-face is pinched.  Conversely, if
                 // some subdim-face *is* pinched then that face will appear

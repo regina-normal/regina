@@ -731,6 +731,12 @@ TEST_F(Dim4Test, skeleton) {
 
 TEST_F(Dim4Test, boundaryLabelling) {
     testManualCases(TriangulationTest<4>::verifyBoundaryLabelling);
+
+    // One more case, which was problematic in earlier versions of regina:
+    TriangulationTest<4>::verifyBoundaryLabelling(
+        Triangulation<4>::fromSig(
+            "mHHvwMMIuQQkbcfhhggghkllllkkkaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+        "Invalid 12-pentachoron 4-manifold triangulation");
 }
 
 TEST_F(Dim4Test, edgeAccess) {

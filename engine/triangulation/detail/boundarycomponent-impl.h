@@ -262,7 +262,7 @@ void BoundaryComponentBase<dim>::reorderAndRelabelFaces(
                 Perm<dim>::contract(
                     outer->template faceMapping<subdim>(emb.face()));
             adjust.clear(subdim + 1);
-            tri->relabelFace(f, adjust);
+            f->relabel(adjust);
         }
 
         tri->template reorderFaces<subdim>(
