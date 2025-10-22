@@ -1137,6 +1137,8 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
     friend class Triangulation<dim>;
     friend class regina::XMLSimplexReader<dim>;
     friend class regina::XMLTriangulationReader<dim>;
+    // Face::relabel() adjusts Simplex::mappings_.
+    template<int, int> friend class FaceBase;
 };
 
 // Inline functions for SimplexBase

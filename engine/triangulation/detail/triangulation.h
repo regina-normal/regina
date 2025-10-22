@@ -4225,21 +4225,6 @@ class TriangulationBase :
         void reorderFaces(Iterator begin, Iterator end);
 
         /**
-         * Relabels the vertices of the given face.
-         *
-         * For each top-dimensional simplex \a s of the triangulation that
-         * contains \a f, if the old mapping from vertices of \a f to vertices
-         * of \a s (as returned by Simplex<dim>::faceMapping()) is given by the
-         * permutation \a p, then the new mapping will become
-         * `p * adjust`.
-         *
-         * \pre For each \a i = <i>subdim</i>+1,...,\a dim, the given
-         * permutation maps \a i to itself.
-         */
-        template <int subdim>
-        void relabelFace(Face<dim, subdim>* f, const Perm<dim + 1>& adjust);
-
-        /**
          * Tests whether this and the given triangulation have the same
          * <i>useDim</i>-face degree sequences.
          *
@@ -4998,15 +4983,6 @@ template <int dim>
 template <int subdim, typename Iterator>
 inline void TriangulationBase<dim>::reorderFaces(Iterator begin, Iterator end) {
     std::get<subdim>(faces_).refill(begin, end);
-}
-
-template <int dim>
-template <int subdim>
-inline void TriangulationBase<dim>::relabelFace(Face<dim, subdim>* f,
-        const Perm<dim + 1>& adjust) {
-    for (const auto& emb : *f)
-        std::get<subdim>(emb.simplex()->mappings_)[emb.face()] =
-            emb.vertices() * adjust;
 }
 
 template <int dim>
