@@ -7,6 +7,21 @@ Regina - Software for low-dimensional topology
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Version 7.4.1  [ TODO ]
+
+    GENERAL:
+        - Now builds under clang 16 and on macOS 26.
+    ENGINE:
+        Class BoundaryComponent<dim>:
+            - Fixed an important bug in build() for real boundary components,
+              which gave inconsistencies in the labelling of lower-dimensional
+              faces.  See: https://regina-normal.github.io/bugs.html#bcbuild
+    PYTHON:
+        - Added missing Python bindings for Triangulation<dim>::simplices()
+          for dimension dim ≥ 5.
+    UTILITIES:
+        - Fixed a bug in Katie's quadricolour search.
+
 Version 7.4  [ 29 August, 2025 ] - Happy Wear it Purple day!
 
     GENERAL:
