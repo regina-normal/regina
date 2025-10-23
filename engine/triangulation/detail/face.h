@@ -1267,14 +1267,18 @@ class FaceBase :
          *
          * Denote this face by \a f.  For each top-dimensional simplex \a s of
          * the triangulation that contains \a f, if the old mapping from
-         * vertices of \a f to vertices of \a s (as returned by
-         * Simplex<dim>::faceMapping()) is given by the permutation \a p,
+         * vertices `0,1,...,subdim` of \a f to vertices of \a s (as returned
+         * by Simplex<dim>::faceMapping()) is given by the permutation \a p,
          * then the new mapping will become `p * adjust`.
          *
-         * \pre For each \a i = <i>subdim</i>+1,...,\a dim, the given
-         * permutation maps \a i to itself.
+         * Although \a adjust is a permutation on integers `0,...,dim`,
+         * only the images of `0,...,subdim` will be used - the images of
+         * `subdim+1,...,dim` will be ignored.
+         *
+         * \pre The given permutation maps the set `{0,1,...,subdim}`
+         * to itself, and maps the set `{subdim+1,...,dim}` to itself.
          */
-        void relabel(const Perm<dim + 1>& adjust);
+        void relabel(Perm<dim + 1> adjust);
 
     friend class Triangulation<dim>;
     friend class TriangulationBase<dim>;
@@ -1776,7 +1780,8 @@ void FaceBase<dim, subdim>::writeTextShort(std::ostream& out) const {
 }
 
 template <int dim, int subdim>
-void FaceBase<dim, subdim>::relabel(const Perm<dim + 1>& adjust) {
+void FaceBase<dim, subdim>::relabel(Perm<dim + 1> adjust) {
+    adjust.clear(subdim + 1);
     if (! adjust.isIdentity()) {
         for (auto& emb : embeddings_) {
             emb.vertices_ = emb.vertices_ * adjust;

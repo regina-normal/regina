@@ -258,11 +258,8 @@ void BoundaryComponentBase<dim>::reorderAndRelabelFaces(
             //
             // Note that (1) is just emb.vertices().
             //
-            Perm<dim> adjust = emb.vertices().inverse() *
-                Perm<dim>::contract(
-                    outer->template faceMapping<subdim>(emb.face()));
-            adjust.clear(subdim + 1);
-            f->relabel(adjust);
+            f->relabel(emb.vertices().inverse() * Perm<dim>::contract(
+                outer->template faceMapping<subdim>(emb.face())));
         }
 
         tri->template reorderFaces<subdim>(
