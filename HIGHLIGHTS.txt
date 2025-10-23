@@ -6,6 +6,23 @@ Regina - Software for low-dimensional topology
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
+Version 7.4.1  [ TODO ]
+
+    Overview:
+        - This is a service release to fix some important bugs, and to support
+          additional build environments.
+    Bugs fixed:
+        - Fixed a serious (and very old) bug that occurred when triangulating
+          a real boundary component.  In short, the new triangulation of the
+          original boundary component could have had inconsistencies in the
+          labelling of its own lower-dimensional faces.  Ideal boundaries were
+          not affected.  For a detailed discussion of how this might have
+          affected you, see: https://regina-normal.github.io/bugs.html#bcbuild
+        - Fixed a bug in Katie's quadricolour search routine, which would cause
+          a segfault for certain inputs.
+        - Added a few missing Python bindings for triangulations in higher
+          dimensions.
+
 Version 7.4  [ 29 August, 2025 ] - Happy Wear it Purple day!
 
     Requirements:

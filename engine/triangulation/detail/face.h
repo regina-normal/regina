@@ -1500,7 +1500,7 @@ Perm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
 
     int inSimp = (
         // If lowerdim = 0, the general formula can be simplified.
-        lowerdim == 0 ?  front().vertices()[f] :
+        lowerdim == 0 ? front().vertices()[f] :
         FaceNumbering<dim, lowerdim>::faceNumber(
             front().vertices() * Perm<dim + 1>::extend(
                 FaceNumbering<subdim, lowerdim>::ordering(f))));

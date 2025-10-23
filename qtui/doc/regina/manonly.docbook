@@ -5,7 +5,7 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.2//EN" [
   <!ENTITY regina "Regina">
 
-  <!ENTITY regversion "7.4">
+  <!ENTITY regversion "7.4.1">
   <!ENTITY regabstract
    "<para>
      &regina; is a software package for studying 3-manifold triangulations
