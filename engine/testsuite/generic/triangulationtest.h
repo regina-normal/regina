@@ -791,6 +791,7 @@ class TriangulationTest : public testing::Test {
                 // Before doing anything else, check the consistency of the
                 // skeleton (which includes the face mapping permutations).
                 TriangulationTest<dim-1>::verifySkeletonDetail(built);
+                EXPECT_EQ(built.countBoundaryFacets(), 0);
 
                 // The labelling and ordering of subdim-faces is only
                 // guaranteed if no subdim-face is pinched.  Conversely, if
