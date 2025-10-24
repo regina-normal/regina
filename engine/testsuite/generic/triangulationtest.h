@@ -79,11 +79,10 @@ class TriangulationTest : public testing::Test {
         };
 
         /**
-         * We make verifySkeletonDetail() public because we may wish to
-         * access it from test suites in other dimensions.
+         * We make detailed skeletal tests public because we may wish to
+         * access them from test suites in other dimensions.
          */
-        static void verifySkeletonDetail(const Triangulation<dim>& tri) {
-            // Components and their boundary components and simplices:
+        static void verifyComponentsDetail(const Triangulation<dim>& tri) {
             bool allOrbl = true;
             size_t totSize = 0;
             size_t totBdry = 0;
@@ -155,9 +154,11 @@ class TriangulationTest : public testing::Test {
             EXPECT_EQ(tri.size(), totSize);
             EXPECT_EQ(tri.countBoundaryComponents(), totBdry);
             EXPECT_EQ(tri.countBoundaryFacets(), totBdryFacets);
+        }
 
-            // More boundary components:
-            totBdryFacets = 0; // reset, since we will count this again
+        static void verifyBoundaryComponentsDetail(
+                const Triangulation<dim>& tri) {
+            size_t totBdryFacets = 0;
             for (auto b : tri.boundaryComponents()) {
                 totBdryFacets += b->size();
                 EXPECT_EQ(b->size() * dim, b->countRidges() * 2);
@@ -224,8 +225,9 @@ class TriangulationTest : public testing::Test {
                 }
             }
             EXPECT_EQ(tri.countBoundaryFacets(), totBdryFacets);
+        }
 
-            // Faces:
+        static void verifyFacesDetail(const Triangulation<dim>& tri) {
             bool allValid = true;
             regina::for_constexpr<0, dim>([&tri, &allValid](auto subdim) {
                 size_t bdry = 0;
@@ -267,6 +269,40 @@ class TriangulationTest : public testing::Test {
                 EXPECT_EQ(degreeSum, tri.size() * nFaces);
             });
             EXPECT_EQ(tri.isValid(), allValid);
+
+            if constexpr (dim == 3) {
+                // All triangle types should, at this point, be not yet
+                // determined.
+                for (auto t : tri.triangles()) {
+                    int sub = t->triangleSubtype();
+                    switch (t->triangleType()) {
+                        case regina::TriangleType::Triangle:
+                        case regina::TriangleType::Parachute:
+                        case regina::TriangleType::L31:
+                            EXPECT_EQ(sub, -1);
+                            break;
+
+                        case regina::TriangleType::Scarf:
+                        case regina::TriangleType::Cone:
+                        case regina::TriangleType::Mobius:
+                        case regina::TriangleType::Horn:
+                        case regina::TriangleType::DunceHat:
+                            EXPECT_GE(sub, 0);
+                            EXPECT_LE(sub, 2);
+                            break;
+
+                        default:
+                            ADD_FAILURE() << "Unexpected triangle type";
+                            break;
+                    }
+                }
+            }
+        }
+
+        static void verifySkeletonDetail(const Triangulation<dim>& tri) {
+            verifyComponentsDetail(tri);
+            verifyBoundaryComponentsDetail(tri);
+            verifyFacesDetail(tri);
 
             // Additional skeletal data for low dimensions:
             if constexpr (regina::standardDim(dim)) {
@@ -358,33 +394,6 @@ class TriangulationTest : public testing::Test {
                 } else /* dim == 3 */ {
                     EXPECT_EQ(tri.isIdeal(), foundIdeal);
                     EXPECT_EQ(tri.isStandard(), allStandard);
-                }
-            }
-            if constexpr (dim == 3) {
-                // All triangle types should, at this point, be not yet
-                // determined.
-                for (auto t : tri.triangles()) {
-                    int sub = t->triangleSubtype();
-                    switch (t->triangleType()) {
-                        case regina::TriangleType::Triangle:
-                        case regina::TriangleType::Parachute:
-                        case regina::TriangleType::L31:
-                            EXPECT_EQ(sub, -1);
-                            break;
-
-                        case regina::TriangleType::Scarf:
-                        case regina::TriangleType::Cone:
-                        case regina::TriangleType::Mobius:
-                        case regina::TriangleType::Horn:
-                        case regina::TriangleType::DunceHat:
-                            EXPECT_GE(sub, 0);
-                            EXPECT_LE(sub, 2);
-                            break;
-
-                        default:
-                            ADD_FAILURE() << "Unexpected triangle type";
-                            break;
-                    }
                 }
             }
         }
