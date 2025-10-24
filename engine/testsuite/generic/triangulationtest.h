@@ -256,12 +256,27 @@ class TriangulationTest : public testing::Test {
                         }
                     }
 
+                    size_t embIndex = 0;
                     for (auto emb : f->embeddings()) {
                         auto s = emb.simplex();
                         auto v = emb.vertices();
                         auto which = regina::Face<dim, subdim>::faceNumber(v);
                         EXPECT_EQ(s->template face<subdim>(which), f);
                         EXPECT_EQ(s->template faceMapping<subdim>(which), v);
+
+                        if (s->component()->isOrientable()) {
+                            if constexpr (subdim < dim - 1) {
+                                EXPECT_EQ(v.sign(), s->orientation());
+                            } else {
+                                if (embIndex == 0) {
+                                    EXPECT_EQ(v.sign(), s->orientation());
+                                } else {
+                                    EXPECT_EQ(v.sign(), - s->orientation());
+                                }
+                            }
+                        }
+
+                        ++embIndex;
                     }
                 }
                 constexpr size_t nFaces = regina::Face<dim, subdim>::nFaces;
