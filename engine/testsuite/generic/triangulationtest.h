@@ -233,6 +233,8 @@ class TriangulationTest : public testing::Test {
                 size_t bdry = 0;
                 size_t degreeSum = 0;
                 for (auto f : tri.template faces<subdim>()) {
+                    SCOPED_TRACE_NUMERIC(subdim);
+
                     if (! f->isValid())
                         allValid = false;
                     if (f->isBoundary())
@@ -272,6 +274,46 @@ class TriangulationTest : public testing::Test {
                                     EXPECT_EQ(v.sign(), s->orientation());
                                 } else {
                                     EXPECT_EQ(v.sign(), - s->orientation());
+                                }
+                            }
+                        }
+
+                        for (int i = subdim + 1; i <= dim; ++i) {
+                            if (auto adj = s->adjacentSimplex(v[i])) {
+                                Perm adjMap = s->adjacentGluing(v[i]) * v;
+                                Perm crossMap =
+                                    adj->template faceMapping<subdim>(
+                                    regina::Face<dim, subdim>::faceNumber(
+                                    adjMap)).inverse() * adjMap;
+                                // The permutation crossMap is essentially
+                                // a "gluing map" for the implicit vertices
+                                // of f and the implicit vertices of the
+                                // face opposite f when we step across
+                                // facet v[i] of simplex s.
+
+                                if constexpr (subdim < dim - 1) {
+                                    if (f->isLinkOrientable()) {
+                                        // The faces opposite f should have
+                                        // consistent implicit orientations.
+                                        // Here we need to ignore the images
+                                        // of i ≤ subdim.
+                                        SCOPED_TRACE("Gluings for faces "
+                                            "opposite f");
+                                        Perm reverse = Perm<dim+1>().reverse();
+                                        Perm p = reverse * crossMap * reverse;
+                                        p.clear(dim - subdim);
+                                        EXPECT_EQ(p.sign(), -1);
+                                    }
+                                }
+
+                                if (! f->hasBadIdentification()) {
+                                    // For the vertices of f itself, this map
+                                    // should be the identity.  Here we need
+                                    // to ignore the images of i ≥ subdim+1.
+                                    SCOPED_TRACE("Gluings for f");
+                                    Perm p = crossMap;
+                                    p.clear(subdim + 1);
+                                    EXPECT_TRUE(p.isIdentity());
                                 }
                             }
                         }
