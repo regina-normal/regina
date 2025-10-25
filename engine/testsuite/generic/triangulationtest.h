@@ -320,6 +320,24 @@ class TriangulationTest : public testing::Test {
 
                         ++embIndex;
                     }
+
+                    if constexpr (subdim == dim - 2) {
+                        // For codimension 2, the order of embeddings is
+                        // specified precisely.
+                        for (size_t i = 1; i < f->degree(); ++i) {
+                            auto prev = f->embedding(i - 1);
+                            auto next = f->embedding(i);
+
+                            int facet = prev.vertices()[dim - 1];
+                            auto adj = prev.simplex()->adjacentSimplex(facet);
+                            EXPECT_EQ(next.simplex(), adj);
+                            if (adj) {
+                                EXPECT_EQ(next.vertices(),
+                                    prev.simplex()->adjacentGluing(facet) *
+                                    prev.vertices() * Perm<dim+1>(dim-1, dim));
+                            }
+                        }
+                    }
                 }
                 constexpr size_t nFaces = regina::Face<dim, subdim>::nFaces;
                 EXPECT_EQ(bdry, tri.template countBoundaryFaces<subdim>());
