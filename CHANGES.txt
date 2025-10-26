@@ -19,6 +19,9 @@ Version 7.4.1  [ TODO ]
             - Fixed an important bug in build() for real boundary components,
               which gave inconsistencies in the labelling of lower-dimensional
               faces.  See: https://regina-normal.github.io/bugs.html#bcbuild
+        Class Face<dim, subdim>
+            - Now isLinkOrientable() will compute the orientability of the link
+              correctly even for invalid faces with bad self-identifications.
     PYTHON:
         - Added missing Python bindings for Triangulation<dim>::simplices()
           for dimension dim ≥ 5.

@@ -448,10 +448,8 @@ class TriangulationTest : public testing::Test {
                     if constexpr (dim == 4) {
                         for (auto e : c->edges()) {
                             const auto& link = e->buildLink();
-                            if (! e->hasBadIdentification())
-                                EXPECT_EQ(e->isLinkOrientable(),
-                                    link.isOrientable());
-
+                            EXPECT_EQ(e->isLinkOrientable(),
+                                link.isOrientable());
                             EXPECT_EQ(e->hasBadLink(),
                                 ! (link.isSphere() || link.isBall()));
                         }

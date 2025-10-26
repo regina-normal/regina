@@ -762,9 +762,9 @@ class FaceBase :
          * This routine is fast: it uses pre-computed information, and
          * does not need to build a full triangulation of the link.
          *
-         * \warning If this face is identified with itself under a
-         * non-identity permutation (which makes the face invalid), then
-         * the return value of this routine is undefined.
+         * As of Regina 7.4.1, the orientability of the link will be calculated
+         * correctly even if the face is invalid due to a non-trivial
+         * self-identification.
          *
          * \return \c true if and only if the link is orientable.
          */
