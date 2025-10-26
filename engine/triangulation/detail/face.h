@@ -48,6 +48,7 @@
 #include "utilities/markedvector.h"
 #include "utilities/shortarray.h"
 #include "utilities/typeutils.h"
+#include <algorithm>
 #include <deque>
 #include <vector>
 
@@ -1277,6 +1278,10 @@ class FaceBase :
          *
          * \pre The given permutation maps the set `{0,1,...,subdim}`
          * to itself, and maps the set `{subdim+1,...,dim}` to itself.
+         * \pre If this face has codimension one, then it has degree two
+         * (not degree one).  Otherwise it may be impossible for the
+         * relabelling to meet the strict permutation requirements laid down
+         * by Simplex::faceMapping().
          */
         void relabel(Perm<dim + 1> adjust);
 
@@ -1783,6 +1788,34 @@ template <int dim, int subdim>
 void FaceBase<dim, subdim>::relabel(Perm<dim + 1> adjust) {
     adjust.clear(subdim + 1);
     if (! adjust.isIdentity()) {
+        if (adjust.sign() < 0) {
+            // We need to make further adjustments so that we satisfy the
+            // various promises made about permutation signs in the
+            // Simplex::faceMapping() notes.
+            if constexpr (subdim == dim - 1) {
+                // We cannot make adjust into an even permutation.  Instead,
+                // the constraint we need to satisfy involves the order of the
+                // two embeddings.
+                // (The preconditions for relabel() tell us that we have
+                // two embeddings; nevertheless, we check this again now.
+                // With only one embedding then would be no way to meet the
+                // face mapping constraints.)
+                if (degree() == 2)
+                    std::swap(embeddings_[0], embeddings_[1]);
+            } else if constexpr (subdim == dim - 2) {
+                // We can make adjust into an even permutation; however, this
+                // also requires us to reverse the sequence of embeddings so
+                // that the images of (dim - 1, dim) point in the correct
+                // direction around the link.
+                adjust = adjust * Perm<dim + 1>(dim - 1, dim);
+                std::reverse(embeddings_.begin(), embeddings_.end());
+            } else {
+                // Make adjust an even permutation by adjusting the images of
+                // the vertices of the opposite face.
+                adjust = adjust * Perm<dim + 1>(dim - 1, dim);
+            }
+        }
+
         for (auto& emb : embeddings_) {
             emb.vertices_ = emb.vertices_ * adjust;
             std::get<subdim>(emb.simplex()->mappings_)[emb.face()] =
