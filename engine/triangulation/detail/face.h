@@ -48,6 +48,7 @@
 #include "utilities/markedvector.h"
 #include "utilities/shortarray.h"
 #include "utilities/typeutils.h"
+#include <algorithm>
 #include <deque>
 #include <vector>
 
@@ -762,9 +763,9 @@ class FaceBase :
          * This routine is fast: it uses pre-computed information, and
          * does not need to build a full triangulation of the link.
          *
-         * \warning If this face is identified with itself under a
-         * non-identity permutation (which makes the face invalid), then
-         * the return value of this routine is undefined.
+         * As of Regina 7.4.1, the orientability of the link will be calculated
+         * correctly even if the face is invalid due to a non-trivial
+         * self-identification.
          *
          * \return \c true if and only if the link is orientable.
          */
@@ -1267,14 +1268,22 @@ class FaceBase :
          *
          * Denote this face by \a f.  For each top-dimensional simplex \a s of
          * the triangulation that contains \a f, if the old mapping from
-         * vertices of \a f to vertices of \a s (as returned by
-         * Simplex<dim>::faceMapping()) is given by the permutation \a p,
+         * vertices `0,1,...,subdim` of \a f to vertices of \a s (as returned
+         * by Simplex<dim>::faceMapping()) is given by the permutation \a p,
          * then the new mapping will become `p * adjust`.
          *
-         * \pre For each \a i = <i>subdim</i>+1,...,\a dim, the given
-         * permutation maps \a i to itself.
+         * Although \a adjust is a permutation on integers `0,...,dim`,
+         * only the images of `0,...,subdim` will be used - the images of
+         * `subdim+1,...,dim` will be ignored.
+         *
+         * \pre The given permutation maps the set `{0,1,...,subdim}`
+         * to itself, and maps the set `{subdim+1,...,dim}` to itself.
+         * \pre If this face has codimension one, then it has degree two
+         * (not degree one).  Otherwise it may be impossible for the
+         * relabelling to meet the strict permutation requirements laid down
+         * by Simplex::faceMapping().
          */
-        void relabel(const Perm<dim + 1>& adjust);
+        void relabel(Perm<dim + 1> adjust);
 
     friend class Triangulation<dim>;
     friend class TriangulationBase<dim>;
@@ -1776,8 +1785,37 @@ void FaceBase<dim, subdim>::writeTextShort(std::ostream& out) const {
 }
 
 template <int dim, int subdim>
-void FaceBase<dim, subdim>::relabel(const Perm<dim + 1>& adjust) {
+void FaceBase<dim, subdim>::relabel(Perm<dim + 1> adjust) {
+    adjust.clear(subdim + 1);
     if (! adjust.isIdentity()) {
+        if (adjust.sign() < 0) {
+            // We need to make further adjustments so that we satisfy the
+            // various promises made about permutation signs in the
+            // Simplex::faceMapping() notes.
+            if constexpr (subdim == dim - 1) {
+                // We cannot make adjust into an even permutation.  Instead,
+                // the constraint we need to satisfy involves the order of the
+                // two embeddings.
+                // (The preconditions for relabel() tell us that we have
+                // two embeddings; nevertheless, we check this again now.
+                // With only one embedding then would be no way to meet the
+                // face mapping constraints.)
+                if (degree() == 2)
+                    std::swap(embeddings_[0], embeddings_[1]);
+            } else if constexpr (subdim == dim - 2) {
+                // We can make adjust into an even permutation; however, this
+                // also requires us to reverse the sequence of embeddings so
+                // that the images of (dim - 1, dim) point in the correct
+                // direction around the link.
+                adjust = adjust * Perm<dim + 1>(dim - 1, dim);
+                std::reverse(embeddings_.begin(), embeddings_.end());
+            } else {
+                // Make adjust an even permutation by adjusting the images of
+                // the vertices of the opposite face.
+                adjust = adjust * Perm<dim + 1>(dim - 1, dim);
+            }
+        }
+
         for (auto& emb : embeddings_) {
             emb.vertices_ = emb.vertices_ * adjust;
             std::get<subdim>(emb.simplex()->mappings_)[emb.face()] =

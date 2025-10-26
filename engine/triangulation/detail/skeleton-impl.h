@@ -352,10 +352,12 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
 
                         adj = simp->adjacentSimplex(exitFacet);
                         if (adj) {
-                            // When we choose an adjacent gluing map, throw in a
-                            // swap to preserve the "orientation" of the images
-                            // of (subdim+1),...,dim.  Note that this is only
-                            // possible if the link of the face is orientable.
+                            // Build the face mapping that we'd _like_ to use
+                            // in the adjacent simplex.  When we do this, we
+                            // throw in a swap to preserve the "orientation"
+                            // of the images of (subdim+1),...,dim.  Note
+                            // that this is only possible if the link of the
+                            // face is orientable.
                             adjMap = simp->adjacentGluing(exitFacet) *
                                 std::get<subdim>(simp->mappings_)[face] *
                                 Perm<dim + 1>(dim - 1, dim);
@@ -364,34 +366,44 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
                             if (std::get<subdim>(adj->faces_)[adjFace]) {
                                 // We have looped back around to where we've
                                 // been before.
+                                //
+                                // Build a "difference map" that compares what
+                                // we want with what we've actually got.
+                                //
+                                // If the face has no bad self-identifications,
+                                // then diffMap is the identity on [0..subdim].
+                                // If it _does_ have bad self-identifications,
+                                // it should still send {0..subdim} to itself.
 
-                                if constexpr (subdim > 0) {
+                                auto diffMap =
+                                    std::get<subdim>(adj->mappings_)[adjFace]
+                                        .inverse() * adjMap;
+
+                                if constexpr (subdim == 0) {
+                                    // Is the link non-orientable?
+                                    if (diffMap.sign() != 1)
+                                        f->linkOrientable_.value = false;
+                                } else {
                                     // Have we mapped the face to itself with a
                                     // non-identity permutation?
-                                    // Note that we only need to check
-                                    // p[0,...,(subdim-1)] in the permutations
-                                    // below, since p[subdim] then comes for
-                                    // free.
-                                    for (pos = 0; pos < subdim; ++pos)
-                                        if (std::get<subdim>(adj->mappings_)
-                                                [adjFace][pos] != adjMap[pos]) {
-                                            if constexpr (standardDim(dim))
-                                                f->whyInvalid_.value |=
-                                                    Face<dim, subdim>::
-                                                    INVALID_IDENTIFICATION;
-                                            else
-                                                f->valid_.value = false;
-                                            tri->valid_ =
-                                                s->component_->valid_ = false;
-                                            break;
-                                        }
-                                }
+                                    Perm<dim + 1> slice = diffMap;
+                                    slice.clear(subdim + 1);
+                                    if (! slice.isIdentity()) {
+                                        if constexpr (standardDim(dim))
+                                            f->whyInvalid_.value |=
+                                                Face<dim, subdim>::
+                                                INVALID_IDENTIFICATION;
+                                        else
+                                            f->valid_.value = false;
+                                        tri->valid_ =
+                                            s->component_->valid_ = false;
+                                    }
 
-                                if constexpr (subdim <= dim - 3) {
                                     // Is the link non-orientable?
-                                    if (adjMap.sign() !=
-                                            std::get<subdim>(adj->mappings_)
-                                            [adjFace].sign())
+                                    // We are interested in whether diffMap
+                                    // permutes { subdim+1, ..., dim } using
+                                    // an even or odd permutation.
+                                    if (diffMap.sign() != slice.sign())
                                         f->linkOrientable_.value = false;
                                 }
                             } else {

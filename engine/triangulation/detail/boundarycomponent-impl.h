@@ -258,11 +258,13 @@ void BoundaryComponentBase<dim>::reorderAndRelabelFaces(
             //
             // Note that (1) is just emb.vertices().
             //
-            Perm<dim> adjust = emb.vertices().inverse() *
-                Perm<dim>::contract(
-                    outer->template faceMapping<subdim>(emb.face()));
-            adjust.clear(subdim + 1);
-            f->relabel(adjust);
+            // A side note: Face::relabel() requires that, if the face has
+            // codimension one, it must have degree two.  This will always be
+            // satisfied when triangulating a real boundary component, so we
+            // have no problem there.
+            //
+            f->relabel(emb.vertices().inverse() * Perm<dim>::contract(
+                outer->template faceMapping<subdim>(emb.face())));
         }
 
         tri->template reorderFaces<subdim>(
