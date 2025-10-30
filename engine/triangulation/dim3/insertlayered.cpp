@@ -54,9 +54,34 @@ Tetrahedron<3>* Triangulation<3>::layerOn(Edge<3>* edge) {
     // tetrahedron vertices for the second boundary triangle.  In each case,
     // (0,1) maps to the endpoints of the given edge.
     //
-    // The simplest thing to do is let (0,1,2,3) in the preimages for
-    // roles1 and roles2 match up with vertices (0,1,2,3) of the new
+    // In the diagram below, the first triangle is shown on the left, and the
+    // second triangle is shown on the right.
+    //
+    //                   roles1[0]• •roles2[0]
+    //                           /| |\
+    //                          / | | \
+    //                roles1[2]•  | |  •roles2[3]
+    //                          \ | | /
+    //                           \| |/
+    //                   roles1[1]• •roles2[1]
+    //
+    // If the triangulation is oriented, then the permutations roles1 and
+    // roles2 will both have sign +1, so we can ensure that the triangulation
+    // remains oriented after layering if we attach the new tetrahedron as
+    // shown below. In terms of the gluing permutations, this amounts to
+    // letting (0,1,2,3) in the preimages for roles1 and roles2 match up with
+    // vertices (0,1,3,2) -- note that 2 and 3 are swapped -- of the new
     // tetrahedron.
+    //                             0
+    //                             •
+    //                            /|\
+    //                           / | \
+    //                         3•-----•2
+    //                           \ | /
+    //                            \|/
+    //                             •
+    //                             1
+    //
 
     if (tet1->triangle(roles1[3]) == tet2->triangle(roles2[2]))
         throw InvalidArgument("layerOn() requires an edge between two "
@@ -71,8 +96,8 @@ Tetrahedron<3>* Triangulation<3>::layerOn(Edge<3>* edge) {
 
     Tetrahedron<3>* newTet = newSimplexRaw();
 
-    newTet->joinRaw(3, tet1, roles1);
-    newTet->joinRaw(2, tet2, roles2);
+    newTet->joinRaw(2, tet1, roles1*Perm<4>(2,3));
+    newTet->joinRaw(3, tet2, roles2*Perm<4>(2,3));
 
     return newTet;
 }
