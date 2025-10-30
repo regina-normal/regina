@@ -4126,7 +4126,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * If the triangulation (or more generally, the component of the
          * triangulation that contains the given edge) is currently oriented,
-         * then it will remain oriented after the layering.
+         * then the layering will preserve this orientation.
          *
          * \pre The given edge is a boundary edge of this triangulation,
          * and the two boundary triangles on either side of it are distinct.
