@@ -39,6 +39,7 @@
 #include "maths/numbertheory.h"
 #include "subcomplex/satannulus.h"
 #include "triangulation/dim3.h"
+#include "triangulation/example2.h" // for Example<2>::disc()
 #include "utilities/exception.h"
 
 namespace regina {
@@ -706,6 +707,28 @@ std::strong_ordering SFSpace::operator <=> (const SFSpace& rhs) const {
     return std::strong_ordering::equal;
 }
 
+// ------------------------------------------------------------------------
+// Supporting classes for construct()
+// ------------------------------------------------------------------------
+namespace {
+
+    //TODO
+
+    /**
+     */
+    class OrientableCircleBundle {
+    };  // class OrientableCircleBundle
+
+    /**
+     */
+    class TriPrism {
+    };  // class TriPrism
+
+}   // anonymous namespace
+
+// ------------------------------------------------------------------------
+// Implementation of construct()
+// ------------------------------------------------------------------------
 Triangulation<3> SFSpace::construct() const {
     // Things that we don't deal with just yet.
     if (punctures_ || puncturesTwisted_ || reflectors_ || reflectorsTwisted_)
@@ -716,6 +739,8 @@ Triangulation<3> SFSpace::construct() const {
     // We already know how to construct lens spaces.
     if (auto lens = isLensSpace())
         return lens->construct();
+
+    //TODO The plan is to construct orientable SFS over any base.
 
     // Currently we work over the 2-sphere only.
     if (genus_ != 0 || class_ != Class::o1)

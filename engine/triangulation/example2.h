@@ -61,6 +61,9 @@ namespace regina {
 template <>
 class Example<2> : public detail::ExampleBase<2> {
     public:
+
+        //TODO The plan is for orientable() to always return minimal.
+
         /**
          * Returns a triangulation of the given orientable surface.
          *
@@ -76,6 +79,8 @@ class Example<2> : public detail::ExampleBase<2> {
          */
         static Triangulation<2> orientable(
             unsigned genus, unsigned punctures);
+
+        //TODO The plan is for nonOrientable() to always return minimal.
 
         /**
          * Returns a triangulation of the given non-orientable surface.
@@ -114,13 +119,19 @@ class Example<2> : public detail::ExampleBase<2> {
         static Triangulation<2> sphereOctahedron();
 
         /**
-         * Returns a one-triangle disc.
-         * This is identical to the triangulation returned by the generic
-         * routine ball().
+         * Returns an <i>n</i>-triangle disc (<i>n</i> = 1 by default).
+         *
+         * The default 1-triangle disc is identical to the triangulation
+         * returned by the generic routine ball().
+         *
+         * This routine always returns an oriented triangulation of an
+         * (<i>n</i> + 2)-sided polygon. In particular, the returned
+         * triangulation always uses the minimum number of edge
+         * identifications for an <i>n</i>-triangle disc.
          *
          * \return the disc.
          */
-        static Triangulation<2> disc();
+        static Triangulation<2> disc(unsigned n = 1);
 
         /**
          * Returns a two-triangle annulus.
@@ -176,7 +187,9 @@ inline Triangulation<2> Example<2>::kb() {
     return twistedSphereBundle();
 }
 
-inline Triangulation<2> Example<2>::disc() {
+
+inline Triangulation<2> Example<2>::disc(unsigned n) {
+    //TODO Construct polygonal discs with any number of triangles.
     return ball();
 }
 

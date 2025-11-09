@@ -35,6 +35,8 @@
 using regina::SFSFibre;
 using regina::SFSpace;
 
+//TODO Test new SFS constructions.
+
 void verifyName(SFSpace::Class c, size_t genus,
         size_t punctures, size_t puncturesTwisted,
         size_t reflectors, size_t reflectorsTwisted,

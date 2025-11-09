@@ -37,6 +37,8 @@
 using regina::Triangulation;
 using regina::Example;
 
+//TODO Test new Example<2> constructions.
+
 class Dim2Test : public TriangulationTest<2> {
     protected:
         // Closed orientable triangulations:
