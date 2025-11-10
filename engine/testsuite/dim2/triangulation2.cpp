@@ -298,3 +298,12 @@ TEST_F(Dim2Test, dualToPrimal) {
 TEST_F(Dim2Test, copyMove) {
     testManualCases(TriangulationTest<2>::verifyCopyMove);
 }
+TEST_F(Dim2Test, minimalSize) {
+    // Check that promises of minimality are fulfilled.
+    EXPECT_EQ(Example<2>::orientable(0, 0).size(), 2);
+    EXPECT_EQ(Example<2>::orientable(0, 1).size(), 1);
+    EXPECT_EQ(torus2.tri.size(), 6);
+    EXPECT_EQ(pants.tri.size(), 5);
+    EXPECT_EQ(orPunc1.tri.size(), 7);
+    EXPECT_EQ(orPunc3.tri.size(), 13);
+}
