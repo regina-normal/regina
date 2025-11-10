@@ -35,39 +35,82 @@
 namespace regina {
 
 Triangulation<2> Example<2>::orientable(unsigned genus, unsigned punctures) {
-    if (genus == 0 && punctures == 0)
-        return sphere();
+    // Small cases that don't fit into the general constructions below.
+    if (genus == 0) {
+        if (punctures == 0) {
+            //TODO If sphere() were oriented(), then we could promise
+            //  oriented for orientable(), since all the other constructions
+            //  below are already oriented.
+            return sphere();
+        } else if (punctures == 1) {
+            return disc();
+        }
+    }
 
     Triangulation<2> ans;
 
-    if (genus == 0) {
-        // Fact: punctures >= 1.
-        unsigned n = 3 * punctures - 2;
-        unsigned i;
-        ans.newTriangles(n);
-        for (i = 0; i < n - 1; ++i)
-            ans.triangle(i)->join(1, ans.triangle(i + 1), Perm<3>(1, 2));
-        ans.triangle(0)->join(0, ans.triangle(n - 1), Perm<3>(0, 1));
-        for (i = 1; i < punctures; ++i)
-            ans.triangle(3 * i - 2)->join(0, ans.triangle(3 * i),
-                Perm<3>(1, 2));
-    } else {
-        unsigned n = 4 * genus + 3 * punctures - 2;
-        unsigned i;
-        ans.newTriangles(n);
-        for (i = 0; i < n - 1; ++i)
-            ans.triangle(i)->join(1, ans.triangle(i + 1), Perm<3>(1, 2));
+    //TODO Merge the punctures == 0 and punctures == 1 cases?
+    if (punctures == 0) {
+        // Already handled the sphere, so genus >= 1.
+        //
+        // The size of a minimal triangulation is 4*genus - 2.
+        //
+        // This is essentially the same as the old implementation, but without
+        // the punctures part of the construction (which was non-minimal).
+        unsigned n = 4 * genus - 2;
+        ans = polygon(n);
         ans.triangle(0)->join(2, ans.triangle(n - 1), Perm<3>(0, 2));
         ans.triangle(0)->join(0, ans.triangle(n - 1), Perm<3>(0, 1));
-        for (i = 1; i < genus; ++i) {
+        for (unsigned i = 1; i < genus; ++i) {
             ans.triangle(4 * i - 3)->join(0, ans.triangle(4 * i - 1),
                 Perm<3>(1, 2));
             ans.triangle(4 * i - 2)->join(0, ans.triangle(4 * i),
                 Perm<3>(1, 2));
         }
-        for (i = 0; i < punctures; ++i)
-            ans.triangle(4 * genus + 3 * i - 3)->join(
-                0, ans.triangle(4 * genus + 3 * i - 1), Perm<3>(1, 2));
+    } else if (punctures == 1) {
+        // Already handled the disc, so genus >= 1.
+        //
+        // The size of a minimal triangulation is 4*genus - 1.
+        ans = polygon( 4*genus - 1 );
+        for (unsigned handle = 0; handle < genus; ++handle) {
+            for (unsigned faceIndex : {4*handle, 4*handle + 1}) {
+                if ( handle == genus - 1 && faceIndex == 4*genus - 3 ) {
+                    // The very last gluing needs to be handled differently
+                    // from the others.
+                    ans.triangle(faceIndex)->join(
+                            0, ans.triangle(4*genus - 2), Perm<3>(0, 1) );
+                } else {
+                    ans.triangle(faceIndex)->join(
+                            0, ans.triangle(faceIndex + 2), Perm<3>(1, 2) );
+                }
+            }
+        }
+    } else if (genus == 0) {
+        // Already handled the sphere and the disc, so punctures >= 2.
+        //
+        // The size of a minimal triangulation is 3*punctures - 4.
+        ans = polygon( 3*punctures - 4 );
+        for (unsigned i = 0; i < punctures - 1; ++i) {
+            if (i == punctures - 2) {
+                // The very last gluing needs to be handled differently
+                // from the others.
+                ans.triangle(3*i)->join(
+                        0, ans.triangle( 3*punctures - 5 ), Perm<3>(0, 1) );
+            } else {
+                ans.triangle(3*i)->join(
+                        0, ans.triangle( 3*i + 2 ), Perm<3>(1, 2) );
+            }
+        }
+    } else {
+        // All that remains are the cases where genus >= 1 and punctures >= 2.
+        //
+        // The size of a minimal triangulation is 4*genus + 3*punctures - 4.
+        //
+        // We construct this by starting with one puncture (which has
+        // 4*genus - 1 triangles), and then adding all the extra punctures by
+        // attaching a gadget with 3*punctures - 3 triangles.
+        ans = orientable( genus, 1 );
+        addPunctures( ans, punctures );
     }
 
     return ans;
@@ -138,6 +181,16 @@ Triangulation<2> Example<2>::polygon(unsigned n) {
         ans.triangle(i)->join( 2, ans.triangle(i - 1), Perm<3>(1, 2) );
     }
     return ans;
+}
+
+void Example<2>::addPunctures(Triangulation<2> surf, unsigned punctures) {
+    size_t initSize = surf.size();
+    surf.insertTriangulation( polygon(3*punctures - 3) );
+    for (unsigned i = 0; i < punctures - 1; ++i) {
+        surf.triangle( initSize + 3*i )->join(
+                0, surf.triangle( initSize + 3*i + 2 ), Perm<3>(1, 2) );
+    }
+    surf.triangle(0)->join( 2, surf.triangle(initSize), Perm<3>(0, 1) );
 }
 
 Triangulation<2> Example<2>::sphereOctahedron() {

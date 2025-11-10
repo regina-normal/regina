@@ -41,6 +41,7 @@
 #include "regina-core.h"
 #include "triangulation/dim2.h"
 #include "triangulation/detail/example.h"
+#include "manifold/sfs.h"   // To make regina::SFSpace a friend.
 
 namespace regina {
 
@@ -62,14 +63,8 @@ template <>
 class Example<2> : public detail::ExampleBase<2> {
     public:
 
-        //TODO The plan is for orientable() to always return minimal.
-
         /**
-         * Returns a triangulation of the given orientable surface.
-         *
-         * If the number of punctures is 0, then the resulting triangulation
-         * will be minimal (which, for positive genus, means there is exactly
-         * one vertex).
+         * Returns a minimal triangulation of the given orientable surface.
          *
          * \param genus the genus of the surface; this must be greater
          * than or equal to zero.
@@ -80,14 +75,8 @@ class Example<2> : public detail::ExampleBase<2> {
         static Triangulation<2> orientable(
             unsigned genus, unsigned punctures);
 
-        //TODO The plan is for nonOrientable() to always return minimal.
-
         /**
-         * Returns a triangulation of the given non-orientable surface.
-         *
-         * If the number of punctures is 0 or 1, then the resulting
-         * triangulation will be minimal (which, with the exception of
-         * the projective plane, means there is exactly one vertex).
+         * Returns a minimal triangulation of the given non-orientable surface.
          *
          * \param genus the non-orientable genus of the surface, i.e.,
          * the number of crosscaps that it contains; this must be greater
@@ -182,6 +171,24 @@ class Example<2> : public detail::ExampleBase<2> {
          * \return the polygon.
          */
         static Triangulation<2> polygon(unsigned n);
+
+        /**
+         * Adds punctures to the given once-punctured surface until it has
+         * the given number of punctures.
+         *
+         * This routine modifies \a surf directly. Adding the punctures
+         * increases the size of \a surf by `3*punctures - 3`.
+         *
+         * \pre \a surf has exactly one boundary edge, and this boundary edge
+         * is given by edge (01) of triangle 0.
+         *
+         * \param surf the once-punctured surface to which we should add
+         * extra punctures.
+         * \param punctures the total number of punctures that we should end
+         * up with.
+         */
+        static void addPunctures(
+                Triangulation<2> surf, unsigned punctures);
 
     friend class regina::SFSpace;
 };
