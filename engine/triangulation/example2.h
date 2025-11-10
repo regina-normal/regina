@@ -71,6 +71,8 @@ class Example<2> : public detail::ExampleBase<2> {
          * \param punctures the number of punctures in the surface;
          * this must be greater than or equal to zero.
          * \return the requested orientable surface.
+         *
+         * \author Alex He, B.B.
          */
         static Triangulation<2> orientable(
             unsigned genus, unsigned punctures);
@@ -169,6 +171,8 @@ class Example<2> : public detail::ExampleBase<2> {
          * \param n the number of triangles used to construct the polygon.
          *
          * \return the polygon.
+         *
+         * \author Alex He
          */
         static Triangulation<2> polygon(unsigned n);
 
@@ -186,6 +190,8 @@ class Example<2> : public detail::ExampleBase<2> {
          * extra punctures.
          * \param punctures the total number of punctures that we should end
          * up with.
+         *
+         * \author Alex He
          */
         static void addPunctures(
                 Triangulation<2>& surf, unsigned punctures);
