@@ -127,6 +127,10 @@ Triangulation<2> Example<2>::nonOrientable(unsigned genus, unsigned punctures) {
     return ans;
 }
 
+Triangulation<2> Example<2>::polygon(unsigned n) {
+    //TODO
+}
+
 Triangulation<2> Example<2>::sphereOctahedron() {
     Triangulation<2> ans;
 

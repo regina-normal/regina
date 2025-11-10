@@ -39,7 +39,7 @@
 #include "maths/numbertheory.h"
 #include "subcomplex/satannulus.h"
 #include "triangulation/dim3.h"
-#include "triangulation/example2.h" // for Example<2>::disc()
+#include "triangulation/example2.h" // for Example<2>::polygon()
 #include "utilities/exception.h"
 
 namespace regina {

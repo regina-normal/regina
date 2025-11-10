@@ -119,19 +119,13 @@ class Example<2> : public detail::ExampleBase<2> {
         static Triangulation<2> sphereOctahedron();
 
         /**
-         * Returns an <i>n</i>-triangle disc (<i>n</i> = 1 by default).
-         *
-         * The default 1-triangle disc is identical to the triangulation
-         * returned by the generic routine ball().
-         *
-         * This routine always returns an oriented triangulation of an
-         * (<i>n</i> + 2)-sided polygon. In particular, the returned
-         * triangulation always uses the minimum number of edge
-         * identifications for an <i>n</i>-triangle disc.
+         * Returns a one-triangle disc.
+         * This is identical to the triangulation returned by the generic
+         * routine ball().
          *
          * \return the disc.
          */
-        static Triangulation<2> disc(unsigned n = 1);
+        static Triangulation<2> disc();
 
         /**
          * Returns a two-triangle annulus.
@@ -173,6 +167,23 @@ class Example<2> : public detail::ExampleBase<2> {
          * \return the Klein bottle.
          */
         static Triangulation<2> kb();
+
+    private:
+
+        /**
+         * Returns an oriented n-triangle polygon with (n + 2) boundary edges.
+         *
+         * The triangulation is constructed by gluing edge (01) of triangle
+         * i to edge (02) of triangle (i - 1), for each i from 1 to (n - 1)
+         * (inclusive).
+         *
+         * \param n the number of triangles used to construct the polygon.
+         *
+         * \return the polygon.
+         */
+        static Triangulation<2> polygon(unsigned n);
+
+    friend class regina::SFSpace;
 };
 
 inline Triangulation<2> Example<2>::sphereTetrahedron() {
@@ -187,9 +198,7 @@ inline Triangulation<2> Example<2>::kb() {
     return twistedSphereBundle();
 }
 
-
-inline Triangulation<2> Example<2>::disc(unsigned n) {
-    //TODO Construct polygonal discs with any number of triangles.
+inline Triangulation<2> Example<2>::disc() {
     return ball();
 }
 
