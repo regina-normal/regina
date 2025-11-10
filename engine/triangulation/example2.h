@@ -188,7 +188,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * up with.
          */
         static void addPunctures(
-                Triangulation<2> surf, unsigned punctures);
+                Triangulation<2>& surf, unsigned punctures);
 
     friend class regina::SFSpace;
 };

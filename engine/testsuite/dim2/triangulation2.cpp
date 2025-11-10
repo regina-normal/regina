@@ -49,6 +49,13 @@ class Dim2Test : public TriangulationTest<2> {
         // Closed non-orientable triangulations:
         TestCase rp2 { Example<2>::rp2(), "RP^2" };
 
+        // Minimal bounded orientable triangulations:
+        TestCase pants { Example<2>::orientable(0, 3), "Pair of pants" };
+        TestCase orPunc1 { Example<2>::orientable(2, 1),
+            "Or, g=2 + 1 puncture" };
+        TestCase orPunc3 { Example<2>::orientable(2, 3),
+            "Or, g=2 + 3 punctures" };
+
         // Disconnected triangulations (we build these in the constructor):
         TestCase disjoint2 { {}, "Torus U Mobius" };
         TestCase disjoint3 { {}, "KB U Annulus U S^2" };
@@ -74,6 +81,11 @@ class Dim2Test : public TriangulationTest<2> {
             f(rp2.tri, rp2.name);
             f(disjoint2.tri, disjoint2.name);
             f(disjoint3.tri, disjoint3.name);
+
+            // Minimal bounded triangulations.
+            f(pants.tri, pants.name);
+            f(orPunc1.tri, orPunc1.name);
+            f(orPunc3.tri, orPunc3.name);
         }
 };
 
@@ -97,6 +109,11 @@ TEST_F(Dim2Test, validity) {
     verifyValid(rp2);
     verifyValid(disjoint2);
     verifyValid(disjoint3);
+
+    // Minimal bounded triangulations.
+    verifyValid(pants);
+    verifyValid(orPunc1);
+    verifyValid(orPunc3);
 }
 TEST_F(Dim2Test, connectivity) {
     TriangulationTest<2>::connectivityGenericCases();
@@ -106,6 +123,11 @@ TEST_F(Dim2Test, connectivity) {
     EXPECT_TRUE(rp2.tri.isConnected());
     EXPECT_FALSE(disjoint2.tri.isConnected());
     EXPECT_FALSE(disjoint3.tri.isConnected());
+
+    // Minimal bounded triangulations.
+    EXPECT_TRUE(pants.tri.isConnected());
+    EXPECT_TRUE(orPunc1.tri.isConnected());
+    EXPECT_TRUE(orPunc3.tri.isConnected());
 }
 TEST_F(Dim2Test, orientability) {
     TriangulationTest<2>::orientabilityGenericCases();
@@ -115,6 +137,11 @@ TEST_F(Dim2Test, orientability) {
     EXPECT_FALSE(rp2.tri.isOrientable());
     EXPECT_FALSE(disjoint2.tri.isOrientable());
     EXPECT_FALSE(disjoint3.tri.isOrientable());
+
+    // Minimal bounded triangulations.
+    EXPECT_TRUE(pants.tri.isOrientable());
+    EXPECT_TRUE(orPunc1.tri.isOrientable());
+    EXPECT_TRUE(orPunc3.tri.isOrientable());
 }
 TEST_F(Dim2Test, orientedExamples) {
     // Ensure that the orientable Example<2> constructions are oriented.
@@ -130,6 +157,11 @@ TEST_F(Dim2Test, orientedExamples) {
     EXPECT_TRUE(Example<2>::orientable(5, 3).isOriented());
     EXPECT_TRUE(Example<2>::sphereOctahedron().isOriented());
     EXPECT_TRUE(Example<2>::disc().isOriented());
+
+    // Minimal bounded triangulations.
+    EXPECT_TRUE(pants.tri.isOriented());
+    EXPECT_TRUE(orPunc1.tri.isOriented());
+    EXPECT_TRUE(orPunc3.tri.isOriented());
 }
 
 TEST_F(Dim2Test, eulerChar) {
@@ -140,6 +172,11 @@ TEST_F(Dim2Test, eulerChar) {
     EXPECT_EQ(rp2.tri.eulerCharTri(), 1);
     EXPECT_EQ(disjoint2.tri.eulerCharTri(), 0);
     EXPECT_EQ(disjoint3.tri.eulerCharTri(), 2);
+
+    // Minimal bounded triangulations.
+    EXPECT_EQ(pants.tri.eulerCharTri(), -1);
+    EXPECT_EQ(orPunc1.tri.eulerCharTri(), -3);
+    EXPECT_EQ(orPunc3.tri.eulerCharTri(), -5);
 }
 TEST_F(Dim2Test, boundaryBasic) {
     TriangulationTest<2>::boundaryBasicGenericCases();
@@ -149,6 +186,11 @@ TEST_F(Dim2Test, boundaryBasic) {
     verifyBoundaryBasic(rp2, {}, {}, {});
     verifyBoundaryBasic(disjoint2, {0}, {}, {});
     verifyBoundaryBasic(disjoint3, {0, 0}, {}, {});
+
+    // Minimal bounded triangulations.
+    verifyBoundaryBasic(pants, {0, 0, 0}, {}, {});
+    verifyBoundaryBasic(orPunc1, {0}, {}, {});
+    verifyBoundaryBasic(orPunc3, {0, 0, 0}, {}, {});
 }
 TEST_F(Dim2Test, vertexLinksBasic) {
     TriangulationTest<2>::vertexLinksBasicGenericCases();
@@ -158,6 +200,11 @@ TEST_F(Dim2Test, vertexLinksBasic) {
     verifyVertexLinksBasic(rp2, 2, 0);
     verifyVertexLinksBasic(disjoint2, 1, 1);
     verifyVertexLinksBasic(disjoint3, 4, 2);
+
+    // Minimal bounded triangulations.
+    verifyVertexLinksBasic(pants, 0, 3);
+    verifyVertexLinksBasic(orPunc1, 0, 1);
+    verifyVertexLinksBasic(orPunc3, 0, 3);
 }
 TEST_F(Dim2Test, orient) {
     testManualCases(TriangulationTest<2>::verifyOrient);
@@ -219,6 +266,11 @@ TEST_F(Dim2Test, homologyH1) {
     EXPECT_EQ(rp2.tri.homology<1>(), regina::AbelianGroup(0, {2}));
     EXPECT_EQ(disjoint2.tri.homology<1>(), regina::AbelianGroup(3));
     EXPECT_EQ(disjoint3.tri.homology<1>(), regina::AbelianGroup(2, {2}));
+
+    // Minimal bounded triangulations.
+    EXPECT_EQ(pants.tri.homology<1>(), regina::AbelianGroup(2));
+    EXPECT_EQ(orPunc1.tri.homology<1>(), regina::AbelianGroup(4));
+    EXPECT_EQ(orPunc3.tri.homology<1>(), regina::AbelianGroup(6));
 }
 TEST_F(Dim2Test, fundGroup) {
     TriangulationTest<2>::fundGroupGenericCases();
@@ -228,6 +280,11 @@ TEST_F(Dim2Test, fundGroup) {
     EXPECT_EQ(rp2.tri.group().recogniseGroup(), "Z_2");
 
     // We cannot call group() on disjoint triangulations.
+
+    // Minimal bounded triangulations.
+    EXPECT_EQ(pants.tri.group().recogniseGroup(), "Free(2)");
+    EXPECT_EQ(orPunc1.tri.group().recogniseGroup(), "Free(4)");
+    EXPECT_EQ(orPunc3.tri.group().recogniseGroup(), "Free(6)");
 }
 TEST_F(Dim2Test, chainComplex) {
     testManualCases(TriangulationTest<2>::verifyChainComplex);

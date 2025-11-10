@@ -49,7 +49,6 @@ Triangulation<2> Example<2>::orientable(unsigned genus, unsigned punctures) {
 
     Triangulation<2> ans;
 
-    //TODO Merge the punctures == 0 and punctures == 1 cases?
     if (punctures == 0) {
         // Already handled the sphere, so genus >= 1.
         //
@@ -74,7 +73,7 @@ Triangulation<2> Example<2>::orientable(unsigned genus, unsigned punctures) {
         ans = polygon( 4*genus - 1 );
         for (unsigned handle = 0; handle < genus; ++handle) {
             for (unsigned faceIndex : {4*handle, 4*handle + 1}) {
-                if ( handle == genus - 1 && faceIndex == 4*genus - 3 ) {
+                if ( faceIndex == 4*genus - 3 ) {
                     // The very last gluing needs to be handled differently
                     // from the others.
                     ans.triangle(faceIndex)->join(
@@ -183,7 +182,10 @@ Triangulation<2> Example<2>::polygon(unsigned n) {
     return ans;
 }
 
-void Example<2>::addPunctures(Triangulation<2> surf, unsigned punctures) {
+void Example<2>::addPunctures(Triangulation<2>& surf, unsigned punctures) {
+    // NOTE: The following routines rely on this specific construction
+    //      --> Example<2>::orientable()
+    //      --> Example<2>::nonOrientable()
     size_t initSize = surf.size();
     surf.insertTriangulation( polygon(3*punctures - 3) );
     for (unsigned i = 0; i < punctures - 1; ++i) {
