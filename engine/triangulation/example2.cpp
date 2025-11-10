@@ -128,7 +128,16 @@ Triangulation<2> Example<2>::nonOrientable(unsigned genus, unsigned punctures) {
 }
 
 Triangulation<2> Example<2>::polygon(unsigned n) {
-    //TODO
+    // NOTE: The following routines all rely on this specific construction
+    //      --> Example<2>::orientable()
+    //      --> Example<2>::nonOrientable()
+    //      --> SFSpace::construct()
+    Triangulation<2> ans;
+    ans.newTriangles(n);
+    for (unsigned i = 1; i < n; ++i) {
+        ans.triangle(i)->join( 2, ans.triangle(i - 1), Perm<3>(1, 2) );
+    }
+    return ans;
 }
 
 Triangulation<2> Example<2>::sphereOctahedron() {
