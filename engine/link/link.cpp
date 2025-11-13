@@ -224,6 +224,8 @@ Link::Link(const std::string& description) {
     } catch (const InvalidArgument&) {
     }
 
+    //TODO Maybe parse braid words too.
+
     throw InvalidArgument("The given string could not be interpreted "
         "as representing a link");
 }

@@ -4269,6 +4269,8 @@ TEST_F(LinkTest, pdCode) {
     testManualCases(verifyPDCode);
 }
 
+//TODO Test fromBraid().
+
 TEST_F(LinkTest, invalidCode) {
     static const char* code = "INVALID";
 
@@ -4278,6 +4280,8 @@ TEST_F(LinkTest, invalidCode) {
     EXPECT_THROW({ Link::fromOrientedGauss(code); }, InvalidArgument);
     EXPECT_THROW({ Link::fromJenkins(code); }, InvalidArgument);
     EXPECT_THROW({ Link::fromPD(code); }, InvalidArgument);
+
+    //TODO Test fromBraid().
 
     // Finally, the "magic" constructor:
     EXPECT_THROW({ Link l(code); }, InvalidArgument);

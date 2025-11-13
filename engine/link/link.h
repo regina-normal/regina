@@ -6731,6 +6731,17 @@ class Link :
         template <typename Iterator>
         static Link fromPD(Iterator begin, Iterator end);
 
+        /**
+         * TODO
+         */
+        static Link fromBraid(const std::string& str);
+
+        /**
+         * TODO
+         */
+        template <typename Iterator>
+        static Link fromBraid(Iterator begin, Iterator end);
+
         /*@}*/
 
     private:

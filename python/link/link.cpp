@@ -233,6 +233,7 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
         }, pybind11::arg("signs"), pybind11::arg("component"), rdoc::fromData)
         .def_static("fromKnotSig", &Link::fromKnotSig, rdoc::fromKnotSig)
         .def_static("fromSig", &Link::fromSig, rdoc::fromSig)
+        //TODO python bindings for fromBraid().
         .def("swap", &Link::swap, rdoc::swap)
         .def("insertLink", overload_cast<const Link&>(&Link::insertLink),
             rdoc::insertLink)
