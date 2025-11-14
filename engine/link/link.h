@@ -5616,6 +5616,9 @@ class Link :
          */
         bool pdAmbiguous() const;
 
+        //TODO Use Vogel's algorithm to implement braid(), ie convert a link
+        //  diagram into a braid word.
+
         /**
          * Outputs the underlying 4-valent multigraph for this link diagram
          * using the PACE text format.  This format is described in detail at
@@ -6732,12 +6735,120 @@ class Link :
         static Link fromPD(Iterator begin, Iterator end);
 
         /**
-         * TODO
+         * Creates a new classical link from a braid word, presented as a
+         * string.
+         *
+         * For a braid on <i>n</i> strands (not to be confused with strands of
+         * a link diagram), orient the strands from left to right, and label
+         * the strands in order from bottom to top by 0 to <i>n</i> - 1
+         * (inclusive). A braid word for such an <i>n</i>-strand braid is
+         * given by a (nonempty) sequence of nonzero integers between
+         * 1 - <i>n</i> and <i>n</i> - 1 (inclusive), in which either
+         * 1 - <i>n</i> or <i>n</i> - 1 appears at least once; in other words,
+         * we assume that there is at least one crossing involving the
+         * uppermost strand (we make no such assumption for the lowermost
+         * strand).
+         *
+         * - A positive integer <i>s</i> in the braid word indicates an
+         *   exchange of strands <i>s</i> - 1 and <i>s</i> via a positive
+         *   crossing.
+             \verbatim
+             ___   ___
+                \ /
+                 \
+             ___/ \___
+             \endverbatim
+         *
+         * - A negative integer -<i>s</i> in the braid word indicates an
+         *   exchange of strands <i>s</i> - 1 and <i>s</i> via a negative
+         *   crossing.
+             \verbatim
+             ___   ___
+                \ /
+                 /
+             ___/ \___
+             \endverbatim
+         *
+         * As an example, the braid word
+           \verbatim
+           1 -3 -3 2 1
+           \endverbatim
+         * describes the following 4-strand braid:
+         *
+           \verbatim
+           _________   ___   _______________
+                    \ /   \ /
+                     /     /
+           _________/ \___/ \___   _________
+                                \ /
+                                 \
+           ___   _______________/ \___   ___
+              \ /                     \ /
+               \                       \
+           ___/ \_____________________/ \___
+           \endverbatim
+         *
+         * The corresponding link is constructed by taking the closure of the
+         * braid; that is, by taking strand <i>s</i> on the right and joining
+         * it with strand <i>s</i> on the left, for each <i>s</i> between 0 and
+         * <i>n</i> - 1 (inclusive). Depending on how the braid word permutes
+         * the strands as we go from left to right, this produces a link with
+         * up to <i>n</i> components. For example, in the 4-strand example
+         * above, the closure will be a 3-component link.
+         *
+         * The conventions for braids described above are chosen to be
+         * consistent with those used in SnapPy 3.0/Spherogram 2.0 and newer.
+         *
+         * There are two variants of this routine. This variant takes a single
+         * string, where the integers have been combined together and separated
+         * by whitespace. The other variant takes a sequence of integers,
+         * defined by a pair of iterators.
+         *
+         * In this variant (the string variant), the exact form of the
+         * whitespace does not matter, and additional whitespace at the
+         * beginning or end of the string is allowed.
+         *
+         * \exception InvalidArgument The given string was not a valid braid
+         * word for a classical link.
+         *
+         * \author Alex He
+         *
+         * \param str a braid word for a classical link, as described above.
+         * \return the reconstructed link.
          */
         static Link fromBraid(const std::string& str);
 
         /**
-         * TODO
+         * Creates a new classical link from a braid word, presented as an
+         * integer sequence.
+         *
+         * See fromBraid(const std::string&) for a full description of the
+         * notation for braid words, as well as a detailed discussion of how
+         * Regina constructs classical links from such notation.
+         *
+         * This routine is a variant of fromBraid(const std::string&) which,
+         * instead of taking a human-readable string, takes a machine-readable
+         * sequence of integers. This sequence is given by passing a pair of
+         * begin/end iterators.
+         *
+         * \pre \a Iterator is a random access iterator type, and
+         * dereferencing such an iterator produces a native C++ integer.
+         * (The specific native C++ integer type being used will be deduced
+         * from the type \a Iterator.)
+         *
+         * \exception InvalidArgument The given sequence was not a valid braid
+         * word for a classical link.
+         *
+         * \python Instead of a pair of begin and past-the-end
+         * iterators, this routine takes a Python list of integers.
+         *
+         * \author Alex He
+         *
+         * \param begin an iterator that points to the beginning of the
+         * sequence of integers for the braid word for a classical link.
+         * \param end an iterator that points past the end of the
+         * sequence of integers for the braid word for a classical link.
+         * \return the reconstructed link.
          */
         template <typename Iterator>
         static Link fromBraid(Iterator begin, Iterator end);
