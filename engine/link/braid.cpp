@@ -29,18 +29,12 @@
  **************************************************************************/
 
 #include "link/link.h"
-#include <vector>
 
 namespace regina {
 
 Link Link::fromBraid(const std::string& s) {
     // Work with the largest integer type that we could possibly need.
     using Int = std::make_signed_t<size_t>;
-    //TODO
-}
-
-template <typename Iterator>
-Link Link::fromBraid(Iterator begin, Iterator end) {
     //TODO
 }
 

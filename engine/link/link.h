@@ -6799,6 +6799,9 @@ class Link :
          * The conventions for braids described above are chosen to be
          * consistent with those used in SnapPy 3.0/Spherogram 2.0 and newer.
          *
+         * For the special case where the braid word is empty, this routine
+         * returns a zero-crossing unknot.
+         *
          * There are two variants of this routine. This variant takes a single
          * string, where the integers have been combined together and separated
          * by whitespace. The other variant takes a sequence of integers,
@@ -8110,6 +8113,7 @@ inline void swap(Link& lhs, Link& rhs) {
 #include "link/gauss-impl.h"
 #include "link/jenkins-impl.h"
 #include "link/pd-impl.h"
+#include "link/braid-impl.h"
 
 #endif
 
