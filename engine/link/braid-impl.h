@@ -57,68 +57,148 @@ Link Link::fromBraid(Iterator begin, Iterator end) {
         return { 1 };   // Zero-crossing unknot.
     }
 
-    // TODO It should be possible to do everything in just a single pass
-    //      through the braid. But is this worth the effort?
+    // The braid must have at least 2 "rows" (we use "rows" to avoid a clash
+    // of terminology with "strands" of the link diagram), so we can at least
+    // make a start on the book-keeping for the first 2 rows (ie, the rows
+    // numbered either 0 or 1).
+    std::vector<StrandRef> leftmostStrand;
+    std::vector<StrandRef> previousStrand;
+    std::vector<size_t> rowPerm;
+    size_t row;
+    for (row : {0,1}) {
+        leftmostStrand.emplace_back();
+        previousStrand.emplace_back();
+        rowPerm.push_back(row);
+    }
 
-    // Make a first pass through the braid in order to:
-    //  (a) Work out the number of "rows" in the braid (we use "rows" to avoid
-    //      a class of terminology with "strands" of the link diagram).
-    //  (b) Work out the signs of all the crossings of the link diagram.
-    size_t numRows = 0;
+    // Iterate through the braid word and build the link.
+    Link ans;
+    size_t uppermostRow = 1;
     size_t upperRow;
     size_t iCross;
     InputInt s;
-    Link ans;
     for (iCross = 0; iCross < numCross; ++iCross) {
         s = begin[iCross];
         if (s == 0) {
             throw InvalidArgument("fromBraid(): braid word contains 0");
-        } else {
-            // Have we found a new uppermost row in the braid?
-            upperRow = static_cast<size_t>( std::abs(s) );
-            if (upperRow > numRows) {
-                numRows = upperRow;
+        }
+
+        // Have we found a new uppermost row in the braid?
+        upperRow = static_cast<size_t>( std::abs(s) );
+        for (++uppermostRow; uppermostRow <= upperRow; ++uppermostRow) {
+            leftmostStrand.emplace_back();
+            previousStrand.emplace_back();
+            rowPerm.push_back(uppermostRow);
+        }
+
+        // We have a new crossing that exchanges upperRow and upperRow - 1.
+        std::swap( rowPerm[upperRow], rowPerm[upperRow - 1] );
+        Crossing* crossing = new Crossing;
+        ans.crossings_.push_back(crossing);
+        if (s > 0) {
+            // Positive crossing.
+            //  ___   ___
+            //     \ /
+            //      \
+            //  ___/ \___
+            //
+            crossing->sign_ = 1;
+
+            // The overstrand either:
+            //  --> joins up with the previous strand in upperRow; or
+            //  --> there is no previous strand, which means that the
+            //      overstrand is the leftmost strand in upperRow.
+            if (previousStrand[upperRow]) {
+                ans.join( previousStrand[upperRow], crossing->over() );
+            } else {
+                leftmostStrand[upperRow] = crossing->over();
             }
 
-            // What's the sign of crossing number iCross?
-            if (s > 0) {
-                ans.crossings_.push_back( new Crossing(1) );
+            // The understrand either:
+            //  --> joins up with the previous strand in upperRow - 1; or
+            //  --> there is no previous strand, which means that the
+            //      understrand is the leftmost strand in upperRow - 1.
+            if (previousStrand[upperRow - 1]) {
+                ans.join( previousStrand[upperRow - 1], crossing->under() );
             } else {
-                ans.crossings_.push_back( new Crossing(-1) );
+                leftmostStrand[upperRow - 1] = crossing->under();
             }
+
+            // Update the previous strands.
+            previousStrand[upperRow - 1] = crossing->over();
+            previousStrand[upperRow] = crossing->under();
+        } else {
+            // Negative crossing.
+            //  ___   ___
+            //     \ /
+            //      /
+            //  ___/ \___
+            //
+            crossing->sign_ = -1;
+
+            // The understrand either:
+            //  --> joins up with the previous strand in upperRow; or
+            //  --> there is no previous strand, which means that the
+            //      understrand is the leftmost strand in upperRow.
+            if (previousStrand[upperRow]) {
+                ans.join( previousStrand[upperRow], crossing->under() );
+            } else {
+                leftmostStrand[upperRow] = crossing->under();
+            }
+
+            // The overstrand either:
+            //  --> joins up with the previous strand in upperRow - 1; or
+            //  --> there is no previous strand, which means that the
+            //      overstrand is the leftmost strand in upperRow - 1.
+            if (previousStrand[upperRow - 1]) {
+                ans.join( previousStrand[upperRow - 1], crossing->over() );
+            } else {
+                leftmostStrand[upperRow - 1] = crossing->over();
+            }
+
+            // Update the previous strands.
+            previousStrand[upperRow - 1] = crossing->under();
+            previousStrand[upperRow] = crossing->over();
         }
     }
-    numRows += 1;
 
-    // In a moment, we will make a second pass through the braid in order to
-    // join all the crossings together. As part of the book-keeping, we will:
-    //  --> search for the leftmost strand in each row, and
-    //  --> keep track of the latest strand that we have encountered in each
-    //      row.
-    std::vector<StrandRef> leftmostStrand;
-    std::vector<StrandRef> latestStrand;
-    size_t row;
-    for (row = 0; row < numRows; ++row) {
-        leftmostStrand.emplace_back( StrandRef() );
-        latestStrand.emplace_back( StrandRef() );
+    // At this point, we have effectively built the braid, but haven't done
+    // the closure yet.
+    std::unordered_set<size_t> untraversedRows;
+    for (row = 0; row <= uppermostRow; ++row) {
+        if (previousStrand[row]) {
+            // Close up this row.
+            ans.join( previousStrand[row], leftmostStrand[row] );
+
+            // In a moment, we will need to traverse the leftmost strand of
+            // this row to find all the components of the link with at least
+            // one crossing.
+            untraversedRows.insert(row);
+        } else {
+            // This row isn't involved in any crossings at all, so it simply
+            // forms a zero-crossing unknotted component of the link.
+            ans.components_.emplace_back();
+        }
     }
 
-    // As promised, go through the braid again to work out how to join all the
-    // crossings together.
-    for (iCross = 0; iCross < numCross; ++iCross) {
-        s = begin[iCross];
-        //TODO
-    }
+    // All that remains is to find all the components (with at least one
+    // crossing).
+    size_t firstRow;
+    size_t currentRow;
+    while (not untraversedRows.empty()) {
+        firstRow = *untraversedRows.begin();
+        untraversedRows.erase( untraversedRows.begin() );
+        ans.components_.push_back( leftmostStrand[firstRow] );
 
-    // Close up the braid.
-    //TODO
-
-    // Find all the components.
-    std::unordered_set<InputInt> unvisitedRows;
-    for (InputInt i = 0; i < numCross; ++i) {
-        unvisitedRows.insert(i);
+        // Traverse and erase all the other leftmost strands that belong to
+        // this component.
+        currentRow = rowPerm[firstRow];
+        while (currentRow != firstRow) {
+            untraversedRows.erase(currentRow);
+            currentRow = rowPerm[firstRow];
+        }
     }
-    //TODO
+    return ans;
 }
 
 }   // namespace regina
