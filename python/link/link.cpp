@@ -187,6 +187,18 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
         .def_static("fromDT", [](const std::vector<int>& v) {
             return Link::fromDT(v.begin(), v.end());
         }, pybind11::arg("integers"), rdoc::fromDT_2)
+        //TODO Don't know why this breaks all of the following tests:
+        //  --> python-test
+        //  --> python-basic
+        //  --> python-sub
+        //  --> python-callback
+        //TODO
+        //.def_static("fromBraid", [](const std::string& s) {
+        //    return Link::fromBraid(s);
+        //}, pybind11::arg("word"), rdoc::fromBraid)
+        //.def_static("fromBraid", [](const std::vector<int>& v) {
+        //    return Link::fromBraid(v.begin(), v.end());
+        //}, pybind11::arg("integers"), rdoc::fromBraid_2)
         .def_static("fromPD", [](const std::string& s) {
             return Link::fromPD(s);
         }, rdoc::fromPD)
@@ -233,7 +245,6 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
         }, pybind11::arg("signs"), pybind11::arg("component"), rdoc::fromData)
         .def_static("fromKnotSig", &Link::fromKnotSig, rdoc::fromKnotSig)
         .def_static("fromSig", &Link::fromSig, rdoc::fromSig)
-        //TODO python bindings for fromBraid().
         .def("swap", &Link::swap, rdoc::swap)
         .def("insertLink", overload_cast<const Link&>(&Link::insertLink),
             rdoc::insertLink)

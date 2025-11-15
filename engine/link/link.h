@@ -6843,7 +6843,8 @@ class Link :
          * word for a classical link.
          *
          * \python Instead of a pair of begin and past-the-end
-         * iterators, this routine takes a Python list of integers.
+         * iterators, this routine takes a sequence (such as a Python list) of
+         * integers.
          *
          * \author Alex He
          *
