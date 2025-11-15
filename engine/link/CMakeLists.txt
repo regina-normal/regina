@@ -6,6 +6,7 @@ SET ( FILES
   alexander.cpp
   algebra.cpp
   arrow.cpp
+  braid.cpp
   complement.cpp
   dt.cpp
   examplelink.cpp
@@ -41,6 +42,7 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    braid-impl.h
     data-impl.h
     dt-impl.h
     examplelink.h
