@@ -65,7 +65,7 @@ Link Link::fromBraid(Iterator begin, Iterator end) {
     std::vector<StrandRef> previousStrand;
     std::vector<size_t> rowPerm;
     size_t row;
-    for (row : {0,1}) {
+    for (row = 0; row <= 1; ++row) {
         leftmostStrand.emplace_back();
         previousStrand.emplace_back();
         rowPerm.push_back(row);

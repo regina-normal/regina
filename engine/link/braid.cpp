@@ -35,7 +35,22 @@ namespace regina {
 Link Link::fromBraid(const std::string& s) {
     // Work with the largest integer type that we could possibly need.
     using Int = std::make_signed_t<size_t>;
-    //TODO
+    std::istringstream in(s);
+    std::vector<Int> terms;
+
+    Int i;
+    while (true) {
+        in >> i;
+        if (not in) {
+            if (in.eof()) {
+                break;
+            }
+            throw InvalidArgument(
+                    "fromBraid(): invalid integer in braid word");
+        }
+        terms.push_back(i);
+    }
+    return fromBraid( terms.begin(), terms.end() );
 }
 
 }   // namespace regina
