@@ -4269,7 +4269,44 @@ TEST_F(LinkTest, pdCode) {
     testManualCases(verifyPDCode);
 }
 
-//TODO Test fromBraid().
+static void verifyBraid(
+        const Link& link, const std::string& word, const char* name) {
+    //TODO Test fromBraid().
+    //      --> No throw
+    //      --> Size
+    //      --> Components
+    //      --> Magic constructor
+    //      --> Simple invariants?
+    //
+    //      Also look through the documentation and implementation for
+    //      specific things that we might want to test.
+}
+
+TEST_F(LinkTest, braid) {
+    //TODO We don't currently have Vogel's algorithm, so we will need to
+    //      resort to manually coming up with some braid words.
+    //
+    //      Since we're supposed to be consistent with SnapPy, it probably
+    //      makes sense to use SnapPy to help generate test cases.
+
+    // Invalid braid words.
+    //TODO
+
+    // Braid words for the unknot.
+    //TODO
+
+    // Braid words for the trefoil knot.
+    //TODO
+
+    // Braid words for the figure-eight knot.
+    //TODO
+
+    // Braid words for multi-component links.
+    //TODO
+
+    // Some more specialised braid word tests.
+    //TODO ??????
+}
 
 TEST_F(LinkTest, invalidCode) {
     static const char* code = "INVALID";
@@ -4280,8 +4317,7 @@ TEST_F(LinkTest, invalidCode) {
     EXPECT_THROW({ Link::fromOrientedGauss(code); }, InvalidArgument);
     EXPECT_THROW({ Link::fromJenkins(code); }, InvalidArgument);
     EXPECT_THROW({ Link::fromPD(code); }, InvalidArgument);
-
-    //TODO Test fromBraid().
+    EXPECT_THROW({ Link::fromBraid(code); }, InvalidArgument);
 
     // Finally, the "magic" constructor:
     EXPECT_THROW({ Link l(code); }, InvalidArgument);
