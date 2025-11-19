@@ -4269,6 +4269,12 @@ TEST_F(LinkTest, pdCode) {
     testManualCases(verifyPDCode);
 }
 
+struct BraidTestCase {
+    Link link;
+    std::string word;
+    const char* name;
+};
+
 static void verifyBraid(
         const Link& link, const std::string& word, const char* name) {
     //TODO Test fromBraid().
@@ -4283,25 +4289,152 @@ static void verifyBraid(
 }
 
 TEST_F(LinkTest, braid) {
-    //TODO We don't currently have Vogel's algorithm, so we will need to
-    //      resort to manually coming up with some braid words.
+    // Regina doesn't (yet) have an implementation of Vogel's algorithm, so
+    // for the braid closure tests we resort to using some bespoke test cases.
     //
-    //      Since we're supposed to be consistent with SnapPy, it probably
-    //      makes sense to use SnapPy to help generate test cases.
+    // Here are some notes on how these test cases were constructed:
+    //  --> For links built from PD codes, such codes were computed from the
+    //      SnapPy link given by the closure of the braid word. This ensures
+    //      that the fromBraid() construction is indeed consistent with
+    //      SnapPy 3.0, as promised in the documentation of fromBraid().
+    //  --> Many of the braid words were constructed using some Python code
+    //      (currently not publicly available) that randomises braid words
+    //      using Markov moves.
 
     // Invalid braid words.
     //TODO
 
     // Braid words for the unknot.
-    //TODO
+    // 3-, 4- and 6-strand braids generated using random Markov moves.
+    BraidTestCase braidEmpty {Link(1), "", "Empty"};
+    BraidTestCase braidUnknot1Pos {
+        Link::fromPD("[[2, 2, 1, 1]]"),
+            "1",
+            "Unknot (1 +ve crossing)" };
+    BraidTestCase braidUnknot1Neg {
+        Link::fromPD("[[2, 1, 1, 2]]"),
+            "-1",
+            "Unknot (1 -ve crossing)" };
+    BraidTestCase braidUnknot3Strand {
+        Link::fromPD("[[4, 8, 5, 7], [2, 5, 3, 6], [3, 8, 4, 1], "
+                "[6, 1, 7, 2]]"),
+            "1 -2 -1 -2",
+            "Unknot (3 strands)" };
+    BraidTestCase braidUnknot4Strand {
+        Link::fromPD("[[9, 7, 10, 6], [7, 2, 8, 3], [10, 3, 11, 4], "
+                "[4, 14, 5, 13], [11, 1, 12, 14], [12, 6, 13, 5], "
+                "[8, 2, 9, 1]]"),
+            "2 -1 -2 3 2 3 1",
+            "Unknot (4 strands)" };
+    BraidTestCase braidUnknot6Strand {
+        Link::fromPD("[[14, 17, 15, 18], [6, 9, 7, 10], [11, 3, 12, 2], "
+                "[10, 4, 11, 3], [7, 5, 8, 4], [15, 12, 16, 13], "
+                "[5, 9, 6, 8], [13, 1, 14, 18], [16, 2, 17, 1]]"),
+            "-5 -1 3 2 1 -4 1 5 4",
+            "Unknot (6 strands)" };
+    // Run the tests.
+    verifyBraid(braidEmpty.link, braidEmpty.word, braidEmpty.name);
+    verifyBraid(braidUnknot1Pos.link, braidUnknot1Pos.word,
+            braidUnknot1Pos.name);
+    verifyBraid(braidUnknot1Neg.link, braidUnknot1Neg.word,
+            braidUnknot1Neg.name);
+    verifyBraid(braidUnknot3Strand.link, braidUnknot3Strand.word,
+            braidUnknot3Strand.name);
+    verifyBraid(braidUnknot4Strand.link, braidUnknot4Strand.word,
+            braidUnknot4Strand.name);
+    verifyBraid(braidUnknot6Strand.link, braidUnknot6Strand.word,
+            braidUnknot6Strand.name);
+    // We could check that these are all unknots, but this shouldn't be
+    // necessary since verifyBraid() already checks for combinatorial
+    // isomorphism (which is stronger).
 
     // Braid words for the trefoil knot.
-    //TODO
+    // 3-, 4- and 6-strand braids generated using random Markov moves.
+    BraidTestCase braidTrefoil3Pos {
+        Link::fromPD("[[2, 6, 3, 5], [6, 4, 1, 3], [4, 2, 5, 1]]"),
+            "1 1 1",
+            "Trefoil (3 +ve crossings)" };
+    BraidTestCase braidTrefoil3Neg {
+        Link::fromPD("[[2, 5, 3, 6], [6, 3, 1, 4], [4, 1, 5, 2]]"),
+            "-1 -1 -1",
+            "Trefoil (3 -ve crossings)" };
+    BraidTestCase braidTrefoil3Strand {
+        Link::fromPD("[[7, 5, 8, 4], [2, 6, 3, 5], [3, 1, 4, 8], "
+                "[6, 2, 7, 1]]"),
+            "2 1 2 1",
+            "Trefoil (3 strands)" };
+    BraidTestCase braidTrefoil4Strand {
+        Link::fromPD("[[13, 8, 14, 9], [2, 6, 3, 5], [9, 7, 10, 6], "
+                "[10, 4, 11, 3], [4, 12, 5, 11], [14, 8, 1, 7], "
+                "[12, 1, 13, 2]]"),
+            "-1 3 2 3 3 1 -2",
+            "Trefoil (4 strands)" };
+    BraidTestCase braidTrefoil6Strand {
+        Link::fromPD("[[7, 24, 8, 25], [25, 3, 26, 2], [8, 4, 9, 3], "
+                "[16, 20, 17, 19], [9, 27, 10, 26], [13, 21, 14, 20], "
+                "[17, 14, 18, 15], [27, 11, 28, 10], [11, 29, 12, 28], "
+                "[4, 30, 5, 29], [21, 12, 22, 13], [15, 18, 16, 19], "
+                "[5, 23, 6, 22], [23, 30, 24, 1], [6, 1, 7, 2]]"),
+            "-1 2 1 5 2 4 -5 2 2 1 -3 -5 2 -1 -2",
+            "Trefoil (6 strands)" };
+    // Run the tests.
+    verifyBraid(braidTrefoil3Pos.link, braidTrefoil3Pos.word,
+            braidTrefoil3Pos.name);
+    verifyBraid(braidTrefoil3Neg.link, braidTrefoil3Neg.word,
+            braidTrefoil3Neg.name);
+    verifyBraid(braidTrefoil3Strand.link, braidTrefoil3Strand.word,
+            braidTrefoil3Strand.name);
+    verifyBraid(braidTrefoil4Strand.link, braidTrefoil4Strand.word,
+            braidTrefoil4Strand.name);
+    verifyBraid(braidTrefoil6Strand.link, braidTrefoil6Strand.word,
+            braidTrefoil6Strand.name);
+    // Again we could check that these are all trefoil knots, but this
+    // shouldn't be necessary.
 
     // Braid words for the figure-eight knot.
-    //TODO
+    // 4- and 5-strand braids generated using random Markov moves.
+    BraidTestCase braidFig8_4Cross {
+        Link::fromPD("[[4, 8, 5, 7], [2, 5, 3, 6], [8, 4, 1, 3], "
+                "[6, 1, 7, 2]]"),
+            "1 -2 1 -2",
+            "Figure eight (4 crossings)"};
+    BraidTestCase braidFig8_4Strand {
+        Link::fromPD("[[2, 9, 3, 10], [12, 4, 13, 3], [15, 5, 16, 4], "
+                "[13, 16, 14, 17], [5, 15, 6, 14], [17, 6, 18, 7], "
+                "[7, 11, 8, 10], [18, 12, 1, 11], [8, 1, 9, 2]]"),
+            "-3 2 1 -2 1 -2 3 2 -3",
+            "Figure eight (4 strands)"};
+    BraidTestCase braidFig8_5Strand {
+        Link::fromPD("[[4, 12, 5, 11], [5, 3, 6, 2], [12, 4, 13, 3], "
+                "[8, 15, 9, 16], [9, 6, 10, 7], [16, 7, 1, 8], "
+                "[10, 13, 11, 14], [14, 2, 15, 1]]"),
+            "1 2 1 -4 -3 -4 -2 3",
+            "Figure eight (5 strands)"};
+    // Run the tests.
+    verifyBraid(braidFig8_4Cross.link, braidFig8_4Cross.word,
+            braidFig8_4Cross.name);
+    verifyBraid(braidFig8_4Strand.link, braidFig8_4Strand.word,
+            braidFig8_4Strand.name);
+    verifyBraid(braidFig8_5Strand.link, braidFig8_5Strand.word,
+            braidFig8_5Strand.name);
+    // Again we could check that these are all figure eight knots, but this
+    // shouldn't be necessary.
 
     // Braid words for multi-component links.
+    BraidTestCase braidHopf2Pos {
+        Link::fromPD("[[2, 4, 1, 3], [4, 2, 3, 1]]"),
+            "1 1",
+            "Hopf link (2 +ve crossings)"};
+    BraidTestCase braidHopf2Neg {
+        Link::fromPD("[[2, 3, 1, 4], [4, 1, 3, 2]]"),
+            "-1 -1",
+            "Hopf link (2 -ve crossings)"};
+    //TODO
+    // Run the tests.
+    verifyBraid(braidHopf2Pos.link, braidHopf2Pos.word,
+            braidHopf2Pos.name);
+    verifyBraid(braidHopf2Neg.link, braidHopf2Neg.word,
+            braidHopf2Neg.name);
     //TODO
 
     // Some more specialised braid word tests.
