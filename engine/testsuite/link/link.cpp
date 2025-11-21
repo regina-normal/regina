@@ -4277,15 +4277,18 @@ struct BraidTestCase {
 
 static void verifyBraid(
         const Link& link, const std::string& word, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    // The closure of the given braid should be the same as the given link
+    // diagram, possibly up to relabelling (but not reflection, rotation or
+    // reversal).
     //TODO Test fromBraid().
     //      --> No throw
-    //      --> Size
-    //      --> Components
+    //      --> Knot/link signature, which should subsume following tests:
+    //          --> Size
+    //          --> Components
+    //          --> Simple invariants?
     //      --> Magic constructor
-    //      --> Simple invariants?
-    //
-    //      Also look through the documentation and implementation for
-    //      specific things that we might want to test.
 }
 
 TEST_F(LinkTest, braid) {
@@ -4302,7 +4305,8 @@ TEST_F(LinkTest, braid) {
     //      using Markov moves.
 
     // Invalid braid words.
-    //TODO
+    EXPECT_THROW({ Link::fromBraid("3 -2 a 2"); }, regina::InvalidArgument);
+    EXPECT_THROW({ Link::fromBraid("3 -2 0 2"); }, regina::InvalidArgument);
 
     // Braid words for the unknot.
     // 3-, 4- and 6-strand braids generated using random Markov moves.
@@ -4393,9 +4397,10 @@ TEST_F(LinkTest, braid) {
 
     // Braid words for the figure-eight knot.
     // 4- and 5-strand braids generated using random Markov moves.
+    Link fig8_4Cross = Link::fromPD("[[4, 8, 5, 7], [2, 5, 3, 6], "
+            "[8, 4, 1, 3], [6, 1, 7, 2]]"); // We reuse this later.
     BraidTestCase braidFig8_4Cross {
-        Link::fromPD("[[4, 8, 5, 7], [2, 5, 3, 6], [8, 4, 1, 3], "
-                "[6, 1, 7, 2]]"),
+        fig8_4Cross,
             "1 -2 1 -2",
             "Figure eight (4 crossings)"};
     BraidTestCase braidFig8_4Strand {
@@ -4429,16 +4434,39 @@ TEST_F(LinkTest, braid) {
         Link::fromPD("[[2, 3, 1, 4], [4, 1, 3, 2]]"),
             "-1 -1",
             "Hopf link (2 -ve crossings)"};
-    //TODO
+    BraidTestCase braidFig8_unknot1 {
+        addTrivialComponents(fig8_4Cross,1),
+            "2 -3 2 -3",
+            "Figure-eight U unknot"};
+    BraidTestCase braidFig8_unknot2 {
+        addTrivialComponents(fig8_4Cross,2),
+            "3 -4 3 -4",
+            "Figure-eight U unknot U unknot"};
+    BraidTestCase braid2Comp {
+        Link::fromPD("[[2, 8, 3, 7], [18, 22, 19, 21], [3, 11, 4, 22], "
+                "[14, 19, 15, 20], [11, 5, 12, 4], [8, 6, 9, 5], "
+                "[12, 16, 13, 15], [9, 17, 10, 16], [20, 13, 21, 14], "
+                "[17, 1, 18, 10], [6, 2, 7, 1]]"),
+            "1 3 2 -4 2 1 3 2 -4 2 1",
+            "2-component link"};
+    BraidTestCase braid3Comp {
+        Link::fromPD("[[2, 8, 3, 7], [9, 4, 10, 5], [5, 10, 6, 9], "
+                "[3, 1, 4, 6], [8, 2, 7, 1]]"),
+            "1 -3 -3 2 1",
+            "3-component link"};
     // Run the tests.
     verifyBraid(braidHopf2Pos.link, braidHopf2Pos.word,
             braidHopf2Pos.name);
     verifyBraid(braidHopf2Neg.link, braidHopf2Neg.word,
             braidHopf2Neg.name);
-    //TODO
-
-    // Some more specialised braid word tests.
-    //TODO ??????
+    verifyBraid(braidFig8_unknot1.link, braidFig8_unknot1.word,
+            braidFig8_unknot1.name);
+    verifyBraid(braidFig8_unknot2.link, braidFig8_unknot2.word,
+            braidFig8_unknot2.name);
+    verifyBraid(braid2Comp.link, braid2Comp.word,
+            braid2Comp.name);
+    verifyBraid(braid3Comp.link, braid3Comp.word,
+            braid3Comp.name);
 }
 
 TEST_F(LinkTest, invalidCode) {
