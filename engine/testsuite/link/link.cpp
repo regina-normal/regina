@@ -4282,13 +4282,14 @@ static void verifyBraid(
     // The closure of the given braid should be the same as the given link
     // diagram, possibly up to relabelling (but not reflection, rotation or
     // reversal).
-    //TODO Test fromBraid().
-    //      --> No throw
-    //      --> Knot/link signature, which should subsume following tests:
-    //          --> Size
-    //          --> Components
-    //          --> Simple invariants?
-    //      --> Magic constructor
+    Link recon;
+    ASSERT_NO_THROW({ recon = Link::fromBraid(word); });
+    EXPECT_EQ( recon.sig(false, false, false),
+            link.sig(false, false, false) );
+
+    // Verify the "magic" string constructor.
+    //TODO Need to add braid words to the "magic" constructor first.
+    //EXPECT_NO_THROW({ EXPECT_EQ( Link(word), recon ); });
 }
 
 TEST_F(LinkTest, braid) {
@@ -4305,8 +4306,8 @@ TEST_F(LinkTest, braid) {
     //      using Markov moves.
 
     // Invalid braid words.
-    EXPECT_THROW({ Link::fromBraid("3 -2 a 2"); }, regina::InvalidArgument);
-    EXPECT_THROW({ Link::fromBraid("3 -2 0 2"); }, regina::InvalidArgument);
+    EXPECT_THROW({ Link::fromBraid("3 -2 2 a"); }, regina::InvalidArgument);
+    EXPECT_THROW({ Link::fromBraid("3 -2 2 0"); }, regina::InvalidArgument);
 
     // Braid words for the unknot.
     // 3-, 4- and 6-strand braids generated using random Markov moves.

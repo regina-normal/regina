@@ -85,7 +85,8 @@ Link Link::fromBraid(Iterator begin, Iterator end) {
 
         // Have we found a new uppermost row in the braid?
         upperRow = static_cast<size_t>( std::abs(s) );
-        for (++uppermostRow; uppermostRow <= upperRow; ++uppermostRow) {
+        while (upperRow > uppermostRow) {
+            ++uppermostRow;
             leftmostStrand.emplace_back();
             previousStrand.emplace_back();
             rowPerm.push_back(uppermostRow);
@@ -195,7 +196,7 @@ Link Link::fromBraid(Iterator begin, Iterator end) {
         currentRow = rowPerm[firstRow];
         while (currentRow != firstRow) {
             untraversedRows.erase(currentRow);
-            currentRow = rowPerm[firstRow];
+            currentRow = rowPerm[currentRow];
         }
     }
     return ans;
