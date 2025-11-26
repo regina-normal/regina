@@ -7,7 +7,7 @@ Regina - Software for low-dimensional topology
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 7.4.1  [ TODO ]
+Version 7.4.1  [ 30 November, 2025 ]
 
     GENERAL:
         - Now builds under clang 16 and on macOS 26.
