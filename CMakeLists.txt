@@ -55,15 +55,6 @@ ELSE(HIGHDIM)
   SET (REGINA_HIGHDIM FALSE)
 ENDIF(HIGHDIM)
 
-# Every year I swear I will drop windows support, and this year is no different.
-# The windows build (as of November 2015) crashes in the test suite with -O3.
-# It looks as though this might be a compiler problem: the ipa-cp-clone
-# optimisation has been known to cause crashes under mingw in other projects
-# in the past also.
-IF (WIN32)
-  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-ipa-cp-clone")
-ENDIF (WIN32)
-
 # Distinguish between the different Regina installation types:
 # XDG = standard freedesktop.org filesystem installation in a fixed location.
 # HPC = filesystem installation suitable for HPC systems where there is
