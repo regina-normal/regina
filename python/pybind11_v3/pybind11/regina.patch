@@ -216,3 +216,20 @@ index 9f2f704c5..cb666cf28 100644
      auto cur_tstate = get_thread_state_unchecked();
      if (cur_tstate)
          return cur_tstate->interp;
+diff --git a/python/pybind11_v3/pybind11/detail/common.h b/python/pybind11_v3/pybind11/detail/common.h
+index 6f3de4145..4b964218b 100644
+--- a/python/pybind11_v3/pybind11/detail/common.h
++++ b/python/pybind11_v3/pybind11/detail/common.h
+@@ -135,7 +135,11 @@
+ 
+ #if !defined(PYBIND11_EXPORT)
+ #    if defined(WIN32) || defined(_WIN32)
+-#        define PYBIND11_EXPORT __declspec(dllexport)
++#        if defined(__aarch64__)
++#            define PYBIND11_EXPORT __declspec(dllexport) __attribute__((visibility("default")))
++#        else
++#            define PYBIND11_EXPORT __declspec(dllexport)
++#        endif
+ #    else
+ #        define PYBIND11_EXPORT __attribute__((visibility("default")))
+ #    endif
