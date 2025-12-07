@@ -107,6 +107,9 @@ bool valueOf(const std::string& str, int8_t& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
+ * In particular, since \a dest uses an unsigned type, if \a str describes a
+ * negative number then this routine will return \c false.
+ *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
@@ -149,6 +152,9 @@ bool valueOf(const std::string& str, short& dest);
  * that are not a part of the integer that the string represents.
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
+ *
+ * In particular, since \a dest uses an unsigned type, if \a str describes a
+ * negative number then this routine will return \c false.
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
@@ -193,6 +199,9 @@ bool valueOf(const std::string& str, int& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
+ * In particular, since \a dest uses an unsigned type, if \a str describes a
+ * negative number then this routine will return \c false.
+ *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
@@ -234,6 +243,9 @@ bool valueOf(const std::string& str, long& dest);
  * that are not a part of the integer that the string represents.
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
+ *
+ * In particular, since \a dest uses an unsigned type, if \a str describes a
+ * negative number then this routine will return \c false.
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
@@ -277,6 +289,9 @@ bool valueOf(const std::string& str, long long& dest);
  * that are not a part of the integer that the string represents.
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
+ *
+ * In particular, since \a dest uses an unsigned type, if \a str describes a
+ * negative number then this routine will return \c false.
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
