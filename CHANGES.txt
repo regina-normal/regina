@@ -7,6 +7,16 @@ Regina - Software for low-dimensional topology
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Version 7.5  [ TODO ]
+
+    ENGINE:
+        Class GroupExpressionTerm, GroupExpression, GroupPresentation,
+                HomGroupPresentation:
+            - Now uses size_t instead of unsigned long throughout for
+              generator counts and generator indices.
+            - The depth argument to GroupPresentation::proliferateRelators()
+              is now of type int.
+
 Version 7.4.1  [ 30 November, 2025 ]
 
     GENERAL:

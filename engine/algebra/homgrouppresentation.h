@@ -239,7 +239,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * \param i the index of a generator in the domain.
          * \return the image of the <i>i</i>th generator in the codomain.
          */
-        GroupExpression evaluate(unsigned long i) const;
+        GroupExpression evaluate(size_t i) const;
 
         /**
          * Evaluate the isomorphisms's inverse at an element of the codomain.
@@ -262,7 +262,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * \param i the index of a generator in the codomain.
          * \return the image of this generator in the domain.
          */
-        GroupExpression invEvaluate(unsigned long i) const;
+        GroupExpression invEvaluate(size_t i) const;
 
         /**
          * Simultaneously simplifies the presentation of the domain, the
@@ -513,7 +513,7 @@ inline bool HomGroupPresentation::knowsInverse() const {
     return inv_.has_value();
 }
 
-inline GroupExpression HomGroupPresentation::evaluate(unsigned long i) const {
+inline GroupExpression HomGroupPresentation::evaluate(size_t i) const {
     return map_[i];
 }
 
@@ -529,7 +529,7 @@ inline GroupExpression HomGroupPresentation::invEvaluate(GroupExpression arg)
     return arg;
 }
 
-inline GroupExpression HomGroupPresentation::invEvaluate(unsigned long i)
+inline GroupExpression HomGroupPresentation::invEvaluate(size_t i)
         const {
     return (*inv_)[i];
 }

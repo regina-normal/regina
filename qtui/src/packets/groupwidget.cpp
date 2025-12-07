@@ -124,7 +124,7 @@ void GroupWidget::refresh() {
         name_->show();
     }
 
-    unsigned long nGens = group_.countGenerators();
+    size_t nGens = group_.countGenerators();
     bool alphabetic = (nGens <= 26);
     if (nGens == 0)
         gens_->setText(tr("No generators"));

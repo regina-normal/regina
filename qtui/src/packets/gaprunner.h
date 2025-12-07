@@ -69,11 +69,11 @@ class GAPRunner : public QDialog {
         QString currOutput;
         QString partialLine;
         int stage;
-        unsigned long newGenCount;
-        unsigned long stageWhichGen;
-        unsigned long newRelnCount;
-        unsigned long stageWhichReln;
-        std::map<QString, unsigned long> newGens;
+        size_t newGenCount;
+        size_t stageWhichGen;
+        size_t newRelnCount;
+        size_t stageWhichReln;
+        std::map<QString, size_t> newGens;
         bool cancelled;
 
         /**

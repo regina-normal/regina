@@ -42,28 +42,29 @@ namespace {
      */
     class ExpressionReader : public XMLElementReader {
         private:
-            std::optional<GroupExpression> exp;
-            long nGens;
+            std::optional<GroupExpression> exp_;
+            size_t nGens_;
 
         public:
-            ExpressionReader(long newNGens) : exp(GroupExpression()),
-                    nGens(newNGens) {
+            ExpressionReader(size_t nGens) : exp_(GroupExpression()),
+                    nGens_(nGens) {
             }
 
             std::optional<GroupExpression>& expression() {
-                return exp;
+                return exp_;
             }
 
             void initialChars(const std::string& chars) override {
                 std::vector<std::string> tokens = basicTokenise(chars);
 
                 std::string genStr, powStr;
-                long gen, pow;
+                size_t gen;
+                long pow;
                 std::string::size_type split;
                 for (const std::string& t : tokens) {
                     split = t.find('^');
                     if (split == t.length()) {
-                        exp.reset();
+                        exp_.reset();
                         break;
                     }
 
@@ -71,16 +72,17 @@ namespace {
                     powStr = t.substr(split + 1, t.length() - split - 1);
 
                     if ((! valueOf(genStr, gen)) || (! valueOf(powStr, pow))) {
-                        exp.reset();
-                        break;
-                    } 
-
-                    if (gen < 0 || gen >= nGens) {
-                        exp.reset();
+                        exp_.reset();
                         break;
                     }
 
-                    exp->addTermLast(gen, pow);
+                    // We already have gen >= 0, since size_t is unsigned.
+                    if (gen >= nGens_) {
+                        exp_.reset();
+                        break;
+                    }
+
+                    exp_->addTermLast(gen, pow);
                 }
             }
     };
@@ -110,13 +112,12 @@ void XMLAbelianGroupReader::initialChars(const std::string& chars) {
 
 void XMLGroupPresentationReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& tagProps, XMLElementReader*) {
-    long nGen;
-    if (valueOf(tagProps.lookup("generators"), nGen))
-        if (nGen >= 0) {
-            group_ = GroupPresentation();
-            if (nGen)
-                group_->addGenerator(nGen);
-        }
+    size_t nGen;
+    if (valueOf(tagProps.lookup("generators"), nGen)) {
+        group_ = GroupPresentation();
+        if (nGen)
+            group_->addGenerator(nGen);
+    }
 }
 
 XMLElementReader* XMLGroupPresentationReader::startSubElement(

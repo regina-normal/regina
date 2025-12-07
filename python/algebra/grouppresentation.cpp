@@ -54,7 +54,7 @@ void addGroupPresentation(pybind11::module_& m) {
         .def_readwrite("generator", &GroupExpressionTerm::generator)
         .def_readwrite("exponent", &GroupExpressionTerm::exponent)
         .def(pybind11::init<>(), rdoc::__default)
-        .def(pybind11::init<unsigned long, long>(), rdoc::__init)
+        .def(pybind11::init<size_t, long>(), rdoc::__init)
         .def(pybind11::init<const GroupExpressionTerm&>(), rdoc::__copy)
         .def("inverse", &GroupExpressionTerm::inverse, rdoc::inverse)
         .def(pybind11::self += pybind11::self, rdoc::__iadd)
@@ -69,9 +69,9 @@ void addGroupPresentation(pybind11::module_& m) {
             rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const GroupExpressionTerm&>(), rdoc::__init)
-        .def(pybind11::init<unsigned long, long>(), rdoc::__init_2)
+        .def(pybind11::init<size_t, long>(), rdoc::__init_2)
         .def(pybind11::init<const GroupExpression&>(), rdoc::__copy)
-        .def(pybind11::init<const std::string&, unsigned long>(),
+        .def(pybind11::init<const std::string&, size_t>(),
             pybind11::arg(), pybind11::arg("nGens") = 0, rdoc::__init_3)
         .def("swap", &GroupExpression::swap, rdoc::swap)
         .def("terms", overload_cast<>(&GroupExpression::terms),
@@ -86,11 +86,11 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("exponent", &GroupExpression::exponent, rdoc::exponent)
         .def("addTermFirst", overload_cast<const GroupExpressionTerm&>(
             &GroupExpression::addTermFirst), rdoc::addTermFirst)
-        .def("addTermFirst", overload_cast<unsigned long, long>(
+        .def("addTermFirst", overload_cast<size_t, long>(
             &GroupExpression::addTermFirst), rdoc::addTermFirst_2)
         .def("addTermLast", overload_cast<const GroupExpressionTerm&>(
             &GroupExpression::addTermLast), rdoc::addTermLast)
-        .def("addTermLast", overload_cast<unsigned long, long>(
+        .def("addTermLast", overload_cast<size_t, long>(
             &GroupExpression::addTermLast), rdoc::addTermLast_2)
         .def("addTermsFirst", &GroupExpression::addTermsFirst,
             rdoc::addTermsFirst)
@@ -103,7 +103,7 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("simplify", &GroupExpression::simplify,
             pybind11::arg("cyclic") = false, rdoc::simplify)
         .def("substitute",
-            overload_cast<unsigned long, const GroupExpression&, bool>(
+            overload_cast<size_t, const GroupExpression&, bool>(
                 &GroupExpression::substitute),
             pybind11::arg(), pybind11::arg(), pybind11::arg("cyclic") = false,
             rdoc::substitute)
@@ -136,8 +136,8 @@ void addGroupPresentation(pybind11::module_& m) {
             rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const GroupPresentation&>(), rdoc::__copy)
-        .def(pybind11::init<unsigned long>(), rdoc::__init)
-        .def(pybind11::init<unsigned long, const std::vector<std::string>&>(),
+        .def(pybind11::init<size_t>(), rdoc::__init)
+        .def(pybind11::init<size_t, const std::vector<std::string>&>(),
             rdoc::__init_2)
         .def("swap", &GroupPresentation::swap, rdoc::swap)
         .def("addGenerator", &GroupPresentation::addGenerator,

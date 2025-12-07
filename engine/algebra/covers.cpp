@@ -340,7 +340,7 @@ namespace {
          * about this, because the time spent doing this replacements is
          * insignificant compared to the "real" work of enumerateCovers().
          */
-        void tryReplace(const Formula& inner, unsigned long index) {
+        void tryReplace(const Formula& inner, size_t index) {
             if (inner.terms.size() == 0)
                 return;
 
@@ -441,7 +441,7 @@ namespace {
         std::unique_ptr<Perm<index>[]> computed;
 
         // Give an easy way to convert rep[i] from an Sn index to a permutation.
-        inline Perm<index> perm(unsigned long gen) const {
+        inline Perm<index> perm(size_t gen) const {
             if constexpr (Perm<index>::codeType == PermCodeType::Index)
                 return Perm<index>::Sn[rep[gen]];
             else
@@ -459,7 +459,7 @@ namespace {
             // well as all additional subexpressions that are stored in
             // formulae[].  In particular, we should always have
             // nSeen == formulae.size() + nGen.
-            long nSeen = nGen;
+            size_t nSeen = nGen;
 
             // Work out all the additonal formulae we will want to compute.
             // Initially we will give these temporary indices, which we
@@ -478,12 +478,12 @@ namespace {
             // as keys in the map foundExp[d].  The corresponding values
             // (as noted earlier) are the temporary indices for each formulae.
             auto foundExp =
-                std::make_unique<std::map<Formula, long, Formula::Compare>[]>(nGen);
+                std::make_unique<std::map<Formula, size_t, Formula::Compare>[]>(nGen);
 
-            unsigned long depth;
+            size_t depth;
             for (const auto& r : g.relations()) {
                 depth = nGen; // the last generator seen
-                unsigned long prev;
+                size_t prev;
 
                 for (const auto& t : r.terms()) {
                     if (t.generator < depth) {
@@ -582,8 +582,8 @@ namespace {
             // the original indices map to the final indices; and then
             // (2) fix all the terms in all the formulae that *use* these
             // indices.
-            auto reindex = std::make_unique<unsigned long[]>(nSeen);
-            long newIndex = nGen;
+            auto reindex = std::make_unique<size_t[]>(nSeen);
+            size_t newIndex = nGen;
             for (depth = 0; depth < nGen; ++depth) {
                 for (const auto& exp : foundExp[depth])
                     reindex[exp.second] = newIndex++;
@@ -617,8 +617,8 @@ namespace {
             // formulae in the computations of later ones.  We work backwards
             // from the longer relations to the shorter ones, since we want to
             // prioritise large substitutions if any are possible.
-            long outer, inner;
-            for (outer = static_cast<long>(formulae.size()) - 1; outer >= 0;
+            ssize_t outer, inner;
+            for (outer = static_cast<ssize_t>(formulae.size()) - 1; outer >= 0;
                     --outer) {
                 for (inner = outer - 1; inner >= 0; --inner) {
                     formulae[outer].tryReplace(formulae[inner], inner + nGen);
@@ -747,7 +747,7 @@ namespace {
      */
     struct SignScheme {
         size_t nGen;
-        std::unique_ptr<std::optional<std::vector<unsigned long>>[]> constraint;
+        std::unique_ptr<std::optional<std::vector<size_t>>[]> constraint;
 
         SignScheme(const GroupPresentation& g) : nGen(g.countGenerators()) {
             if (nGen == 0) {
@@ -755,7 +755,7 @@ namespace {
             }
 
             constraint =
-                std::make_unique<std::optional<std::vector<unsigned long>>[]>(nGen);
+                std::make_unique<std::optional<std::vector<size_t>>[]>(nGen);
 
             if (g.countRelations() == 0) {
                 return;
@@ -767,7 +767,7 @@ namespace {
             Matrix<bool> m(g.countRelations(), nGen);
             m.fill(false);
 
-            unsigned long row, col;
+            size_t row, col;
 
             row = 0;
             for (const auto& r : g.relations()) {
@@ -785,8 +785,8 @@ namespace {
             // all appear at the top).
 
             // The algorithm works from right to left and bottom to top.
-            unsigned long rowsRemain = m.rows();
-            unsigned long colsRemain = m.columns();
+            size_t rowsRemain = m.rows();
+            size_t colsRemain = m.columns();
             while (rowsRemain > 0 && colsRemain > 0) {
                 // Columns [0 .. colsRemain) are still completely unstructured.
                 // Columns [colsRemain ...) contain a jagged "staircase" that
@@ -838,7 +838,7 @@ namespace {
                 // For now, just create the vector and stash the row number as
                 // its only entry.  We will come back and construct the full
                 // relation once the matrix reduction is complete.
-                constraint[colsRemain] = std::vector<unsigned long>();
+                constraint[colsRemain] = std::vector<size_t>();
                 constraint[colsRemain]->push_back(rowsRemain);
             }
 
@@ -851,7 +851,7 @@ namespace {
                     constraint[col]->pop_back();
                     constraint[col]->reserve(nGen - 1);
 
-                    for (unsigned long i = 0; i < col; ++i)
+                    for (size_t i = 0; i < col; ++i)
                         if (m.entry(row, i))
                             constraint[col]->push_back(i);
                 }
@@ -870,9 +870,9 @@ void GroupPresentation::minimaxGenerators() {
     Matrix<bool> inc = incidence();
 
     // Note how we plan to relabel the generators.
-    auto relabel = std::make_unique<unsigned long[]>(nGenerators_);
-    auto relabelInv = std::make_unique<unsigned long[]>(nGenerators_);
-    for (unsigned long i = 0; i < nGenerators_; ++i)
+    auto relabel = std::make_unique<size_t[]>(nGenerators_);
+    auto relabelInv = std::make_unique<size_t[]>(nGenerators_);
+    for (size_t i = 0; i < nGenerators_; ++i)
         relabel[i] = relabelInv[i] = i;
 
     size_t gensUsed = 0;
@@ -1003,8 +1003,7 @@ size_t GroupPresentation::enumerateCoversInternal(
     // The rewrite[] array is used when we build the explicit subgroup for
     // each solution that is found.  Since the size of this array is already
     // known, we allocate it once now to avoid (re/de)-allocating per solution.
-    std::unique_ptr<unsigned long[]> rewrite(
-        new unsigned long[index * nGenerators_]);
+    std::unique_ptr<size_t[]> rewrite(new size_t[index * nGenerators_]);
 
     size_t pos = 0; // The generator whose current rep we are about to try.
     // Note: if we are constraining the sign of rep[0], then it must be
@@ -1136,11 +1135,11 @@ size_t GroupPresentation::enumerateCoversInternal(
                 int stackSize = 1;
                 stack[0] = 0;
 
-                unsigned long spanningTree[index - 1];
+                size_t spanningTree[index - 1];
 
                 while (nFound < index && stackSize > 0) {
                     int from = stack[--stackSize];
-                    for (unsigned long i = 0; i < nGenerators_; ++i) {
+                    for (size_t i = 0; i < nGenerators_; ++i) {
                         int to = scheme.perm(i)[from];
                         if (! seen[to]) {
                             seen[to] = true;
@@ -1167,8 +1166,8 @@ size_t GroupPresentation::enumerateCoversInternal(
 
                     // Work out how the subgroup generators will be relabelled
                     // once the spanning tree is removed.
-                    unsigned long treeIdx = 0;
-                    for (unsigned long i = 0; i < sub.nGenerators_; ++i) {
+                    size_t treeIdx = 0;
+                    for (size_t i = 0; i < sub.nGenerators_; ++i) {
                         if (treeIdx < index - 1 && spanningTree[treeIdx] == i) {
                             // This generator will be removed from the subgroup.
                             rewrite[i] = sub.nGenerators_;
@@ -1182,7 +1181,7 @@ size_t GroupPresentation::enumerateCoversInternal(
                         for (int start = 0; start < index; ++start) {
                             GroupExpression e;
                             int sheet = start;
-                            unsigned long gen;
+                            size_t gen;
                             for (const auto& t : r.terms()) {
                                 if (t.exponent > 0) {
                                     for (long i = 0; i < t.exponent; ++i) {
