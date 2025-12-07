@@ -35,15 +35,6 @@
 #include "triangulation/generic.h"
 #include "../helpers.h"
 
-// On some systems we get warnings about regina's helper classes having
-// greater visibility than the pybind11 code that it uses.  We can fix
-// this by setting the same visibility attributes that pybind11 uses.
-#ifdef __GNUG__
-    #define MATCH_PYBIND11_VISIBILITY __attribute__((visibility("hidden")))
-#else
-    #define MATCH_PYBIND11_VISIBILITY
-#endif
-
 namespace regina::python {
 
 /**

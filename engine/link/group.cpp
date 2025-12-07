@@ -35,7 +35,7 @@ namespace regina {
 GroupPresentation Link::internalGroup(bool flip, bool simplify) const {
     if (crossings_.empty()) {
         // This is a zero-crossing unlink.
-        return { components_.size() };
+        return { static_cast<unsigned long>(components_.size()) };
     }
 
     // We have a non-zero number of crossings.
@@ -162,7 +162,7 @@ GroupPresentation Link::internalGroup(bool flip, bool simplify) const {
 GroupPresentation Link::internalExtendedGroup(bool flip, bool simplify) const {
     if (crossings_.empty()) {
         // This is a zero-crossing unlink.
-        return { components_.size() + 1 };
+        return { static_cast<unsigned long>(components_.size() + 1) };
     }
 
     // We have a non-zero number of crossings.
