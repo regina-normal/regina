@@ -140,7 +140,7 @@ XMLElementReader* XMLPacketReader::startSubElement(
 
         // We will need to fetch and store the following two properties
         // for triangulations.
-        long size = 0;
+        size_t size = 0;
         bool permIndex = false;
 
         if (xmlTagType == XML_LEGACY_CHILD) {
@@ -185,9 +185,9 @@ XMLElementReader* XMLPacketReader::startSubElement(
             }
 
             // Fetch the number of top-dimensional simplices.
+            // Note: size is unsigned, so valueOf() ensures size >= 0.
             prop = subTagProps.find("size");
-            if (! (prop != subTagProps.end() && valueOf(prop->second, size) &&
-                    size >= 0))
+            if (! (prop != subTagProps.end() && valueOf(prop->second, size)))
                 return new XMLElementReader();
 
             // Identify how permutations are stored.

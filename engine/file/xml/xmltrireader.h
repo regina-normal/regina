@@ -433,7 +433,7 @@ template <int dim>
 void XMLLegacySimplicesReader<dim>::startElement(
         const std::string& /* tagName */,
         const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
-    long size;
+    size_t size;
     if (valueOf(props.lookup(XMLLegacyTriangulationTags<dim>::size), size))
         for ( ; size > 0; --size)
             tri_->newSimplexRaw();

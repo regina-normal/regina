@@ -60,12 +60,12 @@ void XMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
     // Create a new vector and read all non-zero entries.
     Vector<LargeInteger> vec(vecLen_);
 
-    long pos;
+    size_t pos;
     LargeInteger value;
     for (size_t i = 0; i < tokens.size(); i += 2) {
-        if (! valueOf(tokens[i], pos))
+        if (! valueOf(tokens[i], pos)) // note: this ensures pos >= 0
             return;
-        if (pos < 0 || pos >= vecLen_)
+        if (pos >= vecLen_)
             return;
         try {
             vec[pos] = tokens[i + 1];
