@@ -90,7 +90,7 @@ namespace {
 
 void XMLAbelianGroupReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& tagProps, XMLElementReader*) {
-    long rank;
+    size_t rank;
     if (valueOf(tagProps.lookup("rank"), rank))
         if (rank >= 0) {
             group_ = AbelianGroup(rank);
