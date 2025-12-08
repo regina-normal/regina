@@ -16,6 +16,19 @@ Version 7.5  [ TODO ]
               generator counts and generator indices.
             - The depth argument to GroupPresentation::proliferateRelators()
               is now of type int.
+        Function valueOf():
+            - The native C++ integer versions of valueOf() are now templated.
+            - The unsigned integer versions now reject negative numbers
+              instead of performing wrap-around arithmetic.
+            - All numeric versions of valueOf() (native integers and double)
+              have been tightened with respect to unexpected characters,
+              including leading and trailing whitespace:
+              + they always return false, as the documentation has always
+                promised (in the past, they succeeded in the presence of
+                leading whitespace);
+              + instead of performing the conversion "as best it can", the
+                documentation now states that the value stored in dest is
+                undefined.
         Constant is_cpp_integer_v<T>, is_signed_cpp_integer_v<T>,
                 is_unsigned_cpp_integer_v<T>:
             - New compile-time constant is_signed_cpp_integer_v<T>.

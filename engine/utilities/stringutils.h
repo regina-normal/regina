@@ -38,9 +38,12 @@
 #endif
 
 #include <cstdint>
+#include <cctype>
+#include <sstream>
 #include <string>
 #include <vector>
 #include "regina-core.h"
+#include "utilities/intutils.h"
 
 namespace regina {
 
@@ -78,219 +81,62 @@ bool startsWith(const std::string& str, const std::string& prefix);
 std::string stripWhitespace(const std::string& str);
 
 /**
- * Converts the entire given string to an 8-bit integer and reports whether
- * this conversion was successful.
+ * Converts the entire given string to a signed native integer of type \a T
+ * and reports whether this conversion was successful.
  *
  * The given string should contain no whitespace or other characters
  * that are not a part of the integer that the string represents.
- * If any unexpected characters are encountered, the routine will convert
- * the string as best it can but \c false will be returned.
+ * If any unexpected characters are found (including leading or trailing
+ * whitespace), then this routine will return \c false, and the value of
+ * \a dest will be undefined.
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
  * \param str the string to convert.
- * \param dest the variable in which to store the resulting 8-bit integer.
- * \return \c true if the conversion was completely successful or \c false
- * otherwise.
- *
- * \ingroup utilities
- */
-bool valueOf(const std::string& str, int8_t& dest);
-/**
- * Converts the entire given string to an unsigned 8-bit integer and reports
- * whether this conversion was successful.
- *
- * The given string should contain no whitespace or other characters
- * that are not a part of the integer that the string represents.
- * If any unexpected characters are encountered, the routine will convert
- * the string as best it can but \c false will be returned.
- *
- * In particular, since \a dest uses an unsigned type, if \a str describes a
- * negative number then this routine will return \c false.
- *
- * \nopython None of Regina's valueOf() functions are wrapped in Python,
- * since these tailored to the many different native C++ numeric types.
- * Instead, use Python's own native string-to-number mechanisms.
- *
- * \param str the string to convert.
- * \param dest the variable in which to store the resulting unsigned
- * 8-bit integer.
- * \return \c true if the conversion was completely successful or \c false
- * otherwise.
- *
- * \ingroup utilities
- */
-bool valueOf(const std::string& str, uint8_t& dest);
-/**
- * Converts the entire given string to a short integer and reports whether
- * this conversion was successful.
- *
- * The given string should contain no whitespace or other characters
- * that are not a part of the integer that the string represents.
- * If any unexpected characters are encountered, the routine will convert
- * the string as best it can but \c false will be returned.
- *
- * \nopython None of Regina's valueOf() functions are wrapped in Python,
- * since these tailored to the many different native C++ numeric types.
- * Instead, use Python's own native string-to-number mechanisms.
- *
- * \param str the string to convert.
- * \param dest the variable in which to store the resulting short integer.
- * \return \c true if the conversion was completely successful or \c false
- * otherwise.
- *
- * \ingroup utilities
- */
-bool valueOf(const std::string& str, short& dest);
-/**
- * Converts the entire given string to an unsigned short integer and reports
- * whether this conversion was successful.
- *
- * The given string should contain no whitespace or other characters
- * that are not a part of the integer that the string represents.
- * If any unexpected characters are encountered, the routine will convert
- * the string as best it can but \c false will be returned.
- *
- * In particular, since \a dest uses an unsigned type, if \a str describes a
- * negative number then this routine will return \c false.
- *
- * \nopython None of Regina's valueOf() functions are wrapped in Python,
- * since these tailored to the many different native C++ numeric types.
- * Instead, use Python's own native string-to-number mechanisms.
- *
- * \param str the string to convert.
- * \param dest the variable in which to store the resulting unsigned
- * short integer.
- * \return \c true if the conversion was completely successful or \c false
- * otherwise.
- *
- * \ingroup utilities
- */
-bool valueOf(const std::string& str, unsigned short& dest);
-/**
- * Converts the entire given string to an integer and reports whether
- * this conversion was successful.
- *
- * The given string should contain no whitespace or other characters
- * that are not a part of the integer that the string represents.
- * If any unexpected characters are encountered, the routine will convert
- * the string as best it can but \c false will be returned.
- *
- * \nopython None of Regina's valueOf() functions are wrapped in Python,
- * since these tailored to the many different native C++ numeric types.
- * Instead, use Python's own native string-to-number mechanisms.
- *
- * \param str the string to convert.
- * \param dest the variable in which to store the resulting integer.
- * \return \c true if the conversion was completely successful or \c false
- * otherwise.
- *
- * \ingroup utilities
- */
-bool valueOf(const std::string& str, int& dest);
-/**
- * Converts the entire given string to an unsigned integer and reports
- * whether this conversion was successful.
- *
- * The given string should contain no whitespace or other characters
- * that are not a part of the integer that the string represents.
- * If any unexpected characters are encountered, the routine will convert
- * the string as best it can but \c false will be returned.
- *
- * In particular, since \a dest uses an unsigned type, if \a str describes a
- * negative number then this routine will return \c false.
- *
- * \nopython None of Regina's valueOf() functions are wrapped in Python,
- * since these tailored to the many different native C++ numeric types.
- * Instead, use Python's own native string-to-number mechanisms.
- *
- * \param str the string to convert.
- * \param dest the variable in which to store the resulting unsigned integer.
- * \return \c true if the conversion was completely successful or \c false
- * otherwise.
- *
- * \ingroup utilities
- */
-bool valueOf(const std::string& str, unsigned& dest);
-/**
- * Converts the entire given string to a long integer and reports whether
- * this conversion was successful.
- *
- * The given string should contain no whitespace or other characters
- * that are not a part of the integer that the string represents.
- * If any unexpected characters are encountered, the routine will convert
- * the string as best it can but \c false will be returned.
- *
- * \nopython None of Regina's valueOf() functions are wrapped in Python,
- * since these tailored to the many different native C++ numeric types.
- * Instead, use Python's own native string-to-number mechanisms.
- *
- * \param str the string to convert.
- * \param dest the variable in which to store the resulting long integer.
- * \return \c true if the conversion was completely successful or \c false
- * otherwise.
- *
- * \ingroup utilities
- */
-bool valueOf(const std::string& str, long& dest);
-/**
- * Converts the entire given string to an unsigned long integer and reports
- * whether this conversion was successful.
- *
- * The given string should contain no whitespace or other characters
- * that are not a part of the integer that the string represents.
- * If any unexpected characters are encountered, the routine will convert
- * the string as best it can but \c false will be returned.
- *
- * In particular, since \a dest uses an unsigned type, if \a str describes a
- * negative number then this routine will return \c false.
- *
- * \nopython None of Regina's valueOf() functions are wrapped in Python,
- * since these tailored to the many different native C++ numeric types.
- * Instead, use Python's own native string-to-number mechanisms.
- *
- * \param str the string to convert.
- * \param dest the variable in which to store the resulting unsigned long
+ * \param dest the variable in which to store the resulting signed native
  * integer.
  * \return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
  * \ingroup utilities
  */
-bool valueOf(const std::string& str, unsigned long& dest);
+template <typename T>
+requires is_signed_cpp_integer_v<T>
+bool valueOf(const std::string& str, T& dest) {
+    if (str.empty() || std::isspace(str.front()))
+        return false;
+
+    // TODO: Check for overflow
+    if constexpr (sizeof(T) <= sizeof(unsigned long)) {
+        char* endPtr;
+        dest = static_cast<T>(strtol(str.c_str(), &endPtr, 10));
+        return (*endPtr == 0);
+    } else if constexpr (sizeof(T) <= sizeof(unsigned long long)) {
+        char* endPtr;
+        dest = static_cast<T>(strtoll(str.c_str(), &endPtr, 10));
+        return (*endPtr == 0);
+    } else {
+        std::istringstream s(str);
+        s >> dest;
+        return s.eof();
+    }
+}
+
 /**
- * Converts the entire given string to a long long integer and reports whether
- * this conversion was successful.
+ * Converts the entire given string to an unsigned native integer of type \a T
+ * and reports whether this conversion was successful.
+ *
+ * The type \a T may be any native C++ unsigned integer type.
  *
  * The given string should contain no whitespace or other characters
  * that are not a part of the integer that the string represents.
- * If any unexpected characters are encountered, the routine will convert
- * the string as best it can but \c false will be returned.
+ * If any unexpected characters are found (including leading or trailing
+ * whitespace), then this routine will return \c false, and the value of
+ * \a dest will be undefined.
  *
- * \nopython None of Regina's valueOf() functions are wrapped in Python,
- * since these tailored to the many different native C++ numeric types.
- * Instead, use Python's own native string-to-number mechanisms.
- *
- * \param str the string to convert.
- * \param dest the variable in which to store the resulting long long integer.
- * \return \c true if the conversion was completely successful or \c false
- * otherwise.
- *
- * \ingroup utilities
- */
-bool valueOf(const std::string& str, long long& dest);
-/**
- * Converts the entire given string to an unsigned long long integer and reports
- * whether this conversion was successful.
- *
- * The given string should contain no whitespace or other characters
- * that are not a part of the integer that the string represents.
- * If any unexpected characters are encountered, the routine will convert
- * the string as best it can but \c false will be returned.
- *
- * In particular, since \a dest uses an unsigned type, if \a str describes a
+ * In particular, since \a T is an unsigned type, if \a str describes a
  * negative number then this routine will return \c false.
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
@@ -298,22 +144,44 @@ bool valueOf(const std::string& str, long long& dest);
  * Instead, use Python's own native string-to-number mechanisms.
  *
  * \param str the string to convert.
- * \param dest the variable in which to store the resulting unsigned long long
+ * \param dest the variable in which to store the resulting unsigned native
  * integer.
  * \return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
  * \ingroup utilities
  */
-bool valueOf(const std::string& str, unsigned long long& dest);
+template <typename T>
+requires is_unsigned_cpp_integer_v<T>
+bool valueOf(const std::string& str, T& dest) {
+    if (str.empty() || std::isspace(str.front()) || str.front() == '-')
+        return false;
+
+    // TODO: Check for overflow
+    if constexpr (sizeof(T) <= sizeof(unsigned long)) {
+        char* endPtr;
+        dest = static_cast<T>(strtoul(str.c_str(), &endPtr, 10));
+        return (*endPtr == 0);
+    } else if constexpr (sizeof(T) <= sizeof(unsigned long long)) {
+        char* endPtr;
+        dest = static_cast<T>(strtoull(str.c_str(), &endPtr, 10));
+        return (*endPtr == 0);
+    } else {
+        std::istringstream s(str);
+        s >> dest;
+        return s.eof();
+    }
+}
+
 /**
  * Converts the entire given string to a double precision real number and
  * reports whether this conversion was successful.
  *
  * The given string should contain no whitespace or other characters
  * that are not a part of the real number that the string represents.
- * If any unexpected characters are encountered, the routine will convert
- * the string as best it can but \c false will be returned.
+ * If any unexpected characters are found (including leading or trailing
+ * whitespace), then this routine will return \c false, and the value of
+ * \a dest will be undefined.
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
@@ -327,6 +195,7 @@ bool valueOf(const std::string& str, unsigned long long& dest);
  * \ingroup utilities
  */
 bool valueOf(const std::string& str, double& dest);
+
 /**
  * Converts the entire given string to a boolean and reports whether
  * this conversion was successful.
@@ -350,6 +219,7 @@ bool valueOf(const std::string& str, double& dest);
  * \ingroup utilities
  */
 bool valueOf(const std::string& str, bool& dest);
+
 /**
  * Converts the entire given string to a set of booleans and reports whether
  * this conversion was successful.

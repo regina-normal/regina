@@ -46,22 +46,23 @@ static void testValueOf(Integer value) {
     } else {
         s << value;
     }
-    Integer dest;
+    Integer dest = 3;
     EXPECT_TRUE(regina::valueOf(s.str(), dest));
     EXPECT_EQ(dest, value);
 }
 
 template <typename Integer, bool isSigned>
+requires regina::is_cpp_integer_v<Integer>
 static void testValueOf() {
     SCOPED_TRACE_TYPE(Integer);
 
     {
-        Integer dest;
+        Integer dest = 3;
         EXPECT_TRUE(regina::valueOf("0", dest));
         EXPECT_EQ(dest, 0);
     }
     {
-        Integer dest;
+        Integer dest = 3;
         EXPECT_TRUE(regina::valueOf("10", dest));
         EXPECT_EQ(dest, 10);
     }
@@ -71,28 +72,94 @@ static void testValueOf() {
 
     if constexpr (isSigned) {
         {
-            Integer dest;
+            Integer dest = 3;
             EXPECT_TRUE(regina::valueOf("-1", dest));
             EXPECT_EQ(dest, -1);
         }
         {
-            Integer dest;
+            Integer dest = 3;
             EXPECT_TRUE(regina::valueOf("-10", dest));
             EXPECT_EQ(dest, -10);
         }
     } else {
         {
-            Integer dest;
+            Integer dest = 3;
             EXPECT_FALSE(regina::valueOf("-1", dest));
+            EXPECT_EQ(dest, 3); // this is not guaranteed by valueOf()
         }
         {
-            Integer dest;
+            Integer dest = 3;
             EXPECT_FALSE(regina::valueOf("-10", dest));
+            EXPECT_EQ(dest, 3); // this is not guaranteed by valueOf()
         }
+    }
+
+    // Cases that should fail for all integer types:
+    {
+        Integer dest = 3;
+        EXPECT_FALSE(regina::valueOf("", dest));
+        EXPECT_FALSE(regina::valueOf(" ", dest));
+        EXPECT_FALSE(regina::valueOf("-", dest));
+        EXPECT_FALSE(regina::valueOf("x", dest));
+    }
+
+    // Trailing characters should cause a failure, but (as promised) the
+    // routine should convert the string as best it can.
+    {
+        Integer dest = 3;
+        EXPECT_FALSE(regina::valueOf("0 ", dest));
+        EXPECT_EQ(dest, 0);
+    }
+    {
+        Integer dest = 3;
+        EXPECT_FALSE(regina::valueOf("0x", dest));
+        EXPECT_EQ(dest, 0);
+    }
+    {
+        Integer dest = 3;
+        EXPECT_FALSE(regina::valueOf("10 ", dest));
+        EXPECT_EQ(dest, 10);
+    }
+    if constexpr (isSigned) {
+        {
+            Integer dest = 3;
+            EXPECT_FALSE(regina::valueOf("-1 ", dest));
+            EXPECT_EQ(dest, -1);
+        }
+        {
+            Integer dest = 3;
+            EXPECT_FALSE(regina::valueOf("-10 ", dest));
+            EXPECT_EQ(dest, -10);
+        }
+    } else {
+        {
+            Integer dest = 3;
+            EXPECT_FALSE(regina::valueOf("-1 ", dest));
+            EXPECT_EQ(dest, 3); // this is not guaranteed by valueOf()
+        }
+        {
+            Integer dest = 3;
+            EXPECT_FALSE(regina::valueOf("-10 ", dest));
+            EXPECT_EQ(dest, 3); // this is not guaranteed by valueOf()
+        }
+    }
+
+    // What to do about leading whitespace?  Functions like strtol() can
+    // handle it, but we claim that any whitespace at all should cause a
+    // failure, so test for that.
+    {
+        Integer dest = 3;
+        EXPECT_FALSE(regina::valueOf(" 0", dest));
+        EXPECT_FALSE(regina::valueOf(" 10", dest));
+        EXPECT_FALSE(regina::valueOf(" -1", dest));
+        EXPECT_FALSE(regina::valueOf(" -10", dest));
+        EXPECT_EQ(dest, 3); // this is not guaranteed by valueOf()
     }
 }
 
 TEST(StringUtilsTest, valueOf) {
+    // Tests for integer types:
+
     testValueOf<signed char, true>();
     testValueOf<short, true>();
     testValueOf<int, true>();
@@ -107,6 +174,24 @@ TEST(StringUtilsTest, valueOf) {
     testValueOf<unsigned long long, false>();
     testValueOf<size_t, false>();
 
-    // TODO: Also test valueOf() for bool, double, BoolSet.
+    // Some very basic tests for double:
+
+    {
+        double dest = 3.0;
+        EXPECT_TRUE(regina::valueOf("2.5", dest));
+        EXPECT_EQ(dest, 2.5);
+    }
+    {
+        double dest = 3.0;
+        EXPECT_TRUE(regina::valueOf("-2.5", dest));
+        EXPECT_EQ(dest, -2.5);
+    }
+    {
+        double dest = 3.0;
+        EXPECT_FALSE(regina::valueOf(" 2.5", dest));
+        EXPECT_FALSE(regina::valueOf("2.5 ", dest));
+    }
+
+    // TODO: Properly test valueOf() for bool, double, BoolSet.
 }
 

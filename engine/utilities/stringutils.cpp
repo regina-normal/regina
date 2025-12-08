@@ -61,76 +61,13 @@ std::string stripWhitespace(const std::string& str) {
     return str.substr(start, end - start);
 }
 
-bool valueOf(const std::string& str, int8_t& dest) {
-    // TODO: Check errno, and check for overflow when casting back to int.
-    char* endPtr;
-    dest = static_cast<int8_t>(strtol(str.c_str(), &endPtr, 10));
-    return ((! str.empty()) && (*endPtr == 0));
-}
-
-bool valueOf(const std::string& str, uint8_t& dest) {
-    // TODO: Check errno, and check for overflow when casting back to unsigned.
-    char* endPtr;
-    dest = static_cast<uint8_t>(strtoul(str.c_str(), &endPtr, 10));
-    return ((! str.empty()) && (*endPtr == 0));
-}
-
-bool valueOf(const std::string& str, short& dest) {
-    // TODO: Check errno, and check for overflow when casting back to int.
-    char* endPtr;
-    dest = static_cast<short>(strtol(str.c_str(), &endPtr, 10));
-    return ((! str.empty()) && (*endPtr == 0));
-}
-
-bool valueOf(const std::string& str, unsigned short& dest) {
-    // TODO: Check errno, and check for overflow when casting back to unsigned.
-    char* endPtr;
-    dest = static_cast<unsigned short>(strtoul(str.c_str(), &endPtr, 10));
-    return ((! str.empty()) && (*endPtr == 0));
-}
-
-bool valueOf(const std::string& str, int& dest) {
-    // TODO: Check errno, and check for overflow when casting back to int.
-    char* endPtr;
-    dest = static_cast<int>(strtol(str.c_str(), &endPtr, 10));
-    return ((! str.empty()) && (*endPtr == 0));
-}
-
-bool valueOf(const std::string& str, unsigned& dest) {
-    // TODO: Check errno, and check for overflow when casting back to unsigned.
-    char* endPtr;
-    dest = static_cast<unsigned>(strtoul(str.c_str(), &endPtr, 10));
-    return ((! str.empty()) && (*endPtr == 0));
-}
-
-bool valueOf(const std::string& str, long& dest) {
-    char* endPtr;
-    dest = strtol(str.c_str(), &endPtr, 10);
-    return ((! str.empty()) && (*endPtr == 0));
-}
-
-bool valueOf(const std::string& str, unsigned long& dest) {
-    char* endPtr;
-    dest = strtoul(str.c_str(), &endPtr, 10);
-    return ((! str.empty()) && (*endPtr == 0));
-}
-
-bool valueOf(const std::string& str, long long& dest) {
-    char* endPtr;
-    dest = strtoll(str.c_str(), &endPtr, 10);
-    return ((! str.empty()) && (*endPtr == 0));
-}
-
-bool valueOf(const std::string& str, unsigned long long& dest) {
-    char* endPtr;
-    dest = strtoull(str.c_str(), &endPtr, 10);
-    return ((! str.empty()) && (*endPtr == 0));
-}
-
 bool valueOf(const std::string& str, double& dest) {
+    if (str.empty() || std::isspace(str.front()))
+        return false;
+
     char* endPtr;
     dest = strtod(str.c_str(), &endPtr);
-    return ((! str.empty()) && (*endPtr == 0));
+    return (*endPtr == 0);
 }
 
 bool valueOf(const std::string& str, bool& dest) {
