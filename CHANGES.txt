@@ -16,6 +16,12 @@ Version 7.5  [ TODO ]
               generator counts and generator indices.
             - The depth argument to GroupPresentation::proliferateRelators()
               is now of type int.
+        Constant is_cpp_integer_v<T>, is_signed_cpp_integer_v<T>,
+                is_unsigned_integer_v<T>:
+            - New compile-time constant is_signed_cpp_integer_v<T>.
+            - All three constants are now false when T == bool (previously,
+              is_cpp_integer_v<bool> and is_unsigned_integer_v<bool> were
+              both true).
 
 Version 7.4.1  [ 30 November, 2025 ]
 
