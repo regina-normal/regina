@@ -225,7 +225,7 @@ index 6f3de4145..4b964218b 100644
  #if !defined(PYBIND11_EXPORT)
  #    if defined(WIN32) || defined(_WIN32)
 -#        define PYBIND11_EXPORT __declspec(dllexport)
-+#        if defined(__aarch64__)
++#        if defined(__GNUG__)
 +#            define PYBIND11_EXPORT __declspec(dllexport) __attribute__((visibility("default")))
 +#        else
 +#            define PYBIND11_EXPORT __declspec(dllexport)
