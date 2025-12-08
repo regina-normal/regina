@@ -72,6 +72,14 @@ static_assert(regina::is_cpp_integer_v<signed char>);
 static_assert(! regina::is_unsigned_cpp_integer_v<signed char>);
 static_assert(regina::is_signed_cpp_integer_v<signed char>);
 
+static_assert(regina::is_cpp_integer_v<unsigned>);
+static_assert(regina::is_unsigned_cpp_integer_v<unsigned>);
+static_assert(! regina::is_signed_cpp_integer_v<unsigned>);
+
+static_assert(regina::is_cpp_integer_v<int>);
+static_assert(! regina::is_unsigned_cpp_integer_v<int>);
+static_assert(regina::is_signed_cpp_integer_v<int>);
+
 static_assert(regina::is_cpp_integer_v<unsigned long long>);
 static_assert(regina::is_unsigned_cpp_integer_v<unsigned long long>);
 static_assert(! regina::is_signed_cpp_integer_v<unsigned long long>);
@@ -79,6 +87,14 @@ static_assert(! regina::is_signed_cpp_integer_v<unsigned long long>);
 static_assert(regina::is_cpp_integer_v<long long>);
 static_assert(! regina::is_unsigned_cpp_integer_v<long long>);
 static_assert(regina::is_signed_cpp_integer_v<long long>);
+
+static_assert(regina::is_cpp_integer_v<size_t>);
+static_assert(regina::is_unsigned_cpp_integer_v<size_t>);
+static_assert(! regina::is_signed_cpp_integer_v<size_t>);
+
+static_assert(regina::is_cpp_integer_v<ssize_t>);
+static_assert(! regina::is_unsigned_cpp_integer_v<ssize_t>);
+static_assert(regina::is_signed_cpp_integer_v<ssize_t>);
 
 #if defined(INT128_AVAILABLE)
 static_assert(regina::is_cpp_integer_v<regina::IntOfSize<16>::utype>);
