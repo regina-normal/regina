@@ -62,7 +62,11 @@ def dump(tree):
 		p = p.nextTreePacket()
 
 # Load and dump some files created by different versions of regina.
+# This includes one ancient file (file4.rga) where gluing permutations were
+# written using _signed_ image packs and negative numbers do appear.
 dump(regina.open(testpath + '/file1.rga'))
 dump(regina.open(testpath + '/file2.rga'))
 dump(regina.open(testpath + '/file3.rga'))
+dump(regina.open(testpath + '/file4.rga'))
+dump(regina.open(testpath + '/file5.rga'))
 
