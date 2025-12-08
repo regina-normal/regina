@@ -400,12 +400,27 @@ void XMLSimplexReader<dim>::initialChars(const std::string& chars) {
             // written as a plain char (which on many platforms is signed).
             // So, just to be safe, for Perm<4> we read the image pack as an
             // int (which will happily capture a signed or unsigned char).
-            typename Perm<dim + 1>::ImagePack imagePack;
-            if (! valueOf(tokens[2 * k + 1], imagePack))
-                continue;
-            if (! Perm<dim + 1>::isImagePack(imagePack))
-                continue;
-            perm = Perm<dim + 1>::fromImagePack(imagePack);
+            if constexpr (dim == 3) {
+                int signedImagePack;
+                if (! valueOf(tokens[2 * k + 1], signedImagePack))
+                    continue;
+                if (signedImagePack < -128 /* minimum signed char */ ||
+                        signedImagePack > 255 /* maximum unsigned char */)
+                    continue;
+
+                auto imagePack = static_cast<Perm<dim + 1>::ImagePack>(
+                    signedImagePack);
+                if (! Perm<dim + 1>::isImagePack(imagePack))
+                    continue;
+                perm = Perm<dim + 1>::fromImagePack(imagePack);
+            } else {
+                typename Perm<dim + 1>::ImagePack imagePack;
+                if (! valueOf(tokens[2 * k + 1], imagePack))
+                    continue;
+                if (! Perm<dim + 1>::isImagePack(imagePack))
+                    continue;
+                perm = Perm<dim + 1>::fromImagePack(imagePack);
+            }
         }
 
         adjSimp = tri_->simplices()[simpIndex];
