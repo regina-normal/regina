@@ -2498,3 +2498,922 @@ while t != None:
 	t = t.nextSibling()
 
 
+************************************************************
+*
+* Label: Sample Data File
+* Type: Container
+* Parent: (none)
+*
+************************************************************
+
+Container with 7 children, 31 descendants
+
+
+************************************************************
+*
+* Label: Read Me
+* Type: Text
+* Parent: Sample Data File
+*
+************************************************************
+
+Welcome to Regina!
+
+A single Regina data file can store a range of objects, from 3-manifold triangulations and normal surfaces to Python scripts, PDF documents and text notes (such as the one you are reading now).
+
+These objects are called "packets", and are arranged in a tree-like structure as you can see to the left.  To view or edit a packet, just click on the packet in the tree (on some platforms, such as macOS, you should double-click instead).
+
+Have a play with the packets in this file to see what Regina can do.
+
+If you ever want to know what some element of the user interface means (such as a button or a text box), just press Shift-F1 and click on the thing that you want to know more about.  You can try this now with the tree in the main window, or the buttons in the toolbar.  If you ever forget the Shift-F1 shortcut, you can find it in the menu under Help → What's This?
+
+For more detailed help, try the Regina Handbook (in the Help menu, or just press F1).  The handbook includes lots of screenshots and talks you through how to do many different things.
+
+Any questions?  Just mail the authors; see Help → About for our email addresses.
+
+Enjoy!
+
+- The Regina development team
+
+
+************************************************************
+*
+* Label: LaTeX Document
+* Type: Attachment
+* Parent: Sample Data File
+*
+************************************************************
+
+Attachment (99383 bytes): welcome.pdf
+
+
+************************************************************
+*
+* Label: 3-Manifolds and Knots
+* Type: Container
+* Parent: Sample Data File
+*
+************************************************************
+
+Container with 7 children, 15 descendants
+
+
+************************************************************
+*
+* Label: Layered Solid Torus
+* Type: 3-D triangulation
+* Parent: 3-Manifolds and Knots
+*
+************************************************************
+
+Size of the skeleton:
+  Tetrahedra: 4
+  Triangles: 9
+  Edges: 6
+  Vertices: 1
+
+Tetrahedron gluing:
+  Tet  |  gluing:       (012)       (013)       (023)       (123)
+  -----+---------------------------------------------------------
+    0  |             boundary    boundary     1 (012)     1 (130)
+    1  |              0 (023)     0 (312)     2 (012)     2 (130)
+    2  |              1 (023)     1 (312)     3 (013)     3 (120)
+    3  |              2 (312)     2 (023)     3 (312)     3 (230)
+
+Vertices:
+  Tet  |  vertex:    0   1   2   3
+  -----+--------------------------
+    0  |             0   0   0   0
+    1  |             0   0   0   0
+    2  |             0   0   0   0
+    3  |             0   0   0   0
+
+Edges:
+  Tet  |  edge:   01  02  03  12  13  23
+  -----+--------------------------------
+    0  |           0   1   2   2   1   3
+    1  |           1   2   3   3   2   4
+    2  |           2   3   4   4   3   5
+    3  |           3   5   4   4   5   4
+
+Triangles:
+  Tet  |  face:  012 013 023 123
+  -----+------------------------
+    0  |           0   1   2   3
+    1  |           2   3   4   5
+    2  |           4   5   6   7
+    3  |           7   6   8   8
+
+
+
+************************************************************
+*
+* Label: Vertex Link
+* Type: 2-D triangulation
+* Parent: Layered Solid Torus
+*
+************************************************************
+
+Size of the skeleton:
+  Triangles: 16
+  Edges: 27
+  Vertices: 12
+
+Triangle gluing:
+  Triangle  |  gluing:      (01)      (02)      (12)
+  ----------+---------------------------------------
+         0  |           boundary  boundary    1 (01)
+         1  |             0 (12)    3 (12)    2 (01)
+         2  |             1 (12)    5 (12)    4 (10)
+         3  |           boundary    6 (20)    1 (02)
+         4  |             2 (21)    7 (10)    8 (12)
+         5  |            10 (21)    9 (20)    2 (02)
+         6  |             8 (10)    3 (20)   11 (10)
+         7  |             4 (20)    8 (20)   12 (12)
+         8  |             6 (10)    7 (20)    4 (12)
+         9  |            12 (10)    5 (20)   13 (20)
+        10  |           boundary   14 (01)    5 (10)
+        11  |             6 (21)   14 (21)   13 (10)
+        12  |             9 (10)   13 (21)    7 (12)
+        13  |            11 (21)    9 (21)   12 (20)
+        14  |            10 (02)   15 (21)   11 (20)
+        15  |           boundary  boundary   14 (20)
+
+Vertices:
+  Triangle  |  vertex:    0   1   2
+  ----------+----------------------
+         0  |             0   1   2
+         1  |             1   2   3
+         2  |             2   3   4
+         3  |             5   1   3
+         4  |             4   3   6
+         5  |             7   2   4
+         6  |             3   8   5
+         7  |             6   4   8
+         8  |             8   3   6
+         9  |             4   9   7
+        10  |            10   2   7
+        11  |             5   8   7
+        12  |             9   4   8
+        13  |             7   8   9
+        14  |            10   7   5
+        15  |            11   5  10
+
+Edges:
+  Triangle  |  edge:   01  02  12
+  ----------+--------------------
+         0  |           0   1   2
+         1  |           2   3   4
+         2  |           4   5   6
+         3  |           7   8   3
+         4  |           6   9  10
+         5  |          11  12   5
+         6  |          13   8  14
+         7  |           9  15  16
+         8  |          13  15  10
+         9  |          17  12  18
+        10  |          19  20  11
+        11  |          14  21  22
+        12  |          17  23  16
+        13  |          22  18  23
+        14  |          20  24  21
+        15  |          25  26  24
+
+
+
+************************************************************
+*
+* Label: Almost Normal Surfaces
+* Type: Normal surface list
+* Parent: Layered Solid Torus
+*
+************************************************************
+
+Embedded, vertex surfaces
+Coordinates: Standard almost normal (tri-quad-oct)
+Number of surfaces is 33
+1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 0 0 ; 1 0 0 ; 0 0 0 || 0 0 0 0 ; 0 2 0 ; 0 0 0
+0 0 2 2 ; 0 0 0 ; 0 0 0 || 0 0 2 2 ; 0 2 0 ; 0 0 0 || 0 0 2 2 ; 0 0 0 ; 0 0 2 || 2 2 3 3 ; 1 0 0 ; 0 0 0
+2 2 0 0 ; 0 0 0 ; 0 0 0 || 0 0 0 0 ; 0 0 2 ; 0 0 0 || 0 0 0 0 ; 0 2 0 ; 0 0 0 || 0 0 1 1 ; 1 0 0 ; 0 0 0
+0 0 1 1 ; 1 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
+0 0 0 0 ; 0 2 0 ; 0 0 0 || 0 0 1 1 ; 1 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
+2 2 0 0 ; 0 4 0 ; 0 0 0 || 0 0 2 2 ; 0 0 0 ; 0 2 0 || 2 2 2 2 ; 0 2 0 ; 0 0 0 || 2 2 3 3 ; 1 0 0 ; 0 0 0
+1 1 0 0 ; 0 1 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 0 1 0 || 1 1 0 0 ; 0 0 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0 ; 0 0 0
+0 0 2 2 ; 0 2 0 ; 0 0 0 || 0 0 2 2 ; 0 0 0 ; 0 0 2 || 2 2 3 3 ; 1 0 0 ; 0 0 0 || 3 3 3 3 ; 0 0 0 ; 0 0 0
+0 0 0 0 ; 0 0 2 ; 0 0 0 || 0 0 0 0 ; 0 2 0 ; 0 0 0 || 0 0 1 1 ; 1 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
+2 2 0 0 ; 0 0 5 ; 0 0 0 || 2 2 0 0 ; 0 3 0 ; 0 0 0 || 0 0 1 1 ; 0 0 0 ; 0 2 0 || 2 2 1 1 ; 0 0 1 ; 0 0 0
+0 0 0 0 ; 0 0 1 ; 0 0 0 || 0 0 0 0 ; 0 1 0 ; 0 0 0 || 0 0 1 1 ; 0 0 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 0 1 0
+4 4 0 0 ; 0 0 2 ; 0 0 0 || 2 2 0 0 ; 0 0 2 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 1 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
+2 2 0 0 ; 0 0 1 ; 0 0 0 || 1 1 0 0 ; 0 0 1 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0 ; 0 0 0
+4 4 0 0 ; 0 0 3 ; 0 0 0 || 3 3 0 0 ; 0 0 1 ; 0 0 0 || 1 1 0 0 ; 0 0 2 ; 0 0 0 || 1 1 0 0 ; 0 0 1 ; 0 0 0
+6 6 0 0 ; 0 0 4 ; 0 0 0 || 4 4 0 0 ; 0 0 2 ; 0 0 0 || 2 2 0 0 ; 0 0 2 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 1 0 0
+4 4 0 0 ; 0 0 1 ; 0 0 0 || 1 1 0 0 ; 0 0 3 ; 0 0 0 || 1 1 0 0 ; 0 2 0 ; 0 0 0 || 0 0 1 1 ; 0 0 0 ; 0 0 1
+2 2 0 0 ; 0 0 2 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 1 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
+3 3 1 1 ; 0 0 1 ; 0 0 0 || 2 2 0 0 ; 0 0 0 ; 0 1 0 || 1 1 0 0 ; 0 0 2 ; 0 0 0 || 1 1 0 0 ; 0 0 1 ; 0 0 0
+1 1 0 0 ; 0 0 0 ; 1 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
+0 0 2 2 ; 0 0 0 ; 0 2 0 || 2 2 2 2 ; 0 2 0 ; 0 0 0 || 2 2 3 3 ; 1 0 0 ; 0 0 0 || 3 3 3 3 ; 0 0 0 ; 0 0 0
+1 1 0 0 ; 0 0 0 ; 0 1 0 || 1 1 0 0 ; 0 0 1 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0 ; 0 0 0
+1 1 0 0 ; 0 0 0 ; 0 3 0 || 3 3 0 0 ; 0 0 1 ; 0 0 0 || 1 1 0 0 ; 0 0 2 ; 0 0 0 || 1 1 0 0 ; 0 0 1 ; 0 0 0
+0 0 2 2 ; 0 0 0 ; 0 0 2 || 2 2 3 3 ; 1 0 0 ; 0 0 0 || 3 3 3 3 ; 0 0 0 ; 0 0 0 || 3 3 3 3 ; 0 0 0 ; 0 0 0
+0 0 0 0 ; 2 0 0 ; 0 0 0 || 0 0 0 0 ; 0 0 2 ; 0 0 0 || 0 0 0 0 ; 0 2 0 ; 0 0 0 || 0 0 1 1 ; 1 0 0 ; 0 0 0
+0 0 1 1 ; 1 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 0 0 ; 1 0 0 ; 0 0 0 || 0 0 0 0 ; 0 2 0 ; 0 0 0
+0 0 0 0 ; 0 2 0 ; 0 0 0 || 0 0 1 1 ; 1 0 0 ; 0 0 0 || 1 1 0 0 ; 1 0 0 ; 0 0 0 || 0 0 0 0 ; 0 2 0 ; 0 0 0
+0 0 1 1 ; 0 1 0 ; 0 0 0 || 0 0 1 1 ; 0 0 0 ; 0 0 1 || 1 1 0 0 ; 2 0 0 ; 0 0 0 || 0 0 0 0 ; 0 3 0 ; 0 0 0
+0 0 0 0 ; 0 0 1 ; 0 0 0 || 0 0 0 0 ; 0 1 0 ; 0 0 0 || 0 0 0 0 ; 1 0 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0 ; 0 0 0
+2 2 0 0 ; 0 0 2 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 1 0 0 || 1 1 0 0 ; 1 0 0 ; 0 0 0 || 0 0 0 0 ; 0 2 0 ; 0 0 0
+1 1 0 0 ; 0 0 0 ; 1 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 0 0 ; 1 0 0 ; 0 0 0 || 0 0 0 0 ; 0 2 0 ; 0 0 0
+0 0 1 1 ; 0 0 0 ; 0 1 0 || 1 1 1 1 ; 0 1 0 ; 0 0 0 || 1 1 0 0 ; 2 0 0 ; 0 0 0 || 0 0 0 0 ; 0 3 0 ; 0 0 0
+0 0 2 2 ; 0 0 0 ; 0 0 2 || 2 2 3 3 ; 1 0 0 ; 0 0 0 || 3 3 0 0 ; 3 0 0 ; 0 0 0 || 0 0 0 0 ; 0 6 0 ; 0 0 0
+1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
+
+
+************************************************************
+*
+* Label: Fundamental Normal Surfaces
+* Type: Normal surface list
+* Parent: Layered Solid Torus
+*
+************************************************************
+
+Embedded, fundamental surfaces
+Coordinates: Standard normal (tri-quad)
+Number of surfaces is 13
+0 0 0 0 ; 0 0 1 || 0 0 0 0 ; 0 1 0 || 0 0 0 0 ; 1 0 0 || 0 0 0 0 ; 0 1 0
+0 0 0 0 ; 0 0 2 || 0 0 0 0 ; 0 2 0 || 0 0 1 1 ; 1 0 0 || 1 1 1 1 ; 0 0 0
+0 0 0 0 ; 0 2 0 || 0 0 1 1 ; 1 0 0 || 1 1 0 0 ; 1 0 0 || 0 0 0 0 ; 0 2 0
+0 0 0 0 ; 0 2 0 || 0 0 1 1 ; 1 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
+0 0 0 0 ; 2 0 0 || 0 0 0 0 ; 0 0 2 || 0 0 0 0 ; 0 2 0 || 0 0 1 1 ; 1 0 0
+0 0 1 1 ; 1 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 0 0 ; 1 0 0 || 0 0 0 0 ; 0 2 0
+0 0 1 1 ; 1 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
+1 1 0 0 ; 1 0 0 || 0 0 0 0 ; 0 0 2 || 0 0 0 0 ; 0 2 0 || 0 0 1 1 ; 1 0 0
+1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 0 0 ; 1 0 0 || 0 0 0 0 ; 0 2 0
+1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
+2 2 0 0 ; 0 0 0 || 0 0 0 0 ; 0 0 2 || 0 0 0 0 ; 0 2 0 || 0 0 1 1 ; 1 0 0
+2 2 0 0 ; 0 0 1 || 1 1 0 0 ; 0 0 1 || 1 1 0 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0
+4 4 0 0 ; 0 0 3 || 3 3 0 0 ; 0 0 1 || 1 1 0 0 ; 0 0 2 || 1 1 0 0 ; 0 0 1
+
+
+************************************************************
+*
+* Label: Poincaré Homology Sphere
+* Type: 3-D triangulation
+* Parent: 3-Manifolds and Knots
+*
+************************************************************
+
+Size of the skeleton:
+  Tetrahedra: 5
+  Triangles: 10
+  Edges: 6
+  Vertices: 1
+
+Tetrahedron gluing:
+  Tet  |  gluing:       (012)       (013)       (023)       (123)
+  -----+---------------------------------------------------------
+    0  |              4 (312)     3 (231)     2 (312)     1 (231)
+    1  |              4 (230)     3 (302)     2 (230)     0 (312)
+    2  |              4 (301)     3 (130)     1 (302)     0 (230)
+    3  |              4 (120)     2 (301)     1 (130)     0 (301)
+    4  |              3 (201)     2 (120)     1 (201)     0 (120)
+
+Vertices:
+  Tet  |  vertex:    0   1   2   3
+  -----+--------------------------
+    0  |             0   0   0   0
+    1  |             0   0   0   0
+    2  |             0   0   0   0
+    3  |             0   0   0   0
+    4  |             0   0   0   0
+
+Edges:
+  Tet  |  edge:   01  02  03  12  13  23
+  -----+--------------------------------
+    0  |           0   1   2   3   4   5
+    1  |           1   2   0   4   5   3
+    2  |           4   0   3   5   1   2
+    3  |           3   5   1   2   4   0
+    4  |           5   2   4   3   0   1
+
+Triangles:
+  Tet  |  face:  012 013 023 123
+  -----+------------------------
+    0  |           0   1   2   3
+    1  |           4   5   6   3
+    2  |           7   8   6   2
+    3  |           9   8   5   1
+    4  |           9   7   4   0
+
+
+
+************************************************************
+*
+* Label: RP² x S¹
+* Type: 3-D triangulation
+* Parent: 3-Manifolds and Knots
+*
+************************************************************
+
+Size of the skeleton:
+  Tetrahedra: 3
+  Triangles: 6
+  Edges: 4
+  Vertices: 1
+
+Tetrahedron gluing:
+  Tet  |  gluing:       (012)       (013)       (023)       (123)
+  -----+---------------------------------------------------------
+    0  |              2 (023)     2 (132)     1 (023)     1 (123)
+    1  |              2 (201)     2 (310)     0 (023)     0 (123)
+    2  |              1 (120)     1 (310)     0 (012)     0 (031)
+
+Vertices:
+  Tet  |  vertex:    0   1   2   3
+  -----+--------------------------
+    0  |             0   0   0   0
+    1  |             0   0   0   0
+    2  |             0   0   0   0
+
+Edges:
+  Tet  |  edge:   01  02  03  12  13  23
+  -----+--------------------------------
+    0  |           0   1   1   2   2   3
+    1  |           0   1   1   2   2   3
+    2  |           2   0   1   1   0   2
+
+Triangles:
+  Tet  |  face:  012 013 023 123
+  -----+------------------------
+    0  |           0   1   2   3
+    1  |           4   5   2   3
+    2  |           4   5   0   1
+
+
+
+************************************************************
+*
+* Label: Note
+* Type: Text
+* Parent: RP² x S¹
+*
+************************************************************
+
+There are in fact two triangulations of this 3-manifold with three tetrahedra.
+
+
+************************************************************
+*
+* Label: Right-Hand Trefoil
+* Type: Link
+* Parent: 3-Manifolds and Knots
+*
+************************************************************
+
+3-crossing knot
+
+Component 0: ^0 _1 ^2 _0 ^1 _2
+
+Crossings: +0 +1 +2
+
+
+************************************************************
+*
+* Label: Borromean Rings
+* Type: Link
+* Parent: 3-Manifolds and Knots
+*
+************************************************************
+
+6-crossing, 3-component link
+
+Component 0: ^0 _1 ^3 _4
+Component 1: ^2 _3 ^5 _0
+Component 2: ^4 _5 ^1 _2
+
+Crossings: +0 -1 +2 -3 +4 -5
+
+
+************************************************************
+*
+* Label: Whitehead Link Complement
+* Type: SnapPea triangulation
+* Parent: 3-Manifolds and Knots
+*
+************************************************************
+
+Size of the skeleton:
+  Tetrahedra: 4
+  Triangles: 8
+  Edges: 4
+  Vertices: 2
+
+Tetrahedron gluing:
+  Tet  |  gluing:       (012)       (013)       (023)       (123)
+  -----+---------------------------------------------------------
+    0  |              1 (320)     3 (012)     2 (032)     1 (132)
+    1  |              2 (312)     3 (310)     0 (210)     0 (132)
+    2  |              3 (312)     3 (023)     0 (032)     1 (120)
+    3  |              0 (013)     1 (310)     2 (013)     2 (120)
+
+Vertices:
+  Tet  |  vertex:    0   1   2   3
+  -----+--------------------------
+    0  |             0   1   0   1
+    1  |             0   1   1   0
+    2  |             0   1   1   0
+    3  |             0   1   1   0
+
+Edges:
+  Tet  |  edge:   01  02  03  12  13  23
+  -----+--------------------------------
+    0  |           0   1   2   0   3   0
+    1  |           2   0   1   3   0   0
+    2  |           2   2   1   3   2   0
+    3  |           0   2   1   3   2   2
+
+Triangles:
+  Tet  |  face:  012 013 023 123
+  -----+------------------------
+    0  |           0   1   2   3
+    1  |           4   5   0   3
+    2  |           6   7   2   4
+    3  |           1   5   7   6
+
+Tetrahedron shapes:
+  0: ( 1, 1 )
+  1: ( 0.5, 0.5 )
+  2: ( 0.5, 0.5 )
+  3: ( 0.5, 0.5 )
+
+Cusps:
+  0: Vertex 0, complete
+  1: Vertex 1, complete
+
+
+************************************************************
+*
+* Label: Figure 8 Knot Complement
+* Type: SnapPea triangulation
+* Parent: 3-Manifolds and Knots
+*
+************************************************************
+
+Size of the skeleton:
+  Tetrahedra: 2
+  Triangles: 4
+  Edges: 2
+  Vertices: 1
+
+Tetrahedron gluing:
+  Tet  |  gluing:       (012)       (013)       (023)       (123)
+  -----+---------------------------------------------------------
+    0  |              1 (210)     1 (230)     1 (130)     1 (132)
+    1  |              0 (210)     0 (302)     0 (301)     0 (132)
+
+Vertices:
+  Tet  |  vertex:    0   1   2   3
+  -----+--------------------------
+    0  |             0   0   0   0
+    1  |             0   0   0   0
+
+Edges:
+  Tet  |  edge:   01  02  03  12  13  23
+  -----+--------------------------------
+    0  |           0   1   1   1   0   0
+    1  |           1   1   0   0   1   0
+
+Triangles:
+  Tet  |  face:  012 013 023 123
+  -----+------------------------
+    0  |           0   1   2   3
+    1  |           0   2   1   3
+
+Tetrahedron shapes:
+  0: ( 0.5, 0.866025 )
+  1: ( 0.5, 0.866025 )
+
+Cusps:
+  0: Vertex 0, complete
+
+
+************************************************************
+*
+* Label: Vertex Link
+* Type: 2-D triangulation
+* Parent: Figure 8 Knot Complement
+*
+************************************************************
+
+Size of the skeleton:
+  Triangles: 8
+  Edges: 12
+  Vertices: 4
+
+Triangle gluing:
+  Triangle  |  gluing:      (01)      (02)      (12)
+  ----------+---------------------------------------
+         0  |             2 (02)    2 (12)    1 (12)
+         1  |             3 (21)    3 (01)    0 (12)
+         2  |             4 (12)    0 (01)    0 (02)
+         3  |             1 (02)    5 (02)    1 (10)
+         4  |             6 (21)    6 (01)    2 (01)
+         5  |             7 (21)    3 (02)    7 (02)
+         6  |             4 (02)    7 (10)    4 (10)
+         7  |             6 (20)    5 (12)    5 (10)
+
+Vertices:
+  Triangle  |  vertex:    0   1   2
+  ----------+----------------------
+         0  |             0   1   1
+         1  |             2   1   1
+         2  |             0   0   1
+         3  |             2   1   2
+         4  |             3   0   0
+         5  |             2   3   2
+         6  |             3   0   3
+         7  |             3   3   2
+
+Edges:
+  Triangle  |  edge:   01  02  12
+  ----------+--------------------
+         0  |           0   1   2
+         1  |           3   4   2
+         2  |           5   0   1
+         3  |           4   6   3
+         4  |           7   8   5
+         5  |           9   6  10
+         6  |           8  11   7
+         7  |          11  10   9
+
+
+
+************************************************************
+*
+* Label: Tri-Quad Normal Surfaces
+* Type: Normal surface list
+* Parent: Figure 8 Knot Complement
+*
+************************************************************
+
+Embedded, vertex surfaces
+Coordinates: Standard normal (tri-quad)
+Number of surfaces is 1
+1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
+
+
+************************************************************
+*
+* Label: Quad Normal Surfaces
+* Type: Normal surface list
+* Parent: Figure 8 Knot Complement
+*
+************************************************************
+
+Embedded, vertex surfaces
+Coordinates: Quad normal
+Number of surfaces is 4
+inf inf inf inf ; 2 0 0 || inf inf inf inf ; 1 0 0
+inf inf inf inf ; 0 0 2 || inf inf inf inf ; 1 0 0
+inf inf inf inf ; 0 1 0 || inf inf inf inf ; 0 2 0
+inf inf inf inf ; 0 1 0 || inf inf inf inf ; 0 0 2
+
+
+************************************************************
+*
+* Label: Angle Structures
+* Type: Angle structure list
+* Parent: Figure 8 Knot Complement
+*
+************************************************************
+
+5 vertex angle structures (no restrictions):
+0 1 0 ; 1 0 0
+0 0 1 ; 0 0 1
+1 0 0 ; 0 1 0
+1/2 0 1/2 ; 1 0 0
+0 1 0 ; 0 1/2 1/2
+
+
+************************************************************
+*
+* Label: 4-Manifolds
+* Type: Container
+* Parent: Sample Data File
+*
+************************************************************
+
+Container with 2 children, 3 descendants
+
+
+************************************************************
+*
+* Label: Cappell-Shaneson Knot Complement
+* Type: 4-D triangulation
+* Parent: 4-Manifolds
+*
+************************************************************
+
+Size of the skeleton:
+  Pentachora: 2
+  Tetrahedra: 5
+  Triangles: 4
+  Edges: 1
+  Vertices: 1
+
+Pentachoron gluing:
+  Pent  |  gluing:      (0123)      (0124)      (0134)      (0234)      (1234)
+  ------+---------------------------------------------------------------------
+     0  |             1 (0134)    0 (1234)    1 (1234)    1 (0124)    0 (0124)
+     1  |             1 (0234)    0 (0234)    0 (0123)    1 (0123)    0 (0134)
+
+Vertices:
+  Pent  |  vertex:    0   1   2   3   4
+  ------+------------------------------
+     0  |             0   0   0   0   0
+     1  |             0   0   0   0   0
+
+Edges:
+  Pent  |  edge:   01  02  03  04  12  13  14  23  24  34
+  ------+------------------------------------------------
+     0  |           0   0   0   0   0   0   0   0   0   0
+     1  |           0   0   0   0   0   0   0   0   0   0
+
+Triangles:
+  Pent  |  triangle:  012 013 014 023 024 034 123 124 134 234
+  ------+----------------------------------------------------
+     0  |               2   1   0   3   1   2   2   0   1   0
+     1  |               3   2   1   3   2   3   1   0   2   1
+
+Tetrahedra:
+  Pent  |  facet:  0123 0124 0134 0234 1234
+  ------+----------------------------------
+     0  |             0    1    2    3    1
+     1  |             4    3    0    4    2
+
+
+
+************************************************************
+*
+* Label: Twisted S³ x~ S¹
+* Type: 4-D triangulation
+* Parent: 4-Manifolds
+*
+************************************************************
+
+Size of the skeleton:
+  Pentachora: 2
+  Tetrahedra: 5
+  Triangles: 6
+  Edges: 4
+  Vertices: 1
+
+Pentachoron gluing:
+  Pent  |  gluing:      (0123)      (0124)      (0134)      (0234)      (1234)
+  ------+---------------------------------------------------------------------
+     0  |             0 (1234)    1 (0124)    1 (0134)    1 (0234)    0 (0123)
+     1  |             1 (1234)    0 (0124)    0 (0134)    0 (0234)    1 (0123)
+
+Vertices:
+  Pent  |  vertex:    0   1   2   3   4
+  ------+------------------------------
+     0  |             0   0   0   0   0
+     1  |             0   0   0   0   0
+
+Edges:
+  Pent  |  edge:   01  02  03  04  12  13  14  23  24  34
+  ------+------------------------------------------------
+     0  |           0   1   2   3   0   1   2   0   1   0
+     1  |           0   1   2   3   0   1   2   0   1   0
+
+Triangles:
+  Pent  |  triangle:  012 013 014 023 024 034 123 124 134 234
+  ------+----------------------------------------------------
+     0  |               0   2   5   1   4   3   0   2   1   0
+     1  |               0   2   5   1   4   3   0   2   1   0
+
+Tetrahedra:
+  Pent  |  facet:  0123 0124 0134 0234 1234
+  ------+----------------------------------
+     0  |             0    1    2    3    0
+     1  |             4    1    2    3    4
+
+
+
+************************************************************
+*
+* Label: Normal Hypersurfaces
+* Type: Normal hypersurface list
+* Parent: Twisted S³ x~ S¹
+*
+************************************************************
+
+Embedded, vertex hypersurfaces
+Coordinates: Standard normal (tet-prism)
+Number of hypersurfaces is 5
+0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0 || 0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0
+0 0 1 0 0 ; 0 0 1 0 0 0 1 0 0 0 || 0 0 1 0 0 ; 0 0 1 0 0 0 1 0 0 0
+0 1 1 1 0 ; 0 0 0 1 0 0 0 0 0 0 || 0 1 1 1 0 ; 0 0 0 1 0 0 0 0 0 0
+1 0 0 0 1 ; 1 0 0 0 0 0 0 0 0 1 || 1 0 0 0 1 ; 1 0 0 0 0 0 0 0 0 1
+1 1 1 1 1 ; 0 0 0 0 0 0 0 0 0 0 || 1 1 1 1 1 ; 0 0 0 0 0 0 0 0 0 0
+
+
+************************************************************
+*
+* Label: 2-Manifolds
+* Type: Container
+* Parent: Sample Data File
+*
+************************************************************
+
+Container with 3 children, 3 descendants
+
+
+************************************************************
+*
+* Label: Octahedron Boundary
+* Type: 2-D triangulation
+* Parent: 2-Manifolds
+*
+************************************************************
+
+Size of the skeleton:
+  Triangles: 8
+  Edges: 12
+  Vertices: 6
+
+Triangle gluing:
+  Triangle  |  gluing:      (01)      (02)      (12)
+  ----------+---------------------------------------
+         0  |             3 (02)    1 (01)    4 (12)
+         1  |             0 (02)    2 (01)    5 (12)
+         2  |             1 (02)    3 (01)    6 (12)
+         3  |             2 (02)    0 (01)    7 (12)
+         4  |             7 (02)    5 (01)    0 (12)
+         5  |             4 (02)    6 (01)    1 (12)
+         6  |             5 (02)    7 (01)    2 (12)
+         7  |             6 (02)    4 (01)    3 (12)
+
+Vertices:
+  Triangle  |  vertex:    0   1   2
+  ----------+----------------------
+         0  |             0   1   2
+         1  |             0   2   3
+         2  |             0   3   4
+         3  |             0   4   1
+         4  |             5   1   2
+         5  |             5   2   3
+         6  |             5   3   4
+         7  |             5   4   1
+
+Edges:
+  Triangle  |  edge:   01  02  12
+  ----------+--------------------
+         0  |           0   1   2
+         1  |           1   3   4
+         2  |           3   5   6
+         3  |           5   0   7
+         4  |           8   9   2
+         5  |           9  10   4
+         6  |          10  11   6
+         7  |          11   8   7
+
+
+
+************************************************************
+*
+* Label: Klein Bottle, version 1
+* Type: 2-D triangulation
+* Parent: 2-Manifolds
+*
+************************************************************
+
+Size of the skeleton:
+  Triangles: 2
+  Edges: 3
+  Vertices: 1
+
+Triangle gluing:
+  Triangle  |  gluing:      (01)      (02)      (12)
+  ----------+---------------------------------------
+         0  |             1 (01)    1 (20)    1 (21)
+         1  |             0 (01)    0 (20)    0 (21)
+
+Vertices:
+  Triangle  |  vertex:    0   1   2
+  ----------+----------------------
+         0  |             0   0   0
+         1  |             0   0   0
+
+Edges:
+  Triangle  |  edge:   01  02  12
+  ----------+--------------------
+         0  |           0   1   2
+         1  |           0   1   2
+
+
+
+************************************************************
+*
+* Label: Klein Bottle, version 2
+* Type: 2-D triangulation
+* Parent: 2-Manifolds
+*
+************************************************************
+
+Size of the skeleton:
+  Triangles: 2
+  Edges: 3
+  Vertices: 1
+
+Triangle gluing:
+  Triangle  |  gluing:      (01)      (02)      (12)
+  ----------+---------------------------------------
+         0  |             0 (12)    1 (02)    0 (01)
+         1  |             1 (12)    0 (02)    1 (01)
+
+Vertices:
+  Triangle  |  vertex:    0   1   2
+  ----------+----------------------
+         0  |             0   0   0
+         1  |             0   0   0
+
+Edges:
+  Triangle  |  edge:   01  02  12
+  ----------+--------------------
+         0  |           0   1   0
+         1  |           2   1   2
+
+
+
+************************************************************
+*
+* Label: Normal Surface Filters
+* Type: Container
+* Parent: Sample Data File
+*
+************************************************************
+
+Container with 1 child, 3 descendants
+
+
+************************************************************
+*
+* Label: Tori, Annuli and Discs
+* Type: Surface filter
+* Parent: Normal Surface Filters
+*
+************************************************************
+
+OR filter
+
+
+************************************************************
+*
+* Label: Tori and Annuli
+* Type: Surface filter
+* Parent: Tori, Annuli and Discs
+*
+************************************************************
+
+Euler in { 0 }, orientable only, compact only
+
+
+************************************************************
+*
+* Label: Discs
+* Type: Surface filter
+* Parent: Tori, Annuli and Discs
+*
+************************************************************
+
+Euler in { 1 }, orientable only, compact only, real boundary only
+
+
+************************************************************
+*
+* Label: Python Script
+* Type: Script
+* Parent: Sample Data File
+*
+************************************************************
+
+Variable: tri = 3-Manifolds and Knots
+
+# This Python script runs through all 3-manifold triangulations and links
+# in this file.  It prints the first homology of each Regina triangulation,
+# the volume of each SnapPea triangulation, and the HOMFLY-PT polynomial of each link.
+#
+# See the Regina handbook for more elaborate sample Python sessions.
+
+for t in tri.children():
+	print(t.label() + ": ", end='')
+
+	if t.type() == PacketType.Triangulation3:
+		print(t.homology())
+	elif t.type() == PacketType.SnapPea:
+		print(t.volume())
+	elif t.type() == PacketType.Link:
+		print(t.homfly())
+	else:
+		print('Unknown packet type')
+
+
