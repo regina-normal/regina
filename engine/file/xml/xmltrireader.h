@@ -368,14 +368,14 @@ void XMLSimplexReader<dim>::initialChars(const std::string& chars) {
     if (tokens.size() != 2 * (dim + 1))
         return;
 
-    long simpIndex;
+    ssize_t simpIndex;
     Perm<dim + 1> perm;
     Simplex<dim>* adjSimp;
     int adjFacet;
     for (int k = 0; k <= dim; ++k) {
         if (! valueOf(tokens[2 * k], simpIndex))
             continue;
-        if (simpIndex < 0 || simpIndex >= static_cast<long>(tri_->size()))
+        if (simpIndex < 0 || simpIndex >= static_cast<ssize_t>(tri_->size()))
             continue;
 
         if constexpr (dim == 2) {
@@ -387,6 +387,7 @@ void XMLSimplexReader<dim>::initialChars(const std::string& chars) {
                 continue;
             perm = Perm<dim + 1>::Sn[permIndex];
         } else if (permIndex_) {
+            // Note: Perm::Index is a signed type.
             typename Perm<dim + 1>::Index permIndex;
             if (! valueOf(tokens[2 * k + 1], permIndex))
                 continue;
@@ -394,6 +395,11 @@ void XMLSimplexReader<dim>::initialChars(const std::string& chars) {
                 continue;
             perm = Perm<dim + 1>::Sn[permIndex];
         } else {
+            // Note: Perm::ImagePack is an unsigned type.
+            // However, in Regina 3.0 and 3.1 for 3-D triangulations, this was
+            // written as a plain char (which on many platforms is signed).
+            // So, just to be safe, for Perm<4> we read the image pack as an
+            // int (which will happily capture a signed or unsigned char).
             typename Perm<dim + 1>::ImagePack imagePack;
             if (! valueOf(tokens[2 * k + 1], imagePack))
                 continue;

@@ -61,7 +61,7 @@ class XMLNormalHypersurfaceReader : public XMLElementReader {
         int vecEnc_;
             /**< The integer encoding used for the normal hypersurface
                  vector, or 0 if this is unknown. */
-        long vecLen_;
+        ssize_t vecLen_;
             /**< The length of the normal hypersurface vector, or -1 if
                  this is unknown (since 0 is a valid vector length). */
         std::string name_;
