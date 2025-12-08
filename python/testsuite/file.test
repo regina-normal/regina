@@ -37,7 +37,8 @@ if (len(sys.argv) > 1):
 else:
 	testpath = '.'
 
-# A routine that performs essentially the same tasks as regfiledump.
+# A routine that performs essentially the same tasks as regfiledump,
+# but with the addition of dumping cached properties.
 def dump(tree):
 	if tree == None:
 		print('ERROR: Null packet tree.')
@@ -57,6 +58,19 @@ def dump(tree):
 		print('************************************************************')
 		print()
 		print(p.detail())
+		if p.type() == PacketType.Triangulation2:
+			print('Properties:')
+			print('H1 =', p.homology())
+		elif p.type() == PacketType.Triangulation3:
+			print('Properties:')
+			print('H1 =', p.homology())
+			print('H1Rel =', p.homologyRel())
+			print('H1Bdry =', p.homologyBdry())
+			print('H2 =', p.homology(2))
+		elif p.type() == PacketType.Triangulation4:
+			print('Properties:')
+			print('H1 =', p.homology())
+			print('H2 =', p.homology(2))
 		print()
 
 		p = p.nextTreePacket()
@@ -69,4 +83,5 @@ dump(regina.open(testpath + '/file2.rga'))
 dump(regina.open(testpath + '/file3.rga'))
 dump(regina.open(testpath + '/file4.rga'))
 dump(regina.open(testpath + '/file5.rga'))
+dump(regina.open(testpath + '/file6.rga'))
 
