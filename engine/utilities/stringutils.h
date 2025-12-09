@@ -43,7 +43,7 @@
 #include <string>
 #include <vector>
 #include "regina-core.h"
-#include "utilities/intutils.h"
+#include "concepts/core.h"
 
 namespace regina {
 
@@ -102,8 +102,7 @@ std::string stripWhitespace(const std::string& str);
  *
  * \ingroup utilities
  */
-template <typename T>
-requires is_signed_cpp_integer_v<T>
+template <SignedCppInteger T>
 bool valueOf(const std::string& str, T& dest) {
     if (str.empty() || std::isspace(str.front()))
         return false;
@@ -128,8 +127,6 @@ bool valueOf(const std::string& str, T& dest) {
  * Converts the entire given string to an unsigned native integer of type \a T
  * and reports whether this conversion was successful.
  *
- * The type \a T may be any native C++ unsigned integer type.
- *
  * The given string should contain no whitespace or other characters
  * that are not a part of the integer that the string represents.
  * If any unexpected characters are found (including leading or trailing
@@ -151,8 +148,7 @@ bool valueOf(const std::string& str, T& dest) {
  *
  * \ingroup utilities
  */
-template <typename T>
-requires is_unsigned_cpp_integer_v<T>
+template <UnsignedCppInteger T>
 bool valueOf(const std::string& str, T& dest) {
     if (str.empty() || std::isspace(str.front()) || str.front() == '-')
         return false;

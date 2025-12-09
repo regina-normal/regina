@@ -34,7 +34,7 @@
 
 #include "testhelper.h"
 
-template <typename Integer>
+template <regina::CppInteger Integer>
 static void testValueOf(Integer value) {
     SCOPED_TRACE_NUMERIC(value);
 
@@ -51,8 +51,7 @@ static void testValueOf(Integer value) {
     EXPECT_EQ(dest, value);
 }
 
-template <typename Integer, bool isSigned>
-requires regina::is_cpp_integer_v<Integer>
+template <regina::CppInteger Integer, bool isSigned>
 static void testValueOf() {
     SCOPED_TRACE_TYPE(Integer);
 

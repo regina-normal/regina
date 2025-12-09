@@ -1214,6 +1214,7 @@
 		057EE4E21C600A3600C4D155 /* facetpairing7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4651C600A1B00C4D155 /* facetpairing7.cpp */; };
 		057EE4E31C600A3600C4D155 /* facetpairing8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4661C600A1B00C4D155 /* facetpairing8.cpp */; };
 		057FDAF32EE56488000C706E /* stringutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057FDAF22EE56488000C706E /* stringutils.cpp */; };
+		057FDAF72EE7ACC3000C706E /* core.h in Headers */ = {isa = PBXBuildFile; fileRef = 057FDAF52EE7ACC3000C706E /* core.h */; };
 		0581D2792E2D31C50099E9E7 /* graphviz.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581D2782E2D31C50099E9E7 /* graphviz.cpp */; };
 		0582FDE62731FE0900203AE7 /* attachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0582FDE42731FE0800203AE7 /* attachment.cpp */; };
 		0582FDE82731FE0900203AE7 /* attachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 0582FDE52731FE0800203AE7 /* attachment.h */; };
@@ -3808,6 +3809,8 @@
 		057F317219B8935800D30520 /* Example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Example.h; sourceTree = "<group>"; };
 		057F317319B8935800D30520 /* Example.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Example.mm; sourceTree = "<group>"; };
 		057FDAF22EE56488000C706E /* stringutils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = stringutils.cpp; sourceTree = "<group>"; };
+		057FDAF42EE7ACC3000C706E /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		057FDAF52EE7ACC3000C706E /* core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = core.h; sourceTree = "<group>"; };
 		0581D2772E2D31C50099E9E7 /* graphviz.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = graphviz.h; sourceTree = "<group>"; };
 		0581D2782E2D31C50099E9E7 /* graphviz.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = graphviz.cpp; sourceTree = "<group>"; };
 		0582FDE42731FE0800203AE7 /* attachment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = attachment.cpp; sourceTree = "<group>"; };
@@ -6157,6 +6160,7 @@
 				052F9C12180600FA00FAE4DF /* census */,
 				052F9C2C180600FA00FAE4DF /* checkdocs */,
 				052F9C2D180600FA00FAE4DF /* CMakeLists.txt */,
+				057FDAF62EE7ACC3000C706E /* concepts */,
 				05B4D2DB229F42E000B7B11C /* core */,
 				052F9C4C180600FA00FAE4DF /* docs.h */,
 				052F9C4D180600FA00FAE4DF /* doxygen */,
@@ -8121,6 +8125,15 @@
 			name = admin;
 			sourceTree = "<group>";
 		};
+		057FDAF62EE7ACC3000C706E /* concepts */ = {
+			isa = PBXGroup;
+			children = (
+				057FDAF42EE7ACC3000C706E /* CMakeLists.txt */,
+				057FDAF52EE7ACC3000C706E /* core.h */,
+			);
+			path = concepts;
+			sourceTree = "<group>";
+		};
 		0591E7831C4F749400793A9C /* hypersurface */ = {
 			isa = PBXGroup;
 			children = (
@@ -8743,6 +8756,7 @@
 			files = (
 				052F9F11180600FB00FAE4DF /* orb.h in Headers */,
 				05F09FFB1DBF078800117BFC /* component4.h in Headers */,
+				057FDAF72EE7ACC3000C706E /* core.h in Headers */,
 				050C646A1DA1019B00C9420F /* anglestructure.h in Headers */,
 				05F0A00A1DBF078800117BFC /* triangulation4.h in Headers */,
 				05CAE69B274AA785007C93F3 /* isosigtype.h in Headers */,

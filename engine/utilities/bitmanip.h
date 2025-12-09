@@ -40,7 +40,7 @@
 
 #include <bit>
 #include <compare>
-#include "utilities/intutils.h"
+#include "concepts/core.h"
 
 namespace regina {
 
@@ -162,18 +162,13 @@ class BitManipulatorByType<unsigned long long> {
 
 /**
  * An optimised class for bitwise analysis and manipulation of native
- * data types.
- *
- * The class BitManipulator<T> is used to manipulate an integer of type \a T
- * as a sequence of bits.  Here \a T must be an unsigned native integer
- * type such as unsigned char, unsigned int, or unsigned long long.
+ * C++ integer types.
  *
  * Whilst BitManipulator has a generic implementation, all or most native types
  * \a T have template specialisations that are carefully optimised (precisely
  * what gets specialised depends upon properties of the compiler).
  *
- * \pre Type \a T is an unsigned integral numeric type whose size in
- * bits is a power of two.
+ * \pre The size in bits of type \a T is a power of two.
  *
  * \python For Python users, the class BitManipulator represents the
  * C++ type BitManipulator<unsigned long>.  In particular, you should be aware
@@ -182,10 +177,8 @@ class BitManipulatorByType<unsigned long long> {
  * up to you to ensure that any Python integers that you pass into the
  * BitManipulator routines are small enough to fit inside a C++ unsigned long.
  */
-template <typename T>
+template <UnsignedCppInteger T>
 class BitManipulator : public BitManipulatorByType<T> {
-    static_assert(regina::is_unsigned_cpp_integer_v<T>,
-        "BitManipulator can only work with native unsigned integral types.");
     static_assert(sizeof(T) == 1 || sizeof(T) == 2 || sizeof(T) == 4 ||
         sizeof(T) == 8 || sizeof(T) == 16 || sizeof(T) == 32 ||
         sizeof(T) == 64 || sizeof(T) == 128,

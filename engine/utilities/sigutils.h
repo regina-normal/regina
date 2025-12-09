@@ -42,9 +42,9 @@
 #include <cstdint>
 #include <string>
 #include "regina-core.h"
+#include "concepts/core.h"
 #include "utilities/exception.h"
 #include "utilities/fixedarray.h"
-#include "utilities/intutils.h"
 
 namespace regina {
 
@@ -121,9 +121,9 @@ struct [[deprecated]] Base64SigEncoding {
     }
 
     /**
-     * Append a base64 encoding of the given integer to the given string.
-     * The integer will be broken into \a nChars distinct 6-bit blocks, and
-     * the lowest-significance blocks will be written first.
+     * Append a base64 encoding of the given native C++ integer to the given
+     * string.  The integer will be broken into \a nChars distinct 6-bit blocks,
+     * and the lowest-significance blocks will be written first.
      *
      * The inverse to this routine is decodeInt().
      *
@@ -133,18 +133,12 @@ struct [[deprecated]] Base64SigEncoding {
      * \python The template argument \a IntType is taken to be a
      * native C++ \c long.
      *
-     * \tparam IntType a native C++ integer type, such as \c uint8_t, or
-     * \c unsigned, or `long long`.
-     *
      * \param s the string that resulting characters should be appended to.
      * \param val the integer to encode.
      * \param nChars the number of base64 characters to use.
      */
-    template <typename IntType>
+    template <CppInteger IntType>
     static void encodeInt(std::string& s, IntType val, int nChars) {
-        static_assert(is_cpp_integer_v<IntType>,
-            "encodeInt() requires IntType to be a native C++ integer type.");
-
         for ( ; nChars > 0; --nChars) {
             s += encodeSingle(val & 0x3F);
             val >>= 6;
@@ -159,6 +153,10 @@ struct [[deprecated]] Base64SigEncoding {
      * base64 characters, each containing 6 bits of the integer,
      * with the lowest-significance bits encoded in the first characters.
      *
+     * The result will be assembled using bitwise OR and bitwise shift lefts.
+     * It is assumed that the programmer has chosen an integer type large
+     * enough to contain whatever values they expect to read.
+     *
      * The inverse to this routine is encodeInt().
      *
      * \pre The given string contains at least \a nChars characters.
@@ -166,22 +164,13 @@ struct [[deprecated]] Base64SigEncoding {
      * \python The template argument \a IntType is taken to be a
      * native C++ \c long.
      *
-     * \tparam IntType a native C++ integer type, such as \c uint8_t,
-     * or \c unsigned, or `long long`.  The result will be
-     * assembled using bitwise OR and bitwise shift lefts, and it is
-     * assumed that the programmer has chosen an integer type large enough
-     * to contain whatever values they expect to read.
-     *
      * \param s the string from which the encoded base64 characters
      * should be read.
      * \param nChars the number of base64 characters to read.
      * \return the native integer that was encoded.
      */
-    template <typename IntType>
+    template <CppInteger IntType>
     static IntType decodeInt(const char* s, int nChars) {
-        static_assert(is_cpp_integer_v<IntType>,
-            "decodeInt() requires IntType to be a native C++ integer type.");
-
         IntType ans = 0;
         for (int i = 0; i < nChars; ++i)
             ans |= (static_cast<IntType>(decodeSingle(s[i])) << (6 * i));
@@ -378,16 +367,10 @@ class Base64SigEncoder {
          * \python The template argument \a IntType is taken to be a
          * native C++ \c long.
          *
-         * \tparam IntType a native C++ integer type.
-         *
          * \param c an integer between 0 and 63 inclusive.
          */
-        template <typename IntType>
+        template <CppInteger IntType>
         void encodeSingle(IntType c) {
-            static_assert(is_cpp_integer_v<IntType>,
-                "Base64SigEncoder::encodeSingle() requires IntType to be a "
-                "native C++ integer type.");
-
             if (c < 0)
                 throw InvalidArgument("Base64SigEncoder::encodeSingle(): "
                     "integer argument cannot be negative");
@@ -471,18 +454,12 @@ class Base64SigEncoder {
          * \python The template argument \a IntType is taken to be a
          * native C++ \c long.
          *
-         * \tparam IntType a native C++ integer type.
-         *
          * \param val the non-negative integer to encode.
          * \param nChars the number of base64 characters to use; typically
          * this would be obtained through an earlier call to encodeSize().
          */
-        template <typename IntType>
+        template <CppInteger IntType>
         void encodeInt(IntType val, int nChars) {
-            static_assert(is_cpp_integer_v<IntType>,
-                "Base64SigEncoder::encodeInt() requires IntType to be a "
-                "native C++ integer type.");
-
             if (val < 0)
                 throw InvalidArgument("Base64SigEncoder::encodeInt(): "
                     "integer argument cannot be negative");
@@ -728,17 +705,11 @@ class Base64SigDecoder {
          * \python The template argument \a IntType is taken to be a
          * native C++ \c long.
          *
-         * \tparam IntType a native C++ integer type.
-         *
          * \return the corresponding integer, which will be between 0 and 63
          * inclusive.
          */
-        template <typename IntType>
+        template <CppInteger IntType>
         IntType decodeSingle() {
-            static_assert(is_cpp_integer_v<IntType>,
-                "Base64SigDecoder::decodeSingle() requires IntType to be a "
-                "native C++ integer type.");
-
             if (next_ == end_)
                 throw InvalidInput("Base64SigDecoder: "
                     "unexpected end of encoded string");
@@ -808,6 +779,10 @@ class Base64SigDecoder {
          * base64 character, and with the blocks presented in order from
          * lowest to highest significance.
          *
+         * The result will be assembled using bitwise OR and bitwise shift
+         * lefts.  It is assumed that the programmer has chosen an integer type
+         * large enough to contain whatever values they expect to read.
+         *
          * The inverse to this routine is Base64SigEncoder::encodeInt().
          *
          * \exception InvalidInput There are fewer than \a nChars characters
@@ -817,20 +792,11 @@ class Base64SigDecoder {
          * \python The template argument \a IntType is taken to be a
          * native C++ \c long.
          *
-         * \tparam IntType a native C++ integer type.  The result will be
-         * assembled using bitwise OR and bitwise shift lefts, and it is
-         * assumed that the programmer has chosen an integer type large enough
-         * to contain whatever values they expect to read.
-         *
          * \param nChars the number of base64 characters to read.
          * \return the integer that was decoded.
          */
-        template <typename IntType>
+        template <CppInteger IntType>
         IntType decodeInt(int nChars) {
-            static_assert(is_cpp_integer_v<IntType>,
-                "Base64SigDecoder::decodeInt() requires IntType to be a "
-                "native C++ integer type.");
-
             IntType ans = 0;
             for (int i = 0; i < nChars; ++i)
                 ans |= (decodeSingle<IntType>() << (6 * i));

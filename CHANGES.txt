@@ -9,6 +9,10 @@ Regina - Software for low-dimensional topology
 
 Version 7.5  [ TODO ]
 
+    GENERAL:
+        - Begun a move to use C++20 concepts and constraints instead of plain
+          English requirements for template parameters.  This is an ongoing
+          project.
     ENGINE:
         Class GroupExpressionTerm, GroupExpression, GroupPresentation,
                 HomGroupPresentation:
