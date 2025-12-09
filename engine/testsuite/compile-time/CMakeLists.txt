@@ -2,6 +2,7 @@
 SET ( FILES
   binom.cpp
   boolset.cpp
+  concepts.cpp
   disctype.cpp
   facenumbering.cpp
   intutils.cpp

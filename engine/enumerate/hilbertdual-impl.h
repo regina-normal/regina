@@ -51,16 +51,10 @@
 
 namespace regina {
 
-template <class RayClass, typename Action>
+template <ArbitraryPrecisionIntegerVector Ray, typename Action>
 void HilbertDual::enumerate(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned initialRows) {
-    static_assert(
-        IsReginaArbitraryPrecisionInteger<typename RayClass::value_type>::value,
-        "HilbertDual::enumerate() requires the RayClass "
-        "template parameter to be equal to or derived from Vector<T>, "
-        "where T is one of Regina's arbitrary precision integer types.");
-
     // Get the dimension of the entire space in which we are working.
     size_t dim = subspace.columns();
 
@@ -73,43 +67,44 @@ void HilbertDual::enumerate(Action&& action,
     // Then farm the work out to the real enumeration routine that is
     // templated on the bitmask type.
     if (dim <= 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned> >(
+        enumerateUsingBitmask<Ray, Bitmask1<unsigned> >(
             std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else if (dim <= 8 * sizeof(unsigned long))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long> >(
+        enumerateUsingBitmask<Ray, Bitmask1<unsigned long> >(
             std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else if (dim <= 8 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long long> >(
+        enumerateUsingBitmask<Ray, Bitmask1<unsigned long long> >(
             std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else if (dim <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass,
+        enumerateUsingBitmask<Ray,
             Bitmask2<unsigned long long, unsigned> >(
             std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else if (dim <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
-        enumerateUsingBitmask<RayClass,
+        enumerateUsingBitmask<Ray,
             Bitmask2<unsigned long long, unsigned long> >(
             std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else if (dim <= 16 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, Bitmask2<unsigned long long> >(
+        enumerateUsingBitmask<Ray, Bitmask2<unsigned long long> >(
             std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else
-        enumerateUsingBitmask<RayClass, Bitmask>(
+        enumerateUsingBitmask<Ray, Bitmask>(
             std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
 }
 
-template <class RayClass, class BitmaskType, typename Action>
+template <ArbitraryPrecisionIntegerVector Ray, typename BitmaskType,
+    typename Action>
 void HilbertDual::enumerateUsingBitmask(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned initialRows) {
-    using IntegerType = typename RayClass::value_type;
+    using IntegerType = typename Ray::value_type;
 
     // Get the dimension of the entire space in which we are working.
     // At this point we are guaranteed that the dimension is non-zero.
@@ -120,7 +115,7 @@ void HilbertDual::enumerateUsingBitmask(Action&& action,
     if (nEqns == 0) {
         // No!  Just send back the unit vectors.
         for (unsigned i = 0; i < dim; ++i) {
-            RayClass ans(dim);
+            Ray ans(dim);
             ans[i] = IntegerType::one;
             action(std::move(ans));
         }
@@ -181,7 +176,7 @@ void HilbertDual::enumerateUsingBitmask(Action&& action,
     }
 
     for (it = list.begin(); it != list.end(); ++it) {
-        RayClass ans(dim);
+        Ray ans(dim);
         for (i = 0; i < dim; ++i)
             ans[i] = (**it)[i];
         action(std::move(ans));

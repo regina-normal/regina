@@ -38,6 +38,7 @@
 #endif
 
 #include "regina-core.h"
+#include "concepts/maths.h"
 #include "maths/matrix.h"
 #include "maths/vector.h"
 #include <iterator>
@@ -97,7 +98,7 @@ class HilbertDual {
          * Determines the Hilbert basis that generates all integer
          * points in the intersection of the <i>n</i>-dimensional
          * non-negative orthant with the given linear subspace.
-         * The resulting basis elements will be of the class \a RayClass,
+         * The resulting basis elements will be of the class \a Ray,
          * and will be passed into the given action function one at a time.
          *
          * The non-negative orthant is an <i>n</i>-dimensional cone with
@@ -135,14 +136,10 @@ class HilbertDual {
          * For each of the resulting basis elements, this routine will call
          * \a action (which must be a function or some other callable object).
          * This action should return \c void, and must take exactly one
-         * argument, which will be the basis element stored using \a RayClass.
+         * argument, which will be the basis element stored using type \a Ray.
          * The argument will be passed as an rvalue; a typical \a action
-         * would take it as an rvalue reference (RayClass&&) and move its
+         * would take it as an rvalue reference (`Ray&&`) and move its
          * contents into some other more permanent storage.
-         *
-         * \pre The template argument RayClass is derived from (or equal to)
-         * Vector<T>, where \a T is one of Regina's arbitrary-precision
-         * integer classes (Integer or LargeInteger).
          *
          * \python There are two versions of this function available
          * in Python.  The first version is the same as the C++ function;
@@ -150,13 +147,13 @@ class HilbertDual {
          * The second form does not have an \a action argument; instead you
          * call `enumerate(subspace, constraints, tracker, initialRows)`,
          * and it returns a Python list containing all Hilbert basis elements.
-         * In both versions, the argument \a RayClass is fixed as VectorInt.
+         * In both versions, the template argument \a Ray is fixed as VectorInt.
          * The global interpreter lock will be released while this function
          * runs, so you can use it with Python-based multithreading.
          *
          * \param action a function (or other callable object) that will be
          * called for each basis element.  This function must take a single
-         * argument, which will be passed as an rvalue of type RayClass.
+         * argument, which will be passed as an rvalue of type Ray.
          * \param subspace a matrix defining the linear subspace to intersect
          * with the given cone.  Each row of this matrix is the equation
          * for one of the hyperplanes whose intersection forms this linear
@@ -171,7 +168,7 @@ class HilbertDual {
          * The remaining rows will be sorted using the PosOrder class
          * before they are processed.
          */
-        template <class RayClass, typename Action>
+        template <ArbitraryPrecisionIntegerVector Ray, typename Action>
         static void enumerate(Action&& action,
             const MatrixInt& subspace, const ValidityConstraints& constraints,
             ProgressTracker* tracker = nullptr, unsigned initialRows = 0);
@@ -360,7 +357,8 @@ class HilbertDual {
          * \pre The type \a BitmaskType can handle at least \a n bits,
          * where \a n is the number of coordinates in the underlying vectors.
          */
-        template <class RayClass, class BitmaskType, typename Action>
+        template <ArbitraryPrecisionIntegerVector Ray, typename BitmaskType,
+            typename Action>
         static void enumerateUsingBitmask(Action&& action,
             const MatrixInt& subspace, const ValidityConstraints& constraints,
             ProgressTracker* tracker, unsigned initialRows);

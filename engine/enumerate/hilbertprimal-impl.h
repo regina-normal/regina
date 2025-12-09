@@ -54,16 +54,11 @@
 
 namespace regina {
 
-template <class RayClass, class RayIterator, typename Action>
+template <ArbitraryPrecisionIntegerVector Ray, typename RayIterator,
+    typename Action>
 void HilbertPrimal::enumerate(Action&& action,
         const RayIterator& raysBegin, const RayIterator& raysEnd,
         const ValidityConstraints& constraints, ProgressTracker* tracker) {
-    static_assert(
-        IsReginaArbitraryPrecisionInteger<typename RayClass::value_type>::value,
-        "HilbertPrimal::enumerate() requires the RayClass "
-        "template parameter to be equal to or derived from Vector<T>, "
-        "where T is one of Regina's arbitrary precision integer types.");
-
     if (raysBegin == raysEnd) {
         // No extremal rays; no Hilbert basis.
         return;
@@ -79,44 +74,44 @@ void HilbertPrimal::enumerate(Action&& action,
     // Then farm the work out to the real enumeration routine that is
     // templated on the bitmask type.
     if (dim <= 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned> >(
+        enumerateUsingBitmask<Ray, Bitmask1<unsigned> >(
             std::forward<Action>(action),
             raysBegin, raysEnd, constraints, tracker);
     else if (dim <= 8 * sizeof(unsigned long))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long> >(
+        enumerateUsingBitmask<Ray, Bitmask1<unsigned long> >(
             std::forward<Action>(action),
             raysBegin, raysEnd, constraints, tracker);
     else if (dim <= 8 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long long> >(
+        enumerateUsingBitmask<Ray, Bitmask1<unsigned long long> >(
             std::forward<Action>(action),
             raysBegin, raysEnd, constraints, tracker);
     else if (dim <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass,
+        enumerateUsingBitmask<Ray,
             Bitmask2<unsigned long long, unsigned> >(
             std::forward<Action>(action),
             raysBegin, raysEnd, constraints, tracker);
     else if (dim <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
-        enumerateUsingBitmask<RayClass,
+        enumerateUsingBitmask<Ray,
             Bitmask2<unsigned long long, unsigned long> >(
             std::forward<Action>(action),
             raysBegin, raysEnd, constraints, tracker);
     else if (dim <= 16 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, Bitmask2<unsigned long long> >(
+        enumerateUsingBitmask<Ray, Bitmask2<unsigned long long> >(
             std::forward<Action>(action),
             raysBegin, raysEnd, constraints, tracker);
     else
-        enumerateUsingBitmask<RayClass, Bitmask>(
+        enumerateUsingBitmask<Ray, Bitmask>(
             std::forward<Action>(action),
             raysBegin, raysEnd, constraints, tracker);
 }
 
-template <class RayClass, class BitmaskType,
-        class RayIterator, typename Action>
+template <ArbitraryPrecisionIntegerVector Ray, typename BitmaskType,
+        typename RayIterator, typename Action>
 void HilbertPrimal::enumerateUsingBitmask(Action&& action,
         const RayIterator& raysBegin, const RayIterator& raysEnd,
         const ValidityConstraints& constraints, ProgressTracker* tracker) {
-    using IntegerType = typename RayClass::value_type;
+    using IntegerType = typename Ray::value_type;
 
     // We know at this point that the dimension is non-zero.
     size_t dim = (*raysBegin).size();
@@ -159,7 +154,7 @@ void HilbertPrimal::enumerateUsingBitmask(Action&& action,
         tracker->setPercent(90);
 
     for (const auto& b : finalBasis) {
-        RayClass ans(dim);
+        Ray ans(dim);
         for (i = 0, hvit = b.begin(); hvit != b.end(); ++hvit, ++i)
             ans[i].setRaw(hvit->get_mpz_t());
         action(std::move(ans));

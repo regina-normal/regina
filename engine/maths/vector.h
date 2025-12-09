@@ -98,7 +98,7 @@ class Rational;
  *
  * \ingroup maths
  */
-template <class T>
+template <typename T>
 class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
     public:
         /**

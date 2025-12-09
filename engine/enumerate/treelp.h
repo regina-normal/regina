@@ -37,6 +37,8 @@
 #define __REGINA_TREELP_H
 #endif
 
+#include "regina-core.h"
+#include "concepts/maths.h"
 #include "maths/integer.h"
 #include "maths/matrix.h"
 #include "surface/normalcoords.h"
@@ -1727,19 +1729,13 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * additional columns arising from LPConstraint are exempt from
          * this requirement.
          *
-         * \pre The precision of integers in \a RayClass is at least as
+         * \pre The precision of integers in \a Ray is at least as
          * large as the precision of \a IntType (as used by LPData).
-         *
-         * \tparam RayClass the class used to hold the output vector.
-         * This should be Vector<T> where \a T is one of Regina's own integer
-         * types (Integer, LargeInteger or NativeInteger).  In particular,
-         * this ensures that all elements of a newly-created output vector
-         * will be automatically initialised to zero.
          *
          * \python The type vector should be passed as a Python list of
          * integers (for example, in the enumeration of normal surfaces, there
          * would be one integer per tetrahedron, each equal to 0, 1, 2 or 3).
-         * The \a RayClass argument is taken to be Vector<Integer>.
+         * The template parameter \a Ray is taken to be Vector<Integer>.
          *
          * \param type the type vector corresponding to the current state of
          * this tableaux, indicating which variables were previously fixed as
@@ -1754,8 +1750,8 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * \return a vector containing the values of all the variables.
          * This vector will have length origTableaux_->coordinateColumns().
          */
-        template <class RayClass>
-        RayClass extractSolution(const char* type) const;
+        template <IntegerVector Ray>
+        Ray extractSolution(const char* type) const;
 
         /**
          * Writes a short text representation of this object to the

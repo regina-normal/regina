@@ -994,19 +994,14 @@ void LPData<LPConstraint, IntType>::writeTextLong(std::ostream& out) const {
 }
 
 template <class LPConstraint, typename IntType>
-template <class RayClass>
-RayClass LPData<LPConstraint, IntType>::extractSolution(const char* type)
+template <IntegerVector Ray>
+Ray LPData<LPConstraint, IntType>::extractSolution(const char* type)
         const {
     static_assert(
-        FaithfulAssignment<IntType, typename RayClass::value_type>::value,
-        "LPData::extractSolution() requires a RayClass template parameter "
+        FaithfulAssignment<IntType, typename Ray::value_type>::value,
+        "LPData::extractSolution() requires a template parameter Ray "
         "whose elements can faithfully store integers of the template "
         "parameter IntType.");
-
-    // This next test is to ensure that RayClass zero-initialises its elements.
-    static_assert(IsReginaInteger<typename RayClass::value_type>::value,
-        "LPData::extractSolution() requires a RayClass template parameter "
-        "that stores one of Regina's own integer types.");
 
     // Fetch details on how to undo the column permutation.
     const size_t* columnPerm = origTableaux_->columnPerm();
@@ -1019,11 +1014,11 @@ RayClass LPData<LPConstraint, IntType>::extractSolution(const char* type)
     //
     // First compute this lcm.
     size_t i;
-    typename RayClass::value_type lcm(1);
+    typename Ray::value_type lcm(1);
     for (i = 0; i < rank_; ++i)
         lcm = lcm.lcm(entry(i, basis_[i]));
 
-    RayClass v(origTableaux_->coordinateColumns());
+    Ray v(origTableaux_->coordinateColumns());
 
     // Now compute (lcm * the solution vector).  We do not yet
     // take into account the change of variables x_i -> x_i - 1
@@ -1038,7 +1033,7 @@ RayClass LPData<LPConstraint, IntType>::extractSolution(const char* type)
     // Because we are multiplying everything by lcm, the
     // divisions in the following code are all perfectly safe
     // (and give precise integer results).
-    typename RayClass::value_type coord;
+    typename Ray::value_type coord;
     for (i = 0; i < rank_; ++i) {
         if (basis_[i] >= v.size())
             continue;
