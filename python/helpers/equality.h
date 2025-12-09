@@ -335,7 +335,7 @@ namespace add_eq_operators_detail {
      * A helper struct that determines at compile time whether or not
      * Regina provides == and/or != operators for type T.
      */
-    template<class T>
+    template<typename T>
     struct EqOperatorTraits {
         static const T& makeRef();
 

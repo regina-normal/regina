@@ -70,7 +70,7 @@ namespace {
      * \pre The template argument \a BitmaskType is one of Regina's
      * bitmask types, such as Bitmask, Bitmask1 or Bitmask2.
      */
-    template <class BitmaskType>
+    template <typename BitmaskType>
     class RaySpec : private Vector<LargeInteger> {
         private:
             BitmaskType facets_;
@@ -318,7 +318,7 @@ void NormalSurfaces::buildStandardFromReduced(
         buildStandardFromReducedUsing<Bitmask>(reducedList, tracker);
 }
 
-template <class BitmaskType>
+template <typename BitmaskType>
 void NormalSurfaces::buildStandardFromReducedUsing(
         const std::vector<NormalSurface>& reducedList,
         ProgressTracker* tracker) {

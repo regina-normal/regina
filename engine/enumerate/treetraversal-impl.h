@@ -81,7 +81,7 @@
 
 namespace regina {
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 NormalSurface TreeTraversal<LPConstraint, BanConstraint, IntType>::
         buildSurface() const {
     if (enc_.storesAngles())
@@ -137,7 +137,7 @@ NormalSurface TreeTraversal<LPConstraint, BanConstraint, IntType>::
     }
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 AngleStructure TreeTraversal<LPConstraint, BanConstraint, IntType>::
         buildStructure() const {
     if (! enc_.storesAngles())
@@ -152,7 +152,7 @@ AngleStructure TreeTraversal<LPConstraint, BanConstraint, IntType>::
 /**
  * Destroys this object.
  */
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 TreeTraversal<LPConstraint, BanConstraint, IntType>::~TreeTraversal() {
     delete[] type_;
     delete[] typeOrder_;
@@ -161,7 +161,7 @@ TreeTraversal<LPConstraint, BanConstraint, IntType>::~TreeTraversal() {
     delete[] nextSlot_;
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 void TreeTraversal<LPConstraint, BanConstraint, IntType>::setNext(
         size_t nextType) {
     auto pos = std::find(typeOrder_ + level_ + 1,
@@ -176,7 +176,7 @@ void TreeTraversal<LPConstraint, BanConstraint, IntType>::setNext(
     }
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 int TreeTraversal<LPConstraint, BanConstraint, IntType>::feasibleBranches(
         size_t quadType) {
     // Spin off clones for the new linear programs (reusing as much
@@ -249,7 +249,7 @@ int TreeTraversal<LPConstraint, BanConstraint, IntType>::feasibleBranches(
     }
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 double TreeTraversal<LPConstraint, BanConstraint, IntType>::percent() const {
     double percent = 0.0;
     double range = 100.0;
@@ -293,7 +293,7 @@ double TreeTraversal<LPConstraint, BanConstraint, IntType>::percent() const {
     return percent;
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::next(
         ProgressTracker* tracker) {
     if (lastNonZero_ < 0) {
@@ -669,7 +669,7 @@ bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::next(
     return false;
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 bool TautEnumeration<LPConstraint, BanConstraint, IntType>::next(
         ProgressTracker* tracker) {
     // Note that for taut angle structures we have no domination test and
@@ -838,7 +838,7 @@ bool TautEnumeration<LPConstraint, BanConstraint, IntType>::next(
     return false;
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
     // This code is similar to next(), but makes some changes to
     // account for the facts that:

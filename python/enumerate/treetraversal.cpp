@@ -49,7 +49,7 @@ using regina::BanBoundary;
 using regina::BanEdge;
 using regina::BanTorusBoundary;
 
-template <class LPConstraint, typename BanConstraint>
+template <typename LPConstraint, typename BanConstraint>
 void addTreeTraversalBase(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(TreeTraversal)
 
@@ -69,7 +69,7 @@ void addTreeTraversalBase(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
-template <class LPConstraint, typename BanConstraint, typename... BanArgs>
+template <typename LPConstraint, typename BanConstraint, typename... BanArgs>
 void addTreeEnumeration(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(TreeEnumeration)
 
@@ -96,7 +96,7 @@ void addTreeEnumeration(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
-template <class LPConstraint, typename BanConstraint, typename... BanArgs>
+template <typename LPConstraint, typename BanConstraint, typename... BanArgs>
 void addTautEnumeration(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(TautEnumeration)
 
@@ -124,7 +124,7 @@ void addTautEnumeration(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
-template <class LPConstraint, typename BanConstraint, typename... BanArgs>
+template <typename LPConstraint, typename BanConstraint, typename... BanArgs>
 void addTreeSingleSoln(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(TreeSingleSoln)
 

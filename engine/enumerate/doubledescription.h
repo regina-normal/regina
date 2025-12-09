@@ -190,7 +190,7 @@ class DoubleDescription {
          * this must be one of Regina's own bitmask types, such as
          * Bitmask, Bitmask1 or Bitmask2.
          */
-        template <class IntegerType, class BitmaskType>
+        template <typename IntegerType, typename BitmaskType>
         class RaySpec : private Vector<IntegerType> {
             private:
                 using Vector<IntegerType>::elts_;
@@ -386,7 +386,7 @@ class DoubleDescription {
          * the entire old solution set, or undefined if the operation
          * was cancelled via the progress tracker.
          */
-        template <class IntegerType, class BitmaskType>
+        template <typename IntegerType, typename BitmaskType>
         static bool intersectHyperplane(
             std::vector<RaySpec<IntegerType, BitmaskType>*>& src,
             std::vector<RaySpec<IntegerType, BitmaskType>*>& dest,
@@ -397,14 +397,14 @@ class DoubleDescription {
 
 // Inline functions for DoubleDescription::RaySpec
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 inline DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
         const RaySpec<IntegerType, BitmaskType>& trunc) :
         Vector<IntegerType>(trunc.size() - 1), facets_(trunc.facets_) {
     std::copy(trunc.elts_ + 1, trunc.end_, elts_);
 }
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 inline int DoubleDescription::RaySpec<IntegerType, BitmaskType>::sign() const {
     if (*elts_ < 0)
         return -1;
@@ -413,13 +413,13 @@ inline int DoubleDescription::RaySpec<IntegerType, BitmaskType>::sign() const {
     return 0;
 }
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 inline const BitmaskType&
         DoubleDescription::RaySpec<IntegerType, BitmaskType>::facets() const {
     return facets_;
 }
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 inline bool
         DoubleDescription::RaySpec<IntegerType, BitmaskType>::onAllCommonFacets(
         const RaySpec<IntegerType, BitmaskType>& x,

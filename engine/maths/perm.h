@@ -1135,7 +1135,7 @@ class Perm {
          * returned with equal probability).
          * \return a random permutation.
          */
-        template <class URBG>
+        template <typename URBG>
         static Perm rand(URBG&& gen, bool even = false);
 
         /**
@@ -2122,7 +2122,7 @@ Perm<n> Perm<n>::rand(bool even) {
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
 template <int n>
-template <class URBG>
+template <typename URBG>
 Perm<n> Perm<n>::rand(URBG&& gen, bool even) {
     // Note: This generic implementation of Perm covers 8 <= n <= 16.
     // The corresponding index types require 16, 32 or 64 bits.

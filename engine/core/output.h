@@ -46,7 +46,7 @@
 namespace regina {
 
 #ifndef __APIDOCS
-template <class T, bool supportsUtf8 = false> struct Output;
+template <typename T, bool supportsUtf8 = false> struct Output;
 #else
 /**
  * A common base class for objects that write human-readable text output.
@@ -114,7 +114,7 @@ template <class T, bool supportsUtf8 = false> struct Output;
  *
  * \ingroup engine
  */
-template <class T, bool supportsUtf8 = false>
+template <typename T, bool supportsUtf8 = false>
 struct Output {
     /**
      * Returns a short text representation of this object.
@@ -172,7 +172,7 @@ struct Output {
  *
  * \ingroup engine
  */
-template <class T, bool supportsUtf8>
+template <typename T, bool supportsUtf8>
 std::ostream& operator << (std::ostream& out,
     const Output<T, supportsUtf8>& object);
 
@@ -213,7 +213,7 @@ std::ostream& operator << (std::ostream& out,
  *
  * \ingroup engine
  */
-template <class T, bool supportsUtf8 = false>
+template <typename T, bool supportsUtf8 = false>
 struct ShortOutput : public Output<T, supportsUtf8> {
     /**
      * A default implementation for detailed output.
@@ -250,7 +250,7 @@ struct ShortOutput : public Output<T, supportsUtf8> {
  *
  * \ingroup engine
  */
-template <class T>
+template <typename T>
 struct OutputBase {
     private:
         // Implementation details:
@@ -280,7 +280,7 @@ struct OutputBase {
 // Inline functions
 
 #ifndef __DOXYGEN
-template <class T>
+template <typename T>
 struct Output<T, true> {
     inline std::string str() const {
         std::ostringstream out;
@@ -299,7 +299,7 @@ struct Output<T, true> {
     }
 };
 
-template <class T>
+template <typename T>
 struct Output<T, false> {
     inline std::string str() const {
         std::ostringstream out;
@@ -318,14 +318,14 @@ struct Output<T, false> {
     }
 };
 
-template <class T>
+template <typename T>
 inline std::ostream& operator << (std::ostream& out,
         const Output<T, true>& object) {
     static_cast<const T&>(object).writeTextShort(out, false);
     return out;
 }
 
-template <class T>
+template <typename T>
 inline std::ostream& operator << (std::ostream& out,
         const Output<T, false>& object) {
     static_cast<const T&>(object).writeTextShort(out);
@@ -333,7 +333,7 @@ inline std::ostream& operator << (std::ostream& out,
 }
 #endif // __DOXYGEN
 
-template <class T, bool supportsUtf8>
+template <typename T, bool supportsUtf8>
 inline void ShortOutput<T, supportsUtf8>::writeTextLong(std::ostream& out)
         const {
     // Plain ASCII short output, with an extra newline:

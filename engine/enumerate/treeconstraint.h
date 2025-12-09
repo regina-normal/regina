@@ -48,9 +48,9 @@ namespace regina {
 class AngleStructure;
 
 template <typename IntType> class LPMatrix;
-template <class LPConstraint> struct LPCol;
-template <class LPConstraint> class LPInitialTableaux;
-template <class LPConstraint, typename IntType> class LPData;
+template <typename LPConstraint> struct LPCol;
+template <typename LPConstraint> class LPInitialTableaux;
+template <typename LPConstraint, typename IntType> class LPData;
 
 class LPConstraintNone;
 
@@ -694,7 +694,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          * \param init the original starting tableaux being used for this
          * enumeration task.
          */
-        template <class LPConstraint>
+        template <typename LPConstraint>
         BanConstraintBase(const LPInitialTableaux<LPConstraint>& init);
 
         /**
@@ -710,7 +710,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          *
          * \param lp the tableaux in which to enforce the bans.
          */
-        template <class LPConstraint, typename IntType>
+        template <typename LPConstraint, typename IntType>
         void enforceBans(LPData<LPConstraint, IntType>& lp) const;
 
         /**
@@ -822,10 +822,10 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
  */
 class BanNone : public ShortOutput<BanNone> {
     public:
-        template <class LPConstraint>
+        template <typename LPConstraint>
         BanNone(const LPInitialTableaux<LPConstraint>&) {}
 
-        template <class LPConstraint, typename IntType>
+        template <typename LPConstraint, typename IntType>
         void enforceBans(LPData<LPConstraint, IntType>&) const {}
 
         bool operator == (const BanNone&) const { return true; }
@@ -895,7 +895,7 @@ class BanBoundary : public BanConstraintBase {
          * enumeration task.  This tableaux must work with normal or almost
          * normal surface coordinates (not angle structure coordinates).
          */
-        template <class LPConstraint>
+        template <typename LPConstraint>
         BanBoundary(const LPInitialTableaux<LPConstraint>& init);
 
         static bool supported(NormalEncoding enc);
@@ -959,7 +959,7 @@ class BanEdge : public BanConstraintBase {
          * normal surface coordinates (not angle structure coordinates).
          * \param edge the specific edge that our normal discs must not meet.
          */
-        template <class LPConstraint>
+        template <typename LPConstraint>
         BanEdge(const LPInitialTableaux<LPConstraint>& init, Edge<3>* edge);
 
         static bool supported(NormalEncoding enc);
@@ -1028,7 +1028,7 @@ class BanTorusBoundary : public BanConstraintBase {
          * enumeration task.  This tableaux must work with normal or almost
          * normal surface coordinates (not angle structure coordinates).
          */
-        template <class LPConstraint>
+        template <typename LPConstraint>
         BanTorusBoundary(const LPInitialTableaux<LPConstraint>& init);
 
         static bool supported(NormalEncoding enc);
@@ -1122,7 +1122,7 @@ inline bool LPConstraintNonSpun::supported(NormalEncoding enc) {
     return ! (enc.storesTriangles() || enc.storesAngles());
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 inline BanConstraintBase::BanConstraintBase(
         const LPInitialTableaux<LPConstraint>& init) :
         tri_(init.tri()), system_(init.system()) {
@@ -1138,7 +1138,7 @@ inline BanConstraintBase::~BanConstraintBase() {
     delete[] marked_;
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 inline void BanConstraintBase::enforceBans(LPData<LPConstraint, IntType>& lp)
         const {
     for (size_t i = 0; i < lp.coordinateColumns(); ++i)

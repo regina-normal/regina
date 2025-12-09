@@ -200,7 +200,7 @@ class HilbertDual {
          * coordinates; this must be one of Regina's own bitmask types, such as
          * Bitmask, Bitmask1 or Bitmask2.
          */
-        template <class IntegerType, class BitmaskType>
+        template <typename IntegerType, typename BitmaskType>
         class VecSpec : private Vector<IntegerType> {
             private:
                 IntegerType nextHyp_;
@@ -389,7 +389,7 @@ class HilbertDual {
          * \return \c true if the given vector can be reduced, or \c false 
          * otherwise.
          */
-        template <class IntegerType, class BitmaskType>
+        template <typename IntegerType, typename BitmaskType>
         static bool reduces(const VecSpec<IntegerType, BitmaskType>& vec,
             const std::list<VecSpec<IntegerType, BitmaskType>*>& against,
             int listSign);
@@ -409,7 +409,7 @@ class HilbertDual {
          * \param listSign an integer indicating which sign of the
          * current hyperplane we are working on.
          */
-        template <class IntegerType, class BitmaskType>
+        template <typename IntegerType, typename BitmaskType>
         static void reduceBasis(
             std::list<VecSpec<IntegerType, BitmaskType>*>& reduce,
             std::list<VecSpec<IntegerType, BitmaskType>*>& against,
@@ -447,7 +447,7 @@ class HilbertDual {
          * \param constraintsBegin the list of additional validity constraints
          * to impose.
          */
-        template <class IntegerType, class BitmaskType>
+        template <typename IntegerType, typename BitmaskType>
         static void intersectHyperplane(
             std::vector<VecSpec<IntegerType, BitmaskType>*>& list,
             const MatrixInt& subspace, unsigned row,
@@ -456,14 +456,14 @@ class HilbertDual {
 
 // Inline functions for HilbertDual::VecSpec
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 inline HilbertDual::VecSpec<IntegerType, BitmaskType>::VecSpec(size_t dim) :
         Vector<IntegerType>(dim), mask_(dim) {
     // All vector elements, nextHyp_ and srcNextHyp_ are initialised to
     // zero thanks to the default constructors for Regina's integer types.
 }
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 inline HilbertDual::VecSpec<IntegerType, BitmaskType>::VecSpec(
         size_t pos, size_t dim) :
         Vector<IntegerType>(dim), mask_(dim) {
@@ -473,7 +473,7 @@ inline HilbertDual::VecSpec<IntegerType, BitmaskType>::VecSpec(
     mask_.set(pos, true);
 }
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 inline void HilbertDual::VecSpec<IntegerType, BitmaskType>::initNextHyp(
         const MatrixInt& subspace, unsigned row) {
     nextHyp_ = 0;
@@ -491,7 +491,7 @@ inline void HilbertDual::VecSpec<IntegerType, BitmaskType>::initNextHyp(
 #endif
 }
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 inline void HilbertDual::VecSpec<IntegerType, BitmaskType>::formSum(
         const HilbertDual::VecSpec<IntegerType, BitmaskType>& pos,
         const HilbertDual::VecSpec<IntegerType, BitmaskType>& neg) {
@@ -509,32 +509,32 @@ inline void HilbertDual::VecSpec<IntegerType, BitmaskType>::formSum(
 #endif
 }
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 inline const IntegerType&
         HilbertDual::VecSpec<IntegerType, BitmaskType>::nextHyp() const {
     return nextHyp_;
 }
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 inline const BitmaskType&
         HilbertDual::VecSpec<IntegerType, BitmaskType>::mask() const {
     return mask_;
 }
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 inline int HilbertDual::VecSpec<IntegerType, BitmaskType>::sign() const {
     return (nextHyp_ == 0 ? 0 : nextHyp_ > 0 ? 1 : -1);
 }
 
 #ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 inline const IntegerType&
         HilbertDual::VecSpec<IntegerType, BitmaskType>::srcNextHyp() const {
     return srcNextHyp_;
 }
 #endif
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 inline bool HilbertDual::VecSpec<IntegerType, BitmaskType>::operator == (
         const HilbertDual::VecSpec<IntegerType, BitmaskType>& other) const {
     // Begin with simple tests that give us a fast way of saying no.
@@ -543,7 +543,7 @@ inline bool HilbertDual::VecSpec<IntegerType, BitmaskType>::operator == (
     return (static_cast<const Vector<IntegerType>&>(*this) == static_cast<const Vector<IntegerType>&>(other));
 }
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 inline bool HilbertDual::VecSpec<IntegerType, BitmaskType>::dominatedBy(
         const HilbertDual::VecSpec<IntegerType, BitmaskType>& other) const {
     // Begin with simple tests that give us a fast way of saying no.

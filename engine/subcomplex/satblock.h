@@ -567,7 +567,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * \param list the list in which to search.
          * \return \c true if and only if the given tetrahedron was found.
          */
-        template <class List>
+        template <typename List>
         static bool isBad(const Tetrahedron<3>* t, const List& list) {
             for (const Tetrahedron<3>* tet : list)
                 if (tet == t)

@@ -838,7 +838,7 @@ inline void swap(Vector<T>& a, Vector<T>& b) noexcept {
  *
  * \ingroup maths
  */
-template <class T>
+template <typename T>
 std::ostream& operator << (std::ostream& out, const Vector<T>& vector) {
     size_t size = vector.size();
     if (size == 0)

@@ -160,7 +160,7 @@ class HilbertCD {
          * coordinates; this must be one of Regina's own bitmask types, such as
          * Bitmask, Bitmask1 or Bitmask2.
          */
-        template <class IntegerType, class BitmaskType>
+        template <typename IntegerType, typename BitmaskType>
         struct VecSpec : public Vector<IntegerType> {
             BitmaskType mask_;
                 /**< A bitmask indicating which coordinates are zero
@@ -207,7 +207,7 @@ class HilbertCD {
 
 // Inline functions for HilbertCD::VecSpec
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 inline HilbertCD::VecSpec<IntegerType, BitmaskType>::VecSpec(size_t dim) :
         Vector<IntegerType>(dim), mask_(dim) {
     // All vector elements are initialised to zero thanks to the default

@@ -53,7 +53,7 @@ using regina::LPConstraintEulerPositive;
 using regina::LPConstraintEulerZero;
 using regina::LPConstraintNonSpun;
 
-template <class LPConstraint>
+template <typename LPConstraint>
 void addLPConstraint(pybind11::module_& m, const char* name, const char* doc) {
     RDOC_SCOPE_BEGIN(LPConstraintBase)
 

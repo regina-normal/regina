@@ -47,7 +47,7 @@
 
 namespace regina {
 
-template <class BitmaskType, class RayIterator>
+template <typename BitmaskType, typename RayIterator>
 std::vector<BitmaskType> MaxAdmissible::enumerate(
         RayIterator beginExtremalRays, RayIterator endExtremalRays,
         const ValidityConstraints& constraints) {

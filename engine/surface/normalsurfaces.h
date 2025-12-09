@@ -1147,7 +1147,7 @@ class NormalSurfaces :
          * \pre The underlying triangulation (in addition to the other
          * preconditions) is non-empty.
          */
-        template <class BitmaskType>
+        template <typename BitmaskType>
         void buildStandardFromReducedUsing(
             const std::vector<NormalSurface>& reducedList,
             ProgressTracker* tracker);

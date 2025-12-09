@@ -505,7 +505,7 @@ inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept;
  *
  * \ingroup enumerate
  */
-template <class LPConstraint>
+template <typename LPConstraint>
 struct LPCol {
     int nPlus;
         /**< The total number of +1 entries in this column. */
@@ -830,7 +830,7 @@ class LPSystem : public ShortOutput<LPSystem> {
  *
  * \ingroup enumerate
  */
-template <class LPConstraint>
+template <typename LPConstraint>
 class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
     private:
         const Triangulation<3>* tri_;
@@ -1368,7 +1368,7 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
  *
  * \ingroup enumerate
  */
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 class LPData : public Output<LPData<LPConstraint, IntType>> {
     private:
         const LPInitialTableaux<LPConstraint>* origTableaux_;
@@ -1950,7 +1950,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
  *
  * \ingroup enumerate
  */
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 inline void swap(LPData<LPConstraint, IntType>& a,
         LPData<LPConstraint, IntType>& b) noexcept;
 
@@ -2076,7 +2076,7 @@ inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept {
 
 // Inline functions for LPCol
 
-template <class LPConstraint>
+template <typename LPConstraint>
 inline LPCol<LPConstraint>::LPCol() : nPlus(0), nMinus(0) {
     if constexpr (LPConstraint::nConstraints > 0) {
         // I'm not sure how well the compiler and std::array optimise this for
@@ -2091,7 +2091,7 @@ inline LPCol<LPConstraint>::LPCol() : nPlus(0), nMinus(0) {
     }
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 inline void LPCol<LPConstraint>::push(size_t row, int val) {
 #ifdef REGINA_VERIFY_LPDATA
     if ((val > 0 && val + nPlus > 4) ||
@@ -2108,7 +2108,7 @@ inline void LPCol<LPConstraint>::push(size_t row, int val) {
 
 // Inline functions for LPInitialTableaux
 
-template <class LPConstraint>
+template <typename LPConstraint>
 inline LPInitialTableaux<LPConstraint>::LPInitialTableaux(
         const LPInitialTableaux& src) :
         tri_(src.tri_),
@@ -2123,7 +2123,7 @@ inline LPInitialTableaux<LPConstraint>::LPInitialTableaux(
     std::copy(src.columnPerm_, src.columnPerm_ + cols_, columnPerm_);
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 inline LPInitialTableaux<LPConstraint>::LPInitialTableaux(
         LPInitialTableaux&& src) noexcept :
         tri_(src.tri_),
@@ -2138,13 +2138,13 @@ inline LPInitialTableaux<LPConstraint>::LPInitialTableaux(
     src.columnPerm_ = nullptr;
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 inline LPInitialTableaux<LPConstraint>::~LPInitialTableaux() {
     delete[] col_;
     delete[] columnPerm_;
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 inline LPInitialTableaux<LPConstraint>&
         LPInitialTableaux<LPConstraint>::operator = (
         const LPInitialTableaux& src) {
@@ -2168,7 +2168,7 @@ inline LPInitialTableaux<LPConstraint>&
     return *this;
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 inline LPInitialTableaux<LPConstraint>&
         LPInitialTableaux<LPConstraint>::operator = (
         LPInitialTableaux&& src) noexcept {
@@ -2186,7 +2186,7 @@ inline LPInitialTableaux<LPConstraint>&
     return *this;
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 inline void LPInitialTableaux<LPConstraint>::swap(LPInitialTableaux& other)
         noexcept {
     std::swap(tri_, other.tri_);
@@ -2199,37 +2199,37 @@ inline void LPInitialTableaux<LPConstraint>::swap(LPInitialTableaux& other)
     std::swap(columnPerm_, other.columnPerm_);
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 inline const Triangulation<3>& LPInitialTableaux<LPConstraint>::tri() const {
     return *tri_;
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 inline LPSystem LPInitialTableaux<LPConstraint>::system() const {
     return system_;
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 inline size_t LPInitialTableaux<LPConstraint>::rank() const {
     return rank_;
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 inline size_t LPInitialTableaux<LPConstraint>::columns() const {
     return cols_;
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 inline size_t LPInitialTableaux<LPConstraint>::coordinateColumns() const {
     return eqns_.columns();
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 inline const size_t* LPInitialTableaux<LPConstraint>::columnPerm() const {
     return columnPerm_;
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 template <typename IntType>
 inline IntType LPInitialTableaux<LPConstraint>::multColByRow(
         const LPMatrix<IntType>& m, size_t mRow, size_t thisCol) const {
@@ -2255,7 +2255,7 @@ inline IntType LPInitialTableaux<LPConstraint>::multColByRow(
     }
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 template <typename IntType>
 inline IntType LPInitialTableaux<LPConstraint>::multColByRowOct(
         const LPMatrix<IntType>& m, size_t mRow, size_t thisCol) const {
@@ -2273,7 +2273,7 @@ inline IntType LPInitialTableaux<LPConstraint>::multColByRowOct(
     return ans;
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 template <typename IntType>
 inline void LPInitialTableaux<LPConstraint>::fillInitialTableaux(
         LPMatrix<IntType>& m) const {
@@ -2303,12 +2303,12 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
 
 // Template functions for LPData
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 inline LPData<LPConstraint, IntType>::LPData() :
         rhs_(nullptr), rank_(0), basis_(nullptr), basisRow_(nullptr) {
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 inline LPData<LPConstraint, IntType>::LPData(LPData&& src) noexcept :
         origTableaux_(src.origTableaux_),
         rhs_(src.rhs_),
@@ -2324,14 +2324,14 @@ inline LPData<LPConstraint, IntType>::LPData(LPData&& src) noexcept :
     src.basisRow_ = nullptr;
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 inline LPData<LPConstraint, IntType>::~LPData() {
     delete[] rhs_;
     delete[] basis_;
     delete[] basisRow_;
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 inline LPData<LPConstraint, IntType>&
         LPData<LPConstraint, IntType>::operator = (LPData&& src) noexcept {
     origTableaux_ = src.origTableaux_;
@@ -2349,7 +2349,7 @@ inline LPData<LPConstraint, IntType>&
     return *this;
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 inline void LPData<LPConstraint, IntType>::swap(LPData& other) noexcept {
     std::swap(origTableaux_, other.origTableaux_);
     std::swap(rhs_, other.rhs_);
@@ -2362,7 +2362,7 @@ inline void LPData<LPConstraint, IntType>::swap(LPData& other) noexcept {
     std::swap(octSecondary_, other.octSecondary_);
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 inline void LPData<LPConstraint, IntType>::reserve(
         const LPInitialTableaux<LPConstraint>& origTableaux) {
     origTableaux_ = std::addressof(origTableaux);
@@ -2372,22 +2372,22 @@ inline void LPData<LPConstraint, IntType>::reserve(
     basisRow_ = new ssize_t[origTableaux.columns()];
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 inline size_t LPData<LPConstraint, IntType>::columns() const {
     return origTableaux_->columns();
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 inline size_t LPData<LPConstraint, IntType>::coordinateColumns() const {
     return origTableaux_->coordinateColumns();
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 inline bool LPData<LPConstraint, IntType>::isFeasible() const {
     return feasible_;
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 inline bool LPData<LPConstraint, IntType>::isActive(size_t pos) const {
     // If basisRow_[pos] < 0, the variable is active and non-basic.
     // If basisRow_[pos] > 0, the variable is active and basic.
@@ -2399,7 +2399,7 @@ inline bool LPData<LPConstraint, IntType>::isActive(size_t pos) const {
         (rank_ == 0 || basis_[0] != pos));
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 inline int LPData<LPConstraint, IntType>::sign(size_t pos) const {
     // If basisRow_[pos] < 0, the variable is active and non-basic.
     // If basisRow_[pos] > 0, the variable is active and basic.
@@ -2411,7 +2411,7 @@ inline int LPData<LPConstraint, IntType>::sign(size_t pos) const {
         rhs_[basisRow_[pos]].sign() : 0);
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 inline IntType LPData<LPConstraint, IntType>::entry(size_t row, size_t col)
         const {
     // Remember to take into account any changes of variable due
@@ -2425,7 +2425,7 @@ inline IntType LPData<LPConstraint, IntType>::entry(size_t row, size_t col)
     }
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 inline void LPData<LPConstraint, IntType>::entry(size_t row, size_t col,
         IntType& ans) const {
     // Remember to take into account any changes of variable due
@@ -2438,7 +2438,7 @@ inline void LPData<LPConstraint, IntType>::entry(size_t row, size_t col,
     }
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 inline int LPData<LPConstraint, IntType>::entrySign(size_t row, size_t col)
         const {
     // Remember to take into account any changes of variable due
@@ -2452,7 +2452,7 @@ inline int LPData<LPConstraint, IntType>::entrySign(size_t row, size_t col)
     }
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 inline void swap(LPData<LPConstraint, IntType>& a,
         LPData<LPConstraint, IntType>& b) noexcept {
     a.swap(b);

@@ -134,7 +134,7 @@ void LPMatrix<IntType>::writeTextLong(std::ostream& out) const {
     }
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 LPInitialTableaux<LPConstraint>::LPInitialTableaux(
         const Triangulation<3>& tri, NormalEncoding enc, bool enumeration) :
         tri_(&tri), system_(enc) {
@@ -191,7 +191,7 @@ LPInitialTableaux<LPConstraint>::LPInitialTableaux(
 }
 
 #ifdef REGINA_NOOPT_REORDER_COLUMNS
-template <class LPConstraint>
+template <typename LPConstraint>
 void LPInitialTableaux<LPConstraint>::reorder(bool) {
     // This is a "do-nothing" version of reorder().
     if (! system_.standard()) {
@@ -255,7 +255,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool) {
         columnPerm_[cols_ - i - 1] = cols_ - i - 1;
 }
 #else
-template <class LPConstraint>
+template <typename LPConstraint>
 void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
     size_t n = tri_->size();
 
@@ -464,7 +464,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
 }
 #endif
 
-template <class LPConstraint>
+template <typename LPConstraint>
 void LPInitialTableaux<LPConstraint>::writeTextShort(std::ostream& out) const {
     out << "Columns:";
     for (size_t c = 0; c < eqns_.columns(); ++c) {
@@ -504,7 +504,7 @@ void LPInitialTableaux<LPConstraint>::writeTextShort(std::ostream& out) const {
     }
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 void LPInitialTableaux<LPConstraint>::writeTextLong(std::ostream& out) const {
     out << "System: ";
     system_.writeTextShort(out);
@@ -549,7 +549,7 @@ void LPInitialTableaux<LPConstraint>::writeTextLong(std::ostream& out) const {
     }
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 void LPData<LPConstraint, IntType>::initStart() {
     // In this routine we rely on the fact that the
     // LPInitialTableaux constructor ensures that the original
@@ -573,7 +573,7 @@ void LPData<LPConstraint, IntType>::initStart() {
     LPConstraint::constrain(*this, origTableaux_->columns());
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 void LPData<LPConstraint, IntType>::initClone(const LPData& parent) {
     // If the parent tableaux is infeasible, mark this tableaux as
     // infeasible also and abort.
@@ -592,7 +592,7 @@ void LPData<LPConstraint, IntType>::initClone(const LPData& parent) {
     octSecondary_ = parent.octSecondary_;
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 void LPData<LPConstraint, IntType>::constrainZero(size_t pos) {
     // If the variable has already been deactivated, there is
     // nothing to do.
@@ -698,7 +698,7 @@ void LPData<LPConstraint, IntType>::constrainZero(size_t pos) {
 #endif
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 void LPData<LPConstraint, IntType>::constrainPositive(size_t pos) {
     // If the variable has already been deactivated, it cannot
     // be positive.
@@ -740,7 +740,7 @@ void LPData<LPConstraint, IntType>::constrainPositive(size_t pos) {
     }
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 void LPData<LPConstraint, IntType>::constrainOct(size_t quad1, size_t quad2) {
     // If either variable has already been deactivated, it cannot
     // be positive.
@@ -950,7 +950,7 @@ void LPData<LPConstraint, IntType>::constrainOct(size_t quad1, size_t quad2) {
     }
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 void LPData<LPConstraint, IntType>::writeTextShort(std::ostream& out) const {
     if (! basis_) {
         out << "Uninitialised";
@@ -968,7 +968,7 @@ void LPData<LPConstraint, IntType>::writeTextShort(std::ostream& out) const {
         out << " (empty)";
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 void LPData<LPConstraint, IntType>::writeTextLong(std::ostream& out) const {
     if (! basis_) {
         out << "Uninitialised";
@@ -993,7 +993,7 @@ void LPData<LPConstraint, IntType>::writeTextLong(std::ostream& out) const {
     }
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 template <IntegerVector Ray>
 Ray LPData<LPConstraint, IntType>::extractSolution(const char* type)
         const {
@@ -1095,7 +1095,7 @@ Ray LPData<LPConstraint, IntType>::extractSolution(const char* type)
     return v;
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 void LPData<LPConstraint, IntType>::pivot(size_t outCol, size_t inCol) {
     size_t defRow = basisRow_[outCol];
     basisRow_[outCol] = -1;
@@ -1139,7 +1139,7 @@ void LPData<LPConstraint, IntType>::pivot(size_t outCol, size_t inCol) {
     }
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 void LPData<LPConstraint, IntType>::findInitialBasis() {
     // Start with all variables active but non-basic.
     std::fill(basisRow_, basisRow_ + origTableaux_->columns(), -1);
@@ -1231,7 +1231,7 @@ void LPData<LPConstraint, IntType>::findInitialBasis() {
             rowOps_.entry(r, c) = IntType(ops.entry(r, c));
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 void LPData<LPConstraint, IntType>::makeFeasible() {
     ssize_t outCol;
     size_t outRow;
@@ -1336,7 +1336,7 @@ void LPData<LPConstraint, IntType>::makeFeasible() {
     }
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 void LPData<LPConstraint, IntType>::makeFeasibleAntiCycling() {
     ssize_t outCol;
 #ifdef REGINA_COUNT_PIVOTS
@@ -1380,7 +1380,7 @@ void LPData<LPConstraint, IntType>::makeFeasibleAntiCycling() {
     }
 }
 
-template <class LPConstraint, typename IntType>
+template <typename LPConstraint, typename IntType>
 void LPData<LPConstraint, IntType>::verify() const {
     size_t r, c;
     for (r = 0; r < rank_; ++r) {

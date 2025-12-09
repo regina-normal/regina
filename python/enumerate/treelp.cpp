@@ -49,7 +49,7 @@ using regina::LPConstraintEulerPositive;
 using regina::LPConstraintEulerZero;
 using regina::LPConstraintNonSpun;
 
-template <class LPConstraint>
+template <typename LPConstraint>
 void addLPInitialTableaux(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(LPInitialTableaux)
 
@@ -95,7 +95,7 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
-template <class LPConstraint>
+template <typename LPConstraint>
 void addLPData(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(LPData)
 

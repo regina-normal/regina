@@ -119,7 +119,7 @@ class MaxAdmissible {
          * \return a vector containing one bitmask representing each
          * maximal admissible face, as described above.
          */
-        template <class BitmaskType, class RayIterator>
+        template <typename BitmaskType, typename RayIterator>
         static std::vector<BitmaskType> enumerate(
                 RayIterator beginExtremalRays, RayIterator endExtremalRays,
                 const ValidityConstraints& constraints);

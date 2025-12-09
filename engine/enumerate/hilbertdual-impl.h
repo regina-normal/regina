@@ -189,7 +189,7 @@ void HilbertDual::enumerateUsingBitmask(Action&& action,
         tracker->setPercent(100);
 }
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 bool HilbertDual::reduces(const VecSpec<IntegerType, BitmaskType>& vec,
         const std::list<VecSpec<IntegerType, BitmaskType>*>& against,
         int listSign) {
@@ -213,7 +213,7 @@ bool HilbertDual::reduces(const VecSpec<IntegerType, BitmaskType>& vec,
     return false;
 }
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 void HilbertDual::reduceBasis(
         std::list<VecSpec<IntegerType, BitmaskType>*>& reduce,
         std::list<VecSpec<IntegerType, BitmaskType>*>& against,
@@ -288,7 +288,7 @@ void HilbertDual::reduceBasis(
     }
 }
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 void HilbertDual::intersectHyperplane(
         std::vector<VecSpec<IntegerType, BitmaskType>*>& list,
         const MatrixInt& subspace, unsigned row,

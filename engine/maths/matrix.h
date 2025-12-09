@@ -49,7 +49,7 @@
 namespace regina {
 
 class Rational;
-template <class> class Vector;
+template <typename> class Vector;
 
 /**
  * Represents a matrix of elements of the given type \a T.
@@ -76,7 +76,7 @@ template <class> class Vector;
  *
  * \ingroup maths
  */
-template <class T>
+template <typename T>
 class Matrix : public Output<Matrix<T>> {
     public:
         /**

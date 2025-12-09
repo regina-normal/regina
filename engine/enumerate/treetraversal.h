@@ -167,7 +167,7 @@ class ProgressTracker;
  *
  * \ingroup enumerate
  */
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 class TreeTraversal : public ShortOutput<
         TreeTraversal<LPConstraint, BanConstraint, IntType>> {
     protected:
@@ -648,7 +648,7 @@ class TreeTraversal : public ShortOutput<
  *
  * \ingroup enumerate
  */
-template <class LPConstraint = LPConstraintNone,
+template <typename LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
           typename IntType = Integer>
 class TreeEnumeration :
@@ -991,7 +991,7 @@ class TreeEnumeration :
  *
  * \ingroup enumerate
  */
-template <class LPConstraint = LPConstraintNone,
+template <typename LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
           typename IntType = Integer>
 class TautEnumeration :
@@ -1363,7 +1363,7 @@ class TautEnumeration :
  *
  * \ingroup enumerate
  */
-template <class LPConstraint = LPConstraintNone,
+template <typename LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
           typename IntType = Integer>
 class TreeSingleSoln :
@@ -1506,27 +1506,27 @@ class TreeSingleSoln :
 
 // Inline functions
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 inline bool TreeTraversal<LPConstraint, BanConstraint, IntType>::supported(
         NormalEncoding enc) {
     return enc.valid() &&
         LPConstraint::supported(enc) && BanConstraint::supported(enc);
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 inline size_t TreeTraversal<LPConstraint, BanConstraint, IntType>::visited()
         const {
     return nVisited_;
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 inline void TreeTraversal<LPConstraint, BanConstraint, IntType>::dumpTypes(
         std::ostream& out) const {
     for (size_t i = 0; i < nTypes_; ++i)
         out << static_cast<int>(type_[i]);
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 inline std::string TreeTraversal<LPConstraint, BanConstraint, IntType>::
         typeString() const {
     std::ostringstream out;
@@ -1534,7 +1534,7 @@ inline std::string TreeTraversal<LPConstraint, BanConstraint, IntType>::
     return out.str();
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 void TreeTraversal<LPConstraint, BanConstraint, IntType>::writeTextShort(
         std::ostream& out) const {
     out << "Level " << level_  << " of 0.." << (nTypes_-1) << ", types: ";
@@ -1552,7 +1552,7 @@ void TreeTraversal<LPConstraint, BanConstraint, IntType>::writeTextShort(
     delete[] c;
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 template <typename... BanArgs>
 TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
         const Triangulation<3>& tri, NormalEncoding enc,
@@ -1600,7 +1600,7 @@ TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
     tmpLP_[3].reserve(origTableaux_);
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 inline ssize_t TreeTraversal<LPConstraint, BanConstraint, IntType>::
         nextUnmarkedTriangleType(size_t startFrom) {
     while (startFrom < nTypes_ && ban_.marked(2 * nTets_ + startFrom))
@@ -1612,7 +1612,7 @@ inline ssize_t TreeTraversal<LPConstraint, BanConstraint, IntType>::
         return startFrom;
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 template <typename... BanArgs>
 inline TreeEnumeration<LPConstraint, BanConstraint, IntType>::TreeEnumeration(
         const Triangulation<3>& tri, NormalEncoding enc, BanArgs&&... banArgs) :
@@ -1625,13 +1625,13 @@ inline TreeEnumeration<LPConstraint, BanConstraint, IntType>::TreeEnumeration(
         lastNonZero_(-1) {
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 inline size_t TreeEnumeration<LPConstraint, BanConstraint, IntType>::solutions()
         const {
     return nSolns_;
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 template <typename Action, typename... Args>
 inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::run(
         Action&& action, Args&&... args) {
@@ -1641,7 +1641,7 @@ inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::run(
     return false;
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::writeTypes(
         const TreeEnumeration& tree) {
     std::cout << "SOLN #" << tree.solutions() << ": ";
@@ -1650,7 +1650,7 @@ inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::writeTypes(
     return false;
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::
         writeSurface(const TreeEnumeration& tree) {
     std::cout << "SOLN #" << tree.solutions() << ": ";
@@ -1658,7 +1658,7 @@ inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::
     return false;
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 template <typename... BanArgs>
 inline TautEnumeration<LPConstraint, BanConstraint, IntType>::TautEnumeration(
         const Triangulation<3>& tri, BanArgs&&... banArgs) :
@@ -1671,13 +1671,13 @@ inline TautEnumeration<LPConstraint, BanConstraint, IntType>::TautEnumeration(
         nSolns_(0) {
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 inline size_t TautEnumeration<LPConstraint, BanConstraint, IntType>::
         solutions() const {
     return nSolns_;
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 template <typename Action, typename... Args>
 inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::run(
         Action&& action, Args&&... args) {
@@ -1687,7 +1687,7 @@ inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::run(
     return false;
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::writeTypes(
         const TautEnumeration& tree) {
     std::cout << "SOLN #" << tree.solutions() << ": ";
@@ -1696,7 +1696,7 @@ inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::writeTypes(
     return false;
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::
         writeStructure(const TautEnumeration& tree) {
     std::cout << "SOLN #" << tree.solutions() << ": ";
@@ -1704,7 +1704,7 @@ inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::
     return false;
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 template <typename... BanArgs>
 inline TreeSingleSoln<LPConstraint, BanConstraint, IntType>::TreeSingleSoln(
         const Triangulation<3>& tri, NormalEncoding enc, BanArgs&&... banArgs) :
@@ -1717,13 +1717,13 @@ inline TreeSingleSoln<LPConstraint, BanConstraint, IntType>::TreeSingleSoln(
         cancelled_(false) {
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 inline void TreeSingleSoln<LPConstraint, BanConstraint, IntType>::cancel() {
     std::lock_guard<std::mutex> lock(mCancel_);
     cancelled_ = true;
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename LPConstraint, typename BanConstraint, typename IntType>
 inline bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::cancelled() {
     std::lock_guard<std::mutex> lock(mCancel_);
     return cancelled_;

@@ -55,7 +55,7 @@
 
 namespace regina {
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
         size_t axis, const MatrixInt& subspace, const long* hypOrder) :
         Vector<IntegerType>(subspace.rows()), facets_(subspace.columns()) {
@@ -69,7 +69,7 @@ DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
         elts_[i] = subspace.entry(hypOrder[i], axis);
 }
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
         const RaySpec<IntegerType, BitmaskType>& first,
         const RaySpec<IntegerType, BitmaskType>& second) :
@@ -86,7 +86,7 @@ DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
     facets_ &= first.facets_;
 }
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 template <ArbitraryPrecisionIntegerVector Ray>
 void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
         Ray& dest, const MatrixInt& subspace) const {
@@ -358,7 +358,7 @@ void DoubleDescription::enumerateUsingBitmask(Action&& action,
         tracker->setPercent(100);
 }
 
-template <class IntegerType, class BitmaskType>
+template <typename IntegerType, typename BitmaskType>
 bool DoubleDescription::intersectHyperplane(
         std::vector<RaySpec<IntegerType, BitmaskType>*>& src,
         std::vector<RaySpec<IntegerType, BitmaskType>*>& dest,

@@ -757,7 +757,7 @@ class Perm<2> {
          * elements, the resulting permutation must be the identity).
          * \return a random permutation.
          */
-        template <class URBG>
+        template <typename URBG>
         static Perm rand(URBG&& gen, bool even = false);
 
         /**
@@ -1163,7 +1163,7 @@ inline Perm<2> Perm<2>::rand(bool even) {
 #ifndef __DOXYGEN
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
-template <class URBG>
+template <typename URBG>
 inline Perm<2> Perm<2>::rand(URBG&& gen, bool even) {
     if (even)
         return Perm<2>();
