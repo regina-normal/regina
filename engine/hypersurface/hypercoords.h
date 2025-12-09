@@ -223,7 +223,7 @@ class HyperEncoding {
          *
          * \return a reference to this encoding.
          */
-        HyperEncoding& operator = (const HyperEncoding&) = default;
+        constexpr HyperEncoding& operator = (const HyperEncoding&) = default;
 
         /**
          * Determines whether this and the given encoding are identical.

@@ -103,7 +103,7 @@ struct SFSFibre {
     /**
      * Makes this exceptional fibre a clone of the given fibre.
      */
-    SFSFibre& operator = (const SFSFibre&) = default;
+    constexpr SFSFibre& operator = (const SFSFibre&) = default;
     /**
      * Determines if this and the given exceptional fibre are identical.
      * This requires both fibres to have the same values for \a alpha

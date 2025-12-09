@@ -114,7 +114,7 @@ struct DiscType {
      *
      * \return a reference to this disc type.
      */
-    DiscType& operator = (const DiscType&) = default;
+    constexpr DiscType& operator = (const DiscType&) = default;
     /**
      * Determines if this and the given disc type are identical.
      *

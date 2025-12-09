@@ -644,7 +644,7 @@ class LPSystem : public ShortOutput<LPSystem> {
          *
          * \return a reference to this object.
          */
-        LPSystem& operator = (const LPSystem&) = default;
+        constexpr LPSystem& operator = (const LPSystem&) = default;
         /**
          * Determines whether this and the given object represent the
          * same class of vector encodings.

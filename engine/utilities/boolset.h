@@ -122,19 +122,19 @@ class BoolSet {
         /**
          * Inserts \c true into this set if it is not already present.
          */
-        void insertTrue();
+        constexpr void insertTrue();
         /**
          * Inserts \c false into this set if it is not already present.
          */
-        void insertFalse();
+        constexpr void insertFalse();
         /**
          * Removes \c true from this set if it is present.
          */
-        void removeTrue();
+        constexpr void removeTrue();
         /**
          * Removes \c false from this set if it is present.
          */
-        void removeFalse();
+        constexpr void removeFalse();
         /**
          * Removes all elements from this set.
          *
@@ -143,12 +143,12 @@ class BoolSet {
          * avoid confusion with the more common pattern where empty() queries
          * whether a container holds any elements at all.
          */
-        void clear();
+        constexpr void clear();
         /**
          * Places both \c true and \c false into this set if they are
          * not already present.
          */
-        void fill();
+        constexpr void fill();
 
         /**
          * Determines if this set is equal to the given set.
@@ -177,7 +177,7 @@ class BoolSet {
          *
          * \return a reference to this set.
          */
-        BoolSet& operator = (const BoolSet&) = default;
+        constexpr BoolSet& operator = (const BoolSet&) = default;
         /**
          * Sets this set to the single member set containing the given
          * element.
@@ -185,7 +185,7 @@ class BoolSet {
          * \param member the single element to include in this set.
          * \return a reference to this set.
          */
-        BoolSet& operator = (bool member);
+        constexpr BoolSet& operator = (bool member);
         /**
          * Sets this set to be the union of this and the given set.
          * The result is a set containing precisely the elements that
@@ -195,7 +195,7 @@ class BoolSet {
          * \param other the set to union with this set.
          * \return a reference to this set.
          */
-        BoolSet& operator |= (BoolSet other);
+        constexpr BoolSet& operator |= (BoolSet other);
         /**
          * Sets this set to be the intersection of this and the given set.
          * The result is a set containing precisely the elements that
@@ -205,7 +205,7 @@ class BoolSet {
          * \param other the set to intersect with this set.
          * \return a reference to this set.
          */
-        BoolSet& operator &= (BoolSet other);
+        constexpr BoolSet& operator &= (BoolSet other);
         /**
          * Sets this set to be the symmetric difference of this and the
          * given set.
@@ -217,7 +217,7 @@ class BoolSet {
          * is to be found.
          * \return a reference to this set.
          */
-        BoolSet& operator ^= (BoolSet other);
+        constexpr BoolSet& operator ^= (BoolSet other);
 
         /**
          * Returns the union of this set with the given set.
@@ -286,7 +286,7 @@ class BoolSet {
          * of this set.
          * \return \c true if and only if \c code is a valid byte code.
          */
-        bool setByteCode(unsigned char code);
+        constexpr bool setByteCode(unsigned char code);
         /**
          * Creates a boolean set from the given byte code.
          * See byteCode() for more information on byte codes.
@@ -310,7 +310,7 @@ class BoolSet {
          *
          * \return the two-character string code representing this set.
          */
-        const char* stringCode() const;
+        constexpr const char* stringCode() const;
         /**
          * Sets this to be the boolean set represented by the given string code.
          * See stringCode() for more information on string codes.
@@ -368,22 +368,22 @@ inline constexpr bool BoolSet::full() const {
     return (elements == (eltTrue | eltFalse));
 }
 
-inline void BoolSet::insertTrue() {
+inline constexpr void BoolSet::insertTrue() {
     elements = static_cast<unsigned char>(elements | eltTrue);
 }
-inline void BoolSet::insertFalse() {
+inline constexpr void BoolSet::insertFalse() {
     elements = static_cast<unsigned char>(elements | eltFalse);
 }
-inline void BoolSet::removeTrue() {
+inline constexpr void BoolSet::removeTrue() {
     elements = static_cast<unsigned char>(elements & eltFalse);
 }
-inline void BoolSet::removeFalse() {
+inline constexpr void BoolSet::removeFalse() {
     elements = static_cast<unsigned char>(elements & eltTrue);
 }
-inline void BoolSet::clear() {
+inline constexpr void BoolSet::clear() {
     elements = 0;
 }
-inline void BoolSet::fill() {
+inline constexpr void BoolSet::fill() {
     elements = static_cast<unsigned char>(eltTrue | eltFalse);
 }
 
@@ -399,19 +399,19 @@ inline constexpr std::partial_ordering BoolSet::operator <=> (BoolSet rhs)
         return std::partial_ordering::unordered;
 }
 
-inline BoolSet& BoolSet::operator = (bool member) {
+inline constexpr BoolSet& BoolSet::operator = (bool member) {
     elements = (member ? eltTrue : eltFalse);
     return *this;
 }
-inline BoolSet& BoolSet::operator |= (BoolSet other) {
+inline constexpr BoolSet& BoolSet::operator |= (BoolSet other) {
     elements = static_cast<unsigned char>(elements | other.elements);
     return *this;
 }
-inline BoolSet& BoolSet::operator &= (BoolSet other) {
+inline constexpr BoolSet& BoolSet::operator &= (BoolSet other) {
     elements = static_cast<unsigned char>(elements & other.elements);
     return *this;
 }
-inline BoolSet& BoolSet::operator ^= (BoolSet other) {
+inline constexpr BoolSet& BoolSet::operator ^= (BoolSet other) {
     elements = static_cast<unsigned char>(elements ^ other.elements);
     return *this;
 }
@@ -438,7 +438,7 @@ inline constexpr BoolSet BoolSet::operator ~ () const {
 inline constexpr unsigned char BoolSet::byteCode() const {
     return elements;
 }
-inline bool BoolSet::setByteCode(unsigned char code) {
+inline constexpr bool BoolSet::setByteCode(unsigned char code) {
     if (code < 4) {
         elements = code;
         return true;
@@ -448,7 +448,7 @@ inline bool BoolSet::setByteCode(unsigned char code) {
 inline constexpr BoolSet BoolSet::fromByteCode(unsigned char code) {
     return BoolSet(code & eltTrue, code & eltFalse);
 }
-inline const char* BoolSet::stringCode() const {
+inline constexpr const char* BoolSet::stringCode() const {
     return stringCodes[elements];
 }
 

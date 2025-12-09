@@ -13,6 +13,7 @@ Version 7.5  [ TODO ]
         - Begun a move to use C++20 concepts and constraints instead of plain
           English requirements for template parameters.  This is an ongoing
           project.
+        - More use of constexpr throughout the calculation engine.
     ENGINE:
         Class GroupExpressionTerm, GroupExpression, GroupPresentation,
                 HomGroupPresentation:
