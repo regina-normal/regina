@@ -110,7 +110,7 @@ struct Vector3D {
      *
      * \return a reference to this vector.
      */
-    Vector3D& operator = (const Vector3D&) = default;
+    constexpr Vector3D& operator = (const Vector3D&) = default;
 
     /**
      * Determines if this and the given vector have the same coordinates.
@@ -178,7 +178,7 @@ struct Vector3D {
      * \param rhs the vector to add to this vector.
      * \return a reference to this vector.
      */
-    Vector3D& operator += (const Vector3D& rhs) {
+    constexpr Vector3D& operator += (const Vector3D& rhs) {
         x += rhs.x; y += rhs.y; z += rhs.z;
         return *this;
     }
@@ -189,7 +189,7 @@ struct Vector3D {
      * \param rhs the vector to subtract from this vector.
      * \return a reference to this vector.
      */
-    Vector3D& operator -= (const Vector3D& rhs) {
+    constexpr Vector3D& operator -= (const Vector3D& rhs) {
         x -= rhs.x; y -= rhs.y; z -= rhs.z;
         return *this;
     }
@@ -202,7 +202,7 @@ struct Vector3D {
      * \param scale the scaling factor to apply.
      * \return a reference to this vector.
      */
-    Vector3D& operator *= (Real scale) {
+    constexpr Vector3D& operator *= (Real scale) {
         x *= scale; y *= scale; z *= scale;
         return *this;
     }
@@ -214,7 +214,7 @@ struct Vector3D {
      * \param scale the scaling factor to apply; this must be non-zero.
      * \return a reference to this vector.
      */
-    Vector3D& operator /= (Real scale) {
+    constexpr Vector3D& operator /= (Real scale) {
         x /= scale; y /= scale; z /= scale;
         return *this;
     }
@@ -359,7 +359,7 @@ struct Segment3D {
      *
      * \return a reference to this line segment.
      */
-    Segment3D& operator = (const Segment3D&) = default;
+    constexpr Segment3D& operator = (const Segment3D&) = default;
 
     /**
      * Determines if this and the given line segment have the same endpoints,
@@ -425,7 +425,7 @@ struct Segment3D {
      * \return a reference to this line segment, which will be modified
      * directly.
      */
-    Segment3D& operator += (const Vector3D<Real>& translation) {
+    constexpr Segment3D& operator += (const Vector3D<Real>& translation) {
         u += translation;
         v += translation;
         return *this;
@@ -451,7 +451,7 @@ struct Segment3D {
      * \return a reference to this line segment, which will be modified
      * directly.
      */
-    Segment3D& operator -= (const Vector3D<Real>& translation) {
+    constexpr Segment3D& operator -= (const Vector3D<Real>& translation) {
         u -= translation;
         v -= translation;
         return *this;
@@ -484,7 +484,7 @@ struct Segment3D {
      * point to \a p on this segment is the point `𝜆v + (1-𝜆)u`; in other
      * words, `point(𝜆)`.
      */
-    Real closest(const Vector3D<Real>& p) const {
+    constexpr Real closest(const Vector3D<Real>& p) const {
         auto uv = v - u;
         auto norm = uv * uv;
         if (norm > 0) {
@@ -554,7 +554,7 @@ class Matrix3D {
         /**
          * Creates the identity matrix.
          */
-        Matrix3D() = default;
+        constexpr Matrix3D() = default;
 
         /**
          * Creates a new copy of the given matrix.
@@ -586,7 +586,7 @@ class Matrix3D {
          *
          * \return a reference to this matrix.
          */
-        Matrix3D& operator = (const Matrix3D&) = default;
+        constexpr Matrix3D& operator = (const Matrix3D&) = default;
 
         /**
          * Gives read-write access to a single row of this matrix.
@@ -598,7 +598,7 @@ class Matrix3D {
          * \return a reference to the three-element array containing the
          * elements of the requested row.
          */
-        std::array<Real, 3>& operator [] (int row) {
+        constexpr std::array<Real, 3>& operator [] (int row) {
             return m_[row];
         }
 
@@ -672,7 +672,7 @@ class Matrix3D {
          * \param rhs the transformation to apply before this.
          * \return a reference to this transformation.
          */
-        Matrix3D& operator *= (const Matrix3D& rhs) {
+        constexpr Matrix3D& operator *= (const Matrix3D& rhs) {
             // No particular optimisations to perform here.
             return (*this = (*this) * rhs);
         }
@@ -814,7 +814,7 @@ class Rotation3D {
          * Creates the identity rotation.  This is the operation that does not
          * rotate at all.
          */
-        Rotation3D() = default;
+        constexpr Rotation3D() = default;
 
         /**
          * Creates a new copy of the given rotation.
@@ -846,7 +846,7 @@ class Rotation3D {
          *
          * \return a reference to this rotation.
          */
-        Rotation3D& operator = (const Rotation3D&) = default;
+        constexpr Rotation3D& operator = (const Rotation3D&) = default;
 
         /**
          * Returns the given quaternion coordinate for this rotation.
@@ -886,7 +886,7 @@ class Rotation3D {
          * - the four quaternion coordinates `(a,b,c,d)` will satisfy
          *   `a^2 + b^2 + c^2 + d^2 = 1`.
          */
-        void normalise() {
+        constexpr void normalise() {
             Real scale = 1.0 / std::sqrt(q_[0] * q_[0] + q_[1] * q_[1] +
                 q_[2] * q_[2] + q_[3] * q_[3]);
             for (int i = 0; i < 4; ++i)
@@ -946,7 +946,7 @@ class Rotation3D {
          * \param rhs the rotation to apply before this.
          * \return a reference to this rotation.
          */
-        Rotation3D& operator *= (const Rotation3D& rhs) {
+        constexpr Rotation3D& operator *= (const Rotation3D& rhs) {
             // No particular optimisations to perform here.
             return (*this = (*this) * rhs);
         }
