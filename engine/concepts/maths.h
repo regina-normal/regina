@@ -70,10 +70,11 @@ concept ReginaInteger =
  * types (Integer or LargeInteger).
  */
 template <typename T>
-concept ArbitraryPrecisionIntegerVector = requires(T x) {
-    []<typename U>(Vector<U>&){}(x); // derived from Vector<...>
-    requires ArbitraryPrecisionInteger<typename T::value_type>;
-};
+concept ArbitraryPrecisionIntegerVector =
+    requires(T x) {
+        []<typename U>(Vector<U>&){}(x); // derived from Vector<...>
+        requires ArbitraryPrecisionInteger<typename T::value_type>;
+    };
 
 /**
  * A mathematical vector type derived from (or the same as) `Vector<T>`,
@@ -81,10 +82,11 @@ concept ArbitraryPrecisionIntegerVector = requires(T x) {
  * (Integer, LargeInteger, or NativeInteger).
  */
 template <typename T>
-concept IntegerVector = requires(T x) {
-    []<typename U>(Vector<U>&){}(x); // derived from Vector<...>
-    requires ReginaInteger<typename T::value_type>;
-};
+concept IntegerVector =
+    requires(T x) {
+        []<typename U>(Vector<U>&){}(x); // derived from Vector<...>
+        requires ReginaInteger<typename T::value_type>;
+    };
 
 } // namespace regina
 
