@@ -603,15 +603,6 @@ class Laurent2 :
     friend class Link;
 };
 
-#ifndef __DOXYGEN
-// Don't confuse doxygen with specialisations.
-template <typename T>
-struct RingTraits<Laurent2<T>> {
-    inline static const Laurent2<T> zero;
-    inline static const Laurent2<T> one { { 0, 0, 1 } };
-};
-#endif // __DOXYGEN
-
 /**
  * Swaps the contents of the given polynomials.
  *
@@ -814,6 +805,17 @@ Laurent2<T> operator - (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
  */
 template <typename T>
 Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
+
+#ifndef __DOXYGEN
+// Don't confuse doxygen with specialisations.
+template <typename T>
+struct RingTraits<Laurent2<T>> {
+    inline static const Laurent2<T> zero;
+    inline static const Laurent2<T> one { { 0, 0, 1 } };
+};
+#endif // __DOXYGEN
+
+// Inline functions and constants for Laurent2:
 
 template <typename T>
 const T Laurent2<T>::zero_(0);

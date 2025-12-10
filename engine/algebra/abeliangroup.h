@@ -41,12 +41,10 @@
 #include <vector>
 #include "regina-core.h"
 #include "maths/integer.h"
+#include "maths/matrix.h"
 #include "core/output.h"
 
 namespace regina {
-
-template <typename> class Matrix;
-using MatrixInt = Matrix<Integer>;
 
 /**
  * \defgroup algebra Algebraic Structures

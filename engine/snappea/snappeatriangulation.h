@@ -38,6 +38,7 @@
 #endif
 
 #include "regina-core.h"
+#include "maths/forward.h"
 #include "triangulation/dim3.h"
 #include <complex>
 #include <functional>
@@ -52,9 +53,6 @@ namespace regina {
 class SnapPeaTriangulation;
 class XMLSnapPeaReader;
 class XMLLegacySnapPeaReader;
-
-template <typename> class Matrix;
-using MatrixInt = Matrix<Integer>;
 
 /**
  * \defgroup snappea SnapPea Triangulations
@@ -1316,7 +1314,7 @@ class SnapPeaTriangulation :
          * \return a matrix with (\a number_of_rows + \a number_of_cusps) rows
          * and (3 * \a number_of_tetrahedra) columns as described above.
          */
-        MatrixInt gluingEquations() const;
+        Matrix<Integer> gluingEquations() const;
 
         /**
          * Returns a matrix describing Thurston's gluing equations in a
@@ -1350,7 +1348,7 @@ class SnapPeaTriangulation :
          * \return a matrix with (\a number_of_rows + \a number_of_cusps) rows
          * and (2 * \a number_of_tetrahedra + 1) columns as described above.
          */
-        MatrixInt gluingEquationsRect() const;
+        Matrix<Integer> gluingEquationsRect() const;
 
         /**
          * Determines whether this and the given SnapPea triangulation
@@ -1737,7 +1735,7 @@ class SnapPeaTriangulation :
          * \return a matrix with (2 * \a number_of_cusps) rows
          * and (3 * \a number_of_tetrahedra) columns as described above.
          */
-        MatrixInt slopeEquations() const;
+        Matrix<Integer> slopeEquations() const;
 
         /*@}*/
         /**

@@ -28,77 +28,29 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file maths/ring.h
- *  \brief Utilities for writing generic code that can work in arbitrary
- *  (mathematical) rings.
+/*! \file concepts/io.h
+ *  \brief Concepts related to input and output.
  */
 
-#ifndef __REGINA_RINGUTILS_H
+#ifndef __REGINA_CONCEPTS_IO_H
 #ifndef __DOXYGEN
-#define __REGINA_RINGUTILS_H
+#define __REGINA_CONCEPTS_IO_H
 #endif
 
-#include "concepts/maths.h"
-#include "utilities/intutils.h"
+#include <concepts>
+#include <iostream>
+#include "regina-core.h"
 
 namespace regina {
 
 /**
- * A helper class that assists Regina in doing mathematical operations with
- * objects of any ring-like type \a T.
- *
- * The concept `RingLike<T>` already ensures that \a T provides the basic
- * syntax and mathematical operations for working over a ring.
- *
- * What `RingTraits<T>` provides in addition to this is:
- *
- * - class constants `RingTraits<T>::zero` and `RingTraits<T>::one`, which are
- *   objects of type \a T that hold the additive and multiplicative identities
- *   respectively.
- *
- * Regina specialises RingTraits for its own ring-like classes where this
- * makes sense (e.g., Regina's own integer, rational and polynomial classes),
- * and also provides implementations for native C++ signed integer and
- * floating point types.
- *
- * \nopython
- *
- * \ingroup maths
+ * A type that can be written to an output stream.
  */
-template <RingLike T>
-struct RingTraits;
-
-#ifndef __DOXYGEN
-// Don't confuse doxygen with specialisations.
-
-/**
- * Provides the specialisation of RingType for a native C++ integer or
- * floating point type.
- *
- * \param T the C++ integer or floating point type being described.
- *
- * \ingroup maths
- */
-#define NATIVE_RINGTYPE(T) \
-template <> \
-struct RingTraits<T> { \
-    static constexpr T zero = 0; \
-    static constexpr T one = 1; \
-}
-
-NATIVE_RINGTYPE(int8_t);
-NATIVE_RINGTYPE(int16_t);
-NATIVE_RINGTYPE(int32_t);
-NATIVE_RINGTYPE(int64_t);
-#ifdef INT128_AVAILABLE
-NATIVE_RINGTYPE(IntOfSize<16>::type);
-#endif
-
-NATIVE_RINGTYPE(float);
-NATIVE_RINGTYPE(double);
-NATIVE_RINGTYPE(long double);
-
-#endif // __DOXYGEN
+template <typename T>
+concept Writeable =
+    requires(const T x, std::ostream& s) {
+        { s << x } -> std::same_as<std::ostream&>;
+    };
 
 } // namespace regina
 

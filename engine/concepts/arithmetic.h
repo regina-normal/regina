@@ -28,77 +28,61 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file maths/ring.h
- *  \brief Utilities for writing generic code that can work in arbitrary
- *  (mathematical) rings.
+/*! \file concepts/arithmetic.h
+ *  \brief Concepts related to arithmetical operations.
  */
 
-#ifndef __REGINA_RINGUTILS_H
+#ifndef __REGINA_CONCEPTS_ARITHMETIC_H
 #ifndef __DOXYGEN
-#define __REGINA_RINGUTILS_H
+#define __REGINA_CONCEPTS_ARITHMETIC_H
 #endif
 
-#include "concepts/maths.h"
-#include "utilities/intutils.h"
+#include <concepts>
+#include "regina-core.h"
 
 namespace regina {
 
 /**
- * A helper class that assists Regina in doing mathematical operations with
- * objects of any ring-like type \a T.
+ * A type that supports very basic interoperability with integer values,
+ * via construction, assignment, and equality/inequality testing.
  *
- * The concept `RingLike<T>` already ensures that \a T provides the basic
- * syntax and mathematical operations for working over a ring.
- *
- * What `RingTraits<T>` provides in addition to this is:
- *
- * - class constants `RingTraits<T>::zero` and `RingTraits<T>::one`, which are
- *   objects of type \a T that hold the additive and multiplicative identities
- *   respectively.
- *
- * Regina specialises RingTraits for its own ring-like classes where this
- * makes sense (e.g., Regina's own integer, rational and polynomial classes),
- * and also provides implementations for native C++ signed integer and
- * floating point types.
- *
- * \nopython
- *
- * \ingroup maths
+ * \ingroup concepts
  */
-template <RingLike T>
-struct RingTraits;
-
-#ifndef __DOXYGEN
-// Don't confuse doxygen with specialisations.
+template <typename T>
+concept IntegerCompatible =
+    std::constructible_from<T, int> &&
+    std::assignable_from<T&, int> &&
+    std::equality_comparable_with<T, int>;
 
 /**
- * Provides the specialisation of RingType for a native C++ integer or
- * floating point type.
- *
- * \param T the C++ integer or floating point type being described.
- *
- * \ingroup maths
+ * A type that has the necessary operations to behave like a mathematical ring.
  */
-#define NATIVE_RINGTYPE(T) \
-template <> \
-struct RingTraits<T> { \
-    static constexpr T zero = 0; \
-    static constexpr T one = 1; \
-}
+template <typename T>
+concept RingLike =
+    requires(const T a, const T b, T x) {
+        requires std::regular<T>;
+        { a + b } -> std::convertible_to<T>;
+        { a - b } -> std::convertible_to<T>;
+        { a * b } -> std::convertible_to<T>;
+        { -a } -> std::convertible_to<T>;
+        { x += a } -> std::same_as<T&>;
+        { x -= a } -> std::same_as<T&>;
+        { x *= a } -> std::same_as<T&>;
+    };
 
-NATIVE_RINGTYPE(int8_t);
-NATIVE_RINGTYPE(int16_t);
-NATIVE_RINGTYPE(int32_t);
-NATIVE_RINGTYPE(int64_t);
-#ifdef INT128_AVAILABLE
-NATIVE_RINGTYPE(IntOfSize<16>::type);
-#endif
+template <RingLike> struct RingTraits;
 
-NATIVE_RINGTYPE(float);
-NATIVE_RINGTYPE(double);
-NATIVE_RINGTYPE(long double);
-
-#endif // __DOXYGEN
+/**
+ * A type that behaves like a mathematical ring, and for which the
+ * specialisation `RingTraits<T>` is available.
+ */
+template <typename T>
+concept Ring =
+    requires {
+        requires RingLike<T>;
+        { RingTraits<T>::zero } -> std::convertible_to<T>;
+        { RingTraits<T>::one } -> std::convertible_to<T>;
+    };
 
 } // namespace regina
 

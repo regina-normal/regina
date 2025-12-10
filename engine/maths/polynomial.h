@@ -667,15 +667,6 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
     friend Polynomial<U> operator *(const Polynomial<U>&, const Polynomial<U>&);
 };
 
-#ifndef __DOXYGEN
-// Don't confuse doxygen with specialisations.
-template <typename T>
-struct RingTraits<Polynomial<T>> {
-    inline static const Polynomial<T> zero;
-    inline static const Polynomial<T> one { 1 };
-};
-#endif // __DOXYGEN
-
 /**
  * Swaps the contents of the given polynomials.
  *
@@ -919,6 +910,17 @@ Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
  */
 template <typename T>
 Polynomial<T> operator / (Polynomial<T> lhs, const Polynomial<T>& rhs);
+
+#ifndef __DOXYGEN
+// Don't confuse doxygen with specialisations.
+template <typename T>
+struct RingTraits<Polynomial<T>> {
+    inline static const Polynomial<T> zero;
+    inline static const Polynomial<T> one { 1 };
+};
+#endif // __DOXYGEN
+
+// Inline functions for Polynomial:
 
 template <typename T>
 inline Polynomial<T>::Polynomial() : degree_(0), coeff_(new T[1]) {

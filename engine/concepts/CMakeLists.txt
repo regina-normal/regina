@@ -4,6 +4,9 @@
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    arithmetic.h
     core.h
+    io.h
+    maths.h
     DESTINATION "${PKGINCLUDEDIR}/concepts" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

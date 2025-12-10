@@ -28,77 +28,36 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file maths/ring.h
- *  \brief Utilities for writing generic code that can work in arbitrary
- *  (mathematical) rings.
- */
-
-#ifndef __REGINA_RINGUTILS_H
+#ifndef __REGINA_MATHS_FORWARD_H
 #ifndef __DOXYGEN
-#define __REGINA_RINGUTILS_H
+#define __REGINA_MATHS_FORWARD_H
 #endif
 
-#include "concepts/maths.h"
-#include "utilities/intutils.h"
+/*! \file maths/forward.h
+ *  \brief Forward declarations for some mathematical classes, including
+ *  integer, ring, vector and matrix types.
+ */
+
+#include "concepts/arithmetic.h"
+#include "concepts/io.h"
 
 namespace regina {
 
-/**
- * A helper class that assists Regina in doing mathematical operations with
- * objects of any ring-like type \a T.
- *
- * The concept `RingLike<T>` already ensures that \a T provides the basic
- * syntax and mathematical operations for working over a ring.
- *
- * What `RingTraits<T>` provides in addition to this is:
- *
- * - class constants `RingTraits<T>::zero` and `RingTraits<T>::one`, which are
- *   objects of type \a T that hold the additive and multiplicative identities
- *   respectively.
- *
- * Regina specialises RingTraits for its own ring-like classes where this
- * makes sense (e.g., Regina's own integer, rational and polynomial classes),
- * and also provides implementations for native C++ signed integer and
- * floating point types.
- *
- * \nopython
- *
- * \ingroup maths
- */
+template <bool> class IntegerBase;
+using Integer = IntegerBase<false>;
+using LargeInteger = IntegerBase<true>;
+
+template <int> class NativeInteger;
+
+template <RingLike> struct RingTraits;
+
 template <RingLike T>
-struct RingTraits;
+requires Writeable<T> && IntegerCompatible<T>
+class Vector;
 
-#ifndef __DOXYGEN
-// Don't confuse doxygen with specialisations.
-
-/**
- * Provides the specialisation of RingType for a native C++ integer or
- * floating point type.
- *
- * \param T the C++ integer or floating point type being described.
- *
- * \ingroup maths
- */
-#define NATIVE_RINGTYPE(T) \
-template <> \
-struct RingTraits<T> { \
-    static constexpr T zero = 0; \
-    static constexpr T one = 1; \
-}
-
-NATIVE_RINGTYPE(int8_t);
-NATIVE_RINGTYPE(int16_t);
-NATIVE_RINGTYPE(int32_t);
-NATIVE_RINGTYPE(int64_t);
-#ifdef INT128_AVAILABLE
-NATIVE_RINGTYPE(IntOfSize<16>::type);
-#endif
-
-NATIVE_RINGTYPE(float);
-NATIVE_RINGTYPE(double);
-NATIVE_RINGTYPE(long double);
-
-#endif // __DOXYGEN
+template <typename T>
+requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+class Matrix;
 
 } // namespace regina
 

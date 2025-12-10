@@ -45,10 +45,9 @@ Version 7.5  [ TODO ]
         Concept CppInteger, StandardCppInteger, SignedCppInteger,
                 UnsignedCppInteger:
             - New concepts for detecting native C++ integers and related types.
-        Concept ReginaInteger, ArbitraryPrecisionInteger:
-            - New concepts for detecting Regina's own integer types.
-        Concept IntegerVector, ArbitraryPrecisionIntegerVector:
-            - New concepts for detecting mathematical vector types.
+        Concept ReginaInteger, ArbitraryPrecisionInteger, IntegerVector,
+                ArbitraryPrecisionIntegerVector, RingLike, Ring:
+            - New concepts for detecting various mathematical types.
 
 Version 7.4.1  [ 30 November, 2025 ]
 

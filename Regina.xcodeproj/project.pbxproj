@@ -1217,6 +1217,9 @@
 		057FDAF72EE7ACC3000C706E /* core.h in Headers */ = {isa = PBXBuildFile; fileRef = 057FDAF52EE7ACC3000C706E /* core.h */; };
 		057FDAF92EE7E2B4000C706E /* maths.h in Headers */ = {isa = PBXBuildFile; fileRef = 057FDAF82EE7E2B4000C706E /* maths.h */; };
 		057FDAFB2EE86FE1000C706E /* concepts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057FDAFA2EE86FE1000C706E /* concepts.cpp */; };
+		057FDAFE2EE95CBB000C706E /* arithmetic.h in Headers */ = {isa = PBXBuildFile; fileRef = 057FDAFC2EE95CBB000C706E /* arithmetic.h */; };
+		057FDAFF2EE95CBB000C706E /* io.h in Headers */ = {isa = PBXBuildFile; fileRef = 057FDAFD2EE95CBB000C706E /* io.h */; };
+		057FDB012EE967A3000C706E /* forward.h in Headers */ = {isa = PBXBuildFile; fileRef = 057FDB002EE967A3000C706E /* forward.h */; };
 		0581D2792E2D31C50099E9E7 /* graphviz.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581D2782E2D31C50099E9E7 /* graphviz.cpp */; };
 		0582FDE62731FE0900203AE7 /* attachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0582FDE42731FE0800203AE7 /* attachment.cpp */; };
 		0582FDE82731FE0900203AE7 /* attachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 0582FDE52731FE0800203AE7 /* attachment.h */; };
@@ -3815,6 +3818,9 @@
 		057FDAF52EE7ACC3000C706E /* core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = core.h; sourceTree = "<group>"; };
 		057FDAF82EE7E2B4000C706E /* maths.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = maths.h; sourceTree = "<group>"; };
 		057FDAFA2EE86FE1000C706E /* concepts.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = concepts.cpp; sourceTree = "<group>"; };
+		057FDAFC2EE95CBB000C706E /* arithmetic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = arithmetic.h; sourceTree = "<group>"; };
+		057FDAFD2EE95CBB000C706E /* io.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = io.h; sourceTree = "<group>"; };
+		057FDB002EE967A3000C706E /* forward.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = forward.h; sourceTree = "<group>"; };
 		0581D2772E2D31C50099E9E7 /* graphviz.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = graphviz.h; sourceTree = "<group>"; };
 		0581D2782E2D31C50099E9E7 /* graphviz.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = graphviz.cpp; sourceTree = "<group>"; };
 		0582FDE42731FE0800203AE7 /* attachment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = attachment.cpp; sourceTree = "<group>"; };
@@ -6371,6 +6377,7 @@
 				052F9CE0180600FA00FAE4DF /* CMakeLists.txt */,
 				0541AF481B8BE2F5002E166B /* cyclotomic.cpp */,
 				0541AF491B8BE2F5002E166B /* cyclotomic.h */,
+				057FDB002EE967A3000C706E /* forward.h */,
 				052F9CE3180600FA00FAE4DF /* integer.cpp */,
 				052F9CE4180600FA00FAE4DF /* integer.h */,
 				05721EFE1F9715C700A83FFC /* laurent.h */,
@@ -8134,7 +8141,9 @@
 			isa = PBXGroup;
 			children = (
 				057FDAF42EE7ACC3000C706E /* CMakeLists.txt */,
+				057FDAFC2EE95CBB000C706E /* arithmetic.h */,
 				057FDAF52EE7ACC3000C706E /* core.h */,
+				057FDAFD2EE95CBB000C706E /* io.h */,
 				057FDAF82EE7E2B4000C706E /* maths.h */,
 			);
 			path = concepts;
@@ -8932,6 +8941,8 @@
 				053CB70B28D0168D006B37B0 /* triangle4.h in Headers */,
 				054209231DF28C990018AB24 /* context.h in Headers */,
 				05EDDA5527E31061001743C1 /* nmz_hash.h in Headers */,
+				057FDAFE2EE95CBB000C706E /* arithmetic.h in Headers */,
+				057FDAFF2EE95CBB000C706E /* io.h in Headers */,
 				05199A5D25C63CCE0006B8FA /* typeutils.h in Headers */,
 				05A0671D1DFA68190047872E /* layeredsolidtorus.h in Headers */,
 				052FA088180600FB00FAE4DF /* i18nutils.h in Headers */,
@@ -8968,6 +8979,7 @@
 				054208C61DF0D2740018AB24 /* torusbundle.h in Headers */,
 				05431F6E1C40F3C9009BC072 /* general.h in Headers */,
 				05772EB7270CF97100D26D8A /* angleflags.h in Headers */,
+				057FDB012EE967A3000C706E /* forward.h in Headers */,
 				0542087A1DF0D0B50018AB24 /* format.h in Headers */,
 				05431F801C40F3C9009BC072 /* reduction.h in Headers */,
 				055BC3EB265338E800E5E34C /* fromsiglist-impl.h in Headers */,

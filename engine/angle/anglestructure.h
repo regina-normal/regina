@@ -40,6 +40,7 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "angle/angleflags.h"
+#include "maths/forward.h"
 #include "maths/rational.h"
 #include "maths/vector.h"
 #include "triangulation/forward.h"
@@ -48,9 +49,6 @@
 namespace regina {
 
 class XMLAngleStructureReader;
-
-template <typename> class Matrix;
-using MatrixInt = Matrix<Integer>;
 
 /**
  * \defgroup angle Angle Structures

@@ -591,15 +591,6 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
     friend Arrow operator * (const Arrow&, const Arrow&);
 };
 
-#ifndef __DOXYGEN
-// Don't confuse doxygen with specialisations.
-template <>
-struct RingTraits<Arrow> {
-    inline static const Arrow zero;
-    inline static const Arrow one { Laurent<Integer>(0, {1}) };
-};
-#endif // __DOXYGEN
-
 /**
  * Swaps the contents of the given polynomials.
  *
@@ -767,6 +758,17 @@ Arrow operator - (Arrow&& lhs, Arrow&& rhs);
  * \ingroup maths
  */
 Arrow operator * (const Arrow& lhs, const Arrow& rhs);
+
+#ifndef __DOXYGEN
+// Don't confuse doxygen with specialisations.
+template <>
+struct RingTraits<Arrow> {
+    inline static const Arrow zero;
+    inline static const Arrow one { Laurent<Integer>(0, {1}) };
+};
+#endif // __DOXYGEN
+
+// Inline functions for Arrow
 
 template <typename iterator, typename deref>
 inline Arrow::Arrow(iterator begin, iterator end) {

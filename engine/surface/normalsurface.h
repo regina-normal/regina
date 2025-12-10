@@ -42,6 +42,7 @@
 #include <utility>
 #include "regina-core.h"
 #include "core/output.h"
+#include "maths/forward.h"
 #include "maths/perm.h"
 #include "maths/vector.h"
 #include "packet/packet.h"
@@ -226,9 +227,6 @@ inline constexpr Perm<4> octDiscArcs[3][8] = {
     Perm<4>(0,2,3,1), Perm<4>(0,3,1,2), Perm<4>(1,0,2,3), Perm<4>(1,2,3,0),
     Perm<4>(3,1,0,2), Perm<4>(3,0,2,1), Perm<4>(2,3,1,0), Perm<4>(2,1,0,3)
 };
-
-template <typename> class Matrix;
-using MatrixInt = Matrix<Integer>;
 
 /**
  * Represents a single normal surface in a 3-manifold triangulation.
@@ -1790,7 +1788,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \return a matrix with \a number_of_vertices rows and two columns
          * as described above.
          */
-        MatrixInt boundaryIntersections() const;
+        Matrix<Integer> boundaryIntersections() const;
 
         /**
          * Gives read-only access to the integer vector that Regina uses

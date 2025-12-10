@@ -30,8 +30,11 @@
 
 #include "concepts/core.h"
 #include "concepts/maths.h"
+#include "maths/arrow.h"
+#include "maths/cyclotomic.h"
 #include "maths/integer.h"
 #include "maths/matrix.h"
+#include "maths/polynomial.h"
 #include "maths/vector.h"
 
 using regina::Integer;
@@ -137,4 +140,12 @@ static_assert(! IntegerVector<SubVector<int>>);
 
 static_assert(! ArbitraryPrecisionIntegerVector<MatrixInt>);
 static_assert(! IntegerVector<MatrixInt>);
+
+static_assert(regina::Ring<int>);
+static_assert(! regina::Ring<unsigned>);
+static_assert(regina::RingLike<unsigned>);
+static_assert(regina::Ring<regina::Arrow>);
+static_assert(regina::Ring<regina::Polynomial<Integer>>);
+static_assert(! regina::Ring<regina::Cyclotomic>);
+static_assert(regina::RingLike<regina::Cyclotomic>);
 

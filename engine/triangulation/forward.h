@@ -29,7 +29,7 @@
  **************************************************************************/
 
 /*! \file triangulation/forward.h
- *  \brief Provides forward declarations of Regina's triangulation-related
+ *  \brief Provides forward declarations for Regina's triangulation-related
  *  classes.
  *
  *  It is better to include this file rather than manually declare classes
@@ -44,9 +44,9 @@
  *    type alias (as seen for example in some versions of gcc).
  */
 
-#ifndef __REGINA_FORWARD_H
+#ifndef __REGINA_TRIANGULATION_FORWARD_H
 #ifndef __DOXYGEN
-#define __REGINA_FORWARD_H
+#define __REGINA_TRIANGULATION_FORWARD_H
 #endif
 
 namespace regina {

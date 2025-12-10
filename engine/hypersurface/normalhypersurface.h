@@ -44,6 +44,7 @@
 #include "core/output.h"
 #include "algebra/abeliangroup.h"
 #include "hypersurface/hypercoords.h"
+#include "maths/forward.h"
 #include "maths/vector.h"
 #include "packet/packet.h"
 #include "triangulation/forward.h"
@@ -53,9 +54,6 @@
 namespace regina {
 
 class NormalHypersurfaces;
-
-template <typename> class Matrix;
-using MatrixInt = Matrix<Integer>;
 
 /**
  * \defgroup hypersurface Normal Hypersurfaces

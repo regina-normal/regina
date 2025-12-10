@@ -1665,15 +1665,6 @@ class IntegerBase : private InfinityBase<withInfinity> {
         const IntegerBase<withInfinity_>& large);
 };
 
-#ifndef __DOXYGEN
-// Don't confuse doxygen with specialisations.
-template <bool withInfinity>
-struct RingTraits<IntegerBase<withInfinity>> {
-    inline static const IntegerBase<withInfinity> zero;
-    inline static const IntegerBase<withInfinity> one { 1 };
-};
-#endif // __DOXYGEN
-
 /**
  * LargeInteger is a type alias for IntegerBase<true>, which offers
  * arbitrary precision integers with support for infinity.
@@ -1781,6 +1772,15 @@ void tightEncode(std::ostream& out, IntegerBase<withInfinity> value);
  */
 template <bool withInfinity>
 std::string tightEncoding(IntegerBase<withInfinity> value);
+
+#ifndef __DOXYGEN
+// Don't confuse doxygen with specialisations.
+template <bool withInfinity>
+struct RingTraits<IntegerBase<withInfinity>> {
+    inline static const IntegerBase<withInfinity> zero;
+    inline static const IntegerBase<withInfinity> one { 1 };
+};
+#endif // __DOXYGEN
 
 /**
  * A wrapper class for a native, fixed-precision integer type of the
@@ -2360,15 +2360,6 @@ class NativeInteger {
 #endif
 };
 
-#ifndef __DOXYGEN
-// Don't confuse doxygen with specialisations.
-template <int bytes>
-struct RingTraits<NativeInteger<bytes>> {
-    static constexpr NativeInteger<bytes> zero { };
-    static constexpr NativeInteger<bytes> one { 1 };
-};
-#endif // __DOXYGEN
-
 /**
  * Swaps the contents of the given integers.
  *
@@ -2406,6 +2397,15 @@ std::ostream& operator << (std::ostream& out, const NativeInteger<bytes>& i);
  * \ingroup maths
  */
 using NativeLong = NativeInteger<sizeof(long)>;
+
+#ifndef __DOXYGEN
+// Don't confuse doxygen with specialisations.
+template <int bytes>
+struct RingTraits<NativeInteger<bytes>> {
+    static constexpr NativeInteger<bytes> zero { };
+    static constexpr NativeInteger<bytes> one { 1 };
+};
+#endif // __DOXYGEN
 
 // Inline functions for IntegerBase
 

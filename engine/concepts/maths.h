@@ -29,7 +29,7 @@
  **************************************************************************/
 
 /*! \file concepts/maths.h
- *  \brief Concepts related to core types.
+ *  \brief Concepts related to mathematical types.
  */
 
 #ifndef __REGINA_CONCEPTS_MATHS_H
@@ -37,12 +37,11 @@
 #define __REGINA_CONCEPTS_MATHS_H
 #endif
 
-#include <concepts>
 #include <type_traits>
+#include "maths/forward.h"
 
 namespace regina {
 
-template <typename> class Vector;
 template <bool> class IntegerBase;
 template <int> class NativeInteger;
 
