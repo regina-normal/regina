@@ -21,6 +21,8 @@ Version 7.5  [ TODO ]
               generator counts and generator indices.
             - The depth argument to GroupPresentation::proliferateRelators()
               is now of type int.
+        Class PermClass<n>:
+            - Everything in this class is now constexpr.
         Function valueOf():
             - The native C++ integer versions of valueOf() are now templated.
             - The unsigned integer versions now reject negative numbers
