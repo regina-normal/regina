@@ -8,5 +8,6 @@ if (${REGINA_INSTALL_DEV})
     core.h
     io.h
     maths.h
+    packet.h
     DESTINATION "${PKGINCLUDEDIR}/concepts" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

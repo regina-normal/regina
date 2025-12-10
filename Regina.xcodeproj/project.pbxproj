@@ -1220,6 +1220,7 @@
 		057FDAFE2EE95CBB000C706E /* arithmetic.h in Headers */ = {isa = PBXBuildFile; fileRef = 057FDAFC2EE95CBB000C706E /* arithmetic.h */; };
 		057FDAFF2EE95CBB000C706E /* io.h in Headers */ = {isa = PBXBuildFile; fileRef = 057FDAFD2EE95CBB000C706E /* io.h */; };
 		057FDB012EE967A3000C706E /* forward.h in Headers */ = {isa = PBXBuildFile; fileRef = 057FDB002EE967A3000C706E /* forward.h */; };
+		057FDB032EEA3D01000C706E /* packet.h in Headers */ = {isa = PBXBuildFile; fileRef = 057FDB022EEA3D01000C706E /* packet.h */; };
 		0581D2792E2D31C50099E9E7 /* graphviz.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581D2782E2D31C50099E9E7 /* graphviz.cpp */; };
 		0582FDE62731FE0900203AE7 /* attachment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0582FDE42731FE0800203AE7 /* attachment.cpp */; };
 		0582FDE82731FE0900203AE7 /* attachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 0582FDE52731FE0800203AE7 /* attachment.h */; };
@@ -3821,6 +3822,7 @@
 		057FDAFC2EE95CBB000C706E /* arithmetic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = arithmetic.h; sourceTree = "<group>"; };
 		057FDAFD2EE95CBB000C706E /* io.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = io.h; sourceTree = "<group>"; };
 		057FDB002EE967A3000C706E /* forward.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = forward.h; sourceTree = "<group>"; };
+		057FDB022EEA3D01000C706E /* packet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = packet.h; sourceTree = "<group>"; };
 		0581D2772E2D31C50099E9E7 /* graphviz.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = graphviz.h; sourceTree = "<group>"; };
 		0581D2782E2D31C50099E9E7 /* graphviz.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = graphviz.cpp; sourceTree = "<group>"; };
 		0582FDE42731FE0800203AE7 /* attachment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = attachment.cpp; sourceTree = "<group>"; };
@@ -8145,6 +8147,7 @@
 				057FDAF52EE7ACC3000C706E /* core.h */,
 				057FDAFD2EE95CBB000C706E /* io.h */,
 				057FDAF82EE7E2B4000C706E /* maths.h */,
+				057FDB022EEA3D01000C706E /* packet.h */,
 			);
 			path = concepts;
 			sourceTree = "<group>";
@@ -9015,6 +9018,7 @@
 				058E398D1DCBC67C00D463A4 /* generic.h in Headers */,
 				059802EF26683C6D002D5D57 /* xmlpacketreaders.h in Headers */,
 				05F0A0001DBF078800117BFC /* pentachoron4.h in Headers */,
+				057FDB032EEA3D01000C706E /* packet.h in Headers */,
 				055114D41DCC71A700EC753C /* facenumbering.h in Headers */,
 				05CAE69A274AA785007C93F3 /* isosigencoding.h in Headers */,
 				0591E85F1C50D28700793A9C /* hyperflags.h in Headers */,

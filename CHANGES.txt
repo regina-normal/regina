@@ -67,6 +67,8 @@ Version 7.5  [ TODO ]
                 IntegerComparable, RingLike, Ring, Domain, IntegralDomain,
                 CoefficientDomain:
             - New concepts for detecting various mathematical types.
+        Concept PacketClass:
+            - New concept for working with packets.
 
 Version 7.4.1  [ 30 November, 2025 ]
 

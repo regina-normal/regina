@@ -31,6 +31,8 @@
 #include "concepts/core.h"
 #include "concepts/io.h"
 #include "concepts/maths.h"
+#include "concepts/packet.h"
+#include "link/link.h"
 #include "maths/arrow.h"
 #include "maths/cyclotomic.h"
 #include "maths/integer.h"
@@ -41,6 +43,8 @@
 #include "maths/polynomial.h"
 #include "maths/rational.h"
 #include "maths/vector.h"
+#include "packet/container.h"
+#include "surface/surfacefilter.h"
 
 using regina::Integer;
 using regina::LargeInteger;
@@ -234,3 +238,9 @@ static_assert(! regina::InherentlyTightEncodable<int>);
 // NativeInteger does not yet support tight encodings.
 static_assert(! regina::InherentlyTightEncodable<NativeInteger<8>>);
 
+static_assert(regina::PacketClass<regina::Container>);
+static_assert(regina::PacketClass<regina::PacketOf<regina::Link>>);
+static_assert(! regina::PacketClass<regina::Link>);
+static_assert(! regina::PacketClass<regina::Packet>);
+static_assert(regina::PacketClass<regina::SurfaceFilter>);
+static_assert(regina::PacketClass<regina::SurfaceFilterCombination>);
