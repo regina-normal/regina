@@ -42,6 +42,13 @@ Version 7.5  [ TODO ]
             - All three constants are now false when T == bool (previously,
               is_cpp_integer_v<bool> and is_unsigned_cpp_integer_v<bool> were
               both true).
+        Concept CppInteger, StandardCppInteger, SignedCppInteger,
+                UnsignedCppInteger:
+            - New concepts for detecting native C++ integers and related types.
+        Concept ReginaInteger, ArbitraryPrecisionInteger:
+            - New concepts for detecting Regina's own integer types.
+        Concept IntegerVector, ArbitraryPrecisionIntegerVector:
+            - New concepts for detecting mathematical vector types.
 
 Version 7.4.1  [ 30 November, 2025 ]
 

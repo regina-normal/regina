@@ -51,12 +51,8 @@
 namespace regina::detail {
 
 template <typename Int>
+requires StandardCppInteger<Int> || ArbitraryPrecisionInteger<Int>
 void tightEncodeInteger(std::ostream& out, Int value) {
-    static_assert((std::is_integral_v<Int> && ! std::is_same_v<Int, bool>)
-            || IsReginaArbitraryPrecisionInteger<Int>::value,
-        "tightEncodeInteger() requires either a native C++ integer type "
-        "or one of Regina's arbitrary precision integer types.");
-
     // Here we use the 90 values 33..122 as "digit" characters,
     // and the four values 123..126 as different types of markers.
     // As characters, the four markers are: { | } ~
@@ -228,12 +224,8 @@ void tightEncodeInteger(std::ostream& out, Int value) {
 }
 
 template <typename Int, typename iterator>
+requires StandardCppInteger<Int> || ArbitraryPrecisionInteger<Int>
 Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
-    static_assert((std::is_integral_v<Int> && ! std::is_same_v<Int, bool>)
-            || IsReginaArbitraryPrecisionInteger<Int>::value,
-        "tightEncodeInteger() requires either a native C++ integer type "
-        "or one of Regina's arbitrary precision integer types.");
-
     Int result;
     bool overflow = false;
 

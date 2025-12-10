@@ -40,6 +40,8 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include "concepts/core.h"
+#include "concepts/maths.h"
 #include "utilities/exception.h"
 
 namespace regina {
@@ -541,6 +543,7 @@ namespace detail {
      * \ingroup utilities
      */
     template <typename Int>
+    requires StandardCppInteger<Int> || ArbitraryPrecisionInteger<Int>
     void tightEncodeInteger(std::ostream& out, Int value);
 
     /**
@@ -589,6 +592,7 @@ namespace detail {
      * \ingroup utilities
      */
     template <typename Int, typename iterator>
+    requires StandardCppInteger<Int> || ArbitraryPrecisionInteger<Int>
     Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData);
 
     /**
