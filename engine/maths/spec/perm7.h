@@ -438,7 +438,7 @@ class Perm<7> {
          * \param code the first-generation code that will determine the
          * new value of this permutation.
          */
-        void setPermCode1(Code1 code);
+        constexpr void setPermCode1(Code1 code);
 
         /**
          * Sets this permutation to that represented by the given
@@ -453,7 +453,7 @@ class Perm<7> {
          * \param code the second-generation code that will determine the
          * new value of this permutation.
          */
-        void setPermCode2(Code2 code);
+        constexpr void setPermCode2(Code2 code);
 
         /**
          * Creates a permutation from the given first-generation
@@ -564,7 +564,7 @@ class Perm<7> {
          * to this permutation.
          * \return a reference to this permutation.
          */
-        Perm<7>& operator = (const Perm<7>& cloneMe) = default;
+        constexpr Perm<7>& operator = (const Perm<7>& cloneMe) = default;
 
         /**
          * Returns the composition of this permutation with the given
@@ -905,7 +905,7 @@ class Perm<7> {
          *
          * \return a reference to this permutation after the increment.
          */
-        Perm<7>& operator ++();
+        constexpr Perm<7>& operator ++();
 
         /**
          * A postincrement operator that changes this to be the next permutation
@@ -1128,7 +1128,7 @@ class Perm<7> {
          * \param from the first integer whose image should be reset.
          * This must be between 0 and 7 inclusive.
          */
-        void clear(unsigned from);
+        constexpr void clear(unsigned from);
 
         /**
          * Returns the index of this permutation in the Perm<7>::Sn array.
@@ -1925,7 +1925,7 @@ inline constexpr Perm<7>::Code2 Perm<7>::permCode2() const {
     return code2_;
 }
 
-inline void Perm<7>::setPermCode1(Code1 code) {
+inline constexpr void Perm<7>::setPermCode1(Code1 code) {
     code2_ = static_cast<Code2>(S7Index(
         code & 0x07,
         (code >> 3) & 0x07,
@@ -1936,7 +1936,7 @@ inline void Perm<7>::setPermCode1(Code1 code) {
         (code >> 18) & 0x07));
 }
 
-inline void Perm<7>::setPermCode2(Code2 code) {
+inline constexpr void Perm<7>::setPermCode2(Code2 code) {
     code2_ = code;
 }
 
@@ -2146,7 +2146,7 @@ inline constexpr bool Perm<7>::isIdentity() const {
     return (code2_ == 0);
 }
 
-inline Perm<7>& Perm<7>::operator ++() {
+inline constexpr Perm<7>& Perm<7>::operator ++() {
     if (++code2_ == 5040)
         code2_ = 0;
     return *this;

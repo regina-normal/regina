@@ -348,7 +348,7 @@ class Perm<2> {
          * \param code the internal code that will determine the
          * new value of this permutation.
          */
-        void setPermCode(Code code);
+        constexpr void setPermCode(Code code);
 
         /**
          * Creates a permutation from the given internal code.
@@ -379,7 +379,7 @@ class Perm<2> {
          * to this permutation.
          * \return a reference to this permutation.
          */
-        Perm<2>& operator = (const Perm<2>& cloneMe) = default;
+        constexpr Perm<2>& operator = (const Perm<2>& cloneMe) = default;
 
         /**
          * Returns the composition of this permutation with the given
@@ -670,7 +670,7 @@ class Perm<2> {
          *
          * \return a reference to this permutation after the increment.
          */
-        Perm<2>& operator ++();
+        constexpr Perm<2>& operator ++();
 
         /**
          * A postincrement operator that changes this to be the next permutation
@@ -894,7 +894,7 @@ class Perm<2> {
          * \param from the first integer whose image should be reset.
          * This must be between 0 and 2 inclusive.
          */
-        void clear(unsigned from);
+        constexpr void clear(unsigned from);
 
         /**
          * Returns the index of this permutation in the Perm<2>::Sn array.
@@ -1056,7 +1056,7 @@ inline constexpr Perm<2>::Code Perm<2>::permCode() const {
     return code_;
 }
 
-inline void Perm<2>::setPermCode(Code code) {
+inline constexpr void Perm<2>::setPermCode(Code code) {
     code_ = code;
 }
 
@@ -1140,7 +1140,7 @@ inline constexpr bool Perm<2>::isIdentity() const {
     return (code_ == 0);
 }
 
-inline Perm<2>& Perm<2>::operator ++() {
+inline constexpr Perm<2>& Perm<2>::operator ++() {
     code_ ^= 1;
     return *this;
 }
