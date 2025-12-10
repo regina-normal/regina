@@ -39,6 +39,7 @@
 
 #include "utilities/stringutils.h"
 #include "utilities/tightencoding.h"
+#include "concepts/io.h"
 #include "core/output.h"
 #include <iostream>
 #include <map>
@@ -550,16 +551,13 @@ class Laurent2 :
          * Writes the tight encoding of this polynomial to the given output
          * stream.  See the page on \ref tight "tight encodings" for details.
          *
-         * \pre The coefficient type \a T must have a corresponding
-         * tightEncode() function.  This is true for Regina's arbitrary
-         * precision integer types (Integer and LargeInteger).
-         *
          * \nopython Use tightEncoding() instead, which returns a string.
          *
          * \param out the output stream to which the encoded string will
          * be written.
          */
-        void tightEncode(std::ostream& out) const;
+        void tightEncode(std::ostream& out) const
+            requires InherentlyTightEncodable<T>;
 
         /**
          * Reconstructs a polynomial from its given tight encoding.
@@ -573,10 +571,6 @@ class Laurent2 :
          * immediately after the encoding, without skipping any trailing
          * whitespace.
          *
-         * \pre The coefficient type \a T must have a corresponding static
-         * tightDecode() function.  This is true for Regina's arbitrary
-         * precision integer types (Integer and LargeInteger).
-         *
          * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of a two-variable Laurent polynomial.
          *
@@ -587,7 +581,8 @@ class Laurent2 :
          * for a two-variable Laurent polynomial.
          * \return the polynomial represented by the given tight encoding.
          */
-        static Laurent2 tightDecode(std::istream& input);
+        static Laurent2 tightDecode(std::istream& input)
+            requires InherentlyTightEncodable<T>;
 
     private:
         /**
@@ -1270,7 +1265,8 @@ inline Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
 }
 
 template <typename T>
-inline void Laurent2<T>::tightEncode(std::ostream& out) const {
+inline void Laurent2<T>::tightEncode(std::ostream& out) const
+        requires InherentlyTightEncodable<T> {
     for (const auto& c : coeff_) {
         // Write the coefficient (which must be non-zero) before the exponents.
         // This way we can use tightEncode(0) as an unambiguous terminator.
@@ -1282,7 +1278,8 @@ inline void Laurent2<T>::tightEncode(std::ostream& out) const {
 }
 
 template <typename T>
-inline Laurent2<T> Laurent2<T>::tightDecode(std::istream& input) {
+inline Laurent2<T> Laurent2<T>::tightDecode(std::istream& input)
+        requires InherentlyTightEncodable<T> {
     Laurent2 ans;
 
     while (true) {

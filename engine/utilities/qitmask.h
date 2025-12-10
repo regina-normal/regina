@@ -43,18 +43,19 @@
 
 #include "regina-core.h"
 #include "regina-config.h"
+#include "concepts/core.h"
 
 namespace regina {
 
-template <typename T>
-class Qitmask1;
+template <UnsignedCppInteger> class Qitmask1;
+template <UnsignedCppInteger, UnsignedCppInteger> class Qitmask2;
 
 /**
  * Writes the given qitmask to the given output stream as a sequence of
  * digits (0, 1, 2 and/or 3).
  *
  * Since the length of the qitmask is not stored, the number of qits
- * written will be 8 * sizeof(\a T).
+ * written will be `8 * sizeof(T)`.
  *
  * \param out the output stream to which to write.
  * \param mask the qitmask to write.
@@ -62,7 +63,7 @@ class Qitmask1;
  *
  * \ingroup utilities
  */
-template <typename T>
+template <UnsignedCppInteger T>
 std::ostream& operator << (std::ostream& out, const Qitmask1<T>& mask) {
     for (T bit = 1; bit; bit <<= 1)
         out << int(((mask.mask1 & bit) ? 1 : 0) | ((mask.mask2 & bit) ? 2 : 0));
@@ -71,7 +72,7 @@ std::ostream& operator << (std::ostream& out, const Qitmask1<T>& mask) {
 
 /**
  * A small but extremely fast "base 4 bitmask" class that can store up to
- * 8 * sizeof(\a T) "qits", each equal to 0, 1, 2 or 3.
+ * `8 * sizeof(T)` "qits", each equal to 0, 1, 2 or 3.
  *
  * This qitmask packs all of the qits together into two variables of
  * type \a T.  This means that operations on qitmasks are extremely
@@ -79,9 +80,8 @@ std::ostream& operator << (std::ostream& out, const Qitmask1<T>& mask) {
  * CPU operations.
  *
  * The downside of course is that the number of qits that can be stored
- * is limited to 8 * sizeof(\a T), where \a T must be a native unsigned
- * integer type (such as unsigned char, unsigned int, or unsigned long
- * long).
+ * is limited to `8 * sizeof(T)`, where \a T is some native unsigned
+ * C++ integer type.
  *
  * For another extremely fast qitmask class that can store twice as
  * many qits, see Qitmask2.  At present there is no qitmask class
@@ -89,8 +89,6 @@ std::ostream& operator << (std::ostream& out, const Qitmask1<T>& mask) {
  *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
- *
- * \pre Type \a T is an unsigned integral numeric type.
  *
  * \python Python does not support templates, and so instead Regina's
  * python interface offers the classes Qitmask8, Qitmask16, Qitmask32,
@@ -102,7 +100,7 @@ std::ostream& operator << (std::ostream& out, const Qitmask1<T>& mask) {
  *
  * \ingroup utilities
  */
-template <typename T>
+template <UnsignedCppInteger T>
 class Qitmask1 {
     private:
         T mask1;
@@ -122,7 +120,7 @@ class Qitmask1 {
         /**
          * Creates a clone of the given qitmask.
          */
-        inline Qitmask1(const Qitmask1<T>&) = default;
+        inline Qitmask1(const Qitmask1&) = default;
 
         /**
          * Sets all qits of this qitmask to 0.
@@ -136,7 +134,7 @@ class Qitmask1 {
          *
          * \return a reference to this qitmask.
          */
-        Qitmask1<T>& operator = (const Qitmask1<T>&) = default;
+        Qitmask1& operator = (const Qitmask1&) = default;
 
         /**
          * Returns the value of the given qit in this qitmask.
@@ -207,7 +205,7 @@ class Qitmask1 {
          * \param rhs the qitmask to add to this.
          * \return a reference to this qitmask.
          */
-        inline Qitmask1<T>& operator += (const Qitmask1<T>& rhs) {
+        inline Qitmask1& operator += (const Qitmask1& rhs) {
             mask2 = mask2 ^ rhs.mask2 ^ (mask1 & rhs.mask1);
             mask1 = mask1 ^ rhs.mask1;
             return *this;
@@ -221,7 +219,7 @@ class Qitmask1 {
          * \param rhs the qitmask to subtract from this.
          * \return a reference to this qitmask.
          */
-        inline Qitmask1<T>& operator -= (const Qitmask1<T>& rhs) {
+        inline Qitmask1& operator -= (const Qitmask1& rhs) {
             mask2 = mask2 ^ rhs.mask2 ^ (rhs.mask1 & ~ mask1);
             mask1 = mask1 ^ rhs.mask1;
             return *this;
@@ -233,7 +231,7 @@ class Qitmask1 {
          * \return \c true if and only if this and the given qitmask are
          * identical.
          */
-        bool operator == (const Qitmask1<T>&) const = default;
+        bool operator == (const Qitmask1&) const = default;
 
         /**
          * Determines whether there is some index at which both this and
@@ -250,26 +248,23 @@ class Qitmask1 {
          * \return \c true if there is some index at which this and \a other
          * both have non-zero qits, or \c false otherwise.
          */
-        inline bool hasNonZeroMatch(const Qitmask1<T>& other) const {
+        inline bool hasNonZeroMatch(const Qitmask1& other) const {
             return ((mask1 | mask2) & (other.mask1 | other.mask2));
         }
 
 #ifndef __DOXYGEN
     // Doxygen gets confused by the "<< <" combination here.
     friend std::ostream& operator << <T>(std::ostream& out,
-        const Qitmask1<T>& mask);
+        const Qitmask1& mask);
 #endif
 };
-
-template <typename T, typename U>
-class Qitmask2;
 
 /**
  * Writes the given qitmask to the given output stream as a sequence of
  * digits (0, 1, 2 and/or 3).
  *
  * Since the length of the qitmask is not stored, the number of qits
- * written will be 8 * sizeof(\a T) + 8 * sizeof(\a U).
+ * written will be `8 * sizeof(T) + 8 * sizeof(U)`.
  *
  * \param out the output stream to which to write.
  * \param mask the qitmask to write.
@@ -277,7 +272,7 @@ class Qitmask2;
  *
  * \ingroup utilities
  */
-template <typename T, typename U>
+template <UnsignedCppInteger T, UnsignedCppInteger U>
 std::ostream& operator << (std::ostream& out, const Qitmask2<T, U>& mask) {
     for (T bit = 1; bit; bit <<= 1)
         out << int(((mask.low1 & bit) ? 1 : 0) | ((mask.low2 & bit) ? 2 : 0));
@@ -288,7 +283,7 @@ std::ostream& operator << (std::ostream& out, const Qitmask2<T, U>& mask) {
 
 /**
  * A small but extremely fast "base 4 bitmask" class that can store up to
- * 8 * sizeof(\a T) + 8 * sizeof(\a U) "qits", each equal to 0, 1, 2 or 3.
+ * `8 * sizeof(T) + 8 * sizeof(U)` "qits", each equal to 0, 1, 2 or 3.
  *
  * This qitmask packs all of the qits together into two variables of
  * type \a T and two variables of type \a U.  This means that operations
@@ -296,9 +291,8 @@ std::ostream& operator << (std::ostream& out, const Qitmask2<T, U>& mask) {
  * processed in just a few native CPU operations.
  *
  * The downside of course is that the number of qits that can be stored
- * is limited to 8 * sizeof(\a T) + 8 * sizeof(\a U), where \a T and \a U
- * must be native unsigned integer types (such as unsigned char, unsigned int,
- * or unsigned long long).
+ * is limited to `8 * sizeof(T) + 8 * sizeof(U)`, where \a T and \a U
+ * are some native unsigned C++ integer types.
  *
  * For an even faster qitmask class that can only store half as many qits,
  * see Qitmask1.  At present there is no qitmask class
@@ -306,8 +300,6 @@ std::ostream& operator << (std::ostream& out, const Qitmask2<T, U>& mask) {
  *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
- *
- * \pre Types \a T and \a U are unsigned integral numeric types.
  *
  * \python Python does not support templates, and so instead Regina's
  * python interface offers the classes Qitmask8, Qitmask16, Qitmask32,
@@ -319,7 +311,7 @@ std::ostream& operator << (std::ostream& out, const Qitmask2<T, U>& mask) {
  *
  * \ingroup utilities
  */
-template <typename T, typename U = T>
+template <UnsignedCppInteger T, UnsignedCppInteger U = T>
 class Qitmask2 {
     private:
         T low1;
@@ -345,7 +337,7 @@ class Qitmask2 {
         /**
          * Creates a clone of the given qitmask.
          */
-        inline Qitmask2(const Qitmask2<T, U>&) = default;
+        inline Qitmask2(const Qitmask2&) = default;
 
         /**
          * Sets all qits of this qitmask to 0.
@@ -360,7 +352,7 @@ class Qitmask2 {
          *
          * \return a reference to this qitmask.
          */
-        Qitmask2<T, U>& operator = (const Qitmask2<T, U>&) = default;
+        Qitmask2& operator = (const Qitmask2&) = default;
 
         /**
          * Returns the value of the given qit in this qitmask.
@@ -443,7 +435,7 @@ class Qitmask2 {
          * \param rhs the qitmask to add to this.
          * \return a reference to this qitmask.
          */
-        inline Qitmask2<T, U>& operator += (const Qitmask2<T, U>& rhs) {
+        inline Qitmask2& operator += (const Qitmask2& rhs) {
             low2 = low2 ^ rhs.low2 ^ (low1 & rhs.low1);
             low1 = low1 ^ rhs.low1;
             high2 = high2 ^ rhs.high2 ^ (high1 & rhs.high1);
@@ -459,7 +451,7 @@ class Qitmask2 {
          * \param rhs the qitmask to subtract from this.
          * \return a reference to this qitmask.
          */
-        inline Qitmask2<T, U>& operator -= (const Qitmask2<T, U>& rhs) {
+        inline Qitmask2& operator -= (const Qitmask2& rhs) {
             low2 = low2 ^ rhs.low2 ^ (rhs.low1 & ~ low1);
             low1 = low1 ^ rhs.low1;
             high2 = high2 ^ rhs.high2 ^ (rhs.high1 & ~ high1);
@@ -473,7 +465,7 @@ class Qitmask2 {
          * \return \c true if and only if this and the given qitmask are
          * identical.
          */
-        bool operator == (const Qitmask2<T, U>&) const = default;
+        bool operator == (const Qitmask2&) const = default;
 
         /**
          * Determines whether there is some index at which both this and
@@ -490,7 +482,7 @@ class Qitmask2 {
          * \return \c true if there is some index at which this and \a other
          * both have non-zero qits, or \c false otherwise.
          */
-        inline bool hasNonZeroMatch(const Qitmask2<T, U>& other) const {
+        inline bool hasNonZeroMatch(const Qitmask2& other) const {
             return ((low1 | low2) & (other.low1 | other.low2)) ||
                 ((high1 | high2) & (other.high1 | other.high2));
         }
@@ -498,7 +490,7 @@ class Qitmask2 {
 #ifndef __DOXYGEN
     // Doxygen gets confused by the "<< <" combination here.
     friend std::ostream& operator << <T, U>(std::ostream& out,
-        const Qitmask2<T, U>& mask);
+        const Qitmask2& mask);
 #endif
 };
 

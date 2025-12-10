@@ -31,12 +31,12 @@
 #ifndef __TIGHTENCODINGTEST_H
 #define __TIGHTENCODINGTEST_H
 
+#include "concepts/io.h"
 #include "testhelper.h"
 
 /**
  * Implements tests for tight encodings (and optionally decodings) of objects
- * of type \a T.  This type \a T must provide equality tests and a str()
- * function that returns a std::string.
+ * of type \a T.
  *
  * Test suites can call these functions directly.  There is no need (or
  * benefit) for using inheritance of test fixture classes, other than the
@@ -44,12 +44,8 @@
  * TightEncodingTest every time it is used.
  */
 template <typename T, bool hasDecoding = true>
+requires std::equality_comparable<T> && regina::Stringifiable<T>
 class TightEncodingTest {
-    // Ensure that str() returns a std::string.
-    static_assert(
-        std::is_same_v<decltype(std::declval<T>().str()), std::string>,
-        "TightEncodingTest<T> requires T::str() to return a std::string.");
-
     public:
         static void verifyTightEncoding(const T& obj) {
             SCOPED_TRACE_REGINA(obj);

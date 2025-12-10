@@ -31,6 +31,7 @@
 #include <cstring>
 #include <limits>
 #include <string>
+#include "concepts/core.h"
 #include "maths/integer.h"
 #include "utilities/intutils.h"
 #include "utilities/tightencoding-impl.h"
@@ -40,10 +41,8 @@
 using regina::Integer;
 using regina::LargeInteger;
 
-template <typename T>
+template <regina::StandardCppInteger T>
 static Integer toInteger(T val) {
-    // The type T must be a native C++ integer type.
-
     // This function exists because Integer cannot necessarily
     // convert from long long, and even with conversion from long
     // it only works with signed (not unsigned) arguments, which
@@ -59,10 +58,8 @@ static Integer toInteger(T val) {
     }
 }
 
-template <typename T>
+template <regina::StandardCppInteger T>
 static T fromInteger(const Integer& val) {
-    // The type T must be a native C++ integer type.
-
     // This function exists so that we can convert an Integer to
     // a native C++ integer type, even if that type takes values
     // outside the range of a long (which means Integer::longValue

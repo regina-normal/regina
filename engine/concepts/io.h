@@ -55,6 +55,17 @@ concept Writeable =
     };
 
 /**
+ * A type that supports string output through a member function `str()`.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept Stringifiable =
+    requires(const T x) {
+        { x.str() } -> std::same_as<std::string>;
+    };
+
+/**
  * A type that has member functions for tight encoding and decoding.
  *
  * \ingroup concepts

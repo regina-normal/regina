@@ -42,9 +42,13 @@
 
 #include "regina-core.h"
 #include "regina-config.h"
+#include "concepts/core.h"
 #include "utilities/bitmanip.h"
 
 namespace regina {
+
+template <UnsignedCppInteger> class Bitmask1;
+template <UnsignedCppInteger, UnsignedCppInteger> class Bitmask2;
 
 /**
  * A bitmask that can store arbitrarily many true-or-false bits.
@@ -538,15 +542,12 @@ void swap(Bitmask& a, Bitmask& b) noexcept;
  */
 std::ostream& operator << (std::ostream& out, const Bitmask& mask);
 
-template <typename T>
-class Bitmask1;
-
 /**
  * Writes the given bitmask to the given output stream as a sequence of
  * zeroes and ones.
  *
  * Since the length of the bitmask is not stored, the number of bits
- * written will be 8 * sizeof(\a T).
+ * written will be `8 * sizeof(T)`.
  *
  * \param out the output stream to which to write.
  * \param mask the bitmask to write.
@@ -554,7 +555,7 @@ class Bitmask1;
  *
  * \ingroup utilities
  */
-template <typename T>
+template <UnsignedCppInteger T>
 std::ostream& operator << (std::ostream& out, const Bitmask1<T>& mask) {
     for (T bit = 1; bit; bit <<= 1)
         out << ((mask.mask & bit) ? '1' : '0');
@@ -563,16 +564,15 @@ std::ostream& operator << (std::ostream& out, const Bitmask1<T>& mask) {
 
 /**
  * A small but extremely fast bitmask class that can store up to
- * 8 * sizeof(\a T) true-or-false bits.
+ * `8 * sizeof(T)` true-or-false bits.
  *
  * This bitmask packs all of the bits together into a single variable of
  * type \a T.  This means that operations on bitmasks are extremely
  * fast, because all of the bits can be processed at once.
  *
  * The downside of course is that the number of bits that can be stored
- * is limited to 8 * sizeof(\a T), where \a T must be a native unsigned
- * integer type (such as unsigned char, unsigned int, or unsigned long
- * long).
+ * is limited to `8 * sizeof(T)`, where \a T is some native unsigned
+ * C++ integer type.
  *
  * For another extremely fast bitmask class that can store twice as
  * many bits, see Bitmask2.  For a bitmask class that can store
@@ -580,8 +580,6 @@ std::ostream& operator << (std::ostream& out, const Bitmask1<T>& mask) {
  *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
- *
- * \pre Type \a T is an unsigned integral numeric type.
  *
  * \python Python does not support templates, and so instead Regina's
  * python interface offers the classes Bitmask8, Bitmask16, Bitmask32,
@@ -593,7 +591,7 @@ std::ostream& operator << (std::ostream& out, const Bitmask1<T>& mask) {
  *
  * \ingroup utilities
  */
-template <typename T>
+template <UnsignedCppInteger T>
 class Bitmask1 {
     public:
         /**
@@ -631,7 +629,7 @@ class Bitmask1 {
         /**
          * Creates a clone of the given bitmask.
          */
-        inline Bitmask1(const Bitmask1<T>&) = default;
+        inline Bitmask1(const Bitmask1&) = default;
 
         /**
          * Sets all bits of this bitmask to \c false.
@@ -655,7 +653,7 @@ class Bitmask1 {
          *
          * \return a reference to this bitmask.
          */
-        Bitmask1<T>& operator = (const Bitmask1<T>&) = default;
+        Bitmask1& operator = (const Bitmask1&) = default;
 
         /**
          * Leaves the first \a numBits bits of this bitmask intact, but
@@ -759,7 +757,7 @@ class Bitmask1 {
          * \param other the bitmask to intersect with this.
          * \return a reference to this bitmask.
          */
-        inline Bitmask1<T>& operator &= (const Bitmask1<T>& other) {
+        inline Bitmask1& operator &= (const Bitmask1& other) {
             mask &= other.mask;
             return *this;
         }
@@ -771,7 +769,7 @@ class Bitmask1 {
          * \param other the bitmask to union with this.
          * \return a reference to this bitmask.
          */
-        inline Bitmask1<T>& operator |= (const Bitmask1<T>& other) {
+        inline Bitmask1& operator |= (const Bitmask1& other) {
             mask |= other.mask;
             return *this;
         }
@@ -784,7 +782,7 @@ class Bitmask1 {
          * \param other the bitmask to XOR with this.
          * \return a reference to this bitmask.
          */
-        inline Bitmask1<T>& operator ^= (const Bitmask1<T>& other) {
+        inline Bitmask1& operator ^= (const Bitmask1& other) {
             mask ^= other.mask;
             return *this;
         }
@@ -796,7 +794,7 @@ class Bitmask1 {
          * \param other the bitmask to XOR with this.
          * \return a reference to this bitmask.
          */
-        inline Bitmask1<T>& operator -= (const Bitmask1<T>& other) {
+        inline Bitmask1& operator -= (const Bitmask1& other) {
             mask |= other.mask;
             mask ^= other.mask;
             return *this;
@@ -820,7 +818,7 @@ class Bitmask1 {
          * \return \c true if and only if this and the given bitmask are
          * identical.
          */
-        bool operator == (const Bitmask1<T>&) const = default;
+        bool operator == (const Bitmask1&) const = default;
 
         /**
          * Determines whether this bitmask appears strictly before the given
@@ -835,7 +833,7 @@ class Bitmask1 {
          * \return \c true if and only if this is lexicographically
          * strictly smaller than the given bitmask.
          */
-        inline bool lessThan(const Bitmask1<T>& other) const {
+        inline bool lessThan(const Bitmask1& other) const {
             return (mask < other.mask);
         }
 
@@ -860,7 +858,7 @@ class Bitmask1 {
          * \return The result of the subset comparison between this and the
          * given bitmask.
          */
-        inline std::partial_ordering operator <=> (const Bitmask1<T>& rhs)
+        inline std::partial_ordering operator <=> (const Bitmask1& rhs)
                 const {
             return BitManipulator<T>::subsetComparison(mask, rhs.mask);
         }
@@ -877,7 +875,7 @@ class Bitmask1 {
          * \return \c true if and only if this bitmask is entirely contained
          * within the union of \a x and \a y.
          */
-        inline bool inUnion(const Bitmask1<T>& x, const Bitmask1<T>& y)
+        inline bool inUnion(const Bitmask1& x, const Bitmask1& y)
                 const {
             return ((mask & (x.mask | y.mask)) == mask);
         }
@@ -894,7 +892,7 @@ class Bitmask1 {
          * \return \c true if and only if this bitmask entirely contains
          * the intersection of \a x and \a y.
          */
-        inline bool containsIntn(const Bitmask1<T>& x, const Bitmask1<T>& y)
+        inline bool containsIntn(const Bitmask1& x, const Bitmask1& y)
                 const {
             return ((mask | (x.mask & y.mask)) == mask);
         }
@@ -946,19 +944,16 @@ class Bitmask1 {
 #ifndef __DOXYGEN
     // Doxygen gets confused by the "<< <" combination here.
     friend std::ostream& operator << <T>(std::ostream& out,
-        const Bitmask1<T>& mask);
+        const Bitmask1& mask);
 #endif
 };
-
-template <typename T, typename U>
-class Bitmask2;
 
 /**
  * Writes the given bitmask to the given output stream as a sequence of
  * zeroes and ones.
  *
  * Since the length of the bitmask is not stored, the number of bits
- * written will be 8 * sizeof(\a T) + 8 * sizeof(\a U).
+ * written will be `8 * sizeof(T) + 8 * sizeof(U)`.
  *
  * \param out the output stream to which to write.
  * \param mask the bitmask to write.
@@ -966,7 +961,7 @@ class Bitmask2;
  *
  * \ingroup utilities
  */
-template <typename T, typename U>
+template <UnsignedCppInteger T, UnsignedCppInteger U>
 std::ostream& operator << (std::ostream& out, const Bitmask2<T, U>& mask) {
     for (T bit = 1; bit; bit <<= 1)
         out << ((mask.low & bit) ? '1' : '0');
@@ -977,7 +972,7 @@ std::ostream& operator << (std::ostream& out, const Bitmask2<T, U>& mask) {
 
 /**
  * A small but extremely fast bitmask class that can store up to
- * 8 * sizeof(\a T) + 8 * sizeof(\a U) true-or-false bits.
+ * `8 * sizeof(T) + 8 * sizeof(U)` true-or-false bits.
  *
  * This bitmask packs all of the bits together into a single variable of
  * type \a T and a single variable of type \a U.  This means that operations
@@ -985,9 +980,8 @@ std::ostream& operator << (std::ostream& out, const Bitmask2<T, U>& mask) {
  * processed in just two "native" operations.
  *
  * The downside of course is that the number of bits that can be stored
- * is limited to 8 * sizeof(\a T) + 8 * sizeof(\a U), where \a T and \a U
- * must be native unsigned integer types (such as unsigned char, unsigned int,
- * or unsigned long long).
+ * is limited to `8 * sizeof(T) + 8 * sizeof(U)`, where \a T and \a U
+ * are some native unsigned C++ integer types.
  *
  * For an even faster bitmask class that can only store half as many bits,
  * see Bitmask1.  For a bitmask class that can store arbitrarily many bits,
@@ -995,8 +989,6 @@ std::ostream& operator << (std::ostream& out, const Bitmask2<T, U>& mask) {
  *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
- *
- * \pre Types \a T and \a U are unsigned integral numeric types.
  *
  * \python Python does not support templates, and so instead Regina's
  * python interface offers the classes Bitmask8, Bitmask16, Bitmask32,
@@ -1008,7 +1000,7 @@ std::ostream& operator << (std::ostream& out, const Bitmask2<T, U>& mask) {
  *
  * \ingroup utilities
  */
-template <typename T, typename U = T>
+template <UnsignedCppInteger T, UnsignedCppInteger U = T>
 class Bitmask2 {
     public:
         /**
@@ -1048,7 +1040,7 @@ class Bitmask2 {
         /**
          * Creates a clone of the given bitmask.
          */
-        inline Bitmask2(const Bitmask2<T, U>&) = default;
+        inline Bitmask2(const Bitmask2&) = default;
 
         /**
          * Sets all bits of this bitmask to \c false.
@@ -1074,7 +1066,7 @@ class Bitmask2 {
          *
          * \return a reference to this bitmask.
          */
-        Bitmask2<T, U>& operator = (const Bitmask2<T, U>&) = default;
+        Bitmask2& operator = (const Bitmask2&) = default;
 
         /**
          * Leaves the first \a numBits bits of this bitmask intact, but
@@ -1202,7 +1194,7 @@ class Bitmask2 {
          * \param other the bitmask to intersect with this.
          * \return a reference to this bitmask.
          */
-        inline Bitmask2<T, U>& operator &= (const Bitmask2<T, U>& other) {
+        inline Bitmask2& operator &= (const Bitmask2& other) {
             low &= other.low;
             high &= other.high;
             return *this;
@@ -1215,7 +1207,7 @@ class Bitmask2 {
          * \param other the bitmask to union with this.
          * \return a reference to this bitmask.
          */
-        inline Bitmask2<T, U>& operator |= (const Bitmask2<T, U>& other) {
+        inline Bitmask2& operator |= (const Bitmask2& other) {
             low |= other.low;
             high |= other.high;
             return *this;
@@ -1229,7 +1221,7 @@ class Bitmask2 {
          * \param other the bitmask to XOR with this.
          * \return a reference to this bitmask.
          */
-        inline Bitmask2<T, U>& operator ^= (const Bitmask2<T, U>& other) {
+        inline Bitmask2& operator ^= (const Bitmask2& other) {
             low ^= other.low;
             high ^= other.high;
             return *this;
@@ -1242,7 +1234,7 @@ class Bitmask2 {
          * \param other the bitmask to XOR with this.
          * \return a reference to this bitmask.
          */
-        inline Bitmask2<T, U>& operator -= (const Bitmask2<T, U>& other) {
+        inline Bitmask2& operator -= (const Bitmask2& other) {
             low |= other.low;
             low ^= other.low;
             high |= other.high;
@@ -1269,7 +1261,7 @@ class Bitmask2 {
          * \return \c true if and only if this and the given bitmask are
          * identical.
          */
-        bool operator == (const Bitmask2<T, U>& other) const = default;
+        bool operator == (const Bitmask2& other) const = default;
 
         /**
          * Determines whether this bitmask appears strictly before the given
@@ -1284,7 +1276,7 @@ class Bitmask2 {
          * \return \c true if and only if this is lexicographically
          * strictly smaller than the given bitmask.
          */
-        inline bool lessThan(const Bitmask2<T, U>& other) const {
+        inline bool lessThan(const Bitmask2& other) const {
             return (high < other.high ||
                 (high == other.high && low < other.low));
         }
@@ -1310,7 +1302,7 @@ class Bitmask2 {
          * \return The result of the subset comparison between this and the
          * given bitmask.
          */
-        std::partial_ordering operator <=> (const Bitmask2<T, U>& rhs) const {
+        std::partial_ordering operator <=> (const Bitmask2& rhs) const {
             auto t = BitManipulator<T>::subsetComparison(low, rhs.low);
 
             if (t == std::partial_ordering::equivalent) {
@@ -1346,8 +1338,7 @@ class Bitmask2 {
          * \return \c true if and only if this bitmask is entirely contained
          * within the union of \a x and \a y.
          */
-        inline bool inUnion(const Bitmask2<T, U>& x, const Bitmask2<T, U>& y)
-                const {
+        inline bool inUnion(const Bitmask2& x, const Bitmask2& y) const {
             return ((low & (x.low | y.low)) == low &&
                 (high & (x.high | y.high)) == high);
         }
@@ -1364,8 +1355,7 @@ class Bitmask2 {
          * \return \c true if and only if this bitmask entirely contains
          * the intersection of \a x and \a y.
          */
-        inline bool containsIntn(const Bitmask2<T, U>& x,
-                const Bitmask2<T, U>& y) const {
+        inline bool containsIntn(const Bitmask2& x, const Bitmask2& y) const {
             return ((low | (x.low & y.low)) == low &&
                 (high | (x.high & y.high)) == high);
         }
@@ -1429,7 +1419,7 @@ class Bitmask2 {
 #ifndef __DOXYGEN
     // Doxygen gets confused by the "<< <" combination here.
     friend std::ostream& operator << <T, U>(std::ostream& out,
-        const Bitmask2<T, U>& mask);
+        const Bitmask2& mask);
 #endif
 };
 
