@@ -37,13 +37,23 @@
 #define __REGINA_CONCEPTS_CORE_H
 #endif
 
+#include <concepts>
 #include "utilities/intutils.h"
 
 namespace regina {
 
 /**
- * A native C++ integer type, allowing for 128-bit integers also but excluding
- * booleans.
+ * One of the standard non-boolean C++ integer types, without making any
+ * special accommodations for 128-bit integer compiler extensions.
+ *
+ * This concept is exactly like `std::integral` but with `bool` excluded.
+ */
+template <typename T>
+concept StandardCppInteger = std::integral<T> && ! std::same_as<T, bool>;
+
+/**
+ * A native non-boolean C++ integer type, allowing for 128-bit integers also
+ * if these are supported by the compiler.
  *
  * See the constant regina::is_cpp_integer_v for further details.
  */
@@ -51,8 +61,8 @@ template <typename T>
 concept CppInteger = is_cpp_integer_v<T>;
 
 /**
- * A signed native C++ integer type, allowing for 128-bit integers also but
- * excluding booleans.
+ * A signed native non-boolean C++ integer type, allowing for 128-bit integers
+ * also if these are supported by the compiler.
  *
  * See the constant regina::is_signed_cpp_integer_v for further details.
  */
@@ -60,8 +70,8 @@ template <typename T>
 concept SignedCppInteger = is_signed_cpp_integer_v<T>;
 
 /**
- * An unsigned native C++ integer type, allowing for 128-bit integers also but
- * excluding booleans.
+ * An unsigned native non-boolean C++ integer type, allowing for 128-bit
+ * integers also if these are supported by the compiler.
  *
  * See the constant regina::is_unsigned_cpp_integer_v for further details.
  */

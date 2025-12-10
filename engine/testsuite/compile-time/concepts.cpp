@@ -40,137 +40,101 @@ using regina::MatrixInt;
 using regina::NativeInteger;
 using regina::Vector;
 
-// Some of our tests below use types that are not compile-time constructible
-// (e.g., regina::Vector).  For these tests we work with pointers, so that
-// there is no need to ever construct actual objects, and therefore our tests
-// can remain compile-time.
-
-// Integer tests:
-
-namespace {
-    // --- Testing adherence to CppInteger ---
-
-    template <regina::CppInteger T>
-    constexpr bool cppInt(T* x) { return true; }
-
-    template <typename T>
-    constexpr bool cppInt(T* x) { return false; }
-
-    // --- Testing adherence to SignedCppInteger ---
-
-    template <regina::SignedCppInteger T>
-    constexpr bool signedCppInt(T* x) { return true; }
-
-    template <typename T>
-    constexpr bool signedCppInt(T* x) { return false; }
-
-    // --- Testing adherence to UnsignedCppInteger ---
-
-    template <regina::UnsignedCppInteger T>
-    constexpr bool unsignedCppInt(T* x) { return true; }
-
-    template <typename T>
-    constexpr bool unsignedCppInt(T* x) { return false; }
-
-    // --- The actual tests ---
-
-    static_assert(cppInt((char*)(nullptr)));
-
-    static_assert(cppInt((signed char*)(nullptr)));
-    static_assert(signedCppInt((signed char*)(nullptr)));
-    static_assert(! unsignedCppInt((signed char*)(nullptr)));
-
-    static_assert(cppInt((unsigned char*)(nullptr)));
-    static_assert(! signedCppInt((unsigned char*)(nullptr)));
-    static_assert(unsignedCppInt((unsigned char*)(nullptr)));
-
-    static_assert(cppInt((int*)(nullptr)));
-    static_assert(signedCppInt((int*)(nullptr)));
-    static_assert(! unsignedCppInt((int*)(nullptr)));
-
-    static_assert(cppInt((unsigned*)(nullptr)));
-    static_assert(! signedCppInt((unsigned*)(nullptr)));
-    static_assert(unsignedCppInt((unsigned*)(nullptr)));
-
-    static_assert(cppInt((size_t*)(nullptr)));
-    static_assert(! signedCppInt((size_t*)(nullptr)));
-    static_assert(unsignedCppInt((size_t*)(nullptr)));
-
-    static_assert(cppInt((ssize_t*)(nullptr)));
-    static_assert(signedCppInt((ssize_t*)(nullptr)));
-    static_assert(! unsignedCppInt((ssize_t*)(nullptr)));
-
-    #if defined(INT128_AVAILABLE)
-    static_assert(cppInt((regina::IntOfSize<16>::type*)(nullptr)));
-    static_assert(signedCppInt((regina::IntOfSize<16>::type*)(nullptr)));
-    static_assert(! unsignedCppInt((regina::IntOfSize<16>::type*)(nullptr)));
-
-    static_assert(cppInt((regina::IntOfSize<16>::utype*)(nullptr)));
-    static_assert(! signedCppInt((regina::IntOfSize<16>::utype*)(nullptr)));
-    static_assert(unsignedCppInt((regina::IntOfSize<16>::utype*)(nullptr)));
-    #endif
-
-    static_assert(! cppInt((bool*)(nullptr)));
-    static_assert(! signedCppInt((bool*)(nullptr)));
-    static_assert(! unsignedCppInt((bool*)(nullptr)));
-
-    static_assert(! cppInt((Integer*)(nullptr)));
-    static_assert(! signedCppInt((Integer*)(nullptr)));
-    static_assert(! unsignedCppInt((Integer*)(nullptr)));
-
-    static_assert(! cppInt((LargeInteger*)(nullptr)));
-    static_assert(! signedCppInt((LargeInteger*)(nullptr)));
-    static_assert(! unsignedCppInt((LargeInteger*)(nullptr)));
-
-    static_assert(! cppInt((NativeInteger<8>*)(nullptr)));
-    static_assert(! signedCppInt((NativeInteger<8>*)(nullptr)));
-    static_assert(! unsignedCppInt((NativeInteger<8>*)(nullptr)));
-}
-
-// Vector tests:
+using regina::ArbitraryPrecisionIntegerVector;
+using regina::CppInteger;
+using regina::IntegerVector;
+using regina::SignedCppInteger;
+using regina::StandardCppInteger;
+using regina::UnsignedCppInteger;
 
 namespace {
-    // A strict subclass of Vector<...>.
     template <typename T>
     class SubVector : public Vector<T> {};
-
-    // --- Testing adherence to ArbitraryPrecisionIntegerVector ---
-
-    template <regina::ArbitraryPrecisionIntegerVector T>
-    constexpr bool apiVec(T* x) { return true; }
-
-    template <typename T>
-    constexpr bool apiVec(T* x) { return false; }
-
-    // --- Testing adherence to IntegerVector ---
-
-    template <regina::IntegerVector T>
-    constexpr bool intVec(T* x) { return true; }
-
-    template <typename T>
-    constexpr bool intVec(T* x) { return false; }
-
-    // --- The actual tests ---
-
-    static_assert(apiVec((Vector<Integer>*)(nullptr)));
-    static_assert(intVec((Vector<Integer>*)(nullptr)));
-
-    static_assert(apiVec((SubVector<Integer>*)(nullptr)));
-    static_assert(intVec((SubVector<Integer>*)(nullptr)));
-
-    static_assert(! apiVec((Vector<NativeInteger<8>>*)(nullptr)));
-    static_assert(intVec((Vector<NativeInteger<8>>*)(nullptr)));
-
-    static_assert(! apiVec((SubVector<NativeInteger<8>>*)(nullptr)));
-    static_assert(intVec((SubVector<NativeInteger<8>>*)(nullptr)));
-
-    static_assert(! apiVec((Vector<int>*)(nullptr)));
-    static_assert(! intVec((Vector<int>*)(nullptr)));
-
-    static_assert(! apiVec((SubVector<int>*)(nullptr)));
-    static_assert(! intVec((SubVector<int>*)(nullptr)));
-
-    static_assert(! apiVec((MatrixInt*)(nullptr)));
-    static_assert(! intVec((MatrixInt*)(nullptr)));
 }
+
+static_assert(CppInteger<char>);
+static_assert(StandardCppInteger<char>);
+
+static_assert(CppInteger<signed char>);
+static_assert(StandardCppInteger<signed char>);
+static_assert(SignedCppInteger<signed char>);
+static_assert(! UnsignedCppInteger<signed char>);
+
+static_assert(CppInteger<unsigned char>);
+static_assert(StandardCppInteger<unsigned char>);
+static_assert(! SignedCppInteger<unsigned char>);
+static_assert(UnsignedCppInteger<unsigned char>);
+
+static_assert(CppInteger<int>);
+static_assert(StandardCppInteger<int>);
+static_assert(SignedCppInteger<int>);
+static_assert(! UnsignedCppInteger<int>);
+
+static_assert(CppInteger<unsigned>);
+static_assert(StandardCppInteger<unsigned>);
+static_assert(! SignedCppInteger<unsigned>);
+static_assert(UnsignedCppInteger<unsigned>);
+
+static_assert(CppInteger<size_t>);
+static_assert(StandardCppInteger<size_t>);
+static_assert(! SignedCppInteger<size_t>);
+static_assert(UnsignedCppInteger<size_t>);
+
+static_assert(CppInteger<ssize_t>);
+static_assert(StandardCppInteger<ssize_t>);
+static_assert(SignedCppInteger<ssize_t>);
+static_assert(! UnsignedCppInteger<ssize_t>);
+
+#if defined(INT128_AVAILABLE)
+// 128-bit integers might or might not be standard C++ types.
+// Therefore we do not test adherence to StandardCppInteger here.
+static_assert(CppInteger<regina::IntOfSize<16>::type>);
+static_assert(SignedCppInteger<regina::IntOfSize<16>::type>);
+static_assert(! UnsignedCppInteger<regina::IntOfSize<16>::type>);
+
+static_assert(CppInteger<regina::IntOfSize<16>::utype>);
+static_assert(! SignedCppInteger<regina::IntOfSize<16>::utype>);
+static_assert(UnsignedCppInteger<regina::IntOfSize<16>::utype>);
+#endif
+
+static_assert(! CppInteger<bool>);
+static_assert(! StandardCppInteger<bool>);
+static_assert(! SignedCppInteger<bool>);
+static_assert(! UnsignedCppInteger<bool>);
+
+static_assert(! CppInteger<Integer>);
+static_assert(! StandardCppInteger<Integer>);
+static_assert(! SignedCppInteger<Integer>);
+static_assert(! UnsignedCppInteger<Integer>);
+
+static_assert(! CppInteger<LargeInteger>);
+static_assert(! StandardCppInteger<LargeInteger>);
+static_assert(! SignedCppInteger<LargeInteger>);
+static_assert(! UnsignedCppInteger<LargeInteger>);
+
+static_assert(! CppInteger<NativeInteger<8>>);
+static_assert(! StandardCppInteger<NativeInteger<8>>);
+static_assert(! SignedCppInteger<NativeInteger<8>>);
+static_assert(! UnsignedCppInteger<NativeInteger<8>>);
+
+static_assert(ArbitraryPrecisionIntegerVector<Vector<Integer>>);
+static_assert(IntegerVector<Vector<Integer>>);
+
+static_assert(ArbitraryPrecisionIntegerVector<SubVector<Integer>>);
+static_assert(IntegerVector<SubVector<Integer>>);
+
+static_assert(! ArbitraryPrecisionIntegerVector<Vector<NativeInteger<8>>>);
+static_assert(IntegerVector<Vector<NativeInteger<8>>>);
+
+static_assert(! ArbitraryPrecisionIntegerVector<SubVector<NativeInteger<8>>>);
+static_assert(IntegerVector<SubVector<NativeInteger<8>>>);
+
+static_assert(! ArbitraryPrecisionIntegerVector<Vector<int>>);
+static_assert(! IntegerVector<Vector<int>>);
+
+static_assert(! ArbitraryPrecisionIntegerVector<SubVector<int>>);
+static_assert(! IntegerVector<SubVector<int>>);
+
+static_assert(! ArbitraryPrecisionIntegerVector<MatrixInt>);
+static_assert(! IntegerVector<MatrixInt>);
 

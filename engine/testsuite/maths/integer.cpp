@@ -29,10 +29,12 @@
  **************************************************************************/
 
 #include <array>
+#include "concepts/maths.h"
 #include "maths/integer.h"
 
 #include "testhelper.h"
 
+using regina::ArbitraryPrecisionInteger;
 using regina::IntegerBase;
 using regina::Integer;
 using regina::LargeInteger;
@@ -695,12 +697,9 @@ TYPED_TEST(IntegerTest, swap) {
     }
 }
 
-template <typename IntegerType, typename NumericType>
+template <ArbitraryPrecisionInteger IntegerType, std::integral NumericType>
 static void verifyNumeric(NumericType value) {
     // Test construction and assignment from the given native C++ integer type.
-    static_assert(
-        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
-    static_assert(std::is_integral_v<NumericType>);
 
     SCOPED_TRACE_NUMERIC(value);
     std::string str = std::to_string(value);
@@ -1122,10 +1121,8 @@ TYPED_TEST(IntegerTest, incDec) {
     }
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifySumNativeNative(long a, long b, const IntegerType& expect) {
-    static_assert(
-        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
     SCOPED_TRACE_NUMERIC(a);
     SCOPED_TRACE_NUMERIC(b);
 
@@ -1141,11 +1138,9 @@ static void verifySumNativeNative(long a, long b, const IntegerType& expect) {
     EXPECT_EQ(expect - IntegerType(b), a);
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifySumLargeNative(const IntegerType& a, long b,
         const IntegerType& expect) {
-    static_assert(
-        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
     SCOPED_TRACE_REGINA(a);
     SCOPED_TRACE_NUMERIC(b);
 
@@ -1158,11 +1153,9 @@ static void verifySumLargeNative(const IntegerType& a, long b,
     EXPECT_EQ(expect - IntegerType(b), a);
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifySumLargeLarge(const IntegerType& a, const IntegerType& b,
         const IntegerType& expect) {
-    static_assert(
-        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
     SCOPED_TRACE_REGINA(a);
     SCOPED_TRACE_REGINA(b);
 
@@ -1401,11 +1394,9 @@ TYPED_TEST(IntegerTest, plusMinus) {
     }
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifyProductNativeNative(long a, long b,
         const IntegerType& expect) {
-    static_assert(
-        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
     SCOPED_TRACE_NUMERIC(a);
     SCOPED_TRACE_NUMERIC(b);
 
@@ -1417,11 +1408,9 @@ static void verifyProductNativeNative(long a, long b,
     EXPECT_EQ(IntegerType(b) * IntegerType(a), expect);
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifyProductLargeNative(const IntegerType& a, long b,
         const IntegerType& expect) {
-    static_assert(
-        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
     SCOPED_TRACE_REGINA(a);
     SCOPED_TRACE_NUMERIC(b);
 
