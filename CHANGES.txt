@@ -23,6 +23,10 @@ Version 7.5  [ TODO ]
               is now of type int.
         Class PermClass<n>:
             - Everything in this class is now constexpr.
+        Class Vector<T>:
+            - For the constructor that takes a pair of iterators, the old
+              recommendation that the iterator type be random access is now a
+              hard requirement.
         Function valueOf():
             - The native C++ integer versions of valueOf() are now templated.
             - The unsigned integer versions now reject negative numbers
@@ -42,11 +46,14 @@ Version 7.5  [ TODO ]
             - All three constants are now false when T == bool (previously,
               is_cpp_integer_v<bool> and is_unsigned_cpp_integer_v<bool> were
               both true).
+        Concept Writeable, InherentlyTightEncodable:
+            - New concepts for describing input and output capabilities.
         Concept CppInteger, StandardCppInteger, SignedCppInteger,
                 UnsignedCppInteger:
             - New concepts for detecting native C++ integers and related types.
         Concept ReginaInteger, ArbitraryPrecisionInteger, IntegerVector,
-                ArbitraryPrecisionIntegerVector, RingLike, Ring:
+                ArbitraryPrecisionIntegerVector, IntegerCompatible, RingLike,
+                Ring:
             - New concepts for detecting various mathematical types.
 
 Version 7.4.1  [ 30 November, 2025 ]

@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include "concepts/core.h"
+#include "concepts/io.h"
 #include "concepts/maths.h"
 #include "maths/arrow.h"
 #include "maths/cyclotomic.h"
@@ -148,4 +149,11 @@ static_assert(regina::Ring<regina::Arrow>);
 static_assert(regina::Ring<regina::Polynomial<Integer>>);
 static_assert(! regina::Ring<regina::Cyclotomic>);
 static_assert(regina::RingLike<regina::Cyclotomic>);
+
+static_assert(regina::InherentlyTightEncodable<Integer>);
+static_assert(regina::InherentlyTightEncodable<LargeInteger>);
+static_assert(regina::InherentlyTightEncodable<Vector<Integer>>);
+static_assert(! regina::InherentlyTightEncodable<int>);
+// NativeInteger does not yet support tight encodings.
+static_assert(! regina::InherentlyTightEncodable<NativeInteger<8>>);
 

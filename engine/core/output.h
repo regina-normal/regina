@@ -246,11 +246,10 @@ struct ShortOutput : public Output<T, supportsUtf8> {
  * implementation of str() (perhaps with more arguments) that is implemented
  * in the class \a T itself.
  *
- * \pre \a T is a class or struct type.
- *
  * \ingroup engine
  */
 template <typename T>
+requires std::is_class_v<T>
 struct OutputBase {
     private:
         // Implementation details:

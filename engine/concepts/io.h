@@ -50,8 +50,20 @@ namespace regina {
  */
 template <typename T>
 concept Writeable =
-    requires(const T x, std::ostream& s) {
-        { s << x } -> std::same_as<std::ostream&>;
+    requires(const T x, std::ostream& out) {
+        { out << x } -> std::same_as<std::ostream&>;
+    };
+
+/**
+ * A type that has member functions for tight encoding and decoding.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept InherentlyTightEncodable =
+    requires(const T x, std::ostream& out, std::istream& in) {
+        { x.tightEncode(out) };
+        { T::tightDecode(in) } -> std::same_as<T>;
     };
 
 } // namespace regina

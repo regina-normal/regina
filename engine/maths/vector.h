@@ -40,6 +40,7 @@
 #include <algorithm>
 #include <initializer_list>
 #include <iostream>
+#include <iterator>
 #include "regina-core.h"
 #include "concepts/maths.h"
 #include "core/output.h"
@@ -157,17 +158,12 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
             std::fill(elts_, end_, initValue);
         }
         /**
-         * Creates a new vector containing the given sequence of elements.
+         * Creates a new vector containing a deep copy of the given sequence
+         * of elements.
          *
-         * This constructor induces a deep copy of the given range.
-         *
-         * \pre Objects of type \a T can be assigned values from
-         * dereferenced iterators of type \a iterator.
-         *
-         * \warning This routine computes the length of the given
-         * sequence by subtracting `end - begin`, and so ideally
-         * \a iterator should be a random access iterator type for which
-         * this operation is constant time.
+         * The iterator type must be random access because this allows the
+         * implementation to compute the sequence length `end - begin` in
+         * constant time.
          *
          * \python Instead of a pair of iterators, this routine
          * takes a python list of coefficients.
@@ -176,7 +172,8 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * \param end a past-the-end iterator indicating the end of the
          * sequence of elements.
          */
-        template <typename iterator>
+        template <std::random_access_iterator iterator>
+        requires std::assignable_from<T&, decltype(*std::declval<iterator&>())>
         inline Vector(iterator begin, iterator end) :
                 elts_(new T[end - begin]), end_(elts_ + (end - begin)) {
             std::copy(begin, end, elts_);
@@ -681,16 +678,13 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * Writes the tight encoding of this vector to the given output
          * stream.  See the page on \ref tight "tight encodings" for details.
          *
-         * \pre The element type \a T must have a corresponding
-         * tightEncode() function.  This is true for Regina's arbitrary
-         * precision integer types (Integer and LargeInteger).
-         *
          * \nopython Use tightEncoding() instead, which returns a string.
          *
          * \param out the output stream to which the encoded string will
          * be written.
          */
-        void tightEncode(std::ostream& out) const {
+        void tightEncode(std::ostream& out) const
+                requires InherentlyTightEncodable<T> {
             regina::detail::tightEncodeIndex(out, size());
             for (const T* elt = elts_; elt != end_; ++elt)
                 elt->tightEncode(out);
@@ -708,10 +702,6 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * immediately after the encoding, without skipping any trailing
          * whitespace.
          *
-         * \pre The element type \a T must have a corresponding static
-         * tightDecode() function.  This is true for Regina's arbitrary
-         * precision integer types (Integer and LargeInteger).
-         *
          * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of a vector of elements of type \a T.
          *
@@ -722,7 +712,8 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * for a vector of element of type \a T.
          * \return the vector represented by the given tight encoding.
          */
-        static Vector tightDecode(std::istream& input) {
+        static Vector tightDecode(std::istream& input)
+                requires InherentlyTightEncodable<T> {
             Vector ans(regina::detail::tightDecodeIndex<size_t>(input));
             for (T* elt = ans.elts_; elt != ans.end_; ++elt)
                 *elt = T::tightDecode(input);
