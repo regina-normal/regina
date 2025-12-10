@@ -66,11 +66,7 @@ namespace regina {
 class Crossing;
 class Link;
 class ModelLinkGraph;
-class ProgressTracker;
 class Tangle;
-template <typename T> class Laurent;
-template <typename T> class Laurent2;
-template <int> class Triangulation;
 
 /**
  * \defgroup link Knots and Links

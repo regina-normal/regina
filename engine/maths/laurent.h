@@ -42,6 +42,7 @@
 #include "concepts/io.h"
 #include "core/output.h"
 #include <iostream>
+#include <iterator>
 
 namespace regina {
 
@@ -50,18 +51,6 @@ namespace regina {
  * type \a T.  A Laurent polynomial differs from an ordinary polynomial
  * in that it allows negative exponents (so, unlike the Polynomial class,
  * you can represent both `2+3x` and `1+1/x`).
- *
- * The type \a T must represent a ring with no zero divisors.
- * In particular, it must:
- *
- * - support basic arithmetic operations;
- * - support assignments of the form `x = int` and
- *   tests of the form `x == int` and `x < int`;
- * - have a default constructor that assigns an explicit value of zero.
- *
- * This means that Regina's numerical types such as Integer and Rational
- * are supported, but native data types such as int and long are not
- * (since they have no zero-initialising default constructor).
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -76,9 +65,13 @@ namespace regina {
  * \python In Python, the class Laurent refers to the specific
  * template class Laurent<Integer>.
  *
+ * \tparam T the coefficient type.  A typical coefficient type would be
+ * Integer or Rational.  Note that native C++ integer types are _not_
+ * supported (since they have no zero-initialising default constructor).
+ *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 class Laurent :
         public ShortOutput<Laurent<T>, true>,
         public TightEncodable<Laurent<T>> {
@@ -160,7 +153,7 @@ class Laurent :
          *
          * \param value the polynomial to clone.
          */
-        template <typename U>
+        template <CoefficientDomain U>
         Laurent(const Laurent<U>& value);
 
         /**
@@ -186,8 +179,8 @@ class Laurent :
          *
          * This constructor induces a deep copy of the given range.
          *
-         * \pre Objects of type \a T can be assigned values from
-         * dereferenced iterators of type \a iterator.
+         * The iterator type must be random access because this allows the
+         * implementation to compute the sequence length in constant time.
          *
          * \python Instead of the iterators \a begin and \a end,
          * this routine takes a python list of coefficients.
@@ -198,7 +191,8 @@ class Laurent :
          * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
-        template <typename iterator>
+        template <std::random_access_iterator iterator>
+        requires InputIteratorFor<iterator, T>
         Laurent(long minExp, iterator begin, iterator end);
 
         /**
@@ -265,8 +259,8 @@ class Laurent :
          *
          * This routine induces a deep copy of the given range.
          *
-         * \pre Objects of type \a T can be assigned values from
-         * dereferenced iterators of type \a iterator.
+         * The iterator type must be random access because this allows the
+         * implementation to compute the sequence length in constant time.
          *
          * \python Instead of the iterators \a begin and \a end,
          * this routine takes a python list of coefficients.
@@ -277,7 +271,8 @@ class Laurent :
          * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
-        template <typename iterator>
+        template <std::random_access_iterator iterator>
+        requires InputIteratorFor<iterator, T>
         void init(long minExp, iterator begin, iterator end);
 
         /**
@@ -408,7 +403,7 @@ class Laurent :
          * \param value the polynomial to copy.
          * \return a reference to this polynomial.
          */
-        template <typename U>
+        template <CoefficientDomain U>
         Laurent& operator = (const Laurent<U>& value);
 
         /**
@@ -691,22 +686,22 @@ class Laurent :
          */
         Laurent<T>& subtractFrom(const Laurent<T>& other);
 
-    template <typename U>
+    template <CoefficientDomain U>
     friend Laurent<U> operator + (const Laurent<U>&, const Laurent<U>&);
 
-    template <typename U>
+    template <CoefficientDomain U>
     friend Laurent<U> operator + (Laurent<U>&&, Laurent<U>&&);
 
-    template <typename U>
+    template <CoefficientDomain U>
     friend Laurent<U> operator - (const Laurent<U>&, const Laurent<U>&);
 
-    template <typename U>
+    template <CoefficientDomain U>
     friend Laurent<U> operator - (const Laurent<U>&, Laurent<U>&&);
 
-    template <typename U>
+    template <CoefficientDomain U>
     friend Laurent<U> operator - (Laurent<U>&&, Laurent<U>&&);
 
-    template <typename U>
+    template <CoefficientDomain U>
     friend Laurent<U> operator * (const Laurent<U>&, const Laurent<U>&);
 };
 
@@ -721,7 +716,7 @@ class Laurent :
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 void swap(Laurent<T>& a, Laurent<T>& b) noexcept;
 
 /**
@@ -736,7 +731,7 @@ void swap(Laurent<T>& a, Laurent<T>& b) noexcept;
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator * (Laurent<T> poly,
     const typename Laurent<T>::Coefficient& scalar);
 
@@ -752,7 +747,7 @@ Laurent<T> operator * (Laurent<T> poly,
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator * (const typename Laurent<T>::Coefficient& scalar,
     Laurent<T> poly);
 
@@ -772,7 +767,7 @@ Laurent<T> operator * (const typename Laurent<T>::Coefficient& scalar,
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator / (Laurent<T> poly,
     const typename Laurent<T>::Coefficient& scalar);
 
@@ -788,7 +783,7 @@ Laurent<T> operator / (Laurent<T> poly,
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator + (const Laurent<T>& lhs, const Laurent<T>& rhs);
 
 /**
@@ -803,7 +798,7 @@ Laurent<T> operator + (const Laurent<T>& lhs, const Laurent<T>& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator + (Laurent<T>&& lhs, const Laurent<T>& rhs);
 
 /**
@@ -818,7 +813,7 @@ Laurent<T> operator + (Laurent<T>&& lhs, const Laurent<T>& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator + (const Laurent<T>& lhs, Laurent<T>&& rhs);
 
 /**
@@ -833,7 +828,7 @@ Laurent<T> operator + (const Laurent<T>& lhs, Laurent<T>&& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator + (Laurent<T>&& lhs, Laurent<T>&& rhs);
 
 /**
@@ -844,7 +839,7 @@ Laurent<T> operator + (Laurent<T>&& lhs, Laurent<T>&& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator - (Laurent<T> arg);
 
 /**
@@ -859,7 +854,7 @@ Laurent<T> operator - (Laurent<T> arg);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator - (const Laurent<T>& lhs, const Laurent<T>& rhs);
 
 /**
@@ -874,7 +869,7 @@ Laurent<T> operator - (const Laurent<T>& lhs, const Laurent<T>& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator - (Laurent<T>&& lhs, const Laurent<T>& rhs);
 
 /**
@@ -889,7 +884,7 @@ Laurent<T> operator - (Laurent<T>&& lhs, const Laurent<T>& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator - (const Laurent<T>& lhs, Laurent<T>&& rhs);
 
 /**
@@ -904,7 +899,7 @@ Laurent<T> operator - (const Laurent<T>& lhs, Laurent<T>&& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator - (Laurent<T>&& lhs, Laurent<T>&& rhs);
 
 /**
@@ -916,49 +911,53 @@ Laurent<T> operator - (Laurent<T>&& lhs, Laurent<T>&& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator * (const Laurent<T>& lhs, const Laurent<T>& rhs);
 
 #ifndef __DOXYGEN
 // Don't confuse doxygen with specialisations.
-template <typename T>
+template <CoefficientDomain T>
 struct RingTraits<Laurent<T>> {
     inline static const Laurent<T> zero;
     inline static const Laurent<T> one { 0, { 1 } };
+    static constexpr bool commutative = RingTraits<T>::commutative;
+    static constexpr bool zeroInitialised = true;
+    static constexpr bool zeroDivisors = false; // since T is a domain
 };
 #endif // __DOXYGEN
 
 // Inline functions and constants for Laurent:
 
-template <typename T>
+template <CoefficientDomain T>
 const T Laurent<T>::zero_(0);
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T>::Laurent() : minExp_(0), maxExp_(0), base_(0),
         coeff_(new T[1]) {
     // The default constructor for T already initialises coeff_[0] to zero.
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T>::Laurent(long exp) :
         minExp_(exp), maxExp_(exp), base_(exp), coeff_(new T[1]) {
     coeff_[0] = 1;
 }
 
-template <typename T>
-template <typename iterator>
+template <CoefficientDomain T>
+template <std::random_access_iterator iterator>
+requires InputIteratorFor<iterator, T>
 inline Laurent<T>::Laurent(long minExp, iterator begin, iterator end) :
         coeff_(nullptr) {
     init(minExp, begin, end);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T>::Laurent(long minExp, std::initializer_list<T> coefficients) :
         coeff_(nullptr) {
     init(minExp, coefficients.begin(), coefficients.end());
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T>::Laurent(const Laurent<T>& value) :
         minExp_(value.minExp_), maxExp_(value.maxExp_), base_(value.minExp_),
         coeff_(new T[value.maxExp_ - value.minExp_ + 1]) {
@@ -967,8 +966,8 @@ inline Laurent<T>::Laurent(const Laurent<T>& value) :
         coeff_[i] = value.coeff_[i + value.minExp_ - value.base_];
 }
 
-template <typename T>
-template <typename U>
+template <CoefficientDomain T>
+template <CoefficientDomain U>
 inline Laurent<T>::Laurent(const Laurent<U>& value) :
         minExp_(value.minExp_), maxExp_(value.maxExp_), base_(value.minExp_),
         coeff_(new T[value.maxExp_ - value.minExp_ + 1]) {
@@ -977,14 +976,14 @@ inline Laurent<T>::Laurent(const Laurent<U>& value) :
         coeff_[i] = value.coeff_[i + value.minExp_ - value.base_];
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T>::Laurent(Laurent<T>&& value) noexcept :
         minExp_(value.minExp_), maxExp_(value.maxExp_), base_(value.base_),
         coeff_(value.coeff_) {
     value.coeff_ = nullptr;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T>::Laurent(long minExp, long maxExp, T* coeff,
         bool checkZeroes) :
         minExp_(minExp), maxExp_(maxExp), base_(minExp), coeff_(coeff) {
@@ -992,12 +991,12 @@ inline Laurent<T>::Laurent(long minExp, long maxExp, T* coeff,
         fixDegrees();
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T>::~Laurent() {
     delete[] coeff_;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Laurent<T>::init() {
     delete[] coeff_;
     minExp_ = maxExp_ = base_ = 0;
@@ -1005,7 +1004,7 @@ inline void Laurent<T>::init() {
     // coeff_[0] is initialised to 0 automatically.
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Laurent<T>::initExp(long exp) {
     delete[] coeff_;
     minExp_ = maxExp_ = base_ = exp;
@@ -1013,13 +1012,14 @@ inline void Laurent<T>::initExp(long exp) {
     coeff_[0] = 1;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Laurent<T>::init(long exp) {
     initExp(exp);
 }
 
-template <typename T>
-template <typename iterator>
+template <CoefficientDomain T>
+template <std::random_access_iterator iterator>
+requires InputIteratorFor<iterator, T>
 void Laurent<T>::init(long minExp, iterator begin, iterator end) {
     delete[] coeff_;
 
@@ -1049,22 +1049,22 @@ void Laurent<T>::init(long minExp, iterator begin, iterator end) {
         --maxExp_;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline long Laurent<T>::minExp() const {
     return minExp_;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline long Laurent<T>::maxExp() const {
     return maxExp_;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline bool Laurent<T>::isZero() const {
     return (minExp_ == maxExp_ && coeff_[minExp_ - base_] == 0);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline const T& Laurent<T>::operator [] (long exp) const {
     if (exp < minExp_ || exp > maxExp_)
         return zero_;
@@ -1072,7 +1072,7 @@ inline const T& Laurent<T>::operator [] (long exp) const {
         return coeff_[exp - base_];
 }
 
-template <typename T>
+template <CoefficientDomain T>
 void Laurent<T>::set(long exp, const T& value) {
     if (value == 0) {
         if (exp == maxExp_) {
@@ -1133,7 +1133,7 @@ void Laurent<T>::set(long exp, const T& value) {
     }
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline bool Laurent<T>::operator == (const Laurent<T>& rhs) const {
     if (minExp_ != rhs.minExp_ || maxExp_ != rhs.maxExp_)
         return false;
@@ -1143,7 +1143,7 @@ inline bool Laurent<T>::operator == (const Laurent<T>& rhs) const {
     return true;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 std::strong_ordering Laurent<T>::operator <=> (const Laurent<T>& rhs) const {
     if (minExp_ < rhs.minExp_)
         return std::strong_ordering::less;
@@ -1164,7 +1164,7 @@ std::strong_ordering Laurent<T>::operator <=> (const Laurent<T>& rhs) const {
     return std::strong_ordering::equal;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T>& Laurent<T>::operator = (const Laurent<T>& other) {
     // Treat x = x separately, since otherwise we break things when we
     // reset base_ = other.minExp_.
@@ -1186,8 +1186,8 @@ Laurent<T>& Laurent<T>::operator = (const Laurent<T>& other) {
 #ifndef __DOXYGEN
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
-template <typename T>
-template <typename U>
+template <CoefficientDomain T>
+template <CoefficientDomain U>
 Laurent<T>& Laurent<T>::operator = (const Laurent<U>& other) {
     // Treat x = x separately, since otherwise we break things when we
     // reset base_ = other.minExp_.
@@ -1207,7 +1207,7 @@ Laurent<T>& Laurent<T>::operator = (const Laurent<U>& other) {
 }
 #endif // __DOXYGEN
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T>& Laurent<T>::operator = (Laurent<T>&& other) noexcept {
     minExp_ = other.minExp_;
     maxExp_ = other.maxExp_;
@@ -1217,7 +1217,7 @@ inline Laurent<T>& Laurent<T>::operator = (Laurent<T>&& other) noexcept {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Laurent<T>::swap(Laurent<T>& other) noexcept {
     std::swap(minExp_, other.minExp_);
     std::swap(maxExp_, other.maxExp_);
@@ -1225,14 +1225,14 @@ inline void Laurent<T>::swap(Laurent<T>& other) noexcept {
     std::swap(coeff_, other.coeff_);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Laurent<T>::shift(long s) {
     base_ += s;
     minExp_ += s;
     maxExp_ += s;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 void Laurent<T>::scaleUp(long k) {
     if (k == 1)
         return;
@@ -1265,7 +1265,7 @@ void Laurent<T>::scaleUp(long k) {
     coeff_ = newCoeff;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 void Laurent<T>::scaleDown(long k) {
     if (k == 0)
         throw FailedPrecondition("scaleDown() requires a non-zero "
@@ -1328,14 +1328,14 @@ void Laurent<T>::scaleDown(long k) {
     coeff_ = newCoeff;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Laurent<T>::negate() {
     for (long exp = minExp_; exp <= maxExp_; ++exp)
         if (coeff_[exp - base_] != 0)
             coeff_[exp - base_] = -coeff_[exp - base_];
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Laurent<T>::invertX() {
     if (minExp_ == maxExp_ && base_ == minExp_) {
         // Just a single coefficient.
@@ -1357,7 +1357,7 @@ inline void Laurent<T>::invertX() {
     coeff_ = newCoeff;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T>& Laurent<T>::operator *= (const T& scalar) {
     if (scalar == 0)
         init();
@@ -1368,7 +1368,7 @@ Laurent<T>& Laurent<T>::operator *= (const T& scalar) {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T>& Laurent<T>::operator /= (const T& scalar) {
     for (long exp = minExp_; exp <= maxExp_; ++exp)
         coeff_[exp - base_] /= scalar;
@@ -1378,7 +1378,7 @@ inline Laurent<T>& Laurent<T>::operator /= (const T& scalar) {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T>& Laurent<T>::operator += (const Laurent<T>& other) {
     // This routine works even if &other == this, since in this case we do not
     // reallocate.
@@ -1397,7 +1397,7 @@ inline Laurent<T>& Laurent<T>::operator += (const Laurent<T>& other) {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T>& Laurent<T>::operator -= (const Laurent<T>& other) {
     // This routine works even if &other == this, since in this case we do not
     // reallocate.
@@ -1416,7 +1416,7 @@ inline Laurent<T>& Laurent<T>::operator -= (const Laurent<T>& other) {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T>& Laurent<T>::operator *= (const Laurent<T>& other) {
     if (isZero())
         return *this;
@@ -1445,7 +1445,7 @@ Laurent<T>& Laurent<T>::operator *= (const Laurent<T>& other) {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 void Laurent<T>::writeTextShort(std::ostream& out, bool utf8,
         const char* variable) const {
     if (isZero()) {
@@ -1500,7 +1500,7 @@ void Laurent<T>::writeTextShort(std::ostream& out, bool utf8,
     }
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline std::string Laurent<T>::str(const char* variable) const {
     // Make sure that python will be able to find the inherited str().
     static_assert(std::is_same_v<typename OutputBase<Laurent<T>>::type,
@@ -1512,14 +1512,14 @@ inline std::string Laurent<T>::str(const char* variable) const {
     return out.str();
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline std::string Laurent<T>::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
     return out.str();
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Laurent<T>::tightEncode(std::ostream& out) const
         requires InherentlyTightEncodable<T> {
     // Write the non-zero coefficients with their exponents, and then
@@ -1534,7 +1534,7 @@ inline void Laurent<T>::tightEncode(std::ostream& out) const
     T().tightEncode(out); // The zero terminator
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> Laurent<T>::tightDecode(std::istream& input)
         requires InherentlyTightEncodable<T> {
     // Use a temporary std::vector to store non-zero coefficients, since we
@@ -1566,7 +1566,7 @@ Laurent<T> Laurent<T>::tightDecode(std::istream& input)
     }
 }
 
-template <typename T>
+template <CoefficientDomain T>
 void Laurent<T>::reallocateForRange(long newMin, long newMax) {
     long exp;
     if (base_ > newMin) {
@@ -1629,7 +1629,7 @@ void Laurent<T>::reallocateForRange(long newMin, long newMax) {
     }
 }
 
-template <typename T>
+template <CoefficientDomain T>
 void Laurent<T>::fixDegrees() {
     while (maxExp_ > minExp_ && coeff_[maxExp_ - base_] == 0)
         --maxExp_;
@@ -1644,7 +1644,7 @@ void Laurent<T>::fixDegrees() {
     }
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T>& Laurent<T>::subtractFrom(const Laurent<T>& other) {
     // This routine works even if &other == this, since in this case we do not
     // reallocate.
@@ -1676,12 +1676,12 @@ inline Laurent<T>& Laurent<T>::subtractFrom(const Laurent<T>& other) {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void swap(Laurent<T>& a, Laurent<T>& b) noexcept {
     a.swap(b);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T> operator * (Laurent<T> poly,
         const typename Laurent<T>::Coefficient& scalar) {
     // When the argument poly is an lvalue reference, we perform a deep copy
@@ -1693,7 +1693,7 @@ inline Laurent<T> operator * (Laurent<T> poly,
     return poly;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T> operator * (const typename Laurent<T>::Coefficient& scalar,
         Laurent<T> poly) {
     // See the notes above on a possible optimisation for scalar == 0.
@@ -1701,14 +1701,14 @@ inline Laurent<T> operator * (const typename Laurent<T>::Coefficient& scalar,
     return poly;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T> operator / (Laurent<T> poly,
         const typename Laurent<T>::Coefficient& scalar) {
     poly /= scalar;
     return poly;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator + (const Laurent<T>& lhs, const Laurent<T>& rhs) {
     // Handle zero polynomials separately, since their ranges do not
     // actually contain any coefficients and so should be ignored.
@@ -1778,17 +1778,17 @@ Laurent<T> operator + (const Laurent<T>& lhs, const Laurent<T>& rhs) {
     return Laurent<T>(minExp, maxExp, coeff, true);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T> operator + (Laurent<T>&& lhs, const Laurent<T>& rhs) {
     return std::move(lhs += rhs);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T> operator + (const Laurent<T>& lhs, Laurent<T>&& rhs) {
     return std::move(rhs += lhs);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T> operator + (Laurent<T>&& lhs, Laurent<T>&& rhs) {
     // If we can, choose a direction for the addition that avoids a
     // deep copy within +=.
@@ -1802,13 +1802,13 @@ inline Laurent<T> operator + (Laurent<T>&& lhs, Laurent<T>&& rhs) {
     }
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent<T> operator - (Laurent<T> arg) {
     arg.negate();
     return arg;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator - (const Laurent<T>& lhs, const Laurent<T>& rhs) {
     // Handle zero polynomials separately, since their ranges do not
     // actually contain any coefficients and so should be ignored.
@@ -1893,17 +1893,17 @@ Laurent<T> operator - (const Laurent<T>& lhs, const Laurent<T>& rhs) {
     return Laurent<T>(minExp, maxExp, coeff, true);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator - (Laurent<T>&& lhs, const Laurent<T>& rhs) {
     return std::move(lhs -= rhs);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator - (const Laurent<T>& lhs, Laurent<T>&& rhs) {
     return std::move(rhs.subtractFrom(lhs));
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator - (Laurent<T>&& lhs, Laurent<T>&& rhs) {
     // If we can, choose a direction for the subtraction that avoids a
     // deep copy within -= / subtractFrom.
@@ -1914,7 +1914,7 @@ Laurent<T> operator - (Laurent<T>&& lhs, Laurent<T>&& rhs) {
         return std::move(lhs -= rhs);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Laurent<T> operator * (const Laurent<T>& lhs, const Laurent<T>& rhs) {
     if (lhs.isZero() || rhs.isZero())
         return Laurent<T>(); // zero

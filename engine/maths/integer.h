@@ -1779,6 +1779,9 @@ template <bool withInfinity>
 struct RingTraits<IntegerBase<withInfinity>> {
     inline static const IntegerBase<withInfinity> zero;
     inline static const IntegerBase<withInfinity> one { 1 };
+    static constexpr bool commutative = true;
+    static constexpr bool zeroInitialised = true;
+    static constexpr bool zeroDivisors = false;
 };
 #endif // __DOXYGEN
 
@@ -2404,6 +2407,9 @@ template <int bytes>
 struct RingTraits<NativeInteger<bytes>> {
     static constexpr NativeInteger<bytes> zero { };
     static constexpr NativeInteger<bytes> one { 1 };
+    static constexpr bool commutative = true;
+    static constexpr bool zeroInitialised = true;
+    static constexpr bool zeroDivisors = true;
 };
 #endif // __DOXYGEN
 

@@ -475,6 +475,9 @@ template <>
 struct RingTraits<Rational> {
     inline static const Rational zero;
     inline static const Rational one { 1 };
+    static constexpr bool commutative = true;
+    static constexpr bool zeroInitialised = true;
+    static constexpr bool zeroDivisors = false;
 };
 #endif // __DOXYGEN
 

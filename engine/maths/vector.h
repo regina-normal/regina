@@ -162,8 +162,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * of elements.
          *
          * The iterator type must be random access because this allows the
-         * implementation to compute the sequence length `end - begin` in
-         * constant time.
+         * implementation to compute the sequence length in constant time.
          *
          * \python Instead of a pair of iterators, this routine
          * takes a python list of coefficients.
@@ -173,7 +172,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * sequence of elements.
          */
         template <std::random_access_iterator iterator>
-        requires std::assignable_from<T&, decltype(*std::declval<iterator&>())>
+        requires InputIteratorFor<iterator, T>
         inline Vector(iterator begin, iterator end) :
                 elts_(new T[end - begin]), end_(elts_ + (end - begin)) {
             std::copy(begin, end, elts_);

@@ -11,8 +11,9 @@ Version 7.5  [ TODO ]
 
     GENERAL:
         - Begun a move to use C++20 concepts and constraints instead of plain
-          English requirements for template parameters.  This is an ongoing
-          project.
+          English requirements for template arguments.  This is an ongoing
+          project.  As a result, many constraints on template arguments are
+          now enforced by the compiler.
         - More use of constexpr throughout the calculation engine.
     ENGINE:
         Class GroupExpressionTerm, GroupExpression, GroupPresentation,
@@ -21,12 +22,20 @@ Version 7.5  [ TODO ]
               generator counts and generator indices.
             - The depth argument to GroupPresentation::proliferateRelators()
               is now of type int.
+        Class Laurent<T>:
+            - For the iterator-based constructor and init() routine, the
+              iterator type is now required to be random access.
         Class PermClass<n>:
             - Everything in this class is now constexpr.
+        Class Polynomial<T>:
+            - For the iterator-based constructor and init() routine, the
+              iterator type is now required to be random access.
+        Class RingTraits:
+            - Provides new compile-time constants zeroInitialised and
+              zeroDivisors.
         Class Vector<T>:
-            - For the constructor that takes a pair of iterators, the old
-              recommendation that the iterator type be random access is now a
-              hard requirement.
+            - For the iterator-based constructor, the old recommendation that
+              the iterator type be random access is now a hard requirement.
         Function valueOf():
             - The native C++ integer versions of valueOf() are now templated.
             - The unsigned integer versions now reject negative numbers
@@ -46,14 +55,17 @@ Version 7.5  [ TODO ]
             - All three constants are now false when T == bool (previously,
               is_cpp_integer_v<bool> and is_unsigned_cpp_integer_v<bool> were
               both true).
+        Concept AssignableTo, InputIteratorFor:
+            - New concepts surrounding assignment operations.
         Concept Writeable, Stringifiable, InherentlyTightEncodable:
             - New concepts for describing input and output capabilities.
         Concept CppInteger, StandardCppInteger, SignedCppInteger,
                 UnsignedCppInteger:
             - New concepts for detecting native C++ integers and related types.
         Concept ReginaInteger, ArbitraryPrecisionInteger, IntegerVector,
-                ArbitraryPrecisionIntegerVector, IntegerCompatible, RingLike,
-                Ring:
+                ArbitraryPrecisionIntegerVector, IntegerCompatible,
+                IntegerComparable, RingLike, Ring, Domain, IntegralDomain,
+                CoefficientDomain:
             - New concepts for detecting various mathematical types.
 
 Version 7.4.1  [ 30 November, 2025 ]

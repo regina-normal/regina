@@ -378,6 +378,9 @@ template <>
 struct RingTraits<Matrix2> {
     inline static const Matrix2 zero;
     inline static const Matrix2 one { 1, 0, 0, 1 };
+    static constexpr bool commutative = false;
+    static constexpr bool zeroInitialised = true;
+    static constexpr bool zeroDivisors = true;
 };
 #endif // __DOXYGEN
 

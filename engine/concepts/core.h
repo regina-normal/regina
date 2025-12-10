@@ -48,6 +48,18 @@ namespace regina {
  */
 
 /**
+ * Indicates that a variable of type \a Source can be assigned to a variablei
+ * of type \a Target.  This is identical to `std::assignable_from`, but with
+ * the arguments in the opposite order.
+ *
+ * Typically \a Target would be an lvalue reference.
+ *
+ * \ingroup concepts
+ */
+template <typename Source, typename Target>
+concept AssignableTo = std::assignable_from<Target, Source>;
+
+/**
  * One of the standard non-boolean C++ integer types, without making any
  * special accommodations for 128-bit integer compiler extensions.
  *
@@ -90,6 +102,16 @@ concept SignedCppInteger = is_signed_cpp_integer_v<T>;
  */
 template <typename T>
 concept UnsignedCppInteger = is_unsigned_cpp_integer_v<T>;
+
+/**
+ * An input iterator whose dereferenced values can be assigned to the type
+ * \a Target.
+ *
+ * \ingroup concepts
+ */
+template <typename T, typename Target>
+concept InputIteratorFor =
+    std::assignable_from<Target&, decltype(*std::declval<T&>())>;
 
 } // namespace regina
 

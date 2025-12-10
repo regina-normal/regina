@@ -41,6 +41,7 @@
 #include "utilities/stringutils.h"
 #include "core/output.h"
 #include <iostream>
+#include <iterator>
 
 namespace regina {
 
@@ -48,18 +49,6 @@ namespace regina {
  * Represents a single-variable polynomial with coefficients of type \a T.
  * All exponents in the polynomial must be non-negative (so you can
  * represent `2+3x` but not `1+1/x`).
- *
- * The type \a T must represent a ring with no zero divisors.
- * In particular, it must:
- *
- * - support basic arithmetic operations;
- * - support construction of the form `x(int)`, assignments of the form
- *   `x = int`, and tests of the form `x == int` and `x < int`;
- * - have a default constructor that assigns an explicit value of zero.
- *
- * This means that Regina's numerical types such as Integer and Rational
- * are supported, but native data types such as int and long are not
- * (since they have no zero-initialising default constructor).
  *
  * The underlying storage method for this class is dense (i.e., all
  * coefficients are explicitly stored, including zero coefficients).
@@ -73,9 +62,13 @@ namespace regina {
  * respectively.  The alias Polynomial is also provided for the type
  * Polynomial<Rational>.
  *
+ * \tparam T the coefficient type.  A typical coefficient type would be
+ * Integer or Rational.  Note that native C++ integer types are _not_
+ * supported (since they have no zero-initialising default constructor).
+ *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 class Polynomial : public ShortOutput<Polynomial<T>, true> {
     public:
         using Coefficient = T;
@@ -141,7 +134,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * \param value the polynomial to clone.
          */
-        template <typename U>
+        template <CoefficientDomain U>
         Polynomial(const Polynomial<U>& value);
 
         /**
@@ -165,8 +158,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * This constructor induces a deep copy of the given range.
          *
-         * \pre Objects of type \a T can be assigned values from
-         * dereferenced iterators of type \a iterator.
+         * The iterator type must be random access because this allows the
+         * implementation to compute the sequence length in constant time.
          *
          * \python Instead of a pair of iterators, this routine
          * takes a python list of coefficients.
@@ -175,7 +168,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
-        template <typename iterator>
+        template <std::random_access_iterator iterator>
+        requires InputIteratorFor<iterator, T>
         Polynomial(iterator begin, iterator end);
 
         /**
@@ -236,8 +230,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * This routine induces a deep copy of the given range.
          *
-         * \pre Objects of type \a T can be assigned values from
-         * dereferenced iterators of type \a iterator.
+         * The iterator type must be random access because this allows the
+         * implementation to compute the sequence length in constant time.
          *
          * \python Instead of a pair of iterators, this routine
          * takes a python list of coefficients.
@@ -246,7 +240,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
-        template <typename iterator>
+        template <std::random_access_iterator iterator>
+        requires InputIteratorFor<iterator, T>
         void init(iterator begin, iterator end);
 
         /**
@@ -368,7 +363,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \param value the polynomial to copy.
          * \return a reference to this polynomial.
          */
-        template <typename U>
+        template <CoefficientDomain U>
         Polynomial& operator = (const Polynomial<U>& value);
 
         /**
@@ -562,7 +557,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \param v a polynomial whose contents will be destroyed and
          * replaced with \a v, as described above.
          */
-        template <typename U>
+        template <CoefficientDomain U>
         void gcdWithCoeffs(const Polynomial<U>& other,
             Polynomial& gcd, Polynomial& u, Polynomial& v) const;
 
@@ -651,19 +646,19 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          */
         Polynomial& subtractFrom(const Polynomial& other);
 
-    template <typename U>
+    template <CoefficientDomain U>
     friend Polynomial<U> operator +(const Polynomial<U>&, const Polynomial<U>&);
 
-    template <typename U>
+    template <CoefficientDomain U>
     friend Polynomial<U> operator -(const Polynomial<U>&, const Polynomial<U>&);
 
-    template <typename U>
+    template <CoefficientDomain U>
     friend Polynomial<U> operator -(const Polynomial<U>&, Polynomial<U>&&);
 
-    template <typename U>
+    template <CoefficientDomain U>
     friend Polynomial<U> operator -(Polynomial<U>&&, Polynomial<U>&&);
 
-    template <typename U>
+    template <CoefficientDomain U>
     friend Polynomial<U> operator *(const Polynomial<U>&, const Polynomial<U>&);
 };
 
@@ -678,7 +673,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 void swap(Polynomial<T>& a, Polynomial<T>& b) noexcept;
 
 /**
@@ -693,7 +688,7 @@ void swap(Polynomial<T>& a, Polynomial<T>& b) noexcept;
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator * (Polynomial<T> poly,
     const typename Polynomial<T>::Coefficient& scalar);
 
@@ -709,7 +704,7 @@ Polynomial<T> operator * (Polynomial<T> poly,
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator * (const typename Polynomial<T>::Coefficient& scalar,
     Polynomial<T> poly);
 
@@ -729,7 +724,7 @@ Polynomial<T> operator * (const typename Polynomial<T>::Coefficient& scalar,
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator / (Polynomial<T> poly,
     const typename Polynomial<T>::Coefficient& scalar);
 
@@ -745,7 +740,7 @@ Polynomial<T> operator / (Polynomial<T> poly,
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
 
 /**
@@ -760,7 +755,7 @@ Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator + (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
 
 /**
@@ -775,7 +770,7 @@ Polynomial<T> operator + (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator + (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
 
 /**
@@ -790,7 +785,7 @@ Polynomial<T> operator + (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator + (Polynomial<T>&& lhs, Polynomial<T>&& rhs);
 
 /**
@@ -801,7 +796,7 @@ Polynomial<T> operator + (Polynomial<T>&& lhs, Polynomial<T>&& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator - (Polynomial<T> arg);
 
 /**
@@ -816,7 +811,7 @@ Polynomial<T> operator - (Polynomial<T> arg);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator - (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
 
 /**
@@ -831,7 +826,7 @@ Polynomial<T> operator - (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator - (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
 
 /**
@@ -846,7 +841,7 @@ Polynomial<T> operator - (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator - (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
 
 /**
@@ -861,7 +856,7 @@ Polynomial<T> operator - (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator - (Polynomial<T>&& lhs, Polynomial<T>&& rhs);
 
 /**
@@ -873,7 +868,7 @@ Polynomial<T> operator - (Polynomial<T>&& lhs, Polynomial<T>&& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
 
 /**
@@ -908,45 +903,49 @@ Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator / (Polynomial<T> lhs, const Polynomial<T>& rhs);
 
 #ifndef __DOXYGEN
 // Don't confuse doxygen with specialisations.
-template <typename T>
+template <CoefficientDomain T>
 struct RingTraits<Polynomial<T>> {
     inline static const Polynomial<T> zero;
     inline static const Polynomial<T> one { 1 };
+    static constexpr bool commutative = RingTraits<T>::commutative;
+    static constexpr bool zeroInitialised = true;
+    static constexpr bool zeroDivisors = false; // since T is a domain
 };
 #endif // __DOXYGEN
 
 // Inline functions for Polynomial:
 
-template <typename T>
+template <CoefficientDomain T>
 inline Polynomial<T>::Polynomial() : degree_(0), coeff_(new T[1]) {
     // The default constructor for T already initialises coeff_[0] to zero.
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Polynomial<T>::Polynomial(size_t degree) :
         degree_(degree), coeff_(new T[degree + 1]) {
     coeff_[degree] = 1;
 }
 
-template <typename T>
-template <typename iterator>
+template <CoefficientDomain T>
+template <std::random_access_iterator iterator>
+requires InputIteratorFor<iterator, T>
 inline Polynomial<T>::Polynomial(iterator begin, iterator end) :
         coeff_(nullptr) {
     init(begin, end);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Polynomial<T>::Polynomial(std::initializer_list<T> coefficients) :
         coeff_(nullptr) {
     init(coefficients.begin(), coefficients.end());
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Polynomial<T>::Polynomial(const Polynomial<T>& value) :
         degree_(value.degree()), coeff_(new T[value.degree() + 1]) {
     // std::cerr << "Polynomial: deep copy (init)" << std::endl;
@@ -954,8 +953,8 @@ inline Polynomial<T>::Polynomial(const Polynomial<T>& value) :
         coeff_[i] = value[i];
 }
 
-template <typename T>
-template <typename U>
+template <CoefficientDomain T>
+template <CoefficientDomain U>
 inline Polynomial<T>::Polynomial(const Polynomial<U>& value) :
         degree_(value.degree()), coeff_(new T[value.degree() + 1]) {
     // std::cerr << "Polynomial: deep copy (init)" << std::endl;
@@ -963,18 +962,18 @@ inline Polynomial<T>::Polynomial(const Polynomial<U>& value) :
         coeff_[i] = value[i];
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Polynomial<T>::Polynomial(Polynomial<T>&& value) noexcept :
         degree_(value.degree_), coeff_(value.coeff_) {
     value.coeff_ = nullptr;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Polynomial<T>::~Polynomial() {
     delete[] coeff_;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Polynomial<T>::init() {
     delete[] coeff_;
     degree_ = 0;
@@ -982,7 +981,7 @@ inline void Polynomial<T>::init() {
     // coeff_[0] is initialised to 0 automatically.
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Polynomial<T>::initExp(size_t degree) {
     delete[] coeff_;
     degree_ = degree;
@@ -990,13 +989,14 @@ inline void Polynomial<T>::initExp(size_t degree) {
     coeff_[degree] = 1;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Polynomial<T>::init(size_t degree) {
     initExp(degree);
 }
 
-template <typename T>
-template <typename iterator>
+template <CoefficientDomain T>
+template <std::random_access_iterator iterator>
+requires InputIteratorFor<iterator, T>
 void Polynomial<T>::init(iterator begin, iterator end) {
     delete[] coeff_;
 
@@ -1017,32 +1017,32 @@ void Polynomial<T>::init(iterator begin, iterator end) {
     fixDegree();
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline size_t Polynomial<T>::degree() const {
     return degree_;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline bool Polynomial<T>::isZero() const {
     return (degree_ == 0 && coeff_[0] == 0);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline bool Polynomial<T>::isMonic() const {
     return (coeff_[degree_] == 1);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline const T& Polynomial<T>::leading() const {
     return coeff_[degree_];
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline const T& Polynomial<T>::operator [] (size_t exp) const {
     return coeff_[exp];
 }
 
-template <typename T>
+template <CoefficientDomain T>
 void Polynomial<T>::set(size_t exp, const T& value) {
     if (exp < degree_) {
         coeff_[exp] = value;
@@ -1068,7 +1068,7 @@ void Polynomial<T>::set(size_t exp, const T& value) {
     }
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline bool Polynomial<T>::operator == (const Polynomial<T>& rhs) const {
     if (degree_ != rhs.degree_)
         return false;
@@ -1078,7 +1078,7 @@ inline bool Polynomial<T>::operator == (const Polynomial<T>& rhs) const {
     return true;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 // NOLINTNEXTLINE(bugprone-unhandled-self-assignment)
 Polynomial<T>& Polynomial<T>::operator = (const Polynomial<T>& value) {
     // This works even if &value == this, assuming T itself can handle
@@ -1097,8 +1097,8 @@ Polynomial<T>& Polynomial<T>::operator = (const Polynomial<T>& value) {
 #ifndef __DOXYGEN
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
-template <typename T>
-template <typename U>
+template <CoefficientDomain T>
+template <CoefficientDomain U>
 Polynomial<T>& Polynomial<T>::operator = (const Polynomial<U>& value) {
     // This works even if &value == this, since we don't reallocate if
     // the degrees are equal.
@@ -1114,7 +1114,7 @@ Polynomial<T>& Polynomial<T>::operator = (const Polynomial<U>& value) {
 }
 #endif // __DOXYGEN
 
-template <typename T>
+template <CoefficientDomain T>
 inline Polynomial<T>& Polynomial<T>::operator = (Polynomial<T>&& value)
         noexcept {
     degree_ = value.degree_;
@@ -1123,20 +1123,20 @@ inline Polynomial<T>& Polynomial<T>::operator = (Polynomial<T>&& value)
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Polynomial<T>::swap(Polynomial<T>& other) noexcept {
     std::swap(degree_, other.degree_);
     std::swap(coeff_, other.coeff_);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Polynomial<T>::negate() {
     for (size_t i = 0; i <= degree_; ++i)
         if (coeff_[i] != 0)
             coeff_[i] = - coeff_[i];
 }
 
-template <typename T>
+template <CoefficientDomain T>
 void Polynomial<T>::shift(long s) {
     if (isZero())
         return;
@@ -1159,7 +1159,7 @@ void Polynomial<T>::shift(long s) {
     }
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T>& Polynomial<T>::operator *= (const T& scalar) {
     if (scalar == 0)
         init();
@@ -1170,7 +1170,7 @@ Polynomial<T>& Polynomial<T>::operator *= (const T& scalar) {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Polynomial<T>& Polynomial<T>::operator /= (const T& scalar) {
     for (size_t i = 0; i <= degree_; ++i)
         coeff_[i] /= scalar;
@@ -1181,7 +1181,7 @@ inline Polynomial<T>& Polynomial<T>::operator /= (const T& scalar) {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T>& Polynomial<T>::operator += (const Polynomial<T>& other) {
     // This works even if &other == this, since we don't reallocate if
     // the degrees are equal.
@@ -1204,7 +1204,7 @@ Polynomial<T>& Polynomial<T>::operator += (const Polynomial<T>& other) {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T>& Polynomial<T>::operator -= (const Polynomial<T>& other) {
     // This works even if &other == this, since we don't reallocate if
     // the degrees are equal.
@@ -1227,7 +1227,7 @@ Polynomial<T>& Polynomial<T>::operator -= (const Polynomial<T>& other) {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T>& Polynomial<T>::operator *= (const Polynomial<T>& other) {
     if (isZero())
         return *this;
@@ -1253,7 +1253,7 @@ Polynomial<T>& Polynomial<T>::operator *= (const Polynomial<T>& other) {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T>& Polynomial<T>::operator /= (const Polynomial<T>& other) {
     // The code below breaks if other and *this are the same object, so
     // treat this case specially.
@@ -1293,7 +1293,7 @@ Polynomial<T>& Polynomial<T>::operator /= (const Polynomial<T>& other) {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 std::pair<Polynomial<T>, Polynomial<T>> Polynomial<T>::divisionAlg(
         const Polynomial<T>& divisor) const {
     // The code below breaks if divisor and *this are the same object, so
@@ -1342,8 +1342,8 @@ std::pair<Polynomial<T>, Polynomial<T>> Polynomial<T>::divisionAlg(
     return ans;
 }
 
-template <typename T>
-template <typename U>
+template <CoefficientDomain T>
+template <CoefficientDomain U>
 void Polynomial<T>::gcdWithCoeffs(const Polynomial<U>& other,
         Polynomial<T>& gcd, Polynomial<T>& u, Polynomial<T>& v) const {
     // Special-case situations where one or both polynomials are zero.
@@ -1427,7 +1427,7 @@ void Polynomial<T>::gcdWithCoeffs(const Polynomial<U>& other,
     }
 }
 
-template <typename T>
+template <CoefficientDomain T>
 void Polynomial<T>::writeTextShort(std::ostream& out, bool utf8,
         const char* variable) const {
     if (degree_ == 0) {
@@ -1480,7 +1480,7 @@ void Polynomial<T>::writeTextShort(std::ostream& out, bool utf8,
     }
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline std::string Polynomial<T>::str(const char* variable) const {
     // Make sure that python will be able to find the inherited str().
     static_assert(std::is_same_v<typename OutputBase<Polynomial<T>>::type,
@@ -1492,26 +1492,26 @@ inline std::string Polynomial<T>::str(const char* variable) const {
     return out.str();
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline std::string Polynomial<T>::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
     return out.str();
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Polynomial<T>::Polynomial(size_t degree, T* coeff) :
         degree_(degree), coeff_(coeff) {
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Polynomial<T>::fixDegree() {
     // The leading coefficient might be zero.
     while (degree_ > 0 && coeff_[degree_] == 0)
         --degree_;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Polynomial<T>& Polynomial<T>::subtractFrom(const Polynomial<T>& other) {
     // This works even if &other == this, since we don't reallocate if
     // the degrees are equal.
@@ -1547,12 +1547,12 @@ inline Polynomial<T>& Polynomial<T>::subtractFrom(const Polynomial<T>& other) {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void swap(Polynomial<T>& a, Polynomial<T>& b) noexcept {
     a.swap(b);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Polynomial<T> operator * (Polynomial<T> poly,
         const typename Polynomial<T>::Coefficient& scalar) {
     // When the argument poly is an lvalue reference, we perform a deep copy
@@ -1564,7 +1564,7 @@ inline Polynomial<T> operator * (Polynomial<T> poly,
     return poly;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Polynomial<T> operator * (
         const typename Polynomial<T>::Coefficient& scalar, Polynomial<T> poly) {
     // See the notes above on a possible optimisation for scalar == 0.
@@ -1572,14 +1572,14 @@ inline Polynomial<T> operator * (
     return poly;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Polynomial<T> operator / (Polynomial<T> poly,
         const typename Polynomial<T>::Coefficient& scalar) {
     poly /= scalar;
     return poly;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
     // std::cerr << "Polynomial: deep copy (const +)" << std::endl;
     if (lhs.degree_ >= rhs.degree_) {
@@ -1607,21 +1607,21 @@ Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
     }
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Polynomial<T> operator + (Polynomial<T>&& lhs,
         const Polynomial<T>& rhs) {
     // If deg(lhs) < deg(rhs) then a deep copy is unavoidable.
     return std::move(lhs += rhs);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Polynomial<T> operator + (const Polynomial<T>& lhs,
         Polynomial<T>&& rhs) {
     // If deg(rhs) < deg(lhs) then a deep copy is unavoidable.
     return std::move(rhs += lhs);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Polynomial<T> operator + (Polynomial<T>&& lhs, Polynomial<T>&& rhs) {
     // Add in whichever diretion avoids the deep copy in +=.
     if (lhs.degree() >= rhs.degree())
@@ -1630,13 +1630,13 @@ inline Polynomial<T> operator + (Polynomial<T>&& lhs, Polynomial<T>&& rhs) {
         return std::move(rhs += lhs);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Polynomial<T> operator - (Polynomial<T> arg) {
     arg.negate();
     return arg;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator - (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
     // std::cerr << "Polynomial: deep copy (const -)" << std::endl;
     if (lhs.degree_ >= rhs.degree_) {
@@ -1672,17 +1672,17 @@ Polynomial<T> operator - (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
     }
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator - (Polynomial<T>&& lhs, const Polynomial<T>& rhs) {
     return std::move(lhs -= rhs);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator - (const Polynomial<T>& lhs, Polynomial<T>&& rhs) {
     return std::move(rhs.subtractFrom(lhs));
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator - (Polynomial<T>&& lhs, Polynomial<T>&& rhs) {
     // Choose a direction for the subtraction that avoids a
     // deep copy within -= / subtractFrom.
@@ -1692,7 +1692,7 @@ Polynomial<T> operator - (Polynomial<T>&& lhs, Polynomial<T>&& rhs) {
         return std::move(lhs -= rhs);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
     if (lhs.isZero() || rhs.isZero())
         return Polynomial<T>();
@@ -1708,7 +1708,7 @@ Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
     return Polynomial<T>(lhs.degree_ + rhs.degree_, coeff);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Polynomial<T> operator / (Polynomial<T> lhs, const Polynomial<T>& rhs) {
     return std::move(lhs /= rhs);
 }

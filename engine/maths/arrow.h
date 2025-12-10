@@ -765,6 +765,9 @@ template <>
 struct RingTraits<Arrow> {
     inline static const Arrow zero;
     inline static const Arrow one { Laurent<Integer>(0, {1}) };
+    static constexpr bool commutative = true;
+    static constexpr bool zeroInitialised = true;
+    static constexpr bool zeroDivisors = false;
 };
 #endif // __DOXYGEN
 

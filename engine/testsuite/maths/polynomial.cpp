@@ -367,6 +367,6 @@ TEST_F(PolynomialTest, divisionAlg) {
     verifyDivisionAlg({0, 0, 0, 0, 1}, {0, 1});
 
     // Test the case where x and divisor are the same C++ object.
-    Polynomial p {1, 3, 2};
+    Polynomial<Integer> p {1, 3, 2};
     verifyDivisionAlg(p, p);
 }
