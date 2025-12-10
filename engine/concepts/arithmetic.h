@@ -73,8 +73,8 @@ concept IntegerComparable =
  */
 template <typename T>
 concept RingLike =
+    std::regular<T> &&
     requires(const T a, const T b, T x) {
-        requires std::regular<T>;
         { a + b } -> std::convertible_to<T>;
         { a - b } -> std::convertible_to<T>;
         { a * b } -> std::convertible_to<T>;
@@ -94,8 +94,8 @@ template <RingLike> struct RingTraits;
  */
 template <typename T>
 concept Ring =
+    RingLike<T> &&
     requires {
-        requires RingLike<T>;
         { RingTraits<T>::zero } -> std::convertible_to<T>;
         { RingTraits<T>::one } -> std::convertible_to<T>;
     };

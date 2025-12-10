@@ -78,8 +78,8 @@ template <typename T>
 concept ArbitraryPrecisionIntegerVector =
     requires(T x) {
         []<typename U>(Vector<U>&){}(x); // derived from Vector<...>
-        requires ArbitraryPrecisionInteger<typename T::value_type>;
-    };
+    } &&
+    ArbitraryPrecisionInteger<typename T::value_type>;
 
 /**
  * A mathematical vector type derived from (or the same as) `Vector<T>`,
@@ -92,8 +92,8 @@ template <typename T>
 concept IntegerVector =
     requires(T x) {
         []<typename U>(Vector<U>&){}(x); // derived from Vector<...>
-        requires ReginaInteger<typename T::value_type>;
-    };
+    } &&
+    ReginaInteger<typename T::value_type>;
 
 } // namespace regina
 
