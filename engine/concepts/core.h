@@ -43,10 +43,17 @@
 namespace regina {
 
 /**
+ * \defgroup concepts Concepts
+ * C++ concepts for describing constraints on types.
+ */
+
+/**
  * One of the standard non-boolean C++ integer types, without making any
  * special accommodations for 128-bit integer compiler extensions.
  *
  * This concept is exactly like `std::integral` but with `bool` excluded.
+ *
+ * \ingroup concepts
  */
 template <typename T>
 concept StandardCppInteger = std::integral<T> && ! std::same_as<T, bool>;
@@ -56,6 +63,8 @@ concept StandardCppInteger = std::integral<T> && ! std::same_as<T, bool>;
  * if these are supported by the compiler.
  *
  * See the constant regina::is_cpp_integer_v for further details.
+ *
+ * \ingroup concepts
  */
 template <typename T>
 concept CppInteger = is_cpp_integer_v<T>;
@@ -65,6 +74,8 @@ concept CppInteger = is_cpp_integer_v<T>;
  * also if these are supported by the compiler.
  *
  * See the constant regina::is_signed_cpp_integer_v for further details.
+ *
+ * \ingroup concepts
  */
 template <typename T>
 concept SignedCppInteger = is_signed_cpp_integer_v<T>;
@@ -74,6 +85,8 @@ concept SignedCppInteger = is_signed_cpp_integer_v<T>;
  * integers also if these are supported by the compiler.
  *
  * See the constant regina::is_unsigned_cpp_integer_v for further details.
+ *
+ * \ingroup concepts
  */
 template <typename T>
 concept UnsignedCppInteger = is_unsigned_cpp_integer_v<T>;

@@ -45,6 +45,8 @@ namespace regina {
 
 /**
  * A type that can be written to an output stream.
+ *
+ * \ingroup concepts
  */
 template <typename T>
 concept Writeable =

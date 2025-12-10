@@ -56,6 +56,8 @@ concept IntegerCompatible =
 
 /**
  * A type that has the necessary operations to behave like a mathematical ring.
+ *
+ * \ingroup concepts
  */
 template <typename T>
 concept RingLike =
@@ -75,6 +77,8 @@ template <RingLike> struct RingTraits;
 /**
  * A type that behaves like a mathematical ring, and for which the
  * specialisation `RingTraits<T>` is available.
+ *
+ * \ingroup concepts
  */
 template <typename T>
 concept Ring =

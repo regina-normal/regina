@@ -47,6 +47,8 @@ template <int> class NativeInteger;
 
 /**
  * One of Regina's arbitrary precision integer types (Integer or LargeInteger).
+ *
+ * \ingroup concepts
  */
 template <typename T>
 concept ArbitraryPrecisionInteger =
@@ -55,6 +57,8 @@ concept ArbitraryPrecisionInteger =
 
 /**
  * One of Regina's own integer types (Integer, LargeInteger, or NativeInteger).
+ *
+ * \ingroup concepts
  */
 template <typename T>
 concept ReginaInteger =
@@ -67,6 +71,8 @@ concept ReginaInteger =
  * A mathematical vector type derived from (or the same as) `Vector<T>`,
  * where the element type \a T is one of Regina's arbitrary-precision integer
  * types (Integer or LargeInteger).
+ *
+ * \ingroup concepts
  */
 template <typename T>
 concept ArbitraryPrecisionIntegerVector =
@@ -79,6 +85,8 @@ concept ArbitraryPrecisionIntegerVector =
  * A mathematical vector type derived from (or the same as) `Vector<T>`,
  * where the element type \a T is one of Regina's own integer types
  * (Integer, LargeInteger, or NativeInteger).
+ *
+ * \ingroup concepts
  */
 template <typename T>
 concept IntegerVector =
