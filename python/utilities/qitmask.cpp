@@ -38,7 +38,7 @@
 using regina::Qitmask1;
 using regina::Qitmask2;
 
-template <class Q>
+template <typename Q>
 void addQitmaskOpt(pybind11::module_& m, const char* name) {
     // Q could be an instance of either Qitmask1 or Qitmask2, but since the
     // Python docs are essentially the same we will just use Qitmask1 here.

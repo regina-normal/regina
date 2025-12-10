@@ -75,7 +75,7 @@ namespace regina::alias {
  *
  * \ingroup alias
  */
-template <class Derived, int dim>
+template <typename Derived, int dim>
 class SimplexVoid {
 };
 
@@ -87,7 +87,7 @@ class SimplexVoid {
  *
  * \ingroup alias
  */
-template <class Derived>
+template <typename Derived>
 class SimplexVoid<Derived, 2> {
     public:
         /**
@@ -108,7 +108,7 @@ class SimplexVoid<Derived, 2> {
  *
  * \ingroup alias
  */
-template <class Derived>
+template <typename Derived>
 class SimplexVoid<Derived, 3> {
     public:
         /**
@@ -129,7 +129,7 @@ class SimplexVoid<Derived, 3> {
  *
  * \ingroup alias
  */
-template <class Derived>
+template <typename Derived>
 class SimplexVoid<Derived, 4> {
     public:
         /**

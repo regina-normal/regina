@@ -97,7 +97,7 @@ enum class ReprStyle {
  * should provide str(), utf8() and detail() functions and an ostream output
  * operator in a way that is consistent with the regina::Output interface.
  */
-template <class C, typename... options>
+template <typename C, typename... options>
 void add_output(pybind11::class_<C, options...>& c,
         ReprStyle style = ReprStyle::Detailed) {
     // The messy std::conditional below is to resolve packets of type
@@ -158,7 +158,7 @@ void add_output(pybind11::class_<C, options...>& c,
  * Instead we simply assume that \a T provides a function of the form
  * `std::string T::str() const`.
  */
-template <class C, typename... options>
+template <typename C, typename... options>
 void add_output_basic(pybind11::class_<C, options...>& c,
         const char* doc, ReprStyle style = ReprStyle::Detailed) {
     using BaseType = typename regina::OutputBase<C>::type;
@@ -207,7 +207,7 @@ void add_output_basic(pybind11::class_<C, options...>& c,
  * or add_output_basic respectively).  Instead we simply assume that there is
  * a C++ operator for writing an object of type \a T to a C++ output stream.
  */
-template <class C, typename... options>
+template <typename C, typename... options>
 void add_output_ostream(pybind11::class_<C, options...>& c,
         ReprStyle style = ReprStyle::Detailed) {
     auto func = [](const C& x) {
@@ -257,7 +257,7 @@ void add_output_ostream(pybind11::class_<C, options...>& c,
  * `regina::python::add_output_custom(c, style)`, where \a c is the
  * pybind11::class_ object that wraps \a T.
  */
-template <class C, typename Function, typename... options>
+template <typename C, typename Function, typename... options>
 void add_output_custom(pybind11::class_<C, options...>& c,
         Function&& outputFunction) {
     // We make local copies of outputFunction, since this may have been
@@ -300,7 +300,7 @@ void add_output_custom(pybind11::class_<C, options...>& c,
  * `regina::python::add_output_custom(c, style)`, where \a c is the
  * pybind11::class_ object that wraps \a T.
  */
-template <class C, typename Function, typename... options>
+template <typename C, typename Function, typename... options>
 void add_output_custom(pybind11::class_<C, options...>& c,
         Function&& outputFunction, const char* className) {
     // We make local copies of outputFunction, since this may have been

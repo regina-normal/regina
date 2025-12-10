@@ -43,8 +43,8 @@
 
 namespace regina {
 
-template <class T> class SnapshotRef;
-template <class T> class Snapshottable;
+template <typename> class SnapshotRef;
+template <typename> class Snapshottable;
 
 /**
  * An exception thrown when someone tries to modify the read-only deep copy
@@ -204,7 +204,7 @@ class SnapshotWriteError : public std::exception {
  *
  * \ingroup utilities
  */
-template <class T>
+template <typename T>
 class Snapshot {
     static_assert(std::is_base_of_v<Snapshottable<T>, T>,
         "Snapshot<T> requires T to be derived from Snapshottable<T>.");
@@ -301,7 +301,7 @@ class Snapshot {
  *
  * \ingroup utilities
  */
-template <class T>
+template <typename T>
 class Snapshottable {
     private:
         mutable Snapshot<T>* snapshot_;
@@ -529,7 +529,7 @@ class Snapshottable {
  *
  * \ingroup utilities
  */
-template <class T>
+template <typename T>
 class SnapshotRef {
     private:
         Snapshot<T>* snapshot_; // non-null
@@ -745,7 +745,7 @@ class SnapshotRef {
  *
  * \ingroup utilities
  */
-template <class T>
+template <typename T>
 void swap(SnapshotRef<T>& a, SnapshotRef<T>& b) noexcept {
     a.swap(b);
 }

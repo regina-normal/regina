@@ -373,7 +373,7 @@ class DiscSetTet {
  *
  * \ingroup surface
  */
-template <class T>
+template <typename T>
 class DiscSetTetData : public DiscSetTet {
     public:
         /**
@@ -625,7 +625,7 @@ class DiscSetTetData : public DiscSetTet {
  *
  * \ingroup surface
  */
-template <class T>
+template <typename T>
 void swap(DiscSetTetData<T>& a, DiscSetTetData<T>& b) noexcept {
     a.swap(b);
 }
@@ -660,7 +660,7 @@ void swap(DiscSetTetData<T>& a, DiscSetTetData<T>& b) noexcept {
  *
  * \ingroup surface
  */
-template <class TetData>
+template <typename TetData>
 class DiscSetSurfaceDataImpl {
     private:
         TetData** discSets;
@@ -1055,7 +1055,7 @@ class DiscSetSurfaceDataImpl {
  *
  * \ingroup surface
  */
-template <class T>
+template <typename T>
 void swap(DiscSetSurfaceDataImpl<T>& a, DiscSetSurfaceDataImpl<T>& b) noexcept {
     a.swap(b);
 }
@@ -1115,7 +1115,7 @@ using DiscSetSurface = DiscSetSurfaceDataImpl<DiscSetTet>;
  *
  * \ingroup surface
  */
-template <class TetData>
+template <typename TetData>
 class DiscSpecIterator {
     private:
         const DiscSetSurfaceDataImpl<TetData>* internalDiscSet;
@@ -1296,7 +1296,7 @@ class DiscSpecIterator {
 
 #ifndef __APIDOCS
 } namespace std {
-    template <class TetData>
+    template <typename TetData>
     struct iterator_traits<regina::DiscSpecIterator<TetData>> {
         using value_type = regina::DiscSpec;
         using iterator_category = std::forward_iterator_tag;

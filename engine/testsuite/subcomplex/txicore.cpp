@@ -37,7 +37,7 @@ using regina::TxICore;
 using regina::TxIDiagonalCore;
 using regina::TxIParallelCore;
 
-template <class Core>
+template <typename Core>
 static void testCopyMove(const Core& core) {
     SCOPED_TRACE("core = " + core.name());
 

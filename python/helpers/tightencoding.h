@@ -51,7 +51,7 @@ namespace python {
  * <t>regina::python::add_tight_encoding(c, ...)</t>, where \a c is the
  * pybind11::class_ object that wraps \a T.
  */
-template <class C, typename... options>
+template <typename C, typename... options>
 void add_tight_encoding(pybind11::class_<C, options...>& c,
         const char* docEnc, const char* docDec, const char* docHash) {
     static_assert(! std::is_base_of_v<TightEncodable<C>, C>,
@@ -76,7 +76,7 @@ void add_tight_encoding(pybind11::class_<C, options...>& c,
  * <t>regina::python::add_tight_encoding(c)</t>, where \a c is the
  * pybind11::class_ object that wraps \a T.
  */
-template <class C, typename... options>
+template <typename C, typename... options>
 void add_tight_encoding(pybind11::class_<C, options...>& c) {
     static_assert(std::is_base_of_v<TightEncodable<C>, C>,
         "The no-docstring version of add_tight_encoding() should "

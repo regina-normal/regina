@@ -53,7 +53,7 @@ namespace python {
  * casts) to resolve the overload, so that there is no risk of accidentally
  * binding the wrong variant of regina::swap().
  */
-template <class T>
+template <typename T>
 inline void add_global_swap(pybind11::module_& m, const char* doc) {
     m.def("swap", static_cast<void(&)(T&, T&)>(regina::swap), doc);
 }

@@ -97,7 +97,7 @@ struct EnableIf<false, T, defaultValue> {
  *
  * \ingroup utilities
  */
-template <int from, int to, class Action>
+template <int from, int to, typename Action>
 constexpr void for_constexpr(Action&& action) {
     if constexpr (from < to) {
         action(std::integral_constant<int, from>());
@@ -128,7 +128,7 @@ constexpr void for_constexpr(Action&& action) {
  *
  * \ingroup utilities
  */
-template <int... values, class Action>
+template <int... values, typename Action>
 constexpr void foreach_constexpr(Action&& action) {
     (action(std::integral_constant<int, values>()), ...);
 }
@@ -156,7 +156,7 @@ constexpr void foreach_constexpr(Action&& action) {
  *
  * \ingroup utilities
  */
-template <int... values, class Action>
+template <int... values, typename Action>
 constexpr void foreach_constexpr(std::integer_sequence<int, values...>,
         Action&& action) {
     (action(std::integral_constant<int, values>()), ...);
@@ -192,7 +192,7 @@ constexpr void foreach_constexpr(std::integer_sequence<int, values...>,
  *
  * \ingroup utilities
  */
-template <int from, int to, typename Return, class Action>
+template <int from, int to, typename Return, typename Action>
 constexpr Return select_constexpr(int value, Action&& action) {
     if constexpr (from < to) {
         if (value == from)
@@ -213,12 +213,12 @@ namespace detail {
  * These declarations are used to pack together the correct std::variant
  * return type.
  */
-template <int from, class Action, int... arg /* 0,...,(to-from-1) */>
+template <int from, typename Action, int... arg /* 0,...,(to-from-1) */>
 auto seqToVariantHelper(std::integer_sequence<int, arg...>) ->
     std::variant<decltype(std::declval<Action>()(
         std::integral_constant<int, arg + from>()))...>;
 
-template <int from, int to, class Action>
+template <int from, int to, typename Action>
 using SeqToVariant = decltype(seqToVariantHelper<from, Action>(
     std::make_integer_sequence<int, to - from>()));
 
@@ -264,7 +264,7 @@ using SeqToVariant = decltype(seqToVariantHelper<from, Action>(
  *
  * \ingroup utilities
  */
-template <int from, int to, class Action>
+template <int from, int to, typename Action>
 constexpr auto select_constexpr_as_variant(int value, Action&& action) {
     return select_constexpr<from, to,
         regina::detail::SeqToVariant<from, to, Action>, Action>(

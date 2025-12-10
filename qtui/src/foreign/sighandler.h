@@ -61,7 +61,7 @@ namespace regina {
  * Triangulation<dim> classes (indicating isomorphism signatures for
  * <i>dim</i>-dimensional triangulations).
  */
-template <class PacketType>
+template <typename PacketType>
 class SigHandler : public PacketImporter {
     using PacketImporter::importData;
 
@@ -85,10 +85,10 @@ class SigHandler : public PacketImporter {
         SigHandler() = default;
 };
 
-template <class PacketType>
+template <typename PacketType>
 const SigHandler<PacketType> SigHandler<PacketType>::instance;
 
-template <class PacketType>
+template <typename PacketType>
 std::shared_ptr<regina::Packet> SigHandler<PacketType>::importData(
         const QString& fileName, ReginaMain* parentWidget) const {
     QString explnSuffix;

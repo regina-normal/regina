@@ -44,7 +44,7 @@
  *
  * The class \a Object would typically be `Triangulation<dim>` or `Link`.
  */
-template <class Object>
+template <typename Object>
 class ExampleCreator {
     public:
         using CreatorFunc = Object (*)();

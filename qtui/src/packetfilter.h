@@ -76,7 +76,7 @@ class AllPacketsFilter : public PacketFilter {
  * The acceptance test will be performed by calling
  * Packet::type() upon each packet being questioned.
  */
-template <class T>
+template <typename T>
 class SingleTypeFilter : public PacketFilter {
     public:
         /**
@@ -94,7 +94,7 @@ class SingleTypeFilter : public PacketFilter {
  * types.  The acceptance test will be performed by calling
  * Packet::type() upon each packet being questioned.
  */
-template <class S, class T>
+template <typename S, typename T>
 class TwoTypeFilter : public PacketFilter {
     public:
         /**
@@ -113,7 +113,7 @@ class TwoTypeFilter : public PacketFilter {
  * The acceptance test will be performed by calling dynamic_cast<T*>
  * upon each packet being questioned.
  */
-template <class T>
+template <typename T>
 class SubclassFilter : public PacketFilter {
     public:
         /**

@@ -505,7 +505,7 @@ class LightweightSequence {
         };
 
 #if 0 // gcc bug #79501 incorrectly marks this as an error.
-        template <class IndexIterator>
+        template <typename IndexIterator>
         SubsequenceCompareFirst(IndexIterator, IndexIterator) ->
             SubsequenceCompareFirst<IndexIterator>;
 #endif

@@ -179,7 +179,7 @@ class IntegerBase;
  *
  * \ingroup utilities
  */
-template <class T>
+template <typename T>
 struct TightEncodable {
     /**
      * Returns the tight encoding of this object.

@@ -85,7 +85,7 @@ namespace regina::python {
  *   appropriately): thus the list elements keep the ListView alive, and
  *   in turn the ListView keeps the container alive.
  */
-template <class T, pybind11::return_value_policy Policy =
+template <typename T, pybind11::return_value_policy Policy =
     (std::is_pointer<typename T::value_type>::value ?
         pybind11::return_value_policy::reference_internal :
         pybind11::return_value_policy::copy)>

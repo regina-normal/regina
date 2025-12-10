@@ -63,7 +63,7 @@ namespace regina::alias {
  *
  * \ingroup alias
  */
-template <class Derived, int dim>
+template <typename Derived, int dim>
 class IsomorphismImage {
 };
 
@@ -80,7 +80,7 @@ class IsomorphismImage {
  *
  * \ingroup alias
  */
-template <class Derived>
+template <typename Derived>
 class IsomorphismImage<Derived, 2> {
     public:
         /**
@@ -160,7 +160,7 @@ class IsomorphismImage<Derived, 2> {
  *
  * \ingroup alias
  */
-template <class Derived>
+template <typename Derived>
 class IsomorphismImage<Derived, 3> {
     public:
         /**
@@ -238,7 +238,7 @@ class IsomorphismImage<Derived, 3> {
  *
  * \ingroup alias
  */
-template <class Derived>
+template <typename Derived>
 class IsomorphismImage<Derived, 4> {
     public:
         /**

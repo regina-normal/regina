@@ -111,7 +111,7 @@ enum class EqualityType {
  * type (such as regina::Link), then you should use packet_eq_operators()
  * instead.
  */
-template <class C, typename... options>
+template <typename C, typename... options>
 void add_eq_operators(pybind11::class_<C, options...>& c, const char* docEq);
 
 /**
@@ -144,7 +144,7 @@ void add_eq_operators(pybind11::class_<C, options...>& c, const char* docEq);
  * type (such as regina::Link), then you should use packet_eq_operators()
  * instead.
  */
-template <class C, typename... options>
+template <typename C, typename... options>
 void add_eq_operators(pybind11::class_<C, options...>& c);
 
 /**
@@ -159,7 +159,7 @@ void add_eq_operators(pybind11::class_<C, options...>& c);
  * aware that they should use samePacket() and not the comparison operators
  * to test whether two Python objects wrap the same packet.
  */
-template <class C, typename... options>
+template <typename C, typename... options>
 void packet_eq_operators(pybind11::class_<C, options...>& c, const char* docEq);
 
 /**
@@ -174,7 +174,7 @@ void packet_eq_operators(pybind11::class_<C, options...>& c, const char* docEq);
  * aware that they should use samePacket() and not the comparison operators
  * to test whether two Python objects wrap the same packet.
  */
-template <class C, typename... options>
+template <typename C, typename... options>
 void packet_eq_operators(pybind11::class_<C, options...>& c);
 
 /**
@@ -187,7 +187,7 @@ void packet_eq_operators(pybind11::class_<C, options...>& c);
  * packet types that do not provide their own comparison operators (such as
  * Container, which does not contain any internal data of its own).
  */
-template <class C, typename... options>
+template <typename C, typename... options>
 void packet_disasble_eq_operators(pybind11::class_<C, options...>& c);
 
 /**
@@ -214,7 +214,7 @@ void packet_disasble_eq_operators(pybind11::class_<C, options...>& c);
  * This is similar in effect to no_eq_abstract(); the main difference here
  * is that different docstrings will be supplied.
  */
-template <class C, typename... options>
+template <typename C, typename... options>
 void no_eq_static(pybind11::class_<C, options...>& c);
 
 /**
@@ -242,7 +242,7 @@ void no_eq_static(pybind11::class_<C, options...>& c);
  * This is similar in effect to no_eq_static(); the main difference here
  * is that different docstrings will be supplied.
  */
-template <class C, typename... options>
+template <typename C, typename... options>
 void no_eq_abstract(pybind11::class_<C, options...>& c);
 
 /**
@@ -267,7 +267,7 @@ void no_eq_abstract(pybind11::class_<C, options...>& c);
  * - The attribute \a equalityType will be added to the python wrapper class.
  *   Its value will be the EqualityType enum constant \a DISABLED.
  */
-template <class C, typename... options>
+template <typename C, typename... options>
 void disable_eq_operators(pybind11::class_<C, options...>& c);
 
 /**
@@ -282,7 +282,7 @@ void disable_eq_operators(pybind11::class_<C, options...>& c);
  * which compare by value.  The \a doc argument will be used for all four
  * Python docstrings.
  */
-template <class C, typename... options>
+template <typename C, typename... options>
 void add_cmp_operators(pybind11::class_<C, options...>& c, const char* doc);
 
 #ifndef __DOXYGEN
@@ -352,7 +352,7 @@ namespace add_eq_operators_detail {
      * The template EqualityOperators<T> provides the implementation
      * that we use in python for == and != when wrapping the C++ class T.
      */
-    template <class T,
+    template <typename T,
               bool hasEqualityOperator = EqOperatorTraits<T>::hasEqOperator,
               bool hasInequalityOperator = EqOperatorTraits<T>::hasIneqOperator>
     struct EqualityOperators {
@@ -368,7 +368,7 @@ namespace add_eq_operators_detail {
                       "Wrapped C++ type implements == but not !=.");
     };
 
-    template <class T>
+    template <typename T>
     struct EqualityOperators<T, true, true> {
         // Instantion of this template means we know that T offers both
         // an operator == and an operator !=.
@@ -385,7 +385,7 @@ namespace add_eq_operators_detail {
         }
     };
 
-    template <class T>
+    template <typename T>
     struct EqualityOperators<T, false, false> {
         // Instantion of this template means we know that T offers neither
         // an operator == nor an operator !=.
@@ -406,7 +406,7 @@ namespace add_eq_operators_detail {
 // Implementation of the main ..._eq_operators() functions.
 // See the top of this header for their documentation.
 
-template <class C, typename... options>
+template <typename C, typename... options>
 inline void add_eq_operators(pybind11::class_<C, options...>& c,
         const char* docEq) {
     constexpr EqualityType equalityType =
@@ -430,7 +430,7 @@ inline void add_eq_operators(pybind11::class_<C, options...>& c,
     c.attr("equalityType") = equalityType;
 }
 
-template <class C, typename... options>
+template <typename C, typename... options>
 inline void add_eq_operators(pybind11::class_<C, options...>& c) {
     constexpr EqualityType equalityType =
         add_eq_operators_detail::EqualityOperators<C>::equalityType();
@@ -454,7 +454,7 @@ inline void add_eq_operators(pybind11::class_<C, options...>& c) {
     c.attr("equalityType") = equalityType;
 }
 
-template <class C, typename... options>
+template <typename C, typename... options>
 inline void no_eq_static(pybind11::class_<C, options...>& c) {
     c.def("__eq__", &add_eq_operators_detail::no_equality_operators<C>,
         doc::common::eq_none_static);
@@ -463,7 +463,7 @@ inline void no_eq_static(pybind11::class_<C, options...>& c) {
     c.attr("equalityType") = EqualityType::NEVER_INSTANTIATED;
 }
 
-template <class C, typename... options>
+template <typename C, typename... options>
 inline void no_eq_abstract(pybind11::class_<C, options...>& c) {
     c.def("__eq__", &add_eq_operators_detail::no_equality_operators<C>,
         doc::common::eq_none_abstract);
@@ -472,7 +472,7 @@ inline void no_eq_abstract(pybind11::class_<C, options...>& c) {
     c.attr("equalityType") = EqualityType::NEVER_INSTANTIATED;
 }
 
-template <class C, typename... options>
+template <typename C, typename... options>
 inline void disable_eq_operators(pybind11::class_<C, options...>& c) {
     c.def("__eq__", &add_eq_operators_detail::disable_equality_operators<C>,
         doc::common::eq_disabled);
@@ -493,7 +493,7 @@ inline bool invalidPacketComparison(const regina::Packet&,
         "to the same underlying packet, use Packet.samePacket() instead.");
 }
 
-template <class C, typename... options>
+template <typename C, typename... options>
 inline void packet_eq_operators(pybind11::class_<C, options...>& c,
         const char* docEq) {
     add_eq_operators(c, docEq);
@@ -501,14 +501,14 @@ inline void packet_eq_operators(pybind11::class_<C, options...>& c,
     c.def("__ne__", &invalidPacketComparison, doc::common::eq_packet_invalid);
 }
 
-template <class C, typename... options>
+template <typename C, typename... options>
 inline void packet_eq_operators(pybind11::class_<C, options...>& c) {
     add_eq_operators(c);
     c.def("__eq__", &invalidPacketComparison, doc::common::eq_packet_invalid);
     c.def("__ne__", &invalidPacketComparison, doc::common::eq_packet_invalid);
 }
 
-template <class C, typename... options>
+template <typename C, typename... options>
 inline void packet_disable_eq_operators(pybind11::class_<C, options...>& c) {
     auto func = [](const regina::Packet&, const regina::Packet&) {
         std::ostringstream s;
@@ -530,7 +530,7 @@ inline void packet_disable_eq_operators(pybind11::class_<C, options...>& c) {
     c.attr("equalityType") = EqualityType::DISABLED;
 }
 
-template <class C, typename... options>
+template <typename C, typename... options>
 void add_cmp_operators(pybind11::class_<C, options...>& c, const char* doc) {
     static_assert(add_eq_operators_detail::EqualityOperators<C>::equalityType()
             == EqualityType::BY_VALUE,

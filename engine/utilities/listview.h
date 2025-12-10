@@ -104,7 +104,7 @@ namespace regina {
  *
  * \ingroup utilities
  */
-template <class Container>
+template <typename Container>
 class ListView {
     static_assert(std::is_class_v<Container>,
         "The generic ListView implementation should only be used for "
@@ -677,141 +677,141 @@ ListView(const Element (&)[n]) -> ListView<Element[n]>;
 
 // Inline functions for ListView
 
-template <class Container>
+template <typename Container>
 inline ListView<Container>::ListView(const Container& list) : list_(&list) {
 }
 
-template <class Container>
+template <typename Container>
 inline bool ListView<Container>::empty() const {
     return list_->empty();
 }
 
-template <class Container>
+template <typename Container>
 inline typename ListView<Container>::size_type ListView<Container>::size()
         const {
     return list_->size();
 }
 
-template <class Container>
+template <typename Container>
 inline typename ListView<Container>::const_reference
         ListView<Container>::operator [](size_type index) const {
     return (*list_)[index];
 }
 
-template <class Container>
+template <typename Container>
 inline typename ListView<Container>::const_reference
         ListView<Container>::front() const {
     return list_->front();
 }
 
-template <class Container>
+template <typename Container>
 inline typename ListView<Container>::const_reference ListView<Container>::back()
         const {
     return list_->back();
 }
 
-template <class Container>
+template <typename Container>
 inline typename ListView<Container>::const_iterator ListView<Container>::begin()
         const {
     return list_->begin();
 }
 
-template <class Container>
+template <typename Container>
 inline typename ListView<Container>::const_iterator ListView<Container>::end()
         const {
     return list_->end();
 }
 
-template <class Element>
+template <typename Element>
 inline ListView<Element*>::ListView(const Element* array, size_t size) :
         begin_(array), end_(array + size) {
 }
 
-template <class Element>
+template <typename Element>
 inline ListView<Element*>::ListView(const Element* begin, const Element* end) :
         begin_(begin), end_(end) {
 }
 
-template <class Element>
+template <typename Element>
 inline bool ListView<Element*>::empty() const {
     return (begin_ == end_);
 }
 
-template <class Element>
+template <typename Element>
 inline typename ListView<Element*>::size_type ListView<Element*>::size() const {
     return (end_ - begin_);
 }
 
-template <class Element>
+template <typename Element>
 inline typename ListView<Element*>::const_reference ListView<Element*>::
         operator [](size_type index) const {
     return begin_[index];
 }
 
-template <class Element>
+template <typename Element>
 inline typename ListView<Element*>::const_reference ListView<Element*>::front()
         const {
     return *begin_;
 }
 
-template <class Element>
+template <typename Element>
 inline typename ListView<Element*>::const_reference ListView<Element*>::back()
         const {
     return *(end_ - 1);
 }
 
-template <class Element>
+template <typename Element>
 inline typename ListView<Element*>::const_iterator ListView<Element*>::begin()
         const {
     return begin_;
 }
 
-template <class Element>
+template <typename Element>
 inline typename ListView<Element*>::const_iterator ListView<Element*>::end()
         const {
     return end_;
 }
 
-template <class Element, size_t n>
+template <typename Element, size_t n>
 inline ListView<Element[n]>::ListView(const Element* array) : array_(array) {
 }
 
-template <class Element, size_t n>
+template <typename Element, size_t n>
 inline bool ListView<Element[n]>::empty() const {
     return (n == 0);
 }
 
-template <class Element, size_t n>
+template <typename Element, size_t n>
 inline typename ListView<Element[n]>::size_type ListView<Element[n]>::size()
         const {
     return n;
 }
 
-template <class Element, size_t n>
+template <typename Element, size_t n>
 inline typename ListView<Element[n]>::const_reference ListView<Element[n]>::
         operator [](size_type index) const {
     return array_[index];
 }
 
-template <class Element, size_t n>
+template <typename Element, size_t n>
 inline typename ListView<Element[n]>::const_reference ListView<Element[n]>::
         front() const {
     return *array_;
 }
 
-template <class Element, size_t n>
+template <typename Element, size_t n>
 inline typename ListView<Element[n]>::const_reference ListView<Element[n]>::
         back() const {
     return *(array_ + n - 1);
 }
 
-template <class Element, size_t n>
+template <typename Element, size_t n>
 inline typename ListView<Element[n]>::const_iterator ListView<Element[n]>::
         begin() const {
     return array_;
 }
 
-template <class Element, size_t n>
+template <typename Element, size_t n>
 inline typename ListView<Element[n]>::const_iterator ListView<Element[n]>::end()
         const {
     return array_ + n;

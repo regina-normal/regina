@@ -51,7 +51,7 @@
 namespace regina::detail {
 
 template <int dim>
-template <class Encoding>
+template <typename Encoding>
 typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
         size_t simp, const Perm<dim+1>& vertices,
         Isomorphism<dim>* relabelling) const {
@@ -229,7 +229,7 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
 }
 
 template <int dim>
-template <class Type, class Encoding>
+template <typename Type, typename Encoding>
 typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
     if (isEmpty())
         return Encoding::emptySig();
@@ -265,7 +265,7 @@ typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
 }
 
 template <int dim>
-template <class Type, class Encoding>
+template <typename Type, typename Encoding>
 std::pair<typename Encoding::Signature, Isomorphism<dim>>
         TriangulationBase<dim>::isoSigDetail() const {
     // Make sure the user is not trying to do something illegal.

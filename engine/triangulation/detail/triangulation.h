@@ -3252,8 +3252,8 @@ class TriangulationBase :
          *
          * \return the isomorphism signature of this triangulation.
          */
-        template <class Type = IsoSigClassic<dim>,
-            class Encoding = IsoSigPrintable<dim>>
+        template <typename Type = IsoSigClassic<dim>,
+            typename Encoding = IsoSigPrintable<dim>>
         typename Encoding::Signature isoSig() const;
 
         /**
@@ -3274,8 +3274,8 @@ class TriangulationBase :
          *
          * \return the isomorphism signature of this triangulation.
          */
-        template <class Type = IsoSigClassic<dim>,
-            class Encoding = IsoSigPrintable<dim>>
+        template <typename Type = IsoSigClassic<dim>,
+            typename Encoding = IsoSigPrintable<dim>>
         typename Encoding::Signature sig() const;
 
         /**
@@ -3325,8 +3325,8 @@ class TriangulationBase :
          * triangulation, and (ii) the isomorphism between this triangulation
          * and the triangulation that would be reconstructed from fromIsoSig().
          */
-        template <class Type = IsoSigClassic<dim>,
-            class Encoding = IsoSigPrintable<dim>>
+        template <typename Type = IsoSigClassic<dim>,
+            typename Encoding = IsoSigPrintable<dim>>
         std::pair<typename Encoding::Signature, Isomorphism<dim>> isoSigDetail()
             const;
 
@@ -4137,7 +4137,7 @@ class TriangulationBase :
          * constructed for the correct number of simplices.
          * \return the candidate isomorphism signature.
          */
-        template <class Encoding>
+        template <typename Encoding>
         typename Encoding::Signature isoSigFrom(size_t simp,
             const Perm<dim+1>& vertices, Isomorphism<dim>* relabelling) const;
 
@@ -5866,7 +5866,7 @@ inline void TriangulationBase<dim>::cloneBoundaryFaces(
 }
 
 template <int dim>
-template <class Type, class Encoding>
+template <typename Type, typename Encoding>
 inline typename Encoding::Signature TriangulationBase<dim>::sig() const {
     return isoSig<Type, Encoding>();
 }

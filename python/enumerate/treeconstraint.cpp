@@ -94,7 +94,7 @@ void addLPConstraint(pybind11::module_& m, const char* name, const char* doc) {
     RDOC_SCOPE_END
 }
 
-template <class BanConstraint, typename... BanArgs>
+template <typename BanConstraint, typename... BanArgs>
 void addBanConstraint(pybind11::module_& m, const char* name,
         const char* classDoc, const char* initDoc) {
     RDOC_SCOPE_BEGIN(BanConstraintBase)

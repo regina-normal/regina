@@ -287,7 +287,7 @@ class MarkedVector : private std::vector<T*> {
          * \param gen the source of randomness to use (e.g., one of the
          * many options provided in the C++ standard \c random header).
          */
-        template <class URBG>
+        template <typename URBG>
         void shuffle(URBG&& gen) {
             std::shuffle(std::vector<T*>::begin(), std::vector<T*>::end(),
                 std::forward<URBG>(gen));

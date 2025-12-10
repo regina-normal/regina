@@ -101,7 +101,7 @@ std::string xmlEncodeComment(const std::string& comment);
  *
  * \ingroup utilities
  */
-template <class T>
+template <typename T>
 inline std::string xmlValueTag(const std::string& tagName, const T& value) {
     std::ostringstream out;
     out << '<' << tagName << " value=\"" << value << "\"/>";

@@ -111,7 +111,7 @@ enum {
  *
  * \ingroup detail
  */
-template <class Object, bool withSig>
+template <typename Object, bool withSig>
 using RetriangulateActionFunc = std::conditional_t<withSig,
     std::function<bool(const std::string&, Object&&)>,
     std::function<bool(Object&&)>>;
@@ -163,7 +163,7 @@ using RetriangulateActionFunc = std::conditional_t<withSig,
  *
  * \ingroup detail
  */
-template <class Object, bool withSig, int flags = RetriangulateDefault,
+template <typename Object, bool withSig, int flags = RetriangulateDefault,
     typename PropagationOptions = void>
 bool retriangulateInternal(const Object& obj, bool rigid, int height,
         int nThreads, ProgressTrackerOpen* tracker,
@@ -201,7 +201,7 @@ bool retriangulateInternal(const Object& obj, bool rigid, int height,
  *
  * \ingroup detail
  */
-template <class Object, typename Action,
+template <typename Object, typename Action,
         typename FirstArg = typename CallableArg<Action, 0>::type>
 struct RetriangulateActionTraits;
 
@@ -237,7 +237,7 @@ struct RetriangulateActionTraits;
  *
  * \ingroup detail
  */
-template <class Object, typename PropagationOptions = void>
+template <typename Object, typename PropagationOptions = void>
 bool simplifyExhaustiveInternal(Object& obj, int height,
         int threads, ProgressTrackerOpen* tracker) {
     // Make a place for the callback to put a simplified object, if it finds
@@ -302,7 +302,7 @@ bool simplifyExhaustiveInternal(Object& obj, int height,
  *
  * \ingroup detail
  */
-template <class Object, typename PropagationOptions = void>
+template <typename Object, typename PropagationOptions = void>
 bool improveTreewidthInternal(Object& obj, ssize_t maxAttempts, int height,
         int threads, ProgressTrackerOpen* tracker) {
     // Make a place for the callback to put an improved object, if it finds
@@ -410,31 +410,31 @@ bool improveTreewidthInternal(Object& obj, ssize_t maxAttempts, int height,
 
 #ifndef __DOXYGEN
 
-template <class Object, typename Action, typename FirstArg>
+template <typename Object, typename Action, typename FirstArg>
 struct RetriangulateActionTraits {
     static constexpr bool valid = false;
     static constexpr bool withSig = false;
 };
 
-template <class Object, typename Action>
+template <typename Object, typename Action>
 struct RetriangulateActionTraits<Object, Action, Object> {
     static constexpr bool valid = true;
     static constexpr bool withSig = false;
 };
 
-template <class Object, typename Action>
+template <typename Object, typename Action>
 struct RetriangulateActionTraits<Object, Action, Object&&> {
     static constexpr bool valid = true;
     static constexpr bool withSig = false;
 };
 
-template <class Object, typename Action>
+template <typename Object, typename Action>
 struct RetriangulateActionTraits<Object, Action, const Object&> {
     static constexpr bool valid = true;
     static constexpr bool withSig = false;
 };
 
-template <class Object, typename Action>
+template <typename Object, typename Action>
 struct RetriangulateActionTraits<Object, Action, const std::string&> {
     using SecondArg = typename CallableArg<Action, 1>::type;
     static constexpr bool valid =

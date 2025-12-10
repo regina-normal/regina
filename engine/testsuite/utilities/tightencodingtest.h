@@ -43,7 +43,7 @@
  * minor convenience of not having to type out the template parameters for
  * TightEncodingTest every time it is used.
  */
-template <class T, bool hasDecoding = true>
+template <typename T, bool hasDecoding = true>
 class TightEncodingTest {
     // Ensure that str() returns a std::string.
     static_assert(

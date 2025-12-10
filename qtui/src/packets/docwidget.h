@@ -66,7 +66,7 @@ class QTextDocument;
  * function void sanitise(QString&).  This will be applied to the text
  * contents of the widget before each push.
  */
-template <class PacketType, class Sanitise = DocWidgetNoSanitise>
+template <typename PacketType, typename Sanitise = DocWidgetNoSanitise>
 class DocWidget : public QPlainTextEdit {
     private:
         struct Details {
@@ -116,11 +116,11 @@ struct DocWidgetFinalNewline {
     static void sanitise(QString& str);
 };
 
-template <class PacketType, class Sanitise>
+template <typename PacketType, typename Sanitise>
 typename DocWidget<PacketType, Sanitise>::Registry
     DocWidget<PacketType, Sanitise>::registry_;
 
-template <class PacketType, class Sanitise>
+template <typename PacketType, typename Sanitise>
 DocWidget<PacketType, Sanitise>::DocWidget(
         PacketType* packet, QWidget* parent) :
         QPlainTextEdit(parent),
@@ -142,7 +142,7 @@ DocWidget<PacketType, Sanitise>::DocWidget(
     }
 }
 
-template <class PacketType, class Sanitise>
+template <typename PacketType, typename Sanitise>
 DocWidget<PacketType, Sanitise>::~DocWidget() {
     // We could be in the destructor because the user closed the packet pane,
     // or because the packet was destroyed elsewhere.
@@ -172,7 +172,7 @@ DocWidget<PacketType, Sanitise>::~DocWidget() {
     }
 }
 
-template <class PacketType, class Sanitise>
+template <typename PacketType, typename Sanitise>
 inline void DocWidget<PacketType, Sanitise>::refresh() {
     if (auto p = packet_.lock()) {
         // We have to jump through several hoops to preserve the cursor
@@ -185,7 +185,7 @@ inline void DocWidget<PacketType, Sanitise>::refresh() {
     }
 }
 
-template <class PacketType, class Sanitise>
+template <typename PacketType, typename Sanitise>
 inline void DocWidget<PacketType, Sanitise>::commit() {
     if (auto p = packet_.lock()) {
         QString text = toPlainText();
@@ -194,7 +194,7 @@ inline void DocWidget<PacketType, Sanitise>::commit() {
     }
 }
 
-template <class PacketType, class Sanitise>
+template <typename PacketType, typename Sanitise>
 inline void DocWidget<PacketType, Sanitise>::focusOutEvent(QFocusEvent* evt) {
     commit();
     QPlainTextEdit::focusOutEvent(evt);
