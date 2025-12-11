@@ -166,16 +166,14 @@ void HilbertDual::enumerateUsingBitmask(Action&& action,
     // We're done!
     delete[] hyperplanes;
 
-    typename std::vector<VecSpec<IntegerType, BitmaskType>*>::iterator it;
-
     if (tracker && tracker->isCancelled()) {
         // The operation was cancelled.  Clean up before returning.
-        for (it = list.begin(); it != list.end(); ++it)
+        for (auto it = list.begin(); it != list.end(); ++it)
             delete *it;
         return;
     }
 
-    for (it = list.begin(); it != list.end(); ++it) {
+    for (auto it = list.begin(); it != list.end(); ++it) {
         Ray ans(dim);
         for (i = 0; i < dim; ++i)
             ans[i] = (**it)[i];
@@ -193,8 +191,7 @@ template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 bool HilbertDual::reduces(const VecSpec<IntegerType, BitmaskType>& vec,
         const std::list<VecSpec<IntegerType, BitmaskType>*>& against,
         int listSign) {
-    typename std::list<VecSpec<IntegerType, BitmaskType>*>::const_iterator it;
-    for (it = against.begin(); it != against.end(); ++it) {
+    for (auto it = against.begin(); it != against.end(); ++it) {
         if (! (*it)->dominatedBy(vec))
             continue;
 
@@ -221,12 +218,11 @@ void HilbertDual::reduceBasis(
     if (reduce.empty())
         return;
 
-    typename std::list<VecSpec<IntegerType, BitmaskType>*>::iterator
-        i, next, red;
+    typename std::list<VecSpec<IntegerType, BitmaskType>*>::iterator red;
     bool processed;
 
-    i = reduce.begin();
-    next = i;
+    auto i = reduce.begin();
+    auto next = i;
     ++next;
 
     while (i != reduce.end()) {
@@ -297,30 +293,25 @@ void HilbertDual::intersectHyperplane(
     // deletion at arbitrary locations.
     std::list<VecSpec<IntegerType, BitmaskType>*>
         zero, pos, neg, newZero, newPos, newNeg;
-    typename std::list<VecSpec<IntegerType, BitmaskType>*>::iterator
-        it, posit, negit;
-    typename std::list<VecSpec<IntegerType, BitmaskType>*>::iterator
-        posPrevGen, negPrevGen;
 
     // Decant the existing basis elements into 0/+/- sets according to the
     // new hyperplane.
     int s;
-    typename std::vector<VecSpec<IntegerType, BitmaskType>*>::iterator srcit;
-    for (srcit = list.begin(); srcit != list.end(); srcit++) {
-        (*srcit)->initNextHyp(subspace, row);
+    for (auto ptr : list) {
+        ptr->initNextHyp(subspace, row);
 
-        s = (*srcit)->sign();
+        s = ptr->sign();
         if (s == 0)
-            zero.push_back(*srcit);
+            zero.push_back(ptr);
         else if (s < 0)
-            neg.push_back(*srcit);
+            neg.push_back(ptr);
         else
-            pos.push_back(*srcit);
+            pos.push_back(ptr);
     }
     list.clear();
 
-    posPrevGen = pos.begin();
-    negPrevGen = neg.begin();
+    auto posPrevGen = pos.begin();
+    auto negPrevGen = neg.begin();
 
     // TODO: Optimise from here down: (d), Sec.3
 
@@ -341,11 +332,11 @@ void HilbertDual::intersectHyperplane(
         // Generate all valid (pos + neg) pairs that cannot be reduced using
         // the present lists.
         reachedPosPrevGen = false;
-        for (posit = pos.begin(); posit != pos.end(); ++posit) {
+        for (auto posit = pos.begin(); posit != pos.end(); ++posit) {
             if (posit == posPrevGen)
                 reachedPosPrevGen = true;
 
-            for (negit = (reachedPosPrevGen ? neg.begin() : negPrevGen);
+            for (auto negit = (reachedPosPrevGen ? neg.begin() : negPrevGen);
                     negit != neg.end(); ++negit) {
 #ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
                 // Check for guaranteed redundany.
@@ -443,13 +434,14 @@ void HilbertDual::intersectHyperplane(
     }
 
     // We have a final Hilbert basis!
+    // At this point in time, list is empty and zero holds our solutions.
     // Clean up and return.
-    for (it = pos.begin(); it != pos.end(); ++it)
-        delete *it;
-    for (it = neg.begin(); it != neg.end(); ++it)
-        delete *it;
-    for (it = zero.begin(); it != zero.end(); ++it)
-        list.push_back(*it);
+    for (auto ptr : pos)
+        delete ptr;
+    for (auto ptr : neg)
+        delete ptr;
+    for (auto ptr : zero)
+        list.push_back(ptr);
 }
 
 } // namespace regina

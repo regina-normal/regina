@@ -102,7 +102,6 @@ void HilbertCD::enumerateUsingBitmask(Action&& action,
     auto constraintMasks = constraints.bitmasks<BitmaskType>(dim);
 
     std::list<VecSpec<IntegerType, BitmaskType>*> basis;
-    typename std::list<VecSpec<IntegerType, BitmaskType>*>::iterator bit;
 
     auto* unitMatch = new Vector<IntegerType>*[dim];
     for (size_t i = 0; i < dim; ++i) {
@@ -188,7 +187,7 @@ void HilbertCD::enumerateUsingBitmask(Action&& action,
 
                 // Domination test.
                 found = false;
-                for (bit = basis.begin(); bit != basis.end(); ++bit) {
+                for (auto bit = basis.begin(); bit != basis.end(); ++bit) {
                     // Is (**bit) <= (*c + ith unit vector) ?
                     // Quick pre-check using bitmasks.
                     if (! ((*bit)->mask_ <= mask))
@@ -248,9 +247,9 @@ void HilbertCD::enumerateUsingBitmask(Action&& action,
     delete[] frozen;
 
     // Output basis elements.
-    for (bit = basis.begin(); bit != basis.end(); ++bit) {
-        action(Ray(**bit));
-        delete *bit;
+    for (auto ptr : basis) {
+        action(Ray(*ptr));
+        delete ptr;
     }
 }
 
