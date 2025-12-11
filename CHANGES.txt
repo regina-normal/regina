@@ -57,7 +57,7 @@ Version 7.5  [ TODO ]
               both true).
         Concept AssignableTo, InputIteratorFor:
             - New concepts surrounding assignment operations.
-        Concept Writeable, Stringifiable, InherentlyTightEncodable:
+        Concept Writable, Stringifiable, InherentlyTightEncodable:
             - New concepts for describing input and output capabilities.
         Concept CppInteger, StandardCppInteger, SignedCppInteger,
                 UnsignedCppInteger:
