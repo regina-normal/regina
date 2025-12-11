@@ -52,11 +52,11 @@ template <int> class NativeInteger;
 template <RingLike> struct RingTraits;
 
 template <RingLike T>
-requires Writable<T> && IntegerCompatible<T>
+requires Writeable<T> && IntegerCompatible<T>
 class Vector;
 
 template <typename T>
-requires std::default_initializable<T> && std::copyable<T> && Writable<T>
+requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
 class Matrix;
 
 } // namespace regina

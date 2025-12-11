@@ -49,7 +49,7 @@ namespace regina {
  * \ingroup concepts
  */
 template <typename T>
-concept Writable =
+concept Writeable =
     requires(const T x, std::ostream& out) {
         { out << x } -> std::same_as<std::ostream&>;
     };

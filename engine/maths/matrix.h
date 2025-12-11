@@ -73,7 +73,7 @@ class Rational;
  * \ingroup maths
  */
 template <typename T>
-requires std::default_initializable<T> && std::copyable<T> && Writable<T>
+requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
 class Matrix : public Output<Matrix<T>> {
     public:
         /**

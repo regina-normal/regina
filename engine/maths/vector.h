@@ -88,7 +88,7 @@ class Rational;
  * \ingroup maths
  */
 template <RingLike T>
-requires Writable<T> && IntegerCompatible<T>
+requires Writeable<T> && IntegerCompatible<T>
 class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
     public:
         /**
