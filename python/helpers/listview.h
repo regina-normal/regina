@@ -89,6 +89,10 @@ template <typename T, pybind11::return_value_policy Policy =
     (std::is_pointer<typename T::value_type>::value ?
         pybind11::return_value_policy::reference_internal :
         pybind11::return_value_policy::copy)>
+requires requires(T x) {
+    // Ensure that T is of the form regina::ListView<...>:
+    { regina::ListView(x) } -> std::same_as<T>;
+}
 void addListView(pybind11::module_& internal, const char* suffix) {
     auto c = pybind11::class_<T>(internal,
             (std::string("ListView_") + suffix).c_str(), doc::ListView)
