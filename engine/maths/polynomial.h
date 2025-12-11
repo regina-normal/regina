@@ -39,6 +39,7 @@
 
 #include "regina-core.h"
 #include "utilities/stringutils.h"
+#include "concepts/iterator.h"
 #include "core/output.h"
 #include <iostream>
 #include <iterator>
@@ -168,8 +169,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
-        template <std::random_access_iterator iterator>
-        requires InputIteratorFor<iterator, T>
+        template <RandomAccessIteratorFor<T> iterator>
         Polynomial(iterator begin, iterator end);
 
         /**
@@ -240,8 +240,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
-        template <std::random_access_iterator iterator>
-        requires InputIteratorFor<iterator, T>
+        template <RandomAccessIteratorFor<T> iterator>
         void init(iterator begin, iterator end);
 
         /**
@@ -932,8 +931,7 @@ inline Polynomial<T>::Polynomial(size_t degree) :
 }
 
 template <CoefficientDomain T>
-template <std::random_access_iterator iterator>
-requires InputIteratorFor<iterator, T>
+template <RandomAccessIteratorFor<T> iterator>
 inline Polynomial<T>::Polynomial(iterator begin, iterator end) :
         coeff_(nullptr) {
     init(begin, end);
@@ -995,8 +993,7 @@ inline void Polynomial<T>::init(size_t degree) {
 }
 
 template <CoefficientDomain T>
-template <std::random_access_iterator iterator>
-requires InputIteratorFor<iterator, T>
+template <RandomAccessIteratorFor<T> iterator>
 void Polynomial<T>::init(iterator begin, iterator end) {
     delete[] coeff_;
 

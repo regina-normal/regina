@@ -44,6 +44,7 @@
 #include "regina-core.h"
 #include "concepts/core.h"
 #include "concepts/io.h"
+#include "concepts/iterator.h"
 #include "core/output.h"
 #include "maths/integer.h"
 #include "utilities/intutils.h"
@@ -172,8 +173,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * \param end a past-the-end iterator indicating the end of the
          * sequence of elements.
          */
-        template <std::random_access_iterator iterator>
-        requires InputIteratorFor<iterator, T>
+        template <RandomAccessIteratorFor<T> iterator>
         inline Vector(iterator begin, iterator end) :
                 elts_(new T[end - begin]), end_(elts_ + (end - begin)) {
             std::copy(begin, end, elts_);

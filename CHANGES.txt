@@ -58,12 +58,13 @@ Version 7.5  [ TODO ]
         Concepts:
             - Many new concepts, accessible via #include <concepts/*.h>:
               + ArbitraryPrecisionInteger, ArbitraryPrecisionIntegerVector,
-                AssignableTo, CoefficientDomain, CppInteger, Domain,
+                AssignableTo, BidirectionalIteratorFor, CoefficientDomain,
+                CppInteger, Domain, ForwardIteratorFor,
                 InherentlyTightEncodable, InputIteratorFor, IntegerComparable,
                 IntegerCompatible, IntegerVector, IntegralDomain, PacketClass,
-                ReginaBitmask, ReginaInteger, Ring, RingLike, SignedCppInteger,
-                StandardCppInteger, Stringifiable, UnsignedCppInteger,
-                Writeable.
+                RandomAccessIteratorFor, ReginaBitmask, ReginaInteger, Ring,
+                RingLike, SignedCppInteger, StandardCppInteger, Stringifiable,
+                UnsignedCppInteger, Writeable.
 
 Version 7.4.1  [ 30 November, 2025 ]
 

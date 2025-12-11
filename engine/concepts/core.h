@@ -65,21 +65,6 @@ template <typename Source, typename Target>
 concept AssignableTo = std::assignable_from<Target, Source>;
 
 /**
- * An input iterator whose dereferenced values can be assigned to the type
- * \a Target.
- *
- * This concept does not actually verify that \a T is an iterator (you should
- * do that separately using one of the standard C++ iterator concepts).
- * What it _does_ do is verify the dereferenced assignment property described
- * above.
- *
- * \ingroup concepts
- */
-template <typename T, typename Target>
-concept InputIteratorFor =
-    std::assignable_from<Target&, decltype(*std::declval<T&>())>;
-
-/**
  * One of the standard non-boolean C++ integer types, without making any
  * special accommodations for 128-bit integer compiler extensions.
  *

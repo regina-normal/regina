@@ -40,9 +40,9 @@
 #include "utilities/stringutils.h"
 #include "utilities/tightencoding.h"
 #include "concepts/io.h"
+#include "concepts/iterator.h"
 #include "core/output.h"
 #include <iostream>
-#include <iterator>
 
 namespace regina {
 
@@ -191,8 +191,7 @@ class Laurent :
          * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
-        template <std::random_access_iterator iterator>
-        requires InputIteratorFor<iterator, T>
+        template <RandomAccessIteratorFor<T> iterator>
         Laurent(long minExp, iterator begin, iterator end);
 
         /**
@@ -271,8 +270,7 @@ class Laurent :
          * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
-        template <std::random_access_iterator iterator>
-        requires InputIteratorFor<iterator, T>
+        template <RandomAccessIteratorFor<T> iterator>
         void init(long minExp, iterator begin, iterator end);
 
         /**
@@ -944,8 +942,7 @@ inline Laurent<T>::Laurent(long exp) :
 }
 
 template <CoefficientDomain T>
-template <std::random_access_iterator iterator>
-requires InputIteratorFor<iterator, T>
+template <RandomAccessIteratorFor<T> iterator>
 inline Laurent<T>::Laurent(long minExp, iterator begin, iterator end) :
         coeff_(nullptr) {
     init(minExp, begin, end);
@@ -1018,8 +1015,7 @@ inline void Laurent<T>::init(long exp) {
 }
 
 template <CoefficientDomain T>
-template <std::random_access_iterator iterator>
-requires InputIteratorFor<iterator, T>
+template <RandomAccessIteratorFor<T> iterator>
 void Laurent<T>::init(long minExp, iterator begin, iterator end) {
     delete[] coeff_;
 
