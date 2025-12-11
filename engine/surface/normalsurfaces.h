@@ -43,6 +43,7 @@
 #include <optional>
 #include <vector>
 #include "regina-core.h"
+#include "concepts/core.h"
 #include "enumerate/validityconstraints.h"
 #include "maths/matrix.h"
 #include "packet/packet.h"
@@ -1130,15 +1131,12 @@ class NormalSurfaces :
             ProgressTracker* tracker = nullptr);
 
         /**
-         * Implements the one-template-argument version of
-         * buildStandardFromReduced() using the specified bitmask type
-         * to store zero sets.  See the one-template-argument
-         * buildStandardFromReduced() for further information on this routine,
-         * including important preconditions.
+         * Implements buildStandardFromReduced() using the specified bitmask
+         * type to store zero sets.  See buildStandardFromReduced() for further
+         * information on this routine, including important preconditions.
          *
-         * The one-template-argument buildStandardFromReduced() simply
-         * chooses an appropriate bitmask type and then calls this
-         * routine, which does the real work.
+         * The routine buildStandardFromReduced() simply chooses an appropriate
+         * bitmask type and then calls this routine, which does the real work.
          *
          * \pre The template argument \a BitmaskType can support
          * bitmasks of size 7 \a n (if we are using normal surfaces) or size
@@ -1147,7 +1145,7 @@ class NormalSurfaces :
          * \pre The underlying triangulation (in addition to the other
          * preconditions) is non-empty.
          */
-        template <typename BitmaskType>
+        template <ReginaBitmask BitmaskType>
         void buildStandardFromReducedUsing(
             const std::vector<NormalSurface>& reducedList,
             ProgressTracker* tracker);

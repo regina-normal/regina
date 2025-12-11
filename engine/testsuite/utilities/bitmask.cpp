@@ -31,6 +31,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <sstream>
+#include "concepts/core.h"
 #include "maths/binom.h"
 #include "utilities/bitmask.h"
 #include "utilities/bitmanip.h"
@@ -103,7 +104,7 @@ TEST(BitmaskTest, sizes) {
 #endif
 }
 
-template <typename BitmaskType>
+template <regina::ReginaBitmask BitmaskType>
 static void testFirstLastBit(int length) {
     SCOPED_TRACE_TYPE(BitmaskType);
     SCOPED_TRACE_NUMERIC(length);
@@ -142,7 +143,7 @@ TEST(BitmaskTest, firstLastBit) {
     testFirstLastBit<regina::Bitmask>(128);
 }
 
-template <typename BitmaskType>
+template <regina::ReginaBitmask BitmaskType>
 static void testBits(int length) {
     SCOPED_TRACE_TYPE(BitmaskType);
     SCOPED_TRACE_NUMERIC(length);
@@ -180,7 +181,7 @@ TEST(BitmaskTest, bits) {
     testBits<regina::Bitmask>(128);
 }
 
-template <typename BitmaskType>
+template <regina::ReginaBitmask BitmaskType>
 static void testTruncate(int length) {
     SCOPED_TRACE_TYPE(BitmaskType);
     SCOPED_TRACE_NUMERIC(length);
@@ -220,7 +221,7 @@ TEST(BitmaskTest, truncate) {
     testTruncate<regina::Bitmask>(128);
 }
 
-template <typename BitmaskType>
+template <regina::ReginaBitmask BitmaskType>
 static void testLexOrder(int length) {
     SCOPED_TRACE_TYPE(BitmaskType);
     SCOPED_TRACE_NUMERIC(length);

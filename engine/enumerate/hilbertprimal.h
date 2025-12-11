@@ -184,8 +184,6 @@ class HilbertPrimal {
          * All arguments to this function are identical to those for the
          * public routine enumerate().
          *
-         * \pre The bitmask type is one of Regina's bitmask types, such
-         * as Bitmask, Bitmask1 or Bitmask2.
          * \pre The type \a BitmaskType can handle at least \a n bits,
          * where \a n is the dimension of the Euclidean space (i.e., the
          * number of columns in \a subspace).
@@ -193,8 +191,8 @@ class HilbertPrimal {
          * \exception UnsolvedCase Normaliz was unable to compute the
          * Hilbert basis for one or more maximal admissible faces.
          */
-        template <ArbitraryPrecisionIntegerVector Ray, typename BitmaskType,
-            typename RayIterator, typename Action>
+        template <ArbitraryPrecisionIntegerVector Ray,
+            ReginaBitmask BitmaskType, typename RayIterator, typename Action>
         static void enumerateUsingBitmask(Action&& action,
             const RayIterator& raysBegin, const RayIterator& raysEnd,
             const ValidityConstraints& constraints, ProgressTracker* tracker);
@@ -238,7 +236,7 @@ class HilbertPrimal {
          * \return \c true if the given ray lies within the given face,
          * or \c false otherwise.
          */
-        template <typename VectorClass, typename BitmaskType>
+        template <typename VectorClass, ReginaBitmask BitmaskType>
         static bool inFace(const VectorClass& ray, const BitmaskType& face);
 };
 

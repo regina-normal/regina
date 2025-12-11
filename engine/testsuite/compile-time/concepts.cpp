@@ -28,7 +28,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "concepts/core.h"
 #include "concepts/io.h"
 #include "concepts/maths.h"
 #include "concepts/packet.h"

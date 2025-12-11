@@ -41,7 +41,6 @@
 #include <string>
 #include <sstream>
 #include "concepts/core.h"
-#include "concepts/maths.h"
 #include "utilities/exception.h"
 
 namespace regina {

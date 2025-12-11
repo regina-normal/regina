@@ -39,6 +39,7 @@
 #endif
 
 #include "regina-core.h"
+#include "concepts/core.h"
 #include "utilities/bitmask.h"
 #include <vector>
 
@@ -93,15 +94,12 @@ class MaxAdmissible {
          * is that, for any such iterator \a it and any integer index \a i,
          * we can test `(*it)[i] == 0` and `(*it)[i] != 0`.
          *
-         * \pre The template argument BitmaskType is one of the bitmask
-         * types Bitmask, Bitmask1 or Bitmask2.
-         *
          * \pre Bitmasks of type BitmaskType can hold \a n bits, where
          * \a n is the dimension of the underlying space (i.e., the size
          * of the input vectors described by \a beginExtremalRays and
-         * \a endExtremalRays).  This is always true of Bitmask, but
+         * \a endExtremalRays).  This is always true of regina::Bitmask, but
          * you must be careful when using one of the fast but size-limited
-         * types Bitmask1 or Bitmask2.
+         * types regina::Bitmask1 or regina::Bitmask2.
          *
          * \python The extremal rays should be passed as a Python list
          * of VectorInt objects, not a pair of iterators.  The bitmasks
@@ -119,7 +117,7 @@ class MaxAdmissible {
          * \return a vector containing one bitmask representing each
          * maximal admissible face, as described above.
          */
-        template <typename BitmaskType, typename RayIterator>
+        template <ReginaBitmask BitmaskType, typename RayIterator>
         static std::vector<BitmaskType> enumerate(
                 RayIterator beginExtremalRays, RayIterator endExtremalRays,
                 const ValidityConstraints& constraints);

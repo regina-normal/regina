@@ -4,7 +4,6 @@
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    arithmetic.h
     core.h
     io.h
     maths.h

@@ -55,7 +55,7 @@
 
 namespace regina {
 
-template <typename IntegerType, typename BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
         size_t axis, const MatrixInt& subspace, const long* hypOrder) :
         Vector<IntegerType>(subspace.rows()), facets_(subspace.columns()) {
@@ -69,7 +69,7 @@ DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
         elts_[i] = subspace.entry(hypOrder[i], axis);
 }
 
-template <typename IntegerType, typename BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
         const RaySpec<IntegerType, BitmaskType>& first,
         const RaySpec<IntegerType, BitmaskType>& second) :
@@ -86,7 +86,7 @@ DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
     facets_ &= first.facets_;
 }
 
-template <typename IntegerType, typename BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 template <ArbitraryPrecisionIntegerVector Ray>
 void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
         Ray& dest, const MatrixInt& subspace) const {
@@ -248,7 +248,7 @@ void DoubleDescription::enumerate(Action&& action,
             subspace, constraints, tracker, initialRows);
 }
 
-template <ArbitraryPrecisionIntegerVector Ray, typename BitmaskType,
+template <ArbitraryPrecisionIntegerVector Ray, ReginaBitmask BitmaskType,
     typename Action>
 void DoubleDescription::enumerateUsingBitmask(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
@@ -358,7 +358,7 @@ void DoubleDescription::enumerateUsingBitmask(Action&& action,
         tracker->setPercent(100);
 }
 
-template <typename IntegerType, typename BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 bool DoubleDescription::intersectHyperplane(
         std::vector<RaySpec<IntegerType, BitmaskType>*>& src,
         std::vector<RaySpec<IntegerType, BitmaskType>*>& dest,

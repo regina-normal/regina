@@ -40,10 +40,11 @@
 #include <initializer_list>
 #include <iostream>
 #include <memory>
-#include <type_traits> // for std::enable_if_t
 #include "regina-core.h"
-#include "concepts/maths.h"
+#include "concepts/core.h"
+#include "concepts/io.h"
 #include "core/output.h"
+#include "maths/forward.h"
 #include "maths/integer.h"
 #include "maths/ring.h"
 

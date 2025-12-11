@@ -42,7 +42,8 @@
 #include <iostream>
 #include <iterator>
 #include "regina-core.h"
-#include "concepts/maths.h"
+#include "concepts/core.h"
+#include "concepts/io.h"
 #include "core/output.h"
 #include "maths/integer.h"
 #include "utilities/intutils.h"

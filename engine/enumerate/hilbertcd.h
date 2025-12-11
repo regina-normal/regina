@@ -39,6 +39,7 @@
 #endif
 
 #include "regina-core.h"
+#include "concepts/core.h"
 #include "concepts/maths.h"
 #include "maths/matrix.h"
 #include "maths/vector.h"
@@ -146,21 +147,11 @@ class HilbertCD {
          * A helper class for Hilbert basis enumeration, describing a
          * single candidate basis vector.
          *
-         * The coordinates of the vector are inherited through the
-         * Vector superclass.
-         *
-         * The \a BitmaskType template argument is used to store one bit
-         * per coordinate, which is \c false if the coordinate is zero
-         * or \c true if the coordinate is non-zero.
-         *
-         * \tparam IntegerType the integer type used to store and manipulate
-         * vectors; this must be one of Regina's own integer types.
-         *
-         * \tparam BitmaskType the bitmask type used to indicate zero/non-zero
-         * coordinates; this must be one of Regina's own bitmask types, such as
-         * Bitmask, Bitmask1 or Bitmask2.
+         * The integer coordinates of the vector are inherited through the
+         * Vector superclass.  This class augments it with a bitmask whose
+         * individual bits indicate which coordinates are zero vs non-zero.
          */
-        template <typename IntegerType, typename BitmaskType>
+        template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
         struct VecSpec : public Vector<IntegerType> {
             BitmaskType mask_;
                 /**< A bitmask indicating which coordinates are zero
@@ -186,28 +177,26 @@ class HilbertCD {
         };
         /**
          * Identical to the public routine enumerate(),
-         * except that there is an extra template parameter \a BitmaskType.
-         * This describes what type should be used for bitmasks that
-         * assign flags to individual coordinate positions.
+         * except that there is an extra template parameter \a BitmaskType
+         * to indicate what bitmask type we should use to assign flags to
+         * individual coordinate positions.
          *
          * All arguments to this function are identical to those for the
          * public routine enumerate().
          *
-         * \pre The bitmask type is one of Regina's bitmask types, such
-         * as Bitmask, Bitmask1 or Bitmask2.
          * \pre The type \a BitmaskType can handle at least \a n bits,
          * where \a n is the dimension of the Euclidean space (i.e., the
          * number of columns in \a subspace).
          */
-        template <ArbitraryPrecisionIntegerVector Ray, typename BitmaskType,
-            typename Action>
+        template <ArbitraryPrecisionIntegerVector Ray,
+            ReginaBitmask BitmaskType, typename Action>
         static void enumerateUsingBitmask(Action&& action,
             const MatrixInt& subspace, const ValidityConstraints& constraints);
 };
 
 // Inline functions for HilbertCD::VecSpec
 
-template <typename IntegerType, typename BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 inline HilbertCD::VecSpec<IntegerType, BitmaskType>::VecSpec(size_t dim) :
         Vector<IntegerType>(dim), mask_(dim) {
     // All vector elements are initialised to zero thanks to the default

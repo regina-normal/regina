@@ -29,7 +29,7 @@
  **************************************************************************/
 
 /*! \file concepts/maths.h
- *  \brief Concepts related to mathematical types.
+ *  \brief Concepts related to "large" mathematical types, such as vectors.
  */
 
 #ifndef __REGINA_CONCEPTS_MATHS_H
@@ -38,34 +38,10 @@
 #endif
 
 #include <type_traits>
+#include "concepts/core.h"
 #include "maths/forward.h"
 
 namespace regina {
-
-template <bool> class IntegerBase;
-template <int> class NativeInteger;
-
-/**
- * One of Regina's arbitrary precision integer types (Integer or LargeInteger).
- *
- * \ingroup concepts
- */
-template <typename T>
-concept ArbitraryPrecisionInteger =
-    std::is_same_v<IntegerBase<true>, T> ||
-    std::is_same_v<IntegerBase<false>, T>;
-
-/**
- * One of Regina's own integer types (Integer, LargeInteger, or NativeInteger).
- *
- * \ingroup concepts
- */
-template <typename T>
-concept ReginaInteger =
-    ArbitraryPrecisionInteger<T> ||
-    requires(T x) {
-        { NativeInteger(x) } -> std::same_as<T>; // equal to NativeInteger<...>
-    };
 
 /**
  * A mathematical vector type derived from (or the same as) `Vector<T>`,

@@ -1217,7 +1217,6 @@
 		057FDAF72EE7ACC3000C706E /* core.h in Headers */ = {isa = PBXBuildFile; fileRef = 057FDAF52EE7ACC3000C706E /* core.h */; };
 		057FDAF92EE7E2B4000C706E /* maths.h in Headers */ = {isa = PBXBuildFile; fileRef = 057FDAF82EE7E2B4000C706E /* maths.h */; };
 		057FDAFB2EE86FE1000C706E /* concepts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057FDAFA2EE86FE1000C706E /* concepts.cpp */; };
-		057FDAFE2EE95CBB000C706E /* arithmetic.h in Headers */ = {isa = PBXBuildFile; fileRef = 057FDAFC2EE95CBB000C706E /* arithmetic.h */; };
 		057FDAFF2EE95CBB000C706E /* io.h in Headers */ = {isa = PBXBuildFile; fileRef = 057FDAFD2EE95CBB000C706E /* io.h */; };
 		057FDB012EE967A3000C706E /* forward.h in Headers */ = {isa = PBXBuildFile; fileRef = 057FDB002EE967A3000C706E /* forward.h */; };
 		057FDB032EEA3D01000C706E /* packet.h in Headers */ = {isa = PBXBuildFile; fileRef = 057FDB022EEA3D01000C706E /* packet.h */; };
@@ -3819,7 +3818,6 @@
 		057FDAF52EE7ACC3000C706E /* core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = core.h; sourceTree = "<group>"; };
 		057FDAF82EE7E2B4000C706E /* maths.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = maths.h; sourceTree = "<group>"; };
 		057FDAFA2EE86FE1000C706E /* concepts.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = concepts.cpp; sourceTree = "<group>"; };
-		057FDAFC2EE95CBB000C706E /* arithmetic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = arithmetic.h; sourceTree = "<group>"; };
 		057FDAFD2EE95CBB000C706E /* io.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = io.h; sourceTree = "<group>"; };
 		057FDB002EE967A3000C706E /* forward.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = forward.h; sourceTree = "<group>"; };
 		057FDB022EEA3D01000C706E /* packet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = packet.h; sourceTree = "<group>"; };
@@ -8143,7 +8141,6 @@
 			isa = PBXGroup;
 			children = (
 				057FDAF42EE7ACC3000C706E /* CMakeLists.txt */,
-				057FDAFC2EE95CBB000C706E /* arithmetic.h */,
 				057FDAF52EE7ACC3000C706E /* core.h */,
 				057FDAFD2EE95CBB000C706E /* io.h */,
 				057FDAF82EE7E2B4000C706E /* maths.h */,
@@ -8944,7 +8941,6 @@
 				053CB70B28D0168D006B37B0 /* triangle4.h in Headers */,
 				054209231DF28C990018AB24 /* context.h in Headers */,
 				05EDDA5527E31061001743C1 /* nmz_hash.h in Headers */,
-				057FDAFE2EE95CBB000C706E /* arithmetic.h in Headers */,
 				057FDAFF2EE95CBB000C706E /* io.h in Headers */,
 				05199A5D25C63CCE0006B8FA /* typeutils.h in Headers */,
 				05A0671D1DFA68190047872E /* layeredsolidtorus.h in Headers */,

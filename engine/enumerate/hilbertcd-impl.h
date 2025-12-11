@@ -89,7 +89,7 @@ void HilbertCD::enumerate(Action&& action,
             std::forward<Action>(action), subspace, constraints);
 }
 
-template <ArbitraryPrecisionIntegerVector Ray, typename BitmaskType,
+template <ArbitraryPrecisionIntegerVector Ray, ReginaBitmask BitmaskType,
     typename Action>
 void HilbertCD::enumerateUsingBitmask(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints) {

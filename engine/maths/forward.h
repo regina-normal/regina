@@ -38,7 +38,7 @@
  *  integer, ring, vector and matrix types.
  */
 
-#include "concepts/arithmetic.h"
+#include "concepts/core.h"
 #include "concepts/io.h"
 
 namespace regina {

@@ -106,7 +106,7 @@ void HilbertPrimal::enumerate(Action&& action,
             raysBegin, raysEnd, constraints, tracker);
 }
 
-template <ArbitraryPrecisionIntegerVector Ray, typename BitmaskType,
+template <ArbitraryPrecisionIntegerVector Ray, ReginaBitmask BitmaskType,
         typename RayIterator, typename Action>
 void HilbertPrimal::enumerateUsingBitmask(Action&& action,
         const RayIterator& raysBegin, const RayIterator& raysEnd,
@@ -165,7 +165,7 @@ void HilbertPrimal::enumerateUsingBitmask(Action&& action,
         tracker->setPercent(100);
 }
 
-template <typename VectorClass, typename BitmaskType>
+template <typename VectorClass, ReginaBitmask BitmaskType>
 bool HilbertPrimal::inFace(const VectorClass& ray, const BitmaskType& face) {
     for (unsigned i = 0; i < ray.size(); ++i)
         if ((! face.get(i)) && ray[i] > 0)

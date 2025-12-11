@@ -29,7 +29,7 @@
  **************************************************************************/
 
 #include <array>
-#include "concepts/maths.h"
+#include "concepts/core.h"
 #include "maths/integer.h"
 
 #include "testhelper.h"

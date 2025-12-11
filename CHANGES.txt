@@ -55,20 +55,15 @@ Version 7.5  [ TODO ]
             - All three constants are now false when T == bool (previously,
               is_cpp_integer_v<bool> and is_unsigned_cpp_integer_v<bool> were
               both true).
-        Concept AssignableTo, InputIteratorFor:
-            - New concepts surrounding assignment operations.
-        Concept Writeable, Stringifiable, InherentlyTightEncodable:
-            - New concepts for describing input and output capabilities.
-        Concept CppInteger, StandardCppInteger, SignedCppInteger,
-                UnsignedCppInteger:
-            - New concepts for detecting native C++ integers and related types.
-        Concept ReginaInteger, ArbitraryPrecisionInteger, IntegerVector,
-                ArbitraryPrecisionIntegerVector, IntegerCompatible,
-                IntegerComparable, RingLike, Ring, Domain, IntegralDomain,
-                CoefficientDomain:
-            - New concepts for detecting various mathematical types.
-        Concept PacketClass:
-            - New concept for working with packets.
+        Concepts:
+            - Many new concepts, accessible via #include <concepts/*.h>:
+              + ArbitraryPrecisionInteger, ArbitraryPrecisionIntegerVector,
+                AssignableTo, CoefficientDomain, CppInteger, Domain,
+                InherentlyTightEncodable, InputIteratorFor, IntegerComparable,
+                IntegerCompatible, IntegerVector, IntegralDomain, PacketClass,
+                ReginaBitmask, ReginaInteger, Ring, RingLike, SignedCppInteger,
+                StandardCppInteger, Stringifiable, UnsignedCppInteger,
+                Writeable.
 
 Version 7.4.1  [ 30 November, 2025 ]
 

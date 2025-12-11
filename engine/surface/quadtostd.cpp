@@ -66,11 +66,8 @@ namespace {
      * Bitmask1 and Bitmask2 are preferred; however, if the number
      * of coordinates is too large then the slower general-use Bitmask
      * class will need to be used instead.
-     *
-     * \pre The template argument \a BitmaskType is one of Regina's
-     * bitmask types, such as Bitmask, Bitmask1 or Bitmask2.
      */
-    template <typename BitmaskType>
+    template <ReginaBitmask BitmaskType>
     class RaySpec : private Vector<LargeInteger> {
         private:
             BitmaskType facets_;
@@ -318,7 +315,7 @@ void NormalSurfaces::buildStandardFromReduced(
         buildStandardFromReducedUsing<Bitmask>(reducedList, tracker);
 }
 
-template <typename BitmaskType>
+template <ReginaBitmask BitmaskType>
 void NormalSurfaces::buildStandardFromReducedUsing(
         const std::vector<NormalSurface>& reducedList,
         ProgressTracker* tracker) {

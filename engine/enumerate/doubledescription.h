@@ -164,33 +164,24 @@ class DoubleDescription {
          * - a bitmask indicating which facets of the original cone this
          *   ray belongs to.
          *
-         * The dot products are stored as coordinates of the Vector superclass.
-         * Dot products are only stored for hyperplanes that have not yet been
-         * intersected (thus the vector length becomes smaller as the
-         * main algorithm progresses).
+         * The dot products are stored as the integer coordinates of the
+         * Vector superclass.  Dot products are only stored for hyperplanes
+         * that have not yet been intersected (thus the vector length becomes
+         * smaller as the main algorithm progresses).
          * Dot products are stored in the order in which hyperplanes are
          * to be processed (thus the dot product with the next hyperplane
          * is the first element of this vector, and the dot product with
          * the final hyperplane is the last element).
          *
-         * The \a BitmaskType template argument describes how the set of
-         * facets will be stored.  Specifically, the set of facets is
-         * stored as a bitmask with one bit per facet; each bit is set if
-         * and only if this ray belongs to the corresponding original facet.
-         *
+         * The additional bitmask uses one bit per facet of the original cone:
+         * each bit is set if and only if this ray belongs to the corresponding
+         * original facet.
          * Since this class is used heavily, faster bitmask types such
          * as Bitmask1 and Bitmask2 are preferred; however, if the
          * number of facets is too large then the slower general-use Bitmask
          * class will need to be used instead.
-         *
-         * \tparam IntegerType the integer type used to store and manipulate
-         * rays; this must be one of Regina's own integer types.
-         *
-         * \tparam BitmaskType the bitmask type used to store a set of facets;
-         * this must be one of Regina's own bitmask types, such as
-         * Bitmask, Bitmask1 or Bitmask2.
          */
-        template <typename IntegerType, typename BitmaskType>
+        template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
         class RaySpec : private Vector<IntegerType> {
             private:
                 using Vector<IntegerType>::elts_;
@@ -325,14 +316,12 @@ class DoubleDescription {
          * All arguments to this function are identical to those for the
          * public routine enumerate().
          *
-         * \pre The bitmask type is one of Regina's bitmask types, such
-         * as Bitmask, Bitmask1 or Bitmask2.
          * \pre The type \a BitmaskType can handle at least \a f bits,
          * where \a f is the number of original facets in the given range.
          * \pre The given range of facets is not empty.
          */
-        template <ArbitraryPrecisionIntegerVector Ray, typename BitmaskType,
-            typename Action>
+        template <ArbitraryPrecisionIntegerVector Ray,
+            ReginaBitmask BitmaskType, typename Action>
         static void enumerateUsingBitmask(Action&& action,
             const MatrixInt& subspace, const ValidityConstraints& constraints,
             ProgressTracker* tracker, size_t initialRows);
@@ -386,7 +375,7 @@ class DoubleDescription {
          * the entire old solution set, or undefined if the operation
          * was cancelled via the progress tracker.
          */
-        template <typename IntegerType, typename BitmaskType>
+        template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
         static bool intersectHyperplane(
             std::vector<RaySpec<IntegerType, BitmaskType>*>& src,
             std::vector<RaySpec<IntegerType, BitmaskType>*>& dest,
@@ -397,14 +386,14 @@ class DoubleDescription {
 
 // Inline functions for DoubleDescription::RaySpec
 
-template <typename IntegerType, typename BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 inline DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
         const RaySpec<IntegerType, BitmaskType>& trunc) :
         Vector<IntegerType>(trunc.size() - 1), facets_(trunc.facets_) {
     std::copy(trunc.elts_ + 1, trunc.end_, elts_);
 }
 
-template <typename IntegerType, typename BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 inline int DoubleDescription::RaySpec<IntegerType, BitmaskType>::sign() const {
     if (*elts_ < 0)
         return -1;
@@ -413,13 +402,13 @@ inline int DoubleDescription::RaySpec<IntegerType, BitmaskType>::sign() const {
     return 0;
 }
 
-template <typename IntegerType, typename BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 inline const BitmaskType&
         DoubleDescription::RaySpec<IntegerType, BitmaskType>::facets() const {
     return facets_;
 }
 
-template <typename IntegerType, typename BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 inline bool
         DoubleDescription::RaySpec<IntegerType, BitmaskType>::onAllCommonFacets(
         const RaySpec<IntegerType, BitmaskType>& x,

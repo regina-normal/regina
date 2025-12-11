@@ -38,7 +38,7 @@
 #define __REGINA_RINGUTILS_H
 #endif
 
-#include "concepts/maths.h"
+#include "concepts/core.h"
 #include "utilities/intutils.h"
 
 namespace regina {

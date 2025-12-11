@@ -29,7 +29,7 @@
  **************************************************************************/
 
 /*! \file concepts/core.h
- *  \brief Concepts related to core types.
+ *  \brief Concepts related to core C++ and Regina types.
  */
 
 #ifndef __REGINA_CONCEPTS_CORE_H
@@ -41,6 +41,11 @@
 #include "utilities/intutils.h"
 
 namespace regina {
+
+template <bool> class IntegerBase;
+template <int> class NativeInteger;
+// More forward declarations appear later, once we have the concepts necessary
+// to make them.
 
 /**
  * \defgroup concepts Concepts
@@ -58,6 +63,21 @@ namespace regina {
  */
 template <typename Source, typename Target>
 concept AssignableTo = std::assignable_from<Target, Source>;
+
+/**
+ * An input iterator whose dereferenced values can be assigned to the type
+ * \a Target.
+ *
+ * This concept does not actually verify that \a T is an iterator (you should
+ * do that separately using one of the standard C++ iterator concepts).
+ * What it _does_ do is verify the dereferenced assignment property described
+ * above.
+ *
+ * \ingroup concepts
+ */
+template <typename T, typename Target>
+concept InputIteratorFor =
+    std::assignable_from<Target&, decltype(*std::declval<T&>())>;
 
 /**
  * One of the standard non-boolean C++ integer types, without making any
@@ -104,14 +124,136 @@ template <typename T>
 concept UnsignedCppInteger = is_unsigned_cpp_integer_v<T>;
 
 /**
- * An input iterator whose dereferenced values can be assigned to the type
- * \a Target.
+ * One of Regina's arbitrary precision integer types (Integer or LargeInteger).
  *
  * \ingroup concepts
  */
-template <typename T, typename Target>
-concept InputIteratorFor =
-    std::assignable_from<Target&, decltype(*std::declval<T&>())>;
+template <typename T>
+concept ArbitraryPrecisionInteger =
+    std::is_same_v<IntegerBase<true>, T> ||
+    std::is_same_v<IntegerBase<false>, T>;
+
+/**
+ * One of Regina's own integer types (Integer, LargeInteger, or NativeInteger).
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept ReginaInteger =
+    ArbitraryPrecisionInteger<T> ||
+    requires(T x) { { NativeInteger(x) } -> std::same_as<T>; };
+
+/**
+ * A type that supports very basic interoperability with integer values,
+ * via construction, assignment, and equality/inequality testing.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept IntegerCompatible =
+    std::constructible_from<T, int> &&
+    std::assignable_from<T&, int> &&
+    std::equality_comparable_with<T, int>;
+
+/**
+ * A type that supports interoperability with integer values via construction,
+ * assignment, equality/inequality testing, and comparisons.  The comparisons
+ * must yield a total order.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept IntegerComparable =
+    IntegerCompatible<T> &&
+    std::totally_ordered_with<T, int>;
+
+/**
+ * A type that has the necessary operations to behave like a mathematical ring.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept RingLike =
+    std::regular<T> &&
+    requires(const T a, const T b, T x) {
+        { a + b } -> std::convertible_to<T>;
+        { a - b } -> std::convertible_to<T>;
+        { a * b } -> std::convertible_to<T>;
+        { -a } -> std::convertible_to<T>;
+        { x += a } -> std::same_as<T&>;
+        { x -= a } -> std::same_as<T&>;
+        { x *= a } -> std::same_as<T&>;
+    };
+
+// Forward declarations that require the concept RingLike:
+template <RingLike> struct RingTraits;
+
+/**
+ * A type that behaves like a mathematical ring, and for which the
+ * specialisation `RingTraits<T>` is available.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept Ring =
+    RingLike<T> &&
+    requires {
+        { RingTraits<T>::zero } -> std::convertible_to<T>;
+        { RingTraits<T>::one } -> std::convertible_to<T>;
+    };
+
+/**
+ * A ring with no zero divisors.
+ *
+ * The property of having no zero divisors is self-identified through the
+ * specialisation `RingTraits<T>`.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept Domain = Ring<T> && ! RingTraits<T>::zeroDivisors;
+
+/**
+ * A commutative ring with no zero divisors.
+ *
+ * Commutativity and the property of having no zero divisors are both
+ * self-identified through the specialisation `RingTraits<T>`.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept IntegralDomain = Domain<T> && RingTraits<T>::commutative;
+
+/**
+ * A type suitable to use for coefficients in Regina's polynomial-like classes.
+ *
+ * This concept is tailored to Regina's own requirements, and so is stricter
+ * than the mathematical requirements for polynomial coefficients.  For example,
+ * we insist here on no zero divisors (to support division-related algorithms),
+ * and we insist on default constructors that initialise to zero (to simplify
+ * algorithm implementations).
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept CoefficientDomain =
+    Domain<T> && IntegerComparable<T> && RingTraits<T>::zeroInitialised;
+
+// Forward declarations that require the concept UnsignedCppInteger:
+class Bitmask;
+template <UnsignedCppInteger> class Bitmask1;
+template <UnsignedCppInteger, UnsignedCppInteger> class Bitmask2;
+
+/**
+ * One of Regina's own bitmask types.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept ReginaBitmask =
+    std::same_as<T, Bitmask> ||
+    requires(T x) { { Bitmask1(x) } -> std::same_as<T>; } ||
+    requires(T x) { { Bitmask2(x) } -> std::same_as<T>; };
 
 } // namespace regina
 

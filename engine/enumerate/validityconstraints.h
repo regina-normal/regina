@@ -40,6 +40,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <vector>
+#include "concepts/core.h"
 #include "core/output.h"
 
 namespace regina {
@@ -309,16 +310,12 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          *
          * \python This routine uses the bitmask type regina::Bitmask.
          *
-         * \tparam BitmaskType the bitmask type used to encode each constraint;
-         * this must be one of Regina's own bitmask types, such as Bitmask,
-         * Bitmask1 or Bitmask2.
-         *
          * \param len the total number of coordinates in the vectors being
          * constrained.  Each bitmask will be created with this length.
          * \return the list of bitmasks describing the full set of validity
          * constraints.
          */
-        template <typename BitmaskType>
+        template <ReginaBitmask BitmaskType>
         std::vector<BitmaskType> bitmasks(size_t len) const;
 
         /**
@@ -349,14 +346,10 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          *
          * \python This routine uses the bitmask type regina::Bitmask.
          *
-         * \tparam BitmaskType the bitmask type used to encode each constraint;
-         * this must be one of Regina's own bitmask types, such as Bitmask,
-         * Bitmask1 or Bitmask2.
-         *
          * \return the list of bitmasks describing the full set of validity
          * constraints.
          */
-        template <typename BitmaskType>
+        template <ReginaBitmask BitmaskType>
         std::vector<BitmaskType> bitmasks() const;
 
         /**
@@ -458,7 +451,7 @@ inline void ValidityConstraints::swap(ValidityConstraints& other) noexcept {
     global_.swap(other.global_);
 }
 
-template <typename BitmaskType>
+template <ReginaBitmask BitmaskType>
 std::vector<BitmaskType> ValidityConstraints::bitmasks(size_t len) const {
     std::vector<BitmaskType> ans;
     ans.reserve(local_.size() * nBlocks_ + global_.size());
@@ -486,7 +479,7 @@ std::vector<BitmaskType> ValidityConstraints::bitmasks(size_t len) const {
     return ans;
 }
 
-template <typename BitmaskType>
+template <ReginaBitmask BitmaskType>
 inline std::vector<BitmaskType> ValidityConstraints::bitmasks() const {
     return bitmasks<BitmaskType>(blockSize_ * nBlocks_);
 }
