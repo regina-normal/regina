@@ -85,7 +85,7 @@ concept BidirectionalIteratorFor =
     std::constructible_from<Target, decltype(*std::declval<T&>())>;
 
 /**
- * An random access iterator whose dereferenced values can be assigned to the
+ * A random access iterator whose dereferenced values can be assigned to the
  * type \a Target.
  *
  * Both construction and the assignment operator should be supported.
