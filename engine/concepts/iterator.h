@@ -42,6 +42,8 @@
 
 namespace regina {
 
+class Packet;
+
 /**
  * An input iterator whose dereferenced values can be assigned to the
  * type \a Target.
@@ -97,6 +99,34 @@ concept RandomAccessIteratorFor =
     std::random_access_iterator<T> &&
     std::assignable_from<Target&, decltype(*std::declval<T&>())> &&
     std::constructible_from<Target, decltype(*std::declval<T&>())>;
+
+/**
+ * An input iterator that knows when iteration has finished.
+ *
+ * Specifically, such an iterator should have a `bool` operator that returns
+ * \c true if and only if the iterator is dereferenceable.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept SelfSentinelInputIterator =
+    std::input_iterator<T> &&
+    requires(T x) { bool(x); };
+
+/**
+ * An input iterator that iterates over packets.
+ *
+ * Dereferencing the iterator should yield a reference type `Packet&` (possibly
+ * `const`).  Moreover, the iterator should have a `bool` operator that returns
+ * \c true if and only if the iterator is dereferenceable.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept PacketIterator =
+    SelfSentinelInputIterator<T> &&
+    (std::same_as<Packet&, decltype(*std::declval<T&>())> ||
+        std::same_as<const Packet&, decltype(*std::declval<T&>())>);
 
 } // namespace regina
 

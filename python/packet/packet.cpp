@@ -31,6 +31,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/iostream.h>
+#include "concepts/iterator.h"
 #include "packet/packet.h"
 #include "../helpers.h"
 #include "../docstrings/packet/packet.h"
@@ -59,7 +60,7 @@ namespace regina::python::doc::common {
 
 namespace {
     // Support for iterables and iterators:
-    template <typename Iterator>
+    template <regina::PacketIterator Iterator>
     std::shared_ptr<Packet> next(Iterator& it) {
         if (it)
             return (*it++).shared_from_this();

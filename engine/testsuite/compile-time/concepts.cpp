@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include "concepts/io.h"
+#include "concepts/iterator.h"
 #include "concepts/maths.h"
 #include "concepts/packet.h"
 #include "link/link.h"
@@ -243,3 +244,16 @@ static_assert(! regina::PacketClass<regina::Link>);
 static_assert(! regina::PacketClass<regina::Packet>);
 static_assert(regina::PacketClass<regina::SurfaceFilter>);
 static_assert(regina::PacketClass<regina::SurfaceFilterCombination>);
+
+static_assert(regina::InputIteratorFor<std::vector<int>::iterator, int>);
+static_assert(regina::InputIteratorFor<std::vector<int>::const_iterator, int>);
+
+static_assert(! regina::SelfSentinelInputIterator<std::vector<int>::iterator>);
+static_assert(regina::SelfSentinelInputIterator<regina::ChildIterator<true>>);
+static_assert(regina::SelfSentinelInputIterator<regina::ChildIterator<false>>);
+
+static_assert(! regina::PacketIterator<std::vector<int>::iterator>);
+static_assert(regina::PacketIterator<regina::ChildIterator<true>>);
+static_assert(regina::PacketIterator<regina::ChildIterator<false>>);
+static_assert(regina::PacketIterator<regina::SubtreeIterator<true>>);
+static_assert(regina::PacketIterator<regina::SubtreeIterator<false>>);
