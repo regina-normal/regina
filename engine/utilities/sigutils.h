@@ -260,9 +260,9 @@ struct [[deprecated]] Base64SigEncoding {
     template <std::output_iterator<uint8_t> iterator>
     static void decodeTrits(char c, iterator result) {
         auto val = static_cast<uint8_t>(decodeSingle(c));
-        *result++ = val & 3;
-        *result++ = (val >> 2) & 3;
-        *result++ = (val >> 4) & 3;
+        *result++ = static_cast<uint8_t>(val & 3);
+        *result++ = static_cast<uint8_t>((val >> 2) & 3);
+        *result++ = static_cast<uint8_t>((val >> 4) & 3);
     }
 
     /**
@@ -895,9 +895,9 @@ class Base64SigDecoder {
         template <std::output_iterator<uint8_t> iterator>
         void decodeTrits(iterator result) {
             uint8_t val = decodeSingle<uint8_t>();
-            *result++ = val & 3;
-            *result++ = (val >> 2) & 3;
-            *result++ = (val >> 4) & 3;
+            *result++ = static_cast<uint8_t>(val & 3);
+            *result++ = static_cast<uint8_t>((val >> 2) & 3);
+            *result++ = static_cast<uint8_t>((val >> 4) & 3);
         }
 
         /**
