@@ -47,7 +47,7 @@
 
 namespace regina {
 
-template <typename TetData> class DiscSpecIterator;
+template <typename> class DiscSpecIterator;
 
 /**
  * Specifies a single normal disc in a normal surface.

@@ -218,7 +218,6 @@ void HilbertDual::reduceBasis(
     if (reduce.empty())
         return;
 
-    typename std::list<VecSpec<IntegerType, BitmaskType>*>::iterator red;
     bool processed;
 
     auto i = reduce.begin();
@@ -227,7 +226,8 @@ void HilbertDual::reduceBasis(
 
     while (i != reduce.end()) {
         processed = true;
-        for (red = against.begin(); red != against.end(); ++red) {
+        auto red = against.begin();
+        for ( ; red != against.end(); ++red) {
             if (red == i) {
                 processed = false;
                 continue;
@@ -247,7 +247,6 @@ void HilbertDual::reduceBasis(
                     break;
             }
         }
-
         if (red == against.end()) {
             i = next;
             if (next != reduce.end())

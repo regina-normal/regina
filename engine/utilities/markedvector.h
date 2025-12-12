@@ -259,8 +259,7 @@ class MarkedVector : private std::vector<T*> {
         inline typename std::vector<T*>::iterator erase(
                 typename std::vector<T*>::iterator first,
                 typename std::vector<T*>::iterator last) {
-            for (typename std::vector<T*>::iterator it = last;
-                    it != end(); ++it)
+            for (auto it = last; it != end(); ++it)
                 (*it)->marking_ -= (first - last);
             return std::vector<T*>::erase(first, last);
         }
