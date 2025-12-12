@@ -41,7 +41,7 @@
 #include <algorithm>
 #include <tuple>
 #include <utility>
-#include "regina-core.h"
+#include "concepts/iterator.h"
 #include "core/output.h"
 #include "utilities/exception.h"
 
@@ -150,12 +150,8 @@ class Cut : public ShortOutput<Cut> {
          * each equal to 0 or 1, indicating which side of the partition each
          * node lies on.
          *
-         * \pre The type \a iterator, when dereferenced, can be cast to
-         * an \c int.
-         *
-         * \warning This routine computes the number of nodes by subtracting
-         * `end - begin`, and so ideally \a iterator should be a random access
-         * iterator type for which this operation is constant time.
+         * The iterator type must be random access because this allows the
+         * implementation to compute the number of nodes in constant time.
          *
          * \exception InvalidArgument Some element of the given sequence
          * is neither 0 nor 1.
@@ -168,7 +164,7 @@ class Cut : public ShortOutput<Cut> {
          * \param end a past-the-end iterator indicating the end of the
          * 0-1 sequence of sides.
          */
-        template <typename iterator>
+        template <RandomAccessIteratorFor<int> iterator>
         Cut(iterator begin, iterator end);
 
         /**
@@ -553,7 +549,7 @@ inline Cut::Cut(Cut&& src) noexcept : size_(src.size_), side_(src.side_) {
     src.side_ = nullptr;
 }
 
-template <typename iterator>
+template <RandomAccessIteratorFor<int> iterator>
 Cut::Cut(iterator begin, iterator end) : size_(end - begin) {
     side_ = new int[size_];
 

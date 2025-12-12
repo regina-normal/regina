@@ -43,6 +43,7 @@
 #include <string>
 #include "regina-core.h"
 #include "concepts/core.h"
+#include "concepts/iterator.h"
 #include "utilities/exception.h"
 #include "utilities/fixedarray.h"
 
@@ -192,13 +193,12 @@ struct [[deprecated]] Base64SigEncoding {
      *
      * \param trits an input iterator pointing to the first trit to encode;
      * it must be possible to read and advance this iterator at least
-     * \a nTrits times.  Each trit will be cast to a \c uint8_t, and must take
-     * the value 0, 1 or 2.
+     * \a nTrits times.  Each trit must take the value 0, 1 or 2.
      * \param nTrits the number of trits to encode; this must be at most 3.
      * \return the resulting printable base64 character.
      */
-    template <typename InputIterator>
-    static char encodeTrits(InputIterator trits, int nTrits) {
+    template <InputIteratorFor<uint8_t> iterator>
+    static char encodeTrits(iterator trits, int nTrits) {
         uint8_t ans = 0;
         if (nTrits >= 1)
             ans |= static_cast<uint8_t>(*trits++);
@@ -255,11 +255,10 @@ struct [[deprecated]] Base64SigEncoding {
      * \param c the base64 character to decode.
      * \param result an output iterator pointing to the location where the
      * resulting trits will be stored; it must be possible to write and advance
-     * this iterator at least three times.  Each trit will be written as a
-     * \c uint8_t.
+     * this iterator at least three times.
      */
-    template <typename OutputIterator>
-    static void decodeTrits(char c, OutputIterator result) {
+    template <std::output_iterator<uint8_t> iterator>
+    static void decodeTrits(char c, iterator result) {
         auto val = static_cast<uint8_t>(decodeSingle(c));
         *result++ = val & 3;
         *result++ = (val >> 2) & 3;
@@ -517,8 +516,8 @@ class Base64SigEncoder {
          * significance.  (The last base64 character might of course encode
          * just one or two trits instead.)
          *
-         * Each trit will be obtained by dereferencing an iterator and casting
-         * to \c uint8_t, and (as noted above) must take the value 0, 1 or 2.
+         * Each trit will be obtained by dereferencing an iterator, which
+         * (as noted above) must yield the value 0, 1 or 2.
          *
          * The inverse to this routine is Base64SigDecoder::decodeTrits(),
          * though that function only decodes three trits at a time.
@@ -526,15 +525,12 @@ class Base64SigEncoder {
          * \python This routine takes a single argument, which is a Python
          * sequence of integer trits.
          *
-         * \tparam Iterator an input iterator which, when dereferenced,
-         * can be cast as a native C++ unsigned 8-bit integer (`uint8_t`).
-         *
          * \param beginTrits an iterator pointing to the first trit to encode.
          * \param endTrits a past-the-end iterator pointing beyond the last
          * trit to encode.
          */
-        template <typename Iterator>
-        void encodeTrits(Iterator beginTrits, Iterator endTrits) {
+        template <InputIteratorFor<uint8_t> iterator>
+        void encodeTrits(iterator beginTrits, iterator endTrits) {
             auto it = beginTrits;
             while (it != endTrits) {
                 uint8_t packed = static_cast<uint8_t>(*it++);
@@ -593,11 +589,9 @@ class Base64SigEncoder {
  * \python The type \a Iterator is an implementation detail, and is hidden
  * from Python users.  Just use the unadorned type name `Base64SigDecoder`.
  *
- * \tparam Iterator a forward iterator whose associated value type is `char`.
- *
  * \ingroup utilities
  */
-template <typename Iterator>
+template <ForwardIteratorFor<char> Iterator>
 class Base64SigDecoder {
     private:
         Iterator next_;
@@ -607,11 +601,6 @@ class Base64SigDecoder {
                  location, as is usual for an iterator range). */
 
     public:
-        static_assert(
-            std::is_same_v<typename std::iterator_traits<Iterator>::value_type,
-                char>,
-            "Base64SigDecoder requires iterators over characters.");
-
         /**
          * Creates a new decoder for the given encoded string.
          *
@@ -901,11 +890,10 @@ class Base64SigDecoder {
          *
          * \param result an output iterator pointing to the location where the
          * resulting trits will be stored; it must be possible to write and
-         * advance this iterator at least three times.  Each trit will be
-         * written as a \c uint8_t.
+         * advance this iterator at least three times.
          */
-        template <typename OutputIterator>
-        void decodeTrits(OutputIterator result) {
+        template <std::output_iterator<uint8_t> iterator>
+        void decodeTrits(iterator result) {
             uint8_t val = decodeSingle<uint8_t>();
             *result++ = val & 3;
             *result++ = (val >> 2) & 3;

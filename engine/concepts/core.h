@@ -65,6 +65,16 @@ template <typename Source, typename Target>
 concept AssignableTo = std::assignable_from<Target, Source>;
 
 /**
+ * Indicates that a variable of type \a Source can be used to construct a
+ * variable of type \a Target.  This is identical to `std::constructible_from`,
+ * but with the arguments in the opposite order.
+ *
+ * \ingroup concepts
+ */
+template <typename Source, typename Target>
+concept CanConstruct = std::constructible_from<Target, Source>;
+
+/**
  * One of the standard non-boolean C++ integer types, without making any
  * special accommodations for 128-bit integer compiler extensions.
  *

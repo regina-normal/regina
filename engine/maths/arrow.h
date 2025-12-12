@@ -143,22 +143,16 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
          * \exception InvalidArgument At least one of the given diagram
          * sequences is non-empty and ends in zero.
          *
-         * \tparam iterator an iterator type which, when dereferenced, gives a
-         * std::pair of the form `(seq, laurent)`, where \a seq and \a laurent
-         * can be used to construct objects of types DiagramSequence and
-         * Laurent<Integer> respectively.
-         *
-         * \tparam deref a dummy argument that should be ignored.  This is
-         * present to ensure that \a iterator can be dereferenced.  Once we
-         * support a greater subset of C++20, this will be enforced through
-         * concepts instead.
-         *
          * \param begin the beginning of the collection of pairs, as outlined
          * above.
          * \param end a past-the-end iterator indicating the end of the
          * collection of pairs.
          */
-        template <typename iterator, typename deref = decltype(*iterator())>
+        template <std::input_iterator iterator>
+        requires requires(iterator it) {
+            { it->first } -> CanConstruct<DiagramSequence>;
+            { it->second } -> CanConstruct<Laurent<Integer>>;
+        }
         Arrow(iterator begin, iterator end);
 
         /**
@@ -773,7 +767,11 @@ struct RingTraits<Arrow> {
 
 // Inline functions for Arrow
 
-template <typename iterator, typename deref>
+template <std::input_iterator iterator>
+requires requires(iterator it) {
+    { it->first } -> CanConstruct<Arrow::DiagramSequence>;
+    { it->second } -> CanConstruct<Laurent<Integer>>;
+}
 inline Arrow::Arrow(iterator begin, iterator end) {
     for (auto it = begin; it != end; ++it) {
         DiagramSequence seq = it->first;

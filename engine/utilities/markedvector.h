@@ -39,7 +39,7 @@
 
 #include <algorithm>
 #include <vector>
-#include "regina-core.h"
+#include "concepts/iterator.h"
 
 namespace regina {
 
@@ -307,17 +307,14 @@ class MarkedVector : private std::vector<T*> {
          * The algorithm only makes a single pass through the given
          * range of iterators.
          *
-         * \tparam Iterator an input iterator type, whose dereference
-         * operator returns a pointer of type `T*`.
-         *
          * \param begin an iterator that points to the beginning of the range
          * of items with which to refill this vector.
          * \param end an iterator that points past the end of the range of
          * items with which to refill this vector.
          */
-        template <typename Iterator>
-        void refill(Iterator begin, Iterator end) {
-            Iterator it = begin;
+        template <InputIteratorFor<T*> iterator>
+        void refill(iterator begin, iterator end) {
+            iterator it = begin;
             auto local = std::vector<T*>::begin();
             while (it != end && local != std::vector<T*>::end())
                 *local++ = *it++;

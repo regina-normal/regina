@@ -49,6 +49,7 @@
 #include <iterator>
 #include <string>
 #include "regina-core.h"
+#include "concepts/iterator.h"
 #include "utilities/bitmanip.h"
 #include "utilities/exception.h"
 #include "utilities/intutils.h"
@@ -1416,8 +1417,6 @@ class Perm {
          * \exception InvalidInput The given iterator does not point to
          * a tight encoding of an <i>n</i>-element permutation.
          *
-         * \tparam iterator an input iterator type.
-         *
          * \param start an iterator that points to the beginning of a
          * tight encoding.
          * \param limit an iterator that, if reached, indicates that no more
@@ -1427,7 +1426,7 @@ class Perm {
          * allowed to be additional unread data.
          * \return the permutation represented by the given tight encoding.
          */
-        template <typename iterator>
+        template <InputIteratorFor<char> iterator>
         static Perm tightDecode(iterator start, iterator limit,
             bool noTrailingData);
 
@@ -2254,7 +2253,7 @@ std::string Perm<n>::tightEncoding() const {
 // thinks this is a new non-static function instead.
 #ifndef __DOXYGEN
 template <int n>
-template <typename iterator>
+template <InputIteratorFor<char> iterator>
 Perm<n> Perm<n>::tightDecode(iterator start, iterator limit,
         bool noTrailingData) {
     // Ensure that our calculations will not overflow, even when reading

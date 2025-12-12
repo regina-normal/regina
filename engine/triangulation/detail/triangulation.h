@@ -3505,8 +3505,8 @@ class TriangulationBase :
          * amongst other things).
          *
          * The iterator range (\a beginGluings, \a endGluings) should encode
-         * the list of gluings for the triangulation.  Each iterator in
-         * this range must dereference to a tuple of the form
+         * the list of gluings for the triangulation.  Each iterator in this
+         * range must dereference to a tuple (or tuple-like object) of the form
          * (\a simp, \a facet, \a adj, \a gluing); here \a simp, \a facet
          * and \a adj are all integers, and \a gluing is of type Perm<dim+1>.
          * Each such tuple indicates that facet \a facet of top-dimensional
@@ -3540,12 +3540,6 @@ class TriangulationBase :
          *     ( 0, 2, 1, Perm4(0,3,2,1) ), ( 0, 3, 1, Perm4(2,1,0,3) )])
          * \endcode
          *
-         * \note The assumption is that the iterators dereference to a
-         * std::tuple<size_t, int, size_t, Perm<dim+1>>.  However, this is
-         * not strictly necessary - the dereferenced type may be any type that
-         * supports std::get (and for which std::get<0..3>() yields suitable
-         * integer/permutation types).
-         *
          * \exception InvalidArgument The given list of gluings does not
          * correctly describe a triangulation with \a size top-dimensional
          * simplices.
@@ -3561,9 +3555,15 @@ class TriangulationBase :
          * of the list of gluings.
          * \return the reconstructed triangulation.
          */
-        template <typename Iterator>
+        template <std::input_iterator iterator>
+        requires requires(iterator it) {
+            { std::get<0>(*it) } -> AssignableTo<size_t&>;
+            { std::get<1>(*it) } -> AssignableTo<int&>;
+            { std::get<2>(*it) } -> AssignableTo<size_t&>;
+            { std::get<3>(*it) } -> AssignableTo<Perm<dim + 1>&>;
+        }
         static Triangulation<dim> fromGluings(size_t size,
-            Iterator beginGluings, Iterator endGluings);
+            iterator beginGluings, iterator endGluings);
 
         /**
          * Recovers a full triangulation from an isomorphism signature.
@@ -4221,8 +4221,8 @@ class TriangulationBase :
          *
          * \pre The skeleton of this triangulation has been computed.
          */
-        template <int subdim, typename Iterator>
-        void reorderFaces(Iterator begin, Iterator end);
+        template <int subdim, InputIteratorFor<Face<dim, subdim>*> iterator>
+        void reorderFaces(iterator begin, iterator end);
 
         /**
          * Tests whether this and the given triangulation have the same
@@ -4980,8 +4980,8 @@ inline auto TriangulationBase<dim>::pentachora() const {
 }
 
 template <int dim>
-template <int subdim, typename Iterator>
-inline void TriangulationBase<dim>::reorderFaces(Iterator begin, Iterator end) {
+template <int subdim, InputIteratorFor<Face<dim, subdim>*> iterator>
+inline void TriangulationBase<dim>::reorderFaces(iterator begin, iterator end) {
     std::get<subdim>(faces_).refill(begin, end);
 }
 
@@ -5393,9 +5393,15 @@ Triangulation<dim> TriangulationBase<dim>::tightDecode(std::istream& input) {
 }
 
 template <int dim>
-template <typename Iterator>
+template <std::input_iterator iterator>
+requires requires(iterator it) {
+    { std::get<0>(*it) } -> AssignableTo<size_t&>;
+    { std::get<1>(*it) } -> AssignableTo<int&>;
+    { std::get<2>(*it) } -> AssignableTo<size_t&>;
+    { std::get<3>(*it) } -> AssignableTo<Perm<dim + 1>&>;
+}
 Triangulation<dim> TriangulationBase<dim>::fromGluings(size_t size,
-        Iterator beginGluings, Iterator endGluings) {
+        iterator beginGluings, iterator endGluings) {
     Triangulation<dim> ans;
 
     // Note: new simplices are initialised with all adj_[i] null.

@@ -1175,8 +1175,6 @@ class Perm<3> {
          * \exception InvalidInput The given iterator does not point to
          * a tight encoding of a 3-element permutation.
          *
-         * \tparam iterator an input iterator type.
-         *
          * \param start an iterator that points to the beginning of a
          * tight encoding.
          * \param limit an iterator that, if reached, indicates that no more
@@ -1186,7 +1184,7 @@ class Perm<3> {
          * allowed to be additional unread data.
          * \return the permutation represented by the given tight encoding.
          */
-        template <typename iterator>
+        template <InputIteratorFor<char> iterator>
         static Perm tightDecode(iterator start, iterator limit,
             bool noTrailingData);
 
@@ -1421,7 +1419,7 @@ inline Perm<3> Perm<3>::tightDecode(std::istream& input) {
 #ifndef __DOXYGEN
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
-template <typename iterator>
+template <InputIteratorFor<char> iterator>
 Perm<3> Perm<3>::tightDecode(iterator start, iterator limit,
         bool noTrailingData) {
     if (start == limit)

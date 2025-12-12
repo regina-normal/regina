@@ -43,6 +43,7 @@
 #include "regina-core.h"
 #include "regina-config.h"
 #include "concepts/core.h"
+#include "concepts/iterator.h"
 #include "utilities/bitmanip.h"
 
 namespace regina {
@@ -208,8 +209,6 @@ class Bitmask {
          *
          * All other bits of this bitmask are unaffected by this routine.
          *
-         * \pre \a ForwardIterator is a forward iterator type that iterates
-         * over integer values.
          * \pre The list of indices described by these iterators is
          * in _sorted_ order.  This is to allow optimisations for
          * larger bitmask types.
@@ -227,9 +226,8 @@ class Bitmask {
          * \param value the value that will be assigned to each of the
          * corresponding bits.
          */
-        template <typename ForwardIterator>
-        void set(ForwardIterator indexBegin, ForwardIterator indexEnd,
-                bool value) {
+        template <InputIteratorFor<size_t> iterator>
+        void set(iterator indexBegin, iterator indexEnd, bool value) {
             Piece* base = mask;
             size_t offset = 0;
             size_t diff;
@@ -721,8 +719,6 @@ class Bitmask1 {
          *
          * All other bits of this bitmask are unaffected by this routine.
          *
-         * \pre \a ForwardIterator is a forward iterator type that iterates
-         * over integer values.
          * \pre The list of indices described by these iterators is
          * in _sorted_ order.  This is to allow optimisations for
          * larger bitmask types.
@@ -740,9 +736,8 @@ class Bitmask1 {
          * \param value the value that will be assigned to each of the
          * corresponding bits.
          */
-        template <typename ForwardIterator>
-        void set(ForwardIterator indexBegin, ForwardIterator indexEnd,
-                bool value) {
+        template <InputIteratorFor<size_t> iterator>
+        void set(iterator indexBegin, iterator indexEnd, bool value) {
             for ( ; indexBegin != indexEnd; ++indexBegin) {
                 mask |= (T(1) << *indexBegin);
                 if (! value)
@@ -1149,8 +1144,6 @@ class Bitmask2 {
          *
          * All other bits of this bitmask are unaffected by this routine.
          *
-         * \pre \a ForwardIterator is a forward iterator type that iterates
-         * over integer values.
          * \pre The list of indices described by these iterators is
          * in _sorted_ order.  This is to allow optimisations for
          * larger bitmask types.
@@ -1168,9 +1161,8 @@ class Bitmask2 {
          * \param value the value that will be assigned to each of the
          * corresponding bits.
          */
-        template <typename ForwardIterator>
-        void set(ForwardIterator indexBegin, ForwardIterator indexEnd,
-                bool value) {
+        template <InputIteratorFor<size_t> iterator>
+        void set(iterator indexBegin, iterator indexEnd, bool value) {
             // First deal with the bits stored in low.
             for ( ; indexBegin != indexEnd && *indexBegin < 8 * sizeof(T);
                     ++indexBegin) {

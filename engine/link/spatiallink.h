@@ -39,7 +39,7 @@
 #endif
 
 #include <vector>
-#include "regina-core.h"
+#include "concepts/iterator.h"
 #include "maths/3d.h"
 #include "packet/packet.h"
 #include "utilities/listview.h"
@@ -206,7 +206,7 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          * \param end a past-the-end iterator indicating the end of the
          * sequence of components.
          */
-        template <typename iterator>
+        template <std::input_iterator iterator>
         SpatialLink(iterator begin, iterator end);
 
         /**
@@ -765,7 +765,7 @@ void swap(SpatialLink& lhs, SpatialLink& rhs);
 
 // Inline functions for SpatialLink
 
-template <typename iterator>
+template <std::input_iterator iterator>
 SpatialLink::SpatialLink(iterator begin, iterator end) {
     static_assert(std::is_convertible_v<decltype(*(begin->begin())), Node>,
         "The SpatialLink iterator constructor requires each inner list element "
@@ -773,8 +773,8 @@ SpatialLink::SpatialLink(iterator begin, iterator end) {
 
     while (begin != end) {
         auto& comp = components_.emplace_back();
-        for (auto it = begin->begin(); it != begin->end(); ++it)
-            comp.push_back(*it);
+        for (const auto& node : *begin)
+            comp.push_back(node);
         ++begin;
     }
 }

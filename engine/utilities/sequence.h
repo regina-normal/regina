@@ -504,7 +504,7 @@ class LightweightSequence {
                 bool operator () (SeqIterator a, SeqIterator b) const;
         };
 
-#if 0 // gcc bug #79501 incorrectly marks this as an error.
+#if 0 // gcc bug #79501 (fixed in gcc-12) incorrectly marks this as an error.
         template <typename IndexIterator>
         SubsequenceCompareFirst(IndexIterator, IndexIterator) ->
             SubsequenceCompareFirst<IndexIterator>;

@@ -201,9 +201,9 @@ class Laurent2 :
          */
         template <std::input_iterator iterator>
         requires requires(iterator it) {
-            { std::get<0>(*it) } -> AssignableTo<long&>;
-            { std::get<1>(*it) } -> AssignableTo<long&>;
-            { std::get<2>(*it) } -> AssignableTo<T&>;
+            { std::get<0>(*it) } -> CanConstruct<long>;
+            { std::get<1>(*it) } -> CanConstruct<long>;
+            { std::get<2>(*it) } -> CanConstruct<T>;
         }
         Laurent2(iterator begin, iterator end);
 
@@ -834,9 +834,9 @@ inline Laurent2<T>::Laurent2(const Laurent2<U>& value) :
 template <CoefficientDomain T>
 template <std::input_iterator iterator>
 requires requires(iterator it) {
-    { std::get<0>(*it) } -> AssignableTo<long&>;
-    { std::get<1>(*it) } -> AssignableTo<long&>;
-    { std::get<2>(*it) } -> AssignableTo<T&>;
+    { std::get<0>(*it) } -> CanConstruct<long>;
+    { std::get<1>(*it) } -> CanConstruct<long>;
+    { std::get<2>(*it) } -> CanConstruct<T>;
 }
 inline Laurent2<T>::Laurent2(iterator begin, iterator end) {
     for (auto it = begin; it != end; ++it) {

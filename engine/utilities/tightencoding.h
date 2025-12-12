@@ -41,6 +41,7 @@
 #include <string>
 #include <sstream>
 #include "concepts/core.h"
+#include "concepts/iterator.h"
 #include "utilities/exception.h"
 
 namespace regina {
@@ -577,8 +578,6 @@ namespace detail {
      * precision integer types (i.e., regina::Integer or regina::LargeInteger).
      * In particular, \c bool is not allowed here.
      *
-     * \tparam iterator an input iterator type.
-     *
      * \param start an iterator that points to the beginning of a
      * tight encoding.
      * \param limit an iterator that, if reached, indicates that no more
@@ -590,7 +589,7 @@ namespace detail {
      *
      * \ingroup utilities
      */
-    template <typename Int, typename iterator>
+    template <typename Int, InputIteratorFor<char> iterator>
     requires StandardCppInteger<Int> || ArbitraryPrecisionInteger<Int>
     Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData);
 
