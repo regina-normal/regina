@@ -60,8 +60,8 @@ namespace regina::python::doc::common {
 
 namespace {
     // Support for iterables and iterators:
-    template <regina::PacketIterator Iterator>
-    std::shared_ptr<Packet> next(Iterator& it) {
+    template <regina::PacketIterator iterator>
+    std::shared_ptr<Packet> next(iterator& it) {
         if (it)
             return (*it++).shared_from_this();
         else
