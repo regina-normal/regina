@@ -64,11 +64,11 @@ Version 7.5  [ TODO ]
                 AssignableTo, BidirectionalIteratorFor, CanConstruct,
                 CoefficientDomain, CppInteger, Domain, ForwardIteratorFor,
                 InherentlyTightEncodable, InputIteratorFor, IntegerComparable,
-                IntegerCompatible, IntegerVector, IntegralDomain, PacketClass,
-                PacketIterator, RandomAccessIteratorFor, ReginaBitmask,
-                ReginaInteger, Ring, RingLike, SelfSentinelInputIterator,
-                SignedCppInteger, StandardCppInteger, Stringifiable,
-                UnsignedCppInteger, Writeable.
+                IntegerCompatible, IntegerVector, IntegralDomain, Iterable,
+                PacketClass, PacketIterator, RandomAccessIteratorFor,
+                ReginaBitmask, ReginaInteger, Ring, RingLike,
+                SelfSentinelInputIterator, SignedCppInteger, StandardCppInteger,
+                Stringifiable, UnsignedCppInteger, Writeable.
 
 Version 7.4.1  [ 30 November, 2025 ]
 

@@ -128,6 +128,20 @@ concept PacketIterator =
     (std::same_as<Packet&, decltype(*std::declval<T&>())> ||
         std::same_as<const Packet&, decltype(*std::declval<T&>())>);
 
+/**
+ * A type that can be iterated over via `begin()` and `end()` member functions.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept Iterable =
+    requires(T x) {
+        { x.begin() };
+        { x.end() };
+        requires std::same_as<decltype(x.begin()), decltype(x.end())>;
+        requires std::forward_iterator<decltype(x.begin())>;
+    };
+
 } // namespace regina
 
 #endif
