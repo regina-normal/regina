@@ -234,9 +234,20 @@ class FaceEmbeddingBase :
          * FaceEmbedding objects for the same underlying <i>subdim</i>-face.
          *
          * This routine returns the same permutation as
-         * `simplex().faceMapping<subdim>(face())` (and this
+         * `simplex()->faceMapping<subdim>(face())` (and this
          * routine is faster if you already have a FaceEmbedding).
          * See Simplex<dim>::faceMapping() for details.
+         *
+         * \warning Be aware that if the triangulation changes then the
+         * skeleton will be recomputed, and there is no guarantee that the new
+         * Face objects will use the same inherent labelling as the old ones.
+         * In particular, after the triangulation changes, the FaceEmbedding
+         * for the same face of the same simplex might return a different
+         * permutation for `vertices()`.  Likewise, if you keep a copy of an
+         * old FaceEmbedding `emb` and then change the triangulation, the
+         * connection between `emb.vertices()` (which will not be updated) and
+         * `emb.simplex()->faceMapping<subdim>(emb.face())` (which will be
+         * updated) will be lost.
          *
          * \return a mapping from the vertices of the underlying
          * <i>subdim</i>-face to the corresponding vertices of simplex().
