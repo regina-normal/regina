@@ -45,10 +45,11 @@ namespace regina {
 class Packet;
 
 /**
- * An input iterator whose dereferenced values can be assigned to the
- * type \a Target.
+ * An input iterator whose dereferenced values can be assigned or converted
+ * to the type \a Target.
  *
- * Both construction and the assignment operator should be supported.
+ * Both construction and the assignment operator should be supported, and
+ * implicit conversion should be supported also.
  *
  * \ingroup concepts
  */
@@ -56,13 +57,15 @@ template <typename T, typename Target>
 concept InputIteratorFor =
     std::input_iterator<T> &&
     std::assignable_from<Target&, decltype(*std::declval<T&>())> &&
-    std::constructible_from<Target, decltype(*std::declval<T&>())>;
+    std::constructible_from<Target, decltype(*std::declval<T&>())> &&
+    std::convertible_to<decltype(*std::declval<T&>()), Target>;
 
 /**
- * A forward iterator whose dereferenced values can be assigned to the
- * type \a Target.
+ * A forward iterator whose dereferenced values can be assigned or converted
+ * to the type \a Target.
  *
- * Both construction and the assignment operator should be supported.
+ * Both construction and the assignment operator should be supported, and
+ * implicit conversion should be supported also.
  *
  * \ingroup concepts
  */
@@ -70,13 +73,15 @@ template <typename T, typename Target>
 concept ForwardIteratorFor =
     std::forward_iterator<T> &&
     std::assignable_from<Target&, decltype(*std::declval<T&>())> &&
-    std::constructible_from<Target, decltype(*std::declval<T&>())>;
+    std::constructible_from<Target, decltype(*std::declval<T&>())> &&
+    std::convertible_to<decltype(*std::declval<T&>()), Target>;
 
 /**
- * A bidirectional iterator whose dereferenced values can be assigned to the
- * type \a Target.
+ * A bidirectional iterator whose dereferenced values can be assigned or
+ * converted to the type \a Target.
  *
- * Both construction and the assignment operator should be supported.
+ * Both construction and the assignment operator should be supported, and
+ * implicit conversion should be supported also.
  *
  * \ingroup concepts
  */
@@ -84,13 +89,15 @@ template <typename T, typename Target>
 concept BidirectionalIteratorFor =
     std::bidirectional_iterator<T> &&
     std::assignable_from<Target&, decltype(*std::declval<T&>())> &&
-    std::constructible_from<Target, decltype(*std::declval<T&>())>;
+    std::constructible_from<Target, decltype(*std::declval<T&>())> &&
+    std::convertible_to<decltype(*std::declval<T&>()), Target>;
 
 /**
- * A random access iterator whose dereferenced values can be assigned to the
- * type \a Target.
+ * A random access iterator whose dereferenced values can be assigned or
+ * converted to the type \a Target.
  *
- * Both construction and the assignment operator should be supported.
+ * Both construction and the assignment operator should be supported, and
+ * implicit conversion should be supported also.
  *
  * \ingroup concepts
  */
@@ -98,7 +105,8 @@ template <typename T, typename Target>
 concept RandomAccessIteratorFor =
     std::random_access_iterator<T> &&
     std::assignable_from<Target&, decltype(*std::declval<T&>())> &&
-    std::constructible_from<Target, decltype(*std::declval<T&>())>;
+    std::constructible_from<Target, decltype(*std::declval<T&>())> &&
+    std::convertible_to<decltype(*std::declval<T&>()), Target>;
 
 /**
  * An input iterator that knows when iteration has finished.
