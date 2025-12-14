@@ -774,8 +774,8 @@ requires requires(iterator it) {
 }
 inline Arrow::Arrow(iterator begin, iterator end) {
     for (auto it = begin; it != end; ++it) {
-        DiagramSequence seq = it->first;
-        Laurent<Integer> laurent = it->second;
+        DiagramSequence seq(it->first);
+        Laurent<Integer> laurent(it->second);
 
         if ((! seq.empty()) && seq.back() == 0)
             throw InvalidArgument("One of the given diagram sequences "
