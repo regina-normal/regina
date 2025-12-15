@@ -59,15 +59,12 @@ Precondition:
     can test ``(*it)[i] == 0`` and ``(*it)[i] != 0``.
 
 Precondition:
-    The template argument BitmaskType is one of the bitmask types
-    Bitmask, Bitmask1 or Bitmask2.
-
-Precondition:
     Bitmasks of type BitmaskType can hold *n* bits, where *n* is the
     dimension of the underlying space (i.e., the size of the input
     vectors described by *beginExtremalRays* and *endExtremalRays*).
-    This is always true of Bitmask, but you must be careful when using
-    one of the fast but size-limited types Bitmask1 or Bitmask2.
+    This is always true of regina::Bitmask, but you must be careful
+    when using one of the fast but size-limited types regina::Bitmask1
+    or regina::Bitmask2.
 
 Python:
     The extremal rays should be passed as a Python list of VectorInt

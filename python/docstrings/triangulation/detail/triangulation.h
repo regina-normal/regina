@@ -994,14 +994,14 @@ other things).
 
 The iterator range (*beginGluings*, *endGluings*) should encode the
 list of gluings for the triangulation. Each iterator in this range
-must dereference to a tuple of the form (*simp*, *facet*, *adj*,
-*gluing*); here *simp*, *facet* and *adj* are all integers, and
-*gluing* is of type Perm<dim+1>. Each such tuple indicates that facet
-*facet* of top-dimensional simplex number *simp* should be glued to
-top-dimensional simplex number *adj* using the permutation *gluing*.
-In other words, such a tuple encodes the same information as calling
-``simplex(simp).join(facet, simplex(adj), gluing)`` upon the
-triangulation being constructed.
+must dereference to a tuple (or tuple-like object) of the form
+(*simp*, *facet*, *adj*, *gluing*); here *simp*, *facet* and *adj* are
+all integers, and *gluing* is of type Perm<dim+1>. Each such tuple
+indicates that facet *facet* of top-dimensional simplex number *simp*
+should be glued to top-dimensional simplex number *adj* using the
+permutation *gluing*. In other words, such a tuple encodes the same
+information as calling ``simplex(simp).join(facet, simplex(adj),
+gluing)`` upon the triangulation being constructed.
 
 Every gluing should be encoded from _one direction only_. This means,
 for example, that to build a closed 3-manifold triangulation with *n*
@@ -1025,13 +1025,6 @@ tri = Triangulation3.fromGluings(2, [
     ( 0, 0, 1, Perm4(1,3,0,2) ), ( 0, 1, 1, Perm4(2,0,3,1) ),
     ( 0, 2, 1, Perm4(0,3,2,1) ), ( 0, 3, 1, Perm4(2,1,0,3) )])
 ```
-
-.. note::
-    The assumption is that the iterators dereference to a
-    std::tuple<size_t, int, size_t, Perm<dim+1>>. However, this is not
-    strictly necessary - the dereferenced type may be any type that
-    supports std::get (and for which std::get<0..3>() yields suitable
-    integer/permutation types).
 
 Exception ``InvalidArgument``:
     The given list of gluings does not correctly describe a

@@ -27,8 +27,8 @@ namespace DoubleDescription_ {
 static const char *enumerate =
 R"doc(Determines the extremal rays of the intersection of the
 *n*-dimensional non-negative orthant with the given linear subspace.
-The resulting rays will be of the class *RayClass*, and will be passed
-into the given action function one at a time.
+The resulting rays will be of the class *Ray*, and will be passed into
+the given action function one at a time.
 
 The non-negative orthant is an *n*-dimensional cone with its vertex at
 the origin. The extremal rays of this cone are the *n* non-negative
@@ -63,15 +63,10 @@ returns.
 For each of the resulting extremal rays, this routine will call
 *action* (which must be a function or some other callable object).
 This action should return ``void``, and must take exactly one
-argument, which will be the extremal ray stored using *RayClass*. The
+argument, which will be the extremal ray stored using type *Ray*. The
 argument will be passed as an rvalue; a typical *action* would take it
-as an rvalue reference (RayClass&&) and move its contents into some
+as an rvalue reference (``Ray&&``) and move its contents into some
 other more permanent storage.
-
-Precondition:
-    The template argument RayClass is derived from (or equal to)
-    Vector<T>, where *T* is one of Regina's arbitrary-precision
-    integer classes (Integer or LargeInteger).
 
 Python:
     There are two versions of this function available in Python. The
@@ -80,14 +75,14 @@ Python:
     does not have an *action* argument; instead you call
     ``enumerate(subspace, constraints, tracker, initialRows)``, and it
     returns a Python list containing all extremal rays. In both
-    versions, the argument *RayClass* is fixed as VectorInt. The
+    versions, the template argument *Ray* is fixed as VectorInt. The
     global interpreter lock will be released while this function runs,
     so you can use it with Python-based multithreading.
 
 Parameter ``action``:
     a function (or other callable object) that will be called for each
     extremal ray. This function must take a single argument, which
-    will be passed as an rvalue of type RayClass.
+    will be passed as an rvalue of type Ray.
 
 Parameter ``subspace``:
     a matrix defining the linear subspace to intersect with the given

@@ -47,10 +47,10 @@ namespace regina {
 
 class AngleStructure;
 
-template <typename IntType> class LPMatrix;
+template <ReginaInteger IntType> class LPMatrix;
 template <typename LPConstraint> struct LPCol;
 template <typename LPConstraint> class LPInitialTableaux;
-template <typename LPConstraint, typename IntType> class LPData;
+template <typename LPConstraint, ReginaInteger IntType> class LPData;
 
 class LPConstraintNone;
 

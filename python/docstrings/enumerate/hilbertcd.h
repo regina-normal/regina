@@ -36,7 +36,7 @@ static const char *enumerate =
 R"doc(Determines the Hilbert basis that generates all integer points in the
 intersection of the *n*-dimensional non-negative orthant with some
 linear subspace. The resulting basis elements will be of the class
-*RayClass*, and will be passed into the given action function one at a
+*Ray*, and will be passed into the given action function one at a
 time.
 
 The non-negative orthant is an *n*-dimensional cone with its vertex at
@@ -64,15 +64,10 @@ validity is not preserved under addition, _invalidity_ is.
 For each of the resulting basis elements, this routine will call
 *action* (which must be a function or some other callable object).
 This action should return ``void``, and must take exactly one
-argument, which will be the basis element stored using *RayClass*. The
+argument, which will be the basis element stored using type *Ray*. The
 argument will be passed as an rvalue; a typical *action* would take it
-as an rvalue reference (RayClass&&) and move its contents into some
+as an rvalue reference (``Ray&&``) and move its contents into some
 other more permanent storage.
-
-Precondition:
-    The template argument RayClass is derived from (or equal to)
-    Vector<T>, where *T* is one of Regina's arbitrary-precision
-    integer classes (Integer or LargeInteger).
 
 .. warning::
     For normal surface theory, the Contejean-Devie algorithm is
@@ -87,12 +82,12 @@ Python:
     does not have an *action* argument; instead you call
     ``enumerate(subspace, constraints)``, and it returns a Python list
     containing all Hilbert basis elements. In both versions, the
-    argument *RayClass* is fixed as VectorInt.
+    template argument *Ray* is fixed as VectorInt.
 
 Parameter ``action``:
     a function (or other callable object) that will be called for each
     basis element. This function must take a single argument, which
-    will be passed as an rvalue of type RayClass.
+    will be passed as an rvalue of type Ray.
 
 Parameter ``subspace``:
     a matrix defining the linear subspace to intersect with the given

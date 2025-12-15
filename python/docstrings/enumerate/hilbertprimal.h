@@ -37,7 +37,7 @@ static const char *enumerate =
 R"doc(Determines the Hilbert basis that generates all integer points in the
 intersection of the *n*-dimensional non-negative orthant with some
 linear subspace. The resulting basis elements will be of the class
-*RayClass*, and will be passed into the given action function one at a
+*Ray*, and will be passed into the given action function one at a
 time.
 
 The intersection of the non-negative orthant with this linear subspace
@@ -68,20 +68,15 @@ returns.
 For each of the resulting basis elements, this routine will call
 *action* (which must be a function or some other callable object).
 This action should return ``void``, and must take exactly one
-argument, which will be the basis element stored using *RayClass*. The
+argument, which will be the basis element stored using type *Ray*. The
 argument will be passed as an rvalue; a typical *action* would take it
-as an rvalue reference (RayClass&&) and move its contents into some
+as an rvalue reference (``Ray&&``) and move its contents into some
 other more permanent storage.
 
 Precondition:
     If *constraints* is passed, then the given list of extremal rays
     contains _only_ those extremal rays that satisfy all of the given
     constraints.
-
-Precondition:
-    The template argument RayClass is derived from (or equal to)
-    Vector<T>, where *T* is one of Regina's arbitrary-precision
-    integer classes (Integer or LargeInteger).
 
 Precondition:
     The template argument RayIterator is a forward iterator type, and
@@ -116,12 +111,12 @@ Python:
     In both versions, the extremal rays must be passed as either:
 
     * a Python list of VectorInt objects, which means the output type
-      *RayClass* will be VectorInt; or
+      *Ray* will be VectorInt; or
 
     * a NormalSurfaces or NormalHypersurfaces object, which meams the
-      output type *RayClass* will be VectorLarge, and the input list
-      of extremal rays will be the range from ``rays.beginVectors()``
-      to ``rays.endVectors()``.
+      output type *Ray* will be VectorLarge, and the input list of
+      extremal rays will be the range from ``rays.beginVectors()`` to
+      ``rays.endVectors()``.
 
     The global interpreter lock will be released while this function
     runs, so you can use it with Python-based multithreading.
@@ -129,7 +124,7 @@ Python:
 Parameter ``action``:
     a function (or other callable object) that will be called for each
     basis element. This function must take a single argument, which
-    will be passed as an rvalue of type RayClass.
+    will be passed as an rvalue of type Ray.
 
 Parameter ``raysBegin``:
     an iterator pointing to the beginning of the list of extremal

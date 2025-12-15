@@ -122,6 +122,21 @@ concept SelfSentinelInputIterator =
     requires(T x) { bool(x); };
 
 /**
+ * An input iterator that iterates over characters.  Such an iterator would
+ * typically be used when reading characters from an input stream or a string.
+ *
+ * Dereferencing the iterator should yield a `char`, possibly as a reference
+ * and possibly `const`.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept CharIterator =
+    std::input_iterator<T> &&
+    std::same_as<char, std::remove_const_t<std::remove_reference_t<
+        decltype(*std::declval<T&>())>>>;
+
+/**
  * An input iterator that iterates over packets.
  *
  * Dereferencing the iterator should yield a reference type `Packet&` (possibly

@@ -98,24 +98,19 @@ namespace regina {
  * copy assignment).  Because of the move semantics, this class avoids deep
  * copies, even when passing or returning objects by value.
  *
- * \pre The default constructor for the template class IntType must intialise
- * each new integer to zero.  The classes Integer and NativeInteger,
- * for instance, have this property.
- *
  * \headers Parts of this template class are implemented in a separate header
  * (treelp-impl.h), which is not included automatically by this file.
  * Most end users should not need this extra header, since Regina's calculation
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \python The template argument \a IntType is taken to be
- * regina::Integer.
+ * \python The template argument \a IntType is taken to be regina::Integer.
  *
  * \apinotfinal
  *
  * \ingroup enumerate
  */
-template <typename IntType>
+template <ReginaInteger IntType>
 class LPMatrix : public Output<LPMatrix<IntType>> {
     private:
         IntType* dat_;
@@ -465,7 +460,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
  *
  * \ingroup enumerate
  */
-template <typename IntType>
+template <ReginaInteger IntType>
 inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept;
 
 /**
@@ -1096,7 +1091,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * \param thisCol the column of this matrix to use in the inner product.
          * \return the resulting inner product.
          */
-        template <typename IntType>
+        template <ReginaInteger IntType>
         inline IntType multColByRow(const LPMatrix<IntType>& m, size_t mRow,
                 size_t thisCol) const;
 
@@ -1147,7 +1142,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * inner product.
          * \return the resulting adjusted inner product.
          */
-        template <typename IntType>
+        template <ReginaInteger IntType>
         inline IntType multColByRowOct(const LPMatrix<IntType>& m,
                 size_t mRow, size_t thisCol) const;
 
@@ -1164,7 +1159,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          *
          * \param m the matrix to fill.
          */
-        template <typename IntType>
+        template <ReginaInteger IntType>
         void fillInitialTableaux(LPMatrix<IntType>& m) const;
 
         /**
@@ -1216,18 +1211,18 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
 /**
  * Swaps the contents of the given matrices.
  *
- * This global routine simply calls LPInitialTableaux<IntType>::swap(); it is
- * provided so that LPInitialTableaux<IntType> meets the C++ Swappable
- * requirements.
+ * This global routine simply calls LPInitialTableaux<LPConstraint>::swap();
+ * it is provided so that LPInitialTableaux<LPConstraint> meets the C++
+ * Swappable requirements.
  *
  * \param a the first matrix whose contents should be swapped.
  * \param b the second matrix whose contents should be swapped.
  *
  * \ingroup enumerate
  */
-template <typename IntType>
-inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
-    noexcept;
+template <typename LPConstraint>
+inline void swap(LPInitialTableaux<LPConstraint>& a,
+    LPInitialTableaux<LPConstraint>& b) noexcept;
 
 /**
  * Stores an intermediate tableaux for the dual simplex method, and
@@ -1341,10 +1336,6 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
  * \pre The template parameter LPConstraint must be one of the subclasses of
  * LPConstraintBase.  See the LPConstraintBase class notes for further details.
  *
- * \pre The default constructor for the template class IntType must intialise
- * each new integer to zero.  The classes Integer and NativeInteger,
- * for instance, have this property.
- *
  * \headers Parts of this template class are implemented in a separate header
  * (treelp-impl.h), which is not included automatically by this file.
  * Most end users should not need this extra header, since Regina's calculation
@@ -1365,7 +1356,7 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
  *
  * \ingroup enumerate
  */
-template <typename LPConstraint, typename IntType>
+template <typename LPConstraint, ReginaInteger IntType>
 class LPData : public Output<LPData<LPConstraint, IntType>> {
     private:
         const LPInitialTableaux<LPConstraint>* origTableaux_;
@@ -1947,7 +1938,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
  *
  * \ingroup enumerate
  */
-template <typename LPConstraint, typename IntType>
+template <typename LPConstraint, ReginaInteger IntType>
 inline void swap(LPData<LPConstraint, IntType>& a,
         LPData<LPConstraint, IntType>& b) noexcept;
 
@@ -1959,28 +1950,28 @@ namespace regina {
 
 // Inline functions for LPMatrix
 
-template <typename IntType>
+template <ReginaInteger IntType>
 inline LPMatrix<IntType>::LPMatrix() : rows_(0), cols_(0), dat_(nullptr) {
 }
 
-template <typename IntType>
+template <ReginaInteger IntType>
 inline LPMatrix<IntType>::LPMatrix(size_t rows, size_t cols) :
         dat_(new IntType[rows * cols]),
         rows_(rows), cols_(cols) {
 }
 
-template <typename IntType>
+template <ReginaInteger IntType>
 inline LPMatrix<IntType>::LPMatrix(LPMatrix&& src) noexcept :
         dat_(src.dat_), rows_(src.rows_), cols_(src.cols_) {
     src.dat_ = nullptr;
 }
 
-template <typename IntType>
+template <ReginaInteger IntType>
 inline LPMatrix<IntType>::~LPMatrix() {
     delete[] dat_;
 }
 
-template <typename IntType>
+template <ReginaInteger IntType>
 inline LPMatrix<IntType>& LPMatrix<IntType>::operator = (LPMatrix&& src)
         noexcept {
     std::swap(dat_, src.dat_);
@@ -1990,26 +1981,26 @@ inline LPMatrix<IntType>& LPMatrix<IntType>::operator = (LPMatrix&& src)
     return *this;
 }
 
-template <typename IntType>
+template <ReginaInteger IntType>
 inline void LPMatrix<IntType>::swap(LPMatrix& other) noexcept {
     std::swap(dat_, other.dat_);
     std::swap(rows_, other.rows_);
     std::swap(cols_, other.cols_);
 }
 
-template <typename IntType>
+template <ReginaInteger IntType>
 inline void LPMatrix<IntType>::reserve(size_t maxRows, size_t maxCols) {
     dat_ = new IntType[maxRows * maxCols];
 }
 
-template <typename IntType>
+template <ReginaInteger IntType>
 inline void LPMatrix<IntType>::initClone(const LPMatrix& clone) {
     rows_ = clone.rows_;
     cols_ = clone.cols_;
     std::copy(clone.dat_, clone.dat_ + clone.rows_ * clone.cols_, dat_);
 }
 
-template <typename IntType>
+template <ReginaInteger IntType>
 inline void LPMatrix<IntType>::initIdentity(size_t size) {
     // Don't fuss about optimising this, since we only call it once
     // in the entire tree traversal algorithm.
@@ -2021,28 +2012,28 @@ inline void LPMatrix<IntType>::initIdentity(size_t size) {
             entry(r, c) = (r == c ? 1 : long(0));
 }
 
-template <typename IntType>
+template <ReginaInteger IntType>
 inline IntType& LPMatrix<IntType>::entry(size_t row, size_t col) {
     return dat_[row * cols_ + col];
 }
 
-template <typename IntType>
+template <ReginaInteger IntType>
 inline const IntType& LPMatrix<IntType>::entry(size_t row, size_t col)
         const {
     return dat_[row * cols_ + col];
 }
 
-template <typename IntType>
+template <ReginaInteger IntType>
 inline size_t LPMatrix<IntType>::rows() const {
     return rows_;
 }
 
-template <typename IntType>
+template <ReginaInteger IntType>
 inline size_t LPMatrix<IntType>::columns() const {
     return cols_;
 }
 
-template <typename IntType>
+template <ReginaInteger IntType>
 inline bool LPMatrix<IntType>::operator == (const LPMatrix& other) const {
     if (rows_ != other.rows_ || cols_ != other.cols_)
         return false;
@@ -2052,21 +2043,21 @@ inline bool LPMatrix<IntType>::operator == (const LPMatrix& other) const {
         return true;
 }
 
-template <typename IntType>
+template <ReginaInteger IntType>
 inline void LPMatrix<IntType>::swapRows(size_t r1, size_t r2) {
     if (r1 != r2)
         std::swap_ranges(dat_ + r1 * cols_, dat_ + r1 * cols_ + cols_,
             dat_ + r2 * cols_);
 }
 
-template <typename IntType>
+template <ReginaInteger IntType>
 inline void LPMatrix<IntType>::negateRow(size_t row) {
     IntType *p = dat_ + row * cols_;
     for (size_t i = 0; i < cols_; ++p, ++i)
         p->negate();
 }
 
-template <typename IntType>
+template <ReginaInteger IntType>
 inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept {
     a.swap(b);
 }
@@ -2227,12 +2218,12 @@ inline const size_t* LPInitialTableaux<LPConstraint>::columnPerm() const {
 }
 
 template <typename LPConstraint>
-template <typename IntType>
+template <ReginaInteger IntType>
 inline IntType LPInitialTableaux<LPConstraint>::multColByRow(
         const LPMatrix<IntType>& m, size_t mRow, size_t thisCol) const {
     if (scaling_ && thisCol == coordinateColumns() - 1) {
         // Multiply the entire row by the scaling coefficient.
-        IntType ans; // Initialised to zero.
+        IntType ans; // Initialised to 0.
         for (size_t i = 0; i < rank_; ++i)
             ans += m.entry(mRow, i);
         ans *= scaling_;
@@ -2240,7 +2231,7 @@ inline IntType LPInitialTableaux<LPConstraint>::multColByRow(
     } else {
         // Just pick out individual coefficients using the sparse
         // representation of the column.
-        IntType ans; // Initialised to 0, due to LPMatrix requirements.
+        IntType ans; // Initialised to 0.
         for (int i = 0; i < col_[thisCol].nPlus; ++i)
             ans += m.entry(mRow, col_[thisCol].plus[i]);
         for (int i = 0; i < col_[thisCol].nMinus; ++i)
@@ -2253,13 +2244,13 @@ inline IntType LPInitialTableaux<LPConstraint>::multColByRow(
 }
 
 template <typename LPConstraint>
-template <typename IntType>
+template <ReginaInteger IntType>
 inline IntType LPInitialTableaux<LPConstraint>::multColByRowOct(
         const LPMatrix<IntType>& m, size_t mRow, size_t thisCol) const {
     // By the preconditions of this routine, we must be working in some normal
     // or almost normal coordinate system, and so there is no scaling
     // coordinate to worry about.
-    IntType ans; // Initialised to 0, due to LPMatrix requirements.
+    IntType ans; // Initialised to 0.
     for (int i = 0; i < col_[thisCol].nPlus; ++i)
         ans += m.entry(mRow, col_[thisCol].plus[i]);
     for (int i = 0; i < col_[thisCol].nMinus; ++i)
@@ -2271,7 +2262,7 @@ inline IntType LPInitialTableaux<LPConstraint>::multColByRowOct(
 }
 
 template <typename LPConstraint>
-template <typename IntType>
+template <ReginaInteger IntType>
 inline void LPInitialTableaux<LPConstraint>::fillInitialTableaux(
         LPMatrix<IntType>& m) const {
     for (size_t c = 0; c < cols_; ++c) {
@@ -2292,20 +2283,20 @@ inline void LPInitialTableaux<LPConstraint>::fillInitialTableaux(
             m.entry(i, coordinateColumns() - 1) = scaling_;
 }
 
-template <typename IntType>
-inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
-        noexcept {
+template <typename LPConstraint>
+inline void swap(LPInitialTableaux<LPConstraint>& a,
+        LPInitialTableaux<LPConstraint>& b) noexcept {
     a.swap(b);
 }
 
 // Template functions for LPData
 
-template <typename LPConstraint, typename IntType>
+template <typename LPConstraint, ReginaInteger IntType>
 inline LPData<LPConstraint, IntType>::LPData() :
         rhs_(nullptr), rank_(0), basis_(nullptr), basisRow_(nullptr) {
 }
 
-template <typename LPConstraint, typename IntType>
+template <typename LPConstraint, ReginaInteger IntType>
 inline LPData<LPConstraint, IntType>::LPData(LPData&& src) noexcept :
         origTableaux_(src.origTableaux_),
         rhs_(src.rhs_),
@@ -2321,14 +2312,14 @@ inline LPData<LPConstraint, IntType>::LPData(LPData&& src) noexcept :
     src.basisRow_ = nullptr;
 }
 
-template <typename LPConstraint, typename IntType>
+template <typename LPConstraint, ReginaInteger IntType>
 inline LPData<LPConstraint, IntType>::~LPData() {
     delete[] rhs_;
     delete[] basis_;
     delete[] basisRow_;
 }
 
-template <typename LPConstraint, typename IntType>
+template <typename LPConstraint, ReginaInteger IntType>
 inline LPData<LPConstraint, IntType>&
         LPData<LPConstraint, IntType>::operator = (LPData&& src) noexcept {
     origTableaux_ = src.origTableaux_;
@@ -2346,7 +2337,7 @@ inline LPData<LPConstraint, IntType>&
     return *this;
 }
 
-template <typename LPConstraint, typename IntType>
+template <typename LPConstraint, ReginaInteger IntType>
 inline void LPData<LPConstraint, IntType>::swap(LPData& other) noexcept {
     std::swap(origTableaux_, other.origTableaux_);
     std::swap(rhs_, other.rhs_);
@@ -2359,7 +2350,7 @@ inline void LPData<LPConstraint, IntType>::swap(LPData& other) noexcept {
     std::swap(octSecondary_, other.octSecondary_);
 }
 
-template <typename LPConstraint, typename IntType>
+template <typename LPConstraint, ReginaInteger IntType>
 inline void LPData<LPConstraint, IntType>::reserve(
         const LPInitialTableaux<LPConstraint>& origTableaux) {
     origTableaux_ = std::addressof(origTableaux);
@@ -2369,22 +2360,22 @@ inline void LPData<LPConstraint, IntType>::reserve(
     basisRow_ = new ssize_t[origTableaux.columns()];
 }
 
-template <typename LPConstraint, typename IntType>
+template <typename LPConstraint, ReginaInteger IntType>
 inline size_t LPData<LPConstraint, IntType>::columns() const {
     return origTableaux_->columns();
 }
 
-template <typename LPConstraint, typename IntType>
+template <typename LPConstraint, ReginaInteger IntType>
 inline size_t LPData<LPConstraint, IntType>::coordinateColumns() const {
     return origTableaux_->coordinateColumns();
 }
 
-template <typename LPConstraint, typename IntType>
+template <typename LPConstraint, ReginaInteger IntType>
 inline bool LPData<LPConstraint, IntType>::isFeasible() const {
     return feasible_;
 }
 
-template <typename LPConstraint, typename IntType>
+template <typename LPConstraint, ReginaInteger IntType>
 inline bool LPData<LPConstraint, IntType>::isActive(size_t pos) const {
     // If basisRow_[pos] < 0, the variable is active and non-basic.
     // If basisRow_[pos] > 0, the variable is active and basic.
@@ -2396,7 +2387,7 @@ inline bool LPData<LPConstraint, IntType>::isActive(size_t pos) const {
         (rank_ == 0 || basis_[0] != pos));
 }
 
-template <typename LPConstraint, typename IntType>
+template <typename LPConstraint, ReginaInteger IntType>
 inline int LPData<LPConstraint, IntType>::sign(size_t pos) const {
     // If basisRow_[pos] < 0, the variable is active and non-basic.
     // If basisRow_[pos] > 0, the variable is active and basic.
@@ -2408,7 +2399,7 @@ inline int LPData<LPConstraint, IntType>::sign(size_t pos) const {
         rhs_[basisRow_[pos]].sign() : 0);
 }
 
-template <typename LPConstraint, typename IntType>
+template <typename LPConstraint, ReginaInteger IntType>
 inline IntType LPData<LPConstraint, IntType>::entry(size_t row, size_t col)
         const {
     // Remember to take into account any changes of variable due
@@ -2422,7 +2413,7 @@ inline IntType LPData<LPConstraint, IntType>::entry(size_t row, size_t col)
     }
 }
 
-template <typename LPConstraint, typename IntType>
+template <typename LPConstraint, ReginaInteger IntType>
 inline void LPData<LPConstraint, IntType>::entry(size_t row, size_t col,
         IntType& ans) const {
     // Remember to take into account any changes of variable due
@@ -2435,7 +2426,7 @@ inline void LPData<LPConstraint, IntType>::entry(size_t row, size_t col,
     }
 }
 
-template <typename LPConstraint, typename IntType>
+template <typename LPConstraint, ReginaInteger IntType>
 inline int LPData<LPConstraint, IntType>::entrySign(size_t row, size_t col)
         const {
     // Remember to take into account any changes of variable due
@@ -2449,7 +2440,7 @@ inline int LPData<LPConstraint, IntType>::entrySign(size_t row, size_t col)
     }
 }
 
-template <typename LPConstraint, typename IntType>
+template <typename LPConstraint, ReginaInteger IntType>
 inline void swap(LPData<LPConstraint, IntType>& a,
         LPData<LPConstraint, IntType>& b) noexcept {
     a.swap(b);

@@ -3557,10 +3557,10 @@ class TriangulationBase :
          */
         template <std::input_iterator iterator>
         requires requires(iterator it) {
-            { std::get<0>(*it) } -> AssignableTo<size_t&>;
-            { std::get<1>(*it) } -> AssignableTo<int&>;
-            { std::get<2>(*it) } -> AssignableTo<size_t&>;
-            { std::get<3>(*it) } -> AssignableTo<Perm<dim + 1>&>;
+            { std::get<0>(*it) } -> std::convertible_to<size_t>;
+            { std::get<1>(*it) } -> std::convertible_to<int>;
+            { std::get<2>(*it) } -> std::convertible_to<size_t>;
+            { std::get<3>(*it) } -> std::convertible_to<Perm<dim + 1>>;
         }
         static Triangulation<dim> fromGluings(size_t size,
             iterator beginGluings, iterator endGluings);
@@ -5395,10 +5395,10 @@ Triangulation<dim> TriangulationBase<dim>::tightDecode(std::istream& input) {
 template <int dim>
 template <std::input_iterator iterator>
 requires requires(iterator it) {
-    { std::get<0>(*it) } -> AssignableTo<size_t&>;
-    { std::get<1>(*it) } -> AssignableTo<int&>;
-    { std::get<2>(*it) } -> AssignableTo<size_t&>;
-    { std::get<3>(*it) } -> AssignableTo<Perm<dim + 1>&>;
+    { std::get<0>(*it) } -> std::convertible_to<size_t>;
+    { std::get<1>(*it) } -> std::convertible_to<int>;
+    { std::get<2>(*it) } -> std::convertible_to<size_t>;
+    { std::get<3>(*it) } -> std::convertible_to<Perm<dim + 1>>;
 }
 Triangulation<dim> TriangulationBase<dim>::fromGluings(size_t size,
         iterator beginGluings, iterator endGluings) {
@@ -5409,35 +5409,40 @@ Triangulation<dim> TriangulationBase<dim>::fromGluings(size_t size,
         ans.simplices_.push_back(new Simplex<dim>(&ans));
 
     for (auto it = beginGluings; it != endGluings; ++it) {
-        if (std::get<0>(*it) >= size)
+        size_t srcIndex = std::get<0>(*it);
+        if (srcIndex >= size)
             throw InvalidArgument(
                 "fromGluings(): source simplex out of range");
-        if (std::get<2>(*it) >= size)
+
+        size_t destIndex = std::get<2>(*it);
+        if (destIndex >= size)
             throw InvalidArgument(
                 "fromGluings(): adjacent simplex out of range");
-        if (std::get<1>(*it) < 0 || std::get<1>(*it) > dim)
+
+        int srcFacet = std::get<1>(*it);
+        if (srcFacet < 0 || srcFacet > dim)
             throw InvalidArgument(
                 "fromGluings(): facet number out of range");
 
-        Simplex<dim>* s = ans.simplices_[std::get<0>(*it)];
-        Simplex<dim>* adj = ans.simplices_[std::get<2>(*it)];
-        int facet = std::get<1>(*it);
+        Simplex<dim>* src = ans.simplices_[srcIndex];
+        Simplex<dim>* dest = ans.simplices_[destIndex];
 
-        if (s->adj_[facet])
+        Perm<dim + 1> gluing = std::get<3>(*it);
+        if (src->adj_[srcFacet])
             throw InvalidArgument(
                 "fromGluings(): source facet already glued to something");
-        if (adj->adj_[std::get<3>(*it)[facet]])
+        if (dest->adj_[gluing[srcFacet]])
             throw InvalidArgument(
                 "fromGluings(): destination facet already glued to something");
-        if (s == adj && std::get<3>(*it)[facet] == facet)
+        if (src == dest && gluing[srcFacet] == srcFacet)
             throw InvalidArgument(
                 "fromGluings(): a facet cannot be glued to itself");
 
-        s->adj_[facet] = adj;
-        s->gluing_[facet] = std::get<3>(*it);
+        src->adj_[srcFacet] = dest;
+        src->gluing_[srcFacet] = gluing;
 
-        adj->adj_[std::get<3>(*it)[facet]] = s;
-        adj->gluing_[std::get<3>(*it)[facet]] = std::get<3>(*it).inverse();
+        dest->adj_[gluing[srcFacet]] = src;
+        dest->gluing_[gluing[srcFacet]] = gluing.inverse();
     }
 
     return ans;

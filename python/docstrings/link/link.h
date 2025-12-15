@@ -1836,13 +1836,6 @@ Each individual token should _not_ contain any whitespace; otherwise
 this routine may fail to parse the token(s) and could throw an
 exception as a result.
 
-Precondition:
-    *Iterator* is a random access iterator type.
-
-Precondition:
-    Dereferencing such an iterator produces a C++-style string (i.e.,
-    something that can be cast to ``const std::string&``).
-
 Exception ``InvalidArgument``:
     The given sequence was not a valid oriented Gauss code for a
     classical or virtual knot.
@@ -2121,13 +2114,6 @@ None of the tokens should contain any whitespace; otherwise this
 routine may fail to parse the token(s) and could throw an exception as
 a result. The symbols ``U`` and ``O`` that begin each token may be
 either upper-case or lower-case (or you may use some mix of both).
-
-Precondition:
-    *Iterator* is a random access iterator type.
-
-Precondition:
-    Dereferencing such an iterator produces a C++-style string (i.e.,
-    something that can be cast to ``const std::string&``).
 
 Exception ``InvalidArgument``:
     The given sequence was not a valid signed Gauss code for a

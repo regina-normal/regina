@@ -102,10 +102,7 @@ If *T* is not derived from any class Output<...>, then
 This helper class can be useful when trying to disambiguate between
 the implementation of str() that is inherited from Output, versus an
 extended implementation of str() (perhaps with more arguments) that is
-implemented in the class *T* itself.
-
-Precondition:
-    *T* is a class or struct type.)doc";
+implemented in the class *T* itself.)doc";
 
 // Docstring regina::python::doc::ShortOutput
 constexpr const char *ShortOutput =

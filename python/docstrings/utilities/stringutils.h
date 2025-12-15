@@ -75,33 +75,64 @@ Returns:
 
 // Docstring regina::python::doc::subscript
 static const char *subscript =
-R"doc(Converts the given C++ integer into a unicode subscript string.
+R"doc(Converts the given native C++ integer into a unicode subscript string.
+
+The resulting string will be encoded using UTF-8.
+
+Python:
+    The type *T* is assumed to be ``long``.
+
+Parameter ``value``:
+    the integer to convert.
+
+Returns:
+    the given integer as a subscript string.)doc";
+
+// Docstring regina::python::doc::subscript_2
+static const char *subscript_2 =
+R"doc(Converts the given Regina integer into a unicode subscript string.
 
 The resulting string will be encoded using UTF-8.
 
 Precondition:
-    The template argument *T* is either (i) a native C++ integer type,
-    for which the standard C++11 library routine std::to_string(T) is
-    defined; or (ii) a const reference to Integer or LargeInteger.
+    The given value is not infinity.
 
-Python:
-    This template function is instantiated in Python for types *T* =
-    ``long``, as well as const references to Integer and LargeInteger.)doc";
+Parameter ``value``:
+    the integer to convert.
+
+Returns:
+    the given integer as a subscript string.)doc";
 
 // Docstring regina::python::doc::superscript
 static const char *superscript =
-R"doc(Converts the given C++ integer into a unicode superscript string.
+R"doc(Converts the given native C++ integer into a unicode superscript
+string.
+
+The resulting string will be encoded using UTF-8.
+
+Python:
+    The type *T* is assumed to be ``long``.
+
+Parameter ``value``:
+    the integer to convert.
+
+Returns:
+    the given integer as a superscript string.)doc";
+
+// Docstring regina::python::doc::superscript_2
+static const char *superscript_2 =
+R"doc(Converts the given Regina integer into a unicode superscript string.
 
 The resulting string will be encoded using UTF-8.
 
 Precondition:
-    The template argument *T* is either (i) a native C++ integer type,
-    for which the standard C++11 library routine std::to_string(T) is
-    defined; or (ii) a const reference to Integer or LargeInteger.
+    The given value is not infinity.
 
-Python:
-    This template function is instantiated in Python for types *T* =
-    ``long``, as well as const references to Integer and LargeInteger.)doc";
+Parameter ``value``:
+    the integer to convert.
+
+Returns:
+    the given integer as a superscript string.)doc";
 
 } // namespace regina::python::doc
 

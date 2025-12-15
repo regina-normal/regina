@@ -1118,12 +1118,6 @@ class Tangle : public Output<Tangle> {
          * have been combined together and separated by whitespace.  This
          * variant takes a sequence of tokens, defined by a pair of iterators.
          *
-         * \pre \a Iterator is a random access iterator type.
-         *
-         * \pre Dereferencing such an iterator produces either a
-         * C-style string (which can be cast to `const char*`) or a
-         * C++-style string (which can be cast to `const std::string&`).
-         *
          * \pre The tokens in the input sequence do not contain any whitespace.
          *
          * \warning While this routine does some error checking on the input,
@@ -1146,8 +1140,8 @@ class Tangle : public Output<Tangle> {
          * sequence of tokens for an oriented Gauss code.
          * \return the resulting tangle.
          */
-        template <typename Iterator>
-        static Tangle fromOrientedGauss(Iterator begin, Iterator end);
+        template <RandomAccessIteratorFor<std::string> iterator>
+        static Tangle fromOrientedGauss(iterator begin, iterator end);
 
         /*@}*/
 

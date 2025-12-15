@@ -13,12 +13,8 @@ namespace regina::python::doc {
 
 // Docstring regina::python::doc::BitManipulator
 static const char *BitManipulator =
-R"doc(An optimised class for bitwise analysis and manipulation of native
-data types.
-
-The class BitManipulator<T> is used to manipulate an integer of type
-*T* as a sequence of bits. Here *T* must be an unsigned native integer
-type such as unsigned char, unsigned int, or unsigned long long.
+R"doc(An optimised class for bitwise analysis and manipulation of native C++
+integer types.
 
 Whilst BitManipulator has a generic implementation, all or most native
 types *T* have template specialisations that are carefully optimised
@@ -26,8 +22,7 @@ types *T* have template specialisations that are carefully optimised
 compiler).
 
 Precondition:
-    Type *T* is an unsigned integral numeric type whose size in bits
-    is a power of two.
+    The size in bits of type *T* is a power of two.
 
 Python:
     For Python users, the class BitManipulator represents the C++ type

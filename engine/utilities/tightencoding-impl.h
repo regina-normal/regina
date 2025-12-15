@@ -223,7 +223,7 @@ void tightEncodeInteger(std::ostream& out, Int value) {
     out << '}';
 }
 
-template <typename Int, InputIteratorFor<char> iterator>
+template <typename Int, CharIterator iterator>
 requires StandardCppInteger<Int> || ArbitraryPrecisionInteger<Int>
 Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
     Int result;

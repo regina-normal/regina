@@ -301,10 +301,6 @@ Python:
     Instead of a pair of iterators, the set of allowable Euler
     characteristic should be passed as a Python list.
 
-Template parameter ``Iterator``:
-    an iterator type that, when dereferenced, can be assigned to a
-    LargeInteger.
-
 Parameter ``beginEuler``:
     the beginning of an iterator range that gives the new set of
     allowable Euler characteristics.

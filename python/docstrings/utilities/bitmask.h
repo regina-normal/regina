@@ -47,17 +47,16 @@ possible, even when passing or returning objects by value.
 
 // Docstring regina::python::doc::Bitmask1
 static const char *Bitmask1 =
-R"doc(A small but extremely fast bitmask class that can store up to 8 *
-sizeof(*T*) true-or-false bits.
+R"doc(A small but extremely fast bitmask class that can store up to ``8 *
+sizeof(T)`` true-or-false bits.
 
 This bitmask packs all of the bits together into a single variable of
 type *T*. This means that operations on bitmasks are extremely fast,
 because all of the bits can be processed at once.
 
 The downside of course is that the number of bits that can be stored
-is limited to 8 * sizeof(*T*), where *T* must be a native unsigned
-integer type (such as unsigned char, unsigned int, or unsigned long
-long).
+is limited to ``8 * sizeof(T)``, where *T* is some native unsigned C++
+integer type.
 
 For another extremely fast bitmask class that can store twice as many
 bits, see Bitmask2. For a bitmask class that can store arbitrarily
@@ -66,9 +65,6 @@ many bits, see Bitmask.
 These objects are small enough to pass by value and swap with
 std::swap(), with no need for any specialised move operations or swap
 functions.
-
-Precondition:
-    Type *T* is an unsigned integral numeric type.
 
 Python:
     Python does not support templates, and so instead Regina's python
@@ -82,8 +78,8 @@ Python:
 
 // Docstring regina::python::doc::Bitmask2
 static const char *Bitmask2 =
-R"doc(A small but extremely fast bitmask class that can store up to 8 *
-sizeof(*T*) + 8 * sizeof(*U*) true-or-false bits.
+R"doc(A small but extremely fast bitmask class that can store up to ``8 *
+sizeof(T) + 8 * sizeof(U)`` true-or-false bits.
 
 This bitmask packs all of the bits together into a single variable of
 type *T* and a single variable of type *U*. This means that operations
@@ -91,9 +87,8 @@ on entire bitmasks are extremely fast, because all of the bits can be
 processed in just two "native" operations.
 
 The downside of course is that the number of bits that can be stored
-is limited to 8 * sizeof(*T*) + 8 * sizeof(*U*), where *T* and *U*
-must be native unsigned integer types (such as unsigned char, unsigned
-int, or unsigned long long).
+is limited to ``8 * sizeof(T) + 8 * sizeof(U)``, where *T* and *U* are
+some native unsigned C++ integer types.
 
 For an even faster bitmask class that can only store half as many
 bits, see Bitmask1. For a bitmask class that can store arbitrarily
@@ -102,9 +97,6 @@ many bits, see Bitmask.
 These objects are small enough to pass by value and swap with
 std::swap(), with no need for any specialised move operations or swap
 functions.
-
-Precondition:
-    Types *T* and *U* are unsigned integral numeric types.
 
 Python:
     Python does not support templates, and so instead Regina's python
@@ -370,10 +362,6 @@ bitmask.set(indices, indices + 3, false);
 ```
 
 All other bits of this bitmask are unaffected by this routine.
-
-Precondition:
-    *ForwardIterator* is a forward iterator type that iterates over
-    integer values.
 
 Precondition:
     The list of indices described by these iterators is in _sorted_
@@ -666,10 +654,6 @@ bitmask.set(indices, indices + 3, false);
 ```
 
 All other bits of this bitmask are unaffected by this routine.
-
-Precondition:
-    *ForwardIterator* is a forward iterator type that iterates over
-    integer values.
 
 Precondition:
     The list of indices described by these iterators is in _sorted_
@@ -1044,10 +1028,6 @@ bitmask.set(indices, indices + 3, false);
 ```
 
 All other bits of this bitmask are unaffected by this routine.
-
-Precondition:
-    *ForwardIterator* is a forward iterator type that iterates over
-    integer values.
 
 Precondition:
     The list of indices described by these iterators is in _sorted_

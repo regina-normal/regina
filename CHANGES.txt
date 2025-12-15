@@ -39,6 +39,9 @@ Version 7.5  [ TODO ]
         Class Vector<T>:
             - For the iterator-based constructor, the old recommendation that
               the iterator type be random access is now a hard requirement.
+        Function subscript(), superscript():
+            - When passing one of Regina's integer types, there is now a
+              precondition that the given value is not infinity.
         Function valueOf():
             - The native C++ integer versions of valueOf() are now templated.
             - The unsigned integer versions now reject negative numbers
@@ -62,13 +65,14 @@ Version 7.5  [ TODO ]
             - Many new concepts, accessible via #include <concepts/*.h>:
               + ArbitraryPrecisionInteger, ArbitraryPrecisionIntegerVector,
                 AssignableTo, BidirectionalIteratorFor, CanConstruct,
-                CoefficientDomain, CppInteger, Domain, ForwardIteratorFor,
-                InherentlyTightEncodable, InputIteratorFor, IntegerComparable,
-                IntegerCompatible, IntegerVector, IntegralDomain, Iterable,
-                PacketClass, PacketIterator, RandomAccessIteratorFor,
-                ReginaBitmask, ReginaInteger, Ring, RingLike,
-                SelfSentinelInputIterator, SignedCppInteger, StandardCppInteger,
-                Stringifiable, UnsignedCppInteger, Writeable.
+                CharIterator, CoefficientDomain, CppInteger, Domain,
+                ForwardIteratorFor, InherentlyTightEncodable, InputIteratorFor,
+                IntegerComparable, IntegerCompatible, IntegerVector,
+                IntegralDomain, Iterable, PacketClass, PacketIterator,
+                RandomAccessIteratorFor, ReginaBitmask, ReginaInteger, Ring,
+                RingLike, SelfSentinelInputIterator, SignedCppInteger,
+                StandardCppInteger, Stringifiable, UnsignedCppInteger,
+                Writeable.
 
 Version 7.4.1  [ 30 November, 2025 ]
 

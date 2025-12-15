@@ -61,11 +61,6 @@ Precondition:
     LPConstraintBase, LPConstraintSubspace and BanConstraintBase class
     notes for further details.
 
-Precondition:
-    The default constructor for the template class IntType must
-    intialise each new integer to zero. The classes Integer and
-    NativeInteger, for instance, have this property.
-
 Python:
     This is a heavily templated class; however, the only
     *LPConstraint* and *BanConstraint* options currently offered for
@@ -146,11 +141,6 @@ Precondition:
     class LPConstraintBase is not enough here. See the
     LPConstraintBase, LPConstraintSubspace and BanConstraintBase class
     notes for further details.
-
-Precondition:
-    The default constructor for the template class IntType must
-    intialise each new integer to zero. The classes Integer and
-    NativeInteger, for instance, have this property.
 
 .. warning::
     Although the tree traversal algorithm can run in standard normal
@@ -282,11 +272,6 @@ Precondition:
     BanConstraintBase. See the LPConstraintBase and BanConstraintBase
     class notes for further details.
 
-Precondition:
-    The default constructor for the template class IntType must
-    intialise each new integer to zero. The classes Integer and
-    NativeInteger, for instance, have this property.
-
 Python:
     This is a heavily templated class; nevertheless, many variants are
     now made available to Python users. Each class name is of the form
@@ -406,11 +391,6 @@ Precondition:
     and BanConstraint must either BanNone or a subclass of
     BanConstraintBase. See the LPConstraintBase and BanConstraintBase
     class notes for further details.
-
-Precondition:
-    The default constructor for the template class IntType must
-    intialise each new integer to zero. The classes Integer and
-    NativeInteger, for instance, have this property.
 
 Python:
     This is a heavily templated class; moreover, it only serves as a

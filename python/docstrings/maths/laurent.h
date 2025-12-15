@@ -18,20 +18,6 @@ type *T*. A Laurent polynomial differs from an ordinary polynomial in
 that it allows negative exponents (so, unlike the Polynomial class,
 you can represent both ``2+3x`` and ``1+1/x``).
 
-The type *T* must represent a ring with no zero divisors. In
-particular, it must:
-
-* support basic arithmetic operations;
-
-* support assignments of the form ``x = int`` and tests of the form
-  ``x == int`` and ``x < int``;
-
-* have a default constructor that assigns an explicit value of zero.
-
-This means that Regina's numerical types such as Integer and Rational
-are supported, but native data types such as int and long are not
-(since they have no zero-initialising default constructor).
-
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.
@@ -44,7 +30,13 @@ two variables.
 
 Python:
     In Python, the class Laurent refers to the specific template class
-    Laurent<Integer>.)doc";
+    Laurent<Integer>.
+
+Template parameter ``T``:
+    the coefficient type. A typical coefficient type would be Integer
+    or Rational. Note that native C++ integer types are _not_
+    supported (since they have no zero-initialising default
+    constructor).)doc";
 
 // Docstring regina::python::doc::__add
 static const char *__add =
@@ -410,9 +402,8 @@ polynomial.
 
 This constructor induces a deep copy of the given range.
 
-Precondition:
-    Objects of type *T* can be assigned values from dereferenced
-    iterators of type *iterator*.
+The iterator type must be random access because this allows the
+implementation to compute the sequence length in constant time.
 
 Python:
     Instead of the iterators *begin* and *end*, this routine takes a
@@ -486,9 +477,8 @@ polynomial.
 
 This routine induces a deep copy of the given range.
 
-Precondition:
-    Objects of type *T* can be assigned values from dereferenced
-    iterators of type *iterator*.
+The iterator type must be random access because this allows the
+implementation to compute the sequence length in constant time.
 
 Python:
     Instead of the iterators *begin* and *end*, this routine takes a

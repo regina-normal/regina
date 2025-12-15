@@ -6251,11 +6251,6 @@ class Link :
          * otherwise this routine may fail to parse the token(s) and
          * could throw an exception as a result.
          *
-         * \pre \a Iterator is a random access iterator type.
-         *
-         * \pre Dereferencing such an iterator produces a C++-style string
-         * (i.e., something that can be cast to `const std::string&`).
-         *
          * \exception InvalidArgument The given sequence was not a valid
          * oriented Gauss code for a classical or virtual knot.
          *
@@ -6268,8 +6263,8 @@ class Link :
          * sequence of tokens for an "oriented" Gauss code.
          * \return the reconstructed knot.
          */
-        template <typename Iterator>
-        static Link fromOrientedGauss(Iterator begin, Iterator end);
+        template <RandomAccessIteratorFor<std::string> iterator>
+        static Link fromOrientedGauss(iterator begin, iterator end);
 
         /**
          * Creates a new classical or virtual knot from a "signed" variant
@@ -6355,11 +6350,6 @@ class Link :
          * as a result.  The symbols `U` and `O` that begin each token may be
          * either upper-case or lower-case (or you may use some mix of both).
          *
-         * \pre \a Iterator is a random access iterator type.
-         *
-         * \pre Dereferencing such an iterator produces a C++-style string
-         * (i.e., something that can be cast to `const std::string&`).
-         *
          * \exception InvalidArgument The given sequence was not a valid
          * signed Gauss code for a classical or virtual knot.
          *
@@ -6372,8 +6362,8 @@ class Link :
          * sequence of tokens for a "signed" Gauss code.
          * \return the reconstructed knot.
          */
-        template <typename Iterator>
-        static Link fromSignedGauss(Iterator begin, Iterator end);
+        template <RandomAccessIteratorFor<std::string> iterator>
+        static Link fromSignedGauss(iterator begin, iterator end);
 
         /**
          * Creates a new classical or virtual link from Bob Jenkins' format,
@@ -6780,8 +6770,9 @@ class Link :
          * This routine exists because fromOrientedGauss() and fromSignedGauss()
          * share much of the same source code.
          */
-        template <GaussEnhancement type_, typename Iterator>
-        static Link fromEnhancedGauss(Iterator begin, Iterator end);
+        template <GaussEnhancement type_,
+            RandomAccessIteratorFor<std::string> iterator>
+        static Link fromEnhancedGauss(iterator begin, iterator end);
         /**
          * Internal to fromOrientedGauss().
          *
@@ -7959,14 +7950,14 @@ inline Link Link::fromKnotSig(const std::string& sig) {
     return Link::fromSig(sig);
 }
 
-template <typename Iterator>
-inline Link Link::fromOrientedGauss(Iterator begin, Iterator end) {
-    return fromEnhancedGauss<GaussEnhancement::Oriented, Iterator>(begin, end);
+template <RandomAccessIteratorFor<std::string> iterator>
+inline Link Link::fromOrientedGauss(iterator begin, iterator end) {
+    return fromEnhancedGauss<GaussEnhancement::Oriented, iterator>(begin, end);
 }
 
-template <typename Iterator>
-inline Link Link::fromSignedGauss(Iterator begin, Iterator end) {
-    return fromEnhancedGauss<GaussEnhancement::Signed, Iterator>(begin, end);
+template <RandomAccessIteratorFor<std::string> iterator>
+inline Link Link::fromSignedGauss(iterator begin, iterator end) {
+    return fromEnhancedGauss<GaussEnhancement::Signed, iterator>(begin, end);
 }
 
 inline std::string Link::dumpConstruction() const {

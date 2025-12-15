@@ -131,6 +131,9 @@ concept ArbitraryPrecisionInteger =
 /**
  * One of Regina's own integer types (Integer, LargeInteger, or NativeInteger).
  *
+ * An important feature of all of Regina's integer types is that their default
+ * constructors initialise the integers to zero.
+ *
  * \ingroup concepts
  */
 template <typename T>

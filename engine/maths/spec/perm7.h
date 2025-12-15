@@ -1839,7 +1839,7 @@ class Perm<7> {
          * allowed to be additional unread data.
          * \return the permutation represented by the given tight encoding.
          */
-        template <InputIteratorFor<char> iterator>
+        template <CharIterator iterator>
         static Perm tightDecode(iterator start, iterator limit,
             bool noTrailingData);
 
@@ -2223,7 +2223,7 @@ inline Perm<7> Perm<7>::tightDecode(std::istream& input) {
 #ifndef __DOXYGEN
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
-template <InputIteratorFor<char> iterator>
+template <CharIterator iterator>
 Perm<7> Perm<7>::tightDecode(iterator start, iterator limit,
         bool noTrailingData) {
     // All codes are >= 0 because we are using an unsigned data type.

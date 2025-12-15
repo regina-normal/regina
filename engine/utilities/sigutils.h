@@ -590,7 +590,8 @@ class Base64SigEncoder {
  *
  * \ingroup utilities
  */
-template <ForwardIteratorFor<char> Iterator>
+template <CharIterator Iterator>
+requires std::forward_iterator<Iterator>
 class Base64SigDecoder {
     private:
         Iterator next_;

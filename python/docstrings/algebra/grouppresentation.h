@@ -1197,9 +1197,9 @@ which may be useful when small cancellation theory can't find the
 simplest relators.
 
 Given a presentation ``<g_i | r_i>``, this routine appends
-consequences of the relators {r_i} to the presentation that are of the
-form ab, where both a and b are cyclic permutations of relators from
-the collection {r_i}.
+consequences of the relators ``{r_i}`` to the presentation that are of
+the form ``ab``, where both ``a`` and ``b`` are cyclic permutations of
+relators from the collection ``{r_i}``.
 
 Passing depth=1 means it will only form products of two relators.
 Depth=2 means products of three, etc. Depth=4 is typically the last
@@ -1209,7 +1209,7 @@ group presentations that we've come across so far.
 
 .. warning::
     Do not call this routine with depth n before having called it at
-    depth n-1 first. Depth=0 is invalid, and depth=1 should be your
+    depth n-1 first. Depth≤0 is invalid, and depth=1 should be your
     first call to this routine. This routine gobbles up an exponential
     amount of memory (exponential in your presentation size times n).
     So do be careful when using it.

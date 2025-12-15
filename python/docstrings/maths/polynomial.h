@@ -17,20 +17,6 @@ R"doc(Represents a single-variable polynomial with coefficients of type *T*.
 All exponents in the polynomial must be non-negative (so you can
 represent ``2+3x`` but not ``1+1/x``).
 
-The type *T* must represent a ring with no zero divisors. In
-particular, it must:
-
-* support basic arithmetic operations;
-
-* support construction of the form ``x(int)``, assignments of the form
-  ``x = int``, and tests of the form ``x == int`` and ``x < int``;
-
-* have a default constructor that assigns an explicit value of zero.
-
-This means that Regina's numerical types such as Integer and Rational
-are supported, but native data types such as int and long are not
-(since they have no zero-initialising default constructor).
-
 The underlying storage method for this class is dense (i.e., all
 coefficients are explicitly stored, including zero coefficients).
 
@@ -42,7 +28,13 @@ Python:
     The C++ types Polynomial<Integer> and Polynomial<Rational> are
     available using the Python names PolynomialInt and
     PolynomialRational respectively. The alias Polynomial is also
-    provided for the type Polynomial<Rational>.)doc";
+    provided for the type Polynomial<Rational>.
+
+Template parameter ``T``:
+    the coefficient type. A typical coefficient type would be Integer
+    or Rational. Note that native C++ integer types are _not_
+    supported (since they have no zero-initialising default
+    constructor).)doc";
 
 // Docstring regina::python::doc::__add
 static const char *__add =
@@ -452,9 +444,8 @@ treated as the zero polynomial.
 
 This constructor induces a deep copy of the given range.
 
-Precondition:
-    Objects of type *T* can be assigned values from dereferenced
-    iterators of type *iterator*.
+The iterator type must be random access because this allows the
+implementation to compute the sequence length in constant time.
 
 Python:
     Instead of a pair of iterators, this routine takes a python list
@@ -601,9 +592,8 @@ treated as the zero polynomial.
 
 This routine induces a deep copy of the given range.
 
-Precondition:
-    Objects of type *T* can be assigned values from dereferenced
-    iterators of type *iterator*.
+The iterator type must be random access because this allows the
+implementation to compute the sequence length in constant time.
 
 Python:
     Instead of a pair of iterators, this routine takes a python list

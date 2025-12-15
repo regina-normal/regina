@@ -270,38 +270,64 @@ std::vector<std::string> basicTokenise(const std::string& str);
 std::string stringToToken(std::string str);
 
 /**
- * Converts the given C++ integer into a unicode superscript string.
+ * Converts the given native C++ integer into a unicode superscript string.
  *
  * The resulting string will be encoded using UTF-8.
  *
- * \pre The template argument \a T is either (i) a native C++ integer type,
- * for which the standard C++11 library routine std::to_string(T) is defined;
- * or (ii) a const reference to Integer or LargeInteger.
+ * \python The type \a T is assumed to be \c long.
  *
- * \python This template function is instantiated in Python for types
- * \a T = \c long, as well as const references to Integer and LargeInteger.
+ * \param value the integer to convert.
+ * \return the given integer as a superscript string.
  *
  * \ingroup utilities
  */
-template <typename T>
+template <StandardCppInteger T>
 std::string superscript(T value);
 
 /**
- * Converts the given C++ integer into a unicode subscript string.
+ * Converts the given Regina integer into a unicode superscript string.
  *
  * The resulting string will be encoded using UTF-8.
  *
- * \pre The template argument \a T is either (i) a native C++ integer type,
- * for which the standard C++11 library routine std::to_string(T) is defined;
- * or (ii) a const reference to Integer or LargeInteger.
+ * \pre The given value is not infinity.
  *
- * \python This template function is instantiated in Python for types
- * \a T = \c long, as well as const references to Integer and LargeInteger.
+ * \param value the integer to convert.
+ * \return the given integer as a superscript string.
  *
  * \ingroup utilities
  */
-template <typename T>
+template <ArbitraryPrecisionInteger T>
+std::string superscript(const T& value);
+
+/**
+ * Converts the given native C++ integer into a unicode subscript string.
+ *
+ * The resulting string will be encoded using UTF-8.
+ *
+ * \python The type \a T is assumed to be \c long.
+ *
+ * \param value the integer to convert.
+ * \return the given integer as a subscript string.
+ *
+ * \ingroup utilities
+ */
+template <StandardCppInteger T>
 std::string subscript(T value);
+
+/**
+ * Converts the given Regina integer into a unicode subscript string.
+ *
+ * The resulting string will be encoded using UTF-8.
+ *
+ * \pre The given value is not infinity.
+ *
+ * \param value the integer to convert.
+ * \return the given integer as a subscript string.
+ *
+ * \ingroup utilities
+ */
+template <ArbitraryPrecisionInteger T>
+std::string subscript(const T& value);
 
 } // namespace regina
 
