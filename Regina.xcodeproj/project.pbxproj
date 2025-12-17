@@ -4136,6 +4136,7 @@
 		05A067061DFA68190047872E /* txicore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = txicore.cpp; sourceTree = "<group>"; };
 		05A067071DFA68190047872E /* txicore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = txicore.h; sourceTree = "<group>"; };
 		05A1C55A2EF37050004A309E /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
+		05A1C55C2EF37809004A309E /* forward.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = forward.h; sourceTree = "<group>"; };
 		05A47F971809CB7600F86BFD /* closed-hyp-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census.rga"; sourceTree = "<group>"; };
 		05A47F981809CB7600F86BFD /* closed-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-nor-census.rga"; sourceTree = "<group>"; };
 		05A47F9A1809CB7600F86BFD /* closed-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-or-census.rga"; sourceTree = "<group>"; };
@@ -5091,6 +5092,7 @@
 				0591FB3A2E5C393C0061D270 /* arrow.h */,
 				05098A9028F24D98005E4716 /* binom.h */,
 				05098AA728F44AAE005E4716 /* cyclotomic.h */,
+				05A1C55C2EF37809004A309E /* forward.h */,
 				05098A9528F24D98005E4716 /* integer.h */,
 				05098AAF28F44AAF005E4716 /* laurent.h */,
 				05098AAC28F44AAF005E4716 /* laurent2.h */,
