@@ -19,6 +19,8 @@ Version 7.5  [ TODO ]
         Class Cut:
             - For the iterator-based constructor, the old recommendation that
               the iterator type be random access is now a hard requirement.
+        Class FixedArray:
+            - Now has a default constructor that creates an empty array.
         Class GroupExpressionTerm, GroupExpression, GroupPresentation,
                 HomGroupPresentation:
             - Now uses size_t instead of unsigned long throughout for
@@ -28,6 +30,21 @@ Version 7.5  [ TODO ]
         Class Laurent<T>:
             - For the iterator-based constructor and init() routine, the
               iterator type is now required to be random access.
+        Class LPCol<...>:
+            - This is now an internal class in the namespace regina::detail,
+              and its template parameters have changed.  End users should have
+              no need to refer to LPCol<...> at all.
+        Class LPConstraint...:
+            - All linear programming constraint classes must now adhere to the
+              concept LPConstraint.
+            - The arguments to addRows() have changed: it no longer takes an
+              initial tableaux, but instead takes the relevant triangulation
+              and column permutation.
+        Class LPInitialTableaux<Constraint>:
+            - Removed the copy assignment operator (since this class now uses
+              FixedArray internally, which is not copy-assignable).  If you
+              need to copy a tableaux, the copy constructor remains available
+              (and move assignment is still available also).
         Class PermClass<n>:
             - Everything in this class is now constexpr.
         Class Polynomial<T>:

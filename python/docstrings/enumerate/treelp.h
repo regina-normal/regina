@@ -105,7 +105,7 @@ following effects, all of which may alter the tableaux:
   they use for octagon types need not be related to the coefficients
   for the two corresponding quadrilateral columns). Any such changes,
   if necessary, are encoded by the constant
-  LPConstraint::octAdjustment.
+  Constraint::octAdjustment.
 
 This class has been optimised to ensure that you only have one octagon
 type declared at any given time (which is consistent with the
@@ -178,7 +178,7 @@ class constructor) are as follows:
 There is also optional support for adding extra linear constraints
 (such as a constraint on Euler characteristic for normal surfaces).
 These extra constraints are supplied by the template parameter
-*LPConstraint*, and will generate LPConstraint::nConstraints
+*LPConstraint*, and will generate Constraint::nConstraints
 additional rows and columns (used by the additional variables that
 evaluate the corresponding linear functions). If there are no
 additional constraints, simply use the template parameter
@@ -786,8 +786,8 @@ static const char *global_swap =
 R"doc(Swaps the contents of the given matrices.
 
 This global routine simply calls
-LPInitialTableaux<LPConstraint>::swap(); it is provided so that
-LPInitialTableaux<LPConstraint> meets the C++ Swappable requirements.
+LPInitialTableaux<Constraint>::swap(); it is provided so that
+LPInitialTableaux<Constraint> meets the C++ Swappable requirements.
 
 Parameter ``a``:
     the first matrix whose contents should be swapped.
@@ -842,7 +842,7 @@ row of the given matrix with (ii) the given column of this matrix. We
 assume that the given column of this matrix describes one of the two
 quadrilateral coordinates in some tetrahedron that together form an
 octagon type, and (via the information given by
-LPConstraint::octAdjustment) we implicitly adjust the coefficients of
+Constraint::octAdjustment) we implicitly adjust the coefficients of
 our extra constraints accordingly.
 
 This routine is optimised to use the sparse representation of columns

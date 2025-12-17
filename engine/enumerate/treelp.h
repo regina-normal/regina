@@ -43,6 +43,8 @@
 #include "maths/matrix.h"
 #include "surface/normalcoords.h"
 #include "triangulation/forward.h"
+#include "utilities/exception.h"
+#include "utilities/fixedarray.h"
 #include <algorithm>
 
 /**
@@ -52,6 +54,20 @@
 // #define REGINA_VERIFY_LPDATA
 
 namespace regina {
+
+class LPConstraintBase;
+
+/**
+ * Represents a set of additional linear constraints that we can add to the
+ * tableaux of normal surface or angle structure matching equations.
+ * This concept is used with Regina's linear programming machinery.
+ *
+ * See LPConstraintBase for further information.
+ *
+ * \ingroup enumerate
+ */
+template <typename T>
+concept LPConstraint = std::derived_from<T, LPConstraintBase>;
 
 /**
  * A matrix class for use with linear programming.
@@ -463,8 +479,10 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
 template <ReginaInteger IntType>
 inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept;
 
+namespace detail {
+
 /**
- * Used by LPInitialTableaux<LPConstraint> to store a single column of the
+ * Internal class used by `LPInitialTableaux` to store a single column of the
  * adjusted matching equation matrix in sparse form.
  *
  * See the LPInitialTableaux class notes for details on what the
@@ -475,10 +493,10 @@ inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept;
  * is greater than +1 or less than -1, we represent it using
  * multiple +1 or -1 entries in the same matrix location.
  *
- * For any additional rows that represent extra linear constraints described
- * by the \a LPConstraint class, an LPCol object stores the coefficients for
- * those rows explicitly.  The number of such rows is assumed to be very small
- * (at the time of writing, this is no larger than 2 for all of Regina's
+ * For any additional rows that represent extra linear constraints (typically
+ * described by an LPConstraint type), an LPCol object stores the coefficients
+ * for those rows explicitly.  The number of such rows is assumed to be very
+ * small (at the time of writing, this is no larger than 2 for all of Regina's
  * constraint classes).
  *
  * These column objects have full value semantics.  Assuming the number of
@@ -490,14 +508,19 @@ inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept;
  * for use as internal storage for LPInitialTableaux, and at some point in the
  * future this class will most likely become private to LPInitialTableaux.
  *
- * \nopython LPCol is only designed to be used as part of the internal
- * data storage for LPInitialTableaux.
- *
  * \apinotfinal
+ *
+ * \nopython
+ *
+ * \tparam nConstraints the number of additional rows that represent extra
+ * linear constraints (as typically described by an LPConstraint type).
+ *
+ * \tparam Coefficient the integer type used for coefficients in these extra
+ * linear constraints.
  *
  * \ingroup enumerate
  */
-template <typename LPConstraint>
+template <int nConstraints, typename Coefficient>
 struct LPCol {
     int nPlus;
         /**< The total number of +1 entries in this column. */
@@ -512,15 +535,26 @@ struct LPCol {
              The same row may appear in this list more than once
              (indicating a -2, -3 or -4 entry in the matrix). */
 
-    std::array<typename LPConstraint::Coefficient, LPConstraint::nConstraints>
-            extra;
+    std::array<Coefficient, nConstraints> extra;
         /**< The coefficients for this column that appear in each extra
-             linear constraint defined by the LPConstraint class. */
+             linear constraint (typically described by an LPConstraint type). */
 
     /**
      * Initialises an empty column.
      */
-    inline LPCol();
+    inline LPCol() : nPlus(0), nMinus(0) {
+        if constexpr (nConstraints > 0) {
+            // I'm not sure how well the compiler will optimise this for us.
+            // Hard-code the first couple of cases without using std::fill().
+            if constexpr (nConstraints == 1) {
+                extra[0] = 0;
+            } else if constexpr (nConstraints == 2) {
+                extra[0] = 0;
+                extra[1] = 0;
+            } else
+                std::fill(extra.begin(), extra.end(), 0);
+        }
+    }
 
     /**
      * Creates a new copy of the given column.
@@ -531,7 +565,7 @@ struct LPCol {
      * Moves the contents of the given column into this new column.
      *
      * This move operation is not marked \c noexcept, since this depends
-     * upon the underlying LPConstraint class.
+     * upon the underlying \a Coefficient type.
      *
      * After this operation, the given column will no longer be usable.
      */
@@ -548,7 +582,7 @@ struct LPCol {
      * Moves the contents of the given column into this column.
      *
      * This move operation is not marked \c noexcept, since this depends
-     * upon the underlying LPConstraint class.
+     * upon the underlying \a Coefficient type.
      *
      * After this operation, the given column will no longer be usable.
      *
@@ -568,8 +602,19 @@ struct LPCol {
      * \param row the row containing the given value.
      * \param val the value at this location in the matrix.
      */
-    inline void push(size_t row, int val);
+    inline void push(size_t row, int val) {
+        #ifdef REGINA_VERIFY_LPDATA
+        if ((val > 0 && val + nPlus > 4) || (val < 0 && val - nMinus < -4))
+            throw ImpossibleScenario("Bad matrix");
+        #endif
+        for (; val > 0; --val)
+            plus[nPlus++] = row;
+        for (; val < 0; ++val)
+            minus[nMinus++] = row;
+    }
 };
+
+} // namespace detail
 
 /**
  * Indicates which broad class of vector encodings a particular tableaux
@@ -759,13 +804,13 @@ class LPSystem : public ShortOutput<LPSystem> {
  *
  * There is also optional support for adding extra linear constraints (such as
  * a constraint on Euler characteristic for normal surfaces).  These extra
- * constraints are supplied by the template parameter \a LPConstraint,
- * and will generate LPConstraint::nConstraints additional rows and columns
+ * constraints are supplied by the template parameter \a Constraint,
+ * and will generate Constraint::nConstraints additional rows and columns
  * (used by the additional variables that evaluate the corresponding linear
  * functions).  If there are no additional constraints, simply use the
  * template parameter LPConstraintNone.
  *
- * For some \a LPConstraint template arguments, Regina may discover at runtime
+ * For some \a Constraint template arguments, Regina may discover at runtime
  * that it is impossible to add the corresponding extra linear constraints
  * (e.g., the constraints might require some preconditions on the underlying
  * triangulation that are not met).  In this case, the LPInitialTableaux
@@ -785,7 +830,7 @@ class LPSystem : public ShortOutput<LPSystem> {
  * the quad normal matching equations (if LPSystem::quad() is \c true),
  * or the homogeneous angle equations (if LPSystem::angles() is true).
  * If you need to add extra matching equations beyond these, use the
- * LPConstraint template argument as outlined above.  If you need to support
+ * Constraint template argument as outlined above.  If you need to support
  * more exotic vector encodings (e.g., for octagonal almost normal surfaces),
  * you will need to find a way to represent it using one of these three broad
  * classes; see the LPData class notes for how this is done with octagons.
@@ -800,9 +845,6 @@ class LPSystem : public ShortOutput<LPSystem> {
  * If you are extending this class to work with more general matching
  * equation matrices, you may need to change the implementation accordingly.
  *
- * \pre The template parameter LPConstraint must be one of the subclasses of
- * LPConstraintBase.  See the LPConstraintBase class notes for further details.
- *
  * \headers Parts of this template class are implemented in a separate header
  * (treelp-impl.h), which is not included automatically by this file.
  * Most end users should not need this extra header, since Regina's calculation
@@ -811,8 +853,8 @@ class LPSystem : public ShortOutput<LPSystem> {
  *
  * \python This is a heavily templated class; nevertheless, many variants
  * are now made available to Python users.  Each class name is of the form
- * LPInitialTableaux_<i>LPConstraint</i>, where the suffix \a LPConstraint
- * is an abbreviated version of the \a LPConstraint template parameter;
+ * LPInitialTableaux_<i>Constraint</i>, where the suffix \a Constraint
+ * is an abbreviated version of the Constraint template parameter;
  * this suffix is omitted entirely for the common case LPConstraintNone.
  * An example of such a Python class name is \c LPInitialTableaux_NonSpun.
  * You are encouraged to look through the Regina namespace to see which
@@ -822,9 +864,14 @@ class LPSystem : public ShortOutput<LPSystem> {
  *
  * \ingroup enumerate
  */
-template <typename LPConstraint>
-class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
+template <LPConstraint Constraint>
+class LPInitialTableaux : public Output<LPInitialTableaux<Constraint>> {
     private:
+        using Col = detail::LPCol<Constraint::nConstraints,
+                typename Constraint::Coefficient>;
+            /**< The type used to store an individual column of this adjusted
+                 matrix in sparse form. */
+
         const Triangulation<3>* tri_;
             /**< The underlying triangulation.  This is stored by pointer
                  in order to support assignment; it must never be \c null. */
@@ -837,11 +884,11 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
                  LPInitialTableaux class notes. */
         size_t rank_;
             /**< The rank of this tableaux, taking into account any additional
-                 constraints from the template parameter LPConstraint. */
+                 constraints from the template parameter Constraint. */
         size_t cols_;
             /**< The number of columns in this tableaux, taking into account
                  any additional constraints from the template parameter
-                 LPConstraint. */
+                 Constraint. */
 
         int scaling_;
             /**< In angle structure coordinates, the final coordinate is a
@@ -852,14 +899,14 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
                  coordinateColumns()-1 of the matrix is equal to \a scaling_.
                  In all normal surface coordinate systems (which do not
                  need to be projectivised), \a scaling_ will be zero. */
-        LPCol<LPConstraint>* col_;
+        FixedArray<Col> col_;
             /**< An array of size \a cols_ that stores the individual columns
                  of this adjusted matrix in sparse form.  In angle structure
                  coordinates, the column col_[coordinateColumns()-1] will be
                  ignored, since this column of the matrix is described by the
                  \a scaling_ member instead. */
 
-        size_t* columnPerm_;
+        FixedArray<size_t> columnPerm_;
             /**< A permutation of 0,...,cols_-1 that maps column numbers
                  in the adjusted matrix to column numbers in the original
                  (unmodified) matrix of matching equations that was originally
@@ -880,15 +927,15 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * \exception InvalidArgument It was not possible to add the extra
          * constraints from the LPConstraint template argument, due to an
          * error which should have been preventable with the right checks
-         * in advance.  Such exceptions are generated by the \a LPConstraint
+         * in advance.  Such exceptions are generated by the \a Constraint
          * class, and so you should consult the class documentation for your
-         * chosen \a LPConstraint template argument to see if this is a
+         * chosen \a Constraint template argument to see if this is a
          * possibility.
          *
          * \exception InvalidArgument It was not possible to add the extra
          * constraints from the LPConstraint template argument, due to an
          * error that was "genuinely" unforseeable.  Again, such exceptions
-         * are generated by your chosen \a LPConstraint class, and you should
+         * are generated by your chosen \a Constraint class, and you should
          * consult its documentation to see if this is a possibility.
          *
          * \param tri the underlying 3-manifold triangulation.
@@ -906,37 +953,19 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
 
         /**
          * Creates a new copy of the given matrix.
-         *
-         * \param src the matrix to copy.
          */
-        inline LPInitialTableaux(const LPInitialTableaux& src);
+        LPInitialTableaux(const LPInitialTableaux&) = default;
 
         /**
          * Moves the contents of the given matrix into this new matrix.
          * This is a fast (constant time) operation.
          *
-         * The matrix that is passed (\a src) will no longer be usable.
-         *
-         * \param src the matrix to move.
+         * The matrix that is passed will no longer be usable.
          */
-        inline LPInitialTableaux(LPInitialTableaux&& src) noexcept;
+        LPInitialTableaux(LPInitialTableaux&& src) noexcept = default;
 
-        /**
-         * Destroys this matrix.
-         */
-        inline ~LPInitialTableaux();
-
-        /**
-         * Sets this to be a copy of the given matrix.
-         *
-         * It does not matter if this and the given matrix have different
-         * sizes and/or work with different vector encodings; if so then these
-         * properties will be copied across also.
-         *
-         * \param src the matrix to copy.
-         * \return a reference to this matrix.
-         */
-        inline LPInitialTableaux& operator = (const LPInitialTableaux& src);
+        // Disable copy assignment, since FixedArray does not support this.
+        LPInitialTableaux& operator = (const LPInitialTableaux&) = delete;
 
         /**
          * Moves the contents of the given matrix into this matrix.
@@ -946,12 +975,11 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * sizes and/or work with different vector encodings; if so then these
          * properties will be moved across also.
          *
-         * The matrix that is passed (\a src) will no longer be usable.
+         * The matrix that is passed will no longer be usable.
          *
-         * \param src the matrix to move.
          * \return a reference to this matrix.
          */
-        inline LPInitialTableaux& operator = (LPInitialTableaux&& src) noexcept;
+        LPInitialTableaux& operator = (LPInitialTableaux&&) noexcept = default;
 
         /**
          * Swaps the contents of this and the given matrix.
@@ -989,7 +1017,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * Returns the rank of this matrix.
          *
          * Note that, if we are imposing extra constraints through the
-         * template parameter LPConstraint, then there will be extra variables
+         * LPConstraint template parameter, then there will be extra variables
          * to enforce these, and so the rank will be larger than the rank of
          * the original matching equation matrix.
          *
@@ -1001,7 +1029,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * Returns the number of columns in this matrix.
          *
          * Note that, if we are imposing extra constraints through the
-         * template parameter LPConstraint, then there will be extra variables
+         * LPConstraint template parameter, then there will be extra variables
          * to enforce these, and so the number of columns will be larger than
          * in the original matching equation matrix.
          *
@@ -1030,7 +1058,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * column `columnPerm()[i]` of the original matrix.
          *
          * If you are imposing additional constraints through the
-         * template parameter LPConstraint, then the corresponding extra
+         * LPConstraint template parameter, then the corresponding extra
          * variables will be included in the permutation; however, these are
          * never moved and will always remain the rightmost variables in
          * this system (i.e., the columns of highest index).
@@ -1107,7 +1135,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * See the LPData class notes for details on how this works.
          *
          * In some settings where we are using additional constraints
-         * through the template parameter LPConstraint, these extra
+         * through the LPConstraint template parameter, these extra
          * constraints behave differently in the presence of octagons
          * (i.e., the coefficient of the octagon type is not just the
          * sum of coefficients of the two constituent quadrilateral types).
@@ -1119,7 +1147,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * column of this matrix.  We assume that the given column of
          * this matrix describes one of the two quadrilateral coordinates
          * in some tetrahedron that together form an octagon type, and
-         * (via the information given by LPConstraint::octAdjustment)
+         * (via the information given by Constraint::octAdjustment)
          * we implicitly adjust the coefficients of our extra constraints
          * accordingly.
          *
@@ -1194,7 +1222,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * on the constraints that this reordering is required to satisfy.
          *
          * This routine is called before any additional constraints are
-         * added from the template parameter LPConstraint; that is, the
+         * added from the LPConstraint template parameter; that is, the
          * rows of the matrix are just the matching equations.  However,
          * we do already have the extra placeholder columns for the new
          * variables that correspond to these extra constraint(s).
@@ -1211,8 +1239,8 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
 /**
  * Swaps the contents of the given matrices.
  *
- * This global routine simply calls LPInitialTableaux<LPConstraint>::swap();
- * it is provided so that LPInitialTableaux<LPConstraint> meets the C++
+ * This global routine simply calls LPInitialTableaux<Constraint>::swap();
+ * it is provided so that LPInitialTableaux<Constraint> meets the C++
  * Swappable requirements.
  *
  * \param a the first matrix whose contents should be swapped.
@@ -1220,9 +1248,9 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
  *
  * \ingroup enumerate
  */
-template <typename LPConstraint>
-inline void swap(LPInitialTableaux<LPConstraint>& a,
-    LPInitialTableaux<LPConstraint>& b) noexcept;
+template <LPConstraint Constraint>
+inline void swap(LPInitialTableaux<Constraint>& a,
+    LPInitialTableaux<Constraint>& b) noexcept;
 
 /**
  * Stores an intermediate tableaux for the dual simplex method, and
@@ -1287,7 +1315,7 @@ inline void swap(LPInitialTableaux<LPConstraint>& a,
  *
  * Like LPInitialTableaux, this class can enforce additional linear
  * constraints (such as positive Euler characteristic) through the template
- * parameter LPConstraint.  If there are no such constraints, simply use
+ * parameter Constraint.  If there are no such constraints, simply use
  * the template parameter LPConstraintNone.
  *
  * In the context of normal surfaces (not angle structures):
@@ -1312,29 +1340,25 @@ inline void swap(LPInitialTableaux<LPConstraint>& a,
  *   will be kept and which will be deactivated: this will depend on the
  *   layout of the tableaux when constrainOct() is called.
  *
- * - If you are imposing additional constraints through the \a LPConstraint
+ * - If you are imposing additional constraints through the LPConstraint
  *   template parameter, the corresponding linear constraint functions
  *   may change their values (since the coefficients they use for
  *   octagon types need not be related to the coefficients for the two
  *   corresponding quadrilateral columns).  Any such changes, if necessary,
- *   are encoded by the constant LPConstraint::octAdjustment.
+ *   are encoded by the constant Constraint::octAdjustment.
  *
  * This class has been optimised to ensure that you only have one
  * octagon type declared at any given time (which is consistent with the
  * constraints of almost normal surface theory).
  *
  * All tableaux elements are of the integer class \a IntType, which is
- * supplied as a template argument.  This same integer class will be
- * used as a template argument for \a LPConstraint.
+ * supplied as a template argument.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  However, due to the unusual create-reserve-initialise
  * procedure, it does not support copying (either by copy construction or
  * copy assignment).  Because of the move semantics, this class avoids deep
  * copies, even when passing or returning objects by value.
- *
- * \pre The template parameter LPConstraint must be one of the subclasses of
- * LPConstraintBase.  See the LPConstraintBase class notes for further details.
  *
  * \headers Parts of this template class are implemented in a separate header
  * (treelp-impl.h), which is not included automatically by this file.
@@ -1344,8 +1368,8 @@ inline void swap(LPInitialTableaux<LPConstraint>& a,
  *
  * \python This is a heavily templated class; nevertheless, many variants
  * are now made available to Python users.  Each class name is of the form
- * LPData_<i>LPConstraint</i>, where the suffix \a LPConstraint
- * is an abbreviated version of the \a LPConstraint template parameter;
+ * LPData_<i>Constraint</i>, where the suffix \a Constraint
+ * is an abbreviated version of the \a Constraint template parameter;
  * this suffix is omitted entirely for the common case LPConstraintNone.
  * An example of such a Python class name is \c LPData_EulerPositive.
  * You are encouraged to look through the Regina namespace to see which
@@ -1356,10 +1380,10 @@ inline void swap(LPInitialTableaux<LPConstraint>& a,
  *
  * \ingroup enumerate
  */
-template <typename LPConstraint, ReginaInteger IntType>
-class LPData : public Output<LPData<LPConstraint, IntType>> {
+template <LPConstraint Constraint, ReginaInteger IntType>
+class LPData : public Output<LPData<Constraint, IntType>> {
     private:
-        const LPInitialTableaux<LPConstraint>* origTableaux_;
+        const LPInitialTableaux<Constraint>* origTableaux_;
             /**< The original starting tableaux that holds the adjusted
                  matrix of matching equations, before the tree traversal
                  algorithm began.  This is stored by pointer, not reference,
@@ -1491,14 +1515,14 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * adjusted matrix of matching equations, before the tree traversal
          * algorithm began.
          */
-        void reserve(const LPInitialTableaux<LPConstraint>& origTableaux);
+        void reserve(const LPInitialTableaux<Constraint>& origTableaux);
 
         /**
          * Initialises this tableaux by beginning at the original
          * starting tableaux and working our way to any feasible basis.
          *
          * This routine also explicitly enforces the additional constraints
-         * from the template parameter LPConstraint (i.e., this routine
+         * from the LPConstraint template parameter  (i.e., this routine
          * is responsible for forcing the corresponding linear
          * function(s) to be zero or strictly positive as appropriate).
          *
@@ -1526,7 +1550,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * Returns the number of columns in this tableaux.
          *
          * Note that, if we are imposing extra constraints through the
-         * template parameter LPConstraint, then there will be extra variables
+         * LPConstraint template parameter, then there will be extra variables
          * to enforce these, and so the number of columns will be larger than
          * in the original matching equation matrix.
          *
@@ -1714,8 +1738,8 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * \pre No individual coordinate column has had more than one call
          * to either of constrainPositive() or constrainOct() (otherwise
          * the coordinate will not be correctly reconstructed).  Any
-         * additional columns arising from LPConstraint are exempt from
-         * this requirement.
+         * additional columns arising from the LPConstraint template parameter
+         * are exempt from this requirement.
          *
          * \pre The precision of integers in \a Ray is at least as
          * large as the precision of \a IntType (as used by LPData).
@@ -1929,8 +1953,8 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
 /**
  * Swaps the contents of the given tableaux.
  *
- * This global routine simply calls LPData<LPConstraint, IntType>::swap();
- * it is provided so that LPData<LPConstraint, IntType> meets the C++ Swappable
+ * This global routine simply calls LPData<Constraint, IntType>::swap();
+ * it is provided so that LPData<Constraint, IntType> meets the C++ Swappable
  * requirements.
  *
  * \param a the first tableaux whose contents should be swapped.
@@ -1938,9 +1962,9 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
  *
  * \ingroup enumerate
  */
-template <typename LPConstraint, ReginaInteger IntType>
-inline void swap(LPData<LPConstraint, IntType>& a,
-        LPData<LPConstraint, IntType>& b) noexcept;
+template <LPConstraint Constraint, ReginaInteger IntType>
+inline void swap(LPData<Constraint, IntType>& a,
+        LPData<Constraint, IntType>& b) noexcept;
 
 } // namespace regina
 
@@ -2062,120 +2086,10 @@ inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept {
     a.swap(b);
 }
 
-// Inline functions for LPCol
-
-template <typename LPConstraint>
-inline LPCol<LPConstraint>::LPCol() : nPlus(0), nMinus(0) {
-    if constexpr (LPConstraint::nConstraints > 0) {
-        // I'm not sure how well the compiler and std::array optimise this for
-        // us.  Hard-code the first couple of cases without using std::fill().
-        if constexpr (LPConstraint::nConstraints == 1) {
-            extra[0] = 0;
-        } else if constexpr (LPConstraint::nConstraints == 2) {
-            extra[0] = 0;
-            extra[1] = 0;
-        } else
-            std::fill(extra.begin(), extra.end(), 0);
-    }
-}
-
-template <typename LPConstraint>
-inline void LPCol<LPConstraint>::push(size_t row, int val) {
-#ifdef REGINA_VERIFY_LPDATA
-    if ((val > 0 && val + nPlus > 4) ||
-            (val < 0 && val - nMinus < -4)) {
-        std::cerr << "BAD MATRIX" << std::endl;
-        ::exit(1);
-    }
-#endif
-    for (; val > 0; --val)
-        plus[nPlus++] = row;
-    for (; val < 0; ++val)
-        minus[nMinus++] = row;
-}
-
 // Inline functions for LPInitialTableaux
 
-template <typename LPConstraint>
-inline LPInitialTableaux<LPConstraint>::LPInitialTableaux(
-        const LPInitialTableaux& src) :
-        tri_(src.tri_),
-        system_(src.system_),
-        eqns_(src.eqns_),
-        rank_(src.rank_),
-        cols_(src.cols_),
-        scaling_(src.scaling_),
-        col_(new LPCol<LPConstraint>[cols_]),
-        columnPerm_(new size_t[cols_]) {
-    std::copy(src.col_, src.col_ + cols_, col_);
-    std::copy(src.columnPerm_, src.columnPerm_ + cols_, columnPerm_);
-}
-
-template <typename LPConstraint>
-inline LPInitialTableaux<LPConstraint>::LPInitialTableaux(
-        LPInitialTableaux&& src) noexcept :
-        tri_(src.tri_),
-        system_(src.system_),
-        eqns_(std::move(src.eqns_)),
-        rank_(src.rank_),
-        cols_(src.cols_),
-        scaling_(src.scaling_),
-        col_(src.col_),
-        columnPerm_(src.columnPerm_) {
-    src.col_ = nullptr;
-    src.columnPerm_ = nullptr;
-}
-
-template <typename LPConstraint>
-inline LPInitialTableaux<LPConstraint>::~LPInitialTableaux() {
-    delete[] col_;
-    delete[] columnPerm_;
-}
-
-template <typename LPConstraint>
-inline LPInitialTableaux<LPConstraint>&
-        LPInitialTableaux<LPConstraint>::operator = (
-        const LPInitialTableaux& src) {
-    // std::copy() exhibits undefined behaviour in the case of self-assignment.
-    if (std::addressof(src) == this)
-        return *this;
-
-    tri_ = src.tri_;
-    system_ = src.system_;
-    eqns_ = std::move(src.eqns_);
-    rank_ = src.rank_;
-    cols_ = src.cols_;
-    scaling_ = src.scaling_;
-
-    col_ = new LPCol<LPConstraint>[cols_];
-    std::copy(src.col_, src.col_ + cols_, col_);
-
-    columnPerm_ = new size_t[cols_];
-    std::copy(src.columnPerm_, src.columnPerm_ + cols_, columnPerm_);
-
-    return *this;
-}
-
-template <typename LPConstraint>
-inline LPInitialTableaux<LPConstraint>&
-        LPInitialTableaux<LPConstraint>::operator = (
-        LPInitialTableaux&& src) noexcept {
-    tri_ = src.tri_;
-    system_ = src.system_;
-    eqns_ = std::move(src.eqns_);
-    rank_ = src.rank_;
-    cols_ = src.cols_;
-    scaling_ = src.scaling_;
-
-    std::swap(col_, src.col_);
-    std::swap(columnPerm_, src.columnPerm_);
-    // Let src dispose of the original contents of col_ and columnPerm_
-    // in its own destructor.
-    return *this;
-}
-
-template <typename LPConstraint>
-inline void LPInitialTableaux<LPConstraint>::swap(LPInitialTableaux& other)
+template <LPConstraint Constraint>
+inline void LPInitialTableaux<Constraint>::swap(LPInitialTableaux& other)
         noexcept {
     std::swap(tri_, other.tri_);
     std::swap(system_, other.system_);
@@ -2183,43 +2097,43 @@ inline void LPInitialTableaux<LPConstraint>::swap(LPInitialTableaux& other)
     std::swap(rank_, other.rank_);
     std::swap(cols_, other.cols_);
     std::swap(scaling_, other.scaling_);
-    std::swap(col_, other.col_);
-    std::swap(columnPerm_, other.columnPerm_);
+    col_.swap(other.col_);
+    columnPerm_.swap(other.columnPerm_);
 }
 
-template <typename LPConstraint>
-inline const Triangulation<3>& LPInitialTableaux<LPConstraint>::tri() const {
+template <LPConstraint Constraint>
+inline const Triangulation<3>& LPInitialTableaux<Constraint>::tri() const {
     return *tri_;
 }
 
-template <typename LPConstraint>
-inline LPSystem LPInitialTableaux<LPConstraint>::system() const {
+template <LPConstraint Constraint>
+inline LPSystem LPInitialTableaux<Constraint>::system() const {
     return system_;
 }
 
-template <typename LPConstraint>
-inline size_t LPInitialTableaux<LPConstraint>::rank() const {
+template <LPConstraint Constraint>
+inline size_t LPInitialTableaux<Constraint>::rank() const {
     return rank_;
 }
 
-template <typename LPConstraint>
-inline size_t LPInitialTableaux<LPConstraint>::columns() const {
+template <LPConstraint Constraint>
+inline size_t LPInitialTableaux<Constraint>::columns() const {
     return cols_;
 }
 
-template <typename LPConstraint>
-inline size_t LPInitialTableaux<LPConstraint>::coordinateColumns() const {
+template <LPConstraint Constraint>
+inline size_t LPInitialTableaux<Constraint>::coordinateColumns() const {
     return eqns_.columns();
 }
 
-template <typename LPConstraint>
-inline const size_t* LPInitialTableaux<LPConstraint>::columnPerm() const {
-    return columnPerm_;
+template <LPConstraint Constraint>
+inline const size_t* LPInitialTableaux<Constraint>::columnPerm() const {
+    return columnPerm_.begin();
 }
 
-template <typename LPConstraint>
+template <LPConstraint Constraint>
 template <ReginaInteger IntType>
-inline IntType LPInitialTableaux<LPConstraint>::multColByRow(
+inline IntType LPInitialTableaux<Constraint>::multColByRow(
         const LPMatrix<IntType>& m, size_t mRow, size_t thisCol) const {
     if (scaling_ && thisCol == coordinateColumns() - 1) {
         // Multiply the entire row by the scaling coefficient.
@@ -2236,16 +2150,16 @@ inline IntType LPInitialTableaux<LPConstraint>::multColByRow(
             ans += m.entry(mRow, col_[thisCol].plus[i]);
         for (int i = 0; i < col_[thisCol].nMinus; ++i)
             ans -= m.entry(mRow, col_[thisCol].minus[i]);
-        for (int i = 0; i < LPConstraint::nConstraints; ++i)
-            ans += m.entry(mRow, m.rows() - LPConstraint::nConstraints + i) *
+        for (int i = 0; i < Constraint::nConstraints; ++i)
+            ans += m.entry(mRow, m.rows() - Constraint::nConstraints + i) *
                 col_[thisCol].extra[i];
         return ans;
     }
 }
 
-template <typename LPConstraint>
+template <LPConstraint Constraint>
 template <ReginaInteger IntType>
-inline IntType LPInitialTableaux<LPConstraint>::multColByRowOct(
+inline IntType LPInitialTableaux<Constraint>::multColByRowOct(
         const LPMatrix<IntType>& m, size_t mRow, size_t thisCol) const {
     // By the preconditions of this routine, we must be working in some normal
     // or almost normal coordinate system, and so there is no scaling
@@ -2255,15 +2169,15 @@ inline IntType LPInitialTableaux<LPConstraint>::multColByRowOct(
         ans += m.entry(mRow, col_[thisCol].plus[i]);
     for (int i = 0; i < col_[thisCol].nMinus; ++i)
         ans -= m.entry(mRow, col_[thisCol].minus[i]);
-    for (int i = 0; i < LPConstraint::nConstraints; ++i)
-        ans += m.entry(mRow, m.rows() - LPConstraint::nConstraints + i) *
-            (col_[thisCol].extra[i] + LPConstraint::octAdjustment);
+    for (int i = 0; i < Constraint::nConstraints; ++i)
+        ans += m.entry(mRow, m.rows() - Constraint::nConstraints + i) *
+            (col_[thisCol].extra[i] + Constraint::octAdjustment);
     return ans;
 }
 
-template <typename LPConstraint>
+template <LPConstraint Constraint>
 template <ReginaInteger IntType>
-inline void LPInitialTableaux<LPConstraint>::fillInitialTableaux(
+inline void LPInitialTableaux<Constraint>::fillInitialTableaux(
         LPMatrix<IntType>& m) const {
     for (size_t c = 0; c < cols_; ++c) {
         for (int i = 0; i < col_[c].nPlus; ++i)
@@ -2273,8 +2187,8 @@ inline void LPInitialTableaux<LPConstraint>::fillInitialTableaux(
 
         // Don't forget any additional constraints that we added
         // as final rows to the matrix.
-        for (int i = 0; i < LPConstraint::nConstraints; ++i)
-            m.entry(m.rows() - LPConstraint::nConstraints + i, c) =
+        for (int i = 0; i < Constraint::nConstraints; ++i)
+            m.entry(m.rows() - Constraint::nConstraints + i, c) =
                 col_[c].extra[i];
     }
 
@@ -2283,21 +2197,21 @@ inline void LPInitialTableaux<LPConstraint>::fillInitialTableaux(
             m.entry(i, coordinateColumns() - 1) = scaling_;
 }
 
-template <typename LPConstraint>
-inline void swap(LPInitialTableaux<LPConstraint>& a,
-        LPInitialTableaux<LPConstraint>& b) noexcept {
+template <LPConstraint Constraint>
+inline void swap(LPInitialTableaux<Constraint>& a,
+        LPInitialTableaux<Constraint>& b) noexcept {
     a.swap(b);
 }
 
 // Template functions for LPData
 
-template <typename LPConstraint, ReginaInteger IntType>
-inline LPData<LPConstraint, IntType>::LPData() :
+template <LPConstraint Constraint, ReginaInteger IntType>
+inline LPData<Constraint, IntType>::LPData() :
         rhs_(nullptr), rank_(0), basis_(nullptr), basisRow_(nullptr) {
 }
 
-template <typename LPConstraint, ReginaInteger IntType>
-inline LPData<LPConstraint, IntType>::LPData(LPData&& src) noexcept :
+template <LPConstraint Constraint, ReginaInteger IntType>
+inline LPData<Constraint, IntType>::LPData(LPData&& src) noexcept :
         origTableaux_(src.origTableaux_),
         rhs_(src.rhs_),
         rowOps_(std::move(src.rowOps_)),
@@ -2312,16 +2226,16 @@ inline LPData<LPConstraint, IntType>::LPData(LPData&& src) noexcept :
     src.basisRow_ = nullptr;
 }
 
-template <typename LPConstraint, ReginaInteger IntType>
-inline LPData<LPConstraint, IntType>::~LPData() {
+template <LPConstraint Constraint, ReginaInteger IntType>
+inline LPData<Constraint, IntType>::~LPData() {
     delete[] rhs_;
     delete[] basis_;
     delete[] basisRow_;
 }
 
-template <typename LPConstraint, ReginaInteger IntType>
-inline LPData<LPConstraint, IntType>&
-        LPData<LPConstraint, IntType>::operator = (LPData&& src) noexcept {
+template <LPConstraint Constraint, ReginaInteger IntType>
+inline LPData<Constraint, IntType>&
+        LPData<Constraint, IntType>::operator = (LPData&& src) noexcept {
     origTableaux_ = src.origTableaux_;
     rowOps_ = std::move(src.rowOps_);
     rank_ = src.rank_;
@@ -2337,8 +2251,8 @@ inline LPData<LPConstraint, IntType>&
     return *this;
 }
 
-template <typename LPConstraint, ReginaInteger IntType>
-inline void LPData<LPConstraint, IntType>::swap(LPData& other) noexcept {
+template <LPConstraint Constraint, ReginaInteger IntType>
+inline void LPData<Constraint, IntType>::swap(LPData& other) noexcept {
     std::swap(origTableaux_, other.origTableaux_);
     std::swap(rhs_, other.rhs_);
     rowOps_.swap(other.rowOps_);
@@ -2350,9 +2264,9 @@ inline void LPData<LPConstraint, IntType>::swap(LPData& other) noexcept {
     std::swap(octSecondary_, other.octSecondary_);
 }
 
-template <typename LPConstraint, ReginaInteger IntType>
-inline void LPData<LPConstraint, IntType>::reserve(
-        const LPInitialTableaux<LPConstraint>& origTableaux) {
+template <LPConstraint Constraint, ReginaInteger IntType>
+inline void LPData<Constraint, IntType>::reserve(
+        const LPInitialTableaux<Constraint>& origTableaux) {
     origTableaux_ = std::addressof(origTableaux);
     rhs_ = new IntType[origTableaux.rank()];
     rowOps_.reserve(origTableaux.rank(), origTableaux.rank());
@@ -2360,23 +2274,23 @@ inline void LPData<LPConstraint, IntType>::reserve(
     basisRow_ = new ssize_t[origTableaux.columns()];
 }
 
-template <typename LPConstraint, ReginaInteger IntType>
-inline size_t LPData<LPConstraint, IntType>::columns() const {
+template <LPConstraint Constraint, ReginaInteger IntType>
+inline size_t LPData<Constraint, IntType>::columns() const {
     return origTableaux_->columns();
 }
 
-template <typename LPConstraint, ReginaInteger IntType>
-inline size_t LPData<LPConstraint, IntType>::coordinateColumns() const {
+template <LPConstraint Constraint, ReginaInteger IntType>
+inline size_t LPData<Constraint, IntType>::coordinateColumns() const {
     return origTableaux_->coordinateColumns();
 }
 
-template <typename LPConstraint, ReginaInteger IntType>
-inline bool LPData<LPConstraint, IntType>::isFeasible() const {
+template <LPConstraint Constraint, ReginaInteger IntType>
+inline bool LPData<Constraint, IntType>::isFeasible() const {
     return feasible_;
 }
 
-template <typename LPConstraint, ReginaInteger IntType>
-inline bool LPData<LPConstraint, IntType>::isActive(size_t pos) const {
+template <LPConstraint Constraint, ReginaInteger IntType>
+inline bool LPData<Constraint, IntType>::isActive(size_t pos) const {
     // If basisRow_[pos] < 0, the variable is active and non-basic.
     // If basisRow_[pos] > 0, the variable is active and basic.
     // If basisRow_[pos] == 0, then:
@@ -2387,8 +2301,8 @@ inline bool LPData<LPConstraint, IntType>::isActive(size_t pos) const {
         (rank_ == 0 || basis_[0] != pos));
 }
 
-template <typename LPConstraint, ReginaInteger IntType>
-inline int LPData<LPConstraint, IntType>::sign(size_t pos) const {
+template <LPConstraint Constraint, ReginaInteger IntType>
+inline int LPData<Constraint, IntType>::sign(size_t pos) const {
     // If basisRow_[pos] < 0, the variable is active and non-basic.
     // If basisRow_[pos] > 0, the variable is active and basic.
     // If basisRow_[pos] == 0, then:
@@ -2399,8 +2313,8 @@ inline int LPData<LPConstraint, IntType>::sign(size_t pos) const {
         rhs_[basisRow_[pos]].sign() : 0);
 }
 
-template <typename LPConstraint, ReginaInteger IntType>
-inline IntType LPData<LPConstraint, IntType>::entry(size_t row, size_t col)
+template <LPConstraint Constraint, ReginaInteger IntType>
+inline IntType LPData<Constraint, IntType>::entry(size_t row, size_t col)
         const {
     // Remember to take into account any changes of variable due
     // to previous calls to constrainOct().
@@ -2413,8 +2327,8 @@ inline IntType LPData<LPConstraint, IntType>::entry(size_t row, size_t col)
     }
 }
 
-template <typename LPConstraint, ReginaInteger IntType>
-inline void LPData<LPConstraint, IntType>::entry(size_t row, size_t col,
+template <LPConstraint Constraint, ReginaInteger IntType>
+inline void LPData<Constraint, IntType>::entry(size_t row, size_t col,
         IntType& ans) const {
     // Remember to take into account any changes of variable due
     // to previous calls to constrainOct().
@@ -2426,8 +2340,8 @@ inline void LPData<LPConstraint, IntType>::entry(size_t row, size_t col,
     }
 }
 
-template <typename LPConstraint, ReginaInteger IntType>
-inline int LPData<LPConstraint, IntType>::entrySign(size_t row, size_t col)
+template <LPConstraint Constraint, ReginaInteger IntType>
+inline int LPData<Constraint, IntType>::entrySign(size_t row, size_t col)
         const {
     // Remember to take into account any changes of variable due
     // to previous calls to constrainOct().
@@ -2440,9 +2354,9 @@ inline int LPData<LPConstraint, IntType>::entrySign(size_t row, size_t col)
     }
 }
 
-template <typename LPConstraint, ReginaInteger IntType>
-inline void swap(LPData<LPConstraint, IntType>& a,
-        LPData<LPConstraint, IntType>& b) noexcept {
+template <LPConstraint Constraint, ReginaInteger IntType>
+inline void swap(LPData<Constraint, IntType>& a,
+        LPData<Constraint, IntType>& b) noexcept {
     a.swap(b);
 }
 

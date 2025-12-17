@@ -49,11 +49,11 @@ using regina::LPConstraintEulerPositive;
 using regina::LPConstraintEulerZero;
 using regina::LPConstraintNonSpun;
 
-template <typename LPConstraint>
+template <regina::LPConstraint Constraint>
 void addLPInitialTableaux(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(LPInitialTableaux)
 
-    using Tableaux = LPInitialTableaux<LPConstraint>;
+    using Tableaux = LPInitialTableaux<Constraint>;
 
     auto c = pybind11::class_<Tableaux>(m, name, rdoc_scope)
         .def(pybind11::init<const Triangulation<3>&, NormalEncoding, bool>(),
@@ -95,11 +95,11 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
-template <typename LPConstraint>
+template <regina::LPConstraint Constraint>
 void addLPData(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(LPData)
 
-    using Data = LPData<LPConstraint, Integer>;
+    using Data = LPData<Constraint, Integer>;
 
     auto c = pybind11::class_<Data>(m, name, rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)

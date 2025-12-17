@@ -116,11 +116,11 @@ print()
 
 t = Example3.rp3rp3()
 tab = LPInitialTableaux(t, NormalCoords.Standard)
-print(LPConstraintNone.addRows(tab))
+print(LPConstraintNone.addRows(tab.tri(), tab.columnPerm()))
 tab = LPInitialTableaux_EulerPositive(t, NormalCoords.Standard)
-print(LPConstraintEulerPositive.addRows(tab))
+print(LPConstraintEulerPositive.addRows(tab.tri(), tab.columnPerm()))
 tab = LPInitialTableaux_EulerZero(t, NormalCoords.Standard)
-print(LPConstraintEulerZero.addRows(tab))
+print(LPConstraintEulerZero.addRows(tab.tri(), tab.columnPerm()))
 
 print()
 

@@ -48,8 +48,8 @@
 
 namespace regina {
 
-template <typename LPConstraint>
-BanBoundary::BanBoundary(const LPInitialTableaux<LPConstraint>& init) :
+template <LPConstraint Constraint>
+BanBoundary::BanBoundary(const LPInitialTableaux<Constraint>& init) :
         BanConstraintBase(init) {
     size_t n = tri_.size();
     size_t tet;
@@ -91,8 +91,8 @@ BanBoundary::BanBoundary(const LPInitialTableaux<LPConstraint>& init) :
         }
 }
 
-template <typename LPConstraint>
-BanEdge::BanEdge(const LPInitialTableaux<LPConstraint>& init, Edge<3>* edge) :
+template <LPConstraint Constraint>
+BanEdge::BanEdge(const LPInitialTableaux<Constraint>& init, Edge<3>* edge) :
         BanConstraintBase(init) {
     size_t n = tri_.size();
     size_t tet;
@@ -139,10 +139,9 @@ BanEdge::BanEdge(const LPInitialTableaux<LPConstraint>& init, Edge<3>* edge) :
         }
 }
 
-template <typename LPConstraint>
+template <LPConstraint Constraint>
 BanTorusBoundary::BanTorusBoundary(
-        const LPInitialTableaux<LPConstraint>& init) :
-        BanConstraintBase(init) {
+        const LPInitialTableaux<Constraint>& init) : BanConstraintBase(init) {
     size_t n = tri_.size();
     size_t tet;
 

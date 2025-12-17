@@ -81,9 +81,9 @@
 
 namespace regina {
 
-template <typename LPConstraint, typename BanConstraint,
+template <LPConstraint Constraint, typename BanConstraint,
     ReginaInteger IntType>
-NormalSurface TreeTraversal<LPConstraint, BanConstraint, IntType>::
+NormalSurface TreeTraversal<Constraint, BanConstraint, IntType>::
         buildSurface() const {
     if (enc_.storesAngles())
         throw regina::FailedPrecondition(
@@ -138,9 +138,9 @@ NormalSurface TreeTraversal<LPConstraint, BanConstraint, IntType>::
     }
 }
 
-template <typename LPConstraint, typename BanConstraint,
+template <LPConstraint Constraint, typename BanConstraint,
     ReginaInteger IntType>
-AngleStructure TreeTraversal<LPConstraint, BanConstraint, IntType>::
+AngleStructure TreeTraversal<Constraint, BanConstraint, IntType>::
         buildStructure() const {
     if (! enc_.storesAngles())
         throw regina::FailedPrecondition(
@@ -154,9 +154,9 @@ AngleStructure TreeTraversal<LPConstraint, BanConstraint, IntType>::
 /**
  * Destroys this object.
  */
-template <typename LPConstraint, typename BanConstraint,
+template <LPConstraint Constraint, typename BanConstraint,
     ReginaInteger IntType>
-TreeTraversal<LPConstraint, BanConstraint, IntType>::~TreeTraversal() {
+TreeTraversal<Constraint, BanConstraint, IntType>::~TreeTraversal() {
     delete[] type_;
     delete[] typeOrder_;
     delete[] lp_;
@@ -164,9 +164,9 @@ TreeTraversal<LPConstraint, BanConstraint, IntType>::~TreeTraversal() {
     delete[] nextSlot_;
 }
 
-template <typename LPConstraint, typename BanConstraint,
+template <LPConstraint Constraint, typename BanConstraint,
     ReginaInteger IntType>
-void TreeTraversal<LPConstraint, BanConstraint, IntType>::setNext(
+void TreeTraversal<Constraint, BanConstraint, IntType>::setNext(
         size_t nextType) {
     auto pos = std::find(typeOrder_ + level_ + 1,
         typeOrder_ + nTypes_, nextType);
@@ -180,9 +180,9 @@ void TreeTraversal<LPConstraint, BanConstraint, IntType>::setNext(
     }
 }
 
-template <typename LPConstraint, typename BanConstraint,
+template <LPConstraint Constraint, typename BanConstraint,
     ReginaInteger IntType>
-int TreeTraversal<LPConstraint, BanConstraint, IntType>::feasibleBranches(
+int TreeTraversal<Constraint, BanConstraint, IntType>::feasibleBranches(
         size_t quadType) {
     // Spin off clones for the new linear programs (reusing as much
     // work as possible).
@@ -254,9 +254,9 @@ int TreeTraversal<LPConstraint, BanConstraint, IntType>::feasibleBranches(
     }
 }
 
-template <typename LPConstraint, typename BanConstraint,
+template <LPConstraint Constraint, typename BanConstraint,
     ReginaInteger IntType>
-double TreeTraversal<LPConstraint, BanConstraint, IntType>::percent() const {
+double TreeTraversal<Constraint, BanConstraint, IntType>::percent() const {
     double percent = 0.0;
     double range = 100.0;
     size_t den;
@@ -299,9 +299,9 @@ double TreeTraversal<LPConstraint, BanConstraint, IntType>::percent() const {
     return percent;
 }
 
-template <typename LPConstraint, typename BanConstraint,
+template <LPConstraint Constraint, typename BanConstraint,
     ReginaInteger IntType>
-bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::next(
+bool TreeEnumeration<Constraint, BanConstraint, IntType>::next(
         ProgressTracker* tracker) {
     if (lastNonZero_ < 0) {
         // Our type vector is the zero vector.
@@ -676,9 +676,9 @@ bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::next(
     return false;
 }
 
-template <typename LPConstraint, typename BanConstraint,
+template <LPConstraint Constraint, typename BanConstraint,
     ReginaInteger IntType>
-bool TautEnumeration<LPConstraint, BanConstraint, IntType>::next(
+bool TautEnumeration<Constraint, BanConstraint, IntType>::next(
         ProgressTracker* tracker) {
     // Note that for taut angle structures we have no domination test and
     // no zero test.  The domination comes for free (every taut angle
@@ -846,9 +846,9 @@ bool TautEnumeration<LPConstraint, BanConstraint, IntType>::next(
     return false;
 }
 
-template <typename LPConstraint, typename BanConstraint,
+template <LPConstraint Constraint, typename BanConstraint,
     ReginaInteger IntType>
-bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
+bool TreeSingleSoln<Constraint, BanConstraint, IntType>::find() {
     // This code is similar to next(), but makes some changes to
     // account for the facts that:
     // - we only need a single solution that satisfies our

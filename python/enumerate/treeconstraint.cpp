@@ -53,41 +53,42 @@ using regina::LPConstraintEulerPositive;
 using regina::LPConstraintEulerZero;
 using regina::LPConstraintNonSpun;
 
-template <typename LPConstraint>
+template <regina::LPConstraint Constraint>
 void addLPConstraint(pybind11::module_& m, const char* name, const char* doc) {
     RDOC_SCOPE_BEGIN(LPConstraintBase)
 
-    auto c = pybind11::class_<LPConstraint>(m, name, doc)
-        .def_readonly_static("nConstraints", &LPConstraint::nConstraints)
-        .def_readonly_static("octAdjustment", &LPConstraint::octAdjustment)
-        .def_static("addRows", [](const LPInitialTableaux<LPConstraint>& t) {
+    auto c = pybind11::class_<Constraint>(m, name, doc)
+        .def_readonly_static("nConstraints", &Constraint::nConstraints)
+        .def_readonly_static("octAdjustment", &Constraint::octAdjustment)
+        .def_static("addRows", [](const Triangulation<3>& tri,
+                const std::vector<size_t>& columnPerm) {
             // The C++ version of this function is likely to change
             // significantly, once we get rid of LPCol (or at least make
             // it private to LPInitialTableaux).  So, for now, we just
             // do a quick hack: we create a set of "fake" columns, fill
             // them with addRows(), and then return the coefficients
             // that came from these linear constraints.
-            std::array<std::vector<typename LPConstraint::Coefficient>,
-                LPConstraint::nConstraints> ans;
+            using Coefficient = typename Constraint::Coefficient;
+            using Col = regina::detail::LPCol<Constraint::nConstraints,
+                Coefficient>;
 
-            auto* col = new regina::LPCol<LPConstraint>[t.columns()];
-            LPConstraint::addRows(col, t);
-            for (int i = 0; i < LPConstraint::nConstraints; ++i) {
-                ans[i].reserve(t.columns());
-                for (size_t j = 0; j < t.columns(); ++j)
+            std::array<std::vector<Coefficient>, Constraint::nConstraints> ans;
+            regina::FixedArray<Col> col(columnPerm.size());
+            Constraint::addRows(col.begin(), tri, columnPerm.data());
+            for (int i = 0; i < Constraint::nConstraints; ++i) {
+                ans[i].reserve(columnPerm.size());
+                for (size_t j = 0; j < columnPerm.size(); ++j)
                     ans[i].push_back(col[j].extra[i]);
             }
-            delete[] col;
-
             return ans;
-        }, pybind11::arg("init"), rdoc::addRows)
-        .def_static("constrain", &LPConstraint::template constrain<Integer>,
+        }, pybind11::arg("tri"), pybind11::arg("columnPerm"), rdoc::addRows)
+        .def_static("constrain", &Constraint::template constrain<Integer>,
             rdoc::constrain)
         .def_static("verify", overload_cast<const regina::NormalSurface&>(
-            &LPConstraint::verify), rdoc::verify)
+            &Constraint::verify), rdoc::verify)
         .def_static("verify", overload_cast<const regina::AngleStructure&>(
-            &LPConstraint::verify), rdoc::verify_2)
-        .def_static("supported", &LPConstraint::supported, rdoc::supported)
+            &Constraint::verify), rdoc::verify_2)
+        .def_static("supported", &Constraint::supported, rdoc::supported)
         ;
     regina::python::no_eq_static(c);
 

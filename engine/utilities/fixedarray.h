@@ -44,12 +44,18 @@ namespace regina {
 
 /**
  * A lightweight fixed-size random-access array whose size can be provided at
- * runtime.  After construction, the size of the array cannot be changed.
+ * runtime.
  *
  * This class is intended to be used for temporary working arrays within the
  * implementations of algorithms: it is lightweight and provides the speed of
  * C-style arrays, but avoids the pitfalls of `new[]` and `delete[]`, instead
  * offering safe and simple stack-based memory mangement and exception safety.
+ *
+ * Typically the size of the array would be passed to the constructor and remain
+ * fixed from that point on.  After construction, the only way to change the
+ * size of the array is to replace its entire contents with those of some other
+ * FixedArray, via swap() or the move assignment operator (both of which are
+ * very fast operations).
  *
  * This class is very similar in nature to LightweightSequence, but was born
  * from different needs.  It is possible that these two classes will be unified
@@ -100,6 +106,17 @@ class FixedArray {
          * The type used for a signed distance between two iterators.
          */
         using difference_type = ptrdiff_t;
+
+        /**
+         * Constructs a new empty array.
+         *
+         * If you ever plan to give this array some real contents at a later
+         * stage, this will need to be done by transfer from some other
+         * FixedArray, using either swap() or the move assignment operator
+         * (both of which are very fast operations).
+         */
+        FixedArray() : data_(nullptr), size_(0) {
+        }
 
         /**
          * Constructs a new array of the given size.
