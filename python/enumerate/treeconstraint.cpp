@@ -55,10 +55,10 @@ using regina::LPConstraintNonSpun;
 
 template <regina::LPConstraint Constraint>
 void addLPConstraint(pybind11::module_& m, const char* name, const char* doc) {
-    RDOC_SCOPE_BEGIN(LPConstraintBase)
+    RDOC_SCOPE_BEGIN(LPConstraintAPI)
 
     auto c = pybind11::class_<Constraint>(m, name, doc)
-        .def_readonly_static("nConstraints", &Constraint::nConstraints)
+        .def_readonly_static("constraints", &Constraint::constraints)
         .def_readonly_static("octAdjustment", &Constraint::octAdjustment)
         .def_static("addRows", [](const Triangulation<3>& tri,
                 const std::vector<size_t>& columnPerm) {
@@ -69,21 +69,20 @@ void addLPConstraint(pybind11::module_& m, const char* name, const char* doc) {
             // them with addRows(), and then return the coefficients
             // that came from these linear constraints.
             using Coefficient = typename Constraint::Coefficient;
-            using Col = regina::detail::LPCol<Constraint::nConstraints,
+            using Col = regina::detail::LPCol<Constraint::constraints.size(),
                 Coefficient>;
 
-            std::array<std::vector<Coefficient>, Constraint::nConstraints> ans;
+            std::array<std::vector<Coefficient>,
+                Constraint::constraints.size()> ans;
             regina::FixedArray<Col> col(columnPerm.size());
             Constraint::addRows(col.begin(), tri, columnPerm.data());
-            for (int i = 0; i < Constraint::nConstraints; ++i) {
+            for (size_t i = 0; i < Constraint::constraints.size(); ++i) {
                 ans[i].reserve(columnPerm.size());
                 for (size_t j = 0; j < columnPerm.size(); ++j)
                     ans[i].push_back(col[j].extra[i]);
             }
             return ans;
         }, pybind11::arg("tri"), pybind11::arg("columnPerm"), rdoc::addRows)
-        .def_static("constrain", &Constraint::template constrain<Integer>,
-            rdoc::constrain)
         .def_static("verify", overload_cast<const regina::NormalSurface&>(
             &Constraint::verify), rdoc::verify)
         .def_static("verify", overload_cast<const regina::AngleStructure&>(

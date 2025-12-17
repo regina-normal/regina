@@ -60,7 +60,7 @@ template BanTorusBoundary::BanTorusBoundary(
     const LPInitialTableaux<LPConstraintNonSpun>&);
 
 void LPConstraintEulerPositive::addRows(
-        detail::LPCol<nConstraints, Coefficient>* col,
+        detail::LPCol<constraints.size(), Coefficient>* col,
         const Triangulation<3>& tri,
         const size_t* columnPerm) {
     int* obj = new int[7 * tri.size()];
@@ -96,7 +96,7 @@ void LPConstraintEulerPositive::addRows(
 }
 
 void LPConstraintEulerZero::addRows(
-        detail::LPCol<nConstraints, Coefficient>* col,
+        detail::LPCol<constraints.size(), Coefficient>* col,
         const Triangulation<3>& tri,
         const size_t* columnPerm) {
     int* obj = new int[7 * tri.size()];
@@ -132,7 +132,7 @@ void LPConstraintEulerZero::addRows(
 }
 
 void LPConstraintNonSpun::addRows(
-        detail::LPCol<nConstraints, Coefficient>* col,
+        detail::LPCol<constraints.size(), Coefficient>* col,
         const Triangulation<3>& tri,
         const size_t* columnPerm) {
     // Add the coefficients for the two new variables now.

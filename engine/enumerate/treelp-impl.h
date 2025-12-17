@@ -171,7 +171,7 @@ LPInitialTableaux<Constraint>::LPInitialTableaux(
     rank_ = regina::rowBasis(eqns_);
 
     // Reorder the columns using a good heuristic.
-    cols_ = eqns_.columns() + Constraint::nConstraints;
+    cols_ = eqns_.columns() + Constraint::constraints.size();
     columnPerm_ = FixedArray<size_t>(cols_);
     reorder(enumeration);
 
@@ -187,7 +187,7 @@ LPInitialTableaux<Constraint>::LPInitialTableaux(
 
     // Add in the final row(s) for any additional constraints.
     Constraint::addRows(col_.begin(), *tri_, columnPerm_.begin());
-    rank_ += Constraint::nConstraints;
+    rank_ += Constraint::constraints.size();
 }
 
 #ifdef REGINA_NOOPT_REORDER_COLUMNS
@@ -220,7 +220,7 @@ void LPInitialTableaux<Constraint>::reorder(bool) {
     // If we have extra variables for additional constraints or
     // objectives, append the corresponding entries to the end of
     // the permutation for completeness.
-    for (int i = 0; i < Constraint::nConstraints; ++i)
+    for (size_t i = 0; i < Constraint::constraints.size(); ++i)
         columnPerm_[cols_ - i - 1] = cols_ - i - 1;
 
     // At this point we have filled the columnPerm_ array.
@@ -421,7 +421,7 @@ void LPInitialTableaux<Constraint>::reorder(bool enumeration) {
     // If we have extra variables for additional constraints or
     // objectives, append the corresponding entries to the end of
     // the permutation for completeness.
-    for (int i = 0; i < Constraint::nConstraints; ++i)
+    for (size_t i = 0; i < Constraint::constraints.size(); ++i)
         columnPerm_[cols_ - i - 1] = cols_ - i - 1;
 
     // At this point we have filled the columnPerm_ array.
@@ -479,9 +479,9 @@ void LPInitialTableaux<Constraint>::writeTextShort(std::ostream& out) const {
             out << '}';
         }
     }
-    if constexpr (Constraint::nConstraints > 0) {
+    if constexpr (! Constraint::constraints.empty()) {
         out << ", constraints:";
-        for (int i = 0; i < Constraint::nConstraints; ++i) {
+        for (size_t i = 0; i < Constraint::constraints.size(); ++i) {
             out << " [";
             for (size_t c = 0; c < cols_; ++c)
                 out << ' ' << col_[c].extra[i];
@@ -525,8 +525,8 @@ void LPInitialTableaux<Constraint>::writeTextLong(std::ostream& out) const {
         }
         out << '\n';
     }
-    if constexpr (Constraint::nConstraints > 0) {
-        for (int i = 0; i < Constraint::nConstraints; ++i) {
+    if constexpr (! Constraint::constraints.empty()) {
+        for (size_t i = 0; i < Constraint::constraints.size(); ++i) {
             out << "Constraint " << i << ':';
             for (size_t c = 0; c < cols_; ++c)
                 out << ' ' << col_[c].extra[i];
@@ -556,7 +556,19 @@ void LPData<Constraint, IntType>::initStart() {
 
     // Finally, enforce our additional linear constraints.
     // This might break feasibility.
-    Constraint::constrain(*this, origTableaux_->columns());
+    if constexpr (! Constraint::constraints.empty()) {
+        size_t col = origTableaux_->columns() - Constraint::constraints.size();
+        for (auto c : Constraint::constraints) {
+            switch (c) {
+                case LPConstraintType::Zero:
+                    constrainZero(col++);
+                    break;
+                case LPConstraintType::Positive:
+                    constrainPositive(col++);
+                    break;
+            }
+        }
+    }
 }
 
 template <LPConstraint Constraint, ReginaInteger IntType>

@@ -11,6 +11,23 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::LPConstraintType
+static const char *LPConstraintType =
+R"doc(Indicates whether a linear constraint describes an equality or an
+inequality. This is used with Regina's linear programming machinery.)doc";
+
+namespace LPConstraintType_ {
+
+// Docstring regina::python::doc::LPConstraintType_::Positive
+static const char *Positive =
+R"doc(Indicates a constraint that requires some linear function to be
+strictly positive.)doc";
+
+// Docstring regina::python::doc::LPConstraintType_::Zero
+static const char *Zero = R"doc(Indicates a constraint that requires some linear function to be zero.)doc";
+
+}
+
 // Docstring regina::python::doc::LPData
 static const char *LPData =
 R"doc(Stores an intermediate tableaux for the dual simplex method, and

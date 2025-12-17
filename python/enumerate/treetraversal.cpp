@@ -69,7 +69,7 @@ void addTreeTraversalBase(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
-template <regina::LPConstraint Constraint,
+template <regina::LPSubspace Constraint,
     typename BanConstraint, typename... BanArgs>
 void addTreeEnumeration(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(TreeEnumeration)
@@ -97,7 +97,7 @@ void addTreeEnumeration(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
-template <regina::LPConstraint Constraint,
+template <regina::LPSubspace Constraint,
     typename BanConstraint, typename... BanArgs>
 void addTautEnumeration(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(TautEnumeration)
@@ -176,28 +176,20 @@ void addTreeTraversal(pybind11::module_& m) {
 
     addTreeEnumeration<LPConstraintNone, BanNone>(
         m, "TreeEnumeration");
-    addTreeEnumeration<LPConstraintEulerPositive, BanNone>(
-        m, "TreeEnumeration_EulerPositive");
     addTreeEnumeration<LPConstraintEulerZero, BanNone>(
         m, "TreeEnumeration_EulerZero");
     addTreeEnumeration<LPConstraintNonSpun, BanNone>(
         m, "TreeEnumeration_NonSpun");
     addTreeEnumeration<LPConstraintNone, BanBoundary>(
         m, "TreeEnumeration_BanBoundary");
-    addTreeEnumeration<LPConstraintEulerPositive, BanBoundary>(
-        m, "TreeEnumeration_EulerPositive_BanBoundary");
     addTreeEnumeration<LPConstraintEulerZero, BanBoundary>(
         m, "TreeEnumeration_EulerZero_BanBoundary");
     addTreeEnumeration<LPConstraintNone, BanEdge, regina::Edge<3>*>(
         m, "TreeEnumeration_BanEdge");
-    addTreeEnumeration<LPConstraintEulerPositive, BanEdge, regina::Edge<3>*>(
-        m, "TreeEnumeration_EulerPositive_BanEdge");
     addTreeEnumeration<LPConstraintEulerZero, BanEdge, regina::Edge<3>*>(
         m, "TreeEnumeration_EulerZero_BanEdge");
     addTreeEnumeration<LPConstraintNone, BanTorusBoundary>(
         m, "TreeEnumeration_BanTorusBoundary");
-    addTreeEnumeration<LPConstraintEulerPositive, BanTorusBoundary>(
-        m, "TreeEnumeration_EulerPositive_BanTorusBoundary");
     addTreeEnumeration<LPConstraintEulerZero, BanTorusBoundary>(
         m, "TreeEnumeration_EulerZero_BanTorusBoundary");
 

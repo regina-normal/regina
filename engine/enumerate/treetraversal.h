@@ -589,7 +589,7 @@ class TreeTraversal : public ShortOutput<
  * "vertex surface" is modified to mean a normal surface whose coordinates
  * lie on an extreme ray of the restricted solution cone under these additional
  * constraints (and whose coordinates are integers with no common divisor).
- * See the LPConstraintBase and BanConstraintBase class notes for details.
+ * See the LPConstraintAPI and BanConstraintBase documentation for details.
  *
  * Note that some constraint classes may cause the TreeEnumeration class
  * constructor to throw an exception; see the constructor documentation for
@@ -604,10 +604,8 @@ class TreeTraversal : public ShortOutput<
  * This class is designed to manage the execution of a significant enumeration
  * operation, and so it does not support copying, moving or swapping.
  *
- * \pre The parameter Constraint must be a subclass of LPConstraintSubspace,
- * and BanConstraint must be either BanNone or a subclass of BanConstraintBase.
- * Note in particular that the base class LPConstraintBase is not enough here.
- * See the LPConstraintSubspace and BanConstraintBase class notes for details.
+ * \pre The parameter BanConstraint must be either BanNone or a subclass of
+ * BanConstraintBase.  See the BanConstraintBase class notes for details.
  *
  * \warning Although the tree traversal algorithm can run in standard normal
  * or almost normal coordinates, this is not recommended: it is likely to be
@@ -639,7 +637,7 @@ class TreeTraversal : public ShortOutput<
  *
  * \ingroup enumerate
  */
-template <LPConstraint Constraint = LPConstraintNone,
+template <LPSubspace Constraint = LPConstraintNone,
           typename BanConstraint = BanNone,
           ReginaInteger IntType = Integer>
 class TreeEnumeration :
@@ -940,8 +938,8 @@ class TreeEnumeration :
  * By using appropriate template parameters \a Constraint and/or
  * \a BanConstraint, it is possible to impose additional linear constraints
  * on the angle structure solution space, and/or explicitly force particular
- * angles to be zero.  See the LPConstraintBase and BanConstraintBase
- * class notes for details.
+ * angles to be zero.  See the LPConstraintAPI and BanConstraintBase
+ * documentation for details.
  *
  * Note that some constraint classes may cause the TautEnumeration class
  * constructor to throw an exception; see the constructor documentation for
@@ -956,10 +954,8 @@ class TreeEnumeration :
  * This class is designed to manage the execution of a significant enumeration
  * operation, and so it does not support copying, moving or swapping.
  *
- * \pre The parameter Constraint must be a subclass of LPConstraintSubspace,
- * and BanConstraint must be either BanNone or a subclass of BanConstraintBase.
- * Note in particular that the base class LPConstraintBase is not enough here.
- * See the LPConstraintSubspace and BanConstraintBase class notes for details.
+ * \pre The parameter BanConstraint must be either BanNone or a subclass of
+ * BanConstraintBase.  See the BanConstraintBase class notes for details.
  *
  * \headers Parts of this template class are implemented in a separate header
  * (treetraversal-impl.h), which is not included automatically by this file.
@@ -977,7 +973,7 @@ class TreeEnumeration :
  *
  * \ingroup enumerate
  */
-template <LPConstraint Constraint = LPConstraintNone,
+template <LPSubspace Constraint = LPConstraintNone,
           typename BanConstraint = BanNone,
           ReginaInteger IntType = Integer>
 class TautEnumeration :
@@ -1600,8 +1596,7 @@ inline ssize_t TreeTraversal<Constraint, BanConstraint, IntType>::
         return startFrom;
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
+template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
 template <typename... BanArgs>
 inline TreeEnumeration<Constraint, BanConstraint, IntType>::TreeEnumeration(
         const Triangulation<3>& tri, NormalEncoding enc, BanArgs&&... banArgs) :
@@ -1614,15 +1609,13 @@ inline TreeEnumeration<Constraint, BanConstraint, IntType>::TreeEnumeration(
         lastNonZero_(-1) {
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
+template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
 inline size_t TreeEnumeration<Constraint, BanConstraint, IntType>::solutions()
         const {
     return nSolns_;
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
+template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
 template <typename Action, typename... Args>
 inline bool TreeEnumeration<Constraint, BanConstraint, IntType>::run(
         Action&& action, Args&&... args) {
@@ -1632,8 +1625,7 @@ inline bool TreeEnumeration<Constraint, BanConstraint, IntType>::run(
     return false;
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
+template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
 inline bool TreeEnumeration<Constraint, BanConstraint, IntType>::writeTypes(
         const TreeEnumeration& tree) {
     std::cout << "SOLN #" << tree.solutions() << ": ";
@@ -1642,8 +1634,7 @@ inline bool TreeEnumeration<Constraint, BanConstraint, IntType>::writeTypes(
     return false;
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
+template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
 inline bool TreeEnumeration<Constraint, BanConstraint, IntType>::
         writeSurface(const TreeEnumeration& tree) {
     std::cout << "SOLN #" << tree.solutions() << ": ";
@@ -1651,8 +1642,7 @@ inline bool TreeEnumeration<Constraint, BanConstraint, IntType>::
     return false;
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
+template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
 template <typename... BanArgs>
 inline TautEnumeration<Constraint, BanConstraint, IntType>::TautEnumeration(
         const Triangulation<3>& tri, BanArgs&&... banArgs) :
@@ -1665,15 +1655,13 @@ inline TautEnumeration<Constraint, BanConstraint, IntType>::TautEnumeration(
         nSolns_(0) {
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
+template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
 inline size_t TautEnumeration<Constraint, BanConstraint, IntType>::
         solutions() const {
     return nSolns_;
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
+template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
 template <typename Action, typename... Args>
 inline bool TautEnumeration<Constraint, BanConstraint, IntType>::run(
         Action&& action, Args&&... args) {
@@ -1683,8 +1671,7 @@ inline bool TautEnumeration<Constraint, BanConstraint, IntType>::run(
     return false;
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
+template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
 inline bool TautEnumeration<Constraint, BanConstraint, IntType>::writeTypes(
         const TautEnumeration& tree) {
     std::cout << "SOLN #" << tree.solutions() << ": ";
@@ -1693,8 +1680,7 @@ inline bool TautEnumeration<Constraint, BanConstraint, IntType>::writeTypes(
     return false;
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
+template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
 inline bool TautEnumeration<Constraint, BanConstraint, IntType>::
         writeStructure(const TautEnumeration& tree) {
     std::cout << "SOLN #" << tree.solutions() << ": ";

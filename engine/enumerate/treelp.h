@@ -38,6 +38,7 @@
 #endif
 
 #include "regina-core.h"
+#include "concepts/array.h"
 #include "concepts/maths.h"
 #include "maths/integer.h"
 #include "maths/matrix.h"
@@ -55,19 +56,78 @@
 
 namespace regina {
 
-class LPConstraintBase;
+class AngleStructure;
+class NormalSurface;
+namespace detail { template <int, typename> class LPCol; }
+
+/**
+ * Indicates whether a linear constraint describes an equality or an inequality.
+ * This is used with Regina's linear programming machinery.
+ *
+ * \ingroup enumerate
+ */
+enum class LPConstraintType {
+    /**
+     * Indicates a constraint that requires some linear function to be zero.
+     *
+     * A constraint of this type would typically be enforced by calling
+     * LPData::constrainZero().
+     */
+    Zero = 0,
+    /**
+     * Indicates a constraint that requires some linear function to be
+     * strictly positive.
+     *
+     * A constraint of this type would typically be enforced by calling
+     * LPData::constrainPositive().
+     */
+    Positive = 1
+};
 
 /**
  * Represents a set of additional linear constraints that we can add to the
  * tableaux of normal surface or angle structure matching equations.
  * This concept is used with Regina's linear programming machinery.
  *
- * See LPConstraintBase for further information.
+ * See LPConstraintAPI for further information.
  *
  * \ingroup enumerate
  */
 template <typename T>
-concept LPConstraint = std::derived_from<T, LPConstraintBase>;
+concept LPConstraint =
+    requires(const Triangulation<3> tri, const NormalSurface surface,
+            const AngleStructure structure, const NormalEncoding enc) {
+        { T::constraints } -> ConstRefArrayOf<LPConstraintType>;
+        typename T::Coefficient;
+        requires SignedCppInteger<typename T::Coefficient>;
+        { T::octAdjustment } -> std::same_as<const typename T::Coefficient&>;
+
+        { T::addRows(
+            (detail::LPCol<T::constraints.size(),
+                typename T::Coefficient>*)(nullptr),
+            tri, (const size_t*)(nullptr)) };
+        { T::verify(surface) } -> std::same_as<bool>;
+        { T::verify(structure) } -> std::same_as<bool>;
+        { T::supported(enc) } -> std::same_as<bool>;
+    };
+
+/**
+ * Represents a set of additional homogeneous linear equality constraints that
+ * we can add to the tableaux of normal surface or angle structure matching
+ * equations.  This concept is used with Regina's linear programming machinery.
+ *
+ * The concept LPSubspace essentially refines LPConstraint to ensure that the
+ * additional linear constraints carve out a linear subspace of `R^n`.
+ *
+ * See LPConstraintAPI for further information.
+ *
+ * \ingroup enumerate
+ */
+template <typename T>
+concept LPSubspace =
+    LPConstraint<T> &&
+    std::count(T::constraints.begin(), T::constraints.end(),
+        LPConstraintType::Zero) == T::constraints.size();
 
 /**
  * A matrix class for use with linear programming.
@@ -540,7 +600,7 @@ struct LPCol {
              linear constraint (typically described by an LPConstraint type). */
 
     /**
-     * Initialises an empty column.
+     * Initialises an empty column, with all entries equal to zero.
      */
     inline LPCol() : nPlus(0), nMinus(0) {
         if constexpr (nConstraints > 0) {
@@ -804,10 +864,11 @@ class LPSystem : public ShortOutput<LPSystem> {
  *
  * There is also optional support for adding extra linear constraints (such as
  * a constraint on Euler characteristic for normal surfaces).  These extra
- * constraints are supplied by the template parameter \a Constraint,
- * and will generate Constraint::nConstraints additional rows and columns
- * (used by the additional variables that evaluate the corresponding linear
- * functions).  If there are no additional constraints, simply use the
+ * constraints are supplied by the template parameter \a Constraint, and will
+ * generate additional rows and columns (one for each element of the array
+ * `Constraint::constraints`).  These additional rows and columns will be
+ * used by the additional variables that evaluate the corresponding linear
+ * functions.  If there are no additional constraints, simply use the
  * template parameter LPConstraintNone.
  *
  * For some \a Constraint template arguments, Regina may discover at runtime
@@ -867,7 +928,7 @@ class LPSystem : public ShortOutput<LPSystem> {
 template <LPConstraint Constraint>
 class LPInitialTableaux : public Output<LPInitialTableaux<Constraint>> {
     private:
-        using Col = detail::LPCol<Constraint::nConstraints,
+        using Col = detail::LPCol<Constraint::constraints.size(),
                 typename Constraint::Coefficient>;
             /**< The type used to store an individual column of this adjusted
                  matrix in sparse form. */
@@ -2150,9 +2211,9 @@ inline IntType LPInitialTableaux<Constraint>::multColByRow(
             ans += m.entry(mRow, col_[thisCol].plus[i]);
         for (int i = 0; i < col_[thisCol].nMinus; ++i)
             ans -= m.entry(mRow, col_[thisCol].minus[i]);
-        for (int i = 0; i < Constraint::nConstraints; ++i)
-            ans += m.entry(mRow, m.rows() - Constraint::nConstraints + i) *
-                col_[thisCol].extra[i];
+        for (size_t i = 0; i < Constraint::constraints.size(); ++i)
+            ans += m.entry(mRow, m.rows() - Constraint::constraints.size() + i)
+                * col_[thisCol].extra[i];
         return ans;
     }
 }
@@ -2169,8 +2230,8 @@ inline IntType LPInitialTableaux<Constraint>::multColByRowOct(
         ans += m.entry(mRow, col_[thisCol].plus[i]);
     for (int i = 0; i < col_[thisCol].nMinus; ++i)
         ans -= m.entry(mRow, col_[thisCol].minus[i]);
-    for (int i = 0; i < Constraint::nConstraints; ++i)
-        ans += m.entry(mRow, m.rows() - Constraint::nConstraints + i) *
+    for (size_t i = 0; i < Constraint::constraints.size(); ++i)
+        ans += m.entry(mRow, m.rows() - Constraint::constraints.size() + i) *
             (col_[thisCol].extra[i] + Constraint::octAdjustment);
     return ans;
 }
@@ -2187,8 +2248,8 @@ inline void LPInitialTableaux<Constraint>::fillInitialTableaux(
 
         // Don't forget any additional constraints that we added
         // as final rows to the matrix.
-        for (int i = 0; i < Constraint::nConstraints; ++i)
-            m.entry(m.rows() - Constraint::nConstraints + i, c) =
+        for (size_t i = 0; i < Constraint::constraints.size(); ++i)
+            m.entry(m.rows() - Constraint::constraints.size() + i, c) =
                 col_[c].extra[i];
     }
 

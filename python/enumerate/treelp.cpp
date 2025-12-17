@@ -30,6 +30,9 @@
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#if REGINA_PYBIND11_VERSION == 3
+#include <pybind11/native_enum.h>
+#endif
 #include "enumerate/treelp.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
@@ -141,7 +144,22 @@ void addLPData(pybind11::module_& m, const char* name) {
 }
 
 void addTreeLP(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(LPMatrix)
+    RDOC_SCOPE_BEGIN(LPConstraintType)
+
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<regina::LPConstraintType>(m, "LPConstraintType",
+        "enum.Enum", rdoc_scope)
+#elif REGINA_PYBIND11_VERSION == 2
+    pybind11::enum_<regina::LPConstraintType>(m, "LPConstraintType", rdoc_scope)
+#endif
+        .value("Zero", regina::LPConstraintType::Zero, rdoc::Zero)
+        .value("Positive", regina::LPConstraintType::Positive, rdoc::Positive)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
+        ;
+
+    RDOC_SCOPE_SWITCH(LPMatrix)
 
     auto c = pybind11::class_<LPMatrix<Integer>>(m, "LPMatrix", rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)

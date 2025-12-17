@@ -4,6 +4,7 @@
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    array.h
     core.h
     io.h
     iterator.h

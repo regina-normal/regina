@@ -1406,6 +1406,7 @@
 		05A0673F1DFA68190047872E /* trivialtri.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A067051DFA68190047872E /* trivialtri.h */; };
 		05A067401DFA68190047872E /* txicore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A067061DFA68190047872E /* txicore.cpp */; };
 		05A067411DFA68190047872E /* txicore.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A067071DFA68190047872E /* txicore.h */; };
+		05A1C55B2EF37050004A309E /* array.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A1C55A2EF37050004A309E /* array.h */; };
 		05A628112AE91FA70049739E /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B4D2D4229F42D600B7B11C /* engine.cpp */; };
 		05A628122AE91FDA0049739E /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E5F180600FB00FAE4DF /* base64.cpp */; };
 		05A628132AE920470049739E /* i18nutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E65180600FB00FAE4DF /* i18nutils.cpp */; };
@@ -4134,6 +4135,7 @@
 		05A067051DFA68190047872E /* trivialtri.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trivialtri.h; sourceTree = "<group>"; };
 		05A067061DFA68190047872E /* txicore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = txicore.cpp; sourceTree = "<group>"; };
 		05A067071DFA68190047872E /* txicore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = txicore.h; sourceTree = "<group>"; };
+		05A1C55A2EF37050004A309E /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		05A47F971809CB7600F86BFD /* closed-hyp-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census.rga"; sourceTree = "<group>"; };
 		05A47F981809CB7600F86BFD /* closed-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-nor-census.rga"; sourceTree = "<group>"; };
 		05A47F9A1809CB7600F86BFD /* closed-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-or-census.rga"; sourceTree = "<group>"; };
@@ -8143,6 +8145,7 @@
 			isa = PBXGroup;
 			children = (
 				057FDAF42EE7ACC3000C706E /* CMakeLists.txt */,
+				05A1C55A2EF37050004A309E /* array.h */,
 				057FDAF52EE7ACC3000C706E /* core.h */,
 				057FDAFD2EE95CBB000C706E /* io.h */,
 				057FDB042EEB6E58000C706E /* iterator.h */,
@@ -8973,6 +8976,7 @@
 				05F09FD41DBF01B600117BFC /* component2.h in Headers */,
 				05772ED0270CF9F900D26D8A /* fileformat.h in Headers */,
 				052F9FDD180600FB00FAE4DF /* SnapPy.h in Headers */,
+				05A1C55B2EF37050004A309E /* array.h in Headers */,
 				05B44D1521914FA300B1D343 /* binom.h in Headers */,
 				052F9F8B180600FB00FAE4DF /* isometry.h in Headers */,
 				0512E09926DF352D00DDB222 /* satregion-impl.h in Headers */,

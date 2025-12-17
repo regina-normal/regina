@@ -36,10 +36,21 @@ Version 7.5  [ TODO ]
               no need to refer to LPCol<...> at all.
         Class LPConstraint...:
             - All linear programming constraint classes must now adhere to the
-              concept LPConstraint.
+              new concept LPConstraint.
+            - The constant nConstraints and the routine constrain() are both
+              removed, and replaced with the class constant array constraints[].
             - The arguments to addRows() have changed: it no longer takes an
               initial tableaux, but instead takes the relevant triangulation
               and column permutation.
+        Class LPConstraintAPI, LPConstraintBase, LPConstraintSubspace:
+            - The old base classes LPConstraintBase and LPConstraintSubspace
+              are now deprecated, and should no longer be used.  Instead they
+              have been replaced with the new concepts LPConstraint and
+              LPSubspace that the relevant constraint types should adhere to.
+              See also the new documentation-only class LPConstraintAPI for
+              details on how a linear programming constraint type should behave.
+        Enum LPConstraintType:
+            - New enumeration for use with the various LPConstraint classes.
         Class LPInitialTableaux<Constraint>:
             - Removed the copy assignment operator (since this class now uses
               FixedArray internally, which is not copy-assignable).  If you
@@ -81,15 +92,22 @@ Version 7.5  [ TODO ]
         Concepts:
             - Many new concepts, accessible via #include <concepts/*.h>:
               + ArbitraryPrecisionInteger, ArbitraryPrecisionIntegerVector,
-                AssignableTo, BidirectionalIteratorFor, CanConstruct,
-                CharIterator, CoefficientDomain, CppInteger, Domain,
-                ForwardIteratorFor, InherentlyTightEncodable, InputIteratorFor,
-                IntegerComparable, IntegerCompatible, IntegerVector,
-                IntegralDomain, Iterable, PacketClass, PacketIterator,
-                RandomAccessIteratorFor, ReginaBitmask, ReginaInteger, Ring,
-                RingLike, SelfSentinelInputIterator, SignedCppInteger,
-                StandardCppInteger, Stringifiable, UnsignedCppInteger,
-                Writeable.
+                ArrayOf, AssignableTo, BidirectionalIteratorFor, CanConstruct,
+                CharIterator, CoefficientDomain, ConstRefArrayOf, CppInteger,
+                Domain, ForwardIteratorFor, InherentlyTightEncodable,
+                InputIteratorFor, IntegerComparable, IntegerCompatible,
+                IntegerVector, IntegralDomain, Iterable, PacketClass,
+                PacketIterator, RandomAccessIteratorFor, ReginaBitmask,
+                ReginaInteger, Ring, RingLike, SelfSentinelInputIterator,
+                SignedCppInteger, StandardCppInteger, Stringifiable,
+                UnsignedCppInteger, Writeable.
+            - Other new concepts for targeted use defined in other headers:
+              + LPConstraint, LPSubspace (defined in enumerate/treelp.h)
+    PYTHON:
+        - Removed the bindings TreeEnumeration_EulerPositive..., since the
+          linear constraint LPConstraintEulerPositive was never meant to be
+          used with TreeEnumeration (since the constraint does not map out a
+          linear subspace).
 
 Version 7.4.1  [ 30 November, 2025 ]
 

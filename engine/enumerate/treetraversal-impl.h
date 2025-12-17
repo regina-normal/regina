@@ -299,8 +299,7 @@ double TreeTraversal<Constraint, BanConstraint, IntType>::percent() const {
     return percent;
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
+template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
 bool TreeEnumeration<Constraint, BanConstraint, IntType>::next(
         ProgressTracker* tracker) {
     if (lastNonZero_ < 0) {
@@ -676,8 +675,7 @@ bool TreeEnumeration<Constraint, BanConstraint, IntType>::next(
     return false;
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
+template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
 bool TautEnumeration<Constraint, BanConstraint, IntType>::next(
         ProgressTracker* tracker) {
     // Note that for taut angle structures we have no domination test and
