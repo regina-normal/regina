@@ -102,7 +102,8 @@ Version 7.5  [ TODO ]
                 SignedCppInteger, StandardCppInteger, Stringifiable,
                 UnsignedCppInteger, Writeable.
             - Other new concepts for targeted use defined in other headers:
-              + LPConstraint, LPSubspace (defined in enumerate/treelp.h)
+              + BanConstraint, LPConstraint, LPSubspace (defined in
+                enumerate/treelp.h)
     PYTHON:
         - Removed the bindings TreeEnumeration_EulerPositive..., since the
           linear constraint LPConstraintEulerPositive was never meant to be

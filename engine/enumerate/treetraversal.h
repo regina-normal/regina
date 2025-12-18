@@ -137,9 +137,6 @@ class ProgressTracker;
  * significant enumeration and search operations, and so this class does not
  * support copying, moving or swapping.
  *
- * \pre The parameter BanConstraint must either BanNone or a subclass of
- * BanConstraintBase.  See the BanConstraintBase class notes for details.
- *
  * \headers Parts of this template class are implemented in a separate header
  * (treetraversal-impl.h), which is not included automatically by this file.
  * Most end users should not need this extra header, since Regina's calculation
@@ -152,20 +149,19 @@ class ProgressTracker;
  * and TreeSingleSoln, each of which offers a more useful interface for
  * solving different type of problems.  The variants of this TreeTraversal
  * base class that are available in Python have Python names of the form
- * TreeTraversal_<i>Constraint</i>_<i>BanConstraint</i>,
- * where the suffixes \a Constraint and \a BanConstraint are abbreviated
- * versions of the corresponding template parameters; these suffixes are
- * omitted entirely for the common cases LPConstraintNone and BanNone.
- * In all cases, the IntType parameter is taken to be regina::Integer.
+ * TreeTraversal_<i>Constraint</i>_<i>Ban</i>, where the suffixes
+ * \a Constraint and \a Ban are abbreviated versions of the corresponding
+ * template parameters; these suffixes are omitted entirely for the common
+ * cases LPConstraintNone and BanNone.  In all cases, the \a IntType parameter
+ * is taken to be regina::Integer.
  *
  * \apinotfinal
  *
  * \ingroup enumerate
  */
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
-class TreeTraversal : public ShortOutput<
-        TreeTraversal<Constraint, BanConstraint, IntType>> {
+template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
+class TreeTraversal :
+        public ShortOutput<TreeTraversal<Constraint, Ban, IntType>> {
     protected:
         // Global information about the search:
         const LPInitialTableaux<Constraint> origTableaux_;
@@ -177,7 +173,7 @@ class TreeTraversal : public ShortOutput<
                  that we are using for our enumeration task.
                  Note that the tableaux will _not_ necessarily use this
                  same encoding; see LPInitialTableaux for details. */
-        const BanConstraint ban_;
+        const Ban ban_;
             /**< Details of any banning/marking constraints that are in use. */
         const size_t nTets_;
             /**< The number of tetrahedra in the underlying triangulation. */
@@ -452,8 +448,8 @@ class TreeTraversal : public ShortOutput<
          * If the underlying coordinate system does not support triangles
          * then this argument will be ignored.
          * \param banArgs any additional arguments to be passed to the
-         * BanConstraint constructor, after the initial starting tableaux.
-         * For most ban constrainst classes, this list of arguments is empty.
+         * constructor for \a Ban, after the initial starting tableaux.
+         * For most ban constraint classes, this list of arguments is empty.
          * \param enumeration \c true if we should optimise the tableaux
          * for a full enumeration of vertex surfaces or taut angle structures,
          * or \c false if we should optimise the tableaux for an existence test
@@ -582,14 +578,14 @@ class TreeTraversal : public ShortOutput<
  * but we only allow at most one octagon _type_ in the entire triangulation.
  * No coordinate systems other than these are supported.
  *
- * By using appropriate template parameters \a Constraint and/or
- * \a BanConstraint, it is possible to impose additional linear
- * constraints on the normal surface solution cone, and/or explicitly force
- * particular normal coordinates to zero.  In this case, the notion of
- * "vertex surface" is modified to mean a normal surface whose coordinates
- * lie on an extreme ray of the restricted solution cone under these additional
- * constraints (and whose coordinates are integers with no common divisor).
- * See the LPConstraintAPI and BanConstraintBase documentation for details.
+ * By using appropriate template parameters \a Constraint and/or \a Ban,
+ * it is possible to impose additional linear constraints on the normal surface
+ * solution cone, and/or explicitly force particular normal coordinates to zero.
+ * In this case, the notion of "vertex surface" is modified to mean a normal
+ * surface whose coordinates lie on an extreme ray of the restricted solution
+ * cone under these additional constraints (and whose coordinates are integers
+ * with no common divisor).  See the LPConstraintAPI and BanConstraintBase
+ * documentation for details.
  *
  * Note that some constraint classes may cause the TreeEnumeration class
  * constructor to throw an exception; see the constructor documentation for
@@ -603,9 +599,6 @@ class TreeTraversal : public ShortOutput<
  *
  * This class is designed to manage the execution of a significant enumeration
  * operation, and so it does not support copying, moving or swapping.
- *
- * \pre The parameter BanConstraint must be either BanNone or a subclass of
- * BanConstraintBase.  See the BanConstraintBase class notes for details.
  *
  * \warning Although the tree traversal algorithm can run in standard normal
  * or almost normal coordinates, this is not recommended: it is likely to be
@@ -623,14 +616,14 @@ class TreeTraversal : public ShortOutput<
  *
  * \python This is a heavily templated class; nevertheless, many variants
  * are now made available to Python users.  Each class name is of the form
- * TreeEnumeration_<i>Constraint</i>_<i>BanConstraint</i>, where the suffixes
- * \a Constraint and \a BanConstraint are abbreviated versions of the
+ * TreeEnumeration_<i>Constraint</i>_<i>Ban</i>, where the suffixes
+ * \a Constraint and \a Ban are abbreviated versions of the
  * corresponding template parameters; these suffixes are omitted entirely for
  * the common cases LPConstraintNone and BanNone.  As an example, to enumerate
  * non-spun normal surfaces in an ideal 3-manifold triangulation, you would
  * use the Python class \c TreeEnumeration_NonSpun.  You are encouraged
  * to look through the Regina namespace to see which combinations of
- * constraint classes are supported under Python.  In all cases, the IntType
+ * constraint classes are supported under Python.  In all cases, the \a IntType
  * parameter is taken to be regina::Integer.
  *
  * \apinotfinal
@@ -638,35 +631,33 @@ class TreeTraversal : public ShortOutput<
  * \ingroup enumerate
  */
 template <LPSubspace Constraint = LPConstraintNone,
-          typename BanConstraint = BanNone,
+          BanConstraint Ban = BanNone,
           ReginaInteger IntType = Integer>
-class TreeEnumeration :
-        public TreeTraversal<Constraint, BanConstraint, IntType> {
+class TreeEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
     public:
-        using TreeTraversal<Constraint, BanConstraint, IntType>::dumpTypes;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::typeString;
+        using TreeTraversal<Constraint, Ban, IntType>::dumpTypes;
+        using TreeTraversal<Constraint, Ban, IntType>::typeString;
 
     protected:
         // Since we have a template base class, we need to explicitly
         // list the inherited member variables that we use.
         // Note that these are all protected in the base class, and so
         // we are not changing any access restrictions here.
-        using TreeTraversal<Constraint, BanConstraint, IntType>::ban_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::level_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::lp_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::lpSlot_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::nextSlot_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::nTets_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::nTypes_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::nVisited_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::octLevel_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::type_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::typeOrder_;
+        using TreeTraversal<Constraint, Ban, IntType>::ban_;
+        using TreeTraversal<Constraint, Ban, IntType>::level_;
+        using TreeTraversal<Constraint, Ban, IntType>::lp_;
+        using TreeTraversal<Constraint, Ban, IntType>::lpSlot_;
+        using TreeTraversal<Constraint, Ban, IntType>::nextSlot_;
+        using TreeTraversal<Constraint, Ban, IntType>::nTets_;
+        using TreeTraversal<Constraint, Ban, IntType>::nTypes_;
+        using TreeTraversal<Constraint, Ban, IntType>::nVisited_;
+        using TreeTraversal<Constraint, Ban, IntType>::octLevel_;
+        using TreeTraversal<Constraint, Ban, IntType>::type_;
+        using TreeTraversal<Constraint, Ban, IntType>::typeOrder_;
 
-        using TreeTraversal<Constraint, BanConstraint, IntType>::
-            feasibleBranches;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::percent;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::setNext;
+        using TreeTraversal<Constraint, Ban, IntType>::feasibleBranches;
+        using TreeTraversal<Constraint, Ban, IntType>::percent;
+        using TreeTraversal<Constraint, Ban, IntType>::setNext;
 
     private:
         TypeTrie<7> solns_;
@@ -706,9 +697,9 @@ class TreeEnumeration :
          *
          * \pre The given triangulation is non-empty.
          *
-         * \pre Both the trianglation and the given vector encoding
-         * adhere to any preconditions required by the template
-         * parameters Constraint and BanConstraint.
+         * \pre Both the trianglation and the given vector encoding adhere to
+         * any preconditions required by the template parameters \a Constraint
+         * and \a Ban.
          *
          * \exception InvalidArgument It was not possible to add the extra
          * constraints from the LPConstraint template argument, due to an
@@ -729,8 +720,8 @@ class TreeEnumeration :
          * \param enc the normal (or almost normal) surface vector encoding
          * that we are working with.
          * \param banArgs any additional arguments to be passed to the
-         * BanConstraint constructor, after the initial starting tableaux.
-         * For most ban constrainst classes, this list of arguments is empty.
+         * constructor for \a Ban, after the initial starting tableaux.
+         * For most ban constraint classes, this list of arguments is empty.
          */
         template <typename... BanArgs>
         TreeEnumeration(const Triangulation<3>& tri, NormalEncoding enc,
@@ -935,11 +926,10 @@ class TreeEnumeration :
  * repeatedly call next() to step through each taut angle structure one at
  * a time.  This allows you to pause and resume the search as you please.
  *
- * By using appropriate template parameters \a Constraint and/or
- * \a BanConstraint, it is possible to impose additional linear constraints
- * on the angle structure solution space, and/or explicitly force particular
- * angles to be zero.  See the LPConstraintAPI and BanConstraintBase
- * documentation for details.
+ * By using appropriate template parameters \a Constraint and/or \a Ban, it is
+ * possible to impose additional linear constraints on the angle structure
+ * solution space, and/or explicitly force particular angles to be zero.
+ * See the LPConstraintAPI and BanConstraintBase documentation for details.
  *
  * Note that some constraint classes may cause the TautEnumeration class
  * constructor to throw an exception; see the constructor documentation for
@@ -954,9 +944,6 @@ class TreeEnumeration :
  * This class is designed to manage the execution of a significant enumeration
  * operation, and so it does not support copying, moving or swapping.
  *
- * \pre The parameter BanConstraint must be either BanNone or a subclass of
- * BanConstraintBase.  See the BanConstraintBase class notes for details.
- *
  * \headers Parts of this template class are implemented in a separate header
  * (treetraversal-impl.h), which is not included automatically by this file.
  * Most end users should not need this extra header, since Regina's calculation
@@ -964,44 +951,42 @@ class TreeEnumeration :
  * template arguments.
  *
  * \python This is a heavily templated class; however, the only
- * \a Constraint and \a BanConstraint options currently offered for
- * angle structures are the default LPConstraintNone and BanNone.
- * Therefore Python offers just one instance of this class (with all template
- * arguments set to their defaults), under the name \c TautEnumeration.
+ * \a Constraint and \a Ban options currently offered for angle structures are
+ * the default LPConstraintNone and BanNone.  Therefore Python offers just one
+ * instance of this class (with all template arguments set to their defaults),
+ * under the name \c TautEnumeration.
  *
  * \apinotfinal
  *
  * \ingroup enumerate
  */
 template <LPSubspace Constraint = LPConstraintNone,
-          typename BanConstraint = BanNone,
+          BanConstraint Ban = BanNone,
           ReginaInteger IntType = Integer>
-class TautEnumeration :
-        public TreeTraversal<Constraint, BanConstraint, IntType> {
+class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
     public:
-        using TreeTraversal<Constraint, BanConstraint, IntType>::dumpTypes;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::typeString;
+        using TreeTraversal<Constraint, Ban, IntType>::dumpTypes;
+        using TreeTraversal<Constraint, Ban, IntType>::typeString;
 
     protected:
         // Since we have a template base class, we need to explicitly
         // list the inherited member variables that we use.
         // Note that these are all protected in the base class, and so
         // we are not changing any access restrictions here.
-        using TreeTraversal<Constraint, BanConstraint, IntType>::ban_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::level_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::lp_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::lpSlot_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::nextSlot_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::nTets_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::nTypes_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::nVisited_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::
-            origTableaux_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::type_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::typeOrder_;
+        using TreeTraversal<Constraint, Ban, IntType>::ban_;
+        using TreeTraversal<Constraint, Ban, IntType>::level_;
+        using TreeTraversal<Constraint, Ban, IntType>::lp_;
+        using TreeTraversal<Constraint, Ban, IntType>::lpSlot_;
+        using TreeTraversal<Constraint, Ban, IntType>::nextSlot_;
+        using TreeTraversal<Constraint, Ban, IntType>::nTets_;
+        using TreeTraversal<Constraint, Ban, IntType>::nTypes_;
+        using TreeTraversal<Constraint, Ban, IntType>::nVisited_;
+        using TreeTraversal<Constraint, Ban, IntType>::origTableaux_;
+        using TreeTraversal<Constraint, Ban, IntType>::type_;
+        using TreeTraversal<Constraint, Ban, IntType>::typeOrder_;
 
-        using TreeTraversal<Constraint, BanConstraint, IntType>::percent;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::setNext;
+        using TreeTraversal<Constraint, Ban, IntType>::percent;
+        using TreeTraversal<Constraint, Ban, IntType>::setNext;
 
     private:
         size_t nSolns_;
@@ -1023,7 +1008,7 @@ class TautEnumeration :
          * \pre The given triangulation is non-empty.
          *
          * \pre The trianglation adheres to any preconditions required by the
-         * template parameters Constraint and BanConstraint.
+         * template parameters \a Constraint and \a Ban.
          *
          * \exception InvalidArgument It was not possible to add the extra
          * constraints from the LPConstraint template argument, due to an
@@ -1042,8 +1027,8 @@ class TautEnumeration :
          * \param tri the triangulation in which we wish to enumerate
          * taut angle structures.
          * \param banArgs any additional arguments to be passed to the
-         * BanConstraint constructor, after the initial starting tableaux.
-         * For most ban constrainst classes, this list of arguments is empty.
+         * constructor for \a Ban, after the initial starting tableaux.
+         * For most ban constraint classes, this list of arguments is empty.
          */
         template <typename... BanArgs>
         TautEnumeration(const Triangulation<3>& tri, BanArgs&&... banArgs);
@@ -1233,7 +1218,7 @@ class TautEnumeration :
  * The main entry point for the tree traversal / branching algorithm to locate
  * a single non-trivial normal surface satisfying given constraints within
  * a 3-manifold triangulation.  The constraints are passed using a
- * combination of the template arguments Constraint and BanConstraint.
+ * combination of the template arguments \a Constraint and \a Ban.
  * Note that some constraint classes may cause the TreeSingleSoln class
  * constructor to throw an exception; see the constructor documentation for
  * details.
@@ -1315,9 +1300,6 @@ class TautEnumeration :
  * type 0 never appears, and that type 1 could indicate _either_ positive
  * quadrilaterals in the first position, or else no quadrilaterals at all.
  *
- * \pre The parameter BanConstraint must either BanNone or a subclass of
- * BanConstraintBase.  See the BanConstraintBase class notes for details.
- *
  * \headers Parts of this template class are implemented in a separate header
  * (treetraversal-impl.h), which is not included automatically by this file.
  * Most end users should not need this extra header, since Regina's calculation
@@ -1326,14 +1308,14 @@ class TautEnumeration :
  *
  * \python This is a heavily templated class; nevertheless, many variants
  * are now made available to Python users.  Each class name is of the form
- * TreeSingleSoln_<i>Constraint</i>_<i>BanConstraint</i>, where the suffixes
- * \a Constraint and \a BanConstraint are abbreviated versions of the
+ * TreeSingleSoln_<i>Constraint</i>_<i>Ban</i>, where the suffixes
+ * \a Constraint and \a Ban are abbreviated versions of the
  * corresponding template parameters; these suffixes are omitted entirely for
  * the common cases LPConstraintNone and BanNone.  As an example, to
  * find a normal disc or sphere in a 3-manifold triangulation, you would
  * use the Python class \c TreeSingleSoln_EulerPositive.  You are encouraged
  * to look through the Regina namespace to see which combinations of
- * constraint classes are supported under Python.  In all cases, the IntType
+ * constraint classes are supported under Python.  In all cases, the \a IntType
  * parameter is taken to be regina::Integer.
  *
  * \apinotfinal
@@ -1341,36 +1323,32 @@ class TautEnumeration :
  * \ingroup enumerate
  */
 template <LPConstraint Constraint = LPConstraintNone,
-          typename BanConstraint = BanNone,
+          BanConstraint Ban = BanNone,
           ReginaInteger IntType = Integer>
-class TreeSingleSoln :
-        public TreeTraversal<Constraint, BanConstraint, IntType> {
+class TreeSingleSoln : public TreeTraversal<Constraint, Ban, IntType> {
     public:
-        using TreeTraversal<Constraint, BanConstraint, IntType>::dumpTypes;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::typeString;
+        using TreeTraversal<Constraint, Ban, IntType>::dumpTypes;
+        using TreeTraversal<Constraint, Ban, IntType>::typeString;
 
     protected:
-        using TreeTraversal<Constraint, BanConstraint, IntType>::ban_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::level_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::lp_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::lpSlot_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::nextSlot_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::nTets_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::nTypes_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::nVisited_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::octLevel_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::
-            origTableaux_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::tmpLP_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::type_;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::typeOrder_;
+        using TreeTraversal<Constraint, Ban, IntType>::ban_;
+        using TreeTraversal<Constraint, Ban, IntType>::level_;
+        using TreeTraversal<Constraint, Ban, IntType>::lp_;
+        using TreeTraversal<Constraint, Ban, IntType>::lpSlot_;
+        using TreeTraversal<Constraint, Ban, IntType>::nextSlot_;
+        using TreeTraversal<Constraint, Ban, IntType>::nTets_;
+        using TreeTraversal<Constraint, Ban, IntType>::nTypes_;
+        using TreeTraversal<Constraint, Ban, IntType>::nVisited_;
+        using TreeTraversal<Constraint, Ban, IntType>::octLevel_;
+        using TreeTraversal<Constraint, Ban, IntType>::origTableaux_;
+        using TreeTraversal<Constraint, Ban, IntType>::tmpLP_;
+        using TreeTraversal<Constraint, Ban, IntType>::type_;
+        using TreeTraversal<Constraint, Ban, IntType>::typeOrder_;
 
-        using TreeTraversal<Constraint, BanConstraint, IntType>::
-            feasibleBranches;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::
-            nextUnmarkedTriangleType;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::percent;
-        using TreeTraversal<Constraint, BanConstraint, IntType>::setNext;
+        using TreeTraversal<Constraint, Ban, IntType>::feasibleBranches;
+        using TreeTraversal<Constraint, Ban, IntType>::nextUnmarkedTriangleType;
+        using TreeTraversal<Constraint, Ban, IntType>::percent;
+        using TreeTraversal<Constraint, Ban, IntType>::setNext;
 
     private:
         ssize_t nextZeroLevel_;
@@ -1400,9 +1378,9 @@ class TreeSingleSoln :
          *
          * \pre The given triangulation is non-empty.
          *
-         * \pre Both the trianglation and the given vector encoding
-         * adhere to any preconditions required by the template
-         * parameters Constraint and BanConstraint.
+         * \pre Both the trianglation and the given vector encoding adhere to
+         * any preconditions required by the template parameters \a Constraint
+         * and \a Ban.
          *
          * \exception InvalidArgument It was not possible to add the extra
          * constraints from the LPConstraint template argument, due to an
@@ -1423,8 +1401,8 @@ class TreeSingleSoln :
          * \param enc the normal (or almost normal) surface vector encoding
          * that we are working with.
          * \param banArgs any additional arguments to be passed to the
-         * BanConstraint constructor, after the initial starting tableaux.
-         * For most ban constrainst classes, this list of arguments is empty.
+         * constructor for \a Ban, after the initial starting tableaux.
+         * For most ban constraint classes, this list of arguments is empty.
          */
         template <typename... BanArgs>
         TreeSingleSoln(const Triangulation<3>& tri, NormalEncoding enc,
@@ -1483,42 +1461,35 @@ class TreeSingleSoln :
 
 // Inline functions
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
-inline bool TreeTraversal<Constraint, BanConstraint, IntType>::supported(
+template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
+inline bool TreeTraversal<Constraint, Ban, IntType>::supported(
         NormalEncoding enc) {
     return enc.valid() &&
-        Constraint::supported(enc) && BanConstraint::supported(enc);
+        Constraint::supported(enc) && Ban::supported(enc);
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
-inline size_t TreeTraversal<Constraint, BanConstraint, IntType>::visited()
-        const {
+template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
+inline size_t TreeTraversal<Constraint, Ban, IntType>::visited() const {
     return nVisited_;
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
-inline void TreeTraversal<Constraint, BanConstraint, IntType>::dumpTypes(
+template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
+inline void TreeTraversal<Constraint, Ban, IntType>::dumpTypes(
         std::ostream& out) const {
     for (size_t i = 0; i < nTypes_; ++i)
         out << static_cast<int>(type_[i]);
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
-inline std::string TreeTraversal<Constraint, BanConstraint, IntType>::
-        typeString() const {
+template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
+inline std::string TreeTraversal<Constraint, Ban, IntType>::typeString() const {
     std::ostringstream out;
     dumpTypes(out);
     return out.str();
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
-void TreeTraversal<Constraint, BanConstraint, IntType>::writeTextShort(
-        std::ostream& out) const {
+template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
+void TreeTraversal<Constraint, Ban, IntType>::writeTextShort(std::ostream& out)
+        const {
     out << "Level " << level_  << " of 0.." << (nTypes_-1) << ", types: ";
 
     // We assume the possible types are all single-digit.
@@ -1534,10 +1505,9 @@ void TreeTraversal<Constraint, BanConstraint, IntType>::writeTextShort(
     delete[] c;
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
+template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
 template <typename... BanArgs>
-TreeTraversal<Constraint, BanConstraint, IntType>::TreeTraversal(
+TreeTraversal<Constraint, Ban, IntType>::TreeTraversal(
         const Triangulation<3>& tri, NormalEncoding enc,
         int branchesPerQuad, int branchesPerTri, bool enumeration,
         BanArgs&&... banArgs) :
@@ -1583,9 +1553,8 @@ TreeTraversal<Constraint, BanConstraint, IntType>::TreeTraversal(
     tmpLP_[3].reserve(origTableaux_);
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
-inline ssize_t TreeTraversal<Constraint, BanConstraint, IntType>::
+template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
+inline ssize_t TreeTraversal<Constraint, Ban, IntType>::
         nextUnmarkedTriangleType(size_t startFrom) {
     while (startFrom < nTypes_ && ban_.marked(2 * nTets_ + startFrom))
         ++startFrom;
@@ -1596,11 +1565,11 @@ inline ssize_t TreeTraversal<Constraint, BanConstraint, IntType>::
         return startFrom;
 }
 
-template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
+template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
 template <typename... BanArgs>
-inline TreeEnumeration<Constraint, BanConstraint, IntType>::TreeEnumeration(
+inline TreeEnumeration<Constraint, Ban, IntType>::TreeEnumeration(
         const Triangulation<3>& tri, NormalEncoding enc, BanArgs&&... banArgs) :
-        TreeTraversal<Constraint, BanConstraint, IntType>(tri, enc,
+        TreeTraversal<Constraint, Ban, IntType>(tri, enc,
             (enc.storesOctagons() ? 7 : 4) /* branches per quad */,
             2 /* branches per triangle */,
             true /* enumeration */,
@@ -1609,24 +1578,23 @@ inline TreeEnumeration<Constraint, BanConstraint, IntType>::TreeEnumeration(
         lastNonZero_(-1) {
 }
 
-template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
-inline size_t TreeEnumeration<Constraint, BanConstraint, IntType>::solutions()
-        const {
+template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
+inline size_t TreeEnumeration<Constraint, Ban, IntType>::solutions() const {
     return nSolns_;
 }
 
-template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
+template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
 template <typename Action, typename... Args>
-inline bool TreeEnumeration<Constraint, BanConstraint, IntType>::run(
-        Action&& action, Args&&... args) {
+inline bool TreeEnumeration<Constraint, Ban, IntType>::run(Action&& action,
+        Args&&... args) {
     while (next())
         if (action(*this, std::forward<Args>(args)...))
             return true;
     return false;
 }
 
-template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
-inline bool TreeEnumeration<Constraint, BanConstraint, IntType>::writeTypes(
+template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
+inline bool TreeEnumeration<Constraint, Ban, IntType>::writeTypes(
         const TreeEnumeration& tree) {
     std::cout << "SOLN #" << tree.solutions() << ": ";
     tree.dumpTypes(std::cout);
@@ -1634,20 +1602,19 @@ inline bool TreeEnumeration<Constraint, BanConstraint, IntType>::writeTypes(
     return false;
 }
 
-template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
-inline bool TreeEnumeration<Constraint, BanConstraint, IntType>::
+template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
+inline bool TreeEnumeration<Constraint, Ban, IntType>::
         writeSurface(const TreeEnumeration& tree) {
     std::cout << "SOLN #" << tree.solutions() << ": ";
     std::cout << tree.buildSurface().str() << std::endl;
     return false;
 }
 
-template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
+template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
 template <typename... BanArgs>
-inline TautEnumeration<Constraint, BanConstraint, IntType>::TautEnumeration(
+inline TautEnumeration<Constraint, Ban, IntType>::TautEnumeration(
         const Triangulation<3>& tri, BanArgs&&... banArgs) :
-        TreeTraversal<Constraint, BanConstraint, IntType>(tri,
-            NormalCoords::Angle,
+        TreeTraversal<Constraint, Ban, IntType>(tri, NormalCoords::Angle,
             3 /* branches per quad */,
             0 /* branches per triangle; irrelevant here */,
             true /* enumeration */,
@@ -1655,24 +1622,23 @@ inline TautEnumeration<Constraint, BanConstraint, IntType>::TautEnumeration(
         nSolns_(0) {
 }
 
-template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
-inline size_t TautEnumeration<Constraint, BanConstraint, IntType>::
-        solutions() const {
+template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
+inline size_t TautEnumeration<Constraint, Ban, IntType>::solutions() const {
     return nSolns_;
 }
 
-template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
+template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
 template <typename Action, typename... Args>
-inline bool TautEnumeration<Constraint, BanConstraint, IntType>::run(
-        Action&& action, Args&&... args) {
+inline bool TautEnumeration<Constraint, Ban, IntType>::run(Action&& action,
+        Args&&... args) {
     while (next())
         if (action(*this, std::forward<Args>(args)...))
             return true;
     return false;
 }
 
-template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
-inline bool TautEnumeration<Constraint, BanConstraint, IntType>::writeTypes(
+template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
+inline bool TautEnumeration<Constraint, Ban, IntType>::writeTypes(
         const TautEnumeration& tree) {
     std::cout << "SOLN #" << tree.solutions() << ": ";
     tree.dumpTypes(std::cout);
@@ -1680,20 +1646,19 @@ inline bool TautEnumeration<Constraint, BanConstraint, IntType>::writeTypes(
     return false;
 }
 
-template <LPSubspace Constraint, typename BanConstraint, ReginaInteger IntType>
-inline bool TautEnumeration<Constraint, BanConstraint, IntType>::
-        writeStructure(const TautEnumeration& tree) {
+template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
+inline bool TautEnumeration<Constraint, Ban, IntType>::writeStructure(
+        const TautEnumeration& tree) {
     std::cout << "SOLN #" << tree.solutions() << ": ";
     std::cout << tree.buildStructure().str() << std::endl;
     return false;
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
+template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
 template <typename... BanArgs>
-inline TreeSingleSoln<Constraint, BanConstraint, IntType>::TreeSingleSoln(
+inline TreeSingleSoln<Constraint, Ban, IntType>::TreeSingleSoln(
         const Triangulation<3>& tri, NormalEncoding enc, BanArgs&&... banArgs) :
-        TreeTraversal<Constraint, BanConstraint, IntType>(tri, enc,
+        TreeTraversal<Constraint, Ban, IntType>(tri, enc,
             (enc.storesOctagons() ? 6 : 3) /* branches per quad */,
             2 /* branches per triangle */,
             false /* enumeration */,
@@ -1702,16 +1667,14 @@ inline TreeSingleSoln<Constraint, BanConstraint, IntType>::TreeSingleSoln(
         cancelled_(false) {
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
-inline void TreeSingleSoln<Constraint, BanConstraint, IntType>::cancel() {
+template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
+inline void TreeSingleSoln<Constraint, Ban, IntType>::cancel() {
     std::lock_guard<std::mutex> lock(mCancel_);
     cancelled_ = true;
 }
 
-template <LPConstraint Constraint, typename BanConstraint,
-    ReginaInteger IntType>
-inline bool TreeSingleSoln<Constraint, BanConstraint, IntType>::cancelled() {
+template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
+inline bool TreeSingleSoln<Constraint, Ban, IntType>::cancelled() {
     std::lock_guard<std::mutex> lock(mCancel_);
     return cancelled_;
 }

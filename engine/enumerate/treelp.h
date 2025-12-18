@@ -57,6 +57,8 @@
 namespace regina {
 
 class AngleStructure;
+class BanConstraintBase;
+class BanNone;
 class NormalSurface;
 namespace detail { template <int, typename> class LPCol; }
 
@@ -128,6 +130,21 @@ concept LPSubspace =
     LPConstraint<T> &&
     std::count(T::constraints.begin(), T::constraints.end(),
         LPConstraintType::Zero) == T::constraints.size();
+
+/**
+ * A type used to force certain normal coordinates or angle structure
+ * coordinates to be zero.  This concept is used with Regina's linear
+ * programming machinery when enumerating or locating normal surfaces or
+ * angle structures.
+ *
+ * See BanConstraintBase for further information.
+ *
+ * \ingroup enumerate
+ */
+template <typename T>
+concept BanConstraint =
+    std::same_as<T, BanNone> ||
+    std::derived_from<T, BanConstraintBase>;
 
 /**
  * A matrix class for use with linear programming.
