@@ -274,6 +274,7 @@ LPConstraintEulerPositive : class -> EqualityType.NEVER_INSTANTIATED
 LPConstraintEulerZero : class -> EqualityType.NEVER_INSTANTIATED
 LPConstraintNonSpun : class -> EqualityType.NEVER_INSTANTIATED
 LPConstraintNone : class -> EqualityType.NEVER_INSTANTIATED
+LPConstraintType : enum
 LPData : class -> EqualityType.DISABLED
 LPData_EulerPositive : class -> EqualityType.DISABLED
 LPData_EulerZero : class -> EqualityType.DISABLED
@@ -550,10 +551,6 @@ TreeEnumeration : class -> EqualityType.BY_REFERENCE
 TreeEnumeration_BanBoundary : class -> EqualityType.BY_REFERENCE
 TreeEnumeration_BanEdge : class -> EqualityType.BY_REFERENCE
 TreeEnumeration_BanTorusBoundary : class -> EqualityType.BY_REFERENCE
-TreeEnumeration_EulerPositive : class -> EqualityType.BY_REFERENCE
-TreeEnumeration_EulerPositive_BanBoundary : class -> EqualityType.BY_REFERENCE
-TreeEnumeration_EulerPositive_BanEdge : class -> EqualityType.BY_REFERENCE
-TreeEnumeration_EulerPositive_BanTorusBoundary : class -> EqualityType.BY_REFERENCE
 TreeEnumeration_EulerZero : class -> EqualityType.BY_REFERENCE
 TreeEnumeration_EulerZero_BanBoundary : class -> EqualityType.BY_REFERENCE
 TreeEnumeration_EulerZero_BanEdge : class -> EqualityType.BY_REFERENCE
