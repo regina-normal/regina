@@ -167,24 +167,22 @@ class BitManipulatorByType<unsigned long long> {
  * \a T have template specialisations that are carefully optimised (precisely
  * what gets specialised depends upon properties of the compiler).
  *
- * \pre The size in bits of type \a T is a power of two.
- *
- * \python For Python users, the class BitManipulator represents the
- * C++ type BitManipulator<unsigned long>.  In particular, you should be aware
- * that BitManipulator is designed specifically to work with native C++ integer
+ * \python For Python users, the class BitManipulator represents the C++ type
+ * `BitManipulator<unsigned long>`.  In particular, you should be aware that
+ * BitManipulator is designed specifically to work with native C++ integer
  * types, and _cannot_ handle Python's arbitrary-precision integers.  It is
  * up to you to ensure that any Python integers that you pass into the
- * BitManipulator routines are small enough to fit inside a C++ unsigned long.
+ * BitManipulator routines are small enough to fit inside a C++ `unsigned long`.
+ *
+ * \tparam T the native unsigned C++ integer type to work with.  The number of
+ * bits in \a T must be a power of two (which is true in practice for all
+ * native integer types on all typical modern hardware).
  *
  * \ingroup utilities
  */
 template <UnsignedCppInteger T>
+requires (std::popcount(sizeof(T)) == 1)
 class BitManipulator : public regina::detail::BitManipulatorByType<T> {
-    static_assert(sizeof(T) == 1 || sizeof(T) == 2 || sizeof(T) == 4 ||
-        sizeof(T) == 8 || sizeof(T) == 16 || sizeof(T) == 32 ||
-        sizeof(T) == 64 || sizeof(T) == 128,
-        "BitManipulator can only work with data types whose size is a "
-        "power of two.");
     public:
         /**
          * Returns the number of bits that are set to 1 in the given integer.
