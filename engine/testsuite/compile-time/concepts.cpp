@@ -231,6 +231,19 @@ static_assert(! regina::CoefficientDomain<regina::Laurent<Integer>>);
 static_assert(! regina::CoefficientDomain<regina::Laurent2<Integer>>);
 static_assert(! regina::CoefficientDomain<regina::Cyclotomic>);
 
+static_assert(! regina::Field<int>);
+static_assert(! regina::Field<unsigned>);
+static_assert(! regina::Field<Integer>);
+static_assert(! regina::Field<LargeInteger>);
+static_assert(regina::Field<Rational>);
+static_assert(! regina::Field<regina::Matrix2>);
+static_assert(! regina::Field<regina::Arrow>);
+static_assert(! regina::Field<regina::Polynomial<Integer>>);
+static_assert(! regina::Field<regina::Polynomial<Rational>>);
+static_assert(! regina::Field<regina::Laurent<Integer>>);
+static_assert(! regina::Field<regina::Laurent2<Integer>>);
+static_assert(! regina::Field<regina::Cyclotomic>);
+
 static_assert(regina::InherentlyTightEncodable<Integer>);
 static_assert(regina::InherentlyTightEncodable<LargeInteger>);
 static_assert(regina::InherentlyTightEncodable<Vector<Integer>>);

@@ -381,6 +381,7 @@ struct RingTraits<Matrix2> {
     static constexpr bool commutative = false;
     static constexpr bool zeroInitialised = true;
     static constexpr bool zeroDivisors = true;
+    static constexpr bool inverses = false;
 };
 #endif // __DOXYGEN
 

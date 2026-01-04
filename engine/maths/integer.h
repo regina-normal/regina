@@ -1782,6 +1782,7 @@ struct RingTraits<IntegerBase<withInfinity>> {
     static constexpr bool commutative = true;
     static constexpr bool zeroInitialised = true;
     static constexpr bool zeroDivisors = false;
+    static constexpr bool inverses = false;
 };
 #endif // __DOXYGEN
 
@@ -2410,6 +2411,7 @@ struct RingTraits<NativeInteger<bytes>> {
     static constexpr bool commutative = true;
     static constexpr bool zeroInitialised = true;
     static constexpr bool zeroDivisors = true;
+    static constexpr bool inverses = false;
 };
 #endif // __DOXYGEN
 

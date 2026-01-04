@@ -50,17 +50,12 @@ namespace regina {
  *
  * End users should use the BitManipulator class, not this class.
  *
- * \pre Type \a T is an unsigned integral numeric type.
- *
  * \nopython Only the end-user class BitManipulator<unsigned long> is
  * available to Python users.
  *
- * \tparam T an unsigned integral numeric type, which we treat as a
- * sequence of \c true and/or \c false bits.
- *
  * \ingroup utilities
  */
-template <typename T>
+template <UnsignedCppInteger T>
 class BitManipulatorByType {
     public:
         /**

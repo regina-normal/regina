@@ -37,6 +37,7 @@
 #define __REGINA_SEQUENCE_H
 #endif
 
+#include <concepts>
 #include <iostream>
 #include "regina-core.h"
 
@@ -70,7 +71,7 @@ namespace regina {
  *
  * \ingroup utilities
  */
-template <typename T>
+template <std::default_initializable T>
 class LightweightSequence {
     public:
         using iterator = T*;
@@ -112,7 +113,8 @@ class LightweightSequence {
          *
          * \param elements the elements to place in the new sequence.
          */
-        LightweightSequence(std::initializer_list<T> elements);
+        LightweightSequence(std::initializer_list<T> elements)
+            requires std::copyable<T>;
         /**
          * Create a new sequence containing the given elements, which
          * may be given through a combination of individual elements and
@@ -143,7 +145,8 @@ class LightweightSequence {
          * fill the sequence, as described above.
          */
         template <typename... Args>
-        explicit LightweightSequence(size_t size, Args&&... elements);
+        explicit LightweightSequence(size_t size, Args&&... elements)
+            requires std::copyable<T>;
         /**
          * Create a copy of the given sequence.
          *
@@ -152,7 +155,8 @@ class LightweightSequence {
          *
          * \param src the sequence to copy.
          */
-        LightweightSequence(const LightweightSequence& src);
+        LightweightSequence(const LightweightSequence& src)
+            requires std::copyable<T>;
         /**
          * Moves the contents of the given sequence to this new sequence.
          * This is a fast (constant time) operation.
@@ -310,7 +314,8 @@ class LightweightSequence {
          * \param src the sequence to copy.
          * \return a reference to this sequence.
          */
-        LightweightSequence<T>& operator = (const LightweightSequence& src);
+        LightweightSequence<T>& operator = (const LightweightSequence& src)
+            requires std::copyable<T>;
         /**
          * Moves the contents of the given sequence to this sequence.
          * This is a fast (constant time) operation.
@@ -515,6 +520,7 @@ class LightweightSequence {
          * Implementation details for the iterators-and-values constructor.
          */
         template <typename... Args>
+        requires std::copyable<T>
         void fill(T* dest, const T* from, const T* to, Args&&... args) {
             fill(std::copy(from, to, dest), std::forward<Args>(args)...);
         }
@@ -523,6 +529,7 @@ class LightweightSequence {
          * Implementation details for the iterators-and-values constructor.
          */
         template <typename... Args>
+        requires std::copyable<T>
         void fill(T* dest, T elt, Args&&... args) {
             *dest = std::move(elt);
             fill(dest + 1, std::forward<Args>(args)...);
@@ -531,7 +538,8 @@ class LightweightSequence {
         /**
          * Implementation details for the iterators-and-values constructor.
          */
-        void fill(T* /* dest */) {
+        void fill(T* /* dest */)
+        requires std::copyable<T> {
         }
 };
 
@@ -550,7 +558,7 @@ class LightweightSequence {
  *
  * \ingroup utilities
  */
-template <typename T>
+template <std::default_initializable T>
 std::ostream& operator << (std::ostream& out, const LightweightSequence<T>& s);
 
 /**
@@ -564,128 +572,132 @@ std::ostream& operator << (std::ostream& out, const LightweightSequence<T>& s);
  *
  * \ingroup utilities
  */
-template <typename T>
+template <std::default_initializable T>
 void swap(LightweightSequence<T>& a, LightweightSequence<T>& b) noexcept;
 
 // Inline functions:
 
-template <typename T>
+template <std::default_initializable T>
 inline LightweightSequence<T>::LightweightSequence() :
         data_(nullptr), size_(0) {
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline LightweightSequence<T>::LightweightSequence(size_t size) :
         data_(new T[size]), size_(size) {
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline LightweightSequence<T>::LightweightSequence(
-        std::initializer_list<T> elements) :
+        std::initializer_list<T> elements)
+        requires std::copyable<T> :
         data_(new T[elements.size()]), size_(elements.size()) {
     std::copy(elements.begin(), elements.end(), data_);
 }
 
-template <typename T>
+template <std::default_initializable T>
 template <typename... Args>
-inline LightweightSequence<T>::LightweightSequence(size_t size,
-        Args&&... args) : data_(new T[size]), size_(size) {
+inline LightweightSequence<T>::LightweightSequence(size_t size, Args&&... args)
+        requires std::copyable<T> :
+        data_(new T[size]), size_(size) {
     fill(data_, std::forward<Args>(args)...);
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline LightweightSequence<T>::LightweightSequence(
-        const LightweightSequence& src) :
+        const LightweightSequence& src)
+        requires std::copyable<T> :
         data_(new T[src.size_]), size_(src.size_) {
     std::copy(src.data_, src.data_ + size_, data_);
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline LightweightSequence<T>::LightweightSequence(
         LightweightSequence&& src) noexcept:
         data_(src.data_), size_(src.size_) {
     src.data_ = nullptr;
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline LightweightSequence<T>::~LightweightSequence() {
     delete[] data_;
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline void LightweightSequence<T>::init(size_t size) {
     delete[] data_;
     data_ = (size ? new T[size] : nullptr);
     size_ = size;
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline size_t LightweightSequence<T>::size() const {
     return size_;
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline bool LightweightSequence<T>::empty() const {
     return size_ == 0;
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline T LightweightSequence<T>::operator [] (size_t pos) const {
     return data_[pos];
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline T& LightweightSequence<T>::operator [] (size_t pos) {
     return data_[pos];
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline T LightweightSequence<T>::front() const {
     return *data_;
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline T& LightweightSequence<T>::front() {
     return *data_;
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline T LightweightSequence<T>::back() const {
     return data_[size_ - 1];
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline T& LightweightSequence<T>::back() {
     return data_[size_ - 1];
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline typename LightweightSequence<T>::iterator
         LightweightSequence<T>::begin() {
     return data_;
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline typename LightweightSequence<T>::const_iterator
         LightweightSequence<T>::begin() const {
     return data_;
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline typename LightweightSequence<T>::iterator
         LightweightSequence<T>::end() {
     return data_ + size_;
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline typename LightweightSequence<T>::const_iterator
         LightweightSequence<T>::end() const {
     return data_ + size_;
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline LightweightSequence<T>& LightweightSequence<T>::operator = (
-        const LightweightSequence& src) {
+        const LightweightSequence& src)
+        requires std::copyable<T> {
     if (std::addressof(src) == this)
         return *this;
 
@@ -698,7 +710,7 @@ inline LightweightSequence<T>& LightweightSequence<T>::operator = (
     return *this;
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline LightweightSequence<T>& LightweightSequence<T>::operator = (
         LightweightSequence&& src) noexcept {
     size_ = src.size_;
@@ -707,14 +719,14 @@ inline LightweightSequence<T>& LightweightSequence<T>::operator = (
     return *this;
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline void LightweightSequence<T>::swap(LightweightSequence<T>& other)
         noexcept {
     std::swap(size_, other.size_);
     std::swap(data_, other.data_);
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline bool LightweightSequence<T>::operator == (
         const LightweightSequence& rhs) const {
     if (size_ != rhs.size_)
@@ -725,7 +737,7 @@ inline bool LightweightSequence<T>::operator == (
     return true;
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline auto LightweightSequence<T>::operator <=> (
         const LightweightSequence& rhs) const {
 #if defined(LEXCMP_FOUND)
@@ -745,7 +757,7 @@ inline auto LightweightSequence<T>::operator <=> (
 #endif
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline std::ostream& operator << (std::ostream& out,
         const LightweightSequence<T>& s) {
     out << '(';
@@ -757,14 +769,14 @@ inline std::ostream& operator << (std::ostream& out,
     return out << ')';
 }
 
-template <typename T>
+template <std::default_initializable T>
 template <typename IndexIterator>
 inline LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
         SubsequenceCompareFirst(IndexIterator beginSub, IndexIterator endSub) :
         beginSub_(beginSub), endSub_(endSub) {
 }
 
-template <typename T>
+template <std::default_initializable T>
 template <typename IndexIterator>
 template <typename SeqIterator>
 inline bool LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
@@ -775,7 +787,7 @@ inline bool LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
     return true;
 }
 
-template <typename T>
+template <std::default_initializable T>
 template <typename IndexIterator>
 template <typename SeqIterator>
 inline bool LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
@@ -788,7 +800,7 @@ inline bool LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
     return false;
 }
 
-template <typename T>
+template <std::default_initializable T>
 template <typename IndexIterator>
 template <typename SeqIterator>
 inline bool LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
@@ -801,7 +813,7 @@ inline bool LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
     return false;
 }
 
-template <typename T>
+template <std::default_initializable T>
 inline void swap(LightweightSequence<T>& a, LightweightSequence<T>& b)
         noexcept {
     a.swap(b);

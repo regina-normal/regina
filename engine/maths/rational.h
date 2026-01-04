@@ -478,6 +478,7 @@ struct RingTraits<Rational> {
     static constexpr bool commutative = true;
     static constexpr bool zeroInitialised = true;
     static constexpr bool zeroDivisors = false;
+    static constexpr bool inverses = true;
 };
 #endif // __DOXYGEN
 

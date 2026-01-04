@@ -145,8 +145,6 @@ class Laurent :
          *
          * This constructor induces a deep copy of \a value.
          *
-         * \pre Objects of type \a T can be assigned values of type \a U.
-         *
          * \nopython Python only supports Laurent polynomials with one type of
          * coefficient (the case where \a T is Integer).  Therefore
          * Python users can use the non-templated copy constructor.
@@ -154,6 +152,7 @@ class Laurent :
          * \param value the polynomial to clone.
          */
         template <CoefficientDomain U>
+        requires std::assignable_from<T&, U>
         Laurent(const Laurent<U>& value);
 
         /**
@@ -402,6 +401,7 @@ class Laurent :
          * \return a reference to this polynomial.
          */
         template <CoefficientDomain U>
+        requires std::assignable_from<T&, U>
         Laurent& operator = (const Laurent<U>& value);
 
         /**
@@ -921,6 +921,7 @@ struct RingTraits<Laurent<T>> {
     static constexpr bool commutative = RingTraits<T>::commutative;
     static constexpr bool zeroInitialised = true;
     static constexpr bool zeroDivisors = false; // since T is a domain
+    static constexpr bool inverses = false;
 };
 #endif // __DOXYGEN
 
@@ -965,6 +966,7 @@ inline Laurent<T>::Laurent(const Laurent<T>& value) :
 
 template <CoefficientDomain T>
 template <CoefficientDomain U>
+requires std::assignable_from<T&, U>
 inline Laurent<T>::Laurent(const Laurent<U>& value) :
         minExp_(value.minExp_), maxExp_(value.maxExp_), base_(value.minExp_),
         coeff_(new T[value.maxExp_ - value.minExp_ + 1]) {
@@ -1184,6 +1186,7 @@ Laurent<T>& Laurent<T>::operator = (const Laurent<T>& other) {
 // issue is that the return type "looks" different due to the explicit <T>.
 template <CoefficientDomain T>
 template <CoefficientDomain U>
+requires std::assignable_from<T&, U>
 Laurent<T>& Laurent<T>::operator = (const Laurent<U>& other) {
     // Treat x = x separately, since otherwise we break things when we
     // reset base_ = other.minExp_.

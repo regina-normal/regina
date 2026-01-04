@@ -127,8 +127,6 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * This constructor induces a deep copy of \a value.
          *
-         * \pre Objects of type \a T can be assigned values of type \a U.
-         *
          * \nopython Python only supports polynomials with one type of
          * coefficient (the case where \a T is Rational).  Therefore
          * Python users can use the non-templated copy constructor.
@@ -136,6 +134,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \param value the polynomial to clone.
          */
         template <CoefficientDomain U>
+        requires std::assignable_from<T&, U>
         Polynomial(const Polynomial<U>& value);
 
         /**
@@ -363,6 +362,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \return a reference to this polynomial.
          */
         template <CoefficientDomain U>
+        requires std::assignable_from<T&, U>
         Polynomial& operator = (const Polynomial<U>& value);
 
         /**
@@ -544,9 +544,6 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * As a special case, gcd(0,0) is considered to be zero.
          *
-         * \pre The coefficient type \a T represents a field.  In particular,
-         * Rational is supported but Integer is not.
-         *
          * \param other the polynomial whose greatest common divisor with this
          * polynomial we should compute.
          * \param gcd a polynomial whose contents will be destroyed and
@@ -557,6 +554,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * replaced with \a v, as described above.
          */
         template <CoefficientDomain U>
+        requires Field<T> && std::assignable_from<T&, U>
         void gcdWithCoeffs(const Polynomial<U>& other,
             Polynomial& gcd, Polynomial& u, Polynomial& v) const;
 
@@ -914,6 +912,7 @@ struct RingTraits<Polynomial<T>> {
     static constexpr bool commutative = RingTraits<T>::commutative;
     static constexpr bool zeroInitialised = true;
     static constexpr bool zeroDivisors = false; // since T is a domain
+    static constexpr bool inverses = false;
 };
 #endif // __DOXYGEN
 
@@ -953,6 +952,7 @@ inline Polynomial<T>::Polynomial(const Polynomial<T>& value) :
 
 template <CoefficientDomain T>
 template <CoefficientDomain U>
+requires std::assignable_from<T&, U>
 inline Polynomial<T>::Polynomial(const Polynomial<U>& value) :
         degree_(value.degree()), coeff_(new T[value.degree() + 1]) {
     // std::cerr << "Polynomial: deep copy (init)" << std::endl;
@@ -1096,6 +1096,7 @@ Polynomial<T>& Polynomial<T>::operator = (const Polynomial<T>& value) {
 // issue is that the return type "looks" different due to the explicit <T>.
 template <CoefficientDomain T>
 template <CoefficientDomain U>
+requires std::assignable_from<T&, U>
 Polynomial<T>& Polynomial<T>::operator = (const Polynomial<U>& value) {
     // This works even if &value == this, since we don't reallocate if
     // the degrees are equal.
@@ -1341,6 +1342,7 @@ std::pair<Polynomial<T>, Polynomial<T>> Polynomial<T>::divisionAlg(
 
 template <CoefficientDomain T>
 template <CoefficientDomain U>
+requires Field<T> && std::assignable_from<T&, U>
 void Polynomial<T>::gcdWithCoeffs(const Polynomial<U>& other,
         Polynomial<T>& gcd, Polynomial<T>& u, Polynomial<T>& v) const {
     // Special-case situations where one or both polynomials are zero.

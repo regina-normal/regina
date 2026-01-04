@@ -94,7 +94,7 @@ Version 7.5  [ TODO ]
               + ArbitraryPrecisionInteger, ArbitraryPrecisionIntegerVector,
                 ArrayOf, AssignableTo, BidirectionalIteratorFor, CanConstruct,
                 CharIterator, CoefficientDomain, ConstRefArrayOf, CppInteger,
-                Domain, ForwardIteratorFor, InherentlyTightEncodable,
+                Domain, Field, ForwardIteratorFor, InherentlyTightEncodable,
                 InputIteratorFor, IntegerComparable, IntegerCompatible,
                 IntegerVector, IntegralDomain, Iterable, PacketClass,
                 PacketIterator, RandomAccessIteratorFor, ReginaBitmask,

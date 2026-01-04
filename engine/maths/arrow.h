@@ -762,6 +762,7 @@ struct RingTraits<Arrow> {
     static constexpr bool commutative = true;
     static constexpr bool zeroInitialised = true;
     static constexpr bool zeroDivisors = false;
+    static constexpr bool inverses = false;
 };
 #endif // __DOXYGEN
 

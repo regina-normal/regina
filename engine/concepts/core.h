@@ -223,6 +223,17 @@ template <typename T>
 concept IntegralDomain = Domain<T> && RingTraits<T>::commutative;
 
 /**
+ * A mathematical field.
+ *
+ * The property of being a field is self-identified through the various
+ * constants in the specialisation `RingTraits<T>`.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept Field = IntegralDomain<T> && RingTraits<T>::inverses;
+
+/**
  * A type suitable to use for coefficients in Regina's polynomial-like classes.
  *
  * This concept is tailored to Regina's own requirements, and so is stricter

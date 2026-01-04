@@ -76,6 +76,13 @@ namespace regina {
  *   hardware.  Likewise, for polynomial types, we assume that exponents will
  *   never grow so large that they overflow and create zero divisors that way.
  *
+ * - a compile-time boolean constant `RingTraits<T>::inverses`, which is
+ *   \c true if and only if every non-zero object of type \a T has a
+ *   multiplicative inverse.  As with `RingTraits<T>::zeroDivisors`,
+ *   judgement calls must be made; for example, we treat native floating point
+ *   arithmetic as having inverses despite the difficulties around precision
+ *   and overflow.
+ *
  * Regina specialises RingTraits for its own ring-like classes where this
  * makes sense (e.g., Regina's own integer, rational and polynomial classes),
  * and also provides implementations for native C++ signed integer and
@@ -106,6 +113,7 @@ struct RingTraits<T> { \
     static constexpr bool commutative = true; \
     static constexpr bool zeroInitialised = false; \
     static constexpr bool zeroDivisors = true; \
+    static constexpr bool inverses = false; \
 }
 
 NATIVE_INTEGER_RINGTYPE(int8_t);
@@ -131,6 +139,7 @@ struct RingTraits<T> { \
     static constexpr bool commutative = true; \
     static constexpr bool zeroInitialised = false; \
     static constexpr bool zeroDivisors = false; \
+    static constexpr bool inverses = true; \
 }
 
 NATIVE_FLOATING_POINT_RINGTYPE(float);

@@ -165,8 +165,6 @@ class Laurent2 :
          *
          * This constructor induces a deep copy of \a value.
          *
-         * \pre Objects of type \a T can be assigned values of type \a U.
-         *
          * \nopython Python only supports Laurent polynomials with one type of
          * coefficient (the case where \a T is Integer).  Therefore
          * Python users can use the non-templated copy constructor.
@@ -174,6 +172,7 @@ class Laurent2 :
          * \param value the polynomial to clone.
          */
         template <CoefficientDomain U>
+        requires std::assignable_from<T&, U>
         Laurent2(const Laurent2<U>& value);
 
         /**
@@ -376,6 +375,7 @@ class Laurent2 :
          * \return a reference to this polynomial.
          */
         template <CoefficientDomain U>
+        requires std::assignable_from<T&, U>
         Laurent2& operator = (const Laurent2<U>& value);
 
         /**
@@ -796,6 +796,7 @@ struct RingTraits<Laurent2<T>> {
     static constexpr bool commutative = RingTraits<T>::commutative;
     static constexpr bool zeroInitialised = true;
     static constexpr bool zeroDivisors = false; // since T is a domain
+    static constexpr bool inverses = false;
 };
 #endif // __DOXYGEN
 
@@ -826,6 +827,7 @@ Laurent2<T>::Laurent2(const Laurent2<T>& toShift, long xShift, long yShift) {
 
 template <CoefficientDomain T>
 template <CoefficientDomain U>
+requires std::assignable_from<T&, U>
 inline Laurent2<T>::Laurent2(const Laurent2<U>& value) :
         coeff_(value.coeff_) {
     // std::cerr << "Laurent2: deep copy (init)" << std::endl;
@@ -935,6 +937,7 @@ inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<T>& other) {
 // issue is that the return type "looks" different due to the explicit <T>.
 template <CoefficientDomain T>
 template <CoefficientDomain U>
+requires std::assignable_from<T&, U>
 inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<U>& other) {
     // std::cerr << "Laurent2: deep copy (=)" << std::endl;
     coeff_ = other.coeff_;
