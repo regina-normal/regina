@@ -152,6 +152,7 @@ class Face : public detail::FaceBase<dim, subdim> {
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim))
 using Vertex = Face<dim, 0>;
 
 /**
@@ -169,6 +170,7 @@ using Vertex = Face<dim, 0>;
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim))
 using Edge = Face<dim, 1>;
 
 /**
@@ -188,6 +190,7 @@ using Edge = Face<dim, 1>;
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim))
 using Triangle = Face<dim, 2>;
 
 /**
@@ -208,6 +211,7 @@ using Triangle = Face<dim, 2>;
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim) && dim >= 3)
 using Tetrahedron = Face<dim, 3>;
 
 /**
@@ -228,6 +232,7 @@ using Tetrahedron = Face<dim, 3>;
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim) && dim >= 4)
 using Pentachoron = Face<dim, 4>;
 #endif // __DOXYGEN
 

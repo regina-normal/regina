@@ -50,7 +50,7 @@ class QLabel;
 class QRadioButton;
 class EdgeIntChooser;
 template <int, int> class FaceChooser;
-template <int> class SimplexChooser;
+template <int dim> requires (regina::supportedDim(dim)) class SimplexChooser;
 
 /**
  * A dialog used to select and perform an elementary move on a

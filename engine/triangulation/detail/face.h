@@ -117,7 +117,7 @@ enum class TriangleType {
 
 namespace detail {
 
-template <int dim> class TriangulationBase;
+template <int dim> requires (supportedDim(dim)) class TriangulationBase;
 template <int dim, int subdim> class FaceBase;
 
 /**
@@ -315,13 +315,13 @@ class FaceEmbeddingBase :
  * \nopython
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  * \tparam codim the codimension (not dimension!) of the faces under
- * consideration.  This must be between 1 and \a dim inclusive.
+ * consideration.
  *
  * \ingroup detail
  */
 template <int dim, int codim>
+requires (supportedDim(dim) && 1 <= codim && codim <= dim)
 struct FaceEmbeddingsList {
     /**
      * For most face types, we store the embeddings in an ordinary vector.
@@ -330,6 +330,7 @@ struct FaceEmbeddingsList {
 };
 
 template <int dim>
+requires (supportedDim(dim))
 struct FaceEmbeddingsList<dim, 2> {
     /**
      * For codimension 2 faces, we store the embeddings in a deque.  This is
@@ -341,6 +342,7 @@ struct FaceEmbeddingsList<dim, 2> {
 };
 
 template <int dim>
+requires (supportedDim(dim))
 struct FaceEmbeddingsList<dim, 1> {
     /**
      * For codimension 1 faces, there are always either one or two embeddings.
@@ -1296,10 +1298,13 @@ class FaceBase :
          */
         void relabel(Perm<dim + 1> adjust);
 
-    friend class Triangulation<dim>;
-    friend class TriangulationBase<dim>;
-    // BoundaryComponent::buildRealBoundary() calls Face::relabel().
-    template<int> friend class BoundaryComponentBase;
+    friend class regina::Triangulation<dim>;
+    friend class regina::detail::TriangulationBase<dim>;
+
+    // BoundaryComponent<dim>::buildRealBoundary() calls
+    // Face<dim-1, subdim>::relabel().
+    template <int dim_> requires (supportedDim(dim_))
+    friend class regina::detail::BoundaryComponentBase;
 };
 
 // Inline functions for FaceEmbeddingBase

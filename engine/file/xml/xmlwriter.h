@@ -46,7 +46,7 @@ namespace regina {
 class AngleStructures;
 class NormalHypersurfaces;
 class NormalSurfaces;
-template <int> class Triangulation;
+template <int dim> requires (supportedDim(dim)) class Triangulation;
 
 /**
  * Provides XMLWriter<T> with the class constant requiresTriangulation,
@@ -229,7 +229,7 @@ class XMLWriter :
         void close();
 };
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class XMLWriter<Triangulation<dim>> {
     public:
         static constexpr bool requiresTriangulation = false;
@@ -262,13 +262,13 @@ void XMLWriter<T>::openPost() {
     out_ << ">\n";
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 XMLWriter<Triangulation<dim>>::XMLWriter(const Triangulation<dim>& data,
         std::ostream& out, FileFormat format) :
         data_(data), out_(out), format_(format) {
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void XMLWriter<Triangulation<dim>>::openPost() {
     out_ << ">\n";
 }

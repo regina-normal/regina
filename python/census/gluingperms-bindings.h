@@ -40,7 +40,7 @@ using regina::FacetSpec;
 using regina::GluingPerms;
 using regina::Perm;
 
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 void addGluingPerms(pybind11::module_& m, const char* name) {
     using Index = typename GluingPerms<dim>::Index;
 

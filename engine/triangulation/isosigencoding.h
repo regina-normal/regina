@@ -190,7 +190,7 @@ class IsoSigPrintable {
  *
  * \ingroup triangulation
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 using IsoSigPrintableLockFree = IsoSigPrintable<dim, false>;
 
 } // namespace regina

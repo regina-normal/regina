@@ -54,7 +54,7 @@
 
 namespace regina::detail {
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 FacetPairingBase<dim>::FacetPairingBase(const Triangulation<dim>& tri) :
         size_(tri.size()),
         pairs_(new FacetSpec<dim>[tri.size() * (dim + 1)]) {
@@ -76,7 +76,7 @@ FacetPairingBase<dim>::FacetPairingBase(const Triangulation<dim>& tri) :
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 FacetPairingBase<dim>::FacetPairingBase(std::istream& in) :
         size_(0), pairs_(nullptr) {
     // Skip initial whitespace to find the facet pairing.
@@ -100,7 +100,7 @@ FacetPairingBase<dim>::FacetPairingBase(std::istream& in) :
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool FacetPairingBase<dim>::isClosed() const {
     for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f)
         if (isUnmatched(f))
@@ -108,14 +108,14 @@ bool FacetPairingBase<dim>::isClosed() const {
     return true;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool FacetPairingBase<dim>::operator == (const FacetPairingBase<dim>& other)
         const {
     return size_ == other.size_ &&
         std::equal(pairs_, pairs_ + (size_ * (dim + 1)), other.pairs_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool FacetPairingBase<dim>::isConnected() const {
     if (size_ <= 1)
         return true;
@@ -151,7 +151,7 @@ bool FacetPairingBase<dim>::isConnected() const {
     return false;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <int k>
 bool FacetPairingBase<dim>::hasMultiEdge() const {
     static_assert(2 <= k && k <= dim + 1,
@@ -188,7 +188,7 @@ bool FacetPairingBase<dim>::hasMultiEdge() const {
     return false;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool FacetPairingBase<dim>::hasMultiEdge(int k) const {
     if (k < 2 || k > dim + 1)
         throw InvalidArgument("hasMultiEdge(): unsupported multiplicity k");
@@ -198,7 +198,7 @@ bool FacetPairingBase<dim>::hasMultiEdge(int k) const {
     });
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void FacetPairingBase<dim>::writeTextShort(std::ostream& out) const {
     for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f) {
         if (f.facet == 0 && f.simp > 0)
@@ -213,14 +213,14 @@ void FacetPairingBase<dim>::writeTextShort(std::ostream& out) const {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 std::string FacetPairingBase<dim>::dotHeader(const char* graphName) {
     std::ostringstream ans;
     writeDotHeader(ans, graphName);
     return ans.str();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void FacetPairingBase<dim>::writeDotHeader(
         std::ostream& out, const char* graphName) {
     static const char defaultGraphName[] = "G";
@@ -233,7 +233,7 @@ void FacetPairingBase<dim>::writeDotHeader(
     out << R"(node [shape=circle,style=filled,height=0.15,fixedsize=true,label="",fontsize=9,fontcolor="#751010"];)" << std::endl;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 std::string FacetPairingBase<dim>::dot(
         const char* prefix, bool subgraph, bool labels) const {
     std::ostringstream ans;
@@ -241,7 +241,7 @@ std::string FacetPairingBase<dim>::dot(
     return ans.str();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void FacetPairingBase<dim>::writeDot(std::ostream& out,
         const char* prefix, bool subgraph, bool labels) const {
     static const char defaultPrefix[] = "g";
@@ -279,7 +279,7 @@ void FacetPairingBase<dim>::writeDot(std::ostream& out,
     out << '}' << std::endl;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 std::string FacetPairingBase<dim>::textRep() const {
     std::ostringstream ans;
 
@@ -292,7 +292,7 @@ std::string FacetPairingBase<dim>::textRep() const {
     return ans.str();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
     std::vector<std::string> tokens = basicTokenise(rep);
 
@@ -344,7 +344,7 @@ FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 std::optional<Cut> FacetPairingBase<dim>::divideConnected(size_t minSide)
         const {
     std::optional<Cut> ans;
@@ -369,7 +369,7 @@ std::optional<Cut> FacetPairingBase<dim>::divideConnected(size_t minSide)
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <typename Action, typename... Args>
 void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         int nBdryFacets, Action&& action, Args&&... args) {

@@ -46,7 +46,7 @@
 
 namespace regina::detail {
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <int k>
 AbelianGroup TriangulationBase<dim>::homology() const {
     if constexpr (standardDim(dim))
@@ -171,7 +171,7 @@ AbelianGroup TriangulationBase<dim>::homology() const {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 const GroupPresentation& TriangulationBase<dim>::group() const {
     if (fundGroup_.has_value())
         return *fundGroup_;
@@ -238,7 +238,7 @@ const GroupPresentation& TriangulationBase<dim>::group() const {
     return *(fundGroup_ = std::move(ans));
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <int subdim>
 MatrixInt TriangulationBase<dim>::boundaryMap() const {
     static_assert(subdim > 0 && subdim <= dim);
@@ -321,7 +321,7 @@ MatrixInt TriangulationBase<dim>::boundaryMap() const {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <int subdim>
 MatrixInt TriangulationBase<dim>::dualBoundaryMap() const {
     static_assert(subdim >= 1 && subdim <= dim);
@@ -409,7 +409,7 @@ MatrixInt TriangulationBase<dim>::dualBoundaryMap() const {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <int subdim>
 MatrixInt TriangulationBase<dim>::dualToPrimal() const {
     static_assert(subdim >= 0 && subdim < dim);

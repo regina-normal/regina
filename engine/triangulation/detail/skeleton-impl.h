@@ -49,7 +49,7 @@
 
 namespace regina::detail {
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::calculateSkeleton() {
     // Set this now so that any simplex query routines do not try to
     // recursively recompute the skeleton again.
@@ -146,7 +146,7 @@ void TriangulationBase<dim>::calculateSkeleton() {
     calculateRealBoundary();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <int subdim>
 void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
     // Clear out all subdim-faces of all simplices.
@@ -426,7 +426,7 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::calculateRealBoundary() {
     // Are there any boundary facets at all?
     long nBdry = 2 * countFaces<dim-1>() - (dim+1) * simplices_.size();
@@ -551,7 +551,7 @@ void TriangulationBase<dim>::calculateRealBoundary() {
     delete[] orient;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <int subdim>
 void TriangulationBase<dim>::calculateBoundaryFaces(BoundaryComponent<dim>* bc,
         Face<dim, dim-1>* facet) {
@@ -596,7 +596,7 @@ void TriangulationBase<dim>::calculateBoundaryFaces(BoundaryComponent<dim>* bc,
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::clearBaseProperties() {
     // Delete the skeleton.
     if (calculatedSkeleton_) {
@@ -621,7 +621,7 @@ void TriangulationBase<dim>::clearBaseProperties() {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::swapBaseData(TriangulationBase<dim>& other) {
     Snapshottable<Triangulation<dim>>::swap(other);
 
@@ -647,7 +647,7 @@ void TriangulationBase<dim>::swapBaseData(TriangulationBase<dim>& other) {
     H1_.swap(other.H1_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <typename FaceList>
 void TriangulationBase<dim>::cloneFaces(const FaceList& srcFaces) {
     static constexpr int subdim =
@@ -676,7 +676,7 @@ void TriangulationBase<dim>::cloneFaces(const FaceList& srcFaces) {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::cloneSkeleton(const TriangulationBase<dim>& src) {
     // Boundary components:
     for (auto you : src.boundaryComponents_) {

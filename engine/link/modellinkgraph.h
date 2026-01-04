@@ -56,7 +56,7 @@ class ModelLinkGraphCells;
 class ModelLinkGraphNode;
 class StrandRef;
 
-template <int> class FacetPairing;
+template <int dim> requires (supportedDim(dim)) class FacetPairing;
 
 /**
  * Represents different classes of graph embeddings that one might want to

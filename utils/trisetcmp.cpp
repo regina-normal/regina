@@ -40,7 +40,7 @@ using regina::Triangulation;
 
 bool subcomplexTesting = false;
 
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 bool compare(const Packet& t1, const Packet& t2) {
     const Triangulation<dim>& tri1 =
         static_cast<const PacketOf<Triangulation<dim>>&>(t1);

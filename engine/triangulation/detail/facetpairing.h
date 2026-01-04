@@ -75,7 +75,7 @@ namespace detail {
  *
  * \ingroup detail
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class FacetPairingBase :
         public ShortOutput<FacetPairingBase<dim>>,
         public TightEncodable<FacetPairing<dim>> {
@@ -983,7 +983,7 @@ class FacetPairingBase :
  *
  * \ingroup generic
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void swap(FacetPairing<dim>& a, FacetPairing<dim>& b) noexcept {
     a.swap(b);
 }
@@ -992,12 +992,12 @@ namespace detail {
 
 // Inline functions for FacetPairingBase
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetPairingBase<dim>::FacetPairingBase(size_t size) :
         size_(size), pairs_(new FacetSpec<dim>[size * (dim + 1)]) {
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetPairingBase<dim>::FacetPairingBase(
         const FacetPairingBase<dim>& src) :
         size_(src.size_),
@@ -1005,7 +1005,7 @@ inline FacetPairingBase<dim>::FacetPairingBase(
     std::copy(src.pairs_, src.pairs_ + (size_ * (dim + 1)), pairs_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetPairingBase<dim>::FacetPairingBase(FacetPairingBase<dim>&& src)
         noexcept :
         size_(src.size_),
@@ -1013,12 +1013,12 @@ inline FacetPairingBase<dim>::FacetPairingBase(FacetPairingBase<dim>&& src)
     src.pairs_ = nullptr;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetPairingBase<dim>::~FacetPairingBase() {
     delete[] pairs_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetPairingBase<dim>& FacetPairingBase<dim>::operator = (
         const FacetPairingBase& src) {
     // std::copy() exhibits undefined behaviour in the case of self-assignment.
@@ -1034,7 +1034,7 @@ inline FacetPairingBase<dim>& FacetPairingBase<dim>::operator = (
     return *this;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetPairingBase<dim>& FacetPairingBase<dim>::operator = (
         FacetPairingBase&& src) noexcept {
     size_ = src.size_;
@@ -1043,84 +1043,84 @@ inline FacetPairingBase<dim>& FacetPairingBase<dim>::operator = (
     return *this;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void FacetPairingBase<dim>::swap(FacetPairingBase& other) noexcept {
     std::swap(size_, other.size_);
     std::swap(pairs_, other.pairs_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t FacetPairingBase<dim>::size() const {
     return size_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline const FacetSpec<dim>& FacetPairingBase<dim>::dest(
         const FacetSpec<dim>& source) const {
     return pairs_[(dim + 1) * source.simp + source.facet];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline const FacetSpec<dim>& FacetPairingBase<dim>::dest(
         size_t simp, int facet) const {
     return pairs_[(dim + 1) * simp + facet];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline const FacetSpec<dim>& FacetPairingBase<dim>::operator [](
         const FacetSpec<dim>& source) const {
     return pairs_[(dim + 1) * source.simp + source.facet];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool FacetPairingBase<dim>::isUnmatched(
         const FacetSpec<dim>& source) const {
     return pairs_[(dim + 1) * source.simp + source.facet].isBoundary(size_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool FacetPairingBase<dim>::isUnmatched(
         size_t simp, int facet) const {
     return pairs_[(dim + 1) * simp + facet].isBoundary(size_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetSpec<dim>& FacetPairingBase<dim>::dest(
         const FacetSpec<dim>& source) {
     return pairs_[(dim + 1) * source.simp + source.facet];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetSpec<dim>& FacetPairingBase<dim>::dest(
         size_t simp, int facet) {
     return pairs_[(dim + 1) * simp + facet];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetSpec<dim>& FacetPairingBase<dim>::operator [](
         const FacetSpec<dim>& source) {
     return pairs_[(dim + 1) * source.simp + source.facet];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool FacetPairingBase<dim>::noDest(
         const FacetSpec<dim>& source) const {
     return dest(source) == source;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool FacetPairingBase<dim>::noDest(
         size_t simp, int facet) const {
     FacetSpec<dim>& f = pairs_[(dim + 1) * simp + facet];
     return (f.simp == static_cast<ssize_t>(simp) && f.facet == facet);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline std::string FacetPairingBase<dim>::toTextRep() const {
     return textRep();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void FacetPairingBase<dim>::tightEncode(std::ostream& out) const {
     regina::detail::tightEncodeIndex(out, size_);
     // Write each pairing from one side only, in the forward direction.
@@ -1142,7 +1142,7 @@ void FacetPairingBase<dim>::tightEncode(std::ostream& out) const {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 FacetPairing<dim> FacetPairingBase<dim>::tightDecode(std::istream& input) {
     auto size = regina::detail::tightDecodeIndex<size_t>(input);
     if (size <= 0)
@@ -1183,19 +1183,19 @@ FacetPairing<dim> FacetPairingBase<dim>::tightDecode(std::istream& input) {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline std::pair<FacetPairing<dim>, Isomorphism<dim>>
         FacetPairingBase<dim>::canonical() const {
     return canonicalInternal<false>();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline std::pair<FacetPairing<dim>, typename FacetPairingBase<dim>::IsoList>
         FacetPairingBase<dim>::canonicalAll() const {
     return canonicalInternal<true>();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline typename FacetPairingBase<dim>::IsoList
         FacetPairingBase<dim>::findAutomorphisms() const {
     IsoList list;
@@ -1203,7 +1203,7 @@ inline typename FacetPairingBase<dim>::IsoList
     return list;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <typename Action, typename... Args>
 inline void FacetPairingBase<dim>::findAllPairings(size_t nSimplices,
         BoolSet boundary, int nBdryFacets,

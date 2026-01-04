@@ -135,7 +135,7 @@ class ExampleFromLowDim {
  *
  * \ingroup detail
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class ExampleFromLowDim<dim, false> {
     static_assert(dim == 2,
         "The ExampleFromLowDim template should only set available = false "
@@ -160,11 +160,10 @@ class ExampleFromLowDim<dim, false> {
  * class Example<dim> is.
  *
  * \tparam dim the dimension of the example triangulations to construct.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup detail
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
     static_assert(dim >= 2, "Example requires dimension >= 2.");
 
@@ -362,7 +361,7 @@ Triangulation<dim> ExampleFromLowDim<dim, available>::doubleCone(
 
 // Inline functions for Example
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Triangulation<dim> ExampleBase<dim>::sphere() {
     // Take two simplices and join their entire boundaries according to
     // the identity map.
@@ -375,7 +374,7 @@ Triangulation<dim> ExampleBase<dim>::sphere() {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Triangulation<dim> ExampleBase<dim>::simplicialSphere() {
     Triangulation<dim> ans;
 
@@ -401,7 +400,7 @@ Triangulation<dim> ExampleBase<dim>::simplicialSphere() {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Triangulation<dim> ExampleBase<dim>::sphereBundle() {
     // Make two simplices, and join all but two of the facets according
     // to the identity map.  Only facets 0 and dim of each simplex remain.
@@ -428,7 +427,7 @@ Triangulation<dim> ExampleBase<dim>::sphereBundle() {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Triangulation<dim> ExampleBase<dim>::twistedSphereBundle() {
     // Make two simplex, and join all but two of the facets according
     // to the identity map.  Only facets 0 and dim of each simplex remain.
@@ -455,7 +454,7 @@ Triangulation<dim> ExampleBase<dim>::twistedSphereBundle() {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Triangulation<dim> ExampleBase<dim>::ball() {
     Triangulation<dim> ans;
 
@@ -463,7 +462,7 @@ Triangulation<dim> ExampleBase<dim>::ball() {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Triangulation<dim> ExampleBase<dim>::ballBundle() {
     // This is the higher-dimensional analogy of a layered solid torus.
     // In even dimensions the corresponding construction is non-orientable,
@@ -487,7 +486,7 @@ Triangulation<dim> ExampleBase<dim>::ballBundle() {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Triangulation<dim> ExampleBase<dim>::twistedBallBundle() {
     // This is the higher-dimensional analogy of a layered solid torus.
     // In even dimensions the corresponding construction is non-orientable.

@@ -49,7 +49,7 @@
 
 namespace regina::detail {
 
-template <int> class TriangulationBase;
+template <int dim> requires (supportedDim(dim)) class TriangulationBase;
 
 /**
  * Helper class that provides core functionality for a boundary component
@@ -70,11 +70,10 @@ template <int> class TriangulationBase;
  * class BoundaryComponent<dim> is.
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup detail
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class BoundaryComponentBase :
         public ShortOutput<BoundaryComponentBase<dim>>, public MarkedElement {
     public:
@@ -162,7 +161,8 @@ class BoundaryComponentBase :
         bool orientable_;
             /**< Is this boundary component orientable? */
 
-        EnableIf<canBuild, Triangulation<dim-1>*, nullptr> boundary_;
+        EnableIf<canBuild, typename TriangulationTraits<dim>::Lower*, nullptr>
+                boundary_;
             /**< A full triangulation of the boundary component.
                  This may be pre-computed when the triangulation skeleton
                  is constructed, or it may be \c null in which case it
@@ -846,12 +846,8 @@ class BoundaryComponentBase :
          *
          * \return the triangulation of this boundary component.
          */
-        const Triangulation<dim-1>& build() const {
-            // Make sure we do not try to instantiate Triangulation<1>.
-            static_assert(canBuild,
-                "BoundaryComponent<dim>::build() can only "
-                "be used with dimensions dim > 2.");
-
+        const TriangulationTraits<dim>::Lower& build() const
+                requires (dim > 2) {
             if (boundary_.value)
                 return *boundary_.value; // Already cached or pre-computed.
             if constexpr (allowVertex) {
@@ -948,12 +944,12 @@ class BoundaryComponentBase :
          * Builds a new triangulation of this boundary component,
          * assuming this is a real boundary component.
          *
-         * \pre The dimension \a dim is greater than 2.
          * \pre The number of (dim-1)-faces is strictly positive.
          *
          * \return the newly created boundary triangulation.
          */
-        Triangulation<dim-1>* buildRealBoundary() const;
+        TriangulationTraits<dim>::Lower* buildRealBoundary() const
+            requires (dim > 2);
 
         /**
          * Reorders and relabels all <i>subdim</i>-faces of the given
@@ -985,8 +981,9 @@ class BoundaryComponentBase :
          * \a subdim can be deduced automatically from inside std::apply().
          */
         template <int subdim>
-        void reorderAndRelabelFaces(Triangulation<dim - 1>* tri,
-                const std::vector<Face<dim, subdim>*>& reference) const;
+        void reorderAndRelabelFaces(TriangulationTraits<dim>::Lower* tri,
+                const std::vector<Face<dim, subdim>*>& reference) const
+                requires (dim > 2);
 
     friend class Triangulation<dim>;
     friend class TriangulationBase<dim>;

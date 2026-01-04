@@ -51,7 +51,7 @@ using regina::MarkedAbelianGroup;
 using regina::MatrixInt;
 using regina::Triangulation;
 
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 void addTriangulation(pybind11::module_& m, pybind11::module_& internal,
         const char* name) {
     RDOC_SCOPE_BEGIN(Triangulation)

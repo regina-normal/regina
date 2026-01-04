@@ -53,7 +53,7 @@ bool internalSig = false;
 bool virtualMoves = false;
 bool classicalMoves = false;
 
-template <int dim>
+template <int dim> requires (dim == 3 || dim == 4)
 void process(const regina::Triangulation<dim>& tri) {
     size_t nSolns = 0;
     bool nonMinimal = false;

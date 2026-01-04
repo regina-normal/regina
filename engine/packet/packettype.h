@@ -473,7 +473,7 @@ class SpatialLink;
 class NormalHypersurfaces;
 class NormalSurfaces;
 class SnapPeaTriangulation;
-template <int> class Triangulation;
+template <int dim> requires (supportedDim(dim)) class Triangulation;
 
 template <>
 inline constexpr PacketType packetTypeHolds<Link> = PacketType::Link;
@@ -498,7 +498,7 @@ template <>
 inline constexpr PacketType packetTypeHolds<Triangulation<4>> =
     PacketType::Triangulation4;
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline constexpr PacketType packetTypeHolds<Triangulation<dim>> =
     PacketType(100 + dim); // dimensions 5-15 use constants 105-115
 

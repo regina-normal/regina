@@ -58,7 +58,7 @@ namespace regina {
  *
  * \tparam dim The dimension of the triangulation in question.
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 struct XMLLegacyTriangulationTags {
     static constexpr const char* simplices = "simplices";
         /**< The XML tag that stores the set of all top-dimensional
@@ -110,7 +110,7 @@ struct XMLLegacyTriangulationTags<2> {
  *
  * \tparam dim The dimension of the triangulation being read.
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class XMLSimplexReader : public XMLElementReader {
     private:
         Triangulation<dim>* tri_;
@@ -162,7 +162,7 @@ class XMLSimplexReader : public XMLElementReader {
  *
  * \tparam dim The dimension of the triangulation being read.
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class XMLLegacySimplicesReader : public XMLElementReader {
     private:
         Triangulation<dim>* tri_;
@@ -211,9 +211,8 @@ class XMLLegacySimplicesReader : public XMLElementReader {
  * \nopython
  *
  * \tparam dim The dimension of the triangulation being read.
- * This must be between 2 and 15 inclusive.
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class XMLTriangulationReader : public XMLPacketReader {
     protected:
         std::shared_ptr<PacketOf<Triangulation<dim>>> tri_;
@@ -334,14 +333,14 @@ class GroupPresentationPropertyReader : public XMLElementReader {
 
 // Implementation details for XMLSimplexReader
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline XMLSimplexReader<dim>::XMLSimplexReader(
         Triangulation<dim>* tri, size_t whichSimplex, bool permIndex) :
         tri_(tri), simplex_(tri->simplices()[whichSimplex]),
         permIndex_(permIndex) {
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void XMLSimplexReader<dim>::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
     auto desc = props.find("desc");
@@ -362,7 +361,7 @@ inline void XMLSimplexReader<dim>::startElement(const std::string&,
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void XMLSimplexReader<dim>::initialChars(const std::string& chars) {
     std::vector<std::string> tokens = basicTokenise(chars);
     if (tokens.size() != 2 * (dim + 1))
@@ -438,13 +437,13 @@ void XMLSimplexReader<dim>::initialChars(const std::string& chars) {
 
 // Implementation details for XMLLegacySimplicesReader
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline XMLLegacySimplicesReader<dim>::XMLLegacySimplicesReader(
         Triangulation<dim>* tri, size_t& readSimplices) :
         tri_(tri), readSimplices_(readSimplices) {
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void XMLLegacySimplicesReader<dim>::startElement(
         const std::string& /* tagName */,
         const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
@@ -454,7 +453,7 @@ void XMLLegacySimplicesReader<dim>::startElement(
             tri_->newSimplexRaw();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 XMLElementReader* XMLLegacySimplicesReader<dim>::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict&) {
@@ -469,7 +468,7 @@ XMLElementReader* XMLLegacySimplicesReader<dim>::startSubElement(
 
 // Inline functions for XMLTriangulationReader
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline XMLTriangulationReader<dim>::XMLTriangulationReader(
         // NOLINTNEXTLINE(performance-unnecessary-value-param)
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
@@ -483,7 +482,7 @@ inline XMLTriangulationReader<dim>::XMLTriangulationReader(
         tri_->newSimplexRaw();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline std::shared_ptr<Packet> XMLTriangulationReader<dim>::packetToCommit() {
     // Here is a good time to enforce the consistency of the triangulation:
     // this function would typically only be called once, immediately after
@@ -508,7 +507,7 @@ inline std::shared_ptr<Packet> XMLTriangulationReader<dim>::packetToCommit() {
     return tri_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 XMLElementReader* XMLTriangulationReader<dim>::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& subTagProps) {
@@ -525,12 +524,12 @@ XMLElementReader* XMLTriangulationReader<dim>::startContentSubElement(
             startPropertySubElement(subTagName, subTagProps);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void XMLTriangulationReader<dim>::endContentSubElement(
         const std::string&, XMLElementReader*) {
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline XMLElementReader*
         XMLTriangulationReader<dim>::startPropertySubElement(
         const std::string& subTagName,

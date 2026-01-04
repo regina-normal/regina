@@ -37,7 +37,7 @@
 
 using regina::Example;
 
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 void addExample(pybind11::module_& m, const char* name) {
     // We use the global scope here because all of Example's members are
     // inherited, and so Example's own docstring namespace does not exist.

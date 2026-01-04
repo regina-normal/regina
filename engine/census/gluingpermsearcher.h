@@ -48,9 +48,10 @@ namespace regina {
  * facet pairing.
  *
  * Currently this class is only implemented in Regina's
- * \ref stddim "standard dimensions".  In higher dimensions, the class
- * GluingPermSearcher<dim> remains undefined, as a placeholder for
- * if/when Regina implements higher-dimensional census code.
+ * \ref stddim "standard dimensions", with implementations that are
+ * specifically tailored for each dimension.  It is possible that a generic
+ * implementation might be written to support higher dimensions in some future
+ * release of Regina.
  *
  * Gluing permutation searchers are designed to manage the construction of
  * a large census of triangulations, and so they cannot be copied, moved or
@@ -67,7 +68,7 @@ namespace regina {
  *
  * \ingroup census
  */
-template <int dim>
+template <int dim> requires (standardDim(dim))
 class GluingPermSearcher;
 
 } // namespace regina

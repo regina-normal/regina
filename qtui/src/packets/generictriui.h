@@ -86,6 +86,7 @@ class GenericTriangulationBase : public QObject, public PacketReadOnlyUI {
  * A very basic packet interface for working with generic triangulations.
  */
 template <int dim>
+requires (regina::supportedDim(dim) && ! regina::standardDim(dim))
 class GenericTriangulationUI : public GenericTriangulationBase {
     private:
         /**

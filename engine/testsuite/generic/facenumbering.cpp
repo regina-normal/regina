@@ -49,7 +49,11 @@ using regina::Perm;
  *
  * Dimensions 8..15 use generic everything.
  */
+#ifdef REGINA_HIGHDIM
 using dims = std::integer_sequence<int, 2, 3, 4, 5, 6, 7, 8, 15>;
+#else
+using dims = std::integer_sequence<int, 2, 3, 4, 5, 6, 7, 8>;
+#endif
 
 /**
  * Lists the facial dimensions to test for a triangulation of dimension dim.
@@ -58,15 +62,18 @@ using dims = std::integer_sequence<int, 2, 3, 4, 5, 6, 7, 8, 15>;
  * we restrict this to a smaller subset of facial dimensions to avoid the test
  * suite becoming too slow.
  */
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 struct TestSubdims {
+    static_assert(dim < 15);
     using subdims = std::make_integer_sequence<int, dim>;
 };
+#ifdef REGINA_HIGHDIM
 template <>
 struct TestSubdims<15> {
     using subdims = std::integer_sequence<int, 0, 1, 2, 5, 8, 12, 13, 14>;
 };
-template <int dim>
+#endif
+template <int dim> requires (regina::supportedDim(dim))
 using subdims = typename TestSubdims<dim>::subdims;
 
 template <int dim, int subdim>

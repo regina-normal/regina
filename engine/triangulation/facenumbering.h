@@ -107,7 +107,6 @@ class FaceNumbering : public detail::FaceNumberingImpl<dim, subdim> {
  * the function.
  *
  * \tparam dim the dimension of simplex that we are working with.
- * This must be between 2 and 15 inclusive.
  *
  * \param i the first vertex of an edge in a <i>dim</i>-dimensional simplex.
  * This must be between 0 and \a dim inclusive.
@@ -117,12 +116,12 @@ class FaceNumbering : public detail::FaceNumberingImpl<dim, subdim> {
  *
  * \ingroup triangulation
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 constexpr inline int faceOppositeEdge(int i, int j);
 
 // Inline functions
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 constexpr int faceOppositeEdge(int i, int j) {
     static_assert(dim >= 5,
         "The generic implementation of faceOpposite() can only be used "

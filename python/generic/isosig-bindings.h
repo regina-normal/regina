@@ -109,7 +109,7 @@ void isosig_options(PythonClass& classWrapper) {
 
 } // namespace regina::python
 
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 void addIsoSigClassic(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(IsoSigClassic)
 
@@ -125,7 +125,7 @@ void addIsoSigClassic(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 void addIsoSigEdgeDegrees(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(IsoSigDegrees)
 
@@ -141,7 +141,7 @@ void addIsoSigEdgeDegrees(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 void addIsoSigRidgeDegrees(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(IsoSigDegrees)
 

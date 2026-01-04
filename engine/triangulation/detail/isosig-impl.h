@@ -50,7 +50,7 @@
 
 namespace regina::detail {
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <typename Encoding>
 typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
         size_t simp, const Perm<dim+1>& vertices,
@@ -228,7 +228,7 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <typename Type, typename Encoding>
 typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
     if (isEmpty())
@@ -264,7 +264,7 @@ typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <typename Type, typename Encoding>
 std::pair<typename Encoding::Signature, Isomorphism<dim>>
         TriangulationBase<dim>::isoSigDetail() const {
@@ -311,7 +311,7 @@ std::pair<typename Encoding::Signature, Isomorphism<dim>>
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
     Base64SigDecoder dec(sig.begin(), sig.end()); // skips leading whitespace
 
@@ -466,7 +466,7 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
     Base64SigDecoder dec(sig.begin(), sig.end()); // skips leading whitespace
     try {

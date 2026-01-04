@@ -92,7 +92,7 @@ template <int, int> class FaceNumbering;
  *
  * \ingroup triangulation
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class IsoSigClassic {
     private:
         size_t size_;
@@ -341,7 +341,7 @@ class IsoSigDegrees {
  *
  * \ingroup triangulation
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 using IsoSigEdgeDegrees = IsoSigDegrees<dim, 1>;
 
 /**
@@ -354,27 +354,27 @@ using IsoSigEdgeDegrees = IsoSigDegrees<dim, 1>;
  *
  * \ingroup triangulation
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 using IsoSigRidgeDegrees = IsoSigDegrees<dim, dim - 2>;
 
 // Inline functions for IsoSigClassic
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline IsoSigClassic<dim>::IsoSigClassic(const Component<dim>& comp) :
         size_(comp.size()), simp_(0), perm_(0) {
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t IsoSigClassic<dim>::simplex() const {
     return simp_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Perm<dim+1> IsoSigClassic<dim>::perm() const {
     return Perm<dim+1>::orderedSn[perm_];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool IsoSigClassic<dim>::next() {
     if (++perm_ == Perm<dim+1>::nPerms) {
         perm_ = 0;

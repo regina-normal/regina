@@ -93,11 +93,11 @@ namespace regina {
  * for all dimensions.
  *
  * \tparam dim the dimension of the underlying triangulation that is
- * being modelled.  This must be between 2 and 15 inclusive.
+ * being modelled.
  *
  * \ingroup census
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class GluingPerms : public Output<GluingPerms<dim>> {
     public:
         /**
@@ -675,25 +675,25 @@ class GluingPerms : public Output<GluingPerms<dim>> {
  *
  * \ingroup census
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void swap(GluingPerms<dim>& a, GluingPerms<dim>& b) noexcept;
 
 // Inline functions for GluingPerms
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline GluingPerms<dim>::GluingPerms(const FacetPairing<dim>& pairing) :
         pairing_(pairing), permIndices_(new Index[pairing.size() * (dim + 1)]) {
     std::fill(permIndices_, permIndices_ + size() * (dim + 1), -1);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline GluingPerms<dim>::GluingPerms(FacetPairing<dim>&& pairing) :
         pairing_(std::move(pairing)), // note: pairing is now unusable
         permIndices_(new Index[pairing_.size() * (dim + 1)]) {
     std::fill(permIndices_, permIndices_ + size() * (dim + 1), -1);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline GluingPerms<dim>::GluingPerms(const GluingPerms<dim>& src) :
         pairing_(src.pairing_),
         permIndices_(new Index[src.size() * (dim + 1)]) {
@@ -701,13 +701,13 @@ inline GluingPerms<dim>::GluingPerms(const GluingPerms<dim>& src) :
         permIndices_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline GluingPerms<dim>::GluingPerms(GluingPerms<dim>&& src) noexcept :
         pairing_(std::move(src.pairing_)), permIndices_(src.permIndices_) {
     src.permIndices_ = nullptr;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline GluingPerms<dim>& GluingPerms<dim>::operator = (const GluingPerms& src) {
     // std::copy() exhibits undefined behaviour in the case of self-assignment.
     if (std::addressof(src) == this)
@@ -723,7 +723,7 @@ inline GluingPerms<dim>& GluingPerms<dim>::operator = (const GluingPerms& src) {
     return *this;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline GluingPerms<dim>& GluingPerms<dim>::operator = (GluingPerms&& src)
         noexcept {
     pairing_ = std::move(src.pairing_);
@@ -732,62 +732,62 @@ inline GluingPerms<dim>& GluingPerms<dim>::operator = (GluingPerms&& src)
     return *this;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline GluingPerms<dim>::~GluingPerms() {
     delete[] permIndices_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void GluingPerms<dim>::swap(GluingPerms& other) noexcept {
     pairing_.swap(other.pairing_);
     std::swap(permIndices_, other.permIndices_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t GluingPerms<dim>::size() const {
     return pairing_.size();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline const FacetPairing<dim>& GluingPerms<dim>::pairing() const {
     return pairing_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Perm<dim+1> GluingPerms<dim>::perm(const FacetSpec<dim>& source) const {
     return indexToGluing(source, permIndex(source));
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Perm<dim+1> GluingPerms<dim>::perm(size_t simp, int facet) const {
     return indexToGluing(simp, facet, permIndex(simp, facet));
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline typename GluingPerms<dim>::Index& GluingPerms<dim>::permIndex(
         const FacetSpec<dim>& source) {
     return permIndices_[(dim + 1) * source.simp + source.facet];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline typename GluingPerms<dim>::Index& GluingPerms<dim>::permIndex(
         size_t simp, int facet) {
     return permIndices_[(dim + 1) * simp + facet];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline typename GluingPerms<dim>::Index GluingPerms<dim>::permIndex(
         const FacetSpec<dim>& source) const {
     return permIndices_[(dim + 1) * source.simp + source.facet];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline typename GluingPerms<dim>::Index GluingPerms<dim>::permIndex(
         size_t simp, int facet) const {
     return permIndices_[(dim + 1) * simp + facet];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Perm<dim+1> GluingPerms<dim>::indexToGluing(
         const FacetSpec<dim>& source, Index index) const {
     return Perm<dim+1>(pairing_.dest(source).facet, dim) *
@@ -795,7 +795,7 @@ inline Perm<dim+1> GluingPerms<dim>::indexToGluing(
         Perm<dim+1>(source.facet, dim);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Perm<dim+1> GluingPerms<dim>::indexToGluing(
         size_t simp, int facet, Index index) const {
     return Perm<dim+1>(pairing_.dest(simp, facet).facet, dim) *
@@ -803,13 +803,13 @@ inline Perm<dim+1> GluingPerms<dim>::indexToGluing(
         Perm<dim+1>(facet, dim);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool GluingPerms<dim>::operator == (const GluingPerms& other) const {
     return pairing_ == other.pairing_ && std::equal(permIndices_,
         permIndices_ + (size() * (dim + 1)), other.permIndices_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void swap(GluingPerms<dim>& a, GluingPerms<dim>& b) noexcept {
     a.swap(b);
 }

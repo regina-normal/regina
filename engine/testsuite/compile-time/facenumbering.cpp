@@ -88,6 +88,7 @@ template void testFaceNumbering<5, 2, 11>();
 template void testFaceNumbering<5, 3, 8>();
 template void testFaceNumbering<5, 4, 4>();
 
+#ifdef REGINA_HIGHDIM
 template void testFaceNumbering<15, 0, 9>();
 template void testFaceNumbering<15, 1, 20>();
 template void testFaceNumbering<15, 2, 40>();
@@ -97,3 +98,4 @@ template void testFaceNumbering<15, 10, 120>();
 template void testFaceNumbering<15, 12, 45>();
 template void testFaceNumbering<15, 13, 27>();
 template void testFaceNumbering<15, 14, 8>();
+#endif

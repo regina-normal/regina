@@ -47,7 +47,7 @@
 
 namespace regina::detail {
 
-template <int> class TriangulationBase;
+template <int dim> requires (supportedDim(dim)) class TriangulationBase;
 
 /**
  * Helper class that provides core functionality for a connected component
@@ -72,7 +72,7 @@ template <int> class TriangulationBase;
  *
  * \ingroup detail
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class ComponentBase :
         public ShortOutput<ComponentBase<dim>>,
         public MarkedElement {
@@ -432,53 +432,53 @@ class ComponentBase :
 
 // Inline functions for ComponentBase
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline ComponentBase<dim>::ComponentBase() :
         valid_(true), boundaryFacets_(0), orientable_(true) {
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t ComponentBase<dim>::index() const {
     return markedIndex();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t ComponentBase<dim>::size() const {
     return simplices_.size();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline auto ComponentBase<dim>::simplices() const {
     return ListView(simplices_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Simplex<dim>* ComponentBase<dim>::simplex(size_t index) const {
     return simplices_[index];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t ComponentBase<dim>::countVertices() const {
     static_assert(standardDim(dim), "countVertices() is only available "
         "for components in standard dimensions.");
     return static_cast<const Component<dim>*>(this)->template countFaces<0>();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t ComponentBase<dim>::countEdges() const {
     static_assert(standardDim(dim), "countEdges() is only available "
         "for components in standard dimensions.");
     return static_cast<const Component<dim>*>(this)->template countFaces<1>();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t ComponentBase<dim>::countTriangles() const {
     static_assert(standardDim(dim), "countTriangles() is only available "
         "for components in standard dimensions.");
     return static_cast<const Component<dim>*>(this)->template countFaces<2>();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t ComponentBase<dim>::countTetrahedra() const {
     static_assert(standardDim(dim) && dim >= 3,
         "countTetrahedra() is only available for components in "
@@ -486,7 +486,7 @@ inline size_t ComponentBase<dim>::countTetrahedra() const {
     return static_cast<const Component<dim>*>(this)->template countFaces<3>();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t ComponentBase<dim>::countPentachora() const {
     static_assert(standardDim(dim) && dim >= 4,
         "countPentachora() is only available for components in "
@@ -494,26 +494,26 @@ inline size_t ComponentBase<dim>::countPentachora() const {
     return static_cast<const Component<dim>*>(this)->template countFaces<4>();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t ComponentBase<dim>::countBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline auto ComponentBase<dim>::vertices() const {
     static_assert(standardDim(dim), "vertices() is only available "
         "for components in standard dimensions.");
     return static_cast<const Component<dim>*>(this)->template faces<0>();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline auto ComponentBase<dim>::edges() const {
     static_assert(standardDim(dim), "edges() is only available "
         "for components in standard dimensions.");
     return static_cast<const Component<dim>*>(this)->template faces<1>();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline auto ComponentBase<dim>::triangles() const {
     static_assert(standardDim(dim), "triangles() is only available "
         "for components in standard dimensions.");
@@ -523,7 +523,7 @@ inline auto ComponentBase<dim>::triangles() const {
         return static_cast<const Component<dim>*>(this)->template faces<2>();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline auto ComponentBase<dim>::tetrahedra() const {
     static_assert(standardDim(dim) && dim >= 3,
         "tetrahedra() is only available for components in "
@@ -534,7 +534,7 @@ inline auto ComponentBase<dim>::tetrahedra() const {
         return static_cast<const Component<dim>*>(this)->template faces<3>();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline auto ComponentBase<dim>::pentachora() const {
     static_assert(standardDim(dim) && dim >= 4,
         "pentachora() is only available for components in "
@@ -545,26 +545,26 @@ inline auto ComponentBase<dim>::pentachora() const {
         return static_cast<const Component<dim>*>(this)->template faces<4>();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline auto ComponentBase<dim>::boundaryComponents() const {
     return ListView(boundaryComponents_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Face<dim, 0>* ComponentBase<dim>::vertex(size_t index) const {
     static_assert(standardDim(dim), "vertex() is only available "
         "for components in standard dimensions.");
     return static_cast<const Component<dim>*>(this)->template face<0>(index);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Face<dim, 1>* ComponentBase<dim>::edge(size_t index) const {
     static_assert(standardDim(dim), "edge() is only available "
         "for components in standard dimensions.");
     return static_cast<const Component<dim>*>(this)->template face<1>(index);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Face<dim, 2>* ComponentBase<dim>::triangle(size_t index) const {
     static_assert(standardDim(dim), "triangle() is only available "
         "for components in standard dimensions.");
@@ -575,7 +575,7 @@ inline Face<dim, 2>* ComponentBase<dim>::triangle(size_t index) const {
             template face<2>(index);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Face<dim, 3>* ComponentBase<dim>::tetrahedron(size_t index) const {
     static_assert(standardDim(dim) && dim >= 3,
         "tetrahedron() is only available for components in "
@@ -587,7 +587,7 @@ inline Face<dim, 3>* ComponentBase<dim>::tetrahedron(size_t index) const {
             template face<3>(index);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Face<dim, 4>* ComponentBase<dim>::pentachoron(size_t index) const {
     static_assert(standardDim(dim) && dim >= 4,
         "pentachoron() is only available for components in "
@@ -599,33 +599,33 @@ inline Face<dim, 4>* ComponentBase<dim>::pentachoron(size_t index) const {
             template face<4>(index);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline BoundaryComponent<dim>* ComponentBase<dim>::boundaryComponent(
         size_t index) const {
     return boundaryComponents_[index];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool ComponentBase<dim>::isValid() const {
     return valid_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool ComponentBase<dim>::isOrientable() const {
     return orientable_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool ComponentBase<dim>::hasBoundaryFacets() const {
     return boundaryFacets_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t ComponentBase<dim>::countBoundaryFacets() const {
     return boundaryFacets_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void ComponentBase<dim>::writeTextShort(std::ostream& out) const {
     if (simplices_.size() == 1)
         out << "Component with 1 " << Strings<dim>::simplex;

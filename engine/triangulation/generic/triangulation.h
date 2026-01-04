@@ -149,23 +149,16 @@ namespace regina {
  * (e.g., Triangulation2 and Triangulation3 for dimensions 2 and 3).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \headerfile triangulation/generic.h
  *
  * \ingroup generic
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class Triangulation : public detail::TriangulationBase<dim> {
     static_assert(! standardDim(dim),
         "The generic implementation of Triangulation<dim> "
         "should not be used for Regina's standard dimensions.");
-#ifndef REGINA_HIGHDIM
-    static_assert(dim <= 8,
-        "This build has been configured without REGINA_HIGHDIM. "
-        "The Triangulation class should only be instantiated for "
-        "dimensions dim <= 8.");
-#endif
 
     protected:
         using detail::TriangulationBase<dim>::simplices_;
@@ -510,29 +503,29 @@ class [[deprecated]] DegreeGreaterThan {
 
 // Inline functions for Triangulation
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Triangulation<dim>::Triangulation() : detail::TriangulationBase<dim>() {
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Triangulation<dim>::Triangulation(const Triangulation& src,
         bool cloneProps, bool cloneLocks) :
         detail::TriangulationBase<dim>(src, cloneProps, cloneLocks) {
     // All properties to clone are held by TriangulationBase.
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Triangulation<dim>::~Triangulation() {
     Snapshottable<Triangulation<dim>>::takeSnapshot();
     clearAllProperties();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void Triangulation<dim>::clearAllProperties() {
     detail::TriangulationBase<dim>::clearBaseProperties();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void Triangulation<dim>::swap(Triangulation<dim>& other) {
     if (&other == this)
         return;

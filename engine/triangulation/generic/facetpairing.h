@@ -104,7 +104,7 @@ namespace regina {
  *
  * \ingroup generic
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class FacetPairing : public detail::FacetPairingBase<dim> {
     static_assert(dim != 3,
         "The generic implementation of FacetPairing<dim> "
@@ -218,17 +218,17 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
 
 // Inline functions for FacetPairing
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetPairing<dim>::FacetPairing(const Triangulation<dim>& tri) :
         detail::FacetPairingBase<dim>(tri) {
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetPairing<dim>::FacetPairing(std::istream& in) :
         detail::FacetPairingBase<dim>(in) {
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetPairing<dim>::FacetPairing(size_t size) :
         detail::FacetPairingBase<dim>(size) {
 }

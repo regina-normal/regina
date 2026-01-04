@@ -38,7 +38,7 @@
 using pybind11::overload_cast;
 using regina::Simplex;
 
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 void addSimplex(pybind11::module_& m, const char* name) {
     static_assert(! regina::standardDim(dim));
 

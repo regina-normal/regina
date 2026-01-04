@@ -46,7 +46,7 @@
 
 namespace regina {
     class Link;
-    template <int> class Triangulation;
+    template <int dim> requires (supportedDim(dim)) class Triangulation;
 }
 
 /**

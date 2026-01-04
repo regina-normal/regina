@@ -57,7 +57,7 @@ namespace regina::detail {
 template <int dim, bool allIsos>
 struct CanonicalInternalReturn;
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 struct CanonicalInternalReturn<dim, true> {
     typename FacetPairingBase<dim>::IsoList result;
 
@@ -74,7 +74,7 @@ struct CanonicalInternalReturn<dim, true> {
     }
 };
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 struct CanonicalInternalReturn<dim, false> {
     Isomorphism<dim> result;
 
@@ -89,7 +89,7 @@ struct CanonicalInternalReturn<dim, false> {
     }
 };
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool FacetPairingBase<dim>::isCanonical() const {
     // Check the preconditions for isCanonicalInternal().
     for (size_t simp = 0; simp < size_; ++simp) {
@@ -112,7 +112,7 @@ bool FacetPairingBase<dim>::isCanonical() const {
     return isCanonicalInternal();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <bool allIsos>
 std::pair<FacetPairing<dim>,
         typename FacetPairingBase<dim>::template CanonicalIsos<allIsos>>
@@ -416,7 +416,7 @@ endPermSearch:
     return { std::move(best), std::move(bestIso.result) };
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool FacetPairingBase<dim>::isCanonicalInternal(
         typename FacetPairingBase<dim>::IsoList* list) const {
     // Create the automorphisms one simplex at a time, selecting the

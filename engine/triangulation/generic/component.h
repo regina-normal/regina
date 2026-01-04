@@ -75,7 +75,7 @@ namespace regina {
  *
  * \ingroup generic
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class Component : public detail::ComponentBase<dim> {
     static_assert(! standardDim(dim),
         "The generic implementation of Component<dim> "

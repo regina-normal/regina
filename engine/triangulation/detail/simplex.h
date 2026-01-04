@@ -49,12 +49,12 @@
 
 namespace regina {
 
-template <int> class XMLSimplexReader;
-template <int> class XMLTriangulationReader;
+template <int dim> requires (supportedDim(dim)) class XMLSimplexReader;
+template <int dim> requires (supportedDim(dim)) class XMLTriangulationReader;
 
 namespace detail {
 
-template <int> class TriangulationBase;
+template <int dim> requires (supportedDim(dim)) class TriangulationBase;
 
 /**
  * Helper class that provides core functionality for a top-dimensional
@@ -76,14 +76,11 @@ template <int> class TriangulationBase;
  * Simplex<dim> is.
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup detail
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
-    static_assert(dim >= 2, "Simplex requires dimension >= 2.");
-
     public:
         static constexpr int dimension = dim;
             /**< A compile-time constant that gives the dimension of the
@@ -1143,13 +1140,13 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
 
 // Inline functions for SimplexBase
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline SimplexBase<dim>::SimplexBase(Triangulation<dim>* tri) : tri_(tri) {
     for (int i = 0; i <= dim; ++i)
         adj_[i] = nullptr;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline SimplexBase<dim>::SimplexBase(const SimplexBase& clone,
         Triangulation<dim>* tri) :
         description_(clone.description_), locks_(clone.locks_), tri_(tri) {
@@ -1157,7 +1154,7 @@ inline SimplexBase<dim>::SimplexBase(const SimplexBase& clone,
         adj_[i] = nullptr;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline SimplexBase<dim>::SimplexBase(std::string desc,
         Triangulation<dim>* tri) :
         description_(std::move(desc)), tri_(tri) {
@@ -1165,49 +1162,49 @@ inline SimplexBase<dim>::SimplexBase(std::string desc,
         adj_[i] = nullptr;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline const std::string& SimplexBase<dim>::description() const {
     return description_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void SimplexBase<dim>::setDescription(const std::string& desc) {
     typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::Cosmetic> span(*tri_);
     description_ = desc;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t SimplexBase<dim>::index() const {
     return markedIndex();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Simplex<dim>* SimplexBase<dim>::adjacentSimplex(int facet) const {
     return adj_[facet];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline int SimplexBase<dim>::adjacentFacet(int facet) const {
     return gluing_[facet][facet];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Perm<dim+1> SimplexBase<dim>::adjacentGluing(int face) const {
     return gluing_[face];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Triangulation<dim>& SimplexBase<dim>::triangulation() const {
     return *tri_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Component<dim>* SimplexBase<dim>::component() const {
     triangulation().ensureSkeleton();
     return component_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <int subdim>
 inline Face<dim, subdim>* SimplexBase<dim>::face(int face) const {
     static_assert(0 <= subdim && subdim < dim,
@@ -1216,19 +1213,19 @@ inline Face<dim, subdim>* SimplexBase<dim>::face(int face) const {
     return std::get<subdim>(faces_)[face];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Face<dim, 0>* SimplexBase<dim>::vertex(int i) const {
     triangulation().ensureSkeleton();
     return std::get<0>(faces_)[i];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Face<dim, 1>* SimplexBase<dim>::edge(int i) const {
     triangulation().ensureSkeleton();
     return std::get<1>(faces_)[i];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Face<dim, 2>* SimplexBase<dim>::triangle(int i) const {
     static_assert(dim >= 3, "triangle() is only available "
         "for simplices of dimension >= 3.");
@@ -1236,7 +1233,7 @@ inline Face<dim, 2>* SimplexBase<dim>::triangle(int i) const {
     return std::get<2>(faces_)[i];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Face<dim, 3>* SimplexBase<dim>::tetrahedron(int i) const {
     static_assert(dim >= 4, "tetrahedron() is only available "
         "for simplices of dimension >= 4.");
@@ -1244,7 +1241,7 @@ inline Face<dim, 3>* SimplexBase<dim>::tetrahedron(int i) const {
     return std::get<3>(faces_)[i];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Face<dim, 4>* SimplexBase<dim>::pentachoron(int i) const {
     static_assert(dim >= 5, "pentachoron() is only available "
         "for simplices of dimension >= 5.");
@@ -1252,7 +1249,7 @@ inline Face<dim, 4>* SimplexBase<dim>::pentachoron(int i) const {
     return std::get<4>(faces_)[i];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <int subdim>
 inline Perm<dim + 1> SimplexBase<dim>::faceMapping(int face) const {
     static_assert(0 <= subdim && subdim < dim,
@@ -1261,19 +1258,19 @@ inline Perm<dim + 1> SimplexBase<dim>::faceMapping(int face) const {
     return std::get<subdim>(mappings_)[face];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Perm<dim + 1> SimplexBase<dim>::vertexMapping(int face) const {
     triangulation().ensureSkeleton();
     return std::get<0>(mappings_)[face];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Perm<dim + 1> SimplexBase<dim>::edgeMapping(int face) const {
     triangulation().ensureSkeleton();
     return std::get<1>(mappings_)[face];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Perm<dim + 1> SimplexBase<dim>::triangleMapping(int face) const {
     static_assert(dim >= 3, "triangleMapping() is only available "
         "for simplices of dimension >= 3.");
@@ -1281,7 +1278,7 @@ inline Perm<dim + 1> SimplexBase<dim>::triangleMapping(int face) const {
     return std::get<2>(mappings_)[face];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Perm<dim + 1> SimplexBase<dim>::tetrahedronMapping(int face) const {
     static_assert(dim >= 4, "tetrahedronMapping() is only available "
         "for simplices of dimension >= 4.");
@@ -1289,7 +1286,7 @@ inline Perm<dim + 1> SimplexBase<dim>::tetrahedronMapping(int face) const {
     return std::get<3>(mappings_)[face];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Perm<dim + 1> SimplexBase<dim>::pentachoronMapping(int face) const {
     static_assert(dim >= 5, "pentachoronMapping() is only available "
         "for simplices of dimension >= 5.");
@@ -1297,19 +1294,19 @@ inline Perm<dim + 1> SimplexBase<dim>::pentachoronMapping(int face) const {
     return std::get<4>(mappings_)[face];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline int SimplexBase<dim>::orientation() const {
     triangulation().ensureSkeleton();
     return orientation_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool SimplexBase<dim>::facetInMaximalForest(int facet) const {
     triangulation().ensureSkeleton();
     return dualForest_ & (FacetMask(1) << facet);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void SimplexBase<dim>::writeTextShort(std::ostream& out) const {
     out << dim << "-simplex " << index();
 
@@ -1336,7 +1333,7 @@ inline void SimplexBase<dim>::writeTextShort(std::ostream& out) const {
         out << ": all facets boundary";
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool SimplexBase<dim>::hasBoundary() const {
     for (int i = 0; i <= dim; ++i)
         if (! adj_[i])
@@ -1344,7 +1341,7 @@ bool SimplexBase<dim>::hasBoundary() const {
     return false;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void SimplexBase<dim>::lock() {
     static constexpr LockMask mask = (LockMask(1) << (dim + 1));
     if (! (locks_ & mask)) {
@@ -1353,7 +1350,7 @@ inline void SimplexBase<dim>::lock() {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void SimplexBase<dim>::lockFacet(int facet) {
     const LockMask mask = (LockMask(1) << facet);
     if (! (locks_ & mask)) {
@@ -1367,12 +1364,12 @@ void SimplexBase<dim>::lockFacet(int facet) {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void SimplexBase<dim>::lockFacetRaw(int facet) {
     locks_ |= (LockMask(1) << facet);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void SimplexBase<dim>::unlock() {
     static constexpr LockMask mask = (LockMask(1) << (dim + 1));
     if (locks_ & mask) {
@@ -1381,7 +1378,7 @@ inline void SimplexBase<dim>::unlock() {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void SimplexBase<dim>::unlockFacet(int facet) {
     const LockMask mask = (LockMask(1) << facet);
     if (locks_ & mask) {
@@ -1395,12 +1392,12 @@ void SimplexBase<dim>::unlockFacet(int facet) {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void SimplexBase<dim>::unlockFacetRaw(int facet) {
     locks_ &= ~(LockMask(1) << facet);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void SimplexBase<dim>::unlockAll() {
     if (locks_) {
         typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::Cosmetic> span(*tri_);
@@ -1414,22 +1411,22 @@ void SimplexBase<dim>::unlockAll() {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool SimplexBase<dim>::isLocked() const {
     return (locks_ & (LockMask(1) << (dim + 1)));
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool SimplexBase<dim>::isFacetLocked(int facet) const {
     return (locks_ & (LockMask(1) << facet));
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline typename SimplexBase<dim>::LockMask SimplexBase<dim>::lockMask() const {
     return locks_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
     if (! adj_[myFacet])
         return nullptr;
@@ -1446,7 +1443,7 @@ Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
     return you;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Simplex<dim>* SimplexBase<dim>::unjoinRaw(int myFacet) {
     if (! adj_[myFacet])
         return nullptr;
@@ -1458,7 +1455,7 @@ inline Simplex<dim>* SimplexBase<dim>::unjoinRaw(int myFacet) {
     return you;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void SimplexBase<dim>::isolate() {
     // We need to check for lock violations before any changes are made,
     // since we promise to leave things unchanged if we throw a LockViolation.
@@ -1492,7 +1489,7 @@ hasGluings:
         }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void SimplexBase<dim>::isolateRaw() {
     for (int i = 0; i <= dim; ++i)
         if (auto you = adj_[i]) {
@@ -1501,7 +1498,7 @@ inline void SimplexBase<dim>::isolateRaw() {
         }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
         Perm<dim+1> gluing) {
     if (tri_ != you->tri_)
@@ -1527,7 +1524,7 @@ void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
     you->gluing_[yourFacet] = gluing.inverse();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void SimplexBase<dim>::joinRaw(int myFacet, Simplex<dim>* you,
         Perm<dim+1> gluing) {
     int yourFacet = gluing[myFacet];
@@ -1538,7 +1535,7 @@ inline void SimplexBase<dim>::joinRaw(int myFacet, Simplex<dim>* you,
     you->gluing_[yourFacet] = gluing.inverse();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void SimplexBase<dim>::writeTextLong(std::ostream& out) const {
     out << dim << "-simplex " << index();
     if (! description_.empty())
@@ -1564,7 +1561,7 @@ void SimplexBase<dim>::writeTextLong(std::ostream& out) const {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <int useDim>
 inline bool SimplexBase<dim>::sameDegreesAt(
         const SimplexBase<dim>& other, Perm<dim + 1> p) const {
@@ -1578,7 +1575,7 @@ inline bool SimplexBase<dim>::sameDegreesAt(
     return true;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <int... useDim >
 inline bool SimplexBase<dim>::sameDegreesAt(const SimplexBase& other,
         Perm<dim+1> p, std::integer_sequence<int, useDim...>) const {

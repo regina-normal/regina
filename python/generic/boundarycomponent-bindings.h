@@ -39,7 +39,7 @@
 using regina::BoundaryComponent;
 using regina::python::invalidFaceDimension;
 
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 void addBoundaryComponent(pybind11::module_& m, pybind11::module_& internal,
         const char* name) {
     // In higher dimensions:

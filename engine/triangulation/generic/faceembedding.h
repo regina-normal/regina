@@ -162,6 +162,7 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim))
 using VertexEmbedding = FaceEmbedding<dim, 0>;
 
 /**
@@ -181,6 +182,7 @@ using VertexEmbedding = FaceEmbedding<dim, 0>;
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim))
 using EdgeEmbedding = FaceEmbedding<dim, 1>;
 
 /**
@@ -200,6 +202,7 @@ using EdgeEmbedding = FaceEmbedding<dim, 1>;
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim) && dim > 2)
 using TriangleEmbedding = FaceEmbedding<dim, 2>;
 
 /**
@@ -219,6 +222,7 @@ using TriangleEmbedding = FaceEmbedding<dim, 2>;
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim) && dim > 3)
 using TetrahedronEmbedding = FaceEmbedding<dim, 3>;
 
 /**
@@ -238,6 +242,7 @@ using TetrahedronEmbedding = FaceEmbedding<dim, 3>;
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim) && dim > 4)
 using PentachoronEmbedding = FaceEmbedding<dim, 4>;
 #endif // __DOXYGEN
 

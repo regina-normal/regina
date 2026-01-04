@@ -59,7 +59,7 @@ class IntersectionForm;
 class ProgressTracker;
 class ProgressTrackerOpen;
 
-template <int> class XMLTriangulationReader;
+template <int dim> requires (supportedDim(dim)) class XMLTriangulationReader;
 
 /**
  * \defgroup dim4 4-Manifold Triangulations

@@ -63,7 +63,7 @@ struct CanonicalHelper {
      *
      * This routine currently only works for connected triangulations.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     static bool extendIsomorphism(
             const TriangulationBase<dim>* tri,
             Isomorphism<dim>& current,
@@ -176,7 +176,7 @@ struct CanonicalHelper {
 };
 #endif
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool TriangulationBase<dim>::makeCanonical() {
     size_t nSimp = size();
 
@@ -229,7 +229,7 @@ bool TriangulationBase<dim>::makeCanonical() {
     return true;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <typename Action, typename... Args>
 bool TriangulationBase<dim>::findIsomorphisms(
         const Triangulation<dim>& other, bool complete, Action&& action,
@@ -474,7 +474,7 @@ bool TriangulationBase<dim>::findIsomorphisms(
     return false;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool TriangulationBase<dim>::compatible(const Triangulation<dim>& other,
         bool complete) const {
     if (complete) {

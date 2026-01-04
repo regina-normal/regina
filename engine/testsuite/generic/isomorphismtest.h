@@ -40,7 +40,7 @@
  * minor convenience of not having to type out all the template parameters for
  * IsomorphismTest every time it is used.
  */
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 class IsomorphismTest {
     public:
         /**

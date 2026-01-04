@@ -68,7 +68,7 @@ class Link;
 class NormalSurface;
 class SnapPeaTriangulation;
 
-template <int> class XMLTriangulationReader;
+template <int dim> requires (supportedDim(dim)) class XMLTriangulationReader;
 
 #ifdef __DOCSTRINGS
 // Declare SnapPy types that appear in the Python-only functions below,

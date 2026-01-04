@@ -45,7 +45,7 @@ using regina::FacetPairing;
 using regina::FacetSpec;
 using regina::Triangulation;
 
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 void addFacetPairing(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(FacetPairing)
     RDOC_SCOPE_BASE(detail::FacetPairingBase)

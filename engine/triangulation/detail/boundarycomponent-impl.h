@@ -120,14 +120,16 @@ class BoundaryFaceReorderIterator {
 } namespace regina::detail {
 #endif
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 BoundaryComponentBase<dim>::~BoundaryComponentBase() {
     if constexpr (canBuild)
         delete boundary_.value;
 }
 
-template <int dim>
-Triangulation<dim-1>* BoundaryComponentBase<dim>::buildRealBoundary() const {
+template <int dim> requires (supportedDim(dim))
+TriangulationTraits<dim>::Lower* BoundaryComponentBase<dim>::buildRealBoundary()
+        const
+        requires (dim > 2) {
     // From the precondition, there is a positive number of (dim-1)-faces.
     const auto& allFacets = std::get<tupleIndex(dim-1)>(faces_);
 
@@ -231,11 +233,12 @@ Triangulation<dim-1>* BoundaryComponentBase<dim>::buildRealBoundary() const {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <int subdim>
 void BoundaryComponentBase<dim>::reorderAndRelabelFaces(
-        Triangulation<dim - 1>* tri,
-        const std::vector<Face<dim, subdim>*>& reference) const {
+        TriangulationTraits<dim>::Lower* tri,
+        const std::vector<Face<dim, subdim>*>& reference) const
+        requires (dim > 2) {
     if constexpr (subdim == dim - 1) {
         // The (dim-1) faces are already in perfect correspondence.
         return;

@@ -38,7 +38,7 @@
 using pybind11::overload_cast;
 using regina::Isomorphism;
 
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 void addIsomorphism(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(Isomorphism)
 

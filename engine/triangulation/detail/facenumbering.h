@@ -179,7 +179,7 @@ class FaceNumberingAPI {
          * contains the given vertex.
          */
         static constexpr bool containsVertex(int face, int vertex);
-#endif // __DOXYGEN
+#endif // __APIDOCS
 };
 
 /**

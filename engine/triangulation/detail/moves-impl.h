@@ -191,7 +191,7 @@ namespace regina::detail {
     }
 #endif // __DOXYGEN
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <int k>
 bool TriangulationBase<dim>::internalPachner(Face<dim, k>* f, bool check,
         bool perform) {
@@ -704,7 +704,7 @@ bool TriangulationBase<dim>::internalPachner(Face<dim, k>* f, bool check,
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <int k>
 bool TriangulationBase<dim>::internal20(Face<dim, k>* f, bool check,
         bool perform) {
@@ -1030,7 +1030,7 @@ bool TriangulationBase<dim>::internal20(Face<dim, k>* f, bool check,
     return true;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool TriangulationBase<dim>::internalShellBoundary(Simplex<dim>* s,
         bool check, bool perform) {
     static_assert(standardDim(dim),

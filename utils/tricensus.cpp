@@ -102,25 +102,25 @@ std::queue<Case> cases;
 bool noMoreCases = false;
 
 // Forward declarations:
-template <int dim>
+template <int dim> requires (regina::standardDim(dim))
 void foundGluingPerms(const regina::GluingPerms<dim>&,
     const std::shared_ptr<regina::Packet>&);
 
-template <int dim>
+template <int dim> requires (regina::standardDim(dim))
 void foundPartial(const regina::GluingPerms<dim>&,
     const regina::GluingPermSearcher<dim>&,
     const std::shared_ptr<regina::Packet>&);
 
-template <int dim>
+template <int dim> requires (regina::standardDim(dim))
 void findAllPerms(const regina::FacetPairing<dim>&,
     typename regina::FacetPairing<dim>::IsoList,
     bool, bool, regina::Flags<regina::CensusPurge>,
     const std::shared_ptr<regina::Packet>&);
 
-template <int dim>
+template <int dim> requires (regina::standardDim(dim))
 bool mightBeMinimal(regina::Triangulation<dim>&);
 
-template <int dim>
+template <int dim> requires (regina::standardDim(dim))
 int runCensus();
 
 // Differences between censuses of 2, 3 and 4-manifolds:
@@ -190,7 +190,7 @@ inline bool mightBeMinimal<4>(regina::Triangulation<4>&) {
 /**
  * What to do with each complete triangulation that is generated.
  */
-template <int dim>
+template <int dim> requires (regina::standardDim(dim))
 void foundGluingPerms(const regina::GluingPerms<dim>& perms,
         const std::shared_ptr<regina::Packet>& container) {
     regina::Triangulation<dim> tri = perms.triangulate();
@@ -281,7 +281,7 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
  * What to do with each partially-constructed triangulation in a
  * multi-threaded search.
  */
-template <int dim>
+template <int dim> requires (regina::standardDim(dim))
 void foundPartial(const regina::GluingPerms<dim>& perms,
         const regina::GluingPermSearcher<dim>& searcher,
         const std::shared_ptr<regina::Packet>& container) {
@@ -303,7 +303,7 @@ void foundPartial(const regina::GluingPerms<dim>& perms,
 /**
  * What to do with each face/facet pairing that is generated.
  */
-template <int dim>
+template <int dim> requires (regina::standardDim(dim))
 void foundFacePairing(const regina::FacetPairing<dim>& pairing,
         typename regina::FacetPairing<dim>::IsoList autos,
         const std::shared_ptr<regina::Packet>& container) {
@@ -328,7 +328,7 @@ void foundFacePairing(const regina::FacetPairing<dim>& pairing,
 /**
  * The work performed by each thread in a multithreaded census.
  */
-template <int dim>
+template <int dim> requires (regina::standardDim(dim))
 void processCases() {
     Case c;
     while (true) {
@@ -928,7 +928,7 @@ int main(int argc, char* argv[]) {
 /**
  * The main census generation routine.
  */
-template <int dim>
+template <int dim> requires (regina::standardDim(dim))
 int runCensus() {
     // Are we only dumping face pairings?
     if (mode == MODE_GENPAIRS) {
