@@ -123,6 +123,8 @@ namespace detail {
      *
      * \param value the value to assign to the new GMP integer.
      * \return a corresponding newly created and initialised GMP integer.
+     *
+     * \ingroup detail
      */
     mpz_ptr mpz_from_ll(long long value);
 
@@ -133,6 +135,8 @@ namespace detail {
      *
      * \param value the value to assign to the new GMP integer.
      * \return a corresponding newly created and initialised GMP integer.
+     *
+     * \ingroup detail
      */
     mpz_ptr mpz_from_ull(unsigned long long value);
 }

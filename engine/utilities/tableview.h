@@ -66,6 +66,8 @@ namespace detail {
      *
      * - \a type represents `const T`;
      * - \a view represents `const T&`.
+     *
+     * \ingroup detail
      */
     template <typename T, size_t... dim>
     struct ConstArrayOf;

@@ -717,7 +717,7 @@ namespace detail {
  * \tparam order the way in which this class orders permutations for the
  * purposes of indexing.
  *
- * \ingroup maths
+ * \ingroup detail
  */
 template <int n, int m, PermOrder order = PermOrder::Sign>
 #ifdef __APIDOCS

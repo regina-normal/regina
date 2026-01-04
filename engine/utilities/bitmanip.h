@@ -44,6 +44,8 @@
 
 namespace regina {
 
+namespace detail {
+
 /**
  * Contains implementation details for BitManipulator where we optimise
  * according to the underlying data type.
@@ -53,7 +55,7 @@ namespace regina {
  * \nopython Only the end-user class BitManipulator<unsigned long> is
  * available to Python users.
  *
- * \ingroup utilities
+ * \ingroup detail
  */
 template <UnsignedCppInteger T>
 class BitManipulatorByType {
@@ -155,6 +157,8 @@ class BitManipulatorByType<unsigned long long> {
 #endif // __GNUC__
 #endif // __DOXYGEN__
 
+} // namespace detail
+
 /**
  * An optimised class for bitwise analysis and manipulation of native
  * C++ integer types.
@@ -171,9 +175,11 @@ class BitManipulatorByType<unsigned long long> {
  * types, and _cannot_ handle Python's arbitrary-precision integers.  It is
  * up to you to ensure that any Python integers that you pass into the
  * BitManipulator routines are small enough to fit inside a C++ unsigned long.
+ *
+ * \ingroup utilities
  */
 template <UnsignedCppInteger T>
-class BitManipulator : public BitManipulatorByType<T> {
+class BitManipulator : public regina::detail::BitManipulatorByType<T> {
     static_assert(sizeof(T) == 1 || sizeof(T) == 2 || sizeof(T) == 4 ||
         sizeof(T) == 8 || sizeof(T) == 16 || sizeof(T) == 32 ||
         sizeof(T) == 64 || sizeof(T) == 128,

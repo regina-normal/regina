@@ -16,6 +16,11 @@ Version 7.5  [ TODO ]
           now enforced by the compiler.
         - More use of constexpr throughout the calculation engine.
     ENGINE:
+        Class BitManipulatorByType<...>:
+            - This is now an internal class in the namespace regina::detail.
+              You should never need to refer to this class directly; instead
+              you can access its functionality through the end-user class
+              BitManipulator<...>.
         Class Cut:
             - For the iterator-based constructor, the old recommendation that
               the iterator type be random access is now a hard requirement.

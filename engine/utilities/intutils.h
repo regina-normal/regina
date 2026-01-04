@@ -438,6 +438,8 @@ using IntOfMinBits = IntOfMinSize<(bits + 7) / 8>;
      *
      * If this macro is not defined, then the types IntOfSize<16>::type and
      * IntOfSize<16>::utype will both be \c void.
+     *
+     * \ingroup utilities
      */
     #define INT128_AVAILABLE
 #else

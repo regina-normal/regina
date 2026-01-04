@@ -540,7 +540,7 @@ namespace detail {
      * \param out the output stream to which the encoded string will be written.
      * \param value the integer to encode.
      *
-     * \ingroup utilities
+     * \ingroup detail
      */
     template <typename Int>
     requires StandardCppInteger<Int> || ArbitraryPrecisionInteger<Int>
@@ -587,7 +587,7 @@ namespace detail {
      * allowed to be additional unread data.
      * \return the integer represented by the given tight encoding.
      *
-     * \ingroup utilities
+     * \ingroup detail
      */
     template <typename Int, CharIterator iterator>
     requires StandardCppInteger<Int> || ArbitraryPrecisionInteger<Int>
@@ -614,7 +614,7 @@ namespace detail {
      * \param out the output stream to which the encoded string will be written.
      * \param value the integer to encode.
      *
-     * \ingroup utilities
+     * \ingroup detail
      */
     template <typename Int>
     void tightEncodeIndex(std::ostream& out, Int value);
@@ -630,7 +630,7 @@ namespace detail {
      *
      * \param out the output stream to which the encoded string will be written.
      *
-     * \ingroup utilities
+     * \ingroup detail
      */
     void tightEncodeNoIndex(std::ostream& out);
 
@@ -663,7 +663,7 @@ namespace detail {
      * \param input an input stream that begins with a tight encoding.
      * \return the integer represented by the given tight encoding.
      *
-     * \ingroup utilities
+     * \ingroup detail
      */
     template <typename Int>
     Int tightDecodeIndex(std::istream& input);

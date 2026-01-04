@@ -197,6 +197,8 @@ namespace detail {
      *
      * This hard-coded array is an implementation detail; these numbers
      * should be accessed by end users as PermClass<n>::count.
+     *
+     * \ingroup detail
      */
     constexpr int countPermClasses[17] = {
         1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231
@@ -212,6 +214,8 @@ namespace detail {
      * as you would obtain by beginning with a default-constructed
      * PermClass<n> \a c, repeatedly incrementing \a c until it is
      * past-the-end, and computing `c.rep()` at each stage.
+     *
+     * \ingroup detail
      */
     constexpr int64_t permClassRep[countPermClasses[16]] = {
         0, 1, 2, 6, 9, 27, 32, 127, 128, 146, 153, 746, 753, 849, 872, 5166,

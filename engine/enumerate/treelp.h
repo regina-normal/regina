@@ -595,7 +595,7 @@ namespace detail {
  * \tparam Coefficient the integer type used for coefficients in these extra
  * linear constraints.
  *
- * \ingroup enumerate
+ * \ingroup detail
  */
 template <int nConstraints, typename Coefficient>
 struct LPCol {

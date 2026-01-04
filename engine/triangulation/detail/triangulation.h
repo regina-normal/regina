@@ -72,32 +72,35 @@ template <int dim> class XMLLegacySimplicesReader;
 template <int dim> class XMLTriangulationReader;
 
 /**
- * Contains implementation details and common functionality for Regina's
- * dimension-agnostic classes.
+ * Hides away implementation details, and also provides common functionality
+ * for Regina's dimension-agnostic triangulation code.
  *
- * For most of Regina's dimension-agnostic classes, such as
- * Triangulation<dim>, Simplex<dim> and Face<dim, subdim>, the bulk of
- * the implementation is hidden away in the namespace regina::detail.
+ * End users should never need to refer to the namespace regina::detail
+ * directly.
  *
- * Regina's main classes acquire their functionality through inheritance.
- * For example, the end-user class regina::Triangulation<dim> inherits
- * most of its functionality from the implementation class
- * regina::detail::TriangulationBase<dim>.
+ * Regarding triangulations:
  *
- * Because of this inheritance, there is typically no need for
- * end users to explicitly refer to the namespace regina::detail.
+ * - For Regina's triangulation-related classes, such as `Triangulation<dim>`,
+ *   `Simplex<dim>` and `Face<dim, subdim>`, regina::detail provides code that
+ *   is shared across all dimensions (as opposed to code that is specialised
+ *   for dimensions 2, 3 and 4).
  *
- * Since regina::detail contains implementation details, its
- * classes are subject to change between releases.  Specifically:
+ * - Regina's end-user classes acquire this functionality through inheritance.
+ *   For example, the end-user class `regina::Triangulation<dim>` inherits
+ *   most of its functionality from its parent class
+ *   `regina::detail::TriangulationBase<dim>`.
  *
- * - All member functions that are inherited and exposed by the end-user
- *   classes in regina (e.g., Triangulation, Simplex, Face and so on) may be
- *   considered part of Regina's official API, and will be supported from
- *   release to release.
+ * Since regina::detail contains implementation details, its classes are
+ * subject to change between releases.  Specifically:
+ *
+ * - All functions that are inherited and exposed by Regina's end-user classes
+ *   (e.g., those member functions of `TriangulationBase<dim>` that are
+ *   exposed by `Triangulation<dim>`) may be considered part of Regina's
+ *   official API, and will be supported from release to release.
  *
  * - In constrast, any methods that are not exposed by the end-user classes
  *   (including the names and inheritance structure of classes within
- *   regina::detail) might change in subsequent releases without notice.
+ *   regina::detail) might change between releases without notice.
  */
 namespace detail {
 
@@ -4403,7 +4406,7 @@ class TriangulationBase :
  * \param lhs the triangulation whose contents should be swapped with \a rhs.
  * \param rhs the triangulation whose contents should be swapped with \a lhs.
  *
- * \ingroup detail
+ * \ingroup triangulation
  */
 template <int dim>
 void swap(Triangulation<dim>& lhs, Triangulation<dim>& rhs) {

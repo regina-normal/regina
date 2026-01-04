@@ -212,6 +212,8 @@ namespace detail {
  * Implementation details for select_constexpr_as_variant.
  * These declarations are used to pack together the correct std::variant
  * return type.
+ *
+ * \ingroup detail
  */
 template <int from, typename Action, int... arg /* 0,...,(to-from-1) */>
 auto seqToVariantHelper(std::integer_sequence<int, arg...>) ->
@@ -281,6 +283,8 @@ namespace detail {
  * cases, without ever instantiating an invalid std::tuple_element.
  *
  * See safe_tuple_element below for details.
+ *
+ * \ingroup detail
  */
 template <int pos, typename tuple, typename out_of_range,
     bool pos_in_range = (pos >= 0 && pos < std::tuple_size_v<tuple>)>
@@ -344,7 +348,7 @@ using safe_tuple_element = typename regina::detail::safe_tuple_element_impl<
  * \tparam pos the index of the argument being requested.  Positions are
  * numbered from 0 upwards.
  *
- * \ingroup detail
+ * \ingroup utilities
  */
 template <typename Action, int pos>
 struct CallableArg;
