@@ -273,7 +273,7 @@ SatLST* SatLST::beginsRegion(const SatAnnulus& annulus, TetList& avoidTets) {
 
     if (annulus.tet[0] != annulus.tet[1])
         return nullptr;
-    if (isBad(annulus.tet[0], avoidTets))
+    if (avoidTets.contains(annulus.tet[0]))
         return nullptr;
 
     // Is it a layering?
@@ -326,7 +326,7 @@ SatLST* SatLST::beginsRegion(const SatAnnulus& annulus, TetList& avoidTets) {
         currPair = nextPair;
 
         // Make sure this next tetrahedron is usable.
-        if (isBad(current, avoidTets))
+        if (avoidTets.contains(current))
             return nullptr;
     }
 
@@ -391,7 +391,8 @@ SatTriPrism* SatTriPrism::beginsRegionMajor(const SatAnnulus& annulus,
         TetList& avoidTets) {
     if (annulus.tet[0] == annulus.tet[1])
         return nullptr;
-    if (isBad(annulus.tet[0], avoidTets) || isBad(annulus.tet[1], avoidTets))
+    if (avoidTets.contains(annulus.tet[0]) ||
+            avoidTets.contains(annulus.tet[1]))
         return nullptr;
     if (annulus.tet[0]->adjacentTetrahedron(annulus.roles[0][0]) !=
             annulus.tet[1])
@@ -407,7 +408,7 @@ SatTriPrism* SatTriPrism::beginsRegionMajor(const SatAnnulus& annulus,
         annulus.roles[0][1]);
     if ((! adj) || adj == annulus.tet[0] || adj == annulus.tet[1])
         return nullptr;
-    if (isBad(adj, avoidTets))
+    if (avoidTets.contains(adj))
         return nullptr;
 
     Perm<4> adjRoles =
@@ -482,7 +483,8 @@ void SatCube::adjustSFS(SFSpace& sfs, bool reflect) const {
 SatCube* SatCube::beginsRegion(const SatAnnulus& annulus, TetList& avoidTets) {
     if (annulus.tet[0] == annulus.tet[1])
         return nullptr;
-    if (isBad(annulus.tet[0], avoidTets) || isBad(annulus.tet[1], avoidTets))
+    if (avoidTets.contains(annulus.tet[0]) ||
+            avoidTets.contains(annulus.tet[1]))
         return nullptr;
 
     Tetrahedron<3>* central0 = annulus.tet[0]->adjacentTetrahedron(
@@ -491,11 +493,11 @@ SatCube* SatCube::beginsRegion(const SatAnnulus& annulus, TetList& avoidTets) {
         annulus.roles[0][1]);
 
     if ((! central0) || central0 == annulus.tet[0] ||
-            central0 == annulus.tet[1] || isBad(central0, avoidTets))
+            central0 == annulus.tet[1] || avoidTets.contains(central0))
         return nullptr;
     if ((! central1) || central1 == annulus.tet[0] ||
             central1 == annulus.tet[1] || central1 == central0 ||
-            isBad(central0, avoidTets))
+            avoidTets.contains(central0))
         return nullptr;
 
     Perm<4> roles0 = annulus.tet[0]->adjacentGluing(
@@ -530,11 +532,11 @@ SatCube* SatCube::beginsRegion(const SatAnnulus& annulus, TetList& avoidTets) {
 
     if ((! bdry2) || bdry2 == annulus.tet[0] || bdry2 == annulus.tet[1] ||
             bdry2 == central0 || bdry2 == central1 ||
-            isBad(bdry2, avoidTets))
+            avoidTets.contains(bdry2))
         return nullptr;
     if ((! bdry3) || bdry3 == annulus.tet[0] || bdry3 == annulus.tet[1] ||
             bdry3 == central0 || bdry3 == central1 || bdry3 == bdry2 ||
-            isBad(bdry3, avoidTets))
+            avoidTets.contains(bdry3))
         return nullptr;
     if (central1->adjacentTetrahedron(roles1[0]) != bdry2)
         return nullptr;
@@ -624,7 +626,8 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
 
     if (annulus.tet[0] == annulus.tet[1])
         return nullptr;
-    if (isBad(annulus.tet[0], avoidTets) || isBad(annulus.tet[1], avoidTets))
+    if (avoidTets.contains(annulus.tet[0]) ||
+            avoidTets.contains(annulus.tet[1]))
         return nullptr;
 
     Tetrahedron<3>* middle = annulus.tet[0]->adjacentTetrahedron(
@@ -633,7 +636,7 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
         annulus.roles[0][0]) * annulus.roles[0] * Perm<4>(3, 1, 0, 2);
 
     if (notUnique(middle, annulus.tet[0], annulus.tet[1]) ||
-            isBad(middle, avoidTets))
+            avoidTets.contains(middle))
         return nullptr;
     if (middle != annulus.tet[0]->adjacentTetrahedron(
             annulus.roles[0][1]))
@@ -750,16 +753,18 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
         }
 
         // Look for a new adjacent block.
-        if (notUnique(nextLeft) ||
-                isBad(nextLeft, avoidTets) || isBad(nextLeft, foundSoFar))
+        if (notUnique(nextLeft) || avoidTets.contains(nextLeft) ||
+                std::find(foundSoFar.begin(), foundSoFar.end(), nextLeft) !=
+                foundSoFar.end())
             return nullptr;
 
         nextMiddle = nextLeft->adjacentTetrahedron(nextLeftRoles[0]);
         nextMiddleRoles = nextLeft->adjacentGluing(
             nextLeftRoles[0]) * nextLeftRoles * Perm<4>(3, 1, 0, 2);
 
-        if (notUnique(nextMiddle, nextLeft) ||
-                isBad(nextMiddle, avoidTets) || isBad(nextMiddle, foundSoFar))
+        if (notUnique(nextMiddle, nextLeft) || avoidTets.contains(nextMiddle) ||
+                std::find(foundSoFar.begin(), foundSoFar.end(), nextMiddle) !=
+                foundSoFar.end())
             return nullptr;
 
         if (nextMiddle != nextLeft->adjacentTetrahedron(nextLeftRoles[1]))
@@ -773,7 +778,9 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
             nextMiddleRoles[0]) * nextMiddleRoles * Perm<4>(0, 3, 1, 2);
 
         if (notUnique(nextRight, nextLeft, nextMiddle) ||
-                isBad(nextRight, avoidTets) || isBad(nextRight, foundSoFar))
+                avoidTets.contains(nextRight) ||
+                std::find(foundSoFar.begin(), foundSoFar.end(), nextRight) !=
+                foundSoFar.end())
             return nullptr;
 
         if (nextRight != nextMiddle->adjacentTetrahedron(nextMiddleRoles[1]))
@@ -862,7 +869,7 @@ SatLayering* SatLayering::beginsRegion(const SatAnnulus& annulus,
     // Must be a common usable tetrahedron.
     if (annulus.tet[0] != annulus.tet[1])
         return nullptr;
-    if (isBad(annulus.tet[0], avoidTets))
+    if (avoidTets.contains(annulus.tet[0]))
         return nullptr;
 
     // Is it a layering over the horizontal edge?

@@ -540,42 +540,6 @@ class SatBlock : public ShortOutput<SatBlock> {
         bool identicalBoundary(const SatBlock& other) const;
 
         /**
-         * Determines whether the given tetrahedron is contained within the
-         * given list.
-         *
-         * This is intended as a helper routine for isBlock() and
-         * related routines.
-         *
-         * \param t the tetrahedron to search for.
-         * \param list the list in which to search.
-         * \return \c true if and only if the given tetrahedron was found.
-         */
-        static bool isBad(const Tetrahedron<3>* t, const TetList& list);
-        /**
-         * Determines whether the given tetrahedron is contained within
-         * the given list.
-         *
-         * This is intended as a helper routine for isBlock() and
-         * related routines.  It is a generic routine for working with
-         * arbitrary list types.
-         *
-         * \pre Forward iterators of type `List::const_iterator`
-         * that span the given list can be obtained by calling
-         * `list.begin()` and `list.end()`.
-         *
-         * \param t the tetrahedron to search for.
-         * \param list the list in which to search.
-         * \return \c true if and only if the given tetrahedron was found.
-         */
-        template <typename List>
-        static bool isBad(const Tetrahedron<3>* t, const List& list) {
-            for (const Tetrahedron<3>* tet : list)
-                if (tet == t)
-                    return true;
-            return false;
-        }
-
-        /**
          * Determines whether the given tetrahedron pointer is null.
          *
          * This is intended as a helper routine for isBlock() and
