@@ -75,6 +75,9 @@ Version 7.5  [ TODO ]
         Function subscript(), superscript():
             - When passing one of Regina's integer types, there is now a
               precondition that the given value is not infinity.
+        Function supportedDim():
+            - New function to indicate which dimensions of triangulation are
+              supported; this complements maxDim() and standardDim().
         Function valueOf():
             - The native C++ integer versions of valueOf() are now templated.
             - The unsigned integer versions now reject negative numbers

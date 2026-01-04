@@ -42,13 +42,51 @@
 namespace regina {
 
 /**
+ * Indicates whether this build of Regina supports triangulations of the given
+ * dimension.
+ *
+ * A normal build of Regina will support triangulations of dimensions 2 to 8
+ * inclusive.  If necessary, you can make a "high-dimenisional build" of Regina
+ * using the `REGINA_HIGHDIM` option at compile time, which will enable support
+ * for triangulations of dimensions 2 to 15 inclusive.
+ *
+ * See the page on \ref stddim "standard dimensions" for further discussion of
+ * supported versus standard dimensions.
+ *
+ * \param dim the dimension in question.
+ * \return \c true if and only if \a dim is one of Regina's supported
+ * dimensions.
+ *
+ * \see standardDim()
+ * \see maxDim()
+ *
+ * \ingroup engine
+ */
+constexpr bool supportedDim(int dim) {
+#ifdef REGINA_HIGHDIM
+    return (dim >= 2 && dim <= 15);
+#else
+    return (dim >= 2 && dim <= 8);
+#endif
+}
+
+/**
  * Indicates whether the given dimension is one of Regina's
- * \ref stddim "standard dimensions".
- * Standard dimensions offer significantly richer functionality for
- * triangulations than generic dimensions.
+ * _standard dimensions_ for triangulations.
+ *
+ * Regina's standard dimensions are 2, 3, and 4.  These dimensions are
+ * Regina's main focus: here triangulations are highly optimised and offer
+ * rich functionality.  This is in contrast to other (higher) supported
+ * dimensions, where Regina's functionality is much more basic.
+ *
+ * See the page on \ref stddim "standard dimensions" for further discussion of
+ * supported versus standard dimensions.
  *
  * \param dim the dimension in question.
  * \return \c true if and only if \a dim is one of Regina's standard dimensions.
+ *
+ * \see supportedDim()
+ * \see maxDim()
  *
  * \ingroup engine
  */
@@ -63,6 +101,9 @@ constexpr bool standardDim(int dim) {
  * otherwise it will be 8 (the default for ordinary builds).
  *
  * \return Regina's maximum dimension of triangulation.
+ *
+ * \see supportedDim()
+ * \see standardDim()
  *
  * \ingroup engine
  */

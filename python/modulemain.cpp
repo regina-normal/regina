@@ -269,6 +269,7 @@ a new Python session.)doc");
     RDOC_SCOPE_SWITCH_MAIN
 
     // From regina-core.h:
+    m.def("supportedDim", regina::supportedDim, rdoc::supportedDim);
     m.def("standardDim", regina::standardDim, rdoc::standardDim);
     m.def("maxDim", regina::maxDim, rdoc::maxDim);
 
