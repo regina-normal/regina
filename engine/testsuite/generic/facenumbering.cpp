@@ -41,7 +41,7 @@ using regina::Perm;
 /**
  * The list of triangulation dimensions to test.
  *
- * Dimensions 2..4 use specialised face numbering implementations and
+ * Dimensions 1..4 use specialised face numbering implementations and
  * specialised permutation classes.
  *
  * Dimensions 5..7 use generic face numbering implementations but specialised
@@ -50,19 +50,19 @@ using regina::Perm;
  * Dimensions 8..15 use generic everything.
  */
 #ifdef REGINA_HIGHDIM
-using dims = std::integer_sequence<int, 2, 3, 4, 5, 6, 7, 8, 15>;
+using dims = std::integer_sequence<int, 1, 2, 3, 4, 5, 6, 7, 8, 15>;
 #else
-using dims = std::integer_sequence<int, 2, 3, 4, 5, 6, 7, 8>;
+using dims = std::integer_sequence<int, 1, 2, 3, 4, 5, 6, 7, 8>;
 #endif
 
 /**
- * Lists the facial dimensions to test for a triangulation of dimension dim.
+ * Lists the facial dimensions to test for a simplex of dimension dim.
  *
  * By default we use all facial dimensions 0..(dim-1), but for large dim
  * we restrict this to a smaller subset of facial dimensions to avoid the test
  * suite becoming too slow.
  */
-template <int dim> requires (regina::supportedDim(dim))
+template <int dim> requires (dim >= 1 && dim <= regina::maxDim())
 struct TestSubdims {
     static_assert(dim < 15);
     using subdims = std::make_integer_sequence<int, dim>;
@@ -73,10 +73,11 @@ struct TestSubdims<15> {
     using subdims = std::integer_sequence<int, 0, 1, 2, 5, 8, 12, 13, 14>;
 };
 #endif
-template <int dim> requires (regina::supportedDim(dim))
+template <int dim> requires (dim >= 1 && dim <= regina::maxDim())
 using subdims = typename TestSubdims<dim>::subdims;
 
 template <int dim, int subdim>
+requires (dim >= 1 && dim <= regina::maxDim() && subdim >= 0 && subdim < dim)
 static void faceNumberDetail() {
     SCOPED_TRACE_NUMERIC(subdim);
     using Impl = FaceNumbering<dim, subdim>;
@@ -96,13 +97,17 @@ static void faceNumberDetail() {
         // possible permutations of the vertices in the face and many possible
         // permutations of the vertices not in the face.
         if constexpr (subdim == 0) {
-            for (int upper = 0; upper < dim; ++upper) {
-                Perm<dim> u = Perm<dim>::rot(upper);
+            if constexpr (dim == 1) {
+                EXPECT_EQ(Impl::faceNumber(ordering), f);
+            } else {
+                for (int upper = 0; upper < dim; ++upper) {
+                    Perm<dim> u = Perm<dim>::rot(upper);
 
-                EXPECT_EQ(Impl::faceNumber(ordering *
-                    rev * Perm<dim + 1>::extend(u) * rev), f);
-                EXPECT_EQ(Impl::faceNumber(ordering *
-                    rev * Perm<dim + 1>::extend(u.reverse()) * rev), f);
+                    EXPECT_EQ(Impl::faceNumber(ordering *
+                        rev * Perm<dim + 1>::extend(u) * rev), f);
+                    EXPECT_EQ(Impl::faceNumber(ordering *
+                        rev * Perm<dim + 1>::extend(u.reverse()) * rev), f);
+                }
             }
         } else if constexpr (subdim == dim - 1) {
             for (int lower = 0; lower <= subdim; ++lower) {
@@ -152,6 +157,7 @@ TEST(FaceNumberingTest, faceNumber) {
 }
 
 template <int dim, int subdim>
+requires (dim >= 1 && dim <= regina::maxDim() && subdim >= 0 && subdim < dim)
 static void orderingDetail() {
     SCOPED_TRACE_NUMERIC(subdim);
 
@@ -181,6 +187,7 @@ TEST(FaceNumberingTest, ordering) {
 }
 
 template <int dim, int subdim>
+requires (dim >= 1 && dim <= regina::maxDim() && subdim >= 0 && subdim < dim)
 static void containsVertexDetail() {
     SCOPED_TRACE_NUMERIC(subdim);
     using Impl = FaceNumbering<dim, subdim>;

@@ -42,6 +42,7 @@ using regina::Face;
 using regina::FaceEmbedding;
 
 template <int dim, int subdim>
+requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
 void addFace(pybind11::module_& m, pybind11::module_& internal,
         const char* name, const char* embName) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)

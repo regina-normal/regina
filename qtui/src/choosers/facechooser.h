@@ -61,6 +61,7 @@
  * classes do not use slots or signals, I believe this is okay.
  */
 template <int dim, int subdim>
+requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
 class FaceChooser : public QComboBox, public regina::PacketListener {
     public:
         /**
@@ -156,6 +157,7 @@ class FaceChooser : public QComboBox, public regina::PacketListener {
  * dialog classes do not use slots or signals, I believe this is okay.
  */
 template <int dim, int subdim>
+requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
 class FaceDialog : public QDialog {
     private:
         /**
@@ -187,6 +189,7 @@ class FaceDialog : public QDialog {
 };
 
 template <int dim, int subdim>
+requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
 template <typename Held>
 FaceChooser<dim, subdim>::FaceChooser(regina::PacketOf<Held>* tri,
         FilterFunc filter, QWidget* parent, bool autoUpdate) :
@@ -199,6 +202,7 @@ FaceChooser<dim, subdim>::FaceChooser(regina::PacketOf<Held>* tri,
 }
 
 template <int dim, int subdim>
+requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
 regina::Face<dim, subdim>* FaceChooser<dim, subdim>::selected() {
     if (count() == 0)
         return nullptr;
@@ -207,6 +211,7 @@ regina::Face<dim, subdim>* FaceChooser<dim, subdim>::selected() {
 }
 
 template <int dim, int subdim>
+requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
 QString FaceChooser<dim, subdim>::description(
         regina::Face<dim, subdim>* option) {
     // This could be optimised for:
@@ -243,6 +248,7 @@ QString FaceChooser<dim, subdim>::description(
 }
 
 template <int dim, int subdim>
+requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
 void FaceChooser<dim, subdim>::fill() {
     for (auto f : tri_->template faces<subdim>())
         if ((! filter_) || (*filter_)(f)) {
@@ -252,6 +258,7 @@ void FaceChooser<dim, subdim>::fill() {
 }
 
 template <int dim, int subdim>
+requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
 void FaceChooser<dim, subdim>::select(regina::Face<dim, subdim>* option) {
     int index = 0;
     auto it = options_.begin();
@@ -271,6 +278,7 @@ void FaceChooser<dim, subdim>::select(regina::Face<dim, subdim>* option) {
 }
 
 template <int dim, int subdim>
+requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
 inline bool FaceChooser<dim, subdim>::refresh() {
     clear();
     options_.clear();
@@ -279,17 +287,20 @@ inline bool FaceChooser<dim, subdim>::refresh() {
 }
 
 template <int dim, int subdim>
+requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
 inline void FaceChooser<dim, subdim>::packetToBeChanged(regina::Packet&) {
     clear();
     options_.clear();
 }
 
 template <int dim, int subdim>
+requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
 inline void FaceChooser<dim, subdim>::packetWasChanged(regina::Packet&) {
     fill();
 }
 
 template <int dim, int subdim>
+requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
 inline void FaceChooser<dim, subdim>::packetBeingDestroyed(
         regina::PacketShell) {
     clear();
@@ -297,6 +308,7 @@ inline void FaceChooser<dim, subdim>::packetBeingDestroyed(
 }
 
 template <int dim, int subdim>
+requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
 template <typename Held>
 FaceDialog<dim, subdim>::FaceDialog(QWidget* parent,
         regina::PacketOf<Held>* tri,
@@ -324,6 +336,7 @@ FaceDialog<dim, subdim>::FaceDialog(QWidget* parent,
 }
 
 template <int dim, int subdim>
+requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
 template <typename Held>
 regina::Face<dim, subdim>* FaceDialog<dim, subdim>::choose(QWidget* parent,
         regina::PacketOf<Held>* tri,

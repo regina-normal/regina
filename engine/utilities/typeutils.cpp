@@ -99,14 +99,20 @@ namespace {
         registerType(typeid(IntegerBase<true>), "regina.LargeInteger");
         registerType(typeid(IntegerBase<false>), "regina.Integer");
 
-        // We use the hard-coded dimension strings to build names for
-        // Perm2..Perm15.
-        for_constexpr<2, 16>([](auto i) {
-            registerType(typeid(Perm<i>),
-                std::string("regina.Perm") + regina::detail::Strings<i>::dim);
-        });
-        // Perm16 does not have a hard-coded dimension string, so do
-        // this separately.
+        registerType(typeid(Perm<2>), "regina.Perm2");
+        registerType(typeid(Perm<3>), "regina.Perm3");
+        registerType(typeid(Perm<4>), "regina.Perm4");
+        registerType(typeid(Perm<5>), "regina.Perm5");
+        registerType(typeid(Perm<6>), "regina.Perm6");
+        registerType(typeid(Perm<7>), "regina.Perm7");
+        registerType(typeid(Perm<8>), "regina.Perm8");
+        registerType(typeid(Perm<9>), "regina.Perm9");
+        registerType(typeid(Perm<10>), "regina.Perm10");
+        registerType(typeid(Perm<11>), "regina.Perm11");
+        registerType(typeid(Perm<12>), "regina.Perm12");
+        registerType(typeid(Perm<13>), "regina.Perm13");
+        registerType(typeid(Perm<14>), "regina.Perm14");
+        registerType(typeid(Perm<15>), "regina.Perm15");
         registerType(typeid(Perm<16>), "regina.Perm16");
 
         for_constexpr<2, REGINA_MAXDIM + 1>([](auto i) {

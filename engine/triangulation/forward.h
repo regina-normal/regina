@@ -63,7 +63,10 @@ template <> class Example<2>;
 template <> class Example<3>;
 template <> class Example<4>;
 
-template <int, int> class Face;
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+class Face;
+
 template <int dim> requires (supportedDim(dim)) class Face<dim, dim>;
 template <> class Face<2, 2>;
 template <> class Face<3, 3>;
@@ -87,7 +90,10 @@ template <int dim> requires (supportedDim(dim) && dim >= 4)
 using Pentachoron = Face<dim, 4>;
 template <int dim> using Simplex = Face<dim, dim>;
 
-template <int, int> class FaceEmbedding;
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+class FaceEmbedding;
+
 template <int dim> requires (supportedDim(dim))
 using VertexEmbedding = FaceEmbedding<dim, 0>;
 template <int dim> requires (supportedDim(dim))
@@ -110,18 +116,14 @@ template <> class Triangulation<3>;
 template <> class Triangulation<4>;
 
 /**
- * Provides safe access to types related to triangulations of a given dimension.
+ * Provides safe access to related types for triangulations of the given
+ * dimension.
  *
- * Currently _related types_ simply refers to triangulations in one dimension
- * higher or lower.  These types are useful in generic code when working with
- * (for example) triangulated boundary components, cobordisms, and so on.
- *
- * By _safe access_, we mean that all of the type aliases in TriangulationTraits
- * will be valid non-void types, even if Regina does not support triangulations
- * of the corresponding dimension.  For example, the type
- * `TriangulationTraits<2>::Lower` is valid even though Regina does not support
- * `Triangulation<1>` (in this case, `TriangulationTraits<2>::Lower` resolves to
- * an empty struct).
+ * Typically these related types will be meaningful for some but not all
+ * triangulation dimensions.  The point of TriangulationTraits is that, for
+ * the cases that are _not_ meaningful, the relevant types will resolve to
+ * regina::NoSuchType (and therefore avoid compiler errors by listing invalid
+ * template parameters, such as `Triangulation<1>` or `Face<dim, dim + 1>`).
  *
  * \nopython
  *
@@ -130,13 +132,36 @@ template <> class Triangulation<4>;
 template <int dim> requires (supportedDim(dim))
 struct TriangulationTraits {
     /**
-     * A type alias for a triangulation of dimension `dim + 1`, or an empty
-     * struct if \a dim is the largest supported dimension in Regina.
+     * A type alias for a vertex of a <i>dim</i>-dimensional triangulation.
+     */
+    using Vertex = Face<dim, 0>;
+    /**
+     * A type alias for an edge of a <i>dim</i>-dimensional triangulation.
+     */
+    using Edge = Face<dim, 1>;
+    /**
+     * A type alias for a triangle of a <i>dim</i>-dimensional triangulation.
+     */
+    using Triangle = Face<dim, 2>;
+    /**
+     * A type alias for a tetrahedron of a <i>dim</i>-dimensional triangulation,
+     * or NoSuchType if `dim < 3`.
+     */
+    using Tetrahedron = Face<dim, 3>;
+    /**
+     * A type alias for a pentachoron of a <i>dim</i>-dimensional triangulation,
+     * or NoSuchType if `dim < 4`.
+     */
+    using Pentachoron = Face<dim, 4>;
+
+    /**
+     * A type alias for a triangulation of dimension `dim + 1`, or NoSuchType
+     * if \a dim is the largest supported dimension in Regina.
      */
     using Higher = Triangulation<dim + 1>;
     /**
-     * A type alias for a triangulation of dimension `dim - 1`, or an empty
-     * struct if \a dim is 2 (i.e., the lowest supported dimension in Regina).
+     * A type alias for a triangulation of dimension `dim - 1`, or NoSuchType
+     * if \a dim is 2 (i.e., the lowest supported dimension in Regina).
      */
     using Lower = Triangulation<dim - 1>;
 };
@@ -144,13 +169,37 @@ struct TriangulationTraits {
 #ifndef __DOXYGEN
 template <>
 struct TriangulationTraits<2> {
+    using Vertex = Face<2, 0>;
+    using Edge = Face<2, 1>;
+    using Triangle = Face<2, 2>;
+    using Tetrahedron = regina::NoSuchType;
+    using Pentachoron = regina::NoSuchType;
+
     using Higher = Triangulation<3>;
-    struct Lower {};
+    using Lower = regina::NoSuchType;
+};
+
+template <>
+struct TriangulationTraits<3> {
+    using Vertex = Face<3, 0>;
+    using Edge = Face<3, 1>;
+    using Triangle = Face<3, 2>;
+    using Tetrahedron = Face<3, 3>;
+    using Pentachoron = regina::NoSuchType;
+
+    using Higher = Triangulation<4>;
+    using Lower = Triangulation<2>;
 };
 
 template <>
 struct TriangulationTraits<maxDim()> {
-    struct Higher {};
+    using Vertex = Face<maxDim(), 0>;
+    using Edge = Face<maxDim(), 1>;
+    using Triangle = Face<maxDim(), 2>;
+    using Tetrahedron = Face<maxDim(), 3>;
+    using Pentachoron = Face<maxDim(), 4>;
+
+    using Higher = regina::NoSuchType;
     using Lower = Triangulation<maxDim() - 1>;
 };
 #endif // ! __DOXYGEN

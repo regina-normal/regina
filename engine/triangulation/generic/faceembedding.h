@@ -84,15 +84,14 @@ namespace regina {
  * (e.g., FaceEmbedding2_1 and FaceEmbedding3_0 for the two examples above).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  * \tparam subdim the dimension of the faces of the underlying triangulation.
- * This must be between 0 and <i>dim</i>-1 inclusive.
  *
  * \headerfile triangulation/generic.h
  *
  * \ingroup generic
  */
 template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
     public:
         /**
@@ -249,6 +248,7 @@ using PentachoronEmbedding = FaceEmbedding<dim, 4>;
 // Inline functions for FaceEmbedding
 
 template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 inline FaceEmbedding<dim, subdim>::FaceEmbedding(
         Simplex<dim>* simplex, Perm<dim + 1> vertices) :
         detail::FaceEmbeddingBase<dim, subdim>(simplex, vertices) {

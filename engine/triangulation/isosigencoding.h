@@ -72,6 +72,7 @@ namespace regina {
  * \ingroup triangulation
  */
 template <int dim, bool supportLocks = true>
+requires (supportedDim(dim))
 class IsoSigPrintable {
     public:
         /**

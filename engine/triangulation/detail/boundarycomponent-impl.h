@@ -70,6 +70,7 @@ namespace regina::detail {
  * _not_ the index of \a f in the boundary component's facet list.
  */
 template <int dim, int subdim>
+requires (dim > 2 && subdim >= 0 && subdim < dim)
 class BoundaryFaceReorderIterator {
     private:
         using InternalIterator =
@@ -109,6 +110,7 @@ class BoundaryFaceReorderIterator {
 #ifndef __APIDOCS
 } namespace std {
     template <int dim, int subdim>
+    requires (dim > 2 && subdim >= 0 && subdim < dim)
     struct iterator_traits<regina::detail::BoundaryFaceReorderIterator<
             dim, subdim>> {
         using value_type = regina::Face<dim - 1, subdim>*;
@@ -234,11 +236,10 @@ TriangulationTraits<dim>::Lower* BoundaryComponentBase<dim>::buildRealBoundary()
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int subdim>
+template <int subdim> requires (dim > 2 && subdim >= 0 && subdim < dim)
 void BoundaryComponentBase<dim>::reorderAndRelabelFaces(
         TriangulationTraits<dim>::Lower* tri,
-        const std::vector<Face<dim, subdim>*>& reference) const
-        requires (dim > 2) {
+        const std::vector<Face<dim, subdim>*>& reference) const {
     if constexpr (subdim == dim - 1) {
         // The (dim-1) faces are already in perfect correspondence.
         return;

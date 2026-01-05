@@ -48,8 +48,8 @@ namespace regina {
  * Contains helper classes that provide dimension-specific aliases for
  * generic functions.
  *
- * For example, this namespace provides aliases such as vertex() and edge()
- * for the functions face<0>() and face<1>() in the Simplex class.
+ * For example, this namespace provides aliases such as `vertex()` and `edge()`
+ * for the functions `face<0>()` and `face<1>()` in the Simplex class.
  *
  * Regina's main classes (such as Triangulation, Simplex and Face) acquire
  * these aliases through inheritance.  There is typically no need for
@@ -75,7 +75,7 @@ namespace regina::alias {
  *
  * \ingroup alias
  */
-template <typename Derived, int dim>
+template <typename Derived, int dim> requires (supportedDim(dim))
 class SimplexVoid {
 };
 

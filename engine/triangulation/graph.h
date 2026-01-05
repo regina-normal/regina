@@ -341,7 +341,7 @@ namespace graph {
      * \tparam out indicates the orientation that will be assigned to
      * the incident dual edges, as described above.
      */
-    template <int dim, bool out>
+    template <int dim, bool out> requires (supportedDim(dim))
     class IncidentDualEdgeIterator {
         public:
             using iterator_category = std::input_iterator_tag;
@@ -600,6 +600,7 @@ namespace graph {
      * boost::vertex_name_t.
      */
     template <int dim, typename PropertyType>
+    requires (supportedDim(dim))
     class InherentTriangulationPropertyMap {
     };
 
@@ -937,6 +938,7 @@ namespace boost {
     };
 
     template <int dim, typename PropertyType>
+    requires (supportedDim(dim))
     struct property_map<regina::Triangulation<dim>, PropertyType> {
         using const_type =
             regina::graph::InherentTriangulationPropertyMap<dim, PropertyType>;
@@ -1034,19 +1036,19 @@ namespace graph {
 
     // Inline functions for IncidentDualEdgeIterator
 
-    template <int dim, bool out>
+    template <int dim, bool out> requires (supportedDim(dim))
     inline IncidentDualEdgeIterator<dim, out>::IncidentDualEdgeIterator() :
             simp_(0), facet_(0) {
     }
 
-    template <int dim, bool out>
+    template <int dim, bool out> requires (supportedDim(dim))
     inline IncidentDualEdgeIterator<dim, out>::IncidentDualEdgeIterator(
             Simplex<dim>* simp, unsigned facet) :
             simp_(simp), facet_(facet) {
         makeValid();
     }
 
-    template <int dim, bool out>
+    template <int dim, bool out> requires (supportedDim(dim))
     inline IncidentDualEdgeIterator<dim, out>&
             IncidentDualEdgeIterator<dim, out>::operator ++ () {
         ++facet_;
@@ -1054,7 +1056,7 @@ namespace graph {
         return *this;
     }
 
-    template <int dim, bool out>
+    template <int dim, bool out> requires (supportedDim(dim))
     inline IncidentDualEdgeIterator<dim, out>
             IncidentDualEdgeIterator<dim, out>::operator ++ (int) {
         IncidentDualEdgeIterator prev(*this);
@@ -1063,7 +1065,7 @@ namespace graph {
         return prev;
     }
 
-    template <int dim, bool out>
+    template <int dim, bool out> requires (supportedDim(dim))
     inline DualEdge<dim> IncidentDualEdgeIterator<dim, out>::operator * ()
             const {
         Face<dim, dim-1>* f = simp_->template face<dim-1>(facet_);
@@ -1071,7 +1073,7 @@ namespace graph {
         return DualEdge<dim>(f, emb.simplex() == simp_ && emb.face() == facet_);
     }
 
-    template <int dim, bool out>
+    template <int dim, bool out> requires (supportedDim(dim))
     inline void IncidentDualEdgeIterator<dim, out>::makeValid() {
         while (facet_ <= dim && ! simp_->adjacentSimplex(facet_))
             ++facet_;

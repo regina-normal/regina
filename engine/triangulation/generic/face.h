@@ -104,15 +104,14 @@ namespace regina {
  * suffices (e.g., Face2_1 and Face3_0 for the two examples above).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  * \tparam subdim the dimension of the faces that this class represents.
- * This must be between 0 and <i>dim</i> inclusive.
  *
  * \headerfile triangulation/generic.h
  *
  * \ingroup generic
  */
 template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
 class Face : public detail::FaceBase<dim, subdim> {
     static_assert(dim == 2 || dim > 4,
         "The generic implementation of Face<dim, subdim> "
@@ -239,6 +238,7 @@ using Pentachoron = Face<dim, 4>;
 // Inline functions for Face
 
 template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
 inline Face<dim, subdim>::Face(Component<dim>* component) :
         detail::FaceBase<dim, subdim>(component) {
 }

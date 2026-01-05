@@ -74,13 +74,14 @@ namespace regina::detail {
  * such as Vertex3, Edge2 and so on).
  *
  * \tparam dim the dimension of the simplex whose faces are being numbered.
- * This must be between 1 and 15 inclusive.
+ * Note that dimension 1 _is_ supported for the purpose of face numbering,
+ * even though it is not supported for building fully-fledged triangulations.
  * \tparam subdim the dimension of the faces being numbered.
- * This must be between 0 and <i>dim</i>-1 inclusive.
  *
  * \ingroup detail
  */
 template <int dim, int subdim>
+requires (dim >= 1 && dim <= maxDim() && subdim >= 0 && subdim < dim)
 class FaceNumberingAPI {
     static_assert(0 <= subdim && subdim < dim,
         "FaceNumberingAPI<dim, subdim> requires 0 <= subdim < dim.");
@@ -200,10 +201,8 @@ class FaceNumberingAPI {
  * such as Vertex3, Edge2 and so on).
  *
  * \tparam dim the dimension of the simplex whose faces are being numbered.
- * This must be between 1 and 15 inclusive.
  * \tparam subdim the dimension of the faces being numbered.
- * This must be between 0 and <i>dim</i>-1 inclusive.
- * \tparam codim the codimension (<i>dim</i>-<i>subdim</i>-1) of the
+ * \tparam codim the codimension `(dim-subdim-1)` of the
  * faces being numbered.  Ideally this would be specified directly as
  * `dim-subdim-1` in the partial template specialisation, and this
  * _should_ be legal according to CWG1315; however, it fails to build
@@ -212,6 +211,9 @@ class FaceNumberingAPI {
  * \ingroup detail
  */
 template <int dim, int subdim, int codim = dim - subdim - 1>
+requires (dim >= 1 && dim <= maxDim() &&
+    subdim >= 0 && subdim < dim &&
+    dim == subdim + codim + 1)
 class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
     static_assert(subdim > 0,
         "The generic FaceNumberingImpl<dim, subdim> class "
@@ -423,11 +425,8 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
 };
 
 template <int dim, int codim>
+requires (dim >= 1 && dim <= maxDim() && dim == codim + 1)
 class FaceNumberingImpl<dim, 0, codim> : public FaceNumberingAPI<dim, 0> {
-    static_assert(codim + 1 == dim,
-        "The FaceNumberingImpl<dim, 0, codim> template specialisation "
-        "has mismatched face dimension and codimension.");
-
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
@@ -473,10 +472,8 @@ class FaceNumberingImpl<dim, 0, codim> : public FaceNumberingAPI<dim, 0> {
 };
 
 template <int dim, int codim>
+requires (dim > 1 && dim <= maxDim() && dim == codim + 2)
 class FaceNumberingImpl<dim, 1, codim> : public FaceNumberingAPI<dim, 1> {
-    static_assert(codim + 2 == dim,
-        "The FaceNumberingImpl<dim, 1, codim> template specialisation "
-        "has mismatched face dimension and codimension.");
     static_assert(! standardDim(dim),
         "The partial specialisation FaceNumberingImpl<dim, 1> "
         "should not be used for Regina's standard dimensions.");
@@ -554,13 +551,11 @@ class FaceNumberingImpl<dim, 1, codim> : public FaceNumberingAPI<dim, 1> {
 };
 
 template <int dim, int subdim>
+requires (dim >= 1 && dim <= maxDim() && subdim == dim - 1)
 class FaceNumberingImpl<dim, subdim, 0> : public FaceNumberingAPI<dim, dim - 1> {
     static_assert(! standardDim(dim),
         "The partial specialisation FaceNumberingImpl<dim, dim-1> "
         "should not be used for Regina's standard dimensions.");
-    static_assert(subdim + 1 == dim,
-        "The FaceNumberingImpl<dim, subdim, 0> template specialisation "
-        "has mismatched face dimension and codimension.");
 
     public:
 #ifndef __DOXYGEN

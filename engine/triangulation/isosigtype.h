@@ -45,7 +45,9 @@
 
 namespace regina {
 
-template <int, int> class FaceNumbering;
+template <int dim, int subdim>
+requires (dim >= 1 && dim <= maxDim() && subdim >= 0 && subdim < dim)
+class FaceNumbering;
 
 /**
  * The default signature type to use for isomorphism signatures.
@@ -82,7 +84,7 @@ template <int, int> class FaceNumbering;
  * possible simplices \a s and all `(dim+1)!` possible permutations \a p.
  *
  * This class is designed to be used as a template parameter for
- * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
+ * `Triangulation<dim>::isoSig()` and `Triangulation<dim>::isoSigDetail()`.
  * Typical users would have no need to create objects of this class or
  * call any of its functions directly.
  *
@@ -186,7 +188,7 @@ class IsoSigClassic {
  * simplices without adding an enormous amount of computational overhead.
  *
  * This class is designed to be used as a template parameter for
- * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
+ * `Triangulation<dim>::isoSig()` and `Triangulation<dim>::isoSigDetail()`.
  * Typical users would have no need to create objects of this class or
  * call any of its functions directly.
  *
@@ -202,6 +204,7 @@ class IsoSigClassic {
  * \ingroup triangulation
  */
 template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 class IsoSigDegrees {
     private:
         static constexpr int nFaces = FaceNumbering<dim, subdim>::nFaces;
@@ -387,6 +390,7 @@ inline bool IsoSigClassic<dim>::next() {
 // Inline functions for IsoSigDegrees
 
 template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 IsoSigDegrees<dim, subdim>::IsoSigDegrees(const Component<dim>& comp) :
         size_(comp.size()), perm_(0) {
     marks_ = new SimplexMarking[size_];
@@ -404,21 +408,25 @@ IsoSigDegrees<dim, subdim>::IsoSigDegrees(const Component<dim>& comp) :
 }
 
 template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 inline IsoSigDegrees<dim, subdim>::~IsoSigDegrees() {
     delete[] marks_;
 }
 
 template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 inline size_t IsoSigDegrees<dim, subdim>::simplex() const {
     return simp_;
 }
 
 template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 inline Perm<dim+1> IsoSigDegrees<dim, subdim>::perm() const {
     return Perm<dim+1>::orderedSn[perm_];
 }
 
 template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 bool IsoSigDegrees<dim, subdim>::next() {
     if (++perm_ == Perm<dim+1>::nPerms) {
         perm_ = 0;

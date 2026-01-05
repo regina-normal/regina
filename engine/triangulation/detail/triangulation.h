@@ -428,13 +428,12 @@ class TriangulationBase :
          * runtime argument, and the new top-dimensional simplices will
          * be returned in a Python tuple of size \a k.
          *
-         * \tparam k the number of new top-dimensional simplices to add;
-         * this must be non-negative.
+         * \tparam k the number of new top-dimensional simplices to add.
          *
          * \return an array containing all of the new simplices, in the order
          * in which they were added.
          */
-        template <int k>
+        template <int k> requires (k >= 0)
         std::array<Simplex<dim>*, k> newSimplices();
         /**
          * Creates \a k new top-dimensional simplices and adds them to this
@@ -679,16 +678,12 @@ class TriangulationBase :
         /**
          * A dimension-specific alias for countFaces<0>().
          *
-         * This alias is available for all dimensions \a dim.
-         *
          * See countFaces() for further information.
          */
         size_t countVertices() const;
 
         /**
          * A dimension-specific alias for countFaces<1>().
-         *
-         * This alias is available for all dimensions \a dim.
          *
          * See countFaces() for further information.
          */
@@ -697,8 +692,6 @@ class TriangulationBase :
         /**
          * A dimension-specific alias for countFaces<2>().
          *
-         * This alias is available for all dimensions \a dim.
-         *
          * See countFaces() for further information.
          */
         size_t countTriangles() const;
@@ -706,20 +699,18 @@ class TriangulationBase :
         /**
          * A dimension-specific alias for countFaces<3>().
          *
-         * This alias is available for dimensions \a dim ≥ 3.
-         *
          * See countFaces() for further information.
          */
-        size_t countTetrahedra() const;
+        size_t countTetrahedra() const
+            requires (dim >= 3);
 
         /**
          * A dimension-specific alias for countFaces<4>().
          *
-         * This alias is available for dimensions \a dim ≥ 4.
-         *
          * See countFaces() for further information.
          */
-        size_t countPentachora() const;
+        size_t countPentachora() const
+            requires (dim >= 4);
 
         /**
          * Returns the f-vector of this triangulation, which counts the
@@ -867,16 +858,12 @@ class TriangulationBase :
         /**
          * A dimension-specific alias for faces<0>().
          *
-         * This alias is available for all dimensions \a dim.
-         *
          * See faces() for further information.
          */
         auto vertices() const;
 
         /**
          * A dimension-specific alias for faces<1>().
-         *
-         * This alias is available for all dimensions \a dim.
          *
          * See faces() for further information.
          */
@@ -886,8 +873,6 @@ class TriangulationBase :
          * A dimension-specific alias for faces<2>(), or an alias for
          * simplices() in dimension \a dim = 2.
          *
-         * This alias is available for all dimensions.
-         *
          * See faces() for further information.
          */
         auto triangles() const;
@@ -896,21 +881,19 @@ class TriangulationBase :
          * A dimension-specific alias for faces<3>(), or an alias for
          * simplices() in dimension \a dim = 3.
          *
-         * This alias is available for dimensions \a dim ≥ 3.
-         *
          * See faces() for further information.
          */
-        auto tetrahedra() const;
+        auto tetrahedra() const
+            requires (dim >= 3);
 
         /**
          * A dimension-specific alias for faces<4>(), or an alias for
          * simplices() in dimension \a dim = 4.
          *
-         * This alias is available for dimensions \a dim ≥ 4.
-         *
          * See faces() for further information.
          */
-        auto pentachora() const;
+        auto pentachora() const
+            requires (dim >= 4);
 
         /**
          * Returns the requested connected component of this triangulation.
@@ -990,16 +973,12 @@ class TriangulationBase :
         /**
          * A dimension-specific alias for face<0>().
          *
-         * This alias is available for all dimensions \a dim.
-         *
          * See face() for further information.
          */
         Face<dim, 0>* vertex(size_t index) const;
 
         /**
          * A dimension-specific alias for face<1>().
-         *
-         * This alias is available for all dimensions \a dim.
          *
          * See face() for further information.
          */
@@ -1009,8 +988,7 @@ class TriangulationBase :
          * A dimension-specific alias for face<2>(), or an alias for
          * simplex() in dimension \a dim = 2.
          *
-         * This alias is available for all dimensions \a dim.
-         * It returns a non-const triangle pointer.
+         * This returns a non-const triangle pointer.
          *
          * See face() for further information.
          */
@@ -1020,8 +998,7 @@ class TriangulationBase :
          * A dimension-specific alias for face<2>(), or an alias for
          * simplex() in dimension \a dim = 2.
          *
-         * This alias is available for all dimensions \a dim.
-         * It returns a const triangle pointer in dimension \a dim = 2,
+         * This returns a const triangle pointer in dimension \a dim = 2,
          * and a non-const triangle pointer in all higher dimensions.
          *
          * See face() for further information.
@@ -1032,47 +1009,47 @@ class TriangulationBase :
          * A dimension-specific alias for face<3>(), or an alias for
          * simplex() in dimension \a dim = 3.
          *
-         * This alias is available for dimensions \a dim ≥ 3.
-         * It returns a non-const tetrahedron pointer.
+         * This returns a non-const tetrahedron pointer.
          *
          * See face() for further information.
          */
-        auto tetrahedron(size_t index);
+        auto tetrahedron(size_t index)
+            requires (dim >= 3);
 
         /**
          * A dimension-specific alias for face<3>(), or an alias for
          * simplex() in dimension \a dim = 3.
          *
-         * This alias is available for dimensions \a dim ≥ 3.
-         * It returns a const tetrahedron pointer in dimension \a dim = 3,
+         * This returns a const tetrahedron pointer in dimension \a dim = 3,
          * and a non-const tetrahedron pointer in all higher dimensions.
          *
          * See face() for further information.
          */
-        auto tetrahedron(size_t index) const;
+        auto tetrahedron(size_t index) const
+            requires (dim >= 3);
 
         /**
          * A dimension-specific alias for face<4>(), or an alias for
          * simplex() in dimension \a dim = 4.
          *
-         * This alias is available for dimensions \a dim ≥ 4.
-         * It returns a non-const pentachoron pointer.
+         * This returns a non-const pentachoron pointer.
          *
          * See face() for further information.
          */
-        auto pentachoron(size_t index);
+        auto pentachoron(size_t index)
+            requires (dim >= 4);
 
         /**
          * A dimension-specific alias for face<4>(), or an alias for
          * simplex() in dimension \a dim = 4.
          *
-         * This alias is available for dimensions \a dim ≥ 4.
-         * It returns a const pentachoron pointer in dimension \a dim = 4,
+         * This returns a const pentachoron pointer in dimension \a dim = 4,
          * and a non-const pentachoron pointer in all higher dimensions.
          *
          * See face() for further information.
          */
-        auto pentachoron(size_t index) const;
+        auto pentachoron(size_t index) const
+            requires (dim >= 4);
 
         /**
          * Translates a face of some other triangulation into the corresponding
@@ -1105,13 +1082,12 @@ class TriangulationBase :
          * above, in typical scenarios both triangulations would actually be
          * combinatorially identical).
          *
-         * \tparam subdim the face dimension; this must be between 0 and
-         * <i>dim</i> inclusive.
+         * \tparam subdim the face dimension.
          *
          * \param other the face to translate.
          * \return the corresponding face of this triangulation.
          */
-        template <int subdim>
+        template <int subdim> requires (0 <= subdim && subdim <= dim)
         Face<dim, subdim>* translate(const Face<dim, subdim>* other) const;
 
         /**
@@ -1134,13 +1110,12 @@ class TriangulationBase :
          * above, in typical scenarios both triangulations would actually be
          * combinatorially identical).
          *
-         * \tparam subdim the face dimension; this must be between 0 and
-         * <i>dim</i>-1 inclusive.
+         * \tparam subdim the face dimension.
          *
          * \param other the face embedding to translate.
          * \return the corresponding face embedding in this triangulation.
          */
-        template <int subdim>
+        template <int subdim> requires (0 <= subdim && subdim < dim)
         FaceEmbedding<dim, subdim> translate(
             const FaceEmbedding<dim, subdim>& other) const;
 
@@ -1246,12 +1221,11 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `countBoundaryFaces(subdim)`.
          *
-         * \tparam subdim the face dimension; this must be between 0 and
-         * <i>dim</i>-1 inclusive.
+         * \tparam subdim the face dimension.
          *
          * \return the number of boundary <i>subdim</i>-faces.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < dim)
         size_t countBoundaryFaces() const;
 
         /**
@@ -1588,13 +1562,12 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `markedHomology(k)`.
          *
-         * \tparam k the dimension of the homology group to compute; this must
-         * be between 1 and (<i>dim</i>-1) inclusive.
+         * \tparam k the dimension of the homology group to compute;
          *
          * \return the <i>k</i>th homology group of the union of all
          * simplices in this triangulation, as described above.
          */
-        template <int k = 1>
+        template <int k = 1> requires (k > 0 && k < dim)
         MarkedAbelianGroup markedHomology() const;
 
         /**
@@ -2091,14 +2064,13 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
-         * \tparam k the dimension of the given face.  This must be
-         * between 0 and (\a dim) inclusive.
+         * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the move.
          * \return \c true if and only if the requested move was able to be
          * performed.
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= dim)
         bool pachner(Face<dim, k>* f);
 
         /**
@@ -2135,12 +2107,11 @@ class TriangulationBase :
          * \exception LockViolation This move would violate a simplex or facet
          * lock.  This exception will be thrown before any changes are made.
          *
-         * \tparam k the dimension of the given face.  This must be
-         * between 0 and (\a dim) inclusive.
+         * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the move.
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= dim)
         void pachner(Face<dim, k>* f, Unprotected);
 
         /**
@@ -2208,14 +2179,13 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
-         * \tparam k the dimension of the given face.  This must be 0, 1 or 2,
-         * and must not exceed `dim - 2`.
+         * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the move.
          * \return \c true if and only if the requested move was able to be
          * performed.
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
         bool move20(Face<dim, k>* f);
 
         /**
@@ -2295,13 +2265,12 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
-         * \tparam k the dimension of the given face.  This must be
-         * between 0 and (\a dim) inclusive.
+         * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the candidate move.
          * \return \c true if and only if the requested move can be performed.
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= dim)
         bool hasPachner(Face<dim, k>* f) const;
 
         /**
@@ -2315,13 +2284,12 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
-         * \tparam k the dimension of the given face.  This must be 0, 1 or 2,
-         * and must not exceed `dim - 2`.
+         * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the candidate move.
          * \return \c true if and only if the requested move can be performed.
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
         bool has20(Face<dim, k>* f) const;
 
         /**
@@ -2362,14 +2330,13 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
-         * \tparam k the dimension of the given face.  This must be
-         * between 0 and (\a dim) inclusive.
+         * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the move.
          * \return The new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= dim)
         std::optional<Triangulation<dim>> withPachner(Face<dim, k>* f) const;
 
         /**
@@ -2386,14 +2353,13 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
-         * \tparam k the dimension of the given face.  This must be 0, 1 or 2,
-         * and must not exceed `dim - 2`.
+         * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the move.
          * \return The new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
         std::optional<Triangulation<dim>> with20(Face<dim, k>* f) const;
 
         /**
@@ -2445,8 +2411,7 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
-         * \tparam k the dimension of the given face.  This must be
-         * between 0 and (\a dim) inclusive.
+         * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the move.
          * \param ignored an argument that is ignored.  In earlier versions of
@@ -2456,7 +2421,7 @@ class TriangulationBase :
          * assuming the move is allowed.
          * \return \c true if and only if the requested move could be performed.
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= dim)
         [[deprecated]] bool pachner(Face<dim, k>* f, bool ignored,
             bool perform = true);
 
@@ -2480,8 +2445,7 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
-         * \tparam k the dimension of the given face.  This must be 0, 1 or 2,
-         * and must not exceed `dim - 2`.
+         * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the move.
          * \param ignored an argument that is ignored.  In earlier versions of
@@ -2491,7 +2455,7 @@ class TriangulationBase :
          * assuming the move is allowed.
          * \return \c true if and only if the requested move could be performed.
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
         [[deprecated]] bool twoZeroMove(Face<dim, k>* f, bool ignored,
             bool perform = true);
 
@@ -3802,7 +3766,7 @@ class TriangulationBase :
          * The return value for this routine is the same as for newSimplices().
          * See newSimplices() for further details.
          */
-        template <int k>
+        template <int k> requires (k >= 0)
         std::array<Simplex<dim>*, k> newSimplicesRaw();
 
         /**
@@ -4070,7 +4034,7 @@ class TriangulationBase :
          * \return \c true if the requested checks pass, or if \a check was
          * \c false (which means no checks were performed at all).
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= dim)
         bool internalPachner(Face<dim, k>* f, bool check, bool perform);
 
         /**
@@ -4093,7 +4057,7 @@ class TriangulationBase :
          * \return \c true if the requested checks pass, or if \a check was
          * \c false (which means no checks were performed at all).
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
         bool internal20(Face<dim, k>* f, bool check, bool perform);
 
         /**
@@ -4648,11 +4612,8 @@ inline Simplex<dim>* TriangulationBase<dim>::newSimplexRaw() {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k>
+template <int k> requires (k >= 0)
 std::array<Simplex<dim>*, k> TriangulationBase<dim>::newSimplices() {
-    static_assert(k >= 0,
-        "The template argument k to newSimplices() must be non-negative.");
-
     ChangeAndClearSpan<> span(*this);
 
     std::array<Simplex<dim>*, k> ans;
@@ -4664,11 +4625,8 @@ std::array<Simplex<dim>*, k> TriangulationBase<dim>::newSimplices() {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k>
+template <int k> requires (k >= 0)
 inline std::array<Simplex<dim>*, k> TriangulationBase<dim>::newSimplicesRaw() {
-    static_assert(k >= 0,
-        "The template argument k to newSimplicesRaw() must be non-negative.");
-
     std::array<Simplex<dim>*, k> ans;
     for (int i = 0; i < k; ++i)
         simplices_.push_back(ans[i] = new Simplex<dim>(
@@ -4877,9 +4835,8 @@ inline size_t TriangulationBase<dim>::countTriangles() const {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline size_t TriangulationBase<dim>::countTetrahedra() const {
-    static_assert(dim >= 3, "countTetrahedra() is only available "
-        "for triangulations of dimension >= 3.");
+inline size_t TriangulationBase<dim>::countTetrahedra() const
+        requires (dim >= 3) {
     if constexpr (dim == 3) {
         return simplices_.size();
     } else {
@@ -4889,9 +4846,8 @@ inline size_t TriangulationBase<dim>::countTetrahedra() const {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline size_t TriangulationBase<dim>::countPentachora() const {
-    static_assert(dim >= 4, "countPentachora() is only available "
-        "for triangulations of dimension >= 4.");
+inline size_t TriangulationBase<dim>::countPentachora() const
+        requires (dim >= 4) {
     if constexpr (dim == 4) {
         return simplices_.size();
     } else {
@@ -4960,9 +4916,8 @@ inline auto TriangulationBase<dim>::triangles() const {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline auto TriangulationBase<dim>::tetrahedra() const {
-    static_assert(dim >= 3, "tetrahedra() is only available "
-        "for triangulations of dimension >= 3.");
+inline auto TriangulationBase<dim>::tetrahedra() const
+        requires (dim >= 3) {
     if constexpr (dim == 3) {
         return ListView(simplices_);
     } else {
@@ -4972,9 +4927,8 @@ inline auto TriangulationBase<dim>::tetrahedra() const {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline auto TriangulationBase<dim>::pentachora() const {
-    static_assert(dim >= 4, "pentachora() is only available "
-        "for triangulations of dimension >= 4.");
+inline auto TriangulationBase<dim>::pentachora() const
+        requires (dim >= 4) {
     if constexpr (dim == 4) {
         return ListView(simplices_);
     } else {
@@ -5052,9 +5006,8 @@ inline auto TriangulationBase<dim>::triangle(size_t index) const {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline auto TriangulationBase<dim>::tetrahedron(size_t index) {
-    static_assert(dim >= 3, "tetrahedron() is only available "
-        "for triangulations of dimension >= 3.");
+inline auto TriangulationBase<dim>::tetrahedron(size_t index)
+        requires (dim >= 3) {
     if constexpr (dim == 3) {
         return simplices_[index];
     } else {
@@ -5064,9 +5017,8 @@ inline auto TriangulationBase<dim>::tetrahedron(size_t index) {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline auto TriangulationBase<dim>::tetrahedron(size_t index) const {
-    static_assert(dim >= 3, "tetrahedron() is only available "
-        "for triangulations of dimension >= 3.");
+inline auto TriangulationBase<dim>::tetrahedron(size_t index) const
+        requires (dim >= 3) {
     if constexpr (dim == 3) {
         return simplices_[index];
     } else {
@@ -5076,9 +5028,8 @@ inline auto TriangulationBase<dim>::tetrahedron(size_t index) const {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline auto TriangulationBase<dim>::pentachoron(size_t index) {
-    static_assert(dim >= 4, "pentachoron() is only available "
-        "for triangulations of dimension >= 4.");
+inline auto TriangulationBase<dim>::pentachoron(size_t index)
+        requires (dim >= 4) {
     if constexpr (dim == 4) {
         return simplices_[index];
     } else {
@@ -5088,9 +5039,8 @@ inline auto TriangulationBase<dim>::pentachoron(size_t index) {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline auto TriangulationBase<dim>::pentachoron(size_t index) const {
-    static_assert(dim >= 4, "pentachoron() is only available "
-        "for triangulations of dimension >= 4.");
+inline auto TriangulationBase<dim>::pentachoron(size_t index) const
+        requires (dim >= 4) {
     if constexpr (dim == 4) {
         return simplices_[index];
     } else {
@@ -5100,12 +5050,9 @@ inline auto TriangulationBase<dim>::pentachoron(size_t index) const {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int subdim>
+template <int subdim> requires (0 <= subdim && subdim <= dim)
 inline Face<dim, subdim>* TriangulationBase<dim>::translate(
         const Face<dim, subdim>* other) const {
-    static_assert(0 <= subdim && subdim <= dim, "translate() for faces "
-        "requires a facial dimension between 0 and dim inclusive.");
-
     if (other) {
         if constexpr (subdim < dim) {
             const auto& emb = other->front();
@@ -5118,13 +5065,9 @@ inline Face<dim, subdim>* TriangulationBase<dim>::translate(
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int subdim>
+template <int subdim> requires (0 <= subdim && subdim < dim)
 inline FaceEmbedding<dim, subdim> TriangulationBase<dim>::translate(
         const FaceEmbedding<dim, subdim>& other) const {
-    static_assert(0 <= subdim && subdim < dim,
-        "translate() for face embeddings requires a facial dimension between "
-        "0 and dim-1 inclusive.");
-
     return { simplices_[other.simplex()->index()], other.vertices() };
 }
 
@@ -5162,10 +5105,8 @@ inline size_t TriangulationBase<dim>::countBoundaryFacets() const {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int subdim>
+template <int subdim> requires (subdim >= 0 && subdim < dim)
 inline size_t TriangulationBase<dim>::countBoundaryFaces() const {
-    static_assert(subdim >= 0 && subdim < dim,
-        "countBoundaryFaces() requires 0 <= subdim < dim.");
     ensureSkeleton();
     return nBoundaryFaces_[subdim];
 }
@@ -5571,30 +5512,20 @@ inline Isomorphism<dim> TriangulationBase<dim>::randomiseLabelling(
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k>
+template <int k> requires (k >= 0 && k <= dim)
 inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f) {
-    static_assert(0 <= k && k <= dim, "pachner() requires a "
-        "facial dimension between 0 and dim inclusive.");
-
     return internalPachner(f, true, true);
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k>
+template <int k> requires (k >= 0 && k <= dim)
 inline void TriangulationBase<dim>::pachner(Face<dim, k>* f, Unprotected) {
-    static_assert(0 <= k && k <= dim, "pachner() requires a "
-        "facial dimension between 0 and dim inclusive.");
-
     internalPachner(f, false, true);
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k>
+template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
 inline bool TriangulationBase<dim>::move20(Face<dim, k>* f) {
-    static_assert(0 <= k && k <= 2 && k <= dim - 2,
-        "move20() requires a facial dimension of 0, 1 or 2 that does "
-        "not exceed dim - 2.");
-
     return internal20(f, true, true);
 }
 
@@ -5604,22 +5535,15 @@ inline bool TriangulationBase<dim>::shellBoundary(Simplex<dim>* s) {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k>
+template <int k> requires (k >= 0 && k <= dim)
 bool TriangulationBase<dim>::hasPachner(Face<dim, k>* f) const {
-    static_assert(0 <= k && k <= dim, "hasPachner() requires a "
-        "facial dimension between 0 and dim inclusive.");
-
     return const_cast<TriangulationBase<dim>*>(this)->internalPachner(f,
         true, false);
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k>
+template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
 bool TriangulationBase<dim>::has20(Face<dim, k>* f) const {
-    static_assert(0 <= k && k <= 2 && k <= dim - 2,
-        "has20() requires a facial dimension of 0, 1 or 2 that does "
-        "not exceed dim - 2.");
-
     return const_cast<TriangulationBase<dim>*>(this)->internal20(f,
         true, false);
 }
@@ -5631,12 +5555,9 @@ bool TriangulationBase<dim>::hasShellBoundary(Simplex<dim>* s) const {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k>
+template <int k> requires (k >= 0 && k <= dim)
 std::optional<Triangulation<dim>> TriangulationBase<dim>::withPachner(
         Face<dim, k>* f) const {
-    static_assert(0 <= k && k <= dim, "withPachner() requires a "
-        "facial dimension between 0 and dim inclusive.");
-
     if (! hasPachner(f))
         return {};
 
@@ -5647,13 +5568,9 @@ std::optional<Triangulation<dim>> TriangulationBase<dim>::withPachner(
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k>
+template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
 std::optional<Triangulation<dim>> TriangulationBase<dim>::with20(
         Face<dim, k>* f) const {
-    static_assert(0 <= k && k <= 2 && k <= dim - 2,
-        "with20() requires a facial dimension of 0, 1 or 2 that does "
-        "not exceed dim - 2.");
-
     if (! has20(f))
         return {};
 
@@ -5676,23 +5593,16 @@ std::optional<Triangulation<dim>> TriangulationBase<dim>::withShellBoundary(
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k>
+template <int k> requires (k >= 0 && k <= dim)
 inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool,
         bool perform) {
-    static_assert(0 <= k && k <= dim, "pachner() requires a "
-        "facial dimension between 0 and dim inclusive.");
-
     return internalPachner(f, true, perform);
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k>
+template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
 inline bool TriangulationBase<dim>::twoZeroMove(Face<dim, k>* f, bool,
         bool perform) {
-    static_assert(0 <= k && k <= 2 && k <= dim - 2,
-        "twoZeroMove() requires a facial dimension of 0, 1 or 2 that does "
-        "not exceed dim - 2.");
-
     return internal20(f, true, perform);
 }
 
@@ -5790,10 +5700,8 @@ inline AbelianGroup TriangulationBase<dim>::homology(int k) const {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k>
+template <int k> requires (k > 0 && k < dim)
 inline MarkedAbelianGroup TriangulationBase<dim>::markedHomology() const {
-    static_assert(1 <= k && k < dim);
-
     if (isEmpty())
         throw FailedPrecondition("markedHomology(): triangulation is empty");
     if (! isValid())

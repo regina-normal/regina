@@ -676,6 +676,7 @@ stringToToken : function
 stripWhitespace : function
 subscript : function
 superscript : function
+supportedDim : function
 swap : function
 testEngine : function
 tightDecoding : function

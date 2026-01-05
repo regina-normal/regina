@@ -44,11 +44,10 @@ namespace regina::detail {
  * Contains a collection of compile-time constant strings that describe
  * features of the dimension \a dim.
  *
- * \tparam dim_ any dimension between 0 and 15 inclusive.
- *
  * \ingroup detail
  */
 template <int dim_>
+requires (dim_ >= 0 && dim_ <= maxDim())
 struct Strings {
 #ifdef __DOXYGEN
     /**
@@ -241,6 +240,7 @@ struct Strings<8> {
     static constexpr const char* Simplices = "8-simplices";
 };
 
+#ifdef REGINA_HIGHDIM
 template <>
 struct Strings<9> {
     static constexpr const char* dim = "9";
@@ -331,6 +331,7 @@ struct Strings<15> {
     static constexpr const char* simplices = "15-simplices";
     static constexpr const char* Simplices = "15-simplices";
 };
+#endif // REGINA_HIGHDIM
 
 #endif // __DOXYGEN
 

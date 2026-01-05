@@ -54,7 +54,7 @@ namespace regina::detail {
  * Gives a unified way to initialise and update the isomorphisms(s) that
  * are returned by FacetPairingBase::canonicalInternal().
  */
-template <int dim, bool allIsos>
+template <int dim, bool allIsos> requires (supportedDim(dim))
 struct CanonicalInternalReturn;
 
 template <int dim> requires (supportedDim(dim))

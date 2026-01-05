@@ -168,6 +168,8 @@ enum class Algorithm {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * Algorithm::Default.
+ *
+ * \ingroup engine
  */
 [[deprecated]] inline constexpr Algorithm ALG_DEFAULT = Algorithm::Default;
 /**
@@ -175,6 +177,8 @@ enum class Algorithm {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * Algorithm::Backtrack.
+ *
+ * \ingroup engine
  */
 [[deprecated]] inline constexpr Algorithm ALG_BACKTRACK = Algorithm::Backtrack;
 /**
@@ -182,6 +186,8 @@ enum class Algorithm {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * Algorithm::Treewidth.
+ *
+ * \ingroup engine
  */
 [[deprecated]] inline constexpr Algorithm ALG_TREEWIDTH = Algorithm::Treewidth;
 /**
@@ -189,6 +195,8 @@ enum class Algorithm {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * Algorithm::Naive.
+ *
+ * \ingroup engine
  */
 [[deprecated]] inline constexpr Algorithm ALG_NAIVE = Algorithm::Naive;
 
@@ -227,6 +235,8 @@ enum class Language {
  *
  * \nopython This enumeration is only used internally by private and/or
  * protected class templates, and is therefore not made available to Python.
+ *
+ * \ingroup engine
  */
 enum class ChangeType {
     /**
@@ -279,6 +289,8 @@ enum class ChangeType {
  *
  * \nopython By design, Python users are not able to circumvent any of
  * Regina's automatic checks.  If speed is essential, you should be using C++.
+ *
+ * \ingroup engine
  */
 struct Unprotected {
     /**
@@ -294,8 +306,25 @@ struct Unprotected {
  *
  * \nopython By design, Python users are not able to circumvent any of
  * Regina's automatic checks.  If speed is essential, you should be using C++.
+ *
+ * \ingroup engine
  */
 inline constexpr Unprotected unprotected;
+
+/**
+ * A legitimate C++ type that can never be used in an implementation.
+ *
+ * This type is declared but never defined.
+ *
+ * For an example of its use, see TriangulationTraits (where it acts as a
+ * placeholder for non-existent classes that would otherwise cause a compile
+ * error).
+ *
+ * \nopython
+ *
+ * \ingroup engine
+ */
+struct NoSuchType;
 
 } // namespace regina
 

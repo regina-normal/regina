@@ -33,6 +33,7 @@
 using regina::FaceNumbering;
 
 template <int dim, int subdim, int face>
+requires (dim >= 1 && dim <= regina::maxDim() && subdim >= 0 && subdim < dim)
 void testFaceNumbering() {
     static_assert(FaceNumbering<dim, subdim>::faceNumber(
         FaceNumbering<dim, subdim>::ordering(face)) == face);

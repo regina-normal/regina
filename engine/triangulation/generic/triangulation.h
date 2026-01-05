@@ -375,14 +375,12 @@ class Triangulation : public detail::TriangulationBase<dim> {
  *
  * \deprecated This comparison is a one-liner.  Just use a lambda instead.
  *
- * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
- * \pre \a subdim is between 0 and <i>dim</i>-1 inclusive.
- *
  * \nopython
  *
  * \ingroup generic
  */
 template <int dim, int subdim>
+requires (standardDim(dim) && subdim >= 0 && subdim < dim)
 class [[deprecated]] DegreeLessThan {
     static_assert(standardDim(dim),
         "DegreeLessThan is only available for Regina's standard dimensions.");
@@ -449,12 +447,10 @@ class [[deprecated]] DegreeLessThan {
  *
  * \nopython
  *
- * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
- * \pre \a subdim is between 0 and <i>dim</i>-1 inclusive.
- *
  * \ingroup generic
  */
 template <int dim, int subdim>
+requires (standardDim(dim) && subdim >= 0 && subdim < dim)
 class [[deprecated]] DegreeGreaterThan {
     static_assert(standardDim(dim),
         "DegreeGreaterThan is only available for Regina's standard dimensions.");

@@ -669,60 +669,51 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * \a subdim becomes the first argument of the function.
          *
          * \tparam subdim the dimension of the subface to examine.
-         * This must be between 0 and (\a dim - 1) inclusive.
          *
          * \param face the <i>subdim</i>-face of this simplex to examine.
-         * This should be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
-         * inclusive.
+         * This should be between 0 and `(dim+1 choose subdim+1)-1` inclusive.
          * \return the corresponding <i>subdim</i>-face of the triangulation.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < dim)
         Face<dim, subdim>* face(int face) const;
 
         /**
          * A dimension-specific alias for face<0>().
          *
-         * This alias is available for all dimensions \a dim.
-         *
          * See face() for further information.
          */
-        Face<dim, 0>* vertex(int i) const;
+        TriangulationTraits<dim>::Vertex* vertex(int i) const;
 
         /**
          * A dimension-specific alias for face<1>().
          *
-         * This alias is available for all dimensions \a dim.
-         *
          * See face() for further information.
          */
-        Face<dim, 1>* edge(int i) const;
+        TriangulationTraits<dim>::Edge* edge(int i) const;
 
         /**
          * A dimension-specific alias for face<2>().
          *
-         * This alias is available for dimensions \a dim ≥ 3.
-         *
          * See face() for further information.
          */
-        Face<dim, 2>* triangle(int i) const;
+        TriangulationTraits<dim>::Triangle* triangle(int i) const
+            requires (dim > 2);
 
         /**
          * A dimension-specific alias for face<3>().
          *
-         * This alias is available for dimensions \a dim ≥ 4.
-         *
          * See face() for further information.
          */
-        Face<dim, 3>* tetrahedron(int i) const;
+        TriangulationTraits<dim>::Tetrahedron* tetrahedron(int i) const
+            requires (dim > 3);
 
         /**
          * A dimension-specific alias for face<4>().
          *
-         * This alias is available for dimensions \a dim ≥ 5.
-         *
          * See face() for further information.
          */
-        Face<dim, 4>* pentachoron(int i) const;
+        TriangulationTraits<dim>::Pentachoron* pentachoron(int i) const
+            requires (dim > 4);
 
         /**
          * Returns the edge of this simplex that connects the
@@ -839,22 +830,18 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * parameter \a subdim becomes the first argument of the function.
          *
          * \tparam subdim the dimension of the subface to examine.
-         * This must be between 0 and (\a dim - 1) inclusive.
          *
          * \param face the <i>subdim</i>-face of this simplex to examine.
-         * This should be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
-         * inclusive.
+         * This should be between 0 and `(dim+1 choose subdim+1)-1` inclusive.
          * \return a mapping from the vertices of the underlying
          * <i>subdim</i>-face of the triangulation to the vertices of
          * this simplex.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < dim)
         Perm<dim + 1> faceMapping(int face) const;
 
         /**
          * A dimension-specific alias for faceMapping<0>().
-         *
-         * This alias is available for all dimensions \a dim.
          *
          * See faceMapping() for further information.
          */
@@ -863,8 +850,6 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
         /**
          * A dimension-specific alias for faceMapping<1>().
          *
-         * This alias is available for all dimensions \a dim.
-         *
          * See faceMapping() for further information.
          */
         Perm<dim + 1> edgeMapping(int face) const;
@@ -872,29 +857,26 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
         /**
          * A dimension-specific alias for faceMapping<2>().
          *
-         * This alias is available for dimensions \a dim ≥ 3.
-         *
          * See faceMapping() for further information.
          */
-        Perm<dim + 1> triangleMapping(int face) const;
+        Perm<dim + 1> triangleMapping(int face) const
+            requires (dim > 2);
 
         /**
          * A dimension-specific alias for faceMapping<3>().
          *
-         * This alias is available for dimensions \a dim ≥ 4.
-         *
          * See faceMapping() for further information.
          */
-        Perm<dim + 1> tetrahedronMapping(int face) const;
+        Perm<dim + 1> tetrahedronMapping(int face) const
+            requires (dim > 3);
 
         /**
          * A dimension-specific alias for faceMapping<4>().
          *
-         * This alias is available for dimensions \a dim ≥ 5.
-         *
          * See faceMapping() for further information.
          */
-        Perm<dim + 1> pentachoronMapping(int face) const;
+        Perm<dim + 1> pentachoronMapping(int face) const
+            requires (dim > 4);
 
         /**
          * Returns the orientation of this simplex in the
@@ -1134,8 +1116,11 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
     friend class Triangulation<dim>;
     friend class regina::XMLSimplexReader<dim>;
     friend class regina::XMLTriangulationReader<dim>;
+
     // Face::relabel() adjusts Simplex::mappings_.
-    template<int, int> friend class FaceBase;
+    template <int dim_, int subdim>
+    requires (supportedDim(dim_) && subdim >= 0 && subdim < dim_)
+    friend class FaceBase;
 };
 
 // Inline functions for SimplexBase
@@ -1205,55 +1190,51 @@ inline Component<dim>* SimplexBase<dim>::component() const {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int subdim>
+template <int subdim> requires (subdim >= 0 && subdim < dim)
 inline Face<dim, subdim>* SimplexBase<dim>::face(int face) const {
-    static_assert(0 <= subdim && subdim < dim,
-        "Simplex<dim>::face<subdim>() requires 0 <= subdim < dim.");
     triangulation().ensureSkeleton();
     return std::get<subdim>(faces_)[face];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Face<dim, 0>* SimplexBase<dim>::vertex(int i) const {
+inline TriangulationTraits<dim>::Vertex* SimplexBase<dim>::vertex(int i) const {
     triangulation().ensureSkeleton();
     return std::get<0>(faces_)[i];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Face<dim, 1>* SimplexBase<dim>::edge(int i) const {
+inline TriangulationTraits<dim>::Edge* SimplexBase<dim>::edge(int i) const {
     triangulation().ensureSkeleton();
     return std::get<1>(faces_)[i];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Face<dim, 2>* SimplexBase<dim>::triangle(int i) const {
-    static_assert(dim >= 3, "triangle() is only available "
-        "for simplices of dimension >= 3.");
+inline TriangulationTraits<dim>::Triangle* SimplexBase<dim>::triangle(
+        int i) const
+        requires (dim > 2) {
     triangulation().ensureSkeleton();
     return std::get<2>(faces_)[i];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Face<dim, 3>* SimplexBase<dim>::tetrahedron(int i) const {
-    static_assert(dim >= 4, "tetrahedron() is only available "
-        "for simplices of dimension >= 4.");
+inline TriangulationTraits<dim>::Tetrahedron* SimplexBase<dim>::tetrahedron(
+        int i) const
+        requires (dim > 3) {
     triangulation().ensureSkeleton();
     return std::get<3>(faces_)[i];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Face<dim, 4>* SimplexBase<dim>::pentachoron(int i) const {
-    static_assert(dim >= 5, "pentachoron() is only available "
-        "for simplices of dimension >= 5.");
+inline TriangulationTraits<dim>::Pentachoron* SimplexBase<dim>::pentachoron(
+        int i) const
+        requires (dim > 4) {
     triangulation().ensureSkeleton();
     return std::get<4>(faces_)[i];
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int subdim>
+template <int subdim> requires (subdim >= 0 && subdim < dim)
 inline Perm<dim + 1> SimplexBase<dim>::faceMapping(int face) const {
-    static_assert(0 <= subdim && subdim < dim,
-        "Simplex<dim>::faceMapping<subdim>() requires 0 <= subdim < dim.");
     triangulation().ensureSkeleton();
     return std::get<subdim>(mappings_)[face];
 }
@@ -1271,25 +1252,22 @@ inline Perm<dim + 1> SimplexBase<dim>::edgeMapping(int face) const {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Perm<dim + 1> SimplexBase<dim>::triangleMapping(int face) const {
-    static_assert(dim >= 3, "triangleMapping() is only available "
-        "for simplices of dimension >= 3.");
+inline Perm<dim + 1> SimplexBase<dim>::triangleMapping(int face) const
+        requires (dim > 2) {
     triangulation().ensureSkeleton();
     return std::get<2>(mappings_)[face];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Perm<dim + 1> SimplexBase<dim>::tetrahedronMapping(int face) const {
-    static_assert(dim >= 4, "tetrahedronMapping() is only available "
-        "for simplices of dimension >= 4.");
+inline Perm<dim + 1> SimplexBase<dim>::tetrahedronMapping(int face) const
+        requires (dim > 3) {
     triangulation().ensureSkeleton();
     return std::get<3>(mappings_)[face];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Perm<dim + 1> SimplexBase<dim>::pentachoronMapping(int face) const {
-    static_assert(dim >= 5, "pentachoronMapping() is only available "
-        "for simplices of dimension >= 5.");
+inline Perm<dim + 1> SimplexBase<dim>::pentachoronMapping(int face) const
+        requires (dim > 4) {
     triangulation().ensureSkeleton();
     return std::get<4>(mappings_)[face];
 }

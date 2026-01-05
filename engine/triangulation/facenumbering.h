@@ -48,22 +48,22 @@ namespace regina {
  *
  * Regina uses the following general scheme for numbering faces:
  *
- * - For low-dimensional faces (\a subdim \< \a dim / 2), faces are
+ * - For low-dimensional faces (`subdim < dim / 2`), faces are
  *   numbered in lexicographical order according to their vertices.
  *   For example, in a 3-dimensional triangulation, edges 0,...,5 contain
  *   vertices 01, 02, 03, 12, 13, 23 respectively.
  *
- * - For high-dimensional faces (\a subdim ≥ \a dim / 2), faces are
+ * - For high-dimensional faces (`subdim ≥ dim / 2`), faces are
  *   numbered in _reverse_ lexicographical order according to their vertices.
  *   For example, in a 3-dimensional triangulation, triangles 0,...,3 contain
  *   vertices 123, 023, 013, 012 respectively.
  *
- * - As a consequence, unless \a subdim = (<i>dim</i>-1)/2, we always have
+ * - As a consequence, unless `subdim = (dim-1)/2`, we always have
  *   <i>subdim</i>-face number \a i opposite (<i>dim</i>-1-<i>subdim</i>)-face
- *   number \a i.  For the special "halfway case" \a subdim = (<i>dim</i>-1)/2,
+ *   number \a i.  For the special "halfway case" `subdim = (dim-1)/2`,
  *   where each <i>subdim</i>-face is opposite another <i>subdim</i>-face,
  *   we always have <i>subdim</i>-face number \a i opposite
- *   <i>subdim</i>-face number (<i>nFaces</i>-1-\a i).
+ *   <i>subdim</i>-face number `(nFaces-1-i)`.
  *
  * Every class Face<dim, subdim> inherits from this class, which means
  * you can access these routines as Face<dim, subdim>::ordering(),
@@ -82,13 +82,14 @@ namespace regina {
  * Vertex3, Edge2 and so on).
  *
  * \tparam dim the dimension of the simplex whose faces we are numbering.
- * This must be between 1 and 15 inclusive.
+ * Note that dimension 1 _is_ supported for the purpose of face numbering,
+ * even though it is not supported for building fully-fledged triangulations.
  * \tparam subdim the dimension of the faces that we are numbering.
- * This must be between 0 and <i>dim</i>-1 inclusive.
  *
  * \ingroup triangulation
  */
 template <int dim, int subdim>
+requires (dim >= 1 && dim <= maxDim() && subdim >= 0 && subdim < dim)
 class FaceNumbering : public detail::FaceNumberingImpl<dim, subdim> {
 };
 

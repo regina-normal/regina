@@ -61,6 +61,9 @@ Version 7.5  [ TODO ]
               FixedArray internally, which is not copy-assignable).  If you
               need to copy a tableaux, the copy constructor remains available
               (and move assignment is still available also).
+        Struct NoSuchType:
+            - A new declared-but-not-defined type that can be used as a
+              placeholder to avoid compile errors.
         Class PermClass<n>:
             - Everything in this class is now constexpr.
         Class Polynomial<T>:
