@@ -146,7 +146,6 @@ class Face : public detail::FaceBase<dim, subdim> {
  * be used by appending the dimension \a dim as a suffix (e.g., \c Vertex8).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup generic
  */
@@ -164,7 +163,6 @@ using Vertex = Face<dim, 0>;
  * be used by appending the dimension \a dim as a suffix (e.g., \c Edge5).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup generic
  */
@@ -184,7 +182,6 @@ using Edge = Face<dim, 1>;
  * be used by appending the dimension \a dim as a suffix (e.g., \c Triangle4).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup generic
  */
@@ -205,7 +202,6 @@ using Triangle = Face<dim, 2>;
  * (e.g., \c Tetrahedron7).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 3 and 15 inclusive.
  *
  * \ingroup generic
  */
@@ -226,7 +222,6 @@ using Tetrahedron = Face<dim, 3>;
  * \c Pentachoron9).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 4 and 15 inclusive.
  *
  * \ingroup generic
  */

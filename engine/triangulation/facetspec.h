@@ -72,7 +72,6 @@ namespace regina {
  * and FacetSpec3 for dimensions 2 and 3).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup triangulation
  */

@@ -156,7 +156,6 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
  * (e.g., \c VertexEmbedding3).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup generic
  */
@@ -176,7 +175,6 @@ using VertexEmbedding = FaceEmbedding<dim, 0>;
  * (e.g., \c EdgeEmbedding5).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup generic
  */
@@ -196,7 +194,6 @@ using EdgeEmbedding = FaceEmbedding<dim, 1>;
  * (e.g., \c TriangleEmbedding12).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 3 and 15 inclusive.
  *
  * \ingroup generic
  */
@@ -216,7 +213,6 @@ using TriangleEmbedding = FaceEmbedding<dim, 2>;
  * (e.g., \c TetrahedronEmbedding7).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 4 and 15 inclusive.
  *
  * \ingroup generic
  */
@@ -236,7 +232,6 @@ using TetrahedronEmbedding = FaceEmbedding<dim, 3>;
  * (e.g., \c PentachoronEmbedding14).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 5 and 15 inclusive.
  *
  * \ingroup generic
  */

@@ -152,12 +152,8 @@ bool FacetPairingBase<dim>::isConnected() const {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k>
+template <int k> requires (k >= 2 && k <= dim + 1)
 bool FacetPairingBase<dim>::hasMultiEdge() const {
-    static_assert(2 <= k && k <= dim + 1,
-        "FacetPairing::hasMultiEdge() requires the edge multiplicity to be "
-        "between 2 and dim+1 inclusive.");
-
     // Let n be the size of this facet pairing (i.e., the number of nodes).
     // The running time must be at least O(n*dim), which is the number of
     // edges in the underlying graph.  We want to engineer this test so that

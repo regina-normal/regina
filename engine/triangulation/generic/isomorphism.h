@@ -101,7 +101,7 @@ namespace regina {
  * (e.g., Isomorphism2 and Isomorphism3 for dimensions 2 and 3).
  *
  * \tparam dim the dimension of the triangulations that this isomorphism
- * class works with.  This must be between 2 and 15 inclusive.
+ * class works with.
  *
  * \headerfile triangulation/generic.h
  *

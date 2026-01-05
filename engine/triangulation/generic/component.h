@@ -69,7 +69,6 @@ namespace regina {
  * (e.g., Component2 and Component3 for dimensions 2 and 3).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \headerfile triangulation/generic.h
  *

@@ -71,7 +71,6 @@ namespace detail {
  * class FacetPairing<dim> is.
  *
  * \tparam dim the dimension of the triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup detail
  */
@@ -316,13 +315,12 @@ class FacetPairingBase :
          *
          * \nopython Instead use the variant `hasMultiEdge(k)`.
          *
-         * \tparam k the multiplicity of edges to search for; this must be
-         * between 2 and `dim+1` inclusive.
+         * \tparam k the multiplicity of edges to search for.
          *
          * \return \c true if and only if the underyling graph has an edge of
          * multiplicity \a k.
          */
-        template <int k>
+        template <int k> requires (k >= 2 && k <= dim + 1)
         bool hasMultiEdge() const;
 
         /**
