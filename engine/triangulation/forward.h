@@ -49,6 +49,8 @@
 #define __REGINA_TRIANGULATION_FORWARD_H
 #endif
 
+#include "regina-core.h"
+
 namespace regina {
 
 template <int dim> requires (supportedDim(dim)) class BoundaryComponent;
@@ -88,7 +90,8 @@ template <int dim> requires (supportedDim(dim) && dim >= 3)
 using Tetrahedron = Face<dim, 3>;
 template <int dim> requires (supportedDim(dim) && dim >= 4)
 using Pentachoron = Face<dim, 4>;
-template <int dim> using Simplex = Face<dim, dim>;
+template <int dim> requires (supportedDim(dim))
+using Simplex = Face<dim, dim>;
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)

@@ -40,7 +40,7 @@ using regina::Example;
 
 void addExample3(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Example)
-    RDOC_SCOPE_BASE_2(detail::ExampleBase, detail::ExampleFromLowDim)
+    RDOC_SCOPE_BASE(detail::ExampleBase)
 
     auto c = pybind11::class_<Example<3>>(m, "Example3", rdoc_scope)
         .def_static("sphere", &Example<3>::sphere, rbase::sphere)
@@ -54,8 +54,8 @@ void addExample3(pybind11::module_& m) {
         .def_static("ballBundle", &Example<3>::ballBundle, rbase::ballBundle)
         .def_static("twistedBallBundle", &Example<3>::twistedBallBundle,
             rbase::twistedBallBundle)
-        .def_static("doubleCone", &Example<3>::doubleCone, rbase2::doubleCone)
-        .def_static("singleCone", &Example<3>::singleCone, rbase2::singleCone)
+        .def_static("doubleCone", &Example<3>::doubleCone, rbase::doubleCone)
+        .def_static("singleCone", &Example<3>::singleCone, rbase::singleCone)
         .def_static("threeSphere", &Example<3>::threeSphere, rdoc::threeSphere)
         .def_static("bingsHouse", &Example<3>::bingsHouse, rdoc::bingsHouse)
         .def_static("s2xs1", &Example<3>::s2xs1, rdoc::s2xs1)

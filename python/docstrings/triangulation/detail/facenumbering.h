@@ -42,12 +42,13 @@ Python:
     one of the type aliases such as Vertex3, Edge2 and so on).
 
 Template parameter ``dim``:
-    the dimension of the simplex whose faces are being numbered. This
-    must be between 1 and 15 inclusive.
+    the dimension of the simplex whose faces are being numbered. Note
+    that dimension 1 _is_ supported for the purpose of face numbering,
+    even though it is not supported for building fully-fledged
+    triangulations.
 
 Template parameter ``subdim``:
-    the dimension of the faces being numbered. This must be between 0
-    and *dim*-1 inclusive.)doc";
+    the dimension of the faces being numbered.)doc";
 
 // Docstring regina::python::doc::detail::FaceNumberingImpl
 constexpr const char *FaceNumberingImpl =
@@ -68,15 +69,13 @@ Python:
     one of the type aliases such as Vertex3, Edge2 and so on).
 
 Template parameter ``dim``:
-    the dimension of the simplex whose faces are being numbered. This
-    must be between 1 and 15 inclusive.
+    the dimension of the simplex whose faces are being numbered.
 
 Template parameter ``subdim``:
-    the dimension of the faces being numbered. This must be between 0
-    and *dim*-1 inclusive.
+    the dimension of the faces being numbered.
 
 Template parameter ``codim``:
-    the codimension (*dim*-*subdim*-1) of the faces being numbered.
+    the codimension ``(dim-subdim-1)`` of the faces being numbered.
     Ideally this would be specified directly as ``dim-subdim-1`` in
     the partial template specialisation, and this _should_ be legal
     according to CWG1315; however, it fails to build under some

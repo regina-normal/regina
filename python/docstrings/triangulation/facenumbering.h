@@ -18,22 +18,22 @@ simplex.
 
 Regina uses the following general scheme for numbering faces:
 
-* For low-dimensional faces (*subdim* < *dim* / 2), faces are numbered
+* For low-dimensional faces (``subdim < dim / 2``), faces are numbered
   in lexicographical order according to their vertices. For example,
   in a 3-dimensional triangulation, edges 0,...,5 contain vertices 01,
   02, 03, 12, 13, 23 respectively.
 
-* For high-dimensional faces (*subdim* ≥ *dim* / 2), faces are
+* For high-dimensional faces (``subdim ≥ dim / 2``), faces are
   numbered in _reverse_ lexicographical order according to their
   vertices. For example, in a 3-dimensional triangulation, triangles
   0,...,3 contain vertices 123, 023, 013, 012 respectively.
 
-* As a consequence, unless *subdim* = (*dim*-1)/2, we always have
+* As a consequence, unless ``subdim = (dim-1)/2``, we always have
   *subdim*-face number *i* opposite (*dim*-1-*subdim*)-face number
-  *i*. For the special "halfway case" *subdim* = (*dim*-1)/2, where
+  *i*. For the special "halfway case" ``subdim = (dim-1)/2``, where
   each *subdim*-face is opposite another *subdim*-face, we always have
   *subdim*-face number *i* opposite *subdim*-face number
-  (*nFaces*-1-*i*).
+  ``(nFaces-1-i)``.
 
 Every class Face<dim, subdim> inherits from this class, which means
 you can access these routines as Face<dim, subdim>::ordering(),
@@ -54,12 +54,13 @@ Python:
     as Vertex3, Edge2 and so on).
 
 Template parameter ``dim``:
-    the dimension of the simplex whose faces we are numbering. This
-    must be between 1 and 15 inclusive.
+    the dimension of the simplex whose faces we are numbering. Note
+    that dimension 1 _is_ supported for the purpose of face numbering,
+    even though it is not supported for building fully-fledged
+    triangulations.
 
 Template parameter ``subdim``:
-    the dimension of the faces that we are numbering. This must be
-    between 0 and *dim*-1 inclusive.)doc";
+    the dimension of the faces that we are numbering.)doc";
 
 // Docstring regina::python::doc::faceOppositeEdge
 static const char *faceOppositeEdge =
@@ -78,8 +79,7 @@ Python:
     of the function.
 
 Template parameter ``dim``:
-    the dimension of simplex that we are working with. This must be
-    between 2 and 15 inclusive.
+    the dimension of simplex that we are working with.
 
 Parameter ``i``:
     the first vertex of an edge in a *dim*-dimensional simplex. This

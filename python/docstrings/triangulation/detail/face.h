@@ -93,12 +93,10 @@ Python:
     subdim> is.
 
 Template parameter ``dim``:
-    the dimension of the underlying triangulation. This must be
-    between 2 and 15 inclusive.
+    the dimension of the underlying triangulation.
 
 Template parameter ``subdim``:
-    the dimension of the faces that this class represents. This must
-    be between 0 and *dim*-1 inclusive.)doc";
+    the dimension of the faces that this class represents.)doc";
 
 // Docstring regina::python::doc::detail::FaceEmbeddingBase
 constexpr const char *FaceEmbeddingBase =
@@ -117,12 +115,10 @@ Python:
     FaceEmbedding<dim, subdim> is.
 
 Template parameter ``dim``:
-    the dimension of the underlying triangulation. This must be
-    between 2 and 15 inclusive.
+    the dimension of the underlying triangulation.
 
 Template parameter ``subdim``:
-    the dimension of the faces of the underlying triangulation. This
-    must be between 0 and *dim*-1 inclusive.)doc";
+    the dimension of the faces of the underlying triangulation.)doc";
 
 }
 
@@ -226,15 +222,11 @@ Returns:
 constexpr const char *edge =
 R"doc(A dimension-specific alias for face<1>().
 
-This alias is available for all facial dimensions *subdim*.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::FaceBase_::edgeMapping
 constexpr const char *edgeMapping =
 R"doc(A dimension-specific alias for faceMapping<1>().
-
-This alias is available for all facial dimensions *subdim*.
 
 See faceMapping() for further information.)doc";
 
@@ -721,15 +713,11 @@ Precondition:
 constexpr const char *pentachoron =
 R"doc(A dimension-specific alias for face<4>().
 
-This alias is available for facial dimensions *subdim* ≥ 5.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::FaceBase_::pentachoronMapping
 constexpr const char *pentachoronMapping =
 R"doc(A dimension-specific alias for faceMapping<4>().
-
-This alias is available for facial dimensions *subdim* ≥ 5.
 
 See faceMapping() for further information.)doc";
 
@@ -737,15 +725,11 @@ See faceMapping() for further information.)doc";
 constexpr const char *tetrahedron =
 R"doc(A dimension-specific alias for face<3>().
 
-This alias is available for facial dimensions *subdim* ≥ 4.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::FaceBase_::tetrahedronMapping
 constexpr const char *tetrahedronMapping =
 R"doc(A dimension-specific alias for faceMapping<3>().
-
-This alias is available for facial dimensions *subdim* ≥ 4.
 
 See faceMapping() for further information.)doc";
 
@@ -753,15 +737,11 @@ See faceMapping() for further information.)doc";
 constexpr const char *triangle =
 R"doc(A dimension-specific alias for face<2>().
 
-This alias is available for facial dimensions *subdim* ≥ 3.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::FaceBase_::triangleMapping
 constexpr const char *triangleMapping =
 R"doc(A dimension-specific alias for faceMapping<2>().
-
-This alias is available for facial dimensions *subdim* ≥ 3.
 
 See faceMapping() for further information.)doc";
 
@@ -842,15 +822,11 @@ Precondition:
 constexpr const char *vertex =
 R"doc(A dimension-specific alias for face<0>().
 
-This alias is available for all facial dimensions *subdim*.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::FaceBase_::vertexMapping
 constexpr const char *vertexMapping =
 R"doc(A dimension-specific alias for faceMapping<0>().
-
-This alias is available for all facial dimensions *subdim*.
 
 See faceMapping() for further information.)doc";
 

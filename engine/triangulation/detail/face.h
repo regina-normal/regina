@@ -118,6 +118,7 @@ enum class TriangleType {
 namespace detail {
 
 template <int dim> requires (supportedDim(dim)) class TriangulationBase;
+template <int dim> requires (supportedDim(dim)) class BoundaryComponentBase;
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)

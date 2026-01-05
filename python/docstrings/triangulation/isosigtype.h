@@ -47,9 +47,10 @@ This classic signature type is trivial, in that it considers *all*
 possible simplices *s* and all ``(dim+1)!`` possible permutations *p*.
 
 This class is designed to be used as a template parameter for
-Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
-Typical users would have no need to create objects of this class or
-call any of its functions directly.
+``Triangulation<dim>::isoSig()`` and
+``Triangulation<dim>::isoSigDetail()``. Typical users would have no
+need to create objects of this class or call any of its functions
+directly.
 
 Python:
     Python does not support templates. Instead this class can be used
@@ -73,9 +74,10 @@ The hope is that this eliminates a large number of potential starting
 simplices without adding an enormous amount of computational overhead.
 
 This class is designed to be used as a template parameter for
-Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
-Typical users would have no need to create objects of this class or
-call any of its functions directly.
+``Triangulation<dim>::isoSig()`` and
+``Triangulation<dim>::isoSigDetail()``. Typical users would have no
+need to create objects of this class or call any of its functions
+directly.
 
 Python:
     Python does not support templates, and there are far too many of

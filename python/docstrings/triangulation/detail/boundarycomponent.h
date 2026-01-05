@@ -35,8 +35,7 @@ Python:
     BoundaryComponent<dim> is.
 
 Template parameter ``dim``:
-    the dimension of the underlying triangulation. This must be
-    between 2 and 15 inclusive.)doc";
+    the dimension of the underlying triangulation.)doc";
 
 }
 
@@ -98,9 +97,6 @@ Returns:
 constexpr const char *countEdges =
 R"doc(A dimension-specific alias for countFaces<1>().
 
-This alias is available only when *dim* is one of Regina's standard
-dimensions.
-
 See countFaces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::BoundaryComponentBase_::countFaces
@@ -126,8 +122,6 @@ Returns:
 constexpr const char *countPentachora =
 R"doc(A dimension-specific alias for countFaces<4>().
 
-This alias is only available for dimensions *dim* = 5 and 6.
-
 See countFaces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::BoundaryComponentBase_::countRidges
@@ -144,16 +138,11 @@ Returns:
 constexpr const char *countTetrahedra =
 R"doc(A dimension-specific alias for countFaces<3>().
 
-This alias is only available for dimensions *dim* = 4 and 5.
-
 See countFaces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::BoundaryComponentBase_::countTriangles
 constexpr const char *countTriangles =
 R"doc(A dimension-specific alias for countFaces<2>().
-
-This alias is available only when *dim* is one of Regina's standard
-dimensions and *dim* ≥ 3.
 
 See countFaces() for further information.)doc";
 
@@ -161,26 +150,17 @@ See countFaces() for further information.)doc";
 constexpr const char *countVertices =
 R"doc(A dimension-specific alias for countFaces<0>().
 
-This alias is available only when *dim* is one of Regina's standard
-dimensions.
-
 See countFaces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::BoundaryComponentBase_::edge
 constexpr const char *edge =
 R"doc(A dimension-specific alias for face<1>().
 
-This alias is available only when *dim* is one of Regina's standard
-dimensions.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::BoundaryComponentBase_::edges
 constexpr const char *edges =
 R"doc(A dimension-specific alias for faces<1>().
-
-This alias is available only when *dim* is one of Regina's standard
-dimensions.
 
 See faces() for further information.)doc";
 
@@ -438,15 +418,11 @@ Returns:
 constexpr const char *pentachora =
 R"doc(A dimension-specific alias for faces<4>().
 
-This alias is only available for dimension *dim* = 5.
-
 See faces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::BoundaryComponentBase_::pentachoron
 constexpr const char *pentachoron =
 R"doc(A dimension-specific alias for face<4>().
-
-This alias is only available for dimension *dim* = 5.
 
 See face() for further information.)doc";
 
@@ -465,15 +441,11 @@ Returns:
 constexpr const char *tetrahedra =
 R"doc(A dimension-specific alias for faces<3>().
 
-This alias is only available for dimension *dim* = 4.
-
 See faces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::BoundaryComponentBase_::tetrahedron
 constexpr const char *tetrahedron =
 R"doc(A dimension-specific alias for face<3>().
-
-This alias is only available for dimension *dim* = 4.
 
 See face() for further information.)doc";
 
@@ -481,17 +453,11 @@ See face() for further information.)doc";
 constexpr const char *triangle =
 R"doc(A dimension-specific alias for face<2>().
 
-This alias is available only when *dim* is one of Regina's standard
-dimensions and *dim* ≥ 3.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::BoundaryComponentBase_::triangles
 constexpr const char *triangles =
 R"doc(A dimension-specific alias for faces<2>().
-
-This alias is available only when *dim* is one of Regina's standard
-dimensions and *dim* ≥ 3.
 
 See faces() for further information.)doc";
 
@@ -507,17 +473,11 @@ Returns:
 constexpr const char *vertex =
 R"doc(A dimension-specific alias for face<0>().
 
-This alias is available only when *dim* is one of Regina's standard
-dimensions.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::BoundaryComponentBase_::vertices
 constexpr const char *vertices =
 R"doc(A dimension-specific alias for faces<0>().
-
-This alias is available only when *dim* is one of Regina's standard
-dimensions.
 
 See faces() for further information.)doc";
 

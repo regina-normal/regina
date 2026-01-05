@@ -38,6 +38,8 @@
 #define __REGINA_STRINGS_H_DETAIL
 #endif
 
+#include "regina-core.h"
+
 namespace regina::detail {
 
 /**

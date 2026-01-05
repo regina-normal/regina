@@ -42,7 +42,7 @@ void addExample(pybind11::module_& m, const char* name) {
     // We use the global scope here because all of Example's members are
     // inherited, and so Example's own docstring namespace does not exist.
     RDOC_SCOPE_BEGIN_MAIN
-    RDOC_SCOPE_BASE_2(detail::ExampleBase, detail::ExampleFromLowDim)
+    RDOC_SCOPE_BASE(detail::ExampleBase)
 
     auto c = pybind11::class_<Example<dim>>(m, name, rdoc::Example)
         .def_static("sphere", &Example<dim>::sphere, rbase::sphere)
@@ -56,8 +56,8 @@ void addExample(pybind11::module_& m, const char* name) {
         .def_static("ballBundle", &Example<dim>::ballBundle, rbase::ballBundle)
         .def_static("twistedBallBundle", &Example<dim>::twistedBallBundle,
             rbase::twistedBallBundle)
-        .def_static("doubleCone", &Example<dim>::doubleCone, rbase2::doubleCone)
-        .def_static("singleCone", &Example<dim>::singleCone, rbase2::singleCone)
+        .def_static("doubleCone", &Example<dim>::doubleCone, rbase::doubleCone)
+        .def_static("singleCone", &Example<dim>::singleCone, rbase::singleCone)
     ;
     regina::python::no_eq_static(c);
 

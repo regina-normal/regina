@@ -74,12 +74,10 @@ Python:
     Face2_1 and Face3_0 for the two examples above).
 
 Template parameter ``dim``:
-    the dimension of the underlying triangulation. This must be
-    between 2 and 15 inclusive.
+    the dimension of the underlying triangulation.
 
 Template parameter ``subdim``:
-    the dimension of the faces that this class represents. This must
-    be between 0 and *dim* inclusive.)doc";
+    the dimension of the faces that this class represents.)doc";
 
 } // namespace regina::python::doc
 

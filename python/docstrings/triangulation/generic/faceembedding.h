@@ -55,12 +55,10 @@ Python:
     FaceEmbedding2_1 and FaceEmbedding3_0 for the two examples above).
 
 Template parameter ``dim``:
-    the dimension of the underlying triangulation. This must be
-    between 2 and 15 inclusive.
+    the dimension of the underlying triangulation.
 
 Template parameter ``subdim``:
-    the dimension of the faces of the underlying triangulation. This
-    must be between 0 and *dim*-1 inclusive.)doc";
+    the dimension of the faces of the underlying triangulation.)doc";
 
 namespace FaceEmbedding_ {
 

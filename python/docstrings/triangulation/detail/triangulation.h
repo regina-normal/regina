@@ -63,8 +63,7 @@ Python:
     Triangulation<dim> is.
 
 Template parameter ``dim``:
-    the dimension of the triangulation. This must be between 2 and 15
-    inclusive.)doc";
+    the dimension of the triangulation.)doc";
 
 }
 
@@ -407,8 +406,6 @@ Returns:
 constexpr const char *countEdges =
 R"doc(A dimension-specific alias for countFaces<1>().
 
-This alias is available for all dimensions *dim*.
-
 See countFaces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::countFaces
@@ -441,15 +438,11 @@ Returns:
 constexpr const char *countPentachora =
 R"doc(A dimension-specific alias for countFaces<4>().
 
-This alias is available for dimensions *dim* ≥ 4.
-
 See countFaces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::countTetrahedra
 constexpr const char *countTetrahedra =
 R"doc(A dimension-specific alias for countFaces<3>().
-
-This alias is available for dimensions *dim* ≥ 3.
 
 See countFaces() for further information.)doc";
 
@@ -457,15 +450,11 @@ See countFaces() for further information.)doc";
 constexpr const char *countTriangles =
 R"doc(A dimension-specific alias for countFaces<2>().
 
-This alias is available for all dimensions *dim*.
-
 See countFaces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::countVertices
 constexpr const char *countVertices =
 R"doc(A dimension-specific alias for countFaces<0>().
-
-This alias is available for all dimensions *dim*.
 
 See countFaces() for further information.)doc";
 
@@ -726,15 +715,11 @@ Returns:
 constexpr const char *edge =
 R"doc(A dimension-specific alias for face<1>().
 
-This alias is available for all dimensions *dim*.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::edges
 constexpr const char *edges =
 R"doc(A dimension-specific alias for faces<1>().
-
-This alias is available for all dimensions *dim*.
 
 See faces() for further information.)doc";
 
@@ -1203,8 +1188,7 @@ Precondition:
     The given *k*-face is a *k*-face of this triangulation.
 
 Template parameter ``k``:
-    the dimension of the given face. This must be 0, 1 or 2, and must
-    not exceed ``dim - 2``.
+    the dimension of the given face.
 
 Parameter ``f``:
     the *k*-face about which to perform the candidate move.
@@ -1251,8 +1235,7 @@ Precondition:
     The given *k*-face is a *k*-face of this triangulation.
 
 Template parameter ``k``:
-    the dimension of the given face. This must be between 0 and
-    (*dim*) inclusive.
+    the dimension of the given face.
 
 Parameter ``f``:
     the *k*-face about which to perform the candidate move.
@@ -1983,8 +1966,7 @@ Precondition:
     The given *k*-face is a *k*-face of this triangulation.
 
 Template parameter ``k``:
-    the dimension of the given face. This must be 0, 1 or 2, and must
-    not exceed ``dim - 2``.
+    the dimension of the given face.
 
 Parameter ``f``:
     the *k*-face about which to perform the move.
@@ -2086,8 +2068,7 @@ Python:
     returned in a Python tuple of size *k*.
 
 Template parameter ``k``:
-    the number of new top-dimensional simplices to add; this must be
-    non-negative.
+    the number of new top-dimensional simplices to add.
 
 Returns:
     an array containing all of the new simplices, in the order in
@@ -2205,8 +2186,7 @@ Precondition:
     The given *k*-face is a *k*-face of this triangulation.
 
 Template parameter ``k``:
-    the dimension of the given face. This must be between 0 and
-    (*dim*) inclusive.
+    the dimension of the given face.
 
 Parameter ``f``:
     the *k*-face about which to perform the move.
@@ -2239,8 +2219,7 @@ Precondition:
     The given *k*-face is a *k*-face of this triangulation.
 
 Template parameter ``k``:
-    the dimension of the given face. This must be between 0 and
-    (*dim*) inclusive.
+    the dimension of the given face.
 
 Parameter ``f``:
     the *k*-face about which to perform the move.
@@ -2276,8 +2255,6 @@ constexpr const char *pentachora =
 R"doc(A dimension-specific alias for faces<4>(), or an alias for simplices()
 in dimension *dim* = 4.
 
-This alias is available for dimensions *dim* ≥ 4.
-
 See faces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::pentachoron
@@ -2285,8 +2262,7 @@ constexpr const char *pentachoron =
 R"doc(A dimension-specific alias for face<4>(), or an alias for simplex() in
 dimension *dim* = 4.
 
-This alias is available for dimensions *dim* ≥ 4. It returns a non-
-const pentachoron pointer.
+This returns a non-const pentachoron pointer.
 
 See face() for further information.)doc";
 
@@ -2295,9 +2271,8 @@ constexpr const char *pentachoron_2 =
 R"doc(A dimension-specific alias for face<4>(), or an alias for simplex() in
 dimension *dim* = 4.
 
-This alias is available for dimensions *dim* ≥ 4. It returns a const
-pentachoron pointer in dimension *dim* = 4, and a non-const
-pentachoron pointer in all higher dimensions.
+This returns a const pentachoron pointer in dimension *dim* = 4, and a
+non-const pentachoron pointer in all higher dimensions.
 
 See face() for further information.)doc";
 
@@ -2762,8 +2737,6 @@ constexpr const char *tetrahedra =
 R"doc(A dimension-specific alias for faces<3>(), or an alias for simplices()
 in dimension *dim* = 3.
 
-This alias is available for dimensions *dim* ≥ 3.
-
 See faces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::tetrahedron
@@ -2771,8 +2744,7 @@ constexpr const char *tetrahedron =
 R"doc(A dimension-specific alias for face<3>(), or an alias for simplex() in
 dimension *dim* = 3.
 
-This alias is available for dimensions *dim* ≥ 3. It returns a non-
-const tetrahedron pointer.
+This returns a non-const tetrahedron pointer.
 
 See face() for further information.)doc";
 
@@ -2781,9 +2753,8 @@ constexpr const char *tetrahedron_2 =
 R"doc(A dimension-specific alias for face<3>(), or an alias for simplex() in
 dimension *dim* = 3.
 
-This alias is available for dimensions *dim* ≥ 3. It returns a const
-tetrahedron pointer in dimension *dim* = 3, and a non-const
-tetrahedron pointer in all higher dimensions.
+This returns a const tetrahedron pointer in dimension *dim* = 3, and a
+non-const tetrahedron pointer in all higher dimensions.
 
 See face() for further information.)doc";
 
@@ -2820,7 +2791,7 @@ Precondition:
     actually be combinatorially identical).
 
 Template parameter ``subdim``:
-    the face dimension; this must be between 0 and *dim* inclusive.
+    the face dimension.
 
 Parameter ``other``:
     the face to translate.
@@ -2851,7 +2822,7 @@ Precondition:
     actually be combinatorially identical).
 
 Template parameter ``subdim``:
-    the face dimension; this must be between 0 and *dim*-1 inclusive.
+    the face dimension.
 
 Parameter ``other``:
     the face embedding to translate.
@@ -2864,8 +2835,7 @@ constexpr const char *triangle =
 R"doc(A dimension-specific alias for face<2>(), or an alias for simplex() in
 dimension *dim* = 2.
 
-This alias is available for all dimensions *dim*. It returns a non-
-const triangle pointer.
+This returns a non-const triangle pointer.
 
 See face() for further information.)doc";
 
@@ -2874,9 +2844,8 @@ constexpr const char *triangle_2 =
 R"doc(A dimension-specific alias for face<2>(), or an alias for simplex() in
 dimension *dim* = 2.
 
-This alias is available for all dimensions *dim*. It returns a const
-triangle pointer in dimension *dim* = 2, and a non-const triangle
-pointer in all higher dimensions.
+This returns a const triangle pointer in dimension *dim* = 2, and a
+non-const triangle pointer in all higher dimensions.
 
 See face() for further information.)doc";
 
@@ -2884,8 +2853,6 @@ See face() for further information.)doc";
 constexpr const char *triangles =
 R"doc(A dimension-specific alias for faces<2>(), or an alias for simplices()
 in dimension *dim* = 2.
-
-This alias is available for all dimensions.
 
 See faces() for further information.)doc";
 
@@ -2933,8 +2900,7 @@ Precondition:
     The given *k*-face is a *k*-face of this triangulation.
 
 Template parameter ``k``:
-    the dimension of the given face. This must be 0, 1 or 2, and must
-    not exceed ``dim - 2``.
+    the dimension of the given face.
 
 Parameter ``f``:
     the *k*-face about which to perform the move.
@@ -2966,15 +2932,11 @@ After this is routine called, hasLocks() will return ``False``.)doc";
 constexpr const char *vertex =
 R"doc(A dimension-specific alias for face<0>().
 
-This alias is available for all dimensions *dim*.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::vertices
 constexpr const char *vertices =
 R"doc(A dimension-specific alias for faces<0>().
-
-This alias is available for all dimensions *dim*.
 
 See faces() for further information.)doc";
 
@@ -2994,8 +2956,7 @@ Precondition:
     The given *k*-face is a *k*-face of this triangulation.
 
 Template parameter ``k``:
-    the dimension of the given face. This must be 0, 1 or 2, and must
-    not exceed ``dim - 2``.
+    the dimension of the given face.
 
 Parameter ``f``:
     the *k*-face about which to perform the move.
@@ -3021,8 +2982,7 @@ Precondition:
     The given *k*-face is a *k*-face of this triangulation.
 
 Template parameter ``k``:
-    the dimension of the given face. This must be between 0 and
-    (*dim*) inclusive.
+    the dimension of the given face.
 
 Parameter ``f``:
     the *k*-face about which to perform the move.
