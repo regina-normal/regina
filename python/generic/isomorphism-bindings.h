@@ -76,16 +76,12 @@ void addIsomorphism(pybind11::module_& m, const char* name) {
         }, rdoc::applyInPlace)
         .def(pybind11::self * pybind11::self, rdoc::__mul)
         .def("inverse", &Isomorphism<dim>::inverse, rdoc::inverse)
+        .def("inc", [](Isomorphism<dim>& iso) { ++iso; }, rdoc::__inc)
         .def_static("random", &Isomorphism<dim>::random,
             pybind11::arg(), pybind11::arg("even") = false,
             rdoc::random)
         .def_static("identity", &Isomorphism<dim>::identity, rdoc::identity)
     ;
-    if constexpr (dim <= 6) {
-        c.def("inc", [](Isomorphism<dim>& iso) {
-            ++iso;
-        }, rdoc::__inc);
-    }
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq);

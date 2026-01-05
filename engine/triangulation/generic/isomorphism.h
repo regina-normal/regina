@@ -112,8 +112,6 @@ class Isomorphism :
         public Output<Isomorphism<dim>>,
         public TightEncodable<Isomorphism<dim>>,
         public alias::IsomorphismImage<Isomorphism<dim>, dim> {
-    static_assert(dim >= 2, "Isomorphism requires dimension >= 2.");
-
     protected:
         size_t size_;
             /**< The number of simplices in the source triangulation. */
@@ -582,9 +580,6 @@ class Isomorphism :
          * iteration, then this operator will "wrap around" and set this
          * to the identity.
          *
-         * \pre The class Perm<dim+1> supports the preincrement operator;
-         * currently this means that \a dim must be at most 6.
-         *
          * \python This routine is named inc() since Python does
          * not support the increment operator.  Unlike other Regina
          * classes, here inc() wraps the preincrement operator (not the
@@ -616,9 +611,6 @@ class Isomorphism :
          * the preincrement operator (since it involves a deep copy of a
          * large object).  You should use the preincrement operator unless
          * you actually need a copy of the old value of this isomorphism.
-         *
-         * \pre The class Perm<dim+1> supports the preincrement operator;
-         * currently this means that \a dim must be at most 6.
          *
          * \nopython The preincrement operator is present in Python as the
          * member function inc().  (Note that this is different from other
@@ -1000,10 +992,6 @@ Isomorphism<dim> Isomorphism<dim>::inverse() const {
 
 template <int dim> requires (supportedDim(dim))
 Isomorphism<dim>& Isomorphism<dim>::operator ++() {
-    static_assert(dim <= 6,
-        "Currently the Isomorphism<dim> pre/postincrement operators "
-        "are only available for dimensions dim <= 6.");
-
     if (size_ == 0)
         return *this;
 

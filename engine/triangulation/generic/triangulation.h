@@ -382,9 +382,6 @@ class Triangulation : public detail::TriangulationBase<dim> {
 template <int dim, int subdim>
 requires (standardDim(dim) && subdim >= 0 && subdim < dim)
 class [[deprecated]] DegreeLessThan {
-    static_assert(standardDim(dim),
-        "DegreeLessThan is only available for Regina's standard dimensions.");
-
     private:
         const Triangulation<dim>& tri_;
             /**< The triangulation with which we are working. */
@@ -452,9 +449,6 @@ class [[deprecated]] DegreeLessThan {
 template <int dim, int subdim>
 requires (standardDim(dim) && subdim >= 0 && subdim < dim)
 class [[deprecated]] DegreeGreaterThan {
-    static_assert(standardDim(dim),
-        "DegreeGreaterThan is only available for Regina's standard dimensions.");
-
     private:
         const Triangulation<dim>& tri_;
             /**< The triangulation with which we are working. */

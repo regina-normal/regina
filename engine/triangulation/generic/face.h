@@ -115,7 +115,7 @@ requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
 class Face : public detail::FaceBase<dim, subdim> {
     static_assert(dim == 2 || dim > 4,
         "The generic implementation of Face<dim, subdim> "
-        "should not be used for those face class that are specialised "
+        "should not be used for those face classes that are specialised "
         "in Regina's standard dimensions.");
     static_assert(subdim < dim,
         "The generic implementation of Face<dim, subdim> "
