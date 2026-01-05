@@ -78,8 +78,6 @@ template <int dim> requires (supportedDim(dim))
 class FacetPairingBase :
         public ShortOutput<FacetPairingBase<dim>>,
         public TightEncodable<FacetPairing<dim>> {
-    static_assert(dim >= 2, "FacetPairing requires dimension >= 2.");
-
     public:
         /**
          * A list of isomorphisms on facet pairings.

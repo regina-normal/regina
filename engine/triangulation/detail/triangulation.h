@@ -1562,7 +1562,7 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `markedHomology(k)`.
          *
-         * \tparam k the dimension of the homology group to compute;
+         * \tparam k the dimension of the homology group to compute.
          *
          * \return the <i>k</i>th homology group of the union of all
          * simplices in this triangulation, as described above.
@@ -2608,10 +2608,10 @@ class TriangulationBase :
          * according to the lexicographical ordering of the corresponding
          * permutations \a p.
          *
-         * \pre \a dim is one of Regina's standard dimensions.
-         * This precondition is a safety net, since in higher dimensions the
-         * triangulation would explode too quickly in size (and for the
-         * highest dimensions, possibly beyond the limits of \c size_t).
+         * As a safety net, this routine requires that \a dim must be one of
+         * Regina's \ref stddim "standard dimensions".  Otherwise in higher
+         * dimensions the triangulation would explode too quickly in size (and
+         * for the highest dimensions, possibly beyond the limits of \c size_t).
          *
          * \warning In dimensions 3 and 4, both the labelling and ordering of
          * sub-simplices in the subdivided triangulation has changed as of
@@ -2631,7 +2631,8 @@ class TriangulationBase :
          * subdivision, which may change properties such as
          * Triangulation<4>::knownSimpleLinks).
          */
-        void subdivide();
+        void subdivide()
+            requires (standardDim(dim));
 
         /**
          * Deprecated routine that performs a barycentric subdivision of the
@@ -2639,9 +2640,7 @@ class TriangulationBase :
          *
          * \deprecated This routine has been renamed to subdivide(), both to
          * shorten the name but also to make it clearer that this triangulation
-         * will be modified directly.
-         *
-         * \pre \a dim is one of Regina's standard dimensions.
+         * will be modified directly.  See subdivide() for further details.
          *
          * \exception LockViolation This triangulation contains at least one
          * locked top-dimensional simplex and/or facet.  This exception will be
@@ -2649,7 +2648,8 @@ class TriangulationBase :
          * Simplex<dim>::lockFacet() for further details on how such locks work
          * and what their implications are.
          */
-        [[deprecated]] void barycentricSubdivision();
+        [[deprecated]] void barycentricSubdivision()
+            requires (standardDim(dim));
 
         /**
          * Converts each real boundary component into a cusp (i.e., an
@@ -5618,7 +5618,8 @@ void TriangulationBase<dim>::makeDoubleCover() {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline void TriangulationBase<dim>::barycentricSubdivision() {
+inline void TriangulationBase<dim>::barycentricSubdivision()
+        requires (standardDim(dim)) {
     subdivide();
 }
 

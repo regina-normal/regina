@@ -515,13 +515,11 @@ Triangulation<dim> TriangulationBase<dim>::doubleOverBoundary() const {
 }
 
 template <int dim> requires (supportedDim(dim))
-void TriangulationBase<dim>::subdivide() {
+void TriangulationBase<dim>::subdivide()
+        requires (standardDim(dim)) {
     size_t nOld = simplices_.size();
     if (nOld == 0)
         return;
-
-    static_assert(standardDim(dim),
-        "subdivide() may only be used in standard dimensions.");
 
     // Any simplex or facet locks at all will be a problem here.
     if (hasLocks())
