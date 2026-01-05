@@ -37,11 +37,11 @@
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/triangulation/facenumbering.h"
 #include "../docstrings/triangulation/alias/face.h"
 #include "../docstrings/triangulation/alias/facenumber.h"
 #include "../docstrings/triangulation/dim3/vertex3.h"
 #include "../docstrings/triangulation/detail/face.h"
-#include "../docstrings/triangulation/detail/facenumbering.h"
 #include "../docstrings/triangulation/generic/faceembedding.h"
 
 using regina::Face;
@@ -71,7 +71,7 @@ void addVertex3(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_eq_operators(e, rbase::__eq);
 
     RDOC_SCOPE_SWITCH(Face)
-    RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
+    RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
     auto c = pybind11::class_<Face<3, 0>>(m, "Face3_0", rdoc_scope)
         .def("index", &Vertex<3>::index, rbase::index)
@@ -127,9 +127,10 @@ being reserved for a different purpose in a future release.)doc")
             rbase::isLinkOrientable)
         .def("linkEulerChar", &Vertex<3>::linkEulerChar, rdoc::linkEulerChar)
         .def("linkingSurface", &Vertex<3>::linkingSurface, rdoc::linkingSurface)
-        .def_static("ordering", &Vertex<3>::ordering)
-        .def_static("faceNumber", &Vertex<3>::faceNumber)
-        .def_static("containsVertex", &Vertex<3>::containsVertex)
+        .def_static("ordering", &Vertex<3>::ordering, rbase2::ordering)
+        .def_static("faceNumber", &Vertex<3>::faceNumber, rbase2::faceNumber)
+        .def_static("containsVertex", &Vertex<3>::containsVertex,
+            rbase2::containsVertex)
         .def_readonly_static("nFaces", &Vertex<3>::nFaces)
         .def_readonly_static("lexNumbering", &Vertex<3>::lexNumbering)
         .def_readonly_static("oppositeDim", &Vertex<3>::oppositeDim)

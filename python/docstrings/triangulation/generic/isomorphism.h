@@ -60,7 +60,7 @@ Python:
 
 Template parameter ``dim``:
     the dimension of the triangulations that this isomorphism class
-    works with. This must be between 2 and 15 inclusive.)doc";
+    works with.)doc";
 
 namespace Isomorphism_ {
 

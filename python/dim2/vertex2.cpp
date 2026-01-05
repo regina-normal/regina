@@ -31,12 +31,12 @@
 #include <pybind11/pybind11.h>
 #include "triangulation/dim2.h"
 #include "../helpers.h"
+#include "../docstrings/triangulation/facenumbering.h"
 #include "../docstrings/triangulation/alias/face.h"
 #include "../docstrings/triangulation/alias/facenumber.h"
 #include "../docstrings/triangulation/generic/face.h"
 #include "../docstrings/triangulation/generic/faceembedding.h"
 #include "../docstrings/triangulation/detail/face.h"
-#include "../docstrings/triangulation/detail/facenumbering.h"
 
 using regina::Vertex;
 using regina::VertexEmbedding;
@@ -67,7 +67,7 @@ void addVertex2(pybind11::module_& m, pybind11::module_& internal) {
     // We use the global scope here because all of Face's members are
     // inherited, and so Face's own docstring namespace does not exist.
     RDOC_SCOPE_SWITCH_MAIN
-    RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
+    RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
     auto c = pybind11::class_<Face<2, 0>>(m, "Face2_0", rdoc::Face)
         .def("index", &Vertex<2>::index, rbase::index)
@@ -94,9 +94,10 @@ void addVertex2(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::return_value_policy::reference, rbase::boundaryComponent)
         .def("degree", &Vertex<2>::degree, rbase::degree)
         .def("isBoundary", &Vertex<2>::isBoundary, rbase::isBoundary)
-        .def_static("ordering", &Vertex<2>::ordering)
-        .def_static("faceNumber", &Vertex<2>::faceNumber)
-        .def_static("containsVertex", &Vertex<2>::containsVertex)
+        .def_static("ordering", &Vertex<2>::ordering, rbase2::ordering)
+        .def_static("faceNumber", &Vertex<2>::faceNumber, rbase2::faceNumber)
+        .def_static("containsVertex", &Vertex<2>::containsVertex,
+            rbase2::containsVertex)
         .def_readonly_static("nFaces", &Vertex<2>::nFaces)
         .def_readonly_static("lexNumbering", &Vertex<2>::lexNumbering)
         .def_readonly_static("oppositeDim", &Vertex<2>::oppositeDim)

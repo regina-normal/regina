@@ -93,6 +93,109 @@ Parameter ``j``:
 Returns:
     the number of the (*dim*-2)-face opposite the given edge.)doc";
 
+namespace FaceNumbering_ {
+
+// Docstring regina::python::doc::FaceNumbering_::containsVertex
+static const char *containsVertex =
+R"doc(Tests whether the given *subdim*-face of a *dim*-dimensional simplex
+contains the given vertex of the simplex.
+
+Parameter ``face``:
+    a *subdim*-face number in a *dim*-simplex; this must be between 0
+    and (*dim*+1 choose *subdim*+1)-1 inclusive.
+
+Parameter ``vertex``:
+    a vertex number in a *dim*-simplex; this must be between 0 and
+    *dim* inclusive.
+
+Returns:
+    ``True`` if and only if the given *subdim*-face contains the given
+    vertex.)doc";
+
+// Docstring regina::python::doc::FaceNumbering_::faceNumber
+static const char *faceNumber =
+R"doc(Identifies which *subdim*-face in a *dim*-dimensional simplex is
+represented by the first (*subdim* + 1) elements of the given
+permutation.
+
+In other words, this routine identifies which *subdim*-face number
+within a *dim*-dimensional simplex spans vertices ``vertices[0, ...,
+subdim]``.
+
+For the special case ``subdim == 1`` (i.e., _edges_ in a
+*dim*-dimensional simplex), you can also call this function in the
+form ``faceNumber(u, v)``, where *u* and *v* are two distinct vertex
+numbers in the range `0 ≤ u,v ≤ dim`: this will return the number of
+the edge spanned by simplex vertices *u* and *v*. It does not matter
+whether *u* is smaller or larger than *v*.
+
+Parameter ``vertices``:
+    a permutation whose first (*subdim* + 1) elements represent some
+    vertex numbers in a *dim*-simplex.
+
+Returns:
+    the corresponding *subdim*-face number in the *dim*-simplex. This
+    will be between 0 and (*dim*+1 choose *subdim*+1)-1 inclusive.)doc";
+
+// Docstring regina::python::doc::FaceNumbering_::faceNumber_2
+static const char *faceNumber_2 =
+R"doc(Identifies which edge in a *dim*-dimensional simplex joins the two
+given vertices of the simplex.
+
+This is essentially a slicker implementation of ``faceNumber(Perm<dim
++ 1>)``, specifically for edge numbering, that does not require an
+entire permutation to be passed as input.
+
+The two given vertex numbers must be distinct, and may appear in
+either order (i.e., they do not need to be sorted).
+
+Parameter ``vertex0``:
+    some vertex number of a simplex; this must be between 0 and *dim*
+    inclusive.
+
+Parameter ``vertex1``:
+    another vertex number of a simplex; this must also be between 0
+    and *dim* inclusive, and must be different from *vertex0*.
+
+Returns:
+    the number of the simplex edge spanned by the two given vertices.
+    This will be between 0 and ``(dim+1 choose 2)-1`` inclusive.)doc";
+
+// Docstring regina::python::doc::FaceNumbering_::ordering
+static const char *ordering =
+R"doc(Given a *subdim*-face number within a *dim*-dimensional simplex,
+returns the corresponding canonical ordering of the simplex vertices.
+
+If this canonical ordering is *c*, then *c*[0,...,*subdim*] will be
+the vertices of the given face in increasing numerical order. That is,
+*c*[0] < ... < *c*[*subdim*]. The remaining images *c*[(*subdim* +
+1),...,*dim*] will be ordered arbitrarily.
+
+Note that this is _not_ the same permutation as returned by
+Simplex<dim>::faceMapping<subdim>():
+
+* ordering() is a static function, which returns the same permutation
+  for the same face number, regardless of which *dim*-simplex we are
+  looking at. The images of 0,...,*subdim* will always appear in
+  increasing order, and the images of (*subdim* + 1),...,*dim* will be
+  arbitrary.
+
+* faceMapping() examines the underlying face *F* of the triangulation
+  and, across all appearances of *F* in different *dim*-simplices: (i)
+  chooses the images of 0,...,*subdim* to map to the same respective
+  vertices of *F*; and (ii) chooses the images of (*subdim* +
+  1),...,*dim* to maintain a "consistent orientation" constraint.
+
+Parameter ``face``:
+    identifies which *subdim*-face of a *dim*-dimensional simplex to
+    query. This must be between 0 and (*dim*+1 choose *subdim*+1)-1
+    inclusive.
+
+Returns:
+    the corresponding canonical ordering of the simplex vertices.)doc";
+
+}
+
 } // namespace regina::python::doc
 
 #if defined(__GNUG__)

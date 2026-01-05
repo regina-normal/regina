@@ -32,11 +32,11 @@
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
+#include "../docstrings/triangulation/facenumbering.h"
 #include "../docstrings/triangulation/alias/face.h"
 #include "../docstrings/triangulation/alias/facenumber.h"
 #include "../docstrings/triangulation/dim4/vertex4.h"
 #include "../docstrings/triangulation/detail/face.h"
-#include "../docstrings/triangulation/detail/facenumbering.h"
 #include "../docstrings/triangulation/generic/faceembedding.h"
 
 using regina::Vertex;
@@ -66,7 +66,7 @@ void addVertex4(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_eq_operators(e, rbase::__eq);
 
     RDOC_SCOPE_SWITCH(Face)
-    RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
+    RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
     auto c = pybind11::class_<Face<4, 0>>(m, "Face4_0", rdoc_scope)
         .def("index", &Vertex<4>::index, rbase::index)
@@ -103,9 +103,10 @@ void addVertex4(pybind11::module_& m, pybind11::module_& internal) {
         .def("isIdeal", &Vertex<4>::isIdeal, rdoc::isIdeal)
         .def("isBoundary", &Vertex<4>::isBoundary, rbase::isBoundary)
         .def("linkingSurface", &Vertex<4>::linkingSurface, rdoc::linkingSurface)
-        .def_static("ordering", &Vertex<4>::ordering)
-        .def_static("faceNumber", &Vertex<4>::faceNumber)
-        .def_static("containsVertex", &Vertex<4>::containsVertex)
+        .def_static("ordering", &Vertex<4>::ordering, rbase2::ordering)
+        .def_static("faceNumber", &Vertex<4>::faceNumber, rbase2::faceNumber)
+        .def_static("containsVertex", &Vertex<4>::containsVertex,
+            rbase2::containsVertex)
         .def_readonly_static("nFaces", &Vertex<4>::nFaces)
         .def_readonly_static("lexNumbering", &Vertex<4>::lexNumbering)
         .def_readonly_static("oppositeDim", &Vertex<4>::oppositeDim)

@@ -32,11 +32,11 @@
 #include "triangulation/generic.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
+#include "../docstrings/triangulation/facenumbering.h"
 #include "../docstrings/triangulation/alias/facenumber.h"
 #include "../docstrings/triangulation/generic/face.h"
 #include "../docstrings/triangulation/generic/faceembedding.h"
 #include "../docstrings/triangulation/detail/face.h"
-#include "../docstrings/triangulation/detail/facenumbering.h"
 
 using regina::Face;
 using regina::FaceEmbedding;
@@ -77,7 +77,7 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
     // We use the global scope here because all of Face's members are
     // inherited, and so Face's own docstring namespace does not exist.
     RDOC_SCOPE_SWITCH_MAIN
-    RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
+    RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
     auto c = pybind11::class_<regina::Face<dim, subdim>>(m, name, rdoc::Face)
         .def("isValid", &Face<dim, subdim>::isValid, rbase::isValid)
@@ -123,7 +123,7 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
             rbase2::faceNumber);
         c.def_static("faceNumber",
             pybind11::overload_cast<int, int>(&Face<dim, subdim>::faceNumber),
-            rbase2::faceNumber);
+            rbase2::faceNumber_2);
     } else {
         c.def_static("faceNumber", &Face<dim, subdim>::faceNumber,
             rbase2::faceNumber);

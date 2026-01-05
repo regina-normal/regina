@@ -76,10 +76,9 @@ namespace detail {
  * See the FaceNumbering template class notes for further information,
  * including details of how the face numbering scheme works.
  *
- * \python This base class is not present; instead Python users can access
- * these routines through the class `Face<dim, subdim>` (which in Python
- * becomes Face<i>dim</i>_<i>subdim</i>, or one of the type aliases
- * such as Vertex3, Edge2 and so on).
+ * \nopython Python users can access these constants through the class
+ * `Face<dim, subdim>` (which in Python becomes Face<i>dim</i>_<i>subdim</i>,
+ * or one of the type aliases such as Vertex3, Edge2 and so on).
  *
  * \tparam dim the dimension of the simplex whose faces are being numbered.
  * \tparam subdim the dimension of the faces being numbered.
@@ -694,48 +693,6 @@ class FaceNumbering : public detail::FaceNumberingTables<dim, subdim> {
         }
 
         /**
-         * Identifies which edge in a <i>dim</i>-dimensional simplex joins the
-         * two given vertices of the simplex.
-         *
-         * This is essentially a slicker implementation of
-         * `faceNumber(Perm<dim + 1>)`, specifically for edge numbering,
-         * that does not require an entire permutation to be passed as input.
-         *
-         * The two given vertex numbers must be distinct, and may appear in
-         * either order (i.e., they do not need to be sorted).
-         *
-         * \param vertex0 some vertex number of a simplex; this must be between
-         * 0 and \a dim inclusive.
-         * \param vertex1 another vertex number of a simplex; this must also be
-         * between 0 and \a dim inclusive, and must be different from
-         * \a vertex0.
-         * \return the number of the simplex edge spanned by the two given
-         * vertices.  This will be between 0 and `(dim+1 choose 2)-1` inclusive.
-         */
-        static constexpr int faceNumber(int vertex0, int vertex1)
-                requires (subdim == 1) {
-            if constexpr (Tables::hasNumberingTables) {
-                return Tables::edgeNumber[vertex0][vertex1];
-            } else if constexpr (dim == 2) {
-                return 3 - vertex0 - vertex1;
-            } else {
-                // Fall back to a generic implementation.
-                static_assert(! standardDim(dim));
-
-                // Let (u, v) = (vertex0, vertex1), where u < v.
-                // Then the edge number is:
-                //     [dim + (dim-1) + ... + (dim-u+1)] + (v-u-1)
-                //   = (dim+1 choose 2) - (dim-u+1 choose 2) + (v-u-1).
-
-                if (vertex0 > vertex1)
-                    std::swap(vertex0, vertex1);
-                return detail::binomSmall_[dim + 1][2]
-                    - detail::binomSmall_[dim - vertex0 + 1][2]
-                    + vertex1 - vertex0 - 1;
-            }
-        }
-
-        /**
          * Identifies which <i>subdim</i>-face in a <i>dim</i>-dimensional
          * simplex is represented by the first (\a subdim + 1) elements of the
          * given permutation.
@@ -830,6 +787,48 @@ class FaceNumbering : public detail::FaceNumberingTables<dim, subdim> {
                   }
                 }
                 return detail::binomSmall_[dim+1][lexDim+1]-1-val;
+            }
+        }
+
+        /**
+         * Identifies which edge in a <i>dim</i>-dimensional simplex joins the
+         * two given vertices of the simplex.
+         *
+         * This is essentially a slicker implementation of
+         * `faceNumber(Perm<dim + 1>)`, specifically for edge numbering,
+         * that does not require an entire permutation to be passed as input.
+         *
+         * The two given vertex numbers must be distinct, and may appear in
+         * either order (i.e., they do not need to be sorted).
+         *
+         * \param vertex0 some vertex number of a simplex; this must be between
+         * 0 and \a dim inclusive.
+         * \param vertex1 another vertex number of a simplex; this must also be
+         * between 0 and \a dim inclusive, and must be different from
+         * \a vertex0.
+         * \return the number of the simplex edge spanned by the two given
+         * vertices.  This will be between 0 and `(dim+1 choose 2)-1` inclusive.
+         */
+        static constexpr int faceNumber(int vertex0, int vertex1)
+                requires (subdim == 1) {
+            if constexpr (Tables::hasNumberingTables) {
+                return Tables::edgeNumber[vertex0][vertex1];
+            } else if constexpr (dim == 2) {
+                return 3 - vertex0 - vertex1;
+            } else {
+                // Fall back to a generic implementation.
+                static_assert(! standardDim(dim));
+
+                // Let (u, v) = (vertex0, vertex1), where u < v.
+                // Then the edge number is:
+                //     [dim + (dim-1) + ... + (dim-u+1)] + (v-u-1)
+                //   = (dim+1 choose 2) - (dim-u+1 choose 2) + (v-u-1).
+
+                if (vertex0 > vertex1)
+                    std::swap(vertex0, vertex1);
+                return detail::binomSmall_[dim + 1][2]
+                    - detail::binomSmall_[dim - vertex0 + 1][2]
+                    + vertex1 - vertex0 - 1;
             }
         }
 

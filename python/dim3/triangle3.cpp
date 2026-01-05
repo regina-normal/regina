@@ -33,11 +33,11 @@
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
+#include "../docstrings/triangulation/facenumbering.h"
 #include "../docstrings/triangulation/alias/face.h"
 #include "../docstrings/triangulation/alias/facenumber.h"
 #include "../docstrings/triangulation/dim3/triangle3.h"
 #include "../docstrings/triangulation/detail/face.h"
-#include "../docstrings/triangulation/detail/facenumbering.h"
 #include "../docstrings/triangulation/generic/faceembedding.h"
 
 using regina::Face;
@@ -68,7 +68,7 @@ void addTriangle3(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_eq_operators(e, rbase::__eq);
 
     RDOC_SCOPE_SWITCH(Face)
-    RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
+    RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
     auto c = pybind11::class_<Face<3, 2>>(m, "Face3_2", rdoc_scope)
         .def("index", &Triangle<3>::index, rbase::index)
@@ -127,9 +127,10 @@ void addTriangle3(pybind11::module_& m, pybind11::module_& internal) {
         .def("lock", &Triangle<3>::lock, rbase::lock)
         .def("unlock", &Triangle<3>::unlock, rbase::unlock)
         .def("isLocked", &Triangle<3>::isLocked, rbase::isLocked)
-        .def_static("ordering", &Triangle<3>::ordering)
-        .def_static("faceNumber", &Triangle<3>::faceNumber)
-        .def_static("containsVertex", &Triangle<3>::containsVertex)
+        .def_static("ordering", &Triangle<3>::ordering, rbase2::ordering)
+        .def_static("faceNumber", &Triangle<3>::faceNumber, rbase2::faceNumber)
+        .def_static("containsVertex", &Triangle<3>::containsVertex,
+            rbase2::containsVertex)
         .def_readonly_static("nFaces", &Triangle<3>::nFaces)
         .def_readonly_static("lexNumbering", &Triangle<3>::lexNumbering)
         .def_readonly_static("oppositeDim", &Triangle<3>::oppositeDim)

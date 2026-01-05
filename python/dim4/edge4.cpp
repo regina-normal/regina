@@ -34,11 +34,11 @@
 #include "../helpers.h"
 #include "../helpers/tableview.h"
 #include "../generic/facehelper.h"
+#include "../docstrings/triangulation/facenumbering.h"
 #include "../docstrings/triangulation/alias/face.h"
 #include "../docstrings/triangulation/alias/facenumber.h"
 #include "../docstrings/triangulation/dim4/edge4.h"
 #include "../docstrings/triangulation/detail/face.h"
-#include "../docstrings/triangulation/detail/facenumbering.h"
 #include "../docstrings/triangulation/generic/faceembedding.h"
 
 using regina::Edge;
@@ -69,7 +69,7 @@ void addEdge4(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_eq_operators(e, rbase::__eq);
 
     RDOC_SCOPE_SWITCH(Face)
-    RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
+    RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
     auto c = pybind11::class_<Face<4, 1>>(m, "Face4_1", rdoc_scope)
         .def("index", &Edge<4>::index, rbase::index)
@@ -115,12 +115,15 @@ void addEdge4(pybind11::module_& m, pybind11::module_& internal) {
         .def("buildLinkInclusion", &Edge<4>::buildLinkInclusion,
             rdoc::buildLinkInclusion)
         .def("linkingSurface", &Edge<4>::linkingSurface, rdoc::linkingSurface)
-        .def_static("ordering", &Edge<4>::ordering)
+        .def_static("ordering", &Edge<4>::ordering, rbase2::ordering)
         .def_static("faceNumber",
-            pybind11::overload_cast<regina::Perm<5>>(&Edge<4>::faceNumber))
+            pybind11::overload_cast<regina::Perm<5>>(&Edge<4>::faceNumber),
+            rbase2::faceNumber)
         .def_static("faceNumber",
-            pybind11::overload_cast<int, int>(&Edge<4>::faceNumber))
-        .def_static("containsVertex", &Edge<4>::containsVertex)
+            pybind11::overload_cast<int, int>(&Edge<4>::faceNumber),
+            rbase2::faceNumber_2)
+        .def_static("containsVertex", &Edge<4>::containsVertex,
+            rbase2::containsVertex)
         .def_readonly_static("nFaces", &Edge<4>::nFaces)
         .def_readonly_static("lexNumbering", &Edge<4>::lexNumbering)
         .def_readonly_static("oppositeDim", &Edge<4>::oppositeDim)

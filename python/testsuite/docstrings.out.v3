@@ -347,8 +347,6 @@ vertex(...)
 
     A dimension-specific alias for face<0>().
 
-    This alias is available for all facial dimensions *subdim*.
-
     See face() for further information.
 
 Help on instancemethod in module regina.engine:

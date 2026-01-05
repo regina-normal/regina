@@ -2350,7 +2350,6 @@
 		05098B70290019DF005E4716 /* strings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = strings.h; sourceTree = "<group>"; };
 		05098B71290019DF005E4716 /* component.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = component.h; sourceTree = "<group>"; };
 		05098B72290019DF005E4716 /* facetpairing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facetpairing.h; sourceTree = "<group>"; };
-		05098B73290019DF005E4716 /* facenumbering.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facenumbering.h; sourceTree = "<group>"; };
 		05098B74290019DF005E4716 /* triangulation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation.h; sourceTree = "<group>"; };
 		05098B75290019DF005E4716 /* face.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = face.h; sourceTree = "<group>"; };
 		050AFC5119DCB90E00835ED6 /* SnapPeaCusps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaCusps.h; sourceTree = "<group>"; };
@@ -5406,7 +5405,6 @@
 				05098B71290019DF005E4716 /* component.h */,
 				05098B6D290019DF005E4716 /* example.h */,
 				05098B75290019DF005E4716 /* face.h */,
-				05098B73290019DF005E4716 /* facenumbering.h */,
 				05098B72290019DF005E4716 /* facetpairing.h */,
 				05098B6F290019DF005E4716 /* simplex.h */,
 				05098B70290019DF005E4716 /* strings.h */,
