@@ -18,7 +18,6 @@ if (${REGINA_INSTALL_DEV})
     component.h
     example.h
     face.h
-    facenumbering.h
     facetpairing.h
     facetpairing-impl.h
     isosig-impl.h

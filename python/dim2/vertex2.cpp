@@ -102,6 +102,8 @@ void addVertex2(pybind11::module_& m, pybind11::module_& internal) {
         .def_readonly_static("oppositeDim", &Vertex<2>::oppositeDim)
         .def_readonly_static("dimension", &Vertex<2>::dimension)
         .def_readonly_static("subdimension", &Vertex<2>::subdimension)
+        .def_readonly_static("hasNumberingTables",
+            &Vertex<2>::hasNumberingTables)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

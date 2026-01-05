@@ -117,6 +117,7 @@ void addEdge3(pybind11::module_& m, pybind11::module_& internal) {
         .def_readonly_static("oppositeDim", &Edge<3>::oppositeDim)
         .def_readonly_static("dimension", &Edge<3>::dimension)
         .def_readonly_static("subdimension", &Edge<3>::subdimension)
+        .def_readonly_static("hasNumberingTables", &Edge<3>::hasNumberingTables)
         // Since the Triangulation<3> maximal forest routines return
         // sets of edges, we need edges to be hashable.
         .def("__hash__", [](const Edge<3>& e) {

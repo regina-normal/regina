@@ -135,6 +135,8 @@ being reserved for a different purpose in a future release.)doc")
         .def_readonly_static("oppositeDim", &Vertex<3>::oppositeDim)
         .def_readonly_static("dimension", &Vertex<3>::dimension)
         .def_readonly_static("subdimension", &Vertex<3>::subdimension)
+        .def_readonly_static("hasNumberingTables",
+            &Vertex<3>::hasNumberingTables)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

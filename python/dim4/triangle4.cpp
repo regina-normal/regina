@@ -123,6 +123,8 @@ void addTriangle4(pybind11::module_& m, pybind11::module_& internal) {
         .def_readonly_static("oppositeDim", &Triangle<4>::oppositeDim)
         .def_readonly_static("dimension", &Triangle<4>::dimension)
         .def_readonly_static("subdimension", &Triangle<4>::subdimension)
+        .def_readonly_static("hasNumberingTables",
+            &Triangle<4>::hasNumberingTables)
     ;
 
     c.attr("triangleNumber") = wrapTableView(internal,

@@ -33,7 +33,9 @@
 using regina::FaceNumbering;
 
 template <int dim, int subdim, int face>
-requires (dim >= 1 && dim <= regina::maxDim() && subdim >= 0 && subdim < dim)
+requires (dim >= 1 && dim <= regina::maxDim() &&
+    subdim >= 0 && subdim < dim &&
+    face >= 0 && face < regina::FaceNumbering<dim, subdim>::nFaces)
 void testFaceNumbering() {
     static_assert(FaceNumbering<dim, subdim>::faceNumber(
         FaceNumbering<dim, subdim>::ordering(face)) == face);
@@ -69,10 +71,15 @@ void testFaceNumbering() {
     }
 }
 
+template void testFaceNumbering<1, 0, 0>();
 template void testFaceNumbering<1, 0, 1>();
 
+template void testFaceNumbering<2, 0, 0>();
 template void testFaceNumbering<2, 0, 1>();
+template void testFaceNumbering<2, 0, 2>();
+template void testFaceNumbering<2, 1, 0>();
 template void testFaceNumbering<2, 1, 1>();
+template void testFaceNumbering<2, 1, 2>();
 
 template void testFaceNumbering<3, 0, 2>();
 template void testFaceNumbering<3, 1, 4>();
@@ -88,6 +95,13 @@ template void testFaceNumbering<5, 1, 7>();
 template void testFaceNumbering<5, 2, 11>();
 template void testFaceNumbering<5, 3, 8>();
 template void testFaceNumbering<5, 4, 4>();
+
+template void testFaceNumbering<8, 0, 5>();
+template void testFaceNumbering<8, 1, 20>();
+template void testFaceNumbering<8, 2, 40>();
+template void testFaceNumbering<8, 4, 101>();
+template void testFaceNumbering<8, 5, 31>();
+template void testFaceNumbering<8, 7, 6>();
 
 #ifdef REGINA_HIGHDIM
 template void testFaceNumbering<15, 0, 9>();

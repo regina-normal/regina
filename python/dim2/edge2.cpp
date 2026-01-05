@@ -122,6 +122,7 @@ void addEdge2(pybind11::module_& m, pybind11::module_& internal) {
         .def_readonly_static("oppositeDim", &Edge<2>::oppositeDim)
         .def_readonly_static("dimension", &Edge<2>::dimension)
         .def_readonly_static("subdimension", &Edge<2>::subdimension)
+        .def_readonly_static("hasNumberingTables", &Edge<2>::hasNumberingTables)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

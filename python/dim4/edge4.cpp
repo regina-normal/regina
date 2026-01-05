@@ -126,6 +126,7 @@ void addEdge4(pybind11::module_& m, pybind11::module_& internal) {
         .def_readonly_static("oppositeDim", &Edge<4>::oppositeDim)
         .def_readonly_static("dimension", &Edge<4>::dimension)
         .def_readonly_static("subdimension", &Edge<4>::subdimension)
+        .def_readonly_static("hasNumberingTables", &Edge<4>::hasNumberingTables)
     ;
 
     c.attr("edgeNumber") = wrapTableView(internal, Edge<4>::edgeNumber);

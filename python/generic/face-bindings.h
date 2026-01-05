@@ -113,6 +113,8 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
         .def_readonly_static("oppositeDim", &Face<dim, subdim>::oppositeDim)
         .def_readonly_static("dimension", &Face<dim, subdim>::dimension)
         .def_readonly_static("subdimension", &Face<dim, subdim>::subdimension)
+        .def_readonly_static("hasNumberingTables",
+            &Face<dim, subdim>::hasNumberingTables)
     ;
     if constexpr (subdim == 1) {
         c.def_static("faceNumber",

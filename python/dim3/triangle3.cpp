@@ -135,6 +135,8 @@ void addTriangle3(pybind11::module_& m, pybind11::module_& internal) {
         .def_readonly_static("oppositeDim", &Triangle<3>::oppositeDim)
         .def_readonly_static("dimension", &Triangle<3>::dimension)
         .def_readonly_static("subdimension", &Triangle<3>::subdimension)
+        .def_readonly_static("hasNumberingTables",
+            &Triangle<3>::hasNumberingTables)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

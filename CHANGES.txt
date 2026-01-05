@@ -24,6 +24,13 @@ Version 7.5  [ TODO ]
         Class Cut:
             - For the iterator-based constructor, the old recommendation that
               the iterator type be random access is now a hard requirement.
+        Class Face<dim, subdim>, FaceNumbering<dim, subdim>, :
+            - Major overhaul of the many classes to support face numbering.
+              The new structure is simpler thanks to new features of modern
+              C++ standards, and several of the old helper classes in
+              regina::detail are now gone.
+            - New class constant hasNumberingTables to indicate whether lookup
+              tables are used for face numbering queries.
         Class FixedArray:
             - Now has a default constructor that creates an empty array.
         Class GroupExpressionTerm, GroupExpression, GroupPresentation,

@@ -128,6 +128,8 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
         .def_readonly_static("oppositeDim", &Tetrahedron<4>::oppositeDim)
         .def_readonly_static("dimension", &Tetrahedron<4>::dimension)
         .def_readonly_static("subdimension", &Tetrahedron<4>::subdimension)
+        .def_readonly_static("hasNumberingTables",
+            &Tetrahedron<4>::hasNumberingTables)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
