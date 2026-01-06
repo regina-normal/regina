@@ -61,12 +61,12 @@ that ProgressTracker::setFinished() will be called after this routine
 returns.
 
 For each of the resulting extremal rays, this routine will call
-*action* (which must be a function or some other callable object).
-This action should return ``void``, and must take exactly one
-argument, which will be the extremal ray stored using type *Ray*. The
-argument will be passed as an rvalue; a typical *action* would take it
-as an rvalue reference (``Ray&&``) and move its contents into some
-other more permanent storage.
+*action* (which must be a function or some other callable type). This
+action must take exactly one argument: the extremal ray stored using
+type *Ray*. The argument will be passed as an rvalue; a typical
+*action* would take it as an rvalue reference (``Ray&&``) and move its
+contents into some other more permanent storage. The return value of
+*action* will be ignored (a typical *action* would return ``void``).
 
 Python:
     There are two versions of this function available in Python. The
@@ -80,7 +80,7 @@ Python:
     so you can use it with Python-based multithreading.
 
 Parameter ``action``:
-    a function (or other callable object) that will be called for each
+    a function (or other callable type) that will be called for each
     extremal ray. This function must take a single argument, which
     will be passed as an rvalue of type Ray.
 

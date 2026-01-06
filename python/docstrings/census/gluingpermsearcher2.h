@@ -248,7 +248,7 @@ Parameter ``maxDepth``:
     indicates that a full search should be run.
 
 Parameter ``action``:
-    a function (or other callable object) to call for each permutation
+    a function (or other callable type) to call for each permutation
     set (partial or complete) that is found.
 
 Parameter ``args``:
@@ -266,7 +266,7 @@ equivalence, where equivalence is defined by the given set of
 automorphisms of the given edge pairing.
 
 For each permutation set that is generated, this routine will call
-*action* (which must be a function or some other callable object).
+*action* (which must be a function or some other callable type).
 
 * The first argument to *action* must be a const reference to a
   GluingPerms<2>. This will be the permutation set that was found. If
@@ -277,7 +277,8 @@ For each permutation set that is generated, this routine will call
 * If there are any additional arguments supplied in the list *args*,
   then these will be passed as subsequent arguments to *action*.
 
-* *action* must return ``void``.
+* The return value of *action* will be ignored; typically it would
+  return ``void``.
 
 It is possible to run only a partial search, branching to a given
 depth but no further; for this you should use the separate routine
@@ -290,7 +291,7 @@ Python:
     additional *args* list is omitted here).
 
 Parameter ``action``:
-    a function (or other callable object) to call for each permutation
+    a function (or other callable type) to call for each permutation
     set that is found.
 
 Parameter ``args``:

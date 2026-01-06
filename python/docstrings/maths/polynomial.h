@@ -531,10 +531,6 @@ gcd``.
 
 As a special case, gcd(0,0) is considered to be zero.
 
-Precondition:
-    The coefficient type *T* represents a field. In particular,
-    Rational is supported but Integer is not.
-
 Parameter ``other``:
     the polynomial whose greatest common divisor with this polynomial
     we should compute.

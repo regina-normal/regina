@@ -425,7 +425,7 @@ Each time an embedding of a starter block is discovered, the block
 will be wrapped in a new SatRegion which describes how the block
 appears within the given triangulation. The region will be expanded to
 encompass as many saturated blocks as possible, and then passed to
-*action*, which must be a function or some other callable object.
+*action*, which must be a function or some other callable type.
 
 * The first argument to *action* must be of type
   std::unique_ptr<SatRegion>; this will be the newly constructed and
@@ -474,8 +474,8 @@ Parameter ``mustBeComplete``:
     triangulation component, as described above.
 
 Parameter ``action``:
-    a function (or other callable object) to call for each embedding
-    of a starter block that is found.
+    a function (or other callable type) to call for each embedding of
+    a starter block that is found.
 
 Parameter ``args``:
     any additional arguments that should be passed to *action*,

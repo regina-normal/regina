@@ -142,8 +142,8 @@ the given membership test.
 Specifically, this generates the subgroup of all permutations *p* in
 *parent* for which ``test(p, args...)`` returns ``True``.
 
-The argument *test* should be a function or some other callable
-object. It must return a boolean, and its first argument should be a
+The argument *test* should be a function or some other callable type.
+It must return a boolean, and its first argument should be a
 permutation (either by value as type ``Perm<n>``, or by const
 reference as type ``const Perm<n>&``). If there are any additional
 arguments supplied in the list *args*, these will be forwarded through
@@ -171,7 +171,7 @@ Parameter ``parent``:
     the "starting" group of all permutations under consideration.
 
 Parameter ``test``:
-    a function (or other callable object) that determines which
+    a function (or other callable type) that determines which
     permutations in *parent* become members of this subgroup.
 
 Parameter ``args``:

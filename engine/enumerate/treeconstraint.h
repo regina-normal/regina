@@ -121,7 +121,7 @@ class LPConstraintAPI {
          * the number of elements may be any non-negative integer (here in
          * this API documentation we use `1` just as an example).
          */
-        static constexpr std::array<LPConstraintType, 1> constraints;
+        static constexpr std::array<LPConstraintType, 1> constraints { };
 
         /**
          * The type used to store each coefficient for each of our
@@ -166,7 +166,7 @@ class LPConstraintAPI {
          * If your constraint type will not be working with octagons at all,
          * simply declare this constant as zero.
          */
-        static constexpr Coefficient octAdjustment;
+        static constexpr Coefficient octAdjustment { 0 };
 
         /**
          * Explicitly builds equations for the linear function(s) constrained

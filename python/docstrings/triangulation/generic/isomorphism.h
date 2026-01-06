@@ -228,10 +228,6 @@ In particular, the identity isomorphism is the first in such an
 iteration. If this isomorphism is the _last_ in such an iteration,
 then this operator will "wrap around" and set this to the identity.
 
-Precondition:
-    The class Perm<dim+1> supports the preincrement operator;
-    currently this means that *dim* must be at most 6.
-
 Python:
     This routine is named inc() since Python does not support the
     increment operator. Unlike other Regina classes, here inc() wraps

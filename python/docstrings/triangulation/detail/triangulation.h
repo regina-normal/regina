@@ -174,10 +174,7 @@ triangulation.
 .. deprecated::
     This routine has been renamed to subdivide(), both to shorten the
     name but also to make it clearer that this triangulation will be
-    modified directly.
-
-Precondition:
-    *dim* is one of Regina's standard dimensions.
+    modified directly. See subdivide() for further details.
 
 Exception ``LockViolation``:
     This triangulation contains at least one locked top-dimensional
@@ -836,13 +833,12 @@ be found and processed. See the isIsomorphicTo() notes for details on
 this.
 
 For each isomorphism that is found, this routine will call *action*
-(which must be a function or some other callable object).
+(which must be a function or some other callable type).
 
-* The first argument to *action* must be of type ``(const
-  Isomorphism<dim>&)``; this will be a reference to the isomorphism
-  that was found. If *action* wishes to keep the isomorphism, it
-  should take a deep copy (not a reference), since the isomorphism may
-  be changed and reused after *action* returns.
+* The first argument to *action* will be a const reference to the
+  isomorphism that was found. If *action* wishes to keep the
+  isomorphism, it should take a deep copy (not a reference), since the
+  isomorphism may be changed and reused after *action* returns.
 
 * If there are any additional arguments supplied in the list *args*,
   then these will be passed as subsequent arguments to *action*.
@@ -873,7 +869,7 @@ Parameter ``other``:
     the triangulation to compare with this one.
 
 Parameter ``action``:
-    a function (or other callable object) to call for each isomorphism
+    a function (or other callable type) to call for each isomorphism
     that is found.
 
 Parameter ``args``:
@@ -897,13 +893,12 @@ incomplete and need not be onto), all such isomorphisms will be found
 and processed. See the isContainedIn() notes for details on this.
 
 For each isomorphism that is found, this routine will call *action*
-(which must be a function or some other callable object).
+(which must be a function or some other callable type).
 
-* The first argument to *action* must be of type ``(const
-  Isomorphism<dim>&)``; this will be a reference to the isomorphism
-  that was found. If *action* wishes to keep the isomorphism, it
-  should take a deep copy (not a reference), since the isomorphism may
-  be changed and reused after *action* returns.
+* The first argument to *action* will be a const reference to the
+  isomorphism that was found. If *action* wishes to keep the
+  isomorphism, it should take a deep copy (not a reference), since the
+  isomorphism may be changed and reused after *action* returns.
 
 * If there are any additional arguments supplied in the list *args*,
   then these will be passed as subsequent arguments to *action*.
@@ -935,7 +930,7 @@ Parameter ``other``:
     triangulation.
 
 Parameter ``action``:
-    a function (or other callable object) to call for each isomorphism
+    a function (or other callable type) to call for each isomorphism
     that is found.
 
 Parameter ``args``:
@@ -2712,11 +2707,10 @@ other words: sub-simplices are ordered first according to the original
 simplex that contains them, and then according to the lexicographical
 ordering of the corresponding permutations *p*.
 
-Precondition:
-    *dim* is one of Regina's standard dimensions. This precondition is
-    a safety net, since in higher dimensions the triangulation would
-    explode too quickly in size (and for the highest dimensions,
-    possibly beyond the limits of ``size_t``).
+As a safety net, this routine requires that *dim* must be one of
+Regina's standard dimensions. Otherwise in higher dimensions the
+triangulation would explode too quickly in size (and for the highest
+dimensions, possibly beyond the limits of ``size_t``).
 
 .. warning::
     In dimensions 3 and 4, both the labelling and ordering of sub-

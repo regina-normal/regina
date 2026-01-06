@@ -268,10 +268,10 @@ Python:
     function.
 
 Parameter ``comp``:
-    a binary function (or other callable object) that accepts two
-    const AngleStructure references, and returns ``True`` if and only
-    if the first angle structure should appear before the second in
-    the sorted list.)doc";
+    a binary function (or other callable type) that accepts two const
+    AngleStructure references, and returns ``True`` if and only if the
+    first angle structure should appear before the second in the
+    sorted list.)doc";
 
 // Docstring regina::python::doc::AngleStructures_::spansStrict
 static const char *spansStrict =

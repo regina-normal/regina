@@ -2067,8 +2067,7 @@ surface, and in some pathological cases could even reduce it to the
 empty surface.
 
 Template parameter ``subdim``:
-    the dimension of the face to link; this must be between 0 and 2
-    inclusive.
+    the dimension of the face to link.
 
 Precondition:
     The given face is a face of this triangulation.
@@ -3404,7 +3403,7 @@ locks.
 
 For every such triangulation (including this starting triangulation),
 this routine will call *action* (which must be a function or some
-other callable object).
+other callable type).
 
 * *action* must take the following initial argument(s). Either (a) the
   first argument must be a triangulation (the precise type is
@@ -3514,8 +3513,8 @@ Parameter ``tracker``:
     ``None`` if no progress reporting is required.
 
 Parameter ``action``:
-    a function (or other callable object) to call for each
-    triangulation that is found.
+    a function (or other callable type) to call for each triangulation
+    that is found.
 
 Parameter ``args``:
     any additional arguments that should be passed to *action*,

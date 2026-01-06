@@ -57,7 +57,7 @@ possible, even when passing or returning objects by value.
 
 Template parameter ``dim``:
     the dimension of the underlying triangulation that is being
-    modelled. This must be between 2 and 15 inclusive.)doc";
+    modelled.)doc";
 
 namespace GluingPerms_ {
 

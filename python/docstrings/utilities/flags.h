@@ -39,7 +39,8 @@ Python:
 
 Template parameter ``T``:
     the enumeration type holding the individual flags that can be
-    combined. This may be a scoped or unscoped enumeration.)doc";
+    combined. This may be a scoped or unscoped enumeration, based upon
+    any underlying native C++ integer type.)doc";
 
 namespace Flags_ {
 
@@ -315,7 +316,10 @@ integer value. This is suitable for file input and/or output.
 
 .. deprecated::
     Use fromBase() instead, which makes no assumptions about the
-    underlying native C++ integer type.
+    underlying native C++ integer type. This routine should, however,
+    still be safe for all of the flag types currently used in Regina,
+    since they are all based on scoped enumerations with the default
+    underlying base type of ``int``.
 
 .. warning::
     This function should not be used widely, since it effectively
@@ -359,7 +363,10 @@ set. This is suitable for file input and/or output.
 
 .. deprecated::
     Use baseValue() instead, which makes no assumptions about the
-    underlying native C++ integer type.
+    underlying native C++ integer type. This routine should, however,
+    still be safe for all of the flag types currently used in Regina,
+    since they are all based on scoped enumerations with the default
+    underlying base type of ``int``.
 
 .. warning::
     This function should not be used widely, since it effectively

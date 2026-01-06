@@ -275,50 +275,61 @@ Python:
 
 // Docstring regina::python::doc::LPConstraintAPI
 static const char *LPConstraintAPI =
-R"doc(Regina supports _linear constraint classes_, which describe different
-forms of linear constraints that can be used with Regina's linear
-programming machinery. These types represent additional linear
-constraints that can be added to the tableaux of normal surface or
-angle structure matching equations, as part of the TreeEnumeration,
-TreeSingleSoln and related algorithms for enumerating and locating
-normal surfaces or angle structures in a 3-manifold triangulation. See
-the LPInitialTableaux class notes for details on how these constraints
-interact with the tableaux of matching equations.
+R"doc(Regina supports _linear constraint types_, which describe different
+families of linear constraints that can be used with Regina's linear
+programming machinery. These constraints are added to the tableaux of
+normal surface or angle structure matching equations, as part of the
+TreeEnumeration, TreeSingleSoln and related algorithms for enumerating
+and locating normal surfaces or angle structures in a 3-manifold
+triangulation.
 
-These linear constraints may be equalities or inequalities, and there
-may be more than one such constraint.
+This LPConstraintAPI class is a documentation-only class (it is not
+actually built into Regina). Its purpose is to describe in detail the
+interface that a linear constraint type should provide.
 
-In angle structure coordinates, these linear constraints must _not_
-involve the scaling coordinate (the final coordinate that is used to
-convert the angle structure polytope into a polyhedral cone). The
-coefficient for the final scaling coordinate in each additional linear
-constraint will be assumed to be zero.
+Regarding the mathematical form of the linear constraints:
 
-Bear in mind that the tableaux that these constraints are working with
-will not necessarily use the same coordinates as the underlying
-enumeration task (e.g., the tableaux will never include separate
-columns for octagon coordinates). See LPInitialTableaux for a more
-detailed discussion of this.
+* Typically only one linear constraint _type_ would be used with a
+  normal surface or angle structure enumeration/location algorithm.
+  However, a single type can describe several simultaneous linear
+  equations and/or inequalities (see LPConstraintNonSpun for an
+  example of this).
 
-All constraint classes provide their functionality through static
-routines: they do not contain any member data, and it is unnecessary
-(but harmless) to construct them.
+* The enumeration LPConstraintType describes what form each individual
+  constraint takes (in particular, whether it is an equality or an
+  inequality). See the LPInitialTableaux class notes for details on
+  how these different forms of constraint interact with the tableaux
+  of normal surface or angle structure matching equations.
 
-These linear constraint classes are designed mainly to act as C++
-template arguments, and end users will typically not need to construct
-their own object of these classes. Instead, to use a linear constraint
-class, pass it as a template parameter to one of the tree traversal
-subclasses (e.g., TreeEnumeration, TreeSingleSolution, or
-TautEnumeration).
+* When working in angle structure coordinates, these linear
+  constraints must _not_ involve the scaling coordinate (the final
+  coordinate that is used to convert the angle structure polytope into
+  a polyhedral cone). Instead, the coefficient for the final scaling
+  coordinate in each additional linear constraint will be assumed to
+  be zero.
+
+* Bear in mind that the tableaux that these linear constraints are
+  working with will not necessarily use the same coordinates as the
+  underlying normal surface or angle structure enumeration task (e.g.,
+  the tableaux will never include separate columns for octagon
+  coordinates). See LPInitialTableaux for a more detailed discussion
+  of this.
+
+All constraint types provide their functionality through static
+members and static routines: they do not contain any member data, and
+it is unnecessary (but harmless) to construct them. Instead constraint
+types are typically used as C++ template arguments (in particular,
+template arguments for tree traversal classes such as TreeEnumeration,
+TreeSingleSolution, and TautEnumeration).
 
 Python:
-    This base class is not present, but all of the "real" linear
-    constraint subclasses are available. However, as noted above, it
-    is rare that you would need to access any of these constraint
-    classes directly through Python. Instead, to use a linear
-    constraint class, you would typically create a tree traversal
-    object with the appropriate class suffix (e.g., one such Python
-    class is ``TreeEnumeration_NonSpun``).
+    Whilst Regina's linear constraint types are available, it is rare
+    that you would need to access any of these types directly through
+    Python. Instead, to use a linear constraint type, you would
+    typically create a tree traversal object whose class name includes
+    the constraint type as a suffix (e.g.,
+    ``TreeEnumeration_NonSpun``, which represents the C++ class
+    ``TreeEnumeration<LPConstraintNonSpun>``).
 
 .. warning::
     The API for this class or function has not yet been finalised.
@@ -687,34 +698,32 @@ As described in the LPInitialTableaux class notes, it might not be
 possible to construct the linear functions (since the underlying
 triangulation might not satisfy the necessary requirements). In such
 cases this routine should throw an exception, as described below, and
-the corresponding constraint class _must_ mention this possibility in
-its class documentation.
+your constraint class _must_ mention this possibility in its class
+documentation.
 
 If you are implementing this routine for a constraint type that works
 with angle structure coordinates, remember that your linear
 constraints must not interact with the scaling coordinate (the final
 angle structure coordinate that is used to projectivise the angle
 structure polytope into a polyhedral cone). Your implementation of
-this routine _must_ ensure that your linear constraints all have
-coefficient zero in this column.
+``addRows()`` _must_ leave all of your constraint coefficients in this
+column as zero.
 
 The precise form of the linear function(s) will typically depend upon
 the underlying triangulation, as well as the permutation that
 indicates which columns of the initial tableaux correspond to which
 normal or angle structure coordinates. All of this information will be
-accessible via the arguments to ``addRows()``.
+accessible via the arguments to ``addRows()``. Note that the number of
+columns is _not_ passed as an argument; instead you would typically
+deduce this from ``tri.size()`` and knowledge of the particular type
+of constraint. For example, if you are implementing a single linear
+constraint that works with standard normal coordinates, the number of
+columns would be ``7 * tri.size() + 1``.
 
 This routine should only write to the coefficients stored in
 ``col[...].extra``. Your implementation of ``addRows()`` may assume
 that these coefficients have already been initialised to zero (this is
 done automatically by the LPCol constructor).
-
-The number of columns is not explicitly passed to this routine. You
-would typically deduce this where necessary from ``tri.size()`` and
-knowledge of the particular type of constraint. For example, if you
-are implementing a single linear constraint that works with standard
-normal coordinates, the number of columns would be ``7 * tri.size() +
-1``.
 
 Precondition:
     For all columns in the array *col*, the members LPCol::extra have
@@ -791,7 +800,7 @@ described by this class.
 Ideally this test is not based on explicitly recomputing the linear
 function(s), but instead runs independent tests. For instance, if this
 class is used to constraint Euler characteristic, then ideally this
-routine would call s.eulerChar() and test the return value of that
+routine would call ``s.eulerChar()`` and test the return value of that
 routine instead.
 
 If these linear constraints work with angle structure coordinates (not

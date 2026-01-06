@@ -62,12 +62,12 @@ details. These contraints have the important property that, although
 validity is not preserved under addition, _invalidity_ is.
 
 For each of the resulting basis elements, this routine will call
-*action* (which must be a function or some other callable object).
-This action should return ``void``, and must take exactly one
-argument, which will be the basis element stored using type *Ray*. The
-argument will be passed as an rvalue; a typical *action* would take it
-as an rvalue reference (``Ray&&``) and move its contents into some
-other more permanent storage.
+*action* (which must be a function or some other callable type). This
+action must take exactly one argument: the basis element stored using
+type *Ray*. The argument will be passed as an rvalue; a typical
+*action* would take it as an rvalue reference (``Ray&&``) and move its
+contents into some other more permanent storage. The return value of
+*action* will be ignored (a typical *action* would return ``void``).
 
 .. warning::
     For normal surface theory, the Contejean-Devie algorithm is
@@ -85,7 +85,7 @@ Python:
     template argument *Ray* is fixed as VectorInt.
 
 Parameter ``action``:
-    a function (or other callable object) that will be called for each
+    a function (or other callable type) that will be called for each
     basis element. This function must take a single argument, which
     will be passed as an rvalue of type Ray.
 

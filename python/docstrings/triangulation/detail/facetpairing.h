@@ -352,7 +352,7 @@ lexicographically minimal representative of its isomorphism class,
 i.e., will be in canonical form as described by isCanonical().
 
 For each facet pairing that is generated, this routine will call
-*action* (which must be a function or some other callable object).
+*action* (which must be a function or some other callable type).
 
 * The first argument to *action* must be a const reference to a
   FacetPairing<dim>. This will be the facet pairing that was found. If
@@ -371,7 +371,8 @@ For each facet pairing that is generated, this routine will call
 * If there are any additional arguments supplied in the list *args*,
   then these will be passed as subsequent arguments to *action*.
 
-* *action* must return ``void``.
+* The return value of *action* will be ignored; typically it would
+  return ``void``.
 
 Because this class cannot represent an empty facet pairing, if the
 argument *nSimplices* is zero then no facet pairings will be generated
@@ -417,8 +418,8 @@ Parameter ``nBdryFacets``:
     (dim+1)``, and can be at most ``(dim-1) * nSimplices + 2``.
 
 Parameter ``action``:
-    a function (or other callable object) to call for each facet
-    pairing that is found.
+    a function (or other callable type) to call for each facet pairing
+    that is found.
 
 Parameter ``args``:
     any additional arguments that should be passed to *action*,

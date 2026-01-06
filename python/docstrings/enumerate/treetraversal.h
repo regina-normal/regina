@@ -33,11 +33,11 @@ and repeatedly call next() to step through each taut angle structure
 one at a time. This allows you to pause and resume the search as you
 please.
 
-By using appropriate template parameters *LPConstraint* and/or
-*BanConstraint*, it is possible to impose additional linear
-constraints on the angle structure solution space, and/or explicitly
-force particular angles to be zero. See the LPConstraintBase and
-BanConstraintBase class notes for details.
+By using appropriate template parameters *Constraint* and/or *Ban*, it
+is possible to impose additional linear constraints on the angle
+structure solution space, and/or explicitly force particular angles to
+be zero. See the LPConstraintAPI and BanConstraintBase documentation
+for details.
 
 Note that some constraint classes may cause the TautEnumeration class
 constructor to throw an exception; see the constructor documentation
@@ -53,21 +53,12 @@ This class is designed to manage the execution of a significant
 enumeration operation, and so it does not support copying, moving or
 swapping.
 
-Precondition:
-    The parameter LPConstraint must be a subclass of
-    LPConstraintSubspace, and BanConstraint must be either BanNone or
-    a subclass of BanConstraintBase. Note in particular that the base
-    class LPConstraintBase is not enough here. See the
-    LPConstraintBase, LPConstraintSubspace and BanConstraintBase class
-    notes for further details.
-
 Python:
-    This is a heavily templated class; however, the only
-    *LPConstraint* and *BanConstraint* options currently offered for
-    angle structures are the default LPConstraintNone and BanNone.
-    Therefore Python offers just one instance of this class (with all
-    template arguments set to their defaults), under the name
-    ``TautEnumeration``.
+    This is a heavily templated class; however, the only *Constraint*
+    and *Ban* options currently offered for angle structures are the
+    default LPConstraintNone and BanNone. Therefore Python offers just
+    one instance of this class (with all template arguments set to
+    their defaults), under the name ``TautEnumeration``.
 
 .. warning::
     The API for this class or function has not yet been finalised.
@@ -110,15 +101,14 @@ we allow any number of octagons (including zero), but we only allow at
 most one octagon _type_ in the entire triangulation. No coordinate
 systems other than these are supported.
 
-By using appropriate template parameters *LPConstraint* and/or
-*BanConstraint*, it is possible to impose additional linear
-constraints on the normal surface solution cone, and/or explicitly
-force particular normal coordinates to zero. In this case, the notion
-of "vertex surface" is modified to mean a normal surface whose
-coordinates lie on an extreme ray of the restricted solution cone
-under these additional constraints (and whose coordinates are integers
-with no common divisor). See the LPConstraintBase and
-BanConstraintBase class notes for details.
+By using appropriate template parameters *Constraint* and/or *Ban*, it
+is possible to impose additional linear constraints on the normal
+surface solution cone, and/or explicitly force particular normal
+coordinates to zero. In this case, the notion of "vertex surface" is
+modified to mean a normal surface whose coordinates lie on an extreme
+ray of the restricted solution cone under these additional constraints
+(and whose coordinates are integers with no common divisor). See the
+LPConstraintAPI and BanConstraintBase documentation for details.
 
 Note that some constraint classes may cause the TreeEnumeration class
 constructor to throw an exception; see the constructor documentation
@@ -134,14 +124,6 @@ This class is designed to manage the execution of a significant
 enumeration operation, and so it does not support copying, moving or
 swapping.
 
-Precondition:
-    The parameter LPConstraint must be a subclass of
-    LPConstraintSubspace, and BanConstraint must be either BanNone or
-    a subclass of BanConstraintBase. Note in particular that the base
-    class LPConstraintBase is not enough here. See the
-    LPConstraintBase, LPConstraintSubspace and BanConstraintBase class
-    notes for further details.
-
 .. warning::
     Although the tree traversal algorithm can run in standard normal
     or almost normal coordinates, this is not recommended: it is
@@ -155,15 +137,15 @@ Precondition:
 Python:
     This is a heavily templated class; nevertheless, many variants are
     now made available to Python users. Each class name is of the form
-    TreeEnumeration_*LPConstraint*_*BanConstraint*, where the suffixes
-    *LPConstraint* and *BanConstraint* are abbreviated versions of the
+    TreeEnumeration_*Constraint*_*Ban*, where the suffixes
+    *Constraint* and *Ban* are abbreviated versions of the
     corresponding template parameters; these suffixes are omitted
     entirely for the common cases LPConstraintNone and BanNone. As an
     example, to enumerate non-spun normal surfaces in an ideal
     3-manifold triangulation, you would use the Python class
     ``TreeEnumeration_NonSpun``. You are encouraged to look through
     the Regina namespace to see which combinations of constraint
-    classes are supported under Python. In all cases, the IntType
+    classes are supported under Python. In all cases, the *IntType*
     parameter is taken to be regina::Integer.
 
 .. warning::
@@ -179,10 +161,10 @@ static const char *TreeSingleSoln =
 R"doc(The main entry point for the tree traversal / branching algorithm to
 locate a single non-trivial normal surface satisfying given
 constraints within a 3-manifold triangulation. The constraints are
-passed using a combination of the template arguments LPConstraint and
-BanConstraint. Note that some constraint classes may cause the
-TreeSingleSoln class constructor to throw an exception; see the
-constructor documentation for details.
+passed using a combination of the template arguments *Constraint* and
+*Ban*. Note that some constraint classes may cause the TreeSingleSoln
+class constructor to throw an exception; see the constructor
+documentation for details.
 
 A common application of this algorithm is to find a surface of
 positive Euler characteristic, using the template argument
@@ -199,7 +181,7 @@ this takes on a different meaning. See the warning on this matter
 below.
 
 Be warned that this routine does not eliminate the zero vector, and so
-the template argument LPConstraint should include at least one
+the template argument *Constraint* should include at least one
 constraint that eliminates the zero vector (e.g., positive Euler
 characteristic). Otherwise this algorithm may simply return the zero
 vector, and the information gained will not be very useful.
@@ -266,25 +248,18 @@ operation, and so it does not support copying, moving or swapping.
     positive quadrilaterals in the first position, or else no
     quadrilaterals at all.
 
-Precondition:
-    The parameter LPConstraint must be a subclass of LPConstraintBase,
-    and BanConstraint must either BanNone or a subclass of
-    BanConstraintBase. See the LPConstraintBase and BanConstraintBase
-    class notes for further details.
-
 Python:
     This is a heavily templated class; nevertheless, many variants are
     now made available to Python users. Each class name is of the form
-    TreeSingleSoln_*LPConstraint*_*BanConstraint*, where the suffixes
-    *LPConstraint* and *BanConstraint* are abbreviated versions of the
-    corresponding template parameters; these suffixes are omitted
-    entirely for the common cases LPConstraintNone and BanNone. As an
-    example, to find a normal disc or sphere in a 3-manifold
-    triangulation, you would use the Python class
-    ``TreeSingleSoln_EulerPositive``. You are encouraged to look
-    through the Regina namespace to see which combinations of
-    constraint classes are supported under Python. In all cases, the
-    IntType parameter is taken to be regina::Integer.
+    TreeSingleSoln_*Constraint*_*Ban*, where the suffixes *Constraint*
+    and *Ban* are abbreviated versions of the corresponding template
+    parameters; these suffixes are omitted entirely for the common
+    cases LPConstraintNone and BanNone. As an example, to find a
+    normal disc or sphere in a 3-manifold triangulation, you would use
+    the Python class ``TreeSingleSoln_EulerPositive``. You are
+    encouraged to look through the Regina namespace to see which
+    combinations of constraint classes are supported under Python. In
+    all cases, the *IntType* parameter is taken to be regina::Integer.
 
 .. warning::
     The API for this class or function has not yet been finalised.
@@ -362,10 +337,10 @@ octagons are indicated by setting a quadrilateral type to 4, 5 or 6.
 
 There is optional support for adding extra linear constraints (such as
 a constraint on Euler characteristic), supplied by the template
-parameter *LPConstraint*. If there are no additional constraints,
-simply use the template parameter LPConstraintNone. Note that some
-constraint classes may cause the TreeTraveral class constructor to
-throw an exception; see the constructor documentation for details.
+parameter *Constraint*. If there are no additional constraints, simply
+use the template parameter LPConstraintNone. Note that some constraint
+classes may cause the TreeTraveral class constructor to throw an
+exception; see the constructor documentation for details.
 
 Also, there is optional support for banning coordinates (i.e.,
 insisting that certain coordinates must be set to zero), and/or
@@ -386,12 +361,6 @@ Subclasses of TreeTraversal are designed to manage the execution of
 significant enumeration and search operations, and so this class does
 not support copying, moving or swapping.
 
-Precondition:
-    The parameter LPConstraint must be a subclass of LPConstraintBase,
-    and BanConstraint must either BanNone or a subclass of
-    BanConstraintBase. See the LPConstraintBase and BanConstraintBase
-    class notes for further details.
-
 Python:
     This is a heavily templated class; moreover, it only serves as a
     base class, and you will most likely not need to access this class
@@ -400,11 +369,11 @@ Python:
     useful interface for solving different type of problems. The
     variants of this TreeTraversal base class that are available in
     Python have Python names of the form
-    TreeTraversal_*LPConstraint*_*BanConstraint*, where the suffixes
-    *LPConstraint* and *BanConstraint* are abbreviated versions of the
-    corresponding template parameters; these suffixes are omitted
-    entirely for the common cases LPConstraintNone and BanNone. In all
-    cases, the IntType parameter is taken to be regina::Integer.
+    TreeTraversal_*Constraint*_*Ban*, where the suffixes *Constraint*
+    and *Ban* are abbreviated versions of the corresponding template
+    parameters; these suffixes are omitted entirely for the common
+    cases LPConstraintNone and BanNone. In all cases, the *IntType*
+    parameter is taken to be regina::Integer.
 
 .. warning::
     The API for this class or function has not yet been finalised.
@@ -434,21 +403,21 @@ Precondition:
 
 Precondition:
     The trianglation adheres to any preconditions required by the
-    template parameters LPConstraint and BanConstraint.
+    template parameters *Constraint* and *Ban*.
 
 Exception ``InvalidArgument``:
     It was not possible to add the extra constraints from the
     LPConstraint template argument, due to an error which should have
     been preventable with the right checks in advance. Such exceptions
-    are generated by the *LPConstraint* class, and so you should
-    consult the class documentation for your chosen *LPConstraint*
-    template argument to see if this is a possibility.
+    are generated by the *Constraint* class, and so you should consult
+    the class documentation for your chosen *Constraint* template
+    argument to see if this is a possibility.
 
 Exception ``InvalidArgument``:
     It was not possible to add the extra constraints from the
     LPConstraint template argument, due to an error that was
     "genuinely" unforseeable. Again, such exceptions are generated by
-    your chosen *LPConstraint* class, and you should consult its
+    your chosen *Constraint* class, and you should consult its
     documentation to see if this is a possibility.
 
 Parameter ``tri``:
@@ -456,9 +425,9 @@ Parameter ``tri``:
     structures.
 
 Parameter ``banArgs``:
-    any additional arguments to be passed to the BanConstraint
-    constructor, after the initial starting tableaux. For most ban
-    constrainst classes, this list of arguments is empty.)doc";
+    any additional arguments to be passed to the constructor for
+    *Ban*, after the initial starting tableaux. For most ban
+    constraint classes, this list of arguments is empty.)doc";
 
 // Docstring regina::python::doc::TautEnumeration_::next
 static const char *next =
@@ -517,10 +486,10 @@ R"doc(Runs the complete tree traversal algorithm to enumerate all taut angle
 structures.
 
 For each taut angle structure that is found, this routine will call
-*action* (which must be a function or some other callable object).
+*action* (which must be a function or some other callable type).
 
-* The first argument to *action* must be a const reference to a
-  TautEnumeration object (which will be this object).
+* The first argument passed to *action* will a const reference to this
+  TautEnumeration object.
 
 * If there are any additional arguments supplied in the list *args*,
   then these will be passed as subsequent arguments to *action*.
@@ -559,7 +528,7 @@ Python:
     additional *args* list is omitted here).
 
 Parameter ``action``:
-    a function (or some other callable object) to call for each taut
+    a function (or some other callable type) to call for each taut
     angle structure that is found.
 
 Parameter ``args``:
@@ -677,22 +646,22 @@ Precondition:
 
 Precondition:
     Both the trianglation and the given vector encoding adhere to any
-    preconditions required by the template parameters LPConstraint and
-    BanConstraint.
+    preconditions required by the template parameters *Constraint* and
+    *Ban*.
 
 Exception ``InvalidArgument``:
     It was not possible to add the extra constraints from the
     LPConstraint template argument, due to an error which should have
     been preventable with the right checks in advance. Such exceptions
-    are generated by the *LPConstraint* class, and so you should
-    consult the class documentation for your chosen *LPConstraint*
-    template argument to see if this is a possibility.
+    are generated by the *Constraint* class, and so you should consult
+    the class documentation for your chosen *Constraint* template
+    argument to see if this is a possibility.
 
 Exception ``InvalidArgument``:
     It was not possible to add the extra constraints from the
     LPConstraint template argument, due to an error that was
     "genuinely" unforseeable. Again, such exceptions are generated by
-    your chosen *LPConstraint* class, and you should consult its
+    your chosen *Constraint* class, and you should consult its
     documentation to see if this is a possibility.
 
 Parameter ``tri``:
@@ -703,9 +672,9 @@ Parameter ``enc``:
     working with.
 
 Parameter ``banArgs``:
-    any additional arguments to be passed to the BanConstraint
-    constructor, after the initial starting tableaux. For most ban
-    constrainst classes, this list of arguments is empty.)doc";
+    any additional arguments to be passed to the constructor for
+    *Ban*, after the initial starting tableaux. For most ban
+    constraint classes, this list of arguments is empty.)doc";
 
 // Docstring regina::python::doc::TreeEnumeration_::next
 static const char *next =
@@ -763,10 +732,10 @@ R"doc(Runs the complete tree traversal algorithm to enumerate vertex normal
 or almost normal surfaces.
 
 For each vertex surface that is found, this routine will call *action*
-(which must be a function or some other callable object).
+(which must be a function or some other callable type).
 
-* The first argument to *action* must be a const reference to a
-  TreeEnumeration object (which will be this object).
+* The first argument passed to *action* will a const reference to this
+  TreeEnumeration object.
 
 * If there are any additional arguments supplied in the list *args*,
   then these will be passed as subsequent arguments to *action*.
@@ -806,7 +775,7 @@ Python:
     additional *args* list is omitted here).
 
 Parameter ``action``:
-    a function (or some other callable object) to call for each vertex
+    a function (or some other callable type) to call for each vertex
     surface that is found.
 
 Parameter ``args``:
@@ -911,22 +880,22 @@ Precondition:
 
 Precondition:
     Both the trianglation and the given vector encoding adhere to any
-    preconditions required by the template parameters LPConstraint and
-    BanConstraint.
+    preconditions required by the template parameters *Constraint* and
+    *Ban*.
 
 Exception ``InvalidArgument``:
     It was not possible to add the extra constraints from the
     LPConstraint template argument, due to an error which should have
     been preventable with the right checks in advance. Such exceptions
-    are generated by the *LPConstraint* class, and so you should
-    consult the class documentation for your chosen *LPConstraint*
-    template argument to see if this is a possibility.
+    are generated by the *Constraint* class, and so you should consult
+    the class documentation for your chosen *Constraint* template
+    argument to see if this is a possibility.
 
 Exception ``InvalidArgument``:
     It was not possible to add the extra constraints from the
     LPConstraint template argument, due to an error that was
     "genuinely" unforseeable. Again, such exceptions are generated by
-    your chosen *LPConstraint* class, and you should consult its
+    your chosen *Constraint* class, and you should consult its
     documentation to see if this is a possibility.
 
 Parameter ``tri``:
@@ -938,9 +907,9 @@ Parameter ``enc``:
     working with.
 
 Parameter ``banArgs``:
-    any additional arguments to be passed to the BanConstraint
-    constructor, after the initial starting tableaux. For most ban
-    constrainst classes, this list of arguments is empty.)doc";
+    any additional arguments to be passed to the constructor for
+    *Ban*, after the initial starting tableaux. For most ban
+    constraint classes, this list of arguments is empty.)doc";
 
 // Docstring regina::python::doc::TreeSingleSoln_::cancel
 static const char *cancel =
@@ -1051,8 +1020,8 @@ Returns:
 static const char *supported =
 R"doc(Indicates whether the given normal surface or angle structure vector
 encoding is supported by this tree traversal infrastructure. Any
-restrictions imposed by LPConstraint and BanConstraint will be taken
-into account.
+restrictions imposed by the LPConstraint and BanConstraint template
+parameters will be taken into account.
 
 Note that, even if an encoding is supported, this does not mean that
 the underlying tableaux will use the same encoding internally. See

@@ -883,7 +883,7 @@ limits the set of covers produced but is also much faster for larger
 *k*.
 
 For each cover that is produced, this routine will call *action*
-(which must be a function or some other callable object).
+(which must be a function or some other callable type).
 
 * The first argument to *action* must be a SnapPea triangulation; this
   will be the newly produced cover. This argument will be passed as an
@@ -902,7 +902,8 @@ For each cover that is produced, this routine will call *action*
 * If there are any additional arguments supplied in the list *args*,
   then these will be passed as subsequent arguments to *action*.
 
-* *action* must return ``void``.
+* The return value of *action* will be ignored; typically it would
+  return ``void``.
 
 * *action* must not make changes to this original triangulation (i.e.,
   the SnapPeaTriangulation upon which enumerateCovers() is being
@@ -958,8 +959,8 @@ Parameter ``type``:
     only cyclic covers.
 
 Parameter ``action``:
-    a function (or other callable object) to call for each cover that
-    is found.
+    a function (or other callable type) to call for each cover that is
+    found.
 
 Parameter ``args``:
     any additional arguments that should be passed to *action*,

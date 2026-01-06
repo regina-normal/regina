@@ -105,10 +105,6 @@ Precondition:
     The sets *exc1* and *exc2* are distinct, and each is contained in
     this collection precisely once.
 
-Template parameter ``T``:
-    One of Regina's bitmask types, such as Bitmask, Bitmask1 or
-    Bitmask2.
-
 Parameter ``subset``:
     the object of the query: we are searching this collection for a
     (non-strict) superset of this argument.
@@ -141,10 +137,6 @@ of sets stored in this collection, whichever is smaller. However, for
 "typical" searches in the context of normal surface enumeration, the
 running time is often significantly faster.
 
-Template parameter ``T``:
-    One of Regina's bitmask types, such as Bitmask, Bitmask1 or
-    Bitmask2.
-
 Parameter ``superset``:
     the object of the query: we are searching this collection for a
     (non-strict) subset of this argument.
@@ -165,10 +157,6 @@ into this collection multiple times (and this multiplicity will be
 recorded correctly).
 
 Running time for insertion is O(*n*), where *n* is the bitmask length.
-
-Template parameter ``T``:
-    One of Regina's bitmask types, such as Bitmask, Bitmask1 or
-    Bitmask2.
 
 Parameter ``entry``:
     the new set to insert.)doc";

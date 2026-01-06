@@ -136,11 +136,12 @@ static const char *lookup =
 R"doc(Searches for the given isomorphism signature in this database.
 
 For each match that is found (if any), this routine will call *action*
-(which must be a function or some other callable object). This action
-should return ``void``, and must take exactly one CensusHit argument.
-The argument will be passed as a prvalue, which means the argument
-type for *action* could be any of (CensusHit), (const CensusHit&), or
-(CensusHit&&).
+(which must be a function or some other callable type). This action
+must take exactly one CensusHit argument, which will be passed as a
+prvalue (so the argument type for *action* could be any of
+``CensusHit``, ``const CensusHit&``, or ``CensusHit&&``). The return
+value of *action* will be ignored (typically *action* would return
+``void``).
 
 Note that the database will be opened and closed every time this
 routine is called.
@@ -163,7 +164,7 @@ Parameter ``isoSig``:
     the isomorphism signature to search for.
 
 Parameter ``action``:
-    a function (or other callable object) that will be called for each
+    a function (or other callable type) that will be called for each
     match in the database.
 
 Returns:

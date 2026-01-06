@@ -5030,7 +5030,7 @@ could easily produce virtual diagrams with positive virtual genus.
 
 For every link diagram that this routine encounters (including this
 starting diagram), this routine will call *action* (which must be a
-function or some other callable object).
+function or some other callable type).
 
 * *action* must take the following initial argument(s). Either (a) the
   first argument must be a link (the precise type is discussed below),
@@ -5136,8 +5136,8 @@ Parameter ``tracker``:
     ``None`` if no progress reporting is required.
 
 Parameter ``action``:
-    a function (or other callable object) to call for each link
-    diagram that is found.
+    a function (or other callable type) to call for each link diagram
+    that is found.
 
 Parameter ``args``:
     any additional arguments that should be passed to *action*,
@@ -5205,8 +5205,8 @@ Parameter ``tracker``:
     ``None`` if no progress reporting is required.
 
 Parameter ``action``:
-    a function (or other callable object) to call for each link
-    diagram that is found.
+    a function (or other callable type) to call for each link diagram
+    that is found.
 
 Parameter ``args``:
     any additional arguments that should be passed to *action*,

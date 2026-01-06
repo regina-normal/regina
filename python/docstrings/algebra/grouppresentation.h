@@ -768,7 +768,7 @@ If this is the fundamental group of a manifold, then each such
 representation also corresponds to a connected *k*-sheeted cover.
 
 For each representation that is produced, this routine will call
-*action* (which must be a function or some other callable object).
+*action* (which must be a function or some other callable type).
 
 * The first argument to *action* must be a group presentation. This
   will be the index *k* subgroup corresponding to the representation.
@@ -780,7 +780,8 @@ For each representation that is produced, this routine will call
 * If there are any additional arguments supplied in the list *args*,
   then these will be passed as subsequent arguments to *action*.
 
-* *action* must return ``void``.
+* The return value of *action* will be ignored; typically it would
+  return ``void``.
 
 * It is completely safe for *action* to (if you wish) make changes to
   the original presentation (i.e., the group presentation upon which
@@ -849,12 +850,12 @@ Python:
 
 Template parameter ``index``:
     the number *k* in the description above; in other words, the index
-    of the resulting subgroups. Currently this must be between 2 and
-    11 inclusive; this range is limited because some of the cached
-    precomputations can consume a _lot_ of space for larger indices.
+    of the resulting subgroups. Currently we limit this to the range
+    ``2 ≤ k ≤ 11`` because some of the cached precomputations can
+    consume a _lot_ of space for larger indices.
 
 Parameter ``action``:
-    a function (or other callable object) to call for each
+    a function (or other callable type) to call for each
     representation that is found.
 
 Parameter ``args``:
