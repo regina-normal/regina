@@ -42,6 +42,7 @@
 #include <optional>
 #include <vector>
 #include "regina-core.h"
+#include "concepts/core.h"
 #include "core/output.h"
 #include "triangulation/cut.h"
 #include "triangulation/facetspec.h"
@@ -741,7 +742,7 @@ class FacetPairingBase :
          * canonical form as described by isCanonical().
          *
          * For each facet pairing that is generated, this routine will call
-         * \a action (which must be a function or some other callable object).
+         * \a action (which must be a function or some other callable type).
          *
          * - The first argument to \a action must be a const reference to a
          *   FacetPairing<dim>.  This will be the facet pairing that was found.
@@ -760,7 +761,8 @@ class FacetPairingBase :
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
          *
-         * - \a action must return \c void.
+         * - The return value of \a action will be ignored; typically it would
+         *   return \c void.
          *
          * Because this class cannot represent an empty facet pairing,
          * if the argument \a nSimplices is zero then no facet pairings
@@ -804,13 +806,17 @@ class FacetPairingBase :
          * Note that, in order to produce any pairings at all, this parameter
          * must be of the same parity as `nSimplices * (dim+1)`,
          * and can be at most `(dim-1) * nSimplices + 2`.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each facet pairing that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial facet pairing argument and the
          * optional automorphism argument.
          */
         template <typename Action, typename... Args>
+        requires
+            VoidCallback<Action, const FacetPairing<dim>&, Args...> ||
+            VoidCallback<Action, const FacetPairing<dim>&,
+                typename FacetPairing<dim>::IsoList, Args...>
         static void findAllPairings(size_t nSimplices, BoolSet boundary,
             int nBdryFacets, Action&& action, Args&&... args);
 
@@ -962,6 +968,10 @@ class FacetPairingBase :
          * FacetPairingBase<dim>.
          */
         template <typename Action, typename... Args>
+        requires
+            VoidCallback<Action, const FacetPairing<dim>&, Args...> ||
+            VoidCallback<Action, const FacetPairing<dim>&,
+                typename FacetPairing<dim>::IsoList, Args...>
         void enumerateInternal(BoolSet boundary, int nBdryFacets,
             Action&& action, Args&&... args);
 };
@@ -1201,6 +1211,10 @@ inline typename FacetPairingBase<dim>::IsoList
 
 template <int dim> requires (supportedDim(dim))
 template <typename Action, typename... Args>
+requires
+    VoidCallback<Action, const FacetPairing<dim>&, Args...> ||
+    VoidCallback<Action, const FacetPairing<dim>&,
+        typename FacetPairing<dim>::IsoList, Args...>
 inline void FacetPairingBase<dim>::findAllPairings(size_t nSimplices,
         BoolSet boundary, int nBdryFacets,
         Action&& action, Args&&... args) {

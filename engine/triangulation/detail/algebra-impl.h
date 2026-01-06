@@ -47,13 +47,8 @@
 namespace regina::detail {
 
 template <int dim> requires (supportedDim(dim))
-template <int k>
+template <int k> requires (k > 0 && k < (standardDim(dim) ? dim : dim - 1))
 AbelianGroup TriangulationBase<dim>::homology() const {
-    if constexpr (standardDim(dim))
-        static_assert(1 <= k && k <= dim - 1);
-    else
-        static_assert(1 <= k && k <= dim - 2);
-
     if (isEmpty())
         return AbelianGroup();
 
@@ -239,9 +234,8 @@ const GroupPresentation& TriangulationBase<dim>::group() const {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int subdim>
+template <int subdim> requires (subdim > 0 && subdim <= dim)
 MatrixInt TriangulationBase<dim>::boundaryMap() const {
-    static_assert(subdim > 0 && subdim <= dim);
     MatrixInt ans(countFaces<subdim - 1>(), countFaces<subdim>());
 
     if constexpr (subdim == dim) {
@@ -323,10 +317,8 @@ MatrixInt TriangulationBase<dim>::boundaryMap() const {
 
 template <int dim> requires (supportedDim(dim))
 template <int subdim>
+requires (subdim > 0 && subdim <= (standardDim(dim) ? dim : dim - 1))
 MatrixInt TriangulationBase<dim>::dualBoundaryMap() const {
-    static_assert(subdim >= 1 && subdim <= dim);
-    static_assert(standardDim(dim) || subdim < dim);
-
     ensureSkeleton();
 
     if constexpr (subdim == 1) {
@@ -410,10 +402,8 @@ MatrixInt TriangulationBase<dim>::dualBoundaryMap() const {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int subdim>
+template <int subdim> requires (subdim >= 0 && subdim < dim)
 MatrixInt TriangulationBase<dim>::dualToPrimal() const {
-    static_assert(subdim >= 0 && subdim < dim);
-
     ensureSkeleton();
 
     if constexpr (subdim == 0) {

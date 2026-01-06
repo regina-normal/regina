@@ -87,7 +87,7 @@ enum {
  * to a retriangulation or link rewriting function.
  *
  * A retriangulation or link rewriting function can work with arbitrary
- * callable objects.  However, the _implementations_ of such functions are
+ * callable types.  However, the _implementations_ of such functions are
  * long and should not be dragged into the main headers.  The core purpose
  * of this class is therefore to coalesce the arbitrary action types
  * down to just _two_ fixed types (depending on whether the action includes a
@@ -170,13 +170,13 @@ bool retriangulateInternal(const Object& obj, bool rigid, int height,
         RetriangulateActionFunc<Object, withSig>&& action);
 
 /**
- * A traits class that analyses callable objects that are passed to
+ * A traits class that analyses callable types that are passed to
  * retriangulation or link rewriting functions.
  *
- * Recall that the initial arguments for such a callable object must be either
+ * Recall that the initial arguments for such a callable type must be either
  * (a) a single triangulation/link, or (b) a text signature (e.g., an
  * isomorphism signature) followed by a triangulation/link.  The callable
- * object may take its triangulation/link by value, const reference or
+ * type may take its triangulation/link by value, const reference or
  * rvalue reference; however, if it takes a signature also then this must be
  * by (const std::string&).
  *
@@ -194,7 +194,7 @@ bool retriangulateInternal(const Object& obj, bool rigid, int height,
  *
  * \tparam Object the class providing the retriangulation or link rewriting
  * function, such as regina::Triangulation<dim> or regina::Link.
- * \tparam Action the type of a callable object that is passed to the
+ * \tparam Action the callable type that is passed to the
  * retriangulation/rewriting function.
  * \tparam FirstArg the type of the first argument to \a Action; you should
  * not specify this directly, but instead allow the compiler to deduce it.

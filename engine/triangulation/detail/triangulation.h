@@ -46,6 +46,7 @@
 #include <variant>
 #include <vector>
 #include "regina-core.h"
+#include "concepts/core.h"
 #include "core/output.h"
 #include "algebra/abeliangroup.h"
 #include "algebra/grouppresentation.h"
@@ -643,12 +644,11 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `countFaces(subdim)`.
          *
-         * \tparam subdim the face dimension; this must be between 0 and
-         * \a dim inclusive.
+         * \tparam subdim the face dimension.
          *
          * \return the number of <i>subdim</i>-faces.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim <= dim)
         size_t countFaces() const;
 
         /**
@@ -818,12 +818,11 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `faces(subdim)`.
          *
-         * \tparam subdim the face dimension; this must be between 0 and
-         * <i>dim</i>-1 inclusive.
+         * \tparam subdim the face dimension.
          *
          * \return access to the list of all <i>subdim</i>-faces.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < dim)
         auto faces() const;
 
         /**
@@ -927,14 +926,13 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `face(subdim, index)`.
          *
-         * \tparam subdim the face dimension; this must be between 0 and
-         * <i>dim</i>-1 inclusive.
+         * \tparam subdim the face dimension.
          *
          * \param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
          * \return the requested face.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < dim)
         Face<dim, subdim>* face(size_t index) const;
 
         /**
@@ -1467,14 +1465,12 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `homology(k)`.
          *
-         * \tparam k the dimension of the homology group to return;
-         * this must be between 1 and (\a dim - 1) inclusive if \a dim is
-         * one of Regina's \ref stddim "standard dimensions", or between
-         * 1 and (\a dim - 2) inclusive if not.
+         * \tparam k the dimension of the homology group to return.
          *
          * \return the <i>k</i>th homology group.
          */
         template <int k = 1>
+        requires (k > 0 && k < (standardDim(dim) ? dim : dim - 1))
         AbelianGroup homology() const;
 
         /**
@@ -1641,13 +1637,12 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `boundaryMap(subdim)`.
          *
-         * \tparam subdim the face dimension; this must be between 1 and
-         * \a dim inclusive.
+         * \tparam subdim the face dimension.
          *
          * \return the boundary map from <i>subdim</i>-faces to
          * (<i>subdim</i>-1)-faces.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim > 0 && subdim <= dim)
         MatrixInt boundaryMap() const;
 
         /**
@@ -1726,14 +1721,13 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `dualBoundaryMap(subdim)`.
          *
-         * \tparam subdim the dual face dimension; this must be between
-         * 1 and \a dim inclusive if \a dim is one of Regina's standard
-         * dimensions, or between 1 and (\a dim - 1) inclusive otherwise.
+         * \tparam subdim the dual face dimension.
          *
          * \return the boundary map from dual <i>subdim</i>-faces to
          * dual (<i>subdim</i>-1)-faces.
          */
         template <int subdim>
+        requires (subdim > 0 && subdim <= (standardDim(dim) ? dim : dim - 1))
         MatrixInt dualBoundaryMap() const;
 
         /**
@@ -1852,13 +1846,12 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `dualToPrimal(subdim)`.
          *
-         * \tparam subdim the chain dimension; this must be between
-         * 0 and (\a dim - 1) inclusive.
+         * \tparam subdim the chain dimension.
          *
          * \return the map from dual <i>subdim</i>-chains to primal
          * <i>subdim</i>-chains.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < dim)
         MatrixInt dualToPrimal() const;
 
         /**
@@ -2877,10 +2870,9 @@ class TriangulationBase :
          * details on this.
          *
          * For each isomorphism that is found, this routine will call
-         * \a action (which must be a function or some other callable object).
+         * \a action (which must be a function or some other callable type).
          *
-         * - The first argument to \a action must be of type
-         *   `(const Isomorphism<dim>&)`; this will be a reference to
+         * - The first argument to \a action will be a const reference to
          *   the isomorphism that was found.  If \a action wishes to keep the
          *   isomorphism, it should take a deep copy (not a reference), since
          *   the isomorphism may be changed and reused after \a action returns.
@@ -2911,7 +2903,7 @@ class TriangulationBase :
          * found.
          *
          * \param other the triangulation to compare with this one.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each isomorphism that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial isomorphism argument.
@@ -2919,6 +2911,7 @@ class TriangulationBase :
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
+        requires TerminatingCallback<Action, const Isomorphism<dim>&, Args...>
         bool findAllIsomorphisms(const Triangulation<dim>& other,
             Action&& action, Args&&... args) const;
 
@@ -2934,10 +2927,9 @@ class TriangulationBase :
          * details on this.
          *
          * For each isomorphism that is found, this routine will call
-         * \a action (which must be a function or some other callable object).
+         * \a action (which must be a function or some other callable type).
          *
-         * - The first argument to \a action must be of type
-         *   `(const Isomorphism<dim>&)`; this will be a reference to
+         * - The first argument to \a action will be a const reference to
          *   the isomorphism that was found.  If \a action wishes to keep the
          *   isomorphism, it should take a deep copy (not a reference), since
          *   the isomorphism may be changed and reused after \a action returns.
@@ -2969,7 +2961,7 @@ class TriangulationBase :
          *
          * \param other the triangulation in which to search for
          * isomorphic copies of this triangulation.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each isomorphism that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial isomorphism argument.
@@ -2977,6 +2969,7 @@ class TriangulationBase :
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
+        requires TerminatingCallback<Action, const Isomorphism<dim>&, Args...>
         bool findAllSubcomplexesIn(const Triangulation<dim>& other,
             Action&& action, Args&&... args) const;
 
@@ -3932,9 +3925,8 @@ class TriangulationBase :
          * that we will need to keep until we drop support for gcc8.
          *
          * \tparam subdim the dimension of the faces to compute.
-         * This must be between 0 and (\a dim - 1) inclusive.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < dim)
         static void calculateFaces(TriangulationBase<dim>* tri);
 
         /**
@@ -4135,7 +4127,7 @@ class TriangulationBase :
          * \param complete \c true if isomorphisms must be
          * onto and boundary complete, or \c false if neither of these
          * restrictions should be imposed.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each isomorphism that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial isomorphism argument.
@@ -4143,6 +4135,7 @@ class TriangulationBase :
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
+        requires TerminatingCallback<Action, const Isomorphism<dim>&, Args...>
         bool findIsomorphisms(const Triangulation<dim>& other,
                 bool complete, Action&& action, Args&&... args) const;
 
@@ -4790,7 +4783,7 @@ inline size_t TriangulationBase<dim>::countBoundaryComponents() const {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int subdim>
+template <int subdim> requires (subdim >= 0 && subdim <= dim)
 inline size_t TriangulationBase<dim>::countFaces() const {
     if constexpr (subdim == dim)
         return size();
@@ -4877,7 +4870,7 @@ inline auto TriangulationBase<dim>::boundaryComponents() const {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int subdim>
+template <int subdim> requires (subdim >= 0 && subdim < dim)
 inline auto TriangulationBase<dim>::faces() const {
     ensureSkeleton();
     return ListView(std::get<subdim>(faces_));
@@ -4957,7 +4950,7 @@ inline BoundaryComponent<dim>* TriangulationBase<dim>::boundaryComponent(
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int subdim>
+template <int subdim> requires (subdim >= 0 && subdim < dim)
 inline Face<dim, subdim>* TriangulationBase<dim>::face(size_t index) const {
     ensureSkeleton();
     return std::get<subdim>(faces_)[index];
@@ -5184,6 +5177,7 @@ inline std::optional<Isomorphism<dim>> TriangulationBase<dim>::isContainedIn(
 
 template <int dim> requires (supportedDim(dim))
 template <typename Action, typename... Args>
+requires TerminatingCallback<Action, const Isomorphism<dim>&, Args...>
 inline bool TriangulationBase<dim>::findAllIsomorphisms(
         const Triangulation<dim>& other, Action&& action, Args&&... args)
         const {
@@ -5193,6 +5187,7 @@ inline bool TriangulationBase<dim>::findAllIsomorphisms(
 
 template <int dim> requires (supportedDim(dim))
 template <typename Action, typename... Args>
+requires TerminatingCallback<Action, const Isomorphism<dim>&, Args...>
 inline bool TriangulationBase<dim>::findAllSubcomplexesIn(
         const Triangulation<dim>& other, Action&& action, Args&&... args)
         const {

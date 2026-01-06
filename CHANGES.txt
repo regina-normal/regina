@@ -115,16 +115,18 @@ Version 7.5  [ TODO ]
               both true).
         Concepts:
             - Many new concepts, accessible via #include <concepts/*.h>:
-              + ArbitraryPrecisionInteger, ArbitraryPrecisionIntegerVector,
-                ArrayOf, AssignableTo, BidirectionalIteratorFor, CanConstruct,
-                CharIterator, CoefficientDomain, ConstRefArrayOf, CppInteger,
-                Domain, Field, ForwardIteratorFor, InherentlyTightEncodable,
-                InputIteratorFor, IntegerComparable, IntegerCompatible,
-                IntegerVector, IntegralDomain, Iterable, PacketClass,
-                PacketIterator, RandomAccessIteratorFor, ReginaBitmask,
-                ReginaInteger, Ring, RingLike, SelfSentinelInputIterator,
-                SignedCppInteger, StandardCppInteger, Stringifiable,
-                UnsignedCppInteger, Writeable.
+              + AnyInteger, ArbitraryPrecisionInteger,
+                ArbitraryPrecisionIntegerVector, ArrayOf, AssignableTo,
+                BidirectionalIteratorFor, CanConstruct, CharIterator,
+                CoefficientDomain, ConstRefArrayOf, CppInteger, Domain, Field,
+                ForwardIteratorFor, InherentlyTightEncodable, InputIteratorFor,
+                IntegerComparable, IntegerCompatible, IntegerVector,
+                IntegralDomain, Iterable, PacketClass, PacketIterator,
+                RandomAccessIteratorFor, ReginaBitmask, ReginaInteger, Ring,
+                RingLike, SelfSentinelInputIterator, SignedCppInteger,
+                StandardCppInteger, StrictWeakOrder, Stringifiable,
+                TerminatingCallback, UnsignedCppInteger, VoidCallback,
+                Writeable.
             - Other new concepts for targeted use defined in other headers:
               + BanConstraint, LPConstraint, LPSubspace (defined in
                 enumerate/treelp.h)

@@ -214,7 +214,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          *
          * See newSimplices() for further information.
          */
-        template <int k>
+        template <int k> requires (k >= 0)
         std::array<Triangle<2>*, k> newTriangles();
         /**
          * A dimension-specific alias for newSimplices().
@@ -495,7 +495,7 @@ inline Triangle<2>* Triangulation<2>::newTriangle(const std::string& desc) {
     return newSimplex(desc);
 }
 
-template <int k>
+template <int k> requires (k >= 0)
 inline std::array<Triangle<2>*, k> Triangulation<2>::newTriangles() {
     return newSimplices<k>();
 }

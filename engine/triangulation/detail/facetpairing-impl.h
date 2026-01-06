@@ -367,6 +367,10 @@ std::optional<Cut> FacetPairingBase<dim>::divideConnected(size_t minSide)
 
 template <int dim> requires (supportedDim(dim))
 template <typename Action, typename... Args>
+requires
+    VoidCallback<Action, const FacetPairing<dim>&, Args...> ||
+    VoidCallback<Action, const FacetPairing<dim>&,
+        typename FacetPairing<dim>::IsoList, Args...>
 void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         int nBdryFacets, Action&& action, Args&&... args) {
     // Bail if it's obvious that nothing will happen.

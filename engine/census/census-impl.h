@@ -64,7 +64,7 @@
 
 namespace regina {
 
-template <typename Action>
+template <VoidCallback<CensusHit&&> Action>
 bool CensusDB::lookup(const std::string& isoSig, Action&& action) const {
     // On some platforms, looking up an empty key triggers the
     // error MDB_BAD_VALSIZE when using LMDB.

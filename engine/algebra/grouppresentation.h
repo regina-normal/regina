@@ -46,6 +46,7 @@
 #include <map>
 
 #include "regina-core.h"
+#include "concepts/core.h"
 #include "core/output.h"
 #include "algebra/markedabeliangroup.h"
 #include "algebra/abeliangroup.h"
@@ -1417,7 +1418,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * <i>k</i>-sheeted cover.
          *
          * For each representation that is produced, this routine will call
-         * \a action (which must be a function or some other callable object).
+         * \a action (which must be a function or some other callable type).
          *
          * - The first argument to \a action must be a group presentation.
          *   This will be the index \a k subgroup corresponding to the
@@ -1429,7 +1430,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
          *
-         * - \a action must return \c void.
+         * - The return value of \a action will be ignored; typically it would
+         *   return \c void.
          *
          * - It is completely safe for \a action to (if you wish) make changes
          *   to the original presentation (i.e., the group presentation upon
@@ -1484,17 +1486,18 @@ class GroupPresentation : public Output<GroupPresentation> {
          * parameter \a index becomes the first argument to the Python function.
          *
          * \tparam index the number \a k in the description above; in other
-         * words, the index of the resulting subgroups.  Currently this
-         * must be between 2 and 11 inclusive; this range is limited because
-         * some of the cached precomputations can consume a _lot_ of space for
-         * larger indices.
-         * \param action a function (or other callable object) to call
+         * words, the index of the resulting subgroups.  Currently we limit
+         * this to the range `2 ≤ k ≤ 11` because some of the cached
+         * precomputations can consume a _lot_ of space for larger indices.
+         * \param action a function (or other callable type) to call
          * for each representation that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial subgroup presentation argument.
          * \return the total number of representations found.
          */
         template <int index, typename Action, typename... Args>
+        requires (index >= 2 && index <= 11) &&
+            VoidCallback<Action, GroupPresentation&&, Args...>
         size_t enumerateCovers(Action&& action, Args&&... args) const;
 
         /**
@@ -1787,7 +1790,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * type of the action function is now known precisely.  This means
          * that the implementation can be kept out of the main headers.
          */
-        template <int index>
+        template <int index> requires (index >= 2 && index <= 11)
         size_t enumerateCoversInternal(
             std::function<void(GroupPresentation&&)>&& action);
 
@@ -2030,6 +2033,8 @@ inline std::optional<HomGroupPresentation>
 }
 
 template <int index, typename Action, typename... Args>
+requires (index >= 2 && index <= 11) &&
+    VoidCallback<Action, GroupPresentation&&, Args...>
 inline size_t GroupPresentation::enumerateCovers(
         Action&& action, Args&&... args) const {
     // Do the real work on a temporary copy of this presentation that we

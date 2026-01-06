@@ -231,6 +231,7 @@ bool TriangulationBase<dim>::makeCanonical() {
 
 template <int dim> requires (supportedDim(dim))
 template <typename Action, typename... Args>
+requires TerminatingCallback<Action, const Isomorphism<dim>&, Args...>
 bool TriangulationBase<dim>::findIsomorphisms(
         const Triangulation<dim>& other, bool complete, Action&& action,
         Args&&... args) const {

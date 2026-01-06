@@ -83,7 +83,7 @@ struct EnableIf<false, T, defaultValue> {
  * This function will call \a action for each integer \a i in the range
  * <i>from</i>, ..., (<i>to</i>-1) inclusive.
  *
- * The action should be a templated callable object (e.g., a generic lambda)
+ * The action should be a templated callable type (e.g., a generic lambda)
  * that takes a single argument whose type depends on the value of \a i.
  * Any return value will be ignored.  For each integer \a i, the argument will
  * be of type `std::integral_constant<int, i>`, which means that \a i
@@ -111,7 +111,7 @@ constexpr void for_constexpr(Action&& action) {
  * This function will call \a action for each integer \a i in the sequence
  * \a values.
  *
- * The action should be a templated callable object (e.g., a generic lambda)
+ * The action should be a templated callable type (e.g., a generic lambda)
  * that takes a single argument whose type depends on the value of \a i.
  * Any return value will be ignored.  For each integer \a i, the argument will
  * be of type `std::integral_constant<int, i>`, which means that \a i
@@ -139,7 +139,7 @@ constexpr void foreach_constexpr(Action&& action) {
  * This function will call \a action for each integer \a i in the integer
  * sequence \a values.
  *
- * The action should be a templated callable object (e.g., a generic lambda)
+ * The action should be a templated callable type (e.g., a generic lambda)
  * that takes a single argument whose type depends on the value of \a i.
  * Any return value will be ignored.  For each integer \a i, the argument will
  * be of type `std::integral_constant<int, i>`, which means that \a i
@@ -167,7 +167,7 @@ constexpr void foreach_constexpr(std::integer_sequence<int, values...>,
  * to a compile-time range of integers, and the value of the argument
  * determines what is returned.
  *
- * The action should be a templated callable object (e.g., a generic lambda)
+ * The action should be a templated callable type (e.g., a generic lambda)
  * that takes a single argument.  If \a value is equal to the integer \a i,
  * for some \a i in the range <i>from</i>, ..., (<i>to</i>-1) inclusive,
  * then this function will return `action(i)`.  The argument \a i
@@ -328,7 +328,7 @@ using safe_tuple_element = typename regina::detail::safe_tuple_element_impl<
 
 /**
  * A traits class that deduces the type of the argument in a given position
- * for a callable object.  It can (amongst other things) work with
+ * for a callable type.  It can (amongst other things) work with
  * function pointers, function references, member function pointers,
  * std::function wrappers, and lambdas.
  *
@@ -343,8 +343,7 @@ using safe_tuple_element = typename regina::detail::safe_tuple_element_impl<
  * If \a Action does not take enough arguments for the given position \a pos,
  * then \a type will be \c void.
  *
- * \tparam Action the type of a callable object that takes at least
- * one argument.
+ * \tparam Action a callable type that takes at least one argument.
  * \tparam pos the index of the argument being requested.  Positions are
  * numbered from 0 upwards.
  *

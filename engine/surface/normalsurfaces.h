@@ -828,12 +828,12 @@ class NormalSurfaces :
          * \python This is available in Python, and \a comp may be
          * a pure Python function.
          *
-         * \param comp a binary function (or other callable object) that
+         * \param comp a binary function (or other callable type) that
          * accepts two const NormalSurface references, and returns \c true
          * if and only if the first surface should appear before the second
          * in the sorted list.
          */
-        template <typename Comparison>
+        template <StrictWeakOrder<const NormalSurface&> Comparison>
         void sort(Comparison&& comp);
 
         /**
@@ -1569,7 +1569,7 @@ inline bool NormalSurfaces::allowsNonCompact() const {
     return NormalEncoding(coords_).couldBeNonCompact();
 }
 
-template <typename Comparison>
+template <StrictWeakOrder<const NormalSurface&> Comparison>
 inline void NormalSurfaces::sort(Comparison&& comp) {
     PacketChangeSpan span(*this);
     std::stable_sort(surfaces_.begin(), surfaces_.end(), comp);

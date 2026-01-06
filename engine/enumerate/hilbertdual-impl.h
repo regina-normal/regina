@@ -51,7 +51,7 @@
 
 namespace regina {
 
-template <ArbitraryPrecisionIntegerVector Ray, typename Action>
+template <ArbitraryPrecisionIntegerVector Ray, VoidCallback<Ray&&> Action>
 void HilbertDual::enumerate(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned initialRows) {
@@ -100,7 +100,7 @@ void HilbertDual::enumerate(Action&& action,
 }
 
 template <ArbitraryPrecisionIntegerVector Ray, ReginaBitmask BitmaskType,
-    typename Action>
+    VoidCallback<Ray&&> Action>
 void HilbertDual::enumerateUsingBitmask(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned initialRows) {

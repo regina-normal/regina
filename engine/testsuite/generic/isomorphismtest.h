@@ -28,6 +28,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include <concepts>
 #include <initializer_list>
 
 #include "utilities/tightencodingtest.h"
@@ -47,17 +48,14 @@ class IsomorphismTest {
          * Run the given test on all isomorphisms of the given order.
          * If \a skip is non-zero, then only every (\a skip)th isomorphism
          * will be tested.
-         *
-         * The isomorphism will be passed to the test as a const reference
-         * (since the test must not modify it directly).
          */
-        template <typename Action>
+        template <std::invocable<const regina::Isomorphism<dim>&> Action>
         static void enumerate(size_t order, Action&& test, size_t skip = 0) {
             SCOPED_TRACE_NUMERIC(order);
 
             if (order == 0) {
                 // Special-case the (unique) empty isomorphism.
-                regina::Isomorphism<dim> iso(0);
+                const regina::Isomorphism<dim> iso(0);
                 EXPECT_TRUE(iso.isIdentity());
                 test(iso);
             } else {

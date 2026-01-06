@@ -279,7 +279,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * See newSimplices() for further information.
          */
-        template <int k>
+        template <int k> requires (k >= 0)
         std::array<Pentachoron<4>*, k> newPentachora();
         /**
          * A dimension-specific alias for newSimplices().
@@ -802,7 +802,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * For every such triangulation (including this starting
          * triangulation), this routine will call \a action (which must
-         * be a function or some other callable object).
+         * be a function or some other callable type).
          *
          * - \a action must take the following initial argument(s).
          *   Either (a) the first argument must be a triangulation (the precise
@@ -901,7 +901,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * 1 or smaller then the routine will run single-threaded.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each triangulation that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial triangulation argument(s).
@@ -910,6 +910,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * completion.
          */
         template <typename Action, typename... Args>
+        requires
+            TerminatingCallback<Action, Triangulation<4>&&, Args...> ||
+            TerminatingCallback<Action, const std::string&, Triangulation<4>&&,
+                Args...>
         bool retriangulate(int height, int threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
@@ -1457,8 +1461,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * and boundary compressions along discs and 3-balls, as well as
          * removing trivial 4-sphere components.
          *
-         * \tparam subdim the dimension of the face to link; this must be
-         * between 0 and 3 inclusive.
+         * \tparam subdim the dimension of the face to link.
          *
          * \pre The given face is a face of this triangulation.
          *
@@ -1466,7 +1469,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * normal hypersurface, and \a thin is \c true if and only if this link
          * is thin (i.e., no additional normalisation steps were required).
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < 4)
         std::pair<NormalHypersurface, bool> linkingSurface(
             const Face<4, subdim>& face) const;
 
@@ -1691,7 +1694,7 @@ inline Pentachoron<4>* Triangulation<4>::newPentachoron(
     return newSimplex(desc);
 }
 
-template <int k>
+template <int k> requires (k >= 0)
 inline std::array<Pentachoron<4>*, k> Triangulation<4>::newPentachora() {
     return newSimplices<k>();
 }
@@ -1792,6 +1795,9 @@ inline bool Triangulation<4>::simplifyUpDown(ssize_t max24, ssize_t max33,
 }
 
 template <typename Action, typename... Args>
+requires
+    TerminatingCallback<Action, Triangulation<4>&&, Args...> ||
+    TerminatingCallback<Action, const std::string&, Triangulation<4>&&, Args...>
 inline bool Triangulation<4>::retriangulate(int height, int threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (countComponents() > 1) {

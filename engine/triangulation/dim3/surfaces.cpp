@@ -388,7 +388,7 @@ bool Triangulation<3>::hasSplittingSurface() const {
     return *(prop_.splittingSurface_ = false);
 }
 
-template <int subdim>
+template <int subdim> requires (subdim >= 0 && subdim < 3)
 std::pair<NormalSurface, bool> Triangulation<3>::linkingSurface(
         const Face<3, subdim>& face) const {
     static_assert(0 <= subdim && subdim < 3,

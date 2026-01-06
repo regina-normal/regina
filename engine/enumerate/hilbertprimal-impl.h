@@ -55,7 +55,7 @@
 namespace regina {
 
 template <ArbitraryPrecisionIntegerVector Ray, typename RayIterator,
-    typename Action>
+    VoidCallback<Ray&&> Action>
 void HilbertPrimal::enumerate(Action&& action,
         const RayIterator& raysBegin, const RayIterator& raysEnd,
         const ValidityConstraints& constraints, ProgressTracker* tracker) {
@@ -107,7 +107,7 @@ void HilbertPrimal::enumerate(Action&& action,
 }
 
 template <ArbitraryPrecisionIntegerVector Ray, ReginaBitmask BitmaskType,
-        typename RayIterator, typename Action>
+        typename RayIterator, VoidCallback<Ray&&> Action>
 void HilbertPrimal::enumerateUsingBitmask(Action&& action,
         const RayIterator& raysBegin, const RayIterator& raysEnd,
         const ValidityConstraints& constraints, ProgressTracker* tracker) {

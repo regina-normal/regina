@@ -3226,7 +3226,7 @@ class Link :
          *
          * For every link diagram that this routine encounters (including this
          * starting diagram), this routine will call \a action (which must be
-         * a function or some other callable object).
+         * a function or some other callable type).
          *
          * - \a action must take the following initial argument(s).
          *   Either (a) the first argument must be a link (the precise type
@@ -3320,7 +3320,7 @@ class Link :
          * 1 or smaller then the routine will run single-threaded.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each link diagram that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial link argument(s).
@@ -3329,6 +3329,9 @@ class Link :
          * completion.
          */
         template <typename Action, typename... Args>
+        requires
+            TerminatingCallback<Action, Link&&, Args...> ||
+            TerminatingCallback<Action, const std::string&, Link&&, Args...>
         bool rewrite(int height, int threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
@@ -3374,7 +3377,7 @@ class Link :
          * 1 or smaller then the routine will run single-threaded.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each link diagram that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial link argument(s).
@@ -3383,6 +3386,9 @@ class Link :
          * completion.
          */
         template <typename Action, typename... Args>
+        requires
+            TerminatingCallback<Action, Link&&, Args...> ||
+            TerminatingCallback<Action, const std::string&, Link&&, Args...>
         bool rewriteVirtual(int height, int threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
@@ -7849,6 +7855,9 @@ inline bool Link::intelligentSimplify() {
 }
 
 template <typename Action, typename... Args>
+requires
+    TerminatingCallback<Action, Link&&, Args...> ||
+    TerminatingCallback<Action, const std::string&, Link&&, Args...>
 inline bool Link::rewrite(int height, int threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (components_.size() >= 64) {
@@ -7883,6 +7892,9 @@ inline bool Link::rewrite(int height, int threads,
 }
 
 template <typename Action, typename... Args>
+requires
+    TerminatingCallback<Action, Link&&, Args...> ||
+    TerminatingCallback<Action, const std::string&, Link&&, Args...>
 inline bool Link::rewriteVirtual(int height, int threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (components_.size() >= 64) {

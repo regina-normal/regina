@@ -147,7 +147,7 @@ void TriangulationBase<dim>::calculateSkeleton() {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int subdim>
+template <int subdim> requires (subdim >= 0 && subdim < dim)
 void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
     // Clear out all subdim-faces of all simplices.
     // These simplex-based arrays will be our markers for what faces

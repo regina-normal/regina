@@ -536,12 +536,12 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * \python This is available in Python, and \a comp may be
          * a pure Python function.
          *
-         * \param comp a binary function (or other callable object) that
+         * \param comp a binary function (or other callable type) that
          * accepts two const HyperSurface references, and returns \c true
          * if and only if the first hypersurface should appear before the
          * second in the sorted list.
          */
-        template <typename Comparison>
+        template <StrictWeakOrder<const NormalHypersurface&> Comparison>
         void sort(Comparison&& comp);
 
         /**
@@ -1054,7 +1054,7 @@ inline bool NormalHypersurfaces::allowsNonCompact() const {
     return HyperEncoding(coords_).couldBeNonCompact();
 }
 
-template <typename Comparison>
+template <StrictWeakOrder<const NormalHypersurface&> Comparison>
 inline void NormalHypersurfaces::sort(Comparison&& comp) {
     PacketChangeSpan span(*this);
     std::stable_sort(surfaces_.begin(), surfaces_.end(), comp);

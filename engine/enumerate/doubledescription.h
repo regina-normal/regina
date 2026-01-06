@@ -108,12 +108,13 @@ class DoubleDescription {
          * called after this routine returns.
          *
          * For each of the resulting extremal rays, this routine will call
-         * \a action (which must be a function or some other callable object).
-         * This action should return \c void, and must take exactly one
-         * argument, which will be the extremal ray stored using type \a Ray.
-         * The argument will be passed as an rvalue; a typical \a action
-         * would take it as an rvalue reference (`Ray&&`) and move its
-         * contents into some other more permanent storage.
+         * \a action (which must be a function or some other callable type).
+         * This action must take exactly one argument: the extremal ray stored
+         * using type \a Ray.  The argument will be passed as an rvalue;
+         * a typical \a action would take it as an rvalue reference (`Ray&&`)
+         * and move its contents into some other more permanent storage.
+         * The return value of \a action will be ignored (a typical \a action
+         * would return \c void).
          *
          * \python There are two versions of this function available
          * in Python.  The first version is the same as the C++ function;
@@ -125,7 +126,7 @@ class DoubleDescription {
          * The global interpreter lock will be released while this function
          * runs, so you can use it with Python-based multithreading.
          *
-         * \param action a function (or other callable object) that will be
+         * \param action a function (or other callable type) that will be
          * called for each extremal ray.  This function must take a single
          * argument, which will be passed as an rvalue of type Ray.
          * \param subspace a matrix defining the linear subspace to intersect
@@ -142,7 +143,8 @@ class DoubleDescription {
          * The remaining rows will be sorted using the PosOrder class
          * before they are processed.
          */
-        template <ArbitraryPrecisionIntegerVector Ray, typename Action>
+        template <ArbitraryPrecisionIntegerVector Ray,
+            VoidCallback<Ray&&> Action>
         static void enumerate(Action&& action,
             const MatrixInt& subspace, const ValidityConstraints& constraints,
             ProgressTracker* tracker = nullptr, size_t initialRows = 0);
@@ -321,7 +323,7 @@ class DoubleDescription {
          * \pre The given range of facets is not empty.
          */
         template <ArbitraryPrecisionIntegerVector Ray,
-            ReginaBitmask BitmaskType, typename Action>
+            ReginaBitmask BitmaskType, VoidCallback<Ray&&> Action>
         static void enumerateUsingBitmask(Action&& action,
             const MatrixInt& subspace, const ValidityConstraints& constraints,
             ProgressTracker* tracker, size_t initialRows);

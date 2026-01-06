@@ -201,7 +201,7 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
     delete[] use;
 }
 
-template <ArbitraryPrecisionIntegerVector Ray, typename Action>
+template <ArbitraryPrecisionIntegerVector Ray, VoidCallback<Ray&&> Action>
 void DoubleDescription::enumerate(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, size_t initialRows) {
@@ -249,7 +249,7 @@ void DoubleDescription::enumerate(Action&& action,
 }
 
 template <ArbitraryPrecisionIntegerVector Ray, ReginaBitmask BitmaskType,
-    typename Action>
+    VoidCallback<Ray&&> Action>
 void DoubleDescription::enumerateUsingBitmask(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, size_t initialRows) {

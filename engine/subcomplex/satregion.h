@@ -39,6 +39,7 @@
 #endif
 
 #include "regina-core.h"
+#include "concepts/core.h"
 #include "core/output.h"
 #include "subcomplex/satblock.h"
 #include <optional>
@@ -616,7 +617,7 @@ class SatRegion : public Output<SatRegion> {
          * will be wrapped in a new SatRegion which describes how the block
          * appears within the given triangulation.  The region will be expanded
          * to encompass as many saturated blocks as possible, and then passed to
-         * \a action, which must be a function or some other callable object.
+         * \a action, which must be a function or some other callable type.
          *
          * - The first argument to \a action must be of type
          *   std::unique_ptr<SatRegion>; this will be the newly constructed
@@ -666,7 +667,7 @@ class SatRegion : public Output<SatRegion> {
          * \param tri the triangulation in which to search for starter blocks.
          * \param mustBeComplete \c true if you are searching for a region
          * that fills an entire triangulation component, as described above.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each embedding of a starter block that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial region and tetrahedron list
@@ -675,6 +676,8 @@ class SatRegion : public Output<SatRegion> {
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
+        requires TerminatingCallback<Action, std::unique_ptr<SatRegion>,
+            SatBlock::TetList&, Args...>
         static bool find(const Triangulation<3>& tri, bool mustBeComplete,
             Action&& action, Args&&... args);
 

@@ -460,7 +460,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * See newSimplices() for further information.
          */
-        template <int k>
+        template <int k> requires (k >= 0)
         std::array<Tetrahedron<3>*, k> newTetrahedra();
         /**
          * A dimension-specific alias for newSimplices().
@@ -1267,8 +1267,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * change the topology of the surface, and in some pathological
          * cases could even reduce it to the empty surface.
          *
-         * \tparam subdim the dimension of the face to link; this must be
-         * between 0 and 2 inclusive.
+         * \tparam subdim the dimension of the face to link.
          *
          * \pre The given face is a face of this triangulation.
          *
@@ -1276,7 +1275,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * normal surface, and \a thin is \c true if and only if this link
          * is thin (i.e., no additional normalisation steps were required).
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < 3)
         std::pair<NormalSurface, bool> linkingSurface(
             const Face<3, subdim>& face) const;
 
@@ -1810,7 +1809,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * For every such triangulation (including this starting
          * triangulation), this routine will call \a action (which must
-         * be a function or some other callable object).
+         * be a function or some other callable type).
          *
          * - \a action must take the following initial argument(s).
          *   Either (a) the first argument must be a triangulation (the precise
@@ -1905,7 +1904,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * 1 or smaller then the routine will run single-threaded.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each triangulation that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial triangulation argument(s).
@@ -1914,6 +1913,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * completion.
          */
         template <typename Action, typename... Args>
+        requires
+            TerminatingCallback<Action, Triangulation<3>&&, Args...> ||
+            TerminatingCallback<Action, const std::string&, Triangulation<3>&&,
+                Args...>
         bool retriangulate(int height, int threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
@@ -5103,7 +5106,7 @@ inline Tetrahedron<3>* Triangulation<3>::newTetrahedron(const std::string& desc)
     return newSimplex(desc);
 }
 
-template <int k>
+template <int k> requires (k >= 0)
 inline std::array<Tetrahedron<3>*, k> Triangulation<3>::newTetrahedra() {
     return newSimplices<k>();
 }
@@ -5295,6 +5298,9 @@ inline bool Triangulation<3>::intelligentSimplify() {
 }
 
 template <typename Action, typename... Args>
+requires
+    TerminatingCallback<Action, Triangulation<3>&&, Args...> ||
+    TerminatingCallback<Action, const std::string&, Triangulation<3>&&, Args...>
 inline bool Triangulation<3>::retriangulate(int height, int threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (countComponents() > 1) {

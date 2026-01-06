@@ -106,12 +106,13 @@ class HilbertPrimal {
          * called after this routine returns.
          *
          * For each of the resulting basis elements, this routine will call
-         * \a action (which must be a function or some other callable object).
-         * This action should return \c void, and must take exactly one
-         * argument, which will be the basis element stored using type \a Ray.
-         * The argument will be passed as an rvalue; a typical \a action
-         * would take it as an rvalue reference (`Ray&&`) and move its
-         * contents into some other more permanent storage.
+         * \a action (which must be a function or some other callable type).
+         * This action must take exactly one argument: the basis element stored
+         * using type \a Ray.  The argument will be passed as an rvalue;
+         * a typical \a action would take it as an rvalue reference (`Ray&&`)
+         * and move its contents into some other more permanent storage.
+         * The return value of \a action will be ignored (a typical \a action
+         * would return \c void).
          *
          * \pre If \a constraints is passed, then the given list of
          * extremal rays contains _only_ those extremal rays that satisfy
@@ -152,7 +153,7 @@ class HilbertPrimal {
          * The global interpreter lock will be released while this
          * function runs, so you can use it with Python-based multithreading.
          *
-         * \param action a function (or other callable object) that will be
+         * \param action a function (or other callable type) that will be
          * called for each basis element.  This function must take a single
          * argument, which will be passed as an rvalue of type Ray.
          * \param raysBegin an iterator pointing to the beginning of the
@@ -165,7 +166,7 @@ class HilbertPrimal {
          * will be reported, or \c null if no progress reporting is required.
          */
         template <ArbitraryPrecisionIntegerVector Ray, typename RayIterator,
-            typename Action>
+            VoidCallback<Ray&&> Action>
         static void enumerate(Action&& action,
             const RayIterator& raysBegin, const RayIterator& raysEnd,
             const ValidityConstraints& constraints,
@@ -192,7 +193,8 @@ class HilbertPrimal {
          * Hilbert basis for one or more maximal admissible faces.
          */
         template <ArbitraryPrecisionIntegerVector Ray,
-            ReginaBitmask BitmaskType, typename RayIterator, typename Action>
+            ReginaBitmask BitmaskType, typename RayIterator,
+            VoidCallback<Ray&&> Action>
         static void enumerateUsingBitmask(Action&& action,
             const RayIterator& raysBegin, const RayIterator& raysEnd,
             const ValidityConstraints& constraints, ProgressTracker* tracker);

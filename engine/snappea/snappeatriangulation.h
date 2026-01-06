@@ -38,6 +38,7 @@
 #endif
 
 #include "regina-core.h"
+#include "concepts/core.h"
 #include "maths/forward.h"
 #include "triangulation/dim3.h"
 #include <complex>
@@ -1875,7 +1876,7 @@ class SnapPeaTriangulation :
          * produced but is also much faster for larger \a k.
          *
          * For each cover that is produced, this routine will call \a action
-         * (which must be a function or some other callable object).
+         * (which must be a function or some other callable type).
          *
          * - The first argument to \a action must be a SnapPea triangulation;
          *   this will be the newly produced cover.  This argument will be
@@ -1896,7 +1897,8 @@ class SnapPeaTriangulation :
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
          *
-         * - \a action must return \c void.
+         * - The return value of \a action will be ignored; typically it would
+         *   return \c void.
          *
          * - \a action must not make changes to this original triangulation
          *   (i.e., the SnapPeaTriangulation upon which enumerateCovers()
@@ -1940,13 +1942,14 @@ class SnapPeaTriangulation :
          * be a positive integer.
          * \param type indicates whether to enumerate all covers (up to
          * equivalence) or only cyclic covers.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each cover that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial triangulation and type arguments.
          * \return the total number of covers found.
          */
         template <typename Action, typename... Args>
+        requires VoidCallback<Action, SnapPeaTriangulation&&, Cover, Args...>
         size_t enumerateCovers(int sheets, CoverEnumeration type,
             Action&& action, Args&&... args) const;
 
@@ -2598,6 +2601,8 @@ inline void SnapPeaTriangulation::randomize() {
 }
 
 template <typename Action, typename... Args>
+requires VoidCallback<Action, SnapPeaTriangulation&&,
+    SnapPeaTriangulation::Cover, Args...>
 inline size_t SnapPeaTriangulation::enumerateCovers(int sheets,
         CoverEnumeration type, Action&& action, Args&&... args) const {
     return enumerateCoversInternal(sheets, type,

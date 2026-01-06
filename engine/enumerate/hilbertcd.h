@@ -104,12 +104,13 @@ class HilbertCD {
          * addition, _invalidity_ is.
          *
          * For each of the resulting basis elements, this routine will call
-         * \a action (which must be a function or some other callable object).
-         * This action should return \c void, and must take exactly one
-         * argument, which will be the basis element stored using type \a Ray.
-         * The argument will be passed as an rvalue; a typical \a action
-         * would take it as an rvalue reference (`Ray&&`) and move its
-         * contents into some other more permanent storage.
+         * \a action (which must be a function or some other callable type).
+         * This action must take exactly one argument: the basis element stored
+         * using type \a Ray.  The argument will be passed as an rvalue;
+         * a typical \a action would take it as an rvalue reference (`Ray&&`)
+         * and move its contents into some other more permanent storage.
+         * The return value of \a action will be ignored (a typical \a action
+         * would return \c void).
          *
          * \warning For normal surface theory, the Contejean-Devie algorithm is
          * extremely slow, even when modified to incorporate admissibility
@@ -124,7 +125,7 @@ class HilbertCD {
          * and it returns a Python list containing all Hilbert basis elements.
          * In both versions, the template argument \a Ray is fixed as VectorInt.
          *
-         * \param action a function (or other callable object) that will be
+         * \param action a function (or other callable type) that will be
          * called for each basis element.  This function must take a single
          * argument, which will be passed as an rvalue of type Ray.
          * \param subspace a matrix defining the linear subspace to intersect
@@ -135,7 +136,8 @@ class HilbertCD {
          * \param constraints a set of validity constraints as described above,
          * or ValidityConstraints::none if none should be imposed.
          */
-        template <ArbitraryPrecisionIntegerVector Ray, typename Action>
+        template <ArbitraryPrecisionIntegerVector Ray,
+            VoidCallback<Ray&&> Action>
         static void enumerate(Action&& action,
             const MatrixInt& subspace, const ValidityConstraints& constraints);
 
@@ -189,7 +191,7 @@ class HilbertCD {
          * number of columns in \a subspace).
          */
         template <ArbitraryPrecisionIntegerVector Ray,
-            ReginaBitmask BitmaskType, typename Action>
+            ReginaBitmask BitmaskType, VoidCallback<Ray&&> Action>
         static void enumerateUsingBitmask(Action&& action,
             const MatrixInt& subspace, const ValidityConstraints& constraints);
 };

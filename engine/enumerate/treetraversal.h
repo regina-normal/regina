@@ -39,6 +39,7 @@
 #endif
 
 #include <mutex>
+#include "concepts/core.h"
 #include "enumerate/treeconstraint.h"
 #include "enumerate/treelp.h"
 #include "enumerate/typetrie.h"
@@ -745,10 +746,10 @@ class TreeEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          * vertex normal or almost normal surfaces.
          *
          * For each vertex surface that is found, this routine will call
-         * \a action (which must be a function or some other callable object).
+         * \a action (which must be a function or some other callable type).
          *
-         * - The first argument to \a action must be a const reference
-         *   to a TreeEnumeration object (which will be this object).
+         * - The first argument passed to \a action will a const reference to
+         *   this TreeEnumeration object.
          *
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
@@ -785,7 +786,7 @@ class TreeEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          * additional arguments beyond the initial TreeEnumeration object
          * (and therefore the additional \a args list is omitted here).
          *
-         * \param action a function (or some other callable object) to
+         * \param action a function (or some other callable type) to
          * call for each vertex surface that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial tree enumeration argument.
@@ -793,6 +794,7 @@ class TreeEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
+        requires TerminatingCallback<Action, const TreeEnumeration&, Args...>
         bool run(Action&& action, Args&&... args);
 
         /**
@@ -1051,10 +1053,10 @@ class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          * all taut angle structures.
          *
          * For each taut angle structure that is found, this routine will call
-         * \a action (which must be a function or some other callable object).
+         * \a action (which must be a function or some other callable type).
          *
-         * - The first argument to \a action must be a const reference
-         *   to a TautEnumeration object (which will be this object).
+         * - The first argument passed to \a action will a const reference to
+         *   this TautEnumeration object.
          *
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
@@ -1091,7 +1093,7 @@ class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          * additional arguments beyond the initial TautEnumeration object
          * (and therefore the additional \a args list is omitted here).
          *
-         * \param action a function (or some other callable object) to
+         * \param action a function (or some other callable type) to
          * call for each taut angle structure that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial tree enumeration argument.
@@ -1099,6 +1101,7 @@ class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
+        requires TerminatingCallback<Action, const TautEnumeration&, Args...>
         bool run(Action&& action, Args&&... args);
 
         /**
@@ -1585,6 +1588,8 @@ inline size_t TreeEnumeration<Constraint, Ban, IntType>::solutions() const {
 
 template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
 template <typename Action, typename... Args>
+requires TerminatingCallback<Action,
+    const TreeEnumeration<Constraint, Ban, IntType>&, Args...>
 inline bool TreeEnumeration<Constraint, Ban, IntType>::run(Action&& action,
         Args&&... args) {
     while (next())
@@ -1629,6 +1634,8 @@ inline size_t TautEnumeration<Constraint, Ban, IntType>::solutions() const {
 
 template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
 template <typename Action, typename... Args>
+requires TerminatingCallback<Action,
+    const TautEnumeration<Constraint, Ban, IntType>&, Args...>
 inline bool TautEnumeration<Constraint, Ban, IntType>::run(Action&& action,
         Args&&... args) {
     while (next())

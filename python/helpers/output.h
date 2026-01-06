@@ -246,7 +246,7 @@ void add_output_ostream(pybind11::class_<C, options...>& c,
  *
  * This will add a function \a __str__ to the python class to provide "native"
  * Python string output.  The implementation will call \a outputFunction,
- * which must be a callable object (typically a lambda) that can be called
+ * which must be a callable type (typically a lambda) that can be called
  * with arguments of the form `outputFunction(const C&, std::ostream&)`.
  *
  * This will also add a \a __repr__ function.  There is no choice of output
@@ -288,7 +288,7 @@ void add_output_custom(pybind11::class_<C, options...>& c,
  *
  * This will add a function \a __str__ to the python class to provide "native"
  * Python string output.  The implementation will call \a outputFunction,
- * which must be a callable object (typically a lambda) that can be called
+ * which must be a callable type (typically a lambda) that can be called
  * with arguments of the form `outputFunction(const C&, std::ostream&)`.
  *
  * This will also add a \a __repr__ function.  There is no choice of output

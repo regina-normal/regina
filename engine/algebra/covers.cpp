@@ -71,20 +71,23 @@ namespace {
 
     // The precomputed Sn tables, for those n where Perm<n> stores image packs
     // internally and not Sn indices:
-    template <int n> Perm<n>* precompSn = nullptr;
+    template <int n> requires (Perm<n>::codeType == PermCodeType::Images)
+    Perm<n>* precompSn = nullptr;
 
     // The precomputed automorphism groups, for n >= precomputeAutGroupsFrom:
-    template <int n> std::vector<Perm<n>> centraliser[PermClass<n>::count];
+    template <int n> requires (n >= precomputeAutGroupsFrom)
+    std::vector<Perm<n>> centraliser[PermClass<n>::count];
 
     // A flag to indicate whether precomputation has been done yet for a
     // given index, and a mutex to make precomputation thread-safe:
-    template <int n> bool precomputed = false;
-    template <int n> std::mutex precomputeLock;
+    template <int n> requires (n >= precomputeAutGroupsFrom)
+    bool precomputed = false;
 
-    template <int n>
+    template <int n> requires (n >= precomputeAutGroupsFrom)
+    std::mutex precomputeLock;
+
+    template <int n> requires (n >= precomputeAutGroupsFrom)
     void precompute() {
-        static_assert(n >= precomputeAutGroupsFrom);
-
         // We use a full mutex here for thread-safety, not just an atomic bool,
         // since if several threads try to precompute simultaneously then
         // they will all have to wait for the entire precomputation process
@@ -166,7 +169,8 @@ namespace {
     //
     // The code that generated these arrays can be found in aut.py, in the same
     // directory as this source file.
-    template <int n> constexpr int
+    template <int n> requires (n < precomputeAutGroupsFrom)
+    constexpr int
         minimalAutGroup[PermClass<n>::count][maxMinimalAutGroup[n] + 1];
 #if 0
     // We never actually use the group for n=2, so hide it from the compiler.
@@ -944,12 +948,9 @@ void GroupPresentation::minimaxGenerators() {
             t.generator = relabel[t.generator];
 }
 
-template <int index>
+template <int index> requires (index >= 2 && index <= 11)
 size_t GroupPresentation::enumerateCoversInternal(
         std::function<void(GroupPresentation&&)>&& action) {
-    static_assert(2 <= index && index <= 11,
-        "Currently enumerateCovers() is only available for 2 <= index <= 11.");
-
     if (nGenerators_ == 0) {
         // We have the trivial group.
         // There is only one trivial representation, and it is not transitive.

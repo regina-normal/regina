@@ -51,7 +51,7 @@
 
 namespace regina {
 
-template <ArbitraryPrecisionIntegerVector Ray, typename Action>
+template <ArbitraryPrecisionIntegerVector Ray, VoidCallback<Ray&&> Action>
 void HilbertCD::enumerate(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints) {
     // Get the dimension of the space.
@@ -90,7 +90,7 @@ void HilbertCD::enumerate(Action&& action,
 }
 
 template <ArbitraryPrecisionIntegerVector Ray, ReginaBitmask BitmaskType,
-    typename Action>
+    VoidCallback<Ray&&> Action>
 void HilbertCD::enumerateUsingBitmask(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints) {
     using IntegerType = typename Ray::value_type;

@@ -39,6 +39,7 @@
 
 #include <array>
 #include <vector>
+#include "concepts/core.h"
 #include "core/output.h"
 #include "utilities/exception.h"
 #include "utilities/fixedarray.h"
@@ -1204,7 +1205,7 @@ class ModelLinkGraph :
          * then the resulting link diagrams will all be virtual.
          *
          * For each link diagram that is generated, this routine will call
-         * \a action (which must be a function or some other callable object).
+         * \a action (which must be a function or some other callable type).
          *
          * - The first argument passed to \a action will be the link diagram
          *   that was generated (of type Link).  This will be passed as an
@@ -1215,7 +1216,8 @@ class ModelLinkGraph :
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
          *
-         * - \a action must return \c void.
+         * - The return value of \a action will be ignored; typically it would
+         *   return \c void.
          *
          * \apinotfinal
          *
@@ -1232,12 +1234,13 @@ class ModelLinkGraph :
          * \exception FailedPrecondition There is a 1-gon in the cell
          * decomposition induced by this graph.
          *
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each link diagram that is generated.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial link diagram argument.
          */
         template <typename Action, typename... Args>
+        requires VoidCallback<Action, Link&&, Args...>
         void generateMinimalLinks(Action&& action, Args&&... args) const;
 
         /**
@@ -1260,7 +1263,7 @@ class ModelLinkGraph :
          * then the resulting link diagrams will all be virtual.
          *
          * For each link diagram that is generated, this routine will call
-         * \a action (which must be a function or some other callable object).
+         * \a action (which must be a function or some other callable type).
          *
          * - The first argument passed to \a action will be the link diagram
          *   that was generated (of type Link).  This will be passed as an
@@ -1271,7 +1274,8 @@ class ModelLinkGraph :
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
          *
-         * - \a action must return \c void.
+         * - The return value of \a action will be ignored; typically it would
+         *   return \c void.
          *
          * \apinotfinal
          *
@@ -1281,12 +1285,13 @@ class ModelLinkGraph :
          * simply call it as generateAllLinks(action).  Moreover, \a action
          * must take exactly one argument (the link diagram).
          *
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each link diagram that is generated.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial link diagram argument.
          */
         template <typename Action, typename... Args>
+        requires VoidCallback<Action, Link&&, Args...>
         void generateAllLinks(Action&& action, Args&&... args) const;
 
         /**
@@ -1364,7 +1369,7 @@ class ModelLinkGraph :
          * or more) the output set should be smaller.
          *
          * For each graph that is generated, this routine will call \a action
-         * (which must be a function or some other callable object).
+         * (which must be a function or some other callable type).
          *
          * - The first argument passed to \a action will be the graph that was
          *   generated (of type ModelLinkGraph).  This will be passed as an
@@ -1375,7 +1380,8 @@ class ModelLinkGraph :
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
          *
-         * - \a action must return \c void.
+         * - The return value of \a action will be ignored; typically it would
+         *   return \c void.
          *
          * \apinotfinal
          *
@@ -1402,12 +1408,13 @@ class ModelLinkGraph :
          * generate every possible embedding.  If several constraints are ORed
          * together, then only embeddings that satisfy _all_ of the these
          * constraints will be produced.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each graph that is generated.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial graph argument.
          */
         template <typename Action, typename... Args>
+        requires VoidCallback<Action, ModelLinkGraph&&, Args...>
         static void generateAllEmbeddings(const FacetPairing<3>& pairing,
             bool allowReflection, Flags<GraphConstraint> constraints,
             Action&& action, Args&&... args);

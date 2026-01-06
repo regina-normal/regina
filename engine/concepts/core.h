@@ -53,7 +53,7 @@ template <int> class NativeInteger;
  */
 
 /**
- * Indicates that a variable of type \a Source can be assigned to a variablei
+ * Indicates that a variable of type \a Source can be assigned to a variable
  * of type \a Target.  This is identical to `std::assignable_from`, but with
  * the arguments in the opposite order.
  *
@@ -142,8 +142,20 @@ concept ReginaInteger =
     requires(T x) { { NativeInteger(x) } -> std::same_as<T>; };
 
 /**
- * A type that supports very basic interoperability with integer values,
- * via construction, assignment, and equality/inequality testing.
+ * Either any standard non-boolean C++ integer type or any of Regina's own
+ * integer types.
+ *
+ * This concept excludes `bool`, and does not make any special accommodations
+ * for 128-bit integer compiler extensions.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept AnyInteger = StandardCppInteger<T> || ReginaInteger<T>;
+
+/**
+ * A type that supports very basic interoperability with native C++ integer
+ * values, via construction, assignment, and equality/inequality testing.
  *
  * \ingroup concepts
  */
@@ -154,9 +166,9 @@ concept IntegerCompatible =
     std::equality_comparable_with<T, int>;
 
 /**
- * A type that supports interoperability with integer values via construction,
- * assignment, equality/inequality testing, and comparisons.  The comparisons
- * must yield a total order.
+ * A type that supports interoperability with native C++ integer values via
+ * construction, assignment, equality/inequality testing, and comparisons.
+ * The comparisons must yield a total order.
  *
  * \ingroup concepts
  */
@@ -263,6 +275,51 @@ concept ReginaBitmask =
     std::same_as<T, Bitmask> ||
     requires(T x) { { Bitmask1(x) } -> std::same_as<T>; } ||
     requires(T x) { { Bitmask2(x) } -> std::same_as<T>; };
+
+/**
+ * A callable type that acts as a strict weak order on the given argument type.
+ * Such an object could (for example) be used for comparisons during a sorting
+ * operation.
+ *
+ * This concept is identical to the standard C++ concept
+ * `std::strict_weak_order<T, Arg, Arg>`.  It is provided here for convenience
+ * so that the argument type does not need to be repeated.
+ *
+ * \ingroup concepts
+ */
+template <typename T, typename Arg>
+concept StrictWeakOrder = std::strict_weak_order<T, Arg, Arg>;
+
+/**
+ * A callable type that takes the given argument types, and whose return value
+ * is ignored.  Such objects are often passed into Regina's enumeration
+ * routines (e.g., the various triangulation and link census generation
+ * routines).
+ *
+ * Typically the return type for such a callback would be `void` (since Regina
+ * will ignore it), though this is not enforced.
+ *
+ * \ingroup concepts
+ */
+template <typename T, typename... Args>
+concept VoidCallback = std::invocable<T, Args...>;
+
+/**
+ * A callable type that takes the given argument types, with a boolean return
+ * value indicating whether the current operation should terminate.
+ * Such objects are often passed into Regina's enumeration and/or exploration
+ * routines (e.g., for enumerating normal surfaces, or exploring nearby
+ * retriangulations).
+ *
+ * The return type for such a callback must be convertible to `bool`.
+ * A return value of `false` (no, do not terminate) would typically indicate
+ * that the current operation should continue, and `true` (yes, terminate)
+ * would typically indicate that it the operation should stop.
+ *
+ * \ingroup concepts
+ */
+template <typename T, typename... Args>
+concept TerminatingCallback = std::predicate<T, Args...>;
 
 } // namespace regina
 
