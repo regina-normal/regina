@@ -7867,26 +7867,22 @@ inline bool Link::rewrite(int height, int threads,
             "rewrite() requires fewer than 64 link components");
     }
 
-    // Use RetriangulateActionTraits to deduce whether the given action takes
-    // a link or both a signature and link as its initial argument(s).
-    using Traits = regina::detail::RetriangulateActionTraits<Link, Action>;
-    static_assert(Traits::valid,
-        "The action that is passed to rewrite() does not take the correct initial argument type(s).");
-
     // The template option std::true_type means allow classical moves only.
-    if constexpr (Traits::withSig) {
-        return detail::retriangulateInternal<Link, true,
-            detail::RetriangulateDefault, std::true_type>(
-            *this, false /* rigid */, height, threads, tracker,
-            [&](const std::string& sig, Link&& obj) {
-                return action(sig, std::move(obj), std::forward<Args>(args)...);
-            });
-    } else {
+    if constexpr (TerminatingCallback<Action, Link&&, Args...>) {
+        // Action takes just a link.
         return detail::retriangulateInternal<Link, false,
             detail::RetriangulateDefault, std::true_type>(
             *this, false /* rigid */, height, threads, tracker,
             [&](Link&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
+            });
+    } else {
+        // Action takes both a signature and a link.
+        return detail::retriangulateInternal<Link, true,
+            detail::RetriangulateDefault, std::true_type>(
+            *this, false /* rigid */, height, threads, tracker,
+            [&](const std::string& sig, Link&& obj) {
+                return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     }
 }
@@ -7904,27 +7900,23 @@ inline bool Link::rewriteVirtual(int height, int threads,
             "rewriteVirtual() requires fewer than 64 link components");
     }
 
-    // Use RetriangulateActionTraits to deduce whether the given action takes
-    // a link or both a signature and link as its initial argument(s).
-    using Traits = regina::detail::RetriangulateActionTraits<Link, Action>;
-    static_assert(Traits::valid,
-        "The action that is passed to rewriteVirtual() does not take the correct initial argument type(s).");
-
     // The template option std::false_type means allow both classical and
     // virtual moves.
-    if constexpr (Traits::withSig) {
-        return detail::retriangulateInternal<Link, true,
-            detail::RetriangulateDefault, std::false_type>(
-            *this, false /* rigid */, height, threads, tracker,
-            [&](const std::string& sig, Link&& obj) {
-                return action(sig, std::move(obj), std::forward<Args>(args)...);
-            });
-    } else {
+    if constexpr (TerminatingCallback<Action, Link&&, Args...>) {
+        // Action takes just a link.
         return detail::retriangulateInternal<Link, false,
             detail::RetriangulateDefault, std::false_type>(
             *this, false /* rigid */, height, threads, tracker,
             [&](Link&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
+            });
+    } else {
+        // Action takes both a signature and a link.
+        return detail::retriangulateInternal<Link, true,
+            detail::RetriangulateDefault, std::false_type>(
+            *this, false /* rigid */, height, threads, tracker,
+            [&](const std::string& sig, Link&& obj) {
+                return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     }
 }

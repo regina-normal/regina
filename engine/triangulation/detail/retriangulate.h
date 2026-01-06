@@ -170,42 +170,6 @@ bool retriangulateInternal(const Object& obj, bool rigid, int height,
         RetriangulateActionFunc<Object, withSig>&& action);
 
 /**
- * A traits class that analyses callable types that are passed to
- * retriangulation or link rewriting functions.
- *
- * Recall that the initial arguments for such a callable type must be either
- * (a) a single triangulation/link, or (b) a text signature (e.g., an
- * isomorphism signature) followed by a triangulation/link.  The callable
- * type may take its triangulation/link by value, const reference or
- * rvalue reference; however, if it takes a signature also then this must be
- * by (const std::string&).
- *
- * This struct provides a boolean compile-time constant \a valid, which is
- * \c true if and only if the initial arguemnt(s) to \a Action are acceptable
- * as outlined above (i.e., an argument of the underlying \a Object class
- * for actions that take a triangulation/link, or a const string reference and
- * an \a Object for actions that take a text signature also).
- *
- * If \a valid is \c true, then this struct also provides a boolean
- * compile-time constant \a withSig, which is \c true if and only if the action
- * takes both a text signature and a triangulation/link.
- * If \a valid is \c false then the boolean constant \a withSig will still
- * be present, but its value is not defined.
- *
- * \tparam Object the class providing the retriangulation or link rewriting
- * function, such as regina::Triangulation<dim> or regina::Link.
- * \tparam Action the callable type that is passed to the
- * retriangulation/rewriting function.
- * \tparam FirstArg the type of the first argument to \a Action; you should
- * not specify this directly, but instead allow the compiler to deduce it.
- *
- * \ingroup detail
- */
-template <typename Object, typename Action,
-        typename FirstArg = typename CallableArg<Action, 0>::type>
-struct RetriangulateActionTraits;
-
-/**
  * The common implementation of all exhaustive simplification functions.
  *
  * This routine performs exactly the task described by
@@ -407,44 +371,6 @@ bool improveTreewidthInternal(Object& obj, ssize_t maxAttempts, int height,
         tracker->setFinished();
     return true;
 }
-
-#ifndef __DOXYGEN
-
-template <typename Object, typename Action, typename FirstArg>
-struct RetriangulateActionTraits {
-    static constexpr bool valid = false;
-    static constexpr bool withSig = false;
-};
-
-template <typename Object, typename Action>
-struct RetriangulateActionTraits<Object, Action, Object> {
-    static constexpr bool valid = true;
-    static constexpr bool withSig = false;
-};
-
-template <typename Object, typename Action>
-struct RetriangulateActionTraits<Object, Action, Object&&> {
-    static constexpr bool valid = true;
-    static constexpr bool withSig = false;
-};
-
-template <typename Object, typename Action>
-struct RetriangulateActionTraits<Object, Action, const Object&> {
-    static constexpr bool valid = true;
-    static constexpr bool withSig = false;
-};
-
-template <typename Object, typename Action>
-struct RetriangulateActionTraits<Object, Action, const std::string&> {
-    using SecondArg = typename CallableArg<Action, 1>::type;
-    static constexpr bool valid =
-        std::is_same_v<SecondArg, Object> ||
-        std::is_same_v<SecondArg, Object&&> ||
-        std::is_same_v<SecondArg, const Object&>;
-    static constexpr bool withSig = true;
-};
-
-#endif // __DOXYGEN
 
 } } // namespace regina::detail
 

@@ -5310,24 +5310,19 @@ inline bool Triangulation<3>::retriangulate(int height, int threads,
             "retriangulate() requires a connected triangulation");
     }
 
-    // Use RetriangulateActionTraits to deduce whether the given action
-    // takes a triangulation or both an isomorphism signature and triangulation
-    // as its initial argument(s).
-    using Traits =
-        regina::detail::RetriangulateActionTraits<Triangulation<3>, Action>;
-    static_assert(Traits::valid,
-        "The action that is passed to retriangulate() does not take the correct initial argument type(s).");
-    if constexpr (Traits::withSig) {
-        return regina::detail::retriangulateInternal<Triangulation<3>, true>(
-            *this, false /* rigid */, height, threads, tracker,
-            [&](const std::string& sig, Triangulation<3>&& obj) {
-                return action(sig, std::move(obj), std::forward<Args>(args)...);
-            });
-    } else {
+    if constexpr (TerminatingCallback<Action, Triangulation<3>&&, Args...>) {
+        // Action takes just a triangulation.
         return regina::detail::retriangulateInternal<Triangulation<3>, false>(
             *this, false /* rigid */, height, threads, tracker,
             [&](Triangulation<3>&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
+            });
+    } else {
+        // Action takes both an isomorphism signature and a triangulation.
+        return regina::detail::retriangulateInternal<Triangulation<3>, true>(
+            *this, false /* rigid */, height, threads, tracker,
+            [&](const std::string& sig, Triangulation<3>&& obj) {
+                return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     }
 }
