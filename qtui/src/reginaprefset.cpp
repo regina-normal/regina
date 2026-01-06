@@ -253,7 +253,11 @@ void ReginaPrefSet::readInternal() {
     hypersurfacesCreationCoords = static_cast<regina::HyperCoords>(
         settings.value("CreationCoordinates",
             static_cast<int>(regina::HyperCoords::Standard)).toInt());
-    hypersurfacesCreationList = regina::Flags<regina::HyperList>::fromInt(
+    // The C++ standard says that scoped enumerations should use int as their
+    // base types by default.  We double-check this now since we are using
+    // QVariant::toInt() with our flags class below.
+    static_assert(std::same_as<regina::Flags<regina::HyperList>::BaseInt, int>);
+    hypersurfacesCreationList = regina::Flags<regina::HyperList>::fromBase(
         settings.value("CreationList", 0 /* HyperList.Default */).toInt());
 
     settings.beginGroup("Link");
@@ -304,7 +308,12 @@ void ReginaPrefSet::readInternal() {
     surfacesCreationCoords = static_cast<regina::NormalCoords>(
         settings.value("CreationCoordinates",
             static_cast<int>(regina::NormalCoords::Standard)).toInt());
-    surfacesCreationList = regina::Flags<regina::NormalList>::fromInt(
+    // The C++ standard says that scoped enumerations should use int as their
+    // base types by default.  We double-check this now since we are using
+    // QVariant::toInt() with our flags class below.
+    static_assert(
+        std::same_as<regina::Flags<regina::NormalList>::BaseInt, int>);
+    surfacesCreationList = regina::Flags<regina::NormalList>::fromBase(
         settings.value("CreationList", 0 /* NormalList::Default */).toInt());
 
     str = settings.value("InitialCompat").toString();
@@ -422,7 +431,7 @@ void ReginaPrefSet::saveInternal() const {
     settings.beginGroup("Hypersurfaces");
     settings.setValue("CreationCoordinates",
         static_cast<int>(hypersurfacesCreationCoords));
-    settings.setValue("CreationList", hypersurfacesCreationList.intValue());
+    settings.setValue("CreationList", hypersurfacesCreationList.baseValue());
 
     settings.beginGroup("Link");
     settings.setValue("CreationTypeV2", linkCreationType);
@@ -474,7 +483,7 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("CompatibilityThreshold", surfacesCompatThreshold);
     settings.setValue("CreationCoordinates",
         static_cast<int>(surfacesCreationCoords));
-    settings.setValue("CreationList", surfacesCreationList.intValue());
+    settings.setValue("CreationList", surfacesCreationList.baseValue());
     switch (surfacesInitialCompat) {
         case ReginaPrefSet::CompatMatrix::Global:
             settings.setValue("InitialCompat", "Global"); break;
