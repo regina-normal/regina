@@ -3176,9 +3176,8 @@ class TriangulationBase :
          *   `simplex()`, `perm()` and `next()`; see the implementation of
          *   IsoSigClassic for details.
          *
-         * - The \a Encoding parameter should be a class that offers a
-         *   \a Signature type alias, and static functions `emptySig()` and
-         *   `encode()`.  See the implementation of IsoSigPrintable for details.
+         * - See the IsoSigEncodingAPI documentation for how the \a Encoding
+         *   type should behave.
          *
          * - If you wish to produce an isomorphism signature that ignores
          *   simplex and/or facet locks then you can use an encoding whose
@@ -3210,7 +3209,7 @@ class TriangulationBase :
          * \return the isomorphism signature of this triangulation.
          */
         template <typename Type = IsoSigClassic<dim>,
-            typename Encoding = IsoSigPrintable<dim>>
+            IsoSigEncoding<dim> Encoding = IsoSigPrintable<dim>>
         typename Encoding::Signature isoSig() const;
 
         /**
@@ -3232,7 +3231,7 @@ class TriangulationBase :
          * \return the isomorphism signature of this triangulation.
          */
         template <typename Type = IsoSigClassic<dim>,
-            typename Encoding = IsoSigPrintable<dim>>
+            IsoSigEncoding<dim> Encoding = IsoSigPrintable<dim>>
         typename Encoding::Signature sig() const;
 
         /**
@@ -3283,7 +3282,7 @@ class TriangulationBase :
          * and the triangulation that would be reconstructed from fromIsoSig().
          */
         template <typename Type = IsoSigClassic<dim>,
-            typename Encoding = IsoSigPrintable<dim>>
+            IsoSigEncoding<dim> Encoding = IsoSigPrintable<dim>>
         std::pair<typename Encoding::Signature, Isomorphism<dim>> isoSigDetail()
             const;
 
@@ -4093,7 +4092,7 @@ class TriangulationBase :
          * constructed for the correct number of simplices.
          * \return the candidate isomorphism signature.
          */
-        template <typename Encoding>
+        template <IsoSigEncoding<dim> Encoding>
         typename Encoding::Signature isoSigFrom(size_t simp,
             const Perm<dim+1>& vertices, Isomorphism<dim>* relabelling) const;
 
@@ -5787,7 +5786,7 @@ inline void TriangulationBase<dim>::cloneBoundaryFaces(
 }
 
 template <int dim> requires (supportedDim(dim))
-template <typename Type, typename Encoding>
+template <typename Type, IsoSigEncoding<dim> Encoding>
 inline typename Encoding::Signature TriangulationBase<dim>::sig() const {
     return isoSig<Type, Encoding>();
 }

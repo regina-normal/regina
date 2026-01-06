@@ -91,7 +91,8 @@ enum class LPConstraintType {
  * tableaux of normal surface or angle structure matching equations.
  * This concept is used with Regina's linear programming machinery.
  *
- * See LPConstraintAPI for further information.
+ * See LPConstraintAPI for further information, including a thorough
+ * description of how a linear constraint type is expected to behave.
  *
  * \ingroup enumerate
  */

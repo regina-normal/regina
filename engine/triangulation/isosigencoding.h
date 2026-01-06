@@ -44,64 +44,67 @@
 
 namespace regina {
 
+#ifdef __APIDOCS
 /**
- * The default encoding to use for isomorphism signatures.
+ * A documentation-only class describing the expected behaviour of isomorphism
+ * signature encodings.
  *
- * This printable encoding is consistent with the original isomorphism
- * signatures that were implemented in Regina 4.90.  It represents an
- * isomorphism signature as a std::string, using only printable characters
- * from the 7-bit ASCII range.
+ * Regina supports different _encodings_ for isomorphism signatures of
+ * triangulations.  Essentially, the job of an encoding algorithm is to distill
+ * the gluings table into a small piece of data (such as a string) that can be
+ * easily saved and/or passed around.
  *
- * As of Regina 7.4, if \a supportLocks is \c true (the default), then this
- * encoding will also encode any simplex and/or facet locks into the
- * isomorphism signature.  If \a supportLocks is \c false, and/or if the
- * triangulation in question does not actually have any simplex and/or facet
- * locks, then the resulting signature will be the same as produced by earlier
- * versions of Regina, before locks were implemented.
+ * This IsoSigEncodingAPI class is a documentation-only class (it is not
+ * actually built into Regina).  Its purpose is to describe in detail the
+ * interface that an isomorphism signature encoding should provide.
  *
- * This class is designed to be used as a template parameter for
- * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
- * Typical users would have no need to create objects of this class or
- * call any of its functions directly.
+ * All encoding types provide their functionality through static members and
+ * static routines: they do not contain any member data, and it is unnecessary
+ * (but harmless) to construct them.  Instead encoding types are typically
+ * used as C++ template arguments (in particular, for the functions
+ * `Triangulation<dim>::isoSig()` and `Triangulation<dim>::isoSigDetail()`).
  *
- * \python Python does not support templates.  For encodings that do support
- * locks (the default), Python users can just append the dimension as a suffix
- * (e.g., IsoSigPrintable2 and IsoSigPrintable3 for dimensions 2 and 3).
- * For encodings that do not support locks, Python users should use the
- * type aliases IsoSigPrintableLockFree2, IsoSigPrintableLockFree3, and so on.
+ * \python Whilst Regina's encoding types are available, it is rare that you
+ * would need to access of these types directly through Python.  Instead, to
+ * use an isomorphism signature encoding type, you would typically use a
+ * modified form of `Triangulation<dim>::isoSig()` or
+ * `Triangulation<dim>::isoSigDetail()`  See `Triangulation<dim>::isoSig()`
+ * for further details.
+ *
+ * \apinotfinal
  *
  * \ingroup triangulation
  */
-template <int dim, bool supportLocks = true>
+template <int dim>
 requires (supportedDim(dim))
-class IsoSigPrintable {
+class IsoSigEncodingAPI {
     public:
         /**
-         * The data type used to store an isomorphism signature.
+         * The data type used by this encoding to store an
+         * isomorphism signature.  A common example (as shown here in this
+         * API documentation) is `std::string`.
+         *
+         * This type must adhere to the concept IsoSigData.  In particular,
+         * this means it must have a default constructor that yields an empty
+         * signature, and it must support concatenation via the operator `+=`.
          */
         using Signature = std::string;
 
         /**
-         * The number of characters that we use in our encoding to
-         * represent a single gluing permutation.
-         * This must be large enough to encode an index into Perm<dim+1>::Sn.
+         * Encodes the isomorphism signature of the empty
+         * <i>dim</i>-dimensional triangulation.
+         *
+         * Note that this would typically _not_ be an empty signature.
+         * For example, under Regina's default encoding, the signature for
+         * the empty triangulation is the non-empty string `a`.
+         *
+         * \return The isomorphism signature of the empty triangulation.
          */
-        static constexpr int charsPerPerm =
-            ((regina::bitsRequired(Perm<(dim)+1>::nPerms) + 5) / 6);
+        static Signature emptySig();
 
         /**
-         * Returns the isomorphism signature of an empty
-         * <i>dim</i>-dimensional triangulation.
-         */
-        static Signature emptySig() {
-            Base64SigEncoder enc;
-            enc.encodeSingle(0);
-            return std::move(enc).str();
-        }
-
-        /**
-         * Encodes data for a single connected component of a
-         * <i>dim</i>-dimensional triangulation.
+         * Encodes compressed gluing information for a single connected
+         * component of a <i>dim</i>-dimensional triangulation.
          *
          * The description consists of several arrays, describing facets of
          * the top-dimensional simplices, as well as the ways that these
@@ -132,8 +135,119 @@ class IsoSigPrintable {
          * `Simplex<dim>::lockMask()`.  This array should have length \a size.
          * If no simplices have any locks at all, then this argument must
          * be \c null.
-         * \return the encoding of the component being described.
+         * \return the encoded isomorphism signature of the component
+         * being described.
          */
+        static Signature encode(size_t size,
+                size_t nFacetActions, const uint8_t* facetAction,
+                size_t nJoins, const size_t* joinDest,
+                const typename Perm<dim+1>::Index* joinGluing,
+                const typename Simplex<dim>::LockMask* lockMasks);
+};
+#endif // __APIDOCS
+
+/**
+ * Represents a data type that can be used to hold an isomorphism signature
+ * for a triangulation.  A commonly used type (and the default in Regina) is
+ * `std::string`.
+ *
+ * It is your chosen _encoding algorithm_ (which is passed as a template
+ * parameter to functions such as `Triangulation<dim>::isoSig()`) that
+ * determines which data type will be used.  See IsoSigEncodingAPI for further
+ * information on encodings.
+ *
+ * The requirements for this data type are mostly simple: it should be default
+ * constructible (yielding an empty signature), it should be copyable, and
+ * it should be totally ordered.  The only unusual requirement is that it
+ * must support _concatenation_ via the operator `+=`.
+ *
+ * \ingroup triangulation
+ */
+template <typename T>
+concept IsoSigData =
+    std::regular<T> &&
+    std::totally_ordered<T> &&
+    requires(T x, const T y) { x += y; };
+
+/**
+ * Represents an encoding that can be used for isomorphism signatures
+ * of triangulations.  Essentially, the job of an encoding algorithm is to
+ * distill the gluings table into a small piece of data (such as a string)
+ * that can be easily saved and/or passed around.  This small piece of data
+ * must adhere to the separate concept IsoSigData.
+ *
+ * See IsoSigEncodingAPI for further information, including a thorough
+ * description of how an encoding type is expected to behave.
+ *
+ * \apinotfinal
+ *
+ * \ingroup triangulation
+ */
+template <typename T, int dim>
+concept IsoSigEncoding =
+    requires {
+        typename T::Signature;
+        requires IsoSigData<typename T::Signature>;
+        { T::emptySig() } -> std::convertible_to<typename T::Signature>;
+        { T::encode((size_t)(0), (size_t)(0), (const uint8_t*)(nullptr),
+            (size_t)(0), (const size_t*)(nullptr),
+            (const typename Perm<dim+1>::Index*)(nullptr),
+            (const typename Simplex<dim>::LockMask*)(nullptr)) } ->
+            std::convertible_to<typename T::Signature>;
+    };
+
+/**
+ * The default encoding to use for isomorphism signatures.
+ *
+ * This printable encoding is consistent with the original isomorphism
+ * signatures that were implemented in Regina 4.90.  It represents an
+ * isomorphism signature as a std::string, using only printable characters
+ * from the 7-bit ASCII range.
+ *
+ * As of Regina 7.4, if \a supportLocks is \c true (the default), then this
+ * encoding will also encode any simplex and/or facet locks into the
+ * isomorphism signature.  If \a supportLocks is \c false, and/or if the
+ * triangulation in question does not actually have any simplex and/or facet
+ * locks, then the resulting signature will be the same as produced by earlier
+ * versions of Regina, before locks were implemented.
+ *
+ * See the IsoSigEncodingAPI documentation for details on all member functions.
+ *
+ * This class is designed to be used as a template parameter for
+ * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
+ * Typical users would have no need to create objects of this class or
+ * call any of its functions directly.
+ *
+ * \python Python does not support templates.  For encodings that do support
+ * locks (the default), Python users can just append the dimension as a suffix
+ * (e.g., IsoSigPrintable2 and IsoSigPrintable3 for dimensions 2 and 3).
+ * For encodings that do not support locks, Python users should use the
+ * type aliases IsoSigPrintableLockFree2, IsoSigPrintableLockFree3, and so on.
+ *
+ * \apinotfinal
+ *
+ * \ingroup triangulation
+ */
+template <int dim, bool supportLocks = true>
+requires (supportedDim(dim))
+class IsoSigPrintable {
+    public:
+        /**
+         * The number of characters that we use in our encoding to
+         * represent a single gluing permutation.
+         * This must be large enough to encode an index into Perm<dim+1>::Sn.
+         */
+        static constexpr int charsPerPerm =
+            ((regina::bitsRequired(Perm<(dim)+1>::nPerms) + 5) / 6);
+
+        using Signature = std::string;
+
+        static Signature emptySig() {
+            Base64SigEncoder enc;
+            enc.encodeSingle(0);
+            return std::move(enc).str();
+        }
+
         static Signature encode(size_t size,
                 size_t nFacetActions, const uint8_t* facetAction,
                 size_t nJoins, const size_t* joinDest,
@@ -181,6 +295,8 @@ class IsoSigPrintable {
  * IsoSigPrintable, this encoding represents an isomorphism signature as a
  * std::string using only printable characters from the 7-bit ASCII range.
  *
+ * See the IsoSigEncodingAPI documentation for details on all member functions.
+ *
  * This class is designed to be used as a template parameter for
  * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
  * Typical users would have no need to create objects of this class or
@@ -189,6 +305,8 @@ class IsoSigPrintable {
  * \python Python does not support templates.  Instead this class can be used
  * by appending the dimension as a suffix (e.g., IsoSigPrintableLockFree2 and
  * IsoSigPrintableLockFree3 for dimensions 2 and 3).
+ *
+ * \apinotfinal
  *
  * \ingroup triangulation
  */

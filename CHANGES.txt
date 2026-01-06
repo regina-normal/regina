@@ -51,6 +51,9 @@ Version 7.5  [ TODO ]
         Class Isomorphism<dim>:
             - The increment operators are now available in all dimensions
               (not just dimensions ≤ 6).
+        Class IsoSigEncodingAPI:
+            - New documentation-only class that explains how encodings for
+              isomorphism signatures are expected to behave.
         Class Laurent<T>:
             - For the iterator-based constructor and init() routine, the
               iterator type is now required to be random access.
@@ -139,6 +142,8 @@ Version 7.5  [ TODO ]
             - Other new concepts for targeted use defined in other headers:
               + BanConstraint, LPConstraint, LPSubspace (defined in
                 enumerate/treelp.h)
+              + IsoSigData, IsoSigEncoding (defined in
+                triangulation/isosigencoding.h)
     PYTHON:
         - Removed the bindings TreeEnumeration_EulerPositive..., since the
           linear constraint LPConstraintEulerPositive was never meant to be
