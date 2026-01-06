@@ -21,6 +21,9 @@ Version 7.5  [ TODO ]
               You should never need to refer to this class directly; instead
               you can access its functionality through the end-user class
               BitManipulator<...>.
+        Class CallableArg<...>:
+            - This is now deprecated, since its implementation is drifting
+              increasingly further away from modern C++ standards.
         Class Cut:
             - For the iterator-based constructor, the old recommendation that
               the iterator type be random access is now a hard requirement.

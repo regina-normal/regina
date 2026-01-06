@@ -350,7 +350,7 @@ using safe_tuple_element = typename regina::detail::safe_tuple_element_impl<
  * \ingroup utilities
  */
 template <typename Action, int pos>
-struct CallableArg;
+struct [[deprecated]] CallableArg;
 
 #ifndef __DOXYGEN
 
