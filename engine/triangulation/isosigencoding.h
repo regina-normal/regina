@@ -50,9 +50,9 @@ namespace regina {
  * signature encodings.
  *
  * Regina supports different _encodings_ for isomorphism signatures of
- * triangulations.  Essentially, the job of an encoding algorithm is to distill
- * the gluings table into a small piece of data (such as a string) that can be
- * easily saved and/or passed around.
+ * triangulations.  Essentially, the job of an encoding algorithm is to pack
+ * a "compressed" gluings table into a small piece of data (such as a string)
+ * that can be easily saved and/or passed around.
  *
  * This IsoSigEncodingAPI class is a documentation-only class (it is not
  * actually built into Regina).  Its purpose is to describe in detail the
@@ -80,13 +80,11 @@ requires (supportedDim(dim))
 class IsoSigEncodingAPI {
     public:
         /**
-         * The data type used by this encoding to store an
-         * isomorphism signature.  A common example (as shown here in this
-         * API documentation) is `std::string`.
+         * The data type that this encoding uses to hold the final
+         * isomorphism signature.
          *
-         * This type must adhere to the concept IsoSigData.  In particular,
-         * this means it must have a default constructor that yields an empty
-         * signature, and it must support concatenation via the operator `+=`.
+         * This API documentation shows `std::string` as an example, but this
+         * may be any type that adheres to the concept ConcatenableSequence.
          */
         using Signature = std::string;
 
@@ -103,16 +101,31 @@ class IsoSigEncodingAPI {
         static Signature emptySig();
 
         /**
-         * Encodes compressed gluing information for a single connected
-         * component of a <i>dim</i>-dimensional triangulation.
+         * Encodes a "compressed" gluings table for a single non-empty
+         * connected component of a <i>dim</i>-dimensional triangulation.
          *
-         * The description consists of several arrays, describing facets of
-         * the top-dimensional simplices, as well as the ways that these
-         * facets are glued together and any simplex and/or facet locks.
-         * Which array elements represent which facets/gluings is an
-         * implementation detail; the purpose of this routine is simply to
-         * encode the given information.  See the isoSig() implementation for
-         * further details.
+         * The compressed gluings table is passed into this routine via a
+         * series of integers and arrays.  The encoding does not need to know
+         * what these mean or where they came from; its only job is to pack
+         * them into the final \a Signature format.  For example, Regina's
+         * default encoding (IsoSigPrintable) uses a combination of bit-packing
+         * and base64 encoding to convert the given data into a string.
+         *
+         * The initial \a size argument will need to be encoded; however, after
+         * this it is not necessary to encode the sizes of the various arrays,
+         * since these are already implicitly encoded by the array contents.
+         * Specifically:
+         *
+         * - by using \a size and sequentially reading the contents of the
+         *   \a facetAction array, it is possible for a reader to deduce the
+         *   point at which the \a facetAction array ends;
+         *
+         * - by using \a size and the contents of the \a facetAction array,
+         *   it is possible for a reader to precompute the length of the
+         *   \a joinDest and \a joinGluing arrays;
+         *
+         * - if the \a lockMasks arrays is non-null, then its length will be
+         *   the already-encoded quantity \a size.
          *
          * \python The arrays \a facetAction, \a joinDest, \a joinGluing and
          * \a lockMasks should each be passed as Python lists of integers;
@@ -120,23 +133,32 @@ class IsoSigEncodingAPI {
          * The arguments \a nFacetActions and \a nJoins are not present,
          * since Python lists already know their own sizes.
          *
-         * \param size the number of top-dimensional simplices in the component.
-         * \param nFacetActions the size of the array \a facetAction.
-         * \param facetAction an array of size \a nFacetActions, where
-         * each element is either 0, 1 or 2, respectively representing
-         * a boundary facet, a facet joined to a new simplex, or a facet
-         * joined to a simplex that has already been seen.
-         * \param nJoins the size of the arrays \a joinDest and \a joinGluing.
-         * \param joinDest an array whose elements are indices of
-         * top-dimensional simplices to which gluings are being made.
-         * \param joinGluing an array of gluing permutations.
-         * \param lockMasks an array that holds the lock masks for all
-         * top-dimensional simplices in the component, as returned by
-         * `Simplex<dim>::lockMask()`.  This array should have length \a size.
-         * If no simplices have any locks at all, then this argument must
-         * be \c null.
-         * \return the encoded isomorphism signature of the component
-         * being described.
+         * \param size a strictly positive integer.  (This represents the
+         * number of top-dimensional simplices in the component.)
+         * \param nFacetActions the strictly positive size of the array
+         * \a facetAction.
+         * \param facetAction a non-empty array of size \a nFacetActions,
+         * where each element is either 0, 1 or 2.  (This encodes which facets
+         * of top-dimensional simplices are boundary, joined to a new simplex,
+         * or joined to an earlier simplex.)
+         * \param nJoins the non-negative size of the arrays \a joinDest and
+         * \a joinGluing.
+         * \param joinDest a possibly empty array of size \a nJoins, each of
+         * whose elements are integers in the range `0,...,size-1` inclusive.
+         * (This represents the indices of top-dimensional simplices to which
+         * various gluings are being made.)
+         * \param joinGluing a possibly empty array of size \a nJoins, each of
+         * which is an arbitrary permutation of `dim+1` elements.  (This
+         * represents various gluing permutations.)
+         * \param lockMasks either a non-empty array of size \a size, each
+         * of whose elements is a lock mask (representing all of the
+         * simplex/facet locks in the triangulation), or else \c null if the
+         * triangulation component being encoded has no locks at all (a common
+         * scenario that is worth optimising for).  If this argument is
+         * non-null, then at least one of the lock masks in the array will be
+         * non-zero.
+         * \return the given data encoded in the form of an
+         * isomorphism signature.
          */
         static Signature encode(size_t size,
                 size_t nFacetActions, const uint8_t* facetAction,
@@ -147,37 +169,13 @@ class IsoSigEncodingAPI {
 #endif // __APIDOCS
 
 /**
- * Represents a data type that can be used to hold an isomorphism signature
- * for a triangulation.  A commonly used type (and the default in Regina) is
- * `std::string`.
- *
- * It is your chosen _encoding algorithm_ (which is passed as a template
- * parameter to functions such as `Triangulation<dim>::isoSig()`) that
- * determines which data type will be used.  See IsoSigEncodingAPI for further
- * information on encodings.
- *
- * The requirements for this data type are mostly simple: it should be default
- * constructible (yielding an empty signature), it should be copyable, and
- * it should be totally ordered.  The only unusual requirement is that it
- * must support _concatenation_ via the operator `+=`.
- *
- * \ingroup triangulation
- */
-template <typename T>
-concept IsoSigData =
-    std::regular<T> &&
-    std::totally_ordered<T> &&
-    requires(T x, const T y) { x += y; };
-
-/**
  * Represents an encoding that can be used for isomorphism signatures
  * of triangulations.  Essentially, the job of an encoding algorithm is to
- * distill the gluings table into a small piece of data (such as a string)
- * that can be easily saved and/or passed around.  This small piece of data
- * must adhere to the separate concept IsoSigData.
+ * pack the gluings table into a small piece of data (such as a string)
+ * that is easily transported.
  *
  * See IsoSigEncodingAPI for further information, including a thorough
- * description of how an encoding type is expected to behave.
+ * description of how an encoding class is expected to behave.
  *
  * \apinotfinal
  *
@@ -187,7 +185,7 @@ template <typename T, int dim>
 concept IsoSigEncoding =
     requires {
         typename T::Signature;
-        requires IsoSigData<typename T::Signature>;
+        requires ConcatenableSequence<typename T::Signature>;
         { T::emptySig() } -> std::convertible_to<typename T::Signature>;
         { T::encode((size_t)(0), (size_t)(0), (const uint8_t*)(nullptr),
             (size_t)(0), (const size_t*)(nullptr),

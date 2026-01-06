@@ -4078,8 +4078,8 @@ class TriangulationBase :
         /**
          * Internal to isoSig().
          *
-         * Constructs a candidate isomorphism signature for a single
-         * component of this triangulation.  This candidate signature
+         * Constructs a candidate isomorphism signature for a single non-empty
+         * connected component of this triangulation.  This candidate signature
          * assumes that the given simplex with the given labelling
          * of its vertices becomes simplex zero with vertices
          * 0,...,\a dim under the "canonical isomorphism".

@@ -56,6 +56,7 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
         size_t simp, const Perm<dim+1>& vertices,
         Isomorphism<dim>* relabelling) const {
     // Only process the component that simp belongs to.
+    // In particular, this component must be non-empty.
 
     // ---------------------------------------------------------------------
     // Data for reconstructing a triangulation from an isomorphism signature

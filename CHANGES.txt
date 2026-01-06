@@ -130,20 +130,19 @@ Version 7.5  [ TODO ]
               + AnyInteger, ArbitraryPrecisionInteger,
                 ArbitraryPrecisionIntegerVector, ArrayOf, AssignableTo,
                 BidirectionalIteratorFor, CanConstruct, CharIterator,
-                CoefficientDomain, ConstRefArrayOf, CppInteger, Domain, Field,
-                ForwardIteratorFor, InherentlyTightEncodable, InputIteratorFor,
-                IntegerComparable, IntegerCompatible, IntegerVector,
-                IntegralDomain, Iterable, PacketClass, PacketIterator,
-                RandomAccessIteratorFor, ReginaBitmask, ReginaInteger, Ring,
-                RingLike, SelfSentinelInputIterator, SignedCppInteger,
-                StandardCppInteger, StrictWeakOrder, Stringifiable,
-                TerminatingCallback, UnsignedCppInteger, VoidCallback,
-                Writeable.
+                CoefficientDomain, ConcatenableSequence, ConstRefArrayOf,
+                CppInteger, Domain, Field, ForwardIteratorFor,
+                InherentlyTightEncodable, InputIteratorFor, IntegerComparable,
+                IntegerCompatible, IntegerVector, IntegralDomain, Iterable,
+                PacketClass, PacketIterator, RandomAccessIteratorFor,
+                ReginaBitmask, ReginaInteger, Ring, RingLike,
+                SelfSentinelInputIterator, SignedCppInteger, StandardCppInteger,
+                StrictWeakOrder, Stringifiable, TerminatingCallback,
+                UnsignedCppInteger, VoidCallback, Writeable.
             - Other new concepts for targeted use defined in other headers:
               + BanConstraint, LPConstraint, LPSubspace (defined in
                 enumerate/treelp.h)
-              + IsoSigData, IsoSigEncoding (defined in
-                triangulation/isosigencoding.h)
+              + IsoSigEncoding (defined in triangulation/isosigencoding.h)
     PYTHON:
         - Removed the bindings TreeEnumeration_EulerPositive..., since the
           linear constraint LPConstraintEulerPositive was never meant to be
