@@ -155,7 +155,7 @@ class TriangulationBase :
 
     private:
         /**
-         * The sequence of all subface dimensions 0,...,(<i>dim</i>-1).
+         * The sequence of all subface dimensions `0,...,(dim-1)`.
          */
         using subdimensions = std::make_integer_sequence<int, dim>;
 
@@ -170,7 +170,7 @@ class TriangulationBase :
 
         decltype(seqToFaces(subdimensions())) faces_;
             /**< A tuple of vectors holding all faces of this triangulation.
-                 Specifically, std::get<k>(faces_)[i] is a pointer to the
+                 Specifically, `std::get<k>(faces_)[i]` is a pointer to the
                  ith k-face of the triangulation. */
 
         /**
@@ -3949,7 +3949,7 @@ class TriangulationBase :
          *
          * See calculateRealBoundary() for further details.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < dim)
         void calculateBoundaryFaces(BoundaryComponent<dim>* bc,
             Face<dim, dim-1>* facet);
 
@@ -3966,7 +3966,7 @@ class TriangulationBase :
          * in the correct order.  It does not matter if the internal data for
          * these cloned facial objects is not yet completely filled.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < dim)
         Face<dim, subdim>* clonedFace(const Face<dim, subdim>* src) const;
 
         /**
@@ -4179,6 +4179,7 @@ class TriangulationBase :
          * \pre The skeleton of this triangulation has been computed.
          */
         template <int subdim, InputIteratorFor<Face<dim, subdim>*> iterator>
+        requires (subdim >= 0 && subdim < dim)
         void reorderFaces(iterator begin, iterator end);
 
         /**
@@ -4195,7 +4196,7 @@ class TriangulationBase :
          * \return \c true if and only if the <i>useDim</i>-face
          * degree sequences are equal.
          */
-        template <int useDim>
+        template <int useDim> requires (useDim >= 0 && useDim < dim)
         bool sameDegreesAt(const TriangulationBase& other) const;
         /**
          * Tests whether this and the given triangulation have the same
@@ -4213,7 +4214,7 @@ class TriangulationBase :
          * \return \c true if and only if all degree sequences considered
          * are equal.
          */
-        template <int... useDim>
+        template <int... useDim> requires ((useDim >= 0 && useDim < dim) && ...)
         bool sameDegreesAt(const TriangulationBase& other,
             std::integer_sequence<int, useDim...>) const;
 
@@ -4932,6 +4933,7 @@ inline auto TriangulationBase<dim>::pentachora() const
 
 template <int dim> requires (supportedDim(dim))
 template <int subdim, InputIteratorFor<Face<dim, subdim>*> iterator>
+requires (subdim >= 0 && subdim < dim)
 inline void TriangulationBase<dim>::reorderFaces(iterator begin, iterator end) {
     std::get<subdim>(faces_).refill(begin, end);
 }
@@ -5765,7 +5767,7 @@ void TriangulationBase<dim>::writeXMLBaseProperties(std::ostream& out) const {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int subdim>
+template <int subdim> requires (subdim >= 0 && subdim < dim)
 inline Face<dim, subdim>* TriangulationBase<dim>::clonedFace(
         const Face<dim, subdim>* src) const {
     // This is a tiny function; it exists mainly to help in scenarios where
@@ -5797,36 +5799,30 @@ inline Triangulation<dim> TriangulationBase<dim>::fromSig(
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int useDim>
+template <int useDim> requires (useDim >= 0 && useDim < dim)
 bool TriangulationBase<dim>::sameDegreesAt(const TriangulationBase<dim>& other)
         const {
     // We may assume that # faces is the same for both triangulations.
     size_t n = std::get<useDim>(faces_).size();
 
-    auto* deg1 = new size_t[n];
-    auto* deg2 = new size_t[n];
+    FixedArray<size_t> deg1(n);
+    FixedArray<size_t> deg2(n);
 
-    size_t* p;
-    p = deg1;
+    auto p = deg1.begin();
     for (auto f : std::get<useDim>(faces_))
         *p++ = f->degree();
-    p = deg2;
+    p = deg2.begin();
     for (auto f : std::get<useDim>(other.faces_))
         *p++ = f->degree();
 
-    std::sort(deg1, deg1 + n);
-    std::sort(deg2, deg2 + n);
+    std::sort(deg1.begin(), deg1.end());
+    std::sort(deg2.begin(), deg2.end());
 
-    bool ans = std::equal(deg1, deg1 + n, deg2);
-
-    delete[] deg1;
-    delete[] deg2;
-
-    return ans;
+    return std::equal(deg1.begin(), deg1.end(), deg2.begin());
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int... useDim>
+template <int... useDim> requires ((useDim >= 0 && useDim < dim) && ...)
 inline bool TriangulationBase<dim>::sameDegreesAt(
         const TriangulationBase& other,
         std::integer_sequence<int, useDim...>) const {

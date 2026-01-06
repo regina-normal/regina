@@ -552,7 +552,7 @@ void TriangulationBase<dim>::calculateRealBoundary() {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int subdim>
+template <int subdim> requires (subdim >= 0 && subdim < dim)
 void TriangulationBase<dim>::calculateBoundaryFaces(BoundaryComponent<dim>* bc,
         Face<dim, dim-1>* facet) {
     // We do not process ridges (dim-2) or facets (dim-1).

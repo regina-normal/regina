@@ -991,7 +991,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * <i>useDim</i>-face number \a i of this simplex has the same degree
          * as its image in \a other under the relabelling \a p.
          */
-        template <int useDim>
+        template <int useDim> requires (useDim >= 0 && useDim < dim)
         bool sameDegreesAt(const SimplexBase& other, Perm<dim+1> p) const;
 
         /**
@@ -1007,7 +1007,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * number \a i of this simplex has the same degree as its image in
          * \a other under the relabelling \a p.
          */
-        template <int... useDim>
+        template <int... useDim> requires ((useDim >= 0 && useDim < dim) && ...)
         bool sameDegreesAt(const SimplexBase& other, Perm<dim+1> p,
             std::integer_sequence<int, useDim...>) const;
 
@@ -1540,7 +1540,7 @@ void SimplexBase<dim>::writeTextLong(std::ostream& out) const {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int useDim>
+template <int useDim> requires (useDim >= 0 && useDim < dim)
 inline bool SimplexBase<dim>::sameDegreesAt(
         const SimplexBase<dim>& other, Perm<dim + 1> p) const {
     for (int i = 0; i < FaceNumbering<dim, useDim>::nFaces; ++i) {
@@ -1554,7 +1554,7 @@ inline bool SimplexBase<dim>::sameDegreesAt(
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int... useDim >
+template <int... useDim > requires ((useDim >= 0 && useDim < dim) && ...)
 inline bool SimplexBase<dim>::sameDegreesAt(const SimplexBase& other,
         Perm<dim+1> p, std::integer_sequence<int, useDim...>) const {
     return (sameDegreesAt<useDim>(other, p) && ...);
