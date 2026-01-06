@@ -5,6 +5,7 @@ SET ( FILES
   concepts.cpp
   disctype.cpp
   facenumbering.cpp
+  flags.cpp
   intutils.cpp
   iterators.cpp
   link.cpp

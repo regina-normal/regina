@@ -86,12 +86,12 @@ XMLAngleStructuresReader::XMLAngleStructuresReader(XMLTreeResolver& res,
     if (! valueOf(props.lookup("tautonly"), tautOnly))
         return;
 
-    int algorithm;
+    Flags<AngleAlg>::BaseInt algorithm;
     if (! valueOf(props.lookup("algorithm"), algorithm))
-        algorithm = static_cast<int>(AngleAlg::Legacy);
+        algorithm = static_cast<Flags<AngleAlg>::BaseInt>(AngleAlg::Legacy);
 
     list_ = make_packet<AngleStructures>(std::in_place, tautOnly,
-        Flags<AngleAlg>::fromInt(algorithm), *tri_);
+        Flags<AngleAlg>::fromBase(algorithm), *tri_);
 }
 
 XMLElementReader* XMLAngleStructuresReader::startContentSubElement(
@@ -153,13 +153,14 @@ XMLElementReader* XMLLegacyAngleStructuresReader::startContentSubElement(
             // All of these parameters are optional, to support older
             // file formats.
             bool tautOnly;
-            int algorithm;
+            Flags<AngleAlg>::BaseInt algorithm;
             if (! valueOf(props.lookup("tautonly"), tautOnly))
                 tautOnly = false;
             if (! valueOf(props.lookup("algorithm"), algorithm))
-                algorithm = static_cast<int>(AngleAlg::Legacy);
+                algorithm = static_cast<Flags<AngleAlg>::BaseInt>(
+                    AngleAlg::Legacy);
             list_ = make_packet<AngleStructures>(std::in_place, tautOnly,
-                Flags<AngleAlg>::fromInt(algorithm), tri_);
+                Flags<AngleAlg>::fromBase(algorithm), tri_);
         } else if (subTagName == "struct") {
             // Eep, we are getting angle structures but no parameters were
             // ever specified.  This was how data files looked in

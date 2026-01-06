@@ -37,6 +37,10 @@
 #define __REGINA_FLAGS_H
 #endif
 
+#include <concepts>
+#include <type_traits>
+#include "regina-config.h"
+
 namespace regina {
 
 /**
@@ -63,30 +67,36 @@ namespace regina {
  * appear in Python as `Flags_NormalAlg`.
  *
  * \tparam T the enumeration type holding the individual flags that can be
- * combined.  This may be a scoped or unscoped enumeration; however, for now
- * we do insist that the underlying native integer type is \c int.
+ * combined.  This may be a scoped or unscoped enumeration, based upon any
+ * underlying native C++ integer type.
  *
  * \ingroup utilities
  */
 template <typename T>
+requires std::is_enum_v<T>
 class Flags {
     public:
         /**
-         * The underlying enumeration type.
+         * The underlying enumeration type used to represent individual flags.
          */
         using Enum = T;
+
+        /**
+         * The native C++ integer type used to store individual flags.
+         */
+        using BaseInt = std::underlying_type_t<T>;
 
     private:
         /**
          * The combination of flags that we are storing.
          */
-        int value_;
+        BaseInt value_;
 
     public:
         /**
          * Creates an empty flag set, with no flags set at all.
          */
-        inline constexpr Flags() : value_(0) {
+        constexpr Flags() : value_(0) {
         }
 
         /**
@@ -94,37 +104,75 @@ class Flags {
          *
          * \param init the initial value of this flag set.
          */
-        inline constexpr Flags(T init) : value_(static_cast<int>(init)) {
+        constexpr Flags(T init) : value_(static_cast<BaseInt>(init)) {
         }
 
         /**
          * Creates a clone of the given flag set.
          */
-        inline constexpr Flags(const Flags<T>&) = default;
+        constexpr Flags(const Flags<T>&) = default;
 
         /**
-         * Returns the integer representation of this set.
+         * Returns the native C++ integer representation of this set.
          * This is suitable for file input and/or output.
+         *
+         * \warning This function should not be used widely, since it
+         * effectively works around inbuilt type safety mechanisms.
+         *
+         * \return the native C++ integer value of this set.
+         */
+        constexpr BaseInt baseValue() const {
+            return static_cast<BaseInt>(value_);
+        }
+
+        /**
+         * Deprecated function that returns the integer representation of this
+         * set.  This is suitable for file input and/or output.
+         *
+         * \deprecated Use baseValue() instead, which makes no assumptions
+         * about the underlying native C++ integer type.  This routine should,
+         * however, still be safe for all of the flag types currently used in
+         * Regina, since they are all based on scoped enumerations with the
+         * default underlying base type of \c int.
          *
          * \warning This function should not be used widely, since it
          * effectively works around inbuilt type safety mechanisms.
          *
          * \return the integer value of this set.
          */
-        constexpr int intValue() const {
+        [[deprecated]] constexpr int intValue() const {
             return static_cast<int>(value_);
         }
 
         /**
-         * Returns the set corresponding to the given integer value.
+         * Returns the set corresponding to the given native C++ integer value.
          * This is suitable for file input and/or output.
+         *
+         * \warning This function should not be used widely, since it
+         * effectively works around inbuilt type safety mechanisms.
+         *
+         * \return the set corresponding to the given native C++ integer value.
+         */
+        constexpr static Flags<T> fromBase(BaseInt value) {
+            return Flags<T>(value);
+        }
+
+        /**
+         * Deprecated function that returns the set corresponding to the given
+         * integer value.  This is suitable for file input and/or output.
+         *
+         * \deprecated Use fromBase() instead, which makes no assumptions
+         * about the underlying native C++ integer type.  This routine should,
+         * however, still be safe for all of the flag types currently used in
+         * Regina, since they are all based on scoped enumerations with the
+         * default underlying base type of \c int.
          *
          * \warning This function should not be used widely, since it
          * effectively works around inbuilt type safety mechanisms.
          *
          * \return the set corresponding to the given integer value.
          */
-        inline constexpr static Flags<T> fromInt(int value) {
+        [[deprecated]] constexpr static Flags<T> fromInt(int value) {
             return Flags<T>(value);
         }
 
@@ -150,7 +198,8 @@ class Flags {
          * flag are set.
          */
         constexpr bool has(T flag) const {
-            return (value_ & static_cast<int>(flag)) == static_cast<int>(flag);
+            return (value_ & static_cast<BaseInt>(flag)) ==
+                static_cast<BaseInt>(flag);
         }
 
         /**
@@ -174,8 +223,8 @@ class Flags {
          * \param rhs the flag to test this against.
          * \return \c true if and only if this and the given flag are identical.
          */
-        inline constexpr bool operator == (T rhs) const {
-            return (value_ == static_cast<int>(rhs));
+        constexpr bool operator == (T rhs) const {
+            return (value_ == static_cast<BaseInt>(rhs));
         }
 
         /**
@@ -193,8 +242,8 @@ class Flags {
          * \param rhs the new value of this flag set.
          * \return a reference to this flag set.
          */
-        inline constexpr Flags<T>& operator = (T rhs) {
-            value_ = static_cast<int>(rhs);
+        constexpr Flags<T>& operator = (T rhs) {
+            value_ = static_cast<BaseInt>(rhs);
             return *this;
         }
 
@@ -212,8 +261,8 @@ class Flags {
          * \param rhs the flag to combine with this set.
          * \return a reference to this flag set.
          */
-        inline constexpr Flags<T>& operator |= (T rhs) {
-            value_ |= static_cast<int>(rhs);
+        constexpr Flags<T>& operator |= (T rhs) {
+            value_ |= static_cast<BaseInt>(rhs);
             return *this;
         }
 
@@ -224,7 +273,7 @@ class Flags {
          * \param rhs the flag set to combine with this set.
          * \return a reference to this flag set.
          */
-        inline constexpr Flags<T>& operator |= (const Flags<T>& rhs) {
+        constexpr Flags<T>& operator |= (const Flags<T>& rhs) {
             value_ |= rhs.value_;
             return *this;
         }
@@ -236,8 +285,8 @@ class Flags {
          * \param rhs the flag to combine with this set.
          * \return a reference to this flag set.
          */
-        inline constexpr Flags<T>& operator &= (T rhs) {
-            value_ &= static_cast<int>(rhs);
+        constexpr Flags<T>& operator &= (T rhs) {
+            value_ &= static_cast<BaseInt>(rhs);
             return *this;
         }
 
@@ -248,7 +297,7 @@ class Flags {
          * \param rhs the flag set to combine with this set.
          * \return a reference to this flag set.
          */
-        inline constexpr Flags<T>& operator &= (const Flags<T>& rhs) {
+        constexpr Flags<T>& operator &= (const Flags<T>& rhs) {
             value_ &= rhs.value_;
             return *this;
         }
@@ -260,8 +309,8 @@ class Flags {
          * \param rhs the flag to combine with this set.
          * \return a reference to this flag set.
          */
-        inline constexpr Flags<T>& operator ^= (T rhs) {
-            value_ ^= static_cast<int>(rhs);
+        constexpr Flags<T>& operator ^= (T rhs) {
+            value_ ^= static_cast<BaseInt>(rhs);
             return *this;
         }
 
@@ -272,7 +321,7 @@ class Flags {
          * \param rhs the flag set to combine with this set.
          * \return a reference to this flag set.
          */
-        inline constexpr Flags<T>& operator ^= (const Flags<T>& rhs) {
+        constexpr Flags<T>& operator ^= (const Flags<T>& rhs) {
             value_ ^= rhs.value_;
             return *this;
         }
@@ -284,8 +333,8 @@ class Flags {
          * \param rhs the flag to combine with this set.
          * \return the combination of this set and the given flag.
          */
-        inline constexpr Flags<T> operator | (T rhs) const {
-            return Flags(value_ | static_cast<int>(rhs));
+        constexpr Flags<T> operator | (T rhs) const {
+            return Flags(value_ | static_cast<BaseInt>(rhs));
         }
 
         /**
@@ -295,7 +344,7 @@ class Flags {
          * \param rhs the flag set to combine with this set.
          * \return the combination of this and the given flag set.
          */
-        inline constexpr Flags<T> operator | (const Flags<T>& rhs) const {
+        constexpr Flags<T> operator | (const Flags<T>& rhs) const {
             return Flags(value_ | rhs.value_);
         }
 
@@ -306,8 +355,8 @@ class Flags {
          * \param rhs the flag to combine with this set.
          * \return the combination of this set and the given flag.
          */
-        inline constexpr Flags<T> operator & (T rhs) const {
-            return Flags(value_ & static_cast<int>(rhs));
+        constexpr Flags<T> operator & (T rhs) const {
+            return Flags(value_ & static_cast<BaseInt>(rhs));
         }
 
         /**
@@ -317,7 +366,7 @@ class Flags {
          * \param rhs the flag set to combine with this set.
          * \return the combination of this and the given flag set.
          */
-        inline constexpr Flags<T> operator & (const Flags<T>& rhs) const {
+        constexpr Flags<T> operator & (const Flags<T>& rhs) const {
             return Flags(value_ & rhs.value_);
         }
 
@@ -328,8 +377,8 @@ class Flags {
          * \param rhs the flag to combine with this set.
          * \return the combination of this set and the given flag.
          */
-        inline constexpr Flags<T> operator ^ (T rhs) const {
-            return Flags(value_ ^ static_cast<int>(rhs));
+        constexpr Flags<T> operator ^ (T rhs) const {
+            return Flags(value_ ^ static_cast<BaseInt>(rhs));
         }
 
         /**
@@ -339,7 +388,7 @@ class Flags {
          * \param rhs the flag set to combine with this set.
          * \return the combination of this and the given flag set.
          */
-        inline constexpr Flags<T> operator ^ (const Flags<T>& rhs) const {
+        constexpr Flags<T> operator ^ (const Flags<T>& rhs) const {
             return Flags(value_ ^ rhs.value_);
         }
 
@@ -348,9 +397,9 @@ class Flags {
          *
          * \param rhs the flag to clear from this set.
          */
-        inline constexpr void clear(T rhs) {
-            value_ |= static_cast<int>(rhs);
-            value_ ^= static_cast<int>(rhs);
+        constexpr void clear(T rhs) {
+            value_ |= static_cast<BaseInt>(rhs);
+            value_ ^= static_cast<BaseInt>(rhs);
         }
 
         /**
@@ -358,7 +407,7 @@ class Flags {
          *
          * \param rhs identifies the bits to clear from this set.
          */
-        inline constexpr void clear(const Flags<T>& rhs) {
+        constexpr void clear(const Flags<T>& rhs) {
             value_ |= rhs.value_;
             value_ ^= rhs.value_;
         }
@@ -378,13 +427,13 @@ class Flags {
          * \param other the flag that will be cleared if any adjustments
          * need to be made.
          */
-        inline constexpr void ensureOne(T default_, T other) {
-            if (! ((value_ & static_cast<int>(default_)) ||
-                    (value_ & static_cast<int>(other))))
-                value_ |= static_cast<int>(default_);
-            else if ((value_ & static_cast<int>(default_)) &&
-                    (value_ & static_cast<int>(other)))
-                value_ ^= static_cast<int>(other);
+        constexpr void ensureOne(T default_, T other) {
+            if (! ((value_ & static_cast<BaseInt>(default_)) ||
+                    (value_ & static_cast<BaseInt>(other))))
+                value_ |= static_cast<BaseInt>(default_);
+            else if ((value_ & static_cast<BaseInt>(default_)) &&
+                    (value_ & static_cast<BaseInt>(other)))
+                value_ ^= static_cast<BaseInt>(other);
         }
 
         /**
@@ -401,14 +450,14 @@ class Flags {
          * \param second the second-highest-priority flag.
          * \param last the lowest-priority flag.
          */
-        inline constexpr void ensureOne(T default_, T second, T last) {
-            // Cast to int, because (T | T) is overloaded to return Flags<T>.
-            if (! (value_ & (static_cast<int>(default_) |
-                    static_cast<int>(second) | static_cast<int>(last))))
-                value_ |= static_cast<int>(default_);
-            else if (value_ & static_cast<int>(default_))
+        constexpr void ensureOne(T default_, T second, T last) {
+            // Cast to BaseInt, since (T | T) is overloaded to return Flags<T>.
+            if (! (value_ & (static_cast<BaseInt>(default_) |
+                    static_cast<BaseInt>(second) | static_cast<BaseInt>(last))))
+                value_ |= static_cast<BaseInt>(default_);
+            else if (value_ & static_cast<BaseInt>(default_))
                 clear(second | last);
-            else if (value_ & static_cast<int>(second))
+            else if (value_ & static_cast<BaseInt>(second))
                 clear(last);
         }
 
@@ -427,17 +476,17 @@ class Flags {
          * \param third the third-highest-priority flag.
          * \param last the lowest-priority flag.
          */
-        inline constexpr void ensureOne(T default_, T second, T third, T last) {
-            // Cast to int, because (T | T) is overloaded to return Flags<T>.
-            if (! (value_ & (static_cast<int>(default_) |
-                    static_cast<int>(second) | static_cast<int>(third) |
-                    static_cast<int>(last))))
-                value_ |= static_cast<int>(default_);
-            else if (value_ & static_cast<int>(default_))
+        constexpr void ensureOne(T default_, T second, T third, T last) {
+            // Cast to BaseInt, since (T | T) is overloaded to return Flags<T>.
+            if (! (value_ & (static_cast<BaseInt>(default_) |
+                    static_cast<BaseInt>(second) | static_cast<BaseInt>(third) |
+                    static_cast<BaseInt>(last))))
+                value_ |= static_cast<BaseInt>(default_);
+            else if (value_ & static_cast<BaseInt>(default_))
                 clear(second | third | last);
-            else if (value_ & static_cast<int>(second))
+            else if (value_ & static_cast<BaseInt>(second))
                 clear(third | last);
-            else if (value_ & static_cast<int>(third))
+            else if (value_ & static_cast<BaseInt>(third))
                 clear(last);
         }
 
@@ -447,7 +496,7 @@ class Flags {
          *
          * \param init the new internal value.
          */
-        inline constexpr Flags(int init) : value_(init) {
+        constexpr Flags(BaseInt init) : value_(init) {
         }
 };
 

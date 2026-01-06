@@ -204,7 +204,7 @@ void GluingPermSearcher<3>::dumpData(std::ostream& out) const {
     out << (orientableOnly_ ? 'o' : '.');
     out << (finiteOnly_ ? 'f' : '.');
     out << (started ? 's' : '.');
-    out << ' ' << purge_.intValue() << std::endl;
+    out << ' ' << purge_.baseValue() << std::endl;
 
     size_t nTets = perms_.size();
 
@@ -236,7 +236,7 @@ void GluingPermSearcher<3>::writeTextShort(std::ostream& out) const {
         out << ", finite only";
     if (purge_ != CensusPurge::None)
         out << ", purge 0x" << std::hex << std::setw(2) << std::setfill('0')
-            << purge_.intValue();
+            << purge_.baseValue();
 
     out << ": stage " << orderElt << ", order:";
     for (size_t i = 0; i < orderSize; ++i)
@@ -277,9 +277,9 @@ GluingPermSearcher<3>::GluingPermSearcher(std::istream& in) :
             "while attempting to read GluingPermSearcher<3>");
 
     {
-        int purge;
+        Flags<CensusPurge>::BaseInt purge;
         in >> purge;
-        purge_ = Flags<CensusPurge>::fromInt(purge);
+        purge_ = Flags<CensusPurge>::fromBase(purge);
     }
 
     size_t nTets = perms_.size();

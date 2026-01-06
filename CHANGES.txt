@@ -36,6 +36,12 @@ Version 7.5  [ TODO ]
               tables are used for face numbering queries.
         Class FixedArray:
             - Now has a default constructor that creates an empty array.
+        Class Flags<T>:
+            - Updated to support enumerations with any base C++ integer type,
+              not just int.
+            - New type alias BaseInt, representing the base C++ integer type.
+            - Routines intValue() and fromInt() are deprecated, and replaced
+              with the new routines baseValue() and fromBase().
         Class GroupExpressionTerm, GroupExpression, GroupPresentation,
                 HomGroupPresentation:
             - Now uses size_t instead of unsigned long throughout for

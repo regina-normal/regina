@@ -130,15 +130,17 @@ XMLNormalSurfacesReader::XMLNormalSurfacesReader(
         return;
 
     // Extract the list parameters from the attributes.
-    int coords, listType, algorithm;
+    int coords;
+    Flags<NormalList>::BaseInt listType;
+    Flags<NormalAlg>::BaseInt algorithm;
     if (valueOf(props.lookup("coords"), coords) &&
             valueOf(props.lookup("type"), listType) &&
             valueOf(props.lookup("algorithm"), algorithm)) {
         // Parameters look sane; create the empty list.
         list_ = make_packet<NormalSurfaces>(std::in_place,
             static_cast<NormalCoords>(coords),
-            Flags<NormalList>::fromInt(listType),
-            Flags<NormalAlg>::fromInt(algorithm),
+            Flags<NormalList>::fromBase(listType),
+            Flags<NormalAlg>::fromBase(algorithm),
             *tri_);
     }
 }
@@ -174,7 +176,8 @@ XMLElementReader* XMLLegacyNormalSurfacesReader::startContentSubElement(
         // The surface list has not yet been created.
         if (subTagName == "params") {
             long coords;
-            int listType, algorithm;
+            Flags<NormalList>::BaseInt listType;
+            Flags<NormalAlg>::BaseInt algorithm;
             bool embedded;
             if (valueOf(props.lookup("flavourid"), coords)) {
                 if (valueOf(props.lookup("type"), listType) &&
@@ -182,8 +185,8 @@ XMLElementReader* XMLLegacyNormalSurfacesReader::startContentSubElement(
                     // Parameters look sane; create the empty list.
                     list_ = make_packet<NormalSurfaces>(std::in_place,
                         static_cast<NormalCoords>(coords),
-                        Flags<NormalList>::fromInt(listType),
-                        Flags<NormalAlg>::fromInt(algorithm),
+                        Flags<NormalList>::fromBase(listType),
+                        Flags<NormalAlg>::fromBase(algorithm),
                         tri_);
                 } else if (valueOf(props.lookup("embedded"), embedded)) {
                     // Parameters look sane but use the old format.

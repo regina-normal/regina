@@ -104,8 +104,10 @@ void add_flags(pybind11::module_& m, const std::string& enumName,
         .def(pybind11::init<const Flags&>(), rdoc::__copy)
         .def("has", pybind11::overload_cast<const Flags&>(
             &Flags::has, pybind11::const_), rdoc::has_2)
-        .def("intValue", &Flags::intValue, rdoc::intValue)
-        .def_static("fromInt", &Flags::fromInt, rdoc::fromInt)
+        .def("baseValue", &Flags::baseValue, rdoc::baseValue)
+        .def("intValue", &Flags::baseValue, rdoc::intValue) // deprecated
+        .def_static("fromBase", &Flags::fromBase, rdoc::fromBase)
+        .def_static("fromInt", &Flags::fromBase, rdoc::fromInt) // deprecated
         .def("__bool__", &Flags::operator bool, rdoc::__as_bool)
         .def(pybind11::self |= pybind11::self, rdoc::__ior_2)
         .def(pybind11::self &= pybind11::self, rdoc::__iand_2)
@@ -124,7 +126,7 @@ void add_flags(pybind11::module_& m, const std::string& enumName,
         .def("__str__", [](Flags f) {
             std::ostringstream out;
             out << "0x" << std::hex << std::setw(hexWidth) << std::setfill('0')
-                << f.intValue();
+                << f.baseValue();
             return out.str();
         })
         .def("__repr__", [](Flags f) {
@@ -133,7 +135,7 @@ void add_flags(pybind11::module_& m, const std::string& enumName,
                 << pybind11::str(pybind11::type::handle_of<Flags>().attr(
                     "__name__")).cast<std::string_view>()
                 << ": 0x" << std::hex << std::setw(hexWidth)
-                << std::setfill('0') << f.intValue() << '>';
+                << std::setfill('0') << f.baseValue() << '>';
             return out.str();
         })
         ;
