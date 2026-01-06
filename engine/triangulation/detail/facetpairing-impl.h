@@ -373,6 +373,9 @@ requires
         typename FacetPairing<dim>::IsoList, Args...>
 void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         int nBdryFacets, Action&& action, Args&&... args) {
+    static constexpr bool withIsoList =
+        ! VoidCallback<Action, const FacetPairing<dim>&, Args...>;
+
     // Bail if it's obvious that nothing will happen.
     if (boundary == BoolSet() || size_ == 0) {
         return;
@@ -547,10 +550,7 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         // Have we got a solution?
         if (trying.simp == static_cast<ssize_t>(size_)) {
             // Deal with the solution!
-            if constexpr (std::is_same_v<
-                    typename std::remove_cv_t<typename std::remove_reference_t<
-                        typename CallableArg<Action, 1>::type>>,
-                    IsoList>) {
+            if constexpr (withIsoList) {
                 IsoList allAutomorphisms;
                 if (isCanonicalInternal(std::addressof(allAutomorphisms))) {
                     action(static_cast<FacetPairing<dim>&>(*this),
