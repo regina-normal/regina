@@ -35,22 +35,12 @@
 #include "utilities/i18nutils.h"
 
 using regina::Packet;
-using regina::PacketOf;
 using regina::Triangulation;
 
-bool subcomplexTesting = false;
-
 template <int dim> requires (regina::supportedDim(dim))
-bool compare(const Packet& t1, const Packet& t2) {
-    const Triangulation<dim>& tri1 =
-        static_cast<const PacketOf<Triangulation<dim>>&>(t1);
-    const Triangulation<dim>& tri2 =
-        static_cast<const PacketOf<Triangulation<dim>>&>(t2);
-    if (subcomplexTesting)
-        return tri1.isContainedIn(tri2).has_value();
-    else
-        return tri1.isIsomorphicTo(tri2).has_value();
-}
+using TriPacket = regina::PacketOf<Triangulation<dim>>;
+
+bool subcomplexTesting = false;
 
 void usage(const char* progName, const std::string& error = std::string()) {
     if (! error.empty())
@@ -75,6 +65,48 @@ void usage(const char* progName, const std::string& error = std::string()) {
     exit(1);
 }
 
+template <int dim> requires (regina::supportedDim(dim))
+bool hasMatchFrom(const TriPacket<dim>& src, const Packet& tree) {
+    for (const Packet& p : tree) {
+        if (p.type() != src.type())
+            continue;
+
+        if (subcomplexTesting) {
+            if (src.isContainedIn(static_cast<const TriPacket<dim>&>(p)))
+                return true;
+        } else {
+            if (src.isIsomorphicTo(static_cast<const TriPacket<dim>&>(p)))
+                return true;
+        }
+    }
+    return false;
+}
+
+template <int dim> requires (regina::supportedDim(dim))
+size_t writeMatchesFrom(const TriPacket<dim>& src, const Packet& tree,
+        std::ostream& out) {
+    size_t matches = 0;
+    for (const Packet& p : tree) {
+        if (p.type() != src.type())
+            continue;
+
+        if (subcomplexTesting) {
+            if (src.isContainedIn(static_cast<const TriPacket<dim>&>(p))) {
+                out << "    " << src.humanLabel() << "  <=  "
+                    << p.humanLabel() << std::endl;
+                ++matches;
+            }
+        } else {
+            if (src.isIsomorphicTo(static_cast<const TriPacket<dim>&>(p))) {
+                out << "    " << src.humanLabel() << "  ==  "
+                    << p.humanLabel() << std::endl;
+                ++matches;
+            }
+        }
+    }
+    return matches;
+}
+
 void runMatches(const Packet& tree1, const Packet& tree2, std::ostream& out) {
     if (subcomplexTesting)
         out << "Matching (isomorphic subcomplex) triangulations:\n"
@@ -82,35 +114,23 @@ void runMatches(const Packet& tree1, const Packet& tree2, std::ostream& out) {
     else
         out << "Matching (isomorphic) triangulations:\n" << std::endl;
 
-    long nMatches = 0;
+    long matches = 0;
 
-    for (const Packet& p1 : tree1)
-        if (p1.type() == regina::PacketType::Triangulation3) {
-            for (const Packet& p2 : tree2)
-                if (p2.type() == regina::PacketType::Triangulation3)
-                    if (compare<3>(p1, p2)) {
-                        out << "    " << p1.humanLabel()
-                            << (subcomplexTesting ? "  <=  " : "  ==  ")
-                            << p2.humanLabel() << std::endl;
-                        nMatches++;
-                    }
-        } else if (p1.type() == regina::PacketType::Triangulation4) {
-            for (const Packet& p2 : tree2)
-                if (p2.type() == regina::PacketType::Triangulation4)
-                    if (compare<4>(p1, p2)) {
-                        out << "    " << p1.label()
-                            << (subcomplexTesting ? "  <=  " : "  ==  ")
-                            << p2.label() << std::endl;
-                        nMatches++;
-                    }
+    for (const Packet& src : tree1)
+        if (src.type() == regina::PacketType::Triangulation3) {
+            matches += writeMatchesFrom(
+                static_cast<const TriPacket<3>&>(src), tree2, out);
+        } else if (src.type() == regina::PacketType::Triangulation4) {
+            matches += writeMatchesFrom(
+                static_cast<const TriPacket<4>&>(src), tree2, out);
         }
 
-    if (nMatches == 0)
+    if (matches == 0)
         out << "No matches found." << std::endl;
-    else if (nMatches == 1)
+    else if (matches == 1)
         out << std::endl << "1 match." << std::endl;
     else
-        out << std::endl << nMatches << " matches." << std::endl;
+        out << std::endl << matches << " matches." << std::endl;
 }
 
 void runNonMatches(const std::string& file1, const Packet& tree1,
@@ -118,42 +138,28 @@ void runNonMatches(const std::string& file1, const Packet& tree1,
         std::ostream& out) {
     out << "Triangulations in " << file1 << " but not " << file2
         << ":\n" << std::endl;
-    long nMissing = 0;
+    long missing = 0;
 
     bool matched;
-    for (const Packet& p1 : tree1)
-        if (p1.type() == regina::PacketType::Triangulation3) {
-            matched = false;
-            for (const Packet& p2 : tree2)
-                if (p2.type() == regina::PacketType::Triangulation3)
-                    if (compare<3>(p1, p2)) {
-                        matched = true;
-                        break;
-                    }
-            if (! matched) {
-                out << "    " << p1.humanLabel() << std::endl;
-                nMissing++;
+    for (const Packet& src : tree1)
+        if (src.type() == regina::PacketType::Triangulation3) {
+            if (! hasMatchFrom(static_cast<const TriPacket<3>&>(src), tree2)) {
+                out << "    " << src.humanLabel() << std::endl;
+                ++missing;
             }
-        } else if (p1.type() == regina::PacketType::Triangulation4) {
-            matched = false;
-            for (const Packet& p2 : tree2)
-                if (p2.type() == regina::PacketType::Triangulation4)
-                    if (compare<4>(p1, p2)) {
-                        matched = true;
-                        break;
-                    }
-            if (! matched) {
-                out << "    " << p1.label() << std::endl;
-                nMissing++;
+        } else if (src.type() == regina::PacketType::Triangulation4) {
+            if (! hasMatchFrom(static_cast<const TriPacket<4>&>(src), tree2)) {
+                out << "    " << src.humanLabel() << std::endl;
+                ++missing;
             }
         }
 
-    if (nMissing == 0)
+    if (missing == 0)
         out << "All triangulations matched." << std::endl;
-    else if (nMissing == 1)
+    else if (missing == 1)
         out << std::endl << "1 non-match." << std::endl;
     else
-        out << std::endl << nMissing << " non-matches." << std::endl;
+        out << std::endl << missing << " non-matches." << std::endl;
 }
 
 int main(int argc, char* argv[]) {
@@ -224,16 +230,16 @@ int main(int argc, char* argv[]) {
     std::shared_ptr<Packet> tree1 = regina::open(file1.c_str());
     if (! tree1) {
         std::cerr << "File " << file1 << " could not be read.\n";
-        std::cerr << "Please check that it exists and that it is a Regina data file.\n";
-
+        std::cerr << "Please check that it exists and that it is a "
+            "Regina data file.\n";
         return 1;
     }
 
     std::shared_ptr<Packet> tree2 = regina::open(file2.c_str());
     if (! tree2) {
         std::cerr << "File " << file2 << " could not be read.\n";
-        std::cerr << "Please check that it exists and that it is a Regina data file.\n";
-
+        std::cerr << "Please check that it exists and that it is a "
+            "Regina data file.\n";
         return 1;
     }
 
