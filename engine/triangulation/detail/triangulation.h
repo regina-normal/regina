@@ -59,6 +59,7 @@
 #include "triangulation/generic/isomorphism.h"
 #include "triangulation/generic/simplex.h"
 #include "triangulation/isosigencoding.h"
+#include "triangulation/isosigtype.h"
 #include "utilities/exception.h"
 #include "utilities/listview.h"
 #include "utilities/snapshot.h"
@@ -3158,7 +3159,7 @@ class TriangulationBase :
          *   its main advantage is that it is consistent with the original
          *   implementation of isomorphism signatures in Regina 4.90.
          *
-         * - The \a Encoding parameter controls how Regina encodes a canonical
+         * - The \a Encoding parameter controls how Regina packs a canonical
          *   labelling into a final signature.  The default encoding
          *   IsoSigPrintable returns a std::string consisting entirely of
          *   printable characters in the 7-bit ASCII range.  Importantly, this
@@ -3169,20 +3170,14 @@ class TriangulationBase :
          * You may instead pass your own type and/or encoding parameters as
          * template arguments.  Currently this facility is for internal use
          * only, and the requirements for type and encoding parameters may
-         * change in future versions of Regina.  At present:
+         * change in future versions of Regina.  See the IsoSigTypeAPI and
+         * IsoSigEncodingAPI documentation for how the \a Type and \a Encoding
+         * classes should behave.
          *
-         * - The \a Type parameter should be a class that is constructible
-         *   from a componenent reference, and that offers the member functions
-         *   `simplex()`, `perm()` and `next()`; see the implementation of
-         *   IsoSigClassic for details.
-         *
-         * - See the IsoSigEncodingAPI documentation for how the \a Encoding
-         *   type should behave.
-         *
-         * - If you wish to produce an isomorphism signature that ignores
-         *   simplex and/or facet locks then you can use an encoding whose
-         *   `encode()` function ignores the final \a locks argument, such as
-         *   IsoSigPrintableLockFree.
+         * Note that, if you wish to produce an isomorphism signature that
+         * ignores simplex and/or facet locks then you can use an encoding whose
+         * `encode()` function ignores the final \a locks argument, such as
+         * IsoSigPrintableLockFree.
          *
          * For a full and precise description of the classic isomorphism
          * signature format for 3-manifold triangulations, see
@@ -3208,7 +3203,7 @@ class TriangulationBase :
          *
          * \return the isomorphism signature of this triangulation.
          */
-        template <typename Type = IsoSigClassic<dim>,
+        template <IsoSigType<dim> Type = IsoSigClassic<dim>,
             IsoSigEncoding<dim> Encoding = IsoSigPrintable<dim>>
         typename Encoding::Signature isoSig() const;
 
@@ -3230,7 +3225,7 @@ class TriangulationBase :
          *
          * \return the isomorphism signature of this triangulation.
          */
-        template <typename Type = IsoSigClassic<dim>,
+        template <IsoSigType<dim> Type = IsoSigClassic<dim>,
             IsoSigEncoding<dim> Encoding = IsoSigPrintable<dim>>
         typename Encoding::Signature sig() const;
 
@@ -3281,7 +3276,7 @@ class TriangulationBase :
          * triangulation, and (ii) the isomorphism between this triangulation
          * and the triangulation that would be reconstructed from fromIsoSig().
          */
-        template <typename Type = IsoSigClassic<dim>,
+        template <IsoSigType<dim> Type = IsoSigClassic<dim>,
             IsoSigEncoding<dim> Encoding = IsoSigPrintable<dim>>
         std::pair<typename Encoding::Signature, Isomorphism<dim>> isoSigDetail()
             const;
@@ -5786,7 +5781,7 @@ inline void TriangulationBase<dim>::cloneBoundaryFaces(
 }
 
 template <int dim> requires (supportedDim(dim))
-template <typename Type, IsoSigEncoding<dim> Encoding>
+template <IsoSigType<dim> Type, IsoSigEncoding<dim> Encoding>
 inline typename Encoding::Signature TriangulationBase<dim>::sig() const {
     return isoSig<Type, Encoding>();
 }

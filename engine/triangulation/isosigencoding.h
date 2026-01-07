@@ -56,18 +56,19 @@ namespace regina {
  *
  * This IsoSigEncodingAPI class is a documentation-only class (it is not
  * actually built into Regina).  Its purpose is to describe in detail the
- * interface that an isomorphism signature encoding should provide.
+ * tasks that an isomorphism signature encoding is expected to perform, and the
+ * interface that the corresponding C++ class should provide.
  *
- * All encoding types provide their functionality through static members and
+ * All encoding classes provide their functionality through static members and
  * static routines: they do not contain any member data, and it is unnecessary
- * (but harmless) to construct them.  Instead encoding types are typically
- * used as C++ template arguments (in particular, for the functions
- * `Triangulation<dim>::isoSig()` and `Triangulation<dim>::isoSigDetail()`).
+ * (but harmless) to construct them.  Instead encoding classes are typically
+ * used as C++ template arguments for functions such as
+ * `Triangulation<dim>::isoSig()` and `Triangulation<dim>::isoSigDetail()`.
  *
- * \python Whilst Regina's encoding types are available, it is rare that you
- * would need to access of these types directly through Python.  Instead, to
- * use an isomorphism signature encoding type, you would typically use a
- * modified form of `Triangulation<dim>::isoSig()` or
+ * \python Whilst Regina's encoding classes are available, it is rare that you
+ * would need to access these directly through Python.  Instead, to use an
+ * isomorphism signature encoding class, you would typically call a modified
+ * form of `Triangulation<dim>::isoSig()` or
  * `Triangulation<dim>::isoSigDetail()`  See `Triangulation<dim>::isoSig()`
  * for further details.
  *
@@ -75,8 +76,7 @@ namespace regina {
  *
  * \ingroup triangulation
  */
-template <int dim>
-requires (supportedDim(dim))
+template <int dim> requires (supportedDim(dim))
 class IsoSigEncodingAPI {
     public:
         /**

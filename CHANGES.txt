@@ -143,6 +143,7 @@ Version 7.5  [ TODO ]
               + BanConstraint, LPConstraint, LPSubspace (defined in
                 enumerate/treelp.h)
               + IsoSigEncoding (defined in triangulation/isosigencoding.h)
+              + IsoSigType (defined in triangulation/isosigtype.h)
     PYTHON:
         - Removed the bindings TreeEnumeration_EulerPositive..., since the
           linear constraint LPConstraintEulerPositive was never meant to be
