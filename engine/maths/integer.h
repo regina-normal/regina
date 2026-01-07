@@ -40,9 +40,11 @@
 #include <climits>
 #include <cstdint> // MPIR (and thus SAGE) needs this *before* gmp.h.
 #include <cstddef> // OSX needs this before gmp.h to avoid a ::ptrdiff_t error.
+#include <limits>
 #include <tuple>
 #include <gmp.h>
 #include "regina-core.h"
+#include "concepts/core.h"
 #include "maths/ring.h"
 #include "utilities/exception.h"
 #include "utilities/tightencoding.h"
@@ -470,15 +472,19 @@ class IntegerBase : private InfinityBase<withInfinity> {
         inline void makeInfinite();
 
         /**
-         * Returns the value of this integer as a long.
+         * Returns the value of this integer as a \c long.
          *
          * It is the programmer's reponsibility to ensure that this integer
          * is within the required range.  If this integer is too large or
-         * small to fit into a long, then the result will be undefined.
+         * small to fit into a \c long, then the result will be undefined.
          *
-         * Note that, assuming the value is within the required range,
+         * Note that, assuming the value _is_ within the required range,
          * this routine will give correct results regardless of whether the
-         * underlying representation is a native or large integer.
+         * underlying representation is a native or large integer.  If the
+         * underlying representation is native however (i.e., isNative()
+         * returns \c true) then the value will definitely be within range,
+         * and so isNative() is a sufficient (but not necessary) condition for
+         * this routine to return the correct result.
          *
          * \pre This integer is not infinity.
          *
@@ -500,6 +506,25 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         long safeLongValue() const;
         /**
+         * Returns the value of this integer as a native unsigned C++ integer
+         * of the given type, or throws an exception if this is not possible.
+         *
+         * If this integer is within the required range, regardless of
+         * whether the underlying representation is a native or large integer,
+         * this routine will return the correct result.
+         *
+         * \nopython Python does not have the diversity of integer types that
+         * C++ does, and so this function is not so important.  Python users
+         * can use longValue(), safeLongValue() or pythonValue() instead.
+         *
+         * \exception NoSolution This integer is either negative, or is
+         * too large to fit into the given integer type.
+         *
+         * \return the value of this integer.
+         */
+        template <UnsignedCppInteger IntType>
+        IntType safeValue() const;
+        /**
          * Returns the value of this integer as a native integer of some
          * fixed byte length.
          *
@@ -520,8 +545,9 @@ class IntegerBase : private InfinityBase<withInfinity> {
          *
          * \pre This integer is not infinity.
          *
-         * \nopython Python users can use the non-templated longValue()
-         * function instead.
+         * \nopython Python does not have the diversity of integer types that
+         * C++ does, and so this function is not so important.  Python users
+         * can simply call longValue() or pythonValue() instead.
          *
          * \return the value of this integer.
          */
@@ -2702,6 +2728,55 @@ inline long IntegerBase<withInfinity>::safeLongValue() const {
             throw NoSolution();
     } else
         return small_;
+}
+
+template <bool withInfinity>
+template <UnsignedCppInteger IntType>
+IntType IntegerBase<withInfinity>::safeValue() const {
+    if constexpr (withInfinity)
+        if (isInfinite())
+            throw NoSolution();
+
+    if (large_) {
+        // We have a GMP integer.
+        int sign = mpz_sgn(large_);
+        if (sign < 0)
+            throw NoSolution();
+        if (sign == 0)
+            return 0;
+
+        // We have a strictly positive GMP integer.
+        size_t count;
+        auto* result = mpz_export(nullptr, &count, 1 /* word order */,
+            sizeof(IntType), 0 /* native endianness */, 0 /* full words */,
+            large_);
+        // We should have count > 0.
+        if (count == 1) {
+            IntType ans = *static_cast<IntType*>(result);
+            free(result);
+            return ans;
+        } else {
+            free(result);
+            throw NoSolution();
+        }
+    } else {
+        // We have a native long integer.
+        if (small_ < 0)
+            throw NoSolution();
+
+        // We have a _non-negative_ native long integer.
+        if constexpr (sizeof(long) <= sizeof(IntType)) {
+            // Any non-negative long can fit inside IntType.
+            return static_cast<IntType>(small_);
+        } else {
+            // We need to test for overflow.
+            // The following test is fine, since in this scenario the
+            // maximum IntType can be happily represented as a signed long.
+            if (small_ > std::numeric_limits<IntType>::max())
+                throw NoSolution();
+            return static_cast<IntType>(small_);
+        }
+    }
 }
 
 template <bool withInfinity>

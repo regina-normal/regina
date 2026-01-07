@@ -2317,3 +2317,68 @@ TYPED_TEST(IntegerTest, nativeVsLarge) {
         }
     }
 }
+
+template <regina::ReginaInteger IntegerType, regina::UnsignedCppInteger Native>
+static void verifySafeValueSuccess(IntegerType value, Native expected) {
+    SCOPED_TRACE_REGINA(value);
+
+    EXPECT_EQ(value.template safeValue<Native>(), expected);
+    if (value.isNative()) {
+        value.makeLarge();
+    } else {
+        value.tryReduce();
+    }
+    EXPECT_EQ(value.template safeValue<Native>(), expected);
+}
+
+template <regina::ReginaInteger IntegerType, regina::UnsignedCppInteger Native>
+static void verifySafeValueFailure(IntegerType value) {
+    SCOPED_TRACE_REGINA(value);
+
+    EXPECT_THROW({ value.template safeValue<Native>(); }, regina::NoSolution);
+    if (value.isNative()) {
+        value.makeLarge();
+    } else {
+        value.tryReduce();
+    }
+    EXPECT_THROW({ value.template safeValue<Native>(); }, regina::NoSolution);
+}
+
+template <regina::ReginaInteger IntegerType, regina::UnsignedCppInteger Native>
+static void verifySafeValue() {
+    static constexpr Native maxNative = std::numeric_limits<Native>::max();
+
+    // Compute the same value directly in Regina's large integer type.
+    // It should be (11...1) in binary.
+    IntegerType maxRegina;
+    for (int i = 0; i < 8 * sizeof(Native); ++i) {
+        maxRegina *= 2;
+        ++maxRegina;
+    }
+    EXPECT_EQ(maxRegina, maxNative);
+
+    verifySafeValueFailure<IntegerType, Native>(-maxRegina);
+    verifySafeValueFailure<IntegerType, Native>(-(maxRegina / 2));
+    verifySafeValueFailure<IntegerType, Native>(-1);
+    verifySafeValueSuccess<IntegerType, Native>(0, 0);
+    verifySafeValueSuccess<IntegerType, Native>(1, 1);
+    verifySafeValueSuccess<IntegerType, Native>(maxRegina / 2, maxNative / 2);
+    verifySafeValueSuccess<IntegerType, Native>(maxRegina - 2, maxNative - 2);
+    verifySafeValueSuccess<IntegerType, Native>(maxRegina - 1, maxNative - 1);
+    verifySafeValueSuccess<IntegerType, Native>(maxRegina, maxNative);
+    verifySafeValueFailure<IntegerType, Native>(maxRegina + 1);
+    verifySafeValueFailure<IntegerType, Native>(maxRegina * 2);
+}
+
+TYPED_TEST(IntegerTest, safeValue) {
+    verifySafeValue<TypeParam, unsigned char>();
+    verifySafeValue<TypeParam, unsigned short>();
+    verifySafeValue<TypeParam, unsigned>();
+    verifySafeValue<TypeParam, unsigned long>();
+    verifySafeValue<TypeParam, unsigned long long>();
+    verifySafeValue<TypeParam, size_t>();
+#ifdef INT128_AVAILABLE
+    verifySafeValue<TypeParam, regina::IntOfSize<16>::utype>();
+#endif
+}
+

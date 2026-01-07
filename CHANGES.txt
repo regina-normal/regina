@@ -52,12 +52,18 @@ Version 7.5  [ TODO ]
               generator counts and generator indices.
             - The depth argument to GroupPresentation::proliferateRelators()
               is now of type int.
+        Class Integer:
+            - New template function safeValue() to assist with regina-to-C++
+              integer conversions.
         Class Isomorphism<dim>:
             - The increment operators are now available in all dimensions
               (not just dimensions ≤ 6).
         Class IsoSigEncodingAPI, IsoSigTypeAPI:
             - New documentation-only classes that explain how encodings and
               signature types for isomorphism signatures are expected to behave.
+        Class LargeInteger:
+            - New template function safeValue() to assist with regina-to-C++
+              integer conversions.
         Class Laurent<T>:
             - For the iterator-based constructor and init() routine, the
               iterator type is now required to be random access.
