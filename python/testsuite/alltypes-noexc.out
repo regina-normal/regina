@@ -646,6 +646,7 @@ gcd : function
 gcdWithCoeffs : function
 hasInt128 : function
 isBase64 : function
+isTriangulation : function
 lcm : function
 makeAngleEquations : function
 makeEmbeddedConstraints : function
