@@ -2357,16 +2357,25 @@ static void verifySafeValue() {
     }
     EXPECT_EQ(maxRegina, maxNative);
 
+    verifySafeValueFailure<IntegerType, Native>(-maxRegina - 1);
     verifySafeValueFailure<IntegerType, Native>(-maxRegina);
+    verifySafeValueFailure<IntegerType, Native>(-maxRegina + 1);
+    verifySafeValueFailure<IntegerType, Native>(-(maxRegina / 2) - 1);
     verifySafeValueFailure<IntegerType, Native>(-(maxRegina / 2));
+    verifySafeValueFailure<IntegerType, Native>(-(maxRegina / 2) + 1);
     verifySafeValueFailure<IntegerType, Native>(-1);
     verifySafeValueSuccess<IntegerType, Native>(0, 0);
     verifySafeValueSuccess<IntegerType, Native>(1, 1);
+    verifySafeValueSuccess<IntegerType, Native>((maxRegina / 2) - 1,
+        (maxNative / 2) - 1);
     verifySafeValueSuccess<IntegerType, Native>(maxRegina / 2, maxNative / 2);
+    verifySafeValueSuccess<IntegerType, Native>((maxRegina / 2) + 1,
+        (maxNative / 2) + 1);
     verifySafeValueSuccess<IntegerType, Native>(maxRegina - 2, maxNative - 2);
     verifySafeValueSuccess<IntegerType, Native>(maxRegina - 1, maxNative - 1);
     verifySafeValueSuccess<IntegerType, Native>(maxRegina, maxNative);
     verifySafeValueFailure<IntegerType, Native>(maxRegina + 1);
+    verifySafeValueFailure<IntegerType, Native>(maxRegina + 2);
     verifySafeValueFailure<IntegerType, Native>(maxRegina * 2);
 }
 
