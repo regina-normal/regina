@@ -2229,11 +2229,18 @@
     details.
    </para>
    <para>
-    This utility compares both 3-manifold and 4-manifold triangulations
-    (but no other dimensions at present).
-    However, it will only compare triangulations of the same
-    dimension&mdash;it will not test whether some 3-manifold triangulation
-    appears as a subcomplex of some other 4-manifold triangulation.
+    This utility now tests triangulations of all dimensions (as opposed to
+    &regina;&nbsp;&le;&nbsp;7.4.1, where it only compared triangulations
+    in dimensions 3 or 4).
+    However, it will only ever try to match pairs of triangulations of the
+    <emphasis>same</emphasis> dimension&mdash;for example, it will not test
+    whether a 3-manifold triangulation from <replaceable>file1</replaceable>
+    appears as a subcomplex of a 4-manifold triangulation from
+    <replaceable>file2</replaceable>.
+   </para>
+   <para>
+    In dimension&nbsp;3, this utility only looks at &regina;'s own native
+    triangulations, and ignores any hybrid &snappea; triangulations.
    </para>
   </refsect1>
 

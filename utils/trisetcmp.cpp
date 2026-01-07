@@ -30,8 +30,10 @@
 
 #include <cstdlib>
 #include <cstring>
+#include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
+#include "triangulation/generic.h"
 #include "utilities/i18nutils.h"
 
 using regina::Packet;
@@ -117,13 +119,11 @@ void runMatches(const Packet& tree1, const Packet& tree2, std::ostream& out) {
     long matches = 0;
 
     for (const Packet& src : tree1)
-        if (src.type() == regina::PacketType::Triangulation3) {
-            matches += writeMatchesFrom(
-                static_cast<const TriPacket<3>&>(src), tree2, out);
-        } else if (src.type() == regina::PacketType::Triangulation4) {
-            matches += writeMatchesFrom(
-                static_cast<const TriPacket<4>&>(src), tree2, out);
-        }
+        regina::for_constexpr<2, regina::maxDim() + 1>([&](auto dim) {
+            if (src.type() == regina::packetTypeHolds<Triangulation<dim>>)
+                matches += writeMatchesFrom(
+                    static_cast<const TriPacket<dim>&>(src), tree2, out);
+        });
 
     if (matches == 0)
         out << "No matches found." << std::endl;
@@ -142,17 +142,14 @@ void runNonMatches(const std::string& file1, const Packet& tree1,
 
     bool matched;
     for (const Packet& src : tree1)
-        if (src.type() == regina::PacketType::Triangulation3) {
-            if (! hasMatchFrom(static_cast<const TriPacket<3>&>(src), tree2)) {
-                out << "    " << src.humanLabel() << std::endl;
-                ++missing;
-            }
-        } else if (src.type() == regina::PacketType::Triangulation4) {
-            if (! hasMatchFrom(static_cast<const TriPacket<4>&>(src), tree2)) {
-                out << "    " << src.humanLabel() << std::endl;
-                ++missing;
-            }
-        }
+        regina::for_constexpr<2, regina::maxDim() + 1>([&](auto dim) {
+            if (src.type() == regina::packetTypeHolds<Triangulation<dim>>)
+                if (! hasMatchFrom(static_cast<const TriPacket<dim>&>(src),
+                        tree2)) {
+                    out << "    " << src.humanLabel() << std::endl;
+                    ++missing;
+                }
+        });
 
     if (missing == 0)
         out << "All triangulations matched." << std::endl;
