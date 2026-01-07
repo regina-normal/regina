@@ -560,7 +560,7 @@ Triangulation<3> NormalHypersurface::triangulate() const {
     int which;
     for (tet = 0; tet < nTets; ++tet)
         for (type = 0; type < 7; ++type)
-            for (unsigned long d = 0; d < tetData[tet]->nDiscs(type); ++d) {
+            for (size_t d = 0; d < tetData[tet]->nDiscs(type); ++d) {
                 discData = &tetData[tet]->data(type, d);
                 for (which = 0; which < (type < 4 ? 1 : 2); ++which) {
                     triData = discData->data + which;

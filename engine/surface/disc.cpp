@@ -81,8 +81,8 @@ DiscSetTet::DiscSetTet(const NormalSurface& surface, size_t tetIndex) {
         discs_[i] = surface.octs(tetIndex, i - 7).longValue();
 }
 
-unsigned long DiscSetTet::arcFromDisc(int /* arcFace */, int arcVertex,
-        int discType, unsigned long discNumber) const {
+size_t DiscSetTet::arcFromDisc(int /* arcFace */, int arcVertex,
+        int discType, size_t discNumber) const {
     // Is it a triangle?
     if (discType < 4)
         return discNumber;
@@ -97,8 +97,8 @@ unsigned long DiscSetTet::arcFromDisc(int /* arcFace */, int arcVertex,
             - discNumber - 1;
 }
 
-std::pair<int, unsigned long> DiscSetTet::discFromArc(int arcFace, int arcVertex,
-        unsigned long arcNumber) const {
+std::pair<int, size_t> DiscSetTet::discFromArc(int arcFace, int arcVertex,
+        size_t arcNumber) const {
     // Is it a triangle?
     if (arcNumber < discs_[arcVertex])
         return { arcVertex, arcNumber };
@@ -114,7 +114,7 @@ std::pair<int, unsigned long> DiscSetTet::discFromArc(int arcFace, int arcVertex
     else
         discType = quadMeeting[arcVertex][arcFace][1] + 7;
 
-    unsigned long discNumber;
+    size_t discNumber;
     if (arcVertex == 0 || arcVertex == quadPartner[(discType - 1) % 3][0])
         discNumber = arcNumber - discs_[arcVertex];
     else

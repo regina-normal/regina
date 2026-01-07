@@ -45,7 +45,7 @@ void addDisc(pybind11::module_& m) {
 
     auto d = pybind11::class_<DiscSpec>(m, "DiscSpec", rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
-        .def(pybind11::init<size_t, int, unsigned long>(), rdoc::__init)
+        .def(pybind11::init<size_t, int, size_t>(), rdoc::__init)
         .def(pybind11::init<const DiscSpec&>(), rdoc::__copy)
         .def_readwrite("tetIndex", &DiscSpec::tetIndex)
         .def_readwrite("type", &DiscSpec::type)
@@ -66,9 +66,8 @@ void addDisc(pybind11::module_& m) {
     auto t = pybind11::class_<DiscSetTet>(m, "DiscSetTet", rdoc_scope)
         .def(pybind11::init<const regina::NormalSurface&, size_t>(),
             rdoc::__init)
-        .def(pybind11::init<unsigned long, unsigned long, unsigned long,
-            unsigned long, unsigned long, unsigned long, unsigned long,
-            unsigned long, unsigned long, unsigned long>(),
+        .def(pybind11::init<size_t, size_t, size_t, size_t,
+            size_t, size_t, size_t, size_t, size_t, size_t>(),
             pybind11::arg("tri0"), pybind11::arg("tri1"), pybind11::arg("tri2"),
             pybind11::arg("tri3"), pybind11::arg("quad0"),
             pybind11::arg("quad1"), pybind11::arg("quad2"),

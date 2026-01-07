@@ -27,6 +27,10 @@ Version 7.5  [ TODO ]
         Class Cut:
             - For the iterator-based constructor, the old recommendation that
               the iterator type be random access is now a hard requirement.
+        Class DiscSpec, DiscSetTet, DiscSetTetData, DiscSetSurface,
+                DiscSetSurfaceData:
+            - Now uses size_t instead of unsigned long for disc indices and
+              disc counts.
         Class Face<dim, subdim>, FaceNumbering<dim, subdim>, :
             - Major overhaul of the many classes to support face numbering.
               The new structure is simpler thanks to new features of modern
