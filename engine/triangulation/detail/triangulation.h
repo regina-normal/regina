@@ -69,7 +69,6 @@
 namespace regina {
 
 template <int dim> requires (supportedDim(dim)) class FacetPairing;
-template <int dim> requires (supportedDim(dim)) class IsoSigClassic;
 template <int dim> requires (supportedDim(dim)) class XMLLegacySimplicesReader;
 template <int dim> requires (supportedDim(dim)) class XMLTriangulationReader;
 
