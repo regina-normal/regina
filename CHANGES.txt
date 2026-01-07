@@ -51,9 +51,9 @@ Version 7.5  [ TODO ]
         Class Isomorphism<dim>:
             - The increment operators are now available in all dimensions
               (not just dimensions ≤ 6).
-        Class IsoSigEncodingAPI:
-            - New documentation-only class that explains how encodings for
-              isomorphism signatures are expected to behave.
+        Class IsoSigEncodingAPI, IsoSigTypeAPI:
+            - New documentation-only classes that explain how encodings and
+              signature types for isomorphism signatures are expected to behave.
         Class Laurent<T>:
             - For the iterator-based constructor and init() routine, the
               iterator type is now required to be random access.
