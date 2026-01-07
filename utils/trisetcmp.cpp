@@ -119,11 +119,12 @@ void runMatches(const Packet& tree1, const Packet& tree2, std::ostream& out) {
     long matches = 0;
 
     for (const Packet& src : tree1)
-        regina::for_constexpr<2, regina::maxDim() + 1>([&](auto dim) {
-            if (src.type() == regina::packetTypeHolds<Triangulation<dim>>)
-                matches += writeMatchesFrom(
-                    static_cast<const TriPacket<dim>&>(src), tree2, out);
-        });
+        if (int srcDim = regina::isTriangulation(src.type()))
+            regina::select_constexpr<2, regina::maxDim() + 1, void>(srcDim,
+                [&](auto dim) {
+                    matches += writeMatchesFrom(
+                        static_cast<const TriPacket<dim>&>(src), tree2, out);
+                });
 
     if (matches == 0)
         out << "No matches found." << std::endl;
@@ -142,14 +143,15 @@ void runNonMatches(const std::string& file1, const Packet& tree1,
 
     bool matched;
     for (const Packet& src : tree1)
-        regina::for_constexpr<2, regina::maxDim() + 1>([&](auto dim) {
-            if (src.type() == regina::packetTypeHolds<Triangulation<dim>>)
-                if (! hasMatchFrom(static_cast<const TriPacket<dim>&>(src),
-                        tree2)) {
-                    out << "    " << src.humanLabel() << std::endl;
-                    ++missing;
-                }
-        });
+        if (int srcDim = regina::isTriangulation(src.type()))
+            regina::select_constexpr<2, regina::maxDim() + 1, void>(srcDim,
+                [&](auto dim) {
+                    if (! hasMatchFrom(static_cast<const TriPacket<dim>&>(src),
+                            tree2)) {
+                        out << "    " << src.humanLabel() << std::endl;
+                        ++missing;
+                    }
+                });
 
     if (missing == 0)
         out << "All triangulations matched." << std::endl;

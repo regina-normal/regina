@@ -168,6 +168,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::None.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_NONE = PacketType::None;
 /**
@@ -175,6 +177,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Container.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_CONTAINER =
     PacketType::Container;
@@ -183,6 +187,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Text.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_TEXT = PacketType::Text;
 /**
@@ -190,6 +196,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::NormalSurfaces.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_NORMALSURFACES =
     PacketType::NormalSurfaces;
@@ -198,6 +206,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Script.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_SCRIPT = PacketType::Script;
 /**
@@ -205,6 +215,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::SurfaceFilter.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_SURFACEFILTER =
     PacketType::SurfaceFilter;
@@ -213,6 +225,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::AngleStructures.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_ANGLESTRUCTURES =
     PacketType::AngleStructures;
@@ -221,6 +235,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Attachment.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_ATTACHMENT = PacketType::Attachment;
 /**
@@ -228,6 +244,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::NormalHypersurfaces.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_NORMALHYPERSURFACES =
     PacketType::NormalHypersurfaces;
@@ -236,6 +254,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::SnapPea.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_SNAPPEATRIANGULATION =
     PacketType::SnapPea;
@@ -244,6 +264,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Link.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_LINK = PacketType::Link;
 /**
@@ -251,6 +273,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation2.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION2 =
     PacketType::Triangulation2;
@@ -259,6 +283,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation3.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION3 =
     PacketType::Triangulation3;
@@ -267,6 +293,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation4.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION4 =
     PacketType::Triangulation4;
@@ -275,6 +303,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation5.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION5 =
     PacketType::Triangulation5;
@@ -283,6 +313,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation6.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION6 =
     PacketType::Triangulation6;
@@ -291,6 +323,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation7.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION7 =
     PacketType::Triangulation7;
@@ -299,6 +333,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation8.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION8 =
     PacketType::Triangulation8;
@@ -308,6 +344,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation9.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION9 =
     PacketType::Triangulation9;
@@ -316,6 +354,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation10.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION10 =
     PacketType::Triangulation10;
@@ -324,6 +364,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation11.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION11 =
     PacketType::Triangulation11;
@@ -332,6 +374,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation12.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION12 =
     PacketType::Triangulation12;
@@ -340,6 +384,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation13.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION13 =
     PacketType::Triangulation13;
@@ -348,6 +394,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation14.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION14 =
     PacketType::Triangulation14;
@@ -356,6 +404,8 @@ enum class PacketType {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * PacketType::Triangulation15.
+ *
+ * \ingroup packet
  */
 [[deprecated]] inline constexpr PacketType PACKET_TRIANGULATION15 =
     PacketType::Triangulation15;
@@ -460,9 +510,53 @@ class PacketInfo {
  * Script, or PacketOf<...>), then this variable will be PacketType::None.
  *
  * \nopython
+ *
+ * \ingroup packet
  */
 template <typename Held>
 static constexpr PacketType packetTypeHolds = PacketType::None;
+
+/**
+ * Identifies whether the given packet type represents a native Regina
+ * triangulation, and if so, returns the dimension.
+ *
+ * Note that this routine does _not_ recognise SnapPea triangulations:
+ * calling `isTriangulation(PacketType::SnapPea)` will return 0.
+ *
+ * This routine is intended to help with generic code, where one might need to
+ * query a packet type at runtime and from this extract a compile-time
+ * dimension constant for use as a template parameter.  For example:
+ *
+ * \code{.cpp}
+ * if (int d = isTriangulation(packet.type())) {
+ *      // Our packet holds a triangulation of dimension d.
+ *      select_constexpr<2, regina::maxDim() + 1, void>(d, [&](auto dim) {
+ *          // The runtime variable d is now a compile-time constant dim.
+ *          do_something<dim>(packet);
+ *      });
+ * }
+ * \endcode
+ *
+ * \param type a packet type constant.
+ * \return the dimension of triangulation that \a type represents, or 0 if
+ * \a type does not represent a native Regina triangulation.
+ *
+ * \ingroup packet
+ */
+constexpr int isTriangulation(PacketType type) {
+    switch (type) {
+        case PacketType::Triangulation2: return 2;
+        case PacketType::Triangulation3: return 3;
+        case PacketType::Triangulation4: return 4;
+        default:
+            // Dimensions 5-15 use constants 105-115.
+            int value = static_cast<int>(type);
+            if (value >= 105 && value <= 100 + maxDim())
+                return value - 100;
+            else
+                return 0;
+    }
+}
 
 #ifndef __DOXYGEN
 // Don't confuse doxygen with specialisations.

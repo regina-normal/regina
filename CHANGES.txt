@@ -100,6 +100,9 @@ Version 7.5  [ TODO ]
         Class Vector<T>:
             - For the iterator-based constructor, the old recommendation that
               the iterator type be random access is now a hard requirement.
+        Function isTriangulation():
+            - New function that converts a packet type constant into a
+              triangulation dimension.
         Function subscript(), superscript():
             - When passing one of Regina's integer types, there is now a
               precondition that the given value is not infinity.
