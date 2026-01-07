@@ -161,13 +161,11 @@ bool NormalSurfaces::saveCSVStandard(const char* filename,
     if (! out)
         return false;
 
-    unsigned long n = triangulation().size();
-
-    unsigned long i;
+    size_t n = triangulation().size();
 
     // Write the CSV header.
     writePropHeader(out, additionalFields);
-    for (i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
         out << 'T' << i << ":0,";
         out << 'T' << i << ":1,";
         out << 'T' << i << ":2,";
@@ -196,7 +194,7 @@ bool NormalSurfaces::saveCSVStandard(const char* filename,
     for (const NormalSurface& s : surfaces_) {
         writePropData(out, s, additionalFields);
 
-        for (i = 0; i < n; ++i) {
+        for (size_t i = 0; i < n; ++i) {
             out << s.triangles(i, 0) << ',';
             out << s.triangles(i, 1) << ',';
             out << s.triangles(i, 2) << ',';
@@ -232,13 +230,11 @@ bool NormalSurfaces::saveCSVEdgeWeight(const char* filename,
     if (! out)
         return false;
 
-    unsigned long n = triangulation().countEdges();
-
-    unsigned long i;
+    size_t n = triangulation().countEdges();
 
     // Write the CSV header.
     writePropHeader(out, additionalFields);
-    for (i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
         out << 'E' << i;
 
         if (i < n - 1)
@@ -250,7 +246,7 @@ bool NormalSurfaces::saveCSVEdgeWeight(const char* filename,
     for (const NormalSurface& s : surfaces_) {
         writePropData(out, s, additionalFields);
 
-        for (i = 0; i < n; ++i) {
+        for (size_t i = 0; i < n; ++i) {
             out << s.edgeWeight(i);
 
             if (i < n - 1)

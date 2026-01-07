@@ -103,7 +103,7 @@ namespace {
              * working with normal surfaces, or 10 if we are working
              * with almost normal surfaces).
              */
-            RaySpec(const Triangulation<3>& tri, unsigned long whichLink,
+            RaySpec(const Triangulation<3>& tri, size_t whichLink,
                     unsigned coordsPerTet) :
                     Vector<LargeInteger>(coordsPerTet * tri.size()),
                     facets_(coordsPerTet * tri.size()) {
@@ -366,19 +366,11 @@ void NormalSurfaces::buildStandardFromReducedUsing(
 
     int workingList = 0;
 
-    unsigned vtx;
-    size_t tcoord;
-    RaySpec<BitmaskType>* linkSpec;
-
     RaySpecList pos, neg;
 
-    int sign;
-    bool broken;
-
-    unsigned long slices = 0;
-    unsigned iterations;
-    for (vtx = 0; vtx < nLinks; ++vtx) {
-        linkSpec = new RaySpec<BitmaskType>(*link[vtx]);
+    size_t slices = 0;
+    for (size_t vtx = 0; vtx < nLinks; ++vtx) {
+        auto linkSpec = new RaySpec<BitmaskType>(*link[vtx]);
         delete link[vtx];
 
         list[workingList].push_back(
@@ -396,12 +388,12 @@ void NormalSurfaces::buildStandardFromReducedUsing(
                 return;
             }
 
-            tcoord = stdEnc.block() * emb.tetrahedron()->markedIndex() +
+            size_t tcoord = stdEnc.block() * emb.tetrahedron()->markedIndex() +
                 emb.vertex();
 
             // Add the inequality v[tcoord] >= 0.
             for (RaySpec<BitmaskType>* r : list[workingList]) {
-                sign = r->sign(tcoord);
+                int sign = r->sign(tcoord);
 
                 if (sign == 0)
                     list[1 - workingList].push_back(r);
@@ -412,7 +404,7 @@ void NormalSurfaces::buildStandardFromReducedUsing(
                     neg.push_back(r);
             }
 
-            iterations = 0;
+            int iterations = 0;
             for (RaySpec<BitmaskType>* posRay : pos)
                 for (RaySpec<BitmaskType>* negRay : neg) {
                     // Test for cancellation, but not every time (since
@@ -454,7 +446,7 @@ void NormalSurfaces::buildStandardFromReducedUsing(
                     // Invert join so that it has a true bit for each
                     // non-zero coordinate.
                     join.flip();
-                    broken = false;
+                    bool broken = false;
                     for (const BitmaskType& constraint : constraints) {
                         BitmaskType mask(join);
                         mask &= constraint;
