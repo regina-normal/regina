@@ -188,7 +188,7 @@ void tightEncodeInteger(std::ostream& out, Int value) {
     if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
         // value might be out of bounds for a native integer,
         // but (value % 45) will not.
-        next = (value % 45).template nativeValue<sizeof(int)>();
+        next = (value % 45).template unsafeValue<int>();
     } else {
         next = value % 45;
     }

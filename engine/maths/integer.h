@@ -429,7 +429,7 @@ class IntegerBase : private InfinityBase<withInfinity> {
         IntType safeValue() const;
         /**
          * Returns the value of this integer as a native C++ integer of the
-         * given type, leaving the programmer responsible for bounds checking.
+         * given type, leaving the programmer responsible for range checking.
          *
          * Note that both signed and unsigned native integer types are
          * supported here.
@@ -452,25 +452,18 @@ class IntegerBase : private InfinityBase<withInfinity> {
         template <CppInteger IntType>
         IntType unsafeValue() const;
         /**
-         * Returns the value of this integer as a native integer of some
-         * fixed byte length.
+         * Deprecated function that returns the value of this integer as a
+         * native integer of some fixed byte length, with no range checking.
          *
-         * It is the programmer's reponsibility to ensure that this integer
-         * is within the required range.  If this integer is too large or
-         * small to fit into the return type, then the result will be undefined.
+         * \deprecated If you want range checking, use safeValue().  If you
+         * know the integer will be within range then you can use unsafeValue()
+         * (which makes your responsibilities more obvious to a casual reader).
+         * Note that both safeValue() and unsafeValue() take a C++ integer type
+         * as their template parameter, not the number of bytes.
          *
-         * Note that, assuming the value is within the required range,
-         * this routine will give correct results regardless of whether the
-         * underlying representation is a native or large integer.
-         *
-         * \pre If \a bytes is larger than sizeof(long), then
-         * \a bytes is a strict _multiple_ of sizeof(long).  For
-         * instance, if longs are 8 bytes then you can use this routine
-         * with \a bytes=4 or \a bytes=16 but not \a bytes=12.
-         * This restriction is enforced through a compile-time assertion,
-         * but may be lifted in future versions of Regina.
-         *
-         * \pre This integer is not infinity.
+         * \pre This integer is within the required range for the type
+         * \a IntType.  It does not matter whether the underlying
+         * representation for this integer is a native or large integer.
          *
          * \nopython Python does not have the diversity of integer types that
          * C++ does, and so this function is not so important.  Python users
@@ -479,7 +472,7 @@ class IntegerBase : private InfinityBase<withInfinity> {
          * \return the value of this integer.
          */
         template <int bytes>
-        typename IntOfSize<bytes>::type nativeValue() const;
+        [[deprecated]] typename IntOfSize<bytes>::type nativeValue() const;
         /**
          * Returns the value of this integer as a string in the given
          * base.  If not specified, the base defaults to 10.
@@ -2527,64 +2520,9 @@ inline IntegerBase<withInfinity>::IntegerBase(double value) : large_(nullptr) {
 
 template <bool withInfinity>
 template <int bytes>
-typename IntOfSize<bytes>::type IntegerBase<withInfinity>::nativeValue() const {
-    using Native = typename IntOfSize<bytes>::type;
-    using UNative = typename IntOfSize<bytes>::utype;
-
-    if constexpr (bytes <= sizeof(long)) {
-        // Since the requested type can fit inside a long, we can just
-        // extract the long value and cast down.
-        return static_cast<Native>(longValue());
-    } else {
-        // The requested type is too big to fit inside a long.
-        if (! large_) {
-            // We are holding a native long, and so this is already
-            // safe to cast directly to the (larger) requested native type.
-            return longValue();
-        }
-
-        // This is a GMP integer, and the requested native type is too
-        // large for a long.  We will need to piece together the result
-        // one long-sized chunk at a time.
-        static_assert(bytes % sizeof(long) == 0,
-            "IntegerBase::nativeValue(): native integer must partition "
-            "exactly into long integers.");
-
-        // We treat positive and negative numbers differently,
-        // because mpz_get_ui() *ignores* sign.  Gulp.
-        int sign = mpz_sgn(large_);
-        if (sign == 0)
-            return 0;
-
-        Native ans = 0;
-        unsigned blocks = bytes / sizeof(long);
-
-        mpz_t tmp;
-        mpz_init_set(tmp, large_);
-
-        if (sign > 0) {
-            // The positive case.
-            for (unsigned i = 0; i < blocks - 1; ++i) {
-                ans += (static_cast<UNative>(mpz_get_ui(tmp))
-                    << (i * 8 * sizeof(long)));
-                mpz_fdiv_q_2exp(tmp, tmp, 8 * sizeof(long));
-            }
-            ans += (static_cast<Native>(mpz_get_ui(tmp))
-                << ((blocks - 1) * 8 * sizeof(long)));
-        } else {
-            // The negative case.
-            for (unsigned i = 0; i < blocks - 1; ++i) {
-                ans -= (static_cast<UNative>(mpz_get_ui(tmp))
-                    << (i * 8 * sizeof(long)));
-                mpz_tdiv_q_2exp(tmp, tmp, 8 * sizeof(long));
-            }
-            ans += (static_cast<Native>(mpz_get_si(tmp))
-                << ((blocks - 1) * 8 * sizeof(long)));
-        }
-
-        mpz_clear(tmp);
-        return ans;
-    }
+inline typename IntOfSize<bytes>::type IntegerBase<withInfinity>::nativeValue()
+        const {
+    return unsafeValue<typename IntOfSize<bytes>::type>();
 }
 
 template <bool withInfinity>
@@ -3619,7 +3557,8 @@ template <int bytes>
 template <bool withInfinity>
 inline NativeInteger<bytes>::NativeInteger(
         const IntegerBase<withInfinity>& value) :
-        data_(value.template nativeValue<bytes>()) {
+        data_(value.template unsafeValue<Native>()) {
+    // TODO: HERE
 }
 
 template <int bytes>

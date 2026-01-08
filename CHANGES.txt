@@ -54,7 +54,8 @@ Version 7.5  [ TODO ]
               is now of type int.
         Class Integer, LargeInteger:
             - New template functions safeValue() and unsafeValue() to assist
-              with regina-to-C++ integer conversions.
+              with regina-to-C++ integer conversions.  The old nativeValue()
+              is now deprecated in favour of these new functions.
             - Regarding construction and assignment from native C++ integers:
               instead of many different constructors and assignment operators
               for the different native C++ integer types, there is now a single
