@@ -35,6 +35,10 @@
 #include "testhelper.h"
 
 using regina::ArbitraryPrecisionInteger;
+using regina::CppInteger;
+using regina::SignedCppInteger;
+using regina::UnsignedCppInteger;
+
 using regina::IntegerBase;
 using regina::Integer;
 using regina::LargeInteger;
@@ -695,42 +699,6 @@ TYPED_TEST(IntegerTest, swap) {
 
         verifyInfinite(b);
     }
-}
-
-template <ArbitraryPrecisionInteger IntegerType, std::integral NumericType>
-static void verifyNumeric(NumericType value) {
-    // Test construction and assignment from the given native C++ integer type.
-
-    SCOPED_TRACE_NUMERIC(value);
-    std::string str = std::to_string(value);
-
-    IntegerType large(value);
-    EXPECT_EQ(large.str(), str);
-
-    IntegerType assigned = 1;
-    EXPECT_EQ(assigned.str(), "1");
-    assigned = value;
-    EXPECT_EQ(assigned.str(), str);
-}
-
-TYPED_TEST(IntegerTest, constructLongLong) {
-    verifyNumeric<TypeParam, long long>(0);
-    verifyNumeric<TypeParam, long long>(1);
-    verifyNumeric<TypeParam, long long>(-1);
-    verifyNumeric<TypeParam, long long>(INT_MAX);
-    verifyNumeric<TypeParam, long long>(INT_MIN);
-    verifyNumeric<TypeParam, long long>(LONG_MAX);
-    verifyNumeric<TypeParam, long long>(LONG_MIN);
-    verifyNumeric<TypeParam, long long>(LLONG_MAX);
-    verifyNumeric<TypeParam, long long>(LLONG_MIN);
-
-    verifyNumeric<TypeParam, unsigned long long>(0);
-    verifyNumeric<TypeParam, unsigned long long>(1);
-    verifyNumeric<TypeParam, unsigned long long>(INT_MAX);
-    verifyNumeric<TypeParam, unsigned long long>(LONG_MAX);
-    verifyNumeric<TypeParam, unsigned long long>(ULONG_MAX);
-    verifyNumeric<TypeParam, unsigned long long>(LLONG_MAX);
-    verifyNumeric<TypeParam, unsigned long long>(ULLONG_MAX);
 }
 
 #ifdef INT128_AVAILABLE
@@ -2318,7 +2286,238 @@ TYPED_TEST(IntegerTest, nativeVsLarge) {
     }
 }
 
-template <regina::ReginaInteger IntegerType, regina::CppInteger Native>
+template <ArbitraryPrecisionInteger IntegerType, CppInteger Native>
+static void verifyCppInteger(Native native) {
+    // Test construction, assignment and various conversions to/from the given
+    // native C++ integer.
+
+    // We cannot use SCOPED_TRACE_NUMERIC, since this does not support 128-bit
+    // integers.  Use SCOPED_TRACE_STDSTRING once we have the string later on.
+
+    std::string str;
+    if constexpr (sizeof(Native) < 16) {
+        str = std::to_string(native);
+    } else {
+        // At present, 128-bit integers do not support std::to_string or
+        // std::ostream::operator >> on some platforms.  We need another way
+        // to extract a string.
+        if (native == 0) {
+            str = "0";
+        } else if (native > 0) {
+            for (Native x = native ; x != 0; x /= 10)
+                str += char('0' + (x % 10));
+            std::reverse(str.begin(), str.end());
+        } else {
+            for (Native x = native ; x != 0; x /= 10) {
+                Native digit = x % 10;
+                if (digit > 0)
+                    digit -= 10;
+                str += char('0' - digit);
+            }
+            str += '-';
+            std::reverse(str.begin(), str.end());
+        }
+    }
+
+    SCOPED_TRACE_STDSTRING(str);
+
+    // Construction from Native:
+    IntegerType large(native);
+    EXPECT_EQ(large.str(), str);
+    EXPECT_EQ(large, native);
+    {
+        Native extracted;
+        EXPECT_NO_THROW({ extracted = large.template safeValue<Native>(); });
+        EXPECT_EQ(extracted, native);
+    }
+
+    // Assignment from Native:
+    {
+        IntegerType assigned = 1;
+        EXPECT_EQ(assigned.str(), "1");
+        assigned = native;
+        EXPECT_EQ(assigned.str(), str);
+        EXPECT_EQ(assigned, native);
+        EXPECT_EQ(assigned, large);
+
+        Native extracted;
+        EXPECT_NO_THROW({ extracted = assigned.template safeValue<Native>(); });
+        EXPECT_EQ(extracted, native);
+    }
+    {
+        IntegerType assigned = HUGE_INTEGER;
+        EXPECT_EQ(assigned.str(), HUGE_INTEGER);
+        assigned = native;
+        EXPECT_EQ(assigned.str(), str);
+        EXPECT_EQ(assigned, native);
+        EXPECT_EQ(assigned, large);
+
+        Native extracted;
+        EXPECT_NO_THROW({ extracted = assigned.template safeValue<Native>(); });
+        EXPECT_EQ(extracted, native);
+    }
+
+    // Equality and inequality testing:
+    EXPECT_EQ(large, native);
+    EXPECT_NE(large, native + 1);
+    EXPECT_NE(large, native - 1);
+    if (native != 0)
+        EXPECT_NE(large, native / 2);
+    if constexpr (regina::is_signed_cpp_integer_v<Native>)
+        if ((native << 1) != 0)
+            EXPECT_NE(large, -native);
+    EXPECT_NE(large, native ^ Native(1));
+    EXPECT_NE(large, native ^ (Native(1) << (sizeof(Native) * 8 - 1)));
+}
+
+template <ArbitraryPrecisionInteger IntegerType, UnsignedCppInteger Native>
+static void verifyCppIntegerType() {
+    SCOPED_TRACE_TYPE(Native);
+
+    static constexpr Native maxNative = std::numeric_limits<Native>::max();
+
+    verifyCppInteger<IntegerType, Native>(0);
+    verifyCppInteger<IntegerType, Native>(1);
+    verifyCppInteger<IntegerType, Native>(2);
+    verifyCppInteger<IntegerType, Native>((maxNative / 2) - 1);
+    verifyCppInteger<IntegerType, Native>(maxNative / 2);
+    verifyCppInteger<IntegerType, Native>((maxNative / 2) + 1);
+    verifyCppInteger<IntegerType, Native>(maxNative - 2);
+    verifyCppInteger<IntegerType, Native>(maxNative - 1);
+    verifyCppInteger<IntegerType, Native>(maxNative);
+
+    if constexpr (sizeof(Native) > sizeof(int)) {
+        Native sMax = INT_MAX;
+        Native uMax = UINT_MAX;
+        verifyCppInteger<IntegerType, Native>(sMax - 1);
+        verifyCppInteger<IntegerType, Native>(sMax);
+        verifyCppInteger<IntegerType, Native>(sMax + 1);
+        verifyCppInteger<IntegerType, Native>(uMax - 1);
+        verifyCppInteger<IntegerType, Native>(uMax);
+        verifyCppInteger<IntegerType, Native>(uMax + 1);
+    }
+    if constexpr (sizeof(Native) > sizeof(long)) {
+        Native sMax = LONG_MAX;
+        Native uMax = ULONG_MAX;
+        verifyCppInteger<IntegerType, Native>(sMax - 1);
+        verifyCppInteger<IntegerType, Native>(sMax);
+        verifyCppInteger<IntegerType, Native>(sMax + 1);
+        verifyCppInteger<IntegerType, Native>(uMax - 1);
+        verifyCppInteger<IntegerType, Native>(uMax);
+        verifyCppInteger<IntegerType, Native>(uMax + 1);
+    }
+    if constexpr (sizeof(Native) > sizeof(long long)) {
+        Native sMax = LLONG_MAX;
+        Native uMax = ULLONG_MAX;
+        verifyCppInteger<IntegerType, Native>(sMax - 1);
+        verifyCppInteger<IntegerType, Native>(sMax);
+        verifyCppInteger<IntegerType, Native>(sMax + 1);
+        verifyCppInteger<IntegerType, Native>(uMax - 1);
+        verifyCppInteger<IntegerType, Native>(uMax);
+        verifyCppInteger<IntegerType, Native>(uMax + 1);
+    }
+}
+
+template <ArbitraryPrecisionInteger IntegerType, SignedCppInteger Native>
+static void verifyCppIntegerType() {
+    SCOPED_TRACE_TYPE(Native);
+
+    static constexpr Native minNative = std::numeric_limits<Native>::min();
+    static constexpr Native maxNative = std::numeric_limits<Native>::max();
+
+    verifyCppInteger<IntegerType, Native>(minNative);
+    verifyCppInteger<IntegerType, Native>(minNative + 1);
+    verifyCppInteger<IntegerType, Native>(minNative + 2);
+    verifyCppInteger<IntegerType, Native>((minNative / 2) - 1);
+    verifyCppInteger<IntegerType, Native>(minNative / 2);
+    verifyCppInteger<IntegerType, Native>((minNative / 2) + 1);
+    verifyCppInteger<IntegerType, Native>(-2);
+    verifyCppInteger<IntegerType, Native>(-1);
+    verifyCppInteger<IntegerType, Native>(0);
+    verifyCppInteger<IntegerType, Native>(1);
+    verifyCppInteger<IntegerType, Native>(2);
+    verifyCppInteger<IntegerType, Native>((maxNative / 2) - 1);
+    verifyCppInteger<IntegerType, Native>(maxNative / 2);
+    verifyCppInteger<IntegerType, Native>((maxNative / 2) + 1);
+    verifyCppInteger<IntegerType, Native>(maxNative - 2);
+    verifyCppInteger<IntegerType, Native>(maxNative - 1);
+    verifyCppInteger<IntegerType, Native>(maxNative);
+
+    if constexpr (sizeof(Native) > sizeof(int)) {
+        Native sMin = INT_MIN;
+        Native sMax = INT_MAX;
+        Native uMax = UINT_MAX;
+        verifyCppInteger<IntegerType, Native>(-uMax - 1);
+        verifyCppInteger<IntegerType, Native>(-uMax);
+        verifyCppInteger<IntegerType, Native>(-uMax + 1);
+        verifyCppInteger<IntegerType, Native>(sMin - 1);
+        verifyCppInteger<IntegerType, Native>(sMin);
+        verifyCppInteger<IntegerType, Native>(sMin + 1);
+        verifyCppInteger<IntegerType, Native>(sMax - 1);
+        verifyCppInteger<IntegerType, Native>(sMax);
+        verifyCppInteger<IntegerType, Native>(sMax + 1);
+        verifyCppInteger<IntegerType, Native>(uMax - 1);
+        verifyCppInteger<IntegerType, Native>(uMax);
+        verifyCppInteger<IntegerType, Native>(uMax + 1);
+    }
+    if constexpr (sizeof(Native) > sizeof(long)) {
+        Native sMin = LONG_MIN;
+        Native sMax = LONG_MAX;
+        Native uMax = ULONG_MAX;
+        verifyCppInteger<IntegerType, Native>(-uMax - 1);
+        verifyCppInteger<IntegerType, Native>(-uMax);
+        verifyCppInteger<IntegerType, Native>(-uMax + 1);
+        verifyCppInteger<IntegerType, Native>(sMin - 1);
+        verifyCppInteger<IntegerType, Native>(sMin);
+        verifyCppInteger<IntegerType, Native>(sMin + 1);
+        verifyCppInteger<IntegerType, Native>(sMax - 1);
+        verifyCppInteger<IntegerType, Native>(sMax);
+        verifyCppInteger<IntegerType, Native>(sMax + 1);
+        verifyCppInteger<IntegerType, Native>(uMax - 1);
+        verifyCppInteger<IntegerType, Native>(uMax);
+        verifyCppInteger<IntegerType, Native>(uMax + 1);
+    }
+    if constexpr (sizeof(Native) > sizeof(long long)) {
+        Native sMin = LLONG_MIN;
+        Native sMax = LLONG_MAX;
+        Native uMax = ULLONG_MAX;
+        verifyCppInteger<IntegerType, Native>(-uMax - 1);
+        verifyCppInteger<IntegerType, Native>(-uMax);
+        verifyCppInteger<IntegerType, Native>(-uMax + 1);
+        verifyCppInteger<IntegerType, Native>(sMin - 1);
+        verifyCppInteger<IntegerType, Native>(sMin);
+        verifyCppInteger<IntegerType, Native>(sMin + 1);
+        verifyCppInteger<IntegerType, Native>(sMax - 1);
+        verifyCppInteger<IntegerType, Native>(sMax);
+        verifyCppInteger<IntegerType, Native>(sMax + 1);
+        verifyCppInteger<IntegerType, Native>(uMax - 1);
+        verifyCppInteger<IntegerType, Native>(uMax);
+        verifyCppInteger<IntegerType, Native>(uMax + 1);
+    }
+}
+
+TYPED_TEST(IntegerTest, cppIntegerTypes) {
+    verifyCppIntegerType<TypeParam, unsigned char>();
+    verifyCppIntegerType<TypeParam, unsigned short>();
+    verifyCppIntegerType<TypeParam, unsigned>();
+    verifyCppIntegerType<TypeParam, unsigned long>();
+    verifyCppIntegerType<TypeParam, unsigned long long>();
+    verifyCppIntegerType<TypeParam, size_t>();
+
+    verifyCppIntegerType<TypeParam, signed char>();
+    verifyCppIntegerType<TypeParam, short>();
+    verifyCppIntegerType<TypeParam, int>();
+    verifyCppIntegerType<TypeParam, long>();
+    verifyCppIntegerType<TypeParam, long long>();
+    verifyCppIntegerType<TypeParam, ssize_t>();
+
+#ifdef INT128_AVAILABLE
+    verifyCppIntegerType<TypeParam, regina::IntOfSize<16>::utype>();
+    verifyCppIntegerType<TypeParam, regina::IntOfSize<16>::type>();
+#endif
+}
+
+template <ArbitraryPrecisionInteger IntegerType, CppInteger Native>
 static void verifySafeValueSuccess(IntegerType value, Native expected) {
     SCOPED_TRACE_REGINA(value);
 
@@ -2342,7 +2541,7 @@ static void verifySafeValueSuccess(IntegerType value, Native expected) {
     }
 }
 
-template <regina::ReginaInteger IntegerType, regina::CppInteger Native>
+template <ArbitraryPrecisionInteger IntegerType, CppInteger Native>
 static void verifySafeValueFailure(IntegerType value) {
     SCOPED_TRACE_REGINA(value);
 
@@ -2358,7 +2557,7 @@ static void verifySafeValueFailure(IntegerType value) {
     EXPECT_THROW({ value.template safeValue<Native>(); }, regina::NoSolution);
 }
 
-template <regina::ReginaInteger IntegerType, regina::UnsignedCppInteger Native>
+template <ArbitraryPrecisionInteger IntegerType, UnsignedCppInteger Native>
 static void verifySafeValue() {
     SCOPED_TRACE_TYPE(Native);
 
@@ -2395,7 +2594,7 @@ static void verifySafeValue() {
     verifySafeValueFailure<IntegerType, Native>(maxRegina * 2);
 }
 
-template <regina::ReginaInteger IntegerType, regina::SignedCppInteger Native>
+template <ArbitraryPrecisionInteger IntegerType, SignedCppInteger Native>
 static void verifySafeValue() {
     SCOPED_TRACE_TYPE(Native);
 
@@ -2441,6 +2640,9 @@ static void verifySafeValue() {
     verifySafeValueFailure<IntegerType, Native>(maxRegina + 1);
     verifySafeValueFailure<IntegerType, Native>(maxRegina + 2);
     verifySafeValueFailure<IntegerType, Native>(maxRegina * 2);
+
+    if constexpr (IntegerType::supportsInfinity)
+        verifySafeValueFailure<IntegerType, Native>(IntegerType::infinity);
 }
 
 TYPED_TEST(IntegerTest, safeValue) {

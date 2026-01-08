@@ -80,6 +80,9 @@ concept CanConstruct = std::constructible_from<Target, Source>;
  *
  * This concept is exactly like `std::integral` but with `bool` excluded.
  *
+ * Note that 128-bit integers (which are not standard C++) might or might not
+ * pass this test, depending on your compiler.
+ *
  * \ingroup concepts
  */
 template <typename T>

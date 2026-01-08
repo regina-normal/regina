@@ -49,28 +49,6 @@
 #include "utilities/exception.h"
 #include "utilities/tightencoding.h"
 
-/**
- * \hideinitializer
- *
- * An internal copy of the GMP signed comparison optimisations.
- * This macro should not be used outside this class.
- *
- * By making our own copy of such optimisation macros we can use
- * C++-style casts instead of C-style casts and avoid noisy compiler
- * warnings.  I'd love a better way of doing this.
- *
- * \ingroup maths
- */
-#ifdef __GNUC__
-    #define mpz_cmp_si_cpp(z, si) \
-        (__builtin_constant_p(si) && (si) == 0 ? mpz_sgn(z) : \
-        __builtin_constant_p(si) && (si) > 0 ? _mpz_cmp_ui(z, \
-            static_cast<unsigned long>(si)) : \
-        _mpz_cmp_si(z, si))
-#else
-    #define mpz_cmp_si_cpp(z, si) _mpz_cmp_si(z, si)
-#endif
-
 namespace regina {
 
 template <int bytes>
@@ -116,32 +94,6 @@ template <>
 struct InfinityBase<false> {
 };
 #endif // __DOXYGEN
-
-namespace detail {
-    /**
-     * Returns a raw GMP integer holding the given value.
-     *
-     * \nopython
-     *
-     * \param value the value to assign to the new GMP integer.
-     * \return a corresponding newly created and initialised GMP integer.
-     *
-     * \ingroup detail
-     */
-    mpz_ptr mpz_from_ll(long long value);
-
-    /**
-     * Returns a raw GMP integer holding the given value.
-     *
-     * \nopython
-     *
-     * \param value the value to assign to the new GMP integer.
-     * \return a corresponding newly created and initialised GMP integer.
-     *
-     * \ingroup detail
-     */
-    mpz_ptr mpz_from_ull(unsigned long long value);
-}
 
 /**
  * Represents an arbitrary precision integer.
@@ -225,59 +177,14 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         IntegerBase();
         /**
-         * Initialises this integer to the given value.
+         * Initialises this integer to the given native C++ value.
          *
-         * \nopython In Python, the only native-integer constructor
-         * is IntegerBase(long).
-         *
-         * \param value the new value of this integer.
-         */
-        IntegerBase(int value);
-        /**
-         * Initialises this integer to the given value.
-         *
-         * \nopython In Python, the only native-integer constructor
-         * is IntegerBase(long).
+         * \python It is assumed that the type \a IntType is \c long.
          *
          * \param value the new value of this integer.
          */
-        IntegerBase(unsigned value);
-        /**
-         * Initialises this integer to the given value.
-         *
-         * \python In Python, this is the only native-integer
-         * constructor available.
-         *
-         * \param value the new value of this integer.
-         */
-        IntegerBase(long value);
-        /**
-         * Initialises this integer to the given value.
-         *
-         * \nopython In Python, the only native-integer constructor
-         * is IntegerBase(long).
-         *
-         * \param value the new value of this integer.
-         */
-        IntegerBase(unsigned long value);
-        /**
-         * Initialises this integer to the given value.
-         *
-         * \nopython In Python, the only native-integer constructor
-         * is IntegerBase(long).
-         *
-         * \param value the new value of this integer.
-         */
-        IntegerBase(long long value);
-        /**
-         * Initialises this integer to the given value.
-         *
-         * \nopython In Python, the only native-integer constructor
-         * is IntegerBase(long).
-         *
-         * \param value the new value of this integer.
-         */
-        IntegerBase(unsigned long long value);
+        template <CppInteger IntType>
+        IntegerBase(IntType value);
         /**
          * Initialises this integer to the given value.
          *
@@ -636,47 +543,13 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         IntegerBase& operator = (IntegerBase<! withInfinity>&& src) noexcept;
         /**
-         * Sets this integer to the given value.
+         * Sets this integer to the given native C++ value.
          *
          * \param value the new value of this integer.
          * \return a reference to this integer with its new value.
          */
-        IntegerBase& operator =(int value);
-        /**
-         * Sets this integer to the given value.
-         *
-         * \param value the new value of this integer.
-         * \return a reference to this integer with its new value.
-         */
-        IntegerBase& operator =(unsigned value);
-        /**
-         * Sets this integer to the given value.
-         *
-         * \param value the new value of this integer.
-         * \return a reference to this integer with its new value.
-         */
-        IntegerBase& operator =(long value);
-        /**
-         * Sets this integer to the given value.
-         *
-         * \param value the new value of this integer.
-         * \return a reference to this integer with its new value.
-         */
-        IntegerBase& operator =(unsigned long value);
-        /**
-         * Sets this integer to the given value.
-         *
-         * \param value the new value of this integer.
-         * \return a reference to this integer with its new value.
-         */
-        IntegerBase& operator =(long long value);
-        /**
-         * Sets this integer to the given value.
-         *
-         * \param value the new value of this integer.
-         * \return a reference to this integer with its new value.
-         */
-        IntegerBase& operator =(unsigned long long value);
+        template <CppInteger IntType>
+        IntegerBase& operator =(IntType value);
         /**
          * Sets this integer to the given value which is
          * represented as a string of digits in base 10.
@@ -745,13 +618,16 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         bool operator ==(const IntegerBase<! withInfinity>& rhs) const;
         /**
-         * Determines if this is equal to the given integer.
+         * Determines if this is equal to the given native C++ integer.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
          *
          * \param rhs the integer with which this will be compared.
          * \return \c true if and only if this and the given integer are
          * equal.
          */
-        bool operator ==(long rhs) const;
+        template <CppInteger IntType>
+        bool operator ==(IntType rhs) const;
         /**
          * Compares this to the given integer.
          *
@@ -847,16 +723,19 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         IntegerBase operator +(const IntegerBase& other) const;
         /**
-         * Adds this to the given integer and returns the result.
+         * Adds this to the given native C++ integer and returns the result.
          * This integer is not changed.
          *
          * If either term of the sum is infinite, the result will be
          * infinity.
          *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
          * \param other the integer to add to this integer.
          * \return the sum \a this plus \a other.
          */
-        IntegerBase operator +(long other) const;
+        template <CppInteger IntType>
+        IntegerBase operator +(IntType other) const;
         /**
          * Subtracts the given integer from this and returns the result.
          * This integer is not changed.
@@ -869,16 +748,20 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         IntegerBase operator -(const IntegerBase& other) const;
         /**
-         * Subtracts the given integer from this and returns the result.
+         * Subtracts the given native C++ integer from this and returns
+         * the result.
          * This integer is not changed.
          *
          * If either term of the difference is infinite, the result will be
          * infinity.
          *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
          * \param other the integer to subtract from this integer.
          * \return the difference \a this minus \a other.
          */
-        IntegerBase operator -(long other) const;
+        template <CppInteger IntType>
+        IntegerBase operator -(IntType other) const;
         /**
          * Multiplies this by the given integer and returns the
          * result.
@@ -892,17 +775,20 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         IntegerBase operator *(const IntegerBase& other) const;
         /**
-         * Multiplies this by the given integer and returns the
+         * Multiplies this by the given native C++ integer and returns the
          * result.
          * This integer is not changed.
          *
          * If either factor of the product is infinite, the result will be
          * infinity.
          *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
          * \param other the integer to multiply by this integer.
          * \return the product \a this times \a other.
          */
-        IntegerBase operator *(long other) const;
+        template <CppInteger IntType>
+        IntegerBase operator *(IntType other) const;
         /**
          * Divides this by the given integer and returns the result.
          * The result will be truncated to an integer, i.e. rounded
@@ -926,7 +812,7 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         IntegerBase operator /(const IntegerBase& other) const;
         /**
-         * Divides this by the given integer and returns the result.
+         * Divides this by the given native C++ integer and returns the result.
          * The result will be truncated to an integer, i.e. rounded
          * towards zero.
          * This integer is not changed.
@@ -942,10 +828,13 @@ class IntegerBase : private InfinityBase<withInfinity> {
          * \pre If this class does not support infinity, then
          * \a other must be non-zero.
          *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
          * \param other the integer to divide this by.
          * \return the quotient \a this divided by \a other.
          */
-        IntegerBase operator /(long other) const;
+        template <CppInteger IntType>
+        IntegerBase operator /(IntType other) const;
         /**
          * Divides this by the given integer and returns the result.
          * This can only be used when the given integer divides into
@@ -962,7 +851,7 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         IntegerBase divExact(const IntegerBase& other) const;
         /**
-         * Divides this by the given integer and returns the result.
+         * Divides this by the given native C++ integer and returns the result.
          * This can only be used when the given integer divides into
          * this exactly, and for large integers can be much faster than
          * ordinary division.  This integer is not changed.
@@ -972,10 +861,13 @@ class IntegerBase : private InfinityBase<withInfinity> {
          * \pre \a other is not zero.
          * \pre This integer is not infinite.
          *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
          * \param other the integer to divide this by.
          * \return the quotient \a this divided by \a other.
          */
-        IntegerBase divExact(long other) const;
+        template <CppInteger IntType>
+        IntegerBase divExact(IntType other) const;
         /**
          * Determines the remainder when this integer is divided by the
          * given integer.  If non-zero, the result will have the same sign
@@ -993,8 +885,8 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         IntegerBase operator %(const IntegerBase& other) const;
         /**
-         * Determines the remainder when this integer is divided by the
-         * given integer.  If non-zero, the result will have the same sign
+         * Determines the remainder when this integer is divided by the given
+         * native C++ integer.  If non-zero, the result will have the same sign
          * as this integer.
          * This integer is not changed.
          *
@@ -1004,10 +896,13 @@ class IntegerBase : private InfinityBase<withInfinity> {
          * \pre \a other is not zero.
          * \pre This integer is not infinite.
          *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
          * \param other the integer to divide this by.
          * \return the remainder \a this modulo \a other.
          */
-        IntegerBase operator %(long other) const;
+        template <CppInteger IntType>
+        IntegerBase operator %(IntType other) const;
 
         /**
          * Uses the division algorithm to obtain a quotient and
@@ -1096,7 +991,7 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         IntegerBase& operator -=(long other);
         /**
-         * Multiplies the given integer by this.
+         * Multiplies this by the given integer.
          * This integer is changed to reflect the result.
          *
          * If either factor of the product is infinite, the result will be
@@ -1107,7 +1002,7 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         IntegerBase& operator *=(const IntegerBase& other);
         /**
-         * Multiplies the given integer by this.
+         * Multiplies this by the given native C++ integer.
          * This integer is changed to reflect the result.
          *
          * If either factor of the product is infinite, the result will be
@@ -1742,8 +1637,10 @@ std::ostream& operator << (std::ostream& out,
     const IntegerBase<withInfinity>& i);
 
 /**
- * Adds the given native integer to the given large integer.
+ * Adds the given native C++ integer to the given large integer.
  * If the large integer is infinite, the result will also be infinity.
+ *
+ * \python It is assumed that the type \a IntType is \c long.
  *
  * \param lhs the native integer to add.
  * \param rhs the large integer to add.
@@ -1751,13 +1648,15 @@ std::ostream& operator << (std::ostream& out,
  *
  * \ingroup maths
  */
-template <bool withInfinity>
-IntegerBase<withInfinity> operator + (long lhs,
+template <bool withInfinity, CppInteger IntType>
+IntegerBase<withInfinity> operator + (IntType lhs,
     const IntegerBase<withInfinity>& rhs);
 
 /**
- * Multiplies the given native integer with the given large integer.
+ * Multiplies the given native C++ integer with the given large integer.
  * If the large integer is infinite, the result will also be infinity.
+ *
+ * \python It is assumed that the type \a IntType is \c long.
  *
  * \param lhs the native integer to multiply.
  * \param rhs the large integer to multiply.
@@ -1765,8 +1664,8 @@ IntegerBase<withInfinity> operator + (long lhs,
  *
  * \ingroup maths
  */
-template <bool withInfinity>
-IntegerBase<withInfinity> operator * (long lhs,
+template <bool withInfinity, CppInteger IntType>
+IntegerBase<withInfinity> operator * (IntType lhs,
     const IntegerBase<withInfinity>& rhs);
 
 /**
@@ -2463,53 +2362,47 @@ inline IntegerBase<withInfinity>::IntegerBase() : small_(0), large_(nullptr) {
 }
 
 template <bool withInfinity>
-inline IntegerBase<withInfinity>::IntegerBase(int value) :
+template <CppInteger IntType>
+inline IntegerBase<withInfinity>::IntegerBase(IntType value) :
         small_(value), large_(nullptr) {
-}
-
-template <bool withInfinity>
-inline IntegerBase<withInfinity>::IntegerBase(unsigned value) : small_(value) {
-    // Detect overflow.
-    if (small_ < 0) {
-        large_ = new __mpz_struct[1];
-        mpz_init_set_ui(large_, value);
-    } else
-        large_ = nullptr;
-}
-
-template <bool withInfinity>
-inline IntegerBase<withInfinity>::IntegerBase(long value) :
-        small_(value), large_(nullptr) {
-}
-
-template <bool withInfinity>
-inline IntegerBase<withInfinity>::IntegerBase(unsigned long value) :
-        small_(value) {
-    // Detect overflow.
-    if (small_ < 0) {
-        large_ = new __mpz_struct[1];
-        mpz_init_set_ui(large_, value);
-    } else
-        large_ = nullptr;
-}
-
-template <bool withInfinity>
-inline IntegerBase<withInfinity>::IntegerBase(long long value) :
-        small_(static_cast<long>(value)), large_(nullptr) {
-    // Detect overflow.
-    if constexpr (sizeof(long) < sizeof(long long))
-        if (small_ != value)
-            large_ = regina::detail::mpz_from_ll(value);
-}
-
-template <bool withInfinity>
-inline IntegerBase<withInfinity>::IntegerBase(unsigned long long value) :
-        small_(static_cast<long>(value)), large_(nullptr) {
-    // Detect overflow.
-    // This could occur even if long and long long have the same size,
-    // due to the discrepancy between signed and unsigned ranges.
-    if (small_ < 0 || static_cast<unsigned long long>(small_) != value)
-        large_ = regina::detail::mpz_from_ull(value);
+    if constexpr (sizeof(IntType) == sizeof(long) &&
+            regina::is_unsigned_cpp_integer_v<IntType>) {
+        // Detect overflow.
+        if (small_ < 0) {
+            large_ = new __mpz_struct[1];
+            mpz_init_set_ui(large_, value);
+        }
+    } else if constexpr (sizeof(IntType) > sizeof(long)) {
+        if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+            // Detect overflow.
+            if (small_ != value) {
+                large_ = new __mpz_struct[1];
+                mpz_init(large_);
+                if (value >= 0) {
+                    mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
+                        0 /* native endianness */, 0 /* full words */, &value);
+                } else {
+                    // mpz_import assumes an unsigned type.
+                    value = -value;
+                    // The negation above does nothing for value == -2^(bits-1),
+                    // but in ALL cases - including this bad case - if we treat
+                    // the type as unsigned, we get |original value|.
+                    mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
+                        0 /* native endianness */, 0 /* full words */, &value);
+                    mpz_neg(large_, large_);
+                }
+            }
+        } else {
+            // Detect overflow.  Here we need to be careful about comparisons
+            // between signed and unsigned.
+            if (small_ < 0 || static_cast<IntType>(small_) != value) {
+                large_ = new __mpz_struct[1];
+                mpz_init(large_);
+                mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
+                    0 /* native endianness */, 0 /* full words */, &value);
+            }
+        }
+    }
 }
 
 template <bool withInfinity>
@@ -2903,102 +2796,72 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
 }
 
 template <bool withInfinity>
+template <CppInteger IntType>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
-        int value) {
-    makeFinite();
-    small_ = value;
-    if (large_)
-        clearLarge();
-    return *this;
-}
-
-template <bool withInfinity>
-inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
-        unsigned value) {
+        IntType value) {
     makeFinite();
     small_ = value;
 
-    // Did we overflow?
-    if (small_ < 0) {
-        // Yes, it's an overflow: just a bit too large for a signed long
-        // (literally).
-        if (large_)
-            mpz_set_ui(large_, value);
-        else {
-            large_ = new __mpz_struct[1];
-            mpz_init_set_ui(large_, value);
+    // Test for overflow, if we need to.
+    if constexpr (sizeof(IntType) == sizeof(long) &&
+            regina::is_unsigned_cpp_integer_v<IntType>) {
+        if (small_ < 0) {
+            if (large_)
+                mpz_set_ui(large_, value);
+            else {
+                large_ = new __mpz_struct[1];
+                mpz_init_set_ui(large_, value);
+            }
+        } else {
+            // No overflow occurred.
+            if (large_)
+                clearLarge();
         }
-    } else if (large_) {
-        // No overflow, but we must clear out any old large integer value.
-        clearLarge();
-    }
-    return *this;
-}
-
-template <bool withInfinity>
-inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
-        long value) {
-    makeFinite();
-    small_ = value;
-    if (large_)
-        clearLarge();
-    return *this;
-}
-
-template <bool withInfinity>
-inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
-        unsigned long value) {
-    makeFinite();
-    small_ = value;
-
-    // Did we overflow?
-    if (small_ < 0) {
-        // Yes, it's an overflow: just a bit too large for a signed long
-        // (literally).
-        if (large_)
-            mpz_set_ui(large_, value);
-        else {
-            large_ = new __mpz_struct[1];
-            mpz_init_set_ui(large_, value);
+    } else if constexpr (sizeof(IntType) > sizeof(long)) {
+        if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+            if (small_ != value) {
+                if (! large_) {
+                    large_ = new __mpz_struct[1];
+                    mpz_init(large_);
+                }
+                if (value >= 0) {
+                    mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
+                        0 /* native endianness */, 0 /* full words */, &value);
+                } else {
+                    // mpz_import assumes an unsigned type.
+                    value = -value;
+                    // The negation above does nothing for value == -2^(bits-1),
+                    // but in ALL cases - including this bad case - if we treat
+                    // the type as unsigned, we get |original value|.
+                    mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
+                        0 /* native endianness */, 0 /* full words */, &value);
+                    mpz_neg(large_, large_);
+                }
+            } else {
+                // No overflow occurred.
+                if (large_)
+                    clearLarge();
+            }
+        } else {
+            // Be careful about comparisons between signed and unsigned.
+            if (small_ < 0 || static_cast<IntType>(small_) != value) {
+                if (! large_) {
+                    large_ = new __mpz_struct[1];
+                    mpz_init(large_);
+                }
+                mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
+                    0 /* native endianness */, 0 /* full words */, &value);
+            } else {
+                // No overflow occurred.
+                if (large_)
+                    clearLarge();
+            }
         }
-    } else if (large_) {
-        // No overflow, but we must clear out any old large integer value.
-        clearLarge();
+    } else {
+        // IntType is small enough that overflow is impossible.
+        if (large_)
+            clearLarge();
     }
-    return *this;
-}
-
-template <bool withInfinity>
-inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
-        long long value) {
-    makeFinite();
-    if (large_)
-        clearLarge();
-
-    small_ = value;
-
-    // Detect overflow.
-    if constexpr (sizeof(long) < sizeof(long long))
-        if (small_ != value)
-            large_ = regina::detail::mpz_from_ll(value);
-
-    return *this;
-}
-
-template <bool withInfinity>
-inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
-        unsigned long long value) {
-    makeFinite();
-    if (large_)
-        clearLarge();
-
-    small_ = value;
-
-    // Detect overflow.
-    // This could occur even if long and long long have the same size,
-    // due to the discrepancy between signed and unsigned ranges.
-    if (small_ < 0 || static_cast<unsigned long long>(small_) != value)
-        large_ = regina::detail::mpz_from_ull(value);
 
     return *this;
 }
@@ -3031,10 +2894,10 @@ inline bool IntegerBase<withInfinity>::operator ==(const IntegerBase& rhs)
         if (rhs.large_)
             return (mpz_cmp(large_, rhs.large_) == 0);
         else
-            return (mpz_cmp_si_cpp(large_, rhs.small_) == 0);
+            return (mpz_cmp_si(large_, rhs.small_) == 0);
     } else {
         if (rhs.large_)
-            return (mpz_cmp_si_cpp(rhs.large_, small_) == 0);
+            return (mpz_cmp_si(rhs.large_, small_) == 0);
         else
             return (small_ == rhs.small_);
     }
@@ -3050,23 +2913,41 @@ inline bool IntegerBase<withInfinity>::operator ==(
         if (rhs.large_)
             return (mpz_cmp(large_, rhs.large_) == 0);
         else
-            return (mpz_cmp_si_cpp(large_, rhs.small_) == 0);
+            return (mpz_cmp_si(large_, rhs.small_) == 0);
     } else {
         if (rhs.large_)
-            return (mpz_cmp_si_cpp(rhs.large_, small_) == 0);
+            return (mpz_cmp_si(rhs.large_, small_) == 0);
         else
             return (small_ == rhs.small_);
     }
 }
 
 template <bool withInfinity>
-inline bool IntegerBase<withInfinity>::operator ==(long rhs) const {
+template <CppInteger IntType>
+inline bool IntegerBase<withInfinity>::operator ==(IntType rhs) const {
     if (isInfinite())
         return false;
-    else if (large_)
-        return (mpz_cmp_si_cpp(large_, rhs) == 0);
-    else
-        return (small_ == rhs);
+    else if (large_) {
+        if constexpr (sizeof(IntType) <= sizeof(long)) {
+            if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+                return (mpz_cmp_si(large_, rhs) == 0);
+            } else {
+                return (mpz_cmp_ui(large_, rhs) == 0);
+            }
+        } else {
+            // TODO: Improve this.
+            return *this == IntegerBase(rhs);
+        }
+    } else {
+        if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+            return (small_ == rhs);
+        } else {
+            // Be careful: small_ is signed, but rhs is unsigned.
+            // Testing small_ == rhs might convert small_ to unsigned before
+            // the comparison.
+            return (small_ >= 0 && small_ == rhs);
+        }
+    }
 }
 
 template <bool withInfinity>
@@ -3081,10 +2962,10 @@ inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
         if (rhs.large_)
             return (mpz_cmp(large_, rhs.large_) <=> 0);
         else
-            return (mpz_cmp_si_cpp(large_, rhs.small_) <=> 0);
+            return (mpz_cmp_si(large_, rhs.small_) <=> 0);
     } else {
         if (rhs.large_)
-            return (0 <=> mpz_cmp_si_cpp(rhs.large_, small_)); // back-to-front
+            return (0 <=> mpz_cmp_si(rhs.large_, small_)); // back-to-front
         else
             return (small_ <=> rhs.small_);
     }
@@ -3096,7 +2977,7 @@ inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (long rhs)
     if (isInfinite())
         return std::strong_ordering::greater;
     else if (large_)
-        return (mpz_cmp_si_cpp(large_, rhs) <=> 0);
+        return (mpz_cmp_si(large_, rhs) <=> 0);
     else
         return (small_ <=> rhs);
 }
@@ -3171,8 +3052,9 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
 }
 
 template <bool withInfinity>
+template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
-        long other) const {
+        IntType other) const {
     if (isInfinite())
         return *this;
 
@@ -3195,8 +3077,9 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
 }
 
 template <bool withInfinity>
+template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
-        long other) const {
+        IntType other) const {
     if (isInfinite())
         return *this;
 
@@ -3219,8 +3102,9 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
 }
 
 template <bool withInfinity>
+template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
-        long other) const {
+        IntType other) const {
     if (isInfinite())
         return *this;
 
@@ -3248,8 +3132,9 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
 }
 
 template <bool withInfinity>
+template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
-        long other) const {
+        IntType other) const {
     if (isInfinite())
         return *this;
     if (other == 0) {
@@ -3272,8 +3157,9 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::divExact(
 }
 
 template <bool withInfinity>
-inline IntegerBase<withInfinity> IntegerBase<withInfinity>::divExact(long other)
-        const {
+template <CppInteger IntType>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::divExact(
+        IntType other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans.divByExact(other);
@@ -3288,8 +3174,9 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator %(
 }
 
 template <bool withInfinity>
+template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator %(
-        long other) const {
+        IntType other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans %= other;
@@ -3405,14 +3292,14 @@ IntegerBase<withInfinity> IntegerBase<withInfinity>::lcm(
     return ans;
 }
 
-template <bool withInfinity>
-inline IntegerBase<withInfinity> operator +(long lhs,
+template <bool withInfinity, CppInteger IntType>
+inline IntegerBase<withInfinity> operator +(IntType lhs,
         const IntegerBase<withInfinity>& rhs) {
     return rhs + lhs;
 }
 
-template <bool withInfinity>
-inline IntegerBase<withInfinity> operator *(long lhs,
+template <bool withInfinity, CppInteger IntType>
+inline IntegerBase<withInfinity> operator *(IntType lhs,
         const IntegerBase<withInfinity>& rhs) {
     return rhs * lhs;
 }
