@@ -407,10 +407,10 @@ __init__(...)
 
     2. __init__(self: regina.Integer, arg0: typing.SupportsInt) -> None
 
-    Initialises this integer to the given value.
+    Initialises this integer to the given native C++ value.
 
     Python:
-        In Python, this is the only native-integer constructor available.
+        It is assumed that the type *IntType* is ``long``.
 
     Parameter ``value``:
         the new value of this integer.
@@ -500,10 +500,10 @@ __init__(...)
 
     2. __init__(self: regina.LargeInteger, arg0: typing.SupportsInt) -> None
 
-    Initialises this integer to the given value.
+    Initialises this integer to the given native C++ value.
 
     Python:
-        In Python, this is the only native-integer constructor available.
+        It is assumed that the type *IntType* is ``long``.
 
     Parameter ``value``:
         the new value of this integer.

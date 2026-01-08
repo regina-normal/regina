@@ -74,8 +74,8 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         .def("str", &Int::str, rdoc::str)
         .def("pythonValue", [](const Int& i) {
             try {
-                return pybind11::int_(i.template unsafeValue<long>());
-            } catch (const NoSolution&) {
+                return pybind11::int_(i.template safeValue<long>());
+            } catch (const regina::NoSolution&) {
                 if (i.isInfinite())
                     throw pybind11::value_error("Cannot represent infinity "
                         "as a Python int");
