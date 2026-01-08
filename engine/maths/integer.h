@@ -2385,10 +2385,12 @@ inline IntegerBase<withInfinity>::IntegerBase(IntType value) :
                         0 /* native endianness */, 0 /* full words */, &value);
                 } else {
                     // mpz_import assumes an unsigned type.
-                    value = -value;
-                    // The negation above does nothing for value == -2^(bits-1),
-                    // but in ALL cases - including this bad case - if we treat
-                    // the type as unsigned, we get |original value|.
+                    // C++20 mandates a two's complement representation, and
+                    // we use that here.
+                    if (value != std::numeric_limits<IntType>::min())
+                        value = -value;
+                    // In all cases - including min() where we did not negate -
+                    // if we treat the type as unsigned we get |original value|.
                     mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
                         0 /* native endianness */, 0 /* full words */, &value);
                     mpz_neg(large_, large_);
@@ -2831,10 +2833,12 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
                         0 /* native endianness */, 0 /* full words */, &value);
                 } else {
                     // mpz_import assumes an unsigned type.
-                    value = -value;
-                    // The negation above does nothing for value == -2^(bits-1),
-                    // but in ALL cases - including this bad case - if we treat
-                    // the type as unsigned, we get |original value|.
+                    // C++20 mandates a two's complement representation, and
+                    // we use that here.
+                    if (value != std::numeric_limits<IntType>::min())
+                        value = -value;
+                    // In all cases - including min() where we did not negate -
+                    // if we treat the type as unsigned we get |original value|.
                     mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
                         0 /* native endianness */, 0 /* full words */, &value);
                     mpz_neg(large_, large_);
