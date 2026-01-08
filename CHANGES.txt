@@ -123,6 +123,10 @@ Version 7.5  [ TODO ]
         Class Polynomial<T>:
             - For the iterator-based constructor and init() routine, the
               iterator type is now required to be random access.
+        Class Primes:
+            - The python-only routines primeDecompInt() and
+              primePowerDecompInt() are now just overloads for primeDecomp()
+              and primePowerDecomp().  The old names are kept but deprecated.
         Class RingTraits:
             - Provides new compile-time constants zeroInitialised and
               zeroDivisors.

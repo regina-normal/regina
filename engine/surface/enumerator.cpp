@@ -634,9 +634,10 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
         v.reserve(eqns_.columns());
         for (size_t c = 0; c < eqns_.columns(); ++c) {
             const Integer& entry(eqns_.entry(r, c));
-            if (entry.isNative())
-                v.emplace_back(entry.longValue());
-            else
+            if (entry.isNative()) {
+                // Since entry is native, unsafeValue() must succeed.
+                v.emplace_back(entry.unsafeValue<long>());
+            } else
                 v.emplace_back(entry.rawData());
         }
         input.push_back(std::move(v));

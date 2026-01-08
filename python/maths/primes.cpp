@@ -37,6 +37,29 @@
 using regina::Integer;
 using regina::Primes;
 
+namespace {
+    pybind11::list nativePrimeDecomp(long n) {
+        // Since n fits into a long, all of the prime factors must fit into a
+        // long also.  Therefore unsafeValue() is fine to use here.
+        auto factors = Primes::primeDecomp(n);
+        pybind11::list ans;
+        for (auto& f : factors)
+            ans.append(f.unsafeValue<long>());
+        return ans;
+    }
+
+    pybind11::list nativePrimePowerDecomp(long n) {
+        // Since n fits into a long, all of the prime factors must fit into a
+        // long also.  Therefore unsafeValue() is fine to use here.
+        auto factors = Primes::primePowerDecomp(n);
+        pybind11::list ans;
+        for (auto& f : factors)
+            ans.append(pybind11::make_tuple(
+                f.first.unsafeValue<long>(), f.second));
+        return ans;
+    }
+}
+
 void addPrimes(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Primes)
 
@@ -47,23 +70,16 @@ void addPrimes(pybind11::module_& m) {
             rdoc::prime)
         .def_static("primeDecomp", &Primes::primeDecomp,
             rdoc::primeDecomp)
-        .def_static("primeDecompInt", [](const Integer& n) {
-            std::vector<Integer> factors = Primes::primeDecomp(n);
-            pybind11::list ans;
-            for (auto& f : factors)
-                ans.append(f.longValue());
-            return ans;
-        }, rdoc::primeDecomp)
+        .def_static("primeDecomp", &nativePrimeDecomp,
+            rdoc::primeDecomp)
+        .def_static("primeDecompInt", &nativePrimeDecomp, // deprecated
+            rdoc::primeDecomp)
         .def_static("primePowerDecomp", &Primes::primePowerDecomp,
             rdoc::primePowerDecomp)
-        .def_static("primePowerDecompInt", [](const Integer& n) {
-            std::vector<std::pair<Integer, unsigned long>>
-                factors = Primes::primePowerDecomp(n);
-            pybind11::list ans;
-            for (auto& f : factors)
-                ans.append(pybind11::make_tuple(f.first.longValue(), f.second));
-            return ans;
-        }, rdoc::primePowerDecomp)
+        .def_static("primePowerDecomp", &nativePrimePowerDecomp,
+            rdoc::primePowerDecomp)
+        .def_static("primePowerDecompInt", // deprecated
+            &nativePrimePowerDecomp, rdoc::primePowerDecomp)
     ;
     regina::python::no_eq_static(c);
 

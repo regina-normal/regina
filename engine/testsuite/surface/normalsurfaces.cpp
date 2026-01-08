@@ -88,7 +88,7 @@ TEST(NormalSurfacesTest, defaultArgs) {
 
 // Use std::tuple for the free comparison operators.
 using CompactProfile = std::tuple<
-    long    /* euler char */,
+    regina::Integer /* euler char */,
     bool    /* orientable? */,
     bool    /* two-sided? */,
     bool    /* has real boundary? */,
@@ -105,7 +105,7 @@ static std::vector<CompactProfile> sortedCompactProfiles(
         EXPECT_TRUE(s.isCompact());
         EXPECT_TRUE(s.isConnected());
         auto edgeLinks = s.isThinEdgeLink();
-        found.push_back({ s.eulerChar().longValue(),
+        found.push_back({ s.eulerChar(),
             s.isOrientable(), s.isTwoSided(), s.hasRealBoundary(),
             s.isVertexLinking(), (edgeLinks.first == nullptr ? 0 :
                 edgeLinks.second == nullptr ? 1 : 2),
@@ -369,7 +369,7 @@ TEST(NormalSurfacesTest, norSFS) {
 
 // Use std::tuple for the free comparison operators.
 using NonCompactProfile = std::tuple<
-    long    /* euler char, or always 0 for non-compact surfaces */,
+    regina::Integer /* euler char, or always 0 for non-compact surfaces */,
     bool    /* orientable?, or always false for non-compact surfaces */,
     bool    /* two-sided?, or always false for non-compact surfaces */,
     bool    /* compact? */,
@@ -387,7 +387,7 @@ static std::vector<NonCompactProfile> sortedNonCompactProfiles(
         auto edgeLinks = s.isThinEdgeLink();
         if (s.isCompact()) {
             EXPECT_TRUE(s.isConnected());
-            found.push_back({ s.eulerChar().longValue(),
+            found.push_back({ s.eulerChar(),
                 s.isOrientable(), s.isTwoSided(),
                 true, s.hasRealBoundary(),
                 s.isVertexLinking(), (edgeLinks.first == nullptr ? 0 :

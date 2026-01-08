@@ -1271,25 +1271,6 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
     return false;
 }
 
-namespace {
-    /**
-     * Used to sort candidate incompressible surfaces by Euler characteristic.
-     * Surfaces with smaller genus (i.e., larger Euler characteristic)
-     * are to be processed first.
-     */
-    struct SurfaceID {
-        long index;
-            /**< Which surface in the list are we referring to? */
-        long euler;
-            /**< What is its Euler characteristic? */
-
-        inline bool operator < (const SurfaceID& rhs) const {
-            return (euler > rhs.euler ||
-                (euler == rhs.euler && index < rhs.index));
-        }
-    };
-}
-
 bool Triangulation<3>::isHaken() const {
     if (prop_.haken_.has_value())
         return *prop_.haken_;
@@ -1322,24 +1303,24 @@ bool Triangulation<3>::isHaken() const {
     // Run through each surface, one at a time.
     // Sort them first however, so we process the (easier) smaller genus
     // surfaces first.
-    auto* id = new SurfaceID[list.size()];
-    unsigned i;
-    for (i = 0; i < list.size(); ++i) {
-        id[i].index = i;
-        id[i].euler = list[i].eulerChar().longValue();
+    // Each SurfaceID in the following list is a pair (index, Euler char).
+    using SurfaceID = std::pair<size_t, Integer>;
+    FixedArray<SurfaceID> id(list.size());
+    for (size_t i = 0; i < list.size(); ++i) {
+        id[i].first = i;
+        id[i].second = list[i].eulerChar();
     }
-    std::sort(id, id + list.size());
+    std::sort(id.begin(), id.end(), [](const SurfaceID& a, const SurfaceID& b) {
+        return (a.second > b.second); // genus of a < genus of b
+    });
 
-    for (i = 0; i < list.size(); ++i) {
-        // std::cout << "Testing surface " << i << "..." << std::endl;
-        if (list[id[i].index].isIncompressible()) {
-            delete[] id;
+    for (const auto& sid : id) {
+        if (list[sid.first].isIncompressible()) {
             prop_.threeSphere_ = false; // Implied by Hakenness.
             return *(prop_.haken_ = true);
         }
     }
 
-    delete[] id;
     return *(prop_.haken_ = false);
 }
 

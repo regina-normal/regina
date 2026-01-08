@@ -139,9 +139,12 @@ void HilbertPrimal::enumerateUsingBitmask(Action&& action,
                 std::vector<mpz_class>& v(input.emplace_back());
                 v.reserve(dim);
                 for (i = 0; i < dim; ++i) {
-                    if ((*rit)[i].isNative())
-                        v.push_back(mpz_class((*rit)[i].longValue()));
-                    else
+                    if ((*rit)[i].isNative()) {
+                        // Since this large integer has a native rep.,
+                        // unsafeValue() must succeed.
+                        v.push_back(mpz_class((*rit)[i].
+                            template unsafeValue<long>()));
+                    } else
                         v.push_back(mpz_class((*rit)[i].rawData()));
                 }
             }

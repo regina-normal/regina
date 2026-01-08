@@ -37,7 +37,7 @@ def encode(i):
 def grouprep(g):
     ans = encode(g.rank())
     for i in range(g.countInvariantFactors()):
-        ans = ans + encode(g.invariantFactor(i).longValue())
+        ans = ans + encode(g.invariantFactor(i).safeValue())
     return ans
 
 def process(tri):

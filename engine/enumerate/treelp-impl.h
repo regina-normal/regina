@@ -152,17 +152,21 @@ LPInitialTableaux<Constraint>::LPInitialTableaux(
     } else {
         eqns_ = regina::makeAngleEquations(tri);
 
-        // Scale each row so that the rightmost entry (used for
+        // Scale each row up so that the rightmost entry (used for
         // projectivising the angle structure polytope) is always -2.
         // This is possible since the angle equation matrix
         // will have final entries of -1 and -2 only.
         scaling_ = -2;
-        long rightmost;
         for (r = 0; r < eqns_.rows(); ++r) {
-            rightmost = eqns_.entry(r, eqns_.columns() - 1).longValue();
-            if (rightmost != scaling_)
+            // Since rightmost must be -1 or -2, unsafeValue() must succeed.
+            long rightmost = eqns_.entry(r, eqns_.columns() - 1).
+                template unsafeValue<long>();
+            if (rightmost == -1) {
                 for (c = 0; c < eqns_.columns(); ++c)
-                    eqns_.entry(r, c) *= (scaling_ / rightmost);
+                    eqns_.entry(r, c) *= 2;
+            } else if (rightmost != -2)
+                throw ImpossibleScenario("Some angle equation does not have "
+                    "-1 or -2 as its final coefficient");
         }
     }
 
@@ -180,9 +184,9 @@ LPInitialTableaux<Constraint>::LPInitialTableaux(
     for (c = 0; c < eqns_.columns() - (scaling_ ? 1 : 0); ++c)
         for (r = 0; r < rank_; ++r)
             if (eqns_.entry(r, c) != 0) {
-                // Each entry should have absolute value. <= 4
-                col_[c].push(r,
-                    static_cast<int>(eqns_.entry(r, c).longValue()));
+                // Each entry should have absolute value <= 4, so
+                // unsafeValue() is safe to use here.
+                col_[c].push(r, eqns_.entry(r, c).template unsafeValue<int>());
             }
 
     // Add in the final row(s) for any additional constraints.

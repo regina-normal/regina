@@ -58,33 +58,6 @@ static Integer toInteger(T val) {
     }
 }
 
-template <regina::StandardCppInteger T>
-static T fromInteger(const Integer& val) {
-    // This function exists so that we can convert an Integer to
-    // a native C++ integer type, even if that type takes values
-    // outside the range of a long (which means Integer::longValue
-    // is not good enough).
-
-    // Due to our use of the standard library string-to-integer
-    // conversion functions, this currently cannot handle
-    // any type T larger than a (signed or unsigned) long long.
-    static_assert(sizeof(T) <= sizeof(long long));
-
-    if (sizeof(T) < sizeof(long)) {
-        return static_cast<T>(val.longValue());
-    } else if (sizeof(T) == sizeof(long)) {
-        if constexpr(std::is_unsigned_v<T>)
-            return std::stoul(val.stringValue());
-        else
-            return val.longValue();
-    } else if (sizeof(T) <= sizeof(long long)) {
-        if constexpr(std::is_unsigned_v<T>)
-            return std::stoull(val.stringValue());
-        else
-            return std::stoll(val.stringValue());
-    }
-}
-
 template <typename T>
 static void verifyUsing(const Integer& val, const std::string& enc) {
     SCOPED_TRACE_TYPE(T);
@@ -117,7 +90,7 @@ static void verifyUsing(const Integer& val, const std::string& enc) {
     if constexpr (arbitraryPrecision) {
         native = val;
     } else {
-        native = fromInteger<T>(val);
+        ASSERT_NO_THROW({ native = val.safeValue<T>(); });
 
         std::ostringstream out;
         if constexpr (sizeof(T) == 1)
