@@ -2357,17 +2357,60 @@ static void verifyCppInteger(Native native) {
         EXPECT_EQ(extracted, native);
     }
 
-    // Equality and inequality testing:
-    EXPECT_EQ(large, native);
-    EXPECT_NE(large, native + 1);
-    EXPECT_NE(large, native - 1);
-    if (native != 0)
-        EXPECT_NE(large, native / 2);
-    if constexpr (regina::is_signed_cpp_integer_v<Native>)
-        if ((native << 1) != 0)
-            EXPECT_NE(large, -native);
-    EXPECT_NE(large, native ^ Native(1));
-    EXPECT_NE(large, native ^ (Native(1) << (sizeof(Native) * 8 - 1)));
+    // Comparisons:
+    {
+        static constexpr Native minNative = std::numeric_limits<Native>::min();
+        static constexpr Native maxNative = std::numeric_limits<Native>::max();
+
+        EXPECT_EQ(large, native);
+        EXPECT_NE(large, static_cast<Native>(native + 1));
+        if (native != maxNative) {
+            EXPECT_LT(large, static_cast<Native>(native + 1));
+            EXPECT_GT(static_cast<Native>(native + 1), large);
+        }
+        EXPECT_NE(large, static_cast<Native>(native - 1));
+        if (native != minNative) {
+            EXPECT_GT(large, static_cast<Native>(native - 1));
+            EXPECT_LT(static_cast<Native>(native - 1), large);
+        }
+        if (native > 0) {
+            EXPECT_NE(large, static_cast<Native>(native / 2));
+            EXPECT_GT(large, static_cast<Native>(native / 2));
+        } else if (native < 0) {
+            EXPECT_NE(large, static_cast<Native>(native / 2));
+            EXPECT_LT(large, static_cast<Native>(native / 2));
+        }
+
+        EXPECT_NE(large, static_cast<Native>(native ^ Native(1)));
+        if (native % 2 == 0)
+            EXPECT_LT(large, static_cast<Native>(native ^ Native(1)));
+        else
+            EXPECT_GT(large, static_cast<Native>(native ^ Native(1)));
+
+        static constexpr Native firstBit =
+            static_cast<Native>(Native(1) << (sizeof(Native) * 8 - 1));
+        if constexpr (regina::is_signed_cpp_integer_v<Native>) {
+            EXPECT_NE(large, static_cast<Native>(native ^ firstBit));
+            if (native >= 0)
+                EXPECT_GT(large, static_cast<Native>(native ^ firstBit));
+            else
+                EXPECT_LT(large, static_cast<Native>(native ^ firstBit));
+
+            if (native != 0 && native != firstBit) {
+                EXPECT_NE(large, static_cast<Native>(-native));
+                if (native > 0)
+                    EXPECT_GT(large, static_cast<Native>(-native));
+                else
+                    EXPECT_LT(large, static_cast<Native>(-native));
+            }
+        } else {
+            EXPECT_NE(large, static_cast<Native>(native ^ firstBit));
+            if (native & firstBit)
+                EXPECT_GT(large, static_cast<Native>(native ^ firstBit));
+            else
+                EXPECT_LT(large, static_cast<Native>(native ^ firstBit));
+        }
+    }
 }
 
 template <ArbitraryPrecisionInteger IntegerType, UnsignedCppInteger Native>

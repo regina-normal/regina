@@ -646,7 +646,7 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         std::strong_ordering operator <=> (const IntegerBase& rhs) const;
         /**
-         * Compares this to the given integer.
+         * Compares this to the given native C++ integer.
          *
          * This is a numerical comparison; that is, it uses the usual ordering
          * of the integers. Infinity is considered greater than any integer.
@@ -656,12 +656,14 @@ class IntegerBase : private InfinityBase<withInfinity> {
          *
          * \python This spaceship operator `x <=> y` is not available, but the
          * other comparison operators that it generates _are_ available.
+         * It is assumed that the type \a IntType is \c long.
          *
          * \param rhs the integer with which this will be compared.
          * \return The result of the numerical comparison between this and
          * the given integer.
          */
-        std::strong_ordering operator <=> (long rhs) const;
+        template <CppInteger IntType>
+        std::strong_ordering operator <=> (IntType rhs) const;
 
         /**
          * The preincrement operator.
@@ -2972,14 +2974,36 @@ inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
 }
 
 template <bool withInfinity>
-inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (long rhs)
-        const {
+template <CppInteger IntType>
+inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
+        IntType rhs) const {
     if (isInfinite())
         return std::strong_ordering::greater;
-    else if (large_)
-        return (mpz_cmp_si(large_, rhs) <=> 0);
-    else
-        return (small_ <=> rhs);
+    else if (large_) {
+        if constexpr (sizeof(IntType) <= sizeof(long)) {
+            if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+                return (mpz_cmp_si(large_, rhs) <=> 0);
+            } else {
+                return (mpz_cmp_ui(large_, rhs) <=> 0);
+            }
+        } else {
+            // TODO: Improve this.
+            return *this <=> IntegerBase(rhs);
+        }
+    } else {
+        if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+            // Both small_ and rhs are signed.
+            return (small_ <=> rhs);
+        } else {
+            // Be careful: small_ is signed, but rhs is unsigned.
+            if (small_ < 0)
+                return std::strong_ordering::less;
+            else {
+                // Cast small_ to an unsigned type that can contain its value.
+                return (static_cast<unsigned long>(small_) <=> rhs);
+            }
+        }
+    }
 }
 
 template <bool withInfinity>
