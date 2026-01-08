@@ -954,7 +954,7 @@ found_a_generator_killer:
         return HomGroupPresentation(std::move(oldGroup), *this,
             substitutionTable, revMap);
     } else
-        return std::nullopt;
+        return {};
 }// end smallCancellation()
 
 std::optional<HomGroupPresentation> GroupPresentation::nielsen() {
@@ -962,7 +962,7 @@ std::optional<HomGroupPresentation> GroupPresentation::nielsen() {
     // This matters (for example) when we simplify the domain and codomain
     // of a monodromy, and we need both ends to simplify identically.
 
-    if (nGenerators_ < 2) return std::nullopt;
+    if (nGenerators_ < 2) return {};
     // let's keep a record of the best possible substitution,
     bool didSomething(true);
     std::optional<HomGroupPresentation> retval;
@@ -1099,116 +1099,139 @@ std::optional<HomGroupPresentation> GroupPresentation::homologicalAlignment() {
         Vector<Integer> temp = abelianized.snfRep(
             Vector<Integer>::unit(countGenerators(), j));
         for (size_t i=0; i<abelianized.snfRank(); i++)
-            abMat.entry(i,j) = temp[i]; // columns are snfreps of abelianized gens.
+            abMat.entry(i,j) = temp[i]; // cols are snfreps of abelianized gens.
     }
 
     size_t abNF = abelianized.countInvariantFactors();
     size_t abNG = abelianized.snfRank();
+
     // step 2: we will mimic the simple smith normal form algorithm algorithm
     //         using corresponding moves on the group presentation.
     //         first the free generators.
-    for (size_t i=abNF; i<abNG; i++) {
-        // in row i we will eliminate all but one entry using column
-        // operations.  Now we need to do a while loop -- find any two non-zero
-        // entries in the row, and reduce.  If there's only one non-zero entry,
-        // we're done.
-        size_t j0 = 0, j1 = abMat.columns()-1;
-        while (j0 < j1) {
-            // if at j0 its zero, inc, if at j1 zero, dec
-            if (abMat.entry(i,j0).isZero()) {
-                j0++;
-                continue;
-            }
-            if (abMat.entry(i,j1).isZero()) {
-                j1--;
-                continue;
-            }
-            // column op!
-            bool colFlag( abMat.entry(i,j0).abs() < abMat.entry(i,j1).abs() );
-            Integer q = abMat.entry(i,colFlag ? j1 : j0) /
-                        abMat.entry(i,colFlag ? j0 : j1);
-            // subtract q times column j0 from column j1
-            for (size_t r=0; r<abMat.rows(); r++)
-                abMat.entry(r,colFlag ? j1 : j0) -= abMat.entry(r,colFlag ? j0 : j1)*q;
-            GroupPresentation oldPres(*this);
-            std::vector<GroupExpression> fVec( nGenerators_ ), bVec( nGenerators_ );
-            for (size_t l=0; l<nGenerators_; l++) {
-                fVec[l].addTermLast(l, 1);
-                bVec[l].addTermLast(l, 1);
-                if (l==j1) {
-                    fVec[l].addTermLast(colFlag ? j0 : j1, q.longValue());
-                    bVec[l].addTermLast(colFlag ? j0 : j1, -q.longValue());
+    try { // Integer::safeValue<long>() could throw exceptions.
+        for (size_t i=abNF; i<abNG; i++) {
+            // in row i we will eliminate all but one entry using column
+            // operations.  Now we need to do a while loop -- find any two
+            // non-zero entries in the row, and reduce.  If there's only one
+            // non-zero entry, we're done.
+            size_t j0 = 0, j1 = abMat.columns()-1;
+            while (j0 < j1) {
+                // if at j0 its zero, inc, if at j1 zero, dec
+                if (abMat.entry(i,j0).isZero()) {
+                    j0++;
+                    continue;
                 }
-            }
-            // manufacture the Nielsen automorphism...
-            nielsenCombine(colFlag ? j1 : j0, colFlag ? j0 : j1, -q.longValue() );
-            HomGroupPresentation tempHom(std::move(oldPres), *this, fVec, bVec);
-            if (!retval)
-                retval = std::move(tempHom);
-            else
-                *retval = tempHom * (*retval);
-        } // j0==j1 is the column such that entry (i,j1) is +-1.
-        nielsenTransposition(i, j1);
-        abMat.swapCols(i, j1);
-        // NOTE: the matrix will have the form:
-        //       [ * * * ]
-        //       [ 0 D 0 ]  At this point, with D a diagonal +-1 matrix.
-    }
-
-    for (size_t i=0; i<abNF; i++)
-        for (size_t j=abNF; j<abNG; j++)
-            abMat.entry(i,j) = 0;
-    // now we're at [ * 0 * ]
-    //              [ 0 D 0 ]
-
-    // step 3: reduce inv fac terms, kill the rest.
-    for (size_t i=0; i<abNF; i++) {
-        // let's start working on entry(i,j0) and (i,j1) with j0<j1 in 0...invFacNum
-        size_t j0 = 0, j1 = abMat.columns()-1;
-        while (j0 < j1) {
-            // if at j0 its zero, inc, if at j1 zero, dec
-            if ((abMat.entry(i,j0) % abelianized.invariantFactor(i)).isZero()) {
-                j0++;
-                continue;
-            }
-            if ((abMat.entry(i,j1) % abelianized.invariantFactor(i)).isZero()) {
-                j1--;
-                continue;
-            }
-            // column op!
-            bool colFlag( (abMat.entry(i,j0) % abelianized.invariantFactor(i)).abs() <
-                          (abMat.entry(i,j1) % abelianized.invariantFactor(i)).abs() );
-            Integer q = abMat.entry(i,colFlag ? j1 : j0) /
-                        abMat.entry(i,colFlag ? j0 : j1);
-
-            // subtract q times column j0 from column j1
-            for (size_t r=0; r<abMat.rows(); r++)
-                abMat.entry(r,colFlag ? j1 : j0) -= abMat.entry(r,colFlag ? j0 : j1)*q;
-            GroupPresentation oldPres(*this);
-            std::vector<GroupExpression> fVec( nGenerators_ ), bVec( nGenerators_ );
-            for (size_t l=0; l<nGenerators_; l++) {
-                fVec[l].addTermLast(l, 1);
-                bVec[l].addTermLast(l, 1);
-                if (l==j1) {
-                    fVec[l].addTermLast(colFlag ? j0 : j1, q.longValue());
-                    bVec[l].addTermLast(colFlag ? j0 : j1, -q.longValue());
+                if (abMat.entry(i,j1).isZero()) {
+                    j1--;
+                    continue;
                 }
-            }
-            // manufacture the Nielsen automorphism...
-            nielsenCombine(colFlag ? j1 : j0, colFlag ? j0 : j1, -q.longValue() );
-            HomGroupPresentation tempHom(std::move(oldPres), *this, fVec, bVec);
-            if (!retval)
-                retval = std::move(tempHom);
-            else
-                *retval = tempHom * (*retval);
-        } // j0==j1 is the column such that entry (i,j1) is +-1.
-        if (i!=j1) {
+                // column op!
+                bool colFlag(
+                    abMat.entry(i,j0).abs() < abMat.entry(i,j1).abs() );
+                Integer q = abMat.entry(i,colFlag ? j1 : j0) /
+                            abMat.entry(i,colFlag ? j0 : j1);
+                // subtract q times column j0 from column j1
+                for (size_t r=0; r<abMat.rows(); r++)
+                    abMat.entry(r,colFlag ? j1 : j0) -=
+                        abMat.entry(r,colFlag ? j0 : j1) * q;
+                GroupPresentation oldPres(*this);
+                std::vector<GroupExpression> fVec( nGenerators_ );
+                std::vector<GroupExpression> bVec( nGenerators_ );
+                for (size_t l=0; l<nGenerators_; l++) {
+                    fVec[l].addTermLast(l, 1);
+                    bVec[l].addTermLast(l, 1);
+                    if (l==j1) {
+                        fVec[l].addTermLast(colFlag ? j0 : j1,
+                            q.safeValue<long>());
+                        bVec[l].addTermLast(colFlag ? j0 : j1,
+                            -q.safeValue<long>());
+                    }
+                }
+                // manufacture the Nielsen automorphism...
+                nielsenCombine(colFlag ? j1 : j0, colFlag ? j0 : j1,
+                    -q.safeValue<long>() );
+                HomGroupPresentation tempHom(std::move(oldPres), *this,
+                    fVec, bVec);
+                if (!retval)
+                    retval = std::move(tempHom);
+                else
+                    *retval = tempHom * (*retval);
+            } // j0==j1 is the column such that entry (i,j1) is +-1.
             nielsenTransposition(i, j1);
             abMat.swapCols(i, j1);
+            // NOTE: the matrix will have the form:
+            //       [ * * * ]
+            //       [ 0 D 0 ]  At this point, with D a diagonal +-1 matrix.
         }
+
+        for (size_t i=0; i<abNF; i++)
+            for (size_t j=abNF; j<abNG; j++)
+                abMat.entry(i,j) = 0;
+        // now we're at [ * 0 * ]
+        //              [ 0 D 0 ]
+
+        // step 3: reduce inv fac terms, kill the rest.
+        for (size_t i=0; i<abNF; i++) {
+            // let's start working on entry(i,j0) and (i,j1)
+            // with j0<j1 in 0...invFacNum
+            size_t j0 = 0, j1 = abMat.columns()-1;
+            while (j0 < j1) {
+                // if at j0 its zero, inc, if at j1 zero, dec
+                if ((abMat.entry(i,j0) %
+                        abelianized.invariantFactor(i)).isZero()) {
+                    j0++;
+                    continue;
+                }
+                if ((abMat.entry(i,j1) %
+                        abelianized.invariantFactor(i)).isZero()) {
+                    j1--;
+                    continue;
+                }
+                // column op!
+                bool colFlag(
+                    (abMat.entry(i,j0) % abelianized.invariantFactor(i)).abs() <
+                    (abMat.entry(i,j1) % abelianized.invariantFactor(i)).abs());
+                Integer q = abMat.entry(i,colFlag ? j1 : j0) /
+                            abMat.entry(i,colFlag ? j0 : j1);
+
+                // subtract q times column j0 from column j1
+                for (size_t r=0; r<abMat.rows(); r++)
+                    abMat.entry(r,colFlag ? j1 : j0) -=
+                        abMat.entry(r,colFlag ? j0 : j1)*q;
+                GroupPresentation oldPres(*this);
+                std::vector<GroupExpression> fVec( nGenerators_ );
+                std::vector<GroupExpression> bVec( nGenerators_ );
+                for (size_t l=0; l<nGenerators_; l++) {
+                    fVec[l].addTermLast(l, 1);
+                    bVec[l].addTermLast(l, 1);
+                    if (l==j1) {
+                        fVec[l].addTermLast(colFlag ? j0 : j1,
+                            q.safeValue<long>());
+                        bVec[l].addTermLast(colFlag ? j0 : j1,
+                            -q.safeValue<long>());
+                    }
+                }
+                // manufacture the Nielsen automorphism...
+                nielsenCombine(colFlag ? j1 : j0, colFlag ? j0 : j1,
+                    -q.safeValue<long>() );
+                HomGroupPresentation tempHom(std::move(oldPres), *this,
+                    fVec, bVec);
+                if (!retval)
+                    retval = std::move(tempHom);
+                else
+                    *retval = tempHom * (*retval);
+            } // j0==j1 is the column such that entry (i,j1) is +-1.
+            if (i!=j1) {
+                nielsenTransposition(i, j1);
+                abMat.swapCols(i, j1);
+            }
+        }
+        // now we're at [ P 0 0 ]
+        //              [ 0 D 0 ] so we're essentially done.
+    } catch (const NoSolution&) {
+        throw UnsolvedCase("An integer overflow occurred while attempting "
+            "to build a group expression");
     }
-    // now we're at [ P 0 0 ]
-    //              [ 0 D 0 ] so we're essentially done.
 
     // call prettify
     if (auto h = prettyRewriting()) {
@@ -1606,10 +1629,16 @@ bool GroupPresentation::nielsenCombine(size_t i, size_t j,
 std::optional<HomGroupPresentation> GroupPresentation::identifyExtensionOverZ()
 {
     // step 1: let's build the abelianization homomorphism.
-    homologicalAlignment();
+    try {
+        homologicalAlignment();
+    } catch (const UnsolvedCase&) {
+        // An integer overflow occurred during homologicalAlignment().
+        // Just declare that the algorithm did not succeed.
+        return {};
+    }
     MarkedAbelianGroup abelianized = markedAbelianisation();
     if (abelianized.rank() != 1)
-        return std::nullopt;
+        return {};
     if (abelianized.countInvariantFactors()>0)  // put Z generator at 0-th
         nielsenTransposition(0, abelianized.countInvariantFactors() );
 
@@ -1716,7 +1745,7 @@ std::optional<HomGroupPresentation> GroupPresentation::identifyExtensionOverZ()
     // generators
     size_t nGm1 = nGenerators_ - 1;
     if ( (maxKiller.size() != nGm1) || (minKiller.size() != nGm1) )
-        return std::nullopt;
+        return {};
 
     unsigned long maxWidth = 0;
     unsigned long liftCount = 0; // how many lifts of our generators do we need?

@@ -52,10 +52,15 @@ Version 7.5  [ TODO ]
               generator counts and generator indices.
             - The depth argument to GroupPresentation::proliferateRelators()
               is now of type int.
+            - GroupPresentation::homologicalAlignment() now throws an
+              UnsolvedCase exception if an integer overflow occurs when
+              transferring information from an abelian group to a group
+              expression.
         Class Integer, LargeInteger:
             - New template functions safeValue() and unsafeValue() to assist
-              with regina-to-C++ integer conversions.  The old nativeValue()
-              is now deprecated in favour of these new functions.
+              with regina-to-C++ integer conversions.  The old longValue(),
+              safeLongValue() and nativeValue() are all deprecated in favour of
+              these new functions.
             - Regarding construction and assignment from native C++ integers:
               instead of many different constructors and assignment operators
               for the different native C++ integer types, there is now a single

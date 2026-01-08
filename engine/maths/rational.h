@@ -500,11 +500,13 @@ template <bool withInfinity>
 inline Rational::Rational(const IntegerBase<withInfinity>& value) :
         flavour(Flavour::Normal) {
     mpq_init(data);
-    if (value.isInfinite())
+    if (value.isInfinite()) {
         flavour = Flavour::Infinity;
-    else if (value.isNative())
-        mpq_set_si(data, value.longValue(), 1);
-    else
+    } else if (value.isNative()) {
+        // Note: unsafeValue<long>() will succeed, since value holds a native
+        // integer representation.
+        mpq_set_si(data, value.template unsafeValue<long>(), 1);
+    } else
         mpq_set_z(data, value.rawData());
 }
 inline Rational::Rational(long value) : flavour(Flavour::Normal) {
@@ -522,9 +524,13 @@ Rational::Rational(const IntegerBase<withInfinity>& num,
             flavour = Flavour::Infinity;
     } else {
         flavour = Flavour::Normal;
-        if (num.isNative() && den.isNative())
-            mpq_set_si(data, num.longValue(), den.longValue());
-        else if (num.isNative()) {
+        if (num.isNative() && den.isNative()) {
+            // Note: these calls to unsafeValue<long>() will succeed, since
+            // both num and den hold native integer representations.
+            mpq_set_si(data,
+                num.template unsafeValue<long>(),
+                den.template unsafeValue<long>());
+        } else if (num.isNative()) {
             // Avoid bloating num with a GMP representation.
             IntegerBase<withInfinity> tmp(num);
             mpz_set(mpq_numref(data), tmp.rawData());
@@ -560,7 +566,9 @@ inline Rational& Rational::operator = (const IntegerBase<withInfinity>& value) {
         flavour = Flavour::Infinity;
     else if (value.isNative()) {
         flavour = Flavour::Normal;
-        mpq_set_si(data, value.longValue(), 1);
+        // Note: unsafeValue<long>() will succeed, since value holds a native
+        // integer representation.
+        mpq_set_si(data, value.template unsafeValue<long>(), 1);
     } else {
         flavour = Flavour::Normal;
         mpq_set_z(data, value.rawData());

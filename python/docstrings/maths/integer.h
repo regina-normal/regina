@@ -62,8 +62,11 @@ Python:
 
 // Docstring regina::python::doc::__add
 static const char *__add =
-R"doc(Adds the given native integer to the given large integer. If the large
-integer is infinite, the result will also be infinity.
+R"doc(Adds the given native C++ integer to the given large integer. If the
+large integer is infinite, the result will also be infinity.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
 
 Parameter ``lhs``:
     the native integer to add.
@@ -76,8 +79,11 @@ Returns:
 
 // Docstring regina::python::doc::__mul
 static const char *__mul =
-R"doc(Multiplies the given native integer with the given large integer. If
-the large integer is infinite, the result will also be infinity.
+R"doc(Multiplies the given native C++ integer with the given large integer.
+If the large integer is infinite, the result will also be infinity.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
 
 Parameter ``lhs``:
     the native integer to multiply.
@@ -121,10 +127,13 @@ Returns:
 
 // Docstring regina::python::doc::IntegerBase_::__add_2
 static const char *__add_2 =
-R"doc(Adds this to the given integer and returns the result. This integer is
-not changed.
+R"doc(Adds this to the given native C++ integer and returns the result. This
+integer is not changed.
 
 If either term of the sum is infinite, the result will be infinity.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
 
 Parameter ``other``:
     the integer to add to this integer.
@@ -155,7 +164,7 @@ Returns:
 
 // Docstring regina::python::doc::IntegerBase_::__cmp_2
 static const char *__cmp_2 =
-R"doc(Compares this to the given integer.
+R"doc(Compares this to the given native C++ integer.
 
 This is a numerical comparison; that is, it uses the usual ordering of
 the integers. Infinity is considered greater than any integer.
@@ -165,7 +174,8 @@ This generates all of the usual comparison operators, including ``<``,
 
 Python:
     This spaceship operator ``x <=> y`` is not available, but the
-    other comparison operators that it generates _are_ available.
+    other comparison operators that it generates _are_ available. It
+    is assumed that the type *IntType* is ``long``.
 
 Parameter ``rhs``:
     the integer with which this will be compared.
@@ -223,9 +233,9 @@ Returns:
 
 // Docstring regina::python::doc::IntegerBase_::__div_2
 static const char *__div_2 =
-R"doc(Divides this by the given integer and returns the result. The result
-will be truncated to an integer, i.e. rounded towards zero. This
-integer is not changed.
+R"doc(Divides this by the given native C++ integer and returns the result.
+The result will be truncated to an integer, i.e. rounded towards zero.
+This integer is not changed.
 
 If *other* is known to divide this integer exactly, divExact() should
 be used instead.
@@ -238,6 +248,9 @@ For a division routine that always rounds down, see divisionAlg().
 Precondition:
     If this class does not support infinity, then *other* must be non-
     zero.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
 
 Parameter ``other``:
     the integer to divide this by.
@@ -267,7 +280,10 @@ Returns:
 
 // Docstring regina::python::doc::IntegerBase_::__eq_3
 static const char *__eq_3 =
-R"doc(Determines if this is equal to the given integer.
+R"doc(Determines if this is equal to the given native C++ integer.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
 
 Parameter ``rhs``:
     the integer with which this will be compared.
@@ -394,7 +410,7 @@ Returns:
 
 // Docstring regina::python::doc::IntegerBase_::__imul
 static const char *__imul =
-R"doc(Multiplies the given integer by this. This integer is changed to
+R"doc(Multiplies this by the given integer. This integer is changed to
 reflect the result.
 
 If either factor of the product is infinite, the result will be
@@ -408,11 +424,14 @@ Returns:
 
 // Docstring regina::python::doc::IntegerBase_::__imul_2
 static const char *__imul_2 =
-R"doc(Multiplies the given integer by this. This integer is changed to
-reflect the result.
+R"doc(Multiplies this by the given native C++ integer. This integer is
+changed to reflect the result.
 
 If either factor of the product is infinite, the result will be
 infinity.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
 
 Parameter ``other``:
     the integer to multiply with this integer.
@@ -434,10 +453,10 @@ Returns:
 
 // Docstring regina::python::doc::IntegerBase_::__init
 static const char *__init =
-R"doc(Initialises this integer to the given value.
+R"doc(Initialises this integer to the given native C++ value.
 
 Python:
-    In Python, this is the only native-integer constructor available.
+    It is assumed that the type *IntType* is ``long``.
 
 Parameter ``value``:
     the new value of this integer.)doc";
@@ -611,8 +630,8 @@ Returns:
 // Docstring regina::python::doc::IntegerBase_::__mod_2
 static const char *__mod_2 =
 R"doc(Determines the remainder when this integer is divided by the given
-integer. If non-zero, the result will have the same sign as this
-integer. This integer is not changed.
+native C++ integer. If non-zero, the result will have the same sign as
+this integer. This integer is not changed.
 
 For a division routine that always returns a non-negative remainder,
 see divisionAlg().
@@ -622,6 +641,9 @@ Precondition:
 
 Precondition:
     This integer is not infinite.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
 
 Parameter ``other``:
     the integer to divide this by.
@@ -645,11 +667,14 @@ Returns:
 
 // Docstring regina::python::doc::IntegerBase_::__mul_2
 static const char *__mul_2 =
-R"doc(Multiplies this by the given integer and returns the result. This
-integer is not changed.
+R"doc(Multiplies this by the given native C++ integer and returns the
+result. This integer is not changed.
 
 If either factor of the product is infinite, the result will be
 infinity.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
 
 Parameter ``other``:
     the integer to multiply by this integer.
@@ -673,11 +698,14 @@ Returns:
 
 // Docstring regina::python::doc::IntegerBase_::__sub_2
 static const char *__sub_2 =
-R"doc(Subtracts the given integer from this and returns the result. This
-integer is not changed.
+R"doc(Subtracts the given native C++ integer from this and returns the
+result. This integer is not changed.
 
 If either term of the difference is infinite, the result will be
 infinity.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
 
 Parameter ``other``:
     the integer to subtract from this integer.
@@ -773,10 +801,10 @@ Returns:
 
 // Docstring regina::python::doc::IntegerBase_::divExact_2
 static const char *divExact_2 =
-R"doc(Divides this by the given integer and returns the result. This can
-only be used when the given integer divides into this exactly, and for
-large integers can be much faster than ordinary division. This integer
-is not changed.
+R"doc(Divides this by the given native C++ integer and returns the result.
+This can only be used when the given integer divides into this
+exactly, and for large integers can be much faster than ordinary
+division. This integer is not changed.
 
 Precondition:
     The given integer divides exactly into this integer, i.e. *this*
@@ -787,6 +815,9 @@ Precondition:
 
 Precondition:
     This integer is not infinite.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
 
 Parameter ``other``:
     the integer to divide this by.
@@ -1058,18 +1089,19 @@ Author:
 
 // Docstring regina::python::doc::IntegerBase_::longValue
 static const char *longValue =
-R"doc(Returns the value of this integer as a long.
+R"doc(Deprecated routine that returns the value of this integer as a native
+C++ ``long``, with no range checking.
 
-It is the programmer's reponsibility to ensure that this integer is
-within the required range. If this integer is too large or small to
-fit into a long, then the result will be undefined.
-
-Note that, assuming the value is within the required range, this
-routine will give correct results regardless of whether the underlying
-representation is a native or large integer.
+.. deprecated::
+    C++ users should now call ``unsafeValue<long>()`` (with a
+    different template parameter if you wish to work with a different
+    native C++ integer type instead of ``long``). Python users should
+    just call ``unsafeValue()``.
 
 Precondition:
-    This integer is not infinity.
+    This integer is within the required range for a native C++
+    ``long``. It does not matter whether the underlying representation
+    for this integer is a native or large integer.
 
 Returns:
     the value of this integer.)doc";
@@ -1183,15 +1215,43 @@ Returns:
 
 // Docstring regina::python::doc::IntegerBase_::safeLongValue
 static const char *safeLongValue =
-R"doc(Returns the value of this integer as a long, or throws an exception if
-this is not possible.
+R"doc(Deprecated routine that returns the value of this integer as a native
+C++ ``long``, or throws an exception if this is not possible.
 
 If this integer is within the required range, regardless of whether
 the underlying representation is a native or large integer, this
 routine will return the correct result.
 
+.. deprecated::
+    C++ users should now call ``safeValue<long>()`` (with a different
+    template parameter if you wish to work with a different native C++
+    integer type instead of ``long``). Python users should just call
+    ``safeValue()``.
+
 Exception ``NoSolution``:
-    This integer is too large or small to fit into a long.
+    This integer is too large or small to fit into a ``long``.
+
+Returns:
+    the value of this integer.)doc";
+
+// Docstring regina::python::doc::IntegerBase_::safeValue
+static const char *safeValue =
+R"doc(Returns the value of this integer as a native C++ integer of the given
+type, or throws an exception if this is not possible.
+
+If this integer is within the required range, regardless of whether
+the underlying representation is a native or large integer, this
+routine will return the correct result.
+
+Note that both signed and unsigned native integer types are supported
+here.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Exception ``NoSolution``:
+    This integer does not fit into the range of the given native C++
+    integer type.
 
 Returns:
     the value of this integer.)doc";
@@ -1293,6 +1353,31 @@ currently using.
 
 Precondition:
     This integer is not infinite.)doc";
+
+// Docstring regina::python::doc::IntegerBase_::unsafeValue
+static const char *unsafeValue =
+R"doc(Returns the value of this integer as a native C++ integer of the given
+type, leaving the programmer responsible for range checking.
+
+Note that both signed and unsigned native integer types are supported
+here.
+
+Precondition:
+    This integer is within the required range for the type *IntType*.
+    It does not matter whether the underlying representation for this
+    integer is a native or large integer.
+
+.. warning::
+    You should _only_ use this routine if you know in advance that
+    this integer is within the required range. Otherwise you should
+    call safeValue() instead, which performs range checking and throws
+    an exception if this fails.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Returns:
+    the value of this integer.)doc";
 
 }
 

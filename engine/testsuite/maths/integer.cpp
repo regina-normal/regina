@@ -99,9 +99,9 @@ static void verifyNative(const IntegerType& x, long expect) {
 
     EXPECT_TRUE(x.isNative());
     EXPECT_FALSE(x.isInfinite());
-    EXPECT_EQ(x.longValue(), expect);
+    EXPECT_EQ(x.template unsafeValue<long>(), expect);
     EXPECT_NO_THROW({
-        EXPECT_EQ(x.safeLongValue(), expect);
+        EXPECT_EQ(x.template safeValue<long>(), expect);
     });
     EXPECT_EQ(x.sign(), sign);
 
@@ -132,7 +132,7 @@ static void verifyInfinite(const IntegerType& x) {
 
     EXPECT_FALSE(x.isNative());
     EXPECT_TRUE(x.isInfinite());
-    EXPECT_THROW({ x.safeLongValue(); }, regina::NoSolution);
+    EXPECT_THROW({ x.template safeValue<long>(); }, regina::NoSolution);
     EXPECT_EQ(x.sign(), 1);
     EXPECT_FALSE(x.isZero());
     EXPECT_EQ(x.stringValue(), "inf");
@@ -155,7 +155,8 @@ static void verifyIdentical(const IntegerType& x, const IntegerType& y) {
     EXPECT_EQ(x.isNative(), y.isNative());
     EXPECT_EQ(x.isInfinite(), y.isInfinite());
     if (x.isNative()) {
-        EXPECT_EQ(x.longValue(), y.longValue());
+        EXPECT_EQ(x.template unsafeValue<long>(),
+            y.template unsafeValue<long>());
     }
     EXPECT_EQ(x.str(), y.str());
 }
@@ -966,10 +967,10 @@ TYPED_TEST(IntegerTest, comparisons) {
         EXPECT_TRUE(b.isNative());
         EXPECT_FALSE(c.isNative());
 
-        EXPECT_EQ(a.longValue(), x);
-        EXPECT_EQ(c.longValue(), x);
-        EXPECT_EQ(a.safeLongValue(), x);
-        EXPECT_EQ(c.safeLongValue(), x);
+        EXPECT_EQ(a.template unsafeValue<long>(), x);
+        EXPECT_EQ(c.template unsafeValue<long>(), x);
+        EXPECT_EQ(a.template safeValue<long>(), x);
+        EXPECT_EQ(c.template safeValue<long>(), x);
 
         EXPECT_TRUE(a.isNative());
         EXPECT_FALSE(c.isNative());
@@ -983,7 +984,7 @@ TYPED_TEST(IntegerTest, comparisons) {
             verifyLess(a, b);
 
             if (a.isNative()) {
-                verifyLess(a.longValue(), b);
+                verifyLess(a.template unsafeValue<long>(), b);
 
                 TypeParam p(a);
                 p.makeLarge();
@@ -991,7 +992,7 @@ TYPED_TEST(IntegerTest, comparisons) {
                 verifyLess(p, b);
             }
             if (b.isNative()) {
-                verifyLess(a, b.longValue());
+                verifyLess(a, b.template unsafeValue<long>());
 
                 TypeParam q(b);
                 q.makeLarge();
@@ -2148,9 +2149,10 @@ TYPED_TEST(IntegerTest, tryReduce) {
             EXPECT_EQ(y.isNative(), supportsNative);
             verifyEqual(x, y);
             if (supportsNative)
-                EXPECT_EQ(x, y.safeLongValue());
+                EXPECT_EQ(x, y.template safeValue<long>());
             else
-                EXPECT_THROW({ y.safeLongValue(); }, regina::NoSolution);
+                EXPECT_THROW({ y.template safeValue<long>(); },
+                    regina::NoSolution);
         }
         {
             TypeParam y = x;
@@ -2162,9 +2164,10 @@ TYPED_TEST(IntegerTest, tryReduce) {
             EXPECT_EQ(y.isNative(), supportsNative);
             verifyEqual(x, y);
             if (supportsNative)
-                EXPECT_EQ(x, y.safeLongValue());
+                EXPECT_EQ(x, y.template safeValue<long>());
             else
-                EXPECT_THROW({ y.safeLongValue(); }, regina::NoSolution);
+                EXPECT_THROW({ y.template safeValue<long>(); },
+                    regina::NoSolution);
         }
         {
             TypeParam y = x;
@@ -2174,9 +2177,10 @@ TYPED_TEST(IntegerTest, tryReduce) {
             EXPECT_EQ(y.isNative(), supportsNative);
             verifyEqual(x, y);
             if (supportsNative)
-                EXPECT_EQ(x, y.safeLongValue());
+                EXPECT_EQ(x, y.template safeValue<long>());
             else
-                EXPECT_THROW({ y.safeLongValue(); }, regina::NoSolution);
+                EXPECT_THROW({ y.template safeValue<long>(); },
+                    regina::NoSolution);
         }
     }
 }

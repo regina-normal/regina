@@ -185,7 +185,7 @@ TEST_F(GroupPresentationTest, homologicalAlignment) {
         SCOPED_TRACE("g = " + g->str());
 
         GroupPresentation tPres(*g);
-        tPres.homologicalAlignment();
+        EXPECT_NO_THROW({ tPres.homologicalAlignment(); });
         MarkedAbelianGroup mab = tPres.markedAbelianisation();
         size_t N = mab.countInvariantFactors();
         size_t M = mab.snfRank();

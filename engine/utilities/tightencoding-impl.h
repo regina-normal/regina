@@ -68,15 +68,16 @@ void tightEncodeInteger(std::ostream& out, Int value) {
     // The best-case scenario: a single "digit" character.
     if constexpr (std::is_unsigned_v<Int>) {
         if (value <= 45) {
-            out << char(value + 77); // char <= 122
+            out << char(value + 77); // char ≤ 122
             return;
         }
     } else {
         if (value > -45 && value <= 45) {
             if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-                out << char(value.longValue() + 77); // 33 <= char <= 122
+                out << char(value.template unsafeValue<int>() + 77);
+                    // 33 ≤ char ≤ 122
             } else {
-                out << char(value + 77); // 33 <= char <= 122
+                out << char(value + 77); // 33 ≤ char ≤ 122
             }
             return;
         }
@@ -97,7 +98,7 @@ void tightEncodeInteger(std::ostream& out, Int value) {
     } else {
         if (value > -45 && value <= 45) {
             if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-                out << '~' << char(value.longValue() + 77);
+                out << '~' << char(value.template unsafeValue<int>() + 77);
             } else {
                 out << '~' << char(value + 77);
             }
@@ -126,9 +127,10 @@ void tightEncodeInteger(std::ostream& out, Int value) {
             // start doing any arithmetic.
             int i;
             if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-                i = int(value.longValue()) + 4049; // 0 <= i < 8100 = 90*90
+                i = value.template unsafeValue<int>() + 4049;
+                    // 0 ≤ i < 8100 = 90*90
             } else {
-                i = int(value) + 4049; // 0 <= i < 8100 = 90*90
+                i = int(value) + 4049; // 0 ≤ i < 8100 = 90*90
             }
             out << '|' << char((i % 90) + 33) << char((i / 90) + 33);
             return;
@@ -160,9 +162,10 @@ void tightEncodeInteger(std::ostream& out, Int value) {
             // we start doing any arithmetic.
             long i;
             if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-                i = value.longValue() + 364499; // 0 <= i < 729000 = 90^3
+                i = value.template unsafeValue<long>() + 364499;
+                    // 0 ≤ i < 729000 = 90^3
             } else {
-                i = long(value) + 364499; // 0 <= i < 729000 = 90^3
+                i = long(value) + 364499; // 0 ≤ i < 729000 = 90^3
             }
             out << '}' << char((i % 90) + 33);
             i /= 90;
@@ -213,7 +216,9 @@ void tightEncodeInteger(std::ostream& out, Int value) {
 
     while (value > 0) {
         if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-            out << char((value % 90).longValue() + 33);
+            // value might be out of bounds for a native integer,
+            // but (value % 90) will not.
+            out << char((value % 90).template unsafeValue<int>() + 33);
         } else {
             out << char((value % 90) + 33);
         }
@@ -491,12 +496,12 @@ void tightEncodeIndex(std::ostream& out, Int value) {
                 "integers >= -1");
 
     if (value <= 88) {
-        out << char(value + 34); // 33 <= char <= 122
+        out << char(value + 34); // 33 ≤ char ≤ 122
         return;
     }
 
     if (value <= 178) {
-        out << '~' << char(value - 56); // 33 <= char <= 122
+        out << '~' << char(value - 56); // 33 ≤ char ≤ 122
         return;
     }
 

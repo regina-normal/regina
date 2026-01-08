@@ -372,40 +372,6 @@ class IntegerBase : private InfinityBase<withInfinity> {
         inline void makeInfinite();
 
         /**
-         * Returns the value of this integer as a \c long.
-         *
-         * It is the programmer's reponsibility to ensure that this integer
-         * is within the required range.  If this integer is too large or
-         * small to fit into a \c long, then the result will be undefined.
-         *
-         * Note that, assuming the value _is_ within the required range,
-         * this routine will give correct results regardless of whether the
-         * underlying representation is a native or large integer.  If the
-         * underlying representation is native however (i.e., isNative()
-         * returns \c true) then the value will definitely be within range,
-         * and so isNative() is a sufficient (but not necessary) condition for
-         * this routine to return the correct result.
-         *
-         * \pre This integer is not infinity.
-         *
-         * \return the value of this integer.
-         */
-        long longValue() const;
-        /**
-         * Returns the value of this integer as a long, or throws an
-         * exception if this is not possible.
-         *
-         * If this integer is within the required range, regardless of
-         * whether the underlying representation is a native or large integer,
-         * this routine will return the correct result.
-         *
-         * \exception NoSolution This integer is too large or small to fit
-         * into a long.
-         *
-         * \return the value of this integer.
-         */
-        long safeLongValue() const;
-        /**
          * Returns the value of this integer as a native C++ integer of the
          * given type, or throws an exception if this is not possible.
          *
@@ -416,9 +382,7 @@ class IntegerBase : private InfinityBase<withInfinity> {
          * Note that both signed and unsigned native integer types are
          * supported here.
          *
-         * \nopython Python does not have the diversity of integer types that
-         * C++ does, and so this function is not so important.  Python users
-         * can use longValue(), safeLongValue() or pythonValue() instead.
+         * \python It is assumed that the type \a IntType is \c long.
          *
          * \exception NoSolution This integer does not fit into the range of
          * the given native C++ integer type.
@@ -443,14 +407,47 @@ class IntegerBase : private InfinityBase<withInfinity> {
          * should call safeValue() instead, which performs range checking and
          * throws an exception if this fails.
          *
-         * \nopython Python does not have the diversity of integer types that
-         * C++ does, and so this function is not so important.  Python users
-         * can use longValue(), safeLongValue() or pythonValue() instead.
+         * \python It is assumed that the type \a IntType is \c long.
          *
          * \return the value of this integer.
          */
         template <CppInteger IntType>
         IntType unsafeValue() const;
+        /**
+         * Deprecated routine that returns the value of this integer as a
+         * native C++ \c long, or throws an exception if this is not possible.
+         *
+         * If this integer is within the required range, regardless of
+         * whether the underlying representation is a native or large integer,
+         * this routine will return the correct result.
+         *
+         * \deprecated C++ users should now call `safeValue<long>()` (with a
+         * different template parameter if you wish to work with a different
+         * native C++ integer type instead of \c long).  Python users should
+         * just call `safeValue()`.
+         *
+         * \exception NoSolution This integer is too large or small to fit
+         * into a \c long.
+         *
+         * \return the value of this integer.
+         */
+        [[deprecated]] long safeLongValue() const;
+        /**
+         * Deprecated routine that returns the value of this integer as a
+         * native C++ \c long, with no range checking.
+         *
+         * \deprecated C++ users should now call `unsafeValue<long>()` (with a
+         * different template parameter if you wish to work with a different
+         * native C++ integer type instead of \c long).  Python users should
+         * just call `unsafeValue()`.
+         *
+         * \pre This integer is within the required range for a native C++
+         * \c long.  It does not matter whether the underlying representation
+         * for this integer is a native or large integer.
+         *
+         * \return the value of this integer.
+         */
+        [[deprecated]] long longValue() const;
         /**
          * Deprecated function that returns the value of this integer as a
          * native integer of some fixed byte length, with no range checking.
@@ -467,7 +464,7 @@ class IntegerBase : private InfinityBase<withInfinity> {
          *
          * \nopython Python does not have the diversity of integer types that
          * C++ does, and so this function is not so important.  Python users
-         * can simply call longValue() or pythonValue() instead.
+         * can simply call safeValue(), unsafeValue(), or pythonValue() instead.
          *
          * \return the value of this integer.
          */
@@ -2522,13 +2519,6 @@ inline IntegerBase<withInfinity>::IntegerBase(double value) : large_(nullptr) {
 }
 
 template <bool withInfinity>
-template <int bytes>
-inline typename IntOfSize<bytes>::type IntegerBase<withInfinity>::nativeValue()
-        const {
-    return unsafeValue<typename IntOfSize<bytes>::type>();
-}
-
-template <bool withInfinity>
 inline IntegerBase<withInfinity>::IntegerBase(
         const std::string& value, int base) :
         IntegerBase(value.c_str(), base) {
@@ -2591,90 +2581,87 @@ inline std::string IntegerBase<withInfinity>::str() const {
 }
 
 template <bool withInfinity>
-inline long IntegerBase<withInfinity>::longValue() const {
-    return (large_ ? mpz_get_si(large_) : small_);
-}
-
-template <bool withInfinity>
-inline long IntegerBase<withInfinity>::safeLongValue() const {
-    if constexpr (withInfinity)
-        if (isInfinite())
-            throw NoSolution();
-
-    if (large_) {
-        if (mpz_cmp_si(large_, LONG_MAX) <= 0 &&
-                mpz_cmp_si(large_, LONG_MIN) >= 0)
-            return mpz_get_si(large_);
-        else
-            throw NoSolution();
-    } else
-        return small_;
-}
-
-template <bool withInfinity>
 template <CppInteger IntType>
 IntType IntegerBase<withInfinity>::safeValue() const {
     if constexpr (withInfinity)
         if (isInfinite())
             throw NoSolution();
 
+    using limits = std::numeric_limits<IntType>;
+
     if (large_) {
         // We have a GMP integer.
-        int sign = mpz_sgn(large_);
-        if (sign == 0)
-            return 0;
-
-        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
-            if (sign < 0)
-                throw NoSolution();
-
-            // We have a strictly positive GMP integer.
-            size_t count;
-            auto* result = mpz_export(nullptr, &count, 1 /* word order */,
-                sizeof(IntType), 0 /* native endianness */, 0 /* full words */,
-                large_);
-            // We should have count > 0.
-            if (count == 1) {
-                IntType ans = *static_cast<IntType*>(result);
-                free(result);
-                return ans;
+        if constexpr (sizeof(IntType) <= sizeof(long)) {
+            // Optimise for small native types.
+            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+                if (mpz_sgn(large_) >= 0 &&
+                        mpz_cmp_ui(large_, limits::max()) <= 0)
+                    return static_cast<IntType>(mpz_get_ui(large_));
+                else
+                    throw NoSolution();
             } else {
-                free(result);
-                throw NoSolution();
+                if (mpz_cmp_si(large_, limits::max()) <= 0 &&
+                        mpz_cmp_si(large_, limits::min()) >= 0)
+                    return static_cast<IntType>(mpz_get_si(large_));
+                else
+                    throw NoSolution();
             }
         } else {
-            // Fetch the absolute value of our GMP integer, which we know to
-            // be non-zero.
-            size_t count;
-            auto* result = mpz_export(nullptr, &count, 1 /* word order */,
-                sizeof(IntType), 0 /* native endianness */, 0 /* full words */,
-                large_);
-            // We should have count > 0.
-            if (count == 1) {
-                IntType absVal = *static_cast<IntType*>(result);
-                free(result);
+            int sign = mpz_sgn(large_);
+            if (sign == 0)
+                return 0;
 
-                // Note that IntType is signed, and so absVal will in fact
-                // appear negative if and only if its highest bit is set.
-                if (absVal >= 0) {
-                    // The highest bit is not set.
-                    // There will be no overflow.
-                    return (sign > 0 ? absVal : -absVal);
+            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+                if (sign < 0)
+                    throw NoSolution();
+
+                // We have a strictly positive GMP integer.
+                size_t count;
+                auto* result = mpz_export(nullptr, &count, 1 /* word order */,
+                    sizeof(IntType), 0 /* native endianness */,
+                    0 /* full words */, large_);
+                // We should have count > 0.
+                if (count == 1) {
+                    IntType ans = *static_cast<IntType*>(result);
+                    free(result);
+                    return ans;
                 } else {
-                    // The highest bit is set.
-                    // There will be overflow - however, this overflow will
-                    // actually wrap around to give the correct result if
-                    // (and only if) our integer is the minimum possible IntVal
-                    // (-100..0 in binary).
-                    if (sign < 0 &&
-                            absVal == std::numeric_limits<IntType>::min())
-                        return absVal;
-                    else
-                        throw NoSolution();
+                    free(result);
+                    throw NoSolution();
                 }
             } else {
-                free(result);
-                throw NoSolution();
+                // Fetch the absolute value of our GMP integer, which we know to
+                // be non-zero.
+                size_t count;
+                auto* result = mpz_export(nullptr, &count, 1 /* word order */,
+                    sizeof(IntType), 0 /* native endianness */,
+                    0 /* full words */, large_);
+                // We should have count > 0.
+                if (count == 1) {
+                    IntType absVal = *static_cast<IntType*>(result);
+                    free(result);
+
+                    // Note that IntType is signed, and so absVal will in fact
+                    // appear negative if and only if its highest bit is set.
+                    if (absVal >= 0) {
+                        // The highest bit is not set.
+                        // There will be no overflow.
+                        return (sign > 0 ? absVal : -absVal);
+                    } else {
+                        // The highest bit is set.
+                        // There will be overflow - however, this overflow will
+                        // actually wrap around to give the correct result if
+                        // (and only if) our integer is the minimum possible
+                        // IntVal (-100..0 in binary).
+                        if (sign < 0 && absVal == limits::min())
+                            return absVal;
+                        else
+                            throw NoSolution();
+                    }
+                } else {
+                    free(result);
+                    throw NoSolution();
+                }
             }
         }
     } else {
@@ -2691,7 +2678,7 @@ IntType IntegerBase<withInfinity>::safeValue() const {
                 // We need to test for overflow.
                 // The following test is fine, since in this scenario the
                 // maximum IntType can be happily represented as a signed long.
-                if (small_ > std::numeric_limits<IntType>::max())
+                if (small_ > limits::max())
                     throw NoSolution();
                 return static_cast<IntType>(small_);
             }
@@ -2704,8 +2691,7 @@ IntType IntegerBase<withInfinity>::safeValue() const {
                 // The following test is fine, since in this scenario the
                 // upper and lower bounds on IntType can both be happily
                 // represented as a signed long.
-                if (small_ < std::numeric_limits<IntType>::min() ||
-                        small_ > std::numeric_limits<IntType>::max())
+                if (small_ < limits::min() || small_ > limits::max())
                     throw NoSolution();
                 return static_cast<IntType>(small_);
             }
@@ -2720,36 +2706,61 @@ IntType IntegerBase<withInfinity>::unsafeValue() const {
     // checking.
     if (large_) {
         // We have a GMP integer.
-        int sign = mpz_sgn(large_);
-        if (sign == 0)
-            return 0;
-
-        // Fetch the absolute value of our GMP integer.
-        auto* result = mpz_export(nullptr, nullptr, 1 /* word order */,
-            sizeof(IntType), 0 /* native endianness */, 0 /* full words */,
-            large_);
-        // We should have result != null, since our GMP integer is non-zero.
-        IntType absVal = *static_cast<IntType*>(result);
-        free(result);
-
-        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
-            return absVal;
+        if constexpr (sizeof(IntType) <= sizeof(long)) {
+            // Optimise for small native types.
+            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>)
+                return static_cast<IntType>(mpz_get_ui(large_));
+            else
+                return static_cast<IntType>(mpz_get_si(large_));
         } else {
-            if (absVal >= 0) {
-                return (sign > 0 ? absVal : -absVal);
-            } else {
-                // C++20 guarantees a two's complement representation for
-                // signed integers.  Therefore the only legitimate situation
-                // in which absVal appears negative is if our integer is the
-                // minimum possible IntType, i.e., -2^(bits-1).
-                // In this case, absVal is already the correct answer.
+            int sign = mpz_sgn(large_);
+            if (sign == 0)
+                return 0;
+
+            // Fetch the absolute value of our GMP integer.
+            auto* result = mpz_export(nullptr, nullptr, 1 /* word order */,
+                sizeof(IntType), 0 /* native endianness */, 0 /* full words */,
+                large_);
+            // We should have result != null, since our GMP integer is non-zero.
+            IntType absVal = *static_cast<IntType*>(result);
+            free(result);
+
+            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
                 return absVal;
+            } else {
+                if (absVal >= 0) {
+                    return (sign > 0 ? absVal : -absVal);
+                } else {
+                    // C++20 guarantees a two's complement representation for
+                    // signed integers.  Therefore the only legitimate situation
+                    // in which absVal appears negative is if our integer is the
+                    // minimum possible IntType, i.e., -2^(bits-1).
+                    // In this case, absVal is already the correct answer.
+                    return absVal;
+                }
             }
         }
     } else {
         // We have a native long integer.
         return static_cast<IntType>(small_);
     }
+}
+
+template <bool withInfinity>
+inline long IntegerBase<withInfinity>::safeLongValue() const {
+    return safeValue<long>();
+}
+
+template <bool withInfinity>
+inline long IntegerBase<withInfinity>::longValue() const {
+    return unsafeValue<long>();
+}
+
+template <bool withInfinity>
+template <int bytes>
+inline typename IntOfSize<bytes>::type IntegerBase<withInfinity>::nativeValue()
+        const {
+    return unsafeValue<typename IntOfSize<bytes>::type>();
 }
 
 template <bool withInfinity>
