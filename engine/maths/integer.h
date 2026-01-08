@@ -222,13 +222,6 @@ class IntegerBase : private InfinityBase<withInfinity> {
         /**
          * Initialises this integer to the given value.
          *
-         * \pre If \a bytes is larger than sizeof(long), then
-         * \a bytes is a strict _multiple_ of sizeof(long).  For
-         * instance, if longs are 8 bytes then you can use \a bytes=16
-         * but not \a bytes=12.  This restriction is enforced through a
-         * compile-time assertion, but may be lifted in future versions
-         * of Regina.
-         *
          * \nopython This is because the NativeInteger classes are not
          * available to Python users.
          *
@@ -551,6 +544,14 @@ class IntegerBase : private InfinityBase<withInfinity> {
         template <CppInteger IntType>
         IntegerBase& operator =(IntType value);
         /**
+         * Sets this integer to the given value.
+         *
+         * \param value the new value of this integer.
+         * \return a reference to this integer with its new value.
+         */
+        template <int bytes>
+        IntegerBase& operator =(const NativeInteger<bytes>& value);
+        /**
          * Sets this integer to the given value which is
          * represented as a string of digits in base 10.
          *
@@ -629,6 +630,18 @@ class IntegerBase : private InfinityBase<withInfinity> {
         template <CppInteger IntType>
         bool operator ==(IntType rhs) const;
         /**
+         * Determines if this is equal to the given integer.
+         *
+         * \nopython This is because the NativeInteger classes are not
+         * available to Python users.
+         *
+         * \param rhs the integer with which this will be compared.
+         * \return \c true if and only if this and the given integer are
+         * equal.
+         */
+        template <int bytes>
+        bool operator ==(const NativeInteger<bytes>& rhs) const;
+        /**
          * Compares this to the given integer.
          *
          * This is a numerical comparison; that is, it uses the usual ordering
@@ -664,6 +677,25 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         template <CppInteger IntType>
         std::strong_ordering operator <=> (IntType rhs) const;
+        /**
+         * Compares this to the given integer.
+         *
+         * This is a numerical comparison; that is, it uses the usual ordering
+         * of the integers. Infinity is considered greater than any integer.
+         *
+         * This generates all of the usual comparison operators, including
+         * `<`, `<=`, `>`, and `>=`.
+         *
+         * \nopython This is because the NativeInteger classes are not
+         * available to Python users.
+         *
+         * \param rhs the integer with which this will be compared.
+         * \return The result of the numerical comparison between this and
+         * the given integer.
+         */
+        template <int bytes>
+        std::strong_ordering operator <=> (const NativeInteger<bytes>& rhs)
+            const;
 
         /**
          * The preincrement operator.
@@ -2455,23 +2487,7 @@ inline IntegerBase<withInfinity>::IntegerBase(
 template <bool withInfinity>
 template <int bytes>
 inline IntegerBase<withInfinity>::IntegerBase(
-        const NativeInteger<bytes>& value) :
-        // This cast may lose information, but we will fix this in a moment.
-        small_(static_cast<long>(value.nativeValue())), large_(nullptr) {
-    static_assert(bytes % sizeof(long) == 0,
-        "IntegerBase native constructor: native integer must partition exactly into long integers.");
-    if (sizeof(long) < bytes && value.nativeValue() != static_cast<typename IntOfSize<bytes>::type>(small_)) {
-        // It didn't fit.  Take things one long at a time.
-        unsigned blocks = bytes / sizeof(long);
-        large_ = new __mpz_struct[1];
-        mpz_init_set_si(large_, static_cast<long>(
-            value.nativeValue() >> ((blocks - 1) * 8 * sizeof(long))));
-        for (unsigned i = 2; i <= blocks; ++i) {
-            mpz_mul_2exp(large_, large_, 8 * sizeof(long));
-            mpz_add_ui(large_, large_, static_cast<unsigned long>(
-                value.nativeValue() >> ((blocks - i) * 8 * sizeof(long))));
-        }
-    }
+        const NativeInteger<bytes>& value) : IntegerBase(value.nativeValue()) {
 }
 
 template <bool withInfinity>
@@ -2873,6 +2889,13 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
 }
 
 template <bool withInfinity>
+template <int bytes>
+inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
+        const NativeInteger<bytes>& value) {
+    return (*this) = value.nativeValue();
+}
+
+template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         const std::string& value) {
     // NOLINTNEXTLINE(misc-unconventional-assign-operator)
@@ -2957,6 +2980,13 @@ inline bool IntegerBase<withInfinity>::operator ==(IntType rhs) const {
 }
 
 template <bool withInfinity>
+template <int bytes>
+inline bool IntegerBase<withInfinity>::operator ==(
+        const NativeInteger<bytes>& rhs) const {
+    return (*this) == rhs.nativeValue();
+}
+
+template <bool withInfinity>
 inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
         const IntegerBase& rhs) const {
     if (isInfinite())
@@ -3008,6 +3038,13 @@ inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
             }
         }
     }
+}
+
+template <bool withInfinity>
+template <int bytes>
+inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
+        const NativeInteger<bytes>& rhs) const {
+    return (*this) <=> rhs.nativeValue();
 }
 
 template <bool withInfinity>

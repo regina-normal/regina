@@ -712,16 +712,23 @@ static void verifyEqual128(const regina::NativeInteger<16>& x,
     EXPECT_EQ(x.str(), y.str());
 }
 
-
 template <typename IntegerType>
 static void verifyNative128(const regina::NativeInteger<16>& native,
         const char* string) {
     EXPECT_EQ(native.str(), string);
     EXPECT_EQ(IntegerType(native).str(), string);
+    {
+        IntegerType assigned = 7;
+        EXPECT_NE(assigned.str(), string);
+        assigned = native;
+        EXPECT_EQ(assigned.str(), string);
+    }
 
     verifyEqual128(native, regina::NativeInteger<16>(IntegerType(string)));
     verifyEqual128(native, IntegerType(string).template nativeValue<16>());
     verifyEqual128(native, IntegerType(native).template nativeValue<16>());
+    verifyEqual128(native,
+        IntegerType(native).template safeValue<regina::IntOfSize<16>::type>());
 
     // Make sure large-to-native conversion works even for numbers that do not
     // enter the highest order long-sized block.  For most machines this means
@@ -731,6 +738,8 @@ static void verifyNative128(const regina::NativeInteger<16>& native,
     large.makeLarge();
     verifyEqual128(native, regina::NativeInteger<16>(large));
     verifyEqual128(native, large.template nativeValue<16>());
+    verifyEqual128(native,
+        large.template safeValue<regina::IntOfSize<16>::type>());
 }
 
 TYPED_TEST(IntegerTest, constructNative128) {
@@ -2291,6 +2300,8 @@ static void verifyCppInteger(Native native) {
     // Test construction, assignment and various conversions to/from the given
     // native C++ integer.
 
+    using ReginaNative = regina::NativeInteger<sizeof(Native)>;
+
     // We cannot use SCOPED_TRACE_NUMERIC, since this does not support 128-bit
     // integers.  Use SCOPED_TRACE_STDSTRING once we have the string later on.
 
@@ -2357,6 +2368,36 @@ static void verifyCppInteger(Native native) {
         EXPECT_EQ(extracted, native);
     }
 
+    // Construction and assignment from regina's NativeInteger class:
+    if constexpr (regina::is_signed_cpp_integer_v<Native>) {
+        ReginaNative n(native);
+        EXPECT_EQ(n.str(), str);
+        EXPECT_EQ(n, native);
+
+        {
+            IntegerType a(n);
+            EXPECT_EQ(a.str(), str);
+            EXPECT_EQ(a, native);
+            EXPECT_EQ(a, n);
+
+            Native extracted;
+            EXPECT_NO_THROW({ extracted = a.template safeValue<Native>(); });
+            EXPECT_EQ(extracted, native);
+        }
+        {
+            IntegerType b = 7;
+            EXPECT_EQ(b.str(), "7");
+            b = n;
+            EXPECT_EQ(b.str(), str);
+            EXPECT_EQ(b, native);
+            EXPECT_EQ(b, n);
+
+            Native extracted;
+            EXPECT_NO_THROW({ extracted = b.template safeValue<Native>(); });
+            EXPECT_EQ(extracted, native);
+        }
+    }
+
     // Comparisons:
     {
         static constexpr Native minNative = std::numeric_limits<Native>::min();
@@ -2409,6 +2450,49 @@ static void verifyCppInteger(Native native) {
                 EXPECT_GT(large, static_cast<Native>(native ^ firstBit));
             else
                 EXPECT_LT(large, static_cast<Native>(native ^ firstBit));
+        }
+
+        // Do this all again, but with regina::NativeInteger (which is always
+        // a signed type).
+        if constexpr (regina::is_signed_cpp_integer_v<Native>) {
+            EXPECT_EQ(large, ReginaNative(native));
+            EXPECT_NE(large, ReginaNative(native + 1));
+            if (native != maxNative) {
+                EXPECT_LT(large, ReginaNative(native + 1));
+                EXPECT_GT(ReginaNative(native + 1), large);
+            }
+            EXPECT_NE(large, ReginaNative(native - 1));
+            if (native != minNative) {
+                EXPECT_GT(large, ReginaNative(native - 1));
+                EXPECT_LT(ReginaNative(native - 1), large);
+            }
+            if (native > 0) {
+                EXPECT_NE(large, ReginaNative(native / 2));
+                EXPECT_GT(large, ReginaNative(native / 2));
+            } else if (native < 0) {
+                EXPECT_NE(large, ReginaNative(native / 2));
+                EXPECT_LT(large, ReginaNative(native / 2));
+            }
+
+            EXPECT_NE(large, ReginaNative(native ^ Native(1)));
+            if (native % 2 == 0)
+                EXPECT_LT(large, ReginaNative(native ^ Native(1)));
+            else
+                EXPECT_GT(large, ReginaNative(native ^ Native(1)));
+
+            EXPECT_NE(large, ReginaNative(native ^ firstBit));
+            if (native >= 0)
+                EXPECT_GT(large, ReginaNative(native ^ firstBit));
+            else
+                EXPECT_LT(large, ReginaNative(native ^ firstBit));
+
+            if (native != 0 && native != firstBit) {
+                EXPECT_NE(large, ReginaNative(-native));
+                if (native > 0)
+                    EXPECT_GT(large, ReginaNative(-native));
+                else
+                    EXPECT_LT(large, ReginaNative(-native));
+            }
         }
     }
 }

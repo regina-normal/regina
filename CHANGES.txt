@@ -61,8 +61,13 @@ Version 7.5  [ TODO ]
               templated constructor and a single templated assignment operator
               to handle _all_ native C++ integer types.  These can also take
               128-bit integers (which were not supported before).
-            - Now supports equality testing (==, !=) against all native C++
-              integer types, not just long.
+            - Now supports comparisons (equality/inequality and ordering)
+              against all native C++ integer types, not just long.
+            - Now supports assignment from and comparisons against
+              NativeInteger<bytes> (in additional to construction, which was
+              already available).
+            - Functions that work with NativeInteger<bytes> no longer require
+              bytes to be a multiple of sizeof(long).
         Class Isomorphism<dim>:
             - The increment operators are now available in all dimensions
               (not just dimensions ≤ 6).
