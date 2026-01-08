@@ -2652,6 +2652,7 @@ static void verifySafeValueSuccess(IntegerType value, Native expected) {
         Native computed;
         EXPECT_NO_THROW({ computed = value.template safeValue<Native>(); });
         EXPECT_EQ(computed, expected);
+        EXPECT_EQ(value.template unsafeValue<Native>(), expected);
     }
 
     if (value.isNative()) {
@@ -2665,6 +2666,7 @@ static void verifySafeValueSuccess(IntegerType value, Native expected) {
         Native computed;
         EXPECT_NO_THROW({ computed = value.template safeValue<Native>(); });
         EXPECT_EQ(computed, expected);
+        EXPECT_EQ(value.template unsafeValue<Native>(), expected);
     }
 }
 

@@ -428,6 +428,30 @@ class IntegerBase : private InfinityBase<withInfinity> {
         template <CppInteger IntType>
         IntType safeValue() const;
         /**
+         * Returns the value of this integer as a native C++ integer of the
+         * given type, leaving the programmer responsible for bounds checking.
+         *
+         * Note that both signed and unsigned native integer types are
+         * supported here.
+         *
+         * \pre This integer is within the required range for the type
+         * \a IntType.  It does not matter whether the underlying
+         * representation for this integer is a native or large integer.
+         *
+         * \warning You should _only_ use this routine if you know in advance
+         * that this integer is within the required range.  Otherwise you
+         * should call safeValue() instead, which performs range checking and
+         * throws an exception if this fails.
+         *
+         * \nopython Python does not have the diversity of integer types that
+         * C++ does, and so this function is not so important.  Python users
+         * can use longValue(), safeLongValue() or pythonValue() instead.
+         *
+         * \return the value of this integer.
+         */
+        template <CppInteger IntType>
+        IntType unsafeValue() const;
+        /**
          * Returns the value of this integer as a native integer of some
          * fixed byte length.
          *
@@ -2745,6 +2769,45 @@ IntType IntegerBase<withInfinity>::safeValue() const {
                 return static_cast<IntType>(small_);
             }
         }
+    }
+}
+
+template <bool withInfinity>
+template <CppInteger IntType>
+IntType IntegerBase<withInfinity>::unsafeValue() const {
+    // Here we follow the logic for unsafeValue(), but without the bounds
+    // checking.
+    if (large_) {
+        // We have a GMP integer.
+        int sign = mpz_sgn(large_);
+        if (sign == 0)
+            return 0;
+
+        // Fetch the absolute value of our GMP integer.
+        auto* result = mpz_export(nullptr, nullptr, 1 /* word order */,
+            sizeof(IntType), 0 /* native endianness */, 0 /* full words */,
+            large_);
+        // We should have result != null, since our GMP integer is non-zero.
+        IntType absVal = *static_cast<IntType*>(result);
+        free(result);
+
+        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            return absVal;
+        } else {
+            if (absVal >= 0) {
+                return (sign > 0 ? absVal : -absVal);
+            } else {
+                // C++20 guarantees a two's complement representation for
+                // signed integers.  Therefore the only legitimate situation
+                // in which absVal appears negative is if our integer is the
+                // minimum possible IntType, i.e., -2^(bits-1).
+                // In this case, absVal is already the correct answer.
+                return absVal;
+            }
+        }
+    } else {
+        // We have a native long integer.
+        return static_cast<IntType>(small_);
     }
 }
 
