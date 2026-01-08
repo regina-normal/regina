@@ -715,6 +715,8 @@ static void verifyEqual128(const regina::NativeInteger<16>& x,
 template <typename IntegerType>
 static void verifyNative128(const regina::NativeInteger<16>& native,
         const char* string) {
+    using CppType = regina::IntOfSize<16>::type;
+
     EXPECT_EQ(native.str(), string);
     EXPECT_EQ(IntegerType(native).str(), string);
     {
@@ -724,22 +726,19 @@ static void verifyNative128(const regina::NativeInteger<16>& native,
         EXPECT_EQ(assigned.str(), string);
     }
 
-    verifyEqual128(native, regina::NativeInteger<16>(IntegerType(string)));
-    verifyEqual128(native, IntegerType(string).template nativeValue<16>());
-    verifyEqual128(native, IntegerType(native).template nativeValue<16>());
-    verifyEqual128(native,
-        IntegerType(native).template safeValue<regina::IntOfSize<16>::type>());
+    verifyEqual128(native, IntegerType(string).template safeValue<CppType>());
+    verifyEqual128(native, IntegerType(string).template unsafeValue<CppType>());
+    verifyEqual128(native, IntegerType(native).template safeValue<CppType>());
+    verifyEqual128(native, IntegerType(native).template unsafeValue<CppType>());
 
     // Make sure large-to-native conversion works even for numbers that do not
     // enter the highest order long-sized block.  For most machines this means
     // the integers fit into a single long, so here we force them into a large
     // (GMP) representation regardless.
-    IntegerType large(string);
+    IntegerType large(native);
     large.makeLarge();
-    verifyEqual128(native, regina::NativeInteger<16>(large));
-    verifyEqual128(native, large.template nativeValue<16>());
-    verifyEqual128(native,
-        large.template safeValue<regina::IntOfSize<16>::type>());
+    verifyEqual128(native, large.template safeValue<CppType>());
+    verifyEqual128(native, large.template unsafeValue<CppType>());
 }
 
 TYPED_TEST(IntegerTest, constructNative128) {

@@ -1832,7 +1832,8 @@ class NativeInteger {
          */
         NativeInteger(const NativeInteger<bytes>& value);
         /**
-         * Initialises this integer to the given value.
+         * Deprecated constructor that initialises this to the given arbitrary
+         * precision integer, with no range checking.
          *
          * This constructor is marked as explicit in the hope of
          * avoiding accidental (and unintentional) mixing of integer classes.
@@ -1842,19 +1843,21 @@ class NativeInteger {
          * small to fit into this native type, then this new NativeInteger
          * will have an undefined initial value.
          *
-         * \pre If \a bytes is larger than sizeof(long), then
-         * \a bytes is a strict _multiple_ of sizeof(long).  For
-         * instance, if longs are 8 bytes then you can use this
-         * routine with \a bytes=16 but not \a bytes=12.
-         * This restriction is enforced through a compile-time assertion,
-         * but may be lifted in future versions of Regina.
+         * \deprecated You should explicitly specify how you plan to deal with
+         * range checking.  If (as with this constructor) you know that the
+         * given integer is within range, you should initialise this as
+         * `NativeInteger(value.unsafeValue<Native>)`.  If you want Regina to
+         * look after range checking for you (and throw an exception if this
+         * fails), you should use `NativeInteger(value.safeValue<Native>)`.
          *
-         * \pre The given integer is not infinity.
+         * \pre The given integer is within the required range; that is, it
+         * can fit within a signed integer of the chosen byte length.
          *
          * \param value the new value of this integer.
          */
         template <bool withInfinity>
-        explicit NativeInteger(const IntegerBase<withInfinity>& value);
+        [[deprecated]] explicit NativeInteger(
+            const IntegerBase<withInfinity>& value);
 
         /**
          * Returns whether or not this integer is zero.
@@ -3548,8 +3551,7 @@ inline NativeInteger<bytes>::NativeInteger(Native value) : data_(value) {
 }
 
 template <int bytes>
-inline NativeInteger<bytes>::NativeInteger(
-        const NativeInteger<bytes>& value) :
+inline NativeInteger<bytes>::NativeInteger(const NativeInteger<bytes>& value) :
         data_(value.data_) {
 }
 
@@ -3558,7 +3560,6 @@ template <bool withInfinity>
 inline NativeInteger<bytes>::NativeInteger(
         const IntegerBase<withInfinity>& value) :
         data_(value.template unsafeValue<Native>()) {
-    // TODO: HERE
 }
 
 template <int bytes>

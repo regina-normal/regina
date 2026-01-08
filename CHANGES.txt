@@ -106,6 +106,10 @@ Version 7.5  [ TODO ]
               FixedArray internally, which is not copy-assignable).  If you
               need to copy a tableaux, the copy constructor remains available
               (and move assignment is still available also).
+        Class NativeInteger<bytes>:
+            - The constructor that takes an Integer or LargeInteger is now
+              deprecated.  Instead, you should initialise this using either
+              safeValue() or unsafeValue() from Integer / LargeInteger.
         Struct NoSuchType:
             - A new declared-but-not-defined type that can be used as a
               placeholder to avoid compile errors.

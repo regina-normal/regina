@@ -1223,8 +1223,17 @@ void LPData<Constraint, IntType>::findInitialBasis() {
 
     // Copy the final tableaux into our own rowOps_ matrix.
     for (r = 0; r < rank_; ++r)
-        for (c = 0; c < rank_; ++c)
-            rowOps_.entry(r, c) = IntType(ops.entry(r, c));
+        for (c = 0; c < rank_; ++c) {
+            if constexpr (ArbitraryPrecisionInteger<IntType>) {
+                rowOps_.entry(r, c) = ops.entry(r, c);
+            } else {
+                // We are converting an arbitrary precision integer into a
+                // bounded-range integer.  Assume that the programmer has
+                // taken responsibility for range checking.
+                rowOps_.entry(r, c) = ops.entry(r, c).
+                    unsafeValue<typename IntType::Native>();
+            }
+        }
 }
 
 template <LPConstraint Constraint, ReginaInteger IntType>
