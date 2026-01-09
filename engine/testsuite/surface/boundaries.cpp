@@ -57,7 +57,7 @@ TEST(BoundariesTest, countBoundaries) {
             "bGaj" );
     NormalSurfaces solidTorusSurfs = NormalSurfaces(
             solidTorus, NormalCoords::Quad );
-    std::vector<size_t> solidTorusCounts = {1,1,2};
+    std::vector<size_t> solidTorusCounts = { 1, 1, 2 };
     compareBoundaryCounts( solidTorusSurfs, solidTorusCounts );
 
     // Solid torus with an internal vertex
@@ -65,12 +65,32 @@ TEST(BoundariesTest, countBoundaries) {
     // The point of this example is that, if we enumerate in standard
     // coordinates, then we include a sanity check that countBoundaries()
     // returns 0 for a closed surface.
+    //
+    // Because this example has minimal (two-triangle) torus boundary, the
+    // number of boundary components of a normal surface can be independently
+    // calculated from the GCD of the normal arcs on the boundary. The
+    // expected boundary-counts have been manually checked to coincide with
+    // these GCDs.
     Triangulation<3> extraVertex = Triangulation<3>::fromIsoSig(
-            "eHbKabdel" );
-    //TODO
+            "eLHkccddpvvo" );
+    NormalSurfaces extraVertexSurfs = NormalSurfaces(
+            extraVertex, NormalCoords::Standard );
+    std::vector<size_t> extraVertexCounts = {
+        1, 1, 1, 1, 2, 1, 0, 1, 1, 2, 1, 2, 1, 2, 1, 1 };
+    compareBoundaryCounts( extraVertexSurfs, extraVertexCounts );
 
     // Genus-2 handlebody
+    //
+    // Example with more than two boundary triangles.
+    //
+    // The expected boundary-counts haven't been checked manually, but this
+    // test at least ensures that countBoundaries() returns consistent
+    // (presumably correct) answers even if the implementation is modified.
     Triangulation<3> handle2 = Triangulation<3>::fromIsoSig(
-            "eLHkccddpvvo" );
-    //TODO
+            "eHbKabdel" );
+    NormalSurfaces handle2Surfs = NormalSurfaces(
+            handle2, NormalCoords::Quad );
+    std::vector<size_t> handle2Counts = {
+        1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1 };
+    compareBoundaryCounts( handle2Surfs, handle2Counts );
 }
