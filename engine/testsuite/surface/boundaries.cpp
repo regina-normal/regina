@@ -35,9 +35,42 @@
 #include "testhelper.h"
 
 using regina::Example;
+using regina::NormalSurface;
 using regina::NormalSurfaces;
+using regina::NormalCoords;
 using regina::Triangulation;
 
+static void compareBoundaryCounts(
+        NormalSurfaces& surfs, std::vector<size_t> expect ) {
+    surfs.sort( []( NormalSurface a, NormalSurface b ){ return a < b; } );
+    for (size_t i = 0; i < surfs.size(); ++i) {
+        EXPECT_EQ( expect[i], surfs.surface(i).countBoundaries() );
+    }
+}
+
 TEST(BoundariesTest, countBoundaries) {
+    // One-tetrahedron layered solid torus
+    //
+    // The expected boundary-counts for this example have been checked by
+    // hand.
+    Triangulation<3> solidTorus = Triangulation<3>::fromIsoSig(
+            "bGaj" );
+    NormalSurfaces solidTorusSurfs = NormalSurfaces(
+            solidTorus, NormalCoords::Quad );
+    std::vector<size_t> solidTorusCounts = {1,1,2};
+    compareBoundaryCounts( solidTorusSurfs, solidTorusCounts );
+
+    // Solid torus with an internal vertex
+    //
+    // The point of this example is that, if we enumerate in standard
+    // coordinates, then we include a sanity check that countBoundaries()
+    // returns 0 for a closed surface.
+    Triangulation<3> extraVertex = Triangulation<3>::fromIsoSig(
+            "eHbKabdel" );
+    //TODO
+
+    // Genus-2 handlebody
+    Triangulation<3> handle2 = Triangulation<3>::fromIsoSig(
+            "eLHkccddpvvo" );
     //TODO
 }
