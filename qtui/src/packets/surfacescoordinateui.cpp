@@ -161,9 +161,15 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                     return tr("Spun");
                 }
             } else if (s.hasRealBoundary()) {
-                if (surfaces_->isEmbeddedOnly())
-                    return QString::number(s.countBoundaries());
-                else
+                if (surfaces_->isEmbeddedOnly()) {
+                    try {
+                        return QString::number(s.countBoundaries());
+                    } catch (const regina::UnsolvedCase&) {
+                        // The normal cordinates are so large that we cannot
+                        // compute this.
+                        return QVariant();
+                    }
+                } else
                     return tr("Real");
             } else
                 return QString(QChar(0x2014 /* emdash */));

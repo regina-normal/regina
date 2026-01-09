@@ -1356,13 +1356,19 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre This normal surface is embedded (not singular or immersed).
          * \pre This normal surface is compact (has finitely many discs).
          *
-         * \warning This routine explicitly builds the normal arcs on
-         * the boundary.  If the normal coordinates are extremely large,
-         * (in particular, of a similar order of magnitude as the
-         * largest possible long integer), then the behaviour of this
-         * routine is undefined.
+         * \warning This routine explicitly builds all of the normal arcs on
+         * the boundary.  If the normal coordinates are extremely large, this
+         * could lead to performance problems.  In extreme cases where these
+         * arc counts cannot even fit into the relevant native C++ integer
+         * type, this routine will throw an exception (see below).
          *
          * \author Alex He
+         *
+         * \exception UnsolvedCase This surface has so many normal arcs on the
+         * boundary that it will be impossible to explicitly build these arcs
+         * in memory.  Specifically, this means that some arc count cannot fit
+         * into a native C++ \c size_t; in practice on a typical 64-bit machine
+         * this means that some arc count is at least `2^64`.
          *
          * \return the number of disjoint boundary curves.
          */
@@ -1917,6 +1923,11 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         /**
          * Computes the number of disjoint boundary curves and stores the
          * result as a property.
+         *
+         * \exception NoSolution Some normal arc count does not fit into a
+         * standard C++ \c size_t.  Be aware that this exception will need to
+         * be converted to something more user-friendly before being passed on
+         * to the end user.
          */
         void calculateBoundaries() const;
 
@@ -2131,8 +2142,14 @@ inline bool NormalSurface::hasRealBoundary() const {
 }
 
 inline size_t NormalSurface::countBoundaries() const {
-    if (! boundaries_.has_value())
-        calculateBoundaries();
+    if (! boundaries_.has_value()) {
+        try {
+            calculateBoundaries();
+        } catch (const NoSolution&) {
+            throw UnsolvedCase("This surface has too many boundary arcs "
+                "for this computation to proceed");
+        }
+    }
     return *boundaries_;
 }
 
