@@ -74,6 +74,8 @@ Version 7.5  [ TODO ]
               already available).
             - Functions that work with NativeInteger<bytes> no longer require
               bytes to be a multiple of sizeof(long).
+        Class IntegerOverflow:
+            - New exception class.
         Class Isomorphism<dim>:
             - The increment operators are now available in all dimensions
               (not just dimensions ≤ 6).

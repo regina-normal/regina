@@ -193,6 +193,33 @@ class FileError : public ReginaException {
 };
 
 /**
+ * An exception thrown when the result of some calculation cannot fit into
+ * an appropriate native C++ integer type.
+ *
+ * Note that the constructor for this exception class follows a different
+ * pattern from most of Regina's exception classes.
+ *
+ * \ingroup utilities
+ */
+class IntegerOverflow : public ReginaException {
+    public:
+        /**
+         * Creates a new exception with a stock error message.
+         */
+        IntegerOverflow() : ReginaException("Integer overflow") {}
+        /**
+         * Creates a new copy of the given exception.
+         */
+        IntegerOverflow(const IntegerOverflow&) noexcept = default;
+        /**
+         * Sets this to be a copy of the given exception.
+         *
+         * \return a reference to this exception.
+         */
+        IntegerOverflow& operator = (const IntegerOverflow&) noexcept = default;
+};
+
+/**
  * An exception thrown when Regina has certified that a mathematical
  * problem has no solution.
  *

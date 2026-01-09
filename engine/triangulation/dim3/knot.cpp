@@ -155,7 +155,7 @@ std::array<long, 3> Triangulation<3>::longitudeCuts() const {
         // Fetch the number of times the longitude cuts this boundary edge.
         try {
             longCuts[j] = a.snfRep(v)[0].abs().safeValue<long>();
-        } catch (const NoSolution&) {
+        } catch (const IntegerOverflow&) {
             // The result does not fit into a C/C++ long.
             throw UnsolvedCase("longitude() detected an integer overflow");
         }

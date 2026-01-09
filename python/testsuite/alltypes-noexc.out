@@ -225,6 +225,7 @@ HyperListFlags : alias -> enum HyperList
 HyperbolicMinSearcher : class -> EqualityType.BY_REFERENCE
 ImpossibleScenario : exception
 Integer : class -> EqualityType.BY_VALUE
+IntegerOverflow : exception
 IntersectionForm : class -> EqualityType.BY_VALUE
 InvalidArgument : exception
 InvalidInput : exception

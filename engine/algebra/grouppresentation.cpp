@@ -1228,7 +1228,7 @@ std::optional<HomGroupPresentation> GroupPresentation::homologicalAlignment() {
         }
         // now we're at [ P 0 0 ]
         //              [ 0 D 0 ] so we're essentially done.
-    } catch (const NoSolution&) {
+    } catch (const IntegerOverflow&) {
         throw UnsolvedCase("An integer overflow occurred while attempting "
             "to build a group expression");
     }

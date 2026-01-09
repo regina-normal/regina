@@ -177,7 +177,7 @@ void LPConstraintNonSpun::addRows(
             col[i].extra[1] =
                 coeffs.entry(1, columnPerm[i]).safeValue<Coefficient>();
         }
-    } catch (const NoSolution&) {
+    } catch (const IntegerOverflow&) {
         // Note: Coefficient is currently hard-coded as long.
         throw UnsolvedCase("The coefficients of the slope equations "
             "do not fit into a native long integer");

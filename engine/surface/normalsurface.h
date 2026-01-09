@@ -1924,7 +1924,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Computes the number of disjoint boundary curves and stores the
          * result as a property.
          *
-         * \exception NoSolution Some normal arc count does not fit into a
+         * \exception IntegerOverflow Some normal arc count does not fit into a
          * standard C++ \c size_t.  Be aware that this exception will need to
          * be converted to something more user-friendly before being passed on
          * to the end user.
@@ -2145,7 +2145,7 @@ inline size_t NormalSurface::countBoundaries() const {
     if (! boundaries_.has_value()) {
         try {
             calculateBoundaries();
-        } catch (const NoSolution&) {
+        } catch (const IntegerOverflow&) {
             throw UnsolvedCase("This surface has too many boundary arcs "
                 "for this computation to proceed");
         }

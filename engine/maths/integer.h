@@ -384,8 +384,8 @@ class IntegerBase : private InfinityBase<withInfinity> {
          *
          * \python It is assumed that the type \a IntType is \c long.
          *
-         * \exception NoSolution This integer does not fit into the range of
-         * the given native C++ integer type.
+         * \exception IntegerOverflow This integer does not fit into the range
+         * of the given native C++ integer type.
          *
          * \return the value of this integer.
          */
@@ -426,7 +426,7 @@ class IntegerBase : private InfinityBase<withInfinity> {
          * native C++ integer type instead of \c long).  Python users should
          * just call `safeValue()`.
          *
-         * \exception NoSolution This integer is too large or small to fit
+         * \exception IntegerOverflow This integer is too large or small to fit
          * into a \c long.
          *
          * \return the value of this integer.
@@ -2585,7 +2585,7 @@ template <CppInteger IntType>
 IntType IntegerBase<withInfinity>::safeValue() const {
     if constexpr (withInfinity)
         if (isInfinite())
-            throw NoSolution();
+            throw IntegerOverflow();
 
     using limits = std::numeric_limits<IntType>;
 
@@ -2598,13 +2598,13 @@ IntType IntegerBase<withInfinity>::safeValue() const {
                         mpz_cmp_ui(large_, limits::max()) <= 0)
                     return static_cast<IntType>(mpz_get_ui(large_));
                 else
-                    throw NoSolution();
+                    throw IntegerOverflow();
             } else {
                 if (mpz_cmp_si(large_, limits::max()) <= 0 &&
                         mpz_cmp_si(large_, limits::min()) >= 0)
                     return static_cast<IntType>(mpz_get_si(large_));
                 else
-                    throw NoSolution();
+                    throw IntegerOverflow();
             }
         } else {
             int sign = mpz_sgn(large_);
@@ -2613,7 +2613,7 @@ IntType IntegerBase<withInfinity>::safeValue() const {
 
             if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
                 if (sign < 0)
-                    throw NoSolution();
+                    throw IntegerOverflow();
 
                 // We have a strictly positive GMP integer.
                 size_t count;
@@ -2627,7 +2627,7 @@ IntType IntegerBase<withInfinity>::safeValue() const {
                     return ans;
                 } else {
                     free(result);
-                    throw NoSolution();
+                    throw IntegerOverflow();
                 }
             } else {
                 // Fetch the absolute value of our GMP integer, which we know to
@@ -2656,11 +2656,11 @@ IntType IntegerBase<withInfinity>::safeValue() const {
                         if (sign < 0 && absVal == limits::min())
                             return absVal;
                         else
-                            throw NoSolution();
+                            throw IntegerOverflow();
                     }
                 } else {
                     free(result);
-                    throw NoSolution();
+                    throw IntegerOverflow();
                 }
             }
         }
@@ -2668,7 +2668,7 @@ IntType IntegerBase<withInfinity>::safeValue() const {
         // We have a native long integer.
         if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
             if (small_ < 0)
-                throw NoSolution();
+                throw IntegerOverflow();
 
             // We have a _non-negative_ native long integer.
             if constexpr (sizeof(long) <= sizeof(IntType)) {
@@ -2679,7 +2679,7 @@ IntType IntegerBase<withInfinity>::safeValue() const {
                 // The following test is fine, since in this scenario the
                 // maximum IntType can be happily represented as a signed long.
                 if (small_ > limits::max())
-                    throw NoSolution();
+                    throw IntegerOverflow();
                 return static_cast<IntType>(small_);
             }
         } else {
@@ -2692,7 +2692,7 @@ IntType IntegerBase<withInfinity>::safeValue() const {
                 // upper and lower bounds on IntType can both be happily
                 // represented as a signed long.
                 if (small_ < limits::min() || small_ > limits::max())
-                    throw NoSolution();
+                    throw IntegerOverflow();
                 return static_cast<IntType>(small_);
             }
         }

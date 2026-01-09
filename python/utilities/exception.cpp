@@ -60,6 +60,8 @@ void addException(pybind11::module_& m) {
         "FileError", rdoc::FileError);
     regina::python::registerReginaException<regina::NoSolution>(m,
         "NoSolution", rdoc::NoSolution);
+    regina::python::registerReginaException<regina::IntegerOverflow>(m,
+        "IntegerOverflow", rdoc::IntegerOverflow);
     regina::python::registerReginaException<regina::UnsolvedCase>(m,
         "UnsolvedCase", rdoc::UnsolvedCase);
     regina::python::registerReginaException<regina::LockViolation>(m,

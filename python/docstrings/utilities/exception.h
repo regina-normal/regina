@@ -52,6 +52,14 @@ documentation (since, by their nature, they should never be thrown).
 All member functions follow the same pattern as the parent class
 ReginaException, and are not documented again here.)doc";
 
+// Docstring regina::python::doc::IntegerOverflow
+static const char *IntegerOverflow =
+R"doc(An exception thrown when the result of some calculation cannot fit
+into an appropriate native C++ integer type.
+
+Note that the constructor for this exception class follows a different
+pattern from most of Regina's exception classes.)doc";
+
 // Docstring regina::python::doc::InvalidArgument
 static const char *InvalidArgument =
 R"doc(An exception thrown when invalid or unsupported arguments are passed
@@ -149,6 +157,16 @@ a particular instance of a problem.
 
 All member functions follow the same pattern as the parent class
 ReginaException, and are not documented again here.)doc";
+
+namespace IntegerOverflow_ {
+
+// Docstring regina::python::doc::IntegerOverflow_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given exception.)doc";
+
+// Docstring regina::python::doc::IntegerOverflow_::__default
+static const char *__default = R"doc(Creates a new exception with a stock error message.)doc";
+
+}
 
 namespace NoSolution_ {
 

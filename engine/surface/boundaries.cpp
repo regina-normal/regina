@@ -48,7 +48,7 @@ void NormalSurface::calculateBoundaries() const {
     general algorithm originally given by Agol, Hass and Thurston.
 
     Be aware that the Integer-to-size_t conversions in this routine could throw
-    a NoSolution exception, which needs to be handled by countBoundaries().
+    an IntegerOverflow exception, which must be handled by countBoundaries().
     */
 
     const Triangulation<3>& tri = triangulation();

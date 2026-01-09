@@ -132,7 +132,7 @@ static void verifyInfinite(const IntegerType& x) {
 
     EXPECT_FALSE(x.isNative());
     EXPECT_TRUE(x.isInfinite());
-    EXPECT_THROW({ x.template safeValue<long>(); }, regina::NoSolution);
+    EXPECT_THROW({ x.template safeValue<long>(); }, regina::IntegerOverflow);
     EXPECT_EQ(x.sign(), 1);
     EXPECT_FALSE(x.isZero());
     EXPECT_EQ(x.stringValue(), "inf");
@@ -2152,7 +2152,7 @@ TYPED_TEST(IntegerTest, tryReduce) {
                 EXPECT_EQ(x, y.template safeValue<long>());
             else
                 EXPECT_THROW({ y.template safeValue<long>(); },
-                    regina::NoSolution);
+                    regina::IntegerOverflow);
         }
         {
             TypeParam y = x;
@@ -2167,7 +2167,7 @@ TYPED_TEST(IntegerTest, tryReduce) {
                 EXPECT_EQ(x, y.template safeValue<long>());
             else
                 EXPECT_THROW({ y.template safeValue<long>(); },
-                    regina::NoSolution);
+                    regina::IntegerOverflow);
         }
         {
             TypeParam y = x;
@@ -2180,7 +2180,7 @@ TYPED_TEST(IntegerTest, tryReduce) {
                 EXPECT_EQ(x, y.template safeValue<long>());
             else
                 EXPECT_THROW({ y.template safeValue<long>(); },
-                    regina::NoSolution);
+                    regina::IntegerOverflow);
         }
     }
 }
@@ -2677,7 +2677,8 @@ template <ArbitraryPrecisionInteger IntegerType, CppInteger Native>
 static void verifySafeValueFailure(IntegerType value) {
     SCOPED_TRACE_REGINA(value);
 
-    EXPECT_THROW({ value.template safeValue<Native>(); }, regina::NoSolution);
+    EXPECT_THROW({ value.template safeValue<Native>(); },
+        regina::IntegerOverflow);
 
     if (value.isNative()) {
         value.makeLarge();
@@ -2686,7 +2687,8 @@ static void verifySafeValueFailure(IntegerType value) {
         value.tryReduce(); // might or might not be possible
     }
 
-    EXPECT_THROW({ value.template safeValue<Native>(); }, regina::NoSolution);
+    EXPECT_THROW({ value.template safeValue<Native>(); },
+        regina::IntegerOverflow);
 }
 
 template <ArbitraryPrecisionInteger IntegerType, UnsignedCppInteger Native>
