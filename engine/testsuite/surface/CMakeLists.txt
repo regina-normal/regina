@@ -1,5 +1,6 @@
 # Files to compile
 SET ( FILES
+  boundaries.cpp
   incompressible.cpp
   normalsurfaces.cpp
   )
