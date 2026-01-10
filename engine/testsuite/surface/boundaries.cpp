@@ -44,48 +44,55 @@ static void compareBoundaryCounts(
         NormalSurfaces surfs, std::vector<size_t> expect ) {
     surfs.sort( []( NormalSurface a, NormalSurface b ){ return a < b; } );
     for (size_t i = 0; i < surfs.size(); ++i) {
+        SCOPED_TRACE_NUMERIC(i);
         EXPECT_EQ( expect[i], surfs.surface(i).countBoundaries() );
     }
 }
 
 TEST(BoundariesTest, countBoundaries) {
-    // One-tetrahedron layered solid torus
-    //
-    // The expected boundary-counts for this example have been checked by
-    // hand.
-    Triangulation<3> solidTorus = Triangulation<3>::fromIsoSig(
-            "bGaj" );
-    compareBoundaryCounts(
-        NormalSurfaces( solidTorus, NormalCoords::Quad ),
-        { 1, 1, 2 } );
+    {
+        SCOPED_TRACE("One-tetrahedron layered solid torus");
 
-    // Solid torus with an internal vertex
-    //
-    // The point of this example is that, if we enumerate in standard
-    // coordinates, then we include a sanity check that countBoundaries()
-    // returns 0 for a closed surface.
-    //
-    // Because this example has minimal (two-triangle) torus boundary, the
-    // number of boundary components of a normal surface can be independently
-    // calculated from the GCD of the normal arcs on the boundary. The
-    // expected boundary-counts have been manually checked to coincide with
-    // these GCDs.
-    Triangulation<3> extraVertex = Triangulation<3>::fromIsoSig(
-            "eLHkccddpvvo" );
-    compareBoundaryCounts(
-        NormalSurfaces( extraVertex, NormalCoords::Standard ),
-        { 1, 1, 1, 1, 2, 1, 0, 1, 1, 2, 1, 2, 1, 2, 1, 1 } );
+        // The expected boundary-counts for this example have been checked by
+        // hand.
+        Triangulation<3> solidTorus = Triangulation<3>::fromIsoSig(
+                "bGaj" );
+        compareBoundaryCounts(
+            NormalSurfaces( solidTorus, NormalCoords::Quad ),
+            { 1, 1, 2 } );
+    }
 
-    // Genus-2 handlebody
-    //
-    // Example with more than two boundary triangles.
-    //
-    // The expected boundary-counts haven't been checked manually, but this
-    // test at least ensures that countBoundaries() returns consistent
-    // (presumably correct) answers even if the implementation is modified.
-    Triangulation<3> handle2 = Triangulation<3>::fromIsoSig(
-            "eHbKabdel" );
-    compareBoundaryCounts(
-        NormalSurfaces( handle2, NormalCoords::Quad ),
-        { 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1 } );
+    {
+        SCOPED_TRACE("Solid torus with an internal vertex");
+
+        // The point of this example is that, if we enumerate in standard
+        // coordinates, then we include a sanity check that countBoundaries()
+        // returns 0 for a closed surface.
+        //
+        // Because this example has minimal (two-triangle) torus boundary, the
+        // number of boundary components of a normal surface can be
+        // independently calculated from the GCD of the normal arcs on the
+        // boundary. The expected boundary-counts have been manually checked
+        // to coincide with these GCDs.
+        Triangulation<3> extraVertex = Triangulation<3>::fromIsoSig(
+                "eLHkccddpvvo" );
+        compareBoundaryCounts(
+            NormalSurfaces( extraVertex, NormalCoords::Standard ),
+            { 1, 1, 1, 1, 2, 1, 0, 1, 1, 2, 1, 2, 1, 2, 1, 1 } );
+    }
+
+    {
+        SCOPED_TRACE("Genus two handlebody");
+
+        // Example with more than two boundary triangles.
+        //
+        // The expected boundary-counts haven't been checked manually, but this
+        // test at least ensures that countBoundaries() returns consistent
+        // (presumably correct) answers even if the implementation is modified.
+        Triangulation<3> handle2 = Triangulation<3>::fromIsoSig(
+                "eHbKabdel" );
+        compareBoundaryCounts(
+            NormalSurfaces( handle2, NormalCoords::Quad ),
+            { 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1 } );
+    }
 }
