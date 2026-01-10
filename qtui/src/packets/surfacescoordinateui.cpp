@@ -177,7 +177,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                     try {
                         return QString::number(s.countBoundaries());
                     } catch (const regina::UnsolvedCase&) {
-                        return OVERFLOW_RESULT;
+                        return tr("Real");
                     }
                 } else
                     return tr("Real");
