@@ -1042,9 +1042,17 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre This normal surface is embedded (not singular or immersed).
          * \pre This normal surface is compact (has finitely many discs).
          *
-         * \warning This routine explicitly builds the normal discs,
-         * and so may run out of memory if the normal coordinates
-         * are extremely large.
+         * \warning This routine explicitly builds all of the normal discs
+         * in this surface.  If the normal coordinates are extremely large,
+         * this could lead to performance problems.  In extreme cases, this
+         * routine will throw an exception (see below).
+         *
+         * \exception UnsolvedCase This algorithm has encountered an
+         * impossible memory requirement, due to the need to store more items
+         * than can fit into a native C++ \c size_t.  This is rarely seen in
+         * practice: on a typical 64-bit machine, this would mean that the
+         * algorithm has encountered a normal surface with some coordinate
+         * at least `2^64`.
          *
          * \return \c true if this surface is orientable, or \c false if
          * this surface is non-orientable.
@@ -1062,9 +1070,17 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre This normal surface is embedded (not singular or immersed).
          * \pre This normal surface is compact (has finitely many discs).
          *
-         * \warning This routine explicitly builds the normal discs,
-         * and so may run out of memory if the normal coordinates
-         * are extremely large.
+         * \warning This routine explicitly builds all of the normal discs
+         * in this surface.  If the normal coordinates are extremely large,
+         * this could lead to performance problems.  In extreme cases, this
+         * routine will throw an exception (see below).
+         *
+         * \exception UnsolvedCase This algorithm has encountered an
+         * impossible memory requirement, due to the need to store more items
+         * than can fit into a native C++ \c size_t.  This is rarely seen in
+         * practice: on a typical 64-bit machine, this would mean that the
+         * algorithm has encountered a normal surface with some coordinate
+         * at least `2^64`.
          *
          * \return \c true if this surface is two-sided, or \c false if
          * this surface is one-sided.
@@ -1082,9 +1098,17 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre This normal surface is embedded (not singular or immersed).
          * \pre This normal surface is compact (has finitely many discs).
          *
-         * \warning This routine explicitly builds the normal discs,
-         * and so may run out of memory if the normal coordinates
-         * are extremely large.
+         * \warning This routine explicitly builds all of the normal discs
+         * in this surface.  If the normal coordinates are extremely large,
+         * this could lead to performance problems.  In extreme cases, this
+         * routine will throw an exception (see below).
+         *
+         * \exception UnsolvedCase This algorithm has encountered an
+         * impossible memory requirement, due to the need to store more items
+         * than can fit into a native C++ \c size_t.  This is rarely seen in
+         * practice: on a typical 64-bit machine, this would mean that the
+         * algorithm has encountered a normal surface with some coordinate
+         * at least `2^64`.
          *
          * \return \c true if this surface is connected, or \c false if
          * this surface is disconnected.
@@ -1113,9 +1137,17 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre This normal surface is embedded (not singular or immersed).
          * \pre This normal surface is compact (has finitely many discs).
          *
-         * \warning This routine explicitly builds the normal discs,
-         * and so may run out of memory if the normal coordinates
-         * are extremely large.
+         * \warning This routine explicitly builds all of the normal discs
+         * in this surface.  If the normal coordinates are extremely large,
+         * this could lead to performance problems.  In extreme cases, this
+         * routine will throw an exception (see below).
+         *
+         * \exception UnsolvedCase This algorithm has encountered an
+         * impossible memory requirement, due to the need to store more items
+         * than can fit into a native C++ \c size_t.  This is rarely seen in
+         * practice: on a typical 64-bit machine, this would mean that the
+         * algorithm has encountered a normal surface with some coordinate
+         * at least `2^64`.
          *
          * \return the list of connected components.
          */
@@ -1357,20 +1389,20 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre This normal surface is compact (has finitely many discs).
          *
          * \warning This routine explicitly builds all of the normal arcs on
-         * the boundary.  If the normal coordinates are extremely large, this
-         * could lead to performance problems.  In extreme cases where these
-         * arc counts cannot even fit into the relevant native C++ integer
-         * type, this routine will throw an exception (see below).
+         * the boundary.  If the normal coordinates are extremely large,
+         * this could lead to performance problems.  In extreme cases, this
+         * routine will throw an exception (see below).
          *
-         * \author Alex He
-         *
-         * \exception UnsolvedCase This surface has so many normal arcs on the
-         * boundary that it will be impossible to explicitly build these arcs
-         * in memory.  Specifically, this means that some arc count cannot fit
-         * into a native C++ \c size_t; in practice on a typical 64-bit machine
-         * this means that some arc count is at least `2^64`.
+         * \exception UnsolvedCase This algorithm has encountered an
+         * impossible memory requirement, due to the need to store more items
+         * than can fit into a native C++ \c size_t.  This is rarely seen in
+         * practice: on a typical 64-bit machine, this would mean that the
+         * algorithm has encountered a normal surface with some boundary
+         * edge weight at least `2^64`.
          *
          * \return the number of disjoint boundary curves.
+         *
+         * \author Alex He
          */
         size_t countBoundaries() const;
 
@@ -1394,9 +1426,19 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \todo \prob Check for absurdly large numbers of discs and bail
          * accordingly.
          *
-         * \warning This routine might cut along the surface and
-         * retriangulate, and so may run out of memory if the normal
-         * coordinates are extremely large.
+         * \warning This routine might need to perform some operation(s) whose
+         * time and memory requirements depend upon the number of normal discs
+         * in this surface (e.g., iterating through individual discs, or
+         * cutting along the surface).  If this surface has enormous normal
+         * coordinates, this could lead to performance problems.
+         * In extreme cases, this routine will throw an exception (see below).
+         *
+         * \exception UnsolvedCase This algorithm has encountered an
+         * impossible memory requirement, due to the need to store more items
+         * than can fit into a native C++ \c size_t.  This is rarely seen in
+         * practice: on a typical 64-bit machine, this would mean that the
+         * algorithm has encountered a normal surface with some coordinate
+         * at least `2^64`.
          *
          * \param knownConnected \c true if this normal surface is
          * already known to be connected (for instance, if it came from
@@ -1429,16 +1471,25 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * If this surface is one-sided, the incompressibility test will
          * be run on its two-sided double cover.
          *
-         * \warning This routine may in some circumstances be extremely slow.
-         * This is because the underlying algorithm cuts along this surface,
-         * retriangulates (possibly using a very large number of tetrahedra),
-         * and then searches for a normal compressing disc in each
-         * component of the cut-open triangulation.
-         *
          * \pre The underlying triangulation is valid and closed, and
          * represents an irreducible 3-manifold.
          * \pre This normal surface is compact, embedded and connected,
          * and contains no octagonal discs.
+         *
+         * \warning This routine might need to perform some operation(s) whose
+         * time and memory requirements depend upon the number of normal discs
+         * in this _or_ some other intermediate surface.  Examples of such
+         * operations include iterating through individual discs, or cutting
+         * along a surface.  If the algorithm encounters a surface with
+         * enormous normal coordinates, this could lead to performance problems.
+         * In extreme cases, this routine will throw an exception (see below).
+         *
+         * \exception UnsolvedCase This algorithm has encountered an
+         * impossible memory requirement, due to the need to store more items
+         * than can fit into a native C++ \c size_t.  This is rarely seen in
+         * practice: on a typical 64-bit machine, this would mean that the
+         * algorithm has encountered a normal surface with some coordinate
+         * at least `2^64`.
          *
          * \return \c true if this surface is incompressible, or \c false if
          * this surface is not incompressible (or if it is a sphere).
@@ -1715,8 +1766,17 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre Both this and the given surface are compact (have
          * finitely many discs), embedded, non-empty and connected.
          *
-         * \warning This routine is slow, since it performs a depth-first
-         * search over the entire set of normal discs.
+         * \warning This routine explicitly builds all of the normal discs
+         * in this and the given surface.  If the normal coordinates are
+         * extremely large, this could lead to performance problems.
+         * In extreme cases, this routine will throw an exception (see below).
+         *
+         * \exception UnsolvedCase This algorithm has encountered an
+         * impossible memory requirement, due to the need to store more items
+         * than can fit into a native C++ \c size_t.  This is rarely seen in
+         * practice: on a typical 64-bit machine, this would mean that the
+         * algorithm has encountered a normal surface with some coordinate
+         * at least `2^64`.
          *
          * \param other the other surface to test alongside this surface
          * for potential intersections.
@@ -1908,11 +1968,14 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          */
         void calculateEulerChar() const;
         /**
-         * Calculates whether this surface is orientable and/or
-         * two-sided and stores the results as properties.
+         * Calculates whether this surface is orientable, two-sided and/or
+         * connected, and stores the results as properties.
          *
          * \pre This normal surface is embedded (not singular or immersed).
          * \pre This normal surface is compact (has finitely many discs).
+         *
+         * \exception UnsolvedCase Some normal disc count does not fit into a
+         * standard C++ \c size_t.
          */
         void calculateOrientable() const;
         /**
@@ -1924,10 +1987,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Computes the number of disjoint boundary curves and stores the
          * result as a property.
          *
-         * \exception IntegerOverflow Some normal arc count does not fit into a
-         * standard C++ \c size_t.  Be aware that this exception will need to
-         * be converted to something more user-friendly before being passed on
-         * to the end user.
+         * \exception UnsolvedCase Some normal arc count on the boundary
+         * does not fit into a standard C++ \c size_t.
          */
         void calculateBoundaries() const;
 
@@ -2142,14 +2203,8 @@ inline bool NormalSurface::hasRealBoundary() const {
 }
 
 inline size_t NormalSurface::countBoundaries() const {
-    if (! boundaries_.has_value()) {
-        try {
-            calculateBoundaries();
-        } catch (const IntegerOverflow&) {
-            throw UnsolvedCase("This surface has too many boundary arcs "
-                "for this computation to proceed");
-        }
-    }
+    if (! boundaries_.has_value())
+        calculateBoundaries();
     return *boundaries_;
 }
 

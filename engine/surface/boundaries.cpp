@@ -35,7 +35,7 @@
 
 namespace regina {
 
-void NormalSurface::calculateBoundaries() const {
+void NormalSurface::calculateBoundaries() const try {
     /*
     Counts the number of boundary curves by transforming the boundary curves
     into a collection of "interval isometries", and counting the number of
@@ -48,7 +48,8 @@ void NormalSurface::calculateBoundaries() const {
     general algorithm originally given by Agol, Hass and Thurston.
 
     Be aware that the Integer-to-size_t conversions in this routine could throw
-    an IntegerOverflow exception, which must be handled by countBoundaries().
+    an IntegerOverflow exception, which is caught at the end of this
+    function try block.
     */
 
     const Triangulation<3>& tri = triangulation();
@@ -137,6 +138,9 @@ void NormalSurface::calculateBoundaries() const {
     }
 
     boundaries_ = orbits;
+} catch (const IntegerOverflow&) {
+    throw UnsolvedCase("This surface has too many boundary arcs "
+        "for this computation to proceed");
 }
 
 } // namespace regina

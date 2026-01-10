@@ -227,7 +227,7 @@ Triangulation<3> NormalHypersurface::triangulate() const {
     // relevant DiscData maps.  We don't actually need this for the
     // boundary tetrahedra, but for now we'll just do everything.
     size_t nTets = outer.countTetrahedra();
-    auto* tetData = new DiscSetTetData<DiscData>*[nTets];
+    FixedArray<DiscSetTetData<DiscData>*> tetData(nTets);
 
     const Pentachoron<4>* outerPent;
     Tetrahedron<4>* outerTet;
@@ -577,9 +577,8 @@ Triangulation<3> NormalHypersurface::triangulate() const {
 
     // And... we're done!
     // Clean up and go home.
-    for (tet = 0; tet < nTets; ++tet)
-        delete tetData[tet];
-    delete[] tetData;
+    for (auto d : tetData)
+        delete d;
 
     inner.simplify();
     return inner;

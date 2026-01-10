@@ -134,6 +134,8 @@ NormalSurfaces::NormalSurfaces(const NormalSurfaces& src,
             break;
         case NormalTransform::FilterDisjoint:
             {
+                // Note: the calls to isConnected() and disjoint() could throw
+                // an UnsolvedCase exception.
                 std::vector<const NormalSurface*> interesting;
                 for (const NormalSurface& s : src.surfaces_)
                     if ((! s.isEmpty()) && s.isCompact() && s.isConnected())

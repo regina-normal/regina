@@ -78,12 +78,13 @@ template <typename> class DiscSpecIterator;
  * inside a \c size_t then your algorithm has no chance of finishing within
  * any practical time or memory bounds.
  *
+ * This class can only be used with _embedded_ normal surfaces.
+ *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
  *
  * \pre The number of normal discs of a particular type in a particular
  * tetrahedron can be represented by a native \c size_t.
- * \pre This class should only be used with \a embedded normal surfaces.
  *
  * \ingroup surface
  */
@@ -203,20 +204,14 @@ bool discOrientationFollowsEdge(int discType, int vertex,
  * querying them is fast regardless of the underlying normal surface
  * coordinate system used.
  *
+ * This class can only be used with _embedded_ normal surfaces.
+ *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
  *
- * \warning This class converts the number of normal discs of a
- * given type from LargeInteger to `size_t`.  See the
- * precondition below.
- *
- * \pre The number of normal discs of a particular type
- * in a particular tetrahedron can be represented by a native \c size_t.
- * \pre This class should only be used with \a embedded normal surfaces.
- *
- * \todo \problong Have some error flag so we can barf politely if the number
- * of normal discs of a given type does not fit into an `size_t`.
- * See how this affects DiscSetTetData also.
+ * \warning This class converts the number of normal discs of a given type from
+ * LargeInteger to `size_t`.  If there are so many normal discs that this is
+ * impossible, the class constructor will throw an exception.
  *
  * \ingroup surface
  */
@@ -238,15 +233,19 @@ class DiscSetTet {
     public:
         /**
          * Creates a new set of normal discs corresponding to the discs
-         * of the given normal surface that lie within the given
-         * tetrahedron.
+         * of the given normal surface that lie within the given tetrahedron.
+         *
+         * \pre The given surface is embedded.
+         *
+         * \exception IntegerOverflow The given surface has normal coordinates
+         * that are so large that the number of discs of some type cannot fit
+         * into a native C++ \c size_t.
          *
          * \param surface the normal surface whose discs we shall use.
          * \param tetIndex the index in the triangulation of the
          * tetrahedron that our discs must lie in; this must be between
-         * 0 and `tri.size()-1` inclusive, where
-         * `tri` is the triangulation containing the given normal
-         * surface.
+         * 0 and `tri.size()-1` inclusive, where `tri` is the triangulation
+         * containing the given normal surface.
          */
         DiscSetTet(const NormalSurface& surface, size_t tetIndex);
         /**
@@ -338,9 +337,8 @@ class DiscSetTet {
          * Determines which normal disc in this tetrahedron meets 
          * the given normal arc on the given face.
          *
-         * \pre The given normal arc
-         * actually exists in the normal surface with which this
-         * \a DiscSetTet object was created.
+         * \pre The given normal arc actually exists in the normal surface
+         * with which this \a DiscSetTet object was created.
          *
          * \param arcFace the face of this tetrahedron containing the
          * normal arc (between 0 and 3 inclusive).
@@ -367,17 +365,16 @@ class DiscSetTet {
  * Stores data of type \c T for every normal disc inside a single
  * tetrahedron.
  *
+ * This class can only be used with _embedded_ normal surfaces.
+ *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \warning This class converts the number of normal discs of a
- * given type from LargeInteger to `size_t`.  See the precondition below.
+ * \warning This class converts the number of normal discs of a given type from
+ * LargeInteger to `size_t`.  If there are so many normal discs that this is
+ * impossible, the class constructor will throw an exception.
  *
- * \pre The number of normal discs of a particular type
- * in a particular tetrahedron can be represented by a native \c size_t.
- * \pre This class should only be used with \a embedded
- * normal surfaces.
  * \pre Type T has a default constructor and an
  * assignment operator.  That is, if \c a and \c b are of type T, then
  * \c a can be declared with no parameters and can then receive the
@@ -405,6 +402,12 @@ class DiscSetTetData : public DiscSetTet {
          * normal surface that lie within the given tetrahedron.  The data for
          * each disc will be initialised using its default constructor.
          *
+         * \pre The given surface is embedded.
+         *
+         * \exception IntegerOverflow The given surface has normal coordinates
+         * that are so large that the number of discs of some type cannot fit
+         * into a native C++ \c size_t.
+         *
          * \param surface the normal surface whose discs we shall use.
          * \param tetIndex the index in the triangulation of the
          * tetrahedron that our discs must lie in; this must be between
@@ -423,6 +426,12 @@ class DiscSetTetData : public DiscSetTet {
          * Creates a new disc set corresponding to the discs of the
          * given normal surface that lie within the given tetrahedron.
          * The data for each disc will be initialised to the given value.
+         *
+         * \pre The given surface is embedded.
+         *
+         * \exception IntegerOverflow The given surface has normal coordinates
+         * that are so large that the number of discs of some type cannot fit
+         * into a native C++ \c size_t.
          *
          * \param surface the normal surface whose discs we shall use.
          * \param tetIndex the index in the triangulation of the
@@ -649,6 +658,8 @@ void swap(DiscSetTetData<T>& a, DiscSetTetData<T>& b) noexcept {
  * End users should not refer to this class directly; instead use one of
  * the type aliases DiscSetSurfaceData<T> or DiscSetSurface.
  *
+ * This class can only be used with _embedded_ normal surfaces.
+ *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
@@ -658,12 +669,9 @@ void swap(DiscSetTetData<T>& a, DiscSetTetData<T>& b) noexcept {
  * (2) a class of the form DiscSetTetData<T>, in which case there will
  * be data of type \a T stored alongside each normal disc.
  *
- * \warning This class converts the number of normal discs of a
- * given type from LargeInteger to `size_t`.  See the precondition below.
- *
- * \pre The number of normal discs of a particular type
- * in a particular tetrahedron can be represented by a native \c size_t.
- * \pre This class should only be used with \a embedded normal surfaces.
+ * \warning This class converts the number of normal discs of a given type from
+ * LargeInteger to `size_t`.  If there are so many normal discs that this is
+ * impossible, the class constructor will throw an exception.
  *
  * \python The only instance of this class that is available
  * through python is DiscSetSurface (i.e., the "vanilla" case where
@@ -692,6 +700,12 @@ class DiscSetSurfaceDataImpl {
          * (using Regina's snapshotting machinery, which only takes a
          * deep copy when absolutely necessary).
          *
+         * \pre The given surface is embedded.
+         *
+         * \exception IntegerOverflow The given surface has normal coordinates
+         * that are so large that the number of discs of some type cannot fit
+         * into a native C++ \c size_t.
+         *
          * \param surface the normal surface whose discs we shall use.
          */
         DiscSetSurfaceDataImpl(const NormalSurface& surface) :
@@ -718,9 +732,15 @@ class DiscSetSurfaceDataImpl {
          * \pre The template argument TetData is a class of the form
          * DiscSetTetData<T>, not DiscSetTet.
          *
+         * \pre The given surface is embedded.
+         *
          * \nopython In Python, the template argument TetData is always
          * DiscSetTet, which does not store any additional data alongside
          * each normal disc.
+         *
+         * \exception IntegerOverflow The given surface has normal coordinates
+         * that are so large that the number of discs of some type cannot fit
+         * into a native C++ \c size_t.
          *
          * \param surface the normal surface whose discs we shall use.
          * \param initValue the value with which to initialise the data
@@ -1075,6 +1095,8 @@ void swap(DiscSetSurfaceDataImpl<T>& a, DiscSetSurfaceDataImpl<T>& b) noexcept {
  * A structure that stores data of type \a T alongside every normal disc
  * within a particular normal surface.
  *
+ * This structure can only be used with _embedded_ normal surfaces.
+ *
  * \nopython
  *
  * \ingroup surface
@@ -1088,6 +1110,8 @@ using DiscSetSurfaceData = DiscSetSurfaceDataImpl<DiscSetTetData<T>>;
  *
  * This structure can be used for iterating through disc types, and for
  * moving between adjacent disc types within a surface.
+ *
+ * This structure can only be used with _embedded_ normal surfaces.
  *
  * \ingroup surface
  */
@@ -1106,12 +1130,6 @@ using DiscSetSurface = DiscSetSurfaceDataImpl<DiscSetTet>;
  * As of Regina 7.3.1, this class no longer provides the iterator type aliases
  * \a value_type, \a iterator_category, \a difference_type, \a pointer and
  * \a reference. Instead you can access these through `std::iterator_traits`.
- *
- * \warning This class converts the indices of normal discs of a
- * given type from LargeInteger to `size_t`.  See the precondition below.
- *
- * \pre The number of normal discs of a particular type
- * in a particular tetrahedron can be represented by a native \c size_t.
  *
  * \python The only instance of this class that is available
  * through python is the iterator for DiscSetSurface (i.e., the "vanilla"
@@ -1281,9 +1299,8 @@ class DiscSpecIterator {
          * not a virtual disc (in which the disc number exceeds the
          * number of discs of the corresponding type).
          *
-         * \pre This iterator is not yet past-the-end
-         * (although it may be in the middle of an increment operation
-         * that will put it past-the-end).
+         * \pre This iterator is not yet past-the-end (although it may be in
+         * the middle of an increment operation that will put it past-the-end).
          */
         void makeValid() {
             if (current.tetIndex == internalDiscSet->nTets())
@@ -1310,7 +1327,7 @@ class DiscSpecIterator {
     struct iterator_traits<regina::DiscSpecIterator<TetData>> {
         using value_type = regina::DiscSpec;
         using iterator_category = std::forward_iterator_tag;
-        using difference_type = long;
+        using difference_type = ptrdiff_t;
         using pointer = const value_type*;
         using reference = const value_type&;
     };

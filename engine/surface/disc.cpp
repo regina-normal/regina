@@ -72,13 +72,14 @@ bool discOrientationFollowsEdge(int discType, int vertex, int edgeStart,
 }
 
 DiscSetTet::DiscSetTet(const NormalSurface& surface, size_t tetIndex) {
+    // Note: These calls to safeValue() could throw an IntegerOverflow.
     int i;
     for (i=0; i<4; i++)
-        discs_[i] = surface.triangles(tetIndex, i).longValue();
+        discs_[i] = surface.triangles(tetIndex, i).safeValue<size_t>();
     for (i=4; i<7; i++)
-        discs_[i] = surface.quads(tetIndex, i - 4).longValue();
+        discs_[i] = surface.quads(tetIndex, i - 4).safeValue<size_t>();
     for (i=7; i<10; i++)
-        discs_[i] = surface.octs(tetIndex, i - 7).longValue();
+        discs_[i] = surface.octs(tetIndex, i - 7).safeValue<size_t>();
 }
 
 size_t DiscSetTet::arcFromDisc(int /* arcFace */, int arcVertex,

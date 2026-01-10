@@ -3660,6 +3660,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \warning This routine could be very slow for larger triangulations.
          *
+         * \exception UnsolvedCase Within the normal surface machinery this
+         * algorithm has encountered an impossible memory requirement, due to
+         * the need to store more items than can fit into a native C++
+         * \c size_t.  This is rarely seen in practice: on a typical 64-bit
+         * machine, this would mean that the algorithm has encountered a
+         * normal surface with some coordinate at least `2^64`.
+         *
          * \return \c true if and only if the underlying 3-manifold is
          * irreducible and Haken.
          */

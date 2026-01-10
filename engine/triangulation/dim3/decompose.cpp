@@ -1272,6 +1272,9 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
 }
 
 bool Triangulation<3>::isHaken() const {
+    // Note: Our calls to NormalSurface::isIncompressible() could throw an
+    // UnsolvedCase exception.
+
     if (prop_.haken_.has_value())
         return *prop_.haken_;
 

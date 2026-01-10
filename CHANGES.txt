@@ -31,6 +31,8 @@ Version 7.5  [ TODO ]
                 DiscSetSurfaceData:
             - Now uses size_t instead of unsigned long for disc indices and
               disc counts.
+            - All constructors that take a normal surface will now throw an
+              exception if the surface coordinates are too large.
         Class Face<dim, subdim>, FaceNumbering<dim, subdim>, :
             - Major overhaul of the many classes to support face numbering.
               The new structure is simpler thanks to new features of modern
@@ -118,9 +120,24 @@ Version 7.5  [ TODO ]
               deprecated.  Instead, you should initialise this using either
               safeValue() or unsafeValue() from Integer / LargeInteger.
         Class NormalSurface:
+            - Routines components(), countBoundaries(), disjoint(),
+              isCompressingDisc(), isConnected(), isIncompressible(),
+              isOrientable() and isTwoSided() now throw an exception if the
+              underlying algorithms encounter an impossible memory requirement
+              (typically due to some normal coordinate being too large to fit
+              into a size_t).
             - Routine countBoundaries() now throws an exception if the normal
-              arc counts on the boundary are so large that they cannot fit
-              into a size_t.
+              arc count for some arc type on the boundary is so large that it
+              cannot fit into a size_t.
+        Class NormalSurfaces:
+            - Routines saveCSVEdgeWeight() and saveCSVStandard() now throw an
+              exception if the underlying algorithms encounter an impossible
+              memory requirement (typically due to some normal coordinate
+              being too large to fit into a size_t).
+            - The "transformation constructor" could throw an exception when
+              using the FilterDisjoint transformation in the presence of
+              enormous normal coordinates (again because an impossible memory
+              requirement was encountered).
         Struct NoSuchType:
             - A new declared-but-not-defined type that can be used as a
               placeholder to avoid compile errors.

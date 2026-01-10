@@ -859,14 +859,16 @@ TEST(NormalSurfacesTest, disjoint) {
         auto s2 = t.edge(0)->linkingSurface().first;
         auto s = s1 + s2;
 
-        auto c = s.components();
+        std::vector<NormalSurface> c;
+
+        EXPECT_NO_THROW({ c = s.components(); });
         ASSERT_EQ(c.size(), 2);
         EXPECT_EQ(c[0], s1);
         EXPECT_EQ(c[1], s2);
 
         // Here's where it used to break - when components() was called for
         // the second time.
-        c = s.components();
+        EXPECT_NO_THROW({ c = s.components(); });
         ASSERT_EQ(c.size(), 2);
         EXPECT_EQ(c[0], s1);
         EXPECT_EQ(c[1], s2);

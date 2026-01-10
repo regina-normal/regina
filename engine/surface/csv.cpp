@@ -79,6 +79,9 @@ namespace {
     /**
      * Writes a piece of the CSV data for the given normal surface
      * corresponding to the given set of optional fields.
+     *
+     * Note that the calls to isOrientable() and isTwoSided() could throw an
+     * UnsolvedCase exception.
      */
     void writePropData(std::ostream& out, const NormalSurface& s,
             Flags<SurfaceExport> fields) {
@@ -192,7 +195,7 @@ bool NormalSurfaces::saveCSVStandard(const char* filename,
 
     // Write the data for individual surfaces.
     for (const NormalSurface& s : surfaces_) {
-        writePropData(out, s, additionalFields);
+        writePropData(out, s, additionalFields); // could throw UnsolvedCase
 
         for (size_t i = 0; i < n; ++i) {
             out << s.triangles(i, 0) << ',';
@@ -244,7 +247,7 @@ bool NormalSurfaces::saveCSVEdgeWeight(const char* filename,
 
     // Write the data for individual surfaces.
     for (const NormalSurface& s : surfaces_) {
-        writePropData(out, s, additionalFields);
+        writePropData(out, s, additionalFields); // could throw UnsolvedCase
 
         for (size_t i = 0; i < n; ++i) {
             out << s.edgeWeight(i);
