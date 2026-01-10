@@ -28,6 +28,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "regina-config.h" // for REGINA_PYBIND11_VERSION
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #if REGINA_PYBIND11_VERSION == 3
