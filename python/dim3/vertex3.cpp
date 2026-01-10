@@ -128,7 +128,9 @@ being reserved for a different purpose in a future release.)doc")
         .def("linkEulerChar", &Vertex<3>::linkEulerChar, rdoc::linkEulerChar)
         .def("linkingSurface", &Vertex<3>::linkingSurface, rdoc::linkingSurface)
         .def_static("ordering", &Vertex<3>::ordering, rbase2::ordering)
-        .def_static("faceNumber", &Vertex<3>::faceNumber, rbase2::faceNumber)
+        .def_static("faceNumber",
+            pybind11::overload_cast<regina::Perm<4>>(&Vertex<3>::faceNumber),
+            rbase2::faceNumber)
         .def_static("containsVertex", &Vertex<3>::containsVertex,
             rbase2::containsVertex)
         .def_readonly_static("nFaces", &Vertex<3>::nFaces)

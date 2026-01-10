@@ -116,7 +116,9 @@ void addTriangle4(pybind11::module_& m, pybind11::module_& internal) {
         .def("linkingSurface", &Triangle<4>::linkingSurface,
             rdoc::linkingSurface)
         .def_static("ordering", &Triangle<4>::ordering, rbase2::ordering)
-        .def_static("faceNumber", &Triangle<4>::faceNumber, rbase2::faceNumber)
+        .def_static("faceNumber",
+            pybind11::overload_cast<regina::Perm<5>>(&Triangle<4>::faceNumber),
+            rbase2::faceNumber)
         .def_static("containsVertex", &Triangle<4>::containsVertex,
             rbase2::containsVertex)
         .def_readonly_static("nFaces", &Triangle<4>::nFaces)

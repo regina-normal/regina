@@ -95,7 +95,9 @@ void addVertex2(pybind11::module_& m, pybind11::module_& internal) {
         .def("degree", &Vertex<2>::degree, rbase::degree)
         .def("isBoundary", &Vertex<2>::isBoundary, rbase::isBoundary)
         .def_static("ordering", &Vertex<2>::ordering, rbase2::ordering)
-        .def_static("faceNumber", &Vertex<2>::faceNumber, rbase2::faceNumber)
+        .def_static("faceNumber",
+            pybind11::overload_cast<regina::Perm<3>>(&Vertex<2>::faceNumber),
+            rbase2::faceNumber)
         .def_static("containsVertex", &Vertex<2>::containsVertex,
             rbase2::containsVertex)
         .def_readonly_static("nFaces", &Vertex<2>::nFaces)

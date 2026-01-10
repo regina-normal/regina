@@ -121,7 +121,9 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
         .def("linkingSurface", &Tetrahedron<4>::linkingSurface,
             rdoc::linkingSurface)
         .def_static("ordering", &Tetrahedron<4>::ordering, rbase2::ordering)
-        .def_static("faceNumber", &Tetrahedron<4>::faceNumber,
+        .def_static("faceNumber",
+            pybind11::overload_cast<regina::Perm<5>>(
+                &Tetrahedron<4>::faceNumber),
             rbase2::faceNumber)
         .def_static("containsVertex", &Tetrahedron<4>::containsVertex,
             rbase2::containsVertex)

@@ -128,7 +128,9 @@ void addTriangle3(pybind11::module_& m, pybind11::module_& internal) {
         .def("unlock", &Triangle<3>::unlock, rbase::unlock)
         .def("isLocked", &Triangle<3>::isLocked, rbase::isLocked)
         .def_static("ordering", &Triangle<3>::ordering, rbase2::ordering)
-        .def_static("faceNumber", &Triangle<3>::faceNumber, rbase2::faceNumber)
+        .def_static("faceNumber",
+            pybind11::overload_cast<regina::Perm<4>>(&Triangle<3>::faceNumber),
+            rbase2::faceNumber)
         .def_static("containsVertex", &Triangle<3>::containsVertex,
             rbase2::containsVertex)
         .def_readonly_static("nFaces", &Triangle<3>::nFaces)
