@@ -56,28 +56,27 @@ using regina::NormalHypersurfaces;
 using regina::NormalSurface;
 using regina::NormalSurfaces;
 
-CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
-        QGraphicsScene(),
-        nSurfaces(useNumSurfaces), filled(false) {
-    if (MIN_CELL * nSurfaces > NICE_SIZE)
+CompatCanvas::CompatCanvas(size_t nSurfaces) :
+        QGraphicsScene(), nSurfaces_(nSurfaces), filled(false) {
+    if (MIN_CELL * nSurfaces_ > NICE_SIZE)
         cellSize = MIN_CELL;
     else {
-        cellSize = NICE_SIZE / nSurfaces;
+        cellSize = NICE_SIZE / nSurfaces_;
         if (cellSize > MAX_CELL)
             cellSize = MAX_CELL;
     }
 
     // Work out how much vertical and horizontal space we will need for
-    // text.  Assume here that (nSurfaces-1) is the largest number we
+    // text.  Assume here that (nSurfaces_-1) is the largest number we
     // will need to draw.
-    auto* t = new QGraphicsSimpleTextItem(QString::number(nSurfaces - 1));
+    auto* t = new QGraphicsSimpleTextItem(QString::number(nSurfaces_ - 1));
     unsigned textWidth = t->boundingRect().width();
     unsigned textHeight = t->boundingRect().height();
     delete t;
 
     gridX = LEFT_MARGIN + textWidth + 2 * TICK_LENGTH;
     gridY = TOP_MARGIN + textHeight + 2 * TICK_LENGTH;
-    gridSize = nSurfaces * cellSize;
+    gridSize = nSurfaces_ * cellSize;
 
     // Work out how much extra space we might need beyond the bottom of the
     // canvas.  Be careful when subtracting, since we are using unsigned ints.
@@ -108,13 +107,10 @@ CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
     box->show();
 
     // Draw labels along the horizontal axis.
-    unsigned labelFreq = (nSurfaces >= 160 ? 20 : nSurfaces >= 30 ? 10 : 5);
+    unsigned labelFreq = (nSurfaces_ >= 160 ? 20 : nSurfaces_ >= 30 ? 10 : 5);
     unsigned halfCell = cellSize / 2;
 
-    unsigned pos;
-    unsigned i;
-
-    pos = gridX + halfCell;
+    size_t pos = gridX + halfCell;
     auto* prev = new QGraphicsSimpleTextItem(" 0 ");
     addItem(prev);
     prev->setPos(pos - prev->boundingRect().width() / 2, TOP_MARGIN);
@@ -126,8 +122,8 @@ CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
         pos, TOP_MARGIN + textHeight + 2 * TICK_LENGTH);
     tick->show();
 
-    pos = gridX + halfCell + cellSize * (nSurfaces - 1);
-    auto* last = new QGraphicsSimpleTextItem(QString(" %1 ").arg(nSurfaces-1));
+    pos = gridX + halfCell + cellSize * (nSurfaces_ - 1);
+    auto* last = new QGraphicsSimpleTextItem(QString(" %1 ").arg(nSurfaces_-1));
     addItem(last);
     last->setPos(pos - last->boundingRect().width() / 2, TOP_MARGIN);
     if (last->collidesWithItem(prev)) {
@@ -144,7 +140,7 @@ CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
     }
 
     if (last) {
-        for (i = labelFreq; i < nSurfaces - 1; i += labelFreq) {
+        for (size_t i = labelFreq; i < nSurfaces_ - 1; i += labelFreq) {
             pos = gridX + halfCell + cellSize * i;
             t = new QGraphicsSimpleTextItem(QString(" %1 ").arg(i));
             addItem(t);
@@ -178,8 +174,8 @@ CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
         LEFT_MARGIN + textWidth + 2 * TICK_LENGTH, pos);
     tick->show();
 
-    pos = gridY + halfCell + cellSize * (nSurfaces - 1);
-    last = new QGraphicsSimpleTextItem(QString(" %1 ").arg(nSurfaces - 1));
+    pos = gridY + halfCell + cellSize * (nSurfaces_ - 1);
+    last = new QGraphicsSimpleTextItem(QString(" %1 ").arg(nSurfaces_ - 1));
     addItem(last);
     last->setPos(LEFT_MARGIN + textWidth - last->boundingRect().width(),
         pos - last->boundingRect().height() / 2);
@@ -197,7 +193,7 @@ CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
     }
 
     if (last) {
-        for (i = labelFreq; i < nSurfaces - 1; i += labelFreq) {
+        for (size_t i = labelFreq; i < nSurfaces_ - 1; i += labelFreq) {
             pos = gridY + halfCell + cellSize * i;
             t = new QGraphicsSimpleTextItem(QString(" %1 ").arg(i));
             addItem(t);
@@ -219,7 +215,7 @@ CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
     }
 
     // Draw internal guide lines.
-    for (i = 1; i < nSurfaces; ++i) {
+    for (size_t i = 1; i < nSurfaces_; ++i) {
         auto* l = new QGraphicsLineItem();
         addItem(l);
         if (i % 5)
@@ -230,7 +226,7 @@ CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
         l->setZValue(9);
         l->show();
     }
-    for (i = 1; i < nSurfaces; ++i) {
+    for (size_t i = 1; i < nSurfaces_; ++i) {
         auto* l = new QGraphicsLineItem();
         addItem(l);
         if (i % 5)
@@ -253,11 +249,10 @@ void CompatCanvas::fillLocal(const NormalSurfaces& surfaces) {
     QPen border(Qt::NoPen);
     QBrush fill(Qt::darkCyan);
 
-    unsigned i, j;
-    for (i = 0; i < nSurfaces; ++i) {
+    for (size_t i = 0; i < nSurfaces_; ++i) {
         const NormalSurface& s = surfaces[i];
 
-        for (j = i; j < nSurfaces; ++j) {
+        for (size_t j = i; j < nSurfaces_; ++j) {
             const NormalSurface& t = surfaces[j];
 
             if (s.locallyCompatible(t)) {
@@ -296,11 +291,10 @@ void CompatCanvas::fillLocal(const NormalHypersurfaces& surfaces) {
     QPen border(Qt::NoPen);
     QBrush fill(Qt::darkCyan);
 
-    unsigned i, j;
-    for (i = 0; i < nSurfaces; ++i) {
+    for (size_t i = 0; i < nSurfaces_; ++i) {
         const NormalHypersurface& s = surfaces[i];
 
-        for (j = i; j < nSurfaces; ++j) {
+        for (size_t j = i; j < nSurfaces_; ++j) {
             const NormalHypersurface& t = surfaces[j];
 
             if (s.locallyCompatible(t)) {
@@ -332,15 +326,16 @@ void CompatCanvas::fillLocal(const NormalHypersurfaces& surfaces) {
 }
 
 void CompatCanvas::fillGlobal(const NormalSurfaces& surfaces) {
+    // Note: our calls to NormalSurface::isConnected() and
+    // NormalSurface::disjoint() could throw an UnsolvedCase exception.
+
     if (filled)
         return;
 
     // We know the surface list is non-empty.
 
-    unsigned i, j;
-
-    bool* usable = new bool[nSurfaces];
-    for (i = 0; i < nSurfaces; ++i) {
+    regina::FixedArray<bool> usable(nSurfaces_);
+    for (size_t i = 0; i < nSurfaces_; ++i) {
         const NormalSurface& s = surfaces[i];
         usable[i] = (s.isCompact() && (! s.isEmpty()) && s.isConnected());
     }
@@ -350,7 +345,7 @@ void CompatCanvas::fillGlobal(const NormalSurfaces& surfaces) {
     QBrush fill(Qt::darkGreen);
     QBrush hash(Qt::darkRed, Qt::DiagCrossPattern);
 
-    for (i = 0; i < nSurfaces; ++i) {
+    for (size_t i = 0; i < nSurfaces_; ++i) {
         if (! usable[i]) {
             box = new QGraphicsRectItem(
                 gridX + i * cellSize, gridY, cellSize, gridSize);
@@ -373,7 +368,7 @@ void CompatCanvas::fillGlobal(const NormalSurfaces& surfaces) {
 
         const NormalSurface& s = surfaces[i];
 
-        for (j = i; j < nSurfaces; ++j) {
+        for (size_t j = i; j < nSurfaces_; ++j) {
             if (! usable[j])
                 continue;
 
@@ -402,8 +397,6 @@ void CompatCanvas::fillGlobal(const NormalSurfaces& surfaces) {
             }
         }
     }
-
-    delete[] usable;
 
     filled = true;
     update();

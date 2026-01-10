@@ -55,7 +55,7 @@ class CompatCanvas : public QGraphicsScene {
         /**
          * Matrix size and state
          */
-        unsigned nSurfaces;
+        size_t nSurfaces_;
         bool filled;
 
         /**
@@ -64,13 +64,13 @@ class CompatCanvas : public QGraphicsScene {
         unsigned cellSize;
         unsigned gridX;
         unsigned gridY;
-        unsigned gridSize;
+        size_t gridSize;
 
     public:
         /**
          * Constructor and destructor.
          */
-        CompatCanvas(unsigned useNumSurfaces);
+        CompatCanvas(size_t nSurfaces);
 
         /**
          * Fill the canvas with data.
