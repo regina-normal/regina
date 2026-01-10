@@ -153,6 +153,11 @@ Version 7.5  [ TODO ]
         Class RingTraits:
             - Provides new compile-time constants zeroInitialised and
               zeroDivisors.
+        Class Triangulation<3>:
+            - Routines hasCompressingDisc() and isHaken() now throw an
+              exception if the underlying algorithms encounter an impossible
+              memory requirement (typically due to some normal surface having
+              a coordinate too large to fit into a size_t).
         Struct TriangulationTraits<dim>:
             - New traits type to help with generic code for working with
               triangulations of different dimensions.

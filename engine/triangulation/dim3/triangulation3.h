@@ -3611,6 +3611,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * them.  See hasSimpleCompressingDisc() for a "heuristic shortcut"
          * that is faster but might not give a definitive answer.
          *
+         * \exception UnsolvedCase Within the normal surface machinery this
+         * algorithm has encountered an impossible memory requirement, due to
+         * the need to store more items than can fit into a native C++
+         * \c size_t.  This is rarely seen in practice: on a typical 64-bit
+         * machine, this would mean that the algorithm has encountered a
+         * normal surface with some coordinate at least `2^64`.
+         *
          * \return \c true if the underlying 3-manifold contains a
          * compressing disc, or \c false if it does not.
          */

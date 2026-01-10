@@ -1010,6 +1010,9 @@ bool Triangulation<3>::knowsIrreducible() const {
 }
 
 bool Triangulation<3>::hasCompressingDisc() const {
+    // Note: the calls to isCompressingDisc() could throw an UnsolvedCase
+    // exception.
+
     if (prop_.compressingDisc_.has_value())
         return *prop_.compressingDisc_;
 
