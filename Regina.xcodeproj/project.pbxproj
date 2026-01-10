@@ -402,6 +402,7 @@
 		052FA0A2180600FB00FAE4DF /* xmlutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E80180600FB00FAE4DF /* xmlutils.h */; };
 		052FA11F18060A4C00FAE4DF /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
 		05329E4D2F0D35190048C8C6 /* flags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05329E4C2F0D35190048C8C6 /* flags.cpp */; };
+		05329E4F2F11E5240048C8C6 /* boundaries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05329E4E2F11E5240048C8C6 /* boundaries.cpp */; };
 		0534FAE222DFDDA7000A96A3 /* memstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0534FADF22DFDDA6000A96A3 /* memstream.cpp */; };
 		0534FAE422DFDDA7000A96A3 /* zstr.h in Headers */ = {isa = PBXBuildFile; fileRef = 0534FAE022DFDDA7000A96A3 /* zstr.h */; };
 		0534FAE522DFDDA7000A96A3 /* memstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 0534FAE122DFDDA7000A96A3 /* memstream.h */; };
@@ -2869,6 +2870,7 @@
 		05318CA22A84F9F200E89B9D /* org.computop.Regina.desktop */ = {isa = PBXFileReference; lastKnownFileType = text; path = org.computop.Regina.desktop; sourceTree = "<group>"; };
 		05318CA32A84F9F200E89B9D /* org.computop.regina.metainfo.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = org.computop.regina.metainfo.xml; sourceTree = "<group>"; };
 		05329E4C2F0D35190048C8C6 /* flags.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = flags.cpp; sourceTree = "<group>"; };
+		05329E4E2F11E5240048C8C6 /* boundaries.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = boundaries.cpp; sourceTree = "<group>"; };
 		0534FADF22DFDDA6000A96A3 /* memstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = memstream.cpp; sourceTree = "<group>"; };
 		0534FAE022DFDDA7000A96A3 /* zstr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zstr.h; sourceTree = "<group>"; };
 		0534FAE122DFDDA7000A96A3 /* memstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = memstream.h; sourceTree = "<group>"; };
@@ -7759,6 +7761,7 @@
 			isa = PBXGroup;
 			children = (
 				056AECEA2A431AE200EAF4FA /* CMakeLists.txt */,
+				05329E4E2F11E5240048C8C6 /* boundaries.cpp */,
 				056AECEB2A431AE200EAF4FA /* incompressible.cpp */,
 				056AECEC2A431AE200EAF4FA /* normalsurfaces.cpp */,
 			);
@@ -10403,6 +10406,7 @@
 				057FDAF32EE56488000C706E /* stringutils.cpp in Sources */,
 				056AED8D2A431AE200EAF4FA /* perm.cpp in Sources */,
 				056AED862A431AE200EAF4FA /* boolset.cpp in Sources */,
+				05329E4F2F11E5240048C8C6 /* boundaries.cpp in Sources */,
 				056AED8E2A431AE200EAF4FA /* link.cpp in Sources */,
 				056AED5F2A431AE200EAF4FA /* txicore.cpp in Sources */,
 				056AED592A431AE200EAF4FA /* callbacks.cpp in Sources */,

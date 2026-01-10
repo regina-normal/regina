@@ -41,7 +41,7 @@ using regina::NormalCoords;
 using regina::Triangulation;
 
 static void compareBoundaryCounts(
-        NormalSurfaces& surfs, std::vector<size_t> expect ) {
+        NormalSurfaces surfs, std::vector<size_t> expect ) {
     surfs.sort( []( NormalSurface a, NormalSurface b ){ return a < b; } );
     for (size_t i = 0; i < surfs.size(); ++i) {
         EXPECT_EQ( expect[i], surfs.surface(i).countBoundaries() );
@@ -55,10 +55,9 @@ TEST(BoundariesTest, countBoundaries) {
     // hand.
     Triangulation<3> solidTorus = Triangulation<3>::fromIsoSig(
             "bGaj" );
-    NormalSurfaces solidTorusSurfs = NormalSurfaces(
-            solidTorus, NormalCoords::Quad );
-    std::vector<size_t> solidTorusCounts = { 1, 1, 2 };
-    compareBoundaryCounts( solidTorusSurfs, solidTorusCounts );
+    compareBoundaryCounts(
+        NormalSurfaces( solidTorus, NormalCoords::Quad ),
+        { 1, 1, 2 } );
 
     // Solid torus with an internal vertex
     //
@@ -73,11 +72,9 @@ TEST(BoundariesTest, countBoundaries) {
     // these GCDs.
     Triangulation<3> extraVertex = Triangulation<3>::fromIsoSig(
             "eLHkccddpvvo" );
-    NormalSurfaces extraVertexSurfs = NormalSurfaces(
-            extraVertex, NormalCoords::Standard );
-    std::vector<size_t> extraVertexCounts = {
-        1, 1, 1, 1, 2, 1, 0, 1, 1, 2, 1, 2, 1, 2, 1, 1 };
-    compareBoundaryCounts( extraVertexSurfs, extraVertexCounts );
+    compareBoundaryCounts(
+        NormalSurfaces( extraVertex, NormalCoords::Standard ),
+        { 1, 1, 1, 1, 2, 1, 0, 1, 1, 2, 1, 2, 1, 2, 1, 1 } );
 
     // Genus-2 handlebody
     //
@@ -88,9 +85,7 @@ TEST(BoundariesTest, countBoundaries) {
     // (presumably correct) answers even if the implementation is modified.
     Triangulation<3> handle2 = Triangulation<3>::fromIsoSig(
             "eHbKabdel" );
-    NormalSurfaces handle2Surfs = NormalSurfaces(
-            handle2, NormalCoords::Quad );
-    std::vector<size_t> handle2Counts = {
-        1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1 };
-    compareBoundaryCounts( handle2Surfs, handle2Counts );
+    compareBoundaryCounts(
+        NormalSurfaces( handle2, NormalCoords::Quad ),
+        { 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1 } );
 }
