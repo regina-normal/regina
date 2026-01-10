@@ -354,6 +354,18 @@ struct [[deprecated]] CallableArg;
 
 #ifndef __DOXYGEN
 
+#if defined(__GNUC__)
+// These specialisations are causing noisy deprecation warnings under gcc.
+// Silence them, since the specialisations need to stay until CallableArg is
+// removed completely.
+#pragma GCC diagnostic push
+#if defined(__clang__)
+#pragma GCC diagnostic ignored "-Wdeprecated"
+#else
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+#endif
+
 // Generic implementation which works for lambdas and classes with a
 // bracket operator.  For lambdas, this then falls through (via inheritance)
 // to the case for member function pointers, implemented separately below.
@@ -391,6 +403,10 @@ template <typename ReturnType, typename... Args, int pos>
 struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
     using type = safe_tuple_element<pos, std::tuple<Args...>>;
 };
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
 
 #endif // __DOXYGEN
 
