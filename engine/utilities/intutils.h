@@ -238,9 +238,8 @@ struct IsReginaArbitraryPrecisionInteger<IntegerBase<withInfinity>> : public std
  *
  * \deprecated This macro is no longer used within Regina, since it makes code
  * unnecessarily difficult to read (especially by automated documentation
- * tools).  Regina's approach now is simply to implement the member function
- * in the natural way and use a static_assert to ensure it is only
- * instantiated with appropriate types.
+ * tools).  Regina now uses C++20 concepts instead to constraint access to
+ * member functions.
  *
  * \pre The member function this macro is applied to is _not_ a
  * template member function (though, as noted above, this macro will
