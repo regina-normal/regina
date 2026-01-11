@@ -1579,12 +1579,8 @@ class IntegerBase : private InfinityBase<withInfinity> {
         /**
          * Initialises this integer to infinity.
          * All parameters are ignored.
-         *
-         * This constructor is only defined if \a withInfinity is \c true.
-         * Any attempt to use it when \a withInfinity is \c false
-         * will generate a linker error.
          */
-        IntegerBase(bool, bool);
+        IntegerBase(bool, bool) requires (withInfinity);
 
         /**
          * Sets this integer to be finite.
