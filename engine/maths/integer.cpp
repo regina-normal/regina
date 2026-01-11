@@ -304,26 +304,6 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
 }
 
 template <bool withInfinity>
-IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(long other) {
-    if (isInfinite())
-        return *this;
-    if (large_)
-        mpz_mul_si(large_, large_, other);
-    else {
-        using Wide = IntOfSize<2 * sizeof(long)>::type;
-        Wide ans = static_cast<Wide>(small_) * static_cast<Wide>(other);
-        if (ans > LONG_MAX || ans < LONG_MIN) {
-            // Overflow.
-            large_ = new __mpz_struct[1];
-            mpz_init_set_si(large_, small_);
-            mpz_mul_si(large_, large_, other);
-        } else
-            small_ = static_cast<long>(ans);
-    }
-    return *this;
-}
-
-template <bool withInfinity>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(
         const IntegerBase& other) {
     if (isInfinite())

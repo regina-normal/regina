@@ -1056,10 +1056,13 @@ class IntegerBase : private InfinityBase<withInfinity> {
          * If either factor of the product is infinite, the result will be
          * infinity.
          *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
          * \param other the integer to multiply with this integer.
          * \return a reference to this integer with its new value.
          */
-        IntegerBase& operator *=(long other);
+        template <CppInteger IntType>
+        IntegerBase& operator *=(IntType other);
         /**
          * Divides this by the given integer.
          * The result will be truncated to an integer, i.e. rounded
@@ -3317,6 +3320,44 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
         return *this;
     } else
         return (*this) -= other.small_;
+}
+
+template <bool withInfinity>
+template <CppInteger IntType>
+IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
+        IntType other) {
+    if (isInfinite())
+        return *this;
+
+    if constexpr (sizeof(IntType) <= sizeof(long)) {
+        if (large_) {
+            if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+                mpz_mul_si(large_, large_, other);
+            } else {
+                mpz_mul_ui(large_, large_, other);
+            }
+        } else {
+            using Wide = IntOfSize<2 * sizeof(long)>::type;
+            // Note: even if other is unsigned, casting it to Wide will do the
+            // cast correctly, and the multiplication should not overflow.
+            Wide ans = static_cast<Wide>(small_) * static_cast<Wide>(other);
+            if (ans > LONG_MAX || ans < LONG_MIN) {
+                // Overflow.
+                large_ = new __mpz_struct[1];
+                mpz_init_set_si(large_, small_);
+                if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+                    mpz_mul_si(large_, large_, other);
+                } else {
+                    mpz_mul_ui(large_, large_, other);
+                }
+            } else
+                small_ = static_cast<long>(ans);
+        }
+    } else {
+        // TODO: Improve this.
+        return (*this) *= IntegerBase(other);
+    }
+    return *this;
 }
 
 template <bool withInfinity>
