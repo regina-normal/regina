@@ -33,6 +33,8 @@ Version 7.5  [ TODO ]
               disc counts.
             - All constructors that take a normal surface will now throw an
               exception if the surface coordinates are too large.
+        Class DivisionByZero:
+            - New exception class.
         Class Face<dim, subdim>, FaceNumbering<dim, subdim>, :
             - Major overhaul of the many classes to support face numbering.
               The new structure is simpler thanks to new features of modern

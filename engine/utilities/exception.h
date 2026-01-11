@@ -193,52 +193,6 @@ class FileError : public ReginaException {
 };
 
 /**
- * An exception thrown when Regina encounters some kind of numerical or
- * arithmetical error.
- *
- * An example here might be division by zero.
- *
- * All member functions follow the same pattern as the parent class
- * ReginaException, and are not documented again here.
- *
- * \ingroup utilities
- */
-class NumericalError : public ReginaException {
-    public:
-        NumericalError(const std::string& msg) : ReginaException(msg) {}
-        NumericalError(const char* msg) : ReginaException(msg) {}
-        NumericalError(const NumericalError&) noexcept = default;
-        NumericalError& operator = (const NumericalError&) noexcept = default;
-};
-
-/**
- * An exception thrown when the result of some calculation cannot fit into
- * an appropriate native C++ integer type.
- *
- * Note that the constructor for this exception class follows a different
- * pattern from most of Regina's exception classes.
- *
- * \ingroup utilities
- */
-class IntegerOverflow : public ReginaException {
-    public:
-        /**
-         * Creates a new exception with a stock error message.
-         */
-        IntegerOverflow() : ReginaException("Integer overflow") {}
-        /**
-         * Creates a new copy of the given exception.
-         */
-        IntegerOverflow(const IntegerOverflow&) noexcept = default;
-        /**
-         * Sets this to be a copy of the given exception.
-         *
-         * \return a reference to this exception.
-         */
-        IntegerOverflow& operator = (const IntegerOverflow&) noexcept = default;
-};
-
-/**
  * An exception thrown when Regina has certified that a mathematical
  * problem has no solution.
  *
@@ -330,6 +284,81 @@ class ImpossibleScenario : public ReginaException {
         ImpossibleScenario(const ImpossibleScenario&) noexcept = default;
         ImpossibleScenario& operator = (const ImpossibleScenario&) noexcept =
             default;
+};
+
+/**
+ * An exception thrown when Regina encounters some kind of numerical or
+ * arithmetical error.
+ *
+ * Examples might be integer overflows, or divisions by zero (both of which
+ * are represented by their own subclasses of NumericalError).
+ *
+ * All member functions follow the same pattern as the parent class
+ * ReginaException, and are not documented again here.
+ *
+ * \ingroup utilities
+ */
+class NumericalError : public ReginaException {
+    public:
+        NumericalError(const std::string& msg) : ReginaException(msg) {}
+        NumericalError(const char* msg) : ReginaException(msg) {}
+        NumericalError(const NumericalError&) noexcept = default;
+        NumericalError& operator = (const NumericalError&) noexcept = default;
+};
+
+/**
+ * An exception thrown when the result of some calculation cannot fit into
+ * an appropriate native C++ integer type.
+ *
+ * Note that, unlike most of Regina's exception classes, the constructor for
+ * IntegerOverflow takes no arguments - you do not need to (and indeed cannot)
+ * supply a text description.
+ *
+ * \ingroup utilities
+ */
+class IntegerOverflow : public NumericalError {
+    public:
+        /**
+         * Creates a new exception with a stock error message.
+         */
+        IntegerOverflow() : NumericalError("Integer overflow") {}
+        /**
+         * Creates a new copy of the given exception.
+         */
+        IntegerOverflow(const IntegerOverflow&) noexcept = default;
+        /**
+         * Sets this to be a copy of the given exception.
+         *
+         * \return a reference to this exception.
+         */
+        IntegerOverflow& operator = (const IntegerOverflow&) noexcept = default;
+};
+
+/**
+ * An exception thrown when Regina encounters an attempted division by zero.
+ *
+ * Note that, unlike most of Regina's exception classes, the constructor for
+ * DivisionByZero takes no arguments - you do not need to (and indeed cannot)
+ * supply a text description.
+ *
+ * \ingroup utilities
+ */
+class DivisionByZero : public NumericalError {
+    public:
+        /**
+         * Creates a new exception with a stock error message.
+         */
+        DivisionByZero() : NumericalError("Division by zero") {}
+        /**
+         * Creates a new copy of the given exception.
+         */
+        DivisionByZero(const DivisionByZero&) noexcept = default;
+        /**
+         * Sets this to be a copy of the given exception.
+         *
+         * \return a reference to this exception.
+         */
+        DivisionByZero& operator = (const DivisionByZero&) noexcept = default;
 };
 
 /**

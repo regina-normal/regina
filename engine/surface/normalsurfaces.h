@@ -1347,7 +1347,7 @@ class NormalSurfaces :
                  * (i.e., will not overflow) for the enumeration problem
                  * under consideration.
                  */
-                template <typename Integer>
+                template <ReginaInteger IntType>
                 void fillVertexTreeWith();
 
                 /**

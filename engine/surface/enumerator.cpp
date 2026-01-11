@@ -448,7 +448,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     }
 }
 
-template <typename Integer>
+template <ReginaInteger IntType>
 void NormalSurfaces::Enumerator::fillVertexTreeWith() {
     if (useNonSpunConstraint(list_->coords_)) {
         // LPConstraintNonSpun can fail to construct the tableaux constraints,
@@ -457,7 +457,7 @@ void NormalSurfaces::Enumerator::fillVertexTreeWith() {
         // the matching equations as the first step of the enumeration process,
         // we are assured that LPConstraintNonSpun can be used without problems.
         // TODO: Convert TreeEnumeration to use SnapshotRef
-        TreeEnumeration<LPConstraintNonSpun, BanNone, Integer> search(
+        TreeEnumeration<LPConstraintNonSpun, BanNone, IntType> search(
             *list_->triangulation_, list_->coords_);
         while (search.next(tracker_)) {
             list_->surfaces_.push_back(search.buildSurface());
@@ -466,7 +466,7 @@ void NormalSurfaces::Enumerator::fillVertexTreeWith() {
         }
     } else {
         // TODO: Convert TreeEnumeration to use SnapshotRef
-        TreeEnumeration<LPConstraintNone, BanNone, Integer> search(
+        TreeEnumeration<LPConstraintNone, BanNone, IntType> search(
             *list_->triangulation_, list_->coords_);
         while (search.next(tracker_)) {
             list_->surfaces_.push_back(search.buildSurface());

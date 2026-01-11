@@ -58,18 +58,20 @@ void addException(pybind11::module_& m) {
         "NotImplemented", rdoc::NotImplemented);
     regina::python::registerReginaException<regina::FileError>(m,
         "FileError", rdoc::FileError);
-    regina::python::registerReginaException<regina::NumericalError>(m,
-        "NumericalError", rdoc::NumericalError);
     regina::python::registerReginaException<regina::NoSolution>(m,
         "NoSolution", rdoc::NoSolution);
-    regina::python::registerReginaException<regina::IntegerOverflow>(m,
-        "IntegerOverflow", rdoc::IntegerOverflow);
     regina::python::registerReginaException<regina::UnsolvedCase>(m,
         "UnsolvedCase", rdoc::UnsolvedCase);
     regina::python::registerReginaException<regina::LockViolation>(m,
         "LockViolation", rdoc::LockViolation);
     regina::python::registerReginaException<regina::ImpossibleScenario>(m,
         "ImpossibleScenario", rdoc::ImpossibleScenario);
+    regina::python::registerReginaException<regina::NumericalError>(m,
+        "NumericalError", rdoc::NumericalError);
+    regina::python::registerReginaException<regina::IntegerOverflow>(m,
+        "IntegerOverflow", rdoc::IntegerOverflow);
+    regina::python::registerReginaException<regina::DivisionByZero>(m,
+        "DivisionByZero", rdoc::DivisionByZero);
     regina::python::registerReginaException<regina::SnapPeaUnsolvedCase>(m,
         "SnapPeaUnsolvedCase", rdoc::SnapPeaUnsolvedCase);
     regina::python::registerReginaException<regina::SnapPeaIsNull>(m,

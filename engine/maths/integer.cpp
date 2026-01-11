@@ -209,66 +209,6 @@ std::ostream& operator << (std::ostream& out,
 }
 
 template <bool withInfinity>
-IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(long other) {
-    if (isInfinite())
-        return *this;
-    if (! large_) {
-        // Use native arithmetic if we can.
-        if (    (small_ > 0 && other > (LONG_MAX - small_)) ||
-                (small_ < 0 && other < (LONG_MIN - small_))) {
-            // Boom.  It's an overflow.
-            // Fall back to large integer arithmetic in the next block.
-            forceLarge();
-        } else {
-            // All good: we're done.
-            small_ += other;
-            return *this;
-        }
-    }
-
-    // And now we're down to large integer arithmetic.
-    // The following code should work even if other == LONG_MIN (in which case
-    // -other == LONG_MIN also), since passing -other to mpz_sub_ui casts it
-    // to an unsigned long (and gives it the correct positive value).
-    if (other >= 0)
-        mpz_add_ui(large_, large_, other);
-    else
-        mpz_sub_ui(large_, large_, -other);
-
-    return *this;
-}
-
-template <bool withInfinity>
-IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(long other) {
-    if (isInfinite())
-        return *this;
-    if (! large_) {
-        // Use native arithmetic if we can.
-        if (    (other > 0 && small_ < (LONG_MIN + other)) ||
-                (other < 0 && small_ > (LONG_MAX + other))) {
-            // Boom.  It's an overflow.
-            // Fall back to large integer arithmetic in the next block.
-            forceLarge();
-        } else {
-            // All good: we're done.
-            small_ -= other;
-            return *this;
-        }
-    }
-
-    // And now we're down to large integer arithmetic.
-    // The following code should work even if other == LONG_MIN (in which case
-    // -other == LONG_MIN also), since passing -other to mpz_add_ui casts it
-    // to an unsigned long (and gives it the correct positive value).
-    if (other >= 0)
-        mpz_sub_ui(large_, large_, other);
-    else
-        mpz_add_ui(large_, large_, -other);
-
-    return *this;
-}
-
-template <bool withInfinity>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
         const IntegerBase& other) {
     if constexpr (withInfinity) {
@@ -321,7 +261,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(
         }
     } else {
         if (other.isZero())
-            throw NumericalError("Division by zero");
+            throw DivisionByZero();
     }
 
     if (other.large_) {
@@ -404,7 +344,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(long other) {
         }
     } else {
         if (other == 0)
-            throw NumericalError("Division by zero");
+            throw DivisionByZero();
     }
 
     if (large_) {

@@ -59,6 +59,7 @@ DiscSetTet : class -> EqualityType.BY_VALUE
 DiscSpec : class -> EqualityType.BY_VALUE
 DiscSpecIterator : class -> EqualityType.BY_VALUE
 DiscType : class -> EqualityType.BY_VALUE
+DivisionByZero : exception
 DoubleDescription : class -> EqualityType.NEVER_INSTANTIATED
 Edge2 : alias -> Face2_1
 Edge3 : alias -> Face3_1

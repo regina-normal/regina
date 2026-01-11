@@ -853,7 +853,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
-         * \exception NumericalError The argument \a other is zero, but this
+         * \exception DivisionByZero The argument \a other is zero, but this
          * class does not support infinity.
          *
          * \param other the integer to divide this by.
@@ -876,7 +876,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          *
          * \python It is assumed that the type \a IntType is \c long.
          *
-         * \exception NumericalError The argument \a other is zero, but this
+         * \exception DivisionByZero The argument \a other is zero, but this
          * class does not support infinity.
          *
          * \param other the integer to divide this by.
@@ -1079,7 +1079,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
-         * \exception NumericalError The argument \a other is zero, but this
+         * \exception DivisionByZero The argument \a other is zero, but this
          * class does not support infinity.
          *
          * \param other the integer to divide this by.
@@ -1100,7 +1100,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
-         * \exception NumericalError The argument \a other is zero, but this
+         * \exception DivisionByZero The argument \a other is zero, but this
          * class does not support infinity.
          *
          * \param other the integer to divide this by.
@@ -3234,7 +3234,7 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
         }
     } else {
         if (other.isZero())
-            throw NumericalError("Division by zero");
+            throw DivisionByZero();
     }
 
     // Do the standard thing for now.
@@ -3256,7 +3256,7 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
         }
     } else {
         if (other == 0)
-            throw NumericalError("Division by zero");
+            throw DivisionByZero();
     }
 
     // Do the standard thing for now.
@@ -3361,6 +3361,66 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
         return *this;
     } else
         return (*this) -= other.small_;
+}
+
+template <bool withInfinity>
+IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(long other) {
+    if (isInfinite())
+        return *this;
+    if (! large_) {
+        // Use native arithmetic if we can.
+        if (    (small_ > 0 && other > (LONG_MAX - small_)) ||
+                (small_ < 0 && other < (LONG_MIN - small_))) {
+            // Boom.  It's an overflow.
+            // Fall back to large integer arithmetic in the next block.
+            forceLarge();
+        } else {
+            // All good: we're done.
+            small_ += other;
+            return *this;
+        }
+    }
+
+    // And now we're down to large integer arithmetic.
+    // The following code should work even if other == LONG_MIN (in which case
+    // -other == LONG_MIN also), since passing -other to mpz_sub_ui casts it
+    // to an unsigned long (and gives it the correct positive value).
+    if (other >= 0)
+        mpz_add_ui(large_, large_, other);
+    else
+        mpz_sub_ui(large_, large_, -other);
+
+    return *this;
+}
+
+template <bool withInfinity>
+IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(long other) {
+    if (isInfinite())
+        return *this;
+    if (! large_) {
+        // Use native arithmetic if we can.
+        if (    (other > 0 && small_ < (LONG_MIN + other)) ||
+                (other < 0 && small_ > (LONG_MAX + other))) {
+            // Boom.  It's an overflow.
+            // Fall back to large integer arithmetic in the next block.
+            forceLarge();
+        } else {
+            // All good: we're done.
+            small_ -= other;
+            return *this;
+        }
+    }
+
+    // And now we're down to large integer arithmetic.
+    // The following code should work even if other == LONG_MIN (in which case
+    // -other == LONG_MIN also), since passing -other to mpz_add_ui casts it
+    // to an unsigned long (and gives it the correct positive value).
+    if (other >= 0)
+        mpz_sub_ui(large_, large_, other);
+    else
+        mpz_add_ui(large_, large_, -other);
+
+    return *this;
 }
 
 template <bool withInfinity>
