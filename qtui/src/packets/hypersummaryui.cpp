@@ -175,8 +175,9 @@ void HyperSummaryUI::refresh() {
     std::set<std::string> allHomClosed, allHomBounded;
     std::set<std::pair<int, int> > allTypesClosed, allTypesBounded;
 
+    bool hasUnsolvedCases = false;
+
     std::string homology;
-    std::pair<int, int> type;
     for (const regina::NormalHypersurface& s :
             static_cast<const regina::NormalHypersurfaces&>(*surfaces)) {
         if (! s.isCompact())
@@ -191,20 +192,28 @@ void HyperSummaryUI::refresh() {
             if (s.hasRealBoundary()) {
                 allHomBounded.insert(homology);
 
-                type = std::make_pair(boolIndex(s.isTwoSided()),
-                    boolIndex(s.isOrientable()));
-                allTypesBounded.insert(type);
-
-                ++countBounded[type.first][type.second][homology];
+                try {
+                    // These tests could throw an UnsolvedCase exception.
+                    int twoSided = boolIndex(s.isTwoSided());
+                    int orientable = boolIndex(s.isOrientable());
+                    allTypesBounded.emplace(twoSided, orientable);
+                    ++countBounded[twoSided][orientable][homology];
+                } catch (const regina::UnsolvedCase&) {
+                    hasUnsolvedCases = true;
+                }
                 ++bounded;
             } else {
                 allHomClosed.insert(homology);
 
-                type = std::make_pair(boolIndex(s.isTwoSided()),
-                    boolIndex(s.isOrientable()));
-                allTypesClosed.insert(type);
-
-                ++countClosed[type.first][type.second][homology];
+                try {
+                    // These tests could throw an UnsolvedCase exception.
+                    int twoSided = boolIndex(s.isTwoSided());
+                    int orientable = boolIndex(s.isOrientable());
+                    allTypesClosed.emplace(twoSided, orientable);
+                    ++countClosed[twoSided][orientable][homology];
+                } catch (const regina::UnsolvedCase&) {
+                    hasUnsolvedCases = true;
+                }
                 ++closed;
             }
         }
@@ -246,6 +255,13 @@ void HyperSummaryUI::refresh() {
 
     if (closed == 0) {
         totClosed->setText(tr("No closed %1hypersurfaces.").arg(embStr));
+        tableClosed->hide();
+    } else if (hasUnsolvedCases) {
+        if (closed == 1)
+            totClosed->setText(tr("1 closed %1hypersurface.").arg(embStr));
+        else
+            totClosed->setText(tr("%1 closed %2hypersurfaces.").arg(closed)
+                .arg(embStr));
         tableClosed->hide();
     } else {
         if (closed == 1)
@@ -292,6 +308,14 @@ void HyperSummaryUI::refresh() {
 
         if (bounded == 0) {
             totBounded->setText(tr("No bounded %1hypersurfaces.").arg(embStr));
+            tableBounded->hide();
+        } else if (hasUnsolvedCases) {
+            if (bounded == 1)
+                totBounded->setText(tr("1 bounded %1hypersurface.")
+                    .arg(embStr));
+            else
+                totBounded->setText(tr("%1 bounded %2hypersurfaces.")
+                    .arg(bounded).arg(embStr));
             tableBounded->hide();
         } else {
             if (bounded == 1)

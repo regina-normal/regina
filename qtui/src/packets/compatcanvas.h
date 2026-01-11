@@ -80,6 +80,9 @@ class CompatCanvas : public QGraphicsScene {
          *
          * \pre The given list is non-empty and contains only embedded
          * surfaces/hypersurfaces.
+         *
+         * \exception UnsolvedCase Potentially thrown by fillGlobal(), due to
+         * its use of connectivity and disjointness testing.
          */
         void fillLocal(const regina::NormalSurfaces& surfaces);
         void fillLocal(const regina::NormalHypersurfaces& surfaces);
