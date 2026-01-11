@@ -69,8 +69,9 @@ Version 7.5  [ TODO ]
               templated constructor and a single templated assignment operator
               to handle _all_ native C++ integer types.  These can also take
               128-bit integers (which were not supported before).
-            - Now supports comparisons (equality/inequality and ordering)
-              against all native C++ integer types, not just long.
+            - Now supports comparisons (equality/inequality and ordering) and
+              arithmetic operations (+, -, *, /, %, divExact, +=, -=, *=, /=,
+              %=, divByExact) with all native C++ integer types, not just long.
             - Now supports assignment from and comparisons against
               NativeInteger<bytes> (in additional to construction, which was
               already available).
