@@ -270,16 +270,6 @@ Returns:
 
 // Docstring regina::python::doc::IntegerBase_::__eq_2
 static const char *__eq_2 =
-R"doc(Determines if this is equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given integer are equal.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::__eq_3
-static const char *__eq_3 =
 R"doc(Determines if this is equal to the given native C++ integer.
 
 Python:
@@ -1228,7 +1218,7 @@ routine will return the correct result.
     integer type instead of ``long``). Python users should just call
     ``safeValue()``.
 
-Exception ``NoSolution``:
+Exception ``IntegerOverflow``:
     This integer is too large or small to fit into a ``long``.
 
 Returns:
@@ -1249,7 +1239,7 @@ here.
 Python:
     It is assumed that the type *IntType* is ``long``.
 
-Exception ``NoSolution``:
+Exception ``IntegerOverflow``:
     This integer does not fit into the range of the given native C++
     integer type.
 

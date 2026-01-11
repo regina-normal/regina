@@ -106,6 +106,16 @@ R"doc(An exception thrown when some functionality is not yet implemented.
 All member functions follow the same pattern as the parent class
 ReginaException, and are not documented again here.)doc";
 
+// Docstring regina::python::doc::NumericalError
+static const char *NumericalError =
+R"doc(An exception thrown when Regina encounters some kind of numerical or
+arithmetical error.
+
+An example here might be division by zero.
+
+All member functions follow the same pattern as the parent class
+ReginaException, and are not documented again here.)doc";
+
 // Docstring regina::python::doc::ReginaException
 static const char *ReginaException =
 R"doc(A base class for all of the exceptions that are thrown by Regina's

@@ -58,13 +58,15 @@ class NativeInteger;
 class python_int; // Represents a Python arbitrary-precision integer.
 #endif
 
+namespace detail {
+
 /**
  * Internal base classes for use with IntegerBase, templated on whether we
  * should support infinity as an allowed value.
  *
  * See the IntegerBase class notes for details.
  *
- * \ingroup maths
+ * \ingroup detail
  */
 template <bool withInfinity>
 struct InfinityBase;
@@ -76,7 +78,7 @@ struct InfinityBase;
  *
  * End users should not use this class directly.
  *
- * \ingroup maths
+ * \ingroup detail
  */
 template <>
 struct InfinityBase<true> {
@@ -88,12 +90,14 @@ struct InfinityBase<true> {
  * An empty internal base class inherited by Integer, which does not
  * support infinity as an allowed value.
  *
- * \ingroup maths
+ * \ingroup detail
  */
 template <>
 struct InfinityBase<false> {
 };
 #endif // __DOXYGEN
+
+} // namespace detail
 
 /**
  * Represents an arbitrary precision integer.
@@ -139,7 +143,7 @@ struct InfinityBase<false> {
  * \ingroup maths
  */
 template <bool withInfinity = false>
-class IntegerBase : private InfinityBase<withInfinity> {
+class IntegerBase : private detail::InfinityBase<withInfinity> {
     public:
         /**
          * A compile-time constant indicating whether this integer type
@@ -361,15 +365,17 @@ class IntegerBase : private InfinityBase<withInfinity> {
          *
          * \return \c true if and only if this integer is infinity.
          */
-        bool isInfinite() const;
+        constexpr bool isInfinite() const {
+            if constexpr (withInfinity)
+                return detail::InfinityBase<withInfinity>::infinite_;
+            else
+                return false;
+        }
 
         /**
          * Sets this integer to be infinity.
-         *
-         * If the template parameter \a withInfinity is \c false,
-         * this routine safely does nothing.
          */
-        inline void makeInfinite();
+        inline void makeInfinite() requires (withInfinity);
 
         /**
          * Returns the value of this integer as a native C++ integer of the
@@ -623,15 +629,8 @@ class IntegerBase : private InfinityBase<withInfinity> {
          * \return \c true if and only if this and the given integer are
          * equal.
          */
-        bool operator ==(const IntegerBase& rhs) const;
-        /**
-         * Determines if this is equal to the given integer.
-         *
-         * \param rhs the integer with which this will be compared.
-         * \return \c true if and only if this and the given integer are
-         * equal.
-         */
-        bool operator ==(const IntegerBase<! withInfinity>& rhs) const;
+        template <bool rhsWithInfinity>
+        bool operator ==(const IntegerBase<rhsWithInfinity>& rhs) const;
         /**
          * Determines if this is equal to the given native C++ integer.
          *
@@ -671,7 +670,9 @@ class IntegerBase : private InfinityBase<withInfinity> {
          * \return The result of the numerical comparison between this and
          * the given integer.
          */
-        std::strong_ordering operator <=> (const IntegerBase& rhs) const;
+        template <bool rhsWithInfinity>
+        std::strong_ordering operator <=> (
+            const IntegerBase<rhsWithInfinity>& rhs) const;
         /**
          * Compares this to the given native C++ integer.
          *
@@ -852,8 +853,8 @@ class IntegerBase : private InfinityBase<withInfinity> {
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
-         * \pre If this class does not support infinity, then
-         * \a other must be non-zero.
+         * \exception NumericalError The argument \a other is zero, but this
+         * class does not support infinity.
          *
          * \param other the integer to divide this by.
          * \return the quotient \a this divided by \a other.
@@ -873,10 +874,10 @@ class IntegerBase : private InfinityBase<withInfinity> {
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
-         * \pre If this class does not support infinity, then
-         * \a other must be non-zero.
-         *
          * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \exception NumericalError The argument \a other is zero, but this
+         * class does not support infinity.
          *
          * \param other the integer to divide this by.
          * \return the quotient \a this divided by \a other.
@@ -1078,8 +1079,8 @@ class IntegerBase : private InfinityBase<withInfinity> {
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
-         * \pre If this class does not support infinity, then
-         * \a other must be non-zero.
+         * \exception NumericalError The argument \a other is zero, but this
+         * class does not support infinity.
          *
          * \param other the integer to divide this by.
          * \return a reference to this integer with its new value.
@@ -1099,8 +1100,8 @@ class IntegerBase : private InfinityBase<withInfinity> {
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
-         * \pre If this class does not support infinity, then
-         * \a other must be non-zero.
+         * \exception NumericalError The argument \a other is zero, but this
+         * class does not support infinity.
          *
          * \param other the integer to divide this by.
          * \return a reference to this integer with its new value.
@@ -1580,17 +1581,19 @@ class IntegerBase : private InfinityBase<withInfinity> {
          * Initialises this integer to infinity.
          * All parameters are ignored.
          */
-        IntegerBase(bool, bool) requires (withInfinity);
+        constexpr IntegerBase(bool, bool) requires (withInfinity) :
+                large_(nullptr) {
+            detail::InfinityBase<withInfinity>::infinite_ = true;
+        }
 
         /**
          * Sets this integer to be finite.
          * Its new value will be determined by the current contents of
          * \a small_ which will not be touched.
-         *
-         * If the template parameter \a withInfinity is \c false,
-         * this routine safely does nothing.
          */
-        inline void makeFinite();
+        constexpr inline void makeFinite() requires (withInfinity) {
+            detail::InfinityBase<withInfinity>::infinite_ = false;
+        }
 
         /**
          * Converts this integer from a native C/C++ long representation
@@ -2326,7 +2329,9 @@ class NativeInteger {
          *
          * \return \c false, since a NativeInteger can never be infinity.
          */
-        bool isInfinite() const;
+        constexpr bool isInfinite() const {
+            return false;
+        }
         /**
          * A do-nothing routine that ensures that this integer is using a
          * native C/C++ integer representation.
@@ -2459,10 +2464,15 @@ inline IntegerBase<withInfinity>::IntegerBase(IntType value) :
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity>::IntegerBase(const IntegerBase& value) {
-    if (value.isInfinite()) {
-        large_ = nullptr;
-        makeInfinite();
-    } else if (value.large_) {
+    if constexpr (withInfinity) {
+        if (value.isInfinite()) {
+            large_ = nullptr;
+            makeInfinite();
+            return;
+        }
+    }
+
+    if (value.large_) {
         large_ = new __mpz_struct[1];
         mpz_init_set(large_, value.large_);
     } else {
@@ -2487,7 +2497,7 @@ inline IntegerBase<withInfinity>::IntegerBase(
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity>::IntegerBase(IntegerBase&& src) noexcept :
-        InfinityBase<withInfinity>(src),
+        detail::InfinityBase<withInfinity>(src),
         small_(src.small_), large_(src.large_) {
     src.large_ = nullptr;
 }
@@ -2533,43 +2543,38 @@ inline IntegerBase<withInfinity>::~IntegerBase() {
 
 template <bool withInfinity>
 inline bool IntegerBase<withInfinity>::isNative() const {
-    return (! isInfinite()) && (! large_);
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return false;
+
+    return (! large_);
 }
 
 template <bool withInfinity>
 inline bool IntegerBase<withInfinity>::isZero() const {
-    return (! isInfinite()) &&
-        (((! large_) && (! small_)) || (large_ && mpz_sgn(large_) == 0));
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return false;
+
+    return (((! large_) && (! small_)) || (large_ && mpz_sgn(large_) == 0));
 }
 
 template <bool withInfinity>
 inline int IntegerBase<withInfinity>::sign() const {
-    return (isInfinite() ? 1 :
-        large_ ? mpz_sgn(large_) :
-        small_ > 0 ? 1 : small_ < 0 ? -1 : 0);
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return 1;
+
+    return (large_ ? mpz_sgn(large_) : small_ > 0 ? 1 : small_ < 0 ? -1 : 0);
 }
 
 #ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
-
-template <>
-inline bool IntegerBase<true>::isInfinite() const {
-    return infinite_;
-}
-
-template <>
-inline bool IntegerBase<false>::isInfinite() const {
-    return false;
-}
 
 template <>
 inline void IntegerBase<true>::makeInfinite() {
     infinite_ = true;
     if (large_)
         clearLarge();
-}
-
-template <>
-inline void IntegerBase<false>::makeInfinite() {
 }
 
 #endif // __DOXYGEN
@@ -2765,15 +2770,18 @@ inline typename IntOfSize<bytes>::type IntegerBase<withInfinity>::nativeValue()
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         const IntegerBase& value) {
+    if constexpr (withInfinity) {
+        if (value.isInfinite()) {
+            makeInfinite();
+            return *this;
+        }
+        makeFinite();
+    }
+
     // We assume that mpz_set() is fine with self-assignment, since:
     // - the GMP docs state that output and input variables can be the same;
     // - the libgmpxx classes do not special-case self-assignment.
     // The C++ test suite tests self-assignment of Integers also.
-    if (value.isInfinite()) {
-        makeInfinite();
-        return *this;
-    }
-    makeFinite();
     if (value.large_) {
         if (large_)
             mpz_set(large_, value.large_);
@@ -2792,7 +2800,9 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         const IntegerBase<! withInfinity>& value) {
-    makeFinite(); // Either this or src does not support infinity.
+    if constexpr (withInfinity)
+        makeFinite(); // The given value cannot be infinity.
+
     if (value.large_) {
         if (large_)
             mpz_set(large_, value.large_);
@@ -2812,7 +2822,7 @@ template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         IntegerBase&& src) noexcept {
     if constexpr (withInfinity)
-        InfinityBase<true>::infinite_ = src.infinite_;
+        detail::InfinityBase<true>::infinite_ = src.infinite_;
     small_ = src.small_;
     std::swap(large_, src.large_);
     // Let src dispose of the original large_, if it was non-null.
@@ -2822,7 +2832,9 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         IntegerBase<! withInfinity>&& src) noexcept {
-    makeFinite(); // Either this or src does not support infinity.
+    if constexpr (withInfinity)
+        makeFinite(); // The given value cannot be infinity.
+
     small_ = src.small_;
     std::swap(large_, src.large_);
     // Let src dispose of the original large_, if it was non-null.
@@ -2833,7 +2845,9 @@ template <bool withInfinity>
 template <CppInteger IntType>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         IntType value) {
-    makeFinite();
+    if constexpr (withInfinity)
+        makeFinite();
+
     small_ = value;
 
     // Test for overflow, if we need to.
@@ -2920,39 +2934,24 @@ template <bool withInfinity>
 inline void IntegerBase<withInfinity>::swap(IntegerBase& other) noexcept {
     // This should just work, since large_ is a pointer.
     if constexpr (withInfinity)
-        std::swap(InfinityBase<true>::infinite_,
-            other.InfinityBase<true>::infinite_);
+        std::swap(detail::InfinityBase<true>::infinite_,
+            other.detail::InfinityBase<true>::infinite_);
     std::swap(small_, other.small_);
     std::swap(large_, other.large_);
 }
 
 template <bool withInfinity>
-inline bool IntegerBase<withInfinity>::operator ==(const IntegerBase& rhs)
-        const {
-    if (isInfinite() && rhs.isInfinite())
-        return true;
-    else if (isInfinite() || rhs.isInfinite())
-        return false;
-    else if (large_) {
-        if (rhs.large_)
-            return (mpz_cmp(large_, rhs.large_) == 0);
-        else
-            return (mpz_cmp_si(large_, rhs.small_) == 0);
-    } else {
-        if (rhs.large_)
-            return (mpz_cmp_si(rhs.large_, small_) == 0);
-        else
-            return (small_ == rhs.small_);
-    }
-}
-
-template <bool withInfinity>
+template <bool rhsWithInfinity>
 inline bool IntegerBase<withInfinity>::operator ==(
-        const IntegerBase<! withInfinity>& rhs) const {
-    // The types are different, so both cannot be infinity.
-    if (isInfinite() || rhs.isInfinite())
-        return false;
-    else if (large_) {
+        const IntegerBase<rhsWithInfinity>& rhs) const {
+    if constexpr (withInfinity && rhsWithInfinity)
+        if (isInfinite() && rhs.isInfinite())
+            return true;
+    if constexpr (withInfinity || rhsWithInfinity)
+        if (isInfinite() || rhs.isInfinite())
+            return false;
+
+    if (large_) {
         if (rhs.large_)
             return (mpz_cmp(large_, rhs.large_) == 0);
         else
@@ -2968,9 +2967,11 @@ inline bool IntegerBase<withInfinity>::operator ==(
 template <bool withInfinity>
 template <CppInteger IntType>
 inline bool IntegerBase<withInfinity>::operator ==(IntType rhs) const {
-    if (isInfinite())
-        return false;
-    else if (large_) {
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return false;
+
+    if (large_) {
         if constexpr (sizeof(IntType) <= sizeof(long)) {
             if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
                 return (mpz_cmp_si(large_, rhs) == 0);
@@ -3001,14 +3002,23 @@ inline bool IntegerBase<withInfinity>::operator ==(
 }
 
 template <bool withInfinity>
+template <bool rhsWithInfinity>
 inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
-        const IntegerBase& rhs) const {
-    if (isInfinite())
-        return rhs.isInfinite() ? std::strong_ordering::equal :
-            std::strong_ordering::greater;
-    else if (rhs.isInfinite())
-        return std::strong_ordering::less;
-    else if (large_) {
+        const IntegerBase<rhsWithInfinity>& rhs) const {
+    if constexpr (withInfinity) {
+        if (isInfinite()) {
+            if constexpr (rhsWithInfinity)
+                if (rhs.isInfinite())
+                    return std::strong_ordering::equal;
+            return std::strong_ordering::greater;
+        }
+    }
+    if constexpr (rhsWithInfinity) {
+        if (rhs.isInfinite())
+            return std::strong_ordering::less;
+    }
+
+    if (large_) {
         if (rhs.large_)
             return (mpz_cmp(large_, rhs.large_) <=> 0);
         else
@@ -3025,9 +3035,11 @@ template <bool withInfinity>
 template <CppInteger IntType>
 inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
         IntType rhs) const {
-    if (isInfinite())
-        return std::strong_ordering::greater;
-    else if (large_) {
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return std::strong_ordering::greater;
+
+    if (large_) {
         if constexpr (sizeof(IntType) <= sizeof(long)) {
             if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
                 return (mpz_cmp_si(large_, rhs) <=> 0);
@@ -3063,24 +3075,27 @@ inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator ++() {
-    if (! isInfinite()) {
-        if (large_)
-            mpz_add_ui(large_, large_, 1);
-        else if (small_ != LONG_MAX)
-            ++small_;
-        else {
-            // This is the point at which we overflow.
-            forceLarge();
-            mpz_add_ui(large_, large_, 1);
-        }
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
+
+    if (large_)
+        mpz_add_ui(large_, large_, 1);
+    else if (small_ != LONG_MAX)
+        ++small_;
+    else {
+        // This is the point at which we overflow.
+        forceLarge();
+        mpz_add_ui(large_, large_, 1);
     }
     return *this;
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator ++(int) {
-    if (isInfinite())
-        return *this;
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
 
     // Hrmph, just do the standard thing for now.
     // It's not clear how much microoptimisation will help..?
@@ -3091,24 +3106,27 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator ++(int) {
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator --() {
-    if (! isInfinite()) {
-        if (large_)
-            mpz_sub_ui(large_, large_, 1);
-        else if (small_ != LONG_MIN)
-            --small_;
-        else {
-            // This is the point at which we overflow.
-            forceLarge();
-            mpz_sub_ui(large_, large_, 1);
-        }
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
+
+    if (large_)
+        mpz_sub_ui(large_, large_, 1);
+    else if (small_ != LONG_MIN)
+        --small_;
+    else {
+        // This is the point at which we overflow.
+        forceLarge();
+        mpz_sub_ui(large_, large_, 1);
     }
     return *this;
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator --(int) {
-    if (isInfinite())
-        return *this;
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
 
     // Hrmph, just do the standard thing for now.
     // It's not clear how much microoptimisation will help..?
@@ -3120,10 +3138,12 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator --(int) {
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
         const IntegerBase& other) const {
-    if (isInfinite())
-        return *this;
-    if (other.isInfinite())
-        return other;
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return *this;
+        if (other.isInfinite())
+            return other;
+    }
 
     // Do the standard thing for now.
     IntegerBase ans(*this);
@@ -3134,8 +3154,9 @@ template <bool withInfinity>
 template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
         IntType other) const {
-    if (isInfinite())
-        return *this;
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
 
     // Do the standard thing for now.
     IntegerBase ans(*this);
@@ -3145,10 +3166,12 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
         const IntegerBase& other) const {
-    if (isInfinite())
-        return *this;
-    if (other.isInfinite())
-        return other;
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return *this;
+        if (other.isInfinite())
+            return other;
+    }
 
     // Do the standard thing for now.
     IntegerBase ans(*this);
@@ -3159,8 +3182,9 @@ template <bool withInfinity>
 template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
         IntType other) const {
-    if (isInfinite())
-        return *this;
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
 
     // Do the standard thing for now.
     IntegerBase ans(*this);
@@ -3170,10 +3194,12 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
         const IntegerBase& other) const {
-    if (isInfinite())
-        return *this;
-    if (other.isInfinite())
-        return other;
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return *this;
+        if (other.isInfinite())
+            return other;
+    }
 
     // Do the standard thing for now.
     IntegerBase ans(*this);
@@ -3184,8 +3210,9 @@ template <bool withInfinity>
 template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
         IntType other) const {
-    if (isInfinite())
-        return *this;
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
 
     // Do the standard thing for now.
     IntegerBase ans(*this);
@@ -3195,14 +3222,19 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
         const IntegerBase& other) const {
-    if (isInfinite())
-        return *this;
-    if (other.isInfinite())
-        return (long)0;
-    if (other.isZero()) {
-        IntegerBase ans;
-        ans.makeInfinite();
-        return ans;
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return *this;
+        if (other.isInfinite())
+            return (long)0;
+        if (other.isZero()) {
+            IntegerBase ans;
+            ans.makeInfinite();
+            return ans;
+        }
+    } else {
+        if (other.isZero())
+            throw NumericalError("Division by zero");
     }
 
     // Do the standard thing for now.
@@ -3214,12 +3246,17 @@ template <bool withInfinity>
 template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
         IntType other) const {
-    if (isInfinite())
-        return *this;
-    if (other == 0) {
-        IntegerBase ans;
-        ans.makeInfinite();
-        return ans;
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return *this;
+        if (other == 0) {
+            IntegerBase ans;
+            ans.makeInfinite();
+            return ans;
+        }
+    } else {
+        if (other == 0)
+            throw NumericalError("Division by zero");
     }
 
     // Do the standard thing for now.
@@ -3263,8 +3300,10 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator %(
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -() const {
-    if (isInfinite())
-        return *this;
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
+
     if (large_) {
         IntegerBase ans;
         ans.large_ = new __mpz_struct[1];
@@ -3285,12 +3324,15 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -() const {
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
         const IntegerBase& other) {
-    if (isInfinite())
-        return *this;
-    else if (other.isInfinite()) {
-        makeInfinite();
-        return *this;
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return *this;
+        else if (other.isInfinite()) {
+            makeInfinite();
+            return *this;
+        }
     }
+
     if (other.large_) {
         if (! large_)
             forceLarge();
@@ -3303,12 +3345,15 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
         const IntegerBase& other) {
-    if (isInfinite())
-        return *this;
-    else if (other.isInfinite()) {
-        makeInfinite();
-        return *this;
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return *this;
+        else if (other.isInfinite()) {
+            makeInfinite();
+            return *this;
+        }
     }
+
     if (other.large_) {
         if (! large_)
             forceLarge();
@@ -3322,8 +3367,9 @@ template <bool withInfinity>
 template <CppInteger IntType>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
         IntType other) {
-    if (isInfinite())
-        return *this;
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
 
     if constexpr (sizeof(IntType) <= sizeof(long)) {
         if (large_) {
@@ -3358,8 +3404,10 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
 
 template <bool withInfinity>
 inline void IntegerBase<withInfinity>::negate() {
-    if (isInfinite())
-        return;
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return;
+
     if (large_)
         mpz_neg(large_, large_);
     else if (small_ == LONG_MIN) {
@@ -3372,8 +3420,10 @@ inline void IntegerBase<withInfinity>::negate() {
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::abs() const {
-    if (isInfinite())
-        return *this;
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
+
     if (large_) {
         IntegerBase ans;
         ans.large_ = new __mpz_struct[1];
@@ -3434,7 +3484,9 @@ inline std::tuple<IntegerBase<withInfinity>, IntegerBase<withInfinity>,
 
 template <bool withInfinity>
 inline void IntegerBase<withInfinity>::setRaw(mpz_srcptr fromData) {
-    makeFinite();
+    if constexpr (withInfinity)
+        makeFinite();
+
     if (! large_) {
         large_ = new __mpz_struct[1];
         mpz_init_set(large_, fromData);
@@ -3547,23 +3599,6 @@ inline void IntegerBase<withInfinity>::forceReduce() {
 }
 
 #ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
-
-template <>
-inline void IntegerBase<true>::makeFinite() {
-    infinite_ = false;
-}
-
-template <>
-inline void IntegerBase<false>::makeFinite() {
-}
-
-// This definition must come *after* the definition of makeInfinite()
-// to keep the compiler happy.
-template <>
-inline IntegerBase<true>::IntegerBase(bool, bool) : large_(nullptr) {
-    // The infinity constructor.
-    makeInfinite();
-}
 
 template <>
 inline const IntegerBase<true> IntegerBase<true>::infinity(false, false);
@@ -3955,11 +3990,6 @@ inline NativeInteger<bytes> NativeInteger<bytes>::gcd(
     NativeInteger<bytes> ans(data_);
     ans.gcdWith(other);
     return ans;
-}
-
-template <int bytes>
-inline bool NativeInteger<bytes>::isInfinite() const {
-    return false;
 }
 
 template <int bytes>

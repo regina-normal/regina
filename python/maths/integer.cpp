@@ -61,7 +61,6 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         .def("isZero", &Int::isZero, rdoc::isZero)
         .def("sign", &Int::sign, rdoc::sign)
         .def("isInfinite", &Int::isInfinite, rdoc::isInfinite)
-        .def("makeInfinite", &Int::makeInfinite, rdoc::makeInfinite)
         .def("safeValue", &Int::template safeValue<long>, rdoc::safeValue)
         .def("unsafeValue", &Int::template unsafeValue<long>, rdoc::unsafeValue)
         .def("safeLongValue", &Int::template safeValue<long>,
@@ -84,13 +83,17 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
             }
         }, rdoc::pythonValue)
         .def("swap", &Int::swap, rdoc::swap)
-        .def(pybind11::self == AltInt(), rdoc::__eq_2)
-        .def(pybind11::self == long(), rdoc::__eq_3)
+        .def(pybind11::self == AltInt(), rdoc::__eq)
+        .def(pybind11::self == long(), rdoc::__eq_2)
         .def(pybind11::self != AltInt(), neq_value)
         .def(pybind11::self != long(), neq_value)
+        .def(pybind11::self < AltInt(), rdoc::__cmp)
         .def(pybind11::self < long(), rdoc::__cmp_2)
+        .def(pybind11::self > AltInt(), rdoc::__cmp)
         .def(pybind11::self > long(), rdoc::__cmp_2)
+        .def(pybind11::self <= AltInt(), rdoc::__cmp)
         .def(pybind11::self <= long(), rdoc::__cmp_2)
+        .def(pybind11::self >= AltInt(), rdoc::__cmp)
         .def(pybind11::self >= long(), rdoc::__cmp_2)
         .def("inc", [](Int& i) {
             return i++;
@@ -164,8 +167,10 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         .def_readonly_static("zero", &Int::zero)
         .def_readonly_static("one", &Int::one)
     ;
-    if constexpr (inf)
+    if constexpr (inf) {
         c.def_readonly_static("infinity", &Int::infinity);
+        c.def("makeInfinite", &Int::makeInfinite, rdoc::makeInfinite);
+    }
 
     regina::python::add_tight_encoding(c, rdoc::tightEncoding,
         rdoc::tightDecoding, rdoc::hash);

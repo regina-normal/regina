@@ -153,7 +153,8 @@ std::string IntegerBase<withInfinity>::stringValue(int base) const {
 template <bool withInfinity>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         const char* value) {
-    makeFinite();
+    if constexpr (withInfinity)
+        makeFinite();
 
     char* endptr;
     errno = 0;
@@ -270,12 +271,15 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(long other) {
 template <bool withInfinity>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
         const IntegerBase& other) {
-    if (isInfinite())
-        return *this;
-    else if (other.isInfinite()) {
-        makeInfinite();
-        return *this;
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return *this;
+        else if (other.isInfinite()) {
+            makeInfinite();
+            return *this;
+        }
     }
+
     if (large_) {
         if (other.large_)
             mpz_mul(large_, large_, other.large_);
@@ -306,14 +310,20 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
 template <bool withInfinity>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(
         const IntegerBase& other) {
-    if (isInfinite())
-        return *this;
-    if (other.isInfinite())
-        return (*this = 0);
-    if (withInfinity && other.isZero()) {
-        makeInfinite();
-        return *this;
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return *this;
+        if (other.isInfinite())
+            return (*this = 0);
+        if (other.isZero()) {
+            makeInfinite();
+            return *this;
+        }
+    } else {
+        if (other.isZero())
+            throw NumericalError("Division by zero");
     }
+
     if (other.large_) {
         if (large_) {
             mpz_tdiv_q(large_, large_, other.large_);
@@ -385,12 +395,18 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(
 
 template <bool withInfinity>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(long other) {
-    if (isInfinite())
-        return *this;
-    if (withInfinity && other == 0) {
-        makeInfinite();
-        return *this;
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return *this;
+        if (other == 0) {
+            makeInfinite();
+            return *this;
+        }
+    } else {
+        if (other == 0)
+            throw NumericalError("Division by zero");
     }
+
     if (large_) {
         if (other >= 0)
             mpz_tdiv_q_ui(large_, large_, other);

@@ -193,6 +193,25 @@ class FileError : public ReginaException {
 };
 
 /**
+ * An exception thrown when Regina encounters some kind of numerical or
+ * arithmetical error.
+ *
+ * An example here might be division by zero.
+ *
+ * All member functions follow the same pattern as the parent class
+ * ReginaException, and are not documented again here.
+ *
+ * \ingroup utilities
+ */
+class NumericalError : public ReginaException {
+    public:
+        NumericalError(const std::string& msg) : ReginaException(msg) {}
+        NumericalError(const char* msg) : ReginaException(msg) {}
+        NumericalError(const NumericalError&) noexcept = default;
+        NumericalError& operator = (const NumericalError&) noexcept = default;
+};
+
+/**
  * An exception thrown when the result of some calculation cannot fit into
  * an appropriate native C++ integer type.
  *

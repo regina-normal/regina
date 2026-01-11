@@ -58,6 +58,8 @@ void addException(pybind11::module_& m) {
         "NotImplemented", rdoc::NotImplemented);
     regina::python::registerReginaException<regina::FileError>(m,
         "FileError", rdoc::FileError);
+    regina::python::registerReginaException<regina::NumericalError>(m,
+        "NumericalError", rdoc::NumericalError);
     regina::python::registerReginaException<regina::NoSolution>(m,
         "NoSolution", rdoc::NoSolution);
     regina::python::registerReginaException<regina::IntegerOverflow>(m,

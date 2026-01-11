@@ -329,6 +329,7 @@ NormalSurface : class -> EqualityType.BY_VALUE
 NormalSurfaces : class -> EqualityType.BY_VALUE
 NormalTransform : enum
 NotImplemented : exception
+NumericalError : exception
 Packet : class -> EqualityType.NEVER_INSTANTIATED
 PacketChildren : class -> EqualityType.BY_VALUE
 PacketDescendants : class -> EqualityType.BY_VALUE

@@ -110,12 +110,13 @@ be expanded as necessary; there is no need for the caller to manage
 this list manually.
 
 Python:
-    In addition to this routine, the routine primeDecompInt() is also
-    available. The routine primeDecompInt() behaves identically to
-    this routine except that the (i) return values are of ordinary
-    integer type, not Integer; (ii) the input value *n* must lie
-    within the C++ long integer range (otherwise the behaviour is
-    undefined).
+    There are two versions of this routine. One is exactly as
+    described here. The second allows you to pass *n* as a native C++
+    long integer, in which case the prime factors that are returned
+    will be of ordinary integer type (not Integer). This second
+    version used to be called ``primeDecompInt()``; that alternate
+    name is now deprecated, and you can just use ``primeDecomp()``
+    instead.
 
 Parameter ``n``:
     the integer to factorise.
@@ -158,12 +159,13 @@ The current implementation of this routine merely calls primeDecomp()
 and rewrites the list of factors by grouping primes.
 
 Python:
-    In addition to this routine, the routine primePowerDecompInt() is
-    also available. The routine primePowerDecompInt() behaves
-    identically to this routine except that the (i) return values are
-    of ordinary integer type, not Integer; (ii) the input value *n*
-    must lie within the C++ long integer range (otherwise the
-    behaviour is undefined).
+    There are two versions of this routine. One is exactly as
+    described here. The second allows you to pass *n* as a native C++
+    long integer, in which case the prime factors that are returned
+    will be of ordinary integer type (not Integer). This second
+    version used to be called ``primePowerDecompInt()``; that
+    alternate name is now deprecated, and you can just use
+    ``primePowerDecomp()`` instead.
 
 Parameter ``n``:
     the integer to factorise.

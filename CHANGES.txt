@@ -58,6 +58,9 @@ Version 7.5  [ TODO ]
               UnsolvedCase exception if an integer overflow occurs when
               transferring information from an abelian group to a group
               expression.
+        Class InfinityBase<...>:
+            - Moved into the regina::detail namespace.  This class was never
+              intended for end users.
         Class Integer, LargeInteger:
             - New template functions safeValue() and unsafeValue() to assist
               with regina-to-C++ integer conversions.  The old longValue(),
@@ -75,8 +78,16 @@ Version 7.5  [ TODO ]
             - Now supports assignment from and comparisons against
               NativeInteger<bytes> (in additional to construction, which was
               already available).
+            - Now supports ordering comparisons between Integer and
+              LargeInteger (in addition to equality comparisons, which were
+              already available).
             - Functions that work with NativeInteger<bytes> no longer require
               bytes to be a multiple of sizeof(long).
+            - The function makeInfinite() is no longer available for Integer
+              (which does not support the value infinity).
+            - The division operators / and /= now throw an exception in the
+              class Integer when dividing by zero (but not in LargeInteger,
+              since that class supports infinity).
         Class IntegerOverflow:
             - New exception class.
         Class Isomorphism<dim>:
@@ -142,6 +153,8 @@ Version 7.5  [ TODO ]
         Struct NoSuchType:
             - A new declared-but-not-defined type that can be used as a
               placeholder to avoid compile errors.
+        Class NumericalError:
+            - New exception class.
         Class PermClass<n>:
             - Everything in this class is now constexpr.
         Class Polynomial<T>:
