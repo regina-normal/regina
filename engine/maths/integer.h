@@ -1013,10 +1013,13 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * If either term of the sum is infinite, the result will be
          * infinity.
          *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
          * \param other the integer to add to this integer.
          * \return a reference to this integer with its new value.
          */
-        IntegerBase& operator +=(long other);
+        template <CppInteger IntType>
+        IntegerBase& operator +=(IntType other);
         /**
          * Subtracts the given integer from this.
          * This integer is changed to reflect the result.
@@ -1035,10 +1038,13 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * If either term of the difference is infinite, the result will be
          * infinity.
          *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
          * \param other the integer to subtract from this integer.
          * \return a reference to this integer with its new value.
          */
-        IntegerBase& operator -=(long other);
+        template <CppInteger IntType>
+        IntegerBase& operator -=(IntType other);
         /**
          * Multiplies this by the given integer.
          * This integer is changed to reflect the result.
@@ -2402,6 +2408,63 @@ struct RingTraits<NativeInteger<bytes>> {
 };
 #endif // __DOXYGEN
 
+// Implementation details
+
+namespace detail {
+
+/**
+ * Negates the given signed native C++ integer, and returns the result as an
+ * unsigned native C++ integer of the same size.  The result should always be
+ * correct (i.e., there should never be an overflow condition).
+ *
+ * \pre The result will be non-negative; that is, `x ≤ 0`.
+ *
+ * \param x the signed integer to negate.
+ * \return a corresponding unsigned representation of `-x`.
+ *
+ * \ingroup detail
+ */
+template <SignedCppInteger IntType>
+inline std::make_unsigned_t<IntType> negateToUnsignedType(IntType x) {
+    // C++20 mandates a two's complement representation.
+    if (x == std::numeric_limits<IntType>::min()) {
+        // Negating x would be a signed overflow, which the C++ standard
+        // says is undefined behaviour.  However, casting x directly as the
+        // unsigned type will do the right thing.
+        return static_cast<std::make_unsigned_t<IntType>>(x);
+    } else {
+        return static_cast<std::make_unsigned_t<IntType>>(-x);
+    }
+}
+
+/**
+ * Returns the difference between two signed native C++ integers, and returns
+ * the result as an unsigned native C++ integer of the same size.  The result
+ * should always be correct (i.e., there should never be an overflow condition).
+ *
+ * \pre The result will be non-negative; that is, `x ≥ y` (as signed types).
+ *
+ * \param x the first signed integer to use in the subtraction.
+ * \param y the second signed integer to use in the subtraction.
+ * \return a corresponding unsigned representation of `x - y`.
+ *
+ * \ingroup detail
+ */
+template <SignedCppInteger IntType>
+inline std::make_unsigned_t<IntType> differenceAsUnsigned(
+        IntType x, IntType y) {
+    // C++20 mandates a two's complement representation.
+    // The C++ standard says both unsigned overflow and casting to unsigned
+    // types always do the right thing (arithmetic modulo 2^bits), whereas
+    // signed overflow is undefined.
+    // So: we can just do everything in the unsigned type.  All errors will be
+    // modulo 2^bits, and we know that the answer is in the range [0, 2^bits).
+    return static_cast<std::make_unsigned_t<IntType>>(x) -
+        static_cast<std::make_unsigned_t<IntType>>(y);
+}
+
+} // namespace detail
+
 // Inline functions for IntegerBase
 
 template <bool withInfinity>
@@ -3343,6 +3406,70 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
 }
 
 template <bool withInfinity>
+template <CppInteger IntType>
+IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
+        IntType other) {
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
+
+    if (! large_) {
+        // Use native arithmetic if we can.
+        // Note: both signed and unsigned integer _conversion_ are guaranteed
+        // to be correct modulo 2^bits (as of C++20); however, signed integer
+        // _arithmetic_ has undefined overflow behaviour.  Be careful.
+        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if (other <= detail::differenceAsUnsigned(LONG_MAX, small_)) {
+                // A consequence: 0 ≤ other ≤ ULONG_MAX.
+                // If sizeof(IntType) < sizeof(long) then I understand the
+                // operation takes place via long, and this is fine since
+                // other will fit into a long.
+                // If sizeof(IntType) ≥ sizeof(long) then I understand the
+                // operation takes place via IntType (which is unsigned,
+                // and therefore overflow behaviour is well-defined).
+                // Casting small_ up, performing the addition and then
+                // casting the result down could all introduce errors; however,
+                // I understand these errors are all guaranteed to be
+                // ± 2^long_bits and/or ± 2^IntType_bits, which means the
+                // final result should still be correct.
+                small_ += other;
+                return *this;
+            }
+        } else {
+            if ((other >= 0 && small_ <= (LONG_MAX - other)) ||
+                    (other < 0 && small_ >= (LONG_MIN - other))) {
+                // A consequence: -ULONG_MAX ≤ other ≤ ULONG_MAX.
+                // If other does not fit into a long, then we must have
+                // sizeof(IntType) > sizeof(long).  I understand this means the
+                // operation takes place via IntType (correctly) and then gets
+                // cast down to long (again correctly).
+                small_ += other;
+                return *this;
+            }
+        }
+        // It will overflow.
+        // Fall back to the large integer arithmetic in the next block.
+        forceLarge();
+    }
+
+    // And now we're down to large integer arithmetic (large != null).
+    if constexpr (sizeof(IntType) <= sizeof(long)) {
+        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            mpz_add_ui(large_, large_, other);
+        } else if (other >= 0) {
+            mpz_add_ui(large_, large_, other);
+        } else {
+            mpz_sub_ui(large_, large_, detail::negateToUnsignedType(other));
+        }
+    } else {
+        // TODO: Improve this.
+        return (*this) += IntegerBase(other);
+    }
+
+    return *this;
+}
+
+template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
         const IntegerBase& other) {
     if constexpr (withInfinity) {
@@ -3364,61 +3491,65 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
 }
 
 template <bool withInfinity>
-IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(long other) {
-    if (isInfinite())
-        return *this;
+template <CppInteger IntType>
+IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
+        IntType other) {
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
+
     if (! large_) {
         // Use native arithmetic if we can.
-        if (    (small_ > 0 && other > (LONG_MAX - small_)) ||
-                (small_ < 0 && other < (LONG_MIN - small_))) {
-            // Boom.  It's an overflow.
-            // Fall back to large integer arithmetic in the next block.
-            forceLarge();
+        // Note: both signed and unsigned integer _conversion_ are guaranteed
+        // to be correct modulo 2^bits (as of C++20); however, signed integer
+        // _arithmetic_ has undefined overflow behaviour.  Be careful.
+        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if (other <= detail::differenceAsUnsigned(small_, LONG_MIN)) {
+                // A consequence: 0 ≤ other ≤ ULONG_MAX.
+                // If sizeof(IntType) < sizeof(long) then I understand the
+                // operation takes place via long, and this is fine since
+                // other will fit into a long.
+                // If sizeof(IntType) ≥ sizeof(long) then I understand the
+                // operation takes place via IntType (which is unsigned,
+                // and therefore overflow behaviour is well-defined).
+                // Casting small_ up, performing the subtraction and then
+                // casting the result down could all introduce errors; however,
+                // I understand these errors are all guaranteed to be
+                // ± 2^long_bits and/or ± 2^IntType_bits, which means the
+                // final result should still be correct.
+                small_ -= other;
+                return *this;
+            }
         } else {
-            // All good: we're done.
-            small_ += other;
-            return *this;
+            if ((other >= 0 && small_ >= other + LONG_MIN) ||
+                    (other < 0 && small_ <= other + LONG_MAX)) {
+                // A consequence: -ULONG_MAX ≤ other ≤ ULONG_MAX.
+                // If other does not fit into a long, then we must have
+                // sizeof(IntType) > sizeof(long).  I understand this means the
+                // operation takes place via IntType (correctly) and then gets
+                // cast down to long (again correctly).
+                small_ -= other;
+                return *this;
+            }
         }
+        // It will overflow.
+        // Fall back to the large integer arithmetic in the next block.
+        forceLarge();
     }
 
-    // And now we're down to large integer arithmetic.
-    // The following code should work even if other == LONG_MIN (in which case
-    // -other == LONG_MIN also), since passing -other to mpz_sub_ui casts it
-    // to an unsigned long (and gives it the correct positive value).
-    if (other >= 0)
-        mpz_add_ui(large_, large_, other);
-    else
-        mpz_sub_ui(large_, large_, -other);
-
-    return *this;
-}
-
-template <bool withInfinity>
-IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(long other) {
-    if (isInfinite())
-        return *this;
-    if (! large_) {
-        // Use native arithmetic if we can.
-        if (    (other > 0 && small_ < (LONG_MIN + other)) ||
-                (other < 0 && small_ > (LONG_MAX + other))) {
-            // Boom.  It's an overflow.
-            // Fall back to large integer arithmetic in the next block.
-            forceLarge();
+    // And now we're down to large integer arithmetic (large != null).
+    if constexpr (sizeof(IntType) <= sizeof(long)) {
+        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            mpz_sub_ui(large_, large_, other);
+        } else if (other >= 0) {
+            mpz_sub_ui(large_, large_, other);
         } else {
-            // All good: we're done.
-            small_ -= other;
-            return *this;
+            mpz_add_ui(large_, large_, detail::negateToUnsignedType(other));
         }
+    } else {
+        // TODO: Improve this.
+        return (*this) -= IntegerBase(other);
     }
-
-    // And now we're down to large integer arithmetic.
-    // The following code should work even if other == LONG_MIN (in which case
-    // -other == LONG_MIN also), since passing -other to mpz_add_ui casts it
-    // to an unsigned long (and gives it the correct positive value).
-    if (other >= 0)
-        mpz_sub_ui(large_, large_, other);
-    else
-        mpz_add_ui(large_, large_, -other);
 
     return *this;
 }
