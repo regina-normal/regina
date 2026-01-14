@@ -658,7 +658,8 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * Compares this to the given integer.
          *
          * This is a numerical comparison; that is, it uses the usual ordering
-         * of the integers. Infinity is considered greater than any integer.
+         * of the integers. Infinity is considered greater than any finite
+         * integer.
          *
          * This generates all of the usual comparison operators, including
          * `<`, `<=`, `>`, and `>=`.
@@ -1139,10 +1140,13 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \pre \a other is not zero.
          * \pre This integer is not infinite.
          *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
          * \param other the integer to divide this by.
          * \return a reference to this integer with its new value.
          */
-        IntegerBase& divByExact(long other);
+        template <CppInteger IntType>
+        IntegerBase& divByExact(IntType other);
         /**
          * Reduces this integer modulo the given integer.
          * If non-zero, the result will have the same sign as the original
@@ -3564,7 +3568,10 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
 
     if constexpr (sizeof(IntType) <= sizeof(long)) {
         if (large_) {
-            if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+            if (other == 0) {
+                clearLarge();
+                small_ = 0;
+            } else if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
                 mpz_mul_si(large_, large_, other);
             } else {
                 mpz_mul_ui(large_, large_, other);
@@ -3586,11 +3593,67 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
             } else
                 small_ = static_cast<long>(ans);
         }
+        return *this;
     } else {
+        // Before we pull out the heavy machinery, look for more easy solutions.
+        // (The test below does not capture _all_ representations of zero, but
+        // it _does_ capture the ones that are trivial to test.)
+        if ((! large_) && small_ == 0)
+            return *this;
+
         // TODO: Improve this.
         return (*this) *= IntegerBase(other);
     }
-    return *this;
+}
+
+template <bool withInfinity>
+template <CppInteger IntType>
+IntegerBase<withInfinity>& IntegerBase<withInfinity>::divByExact(
+        IntType other) {
+    // Preconditions: this is finite; other ≠ 0; (this / other) is an integer.
+    if constexpr (sizeof(IntType) <= sizeof(long)) {
+        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if (large_) {
+                mpz_divexact_ui(large_, large_, other);
+            } else {
+                // We can do this entirely in native arithmetic.
+                // Our precondition implies: other ≤ |small_|, or small_ == 0
+                // (and if small_ == 0 then there is nothing to do).
+                if (small_ != 0) {
+                    // We have other ≤ |small_|.  The only case where we
+                    // _cannot_ fit other into a signed long is if
+                    // other == |LONG_MIN| (and therefore small_ == LONG_MIN).
+                    if (other == static_cast<unsigned long>(LONG_MIN))
+                        small_ = -1;
+                    else
+                        small_ /= static_cast<long>(other);
+                }
+            }
+        } else {
+            if (large_) {
+                if (other >= 0)
+                    mpz_divexact_ui(large_, large_, other);
+                else {
+                    mpz_divexact_ui(large_, large_,
+                        detail::negateToUnsignedType(other));
+                    mpz_neg(large_, large_);
+                }
+            } else if (small_ == LONG_MIN && other == -1) {
+                // This is the special case where we must switch from native to
+                // large integers.
+                large_ = new __mpz_struct[1];
+                mpz_init_set_si(large_, LONG_MIN);
+                mpz_neg(large_, large_);
+            } else {
+                // We can do this entirely in signed native arithmetic.
+                small_ /= other;
+            }
+        }
+        return *this;
+    } else {
+        // TODO: Improve this.
+        return divByExact(IntegerBase(other));
+    }
 }
 
 template <bool withInfinity>

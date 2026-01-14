@@ -74,21 +74,33 @@ struct NativeUnsignedLimits {
     static constexpr Native max = std::numeric_limits<Native>::max();
     static constexpr Native maxSigned = std::numeric_limits<Signed>::max();
     static constexpr Native absMinSigned = maxSigned + 1;
+    static constexpr Native rootBit = (Native(1) << (4 * sizeof(Native)));
 
-    static constexpr std::array<Native, 10> nativeCases = { 0, 1, 2,
+    static constexpr std::array<Native, 12> nativeCases = { 0, 1, 2,
+        (maxSigned / 2), (maxSigned / 2) + 1,
         maxSigned - 1, maxSigned, maxSigned + 1, maxSigned + 2,
         max - 2, max - 1, max };
 
     template <ArbitraryPrecisionInteger IntegerType>
-    inline static const std::array<IntegerType, 22> reginaCases = {
+    inline static const std::array<IntegerType, 43> reginaCases = {
         -IntegerType(max) - 1, -IntegerType(max),
         -IntegerType(absMinSigned) - 1, -IntegerType(absMinSigned),
             -IntegerType(maxSigned), -IntegerType(maxSigned) + 1,
+        -IntegerType(absMinSigned / 2) - 1, -IntegerType(absMinSigned / 2),
+        -Signed(rootBit) - 1, -Signed(rootBit), -Signed(rootBit) + 1,
+        -Signed(rootBit / 2) - 1, -Signed(rootBit / 2),
+            -Signed(rootBit / 2) + 1,
         -1, 0, 1,
+        (rootBit / 2) - 1, rootBit / 2, (rootBit / 2) + 1,
+        rootBit - 1, rootBit, rootBit + 1,
+        (maxSigned / 2), (maxSigned / 2) + 1,
         maxSigned - 2, maxSigned - 1, maxSigned, maxSigned + 1,
         max - 1, max, IntegerType(max) + 1,
+        -IntegerType(ULONG_MAX) - 1, -IntegerType(ULONG_MAX),
+        IntegerType(LONG_MIN) - 1,
         LONG_MIN, LONG_MIN + 1, LONG_MAX - 1, LONG_MAX,
-        ULONG_MAX - 1, ULONG_MAX };
+        (unsigned long)(LONG_MAX) + 1,
+        ULONG_MAX - 1, ULONG_MAX, IntegerType(ULONG_MAX) + 1 };
 
     static void verify() {
         EXPECT_EQ(min, 0);
@@ -96,6 +108,7 @@ struct NativeUnsignedLimits {
         EXPECT_EQ(maxSigned + absMinSigned, max);
         EXPECT_LT(maxSigned, absMinSigned);
         EXPECT_LT(absMinSigned, max);
+        EXPECT_EQ(rootBit * (rootBit >> 1), absMinSigned);
     }
 
     template <ArbitraryPrecisionInteger IntegerType>
@@ -118,8 +131,9 @@ struct NativeSignedLimits {
     static constexpr Native min = std::numeric_limits<Native>::min();
     static constexpr Native max = std::numeric_limits<Native>::max();
 
-    static constexpr std::array<Native, 11> nativeCases = {
-        min, min + 1, min + 2, -2, -1, 0, 1, 2, max - 2, max - 1, max };
+    static constexpr std::array<Native, 16> nativeCases = {
+        min, min + 1, min + 2, min / 2 - 1, min / 2, min / 2 + 1,
+        -2, -1, 0, 1, 2, max / 2, max / 2 + 1, max - 2, max - 1, max };
 
     // For reginaCases, use the corresponding NativeUnsignedLimits class.
 
@@ -2736,6 +2750,67 @@ TYPED_TEST(IntegerTest, cppIntegerTypes) {
 #endif
 }
 
+template <SignedCppInteger Native>
+static void verifyCppHelpers() {
+    SCOPED_TRACE_TYPE(Native);
+
+    using Limits = NativeSignedLimits<Native>;
+    using UnsignedLimits = NativeUnsignedLimits<typename Limits::Unsigned>;
+
+    EXPECT_EQ(regina::detail::negateToUnsignedType(Native(0)), 0);
+    EXPECT_EQ(regina::detail::negateToUnsignedType(Native(-1)), 1);
+    EXPECT_EQ(regina::detail::negateToUnsignedType(Native(-2)), 2);
+    EXPECT_EQ(regina::detail::negateToUnsignedType(Native(Limits::min + 2)),
+        static_cast<typename Limits::Unsigned>(Limits::max - 1));
+    EXPECT_EQ(regina::detail::negateToUnsignedType(Native(Limits::min + 1)),
+        static_cast<typename Limits::Unsigned>(Limits::max));
+    EXPECT_EQ(regina::detail::negateToUnsignedType(Limits::min),
+        UnsignedLimits::absMinSigned);
+
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::min, Limits::min),
+        0);
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max, Limits::max),
+        0);
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Native(Limits::min + 1),
+        Limits::min), 1);
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max,
+        Native(Limits::max - 1)), 1);
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max, Native(1)),
+        UnsignedLimits::maxSigned - unsigned(1));
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max, Native(0)),
+        UnsignedLimits::maxSigned);
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max, Native(-1)),
+        UnsignedLimits::maxSigned + unsigned(1));
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Native(-1), Limits::min),
+        UnsignedLimits::absMinSigned - unsigned(1));
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Native(0), Limits::min),
+        UnsignedLimits::absMinSigned);
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Native(1), Limits::min),
+        UnsignedLimits::absMinSigned + unsigned(1));
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Native(Limits::max - 1),
+        Native(Limits::min + 1)), UnsignedLimits::max - unsigned(2));
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Native(Limits::max - 1),
+        Limits::min), UnsignedLimits::max - unsigned(1));
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max,
+        Native(Limits::min + 1)), UnsignedLimits::max - unsigned(1));
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max, Limits::min),
+        UnsignedLimits::max);
+}
+
+TYPED_TEST(IntegerTest, cppHelpers) {
+    // These tests do not depend on TypeParam at all; however, the worst that
+    // happens is that we run these tests twice.
+    verifyCppHelpers<signed char>();
+    verifyCppHelpers<short>();
+    verifyCppHelpers<int>();
+    verifyCppHelpers<long>();
+    verifyCppHelpers<long long>();
+    verifyCppHelpers<ssize_t>();
+#ifdef INT128_AVAILABLE
+    verifyCppHelpers<regina::IntOfSize<16>::type>();
+#endif
+}
+
 template <ArbitraryPrecisionInteger IntegerType, CppInteger Native>
 static void verifyCppIntegerPlusMinus(IntegerType lhs, Native rhs,
         std::optional<IntegerType> expected = std::nullopt) {
@@ -2760,11 +2835,16 @@ static void verifyCppIntegerPlusMinus(IntegerType lhs, Native rhs,
         else if (leftSign < 0) EXPECT_GT(rhs, sum);
         else EXPECT_EQ(rhs, sum);
     }
-    if constexpr (regina::is_signed_cpp_integer_v<Native>) {
+    if (lhs.isInfinite()) {
+        EXPECT_TRUE(sum.isInfinite());
+        EXPECT_EQ(lhs, sum);
+    } else if constexpr (regina::is_signed_cpp_integer_v<Native>) {
+        EXPECT_FALSE(sum.isInfinite());
         if (rhs > 0) EXPECT_LT(lhs, sum);
         else if (rhs < 0) EXPECT_GT(lhs, sum);
         else EXPECT_EQ(lhs, sum);
     } else {
+        EXPECT_FALSE(sum.isInfinite());
         if (rhs > 0) EXPECT_LT(lhs, sum);
         else EXPECT_EQ(lhs, sum);
     }
@@ -2806,45 +2886,6 @@ static void verifyCppIntegerPlusMinus() {
     using UnsignedLimits = NativeUnsignedLimits<typename Limits::Unsigned>;
     Limits::verify();
     UnsignedLimits::verify();
-
-    EXPECT_EQ(regina::detail::negateToUnsignedType(Native(0)), 0);
-    EXPECT_EQ(regina::detail::negateToUnsignedType(Native(-1)), 1);
-    EXPECT_EQ(regina::detail::negateToUnsignedType(Native(-2)), 2);
-    EXPECT_EQ(regina::detail::negateToUnsignedType(Native(Limits::min + 2)),
-        static_cast<typename Limits::Unsigned>(Limits::max - 1));
-    EXPECT_EQ(regina::detail::negateToUnsignedType(Native(Limits::min + 1)),
-        static_cast<typename Limits::Unsigned>(Limits::max));
-    EXPECT_EQ(regina::detail::negateToUnsignedType(Limits::min),
-        UnsignedLimits::absMinSigned);
-
-    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::min, Limits::min),
-        0);
-    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max, Limits::max),
-        0);
-    EXPECT_EQ(regina::detail::differenceAsUnsigned(Native(Limits::min + 1),
-        Limits::min), 1);
-    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max,
-        Native(Limits::max - 1)), 1);
-    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max, Native(1)),
-        UnsignedLimits::maxSigned - unsigned(1));
-    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max, Native(0)),
-        UnsignedLimits::maxSigned);
-    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max, Native(-1)),
-        UnsignedLimits::maxSigned + unsigned(1));
-    EXPECT_EQ(regina::detail::differenceAsUnsigned(Native(-1), Limits::min),
-        UnsignedLimits::absMinSigned - unsigned(1));
-    EXPECT_EQ(regina::detail::differenceAsUnsigned(Native(0), Limits::min),
-        UnsignedLimits::absMinSigned);
-    EXPECT_EQ(regina::detail::differenceAsUnsigned(Native(1), Limits::min),
-        UnsignedLimits::absMinSigned + unsigned(1));
-    EXPECT_EQ(regina::detail::differenceAsUnsigned(Native(Limits::max - 1),
-        Native(Limits::min + 1)), UnsignedLimits::max - unsigned(2));
-    EXPECT_EQ(regina::detail::differenceAsUnsigned(Native(Limits::max - 1),
-        Limits::min), UnsignedLimits::max - unsigned(1));
-    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max,
-        Native(Limits::min + 1)), UnsignedLimits::max - unsigned(1));
-    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max, Limits::min),
-        UnsignedLimits::max);
 
     for (const auto& x : UnsignedLimits::template reginaCases<IntegerType>)
         for (auto y : Limits::nativeCases)
@@ -3001,6 +3042,392 @@ TYPED_TEST(IntegerTest, cppIntegerPlusMinus) {
 #ifdef INT128_AVAILABLE
     verifyCppIntegerPlusMinus<TypeParam, regina::IntOfSize<16>::utype>();
     verifyCppIntegerPlusMinus<TypeParam, regina::IntOfSize<16>::type>();
+#endif
+}
+
+template <ArbitraryPrecisionInteger IntegerType, CppInteger Native>
+static void verifyCppIntegerMultiplyDivide(IntegerType lhs, Native rhs,
+        std::optional<IntegerType> expected = std::nullopt) {
+    IntegerType rhsAsRegina(rhs); // because we cannot print 128-bit ints
+    SCOPED_TRACE_REGINA(lhs);
+    SCOPED_TRACE_REGINA(rhsAsRegina);
+
+    // Compute the product using pure GMP arithmetic.
+    IntegerType product = gmpInteger(lhs) * gmpInteger(std::move(rhsAsRegina));
+    SCOPED_TRACE_REGINA(product);
+    // We must not use rhsAsRegina again from here on.
+    // Instead just use rhs, which is the native C++ integer.
+
+    lhs.tryReduce();
+    product.tryReduce();
+    if (expected)
+        EXPECT_EQ(product, *expected);
+
+    if (lhs.isInfinite()) {
+        // Note: LargeInteger specifies that infinity * 0 == infinity.
+        EXPECT_TRUE(product.isInfinite());
+        EXPECT_EQ(lhs, product);
+    } else if constexpr (regina::is_unsigned_cpp_integer_v<Native>) {
+        EXPECT_FALSE(product.isInfinite());
+        EXPECT_EQ(product.sign(), rhs == 0 ? 0 : lhs.sign());
+    } else {
+        EXPECT_FALSE(product.isInfinite());
+        EXPECT_EQ(product.sign(),
+            rhs == 0 ? 0 : rhs > 0 ? lhs.sign() : -lhs.sign());
+    }
+
+    // The following tests identify not whether the result _could_ use a
+    // native representation, but whether the Integer/LargeInteger algorithms
+    // expect to actually _use_ one.
+    //
+    // For the following cases, the product algorithm detects overflows
+    // precisely:
+    // - (already using native rep) * (native representable)
+    // - (already using native rep) * (any unsigned long)
+    //
+    bool productShouldBeNative = (lhs.isNative() && product.isNative());
+    //
+    // At this point, we have not considered at cases where (! lhs.isNative()).
+    // Moreover, if sizeof(Native) > sizeof(long) then we have picked up some
+    // additional cases that were not intended:
+    // - 0 * (not native representable), where the algorithm uses a native 0;
+    // - (-1) * |LONG_MIN|, where the algorithm uses a GMP representation.
+    // We handle these extra cases in the subsequent tests below.
+    //
+    if constexpr (sizeof(Native) <= sizeof(long)) {
+        // In this case, even if (! lhs.isNative()), the algorithm still
+        // optimises to use a native representation for the case rhs == 0.
+        productShouldBeNative |= (rhs == 0);
+    } else {
+        productShouldBeNative |= lhs.isZero();
+        productShouldBeNative &= ! (lhs == -1 && product == LONG_MIN);
+    }
+
+    bool quotientShouldBeNative = product.isNative() &&
+        ! (product == LONG_MIN && rhs == -1);
+
+    {
+        IntegerType x = lhs * rhs;
+        EXPECT_EQ(x, product);
+        EXPECT_EQ(x.isNative(), productShouldBeNative);
+    }
+    {
+        IntegerType x = rhs * lhs;
+        EXPECT_EQ(x, product);
+        EXPECT_EQ(x.isNative(), productShouldBeNative);
+    }
+    if (rhs != 0 && ! lhs.isInfinite()) {
+        IntegerType x = product.divExact(rhs);
+        EXPECT_EQ(x, lhs);
+        EXPECT_EQ(x.isNative(), quotientShouldBeNative);
+    }
+    {
+        IntegerType x = lhs;
+        x *= rhs;
+        EXPECT_EQ(x, product);
+        EXPECT_EQ(x.isNative(), productShouldBeNative);
+    }
+    if (rhs != 0 && ! lhs.isInfinite()) {
+        IntegerType x = product;
+        x.divByExact(rhs);
+        EXPECT_EQ(x, lhs);
+        EXPECT_EQ(x.isNative(), quotientShouldBeNative);
+    }
+}
+
+template <ArbitraryPrecisionInteger IntegerType, SignedCppInteger Native>
+static void verifyCppIntegerMultiplyDivide() {
+    SCOPED_TRACE_TYPE(Native);
+
+    using Limits = NativeSignedLimits<Native>;
+    using Unsigned = typename Limits::Unsigned;
+    using UnsignedLimits = NativeUnsignedLimits<Unsigned>;
+    Limits::verify();
+    UnsignedLimits::verify();
+
+    for (const auto& x : UnsignedLimits::template reginaCases<IntegerType>) {
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, -2, -x - x);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, -1, -x);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, 0, 0);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, 1, x);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, 2, x + x);
+
+        for (auto y : Limits::nativeCases)
+            verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, y);
+    }
+
+    if constexpr (sizeof(Native) >= sizeof(long)) {
+        // Probe the boundaries between native vs large representation.
+        Native rootBit = (Native(1) << (4 * sizeof(long)));
+
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN, 2, -IntegerType(ULONG_MAX) - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, LONG_MIN, -IntegerType(ULONG_MAX) - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            Unsigned(LONG_MAX) + 1, -2, -IntegerType(ULONG_MAX) - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN + 1, 2, -IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, LONG_MIN + 1, -IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MAX, -2, -IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, LONG_MAX, -IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -(rootBit + 1), rootBit / 2, IntegerType(LONG_MIN) - (rootBit / 2));
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit + 1, -rootBit / 2, IntegerType(LONG_MIN) - (rootBit / 2));
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -(rootBit / 2), rootBit + 1, IntegerType(LONG_MIN) - (rootBit / 2));
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit / 2, -(rootBit + 1), IntegerType(LONG_MIN) - (rootBit / 2));
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -(rootBit), (rootBit / 2) + 1, IntegerType(LONG_MIN) - rootBit);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, -((rootBit / 2) + 1), IntegerType(LONG_MIN) - rootBit);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -((rootBit / 2) + 1), rootBit, IntegerType(LONG_MIN) - rootBit);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            (rootBit / 2) + 1, -rootBit, IntegerType(LONG_MIN) - rootBit);
+
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            (LONG_MIN / 2) - 1, 2, IntegerType(LONG_MIN) - 2);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, (LONG_MIN / 2) - 1, IntegerType(LONG_MIN) - 2);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            (LONG_MAX / 2) + 2, -2, IntegerType(LONG_MIN) - 2);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, (LONG_MAX / 2) + 2, IntegerType(LONG_MIN) - 2);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN / 2, 2, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, LONG_MIN / 2, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            (LONG_MAX / 2) + 1, -2, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, (LONG_MAX / 2) + 1, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            Unsigned(LONG_MAX) + 1, -1, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            1, LONG_MIN, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -rootBit, rootBit / 2, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, -(rootBit / 2), LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -(rootBit / 2), rootBit, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit / 2, -rootBit, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -1, LONG_MAX, LONG_MIN + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, (rootBit / 2) - 1, LONG_MAX - rootBit + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -rootBit, -(rootBit / 2) + 1, LONG_MAX - rootBit + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            (rootBit / 2) - 1, rootBit, LONG_MAX - rootBit + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -(rootBit / 2) + 1, -rootBit, LONG_MAX - rootBit + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit - 1, rootBit / 2, LONG_MAX - (rootBit / 2) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -rootBit + 1, -rootBit / 2, LONG_MAX - (rootBit / 2) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit / 2, rootBit - 1, LONG_MAX - (rootBit / 2) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -rootBit / 2, -rootBit + 1, LONG_MAX - (rootBit / 2) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MAX / 2, 2, LONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN / 2 + 1, -2, LONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, LONG_MAX / 2, LONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, LONG_MIN / 2 + 1, LONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            1, LONG_MAX, LONG_MAX);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -1, LONG_MIN + 1, LONG_MAX);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MAX / 2 + 1, 2, Unsigned(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN / 2, -2, Unsigned(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, LONG_MAX / 2 + 1, Unsigned(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, LONG_MIN / 2, Unsigned(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, rootBit / 2, Unsigned(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -rootBit, -rootBit / 2, Unsigned(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit / 2, rootBit, Unsigned(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -rootBit / 2, -rootBit, Unsigned(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -1, LONG_MIN, Unsigned(LONG_MAX)+ 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, rootBit - 1, ULONG_MAX - Unsigned(rootBit) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -rootBit, -rootBit + 1, ULONG_MAX - Unsigned(rootBit) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit - 1, rootBit, ULONG_MAX - Unsigned(rootBit) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -rootBit + 1, -rootBit, ULONG_MAX - Unsigned(rootBit) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MAX, 2, ULONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN + 1, -2, ULONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, LONG_MAX, ULONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, LONG_MIN + 1, ULONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -IntegerType(ULONG_MAX), -1, ULONG_MAX);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            Unsigned(LONG_MAX) + 1, 2, IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN, -2, IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, LONG_MIN, IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, rootBit, IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -rootBit, -rootBit, IntegerType(ULONG_MAX) + 1);
+    }
+
+    if constexpr (IntegerType::supportsInfinity) {
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            IntegerType::infinity, Limits::min, IntegerType::infinity);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            IntegerType::infinity, Limits::max, IntegerType::infinity);
+    }
+}
+
+template <ArbitraryPrecisionInteger IntegerType, UnsignedCppInteger Native>
+static void verifyCppIntegerMultiplyDivide() {
+    SCOPED_TRACE_TYPE(Native);
+
+    using Limits = NativeUnsignedLimits<Native>;
+    using Signed = typename Limits::Signed;
+    using SignedLimits = NativeSignedLimits<Signed>;
+    Limits::verify();
+    SignedLimits::verify();
+
+    for (const auto& x : Limits::template reginaCases<IntegerType>) {
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, 0, 0);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, 1, x);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, 2, x + x);
+
+        for (auto y : Limits::nativeCases)
+            verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, y);
+    }
+
+    if constexpr (sizeof(Native) >= sizeof(long)) {
+        // Probe the boundaries between native vs large representation.
+        Native rootBit = (Native(1) << (4 * sizeof(long)));
+
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN, 2, -IntegerType(ULONG_MAX) - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, Native(LONG_MAX) + 1, -IntegerType(ULONG_MAX) - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN + 1, 2, -IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, LONG_MAX, -IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -Signed(rootBit + 1), rootBit / 2,
+                IntegerType(LONG_MIN) - (rootBit / 2));
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -Signed(rootBit / 2), rootBit + 1,
+                IntegerType(LONG_MIN) - (rootBit / 2));
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -Signed(rootBit), (rootBit / 2) + 1,
+                IntegerType(LONG_MIN) - rootBit);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -Signed((rootBit / 2) + 1), rootBit,
+                IntegerType(LONG_MIN) - rootBit);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            (LONG_MIN / 2) - 1, 2, IntegerType(LONG_MIN) - 2);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, (LONG_MAX / 2) + 2, IntegerType(LONG_MIN) - 2);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN / 2, 2, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, (LONG_MAX / 2) + 1, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -1, Native(LONG_MAX) + 1, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -Signed(rootBit), rootBit / 2, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -Signed(rootBit / 2), rootBit, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, (rootBit / 2) - 1, LONG_MAX - rootBit + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            (rootBit / 2) - 1, rootBit, LONG_MAX - rootBit + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit - 1, rootBit / 2, LONG_MAX - (rootBit / 2) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit / 2, rootBit - 1, LONG_MAX - (rootBit / 2) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MAX / 2, 2, LONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, LONG_MAX / 2, LONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            1, LONG_MAX, LONG_MAX);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MAX / 2 + 1, 2, Native(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, LONG_MAX / 2 + 1, Native(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, rootBit / 2, Native(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit / 2, rootBit, Native(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, rootBit - 1, ULONG_MAX - rootBit + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit - 1, rootBit, ULONG_MAX - rootBit + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            ULONG_MAX / 2, 2, ULONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, ULONG_MAX / 2, ULONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            1, ULONG_MAX, ULONG_MAX);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            ULONG_MAX / 2 + 1, 2, IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, ULONG_MAX / 2 + 1, IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, rootBit, IntegerType(ULONG_MAX) + 1);
+    }
+
+    if constexpr (IntegerType::supportsInfinity) {
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            IntegerType::infinity, 0, IntegerType::infinity);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            IntegerType::infinity, Limits::max, IntegerType::infinity);
+    }
+}
+
+TYPED_TEST(IntegerTest, cppIntegerMultiplyDivide) {
+    verifyCppIntegerMultiplyDivide<TypeParam, unsigned char>();
+    verifyCppIntegerMultiplyDivide<TypeParam, unsigned short>();
+    verifyCppIntegerMultiplyDivide<TypeParam, unsigned>();
+    verifyCppIntegerMultiplyDivide<TypeParam, unsigned long>();
+    verifyCppIntegerMultiplyDivide<TypeParam, unsigned long long>();
+    verifyCppIntegerMultiplyDivide<TypeParam, size_t>();
+
+    verifyCppIntegerMultiplyDivide<TypeParam, signed char>();
+    verifyCppIntegerMultiplyDivide<TypeParam, short>();
+    verifyCppIntegerMultiplyDivide<TypeParam, int>();
+    verifyCppIntegerMultiplyDivide<TypeParam, long>();
+    verifyCppIntegerMultiplyDivide<TypeParam, long long>();
+    verifyCppIntegerMultiplyDivide<TypeParam, ssize_t>();
+
+#ifdef INT128_AVAILABLE
+    verifyCppIntegerMultiplyDivide<TypeParam, regina::IntOfSize<16>::utype>();
+    verifyCppIntegerMultiplyDivide<TypeParam, regina::IntOfSize<16>::type>();
 #endif
 }
 
