@@ -3097,7 +3097,7 @@ static void verifyCppIntegerMultiplyDivide(IntegerType lhs, Native rhs,
     if constexpr (sizeof(Native) <= sizeof(long)) {
         // In this case, even if (! lhs.isNative()), the algorithm still
         // optimises to use a native representation for the case rhs == 0.
-        productShouldBeNative |= (rhs == 0);
+        productShouldBeNative |= (rhs == 0 && ! lhs.isInfinite());
     } else {
         productShouldBeNative |= lhs.isZero();
         productShouldBeNative &= ! (lhs == -1 && product == LONG_MIN);
