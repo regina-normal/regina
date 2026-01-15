@@ -202,6 +202,9 @@ Version 7.5  [ TODO ]
               + instead of performing the conversion "as best it can", the
                 documentation now states that the value stored in dest is
                 undefined.
+        Type alias make_signed_cpp_t<T>, make_unsigned_cpp_t<T>:
+            - New alternatives to std::make_signed_t<T> and
+              std::make_unsigned_t<T> that allow for 128-bit integers also.
         Constant is_cpp_integer_v<T>, is_signed_cpp_integer_v<T>,
                 is_unsigned_cpp_integer_v<T>:
             - New compile-time constant is_signed_cpp_integer_v<T>.

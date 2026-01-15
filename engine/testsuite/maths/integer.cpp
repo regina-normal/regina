@@ -67,7 +67,7 @@ IntegerType gmpInteger(IntegerType x) {
 
 template <UnsignedCppInteger Native>
 struct NativeUnsignedLimits {
-    using Signed = std::make_signed_t<Native>;
+    using Signed = regina::make_signed_cpp_t<Native>;
     static_assert(regina::is_signed_cpp_integer_v<Signed>);
 
     static constexpr Native min = std::numeric_limits<Native>::min();
@@ -125,7 +125,7 @@ struct NativeUnsignedLimits {
 
 template <SignedCppInteger Native>
 struct NativeSignedLimits {
-    using Unsigned = std::make_unsigned_t<Native>;
+    using Unsigned = regina::make_unsigned_cpp_t<Native>;
     static_assert(regina::is_unsigned_cpp_integer_v<Unsigned>);
 
     static constexpr Native min = std::numeric_limits<Native>::min();

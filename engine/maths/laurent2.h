@@ -76,10 +76,6 @@ template <CoefficientDomain T>
 class Laurent2 :
         public ShortOutput<Laurent2<T>, true>,
         public TightEncodable<Laurent2<T>> {
-    static_assert(! std::is_integral_v<T>,
-        "Laurent2<T> requires the type T to have a default constructor that "
-        "assigns a value of zero.");
-
     public:
         using Coefficient = T;
             /**< The type of each coefficient of the polynomial. */

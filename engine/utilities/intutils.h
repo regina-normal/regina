@@ -499,6 +499,45 @@ struct IntOfSize<8> {
 #endif // __DOXYGEN
 
 /**
+ * Converts the given native C++ integer type into a signed integer type of
+ * the same size, allowing for 128-bit integers also.
+ *
+ * This is like `std::make_signed_t<T>` but with explicit support for 128-bit
+ * integers on those platforms that support them.  (In contrast some compilers
+ * support 128-bit integers but do not implement `std::make_signed_t for them.)
+ *
+ * \nopython
+ *
+ * \tparam T a standard native C++ integer type, and/or a 128-bit integer type
+ * (if native 128-bit arithmetic is supported on this platform).  The type \a T
+ * may be either signed or unsigned.
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+using make_signed_cpp_t = typename IntOfSize<sizeof(T)>::type;
+
+/**
+ * Converts the given native C++ integer type into an unsigned integer type of
+ * the same size, allowing for 128-bit integers also.
+ *
+ * This is like `std::make_unsigned_t<T>` but with explicit support for 128-bit
+ * integers on those platforms that support them.  (In contrast some compilers
+ * support 128-bit integers but do not implement `std::make_unsigned_t for
+ * them.)
+ *
+ * \nopython
+ *
+ * \tparam T a standard native C++ integer type, and/or a 128-bit integer type
+ * (if native 128-bit arithmetic is supported on this platform).  The type \a T
+ * may be either signed or unsigned.
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+using make_unsigned_cpp_t = typename IntOfSize<sizeof(T)>::utype;
+
+/**
  * Determines if an integer of type \a From can always be assigned to an
  * integer of type \a To with no loss of information.
  *
