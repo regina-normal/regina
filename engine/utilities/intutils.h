@@ -40,6 +40,7 @@
 
 #include "regina-core.h"
 #include "regina-config.h"
+#include <concepts>
 #include <cstdint>
 #include <limits>
 #include <type_traits>
@@ -171,6 +172,53 @@ template <typename T>
         (std::is_integral_v<T> && std::is_unsigned_v<T>) &&
         ! std::is_same_v<T, bool>;
 #endif
+
+/**
+ * One of the standard non-boolean C++ integer types, without making any
+ * special accommodations for 128-bit integer compiler extensions.
+ *
+ * This concept is exactly like `std::integral` but with `bool` excluded.
+ *
+ * Note that 128-bit integers (which are not standard C++) might or might not
+ * pass this test, depending on your compiler.
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+concept StandardCppInteger = std::integral<T> && ! std::same_as<T, bool>;
+
+/**
+ * A native non-boolean C++ integer type, allowing for 128-bit integers also
+ * if these are supported by the compiler.
+ *
+ * See the constant regina::is_cpp_integer_v for further details.
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+concept CppInteger = is_cpp_integer_v<T>;
+
+/**
+ * A signed native non-boolean C++ integer type, allowing for 128-bit integers
+ * also if these are supported by the compiler.
+ *
+ * See the constant regina::is_signed_cpp_integer_v for further details.
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+concept SignedCppInteger = is_signed_cpp_integer_v<T>;
+
+/**
+ * An unsigned native non-boolean C++ integer type, allowing for 128-bit
+ * integers also if these are supported by the compiler.
+ *
+ * See the constant regina::is_unsigned_cpp_integer_v for further details.
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+concept UnsignedCppInteger = is_unsigned_cpp_integer_v<T>;
 
 /**
  * Determines if the type \a T is one of Regina's own integer types
@@ -508,13 +556,9 @@ struct IntOfSize<8> {
  *
  * \nopython
  *
- * \tparam T a standard native C++ integer type, and/or a 128-bit integer type
- * (if native 128-bit arithmetic is supported on this platform).  The type \a T
- * may be either signed or unsigned.
- *
  * \ingroup utilities
  */
-template <typename T>
+template <CppInteger T>
 using make_signed_cpp_t = typename IntOfSize<sizeof(T)>::type;
 
 /**
@@ -528,13 +572,9 @@ using make_signed_cpp_t = typename IntOfSize<sizeof(T)>::type;
  *
  * \nopython
  *
- * \tparam T a standard native C++ integer type, and/or a 128-bit integer type
- * (if native 128-bit arithmetic is supported on this platform).  The type \a T
- * may be either signed or unsigned.
- *
  * \ingroup utilities
  */
-template <typename T>
+template <CppInteger T>
 using make_unsigned_cpp_t = typename IntOfSize<sizeof(T)>::utype;
 
 /**

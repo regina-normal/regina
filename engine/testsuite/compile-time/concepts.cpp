@@ -31,7 +31,6 @@
 #include "concepts/io.h"
 #include "concepts/iterator.h"
 #include "concepts/maths.h"
-#include "concepts/packet.h"
 #include "link/link.h"
 #include "maths/arrow.h"
 #include "maths/cyclotomic.h"

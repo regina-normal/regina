@@ -212,20 +212,24 @@ Version 7.5  [ TODO ]
               is_cpp_integer_v<bool> and is_unsigned_cpp_integer_v<bool> were
               both true).
         Concepts:
-            - Many new concepts, accessible via #include <concepts/*.h>:
-              + AnyInteger, ArbitraryPrecisionInteger,
-                ArbitraryPrecisionIntegerVector, ArrayOf, AssignableTo,
-                BidirectionalIteratorFor, CanConstruct, CharIterator,
-                CoefficientDomain, ConcatenableSequence, ConstRefArrayOf,
-                CppInteger, Domain, Field, ForwardIteratorFor,
-                InherentlyTightEncodable, InputIteratorFor, IntegerComparable,
-                IntegerCompatible, IntegerVector, IntegralDomain, Iterable,
-                PacketClass, PacketIterator, RandomAccessIteratorFor,
-                ReginaBitmask, ReginaInteger, Ring, RingLike,
-                SelfSentinelInputIterator, SignedCppInteger, StandardCppInteger,
-                StrictWeakOrder, Stringifiable, TerminatingCallback,
-                UnsignedCppInteger, VoidCallback, Writeable.
-            - Other new concepts for targeted use defined in other headers:
+            - Many new concepts:
+              + AnyInteger, ArbitraryPrecisionInteger, AssignableTo,
+                CanConstruct, CoefficientDomain, ConcatenableSequence, Domain,
+                Field, IntegerComparable, IntegerCompatible, IntegralDomain,
+                ReginaBitmask, ReginaInteger, Ring, RingLike, StrictWeakOrder,
+                TerminatingCallback, VoidCallback (defined in concepts/core.h)
+              + StandardCppInteger, CppInteger, SignedCppInteger,
+                UnsignedCppInteger (defined in utilities/intutils.h)
+              + InherentlyTightEncodable, Stringifiable, Writable (defined in
+                concepts/io.h)
+              + BidirectionalIteratorFor, CharIterator, ForwardIteratorFor,
+                InputIteratorFor, Iterable, PacketIterator,
+                RandomAccessIteratorFor, SelfSentinelInputIterator (defined in
+                concepts/iterator.h)
+              + ArbitraryPrecisionIntegerVector, IntegerVector (defined in
+                concepts/maths.h)
+              + PacketClass (defined in concepts/packet.h)
+              + ArrayOf, ConstRefArrayOf (defined in concepts/array.h)
               + BanConstraint, LPConstraint, LPSubspace (defined in
                 enumerate/treelp.h)
               + IsoSigEncoding (defined in triangulation/isosigencoding.h)

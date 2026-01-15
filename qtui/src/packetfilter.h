@@ -35,7 +35,7 @@
 #ifndef __PACKETFILTER_H
 #define __PACKETFILTER_H
 
-#include "concepts/packet.h"
+#include "packet/packet.h"
 
 #include "reginaqt.h"
 

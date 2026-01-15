@@ -38,7 +38,7 @@
 #endif
 
 #include <concepts>
-#include "utilities/intutils.h"
+#include "utilities/intutils.h" // for concepts related to C++ integer types
 
 namespace regina {
 
@@ -73,53 +73,6 @@ concept AssignableTo = std::assignable_from<Target, Source>;
  */
 template <typename Source, typename Target>
 concept CanConstruct = std::constructible_from<Target, Source>;
-
-/**
- * One of the standard non-boolean C++ integer types, without making any
- * special accommodations for 128-bit integer compiler extensions.
- *
- * This concept is exactly like `std::integral` but with `bool` excluded.
- *
- * Note that 128-bit integers (which are not standard C++) might or might not
- * pass this test, depending on your compiler.
- *
- * \ingroup concepts
- */
-template <typename T>
-concept StandardCppInteger = std::integral<T> && ! std::same_as<T, bool>;
-
-/**
- * A native non-boolean C++ integer type, allowing for 128-bit integers also
- * if these are supported by the compiler.
- *
- * See the constant regina::is_cpp_integer_v for further details.
- *
- * \ingroup concepts
- */
-template <typename T>
-concept CppInteger = is_cpp_integer_v<T>;
-
-/**
- * A signed native non-boolean C++ integer type, allowing for 128-bit integers
- * also if these are supported by the compiler.
- *
- * See the constant regina::is_signed_cpp_integer_v for further details.
- *
- * \ingroup concepts
- */
-template <typename T>
-concept SignedCppInteger = is_signed_cpp_integer_v<T>;
-
-/**
- * An unsigned native non-boolean C++ integer type, allowing for 128-bit
- * integers also if these are supported by the compiler.
- *
- * See the constant regina::is_unsigned_cpp_integer_v for further details.
- *
- * \ingroup concepts
- */
-template <typename T>
-concept UnsignedCppInteger = is_unsigned_cpp_integer_v<T>;
 
 /**
  * One of Regina's arbitrary precision integer types (Integer or LargeInteger).
