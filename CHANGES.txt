@@ -136,6 +136,7 @@ Version 7.5  [ TODO ]
             - The constructor that takes an Integer or LargeInteger is now
               deprecated.  Instead, you should initialise this using either
               safeValue() or unsafeValue() from Integer / LargeInteger.
+            - Almost everything in this class is now constexpr.
         Class NormalSurface:
             - Routines components(), countBoundaries(), disjoint(),
               isCompressingDisc(), isConnected(), isIncompressible(),
