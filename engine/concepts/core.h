@@ -37,15 +37,13 @@
 #define __REGINA_CONCEPTS_CORE_H
 #endif
 
-#include <concepts>
-#include "utilities/intutils.h" // for concepts related to C++ integer types
+#include "utilities/intutils.h" // provides concepts for integer types
 
 namespace regina {
 
-template <bool> class IntegerBase;
-template <int> class NativeInteger;
-// More forward declarations appear later, once we have the concepts necessary
-// to make them.
+class Bitmask;
+template <UnsignedCppInteger> class Bitmask1;
+template <UnsignedCppInteger, UnsignedCppInteger> class Bitmask2;
 
 /**
  * \defgroup concepts Concepts
@@ -73,65 +71,6 @@ concept AssignableTo = std::assignable_from<Target, Source>;
  */
 template <typename Source, typename Target>
 concept CanConstruct = std::constructible_from<Target, Source>;
-
-/**
- * One of Regina's arbitrary precision integer types (Integer or LargeInteger).
- *
- * \ingroup concepts
- */
-template <typename T>
-concept ArbitraryPrecisionInteger =
-    std::is_same_v<IntegerBase<true>, T> ||
-    std::is_same_v<IntegerBase<false>, T>;
-
-/**
- * One of Regina's own integer types (Integer, LargeInteger, or NativeInteger).
- *
- * An important feature of all of Regina's integer types is that their default
- * constructors initialise the integers to zero.
- *
- * \ingroup concepts
- */
-template <typename T>
-concept ReginaInteger =
-    ArbitraryPrecisionInteger<T> ||
-    requires(T x) { { NativeInteger(x) } -> std::same_as<T>; };
-
-/**
- * Either any standard non-boolean C++ integer type or any of Regina's own
- * integer types.
- *
- * This concept excludes `bool`, and does not make any special accommodations
- * for 128-bit integer compiler extensions.
- *
- * \ingroup concepts
- */
-template <typename T>
-concept AnyInteger = StandardCppInteger<T> || ReginaInteger<T>;
-
-/**
- * A type that supports very basic interoperability with native C++ integer
- * values, via construction, assignment, and equality/inequality testing.
- *
- * \ingroup concepts
- */
-template <typename T>
-concept IntegerCompatible =
-    std::constructible_from<T, int> &&
-    std::assignable_from<T&, int> &&
-    std::equality_comparable_with<T, int>;
-
-/**
- * A type that supports interoperability with native C++ integer values via
- * construction, assignment, equality/inequality testing, and comparisons.
- * The comparisons must yield a total order.
- *
- * \ingroup concepts
- */
-template <typename T>
-concept IntegerComparable =
-    IntegerCompatible<T> &&
-    std::totally_ordered_with<T, int>;
 
 /**
  * A type that has the necessary operations to behave like a mathematical ring.
@@ -215,11 +154,6 @@ concept Field = IntegralDomain<T> && RingTraits<T>::inverses;
 template <typename T>
 concept CoefficientDomain =
     Domain<T> && IntegerComparable<T> && RingTraits<T>::zeroInitialised;
-
-// Forward declarations that require the concept UnsignedCppInteger:
-class Bitmask;
-template <UnsignedCppInteger> class Bitmask1;
-template <UnsignedCppInteger, UnsignedCppInteger> class Bitmask2;
 
 /**
  * One of Regina's own bitmask types.

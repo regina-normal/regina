@@ -98,6 +98,9 @@ Version 7.5  [ TODO ]
         Class IsoSigEncodingAPI, IsoSigTypeAPI:
             - New documentation-only classes that explain how encodings and
               signature types for isomorphism signatures are expected to behave.
+        Struct IsReginaArbitraryPrecisionInteger<T>, IsReginaInteger<T>:
+            - Now deprecated, in favour of the new concepts
+              ArbitraryPrecisionInteger<T> and ReginaInteger<T>.
         Class LargeInteger:
             - See the changes listed under the sister class Integer above.
         Class Laurent<T>:
@@ -178,6 +181,8 @@ Version 7.5  [ TODO ]
             - New traits type to help with generic code for working with
               triangulations of different dimensions.
         Class Vector<T>:
+            - Now requires the element type T to have a RingTraits
+              specialisation.
             - For the iterator-based constructor, the old recommendation that
               the iterator type be random access is now a hard requirement.
         Function isTriangulation():
@@ -213,13 +218,14 @@ Version 7.5  [ TODO ]
               both true).
         Concepts:
             - Many new concepts:
-              + AnyInteger, ArbitraryPrecisionInteger, AssignableTo,
-                CanConstruct, CoefficientDomain, ConcatenableSequence, Domain,
-                Field, IntegerComparable, IntegerCompatible, IntegralDomain,
-                ReginaBitmask, ReginaInteger, Ring, RingLike, StrictWeakOrder,
+              + AssignableTo, CanConstruct, CoefficientDomain,
+                ConcatenableSequence, Domain, Field, IntegralDomain,
+                ReginaBitmask, Ring, RingLike, StrictWeakOrder,
                 TerminatingCallback, VoidCallback (defined in concepts/core.h)
-              + StandardCppInteger, CppInteger, SignedCppInteger,
-                UnsignedCppInteger (defined in utilities/intutils.h)
+              + AnyInteger, ArbitraryPrecisionInteger, CppInteger,
+                IntegerComparable, IntegerCompatible, ReginaInteger,
+                StandardCppInteger, SignedCppInteger, UnsignedCppInteger
+                (defined in utilities/intutils.h)
               + InherentlyTightEncodable, Stringifiable, Writable (defined in
                 concepts/io.h)
               + BidirectionalIteratorFor, CharIterator, ForwardIteratorFor,

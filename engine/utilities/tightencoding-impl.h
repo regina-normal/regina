@@ -58,7 +58,7 @@ void tightEncodeInteger(std::ostream& out, Int value) {
     // As characters, the four markers are: { | } ~
 
     // Get the special case of infinity out of the way.
-    if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
+    if constexpr (ArbitraryPrecisionInteger<Int>) {
         if (value.isInfinite()) {
             out << "{}";
             return;
@@ -73,7 +73,7 @@ void tightEncodeInteger(std::ostream& out, Int value) {
         }
     } else {
         if (value > -45 && value <= 45) {
-            if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
+            if constexpr (ArbitraryPrecisionInteger<Int>) {
                 out << char(value.template unsafeValue<int>() + 77);
                     // 33 ≤ char ≤ 122
             } else {
@@ -97,7 +97,7 @@ void tightEncodeInteger(std::ostream& out, Int value) {
         }
     } else {
         if (value > -45 && value <= 45) {
-            if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
+            if constexpr (ArbitraryPrecisionInteger<Int>) {
                 out << '~' << char(value.template unsafeValue<int>() + 77);
             } else {
                 out << '~' << char(value + 77);
@@ -126,7 +126,7 @@ void tightEncodeInteger(std::ostream& out, Int value) {
             // Note: T could be char, so cast to an int before we
             // start doing any arithmetic.
             int i;
-            if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
+            if constexpr (ArbitraryPrecisionInteger<Int>) {
                 i = value.template unsafeValue<int>() + 4049;
                     // 0 ≤ i < 8100 = 90*90
             } else {
@@ -161,7 +161,7 @@ void tightEncodeInteger(std::ostream& out, Int value) {
             // Note: T could still be short int, so cast to a long before
             // we start doing any arithmetic.
             long i;
-            if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
+            if constexpr (ArbitraryPrecisionInteger<Int>) {
                 i = value.template unsafeValue<long>() + 364499;
                     // 0 ≤ i < 729000 = 90^3
             } else {
@@ -188,7 +188,7 @@ void tightEncodeInteger(std::ostream& out, Int value) {
     // (4) marker to terminate
 
     int next;
-    if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
+    if constexpr (ArbitraryPrecisionInteger<Int>) {
         // value might be out of bounds for a native integer,
         // but (value % 45) will not.
         next = (value % 45).template unsafeValue<int>();
@@ -215,7 +215,7 @@ void tightEncodeInteger(std::ostream& out, Int value) {
     out << '{' << char(next + 33);
 
     while (value > 0) {
-        if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
+        if constexpr (ArbitraryPrecisionInteger<Int>) {
             // value might be out of bounds for a native integer,
             // but (value % 90) will not.
             out << char((value % 90).template unsafeValue<int>() + 33);

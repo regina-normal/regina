@@ -89,7 +89,7 @@ class Rational;
  *
  * \ingroup maths
  */
-template <RingLike T>
+template <Ring T>
 requires Writeable<T> && IntegerCompatible<T>
 class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
     public:
@@ -563,7 +563,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * Negates every element of this vector.
          */
         inline void negate() {
-            if constexpr (IsReginaInteger<T>::value ||
+            if constexpr (ReginaInteger<T> ||
                     std::is_same_v<T, regina::Rational>) {
                 for (T* e = elts_; e < end_; ++e)
                     e->negate();
@@ -772,8 +772,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * \return the requested unit vector.
          */
         static Vector unit(size_t dimension, size_t coordinate) {
-            if constexpr (IsReginaInteger<T>::value) {
-                // Elements are initialised to zero by default.
+            if constexpr (RingTraits<T>::zeroInitialised) {
                 Vector ans(dimension);
                 ans[coordinate] = 1;
                 return ans;
@@ -796,7 +795,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
  *
  * \ingroup maths
  */
-template <RingLike T>
+template <Ring T>
 inline void swap(Vector<T>& a, Vector<T>& b) noexcept {
     a.swap(b);
 }
@@ -812,7 +811,7 @@ inline void swap(Vector<T>& a, Vector<T>& b) noexcept {
  *
  * \ingroup maths
  */
-template <RingLike T>
+template <Ring T>
 std::ostream& operator << (std::ostream& out, const Vector<T>& vector) {
     size_t size = vector.size();
     if (size == 0)

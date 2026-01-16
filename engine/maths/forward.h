@@ -51,7 +51,7 @@ template <int> class NativeInteger;
 
 template <RingLike> struct RingTraits;
 
-template <RingLike T>
+template <Ring T>
 requires Writeable<T> && IntegerCompatible<T>
 class Vector;
 

@@ -63,10 +63,7 @@ static void verifyUsing(const Integer& val, const std::string& enc) {
     SCOPED_TRACE_TYPE(T);
     SCOPED_TRACE_REGINA(val);
 
-    constexpr static bool arbitraryPrecision =
-        regina::IsReginaArbitraryPrecisionInteger<T>::value;
-
-    if constexpr (! arbitraryPrecision) {
+    if constexpr (! regina::ArbitraryPrecisionInteger<T>) {
         // This is a native C++ integer type, and so could be out of range.
         if (val > toInteger(std::numeric_limits<T>::max()) ||
                 val < toInteger(std::numeric_limits<T>::min())) {
@@ -87,7 +84,7 @@ static void verifyUsing(const Integer& val, const std::string& enc) {
     // First fetch it as type T, and in the case of a native C++
     // integer type, make sure it looks like we've done this correctly.
     T native;
-    if constexpr (arbitraryPrecision) {
+    if constexpr (regina::ArbitraryPrecisionInteger<T>) {
         native = val;
     } else {
         ASSERT_NO_THROW({ native = val.safeValue<T>(); });

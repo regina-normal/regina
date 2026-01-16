@@ -221,8 +221,67 @@ template <typename T>
 concept UnsignedCppInteger = is_unsigned_cpp_integer_v<T>;
 
 /**
- * Determines if the type \a T is one of Regina's own integer types
- * (either arbitrary precision or fixed size).
+ * One of Regina's arbitrary precision integer types (Integer or LargeInteger).
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+concept ArbitraryPrecisionInteger =
+    std::is_same_v<IntegerBase<true>, T> ||
+    std::is_same_v<IntegerBase<false>, T>;
+
+/**
+ * One of Regina's own integer types (Integer, LargeInteger, or NativeInteger).
+ *
+ * An important feature of all of Regina's integer types is that their default
+ * constructors initialise the integers to zero.
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+concept ReginaInteger =
+    ArbitraryPrecisionInteger<T> ||
+    requires(T x) { { NativeInteger(x) } -> std::same_as<T>; };
+
+/**
+ * Either any standard non-boolean C++ integer type or any of Regina's own
+ * integer types.
+ *
+ * This concept excludes `bool`, and does not make any special accommodations
+ * for 128-bit integer compiler extensions.
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+concept AnyInteger = StandardCppInteger<T> || ReginaInteger<T>;
+
+/**
+ * A type that supports very basic interoperability with native C++ integer
+ * values, via construction, assignment, and equality/inequality testing.
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+concept IntegerCompatible =
+    std::constructible_from<T, int> &&
+    std::assignable_from<T&, int> &&
+    std::equality_comparable_with<T, int>;
+
+/**
+ * A type that supports interoperability with native C++ integer values via
+ * construction, assignment, equality/inequality testing, and comparisons.
+ * The comparisons must yield a total order.
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+concept IntegerComparable =
+    IntegerCompatible<T> &&
+    std::totally_ordered_with<T, int>;
+
+/**
+ * Deprecated traits class to determine if the type \a T is one of Regina's
+ * own integer types (either arbitrary precision or fixed size).
  *
  * This is true precisely when \a T is one of the classes Integer,
  * LargeInteger, or NativeInteger<...>.
@@ -230,12 +289,14 @@ concept UnsignedCppInteger = is_unsigned_cpp_integer_v<T>;
  * The result will be available through the compile-time boolean constant
  * IsReginaInteger<T>::value.
  *
+ * \deprecated Instead use the concept `ReginaInteger<T>`.
+ *
  * \nopython
  *
  * \ingroup utilities
  */
 template <typename T>
-struct IsReginaInteger : public std::false_type {};
+struct [[deprecated]] IsReginaInteger : public std::false_type {};
 
 #ifndef __DOXYGEN
 template <bool withInfinity>
@@ -246,20 +307,22 @@ struct IsReginaInteger<NativeInteger<bytes>> : public std::true_type {};
 #endif // __DOXYGEN
 
 /**
- * Determines if the type \a T is one of Regina's arbitrary precision
- * integer types.
+ * Deprecated traits class to determine if the type \a T is one of Regina's
+ * arbitrary precision integer types.
  *
  * This is true only when \a T is one of the classes Integer or LargeInteger.
  *
  * The result will be available through the compile-time boolean constant
  * IsReginaArbitraryPrecisionInteger<T>::value.
  *
+ * \deprecated Instead use the concept `ArbitraryPrecisionInteger<T>`.
+ *
  * \nopython
  *
  * \ingroup utilities
  */
 template <typename T>
-struct IsReginaArbitraryPrecisionInteger : public std::false_type {};
+struct [[deprecated]] IsReginaArbitraryPrecisionInteger : public std::false_type {};
 
 #ifndef __DOXYGEN
 template <bool withInfinity>
@@ -299,7 +362,7 @@ struct IsReginaArbitraryPrecisionInteger<IntegerBase<withInfinity>> : public std
  */
 #define ENABLE_MEMBER_FOR_REGINA_INTEGER(T, returnType) \
     template <typename... Args, typename Return = returnType> \
-    std::enable_if_t<IsReginaInteger<T>::value, Return>
+    std::enable_if_t<ReginaInteger<T>, Return>
 #else
 // When generating docstrings, we want docs for all member functions.
 #define ENABLE_MEMBER_FOR_REGINA_INTEGER(T, returnType) returnType

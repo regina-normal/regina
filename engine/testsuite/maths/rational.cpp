@@ -114,7 +114,7 @@ static void verifyInteger(T&& val) {
     SCOPED_TRACE_REGINA(r);
 
     std::string valStr;
-    if constexpr (regina::IsReginaInteger<T>::value)
+    if constexpr (regina::ReginaInteger<T>)
         valStr = val.str();
     else
         valStr = std::to_string(val);
