@@ -947,9 +947,9 @@ TYPED_TEST(IntegerTest, stringValue) {
             EXPECT_EQ(TypeParam::infinity.stringValue(i), "inf");
 }
 
-template <bool withInfinity>
-static void verifyEqual(const IntegerBase<withInfinity>& a,
-        const IntegerBase<withInfinity>& b) {
+template <regina::ArbitraryPrecisionInteger Int1,
+    regina::ArbitraryPrecisionInteger Int2>
+static void verifyEqual(const Int1& a, const Int2& b) {
     SCOPED_TRACE_REGINA(a);
     SCOPED_TRACE_REGINA(b);
 
@@ -987,9 +987,9 @@ static void verifyEqual(const IntegerBase<withInfinity>& a, long b) {
     EXPECT_EQ(a.isZero(), b == 0);
 }
 
-template <bool withInfinity>
-static void verifyLess(const IntegerBase<withInfinity>& a,
-        const IntegerBase<withInfinity>& b) {
+template <regina::ArbitraryPrecisionInteger Int1,
+    regina::ArbitraryPrecisionInteger Int2>
+static void verifyLess(const Int1& a, const Int2& b) {
     SCOPED_TRACE_REGINA(a);
     SCOPED_TRACE_REGINA(b);
 
@@ -1037,16 +1037,24 @@ static void verifyLess(long a, const IntegerBase<withInfinity>& b) {
 }
 
 TYPED_TEST(IntegerTest, comparisons) {
+    using Alt = IntegerBase<! TypeParam::supportsInfinity>;
+
     for (const auto& x : this->cases) {
         verifyEqual(x, x);
 
         TypeParam y(x);
+        Alt yAlt(x);
         EXPECT_EQ(x.isNative(), y.isNative());
+        EXPECT_EQ(x.isNative(), yAlt.isNative());
         verifyEqual(x, y);
+        verifyEqual(x, yAlt);
 
         y.makeLarge();
+        yAlt.makeLarge();
         EXPECT_FALSE(y.isNative());
+        EXPECT_FALSE(yAlt.isNative());
         verifyEqual(x, y);
+        verifyEqual(x, yAlt);
     }
 
     for (long x : this->longCases) {
@@ -1082,8 +1090,12 @@ TYPED_TEST(IntegerTest, comparisons) {
         for (size_t y = x + 1; y < this->cases.size(); ++y) {
             TypeParam a(this->cases[x]);
             TypeParam b(this->cases[y]);
+            Alt aAlt(this->cases[x]);
+            Alt bAlt(this->cases[y]);
 
             verifyLess(a, b);
+            verifyLess(a, bAlt);
+            verifyLess(aAlt, b);
 
             if (a.isNative()) {
                 verifyLess(a.template unsafeValue<long>(), b);
@@ -1128,11 +1140,12 @@ TYPED_TEST(IntegerTest, comparisons) {
             verifyLess(this->longCases[x], q);
         }
 
-    if constexpr (TypeParam::supportsInfinity) {
-        TypeParam inf(TypeParam::infinity);
+    {
+        LargeInteger inf(LargeInteger::infinity);
 
         EXPECT_EQ(inf, inf);
-        EXPECT_EQ(inf, TypeParam(inf));
+        if constexpr (TypeParam::supportsInfinity)
+            EXPECT_EQ(inf, TypeParam(inf));
 
         for (const auto& x : this->cases)
             verifyLess(x, inf);
