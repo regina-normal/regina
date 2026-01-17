@@ -1103,7 +1103,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          */
         IntegerBase& operator /=(const IntegerBase& other);
         /**
-         * Divides this by the given integer.
+         * Divides this by the given native C++ integer.
          * The result will be truncated to an integer, i.e. rounded
          * towards zero.
          * This integer is changed to reflect the result.
@@ -1116,13 +1116,16 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
          * \exception DivisionByZero The argument \a other is zero, but this
          * class does not support infinity.
          *
          * \param other the integer to divide this by.
          * \return a reference to this integer with its new value.
          */
-        IntegerBase& operator /=(long other);
+        template <CppInteger IntType>
+        IntegerBase& operator /=(IntType other);
         /**
          * Divides this by the given integer.
          * This can only be used when the given integer divides into
@@ -1174,7 +1177,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          */
         IntegerBase& operator %=(const IntegerBase& other);
         /**
-         * Reduces this integer modulo the given integer.
+         * Reduces this integer modulo the given native C++ integer.
          * If non-zero, the result will have the same sign as the original
          * value of this integer.
          * This integer is changed to reflect the result.
@@ -1185,11 +1188,13 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \pre \a other is not zero.
          * \pre This integer is not infinite.
          *
-         * \param other the integer modulo which this integer will be
-         * reduced.
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \param other the integer modulo which this integer will be reduced.
          * \return a reference to this integer with its new value.
          */
-        IntegerBase& operator %=(long other);
+        template <CppInteger IntType>
+        IntegerBase& operator %=(IntType other);
         /**
          * Negates this integer.
          * This integer is changed to reflect the result.
@@ -3560,6 +3565,68 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
 
 template <bool withInfinity>
 template <CppInteger IntType>
+IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(
+        IntType other) {
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return *this;
+        if (other == 0) {
+            makeInfinite();
+            return *this;
+        }
+    } else {
+        if (other == 0)
+            throw DivisionByZero();
+    }
+
+    if (large_) {
+        if constexpr (sizeof(IntType) <= sizeof(long)) {
+            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+                mpz_tdiv_q_ui(large_, large_, other);
+            } else if (other >= 0) {
+                mpz_tdiv_q_ui(large_, large_, other);
+            } else {
+                mpz_tdiv_q_ui(large_, large_,
+                    detail::negateToUnsignedType(other));
+                mpz_neg(large_, large_);
+            }
+        } else {
+            // TODO: Improve this.
+            return (*this) /= IntegerBase(other);
+        }
+    } else {
+        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            // We can do this all in native arithmetic.
+            if constexpr (sizeof(IntType) < sizeof(long))
+                small_ /= static_cast<long>(other);
+            else if (other <= static_cast<unsigned long>(LONG_MAX))
+                small_ /= static_cast<long>(other);
+            else if (other == static_cast<unsigned long>(LONG_MAX) + 1)
+                small_ = (small_ == LONG_MIN ? -1 : 0);
+            else
+                small_ = 0;
+        } else if (small_ == LONG_MIN && other == -1) {
+            // This is the special case where we must switch from native to
+            // large integers.
+            large_ = new __mpz_struct[1];
+            mpz_init_set_ui(large_, static_cast<unsigned long>(LONG_MAX) + 1);
+        } else {
+            // We can do this all in native arithmetic.
+            if constexpr (sizeof(IntType) <= sizeof(long))
+                small_ /= other;
+            else if (other >= LONG_MIN && other <= LONG_MAX)
+                small_ /= static_cast<long>(other);
+            else if (other == static_cast<IntType>(LONG_MAX) + 1)
+                small_ = (small_ == LONG_MIN ? -1 : 0);
+            else
+                small_ = 0; // since |other| > |small|
+        }
+    }
+    return *this;
+}
+
+template <bool withInfinity>
+template <CppInteger IntType>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::divByExact(
         IntType other) {
     // Preconditions: this is finite; other ≠ 0; (this / other) is an integer.
@@ -3594,8 +3661,8 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::divByExact(
                 // This is the special case where we must switch from native to
                 // large integers.
                 large_ = new __mpz_struct[1];
-                mpz_init_set_si(large_, LONG_MIN);
-                mpz_neg(large_, large_);
+                mpz_init_set_ui(large_,
+                    static_cast<unsigned long>(LONG_MAX) + 1);
             } else {
                 // We can do this entirely in signed native arithmetic.
                 small_ /= other;
@@ -3606,6 +3673,56 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::divByExact(
         // TODO: Improve this.
         return divByExact(IntegerBase(other));
     }
+}
+
+template <bool withInfinity>
+template <CppInteger IntType>
+IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
+        IntType other) {
+    // Precondition: this != infinity, other != 0.
+    if (large_) {
+        if constexpr (sizeof(IntType) <= sizeof(long)) {
+            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+                mpz_tdiv_r_ui(large_, large_, other);
+            } else if (other >= 0) {
+                mpz_tdiv_r_ui(large_, large_, other);
+            } else {
+                // We use the fact that (this % other) == (this % |other|).
+                mpz_tdiv_r_ui(large_, large_,
+                    detail::negateToUnsignedType(other));
+            }
+            if constexpr (sizeof(IntType) < sizeof(long))
+                forceReduce();
+        } else {
+            // TODO: Improve this.
+            return (*this) %= IntegerBase(other);
+        }
+    } else {
+        // We can do this all in native arithmetic.
+        // Note: some compilers crash on LONG_MIN % -1.
+        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if constexpr (sizeof(IntType) < sizeof(long))
+                small_ %= static_cast<long>(other);
+            else if (other <= static_cast<unsigned long>(LONG_MAX))
+                small_ %= static_cast<long>(other);
+            else if (other == static_cast<unsigned long>(LONG_MAX) + 1 &&
+                    small_ == LONG_MIN)
+                small_ = 0;
+            // Otherwise we have |other| > |small_|, so small_ remains fixed.
+        } else if (other == -1) {
+            small_ = 0;
+        } else {
+            if constexpr (sizeof(IntType) <= sizeof(long))
+                small_ %= other;
+            else if (other >= LONG_MIN && other <= LONG_MAX)
+                small_ %= static_cast<long>(other);
+            else if (other == static_cast<IntType>(LONG_MAX) + 1 &&
+                    small_ == LONG_MIN)
+                small_ = 0;
+            // Otherwise we have |other| > |small_|, so small_ remains fixed.
+        }
+    }
+    return *this;
 }
 
 template <bool withInfinity>

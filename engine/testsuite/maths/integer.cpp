@@ -1271,9 +1271,6 @@ TYPED_TEST(IntegerTest, plusMinus) {
         EXPECT_EQ(TypeParam() - x, -x);
 
         for (const auto& y : this->cases) {
-            if (y == 0)
-                continue;
-
             SCOPED_TRACE_REGINA(y);
 
             EXPECT_EQ(x + y, y + x);
@@ -1323,9 +1320,6 @@ TYPED_TEST(IntegerTest, plusMinus) {
         }
 
         for (long y : this->longCases) {
-            if (y == 0)
-                continue;
-
             SCOPED_TRACE_NUMERIC(y);
 
             EXPECT_EQ(x + y, y + x);
@@ -1524,9 +1518,6 @@ TYPED_TEST(IntegerTest, multiply) {
         verifyProductLargeNative(x, -2, -x - x);
 
         for (const auto& y : this->cases) {
-            if (y == 0)
-                continue;
-
             SCOPED_TRACE_REGINA(y);
 
             // Test the commutative law.
@@ -1569,13 +1560,12 @@ TYPED_TEST(IntegerTest, multiply) {
                 EXPECT_GT(x * y, 0);
                 EXPECT_GE(x * y, -x);
                 EXPECT_GE(x * y, -y);
+            } else {
+                EXPECT_EQ(x * y, 0);
             }
         }
 
         for (long y : this->longCases) {
-            if (y == 0)
-                continue;
-
             SCOPED_TRACE_NUMERIC(y);
 
             // Test the commutative law.
@@ -1623,6 +1613,8 @@ TYPED_TEST(IntegerTest, multiply) {
                 EXPECT_GT(x * y, 0);
                 EXPECT_GE(x * y, -x);
                 EXPECT_GT(x * y, -(y + 1)); // Note: -y could overflow.
+            } else {
+                EXPECT_EQ(x * y, 0);
             }
         }
     }
@@ -1743,8 +1735,15 @@ TYPED_TEST(IntegerTest, divide) {
         }
 
         for (const auto& y : this->cases) {
-            if (y == 0)
+            if (y == 0) {
+                if constexpr (TypeParam::supportsInfinity) {
+                    TypeParam ans = x / y;
+                    EXPECT_TRUE(ans.isInfinite());
+                } else {
+                    EXPECT_THROW({ x / y; }, regina::DivisionByZero);
+                }
                 continue;
+            }
 
             SCOPED_TRACE_REGINA(y);
 
@@ -1785,8 +1784,15 @@ TYPED_TEST(IntegerTest, divide) {
         }
 
         for (long y : this->longCases) {
-            if (y == 0)
+            if (y == 0) {
+                if constexpr (TypeParam::supportsInfinity) {
+                    TypeParam ans = x / y;
+                    EXPECT_TRUE(ans.isInfinite());
+                } else {
+                    EXPECT_THROW({ x / y; }, regina::DivisionByZero);
+                }
                 continue;
+            }
 
             SCOPED_TRACE_NUMERIC(y);
 
@@ -3423,6 +3429,165 @@ TYPED_TEST(IntegerTest, cppIntegerMultiplyDivide) {
 #ifdef INT128_AVAILABLE
     verifyCppIntegerMultiplyDivide<TypeParam, regina::IntOfSize<16>::utype>();
     verifyCppIntegerMultiplyDivide<TypeParam, regina::IntOfSize<16>::type>();
+#endif
+}
+
+template <ArbitraryPrecisionInteger IntegerType, CppInteger Native>
+static void verifyCppIntegerDivMod(IntegerType lhs, Native rhs) {
+    SCOPED_TRACE_REGINA(lhs);
+    SCOPED_TRACE_REGINA(IntegerType(rhs)); // to support 128-bit ints
+
+    if (lhs.isInfinite()) {
+        // Mod is not allowed in this case.
+        {
+            IntegerType q = lhs / rhs;
+            EXPECT_TRUE(q.isInfinite());
+        }
+        {
+            IntegerType q = lhs;
+            q /= rhs;
+            EXPECT_TRUE(q.isInfinite());
+        }
+        return;
+    }
+
+    if (rhs == 0) {
+        // Mod is not allowed in this case.
+        if constexpr (IntegerType::supportsInfinity) {
+            {
+                IntegerType q = lhs / rhs;
+                EXPECT_TRUE(q.isInfinite());
+            }
+            {
+                IntegerType q = lhs;
+                q /= rhs;
+                EXPECT_TRUE(q.isInfinite());
+            }
+        } else {
+            {
+                EXPECT_THROW({ lhs / rhs; }, regina::DivisionByZero);
+            }
+            {
+                IntegerType q = lhs;
+                EXPECT_THROW({ q /= rhs; }, regina::DivisionByZero);
+            }
+        }
+        return;
+    }
+
+    // From here on: lhs is finite, and rhs ≠ 0.
+
+    lhs.tryReduce();
+
+    // Division should round towards zero, and mod (when non-zero) should take
+    // the sign of lhs.  Note: |rhs| might not fit into Native, and for an
+    // unsigned native type, -|rhs| definitely might not fit into Native.
+    int lhsSign = lhs.sign();
+    IntegerType rhsAbs = IntegerType(rhs).abs();
+    {
+        IntegerType q = lhs / rhs;
+        IntegerType r = lhs % rhs;
+
+        if (lhsSign > 0) {
+            EXPECT_GE(r, 0);
+            EXPECT_LT(r, rhsAbs);
+        } else if (lhsSign < 0) {
+            EXPECT_LE(r, 0);
+            EXPECT_GT(r, -rhsAbs);
+        } else {
+            EXPECT_EQ(q, 0);
+            EXPECT_EQ(r, 0);
+        }
+
+        SCOPED_TRACE_REGINA(q);
+        SCOPED_TRACE_REGINA(r);
+        EXPECT_EQ(q * rhs + r, lhs);
+    }
+    {
+        IntegerType q = lhs;
+        IntegerType r = lhs;
+        q /= rhs;
+        r %= rhs;
+
+        if (lhsSign > 0) {
+            EXPECT_GE(r, 0);
+            EXPECT_LT(r, rhsAbs);
+        } else if (lhsSign < 0) {
+            EXPECT_LE(r, 0);
+            EXPECT_GT(r, -rhsAbs);
+        } else {
+            EXPECT_EQ(q, 0);
+            EXPECT_EQ(r, 0);
+        }
+
+        SCOPED_TRACE_REGINA(q);
+        SCOPED_TRACE_REGINA(r);
+        EXPECT_EQ(q * rhs + r, lhs);
+    }
+}
+
+template <ArbitraryPrecisionInteger IntegerType, SignedCppInteger Native>
+static void verifyCppIntegerDivMod() {
+    SCOPED_TRACE_TYPE(Native);
+
+    using Limits = NativeSignedLimits<Native>;
+    using Unsigned = typename Limits::Unsigned;
+    using UnsignedLimits = NativeUnsignedLimits<Unsigned>;
+    Limits::verify();
+    UnsignedLimits::verify();
+
+    for (const auto& x : UnsignedLimits::template reginaCases<IntegerType>)
+        for (auto y : Limits::nativeCases)
+            verifyCppIntegerDivMod<IntegerType, Native>(x, y);
+
+    if constexpr (IntegerType::supportsInfinity) {
+        verifyCppIntegerDivMod<IntegerType, Native>(
+            IntegerType::infinity, Limits::min);
+        verifyCppIntegerDivMod<IntegerType, Native>(
+            IntegerType::infinity, Limits::max);
+    }
+}
+
+template <ArbitraryPrecisionInteger IntegerType, UnsignedCppInteger Native>
+static void verifyCppIntegerDivMod() {
+    SCOPED_TRACE_TYPE(Native);
+
+    using Limits = NativeUnsignedLimits<Native>;
+    using Signed = typename Limits::Signed;
+    using SignedLimits = NativeSignedLimits<Signed>;
+    Limits::verify();
+    SignedLimits::verify();
+
+    for (const auto& x : Limits::template reginaCases<IntegerType>)
+        for (auto y : Limits::nativeCases)
+            verifyCppIntegerDivMod<IntegerType, Native>(x, y);
+
+    if constexpr (IntegerType::supportsInfinity) {
+        verifyCppIntegerDivMod<IntegerType, Native>(
+            IntegerType::infinity, 0);
+        verifyCppIntegerDivMod<IntegerType, Native>(
+            IntegerType::infinity, Limits::max);
+    }
+}
+
+TYPED_TEST(IntegerTest, cppIntegerDivMod) {
+    verifyCppIntegerDivMod<TypeParam, unsigned char>();
+    verifyCppIntegerDivMod<TypeParam, unsigned short>();
+    verifyCppIntegerDivMod<TypeParam, unsigned>();
+    verifyCppIntegerDivMod<TypeParam, unsigned long>();
+    verifyCppIntegerDivMod<TypeParam, unsigned long long>();
+    verifyCppIntegerDivMod<TypeParam, size_t>();
+
+    verifyCppIntegerDivMod<TypeParam, signed char>();
+    verifyCppIntegerDivMod<TypeParam, short>();
+    verifyCppIntegerDivMod<TypeParam, int>();
+    verifyCppIntegerDivMod<TypeParam, long>();
+    verifyCppIntegerDivMod<TypeParam, long long>();
+    verifyCppIntegerDivMod<TypeParam, ssize_t>();
+
+#ifdef INT128_AVAILABLE
+    verifyCppIntegerDivMod<TypeParam, regina::IntOfSize<16>::utype>();
+    verifyCppIntegerDivMod<TypeParam, regina::IntOfSize<16>::type>();
 #endif
 }
 

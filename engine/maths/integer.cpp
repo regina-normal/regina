@@ -334,42 +334,6 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(
 }
 
 template <bool withInfinity>
-IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(long other) {
-    if constexpr (withInfinity) {
-        if (isInfinite())
-            return *this;
-        if (other == 0) {
-            makeInfinite();
-            return *this;
-        }
-    } else {
-        if (other == 0)
-            throw DivisionByZero();
-    }
-
-    if (large_) {
-        if (other >= 0)
-            mpz_tdiv_q_ui(large_, large_, other);
-        else {
-            // The cast to (unsigned long) makes this correct even if
-            // other = LONG_MIN.
-            mpz_tdiv_q_ui(large_, large_, - other);
-            mpz_neg(large_, large_);
-        }
-    } else if (small_ == LONG_MIN && other == -1) {
-        // This is the special case where we must switch from native to
-        // large integers.
-        large_ = new __mpz_struct[1];
-        mpz_init_set_si(large_, LONG_MIN);
-        mpz_neg(large_, large_);
-    } else {
-        // We can do this entirely in native arithmetic.
-        small_ /= other;
-    }
-    return *this;
-}
-
-template <bool withInfinity>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::divByExact(
         const IntegerBase& other) {
     if (other.large_) {
@@ -474,26 +438,6 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
         return *this;
     } else
         return (*this) %= other.small_;
-}
-
-template <bool withInfinity>
-IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(long other) {
-    // Since |result| < |other|, whatever happens we can fit the result
-    // into a native C/C++ long.
-    if (large_) {
-        // We can safely cast other to an unsigned long, because the rounding
-        // rules imply that (this % LONG_MIN) == (this % -LONG_MIN).
-        mpz_tdiv_r_ui(large_, large_, other >= 0 ? other : -other);
-        forceReduce();
-    } else {
-        // All native arithmetic from here.
-        // Some compilers will crash on LONG_MIN % -1, sigh.
-        if (other == -1)
-            small_ = 0;
-        else
-            small_ %= other;
-    }
-    return *this;
 }
 
 template <bool withInfinity>
