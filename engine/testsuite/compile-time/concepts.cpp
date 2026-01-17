@@ -243,6 +243,17 @@ static_assert(! regina::Field<regina::Laurent<Integer>>);
 static_assert(! regina::Field<regina::Laurent2<Integer>>);
 static_assert(! regina::Field<regina::Cyclotomic>);
 
+static_assert(regina::StandardStringifiable<int>);
+static_assert(regina::StandardStringifiable<long>);
+static_assert(regina::StandardStringifiable<long long>);
+static_assert(regina::StandardStringifiable<unsigned>);
+static_assert(regina::StandardStringifiable<unsigned long>);
+static_assert(regina::StandardStringifiable<unsigned long long>);
+static_assert(regina::StandardStringifiable<float>);
+static_assert(regina::StandardStringifiable<double>);
+static_assert(regina::StandardStringifiable<long double>);
+static_assert(! regina::StandardStringifiable<int*>);
+
 static_assert(regina::InherentlyTightEncodable<Integer>);
 static_assert(regina::InherentlyTightEncodable<LargeInteger>);
 static_assert(regina::InherentlyTightEncodable<Vector<Integer>>);

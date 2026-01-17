@@ -37,6 +37,7 @@
 #define __REGINA_STRINGUTILS_H
 #endif
 
+#include <algorithm>
 #include <cstdint>
 #include <cctype>
 #include <sstream>
@@ -44,6 +45,7 @@
 #include <vector>
 #include "regina-core.h"
 #include "concepts/core.h"
+#include "concepts/io.h"
 
 namespace regina {
 
@@ -91,7 +93,7 @@ std::string stripWhitespace(const std::string& str);
  * \a dest will be undefined.
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
- * since these tailored to the many different native C++ numeric types.
+ * since these are tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
  * \param str the string to convert.
@@ -137,7 +139,7 @@ bool valueOf(const std::string& str, T& dest) {
  * negative number then this routine will return \c false.
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
- * since these tailored to the many different native C++ numeric types.
+ * since these are tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
  * \param str the string to convert.
@@ -180,7 +182,7 @@ bool valueOf(const std::string& str, T& dest) {
  * \a dest will be undefined.
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
- * since these tailored to the many different native C++ numeric types.
+ * since these are tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
  * \param str the string to convert.
@@ -204,7 +206,7 @@ bool valueOf(const std::string& str, double& dest);
  * be set to \c false.
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
- * since these tailored to the many different native C++ numeric types.
+ * since these are tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
  * \param str the string to convert.
@@ -237,6 +239,61 @@ bool valueOf(const std::string& str, bool& dest);
  * \ingroup utilities
  */
 bool valueOf(const std::string& str, BoolSet& dest);
+
+/**
+ * Converts the given native C++ integer to a string, with explicit support
+ * for 128-bit integers on those platforms that support them.
+ *
+ * For _standard_ C++ integer types, this routine is identical to calling
+ * `std::to_string(value)`.  The reason this routine exists at all is that,
+ * on platforms that support native 128-bit integers, `std::to_string()` and
+ * the output stream operators are nevertheless _not_ always available for
+ * 128-bit integer arguments.  In contract, for those platforms that support
+ * native 128-bit integer types, `regina::toString()` is guaranteed to work
+ * for 128-bit integer arguments.
+ *
+ * \nopython None of Regina's toString() functions are wrapped in Python,
+ * since these are tailored to the many different native C++ numeric types.
+ * Instead, use Python's own native number-to-string mechanisms.
+ *
+ * \param value the integer value to convert.
+ * \return a string representation of \a value.
+ *
+ * \ingroup utilities
+ */
+template <CppInteger T>
+std::string toString(T value) {
+    if constexpr (StandardStringifiable<T>) {
+        return std::to_string(value);
+    } else {
+        // Presumably we have a 128-bit integer, for which std::to_string()
+        // and/or std::ostream output do not exist on some platforms.
+        static_assert(sizeof(T) >= 16,
+            "std::to_string() should be available for all native C++ "
+            "integer types with < 128 bits.  Please report this to the "
+            "Regina developers.");
+        if (value == 0) {
+            return "0";
+        } else {
+            // Build the string in reverse.
+            std::string ans;
+            if (value >= 0 /* always true for unsigned types */) {
+                for (T x = value ; x != 0; x /= 10)
+                    ans += char('0' + int(x % 10));
+            } else {
+                for (T x = value ; x != 0; x /= 10) {
+                    int digit = int(x % 10);
+                    if (digit > 0)
+                        digit -= 10;
+                    ans += char('0' - digit);
+                }
+                ans += '-';
+            }
+            std::reverse(ans.begin(), ans.end());
+            return ans;
+        }
+    }
+}
 
 /**
  * Decomposes the given string into tokens.

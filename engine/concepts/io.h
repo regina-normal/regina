@@ -39,6 +39,7 @@
 
 #include <concepts>
 #include <iostream>
+#include <string>
 #include "regina-core.h"
 
 namespace regina {
@@ -55,7 +56,10 @@ concept Writeable =
     };
 
 /**
- * A type that supports string output through a member function `str()`.
+ * A class or struct type that supports string output through a member function
+ * `str()`.
+ *
+ * Many of Regina's own classes provide such a function.
  *
  * \ingroup concepts
  */
@@ -63,6 +67,20 @@ template <typename T>
 concept Stringifiable =
     requires(const T x) {
         { x.str() } -> std::same_as<std::string>;
+    };
+
+/**
+ * A type that supports string conversion via `std::to_string()`.
+ *
+ * For example, the standard C++ native integer types support string conversion
+ * in this way.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept StandardStringifiable =
+    requires(const T x) {
+        { std::to_string(x) } -> std::same_as<std::string>;
     };
 
 /**

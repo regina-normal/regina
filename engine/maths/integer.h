@@ -47,6 +47,7 @@
 #include "concepts/core.h"
 #include "maths/ring.h"
 #include "utilities/exception.h"
+#include "utilities/stringutils.h"
 #include "utilities/tightencoding.h"
 
 namespace regina {
@@ -2381,6 +2382,9 @@ constexpr void swap(NativeInteger<bytes>& a, NativeInteger<bytes>& b) noexcept;
 /**
  * Writes the given integer to the given output stream.
  *
+ * The output will always be numerical, even if the underlying native
+ * C++ type is equivalent to `signed char` (i.e., `bytes == 1`).
+ *
  * \param out the output stream to which to write.
  * \param i the integer to write.
  * \return a reference to \a out.
@@ -3919,12 +3923,11 @@ inline constexpr typename NativeInteger<bytes>::Native NativeInteger<bytes>::
 
 template <int bytes>
 inline std::string NativeInteger<bytes>::str() const {
-    // The standard library supports long long, but not necessarily 128-bit
-    // integers.  If we are beyond the realm of long long, go via Integer/GMP.
-    if constexpr (bytes <= sizeof(long long))
+    if constexpr (StandardStringifiable<Native>) {
         return std::to_string(data_);
-    else
-        return Integer(*this).str();
+    } else {
+        return regina::toString(data_);
+    }
 }
 
 template <int bytes>
@@ -4259,12 +4262,27 @@ inline constexpr void NativeInteger<bytes>::tryReduce() {
 template <int bytes>
 inline std::ostream& operator << (std::ostream& out,
         const NativeInteger<bytes>& i) {
-    // The standard library supports long long, but not necessarily 128-bit
-    // integers.  If we are beyond the realm of long long, go via Integer/GMP.
-    if constexpr (bytes <= sizeof(long long))
+    if constexpr (bytes <= sizeof(char)) {
+        // Make sure the ostream operator write this as an int, not a char.
+        return out << int(i.data_);
+    } else if constexpr (Writeable<typename NativeInteger<bytes>::Native>) {
         return out << i.data_;
-    else
-        return out << Integer(i);
+    } else {
+        // Presumably this is a 128-bit integer, for which std::to_string()
+        // and/or std::ostream output do not exist on some platforms.
+        static_assert(bytes >= 16,
+            "std::ostream output should be available for all native C++ "
+            "integer types with < 128 bits.  Please report this to the "
+            "Regina developers.");
+
+        // We still try to use native numerical ostream output where possible.
+        if (i.data_ <= LLONG_MAX && i.data_ >= LLONG_MIN) {
+            return out << static_cast<long long>(i.data_);
+        } else {
+            // Fall back to string output.
+            return out << i.str();
+        }
+    }
 }
 
 template <int bytes>

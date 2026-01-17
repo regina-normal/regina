@@ -31,6 +31,7 @@
 #include <array>
 #include "concepts/core.h"
 #include "maths/integer.h"
+#include "utilities/stringutils.h"
 
 #include "testhelper.h"
 
@@ -2421,33 +2422,9 @@ static void verifyCppInteger(Native native) {
     using ReginaNative = regina::NativeInteger<sizeof(Native)>;
 
     // We cannot use SCOPED_TRACE_NUMERIC, since this does not support 128-bit
-    // integers.  Use SCOPED_TRACE_STDSTRING once we have the string later on.
+    // integers.  Use SCOPED_TRACE_STDSTRING instead.
 
-    std::string str;
-    if constexpr (sizeof(Native) < 16) {
-        str = std::to_string(native);
-    } else {
-        // At present, 128-bit integers do not support std::to_string or
-        // std::ostream::operator >> on some platforms.  We need another way
-        // to extract a string.
-        if (native == 0) {
-            str = "0";
-        } else if (native > 0) {
-            for (Native x = native ; x != 0; x /= 10)
-                str += char('0' + (x % 10));
-            std::reverse(str.begin(), str.end());
-        } else {
-            for (Native x = native ; x != 0; x /= 10) {
-                Native digit = x % 10;
-                if (digit > 0)
-                    digit -= 10;
-                str += char('0' - digit);
-            }
-            str += '-';
-            std::reverse(str.begin(), str.end());
-        }
-    }
-
+    std::string str = regina::toString(native);
     SCOPED_TRACE_STDSTRING(str);
 
     // Construction from Native:
@@ -2489,8 +2466,13 @@ static void verifyCppInteger(Native native) {
     // Construction and assignment from regina's NativeInteger class:
     if constexpr (regina::is_signed_cpp_integer_v<Native>) {
         ReginaNative n(native);
-        EXPECT_EQ(n.str(), str);
         EXPECT_EQ(n, native);
+        EXPECT_EQ(n.str(), str);
+        {
+            std::ostringstream s;
+            s << n;
+            EXPECT_EQ(s.str(), str);
+        }
 
         {
             IntegerType a(n);
