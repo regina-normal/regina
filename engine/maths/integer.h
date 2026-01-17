@@ -50,6 +50,14 @@
 #include "utilities/stringutils.h"
 #include "utilities/tightencoding.h"
 
+// Regina assumes in many places that a byte contains exactly 8 bits.
+// I believe this mandated for POSIX systems.  I'm not sure if anyone has ever
+// tried to build regina on a platform where this assumption fails, but the
+// C++ standard allows other byte sizes and so we should enforce it somewhere.
+static_assert(CHAR_BIT == 8, "Regina works under the assumption that a byte "
+    "is precisely 8 bits, which is not true on your platform.  Please contact "
+    "the Regina developers.");
+
 namespace regina {
 
 template <int bytes>
