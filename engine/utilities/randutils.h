@@ -41,6 +41,7 @@
 #include <random>
 #include <type_traits>
 #include "regina-core.h"
+#include "utilities/intutils.h"
 
 namespace regina {
 
@@ -134,15 +135,12 @@ class RandomEngine : std::scoped_lock<std::mutex> {
          *
          * \python The integer type \a Int will be treated as \c long.
          *
-         * \tparam Int a native integer type (e.g., \c int, \c long,
-         * \c size_t, `long long`, etc.); this may be either
-         * signed or unsigned.
-         *
          * \param range the size of the range of possible results;
          * this must be strictly positive.
          * \return a random integer between 0 and (\a range - 1) inclusive.
          */
-        template <typename Int>
+        template <StandardCppInteger Int>
+        requires (sizeof(Int) <= sizeof(long long))
         static Int rand(Int range);
 
         /**
@@ -189,16 +187,12 @@ inline std::default_random_engine& RandomEngine::engine() {
     return engine_;
 }
 
-template <typename Int>
+template <StandardCppInteger Int>
+requires (sizeof(Int) <= sizeof(long long))
 Int RandomEngine::rand(Int range) {
-    // A slight messiness here is that std::uniform_int_distribution
-    // requires the type argument to be one of short, int, long or long long
+    // At present, the C++ standard insists that the template argument to
+    // std::uniform_int_distribution be one of short, int, long or long long
     // (either signed or unsigned).
-    static_assert(std::is_integral_v<Int>,
-        "RandomEngine::rand() requires a native integer type");
-    static_assert(sizeof(Int) <= sizeof(long long),
-        "RandomEngine::rand() requires a type that can fit inside a long long");
-
     using Arg = std::conditional_t<std::is_signed_v<Int>,
         std::conditional_t<sizeof(Int) <= sizeof(short), short,
         std::conditional_t<sizeof(Int) <= sizeof(int), int,
