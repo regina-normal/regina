@@ -3218,13 +3218,6 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator --(int) {
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
         const IntegerBase& other) const {
-    if constexpr (withInfinity) {
-        if (isInfinite())
-            return *this;
-        if (other.isInfinite())
-            return other;
-    }
-
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans += other;
@@ -3234,10 +3227,6 @@ template <bool withInfinity>
 template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
         IntType other) const {
-    if constexpr (withInfinity)
-        if (isInfinite())
-            return *this;
-
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans += other;
@@ -3246,13 +3235,6 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
         const IntegerBase& other) const {
-    if constexpr (withInfinity) {
-        if (isInfinite())
-            return *this;
-        if (other.isInfinite())
-            return other;
-    }
-
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans -= other;
@@ -3262,10 +3244,6 @@ template <bool withInfinity>
 template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
         IntType other) const {
-    if constexpr (withInfinity)
-        if (isInfinite())
-            return *this;
-
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans -= other;
@@ -3274,13 +3252,6 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
         const IntegerBase& other) const {
-    if constexpr (withInfinity) {
-        if (isInfinite())
-            return *this;
-        if (other.isInfinite())
-            return other;
-    }
-
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans *= other;
@@ -3290,10 +3261,6 @@ template <bool withInfinity>
 template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
         IntType other) const {
-    if constexpr (withInfinity)
-        if (isInfinite())
-            return *this;
-
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans *= other;
@@ -3302,21 +3269,6 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
         const IntegerBase& other) const {
-    if constexpr (withInfinity) {
-        if (isInfinite())
-            return *this;
-        if (other.isInfinite())
-            return (long)0;
-        if (other.isZero()) {
-            IntegerBase ans;
-            ans.makeInfinite();
-            return ans;
-        }
-    } else {
-        if (other.isZero())
-            throw DivisionByZero();
-    }
-
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans /= other;
@@ -3326,19 +3278,6 @@ template <bool withInfinity>
 template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
         IntType other) const {
-    if constexpr (withInfinity) {
-        if (isInfinite())
-            return *this;
-        if (other == 0) {
-            IntegerBase ans;
-            ans.makeInfinite();
-            return ans;
-        }
-    } else {
-        if (other == 0)
-            throw DivisionByZero();
-    }
-
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans /= other;
