@@ -50,6 +50,14 @@ namespace regina {
 template <bool> class IntegerBase;
 template <int> class NativeInteger;
 
+// Regina assumes in many places that a byte contains exactly 8 bits.
+// I believe this mandated for POSIX systems.  I'm not sure if anyone has ever
+// tried to build regina on a platform where this assumption fails, but the
+// C++ standard allows other byte sizes and so we should enforce it somewhere.
+static_assert(CHAR_BIT == 8, "Regina works under the assumption that a byte "
+    "is precisely 8 bits, which is not true on your platform.  Please contact "
+    "the Regina developers.");
+
 /**
  * A compile-time boolean constant that indicates whether the type \a T is a
  * native C++ integer type, allowing for 128-bit integers also but excluding
