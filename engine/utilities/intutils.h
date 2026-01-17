@@ -50,6 +50,65 @@ namespace regina {
 template <bool> class IntegerBase;
 template <int> class NativeInteger;
 
+#ifdef __DOXYGEN
+    /**
+     * Defined if and only if native 128-bit arithmetic is available on
+     * this platform.
+     *
+     * If this macro is defined, then you can access native signed and
+     * unsigned 128-bit integers through the type aliases Int128 and UInt128
+     * respectively.
+     *
+     * If this macro is not defined, then the types Int128 and UInt128
+     * will be left undefined.
+     *
+     * \ingroup utilities
+     */
+    #define INT128_AVAILABLE
+
+    /**
+     * A native signed 128-bit integer type, if available on this platform.
+     *
+     * If native 128-bit arithmetic is not available on this platform, then
+     * the types Int128 and UInt128 will be left undefined.
+     *
+     * See also the preprocessor macro `INT128_AVAILABLE`, which is defined
+     * precisely when these type aliases Int128 and UInt128 exist.
+     *
+     * \ingroup utilities
+     */
+    using Int128 = int128_t;
+
+    /**
+     * A native unsigned 128-bit integer type, if available on this platform.
+     *
+     * If native 128-bit arithmetic is not available on this platform, then
+     * the types Int128 and UInt128 will be left undefined.
+     *
+     * See also the preprocessor macro `INT128_AVAILABLE`, which is defined
+     * precisely when these type aliases Int128 and UInt128 exist.
+     *
+     * \ingroup utilities
+     */
+    using UInt128 = uint128_t;
+#else
+    #if defined(INTERNAL___INT128_FOUND)
+        #define INT128_AVAILABLE
+        using Int128 = __int128;
+        using UInt128 = __uint128;
+    #elif defined(INTERNAL___INT128_T_FOUND)
+        #define INT128_AVAILABLE
+        using Int128 = __int128_t;
+        using UInt128 = __uint128_t;
+    #elif defined(INTERNAL_INT128_T_FOUND)
+        #define INT128_AVAILABLE
+        using Int128 = int128_t;
+        using UInt128 = uint128_t;
+    #else
+        #undef INT128_AVAILABLE
+    #endif
+#endif
+
 /**
  * A compile-time boolean constant that indicates whether the type \a T is a
  * native C++ integer type, allowing for 128-bit integers also but excluding
@@ -72,17 +131,9 @@ template <int> class NativeInteger;
  * \ingroup utilities
  */
 template <typename T>
-#if defined(INTERNAL___INT128_FOUND)
+#ifdef INT128_AVAILABLE
     constexpr bool is_cpp_integer_v = (std::is_integral_v<T> ||
-        std::is_same_v<T, __int128> || std::is_same_v<T, __uint128>) &&
-        ! std::is_same_v<T, bool>;
-#elif defined(INTERNAL___INT128_T_FOUND)
-    constexpr bool is_cpp_integer_v = (std::is_integral_v<T> ||
-        std::is_same_v<T, __int128_t> || std::is_same_v<T, __uint128_t>) &&
-        ! std::is_same_v<T, bool>;
-#elif defined(INTERNAL_INT128_T_FOUND)
-    constexpr bool is_cpp_integer_v = (std::is_integral_v<T> ||
-        std::is_same_v<T, int128_t> || std::is_same_v<T, uint128_t>) &&
+        std::is_same_v<T, Int128> || std::is_same_v<T, UInt128>) &&
         ! std::is_same_v<T, bool>;
 #else
     constexpr bool is_cpp_integer_v = std::is_integral_v<T> &&
@@ -421,17 +472,11 @@ constexpr IntType nextPowerOfTwo(IntType n) {
  * The largest integer of the given type that can be multiplied by \a coeff
  * without overflowing.
  *
- * The template parameter \a IntType may be any native C++ integer type, such
- * as \c int, \c long, and so on.  This type may be either signed or unsigned,
- * but it must be supported by std::numeric_limits.
- *
- * The template parameter \a coeff can be any positive integer.
- *
  * \nopython This is because Python does not support templates.
  *
  * \ingroup utilities
  */
-template <typename IntType, IntType coeff>
+template <CppInteger IntType, IntType coeff> requires (coeff > 0)
 inline constexpr IntType maxSafeFactor =
     std::numeric_limits<IntType>::max() / coeff;
 
@@ -439,17 +484,11 @@ inline constexpr IntType maxSafeFactor =
  * The largest integer of the given type that can be multiplied by \a coeff
  * without overflowing.
  *
- * The template parameter \a IntType may be any native C++ integer type, such
- * as \c int, \c long, and so on.  This type may be either signed or unsigned,
- * but it must be supported by std::numeric_limits.
- *
- * The template parameter \a coeff can be any positive integer.
- *
  * \nopython This is because Python does not support templates.
  *
  * \ingroup utilities
  */
-template <typename IntType, IntType coeff>
+template <CppInteger IntType, IntType coeff> requires (coeff > 0)
 inline constexpr IntType minSafeFactor =
     std::numeric_limits<IntType>::min() / coeff;
 
@@ -537,22 +576,7 @@ struct IntOfMinSize {
 template <int bits>
 using IntOfMinBits = IntOfMinSize<(bits + 7) / 8>;
 
-#ifdef __DOXYGEN
-    /**
-     * Defined if and only if native 128-bit arithmetic is available on
-     * this platform.
-     *
-     * If this macro is defined, then you can access native signed and
-     * unsigned 128-bit integers through the types IntOfSize<16>::type
-     * and IntOfSize<16>::utype respectively.
-     *
-     * If this macro is not defined, then the types IntOfSize<16>::type and
-     * IntOfSize<16>::utype will both be \c void.
-     *
-     * \ingroup utilities
-     */
-    #define INT128_AVAILABLE
-#else
+#ifndef __DOXYGEN
 template <>
 struct IntOfSize<1> {
     using type = int8_t;
@@ -577,34 +601,12 @@ struct IntOfSize<8> {
     using utype = uint64_t;
 };
 
-#if defined(INTERNAL___INT128_FOUND)
-    #define INT128_AVAILABLE
-    template <>
-    struct IntOfSize<16> {
-        using type = __int128;
-        using utype = __uint128;
-    };
-#elif defined(INTERNAL___INT128_T_FOUND)
-    #define INT128_AVAILABLE
-    template <>
-    struct IntOfSize<16> {
-        using type = __int128_t;
-        using utype = __uint128_t;
-    };
-#elif defined(INTERNAL_INT128_T_FOUND)
-    #define INT128_AVAILABLE
-    template <>
-    struct IntOfSize<16> {
-        using type = int128_t;
-        using utype = uint128_t;
-    };
-#else
-    #undef INT128_AVAILABLE
-    template <>
-    struct IntOfSize<16> {
-        using type = void;
-        using utype = void;
-    };
+#ifdef INT128_AVAILABLE
+template <>
+struct IntOfSize<16> {
+    using type = Int128;
+    using utype = UInt128;
+};
 #endif
 
 #endif // __DOXYGEN

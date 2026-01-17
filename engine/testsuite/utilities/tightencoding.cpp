@@ -41,32 +41,16 @@
 using regina::Integer;
 using regina::LargeInteger;
 
-template <regina::StandardCppInteger T>
-static Integer toInteger(T val) {
-    // This function exists because Integer cannot necessarily
-    // convert from long long, and even with conversion from long
-    // it only works with signed (not unsigned) arguments, which
-    // would exclude the maximum possible unsigned long value.
-    if constexpr (sizeof(T) == 1) {
-        // We cannot write this to an output stream since it
-        // will be treated as a character, not an integer.
-        return int(val);
-    } else {
-        std::ostringstream out;
-        out << val;
-        return Integer(out.str());
-    }
-}
-
 template <typename T>
+requires regina::ArbitraryPrecisionInteger<T> || regina::CppInteger<T>
 static void verifyUsing(const Integer& val, const std::string& enc) {
     SCOPED_TRACE_TYPE(T);
     SCOPED_TRACE_REGINA(val);
 
     if constexpr (! regina::ArbitraryPrecisionInteger<T>) {
         // This is a native C++ integer type, and so could be out of range.
-        if (val > toInteger(std::numeric_limits<T>::max()) ||
-                val < toInteger(std::numeric_limits<T>::min())) {
+        if (val > std::numeric_limits<T>::max() ||
+                val < std::numeric_limits<T>::min()) {
             // This integer *should* be out of range.
             EXPECT_THROW({
                 regina::tightDecoding<T>(enc);
@@ -88,13 +72,7 @@ static void verifyUsing(const Integer& val, const std::string& enc) {
         native = val;
     } else {
         ASSERT_NO_THROW({ native = val.safeValue<T>(); });
-
-        std::ostringstream out;
-        if constexpr (sizeof(T) == 1)
-            out << int(native);
-        else
-            out << native;
-        ASSERT_EQ(out.str(), val.stringValue());
+        ASSERT_EQ(regina::toString(native), val.stringValue());
     }
 
     // Now we can verify encodings and decodings.
@@ -149,8 +127,10 @@ static void verifyInteger(Integer val) {
     verifyUsing<uint64_t>(val, enc);
     verifyUsing<long long>(val, enc);
     verifyUsing<unsigned long long>(val, enc);
-    // Leave out 128-bit types for now, since these are not well
-    // supported in the standard library with iostreams/typeinfo/etc.
+    #ifdef INT128_AVAILABLE
+    verifyUsing<regina::IntOfSize<16>::type>(val, enc);
+    verifyUsing<regina::IntOfSize<16>::utype>(val, enc);
+    #endif
     verifyUsing<Integer>(val, enc);
     verifyUsing<LargeInteger>(val, enc);
 }
@@ -283,8 +263,10 @@ TEST(TightEncodingTest, infinity) {
     verifyInfinityUsing<uint64_t>(enc);
     verifyInfinityUsing<long long>(enc);
     verifyInfinityUsing<unsigned long long>(enc);
-    // Leave out 128-bit types for now, since these are not well
-    // supported in the standard library with iostreams/typeinfo/etc.
+    #ifdef INT128_AVAILABLE
+    verifyInfinityUsing<regina::IntOfSize<16>::type>(enc);
+    verifyInfinityUsing<regina::IntOfSize<16>::utype>(enc);
+    #endif
     verifyInfinityUsing<Integer>(enc);
     verifyInfinityUsing<LargeInteger>(enc);
 }
@@ -336,10 +318,12 @@ TEST(TightEncodingTest, boolean) {
     verifyBoolean(false, regina::tightEncoding(0));
 }
 
-template <typename T>
-static void verifyIndex(T val) {
-    SCOPED_TRACE_TYPE(T);
-    SCOPED_TRACE_NUMERIC(val);
+template <typename IntType>
+requires std::same_as<IntType, ssize_t> ||
+    (regina::UnsignedCppInteger<IntType> && (sizeof(IntType) >= 2))
+static void verifyIndex(IntType val) {
+    SCOPED_TRACE_TYPE(IntType);
+    SCOPED_TRACE_INTEGER(val);
 
     std::ostringstream out;
     regina::detail::tightEncodeIndex(out, val);
@@ -347,7 +331,7 @@ static void verifyIndex(T val) {
 
     EXPECT_NO_THROW({
         std::istringstream input(enc);
-        T dec = regina::detail::tightDecodeIndex<T>(input);
+        IntType dec = regina::detail::tightDecodeIndex<IntType>(input);
         EXPECT_EQ(dec, val);
     });
 
@@ -355,7 +339,7 @@ static void verifyIndex(T val) {
     // characters.
     EXPECT_NO_THROW({
         std::istringstream input(enc + "x y z");
-        T dec = regina::detail::tightDecodeIndex<T>(input);
+        IntType dec = regina::detail::tightDecodeIndex<IntType>(input);
         EXPECT_EQ(dec, val);
 
         char c;
@@ -365,13 +349,15 @@ static void verifyIndex(T val) {
     });
 }
 
-template <typename T>
+template <typename IntType>
+requires std::same_as<IntType, ssize_t> ||
+    (regina::UnsignedCppInteger<IntType> && (sizeof(IntType) >= 2))
 static void verifyIndexMax() {
-    SCOPED_TRACE_TYPE(T);
+    SCOPED_TRACE_TYPE(IntType);
 
     // First test the maximum possible value.
-    static constexpr T max = std::numeric_limits<T>::max();
-    verifyIndex<T>(max);
+    static constexpr IntType max = std::numeric_limits<IntType>::max();
+    verifyIndex<IntType>(max);
 
     // Now test what happens just beyond the maximum possible value.
     // This should refuse to encode.
@@ -393,7 +379,7 @@ static void verifyIndexMax() {
     // Likewise, incrementing the decoding beyond max should refuse to decode.
     EXPECT_THROW({
         std::istringstream input(enc);
-        regina::detail::tightDecodeIndex<T>(input);
+        regina::detail::tightDecodeIndex<IntType>(input);
     }, regina::InvalidInput);
 }
 
@@ -436,4 +422,7 @@ TEST(TightEncodingTest, index) {
     verifyIndexMax<unsigned long long>();
     verifyIndexMax<size_t>();
     verifyIndexMax<ssize_t>();
+    #ifdef INT128_AVAILABLE
+    verifyIndexMax<regina::IntOfSize<16>::utype>();
+    #endif
 }

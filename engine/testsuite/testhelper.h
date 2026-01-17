@@ -64,22 +64,36 @@ inline const char* safeTypeName() {
 
 /**
  * A SCOPED_TRACE() macro for use with GoogleTest that writes the value of
- * the given numeric variable in the trace.
+ * the given standard C++ numeric variable in the trace.
  *
- * Here \a var should be a native numeric C++ type that can be converted to a
- * std::string via std::to_string().
+ * Here \a var should be a standard native numeric C++ type (excluding 128-bit
+ * integers) that can be converted to a std::string via std::to_string().
  */
 #define SCOPED_TRACE_NUMERIC(var) SCOPED_TRACE(#var " = " + std::to_string(var))
 
 /**
  * A SCOPED_TRACE() macro for use with GoogleTest that writes the value of
- * the given numeric variable in the trace, using the given variable name.
+ * the given standard C++ numeric variable in the trace, using the given
+ * variable name.
  *
  * Here \a name should be a C-style string, and \a var should be a native
- * numeric C++ type that can be converted to a std::string via std::to_string().
+ * numeric C++ type (excluding 128-bit integers) that can be converted to a
+ * std::string via std::to_string().
  */
 #define SCOPED_TRACE_NAMED_NUMERIC(name, var) SCOPED_TRACE(name " = " + \
     std::to_string(var))
+
+/**
+ * A SCOPED_TRACE() macro for use with GoogleTest that writes the value of
+ * the given native C++ integer variable in the trace.
+ *
+ * Here \a var should be a native C++ integer type, where 128-bit integers are
+ * allowed (if supported by the platform).
+ *
+ * You will need to ensure that `utilities/stringutils.h` is included if you
+ * use this macro.
+ */
+#define SCOPED_TRACE_INTEGER(var) SCOPED_TRACE(#var " = " + regina::toString(var))
 
 /**
  * A SCOPED_TRACE() macro for use with GoogleTest that writes the value of

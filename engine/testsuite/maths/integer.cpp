@@ -2427,9 +2427,8 @@ static void verifyCppInteger(Native native) {
 
     using ReginaNative = regina::NativeInteger<sizeof(Native)>;
 
-    // We cannot use SCOPED_TRACE_NUMERIC, since this does not support 128-bit
-    // integers.  Use SCOPED_TRACE_STDSTRING instead.
-
+    // SCOPED_TRACE_INTEGER computes regina::toString(), but we need this
+    // ourselves also - try to avoid computing it twice.
     std::string str = regina::toString(native);
     SCOPED_TRACE_STDSTRING(str);
 

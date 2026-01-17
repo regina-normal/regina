@@ -43,6 +43,11 @@ template void tightEncodeInteger<unsigned>(std::ostream&, unsigned);
 template void tightEncodeInteger<unsigned long>(std::ostream&, unsigned long);
 template void tightEncodeInteger<unsigned long long>(std::ostream&,
     unsigned long long);
+#ifdef INT128_AVAILABLE
+template void tightEncodeInteger<regina::Int128>(std::ostream&, regina::Int128);
+template void tightEncodeInteger<regina::UInt128>(std::ostream&,
+    regina::UInt128);
+#endif
 template void tightEncodeInteger<Integer>(std::ostream&, Integer);
 template void tightEncodeInteger<LargeInteger>(std::ostream&, LargeInteger);
 
@@ -60,6 +65,14 @@ template unsigned long long tightDecodeInteger<unsigned long long, it1>(
     it1, it1, bool);
 template unsigned long long tightDecodeInteger<unsigned long long, it2>(
     it2, it2, bool);
+#ifdef INT128_AVAILABLE
+template regina::Int128 tightDecodeInteger<regina::Int128, it1>(it1, it1, bool);
+template regina::Int128 tightDecodeInteger<regina::Int128, it2>(it2, it2, bool);
+template regina::UInt128 tightDecodeInteger<regina::UInt128, it1>(
+    it1, it1, bool);
+template regina::UInt128 tightDecodeInteger<regina::UInt128, it2>(
+    it2, it2, bool);
+#endif
 template Integer tightDecodeInteger<Integer, it1>(it1, it1, bool);
 template Integer tightDecodeInteger<Integer, it2>(it2, it2, bool);
 template LargeInteger tightDecodeInteger<LargeInteger, it1>(it1, it1, bool);

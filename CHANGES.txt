@@ -200,6 +200,9 @@ Version 7.5  [ TODO ]
         Function supportedDim():
             - New function to indicate which dimensions of triangulation are
               supported; this complements maxDim() and standardDim().
+        Function tightEncode(), tightDecode():
+            - The native C++ integer versions of these functions are now
+              templated, and explicitly support 128-bit integers.
         Function toString():
             - New function for converting native C++ integers to strings, with
               explicit support for 128-bit integers.
@@ -216,6 +219,10 @@ Version 7.5  [ TODO ]
               + instead of performing the conversion "as best it can", the
                 documentation now states that the value stored in dest is
                 undefined.
+        Type alias Int128, UInt128:
+            - Provides access to native 128-bit integers, if the platform
+              supports them.  This is preferred to the old (and clumsier) way
+              of accessing 128-bit types via the type aliases in IntOfSize<16>.
         Type alias make_signed_cpp_t<T>, make_unsigned_cpp_t<T>:
             - New alternatives to std::make_signed_t<T> and
               std::make_unsigned_t<T> that allow for 128-bit integers also.
