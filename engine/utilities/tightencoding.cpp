@@ -36,9 +36,11 @@ using it2 = std::istreambuf_iterator<char>;
 
 namespace regina::detail {
 
+template void tightEncodeInteger<signed char>(std::ostream&, signed char);
 template void tightEncodeInteger<int>(std::ostream&, int);
 template void tightEncodeInteger<long>(std::ostream&, long);
 template void tightEncodeInteger<long long>(std::ostream&, long long);
+template void tightEncodeInteger<unsigned char>(std::ostream&, unsigned char);
 template void tightEncodeInteger<unsigned>(std::ostream&, unsigned);
 template void tightEncodeInteger<unsigned long>(std::ostream&, unsigned long);
 template void tightEncodeInteger<unsigned long long>(std::ostream&,
@@ -51,12 +53,16 @@ template void tightEncodeInteger<regina::UInt128>(std::ostream&,
 template void tightEncodeInteger<Integer>(std::ostream&, Integer);
 template void tightEncodeInteger<LargeInteger>(std::ostream&, LargeInteger);
 
+template signed char tightDecodeInteger<signed char, it1>(it1, it1, bool);
+template signed char tightDecodeInteger<signed char, it2>(it2, it2, bool);
 template int tightDecodeInteger<int, it1>(it1, it1, bool);
 template int tightDecodeInteger<int, it2>(it2, it2, bool);
 template long tightDecodeInteger<long, it1>(it1, it1, bool);
 template long tightDecodeInteger<long, it2>(it2, it2, bool);
 template long long tightDecodeInteger<long long, it1>(it1, it1, bool);
 template long long tightDecodeInteger<long long, it2>(it2, it2, bool);
+template unsigned char tightDecodeInteger<unsigned char, it1>(it1, it1, bool);
+template unsigned char tightDecodeInteger<unsigned char, it2>(it2, it2, bool);
 template unsigned tightDecodeInteger<unsigned, it1>(it1, it1, bool);
 template unsigned tightDecodeInteger<unsigned, it2>(it2, it2, bool);
 template unsigned long tightDecodeInteger<unsigned long, it1>(it1, it1, bool);

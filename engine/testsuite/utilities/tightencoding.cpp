@@ -117,8 +117,8 @@ static void verifyUsing(const Integer& val, const std::string& enc) {
 static void verifyInteger(Integer val) {
     std::string enc = val.tightEncoding();
 
-    verifyUsing<int8_t>(val, enc);
-    verifyUsing<uint8_t>(val, enc);
+    verifyUsing<signed char>(val, enc);
+    verifyUsing<unsigned char>(val, enc);
     verifyUsing<int16_t>(val, enc);
     verifyUsing<uint16_t>(val, enc);
     verifyUsing<int32_t>(val, enc);
@@ -128,8 +128,8 @@ static void verifyInteger(Integer val) {
     verifyUsing<long long>(val, enc);
     verifyUsing<unsigned long long>(val, enc);
     #ifdef INT128_AVAILABLE
-    verifyUsing<regina::IntOfSize<16>::type>(val, enc);
-    verifyUsing<regina::IntOfSize<16>::utype>(val, enc);
+    verifyUsing<regina::Int128>(val, enc);
+    verifyUsing<regina::UInt128>(val, enc);
     #endif
     verifyUsing<Integer>(val, enc);
     verifyUsing<LargeInteger>(val, enc);
@@ -253,8 +253,8 @@ static void verifyInfinityUsing(const std::string& enc) {
 TEST(TightEncodingTest, infinity) {
     std::string enc = LargeInteger::infinity.tightEncoding();
 
-    verifyInfinityUsing<int8_t>(enc);
-    verifyInfinityUsing<uint8_t>(enc);
+    verifyInfinityUsing<signed char>(enc);
+    verifyInfinityUsing<unsigned char>(enc);
     verifyInfinityUsing<int16_t>(enc);
     verifyInfinityUsing<uint16_t>(enc);
     verifyInfinityUsing<int32_t>(enc);
@@ -264,8 +264,8 @@ TEST(TightEncodingTest, infinity) {
     verifyInfinityUsing<long long>(enc);
     verifyInfinityUsing<unsigned long long>(enc);
     #ifdef INT128_AVAILABLE
-    verifyInfinityUsing<regina::IntOfSize<16>::type>(enc);
-    verifyInfinityUsing<regina::IntOfSize<16>::utype>(enc);
+    verifyInfinityUsing<regina::Int128>(enc);
+    verifyInfinityUsing<regina::UInt128>(enc);
     #endif
     verifyInfinityUsing<Integer>(enc);
     verifyInfinityUsing<LargeInteger>(enc);

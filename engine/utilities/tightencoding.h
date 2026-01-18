@@ -268,8 +268,9 @@ struct TightEncodable {
  * header (tightencoding-impl.h), which is not included automatically by this
  * file.  Most end users should not need this extra header, since Regina's
  * calculation engine already includes explicit instantiations for typical
- * native integer types: signed and unsigned `int`, `long`, and `long long`;
- * and signed and unsigned 128-bit integers if supported by the platform.
+ * native integer types: signed and unsigned `char`, `int`, `long`, and
+ * `long long`; and signed and unsigned 128-bit integers if supported by the
+ * platform.
  *
  * \nopython Use `tightEncoding(value)` instead, which returns a string.
  *
@@ -279,7 +280,6 @@ struct TightEncodable {
  * \ingroup utilities
  */
 template <CppInteger IntType>
-requires (sizeof(IntType) > 1)
 void tightEncode(std::ostream& out, IntType value) {
     regina::detail::tightEncodeInteger(out, value);
 }
@@ -292,8 +292,9 @@ void tightEncode(std::ostream& out, IntType value) {
  * header (tightencoding-impl.h), which is not included automatically by this
  * file.  Most end users should not need this extra header, since Regina's
  * calculation engine already includes explicit instantiations for typical
- * native integer types: signed and unsigned `int`, `long`, and `long long`;
- * and signed and unsigned 128-bit integers if supported by the platform.
+ * native integer types: signed and unsigned `char`, `int`, `long`, and
+ * `long long`; and signed and unsigned 128-bit integers if supported by the
+ * platform.
  *
  * \python It is assumed that \a IntType is either `long` or `long long`.
  *
@@ -303,7 +304,6 @@ void tightEncode(std::ostream& out, IntType value) {
  * \ingroup utilities
  */
 template <CppInteger IntType>
-requires (sizeof(IntType) > 1)
 std::string tightEncoding(IntType value) {
     std::ostringstream out;
     regina::detail::tightEncodeInteger(out, value);
