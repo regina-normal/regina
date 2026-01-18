@@ -278,7 +278,7 @@ struct TightEncodable {
  *
  * \ingroup utilities
  */
-template <SignedCppInteger IntType>
+template <CppInteger IntType>
 requires (sizeof(IntType) > 1)
 void tightEncode(std::ostream& out, IntType value) {
     regina::detail::tightEncodeInteger(out, value);
