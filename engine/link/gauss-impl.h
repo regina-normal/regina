@@ -48,8 +48,7 @@ namespace regina {
 template <typename Iterator>
 Link Link::fromGauss(Iterator begin, Iterator end) {
     using InputInt = std::remove_cv_t<std::remove_reference_t<decltype(*begin)>>;
-    static_assert(std::is_integral_v<InputInt> &&
-        ! std::is_unsigned_v<InputInt>, "fromGauss(): the iterator type "
+    static_assert(SignedCppInteger<InputInt>, "fromGauss(): the iterator type "
         "needs to refer to a native signed C++ integer type.");
 
     // Extract the number of crossings.

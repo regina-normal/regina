@@ -156,8 +156,7 @@ Link Link::fromData(SignIterator beginSigns, SignIterator endSigns,
         ComponentIterator beginComponents, ComponentIterator endComponents) {
     using InputInt = std::remove_cv_t<std::remove_reference_t<
         decltype(*beginComponents->begin())>>;
-    static_assert(std::is_integral_v<InputInt> &&
-        ! std::is_unsigned_v<InputInt>, "fromData(): the iterator type "
+    static_assert(SignedCppInteger<InputInt>, "fromData(): the iterator type "
         "needs to dereference to give a native signed C++ integer type.");
 
     Link ans;

@@ -164,18 +164,10 @@ template <typename T>
  * \ingroup utilities
  */
 template <typename T>
-#if defined(INTERNAL___INT128_FOUND)
+#ifdef INT128_AVAILABLE
     constexpr bool is_signed_cpp_integer_v =
         ((std::is_integral_v<T> && std::is_signed_v<T>) ||
-        std::is_same_v<T, __int128>) && ! std::is_same_v<T, bool>;
-#elif defined(INTERNAL___INT128_T_FOUND)
-    constexpr bool is_signed_cpp_integer_v =
-        ((std::is_integral_v<T> && std::is_signed_v<T>) ||
-        std::is_same_v<T, __int128_t>) && ! std::is_same_v<T, bool>;
-#elif defined(INTERNAL_INT128_T_FOUND)
-    constexpr bool is_signed_cpp_integer_v =
-        ((std::is_integral_v<T> && std::is_signed_v<T>) ||
-        std::is_same_v<T, int128_t>) && ! std::is_same_v<T, bool>;
+        std::is_same_v<T, Int128>) && ! std::is_same_v<T, bool>;
 #else
     constexpr bool is_signed_cpp_integer_v =
         (std::is_integral_v<T> && std::is_signed_v<T>) &&
@@ -206,18 +198,10 @@ template <typename T>
  * \ingroup utilities
  */
 template <typename T>
-#if defined(INTERNAL___INT128_FOUND)
+#ifdef INT128_AVAILABLE
     constexpr bool is_unsigned_cpp_integer_v =
         ((std::is_integral_v<T> && std::is_unsigned_v<T>) ||
-        std::is_same_v<T, __uint128>) && ! std::is_same_v<T, bool>;
-#elif defined(INTERNAL___INT128_T_FOUND)
-    constexpr bool is_unsigned_cpp_integer_v =
-        ((std::is_integral_v<T> && std::is_unsigned_v<T>) ||
-        std::is_same_v<T, __uint128_t>) && ! std::is_same_v<T, bool>;
-#elif defined(INTERNAL_INT128_T_FOUND)
-    constexpr bool is_unsigned_cpp_integer_v =
-        ((std::is_integral_v<T> && std::is_unsigned_v<T>) ||
-        std::is_same_v<T, uint128_t>) && ! std::is_same_v<T, bool>;
+        std::is_same_v<T, UInt128>) && ! std::is_same_v<T, bool>;
 #else
     constexpr bool is_unsigned_cpp_integer_v =
         (std::is_integral_v<T> && std::is_unsigned_v<T>) &&
