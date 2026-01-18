@@ -60,8 +60,8 @@ static void verifyUsing(const Integer& val, const std::string& enc) {
                 std::istringstream input(enc);
                 regina::tightDecode<T>(input);
             }, regina::InvalidInput);
+            return;
         }
-        return;
     }
 
     // This integer should be in range.
@@ -423,6 +423,6 @@ TEST(TightEncodingTest, index) {
     verifyIndexMax<size_t>();
     verifyIndexMax<ssize_t>();
     #ifdef INT128_AVAILABLE
-    verifyIndexMax<regina::IntOfSize<16>::utype>();
+    verifyIndexMax<regina::UInt128>();
     #endif
 }
