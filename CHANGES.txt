@@ -243,8 +243,8 @@ Version 7.5  [ TODO ]
                 IntegerComparable, IntegerCompatible, ReginaInteger,
                 StandardCppInteger, SignedCppInteger, UnsignedCppInteger
                 (defined in utilities/intutils.h)
-              + InherentlyTightEncodable, StandardStringifiable, Stringifiable,
-                Writable (defined in concepts/io.h)
+              + InherentlyTightEncodable, Readable, StandardStringifiable,
+                Stringifiable, Writable (defined in concepts/io.h)
               + BidirectionalIteratorFor, CharIterator, ForwardIteratorFor,
                 InputIteratorFor, Iterable, PacketIterator,
                 RandomAccessIteratorFor, SelfSentinelInputIterator (defined in

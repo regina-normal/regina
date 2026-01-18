@@ -56,6 +56,17 @@ concept Writeable =
     };
 
 /**
+ * A type that can be read from an input stream.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept Readable =
+    requires(T x, std::istream& in) {
+        { in >> x } -> std::same_as<std::istream&>;
+    };
+
+/**
  * A class or struct type that supports string output through a member function
  * `str()`.
  *

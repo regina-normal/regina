@@ -51,7 +51,7 @@ static void testValueOf(Integer value) {
     EXPECT_EQ(dest, value);
 }
 
-template <regina::CppInteger Integer, bool isSigned>
+template <regina::CppInteger Integer>
 static void testValueOf() {
     SCOPED_TRACE_TYPE(Integer);
 
@@ -69,7 +69,7 @@ static void testValueOf() {
     testValueOf<Integer>(std::numeric_limits<Integer>::max());
     testValueOf<Integer>(std::numeric_limits<Integer>::min());
 
-    if constexpr (isSigned) {
+    if constexpr (regina::SignedCppInteger<Integer>) {
         {
             Integer dest = 3;
             EXPECT_TRUE(regina::valueOf("-1", dest));
@@ -119,7 +119,7 @@ static void testValueOf() {
         EXPECT_FALSE(regina::valueOf("10 ", dest));
         EXPECT_EQ(dest, 10);
     }
-    if constexpr (isSigned) {
+    if constexpr (regina::SignedCppInteger<Integer>) {
         {
             Integer dest = 3;
             EXPECT_FALSE(regina::valueOf("-1 ", dest));
@@ -159,19 +159,19 @@ static void testValueOf() {
 TEST(StringUtilsTest, valueOf) {
     // Tests for integer types:
 
-    testValueOf<signed char, true>();
-    testValueOf<short, true>();
-    testValueOf<int, true>();
-    testValueOf<long, true>();
-    testValueOf<long long, true>();
-    testValueOf<ssize_t, true>();
+    testValueOf<signed char>();
+    testValueOf<short>();
+    testValueOf<int>();
+    testValueOf<long>();
+    testValueOf<long long>();
+    testValueOf<ssize_t>();
 
-    testValueOf<unsigned char, false>();
-    testValueOf<unsigned short, false>();
-    testValueOf<unsigned int, false>();
-    testValueOf<unsigned long, false>();
-    testValueOf<unsigned long long, false>();
-    testValueOf<size_t, false>();
+    testValueOf<unsigned char>();
+    testValueOf<unsigned short>();
+    testValueOf<unsigned int>();
+    testValueOf<unsigned long>();
+    testValueOf<unsigned long long>();
+    testValueOf<size_t>();
 
     // Some very basic tests for double:
 
