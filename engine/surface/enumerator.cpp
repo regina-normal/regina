@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include <iterator>
+#include <limits>
 #include <thread>
 #include "enumerate/doubledescription.h"
 #include "enumerate/hilbertcd.h"
@@ -43,13 +44,6 @@
 #include "triangulation/dim3.h"
 
 namespace regina {
-
-#ifdef INT128_AVAILABLE
-/**
- * The largest possible signed 128-bit integer,
- */
-const Integer maxSigned128(NativeInteger<16>(~(IntOfSize<16>::type(1) << 127)));
-#endif
 
 namespace {
     /**
@@ -438,7 +432,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
         // std::cerr << "Using NativeLong." << std::endl;
         fillVertexTreeWith<NativeLong>();
 #ifdef INT128_AVAILABLE
-    } else if (worst <= maxSigned128) {
+    } else if (worst <= std::numeric_limits<regina::Int128>::max()) {
         // std::cerr << "Using NativeInteger<16>." << std::endl;
         fillVertexTreeWith<NativeInteger<16> >();
 #endif

@@ -100,7 +100,7 @@ TEST(BitmaskTest, sizes) {
     EXPECT_GE(sizeof(regina::Bitmask1<uint32_t>), 4);
     EXPECT_GE(sizeof(regina::Bitmask1<uint64_t>), 8);
 #ifdef INT128_AVAILABLE
-    EXPECT_GE(sizeof(regina::Bitmask1<regina::IntOfSize<16>::utype>), 16);
+    EXPECT_GE(sizeof(regina::Bitmask1<regina::UInt128>), 16);
 #endif
 }
 
@@ -131,7 +131,7 @@ TEST(BitmaskTest, firstLastBit) {
     testFirstLastBit<regina::Bitmask1<uint32_t>>(32);
     testFirstLastBit<regina::Bitmask1<uint64_t>>(64);
 #ifdef INT128_AVAILABLE
-    testFirstLastBit<regina::Bitmask1<regina::IntOfSize<16>::utype>>(128);
+    testFirstLastBit<regina::Bitmask1<regina::UInt128>>(128);
 #endif
     testFirstLastBit<regina::Bitmask1<unsigned char>>(8);
     testFirstLastBit<regina::Bitmask1<unsigned long>>(longBits);
@@ -171,7 +171,7 @@ TEST(BitmaskTest, bits) {
     testBits<regina::Bitmask1<uint32_t>>(32);
     testBits<regina::Bitmask1<uint64_t>>(64);
 #ifdef INT128_AVAILABLE
-    testBits<regina::Bitmask1<regina::IntOfSize<16>::utype>>(128);
+    testBits<regina::Bitmask1<regina::UInt128>>(128);
 #endif
     testBits<regina::Bitmask1<unsigned char>>(8);
     testBits<regina::Bitmask1<unsigned long>>(longBits);
@@ -211,7 +211,7 @@ TEST(BitmaskTest, truncate) {
     testTruncate<regina::Bitmask1<uint32_t>>(32);
     testTruncate<regina::Bitmask1<uint64_t>>(64);
 #ifdef INT128_AVAILABLE
-    testTruncate<regina::Bitmask1<regina::IntOfSize<16>::utype>>(128);
+    testTruncate<regina::Bitmask1<regina::UInt128>>(128);
 #endif
     testTruncate<regina::Bitmask1<unsigned char>>(8);
     testTruncate<regina::Bitmask1<unsigned long>>(longBits);
@@ -256,7 +256,7 @@ TEST(BitmaskTest, lexOrder) {
     testLexOrder<regina::Bitmask1<uint32_t>>(32);
     testLexOrder<regina::Bitmask1<uint64_t>>(64);
 #ifdef INT128_AVAILABLE
-    testLexOrder<regina::Bitmask1<regina::IntOfSize<16>::utype>>(128);
+    testLexOrder<regina::Bitmask1<regina::UInt128>>(128);
 #endif
     testLexOrder<regina::Bitmask1<unsigned char>>(8);
     testLexOrder<regina::Bitmask1<unsigned long>>(longBits);
@@ -317,6 +317,6 @@ TEST(BitmaskTest, nextPermutation) {
     verifyNextPermutation<regina::IntOfSize<4>::utype>();
     verifyNextPermutation<regina::IntOfSize<8>::utype>();
 #ifdef INT128_AVAILABLE
-    verifyNextPermutation<regina::IntOfSize<16>::utype>();
+    verifyNextPermutation<regina::UInt128>();
 #endif
 }

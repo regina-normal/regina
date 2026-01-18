@@ -40,8 +40,8 @@ using regina::Bitmask2;
 using regina::TrieSet;
 
 #ifdef INT128_AVAILABLE
-using Bitmask128 = Bitmask1<regina::IntOfSize<16>::utype>;
-using Bitmask256 = Bitmask2<regina::IntOfSize<16>::utype, regina::IntOfSize<16>::utype>;
+using Bitmask128 = Bitmask1<regina::UInt128>;
+using Bitmask256 = Bitmask2<regina::UInt128, regina::UInt128>;
 #else
 using Bitmask128 = Bitmask2<uint64_t, uint64_t>;
 #endif

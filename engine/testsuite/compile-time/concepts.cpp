@@ -100,13 +100,13 @@ static_assert(! UnsignedCppInteger<ssize_t>);
 #if defined(INT128_AVAILABLE)
 // 128-bit integers might or might not be standard C++ types.
 // Therefore we do not test adherence to StandardCppInteger here.
-static_assert(CppInteger<regina::IntOfSize<16>::type>);
-static_assert(SignedCppInteger<regina::IntOfSize<16>::type>);
-static_assert(! UnsignedCppInteger<regina::IntOfSize<16>::type>);
+static_assert(CppInteger<regina::Int128>);
+static_assert(SignedCppInteger<regina::Int128>);
+static_assert(! UnsignedCppInteger<regina::Int128>);
 
-static_assert(CppInteger<regina::IntOfSize<16>::utype>);
-static_assert(! SignedCppInteger<regina::IntOfSize<16>::utype>);
-static_assert(UnsignedCppInteger<regina::IntOfSize<16>::utype>);
+static_assert(CppInteger<regina::UInt128>);
+static_assert(! SignedCppInteger<regina::UInt128>);
+static_assert(UnsignedCppInteger<regina::UInt128>);
 #endif
 
 static_assert(! CppInteger<bool>);

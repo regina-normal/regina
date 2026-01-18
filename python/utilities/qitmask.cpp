@@ -69,9 +69,8 @@ void addQitmask(pybind11::module_& m) {
     addQitmaskOpt<Qitmask1<uint32_t>>(m, "Qitmask32");
     addQitmaskOpt<Qitmask1<uint64_t>>(m, "Qitmask64");
     #ifdef INT128_AVAILABLE
-    addQitmaskOpt<Qitmask1<regina::IntOfSize<16>::utype>>(m, "Qitmask128");
-    addQitmaskOpt<Qitmask2<regina::IntOfSize<16>::utype,
-        regina::IntOfSize<16>::utype>>(m, "Qitmask256");
+    addQitmaskOpt<Qitmask1<regina::UInt128>>(m, "Qitmask128");
+    addQitmaskOpt<Qitmask2<regina::UInt128, regina::UInt128>>(m, "Qitmask256");
     #else
     addQitmaskOpt<Qitmask2<uint64_t, uint64_t>>(m, "Qitmask128");
     #endif

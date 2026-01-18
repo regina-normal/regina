@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include <array>
+#include <limits>
 #include "concepts/core.h"
 #include "maths/integer.h"
 #include "utilities/stringutils.h"
@@ -819,8 +820,6 @@ static void verifyEqual128(const regina::NativeInteger<16>& x,
 template <ArbitraryPrecisionInteger IntegerType>
 static void verifyNative128(const regina::NativeInteger<16>& native,
         const char* string) {
-    using CppType = regina::IntOfSize<16>::type;
-
     EXPECT_EQ(native.str(), string);
     EXPECT_EQ(IntegerType(native).str(), string);
     {
@@ -830,10 +829,14 @@ static void verifyNative128(const regina::NativeInteger<16>& native,
         EXPECT_EQ(assigned.str(), string);
     }
 
-    verifyEqual128(native, IntegerType(string).template safeValue<CppType>());
-    verifyEqual128(native, IntegerType(string).template unsafeValue<CppType>());
-    verifyEqual128(native, IntegerType(native).template safeValue<CppType>());
-    verifyEqual128(native, IntegerType(native).template unsafeValue<CppType>());
+    verifyEqual128(native,
+        IntegerType(string).template safeValue<regina::Int128>());
+    verifyEqual128(native,
+        IntegerType(string).template unsafeValue<regina::Int128>());
+    verifyEqual128(native,
+        IntegerType(native).template safeValue<regina::Int128>());
+    verifyEqual128(native,
+        IntegerType(native).template unsafeValue<regina::Int128>());
 
     // Make sure large-to-native conversion works even for numbers that do not
     // enter the highest order long-sized block.  For most machines this means
@@ -841,8 +844,8 @@ static void verifyNative128(const regina::NativeInteger<16>& native,
     // (GMP) representation regardless.
     IntegerType large(native);
     large.makeLarge();
-    verifyEqual128(native, large.template safeValue<CppType>());
-    verifyEqual128(native, large.template unsafeValue<CppType>());
+    verifyEqual128(native, large.template safeValue<regina::Int128>());
+    verifyEqual128(native, large.template unsafeValue<regina::Int128>());
 }
 
 TYPED_TEST(IntegerTest, constructNative128) {
@@ -866,8 +869,9 @@ TYPED_TEST(IntegerTest, constructNative128) {
     regina::NativeInteger<16> neg126_62 = neg126 + neg62;
     regina::NativeInteger<16> neg126_63 = neg126 + neg63;
 
-    regina::NativeInteger<16> maxVal(
-        ~(regina::IntOfSize<16>::type(1) << 127));
+    regina::NativeInteger<16> maxVal =
+        std::numeric_limits<regina::Int128>::max();
+    EXPECT_EQ(maxVal, ~(regina::Int128(1) << 127));
 
     // We split the strings below into chunks so that vim's syntax highlighting
     // can cope.
@@ -2213,7 +2217,7 @@ TYPED_TEST(IntegerTest, gcdLcm) {
     // A side-effect was that Regina computed gcd(3,3) == 55340232221128654851
     // on this platform.  Verify that we are _not_ seeing these issues now.
 
-    regina::IntOfSize<16>::type n = 3;
+    regina::Int128 n = 3;
     int shift = 0;
     n <<= shift;
     EXPECT_EQ(n, 3);
@@ -2745,8 +2749,8 @@ TYPED_TEST(IntegerTest, cppIntegerTypes) {
     verifyCppIntegerType<TypeParam, ssize_t>();
 
 #ifdef INT128_AVAILABLE
-    verifyCppIntegerType<TypeParam, regina::IntOfSize<16>::utype>();
-    verifyCppIntegerType<TypeParam, regina::IntOfSize<16>::type>();
+    verifyCppIntegerType<TypeParam, regina::UInt128>();
+    verifyCppIntegerType<TypeParam, regina::Int128>();
 #endif
 }
 
@@ -2807,7 +2811,7 @@ TYPED_TEST(IntegerTest, cppHelpers) {
     verifyCppHelpers<long long>();
     verifyCppHelpers<ssize_t>();
 #ifdef INT128_AVAILABLE
-    verifyCppHelpers<regina::IntOfSize<16>::type>();
+    verifyCppHelpers<regina::Int128>();
 #endif
 }
 
@@ -3040,8 +3044,8 @@ TYPED_TEST(IntegerTest, cppIntegerPlusMinus) {
     verifyCppIntegerPlusMinus<TypeParam, ssize_t>();
 
 #ifdef INT128_AVAILABLE
-    verifyCppIntegerPlusMinus<TypeParam, regina::IntOfSize<16>::utype>();
-    verifyCppIntegerPlusMinus<TypeParam, regina::IntOfSize<16>::type>();
+    verifyCppIntegerPlusMinus<TypeParam, regina::UInt128>();
+    verifyCppIntegerPlusMinus<TypeParam, regina::Int128>();
 #endif
 }
 
@@ -3426,8 +3430,8 @@ TYPED_TEST(IntegerTest, cppIntegerMultiplyDivide) {
     verifyCppIntegerMultiplyDivide<TypeParam, ssize_t>();
 
 #ifdef INT128_AVAILABLE
-    verifyCppIntegerMultiplyDivide<TypeParam, regina::IntOfSize<16>::utype>();
-    verifyCppIntegerMultiplyDivide<TypeParam, regina::IntOfSize<16>::type>();
+    verifyCppIntegerMultiplyDivide<TypeParam, regina::UInt128>();
+    verifyCppIntegerMultiplyDivide<TypeParam, regina::Int128>();
 #endif
 }
 
@@ -3585,8 +3589,8 @@ TYPED_TEST(IntegerTest, cppIntegerDivMod) {
     verifyCppIntegerDivMod<TypeParam, ssize_t>();
 
 #ifdef INT128_AVAILABLE
-    verifyCppIntegerDivMod<TypeParam, regina::IntOfSize<16>::utype>();
-    verifyCppIntegerDivMod<TypeParam, regina::IntOfSize<16>::type>();
+    verifyCppIntegerDivMod<TypeParam, regina::UInt128>();
+    verifyCppIntegerDivMod<TypeParam, regina::Int128>();
 #endif
 }
 
@@ -3727,8 +3731,8 @@ TYPED_TEST(IntegerTest, safeValue) {
     verifySafeValue<TypeParam, ssize_t>();
 
 #ifdef INT128_AVAILABLE
-    verifySafeValue<TypeParam, regina::IntOfSize<16>::utype>();
-    verifySafeValue<TypeParam, regina::IntOfSize<16>::type>();
+    verifySafeValue<TypeParam, regina::UInt128>();
+    verifySafeValue<TypeParam, regina::Int128>();
 #endif
 }
 
