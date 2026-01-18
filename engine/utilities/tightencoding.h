@@ -296,7 +296,12 @@ void tightEncode(std::ostream& out, IntType value) {
  * `long long`; and signed and unsigned 128-bit integers if supported by the
  * platform.
  *
- * \python It is assumed that \a IntType is either `long` or `long long`.
+ * \python Signed integers of any size are supported here.  If \a value fits
+ * within the bounds of a C++ \c long then Python will call this routine as
+ * `tightEncoding<long>(value)` (which is reasonably fast).  Otherwise
+ * Python will fall back to using arbitrary-precision integers and use
+ * `Integer(value).tightEncoding()`, which is slower but will give the
+ * correct result.
  *
  * \param value the integer to encode.
  * \return the resulting encoded string.

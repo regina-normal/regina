@@ -80,10 +80,6 @@ using the standard C++ randomness functions.
 Python:
     The integer type *Int* will be treated as ``long``.
 
-Template parameter ``Int``:
-    a native integer type (e.g., ``int``, ``long``, ``size_t``, ``long
-    long``, etc.); this may be either signed or unsigned.
-
 Parameter ``range``:
     the size of the range of possible results; this must be strictly
     positive.

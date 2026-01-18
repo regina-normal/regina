@@ -258,6 +258,8 @@ Version 7.5  [ TODO ]
               + IsoSigEncoding (defined in triangulation/isosigencoding.h)
               + IsoSigType (defined in triangulation/isosigtype.h)
     PYTHON:
+        - The bindings for tightEncoding() now accept integers of any size
+          (using C++ long where possible, and regina::Integer otherwise).
         - Removed the bindings TreeEnumeration_EulerPositive..., since the
           linear constraint LPConstraintEulerPositive was never meant to be
           used with TreeEnumeration (since the constraint does not map out a

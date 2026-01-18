@@ -29,7 +29,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-def doLong(val):
+def doSigned(val):
 	enc = tightEncoding(val)
 	print(enc)
 	for i in [ tightEncoding(Integer(val)), tightEncoding(LargeInteger(val)),
@@ -39,53 +39,45 @@ def doLong(val):
 	if tightDecoding(enc) != val:
 		print("ERROR: Inconsistent decoding")
 
-def doLarge(val):
-	enc = tightEncoding(Integer(val))
-	print(enc)
-	for i in [ tightEncoding(Integer(val)), tightEncoding(LargeInteger(val)),
-			Integer(val).tightEncoding(), LargeInteger(val).tightEncoding() ]:
-		if i != enc:
-			print("ERROR: Inconsistent encodings")
-	if str(tightDecoding(enc)) != val:
-		print("ERROR: Inconsistent decoding")
-
 def doUnsigned(val):
 	# We can test encodings for unsigned types via AbelianGroup,
 	# which stores the rank as an unsigned integer.
 	a = AbelianGroup(val)
 	print(a.tightEncoding())
 
-doLong(0)
-doLong(-44)
-doLong(45)
+doSigned(0)
+doSigned(-44)
+doSigned(45)
 
-doLong(-89)
-doLong(-45)
-doLong(46)
-doLong(90)
+doSigned(-89)
+doSigned(-45)
+doSigned(46)
+doSigned(90)
 
-doLong(-4139)
-doLong(-90)
-doLong(91)
-doLong(4140)
+doSigned(-4139)
+doSigned(-90)
+doSigned(91)
+doSigned(4140)
 
-doLong(-368639)
-doLong(-4140)
-doLong(4141)
-doLong(368640)
+doSigned(-368639)
+doSigned(-4140)
+doSigned(4141)
+doSigned(368640)
 
-doLong(-368684)
-doLong(-368640)
-doLong(368641)
-doLong(368684)
+doSigned(-368684)
+doSigned(-368640)
+doSigned(368641)
+doSigned(368684)
 
-doLong(-368729)
-doLong(-368685)
-doLong(368685)
-doLong(368729)
+doSigned(-368729)
+doSigned(-368685)
+doSigned(368685)
+doSigned(368729)
 
-doLarge('1000000000000000000000000000000000000000')
-doLarge('-1000000000000000000000000000000000000000')
+doSigned(1000000000000000000000000000000000000000)
+doSigned(-1000000000000000000000000000000000000000)
+doSigned(2**120)
+doSigned(-2**120)
 
 print(tightEncoding(LargeInteger.infinity))
 print(LargeInteger.infinity.tightEncoding())
