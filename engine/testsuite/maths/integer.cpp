@@ -2435,6 +2435,13 @@ static void verifyCppInteger(Native native) {
     // ourselves also - try to avoid computing it twice.
     std::string str = regina::toString(native);
     SCOPED_TRACE_STDSTRING(str);
+    {
+        // Since we've computed the string version of native, this is probably
+        // a good spot to check valueOf().
+        Native dest;
+        EXPECT_TRUE(regina::valueOf(str, dest));
+        EXPECT_EQ(dest, native);
+    }
 
     // Construction from Native:
     IntegerType large(native);
