@@ -208,7 +208,8 @@ Version 7.5  [ TODO ]
             - New function for converting native C++ integers to strings, with
               explicit support for 128-bit integers.
         Function valueOf():
-            - The native C++ integer versions of valueOf() are now templated.
+            - The native C++ integer versions of valueOf() are now templated,
+              and now support 128-bit integers (if the platform supports them).
             - The unsigned integer versions now reject negative numbers
               instead of performing wrap-around arithmetic.
             - All numeric versions of valueOf() (native integers and double)

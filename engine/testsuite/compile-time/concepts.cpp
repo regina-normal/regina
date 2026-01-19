@@ -252,7 +252,40 @@ static_assert(regina::StandardStringifiable<unsigned long long>);
 static_assert(regina::StandardStringifiable<float>);
 static_assert(regina::StandardStringifiable<double>);
 static_assert(regina::StandardStringifiable<long double>);
+// Characters should be stringifiable via std::to_string(signed/unsigned int).
+static_assert(regina::StandardStringifiable<signed char>);
+static_assert(regina::StandardStringifiable<unsigned char>);
 static_assert(! regina::StandardStringifiable<int*>);
+
+static_assert(regina::Readable<signed char>);
+static_assert(regina::Readable<int>);
+static_assert(regina::Readable<long>);
+static_assert(regina::Readable<long long>);
+static_assert(regina::Readable<unsigned char>);
+static_assert(regina::Readable<unsigned>);
+static_assert(regina::Readable<unsigned long>);
+static_assert(regina::Readable<unsigned long long>);
+static_assert(regina::Readable<float>);
+static_assert(regina::Readable<double>);
+static_assert(regina::Readable<long double>);
+// Pointers should be writeable but not readable.
+static_assert(! regina::Readable<int*>);
+static_assert(! regina::Readable<regina::Arrow>);
+
+static_assert(regina::Writeable<signed char>);
+static_assert(regina::Writeable<int>);
+static_assert(regina::Writeable<long>);
+static_assert(regina::Writeable<long long>);
+static_assert(regina::Writeable<unsigned char>);
+static_assert(regina::Writeable<unsigned>);
+static_assert(regina::Writeable<unsigned long>);
+static_assert(regina::Writeable<unsigned long long>);
+static_assert(regina::Writeable<float>);
+static_assert(regina::Writeable<double>);
+static_assert(regina::Writeable<long double>);
+// Pointers should be writeable but not readable.
+static_assert(regina::Writeable<int*>);
+static_assert(regina::Writeable<regina::Arrow>);
 
 static_assert(regina::InherentlyTightEncodable<Integer>);
 static_assert(regina::InherentlyTightEncodable<LargeInteger>);

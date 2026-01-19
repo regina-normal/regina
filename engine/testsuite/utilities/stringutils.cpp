@@ -36,18 +36,10 @@
 
 template <regina::CppInteger Integer>
 static void testValueOf(Integer value) {
-    SCOPED_TRACE_NUMERIC(value);
+    SCOPED_TRACE_INTEGER(value);
 
-    std::ostringstream s;
-    if constexpr (sizeof(Integer) <= sizeof(char)) {
-        // I believe that (+value) promotes char to an int,
-        // which means it will be written numerically.
-        s << (+value);
-    } else {
-        s << value;
-    }
     Integer dest = 3;
-    EXPECT_TRUE(regina::valueOf(s.str(), dest));
+    EXPECT_TRUE(regina::valueOf(regina::toString(value), dest));
     EXPECT_EQ(dest, value);
 }
 
@@ -66,8 +58,23 @@ static void testValueOf() {
         EXPECT_EQ(dest, 10);
     }
 
-    testValueOf<Integer>(std::numeric_limits<Integer>::max());
     testValueOf<Integer>(std::numeric_limits<Integer>::min());
+    testValueOf<Integer>(std::numeric_limits<Integer>::min() + 1);
+    testValueOf<Integer>(std::numeric_limits<Integer>::min() / 2);
+    testValueOf<Integer>(std::numeric_limits<Integer>::max() / 2);
+    testValueOf<Integer>(std::numeric_limits<Integer>::max() - 1);
+    testValueOf<Integer>(std::numeric_limits<Integer>::max());
+
+    if constexpr (regina::SignedCppInteger<Integer>) {
+        testValueOf<Integer>(-128);
+        testValueOf<Integer>(-100);
+    }
+    testValueOf<Integer>(100);
+    testValueOf<Integer>(127);
+    if constexpr (regina::UnsignedCppInteger<Integer>) {
+        testValueOf<Integer>(200);
+        testValueOf<Integer>(255);
+    }
 
     if constexpr (regina::SignedCppInteger<Integer>) {
         {
@@ -102,8 +109,10 @@ static void testValueOf() {
         EXPECT_FALSE(regina::valueOf("x", dest));
     }
 
-    // Trailing characters should cause a failure, but (as promised) the
-    // routine should convert the string as best it can.
+    // Trailing characters should cause a failure.
+    // The value of dest is theoretically undefined, but in practice valueOf()
+    // should do its best with the string that it was given, and we check this
+    // here.
     {
         Integer dest = 3;
         EXPECT_FALSE(regina::valueOf("0 ", dest));
@@ -172,6 +181,11 @@ TEST(StringUtilsTest, valueOf) {
     testValueOf<unsigned long>();
     testValueOf<unsigned long long>();
     testValueOf<size_t>();
+
+    #ifdef INT128_AVAILABLE
+    testValueOf<regina::Int128>();
+    testValueOf<regina::UInt128>();
+    #endif
 
     // Some very basic tests for double:
 

@@ -118,10 +118,31 @@ bool valueOf(const std::string& str, T& dest) {
         char* endPtr;
         dest = static_cast<T>(strtoll(str.c_str(), &endPtr, 10));
         return (*endPtr == 0);
-    } else {
+    } else if constexpr (Readable<T>) {
         std::istringstream s(str);
         s >> dest;
         return s.eof();
+    } else {
+        // Remember: we know the string is non-empty.
+        auto pos = str.begin();
+        bool negative = (*pos == '-');
+        if (negative) {
+            if (++pos == str.end())
+                return false;
+        }
+
+        dest = 0;
+        while (pos != str.end()) {
+            char c = *pos++;
+            if (c < '0' || c > '9')
+                return false;
+            if (negative)
+                dest = dest * 10 - int(c - '0');
+            else
+                dest = dest * 10 + unsigned(c - '0');
+            // TODO: Again, check for overflow.
+        }
+        return true;
     }
 }
 
@@ -164,10 +185,20 @@ bool valueOf(const std::string& str, T& dest) {
         char* endPtr;
         dest = static_cast<T>(strtoull(str.c_str(), &endPtr, 10));
         return (*endPtr == 0);
-    } else {
+    } else if constexpr (Readable<T>) {
         std::istringstream s(str);
         s >> dest;
         return s.eof();
+    } else {
+        // Remember: we know the string is non-empty.
+        dest = 0;
+        for (char c : str) {
+            if (c < '0' || c > '9')
+                return false;
+            dest = dest * 10 + unsigned(c - '0');
+            // TODO: Again, check for overflow.
+        }
+        return true;
     }
 }
 
