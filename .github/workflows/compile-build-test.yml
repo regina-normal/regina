@@ -1,0 +1,21 @@
+name: Compile and test
+on:
+    push:
+        branches:
+            - 'master'
+jobs:
+    compile-ubuntu:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Install pre-reqs
+              run: |
+                  sudo apt-get update
+                  sudo apt-get -y install libgmp-dev libxml2-dev libjansson-dev libtokyocabinet-dev libpopt-dev qtbase5-dev libqt5svg5-dev python3-all-dev doxygen libgraphviz-dev pkg-config xsltproc libcppunit-dev
+            - name: Configure
+              run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+            - name: Compile
+              run: cmake --build build --target all --config Release -- -j4
+            - name: Test
+              run: ctest
+
