@@ -252,11 +252,15 @@ bool valueOf(const std::string& str, T& dest) {
  * Converts the entire given string to a double precision real number and
  * reports whether this conversion was successful.
  *
+ * If the number encoded by the given string is out of range for a \c double,
+ * then this routine will return \c false and the value of \a dest will be
+ * left unchanged.
+ *
  * The given string should contain no whitespace or other characters
  * that are not a part of the real number that the string represents.
  * If any unexpected characters are found (including leading or trailing
- * whitespace), then this routine will return \c false, and the value of
- * \a dest will be undefined.
+ * whitespace), then again this routine will return \c false, and the value of
+ * \a dest will be left unchanged.
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these are tailored to the many different native C++ numeric types.

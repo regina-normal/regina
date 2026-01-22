@@ -65,9 +65,17 @@ bool valueOf(const std::string& str, double& dest) {
     if (str.empty() || std::isspace(str.front()))
         return false;
 
-    char* endPtr;
-    dest = strtod(str.c_str(), &endPtr);
-    return (*endPtr == 0);
+    size_t pos = 0;
+    try {
+        double ans = std::stod(str, std::addressof(pos));
+        if (pos != str.size())
+            return false;
+        dest = ans;
+        return true;
+    } catch (const std::logic_error&) {
+        // Either the string was unconvertible, or the value was out of range.
+        return false;
+    }
 }
 
 bool valueOf(const std::string& str, bool& dest) {
