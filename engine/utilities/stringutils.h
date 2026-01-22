@@ -283,8 +283,8 @@ bool valueOf(const std::string& str, double& dest);
  * then the string will be successfully converted to \c true.
  * If the given string begins with `F`, `f` or `0`,
  * then the string will be successfully converted to \c false.
- * Otherwise the conversion will be unsuccessful and argument \a dest will
- * be set to \c false.
+ * Otherwise the conversion will be unsuccessful and the argument \a dest will
+ * be left unchanged.
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these are tailored to the many different native C++ numeric types.
@@ -304,14 +304,14 @@ bool valueOf(const std::string& str, bool& dest);
  * this conversion was successful.
  *
  * A set of booleans is represented by one of the four string codes
- * `--`, `T-`, `-F` or `TF`, as returned by
- * BoolSet::stringCode().  If the conversion is unsuccessful, argument
- * \a dest will be set to the empty set and \c false will be returned.
+ * `--`, `T-`, `-F` or `TF`, as returned by BoolSet::stringCode().
+ * If the conversion is unsuccessful, the argument \a dest will be left
+ * unchanged and \c false will be returned.  Both upper-case and lower-case
+ * codes (or a mix of the two) are accepted by this routine.
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python.
  * For this variant, you can instead use BoolSet::setStringCode(), which
- * performs the same task (with the minor difference that it does not change
- * \a dest if the conversion is unsuccessful).
+ * performs the same task.
  *
  * \param str the string to convert.
  * \param dest the variable in which to store the resulting set of booleans.

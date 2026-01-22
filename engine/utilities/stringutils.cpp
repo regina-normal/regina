@@ -79,33 +79,30 @@ bool valueOf(const std::string& str, double& dest) {
 }
 
 bool valueOf(const std::string& str, bool& dest) {
-    if (str.empty()) {
-        dest = false;
+    if (str.empty())
         return false;
-    }
+
     if (str[0] == 't' || str[0] == 'T' || str[0] == '1') {
         dest = true;
         return true;
     }
-    dest = false;
-    return (str[0] == 'F' || str[0] == 'f' || str[0] == '0');
+    if (str[0] == 'F' || str[0] == 'f' || str[0] == '0') {
+        dest = false;
+        return true;
+    }
+    return false;
 }
 
 bool valueOf(const std::string& str, BoolSet& dest) {
-    if (str.length() != 2) {
-        dest.clear();
+    if (str.length() != 2)
         return false;
-    }
+
     char t = str[0];
     char f = str[1];
-    if (t != '-' && t != 'T' && t != 't') {
-        dest.clear();
+    if (t != '-' && t != 'T' && t != 't')
         return false;
-    }
-    if (f != '-' && f != 'F' && f != 'f') {
-        dest.clear();
+    if (f != '-' && f != 'F' && f != 'f')
         return false;
-    }
 
     dest = BoolSet(t != '-', f != '-');
     return true;
