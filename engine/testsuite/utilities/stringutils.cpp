@@ -30,83 +30,85 @@
 
 #include <limits>
 #include <sstream>
+#include "maths/integer.h"
 #include "utilities/stringutils.h"
 
 #include "testhelper.h"
 
-template <regina::CppInteger Integer>
-static void testValueOf(Integer value) {
+template <regina::CppInteger Native>
+static void testValueOf(Native value) {
     SCOPED_TRACE_INTEGER(value);
 
-    Integer dest = 3;
+    Native dest = 3;
     EXPECT_TRUE(regina::valueOf(regina::toString(value), dest));
     EXPECT_EQ(dest, value);
 }
 
-template <regina::CppInteger Integer>
+template <regina::CppInteger Native>
 static void testValueOf() {
-    SCOPED_TRACE_TYPE(Integer);
+    SCOPED_TRACE_TYPE(Native);
 
     {
-        Integer dest = 3;
+        Native dest = 3;
         EXPECT_TRUE(regina::valueOf("0", dest));
         EXPECT_EQ(dest, 0);
     }
     {
-        Integer dest = 3;
+        Native dest = 3;
         EXPECT_TRUE(regina::valueOf("10", dest));
         EXPECT_EQ(dest, 10);
     }
 
-    testValueOf<Integer>(std::numeric_limits<Integer>::min());
-    testValueOf<Integer>(std::numeric_limits<Integer>::min() + 1);
-    testValueOf<Integer>(std::numeric_limits<Integer>::min() / 2);
-    testValueOf<Integer>(std::numeric_limits<Integer>::max() / 2);
-    testValueOf<Integer>(std::numeric_limits<Integer>::max() - 1);
-    testValueOf<Integer>(std::numeric_limits<Integer>::max());
+    testValueOf<Native>(std::numeric_limits<Native>::min());
+    testValueOf<Native>(std::numeric_limits<Native>::min() + 1);
+    testValueOf<Native>(std::numeric_limits<Native>::min() / 2);
+    testValueOf<Native>(std::numeric_limits<Native>::max() / 2);
+    testValueOf<Native>(std::numeric_limits<Native>::max() - 1);
+    testValueOf<Native>(std::numeric_limits<Native>::max());
 
-    if constexpr (regina::SignedCppInteger<Integer>) {
-        testValueOf<Integer>(-128);
-        testValueOf<Integer>(-100);
+    if constexpr (regina::SignedCppInteger<Native>) {
+        testValueOf<Native>(-128);
+        testValueOf<Native>(-100);
     }
-    testValueOf<Integer>(100);
-    testValueOf<Integer>(127);
-    if constexpr (regina::UnsignedCppInteger<Integer>) {
-        testValueOf<Integer>(200);
-        testValueOf<Integer>(255);
+    testValueOf<Native>(100);
+    testValueOf<Native>(127);
+    if constexpr (regina::UnsignedCppInteger<Native>) {
+        testValueOf<Native>(200);
+        testValueOf<Native>(255);
     }
 
-    if constexpr (regina::SignedCppInteger<Integer>) {
+    if constexpr (regina::SignedCppInteger<Native>) {
         {
-            Integer dest = 3;
+            Native dest = 3;
             EXPECT_TRUE(regina::valueOf("-1", dest));
             EXPECT_EQ(dest, -1);
         }
         {
-            Integer dest = 3;
+            Native dest = 3;
             EXPECT_TRUE(regina::valueOf("-10", dest));
             EXPECT_EQ(dest, -10);
         }
     } else {
         {
-            Integer dest = 3;
+            Native dest = 3;
             EXPECT_FALSE(regina::valueOf("-1", dest));
-            EXPECT_EQ(dest, 3); // this is not guaranteed by valueOf()
+            EXPECT_EQ(dest, 3);
         }
         {
-            Integer dest = 3;
+            Native dest = 3;
             EXPECT_FALSE(regina::valueOf("-10", dest));
-            EXPECT_EQ(dest, 3); // this is not guaranteed by valueOf()
+            EXPECT_EQ(dest, 3);
         }
     }
 
     // Cases that should fail for all integer types:
     {
-        Integer dest = 3;
+        Native dest = 3;
         EXPECT_FALSE(regina::valueOf("", dest));
         EXPECT_FALSE(regina::valueOf(" ", dest));
         EXPECT_FALSE(regina::valueOf("-", dest));
         EXPECT_FALSE(regina::valueOf("x", dest));
+        EXPECT_EQ(dest, 3);
     }
 
     // Trailing characters should cause a failure.
@@ -114,41 +116,41 @@ static void testValueOf() {
     // should do its best with the string that it was given, and we check this
     // here.
     {
-        Integer dest = 3;
+        Native dest = 3;
         EXPECT_FALSE(regina::valueOf("0 ", dest));
-        EXPECT_EQ(dest, 0);
+        EXPECT_EQ(dest, 3);
     }
     {
-        Integer dest = 3;
+        Native dest = 3;
         EXPECT_FALSE(regina::valueOf("0x", dest));
-        EXPECT_EQ(dest, 0);
+        EXPECT_EQ(dest, 3);
     }
     {
-        Integer dest = 3;
+        Native dest = 3;
         EXPECT_FALSE(regina::valueOf("10 ", dest));
-        EXPECT_EQ(dest, 10);
+        EXPECT_EQ(dest, 3);
     }
-    if constexpr (regina::SignedCppInteger<Integer>) {
+    if constexpr (regina::SignedCppInteger<Native>) {
         {
-            Integer dest = 3;
+            Native dest = 3;
             EXPECT_FALSE(regina::valueOf("-1 ", dest));
-            EXPECT_EQ(dest, -1);
+            EXPECT_EQ(dest, 3);
         }
         {
-            Integer dest = 3;
+            Native dest = 3;
             EXPECT_FALSE(regina::valueOf("-10 ", dest));
-            EXPECT_EQ(dest, -10);
+            EXPECT_EQ(dest, 3);
         }
     } else {
         {
-            Integer dest = 3;
+            Native dest = 3;
             EXPECT_FALSE(regina::valueOf("-1 ", dest));
-            EXPECT_EQ(dest, 3); // this is not guaranteed by valueOf()
+            EXPECT_EQ(dest, 3);
         }
         {
-            Integer dest = 3;
+            Native dest = 3;
             EXPECT_FALSE(regina::valueOf("-10 ", dest));
-            EXPECT_EQ(dest, 3); // this is not guaranteed by valueOf()
+            EXPECT_EQ(dest, 3);
         }
     }
 
@@ -156,12 +158,30 @@ static void testValueOf() {
     // handle it, but we claim that any whitespace at all should cause a
     // failure, so test for that.
     {
-        Integer dest = 3;
+        Native dest = 3;
         EXPECT_FALSE(regina::valueOf(" 0", dest));
         EXPECT_FALSE(regina::valueOf(" 10", dest));
         EXPECT_FALSE(regina::valueOf(" -1", dest));
         EXPECT_FALSE(regina::valueOf(" -10", dest));
-        EXPECT_EQ(dest, 3); // this is not guaranteed by valueOf()
+        EXPECT_EQ(dest, 3);
+    }
+
+    // Check how valueOf() behaves in the presence of overflow.
+    {
+        regina::Integer overflow = std::numeric_limits<Native>::max();
+        ++overflow;
+        SCOPED_TRACE_REGINA(overflow);
+        Native dest = 3;
+        EXPECT_FALSE(regina::valueOf(overflow.str(), dest));
+        EXPECT_EQ(dest, 3);
+    }
+    {
+        regina::Integer overflow = std::numeric_limits<Native>::min();
+        --overflow;
+        SCOPED_TRACE_REGINA(overflow);
+        Native dest = 3;
+        EXPECT_FALSE(regina::valueOf(overflow.str(), dest));
+        EXPECT_EQ(dest, 3);
     }
 }
 
@@ -203,6 +223,7 @@ TEST(StringUtilsTest, valueOf) {
         double dest = 3.0;
         EXPECT_FALSE(regina::valueOf(" 2.5", dest));
         EXPECT_FALSE(regina::valueOf("2.5 ", dest));
+        EXPECT_EQ(dest, 3.0);
     }
 
     // TODO: Properly test valueOf() for bool, double, BoolSet.

@@ -40,6 +40,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <cctype>
+#include <limits>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -86,11 +87,15 @@ std::string stripWhitespace(const std::string& str);
  * Converts the entire given string to a signed native integer of type \a T
  * and reports whether this conversion was successful.
  *
+ * If the integer encoded by the given string is out of range for type \a T,
+ * then this routine will return \c false and the value of \a dest will be
+ * left unchanged.
+ *
  * The given string should contain no whitespace or other characters
  * that are not a part of the integer that the string represents.
  * If any unexpected characters are found (including leading or trailing
- * whitespace), then this routine will return \c false, and the value of
- * \a dest will be undefined.
+ * whitespace), then again this routine will return \c false and the value of
+ * \a dest will be left unchanged.
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these are tailored to the many different native C++ numeric types.
@@ -109,20 +114,39 @@ bool valueOf(const std::string& str, T& dest) {
     if (str.empty() || std::isspace(str.front()))
         return false;
 
-    // TODO: Check for overflow
-    if constexpr (sizeof(T) <= sizeof(unsigned long)) {
-        char* endPtr;
-        dest = static_cast<T>(strtol(str.c_str(), &endPtr, 10));
-        return (*endPtr == 0);
-    } else if constexpr (sizeof(T) <= sizeof(unsigned long long)) {
-        char* endPtr;
-        dest = static_cast<T>(strtoll(str.c_str(), &endPtr, 10));
-        return (*endPtr == 0);
-    } else if constexpr (Readable<T>) {
-        std::istringstream s(str);
-        s >> dest;
-        return s.eof();
+    if constexpr (sizeof(T) <= sizeof(long long)) {
+        size_t pos = 0;
+        try {
+            if constexpr (sizeof(T) <= sizeof(long)) {
+                long ans = std::stol(str, std::addressof(pos), 10);
+                if (pos != str.size())
+                    return false;
+                if constexpr (sizeof(T) < sizeof(long))
+                    if (ans < std::numeric_limits<T>::min() ||
+                            ans > std::numeric_limits<T>::max())
+                        return false;
+                dest = static_cast<T>(ans);
+                return true;
+            } else {
+                long long ans = std::stoll(str, std::addressof(pos), 10);
+                if (pos != str.size())
+                    return false;
+                if constexpr (sizeof(T) < sizeof(long long))
+                    if (ans < std::numeric_limits<T>::min() ||
+                            ans > std::numeric_limits<T>::max())
+                        return false;
+                dest = static_cast<T>(ans);
+                return true;
+            }
+        } catch (const std::logic_error&) {
+            // Either the string was unconvertible, or the value was out of
+            // range.
+            return false;
+        }
     } else {
+        // We avoid using std::istream extraction, since it looks like this
+        // does not check for overflow.
+        //
         // Remember: we know the string is non-empty.
         auto pos = str.begin();
         bool negative = (*pos == '-');
@@ -131,17 +155,18 @@ bool valueOf(const std::string& str, T& dest) {
                 return false;
         }
 
-        dest = 0;
+        T ans = 0;
         while (pos != str.end()) {
             char c = *pos++;
             if (c < '0' || c > '9')
                 return false;
             if (negative)
-                dest = dest * 10 - int(c - '0');
+                ans = ans * 10 - int(c - '0');
             else
-                dest = dest * 10 + unsigned(c - '0');
-            // TODO: Again, check for overflow.
+                ans = ans * 10 + unsigned(c - '0');
+            // TODO: Check for overflow.
         }
+        dest = ans;
         return true;
     }
 }
@@ -150,14 +175,16 @@ bool valueOf(const std::string& str, T& dest) {
  * Converts the entire given string to an unsigned native integer of type \a T
  * and reports whether this conversion was successful.
  *
+ * If the integer encoded by the given string is out of range for type \a T,
+ * then this routine will return \c false and the value of \a dest will be
+ * left unchanged.  In particular, this will happen if \a str encodes a
+ * negative number (since \a T is an unsigned type).
+ *
  * The given string should contain no whitespace or other characters
  * that are not a part of the integer that the string represents.
  * If any unexpected characters are found (including leading or trailing
- * whitespace), then this routine will return \c false, and the value of
- * \a dest will be undefined.
- *
- * In particular, since \a T is an unsigned type, if \a str describes a
- * negative number then this routine will return \c false.
+ * whitespace), then again this routine will return \c false and the value of
+ * \a dest will be left unchanged.
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these are tailored to the many different native C++ numeric types.
@@ -176,28 +203,47 @@ bool valueOf(const std::string& str, T& dest) {
     if (str.empty() || std::isspace(str.front()) || str.front() == '-')
         return false;
 
-    // TODO: Check for overflow
-    if constexpr (sizeof(T) <= sizeof(unsigned long)) {
-        char* endPtr;
-        dest = static_cast<T>(strtoul(str.c_str(), &endPtr, 10));
-        return (*endPtr == 0);
-    } else if constexpr (sizeof(T) <= sizeof(unsigned long long)) {
-        char* endPtr;
-        dest = static_cast<T>(strtoull(str.c_str(), &endPtr, 10));
-        return (*endPtr == 0);
-    } else if constexpr (Readable<T>) {
-        std::istringstream s(str);
-        s >> dest;
-        return s.eof();
+    if constexpr (sizeof(T) <= sizeof(unsigned long long)) {
+        size_t pos = 0;
+        try {
+            if constexpr (sizeof(T) <= sizeof(unsigned long)) {
+                unsigned long ans = std::stoul(str, std::addressof(pos), 10);
+                if (pos != str.size())
+                    return false;
+                if constexpr (sizeof(T) < sizeof(unsigned long))
+                    if (ans > std::numeric_limits<T>::max())
+                        return false;
+                dest = static_cast<T>(ans);
+                return true;
+            } else {
+                unsigned long long ans = std::stoull(str, std::addressof(pos),
+                    10);
+                if (pos != str.size())
+                    return false;
+                if constexpr (sizeof(T) < sizeof(unsigned long long))
+                    if (ans > std::numeric_limits<T>::max())
+                        return false;
+                dest = static_cast<T>(ans);
+                return true;
+            }
+        } catch (const std::logic_error&) {
+            // Either the string was unconvertible, or the value was out of
+            // range.
+            return false;
+        }
     } else {
+        // We avoid using std::istream extraction, since it looks like this
+        // does not check for overflow.
+        //
         // Remember: we know the string is non-empty.
-        dest = 0;
+        T ans = 0;
         for (char c : str) {
             if (c < '0' || c > '9')
                 return false;
-            dest = dest * 10 + unsigned(c - '0');
-            // TODO: Again, check for overflow.
+            ans = ans * 10 + unsigned(c - '0');
+            // TODO: Check for overflow.
         }
+        dest = ans;
         return true;
     }
 }

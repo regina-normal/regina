@@ -210,8 +210,8 @@ Version 7.5  [ TODO ]
         Function valueOf():
             - The native C++ integer versions of valueOf() are now templated,
               and now support 128-bit integers (if the platform supports them).
-            - The unsigned integer versions now reject negative numbers
-              instead of performing wrap-around arithmetic.
+            - All integer versions now return false if the integer encoded by
+              the string is out of range for the relevant integer type.
             - All numeric versions of valueOf() (native integers and double)
               have been tightened with respect to unexpected characters,
               including leading and trailing whitespace:
@@ -220,7 +220,11 @@ Version 7.5  [ TODO ]
                 leading whitespace);
               + instead of performing the conversion "as best it can", the
                 documentation now states that the value stored in dest is
-                undefined.
+                left unchanged.
+            - All versions of valueOf() now leave dest unchanged if there was
+              an error (as opposed to leaving dest undefined, as was the case
+              for integer versions, or setting dest to a fixed false/empty
+              value, as was the case for bool and BoolSet versions).
         Type alias Int128, UInt128:
             - Provides access to native 128-bit integers, if the platform
               supports them.  This is preferred to the old (and clumsier) way
