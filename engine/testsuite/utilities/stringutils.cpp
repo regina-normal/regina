@@ -60,10 +60,12 @@ static void testValueOf() {
     }
 
     testValueOf<Native>(std::numeric_limits<Native>::min());
-    testValueOf<Native>(std::numeric_limits<Native>::min() + 1);
+    for (Native i = 1; i <= 10; ++i)
+        testValueOf<Native>(std::numeric_limits<Native>::min() + i);
     testValueOf<Native>(std::numeric_limits<Native>::min() / 2);
     testValueOf<Native>(std::numeric_limits<Native>::max() / 2);
-    testValueOf<Native>(std::numeric_limits<Native>::max() - 1);
+    for (Native i = 1; i <= 10; ++i)
+        testValueOf<Native>(std::numeric_limits<Native>::max() - i);
     testValueOf<Native>(std::numeric_limits<Native>::max());
 
     if constexpr (regina::SignedCppInteger<Native>) {
@@ -168,19 +170,23 @@ static void testValueOf() {
 
     // Check how valueOf() behaves in the presence of overflow.
     {
-        regina::Integer overflow = std::numeric_limits<Native>::max();
-        ++overflow;
-        SCOPED_TRACE_REGINA(overflow);
         Native dest = 3;
-        EXPECT_FALSE(regina::valueOf(overflow.str(), dest));
+        regina::Integer overflow = std::numeric_limits<Native>::max();
+        for (int i = 0; i < 10; ++i) {
+            ++overflow;
+            SCOPED_TRACE_REGINA(overflow);
+            EXPECT_FALSE(regina::valueOf(overflow.str(), dest));
+        }
         EXPECT_EQ(dest, 3);
     }
     {
-        regina::Integer overflow = std::numeric_limits<Native>::min();
-        --overflow;
-        SCOPED_TRACE_REGINA(overflow);
         Native dest = 3;
-        EXPECT_FALSE(regina::valueOf(overflow.str(), dest));
+        regina::Integer overflow = std::numeric_limits<Native>::min();
+        for (int i = 0; i < 10; ++i) {
+            --overflow;
+            SCOPED_TRACE_REGINA(overflow);
+            EXPECT_FALSE(regina::valueOf(overflow.str(), dest));
+        }
         EXPECT_EQ(dest, 3);
     }
 }

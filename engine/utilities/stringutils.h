@@ -160,11 +160,25 @@ bool valueOf(const std::string& str, T& dest) {
             char c = *pos++;
             if (c < '0' || c > '9')
                 return false;
-            if (negative)
-                ans = ans * 10 - int(c - '0');
-            else
-                ans = ans * 10 + unsigned(c - '0');
-            // TODO: Check for overflow.
+            int digit = c - '0';
+            // Note: for overflow testing we cannot rely on wraparound
+            // arithmetic (as we do in the unsigned case), since this behaviour
+            // is not mandated for signed types.
+            if (negative) {
+                if (ans < std::numeric_limits<T>::min() / 10)
+                    return false; // overflow
+                ans *= 10;
+                if (digit && ans < std::numeric_limits<T>::min() + digit)
+                    return false; // overflow
+                ans -= digit;
+            } else {
+                if (ans > std::numeric_limits<T>::max() / 10)
+                    return false; // overflow
+                ans *= 10;
+                if (digit && ans > std::numeric_limits<T>::max() - digit)
+                    return false; // overflow
+                ans += digit;
+            }
         }
         dest = ans;
         return true;
@@ -240,8 +254,15 @@ bool valueOf(const std::string& str, T& dest) {
         for (char c : str) {
             if (c < '0' || c > '9')
                 return false;
-            ans = ans * 10 + unsigned(c - '0');
-            // TODO: Check for overflow.
+            if (ans == 0) {
+                ans = unsigned(c - '0');
+            } else {
+                if (ans > std::numeric_limits<T>::max() / 10)
+                    return false; // this next digit must overflow
+                ans = ans * 10 + unsigned(c - '0');
+                if (ans < 10)
+                    return false; // we overflowed and wrapped around
+            }
         }
         dest = ans;
         return true;
