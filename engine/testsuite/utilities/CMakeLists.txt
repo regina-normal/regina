@@ -2,6 +2,7 @@
 SET ( FILES
   base64.cpp
   bitmask.cpp
+  boolset.cpp
   stringutils.cpp
   tightencoding.cpp
   )

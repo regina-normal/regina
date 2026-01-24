@@ -94,18 +94,7 @@ bool valueOf(const std::string& str, bool& dest) {
 }
 
 bool valueOf(const std::string& str, BoolSet& dest) {
-    if (str.length() != 2)
-        return false;
-
-    char t = str[0];
-    char f = str[1];
-    if (t != '-' && t != 'T' && t != 't')
-        return false;
-    if (f != '-' && f != 'F' && f != 'f')
-        return false;
-
-    dest = BoolSet(t != '-', f != '-');
-    return true;
+    return dest.setStringCode(str);
 }
 
 std::string stringToToken(std::string str) {

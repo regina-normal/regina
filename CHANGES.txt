@@ -225,6 +225,8 @@ Version 7.5  [ TODO ]
               an error (as opposed to leaving dest undefined, as was the case
               for integer versions, or setting dest to a fixed false/empty
               value, as was the case for bool and BoolSet versions).
+            - The BoolSet version is now deprecated; use the identical
+              BoolSet::setStringCode() instead.
         Type alias Int128, UInt128:
             - Provides access to native 128-bit integers, if the platform
               supports them.  This is preferred to the old (and clumsier) way

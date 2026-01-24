@@ -321,14 +321,16 @@ bool valueOf(const std::string& str, double& dest);
 bool valueOf(const std::string& str, bool& dest);
 
 /**
- * Converts the entire given string to a set of booleans and reports whether
- * this conversion was successful.
+ * Deprecated routine that converts the entire given string to a set of
+ * booleans and reports whether this conversion was successful.
  *
  * A set of booleans is represented by one of the four string codes
  * `--`, `T-`, `-F` or `TF`, as returned by BoolSet::stringCode().
  * If the conversion is unsuccessful, the argument \a dest will be left
  * unchanged and \c false will be returned.  Both upper-case and lower-case
  * codes (or a mix of the two) are accepted by this routine.
+ *
+ * \deprecated Use `dest.setStringCode(str)` instead.
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python.
  * For this variant, you can instead use BoolSet::setStringCode(), which
@@ -340,7 +342,7 @@ bool valueOf(const std::string& str, bool& dest);
  *
  * \ingroup utilities
  */
-bool valueOf(const std::string& str, BoolSet& dest);
+[[deprecated]] bool valueOf(const std::string& str, BoolSet& dest);
 
 /**
  * Converts the given native C++ integer to a string, with explicit support

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Test Suite                                                            *
  *                                                                        *
  *  Copyright (c) 1999-2025, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -28,24 +28,49 @@
  *                                                                        *
  **************************************************************************/
 
+#include <array>
 #include "utilities/boolset.h"
-#include "utilities/stringutils.h"
 
-#include <iostream>
+#include "testhelper.h"
 
-namespace regina {
+using regina::BoolSet;
 
-std::ostream& operator << (std::ostream& out, BoolSet set) {
-    if (set == BoolSet())
-        out << "{ }";
-    else if (set == true)
-        out << "{ true }";
-    else if (set == false)
-        out << "{ false }";
-    else
-        out << "{ true, false }";
-    return out;
+class BoolSetTest : public testing::Test {
+    protected:
+        static constexpr BoolSet bsTrue { true };
+        static constexpr BoolSet bsFalse { false };
+        static constexpr BoolSet bsBoth { true, true };
+        static constexpr BoolSet bsNone { };
+
+        static constexpr std::array<BoolSet, 4> cases { BoolSet(false, false),
+            BoolSet(false, true), BoolSet(true, false), BoolSet(true, true) };
+};
+
+TEST_F(BoolSetTest, stringCode) {
+    EXPECT_STREQ(bsTrue.stringCode(), "T-");
+    EXPECT_STREQ(bsFalse.stringCode(), "-F");
+    EXPECT_STREQ(bsBoth.stringCode(), "TF");
+    EXPECT_STREQ(bsNone.stringCode(), "--");
+
+    for (auto x : cases) {
+        for (auto y : cases) {
+            {
+                BoolSet tmp = x;
+                EXPECT_TRUE(tmp.setStringCode(y.stringCode()));
+                EXPECT_EQ(tmp, y);
+            }
+            // TODO: Play with lower-case
+        }
+
+        BoolSet tmp = x;
+        EXPECT_FALSE(tmp.setStringCode("FT"));
+        EXPECT_FALSE(tmp.setStringCode("T- "));
+        EXPECT_FALSE(tmp.setStringCode(" T-"));
+        EXPECT_FALSE(tmp.setStringCode("T "));
+        EXPECT_FALSE(tmp.setStringCode(" F"));
+        EXPECT_FALSE(tmp.setStringCode(" "));
+        EXPECT_FALSE(tmp.setStringCode(""));
+        EXPECT_EQ(tmp, x);
+    }
 }
-
-} // namespace regina
 

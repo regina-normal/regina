@@ -112,21 +112,21 @@ XMLPropertiesFilterReader::XMLPropertiesFilterReader(
 
     auto prop = props.find("orbl");
     if (prop != props.end()) {
-        if (! valueOf(prop->second, orbl))
+        if (! orbl.setStringCode(prop->second))
             return;
     } else
         orbl.fill();
 
     prop = props.find("compact");
     if (prop != props.end()) {
-        if (! valueOf(prop->second, compact))
+        if (! compact.setStringCode(prop->second))
             return;
     } else
         compact.fill();
 
     prop = props.find("realbdry");
     if (prop != props.end()) {
-        if (! valueOf(prop->second, realbdry))
+        if (! realbdry.setStringCode(prop->second))
             return;
     } else
         realbdry.fill();
@@ -158,15 +158,15 @@ XMLElementReader* XMLLegacyPropertiesFilterReader::startContentSubElement(
         return new XMLCharsReader();
     } else if (subTagName == "orbl") {
         BoolSet b;
-        if (valueOf(props.lookup("value"), b))
+        if (b.setStringCode(props.lookup("value")))
             filter_->setOrientability(b);
     } else if (subTagName == "compact") {
         BoolSet b;
-        if (valueOf(props.lookup("value"), b))
+        if (b.setStringCode(props.lookup("value")))
             filter_->setCompactness(b);
     } else if (subTagName == "realbdry") {
         BoolSet b;
-        if (valueOf(props.lookup("value"), b))
+        if (b.setStringCode(props.lookup("value")))
             filter_->setRealBoundary(b);
     }
     return new XMLElementReader();
