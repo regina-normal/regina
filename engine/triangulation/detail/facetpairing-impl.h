@@ -295,24 +295,24 @@ FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
     if (tokens.empty() || tokens.size() % (2 * (dim + 1)) != 0)
         throw InvalidArgument("fromTextRep(): invalid number of tokens");
 
-    // We use ssize_t, not size_t, to avoid signed/unsigned comparisons below.
-    ssize_t nSimp = tokens.size() / (2 * (dim + 1));
+    size_t nSimp = tokens.size() / (2 * (dim + 1));
     FacetPairing<dim> ans(nSimp);
 
     // Read the raw values.
     // Check the range of each value while we're at it.
-    long val;
-    for (ssize_t i = 0; i < nSimp * (dim + 1); ++i) {
+    for (size_t i = 0; i < nSimp * (dim + 1); ++i) {
+        size_t val;
+
         if (! valueOf(tokens[2 * i], val))
             throw InvalidArgument(
                 "fromTextRep(): contains non-integer simplex");
-        if (val < 0 || val > nSimp)
+        if (val > nSimp)
             throw InvalidArgument("fromTextRep(): simplex out of range");
         ans.pairs_[i].simp = val;
 
         if (! valueOf(tokens[2 * i + 1], val))
             throw InvalidArgument("fromTextRep(): contains non-integer facet");
-        if (val < 0 || val > dim)
+        if (val > dim)
             throw InvalidArgument("fromTextRep(): facet out of range");
         ans.pairs_[i].facet = static_cast<int>(val);
     }
@@ -320,21 +320,13 @@ FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
     // Run a sanity check.
     // Note: all destination simplices are known to be in the range [0..nSimp],
     // and all destination facets are known to be in the range [0..dim].
-    FacetSpec<dim> destFacet;
-    bool broken = false;
     for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(nSimp, true); ++f) {
-        destFacet = ans.dest(f);
+        FacetSpec<dim> destFacet = ans.dest(f);
         if (destFacet.simp == nSimp && destFacet.facet != 0)
-            broken = true;
-        else if (destFacet.simp < nSimp && ! (ans.dest(destFacet) == f))
-            broken = true;
-        else
-            continue;
-        break;
+            throw InvalidArgument("fromTextRep(): malformed boundary facet");
+        if (destFacet.simp != nSimp && ans.dest(destFacet) != f)
+            throw InvalidArgument("fromTextRep(): mismatched facet pairings");
     }
-
-    if (broken)
-        throw InvalidArgument("fromTextRep(): mismatched facet pairings");
 
     // All is well.
     return ans;
