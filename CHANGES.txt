@@ -28,8 +28,6 @@ Version 7.5  [ TODO ]
                 byte code is not valid.
               + New routine fromStringCode(), which likewise throws an exception
                 if the given string code is not valid.
-
-              routines.
         Class CallableArg<...>:
             - This is now deprecated, since its implementation is drifting
               increasingly further away from modern C++ standards.
