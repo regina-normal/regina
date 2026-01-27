@@ -54,7 +54,7 @@ TEST_F(BoolSetTest, byteCode) {
     EXPECT_EQ(bsNone.byteCode(), 0);
 
     for (const auto x : cases) {
-        EXPECT_EQ(BoolSet::fromByteCode(x.byteCode()), x);
+        EXPECT_NO_THROW({ EXPECT_EQ(BoolSet::fromByteCode(x.byteCode()), x); });
 
         for (const auto y : cases) {
             {
@@ -69,6 +69,9 @@ TEST_F(BoolSetTest, byteCode) {
         EXPECT_FALSE(tmp.setByteCode(4));
         EXPECT_EQ(tmp, x);
     }
+
+    EXPECT_THROW({ BoolSet::fromByteCode(-1); }, regina::InvalidArgument);
+    EXPECT_THROW({ BoolSet::fromByteCode(4); }, regina::InvalidArgument);
 }
 
 TEST_F(BoolSetTest, comparisons) {
@@ -247,6 +250,18 @@ TEST_F(BoolSetTest, stringCode) {
             }
         }
 
+        {
+            std::string code = x.stringCode();
+            ASSERT_EQ(code.size(), 2);
+            EXPECT_NO_THROW({ EXPECT_EQ(BoolSet::fromStringCode(code), x); });
+            code[0] = std::tolower(code[0]);
+            EXPECT_NO_THROW({ EXPECT_EQ(BoolSet::fromStringCode(code), x); });
+            code[1] = std::tolower(code[1]);
+            EXPECT_NO_THROW({ EXPECT_EQ(BoolSet::fromStringCode(code), x); });
+            code[0] = std::toupper(code[0]);
+            EXPECT_NO_THROW({ EXPECT_EQ(BoolSet::fromStringCode(code), x); });
+        }
+
         BoolSet tmp = x;
         EXPECT_FALSE(tmp.setStringCode("FT"));
         EXPECT_FALSE(tmp.setStringCode("T- "));
@@ -257,4 +272,12 @@ TEST_F(BoolSetTest, stringCode) {
         EXPECT_FALSE(tmp.setStringCode(""));
         EXPECT_EQ(tmp, x);
     }
+
+    EXPECT_THROW({ BoolSet::fromStringCode("FT"); }, regina::InvalidArgument);
+    EXPECT_THROW({ BoolSet::fromStringCode("T- "); }, regina::InvalidArgument);
+    EXPECT_THROW({ BoolSet::fromStringCode(" T-"); }, regina::InvalidArgument);
+    EXPECT_THROW({ BoolSet::fromStringCode("T "); }, regina::InvalidArgument);
+    EXPECT_THROW({ BoolSet::fromStringCode(" F"); }, regina::InvalidArgument);
+    EXPECT_THROW({ BoolSet::fromStringCode(" "); }, regina::InvalidArgument);
+    EXPECT_THROW({ BoolSet::fromStringCode(""); }, regina::InvalidArgument);
 }
