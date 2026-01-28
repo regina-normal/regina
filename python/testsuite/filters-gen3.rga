@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<regina engine="7.4">
+<container label="Normal Surface Filters">
+<filtercomb op="or" label="Tori, Annuli and Discs">
+<filterprop orbl="T-" compact="T-" realbdry="TF" euler="0" label="Tori and Annuli">
+</filterprop>
+<filterprop orbl="T-" compact="T-" realbdry="T-" euler="1" label="Discs">
+</filterprop>
+</filtercomb>
+</container>
+</regina>

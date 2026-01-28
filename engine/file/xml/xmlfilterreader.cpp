@@ -110,26 +110,27 @@ XMLPropertiesFilterReader::XMLPropertiesFilterReader(
         filter_(nullptr) {
     BoolSet orbl, compact, realbdry;
 
-    auto prop = props.find("orbl");
-    if (prop != props.end()) {
-        if (! orbl.setStringCode(prop->second))
-            return;
-    } else
-        orbl.fill();
+    try {
+        auto prop = props.find("orbl");
+        if (prop != props.end())
+            orbl = BoolSet::fromStringCode(prop->second);
+        else
+            orbl.fill();
 
-    prop = props.find("compact");
-    if (prop != props.end()) {
-        if (! compact.setStringCode(prop->second))
-            return;
-    } else
-        compact.fill();
+        prop = props.find("compact");
+        if (prop != props.end())
+            compact = BoolSet::fromStringCode(prop->second);
+        else
+            compact.fill();
 
-    prop = props.find("realbdry");
-    if (prop != props.end()) {
-        if (! realbdry.setStringCode(prop->second))
-            return;
-    } else
-        realbdry.fill();
+        prop = props.find("realbdry");
+        if (prop != props.end())
+            realbdry = BoolSet::fromStringCode(prop->second);
+        else
+            realbdry.fill();
+    } catch (const InvalidArgument&) {
+        return;
+    }
 
     // We have successfully parsed the BoolSet attributes.
     filter_ = std::make_shared<SurfaceFilterProperties>();
@@ -154,27 +155,27 @@ XMLPropertiesFilterReader::XMLPropertiesFilterReader(
 XMLElementReader* XMLLegacyPropertiesFilterReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
-    if (subTagName == "euler") {
-        return new XMLCharsReader();
-    } else if (subTagName == "orbl") {
-        BoolSet b;
-        if (b.setStringCode(props.lookup("value")))
-            filter_->setOrientability(b);
-    } else if (subTagName == "compact") {
-        BoolSet b;
-        if (b.setStringCode(props.lookup("value")))
-            filter_->setCompactness(b);
-    } else if (subTagName == "realbdry") {
-        BoolSet b;
-        if (b.setStringCode(props.lookup("value")))
-            filter_->setRealBoundary(b);
+    if (filter_) {
+        if (subTagName == "euler") {
+            return new XMLCharsReader();
+        } else try {
+            std::string value = props.lookup("value");
+            if (subTagName == "orbl")
+                filter_->setOrientability(BoolSet::fromStringCode(value));
+            else if (subTagName == "compact")
+                filter_->setCompactness(BoolSet::fromStringCode(value));
+            else if (subTagName == "realbdry")
+                filter_->setRealBoundary(BoolSet::fromStringCode(value));
+        } catch (const InvalidArgument&) {
+            filter_.reset();
+        }
     }
     return new XMLElementReader();
 }
 
 void XMLLegacyPropertiesFilterReader::endContentSubElement(
         const std::string& subTagName, XMLElementReader* subReader) {
-    if (subTagName == "euler") {
+    if (filter_ && subTagName == "euler") {
         std::vector<std::string> tokens = basicTokenise(
             static_cast<XMLCharsReader*>(subReader)->chars());
 
@@ -182,10 +183,8 @@ void XMLLegacyPropertiesFilterReader::endContentSubElement(
             try {
                 filter_->addEulerChar(LargeInteger(t));
             } catch (const regina::InvalidArgument&) {
-                // Silently fail with this token, but move on and try the next.
-                // Note that this behaviour changes with the second-generation
-                // file format, where an unparseable Euler characteristic
-                // will result in the entire filter being dropped.
+                filter_.reset();
+                return;
             }
         }
     }

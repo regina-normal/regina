@@ -271,6 +271,12 @@ Version 7.5  [ TODO ]
                 enumerate/treelp.h)
               + IsoSigEncoding (defined in triangulation/isosigencoding.h)
               + IsoSigType (defined in triangulation/isosigtype.h)
+    FILE FORMAT:
+        - When reading a second-generation XML file (from Regina 3.0-6.0.1),
+          a misconstructed surface filter now results in the entire filter
+          being dropped (instead of attempting to reconstruct something from
+          what _could_ be parsed).  This now matches how third-generation XML
+          files (Regina 7.0+) are treated.
     PYTHON:
         - The bindings for tightEncoding() now accept integers of any size
           (using C++ long where possible, and regina::Integer otherwise).
