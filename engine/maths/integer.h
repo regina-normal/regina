@@ -850,7 +850,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
         IntegerBase operator *(IntType other) const;
         /**
          * Divides this by the given integer and returns the result.
-         * The result will be truncated to an integer, i.e. rounded
+         * The result will be truncated to an integer, i.e., rounded
          * towards zero.
          * This integer is not changed.
          *
@@ -872,7 +872,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
         IntegerBase operator /(const IntegerBase& other) const;
         /**
          * Divides this by the given native C++ integer and returns the result.
-         * The result will be truncated to an integer, i.e. rounded
+         * The result will be truncated to an integer, i.e., rounded
          * towards zero.
          * This integer is not changed.
          *
@@ -900,8 +900,8 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * this exactly, and for large integers can be much faster than
          * ordinary division.  This integer is not changed.
          *
-         * \pre The given integer divides exactly into
-         * this integer, i.e. \a this divided by \a other is an integer.
+         * \pre The given integer divides exactly into this integer,
+         * i.e., \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          * \pre Neither this nor \a other is infinite.
          *
@@ -915,8 +915,8 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * this exactly, and for large integers can be much faster than
          * ordinary division.  This integer is not changed.
          *
-         * \pre The given integer divides exactly into
-         * this integer, i.e. \a this divided by \a other is an integer.
+         * \pre The given integer divides exactly into this integer,
+         * i.e., \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          * \pre This integer is not infinite.
          *
@@ -1082,7 +1082,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
         IntegerBase& operator *=(IntType other);
         /**
          * Divides this by the given integer.
-         * The result will be truncated to an integer, i.e. rounded
+         * The result will be truncated to an integer, i.e., rounded
          * towards zero.
          * This integer is changed to reflect the result.
          *
@@ -1104,7 +1104,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
         IntegerBase& operator /=(const IntegerBase& other);
         /**
          * Divides this by the given native C++ integer.
-         * The result will be truncated to an integer, i.e. rounded
+         * The result will be truncated to an integer, i.e., rounded
          * towards zero.
          * This integer is changed to reflect the result.
          *
@@ -1132,8 +1132,8 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * this exactly, and for large integers this is much faster than
          * ordinary division.  This integer is changed to reflect the result.
          *
-         * \pre The given integer divides exactly into
-         * this integer, i.e. \a this divided by \a other is an integer.
+         * \pre The given integer divides exactly into this integer,
+         * i.e., \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          * \pre Neither this nor \a other is infinite.
          *
@@ -1147,8 +1147,8 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * this exactly, and for large integers this is much faster than
          * ordinary division.  This integer is changed to reflect the result.
          *
-         * \pre The given integer divides exactly into
-         * this integer, i.e. \a this divided by \a other is an integer.
+         * \pre The given integer divides exactly into this integer,
+         * i.e., \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          * \pre This integer is not infinite.
          *
@@ -2072,7 +2072,7 @@ class NativeInteger {
         constexpr NativeInteger operator *(Native other) const;
         /**
          * Divides this by the given integer and returns the result.
-         * The result will be truncated to an integer, i.e. rounded
+         * The result will be truncated to an integer, i.e., rounded
          * towards zero.
          * This integer is not changed.
          *
@@ -2086,7 +2086,7 @@ class NativeInteger {
         constexpr NativeInteger operator /(const NativeInteger& other) const;
         /**
          * Divides this by the given integer and returns the result.
-         * The result will be truncated to an integer, i.e. rounded
+         * The result will be truncated to an integer, i.e., rounded
          * towards zero.
          * This integer is not changed.
          *
@@ -2110,8 +2110,8 @@ class NativeInteger {
          * integers) there is no real performance gain in using `x.divExact(y)`
          * instead of `x / y`.
          *
-         * \pre The given integer divides exactly into
-         * this integer, i.e. \a this divided by \a other is an integer.
+         * \pre The given integer divides exactly into this integer,
+         * i.e., \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          *
          * \param other the integer to divide this by.
@@ -2130,8 +2130,8 @@ class NativeInteger {
          * integers) there is no real performance gain in using `x.divExact(y)`
          * instead of `x / y`.
          *
-         * \pre The given integer divides exactly into
-         * this integer, i.e. \a this divided by \a other is an integer.
+         * \pre The given integer divides exactly into this integer,
+         * i.e., \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          *
          * \param other the integer to divide this by.
@@ -2144,7 +2144,7 @@ class NativeInteger {
          * as this integer.
          * This integer is not changed.
          *
-         * For a division routine that always returns a non-negative
+         * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
          * \exception DivisionByZero The argument \a other is zero.
@@ -2159,7 +2159,7 @@ class NativeInteger {
          * as this integer.
          * This integer is not changed.
          *
-         * For a division routine that always returns a non-negative
+         * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
          * \exception DivisionByZero The argument \a other is zero.
@@ -2257,7 +2257,7 @@ class NativeInteger {
         constexpr NativeInteger& operator *=(Native other);
         /**
          * Divides this by the given integer.
-         * The result will be truncated to an integer, i.e. rounded
+         * The result will be truncated to an integer, i.e., rounded
          * towards zero.
          * This integer is changed to reflect the result.
          *
@@ -2271,7 +2271,7 @@ class NativeInteger {
         constexpr NativeInteger& operator /=(const NativeInteger& other);
         /**
          * Divides this by the given integer.
-         * The result will be truncated to an integer, i.e. rounded
+         * The result will be truncated to an integer, i.e., rounded
          * towards zero.
          * This integer is changed to reflect the result.
          *
@@ -2295,8 +2295,8 @@ class NativeInteger {
          * integers) there is no real performance gain in using
          * `x.divByExact(y)` instead of `x /= y`.
          *
-         * \pre The given integer divides exactly into
-         * this integer, i.e. \a this divided by \a other is an integer.
+         * \pre The given integer divides exactly into this integer,
+         * i.e., \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          *
          * \param other the integer to divide this by.
@@ -2315,8 +2315,8 @@ class NativeInteger {
          * integers) there is no real performance gain in using
          * `x.divByExact(y)` instead of `x /= y`.
          *
-         * \pre The given integer divides exactly into
-         * this integer, i.e. \a this divided by \a other is an integer.
+         * \pre The given integer divides exactly into this integer,
+         * i.e., \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          *
          * \param other the integer to divide this by.
