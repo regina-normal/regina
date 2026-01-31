@@ -2147,7 +2147,7 @@ class NativeInteger {
          * For a division routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
-         * \pre \a other is not zero.
+         * \exception DivisionByZero The argument \a other is zero.
          *
          * \param other the integer to divide this by.
          * \return the remainder \a this modulo \a other.
@@ -2162,7 +2162,7 @@ class NativeInteger {
          * For a division routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
-         * \pre \a other is not zero.
+         * \exception DivisionByZero The argument \a other is zero.
          *
          * \param other the integer to divide this by.
          * \return the remainder \a this modulo \a other.
@@ -2332,7 +2332,7 @@ class NativeInteger {
          * For a mod routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
-         * \pre \a other is not zero.
+         * \exception DivisionByZero The argument \a other is zero.
          *
          * \param other the integer modulo which this integer will be
          * reduced.
@@ -2348,7 +2348,7 @@ class NativeInteger {
          * For a mod routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
-         * \pre \a other is not zero.
+         * \exception DivisionByZero The argument \a other is zero.
          *
          * \param other the integer modulo which this integer will be
          * reduced.
@@ -4166,12 +4166,16 @@ inline constexpr NativeInteger<bytes> NativeInteger<bytes>::divExact(
 template <int bytes>
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator %(
         const NativeInteger<bytes>& other) const {
+    if (other.data_ == 0)
+        throw DivisionByZero();
     return NativeInteger<bytes>(data_ % other.data_);
 }
 
 template <int bytes>
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator %(
         Native other) const {
+    if (other == 0)
+        throw DivisionByZero();
     return NativeInteger<bytes>(data_ % other);
 }
 
@@ -4283,6 +4287,8 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::divByExact(
 template <int bytes>
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator %= (
         const NativeInteger<bytes>& other) {
+    if (other.data_ == 0)
+        throw DivisionByZero();
     data_ %= other.data_;
     return *this;
 }
@@ -4290,6 +4296,8 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator %= (
 template <int bytes>
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator %= (
         Native other) {
+    if (other == 0)
+        throw DivisionByZero();
     data_ %= other;
     return *this;
 }

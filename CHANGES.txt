@@ -148,8 +148,8 @@ Version 7.5  [ TODO ]
               are available.
             - The output stream operator now ensures numerical output even when
               bytes == 1 (i.e., when the native C++ integer is a signed char).
-            - The division operators / and /= now throw an exception when
-              dividing by zero.
+            - The division and modulo operators (/, /=, %, %=) now throw an
+              exception when the argument is zero.
             - The division functions divExact() and divByExact() now have
               preconditions that require exact divisibiliy, just like their
               counterparts in the Integer and LargeInteger classes.
