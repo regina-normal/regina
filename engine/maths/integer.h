@@ -933,7 +933,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * as this integer.
          * This integer is not changed.
          *
-         * For a division routine that always returns a non-negative
+         * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
          * \pre \a other is not zero.
@@ -949,7 +949,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * as this integer.
          * This integer is not changed.
          *
-         * For a division routine that always returns a non-negative
+         * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
          * \pre \a other is not zero.
@@ -1165,7 +1165,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * value of this integer.
          * This integer is changed to reflect the result.
          *
-         * For a mod routine that always returns a non-negative
+         * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
          * \pre \a other is not zero.
@@ -1182,7 +1182,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * value of this integer.
          * This integer is changed to reflect the result.
          *
-         * For a mod routine that always returns a non-negative
+         * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
          * \pre \a other is not zero.
@@ -2329,7 +2329,7 @@ class NativeInteger {
          * value of this integer.
          * This integer is changed to reflect the result.
          *
-         * For a mod routine that always returns a non-negative
+         * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
          * \exception DivisionByZero The argument \a other is zero.
@@ -2345,7 +2345,7 @@ class NativeInteger {
          * value of this integer.
          * This integer is changed to reflect the result.
          *
-         * For a mod routine that always returns a non-negative
+         * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
          * \exception DivisionByZero The argument \a other is zero.
