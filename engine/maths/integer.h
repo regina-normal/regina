@@ -2100,8 +2100,18 @@ class NativeInteger {
         constexpr NativeInteger operator /(Native other) const;
         /**
          * Divides this by the given integer and returns the result.
-         * For native integers, this is identical to operator /.
+         * This integer is not changed.
          *
+         * This function is provided for consistency with Integer::divExact()
+         * and LargeInteger::divExact(), and in the spirit of those functions,
+         * it should only be used when the given integer divides into this
+         * exactly.  However, the implementation for NativeInteger just uses
+         * the native operator `/`, and so (unlike for arbitrary precision
+         * integers) there is no real performance gain in using `x.divExact(y)`
+         * instead of `x / y`.
+         *
+         * \pre The given integer divides exactly into
+         * this integer, i.e. \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          *
          * \param other the integer to divide this by.
@@ -2110,8 +2120,18 @@ class NativeInteger {
         constexpr NativeInteger divExact(const NativeInteger& other) const;
         /**
          * Divides this by the given integer and returns the result.
-         * For native integers, this is identical to operator /.
+         * This integer is not changed.
          *
+         * This function is provided for consistency with Integer::divExact()
+         * and LargeInteger::divExact(), and in the spirit of those functions,
+         * it should only be used when the given integer divides into this
+         * exactly.  However, the implementation for NativeInteger just uses
+         * the native operator `/`, and so (unlike for arbitrary precision
+         * integers) there is no real performance gain in using `x.divExact(y)`
+         * instead of `x / y`.
+         *
+         * \pre The given integer divides exactly into
+         * this integer, i.e. \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          *
          * \param other the integer to divide this by.
@@ -2265,8 +2285,18 @@ class NativeInteger {
         constexpr NativeInteger& operator /=(Native other);
         /**
          * Divides this by the given integer.
-         * For native integers, this routine is identical to operator /=.
+         * This integer is changed to reflect the result.
          *
+         * This function is provided for consistency with Integer::divByExact()
+         * and LargeInteger::divByExact(), and in the spirit of those functions,
+         * it should only be used when the given integer divides into this
+         * exactly.  However, the implementation for NativeInteger just uses
+         * the native operator `/=`, and so (unlike for arbitrary precision
+         * integers) there is no real performance gain in using
+         * `x.divByExact(y)` instead of `x /= y`.
+         *
+         * \pre The given integer divides exactly into
+         * this integer, i.e. \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          *
          * \param other the integer to divide this by.
@@ -2275,8 +2305,18 @@ class NativeInteger {
         constexpr NativeInteger& divByExact(const NativeInteger& other);
         /**
          * Divides this by the given integer.
-         * For native integers, this routine is identical to operator /=.
+         * This integer is changed to reflect the result.
          *
+         * This function is provided for consistency with Integer::divByExact()
+         * and LargeInteger::divByExact(), and in the spirit of those functions,
+         * it should only be used when the given integer divides into this
+         * exactly.  However, the implementation for NativeInteger just uses
+         * the native operator `/=`, and so (unlike for arbitrary precision
+         * integers) there is no real performance gain in using
+         * `x.divByExact(y)` instead of `x /= y`.
+         *
+         * \pre The given integer divides exactly into
+         * this integer, i.e. \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          *
          * \param other the integer to divide this by.
