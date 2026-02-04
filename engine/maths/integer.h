@@ -857,9 +857,11 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * If \a other is known to divide this integer exactly,
          * divExact() should be used instead.
          *
-         * Infinity divided by anything will return infinity.
-         * Anything finite divided by infinity will return zero.
-         * Anything finite divided by zero will return infinity.
+         * Regarding special cases:
+         *
+         * - infinity divided by anything will return infinity;
+         * - anything divided by zero will likewise return infinity;
+         * - anything finite divided by infinity will return zero.
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
@@ -879,8 +881,10 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * If \a other is known to divide this integer exactly,
          * divExact() should be used instead.
          *
-         * Infinity divided by anything will return infinity.
-         * Anything finite divided by zero will return infinity.
+         * Regarding special cases:
+         *
+         * - infinity divided by anything will return infinity;
+         * - anything divided by zero will likewise return infinity.
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
@@ -933,11 +937,17 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * as this integer.
          * This integer is not changed.
          *
+         * Regarding special cases:
+         *
+         * - any finite \a x modulo infinity will return \a x;
+         * - infinity modulo anything non-zero will return zero.
+         *
          * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
-         * \pre \a other is not zero.
-         * \pre Neither this nor \a other is infinite.
+         * \exception DivisionByZero The argument \a other is zero.
+         * Note that, unlike the division operators, this exception will be
+         # thrown even if this class supports infinity.
          *
          * \param other the integer to divide this by.
          * \return the remainder \a this modulo \a other.
@@ -949,13 +959,18 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * as this integer.
          * This integer is not changed.
          *
+         * Regarding special cases:
+         *
+         * - infinity modulo anything non-zero will return zero.
+         *
          * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
-         * \pre \a other is not zero.
-         * \pre This integer is not infinite.
-         *
          * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \exception DivisionByZero The argument \a other is zero.
+         * Note that, unlike the division operators, this exception will be
+         # thrown even if this class supports infinity.
          *
          * \param other the integer to divide this by.
          * \return the remainder \a this modulo \a other.
@@ -1089,9 +1104,11 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * If \a other is known to divide this integer exactly,
          * divByExact() should be used instead.
          *
-         * Infinity divided by anything will return infinity.
-         * Anything finite divided by infinity will return zero.
-         * Anything finite divided by zero will return infinity.
+         * Regarding special cases:
+         *
+         * - infinity divided by anything will return infinity;
+         * - anything divided by zero will likewise return infinity;
+         * - anything finite divided by infinity will return zero.
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
@@ -1111,8 +1128,10 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * If \a other is known to divide this integer exactly,
          * divByExact() should be used instead.
          *
-         * Infinity divided by anything will return infinity.
-         * Anything finite divided by zero will return infinity.
+         * Regarding special cases:
+         *
+         * - infinity divided by anything will return infinity;
+         * - anything divided by zero will likewise return infinity.
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
@@ -1165,11 +1184,17 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * value of this integer.
          * This integer is changed to reflect the result.
          *
+         * Regarding special cases:
+         *
+         * - any finite \a x modulo infinity will return \a x;
+         * - infinity modulo anything non-zero will return zero.
+         *
          * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
-         * \pre \a other is not zero.
-         * \pre Neither this nor \a other is infinite.
+         * \exception DivisionByZero The argument \a other is zero.
+         * Note that, unlike the division operators, this exception will be
+         # thrown even if this class supports infinity.
          *
          * \param other the integer modulo which this integer will be
          * reduced.
@@ -1182,13 +1207,18 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * value of this integer.
          * This integer is changed to reflect the result.
          *
+         * Regarding special cases:
+         *
+         * - infinity modulo anything non-zero will return zero.
+         *
          * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
-         * \pre \a other is not zero.
-         * \pre This integer is not infinite.
-         *
          * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \exception DivisionByZero The argument \a other is zero.
+         * Note that, unlike the division operators, this exception will be
+         # thrown even if this class supports infinity.
          *
          * \param other the integer modulo which this integer will be reduced.
          * \return a reference to this integer with its new value.
@@ -3719,7 +3749,16 @@ template <bool withInfinity>
 template <CppInteger IntType>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
         IntType other) {
-    // Precondition: this != infinity, other != 0.
+    if (other == 0)
+        throw DivisionByZero();
+    if constexpr (withInfinity)
+        if (isInfinite()) {
+            makeFinite();
+            small_ = 0;
+            return *this;
+        }
+
+    // Now we have this != infinity, other != 0.
     if (large_) {
         if constexpr (sizeof(IntType) <= sizeof(long)) {
             if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {

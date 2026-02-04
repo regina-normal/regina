@@ -348,7 +348,7 @@ class DivisionByZero : public NumericalError {
         /**
          * Creates a new exception with a stock error message.
          */
-        DivisionByZero() : NumericalError("Division by zero") {}
+        DivisionByZero() : NumericalError("Division or modulo by zero") {}
         /**
          * Creates a new copy of the given exception.
          */

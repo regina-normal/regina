@@ -391,6 +391,30 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::divByExact(
 template <bool withInfinity>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
         const IntegerBase& other) {
+    if constexpr (withInfinity)
+        if (other.isInfinite()) {
+            // We have infinity % infinity == 0 (which requires action), and
+            // for finite x, x % infinity == x (which means nothing to do).
+            if (isInfinite()) {
+                makeFinite();
+                small_ = 0;
+            }
+            return *this;
+        }
+
+    // Test whether other == 0.
+    if (((! large_) && (! small_)) || (large_ && mpz_sgn(large_) == 0))
+        throw DivisionByZero();
+
+    if constexpr (withInfinity)
+        if (isInfinite()) {
+            // We have infinity % (non-zero) == 0.
+            makeFinite();
+            small_ = 0;
+            return *this;
+        }
+
+    // From here on, we know this != infinity and other != (infinity or 0).
     if (other.large_) {
         if (large_) {
             mpz_tdiv_r(large_, large_, other.large_);

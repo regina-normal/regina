@@ -97,6 +97,8 @@ Version 7.5  [ TODO ]
             - The division operators / and /= now throw an exception in the
               class Integer when dividing by zero (but not in LargeInteger,
               since that class supports infinity).
+            - The modulo operators % and %= now support infinite arguments,
+              and now throw an exception when computing anything modulo zero.
         Class IntegerOverflow:
             - New exception class.
         Class Isomorphism<dim>:
