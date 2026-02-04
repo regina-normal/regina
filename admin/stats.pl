@@ -39,7 +39,7 @@ if (not (-e 'LICENSE.txt' and -d 'engine')) {
     exit 1;
 }
 
-my @ext = qw(cpp cc c h hpp tcc m mm py swift);
+my @ext = qw(cpp cc c h hpp tcc m mm py swift test);
 my $types = '\\( -name "*.' . join('" -o -name "*.', @ext) . '" \\)';
 
 # Find any builddirs that should be ignored.
@@ -72,7 +72,7 @@ my $all = `find . $types $exclusions | xargs cat | wc -l`;
 my $snappea = `find engine/snappea/kernel $types | xargs cat | wc -l`;
 my $snappy = `find engine/snappea/snappy $types | xargs cat | wc -l`;
 my $normaliz = `find engine/libnormaliz $types | xargs cat | wc -l`;
-my $pybind11 = `find python/pybind11 $types | xargs cat | wc -l`;
+my $pybind11 = `(find python/pybind11_v2 $types; find python/pybind11_v3 $types) | xargs cat | wc -l`;
 my $docstrings = `find python/docstrings $types | xargs cat | wc -l`;
 my $gtest = `find engine/testsuite/gtest $types | xargs cat | wc -l`;
 
@@ -95,4 +95,17 @@ print "- Normaliz:   $normaliz\n";
 print "- pybind11:   $pybind11\n";
 print "- Docstrings: $docstrings\n";
 print "- GoogleTest: $gtest\n";
+print "\n";
+
+my $test_engine = `find engine/testsuite $types | xargs cat | wc -l` + 0;
+my $test_python = `find python/testsuite $types | xargs cat | wc -l` + 0;
+my $test_utils = `find utils/testsuite $types | xargs cat | wc -l` + 0;
+$test_engine -= $gtest;
+my $test_all = $test_engine + $test_python + $test_utils;
+
+print "Test suite:   $test_all  (excludes GoogleTest)\n";
+print "- Engine:     $test_engine\n";
+print "- Python:     $test_python\n";
+print "- Utils:      $test_utils\n";
+
 exit 0;
