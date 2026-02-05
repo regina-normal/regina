@@ -1274,6 +1274,18 @@ TYPED_TEST(IntegerTest, plusMinus) {
         EXPECT_EQ(TypeParam() + x, x);
         EXPECT_EQ(TypeParam() - x, -x);
 
+        // Verify operating on one's self.
+        {
+            TypeParam z = x;
+            z += z;
+            EXPECT_EQ(z, x + x);
+        }
+        {
+            TypeParam z = x;
+            z -= z;
+            EXPECT_EQ(z, 0);
+        }
+
         for (const auto& y : this->cases) {
             SCOPED_TRACE_REGINA(y);
 
@@ -1465,6 +1477,16 @@ TYPED_TEST(IntegerTest, plusMinus) {
         TypeParam inf(TypeParam::infinity);
         EXPECT_EQ(inf + inf, inf);
         EXPECT_EQ(inf - inf, inf);
+        {
+            TypeParam tmp = TypeParam::infinity;
+            tmp += tmp;
+            EXPECT_EQ(tmp, TypeParam::infinity);
+        }
+        {
+            TypeParam tmp = TypeParam::infinity;
+            tmp -= tmp;
+            EXPECT_EQ(tmp, TypeParam::infinity);
+        }
 
         for (const auto& x : this->cases) {
             SCOPED_TRACE_REGINA(x);
@@ -1520,6 +1542,13 @@ TYPED_TEST(IntegerTest, multiply) {
         verifyProductLargeNative(x, 0, TypeParam());
         verifyProductLargeNative(x, -1, -x);
         verifyProductLargeNative(x, -2, -x - x);
+
+        // Verify operating on one's self.
+        {
+            TypeParam z = x;
+            z *= z;
+            EXPECT_EQ(z, x * x);
+        }
 
         for (const auto& y : this->cases) {
             SCOPED_TRACE_REGINA(y);
@@ -1701,6 +1730,11 @@ TYPED_TEST(IntegerTest, multiply) {
     if constexpr (TypeParam::supportsInfinity) {
         TypeParam inf(TypeParam::infinity);
         EXPECT_EQ(inf * inf, inf);
+        {
+            TypeParam tmp = TypeParam::infinity;
+            tmp *= tmp;
+            EXPECT_EQ(tmp, TypeParam::infinity);
+        }
 
         for (const auto& x : this->cases) {
             SCOPED_TRACE_REGINA(x);
@@ -1742,6 +1776,13 @@ TYPED_TEST(IntegerTest, divide) {
                         tmp /= x;
                         EXPECT_TRUE(tmp.isInfinite());
                     }
+
+                    // Verify operating on one's self.
+                    {
+                        TypeParam tmp = x;
+                        tmp /= tmp;
+                        EXPECT_TRUE(tmp.isInfinite());
+                    }
                 });
             } else {
                 EXPECT_THROW({ TypeParam() / x; }, regina::DivisionByZero);
@@ -1756,6 +1797,12 @@ TYPED_TEST(IntegerTest, divide) {
                 {
                     TypeParam tmp = x;
                     EXPECT_THROW({ tmp /= x; }, regina::DivisionByZero);
+                }
+
+                // Verify operating on one's self.
+                {
+                    TypeParam tmp = x;
+                    EXPECT_THROW({ tmp /= tmp; }, regina::DivisionByZero);
                 }
             }
             // We do not allow divExact() by zero at all.
@@ -1788,6 +1835,18 @@ TYPED_TEST(IntegerTest, divide) {
                     TypeParam tmp = x + x;
                     tmp /= -x;
                     EXPECT_EQ(tmp, -2);
+                }
+
+                // Verify operating on one's self.
+                {
+                    TypeParam tmp = x;
+                    tmp /= tmp;
+                    EXPECT_EQ(tmp, 1);
+                }
+                {
+                    TypeParam tmp = x;
+                    tmp.divByExact(tmp);
+                    EXPECT_EQ(tmp, 1);
                 }
             });
         }
@@ -1991,8 +2050,13 @@ TYPED_TEST(IntegerTest, divide) {
             EXPECT_EQ(tmp, TypeParam::infinity);
         }
         {
-            TypeParam tmp;
+            TypeParam tmp; // zero
             tmp /= TypeParam();
+            EXPECT_EQ(tmp, TypeParam::infinity);
+        }
+        {
+            TypeParam tmp = TypeParam::infinity;
+            tmp /= tmp;
             EXPECT_EQ(tmp, TypeParam::infinity);
         }
 
@@ -2095,6 +2159,12 @@ TYPED_TEST(IntegerTest, mod) {
                     EXPECT_THROW({ z %= x; }, regina::DivisionByZero);
                 }
             }
+
+            // Verify operating on one's self.
+            {
+                TypeParam tmp = x;
+                EXPECT_THROW({ tmp %= tmp; }, regina::DivisionByZero);
+            }
         } else {
             EXPECT_EQ(TypeParam() % x, 0);
             EXPECT_EQ(TypeParam() % x, 0);
@@ -2110,6 +2180,13 @@ TYPED_TEST(IntegerTest, mod) {
                     z %= x;
                     EXPECT_EQ(z, 0);
                 }
+            }
+
+            // Verify operating on one's self.
+            {
+                TypeParam tmp = x;
+                tmp %= tmp;
+                EXPECT_EQ(tmp, 0);
             }
         }
 
