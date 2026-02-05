@@ -403,7 +403,8 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
         }
 
     // Test whether other == 0.
-    if (((! large_) && (! small_)) || (large_ && mpz_sgn(large_) == 0))
+    if (((! other.large_) && (! other.small_)) ||
+            (other.large_ && mpz_sgn(other.large_) == 0))
         throw DivisionByZero();
 
     if constexpr (withInfinity)
