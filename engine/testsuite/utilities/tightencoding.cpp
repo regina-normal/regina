@@ -400,6 +400,9 @@ TEST(TightEncodingTest, index) {
         verifyIndex<unsigned long long>(i);
         verifyIndex<size_t>(i);
         verifyIndex<ssize_t>(i);
+        #ifdef INT128_AVAILABLE
+        verifyIndex<regina::UInt128>(i);
+        #endif
     }
 
     // Test the boundaries between the three-digit and general cases.
@@ -414,6 +417,10 @@ TEST(TightEncodingTest, index) {
     verifyIndex<size_t>(737279);
     verifyIndex<ssize_t>(737278);
     verifyIndex<ssize_t>(737279);
+    #ifdef INT128_AVAILABLE
+    verifyIndex<regina::UInt128>(737278);
+    verifyIndex<regina::UInt128>(737279);
+    #endif
 
     // Test at and beyond the maximum possible values.
     verifyIndexMax<uint16_t>();
