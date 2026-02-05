@@ -384,7 +384,11 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
         /**
          * Sets this integer to be infinity.
          */
-        inline void makeInfinite() requires (withInfinity);
+        inline void makeInfinite() requires (withInfinity) {
+            detail::InfinityBase<withInfinity>::infinite_ = true;
+            if (large_)
+                clearLarge();
+        }
 
         /**
          * Returns the value of this integer as a native C++ integer of the
@@ -2722,17 +2726,6 @@ inline int IntegerBase<withInfinity>::sign() const {
 
     return (large_ ? mpz_sgn(large_) : small_ > 0 ? 1 : small_ < 0 ? -1 : 0);
 }
-
-#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
-
-template <>
-inline void IntegerBase<true>::makeInfinite() {
-    infinite_ = true;
-    if (large_)
-        clearLarge();
-}
-
-#endif // __DOXYGEN
 
 template <bool withInfinity>
 inline std::string IntegerBase<withInfinity>::str() const {
