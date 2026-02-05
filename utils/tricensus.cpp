@@ -89,7 +89,7 @@ std::unique_ptr<std::ostream> dumpStream;
 unsigned long totPairings = 0;
 
 // Variables used for output.
-long long nSolns;
+size_t nSolns;
 bool textOutput;
 std::ofstream sigStream;
 
