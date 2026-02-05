@@ -795,7 +795,12 @@ class TreeEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          */
         template <typename Action, typename... Args>
         requires TerminatingCallback<Action, const TreeEnumeration&, Args...>
-        bool run(Action&& action, Args&&... args);
+        bool run(Action&& action, Args&&... args) {
+            while (next())
+                if (action(*this, std::forward<Args>(args)...))
+                    return true;
+            return false;
+        }
 
         /**
          * An incremental step in the tree traversal algorithm that
@@ -1102,7 +1107,12 @@ class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          */
         template <typename Action, typename... Args>
         requires TerminatingCallback<Action, const TautEnumeration&, Args...>
-        bool run(Action&& action, Args&&... args);
+        bool run(Action&& action, Args&&... args) {
+            while (next())
+                if (action(*this, std::forward<Args>(args)...))
+                    return true;
+            return false;
+        }
 
         /**
          * An incremental step in the enumeration algorithm that
@@ -1587,18 +1597,6 @@ inline size_t TreeEnumeration<Constraint, Ban, IntType>::solutions() const {
 }
 
 template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
-template <typename Action, typename... Args>
-requires TerminatingCallback<Action,
-    const TreeEnumeration<Constraint, Ban, IntType>&, Args...>
-inline bool TreeEnumeration<Constraint, Ban, IntType>::run(Action&& action,
-        Args&&... args) {
-    while (next())
-        if (action(*this, std::forward<Args>(args)...))
-            return true;
-    return false;
-}
-
-template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
 inline bool TreeEnumeration<Constraint, Ban, IntType>::writeTypes(
         const TreeEnumeration& tree) {
     std::cout << "SOLN #" << tree.solutions() << ": ";
@@ -1630,18 +1628,6 @@ inline TautEnumeration<Constraint, Ban, IntType>::TautEnumeration(
 template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
 inline size_t TautEnumeration<Constraint, Ban, IntType>::solutions() const {
     return nSolns_;
-}
-
-template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
-template <typename Action, typename... Args>
-requires TerminatingCallback<Action,
-    const TautEnumeration<Constraint, Ban, IntType>&, Args...>
-inline bool TautEnumeration<Constraint, Ban, IntType>::run(Action&& action,
-        Args&&... args) {
-    while (next())
-        if (action(*this, std::forward<Args>(args)...))
-            return true;
-    return false;
 }
 
 template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
