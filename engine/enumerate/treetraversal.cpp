@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include "enumerate/treetraversal-impl.h"
+#include "utilities/intutils.h" // for INT128_AVAILABLE
 
 namespace regina {
 

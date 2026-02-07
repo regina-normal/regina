@@ -31,7 +31,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include "utilities/qitmask.h"
-#include "utilities/intutils.h"
+#include "utilities/intutils.h" // for INT128_AVAILABLE
 #include "../helpers.h"
 #include "../docstrings/utilities/qitmask.h"
 

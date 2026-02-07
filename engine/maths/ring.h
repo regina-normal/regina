@@ -39,7 +39,7 @@
 #endif
 
 #include "concepts/core.h"
-#include "utilities/intutils.h"
+#include "utilities/intutils.h" // for INT128_AVAILABLE
 
 namespace regina {
 

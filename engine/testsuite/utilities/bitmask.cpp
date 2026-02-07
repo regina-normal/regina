@@ -35,7 +35,7 @@
 #include "maths/binom.h"
 #include "utilities/bitmask.h"
 #include "utilities/bitmanip.h"
-#include "utilities/intutils.h"
+#include "utilities/intutils.h" // for INT128_AVAILABLE
 
 #include "testhelper.h"
 

@@ -44,6 +44,7 @@
 #include "maths/vector.h"
 #include "packet/container.h"
 #include "surface/surfacefilter.h"
+#include "utilities/intutils.h" // for INT128_AVAILABLE
 
 using regina::Integer;
 using regina::LargeInteger;
