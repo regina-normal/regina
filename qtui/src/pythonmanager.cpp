@@ -28,7 +28,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "regina-config.h"
 #include "file/globaldirs.h"
 
 #include "pythonmanager.h"

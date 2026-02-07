@@ -60,6 +60,7 @@
 #else
   #error "No key-value store library was detected!"
 #endif
+
 #include "census/census.h"
 
 namespace regina {

@@ -28,7 +28,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "regina-config.h" // for REGINA_HIGHDIM
+#include "regina-core.h"
 
 namespace pybind11 { class module_; }
 

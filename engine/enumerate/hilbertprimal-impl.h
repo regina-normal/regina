@@ -41,7 +41,6 @@
 #endif
 
 #include "regina-core.h"
-#include "regina-config.h"
 #include "enumerate/hilbertprimal.h"
 #include "enumerate/maxadmissible.h"
 #include "enumerate/validityconstraints.h"

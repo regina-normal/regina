@@ -28,7 +28,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "regina-config.h" // for REGINA_HIGHDIM
 #include "link/link.h"
 #include "angle/anglestructures.h"
 #include "hypersurface/normalhypersurfaces.h"

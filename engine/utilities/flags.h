@@ -39,7 +39,7 @@
 
 #include <concepts>
 #include <type_traits>
-#include "regina-config.h"
+#include "regina-core.h"
 
 namespace regina {
 

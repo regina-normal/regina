@@ -29,7 +29,6 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "regina-config.h" // for REGINA_HIGHDIM
 #include "triangulation/generic.h"
 
 // UI includes:

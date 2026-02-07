@@ -28,8 +28,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "regina-config.h"
-
 #include "file/fileinfo.h"
 #include "file/globaldirs.h"
 #include "snappea/snappeatriangulation.h"

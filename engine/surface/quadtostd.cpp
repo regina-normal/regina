@@ -28,7 +28,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "regina-config.h"
 #include "enumerate/doubledescription.h"
 #include "maths/matrix.h"
 #include "maths/vector.h"

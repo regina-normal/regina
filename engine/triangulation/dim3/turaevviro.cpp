@@ -33,7 +33,6 @@
 #include <numbers>
 #include <numeric> // for std::gcd()
 #include <thread>
-#include "regina-config.h"
 #include "libnormaliz/cone.h"
 #include "maths/cyclotomic.h"
 #include "maths/numbertheory.h"

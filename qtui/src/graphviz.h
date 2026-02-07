@@ -35,7 +35,7 @@
 #ifndef __GRAPHVIZ_H
 #define __GRAPHVIZ_H
 
-#include "regina-config.h" // for LIBGVC_FOUND and LIBGVC_DYNAMIC_PLUGINS
+#include "regina-core.h" // for LIBGVC_FOUND and LIBGVC_DYNAMIC_PLUGINS
 #include <string>
 
 class QSvgWidget;

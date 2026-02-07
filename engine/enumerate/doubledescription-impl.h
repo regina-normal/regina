@@ -44,7 +44,6 @@
 #include <algorithm>
 #include <iterator>
 #include "regina-core.h"
-#include "regina-config.h"
 #include "enumerate/doubledescription.h"
 #include "enumerate/validityconstraints.h"
 #include "maths/matrixops.h"

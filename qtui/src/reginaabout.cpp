@@ -28,7 +28,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "regina-config.h"
+#include "regina-core.h"
 #include "libnormaliz/version.h"
 
 #ifdef BUILD_PYTHON_BINDINGS

@@ -31,7 +31,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
-#include "regina-config.h" // for REGINA_HIGHDIM
 #include "link/link.h"
 #include "link/modellinkgraph.h"
 #include "triangulation/cut.h"

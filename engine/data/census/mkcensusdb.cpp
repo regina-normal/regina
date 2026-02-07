@@ -35,7 +35,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include "utilities/zstr.h"
+#include "utilities/zstr.h" // Does not include regina-config.h
 
 #if defined(REGINA_KVSTORE_QDBM)
   #include <depot.h>

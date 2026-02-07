@@ -28,9 +28,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include <regina-config.h>
 #include <thread>
-
 #include "core/engine.h"
 #include "utilities/intutils.h" // for INT128_AVAILABLE
 

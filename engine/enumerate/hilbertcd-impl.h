@@ -41,7 +41,6 @@
 #endif
 
 #include "regina-core.h"
-#include "regina-config.h"
 #include "enumerate/hilbertcd.h"
 #include "enumerate/validityconstraints.h"
 #include "maths/matrix.h"

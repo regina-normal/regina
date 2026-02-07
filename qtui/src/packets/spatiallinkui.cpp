@@ -29,7 +29,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "regina-config.h"
+#include "regina-core.h"
 
 // UI includes:
 #include "bigwidget.h"
