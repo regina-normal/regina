@@ -42,7 +42,6 @@
 #include "progress/progresstracker.h"
 #include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
-#include "utilities/intutils.h" // for INT128_AVAILABLE
 
 namespace regina {
 

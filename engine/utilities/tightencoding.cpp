@@ -29,7 +29,6 @@
  **************************************************************************/
 
 #include "maths/integer.h"
-#include "utilities/intutils.h" // for INT128_AVAILABLE
 #include "utilities/tightencoding-impl.h"
 
 using it1 = std::string::const_iterator;

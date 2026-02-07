@@ -37,7 +37,7 @@
 #define __REGINA_CORE_H
 #endif
 
-#include "regina-config.h" // for REGINA_HIGHDIM
+#include "regina-config.h"
 
 namespace regina {
 
@@ -114,6 +114,65 @@ constexpr int maxDim() {
     return 8;
 #endif
 }
+
+#ifdef __DOXYGEN
+    /**
+     * Defined if and only if native 128-bit arithmetic is available on
+     * this platform.
+     *
+     * If this macro is defined, then you can access native signed and
+     * unsigned 128-bit integers through the type aliases Int128 and UInt128
+     * respectively.
+     *
+     * If this macro is not defined, then the types Int128 and UInt128
+     * will be left undefined.
+     *
+     * \ingroup utilities
+     */
+    #define INT128_AVAILABLE
+
+    /**
+     * A native signed 128-bit integer type, if available on this platform.
+     *
+     * If native 128-bit arithmetic is not available on this platform, then
+     * the types Int128 and UInt128 will be left undefined.
+     *
+     * See also the preprocessor macro `INT128_AVAILABLE`, which is defined
+     * precisely when these type aliases Int128 and UInt128 exist.
+     *
+     * \ingroup utilities
+     */
+    using Int128 = int128_t;
+
+    /**
+     * A native unsigned 128-bit integer type, if available on this platform.
+     *
+     * If native 128-bit arithmetic is not available on this platform, then
+     * the types Int128 and UInt128 will be left undefined.
+     *
+     * See also the preprocessor macro `INT128_AVAILABLE`, which is defined
+     * precisely when these type aliases Int128 and UInt128 exist.
+     *
+     * \ingroup utilities
+     */
+    using UInt128 = uint128_t;
+#else
+    #if defined(INTERNAL___INT128_FOUND)
+        #define INT128_AVAILABLE
+        using Int128 = __int128;
+        using UInt128 = __uint128;
+    #elif defined(INTERNAL___INT128_T_FOUND)
+        #define INT128_AVAILABLE
+        using Int128 = __int128_t;
+        using UInt128 = __uint128_t;
+    #elif defined(INTERNAL_INT128_T_FOUND)
+        #define INT128_AVAILABLE
+        using Int128 = int128_t;
+        using UInt128 = uint128_t;
+    #else
+        #undef INT128_AVAILABLE
+    #endif
+#endif
 
 /**
  * Represents various classes of algorithms that Regina can use for

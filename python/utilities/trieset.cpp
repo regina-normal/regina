@@ -29,7 +29,6 @@
  **************************************************************************/
 
 #include <pybind11/pybind11.h>
-#include "utilities/intutils.h" // for INT128_AVAILABLE
 #include "utilities/trieset.h"
 #include "../helpers.h"
 #include "../docstrings/utilities/trieset.h"

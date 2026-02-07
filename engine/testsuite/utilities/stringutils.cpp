@@ -31,7 +31,6 @@
 #include <limits>
 #include <sstream>
 #include "maths/integer.h"
-#include "utilities/intutils.h" // for INT128_AVAILABLE
 #include "utilities/stringutils.h"
 
 #include "testhelper.h"

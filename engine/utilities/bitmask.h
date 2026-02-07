@@ -44,7 +44,6 @@
 #include "concepts/core.h"
 #include "concepts/iterator.h"
 #include "utilities/bitmanip.h"
-#include "utilities/intutils.h" // for INT128_AVAILABLE
 
 namespace regina {
 

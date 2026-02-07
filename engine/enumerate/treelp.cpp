@@ -32,7 +32,6 @@
 #include "enumerate/treeconstraint.h"
 #include "enumerate/treelp-impl.h"
 #include "surface/normalsurface.h"
-#include "utilities/intutils.h" // for INT128_AVAILABLE
 
 namespace regina {
 

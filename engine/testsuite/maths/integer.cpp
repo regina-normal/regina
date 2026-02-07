@@ -32,7 +32,6 @@
 #include <limits>
 #include "concepts/core.h"
 #include "maths/integer.h"
-#include "utilities/intutils.h" // for INT128_AVAILABLE
 #include "utilities/stringutils.h"
 
 #include "testhelper.h"

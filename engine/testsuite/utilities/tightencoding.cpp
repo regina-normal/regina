@@ -33,7 +33,6 @@
 #include <string>
 #include "concepts/core.h"
 #include "maths/integer.h"
-#include "utilities/intutils.h" // for INT128_AVAILABLE
 #include "utilities/tightencoding-impl.h"
 
 #include "testhelper.h"
