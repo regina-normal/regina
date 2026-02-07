@@ -41,7 +41,6 @@
 #define __REGINA_TRIANGULATION_H
 #endif
 
-#include "regina-config.h" // for REGINA_HIGHDIM
 #include "packet/packet.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"

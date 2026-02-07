@@ -43,7 +43,7 @@
 #define __REGINA_CENSUS_IMPL_H
 #endif
 
-#include "regina-config.h" // For key-value store macros
+#include "regina-config.h" // For key-value store macros (REGINA_KVSTORE_*)
 
 #include <iostream>
 #include <cstdlib>

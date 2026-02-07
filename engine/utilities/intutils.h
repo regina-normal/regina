@@ -39,7 +39,6 @@
 #endif
 
 #include "regina-core.h"
-#include "regina-config.h"
 #include <concepts>
 #include <cstdint>
 #include <limits>

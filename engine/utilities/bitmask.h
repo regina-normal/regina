@@ -41,7 +41,6 @@
 #include <iostream>
 
 #include "regina-core.h"
-#include "regina-config.h"
 #include "concepts/core.h"
 #include "concepts/iterator.h"
 #include "utilities/bitmanip.h"

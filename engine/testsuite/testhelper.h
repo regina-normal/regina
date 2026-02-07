@@ -31,7 +31,7 @@
 #ifndef __TESTHELPER_H
 #define __TESTHELPER_H
 
-#include "regina-config.h"
+#include "regina-core.h"
 #include "gtest/gtest.h"
 
 /**
