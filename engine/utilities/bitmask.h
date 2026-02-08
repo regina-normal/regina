@@ -1414,6 +1414,64 @@ class Bitmask2 {
 #endif
 };
 
+/**
+ * Performs some action using an optimised bitmask type that can hold the
+ * given number of bits.
+ *
+ * The reason for using this routine (as opposed to just performing your
+ * action using the general Bitmask type) is that, if \a bits is small, this
+ * routine will use one of the optimised bitmask types Bitmask1 or Bitmask2.
+ *
+ * The action should be a templated callable type (e.g., a generic lambda),
+ * whose template type parameter adheres to the concept ReginaBitmask.
+ * Any arguments that are supplied via \a args will be forwarded through as
+ * arguments to \a action, and any return value from \a action will be ignored.
+ *
+ * As an example:
+ *
+ * \code
+ * usingBitmaskFor(nBits, []<ReginaBitmask BitmaskType>() {
+ *     BitmaskType bitmask;
+ *     ...
+ * });
+ * \endcode
+ *
+ * \nopython
+ *
+ * \param bits the number of bits that the chosen bitmask type must support.
+ * \param action the action to perform using the best possible bitmask type.
+ * \param args any arguments that should be forwarded to \a action.
+ *
+ * \ingroup utilities
+ */
+template <typename Action, typename... Args>
+void usingBitmaskFor(size_t bits, Action&& action, Args&&... args) {
+    // Note: The C++ standard says (long long) must be at least 64-bit.
+    if (bits <= 8 * sizeof(unsigned))
+        action.template operator()<Bitmask1<unsigned>>(
+            std::forward<Args>(args)...);
+    else if (bits <= 8 * sizeof(unsigned long))
+        action.template operator()<Bitmask1<unsigned long>>(
+            std::forward<Args>(args)...);
+    else if (bits <= 8 * sizeof(unsigned long long))
+        action.template operator()<Bitmask1<unsigned long long>>(
+            std::forward<Args>(args)...);
+#ifdef INT128_AVAILABLE
+    else if (bits <= 8 * sizeof(regina::UInt128))
+        action.template operator()<Bitmask1<regina::UInt128>>(
+            std::forward<Args>(args)...);
+    else if (bits <= 16 * sizeof(regina::UInt128))
+        action.template operator()<Bitmask2<regina::UInt128>>(
+            std::forward<Args>(args)...);
+#else
+    else if (bits <= 16 * sizeof(unsigned long long))
+        action.template operator()<Bitmask2<unsigned long long>>(
+            std::forward<Args>(args)...);
+#endif
+    else
+        action.template operator()<Bitmask>(std::forward<Args>(args)...);
+}
+
 // Inline functions for Bitmask
 
 inline Bitmask::Bitmask() : pieces(0), mask(nullptr) {

@@ -208,14 +208,24 @@ class DoubleDescription {
                  * \param subspace the matrix containing the set of
                  * hyperplanes to intersect with the original cone
                  * (one hyperplane for each row of the matrix).
-                 * \param hypOrder the order in which we plan to
-                 * intersect the hyperplanes.  The length of this array
-                 * must be the number of rows in \a subspace, and the
-                 * <i>i</i>th hyperplane to intersect must be described
-                 * by row `hypOrder[i]` of \a subspace.
+                 * \param hypOrder the beginning of an integer sequence
+                 * indicating the order in which we plan to intersect the
+                 * hyperplanes.  The length of this sequence must be the number
+                 * of rows in \a subspace, and if the <i>i</i>th element of
+                 * the sequence is \a k then the <i>i</i>th hyperplane to
+                 * intersect must be described by row \a k of \a subspace.
                  */
-                inline RaySpec(size_t axis, const MatrixInt& subspace,
-                    const long* hypOrder);
+                template <InputIteratorFor<long> iterator>
+                RaySpec(size_t axis, const MatrixInt& subspace,
+                        iterator hypOrder) :
+                        Vector<IntegerType>(subspace.rows()),
+                        facets_(subspace.columns()) {
+                    for (size_t i = 0; i < subspace.columns(); ++i)
+                        if (i != axis)
+                            facets_.set(i, true);
+                    for (size_t i = 0; i < Vector<IntegerType>::size(); ++i)
+                        elts_[i] = subspace.entry(*hypOrder++, axis);
+                }
 
                 /**
                  * Creates a copy of the given ray specification, with the
@@ -228,7 +238,11 @@ class DoubleDescription {
                  *
                  * \param trunc the ray to copy and truncate.
                  */
-                inline RaySpec(const RaySpec& trunc);
+                RaySpec(const RaySpec& trunc) :
+                        Vector<IntegerType>(trunc.size() - 1),
+                        facets_(trunc.facets_) {
+                    std::copy(trunc.elts_ + 1, trunc.end_, elts_);
+                }
 
                 /**
                  * Creates a new ray, describing where the plane between
@@ -262,7 +276,13 @@ class DoubleDescription {
                  * \return 1, 0 or -1 according to the sign of the next
                  * dot product.
                  */
-                int sign() const;
+                int sign() const {
+                    if (*elts_ < 0)
+                        return -1;
+                    if (*elts_ > 0)
+                        return 1;
+                    return 0;
+                }
 
                 /**
                  * Returns the bitmask listing which facets of the original
@@ -271,7 +291,9 @@ class DoubleDescription {
                  *
                  * \return a bitmask of facets.
                  */
-                inline const BitmaskType& facets() const;
+                const BitmaskType& facets() const {
+                    return facets_;
+                }
 
                 /**
                  * Determines whether this ray belongs to all of the
@@ -285,8 +307,10 @@ class DoubleDescription {
                  * \return \c true if and only if this ray belongs to all
                  * of the facets that _both_ \a x and \a y belong to.
                  */
-                inline bool onAllCommonFacets(
-                    const RaySpec& x, const RaySpec& y) const;
+                bool onAllCommonFacets(const RaySpec& x,
+                        const RaySpec& y) const {
+                    return facets_.containsIntn(x.facets_, y.facets_);
+                }
 
                 /**
                  * Recovers the coordinates of the actual ray that is
@@ -308,25 +332,6 @@ class DoubleDescription {
                 template <ArbitraryPrecisionIntegerVector Ray>
                 void recover(Ray& dest, const MatrixInt& subspace) const;
         };
-
-        /**
-         * Identical to the public routine enumerate(), except
-         * that there is an extra template parameter \a BitmaskType.
-         * This specifies what type should be used for the bitmask
-         * describing which original facets a ray belongs to.
-         *
-         * All arguments to this function are identical to those for the
-         * public routine enumerate().
-         *
-         * \pre The type \a BitmaskType can handle at least \a f bits,
-         * where \a f is the number of original facets in the given range.
-         * \pre The given range of facets is not empty.
-         */
-        template <ArbitraryPrecisionIntegerVector Ray,
-            ReginaBitmask BitmaskType, VoidCallback<Ray&&> Action>
-        static void enumerateUsingBitmask(Action&& action,
-            const MatrixInt& subspace, const ValidityConstraints& constraints,
-            ProgressTracker* tracker, size_t initialRows);
 
         /**
          * A part of the full double description algorithm that
@@ -385,38 +390,6 @@ class DoubleDescription {
             const std::vector<BitmaskType>& constraintMasks,
             ProgressTracker* tracker);
 };
-
-// Inline functions for DoubleDescription::RaySpec
-
-template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
-inline DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
-        const RaySpec<IntegerType, BitmaskType>& trunc) :
-        Vector<IntegerType>(trunc.size() - 1), facets_(trunc.facets_) {
-    std::copy(trunc.elts_ + 1, trunc.end_, elts_);
-}
-
-template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
-inline int DoubleDescription::RaySpec<IntegerType, BitmaskType>::sign() const {
-    if (*elts_ < 0)
-        return -1;
-    if (*elts_ > 0)
-        return 1;
-    return 0;
-}
-
-template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
-inline const BitmaskType&
-        DoubleDescription::RaySpec<IntegerType, BitmaskType>::facets() const {
-    return facets_;
-}
-
-template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
-inline bool
-        DoubleDescription::RaySpec<IntegerType, BitmaskType>::onAllCommonFacets(
-        const RaySpec<IntegerType, BitmaskType>& x,
-        const RaySpec<IntegerType, BitmaskType>& y) const {
-    return facets_.containsIntn(x.facets_, y.facets_);
-}
 
 } // namespace regina
 

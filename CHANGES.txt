@@ -221,6 +221,9 @@ Version 7.5  [ TODO ]
         Function toString():
             - New function for converting native C++ integers to strings, with
               explicit support for 128-bit integers.
+        Function usingBitmaskFor():
+            - New function to select an optimised bitmask type based on a
+              number of bits that is not known until runtime.
         Function valueOf():
             - The native C++ integer versions of valueOf() are now templated,
               and now support 128-bit integers (if the platform supports them).
