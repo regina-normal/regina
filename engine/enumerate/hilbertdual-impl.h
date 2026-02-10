@@ -47,6 +47,7 @@
 #include "enumerate/validityconstraints.h"
 #include "progress/progresstracker.h"
 #include "utilities/bitmask.h"
+#include "utilities/fixedarray.h"
 #include "utilities/intutils.h"
 
 namespace regina {
@@ -55,136 +56,90 @@ template <ArbitraryPrecisionIntegerVector Ray, VoidCallback<Ray&&> Action>
 void HilbertDual::enumerate(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned initialRows) {
-    // Get the dimension of the entire space in which we are working.
-    size_t dim = subspace.columns();
+    usingBitmaskFor(subspace.columns() /* dimension of the space */,
+            [&action, &subspace, &constraints, tracker, initialRows]
+            <ReginaBitmask BitmaskType>(size_t dim) {
+        using IntegerType = typename Ray::value_type;
 
-    // If the space has dimension zero, return no results.
-    if (dim == 0)
-        return;
+        // If the space has dimension zero, return no results at all.
+        if (dim == 0)
+            return;
 
-    // Choose a bitmask type that can hold dim bits.
-    // Use a (much faster) optimised bitmask type if we can.
-    // Then farm the work out to the real enumeration routine that is
-    // templated on the bitmask type.
-    if (dim <= 8 * sizeof(unsigned))
-        enumerateUsingBitmask<Ray, Bitmask1<unsigned> >(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-    else if (dim <= 8 * sizeof(unsigned long))
-        enumerateUsingBitmask<Ray, Bitmask1<unsigned long> >(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-    else if (dim <= 8 * sizeof(unsigned long long))
-        enumerateUsingBitmask<Ray, Bitmask1<unsigned long long> >(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-    else if (dim <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
-        enumerateUsingBitmask<Ray,
-            Bitmask2<unsigned long long, unsigned> >(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-    else if (dim <= 8 * sizeof(unsigned long long) +
-            8 * sizeof(unsigned long))
-        enumerateUsingBitmask<Ray,
-            Bitmask2<unsigned long long, unsigned long> >(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-    else if (dim <= 16 * sizeof(unsigned long long))
-        enumerateUsingBitmask<Ray, Bitmask2<unsigned long long> >(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-    else
-        enumerateUsingBitmask<Ray, Bitmask>(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-}
+        // Are there any hyperplanes at all in the subspace?
+        size_t nEqns = subspace.rows();
+        if (nEqns == 0) {
+            // No!  Just send back the unit vectors.
+            for (unsigned i = 0; i < dim; ++i) {
+                Ray ans(dim);
+                ans[i] = IntegerType::one;
+                action(std::move(ans));
+            }
 
-template <ArbitraryPrecisionIntegerVector Ray, ReginaBitmask BitmaskType,
-    VoidCallback<Ray&&> Action>
-void HilbertDual::enumerateUsingBitmask(Action&& action,
-        const MatrixInt& subspace, const ValidityConstraints& constraints,
-        ProgressTracker* tracker, unsigned initialRows) {
-    using IntegerType = typename Ray::value_type;
-
-    // Get the dimension of the entire space in which we are working.
-    // At this point we are guaranteed that the dimension is non-zero.
-    size_t dim = subspace.columns();
-
-    // Are there any hyperplanes at all in the subspace?
-    size_t nEqns = subspace.rows();
-    if (nEqns == 0) {
-        // No!  Just send back the unit vectors.
-        for (unsigned i = 0; i < dim; ++i) {
-            Ray ans(dim);
-            ans[i] = IntegerType::one;
-            action(std::move(ans));
+            if (tracker)
+                tracker->setPercent(100);
+            return;
         }
 
-        if (tracker)
-            tracker->setPercent(100);
-        return;
-    }
+        // We actually have some work to do.
 
-    // We actually have some work to do.
+        // Process the hyperplanes in a good order.
+        //
+        // Sort the integers 0..(nEqns-1) into the order in which we plan to
+        // process the hyperplanes.
+        FixedArray<size_t> hyperplanes(nEqns);
+        for (size_t i = 0; i < nEqns; ++i)
+            hyperplanes[i] = i;
 
-    // Process the hyperplanes in a good order.
-    //
-    // Sort the integers 0..(nEqns-1) into the order in which we plan to
-    // process the hyperplanes.
-    int* hyperplanes = new int[nEqns];
-    unsigned i;
-    for (i = 0; i < nEqns; ++i)
-        hyperplanes[i] = i;
+        std::sort(hyperplanes.begin() + initialRows, hyperplanes.end(),
+            PosOrder(subspace));
 
-    std::sort(hyperplanes + initialRows, hyperplanes + nEqns,
-        PosOrder(subspace));
+        auto constraintMasks = constraints.bitmasks<BitmaskType>(dim);
 
-    auto constraintMasks = constraints.bitmasks<BitmaskType>(dim);
-
-    // Create the vector list with which we will work.
-    // Fill it with the initial basis elements.
-    std::vector<VecSpec<IntegerType, BitmaskType>*> list;
-    for (i = 0; i < dim; ++i)
-        list.push_back(new VecSpec<IntegerType, BitmaskType>(i, dim));
-
-#if 0
-    std::cout << "LIST SIZE: " << list.size() << std::endl;
-#endif
-
-    // Intersect the hyperplanes one at a time.
-    for (i=0; i<nEqns; i++) {
-        intersectHyperplane(list, subspace, hyperplanes[i], constraintMasks);
+        // Create the vector list with which we will work.
+        // Fill it with the initial basis elements.
+        std::vector<VecSpec<IntegerType, BitmaskType>*> list;
+        for (size_t i = 0; i < dim; ++i)
+            list.push_back(new VecSpec<IntegerType, BitmaskType>(i, dim));
 
 #if 0
         std::cout << "LIST SIZE: " << list.size() << std::endl;
 #endif
 
-        if (tracker && ! tracker->setPercent(100.0 * i / nEqns))
-            break;
-    }
+        // Intersect the hyperplanes one at a time.
+        for (size_t i=0; i < nEqns; ++i) {
+            intersectHyperplane(list, subspace, hyperplanes[i],
+                constraintMasks);
 
-    // We're done!
-    delete[] hyperplanes;
+#if 0
+            std::cout << "LIST SIZE: " << list.size() << std::endl;
+#endif
 
-    if (tracker && tracker->isCancelled()) {
-        // The operation was cancelled.  Clean up before returning.
-        for (auto it = list.begin(); it != list.end(); ++it)
+            if (tracker && ! tracker->setPercent(100.0 * i / nEqns))
+                break;
+        }
+
+        // We're done!
+
+        if (tracker && tracker->isCancelled()) {
+            // The operation was cancelled.  Clean up before returning.
+            for (auto it = list.begin(); it != list.end(); ++it)
+                delete *it;
+            return;
+        }
+
+        for (auto it = list.begin(); it != list.end(); ++it) {
+            Ray ans(dim);
+            for (size_t i = 0; i < dim; ++i)
+                ans[i] = (**it)[i];
+            action(std::move(ans));
+
             delete *it;
-        return;
-    }
+        }
 
-    for (auto it = list.begin(); it != list.end(); ++it) {
-        Ray ans(dim);
-        for (i = 0; i < dim; ++i)
-            ans[i] = (**it)[i];
-        action(std::move(ans));
-
-        delete *it;
-    }
-
-    // All done!
-    if (tracker)
-        tracker->setPercent(100);
+        // All done!
+        if (tracker)
+            tracker->setPercent(100);
+    });
 }
 
 template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>

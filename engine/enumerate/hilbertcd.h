@@ -165,7 +165,10 @@ class HilbertCD {
              * \param dim the total dimension of the space (and
              * therefore the toatl length of this vector).
              */
-            inline VecSpec(size_t dim);
+            inline VecSpec(size_t dim) : Vector<IntegerType>(dim), mask_(dim) {
+                // All vector elements are initialised to zero thanks to the
+                // default constructors in Regina's integer classes.
+            }
 
             /**
              * Creates a new clone of the given vector.
@@ -177,33 +180,7 @@ class HilbertCD {
              */
             VecSpec& operator = (const VecSpec&) = default;
         };
-        /**
-         * Identical to the public routine enumerate(),
-         * except that there is an extra template parameter \a BitmaskType
-         * to indicate what bitmask type we should use to assign flags to
-         * individual coordinate positions.
-         *
-         * All arguments to this function are identical to those for the
-         * public routine enumerate().
-         *
-         * \pre The type \a BitmaskType can handle at least \a n bits,
-         * where \a n is the dimension of the Euclidean space (i.e., the
-         * number of columns in \a subspace).
-         */
-        template <ArbitraryPrecisionIntegerVector Ray,
-            ReginaBitmask BitmaskType, VoidCallback<Ray&&> Action>
-        static void enumerateUsingBitmask(Action&& action,
-            const MatrixInt& subspace, const ValidityConstraints& constraints);
 };
-
-// Inline functions for HilbertCD::VecSpec
-
-template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
-inline HilbertCD::VecSpec<IntegerType, BitmaskType>::VecSpec(size_t dim) :
-        Vector<IntegerType>(dim), mask_(dim) {
-    // All vector elements are initialised to zero thanks to the default
-    // constructors in Regina's integer classes.
-}
 
 } // namespace regina
 

@@ -60,111 +60,69 @@ void HilbertPrimal::enumerate(Action&& action,
         const ValidityConstraints& constraints, ProgressTracker* tracker) {
     if (raysBegin == raysEnd) {
         // No extremal rays; no Hilbert basis.
+        // (And.. we have no rays from which to get the dimension of the space.)
         return;
     }
 
-    // Get the dimension of the space.
-    size_t dim = (*raysBegin).size();
-    if (dim == 0)
-        return;
+    // Choose the slickest possible bitmask type that can hold dim bits.
+    usingBitmaskFor((*raysBegin).size() /* dimension of the space */,
+            [&action, raysBegin, raysEnd, &constraints, tracker]
+            <ReginaBitmask BitmaskType>(size_t dim) {
+        using IntegerType = typename Ray::value_type;
 
-    // Choose a bitmask type that can hold dim bits.
-    // Use a (much faster) optimised bitmask type if we can.
-    // Then farm the work out to the real enumeration routine that is
-    // templated on the bitmask type.
-    if (dim <= 8 * sizeof(unsigned))
-        enumerateUsingBitmask<Ray, Bitmask1<unsigned> >(
-            std::forward<Action>(action),
-            raysBegin, raysEnd, constraints, tracker);
-    else if (dim <= 8 * sizeof(unsigned long))
-        enumerateUsingBitmask<Ray, Bitmask1<unsigned long> >(
-            std::forward<Action>(action),
-            raysBegin, raysEnd, constraints, tracker);
-    else if (dim <= 8 * sizeof(unsigned long long))
-        enumerateUsingBitmask<Ray, Bitmask1<unsigned long long> >(
-            std::forward<Action>(action),
-            raysBegin, raysEnd, constraints, tracker);
-    else if (dim <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
-        enumerateUsingBitmask<Ray,
-            Bitmask2<unsigned long long, unsigned> >(
-            std::forward<Action>(action),
-            raysBegin, raysEnd, constraints, tracker);
-    else if (dim <= 8 * sizeof(unsigned long long) +
-            8 * sizeof(unsigned long))
-        enumerateUsingBitmask<Ray,
-            Bitmask2<unsigned long long, unsigned long> >(
-            std::forward<Action>(action),
-            raysBegin, raysEnd, constraints, tracker);
-    else if (dim <= 16 * sizeof(unsigned long long))
-        enumerateUsingBitmask<Ray, Bitmask2<unsigned long long> >(
-            std::forward<Action>(action),
-            raysBegin, raysEnd, constraints, tracker);
-    else
-        enumerateUsingBitmask<Ray, Bitmask>(
-            std::forward<Action>(action),
-            raysBegin, raysEnd, constraints, tracker);
-}
+        // If the space has dimension zero, return no results at all.
+        if (dim == 0)
+            return;
 
-template <ArbitraryPrecisionIntegerVector Ray, ReginaBitmask BitmaskType,
-        typename RayIterator, VoidCallback<Ray&&> Action>
-void HilbertPrimal::enumerateUsingBitmask(Action&& action,
-        const RayIterator& raysBegin, const RayIterator& raysEnd,
-        const ValidityConstraints& constraints, ProgressTracker* tracker) {
-    using IntegerType = typename Ray::value_type;
+        // First enumerate all maximal admissible faces.
+        if (tracker)
+            tracker->setPercent(10);
+        auto maxFaces = MaxAdmissible::enumerate<BitmaskType>(
+            raysBegin, raysEnd, constraints);
 
-    // We know at this point that the dimension is non-zero.
-    size_t dim = (*raysBegin).size();
+        // Now use normaliz to process each face.
+        if (tracker)
+            tracker->setPercent(30);
 
-    // First enumerate all maximal admissible faces.
-    if (tracker)
-        tracker->setPercent(10);
-    std::vector<BitmaskType> maxFaces = MaxAdmissible::enumerate<BitmaskType>(
-        raysBegin, raysEnd, constraints);
-
-    // Now use normaliz to process each face.
-    if (tracker)
-        tracker->setPercent(30);
-
-    std::set<std::vector<mpz_class> > finalBasis;
-    std::vector<const Vector<IntegerType>*> face;
-    RayIterator rit;
-    unsigned i;
-    std::vector<mpz_class>::const_iterator hvit;
-    for (const auto& m : maxFaces) {
-        // Locate the extremal rays that generate this face.
-        std::vector<std::vector<mpz_class> > input;
-        for (rit = raysBegin; rit != raysEnd; ++rit)
-            if (inFace(*rit, m)) {
-                std::vector<mpz_class>& v(input.emplace_back());
-                v.reserve(dim);
-                for (i = 0; i < dim; ++i) {
-                    if ((*rit)[i].isNative()) {
-                        // Since this large integer has a native rep.,
-                        // unsafeValue() must succeed.
-                        v.push_back(mpz_class((*rit)[i].
-                            template unsafeValue<long>()));
-                    } else
-                        v.push_back(mpz_class((*rit)[i].rawData()));
+        std::set<std::vector<mpz_class>> finalBasis;
+        for (const auto& m : maxFaces) {
+            // Locate the extremal rays that generate this face.
+            std::vector<std::vector<mpz_class>> input;
+            for (auto rit = raysBegin; rit != raysEnd; ++rit)
+                if (inFace(*rit, m)) {
+                    std::vector<mpz_class>& v(input.emplace_back());
+                    v.reserve(dim);
+                    for (size_t i = 0; i < dim; ++i) {
+                        if ((*rit)[i].isNative()) {
+                            // Since this large integer has a native rep.,
+                            // unsafeValue() must succeed.
+                            v.push_back(mpz_class((*rit)[i].
+                                template unsafeValue<long>()));
+                        } else
+                            v.push_back(mpz_class((*rit)[i].rawData()));
+                    }
                 }
-            }
 
-        for (auto& b : normaliz(input))
-            finalBasis.insert(std::move(b));
-    }
+            for (auto& b : normaliz(input))
+                finalBasis.insert(std::move(b));
+        }
 
-    if (tracker)
-        tracker->setPercent(90);
+        if (tracker)
+            tracker->setPercent(90);
 
-    for (const auto& b : finalBasis) {
-        Ray ans(dim);
-        for (i = 0, hvit = b.begin(); hvit != b.end(); ++hvit, ++i)
-            ans[i].setRaw(hvit->get_mpz_t());
-        action(std::move(ans));
-    }
+        std::vector<mpz_class>::const_iterator hvit;
+        size_t i;
+        for (const auto& b : finalBasis) {
+            Ray ans(dim);
+            for (i = 0, hvit = b.begin(); hvit != b.end(); ++hvit, ++i)
+                ans[i].setRaw(hvit->get_mpz_t());
+            action(std::move(ans));
+        }
 
-    // All done!
-    if (tracker)
-        tracker->setPercent(100);
+        // All done!
+        if (tracker)
+            tracker->setPercent(100);
+    });
 }
 
 template <typename VectorClass, ReginaBitmask BitmaskType>

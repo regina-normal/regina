@@ -337,24 +337,6 @@ class HilbertDual {
         };
 
         /**
-         * Identical to the public routine enumerate(),
-         * except that there is an extra template parameter \a BitmaskType.
-         * This describes what type should be used for bitmasks that
-         * represent zero/non-zero coordinates in a vector.
-         *
-         * All argument are identical to those for the public routine
-         * enumerate().
-         *
-         * \pre The type \a BitmaskType can handle at least \a n bits,
-         * where \a n is the number of coordinates in the underlying vectors.
-         */
-        template <ArbitraryPrecisionIntegerVector Ray,
-            ReginaBitmask BitmaskType, VoidCallback<Ray&&> Action>
-        static void enumerateUsingBitmask(Action&& action,
-            const MatrixInt& subspace, const ValidityConstraints& constraints,
-            ProgressTracker* tracker, unsigned initialRows);
-
-        /**
          * Test whether the vector \a vec can be reduced using
          * any of the candidate basis vectors in \a against.
          *

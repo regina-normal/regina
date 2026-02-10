@@ -1168,26 +1168,6 @@ class NormalSurfaces :
             ProgressTracker* tracker = nullptr);
 
         /**
-         * Implements buildStandardFromReduced() using the specified bitmask
-         * type to store zero sets.  See buildStandardFromReduced() for further
-         * information on this routine, including important preconditions.
-         *
-         * The routine buildStandardFromReduced() simply chooses an appropriate
-         * bitmask type and then calls this routine, which does the real work.
-         *
-         * \pre The template argument \a BitmaskType can support
-         * bitmasks of size 7 \a n (if we are using normal surfaces) or size
-         * 10 \a n (if we are using almost normal surfaces), where \a n is
-         * the number of tetrahedra in the underlying triangulation.
-         * \pre The underlying triangulation (in addition to the other
-         * preconditions) is non-empty.
-         */
-        template <ReginaBitmask BitmaskType>
-        void buildStandardFromReducedUsing(
-            const std::vector<NormalSurface>& reducedList,
-            ProgressTracker* tracker);
-
-        /**
          * Converts a set of embedded vertex normal surfaces in
          * (standard normal or almost normal) space to a set of embedded
          * vertex normal surfaces in (quad or quad-oct) space.

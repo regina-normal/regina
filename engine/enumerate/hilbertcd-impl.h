@@ -45,6 +45,7 @@
 #include "enumerate/validityconstraints.h"
 #include "maths/matrix.h"
 #include "utilities/bitmask.h"
+#include "utilities/fixedarray.h"
 #include "utilities/intutils.h"
 #include <list>
 
@@ -53,125 +54,123 @@ namespace regina {
 template <ArbitraryPrecisionIntegerVector Ray, VoidCallback<Ray&&> Action>
 void HilbertCD::enumerate(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints) {
-    // Get the dimension of the space.
-    size_t dim = subspace.columns();
-    if (dim == 0)
-        return;
+    usingBitmaskFor(subspace.columns() /* dimension of the space */,
+            [&action, &subspace, &constraints]
+            <ReginaBitmask BitmaskType>(size_t dim) {
+        using IntegerType = typename Ray::value_type;
 
-    // Choose a bitmask type that can hold dim bits.
-    // Use a (much faster) optimised bitmask type if we can.
-    // Then farm the work out to the real enumeration routine that is
-    // templated on the bitmask type.
-    if (dim <= 8 * sizeof(unsigned))
-        enumerateUsingBitmask<Ray, Bitmask1<unsigned> >(
-            std::forward<Action>(action), subspace, constraints);
-    else if (dim <= 8 * sizeof(unsigned long))
-        enumerateUsingBitmask<Ray, Bitmask1<unsigned long> >(
-            std::forward<Action>(action), subspace, constraints);
-    else if (dim <= 8 * sizeof(unsigned long long))
-        enumerateUsingBitmask<Ray, Bitmask1<unsigned long long> >(
-            std::forward<Action>(action), subspace, constraints);
-    else if (dim <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
-        enumerateUsingBitmask<Ray,
-            Bitmask2<unsigned long long, unsigned> >(
-            std::forward<Action>(action), subspace, constraints);
-    else if (dim <= 8 * sizeof(unsigned long long) +
-            8 * sizeof(unsigned long))
-        enumerateUsingBitmask<Ray,
-            Bitmask2<unsigned long long, unsigned long> >(
-            std::forward<Action>(action), subspace, constraints);
-    else if (dim <= 16 * sizeof(unsigned long long))
-        enumerateUsingBitmask<Ray, Bitmask2<unsigned long long> >(
-            std::forward<Action>(action), subspace, constraints);
-    else
-        enumerateUsingBitmask<Ray, Bitmask>(
-            std::forward<Action>(action), subspace, constraints);
-}
+        // If the space has dimension zero, return no results at all.
+        if (dim == 0)
+            return;
 
-template <ArbitraryPrecisionIntegerVector Ray, ReginaBitmask BitmaskType,
-    VoidCallback<Ray&&> Action>
-void HilbertCD::enumerateUsingBitmask(Action&& action,
-        const MatrixInt& subspace, const ValidityConstraints& constraints) {
-    using IntegerType = typename Ray::value_type;
+        // Stack-based Contejean-Devie algorithm
+        // (Information & Computation, 1994).
+        size_t nEqns = subspace.rows();
 
-    // Stack-based Contejean-Devie algorithm (Information & Computation, 1994).
-    size_t dim = subspace.columns();
-    size_t nEqns = subspace.rows();
+        auto constraintMasks = constraints.bitmasks<BitmaskType>(dim);
 
-    auto constraintMasks = constraints.bitmasks<BitmaskType>(dim);
+        std::list<VecSpec<IntegerType, BitmaskType>*> basis;
 
-    std::list<VecSpec<IntegerType, BitmaskType>*> basis;
-
-    auto* unitMatch = new Vector<IntegerType>*[dim];
-    for (size_t i = 0; i < dim; ++i) {
-        unitMatch[i] = new Vector<IntegerType>(nEqns);
-        for (size_t j = 0; j < nEqns; ++j)
-            (*unitMatch[i])[j] = subspace.entry(j, i);
-    }
-
-    unsigned stackSize;
-    // All vectors/rays are created and destroyed.
-    // Bitmasks on the other hand are reused.
-    auto* coord = new VecSpec<IntegerType, BitmaskType>*[dim];
-    auto* match = new Vector<IntegerType>*[dim];
-    auto* frozen = new BitmaskType[dim];
-
-    for (size_t i = 0; i < dim; ++i)
-        frozen[i].reset(dim); // All false.
-
-    // Push the zero vector.
-    coord[0] = new VecSpec<IntegerType, BitmaskType>(dim);
-    match[0] = new Vector<IntegerType>(nEqns);
-    stackSize = 1; // The zero vector is already on top.
-    bool first = true;
-
-    VecSpec<IntegerType, BitmaskType> *c;
-    Vector<IntegerType> *m;
-    BitmaskType f(dim);
-    BitmaskType mask(dim), tmpMask(dim);
-    bool found, dom;
-    while (stackSize) {
-        c = coord[stackSize - 1];
-        m = match[stackSize - 1];
-        f = frozen[stackSize - 1];
-        --stackSize;
-
-        // std::cerr << (*c) << " ... " << (*m) << " ... "
-        //     << stackSize << std::endl;
-
-        // Do we have a non-zero solution?
-        if (! first) {
-            found = false;
-            for (size_t i = 0; i < nEqns; ++i)
-                if ((*m)[i] != 0) {
-                    found = true;
-                    break;
-                }
-            if (! found) {
-                // Yep, it's a solution.
-                basis.push_back(c);
-                delete m;
-                continue;
-            }
+        FixedArray<Vector<IntegerType>*> unitMatch(dim);
+        for (size_t i = 0; i < dim; ++i) {
+            unitMatch[i] = new Vector<IntegerType>(nEqns);
+            for (size_t j = 0; j < nEqns; ++j)
+                (*unitMatch[i])[j] = subspace.entry(j, i);
         }
 
-        // Try incrementing along different coordinate axes.
-        for (size_t i = 0; i < dim; ++i) {
-            if (f.get(i))
-                continue; // This coordinate is frozen.
-            if (! first) {
-                // Create the bitmask that we will have if we increment
-                // the ith coordinate.
-                mask = c->mask_;
-                mask.set(i, true);
+        unsigned stackSize;
+        // All vectors/rays are created and destroyed.
+        // Bitmasks on the other hand are reused.
+        FixedArray<VecSpec<IntegerType, BitmaskType>*> coord(dim);
+        FixedArray<Vector<IntegerType>*> match(dim);
+        FixedArray<BitmaskType> frozen(dim);
 
-                // Constraint test.
-                if (! constraintMasks.empty()) {
+        for (size_t i = 0; i < dim; ++i)
+            frozen[i].reset(dim); // All false.
+
+        // Push the zero vector.
+        coord[0] = new VecSpec<IntegerType, BitmaskType>(dim);
+        match[0] = new Vector<IntegerType>(nEqns);
+        stackSize = 1; // The zero vector is already on top.
+        bool first = true;
+
+        VecSpec<IntegerType, BitmaskType> *c;
+        Vector<IntegerType> *m;
+        BitmaskType f(dim);
+        BitmaskType mask(dim), tmpMask(dim);
+        bool found, dom;
+        while (stackSize) {
+            c = coord[stackSize - 1];
+            m = match[stackSize - 1];
+            f = frozen[stackSize - 1];
+            --stackSize;
+
+            // std::cerr << (*c) << " ... " << (*m) << " ... "
+            //     << stackSize << std::endl;
+
+            // Do we have a non-zero solution?
+            if (! first) {
+                found = false;
+                for (size_t i = 0; i < nEqns; ++i)
+                    if ((*m)[i] != 0) {
+                        found = true;
+                        break;
+                    }
+                if (! found) {
+                    // Yep, it's a solution.
+                    basis.push_back(c);
+                    delete m;
+                    continue;
+                }
+            }
+
+            // Try incrementing along different coordinate axes.
+            for (size_t i = 0; i < dim; ++i) {
+                if (f.get(i))
+                    continue; // This coordinate is frozen.
+                if (! first) {
+                    // Create the bitmask that we will have if we increment
+                    // the ith coordinate.
+                    mask = c->mask_;
+                    mask.set(i, true);
+
+                    // Constraint test.
+                    if (! constraintMasks.empty()) {
+                        found = false;
+                        for (const BitmaskType& constraint : constraintMasks) {
+                            tmpMask = mask;
+                            tmpMask &= constraint;
+                            if (! tmpMask.atMostOneBit()) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (found)
+                            continue;
+                    }
+
+                    // Opposite direction test.
+                    if ((*unitMatch[i]) * (*m) >= 0)
+                        continue;
+
+                    // Domination test.
                     found = false;
-                    for (const BitmaskType& constraint : constraintMasks) {
-                        tmpMask = mask;
-                        tmpMask &= constraint;
-                        if (! tmpMask.atMostOneBit()) {
+                    for (auto bit = basis.begin(); bit != basis.end(); ++bit) {
+                        // Is (**bit) <= (*c + ith unit vector) ?
+                        // Quick pre-check using bitmasks.
+                        if (! ((*bit)->mask_ <= mask))
+                            continue;
+
+                        // Full check.
+                        dom = true;
+                        for (size_t j = 0; j < dim; ++j) {
+                            if (    (j != i && (*c)[j] < (**bit)[j]) ||
+                                    (j == i && (*c)[j] + 1 < (**bit)[j])) {
+                                dom = false;
+                                break;
+                            }
+                        }
+                        if (dom) {
                             found = true;
                             break;
                         }
@@ -180,76 +179,42 @@ void HilbertCD::enumerateUsingBitmask(Action&& action,
                         continue;
                 }
 
-                // Opposite direction test.
-                if ((*unitMatch[i]) * (*m) >= 0)
-                    continue;
-
-                // Domination test.
-                found = false;
-                for (auto bit = basis.begin(); bit != basis.end(); ++bit) {
-                    // Is (**bit) <= (*c + ith unit vector) ?
-                    // Quick pre-check using bitmasks.
-                    if (! ((*bit)->mask_ <= mask))
-                        continue;
-
-                    // Full check.
-                    dom = true;
-                    for (size_t j = 0; j < dim; ++j) {
-                        if (    (j != i && (*c)[j] < (**bit)[j]) ||
-                                (j == i && (*c)[j] + 1 < (**bit)[j])) {
-                            dom = false;
-                            break;
-                        }
-                    }
-                    if (dom) {
-                        found = true;
-                        break;
-                    }
+                // Increment!
+                if (stackSize == dim) {
+                    std::cerr << "ERROR: STACK OVERFLOW" << std::endl;
+                    std::exit(1);
                 }
-                if (found)
-                    continue;
+
+                coord[stackSize] = new VecSpec<IntegerType, BitmaskType>(*c);
+                ++(*coord[stackSize])[i];
+                coord[stackSize]->mask_.set(i, true);
+
+                match[stackSize] = new Vector<IntegerType>(*m);
+                (*match[stackSize]) += (*unitMatch[i]);
+
+                frozen[stackSize] = f;
+                f.set(i, true);
+
+                ++stackSize;
             }
 
-            // Increment!
-            if (stackSize == dim) {
-                std::cerr << "ERROR: STACK OVERFLOW" << std::endl;
-                std::exit(1);
-            }
+            // Clean up.
+            delete c;
+            delete m;
 
-            coord[stackSize] = new VecSpec<IntegerType, BitmaskType>(*c);
-            ++(*coord[stackSize])[i];
-            coord[stackSize]->mask_.set(i, true);
-
-            match[stackSize] = new Vector<IntegerType>(*m);
-            (*match[stackSize]) += (*unitMatch[i]);
-
-            frozen[stackSize] = f;
-            f.set(i, true);
-
-            ++stackSize;
+            first = false;
         }
 
         // Clean up.
-        delete c;
-        delete m;
+        for (size_t i = 0; i < dim; ++i)
+            delete unitMatch[i];
 
-        first = false;
-    }
-
-    // Clean up.
-    for (size_t i = 0; i < dim; ++i)
-        delete unitMatch[i];
-
-    delete[] unitMatch;
-    delete[] coord;
-    delete[] match;
-    delete[] frozen;
-
-    // Output basis elements.
-    for (auto ptr : basis) {
-        action(Ray(*ptr));
-        delete ptr;
-    }
+        // Output basis elements.
+        for (auto ptr : basis) {
+            action(Ray(*ptr));
+            delete ptr;
+        }
+    });
 }
 
 } // namespace regina

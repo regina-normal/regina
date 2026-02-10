@@ -195,15 +195,12 @@ void DoubleDescription::enumerate(Action&& action,
     // facets that a ray belongs to.
     usingBitmaskFor(subspace.columns() /* number of facets */,
             [&action, &subspace, &constraints, tracker, initialRows]
-            <ReginaBitmask BitmaskType>() {
+            <ReginaBitmask BitmaskType>(size_t dim) {
         using IntegerType = typename Ray::value_type;
 
-        // Get the dimension of the entire space in which we are working.
-        size_t dim = subspace.columns();
-        if (dim == 0) {
-            // The space has dimension zero: return no results at all.
+        // If the space has dimension zero, return no results at all.
+        if (dim == 0)
             return;
-        }
 
         // Are there any hyperplanes at all in the subspace?
         size_t nEqns = subspace.rows();
@@ -231,9 +228,8 @@ void DoubleDescription::enumerate(Action&& action,
         //
         // Sort the integers 0..(nEqns-1) into the order in which we plan to
         // process the hyperplanes.
-        FixedArray<long> hyperplanes(nEqns);
-        size_t i;
-        for (i = 0; i < nEqns; ++i)
+        FixedArray<size_t> hyperplanes(nEqns);
+        for (size_t i = 0; i < nEqns; ++i)
             hyperplanes[i] = i;
 
         std::sort(hyperplanes.begin() + initialRows, hyperplanes.end(),
@@ -243,7 +239,7 @@ void DoubleDescription::enumerate(Action&& action,
         // Fill the first with the initial set of rays.
         std::vector<RaySpec<IntegerType, BitmaskType>*> list[2];
 
-        for (i = 0; i < dim; ++i)
+        for (size_t i = 0; i < dim; ++i)
             list[0].push_back(new RaySpec<IntegerType, BitmaskType>(
                 i, subspace, hyperplanes.begin()));
 
@@ -258,7 +254,7 @@ void DoubleDescription::enumerate(Action&& action,
         // list[workingList], with the other list empty.
         int workingList = 0;
         size_t used = 0;
-        for (i=0; i<nEqns; i++) {
+        for (size_t i = 0; i < nEqns; ++i) {
             // Do not increment used if the old solution set sits entirely in
             // and/or to only one side of the new hyperplane.  This gives the
             // dimensional filtering in intersectHyperplane() greater strength.

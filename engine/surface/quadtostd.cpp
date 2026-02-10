@@ -35,6 +35,7 @@
 #include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
 #include "utilities/bitmask.h"
+#include "utilities/fixedarray.h"
 #include <iterator>
 #include <vector>
 
@@ -277,242 +278,208 @@ namespace {
 void NormalSurfaces::buildStandardFromReduced(
         const std::vector<NormalSurface>& reducedList,
         ProgressTracker* tracker) {
-    const size_t nFacets = NormalEncoding(coords_).block() *
-        triangulation_->size();
+    // Choose the slickest possible bitmask type for representing the set of
+    // facets that a ray belongs to in our standard normal / almost normal
+    // coordinate system.
+    usingBitmaskFor(NormalEncoding(coords_).block() * triangulation_->size(),
+            [this, &reducedList, tracker]
+            <ReginaBitmask BitmaskType>(size_t stdLen) {
+        // Get the empty triangulation out of the way now.
+        if (stdLen == 0)
+            return;
 
-    // Get the empty triangulation out of the way now.
-    if (nFacets == 0)
-        return;
+        const Triangulation<3>& tri(*triangulation_);
 
-    // Choose a bitmask type for representing the set of facets that a
-    // ray belongs to; in particular, use a (much faster) optimised
-    // bitmask type if we can.
-    // Then farm the work out to the real conversion routine that is
-    // templated on the bitmask type.
-    if (nFacets <= 8 * sizeof(unsigned))
-        buildStandardFromReducedUsing<
-            Bitmask1<unsigned>>(reducedList, tracker);
-    else if (nFacets <= 8 * sizeof(unsigned long))
-        buildStandardFromReducedUsing<
-            Bitmask1<unsigned long>>(reducedList, tracker);
-    else if (nFacets <= 8 * sizeof(unsigned long long))
-        buildStandardFromReducedUsing<
-            Bitmask1<unsigned long long>>(reducedList, tracker);
-    else if (nFacets <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
-        buildStandardFromReducedUsing<
-            Bitmask2<unsigned long long, unsigned>>(reducedList,
-                tracker);
-    else if (nFacets <= 8 * sizeof(unsigned long long) +
-            8 * sizeof(unsigned long))
-        buildStandardFromReducedUsing<
-            Bitmask2<unsigned long long, unsigned long>>(reducedList,
-                tracker);
-    else if (nFacets <= 16 * sizeof(unsigned long long))
-        buildStandardFromReducedUsing<
-            Bitmask2<unsigned long long>>(reducedList, tracker);
-    else
-        buildStandardFromReducedUsing<Bitmask>(reducedList, tracker);
-}
+        // Prepare for the reduced-to-standard double description run.
+        const NormalEncoding stdEnc(coords_);
+        const size_t n = tri.size();
+        const size_t nLinks = tri.countVertices(); // # vertex links
 
-template <ReginaBitmask BitmaskType>
-void NormalSurfaces::buildStandardFromReducedUsing(
-        const std::vector<NormalSurface>& reducedList,
-        ProgressTracker* tracker) {
-    const Triangulation<3>& tri(*triangulation_);
+        // Recreate the quadrilateral constraints (or the corresponding
+        // constraints for almost normal surfaces) as bitmasks.
+        // Since we have a non-empty triangulation, we know the list of
+        // constraints is non-empty.
+        auto constraints = makeEmbeddedConstraints(tri, coords_).
+            bitmasks<BitmaskType>(stdLen);
 
-    // Prepare for the reduced-to-standard double description run.
-    const NormalEncoding stdEnc(coords_);
-    const size_t n = tri.size();
-    const size_t stdLen = stdEnc.block() * n;
-    const size_t nLinks = tri.countVertices(); // # vertex links
+        // Create all vertex links.
+        // TODO: Do this by value.
+        FixedArray<Vector<LargeInteger>*> link(nLinks);
 
-    // Recreate the quadrilateral constraints (or the corresponding
-    // constraints for almost normal surfaces) as bitmasks.
-    // Since we have a non-empty triangulation, we know the list of
-    // constraints is non-empty.
-    auto constraints = makeEmbeddedConstraints(tri, coords_).
-        bitmasks<BitmaskType>(stdLen);
+        for (size_t i = 0; i < nLinks; ++i) {
+            link[i] = new Vector<LargeInteger>(stdLen);
 
-    // Create all vertex links.
-    // TODO: Do this by value.
-    auto* link = new Vector<LargeInteger>*[nLinks];
+            for (auto& emb : *tri.vertex(i))
+                (*link[i])[stdEnc.block() * emb.tetrahedron()->markedIndex() +
+                    emb.vertex()] = 1;
+        }
 
-    for (size_t i = 0; i < nLinks; ++i) {
-        link[i] = new Vector<LargeInteger>(stdLen);
+        // Create the initial set of rays:
+        // TODO: Keep these by value.
+        using RaySpecList = std::vector<RaySpec<BitmaskType>*>;
+        RaySpecList list[2];
 
-        for (auto& emb : *tri.vertex(i))
-            (*link[i])[stdEnc.block() * emb.tetrahedron()->markedIndex() +
-                emb.vertex()] = 1;
-    }
+        // TODO: Check that s uses the right encoding.
+        for (auto& s : reducedList)
+            list[0].push_back(new RaySpec<BitmaskType>(s.vector()));
 
-    // Create the initial set of rays:
-    // TODO: Keep these by value.
-    using RaySpecList = std::vector<RaySpec<BitmaskType>*>;
-    RaySpecList list[2];
+        // Each additional inequality is of the form tri_coord >= 0.
+        // We will therefore just create them on the fly as we need them.
 
-    // TODO: Check that s uses the right encoding.
-    for (auto& s : reducedList)
-        list[0].push_back(new RaySpec<BitmaskType>(s.vector()));
+        // And run!
+        BitmaskType ignoreFacets(stdLen);
+        for (size_t i = 0; i < stdLen; ++i)
+            if (i % stdEnc.block() < 4)
+                ignoreFacets.set(i, true);
 
-    // Each additional inequality is of the form tri_coord >= 0.
-    // We will therefore just create them on the fly as we need them.
+        int workingList = 0;
 
-    // And run!
-    BitmaskType ignoreFacets(stdLen);
-    for (size_t i = 0; i < stdLen; ++i)
-        if (i % stdEnc.block() < 4)
-            ignoreFacets.set(i, true);
+        RaySpecList pos, neg;
 
-    int workingList = 0;
+        size_t slices = 0;
+        for (size_t vtx = 0; vtx < nLinks; ++vtx) {
+            auto linkSpec = new RaySpec<BitmaskType>(*link[vtx]);
+            delete link[vtx];
 
-    RaySpecList pos, neg;
+            list[workingList].push_back(
+                new RaySpec<BitmaskType>(tri, vtx, stdEnc.block()));
 
-    size_t slices = 0;
-    for (size_t vtx = 0; vtx < nLinks; ++vtx) {
-        auto linkSpec = new RaySpec<BitmaskType>(*link[vtx]);
-        delete link[vtx];
-
-        list[workingList].push_back(
-            new RaySpec<BitmaskType>(tri, vtx, stdEnc.block()));
-
-        for (auto& emb : *tri.vertex(vtx)) {
-            // Update the state of progress and test for cancellation.
-            if (tracker && ! tracker->setPercent(25.0 * slices++ / n)) {
-                for (auto r : list[workingList])
-                    delete r;
-                delete linkSpec;
-                for (++vtx; vtx < nLinks; ++vtx)
-                    delete link[vtx];
-                delete[] link;
-                return;
-            }
-
-            size_t tcoord = stdEnc.block() * emb.tetrahedron()->markedIndex() +
-                emb.vertex();
-
-            // Add the inequality v[tcoord] >= 0.
-            for (RaySpec<BitmaskType>* r : list[workingList]) {
-                int sign = r->sign(tcoord);
-
-                if (sign == 0)
-                    list[1 - workingList].push_back(r);
-                else if (sign > 0) {
-                    list[1 - workingList].push_back(r);
-                    pos.push_back(r);
-                } else
-                    neg.push_back(r);
-            }
-
-            int iterations = 0;
-            for (RaySpec<BitmaskType>* posRay : pos)
-                for (RaySpec<BitmaskType>* negRay : neg) {
-                    // Test for cancellation, but not every time (since
-                    // this involves expensive mutex locking).
-                    if (tracker && ++iterations == 100) {
-                        iterations = 0;
-                        if (tracker->isCancelled()) {
-                            for (auto r : list[1 - workingList])
-                                delete r;
-                            for (auto r : neg)
-                                delete r;
-                            delete linkSpec;
-                            for (++vtx; vtx < nLinks; ++vtx)
-                                delete link[vtx];
-                            delete[] link;
-                            return;
-                        }
-                    }
-
-                    // Find the facets that both rays have in common.
-                    BitmaskType join(posRay->facets());
-                    join &= (negRay->facets());
-
-                    // Fukuda and Prodon's dimensional filtering.
-                    // Initial experimentation suggests that this
-                    // is not helpful (perhaps because of the extremely
-                    // nice structure of this particular enumeration problem
-                    // and the consequential way in which one solution set
-                    // expands to the next).  Comment it out for now.
-                    /*
-                    BitmaskType tmpMask(ignoreFacets);
-                    tmpMask.flip();
-                    tmpMask &= join;
-                    if (tmpMask.bits() < 2 * n + vtx - 1)
-                        continue;
-                    */
-
-                    // Are these vectors compatible?
-                    // Invert join so that it has a true bit for each
-                    // non-zero coordinate.
-                    join.flip();
-                    bool broken = false;
-                    for (const BitmaskType& constraint : constraints) {
-                        BitmaskType mask(join);
-                        mask &= constraint;
-                        if (! mask.atMostOneBit()) {
-                            broken = true;
-                            break;
-                        }
-                    }
-                    if (broken)
-                        continue;
-
-                    // Are these vectors adjacent?
-                    broken = false;
-                    for (RaySpec<BitmaskType>* r : list[workingList]) {
-                        if (r != posRay && r != negRay &&
-                                r->onAllCommonFacets(*posRay, *negRay,
-                                ignoreFacets)) {
-                            broken = true;
-                            break;
-                        }
-                    }
-                    if (broken)
-                        continue;
-
-                    // All good!  Join them and put the intersection in the
-                    // new solution set.
-                    list[1 - workingList].push_back(new RaySpec<BitmaskType>(
-                        *posRay, *negRay, tcoord));
+            for (auto& emb : *tri.vertex(vtx)) {
+                // Update the state of progress and test for cancellation.
+                if (tracker && ! tracker->setPercent(25.0 * slices++ / n)) {
+                    for (auto r : list[workingList])
+                        delete r;
+                    delete linkSpec;
+                    for (++vtx; vtx < nLinks; ++vtx)
+                        delete link[vtx];
+                    return;
                 }
 
-            // Clean up and prepare for the next iteration.
-            for (auto ray : neg)
-                delete ray;
+                size_t tcoord = stdEnc.block() *
+                    emb.tetrahedron()->markedIndex() + emb.vertex();
 
-            pos.clear();
-            neg.clear();
-            list[workingList].clear();
+                // Add the inequality v[tcoord] >= 0.
+                for (RaySpec<BitmaskType>* r : list[workingList]) {
+                    int sign = r->sign(tcoord);
 
-            ignoreFacets.set(tcoord, false);
+                    if (sign == 0)
+                        list[1 - workingList].push_back(r);
+                    else if (sign > 0) {
+                        list[1 - workingList].push_back(r);
+                        pos.push_back(r);
+                    } else
+                        neg.push_back(r);
+                }
 
-            workingList = 1 - workingList;
+                int iterations = 0;
+                for (RaySpec<BitmaskType>* posRay : pos)
+                    for (RaySpec<BitmaskType>* negRay : neg) {
+                        // Test for cancellation, but not every time (since
+                        // this involves expensive mutex locking).
+                        if (tracker && ++iterations == 100) {
+                            iterations = 0;
+                            if (tracker->isCancelled()) {
+                                for (auto r : list[1 - workingList])
+                                    delete r;
+                                for (auto r : neg)
+                                    delete r;
+                                delete linkSpec;
+                                for (++vtx; vtx < nLinks; ++vtx)
+                                    delete link[vtx];
+                                return;
+                            }
+                        }
+
+                        // Find the facets that both rays have in common.
+                        BitmaskType join(posRay->facets());
+                        join &= (negRay->facets());
+
+                        // Fukuda and Prodon's dimensional filtering.
+                        // Initial experimentation suggests that this
+                        // is not helpful (perhaps because of the extremely
+                        // nice structure of this particular enumeration problem
+                        // and the consequential way in which one solution set
+                        // expands to the next).  Comment it out for now.
+                        /*
+                        BitmaskType tmpMask(ignoreFacets);
+                        tmpMask.flip();
+                        tmpMask &= join;
+                        if (tmpMask.bits() < 2 * n + vtx - 1)
+                            continue;
+                        */
+
+                        // Are these vectors compatible?
+                        // Invert join so that it has a true bit for each
+                        // non-zero coordinate.
+                        join.flip();
+                        bool broken = false;
+                        for (const BitmaskType& constraint : constraints) {
+                            BitmaskType mask(join);
+                            mask &= constraint;
+                            if (! mask.atMostOneBit()) {
+                                broken = true;
+                                break;
+                            }
+                        }
+                        if (broken)
+                            continue;
+
+                        // Are these vectors adjacent?
+                        broken = false;
+                        for (RaySpec<BitmaskType>* r : list[workingList]) {
+                            if (r != posRay && r != negRay &&
+                                    r->onAllCommonFacets(*posRay, *negRay,
+                                    ignoreFacets)) {
+                                broken = true;
+                                break;
+                            }
+                        }
+                        if (broken)
+                            continue;
+
+                        // All good!  Join them and put the intersection in the
+                        // new solution set.
+                        list[1 - workingList].push_back(
+                            new RaySpec<BitmaskType>(*posRay, *negRay, tcoord));
+                    }
+
+                // Clean up and prepare for the next iteration.
+                for (auto ray : neg)
+                    delete ray;
+
+                pos.clear();
+                neg.clear();
+                list[workingList].clear();
+
+                ignoreFacets.set(tcoord, false);
+
+                workingList = 1 - workingList;
+            }
+
+            // We're done cancelling this vertex link.
+            // Now add the vertex link itself, and cancel any future vertex
+            // links that we might have created.
+            // Note that cancelling future vertex links might introduce
+            // new common factors that can be divided out.
+            list[workingList].push_back(linkSpec);
+
+            for (auto ray : list[workingList]) {
+                for (size_t i = vtx + 1; i < nLinks; ++i)
+                    ray->reduce(*link[i]);
+                ray->scaleDown();
+            }
         }
 
-        // We're done cancelling this vertex link.
-        // Now add the vertex link itself, and cancel any future vertex
-        // links that we might have created.
-        // Note that cancelling future vertex links might introduce
-        // new common factors that can be divided out.
-        list[workingList].push_back(linkSpec);
-
+        // All done!  Put the solutions into the surface list and clean up.
         for (auto ray : list[workingList]) {
-            for (size_t i = vtx + 1; i < nLinks; ++i)
-                ray->reduce(*link[i]);
-            ray->scaleDown();
+            surfaces_.push_back(std::move(*ray).recover(
+                triangulation_, stdEnc));
+            delete ray;
         }
-    }
 
-    // All done!  Put the solutions into the normal surface list and clean up.
-    for (auto ray : list[workingList]) {
-        surfaces_.push_back(std::move(*ray).recover(triangulation_, stdEnc));
-        delete ray;
-    }
-
-    delete[] link;
-
-    if (tracker)
-        tracker->setPercent(100);
+        if (tracker)
+            tracker->setPercent(100);
+    });
 }
 
 } // namespace regina

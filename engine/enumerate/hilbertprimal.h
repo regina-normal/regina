@@ -177,29 +177,6 @@ class HilbertPrimal {
 
     private:
         /**
-         * Identical to the public routine enumerate(),
-         * except that there is an extra template parameter \a BitmaskType.
-         * This describes what type should be used for bitmasks that
-         * represent maximal admissible faces.
-         *
-         * All arguments to this function are identical to those for the
-         * public routine enumerate().
-         *
-         * \pre The type \a BitmaskType can handle at least \a n bits,
-         * where \a n is the dimension of the Euclidean space (i.e., the
-         * number of columns in \a subspace).
-         *
-         * \exception UnsolvedCase Normaliz was unable to compute the
-         * Hilbert basis for one or more maximal admissible faces.
-         */
-        template <ArbitraryPrecisionIntegerVector Ray,
-            ReginaBitmask BitmaskType, typename RayIterator,
-            VoidCallback<Ray&&> Action>
-        static void enumerateUsingBitmask(Action&& action,
-            const RayIterator& raysBegin, const RayIterator& raysEnd,
-            const ValidityConstraints& constraints, ProgressTracker* tracker);
-
-        /**
          * Uses Normaliz to enumerate the Hilbert basis on a single
          * maximal admissible face.
          *
