@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include "enumerate/treetraversal.h"
+#include "manifold/snappeacensusmfd.h"
 #include "split/signature.h"
 #include "surface/normalsurfaces.h"
 #include "triangulation/example3.h"
@@ -771,6 +772,20 @@ TEST(NormalSurfacesTest, fundPrimalVsDual) {
     fundPrimalVsDualDetail<NormalCoords::AlmostNormal>();
     fundPrimalVsDualDetail<NormalCoords::QuadClosed>();
     fundPrimalVsDualDetail<NormalCoords::QuadOctClosed>();
+}
+
+TEST(NormalSurfacesTest, fundDualVsCD) {
+    // The Contejean-Devie algorithm is very slow, and people should not be
+    // using it.  Here we are just giving a proof-of-life that it still works,
+    // but on very small triangulations.
+    // In all of the following examples, there are more fundamental surfaces
+    // than vertex surfaces.
+    verifyFundAlgorithms<NormalCoords::Standard>(
+        Example<3>::lst(1, 4), "LST(1,4,5)",
+        NormalAlg::HilbertDual, NormalAlg::HilbertCD);
+    verifyFundAlgorithms<NormalCoords::Quad>(
+        Triangulation<3>::fromIsoSig("dLQbccchhfo"), "m009",
+        NormalAlg::HilbertDual, NormalAlg::HilbertCD);
 }
 
 static void verifyEulerConstraints(const Triangulation<3>& tri,
