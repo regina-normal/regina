@@ -720,9 +720,188 @@ namespace {
     };  // class OrientableCircleBundle
 
     /**
+     * An oriented solid torus built from a triangular prism within a
+     * triangulation.
+     *                                                                           
+     * The vertical boundary of such a triangular prism consists of three
+     * squares. For s in {0,1,2}, square number s is the one that is opposite
+     * tetrahedron s of the triangulation.
+     *                                                                           
+     * Each boundary square is triangulated by a pair of triangles. The choice
+     * of direction for the diagonal edge separating the two triangles is
+     * specified by a slope: either +1 or -1. Within each square, the triangles
+     * are numbered either 0 (left triangle in the diagrams below) or 1 (right
+     * triangle in the diagrams below).
+     *                                                                           
+     *                     Slope +1        Slope -1
+     *                      •----•          •----•
+     *                      |0 2/|          |\2 0|
+     *                      |  /1|          |1\  |
+     *                      |1/  |          |  \1|
+     *                      |/2 0|          |0 2\|
+     *                      •----•          •----•
+     *                                                                           
+     * Details about boundary square number s can be accessed via the following
+     * three pieces of data:
+     * --> squareSlope(s) gives the slope of the diagonal of square s.
+     * --> squareTet( s, t ) gives the tetrahedron that provides triangle t of
+     *     square s.
+     * --> squareRoles( s, t ) gives a permutation that specifies the roles
+     *     played by the vertices of squareTet( s, t ) with respect to the
+     *     boundary square. In detail:
+     *     --- For v in {0,1,2}, squareRoles( s, t )[v] gives the vertex
+     *         labelled v in the above diagrams.
+     *     --- squareRoles( s, t )[3] gives the vertex that is opposite the
+     *         triangle.
+     * For each s in {0,1,2} and t in {0,1}, it is guaranteed that
+     *     squareSlope(s) * squareRoles( s, t ).sign() == -1.
+     *                                                                           
+     * As shown in the above diagram, for triangle t of square s, the role of
+     * each edge is determined by its endpoints:
+     * --> If the endpoints play roles 0 and 1, then the edge is vertical.
+     * --> If the endpoints play roles 0 and 2, then the edge is horizontal.
+     * --> If the endpoints play roles 1 and 2, then the edge is diagonal.
+     * We number the vertical edges by 0, 1 or 2 depending on which tetrahedron
+     * they are incident to. Thus, for each i in {0,1,2}, vertical edge i is
+     * opposite boundary square i.
+     *                                                                           
+     * This class provides the flipSlope(s) method, which flips the slope of
+     * boundary square s by either adding a tetrahedron (via layering) or
+     * removing a tetrahedron (if the slope was already previously flipped via
+     * layering). The outputs for squareTet() and squareRoles() are
+     * automatically adjusted to account for any such layerings.
      */
-    class TriPrism {
-    };  // class TriPrism
+    class TriSolidTorus {
+        private:
+            Tetrahedron<3>* coreTet_[3];
+                /**
+                 * The three core tetrahedra that form the triangular prism.
+                 */
+            Tetrahedron<3>* layerTet_[3] = {};
+                /**
+                 * The tetrahedra layered onto the boundary squares to flip
+                 * their slopes.
+                 *
+                 * Initially these are all null, to indicate that there are no
+                 * such layered tetrahedra.
+                 */
+            Perm<4> layerRoles_[3][2];
+                /**
+                 * Permutations specifying the roles played by the vertices of
+                 * the layered tetrahedra (if any).
+                 */
+            bool isSquareGlued_[3] = { false, false, false };
+                /**
+                 * Tracks whether each boundary square is glued to some other
+                 * triangular solid torus.
+                 */
+            static const int squareOrigSlope_[3] = {1, -1, 1};
+                /**
+                 * The original slopes of the squares, when no layering has
+                 * been done.
+                 */
+            static const size_t squareOrigTetIndex_[3][2] = {
+                {2, 1},
+                {0, 2},
+                {1, 0}
+            };
+                /**
+                 * Indices of the core tetrahedra which originally (prior to
+                 * any layerings) provide the triangles of the boundary
+                 * squares.
+                 */
+            static const Perm<4> squareOrigRoles_[3][2] = {
+                { Perm<4>(2, 3, 1, 0), Perm<4>(3, 1, 2, 0) },
+                { Perm<4>(1, 0, 3, 2), Perm<4>(2, 3, 0, 1) },
+                { Perm<4>(1, 3, 0, 2), Perm<4>(1, 0, 2, 3) }
+            };
+                /**
+                 * Permutations specifying the roles played by the core
+                 * tetrahedra when they are not covered by a layering.
+                 */
+
+        private:
+            /**
+             * Constructs a solid torus built from a triangular prism, and
+             * inserts it into the given 3-manifold triangulation.
+             */
+            TriSolidTorus(Triangulation<3>& tri);
+
+            /**
+             * Returns the current slope of the diagonal edge of boundary
+             * square s of this triangular solid torus.
+             */
+            int squareSlope(unsigned s);
+
+            /**
+             * Returns the tetrahedron that provides triangle t of boundary
+             * square s of this triangular solid torus.
+             */
+            Tetrahedron<3>* squareTet(unsigned s, unsigned t);
+
+            /**
+             * Returns the permutation describing the roles of the vertices of
+             * squareTet(s, t).
+             *
+             * See the class notes for details.
+             */
+            Perm<4> squareRoles(unsigned s, unsigned t);
+
+            /**
+             * Flips the sign of the slope of the given square's diagonal edge.
+             *                                                                    
+             * This routine returns the new slope that results from performing
+             * the flip.
+             *                                                                    
+             * Precondition
+             * --> isSquareGlued_[square] is false.
+             */
+            int flipSlope(unsigned square);
+
+            /**
+             * Joins boundary square s of this triangular solid torus to some
+             * boundary square of another triangular solid torus in the same
+             * triangulation.
+             *
+             * You may join two distinct boundary squares of this triangular
+             * solid torus (i.e., other is allowed to be this triangular solid
+             * torus), but you cannot join a boundary square to itself.
+             *
+             * If the triangulation is currently oriented, then the requested
+             * gluing will preserve this orientation.
+             *
+             * The rationale for this routine is that if we associate a
+             * collection of prisms to the triangles of a 2-manifold
+             * triangulation S, then joining all the prisms together using the
+             * same gluing permutations as in S will produce an oriented
+             * 3-manifold triangulation of the orientable circle bundle over S.
+             *
+             * Precondition
+             * --> This and other both belong to the same triangulation.
+             * --> Boundary square s of this triangular solid torus is not
+             *     currently glued to anything.
+             * --> The corresponding boundary square of other (i.e., boundary
+             *     square gluing[s] of other) is likewise not currently glued
+             *     to anything.
+             * --> We are not attempting to glue a boundary square to itself
+             *     (i.e., we do not have both this == other and
+             *     gluing[s] == s).
+             *
+             * Parameters:
+             * --> s        The boundary square of this triangular solid torus
+             *              that will be glued to other; s must be in {0,1,2}.
+             * --> other    The other triangular solid torus that will be glued
+             *              to boundary square s of this.
+             * --> gluing   A permutation that describes how the vertical edges
+             *              of this triangular solid torus will map to the
+             *              vertical edges of other across the new gluing.
+             */
+            void orientedJoin(
+                    unsigned s, TriSolidTorus* other, Perm<3> gluing );
+
+        friend class OrientableBundle;
+        friend class SFSpace;
+    };  // class TriSolidTorus
 
 }   // anonymous namespace
 
