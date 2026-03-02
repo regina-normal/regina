@@ -773,11 +773,11 @@ namespace {
      */
     class TriSolidTorus {
         private:
-            std::array<Tetrahedron<3>*, 3> coreTet_[3];
+            std::array<Tetrahedron<3>*, 3> coreTet_;
                 /**
                  * The three core tetrahedra that form the triangular prism.
                  */
-            std::array<Tetrahedron<3>*, 3> layerTet_[3] = {};
+            std::array<Tetrahedron<3>*, 3> layerTet_ = {};
                 /**
                  * The tetrahedra layered onto the boundary squares to flip
                  * their slopes.
@@ -795,12 +795,12 @@ namespace {
                  * Tracks whether each boundary square is glued to some other
                  * triangular solid torus.
                  */
-            static const int squareOrigSlope_[3] = {1, -1, 1};
+            static constexpr int squareOrigSlope_[3] = {1, -1, 1};
                 /**
                  * The original slopes of the squares, when no layering has
                  * been done.
                  */
-            static const size_t squareOrigTetIndex_[3][2] = {
+            static constexpr size_t squareOrigTetIndex_[3][2] = {
                 {2, 1},
                 {0, 2},
                 {1, 0}
@@ -810,7 +810,7 @@ namespace {
                  * any layerings) provide the triangles of the boundary
                  * squares.
                  */
-            static const Perm<4> squareOrigRoles_[3][2] = {
+            static constexpr Perm<4> squareOrigRoles_[3][2] = {
                 { Perm<4>(2, 3, 1, 0), Perm<4>(3, 1, 2, 0) },
                 { Perm<4>(1, 0, 3, 2), Perm<4>(2, 3, 0, 1) },
                 { Perm<4>(1, 3, 0, 2), Perm<4>(1, 0, 2, 3) }
@@ -897,24 +897,24 @@ namespace {
              *              vertical edges of other across the new gluing.
              */
             void orientedJoin(
-                    unsigned s, TriSolidTorus* other, Perm<3> gluing );
+                    unsigned s, TriSolidTorus& other, Perm<3> gluing );
 
         friend class OrientableBundle;
-        friend class SFSpace;
+        friend class regina::SFSpace;
     };  // class TriSolidTorus
 
     TriSolidTorus::TriSolidTorus(Triangulation<3>& tri) :
             coreTet_( tri.newTetrahedra<3>() ) {
         // Glue the three core tetrahedra together to form a triangular prism.
-        _coreTet[0]->join( 1, _coreTet[1], Perm<4>(2,3) )
-        _coreTet[1]->join( 3, _coreTet[2], Perm<4>(2,3) )
+        coreTet_[0]->join( 1, coreTet_[1], Perm<4>(2,3) );
+        coreTet_[1]->join( 3, coreTet_[2], Perm<4>(2,3) );
 
         // Glue top to bottom to form a solid torus.
         //
         // NOTE:    This implementation is easily adapted to build an
         //          orientable I-bundle (instead of a circle bundle) by
         //          simply skipping this last gluing.
-        _coreTet[2]->join( 3, _coreTet[0], Perm<4>(1,2,3,0) )
+        coreTet_[2]->join( 3, coreTet_[0], Perm<4>(1,2,3,0) );
     }
 
 }   // anonymous namespace
