@@ -917,6 +917,37 @@ namespace {
         coreTet_[2]->join( 3, coreTet_[0], Perm<4>(1,2,3,0) );
     }
 
+    int TriSolidTorus::squareSlope(unsigned s){
+        if ( layerTet_[s] == nullptr ){
+            return squareOrigSlope_[s];
+        }
+        return -squareOrigSlope_[s];
+    }
+
+    Tetrahedron<3>* TriSolidTorus::squareTet(unsigned s, unsigned t){
+        if ( layerTet_[s] == nullptr ){
+            return coreTet_[ squareOrigTetIndex_[s][t] ];
+        }
+        return layerTet_[s];
+    }
+
+    Perm<4> TriSolidTorus::squareRoles(unsigned s, unsigned t){
+        if ( layerTet_[s] == nullptr ){
+            return squareOrigRoles_[s][t];
+        }
+        return layerRoles_[s][t];
+    }
+
+    int TriSolidTorus::flipSlope(unsigned square){
+        //TODO
+        return 0;
+    }
+
+    void TriSolidTorus::orientedJoin(
+            unsigned s, TriSolidTorus& other, Perm<3> gluing ){
+        //TODO
+    }
+
 }   // anonymous namespace
 
 // ------------------------------------------------------------------------
