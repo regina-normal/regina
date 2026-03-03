@@ -1127,74 +1127,89 @@ namespace {
 // ------------------------------------------------------------------------
 Triangulation<3> SFSpace::construct() const {
     // Things that we don't deal with just yet.
-    if (punctures_ || puncturesTwisted_ || reflectors_ || reflectorsTwisted_)
+    if (puncturesTwisted_ || reflectors_ || reflectorsTwisted_)
         throw NotImplemented("SFSpace::construct() is currently not "
-            "implemented for spaces whose base orbifolds have punctures "
-            "or reflector boundaries");
+            "implemented for spaces whose base orbifolds have twisted "
+            "punctures or reflector boundaries");
 
     // We already know how to construct lens spaces.
     if (auto lens = isLensSpace())
         return lens->construct();
 
-    //TODO The plan is to construct orientable SFS over any base.
-
-    // Currently we work over the 2-sphere only.
-    if (genus_ != 0 || class_ != Class::o1)
-        throw NotImplemented("SFSpace::construct() is currently not "
-            "implemented for spaces whose base orbifold is not the 2-sphere");
-
-    // Since we've already dealt with lens spaces, we must have at least
-    // three exceptional fibres.  Build a blocked structure.
+    // For 2-sphere base, we keep the longstanding construction.
+    // For more general base, we use the new construction further down.
     Triangulation<3> ans;
-    Tetrahedron<3> *a, *b, *c;
+    if (genus_ == 0 and class_ == Class::o1) {
+        // Since we've already dealt with lens spaces, we must have at least
+        // three exceptional fibres.  Build a blocked structure.
+        Tetrahedron<3> *a, *b, *c;
 
-    // Begin with the first triangular solid torus.
-    a = ans.newTetrahedron();
-    b = ans.newTetrahedron();
-    c = ans.newTetrahedron();
-    a->join(1, b, Perm<4>());
-    b->join(2, c, Perm<4>());
-    c->join(3, a, Perm<4>(1, 2, 3, 0));
-
-    auto fit = fibres_.begin();
-    SatAnnulus::attachLST(a, Perm<4>(1, 0, 2, 3), b, Perm<4>(1, 2, 0, 3),
-        fit->alpha, fit->beta);
-    fit++;
-    SatAnnulus::attachLST(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0),
-        fit->alpha, fit->beta);
-    fit++;
-
-    // Run through the rest of the fibres, one at a time.  Each extra
-    // fibre (aside from the third) will require another triangular
-    // solid torus.
-    Tetrahedron<3>* prevA = a;
-    Tetrahedron<3>* prevC = c;
-
-    SFSFibre nextFibre = *fit++;
-    while (fit != fibres_.end()) {
+        // Begin with the first triangular solid torus.
         a = ans.newTetrahedron();
         b = ans.newTetrahedron();
         c = ans.newTetrahedron();
-        a->join(3, prevA, Perm<4>(2, 3));
-        b->join(3, prevC, Perm<4>(0, 2, 3, 1));
         a->join(1, b, Perm<4>());
         b->join(2, c, Perm<4>());
         c->join(3, a, Perm<4>(1, 2, 3, 0));
 
+        auto fit = fibres_.begin();
+        SatAnnulus::attachLST(a, Perm<4>(1, 0, 2, 3), b, Perm<4>(1, 2, 0, 3),
+            fit->alpha, fit->beta);
+        fit++;
         SatAnnulus::attachLST(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0),
-            nextFibre.alpha, nextFibre.beta);
+            fit->alpha, fit->beta);
+        fit++;
 
-        prevA = a;
-        prevC = c;
-        nextFibre = *fit++;
+        // Run through the rest of the fibres, one at a time.  Each extra
+        // fibre (aside from the third) will require another triangular
+        // solid torus.
+        Tetrahedron<3>* prevA = a;
+        Tetrahedron<3>* prevC = c;
+
+        SFSFibre nextFibre = *fit++;
+        while (fit != fibres_.end()) {
+            a = ans.newTetrahedron();
+            b = ans.newTetrahedron();
+            c = ans.newTetrahedron();
+            a->join(3, prevA, Perm<4>(2, 3));
+            b->join(3, prevC, Perm<4>(0, 2, 3, 1));
+            a->join(1, b, Perm<4>());
+            b->join(2, c, Perm<4>());
+            c->join(3, a, Perm<4>(1, 2, 3, 0));
+
+            SatAnnulus::attachLST(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0),
+                nextFibre.alpha, nextFibre.beta);
+
+            prevA = a;
+            prevC = c;
+            nextFibre = *fit++;
+        }
+
+        // We have one remaining fibre.  Fill in the final annulus of the
+        // last triangular solid torus.
+        SatAnnulus::attachLST(a, Perm<4>(1, 0, 3, 2), c, Perm<4>(2, 3, 0, 1),
+            nextFibre.alpha, -(nextFibre.beta + b_ * nextFibre.alpha));
+
+        return ans;
+    }   // End of construction for 2-sphere base.
+
+    // Currently we only work with orientable total space.
+    if ( class_ != Class::o1 and class_ != Class::bo1 and
+            class_ != Class::n2 and class_ != Class::bn2 ) {
+        throw NotImplemented("SFSpace::construct() is currently not "
+            "implemented for non-orientable spaces");
     }
 
-    // We have one remaining fibre.  Fill in the final annulus of the
-    // last triangular solid torus.
-    SatAnnulus::attachLST(a, Perm<4>(1, 0, 3, 2), c, Perm<4>(2, 3, 0, 1),
-        nextFibre.alpha, -(nextFibre.beta + b_ * nextFibre.alpha));
+    // For the new, more general construction, we start with the
+    // OrientableCircleBundle over a suitable surface with nonempty boundary,
+    // and fill in the exceptional fibres. This is similar in spirit to the
+    // above construction for 2-sphere base, but the trade-off for getting a
+    // manageable implementation at this generality is that the result is
+    // slightly less optimised (in terms of number of tetrahedra).
 
-    return ans;
+    //TODO
+    throw NotImplemented("Orientable SFS with non-2-sphere base is "
+            "coming soon!");
 }
 
 AbelianGroup SFSpace::homology() const {
