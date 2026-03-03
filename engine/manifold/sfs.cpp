@@ -920,30 +920,30 @@ namespace {
         coreTet_[2]->join( 3, coreTet_[0], Perm<4>(1,2,3,0) );
     }
 
-    int TriSolidTorus::squareSlope(unsigned s){
-        if ( layerTet_[s] == nullptr ){
+    int TriSolidTorus::squareSlope(unsigned s) {
+        if ( layerTet_[s] == nullptr ) {
             return squareOrigSlope_[s];
         }
         return -squareOrigSlope_[s];
     }
 
-    Tetrahedron<3>* TriSolidTorus::squareTet(unsigned s, unsigned t){
-        if ( layerTet_[s] == nullptr ){
+    Tetrahedron<3>* TriSolidTorus::squareTet(unsigned s, unsigned t) {
+        if ( layerTet_[s] == nullptr ) {
             return coreTet_[ squareOrigTetIndex_[s][t] ];
         }
         return layerTet_[s];
     }
 
-    Perm<4> TriSolidTorus::squareRoles(unsigned s, unsigned t){
-        if ( not layerTet_[s] ){
+    Perm<4> TriSolidTorus::squareRoles(unsigned s, unsigned t) {
+        if ( not layerTet_[s] ) {
             return squareOrigRoles_[s][t];
         }
         return layerRoles_[s][t];
     }
 
-    int TriSolidTorus::flipSlope(unsigned square){
+    int TriSolidTorus::flipSlope(unsigned square) {
         Triangulation<3> tri = coreTet_[0]->triangulation();
-        if ( layerTet_[square] ){
+        if ( layerTet_[square] ) {
             // This is the easy case: we can flip the slope by simply removing
             // the previously layered tetrahedron.
             tri.removeTetrahedron( layerTet_[square] );
@@ -975,7 +975,7 @@ namespace {
         //               0•----•3          3•----•1
         //
         std::array<Perm<4>, 2> relativeGluing;
-        if ( squareOrigSlope_[square] == 1 ){
+        if ( squareOrigSlope_[square] == 1 ) {
             // Sanity check: roles sign is already -1, so the signs of our
             // relative gluing permutations should be +1 (as they indeed are).
             relativeGluing = { Perm<4>(2, 0, 1, 3), Perm<4>(3, 1, 0, 2) };
@@ -1007,8 +1007,62 @@ namespace {
     }
 
     void TriSolidTorus::orientedJoin(
-            unsigned s, TriSolidTorus& other, Perm<3> gluing ){
-        //TODO
+            unsigned s, TriSolidTorus& other, Perm<3> gluing ) {
+        // Check some of the preconditions.
+        unsigned sOther = gluing[s];
+        if ( isSquareGlued_[s] or other.isSquareGlued_[sOther] ) {
+            throw InvalidArgument(
+                    "Can only glue squares that are currently unglued." );
+        }
+
+        // We need the two squares on either side of the gluing to have
+        // opposite slopes.
+        if ( squareSlope(s) == other.squareSlope(sOther) ) {
+            // Flip slope by removing tetrahedra whenever possible.
+            if ( layerTet_[s] or ( not other.layerTet_[sOther] ) ) {
+                flipSlope(s);
+            } else {
+                other.flipSlope(sOther);
+            }
+        }
+
+        // Recall that the boundary squares are labelled as follows:
+        //
+        //               Slope +1          Slope -1
+        //             Roles sign -1     Roles sign +1
+        //                •----•            •----•
+        //                |0 2/|            |\2 0|
+        //                |  /1|            |1\  |
+        //                |1/  |            |  \1|
+        //                |/2 0|            |0 2\|
+        //                •----•            •----•
+        //
+        unsigned tOther;
+        for (unsigned t : {0, 1}) {
+            if ( gluing.sign() == 1 ) {
+                // Gluing swaps top and bottom, not left and right.
+                tOther = t;
+            } else {
+                // Gluing swaps left and right.
+                tOther = 1 - t;
+            }
+
+            // Perform the gluing on triangle t of square s of this prism.
+            // Opposite slopes implies that roles and rolesOther have opposite
+            // signs, so our choice of gluing permutation between the two
+            // tetrahedra does indeed have sign -1.
+            Perm<4> roles = squareRoles(s, t);
+            Perm<4> rolesOther = other.squareRoles(sOther, tOther);
+            squareTet(s, t)->join(
+                    roles[3],
+                    other.squareTet(sOther, tOther),
+                    rolesOther * roles.inverse() );
+        }
+
+        // All that remains is to record that the two joined boundary squares
+        // are now glued to something (namely, each other).
+        isSquareGlued_[s] = true;
+        other.isSquareGlued_[sOther] = true;
     }
 
 }   // anonymous namespace
