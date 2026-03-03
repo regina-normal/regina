@@ -32,6 +32,7 @@
 #include <iterator>
 #include <numeric> // for std::gcd()
 #include <sstream>
+#include <vector>
 #include "algebra/abeliangroup.h"
 #include "manifold/lensspace.h"
 #include "manifold/sfs.h"
@@ -712,13 +713,6 @@ std::strong_ordering SFSpace::operator <=> (const SFSpace& rhs) const {
 // ------------------------------------------------------------------------
 namespace {
 
-    //TODO
-
-    /**
-     */
-    class OrientableCircleBundle {
-    };  // class OrientableCircleBundle
-
     /**
      * An oriented solid torus built from a triangular prism within a
      * triangulation.
@@ -823,13 +817,14 @@ namespace {
                  * tetrahedra when they are not covered by a layering.
                  */
 
-        private:
+        public:
             /**
              * Constructs a solid torus built from a triangular prism, and
              * inserts it into the given 3-manifold triangulation.
              */
             TriSolidTorus(Triangulation<3>& tri);
 
+        private:
             /**
              * Returns the current slope of the diagonal edge of boundary
              * square s of this triangular solid torus.
@@ -902,9 +897,69 @@ namespace {
             void orientedJoin(
                     unsigned s, TriSolidTorus& other, Perm<3> gluing );
 
-        friend class OrientableBundle;
+        friend class OrientableCircleBundle;
         friend class regina::SFSpace;
     };  // class TriSolidTorus
+
+    /**
+     * An oriented triangulation of an (orientable) circle bundle over a
+     * surface.
+     *
+     * The 3-manifold triangulation T of the bundle is constructed from a
+     * 2-manifold triangulation S by assigning a triangular solid torus (see
+     * the TriSolidTorus class) to each triangle of S, and gluing these solid
+     * tori together accordingly. For triangle i of S, the associated
+     * triangular solid torus can be accessed using
+     *      OrientableCircleBundle.triSolidTorus[i].
+     * Moreover, edge e of triangle i corresponds to boundary square number e
+     * of the associated triangular solid torus.
+     */
+    class OrientableCircleBundle {
+        private:
+            Triangulation<3> tri_;
+                /**
+                 * The underlying triangulation of this bundle.
+                 */
+            std::vector<TriSolidTorus> triSolidTorus;
+                /**
+                 * The triangular solid tori that make up this bundle
+                 * triangulation.
+                 */
+
+        private:
+            /**
+             * Constructs an oriented triangulation of an (orientable) circle
+             * bundle over the given base surface.
+             */
+            OrientableCircleBundle(const Triangulation<2>& baseSurface);
+
+        friend class regina::SFSpace;
+    };  // class OrientableCircleBundle
+
+    OrientableCircleBundle::OrientableCircleBundle(
+            const Triangulation<2>& baseSurface ) {
+        // Create triangular solid tori that give orientable circle bundles
+        // over each triangle in the baseSurface. We can build the full circle
+        // bundle by simply translating the gluings of baseSurface into gluings
+        // of the triangular solid tori.
+        triSolidTorus.reserve( baseSurface.size() );
+        for (unsigned i = 0; i < baseSurface.size(); ++i) {
+            triSolidTorus.emplace_back(tri_);
+        }
+        for ( Edge<2>* edge : baseSurface.edges() ) {
+            if ( edge->isBoundary() ) {
+                continue;
+            }
+
+            // Translate the gluing across this internal edge to a gluing of
+            // two boundary squares of the triangular solid tori.
+            unsigned frontEdgeNum = edge->front().edge();
+            triSolidTorus[ edge->front().triangle()->index() ].orientedJoin(
+                    frontEdgeNum,
+                    triSolidTorus[ edge->back().triangle()->index() ],
+                    edge->front().triangle()->adjacentGluing(frontEdgeNum) );
+        }
+    }
 
     TriSolidTorus::TriSolidTorus(Triangulation<3>& tri) :
             coreTet_( tri.newTetrahedra<3>() ) {
