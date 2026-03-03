@@ -37,21 +37,39 @@ using regina::SFSpace;
 
 //TODO Test new SFS constructions.
 
-void verifyName(SFSpace::Class c, size_t genus,
+SFSpace buildSFS( SFSpace::Class c, size_t genus,
         size_t punctures, size_t puncturesTwisted,
         size_t reflectors, size_t reflectorsTwisted,
-        std::initializer_list<SFSFibre> fibres,
-        const char* expected) {
-    SFSpace s(c, genus, punctures, puncturesTwisted,
-        reflectors, reflectorsTwisted);
-    for (const auto& f : fibres)
-        s.insertFibre(f);
+        std::initializer_list<SFSFibre> fibres ) {
+    SFSpace sfs( c, genus,
+            punctures, puncturesTwisted,
+            reflectors, reflectorsTwisted );
+    for (const auto& f : fibres) {
+        sfs.insertFibre(f);
+    }
+    return sfs;
+}
 
-    EXPECT_EQ(s.name(), expected);
+void verifyLens( const SFSpace& sfs, bool expectedHasValue ) {
+    //TODO
+}
+
+TEST(SFSTest, lens) {
+    //TODO
+}
+
+void verifyName(const SFSpace& sfs, const char* expected) {
+    EXPECT_EQ(sfs.name(), expected);
 }
 
 TEST(SFSTest, construct) {
-    verifyName(SFSpace::Class::o1, 0, 0, 0, 0, 0, {}, "S2 x S1");
-    verifyName(SFSpace::Class::o1, 1, 0, 0, 0, 0, {}, "T x S1");
-    verifyName(SFSpace::Class::bo1, 0, 1, 0, 0, 0, {}, "D x S1");
+    verifyName(
+            buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0, {} ),
+            "S2 x S1" );
+    verifyName(
+            buildSFS( SFSpace::Class::o1, 1, 0, 0, 0, 0, {} ),
+            "T x S1" );
+    verifyName(
+            buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0, {} ),
+            "D x S1" );
 }

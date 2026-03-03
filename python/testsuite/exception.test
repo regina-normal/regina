@@ -70,7 +70,7 @@ except UnsolvedCase:
 
 s = SFSpace()
 print(s.construct().homology())
-s.addPuncture()
+s.addPuncture(True) # twisted puncture
 try:
     print(s.construct())
     print('ERROR: Did not throw exception')
