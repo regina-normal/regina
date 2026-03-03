@@ -40,7 +40,8 @@
 #include "maths/numbertheory.h"
 #include "subcomplex/satannulus.h"
 #include "triangulation/dim3.h"
-#include "triangulation/example2.h" // for Example<2>::polygon()
+#include "triangulation/example2.h" // for constructing base surfaces
+#include "triangulation/example3.h" // for small cases in SFSpace::construct()
 #include "utilities/exception.h"
 
 namespace regina {
@@ -1127,18 +1128,30 @@ namespace {
 // ------------------------------------------------------------------------
 Triangulation<3> SFSpace::construct() const {
     // Things that we don't deal with just yet.
-    if (puncturesTwisted_ || reflectors_ || reflectorsTwisted_)
+    if (puncturesTwisted_ || reflectors_ || reflectorsTwisted_) {
         throw NotImplemented("SFSpace::construct() is currently not "
             "implemented for spaces whose base orbifolds have twisted "
             "punctures or reflector boundaries");
+    }
+
+    // Currently we only work with orientable total space.
+    if ( class_ != Class::o1 and class_ != Class::bo1 and
+            class_ != Class::n2 and class_ != Class::bn2 ) {
+        throw NotImplemented("SFSpace::construct() is currently not "
+            "implemented for non-orientable spaces");
+    }
 
     // We already know how to construct lens spaces.
-    if (auto lens = isLensSpace())
-        return lens->construct();
+    Triangulation<3> ans;
+    if (auto lens = isLensSpace()) {
+        //TODO Is this already oriented?
+        ans = lens->construct();
+        ans.orient();
+        return ans;
+    }
 
     // For 2-sphere base, we keep the longstanding construction.
     // For more general base, we use the new construction further down.
-    Triangulation<3> ans;
     if (genus_ == 0 and class_ == Class::o1) {
         // Since we've already dealt with lens spaces, we must have at least
         // three exceptional fibres.  Build a blocked structure.
@@ -1193,19 +1206,72 @@ Triangulation<3> SFSpace::construct() const {
         return ans;
     }   // End of construction for 2-sphere base.
 
-    // Currently we only work with orientable total space.
-    if ( class_ != Class::o1 and class_ != Class::bo1 and
-            class_ != Class::n2 and class_ != Class::bn2 ) {
-        throw NotImplemented("SFSpace::construct() is currently not "
-            "implemented for non-orientable spaces");
-    }
-
     // For the new, more general construction, we start with the
     // OrientableCircleBundle over a suitable surface with nonempty boundary,
     // and fill in the exceptional fibres. This is similar in spirit to the
     // above construction for 2-sphere base, but the trade-off for getting a
     // manageable implementation at this generality is that the result is
     // slightly less optimised (in terms of number of tetrahedra).
+
+    // If necessary, adjust the fibres that we will fill in to incorporate the
+    // obstruction constant.
+    std::list<SFSFibre> fibresToFill(fibres_);
+    if ( punctures_ == 0 and b_ != 0 ) {
+        long alpha, beta;
+        if ( fibresToFill.empty() ) {
+            alpha = 1;
+            beta = 0;
+        } else {
+            SFSFibre fibreToReplace( fibresToFill.back() );
+            fibresToFill.pop_back();
+            alpha = fibreToReplace.alpha;
+            beta = fibreToReplace.beta;
+        }
+        fibresToFill.emplace_back( alpha, beta + (alpha * b_) );
+    }
+
+    // If there are no fibres to fill at all, then the requested SFS is just
+    // the orientable circle bundle over the base surface.
+    if ( fibresToFill.empty() ) {
+        // For the simplest cases, we just use the constructions that are
+        // already implemented elsewhere. For all remaining cases, we simply
+        // construct a baseSurface which we then pass to our generic circle
+        // bundle construction.
+        Triangulation<2> baseSurface;
+        if ( class_ == Class::o1 ) {
+            // We already handled genus_ == 0 above, so genus_ >= 1.
+            if ( genus_ == 1 ) {
+                //TODO Orient the Example<3> implementation so we don't have to
+                //      orient here.
+                ans = Example<3>::threeTorus();
+                ans.orient();
+                return ans;
+            } else {
+                baseSurface = Example<2>::orientable( genus_, 0 );
+            }
+        } else if ( class_ == Class::bo1 ) {
+            if ( genus_ == 0 and punctures_ == 1 ) {
+                // One-tetrahedron, so trivially oriented.
+                return Example<3>::ballBundle();
+            } else {
+                baseSurface = Example<2>::orientable( genus_, punctures_ );
+            }
+        } else if ( class_ == Class::n2 ) {
+            if ( genus_ == 1 ) {
+                //TODO Orient the Example<3> implementation so we don't have to
+                //      orient here.
+                ans = Example<3>::rp3rp3();
+                ans.orient();
+                return ans;
+            } else {
+                baseSurface = Example<2>::nonOrientable( genus_, 0 );
+            }
+        } else {    // class == Class:bn2
+            baseSurface = Example<2>::nonOrientable( genus_, punctures_ );
+        }
+        OrientableCircleBundle bundle(baseSurface);
+        return bundle.tri_;
+    }
 
     //TODO
     throw NotImplemented("Orientable SFS with non-2-sphere base is "
