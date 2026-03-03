@@ -785,10 +785,13 @@ namespace {
                  * Initially these are all null, to indicate that there are no
                  * such layered tetrahedra.
                  */
-            Perm<4> layerRoles_[3][2];
+            std::array<std::array<Perm<4>, 3>, 2> layerRoles_;
                 /**
                  * Permutations specifying the roles played by the vertices of
                  * the layered tetrahedra (if any).
+                 *
+                 * The value of layerRoles_[s][t] is only meaningful when
+                 * layerTet_[s][t] is not nullptr.
                  */
             bool isSquareGlued_[3] = { false, false, false };
                 /**
@@ -932,15 +935,75 @@ namespace {
     }
 
     Perm<4> TriSolidTorus::squareRoles(unsigned s, unsigned t){
-        if ( layerTet_[s] == nullptr ){
+        if ( not layerTet_[s] ){
             return squareOrigRoles_[s][t];
         }
         return layerRoles_[s][t];
     }
 
     int TriSolidTorus::flipSlope(unsigned square){
-        //TODO
-        return 0;
+        Triangulation<3> tri = coreTet_[0]->triangulation();
+        if ( layerTet_[square] ){
+            // This is the easy case: we can flip the slope by simply removing
+            // the previously layered tetrahedron.
+            tri.removeTetrahedron( layerTet_[square] );
+            layerTet_[square] = nullptr;
+
+            // We have reverted to the original slope.
+            return squareOrigSlope_[square];
+        }
+
+        // No previous layering, so we need to introduce such a layering.
+        //
+        //               Slope +1          Slope -1
+        //             Roles sign -1     Roles sign +1
+        //                •----•            •----•
+        //                |0 2/|            |\2 0|
+        //                |  /1|            |1\  |
+        //                |1/  |            |  \1|
+        //                |/2 0|            |0 2\|
+        //                •----•            •----•
+        //
+        // We will flip the diagonal by layering a tetrahedron. The following
+        // vertex labelling ensures that the layering preserves orientation:
+        //
+        //               2•----•1          0•----•2
+        //                |\   |            |   /|
+        //                | \  |            |  / |
+        //                |  \ |            | /  |
+        //                |   \|            |/   |
+        //               0•----•3          3•----•1
+        //
+        std::array<Perm<4>, 2> relativeGluing;
+        if ( squareOrigSlope_[square] == 1 ){
+            // Sanity check: roles sign is already -1, so the signs of our
+            // relative gluing permutations should be +1 (as they indeed are).
+            relativeGluing = { Perm<4>(2, 0, 1, 3), Perm<4>(3, 1, 0, 2) };
+
+            // Slope will become -1, so the sign of the new roles permutations
+            // needs to be +1 (as they indeed are).
+            layerRoles_[square] = { Perm<4>(0, 2, 3, 1), Perm<4>(1, 3, 2, 0) };
+        } else {
+            // Sanity check: roles sign is +1, so the signs of our relative
+            // gluing permutations should be -1 (as they indeed are).
+            relativeGluing = { Perm<4>(3, 0, 1, 2), Perm<4>(2, 1, 0, 3) };
+
+            // Slope will become +1, so the sign of the new roles permutations
+            // needs to be -1 (as they indeed are).
+            layerRoles_[square] = { Perm<4>(0, 3, 2, 1), Perm<4>(1, 2, 3, 0) };
+        }
+
+        // OK, actually perform the layering.
+        layerTet_[square] = tri.newTetrahedron();
+        Perm<4> origRoles;
+        for (unsigned t : {0, 1}) {
+            origRoles = squareOrigRoles_[square][t];
+            coreTet_[ squareOrigTetIndex_[square][t] ]->join(
+                    origRoles[3],
+                    layerTet_[square],
+                    relativeGluing[t] * origRoles.inverse() );
+        }
+        return -squareOrigSlope_[square];
     }
 
     void TriSolidTorus::orientedJoin(
