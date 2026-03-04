@@ -274,11 +274,29 @@ template <typename T>
 struct [[deprecated]] IsReginaInteger : public std::false_type {};
 
 #ifndef __DOXYGEN
+
+#if defined(__GNUC__)
+// These specialisations are causing noisy deprecation warnings under gcc.
+// Silence them, since the specialisations need to stay until IsReginaInteger
+// is removed completely.
+#pragma GCC diagnostic push
+#if defined(__clang__)
+#pragma GCC diagnostic ignored "-Wdeprecated"
+#else
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+#endif
+
 template <bool withInfinity>
 struct IsReginaInteger<IntegerBase<withInfinity>> : public std::true_type {};
 
 template <int bytes>
 struct IsReginaInteger<NativeInteger<bytes>> : public std::true_type {};
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
+
 #endif // __DOXYGEN
 
 /**

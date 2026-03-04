@@ -37,6 +37,7 @@
 #define __REGINA_BOOLSET_H
 #endif
 
+#include <cstdint>
 #include <iostream>
 #include <string>
 #include "utilities/exception.h"
