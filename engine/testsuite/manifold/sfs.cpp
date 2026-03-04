@@ -29,13 +29,12 @@
  **************************************************************************/
 
 #include "manifold/sfs.h"
+#include "manifold/lensspace.h"
 
 #include "gtest/gtest.h"
 
 using regina::SFSFibre;
 using regina::SFSpace;
-
-//TODO Test new SFS constructions.
 
 SFSpace buildSFS( SFSpace::Class c, size_t genus,
         size_t punctures, size_t puncturesTwisted,
@@ -51,11 +50,43 @@ SFSpace buildSFS( SFSpace::Class c, size_t genus,
 }
 
 void verifyLens( const SFSpace& sfs, bool expectedHasValue ) {
-    //TODO
+    EXPECT_EQ( sfs.isLensSpace().has_value(), expectedHasValue );
 }
 
 TEST(SFSTest, lens) {
-    //TODO
+    // Lens spaces usually have class o1 over the 2-sphere (genus 0), with at
+    // most two exceptional fibres.
+    SFSpace sfsOverS2 = buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0, {} );
+    verifyLens( sfsOverS2, true );
+    sfsOverS2.insertFibre(5, 2);
+    verifyLens( sfsOverS2, true );
+    sfsOverS2.insertFibre(3, 1);
+    verifyLens( sfsOverS2, true );
+    sfsOverS2.insertFibre(5, 1);
+    verifyLens( sfsOverS2, false );
+
+    // Verify some cases which are obviously not lens spaces.
+    verifyLens(
+            buildSFS( SFSpace::Class::o1, 1, 0, 0, 0, 0, {} ),
+            false );
+    verifyLens(
+            buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0, {} ),
+            false );
+    verifyLens(
+            buildSFS( SFSpace::Class::bo1, 0, 0, 1, 0, 0, {} ),
+            false );
+    verifyLens(
+            buildSFS( SFSpace::Class::bo1, 0, 0, 0, 1, 0, {} ),
+            false );
+    verifyLens(
+            buildSFS( SFSpace::Class::bo1, 0, 0, 0, 0, 1, {} ),
+            false );
+    verifyLens(
+            buildSFS( SFSpace::Class::o2, 1, 0, 0, 0, 0, {} ),
+            false );
+    verifyLens(
+            buildSFS( SFSpace::Class::n2, 2, 0, 0, 0, 0, {} ),
+            false );
 }
 
 void verifyName(const SFSpace& sfs, const char* expected) {
@@ -72,4 +103,6 @@ TEST(SFSTest, construct) {
     verifyName(
             buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0, {} ),
             "D x S1" );
+
+    //TODO Actually construct some SFSpaces.
 }
