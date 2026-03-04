@@ -906,6 +906,10 @@ namespace {
      * An oriented triangulation of an (orientable) circle bundle over a
      * surface.
      *
+     * For base surface with nonempty boundary, this class constructs the
+     * unique such bundle. For closed base surface, this class constructs the
+     * bundle with Euler number 0.
+     *
      * The 3-manifold triangulation T of the bundle is constructed from a
      * 2-manifold triangulation S by assigning a triangular solid torus (see
      * the TriSolidTorus class) to each triangle of S, and gluing these solid
@@ -1231,7 +1235,8 @@ Triangulation<3> SFSpace::construct() const {
     }
 
     // If there are no fibres to fill at all, then the requested SFS is just
-    // the orientable circle bundle over the base surface.
+    // the orientable circle bundle (with Euler number 0, if the base surface
+    // has no punctures) over the base surface.
     if ( fibresToFill.empty() ) {
         // For the simplest cases, we just use the constructions that are
         // already implemented elsewhere. For all remaining cases, we simply
