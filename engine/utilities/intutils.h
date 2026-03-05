@@ -433,42 +433,67 @@ inline constexpr IntType minSafeFactor =
     std::numeric_limits<IntType>::min() / coeff;
 
 /**
- * Gives access to native integer types that hold _exactly_ \a k bytes,
- * where \a k may be any compile-time constant.
+ * Gives access to native C++ integer types that hold _exactly_ \a k bytes,
+ * where \a k is a compile-time constant.
+ *
+ * The relevant signed and unsigned types can be accessed via the type aliases
+ * `IntOfSize<k>::type` and `IntOfSize<k>::utype` respectively.
+ *
+ * If the current platform does not offer native integer types of exactly the
+ * requested size (or if Regina cannot work out how to access them), then these
+ * type aliases will resolve to `void`.
+ *
+ * At present, it is guaranteed that these native integer types _will_ be
+ * defined for all power-of-two sizes `k ≤ 8`, _may_ be defined for `k = 16`
+ * (depending on the platform), and will _not_ be defined for `k > 16`.
  *
  * \tparam bytes the exact number of bytes in the native integer types
- * (i.e., the integer \a k described above).
+ * (i.e., the integer \a k described above).  This must be a power of two
+ * (which is true in practice for all native integer types on all typical
+ * modern hardware).
  *
  * \nopython
  *
  * \see IntOfMinSize
+ * \see IntOfMinBits
  *
  * \ingroup utilities
  */
 template <int bytes>
+requires (std::popcount(bytes) == 1)
 struct IntOfSize {
     /**
-     * A native signed integer type with exactly \a k bytes, where \a k is the
-     * template parameter.
+     * A native C++ signed integer type with exactly \a k bytes, where \a k is
+     * the template parameter.
      *
-     * The default is \c void, which indicates that Regina does not know
-     * how to access an integer type of the requested size.
+     * If Regina does not know how to access a native integer type of this size,
+     * then this type alias will resolve to `void`.
      */
     using type = void;
 
     /**
-     * A native unsigned integer type with exactly \a k bytes, where \a k is the
-     * template parameter.
+     * A native C++ unsigned integer type with exactly \a k bytes, where \a k is
+     * the template parameter.
      *
-     * The default is \c void, which indicates that Regina does not know
-     * how to access an integer type of the requested size.
+     * If Regina does not know how to access a native integer type of this size,
+     * then this type alias will resolve to `void`.
      */
     using utype = void;
 };
 
 /**
- * Gives access to native integer types that hold _at least_ \a k bytes,
- * where \a k may be any compile-time constant.
+ * Gives access to native C++ integer types that hold _at least_ \a k bytes,
+ * where \a k is a compile-time constant.
+ *
+ * The relevant signed and unsigned types can be accessed via the type aliases
+ * `IntOfMinSize<k>::type` and `IntOfMinSize<k>::utype` respectively.
+ *
+ * If \a k is so large that Regina does not know how to access such a type on
+ * the current platform, then these type aliases will resolve to `void`.
+ *
+ * At present, it is guaranteed that such native integer types _will_ be
+ * available for all `k ≤ 8`, _may_ be available for `k ≤ 16` (depending on
+ * the platform), and will _not_ be available for `k > 16`.
  *
  * \tparam bytes the minimum number of bytes in the native integer types
  * (i.e., the integer \a k described above).
@@ -476,33 +501,44 @@ struct IntOfSize {
  * \nopython
  *
  * \see IntOfSize
+ * \see IntOfMinBits
  *
  * \ingroup utilities
  */
 template <int bytes>
 struct IntOfMinSize {
     /**
-     * A native signed integer type with at least \a k bytes, where \a k is
+     * A native C++ signed integer type with at least \a k bytes, where \a k is
      * the template parameter.
      *
-     * The default is \c void, which indicates that Regina does not know
-     * how to access an integer type of the requested size.
+     * If Regina does not know how to access a native integer type of such a
+     * size, then this type alias will resolve to `void`.
      */
     using type = typename IntOfSize<nextPowerOfTwo(bytes)>::type;
 
     /**
-     * A native unsigned integer type with at least \a k bytes, where \a k is
-     * the template parameter.
+     * A native C++ unsigned integer type with at least \a k bytes, where \a k
+     * is the template parameter.
      *
-     * The default is \c void, which indicates that Regina does not know
-     * how to access an integer type of the requested size.
+     * If Regina does not know how to access a native integer type of such a
+     * size, then this type alias will resolve to `void`.
      */
     using utype = typename IntOfSize<nextPowerOfTwo(bytes)>::utype;
 };
 
 /**
- * Gives access to native integer types that hold _at least_ \a k bits,
- * where \a k may be any compile-time constant.
+ * Gives access to native C++ integer types that hold _at least_ \a k bits,
+ * where \a k is a compile-time constant.
+ *
+ * The relevant signed and unsigned types can be accessed via the type aliases
+ * `IntOfMinBits<k>::type` and `IntOfMinBits<k>::utype` respectively.
+ *
+ * If \a k is so large that Regina does not know how to access such a type on
+ * the current platform, then these type aliases will resolve to `void`.
+ *
+ * At present, it is guaranteed that such native integer types _will_ be
+ * available for all `k ≤ 64`, _may_ be available for `k ≤ 128` (depending on
+ * the platform), and will _not_ be available for `k > 128`.
  *
  * \tparam bits the minimum number of bits in the native integer types
  * (i.e., the integer \a k described above).
@@ -510,6 +546,7 @@ struct IntOfMinSize {
  * \nopython
  *
  * \see IntOfSize
+ * \see IntOfMinSize
  *
  * \ingroup utilities
  */
