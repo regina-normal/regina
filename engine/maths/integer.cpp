@@ -223,7 +223,8 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
         mpz_init(large_);
         mpz_mul_si(large_, other.large_, small_);
     } else {
-        Wide ans = static_cast<Wide>(small_) * static_cast<Wide>(other.small_);
+        DoubleLong ans = static_cast<DoubleLong>(small_) *
+            static_cast<DoubleLong>(other.small_);
         if (ans > LONG_MAX || ans < LONG_MIN) {
             // Overflow.
             large_ = new __mpz_struct[1];

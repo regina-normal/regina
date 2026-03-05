@@ -552,6 +552,20 @@ struct IntOfSize<16> {
 #endif // __DOXYGEN
 
 /**
+ * A native C++ signed integer type that is twice the size of a \c long.
+ *
+ * The C++ standard does not mandate that this exists, but the developers
+ * have not yet seen a platform where we wish to build Regina and where
+ * this fails.
+ */
+using DoubleLong = IntOfSize<2 * sizeof(long)>::type;
+static_assert(! std::is_void<DoubleLong>(),
+    "Regina requires a native integer type that is twice the size "
+    "of a long. The developers are not currently aware of any cases "
+    "where this fails, so if you see this error then _please_ write "
+    "and let us know.");
+
+/**
  * Converts the given native C++ integer type into a signed integer type of
  * the same size, allowing for 128-bit integers also.
  *
