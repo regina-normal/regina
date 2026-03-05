@@ -39,6 +39,7 @@
 #endif
 
 #include "regina-core.h"
+#include <bit>
 #include <cstdint>
 #include <limits>
 #include <type_traits>
@@ -459,7 +460,7 @@ inline constexpr IntType minSafeFactor =
  *
  * \ingroup utilities
  */
-template <int bytes>
+template <unsigned bytes>
 requires (std::popcount(bytes) == 1)
 struct IntOfSize {
     /**
