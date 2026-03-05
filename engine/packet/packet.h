@@ -38,12 +38,12 @@
 #define __REGINA_PACKET_H
 #endif
 
-#include <concepts>
 #include <iostream>
 #include <iterator>
 #include <map>
 #include <memory>
 #include <set>
+#include <concepts> // Don't include this first - see QTBUG-83160
 
 #include "regina-core.h"
 #include "core/output.h"

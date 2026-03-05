@@ -37,8 +37,8 @@
 #define __REGINA_FLAGS_H
 #endif
 
-#include <concepts>
 #include <type_traits>
+#include <concepts> // Don't include this first - see QTBUG-83160
 #include "regina-core.h"
 
 namespace regina {

@@ -39,10 +39,10 @@
 #endif
 
 #include "regina-core.h"
-#include <concepts>
 #include <cstdint>
 #include <limits>
 #include <type_traits>
+#include <concepts> // Don't include this first - see QTBUG-83160
 
 namespace regina {
 

@@ -37,9 +37,9 @@
 #define __REGINA_CONCEPTS_IO_H
 #endif
 
-#include <concepts>
 #include <iostream>
 #include <string>
+#include <concepts> // Don't include this first - see QTBUG-83160
 #include "regina-core.h"
 
 namespace regina {
