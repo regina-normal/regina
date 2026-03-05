@@ -273,6 +273,24 @@ concept IntegerComparable =
 template <typename T>
 struct [[deprecated]] IsReginaInteger : public std::false_type {};
 
+/**
+ * Deprecated traits class to determine if the type \a T is one of Regina's
+ * arbitrary precision integer types.
+ *
+ * This is true only when \a T is one of the classes Integer or LargeInteger.
+ *
+ * The result will be available through the compile-time boolean constant
+ * IsReginaArbitraryPrecisionInteger<T>::value.
+ *
+ * \deprecated Instead use the concept `ArbitraryPrecisionInteger<T>`.
+ *
+ * \nopython
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+struct [[deprecated]] IsReginaArbitraryPrecisionInteger : public std::false_type {};
+
 #ifndef __DOXYGEN
 
 #if defined(__GNUC__)
@@ -293,33 +311,13 @@ struct IsReginaInteger<IntegerBase<withInfinity>> : public std::true_type {};
 template <int bytes>
 struct IsReginaInteger<NativeInteger<bytes>> : public std::true_type {};
 
+template <bool withInfinity>
+struct IsReginaArbitraryPrecisionInteger<IntegerBase<withInfinity>> : public std::true_type {};
+
 #if defined(__GNUC__)
 #pragma GCC diagnostic pop
 #endif
 
-#endif // __DOXYGEN
-
-/**
- * Deprecated traits class to determine if the type \a T is one of Regina's
- * arbitrary precision integer types.
- *
- * This is true only when \a T is one of the classes Integer or LargeInteger.
- *
- * The result will be available through the compile-time boolean constant
- * IsReginaArbitraryPrecisionInteger<T>::value.
- *
- * \deprecated Instead use the concept `ArbitraryPrecisionInteger<T>`.
- *
- * \nopython
- *
- * \ingroup utilities
- */
-template <typename T>
-struct [[deprecated]] IsReginaArbitraryPrecisionInteger : public std::false_type {};
-
-#ifndef __DOXYGEN
-template <bool withInfinity>
-struct IsReginaArbitraryPrecisionInteger<IntegerBase<withInfinity>> : public std::true_type {};
 #endif // __DOXYGEN
 
 #ifndef __DOCSTRINGS
