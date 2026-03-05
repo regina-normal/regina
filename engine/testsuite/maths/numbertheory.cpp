@@ -34,6 +34,8 @@
 
 #include "testhelper.h"
 
+using regina::DoubleLong;
+
 // A positive odd integer whose square is a bit less than LONG_MAX:
 static constexpr long halfSizeOdd =
     (long(1) << (sizeof(long) * 4 - 4)) * 11 + 5;

@@ -311,10 +311,10 @@ TEST(BitmaskTest, nextPermutation) {
     verifyNextPermutation<unsigned int>();
     verifyNextPermutation<unsigned long>();
     verifyNextPermutation<unsigned long long>();
-    verifyNextPermutation<regina::IntOfSize<1>::utype>();
-    verifyNextPermutation<regina::IntOfSize<2>::utype>();
-    verifyNextPermutation<regina::IntOfSize<4>::utype>();
-    verifyNextPermutation<regina::IntOfSize<8>::utype>();
+    verifyNextPermutation<uint8_t>();
+    verifyNextPermutation<uint16_t>();
+    verifyNextPermutation<uint32_t>();
+    verifyNextPermutation<uint64_t>();
 #ifdef INT128_AVAILABLE
     verifyNextPermutation<regina::UInt128>();
 #endif
