@@ -195,13 +195,10 @@ class BitManipulator : public regina::detail::BitManipulatorByType<T> {
          * \return the number of bits that are set.
          */
         inline static constexpr int bits(T x) {
-            if constexpr (sizeof(T) > sizeof(unsigned long long)) {
-                using HalfSize = typename IntOfSize<sizeof(T) / 2>::utype;
-                return std::popcount(static_cast<HalfSize>(x)) +
-                    std::popcount(static_cast<HalfSize>(x >> (4 * sizeof(T))));
-            } else {
-                return std::popcount(x);
-            }
+            // std::popcount() should be defined for all C++ standard integer
+            // types _and_ extended integer types (in particular, we should
+            // be fine to use this with 128-bit integers also).
+            return std::popcount(x);
         }
 
         /**
