@@ -184,6 +184,16 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
                  corresponding GMP large integer is initialised.
                  If this integer is infinity then large_ must be \c null. */
 
+        using Wide = IntOfSize<2 * sizeof(long)>::type;
+            /**< A native C++ integer type that is twice the size of a long.
+                 The C++ standard does not mandate that this exists, but also
+                 I am not aware of a platform on which this fails. */
+        static_assert(! std::is_void<Wide>(),
+            "Regina requires a native integer type that is twice the size "
+            "of a long. The developers are not currently aware of any cases "
+            "where this fails, so if you see this error then _please_ write "
+            "and let us know.");
+
     public:
         /**
          * Initialises this integer to zero.
@@ -3597,7 +3607,6 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
                 mpz_mul_ui(large_, large_, other);
             }
         } else {
-            using Wide = IntOfSize<2 * sizeof(long)>::type;
             // Note: even if other is unsigned, casting it to Wide will do the
             // cast correctly, and the multiplication should not overflow.
             Wide ans = static_cast<Wide>(small_) * static_cast<Wide>(other);
