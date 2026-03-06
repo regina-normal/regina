@@ -57,8 +57,8 @@ namespace regina {
  * Represents a finitely generated abelian group.
  *
  * The torsion elements of the group are stored in terms of their
- * invariant factors.  For instance, Z_2+Z_3 will appear as
- * Z_6, and Z_2+Z_2+Z_3 will appear as Z_2+Z_6.
+ * invariant factors.  For instance, `Z_2 + Z_3` will appear as
+ * `Z_6`, and `Z_2 + Z_2 + Z_3` will appear as `Z_2 + Z_6`.
  *
  * In general the factors will appear as Z_<i>d0</i>+...+Z_<i>dn</i>,
  * where the invariant factors \a di are all greater than 1 and satisfy
