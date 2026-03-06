@@ -681,6 +681,7 @@ stripWhitespace : function
 subscript : function
 superscript : function
 supportedDim : function
+supportsNativeIntegerSize : function
 swap : function
 testEngine : function
 tightDecoding : function
