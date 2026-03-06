@@ -214,6 +214,9 @@ Version 7.5  [ TODO ]
         Function supportedDim():
             - New function to indicate which dimensions of triangulation are
               supported; this complements maxDim() and standardDim().
+        Function supportsNativeIntegerSize():
+            - New function to indicate which sizes of native C++ integer type
+              are supported.
         Function tightEncode(), tightDecode():
             - The native C++ integer versions of these functions are now
               templated, and explicitly support 8-bit integers (i.e., chars)

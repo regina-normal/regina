@@ -61,6 +61,7 @@ static_assert(CHAR_BIT == 8, "Regina works under the assumption that a byte "
 namespace regina {
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 class NativeInteger;
 
 #ifdef __DOCSTRINGS
@@ -485,9 +486,13 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * C++ does, and so this function is not so important.  Python users
          * can simply call safeValue(), unsafeValue(), or pythonValue() instead.
          *
+         * \tparam bytes the exact number of bytes in the native C++ integer
+         * type to return.
+         *
          * \return the value of this integer.
          */
         template <int bytes>
+        requires (supportsNativeIntegerSize(bytes))
         [[deprecated]] typename IntOfSize<bytes>::type nativeValue() const;
         /**
          * Returns the value of this integer as a string in the given
@@ -1694,6 +1699,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
     friend class IntegerBase<! withInfinity>; // For conversions.
 
     template <int bytes>
+    requires (supportsNativeIntegerSize(bytes))
     friend class NativeInteger; // For conversions.
 
     template <bool withInfinity_>
@@ -1851,8 +1857,8 @@ struct RingTraits<IntegerBase<withInfinity>> {
  * It implements the C++ Swappable requirement via its own member and global
  * swap() functions, for consistency with the Integer and LargeInteger classes.
  *
- * \pre The system must support integers of the given size; in particular,
- * there must be an appropriate specialisation IntOfSize<bytes>.
+ * \tparam bytes the exact number of bytes in the native C++ integer type
+ * that is being wrapped.
  *
  * \nopython The purpose of NativeInteger is to be a highly optimised
  * drop-in replacement for Integer as a C++ template parameter.
@@ -1862,6 +1868,7 @@ struct RingTraits<IntegerBase<withInfinity>> {
  * \ingroup maths
  */
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 class NativeInteger {
     public:
         using Native = typename IntOfSize<bytes>::type;
@@ -2910,6 +2917,7 @@ inline long IntegerBase<withInfinity>::longValue() const {
 
 template <bool withInfinity>
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline typename IntOfSize<bytes>::type IntegerBase<withInfinity>::nativeValue()
         const {
     return unsafeValue<typename IntOfSize<bytes>::type>();
@@ -4021,20 +4029,24 @@ std::string tightEncoding(IntegerBase<withInfinity> value) {
 // Inline functions for NativeInteger
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>::NativeInteger() : data_(0) {
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>::NativeInteger(Native value) : data_(
         value) {
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>::NativeInteger(
         const NativeInteger<bytes>& value) : data_(value.data_) {
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 template <bool withInfinity>
 inline NativeInteger<bytes>::NativeInteger(
         const IntegerBase<withInfinity>& value) :
@@ -4042,22 +4054,26 @@ inline NativeInteger<bytes>::NativeInteger(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr bool NativeInteger<bytes>::isZero() const {
     return (data_ == 0);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr int NativeInteger<bytes>::sign() const {
     return (data_ > 0 ? 1 : data_ < 0 ? -1 : 0);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr typename NativeInteger<bytes>::Native NativeInteger<bytes>::
         nativeValue() const {
     return data_;
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline std::string NativeInteger<bytes>::str() const {
     if constexpr (StandardStringifiable<Native>) {
         return std::to_string(data_);
@@ -4067,6 +4083,7 @@ inline std::string NativeInteger<bytes>::str() const {
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator =(
         const NativeInteger<bytes>& value) {
     data_ = value.data_;
@@ -4074,6 +4091,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator =(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator =(
         Native value) {
     data_ = value;
@@ -4081,93 +4099,109 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator =(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr void NativeInteger<bytes>::swap(NativeInteger<bytes>& other)
         noexcept {
     std::swap(data_, other.data_);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr bool NativeInteger<bytes>::operator ==(
         const NativeInteger<bytes>& rhs) const {
     return (data_ == rhs.data_);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr bool NativeInteger<bytes>::operator ==(Native rhs) const {
     return (data_ == rhs);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr std::strong_ordering NativeInteger<bytes>::operator <=> (
         const NativeInteger& rhs) const {
     return data_ <=> rhs.data_;
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr std::strong_ordering NativeInteger<bytes>::operator <=> (
         Native rhs) const {
     return data_ <=> rhs;
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator ++() {
     ++data_;
     return *this;
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator ++(int) {
     return NativeInteger<bytes>(data_++);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator --() {
     --data_;
     return *this;
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator --(int) {
     return NativeInteger<bytes>(data_--);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator +(
         const NativeInteger<bytes>& other) const {
     return NativeInteger<bytes>(data_ + other.data_);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator +(
         Native other) const {
     return NativeInteger<bytes>(data_ + other);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator -(
         const NativeInteger<bytes>& other) const {
     return NativeInteger<bytes>(data_ - other.data_);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator -(
         Native other) const {
     return NativeInteger<bytes>(data_ - other);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator *(
         const NativeInteger<bytes>& other) const {
     return NativeInteger<bytes>(data_ * other.data_);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator *(
         Native other) const {
     return NativeInteger<bytes>(data_ * other);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator /(
         const NativeInteger<bytes>& other) const {
     if (other.data_ == 0)
@@ -4176,6 +4210,7 @@ inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator /(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator /(
         Native other) const {
     if (other == 0)
@@ -4184,18 +4219,21 @@ inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator /(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::divExact(
         const NativeInteger<bytes>& other) const {
     return NativeInteger<bytes>(data_ / other.data_);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::divExact(
         Native other) const {
     return NativeInteger<bytes>(data_ / other);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator %(
         const NativeInteger<bytes>& other) const {
     if (other.data_ == 0)
@@ -4204,6 +4242,7 @@ inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator %(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator %(
         Native other) const {
     if (other == 0)
@@ -4212,6 +4251,7 @@ inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator %(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr std::pair<NativeInteger<bytes>, NativeInteger<bytes>>
         NativeInteger<bytes>::divisionAlg(const NativeInteger& divisor) const {
     if (divisor == 0)
@@ -4238,11 +4278,13 @@ inline constexpr std::pair<NativeInteger<bytes>, NativeInteger<bytes>>
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator -() const {
     return NativeInteger<bytes>(- data_);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator += (
         const NativeInteger<bytes>& other) {
     data_ += other.data_;
@@ -4250,6 +4292,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator += (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator += (
         Native other) {
     data_ += other;
@@ -4257,6 +4300,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator += (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator -= (
         const NativeInteger<bytes>& other) {
     data_ -= other.data_;
@@ -4264,6 +4308,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator -= (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator -= (
         Native other) {
     data_ -= other;
@@ -4271,6 +4316,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator -= (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator *= (
         const NativeInteger<bytes>& other) {
     data_ *= other.data_;
@@ -4278,6 +4324,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator *= (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator *= (
         Native other) {
     data_ *= other;
@@ -4285,6 +4332,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator *= (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator /= (
         const NativeInteger<bytes>& other) {
     if (other.data_ == 0)
@@ -4294,6 +4342,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator /= (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator /= (
         Native other) {
     if (other == 0)
@@ -4303,6 +4352,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator /= (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::divByExact(
         const NativeInteger<bytes>& other) {
     data_ /= other.data_;
@@ -4310,6 +4360,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::divByExact(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::divByExact(
         Native other) {
     data_ /= other;
@@ -4317,6 +4368,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::divByExact(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator %= (
         const NativeInteger<bytes>& other) {
     if (other.data_ == 0)
@@ -4326,6 +4378,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator %= (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator %= (
         Native other) {
     if (other == 0)
@@ -4335,11 +4388,13 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator %= (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr void NativeInteger<bytes>::negate() {
     data_ = - data_;
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 constexpr void NativeInteger<bytes>::gcdWith(const NativeInteger<bytes>& other)
         {
     Native a = data_;
@@ -4400,6 +4455,7 @@ constexpr void NativeInteger<bytes>::gcdWith(const NativeInteger<bytes>& other)
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::gcd(
         const NativeInteger<bytes>& other) const {
     NativeInteger<bytes> ans(data_);
@@ -4408,6 +4464,7 @@ inline constexpr NativeInteger<bytes> NativeInteger<bytes>::gcd(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr void NativeInteger<bytes>::tryReduce() {
 }
 

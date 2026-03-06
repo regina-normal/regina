@@ -39,7 +39,6 @@
 #endif
 
 #include "regina-core.h"
-#include <bit>
 #include <cstdint>
 #include <limits>
 #include <type_traits>
@@ -48,7 +47,33 @@
 namespace regina {
 
 template <bool> class IntegerBase;
-template <int> class NativeInteger;
+
+/**
+ * Determines whether Regina is able to access native C++ integers of the
+ * given size.
+ *
+ * At present, this _will_ return `true` if \a bytes is a power of two with
+ * `bytes ≤ 8`; this _might_ return `true` if `bytes = 16` (depending on whether
+ * the platform supports native 128-bit arithmetic); and this will _not_ return
+ * `true` for any other value of `bytes`.
+ *
+ * \param bytes the number of bytes in the native integers being queried.
+ * \return \c true if and only if Regina is able to access native C++ integers
+ * with exactly this number of bytes.
+ */
+inline constexpr bool supportsNativeIntegerSize(int bytes) {
+    // Note: this function must be kept in sync with the specialisations of
+    // IntOfSize<bytes>.
+#if defined(INT128_AVAILABLE)
+    return bytes == 1 || bytes == 2 || bytes == 4 || bytes == 8 || bytes == 16;
+#else
+    return bytes == 1 || bytes == 2 || bytes == 4 || bytes == 8;
+#endif
+}
+
+template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
+class NativeInteger;
 
 /**
  * A compile-time boolean constant that indicates whether the type \a T is a
@@ -72,7 +97,7 @@ template <int> class NativeInteger;
  * \ingroup utilities
  */
 template <typename T>
-#ifdef INT128_AVAILABLE
+#if defined(INT128_AVAILABLE)
     constexpr bool is_cpp_integer_v = (std::is_integral_v<T> ||
         std::is_same_v<T, Int128> || std::is_same_v<T, UInt128>) &&
         ! std::is_same_v<T, bool>;
@@ -105,7 +130,7 @@ template <typename T>
  * \ingroup utilities
  */
 template <typename T>
-#ifdef INT128_AVAILABLE
+#if defined(INT128_AVAILABLE)
     constexpr bool is_signed_cpp_integer_v =
         ((std::is_integral_v<T> && std::is_signed_v<T>) ||
         std::is_same_v<T, Int128>) && ! std::is_same_v<T, bool>;
@@ -139,7 +164,7 @@ template <typename T>
  * \ingroup utilities
  */
 template <typename T>
-#ifdef INT128_AVAILABLE
+#if defined(INT128_AVAILABLE)
     constexpr bool is_unsigned_cpp_integer_v =
         ((std::is_integral_v<T> && std::is_unsigned_v<T>) ||
         std::is_same_v<T, UInt128>) && ! std::is_same_v<T, bool>;
@@ -444,14 +469,14 @@ inline constexpr IntType minSafeFactor =
  * requested size (or if Regina cannot work out how to access them), then these
  * type aliases will resolve to `void`.
  *
- * At present, it is guaranteed that these native integer types _will_ be
- * defined for all power-of-two sizes `k ≤ 8`, _may_ be defined for `k = 16`
- * (depending on the platform), and will _not_ be defined for `k > 16`.
+ * These native integer types will be available (i.e., non-void) if and only if
+ * `regina::supportsNativeIntegerSize(k)` is `true`.  At present, this means
+ * they _will_ be available for all power-of-two sizes `k ≤ 8`, they _may_ be
+ * available for `k = 16` (depending on the platform), and they will _not_ be
+ * available for `k > 16`.
  *
  * \tparam bytes the exact number of bytes in the native integer types
- * (i.e., the integer \a k described above).  This must be a power of two
- * (which is true in practice for all native integer types on all typical
- * modern hardware).
+ * (i.e., the integer \a k described above).
  *
  * \nopython
  *
@@ -460,15 +485,15 @@ inline constexpr IntType minSafeFactor =
  *
  * \ingroup utilities
  */
-template <unsigned bytes>
-requires (std::popcount(bytes) == 1)
+template <int bytes>
 struct IntOfSize {
     /**
      * A native C++ signed integer type with exactly \a k bytes, where \a k is
      * the template parameter.
      *
-     * If Regina does not know how to access a native integer type of this size,
-     * then this type alias will resolve to `void`.
+     * If Regina does not know how to access a native integer type of this size
+     * (i.e., `regina::supportsNativeIntegerSize(bytes)` is `false`), then
+     * this type alias will resolve to `void`.
      */
     using type = void;
 
@@ -476,8 +501,9 @@ struct IntOfSize {
      * A native C++ unsigned integer type with exactly \a k bytes, where \a k is
      * the template parameter.
      *
-     * If Regina does not know how to access a native integer type of this size,
-     * then this type alias will resolve to `void`.
+     * If Regina does not know how to access a native integer type of this size
+     * (i.e., `regina::supportsNativeIntegerSize(bytes)` is `false`), then
+     * this type alias will resolve to `void`.
      */
     using utype = void;
 };
@@ -555,6 +581,8 @@ template <int bits>
 using IntOfMinBits = IntOfMinSize<(bits + 7) / 8>;
 
 #ifndef __DOXYGEN
+// Note: these specialisations must be kept in sync with the implementation of
+// supportsNativeIntegerSize(bytes).
 template <>
 struct IntOfSize<1> {
     using type = int8_t;
@@ -579,7 +607,7 @@ struct IntOfSize<8> {
     using utype = uint64_t;
 };
 
-#ifdef INT128_AVAILABLE
+#if defined(INT128_AVAILABLE)
 template <>
 struct IntOfSize<16> {
     using type = Int128;

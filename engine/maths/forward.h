@@ -40,6 +40,7 @@
 
 #include "concepts/core.h"
 #include "concepts/io.h"
+#include "utilities/intutils.h"
 
 namespace regina {
 
@@ -47,7 +48,9 @@ template <bool> class IntegerBase;
 using Integer = IntegerBase<false>;
 using LargeInteger = IntegerBase<true>;
 
-template <int> class NativeInteger;
+template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
+class NativeInteger;
 
 template <RingLike> struct RingTraits;
 
