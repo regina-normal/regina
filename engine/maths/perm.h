@@ -55,6 +55,8 @@
 #include "utilities/intutils.h"
 #include "utilities/randutils.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

@@ -42,6 +42,8 @@
 #include "concepts/io.h"
 #include "utilities/intutils.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <bool> class IntegerBase;

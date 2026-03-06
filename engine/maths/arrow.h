@@ -42,6 +42,8 @@
 #include "utilities/sequence.h"
 #include <map>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

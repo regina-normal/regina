@@ -41,6 +41,8 @@
 
 #include "subcomplex/satregion.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <typename Action, typename... Args>

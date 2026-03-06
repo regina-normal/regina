@@ -37,6 +37,8 @@
 #include "packet/packet.h"
 #include "utilities/memstream.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class PacketChangeCallback : public PacketListener {

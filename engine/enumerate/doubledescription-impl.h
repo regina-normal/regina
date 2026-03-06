@@ -53,6 +53,8 @@
 #include "utilities/intutils.h"
 #include "utilities/trieset.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>

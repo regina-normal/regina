@@ -45,6 +45,8 @@
 #include "subcomplex/standardtri.h"
 #include "subcomplex/txicore.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

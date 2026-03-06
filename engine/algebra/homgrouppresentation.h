@@ -42,6 +42,8 @@
 #define __REGINA_HOMGROUPPRESENTATION_H
 #endif
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class GroupPresentation;

@@ -50,6 +50,8 @@
 #include "utilities/fixedarray.h"
 #include "utilities/intutils.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <ArbitraryPrecisionIntegerVector Ray, VoidCallback<Ray&&> Action>

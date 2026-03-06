@@ -44,6 +44,8 @@
 #include "maths/integer.h"
 #include "maths/matrix.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

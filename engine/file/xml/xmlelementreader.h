@@ -40,6 +40,8 @@
 #include "regina-core.h"
 #include "file/xml/xmlreader.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

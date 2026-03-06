@@ -47,6 +47,8 @@
 #include "regina-core.h"
 #include "utilities/boolset.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 /**
  * Various classes and routines for XML manipulation, some taken or
  * modified from the libxml++ library.  The libxml2 library is used

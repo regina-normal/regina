@@ -43,6 +43,8 @@
 
 #include "triangulation/detail/simplex.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

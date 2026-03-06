@@ -43,6 +43,8 @@
 #include "triangulation/detail/face.h"
 #include "triangulation/generic/faceembedding.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

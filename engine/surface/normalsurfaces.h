@@ -53,6 +53,8 @@
 #include "surface/normalcoords.h"
 #include "utilities/exception.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class NormalSurfaces;

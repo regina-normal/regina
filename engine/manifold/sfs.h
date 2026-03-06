@@ -42,6 +42,8 @@
 #include "regina-core.h"
 #include "manifold.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class AbelianGroup;

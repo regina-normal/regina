@@ -39,6 +39,8 @@
 
 #include "utilities/intutils.h" // provides concepts for integer types
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class Bitmask;

@@ -45,6 +45,8 @@
 #define __REGINA_EDGE4_H
 #endif
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

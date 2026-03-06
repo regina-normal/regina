@@ -51,6 +51,8 @@
 
 #include "regina-core.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <int dim> requires (supportedDim(dim)) class BoundaryComponent;

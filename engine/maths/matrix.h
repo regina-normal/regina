@@ -48,6 +48,8 @@
 #include "maths/integer.h"
 #include "maths/ring.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class Rational;

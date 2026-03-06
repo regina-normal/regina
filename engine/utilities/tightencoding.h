@@ -44,6 +44,8 @@
 #include "concepts/iterator.h"
 #include "utilities/exception.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <bool>

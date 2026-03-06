@@ -38,8 +38,11 @@
 #define __REGINA_SNAPSHOT_H
 #endif
 
+#include "regina-core.h"
 #include <atomic>
 #include <exception>
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 

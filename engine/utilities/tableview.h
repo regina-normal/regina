@@ -42,6 +42,8 @@
 #include <type_traits>
 #include "regina-core.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <typename Element, size_t dim1, size_t... dim>

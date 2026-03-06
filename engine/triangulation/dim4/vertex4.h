@@ -45,6 +45,8 @@
 #define __REGINA_VERTEX4_H
 #endif
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

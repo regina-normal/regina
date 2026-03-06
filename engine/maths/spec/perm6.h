@@ -45,6 +45,8 @@
 #define __REGINA_PERM6_H
 #endif
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

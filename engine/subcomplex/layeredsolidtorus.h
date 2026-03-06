@@ -42,6 +42,8 @@
 #include "subcomplex/standardtri.h"
 #include "triangulation/facepair.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

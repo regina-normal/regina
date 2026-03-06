@@ -43,6 +43,8 @@
 #include "triangulation/dim3.h"
 #include <tuple>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class Matrix2;

@@ -42,6 +42,8 @@
 #include "triangulation/forward.h"
 #include "utilities/sigutils.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 #ifdef __APIDOCS

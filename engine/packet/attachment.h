@@ -42,6 +42,8 @@
 #include "regina-core.h"
 #include "packet/packet.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

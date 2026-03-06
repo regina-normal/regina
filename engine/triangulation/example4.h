@@ -43,6 +43,8 @@
 #include "triangulation/dim4.h"
 #include "triangulation/detail/example.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

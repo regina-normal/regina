@@ -41,6 +41,8 @@
 #include "file/fileformat.h"
 #include "maths/perm.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class AngleStructures;

@@ -39,6 +39,8 @@
 
 #include "regina-core.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina::alias {
 
 /**

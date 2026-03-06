@@ -47,6 +47,8 @@
 #include <list>
 #include <vector>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class ValidityConstraints;

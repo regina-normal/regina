@@ -52,6 +52,8 @@
 #include <deque>
 #include <vector>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

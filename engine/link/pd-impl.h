@@ -44,6 +44,8 @@
 #include <algorithm>
 #include "utilities/fixedarray.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <typename Iterator>

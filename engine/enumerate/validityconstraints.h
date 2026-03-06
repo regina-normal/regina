@@ -44,6 +44,8 @@
 #include "concepts/iterator.h"
 #include "core/output.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

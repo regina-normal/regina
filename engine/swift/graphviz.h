@@ -33,7 +33,10 @@
 #define __REGINA_SWIFT_GRAPHVIZ_H
 #endif
 
+#include "regina-core.h"
 #include <string>
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 

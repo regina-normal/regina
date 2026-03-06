@@ -47,6 +47,8 @@
 #include <cstddef>
 #include <optional>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

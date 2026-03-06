@@ -42,6 +42,8 @@
 #include "triangulation/forward.h"
 #include "utilities/exception.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class AbelianGroup;

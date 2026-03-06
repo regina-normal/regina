@@ -47,6 +47,8 @@
 #include "utilities/intutils.h"
 #include "utilities/tightencoding.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina::detail {
 
 template <typename IntType>

@@ -48,6 +48,8 @@
 #include "utilities/markedvector.h"
 #include "utilities/tightencoding.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class Link;

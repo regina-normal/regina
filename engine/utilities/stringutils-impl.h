@@ -47,6 +47,8 @@
 #include <cctype>
 #include "maths/integer.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <StandardCppInteger T>

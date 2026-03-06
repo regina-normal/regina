@@ -43,6 +43,8 @@
 #include "maths/matrix2.h"
 #include "triangulation/dim3.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

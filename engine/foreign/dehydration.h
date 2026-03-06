@@ -40,6 +40,8 @@
 #include "regina-core.h"
 #include <memory>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class Container;

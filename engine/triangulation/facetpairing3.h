@@ -28,18 +28,20 @@
  *                                                                        *
  **************************************************************************/
 
+/*! \file triangulation/facetpairing3.h
+ *  \brief Deals with dual graphs of 3-manifold triangulations.
+ */
+
 #ifndef __REGINA_FACETPAIRING3_H
 #ifndef __DOXYGEN
 #define __REGINA_FACETPAIRING3_H
 #endif
 
-/*! \file triangulation/facetpairing3.h
- *  \brief Deals with dual graphs of 3-manifold triangulations.
- */
-
 #include "regina-core.h"
 #include "triangulation/dim3.h"
 #include "triangulation/generic/facetpairing.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 

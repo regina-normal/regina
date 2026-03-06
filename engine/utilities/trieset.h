@@ -42,6 +42,8 @@
 #include "core/output.h"
 #include "utilities/bitmask.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

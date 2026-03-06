@@ -42,6 +42,8 @@
 #include <concepts> // Don't include this first - see QTBUG-83160
 #include "regina-core.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

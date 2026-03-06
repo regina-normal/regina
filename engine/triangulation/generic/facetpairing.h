@@ -43,6 +43,8 @@
 
 #include "triangulation/detail/facetpairing.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

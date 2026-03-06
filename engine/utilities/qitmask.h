@@ -44,6 +44,8 @@
 #include "regina-core.h"
 #include "concepts/core.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <UnsignedCppInteger> class Qitmask1;

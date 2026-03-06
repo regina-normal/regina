@@ -44,6 +44,8 @@
 #include "packet/script.h"
 #include "packet/text.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

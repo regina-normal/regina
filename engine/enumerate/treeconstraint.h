@@ -43,6 +43,8 @@
 #include "surface/normalsurface.h"
 #include "triangulation/dim3.h" // for Triangulation<3>::size()
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class AngleStructure;

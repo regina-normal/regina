@@ -45,6 +45,8 @@
 #include <algorithm>
 #include <list>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <ReginaBitmask BitmaskType, typename RayIterator>

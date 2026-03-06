@@ -41,6 +41,8 @@
 #include "file/xml/xmlpacketreader.h"
 #include "snappea/snappeatriangulation.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

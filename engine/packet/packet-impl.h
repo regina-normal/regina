@@ -45,6 +45,8 @@
 #include "packet/packet.h"
 #include "utilities/xmlutils.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <typename Held>

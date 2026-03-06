@@ -44,6 +44,8 @@
 #include "packet/packet.h"
 #include "utilities/listview.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

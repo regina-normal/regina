@@ -42,6 +42,8 @@
 #include "hypersurface/normalhypersurfaces.h"
 #include "file/xml/xmlpacketreader.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

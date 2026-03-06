@@ -39,6 +39,20 @@
 
 #include "regina-config.h"
 
+/**
+ * A macro that ensures that we have included Regina's essential headers.
+ *
+ * To use it, simply place `ENSURE_ESSENTIAL_REGINA_HEADERS` somewhere
+ * after the list of includes in your source file.
+ *
+ * - If `regina-core.h` has been included (directly or indirectly), then this
+ *   silently expands to the empty string.
+ *
+ * - If `regina-core.h` has not been inclued, then this will generate a
+ *   compile error.
+ */
+#define ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

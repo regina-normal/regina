@@ -50,6 +50,8 @@
 #include "utilities/stringutils.h"
 #include "utilities/tightencoding.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 // Regina assumes in many places that a byte contains exactly 8 bits.
 // I believe this mandated for POSIX systems.  I'm not sure if anyone has ever
 // tried to build regina on a platform where this assumption fails, but the

@@ -47,6 +47,8 @@
 #include "maths/matrix.h"
 #include "packet/packet.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class AngleStructures;

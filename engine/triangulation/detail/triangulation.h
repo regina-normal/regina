@@ -66,6 +66,8 @@
 #include "utilities/tightencoding.h"
 #include "utilities/topologylock.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <int dim> requires (supportedDim(dim)) class FacetPairing;

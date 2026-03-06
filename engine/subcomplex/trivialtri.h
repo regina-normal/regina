@@ -40,6 +40,8 @@
 #include "regina-core.h"
 #include "subcomplex/standardtri.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

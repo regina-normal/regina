@@ -67,6 +67,8 @@
 #include "regina-core.h"
 #include <cstddef> // for size_t
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

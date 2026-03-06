@@ -37,6 +37,10 @@
 #define __REGINA_FILEFORMAT_H
 #endif
 
+#include "regina-core.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

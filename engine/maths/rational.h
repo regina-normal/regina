@@ -28,17 +28,19 @@
  *                                                                        *
  **************************************************************************/
 
+/*! \file maths/rational.h
+ *  \brief Deals with artibrary precision rational numbers.
+ */
+
 #ifndef __REGINA_RATIONAL_H
 #ifndef __DOXYGEN
 #define __REGINA_RATIONAL_H
 #endif
 
-/*! \file maths/rational.h
- *  \brief Deals with artibrary precision rational numbers.
- */
-
 #include "regina-core.h"
 #include "maths/integer.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 

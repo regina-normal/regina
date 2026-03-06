@@ -45,6 +45,8 @@
 #include "maths/matrix.h"
 #include "maths/vector.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class HomMarkedAbelianGroup;

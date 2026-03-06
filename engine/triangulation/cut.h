@@ -45,6 +45,8 @@
 #include "core/output.h"
 #include "utilities/exception.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class Link;

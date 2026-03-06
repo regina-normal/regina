@@ -41,6 +41,8 @@
 #include "file/xml/xmlelementreader.h"
 #include <memory>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class Packet;

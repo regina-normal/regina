@@ -42,6 +42,8 @@
 #include "subcomplex/satregion.h"
 #include "subcomplex/standardtri.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class SatBlock;

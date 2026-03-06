@@ -49,6 +49,8 @@
 #include "utilities/intutils.h"
 #include <list>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <ArbitraryPrecisionIntegerVector Ray, VoidCallback<Ray&&> Action>

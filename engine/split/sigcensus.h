@@ -44,6 +44,8 @@
 #include "split/signature.h"
 #include "split/sigisomorphism.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

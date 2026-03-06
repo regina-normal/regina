@@ -42,6 +42,8 @@
 #include "file/xml/xmlpacketreader.h"
 #include "angle/anglestructures.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

@@ -50,6 +50,8 @@
 #include "triangulation/dim3.h"
 #include "utilities/exception.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 /**
  * Optimisation flags:
  * Define any combination of the following flags to switch _off_

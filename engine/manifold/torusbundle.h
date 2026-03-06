@@ -41,6 +41,8 @@
 #include "manifold/manifold.h"
 #include "maths/matrix2.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

@@ -41,6 +41,8 @@
 #include "maths/perm.h"
 #include "subcomplex/standardtri.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

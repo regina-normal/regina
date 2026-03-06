@@ -48,5 +48,7 @@
 #include "triangulation/generic/simplex.h"
 #include "triangulation/generic/triangulation.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 #endif
 

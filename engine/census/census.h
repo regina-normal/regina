@@ -44,6 +44,8 @@
 #include "triangulation/facetpairing3.h"
 #include "utilities/boolset.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class CensusHit;

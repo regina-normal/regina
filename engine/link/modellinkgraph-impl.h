@@ -46,6 +46,8 @@
 #include "utilities/fixedarray.h"
 #include <set>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <typename Action, typename... Args>

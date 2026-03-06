@@ -63,6 +63,8 @@
 
 #include "census/census.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <VoidCallback<CensusHit&&> Action>

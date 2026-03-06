@@ -47,6 +47,8 @@
 #include <iostream>
 #include <limits>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <typename Iterator>

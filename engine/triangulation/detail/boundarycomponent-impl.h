@@ -53,6 +53,8 @@
 #include "triangulation/generic/boundarycomponent.h"
 #include "utilities/fixedarray.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina::detail {
 
 /**

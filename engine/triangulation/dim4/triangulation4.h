@@ -53,6 +53,8 @@
 // NOTE: More #includes for faces, components and boundary components
 // follow after the class declarations.
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class IntersectionForm;

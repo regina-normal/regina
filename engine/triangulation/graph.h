@@ -44,9 +44,11 @@
 #endif
 
 #include <iostream>
-#include <triangulation/generic.h>
+#include "triangulation/generic.h"
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 

@@ -43,9 +43,11 @@
 #define __REGINA_LINK_GRAPH_H
 #endif
 
-#include <link/link.h>
+#include "link/link.h"
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 namespace graph {

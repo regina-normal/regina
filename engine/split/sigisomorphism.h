@@ -41,6 +41,8 @@
 #include "core/output.h"
 #include "split/signature.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

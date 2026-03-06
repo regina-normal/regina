@@ -44,6 +44,8 @@
 #include "surface/surfacefiltertype.h"
 #include "utilities/boolset.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class NormalSurface;

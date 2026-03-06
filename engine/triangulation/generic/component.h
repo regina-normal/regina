@@ -43,6 +43,8 @@
 
 #include "triangulation/detail/component.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

@@ -42,6 +42,8 @@
 #include <compare>
 #include "concepts/core.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 namespace detail {

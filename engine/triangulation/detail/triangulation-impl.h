@@ -48,6 +48,8 @@
 #include "triangulation/generic/triangulation.h"
 #include "utilities/fixedarray.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 // The symbol used in writeTextLong() to indicate a locked simplex or facet:
 #define LOCKED_MARKER '*'
 // #define LOCKED_MARKER "⚿"; // U+26BF: squared key

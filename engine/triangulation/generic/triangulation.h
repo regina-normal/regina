@@ -48,6 +48,8 @@
 #include <type_traits>
 #include "triangulation/detail/triangulation.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

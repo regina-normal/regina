@@ -61,6 +61,8 @@
 
 // Note: there are more includes after the main class definitions.
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class Crossing;

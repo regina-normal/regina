@@ -43,6 +43,8 @@
 #include "maths/binom.h"
 #include "maths/perm.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 namespace detail {
 

@@ -43,6 +43,8 @@
 #include <string>
 #include <iconv.h>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 /**
  * Various classes and routines for working with internationalisation and
  * character encodings.

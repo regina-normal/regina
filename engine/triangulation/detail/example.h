@@ -42,6 +42,8 @@
 #include "packet/packet.h"
 #include "triangulation/detail/strings.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina::detail {
 
 /**

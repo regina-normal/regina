@@ -37,6 +37,8 @@
 #include "packet/text.h"
 #include "swift/packet.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

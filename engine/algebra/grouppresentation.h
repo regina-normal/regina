@@ -54,6 +54,8 @@
 
 // There are more includes at the end of this file.
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class AbelianGroup;

@@ -45,6 +45,8 @@
 #include "concepts/iterator.h"
 #include "utilities/bitmanip.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <UnsignedCppInteger> class Bitmask1;

@@ -42,6 +42,8 @@
 #include "subcomplex/layeredsolidtorus.h"
 #include "subcomplex/satblock.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

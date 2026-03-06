@@ -53,6 +53,8 @@
 #include <sys/types.h> // for ssize_t
 #include <algorithm>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

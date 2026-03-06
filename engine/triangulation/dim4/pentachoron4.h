@@ -46,6 +46,8 @@
 #define __REGINA_PENTACHORON4_H
 #endif
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

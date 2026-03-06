@@ -41,6 +41,8 @@
 #include <vector>
 #include "concepts/iterator.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

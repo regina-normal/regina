@@ -44,6 +44,8 @@
 
 #include "triangulation/generic/triangulation.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina::detail {
 
 template <int dim> requires (supportedDim(dim))

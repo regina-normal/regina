@@ -46,6 +46,8 @@
 #include "enumerate/treeconstraint.h"
 #include "triangulation/dim3.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <LPConstraint Constraint>

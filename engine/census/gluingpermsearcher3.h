@@ -49,6 +49,8 @@
 #include "utilities/exception.h"
 #include "utilities/qitmask.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 /**
  * Specifies whether the ClosedPrimeMinSearcher census generation code
  * should prune on high-degree edges.

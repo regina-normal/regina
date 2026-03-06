@@ -42,6 +42,8 @@
 #include "link/spatiallink.h"
 #include "utilities/stringutils.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class SpatialLink;

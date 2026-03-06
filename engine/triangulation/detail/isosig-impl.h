@@ -48,6 +48,8 @@
 #include "utilities/fixedarray.h"
 #include "utilities/sigutils.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina::detail {
 
 template <int dim> requires (supportedDim(dim))

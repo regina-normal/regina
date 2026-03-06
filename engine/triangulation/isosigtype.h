@@ -44,6 +44,8 @@
 #include "utilities/fixedarray.h"
 #include "utilities/sigutils.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <int dim, int subdim>

@@ -42,5 +42,7 @@
 
 #include "triangulation/dim3/triangulation3.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 #endif
 

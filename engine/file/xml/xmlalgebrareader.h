@@ -43,6 +43,8 @@
 #include "algebra/grouppresentation.h"
 #include "file/xml/xmlelementreader.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

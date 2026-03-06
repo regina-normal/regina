@@ -45,6 +45,8 @@
 #include <set>
 #include <tuple>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class SatBlockModel;

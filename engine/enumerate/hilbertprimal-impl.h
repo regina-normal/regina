@@ -51,6 +51,8 @@
 #include <set>
 #include <vector>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <ArbitraryPrecisionIntegerVector Ray, typename RayIterator,

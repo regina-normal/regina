@@ -64,6 +64,8 @@
 #include "utilities/bitmask.h"
 #include <cstring>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <ReginaInteger IntType>

@@ -48,6 +48,8 @@
 #include "concepts/core.h"
 #include "concepts/io.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class BoolSet;

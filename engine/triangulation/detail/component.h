@@ -45,6 +45,8 @@
 #include "utilities/listview.h"
 #include "utilities/markedvector.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina::detail {
 
 template <int dim> requires (supportedDim(dim)) class TriangulationBase;

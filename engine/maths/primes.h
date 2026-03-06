@@ -28,20 +28,22 @@
  *                                                                        *
  **************************************************************************/
 
+/*! \file maths/primes.h
+ *  \brief Support for finding primes and factorising integers.
+ */
+
 #ifndef __REGINA_PRIMES_H
 #ifndef __DOXYGEN
 #define __REGINA_PRIMES_H
 #endif
-
-/*! \file maths/primes.h
- *  \brief Support for finding primes and factorising integers.
- */
 
 #include "regina-core.h"
 #include "maths/integer.h"
 #include <thread>
 #include <vector>
 #include <mutex>
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 

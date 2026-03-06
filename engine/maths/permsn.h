@@ -45,6 +45,8 @@
 #define __REGINA_PERMSN_H
 #endif
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <int n> class Perm;

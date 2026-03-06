@@ -44,6 +44,8 @@
 #include <complex>
 #include <functional>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 // Forward declaration of SnapPea structures.
 namespace regina::snappea {
     struct Triangulation;

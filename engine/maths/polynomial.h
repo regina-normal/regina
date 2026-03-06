@@ -28,14 +28,14 @@
  *                                                                        *
  **************************************************************************/
 
+/*! \file maths/polynomial.h
+ *  \brief Implements single variable polynomials over arbitrary rings.
+ */
+
 #ifndef __REGINA_POLYNOMIAL_H
 #ifndef __DOXYGEN
 #define __REGINA_POLYNOMIAL_H
 #endif
-
-/*! \file maths/polynomial.h
- *  \brief Implements single variable polynomials over arbitrary rings.
- */
 
 #include "regina-core.h"
 #include "utilities/stringutils.h"
@@ -43,6 +43,8 @@
 #include "core/output.h"
 #include <iostream>
 #include <iterator>
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 

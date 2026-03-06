@@ -51,6 +51,8 @@
 #include "packet/packettype.h"
 #include "utilities/base64.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class Packet;

@@ -42,6 +42,8 @@
 #include "core/output.h"
 #include "triangulation/forward.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class SigCensus;

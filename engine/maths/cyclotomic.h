@@ -42,6 +42,8 @@
 #include "maths/rational.h"
 #include <complex>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

@@ -45,6 +45,8 @@
 #include <list>
 #include <vector>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 #ifndef __DOXYGEN
     // Optimisations:
 

@@ -51,6 +51,8 @@
 #include "utilities/boolset.h"
 #include "utilities/snapshot.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class NormalHypersurfaces;

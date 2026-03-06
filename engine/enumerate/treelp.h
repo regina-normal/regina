@@ -48,6 +48,8 @@
 #include "utilities/fixedarray.h"
 #include <algorithm>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 /**
  * Define REGINA_VERIFY_LPDATA to check invariants as the algorithm runs.
  * This checking is slow and can increase the running time significantly.

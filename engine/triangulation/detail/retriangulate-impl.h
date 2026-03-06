@@ -57,6 +57,8 @@
 #include "progress/progresstracker.h"
 #include "triangulation/detail/retriangulate.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina::detail {
 
 #ifndef __DOXYGEN

@@ -44,6 +44,8 @@
 #include <type_traits>
 #include <concepts> // Don't include this first - see QTBUG-83160
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <bool> class IntegerBase;

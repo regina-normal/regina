@@ -41,6 +41,8 @@
 #include "core/output.h"
 #include "file/fileformat.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

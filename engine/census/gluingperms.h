@@ -43,6 +43,8 @@
 #include "triangulation/forward.h"
 #include "maths/perm.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

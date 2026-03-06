@@ -48,6 +48,8 @@
 #include "triangulation/generic/facetpairing.h"
 #include "triangulation/generic/isomorphism.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina::detail {
 
 /**

@@ -45,6 +45,8 @@
 #define __REGINA_TRIANGLE2_H
 #endif
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**

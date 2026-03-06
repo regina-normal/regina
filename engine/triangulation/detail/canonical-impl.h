@@ -43,6 +43,8 @@
 
 #include <queue>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina::detail {
 
 #ifndef __DOXYGEN
