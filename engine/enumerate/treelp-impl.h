@@ -1235,7 +1235,8 @@ void LPData<Constraint, IntType>::findInitialBasis() {
             } else {
                 // We are converting an arbitrary precision integer into a
                 // bounded-range integer.  Assume that the programmer has
-                // taken responsibility for range checking.
+                // taken responsibility for range checking in advance, since
+                // they explicitly chose to use a fixed-precision integer type.
                 rowOps_.entry(r, c) = ops.entry(r, c).
                     unsafeValue<typename IntType::Native>();
             }

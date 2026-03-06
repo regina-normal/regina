@@ -1432,9 +1432,6 @@ inline void swap(LPInitialTableaux<Constraint>& a,
  * octagon type declared at any given time (which is consistent with the
  * constraints of almost normal surface theory).
  *
- * All tableaux elements are of the integer class \a IntType, which is
- * supplied as a template argument.
- *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  However, due to the unusual create-reserve-initialise
  * procedure, it does not support copying (either by copy construction or
@@ -1456,6 +1453,21 @@ inline void swap(LPInitialTableaux<Constraint>& a,
  * You are encouraged to look through the Regina namespace to see which
  * constraint classes are supported under Python.  In all cases, the IntType
  * parameter is taken to be regina::Integer.
+ *
+ * \tparam Constraint a specification of any extra linear constraints that
+ * should be enforced, or LPConstraintNone if there are none.  See the notes
+ * above for details.
+ *
+ * \tparam IntType the integer type to use throughout this class, including
+ * for all tableaux elements as well as the matrix of row operations that we
+ * apply to the original starting tableaux.  The only place this integer type
+ * is _not_ used is for intermediate calculations when finding an initial basis
+ * using Gauss-Jordan elimination (which always uses arbitrary-precision
+ * integers).  If you are using a fixed-precision integer type here (such as
+ * NativeInteger), be aware that there will be no testing for overflow: it is
+ * your responsibility to prove in advance that overflow will never occur as
+ * you operate on the tableaux via routines such as constraintZero(),
+ * constraintPositive(), and constraintOct().
  *
  * \apinotfinal
  *

@@ -130,12 +130,6 @@ class ProgressTracker;
  * If there are no coordinates to ban or mark, simply use the template
  * parameter \a BanNone.
  *
- * The template argument \a IntType indicates the integer type that
- * will be used throughout the underlying linear programming machinery.
- * Unless you have a good reason to do otherwise, you should use the
- * arbitrary-precision Integer class (in which integers can grow
- * arbitrarily large, and overflow can never occur).
- *
  * Subclasses of TreeTraversal are designed to manage the execution of
  * significant enumeration and search operations, and so this class does not
  * support copying, moving or swapping.
@@ -157,6 +151,19 @@ class ProgressTracker;
  * template parameters; these suffixes are omitted entirely for the common
  * cases LPConstraintNone and BanNone.  In all cases, the \a IntType parameter
  * is taken to be regina::Integer.
+ *
+ * \tparam Constraint a specification of any extra linear constraints that
+ * should be enforced, or LPConstraintNone if there are none.  See the notes
+ * above for details.
+ *
+ * \tparam Ban a specification of which coordinates should be forced to zero
+ * and/or marked, or BanNone if there are none.  See the notes above for
+ * details.
+ *
+ * \tparam IntType the integer type that will be used throughout the underlying
+ * linear programming machinery.  Unless you have a good reason to do otherwise
+ * (and you can prove in advance that calculations will never overflow), you
+ * should use one of Regina's arbitrary-precision integer classes.
  *
  * \apinotfinal
  *
@@ -594,12 +601,6 @@ class TreeTraversal :
  * constructor to throw an exception; see the constructor documentation for
  * details.
  *
- * The template argument \a IntType indicates the integer type that
- * will be used throughout the underlying linear programming machinery.
- * Unless you have a good reason to do otherwise, you should use the
- * arbitrary-precision Integer class (in which integers can grow
- * arbitrarily large, and overflow can never occur).
- *
  * This class is designed to manage the execution of a significant enumeration
  * operation, and so it does not support copying, moving or swapping.
  *
@@ -628,6 +629,19 @@ class TreeTraversal :
  * to look through the Regina namespace to see which combinations of
  * constraint classes are supported under Python.  In all cases, the \a IntType
  * parameter is taken to be regina::Integer.
+ *
+ * \tparam Constraint a specification of any extra linear constraints that
+ * should be enforced, or LPConstraintNone if there are none.  See the notes
+ * above, as well as the TreeTraversal class notes, for details.
+ *
+ * \tparam Ban a specification of which coordinates should be forced to zero
+ * and/or marked, or BanNone if there are none.  See the notes above, as well
+ * as the TreeTraversal class notes, for details.
+ *
+ * \tparam IntType the integer type that will be used throughout the underlying
+ * linear programming machinery.  Unless you have a good reason to do otherwise
+ * (and you can prove in advance that calculations will never overflow), you
+ * should use one of Regina's arbitrary-precision integer classes.
  *
  * \apinotfinal
  *
@@ -944,12 +958,6 @@ class TreeEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
  * constructor to throw an exception; see the constructor documentation for
  * details.
  *
- * The template argument \a IntType indicates the integer type that
- * will be used throughout the underlying linear programming machinery.
- * Unless you have a good reason to do otherwise, you should use the
- * arbitrary-precision Integer class (in which integers can grow
- * arbitrarily large, and overflow can never occur).
- *
  * This class is designed to manage the execution of a significant enumeration
  * operation, and so it does not support copying, moving or swapping.
  *
@@ -964,6 +972,19 @@ class TreeEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
  * the default LPConstraintNone and BanNone.  Therefore Python offers just one
  * instance of this class (with all template arguments set to their defaults),
  * under the name \c TautEnumeration.
+ *
+ * \tparam Constraint a specification of any extra linear constraints that
+ * should be enforced, or LPConstraintNone if there are none.  See the notes
+ * above, as well as the TreeTraversal class notes, for details.
+ *
+ * \tparam Ban a specification of which angles should be forced to zero and/or
+ * marked, or BanNone if there are none.  See the notes above, as well as the
+ * TreeTraversal class notes, for details.
+ *
+ * \tparam IntType the integer type that will be used throughout the underlying
+ * linear programming machinery.  Unless you have a good reason to do otherwise
+ * (and you can prove in advance that calculations will never overflow), you
+ * should use one of Regina's arbitrary-precision integer classes.
  *
  * \apinotfinal
  *
@@ -1292,12 +1313,6 @@ class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
  * but we only allow at most one octagon _type_ in the entire triangulation.
  * No coordinate systems other than these are supported.
  *
- * The template argument \a IntType indicates the integer type that
- * will be used throughout the underlying linear programming machinery.
- * Unless you have a good reason to do otherwise, you should use the
- * arbitrary-precision Integer class (in which integers can grow
- * arbitrarily large, and overflow can never occur).
- *
  * This class is designed to manage the execution of a significant search
  * operation, and so it does not support copying, moving or swapping.
  *
@@ -1332,6 +1347,19 @@ class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
  * to look through the Regina namespace to see which combinations of
  * constraint classes are supported under Python.  In all cases, the \a IntType
  * parameter is taken to be regina::Integer.
+ *
+ * \tparam Constraint a specification of any extra linear constraints that
+ * should be enforced, or LPConstraintNone if there are none.  See the notes
+ * above, as well as the TreeTraversal class notes, for details.
+ *
+ * \tparam Ban a specification of which coordinates should be forced to zero
+ * and/or marked, or BanNone if there are none.  See the notes above, as well
+ * as the TreeTraversal class notes, for details.
+ *
+ * \tparam IntType the integer type that will be used throughout the underlying
+ * linear programming machinery.  Unless you have a good reason to do otherwise
+ * (and you can prove in advance that calculations will never overflow), you
+ * should use one of Regina's arbitrary-precision integer classes.
  *
  * \apinotfinal
  *
