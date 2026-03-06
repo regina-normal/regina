@@ -29,6 +29,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+def throwFailedPrecondition():
+    t = ExampleSnapPea.whiteheadLink()
+    print(t.filledAll()) # should throw
+
 def throwInvalidArgument():
     t = Example3.poincare()
     print(t.faces(2).size()) # should print
@@ -38,9 +42,15 @@ def throwInvalidArgumentV2():
     t = Example3.poincare()
     print(t.faces(-1).size()) # should throw
 
-def throwFailedPrecondition():
-    t = ExampleSnapPea.whiteheadLink()
-    print(t.filledAll()) # should throw
+def throwNotImplemented():
+    s = SFSpace()
+    print(s.construct().homology()) # should print
+    s.addPuncture()
+    print(s.construct()) # should throw
+
+def throwUnsolvedCase():
+    print(Rational(1,2).doubleApprox()) # should print
+    print(Rational(1,0).doubleApprox()) # should throw
 
 def throwSnapPeaIsNull():
     t = ExampleSnapPea.whiteheadLink()
@@ -49,16 +59,6 @@ def throwSnapPeaIsNull():
     print(t.filledAll().homology()) # should print
     dummy = t.pachner(t.triangle(0))
     print(t.filledAll()) # should throw
-
-def throwUnsolvedCase():
-    print(Rational(1,2).doubleApprox()) # should print
-    print(Rational(1,0).doubleApprox()) # should throw
-
-def throwNotImplemented():
-    s = SFSpace()
-    print(s.construct().homology()) # should print
-    s.addPuncture()
-    print(s.construct()) # should throw
 
 def throwSnapshotWriteError():
     t = Example3.poincare()
@@ -77,6 +77,12 @@ def throwSnapshotWriteError():
 ######################################################################
 
 try:
+    throwFailedPrecondition()
+    print('ERROR: Did not throw FailedPrecondition')
+except FailedPrecondition:
+    print('Caught FailedPrecondition')
+
+try:
     throwInvalidArgument()
     print('ERROR: Did not throw InvalidArgument')
 except InvalidArgument:
@@ -88,11 +94,36 @@ try:
 except InvalidArgument:
     print('Caught InvalidArgument')
 
+# TODO: Test InvalidInput
+
 try:
-    throwFailedPrecondition()
-    print('ERROR: Did not throw FailedPrecondition')
-except FailedPrecondition:
-    print('Caught FailedPrecondition')
+    throwNotImplemented()
+    print('ERROR: Did not throw NotImplemented')
+except NotImplemented:
+    print('Caught NotImplemented')
+
+# TODO: Test FileError
+
+# TODO: Test NoSolution
+
+try:
+    throwUnsolvedCase()
+    print('ERROR: Did not throw UnsolvedCase')
+except UnsolvedCase:
+    print('Caught UnsolvedCase')
+
+# TODO: Test LockViolation
+
+# We cannot test for ImpossibleScenario since this should be impossible to
+# produce.
+
+# TODO: Test NumericalError
+
+# TODO: Test IntegerOverflow
+
+# TODO: Test DivisionByZero
+
+# TODO: Test SnapPeaUnsolvedCase
 
 try:
     throwSnapPeaIsNull()
@@ -101,22 +132,12 @@ except SnapPeaIsNull:
     print('Caught SnapPeaIsNull')
 
 try:
-    throwUnsolvedCase()
-    print('ERROR: Did not throw UnsolvedCase')
-except UnsolvedCase:
-    print('Caught UnsolvedCase')
-
-try:
-    throwNotImplemented()
-    print('ERROR: Did not throw NotImplemented')
-except NotImplemented:
-    print('Caught NotImplemented')
-
-try:
     throwSnapshotWriteError()
     print('ERROR: Did not throw SnapshotWriteError')
 except SnapshotWriteError:
     print('Caught SnapshotWriteError')
+
+# TODO: Test SnapPea kernel errors (SnapPeaFatalError, SnapPeaMemoryFull)
 
 print('All done!')
 
