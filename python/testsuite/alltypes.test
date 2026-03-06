@@ -31,6 +31,13 @@
 
 import enum
 
+def isException(object):
+    while object:
+        if object is Exception:
+            return True
+        object = object.__base__
+    return False
+
 def classInfo(name, object):
     realName = object.__name__
     if realName == name:
@@ -39,7 +46,7 @@ def classInfo(name, object):
             # Omit them here so that this test generates the same output
             # across all platforms.
             return
-        if object.__base__ is RuntimeError:
+        if isException(object):
             # Exception classes do not have equalityType.
             print(name, ': exception')
         else:
