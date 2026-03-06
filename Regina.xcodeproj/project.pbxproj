@@ -2253,7 +2253,6 @@
 		05098AF628FAFD4B005E4716 /* graphtriple.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = graphtriple.h; sourceTree = "<group>"; };
 		05098AF728FAFD4B005E4716 /* sfsalt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sfsalt.h; sourceTree = "<group>"; };
 		05098AF828FAFD4B005E4716 /* manifold.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = manifold.h; sourceTree = "<group>"; };
-		05098AF928FAFD4B005E4716 /* notation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = notation.h; sourceTree = "<group>"; };
 		05098AFA28FAFD4B005E4716 /* simplesurfacebundle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = simplesurfacebundle.h; sourceTree = "<group>"; };
 		05098AFB28FAFD4B005E4716 /* handlebody.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = handlebody.h; sourceTree = "<group>"; };
 		05098AFC28FAFD4B005E4716 /* snappeacensusmfd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = snappeacensusmfd.h; sourceTree = "<group>"; };
@@ -5250,7 +5249,6 @@
 				05098AFB28FAFD4B005E4716 /* handlebody.h */,
 				05098AF428FAFD4B005E4716 /* lensspace.h */,
 				05098AF828FAFD4B005E4716 /* manifold.h */,
-				05098AF928FAFD4B005E4716 /* notation.h */,
 				05098AF328FAFD4B005E4716 /* sfs.h */,
 				05098AF728FAFD4B005E4716 /* sfsalt.h */,
 				05098AFA28FAFD4B005E4716 /* simplesurfacebundle.h */,
