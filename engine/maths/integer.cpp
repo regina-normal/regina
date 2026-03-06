@@ -40,37 +40,6 @@
 // We instantiate both variants of the IntegerBase template at the bottom
 // of this file.
 
-/**
- * Old macros for testing signed integer overflow, given in order from
- * fastest to slowest (by experimentation).  All are based on section
- * 2-21 from Hacker's Delight by Warren.
- *
- * These tests are all abandoned now because the 128-bit cast solution is
- * significantly faster than any of these.
- *
- * Note that a slicker test (such as checking whether answer / y == x) is
- * not possible, because compiler optimisations are too clever nowadays
- * and strip out the very tests we are trying to perform
- * (e.g., whether (x * y) / y == x).
- *
- * - Ben, 19/08/2013.
- *
-#define LONG_OVERFLOW(x, y) \
-        (((x) > 0 && ( \
-            ((y) > 0 && (y) > LONG_MAX / (x)) || \
-             (y) < 0 && (y) < LONG_MIN / (x))) || \
-         ((x) < 0 && ( \
-            ((y) > 0 && (x) < LONG_MIN / (y)) || \
-            ((y) < 0 && (x) < LONG_MAX / (y)))))
-#define LONG_OVERFLOW(x, y) \
-        (((x) > 0 && (y) > 0 && (y) > LONG_MAX / (x)) || \
-         ((x) > 0 && (y) < 0 && (y) < LONG_MIN / (x)) || \
-         ((x) < 0 && (y) > 0 && (x) < LONG_MIN / (y)) || \
-         ((x) < 0 && (y) < 0 && (x) < LONG_MAX / (y)))
-#define LONG_OVERFLOW(x, y) \
-        ((y) && labs(x) > (((~((x) ^ (y))) >> (sizeof(long)*8-1)) / labs(y)))
- */
-
 namespace regina {
 
 namespace {
