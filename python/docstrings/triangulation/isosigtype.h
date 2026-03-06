@@ -137,8 +137,8 @@ Python:
 
 namespace IsoSigTypeAPI_ {
 
-// Docstring regina::python::doc::IsoSigTypeAPI_::IsoSigClassic
-constexpr const char *IsoSigClassic =
+// Docstring regina::python::doc::IsoSigTypeAPI_::__init
+constexpr const char *__init =
 R"doc(Initialises this object to iterate through candidate "starting
 simplices" *s* and "starting labellings" *p* for the given
 triangulation component. See the IsoSigTypeAPI class documentation for

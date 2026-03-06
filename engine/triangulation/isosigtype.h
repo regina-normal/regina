@@ -123,7 +123,7 @@ class IsoSigTypeAPI {
          *
          * \param comp the triangulation component that we are examining.
          */
-        IsoSigClassic(const Component<dim>& comp);
+        IsoSigTypeAPI(const Component<dim>& comp);
 
         /**
          * Returns the current starting simplex \a s.

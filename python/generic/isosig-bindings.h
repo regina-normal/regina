@@ -112,14 +112,15 @@ void isosig_options(PythonClass& classWrapper) {
 
 template <int dim> requires (regina::supportedDim(dim))
 void addIsoSigClassic(pybind11::module_& m, const char* name) {
-    RDOC_SCOPE_BEGIN(IsoSigClassic)
+    RDOC_SCOPE_BEGIN_MAIN
+    RDOC_SCOPE_BASE(IsoSigTypeAPI)
 
     using Type = regina::IsoSigClassic<dim>;
-    auto s = pybind11::class_<Type>(m, name, rdoc_scope)
-        .def(pybind11::init<const regina::Component<dim>&>(), rdoc::__init)
-        .def("simplex", &Type::simplex, rdoc::simplex)
-        .def("perm", &Type::perm, rdoc::perm)
-        .def("next", &Type::next, rdoc::next)
+    auto s = pybind11::class_<Type>(m, name, rdoc::IsoSigClassic)
+        .def(pybind11::init<const regina::Component<dim>&>(), rbase::__init)
+        .def("simplex", &Type::simplex, rbase::simplex)
+        .def("perm", &Type::perm, rbase::perm)
+        .def("next", &Type::next, rbase::next)
         ;
     regina::python::disable_eq_operators(s);
 
@@ -128,14 +129,15 @@ void addIsoSigClassic(pybind11::module_& m, const char* name) {
 
 template <int dim> requires (regina::supportedDim(dim))
 void addIsoSigEdgeDegrees(pybind11::module_& m, const char* name) {
-    RDOC_SCOPE_BEGIN(IsoSigDegrees)
+    RDOC_SCOPE_BEGIN_MAIN
+    RDOC_SCOPE_BASE(IsoSigTypeAPI)
 
     using Type = regina::IsoSigEdgeDegrees<dim>;
-    auto s = pybind11::class_<Type>(m, name, rdoc_scope)
-        .def(pybind11::init<const regina::Component<dim>&>(), rdoc::__init)
-        .def("simplex", &Type::simplex, rdoc::simplex)
-        .def("perm", &Type::perm, rdoc::perm)
-        .def("next", &Type::next, rdoc::next)
+    auto s = pybind11::class_<Type>(m, name, rdoc::IsoSigDegrees)
+        .def(pybind11::init<const regina::Component<dim>&>(), rbase::__init)
+        .def("simplex", &Type::simplex, rbase::simplex)
+        .def("perm", &Type::perm, rbase::perm)
+        .def("next", &Type::next, rbase::next)
         ;
     regina::python::disable_eq_operators(s);
 
@@ -144,14 +146,15 @@ void addIsoSigEdgeDegrees(pybind11::module_& m, const char* name) {
 
 template <int dim> requires (regina::supportedDim(dim))
 void addIsoSigRidgeDegrees(pybind11::module_& m, const char* name) {
-    RDOC_SCOPE_BEGIN(IsoSigDegrees)
+    RDOC_SCOPE_BEGIN_MAIN
+    RDOC_SCOPE_BASE(IsoSigTypeAPI)
 
     using Type = regina::IsoSigRidgeDegrees<dim>;
-    auto s = pybind11::class_<Type>(m, name, rdoc_scope)
-        .def(pybind11::init<const regina::Component<dim>&>(), rdoc::__init)
-        .def("simplex", &Type::simplex, rdoc::simplex)
-        .def("perm", &Type::perm, rdoc::perm)
-        .def("next", &Type::next, rdoc::next)
+    auto s = pybind11::class_<Type>(m, name, rdoc::IsoSigDegrees)
+        .def(pybind11::init<const regina::Component<dim>&>(), rbase::__init)
+        .def("simplex", &Type::simplex, rbase::simplex)
+        .def("perm", &Type::perm, rbase::perm)
+        .def("next", &Type::next, rbase::next)
         ;
     regina::python::disable_eq_operators(s);
 
@@ -161,12 +164,13 @@ void addIsoSigRidgeDegrees(pybind11::module_& m, const char* name) {
 template <int dim, bool supportLocks>
 requires (regina::supportedDim(dim))
 void addIsoSigPrintable(pybind11::module_& m, const char* name) {
-    RDOC_SCOPE_BEGIN(IsoSigPrintable)
+    RDOC_SCOPE_BEGIN_MAIN
+    RDOC_SCOPE_BASE(IsoSigEncodingAPI)
 
     using Encoding = regina::IsoSigPrintable<dim, supportLocks>;
-    auto s = pybind11::class_<Encoding>(m, name, rdoc_scope)
+    auto s = pybind11::class_<Encoding>(m, name, rdoc::IsoSigPrintable)
         .def_readonly_static("charsPerPerm", &Encoding::charsPerPerm)
-        .def_static("emptySig", &Encoding::emptySig, rdoc::emptySig)
+        .def_static("emptySig", &Encoding::emptySig, rbase::emptySig)
         .def_static("encode", [](
                 size_t size,
                 const std::vector<uint8_t>& facetAction,
@@ -184,7 +188,7 @@ void addIsoSigPrintable(pybind11::module_& m, const char* name) {
         }, pybind11::arg("size"), pybind11::arg("facetAction"),
             pybind11::arg("joinDest"), pybind11::arg("joinGluing"),
             pybind11::arg("lockMasks"),
-            rdoc::encode)
+            rbase::encode)
         ;
     regina::python::no_eq_static(s);
 
