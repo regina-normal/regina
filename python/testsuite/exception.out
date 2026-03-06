@@ -1,7 +1,14 @@
 10
+Caught InvalidArgument
+Caught InvalidArgument
+Caught FailedPrecondition
 Z_55
+Caught SnapPeaIsNull
 0.5
+Caught UnsolvedCase
 Z
+Caught NotImplemented
 7 embedded, vertex surfaces (Standard normal (tri-quad))
 True
+Caught SnapshotWriteError
 All done!
