@@ -48,9 +48,33 @@ def throwNotImplemented():
     s.addPuncture()
     print(s.construct()) # should throw
 
+def throwFileError():
+    print(SpatialLink.fromKnotPlot('/no/such/file')) # should throw
+
+def throwNoSolution():
+    print(Example3.figureEight().generalAngleStructure()) # should print
+    print(Example3.poincare().generalAngleStructure()) # should throw
+
 def throwUnsolvedCase():
     print(Rational(1,2).doubleApprox()) # should print
     print(Rational(1,0).doubleApprox()) # should throw
+
+def throwLockViolation():
+    t = Example3.poincare()
+    t.simplex(0).lock()
+    t.removeSimplex(t.simplex(1)) # should not throw
+    print(t.sig()) # should print
+    t.removeSimplex(t.simplex(0)) # should throw
+    print(t.sig()) # should never reach
+
+def throwIntegerOverflow():
+    print(Integer(2**15).safeValue()) # should print
+    print(Integer(2**127).safeValue()) # should throw
+
+def throwDivisionByZero():
+    i = Integer(4)
+    print(i / 2) # should print
+    print(i / 0) # should throw
 
 def throwSnapPeaIsNull():
     t = ExampleSnapPea.whiteheadLink()
@@ -94,7 +118,7 @@ try:
 except InvalidArgument:
     print('Caught InvalidArgument')
 
-# TODO: Test InvalidInput
+# TODO: Test InvalidInput (can we even get this in python?)
 
 try:
     throwNotImplemented()
@@ -102,9 +126,17 @@ try:
 except NotImplemented:
     print('Caught NotImplemented')
 
-# TODO: Test FileError
+try:
+    throwFileError()
+    print('ERROR: Did not throw FileError')
+except FileError:
+    print('Caught FileError')
 
-# TODO: Test NoSolution
+try:
+    throwNoSolution()
+    print('ERROR: Did not throw NoSolution')
+except NoSolution:
+    print('Caught NoSolution')
 
 try:
     throwUnsolvedCase()
@@ -112,16 +144,26 @@ try:
 except UnsolvedCase:
     print('Caught UnsolvedCase')
 
-# TODO: Test LockViolation
+try:
+    throwLockViolation()
+    print('ERROR: Did not throw LockViolation')
+except LockViolation:
+    print('Caught LockViolation')
 
 # We cannot test for ImpossibleScenario since this should be impossible to
 # produce.
 
-# TODO: Test NumericalError
+try:
+    throwIntegerOverflow()
+    print('ERROR: Did not throw IntegerOverflow')
+except IntegerOverflow:
+    print('Caught IntegerOverflow')
 
-# TODO: Test IntegerOverflow
-
-# TODO: Test DivisionByZero
+try:
+    throwDivisionByZero()
+    print('ERROR: Did not throw DivisionByZero')
+except DivisionByZero:
+    print('Caught DivisionByZero')
 
 # TODO: Test SnapPeaUnsolvedCase
 
@@ -138,6 +180,8 @@ except SnapshotWriteError:
     print('Caught SnapshotWriteError')
 
 # TODO: Test SnapPea kernel errors (SnapPeaFatalError, SnapPeaMemoryFull)
+
+######################################################################
 
 print('All done!')
 

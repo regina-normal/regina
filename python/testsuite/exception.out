@@ -4,8 +4,17 @@ Caught InvalidArgument
 Caught InvalidArgument
 Z
 Caught NotImplemented
+Caught FileError
+1 0 0 ; 1 0 0
+Caught NoSolution
 0.5
 Caught UnsolvedCase
+efHkadcdrsn.aaaq
+Caught LockViolation
+32768
+Caught IntegerOverflow
+2
+Caught DivisionByZero
 Z_55
 Caught SnapPeaIsNull
 7 embedded, vertex surfaces (Standard normal (tri-quad))
