@@ -60,6 +60,8 @@ namespace regina {
  * Details of the error can be accessed through the inherited member
  * function what().
  *
+ * \python This uses Python's `RuntimeError` as its base class.
+ *
  * \ingroup utilities
  */
 class ReginaException : public std::runtime_error {

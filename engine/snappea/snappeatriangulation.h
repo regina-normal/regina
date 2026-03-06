@@ -75,6 +75,8 @@ class XMLLegacySnapPeaReader;
  * Details of the error can be accessed through the inherited member
  * function what().
  *
+ * \python This uses Python's `RuntimeError` as its base class.
+ *
  * \ingroup snappea
  */
 class SnapPeaFatalError : public std::runtime_error {
@@ -115,6 +117,8 @@ class SnapPeaFatalError : public std::runtime_error {
  * description so they can be created without allocating further resources).
  *
  * Details of the error can be accessed through the member function what().
+ *
+ * \python This uses Python's `RuntimeError` as its base class.
  *
  * \ingroup snappea
  */

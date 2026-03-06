@@ -20,4 +20,26 @@ Caught SnapPeaIsNull
 7 embedded, vertex surfaces (Standard normal (tri-quad))
 True
 Caught SnapshotWriteError
+Caught FailedPrecondition as RuntimeError
+10
+Caught InvalidArgument as RuntimeError
+Caught InvalidArgument as RuntimeError
+Z
+Caught NotImplemented as RuntimeError
+Caught FileError as RuntimeError
+1 0 0 ; 1 0 0
+Caught NoSolution as RuntimeError
+0.5
+Caught UnsolvedCase as RuntimeError
+efHkadcdrsn.aaaq
+Caught LockViolation as RuntimeError
+32768
+Caught IntegerOverflow as RuntimeError
+2
+Caught DivisionByZero as RuntimeError
+Z_55
+Caught SnapPeaIsNull as RuntimeError
+7 embedded, vertex surfaces (Standard normal (tri-quad))
+True
+Caught SnapshotWriteError as RuntimeError
 All done!

@@ -165,7 +165,7 @@ try:
 except DivisionByZero:
     print('Caught DivisionByZero')
 
-# TODO: Test SnapPeaUnsolvedCase
+# TODO: Test SnapPeaUnsolvedCase (this derives from UnsolvedCase)
 
 try:
     throwSnapPeaIsNull()
@@ -180,6 +180,85 @@ except SnapshotWriteError:
     print('Caught SnapshotWriteError')
 
 # TODO: Test SnapPea kernel errors (SnapPeaFatalError, SnapPeaMemoryFull)
+
+######################################################################
+
+try:
+    throwFailedPrecondition()
+    print('ERROR: Did not throw FailedPrecondition')
+except RuntimeError:
+    print('Caught FailedPrecondition as RuntimeError')
+
+try:
+    throwInvalidArgument()
+    print('ERROR: Did not throw InvalidArgument')
+except RuntimeError:
+    print('Caught InvalidArgument as RuntimeError')
+
+try:
+    throwInvalidArgumentV2()
+    print('ERROR: Did not throw InvalidArgument')
+except RuntimeError:
+    print('Caught InvalidArgument as RuntimeError')
+
+try:
+    throwNotImplemented()
+    print('ERROR: Did not throw NotImplemented')
+except RuntimeError:
+    print('Caught NotImplemented as RuntimeError')
+
+try:
+    throwFileError()
+    print('ERROR: Did not throw FileError')
+except RuntimeError:
+    print('Caught FileError as RuntimeError')
+
+try:
+    throwNoSolution()
+    print('ERROR: Did not throw NoSolution')
+except RuntimeError:
+    print('Caught NoSolution as RuntimeError')
+
+try:
+    throwUnsolvedCase()
+    print('ERROR: Did not throw UnsolvedCase')
+except RuntimeError:
+    print('Caught UnsolvedCase as RuntimeError')
+
+try:
+    throwLockViolation()
+    print('ERROR: Did not throw LockViolation')
+except RuntimeError:
+    print('Caught LockViolation as RuntimeError')
+
+try:
+    throwIntegerOverflow()
+    print('ERROR: Did not throw IntegerOverflow')
+except RuntimeError:
+    print('Caught IntegerOverflow as RuntimeError')
+
+try:
+    throwDivisionByZero()
+    print('ERROR: Did not throw DivisionByZero')
+except RuntimeError:
+    print('Caught DivisionByZero as RuntimeError')
+
+try:
+    throwSnapPeaIsNull()
+    print('ERROR: Did not throw SnapPeaIsNull')
+except RuntimeError:
+    print('Caught SnapPeaIsNull as RuntimeError')
+
+try:
+    throwSnapshotWriteError()
+    print('ERROR: Did not throw SnapshotWriteError')
+except RuntimeError:
+    print('Caught SnapshotWriteError as RuntimeError')
+
+######################################################################
+
+# TODO: Catch exceptions as ReginaException.
+# TODO: Catch IntegerOverflow, DivisionByZero as NumericalError.
 
 ######################################################################
 
