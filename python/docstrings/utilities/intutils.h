@@ -59,6 +59,24 @@ Parameter ``n``:
 Returns:
     the smallest integer power of two that is ≥ *n*.)doc";
 
+// Docstring regina::python::doc::supportsNativeIntegerSize
+static const char *supportsNativeIntegerSize =
+R"doc(Determines whether Regina is able to access native C++ integers of the
+given size.
+
+At present, this _will_ return ``True`` if *bytes* is a power of two
+with ``bytes ≤ 8``; this _might_ return ``True`` if ``bytes = 16``
+(depending on whether the platform supports native 128-bit
+arithmetic); and this will _not_ return ``True`` for any other value
+of ``bytes``.
+
+Parameter ``bytes``:
+    the number of bytes in the native integers being queried.
+
+Returns:
+    ``True`` if and only if Regina is able to access native C++
+    integers with exactly this number of bytes.)doc";
+
 } // namespace regina::python::doc
 
 #if defined(__GNUG__)

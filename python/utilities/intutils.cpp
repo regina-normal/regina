@@ -39,8 +39,7 @@ void addIntUtils(pybind11::module_& m) {
     m.def("bitsRequired", regina::bitsRequired<long>, rdoc::bitsRequired);
     m.def("nextPowerOfTwo", regina::nextPowerOfTwo<long>, rdoc::nextPowerOfTwo);
     m.def("supportsNativeIntegerSize", regina::supportsNativeIntegerSize,
-        // rdoc::supportsNativeIntegerSize);
-        RDOC_TODO);
+        rdoc::supportsNativeIntegerSize);
 
     RDOC_SCOPE_END
 }
