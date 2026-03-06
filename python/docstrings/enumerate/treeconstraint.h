@@ -275,7 +275,10 @@ Python:
 
 // Docstring regina::python::doc::LPConstraintAPI
 static const char *LPConstraintAPI =
-R"doc(Regina supports _linear constraint types_, which describe different
+R"doc(A documentation-only class describing the expected behaviour of linear
+constraint types.
+
+Regina supports _linear constraint types_, which describe different
 families of linear constraints that can be used with Regina's linear
 programming machinery. These constraints are added to the tableaux of
 normal surface or angle structure matching equations, as part of the

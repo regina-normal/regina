@@ -19,6 +19,8 @@ normal surface.
 End users should not refer to this class directly; instead use one of
 the type aliases DiscSetSurfaceData<T> or DiscSetSurface.
 
+This class can only be used with _embedded_ normal surfaces.
+
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.
@@ -31,15 +33,9 @@ Template parameter ``TetData``:
 
 .. warning::
     This class converts the number of normal discs of a given type
-    from LargeInteger to ``unsigned long``. See the precondition
-    below.
-
-Precondition:
-    The number of normal discs of a particular type in a particular
-    tetrahedron can be represented by a long integer.
-
-Precondition:
-    This class should only be used with *embedded* normal surfaces.
+    from LargeInteger to ``size_t``. If there are so many normal discs
+    that this is impossible, the class constructor will throw an
+    exception.
 
 Python:
     The only instance of this class that is available through python
@@ -53,52 +49,61 @@ numbers of discs of each type are stored in this structure, so
 querying them is fast regardless of the underlying normal surface
 coordinate system used.
 
+This class can only be used with _embedded_ normal surfaces.
+
 These objects are small enough to pass by value and swap with
 std::swap(), with no need for any specialised move operations or swap
 functions.
 
 .. warning::
     This class converts the number of normal discs of a given type
-    from LargeInteger to ``unsigned long``. See the precondition
-    below.
-
-Precondition:
-    The number of normal discs of a particular type in a particular
-    tetrahedron can be represented by a long integer.
-
-Precondition:
-    This class should only be used with *embedded* normal surfaces.)doc";
+    from LargeInteger to ``size_t``. If there are so many normal discs
+    that this is impossible, the class constructor will throw an
+    exception.)doc";
 
 // Docstring regina::python::doc::DiscSpec
 static const char *DiscSpec =
-R"doc(Specifies a single normal disc in a normal surface.
+R"doc(Specifies a single normal or almost normal disc within a normal or
+almost normal surface.
 
-There are 10 disc types. Types 0-3 represent triangles 0-3, types 4-6
-represent quads 0-2 and types 7-9 represent octagons 0-2.
+There are 10 disc _types_ within each tetrahedron. In contrast to the
+flexibility offered by DiscType, here in DiscSpec we insist on a fixed
+numbering scheme:
 
-Discs of a specific type are assigned numbers from 0 upwards.
-Triangular discs are numbered outwards from the vertex they surround.
-Quad discs and octagonal discs are numbered outwards away from vertex
-0 of the tetrahedron.
+* disc types 0-3 represent triangle types 0-3 respectively;
 
-Note that, unlike DiscType in which the meaning of DiscType::type is
-flexible, the meaning of DiscSpec::type is fixed as described above.
+* disc types 4-6 represent quadrilateral types 0-2 respectively;
+
+* disc types 7-9 represent octagon types 0-2 respectively.
+
+For each disc type within each tetrahedron, the individual discs are
+numbered from 0 upwards:
+
+* triangular discs are numbered outwards from the vertex they
+  surround;
+
+* quadrilateral and octagonal discs are numbered outwards away from
+  vertex 0 of the tetrahedron.
+
+A major limitation of DiscSpec is that, unlike the NormalSurface
+class, it does _not_ use arbitrary precision integers: instead the
+number of discs of each type within each tetrahedron is assumed to fit
+inside a native ``size_t``. This is because the purpose of this class
+is to support algorithms that iterate through all discs in a surface
+(e.g., naïve orientability or two-sidedness testing, or triangulation
+of normal hypersurfaces). In such applications, if you have more discs
+than can fit inside a ``size_t`` then your algorithm has no chance of
+finishing within any practical time or memory bounds.
+
+This class can only be used with _embedded_ normal surfaces.
 
 These objects are small enough to pass by value and swap with
 std::swap(), with no need for any specialised move operations or swap
 functions.
 
-.. warning::
-    This class converts the indices of normal discs of a given type
-    from LargeInteger to ``unsigned long``. See the precondition
-    below.
-
 Precondition:
     The number of normal discs of a particular type in a particular
-    tetrahedron can be represented by a long integer.
-
-Precondition:
-    This class should only be used with *embedded* normal surfaces.)doc";
+    tetrahedron can be represented by a native ``size_t``.)doc";
 
 // Docstring regina::python::doc::DiscSpecIterator
 static const char *DiscSpecIterator =
@@ -116,15 +121,6 @@ As of Regina 7.3.1, this class no longer provides the iterator type
 aliases *value_type*, *iterator_category*, *difference_type*,
 *pointer* and *reference*. Instead you can access these through
 ``std::iterator_traits``.
-
-.. warning::
-    This class converts the indices of normal discs of a given type
-    from LargeInteger to ``unsigned long``. See the precondition
-    below.
-
-Precondition:
-    The number of normal discs of a particular type in a particular
-    tetrahedron can be represented by a long integer.
 
 Python:
     The only instance of this class that is available through python
@@ -221,6 +217,14 @@ and/or its underlying triangulation. This is because it takes a
 snapshot of the necessary information as it appears right now (using
 Regina's snapshotting machinery, which only takes a deep copy when
 absolutely necessary).
+
+Precondition:
+    The given surface is embedded.
+
+Exception ``IntegerOverflow``:
+    The given surface has normal coordinates that are so large that
+    the number of discs of some type cannot fit into a native C++
+    ``size_t``.
 
 Parameter ``surface``:
     the normal surface whose discs we shall use.)doc";
@@ -347,6 +351,14 @@ Returns:
 static const char *__init =
 R"doc(Creates a new set of normal discs corresponding to the discs of the
 given normal surface that lie within the given tetrahedron.
+
+Precondition:
+    The given surface is embedded.
+
+Exception ``IntegerOverflow``:
+    The given surface has normal coordinates that are so large that
+    the number of discs of some type cannot fit into a native C++
+    ``size_t``.
 
 Parameter ``surface``:
     the normal surface whose discs we shall use.
@@ -502,7 +514,7 @@ Returns:
 namespace DiscSpec_ {
 
 // Docstring regina::python::doc::DiscSpec_::__copy
-static const char *__copy = R"doc(Creates a new disc specifier that is a clone of the given specifier.)doc";
+static const char *__copy = R"doc(Creates a new clone of the given disc specifier.)doc";
 
 // Docstring regina::python::doc::DiscSpec_::__default
 static const char *__default = R"doc(Creates a new uninitialised disc specifier.)doc";

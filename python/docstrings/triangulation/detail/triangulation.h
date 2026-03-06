@@ -1587,7 +1587,7 @@ currently determined by the template parameters *Type* and *Encoding:*
   is that it is consistent with the original implementation of
   isomorphism signatures in Regina 4.90.
 
-* The *Encoding* parameter controls how Regina encodes a canonical
+* The *Encoding* parameter controls how Regina packs a canonical
   labelling into a final signature. The default encoding
   IsoSigPrintable returns a std::string consisting entirely of
   printable characters in the 7-bit ASCII range. Importantly, this
@@ -1598,21 +1598,13 @@ currently determined by the template parameters *Type* and *Encoding:*
 You may instead pass your own type and/or encoding parameters as
 template arguments. Currently this facility is for internal use only,
 and the requirements for type and encoding parameters may change in
-future versions of Regina. At present:
+future versions of Regina. See the IsoSigTypeAPI and IsoSigEncodingAPI
+documentation for how the *Type* and *Encoding* classes should behave.
 
-* The *Type* parameter should be a class that is constructible from a
-  componenent reference, and that offers the member functions
-  ``simplex()``, ``perm()`` and ``next()``; see the implementation of
-  IsoSigClassic for details.
-
-* The *Encoding* parameter should be a class that offers a *Signature*
-  type alias, and static functions ``emptySig()`` and ``encode()``.
-  See the implementation of IsoSigPrintable for details.
-
-* If you wish to produce an isomorphism signature that ignores simplex
-  and/or facet locks then you can use an encoding whose ``encode()``
-  function ignores the final *locks* argument, such as
-  IsoSigPrintableLockFree.
+Note that, if you wish to produce an isomorphism signature that
+ignores simplex and/or facet locks then you can use an encoding whose
+``encode()`` function ignores the final *locks* argument, such as
+IsoSigPrintableLockFree.
 
 For a full and precise description of the classic isomorphism
 signature format for 3-manifold triangulations, see _Simplification

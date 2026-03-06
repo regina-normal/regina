@@ -405,8 +405,17 @@ Precondition:
     This normal surface is compact (has finitely many discs).
 
 .. warning::
-    This routine explicitly builds the normal discs, and so may run
-    out of memory if the normal coordinates are extremely large.
+    This routine explicitly builds all of the normal discs in this
+    surface. If the normal coordinates are extremely large, this could
+    lead to performance problems. In extreme cases, this routine will
+    throw an exception (see below).
+
+Exception ``UnsolvedCase``:
+    This algorithm has encountered an impossible memory requirement,
+    due to the need to store more items than can fit into a native C++
+    ``size_t``. This is rarely seen in practice: on a typical 64-bit
+    machine, this would mean that the algorithm has encountered a
+    normal surface with some coordinate at least ``2^64``.
 
 Returns:
     the list of connected components.)doc";
@@ -463,16 +472,23 @@ Precondition:
     This normal surface is compact (has finitely many discs).
 
 .. warning::
-    This routine explicitly builds the normal arcs on the boundary. If
-    the normal coordinates are extremely large, (in particular, of a
-    similar order of magnitude as the largest possible long integer),
-    then the behaviour of this routine is undefined.
+    This routine explicitly builds all of the normal arcs on the
+    boundary. If the normal coordinates are extremely large, this
+    could lead to performance problems. In extreme cases, this routine
+    will throw an exception (see below).
 
-Author:
-    Alex He
+Exception ``UnsolvedCase``:
+    This algorithm has encountered an impossible memory requirement,
+    due to the need to store more items than can fit into a native C++
+    ``size_t``. This is rarely seen in practice: on a typical 64-bit
+    machine, this would mean that the algorithm has encountered a
+    normal surface with some boundary edge weight at least ``2^64``.
 
 Returns:
-    the number of disjoint boundary curves.)doc";
+    the number of disjoint boundary curves.
+
+Author:
+    Alex He)doc";
 
 // Docstring regina::python::doc::NormalSurface_::crush
 static const char *crush =
@@ -581,8 +597,17 @@ Precondition:
     discs), embedded, non-empty and connected.
 
 .. warning::
-    This routine is slow, since it performs a depth-first search over
-    the entire set of normal discs.
+    This routine explicitly builds all of the normal discs in this and
+    the given surface. If the normal coordinates are extremely large,
+    this could lead to performance problems. In extreme cases, this
+    routine will throw an exception (see below).
+
+Exception ``UnsolvedCase``:
+    This algorithm has encountered an impossible memory requirement,
+    due to the need to store more items than can fit into a native C++
+    ``size_t``. This is rarely seen in practice: on a typical 64-bit
+    machine, this would mean that the algorithm has encountered a
+    normal surface with some coordinate at least ``2^64``.
 
 Parameter ``other``:
     the other surface to test alongside this surface for potential
@@ -752,9 +777,19 @@ Precondition:
     This normal surface contains no octagonal discs.
 
 .. warning::
-    This routine might cut along the surface and retriangulate, and so
-    may run out of memory if the normal coordinates are extremely
-    large.
+    This routine might need to perform some operation(s) whose time
+    and memory requirements depend upon the number of normal discs in
+    this surface (e.g., iterating through individual discs, or cutting
+    along the surface). If this surface has enormous normal
+    coordinates, this could lead to performance problems. In extreme
+    cases, this routine will throw an exception (see below).
+
+Exception ``UnsolvedCase``:
+    This algorithm has encountered an impossible memory requirement,
+    due to the need to store more items than can fit into a native C++
+    ``size_t``. This is rarely seen in practice: on a typical 64-bit
+    machine, this would mean that the algorithm has encountered a
+    normal surface with some coordinate at least ``2^64``.
 
 Parameter ``knownConnected``:
     ``True`` if this normal surface is already known to be connected
@@ -783,8 +818,17 @@ Precondition:
     This normal surface is compact (has finitely many discs).
 
 .. warning::
-    This routine explicitly builds the normal discs, and so may run
-    out of memory if the normal coordinates are extremely large.
+    This routine explicitly builds all of the normal discs in this
+    surface. If the normal coordinates are extremely large, this could
+    lead to performance problems. In extreme cases, this routine will
+    throw an exception (see below).
+
+Exception ``UnsolvedCase``:
+    This algorithm has encountered an impossible memory requirement,
+    due to the need to store more items than can fit into a native C++
+    ``size_t``. This is rarely seen in practice: on a typical 64-bit
+    machine, this would mean that the algorithm has encountered a
+    normal surface with some coordinate at least ``2^64``.
 
 Returns:
     ``True`` if this surface is connected, or ``False`` if this
@@ -815,13 +859,6 @@ This test is designed exclusively for two-sided surfaces. If this
 surface is one-sided, the incompressibility test will be run on its
 two-sided double cover.
 
-.. warning::
-    This routine may in some circumstances be extremely slow. This is
-    because the underlying algorithm cuts along this surface,
-    retriangulates (possibly using a very large number of tetrahedra),
-    and then searches for a normal compressing disc in each component
-    of the cut-open triangulation.
-
 Precondition:
     The underlying triangulation is valid and closed, and represents
     an irreducible 3-manifold.
@@ -829,6 +866,23 @@ Precondition:
 Precondition:
     This normal surface is compact, embedded and connected, and
     contains no octagonal discs.
+
+.. warning::
+    This routine might need to perform some operation(s) whose time
+    and memory requirements depend upon the number of normal discs in
+    this _or_ some other intermediate surface. Examples of such
+    operations include iterating through individual discs, or cutting
+    along a surface. If the algorithm encounters a surface with
+    enormous normal coordinates, this could lead to performance
+    problems. In extreme cases, this routine will throw an exception
+    (see below).
+
+Exception ``UnsolvedCase``:
+    This algorithm has encountered an impossible memory requirement,
+    due to the need to store more items than can fit into a native C++
+    ``size_t``. This is rarely seen in practice: on a typical 64-bit
+    machine, this would mean that the algorithm has encountered a
+    normal surface with some coordinate at least ``2^64``.
 
 Returns:
     ``True`` if this surface is incompressible, or ``False`` if this
@@ -942,8 +996,17 @@ Precondition:
     This normal surface is compact (has finitely many discs).
 
 .. warning::
-    This routine explicitly builds the normal discs, and so may run
-    out of memory if the normal coordinates are extremely large.
+    This routine explicitly builds all of the normal discs in this
+    surface. If the normal coordinates are extremely large, this could
+    lead to performance problems. In extreme cases, this routine will
+    throw an exception (see below).
+
+Exception ``UnsolvedCase``:
+    This algorithm has encountered an impossible memory requirement,
+    due to the need to store more items than can fit into a native C++
+    ``size_t``. This is rarely seen in practice: on a typical 64-bit
+    machine, this would mean that the algorithm has encountered a
+    normal surface with some coordinate at least ``2^64``.
 
 Returns:
     ``True`` if this surface is orientable, or ``False`` if this
@@ -1042,8 +1105,17 @@ Precondition:
     This normal surface is compact (has finitely many discs).
 
 .. warning::
-    This routine explicitly builds the normal discs, and so may run
-    out of memory if the normal coordinates are extremely large.
+    This routine explicitly builds all of the normal discs in this
+    surface. If the normal coordinates are extremely large, this could
+    lead to performance problems. In extreme cases, this routine will
+    throw an exception (see below).
+
+Exception ``UnsolvedCase``:
+    This algorithm has encountered an impossible memory requirement,
+    due to the need to store more items than can fit into a native C++
+    ``size_t``. This is rarely seen in practice: on a typical 64-bit
+    machine, this would mean that the algorithm has encountered a
+    normal surface with some coordinate at least ``2^64``.
 
 Returns:
     ``True`` if this surface is two-sided, or ``False`` if this

@@ -769,8 +769,8 @@ def read_args(args):
                 cindex.Config.set_library_file(library_file)
     elif platform.system() == 'Linux':
         # LLVM switched to a monolithical setup that includes everything under
-        # /usr/lib/llvm{version_number}/. We glob for the library and select
-        # the highest version
+        # /usr/lib/llvm-{version_number}/. We glob for the library and select
+        # the highest version.
         def folder_version(d):
             return [int(ver) for ver in re.findall(r'(?<!lib)(?<!\d)\d+', d)]
 

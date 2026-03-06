@@ -334,6 +334,12 @@ documented alongside the various NormalTransform enumeration
 constants. These preconditions will be checked, and if any of them
 fails then this constructor will throw an exception (see below).
 
+Some transformations are not always possible to perform, even when
+their preconditions are satisfied; again these scenarios are
+documented alongside the various NormalTransform enumeration
+constants. If the transformation fails then, as before, this
+constructor will throw an exception (see below).
+
 Unlike the old conversion and filter functions, this constructor will
 _not_ insert the new normal surface list into the packet tree.
 
@@ -341,6 +347,12 @@ Exception ``FailedPrecondition``:
     The preconditions for the given transformation were not met. See
     each NormalTransform enum constant for the corresponding set of
     preconditions.
+
+Exception ``UnsolvedCase``:
+    The transformation could not be performed (even though the
+    preconditions were met). Again, see each NormalTransform enum
+    constant for details of whether this could happen, and if so, what
+    it means.
 
 Parameter ``src``:
     the normal surface list that we wish to transform; this will not
@@ -513,6 +525,20 @@ Internationalisation:
     unchanged to low-level C/C++ file I/O routines. Any user strings
     such as surface names will be written in UTF-8.
 
+.. warning::
+    Depending upon the chosen export fields, this routine might need
+    to explicitly build all of the normal discs in each surface. If
+    some surface has extremely large normal coordinates, this could
+    lead to performance problems. In extreme cases, this routine will
+    throw an exception (see below).
+
+Exception ``UnsolvedCase``:
+    This algorithm has encountered an impossible memory requirement,
+    due to the need to store more items than can fit into a native C++
+    ``size_t``. This is rarely seen in practice: on a typical 64-bit
+    machine, this would mean that the algorithm has encountered a
+    normal surface with some coordinate at least ``2^64``.
+
 Parameter ``filename``:
     the name of the CSV file to export to.
 
@@ -555,6 +581,20 @@ Internationalisation:
     used in the given file _name_, and simply passes it through
     unchanged to low-level C/C++ file I/O routines. Any user strings
     such as surface names will be written in UTF-8.
+
+.. warning::
+    Depending upon the chosen export fields, this routine might need
+    to explicitly build all of the normal discs in each surface. If
+    some surface has extremely large normal coordinates, this could
+    lead to performance problems. In extreme cases, this routine will
+    throw an exception (see below).
+
+Exception ``UnsolvedCase``:
+    This algorithm has encountered an impossible memory requirement,
+    due to the need to store more items than can fit into a native C++
+    ``size_t``. This is rarely seen in practice: on a typical 64-bit
+    machine, this would mean that the algorithm has encountered a
+    normal surface with some coordinate at least ``2^64``.
 
 Parameter ``filename``:
     the name of the CSV file to export to.

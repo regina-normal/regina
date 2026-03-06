@@ -925,6 +925,17 @@ what this means.
     the behaviour of homologicalAlignment() from Regina 6.0 and
     earlier, when the return type was simply ``bool``.
 
+Exception ``UnsolvedCase``:
+    It was not possible to rewrite the presentation as described, due
+    to an integer overflow. This can (in theory) occur because
+    AbelianGroup uses arbitrary precision integers for coefficients
+    and invariant factors, whereas GroupPresentation uses native C++
+    long integers for exponents in relations and other group
+    expressions. Be warned that, if this exception is thrown, the
+    presentation might have already been rewritten in some way (it
+    should still be a correct presentation of the group, just not the
+    one we are aiming for).
+
 Returns:
     an isomorphism describing the reduction map from the original
     presentation to the new presentation, or ``None`` if this

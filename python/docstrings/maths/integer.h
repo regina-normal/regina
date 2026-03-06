@@ -11,18 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::InfinityBase
-static const char *InfinityBase =
-R"doc(An internal base class inherited by LargeInteger, which provides
-support for infinity as an allowed value.
-
-End users should not use this class directly.)doc";
-
-// Docstring regina::python::doc::InfinityBase_2
-static const char *InfinityBase_2 =
-R"doc(An empty internal base class inherited by Integer, which does not
-support infinity as an allowed value.)doc";
-
 // Docstring regina::python::doc::IntegerBase
 static const char *IntegerBase =
 R"doc(Represents an arbitrary precision integer. Calculations are always
@@ -146,7 +134,7 @@ static const char *__cmp =
 R"doc(Compares this to the given integer.
 
 This is a numerical comparison; that is, it uses the usual ordering of
-the integers. Infinity is considered greater than any integer.
+the integers. Infinity is considered greater than any finite integer.
 
 This generates all of the usual comparison operators, including ``<``,
 ``<=``, ``>``, and ``>=``.
@@ -209,21 +197,25 @@ static const char *__default = R"doc(Initialises this integer to zero.)doc";
 // Docstring regina::python::doc::IntegerBase_::__div
 static const char *__div =
 R"doc(Divides this by the given integer and returns the result. The result
-will be truncated to an integer, i.e. rounded towards zero. This
+will be truncated to an integer, i.e., rounded towards zero. This
 integer is not changed.
 
 If *other* is known to divide this integer exactly, divExact() should
 be used instead.
 
-Infinity divided by anything will return infinity. Anything finite
-divided by infinity will return zero. Anything finite divided by zero
-will return infinity.
+Regarding special cases:
+
+* infinity divided by anything will return infinity;
+
+* anything divided by zero will likewise return infinity;
+
+* anything finite divided by infinity will return zero.
 
 For a division routine that always rounds down, see divisionAlg().
 
-Precondition:
-    If this class does not support infinity, then *other* must be non-
-    zero.
+Exception ``DivisionByZero``:
+    The argument *other* is zero, but this class does not support
+    infinity.
 
 Parameter ``other``:
     the integer to divide this by.
@@ -234,23 +226,26 @@ Returns:
 // Docstring regina::python::doc::IntegerBase_::__div_2
 static const char *__div_2 =
 R"doc(Divides this by the given native C++ integer and returns the result.
-The result will be truncated to an integer, i.e. rounded towards zero.
-This integer is not changed.
+The result will be truncated to an integer, i.e., rounded towards
+zero. This integer is not changed.
 
 If *other* is known to divide this integer exactly, divExact() should
 be used instead.
 
-Infinity divided by anything will return infinity. Anything finite
-divided by zero will return infinity.
+Regarding special cases:
+
+* infinity divided by anything will return infinity;
+
+* anything divided by zero will likewise return infinity.
 
 For a division routine that always rounds down, see divisionAlg().
 
-Precondition:
-    If this class does not support infinity, then *other* must be non-
-    zero.
-
 Python:
     It is assumed that the type *IntType* is ``long``.
+
+Exception ``DivisionByZero``:
+    The argument *other* is zero, but this class does not support
+    infinity.
 
 Parameter ``other``:
     the integer to divide this by.
@@ -301,6 +296,9 @@ result.
 
 If either term of the sum is infinite, the result will be infinity.
 
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
 Parameter ``other``:
     the integer to add to this integer.
 
@@ -310,21 +308,25 @@ Returns:
 // Docstring regina::python::doc::IntegerBase_::__idiv
 static const char *__idiv =
 R"doc(Divides this by the given integer. The result will be truncated to an
-integer, i.e. rounded towards zero. This integer is changed to reflect
-the result.
+integer, i.e., rounded towards zero. This integer is changed to
+reflect the result.
 
 If *other* is known to divide this integer exactly, divByExact()
 should be used instead.
 
-Infinity divided by anything will return infinity. Anything finite
-divided by infinity will return zero. Anything finite divided by zero
-will return infinity.
+Regarding special cases:
+
+* infinity divided by anything will return infinity;
+
+* anything divided by zero will likewise return infinity;
+
+* anything finite divided by infinity will return zero.
 
 For a division routine that always rounds down, see divisionAlg().
 
-Precondition:
-    If this class does not support infinity, then *other* must be non-
-    zero.
+Exception ``DivisionByZero``:
+    The argument *other* is zero, but this class does not support
+    infinity.
 
 Parameter ``other``:
     the integer to divide this by.
@@ -334,21 +336,27 @@ Returns:
 
 // Docstring regina::python::doc::IntegerBase_::__idiv_2
 static const char *__idiv_2 =
-R"doc(Divides this by the given integer. The result will be truncated to an
-integer, i.e. rounded towards zero. This integer is changed to reflect
-the result.
+R"doc(Divides this by the given native C++ integer. The result will be
+truncated to an integer, i.e., rounded towards zero. This integer is
+changed to reflect the result.
 
 If *other* is known to divide this integer exactly, divByExact()
 should be used instead.
 
-Infinity divided by anything will return infinity. Anything finite
-divided by zero will return infinity.
+Regarding special cases:
+
+* infinity divided by anything will return infinity;
+
+* anything divided by zero will likewise return infinity.
 
 For a division routine that always rounds down, see divisionAlg().
 
-Precondition:
-    If this class does not support infinity, then *other* must be non-
-    zero.
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Exception ``DivisionByZero``:
+    The argument *other* is zero, but this class does not support
+    infinity.
 
 Parameter ``other``:
     the integer to divide this by.
@@ -362,14 +370,19 @@ R"doc(Reduces this integer modulo the given integer. If non-zero, the result
 will have the same sign as the original value of this integer. This
 integer is changed to reflect the result.
 
-For a mod routine that always returns a non-negative remainder, see
-divisionAlg().
+Regarding special cases:
 
-Precondition:
-    *other* is not zero.
+* any finite *x* modulo infinity will return *x*;
 
-Precondition:
-    Neither this nor *other* is infinite.
+  * infinity modulo anything non-zero will return zero.
+
+For a division/modulo routine that always returns a non-negative
+remainder, see divisionAlg().
+
+Exception ``DivisionByZero``:
+    The argument *other* is zero. Note that, unlike the division
+    operators, this exception will be # thrown even if this class
+    supports infinity.
 
 Parameter ``other``:
     the integer modulo which this integer will be reduced.
@@ -379,18 +392,24 @@ Returns:
 
 // Docstring regina::python::doc::IntegerBase_::__imod_2
 static const char *__imod_2 =
-R"doc(Reduces this integer modulo the given integer. If non-zero, the result
-will have the same sign as the original value of this integer. This
-integer is changed to reflect the result.
+R"doc(Reduces this integer modulo the given native C++ integer. If non-zero,
+the result will have the same sign as the original value of this
+integer. This integer is changed to reflect the result.
 
-For a mod routine that always returns a non-negative remainder, see
-divisionAlg().
+Regarding special cases:
 
-Precondition:
-    *other* is not zero.
+* infinity modulo anything non-zero will return zero.
 
-Precondition:
-    This integer is not infinite.
+For a division/modulo routine that always returns a non-negative
+remainder, see divisionAlg().
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Exception ``DivisionByZero``:
+    The argument *other* is zero. Note that, unlike the division
+    operators, this exception will be # thrown even if this class
+    supports infinity.
 
 Parameter ``other``:
     the integer modulo which this integer will be reduced.
@@ -590,6 +609,9 @@ reflect the result.
 If either term of the difference is infinite, the result will be
 infinity.
 
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
 Parameter ``other``:
     the integer to subtract from this integer.
 
@@ -602,14 +624,19 @@ R"doc(Determines the remainder when this integer is divided by the given
 integer. If non-zero, the result will have the same sign as this
 integer. This integer is not changed.
 
-For a division routine that always returns a non-negative remainder,
-see divisionAlg().
+Regarding special cases:
 
-Precondition:
-    *other* is not zero.
+* any finite *x* modulo infinity will return *x*;
 
-Precondition:
-    Neither this nor *other* is infinite.
+  * infinity modulo anything non-zero will return zero.
+
+For a division/modulo routine that always returns a non-negative
+remainder, see divisionAlg().
+
+Exception ``DivisionByZero``:
+    The argument *other* is zero. Note that, unlike the division
+    operators, this exception will be # thrown even if this class
+    supports infinity.
 
 Parameter ``other``:
     the integer to divide this by.
@@ -623,17 +650,20 @@ R"doc(Determines the remainder when this integer is divided by the given
 native C++ integer. If non-zero, the result will have the same sign as
 this integer. This integer is not changed.
 
-For a division routine that always returns a non-negative remainder,
-see divisionAlg().
+Regarding special cases:
 
-Precondition:
-    *other* is not zero.
+* infinity modulo anything non-zero will return zero.
 
-Precondition:
-    This integer is not infinite.
+For a division/modulo routine that always returns a non-negative
+remainder, see divisionAlg().
 
 Python:
     It is assumed that the type *IntType* is ``long``.
+
+Exception ``DivisionByZero``:
+    The argument *other* is zero. Note that, unlike the division
+    operators, this exception will be # thrown even if this class
+    supports infinity.
 
 Parameter ``other``:
     the integer to divide this by.
@@ -728,7 +758,7 @@ is much faster than ordinary division. This integer is changed to
 reflect the result.
 
 Precondition:
-    The given integer divides exactly into this integer, i.e. *this*
+    The given integer divides exactly into this integer, i.e., *this*
     divided by *other* is an integer.
 
 Precondition:
@@ -751,7 +781,7 @@ is much faster than ordinary division. This integer is changed to
 reflect the result.
 
 Precondition:
-    The given integer divides exactly into this integer, i.e. *this*
+    The given integer divides exactly into this integer, i.e., *this*
     divided by *other* is an integer.
 
 Precondition:
@@ -759,6 +789,9 @@ Precondition:
 
 Precondition:
     This integer is not infinite.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
 
 Parameter ``other``:
     the integer to divide this by.
@@ -774,7 +807,7 @@ large integers can be much faster than ordinary division. This integer
 is not changed.
 
 Precondition:
-    The given integer divides exactly into this integer, i.e. *this*
+    The given integer divides exactly into this integer, i.e., *this*
     divided by *other* is an integer.
 
 Precondition:
@@ -797,7 +830,7 @@ exactly, and for large integers can be much faster than ordinary
 division. This integer is not changed.
 
 Precondition:
-    The given integer divides exactly into this integer, i.e. *this*
+    The given integer divides exactly into this integer, i.e., *this*
     divided by *other* is an integer.
 
 Precondition:
@@ -1097,11 +1130,7 @@ Returns:
     the value of this integer.)doc";
 
 // Docstring regina::python::doc::IntegerBase_::makeInfinite
-static const char *makeInfinite =
-R"doc(Sets this integer to be infinity.
-
-If the template parameter *withInfinity* is ``False``, this routine
-safely does nothing.)doc";
+static const char *makeInfinite = R"doc(Sets this integer to be infinity.)doc";
 
 // Docstring regina::python::doc::IntegerBase_::makeLarge
 static const char *makeLarge =
@@ -1368,6 +1397,57 @@ Python:
 
 Returns:
     the value of this integer.)doc";
+
+}
+
+namespace detail {
+
+// Docstring regina::python::doc::detail::InfinityBase
+static const char *InfinityBase =
+R"doc(An internal base class inherited by LargeInteger, which provides
+support for infinity as an allowed value.
+
+End users should not use this class directly.)doc";
+
+// Docstring regina::python::doc::detail::InfinityBase_2
+static const char *InfinityBase_2 =
+R"doc(An empty internal base class inherited by Integer, which does not
+support infinity as an allowed value.)doc";
+
+// Docstring regina::python::doc::detail::differenceAsUnsigned
+static const char *differenceAsUnsigned =
+R"doc(Returns the difference between two signed native C++ integers, and
+returns the result as an unsigned native C++ integer of the same size.
+The result should always be correct (i.e., there should never be an
+overflow condition).
+
+Precondition:
+    The result will be non-negative; that is, ``x ≥ y`` (as signed
+    types).
+
+Parameter ``x``:
+    the first signed integer to use in the subtraction.
+
+Parameter ``y``:
+    the second signed integer to use in the subtraction.
+
+Returns:
+    a corresponding unsigned representation of ``x - y``.)doc";
+
+// Docstring regina::python::doc::detail::negateToUnsignedType
+static const char *negateToUnsignedType =
+R"doc(Negates the given signed native C++ integer, and returns the result as
+an unsigned native C++ integer of the same size. The result should
+always be correct (i.e., there should never be an overflow condition).
+
+Precondition:
+    The result will be non-negative; that is, ``x ≤ 0``.
+
+Parameter ``x``:
+    the signed integer to negate.
+
+Returns:
+    a corresponding unsigned representation of ``-x``.)doc";
 
 }
 

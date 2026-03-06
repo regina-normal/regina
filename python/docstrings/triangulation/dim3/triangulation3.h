@@ -983,6 +983,14 @@ Precondition:
     hasSimpleCompressingDisc() for a "heuristic shortcut" that is
     faster but might not give a definitive answer.
 
+Exception ``UnsolvedCase``:
+    Within the normal surface machinery this algorithm has encountered
+    an impossible memory requirement, due to the need to store more
+    items than can fit into a native C++ ``size_t``. This is rarely
+    seen in practice: on a typical 64-bit machine, this would mean
+    that the algorithm has encountered a normal surface with some
+    coordinate at least ``2^64``.
+
 Returns:
     ``True`` if the underlying 3-manifold contains a compressing disc,
     or ``False`` if it does not.)doc";
@@ -1560,6 +1568,14 @@ Precondition:
 
 .. warning::
     This routine could be very slow for larger triangulations.
+
+Exception ``UnsolvedCase``:
+    Within the normal surface machinery this algorithm has encountered
+    an impossible memory requirement, due to the need to store more
+    items than can fit into a native C++ ``size_t``. This is rarely
+    seen in practice: on a typical 64-bit machine, this would mean
+    that the algorithm has encountered a normal surface with some
+    coordinate at least ``2^64``.
 
 Returns:
     ``True`` if and only if the underlying 3-manifold is irreducible

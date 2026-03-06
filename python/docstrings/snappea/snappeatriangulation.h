@@ -183,10 +183,10 @@ uses the SnapPea kernel could throw either of these exceptions.
 
 Regina uses the variant of the SnapPea kernel that is shipped with
 SnapPy (standard precision), as well as some additional code written
-explicitly for SnapPy. The header regina-config.h includes a macro
-SNAPPY_VERSION that gives the exact version of SnapPy that is bundled
-into Regina, and you can query this at runtime by calling Regina's
-function regina::versionSnapPy().
+explicitly for SnapPy. The header ``regina-config.h`` (included via
+``regina-core.h``) defines a macro ``SNAPPY_VERSION`` that gives the
+exact version of SnapPy that is bundled into Regina, and you can query
+this at runtime by calling Regina's function regina::versionSnapPy().
 
 Since Regina 7.0, SnapPeaTriangulation is no longer a "packet type"
 that can be inserted directly into the packet tree. Instead a

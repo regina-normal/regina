@@ -357,7 +357,10 @@ The preconditions for using this transformation:
 * The input to this transformation is exactly the set of all embedded
   vertex surfaces in quadrilateral or quadrilateral-octagon
   coordinates. This will be checked by examining
-  NormalSurface::coords() and NormalSurface::which().)doc";
+  NormalSurface::coords() and NormalSurface::which().
+
+Assuming the preconditions are met, this transformation should always
+succeed.)doc";
 
 // Docstring regina::python::doc::NormalTransform_::ConvertStandardToReduced
 static const char *ConvertStandardToReduced =
@@ -384,7 +387,10 @@ The preconditions for using this transformation:
 * The input to this transformation is exactly the set of all embedded
   vertex surfaces in standard normal or almost normal coordinates.
   This will be checked by examining NormalSurface::coords() and
-  NormalSurface::which().)doc";
+  NormalSurface::which().
+
+Assuming the preconditions are met, this transformation should always
+succeed.)doc";
 
 // Docstring regina::python::doc::NormalTransform_::FilterCompatible
 static const char *FilterCompatible =
@@ -405,7 +411,10 @@ and algorithm() will be precisely NormalAlg::Custom.
 The preconditions for using this transformation:
 
 * The input list contains only embedded normal or almost normal
-  surfaces. This will be checked by examining NormalSurface::which().)doc";
+  surfaces. This will be checked by examining NormalSurface::which().
+
+Assuming the preconditions are met, this transformation should always
+succeed.)doc";
 
 // Docstring regina::python::doc::NormalTransform_::FilterDisjoint
 static const char *FilterDisjoint =
@@ -433,7 +442,13 @@ and algorithm() will be precisely NormalAlg::Custom.
 The preconditions for using this transformation:
 
 * The input list contains only embedded normal or almost normal
-  surfaces. This will be checked by examining NormalSurface::which().)doc";
+  surfaces. This will be checked by examining NormalSurface::which().
+
+Assuming the preconditions are met, this transformation could still
+fail with an UnsolvedCase exception if the algorithm encounters an
+impossible memory requirement, due to some normal surface having
+enormous normal coordinates. See NormalSurface::disjoint() for further
+discussion.)doc";
 
 // Docstring regina::python::doc::NormalTransform_::FilterIncompressible
 static const char *FilterIncompressible =
@@ -479,6 +494,9 @@ The preconditions for using this transformation:
 
 * The input list contains only compact, connected, embedded normal
   surfaces. In particular, almost normal surfaces are not supported.
+
+Assuming the preconditions are met, this transformation should always
+succeed.
 
 .. warning::
     The behaviour of this transformation is subject to change in
