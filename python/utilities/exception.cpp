@@ -37,6 +37,8 @@
 #include "../docstrings/utilities/exception.h"
 #include "../docstrings/utilities/snapshot.h"
 
+using regina::python::registerReginaException;
+
 // Bring in all of the exception classes defined in utilities/*.h.
 //
 // The SnapPea kernel exceptions are added elsewhere (since they are
@@ -46,40 +48,40 @@ void addException(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN_MAIN
 
     // Derived from ReginaException:
-    regina::python::registerReginaException<regina::ReginaException>(m,
-        "ReginaException", rdoc::ReginaException);
-    regina::python::registerReginaException<regina::FailedPrecondition>(m,
-        "FailedPrecondition", rdoc::FailedPrecondition);
-    regina::python::registerReginaException<regina::InvalidArgument>(m,
-        "InvalidArgument", rdoc::InvalidArgument);
-    regina::python::registerReginaException<regina::InvalidInput>(m,
-        "InvalidInput", rdoc::InvalidInput);
-    regina::python::registerReginaException<regina::NotImplemented>(m,
-        "NotImplemented", rdoc::NotImplemented);
-    regina::python::registerReginaException<regina::FileError>(m,
-        "FileError", rdoc::FileError);
-    regina::python::registerReginaException<regina::NoSolution>(m,
-        "NoSolution", rdoc::NoSolution);
-    regina::python::registerReginaException<regina::UnsolvedCase>(m,
-        "UnsolvedCase", rdoc::UnsolvedCase);
-    regina::python::registerReginaException<regina::LockViolation>(m,
-        "LockViolation", rdoc::LockViolation);
-    regina::python::registerReginaException<regina::ImpossibleScenario>(m,
-        "ImpossibleScenario", rdoc::ImpossibleScenario);
-    regina::python::registerReginaException<regina::NumericalError>(m,
-        "NumericalError", rdoc::NumericalError);
-    regina::python::registerReginaException<regina::IntegerOverflow>(m,
-        "IntegerOverflow", rdoc::IntegerOverflow);
-    regina::python::registerReginaException<regina::DivisionByZero>(m,
-        "DivisionByZero", rdoc::DivisionByZero);
-    regina::python::registerReginaException<regina::SnapPeaUnsolvedCase>(m,
-        "SnapPeaUnsolvedCase", rdoc::SnapPeaUnsolvedCase);
-    regina::python::registerReginaException<regina::SnapPeaIsNull>(m,
-        "SnapPeaIsNull", rdoc::SnapPeaIsNull);
+    auto base = registerReginaException<regina::ReginaException>(m,
+        "ReginaException", rdoc::ReginaException, PyExc_RuntimeError);
+    registerReginaException<regina::FailedPrecondition>(m,
+        "FailedPrecondition", rdoc::FailedPrecondition, base);
+    registerReginaException<regina::InvalidArgument>(m,
+        "InvalidArgument", rdoc::InvalidArgument, base);
+    registerReginaException<regina::InvalidInput>(m,
+        "InvalidInput", rdoc::InvalidInput, base);
+    registerReginaException<regina::NotImplemented>(m,
+        "NotImplemented", rdoc::NotImplemented, base);
+    registerReginaException<regina::FileError>(m,
+        "FileError", rdoc::FileError, base);
+    registerReginaException<regina::NoSolution>(m,
+        "NoSolution", rdoc::NoSolution, base);
+    auto unsolved = registerReginaException<regina::UnsolvedCase>(m,
+        "UnsolvedCase", rdoc::UnsolvedCase, base);
+    registerReginaException<regina::LockViolation>(m,
+        "LockViolation", rdoc::LockViolation, base);
+    registerReginaException<regina::ImpossibleScenario>(m,
+        "ImpossibleScenario", rdoc::ImpossibleScenario, base);
+    auto numerical = registerReginaException<regina::NumericalError>(m,
+        "NumericalError", rdoc::NumericalError, base);
+    registerReginaException<regina::IntegerOverflow>(m,
+        "IntegerOverflow", rdoc::IntegerOverflow, numerical);
+    registerReginaException<regina::DivisionByZero>(m,
+        "DivisionByZero", rdoc::DivisionByZero, numerical);
+    registerReginaException<regina::SnapPeaUnsolvedCase>(m,
+        "SnapPeaUnsolvedCase", rdoc::SnapPeaUnsolvedCase, unsolved);
+    registerReginaException<regina::SnapPeaIsNull>(m,
+        "SnapPeaIsNull", rdoc::SnapPeaIsNull, base);
 
     // Snapshotting machinery:
-    regina::python::registerReginaException<regina::SnapshotWriteError>(m,
-        "SnapshotWriteError", rdoc::SnapshotWriteError);
+    registerReginaException<regina::SnapshotWriteError>(m,
+        "SnapshotWriteError", rdoc::SnapshotWriteError, base);
 
     RDOC_SCOPE_END
 }

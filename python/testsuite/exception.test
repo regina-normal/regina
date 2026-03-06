@@ -257,8 +257,91 @@ except RuntimeError:
 
 ######################################################################
 
-# TODO: Catch exceptions as ReginaException.
-# TODO: Catch IntegerOverflow, DivisionByZero as NumericalError.
+try:
+    throwFailedPrecondition()
+    print('ERROR: Did not throw FailedPrecondition')
+except ReginaException:
+    print('Caught FailedPrecondition as ReginaException')
+
+try:
+    throwInvalidArgument()
+    print('ERROR: Did not throw InvalidArgument')
+except ReginaException:
+    print('Caught InvalidArgument as ReginaException')
+
+try:
+    throwInvalidArgumentV2()
+    print('ERROR: Did not throw InvalidArgument')
+except ReginaException:
+    print('Caught InvalidArgument as ReginaException')
+
+try:
+    throwNotImplemented()
+    print('ERROR: Did not throw NotImplemented')
+except ReginaException:
+    print('Caught NotImplemented as ReginaException')
+
+try:
+    throwFileError()
+    print('ERROR: Did not throw FileError')
+except ReginaException:
+    print('Caught FileError as ReginaException')
+
+try:
+    throwNoSolution()
+    print('ERROR: Did not throw NoSolution')
+except ReginaException:
+    print('Caught NoSolution as ReginaException')
+
+try:
+    throwUnsolvedCase()
+    print('ERROR: Did not throw UnsolvedCase')
+except ReginaException:
+    print('Caught UnsolvedCase as ReginaException')
+
+try:
+    throwLockViolation()
+    print('ERROR: Did not throw LockViolation')
+except ReginaException:
+    print('Caught LockViolation as ReginaException')
+
+try:
+    throwIntegerOverflow()
+    print('ERROR: Did not throw IntegerOverflow')
+except ReginaException:
+    print('Caught IntegerOverflow as ReginaException')
+
+try:
+    throwDivisionByZero()
+    print('ERROR: Did not throw DivisionByZero')
+except ReginaException:
+    print('Caught DivisionByZero as ReginaException')
+
+try:
+    throwSnapPeaIsNull()
+    print('ERROR: Did not throw SnapPeaIsNull')
+except ReginaException:
+    print('Caught SnapPeaIsNull as ReginaException')
+
+try:
+    throwSnapshotWriteError()
+    print('ERROR: Did not throw SnapshotWriteError')
+except ReginaException:
+    print('Caught SnapshotWriteError as ReginaException')
+
+######################################################################
+
+try:
+    throwIntegerOverflow()
+    print('ERROR: Did not throw IntegerOverflow')
+except NumericalError:
+    print('Caught IntegerOverflow as NumericalError')
+
+try:
+    throwDivisionByZero()
+    print('ERROR: Did not throw DivisionByZero')
+except NumericalError:
+    print('Caught DivisionByZero as NumericalError')
 
 ######################################################################
 

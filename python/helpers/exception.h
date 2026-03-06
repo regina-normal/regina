@@ -92,16 +92,15 @@ class ExceptionCache {
  * Adds Python bindings for one of Regina's C++ exception types.
  *
  * This routine will create a corresponding Python exception type (using
- * PyExc_RuntimeError as its base), and will register a translator between
- * the two.
+ * the given base class), and will register a translator between the two.
  *
  * Conceptually, this does a similar job to `pybind11::register_exception()`;
  * however, it is also safe to use with subinterpreters (which, as of
  * pybind11 3.0.0rc3, `pybind11::register_exception()` is not).
  */
 template <typename ReginaExceptionType>
-void registerReginaException(pybind11::module_& m, const char* className,
-        const char* docstring) {
+PyObject* registerReginaException(pybind11::module_& m, const char* className,
+        const char* docstring, pybind11::handle base) {
 #if REGINA_PYBIND11_VERSION == 3
     // In pybind11 v3 (at least in 3.0.0rc3), the implementation of
     // register_exception() uses a global singleton Python exception object,
@@ -122,9 +121,9 @@ void registerReginaException(pybind11::module_& m, const char* className,
     // The following exception type should live for only as long as the module
     // is loaded, since it is the reference in m.__dict__ that keeps it alive
     // on the python side.  In our own cache we just keep a borrowed reference.
-    pybind11::exception<ReginaExceptionType> exc(m, className, docstring,
-        PyExc_RuntimeError);
-    cache.insert(exc.ptr());
+    pybind11::exception<ReginaExceptionType> exc(m, className, docstring, base);
+    PyObject* ptr = exc.ptr();
+    cache.insert(ptr);
 
     pybind11::register_exception_translator([](std::exception_ptr p) {
         if (!p) {
@@ -142,12 +141,16 @@ void registerReginaException(pybind11::module_& m, const char* className,
             }
         }
     });
+
+    return ptr;
 #elif REGINA_PYBIND11_VERSION == 2
     // pybind11 v2 does not support subinterpreters properly; however,
     // register_exception() does appear to work perfectly fine with the
     // subinterpreter hacks that we are using.
-    pybind11::register_exception<ReginaExceptionType>(m, className,
-        PyExc_RuntimeError).doc() = docstring;
+    auto& exc = pybind11::register_exception<ReginaExceptionType>(m, className,
+        base);
+    exc.doc() = docstring;
+    return exc.ptr();
 #else
     #error "Unsupported pybind11 version"
 #endif

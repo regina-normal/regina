@@ -298,6 +298,9 @@ Version 7.5  [ TODO ]
           what _could_ be parsed).  This now matches how third-generation XML
           files (Regina 7.0+) are treated.
     PYTHON:
+        - Regina's exception types now use the same class hierarchy in Python
+          as they do in C++ (previously in Python they all derived directly
+          from Python's RuntimeError).
         - The bindings for tightEncoding() now accept integers of any size
           (using C++ long where possible, and regina::Integer otherwise).
         - Removed the bindings TreeEnumeration_EulerPositive..., since the

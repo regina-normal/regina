@@ -42,4 +42,30 @@ Caught SnapPeaIsNull as RuntimeError
 7 embedded, vertex surfaces (Standard normal (tri-quad))
 True
 Caught SnapshotWriteError as RuntimeError
+Caught FailedPrecondition as ReginaException
+10
+Caught InvalidArgument as ReginaException
+Caught InvalidArgument as ReginaException
+Z
+Caught NotImplemented as ReginaException
+Caught FileError as ReginaException
+1 0 0 ; 1 0 0
+Caught NoSolution as ReginaException
+0.5
+Caught UnsolvedCase as ReginaException
+efHkadcdrsn.aaaq
+Caught LockViolation as ReginaException
+32768
+Caught IntegerOverflow as ReginaException
+2
+Caught DivisionByZero as ReginaException
+Z_55
+Caught SnapPeaIsNull as ReginaException
+7 embedded, vertex surfaces (Standard normal (tri-quad))
+True
+Caught SnapshotWriteError as ReginaException
+32768
+Caught IntegerOverflow as NumericalError
+2
+Caught DivisionByZero as NumericalError
 All done!
