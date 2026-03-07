@@ -703,9 +703,8 @@ namespace detail {
  * supported" way of accessing the <i>i</i>th permutation of \a m objects
  * using the type `Perm<n>` is `Perm<n>::extend(Perm<m>::Sn[i])`.
  *
- * \python This class does not live inside an inner `detail` namespace, though
- * as an internal class it is subject to change or removal without notice
- * (see the warning above).  Moreover, Python does not support templates,
+ * \python As an internal class, this is subject to change or removal without
+ * notice (see the warning above).  Moreover, Python does not support templates,
  * and so the name of this class is constructed by appending \a n, \a m and
  * \a order as suffixes (e.g., PermSubSn4_3_Sign, or PermSubSn5_3_Lex).
  * The only template parameters that are bound in Python are those that are
