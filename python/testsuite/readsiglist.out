@@ -2,7 +2,7 @@ Links
 -> eabcdbadcvbZa
 -> fabcadefbcedvfpd
 Errors:
-The following signature(s) could not be interpreted as knots or links:
+The following could not be interpreted as link signatures:
 
 junk
 
@@ -10,7 +10,7 @@ Dimension: 2
 -> cPbbde
 -> bcad
 Errors:
-The following signature(s) could not be interpreted as 2-manifold triangulations:
+The following could not be interpreted as 2-D triangulation signatures:
 
 junk
 
@@ -18,7 +18,7 @@ Dimension: 3
 -> fvPQcdecedekrsnrs
 -> cHabj
 Errors:
-The following signature(s) could not be interpreted as 3-manifold triangulations:
+The following could not be interpreted as 3-D triangulation signatures:
 
 junk
 
@@ -26,7 +26,7 @@ Dimension: 4
 -> cMkabbb+aAa3blb
 -> eLMQcbcddcddaaaa8a8a8a8a8a
 Errors:
-The following signature(s) could not be interpreted as 4-manifold triangulations:
+The following could not be interpreted as 4-D triangulation signatures:
 
 junk
 
@@ -34,7 +34,7 @@ Dimension: 5
 -> cMQabbbb-caaaaaa-c
 -> cHaaab-f
 Errors:
-The following signature(s) could not be interpreted as 5-manifold triangulations:
+The following could not be interpreted as 5-D triangulation signatures:
 
 junk
 
@@ -42,7 +42,7 @@ Dimension: 6
 -> cPQcbbbbbb+1a+1a+1a+1aaya+1a
 -> bGaa+1a
 Errors:
-The following signature(s) could not be interpreted as 6-manifold triangulations:
+The following could not be interpreted as 6-D triangulation signatures:
 
 junk
 
@@ -50,7 +50,7 @@ Dimension: 7
 -> cMQkabbbbbb++gaaaaaaaaaaaaaaa++g
 -> cHaaaab+1b
 Errors:
-The following signature(s) could not be interpreted as 7-manifold triangulations:
+The following could not be interpreted as 7-D triangulation signatures:
 
 junk
 
@@ -58,7 +58,7 @@ Dimension: 8
 -> cPQQbbbbbbbb++1a++1alQua++1a++1a++1a++1a++1a
 -> bGaaa++1a
 Errors:
-The following signature(s) could not be interpreted as 8-manifold triangulations:
+The following could not be interpreted as 8-D triangulation signatures:
 
 junk
 

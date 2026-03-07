@@ -43,7 +43,6 @@
 
 #include <fstream>
 #include <sstream>
-#include <type_traits>
 #include "packet/container.h"
 #include "packet/text.h"
 #include "utilities/exception.h"
@@ -51,8 +50,6 @@
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
-
-class Link;
 
 template <SigReconstructible ObjectType>
 requires PacketHeldType<ObjectType>
@@ -118,15 +115,12 @@ std::shared_ptr<Container> readSigList(const char *filename, int colSigs,
 
     // Finish off.
     if (! errStrings.empty()) {
-        std::ostringstream msg;
-        msg << "The following signature(s) could not be interpreted as ";
-        if constexpr (std::is_same_v<ObjectType, Link>)
-            msg << "knots or links:\n";
-        else
-            msg << ObjectType::dimension << "-manifold triangulations:\n";
-        msg << errStrings;
+        std::string typeName = PacketInfo::name(packetTypeHolds<ObjectType>);
+        if (! typeName.empty())
+            typeName.front() = std::tolower(typeName.front());
 
-        auto errPkt = std::make_shared<Text>(msg.str());
+        auto errPkt = std::make_shared<Text>("The following could not be "
+            "interpreted as " + typeName + " signatures:\n" + errStrings);
         errPkt->setLabel("Errors");
         ans->append(errPkt);
     }

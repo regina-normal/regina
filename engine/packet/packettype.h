@@ -460,7 +460,7 @@ class PacketInfo {
                 case PacketType::Link:
                     return "Link";
                 case PacketType::SpatialLink:
-                    return "Spatial Link";
+                    return "Spatial link";
                 case PacketType::Triangulation2:
                     return "2-D triangulation";
                 case PacketType::Triangulation3:
