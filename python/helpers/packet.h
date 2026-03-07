@@ -32,17 +32,9 @@
  *  \brief Assists with packets that wrap standalone C++ types.
  */
 
-namespace regina {
+#include "packet/packet.h"
 
-class Packet;
-template <typename> class PacketData;
-template <typename> class PacketOf;
-
-template <typename Held> std::shared_ptr<PacketOf<Held>> make_packet(Held&&);
-template <typename Held> std::shared_ptr<PacketOf<Held>> make_packet(Held&&,
-    const std::string&);
-
-namespace python {
+namespace regina::python {
 
 /**
  * Adds Python bindings for the class PacketOf<Held>, as well as corresponding
@@ -149,6 +141,5 @@ void add_packet_data(PythonClass& classWrapper) {
         ;
 }
 
-} // namespace python
-} // namespace regina
+} // namespace regina::python
 

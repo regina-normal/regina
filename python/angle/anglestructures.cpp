@@ -34,6 +34,7 @@
 #include "progress/progresstracker.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../helpers/packet.h"
 #include "../docstrings/angle/anglestructures.h"
 
 using namespace regina::python;

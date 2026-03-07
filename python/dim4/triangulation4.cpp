@@ -32,6 +32,7 @@
 #include <pybind11/functional.h>
 #include <pybind11/stl.h>
 #include "../helpers.h"
+#include "../helpers/packet.h"
 #include "algebra/grouppresentation.h"
 #include "algebra/intersectionform.h"
 #include "progress/progresstracker.h"

@@ -38,6 +38,7 @@
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 #include "../helpers/flags.h"
+#include "../helpers/packet.h"
 #include "../docstrings/surface/normalsurfaces.h"
 
 using namespace regina::python;

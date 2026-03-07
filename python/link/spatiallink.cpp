@@ -32,6 +32,7 @@
 #include <pybind11/stl.h>
 #include "link/spatiallink.h"
 #include "../helpers.h"
+#include "../helpers/packet.h"
 #include "../docstrings/link/spatiallink.h"
 
 using pybind11::overload_cast;

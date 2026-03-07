@@ -41,6 +41,7 @@
 #include "snappea/snappeatriangulation.h"
 #include "../helpers.h"
 #include "../helpers/exception.h"
+#include "../helpers/packet.h"
 #include "../docstrings/snappea/snappeatriangulation.h"
 #include "../docstrings/triangulation/detail/triangulation.h" // for global_swap
 

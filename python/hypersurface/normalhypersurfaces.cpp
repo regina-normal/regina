@@ -36,6 +36,7 @@
 #include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
+#include "../helpers/packet.h"
 #include "../docstrings/hypersurface/normalhypersurfaces.h"
 
 using namespace regina::python;

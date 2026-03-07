@@ -194,6 +194,10 @@ Version 7.5  [ TODO ]
         Class RingTraits:
             - Provides new compile-time constants zeroInitialised and
               zeroDivisors.
+        Class TreeDecomposition:
+            - In the version of reroot() that uses costs, the cost type T no
+              no longer treats zero in a special manner; it is only the total
+              order on T that matters.
         Class Triangulation<3>:
             - Routines hasCompressingDisc() and isHaken() now throw an
               exception if the underlying algorithms encounter an impossible

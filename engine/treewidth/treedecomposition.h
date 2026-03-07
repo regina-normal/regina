@@ -38,6 +38,7 @@
 #define __REGINA_TREEDECOMPOSITION_H
 #endif
 
+#include <concepts>
 #include <vector>
 #include "regina-core.h"
 #include "core/output.h"
@@ -1306,8 +1307,9 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * Python lists of real numbers.
          *
          * \tparam T the type being used to estimate costs.
-         * It must be possible to assign 0 to a variable of type \a T
-         * using both constructors and the assignment operator.
+         * As of Regina 7.5, zero plays no special role here (i.e., costs can
+         * be positive or negative, and indeed costs do not need to be real
+         * numbers at all); it is only the total order on \a T that matters.
          *
          * \param costSame An array of size() elements giving an
          * estimated cost of preserving each child-parent connection;
@@ -1318,6 +1320,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * This array may be \c null.
          */
         template <typename T>
+        requires std::regular<T> && std::totally_ordered<T>
         void reroot(const T* costSame, const T* costReverse,
             const T* costRoot = nullptr);
 
@@ -1572,6 +1575,92 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * This routine also recomputes the data member \a size_.
          */
         void reindex();
+
+        /**
+         * Internal struct for reroot().  This stores estimates of "partial"
+         * rerooting costs, where "partial" means that we only consider a
+         * portion of the overall tree decomposition.
+         *
+         * Such partial costs are obtained by aggregating "atomic" costs over
+         * edge and/or nodes of the relevant portion of the tree decomposition.
+         * Aggregation is done by max (as opposed to summation, for example).
+         *
+         * See the implementation of reroot() for more details on how and where
+         * this helper struct is used.
+         */
+        template <typename T>
+        requires std::regular<T> && std::totally_ordered<T>
+        struct RerootingCost {
+            T maxCost;
+                /**< The maximum "atomic" cost seen in the portion of the tree
+                     decomposition that is under consideration.
+                     If `count = 0` then \a maxCost is ignored and instead
+                     treated as negative infinity, since this means that no
+                     atomic costs have been considered at all. */
+            size_t count { 0 };
+                /**< The number of times that \a maxCost appears as an "atomic"
+                     cost in the portion of the tree decomposition that is under
+                     consideration. */
+
+            /**
+             * Initialises this to the given atomic cost, seen exactly once.
+             */
+            void init(const T& cost) {
+                maxCost = cost;
+                count = 1;
+            }
+
+            /**
+             * Aggregates this partial cost with the given partial cost.
+             * It is assumed that this and \a other cover disjoint portions of
+             * the tree decomposition.
+             */
+            void aggregate(const RerootingCost& other) {
+                if (other.count == 0)
+                    return;
+                else if (count == 0)
+                    *this = other;
+                else if (maxCost < other.maxCost)
+                    *this = other;
+                else if (maxCost == other.maxCost)
+                    count += other.count;
+            }
+
+            /**
+             * Aggregates this partial cost with the given atomic cost.
+             * It is assumed that \a cost comes from outside the portion of the
+             * tree decomposition that this partial cost covers.
+             */
+            void aggregate(const T& cost) {
+                if (count == 0 || maxCost < cost) {
+                    maxCost = cost;
+                    count = 1;
+                } else if (maxCost == cost) {
+                    ++count;
+                }
+            }
+
+            /**
+             * Compares this partial cost with the given partial cost.
+             *
+             * If both \a this and \a rhs have the same \a maxCost, then the
+             * one in which \a maxCost appears fewer times (i.e., has smaller
+             * \a count) is considered cheaper.
+             */
+            std::strong_ordering operator <=> (const RerootingCost& rhs) const {
+                if (count == 0)
+                    return rhs.count == 0 ? std::strong_ordering::equal :
+                        std::strong_ordering::less;
+                else if (rhs.count == 0)
+                    return std::strong_ordering::greater;
+                else if (maxCost < rhs.maxCost)
+                    return std::strong_ordering::less;
+                else if (maxCost > rhs.maxCost)
+                    return std::strong_ordering::greater;
+                else
+                    return count <=> rhs.count;
+            }
+        };
 };
 
 /**

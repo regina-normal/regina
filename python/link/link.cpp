@@ -40,6 +40,7 @@
 #include "maths/laurent2.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../helpers/packet.h"
 #include "../docstrings/link/link.h"
 
 using pybind11::overload_cast;
