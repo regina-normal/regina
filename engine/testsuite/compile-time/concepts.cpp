@@ -64,6 +64,33 @@ namespace {
     class SubVector : public Vector<T> {};
 }
 
+static_assert(regina::AssignableTo<const char*, std::string&>);
+static_assert(! regina::AssignableTo<std::string&, char*&>);
+static_assert(regina::AssignableTo<double, int&>);
+static_assert(regina::AssignableTo<int, Integer&>);
+static_assert(regina::AssignableTo<int, LargeInteger&>);
+static_assert(! regina::AssignableTo<Integer, int&>);
+static_assert(! regina::AssignableTo<LargeInteger, int&>);
+static_assert(regina::AssignableTo<Integer, Integer&>);
+static_assert(regina::AssignableTo<LargeInteger, LargeInteger&>);
+static_assert(regina::AssignableTo<Integer, LargeInteger&>);
+static_assert(regina::AssignableTo<LargeInteger, Integer&>);
+static_assert(regina::AssignableTo<NativeInteger<4>, Integer&>);
+static_assert(regina::AssignableTo<NativeInteger<4>, LargeInteger&>);
+static_assert(! regina::AssignableTo<Integer, NativeInteger<4>&>);
+static_assert(! regina::AssignableTo<LargeInteger, NativeInteger<4>&>);
+static_assert(! regina::AssignableTo<NativeInteger<2>, NativeInteger<4>&>);
+static_assert(regina::AssignableTo<int16_t, NativeInteger<4>&>);
+static_assert(regina::AssignableTo<int32_t, NativeInteger<4>&>);
+static_assert(regina::AssignableTo<int64_t, NativeInteger<4>&>);
+static_assert(regina::AssignableTo<int16_t, Integer&>);
+static_assert(regina::AssignableTo<int16_t, LargeInteger&>);
+static_assert(! regina::AssignableTo<NativeInteger<4>, int16_t&>);
+static_assert(! regina::AssignableTo<NativeInteger<4>, int32_t&>);
+static_assert(! regina::AssignableTo<NativeInteger<4>, int64_t&>);
+static_assert(! regina::AssignableTo<Integer, int16_t&>);
+static_assert(! regina::AssignableTo<LargeInteger, int16_t&>);
+
 static_assert(CppInteger<char>);
 static_assert(StandardCppInteger<char>);
 

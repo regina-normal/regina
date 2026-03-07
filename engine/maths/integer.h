@@ -1823,6 +1823,7 @@ std::string tightEncoding(IntegerBase<withInfinity> value);
 
 #ifndef __DOXYGEN
 // Don't confuse doxygen with specialisations.
+
 template <bool withInfinity>
 struct RingTraits<IntegerBase<withInfinity>> {
     inline static const IntegerBase<withInfinity> zero;
@@ -1832,6 +1833,17 @@ struct RingTraits<IntegerBase<withInfinity>> {
     static constexpr bool zeroDivisors = false;
     static constexpr bool inverses = false;
 };
+
+// We need to specify the common type to use when working with both Integer and
+// LargeInteger, since conversions exist in both directions.
+
+} // namespace regina
+template <bool inf1, bool inf2>
+struct std::common_type<regina::IntegerBase<inf1>, regina::IntegerBase<inf2>> {
+    using type = regina::IntegerBase<inf1 || inf2>;
+};
+namespace regina {
+
 #endif // __DOXYGEN
 
 /**

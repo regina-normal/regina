@@ -99,6 +99,8 @@ Version 7.5  [ TODO ]
               since that class supports infinity).
             - The modulo operators % and %= now support infinite arguments,
               and now throw an exception when computing anything modulo zero.
+            - Added specialisations of std::common_type for use when mixing
+              Integer and LargeInteger.
         Class IntegerOverflow:
             - New exception class.
         Class Isomorphism<dim>:

@@ -40,7 +40,7 @@
 
 #include <optional>
 #include <utility>
-#include "regina-core.h"
+#include "concepts/core.h"
 #include "core/output.h"
 #include "algebra/abeliangroup.h"
 #include "hypersurface/hypercoords.h"
@@ -246,12 +246,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface inside the given triangulation, using the given
          * encoding.  This will not be checked!
          *
-         * \python The supported types for the template parameter \a U are
+         * \python The supported element types for the given vector are
          * regina::Integer and regina::LargeInteger.  You may also, if you
          * prefer, pass \a vector as a Python list of integers.
-         *
-         * \tparam U the type of object held by the given vector.  It must be
-         * possible to assign an object of type \a U to a regina::LargeInteger.
          *
          * \param triang the triangulation in which this normal hypersurface
          * resides.
@@ -260,7 +257,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
-        template <typename U>
+        template <AssignableTo<LargeInteger&> U>
         NormalHypersurface(const Triangulation<4>& triang, HyperEncoding enc,
             const Vector<U>& vector);
 
@@ -315,9 +312,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * \tparam U the type of object held by the given vector.  It must be
-         * possible to assign an object of type \a U to a regina::LargeInteger.
-         *
          * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
          * \param enc indicates precisely how the given vector encodes a normal
@@ -325,7 +319,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
-        template <typename U>
+        template <AssignableTo<LargeInteger&> U>
         NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
             HyperEncoding enc, const Vector<U>& vector);
 
@@ -383,12 +377,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface inside the given triangulation, using the encoding
          * `HyperEncoding(coords)`.  This will not be checked!
          *
-         * \python The supported types for the template parameter \a U are
+         * \python The supported element types for the given vector are
          * regina::Integer and regina::LargeInteger.  You may also, if you
          * prefer, pass \a vector as a Python list of integers.
-         *
-         * \tparam U the type of object held by the given vector.  It must be
-         * possible to assign an object of type \a U to a regina::LargeInteger.
          *
          * \param triang the triangulation in which this normal hypersurface
          * resides.
@@ -397,7 +388,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
-        template <typename U>
+        template <AssignableTo<LargeInteger&> U>
         NormalHypersurface(const Triangulation<4>& triang, HyperCoords coords,
             const Vector<U>& vector);
 
@@ -460,9 +451,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * \tparam U the type of object held by the given vector.  It must be
-         * possible to assign an object of type \a U to a regina::LargeInteger.
-         *
          * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
          * \param coords the coordinate system from which the vector
@@ -470,7 +458,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
-        template <typename U>
+        template <AssignableTo<LargeInteger&> U>
         NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
             HyperCoords coords, const Vector<U>& vector);
 
@@ -1364,7 +1352,7 @@ void swap(NormalHypersurface& a, NormalHypersurface& b) noexcept;
 
 // Inline functions for NormalHypersurface
 
-template <typename U>
+template <AssignableTo<LargeInteger&> U>
 inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
         HyperEncoding enc, const Vector<U>& vector) :
         enc_(enc), vector_(vector), triangulation_(tri) {
@@ -1382,7 +1370,7 @@ inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
         enc_ = reconstructTetrahedra(tri, vector_, enc_);
 }
 
-template <typename U>
+template <AssignableTo<LargeInteger&> U>
 inline NormalHypersurface::NormalHypersurface(
         const SnapshotRef<Triangulation<4>>& tri,
         HyperEncoding enc, const Vector<U>& vector) :
@@ -1399,7 +1387,7 @@ inline NormalHypersurface::NormalHypersurface(
         enc_ = reconstructTetrahedra(*tri, vector_, enc_);
 }
 
-template <typename U>
+template <AssignableTo<LargeInteger&> U>
 inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
         HyperCoords coords, const Vector<U>& vector) :
         enc_(coords), vector_(vector), triangulation_(tri) {
@@ -1415,7 +1403,7 @@ inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
         enc_ = reconstructTetrahedra(tri, vector_, enc_);
 }
 
-template <typename U>
+template <AssignableTo<LargeInteger&> U>
 inline NormalHypersurface::NormalHypersurface(
         const SnapshotRef<Triangulation<4>>& tri,
         HyperCoords coords, const Vector<U>& vector) :

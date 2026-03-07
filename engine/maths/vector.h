@@ -214,13 +214,9 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * \python Using this constructor, Python allows you to construct a
          * Vector<Integer> from a Vector<LargeInteger> or vice versa.
          *
-         * \tparam U the type of object held by the given vector \a src.
-         * It must be possible to _assign_ an object of type \a U to an object
-         * of type \a T.
-         *
          * \param src the vector to clone.
          */
-        template <typename U>
+        template <AssignableTo<T&> U>
         inline explicit Vector(const Vector<U>& src) :
                 elts_(new T[src.size()]), end_(elts_ + src.size()) {
             std::copy(src.begin(), src.end(), elts_);
