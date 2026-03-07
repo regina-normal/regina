@@ -63,7 +63,7 @@ pybind11_version='@REGINA_PYBIND11_VERSION@'
 export REGINA_HOME=../../engine
 
 # Cases that expect the python/testsuite directory as an argument:
-blacklist="file i18n memory1 orb pdf repr snappea"
+blacklist="file i18n memory1 orb pdf readsiglist repr snappea"
 
 # The following cases implicitly import the threading module, which leads to a
 # harmless but noisy ignored exception upon shutdown under python 3.12 and
