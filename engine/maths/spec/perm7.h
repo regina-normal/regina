@@ -1187,40 +1187,34 @@ class Perm<7> {
 
         /**
          * Extends a <i>k</i>-element permutation to a 7-element permutation,
-         * where 2 ≤ \a k \< 7.
+         * where `2 ≤ k < 7`.
          *
-         * The resulting permutation will map 0,...,<i>k</i>-1 to their
+         * The resulting permutation will map `0,...,k-1` to their
          * respective images under \a p, and will map the "unused" elements
-         * <i>k</i>,...,6 to themselves.
-         *
-         * \tparam k the number of elements for the input permutation;
-         * this must be 2, 3, 4, 5 or 6.
+         * `k,...,6` to themselves.
          *
          * \param p a permutation on \a k elements.
          * \return the same permutation expressed as a permutation on
          * seven elements.
          */
-        template <int k>
+        template <int k> requires (2 <= k && k < 7)
         static constexpr Perm<7> extend(Perm<k> p);
 
         /**
          * Restricts a <i>k</i>-element permutation to a 7-element
-         * permutation, where \a k > 7.
+         * permutation, where `k > 7`.
          *
-         * The resulting permutation will map 0,...,6 to their
+         * The resulting permutation will map `0,...,6` to their
          * respective images under \a p, and will ignore the "unused" images
-         * \a p[7],...,\a p[<i>k</i>-1].
+         * `p[7],...,p[k-1]`.
          *
-         * \pre The given permutation maps 0,...,6 to 0,...,6 in some order.
-         *
-         * \tparam k the number of elements for the input permutation;
-         * this must be strictly greater than 7.
+         * \pre The given permutation maps `0,...,6` to `0,...,6` in some order.
          *
          * \param p a permutation on \a k elements.
          * \return the same permutation restricted to a permutation on
          * 7 elements.
          */
-        template <int k>
+        template <int k> requires (7 < k)
         static constexpr Perm<7> contract(Perm<k> p);
 
         /**

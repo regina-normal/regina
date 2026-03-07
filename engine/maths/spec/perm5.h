@@ -1291,40 +1291,34 @@ class Perm<5> {
 
         /**
          * Extends a <i>k</i>-element permutation to a 5-element permutation,
-         * where 2 ≤ \a k \< 5.
+         * where `2 ≤ k < 5`.
          *
-         * The resulting permutation will map 0,...,<i>k</i>-1 to their
+         * The resulting permutation will map `0,...,k-1` to their
          * respective images under \a p, and will map the "unused" elements
-         * <i>k</i>,...,4 to themselves.
-         *
-         * \tparam k the number of elements for the input permutation;
-         * this must be 2, 3 or 4.
+         * `k,...,4` to themselves.
          *
          * \param p a permutation on \a k elements.
          * \return the same permutation expressed as a permutation on
          * five elements.
          */
-        template <int k>
+        template <int k> requires (2 <= k && k < 5)
         static constexpr Perm<5> extend(Perm<k> p);
 
         /**
-         * Restricts a <i>k</i>-element permutation to an 5-element
-         * permutation, where \a k > 5.
+         * Restricts a <i>k</i>-element permutation to a 5-element
+         * permutation, where `k > 5`.
          *
-         * The resulting permutation will map 0,...,4 to their
+         * The resulting permutation will map `0,...,4` to their
          * respective images under \a p, and will ignore the "unused" images
-         * \a p[5],...,\a p[<i>k</i>-1].
+         * `p[5],...,p[k-1]`.
          *
-         * \pre The given permutation maps 0,...,4 to 0,...,4 in some order.
-         *
-         * \tparam k the number of elements for the input permutation;
-         * this must be strictly greater than 5.
+         * \pre The given permutation maps `0,...,4` to `0,...,4` in some order.
          *
          * \param p a permutation on \a k elements.
          * \return the same permutation restricted to a permutation on
          * 5 elements.
          */
-        template <int k>
+        template <int k> requires (5 < k)
         static constexpr Perm<5> contract(Perm<k> p);
 
         /**

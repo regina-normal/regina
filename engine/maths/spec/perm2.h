@@ -953,22 +953,19 @@ class Perm<2> {
 
         /**
          * Restricts a <i>k</i>-element permutation to an 2-element
-         * permutation, where \a k > 2.
+         * permutation, where `k > 2`.
          *
          * The resulting permutation will map 0,1 to their
          * respective images under \a p, and will ignore the "unused" images
-         * \a p[2],...,\a p[<i>k</i>-1].
+         * `p[2],...,p[k-1]`.
          *
          * \pre The given permutation maps 0,1 to 0,1 in some order.
-         *
-         * \tparam k the number of elements for the input permutation;
-         * this must be strictly greater than 2.
          *
          * \param p a permutation on \a k elements.
          * \return the same permutation restricted to a permutation on
          * 2 elements.
          */
-        template <int k>
+        template <int k> requires (2 < k)
         static constexpr Perm<2> contract(Perm<k> p);
 
         /**

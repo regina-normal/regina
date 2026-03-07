@@ -1159,40 +1159,34 @@ class Perm<6> {
 
         /**
          * Extends a <i>k</i>-element permutation to a 6-element permutation,
-         * where 2 ≤ \a k \< 6.
+         * where `2 ≤ k < 6`.
          *
-         * The resulting permutation will map 0,...,<i>k</i>-1 to their
+         * The resulting permutation will map `0,...,k-1` to their
          * respective images under \a p, and will map the "unused" elements
-         * <i>k</i>,...,5 to themselves.
-         *
-         * \tparam k the number of elements for the input permutation;
-         * this must be 2, 3, 4 or 5.
+         * `k,...,5` to themselves.
          *
          * \param p a permutation on \a k elements.
          * \return the same permutation expressed as a permutation on
          * six elements.
          */
-        template <int k>
+        template <int k> requires (2 <= k && k < 6)
         static constexpr Perm<6> extend(Perm<k> p);
 
         /**
-         * Restricts a <i>k</i>-element permutation to an 6-element
-         * permutation, where \a k > 6.
+         * Restricts a <i>k</i>-element permutation to a 6-element
+         * permutation, where `k > 6`.
          *
-         * The resulting permutation will map 0,...,5 to their
+         * The resulting permutation will map `0,...,5` to their
          * respective images under \a p, and will ignore the "unused" images
-         * \a p[6],...,\a p[<i>k</i>-1].
+         * `p[6],...,p[k-1]`.
          *
-         * \pre The given permutation maps 0,...,5 to 0,...,5 in some order.
-         *
-         * \tparam k the number of elements for the input permutation;
-         * this must be strictly greater than 6.
+         * \pre The given permutation maps `0,...,5` to `0,...,5` in some order.
          *
          * \param p a permutation on \a k elements.
          * \return the same permutation restricted to a permutation on
          * 6 elements.
          */
-        template <int k>
+        template <int k> requires (6 < k)
         static constexpr Perm<6> contract(Perm<k> p);
 
         /**

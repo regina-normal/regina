@@ -1034,41 +1034,35 @@ class Perm<3> {
 
         /**
          * Extends a <i>k</i>-element permutation to an 3-element permutation.
-         * where 2 ≤ \a k \< 3.  The only possible value of \a k is 2, but
+         * where `2 ≤ k < 3`.  The only possible value of \a k is 2, but
          * this routine is kept as a template function for consistency
          * with the other classes' Perm<n>::extend() routines.
          *
          * The resulting permutation will map 0,1 to their respective images
          * under \a p, and will map the "unused" element 3 to itself.
          *
-         * \tparam k the number of elements for the input permutation;
-         * this must be exactly 2.
-         *
          * \param p a permutation on two elements.
          * \return the same permutation expressed as a permutation on
          * three elements.
          */
-        template <int k>
+        template <int k> requires (k == 2)
         static constexpr Perm<3> extend(Perm<k> p);
 
         /**
-         * Restricts a <i>k</i>-element permutation to an 3-element
-         * permutation, where \a k > 3.
+         * Restricts a <i>k</i>-element permutation to a 3-element
+         * permutation, where `k > 3`.
          *
          * The resulting permutation will map 0,1,2 to their
          * respective images under \a p, and will ignore the "unused" images
-         * \a p[3],...,\a p[<i>k</i>-1].
+         * `p[3],...,p[k-1]`.
          *
          * \pre The given permutation maps 0,1,2 to 0,1,2 in some order.
-         *
-         * \tparam k the number of elements for the input permutation;
-         * this must be strictly greater than 3.
          *
          * \param p a permutation on \a k elements.
          * \return the same permutation restricted to a permutation on
          * 3 elements.
          */
-        template <int k>
+        template <int k> requires (3 < k)
         static constexpr Perm<3> contract(Perm<k> p);
 
         /**

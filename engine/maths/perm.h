@@ -1288,41 +1288,35 @@ class Perm {
 
         /**
          * Extends a <i>k</i>-element permutation to an <i>n</i>-element
-         * permutation, where 2 ≤ \a k \< \a n.
+         * permutation, where `2 ≤ k < n`.
          *
-         * The resulting permutation will map 0,...,<i>k</i>-1 to their
-         * respective images under \a p, and will map the "unused" elements
-         * <i>k</i>,...,<i>n</i>-1 to themselves.
-         *
-         * \tparam k the number of elements for the input permutation;
-         * this must be at least 2, and strictly less than \a n.
+         * The resulting permutation will map `0,...,k-1` to their respective
+         * images under \a p, and will map the "unused" elements `k,...,n-1`
+         * to themselves.
          *
          * \param p a permutation on \a k elements.
          * \return the same permutation expressed as a permutation on
          * \a n elements.
          */
-        template <int k>
+        template <int k> requires (2 <= k && k < n)
         static constexpr Perm extend(Perm<k> p);
 
         /**
          * Restricts a <i>k</i>-element permutation to an <i>n</i>-element
-         * permutation, where \a k > \a n.
+         * permutation, where `k > n`.
          *
-         * The resulting permutation will map 0,...,<i>n</i>-1 to their
-         * respective images under \a p, and will ignore the "unused" images
-         * \a p[\a n],...,\a p[<i>k</i>-1].
+         * The resulting permutation will map `0,...,n-1` to their respective
+         * images under \a p, and will ignore the "unused" images
+         * `p[n],...,p[k-1]`.
          *
-         * \pre The given permutation maps 0,...,<i>n</i>-1 to 0,...,<i>n</i>-1
+         * \pre The given permutation maps `0,...,n-1` to `0,...,n-1`
          * in some order.
-         *
-         * \tparam k the number of elements for the input permutation;
-         * this must be strictly greater than \a n.
          *
          * \param p a permutation on \a k elements.
          * \return the same permutation restricted to a permutation on
          * \a n elements.
          */
-        template <int k>
+        template <int k> requires (n < k)
         static constexpr Perm contract(Perm<k> p);
 
         /**
@@ -2178,9 +2172,8 @@ std::string Perm<n>::trunc(int len) const {
 // thinks these are new non-static functions instead.
 #ifndef __DOXYGEN
 template <int n>
-template <int k>
+template <int k> requires (2 <= k && k < n)
 constexpr Perm<n> Perm<n>::extend(Perm<k> p) {
-    static_assert(k < n, "Perm<n>::extend<k> requires k < n.");
     static_assert(n > 7, "The generic implementation of Perm<n>::extend() "
         "should not be used for n <= 7.");
 
@@ -2200,9 +2193,8 @@ constexpr Perm<n> Perm<n>::extend(Perm<k> p) {
 }
 
 template <int n>
-template <int k>
+template <int k> requires (n < k)
 constexpr Perm<n> Perm<n>::contract(Perm<k> p) {
-    static_assert(n < k, "Perm<n>::contract<k> requires n < k.");
     static_assert(n > 7, "The generic implementation of Perm<n>::contract() "
         "should not be used for n <= 7.");
 
@@ -2537,7 +2529,7 @@ namespace regina {
 // We hide them from doxygen since specialisations can confuse it.
 #ifndef __DOXYGEN
 
-template <int k>
+template <int k> requires (2 < k)
 inline constexpr Perm<2> Perm<2>::contract(Perm<k> p) {
     static_assert(k >= 8, "The generic implementation of Perm<2>::contract<k> "
         "requires k >= 8.");
@@ -2581,7 +2573,7 @@ inline constexpr Perm<3> Perm<3>::extend(Perm<2> p) {
         p.permCode() == 0 ? code012 : code102));
 }
 
-template <int k>
+template <int k> requires (3 < k)
 inline constexpr Perm<3> Perm<3>::contract(Perm<k> p) {
     static_assert(k >= 5, "The generic implementation of Perm<3>::contract<k> "
         "requires k >= 5.");
@@ -2611,11 +2603,8 @@ inline constexpr Perm<4> Perm<4>::extend(Perm<3> p) {
     return detail::PermSubSn<4, 3>::at(p.SnIndex());
 }
 
-template <int k>
+template <int k> requires (4 < k)
 inline constexpr Perm<4> Perm<4>::contract(Perm<k> p) {
-    static_assert(k >= 5, "The generic implementation of Perm<4>::contract<k> "
-        "requires k >= 5.");
-
     return Perm<4>(p[0], p[1], p[2], p[3]);
 }
 
@@ -2641,10 +2630,8 @@ inline constexpr Perm<5> Perm<5>::extend(Perm<4> p) {
     return detail::PermSubSn<5, 4>::at(p.SnIndex());
 }
 
-template <int k>
+template <int k> requires (5 < k)
 constexpr Perm<5> Perm<5>::contract(Perm<k> p) {
-    static_assert(k > 5, "Perm<5>::contract<k> requires k > 5.");
-
     return Perm<5>(p[0], p[1], p[2], p[3], p[4]);
 }
 
@@ -2691,10 +2678,8 @@ inline constexpr Perm<6> Perm<6>::extend(Perm<5> p) {
         p6 * Perm<6>(static_cast<Code2>(153 /* 123450 */));
 }
 
-template <int k>
+template <int k> requires (6 < k)
 constexpr Perm<6> Perm<6>::contract(Perm<k> p) {
-    static_assert(k > 6, "Perm<6>::contract<k> requires k > 6.");
-
     return Perm<6>(p[0], p[1], p[2], p[3], p[4], p[5]);
 }
 
@@ -2731,10 +2716,10 @@ inline constexpr Perm<7> Perm<7>::extend(Perm<2> p) {
     return Perm<7>(static_cast<Code2>(p.permCode() == 0 ? 0 : 721));
 }
 
-template <int k>
+template <int k> requires (2 <= k && k < 7)
 inline constexpr Perm<7> Perm<7>::extend(Perm<k> p) {
-    static_assert(2 < k && k < 7,
-        "The generic implementation of Perm<7>::extend<k> requires 2 < k < 7.");
+    static_assert(2 < k,
+        "The generic implementation of Perm<7>::extend<k> requires 2 < k.");
 
     Perm<7> p7(static_cast<Code2>(p.SnIndex()));
     // Now p7 acts on {(7-k),...,6} in the way that p acts on {0,...,(k-1)}.
@@ -2744,10 +2729,8 @@ inline constexpr Perm<7> Perm<7>::extend(Perm<k> p) {
     return rot(k) * p7 * rot(7 - k);
 }
 
-template <int k>
+template <int k> requires (7 < k)
 constexpr Perm<7> Perm<7>::contract(Perm<k> p) {
-    static_assert(k > 7, "Perm<7>::contract<k> requires k > 7.");
-
     return Perm<7>(p[0], p[1], p[2], p[3], p[4], p[5], p[6]);
 }
 
