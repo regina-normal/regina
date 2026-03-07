@@ -155,7 +155,7 @@ struct SharedPacket {
          *
          * For now we hard-code the return type as int64_t, since in practice
          * the SwiftUI will only be built on 64-bit architectures (and there
-         * is a static assert to ensure that 64 bits exactly what we need).
+         * is a static assert to ensure that 64 bits is exactly what we need).
          *
          * If this is a null packet, then the ID returned will be 0.
          */
