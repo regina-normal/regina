@@ -2676,13 +2676,14 @@ concept PacketClass =
     };
 
 /**
- * A data type that can be held within one of Regina's wrapped packet types.
+ * A data type (typically mathematical) that can be held within one of Regina's
+ * wrapped packet types.
  *
  * Specifically, this requires that data of type \a T can be held in the
  * wrapped packet type `PacketOf<T>`.
  *
- * Examples of types that adhere to this concept include `Triangulation<dim>`
- * and Link.
+ * Examples of such types \a T include `Triangulation<dim>`, Link, and
+ * NormalSurfaces.
  *
  * \ingroup packet
  */

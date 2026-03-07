@@ -35,6 +35,8 @@
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
+#include "triangulation/generic.h"
+#include "utilities/typeutils.h"
 #include "../helpers.h"
 #include "../docstrings/foreign/isosig.h"
 
@@ -44,27 +46,22 @@ void addForeignIsoSig(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN_MAIN
 
     m.def("readSigList", [](int dimension, const char* filename,
-            unsigned colSigs, int colLabels, unsigned long ignoreLines) {
-        if (dimension > 4) {
-            throw regina::InvalidArgument(
-                "The python version of readSigList() can only work "
-                "with Regina's standard dimensions.");
-        }
-        switch (dimension) {
-            case 0:
-                return regina::readSigList<regina::Link>(
-                    filename, colSigs, colLabels, ignoreLines);
-            case 2:
-                return regina::readSigList<regina::Triangulation<2>>(
-                    filename, colSigs, colLabels, ignoreLines);
-            case 3:
-                return regina::readSigList<regina::Triangulation<3>>(
-                    filename, colSigs, colLabels, ignoreLines);
-            case 4:
-                return regina::readSigList<regina::Triangulation<4>>(
-                    filename, colSigs, colLabels, ignoreLines);
-            default:
-                return std::shared_ptr<regina::Container>();
+            int colSigs, int colLabels, size_t ignoreLines) {
+        if (dimension == 0) {
+            return regina::readSigList<regina::Link>(
+                filename, colSigs, colLabels, ignoreLines);
+        } else {
+            try {
+                return regina::select_constexpr<2, regina::maxDim() + 1,
+                        std::shared_ptr<regina::Container>>(dimension,
+                        [=](auto dim) {
+                    return regina::readSigList<regina::Triangulation<dim>>(
+                        filename, colSigs, colLabels, ignoreLines);
+                });
+            } catch (const std::runtime_error&) {
+                throw regina::InvalidArgument(
+                    "The given dimension is out of range.");
+            }
         }
     },
     pybind11::arg("dimension"),

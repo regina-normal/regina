@@ -285,8 +285,8 @@ Version 7.5  [ TODO ]
                 InputIteratorFor, Iterable, PacketIterator,
                 RandomAccessIteratorFor, SelfSentinelInputIterator (defined in
                 concepts/iterator.h)
-              + ArbitraryPrecisionIntegerVector, IntegerVector (defined in
-                concepts/maths.h)
+              + ArbitraryPrecisionIntegerVector, IntegerVector,
+                SigReconstructible (defined in concepts/maths.h)
               + PacketClass, PacketHeldType (defined in concepts/packet.h)
               + ArrayOf, ConstRefArrayOf (defined in concepts/array.h)
               + BanConstraint, LPConstraint, LPSubspace (defined in
@@ -305,6 +305,8 @@ Version 7.5  [ TODO ]
           from Python's RuntimeError).
         - The bindings for tightEncoding() now accept integers of any size
           (using C++ long where possible, and regina::Integer otherwise).
+        - The bindings for readSigList() can now work with triangulations of
+          any dimension (not just the standard dimensions 2, 3 and 4).
         - Removed the bindings TreeEnumeration_EulerPositive..., since the
           linear constraint LPConstraintEulerPositive was never meant to be
           used with TreeEnumeration (since the constraint does not map out a

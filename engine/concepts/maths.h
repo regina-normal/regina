@@ -29,7 +29,8 @@
  **************************************************************************/
 
 /*! \file concepts/maths.h
- *  \brief Concepts related to "large" mathematical types, such as vectors.
+ *  \brief Concepts related to "large" mathematical types, such as vectors,
+ *  links, and triangulations.
  */
 
 #ifndef __REGINA_CONCEPTS_MATHS_H
@@ -72,6 +73,19 @@ concept IntegerVector =
         []<typename U>(Vector<U>&){}(x); // derived from Vector<...>
     } &&
     ReginaInteger<typename T::value_type>;
+
+/**
+ * One of Regina's mathematical types that allows reconstruction from
+ * signatures, up to combinatorial isomorphism.
+ *
+ * Examples of such types include `Triangulation<dim>` and Link.
+ */
+template <typename T>
+concept SigReconstructible =
+    requires(const T x, const std::string sig) {
+        { x.sig() } -> std::same_as<std::string>;
+        { T::fromSig(sig) } -> std::same_as<T>;
+    };
 
 } // namespace regina
 

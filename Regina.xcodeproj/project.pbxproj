@@ -3641,6 +3641,21 @@
 		056AEDBF2A4BC65E00EAF4FA /* links4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = links4.cpp; sourceTree = "<group>"; };
 		056AEDC12A4BC66A00EAF4FA /* links3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = links3.cpp; sourceTree = "<group>"; };
 		056AEDC32A4CFFDE00EAF4FA /* triangulation3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation3.cpp; sourceTree = "<group>"; };
+		056BEB5F2F5C28F9001AF328 /* file4.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = file4.rga; sourceTree = "<group>"; };
+		056BEB602F5C28F9001AF328 /* file5.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = file5.rga; sourceTree = "<group>"; };
+		056BEB612F5C28F9001AF328 /* file6.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = file6.rga; sourceTree = "<group>"; };
+		056BEB622F5C28F9001AF328 /* filters-gen2.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "filters-gen2.rga"; sourceTree = "<group>"; };
+		056BEB632F5C28F9001AF328 /* filters-gen3.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "filters-gen3.rga"; sourceTree = "<group>"; };
+		056BEB642F5C28F9001AF328 /* readsiglist.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = readsiglist.out; sourceTree = "<group>"; };
+		056BEB652F5C28F9001AF328 /* readsiglist.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = readsiglist.test; sourceTree = "<group>"; };
+		056BEB662F5C28F9001AF328 /* sigs-dim2.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sigs-dim2.txt"; sourceTree = "<group>"; };
+		056BEB672F5C28F9001AF328 /* sigs-dim3.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sigs-dim3.txt"; sourceTree = "<group>"; };
+		056BEB682F5C28F9001AF328 /* sigs-dim4.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sigs-dim4.txt"; sourceTree = "<group>"; };
+		056BEB692F5C28F9001AF328 /* sigs-dim5.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sigs-dim5.txt"; sourceTree = "<group>"; };
+		056BEB6A2F5C28F9001AF328 /* sigs-dim6.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sigs-dim6.txt"; sourceTree = "<group>"; };
+		056BEB6B2F5C28F9001AF328 /* sigs-dim7.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sigs-dim7.txt"; sourceTree = "<group>"; };
+		056BEB6C2F5C28F9001AF328 /* sigs-dim8.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sigs-dim8.txt"; sourceTree = "<group>"; };
+		056BEB6D2F5C28F9001AF328 /* sigs-links.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sigs-links.txt"; sourceTree = "<group>"; };
 		056E071E1F994D9000DF136B /* graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graph.h; sourceTree = "<group>"; };
 		056EC54F2A288F2E006EE87A /* default_theme.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = default_theme.cpp; sourceTree = "<group>"; };
 		056F7469276754CC00F7EAC9 /* linkalgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkalgebra.h; sourceTree = "<group>"; };
@@ -5736,6 +5751,11 @@
 				050F5D8C1B9BAB9C00C1F681 /* file1.rga */,
 				050F5D8D1B9BAB9C00C1F681 /* file2.rga */,
 				05199A2F25C63B7F0006B8FA /* file3.rga */,
+				056BEB5F2F5C28F9001AF328 /* file4.rga */,
+				056BEB602F5C28F9001AF328 /* file5.rga */,
+				056BEB612F5C28F9001AF328 /* file6.rga */,
+				056BEB622F5C28F9001AF328 /* filters-gen2.rga */,
+				056BEB632F5C28F9001AF328 /* filters-gen3.rga */,
 				0591FB332E5C38C70061D270 /* flags.out.v2 */,
 				0591FB342E5C38C70061D270 /* flags.out.v3 */,
 				0553FBA12AF2117300BE89A7 /* flags.test */,
@@ -5795,6 +5815,8 @@
 				059802772667067B002D5D57 /* presentations.out */,
 				0598027F2667067C002D5D57 /* presentations.test */,
 				050F5D9E1B9BAB9C00C1F681 /* README.txt */,
+				056BEB642F5C28F9001AF328 /* readsiglist.out */,
+				056BEB652F5C28F9001AF328 /* readsiglist.test */,
 				05772F04270CFB6000D26D8A /* refs.out */,
 				05772F02270CFB6000D26D8A /* refs.test */,
 				0591FB352E5C38C70061D270 /* repr.out.v2 */,
@@ -5808,6 +5830,14 @@
 				050F5D9F1B9BAB9C00C1F681 /* sample.pdf */,
 				05CAE60B27429B18007C93F3 /* sets.out */,
 				05CAE60E27429B19007C93F3 /* sets.test */,
+				056BEB662F5C28F9001AF328 /* sigs-dim2.txt */,
+				056BEB672F5C28F9001AF328 /* sigs-dim3.txt */,
+				056BEB682F5C28F9001AF328 /* sigs-dim4.txt */,
+				056BEB692F5C28F9001AF328 /* sigs-dim5.txt */,
+				056BEB6A2F5C28F9001AF328 /* sigs-dim6.txt */,
+				056BEB6B2F5C28F9001AF328 /* sigs-dim7.txt */,
+				056BEB6C2F5C28F9001AF328 /* sigs-dim8.txt */,
+				056BEB6D2F5C28F9001AF328 /* sigs-links.txt */,
 				05431FD41C40F67C009BC072 /* skeleton.out */,
 				05431FD51C40F67C009BC072 /* skeleton.test */,
 				05CAE6A3274B94C9007C93F3 /* snappea.out */,

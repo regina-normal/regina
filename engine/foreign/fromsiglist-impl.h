@@ -53,11 +53,11 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 namespace regina {
 
 class Link;
-template <int dim> requires (supportedDim(dim)) class Triangulation;
 
-template <typename ObjectType>
-std::shared_ptr<Container> readSigList(const char *filename, unsigned colSigs,
-        int colLabels, unsigned long ignoreLines) {
+template <SigReconstructible ObjectType>
+requires PacketHeldType<ObjectType>
+std::shared_ptr<Container> readSigList(const char *filename, int colSigs,
+        int colLabels, size_t ignoreLines) {
     // Open the file.
     std::ifstream in(filename);
     if (! in)
@@ -66,8 +66,7 @@ std::shared_ptr<Container> readSigList(const char *filename, unsigned colSigs,
     // Ignore the specified number of lines.
     std::string line;
 
-    unsigned long i;
-    for (i = 0; i < ignoreLines; i++) {
+    for (size_t i = 0; i < ignoreLines; ++i) {
         std::getline(in, line);
         if (in.eof())
             return std::make_shared<Container>();
@@ -77,7 +76,6 @@ std::shared_ptr<Container> readSigList(const char *filename, unsigned colSigs,
     auto ans = std::make_shared<Container>();
     std::string errStrings;
 
-    int col;
     std::string token;
 
     std::string sig;
@@ -96,12 +94,11 @@ std::shared_ptr<Container> readSigList(const char *filename, unsigned colSigs,
 
         sig.clear();
         label.clear();
-        for (col = 0; col <= static_cast<int>(colSigs) ||
-                col <= colLabels; col++) {
+        for (int col = 0; col <= colSigs || col <= colLabels; ++col) {
             tokens >> token;
             if (token.empty())
                 break;
-            if (col == static_cast<int>(colSigs))
+            if (col == colSigs)
                 sig = token;
             if (col == colLabels)
                 label = token;
@@ -124,7 +121,7 @@ std::shared_ptr<Container> readSigList(const char *filename, unsigned colSigs,
         std::ostringstream msg;
         msg << "The following signature(s) could not be interpreted as ";
         if constexpr (std::is_same_v<ObjectType, Link>)
-            msg << "knots:\n";
+            msg << "knots or links:\n";
         else
             msg << ObjectType::dimension << "-manifold triangulations:\n";
         msg << errStrings;
