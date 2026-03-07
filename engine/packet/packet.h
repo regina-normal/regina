@@ -69,6 +69,43 @@ template <typename Held> class XMLWriter;
  */
 
 /**
+ * A class that is equal to or derived from one of Regina's packet types.
+ *
+ * This concept does _not_ include the virtual base class Packet.
+ * It does, however, include SurfaceFilter (which represents a single packet
+ * type in Regina, but which itself is a virtual base class for different
+ * kinds of filters).
+ *
+ * \ingroup packet
+ */
+template <typename T>
+concept PacketClass =
+    std::derived_from<T, Packet> &&
+    requires {
+        { T::typeID } -> std::same_as<const PacketType&>;
+    };
+
+/**
+ * A data type (typically mathematical) that can be held within one of Regina's
+ * wrapped packets.  Specifically, such a type \a T can be held in the wrapped
+ * packet type `PacketOf<T>`.
+ *
+ * Examples of such types \a T include `Triangulation<dim>`, Link, and
+ * NormalSurfaces.
+ *
+ * See the Packet class notes for an overview of how wrapped packets work, as
+ * well as instructions on how to create a new wrapped packet type.
+ *
+ * \ingroup packet
+ */
+template <typename T>
+concept PacketHeldType =
+    std::derived_from<T, PacketData<T>> &&
+    requires {
+        { packetTypeHolds<T> } -> std::same_as<const PacketType&>;
+    };
+
+/**
  * Defines various constants and virtual functions for a subclass of Packet.
  *
  * Every subclass of Packet \a must include REGINA_PACKET at the beginning
@@ -2086,6 +2123,11 @@ enum class PacketHeldBy {
  */
 template <typename Held>
 class PacketOf : public Packet, public Held {
+    // We can't make PacketHeldType<Held> a formal type requirement since this
+    // would end up being enforced within Held's parent class PacketData<Held>,
+    // before Held can be defined.  We can, however, assert it here instead.
+    static_assert(PacketHeldType<Held>);
+
     REGINA_PACKET(packetTypeHolds<Held>, PacketInfo::name(typeID))
 
     public:
@@ -2499,10 +2541,8 @@ class PacketData {
  *
  * \ingroup packet
  */
-template <typename Held>
+template <PacketHeldType Held>
 std::shared_ptr<PacketOf<Held>> make_packet(Held&& src) {
-    static_assert(std::is_class_v<Held>,
-        "The template argument to make_packet() must be a plain class type.");
     return std::make_shared<PacketOf<Held>>(std::forward<Held>(src));
 }
 
@@ -2533,11 +2573,9 @@ std::shared_ptr<PacketOf<Held>> make_packet(Held&& src) {
  *
  * \ingroup packet
  */
-template <typename Held>
+template <PacketHeldType Held>
 std::shared_ptr<PacketOf<Held>> make_packet(Held&& src,
         const std::string& label) {
-    static_assert(std::is_class_v<Held>,
-        "The template argument to make_packet() must be a plain class type.");
     auto ans = std::make_shared<PacketOf<Held>>(std::forward<Held>(src));
     ans->setLabel(label);
     return ans;
@@ -2571,7 +2609,7 @@ std::shared_ptr<PacketOf<Held>> make_packet(Held&& src,
  *
  * \ingroup packet
  */
-template <typename Held, typename... Args>
+template <PacketHeldType Held, typename... Args>
 std::shared_ptr<PacketOf<Held>> make_packet(std::in_place_t, Args&&... args) {
     return std::make_shared<PacketOf<Held>>(
         std::in_place, std::forward<Args>(args)...);
@@ -2597,7 +2635,7 @@ std::shared_ptr<PacketOf<Held>> make_packet(std::in_place_t, Args&&... args) {
  *
  * \ingroup packet
  */
-template <typename Held>
+template <PacketHeldType Held>
 std::shared_ptr<PacketOf<Held>> make_packet() {
     return std::make_shared<PacketOf<Held>>();
 }
@@ -2606,16 +2644,16 @@ std::shared_ptr<PacketOf<Held>> make_packet() {
  * Casts a reference from Packet to \a Held, assuming that the given
  * packet is actually a PacketOf<Held>.
  *
- * This is analogous to static_cast<Held&>().  It is provided
+ * This is analogous to `static_cast<Held&>()`.  It is provided
  * because we cannot perform a direct static cast between Packet and \a Held
  * (since the two classes do not have a one-way inheritance relationship).
  *
  * \pre The given reference refers to an object of type PacketOf<Held>.
  *
- * \warning If you try to use static_packet_cast<Triangulation<3>> on a
- * reference to a PacketOf<SnapPeaTriangulation>, this will _not_ work,
- * since PacketOf<SnapPeaTriangulation> is _not_ a subclass of
- * PacketOf<Triangulation<3>>.  The behaviour in this scenario is undefined.
+ * \warning If you try to use `static_packet_cast<Triangulation<3>>` on a
+ * reference to a `PacketOf<SnapPeaTriangulation>`, this will _not_ work,
+ * since `PacketOf<SnapPeaTriangulation>` is _not_ a subclass of
+ * `PacketOf<Triangulation<3>>`.  The behaviour in this scenario is undefined.
  * You should use regina::static_triangulation3_cast() instead.
  *
  * \nopython Casting is unnecessary in Python.
@@ -2625,7 +2663,7 @@ std::shared_ptr<PacketOf<Held>> make_packet() {
  *
  * \ingroup packet
  */
-template <typename Held>
+template <PacketHeldType Held>
 Held& static_packet_cast(Packet& p) {
     return static_cast<PacketOf<Held>&>(p);
 }
@@ -2634,16 +2672,16 @@ Held& static_packet_cast(Packet& p) {
  * Casts a const reference from Packet to \a Held, assuming that the given
  * packet is actually a PacketOf<Held>.
  *
- * This is analogous to static_cast<const Held&>().  It is provided
+ * This is analogous to `static_cast<const Held&>()`.  It is provided
  * because we cannot perform a direct static cast between Packet and \a Held
  * (since the two classes do not have a one-way inheritance relationship).
  *
  * \pre The given reference refers to an object of type PacketOf<Held>.
  *
- * \warning If you try to use static_packet_cast<Triangulation<3>> on a
- * reference to a PacketOf<SnapPeaTriangulation>, this will _not_ work,
- * since PacketOf<SnapPeaTriangulation> is _not_ a subclass of
- * PacketOf<Triangulation<3>>.  The behaviour in this scenario is undefined.
+ * \warning If you try to use `static_packet_cast<Triangulation<3>>` on a
+ * reference to a `PacketOf<SnapPeaTriangulation>`, this will _not_ work,
+ * since `PacketOf<SnapPeaTriangulation>` is _not_ a subclass of
+ * `PacketOf<Triangulation<3>>`.  The behaviour in this scenario is undefined.
  * You should use regina::static_triangulation3_cast() instead.
  *
  * \nopython Casting is unnecessary in Python.
@@ -2653,42 +2691,10 @@ Held& static_packet_cast(Packet& p) {
  *
  * \ingroup packet
  */
-template <typename Held>
+template <PacketHeldType Held>
 const Held& static_packet_cast(const Packet& p) {
     return static_cast<const PacketOf<Held>&>(p);
 }
-
-/**
- * A class that is equal to or derived from one of Regina's packet types.
- *
- * This concept does _not_ include the virtual base class Packet.
- * It does, however, include SurfaceFilter (which represents a single packet
- * type in Regina, but which itself is a virtual base class for different
- * kinds of filters).
- *
- * \ingroup packet
- */
-template <typename T>
-concept PacketClass =
-    std::derived_from<T, Packet> &&
-    requires {
-        { T::typeID } -> std::same_as<const PacketType&>;
-    };
-
-/**
- * A data type (typically mathematical) that can be held within one of Regina's
- * wrapped packet types.
- *
- * Specifically, this requires that data of type \a T can be held in the
- * wrapped packet type `PacketOf<T>`.
- *
- * Examples of such types \a T include `Triangulation<dim>`, Link, and
- * NormalSurfaces.
- *
- * \ingroup packet
- */
-template <typename T>
-concept PacketHeldType = std::derived_from<T, PacketData<T>>;
 
 /**
  * Reads a Regina data file, and returns the corresponding packet tree.
