@@ -219,24 +219,21 @@ class XMLTreeResolver {
          * having the given ID within the the XML data file.
          *
          * This is similar to resolve(), except that it will only find packets
-         * of the given type.  If there is a packet registered with the given
-         * ID but it is not equal to or derived from type \a PacketType, then
-         * then this routine will return \c null (as though the packet had not
-         * been found).
+         * whose type is equal to or derived from \a P.  If there is a packet
+         * registered with the given ID but its type is _not_ equal to or
+         * derived from \a P, then this routine will return \c null (as though
+         * the packet had not been found).
          *
          * See resolve() for more information on the general resolution
          * process and string IDs.
          *
-         * \tparam PacketType the type of packet that is required; this
-         * must be a subclass of Packet.
-         *
          * \param id the string ID to query.
          * \return the packet with the given ID, or \c null if either there is
          * no such packet registered so far or if there is such a packet but
-         * its type is not equal to or derived from \a packetType.
+         * its type is not equal to or derived from \a P.
          */
-        template <typename PacketType>
-        std::shared_ptr<PacketType> resolveAs(const std::string& id) const;
+        template <PacketClass P>
+        std::shared_ptr<P> resolveAs(const std::string& id) const;
 
         /**
          * Identifies if some packet holding the given data type has been
@@ -250,16 +247,13 @@ class XMLTreeResolver {
          * See resolve() for more information on the general resolution
          * process and string IDs.
          *
-         * \tparam Held the data type that is required; this must be a
-         * type that can be stored in a PacketOf<Held>.
-         *
          * \param id the string ID to query.
          * \return the data held by the packet with the given ID, or \c null
          * if either there is no such packet registered so far, or if there
          * is such a packet but its type is not equal to or derived from
          * PacketOf<Held>.
          */
-        template <typename Held>
+        template <PacketHeldType Held>
         Held* resolvePacketData(const std::string& id) const;
 
         /**
@@ -318,19 +312,14 @@ inline std::shared_ptr<Packet> XMLTreeResolver::resolve(const std::string& id)
     return (pos == ids_.end() ? std::shared_ptr<Packet>() : pos->second);
 }
 
-template <typename PacketType>
-inline std::shared_ptr<PacketType> XMLTreeResolver::resolveAs(
-        const std::string& id) const {
-    static_assert(std::is_base_of_v<Packet, PacketType>,
-        "XMLTreeResolver::resolveAs<T> requires T to be derived from Packet.");
-    return std::dynamic_pointer_cast<PacketType>(resolve(id));
+template <PacketClass P>
+inline std::shared_ptr<P> XMLTreeResolver::resolveAs(const std::string& id)
+        const {
+    return std::dynamic_pointer_cast<P>(resolve(id));
 }
 
-template <typename Held>
+template <PacketHeldType Held>
 inline Held* XMLTreeResolver::resolvePacketData(const std::string& id) const {
-    static_assert(std::is_base_of_v<PacketData<Held>, Held>,
-        "XMLTreeResolver::resolvePacketData<T> requires T to be a type "
-        "that is held by PacketOf<T>.");
     auto ans = std::dynamic_pointer_cast<PacketOf<Held>>(resolve(id));
     return (ans ? ans.get() : nullptr);
 }

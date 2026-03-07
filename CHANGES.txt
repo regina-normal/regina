@@ -287,7 +287,7 @@ Version 7.5  [ TODO ]
                 concepts/iterator.h)
               + ArbitraryPrecisionIntegerVector, IntegerVector (defined in
                 concepts/maths.h)
-              + PacketClass (defined in concepts/packet.h)
+              + PacketClass, PacketHeldType (defined in concepts/packet.h)
               + ArrayOf, ConstRefArrayOf (defined in concepts/array.h)
               + BanConstraint, LPConstraint, LPSubspace (defined in
                 enumerate/treelp.h)

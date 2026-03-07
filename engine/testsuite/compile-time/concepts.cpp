@@ -328,6 +328,10 @@ static_assert(! regina::PacketClass<regina::Packet>);
 static_assert(regina::PacketClass<regina::SurfaceFilter>);
 static_assert(regina::PacketClass<regina::SurfaceFilterCombination>);
 
+static_assert(regina::PacketHeldType<regina::Link>);
+static_assert(! regina::PacketHeldType<regina::PacketOf<regina::Link>>);
+static_assert(! regina::PacketHeldType<regina::Container>);
+
 static_assert(regina::InputIteratorFor<std::vector<int>::iterator, int>);
 static_assert(regina::InputIteratorFor<std::vector<int>::const_iterator, int>);
 

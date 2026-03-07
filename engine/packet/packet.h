@@ -2005,23 +2005,6 @@ class Packet : public std::enable_shared_from_this<Packet>,
 };
 
 /**
- * A class that is equal to or derived from one of Regina's packet types.
- *
- * This concept does _not_ include the virtual base class Packet.
- * It does, however, include SurfaceFilter (which represents a single packet
- * type in Regina, but which itself is a virtual base class for different
- * kinds of filters).
- *
- * \ingroup packet
- */
-template <typename T>
-concept PacketClass =
-    std::derived_from<T, Packet> &&
-    requires {
-        { T::typeID } -> std::same_as<const PacketType&>;
-    };
-
-/**
  * Internal constants that support wrapped packets.
  *
  * These constants indicate whether an object of type \a Held is in fact part
@@ -2674,6 +2657,37 @@ template <typename Held>
 const Held& static_packet_cast(const Packet& p) {
     return static_cast<const PacketOf<Held>&>(p);
 }
+
+/**
+ * A class that is equal to or derived from one of Regina's packet types.
+ *
+ * This concept does _not_ include the virtual base class Packet.
+ * It does, however, include SurfaceFilter (which represents a single packet
+ * type in Regina, but which itself is a virtual base class for different
+ * kinds of filters).
+ *
+ * \ingroup packet
+ */
+template <typename T>
+concept PacketClass =
+    std::derived_from<T, Packet> &&
+    requires {
+        { T::typeID } -> std::same_as<const PacketType&>;
+    };
+
+/**
+ * A data type that can be held within one of Regina's wrapped packet types.
+ *
+ * Specifically, this requires that data of type \a T can be held in the
+ * wrapped packet type `PacketOf<T>`.
+ *
+ * Examples of types that adhere to this concept include `Triangulation<dim>`
+ * and Link.
+ *
+ * \ingroup packet
+ */
+template <typename T>
+concept PacketHeldType = std::derived_from<T, PacketData<T>>;
 
 /**
  * Reads a Regina data file, and returns the corresponding packet tree.
