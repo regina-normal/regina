@@ -292,8 +292,9 @@ Version 7.5  [ TODO ]
                 (defined in utilities/intutils.h)
               + InherentlyTightEncodable, Readable, StandardStringifiable,
                 Stringifiable, Writable (defined in concepts/io.h)
-              + BidirectionalIteratorFor, CharIterator, ForwardIteratorFor,
-                InputIteratorFor, Iterable, PacketIterator,
+              + BidirectionalIterableFor, BidirectionalIteratorFor,
+                CharIterator, ForwardIteratorFor, InputIteratorFor, Iterable,
+                IterableFor, PacketIterator, RandomAccessIterableFor,
                 RandomAccessIteratorFor, SelfSentinelInputIterator (defined in
                 concepts/iterator.h)
               + ArbitraryPrecisionIntegerVector, IntegerVector,

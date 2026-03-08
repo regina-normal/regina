@@ -182,11 +182,7 @@ class AbelianGroup :
          * \param invFac a container or view holding the list of invariant
          * factors, as described above.
          */
-        template <typename Container>
-        requires requires(const Container c) {
-            { c.begin() } -> BidirectionalIteratorFor<Integer>;
-            { c.end() } -> BidirectionalIteratorFor<Integer>;
-        }
+        template <BidirectionalIterableFor<Integer> Container>
         [[deprecated]] AbelianGroup(size_t rank, const Container& invFac);
         /**
          * Creates the abelian group defined by the given presentation matrix.
@@ -619,11 +615,7 @@ inline AbelianGroup::AbelianGroup(size_t rank,
     }
 }
 
-template <typename Container>
-requires requires(const Container c) {
-    { c.begin() } -> BidirectionalIteratorFor<Integer>;
-    { c.end() } -> BidirectionalIteratorFor<Integer>;
-}
+template <BidirectionalIterableFor<Integer> Container>
 inline AbelianGroup::AbelianGroup(size_t rank, const Container& invFac) :
         AbelianGroup(rank, invFac.begin(), invFac.end()) {
 }

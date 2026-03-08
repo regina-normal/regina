@@ -154,7 +154,10 @@ concept PacketIterator =
         std::same_as<const Packet&, decltype(*std::declval<T&>())>);
 
 /**
- * A type that can be iterated over via `begin()` and `end()` member functions.
+ * A container-like type that can be iterated over via `begin()` and `end()`
+ * member functions.
+ *
+ * The corresponding iterator type must be a forward iterator.
  *
  * \ingroup concepts
  */
@@ -166,6 +169,63 @@ concept Iterable =
         requires std::same_as<decltype(x.begin()), decltype(x.end())>;
         requires std::forward_iterator<decltype(x.begin())>;
     };
+
+/**
+ * A container-like type that can be iterated over via `begin()`
+ * and `end()` member functions, and whose elements can be assigned or
+ * converted to the type \a Target.
+ *
+ * The corresponding iterator type must be a forward iterator.
+ *
+ * Here _elements_ means the values obtained when dereferencing iterators.
+ * When converting elements to the type \a Target, both construction and the
+ * assignment operator should be supported, and implicit conversion should be
+ * supported also.
+ *
+ * \ingroup concepts
+ */
+template <typename T, typename Target>
+concept IterableFor =
+    Iterable<T> &&
+    ForwardIteratorFor<decltype(std::declval<T>().begin()), Target>;
+
+/**
+ * A container-like type that can be iterated over both forwards and backwards
+ * via `begin()` and `end()` member functions, and whose elements can be
+ * assigned or converted to the type \a Target.
+ *
+ * The corresponding iterator type must be a bidirectional iterator.
+ *
+ * Here _elements_ means the values obtained when dereferencing iterators.
+ * When converting elements to the type \a Target, both construction and the
+ * assignment operator should be supported, and implicit conversion should be
+ * supported also.
+ *
+ * \ingroup concepts
+ */
+template <typename T, typename Target>
+concept BidirectionalIterableFor =
+    Iterable<T> &&
+    BidirectionalIteratorFor<decltype(std::declval<T>().begin()), Target>;
+
+/**
+ * A container-like type that can be iterated over in a random access manner
+ * via `begin()` and `end()` member functions, and whose elements can be
+ * assigned or converted to the type \a Target.
+ *
+ * The corresponding iterator type must be a random access iterator.
+ *
+ * Here _elements_ means the values obtained when dereferencing iterators.
+ * When converting elements to the type \a Target, both construction and the
+ * assignment operator should be supported, and implicit conversion should be
+ * supported also.
+ *
+ * \ingroup concepts
+ */
+template <typename T, typename Target>
+concept RandomAccessIterableFor =
+    Iterable<T> &&
+    RandomAccessIteratorFor<decltype(std::declval<T>().begin()), Target>;
 
 } // namespace regina
 
