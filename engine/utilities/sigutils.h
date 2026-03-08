@@ -260,8 +260,8 @@ struct [[deprecated]] Base64SigEncoding {
      * resulting trits will be stored; it must be possible to write and advance
      * this iterator at least three times.
      */
-    template <std::output_iterator<uint8_t> Iterator>
-    static void decodeTrits(char c, Iterator result) {
+    template <std::output_iterator<uint8_t> DestIterator>
+    static void decodeTrits(char c, DestIterator result) {
         auto val = static_cast<uint8_t>(decodeSingle(c));
         *result++ = static_cast<uint8_t>(val & 3);
         *result++ = static_cast<uint8_t>((val >> 2) & 3);
@@ -832,11 +832,11 @@ class Base64SigDecoder {
          * \param count the number of integers to decode.
          * \param nChars the number of base64 characters to read.
          */
-        template <std::output_iterator<int> OutputIterator>
-        requires CppInteger<std::iter_value_t<OutputIterator>>
-        void decodeInts(OutputIterator output, size_t count, int nChars) {
+        template <OutputIterator DestIterator>
+        requires CppInteger<std::iter_value_t<DestIterator>>
+        void decodeInts(DestIterator output, size_t count, int nChars) {
             for (size_t i = 0; i < count; ++i)
-                *output++ = decodeInt<std::iter_value_t<OutputIterator>>(nChars);
+                *output++ = decodeInt<std::iter_value_t<DestIterator>>(nChars);
         }
 
         /**
@@ -896,8 +896,8 @@ class Base64SigDecoder {
          * resulting trits will be stored; it must be possible to write and
          * advance this iterator at least three times.
          */
-        template <std::output_iterator<uint8_t> OutputIterator>
-        void decodeTrits(OutputIterator result) {
+        template <std::output_iterator<uint8_t> DestIterator>
+        void decodeTrits(DestIterator result) {
             uint8_t val = decodeSingle<uint8_t>();
             *result++ = static_cast<uint8_t>(val & 3);
             *result++ = static_cast<uint8_t>((val >> 2) & 3);

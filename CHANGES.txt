@@ -316,9 +316,9 @@ Version 7.5  [ TODO ]
                 Stringifiable, Writable (defined in concepts/io.h)
               + BidirectionalIterableFor, BidirectionalIteratorFor,
                 CharIterator, ForwardIteratorFor, InputIteratorFor, Iterable,
-                IterableFor, PacketIterator, RandomAccessIterableFor,
-                RandomAccessIteratorFor, SelfSentinelInputIterator (defined in
-                concepts/iterator.h)
+                IterableFor, OutputIterator, PacketIterator,
+                RandomAccessIterableFor, RandomAccessIteratorFor,
+                SelfSentinelInputIterator (defined in concepts/iterator.h)
               + ArbitraryPrecisionIntegerVector, IntegerVector,
                 SigReconstructible (defined in concepts/maths.h)
               + PacketClass, PacketHeldType (defined in concepts/packet.h)

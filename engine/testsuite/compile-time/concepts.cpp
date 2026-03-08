@@ -344,3 +344,6 @@ static_assert(regina::PacketIterator<regina::ChildIterator<true>>);
 static_assert(regina::PacketIterator<regina::ChildIterator<false>>);
 static_assert(regina::PacketIterator<regina::SubtreeIterator<true>>);
 static_assert(regina::PacketIterator<regina::SubtreeIterator<false>>);
+
+static_assert(regina::OutputIterator<std::vector<int>::iterator>);
+static_assert(! regina::OutputIterator<std::vector<int>::const_iterator>);

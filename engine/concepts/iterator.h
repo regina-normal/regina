@@ -225,6 +225,20 @@ concept RandomAccessIterableFor =
     Iterable<T> &&
     RandomAccessIteratorFor<decltype(std::declval<T>().begin()), Target>;
 
+/**
+ * An output iterator type.
+ *
+ * The reason for using OutputIterator instead of std::output_iterator is that
+ * this concept does not require you to specify the output type in advance.
+ * Instead, the output type is deduced automatically via `std::iter_value_t`.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept OutputIterator =
+    std::input_or_output_iterator<T> &&
+    std::output_iterator<T, std::iter_value_t<T>>;
+
 } // namespace regina
 
 #endif
