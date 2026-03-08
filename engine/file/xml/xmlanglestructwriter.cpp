@@ -46,7 +46,7 @@ void XMLWriter<AngleStructures>::openPre() {
     } else {
         out_ << R"(<angles tri=")" << triID_
             << R"(" tautonly=")" << (data_.tautOnly_ ? 'T' : 'F')
-            << R"(" algorithm=")" << data_.algorithm_.intValue() << '"';
+            << R"(" algorithm=")" << data_.algorithm_.baseValue() << '"';
     }
 }
 
@@ -58,7 +58,7 @@ void XMLWriter<AngleStructures>::writeContent() {
         // Write the enumeration parameters in a separate angleparams element.
         out_ << "  <angleparams "
             "tautonly=\"" << (data_.tautOnly_ ? 'T' : 'F') << "\" "
-            "algorithm=\"" << data_.algorithm_.intValue() << "\"/>\n";
+            "algorithm=\"" << data_.algorithm_.baseValue() << "\"/>\n";
     }
 
     // Write the individual structures.

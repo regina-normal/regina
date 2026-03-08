@@ -35,17 +35,6 @@
 
 namespace regina {
 
-bool BoolSet::setStringCode(const std::string& code) {
-    // We need to use a temporary, since valueOf() will change ans even
-    // if code is not valid.
-    BoolSet ans;
-    if (valueOf(code, ans)) {
-        elements = ans.elements;
-        return true;
-    } else
-        return false;
-}
-
 std::ostream& operator << (std::ostream& out, BoolSet set) {
     if (set == BoolSet())
         out << "{ }";

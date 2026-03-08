@@ -124,7 +124,7 @@ class ShortArray {
          *
          * \return a reference to this array.
          */
-        ShortArray& operator = (const ShortArray&) = default;
+        constexpr ShortArray& operator = (const ShortArray&) = default;
 
         /**
          * Determines if this array is currently empty.
@@ -161,7 +161,7 @@ class ShortArray {
          * between 0 and size()-1 inclusive.
          * \return a reference to the array element at the given index.
          */
-        T& operator [] (size_t index) {
+        constexpr T& operator [] (size_t index) {
             return data_[index];
         }
 
@@ -204,7 +204,7 @@ class ShortArray {
          *
          * \return an iterator pointing to the first element.
          */
-        iterator begin() {
+        constexpr iterator begin() {
             return data_;
         }
 
@@ -214,7 +214,7 @@ class ShortArray {
          *
          * \return an iterator pointing to the first element.
          */
-        const_iterator begin() const {
+        constexpr const_iterator begin() const {
             return data_;
         }
 
@@ -223,7 +223,7 @@ class ShortArray {
          *
          * \return an iterator after the last element.
          */
-        iterator end() {
+        constexpr iterator end() {
             return data_ + size_;
         }
 
@@ -232,7 +232,7 @@ class ShortArray {
          *
          * \return an iterator after the last element.
          */
-        const_iterator end() const {
+        constexpr const_iterator end() const {
             return data_ + size_;
         }
 
@@ -243,7 +243,7 @@ class ShortArray {
          *
          * \param item the item to add to this array.
          */
-        void push_back(const T& item) {
+        constexpr void push_back(const T& item) {
             data_[size_++] = item;
         }
 
@@ -254,7 +254,7 @@ class ShortArray {
          *
          * \param item the item to add to this array.
          */
-        void push_back(T&& item) {
+        constexpr void push_back(T&& item) {
             data_[size_++] = std::move(item);
         }
 
@@ -263,14 +263,14 @@ class ShortArray {
          *
          * \pre The array is non-empty.
          */
-        void pop_back() {
+        constexpr void pop_back() {
             --size_;
         }
 
         /**
          * Removes all elements from this array.
          */
-        void clear() {
+        constexpr void clear() {
             size_ = 0;
         }
 };

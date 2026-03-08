@@ -22,8 +22,6 @@ a: a-44 (covers -44..45)
 
 NOTE: {!} is unused; here ! represents the digit 0
 
-Supported types: (signed/unsigned) (int/long/long long), Integer/LargeInteger
-
 
 
 Scheme for tight encodings of indices (integers >= -1)
@@ -47,5 +45,3 @@ a: a-1 (covers -1..88)
 NOTE: 737279 is encoded as {!}, not {}; that is, we write a zero digit.
       The encoding {} is reserved for infinity in case we wish to support
       the LargeInteger type in the future.
-
-Supported types: size_t, ssize_t

@@ -49,7 +49,7 @@
 
 namespace regina::detail {
 
-template <int> class TriangulationBase;
+template <int dim> requires (supportedDim(dim)) class TriangulationBase;
 
 /**
  * Helper class that provides core functionality for a boundary component
@@ -70,11 +70,10 @@ template <int> class TriangulationBase;
  * class BoundaryComponent<dim> is.
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup detail
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class BoundaryComponentBase :
         public ShortOutput<BoundaryComponentBase<dim>>, public MarkedElement {
     public:
@@ -162,7 +161,8 @@ class BoundaryComponentBase :
         bool orientable_;
             /**< Is this boundary component orientable? */
 
-        EnableIf<canBuild, Triangulation<dim-1>*, nullptr> boundary_;
+        EnableIf<canBuild, typename TriangulationTraits<dim>::Lower*, nullptr>
+                boundary_;
             /**< A full triangulation of the boundary component.
                  This may be pre-computed when the triangulation skeleton
                  is constructed, or it may be \c null in which case it
@@ -260,71 +260,50 @@ class BoundaryComponentBase :
         /**
          * A dimension-specific alias for countFaces<0>().
          *
-         * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions".
-         *
          * See countFaces() for further information.
          */
-        size_t countVertices() const {
-            static_assert(standardDim(dim), "countVertices() is only available "
-                "for boundary components in standard dimensions.");
+        size_t countVertices() const
+                requires (standardDim(dim)) {
             return countFaces<0>();
         }
 
         /**
          * A dimension-specific alias for countFaces<1>().
          *
-         * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions".
-         *
          * See countFaces() for further information.
          */
-        size_t countEdges() const {
-            static_assert(standardDim(dim), "countEdges() is only available "
-                "for boundary components in standard dimensions.");
+        size_t countEdges() const
+                requires (standardDim(dim)) {
             return countFaces<1>();
         }
 
         /**
          * A dimension-specific alias for countFaces<2>().
          *
-         * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions" and \a dim ≥ 3.
-         *
          * See countFaces() for further information.
          */
-        size_t countTriangles() const {
-            static_assert(standardDim(dim) && dim >= 3,
-                "countTriangles() is only available "
-                "for boundary components in standard dimensions dim >= 3.");
+        size_t countTriangles() const
+                requires (standardDim(dim) && dim > 2) {
             return countFaces<2>();
         }
 
         /**
          * A dimension-specific alias for countFaces<3>().
          *
-         * This alias is only available for dimensions \a dim = 4 and 5.
-         *
          * See countFaces() for further information.
          */
-        size_t countTetrahedra() const {
-            static_assert((standardDim(dim) && dim >= 4) || dim == 5,
-                "countTetrahedra() is only available for boundary components "
-                "in dimensions dim = 4 or 5.");
+        size_t countTetrahedra() const
+                requires (dim == 4 || dim == 5) {
             return countFaces<3>();
         }
 
         /**
          * A dimension-specific alias for countFaces<4>().
          *
-         * This alias is only available for dimensions \a dim = 5 and 6.
-         *
          * See countFaces() for further information.
          */
-        size_t countPentachora() const {
-            static_assert(dim == 5 || dim == 6, "countPentachora() is only "
-                "available for boundary components in dimensions "
-                "dim = 5 or 6.");
+        size_t countPentachora() const
+                requires (dim == 5 || dim == 6) {
             return countFaces<4>();
         }
 
@@ -406,70 +385,50 @@ class BoundaryComponentBase :
         /**
          * A dimension-specific alias for faces<0>().
          *
-         * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions".
-         *
          * See faces() for further information.
          */
-        auto vertices() const {
-            static_assert(standardDim(dim), "vertices() is only available "
-                "for boundary components in standard dimensions.");
+        auto vertices() const
+                requires (standardDim(dim)) {
             return ListView(std::get<tupleIndex(0)>(faces_));
         }
 
         /**
          * A dimension-specific alias for faces<1>().
          *
-         * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions".
-         *
          * See faces() for further information.
          */
-        auto edges() const {
-            static_assert(standardDim(dim), "edges() is only available "
-                "for boundary components in standard dimensions.");
+        auto edges() const
+                requires (standardDim(dim)) {
             return ListView(std::get<tupleIndex(1)>(faces_));
         }
 
         /**
          * A dimension-specific alias for faces<2>().
          *
-         * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions" and \a dim ≥ 3.
-         *
          * See faces() for further information.
          */
-        auto triangles() const {
-            static_assert(standardDim(dim) && dim >= 3,
-                "triangles() is only available "
-                "for boundary components in standard dimensions dim >= 3.");
+        auto triangles() const
+                requires (standardDim(dim) && dim > 2) {
             return ListView(std::get<tupleIndex(2)>(faces_));
         }
 
         /**
          * A dimension-specific alias for faces<3>().
          *
-         * This alias is only available for dimension \a dim = 4.
-         *
          * See faces() for further information.
          */
-        auto tetrahedra() const {
-            static_assert(standardDim(dim) && dim >= 4,
-                "tetrahedra() is only available for "
-                "boundary components in dimension dim = 4.");
+        auto tetrahedra() const
+                requires (standardDim(dim) && dim > 3) {
             return ListView(std::get<tupleIndex(3)>(faces_));
         }
 
         /**
          * A dimension-specific alias for faces<4>().
          *
-         * This alias is only available for dimension \a dim = 5.
-         *
          * See faces() for further information.
          */
-        auto pentachora() const {
-            static_assert(dim == 5, "pentachora() is only available for "
-                "boundary components in dimension dim = 5.");
+        auto pentachora() const
+                requires (dim == 5) {
             return ListView(std::get<tupleIndex(4)>(faces_));
         }
 
@@ -529,70 +488,50 @@ class BoundaryComponentBase :
         /**
          * A dimension-specific alias for face<0>().
          *
-         * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions".
-         *
          * See face() for further information.
          */
-        Face<dim, 0>* vertex(size_t index) const {
-            static_assert(standardDim(dim), "vertex() is only available "
-                "for boundary components in standard dimensions.");
+        TriangulationTraits<dim>::Vertex* vertex(size_t index) const
+                requires (standardDim(dim)) {
             return std::get<tupleIndex(0)>(faces_)[index];
         }
 
         /**
          * A dimension-specific alias for face<1>().
          *
-         * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions".
-         *
          * See face() for further information.
          */
-        Face<dim, 1>* edge(size_t index) const {
-            static_assert(standardDim(dim), "edge() is only available "
-                "for boundary components in standard dimensions.");
+        TriangulationTraits<dim>::Edge* edge(size_t index) const
+                requires (standardDim(dim)) {
             return std::get<tupleIndex(1)>(faces_)[index];
         }
 
         /**
          * A dimension-specific alias for face<2>().
          *
-         * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions" and \a dim ≥ 3.
-         *
          * See face() for further information.
          */
-        Face<dim, 2>* triangle(size_t index) const {
-            static_assert(standardDim(dim) && dim >= 3,
-                "triangle() is only available "
-                "for boundary components in standard dimensions dim >= 3.");
+        TriangulationTraits<dim>::Triangle* triangle(size_t index) const
+                requires (standardDim(dim) && dim > 2) {
             return std::get<tupleIndex(2)>(faces_)[index];
         }
 
         /**
          * A dimension-specific alias for face<3>().
          *
-         * This alias is only available for dimension \a dim = 4.
-         *
          * See face() for further information.
          */
-        Face<dim, 3>* tetrahedron(size_t index) const {
-            static_assert(standardDim(dim) && dim >= 4,
-                "tetrahedron() is only available for "
-                "boundary components in dimension dim = 4.");
+        TriangulationTraits<dim>::Tetrahedron* tetrahedron(size_t index) const
+                requires (dim == 4) {
             return std::get<tupleIndex(3)>(faces_)[index];
         }
 
         /**
          * A dimension-specific alias for face<4>().
          *
-         * This alias is only available for dimension \a dim = 5.
-         *
          * See face() for further information.
          */
-        Face<dim, 4>* pentachoron(size_t index) const {
-            static_assert(dim == 5, "pentachoron() is only available for "
-                "boundary components in dimension dim = 5.");
+        TriangulationTraits<dim>::Pentachoron* pentachoron(size_t index) const
+                requires (dim == 5) {
             return std::get<tupleIndex(4)>(faces_)[index];
         }
 
@@ -846,12 +785,8 @@ class BoundaryComponentBase :
          *
          * \return the triangulation of this boundary component.
          */
-        const Triangulation<dim-1>& build() const {
-            // Make sure we do not try to instantiate Triangulation<1>.
-            static_assert(canBuild,
-                "BoundaryComponent<dim>::build() can only "
-                "be used with dimensions dim > 2.");
-
+        const TriangulationTraits<dim>::Lower& build() const
+                requires (dim > 2) {
             if (boundary_.value)
                 return *boundary_.value; // Already cached or pre-computed.
             if constexpr (allowVertex) {
@@ -948,12 +883,12 @@ class BoundaryComponentBase :
          * Builds a new triangulation of this boundary component,
          * assuming this is a real boundary component.
          *
-         * \pre The dimension \a dim is greater than 2.
          * \pre The number of (dim-1)-faces is strictly positive.
          *
          * \return the newly created boundary triangulation.
          */
-        Triangulation<dim-1>* buildRealBoundary() const;
+        TriangulationTraits<dim>::Lower* buildRealBoundary() const
+            requires (dim > 2);
 
         /**
          * Reorders and relabels all <i>subdim</i>-faces of the given
@@ -985,7 +920,8 @@ class BoundaryComponentBase :
          * \a subdim can be deduced automatically from inside std::apply().
          */
         template <int subdim>
-        void reorderAndRelabelFaces(Triangulation<dim - 1>* tri,
+        requires (dim > 2 && subdim >= 0 && subdim < dim)
+        void reorderAndRelabelFaces(TriangulationTraits<dim>::Lower* tri,
                 const std::vector<Face<dim, subdim>*>& reference) const;
 
     friend class Triangulation<dim>;

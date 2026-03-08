@@ -45,28 +45,6 @@ possible, even when passing or returning objects by value.
     and the old makeLinComb() method is also gone (just use operator
     *= and addCopies()).
 
-Precondition:
-    Type T has a copy constructor. That is, if ``a`` and ``b`` are of
-    type T, then ``a`` can be initialised to the value of ``b`` using
-    ``a(b)``.
-
-Precondition:
-    Type T has a default constructor. That is, an object of type T can
-    be declared with no arguments. No specific default value is
-    required.
-
-Precondition:
-    Type T allows for operators ``=``, ``==``, ``+=``, ``-=``, ``*=``,
-    ``+``, ``-`` and ``*``.
-
-Precondition:
-    Type T has an integer constructor. That is, if ``a`` is of type T,
-    then ``a`` can be initialised to an integer ``l`` using ``a(l)``.
-
-Precondition:
-    An element ``t`` of type T can be written to an output stream
-    ``out`` using the standard expression ``out << t``.
-
 Python:
     Only the specific types Vector<Integer> and Vector<LargeInteger>
     are available, under the names VectorInt and VectorLarge
@@ -189,19 +167,11 @@ Parameter ``initValue``:
 
 // Docstring regina::python::doc::Vector_::__init_3
 static const char *__init_3 =
-R"doc(Creates a new vector containing the given sequence of elements.
+R"doc(Creates a new vector containing a deep copy of the given sequence of
+elements.
 
-This constructor induces a deep copy of the given range.
-
-Precondition:
-    Objects of type *T* can be assigned values from dereferenced
-    iterators of type *iterator*.
-
-.. warning::
-    This routine computes the length of the given sequence by
-    subtracting ``end - begin``, and so ideally *iterator* should be a
-    random access iterator type for which this operation is constant
-    time.
+The iterator type must be random access because this allows the
+implementation to compute the sequence length in constant time.
 
 Python:
     Instead of a pair of iterators, this routine takes a python list
@@ -359,10 +329,6 @@ smallest possible integer representation.
 
 This routine poses no problem for vectors containing infinite
 elements; such elements are simply ignored and left at infinity.
-
-Precondition:
-    Type *T* is one of Regina's own integer classes (Integer,
-    LargeInteger, or NativeIntgeger).
 
 Returns:
     the integer by which this vector was divided (i.e., the gcd of its

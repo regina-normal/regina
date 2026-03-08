@@ -16,8 +16,9 @@ namespace alias {
 // Docstring regina::python::doc::alias::IsomorphismImage
 constexpr const char *IsomorphismImage =
 R"doc(Helper class that provides dimension-specific aliases for both const
-and non-const versions of simpImage(size_t) and facetPerm(size_t),
-where reasonable, for isomorphisms in dimension *dim*.
+and non-const versions of ``simpImage(size_t)`` and
+``facetPerm(size_t)``, where reasonable, for isomorphisms in dimension
+*dim*.
 
 This is inherited by the class *Derived*, which must provide functions
 of the form ``int& simpImage(size_t)``, ``int simpImage(size_t)

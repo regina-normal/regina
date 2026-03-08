@@ -38,7 +38,7 @@
 #endif
 
 #include <set>
-#include "regina-core.h"
+#include "concepts/iterator.h"
 #include "maths/integer.h"
 #include "packet/packet.h"
 #include "surface/surfacefiltertype.h"
@@ -409,17 +409,14 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * \python Instead of a pair of iterators, the set of
          * allowable Euler characteristic should be passed as a Python list.
          *
-         * \tparam Iterator an iterator type that, when dereferenced,
-         * can be assigned to a LargeInteger.
-         *
          * \param beginEuler the beginning of an iterator range that
          * gives the new set of allowable Euler characteristics.
          * \param endEuler the end of an iterator range (i.e., an iterator
          * past the end of the list) that gives the new set of allowable
          * Euler characteristics.
          */
-        template <typename Iterator>
-        void setEulerChars(Iterator beginEuler, Iterator endEuler);
+        template <InputIteratorFor<LargeInteger> iterator>
+        void setEulerChars(iterator beginEuler, iterator endEuler);
 
         /**
          * Adds the given Euler characteristic to the set of allowable
@@ -605,9 +602,9 @@ inline BoolSet SurfaceFilterProperties::realBoundary() const {
     return realBoundary_;
 }
 
-template <typename Iterator>
+template <InputIteratorFor<LargeInteger> iterator>
 inline void SurfaceFilterProperties::setEulerChars(
-        Iterator beginEuler, Iterator endEuler) {
+        iterator beginEuler, iterator endEuler) {
     PacketChangeSpan span(*this);
     eulerChar_.clear();
     eulerChar_.insert(beginEuler, endEuler);

@@ -11,6 +11,15 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::DivisionByZero
+static const char *DivisionByZero =
+R"doc(An exception thrown when Regina encounters an attempted division by
+zero.
+
+Note that, unlike most of Regina's exception classes, the constructor
+for DivisionByZero takes no arguments - you do not need to (and indeed
+cannot) supply a text description.)doc";
+
 // Docstring regina::python::doc::FailedPrecondition
 static const char *FailedPrecondition =
 R"doc(An exception thrown when a function detects that its preconditions
@@ -51,6 +60,15 @@ documentation (since, by their nature, they should never be thrown).
 
 All member functions follow the same pattern as the parent class
 ReginaException, and are not documented again here.)doc";
+
+// Docstring regina::python::doc::IntegerOverflow
+static const char *IntegerOverflow =
+R"doc(An exception thrown when the result of some calculation cannot fit
+into an appropriate native C++ integer type.
+
+Note that, unlike most of Regina's exception classes, the constructor
+for IntegerOverflow takes no arguments - you do not need to (and
+indeed cannot) supply a text description.)doc";
 
 // Docstring regina::python::doc::InvalidArgument
 static const char *InvalidArgument =
@@ -94,6 +112,17 @@ pattern from most of Regina's exception classes.)doc";
 // Docstring regina::python::doc::NotImplemented
 static const char *NotImplemented =
 R"doc(An exception thrown when some functionality is not yet implemented.
+
+All member functions follow the same pattern as the parent class
+ReginaException, and are not documented again here.)doc";
+
+// Docstring regina::python::doc::NumericalError
+static const char *NumericalError =
+R"doc(An exception thrown when Regina encounters some kind of numerical or
+arithmetical error.
+
+Examples might be integer overflows, or divisions by zero (both of
+which are represented by their own subclasses of NumericalError).
 
 All member functions follow the same pattern as the parent class
 ReginaException, and are not documented again here.)doc";
@@ -149,6 +178,26 @@ a particular instance of a problem.
 
 All member functions follow the same pattern as the parent class
 ReginaException, and are not documented again here.)doc";
+
+namespace DivisionByZero_ {
+
+// Docstring regina::python::doc::DivisionByZero_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given exception.)doc";
+
+// Docstring regina::python::doc::DivisionByZero_::__default
+static const char *__default = R"doc(Creates a new exception with a stock error message.)doc";
+
+}
+
+namespace IntegerOverflow_ {
+
+// Docstring regina::python::doc::IntegerOverflow_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given exception.)doc";
+
+// Docstring regina::python::doc::IntegerOverflow_::__default
+static const char *__default = R"doc(Creates a new exception with a stock error message.)doc";
+
+}
 
 namespace NoSolution_ {
 

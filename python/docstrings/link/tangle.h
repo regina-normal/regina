@@ -476,14 +476,6 @@ combined together and separated by whitespace. This variant takes a
 sequence of tokens, defined by a pair of iterators.
 
 Precondition:
-    *Iterator* is a random access iterator type.
-
-Precondition:
-    Dereferencing such an iterator produces either a C-style string
-    (which can be cast to ``const char*``) or a C++-style string
-    (which can be cast to ``const std::string&``).
-
-Precondition:
     The tokens in the input sequence do not contain any whitespace.
 
 .. warning::

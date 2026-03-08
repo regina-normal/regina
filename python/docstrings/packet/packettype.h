@@ -23,6 +23,36 @@ accessible at both compile time and runtime.)doc";
 // Docstring regina::python::doc::PacketType
 static const char *PacketType = R"doc(Represents the different types of packet that are available in Regina.)doc";
 
+// Docstring regina::python::doc::isTriangulation
+static const char *isTriangulation =
+R"doc(Identifies whether the given packet type represents a native Regina
+triangulation, and if so, returns the dimension.
+
+Note that this routine does _not_ recognise SnapPea triangulations:
+calling ``isTriangulation(PacketType::SnapPea)`` will return 0.
+
+This routine is intended to help with generic code, where one might
+need to query a packet type at runtime and from this extract a
+compile-time dimension constant for use as a template parameter. For
+example:
+
+```
+if (int d = isTriangulation(packet.type())) {
+     // Our packet holds a triangulation of dimension d.
+     select_constexpr<2, regina::maxDim() + 1, void>(d, [&](auto dim) {
+         // The runtime variable d is now a compile-time constant dim.
+         do_something<dim>(packet);
+     });
+}
+```
+
+Parameter ``type``:
+    a packet type constant.
+
+Returns:
+    the dimension of triangulation that *type* represents, or 0 if
+    *type* does not represent a native Regina triangulation.)doc";
+
 namespace PacketInfo_ {
 
 // Docstring regina::python::doc::PacketInfo_::name

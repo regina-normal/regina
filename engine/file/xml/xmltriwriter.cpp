@@ -40,7 +40,7 @@
 
 namespace regina {
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void XMLWriter<Triangulation<dim>>::openPre() {
     if (format_ == FileFormat::XmlGen2) {
         out_ << R"(<packet type=")" << dim
@@ -52,7 +52,7 @@ void XMLWriter<Triangulation<dim>>::openPre() {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void XMLWriter<Triangulation<dim>>::writeContent() {
     // Write the simplex gluings.
     // We send permutation indices directly to the output stream.
@@ -223,7 +223,7 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void XMLWriter<Triangulation<dim>>::close() {
     if (format_ == FileFormat::XmlGen2)
         out_ << "</packet> <!-- Triangulation -->\n";

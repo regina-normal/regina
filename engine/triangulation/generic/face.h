@@ -104,19 +104,18 @@ namespace regina {
  * suffices (e.g., Face2_1 and Face3_0 for the two examples above).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  * \tparam subdim the dimension of the faces that this class represents.
- * This must be between 0 and <i>dim</i> inclusive.
  *
  * \headerfile triangulation/generic.h
  *
  * \ingroup generic
  */
 template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
 class Face : public detail::FaceBase<dim, subdim> {
     static_assert(dim == 2 || dim > 4,
         "The generic implementation of Face<dim, subdim> "
-        "should not be used for those face class that are specialised "
+        "should not be used for those face classes that are specialised "
         "in Regina's standard dimensions.");
     static_assert(subdim < dim,
         "The generic implementation of Face<dim, subdim> "
@@ -147,11 +146,11 @@ class Face : public detail::FaceBase<dim, subdim> {
  * be used by appending the dimension \a dim as a suffix (e.g., \c Vertex8).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim))
 using Vertex = Face<dim, 0>;
 
 /**
@@ -164,11 +163,11 @@ using Vertex = Face<dim, 0>;
  * be used by appending the dimension \a dim as a suffix (e.g., \c Edge5).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim))
 using Edge = Face<dim, 1>;
 
 /**
@@ -183,11 +182,11 @@ using Edge = Face<dim, 1>;
  * be used by appending the dimension \a dim as a suffix (e.g., \c Triangle4).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim))
 using Triangle = Face<dim, 2>;
 
 /**
@@ -203,11 +202,11 @@ using Triangle = Face<dim, 2>;
  * (e.g., \c Tetrahedron7).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 3 and 15 inclusive.
  *
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim) && dim >= 3)
 using Tetrahedron = Face<dim, 3>;
 
 /**
@@ -223,17 +222,18 @@ using Tetrahedron = Face<dim, 3>;
  * \c Pentachoron9).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 4 and 15 inclusive.
  *
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim) && dim >= 4)
 using Pentachoron = Face<dim, 4>;
 #endif // __DOXYGEN
 
 // Inline functions for Face
 
 template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
 inline Face<dim, subdim>::Face(Component<dim>* component) :
         detail::FaceBase<dim, subdim>(component) {
 }

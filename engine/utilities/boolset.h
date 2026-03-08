@@ -37,9 +37,10 @@
 #define __REGINA_BOOLSET_H
 #endif
 
+#include <cstdint>
 #include <iostream>
 #include <string>
-#include "regina-core.h"
+#include "utilities/exception.h"
 
 namespace regina {
 
@@ -52,15 +53,23 @@ namespace regina {
  * \ingroup utilities
  */
 class BoolSet {
-    private:
-        unsigned char elements;
-            /**< The first two bits of this character represent whether
-                 or not \c true or \c false belongs to this set. */
+    public:
+        using ByteCode = uint8_t;
+            /**< A small unsigned integer type used by routines such as
+                 byteCode() and fromByteCode() to encode boolean sets. */
 
-        static constexpr unsigned char eltTrue = 1;
+    private:
+        ByteCode code_;
+            /**< The byte code for this boolean set.  The first two bits
+                 indicate whether or not \c true or \c false belong to this
+                 set respectively; all remaining bits will be zero. */
+
+        static constexpr ByteCode trueBit = 1;
             /**< A character with only the \c true member bit set. */
-        static constexpr unsigned char eltFalse = 2;
+        static constexpr ByteCode falseBit = 2;
             /**< A character with only the \c false member bit set. */
+        static constexpr ByteCode bothBits = 3;
+            /**< A character with both the \c true and \c false bits set. */
         static constexpr char stringCodes[4][3] = { "--", "T-", "-F", "TF" };
             /**< The string codes for all four boolean sets. */
 
@@ -122,19 +131,19 @@ class BoolSet {
         /**
          * Inserts \c true into this set if it is not already present.
          */
-        void insertTrue();
+        constexpr void insertTrue();
         /**
          * Inserts \c false into this set if it is not already present.
          */
-        void insertFalse();
+        constexpr void insertFalse();
         /**
          * Removes \c true from this set if it is present.
          */
-        void removeTrue();
+        constexpr void removeTrue();
         /**
          * Removes \c false from this set if it is present.
          */
-        void removeFalse();
+        constexpr void removeFalse();
         /**
          * Removes all elements from this set.
          *
@@ -143,12 +152,12 @@ class BoolSet {
          * avoid confusion with the more common pattern where empty() queries
          * whether a container holds any elements at all.
          */
-        void clear();
+        constexpr void clear();
         /**
          * Places both \c true and \c false into this set if they are
          * not already present.
          */
-        void fill();
+        constexpr void fill();
 
         /**
          * Determines if this set is equal to the given set.
@@ -177,7 +186,7 @@ class BoolSet {
          *
          * \return a reference to this set.
          */
-        BoolSet& operator = (const BoolSet&) = default;
+        constexpr BoolSet& operator = (const BoolSet&) = default;
         /**
          * Sets this set to the single member set containing the given
          * element.
@@ -185,7 +194,7 @@ class BoolSet {
          * \param member the single element to include in this set.
          * \return a reference to this set.
          */
-        BoolSet& operator = (bool member);
+        constexpr BoolSet& operator = (bool member);
         /**
          * Sets this set to be the union of this and the given set.
          * The result is a set containing precisely the elements that
@@ -195,7 +204,7 @@ class BoolSet {
          * \param other the set to union with this set.
          * \return a reference to this set.
          */
-        BoolSet& operator |= (BoolSet other);
+        constexpr BoolSet& operator |= (BoolSet other);
         /**
          * Sets this set to be the intersection of this and the given set.
          * The result is a set containing precisely the elements that
@@ -205,7 +214,7 @@ class BoolSet {
          * \param other the set to intersect with this set.
          * \return a reference to this set.
          */
-        BoolSet& operator &= (BoolSet other);
+        constexpr BoolSet& operator &= (BoolSet other);
         /**
          * Sets this set to be the symmetric difference of this and the
          * given set.
@@ -217,7 +226,7 @@ class BoolSet {
          * is to be found.
          * \return a reference to this set.
          */
-        BoolSet& operator ^= (BoolSet other);
+        constexpr BoolSet& operator ^= (BoolSet other);
 
         /**
          * Returns the union of this set with the given set.
@@ -274,29 +283,30 @@ class BoolSet {
          *
          * \return the byte code representing this set.
          */
-        constexpr unsigned char byteCode() const;
+        constexpr ByteCode byteCode() const;
         /**
          * Sets this to be the boolean set represented by the given byte code.
          * See byteCode() for more information on byte codes.
          *
-         * If \a code is not a value byte code, then this routine will
+         * If \a code is not a valid byte code, then this routine will
          * do nothing and return \c false.
          *
          * \param code the byte code that will determine the new value
          * of this set.
          * \return \c true if and only if \c code is a valid byte code.
          */
-        bool setByteCode(unsigned char code);
+        constexpr bool setByteCode(ByteCode code);
         /**
          * Creates a boolean set from the given byte code.
          * See byteCode() for more information on byte codes.
          *
-         * \pre \a code is 0, 1, 2 or 3.
+         * \exception InvalidArgument The given argument was not a valid
+         * byte code (i.e., it was not 0, 1, 2 or 3).
          *
          * \param code the byte code from which the new set will be
          * created.
          */
-        constexpr static BoolSet fromByteCode(unsigned char code);
+        constexpr static BoolSet fromByteCode(ByteCode code);
 
         /**
          * Returns the string code representing this boolean set.
@@ -305,24 +315,52 @@ class BoolSet {
          *
          * Every string code contains precisely two characters (plus a
          * terminating null).
-         * Sets {}, {true}, {false} and {true, false} have string codes
-         * `--`, `T-`, `-F` and `TF` respectively.
+         * The sets `{}`, `{true}`, `{false}` and `{true, false}` have string
+         * codes `--`, `T-`, `-F` and `TF` respectively.
          *
          * \return the two-character string code representing this set.
+         * Any letters in this code will be upper-case.
          */
-        const char* stringCode() const;
+        constexpr const char* stringCode() const;
         /**
          * Sets this to be the boolean set represented by the given string code.
          * See stringCode() for more information on string codes.
          *
-         * If \a code is not a value string code, then this routine will
+         * Both upper-case and lower-case codes (or a mix of the two) are
+         * accepted by this routine.
+         *
+         * If \a code is not a valid string code, then this routine will
          * do nothing and return \c false.
          *
          * \param code the string code that will determine the new value
          * of this set.
          * \return \c true if and only if \c code is a valid string code.
          */
-        bool setStringCode(const std::string& code);
+        constexpr bool setStringCode(const std::string& code);
+        /**
+         * Creates a boolean set from the given string code.
+         * See stringCode() for more information on string codes.
+         *
+         * Both upper-case and lower-case codes (or a mix of the two) are
+         * accepted by this routine.
+         *
+         * \exception InvalidArgument The given argument was not a valid
+         * string code.
+         *
+         * \param code the string code from which the new set will be
+         * created.
+         */
+        constexpr static BoolSet fromStringCode(const std::string& code);
+
+    private:
+        /**
+         * Creates a new set from the given byte code.
+         *
+         * \pre The given byte code is valid (i.e., 0, 1, 2, or 3).
+         *
+         * \param code the byte code representing the new boolean set.
+         */
+        constexpr BoolSet(ByteCode code);
 
     friend std::ostream& operator << (std::ostream& out, BoolSet set);
 };
@@ -342,114 +380,140 @@ std::ostream& operator << (std::ostream& out, BoolSet set);
 
 // Inline functions for BoolSet
 
-inline constexpr BoolSet::BoolSet() : elements(0) {
+inline constexpr BoolSet::BoolSet() : code_(0) {
+}
+inline constexpr BoolSet::BoolSet(ByteCode code) : code_(code) {
 }
 inline constexpr BoolSet::BoolSet(bool member) :
-        elements(member ? eltTrue : eltFalse) {
+        code_(member ? trueBit : falseBit) {
 }
 inline constexpr BoolSet::BoolSet(bool insertTrue, bool insertFalse) :
-        elements(0) {
-    if (insertTrue)
-        elements = static_cast<unsigned char>(elements | eltTrue);
-    if (insertFalse)
-        elements = static_cast<unsigned char>(elements | eltFalse);
+        code_((insertTrue ? trueBit : 0) | (insertFalse ? falseBit : 0)) {
 }
 
 inline constexpr bool BoolSet::hasTrue() const {
-    return (elements & eltTrue);
+    return (code_ & trueBit);
 }
 inline constexpr bool BoolSet::hasFalse() const {
-    return (elements & eltFalse);
+    return (code_ & falseBit);
 }
 inline constexpr bool BoolSet::contains(bool value) const {
-    return (elements & (value ? eltTrue : eltFalse));
+    return (code_ & (value ? trueBit : falseBit));
 }
 inline constexpr bool BoolSet::full() const {
-    return (elements == (eltTrue | eltFalse));
+    return (code_ == bothBits);
 }
 
-inline void BoolSet::insertTrue() {
-    elements = static_cast<unsigned char>(elements | eltTrue);
+inline constexpr void BoolSet::insertTrue() {
+    code_ |= trueBit;
 }
-inline void BoolSet::insertFalse() {
-    elements = static_cast<unsigned char>(elements | eltFalse);
+inline constexpr void BoolSet::insertFalse() {
+    code_ |= falseBit;
 }
-inline void BoolSet::removeTrue() {
-    elements = static_cast<unsigned char>(elements & eltFalse);
+inline constexpr void BoolSet::removeTrue() {
+    code_ &= falseBit;
 }
-inline void BoolSet::removeFalse() {
-    elements = static_cast<unsigned char>(elements & eltTrue);
+inline constexpr void BoolSet::removeFalse() {
+    code_ &= trueBit;
 }
-inline void BoolSet::clear() {
-    elements = 0;
+inline constexpr void BoolSet::clear() {
+    code_ = 0;
 }
-inline void BoolSet::fill() {
-    elements = static_cast<unsigned char>(eltTrue | eltFalse);
+inline constexpr void BoolSet::fill() {
+    code_ = bothBits;
 }
 
 inline constexpr std::partial_ordering BoolSet::operator <=> (BoolSet rhs)
         const {
-    if (elements == rhs.elements)
+    if (code_ == rhs.code_)
         return std::partial_ordering::equivalent;
-    else if ((elements & rhs.elements) == elements)
+    else if ((code_ & rhs.code_) == code_)
         return std::partial_ordering::less;
-    else if ((elements & rhs.elements) == rhs.elements)
+    else if ((code_ & rhs.code_) == rhs.code_)
         return std::partial_ordering::greater;
     else
         return std::partial_ordering::unordered;
 }
 
-inline BoolSet& BoolSet::operator = (bool member) {
-    elements = (member ? eltTrue : eltFalse);
+inline constexpr BoolSet& BoolSet::operator = (bool member) {
+    code_ = (member ? trueBit : falseBit);
     return *this;
 }
-inline BoolSet& BoolSet::operator |= (BoolSet other) {
-    elements = static_cast<unsigned char>(elements | other.elements);
+inline constexpr BoolSet& BoolSet::operator |= (BoolSet other) {
+    code_ |= other.code_;
     return *this;
 }
-inline BoolSet& BoolSet::operator &= (BoolSet other) {
-    elements = static_cast<unsigned char>(elements & other.elements);
+inline constexpr BoolSet& BoolSet::operator &= (BoolSet other) {
+    code_ &= other.code_;
     return *this;
 }
-inline BoolSet& BoolSet::operator ^= (BoolSet other) {
-    elements = static_cast<unsigned char>(elements ^ other.elements);
+inline constexpr BoolSet& BoolSet::operator ^= (BoolSet other) {
+    code_ ^= other.code_;
     return *this;
 }
 
 inline constexpr BoolSet BoolSet::operator | (BoolSet other) const {
-    BoolSet ans;
-    ans.elements = static_cast<unsigned char>(elements | other.elements);
-    return ans;
+    return BoolSet(static_cast<ByteCode>(code_ | other.code_));
 }
 inline constexpr BoolSet BoolSet::operator & (BoolSet other) const {
-    BoolSet ans;
-    ans.elements = static_cast<unsigned char>(elements & other.elements);
-    return ans;
+    return BoolSet(static_cast<ByteCode>(code_ & other.code_));
 }
 inline constexpr BoolSet BoolSet::operator ^ (BoolSet other) const {
-    BoolSet ans;
-    ans.elements = static_cast<unsigned char>(elements ^ other.elements);
-    return ans;
+    return BoolSet(static_cast<ByteCode>(code_ ^ other.code_));
 }
 inline constexpr BoolSet BoolSet::operator ~ () const {
-    return BoolSet(! hasTrue(), ! hasFalse());
+    return BoolSet(static_cast<ByteCode>(code_ ^ bothBits));
 }
 
-inline constexpr unsigned char BoolSet::byteCode() const {
-    return elements;
+inline constexpr BoolSet::ByteCode BoolSet::byteCode() const {
+    return code_;
 }
-inline bool BoolSet::setByteCode(unsigned char code) {
+inline constexpr bool BoolSet::setByteCode(ByteCode code) {
     if (code < 4) {
-        elements = code;
+        code_ = code;
         return true;
     } else
         return false;
 }
-inline constexpr BoolSet BoolSet::fromByteCode(unsigned char code) {
-    return BoolSet(code & eltTrue, code & eltFalse);
+inline constexpr BoolSet BoolSet::fromByteCode(ByteCode code) {
+    if (code < 4)
+        return BoolSet(code);
+    else
+        throw InvalidArgument("The given argument was not a valid byte code");
 }
-inline const char* BoolSet::stringCode() const {
-    return stringCodes[elements];
+
+inline constexpr const char* BoolSet::stringCode() const {
+    return stringCodes[code_];
+}
+inline constexpr bool BoolSet::setStringCode(const std::string& code) {
+    if (code.length() != 2)
+        return false;
+
+    ByteCode byteCode = 0;
+    switch (code[0]) {
+        case 'T':
+        case 't':
+            byteCode |= trueBit; break;
+        case '-': break;
+        default: return false;
+    }
+    switch (code[1]) {
+        case 'F':
+        case 'f':
+            byteCode |= falseBit; break;
+        case '-': break;
+        default: return false;
+    }
+
+    code_ = byteCode;
+    return true;
+}
+inline constexpr BoolSet BoolSet::fromStringCode(const std::string& code) {
+    BoolSet ans;
+    if (ans.setStringCode(code))
+        return ans;
+    else
+        throw InvalidArgument("The given argument was not a valid string code");
 }
 
 } // namespace regina

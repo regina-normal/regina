@@ -44,32 +44,18 @@
 #include <algorithm>
 #include <iterator>
 #include "regina-core.h"
-#include "regina-config.h"
 #include "enumerate/doubledescription.h"
 #include "enumerate/validityconstraints.h"
 #include "maths/matrixops.h"
 #include "progress/progresstracker.h"
 #include "utilities/bitmask.h"
+#include "utilities/fixedarray.h"
 #include "utilities/intutils.h"
 #include "utilities/trieset.h"
 
 namespace regina {
 
-template <class IntegerType, class BitmaskType>
-DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
-        size_t axis, const MatrixInt& subspace, const long* hypOrder) :
-        Vector<IntegerType>(subspace.rows()), facets_(subspace.columns()) {
-    size_t i;
-
-    for (i = 0; i < subspace.columns(); ++i)
-        if (i != axis)
-            facets_.set(i, true);
-
-    for (i = 0; i < Vector<IntegerType>::size(); ++i)
-        elts_[i] = subspace.entry(hypOrder[i], axis);
-}
-
-template <class IntegerType, class BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
         const RaySpec<IntegerType, BitmaskType>& first,
         const RaySpec<IntegerType, BitmaskType>& second) :
@@ -86,10 +72,10 @@ DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
     facets_ &= first.facets_;
 }
 
-template <class IntegerType, class BitmaskType>
-template <typename RayClass>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
+template <ArbitraryPrecisionIntegerVector Ray>
 void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
-        RayClass& dest, const MatrixInt& subspace) const {
+        Ray& dest, const MatrixInt& subspace) const {
     size_t i, j;
 
     size_t rows = subspace.rows();
@@ -201,169 +187,120 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
     delete[] use;
 }
 
-template <class RayClass, typename Action>
+template <ArbitraryPrecisionIntegerVector Ray, VoidCallback<Ray&&> Action>
 void DoubleDescription::enumerate(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, size_t initialRows) {
-    static_assert(
-        IsReginaArbitraryPrecisionInteger<typename RayClass::value_type>::value,
-        "DoubleDescription::enumerate() requires the RayClass "
-        "template parameter to be equal to or derived from Vector<T>, "
-        "where T is one of Regina's arbitrary precision integer types.");
+    // Choose the slickest possible bitmask type for representing the set of
+    // facets that a ray belongs to.
+    usingBitmaskFor(subspace.columns() /* number of facets */,
+            [&action, &subspace, &constraints, tracker, initialRows]
+            <ReginaBitmask BitmaskType>(size_t dim) {
+        using IntegerType = typename Ray::value_type;
 
-    size_t nFacets = subspace.columns();
+        // If the space has dimension zero, return no results at all.
+        if (dim == 0)
+            return;
 
-    // If the space has dimension zero, return no results.
-    if (nFacets == 0)
-        return;
+        // Are there any hyperplanes at all in the subspace?
+        size_t nEqns = subspace.rows();
+        if (nEqns == 0) {
+            // No!  Just send back the vertices of the non-negative orthant.
+            for (size_t i = 0; i < dim; ++i) {
+                Ray ans(dim);
+                ans[i] = IntegerType::one;
+                action(std::move(ans));
+            }
 
-    // Choose a bitmask type for representing the set of facets that a
-    // ray belongs to; in particular, use a (much faster) optimised
-    // bitmask type if we can.
-    // Then farm the work out to the real enumeration routine that is
-    // templated on the bitmask type.
-    if (nFacets <= 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned>>(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-    else if (nFacets <= 8 * sizeof(unsigned long))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long>>(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-    else if (nFacets <= 8 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long long>>(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-    else if (nFacets <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass, Bitmask2<unsigned long long, unsigned>>(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-    else if (nFacets <= 8 * sizeof(unsigned long long) +
-            8 * sizeof(unsigned long))
-        enumerateUsingBitmask<RayClass,
-            Bitmask2<unsigned long long, unsigned long>>(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-    else if (nFacets <= 16 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, Bitmask2<unsigned long long>>(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-    else
-        enumerateUsingBitmask<RayClass, Bitmask>(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-}
-
-template <class RayClass, class BitmaskType, typename Action>
-void DoubleDescription::enumerateUsingBitmask(Action&& action,
-        const MatrixInt& subspace, const ValidityConstraints& constraints,
-        ProgressTracker* tracker, size_t initialRows) {
-    using IntegerType = typename RayClass::value_type;
-
-    // Get the dimension of the entire space in which we are working.
-    size_t dim = subspace.columns();
-
-    // Are there any hyperplanes at all in the subspace?
-    size_t nEqns = subspace.rows();
-    if (nEqns == 0) {
-        // No!  Just send back the vertices of the non-negative orthant.
-        for (size_t i = 0; i < dim; ++i) {
-            RayClass ans(dim);
-            ans[i] = IntegerType::one;
-            action(std::move(ans));
+            if (tracker)
+                tracker->setPercent(100);
+            return;
         }
 
+        // We actually have some work to do.
+
+        // We want to process the hyperplanes in a good order;
+        // Fukuda and Prodon (1996) recommend this, and experimental
+        // experience with Regina agrees.  The ordering we use here is based on
+        // position vectors, as described in "Optimizing the double description
+        // method for normal surface enumeration", B.A. Burton, Mathematics of
+        // Computation 79 (2010), 453-484.  See the class PosOrder for details.
+        //
+        // Sort the integers 0..(nEqns-1) into the order in which we plan to
+        // process the hyperplanes.
+        FixedArray<size_t> hyperplanes(nEqns);
+        for (size_t i = 0; i < nEqns; ++i)
+            hyperplanes[i] = i;
+
+        std::sort(hyperplanes.begin() + initialRows, hyperplanes.end(),
+            PosOrder(subspace));
+
+        // Create the two vector lists with which we will work.
+        // Fill the first with the initial set of rays.
+        std::vector<RaySpec<IntegerType, BitmaskType>*> list[2];
+
+        for (size_t i = 0; i < dim; ++i)
+            list[0].push_back(new RaySpec<IntegerType, BitmaskType>(
+                i, subspace, hyperplanes.begin()));
+
+        auto constraintMasks = constraints.bitmasks<BitmaskType>(dim);
+
+#if 0
+        std::cout << "Initial size: " << list[0].size() << std::endl;
+#endif
+
+        // Intersect the hyperplanes one at a time.
+        // At any point we should have the latest results in
+        // list[workingList], with the other list empty.
+        int workingList = 0;
+        size_t used = 0;
+        for (size_t i = 0; i < nEqns; ++i) {
+            // Do not increment used if the old solution set sits entirely in
+            // and/or to only one side of the new hyperplane.  This gives the
+            // dimensional filtering in intersectHyperplane() greater strength.
+            // The reason this works is because any vertex of the solution
+            // space *with* this hyperplane is also a vertex of the solution
+            // space *without* this hyperplane (and therefore satisfies the
+            // relevant dimensional constraints without this hyperplane).
+            if (intersectHyperplane(list[workingList], list[1 - workingList],
+                    dim, used, constraintMasks, tracker))
+                ++used;
+
+            workingList = 1 - workingList;
+#if 0
+            std::cout << "Intermediate size: " << list[workingList].size()
+                << std::endl;
+#endif
+
+            if (tracker && ! tracker->setPercent(100.0 * i / nEqns))
+                break;
+        }
+
+        // We're done!
+
+        if (tracker && tracker->isCancelled()) {
+            // The operation was cancelled.  Clean up before returning.
+            for (auto* r : list[workingList])
+                delete r;
+            return;
+        }
+
+        // Convert the final solutions into the required ray class.
+        for (auto* r : list[workingList]) {
+            Ray ans(dim);
+            r->recover(ans, subspace);
+            action(std::move(ans));
+
+            delete r;
+        }
+
+        // All done!
         if (tracker)
             tracker->setPercent(100);
-        return;
-    }
-
-    // We actually have some work to do.
-
-    // We want to process the hyperplanes in a good order;
-    // Fukuda and Prodon (1996) recommend this, and experimental
-    // experience with Regina agrees.  The ordering we use here
-    // is based on position vectors, as described in
-    // "Optimizing the double description method for normal surface
-    // enumeration", B.A. Burton, Mathematics of Computation 79 (2010), 453-484.
-    // See the class PosOrder for details.
-    //
-    // Sort the integers 0..(nEqns-1) into the order in which we plan to
-    // process the hyperplanes.
-    long* hyperplanes = new long[nEqns];
-    size_t i;
-    for (i = 0; i < nEqns; ++i)
-        hyperplanes[i] = i;
-
-    std::sort(hyperplanes + initialRows, hyperplanes + nEqns,
-        PosOrder(subspace));
-
-    // Create the two vector lists with which we will work.
-    // Fill the first with the initial set of rays.
-    std::vector<RaySpec<IntegerType, BitmaskType>*> list[2];
-
-    for (i = 0; i < dim; ++i)
-        list[0].push_back(new RaySpec<IntegerType, BitmaskType>(
-            i, subspace, hyperplanes));
-
-    auto constraintMasks = constraints.bitmasks<BitmaskType>(dim);
-
-#if 0
-    std::cout << "Initial size: " << list[0].size() << std::endl;
-#endif
-
-    // Intersect the hyperplanes one at a time.
-    // At any point we should have the latest results in
-    // list[workingList], with the other list empty.
-    int workingList = 0;
-    size_t used = 0;
-    for (i=0; i<nEqns; i++) {
-        // Do not increment used if the old solution set sits entirely in
-        // and/or to only one side of the new hyperplane.  This gives the
-        // dimensional filtering in intersectHyperplane() greater strength.
-        // The reason this works is because any vertex of the solution
-        // space *with* this hyperplane is also a vertex of the solution
-        // space *without* this hyperplane (and therefore satisfies the
-        // relevant dimensional constraints without this hyperplane).
-        if (intersectHyperplane(list[workingList], list[1 - workingList],
-                dim, used, constraintMasks, tracker))
-            ++used;
-
-        workingList = 1 - workingList;
-#if 0
-        std::cout << "Intermediate size: " << list[workingList].size()
-            << std::endl;
-#endif
-
-        if (tracker && ! tracker->setPercent(100.0 * i / nEqns))
-            break;
-    }
-
-    // We're done!
-    delete[] hyperplanes;
-
-    if (tracker && tracker->isCancelled()) {
-        // The operation was cancelled.  Clean up before returning.
-        for (auto* r : list[workingList])
-            delete r;
-        return;
-    }
-
-    // Convert the final solutions into the required ray class.
-    for (auto* r : list[workingList]) {
-        RayClass ans(dim);
-        r->recover(ans, subspace);
-        action(std::move(ans));
-
-        delete r;
-    }
-
-    // All done!
-    if (tracker)
-        tracker->setPercent(100);
+    });
 }
 
-template <class IntegerType, class BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 bool DoubleDescription::intersectHyperplane(
         std::vector<RaySpec<IntegerType, BitmaskType>*>& src,
         std::vector<RaySpec<IntegerType, BitmaskType>*>& dest,

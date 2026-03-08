@@ -28,7 +28,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "regina-config.h"
 #include "file/globaldirs.h"
 #include "packet/container.h"
 #include "packet/script.h"

@@ -83,7 +83,7 @@ struct EnableIf<false, T, defaultValue> {
  * This function will call \a action for each integer \a i in the range
  * <i>from</i>, ..., (<i>to</i>-1) inclusive.
  *
- * The action should be a templated callable object (e.g., a generic lambda)
+ * The action should be a templated callable type (e.g., a generic lambda)
  * that takes a single argument whose type depends on the value of \a i.
  * Any return value will be ignored.  For each integer \a i, the argument will
  * be of type `std::integral_constant<int, i>`, which means that \a i
@@ -97,7 +97,7 @@ struct EnableIf<false, T, defaultValue> {
  *
  * \ingroup utilities
  */
-template <int from, int to, class Action>
+template <int from, int to, typename Action>
 constexpr void for_constexpr(Action&& action) {
     if constexpr (from < to) {
         action(std::integral_constant<int, from>());
@@ -111,7 +111,7 @@ constexpr void for_constexpr(Action&& action) {
  * This function will call \a action for each integer \a i in the sequence
  * \a values.
  *
- * The action should be a templated callable object (e.g., a generic lambda)
+ * The action should be a templated callable type (e.g., a generic lambda)
  * that takes a single argument whose type depends on the value of \a i.
  * Any return value will be ignored.  For each integer \a i, the argument will
  * be of type `std::integral_constant<int, i>`, which means that \a i
@@ -128,7 +128,7 @@ constexpr void for_constexpr(Action&& action) {
  *
  * \ingroup utilities
  */
-template <int... values, class Action>
+template <int... values, typename Action>
 constexpr void foreach_constexpr(Action&& action) {
     (action(std::integral_constant<int, values>()), ...);
 }
@@ -139,7 +139,7 @@ constexpr void foreach_constexpr(Action&& action) {
  * This function will call \a action for each integer \a i in the integer
  * sequence \a values.
  *
- * The action should be a templated callable object (e.g., a generic lambda)
+ * The action should be a templated callable type (e.g., a generic lambda)
  * that takes a single argument whose type depends on the value of \a i.
  * Any return value will be ignored.  For each integer \a i, the argument will
  * be of type `std::integral_constant<int, i>`, which means that \a i
@@ -156,7 +156,7 @@ constexpr void foreach_constexpr(Action&& action) {
  *
  * \ingroup utilities
  */
-template <int... values, class Action>
+template <int... values, typename Action>
 constexpr void foreach_constexpr(std::integer_sequence<int, values...>,
         Action&& action) {
     (action(std::integral_constant<int, values>()), ...);
@@ -167,7 +167,7 @@ constexpr void foreach_constexpr(std::integer_sequence<int, values...>,
  * to a compile-time range of integers, and the value of the argument
  * determines what is returned.
  *
- * The action should be a templated callable object (e.g., a generic lambda)
+ * The action should be a templated callable type (e.g., a generic lambda)
  * that takes a single argument.  If \a value is equal to the integer \a i,
  * for some \a i in the range <i>from</i>, ..., (<i>to</i>-1) inclusive,
  * then this function will return `action(i)`.  The argument \a i
@@ -192,7 +192,7 @@ constexpr void foreach_constexpr(std::integer_sequence<int, values...>,
  *
  * \ingroup utilities
  */
-template <int from, int to, typename Return, class Action>
+template <int from, int to, typename Return, typename Action>
 constexpr Return select_constexpr(int value, Action&& action) {
     if constexpr (from < to) {
         if (value == from)
@@ -212,13 +212,15 @@ namespace detail {
  * Implementation details for select_constexpr_as_variant.
  * These declarations are used to pack together the correct std::variant
  * return type.
+ *
+ * \ingroup detail
  */
-template <int from, class Action, int... arg /* 0,...,(to-from-1) */>
+template <int from, typename Action, int... arg /* 0,...,(to-from-1) */>
 auto seqToVariantHelper(std::integer_sequence<int, arg...>) ->
     std::variant<decltype(std::declval<Action>()(
         std::integral_constant<int, arg + from>()))...>;
 
-template <int from, int to, class Action>
+template <int from, int to, typename Action>
 using SeqToVariant = decltype(seqToVariantHelper<from, Action>(
     std::make_integer_sequence<int, to - from>()));
 
@@ -264,7 +266,7 @@ using SeqToVariant = decltype(seqToVariantHelper<from, Action>(
  *
  * \ingroup utilities
  */
-template <int from, int to, class Action>
+template <int from, int to, typename Action>
 constexpr auto select_constexpr_as_variant(int value, Action&& action) {
     return select_constexpr<from, to,
         regina::detail::SeqToVariant<from, to, Action>, Action>(
@@ -281,6 +283,8 @@ namespace detail {
  * cases, without ever instantiating an invalid std::tuple_element.
  *
  * See safe_tuple_element below for details.
+ *
+ * \ingroup detail
  */
 template <int pos, typename tuple, typename out_of_range,
     bool pos_in_range = (pos >= 0 && pos < std::tuple_size_v<tuple>)>
@@ -324,7 +328,7 @@ using safe_tuple_element = typename regina::detail::safe_tuple_element_impl<
 
 /**
  * A traits class that deduces the type of the argument in a given position
- * for a callable object.  It can (amongst other things) work with
+ * for a callable type.  It can (amongst other things) work with
  * function pointers, function references, member function pointers,
  * std::function wrappers, and lambdas.
  *
@@ -339,17 +343,28 @@ using safe_tuple_element = typename regina::detail::safe_tuple_element_impl<
  * If \a Action does not take enough arguments for the given position \a pos,
  * then \a type will be \c void.
  *
- * \tparam Action the type of a callable object that takes at least
- * one argument.
+ * \tparam Action a callable type that takes at least one argument.
  * \tparam pos the index of the argument being requested.  Positions are
  * numbered from 0 upwards.
  *
- * \ingroup detail
+ * \ingroup utilities
  */
 template <typename Action, int pos>
-struct CallableArg;
+struct [[deprecated]] CallableArg;
 
 #ifndef __DOXYGEN
+
+#if defined(__GNUC__)
+// These specialisations are causing noisy deprecation warnings under gcc.
+// Silence them, since the specialisations need to stay until CallableArg is
+// removed completely.
+#pragma GCC diagnostic push
+#if defined(__clang__)
+#pragma GCC diagnostic ignored "-Wdeprecated"
+#else
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+#endif
 
 // Generic implementation which works for lambdas and classes with a
 // bracket operator.  For lambdas, this then falls through (via inheritance)
@@ -388,6 +403,10 @@ template <typename ReturnType, typename... Args, int pos>
 struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
     using type = safe_tuple_element<pos, std::tuple<Args...>>;
 };
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
 
 #endif // __DOXYGEN
 

@@ -114,8 +114,7 @@ Python:
     Triangulation3 for dimensions 2 and 3).
 
 Template parameter ``dim``:
-    the dimension of the underlying triangulation. This must be
-    between 2 and 15 inclusive.)doc";
+    the dimension of the underlying triangulation.)doc";
 
 namespace Triangulation_ {
 

@@ -37,18 +37,56 @@
 #define __REGINA_CORE_H
 #endif
 
-#include "regina-config.h" // for REGINA_HIGHDIM
+#include "regina-config.h"
 
 namespace regina {
 
 /**
+ * Indicates whether this build of Regina supports triangulations of the given
+ * dimension.
+ *
+ * A normal build of Regina will support triangulations of dimensions 2 to 8
+ * inclusive.  If necessary, you can make a "high-dimenisional build" of Regina
+ * using the `REGINA_HIGHDIM` option at compile time, which will enable support
+ * for triangulations of dimensions 2 to 15 inclusive.
+ *
+ * See the page on \ref stddim "standard dimensions" for further discussion of
+ * supported versus standard dimensions.
+ *
+ * \param dim the dimension in question.
+ * \return \c true if and only if \a dim is one of Regina's supported
+ * dimensions.
+ *
+ * \see standardDim()
+ * \see maxDim()
+ *
+ * \ingroup engine
+ */
+constexpr bool supportedDim(int dim) {
+#ifdef REGINA_HIGHDIM
+    return (dim >= 2 && dim <= 15);
+#else
+    return (dim >= 2 && dim <= 8);
+#endif
+}
+
+/**
  * Indicates whether the given dimension is one of Regina's
- * \ref stddim "standard dimensions".
- * Standard dimensions offer significantly richer functionality for
- * triangulations than generic dimensions.
+ * _standard dimensions_ for triangulations.
+ *
+ * Regina's standard dimensions are 2, 3, and 4.  These dimensions are
+ * Regina's main focus: here triangulations are highly optimised and offer
+ * rich functionality.  This is in contrast to other (higher) supported
+ * dimensions, where Regina's functionality is much more basic.
+ *
+ * See the page on \ref stddim "standard dimensions" for further discussion of
+ * supported versus standard dimensions.
  *
  * \param dim the dimension in question.
  * \return \c true if and only if \a dim is one of Regina's standard dimensions.
+ *
+ * \see supportedDim()
+ * \see maxDim()
  *
  * \ingroup engine
  */
@@ -64,6 +102,9 @@ constexpr bool standardDim(int dim) {
  *
  * \return Regina's maximum dimension of triangulation.
  *
+ * \see supportedDim()
+ * \see standardDim()
+ *
  * \ingroup engine
  */
 constexpr int maxDim() {
@@ -73,6 +114,65 @@ constexpr int maxDim() {
     return 8;
 #endif
 }
+
+#ifdef __DOXYGEN
+    /**
+     * Defined if and only if native 128-bit arithmetic is available on
+     * this platform.
+     *
+     * If this macro is defined, then you can access native signed and
+     * unsigned 128-bit integers through the type aliases Int128 and UInt128
+     * respectively.
+     *
+     * If this macro is not defined, then the types Int128 and UInt128
+     * will be left undefined.
+     *
+     * \ingroup utilities
+     */
+    #define INT128_AVAILABLE
+
+    /**
+     * A native signed 128-bit integer type, if available on this platform.
+     *
+     * If native 128-bit arithmetic is not available on this platform, then
+     * the types Int128 and UInt128 will be left undefined.
+     *
+     * See also the preprocessor macro `INT128_AVAILABLE`, which is defined
+     * precisely when these type aliases Int128 and UInt128 exist.
+     *
+     * \ingroup utilities
+     */
+    using Int128 = int128_t;
+
+    /**
+     * A native unsigned 128-bit integer type, if available on this platform.
+     *
+     * If native 128-bit arithmetic is not available on this platform, then
+     * the types Int128 and UInt128 will be left undefined.
+     *
+     * See also the preprocessor macro `INT128_AVAILABLE`, which is defined
+     * precisely when these type aliases Int128 and UInt128 exist.
+     *
+     * \ingroup utilities
+     */
+    using UInt128 = uint128_t;
+#else
+    #if defined(INTERNAL___INT128_FOUND)
+        #define INT128_AVAILABLE
+        using Int128 = __int128;
+        using UInt128 = __uint128;
+    #elif defined(INTERNAL___INT128_T_FOUND)
+        #define INT128_AVAILABLE
+        using Int128 = __int128_t;
+        using UInt128 = __uint128_t;
+    #elif defined(INTERNAL_INT128_T_FOUND)
+        #define INT128_AVAILABLE
+        using Int128 = int128_t;
+        using UInt128 = uint128_t;
+    #else
+        #undef INT128_AVAILABLE
+    #endif
+#endif
 
 /**
  * Represents various classes of algorithms that Regina can use for
@@ -127,6 +227,8 @@ enum class Algorithm {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * Algorithm::Default.
+ *
+ * \ingroup engine
  */
 [[deprecated]] inline constexpr Algorithm ALG_DEFAULT = Algorithm::Default;
 /**
@@ -134,6 +236,8 @@ enum class Algorithm {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * Algorithm::Backtrack.
+ *
+ * \ingroup engine
  */
 [[deprecated]] inline constexpr Algorithm ALG_BACKTRACK = Algorithm::Backtrack;
 /**
@@ -141,6 +245,8 @@ enum class Algorithm {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * Algorithm::Treewidth.
+ *
+ * \ingroup engine
  */
 [[deprecated]] inline constexpr Algorithm ALG_TREEWIDTH = Algorithm::Treewidth;
 /**
@@ -148,6 +254,8 @@ enum class Algorithm {
  *
  * \deprecated This has been renamed to the scoped enumeration constant
  * Algorithm::Naive.
+ *
+ * \ingroup engine
  */
 [[deprecated]] inline constexpr Algorithm ALG_NAIVE = Algorithm::Naive;
 
@@ -186,6 +294,8 @@ enum class Language {
  *
  * \nopython This enumeration is only used internally by private and/or
  * protected class templates, and is therefore not made available to Python.
+ *
+ * \ingroup engine
  */
 enum class ChangeType {
     /**
@@ -238,6 +348,8 @@ enum class ChangeType {
  *
  * \nopython By design, Python users are not able to circumvent any of
  * Regina's automatic checks.  If speed is essential, you should be using C++.
+ *
+ * \ingroup engine
  */
 struct Unprotected {
     /**
@@ -253,8 +365,25 @@ struct Unprotected {
  *
  * \nopython By design, Python users are not able to circumvent any of
  * Regina's automatic checks.  If speed is essential, you should be using C++.
+ *
+ * \ingroup engine
  */
 inline constexpr Unprotected unprotected;
+
+/**
+ * A legitimate C++ type that can never be used in an implementation.
+ *
+ * This type is declared but never defined.
+ *
+ * For an example of its use, see TriangulationTraits (where it acts as a
+ * placeholder for non-existent classes that would otherwise cause a compile
+ * error).
+ *
+ * \nopython
+ *
+ * \ingroup engine
+ */
+struct NoSuchType;
 
 } // namespace regina
 

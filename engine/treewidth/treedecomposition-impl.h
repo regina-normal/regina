@@ -48,7 +48,7 @@
 
 namespace regina {
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 TreeDecomposition::TreeDecomposition(
         const Triangulation<dim>& triangulation,
         TreeDecompositionAlg alg) :
@@ -66,7 +66,7 @@ TreeDecomposition::TreeDecomposition(
     construct(g, alg);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 TreeDecomposition::TreeDecomposition(
         const FacetPairing<dim>& pairing,
         TreeDecompositionAlg alg) :

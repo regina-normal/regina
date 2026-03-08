@@ -29,6 +29,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+print(subscript(-12))
+print(superscript(-12))
+print(subscript(Integer(-12)))
+print(superscript(Integer(-12)))
+print(subscript(LargeInteger(-12)))
+print(superscript(LargeInteger(-12)))
+
 g = AbelianGroup(3)
 print(g)
 print(g.str())

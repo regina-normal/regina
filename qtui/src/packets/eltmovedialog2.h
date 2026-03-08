@@ -48,8 +48,12 @@ class QButtonGroup;
 class QDialogButtonBox;
 class QLabel;
 class QRadioButton;
-template <int, int> class FaceChooser;
-template <int> class SimplexChooser;
+
+template <int dim, int subdim>
+requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
+class FaceChooser;
+
+template <int dim> requires (regina::supportedDim(dim)) class SimplexChooser;
 
 /**
  * A dialog used to select and perform an elementary move on a

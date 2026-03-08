@@ -81,7 +81,7 @@ namespace graph {
      *
      * \tparam dim the dimension of the underlying triangulation.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     struct DualEdge {
         Face<dim, dim-1> const* face;
             /**< The (<i>dim</i>-1)-face of the underlying
@@ -194,7 +194,7 @@ namespace graph {
      *
      * \tparam dim the dimension of the underlying triangulation.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     class DualEdgeIterator {
         public:
             using InternalIterator =
@@ -341,7 +341,7 @@ namespace graph {
      * \tparam out indicates the orientation that will be assigned to
      * the incident dual edges, as described above.
      */
-    template <int dim, bool out>
+    template <int dim, bool out> requires (supportedDim(dim))
     class IncidentDualEdgeIterator {
         public:
             using iterator_category = std::input_iterator_tag;
@@ -473,7 +473,7 @@ namespace graph {
      *
      * \tparam dim the dimension of the underlying triangulation.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     class AdjacentDualVertexIterator {
         public:
             using iterator_category = std::input_iterator_tag;
@@ -600,6 +600,7 @@ namespace graph {
      * boost::vertex_name_t.
      */
     template <int dim, typename PropertyType>
+    requires (supportedDim(dim))
     class InherentTriangulationPropertyMap {
     };
 
@@ -615,7 +616,7 @@ namespace graph {
      * \return the range of all dual vertices of \a t, presented as a
      * std::pair of simplex iterators.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     auto vertices(const Triangulation<dim>& t);
 
     /**
@@ -627,7 +628,7 @@ namespace graph {
      * \param t the triangulation whose dual graph we are studying.
      * \return the range of all dual edges of \a t.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     std::pair<graph::DualEdgeIterator<dim>, graph::DualEdgeIterator<dim>>
         edges(const Triangulation<dim>& t);
 
@@ -640,7 +641,7 @@ namespace graph {
      * \param t the triangulation whose dual graph we are studying.
      * \return the number of dual vertices of \a t.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     size_t num_vertices(const Triangulation<dim>& t);
 
     /**
@@ -652,7 +653,7 @@ namespace graph {
      * \param t the triangulation whose dual graph we are studying.
      * \return the number of dual edges of \a t.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     size_t num_edges(const Triangulation<dim>& t);
 
     /**
@@ -672,7 +673,7 @@ namespace graph {
      * \param t the dual graph itself (i.e., the underlying triangulation).
      * \return the source vertex of the dual edge \a e.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     Simplex<dim>* source(graph::DualEdge<dim> e, const Triangulation<dim>& t);
 
     /**
@@ -692,7 +693,7 @@ namespace graph {
      * \param t the dual graph itself (i.e., the underlying triangulation).
      * \return the target vertex of the dual edge \a e.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     Simplex<dim>* target(graph::DualEdge<dim> e, const Triangulation<dim>& t);
 
     /**
@@ -709,7 +710,7 @@ namespace graph {
      * \param t the dual graph itself (i.e., the underlying triangulation).
      * \return the degree of the dual vertex \a v.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     unsigned degree(Simplex<dim>* v, const Triangulation<dim>& t);
 
     /**
@@ -726,7 +727,7 @@ namespace graph {
      * \param t the dual graph itself (i.e., the underlying triangulation).
      * \return the degree of the dual vertex \a v.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     unsigned in_degree(Simplex<dim>* v, const Triangulation<dim>& t);
 
     /**
@@ -743,7 +744,7 @@ namespace graph {
      * \param t the dual graph itself (i.e., the underlying triangulation).
      * \return the degree of the dual vertex \a v.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     unsigned out_degree(Simplex<dim>* v, const Triangulation<dim>& t);
 
     /**
@@ -756,7 +757,7 @@ namespace graph {
      * \param t the dual graph itself (i.e., the underlying triangulation).
      * \return the range of all dual vertices adjacent to \a v.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     std::pair<graph::AdjacentDualVertexIterator<dim>,
             graph::AdjacentDualVertexIterator<dim>>
         adjacent_vertices(Simplex<dim>* v, const Triangulation<dim>& t);
@@ -777,7 +778,7 @@ namespace graph {
      * \param t the dual graph itself (i.e., the underlying triangulation).
      * \return the range of all dual edges incident with \a v.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     std::pair<graph::IncidentDualEdgeIterator<dim, false>,
             graph::IncidentDualEdgeIterator<dim, false>>
         in_edges(Simplex<dim>* v, const Triangulation<dim>& t);
@@ -798,7 +799,7 @@ namespace graph {
      * \param t the dual graph itself (i.e., the underlying triangulation).
      * \return the range of all dual edges incident with \a v.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     std::pair<graph::IncidentDualEdgeIterator<dim, true>,
             graph::IncidentDualEdgeIterator<dim, true>>
         out_edges(Simplex<dim>* v, const Triangulation<dim>& t);
@@ -816,7 +817,7 @@ namespace graph {
      * \return the index of the top-dimensional simplex corresponding to
      * \a v in the underlying triangulation.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     size_t get(
         graph::InherentTriangulationPropertyMap<dim, boost::vertex_index_t>,
         Simplex<dim>* v);
@@ -834,7 +835,7 @@ namespace graph {
      * \return the description of the top-dimensional simplex corresponding to
      * \a v in the underlying triangulation.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     const std::string& get(
         graph::InherentTriangulationPropertyMap<dim, boost::vertex_name_t>,
         Simplex<dim>* v);
@@ -853,7 +854,7 @@ namespace graph {
      *
      * \return a property map for querying indices of dual vertices.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     graph::InherentTriangulationPropertyMap<dim, boost::vertex_index_t> get(
         boost::vertex_index_t, const Triangulation<dim>&);
 
@@ -871,7 +872,7 @@ namespace graph {
      *
      * \return a property map for querying descriptions of dual vertices.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     graph::InherentTriangulationPropertyMap<dim, boost::vertex_name_t> get(
         boost::vertex_name_t, const Triangulation<dim>&);
 
@@ -890,7 +891,7 @@ namespace graph {
      * \return the index of the top-dimensional simplex corresponding to
      * \a v in the underlying triangulation.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     size_t get(boost::vertex_index_t, const Triangulation<dim>&,
             Simplex<dim>* v);
 
@@ -909,14 +910,14 @@ namespace graph {
      * \return the description of the top-dimensional simplex corresponding to
      * \a v in the underlying triangulation.
      */
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     const std::string& get(boost::vertex_name_t, const Triangulation<dim>&,
             Simplex<dim>* v);
 
 } // namespace regina
 
 namespace boost {
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     struct property_traits<
             regina::graph::InherentTriangulationPropertyMap<
             dim, boost::vertex_index_t>> {
@@ -926,7 +927,7 @@ namespace boost {
         using category = boost::readable_property_map_tag;
     };
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     struct property_traits<
             regina::graph::InherentTriangulationPropertyMap<
             dim, boost::vertex_name_t>> {
@@ -937,12 +938,13 @@ namespace boost {
     };
 
     template <int dim, typename PropertyType>
+    requires (supportedDim(dim))
     struct property_map<regina::Triangulation<dim>, PropertyType> {
         using const_type =
             regina::graph::InherentTriangulationPropertyMap<dim, PropertyType>;
     };
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     struct graph_traits<regina::Triangulation<dim>> {
         using vertex_descriptor = regina::Simplex<dim>*;
         using edge_descriptor = typename regina::graph::DualEdge<dim>;
@@ -978,55 +980,55 @@ namespace graph {
 
     // Inline functions for DualEdge
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline DualEdge<dim>::DualEdge(
             const Face<dim, dim-1>* face_, bool forward_) :
             face(face_), forward(forward_) {
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline Simplex<dim>* DualEdge<dim>::source() const {
         return face->embedding(forward ? 0 : 1).simplex();
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline Simplex<dim>* DualEdge<dim>::target() const {
         return face->embedding(forward ? 1 : 0).simplex();
     }
 
     // Inline functions for DualEdgeIterator
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline DualEdgeIterator<dim>::DualEdgeIterator(
             const InternalIterator& it, const InternalIterator& end) :
             it_(it), end_(end) {
         makeValid();
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline DualEdgeIterator<dim>& DualEdgeIterator<dim>::operator ++ () {
         ++it_;
         makeValid();
         return *this;
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline DualEdgeIterator<dim> DualEdgeIterator<dim>::operator ++ (int) {
         return DualEdgeIterator(it_++, end_);
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline DualEdge<dim> DualEdgeIterator<dim>::operator * () const {
         return DualEdge<dim>(*it_);
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline bool DualEdgeIterator<dim>::operator == (const DualEdgeIterator& rhs)
             const {
         return it_ == rhs.it_;
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline void DualEdgeIterator<dim>::makeValid() {
         while (it_ != end_ && (*it_)->isBoundary())
             ++it_;
@@ -1034,19 +1036,19 @@ namespace graph {
 
     // Inline functions for IncidentDualEdgeIterator
 
-    template <int dim, bool out>
+    template <int dim, bool out> requires (supportedDim(dim))
     inline IncidentDualEdgeIterator<dim, out>::IncidentDualEdgeIterator() :
             simp_(0), facet_(0) {
     }
 
-    template <int dim, bool out>
+    template <int dim, bool out> requires (supportedDim(dim))
     inline IncidentDualEdgeIterator<dim, out>::IncidentDualEdgeIterator(
             Simplex<dim>* simp, unsigned facet) :
             simp_(simp), facet_(facet) {
         makeValid();
     }
 
-    template <int dim, bool out>
+    template <int dim, bool out> requires (supportedDim(dim))
     inline IncidentDualEdgeIterator<dim, out>&
             IncidentDualEdgeIterator<dim, out>::operator ++ () {
         ++facet_;
@@ -1054,7 +1056,7 @@ namespace graph {
         return *this;
     }
 
-    template <int dim, bool out>
+    template <int dim, bool out> requires (supportedDim(dim))
     inline IncidentDualEdgeIterator<dim, out>
             IncidentDualEdgeIterator<dim, out>::operator ++ (int) {
         IncidentDualEdgeIterator prev(*this);
@@ -1063,7 +1065,7 @@ namespace graph {
         return prev;
     }
 
-    template <int dim, bool out>
+    template <int dim, bool out> requires (supportedDim(dim))
     inline DualEdge<dim> IncidentDualEdgeIterator<dim, out>::operator * ()
             const {
         Face<dim, dim-1>* f = simp_->template face<dim-1>(facet_);
@@ -1071,7 +1073,7 @@ namespace graph {
         return DualEdge<dim>(f, emb.simplex() == simp_ && emb.face() == facet_);
     }
 
-    template <int dim, bool out>
+    template <int dim, bool out> requires (supportedDim(dim))
     inline void IncidentDualEdgeIterator<dim, out>::makeValid() {
         while (facet_ <= dim && ! simp_->adjacentSimplex(facet_))
             ++facet_;
@@ -1079,19 +1081,19 @@ namespace graph {
 
     // Inline functions for AdjacentDualVertexIterator
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline AdjacentDualVertexIterator<dim>::AdjacentDualVertexIterator() :
             source_(0) {
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline AdjacentDualVertexIterator<dim>::AdjacentDualVertexIterator(
             Simplex<dim>* source, unsigned facet) :
             source_(source), facet_(facet) {
         skipBoundary();
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline AdjacentDualVertexIterator<dim>&
             AdjacentDualVertexIterator<dim>::operator ++ () {
         ++facet_;
@@ -1099,7 +1101,7 @@ namespace graph {
         return *this;
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline AdjacentDualVertexIterator<dim>
             AdjacentDualVertexIterator<dim>::operator ++ (int) {
         AdjacentDualVertexIterator prev(*this);
@@ -1108,12 +1110,12 @@ namespace graph {
         return prev;
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline Simplex<dim>* AdjacentDualVertexIterator<dim>::operator * () const {
         return source_->adjacentSimplex(facet_);
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline void AdjacentDualVertexIterator<dim>::skipBoundary() {
         while (facet_ <= dim && ! source_->adjacentSimplex(facet_))
             ++facet_;
@@ -1123,12 +1125,12 @@ namespace graph {
 
     // Inline BGL functions
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline auto vertices(const Triangulation<dim>& t) {
         return std::make_pair(t.simplices().begin(), t.simplices().end());
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline std::pair<graph::DualEdgeIterator<dim>, graph::DualEdgeIterator<dim>>
             edges(const Triangulation<dim>& t) {
         return std::make_pair(
@@ -1138,29 +1140,29 @@ namespace graph {
                 t.template faces<dim-1>().end()));
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline size_t num_vertices(const Triangulation<dim>& t) {
         return t.size();
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline size_t num_edges(const Triangulation<dim>& t) {
         return t.template countFaces<dim-1>() - t.countBoundaryFacets();
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline Simplex<dim>* source(graph::DualEdge<dim> e,
             const Triangulation<dim>&) {
         return e.source();
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline Simplex<dim>* target(graph::DualEdge<dim> e,
             const Triangulation<dim>&) {
         return e.target();
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline unsigned degree(Simplex<dim>* source, const Triangulation<dim>&) {
         unsigned ans = 0;
         for (unsigned i = 0; i <= dim; ++i)
@@ -1169,19 +1171,19 @@ namespace graph {
         return ans;
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline unsigned in_degree(Simplex<dim>* source,
             const Triangulation<dim>& t) {
         return degree(source, t);
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline unsigned out_degree(Simplex<dim>* source,
             const Triangulation<dim>& t) {
         return degree(source, t);
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline std::pair<graph::AdjacentDualVertexIterator<dim>,
             graph::AdjacentDualVertexIterator<dim>>
             adjacent_vertices(Simplex<dim>* source, const Triangulation<dim>&) {
@@ -1190,7 +1192,7 @@ namespace graph {
             graph::AdjacentDualVertexIterator<dim>(source, dim + 1));
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline std::pair<graph::IncidentDualEdgeIterator<dim, false>,
             graph::IncidentDualEdgeIterator<dim, false>>
             in_edges(Simplex<dim>* source, const Triangulation<dim>&) {
@@ -1199,7 +1201,7 @@ namespace graph {
             graph::IncidentDualEdgeIterator<dim, false>(source, dim + 1));
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline std::pair<graph::IncidentDualEdgeIterator<dim, true>,
             graph::IncidentDualEdgeIterator<dim, true>>
             out_edges(Simplex<dim>* source, const Triangulation<dim>&) {
@@ -1208,41 +1210,41 @@ namespace graph {
             graph::IncidentDualEdgeIterator<dim, true>(source, dim + 1));
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline size_t get(
             graph::InherentTriangulationPropertyMap<dim, boost::vertex_index_t>,
             Simplex<dim>* v) {
         return v->index();
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline const std::string& get(
             graph::InherentTriangulationPropertyMap<dim, boost::vertex_name_t>,
             Simplex<dim>* v) {
         return v->description();
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline graph::InherentTriangulationPropertyMap<dim, boost::vertex_index_t>
             get(boost::vertex_index_t, const Triangulation<dim>&) {
         return graph::InherentTriangulationPropertyMap<
             dim, boost::vertex_index_t>();
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline graph::InherentTriangulationPropertyMap<dim, boost::vertex_name_t>
             get(boost::vertex_name_t, const Triangulation<dim>&) {
         return graph::InherentTriangulationPropertyMap<
             dim, boost::vertex_name_t>();
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline size_t get(
             boost::vertex_index_t, const Triangulation<dim>&, Simplex<dim>* v) {
         return v->index();
     }
 
-    template <int dim>
+    template <int dim> requires (supportedDim(dim))
     inline const std::string& get(
             boost::vertex_name_t, const Triangulation<dim>&, Simplex<dim>* v) {
         return v->desc();

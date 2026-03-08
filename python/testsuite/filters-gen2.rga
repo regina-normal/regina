@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<reginadata engine="3.0.0">
+<packet label="Normal Surface Filters"
+	type="Container" typeid="1"
+	parent="">
+<packet label="Tori, Annuli and Discs"
+	type="Surface Filter" typeid="8"
+	parent="Container">
+  <filter type="Combination filter" typeid="2">
+    <op type="or"/>
+  </filter>
+<packet label="Tori and Annuli"
+	type="Surface Filter" typeid="8"
+	parent="Tori, Annuli and Discs">
+  <filter type="Filter by basic properties" typeid="1">
+    <euler> 0 </euler>
+    <orbl value="T-"/>
+    <compact value="T-"/>
+  </filter>
+</packet> <!-- Tori and Annuli (Surface Filter) -->
+<packet label="Discs"
+	type="Surface Filter" typeid="8"
+	parent="Tori, Annuli and Discs">
+  <filter type="Filter by basic properties" typeid="1">
+    <euler> 1 </euler>
+    <orbl value="T-"/>
+    <compact value="T-"/>
+    <realbdry value="T-"/>
+  </filter>
+</packet> <!-- Discs (Surface Filter) -->
+</packet> <!-- Tori, Annuli and Discs (Surface Filter) -->
+</packet> <!-- Normal Surface Filters (Container) -->
+</reginadata>

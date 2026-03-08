@@ -62,7 +62,7 @@ class CensusTest : public testing::Test {
                     minimal_(minimal) {}
         };
 
-        template <int dim>
+        template <int dim> requires (regina::standardDim(dim))
         static void foundPerms(const GluingPerms<dim>& p, CensusSpec* spec) {
             Triangulation<dim> tri = p.triangulate();
             if (tri.isValid() &&
@@ -80,7 +80,7 @@ class CensusTest : public testing::Test {
             }
         }
 
-        template <int dim>
+        template <int dim> requires (regina::standardDim(dim))
         static void foundPairing(const FacetPairing<dim>& pairing,
             typename FacetPairing<dim>::IsoList autos, CensusSpec* spec) {
             if constexpr (dim == 2) {
@@ -97,7 +97,7 @@ class CensusTest : public testing::Test {
             }
         }
 
-        template <int dim>
+        template <int dim> requires (regina::standardDim(dim))
         static void rawCountsCompare(int minSize, int maxSize,
                 const size_t* realAns,
                 BoolSet orientability,

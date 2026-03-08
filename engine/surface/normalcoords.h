@@ -468,7 +468,7 @@ class NormalEncoding {
          *
          * \return a reference to this encoding.
          */
-        NormalEncoding& operator = (const NormalEncoding&) = default;
+        constexpr NormalEncoding& operator = (const NormalEncoding&) = default;
 
         /**
          * Determines whether this and the given encoding are identical.

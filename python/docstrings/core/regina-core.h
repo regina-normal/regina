@@ -39,20 +39,66 @@ If Regina was built with the ``REGINA_HIGHDIM`` option, then this will
 be 15; otherwise it will be 8 (the default for ordinary builds).
 
 Returns:
-    Regina's maximum dimension of triangulation.)doc";
+    Regina's maximum dimension of triangulation.
+
+See also:
+    supportedDim()
+
+See also:
+    standardDim())doc";
 
 // Docstring regina::python::doc::standardDim
 static const char *standardDim =
-R"doc(Indicates whether the given dimension is one of Regina's standard
-dimensions. Standard dimensions offer significantly richer
-functionality for triangulations than generic dimensions.
+R"doc(Indicates whether the given dimension is one of Regina's _standard
+dimensions_ for triangulations.
+
+Regina's standard dimensions are 2, 3, and 4. These dimensions are
+Regina's main focus: here triangulations are highly optimised and
+offer rich functionality. This is in contrast to other (higher)
+supported dimensions, where Regina's functionality is much more basic.
+
+See the page on standard dimensions for further discussion of
+supported versus standard dimensions.
 
 Parameter ``dim``:
     the dimension in question.
 
 Returns:
     ``True`` if and only if *dim* is one of Regina's standard
-    dimensions.)doc";
+    dimensions.
+
+See also:
+    supportedDim()
+
+See also:
+    maxDim())doc";
+
+// Docstring regina::python::doc::supportedDim
+static const char *supportedDim =
+R"doc(Indicates whether this build of Regina supports triangulations of the
+given dimension.
+
+A normal build of Regina will support triangulations of dimensions 2
+to 8 inclusive. If necessary, you can make a "high-dimenisional build"
+of Regina using the ``REGINA_HIGHDIM`` option at compile time, which
+will enable support for triangulations of dimensions 2 to 15
+inclusive.
+
+See the page on standard dimensions for further discussion of
+supported versus standard dimensions.
+
+Parameter ``dim``:
+    the dimension in question.
+
+Returns:
+    ``True`` if and only if *dim* is one of Regina's supported
+    dimensions.
+
+See also:
+    standardDim()
+
+See also:
+    maxDim())doc";
 
 namespace Algorithm_ {
 

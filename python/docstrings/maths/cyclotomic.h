@@ -471,10 +471,6 @@ where *n* is the given order of the underlying field; any missing
 coefficients are assumed to be zero. In particular, an empty sequence
 is allowed (and represents the zero field element).
 
-Precondition:
-    Rationals can be assigned values from dereferenced iterators of
-    type *iterator*.
-
 Python:
     Instead of a pair of iterators, this routine takes a python list
     of coefficients.

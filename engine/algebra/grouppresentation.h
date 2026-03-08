@@ -46,6 +46,7 @@
 #include <map>
 
 #include "regina-core.h"
+#include "concepts/core.h"
 #include "core/output.h"
 #include "algebra/markedabeliangroup.h"
 #include "algebra/abeliangroup.h"
@@ -68,7 +69,7 @@ class MarkedAbelianGroup;
  * \ingroup algebra
  */
 struct GroupExpressionTerm {
-    unsigned long generator;
+    size_t generator;
         /**< The number that identifies the generator in this term. */
     long exponent;
         /**< The exponent to which the generator is raised. */
@@ -83,7 +84,7 @@ struct GroupExpressionTerm {
      * \param gen the number that identifies the generator in the new term.
      * \param exp the exponent to which this generator is raised.
      */
-    GroupExpressionTerm(unsigned long gen, long exp);
+    GroupExpressionTerm(size_t gen, long exp);
     /**
      * Creates a new term initialised to the given value.
      */
@@ -206,7 +207,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \param exponent the exponent to which the given generator is
          * raised in the term.
          */
-        GroupExpression(unsigned long generator, long exponent);
+        GroupExpression(size_t generator, long exponent);
         /**
          * Creates a new expression that is a clone of the given expression.
          */
@@ -247,7 +248,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * If this is 0 (the default), then this argument will be ignored and
          * this constructor will not check whether generators are within range.
          */
-        GroupExpression(const char* input, unsigned long nGens = 0);
+        GroupExpression(const char* input, size_t nGens = 0);
         /**
          * Attempts to interpret the given input string as a word in a group.
          * Regina can recognise strings in the following four basic forms:
@@ -277,7 +278,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * If this is 0 (the default), then this argument will be ignored and
          * this constructor will not check whether generators are within range.
          */
-        GroupExpression(const std::string &input, unsigned long nGens = 0);
+        GroupExpression(const std::string &input, size_t nGens = 0);
 
         /**
          * Makes this expression a clone of the given expression.
@@ -426,7 +427,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * between 0 and countTerms()-1 inclusive.
          * \return the number of the requested generator.
          */
-        unsigned long generator(size_t index) const;
+        size_t generator(size_t index) const;
         /**
          * Returns the exponent corresonding to the
          * term at the given index in this expression.
@@ -456,7 +457,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \param exponent the exponent to which the given generator is
          * raised.
          */
-        void addTermFirst(unsigned long generator, long exponent);
+        void addTermFirst(size_t generator, long exponent);
         /**
          * Adds the given term to the end of this expression.
          *
@@ -471,7 +472,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \param exponent the exponent to which the given generator is
          * raised.
          */
-        void addTermLast(unsigned long generator, long exponent);
+        void addTermLast(size_t generator, long exponent);
 
         /**
          * Multiplies this expression on the left by the given word.
@@ -565,7 +566,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * assumed to be cyclic; see simplify() for further details.
          * \return \c true if and only if any substitutions were made.
          */
-        bool substitute(unsigned long generator,
+        bool substitute(size_t generator,
             const GroupExpression& expansion, bool cyclic = false);
         /**
          * Replaces every generator in this expression with the
@@ -621,9 +622,9 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \return a list of permutations, implemented as maps from
          * generator indices of this word to generator indices of \a other.
          */
-        std::list< std::map< unsigned long, GroupExpressionTerm > >
-            relabellingsThisToOther( const GroupExpression &other,
-            bool cyclic=false ) const;
+        std::list<std::map<size_t, GroupExpressionTerm>>
+            relabellingsThisToOther(const GroupExpression &other,
+            bool cyclic = false) const;
 
         /**
          * Writes a chunk of XML containing this expression.
@@ -780,7 +781,7 @@ void swap(GroupExpression& lhs, GroupExpression& rhs) noexcept;
  */
 class GroupPresentation : public Output<GroupPresentation> {
     protected:
-        unsigned long nGenerators_;
+        size_t nGenerators_;
             /**< The number of generators. */
         std::vector<GroupExpression> relations_;
             /**< The relations between the generators. */
@@ -811,7 +812,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \param nGenerators the number of generators.
          */
-        GroupPresentation(unsigned long nGenerators);
+        GroupPresentation(size_t nGenerators);
         /**
          * Constructor that allows you to directly pass an arbitrary number
          * of relators in string format.
@@ -836,8 +837,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * \param rels a vector of relations each given in string form,
          * as outlined above.
          */
-        GroupPresentation(unsigned long nGens,
-                const std::vector<std::string> &rels);
+        GroupPresentation(size_t nGens, const std::vector<std::string> &rels);
 
         /**
          * Sets this to be a clone of the given group presentation.
@@ -875,7 +875,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * \param numToAdd the number of generators to add.
          * \return the number of generators in the new presentation.
          */
-        unsigned long addGenerator(unsigned long numToAdd = 1);
+        size_t addGenerator(size_t numToAdd = 1);
         /**
          * Adds the given relation to the group presentation.
          * The relation must be of the form `expression = 1`.
@@ -896,7 +896,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \return the number of generators.
          */
-        unsigned long countGenerators() const;
+        size_t countGenerators() const;
         /**
          * Returns the number of relations in this group presentation.
          *
@@ -1052,9 +1052,9 @@ class GroupPresentation : public Output<GroupPresentation> {
          * can't find the simplest relators.
          *
          * Given a presentation `<g_i | r_i>`, this routine appends
-         * consequences of the relators {r_i} to the presentation that
-         * are of the form ab, where both a and b are cyclic permutations
-         * of relators from the collection {r_i}.
+         * consequences of the relators `{r_i}` to the presentation that
+         * are of the form `ab`, where both `a` and `b` are cyclic permutations
+         * of relators from the collection `{r_i}`.
          *
          * Passing depth=1 means it will only form products of two
          * relators.  Depth=2 means products of three, etc.  Depth=4 is
@@ -1064,7 +1064,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * across so far.
          *
          * \warning Do not call this routine with depth n before having called
-         * it at depth n-1 first.  Depth=0 is invalid, and depth=1 should be
+         * it at depth n-1 first.  Depth≤0 is invalid, and depth=1 should be
          * your first call to this routine.  This routine gobbles up an
          * exponential amount of memory (exponential in your presentation
          * size times n).  So do be careful when using it.
@@ -1072,7 +1072,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * \param depth controls the depth of the proliferation, as
          * described above; this must be strictly positive.
          */
-        void proliferateRelators(unsigned long depth=1);
+        void proliferateRelators(int depth = 1);
 
         /**
          * Attempts to recognise the group corresponding to this
@@ -1155,7 +1155,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \return the rank of the abelianisation of this group.
          */
-        unsigned long abelianRank() const;
+        size_t abelianRank() const;
 
         /**
          * Computes the abelianisation of this group.
@@ -1208,7 +1208,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * \return \c true if and only if the Nielsen automorphism had an
          * effect on at least one relation.
          */
-        bool nielsenTransposition(unsigned long i, unsigned long j);
+        bool nielsenTransposition(size_t i, size_t j);
 
         /**
          * Replaces a generator in a presentation by its inverse, and
@@ -1221,7 +1221,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * \return \c true if and only if the Nielsen automorphism had an
          * effect on at least one relation.
          */
-        bool nielsenInvert(unsigned long i);
+        bool nielsenInvert(size_t i);
 
         /**
          * Replaces a generator \c gi by either
@@ -1246,8 +1246,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * \return \c true if and only if the nielsen automorphism had an
          * effect on at least one relation.
          */
-        bool nielsenCombine(unsigned long i, unsigned long j,
-                long k, bool rightMult=true);
+        bool nielsenCombine(size_t i, size_t j, long k, bool rightMult = true);
 
         /**
          * Looks for Nielsen moves that will simplify the presentation.
@@ -1311,6 +1310,16 @@ class GroupPresentation : public Output<GroupPresentation> {
          * you can simply cast the return value to a \c bool.  This will
          * then mirror the behaviour of homologicalAlignment() from Regina 6.0
          * and earlier, when the return type was simply \c bool.
+         *
+         * \exception UnsolvedCase It was not possible to rewrite the
+         * presentation as described, due to an integer overflow.
+         * This can (in theory) occur because AbelianGroup uses arbitrary
+         * precision integers for coefficients and invariant factors, whereas
+         * GroupPresentation uses native C++ long integers for exponents in
+         * relations and other group expressions.
+         * Be warned that, if this exception is thrown, the presentation might
+         * have already been rewritten in some way (it should still be a correct
+         * presentation of the group, just not the one we are aiming for).
          *
          * \return an isomorphism describing the reduction map from the
          * original presentation to the new presentation, or \nullopt if
@@ -1419,7 +1428,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * <i>k</i>-sheeted cover.
          *
          * For each representation that is produced, this routine will call
-         * \a action (which must be a function or some other callable object).
+         * \a action (which must be a function or some other callable type).
          *
          * - The first argument to \a action must be a group presentation.
          *   This will be the index \a k subgroup corresponding to the
@@ -1431,7 +1440,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
          *
-         * - \a action must return \c void.
+         * - The return value of \a action will be ignored; typically it would
+         *   return \c void.
          *
          * - It is completely safe for \a action to (if you wish) make changes
          *   to the original presentation (i.e., the group presentation upon
@@ -1486,17 +1496,18 @@ class GroupPresentation : public Output<GroupPresentation> {
          * parameter \a index becomes the first argument to the Python function.
          *
          * \tparam index the number \a k in the description above; in other
-         * words, the index of the resulting subgroups.  Currently this
-         * must be between 2 and 11 inclusive; this range is limited because
-         * some of the cached precomputations can consume a _lot_ of space for
-         * larger indices.
-         * \param action a function (or other callable object) to call
+         * words, the index of the resulting subgroups.  Currently we limit
+         * this to the range `2 ≤ k ≤ 11` because some of the cached
+         * precomputations can consume a _lot_ of space for larger indices.
+         * \param action a function (or other callable type) to call
          * for each representation that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial subgroup presentation argument.
          * \return the total number of representations found.
          */
         template <int index, typename Action, typename... Args>
+        requires (index >= 2 && index <= 11) &&
+            VoidCallback<Action, GroupPresentation&&, Args...>
         size_t enumerateCovers(Action&& action, Args&&... args) const;
 
         /**
@@ -1690,11 +1701,11 @@ class GroupPresentation : public Output<GroupPresentation> {
          *   on the above substitution, so the score is also 4.
          */
         struct WordSubstitutionData {
-            unsigned long start_sub_at;
+            size_t start_sub_at;
                 /**< Where in A do we start? */
-            unsigned long start_from;
+            size_t start_from;
                 /**< Where in B do we start? */
-            unsigned long sub_length;
+            size_t sub_length;
                 /**< The number of letters from B to use. */
             bool invertB;
                 /**< Invert B before making the substitution? */
@@ -1747,11 +1758,12 @@ class GroupPresentation : public Output<GroupPresentation> {
          *  as if the words were cyclically reduced.  It also only adds
          *  to sub_list, so in normal usage one would pass it an empty sub-list.
          *
-         *  The default argument step==1 assumes you are looking for
+         *  The argument \a step must be strictly positive.
+         *  The default `step == 1` assumes you are looking for
          *  substitutions that shorten the length of a word, and that
          *  you only want to make an immediate substitution.  Setting
-         *  step==2 assumes after you make your first substitution you
-         *  will want to attempt a further substitution, etc.  step>1
+         *  `step == 2` assumes after you make your first substitution you
+         *  will want to attempt a further substitution, etc.  `step>1`
          *  is used primarily when building relator tables for group
          *  recognition.
          */
@@ -1759,7 +1771,7 @@ class GroupPresentation : public Output<GroupPresentation> {
             const GroupExpression &this_word,
             const GroupExpression &that_word,
             std::set<WordSubstitutionData> &sub_list,
-            unsigned long step=1 );
+            int step = 1);
 
         /**
          *  A routine internal to the small cancellation simplification
@@ -1788,7 +1800,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * type of the action function is now known precisely.  This means
          * that the implementation can be kept out of the main headers.
          */
-        template <int index>
+        template <int index> requires (index >= 2 && index <= 11)
         size_t enumerateCoversInternal(
             std::function<void(GroupPresentation&&)>&& action);
 
@@ -1836,7 +1848,7 @@ void swap(GroupPresentation& lhs, GroupPresentation& rhs) noexcept;
 
 // Inline functions for GroupExpressionTerm
 
-inline GroupExpressionTerm::GroupExpressionTerm(unsigned long gen, long exp) :
+inline GroupExpressionTerm::GroupExpressionTerm(size_t gen, long exp) :
         generator(gen), exponent(exp) {
 }
 
@@ -1859,13 +1871,12 @@ inline GroupExpression::GroupExpression(const GroupExpressionTerm& term) {
     terms_.push_back(term);
 }
 
-inline GroupExpression::GroupExpression(unsigned long generator,
-        long exponent) {
+inline GroupExpression::GroupExpression(size_t generator, long exponent) {
     terms_.emplace_back(generator, exponent);
 }
 
 inline GroupExpression::GroupExpression(const std::string &input,
-        unsigned long nGens) : GroupExpression(input.c_str(), nGens) {
+        size_t nGens) : GroupExpression(input.c_str(), nGens) {
 }
 
 inline void GroupExpression::swap(GroupExpression& other) noexcept {
@@ -1901,7 +1912,7 @@ inline size_t GroupExpression::wordLength() const {
     return retval;
 }
 
-inline unsigned long GroupExpression::generator(size_t index) const {
+inline size_t GroupExpression::generator(size_t index) const {
     return term(index).generator;
 }
 
@@ -1913,8 +1924,7 @@ inline void GroupExpression::addTermFirst(const GroupExpressionTerm& term) {
     terms_.push_front(term);
 }
 
-inline void GroupExpression::addTermFirst(unsigned long generator,
-        long exponent) {
+inline void GroupExpression::addTermFirst(size_t generator, long exponent) {
     terms_.push_front(GroupExpressionTerm(generator, exponent));
 }
 
@@ -1922,7 +1932,7 @@ inline void GroupExpression::addTermLast(const GroupExpressionTerm& term) {
     terms_.push_back(term);
 }
 
-inline void GroupExpression::addTermLast(unsigned long generator,
+inline void GroupExpression::addTermLast(size_t generator,
         long exponent) {
     terms_.emplace_back(generator, exponent);
 }
@@ -1960,7 +1970,7 @@ inline void swap(GroupExpression& lhs, GroupExpression& rhs) noexcept {
 inline GroupPresentation::GroupPresentation() : nGenerators_(0) {
 }
 
-inline GroupPresentation::GroupPresentation(unsigned long nGenerators) :
+inline GroupPresentation::GroupPresentation(size_t nGenerators) :
         nGenerators_(nGenerators) {
 }
 
@@ -1969,7 +1979,7 @@ inline void GroupPresentation::swap(GroupPresentation& other) noexcept {
     relations_.swap(other.relations_);
 }
 
-inline unsigned long GroupPresentation::addGenerator(unsigned long num) {
+inline size_t GroupPresentation::addGenerator(size_t num) {
     return (nGenerators_ += num);
 }
 
@@ -1977,7 +1987,7 @@ inline void GroupPresentation::addRelation(GroupExpression rel) {
     relations_.push_back(std::move(rel));
 }
 
-inline unsigned long GroupPresentation::countGenerators() const {
+inline size_t GroupPresentation::countGenerators() const {
     return nGenerators_;
 }
 
@@ -2033,6 +2043,8 @@ inline std::optional<HomGroupPresentation>
 }
 
 template <int index, typename Action, typename... Args>
+requires (index >= 2 && index <= 11) &&
+    VoidCallback<Action, GroupPresentation&&, Args...>
 inline size_t GroupPresentation::enumerateCovers(
         Action&& action, Args&&... args) const {
     // Do the real work on a temporary copy of this presentation that we

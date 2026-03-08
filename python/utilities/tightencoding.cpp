@@ -50,18 +50,22 @@ void addTightEncoding(pybind11::module_& m) {
     // We cannot use overload_cast here because there is a templated
     // global tightEncoding() function.
     m.def("tightEncoding", static_cast<std::string(&)(long)>(
-        regina::tightEncoding), rdoc::tightEncoding_2);
-    m.def("tightEncoding", static_cast<std::string(&)(long long)>(
-        regina::tightEncoding), rdoc::tightEncoding_3);
+        regina::tightEncoding), rdoc::tightEncoding);
+    m.def("tightEncoding", [](pybind11::int_ val) {
+        // Go via regina's Integer class if we are given an integer argument
+        // that does not fit into a native C++ long.
+        return regina::Integer(pybind11::cast<std::string>(pybind11::str(val))).
+            tightEncoding();
+    }, rdoc::tightEncoding);
     m.def("tightEncoding", static_cast<std::string(&)(bool)>(
-        regina::tightEncoding), rdoc::tightEncoding_7);
+        regina::tightEncoding), rdoc::tightEncoding_2);
     m.def("tightDecoding", [](const std::string& enc) {
         // Try a native integer conversion first.
         try {
             return pybind11::cast(regina::tightDecoding<long>(enc));
         } catch (const regina::InvalidArgument&) {
-            // It could have been out of range.  Try arbitrary precision
-            // integers before aborting.
+            // The result could have been outside the range of a native C++
+            // long.  Try arbitrary precision integers before aborting.
             regina::Integer ans = regina::tightDecoding<regina::Integer>(enc);
 
             // At this point we have a valid solution, so we should be

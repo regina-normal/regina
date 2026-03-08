@@ -62,7 +62,7 @@
   </provides>
 
   <releases>
-    <release version="7.4.1" date="2025-11-01">
+    <release version="7.4.1" date="2025-11-30">
       <description>
         <p>
           Fixes some important bugs, and adds support for additional build

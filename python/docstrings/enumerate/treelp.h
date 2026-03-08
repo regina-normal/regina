@@ -11,6 +11,23 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::LPConstraintType
+static const char *LPConstraintType =
+R"doc(Indicates whether a linear constraint describes an equality or an
+inequality. This is used with Regina's linear programming machinery.)doc";
+
+namespace LPConstraintType_ {
+
+// Docstring regina::python::doc::LPConstraintType_::Positive
+static const char *Positive =
+R"doc(Indicates a constraint that requires some linear function to be
+strictly positive.)doc";
+
+// Docstring regina::python::doc::LPConstraintType_::Zero
+static const char *Zero = R"doc(Indicates a constraint that requires some linear function to be zero.)doc";
+
+}
+
 // Docstring regina::python::doc::LPData
 static const char *LPData =
 R"doc(Stores an intermediate tableaux for the dual simplex method, and
@@ -105,7 +122,7 @@ following effects, all of which may alter the tableaux:
   they use for octagon types need not be related to the coefficients
   for the two corresponding quadrilateral columns). Any such changes,
   if necessary, are encoded by the constant
-  LPConstraint::octAdjustment.
+  Constraint::octAdjustment.
 
 This class has been optimised to ensure that you only have one octagon
 type declared at any given time (which is consistent with the
@@ -126,11 +143,6 @@ Precondition:
     The template parameter LPConstraint must be one of the subclasses
     of LPConstraintBase. See the LPConstraintBase class notes for
     further details.
-
-Precondition:
-    The default constructor for the template class IntType must
-    intialise each new integer to zero. The classes Integer and
-    NativeInteger, for instance, have this property.
 
 Python:
     This is a heavily templated class; nevertheless, many variants are
@@ -183,7 +195,7 @@ class constructor) are as follows:
 There is also optional support for adding extra linear constraints
 (such as a constraint on Euler characteristic for normal surfaces).
 These extra constraints are supplied by the template parameter
-*LPConstraint*, and will generate LPConstraint::nConstraints
+*LPConstraint*, and will generate Constraint::nConstraints
 additional rows and columns (used by the additional variables that
 evaluate the corresponding linear functions). If there are no
 additional constraints, simply use the template parameter
@@ -297,11 +309,6 @@ initialise procedure, it does not support copying (either by copy
 construction or copy assignment). Because of the move semantics, this
 class avoids deep copies, even when passing or returning objects by
 value.
-
-Precondition:
-    The default constructor for the template class IntType must
-    intialise each new integer to zero. The classes Integer and
-    NativeInteger, for instance, have this property.
 
 Python:
     The template argument *IntType* is taken to be regina::Integer.
@@ -504,21 +511,14 @@ Precondition:
     requirement.
 
 Precondition:
-    The precision of integers in *RayClass* is at least as large as
-    the precision of *IntType* (as used by LPData).
-
-Template parameter ``RayClass``:
-    the class used to hold the output vector. This should be Vector<T>
-    where *T* is one of Regina's own integer types (Integer,
-    LargeInteger or NativeInteger). In particular, this ensures that
-    all elements of a newly-created output vector will be
-    automatically initialised to zero.
+    The precision of integers in *Ray* is at least as large as the
+    precision of *IntType* (as used by LPData).
 
 Python:
     The type vector should be passed as a Python list of integers (for
     example, in the enumeration of normal surfaces, there would be one
-    integer per tetrahedron, each equal to 0, 1, 2 or 3). The
-    *RayClass* argument is taken to be Vector<Integer>.
+    integer per tetrahedron, each equal to 0, 1, 2 or 3). The template
+    parameter *Ray* is taken to be Vector<Integer>.
 
 Parameter ``type``:
     the type vector corresponding to the current state of this
@@ -802,9 +802,9 @@ Parameter ``m``:
 static const char *global_swap =
 R"doc(Swaps the contents of the given matrices.
 
-This global routine simply calls LPInitialTableaux<IntType>::swap();
-it is provided so that LPInitialTableaux<IntType> meets the C++
-Swappable requirements.
+This global routine simply calls
+LPInitialTableaux<Constraint>::swap(); it is provided so that
+LPInitialTableaux<Constraint> meets the C++ Swappable requirements.
 
 Parameter ``a``:
     the first matrix whose contents should be swapped.
@@ -859,7 +859,7 @@ row of the given matrix with (ii) the given column of this matrix. We
 assume that the given column of this matrix describes one of the two
 quadrilateral coordinates in some tetrahedron that together form an
 octagon type, and (via the information given by
-LPConstraint::octAdjustment) we implicitly adjust the coefficients of
+Constraint::octAdjustment) we implicitly adjust the coefficients of
 our extra constraints accordingly.
 
 This routine is optimised to use the sparse representation of columns

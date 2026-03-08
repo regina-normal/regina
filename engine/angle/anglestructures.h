@@ -479,12 +479,12 @@ class AngleStructures :
          * \python This is available in Python, and \a comp may be
          * a pure Python function.
          *
-         * \param comp a binary function (or other callable object) that
+         * \param comp a binary function (or other callable type) that
          * accepts two const AngleStructure references, and returns \c true
          * if and only if the first angle structure should appear before the
          * second in the sorted list.
          */
-        template <typename Comparison>
+        template <StrictWeakOrder<const AngleStructure&> Comparison>
         void sort(Comparison&& comp);
 
     protected:
@@ -659,7 +659,7 @@ inline bool AngleStructures::spansTaut() const {
     return *doesSpanTaut_;
 }
 
-template <typename Comparison>
+template <StrictWeakOrder<const AngleStructure&> Comparison>
 inline void AngleStructures::sort(Comparison&& comp) {
     PacketChangeSpan span(*this);
     std::stable_sort(structures_.begin(), structures_.end(), comp);

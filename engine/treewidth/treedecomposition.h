@@ -846,7 +846,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * tree decomposition; in particular, this specifies whether to
          * use a slow exact algorithm or a fast greedy algorithm.
          */
-        template <int dim>
+        template <int dim> requires (supportedDim(dim))
         TreeDecomposition(
             const Triangulation<dim>& triangulation,
             TreeDecompositionAlg alg = TreeDecompositionAlg::Upper);
@@ -871,7 +871,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * tree decomposition; in particular, this specifies whether to
          * use a slow exact algorithm or a fast greedy algorithm.
          */
-        template <int dim>
+        template <int dim> requires (supportedDim(dim))
         TreeDecomposition(
             const FacetPairing<dim>& pairing,
             TreeDecompositionAlg alg = TreeDecompositionAlg::Upper);

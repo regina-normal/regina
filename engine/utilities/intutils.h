@@ -39,10 +39,10 @@
 #endif
 
 #include "regina-core.h"
-#include "regina-config.h"
 #include <cstdint>
 #include <limits>
 #include <type_traits>
+#include <concepts> // Don't include this first - see QTBUG-83160
 
 namespace regina {
 
@@ -51,12 +51,18 @@ template <int> class NativeInteger;
 
 /**
  * A compile-time boolean constant that indicates whether the type \a T is a
- * native C++ integer type, allowing for 128-bit integers also.
+ * native C++ integer type, allowing for 128-bit integers also but excluding
+ * booleans.
  *
- * This is true precisely when either `std::is_integral_v<T>` is true and/or
- * \a T is a native 128-bit integer.
+ * Except for booleans, this is true precisely when either
+ * `std::is_integral_v<T>` is true and/or \a T is a native 128-bit integer.
  *
- * The only reason for using this constant (as opposed to
+ * Regina treats booleans differently: `is_cpp_integer_v<bool>` is false,
+ * even though C++ `std::is_integral_v<bool>` is true, since Regina's
+ * functions aim to identify native types that _behave_ like integers
+ * arithmetically.
+ *
+ * The main reason for using this constant (as opposed to
  * `std::is_integral_v<T>`) is because the C++ standard constants treat
  * 128-bit integers differently under different compilers.
  *
@@ -65,27 +71,64 @@ template <int> class NativeInteger;
  * \ingroup utilities
  */
 template <typename T>
-#if defined(INTERNAL___INT128_FOUND)
-    constexpr bool is_cpp_integer_v = std::is_integral_v<T> ||
-        std::is_same_v<T, __int128> || std::is_same_v<T, __uint128>;
-#elif defined(INTERNAL___INT128_T_FOUND)
-    constexpr bool is_cpp_integer_v = std::is_integral_v<T> ||
-        std::is_same_v<T, __int128_t> || std::is_same_v<T, __uint128_t>;
-#elif defined(INTERNAL_INT128_T_FOUND)
-    constexpr bool is_cpp_integer_v = std::is_integral_v<T> ||
-        std::is_same_v<T, int128_t> || std::is_same_v<T, uint128_t>;
+#ifdef INT128_AVAILABLE
+    constexpr bool is_cpp_integer_v = (std::is_integral_v<T> ||
+        std::is_same_v<T, Int128> || std::is_same_v<T, UInt128>) &&
+        ! std::is_same_v<T, bool>;
 #else
-    constexpr bool is_cpp_integer_v = std::is_integral_v<T>;
+    constexpr bool is_cpp_integer_v = std::is_integral_v<T> &&
+        ! std::is_same_v<T, bool>;
+#endif
+
+/**
+ * A compile-time boolean constant that indicates whether the type \a T is a
+ * signed native C++ integer type, allowing for 128-bit integers also but
+ * excluding booleans.
+ *
+ * Except for booleans, this is true precisely when (i) either
+ * `std::is_integral_v<T>` is true and/or \a T is a native 128-bit integer,
+ * and (ii) \a T is a signed type.
+ *
+ * Regina treats booleans differently: `is_signed_cpp_integer_v<bool>` is
+ * false, even though C++ `std::is_integral_v<bool>` is true, since Regina's
+ * functions aim to identify native types that _behave_ like integers
+ * arithmetically.
+ *
+ * The main reason for using this constant (as opposed to
+ * `std::is_integral_v<T>` and `std::is_signed_v<T>`) is because the
+ * C++ standard constants treat 128-bit integers differently under
+ * different compilers.
+ *
+ * \nopython
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+#ifdef INT128_AVAILABLE
+    constexpr bool is_signed_cpp_integer_v =
+        ((std::is_integral_v<T> && std::is_signed_v<T>) ||
+        std::is_same_v<T, Int128>) && ! std::is_same_v<T, bool>;
+#else
+    constexpr bool is_signed_cpp_integer_v =
+        (std::is_integral_v<T> && std::is_signed_v<T>) &&
+        ! std::is_same_v<T, bool>;
 #endif
 
 /**
  * A compile-time boolean constant that indicates whether the type \a T is an
- * unsigned native C++ integer type, allowing for 128-bit integers also.
+ * unsigned native C++ integer type, allowing for 128-bit integers also but
+ * excluding booleans.
  *
- * This is true precisely when (i) either `std::is_integral_v<T>` is true
- * and/or \a T is a native 128-bit integer, and (ii) \a T is an unsigned type.
+ * Except for booleans, this is true precisely when (i) either
+ * `std::is_integral_v<T>` is true and/or \a T is a native 128-bit integer,
+ * and (ii) \a T is an unsigned type.
  *
- * The only reason for using this constant (as opposed to
+ * Regina treats booleans differently: `is_unsigned_cpp_integer_v<bool>` is
+ * false, even though C++ `std::is_integral_v<bool>` and
+ * `std::is_unsigned_v<bool>` are both true, since Regina's functions aim to
+ * identify native types that _behave_ like integers arithmetically.
+ *
+ * The main reason for using this constant (as opposed to
  * `std::is_integral_v<T>` and `std::is_unsigned_v<T>`)
  * is because the C++ standard constants treat 128-bit integers differently
  * under different compilers.
@@ -95,26 +138,125 @@ template <typename T>
  * \ingroup utilities
  */
 template <typename T>
-#if defined(INTERNAL___INT128_FOUND)
+#ifdef INT128_AVAILABLE
     constexpr bool is_unsigned_cpp_integer_v =
-        (std::is_integral_v<T> && std::is_unsigned_v<T>) ||
-        std::is_same_v<T, __uint128>;
-#elif defined(INTERNAL___INT128_T_FOUND)
-    constexpr bool is_unsigned_cpp_integer_v =
-        (std::is_integral_v<T> && std::is_unsigned_v<T>) ||
-        std::is_same_v<T, __uint128_t>;
-#elif defined(INTERNAL_INT128_T_FOUND)
-    constexpr bool is_unsigned_cpp_integer_v =
-        (std::is_integral_v<T> && std::is_unsigned_v<T>) ||
-        std::is_same_v<T, uint128_t>;
+        ((std::is_integral_v<T> && std::is_unsigned_v<T>) ||
+        std::is_same_v<T, UInt128>) && ! std::is_same_v<T, bool>;
 #else
     constexpr bool is_unsigned_cpp_integer_v =
-        (std::is_integral_v<T> && std::is_unsigned_v<T>);
+        (std::is_integral_v<T> && std::is_unsigned_v<T>) &&
+        ! std::is_same_v<T, bool>;
 #endif
 
 /**
- * Determines if the type \a T is one of Regina's own integer types
- * (either arbitrary precision or fixed size).
+ * One of the standard non-boolean C++ integer types, without making any
+ * special accommodations for 128-bit integer compiler extensions.
+ *
+ * This concept is exactly like `std::integral` but with `bool` excluded.
+ *
+ * Note that 128-bit integers (which are not standard C++) might or might not
+ * pass this test, depending on your compiler.
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+concept StandardCppInteger = std::integral<T> && ! std::same_as<T, bool>;
+
+/**
+ * A native non-boolean C++ integer type, allowing for 128-bit integers also
+ * if these are supported by the compiler.
+ *
+ * See the constant regina::is_cpp_integer_v for further details.
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+concept CppInteger = is_cpp_integer_v<T>;
+
+/**
+ * A signed native non-boolean C++ integer type, allowing for 128-bit integers
+ * also if these are supported by the compiler.
+ *
+ * See the constant regina::is_signed_cpp_integer_v for further details.
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+concept SignedCppInteger = is_signed_cpp_integer_v<T>;
+
+/**
+ * An unsigned native non-boolean C++ integer type, allowing for 128-bit
+ * integers also if these are supported by the compiler.
+ *
+ * See the constant regina::is_unsigned_cpp_integer_v for further details.
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+concept UnsignedCppInteger = is_unsigned_cpp_integer_v<T>;
+
+/**
+ * One of Regina's arbitrary precision integer types (Integer or LargeInteger).
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+concept ArbitraryPrecisionInteger =
+    std::is_same_v<IntegerBase<true>, T> ||
+    std::is_same_v<IntegerBase<false>, T>;
+
+/**
+ * One of Regina's own integer types (Integer, LargeInteger, or NativeInteger).
+ *
+ * An important feature of all of Regina's integer types is that their default
+ * constructors initialise the integers to zero.
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+concept ReginaInteger =
+    ArbitraryPrecisionInteger<T> ||
+    requires(T x) { { NativeInteger(x) } -> std::same_as<T>; };
+
+/**
+ * Either any standard non-boolean C++ integer type or any of Regina's own
+ * integer types.
+ *
+ * This concept excludes `bool`, and does not make any special accommodations
+ * for 128-bit integer compiler extensions.
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+concept AnyInteger = StandardCppInteger<T> || ReginaInteger<T>;
+
+/**
+ * A type that supports very basic interoperability with native C++ integer
+ * values, via construction, assignment, and equality/inequality testing.
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+concept IntegerCompatible =
+    std::constructible_from<T, int> &&
+    std::assignable_from<T&, int> &&
+    std::equality_comparable_with<T, int>;
+
+/**
+ * A type that supports interoperability with native C++ integer values via
+ * construction, assignment, equality/inequality testing, and comparisons.
+ * The comparisons must yield a total order.
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+concept IntegerComparable =
+    IntegerCompatible<T> &&
+    std::totally_ordered_with<T, int>;
+
+/**
+ * Deprecated traits class to determine if the type \a T is one of Regina's
+ * own integer types (either arbitrary precision or fixed size).
  *
  * This is true precisely when \a T is one of the classes Integer,
  * LargeInteger, or NativeInteger<...>.
@@ -122,40 +264,60 @@ template <typename T>
  * The result will be available through the compile-time boolean constant
  * IsReginaInteger<T>::value.
  *
+ * \deprecated Instead use the concept `ReginaInteger<T>`.
+ *
  * \nopython
  *
  * \ingroup utilities
  */
 template <typename T>
-struct IsReginaInteger : public std::false_type {};
-
-#ifndef __DOXYGEN
-template <bool withInfinity>
-struct IsReginaInteger<IntegerBase<withInfinity>> : public std::true_type {};
-
-template <int bytes>
-struct IsReginaInteger<NativeInteger<bytes>> : public std::true_type {};
-#endif // __DOXYGEN
+struct [[deprecated]] IsReginaInteger : public std::false_type {};
 
 /**
- * Determines if the type \a T is one of Regina's arbitrary precision
- * integer types.
+ * Deprecated traits class to determine if the type \a T is one of Regina's
+ * arbitrary precision integer types.
  *
  * This is true only when \a T is one of the classes Integer or LargeInteger.
  *
  * The result will be available through the compile-time boolean constant
  * IsReginaArbitraryPrecisionInteger<T>::value.
  *
+ * \deprecated Instead use the concept `ArbitraryPrecisionInteger<T>`.
+ *
  * \nopython
  *
  * \ingroup utilities
  */
 template <typename T>
-struct IsReginaArbitraryPrecisionInteger : public std::false_type {};
+struct [[deprecated]] IsReginaArbitraryPrecisionInteger : public std::false_type {};
 
 #ifndef __DOXYGEN
+
+#if defined(__GNUC__)
+// These specialisations are causing noisy deprecation warnings under gcc.
+// Silence them, since the specialisations need to stay until IsReginaInteger
+// is removed completely.
+#pragma GCC diagnostic push
+#if defined(__clang__)
+#pragma GCC diagnostic ignored "-Wdeprecated"
+#else
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+#endif
+
+template <bool withInfinity>
+struct IsReginaInteger<IntegerBase<withInfinity>> : public std::true_type {};
+
+template <int bytes>
+struct IsReginaInteger<NativeInteger<bytes>> : public std::true_type {};
+
 template <bool withInfinity>
 struct IsReginaArbitraryPrecisionInteger<IntegerBase<withInfinity>> : public std::true_type {};
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
+
 #endif // __DOXYGEN
 
 #ifndef __DOCSTRINGS
@@ -178,9 +340,8 @@ struct IsReginaArbitraryPrecisionInteger<IntegerBase<withInfinity>> : public std
  *
  * \deprecated This macro is no longer used within Regina, since it makes code
  * unnecessarily difficult to read (especially by automated documentation
- * tools).  Regina's approach now is simply to implement the member function
- * in the natural way and use a static_assert to ensure it is only
- * instantiated with appropriate types.
+ * tools).  Regina now uses C++20 concepts instead to constraint access to
+ * member functions.
  *
  * \pre The member function this macro is applied to is _not_ a
  * template member function (though, as noted above, this macro will
@@ -192,7 +353,7 @@ struct IsReginaArbitraryPrecisionInteger<IntegerBase<withInfinity>> : public std
  */
 #define ENABLE_MEMBER_FOR_REGINA_INTEGER(T, returnType) \
     template <typename... Args, typename Return = returnType> \
-    std::enable_if_t<IsReginaInteger<T>::value, Return>
+    std::enable_if_t<ReginaInteger<T>, Return>
 #else
 // When generating docstrings, we want docs for all member functions.
 #define ENABLE_MEMBER_FOR_REGINA_INTEGER(T, returnType) returnType
@@ -251,17 +412,11 @@ constexpr IntType nextPowerOfTwo(IntType n) {
  * The largest integer of the given type that can be multiplied by \a coeff
  * without overflowing.
  *
- * The template parameter \a IntType may be any native C++ integer type, such
- * as \c int, \c long, and so on.  This type may be either signed or unsigned,
- * but it must be supported by std::numeric_limits.
- *
- * The template parameter \a coeff can be any positive integer.
- *
  * \nopython This is because Python does not support templates.
  *
  * \ingroup utilities
  */
-template <typename IntType, IntType coeff>
+template <CppInteger IntType, IntType coeff> requires (coeff > 0)
 inline constexpr IntType maxSafeFactor =
     std::numeric_limits<IntType>::max() / coeff;
 
@@ -269,17 +424,11 @@ inline constexpr IntType maxSafeFactor =
  * The largest integer of the given type that can be multiplied by \a coeff
  * without overflowing.
  *
- * The template parameter \a IntType may be any native C++ integer type, such
- * as \c int, \c long, and so on.  This type may be either signed or unsigned,
- * but it must be supported by std::numeric_limits.
- *
- * The template parameter \a coeff can be any positive integer.
- *
  * \nopython This is because Python does not support templates.
  *
  * \ingroup utilities
  */
-template <typename IntType, IntType coeff>
+template <CppInteger IntType, IntType coeff> requires (coeff > 0)
 inline constexpr IntType minSafeFactor =
     std::numeric_limits<IntType>::min() / coeff;
 
@@ -367,20 +516,7 @@ struct IntOfMinSize {
 template <int bits>
 using IntOfMinBits = IntOfMinSize<(bits + 7) / 8>;
 
-#ifdef __DOXYGEN
-    /**
-     * Defined if and only if native 128-bit arithmetic is available on
-     * this platform.
-     *
-     * If this macro is defined, then you can access native signed and
-     * unsigned 128-bit integers through the types IntOfSize<16>::type
-     * and IntOfSize<16>::utype respectively.
-     *
-     * If this macro is not defined, then the types IntOfSize<16>::type and
-     * IntOfSize<16>::utype will both be \c void.
-     */
-    #define INT128_AVAILABLE
-#else
+#ifndef __DOXYGEN
 template <>
 struct IntOfSize<1> {
     using type = int8_t;
@@ -405,37 +541,46 @@ struct IntOfSize<8> {
     using utype = uint64_t;
 };
 
-#if defined(INTERNAL___INT128_FOUND)
-    #define INT128_AVAILABLE
-    template <>
-    struct IntOfSize<16> {
-        using type = __int128;
-        using utype = __uint128;
-    };
-#elif defined(INTERNAL___INT128_T_FOUND)
-    #define INT128_AVAILABLE
-    template <>
-    struct IntOfSize<16> {
-        using type = __int128_t;
-        using utype = __uint128_t;
-    };
-#elif defined(INTERNAL_INT128_T_FOUND)
-    #define INT128_AVAILABLE
-    template <>
-    struct IntOfSize<16> {
-        using type = int128_t;
-        using utype = uint128_t;
-    };
-#else
-    #undef INT128_AVAILABLE
-    template <>
-    struct IntOfSize<16> {
-        using type = void;
-        using utype = void;
-    };
+#ifdef INT128_AVAILABLE
+template <>
+struct IntOfSize<16> {
+    using type = Int128;
+    using utype = UInt128;
+};
 #endif
 
 #endif // __DOXYGEN
+
+/**
+ * Converts the given native C++ integer type into a signed integer type of
+ * the same size, allowing for 128-bit integers also.
+ *
+ * This is like `std::make_signed_t<T>` but with explicit support for 128-bit
+ * integers on those platforms that support them.  (In contrast some compilers
+ * support 128-bit integers but do not implement `std::make_signed_t for them.)
+ *
+ * \nopython
+ *
+ * \ingroup utilities
+ */
+template <CppInteger T>
+using make_signed_cpp_t = typename IntOfSize<sizeof(T)>::type;
+
+/**
+ * Converts the given native C++ integer type into an unsigned integer type of
+ * the same size, allowing for 128-bit integers also.
+ *
+ * This is like `std::make_unsigned_t<T>` but with explicit support for 128-bit
+ * integers on those platforms that support them.  (In contrast some compilers
+ * support 128-bit integers but do not implement `std::make_unsigned_t for
+ * them.)
+ *
+ * \nopython
+ *
+ * \ingroup utilities
+ */
+template <CppInteger T>
+using make_unsigned_cpp_t = typename IntOfSize<sizeof(T)>::utype;
 
 /**
  * Determines if an integer of type \a From can always be assigned to an

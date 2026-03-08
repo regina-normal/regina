@@ -1836,13 +1836,6 @@ Each individual token should _not_ contain any whitespace; otherwise
 this routine may fail to parse the token(s) and could throw an
 exception as a result.
 
-Precondition:
-    *Iterator* is a random access iterator type.
-
-Precondition:
-    Dereferencing such an iterator produces a C++-style string (i.e.,
-    something that can be cast to ``const std::string&``).
-
 Exception ``InvalidArgument``:
     The given sequence was not a valid oriented Gauss code for a
     classical or virtual knot.
@@ -2121,13 +2114,6 @@ None of the tokens should contain any whitespace; otherwise this
 routine may fail to parse the token(s) and could throw an exception as
 a result. The symbols ``U`` and ``O`` that begin each token may be
 either upper-case or lower-case (or you may use some mix of both).
-
-Precondition:
-    *Iterator* is a random access iterator type.
-
-Precondition:
-    Dereferencing such an iterator produces a C++-style string (i.e.,
-    something that can be cast to ``const std::string&``).
 
 Exception ``InvalidArgument``:
     The given sequence was not a valid signed Gauss code for a
@@ -5044,7 +5030,7 @@ could easily produce virtual diagrams with positive virtual genus.
 
 For every link diagram that this routine encounters (including this
 starting diagram), this routine will call *action* (which must be a
-function or some other callable object).
+function or some other callable type).
 
 * *action* must take the following initial argument(s). Either (a) the
   first argument must be a link (the precise type is discussed below),
@@ -5150,8 +5136,8 @@ Parameter ``tracker``:
     ``None`` if no progress reporting is required.
 
 Parameter ``action``:
-    a function (or other callable object) to call for each link
-    diagram that is found.
+    a function (or other callable type) to call for each link diagram
+    that is found.
 
 Parameter ``args``:
     any additional arguments that should be passed to *action*,
@@ -5219,8 +5205,8 @@ Parameter ``tracker``:
     ``None`` if no progress reporting is required.
 
 Parameter ``action``:
-    a function (or other callable object) to call for each link
-    diagram that is found.
+    a function (or other callable type) to call for each link diagram
+    that is found.
 
 Parameter ``args``:
     any additional arguments that should be passed to *action*,

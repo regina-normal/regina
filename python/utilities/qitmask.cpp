@@ -31,14 +31,13 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include "utilities/qitmask.h"
-#include "utilities/intutils.h"
 #include "../helpers.h"
 #include "../docstrings/utilities/qitmask.h"
 
 using regina::Qitmask1;
 using regina::Qitmask2;
 
-template <class Q>
+template <typename Q>
 void addQitmaskOpt(pybind11::module_& m, const char* name) {
     // Q could be an instance of either Qitmask1 or Qitmask2, but since the
     // Python docs are essentially the same we will just use Qitmask1 here.
@@ -69,9 +68,8 @@ void addQitmask(pybind11::module_& m) {
     addQitmaskOpt<Qitmask1<uint32_t>>(m, "Qitmask32");
     addQitmaskOpt<Qitmask1<uint64_t>>(m, "Qitmask64");
     #ifdef INT128_AVAILABLE
-    addQitmaskOpt<Qitmask1<regina::IntOfSize<16>::utype>>(m, "Qitmask128");
-    addQitmaskOpt<Qitmask2<regina::IntOfSize<16>::utype,
-        regina::IntOfSize<16>::utype>>(m, "Qitmask256");
+    addQitmaskOpt<Qitmask1<regina::UInt128>>(m, "Qitmask128");
+    addQitmaskOpt<Qitmask2<regina::UInt128, regina::UInt128>>(m, "Qitmask256");
     #else
     addQitmaskOpt<Qitmask2<uint64_t, uint64_t>>(m, "Qitmask128");
     #endif

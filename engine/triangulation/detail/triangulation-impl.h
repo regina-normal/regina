@@ -54,7 +54,7 @@
 
 namespace regina::detail {
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::writeTextShort(std::ostream& out) const {
     if (isEmpty()) {
         out << "Empty " << dim << "-D triangulation";
@@ -96,7 +96,7 @@ void TriangulationBase<dim>::writeTextShort(std::ostream& out) const {
     out << " )";
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::writeTextLong(std::ostream& out) const {
     ensureSkeleton();
 
@@ -319,7 +319,7 @@ void TriangulationBase<dim>::writeTextLong(std::ostream& out) const {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::reorderBFS(bool reverse) {
     size_t n = size();
     if (n == 0)
@@ -377,7 +377,7 @@ void TriangulationBase<dim>::reorderBFS(bool reverse) {
     delete[] ordered;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Triangulation<dim> TriangulationBase<dim>::doubleCover() const {
     size_t sheetSize = simplices_.size();
     if (sheetSize == 0)
@@ -472,7 +472,7 @@ Triangulation<dim> TriangulationBase<dim>::doubleCover() const {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Triangulation<dim> TriangulationBase<dim>::doubleOverBoundary() const {
     size_t origSize = simplices_.size();
     if (origSize == 0)
@@ -514,14 +514,12 @@ Triangulation<dim> TriangulationBase<dim>::doubleOverBoundary() const {
     return ans;
 }
 
-template <int dim>
-void TriangulationBase<dim>::subdivide() {
+template <int dim> requires (supportedDim(dim))
+void TriangulationBase<dim>::subdivide()
+        requires (standardDim(dim)) {
     size_t nOld = simplices_.size();
     if (nOld == 0)
         return;
-
-    static_assert(standardDim(dim),
-        "subdivide() may only be used in standard dimensions.");
 
     // Any simplex or facet locks at all will be a problem here.
     if (hasLocks())
@@ -593,7 +591,7 @@ void TriangulationBase<dim>::subdivide() {
     delete[] newSimp;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool TriangulationBase<dim>::makeIdeal() {
     if (! hasBoundaryFacets())
         return false;
@@ -669,7 +667,7 @@ bool TriangulationBase<dim>::makeIdeal() {
     return true;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 std::string TriangulationBase<dim>::source(Language language) const {
     std::ostringstream ans;
 
@@ -742,7 +740,7 @@ std::string TriangulationBase<dim>::source(Language language) const {
     return ans.str();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::writeDot(std::ostream& out, bool labels) const {
     // For a full visual list of named colours, see:
     // https://graphviz.org/doc/info/colors.html

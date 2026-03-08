@@ -87,7 +87,7 @@ enum {
  * to a retriangulation or link rewriting function.
  *
  * A retriangulation or link rewriting function can work with arbitrary
- * callable objects.  However, the _implementations_ of such functions are
+ * callable types.  However, the _implementations_ of such functions are
  * long and should not be dragged into the main headers.  The core purpose
  * of this class is therefore to coalesce the arbitrary action types
  * down to just _two_ fixed types (depending on whether the action includes a
@@ -111,7 +111,7 @@ enum {
  *
  * \ingroup detail
  */
-template <class Object, bool withSig>
+template <typename Object, bool withSig>
 using RetriangulateActionFunc = std::conditional_t<withSig,
     std::function<bool(const std::string&, Object&&)>,
     std::function<bool(Object&&)>>;
@@ -163,47 +163,11 @@ using RetriangulateActionFunc = std::conditional_t<withSig,
  *
  * \ingroup detail
  */
-template <class Object, bool withSig, int flags = RetriangulateDefault,
+template <typename Object, bool withSig, int flags = RetriangulateDefault,
     typename PropagationOptions = void>
 bool retriangulateInternal(const Object& obj, bool rigid, int height,
         int nThreads, ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action);
-
-/**
- * A traits class that analyses callable objects that are passed to
- * retriangulation or link rewriting functions.
- *
- * Recall that the initial arguments for such a callable object must be either
- * (a) a single triangulation/link, or (b) a text signature (e.g., an
- * isomorphism signature) followed by a triangulation/link.  The callable
- * object may take its triangulation/link by value, const reference or
- * rvalue reference; however, if it takes a signature also then this must be
- * by (const std::string&).
- *
- * This struct provides a boolean compile-time constant \a valid, which is
- * \c true if and only if the initial arguemnt(s) to \a Action are acceptable
- * as outlined above (i.e., an argument of the underlying \a Object class
- * for actions that take a triangulation/link, or a const string reference and
- * an \a Object for actions that take a text signature also).
- *
- * If \a valid is \c true, then this struct also provides a boolean
- * compile-time constant \a withSig, which is \c true if and only if the action
- * takes both a text signature and a triangulation/link.
- * If \a valid is \c false then the boolean constant \a withSig will still
- * be present, but its value is not defined.
- *
- * \tparam Object the class providing the retriangulation or link rewriting
- * function, such as regina::Triangulation<dim> or regina::Link.
- * \tparam Action the type of a callable object that is passed to the
- * retriangulation/rewriting function.
- * \tparam FirstArg the type of the first argument to \a Action; you should
- * not specify this directly, but instead allow the compiler to deduce it.
- *
- * \ingroup detail
- */
-template <class Object, typename Action,
-        typename FirstArg = typename CallableArg<Action, 0>::type>
-struct RetriangulateActionTraits;
 
 /**
  * The common implementation of all exhaustive simplification functions.
@@ -237,7 +201,7 @@ struct RetriangulateActionTraits;
  *
  * \ingroup detail
  */
-template <class Object, typename PropagationOptions = void>
+template <typename Object, typename PropagationOptions = void>
 bool simplifyExhaustiveInternal(Object& obj, int height,
         int threads, ProgressTrackerOpen* tracker) {
     // Make a place for the callback to put a simplified object, if it finds
@@ -302,7 +266,7 @@ bool simplifyExhaustiveInternal(Object& obj, int height,
  *
  * \ingroup detail
  */
-template <class Object, typename PropagationOptions = void>
+template <typename Object, typename PropagationOptions = void>
 bool improveTreewidthInternal(Object& obj, ssize_t maxAttempts, int height,
         int threads, ProgressTrackerOpen* tracker) {
     // Make a place for the callback to put an improved object, if it finds
@@ -407,44 +371,6 @@ bool improveTreewidthInternal(Object& obj, ssize_t maxAttempts, int height,
         tracker->setFinished();
     return true;
 }
-
-#ifndef __DOXYGEN
-
-template <class Object, typename Action, typename FirstArg>
-struct RetriangulateActionTraits {
-    static constexpr bool valid = false;
-    static constexpr bool withSig = false;
-};
-
-template <class Object, typename Action>
-struct RetriangulateActionTraits<Object, Action, Object> {
-    static constexpr bool valid = true;
-    static constexpr bool withSig = false;
-};
-
-template <class Object, typename Action>
-struct RetriangulateActionTraits<Object, Action, Object&&> {
-    static constexpr bool valid = true;
-    static constexpr bool withSig = false;
-};
-
-template <class Object, typename Action>
-struct RetriangulateActionTraits<Object, Action, const Object&> {
-    static constexpr bool valid = true;
-    static constexpr bool withSig = false;
-};
-
-template <class Object, typename Action>
-struct RetriangulateActionTraits<Object, Action, const std::string&> {
-    using SecondArg = typename CallableArg<Action, 1>::type;
-    static constexpr bool valid =
-        std::is_same_v<SecondArg, Object> ||
-        std::is_same_v<SecondArg, Object&&> ||
-        std::is_same_v<SecondArg, const Object&>;
-    static constexpr bool withSig = true;
-};
-
-#endif // __DOXYGEN
 
 } } // namespace regina::detail
 

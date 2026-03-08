@@ -54,7 +54,7 @@
 
 namespace regina::detail {
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 FacetPairingBase<dim>::FacetPairingBase(const Triangulation<dim>& tri) :
         size_(tri.size()),
         pairs_(new FacetSpec<dim>[tri.size() * (dim + 1)]) {
@@ -76,7 +76,7 @@ FacetPairingBase<dim>::FacetPairingBase(const Triangulation<dim>& tri) :
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 FacetPairingBase<dim>::FacetPairingBase(std::istream& in) :
         size_(0), pairs_(nullptr) {
     // Skip initial whitespace to find the facet pairing.
@@ -100,7 +100,7 @@ FacetPairingBase<dim>::FacetPairingBase(std::istream& in) :
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool FacetPairingBase<dim>::isClosed() const {
     for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f)
         if (isUnmatched(f))
@@ -108,14 +108,14 @@ bool FacetPairingBase<dim>::isClosed() const {
     return true;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool FacetPairingBase<dim>::operator == (const FacetPairingBase<dim>& other)
         const {
     return size_ == other.size_ &&
         std::equal(pairs_, pairs_ + (size_ * (dim + 1)), other.pairs_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool FacetPairingBase<dim>::isConnected() const {
     if (size_ <= 1)
         return true;
@@ -151,13 +151,9 @@ bool FacetPairingBase<dim>::isConnected() const {
     return false;
 }
 
-template <int dim>
-template <int k>
+template <int dim> requires (supportedDim(dim))
+template <int k> requires (k >= 2 && k <= dim + 1)
 bool FacetPairingBase<dim>::hasMultiEdge() const {
-    static_assert(2 <= k && k <= dim + 1,
-        "FacetPairing::hasMultiEdge() requires the edge multiplicity to be "
-        "between 2 and dim+1 inclusive.");
-
     // Let n be the size of this facet pairing (i.e., the number of nodes).
     // The running time must be at least O(n*dim), which is the number of
     // edges in the underlying graph.  We want to engineer this test so that
@@ -188,7 +184,7 @@ bool FacetPairingBase<dim>::hasMultiEdge() const {
     return false;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool FacetPairingBase<dim>::hasMultiEdge(int k) const {
     if (k < 2 || k > dim + 1)
         throw InvalidArgument("hasMultiEdge(): unsupported multiplicity k");
@@ -198,7 +194,7 @@ bool FacetPairingBase<dim>::hasMultiEdge(int k) const {
     });
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void FacetPairingBase<dim>::writeTextShort(std::ostream& out) const {
     for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f) {
         if (f.facet == 0 && f.simp > 0)
@@ -213,14 +209,14 @@ void FacetPairingBase<dim>::writeTextShort(std::ostream& out) const {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 std::string FacetPairingBase<dim>::dotHeader(const char* graphName) {
     std::ostringstream ans;
     writeDotHeader(ans, graphName);
     return ans.str();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void FacetPairingBase<dim>::writeDotHeader(
         std::ostream& out, const char* graphName) {
     static const char defaultGraphName[] = "G";
@@ -233,7 +229,7 @@ void FacetPairingBase<dim>::writeDotHeader(
     out << R"(node [shape=circle,style=filled,height=0.15,fixedsize=true,label="",fontsize=9,fontcolor="#751010"];)" << std::endl;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 std::string FacetPairingBase<dim>::dot(
         const char* prefix, bool subgraph, bool labels) const {
     std::ostringstream ans;
@@ -241,7 +237,7 @@ std::string FacetPairingBase<dim>::dot(
     return ans.str();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void FacetPairingBase<dim>::writeDot(std::ostream& out,
         const char* prefix, bool subgraph, bool labels) const {
     static const char defaultPrefix[] = "g";
@@ -279,7 +275,7 @@ void FacetPairingBase<dim>::writeDot(std::ostream& out,
     out << '}' << std::endl;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 std::string FacetPairingBase<dim>::textRep() const {
     std::ostringstream ans;
 
@@ -292,31 +288,31 @@ std::string FacetPairingBase<dim>::textRep() const {
     return ans.str();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
     std::vector<std::string> tokens = basicTokenise(rep);
 
     if (tokens.empty() || tokens.size() % (2 * (dim + 1)) != 0)
         throw InvalidArgument("fromTextRep(): invalid number of tokens");
 
-    // We use ssize_t, not size_t, to avoid signed/unsigned comparisons below.
-    ssize_t nSimp = tokens.size() / (2 * (dim + 1));
+    size_t nSimp = tokens.size() / (2 * (dim + 1));
     FacetPairing<dim> ans(nSimp);
 
     // Read the raw values.
     // Check the range of each value while we're at it.
-    long val;
-    for (ssize_t i = 0; i < nSimp * (dim + 1); ++i) {
+    for (size_t i = 0; i < nSimp * (dim + 1); ++i) {
+        size_t val;
+
         if (! valueOf(tokens[2 * i], val))
             throw InvalidArgument(
                 "fromTextRep(): contains non-integer simplex");
-        if (val < 0 || val > nSimp)
+        if (val > nSimp)
             throw InvalidArgument("fromTextRep(): simplex out of range");
         ans.pairs_[i].simp = val;
 
         if (! valueOf(tokens[2 * i + 1], val))
             throw InvalidArgument("fromTextRep(): contains non-integer facet");
-        if (val < 0 || val > dim)
+        if (val > dim)
             throw InvalidArgument("fromTextRep(): facet out of range");
         ans.pairs_[i].facet = static_cast<int>(val);
     }
@@ -324,27 +320,19 @@ FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
     // Run a sanity check.
     // Note: all destination simplices are known to be in the range [0..nSimp],
     // and all destination facets are known to be in the range [0..dim].
-    FacetSpec<dim> destFacet;
-    bool broken = false;
     for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(nSimp, true); ++f) {
-        destFacet = ans.dest(f);
+        FacetSpec<dim> destFacet = ans.dest(f);
         if (destFacet.simp == nSimp && destFacet.facet != 0)
-            broken = true;
-        else if (destFacet.simp < nSimp && ! (ans.dest(destFacet) == f))
-            broken = true;
-        else
-            continue;
-        break;
+            throw InvalidArgument("fromTextRep(): malformed boundary facet");
+        if (destFacet.simp != nSimp && ans.dest(destFacet) != f)
+            throw InvalidArgument("fromTextRep(): mismatched facet pairings");
     }
-
-    if (broken)
-        throw InvalidArgument("fromTextRep(): mismatched facet pairings");
 
     // All is well.
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 std::optional<Cut> FacetPairingBase<dim>::divideConnected(size_t minSide)
         const {
     std::optional<Cut> ans;
@@ -369,10 +357,17 @@ std::optional<Cut> FacetPairingBase<dim>::divideConnected(size_t minSide)
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <typename Action, typename... Args>
+requires
+    VoidCallback<Action, const FacetPairing<dim>&, Args...> ||
+    VoidCallback<Action, const FacetPairing<dim>&,
+        typename FacetPairing<dim>::IsoList, Args...>
 void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         int nBdryFacets, Action&& action, Args&&... args) {
+    static constexpr bool withIsoList =
+        ! VoidCallback<Action, const FacetPairing<dim>&, Args...>;
+
     // Bail if it's obvious that nothing will happen.
     if (boundary == BoolSet() || size_ == 0) {
         return;
@@ -547,10 +542,7 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         // Have we got a solution?
         if (trying.simp == static_cast<ssize_t>(size_)) {
             // Deal with the solution!
-            if constexpr (std::is_same_v<
-                    typename std::remove_cv_t<typename std::remove_reference_t<
-                        typename CallableArg<Action, 1>::type>>,
-                    IsoList>) {
+            if constexpr (withIsoList) {
                 IsoList allAutomorphisms;
                 if (isCanonicalInternal(std::addressof(allAutomorphisms))) {
                     action(static_cast<FacetPairing<dim>&>(*this),

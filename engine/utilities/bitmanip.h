@@ -40,9 +40,11 @@
 
 #include <bit>
 #include <compare>
-#include "utilities/intutils.h"
+#include "concepts/core.h"
 
 namespace regina {
+
+namespace detail {
 
 /**
  * Contains implementation details for BitManipulator where we optimise
@@ -50,17 +52,12 @@ namespace regina {
  *
  * End users should use the BitManipulator class, not this class.
  *
- * \pre Type \a T is an unsigned integral numeric type.
- *
  * \nopython Only the end-user class BitManipulator<unsigned long> is
  * available to Python users.
  *
- * \tparam T an unsigned integral numeric type, which we treat as a
- * sequence of \c true and/or \c false bits.
- *
- * \ingroup utilities
+ * \ingroup detail
  */
-template <typename T>
+template <UnsignedCppInteger T>
 class BitManipulatorByType {
     public:
         /**
@@ -160,37 +157,32 @@ class BitManipulatorByType<unsigned long long> {
 #endif // __GNUC__
 #endif // __DOXYGEN__
 
+} // namespace detail
+
 /**
  * An optimised class for bitwise analysis and manipulation of native
- * data types.
- *
- * The class BitManipulator<T> is used to manipulate an integer of type \a T
- * as a sequence of bits.  Here \a T must be an unsigned native integer
- * type such as unsigned char, unsigned int, or unsigned long long.
+ * C++ integer types.
  *
  * Whilst BitManipulator has a generic implementation, all or most native types
  * \a T have template specialisations that are carefully optimised (precisely
  * what gets specialised depends upon properties of the compiler).
  *
- * \pre Type \a T is an unsigned integral numeric type whose size in
- * bits is a power of two.
- *
- * \python For Python users, the class BitManipulator represents the
- * C++ type BitManipulator<unsigned long>.  In particular, you should be aware
- * that BitManipulator is designed specifically to work with native C++ integer
+ * \python For Python users, the class BitManipulator represents the C++ type
+ * `BitManipulator<unsigned long>`.  In particular, you should be aware that
+ * BitManipulator is designed specifically to work with native C++ integer
  * types, and _cannot_ handle Python's arbitrary-precision integers.  It is
  * up to you to ensure that any Python integers that you pass into the
- * BitManipulator routines are small enough to fit inside a C++ unsigned long.
+ * BitManipulator routines are small enough to fit inside a C++ `unsigned long`.
+ *
+ * \tparam T the native unsigned C++ integer type to work with.  The number of
+ * bits in \a T must be a power of two (which is true in practice for all
+ * native integer types on all typical modern hardware).
+ *
+ * \ingroup utilities
  */
-template <typename T>
-class BitManipulator : public BitManipulatorByType<T> {
-    static_assert(regina::is_unsigned_cpp_integer_v<T>,
-        "BitManipulator can only work with native unsigned integral types.");
-    static_assert(sizeof(T) == 1 || sizeof(T) == 2 || sizeof(T) == 4 ||
-        sizeof(T) == 8 || sizeof(T) == 16 || sizeof(T) == 32 ||
-        sizeof(T) == 64 || sizeof(T) == 128,
-        "BitManipulator can only work with data types whose size is a "
-        "power of two.");
+template <UnsignedCppInteger T>
+requires (std::popcount(sizeof(T)) == 1)
+class BitManipulator : public regina::detail::BitManipulatorByType<T> {
     public:
         /**
          * Returns the number of bits that are set to 1 in the given integer.

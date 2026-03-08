@@ -54,7 +54,7 @@ namespace regina::alias {
  *
  * \ingroup alias
  */
-template <class Derived, int subdim>
+template <typename Derived, int subdim>
 class FaceNumber {
 };
 
@@ -66,7 +66,7 @@ class FaceNumber {
  *
  * \ingroup alias
  */
-template <class Derived>
+template <typename Derived>
 class FaceNumber<Derived, 0> {
     public:
         /**
@@ -87,7 +87,7 @@ class FaceNumber<Derived, 0> {
  *
  * \ingroup alias
  */
-template <class Derived>
+template <typename Derived>
 class FaceNumber<Derived, 1> {
     public:
         /**
@@ -108,7 +108,7 @@ class FaceNumber<Derived, 1> {
  *
  * \ingroup alias
  */
-template <class Derived>
+template <typename Derived>
 class FaceNumber<Derived, 2> {
     public:
         /**
@@ -129,7 +129,7 @@ class FaceNumber<Derived, 2> {
  *
  * \ingroup alias
  */
-template <class Derived>
+template <typename Derived>
 class FaceNumber<Derived, 3> {
     public:
         /**
@@ -150,7 +150,7 @@ class FaceNumber<Derived, 3> {
  *
  * \ingroup alias
  */
-template <class Derived>
+template <typename Derived>
 class FaceNumber<Derived, 4> {
     public:
         /**

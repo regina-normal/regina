@@ -47,15 +47,6 @@ static_assert(
     ! std::is_void<typename regina::IntOfSize<2 * sizeof(long)>::type>(),
     "Regina requires a native integer type that is twice the size of a long. The developers are not currently aware of any cases where this fails, so if you see this error then _please_ write and let us know.");
 
-// The code in this file also requires that sizeof(long long) is a
-// multiple of sizeof(long).  Again, this is not mandated but I am not
-// aware of a platform on which it fails.
-static_assert(sizeof(long long) % sizeof(long) == 0,
-    "Regina requires that a the size of a long long is an exact multiple of "
-    "the size of a long. The developers are not currently aware of any cases "
-    "where this fails, so if you see this error then _please_ write and "
-    "let us know.");
-
 /**
  * Old macros for testing signed integer overflow, given in order from
  * fastest to slowest (by experimentation).  All are based on section
@@ -96,48 +87,6 @@ namespace {
     std::mutex randMutex;
     gmp_randstate_t randState;
     bool randInitialised(false);
-}
-
-namespace detail {
-    mpz_ptr mpz_from_ll(long long value) {
-        auto ans = new __mpz_struct[1];
-        if constexpr (sizeof(long) == sizeof(long long)) {
-            mpz_init_set_si(ans, value);
-            return ans;
-        } else {
-            constexpr static int blocks = sizeof(long long) / sizeof(long);
-            constexpr static int block = 8 * sizeof(long);
-
-            mpz_init_set_si(ans, static_cast<long>(
-                value >> ((blocks - 1) * block)));
-            for (int i = 2; i <= blocks; ++i) {
-                mpz_mul_2exp(ans, ans, block);
-                mpz_add_ui(ans, ans, static_cast<unsigned long>(
-                    value >> ((blocks - i) * block)));
-            }
-        }
-        return ans;
-    }
-
-    mpz_ptr mpz_from_ull(unsigned long long value) {
-        auto ans = new __mpz_struct[1];
-        if constexpr (sizeof(long) == sizeof(long long)) {
-            mpz_init_set_ui(ans, value);
-            return ans;
-        } else {
-            constexpr static int blocks = sizeof(long long) / sizeof(long);
-            constexpr static int block = 8 * sizeof(long);
-
-            mpz_init_set_ui(ans, static_cast<unsigned long>(
-                value >> ((blocks - 1) * block)));
-            for (int i = 2; i <= blocks; ++i) {
-                mpz_mul_2exp(ans, ans, block);
-                mpz_add_ui(ans, ans, static_cast<unsigned long>(
-                    value >> ((blocks - i) * block)));
-            }
-        }
-        return ans;
-    }
 }
 
 // The use of errno in this file should be threadsafe, since (as I
@@ -204,7 +153,8 @@ std::string IntegerBase<withInfinity>::stringValue(int base) const {
 template <bool withInfinity>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         const char* value) {
-    makeFinite();
+    if constexpr (withInfinity)
+        makeFinite();
 
     char* endptr;
     errno = 0;
@@ -259,74 +209,17 @@ std::ostream& operator << (std::ostream& out,
 }
 
 template <bool withInfinity>
-IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(long other) {
-    if (isInfinite())
-        return *this;
-    if (! large_) {
-        // Use native arithmetic if we can.
-        if (    (small_ > 0 && other > (LONG_MAX - small_)) ||
-                (small_ < 0 && other < (LONG_MIN - small_))) {
-            // Boom.  It's an overflow.
-            // Fall back to large integer arithmetic in the next block.
-            forceLarge();
-        } else {
-            // All good: we're done.
-            small_ += other;
-            return *this;
-        }
-    }
-
-    // And now we're down to large integer arithmetic.
-    // The following code should work even if other == LONG_MIN (in which case
-    // -other == LONG_MIN also), since passing -other to mpz_sub_ui casts it
-    // to an unsigned long (and gives it the correct positive value).
-    if (other >= 0)
-        mpz_add_ui(large_, large_, other);
-    else
-        mpz_sub_ui(large_, large_, -other);
-
-    return *this;
-}
-
-template <bool withInfinity>
-IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(long other) {
-    if (isInfinite())
-        return *this;
-    if (! large_) {
-        // Use native arithmetic if we can.
-        if (    (other > 0 && small_ < (LONG_MIN + other)) ||
-                (other < 0 && small_ > (LONG_MAX + other))) {
-            // Boom.  It's an overflow.
-            // Fall back to large integer arithmetic in the next block.
-            forceLarge();
-        } else {
-            // All good: we're done.
-            small_ -= other;
-            return *this;
-        }
-    }
-
-    // And now we're down to large integer arithmetic.
-    // The following code should work even if other == LONG_MIN (in which case
-    // -other == LONG_MIN also), since passing -other to mpz_add_ui casts it
-    // to an unsigned long (and gives it the correct positive value).
-    if (other >= 0)
-        mpz_sub_ui(large_, large_, other);
-    else
-        mpz_add_ui(large_, large_, -other);
-
-    return *this;
-}
-
-template <bool withInfinity>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
         const IntegerBase& other) {
-    if (isInfinite())
-        return *this;
-    else if (other.isInfinite()) {
-        makeInfinite();
-        return *this;
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return *this;
+        else if (other.isInfinite()) {
+            makeInfinite();
+            return *this;
+        }
     }
+
     if (large_) {
         if (other.large_)
             mpz_mul(large_, large_, other.large_);
@@ -355,36 +248,22 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
 }
 
 template <bool withInfinity>
-IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(long other) {
-    if (isInfinite())
-        return *this;
-    if (large_)
-        mpz_mul_si(large_, large_, other);
-    else {
-        using Wide = IntOfSize<2 * sizeof(long)>::type;
-        Wide ans = static_cast<Wide>(small_) * static_cast<Wide>(other);
-        if (ans > LONG_MAX || ans < LONG_MIN) {
-            // Overflow.
-            large_ = new __mpz_struct[1];
-            mpz_init_set_si(large_, small_);
-            mpz_mul_si(large_, large_, other);
-        } else
-            small_ = static_cast<long>(ans);
-    }
-    return *this;
-}
-
-template <bool withInfinity>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(
         const IntegerBase& other) {
-    if (isInfinite())
-        return *this;
-    if (other.isInfinite())
-        return (*this = 0);
-    if (withInfinity && other.isZero()) {
-        makeInfinite();
-        return *this;
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return *this;
+        if (other.isInfinite())
+            return (*this = 0);
+        if (other.isZero()) {
+            makeInfinite();
+            return *this;
+        }
+    } else {
+        if (other.isZero())
+            throw DivisionByZero();
     }
+
     if (other.large_) {
         if (large_) {
             mpz_tdiv_q(large_, large_, other.large_);
@@ -455,36 +334,6 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(
 }
 
 template <bool withInfinity>
-IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(long other) {
-    if (isInfinite())
-        return *this;
-    if (withInfinity && other == 0) {
-        makeInfinite();
-        return *this;
-    }
-    if (large_) {
-        if (other >= 0)
-            mpz_tdiv_q_ui(large_, large_, other);
-        else {
-            // The cast to (unsigned long) makes this correct even if
-            // other = LONG_MIN.
-            mpz_tdiv_q_ui(large_, large_, - other);
-            mpz_neg(large_, large_);
-        }
-    } else if (small_ == LONG_MIN && other == -1) {
-        // This is the special case where we must switch from native to
-        // large integers.
-        large_ = new __mpz_struct[1];
-        mpz_init_set_si(large_, LONG_MIN);
-        mpz_neg(large_, large_);
-    } else {
-        // We can do this entirely in native arithmetic.
-        small_ /= other;
-    }
-    return *this;
-}
-
-template <bool withInfinity>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::divByExact(
         const IntegerBase& other) {
     if (other.large_) {
@@ -540,32 +389,33 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::divByExact(
 }
 
 template <bool withInfinity>
-IntegerBase<withInfinity>& IntegerBase<withInfinity>::divByExact(long other) {
-    if (large_) {
-        if (other >= 0)
-            mpz_divexact_ui(large_, large_, other);
-        else {
-            // The cast to (unsigned long) makes this correct even if
-            // other = LONG_MIN.
-            mpz_divexact_ui(large_, large_, - other);
-            mpz_neg(large_, large_);
-        }
-    } else if (small_ == LONG_MIN && other == -1) {
-        // This is the special case where we must switch from native to
-        // large integers.
-        large_ = new __mpz_struct[1];
-        mpz_init_set_si(large_, LONG_MIN);
-        mpz_neg(large_, large_);
-    } else {
-        // We can do this entirely in native arithmetic.
-        small_ /= other;
-    }
-    return *this;
-}
-
-template <bool withInfinity>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
         const IntegerBase& other) {
+    if constexpr (withInfinity)
+        if (other.isInfinite()) {
+            // We have infinity % infinity == 0 (which requires action), and
+            // for finite x, x % infinity == x (which means nothing to do).
+            if (isInfinite()) {
+                makeFinite();
+                small_ = 0;
+            }
+            return *this;
+        }
+
+    // Test whether other == 0.
+    if (((! other.large_) && (! other.small_)) ||
+            (other.large_ && mpz_sgn(other.large_) == 0))
+        throw DivisionByZero();
+
+    if constexpr (withInfinity)
+        if (isInfinite()) {
+            // We have infinity % (non-zero) == 0.
+            makeFinite();
+            small_ = 0;
+            return *this;
+        }
+
+    // From here on, we know this != infinity and other != (infinity or 0).
     if (other.large_) {
         if (large_) {
             mpz_tdiv_r(large_, large_, other.large_);
@@ -613,26 +463,6 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
         return *this;
     } else
         return (*this) %= other.small_;
-}
-
-template <bool withInfinity>
-IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(long other) {
-    // Since |result| < |other|, whatever happens we can fit the result
-    // into a native C/C++ long.
-    if (large_) {
-        // We can safely cast other to an unsigned long, because the rounding
-        // rules imply that (this % LONG_MIN) == (this % -LONG_MIN).
-        mpz_tdiv_r_ui(large_, large_, other >= 0 ? other : -other);
-        forceReduce();
-    } else {
-        // All native arithmetic from here.
-        // Some compilers will crash on LONG_MIN % -1, sigh.
-        if (other == -1)
-            small_ = 0;
-        else
-            small_ %= other;
-    }
-    return *this;
 }
 
 template <bool withInfinity>

@@ -45,8 +45,8 @@ void XMLWriter<NormalSurfaces>::openPre() {
             << static_cast<int>(PacketType::NormalSurfaces) << '"';
     } else {
         out_ << R"(<surfaces tri=")" << triID_
-            << R"(" type=")" << data_.which_.intValue()
-            << R"(" algorithm=")" << data_.algorithm_.intValue()
+            << R"(" type=")" << data_.which_.baseValue()
+            << R"(" algorithm=")" << data_.algorithm_.baseValue()
             << R"(" coords=")" << static_cast<int>(data_.coords_) << '"';
     }
 }
@@ -58,8 +58,8 @@ void XMLWriter<NormalSurfaces>::writeContent() {
     if (format_ == FileFormat::XmlGen2) {
         // Write the enumeration parameters.
         out_ << "  <params "
-            "type=\"" << data_.which_.intValue() << "\" "
-            "algorithm=\"" << data_.algorithm_.intValue() << "\" "
+            "type=\"" << data_.which_.baseValue() << "\" "
+            "algorithm=\"" << data_.algorithm_.baseValue() << "\" "
             "flavourid=\"" << static_cast<int>(data_.coords_) << "\"\n";
         out_ << "\tflavour=\""
             << regina::xml::xmlEncodeSpecialChars(NormalInfo::name(

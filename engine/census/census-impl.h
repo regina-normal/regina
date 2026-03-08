@@ -43,7 +43,7 @@
 #define __REGINA_CENSUS_IMPL_H
 #endif
 
-#include "regina-config.h" // For key-value store macros
+#include "regina-config.h" // For key-value store macros (REGINA_KVSTORE_*)
 
 #include <iostream>
 #include <cstdlib>
@@ -60,11 +60,12 @@
 #else
   #error "No key-value store library was detected!"
 #endif
+
 #include "census/census.h"
 
 namespace regina {
 
-template <typename Action>
+template <VoidCallback<CensusHit&&> Action>
 bool CensusDB::lookup(const std::string& isoSig, Action&& action) const {
     // On some platforms, looking up an empty key triggers the
     // error MDB_BAD_VALSIZE when using LMDB.

@@ -41,7 +41,6 @@
 #define __REGINA_TRIANGULATION_H
 #endif
 
-#include "regina-config.h" // for REGINA_HIGHDIM
 #include "packet/packet.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
@@ -149,23 +148,16 @@ namespace regina {
  * (e.g., Triangulation2 and Triangulation3 for dimensions 2 and 3).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \headerfile triangulation/generic.h
  *
  * \ingroup generic
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class Triangulation : public detail::TriangulationBase<dim> {
     static_assert(! standardDim(dim),
         "The generic implementation of Triangulation<dim> "
         "should not be used for Regina's standard dimensions.");
-#ifndef REGINA_HIGHDIM
-    static_assert(dim <= 8,
-        "This build has been configured without REGINA_HIGHDIM. "
-        "The Triangulation class should only be instantiated for "
-        "dimensions dim <= 8.");
-#endif
 
     protected:
         using detail::TriangulationBase<dim>::simplices_;
@@ -382,18 +374,13 @@ class Triangulation : public detail::TriangulationBase<dim> {
  *
  * \deprecated This comparison is a one-liner.  Just use a lambda instead.
  *
- * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
- * \pre \a subdim is between 0 and <i>dim</i>-1 inclusive.
- *
  * \nopython
  *
  * \ingroup generic
  */
 template <int dim, int subdim>
+requires (standardDim(dim) && subdim >= 0 && subdim < dim)
 class [[deprecated]] DegreeLessThan {
-    static_assert(standardDim(dim),
-        "DegreeLessThan is only available for Regina's standard dimensions.");
-
     private:
         const Triangulation<dim>& tri_;
             /**< The triangulation with which we are working. */
@@ -456,16 +443,11 @@ class [[deprecated]] DegreeLessThan {
  *
  * \nopython
  *
- * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
- * \pre \a subdim is between 0 and <i>dim</i>-1 inclusive.
- *
  * \ingroup generic
  */
 template <int dim, int subdim>
+requires (standardDim(dim) && subdim >= 0 && subdim < dim)
 class [[deprecated]] DegreeGreaterThan {
-    static_assert(standardDim(dim),
-        "DegreeGreaterThan is only available for Regina's standard dimensions.");
-
     private:
         const Triangulation<dim>& tri_;
             /**< The triangulation with which we are working. */
@@ -510,29 +492,29 @@ class [[deprecated]] DegreeGreaterThan {
 
 // Inline functions for Triangulation
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Triangulation<dim>::Triangulation() : detail::TriangulationBase<dim>() {
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Triangulation<dim>::Triangulation(const Triangulation& src,
         bool cloneProps, bool cloneLocks) :
         detail::TriangulationBase<dim>(src, cloneProps, cloneLocks) {
     // All properties to clone are held by TriangulationBase.
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Triangulation<dim>::~Triangulation() {
     Snapshottable<Triangulation<dim>>::takeSnapshot();
     clearAllProperties();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void Triangulation<dim>::clearAllProperties() {
     detail::TriangulationBase<dim>::clearBaseProperties();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void Triangulation<dim>::swap(Triangulation<dim>& other) {
     if (&other == this)
         return;

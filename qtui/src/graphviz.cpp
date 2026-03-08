@@ -30,11 +30,43 @@
 
 #include "graphviz.h"
 
+// We make two passes at clearing out all of the PACKAGE_* macros,
+// since both regina-config.h and graphviz_version.h provide different
+// (and overlapping) combinations of these.
+//
+// It is better to have none of these macros than to be unsure of
+// whose we're using.
+//
+// The list of macros that we clear is the union of what Regina and Graphviz
+// provide.
+
+// At this point we have imported Regina's PACKAGE_* macros.
+#undef PACKAGE_BUGREPORT
+#undef PACKAGE_BUILD_STRING
+#undef PACKAGE_NAME
+#undef PACKAGE_STRING
+#undef PACKAGE_TARNAME
+#undef PACKAGE_URL
+#undef PACKAGE_VERSION
+#undef PACKAGE_VERSION_MAJOR
+#undef PACKAGE_VERSION_MINOR
+
 #ifdef LIBGVC_FOUND
+#include "graphviz_version.h"
 #include "gvc.h"
-#include "utilities/typeutils.h"
 #include <QSvgWidget>
 #endif
+
+// At this point we have (possibly) imported Graphviz's PACKAGE_* macros.
+#undef PACKAGE_BUGREPORT
+#undef PACKAGE_BUILD_STRING
+#undef PACKAGE_NAME
+#undef PACKAGE_STRING
+#undef PACKAGE_TARNAME
+#undef PACKAGE_URL
+#undef PACKAGE_VERSION
+#undef PACKAGE_VERSION_MAJOR
+#undef PACKAGE_VERSION_MINOR
 
 #ifdef LIBGVC_FOUND
 
@@ -59,13 +91,36 @@ lt_symlist_t link_lt_preloaded_symbols[] = {
 
 void Graphviz::render(QSvgWidget* widget, const std::string& dot,
         Renderer renderer) {
-    // At some point (Graphviz 13), Graphviz changed the type of the svgLen
-    // argument to gvRenderData() from unsigned* to size_t*.  Instead of
-    // trying to fix this via conditional compilation, we ask the compiler
-    // to deduce the type automatically.
-    using SVGLen = std::remove_pointer_t<
-        regina::CallableArg<decltype(&gvRenderData), 4>::type>;
-    static_assert(std::is_integral_v<SVGLen>);
+    // In Graphviz 13.0.0, Graphviz changed the type of the svgLen argument
+    // to gvRenderData() from unsigned* to size_t*.  This means we need to
+    // distinguish between graphviz ≥ 13.0.0 vs ≤ 12.2.1.
+    //
+    // Nowadays, graphviz_version.h contains integer macros
+    // GRAPHVIZ_VERSION_MAJOR, GRAPHVIZ_VERSION_MINOR, GRAPHVIZ_VERSION_PATCH.
+    // However, these were not introduced until graphviz 14.0.0.
+    //
+    // Happily, the transition from 12.2.1 to 13.0.0 also saw the integer macro
+    // GVPLUGIN_VERSION change from 6 to 8.  This gives us enough information
+    // to deduce our place in the timeline.  Note that GVPLUGIN_VERSION has
+    // been around for as long as the header graphviz_version.h, which was
+    // introduced in graphviz 2.24.0 (2009-06-16).
+    //
+    #if defined(GRAPHVIZ_VERSION_MAJOR)
+        // A modern graphviz, with version ≥ 14.0.0.
+        using SVGLen = size_t;
+    #elif defined(GVPLUGIN_VERSION)
+        #if GVPLUGIN_VERSION >= 8
+            // An older graphviz, with 13.0.0 ≤ version < 14.0.0.
+            using SVGLen = size_t;
+        #else
+            // An older graphviz, with 2.24.0 ≤ version ≤ 12.2.1.
+            using SVGLen = unsigned;
+        #endif
+    #else
+        // An ancient graphviz.  Assume we have found graphviz_version.h,
+        // we should never reach this branch of the code.
+        #error Cannot find either GRAPHVIZ_VERSION_MAJOR or GVPLUGIN_VERSION
+    #endif
 
     char* svg;
     SVGLen svgLen;

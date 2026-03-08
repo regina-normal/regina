@@ -88,13 +88,12 @@ namespace regina {
  * (e.g., Simplex2 and Simplex3 for dimensions 2 and 3).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \headerfile triangulation/generic.h
  *
  * \ingroup generic
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class Face<dim, dim> : public detail::SimplexBase<dim> {
     static_assert(! standardDim(dim),
         "The generic implementation of Simplex<dim> "
@@ -139,27 +138,26 @@ class Face<dim, dim> : public detail::SimplexBase<dim> {
  * opposed to the more clumsy notation Face<dim, dim>).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup generic
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 using Simplex = Face<dim, dim>;
 #endif
 
 // Inline functions for Simplex
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Face<dim, dim>::Face(Triangulation<dim>* tri) :
         detail::SimplexBase<dim>(tri) {
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Face<dim, dim>::Face(const Face& clone, Triangulation<dim>* tri) :
         detail::SimplexBase<dim>(clone, tri) {
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Face<dim, dim>::Face(const std::string& desc,
         Triangulation<dim>* tri) :
         detail::SimplexBase<dim>(desc, tri) {

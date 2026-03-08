@@ -732,12 +732,12 @@ void SnapPeaTriangulation::randomise() {
     regina::snappea::randomize_triangulation(data_);
 }
 
-MatrixInt SnapPeaTriangulation::gluingEquations() const {
+Matrix<Integer> SnapPeaTriangulation::gluingEquations() const {
     if (! data_)
-        return MatrixInt(); // Should never happen, due to preconditions
+        return {}; // Should never happen, due to preconditions
 
-    MatrixInt matrix(countEdges() + data_->num_cusps + countCompleteCusps(),
-        3 * size());
+    Matrix<Integer> matrix(countEdges() + data_->num_cusps +
+        countCompleteCusps(), 3 * size());
 
     int numRows, numCols;
     int row, j;
@@ -779,14 +779,14 @@ MatrixInt SnapPeaTriangulation::gluingEquations() const {
     return matrix;
 }
 
-MatrixInt SnapPeaTriangulation::gluingEquationsRect() const {
+Matrix<Integer> SnapPeaTriangulation::gluingEquationsRect() const {
     if (! data_)
-        return MatrixInt(); // Should never happen, due to preconditions
+        return {}; // Should never happen, due to preconditions
 
     size_t n = size();
 
-    MatrixInt matrix(countEdges() + data_->num_cusps + countCompleteCusps(),
-        2 * n + 1);
+    Matrix<Integer> matrix(countEdges() + data_->num_cusps +
+        countCompleteCusps(), 2 * n + 1);
     // Note: all entries are automatically initialised to zero.
 
     int numRows, numCols, row; // Using int to match the type used by SnapPy
@@ -862,11 +862,11 @@ MatrixInt SnapPeaTriangulation::gluingEquationsRect() const {
 /**
  * Written by William Pettersson, 2011.
  */
-MatrixInt SnapPeaTriangulation::slopeEquations() const {
+Matrix<Integer> SnapPeaTriangulation::slopeEquations() const {
     if (! data_)
         throw SnapPeaIsNull("SnapPeaTriangulation::slopeEquations");
 
-    MatrixInt matrix(2*data_->num_cusps, 3*data_->num_tetrahedra);
+    Matrix<Integer> matrix(2*data_->num_cusps, 3*data_->num_tetrahedra);
     int i,j;
     for(i=0; i< data_->num_cusps; i++) {
         int numRows;

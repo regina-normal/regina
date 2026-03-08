@@ -51,6 +51,7 @@ namespace regina::python {
  * pybind11::class_ object that wraps `Triangulation<dim>`.
  */
 template <int dim, typename PythonClass>
+requires (regina::supportedDim(dim))
 void isosig_options(PythonClass& classWrapper) {
     RDOC_SCOPE_BASE(detail::TriangulationBase)
 
@@ -109,7 +110,7 @@ void isosig_options(PythonClass& classWrapper) {
 
 } // namespace regina::python
 
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 void addIsoSigClassic(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(IsoSigClassic)
 
@@ -125,7 +126,7 @@ void addIsoSigClassic(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 void addIsoSigEdgeDegrees(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(IsoSigDegrees)
 
@@ -141,7 +142,7 @@ void addIsoSigEdgeDegrees(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 void addIsoSigRidgeDegrees(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(IsoSigDegrees)
 
@@ -158,6 +159,7 @@ void addIsoSigRidgeDegrees(pybind11::module_& m, const char* name) {
 }
 
 template <int dim, bool supportLocks>
+requires (regina::supportedDim(dim))
 void addIsoSigPrintable(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(IsoSigPrintable)
 
