@@ -1091,7 +1091,6 @@
 		056AEDC02A4BC65E00EAF4FA /* links4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AEDBF2A4BC65E00EAF4FA /* links4.cpp */; };
 		056AEDC22A4BC66A00EAF4FA /* links3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AEDC12A4BC66A00EAF4FA /* links3.cpp */; };
 		056AEDC42A4CFFDF00EAF4FA /* triangulation3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AEDC32A4CFFDE00EAF4FA /* triangulation3.cpp */; };
-		056E071F1F994D9000DF136B /* graph.h in Headers */ = {isa = PBXBuildFile; fileRef = 056E071E1F994D9000DF136B /* graph.h */; };
 		056EC5502A288F2E006EE87A /* default_theme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056EC54F2A288F2E006EE87A /* default_theme.cpp */; };
 		056F746B276754CD00F7EAC9 /* linkalgebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056F746A276754CC00F7EAC9 /* linkalgebra.cpp */; };
 		056F746C2767551F00F7EAC9 /* linkalgebra.h in Sources */ = {isa = PBXBuildFile; fileRef = 056F7469276754CC00F7EAC9 /* linkalgebra.h */; };
@@ -1106,7 +1105,6 @@
 		05721EE61F97153E00A83FFC /* jones.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721ED41F97153C00A83FFC /* jones.cpp */; };
 		05721EE71F97153E00A83FFC /* examplelink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721ED61F97153C00A83FFC /* examplelink.cpp */; };
 		05721EE81F97153E00A83FFC /* simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721ED71F97153C00A83FFC /* simplify.cpp */; };
-		05721EEA1F97153E00A83FFC /* graph.h in Headers */ = {isa = PBXBuildFile; fileRef = 05721ED91F97153C00A83FFC /* graph.h */; };
 		05721EEB1F97153E00A83FFC /* homfly.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721EDA1F97153C00A83FFC /* homfly.cpp */; };
 		05721EEC1F97153E00A83FFC /* reidemeister.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721EDB1F97153C00A83FFC /* reidemeister.cpp */; };
 		05721EEE1F97153E00A83FFC /* gauss-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05721EDD1F97153C00A83FFC /* gauss-impl.h */; };
@@ -3656,7 +3654,6 @@
 		056BEB6B2F5C28F9001AF328 /* sigs-dim7.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sigs-dim7.txt"; sourceTree = "<group>"; };
 		056BEB6C2F5C28F9001AF328 /* sigs-dim8.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sigs-dim8.txt"; sourceTree = "<group>"; };
 		056BEB6D2F5C28F9001AF328 /* sigs-links.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sigs-links.txt"; sourceTree = "<group>"; };
-		056E071E1F994D9000DF136B /* graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graph.h; sourceTree = "<group>"; };
 		056EC54F2A288F2E006EE87A /* default_theme.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = default_theme.cpp; sourceTree = "<group>"; };
 		056F7469276754CC00F7EAC9 /* linkalgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkalgebra.h; sourceTree = "<group>"; };
 		056F746A276754CC00F7EAC9 /* linkalgebra.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = linkalgebra.cpp; sourceTree = "<group>"; };
@@ -3675,7 +3672,6 @@
 		05721ED41F97153C00A83FFC /* jones.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jones.cpp; sourceTree = "<group>"; };
 		05721ED61F97153C00A83FFC /* examplelink.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = examplelink.cpp; sourceTree = "<group>"; };
 		05721ED71F97153C00A83FFC /* simplify.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplify.cpp; sourceTree = "<group>"; };
-		05721ED91F97153C00A83FFC /* graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graph.h; sourceTree = "<group>"; };
 		05721EDA1F97153C00A83FFC /* homfly.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homfly.cpp; sourceTree = "<group>"; };
 		05721EDB1F97153C00A83FFC /* reidemeister.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = reidemeister.cpp; sourceTree = "<group>"; };
 		05721EDD1F97153C00A83FFC /* gauss-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gauss-impl.h"; sourceTree = "<group>"; };
@@ -6766,7 +6762,6 @@
 				055114D11DCC71A700EC753C /* facetspec.h */,
 				058C305E1DCAF6F8006162D2 /* forward.h */,
 				058E398C1DCBC67C00D463A4 /* generic.h */,
-				056E071E1F994D9000DF136B /* graph.h */,
 				05CAE698274AA785007C93F3 /* isosigencoding.h */,
 				05CAE699274AA785007C93F3 /* isosigtype.h */,
 				055114CC1DCC476A00EC753C /* pachner.h */,
@@ -8046,7 +8041,6 @@
 				05721ED21F97153C00A83FFC /* gauss.cpp */,
 				05721EDD1F97153C00A83FFC /* gauss-impl.h */,
 				0568742120C5D869001C435B /* gauss-tangle-impl.h */,
-				05721ED91F97153C00A83FFC /* graph.h */,
 				05FE05002DC39ECE001432AC /* group.cpp */,
 				05721EDA1F97153C00A83FFC /* homfly.cpp */,
 				05721ECE1F97153C00A83FFC /* jenkins.cpp */,
@@ -8855,7 +8849,6 @@
 				05FB46E91DD92D4A00BB00E5 /* homgrouppresentation.h in Headers */,
 				05B4D2C3229F376B00B7B11C /* output.h in Headers */,
 				052F9ECD180600FB00FAE4DF /* hilbertprimal.h in Headers */,
-				05721EEA1F97153E00A83FFC /* graph.h in Headers */,
 				054208761DF0D0B50018AB24 /* definition.h in Headers */,
 				05A067251DFA68190047872E /* pluggedtorusbundle.h in Headers */,
 				053CB70828D0168D006B37B0 /* tetrahedron4.h in Headers */,
@@ -9128,7 +9121,6 @@
 				0588F1191808D43B006BDC79 /* packettype.h in Headers */,
 				05431F7C1C40F3C9009BC072 /* normaliz_exception.h in Headers */,
 				05EDDA4F27E3102A001743C1 /* signed_dec.h in Headers */,
-				056E071F1F994D9000DF136B /* graph.h in Headers */,
 				059BC6681DC7F77F00AB4206 /* boundarycomponent.h in Headers */,
 				05431F821C40F3C9009BC072 /* simplex.h in Headers */,
 				05ACC9FA2AFC674C000CF07F /* spatiallink.h in Headers */,

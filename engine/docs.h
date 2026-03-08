@@ -249,63 +249,6 @@ namespace regina {
  *  - Regina uses a right-handed coordinate system.
  */
 
-/*! \page bgl Boost Graph Library interface
- *
- * The namespace regina::graph provides an interface for various types of
- * objects from Regina to work directly with the Boost Graph Library (BGL).
- *
- * <h3>Triangulations</h3>
- *
- * After including the header triangulation/graph.h, any object of type
- * `regina::Triangulation<dim>` can be used directly as a graph with
- * the BGL.  Here the graph will be the _dual graph_ of the triangulation:
- * this is an undirected multigraph in which each node represents a
- * <i>dim</i>-simplex of the triangulation, and each arc represents a gluing
- * between two adjacent <i>dim</i>-simplices.
- *
- * Triangulations implement several BGL graph concepts, including:
- * - vertex link graph;
- * - edge list graph;
- * - adjacency graph;
- * - incidence graph;
- * - bidirectional graph;
- * - the read-only portions of property graph.
- *
- * Triangulations are _not_ mutable graphs - for the purposes of the BGL,
- * they are considered read-only.
- *
- * Dual vertices of the graph represent <i>dim</i>-dimensional simplices
- * of the underlying triangulation, and so are represented directly by a
- * pointer of type `regina::Simplex<dim>*`.  Dual edges (when
- * accessed through the BGL) must come with an orientation, and so are
- * represented by lightweight objects of type regina::graph::DualEdge<dim>.
- *
- * <h3>Knots and links</h3>
- *
- * After including the header link/graph.h, any object of type
- * regina::Link can be used directly as a graph with the BGL.
- * Here the graph will be the underlying 4-valent directed multigraph of the
- * link: every crossing of the link becomes a vertex of the graph, and every
- * directed arc between crossings becomes a directed edge.  Zero-crossing
- * unknot components of a link do not appear in this graph at all.
- *
- * Knots and links implement several BGL graph concepts, including:
- * - vertex link graph;
- * - edge list graph;
- * - adjacency graph;
- * - incidence graph;
- * - bidirectional graph;
- * - the read-only portions of property graph.
- *
- * Knots and links are _not_ mutable graphs - for the purposes of the BGL,
- * they are considered read-only.
- *
- * Vertices of the graph are represented directly by a pointer of type
- * `regina::Crossing*`.  Directed edges are represented by lightweight
- * `regina::StrandRef` objects; see the regina::StrandRef documentation
- * for how a StrandRef object is used to identify a directed arc of the link.
- */
-
 /*! \page pythonapi Python users
  *
  *  Regina's calculation engine is provided as a shared C++ library, and this

@@ -124,6 +124,10 @@ Version 7.5  [ TODO ]
         Class Laurent<T>:
             - For the iterator-based constructor and init() routine, the
               iterator type is now required to be random access.
+        Class Link:
+            - Removed the Boost Graph Library (BGL) interface for links
+              (link/graph.h).  This is because Regina has not used Boost since
+              December 2021, and so this code is essentially untested nowadays.
         Class LPCol<...>:
             - This is now an internal class in the namespace regina::detail,
               and its template parameters have changed.  End users should have
@@ -205,6 +209,11 @@ Version 7.5  [ TODO ]
             - In the version of reroot() that uses costs, the cost type T no
               no longer treats zero in a special manner; it is only the total
               order on T that matters.
+        Class Triangulation<dim>:
+            - Removed the Boost Graph Library (BGL) interface for triangulations
+              (triangulation/graph.h).  This is because Regina has not used
+              Boost since December 2021, and so this code is essentially
+              untested nowadays.
         Class Triangulation<3>:
             - Routines hasCompressingDisc() and isHaken() now throw an
               exception if the underlying algorithms encounter an impossible
