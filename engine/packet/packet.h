@@ -2893,11 +2893,11 @@ class ChildIterator {
 } namespace std {
     template <bool const_>
     struct iterator_traits<regina::ChildIterator<const_>> {
-        using value_type = typename regina::ChildIterator<const_>::packet_type;
+        using value_type = regina::Packet;
         using iterator_category = std::forward_iterator_tag;
         using difference_type = ptrdiff_t;
-        using pointer = value_type*;
-        using reference = value_type&;
+        using pointer = typename regina::ChildIterator<const_>::packet_type*;
+        using reference = typename regina::ChildIterator<const_>::packet_type&;
     };
 } namespace regina {
 #endif
@@ -3101,12 +3101,11 @@ class SubtreeIterator {
 } namespace std {
     template <bool const_>
     struct iterator_traits<regina::SubtreeIterator<const_>> {
-        using value_type =
-            typename regina::SubtreeIterator<const_>::packet_type;
+        using value_type = regina::Packet;
         using iterator_category = std::forward_iterator_tag;
         using difference_type = ptrdiff_t;
-        using pointer = value_type*;
-        using reference = value_type&;
+        using pointer = typename regina::SubtreeIterator<const_>::packet_type*;
+        using reference = typename regina::SubtreeIterator<const_>::packet_type&;
     };
 } namespace regina {
 #endif
