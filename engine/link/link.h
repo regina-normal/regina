@@ -6268,8 +6268,8 @@ class Link :
          * sequence of tokens for an "oriented" Gauss code.
          * \return the reconstructed knot.
          */
-        template <RandomAccessIteratorFor<std::string> iterator>
-        static Link fromOrientedGauss(iterator begin, iterator end);
+        template <RandomAccessIteratorFor<std::string> Iterator>
+        static Link fromOrientedGauss(Iterator begin, Iterator end);
 
         /**
          * Creates a new classical or virtual knot from a "signed" variant
@@ -6367,8 +6367,8 @@ class Link :
          * sequence of tokens for a "signed" Gauss code.
          * \return the reconstructed knot.
          */
-        template <RandomAccessIteratorFor<std::string> iterator>
-        static Link fromSignedGauss(iterator begin, iterator end);
+        template <RandomAccessIteratorFor<std::string> Iterator>
+        static Link fromSignedGauss(Iterator begin, Iterator end);
 
         /**
          * Creates a new classical or virtual link from Bob Jenkins' format,
@@ -6768,8 +6768,8 @@ class Link :
          * share much of the same source code.
          */
         template <GaussEnhancement type_,
-            RandomAccessIteratorFor<std::string> iterator>
-        static Link fromEnhancedGauss(iterator begin, iterator end);
+            RandomAccessIteratorFor<std::string> Iterator>
+        static Link fromEnhancedGauss(Iterator begin, Iterator end);
         /**
          * Internal to fromOrientedGauss().
          *
@@ -7945,14 +7945,14 @@ inline Link Link::fromKnotSig(const std::string& sig) {
     return Link::fromSig(sig);
 }
 
-template <RandomAccessIteratorFor<std::string> iterator>
-inline Link Link::fromOrientedGauss(iterator begin, iterator end) {
-    return fromEnhancedGauss<GaussEnhancement::Oriented, iterator>(begin, end);
+template <RandomAccessIteratorFor<std::string> Iterator>
+inline Link Link::fromOrientedGauss(Iterator begin, Iterator end) {
+    return fromEnhancedGauss<GaussEnhancement::Oriented, Iterator>(begin, end);
 }
 
-template <RandomAccessIteratorFor<std::string> iterator>
-inline Link Link::fromSignedGauss(iterator begin, iterator end) {
-    return fromEnhancedGauss<GaussEnhancement::Signed, iterator>(begin, end);
+template <RandomAccessIteratorFor<std::string> Iterator>
+inline Link Link::fromSignedGauss(Iterator begin, Iterator end) {
+    return fromEnhancedGauss<GaussEnhancement::Signed, Iterator>(begin, end);
 }
 
 inline std::string Link::dumpConstruction() const {

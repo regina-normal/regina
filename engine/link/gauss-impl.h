@@ -286,8 +286,8 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
 }
 
 template <Link::GaussEnhancement type_,
-    RandomAccessIteratorFor<std::string> iterator>
-Link Link::fromEnhancedGauss(iterator begin, iterator end) {
+    RandomAccessIteratorFor<std::string> Iterator>
+Link Link::fromEnhancedGauss(Iterator begin, Iterator end) {
     // Extract the number of crossings.
     size_t n = end - begin;
     if (n % 2)
