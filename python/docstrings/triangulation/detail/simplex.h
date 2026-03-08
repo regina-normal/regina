@@ -36,8 +36,7 @@ Python:
     Simplex<dim> is.
 
 Template parameter ``dim``:
-    the dimension of the underlying triangulation. This must be
-    between 2 and 15 inclusive.)doc";
+    the dimension of the underlying triangulation.)doc";
 
 }
 
@@ -130,8 +129,6 @@ Returns:
 constexpr const char *edge =
 R"doc(A dimension-specific alias for face<1>().
 
-This alias is available for all dimensions *dim*.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::SimplexBase_::edge_2
@@ -161,8 +158,6 @@ Returns:
 constexpr const char *edgeMapping =
 R"doc(A dimension-specific alias for faceMapping<1>().
 
-This alias is available for all dimensions *dim*.
-
 See faceMapping() for further information.)doc";
 
 // Docstring regina::python::doc::detail::SimplexBase_::face
@@ -180,12 +175,11 @@ Python:
     function.
 
 Template parameter ``subdim``:
-    the dimension of the subface to examine. This must be between 0
-    and (*dim* - 1) inclusive.
+    the dimension of the subface to examine.
 
 Parameter ``face``:
     the *subdim*-face of this simplex to examine. This should be
-    between 0 and (*dim*+1 choose *subdim*+1)-1 inclusive.
+    between 0 and ``(dim+1 choose subdim+1)-1`` inclusive.
 
 Returns:
     the corresponding *subdim*-face of the triangulation.)doc";
@@ -276,12 +270,11 @@ Python:
     the function.
 
 Template parameter ``subdim``:
-    the dimension of the subface to examine. This must be between 0
-    and (*dim* - 1) inclusive.
+    the dimension of the subface to examine.
 
 Parameter ``face``:
     the *subdim*-face of this simplex to examine. This should be
-    between 0 and (*dim*+1 choose *subdim*+1)-1 inclusive.
+    between 0 and ``(dim+1 choose subdim+1)-1`` inclusive.
 
 Returns:
     a mapping from the vertices of the underlying *subdim*-face of the
@@ -637,15 +630,11 @@ Returns:
 constexpr const char *pentachoron =
 R"doc(A dimension-specific alias for face<4>().
 
-This alias is available for dimensions *dim* ≥ 5.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::SimplexBase_::pentachoronMapping
 constexpr const char *pentachoronMapping =
 R"doc(A dimension-specific alias for faceMapping<4>().
-
-This alias is available for dimensions *dim* ≥ 5.
 
 See faceMapping() for further information.)doc";
 
@@ -666,15 +655,11 @@ Parameter ``desc``:
 constexpr const char *tetrahedron =
 R"doc(A dimension-specific alias for face<3>().
 
-This alias is available for dimensions *dim* ≥ 4.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::SimplexBase_::tetrahedronMapping
 constexpr const char *tetrahedronMapping =
 R"doc(A dimension-specific alias for faceMapping<3>().
-
-This alias is available for dimensions *dim* ≥ 4.
 
 See faceMapping() for further information.)doc";
 
@@ -682,15 +667,11 @@ See faceMapping() for further information.)doc";
 constexpr const char *triangle =
 R"doc(A dimension-specific alias for face<2>().
 
-This alias is available for dimensions *dim* ≥ 3.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::SimplexBase_::triangleMapping
 constexpr const char *triangleMapping =
 R"doc(A dimension-specific alias for faceMapping<2>().
-
-This alias is available for dimensions *dim* ≥ 3.
 
 See faceMapping() for further information.)doc";
 
@@ -802,15 +783,11 @@ Parameter ``facet``:
 constexpr const char *vertex =
 R"doc(A dimension-specific alias for face<0>().
 
-This alias is available for all dimensions *dim*.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::SimplexBase_::vertexMapping
 constexpr const char *vertexMapping =
 R"doc(A dimension-specific alias for faceMapping<0>().
-
-This alias is available for all dimensions *dim*.
 
 See faceMapping() for further information.)doc";
 

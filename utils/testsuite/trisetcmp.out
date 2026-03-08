@@ -157,6 +157,22 @@ Please check that it exists and that it is a Regina data file.
 --------------------
 Exit code: 1
 ============================================================
+TEST: trisetcmp @TESTDIR@/tiny.rga @TESTDIR@/tiny.rga
+--------------------
+Matching (isomorphic) triangulations:
+
+    Layered Solid Torus  ==  Layered Solid Torus
+    RP² x S¹  ==  RP² x S¹
+    Twisted S³ x~ S¹  ==  Twisted S³ x~ S¹
+    Klein Bottle, version 1  ==  Klein Bottle, version 1
+    Klein Bottle, version 2  ==  Klein Bottle, version 2
+    B4 x~ S1  ==  B4 x~ S1
+    8-sphere  ==  8-sphere
+
+7 matches.
+--------------------
+Exit code: 0
+============================================================
 TEST: trisetcmp @TESTDIR@/tiny.rga @TESTDIR@/test.rga
 --------------------
 Matching (isomorphic) triangulations:
@@ -164,8 +180,10 @@ Matching (isomorphic) triangulations:
     Layered Solid Torus  ==  Layered Solid Torus
     RP² x S¹  ==  RP² x S¹
     Twisted S³ x~ S¹  ==  Twisted S³ x~ S¹
+    Klein Bottle, version 1  ==  Klein Bottle, version 1
+    Klein Bottle, version 2  ==  Klein Bottle, version 2
 
-3 matches.
+5 matches.
 --------------------
 Exit code: 0
 ============================================================
@@ -176,8 +194,10 @@ Matching (isomorphic) triangulations:
     Layered Solid Torus  ==  Layered Solid Torus
     RP² x S¹  ==  RP² x S¹
     Twisted S³ x~ S¹  ==  Twisted S³ x~ S¹
+    Klein Bottle, version 1  ==  Klein Bottle, version 1
+    Klein Bottle, version 2  ==  Klein Bottle, version 2
 
-3 matches.
+5 matches.
 --------------------
 Exit code: 0
 ============================================================
@@ -276,20 +296,40 @@ Matching (isomorphic subcomplex) triangulations:
 --------------------
 Exit code: 0
 ============================================================
-TEST: trisetcmp -n @TESTDIR@/tiny.rga @TESTDIR@/test.rga
+TEST: trisetcmp -n @TESTDIR@/tiny.rga @TESTDIR@/tiny.rga
 --------------------
-Triangulations in @TESTDIR@/tiny.rga but not @TESTDIR@/test.rga:
+Triangulations in @TESTDIR@/tiny.rga but not @TESTDIR@/tiny.rga:
 
 All triangulations matched.
 
 --------------------
 
-Triangulations in @TESTDIR@/test.rga but not @TESTDIR@/tiny.rga:
+Triangulations in @TESTDIR@/tiny.rga but not @TESTDIR@/tiny.rga:
 
-    Poincaré Homology Sphere
-    Cappell-Shaneson Knot Complement
+All triangulations matched.
+--------------------
+Exit code: 0
+============================================================
+TEST: trisetcmp -n @TESTDIR@/tiny.rga @TESTDIR@/test.rga
+--------------------
+Triangulations in @TESTDIR@/tiny.rga but not @TESTDIR@/test.rga:
+
+    B4 x~ S1
+    8-sphere
 
 2 non-matches.
+
+--------------------
+
+Triangulations in @TESTDIR@/test.rga but not @TESTDIR@/tiny.rga:
+
+    Vertex Link
+    Poincaré Homology Sphere
+    Vertex Link
+    Cappell-Shaneson Knot Complement
+    Octahedron Boundary
+
+5 non-matches.
 --------------------
 Exit code: 0
 ============================================================
@@ -297,16 +337,22 @@ TEST: trisetcmp -n @TESTDIR@/test.rga @TESTDIR@/tiny.rga
 --------------------
 Triangulations in @TESTDIR@/test.rga but not @TESTDIR@/tiny.rga:
 
+    Vertex Link
     Poincaré Homology Sphere
+    Vertex Link
     Cappell-Shaneson Knot Complement
+    Octahedron Boundary
 
-2 non-matches.
+5 non-matches.
 
 --------------------
 
 Triangulations in @TESTDIR@/tiny.rga but not @TESTDIR@/test.rga:
 
-All triangulations matched.
+    B4 x~ S1
+    8-sphere
+
+2 non-matches.
 --------------------
 Exit code: 0
 ============================================================
@@ -315,11 +361,16 @@ TEST: trisetcmp -n @TESTDIR@/test.rga @TESTDIR@/census-or-small.rga
 Triangulations in @TESTDIR@/test.rga but not @TESTDIR@/census-or-small.rga:
 
     Layered Solid Torus
+    Vertex Link
     RP² x S¹
+    Vertex Link
     Cappell-Shaneson Knot Complement
     Twisted S³ x~ S¹
+    Octahedron Boundary
+    Klein Bottle, version 1
+    Klein Bottle, version 2
 
-4 non-matches.
+9 non-matches.
 
 --------------------
 
@@ -409,11 +460,16 @@ TEST: trisetcmp -n -s @TESTDIR@/test.rga @TESTDIR@/census-or-small.rga
 --------------------
 Triangulations in @TESTDIR@/test.rga but not @TESTDIR@/census-or-small.rga:
 
+    Vertex Link
     RP² x S¹
+    Vertex Link
     Cappell-Shaneson Knot Complement
     Twisted S³ x~ S¹
+    Octahedron Boundary
+    Klein Bottle, version 1
+    Klein Bottle, version 2
 
-3 non-matches.
+8 non-matches.
 --------------------
 Exit code: 0
 ============================================================
@@ -422,12 +478,17 @@ TEST: trisetcmp -n -s @TESTDIR@/test.rga @TESTDIR@/b5-found.rga
 Triangulations in @TESTDIR@/test.rga but not @TESTDIR@/b5-found.rga:
 
     Layered Solid Torus
+    Vertex Link
     Poincaré Homology Sphere
     RP² x S¹
+    Vertex Link
     Cappell-Shaneson Knot Complement
     Twisted S³ x~ S¹
+    Octahedron Boundary
+    Klein Bottle, version 1
+    Klein Bottle, version 2
 
-5 non-matches.
+10 non-matches.
 --------------------
 Exit code: 0
 ============================================================

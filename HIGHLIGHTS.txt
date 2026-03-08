@@ -6,7 +6,7 @@ Regina - Software for low-dimensional topology
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
-Version 7.4.1  [ TODO ]
+Version 7.4.1  [ 30 November, 2025 ]
 
     Overview:
         - This is a service release to fix some important bugs, and to support

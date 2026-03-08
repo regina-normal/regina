@@ -77,17 +77,18 @@ contains leading whitespace or any trailing characters at all
 (including trailing whitespace), then it will be treated as an invalid
 encoding (i.e., this routine will throw an exception).
 
-This routine does recognise infinity in the case where *Int* is the
-type regina::LargeInteger.
+This routine does recognise infinity in the case where *IntOrBoolType*
+is regina::LargeInteger.
 
-If *Int* is one of Regina's arbitrary precision integer types, then
-this routine is identical to calling Int::tightDecoding().
+If *IntOrBoolType* is one of Regina's arbitrary precision integer
+types, then this routine is identical to calling
+IntOrBoolType::tightDecoding().
 
 Exception ``InvalidArgument``:
     The given string is not a tight encoding of an integer/boolean of
-    type *Int*. This includes the case where the encoding _is_ a valid
-    integer encoding but the integer itself is outside the allowed
-    range for the *Int* type.
+    type *IntOrBoolType*. This includes the case where the encoding
+    _is_ a valid integer encoding but the integer itself is outside
+    the allowed range for *IntOrBoolType*.
 
 Python:
     Since Python does not support templates, the interface for this
@@ -102,11 +103,8 @@ Python:
     Integer::tightDecoding() or LargeInteger::tightDecoding(), which
     will return a Regina integer instead of a Python integer.
 
-Template parameter ``Int``:
-    The type of integer/boolean to reconstruct; this must be either
-    (i) a native C++ integer type or ``bool``, or (ii) one of Regina's
-    arbitrary precision integer types (i.e., regina::Integer or
-    regina::LargeInteger).
+Template parameter ``IntOrBoolType``:
+    The type of integer or boolean to reconstruct.
 
 Parameter ``enc``:
     the tight encoding for an integer or boolean.
@@ -116,8 +114,16 @@ Returns:
 
 // Docstring regina::python::doc::tightEncoding
 static const char *tightEncoding =
-R"doc(Returns the tight encoding of the given signed integer. See the page
-on tight encodings for details.
+R"doc(Returns the tight encoding of the given native C++ integer. See the
+page on tight encodings for details.
+
+Python:
+    Signed integers of any size are supported here. If *value* fits
+    within the bounds of a C++ ``long`` then Python will call this
+    routine as ``tightEncoding<long>(value)`` (which is reasonably
+    fast). Otherwise Python will fall back to using arbitrary-
+    precision integers and use ``Integer(value).tightEncoding()``,
+    which is slower but will give the correct result.
 
 Parameter ``value``:
     the integer to encode.
@@ -127,61 +133,6 @@ Returns:
 
 // Docstring regina::python::doc::tightEncoding_2
 static const char *tightEncoding_2 =
-R"doc(Returns the tight encoding of the given signed long integer. See the
-page on tight encodings for details.
-
-Parameter ``value``:
-    the integer to encode.
-
-Returns:
-    the resulting encoded string.)doc";
-
-// Docstring regina::python::doc::tightEncoding_3
-static const char *tightEncoding_3 =
-R"doc(Returns the tight encoding of the given signed long long integer. See
-the page on tight encodings for details.
-
-Parameter ``value``:
-    the integer to encode.
-
-Returns:
-    the resulting encoded string.)doc";
-
-// Docstring regina::python::doc::tightEncoding_4
-static const char *tightEncoding_4 =
-R"doc(Returns the tight encoding of the given unsigned integer. See the page
-on tight encodings for details.
-
-Parameter ``value``:
-    the integer to encode.
-
-Returns:
-    the resulting encoded string.)doc";
-
-// Docstring regina::python::doc::tightEncoding_5
-static const char *tightEncoding_5 =
-R"doc(Returns the tight encoding of the given unsigned long integer. See the
-page on tight encodings for details.
-
-Parameter ``value``:
-    the integer to encode.
-
-Returns:
-    the resulting encoded string.)doc";
-
-// Docstring regina::python::doc::tightEncoding_6
-static const char *tightEncoding_6 =
-R"doc(Returns the tight encoding of the given unsigned long long integer.
-See the page on tight encodings for details.
-
-Parameter ``value``:
-    the integer to encode.
-
-Returns:
-    the resulting encoded string.)doc";
-
-// Docstring regina::python::doc::tightEncoding_7
-static const char *tightEncoding_7 =
 R"doc(Returns the tight encoding of the given boolean. See the page on tight
 encodings for details.
 

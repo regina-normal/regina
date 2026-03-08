@@ -66,11 +66,7 @@ namespace regina {
 class Crossing;
 class Link;
 class ModelLinkGraph;
-class ProgressTracker;
 class Tangle;
-template <typename T> class Laurent;
-template <typename T> class Laurent2;
-template <int> class Triangulation;
 
 /**
  * \defgroup link Knots and Links
@@ -3230,7 +3226,7 @@ class Link :
          *
          * For every link diagram that this routine encounters (including this
          * starting diagram), this routine will call \a action (which must be
-         * a function or some other callable object).
+         * a function or some other callable type).
          *
          * - \a action must take the following initial argument(s).
          *   Either (a) the first argument must be a link (the precise type
@@ -3324,7 +3320,7 @@ class Link :
          * 1 or smaller then the routine will run single-threaded.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each link diagram that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial link argument(s).
@@ -3333,6 +3329,9 @@ class Link :
          * completion.
          */
         template <typename Action, typename... Args>
+        requires
+            TerminatingCallback<Action, Link&&, Args...> ||
+            TerminatingCallback<Action, const std::string&, Link&&, Args...>
         bool rewrite(int height, int threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
@@ -3378,7 +3377,7 @@ class Link :
          * 1 or smaller then the routine will run single-threaded.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each link diagram that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial link argument(s).
@@ -3387,6 +3386,9 @@ class Link :
          * completion.
          */
         template <typename Action, typename... Args>
+        requires
+            TerminatingCallback<Action, Link&&, Args...> ||
+            TerminatingCallback<Action, const std::string&, Link&&, Args...>
         bool rewriteVirtual(int height, int threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
@@ -6255,11 +6257,6 @@ class Link :
          * otherwise this routine may fail to parse the token(s) and
          * could throw an exception as a result.
          *
-         * \pre \a Iterator is a random access iterator type.
-         *
-         * \pre Dereferencing such an iterator produces a C++-style string
-         * (i.e., something that can be cast to `const std::string&`).
-         *
          * \exception InvalidArgument The given sequence was not a valid
          * oriented Gauss code for a classical or virtual knot.
          *
@@ -6272,8 +6269,8 @@ class Link :
          * sequence of tokens for an "oriented" Gauss code.
          * \return the reconstructed knot.
          */
-        template <typename Iterator>
-        static Link fromOrientedGauss(Iterator begin, Iterator end);
+        template <RandomAccessIteratorFor<std::string> iterator>
+        static Link fromOrientedGauss(iterator begin, iterator end);
 
         /**
          * Creates a new classical or virtual knot from a "signed" variant
@@ -6359,11 +6356,6 @@ class Link :
          * as a result.  The symbols `U` and `O` that begin each token may be
          * either upper-case or lower-case (or you may use some mix of both).
          *
-         * \pre \a Iterator is a random access iterator type.
-         *
-         * \pre Dereferencing such an iterator produces a C++-style string
-         * (i.e., something that can be cast to `const std::string&`).
-         *
          * \exception InvalidArgument The given sequence was not a valid
          * signed Gauss code for a classical or virtual knot.
          *
@@ -6376,8 +6368,8 @@ class Link :
          * sequence of tokens for a "signed" Gauss code.
          * \return the reconstructed knot.
          */
-        template <typename Iterator>
-        static Link fromSignedGauss(Iterator begin, Iterator end);
+        template <RandomAccessIteratorFor<std::string> iterator>
+        static Link fromSignedGauss(iterator begin, iterator end);
 
         /**
          * Creates a new classical or virtual link from Bob Jenkins' format,
@@ -6784,8 +6776,9 @@ class Link :
          * This routine exists because fromOrientedGauss() and fromSignedGauss()
          * share much of the same source code.
          */
-        template <GaussEnhancement type_, typename Iterator>
-        static Link fromEnhancedGauss(Iterator begin, Iterator end);
+        template <GaussEnhancement type_,
+            RandomAccessIteratorFor<std::string> iterator>
+        static Link fromEnhancedGauss(iterator begin, iterator end);
         /**
          * Internal to fromOrientedGauss().
          *
@@ -7862,6 +7855,9 @@ inline bool Link::intelligentSimplify() {
 }
 
 template <typename Action, typename... Args>
+requires
+    TerminatingCallback<Action, Link&&, Args...> ||
+    TerminatingCallback<Action, const std::string&, Link&&, Args...>
 inline bool Link::rewrite(int height, int threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (components_.size() >= 64) {
@@ -7871,31 +7867,30 @@ inline bool Link::rewrite(int height, int threads,
             "rewrite() requires fewer than 64 link components");
     }
 
-    // Use RetriangulateActionTraits to deduce whether the given action takes
-    // a link or both a signature and link as its initial argument(s).
-    using Traits = regina::detail::RetriangulateActionTraits<Link, Action>;
-    static_assert(Traits::valid,
-        "The action that is passed to rewrite() does not take the correct initial argument type(s).");
-
     // The template option std::true_type means allow classical moves only.
-    if constexpr (Traits::withSig) {
-        return detail::retriangulateInternal<Link, true,
-            detail::RetriangulateDefault, std::true_type>(
-            *this, false /* rigid */, height, threads, tracker,
-            [&](const std::string& sig, Link&& obj) {
-                return action(sig, std::move(obj), std::forward<Args>(args)...);
-            });
-    } else {
+    if constexpr (TerminatingCallback<Action, Link&&, Args...>) {
+        // Action takes just a link.
         return detail::retriangulateInternal<Link, false,
             detail::RetriangulateDefault, std::true_type>(
             *this, false /* rigid */, height, threads, tracker,
             [&](Link&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
             });
+    } else {
+        // Action takes both a signature and a link.
+        return detail::retriangulateInternal<Link, true,
+            detail::RetriangulateDefault, std::true_type>(
+            *this, false /* rigid */, height, threads, tracker,
+            [&](const std::string& sig, Link&& obj) {
+                return action(sig, std::move(obj), std::forward<Args>(args)...);
+            });
     }
 }
 
 template <typename Action, typename... Args>
+requires
+    TerminatingCallback<Action, Link&&, Args...> ||
+    TerminatingCallback<Action, const std::string&, Link&&, Args...>
 inline bool Link::rewriteVirtual(int height, int threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (components_.size() >= 64) {
@@ -7905,27 +7900,23 @@ inline bool Link::rewriteVirtual(int height, int threads,
             "rewriteVirtual() requires fewer than 64 link components");
     }
 
-    // Use RetriangulateActionTraits to deduce whether the given action takes
-    // a link or both a signature and link as its initial argument(s).
-    using Traits = regina::detail::RetriangulateActionTraits<Link, Action>;
-    static_assert(Traits::valid,
-        "The action that is passed to rewriteVirtual() does not take the correct initial argument type(s).");
-
     // The template option std::false_type means allow both classical and
     // virtual moves.
-    if constexpr (Traits::withSig) {
-        return detail::retriangulateInternal<Link, true,
-            detail::RetriangulateDefault, std::false_type>(
-            *this, false /* rigid */, height, threads, tracker,
-            [&](const std::string& sig, Link&& obj) {
-                return action(sig, std::move(obj), std::forward<Args>(args)...);
-            });
-    } else {
+    if constexpr (TerminatingCallback<Action, Link&&, Args...>) {
+        // Action takes just a link.
         return detail::retriangulateInternal<Link, false,
             detail::RetriangulateDefault, std::false_type>(
             *this, false /* rigid */, height, threads, tracker,
             [&](Link&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
+            });
+    } else {
+        // Action takes both a signature and a link.
+        return detail::retriangulateInternal<Link, true,
+            detail::RetriangulateDefault, std::false_type>(
+            *this, false /* rigid */, height, threads, tracker,
+            [&](const std::string& sig, Link&& obj) {
+                return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     }
 }
@@ -7963,14 +7954,14 @@ inline Link Link::fromKnotSig(const std::string& sig) {
     return Link::fromSig(sig);
 }
 
-template <typename Iterator>
-inline Link Link::fromOrientedGauss(Iterator begin, Iterator end) {
-    return fromEnhancedGauss<GaussEnhancement::Oriented, Iterator>(begin, end);
+template <RandomAccessIteratorFor<std::string> iterator>
+inline Link Link::fromOrientedGauss(iterator begin, iterator end) {
+    return fromEnhancedGauss<GaussEnhancement::Oriented, iterator>(begin, end);
 }
 
-template <typename Iterator>
-inline Link Link::fromSignedGauss(Iterator begin, Iterator end) {
-    return fromEnhancedGauss<GaussEnhancement::Signed, Iterator>(begin, end);
+template <RandomAccessIteratorFor<std::string> iterator>
+inline Link Link::fromSignedGauss(iterator begin, iterator end) {
+    return fromEnhancedGauss<GaussEnhancement::Signed, iterator>(begin, end);
 }
 
 inline std::string Link::dumpConstruction() const {

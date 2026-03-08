@@ -42,6 +42,7 @@
 #include <optional>
 #include <vector>
 #include "regina-core.h"
+#include "concepts/core.h"
 #include "core/output.h"
 #include "triangulation/cut.h"
 #include "triangulation/facetspec.h"
@@ -71,16 +72,13 @@ namespace detail {
  * class FacetPairing<dim> is.
  *
  * \tparam dim the dimension of the triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup detail
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class FacetPairingBase :
         public ShortOutput<FacetPairingBase<dim>>,
         public TightEncodable<FacetPairing<dim>> {
-    static_assert(dim >= 2, "FacetPairing requires dimension >= 2.");
-
     public:
         /**
          * A list of isomorphisms on facet pairings.
@@ -316,13 +314,12 @@ class FacetPairingBase :
          *
          * \nopython Instead use the variant `hasMultiEdge(k)`.
          *
-         * \tparam k the multiplicity of edges to search for; this must be
-         * between 2 and `dim+1` inclusive.
+         * \tparam k the multiplicity of edges to search for.
          *
          * \return \c true if and only if the underyling graph has an edge of
          * multiplicity \a k.
          */
-        template <int k>
+        template <int k> requires (k >= 2 && k <= dim + 1)
         bool hasMultiEdge() const;
 
         /**
@@ -745,7 +742,7 @@ class FacetPairingBase :
          * canonical form as described by isCanonical().
          *
          * For each facet pairing that is generated, this routine will call
-         * \a action (which must be a function or some other callable object).
+         * \a action (which must be a function or some other callable type).
          *
          * - The first argument to \a action must be a const reference to a
          *   FacetPairing<dim>.  This will be the facet pairing that was found.
@@ -764,7 +761,8 @@ class FacetPairingBase :
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
          *
-         * - \a action must return \c void.
+         * - The return value of \a action will be ignored; typically it would
+         *   return \c void.
          *
          * Because this class cannot represent an empty facet pairing,
          * if the argument \a nSimplices is zero then no facet pairings
@@ -808,13 +806,17 @@ class FacetPairingBase :
          * Note that, in order to produce any pairings at all, this parameter
          * must be of the same parity as `nSimplices * (dim+1)`,
          * and can be at most `(dim-1) * nSimplices + 2`.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each facet pairing that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial facet pairing argument and the
          * optional automorphism argument.
          */
         template <typename Action, typename... Args>
+        requires
+            VoidCallback<Action, const FacetPairing<dim>&, Args...> ||
+            VoidCallback<Action, const FacetPairing<dim>&,
+                typename FacetPairing<dim>::IsoList, Args...>
         static void findAllPairings(size_t nSimplices, BoolSet boundary,
             int nBdryFacets, Action&& action, Args&&... args);
 
@@ -966,6 +968,10 @@ class FacetPairingBase :
          * FacetPairingBase<dim>.
          */
         template <typename Action, typename... Args>
+        requires
+            VoidCallback<Action, const FacetPairing<dim>&, Args...> ||
+            VoidCallback<Action, const FacetPairing<dim>&,
+                typename FacetPairing<dim>::IsoList, Args...>
         void enumerateInternal(BoolSet boundary, int nBdryFacets,
             Action&& action, Args&&... args);
 };
@@ -983,7 +989,7 @@ class FacetPairingBase :
  *
  * \ingroup generic
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void swap(FacetPairing<dim>& a, FacetPairing<dim>& b) noexcept {
     a.swap(b);
 }
@@ -992,12 +998,12 @@ namespace detail {
 
 // Inline functions for FacetPairingBase
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetPairingBase<dim>::FacetPairingBase(size_t size) :
         size_(size), pairs_(new FacetSpec<dim>[size * (dim + 1)]) {
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetPairingBase<dim>::FacetPairingBase(
         const FacetPairingBase<dim>& src) :
         size_(src.size_),
@@ -1005,7 +1011,7 @@ inline FacetPairingBase<dim>::FacetPairingBase(
     std::copy(src.pairs_, src.pairs_ + (size_ * (dim + 1)), pairs_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetPairingBase<dim>::FacetPairingBase(FacetPairingBase<dim>&& src)
         noexcept :
         size_(src.size_),
@@ -1013,12 +1019,12 @@ inline FacetPairingBase<dim>::FacetPairingBase(FacetPairingBase<dim>&& src)
     src.pairs_ = nullptr;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetPairingBase<dim>::~FacetPairingBase() {
     delete[] pairs_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetPairingBase<dim>& FacetPairingBase<dim>::operator = (
         const FacetPairingBase& src) {
     // std::copy() exhibits undefined behaviour in the case of self-assignment.
@@ -1034,7 +1040,7 @@ inline FacetPairingBase<dim>& FacetPairingBase<dim>::operator = (
     return *this;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetPairingBase<dim>& FacetPairingBase<dim>::operator = (
         FacetPairingBase&& src) noexcept {
     size_ = src.size_;
@@ -1043,84 +1049,84 @@ inline FacetPairingBase<dim>& FacetPairingBase<dim>::operator = (
     return *this;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void FacetPairingBase<dim>::swap(FacetPairingBase& other) noexcept {
     std::swap(size_, other.size_);
     std::swap(pairs_, other.pairs_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t FacetPairingBase<dim>::size() const {
     return size_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline const FacetSpec<dim>& FacetPairingBase<dim>::dest(
         const FacetSpec<dim>& source) const {
     return pairs_[(dim + 1) * source.simp + source.facet];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline const FacetSpec<dim>& FacetPairingBase<dim>::dest(
         size_t simp, int facet) const {
     return pairs_[(dim + 1) * simp + facet];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline const FacetSpec<dim>& FacetPairingBase<dim>::operator [](
         const FacetSpec<dim>& source) const {
     return pairs_[(dim + 1) * source.simp + source.facet];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool FacetPairingBase<dim>::isUnmatched(
         const FacetSpec<dim>& source) const {
     return pairs_[(dim + 1) * source.simp + source.facet].isBoundary(size_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool FacetPairingBase<dim>::isUnmatched(
         size_t simp, int facet) const {
     return pairs_[(dim + 1) * simp + facet].isBoundary(size_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetSpec<dim>& FacetPairingBase<dim>::dest(
         const FacetSpec<dim>& source) {
     return pairs_[(dim + 1) * source.simp + source.facet];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetSpec<dim>& FacetPairingBase<dim>::dest(
         size_t simp, int facet) {
     return pairs_[(dim + 1) * simp + facet];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetSpec<dim>& FacetPairingBase<dim>::operator [](
         const FacetSpec<dim>& source) {
     return pairs_[(dim + 1) * source.simp + source.facet];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool FacetPairingBase<dim>::noDest(
         const FacetSpec<dim>& source) const {
     return dest(source) == source;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool FacetPairingBase<dim>::noDest(
         size_t simp, int facet) const {
     FacetSpec<dim>& f = pairs_[(dim + 1) * simp + facet];
     return (f.simp == static_cast<ssize_t>(simp) && f.facet == facet);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline std::string FacetPairingBase<dim>::toTextRep() const {
     return textRep();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void FacetPairingBase<dim>::tightEncode(std::ostream& out) const {
     regina::detail::tightEncodeIndex(out, size_);
     // Write each pairing from one side only, in the forward direction.
@@ -1142,7 +1148,7 @@ void FacetPairingBase<dim>::tightEncode(std::ostream& out) const {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 FacetPairing<dim> FacetPairingBase<dim>::tightDecode(std::istream& input) {
     auto size = regina::detail::tightDecodeIndex<size_t>(input);
     if (size <= 0)
@@ -1183,19 +1189,19 @@ FacetPairing<dim> FacetPairingBase<dim>::tightDecode(std::istream& input) {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline std::pair<FacetPairing<dim>, Isomorphism<dim>>
         FacetPairingBase<dim>::canonical() const {
     return canonicalInternal<false>();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline std::pair<FacetPairing<dim>, typename FacetPairingBase<dim>::IsoList>
         FacetPairingBase<dim>::canonicalAll() const {
     return canonicalInternal<true>();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline typename FacetPairingBase<dim>::IsoList
         FacetPairingBase<dim>::findAutomorphisms() const {
     IsoList list;
@@ -1203,8 +1209,12 @@ inline typename FacetPairingBase<dim>::IsoList
     return list;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <typename Action, typename... Args>
+requires
+    VoidCallback<Action, const FacetPairing<dim>&, Args...> ||
+    VoidCallback<Action, const FacetPairing<dim>&,
+        typename FacetPairing<dim>::IsoList, Args...>
 inline void FacetPairingBase<dim>::findAllPairings(size_t nSimplices,
         BoolSet boundary, int nBdryFacets,
         Action&& action, Args&&... args) {

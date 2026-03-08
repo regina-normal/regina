@@ -68,7 +68,7 @@ class Link;
 class NormalSurface;
 class SnapPeaTriangulation;
 
-template <int> class XMLTriangulationReader;
+template <int dim> requires (supportedDim(dim)) class XMLTriangulationReader;
 
 #ifdef __DOCSTRINGS
 // Declare SnapPy types that appear in the Python-only functions below,
@@ -460,7 +460,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * See newSimplices() for further information.
          */
-        template <int k>
+        template <int k> requires (k >= 0)
         std::array<Tetrahedron<3>*, k> newTetrahedra();
         /**
          * A dimension-specific alias for newSimplices().
@@ -1267,8 +1267,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * change the topology of the surface, and in some pathological
          * cases could even reduce it to the empty surface.
          *
-         * \tparam subdim the dimension of the face to link; this must be
-         * between 0 and 2 inclusive.
+         * \tparam subdim the dimension of the face to link.
          *
          * \pre The given face is a face of this triangulation.
          *
@@ -1276,7 +1275,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * normal surface, and \a thin is \c true if and only if this link
          * is thin (i.e., no additional normalisation steps were required).
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < 3)
         std::pair<NormalSurface, bool> linkingSurface(
             const Face<3, subdim>& face) const;
 
@@ -1810,7 +1809,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * For every such triangulation (including this starting
          * triangulation), this routine will call \a action (which must
-         * be a function or some other callable object).
+         * be a function or some other callable type).
          *
          * - \a action must take the following initial argument(s).
          *   Either (a) the first argument must be a triangulation (the precise
@@ -1905,7 +1904,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * 1 or smaller then the routine will run single-threaded.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each triangulation that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial triangulation argument(s).
@@ -1914,6 +1913,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * completion.
          */
         template <typename Action, typename... Args>
+        requires
+            TerminatingCallback<Action, Triangulation<3>&&, Args...> ||
+            TerminatingCallback<Action, const std::string&, Triangulation<3>&&,
+                Args...>
         bool retriangulate(int height, int threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
@@ -3608,6 +3611,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * them.  See hasSimpleCompressingDisc() for a "heuristic shortcut"
          * that is faster but might not give a definitive answer.
          *
+         * \exception UnsolvedCase Within the normal surface machinery this
+         * algorithm has encountered an impossible memory requirement, due to
+         * the need to store more items than can fit into a native C++
+         * \c size_t.  This is rarely seen in practice: on a typical 64-bit
+         * machine, this would mean that the algorithm has encountered a
+         * normal surface with some coordinate at least `2^64`.
+         *
          * \return \c true if the underlying 3-manifold contains a
          * compressing disc, or \c false if it does not.
          */
@@ -3656,6 +3666,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre This triangulation is valid, closed, orientable and connected.
          *
          * \warning This routine could be very slow for larger triangulations.
+         *
+         * \exception UnsolvedCase Within the normal surface machinery this
+         * algorithm has encountered an impossible memory requirement, due to
+         * the need to store more items than can fit into a native C++
+         * \c size_t.  This is rarely seen in practice: on a typical 64-bit
+         * machine, this would mean that the algorithm has encountered a
+         * normal surface with some coordinate at least `2^64`.
          *
          * \return \c true if and only if the underlying 3-manifold is
          * irreducible and Haken.
@@ -5107,7 +5124,7 @@ inline Tetrahedron<3>* Triangulation<3>::newTetrahedron(const std::string& desc)
     return newSimplex(desc);
 }
 
-template <int k>
+template <int k> requires (k >= 0)
 inline std::array<Tetrahedron<3>*, k> Triangulation<3>::newTetrahedra() {
     return newSimplices<k>();
 }
@@ -5299,6 +5316,9 @@ inline bool Triangulation<3>::intelligentSimplify() {
 }
 
 template <typename Action, typename... Args>
+requires
+    TerminatingCallback<Action, Triangulation<3>&&, Args...> ||
+    TerminatingCallback<Action, const std::string&, Triangulation<3>&&, Args...>
 inline bool Triangulation<3>::retriangulate(int height, int threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (countComponents() > 1) {
@@ -5308,24 +5328,19 @@ inline bool Triangulation<3>::retriangulate(int height, int threads,
             "retriangulate() requires a connected triangulation");
     }
 
-    // Use RetriangulateActionTraits to deduce whether the given action
-    // takes a triangulation or both an isomorphism signature and triangulation
-    // as its initial argument(s).
-    using Traits =
-        regina::detail::RetriangulateActionTraits<Triangulation<3>, Action>;
-    static_assert(Traits::valid,
-        "The action that is passed to retriangulate() does not take the correct initial argument type(s).");
-    if constexpr (Traits::withSig) {
-        return regina::detail::retriangulateInternal<Triangulation<3>, true>(
-            *this, false /* rigid */, height, threads, tracker,
-            [&](const std::string& sig, Triangulation<3>&& obj) {
-                return action(sig, std::move(obj), std::forward<Args>(args)...);
-            });
-    } else {
+    if constexpr (TerminatingCallback<Action, Triangulation<3>&&, Args...>) {
+        // Action takes just a triangulation.
         return regina::detail::retriangulateInternal<Triangulation<3>, false>(
             *this, false /* rigid */, height, threads, tracker,
             [&](Triangulation<3>&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
+            });
+    } else {
+        // Action takes both an isomorphism signature and a triangulation.
+        return regina::detail::retriangulateInternal<Triangulation<3>, true>(
+            *this, false /* rigid */, height, threads, tracker,
+            [&](const std::string& sig, Triangulation<3>&& obj) {
+                return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     }
 }

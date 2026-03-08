@@ -38,6 +38,7 @@ trisetcmp @TESTDIR@/tiny.rga @BADFILE@
 trisetcmp @INVALIDFILE@ @TESTDIR@/tiny.rga
 trisetcmp @BADFILE@ @TESTDIR@/tiny.rga
 # --- trisetcmp -m when successful:
+trisetcmp @TESTDIR@/tiny.rga @TESTDIR@/tiny.rga
 trisetcmp @TESTDIR@/tiny.rga @TESTDIR@/test.rga
 trisetcmp @TESTDIR@/test.rga @TESTDIR@/tiny.rga
 trisetcmp @TESTDIR@/test.rga @TESTDIR@/census-or-small.rga
@@ -47,6 +48,7 @@ trisetcmp -s @TESTDIR@/b5-found.rga @TESTDIR@/b5.rga
 trisetcmp -s @TESTDIR@/test.rga @TESTDIR@/census-or-small.rga
 trisetcmp -s @TESTDIR@/census-or-small.rga @TESTDIR@/test.rga
 # --- trisetcmp -n when successful:
+trisetcmp -n @TESTDIR@/tiny.rga @TESTDIR@/tiny.rga
 trisetcmp -n @TESTDIR@/tiny.rga @TESTDIR@/test.rga
 trisetcmp -n @TESTDIR@/test.rga @TESTDIR@/tiny.rga
 trisetcmp -n @TESTDIR@/test.rga @TESTDIR@/census-or-small.rga

@@ -416,10 +416,10 @@ Python:
     function.
 
 Parameter ``comp``:
-    a binary function (or other callable object) that accepts two
-    const HyperSurface references, and returns ``True`` if and only if
-    the first hypersurface should appear before the second in the
-    sorted list.)doc";
+    a binary function (or other callable type) that accepts two const
+    HyperSurface references, and returns ``True`` if and only if the
+    first hypersurface should appear before the second in the sorted
+    list.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::swap
 static const char *swap =

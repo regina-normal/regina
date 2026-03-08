@@ -84,15 +84,14 @@ namespace regina {
  * (e.g., FaceEmbedding2_1 and FaceEmbedding3_0 for the two examples above).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  * \tparam subdim the dimension of the faces of the underlying triangulation.
- * This must be between 0 and <i>dim</i>-1 inclusive.
  *
  * \headerfile triangulation/generic.h
  *
  * \ingroup generic
  */
 template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
     public:
         /**
@@ -157,11 +156,11 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
  * (e.g., \c VertexEmbedding3).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim))
 using VertexEmbedding = FaceEmbedding<dim, 0>;
 
 /**
@@ -176,11 +175,11 @@ using VertexEmbedding = FaceEmbedding<dim, 0>;
  * (e.g., \c EdgeEmbedding5).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim))
 using EdgeEmbedding = FaceEmbedding<dim, 1>;
 
 /**
@@ -195,11 +194,11 @@ using EdgeEmbedding = FaceEmbedding<dim, 1>;
  * (e.g., \c TriangleEmbedding12).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 3 and 15 inclusive.
  *
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim) && dim > 2)
 using TriangleEmbedding = FaceEmbedding<dim, 2>;
 
 /**
@@ -214,11 +213,11 @@ using TriangleEmbedding = FaceEmbedding<dim, 2>;
  * (e.g., \c TetrahedronEmbedding7).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 4 and 15 inclusive.
  *
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim) && dim > 3)
 using TetrahedronEmbedding = FaceEmbedding<dim, 3>;
 
 /**
@@ -233,17 +232,18 @@ using TetrahedronEmbedding = FaceEmbedding<dim, 3>;
  * (e.g., \c PentachoronEmbedding14).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 5 and 15 inclusive.
  *
  * \ingroup generic
  */
 template <int dim>
+requires (supportedDim(dim) && dim > 4)
 using PentachoronEmbedding = FaceEmbedding<dim, 4>;
 #endif // __DOXYGEN
 
 // Inline functions for FaceEmbedding
 
 template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 inline FaceEmbedding<dim, subdim>::FaceEmbedding(
         Simplex<dim>* simplex, Perm<dim + 1> vertices) :
         detail::FaceEmbeddingBase<dim, subdim>(simplex, vertices) {

@@ -40,13 +40,11 @@
 #include <set>
 #include <vector>
 #include "regina-core.h"
+#include "concepts/core.h"
 #include "maths/integer.h"
-#include "core/output.h"
+#include "maths/matrix.h"
 
 namespace regina {
-
-template <typename> class Matrix;
-using MatrixInt = Matrix<Integer>;
 
 /**
  * \defgroup algebra Algebraic Structures
@@ -122,16 +120,13 @@ class AbelianGroup :
          * \nopython Instead, use the constructor that takes the invariant
          * factors as a Python list.
          *
-         * \tparam T an integer type, which may be a native C++ integer
-         * type or one of Regina's own integer types.
-         *
          * \param rank the rank of the new group (i.e., the number of
          * copies of \a Z).
          * \param invFac the list of invariant factors \a d0, \a d1, ...,
          * as described in the class notes, where each invariant factor
          * is greater than 1 and divides the invariant factor after it.
          */
-        template <typename T>
+        template <AnyInteger T>
         AbelianGroup(size_t rank, std::initializer_list<T> invFac);
         /**
          * Creates a new group with the given rank and invariant factors.
@@ -529,7 +524,7 @@ void swap(AbelianGroup& lhs, AbelianGroup& rhs) noexcept;
 inline AbelianGroup::AbelianGroup(size_t rank) : rank_(rank) {
 }
 
-template <typename T>
+template <AnyInteger T>
 inline AbelianGroup::AbelianGroup(size_t rank,
         std::initializer_list<T> invFac) : rank_(rank) {
     if (invFac.size() > 0) {

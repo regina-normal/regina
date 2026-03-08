@@ -393,17 +393,6 @@ Exception ``InvalidArgument``:
     At least one of the given diagram sequences is non-empty and ends
     in zero.
 
-Template parameter ``iterator``:
-    an iterator type which, when dereferenced, gives a std::pair of
-    the form ``(seq, laurent)``, where *seq* and *laurent* can be used
-    to construct objects of types DiagramSequence and Laurent<Integer>
-    respectively.
-
-Template parameter ``deref``:
-    a dummy argument that should be ignored. This is present to ensure
-    that *iterator* can be dereferenced. Once we support a greater
-    subset of C++20, this will be enforced through concepts instead.
-
 Parameter ``begin``:
     the beginning of the collection of pairs, as outlined above.
 

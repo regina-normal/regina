@@ -101,11 +101,5 @@ std::string SatBlock::abbr(bool tex) const {
     return s.str();
 }
 
-bool SatBlock::isBad(const Tetrahedron<3>* t, const TetList& list) {
-    if (list.find(t) != list.end())
-        return true;
-    return false;
-}
-
 } // namespace regina
 

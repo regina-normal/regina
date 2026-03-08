@@ -40,10 +40,13 @@
 
 #include <list>
 #include "regina-core.h"
+#include "concepts/core.h"
 #include "triangulation/facetpairing3.h"
 #include "utilities/boolset.h"
 
 namespace regina {
+
+class CensusHit;
 
 /**
  * \defgroup census Census of Triangulations
@@ -130,11 +133,12 @@ class CensusDB {
          * Searches for the given isomorphism signature in this database.
          *
          * For each match that is found (if any), this routine will call
-         * \a action (which must be a function or some other callable object).
-         * This action should return \c void, and must take exactly one
-         * CensusHit argument.  The argument will be passed as a prvalue,
-         * which means the argument type for \a action could be any of
-         * (CensusHit), (const CensusHit&), or (CensusHit&&).
+         * \a action (which must be a function or some other callable type).
+         * This action must take exactly one CensusHit argument, which will be
+         * passed as a prvalue (so the argument type for \a action could be
+         * any of `CensusHit`, `const CensusHit&`, or `CensusHit&&`).
+         * The return value of \a action will be ignored (typically \a action
+         * would return \c void).
          *
          * Note that the database will be opened and closed every time
          * this routine is called.
@@ -153,14 +157,14 @@ class CensusDB {
          * \a action argument may be a pure Python function.
          *
          * \param isoSig the isomorphism signature to search for.
-         * \param action a function (or other callable object) that will
+         * \param action a function (or other callable type) that will
          * be called for each match in the database.
          * \return \c true if the lookup was correctly performed, or \c false
          * if some error occurred (e.g., the database could not be opened).
          * Note in particular that if there were no matches but no errors,
          * then the return value will be \c true.
          */
-        template <typename Action>
+        template <VoidCallback<CensusHit&&> Action>
         bool lookup(const std::string& isoSig, Action&& action) const;
 
         /**

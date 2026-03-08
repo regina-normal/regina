@@ -262,15 +262,6 @@ class Matrix2 {
     friend std::ostream& operator << (std::ostream& out, const Matrix2& mat);
 };
 
-#ifndef __DOXYGEN
-// Don't confuse doxygen with specialisations.
-template <>
-struct RingTraits<Matrix2> {
-    inline static const Matrix2 zero;
-    inline static const Matrix2 one { 1, 0, 0, 1 };
-};
-#endif // __DOXYGEN
-
 /**
  * Swaps the contents of the two given matrices.
  *
@@ -380,6 +371,19 @@ std::strong_ordering simplerThreeWay(
 [[deprecated]] bool simpler(
         const Matrix2& pair1first, const Matrix2& pair1second,
         const Matrix2& pair2first, const Matrix2& pair2second);
+
+#ifndef __DOXYGEN
+// Don't confuse doxygen with specialisations.
+template <>
+struct RingTraits<Matrix2> {
+    inline static const Matrix2 zero;
+    inline static const Matrix2 one { 1, 0, 0, 1 };
+    static constexpr bool commutative = false;
+    static constexpr bool zeroInitialised = true;
+    static constexpr bool zeroDivisors = true;
+    static constexpr bool inverses = false;
+};
+#endif // __DOXYGEN
 
 // Inline functions for Matrix2
 

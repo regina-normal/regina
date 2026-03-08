@@ -41,10 +41,7 @@ or swapped.
 Python:
     The type *Iterator* is an implementation detail, and is hidden
     from Python users. Just use the unadorned type name
-    ``Base64SigDecoder``.
-
-Template parameter ``Iterator``:
-    a forward iterator whose associated value type is ``char``.)doc";
+    ``Base64SigDecoder``.)doc";
 
 // Docstring regina::python::doc::Base64SigEncoder
 static const char *Base64SigEncoder =
@@ -116,13 +113,18 @@ Parameter ``skipInitialWhitespace``:
 static const char *decodeInt =
 R"doc(Decodes the next non-negative integer value, assuming this uses a
 fixed number of base64 characters. This integer value would typically
-have been encoded using Base64SigEncoder::encodeInt(), with the same
+have been encoded using Base64SigEncoder::encodeInt(), using the same
 *nChars* argument.
 
 Specifically, it will be assumed that the integer has been broken into
 *nChars* 6-bit blocks, with each block encoded as a single base64
 character, and with the blocks presented in order from lowest to
 highest significance.
+
+The result will be assembled using the integer type *IntType*, via
+bitwise OR and bitwise shift lefts. It is assumed that the programmer
+has chosen an integer type large enough to contain whatever values
+they expect to read.
 
 The inverse to this routine is Base64SigEncoder::encodeInt().
 
@@ -135,12 +137,6 @@ Python:
     The template argument *IntType* is taken to be a native C++
     ``long``.
 
-Template parameter ``IntType``:
-    a native C++ integer type. The result will be assembled using
-    bitwise OR and bitwise shift lefts, and it is assumed that the
-    programmer has chosen an integer type large enough to contain
-    whatever values they expect to read.
-
 Parameter ``nChars``:
     the number of base64 characters to read.
 
@@ -150,15 +146,20 @@ Returns:
 // Docstring regina::python::doc::Base64SigDecoder_::decodeInts
 static const char *decodeInts =
 R"doc(Decodes a sequence of non-negative integer values, assuming that each
-individual value uses a fixed number of base64 characters. Each such
-integer value would typically have been encoded using
-Base64SigEncoder::encodeInt() or Base64SigEncoder::encodeInts(), with
-the same *nChars* argument.
+individual value uses a fixed number of base64 characters, and returns
+these as an array of native C++ integers. Each integer to be decoded
+would typically have been encoded using Base64SigEncoder::encodeInt()
+or Base64SigEncoder::encodeInts(), with the same *nChars* argument.
 
 Specifically, it will be assumed that each integer has been broken
 into *nChars* 6-bit blocks, with each block encoded as a single base64
 character, and with the blocks presented in order from lowest to
 highest significance.
+
+Each resulting integer will be assembled using the integer type
+*IntType*, via bitwise OR and bitwise shift lefts. It is assumed that
+the programmer has chosen an integer type large enough to contain
+whatever values they expect to read.
 
 The inverse to this routine is Base64SigEncoder::encodeInts().
 
@@ -170,12 +171,6 @@ Exception ``InvalidInput``:
 Python:
     The template argument *IntType* is taken to be a native C++
     ``long``. This routine returns a Python list of integers.
-
-Template parameter ``IntType``:
-    a native C++ integer type. The result will be assembled using
-    bitwise OR and bitwise shift lefts, and it is assumed that the
-    programmer has chosen an integer type large enough to contain
-    whatever values they expect to read.
 
 Parameter ``count``:
     the number of integers to decode.
@@ -200,9 +195,6 @@ Exception ``InvalidInput``:
 Python:
     The template argument *IntType* is taken to be a native C++
     ``long``.
-
-Template parameter ``IntType``:
-    a native C++ integer type.
 
 Returns:
     the corresponding integer, which will be between 0 and 63
@@ -322,8 +314,8 @@ Parameter ``c``:
 
 // Docstring regina::python::doc::Base64SigEncoder_::encodeInt
 static const char *encodeInt =
-R"doc(Encodes the given non-negative integer using a fixed number of base64
-characters.
+R"doc(Encodes the given non-negative native C++ integer using a fixed number
+of base64 characters.
 
 Specifically, the integer *val* will be broken into *nChars* distinct
 6-bit blocks, which will be encoded in order from lowest to highest
@@ -339,9 +331,6 @@ Python:
     The template argument *IntType* is taken to be a native C++
     ``long``.
 
-Template parameter ``IntType``:
-    a native C++ integer type.
-
 Parameter ``val``:
     the non-negative integer to encode.
 
@@ -351,8 +340,8 @@ Parameter ``nChars``:
 
 // Docstring regina::python::doc::Base64SigEncoder_::encodeInts
 static const char *encodeInts =
-R"doc(Encodes a sequence of non-negative integers, each using a fixed number
-of base64 characters.
+R"doc(Encodes a sequence of non-negative native C++ integers, each using a
+fixed number of base64 characters.
 
 Each integer in the sequence will be encoded using encodeInt(). That
 is, each integer will be broken into *nChars* distinct 6-bit blocks,
@@ -368,10 +357,6 @@ Python:
     Instead of a begin/end pair of iterators, this routine takes a
     Python sequence of integers. Each Python integer will be read as a
     native C++ ``long``.
-
-Template parameter ``Iterator``:
-    an input iterator which, when dereferenced, gives a native C++
-    integer type.
 
 Parameter ``begin``:
     an iterator pointing to the first integer to encode.
@@ -396,9 +381,6 @@ Exception ``InvalidArgument``:
 Python:
     The template argument *IntType* is taken to be a native C++
     ``long``.
-
-Template parameter ``IntType``:
-    a native C++ integer type.
 
 Parameter ``c``:
     an integer between 0 and 63 inclusive.)doc";
@@ -440,8 +422,8 @@ underlying 6-bit integer in order from lowest to highest significance.
 (The last base64 character might of course encode just one or two
 trits instead.)
 
-Each trit will be obtained by dereferencing an iterator and casting to
-``uint8_t``, and (as noted above) must take the value 0, 1 or 2.
+Each trit will be obtained by dereferencing an iterator, which (as
+noted above) must yield the value 0, 1 or 2.
 
 The inverse to this routine is Base64SigDecoder::decodeTrits(), though
 that function only decodes three trits at a time.
@@ -449,10 +431,6 @@ that function only decodes three trits at a time.
 Python:
     This routine takes a single argument, which is a Python sequence
     of integer trits.
-
-Template parameter ``Iterator``:
-    an input iterator which, when dereferenced, can be cast as a
-    native C++ unsigned 8-bit integer (``uint8_t``).
 
 Parameter ``beginTrits``:
     an iterator pointing to the first trit to encode.
@@ -480,6 +458,11 @@ It will be assumed that the integer is encoded using *nChars* base64
 characters, each containing 6 bits of the integer, with the lowest-
 significance bits encoded in the first characters.
 
+The result will be assembled using the integer type *IntType*, via
+bitwise OR and bitwise shift lefts. It is assumed that the programmer
+has chosen an integer type large enough to contain whatever values
+they expect to read.
+
 The inverse to this routine is encodeInt().
 
 Precondition:
@@ -488,13 +471,6 @@ Precondition:
 Python:
     The template argument *IntType* is taken to be a native C++
     ``long``.
-
-Template parameter ``IntType``:
-    a native C++ integer type, such as ``uint8_t``, or ``unsigned``,
-    or ``long long``. The result will be assembled using bitwise OR
-    and bitwise shift lefts, and it is assumed that the programmer has
-    chosen an integer type large enough to contain whatever values
-    they expect to read.
 
 Parameter ``s``:
     the string from which the encoded base64 characters should be
@@ -537,9 +513,9 @@ Returns:
 
 // Docstring regina::python::doc::Base64SigEncoding_::encodeInt
 static const char *encodeInt =
-R"doc(Append a base64 encoding of the given integer to the given string. The
-integer will be broken into *nChars* distinct 6-bit blocks, and the
-lowest-significance blocks will be written first.
+R"doc(Append a base64 encoding of the given native C++ integer to the given
+string. The integer will be broken into *nChars* distinct 6-bit
+blocks, and the lowest-significance blocks will be written first.
 
 The inverse to this routine is decodeInt().
 
@@ -550,10 +526,6 @@ Precondition:
 Python:
     The template argument *IntType* is taken to be a native C++
     ``long``.
-
-Template parameter ``IntType``:
-    a native C++ integer type, such as ``uint8_t``, or ``unsigned``,
-    or ``long long``.
 
 Parameter ``s``:
     the string that resulting characters should be appended to.

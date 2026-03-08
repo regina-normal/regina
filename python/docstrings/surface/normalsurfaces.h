@@ -592,10 +592,9 @@ Python:
     function.
 
 Parameter ``comp``:
-    a binary function (or other callable object) that accepts two
-    const NormalSurface references, and returns ``True`` if and only
-    if the first surface should appear before the second in the sorted
-    list.)doc";
+    a binary function (or other callable type) that accepts two const
+    NormalSurface references, and returns ``True`` if and only if the
+    first surface should appear before the second in the sorted list.)doc";
 
 // Docstring regina::python::doc::NormalSurfaces_::surface
 static const char *surface =

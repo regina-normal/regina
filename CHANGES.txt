@@ -7,7 +7,302 @@ Regina - Software for low-dimensional topology
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 7.4.1  [ TODO ]
+Version 7.5  [ TODO ]
+
+    GENERAL:
+        - Begun a move to use C++20 concepts and constraints instead of plain
+          English requirements for template arguments.  This is an ongoing
+          project.  As a result, many constraints on template arguments are
+          now enforced by the compiler.
+        - More use of constexpr throughout the calculation engine.
+    ENGINE:
+        Class BitManipulatorByType<...>:
+            - This is now an internal class in the namespace regina::detail.
+              You should never need to refer to this class directly; instead
+              you can access its functionality through the end-user class
+              BitManipulator<...>.
+        Class BoolSet:
+            - Regarding byte codes and string codes:
+              + New type alias ByteCode.
+              + Routine fromByteCode() now throws an exception if the given
+                byte code is not valid.
+              + New routine fromStringCode(), which likewise throws an exception
+                if the given string code is not valid.
+        Class CallableArg<...>:
+            - This is now deprecated, since its implementation is drifting
+              increasingly further away from modern C++ standards.
+        Class Cut:
+            - For the iterator-based constructor, the old recommendation that
+              the iterator type be random access is now a hard requirement.
+        Class DiscSpec, DiscSetTet, DiscSetTetData, DiscSetSurface,
+                DiscSetSurfaceData:
+            - Now uses size_t instead of unsigned long for disc indices and
+              disc counts.
+            - All constructors that take a normal surface will now throw an
+              exception if the surface coordinates are too large.
+        Class DivisionByZero:
+            - New exception class.
+        Class Face<dim, subdim>, FaceNumbering<dim, subdim>, :
+            - Major overhaul of the many classes to support face numbering.
+              The new structure is simpler thanks to new features of modern
+              C++ standards, and several of the old helper classes in
+              regina::detail are now gone.
+            - New class constant hasNumberingTables to indicate whether lookup
+              tables are used for face numbering queries.
+        Class FixedArray:
+            - Now has a default constructor that creates an empty array.
+        Class Flags<T>:
+            - Updated to support enumerations with any base C++ integer type,
+              not just int.
+            - New type alias BaseInt, representing the base C++ integer type.
+            - Routines intValue() and fromInt() are deprecated, and replaced
+              with the new routines baseValue() and fromBase().
+        Class GroupExpressionTerm, GroupExpression, GroupPresentation,
+                HomGroupPresentation:
+            - Now uses size_t instead of unsigned long throughout for
+              generator counts and generator indices.
+            - The depth argument to GroupPresentation::proliferateRelators()
+              is now of type int.
+            - GroupPresentation::homologicalAlignment() now throws an
+              UnsolvedCase exception if an integer overflow occurs when
+              transferring information from an abelian group to a group
+              expression.
+        Class InfinityBase<...>:
+            - Moved into the regina::detail namespace.  This class was never
+              intended for end users.
+        Class Integer, LargeInteger:
+            - New template functions safeValue() and unsafeValue() to assist
+              with regina-to-C++ integer conversions.  The old longValue(),
+              safeLongValue() and nativeValue() are all deprecated in favour of
+              these new functions.
+            - Regarding construction and assignment from native C++ integers:
+              instead of many different constructors and assignment operators
+              for the different native C++ integer types, there is now a single
+              templated constructor and a single templated assignment operator
+              to handle _all_ native C++ integer types.  These can also take
+              128-bit integers (which were not supported before).
+            - Now supports comparisons (equality/inequality and ordering) and
+              arithmetic operations (+, -, *, /, %, divExact, +=, -=, *=, /=,
+              %=, divByExact) with all native C++ integer types, not just long.
+            - Now supports assignment from and comparisons against
+              NativeInteger<bytes> (in additional to construction, which was
+              already available).
+            - Now supports ordering comparisons between Integer and
+              LargeInteger (in addition to equality comparisons, which were
+              already available).
+            - Functions that work with NativeInteger<bytes> no longer require
+              bytes to be a multiple of sizeof(long).
+            - The function makeInfinite() is no longer available for Integer
+              (which does not support the value infinity).
+            - The division operators / and /= now throw an exception in the
+              class Integer when dividing by zero (but not in LargeInteger,
+              since that class supports infinity).
+            - The modulo operators % and %= now support infinite arguments,
+              and now throw an exception when computing anything modulo zero.
+        Class IntegerOverflow:
+            - New exception class.
+        Class Isomorphism<dim>:
+            - The increment operators are now available in all dimensions
+              (not just dimensions ≤ 6).
+        Class IsoSigEncodingAPI, IsoSigTypeAPI:
+            - New documentation-only classes that explain how encodings and
+              signature types for isomorphism signatures are expected to behave.
+        Struct IsReginaArbitraryPrecisionInteger<T>, IsReginaInteger<T>:
+            - Now deprecated, in favour of the new concepts
+              ArbitraryPrecisionInteger<T> and ReginaInteger<T>.
+        Class LargeInteger:
+            - See the changes listed under the sister class Integer above.
+        Class Laurent<T>:
+            - For the iterator-based constructor and init() routine, the
+              iterator type is now required to be random access.
+        Class LPCol<...>:
+            - This is now an internal class in the namespace regina::detail,
+              and its template parameters have changed.  End users should have
+              no need to refer to LPCol<...> at all.
+        Class LPConstraint...:
+            - All linear programming constraint classes must now adhere to the
+              new concept LPConstraint.
+            - The constant nConstraints and the routine constrain() are both
+              removed, and replaced with the class constant array constraints[].
+            - The arguments to addRows() have changed: it no longer takes an
+              initial tableaux, but instead takes the relevant triangulation
+              and column permutation.
+        Class LPConstraintAPI, LPConstraintBase, LPConstraintSubspace:
+            - The old base classes LPConstraintBase and LPConstraintSubspace
+              are now deprecated, and should no longer be used.  Instead they
+              have been replaced with the new concepts LPConstraint and
+              LPSubspace that the relevant constraint types should adhere to.
+              See also the new documentation-only class LPConstraintAPI for
+              details on how a linear programming constraint type should behave.
+        Enum LPConstraintType:
+            - New enumeration for use with the various LPConstraint classes.
+        Class LPInitialTableaux<Constraint>:
+            - Removed the copy assignment operator (since this class now uses
+              FixedArray internally, which is not copy-assignable).  If you
+              need to copy a tableaux, the copy constructor remains available
+              (and move assignment is still available also).
+        Class NativeInteger<bytes>:
+            - The constructor that takes an Integer or LargeInteger is now
+              deprecated.  Instead, you should initialise this using either
+              safeValue() or unsafeValue() from Integer / LargeInteger.
+            - The str() function and output stream operator now support
+              128-bit integers on all platforms where native 128-bit integers
+              are available.
+            - The output stream operator now ensures numerical output even when
+              bytes == 1 (i.e., when the native C++ integer is a signed char).
+            - The division and modulo operators (/, /=, %, %=) now throw an
+              exception when the argument is zero.
+            - The division functions divExact() and divByExact() now have
+              preconditions that require exact divisibiliy, just like their
+              counterparts in the Integer and LargeInteger classes.
+            - Almost everything in this class is now constexpr.
+        Class NormalSurface:
+            - Routines components(), countBoundaries(), disjoint(),
+              isCompressingDisc(), isConnected(), isIncompressible(),
+              isOrientable() and isTwoSided() now throw an exception if the
+              underlying algorithms encounter an impossible memory requirement
+              (typically due to some normal coordinate being too large to fit
+              into a size_t).
+            - Routine countBoundaries() now throws an exception if the normal
+              arc count for some arc type on the boundary is so large that it
+              cannot fit into a size_t.
+        Class NormalSurfaces:
+            - Routines saveCSVEdgeWeight() and saveCSVStandard() now throw an
+              exception if the underlying algorithms encounter an impossible
+              memory requirement (typically due to some normal coordinate
+              being too large to fit into a size_t).
+            - The "transformation constructor" could throw an exception when
+              using the FilterDisjoint transformation in the presence of
+              enormous normal coordinates (again because an impossible memory
+              requirement was encountered).
+        Struct NoSuchType:
+            - A new declared-but-not-defined type that can be used as a
+              placeholder to avoid compile errors.
+        Class NumericalError:
+            - New exception class.
+        Class PermClass<n>:
+            - Everything in this class is now constexpr.
+        Class Polynomial<T>:
+            - For the iterator-based constructor and init() routine, the
+              iterator type is now required to be random access.
+        Class Primes:
+            - The python-only routines primeDecompInt() and
+              primePowerDecompInt() are now just overloads for primeDecomp()
+              and primePowerDecomp().  The old names are kept but deprecated.
+        Class RingTraits:
+            - Provides new compile-time constants zeroInitialised and
+              zeroDivisors.
+        Class Triangulation<3>:
+            - Routines hasCompressingDisc() and isHaken() now throw an
+              exception if the underlying algorithms encounter an impossible
+              memory requirement (typically due to some normal surface having
+              a coordinate too large to fit into a size_t).
+        Struct TriangulationTraits<dim>:
+            - New traits type to help with generic code for working with
+              triangulations of different dimensions.
+        Class Vector<T>:
+            - Now requires the element type T to have a RingTraits
+              specialisation.
+            - For the iterator-based constructor, the old recommendation that
+              the iterator type be random access is now a hard requirement.
+        Function isTriangulation():
+            - New function that converts a packet type constant into a
+              triangulation dimension.
+        Function subscript(), superscript():
+            - When passing one of Regina's integer types, there is now a
+              precondition that the given value is not infinity.
+        Function supportedDim():
+            - New function to indicate which dimensions of triangulation are
+              supported; this complements maxDim() and standardDim().
+        Function tightEncode(), tightDecode():
+            - The native C++ integer versions of these functions are now
+              templated, and explicitly support 8-bit integers (i.e., chars)
+              and 128-bit integers (if the platform supports them).
+        Function toString():
+            - New function for converting native C++ integers to strings, with
+              explicit support for 128-bit integers.
+        Function usingBitmaskFor():
+            - New function to select an optimised bitmask type based on a
+              number of bits that is not known until runtime.
+        Function valueOf():
+            - The native C++ integer versions of valueOf() are now templated,
+              and now support 128-bit integers (if the platform supports them).
+            - All integer versions now return false if the integer encoded by
+              the string is out of range for the relevant integer type.
+            - All numeric versions of valueOf() (native integers and double)
+              have been tightened with respect to unexpected characters,
+              including leading and trailing whitespace:
+              + they always return false, as the documentation has always
+                promised (in the past, they succeeded in the presence of
+                leading whitespace);
+              + instead of performing the conversion "as best it can", the
+                documentation now states that the value stored in dest is
+                left unchanged.
+            - All versions of valueOf() now leave dest unchanged if there was
+              an error (as opposed to leaving dest undefined, as was the case
+              for integer versions, or setting dest to a fixed false/empty
+              value, as was the case for bool and BoolSet versions).
+            - The BoolSet version is now deprecated; use the identical
+              BoolSet::setStringCode() instead.
+        Type alias Int128, UInt128:
+            - Provides access to native 128-bit integers, if the platform
+              supports them.  This is preferred to the old (and clumsier) way
+              of accessing 128-bit types via the type aliases in IntOfSize<16>.
+        Type alias make_signed_cpp_t<T>, make_unsigned_cpp_t<T>:
+            - New alternatives to std::make_signed_t<T> and
+              std::make_unsigned_t<T> that allow for 128-bit integers also.
+        Constant is_cpp_integer_v<T>, is_signed_cpp_integer_v<T>,
+                is_unsigned_cpp_integer_v<T>:
+            - New compile-time constant is_signed_cpp_integer_v<T>.
+            - All three constants are now false when T == bool (previously,
+              is_cpp_integer_v<bool> and is_unsigned_cpp_integer_v<bool> were
+              both true).
+        Macro INT128_AVAILABLE:
+            - This is now defined in regina-core.h (not intutils.h), alongside
+              the new type aliases Int128 and UInt128.
+        Concepts:
+            - Many new concepts:
+              + AssignableTo, CanConstruct, CoefficientDomain,
+                ConcatenableSequence, Domain, Field, IntegralDomain,
+                ReginaBitmask, Ring, RingLike, StrictWeakOrder,
+                TerminatingCallback, VoidCallback (defined in concepts/core.h)
+              + AnyInteger, ArbitraryPrecisionInteger, CppInteger,
+                IntegerComparable, IntegerCompatible, ReginaInteger,
+                StandardCppInteger, SignedCppInteger, UnsignedCppInteger
+                (defined in utilities/intutils.h)
+              + InherentlyTightEncodable, Readable, StandardStringifiable,
+                Stringifiable, Writable (defined in concepts/io.h)
+              + BidirectionalIteratorFor, CharIterator, ForwardIteratorFor,
+                InputIteratorFor, Iterable, PacketIterator,
+                RandomAccessIteratorFor, SelfSentinelInputIterator (defined in
+                concepts/iterator.h)
+              + ArbitraryPrecisionIntegerVector, IntegerVector (defined in
+                concepts/maths.h)
+              + PacketClass (defined in concepts/packet.h)
+              + ArrayOf, ConstRefArrayOf (defined in concepts/array.h)
+              + BanConstraint, LPConstraint, LPSubspace (defined in
+                enumerate/treelp.h)
+              + IsoSigEncoding (defined in triangulation/isosigencoding.h)
+              + IsoSigType (defined in triangulation/isosigtype.h)
+    FILE FORMAT:
+        - When reading a second-generation XML file (from Regina 3.0-6.0.1),
+          a misconstructed surface filter now results in the entire filter
+          being dropped (instead of attempting to reconstruct something from
+          what _could_ be parsed).  This now matches how third-generation XML
+          files (Regina 7.0+) are treated.
+    PYTHON:
+        - The bindings for tightEncoding() now accept integers of any size
+          (using C++ long where possible, and regina::Integer otherwise).
+        - Removed the bindings TreeEnumeration_EulerPositive..., since the
+          linear constraint LPConstraintEulerPositive was never meant to be
+          used with TreeEnumeration (since the constraint does not map out a
+          linear subspace).
+    UTILITIES:
+        trisetcmp:
+            - Now finds matches (or non-matches) in any dimension, not just
+              dimensions 3 and 4.
+
+Version 7.4.1  [ 30 November, 2025 ]
 
     GENERAL:
         - Now builds under clang 16 and on macOS 26.

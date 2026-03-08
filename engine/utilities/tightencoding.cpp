@@ -36,22 +36,33 @@ using it2 = std::istreambuf_iterator<char>;
 
 namespace regina::detail {
 
+template void tightEncodeInteger<signed char>(std::ostream&, signed char);
 template void tightEncodeInteger<int>(std::ostream&, int);
 template void tightEncodeInteger<long>(std::ostream&, long);
 template void tightEncodeInteger<long long>(std::ostream&, long long);
+template void tightEncodeInteger<unsigned char>(std::ostream&, unsigned char);
 template void tightEncodeInteger<unsigned>(std::ostream&, unsigned);
 template void tightEncodeInteger<unsigned long>(std::ostream&, unsigned long);
 template void tightEncodeInteger<unsigned long long>(std::ostream&,
     unsigned long long);
+#ifdef INT128_AVAILABLE
+template void tightEncodeInteger<regina::Int128>(std::ostream&, regina::Int128);
+template void tightEncodeInteger<regina::UInt128>(std::ostream&,
+    regina::UInt128);
+#endif
 template void tightEncodeInteger<Integer>(std::ostream&, Integer);
 template void tightEncodeInteger<LargeInteger>(std::ostream&, LargeInteger);
 
+template signed char tightDecodeInteger<signed char, it1>(it1, it1, bool);
+template signed char tightDecodeInteger<signed char, it2>(it2, it2, bool);
 template int tightDecodeInteger<int, it1>(it1, it1, bool);
 template int tightDecodeInteger<int, it2>(it2, it2, bool);
 template long tightDecodeInteger<long, it1>(it1, it1, bool);
 template long tightDecodeInteger<long, it2>(it2, it2, bool);
 template long long tightDecodeInteger<long long, it1>(it1, it1, bool);
 template long long tightDecodeInteger<long long, it2>(it2, it2, bool);
+template unsigned char tightDecodeInteger<unsigned char, it1>(it1, it1, bool);
+template unsigned char tightDecodeInteger<unsigned char, it2>(it2, it2, bool);
 template unsigned tightDecodeInteger<unsigned, it1>(it1, it1, bool);
 template unsigned tightDecodeInteger<unsigned, it2>(it2, it2, bool);
 template unsigned long tightDecodeInteger<unsigned long, it1>(it1, it1, bool);
@@ -60,6 +71,14 @@ template unsigned long long tightDecodeInteger<unsigned long long, it1>(
     it1, it1, bool);
 template unsigned long long tightDecodeInteger<unsigned long long, it2>(
     it2, it2, bool);
+#ifdef INT128_AVAILABLE
+template regina::Int128 tightDecodeInteger<regina::Int128, it1>(it1, it1, bool);
+template regina::Int128 tightDecodeInteger<regina::Int128, it2>(it2, it2, bool);
+template regina::UInt128 tightDecodeInteger<regina::UInt128, it1>(
+    it1, it1, bool);
+template regina::UInt128 tightDecodeInteger<regina::UInt128, it2>(
+    it2, it2, bool);
+#endif
 template Integer tightDecodeInteger<Integer, it1>(it1, it1, bool);
 template Integer tightDecodeInteger<Integer, it2>(it2, it2, bool);
 template LargeInteger tightDecodeInteger<LargeInteger, it1>(it1, it1, bool);

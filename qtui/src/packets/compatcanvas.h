@@ -55,7 +55,7 @@ class CompatCanvas : public QGraphicsScene {
         /**
          * Matrix size and state
          */
-        unsigned nSurfaces;
+        size_t nSurfaces_;
         bool filled;
 
         /**
@@ -64,13 +64,13 @@ class CompatCanvas : public QGraphicsScene {
         unsigned cellSize;
         unsigned gridX;
         unsigned gridY;
-        unsigned gridSize;
+        size_t gridSize;
 
     public:
         /**
          * Constructor and destructor.
          */
-        CompatCanvas(unsigned useNumSurfaces);
+        CompatCanvas(size_t nSurfaces);
 
         /**
          * Fill the canvas with data.
@@ -80,6 +80,9 @@ class CompatCanvas : public QGraphicsScene {
          *
          * \pre The given list is non-empty and contains only embedded
          * surfaces/hypersurfaces.
+         *
+         * \exception UnsolvedCase Potentially thrown by fillGlobal(), due to
+         * its use of connectivity and disjointness testing.
          */
         void fillLocal(const regina::NormalSurfaces& surfaces);
         void fillLocal(const regina::NormalHypersurfaces& surfaces);

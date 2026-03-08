@@ -38,30 +38,49 @@
 #define __REGINA_RINGUTILS_H
 #endif
 
-#include "utilities/intutils.h"
+#include "concepts/core.h"
 
 namespace regina {
 
 /**
- * A helper class that instructs Regina how to do mathematical operations
- * with objects from any ring type \a T.
+ * A helper class that assists Regina in doing mathematical operations with
+ * objects of any ring-like type \a T.
  *
- * Before specialising `RingTraits<T>`, you should ensure that \a T satisfies
- * the following requirements:
+ * The concept `RingLike<T>` already ensures that \a T provides the basic
+ * syntax and mathematical operations for working over a ring.
  *
- * - \a T has a default constructor (which is allowed to leave the object
- *   uninitialised);
+ * What `RingTraits<T>` provides in addition to this is:
  *
- * - \a T has a copy constructor, an assignment operator, and
- *   equality/inequality tests;
+ * - class constants `RingTraits<T>::zero` and `RingTraits<T>::one`, which are
+ *   objects of type \a T that hold the additive and multiplicative identities
+ *   respectively;
  *
- * - \a T supports the binary operators `+`, `-` and `*`, and unary operators
- *   `+=`, `-=` and `*=`.
+ * - a compile-time boolean constant `RingTraits<T>::commutative`, which
+ *   identifies whether multiplication is commutative in the ring;
  *
- * The type `RingTraits<T>` should then provide:
+ * - a compile-time boolean constant `RingTraits<T>::zeroInitialised`, which
+ *   identifies whether the default constructor for \a T initialises the value
+ *   to zero (as opposed to leaving it uninitialised);
  *
- * - class constants `zero` and `one`, which are objects of type \a T that
- *   hold the additive and multiplicative identities respectively.
+ * - a compile-time boolean constant `RingTraits<T>::zeroDivisors`, which is
+ *   \c true if and only if it is possible to multiply two non-zero values of
+ *   type \a T to obtain zero.  Here some judgement calls must be made.  For
+ *   example, we treat native C++ integer arithmetic as having zero divisors
+ *   because this is a well-defined integer arithmetic modulo some power of two,
+ *   and divisors of zero are often small and easy to produce (e.g., `16 × 16`
+ *   for the type `uint8_t`).  On the other hand, we treat native floating point
+ *   arithmetic as _not_ having zero divisors, even though it is possible to
+ *   obtain zero by exceeding the available floating point precision, because
+ *   such a scenario feels more like the user exceeding the limits of the
+ *   hardware.  Likewise, for polynomial types, we assume that exponents will
+ *   never grow so large that they overflow and create zero divisors that way.
+ *
+ * - a compile-time boolean constant `RingTraits<T>::inverses`, which is
+ *   \c true if and only if every non-zero object of type \a T has a
+ *   multiplicative inverse.  As with `RingTraits<T>::zeroDivisors`,
+ *   judgement calls must be made; for example, we treat native floating point
+ *   arithmetic as having inverses despite the difficulties around precision
+ *   and overflow.
  *
  * Regina specialises RingTraits for its own ring-like classes where this
  * makes sense (e.g., Regina's own integer, rational and polynomial classes),
@@ -72,38 +91,59 @@ namespace regina {
  *
  * \ingroup maths
  */
-template <typename T>
+template <RingLike T>
 struct RingTraits;
 
 #ifndef __DOXYGEN
 // Don't confuse doxygen with specialisations.
 
 /**
- * Provides the specialisation of RingType for a native C++ integer or
- * floating point type.
+ * Provides the specialisation of RingType for a native C++ integer type.
  *
- * \param T the C++ integer or floating point type being described.
+ * \param T the C++ integer type being described.
  *
  * \ingroup maths
  */
-#define NATIVE_RINGTYPE(T) \
+#define NATIVE_INTEGER_RINGTYPE(T) \
 template <> \
 struct RingTraits<T> { \
     static constexpr T zero = 0; \
     static constexpr T one = 1; \
+    static constexpr bool commutative = true; \
+    static constexpr bool zeroInitialised = false; \
+    static constexpr bool zeroDivisors = true; \
+    static constexpr bool inverses = false; \
 }
 
-NATIVE_RINGTYPE(int8_t);
-NATIVE_RINGTYPE(int16_t);
-NATIVE_RINGTYPE(int32_t);
-NATIVE_RINGTYPE(int64_t);
+NATIVE_INTEGER_RINGTYPE(int8_t);
+NATIVE_INTEGER_RINGTYPE(int16_t);
+NATIVE_INTEGER_RINGTYPE(int32_t);
+NATIVE_INTEGER_RINGTYPE(int64_t);
 #ifdef INT128_AVAILABLE
-NATIVE_RINGTYPE(IntOfSize<16>::type);
+NATIVE_INTEGER_RINGTYPE(Int128);
 #endif
 
-NATIVE_RINGTYPE(float);
-NATIVE_RINGTYPE(double);
-NATIVE_RINGTYPE(long double);
+/**
+ * Provides the specialisation of RingType for a native C++ floating point type.
+ *
+ * \param T the C++ floating point type being described.
+ *
+ * \ingroup maths
+ */
+#define NATIVE_FLOATING_POINT_RINGTYPE(T) \
+template <> \
+struct RingTraits<T> { \
+    static constexpr T zero = 0; \
+    static constexpr T one = 1; \
+    static constexpr bool commutative = true; \
+    static constexpr bool zeroInitialised = false; \
+    static constexpr bool zeroDivisors = false; \
+    static constexpr bool inverses = true; \
+}
+
+NATIVE_FLOATING_POINT_RINGTYPE(float);
+NATIVE_FLOATING_POINT_RINGTYPE(double);
+NATIVE_FLOATING_POINT_RINGTYPE(long double);
 
 #endif // __DOXYGEN
 

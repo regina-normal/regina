@@ -41,7 +41,7 @@ using regina::Example;
 
 void addExample4(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Example)
-    RDOC_SCOPE_BASE_2(detail::ExampleBase, detail::ExampleFromLowDim)
+    RDOC_SCOPE_BASE(detail::ExampleBase)
 
     auto c = pybind11::class_<Example<4>>(m, "Example4", rdoc_scope)
         .def_static("sphere", &Example<4>::sphere, rbase::sphere)
@@ -55,8 +55,8 @@ void addExample4(pybind11::module_& m) {
         .def_static("ballBundle", &Example<4>::ballBundle, rbase::ballBundle)
         .def_static("twistedBallBundle", &Example<4>::twistedBallBundle,
             rbase::twistedBallBundle)
-        .def_static("doubleCone", &Example<4>::doubleCone, rbase2::doubleCone)
-        .def_static("singleCone", &Example<4>::singleCone, rbase2::singleCone)
+        .def_static("doubleCone", &Example<4>::doubleCone, rbase::doubleCone)
+        .def_static("singleCone", &Example<4>::singleCone, rbase::singleCone)
         .def_static("fourSphere", &Example<4>::fourSphere, rdoc::fourSphere)
         .def_static("simplicialFourSphere", &Example<4>::simplicialFourSphere,
             rdoc::simplicialFourSphere)

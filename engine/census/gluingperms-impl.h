@@ -53,14 +53,14 @@
 
 namespace regina {
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 std::string GluingPerms<dim>::data() const {
     std::ostringstream out;
     dumpData(out);
     return out.str();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Triangulation<dim> GluingPerms<dim>::triangulate() const {
     size_t nSimp = size();
 
@@ -81,7 +81,7 @@ Triangulation<dim> GluingPerms<dim>::triangulate() const {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 typename GluingPerms<dim>::Index GluingPerms<dim>::gluingToIndex(
         const FacetSpec<dim>& source, const Perm<dim+1>& gluing) const {
     Perm<dim+1> permSn_1 = Perm<dim+1>(pairing_.dest(source).facet, dim)
@@ -89,7 +89,7 @@ typename GluingPerms<dim>::Index GluingPerms<dim>::gluingToIndex(
     return Perm<dim>::contract(permSn_1).SnIndex();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 typename GluingPerms<dim>::Index GluingPerms<dim>::gluingToIndex(
         size_t simp, int facet, const Perm<dim+1>& gluing) const {
     Perm<dim+1> permSn_1 =
@@ -98,7 +98,7 @@ typename GluingPerms<dim>::Index GluingPerms<dim>::gluingToIndex(
     return Perm<dim>::contract(permSn_1).SnIndex();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void GluingPerms<dim>::dumpData(std::ostream& out) const {
     out << pairing_.textRep() << std::endl;
 
@@ -111,7 +111,7 @@ void GluingPerms<dim>::dumpData(std::ostream& out) const {
     out << std::endl;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 GluingPerms<dim>::GluingPerms(std::istream& in) :
         pairing_(in), permIndices_(new Index[pairing_.size() * (dim + 1)]) {
     // The FacetPairing constructor has already skipped whitespace and
@@ -130,7 +130,7 @@ GluingPerms<dim>::GluingPerms(std::istream& in) :
             "while attempting to read GluingPerms");
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 GluingPerms<dim> GluingPerms<dim>::fromData(const std::string& data) {
     try {
         std::istringstream in(data);
@@ -140,7 +140,7 @@ GluingPerms<dim> GluingPerms<dim>::fromData(const std::string& data) {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void GluingPerms<dim>::writeTextShort(std::ostream& out) const {
     for (size_t simp = 0; simp < size(); ++simp) {
         if (simp > 0)
@@ -159,7 +159,7 @@ void GluingPerms<dim>::writeTextShort(std::ostream& out) const {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void GluingPerms<dim>::writeTextLong(std::ostream& out) const {
     if constexpr (dim == 2)
         out << "  Triangle  |  glued to:";

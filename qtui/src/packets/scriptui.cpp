@@ -29,7 +29,6 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "regina-config.h"
 #include "file/globaldirs.h"
 #include "packet/script.h"
 

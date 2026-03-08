@@ -38,18 +38,25 @@
 #endif
 
 #include <algorithm>
+#include <concepts>
 #include "regina-core.h"
 
 namespace regina {
 
 /**
  * A lightweight fixed-size random-access array whose size can be provided at
- * runtime.  After construction, the size of the array cannot be changed.
+ * runtime.
  *
  * This class is intended to be used for temporary working arrays within the
  * implementations of algorithms: it is lightweight and provides the speed of
  * C-style arrays, but avoids the pitfalls of `new[]` and `delete[]`, instead
  * offering safe and simple stack-based memory mangement and exception safety.
+ *
+ * Typically the size of the array would be passed to the constructor and remain
+ * fixed from that point on.  After construction, the only way to change the
+ * size of the array is to replace its entire contents with those of some other
+ * FixedArray, via swap() or the move assignment operator (both of which are
+ * very fast operations).
  *
  * This class is very similar in nature to LightweightSequence, but was born
  * from different needs.  It is possible that these two classes will be unified
@@ -63,7 +70,7 @@ namespace regina {
  *
  * \ingroup utilities
  */
-template <typename T>
+template <std::default_initializable T>
 class FixedArray {
     private:
         T* data_; /**< The elements of this array. */
@@ -102,9 +109,18 @@ class FixedArray {
         using difference_type = ptrdiff_t;
 
         /**
-         * Constructs a new array of the given size.
+         * Constructs a new empty array.
          *
-         * \pre The type \a T has a default constructor.
+         * If you ever plan to give this array some real contents at a later
+         * stage, this will need to be done by transfer from some other
+         * FixedArray, using either swap() or the move assignment operator
+         * (both of which are very fast operations).
+         */
+        FixedArray() : data_(nullptr), size_(0) {
+        }
+
+        /**
+         * Constructs a new array of the given size.
          *
          * Every element will be created using the default constructor for \a T.
          *
@@ -117,12 +133,11 @@ class FixedArray {
          * Constructs a new array of the given size, and initialises every
          * element to the given value.
          *
-         * \pre The type \a T has a copy constructor.
-         *
          * \param size the number of elements in the new array.
          * \param value the value to assign to every element of the new array.
          */
-        FixedArray(size_t size, const T& value) :
+        FixedArray(size_t size, const T& value)
+                requires std::copyable<T> :
                 data_(new T[size]), size_(size) {
             std::fill(data_, data_ + size_, value);
         }
@@ -130,11 +145,10 @@ class FixedArray {
         /**
          * Makes a new deep copy of the given array.
          *
-         * \pre The type \a T has a copy assignment operator.
-         *
          * \param src the array whose contents should be copied.
          */
-        FixedArray(const FixedArray& src) :
+        FixedArray(const FixedArray& src)
+                requires std::copyable<T> :
                 data_(new T[src.size_]), size_(src.size_) {
             std::copy(src.data_, src.data_ + src.size_, data_);
         }
@@ -155,11 +169,10 @@ class FixedArray {
         /**
          * Creates a new array containing a hard-coded sequence of values.
          *
-         * \pre The type \a T has a copy assignment operator.
-         *
          * \param values the sequence of values to copy into this new list.
          */
-        FixedArray(std::initializer_list<T> values) :
+        FixedArray(std::initializer_list<T> values)
+                requires std::copyable<T> :
                 data_(new T[values.size()]), size_(values.size()) {
             std::copy(values.begin(), values.end(), data_);
         }

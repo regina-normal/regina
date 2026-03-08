@@ -126,7 +126,7 @@ namespace regina::detail {
  * \tparam Object the class that provides the retriangulation/rewriting
  * function, such as regina::Triangulation<dim> or regina::Link.
  */
-template <class Object>
+template <typename Object>
 struct RetriangulateParams;
 
 /**
@@ -176,7 +176,7 @@ class RetriangulateThreadSync<true> {
             done_ = true;
         }
 
-        template <class RetriangulatorType>
+        template <typename RetriangulatorType>
         void startThreads(int nThreads, ProgressTrackerOpen* tracker) {
             nRunning_ = nThreads;
 
@@ -262,7 +262,7 @@ class RetriangulateThreadSync<false> {
                 void unlock() {}
         };
 
-        template <class RetriangulatorType>
+        template <typename RetriangulatorType>
         void startThreads(unsigned, ProgressTrackerOpen* tracker) {
             static_cast<RetriangulatorType*>(this)->processQueue(tracker);
         }
@@ -362,7 +362,7 @@ class RetriangulateSigGraph<false> : private std::set<std::string> {
  * \tparam flags controls how the retriangulation/rewriting process is managed;
  * see the RetriangulationOptions enum for what can be included here.
  */
-template <class Object, bool threading, bool withSig, int flags,
+template <typename Object, bool threading, bool withSig, int flags,
     typename PropagationOptions_>
 class Retriangulator : public RetriangulateThreadSync<threading> {
     public:
@@ -440,7 +440,7 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
         bool candidate(Object&& alt, const std::string& derivedFrom);
 };
 
-template <class Object, bool threading, bool withSig, int flags,
+template <typename Object, bool threading, bool withSig, int flags,
     typename PropagationOptions>
 inline bool Retriangulator<Object, threading, withSig, flags,
         PropagationOptions>::seed(const Object& obj) {
@@ -471,7 +471,7 @@ inline bool Retriangulator<Object, threading, withSig, flags,
     return false;
 }
 
-template <class Object, bool threading, bool withSig, int flags,
+template <typename Object, bool threading, bool withSig, int flags,
     typename PropagationOptions>
 void Retriangulator<Object, threading, withSig, flags,
         PropagationOptions>::processQueue(ProgressTrackerOpen* tracker) {
@@ -506,7 +506,7 @@ void Retriangulator<Object, threading, withSig, flags,
     }
 }
 
-template <class Object, bool threading, bool withSig, int flags,
+template <typename Object, bool threading, bool withSig, int flags,
     typename PropagationOptions>
 bool Retriangulator<Object, threading, withSig, flags,
         PropagationOptions>::candidate(Object&& alt,
@@ -568,7 +568,7 @@ bool Retriangulator<Object, threading, withSig, flags,
     return false; // keep propagating
 }
 
-template <class Object, bool threading, bool withSig, int flags,
+template <typename Object, bool threading, bool withSig, int flags,
     typename PropagationOptions>
 bool enumerateDetail(const Object& obj, bool rigid, int height, int nThreads,
         ProgressTrackerOpen* tracker,
@@ -617,7 +617,7 @@ bool enumerateDetail(const Object& obj, bool rigid, int height, int nThreads,
     return bfs.done();
 }
 
-template <class Object, bool withSig, int flags, typename PropagationOptions>
+template <typename Object, bool withSig, int flags, typename PropagationOptions>
 bool retriangulateInternal(const Object& obj, bool rigid, int height,
         int nThreads, ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action) {

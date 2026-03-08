@@ -49,6 +49,10 @@
 using regina::NormalHypersurfaces;
 using regina::Packet;
 
+// The string to return in cases where a computation fails due to integer
+// overflow:
+#define OVERFLOW_RESULT tr("?")
+
 void HyperModel::rebuild(regina::HyperCoords coordSystem) {
     beginResetModel();
     coordSystem_ = coordSystem;
@@ -100,11 +104,15 @@ QVariant HyperModel::data(const QModelIndex& index, int role) const {
             if (! s.isCompact())
                 return QVariant();
 
-            if (s.isOrientable())
-                return QString(QChar(0x2713 /* tick */));
-                // return tr("Yes");
-            else
-                return tr("Non-or.");
+            try {
+                if (s.isOrientable())
+                    return QString(QChar(0x2713 /* tick */));
+                    // return tr("Yes");
+                else
+                    return tr("Non-or.");
+            } catch (const regina::UnsolvedCase&) {
+                return OVERFLOW_RESULT;
+            }
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 4) {
             if (! s.isCompact())
                 return QVariant();
@@ -223,10 +231,14 @@ QVariant HyperModel::data(const QModelIndex& index, int role) const {
             if (! s.isCompact())
                 return QVariant();
 
-            if (s.isOrientable())
-                return QColor(Qt::darkGreen);
-            else
-                return QColor(Qt::darkRed);
+            try {
+                if (s.isOrientable())
+                    return QColor(Qt::darkGreen);
+                else
+                    return QColor(Qt::darkRed);
+            } catch (const regina::UnsolvedCase&) {
+                return QColor(Qt::darkYellow); // could not compute
+            }
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 4) {
             if (! s.isCompact())
                 return QVariant();

@@ -48,7 +48,7 @@ namespace regina::alias {
 
 /**
  * Helper class that provides dimension-specific aliases for both const and
- * non-const versions of simpImage(size_t) and facetPerm(size_t), where
+ * non-const versions of `simpImage(size_t)` and `facetPerm(size_t)`, where
  * reasonable, for isomorphisms in dimension \a dim.
  *
  * This is inherited by the class \a Derived, which must provide functions
@@ -63,13 +63,13 @@ namespace regina::alias {
  *
  * \ingroup alias
  */
-template <class Derived, int dim>
+template <typename Derived, int dim> requires (supportedDim(dim))
 class IsomorphismImage {
 };
 
 /**
  * Helper class that provides dimension-specific aliases for both const and
- * non-const versions of simpImage(size_t) and facetPerm(size_t).
+ * non-const versions of `simpImage(size_t)` and `facetPerm(size_t)`.
  *
  * This is inherited by the class \a Derived, which must provide functions
  * of the form
@@ -80,7 +80,7 @@ class IsomorphismImage {
  *
  * \ingroup alias
  */
-template <class Derived>
+template <typename Derived>
 class IsomorphismImage<Derived, 2> {
     public:
         /**
@@ -149,7 +149,7 @@ class IsomorphismImage<Derived, 2> {
 
 /**
  * Helper class that provides dimension-specific aliases for both const and
- * non-const versions of simpImage(size_t) and facetPerm(size_t).
+ * non-const versions of `simpImage(size_t)` and `facetPerm(size_t)`.
  *
  * This is inherited by the class \a Derived, which must provide functions
  * of the form
@@ -160,7 +160,7 @@ class IsomorphismImage<Derived, 2> {
  *
  * \ingroup alias
  */
-template <class Derived>
+template <typename Derived>
 class IsomorphismImage<Derived, 3> {
     public:
         /**
@@ -229,7 +229,7 @@ class IsomorphismImage<Derived, 3> {
 
 /**
  * Helper class that provides dimension-specific aliases for both const and
- * non-const versions of simpImage(size_t).
+ * non-const versions of `simpImage(size_t)`.
  *
  * This is inherited by the class \a Derived, which must provide functions
  * of the form
@@ -238,7 +238,7 @@ class IsomorphismImage<Derived, 3> {
  *
  * \ingroup alias
  */
-template <class Derived>
+template <typename Derived>
 class IsomorphismImage<Derived, 4> {
     public:
         /**

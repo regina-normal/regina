@@ -1331,7 +1331,7 @@ precisely those graphs described by OEIS sequence A292206. If
 more) the output set should be smaller.
 
 For each graph that is generated, this routine will call *action*
-(which must be a function or some other callable object).
+(which must be a function or some other callable type).
 
 * The first argument passed to *action* will be the graph that was
   generated (of type ModelLinkGraph). This will be passed as an
@@ -1342,7 +1342,8 @@ For each graph that is generated, this routine will call *action*
 * If there are any additional arguments supplied in the list *args*,
   then these will be passed as subsequent arguments to *action*.
 
-* *action* must return ``void``.
+* The return value of *action* will be ignored; typically it would
+  return ``void``.
 
 .. warning::
     The API for this class or function has not yet been finalised.
@@ -1383,8 +1384,8 @@ Parameter ``constraints``:
     produced.
 
 Parameter ``action``:
-    a function (or other callable object) to call for each graph that
-    is generated.
+    a function (or other callable type) to call for each graph that is
+    generated.
 
 Parameter ``args``:
     any additional arguments that should be passed to *action*,
@@ -1411,7 +1412,7 @@ correspond to node *k* of this graph. If this graph is non-planar,
 then the resulting link diagrams will all be virtual.
 
 For each link diagram that is generated, this routine will call
-*action* (which must be a function or some other callable object).
+*action* (which must be a function or some other callable type).
 
 * The first argument passed to *action* will be the link diagram that
   was generated (of type Link). This will be passed as an rvalue; a
@@ -1422,7 +1423,8 @@ For each link diagram that is generated, this routine will call
 * If there are any additional arguments supplied in the list *args*,
   then these will be passed as subsequent arguments to *action*.
 
-* *action* must return ``void``.
+* The return value of *action* will be ignored; typically it would
+  return ``void``.
 
 .. warning::
     The API for this class or function has not yet been finalised.
@@ -1440,8 +1442,8 @@ Python:
     one argument (the link diagram).
 
 Parameter ``action``:
-    a function (or other callable object) to call for each link
-    diagram that is generated.
+    a function (or other callable type) to call for each link diagram
+    that is generated.
 
 Parameter ``args``:
     any additional arguments that should be passed to *action*,
@@ -1505,7 +1507,7 @@ correspond to node *k* of this graph. If this graph is non-planar,
 then the resulting link diagrams will all be virtual.
 
 For each link diagram that is generated, this routine will call
-*action* (which must be a function or some other callable object).
+*action* (which must be a function or some other callable type).
 
 * The first argument passed to *action* will be the link diagram that
   was generated (of type Link). This will be passed as an rvalue; a
@@ -1516,7 +1518,8 @@ For each link diagram that is generated, this routine will call
 * If there are any additional arguments supplied in the list *args*,
   then these will be passed as subsequent arguments to *action*.
 
-* *action* must return ``void``.
+* The return value of *action* will be ignored; typically it would
+  return ``void``.
 
 .. warning::
     The API for this class or function has not yet been finalised.
@@ -1542,8 +1545,8 @@ Exception ``FailedPrecondition``:
     There is a 1-gon in the cell decomposition induced by this graph.
 
 Parameter ``action``:
-    a function (or other callable object) to call for each link
-    diagram that is generated.
+    a function (or other callable type) to call for each link diagram
+    that is generated.
 
 Parameter ``args``:
     any additional arguments that should be passed to *action*,

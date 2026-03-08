@@ -1282,6 +1282,8 @@ Triangulation<3> NormalSurface::crush() const {
 }
 
 bool NormalSurface::isCompressingDisc(bool knownConnected) const {
+    // Note: Our call to isConnected() could throw an UnsolvedCase exception.
+
     // Is it even a disc?
     if (! hasRealBoundary())
         return false;
@@ -1510,6 +1512,8 @@ bool NormalSurface::isIncompressible() const {
     // (ii) a twisted I-bundle over a surface that will not contain any
     // compressing discs.
 
+    // Note: Our call to isTwoSided() could throw an UnsolvedCase exception.
+
     // Rule out spheres.
     // From the preconditions, we can assume this surface to be
     // closed, compact and connected.
@@ -1535,9 +1539,8 @@ bool NormalSurface::isIncompressible() const {
             if (which == 2) {
                 // We have more than two components with boundary.
                 // This should never happen.
-                std::cerr << "ERROR: isIncompressible() sliced to give "
-                    "more than two components with boundary." << std::endl;
-                return false;
+                throw ImpossibleScenario("isIncompressible() sliced to give "
+                    "more than two components with boundary");
             }
             side[which++] = new Triangulation<3>(std::move(comp));
         }

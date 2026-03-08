@@ -61,31 +61,39 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         .def("isZero", &Int::isZero, rdoc::isZero)
         .def("sign", &Int::sign, rdoc::sign)
         .def("isInfinite", &Int::isInfinite, rdoc::isInfinite)
-        .def("makeInfinite", &Int::makeInfinite, rdoc::makeInfinite)
-        .def("longValue", &Int::longValue, rdoc::longValue)
-        .def("safeLongValue", &Int::safeLongValue, rdoc::safeLongValue)
+        .def("safeValue", &Int::template safeValue<long>, rdoc::safeValue)
+        .def("unsafeValue", &Int::template unsafeValue<long>, rdoc::unsafeValue)
+        .def("safeLongValue", &Int::template safeValue<long>,
+            rdoc::safeLongValue) // deprecated
+        .def("longValue", &Int::template unsafeValue<long>,
+            rdoc::longValue) // deprecated
         .def("stringValue", &Int::stringValue,
             pybind11::arg("base") = 10,
             rdoc::stringValue)
         .def("str", &Int::str, rdoc::str)
         .def("pythonValue", [](const Int& i) {
-            if (i.isNative())
-                return pybind11::int_(i.longValue());
-            else if (i.isInfinite())
-                throw pybind11::value_error("Cannot represent infinity "
-                    "as a Python int");
-            else
+            try {
+                return pybind11::int_(i.template safeValue<long>());
+            } catch (const regina::IntegerOverflow&) {
+                if (i.isInfinite())
+                    throw pybind11::value_error("Cannot represent infinity "
+                        "as a Python int");
                 return pybind11::reinterpret_steal<pybind11::int_>(
                     PyLong_FromString(i.stringValue(16).c_str(), nullptr, 16));
+            }
         }, rdoc::pythonValue)
         .def("swap", &Int::swap, rdoc::swap)
-        .def(pybind11::self == AltInt(), rdoc::__eq_2)
-        .def(pybind11::self == long(), rdoc::__eq_3)
+        .def(pybind11::self == AltInt(), rdoc::__eq)
+        .def(pybind11::self == long(), rdoc::__eq_2)
         .def(pybind11::self != AltInt(), neq_value)
         .def(pybind11::self != long(), neq_value)
+        .def(pybind11::self < AltInt(), rdoc::__cmp)
         .def(pybind11::self < long(), rdoc::__cmp_2)
+        .def(pybind11::self > AltInt(), rdoc::__cmp)
         .def(pybind11::self > long(), rdoc::__cmp_2)
+        .def(pybind11::self <= AltInt(), rdoc::__cmp)
         .def(pybind11::self <= long(), rdoc::__cmp_2)
+        .def(pybind11::self >= AltInt(), rdoc::__cmp)
         .def(pybind11::self >= long(), rdoc::__cmp_2)
         .def("inc", [](Int& i) {
             return i++;
@@ -101,10 +109,14 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         .def(pybind11::self * long(), rdoc::__mul_2)
         .def(pybind11::self / pybind11::self, rdoc::__div)
         .def(pybind11::self / long(), rdoc::__div_2)
-        .def("divExact", overload_cast<const Int&>(
-            &Int::divExact, pybind11::const_), rdoc::divExact)
-        .def("divExact", overload_cast<long>(
-            &Int::divExact, pybind11::const_), rdoc::divExact_2)
+        // overload_cast has trouble with templated vs non-templated overloads.
+        // Just cast directly.
+        .def("divExact",
+            static_cast<Int (Int::*)(const Int&) const>(&Int::divExact),
+            rdoc::divExact)
+        .def("divExact",
+            static_cast<Int (Int::*)(long) const>(&Int::divExact),
+            rdoc::divExact_2)
         .def(pybind11::self % pybind11::self, rdoc::__mod)
         .def(pybind11::self % long(), rdoc::__mod_2)
         .def("divisionAlg", overload_cast<const Int&>(
@@ -118,10 +130,12 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         .def(pybind11::self *= long(), rdoc::__imul_2)
         .def(pybind11::self /= pybind11::self, rdoc::__idiv)
         .def(pybind11::self /= long(), rdoc::__idiv_2)
-        .def("divByExact", overload_cast<const Int&>(&Int::divByExact),
+        .def("divByExact",
+            static_cast<Int& (Int::*)(const Int&)>(&Int::divByExact),
             pybind11::return_value_policy::reference_internal,
             rdoc::divByExact)
-        .def("divByExact", overload_cast<long>(&Int::divByExact),
+        .def("divByExact",
+            static_cast<Int& (Int::*)(long)>(&Int::divByExact),
             pybind11::return_value_policy::reference_internal,
             rdoc::divByExact_2)
         .def(pybind11::self %= pybind11::self, rdoc::__imod)
@@ -153,8 +167,10 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         .def_readonly_static("zero", &Int::zero)
         .def_readonly_static("one", &Int::one)
     ;
-    if constexpr (inf)
+    if constexpr (inf) {
         c.def_readonly_static("infinity", &Int::infinity);
+        c.def("makeInfinite", &Int::makeInfinite, rdoc::makeInfinite);
+    }
 
     regina::python::add_tight_encoding(c, rdoc::tightEncoding,
         rdoc::tightDecoding, rdoc::hash);

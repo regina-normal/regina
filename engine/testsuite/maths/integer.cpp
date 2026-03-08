@@ -29,9 +29,17 @@
  **************************************************************************/
 
 #include <array>
+#include <limits>
+#include "concepts/core.h"
 #include "maths/integer.h"
+#include "utilities/stringutils.h"
 
 #include "testhelper.h"
+
+using regina::ArbitraryPrecisionInteger;
+using regina::CppInteger;
+using regina::SignedCppInteger;
+using regina::UnsignedCppInteger;
 
 using regina::IntegerBase;
 using regina::Integer;
@@ -52,7 +60,113 @@ using regina::LargeInteger;
     "0000000000000000000000000000000000000000000000000000000000000000" \
     "0000000000000000000000000000000000000000000000000000000000000000"
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
+IntegerType gmpInteger(IntegerType x) {
+    x.makeLarge();
+    EXPECT_FALSE(x.isNative());
+    return std::move(x);
+}
+
+template <UnsignedCppInteger Native>
+struct NativeUnsignedLimits {
+    using Signed = regina::make_signed_cpp_t<Native>;
+    static_assert(regina::is_signed_cpp_integer_v<Signed>);
+
+    static constexpr Native min = std::numeric_limits<Native>::min();
+    static constexpr Native max = std::numeric_limits<Native>::max();
+    static constexpr Native maxSigned = std::numeric_limits<Signed>::max();
+    static constexpr Native absMinSigned = maxSigned + 1;
+    static constexpr Native rootBit = (Native(1) << (4 * sizeof(Native)));
+
+    static constexpr std::array<Native, 12> nativeCases = { 0, 1, 2,
+        (maxSigned / 2), (maxSigned / 2) + 1,
+        maxSigned - 1, maxSigned, maxSigned + 1, maxSigned + 2,
+        max - 2, max - 1, max };
+
+    template <ArbitraryPrecisionInteger IntegerType>
+    inline static const std::array<IntegerType, 43> reginaCases = {
+        -IntegerType(max) - 1, -IntegerType(max),
+        -IntegerType(absMinSigned) - 1, -IntegerType(absMinSigned),
+            -IntegerType(maxSigned), -IntegerType(maxSigned) + 1,
+        -IntegerType(absMinSigned / 2) - 1, -IntegerType(absMinSigned / 2),
+        -Signed(rootBit) - 1, -Signed(rootBit), -Signed(rootBit) + 1,
+        -Signed(rootBit / 2) - 1, -Signed(rootBit / 2),
+            -Signed(rootBit / 2) + 1,
+        -1, 0, 1,
+        (rootBit / 2) - 1, rootBit / 2, (rootBit / 2) + 1,
+        rootBit - 1, rootBit, rootBit + 1,
+        (maxSigned / 2), (maxSigned / 2) + 1,
+        maxSigned - 2, maxSigned - 1, maxSigned, maxSigned + 1,
+        max - 1, max, IntegerType(max) + 1,
+        -IntegerType(ULONG_MAX) - 1, -IntegerType(ULONG_MAX),
+        IntegerType(LONG_MIN) - 1,
+        LONG_MIN, LONG_MIN + 1, LONG_MAX - 1, LONG_MAX,
+        (unsigned long)(LONG_MAX) + 1,
+        ULONG_MAX - 1, ULONG_MAX, IntegerType(ULONG_MAX) + 1 };
+
+    static void verify() {
+        EXPECT_EQ(min, 0);
+        EXPECT_EQ(maxSigned * 2 + 1, max);
+        EXPECT_EQ(maxSigned + absMinSigned, max);
+        EXPECT_LT(maxSigned, absMinSigned);
+        EXPECT_LT(absMinSigned, max);
+        EXPECT_EQ(rootBit * (rootBit >> 1), absMinSigned);
+    }
+
+    template <ArbitraryPrecisionInteger IntegerType>
+    static IntegerType maxAs() {
+        // We want (11...1) in binary.
+        IntegerType ans;
+        for (int i = 0; i < 8 * sizeof(Native); ++i) {
+            ans *= 2;
+            ++ans;
+        }
+        return ans;
+    }
+};
+
+template <SignedCppInteger Native>
+struct NativeSignedLimits {
+    using Unsigned = regina::make_unsigned_cpp_t<Native>;
+    static_assert(regina::is_unsigned_cpp_integer_v<Unsigned>);
+
+    static constexpr Native min = std::numeric_limits<Native>::min();
+    static constexpr Native max = std::numeric_limits<Native>::max();
+
+    static constexpr std::array<Native, 16> nativeCases = {
+        min, min + 1, min + 2, min / 2 - 1, min / 2, min / 2 + 1,
+        -2, -1, 0, 1, 2, max / 2, max / 2 + 1, max - 2, max - 1, max };
+
+    // For reginaCases, use the corresponding NativeUnsignedLimits class.
+
+    static void verify() {
+        EXPECT_LT(min, 0);
+        EXPECT_LT(0, max);
+    }
+
+    template <ArbitraryPrecisionInteger IntegerType>
+    static IntegerType minAs() {
+        // We want (-100...0) in binary.
+        IntegerType ans = -1;
+        for (int i = 1; i < 8 * sizeof(Native); ++i) {
+            ans *= 2;
+        }
+        return ans;
+    }
+
+    template <ArbitraryPrecisionInteger IntegerType>
+    static IntegerType maxAs() {
+        // We want (+011...1) in binary.
+        IntegerType ans;
+        for (int i = 1; i < 8 * sizeof(Native); ++i) {
+            ans *= 2;
+            ++ans;
+        }
+        return ans;
+    }
+};
+
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifyLarge(const IntegerType& x, const std::string& expect) {
     // Verifies that x uses a large integer representation, and appears
     // self-consistent with a string value equal to expect.
@@ -83,7 +197,7 @@ static void verifyLarge(const IntegerType& x, const std::string& expect) {
     }
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifyNative(const IntegerType& x, long expect) {
     // Verifies that x uses a native integer representation, and appears
     // self-consistent with a long value equal to expect.
@@ -93,9 +207,9 @@ static void verifyNative(const IntegerType& x, long expect) {
 
     EXPECT_TRUE(x.isNative());
     EXPECT_FALSE(x.isInfinite());
-    EXPECT_EQ(x.longValue(), expect);
+    EXPECT_EQ(x.template unsafeValue<long>(), expect);
     EXPECT_NO_THROW({
-        EXPECT_EQ(x.safeLongValue(), expect);
+        EXPECT_EQ(x.template safeValue<long>(), expect);
     });
     EXPECT_EQ(x.sign(), sign);
 
@@ -119,14 +233,11 @@ static void verifyNative(const IntegerType& x, long expect) {
     }
 }
 
-template <typename IntegerType>
-static void verifyInfinite(const IntegerType& x) {
+static void verifyInfinite(const LargeInteger& x) {
     // Verifies that x appears to be self-consistent and equal to infinity.
-    static_assert(IntegerType::supportsInfinity);
-
     EXPECT_FALSE(x.isNative());
     EXPECT_TRUE(x.isInfinite());
-    EXPECT_THROW({ x.safeLongValue(); }, regina::NoSolution);
+    EXPECT_THROW({ x.template safeValue<long>(); }, regina::IntegerOverflow);
     EXPECT_EQ(x.sign(), 1);
     EXPECT_FALSE(x.isZero());
     EXPECT_EQ(x.stringValue(), "inf");
@@ -137,7 +248,7 @@ static void verifyInfinite(const IntegerType& x) {
     }
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifyIdentical(const IntegerType& x, const IntegerType& y) {
     // Verifies that x and y appear to be equal, _and_ with identical internal
     // representations.
@@ -149,12 +260,13 @@ static void verifyIdentical(const IntegerType& x, const IntegerType& y) {
     EXPECT_EQ(x.isNative(), y.isNative());
     EXPECT_EQ(x.isInfinite(), y.isInfinite());
     if (x.isNative()) {
-        EXPECT_EQ(x.longValue(), y.longValue());
+        EXPECT_EQ(x.template unsafeValue<long>(),
+            y.template unsafeValue<long>());
     }
     EXPECT_EQ(x.str(), y.str());
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifyCopyAssign(const IntegerType& x) {
     SCOPED_TRACE_REGINA(x);
 
@@ -217,26 +329,25 @@ static void verifyCopyAssign(const IntegerType& x) {
     }
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifyCopyAssignLarge(const IntegerType& x,
         const std::string& expect) {
     verifyLarge(x, expect);
     verifyCopyAssign(x);
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifyCopyAssignNative(const IntegerType& x, long expect) {
     verifyNative(x, expect);
     verifyCopyAssign(x);
 }
 
-template <typename IntegerType>
-static void verifyCopyAssignInfinite(const IntegerType& x) {
+static void verifyCopyAssignInfinite(const LargeInteger& x) {
     verifyInfinite(x);
     verifyCopyAssign(x);
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 class IntegerTest : public testing::Test {
     protected:
         // TODO: Perhaps make these non-static?
@@ -347,7 +458,7 @@ TYPED_TEST(IntegerTest, constructCopyAssignNative) {
     verifyCopyAssignLarge(x, sULongMax);
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifyNativeFromString(const std::string& s, int base, long value) {
     std::string use[4] = { s, s + " \t\r\n  ", " \t\r\n  " + s,
         " \t\r\n  " + s + " \t\r\n  " };
@@ -395,7 +506,7 @@ static void verifyNativeFromString(const std::string& s, int base, long value) {
     }, regina::InvalidArgument);
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifyLargeFromString(const std::string& s) {
     std::string use[4] = { s, s + " \t\r\n  ", " \t\r\n  " + s,
         " \t\r\n  " + s + " \t\r\n  " };
@@ -430,7 +541,7 @@ static void verifyLargeFromString(const std::string& s) {
     EXPECT_THROW({ IntegerType((s + "!").c_str()); }, regina::InvalidArgument);
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifyLargeFromString(const std::string& s, int base,
         const std::string& valueBase10) {
     std::string use[4] = { s, s + " \t\r\n  ", " \t\r\n  " + s,
@@ -695,45 +806,6 @@ TYPED_TEST(IntegerTest, swap) {
     }
 }
 
-template <typename IntegerType, typename NumericType>
-static void verifyNumeric(NumericType value) {
-    // Test construction and assignment from the given native C++ integer type.
-    static_assert(
-        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
-    static_assert(std::is_integral_v<NumericType>);
-
-    SCOPED_TRACE_NUMERIC(value);
-    std::string str = std::to_string(value);
-
-    IntegerType large(value);
-    EXPECT_EQ(large.str(), str);
-
-    IntegerType assigned = 1;
-    EXPECT_EQ(assigned.str(), "1");
-    assigned = value;
-    EXPECT_EQ(assigned.str(), str);
-}
-
-TYPED_TEST(IntegerTest, constructLongLong) {
-    verifyNumeric<TypeParam, long long>(0);
-    verifyNumeric<TypeParam, long long>(1);
-    verifyNumeric<TypeParam, long long>(-1);
-    verifyNumeric<TypeParam, long long>(INT_MAX);
-    verifyNumeric<TypeParam, long long>(INT_MIN);
-    verifyNumeric<TypeParam, long long>(LONG_MAX);
-    verifyNumeric<TypeParam, long long>(LONG_MIN);
-    verifyNumeric<TypeParam, long long>(LLONG_MAX);
-    verifyNumeric<TypeParam, long long>(LLONG_MIN);
-
-    verifyNumeric<TypeParam, unsigned long long>(0);
-    verifyNumeric<TypeParam, unsigned long long>(1);
-    verifyNumeric<TypeParam, unsigned long long>(INT_MAX);
-    verifyNumeric<TypeParam, unsigned long long>(LONG_MAX);
-    verifyNumeric<TypeParam, unsigned long long>(ULONG_MAX);
-    verifyNumeric<TypeParam, unsigned long long>(LLONG_MAX);
-    verifyNumeric<TypeParam, unsigned long long>(ULLONG_MAX);
-}
-
 #ifdef INT128_AVAILABLE
 static void verifyEqual128(const regina::NativeInteger<16>& x,
         const regina::NativeInteger<16>& y) {
@@ -745,25 +817,35 @@ static void verifyEqual128(const regina::NativeInteger<16>& x,
     EXPECT_EQ(x.str(), y.str());
 }
 
-
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifyNative128(const regina::NativeInteger<16>& native,
         const char* string) {
     EXPECT_EQ(native.str(), string);
     EXPECT_EQ(IntegerType(native).str(), string);
+    {
+        IntegerType assigned = 7;
+        EXPECT_NE(assigned.str(), string);
+        assigned = native;
+        EXPECT_EQ(assigned.str(), string);
+    }
 
-    verifyEqual128(native, regina::NativeInteger<16>(IntegerType(string)));
-    verifyEqual128(native, IntegerType(string).template nativeValue<16>());
-    verifyEqual128(native, IntegerType(native).template nativeValue<16>());
+    verifyEqual128(native,
+        IntegerType(string).template safeValue<regina::Int128>());
+    verifyEqual128(native,
+        IntegerType(string).template unsafeValue<regina::Int128>());
+    verifyEqual128(native,
+        IntegerType(native).template safeValue<regina::Int128>());
+    verifyEqual128(native,
+        IntegerType(native).template unsafeValue<regina::Int128>());
 
     // Make sure large-to-native conversion works even for numbers that do not
     // enter the highest order long-sized block.  For most machines this means
     // the integers fit into a single long, so here we force them into a large
     // (GMP) representation regardless.
-    IntegerType large(string);
+    IntegerType large(native);
     large.makeLarge();
-    verifyEqual128(native, regina::NativeInteger<16>(large));
-    verifyEqual128(native, large.template nativeValue<16>());
+    verifyEqual128(native, large.template safeValue<regina::Int128>());
+    verifyEqual128(native, large.template unsafeValue<regina::Int128>());
 }
 
 TYPED_TEST(IntegerTest, constructNative128) {
@@ -787,8 +869,9 @@ TYPED_TEST(IntegerTest, constructNative128) {
     regina::NativeInteger<16> neg126_62 = neg126 + neg62;
     regina::NativeInteger<16> neg126_63 = neg126 + neg63;
 
-    regina::NativeInteger<16> maxVal(
-        ~(regina::IntOfSize<16>::type(1) << 127));
+    regina::NativeInteger<16> maxVal =
+        std::numeric_limits<regina::Int128>::max();
+    EXPECT_EQ(maxVal, ~(regina::Int128(1) << 127));
 
     // We split the strings below into chunks so that vim's syntax highlighting
     // can cope.
@@ -869,9 +952,9 @@ TYPED_TEST(IntegerTest, stringValue) {
             EXPECT_EQ(TypeParam::infinity.stringValue(i), "inf");
 }
 
-template <bool withInfinity>
-static void verifyEqual(const IntegerBase<withInfinity>& a,
-        const IntegerBase<withInfinity>& b) {
+template <regina::ArbitraryPrecisionInteger Int1,
+    regina::ArbitraryPrecisionInteger Int2>
+static void verifyEqual(const Int1& a, const Int2& b) {
     SCOPED_TRACE_REGINA(a);
     SCOPED_TRACE_REGINA(b);
 
@@ -909,9 +992,9 @@ static void verifyEqual(const IntegerBase<withInfinity>& a, long b) {
     EXPECT_EQ(a.isZero(), b == 0);
 }
 
-template <bool withInfinity>
-static void verifyLess(const IntegerBase<withInfinity>& a,
-        const IntegerBase<withInfinity>& b) {
+template <regina::ArbitraryPrecisionInteger Int1,
+    regina::ArbitraryPrecisionInteger Int2>
+static void verifyLess(const Int1& a, const Int2& b) {
     SCOPED_TRACE_REGINA(a);
     SCOPED_TRACE_REGINA(b);
 
@@ -959,16 +1042,24 @@ static void verifyLess(long a, const IntegerBase<withInfinity>& b) {
 }
 
 TYPED_TEST(IntegerTest, comparisons) {
+    using Alt = IntegerBase<! TypeParam::supportsInfinity>;
+
     for (const auto& x : this->cases) {
         verifyEqual(x, x);
 
         TypeParam y(x);
+        Alt yAlt(x);
         EXPECT_EQ(x.isNative(), y.isNative());
+        EXPECT_EQ(x.isNative(), yAlt.isNative());
         verifyEqual(x, y);
+        verifyEqual(x, yAlt);
 
         y.makeLarge();
+        yAlt.makeLarge();
         EXPECT_FALSE(y.isNative());
+        EXPECT_FALSE(yAlt.isNative());
         verifyEqual(x, y);
+        verifyEqual(x, yAlt);
     }
 
     for (long x : this->longCases) {
@@ -991,10 +1082,10 @@ TYPED_TEST(IntegerTest, comparisons) {
         EXPECT_TRUE(b.isNative());
         EXPECT_FALSE(c.isNative());
 
-        EXPECT_EQ(a.longValue(), x);
-        EXPECT_EQ(c.longValue(), x);
-        EXPECT_EQ(a.safeLongValue(), x);
-        EXPECT_EQ(c.safeLongValue(), x);
+        EXPECT_EQ(a.template unsafeValue<long>(), x);
+        EXPECT_EQ(c.template unsafeValue<long>(), x);
+        EXPECT_EQ(a.template safeValue<long>(), x);
+        EXPECT_EQ(c.template safeValue<long>(), x);
 
         EXPECT_TRUE(a.isNative());
         EXPECT_FALSE(c.isNative());
@@ -1004,11 +1095,15 @@ TYPED_TEST(IntegerTest, comparisons) {
         for (size_t y = x + 1; y < this->cases.size(); ++y) {
             TypeParam a(this->cases[x]);
             TypeParam b(this->cases[y]);
+            Alt aAlt(this->cases[x]);
+            Alt bAlt(this->cases[y]);
 
             verifyLess(a, b);
+            verifyLess(a, bAlt);
+            verifyLess(aAlt, b);
 
             if (a.isNative()) {
-                verifyLess(a.longValue(), b);
+                verifyLess(a.template unsafeValue<long>(), b);
 
                 TypeParam p(a);
                 p.makeLarge();
@@ -1016,7 +1111,7 @@ TYPED_TEST(IntegerTest, comparisons) {
                 verifyLess(p, b);
             }
             if (b.isNative()) {
-                verifyLess(a, b.longValue());
+                verifyLess(a, b.template unsafeValue<long>());
 
                 TypeParam q(b);
                 q.makeLarge();
@@ -1050,11 +1145,12 @@ TYPED_TEST(IntegerTest, comparisons) {
             verifyLess(this->longCases[x], q);
         }
 
-    if constexpr (TypeParam::supportsInfinity) {
-        TypeParam inf(TypeParam::infinity);
+    {
+        LargeInteger inf(LargeInteger::infinity);
 
         EXPECT_EQ(inf, inf);
-        EXPECT_EQ(inf, TypeParam(inf));
+        if constexpr (TypeParam::supportsInfinity)
+            EXPECT_EQ(inf, TypeParam(inf));
 
         for (const auto& x : this->cases)
             verifyLess(x, inf);
@@ -1122,10 +1218,8 @@ TYPED_TEST(IntegerTest, incDec) {
     }
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifySumNativeNative(long a, long b, const IntegerType& expect) {
-    static_assert(
-        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
     SCOPED_TRACE_NUMERIC(a);
     SCOPED_TRACE_NUMERIC(b);
 
@@ -1141,11 +1235,9 @@ static void verifySumNativeNative(long a, long b, const IntegerType& expect) {
     EXPECT_EQ(expect - IntegerType(b), a);
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifySumLargeNative(const IntegerType& a, long b,
         const IntegerType& expect) {
-    static_assert(
-        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
     SCOPED_TRACE_REGINA(a);
     SCOPED_TRACE_NUMERIC(b);
 
@@ -1158,11 +1250,9 @@ static void verifySumLargeNative(const IntegerType& a, long b,
     EXPECT_EQ(expect - IntegerType(b), a);
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifySumLargeLarge(const IntegerType& a, const IntegerType& b,
         const IntegerType& expect) {
-    static_assert(
-        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
     SCOPED_TRACE_REGINA(a);
     SCOPED_TRACE_REGINA(b);
 
@@ -1184,10 +1274,19 @@ TYPED_TEST(IntegerTest, plusMinus) {
         EXPECT_EQ(TypeParam() + x, x);
         EXPECT_EQ(TypeParam() - x, -x);
 
-        for (const auto& y : this->cases) {
-            if (y == 0)
-                continue;
+        // Verify operating on one's self.
+        {
+            TypeParam z = x;
+            z += z;
+            EXPECT_EQ(z, x + x);
+        }
+        {
+            TypeParam z = x;
+            z -= z;
+            EXPECT_EQ(z, 0);
+        }
 
+        for (const auto& y : this->cases) {
             SCOPED_TRACE_REGINA(y);
 
             EXPECT_EQ(x + y, y + x);
@@ -1237,9 +1336,6 @@ TYPED_TEST(IntegerTest, plusMinus) {
         }
 
         for (long y : this->longCases) {
-            if (y == 0)
-                continue;
-
             SCOPED_TRACE_NUMERIC(y);
 
             EXPECT_EQ(x + y, y + x);
@@ -1381,6 +1477,16 @@ TYPED_TEST(IntegerTest, plusMinus) {
         TypeParam inf(TypeParam::infinity);
         EXPECT_EQ(inf + inf, inf);
         EXPECT_EQ(inf - inf, inf);
+        {
+            TypeParam tmp = TypeParam::infinity;
+            tmp += tmp;
+            EXPECT_EQ(tmp, TypeParam::infinity);
+        }
+        {
+            TypeParam tmp = TypeParam::infinity;
+            tmp -= tmp;
+            EXPECT_EQ(tmp, TypeParam::infinity);
+        }
 
         for (const auto& x : this->cases) {
             SCOPED_TRACE_REGINA(x);
@@ -1401,11 +1507,9 @@ TYPED_TEST(IntegerTest, plusMinus) {
     }
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifyProductNativeNative(long a, long b,
         const IntegerType& expect) {
-    static_assert(
-        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
     SCOPED_TRACE_NUMERIC(a);
     SCOPED_TRACE_NUMERIC(b);
 
@@ -1417,11 +1521,9 @@ static void verifyProductNativeNative(long a, long b,
     EXPECT_EQ(IntegerType(b) * IntegerType(a), expect);
 }
 
-template <typename IntegerType>
+template <ArbitraryPrecisionInteger IntegerType>
 static void verifyProductLargeNative(const IntegerType& a, long b,
         const IntegerType& expect) {
-    static_assert(
-        regina::IsReginaArbitraryPrecisionInteger<IntegerType>::value);
     SCOPED_TRACE_REGINA(a);
     SCOPED_TRACE_NUMERIC(b);
 
@@ -1441,10 +1543,14 @@ TYPED_TEST(IntegerTest, multiply) {
         verifyProductLargeNative(x, -1, -x);
         verifyProductLargeNative(x, -2, -x - x);
 
-        for (const auto& y : this->cases) {
-            if (y == 0)
-                continue;
+        // Verify operating on one's self.
+        {
+            TypeParam z = x;
+            z *= z;
+            EXPECT_EQ(z, x * x);
+        }
 
+        for (const auto& y : this->cases) {
             SCOPED_TRACE_REGINA(y);
 
             // Test the commutative law.
@@ -1487,13 +1593,12 @@ TYPED_TEST(IntegerTest, multiply) {
                 EXPECT_GT(x * y, 0);
                 EXPECT_GE(x * y, -x);
                 EXPECT_GE(x * y, -y);
+            } else {
+                EXPECT_EQ(x * y, 0);
             }
         }
 
         for (long y : this->longCases) {
-            if (y == 0)
-                continue;
-
             SCOPED_TRACE_NUMERIC(y);
 
             // Test the commutative law.
@@ -1541,6 +1646,8 @@ TYPED_TEST(IntegerTest, multiply) {
                 EXPECT_GT(x * y, 0);
                 EXPECT_GE(x * y, -x);
                 EXPECT_GT(x * y, -(y + 1)); // Note: -y could overflow.
+            } else {
+                EXPECT_EQ(x * y, 0);
             }
         }
     }
@@ -1623,6 +1730,11 @@ TYPED_TEST(IntegerTest, multiply) {
     if constexpr (TypeParam::supportsInfinity) {
         TypeParam inf(TypeParam::infinity);
         EXPECT_EQ(inf * inf, inf);
+        {
+            TypeParam tmp = TypeParam::infinity;
+            tmp *= tmp;
+            EXPECT_EQ(tmp, TypeParam::infinity);
+        }
 
         for (const auto& x : this->cases) {
             SCOPED_TRACE_REGINA(x);
@@ -1646,23 +1758,117 @@ TYPED_TEST(IntegerTest, divide) {
     for (const auto& x : this->cases) {
         SCOPED_TRACE_REGINA(x);
 
-        if (x != 0) {
-            EXPECT_EQ(TypeParam() / x, 0);
-            EXPECT_EQ(x / x, 1);
-            EXPECT_EQ(x / -x, -1);
-            EXPECT_EQ((x + x) / x, 2);
-            EXPECT_EQ((x + x) / -x, -2);
+        if (x == 0) {
+            if constexpr (TypeParam::supportsInfinity) {
+                EXPECT_NO_THROW({
+                    EXPECT_TRUE((TypeParam() / x).isInfinite());
+                    EXPECT_TRUE((x / x).isInfinite());
+                    EXPECT_TRUE((x / -x).isInfinite());
+                    EXPECT_TRUE(((x + x) / x).isInfinite());
+                    EXPECT_TRUE(((x + x) / -x).isInfinite());
+                    {
+                        TypeParam tmp;
+                        tmp /= x;
+                        EXPECT_TRUE(tmp.isInfinite());
+                    }
+                    {
+                        TypeParam tmp = x;
+                        tmp /= x;
+                        EXPECT_TRUE(tmp.isInfinite());
+                    }
 
-            EXPECT_EQ(TypeParam().divExact(x), 0);
-            EXPECT_EQ(x.divExact(x), 1);
-            EXPECT_EQ(x.divExact(-x), -1);
-            EXPECT_EQ((x + x).divExact(x), 2);
-            EXPECT_EQ((x + x).divExact(-x), -2);
+                    // Verify operating on one's self.
+                    {
+                        TypeParam tmp = x;
+                        tmp /= tmp;
+                        EXPECT_TRUE(tmp.isInfinite());
+                    }
+                });
+            } else {
+                EXPECT_THROW({ TypeParam() / x; }, regina::DivisionByZero);
+                EXPECT_THROW({ x / x; }, regina::DivisionByZero);
+                EXPECT_THROW({ x / -x; }, regina::DivisionByZero);
+                EXPECT_THROW({ (x + x) / x; }, regina::DivisionByZero);
+                EXPECT_THROW({ (x + x) / -x; }, regina::DivisionByZero);
+                {
+                    TypeParam tmp;
+                    EXPECT_THROW({ tmp /= x; }, regina::DivisionByZero);
+                }
+                {
+                    TypeParam tmp = x;
+                    EXPECT_THROW({ tmp /= x; }, regina::DivisionByZero);
+                }
+
+                // Verify operating on one's self.
+                {
+                    TypeParam tmp = x;
+                    EXPECT_THROW({ tmp /= tmp; }, regina::DivisionByZero);
+                }
+            }
+            // We do not allow divExact() by zero at all.
+        } else {
+            EXPECT_NO_THROW({
+                EXPECT_EQ(TypeParam() / x, 0);
+                EXPECT_EQ(x / x, 1);
+                EXPECT_EQ(x / -x, -1);
+                EXPECT_EQ((x + x) / x, 2);
+                EXPECT_EQ((x + x) / -x, -2);
+
+                EXPECT_EQ(TypeParam().divExact(x), 0);
+                EXPECT_EQ(x.divExact(x), 1);
+                EXPECT_EQ(x.divExact(-x), -1);
+                EXPECT_EQ((x + x).divExact(x), 2);
+                EXPECT_EQ((x + x).divExact(-x), -2);
+
+                // Just test a few of the cases above with /=.
+                {
+                    TypeParam tmp;
+                    tmp /= x;
+                    EXPECT_EQ(tmp, 0);
+                }
+                {
+                    TypeParam tmp = x;
+                    tmp /= x;
+                    EXPECT_EQ(tmp, 1);
+                }
+                {
+                    TypeParam tmp = x + x;
+                    tmp /= -x;
+                    EXPECT_EQ(tmp, -2);
+                }
+
+                // Verify operating on one's self.
+                {
+                    TypeParam tmp = x;
+                    tmp /= tmp;
+                    EXPECT_EQ(tmp, 1);
+                }
+                {
+                    TypeParam tmp = x;
+                    tmp.divByExact(tmp);
+                    EXPECT_EQ(tmp, 1);
+                }
+            });
         }
 
         for (const auto& y : this->cases) {
-            if (y == 0)
+            if (y == 0) {
+                if constexpr (TypeParam::supportsInfinity) {
+                    EXPECT_NO_THROW({ EXPECT_TRUE((x / y).isInfinite()); });
+                    {
+                        TypeParam tmp = x;
+                        EXPECT_NO_THROW({ tmp /= y; });
+                        EXPECT_TRUE(tmp.isInfinite());
+                    }
+                } else {
+                    EXPECT_THROW({ x / y; }, regina::DivisionByZero);
+                    {
+                        TypeParam tmp = x;
+                        EXPECT_THROW({ tmp /= y; }, regina::DivisionByZero);
+                    }
+                }
                 continue;
+            }
 
             SCOPED_TRACE_REGINA(y);
 
@@ -1703,8 +1909,23 @@ TYPED_TEST(IntegerTest, divide) {
         }
 
         for (long y : this->longCases) {
-            if (y == 0)
+            if (y == 0) {
+                if constexpr (TypeParam::supportsInfinity) {
+                    EXPECT_NO_THROW({ EXPECT_TRUE((x / y).isInfinite()); });
+                    {
+                        TypeParam tmp = x;
+                        EXPECT_NO_THROW({ tmp /= y; });
+                        EXPECT_TRUE(tmp.isInfinite());
+                    }
+                } else {
+                    EXPECT_THROW({ x / y; }, regina::DivisionByZero);
+                    {
+                        TypeParam tmp = x;
+                        EXPECT_THROW({ tmp /= y; }, regina::DivisionByZero);
+                    }
+                }
                 continue;
+            }
 
             SCOPED_TRACE_NUMERIC(y);
 
@@ -1820,7 +2041,24 @@ TYPED_TEST(IntegerTest, divide) {
 
     if constexpr (TypeParam::supportsInfinity) {
         TypeParam inf(TypeParam::infinity);
+
         EXPECT_EQ(inf / inf, inf);
+        EXPECT_EQ(TypeParam() / TypeParam(), inf);
+        {
+            TypeParam tmp = TypeParam::infinity;
+            tmp /= TypeParam::infinity;
+            EXPECT_EQ(tmp, TypeParam::infinity);
+        }
+        {
+            TypeParam tmp; // zero
+            tmp /= TypeParam();
+            EXPECT_EQ(tmp, TypeParam::infinity);
+        }
+        {
+            TypeParam tmp = TypeParam::infinity;
+            tmp /= tmp;
+            EXPECT_EQ(tmp, TypeParam::infinity);
+        }
 
         for (const auto& x : this->cases) {
             SCOPED_TRACE_REGINA(x);
@@ -1829,94 +2067,208 @@ TYPED_TEST(IntegerTest, divide) {
             EXPECT_EQ(x / inf, 0);
             EXPECT_EQ(x / TypeParam(), inf);
             EXPECT_EQ(x / 0L, inf);
+
+            {
+                TypeParam tmp = TypeParam::infinity;
+                tmp /= x;
+                EXPECT_EQ(tmp, TypeParam::infinity);
+            }
+            {
+                TypeParam tmp = x;
+                tmp /= inf;
+                EXPECT_EQ(tmp, 0);
+            }
+            {
+                TypeParam tmp = x;
+                tmp /= TypeParam();
+                EXPECT_EQ(tmp, TypeParam::infinity);
+            }
+            {
+                TypeParam tmp = x;
+                tmp /= 0L;
+                EXPECT_EQ(tmp, TypeParam::infinity);
+            }
         }
 
         for (long x : this->longCases) {
             SCOPED_TRACE_NUMERIC(x);
 
             EXPECT_EQ(inf / x, inf);
+            {
+                TypeParam tmp = TypeParam::infinity;
+                tmp /= x;
+                EXPECT_EQ(tmp, TypeParam::infinity);
+            }
+        }
+    } else {
+        EXPECT_THROW({ TypeParam() / TypeParam(); }, regina::DivisionByZero);
+        {
+            TypeParam tmp;
+            EXPECT_THROW({ tmp /= TypeParam(); }, regina::DivisionByZero);
+        }
+
+        for (const auto& x : this->cases) {
+            EXPECT_THROW({ x / 0L; }, regina::DivisionByZero);
+            EXPECT_THROW({ x / TypeParam(); }, regina::DivisionByZero);
+            {
+                TypeParam tmp = x;
+                EXPECT_THROW({ tmp /= 0L; }, regina::DivisionByZero);
+            }
+            {
+                TypeParam tmp = x;
+                EXPECT_THROW({ tmp /= TypeParam(); }, regina::DivisionByZero);
+            }
         }
     }
 }
 
 TYPED_TEST(IntegerTest, mod) {
-    // Infinity is not supported.
-    // x % 0 is not supported.
-    // If result is non-zero then sign(x % y) = sign(x).
+    // If the result is non-zero then sign(x % y) = sign(x).
+
+    if constexpr (TypeParam::supportsInfinity) {
+        EXPECT_EQ(TypeParam::infinity % TypeParam::infinity, 0);
+        {
+            TypeParam z = TypeParam::infinity;
+            z %= TypeParam::infinity;
+            EXPECT_EQ(z, 0);
+        }
+        {
+            TypeParam z = TypeParam::infinity;
+            z %= z;
+            EXPECT_EQ(z, 0);
+        }
+    }
 
     for (const auto& x : this->cases) {
         SCOPED_TRACE_REGINA(x);
 
         EXPECT_EQ(x % 1, 0);
-        if (x != 0) {
+        if (x == 0) {
+            EXPECT_THROW({ TypeParam() % x; }, regina::DivisionByZero);
+            EXPECT_THROW({ TypeParam() % x; }, regina::DivisionByZero);
+            EXPECT_THROW({ x % x; }, regina::DivisionByZero);
+            EXPECT_THROW({ (-x) % x; }, regina::DivisionByZero);
+            EXPECT_THROW({ (x + x) % x; }, regina::DivisionByZero);
+            EXPECT_THROW({ (-(x + x)) % x; }, regina::DivisionByZero);
+
+            if constexpr (TypeParam::supportsInfinity) {
+                EXPECT_THROW({ TypeParam::infinity % x; },
+                    regina::DivisionByZero);
+                {
+                    TypeParam z = TypeParam::infinity;
+                    EXPECT_THROW({ z %= x; }, regina::DivisionByZero);
+                }
+            }
+
+            // Verify operating on one's self.
+            {
+                TypeParam tmp = x;
+                EXPECT_THROW({ tmp %= tmp; }, regina::DivisionByZero);
+            }
+        } else {
             EXPECT_EQ(TypeParam() % x, 0);
             EXPECT_EQ(TypeParam() % x, 0);
             EXPECT_EQ(x % x, 0);
             EXPECT_EQ((-x) % x, 0);
             EXPECT_EQ((x + x) % x, 0);
             EXPECT_EQ((-(x + x)) % x, 0);
+
+            if constexpr (TypeParam::supportsInfinity) {
+                EXPECT_EQ(TypeParam::infinity % x, 0);
+                {
+                    TypeParam z = TypeParam::infinity;
+                    z %= x;
+                    EXPECT_EQ(z, 0);
+                }
+            }
+
+            // Verify operating on one's self.
+            {
+                TypeParam tmp = x;
+                tmp %= tmp;
+                EXPECT_EQ(tmp, 0);
+            }
+        }
+
+        if constexpr (TypeParam::supportsInfinity) {
+            EXPECT_EQ(x % TypeParam::infinity, x);
+            {
+                TypeParam z = x;
+                z %= TypeParam::infinity;
+                EXPECT_EQ(z, x);
+            }
         }
 
         for (const auto& y : this->cases) {
-            if (y == 0)
-                continue;
-
             SCOPED_TRACE_REGINA(y);
 
-            TypeParam ans = x % y;
+            if (y == 0) {
+                EXPECT_THROW({ x % y; }, regina::DivisionByZero);
+                {
+                    TypeParam z = x;
+                    EXPECT_THROW({ z % y; }, regina::DivisionByZero);
+                }
+            } else {
+                TypeParam ans = x % y;
 
-            // Ensure that ans is within range.
-            if (ans < 0) {
-                EXPECT_LT(x, 0);
-                EXPECT_GT(ans, -y.abs());
-            } else if (ans > 0) {
-                EXPECT_GT(x, 0);
-                EXPECT_LT(ans, y.abs());
+                // Ensure that ans is within range.
+                if (ans < 0) {
+                    EXPECT_LT(x, 0);
+                    EXPECT_GT(ans, -y.abs());
+                } else if (ans > 0) {
+                    EXPECT_GT(x, 0);
+                    EXPECT_LT(ans, y.abs());
+                }
+
+                // Ensure that y | (x - ans).
+                TypeParam q = (x - ans) / y;
+                EXPECT_EQ(q * y + ans, x);
+
+                TypeParam z = x;
+                EXPECT_EQ(z %= y, ans);
+                EXPECT_EQ(z, ans);
+
+                // Verify divExact() if we can.
+                if (ans == 0)
+                    EXPECT_EQ(x.divExact(y) * y, x);
             }
-
-            // Ensure that y | (x - ans).
-            TypeParam q = (x - ans) / y;
-            EXPECT_EQ(q * y + ans, x);
-
-            TypeParam z = x;
-            EXPECT_EQ(z %= y, ans);
-            EXPECT_EQ(z, ans);
-
-            // Verify divExact() if we can.
-            if (ans == 0)
-                EXPECT_EQ(x.divExact(y) * y, x);
         }
 
         for (long y : this->longCases) {
-            if (y == 0)
-                continue;
-
             SCOPED_TRACE_NUMERIC(y);
 
-            TypeParam ans = x % y;
+            if (y == 0) {
+                EXPECT_THROW({ x % y; }, regina::DivisionByZero);
+                {
+                    TypeParam z = x;
+                    EXPECT_THROW({ z % y; }, regina::DivisionByZero);
+                }
+            } else {
+                TypeParam ans = x % y;
 
-            // Ensure that ans is within range.
-            if (ans < 0) {
-                EXPECT_LT(x, 0);
-                EXPECT_GT(ans, y < 0 ? y : -y);
-            } else if (ans > 0) {
-                EXPECT_GT(x, 0);
-                // Careful here: -LONG_MIN will overflow.
-                // Work in the negatives instead.
-                EXPECT_GT(-ans, y < 0 ? y : -y);
+                // Ensure that ans is within range.
+                if (ans < 0) {
+                    EXPECT_LT(x, 0);
+                    EXPECT_GT(ans, y < 0 ? y : -y);
+                } else if (ans > 0) {
+                    EXPECT_GT(x, 0);
+                    // Careful here: -LONG_MIN will overflow.
+                    // Work in the negatives instead.
+                    EXPECT_GT(-ans, y < 0 ? y : -y);
+                }
+
+                // Ensure that y | (x - ans).
+                TypeParam q = (x - ans) / y;
+                EXPECT_EQ(q * y + ans, x);
+
+                TypeParam z = x;
+                EXPECT_EQ(z %= y, ans);
+                EXPECT_EQ(z, ans);
+
+                // Verify divExact() if we can.
+                if (ans == 0)
+                    EXPECT_EQ(x.divExact(y) * y, x);
             }
-
-            // Ensure that y | (x - ans).
-            TypeParam q = (x - ans) / y;
-            EXPECT_EQ(q * y + ans, x);
-
-            TypeParam z = x;
-            EXPECT_EQ(z %= y, ans);
-            EXPECT_EQ(z, ans);
-
-            // Verify divExact() if we can.
-            if (ans == 0)
-                EXPECT_EQ(x.divExact(y) * y, x);
         }
     }
 
@@ -2125,7 +2477,7 @@ TYPED_TEST(IntegerTest, gcdLcm) {
     // A side-effect was that Regina computed gcd(3,3) == 55340232221128654851
     // on this platform.  Verify that we are _not_ seeing these issues now.
 
-    regina::IntOfSize<16>::type n = 3;
+    regina::Int128 n = 3;
     int shift = 0;
     n <<= shift;
     EXPECT_EQ(n, 3);
@@ -2183,9 +2535,10 @@ TYPED_TEST(IntegerTest, tryReduce) {
             EXPECT_EQ(y.isNative(), supportsNative);
             verifyEqual(x, y);
             if (supportsNative)
-                EXPECT_EQ(x, y.safeLongValue());
+                EXPECT_EQ(x, y.template safeValue<long>());
             else
-                EXPECT_THROW({ y.safeLongValue(); }, regina::NoSolution);
+                EXPECT_THROW({ y.template safeValue<long>(); },
+                    regina::IntegerOverflow);
         }
         {
             TypeParam y = x;
@@ -2197,9 +2550,10 @@ TYPED_TEST(IntegerTest, tryReduce) {
             EXPECT_EQ(y.isNative(), supportsNative);
             verifyEqual(x, y);
             if (supportsNative)
-                EXPECT_EQ(x, y.safeLongValue());
+                EXPECT_EQ(x, y.template safeValue<long>());
             else
-                EXPECT_THROW({ y.safeLongValue(); }, regina::NoSolution);
+                EXPECT_THROW({ y.template safeValue<long>(); },
+                    regina::IntegerOverflow);
         }
         {
             TypeParam y = x;
@@ -2209,9 +2563,10 @@ TYPED_TEST(IntegerTest, tryReduce) {
             EXPECT_EQ(y.isNative(), supportsNative);
             verifyEqual(x, y);
             if (supportsNative)
-                EXPECT_EQ(x, y.safeLongValue());
+                EXPECT_EQ(x, y.template safeValue<long>());
             else
-                EXPECT_THROW({ y.safeLongValue(); }, regina::NoSolution);
+                EXPECT_THROW({ y.template safeValue<long>(); },
+                    regina::IntegerOverflow);
         }
     }
 }
@@ -2310,16 +2665,14 @@ TYPED_TEST(IntegerTest, nativeVsLarge) {
 
                             // Operations that require RHS != 0:
                             case 12:
-                                EXPECT_EQ(x / y, x2 / y2); break;
+                                EXPECT_NO_THROW({ EXPECT_EQ(x / y, x2 / y2); });
+                                break;
                             case 13:
-                                EXPECT_EQ(x % y, x2 % y2); break;
+                                EXPECT_NO_THROW({ EXPECT_EQ(x % y, x2 % y2); });
+                                break;
                             case 14:
-                                {
-                                    auto [q, r] = x.divisionAlg(y);
-                                    auto [q2, r2] = x2.divisionAlg(y2);
-                                    EXPECT_EQ(q, q2);
-                                    EXPECT_EQ(r, r2);
-                                }
+                                EXPECT_NO_THROW({ EXPECT_EQ(x.divisionAlg(y),
+                                    x2.divisionAlg(y2)); });
                                 break;
                         }
                     }
@@ -2328,3 +2681,1345 @@ TYPED_TEST(IntegerTest, nativeVsLarge) {
         }
     }
 }
+
+template <ArbitraryPrecisionInteger IntegerType, CppInteger Native>
+static void verifyCppInteger(Native native) {
+    // Test construction, assignment and various conversions to/from the given
+    // native C++ integer.
+
+    using ReginaNative = regina::NativeInteger<sizeof(Native)>;
+
+    // SCOPED_TRACE_INTEGER computes regina::toString(), but we need this
+    // ourselves also - try to avoid computing it twice.
+    std::string str = regina::toString(native);
+    SCOPED_TRACE_STDSTRING(str);
+    {
+        // Since we've computed the string version of native, this is probably
+        // a good spot to check valueOf().
+        Native dest;
+        EXPECT_TRUE(regina::valueOf(str, dest));
+        EXPECT_EQ(dest, native);
+    }
+
+    // Construction from Native:
+    IntegerType large(native);
+    EXPECT_EQ(large.str(), str);
+    EXPECT_EQ(large, native);
+    {
+        Native extracted;
+        EXPECT_NO_THROW({ extracted = large.template safeValue<Native>(); });
+        EXPECT_EQ(extracted, native);
+    }
+
+    // Assignment from Native:
+    {
+        IntegerType assigned = 1;
+        EXPECT_EQ(assigned.str(), "1");
+        assigned = native;
+        EXPECT_EQ(assigned.str(), str);
+        EXPECT_EQ(assigned, native);
+        EXPECT_EQ(assigned, large);
+
+        Native extracted;
+        EXPECT_NO_THROW({ extracted = assigned.template safeValue<Native>(); });
+        EXPECT_EQ(extracted, native);
+    }
+    {
+        IntegerType assigned = HUGE_INTEGER;
+        EXPECT_EQ(assigned.str(), HUGE_INTEGER);
+        assigned = native;
+        EXPECT_EQ(assigned.str(), str);
+        EXPECT_EQ(assigned, native);
+        EXPECT_EQ(assigned, large);
+
+        Native extracted;
+        EXPECT_NO_THROW({ extracted = assigned.template safeValue<Native>(); });
+        EXPECT_EQ(extracted, native);
+    }
+
+    // Construction and assignment from regina's NativeInteger class:
+    if constexpr (regina::is_signed_cpp_integer_v<Native>) {
+        ReginaNative n(native);
+        EXPECT_EQ(n, native);
+        EXPECT_EQ(n.str(), str);
+        {
+            std::ostringstream s;
+            s << n;
+            EXPECT_EQ(s.str(), str);
+        }
+
+        {
+            IntegerType a(n);
+            EXPECT_EQ(a.str(), str);
+            EXPECT_EQ(a, native);
+            EXPECT_EQ(a, n);
+
+            Native extracted;
+            EXPECT_NO_THROW({ extracted = a.template safeValue<Native>(); });
+            EXPECT_EQ(extracted, native);
+        }
+        {
+            IntegerType b = 7;
+            EXPECT_EQ(b.str(), "7");
+            b = n;
+            EXPECT_EQ(b.str(), str);
+            EXPECT_EQ(b, native);
+            EXPECT_EQ(b, n);
+
+            Native extracted;
+            EXPECT_NO_THROW({ extracted = b.template safeValue<Native>(); });
+            EXPECT_EQ(extracted, native);
+        }
+    }
+
+    // Comparisons:
+    {
+        static constexpr Native minNative = std::numeric_limits<Native>::min();
+        static constexpr Native maxNative = std::numeric_limits<Native>::max();
+
+        EXPECT_EQ(large, native);
+        EXPECT_NE(large, static_cast<Native>(native + 1));
+        if (native != maxNative) {
+            EXPECT_LT(large, static_cast<Native>(native + 1));
+            EXPECT_GT(static_cast<Native>(native + 1), large);
+        }
+        EXPECT_NE(large, static_cast<Native>(native - 1));
+        if (native != minNative) {
+            EXPECT_GT(large, static_cast<Native>(native - 1));
+            EXPECT_LT(static_cast<Native>(native - 1), large);
+        }
+        if (native > 0) {
+            EXPECT_NE(large, static_cast<Native>(native / 2));
+            EXPECT_GT(large, static_cast<Native>(native / 2));
+        } else if (native < 0) {
+            EXPECT_NE(large, static_cast<Native>(native / 2));
+            EXPECT_LT(large, static_cast<Native>(native / 2));
+        }
+
+        EXPECT_NE(large, static_cast<Native>(native ^ Native(1)));
+        if (native % 2 == 0)
+            EXPECT_LT(large, static_cast<Native>(native ^ Native(1)));
+        else
+            EXPECT_GT(large, static_cast<Native>(native ^ Native(1)));
+
+        static constexpr Native firstBit =
+            static_cast<Native>(Native(1) << (sizeof(Native) * 8 - 1));
+        if constexpr (regina::is_signed_cpp_integer_v<Native>) {
+            EXPECT_NE(large, static_cast<Native>(native ^ firstBit));
+            if (native >= 0)
+                EXPECT_GT(large, static_cast<Native>(native ^ firstBit));
+            else
+                EXPECT_LT(large, static_cast<Native>(native ^ firstBit));
+
+            if (native != 0 && native != firstBit) {
+                EXPECT_NE(large, static_cast<Native>(-native));
+                if (native > 0)
+                    EXPECT_GT(large, static_cast<Native>(-native));
+                else
+                    EXPECT_LT(large, static_cast<Native>(-native));
+            }
+        } else {
+            EXPECT_NE(large, static_cast<Native>(native ^ firstBit));
+            if (native & firstBit)
+                EXPECT_GT(large, static_cast<Native>(native ^ firstBit));
+            else
+                EXPECT_LT(large, static_cast<Native>(native ^ firstBit));
+        }
+
+        // Do this all again, but with regina::NativeInteger (which is always
+        // a signed type).
+        if constexpr (regina::is_signed_cpp_integer_v<Native>) {
+            EXPECT_EQ(large, ReginaNative(native));
+            EXPECT_NE(large, ReginaNative(native + 1));
+            if (native != maxNative) {
+                EXPECT_LT(large, ReginaNative(native + 1));
+                EXPECT_GT(ReginaNative(native + 1), large);
+            }
+            EXPECT_NE(large, ReginaNative(native - 1));
+            if (native != minNative) {
+                EXPECT_GT(large, ReginaNative(native - 1));
+                EXPECT_LT(ReginaNative(native - 1), large);
+            }
+            if (native > 0) {
+                EXPECT_NE(large, ReginaNative(native / 2));
+                EXPECT_GT(large, ReginaNative(native / 2));
+            } else if (native < 0) {
+                EXPECT_NE(large, ReginaNative(native / 2));
+                EXPECT_LT(large, ReginaNative(native / 2));
+            }
+
+            EXPECT_NE(large, ReginaNative(native ^ Native(1)));
+            if (native % 2 == 0)
+                EXPECT_LT(large, ReginaNative(native ^ Native(1)));
+            else
+                EXPECT_GT(large, ReginaNative(native ^ Native(1)));
+
+            EXPECT_NE(large, ReginaNative(native ^ firstBit));
+            if (native >= 0)
+                EXPECT_GT(large, ReginaNative(native ^ firstBit));
+            else
+                EXPECT_LT(large, ReginaNative(native ^ firstBit));
+
+            if (native != 0 && native != firstBit) {
+                EXPECT_NE(large, ReginaNative(-native));
+                if (native > 0)
+                    EXPECT_GT(large, ReginaNative(-native));
+                else
+                    EXPECT_LT(large, ReginaNative(-native));
+            }
+        }
+    }
+}
+
+template <ArbitraryPrecisionInteger IntegerType, UnsignedCppInteger Native>
+static void verifyCppIntegerType() {
+    SCOPED_TRACE_TYPE(Native);
+
+    using Limits = NativeUnsignedLimits<Native>;
+    Limits::verify();
+
+    verifyCppInteger<IntegerType, Native>(0);
+    verifyCppInteger<IntegerType, Native>(1);
+    verifyCppInteger<IntegerType, Native>(2);
+    verifyCppInteger<IntegerType, Native>((Limits::max / 2) - 1);
+    verifyCppInteger<IntegerType, Native>(Limits::max / 2);
+    verifyCppInteger<IntegerType, Native>((Limits::max / 2) + 1);
+    verifyCppInteger<IntegerType, Native>(Limits::max - 2);
+    verifyCppInteger<IntegerType, Native>(Limits::max - 1);
+    verifyCppInteger<IntegerType, Native>(Limits::max);
+
+    if constexpr (sizeof(Native) > sizeof(int)) {
+        Native sMax = INT_MAX;
+        Native uMax = UINT_MAX;
+        verifyCppInteger<IntegerType, Native>(sMax - 1);
+        verifyCppInteger<IntegerType, Native>(sMax);
+        verifyCppInteger<IntegerType, Native>(sMax + 1);
+        verifyCppInteger<IntegerType, Native>(uMax - 1);
+        verifyCppInteger<IntegerType, Native>(uMax);
+        verifyCppInteger<IntegerType, Native>(uMax + 1);
+    }
+    if constexpr (sizeof(Native) > sizeof(long)) {
+        Native sMax = LONG_MAX;
+        Native uMax = ULONG_MAX;
+        verifyCppInteger<IntegerType, Native>(sMax - 1);
+        verifyCppInteger<IntegerType, Native>(sMax);
+        verifyCppInteger<IntegerType, Native>(sMax + 1);
+        verifyCppInteger<IntegerType, Native>(uMax - 1);
+        verifyCppInteger<IntegerType, Native>(uMax);
+        verifyCppInteger<IntegerType, Native>(uMax + 1);
+    }
+    if constexpr (sizeof(Native) > sizeof(long long)) {
+        Native sMax = LLONG_MAX;
+        Native uMax = ULLONG_MAX;
+        verifyCppInteger<IntegerType, Native>(sMax - 1);
+        verifyCppInteger<IntegerType, Native>(sMax);
+        verifyCppInteger<IntegerType, Native>(sMax + 1);
+        verifyCppInteger<IntegerType, Native>(uMax - 1);
+        verifyCppInteger<IntegerType, Native>(uMax);
+        verifyCppInteger<IntegerType, Native>(uMax + 1);
+    }
+}
+
+template <ArbitraryPrecisionInteger IntegerType, SignedCppInteger Native>
+static void verifyCppIntegerType() {
+    SCOPED_TRACE_TYPE(Native);
+
+    using Limits = NativeSignedLimits<Native>;
+    Limits::verify();
+
+    verifyCppInteger<IntegerType, Native>(Limits::min);
+    verifyCppInteger<IntegerType, Native>(Limits::min + 1);
+    verifyCppInteger<IntegerType, Native>(Limits::min + 2);
+    verifyCppInteger<IntegerType, Native>((Limits::min / 2) - 1);
+    verifyCppInteger<IntegerType, Native>(Limits::min / 2);
+    verifyCppInteger<IntegerType, Native>((Limits::min / 2) + 1);
+    verifyCppInteger<IntegerType, Native>(-2);
+    verifyCppInteger<IntegerType, Native>(-1);
+    verifyCppInteger<IntegerType, Native>(0);
+    verifyCppInteger<IntegerType, Native>(1);
+    verifyCppInteger<IntegerType, Native>(2);
+    verifyCppInteger<IntegerType, Native>((Limits::max / 2) - 1);
+    verifyCppInteger<IntegerType, Native>(Limits::max / 2);
+    verifyCppInteger<IntegerType, Native>((Limits::max / 2) + 1);
+    verifyCppInteger<IntegerType, Native>(Limits::max - 2);
+    verifyCppInteger<IntegerType, Native>(Limits::max - 1);
+    verifyCppInteger<IntegerType, Native>(Limits::max);
+
+    if constexpr (sizeof(Native) > sizeof(int)) {
+        Native sMin = INT_MIN;
+        Native sMax = INT_MAX;
+        Native uMax = UINT_MAX;
+        verifyCppInteger<IntegerType, Native>(-uMax - 1);
+        verifyCppInteger<IntegerType, Native>(-uMax);
+        verifyCppInteger<IntegerType, Native>(-uMax + 1);
+        verifyCppInteger<IntegerType, Native>(sMin - 1);
+        verifyCppInteger<IntegerType, Native>(sMin);
+        verifyCppInteger<IntegerType, Native>(sMin + 1);
+        verifyCppInteger<IntegerType, Native>(sMax - 1);
+        verifyCppInteger<IntegerType, Native>(sMax);
+        verifyCppInteger<IntegerType, Native>(sMax + 1);
+        verifyCppInteger<IntegerType, Native>(uMax - 1);
+        verifyCppInteger<IntegerType, Native>(uMax);
+        verifyCppInteger<IntegerType, Native>(uMax + 1);
+    }
+    if constexpr (sizeof(Native) > sizeof(long)) {
+        Native sMin = LONG_MIN;
+        Native sMax = LONG_MAX;
+        Native uMax = ULONG_MAX;
+        verifyCppInteger<IntegerType, Native>(-uMax - 1);
+        verifyCppInteger<IntegerType, Native>(-uMax);
+        verifyCppInteger<IntegerType, Native>(-uMax + 1);
+        verifyCppInteger<IntegerType, Native>(sMin - 1);
+        verifyCppInteger<IntegerType, Native>(sMin);
+        verifyCppInteger<IntegerType, Native>(sMin + 1);
+        verifyCppInteger<IntegerType, Native>(sMax - 1);
+        verifyCppInteger<IntegerType, Native>(sMax);
+        verifyCppInteger<IntegerType, Native>(sMax + 1);
+        verifyCppInteger<IntegerType, Native>(uMax - 1);
+        verifyCppInteger<IntegerType, Native>(uMax);
+        verifyCppInteger<IntegerType, Native>(uMax + 1);
+    }
+    if constexpr (sizeof(Native) > sizeof(long long)) {
+        Native sMin = LLONG_MIN;
+        Native sMax = LLONG_MAX;
+        Native uMax = ULLONG_MAX;
+        verifyCppInteger<IntegerType, Native>(-uMax - 1);
+        verifyCppInteger<IntegerType, Native>(-uMax);
+        verifyCppInteger<IntegerType, Native>(-uMax + 1);
+        verifyCppInteger<IntegerType, Native>(sMin - 1);
+        verifyCppInteger<IntegerType, Native>(sMin);
+        verifyCppInteger<IntegerType, Native>(sMin + 1);
+        verifyCppInteger<IntegerType, Native>(sMax - 1);
+        verifyCppInteger<IntegerType, Native>(sMax);
+        verifyCppInteger<IntegerType, Native>(sMax + 1);
+        verifyCppInteger<IntegerType, Native>(uMax - 1);
+        verifyCppInteger<IntegerType, Native>(uMax);
+        verifyCppInteger<IntegerType, Native>(uMax + 1);
+    }
+}
+
+TYPED_TEST(IntegerTest, cppIntegerTypes) {
+    verifyCppIntegerType<TypeParam, unsigned char>();
+    verifyCppIntegerType<TypeParam, unsigned short>();
+    verifyCppIntegerType<TypeParam, unsigned>();
+    verifyCppIntegerType<TypeParam, unsigned long>();
+    verifyCppIntegerType<TypeParam, unsigned long long>();
+    verifyCppIntegerType<TypeParam, size_t>();
+
+    verifyCppIntegerType<TypeParam, signed char>();
+    verifyCppIntegerType<TypeParam, short>();
+    verifyCppIntegerType<TypeParam, int>();
+    verifyCppIntegerType<TypeParam, long>();
+    verifyCppIntegerType<TypeParam, long long>();
+    verifyCppIntegerType<TypeParam, ssize_t>();
+
+#ifdef INT128_AVAILABLE
+    verifyCppIntegerType<TypeParam, regina::UInt128>();
+    verifyCppIntegerType<TypeParam, regina::Int128>();
+#endif
+}
+
+template <SignedCppInteger Native>
+static void verifyCppHelpers() {
+    SCOPED_TRACE_TYPE(Native);
+
+    using Limits = NativeSignedLimits<Native>;
+    using UnsignedLimits = NativeUnsignedLimits<typename Limits::Unsigned>;
+
+    EXPECT_EQ(regina::detail::negateToUnsignedType(Native(0)), 0);
+    EXPECT_EQ(regina::detail::negateToUnsignedType(Native(-1)), 1);
+    EXPECT_EQ(regina::detail::negateToUnsignedType(Native(-2)), 2);
+    EXPECT_EQ(regina::detail::negateToUnsignedType(Native(Limits::min + 2)),
+        static_cast<typename Limits::Unsigned>(Limits::max - 1));
+    EXPECT_EQ(regina::detail::negateToUnsignedType(Native(Limits::min + 1)),
+        static_cast<typename Limits::Unsigned>(Limits::max));
+    EXPECT_EQ(regina::detail::negateToUnsignedType(Limits::min),
+        UnsignedLimits::absMinSigned);
+
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::min, Limits::min),
+        0);
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max, Limits::max),
+        0);
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Native(Limits::min + 1),
+        Limits::min), 1);
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max,
+        Native(Limits::max - 1)), 1);
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max, Native(1)),
+        UnsignedLimits::maxSigned - unsigned(1));
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max, Native(0)),
+        UnsignedLimits::maxSigned);
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max, Native(-1)),
+        UnsignedLimits::maxSigned + unsigned(1));
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Native(-1), Limits::min),
+        UnsignedLimits::absMinSigned - unsigned(1));
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Native(0), Limits::min),
+        UnsignedLimits::absMinSigned);
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Native(1), Limits::min),
+        UnsignedLimits::absMinSigned + unsigned(1));
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Native(Limits::max - 1),
+        Native(Limits::min + 1)), UnsignedLimits::max - unsigned(2));
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Native(Limits::max - 1),
+        Limits::min), UnsignedLimits::max - unsigned(1));
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max,
+        Native(Limits::min + 1)), UnsignedLimits::max - unsigned(1));
+    EXPECT_EQ(regina::detail::differenceAsUnsigned(Limits::max, Limits::min),
+        UnsignedLimits::max);
+}
+
+TYPED_TEST(IntegerTest, cppHelpers) {
+    // These tests do not depend on TypeParam at all; however, the worst that
+    // happens is that we run these tests twice.
+    verifyCppHelpers<signed char>();
+    verifyCppHelpers<short>();
+    verifyCppHelpers<int>();
+    verifyCppHelpers<long>();
+    verifyCppHelpers<long long>();
+    verifyCppHelpers<ssize_t>();
+#ifdef INT128_AVAILABLE
+    verifyCppHelpers<regina::Int128>();
+#endif
+}
+
+template <ArbitraryPrecisionInteger IntegerType, CppInteger Native>
+static void verifyCppIntegerPlusMinus(IntegerType lhs, Native rhs,
+        std::optional<IntegerType> expected = std::nullopt) {
+    IntegerType rhsAsRegina(rhs); // because we cannot print 128-bit ints
+    SCOPED_TRACE_REGINA(lhs);
+    SCOPED_TRACE_REGINA(rhsAsRegina);
+
+    // Compute the sum using pure GMP arithmetic.
+    IntegerType sum = gmpInteger(lhs) + gmpInteger(std::move(rhsAsRegina));
+    SCOPED_TRACE_REGINA(sum);
+    // We must not use rhsAsRegina again from here on.
+    // Instead just use rhs, which is the native C++ integer.
+
+    lhs.tryReduce();
+    sum.tryReduce();
+    if (expected)
+        EXPECT_EQ(sum, *expected);
+
+    {
+        int leftSign = lhs.sign();
+        if (leftSign > 0) EXPECT_LT(rhs, sum);
+        else if (leftSign < 0) EXPECT_GT(rhs, sum);
+        else EXPECT_EQ(rhs, sum);
+    }
+    if (lhs.isInfinite()) {
+        EXPECT_TRUE(sum.isInfinite());
+        EXPECT_EQ(lhs, sum);
+    } else if constexpr (regina::is_signed_cpp_integer_v<Native>) {
+        EXPECT_FALSE(sum.isInfinite());
+        if (rhs > 0) EXPECT_LT(lhs, sum);
+        else if (rhs < 0) EXPECT_GT(lhs, sum);
+        else EXPECT_EQ(lhs, sum);
+    } else {
+        EXPECT_FALSE(sum.isInfinite());
+        if (rhs > 0) EXPECT_LT(lhs, sum);
+        else EXPECT_EQ(lhs, sum);
+    }
+
+    {
+        IntegerType x = lhs + rhs;
+        EXPECT_EQ(x, sum);
+        EXPECT_EQ(x.isNative(), lhs.isNative() && sum.isNative());
+    }
+    {
+        IntegerType x = rhs + lhs;
+        EXPECT_EQ(x, sum);
+        EXPECT_EQ(x.isNative(), lhs.isNative() && sum.isNative());
+    }
+    {
+        IntegerType x = sum - rhs;
+        EXPECT_EQ(x, lhs);
+        EXPECT_EQ(x.isNative(), lhs.isNative() && sum.isNative());
+    }
+    {
+        IntegerType x = lhs;
+        x += rhs;
+        EXPECT_EQ(x, sum);
+        EXPECT_EQ(x.isNative(), lhs.isNative() && sum.isNative());
+    }
+    {
+        IntegerType x = sum;
+        x -= rhs;
+        EXPECT_EQ(x, lhs);
+        EXPECT_EQ(x.isNative(), lhs.isNative() && sum.isNative());
+    }
+}
+
+template <ArbitraryPrecisionInteger IntegerType, SignedCppInteger Native>
+static void verifyCppIntegerPlusMinus() {
+    SCOPED_TRACE_TYPE(Native);
+
+    using Limits = NativeSignedLimits<Native>;
+    using UnsignedLimits = NativeUnsignedLimits<typename Limits::Unsigned>;
+    Limits::verify();
+    UnsignedLimits::verify();
+
+    for (const auto& x : UnsignedLimits::template reginaCases<IntegerType>)
+        for (auto y : Limits::nativeCases)
+            verifyCppIntegerPlusMinus<IntegerType, Native>(x, y);
+
+
+    if constexpr (sizeof(Native) >= sizeof(long)) {
+        // Probe the boundaries between native vs large representation.
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            IntegerType(LONG_MIN) - 1, LONG_MIN, -IntegerType(ULONG_MAX) - 2);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MIN, LONG_MIN, -IntegerType(ULONG_MAX) - 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MIN, LONG_MIN + 1, -IntegerType(ULONG_MAX));
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MIN + 1, LONG_MIN, -IntegerType(ULONG_MAX));
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MIN, -1, -IntegerType((ULONG_MAX >> 1) + 2));
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            -1, LONG_MIN, -IntegerType((ULONG_MAX >> 1) + 2));
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            0, LONG_MIN, LONG_MIN);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MIN, 0, LONG_MIN);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            1, LONG_MIN, LONG_MIN + 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MIN, 1, LONG_MIN + 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MIN + 1, 0, LONG_MIN + 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            0, LONG_MIN + 1, LONG_MIN + 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MIN, LONG_MAX, -1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MAX, LONG_MIN, -1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MIN + 1, LONG_MAX, 0);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MAX, LONG_MIN + 1, 0);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            -1, LONG_MAX, LONG_MAX - 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MAX, -1, LONG_MAX - 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MAX - 1, 0, LONG_MAX - 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            0, LONG_MAX - 1, LONG_MAX - 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            0, LONG_MAX, LONG_MAX);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MAX, 0, LONG_MAX);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MAX, 1, (ULONG_MAX >> 1) + 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            1, LONG_MAX, (ULONG_MAX >> 1) + 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MAX, LONG_MAX, ULONG_MAX - 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            IntegerType(LONG_MAX) + 1, LONG_MAX, ULONG_MAX);
+    }
+
+    if constexpr (IntegerType::supportsInfinity) {
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            IntegerType::infinity, Limits::min, IntegerType::infinity);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            IntegerType::infinity, Limits::max, IntegerType::infinity);
+    }
+}
+
+template <ArbitraryPrecisionInteger IntegerType, UnsignedCppInteger Native>
+static void verifyCppIntegerPlusMinus() {
+    SCOPED_TRACE_TYPE(Native);
+
+    using Limits = NativeUnsignedLimits<Native>;
+    using SignedLimits = NativeSignedLimits<typename Limits::Signed>;
+    Limits::verify();
+    SignedLimits::verify();
+
+    for (const auto& x : Limits::template reginaCases<IntegerType>)
+        for (auto y : Limits::nativeCases)
+            verifyCppIntegerPlusMinus<IntegerType, Native>(x, y);
+
+    if constexpr (sizeof(Native) >= sizeof(long)) {
+        // Probe the boundaries between native vs large representation.
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MIN, 0, LONG_MIN);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MIN + 1, 0, LONG_MIN + 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MIN, 1, LONG_MIN + 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MIN, LONG_MAX, -1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MIN + 1, LONG_MAX, 0);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MIN, Native(LONG_MAX) + 1, 0);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MIN + 1, Native(LONG_MAX) + 1, 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            -1, LONG_MAX, LONG_MAX - 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MAX - 1, 0, LONG_MAX - 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            0, LONG_MAX, LONG_MAX);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MAX, 0, LONG_MAX);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MIN, ULONG_MAX, LONG_MAX);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MAX, 1, Native(LONG_MAX) + 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            1, LONG_MAX, Native(LONG_MAX) + 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            0, Native(LONG_MAX) + 1, Native(LONG_MAX) + 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MIN + 1, ULONG_MAX, Native(LONG_MAX) + 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MAX, LONG_MAX, ULONG_MAX - 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            -1, ULONG_MAX, ULONG_MAX - 1);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            IntegerType(LONG_MAX) + 1, LONG_MAX, ULONG_MAX);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            LONG_MAX, Native(LONG_MAX) + 1, ULONG_MAX);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            IntegerType(LONG_MAX) + 1, Native(LONG_MAX) + 1,
+            IntegerType(ULONG_MAX) + 1);
+    }
+
+    if constexpr (IntegerType::supportsInfinity) {
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            IntegerType::infinity, 0, IntegerType::infinity);
+        verifyCppIntegerPlusMinus<IntegerType, Native>(
+            IntegerType::infinity, Limits::max, IntegerType::infinity);
+    }
+}
+
+TYPED_TEST(IntegerTest, cppIntegerPlusMinus) {
+    verifyCppIntegerPlusMinus<TypeParam, unsigned char>();
+    verifyCppIntegerPlusMinus<TypeParam, unsigned short>();
+    verifyCppIntegerPlusMinus<TypeParam, unsigned>();
+    verifyCppIntegerPlusMinus<TypeParam, unsigned long>();
+    verifyCppIntegerPlusMinus<TypeParam, unsigned long long>();
+    verifyCppIntegerPlusMinus<TypeParam, size_t>();
+
+    verifyCppIntegerPlusMinus<TypeParam, signed char>();
+    verifyCppIntegerPlusMinus<TypeParam, short>();
+    verifyCppIntegerPlusMinus<TypeParam, int>();
+    verifyCppIntegerPlusMinus<TypeParam, long>();
+    verifyCppIntegerPlusMinus<TypeParam, long long>();
+    verifyCppIntegerPlusMinus<TypeParam, ssize_t>();
+
+#ifdef INT128_AVAILABLE
+    verifyCppIntegerPlusMinus<TypeParam, regina::UInt128>();
+    verifyCppIntegerPlusMinus<TypeParam, regina::Int128>();
+#endif
+}
+
+template <ArbitraryPrecisionInteger IntegerType, CppInteger Native>
+static void verifyCppIntegerMultiplyDivide(IntegerType lhs, Native rhs,
+        std::optional<IntegerType> expected = std::nullopt) {
+    IntegerType rhsAsRegina(rhs); // because we cannot print 128-bit ints
+    SCOPED_TRACE_REGINA(lhs);
+    SCOPED_TRACE_REGINA(rhsAsRegina);
+
+    // Compute the product using pure GMP arithmetic.
+    IntegerType product = gmpInteger(lhs) * gmpInteger(std::move(rhsAsRegina));
+    SCOPED_TRACE_REGINA(product);
+    // We must not use rhsAsRegina again from here on.
+    // Instead just use rhs, which is the native C++ integer.
+
+    lhs.tryReduce();
+    product.tryReduce();
+    if (expected)
+        EXPECT_EQ(product, *expected);
+
+    if (lhs.isInfinite()) {
+        // Note: LargeInteger specifies that infinity * 0 == infinity.
+        EXPECT_TRUE(product.isInfinite());
+        EXPECT_EQ(lhs, product);
+    } else if constexpr (regina::is_unsigned_cpp_integer_v<Native>) {
+        EXPECT_FALSE(product.isInfinite());
+        EXPECT_EQ(product.sign(), rhs == 0 ? 0 : lhs.sign());
+    } else {
+        EXPECT_FALSE(product.isInfinite());
+        EXPECT_EQ(product.sign(),
+            rhs == 0 ? 0 : rhs > 0 ? lhs.sign() : -lhs.sign());
+    }
+
+    // The following tests identify not whether the result _could_ use a
+    // native representation, but whether the Integer/LargeInteger algorithms
+    // expect to actually _use_ one.
+    //
+    // For the following cases, the product algorithm detects overflows
+    // precisely:
+    // - (already using native rep) * (native representable)
+    // - (already using native rep) * (any unsigned long)
+    //
+    bool productShouldBeNative = (lhs.isNative() && product.isNative());
+    //
+    // At this point, we have not considered at cases where (! lhs.isNative()).
+    // Moreover, if sizeof(Native) > sizeof(long) then we have picked up some
+    // additional cases that were not intended:
+    // - 0 * (not native representable), where the algorithm uses a native 0;
+    // - (-1) * |LONG_MIN|, where the algorithm uses a GMP representation.
+    // We handle these extra cases in the subsequent tests below.
+    //
+    if constexpr (sizeof(Native) <= sizeof(long)) {
+        // In this case, even if (! lhs.isNative()), the algorithm still
+        // optimises to use a native representation for the case rhs == 0.
+        productShouldBeNative |= (rhs == 0 && ! lhs.isInfinite());
+    } else {
+        productShouldBeNative |= lhs.isZero();
+        productShouldBeNative &= ! (lhs == -1 && product == LONG_MIN);
+    }
+
+    bool quotientShouldBeNative = product.isNative() &&
+        ! (product == LONG_MIN && rhs == -1);
+
+    {
+        IntegerType x = lhs * rhs;
+        EXPECT_EQ(x, product);
+        EXPECT_EQ(x.isNative(), productShouldBeNative);
+    }
+    {
+        IntegerType x = rhs * lhs;
+        EXPECT_EQ(x, product);
+        EXPECT_EQ(x.isNative(), productShouldBeNative);
+    }
+    if (rhs != 0 && ! lhs.isInfinite()) {
+        IntegerType x = product.divExact(rhs);
+        EXPECT_EQ(x, lhs);
+        EXPECT_EQ(x.isNative(), quotientShouldBeNative);
+    }
+    {
+        IntegerType x = lhs;
+        x *= rhs;
+        EXPECT_EQ(x, product);
+        EXPECT_EQ(x.isNative(), productShouldBeNative);
+    }
+    if (rhs != 0 && ! lhs.isInfinite()) {
+        IntegerType x = product;
+        x.divByExact(rhs);
+        EXPECT_EQ(x, lhs);
+        EXPECT_EQ(x.isNative(), quotientShouldBeNative);
+    }
+}
+
+template <ArbitraryPrecisionInteger IntegerType, SignedCppInteger Native>
+static void verifyCppIntegerMultiplyDivide() {
+    SCOPED_TRACE_TYPE(Native);
+
+    using Limits = NativeSignedLimits<Native>;
+    using Unsigned = typename Limits::Unsigned;
+    using UnsignedLimits = NativeUnsignedLimits<Unsigned>;
+    Limits::verify();
+    UnsignedLimits::verify();
+
+    for (const auto& x : UnsignedLimits::template reginaCases<IntegerType>) {
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, -2, -x - x);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, -1, -x);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, 0, 0);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, 1, x);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, 2, x + x);
+
+        for (auto y : Limits::nativeCases)
+            verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, y);
+    }
+
+    if constexpr (sizeof(Native) >= sizeof(long)) {
+        // Probe the boundaries between native vs large representation.
+        Native rootBit = (Native(1) << (4 * sizeof(long)));
+
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN, 2, -IntegerType(ULONG_MAX) - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, LONG_MIN, -IntegerType(ULONG_MAX) - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            Unsigned(LONG_MAX) + 1, -2, -IntegerType(ULONG_MAX) - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN + 1, 2, -IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, LONG_MIN + 1, -IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MAX, -2, -IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, LONG_MAX, -IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -(rootBit + 1), rootBit / 2, IntegerType(LONG_MIN) - (rootBit / 2));
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit + 1, -rootBit / 2, IntegerType(LONG_MIN) - (rootBit / 2));
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -(rootBit / 2), rootBit + 1, IntegerType(LONG_MIN) - (rootBit / 2));
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit / 2, -(rootBit + 1), IntegerType(LONG_MIN) - (rootBit / 2));
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -(rootBit), (rootBit / 2) + 1, IntegerType(LONG_MIN) - rootBit);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, -((rootBit / 2) + 1), IntegerType(LONG_MIN) - rootBit);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -((rootBit / 2) + 1), rootBit, IntegerType(LONG_MIN) - rootBit);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            (rootBit / 2) + 1, -rootBit, IntegerType(LONG_MIN) - rootBit);
+
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            (LONG_MIN / 2) - 1, 2, IntegerType(LONG_MIN) - 2);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, (LONG_MIN / 2) - 1, IntegerType(LONG_MIN) - 2);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            (LONG_MAX / 2) + 2, -2, IntegerType(LONG_MIN) - 2);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, (LONG_MAX / 2) + 2, IntegerType(LONG_MIN) - 2);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN / 2, 2, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, LONG_MIN / 2, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            (LONG_MAX / 2) + 1, -2, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, (LONG_MAX / 2) + 1, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            Unsigned(LONG_MAX) + 1, -1, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            1, LONG_MIN, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -rootBit, rootBit / 2, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, -(rootBit / 2), LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -(rootBit / 2), rootBit, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit / 2, -rootBit, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -1, LONG_MAX, LONG_MIN + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, (rootBit / 2) - 1, LONG_MAX - rootBit + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -rootBit, -(rootBit / 2) + 1, LONG_MAX - rootBit + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            (rootBit / 2) - 1, rootBit, LONG_MAX - rootBit + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -(rootBit / 2) + 1, -rootBit, LONG_MAX - rootBit + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit - 1, rootBit / 2, LONG_MAX - (rootBit / 2) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -rootBit + 1, -rootBit / 2, LONG_MAX - (rootBit / 2) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit / 2, rootBit - 1, LONG_MAX - (rootBit / 2) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -rootBit / 2, -rootBit + 1, LONG_MAX - (rootBit / 2) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MAX / 2, 2, LONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN / 2 + 1, -2, LONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, LONG_MAX / 2, LONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, LONG_MIN / 2 + 1, LONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            1, LONG_MAX, LONG_MAX);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -1, LONG_MIN + 1, LONG_MAX);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MAX / 2 + 1, 2, Unsigned(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN / 2, -2, Unsigned(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, LONG_MAX / 2 + 1, Unsigned(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, LONG_MIN / 2, Unsigned(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, rootBit / 2, Unsigned(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -rootBit, -rootBit / 2, Unsigned(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit / 2, rootBit, Unsigned(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -rootBit / 2, -rootBit, Unsigned(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -1, LONG_MIN, Unsigned(LONG_MAX)+ 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, rootBit - 1, ULONG_MAX - Unsigned(rootBit) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -rootBit, -rootBit + 1, ULONG_MAX - Unsigned(rootBit) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit - 1, rootBit, ULONG_MAX - Unsigned(rootBit) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -rootBit + 1, -rootBit, ULONG_MAX - Unsigned(rootBit) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MAX, 2, ULONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN + 1, -2, ULONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, LONG_MAX, ULONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, LONG_MIN + 1, ULONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -IntegerType(ULONG_MAX), -1, ULONG_MAX);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            Unsigned(LONG_MAX) + 1, 2, IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN, -2, IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, LONG_MIN, IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, rootBit, IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -rootBit, -rootBit, IntegerType(ULONG_MAX) + 1);
+    }
+
+    if constexpr (IntegerType::supportsInfinity) {
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            IntegerType::infinity, Limits::min, IntegerType::infinity);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            IntegerType::infinity, Limits::max, IntegerType::infinity);
+    }
+}
+
+template <ArbitraryPrecisionInteger IntegerType, UnsignedCppInteger Native>
+static void verifyCppIntegerMultiplyDivide() {
+    SCOPED_TRACE_TYPE(Native);
+
+    using Limits = NativeUnsignedLimits<Native>;
+    using Signed = typename Limits::Signed;
+    using SignedLimits = NativeSignedLimits<Signed>;
+    Limits::verify();
+    SignedLimits::verify();
+
+    for (const auto& x : Limits::template reginaCases<IntegerType>) {
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, 0, 0);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, 1, x);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, 2, x + x);
+
+        for (auto y : Limits::nativeCases)
+            verifyCppIntegerMultiplyDivide<IntegerType, Native>(x, y);
+    }
+
+    if constexpr (sizeof(Native) >= sizeof(long)) {
+        // Probe the boundaries between native vs large representation.
+        Native rootBit = (Native(1) << (4 * sizeof(long)));
+
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN, 2, -IntegerType(ULONG_MAX) - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, Native(LONG_MAX) + 1, -IntegerType(ULONG_MAX) - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN + 1, 2, -IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, LONG_MAX, -IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -Signed(rootBit + 1), rootBit / 2,
+                IntegerType(LONG_MIN) - (rootBit / 2));
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -Signed(rootBit / 2), rootBit + 1,
+                IntegerType(LONG_MIN) - (rootBit / 2));
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -Signed(rootBit), (rootBit / 2) + 1,
+                IntegerType(LONG_MIN) - rootBit);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -Signed((rootBit / 2) + 1), rootBit,
+                IntegerType(LONG_MIN) - rootBit);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            (LONG_MIN / 2) - 1, 2, IntegerType(LONG_MIN) - 2);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, (LONG_MAX / 2) + 2, IntegerType(LONG_MIN) - 2);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MIN / 2, 2, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -2, (LONG_MAX / 2) + 1, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -1, Native(LONG_MAX) + 1, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -Signed(rootBit), rootBit / 2, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            -Signed(rootBit / 2), rootBit, LONG_MIN);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, (rootBit / 2) - 1, LONG_MAX - rootBit + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            (rootBit / 2) - 1, rootBit, LONG_MAX - rootBit + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit - 1, rootBit / 2, LONG_MAX - (rootBit / 2) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit / 2, rootBit - 1, LONG_MAX - (rootBit / 2) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MAX / 2, 2, LONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, LONG_MAX / 2, LONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            1, LONG_MAX, LONG_MAX);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            LONG_MAX / 2 + 1, 2, Native(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, LONG_MAX / 2 + 1, Native(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, rootBit / 2, Native(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit / 2, rootBit, Native(LONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, rootBit - 1, ULONG_MAX - rootBit + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit - 1, rootBit, ULONG_MAX - rootBit + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            ULONG_MAX / 2, 2, ULONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, ULONG_MAX / 2, ULONG_MAX - 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            1, ULONG_MAX, ULONG_MAX);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            ULONG_MAX / 2 + 1, 2, IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            2, ULONG_MAX / 2 + 1, IntegerType(ULONG_MAX) + 1);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            rootBit, rootBit, IntegerType(ULONG_MAX) + 1);
+    }
+
+    if constexpr (IntegerType::supportsInfinity) {
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            IntegerType::infinity, 0, IntegerType::infinity);
+        verifyCppIntegerMultiplyDivide<IntegerType, Native>(
+            IntegerType::infinity, Limits::max, IntegerType::infinity);
+    }
+}
+
+TYPED_TEST(IntegerTest, cppIntegerMultiplyDivide) {
+    verifyCppIntegerMultiplyDivide<TypeParam, unsigned char>();
+    verifyCppIntegerMultiplyDivide<TypeParam, unsigned short>();
+    verifyCppIntegerMultiplyDivide<TypeParam, unsigned>();
+    verifyCppIntegerMultiplyDivide<TypeParam, unsigned long>();
+    verifyCppIntegerMultiplyDivide<TypeParam, unsigned long long>();
+    verifyCppIntegerMultiplyDivide<TypeParam, size_t>();
+
+    verifyCppIntegerMultiplyDivide<TypeParam, signed char>();
+    verifyCppIntegerMultiplyDivide<TypeParam, short>();
+    verifyCppIntegerMultiplyDivide<TypeParam, int>();
+    verifyCppIntegerMultiplyDivide<TypeParam, long>();
+    verifyCppIntegerMultiplyDivide<TypeParam, long long>();
+    verifyCppIntegerMultiplyDivide<TypeParam, ssize_t>();
+
+#ifdef INT128_AVAILABLE
+    verifyCppIntegerMultiplyDivide<TypeParam, regina::UInt128>();
+    verifyCppIntegerMultiplyDivide<TypeParam, regina::Int128>();
+#endif
+}
+
+template <ArbitraryPrecisionInteger IntegerType, CppInteger Native>
+static void verifyCppIntegerDivMod(IntegerType lhs, Native rhs) {
+    SCOPED_TRACE_REGINA(lhs);
+    SCOPED_TRACE_REGINA(IntegerType(rhs)); // to support 128-bit ints
+
+    if (lhs.isInfinite()) {
+        {
+            IntegerType q = lhs / rhs;
+            EXPECT_TRUE(q.isInfinite());
+        }
+        {
+            IntegerType q = lhs;
+            q /= rhs;
+            EXPECT_TRUE(q.isInfinite());
+        }
+
+        if (rhs == 0) {
+            EXPECT_THROW({ lhs % rhs; }, regina::DivisionByZero);
+            {
+                IntegerType q = lhs;
+                EXPECT_THROW({ q %= rhs; }, regina::DivisionByZero);
+            }
+        } else {
+            {
+                IntegerType q = lhs % rhs;
+                EXPECT_EQ(q, 0);
+            }
+            {
+                IntegerType q = lhs;
+                q %= rhs;
+                EXPECT_EQ(q, 0);
+            }
+        }
+
+        return;
+    }
+
+    if (rhs == 0) {
+        if constexpr (IntegerType::supportsInfinity) {
+            {
+                IntegerType q = lhs / rhs;
+                EXPECT_TRUE(q.isInfinite());
+            }
+            {
+                IntegerType q = lhs;
+                q /= rhs;
+                EXPECT_TRUE(q.isInfinite());
+            }
+        } else {
+            {
+                EXPECT_THROW({ lhs / rhs; }, regina::DivisionByZero);
+            }
+            {
+                IntegerType q = lhs;
+                EXPECT_THROW({ q /= rhs; }, regina::DivisionByZero);
+            }
+        }
+        EXPECT_THROW({ lhs % rhs; }, regina::DivisionByZero);
+        {
+            IntegerType q = lhs;
+            EXPECT_THROW({ q %= rhs; }, regina::DivisionByZero);
+        }
+        return;
+    }
+
+    // From here on: lhs is finite, and rhs ≠ 0.
+
+    lhs.tryReduce();
+
+    // Division should round towards zero, and mod (when non-zero) should take
+    // the sign of lhs.  Note: |rhs| might not fit into Native, and for an
+    // unsigned native type, -|rhs| definitely might not fit into Native.
+    int lhsSign = lhs.sign();
+    IntegerType rhsAbs = IntegerType(rhs).abs();
+    {
+        IntegerType q = lhs / rhs;
+        IntegerType r = lhs % rhs;
+
+        if (lhsSign > 0) {
+            EXPECT_GE(r, 0);
+            EXPECT_LT(r, rhsAbs);
+        } else if (lhsSign < 0) {
+            EXPECT_LE(r, 0);
+            EXPECT_GT(r, -rhsAbs);
+        } else {
+            EXPECT_EQ(q, 0);
+            EXPECT_EQ(r, 0);
+        }
+
+        SCOPED_TRACE_REGINA(q);
+        SCOPED_TRACE_REGINA(r);
+        EXPECT_EQ(q * rhs + r, lhs);
+    }
+    {
+        IntegerType q = lhs;
+        IntegerType r = lhs;
+        q /= rhs;
+        r %= rhs;
+
+        if (lhsSign > 0) {
+            EXPECT_GE(r, 0);
+            EXPECT_LT(r, rhsAbs);
+        } else if (lhsSign < 0) {
+            EXPECT_LE(r, 0);
+            EXPECT_GT(r, -rhsAbs);
+        } else {
+            EXPECT_EQ(q, 0);
+            EXPECT_EQ(r, 0);
+        }
+
+        SCOPED_TRACE_REGINA(q);
+        SCOPED_TRACE_REGINA(r);
+        EXPECT_EQ(q * rhs + r, lhs);
+    }
+}
+
+template <ArbitraryPrecisionInteger IntegerType, SignedCppInteger Native>
+static void verifyCppIntegerDivMod() {
+    SCOPED_TRACE_TYPE(Native);
+
+    using Limits = NativeSignedLimits<Native>;
+    using Unsigned = typename Limits::Unsigned;
+    using UnsignedLimits = NativeUnsignedLimits<Unsigned>;
+    Limits::verify();
+    UnsignedLimits::verify();
+
+    for (const auto& x : UnsignedLimits::template reginaCases<IntegerType>)
+        for (auto y : Limits::nativeCases)
+            verifyCppIntegerDivMod<IntegerType, Native>(x, y);
+
+    if constexpr (IntegerType::supportsInfinity) {
+        verifyCppIntegerDivMod<IntegerType, Native>(
+            IntegerType::infinity, Limits::min);
+        verifyCppIntegerDivMod<IntegerType, Native>(
+            IntegerType::infinity, Limits::max);
+    }
+}
+
+template <ArbitraryPrecisionInteger IntegerType, UnsignedCppInteger Native>
+static void verifyCppIntegerDivMod() {
+    SCOPED_TRACE_TYPE(Native);
+
+    using Limits = NativeUnsignedLimits<Native>;
+    using Signed = typename Limits::Signed;
+    using SignedLimits = NativeSignedLimits<Signed>;
+    Limits::verify();
+    SignedLimits::verify();
+
+    for (const auto& x : Limits::template reginaCases<IntegerType>)
+        for (auto y : Limits::nativeCases)
+            verifyCppIntegerDivMod<IntegerType, Native>(x, y);
+
+    if constexpr (IntegerType::supportsInfinity) {
+        verifyCppIntegerDivMod<IntegerType, Native>(
+            IntegerType::infinity, 0);
+        verifyCppIntegerDivMod<IntegerType, Native>(
+            IntegerType::infinity, Limits::max);
+    }
+}
+
+TYPED_TEST(IntegerTest, cppIntegerDivMod) {
+    verifyCppIntegerDivMod<TypeParam, unsigned char>();
+    verifyCppIntegerDivMod<TypeParam, unsigned short>();
+    verifyCppIntegerDivMod<TypeParam, unsigned>();
+    verifyCppIntegerDivMod<TypeParam, unsigned long>();
+    verifyCppIntegerDivMod<TypeParam, unsigned long long>();
+    verifyCppIntegerDivMod<TypeParam, size_t>();
+
+    verifyCppIntegerDivMod<TypeParam, signed char>();
+    verifyCppIntegerDivMod<TypeParam, short>();
+    verifyCppIntegerDivMod<TypeParam, int>();
+    verifyCppIntegerDivMod<TypeParam, long>();
+    verifyCppIntegerDivMod<TypeParam, long long>();
+    verifyCppIntegerDivMod<TypeParam, ssize_t>();
+
+#ifdef INT128_AVAILABLE
+    verifyCppIntegerDivMod<TypeParam, regina::UInt128>();
+    verifyCppIntegerDivMod<TypeParam, regina::Int128>();
+#endif
+}
+
+template <ArbitraryPrecisionInteger IntegerType, CppInteger Native>
+static void verifySafeValueSuccess(IntegerType value, Native expected) {
+    SCOPED_TRACE_REGINA(value);
+
+    {
+        Native computed;
+        EXPECT_NO_THROW({ computed = value.template safeValue<Native>(); });
+        EXPECT_EQ(computed, expected);
+        EXPECT_EQ(value.template unsafeValue<Native>(), expected);
+    }
+
+    if (value.isNative()) {
+        value.makeLarge();
+        EXPECT_FALSE(value.isNative());
+    } else {
+        value.tryReduce(); // might or might not be possible
+    }
+
+    {
+        Native computed;
+        EXPECT_NO_THROW({ computed = value.template safeValue<Native>(); });
+        EXPECT_EQ(computed, expected);
+        EXPECT_EQ(value.template unsafeValue<Native>(), expected);
+    }
+}
+
+template <ArbitraryPrecisionInteger IntegerType, CppInteger Native>
+static void verifySafeValueFailure(IntegerType value) {
+    SCOPED_TRACE_REGINA(value);
+
+    EXPECT_THROW({ value.template safeValue<Native>(); },
+        regina::IntegerOverflow);
+
+    if (value.isNative()) {
+        value.makeLarge();
+        EXPECT_FALSE(value.isNative());
+    } else {
+        value.tryReduce(); // might or might not be possible
+    }
+
+    EXPECT_THROW({ value.template safeValue<Native>(); },
+        regina::IntegerOverflow);
+}
+
+template <ArbitraryPrecisionInteger IntegerType, UnsignedCppInteger Native>
+static void verifySafeValue() {
+    SCOPED_TRACE_TYPE(Native);
+
+    using Limits = NativeUnsignedLimits<Native>;
+    Limits::verify();
+
+    // Compute the same value directly in Regina's large integer type.
+    IntegerType maxRegina = Limits::template maxAs<IntegerType>();
+    EXPECT_EQ(maxRegina, Limits::max);
+
+    verifySafeValueFailure<IntegerType, Native>(-maxRegina - 1);
+    verifySafeValueFailure<IntegerType, Native>(-maxRegina);
+    verifySafeValueFailure<IntegerType, Native>(-maxRegina + 1);
+    verifySafeValueFailure<IntegerType, Native>(-(maxRegina / 2) - 1);
+    verifySafeValueFailure<IntegerType, Native>(-(maxRegina / 2));
+    verifySafeValueFailure<IntegerType, Native>(-(maxRegina / 2) + 1);
+    verifySafeValueFailure<IntegerType, Native>(-1);
+    verifySafeValueSuccess<IntegerType, Native>(0, 0);
+    verifySafeValueSuccess<IntegerType, Native>(1, 1);
+    verifySafeValueSuccess<IntegerType, Native>((maxRegina / 2) - 1,
+        (Limits::max / 2) - 1);
+    verifySafeValueSuccess<IntegerType, Native>(maxRegina / 2, Limits::max / 2);
+    verifySafeValueSuccess<IntegerType, Native>((maxRegina / 2) + 1,
+        (Limits::max / 2) + 1);
+    verifySafeValueSuccess<IntegerType, Native>(maxRegina - 2, Limits::max - 2);
+    verifySafeValueSuccess<IntegerType, Native>(maxRegina - 1, Limits::max - 1);
+    verifySafeValueSuccess<IntegerType, Native>(maxRegina, Limits::max);
+    verifySafeValueFailure<IntegerType, Native>(maxRegina + 1);
+    verifySafeValueFailure<IntegerType, Native>(maxRegina + 2);
+    verifySafeValueFailure<IntegerType, Native>(maxRegina * 2);
+}
+
+template <ArbitraryPrecisionInteger IntegerType, SignedCppInteger Native>
+static void verifySafeValue() {
+    SCOPED_TRACE_TYPE(Native);
+
+    using Limits = NativeSignedLimits<Native>;
+    Limits::verify();
+
+    // Compute the same values directly in Regina's large integer type.
+    // They should be (-100...0) and (+11...1) in binary.
+    IntegerType minRegina = Limits::template minAs<IntegerType>();
+    IntegerType maxRegina = Limits::template maxAs<IntegerType>();
+    EXPECT_EQ(minRegina, Limits::min);
+    EXPECT_EQ(maxRegina, Limits::max);
+
+    verifySafeValueFailure<IntegerType, Native>(minRegina * 2);
+    verifySafeValueFailure<IntegerType, Native>(minRegina - 2);
+    verifySafeValueFailure<IntegerType, Native>(minRegina - 1);
+    verifySafeValueSuccess<IntegerType, Native>(minRegina, Limits::min);
+    verifySafeValueSuccess<IntegerType, Native>(minRegina + 1, Limits::min + 1);
+    verifySafeValueSuccess<IntegerType, Native>(minRegina + 2, Limits::min + 2);
+    verifySafeValueSuccess<IntegerType, Native>((minRegina / 2) - 1,
+        (Limits::min / 2) - 1);
+    verifySafeValueSuccess<IntegerType, Native>(minRegina / 2, Limits::min / 2);
+    verifySafeValueSuccess<IntegerType, Native>((minRegina / 2) + 1,
+        (Limits::min / 2) + 1);
+    verifySafeValueSuccess<IntegerType, Native>(-1, -1);
+    verifySafeValueSuccess<IntegerType, Native>(0, 0);
+    verifySafeValueSuccess<IntegerType, Native>(1, 1);
+    verifySafeValueSuccess<IntegerType, Native>((maxRegina / 2) - 1,
+        (Limits::max / 2) - 1);
+    verifySafeValueSuccess<IntegerType, Native>(maxRegina / 2, Limits::max / 2);
+    verifySafeValueSuccess<IntegerType, Native>((maxRegina / 2) + 1,
+        (Limits::max / 2) + 1);
+    verifySafeValueSuccess<IntegerType, Native>(maxRegina - 2, Limits::max - 2);
+    verifySafeValueSuccess<IntegerType, Native>(maxRegina - 1, Limits::max - 1);
+    verifySafeValueSuccess<IntegerType, Native>(maxRegina, Limits::max);
+    verifySafeValueFailure<IntegerType, Native>(maxRegina + 1);
+    verifySafeValueFailure<IntegerType, Native>(maxRegina + 2);
+    verifySafeValueFailure<IntegerType, Native>(maxRegina * 2);
+
+    if constexpr (IntegerType::supportsInfinity)
+        verifySafeValueFailure<IntegerType, Native>(IntegerType::infinity);
+}
+
+TYPED_TEST(IntegerTest, safeValue) {
+    verifySafeValue<TypeParam, unsigned char>();
+    verifySafeValue<TypeParam, unsigned short>();
+    verifySafeValue<TypeParam, unsigned>();
+    verifySafeValue<TypeParam, unsigned long>();
+    verifySafeValue<TypeParam, unsigned long long>();
+    verifySafeValue<TypeParam, size_t>();
+
+    verifySafeValue<TypeParam, signed char>();
+    verifySafeValue<TypeParam, short>();
+    verifySafeValue<TypeParam, int>();
+    verifySafeValue<TypeParam, long>();
+    verifySafeValue<TypeParam, long long>();
+    verifySafeValue<TypeParam, ssize_t>();
+
+#ifdef INT128_AVAILABLE
+    verifySafeValue<TypeParam, regina::UInt128>();
+    verifySafeValue<TypeParam, regina::Int128>();
+#endif
+}
+

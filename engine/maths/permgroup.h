@@ -37,6 +37,7 @@
  *  \brief Implements groups of permutations on \a n objects.
  */
 
+#include <concepts>
 #include "core/output.h"
 #include "maths/perm.h"
 
@@ -395,7 +396,7 @@ class PermGroup : public Output<PermGroup<n, cached>> {
          * in \a parent for which `test(p, args...)` returns \c true.
          *
          * The argument \a test should be a function or some other callable
-         * object.  It must return a boolean, and its first argument should
+         * type.  It must return a boolean, and its first argument should
          * be a permutation (either by value as type `Perm<n>`, or by
          * const reference as type `const Perm<n>&`).  If there are
          * any additional arguments supplied in the list \a args, these
@@ -419,12 +420,13 @@ class PermGroup : public Output<PermGroup<n, cached>> {
          *
          * \param parent the "starting" group of all permutations under
          * consideration.
-         * \param test a function (or other callable object) that determines
+         * \param test a function (or other callable type) that determines
          * which permutations in \a parent become members of this subgroup.
          * \param args any additional arguments that should be passed to
          * \a test, following the initial permutation argument.
          */
         template <typename Test, typename... Args>
+        requires std::predicate<Test, Perm<n>, Args...>
         PermGroup(const PermGroup& parent, Test&& test, Args&&... args);
 
         /**
@@ -643,6 +645,7 @@ inline PermGroup<n, cached>::PermGroup() {
 
 template <int n, bool cached>
 template <typename Test, typename... Args>
+requires std::predicate<Test, Perm<n>, Args...>
 inline PermGroup<n, cached>::PermGroup(const PermGroup& parent, Test&& test,
         Args&&... args) {
     // Go through and fix term_[k][j] (k >= j), in order of increasing k.

@@ -32,7 +32,6 @@
 #include <cstring> // for strdup()
 #include <libgen.h> // for dirname()
 #include <unistd.h> // for access()
-#include "regina-config.h"
 #include "file/globaldirs.h"
 
 // We will be special-casing the Xcode build here.

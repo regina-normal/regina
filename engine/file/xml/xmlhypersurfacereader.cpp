@@ -60,12 +60,12 @@ void XMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
     // Create a new vector and read all non-zero entries.
     Vector<LargeInteger> vec(vecLen_);
 
-    long pos;
+    size_t pos;
     LargeInteger value;
     for (size_t i = 0; i < tokens.size(); i += 2) {
-        if (! valueOf(tokens[i], pos))
+        if (! valueOf(tokens[i], pos)) // note: this ensures pos >= 0
             return;
-        if (pos < 0 || pos >= vecLen_)
+        if (pos >= vecLen_)
             return;
         try {
             vec[pos] = tokens[i + 1];
@@ -113,15 +113,17 @@ XMLNormalHypersurfacesReader::XMLNormalHypersurfacesReader(
         return;
 
     // Extract the list parameters from the attributes.
-    int coords, listType, algorithm;
+    int coords;
+    Flags<HyperList>::BaseInt listType;
+    Flags<HyperAlg>::BaseInt algorithm;
     if (valueOf(props.lookup("coords"), coords) &&
             valueOf(props.lookup("type"), listType) &&
             valueOf(props.lookup("algorithm"), algorithm)) {
         // Parameters look sane; create the empty list.
         list_ = make_packet<NormalHypersurfaces>(std::in_place,
             static_cast<HyperCoords>(coords),
-            Flags<HyperList>::fromInt(listType),
-            Flags<HyperAlg>::fromInt(algorithm),
+            Flags<HyperList>::fromBase(listType),
+            Flags<HyperAlg>::fromBase(algorithm),
             *tri_);
     }
 }
@@ -157,7 +159,8 @@ XMLElementReader* XMLLegacyNormalHypersurfacesReader::startContentSubElement(
         // The hypersurface list has not yet been created.
         if (subTagName == "params") {
             long coords;
-            int listType, algorithm;
+            Flags<HyperList>::BaseInt listType;
+            Flags<HyperAlg>::BaseInt algorithm;
             bool embedded;
             if (valueOf(props.lookup("flavourid"), coords)) {
                 if (valueOf(props.lookup("type"), listType) &&
@@ -165,8 +168,8 @@ XMLElementReader* XMLLegacyNormalHypersurfacesReader::startContentSubElement(
                     // Parameters look sane; create the empty list.
                     list_ = make_packet<NormalHypersurfaces>(std::in_place,
                         static_cast<HyperCoords>(coords),
-                        Flags<HyperList>::fromInt(listType),
-                        Flags<HyperAlg>::fromInt(algorithm),
+                        Flags<HyperList>::fromBase(listType),
+                        Flags<HyperAlg>::fromBase(algorithm),
                         tri_);
                 } else if (valueOf(props.lookup("embedded"), embedded)) {
                     // Parameters look sane but use the old prerelease format.

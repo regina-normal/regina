@@ -38,6 +38,7 @@
 #endif
 
 #include "regina-core.h"
+#include "concepts/maths.h"
 #include "maths/matrix.h"
 #include "maths/vector.h"
 #include <iterator>
@@ -97,7 +98,7 @@ class HilbertDual {
          * Determines the Hilbert basis that generates all integer
          * points in the intersection of the <i>n</i>-dimensional
          * non-negative orthant with the given linear subspace.
-         * The resulting basis elements will be of the class \a RayClass,
+         * The resulting basis elements will be of the class \a Ray,
          * and will be passed into the given action function one at a time.
          *
          * The non-negative orthant is an <i>n</i>-dimensional cone with
@@ -133,16 +134,13 @@ class HilbertDual {
          * called after this routine returns.
          *
          * For each of the resulting basis elements, this routine will call
-         * \a action (which must be a function or some other callable object).
-         * This action should return \c void, and must take exactly one
-         * argument, which will be the basis element stored using \a RayClass.
-         * The argument will be passed as an rvalue; a typical \a action
-         * would take it as an rvalue reference (RayClass&&) and move its
-         * contents into some other more permanent storage.
-         *
-         * \pre The template argument RayClass is derived from (or equal to)
-         * Vector<T>, where \a T is one of Regina's arbitrary-precision
-         * integer classes (Integer or LargeInteger).
+         * \a action (which must be a function or some other callable type).
+         * This action must take exactly one argument: the basis element stored
+         * using type \a Ray.  The argument will be passed as an rvalue;
+         * a typical \a action would take it as an rvalue reference (`Ray&&`)
+         * and move its contents into some other more permanent storage.
+         * The return value of \a action will be ignored (a typical \a action
+         * would return \c void).
          *
          * \python There are two versions of this function available
          * in Python.  The first version is the same as the C++ function;
@@ -150,13 +148,13 @@ class HilbertDual {
          * The second form does not have an \a action argument; instead you
          * call `enumerate(subspace, constraints, tracker, initialRows)`,
          * and it returns a Python list containing all Hilbert basis elements.
-         * In both versions, the argument \a RayClass is fixed as VectorInt.
+         * In both versions, the template argument \a Ray is fixed as VectorInt.
          * The global interpreter lock will be released while this function
          * runs, so you can use it with Python-based multithreading.
          *
-         * \param action a function (or other callable object) that will be
+         * \param action a function (or other callable type) that will be
          * called for each basis element.  This function must take a single
-         * argument, which will be passed as an rvalue of type RayClass.
+         * argument, which will be passed as an rvalue of type Ray.
          * \param subspace a matrix defining the linear subspace to intersect
          * with the given cone.  Each row of this matrix is the equation
          * for one of the hyperplanes whose intersection forms this linear
@@ -171,7 +169,8 @@ class HilbertDual {
          * The remaining rows will be sorted using the PosOrder class
          * before they are processed.
          */
-        template <class RayClass, typename Action>
+        template <ArbitraryPrecisionIntegerVector Ray,
+            VoidCallback<Ray&&> Action>
         static void enumerate(Action&& action,
             const MatrixInt& subspace, const ValidityConstraints& constraints,
             ProgressTracker* tracker = nullptr, unsigned initialRows = 0);
@@ -185,25 +184,16 @@ class HilbertDual {
          * single vector (which is typically a basis element in some
          * partial solution space).
          *
-         * The coordinates of the vector are inherited through the
-         * Vector superclass.
+         * The integer coordinates of the vector are inherited through the
+         * Vector superclass.  In addition, this class stores:
          *
-         * In addition, this class stores a data member \a nextHyp_,
-         * which gives fast access to the dot product of this vector
-         * with the hyperplane currently being processed.
+         * - the integer dot product of this vector with the hyperplane
+         *   currently being processed;
          *
-         * The \a BitmaskType template argument is used to store one bit
-         * per coordinate, which is \c false if the coordinate is zero
-         * or \c true if the coordinate is non-zero.
-         *
-         * \tparam IntegerType the integer type used to store and manipulate
-         * vectors; this must be one of Regina's own integer types.
-         *
-         * \tparam BitmaskType the bitmask type used to indicate zero/non-zero
-         * coordinates; this must be one of Regina's own bitmask types, such as
-         * Bitmask, Bitmask1 or Bitmask2.
+         * - a bitmask that indicates which coordinates are zero (\c false)
+         *   vs non-zero (\c true), holding one bit per coordinate.
          */
-        template <class IntegerType, class BitmaskType>
+        template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
         class VecSpec : private Vector<IntegerType> {
             private:
                 IntegerType nextHyp_;
@@ -347,25 +337,6 @@ class HilbertDual {
         };
 
         /**
-         * Identical to the public routine enumerate(),
-         * except that there is an extra template parameter \a BitmaskType.
-         * This describes what type should be used for bitmasks that
-         * represent zero/non-zero coordinates in a vector.
-         *
-         * All argument are identical to those for the public routine
-         * enumerate().
-         *
-         * \pre The bitmask type is one of Regina's bitmask types, such
-         * as Bitmask, Bitmask1 or Bitmask2.
-         * \pre The type \a BitmaskType can handle at least \a n bits,
-         * where \a n is the number of coordinates in the underlying vectors.
-         */
-        template <class RayClass, class BitmaskType, typename Action>
-        static void enumerateUsingBitmask(Action&& action,
-            const MatrixInt& subspace, const ValidityConstraints& constraints,
-            ProgressTracker* tracker, unsigned initialRows);
-
-        /**
          * Test whether the vector \a vec can be reduced using
          * any of the candidate basis vectors in \a against.
          *
@@ -391,7 +362,7 @@ class HilbertDual {
          * \return \c true if the given vector can be reduced, or \c false 
          * otherwise.
          */
-        template <class IntegerType, class BitmaskType>
+        template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
         static bool reduces(const VecSpec<IntegerType, BitmaskType>& vec,
             const std::list<VecSpec<IntegerType, BitmaskType>*>& against,
             int listSign);
@@ -411,7 +382,7 @@ class HilbertDual {
          * \param listSign an integer indicating which sign of the
          * current hyperplane we are working on.
          */
-        template <class IntegerType, class BitmaskType>
+        template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
         static void reduceBasis(
             std::list<VecSpec<IntegerType, BitmaskType>*>& reduce,
             std::list<VecSpec<IntegerType, BitmaskType>*>& against,
@@ -449,7 +420,7 @@ class HilbertDual {
          * \param constraintsBegin the list of additional validity constraints
          * to impose.
          */
-        template <class IntegerType, class BitmaskType>
+        template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
         static void intersectHyperplane(
             std::vector<VecSpec<IntegerType, BitmaskType>*>& list,
             const MatrixInt& subspace, unsigned row,
@@ -458,14 +429,14 @@ class HilbertDual {
 
 // Inline functions for HilbertDual::VecSpec
 
-template <class IntegerType, class BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 inline HilbertDual::VecSpec<IntegerType, BitmaskType>::VecSpec(size_t dim) :
         Vector<IntegerType>(dim), mask_(dim) {
     // All vector elements, nextHyp_ and srcNextHyp_ are initialised to
     // zero thanks to the default constructors for Regina's integer types.
 }
 
-template <class IntegerType, class BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 inline HilbertDual::VecSpec<IntegerType, BitmaskType>::VecSpec(
         size_t pos, size_t dim) :
         Vector<IntegerType>(dim), mask_(dim) {
@@ -475,7 +446,7 @@ inline HilbertDual::VecSpec<IntegerType, BitmaskType>::VecSpec(
     mask_.set(pos, true);
 }
 
-template <class IntegerType, class BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 inline void HilbertDual::VecSpec<IntegerType, BitmaskType>::initNextHyp(
         const MatrixInt& subspace, unsigned row) {
     nextHyp_ = 0;
@@ -493,7 +464,7 @@ inline void HilbertDual::VecSpec<IntegerType, BitmaskType>::initNextHyp(
 #endif
 }
 
-template <class IntegerType, class BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 inline void HilbertDual::VecSpec<IntegerType, BitmaskType>::formSum(
         const HilbertDual::VecSpec<IntegerType, BitmaskType>& pos,
         const HilbertDual::VecSpec<IntegerType, BitmaskType>& neg) {
@@ -511,32 +482,32 @@ inline void HilbertDual::VecSpec<IntegerType, BitmaskType>::formSum(
 #endif
 }
 
-template <class IntegerType, class BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 inline const IntegerType&
         HilbertDual::VecSpec<IntegerType, BitmaskType>::nextHyp() const {
     return nextHyp_;
 }
 
-template <class IntegerType, class BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 inline const BitmaskType&
         HilbertDual::VecSpec<IntegerType, BitmaskType>::mask() const {
     return mask_;
 }
 
-template <class IntegerType, class BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 inline int HilbertDual::VecSpec<IntegerType, BitmaskType>::sign() const {
     return (nextHyp_ == 0 ? 0 : nextHyp_ > 0 ? 1 : -1);
 }
 
 #ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
-template <class IntegerType, class BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 inline const IntegerType&
         HilbertDual::VecSpec<IntegerType, BitmaskType>::srcNextHyp() const {
     return srcNextHyp_;
 }
 #endif
 
-template <class IntegerType, class BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 inline bool HilbertDual::VecSpec<IntegerType, BitmaskType>::operator == (
         const HilbertDual::VecSpec<IntegerType, BitmaskType>& other) const {
     // Begin with simple tests that give us a fast way of saying no.
@@ -545,7 +516,7 @@ inline bool HilbertDual::VecSpec<IntegerType, BitmaskType>::operator == (
     return (static_cast<const Vector<IntegerType>&>(*this) == static_cast<const Vector<IntegerType>&>(other));
 }
 
-template <class IntegerType, class BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 inline bool HilbertDual::VecSpec<IntegerType, BitmaskType>::dominatedBy(
         const HilbertDual::VecSpec<IntegerType, BitmaskType>& other) const {
     // Begin with simple tests that give us a fast way of saying no.

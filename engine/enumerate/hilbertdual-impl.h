@@ -47,159 +47,106 @@
 #include "enumerate/validityconstraints.h"
 #include "progress/progresstracker.h"
 #include "utilities/bitmask.h"
+#include "utilities/fixedarray.h"
 #include "utilities/intutils.h"
 
 namespace regina {
 
-template <class RayClass, typename Action>
+template <ArbitraryPrecisionIntegerVector Ray, VoidCallback<Ray&&> Action>
 void HilbertDual::enumerate(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned initialRows) {
-    static_assert(
-        IsReginaArbitraryPrecisionInteger<typename RayClass::value_type>::value,
-        "HilbertDual::enumerate() requires the RayClass "
-        "template parameter to be equal to or derived from Vector<T>, "
-        "where T is one of Regina's arbitrary precision integer types.");
+    usingBitmaskFor(subspace.columns() /* dimension of the space */,
+            [&action, &subspace, &constraints, tracker, initialRows]
+            <ReginaBitmask BitmaskType>(size_t dim) {
+        using IntegerType = typename Ray::value_type;
 
-    // Get the dimension of the entire space in which we are working.
-    size_t dim = subspace.columns();
+        // If the space has dimension zero, return no results at all.
+        if (dim == 0)
+            return;
 
-    // If the space has dimension zero, return no results.
-    if (dim == 0)
-        return;
+        // Are there any hyperplanes at all in the subspace?
+        size_t nEqns = subspace.rows();
+        if (nEqns == 0) {
+            // No!  Just send back the unit vectors.
+            for (unsigned i = 0; i < dim; ++i) {
+                Ray ans(dim);
+                ans[i] = IntegerType::one;
+                action(std::move(ans));
+            }
 
-    // Choose a bitmask type that can hold dim bits.
-    // Use a (much faster) optimised bitmask type if we can.
-    // Then farm the work out to the real enumeration routine that is
-    // templated on the bitmask type.
-    if (dim <= 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned> >(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-    else if (dim <= 8 * sizeof(unsigned long))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long> >(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-    else if (dim <= 8 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long long> >(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-    else if (dim <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass,
-            Bitmask2<unsigned long long, unsigned> >(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-    else if (dim <= 8 * sizeof(unsigned long long) +
-            8 * sizeof(unsigned long))
-        enumerateUsingBitmask<RayClass,
-            Bitmask2<unsigned long long, unsigned long> >(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-    else if (dim <= 16 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, Bitmask2<unsigned long long> >(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-    else
-        enumerateUsingBitmask<RayClass, Bitmask>(
-            std::forward<Action>(action),
-            subspace, constraints, tracker, initialRows);
-}
-
-template <class RayClass, class BitmaskType, typename Action>
-void HilbertDual::enumerateUsingBitmask(Action&& action,
-        const MatrixInt& subspace, const ValidityConstraints& constraints,
-        ProgressTracker* tracker, unsigned initialRows) {
-    using IntegerType = typename RayClass::value_type;
-
-    // Get the dimension of the entire space in which we are working.
-    // At this point we are guaranteed that the dimension is non-zero.
-    size_t dim = subspace.columns();
-
-    // Are there any hyperplanes at all in the subspace?
-    size_t nEqns = subspace.rows();
-    if (nEqns == 0) {
-        // No!  Just send back the unit vectors.
-        for (unsigned i = 0; i < dim; ++i) {
-            RayClass ans(dim);
-            ans[i] = IntegerType::one;
-            action(std::move(ans));
+            if (tracker)
+                tracker->setPercent(100);
+            return;
         }
 
-        if (tracker)
-            tracker->setPercent(100);
-        return;
-    }
+        // We actually have some work to do.
 
-    // We actually have some work to do.
+        // Process the hyperplanes in a good order.
+        //
+        // Sort the integers 0..(nEqns-1) into the order in which we plan to
+        // process the hyperplanes.
+        FixedArray<size_t> hyperplanes(nEqns);
+        for (size_t i = 0; i < nEqns; ++i)
+            hyperplanes[i] = i;
 
-    // Process the hyperplanes in a good order.
-    //
-    // Sort the integers 0..(nEqns-1) into the order in which we plan to
-    // process the hyperplanes.
-    int* hyperplanes = new int[nEqns];
-    unsigned i;
-    for (i = 0; i < nEqns; ++i)
-        hyperplanes[i] = i;
+        std::sort(hyperplanes.begin() + initialRows, hyperplanes.end(),
+            PosOrder(subspace));
 
-    std::sort(hyperplanes + initialRows, hyperplanes + nEqns,
-        PosOrder(subspace));
+        auto constraintMasks = constraints.bitmasks<BitmaskType>(dim);
 
-    auto constraintMasks = constraints.bitmasks<BitmaskType>(dim);
-
-    // Create the vector list with which we will work.
-    // Fill it with the initial basis elements.
-    std::vector<VecSpec<IntegerType, BitmaskType>*> list;
-    for (i = 0; i < dim; ++i)
-        list.push_back(new VecSpec<IntegerType, BitmaskType>(i, dim));
-
-#if 0
-    std::cout << "LIST SIZE: " << list.size() << std::endl;
-#endif
-
-    // Intersect the hyperplanes one at a time.
-    for (i=0; i<nEqns; i++) {
-        intersectHyperplane(list, subspace, hyperplanes[i], constraintMasks);
+        // Create the vector list with which we will work.
+        // Fill it with the initial basis elements.
+        std::vector<VecSpec<IntegerType, BitmaskType>*> list;
+        for (size_t i = 0; i < dim; ++i)
+            list.push_back(new VecSpec<IntegerType, BitmaskType>(i, dim));
 
 #if 0
         std::cout << "LIST SIZE: " << list.size() << std::endl;
 #endif
 
-        if (tracker && ! tracker->setPercent(100.0 * i / nEqns))
-            break;
-    }
+        // Intersect the hyperplanes one at a time.
+        for (size_t i=0; i < nEqns; ++i) {
+            intersectHyperplane(list, subspace, hyperplanes[i],
+                constraintMasks);
 
-    // We're done!
-    delete[] hyperplanes;
+#if 0
+            std::cout << "LIST SIZE: " << list.size() << std::endl;
+#endif
 
-    typename std::vector<VecSpec<IntegerType, BitmaskType>*>::iterator it;
+            if (tracker && ! tracker->setPercent(100.0 * i / nEqns))
+                break;
+        }
 
-    if (tracker && tracker->isCancelled()) {
-        // The operation was cancelled.  Clean up before returning.
-        for (it = list.begin(); it != list.end(); ++it)
+        // We're done!
+
+        if (tracker && tracker->isCancelled()) {
+            // The operation was cancelled.  Clean up before returning.
+            for (auto it = list.begin(); it != list.end(); ++it)
+                delete *it;
+            return;
+        }
+
+        for (auto it = list.begin(); it != list.end(); ++it) {
+            Ray ans(dim);
+            for (size_t i = 0; i < dim; ++i)
+                ans[i] = (**it)[i];
+            action(std::move(ans));
+
             delete *it;
-        return;
-    }
+        }
 
-    for (it = list.begin(); it != list.end(); ++it) {
-        RayClass ans(dim);
-        for (i = 0; i < dim; ++i)
-            ans[i] = (**it)[i];
-        action(std::move(ans));
-
-        delete *it;
-    }
-
-    // All done!
-    if (tracker)
-        tracker->setPercent(100);
+        // All done!
+        if (tracker)
+            tracker->setPercent(100);
+    });
 }
 
-template <class IntegerType, class BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 bool HilbertDual::reduces(const VecSpec<IntegerType, BitmaskType>& vec,
         const std::list<VecSpec<IntegerType, BitmaskType>*>& against,
         int listSign) {
-    typename std::list<VecSpec<IntegerType, BitmaskType>*>::const_iterator it;
-    for (it = against.begin(); it != against.end(); ++it) {
+    for (auto it = against.begin(); it != against.end(); ++it) {
         if (! (*it)->dominatedBy(vec))
             continue;
 
@@ -218,7 +165,7 @@ bool HilbertDual::reduces(const VecSpec<IntegerType, BitmaskType>& vec,
     return false;
 }
 
-template <class IntegerType, class BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 void HilbertDual::reduceBasis(
         std::list<VecSpec<IntegerType, BitmaskType>*>& reduce,
         std::list<VecSpec<IntegerType, BitmaskType>*>& against,
@@ -226,17 +173,16 @@ void HilbertDual::reduceBasis(
     if (reduce.empty())
         return;
 
-    typename std::list<VecSpec<IntegerType, BitmaskType>*>::iterator
-        i, next, red;
     bool processed;
 
-    i = reduce.begin();
-    next = i;
+    auto i = reduce.begin();
+    auto next = i;
     ++next;
 
     while (i != reduce.end()) {
         processed = true;
-        for (red = against.begin(); red != against.end(); ++red) {
+        auto red = against.begin();
+        for ( ; red != against.end(); ++red) {
             if (red == i) {
                 processed = false;
                 continue;
@@ -256,7 +202,6 @@ void HilbertDual::reduceBasis(
                     break;
             }
         }
-
         if (red == against.end()) {
             i = next;
             if (next != reduce.end())
@@ -293,7 +238,7 @@ void HilbertDual::reduceBasis(
     }
 }
 
-template <class IntegerType, class BitmaskType>
+template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 void HilbertDual::intersectHyperplane(
         std::vector<VecSpec<IntegerType, BitmaskType>*>& list,
         const MatrixInt& subspace, unsigned row,
@@ -302,30 +247,25 @@ void HilbertDual::intersectHyperplane(
     // deletion at arbitrary locations.
     std::list<VecSpec<IntegerType, BitmaskType>*>
         zero, pos, neg, newZero, newPos, newNeg;
-    typename std::list<VecSpec<IntegerType, BitmaskType>*>::iterator
-        it, posit, negit;
-    typename std::list<VecSpec<IntegerType, BitmaskType>*>::iterator
-        posPrevGen, negPrevGen;
 
     // Decant the existing basis elements into 0/+/- sets according to the
     // new hyperplane.
     int s;
-    typename std::vector<VecSpec<IntegerType, BitmaskType>*>::iterator srcit;
-    for (srcit = list.begin(); srcit != list.end(); srcit++) {
-        (*srcit)->initNextHyp(subspace, row);
+    for (auto ptr : list) {
+        ptr->initNextHyp(subspace, row);
 
-        s = (*srcit)->sign();
+        s = ptr->sign();
         if (s == 0)
-            zero.push_back(*srcit);
+            zero.push_back(ptr);
         else if (s < 0)
-            neg.push_back(*srcit);
+            neg.push_back(ptr);
         else
-            pos.push_back(*srcit);
+            pos.push_back(ptr);
     }
     list.clear();
 
-    posPrevGen = pos.begin();
-    negPrevGen = neg.begin();
+    auto posPrevGen = pos.begin();
+    auto negPrevGen = neg.begin();
 
     // TODO: Optimise from here down: (d), Sec.3
 
@@ -346,11 +286,11 @@ void HilbertDual::intersectHyperplane(
         // Generate all valid (pos + neg) pairs that cannot be reduced using
         // the present lists.
         reachedPosPrevGen = false;
-        for (posit = pos.begin(); posit != pos.end(); ++posit) {
+        for (auto posit = pos.begin(); posit != pos.end(); ++posit) {
             if (posit == posPrevGen)
                 reachedPosPrevGen = true;
 
-            for (negit = (reachedPosPrevGen ? neg.begin() : negPrevGen);
+            for (auto negit = (reachedPosPrevGen ? neg.begin() : negPrevGen);
                     negit != neg.end(); ++negit) {
 #ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
                 // Check for guaranteed redundany.
@@ -448,13 +388,14 @@ void HilbertDual::intersectHyperplane(
     }
 
     // We have a final Hilbert basis!
+    // At this point in time, list is empty and zero holds our solutions.
     // Clean up and return.
-    for (it = pos.begin(); it != pos.end(); ++it)
-        delete *it;
-    for (it = neg.begin(); it != neg.end(); ++it)
-        delete *it;
-    for (it = zero.begin(); it != zero.end(); ++it)
-        list.push_back(*it);
+    for (auto ptr : pos)
+        delete ptr;
+    for (auto ptr : neg)
+        delete ptr;
+    for (auto ptr : zero)
+        list.push_back(ptr);
 }
 
 } // namespace regina

@@ -102,7 +102,7 @@ class Container;
  *
  * \ingroup foreign
  */
-template <class ObjectType>
+template <typename ObjectType>
 std::shared_ptr<Container> readSigList(const char *filename,
     unsigned colSigs = 0, int colLabels = -1, unsigned long ignoreLines = 0);
 

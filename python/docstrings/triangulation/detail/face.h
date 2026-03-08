@@ -93,12 +93,10 @@ Python:
     subdim> is.
 
 Template parameter ``dim``:
-    the dimension of the underlying triangulation. This must be
-    between 2 and 15 inclusive.
+    the dimension of the underlying triangulation.
 
 Template parameter ``subdim``:
-    the dimension of the faces that this class represents. This must
-    be between 0 and *dim*-1 inclusive.)doc";
+    the dimension of the faces that this class represents.)doc";
 
 // Docstring regina::python::doc::detail::FaceEmbeddingBase
 constexpr const char *FaceEmbeddingBase =
@@ -117,12 +115,10 @@ Python:
     FaceEmbedding<dim, subdim> is.
 
 Template parameter ``dim``:
-    the dimension of the underlying triangulation. This must be
-    between 2 and 15 inclusive.
+    the dimension of the underlying triangulation.
 
 Template parameter ``subdim``:
-    the dimension of the faces of the underlying triangulation. This
-    must be between 0 and *dim*-1 inclusive.)doc";
+    the dimension of the faces of the underlying triangulation.)doc";
 
 }
 
@@ -226,15 +222,11 @@ Returns:
 constexpr const char *edge =
 R"doc(A dimension-specific alias for face<1>().
 
-This alias is available for all facial dimensions *subdim*.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::FaceBase_::edgeMapping
 constexpr const char *edgeMapping =
 R"doc(A dimension-specific alias for faceMapping<1>().
-
-This alias is available for all facial dimensions *subdim*.
 
 See faceMapping() for further information.)doc";
 
@@ -565,10 +557,9 @@ R"doc(Determines if the link of this face is orientable.
 This routine is fast: it uses pre-computed information, and does not
 need to build a full triangulation of the link.
 
-.. warning::
-    If this face is identified with itself under a non-identity
-    permutation (which makes the face invalid), then the return value
-    of this routine is undefined.
+As of Regina 7.4.1, the orientability of the link will be calculated
+correctly even if the face is invalid due to a non-trivial self-
+identification.
 
 Returns:
     ``True`` if and only if the link is orientable.)doc";
@@ -722,15 +713,11 @@ Precondition:
 constexpr const char *pentachoron =
 R"doc(A dimension-specific alias for face<4>().
 
-This alias is available for facial dimensions *subdim* ≥ 5.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::FaceBase_::pentachoronMapping
 constexpr const char *pentachoronMapping =
 R"doc(A dimension-specific alias for faceMapping<4>().
-
-This alias is available for facial dimensions *subdim* ≥ 5.
 
 See faceMapping() for further information.)doc";
 
@@ -738,15 +725,11 @@ See faceMapping() for further information.)doc";
 constexpr const char *tetrahedron =
 R"doc(A dimension-specific alias for face<3>().
 
-This alias is available for facial dimensions *subdim* ≥ 4.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::FaceBase_::tetrahedronMapping
 constexpr const char *tetrahedronMapping =
 R"doc(A dimension-specific alias for faceMapping<3>().
-
-This alias is available for facial dimensions *subdim* ≥ 4.
 
 See faceMapping() for further information.)doc";
 
@@ -754,15 +737,11 @@ See faceMapping() for further information.)doc";
 constexpr const char *triangle =
 R"doc(A dimension-specific alias for face<2>().
 
-This alias is available for facial dimensions *subdim* ≥ 3.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::FaceBase_::triangleMapping
 constexpr const char *triangleMapping =
 R"doc(A dimension-specific alias for faceMapping<2>().
-
-This alias is available for facial dimensions *subdim* ≥ 3.
 
 See faceMapping() for further information.)doc";
 
@@ -843,15 +822,11 @@ Precondition:
 constexpr const char *vertex =
 R"doc(A dimension-specific alias for face<0>().
 
-This alias is available for all facial dimensions *subdim*.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::FaceBase_::vertexMapping
 constexpr const char *vertexMapping =
 R"doc(A dimension-specific alias for faceMapping<0>().
-
-This alias is available for all facial dimensions *subdim*.
 
 See faceMapping() for further information.)doc";
 
@@ -946,9 +921,21 @@ walk through the many different FaceEmbedding objects for the same
 underlying *subdim*-face.
 
 This routine returns the same permutation as
-``simplex().faceMapping<subdim>(face())`` (and this routine is faster
+``simplex()->faceMapping<subdim>(face())`` (and this routine is faster
 if you already have a FaceEmbedding). See Simplex<dim>::faceMapping()
 for details.
+
+.. warning::
+    Be aware that if the triangulation changes then the skeleton will
+    be recomputed, and there is no guarantee that the new Face objects
+    will use the same inherent labelling as the old ones. In
+    particular, after the triangulation changes, the FaceEmbedding for
+    the same face of the same simplex might return a different
+    permutation for ``vertices()``. Likewise, if you keep a copy of an
+    old FaceEmbedding ``emb`` and then change the triangulation, the
+    connection between ``emb.vertices()`` (which will not be updated)
+    and ``emb.simplex()->faceMapping<subdim>(emb.face())`` (which will
+    be updated) will be lost.
 
 Returns:
     a mapping from the vertices of the underlying *subdim*-face to the

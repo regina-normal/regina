@@ -52,6 +52,10 @@
 using regina::NormalSurfaces;
 using regina::Packet;
 
+// The string to return in cases where a computation fails due to integer
+// overflow:
+#define OVERFLOW_RESULT tr("?")
+
 SurfaceModel::SurfaceModel(NormalSurfaces* surfaces) :
         surfaces_(surfaces), coordSystem_(surfaces->coords()) {
     nFiltered = surfaces_->size();
@@ -131,19 +135,27 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             if (! s.isCompact())
                 return QVariant();
 
-            if (s.isOrientable())
-                return QString(QChar(0x2713 /* tick */));
-                // return tr("Yes");
-            else
-                return tr("Non-or.");
+            try {
+                if (s.isOrientable())
+                    return QString(QChar(0x2713 /* tick */));
+                    // return tr("Yes");
+                else
+                    return tr("Non-or.");
+            } catch (const regina::UnsolvedCase&) {
+                return OVERFLOW_RESULT;
+            }
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 4) {
             if (! s.isCompact())
                 return QVariant();
 
-            if (s.isTwoSided())
-                return "2";
-            else
-                return "1";
+            try {
+                if (s.isTwoSided())
+                    return "2";
+                else
+                    return "1";
+            } catch (const regina::UnsolvedCase&) {
+                return OVERFLOW_RESULT;
+            }
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
             if (! s.isCompact()) {
@@ -161,9 +173,13 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                     return tr("Spun");
                 }
             } else if (s.hasRealBoundary()) {
-                if (surfaces_->isEmbeddedOnly())
-                    return QString::number(s.countBoundaries());
-                else
+                if (surfaces_->isEmbeddedOnly()) {
+                    try {
+                        return QString::number(s.countBoundaries());
+                    } catch (const regina::UnsolvedCase&) {
+                        return tr("Real");
+                    }
+                } else
                     return tr("Real");
             } else
                 return QString(QChar(0x2014 /* emdash */));
@@ -280,18 +296,26 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             if (! s.isCompact())
                 return QVariant();
 
-            if (s.isOrientable())
-                return QColor(Qt::darkGreen);
-            else
-                return QColor(Qt::darkRed);
+            try {
+                if (s.isOrientable())
+                    return QColor(Qt::darkGreen);
+                else
+                    return QColor(Qt::darkRed);
+            } catch (const regina::UnsolvedCase&) {
+                return QColor(Qt::darkYellow); // could not compute
+            }
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 4) {
             if (! s.isCompact())
                 return QVariant();
 
-            if (s.isTwoSided())
-                return QColor(Qt::darkGreen);
-            else
-                return QColor(Qt::darkRed);
+            try {
+                if (s.isTwoSided())
+                    return QColor(Qt::darkGreen);
+                else
+                    return QColor(Qt::darkRed);
+            } catch (const regina::UnsolvedCase&) {
+                return QColor(Qt::darkYellow); // could not compute
+            }
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
             if (! s.isCompact())

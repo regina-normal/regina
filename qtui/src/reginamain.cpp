@@ -28,7 +28,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "regina-config.h"
 #include "packet/container.h"
 #include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"

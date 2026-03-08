@@ -32,8 +32,12 @@
 for IntegerType in [Integer, LargeInteger]:
     
     for i in range(0,30,2):
-        print(IntegerType(10**i))
-        print(IntegerType(-(10**i)))
+        x = IntegerType(10**i)
+        print(x)
+        print(x.pythonValue())
+        y = IntegerType(-(10**i))
+        print(y)
+        print(y.pythonValue())
     
     print(IntegerType('3141592'))
     print(IntegerType(1234567.89))

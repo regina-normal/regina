@@ -29,7 +29,6 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "regina-config.h" // for REGINA_HIGHDIM
 #include "triangulation/generic.h"
 
 // UI includes:
@@ -74,6 +73,7 @@ regina::Packet* GenericTriangulationBase::getPacket() {
 }
 
 template <int dim>
+requires (regina::supportedDim(dim) && ! regina::standardDim(dim))
 GenericTriangulationUI<dim>::GenericTriangulationUI(
         regina::PacketOf<Triangulation<dim>>* packet,
         PacketPane* enclosingPane) :
@@ -130,16 +130,19 @@ GenericTriangulationUI<dim>::GenericTriangulationUI(
 }
 
 template <int dim>
+requires (regina::supportedDim(dim) && ! regina::standardDim(dim))
 QWidget* GenericTriangulationUI<dim>::getInterface() {
     return ui;
 }
 
 template <int dim>
+requires (regina::supportedDim(dim) && ! regina::standardDim(dim))
 QString GenericTriangulationUI<dim>::getPacketMenuText() const {
     return QObject::tr("%1-D &Triangulation").arg(dim);
 }
 
 template <int dim>
+requires (regina::supportedDim(dim) && ! regina::standardDim(dim))
 void GenericTriangulationUI<dim>::refresh() {
     const auto tri = static_cast<regina::PacketOf<Triangulation<dim>>*>(packet);
     if (tri->isEmpty())

@@ -40,6 +40,7 @@
 #include <functional>
 #include <list>
 #include "regina-core.h"
+#include "concepts/core.h"
 #include "split/signature.h"
 #include "split/sigisomorphism.h"
 
@@ -101,7 +102,7 @@ class SigCensus {
          * lower-case.
          *
          * For each signature that is generated, this routine will call
-         * \a action (which must be a function or some other callable object).
+         * \a action (which must be a function or some other callable type).
          *
          * - The first argument to \a action must be a const reference to a
          *   Signature.  This will be the signature that was found.
@@ -117,7 +118,8 @@ class SigCensus {
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
          *
-         * - \a action must return \c void.
+         * - The return value of \a action will be ignored; typically it would
+         *   return \c void.
          *
          * \warning Currently upper-case symbols in signatures are not supported
          * by this routine; only signatures whose symbols are all lower-case
@@ -131,7 +133,7 @@ class SigCensus {
          * therefore the additional \a args list is omitted here).
          *
          * \param order the order of signatures to generate.
-         * \param action a function (or other callable object) to call for each
+         * \param action a function (or other callable type) to call for each
          * signature that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial signature and automorphism
@@ -140,6 +142,7 @@ class SigCensus {
          * found.
          */
         template <typename Action, typename... Args>
+        requires VoidCallback<Action, const Signature&, const IsoList&, Args...>
         static size_t formCensus(unsigned order, Action&& action,
             Args&&... args);
 
@@ -160,6 +163,7 @@ class SigCensus {
          * \pre order is at least 1.
          */
         template <typename Action, typename... Args>
+        requires VoidCallback<Action, const Signature&, const IsoList&, Args...>
         SigCensus(unsigned order, Action&& action, Args&&... args);
 
         /**
@@ -204,6 +208,8 @@ class SigCensus {
 // Inline functions for SigCensus
 
 template <typename Action, typename... Args>
+requires VoidCallback<Action, const Signature&, const SigCensus::IsoList&,
+    Args...>
 inline size_t SigCensus::formCensus(unsigned order, Action&& action,
         Args&&... args) {
     return SigCensus(order, std::forward<Action>(action),
@@ -211,6 +217,8 @@ inline size_t SigCensus::formCensus(unsigned order, Action&& action,
 }
 
 template <typename Action, typename... Args>
+requires VoidCallback<Action, const Signature&, const SigCensus::IsoList&,
+    Args...>
 inline SigCensus::SigCensus(unsigned order, Action&& action, Args&&... args) :
         sig(order), used(new unsigned[order]),
         automorph(new IsoList[order + 2]),

@@ -38,6 +38,8 @@
 #endif
 
 #include "regina-core.h"
+#include "concepts/core.h"
+#include "maths/forward.h"
 #include "triangulation/dim3.h"
 #include <complex>
 #include <functional>
@@ -52,9 +54,6 @@ namespace regina {
 class SnapPeaTriangulation;
 class XMLSnapPeaReader;
 class XMLLegacySnapPeaReader;
-
-template <typename> class Matrix;
-using MatrixInt = Matrix<Integer>;
 
 /**
  * \defgroup snappea SnapPea Triangulations
@@ -388,10 +387,10 @@ class Cusp : public ShortOutput<Cusp> {
  *
  * Regina uses the variant of the SnapPea kernel that is shipped with
  * SnapPy (standard precision), as well as some additional code
- * written explicitly for SnapPy.  The header regina-config.h includes a
- * macro SNAPPY_VERSION that gives the exact version of SnapPy that is
- * bundled into Regina, and you can query this at runtime by calling
- * Regina's function regina::versionSnapPy().
+ * written explicitly for SnapPy.  The header `regina-config.h` (included via
+ * `regina-core.h`) defines a macro `SNAPPY_VERSION` that gives the exact
+ * version of SnapPy that is bundled into Regina, and you can query this at
+ * runtime by calling Regina's function regina::versionSnapPy().
  *
  * Since Regina 7.0, SnapPeaTriangulation is no longer a "packet type" that can
  * be inserted directly into the packet tree.  Instead a SnapPeaTriangulation
@@ -1316,7 +1315,7 @@ class SnapPeaTriangulation :
          * \return a matrix with (\a number_of_rows + \a number_of_cusps) rows
          * and (3 * \a number_of_tetrahedra) columns as described above.
          */
-        MatrixInt gluingEquations() const;
+        Matrix<Integer> gluingEquations() const;
 
         /**
          * Returns a matrix describing Thurston's gluing equations in a
@@ -1350,7 +1349,7 @@ class SnapPeaTriangulation :
          * \return a matrix with (\a number_of_rows + \a number_of_cusps) rows
          * and (2 * \a number_of_tetrahedra + 1) columns as described above.
          */
-        MatrixInt gluingEquationsRect() const;
+        Matrix<Integer> gluingEquationsRect() const;
 
         /**
          * Determines whether this and the given SnapPea triangulation
@@ -1737,7 +1736,7 @@ class SnapPeaTriangulation :
          * \return a matrix with (2 * \a number_of_cusps) rows
          * and (3 * \a number_of_tetrahedra) columns as described above.
          */
-        MatrixInt slopeEquations() const;
+        Matrix<Integer> slopeEquations() const;
 
         /*@}*/
         /**
@@ -1877,7 +1876,7 @@ class SnapPeaTriangulation :
          * produced but is also much faster for larger \a k.
          *
          * For each cover that is produced, this routine will call \a action
-         * (which must be a function or some other callable object).
+         * (which must be a function or some other callable type).
          *
          * - The first argument to \a action must be a SnapPea triangulation;
          *   this will be the newly produced cover.  This argument will be
@@ -1898,7 +1897,8 @@ class SnapPeaTriangulation :
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
          *
-         * - \a action must return \c void.
+         * - The return value of \a action will be ignored; typically it would
+         *   return \c void.
          *
          * - \a action must not make changes to this original triangulation
          *   (i.e., the SnapPeaTriangulation upon which enumerateCovers()
@@ -1942,13 +1942,14 @@ class SnapPeaTriangulation :
          * be a positive integer.
          * \param type indicates whether to enumerate all covers (up to
          * equivalence) or only cyclic covers.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each cover that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial triangulation and type arguments.
          * \return the total number of covers found.
          */
         template <typename Action, typename... Args>
+        requires VoidCallback<Action, SnapPeaTriangulation&&, Cover, Args...>
         size_t enumerateCovers(int sheets, CoverEnumeration type,
             Action&& action, Args&&... args) const;
 
@@ -2600,6 +2601,8 @@ inline void SnapPeaTriangulation::randomize() {
 }
 
 template <typename Action, typename... Args>
+requires VoidCallback<Action, SnapPeaTriangulation&&,
+    SnapPeaTriangulation::Cover, Args...>
 inline size_t SnapPeaTriangulation::enumerateCovers(int sheets,
         CoverEnumeration type, Action&& action, Args&&... args) const {
     return enumerateCoversInternal(sheets, type,

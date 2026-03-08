@@ -45,108 +45,6 @@
 namespace regina::detail {
 
 /**
- * Helper class that builds various <i>dim</i>-dimensional
- * triangulations from (<i>dim</i>-1)-dimensional triangulations.
- *
- * \python This base class is not present, but the "end user"
- * class Example<dim> is.
- *
- * \tparam dim the dimension of the example triangulations to construct.
- * This must be between 2 and 15 inclusive.
- * \tparam available \c true if Regina supports (<i>dim</i>-1)-dimensional
- * triangulations, or \c false if not (in which case this class will be empty).
- *
- * \ingroup detail
- */
-template <int dim, bool available>
-class ExampleFromLowDim {
-    static_assert(dim >= 3,
-        "The generic implementation of ExampleFromLowDim requires "
-        "dimension >= 3.");
-
-    public:
-        /**
-         * Returns a double cone over the given (<i>dim-1</i>)-dimensional
-         * triangulation.
-         *
-         * If the given triangulation represents the manifold `M`, then
-         * this returns an ideal triangulation of the product `M × I`
-         * (with two ideal boundary components).  A copy of the original
-         * triangulation \a base can be found at the centre of this
-         * construction, formed from the <i>dim</i>-simplices that sit
-         * between the two ideal vertices.
-         *
-         * Note that, as a special case, if `M` is either a sphere or
-         * a ball, then this routine returns a (<i>dim</i>)-sphere or
-         * a (<i>dim</i>)-ball (since "ideal spheres" and "ideal balls" just
-         * become regular internal and boundary vertices respectively).
-         *
-         * This construction is essentially the suspension of the
-         * triangulation \a base.  We do not call it this however, since
-         * from a topological point of view, to form the ideal triangulation
-         * of `M × I` we "remove" the vertices at the apex of each cone.
-         *
-         * If the given 3-dimensional triangulation is oriented, then the
-         * resulting 4-dimensional triangulation will be oriented also.
-         *
-         * \warning If the given (<i>dim</i>-1)-dimensional triangulation has
-         * any boundary whatsoever (either real or ideal), then unless it is
-         * a (<i>dim</i>-1)-ball, you will obtain an invalid
-         * <i>dim</i>-manifold triangulation as a result.
-         *
-         * \return a double cone over the given triangulation.
-         */
-        static Triangulation<dim> doubleCone(const Triangulation<dim-1>& base);
-
-        /**
-         * Returns a single cone over the given (<i>dim-1</i>)-dimensional
-         * triangulation.
-         *
-         * If the given triangulation represents the manifold `M`, then
-         * this returns a triangulation of the product `M × I` that has
-         * one real boundary component and one ideal boundary component.
-         * The triangulation of the real boundary component will be identical
-         * to the original (<i>dim-1</i>)-dimensional triangulation \a base.
-         *
-         * If the given 3-dimensional triangulation is oriented, then the
-         * resulting 4-dimensional triangulation will be oriented also.
-         *
-         * \warning If the given (<i>dim</i>-1)-dimensional triangulation has
-         * any boundary whatsoever (either real or ideal), then unless it is
-         * a (<i>dim</i>-1)-ball, you will obtain an invalid
-         * <i>dim</i>-manifold triangulation as a result.
-         *
-         * \return a single cone over the given triangulation.
-         */
-        static Triangulation<dim> singleCone(const Triangulation<dim-1>& base);
-
-        // Make this class non-constructible.
-        ExampleFromLowDim() = delete;
-};
-
-/**
- * Helper class that builds various <i>dim</i>-dimensional
- * triangulations from (<i>dim</i>-1)-dimensional triangulations.
- * See the general ExampleFromLowDim template notes for further details.
- *
- * This specialisation is used for dimensions in which
- * (<i>dim</i>-1)-dimensional triangulations are not supported.
- * As a result, this specialised class is empty.
- *
- * \ingroup detail
- */
-template <int dim>
-class ExampleFromLowDim<dim, false> {
-    static_assert(dim == 2,
-        "The ExampleFromLowDim template should only set available = false "
-        "in dimension 2.");
-
-    public:
-        // Make this class non-constructible.
-        ExampleFromLowDim() = delete;
-};
-
-/**
  * Provides core functionality for constructing example
  * <i>dim</i>-dimensional triangulations.
  *
@@ -160,14 +58,11 @@ class ExampleFromLowDim<dim, false> {
  * class Example<dim> is.
  *
  * \tparam dim the dimension of the example triangulations to construct.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup detail
  */
-template <int dim>
-class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
-    static_assert(dim >= 2, "Example requires dimension >= 2.");
-
+template <int dim> requires (supportedDim(dim))
+class ExampleBase {
     public:
         /**
          * Closed Triangulations
@@ -256,16 +151,236 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
         static Triangulation<dim> twistedBallBundle();
 
         /*@}*/
+        /**
+         * Constructions from Lower Dimensions
+         */
+        /*@{*/
+
+        /**
+         * Returns a double cone over the given (<i>dim-1</i>)-dimensional
+         * triangulation.
+         *
+         * If the given triangulation represents the manifold `M`, then
+         * this returns an ideal triangulation of the product `M × I`
+         * (with two ideal boundary components).  A copy of the original
+         * triangulation \a base can be found at the centre of this
+         * construction, formed from the <i>dim</i>-simplices that sit
+         * between the two ideal vertices.
+         *
+         * Note that, as a special case, if `M` is either a sphere or
+         * a ball, then this routine returns a (<i>dim</i>)-sphere or
+         * a (<i>dim</i>)-ball (since "ideal spheres" and "ideal balls" just
+         * become regular internal and boundary vertices respectively).
+         *
+         * This construction is essentially the suspension of the
+         * triangulation \a base.  We do not call it this however, since
+         * from a topological point of view, to form the ideal triangulation
+         * of `M × I` we "remove" the vertices at the apex of each cone.
+         *
+         * If the given (<i>dim</i>-1)-dimensional triangulation is oriented,
+         * then the resulting <i>dim</i>-dimensional triangulation will be
+         * oriented also.
+         *
+         * \warning If the given (<i>dim</i>-1)-dimensional triangulation has
+         * any boundary whatsoever (either real or ideal), then unless it is
+         * a (<i>dim</i>-1)-ball, you will obtain an invalid
+         * <i>dim</i>-manifold triangulation as a result.
+         *
+         * \return a double cone over the given triangulation.
+         */
+        static Triangulation<dim> doubleCone(
+                const TriangulationTraits<dim>::Lower& base)
+            requires (dim > 2);
+
+        /**
+         * Returns a single cone over the given (<i>dim-1</i>)-dimensional
+         * triangulation.
+         *
+         * If the given triangulation represents the manifold `M`, then
+         * this returns a triangulation of the product `M × I` that has
+         * one real boundary component and one ideal boundary component.
+         * The triangulation of the real boundary component will be identical
+         * to the original (<i>dim-1</i>)-dimensional triangulation \a base.
+         *
+         * If the given (<i>dim</i>-1)-dimensional triangulation is oriented,
+         * then the resulting <i>dim</i>-dimensional triangulation will be
+         * oriented also.
+         *
+         * \warning If the given (<i>dim</i>-1)-dimensional triangulation has
+         * any boundary whatsoever (either real or ideal), then unless it is
+         * a (<i>dim</i>-1)-ball, you will obtain an invalid
+         * <i>dim</i>-manifold triangulation as a result.
+         *
+         * \return a single cone over the given triangulation.
+         */
+        static Triangulation<dim> singleCone(
+                const TriangulationTraits<dim>::Lower& base)
+            requires (dim > 2);
+
+        /*@}*/
 
         // Make this class non-constructible.
         ExampleBase() = delete;
 };
 
-// Inline functions for ExampleFromLowDim
+// Inline functions for Example
 
-template <int dim, bool available>
-Triangulation<dim> ExampleFromLowDim<dim, available>::singleCone(
-        const Triangulation<dim-1>& base) {
+template <int dim> requires (supportedDim(dim))
+Triangulation<dim> ExampleBase<dim>::sphere() {
+    // Take two simplices and join their entire boundaries according to
+    // the identity map.
+    Triangulation<dim> ans;
+
+    auto [p, q] = ans.template newSimplices<2>();
+    for (int i = 0; i <= dim; ++i)
+        p->join(i, q, Perm<dim+1>());
+
+    return ans;
+}
+
+template <int dim> requires (supportedDim(dim))
+Triangulation<dim> ExampleBase<dim>::simplicialSphere() {
+    Triangulation<dim> ans;
+
+    // One top-dimensional simplex for every vertex of the (dim+1)-simplex
+    auto simps = ans.template newSimplices<dim + 2>();
+
+    // One gluing for every distinct pair of vertices of the (dim+1)-simplex.
+    // We are gluing facet j-1 of simplex i to facet i of simplex j
+    // using the cycle i -> i+1 -> ... -> j-1 -> i. 
+    for (int i = 0; i <= dim; i++)
+        for (int j = i + 1; j < dim + 2; j++) {
+            std::array<int, dim + 1> map;
+            for (int k = 0; k <= dim; k++) {
+                if ((k < i) || (k >= j))
+                    map[k] = k;
+                else if (k < (j-1))
+                    map[k] = k+1;
+                else map[j-1] = i;
+            }
+            simps[i]->join(j-1, simps[j], Perm<dim+1>(map));
+        }
+
+    return ans;
+}
+
+template <int dim> requires (supportedDim(dim))
+Triangulation<dim> ExampleBase<dim>::sphereBundle() {
+    // Make two simplices, and join all but two of the facets according
+    // to the identity map.  Only facets 0 and dim of each simplex remain.
+    Triangulation<dim> ans;
+
+    auto [p, q] = ans.template newSimplices<2>();
+    for (int i = 1; i < dim; ++i)
+        p->join(i, q, Perm<dim+1>());
+
+    // Now join each facet 0 to a facet dim to join up the S1 loop.
+    // Do this in the orientation-preserving way:
+    //   0, 1, ..., dim -> dim, 0, 1, 2, ..., dim-1
+    Perm<dim + 1> map = Perm<dim + 1>().rot(dim);
+
+    if (dim % 2) {
+        p->join(0, p, Perm<dim+1>(map));
+        q->join(0, q, Perm<dim+1>(map));
+    } else {
+        p->join(0, q, Perm<dim+1>(map));
+        q->join(0, p, Perm<dim+1>(map));
+    }
+
+    // All done.
+    return ans;
+}
+
+template <int dim> requires (supportedDim(dim))
+Triangulation<dim> ExampleBase<dim>::twistedSphereBundle() {
+    // Make two simplex, and join all but two of the facets according
+    // to the identity map.  Only facets 0 and dim of each simplex remain.
+    Triangulation<dim> ans;
+
+    auto [p, q] = ans.template newSimplices<2>();
+    for (int i = 1; i < dim; ++i)
+        p->join(i, q, Perm<dim+1>());
+
+    // Now join each facet 0 to a facet dim to join up the S1 loop.
+    // Do this in the orientation-reversing way:
+    //   0, 1, ..., dim -> dim, 0, 1, 2, ..., dim-1
+    Perm<dim + 1> map = Perm<dim + 1>().rot(dim);
+
+    if (dim % 2) {
+        p->join(0, q, Perm<dim+1>(map));
+        q->join(0, p, Perm<dim+1>(map));
+    } else {
+        p->join(0, p, Perm<dim+1>(map));
+        q->join(0, q, Perm<dim+1>(map));
+    }
+
+    // All done.
+    return ans;
+}
+
+template <int dim> requires (supportedDim(dim))
+Triangulation<dim> ExampleBase<dim>::ball() {
+    Triangulation<dim> ans;
+
+    ans.newSimplex();
+    return ans;
+}
+
+template <int dim> requires (supportedDim(dim))
+Triangulation<dim> ExampleBase<dim>::ballBundle() {
+    // This is the higher-dimensional analogy of a layered solid torus.
+    // In even dimensions the corresponding construction is non-orientable,
+    // and we need to take its orientable double cover.
+    Triangulation<dim> ans;
+
+    // Now join facet 0 to a facet dim to join up the S1 loop:
+    //   0, 1, ..., dim -> dim, 0, 1, 2, ..., dim-1
+    Perm<dim + 1> map = Perm<dim + 1>().rot(dim);
+
+    if (dim % 2) {
+        Simplex<dim>* s = ans.newSimplex();
+        s->join(0, s, Perm<dim+1>(map));
+    } else {
+        auto [s, t] = ans.template newSimplices<2>();
+        s->join(0, t, Perm<dim+1>(map));
+        t->join(0, s, Perm<dim+1>(map));
+    }
+
+    // All done.
+    return ans;
+}
+
+template <int dim> requires (supportedDim(dim))
+Triangulation<dim> ExampleBase<dim>::twistedBallBundle() {
+    // This is the higher-dimensional analogy of a layered solid torus.
+    // In even dimensions the corresponding construction is non-orientable.
+    // In odd dimensions the construction is orientable, and so we
+    // double it (giving a two-vertex, two-simplex Bn × S1) but fiddle
+    // with the second map to make it non-orientable.
+    Triangulation<dim> ans;
+
+    // Now join facet 0 to a facet dim to join up the S1 loop:
+    //   0, 1, ..., dim -> dim, 0, 1, 2, ..., dim-1
+    Perm<dim + 1> map = Perm<dim + 1>().rot(dim);
+
+    if (dim % 2) {
+        auto [s, t] = ans.template newSimplices<2>();
+        s->join(0, t, Perm<dim+1>(map));
+        map = map * Perm<dim+1>(dim - 1, dim);
+        t->join(0, s, Perm<dim+1>(map));
+    } else {
+        Simplex<dim>* s = ans.newSimplex();
+        s->join(0, s, Perm<dim+1>(map));
+    }
+
+    // All done.
+    return ans;
+}
+
+template <int dim> requires (supportedDim(dim))
+Triangulation<dim> ExampleBase<dim>::singleCone(
+        const TriangulationTraits<dim>::Lower& base)
+        requires (dim > 2) {
     Triangulation<dim> ans;
 
     size_t n = base.size();
@@ -305,9 +420,10 @@ Triangulation<dim> ExampleFromLowDim<dim, available>::singleCone(
     return ans;
 }
 
-template <int dim, bool available>
-Triangulation<dim> ExampleFromLowDim<dim, available>::doubleCone(
-        const Triangulation<dim-1>& base) {
+template <int dim> requires (supportedDim(dim))
+Triangulation<dim> ExampleBase<dim>::doubleCone(
+        const TriangulationTraits<dim>::Lower& base)
+        requires (dim > 2) {
     Triangulation<dim> ans;
 
     size_t n = base.size();
@@ -357,160 +473,6 @@ Triangulation<dim> ExampleFromLowDim<dim, available>::doubleCone(
     }
 
     delete[] simp;
-    return ans;
-}
-
-// Inline functions for Example
-
-template <int dim>
-Triangulation<dim> ExampleBase<dim>::sphere() {
-    // Take two simplices and join their entire boundaries according to
-    // the identity map.
-    Triangulation<dim> ans;
-
-    auto [p, q] = ans.template newSimplices<2>();
-    for (int i = 0; i <= dim; ++i)
-        p->join(i, q, Perm<dim+1>());
-
-    return ans;
-}
-
-template <int dim>
-Triangulation<dim> ExampleBase<dim>::simplicialSphere() {
-    Triangulation<dim> ans;
-
-    // One top-dimensional simplex for every vertex of the (dim+1)-simplex
-    auto simps = ans.template newSimplices<dim + 2>();
-
-    // One gluing for every distinct pair of vertices of the (dim+1)-simplex.
-    // We are gluing facet j-1 of simplex i to facet i of simplex j
-    // using the cycle i -> i+1 -> ... -> j-1 -> i. 
-    for (int i = 0; i <= dim; i++)
-        for (int j = i + 1; j < dim + 2; j++) {
-            std::array<int, dim + 1> map;
-            for (int k = 0; k <= dim; k++) {
-                if ((k < i) || (k >= j))
-                    map[k] = k;
-                else if (k < (j-1))
-                    map[k] = k+1;
-                else map[j-1] = i;
-            }
-            simps[i]->join(j-1, simps[j], Perm<dim+1>(map));
-        }
-
-    return ans;
-}
-
-template <int dim>
-Triangulation<dim> ExampleBase<dim>::sphereBundle() {
-    // Make two simplices, and join all but two of the facets according
-    // to the identity map.  Only facets 0 and dim of each simplex remain.
-    Triangulation<dim> ans;
-
-    auto [p, q] = ans.template newSimplices<2>();
-    for (int i = 1; i < dim; ++i)
-        p->join(i, q, Perm<dim+1>());
-
-    // Now join each facet 0 to a facet dim to join up the S1 loop.
-    // Do this in the orientation-preserving way:
-    //   0, 1, ..., dim -> dim, 0, 1, 2, ..., dim-1
-    Perm<dim + 1> map = Perm<dim + 1>().rot(dim);
-
-    if (dim % 2) {
-        p->join(0, p, Perm<dim+1>(map));
-        q->join(0, q, Perm<dim+1>(map));
-    } else {
-        p->join(0, q, Perm<dim+1>(map));
-        q->join(0, p, Perm<dim+1>(map));
-    }
-
-    // All done.
-    return ans;
-}
-
-template <int dim>
-Triangulation<dim> ExampleBase<dim>::twistedSphereBundle() {
-    // Make two simplex, and join all but two of the facets according
-    // to the identity map.  Only facets 0 and dim of each simplex remain.
-    Triangulation<dim> ans;
-
-    auto [p, q] = ans.template newSimplices<2>();
-    for (int i = 1; i < dim; ++i)
-        p->join(i, q, Perm<dim+1>());
-
-    // Now join each facet 0 to a facet dim to join up the S1 loop.
-    // Do this in the orientation-reversing way:
-    //   0, 1, ..., dim -> dim, 0, 1, 2, ..., dim-1
-    Perm<dim + 1> map = Perm<dim + 1>().rot(dim);
-
-    if (dim % 2) {
-        p->join(0, q, Perm<dim+1>(map));
-        q->join(0, p, Perm<dim+1>(map));
-    } else {
-        p->join(0, p, Perm<dim+1>(map));
-        q->join(0, q, Perm<dim+1>(map));
-    }
-
-    // All done.
-    return ans;
-}
-
-template <int dim>
-Triangulation<dim> ExampleBase<dim>::ball() {
-    Triangulation<dim> ans;
-
-    ans.newSimplex();
-    return ans;
-}
-
-template <int dim>
-Triangulation<dim> ExampleBase<dim>::ballBundle() {
-    // This is the higher-dimensional analogy of a layered solid torus.
-    // In even dimensions the corresponding construction is non-orientable,
-    // and we need to take its orientable double cover.
-    Triangulation<dim> ans;
-
-    // Now join facet 0 to a facet dim to join up the S1 loop:
-    //   0, 1, ..., dim -> dim, 0, 1, 2, ..., dim-1
-    Perm<dim + 1> map = Perm<dim + 1>().rot(dim);
-
-    if (dim % 2) {
-        Simplex<dim>* s = ans.newSimplex();
-        s->join(0, s, Perm<dim+1>(map));
-    } else {
-        auto [s, t] = ans.template newSimplices<2>();
-        s->join(0, t, Perm<dim+1>(map));
-        t->join(0, s, Perm<dim+1>(map));
-    }
-
-    // All done.
-    return ans;
-}
-
-template <int dim>
-Triangulation<dim> ExampleBase<dim>::twistedBallBundle() {
-    // This is the higher-dimensional analogy of a layered solid torus.
-    // In even dimensions the corresponding construction is non-orientable.
-    // In odd dimensions the construction is orientable, and so we
-    // double it (giving a two-vertex, two-simplex Bn × S1) but fiddle
-    // with the second map to make it non-orientable.
-    Triangulation<dim> ans;
-
-    // Now join facet 0 to a facet dim to join up the S1 loop:
-    //   0, 1, ..., dim -> dim, 0, 1, 2, ..., dim-1
-    Perm<dim + 1> map = Perm<dim + 1>().rot(dim);
-
-    if (dim % 2) {
-        auto [s, t] = ans.template newSimplices<2>();
-        s->join(0, t, Perm<dim+1>(map));
-        map = map * Perm<dim+1>(dim - 1, dim);
-        t->join(0, s, Perm<dim+1>(map));
-    } else {
-        Simplex<dim>* s = ans.newSimplex();
-        s->join(0, s, Perm<dim+1>(map));
-    }
-
-    // All done.
     return ans;
 }
 

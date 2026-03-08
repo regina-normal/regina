@@ -54,12 +54,12 @@ void XMLAngleStructureReader::initialChars(const std::string& chars) {
     // Create a new vector and read all non-zero entries.
     VectorInt vec(vecLen);
 
-    long pos;
+    size_t pos;
     Integer value;
     for (size_t i = 0; i < tokens.size(); i += 2) {
-        if (! valueOf(tokens[i], pos))
+        if (! valueOf(tokens[i], pos)) // note: this ensures pos >= 0
             return;
-        if (pos < 0 || pos >= vecLen)
+        if (pos >= vecLen)
             return;
         try {
             vec[pos] = tokens[i + 1];
@@ -86,12 +86,12 @@ XMLAngleStructuresReader::XMLAngleStructuresReader(XMLTreeResolver& res,
     if (! valueOf(props.lookup("tautonly"), tautOnly))
         return;
 
-    int algorithm;
+    Flags<AngleAlg>::BaseInt algorithm;
     if (! valueOf(props.lookup("algorithm"), algorithm))
-        algorithm = static_cast<int>(AngleAlg::Legacy);
+        algorithm = static_cast<Flags<AngleAlg>::BaseInt>(AngleAlg::Legacy);
 
     list_ = make_packet<AngleStructures>(std::in_place, tautOnly,
-        Flags<AngleAlg>::fromInt(algorithm), *tri_);
+        Flags<AngleAlg>::fromBase(algorithm), *tri_);
 }
 
 XMLElementReader* XMLAngleStructuresReader::startContentSubElement(
@@ -153,13 +153,14 @@ XMLElementReader* XMLLegacyAngleStructuresReader::startContentSubElement(
             // All of these parameters are optional, to support older
             // file formats.
             bool tautOnly;
-            int algorithm;
+            Flags<AngleAlg>::BaseInt algorithm;
             if (! valueOf(props.lookup("tautonly"), tautOnly))
                 tautOnly = false;
             if (! valueOf(props.lookup("algorithm"), algorithm))
-                algorithm = static_cast<int>(AngleAlg::Legacy);
+                algorithm = static_cast<Flags<AngleAlg>::BaseInt>(
+                    AngleAlg::Legacy);
             list_ = make_packet<AngleStructures>(std::in_place, tautOnly,
-                Flags<AngleAlg>::fromInt(algorithm), tri_);
+                Flags<AngleAlg>::fromBase(algorithm), tri_);
         } else if (subTagName == "struct") {
             // Eep, we are getting angle structures but no parameters were
             // ever specified.  This was how data files looked in

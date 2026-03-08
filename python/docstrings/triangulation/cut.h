@@ -184,13 +184,8 @@ Here a cut on *n* nodes is described by a sequence of *n* integers,
 each equal to 0 or 1, indicating which side of the partition each node
 lies on.
 
-Precondition:
-    The type *iterator*, when dereferenced, can be cast to an ``int``.
-
-.. warning::
-    This routine computes the number of nodes by subtracting ``end -
-    begin``, and so ideally *iterator* should be a random access
-    iterator type for which this operation is constant time.
+The iterator type must be random access because this allows the
+implementation to compute the number of nodes in constant time.
 
 Exception ``InvalidArgument``:
     Some element of the given sequence is neither 0 nor 1.

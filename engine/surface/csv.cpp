@@ -79,6 +79,9 @@ namespace {
     /**
      * Writes a piece of the CSV data for the given normal surface
      * corresponding to the given set of optional fields.
+     *
+     * Note that the calls to isOrientable() and isTwoSided() could throw an
+     * UnsolvedCase exception.
      */
     void writePropData(std::ostream& out, const NormalSurface& s,
             Flags<SurfaceExport> fields) {
@@ -161,13 +164,11 @@ bool NormalSurfaces::saveCSVStandard(const char* filename,
     if (! out)
         return false;
 
-    unsigned long n = triangulation().size();
-
-    unsigned long i;
+    size_t n = triangulation().size();
 
     // Write the CSV header.
     writePropHeader(out, additionalFields);
-    for (i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
         out << 'T' << i << ":0,";
         out << 'T' << i << ":1,";
         out << 'T' << i << ":2,";
@@ -194,9 +195,9 @@ bool NormalSurfaces::saveCSVStandard(const char* filename,
 
     // Write the data for individual surfaces.
     for (const NormalSurface& s : surfaces_) {
-        writePropData(out, s, additionalFields);
+        writePropData(out, s, additionalFields); // could throw UnsolvedCase
 
-        for (i = 0; i < n; ++i) {
+        for (size_t i = 0; i < n; ++i) {
             out << s.triangles(i, 0) << ',';
             out << s.triangles(i, 1) << ',';
             out << s.triangles(i, 2) << ',';
@@ -232,13 +233,11 @@ bool NormalSurfaces::saveCSVEdgeWeight(const char* filename,
     if (! out)
         return false;
 
-    unsigned long n = triangulation().countEdges();
-
-    unsigned long i;
+    size_t n = triangulation().countEdges();
 
     // Write the CSV header.
     writePropHeader(out, additionalFields);
-    for (i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
         out << 'E' << i;
 
         if (i < n - 1)
@@ -248,9 +247,9 @@ bool NormalSurfaces::saveCSVEdgeWeight(const char* filename,
 
     // Write the data for individual surfaces.
     for (const NormalSurface& s : surfaces_) {
-        writePropData(out, s, additionalFields);
+        writePropData(out, s, additionalFields); // could throw UnsolvedCase
 
-        for (i = 0; i < n; ++i) {
+        for (size_t i = 0; i < n; ++i) {
             out << s.edgeWeight(i);
 
             if (i < n - 1)

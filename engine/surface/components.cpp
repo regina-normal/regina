@@ -34,7 +34,7 @@
 
 namespace regina {
 
-std::vector<NormalSurface> NormalSurface::components() const {
+std::vector<NormalSurface> NormalSurface::components() const try {
     if (connected_.has_value() && *connected_) {
         // We already know that either the surface is empty or it is a
         // single connected component.
@@ -53,13 +53,12 @@ std::vector<NormalSurface> NormalSurface::components() const {
     if (! isCompact())
         return {};
 
-    // TODO: First check that there aren't too many discs!
-
     // The components structure stores an integer alongside each disc;
     // that integer will be the ID of its connected component, or -1 if
     // this is unknown.  Components are numbered from 0 upwards.
     DiscSetSurfaceData<long> components(*this, -1);
         // Stores the component ID for each disc.
+        // Could throw an IntegerOverflow.
     std::queue<DiscSpec> discQueue;
         // A queue of discs whose component IDs must be propagated.
     DiscSpecIterator it(components);
@@ -168,9 +167,15 @@ std::vector<NormalSurface> NormalSurface::components() const {
 
     connected_ = (compID == 1);
     return dest;
+} catch (const IntegerOverflow&) {
+    throw UnsolvedCase("This surface has too many normal discs "
+        "for this computation to proceed");
 }
 
 bool NormalSurface::disjoint(const NormalSurface& other) const {
+    // Note: This calls components() and isConnected(), both of which could
+    // throw an UnsolvedCase exception.
+
     // Some sanity tests before we begin.
     // These should all pass if the user has adhered to the preconditions.
     if (! (isCompact() && other.isCompact()))

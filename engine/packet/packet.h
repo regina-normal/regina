@@ -43,6 +43,7 @@
 #include <map>
 #include <memory>
 #include <set>
+#include <concepts> // Don't include this first - see QTBUG-83160
 
 #include "regina-core.h"
 #include "core/output.h"
@@ -2000,6 +2001,23 @@ class Packet : public std::enable_shared_from_this<Packet>,
 
     template <typename> friend class PacketData;
 };
+
+/**
+ * A class that is equal to or derived from one of Regina's packet types.
+ *
+ * This concept does _not_ include the virtual base class Packet.
+ * It does, however, include SurfaceFilter (which represents a single packet
+ * type in Regina, but which itself is a virtual base class for different
+ * kinds of filters).
+ *
+ * \ingroup packet
+ */
+template <typename T>
+concept PacketClass =
+    std::derived_from<T, Packet> &&
+    requires {
+        { T::typeID } -> std::same_as<const PacketType&>;
+    };
 
 /**
  * Internal constants that support wrapped packets.

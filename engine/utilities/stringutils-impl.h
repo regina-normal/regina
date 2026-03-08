@@ -49,7 +49,7 @@
 
 namespace regina {
 
-template <typename T>
+template <StandardCppInteger T>
 std::string superscript(T value) {
     std::string s = std::to_string(value);
     std::string ans;
@@ -72,8 +72,8 @@ std::string superscript(T value) {
     return ans;
 }
 
-template <bool withInfinity>
-std::string superscript(const IntegerBase<withInfinity>& value) {
+template <ArbitraryPrecisionInteger T>
+std::string superscript(const T& value) {
     std::string s = value.stringValue();
     std::string ans;
     for (auto c : s)
@@ -95,7 +95,7 @@ std::string superscript(const IntegerBase<withInfinity>& value) {
     return ans;
 }
 
-template <typename T>
+template <StandardCppInteger T>
 std::string subscript(T value) {
     std::string s = std::to_string(value);
     std::string ans;
@@ -118,8 +118,8 @@ std::string subscript(T value) {
     return ans;
 }
 
-template <bool withInfinity>
-std::string subscript(const IntegerBase<withInfinity>& value) {
+template <ArbitraryPrecisionInteger T>
+std::string subscript(const T& value) {
     std::string s = value.stringValue();
     std::string ans;
     for (auto c : s)

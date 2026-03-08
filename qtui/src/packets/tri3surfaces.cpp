@@ -789,9 +789,18 @@ void Tri3SurfacesUI::calculateHaken() {
         "Hakenness testing can be quite slow\n"
         "for larger triangulations.\n\n"
         "Please be patient."), ui);
-    tri_->isHaken();
-    delete dlg;
+    try {
+        tri_->isHaken();
+    } catch (const regina::UnsolvedCase&) {
+        delete dlg;
 
+        ReginaSupport::warn(ui, tr("Calculation not possible"),
+            tr("The Hakenness testing algorithm encountered a normal "
+            "surface with coordinates so large that it created an "
+            "impossible memory requirement for this hardware."));
+        return;
+    }
+    delete dlg;
     refresh();
 }
 
@@ -809,7 +818,7 @@ void Tri3SurfacesUI::calculateStrict() {
 void Tri3SurfacesUI::contextManifold(const QPoint& pos) {
     if (name.empty())
         return;
-    
+
     QMenu m(tr("Context menu"), manifold);
     QAction a("Copy manifold", manifold);
     connect(&a, SIGNAL(triggered()), this, SLOT(copyManifold()));
@@ -820,7 +829,7 @@ void Tri3SurfacesUI::contextManifold(const QPoint& pos) {
 void Tri3SurfacesUI::contextCensus(const QPoint& pos) {
     if (hits.empty())
         return;
-    
+
     QMenu m(tr("Context menu"), census);
     QAction a("Copy census", census);
     connect(&a, SIGNAL(triggered()), this, SLOT(copyCensus()));
@@ -834,7 +843,7 @@ void Tri3SurfacesUI::copyManifold() {
 
 void Tri3SurfacesUI::copyCensus() {
     QString ans;
-    
+
     if (hits.size() == 1) {
         ans = hits.front().name().c_str();
     } else {

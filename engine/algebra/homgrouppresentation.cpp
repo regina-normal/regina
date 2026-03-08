@@ -41,7 +41,7 @@ HomGroupPresentation::HomGroupPresentation(
         domain_(groupForIdentity), codomain_(groupForIdentity),
         map_(groupForIdentity.countGenerators()),
         inv_(std::in_place, groupForIdentity.countGenerators()) {
-    unsigned long i = 0;
+    size_t i = 0;
     for (GroupExpression& e : map_)
         e.addTermFirst(i++, 1);
     i = 0;
@@ -53,9 +53,9 @@ HomMarkedAbelianGroup HomGroupPresentation::markedAbelianisation() const {
     MarkedAbelianGroup DOM = domain_.markedAbelianisation();
     MarkedAbelianGroup RAN = codomain_.markedAbelianisation();
     MatrixInt ccMat( RAN.ccRank(), DOM.ccRank() );
-    for (unsigned long j=0; j<ccMat.columns(); j++) {
+    for (size_t j=0; j<ccMat.columns(); j++) {
         GroupExpression COLj( evaluate(j) );
-        for (unsigned long i=0; i<COLj.countTerms(); i++)
+        for (size_t i=0; i<COLj.countTerms(); i++)
             ccMat.entry( COLj.generator(i), j ) += COLj.exponent(i);
     }
     return HomMarkedAbelianGroup(std::move(DOM), std::move(RAN),
@@ -96,7 +96,7 @@ void HomGroupPresentation::writeTextLong(std::ostream& out) const {
     out<<" "; // std::endl;
 
     out<<"map[";
-    for (unsigned long i=0; i<domain_.countGenerators(); i++) {
+    for (size_t i=0; i<domain_.countGenerators(); i++) {
         if (i!=0)
             out<<", ";
         if (domain_.countGenerators()<=26)
@@ -121,12 +121,12 @@ bool HomGroupPresentation::smallCancellation() {
     if (! codomainMap)
         codomainMap = HomGroupPresentation(codomain_);
     std::vector< GroupExpression > newMap( domain_.countGenerators() );
-    for (unsigned long i=0; i<newMap.size(); i++)
+    for (size_t i=0; i<newMap.size(); i++)
         newMap[i] = codomainMap->evaluate( evaluate( domainMap->invEvaluate(i) ) );
     std::vector< GroupExpression > newInvMap;
     if (inv_) {
         newInvMap.resize( codomain_.countGenerators() );
-        for (unsigned long i=0; i<newInvMap.size(); i++)
+        for (size_t i=0; i<newInvMap.size(); i++)
             newInvMap[i] = domainMap->evaluate( invEvaluate(
                 codomainMap->invEvaluate(i) ) );
     }
@@ -151,13 +151,13 @@ bool HomGroupPresentation::smallCancellation() {
 HomGroupPresentation HomGroupPresentation::operator * (
         const HomGroupPresentation& input) const {
     std::vector<GroupExpression> evalVec(input.domain_.countGenerators());
-    for (unsigned long i=0; i<evalVec.size(); i++)
+    for (size_t i=0; i<evalVec.size(); i++)
         evalVec[i] = evaluate( input.evaluate(i) );
     if ( (! inv_) || (! input.inv_) ) {
         return HomGroupPresentation(input.domain_, codomain_, evalVec);
     } else {
         std::vector<GroupExpression> invVec( codomain_.countGenerators());
-        for (unsigned long i=0; i<invVec.size(); i++)
+        for (size_t i=0; i<invVec.size(); i++)
             invVec[i] = input.invEvaluate( invEvaluate(i) );
         return HomGroupPresentation(input.domain_, codomain_, evalVec, invVec );
     }
@@ -166,13 +166,13 @@ HomGroupPresentation HomGroupPresentation::operator * (
 HomGroupPresentation HomGroupPresentation::operator * (
         HomGroupPresentation&& input) const {
     std::vector<GroupExpression> evalVec(input.domain_.countGenerators());
-    for (unsigned long i=0; i<evalVec.size(); i++)
+    for (size_t i=0; i<evalVec.size(); i++)
         evalVec[i] = evaluate( input.evaluate(i) );
     if ( (! inv_) || (! input.inv_) ) {
         return HomGroupPresentation(std::move(input.domain_), codomain_, evalVec);
     } else {
         std::vector<GroupExpression> invVec( codomain_.countGenerators());
-        for (unsigned long i=0; i<invVec.size(); i++)
+        for (size_t i=0; i<invVec.size(); i++)
             invVec[i] = input.invEvaluate( invEvaluate(i) );
         return HomGroupPresentation(std::move(input.domain_), codomain_,
             evalVec, invVec );
@@ -189,12 +189,12 @@ bool HomGroupPresentation::nielsen() {
     if (! codomainMap)
         codomainMap = HomGroupPresentation(codomain_);
     std::vector< GroupExpression > newMap( domain_.countGenerators() );
-    for (unsigned long i=0; i<newMap.size(); i++)
+    for (size_t i=0; i<newMap.size(); i++)
         newMap[i] = codomainMap->evaluate(evaluate(domainMap->invEvaluate(i)));
     std::vector< GroupExpression > newInvMap;
     if (inv_) {
         newInvMap.resize( codomain_.countGenerators() );
-        for (unsigned long i=0; i<newInvMap.size(); i++)
+        for (size_t i=0; i<newInvMap.size(); i++)
             newInvMap[i] = domainMap->evaluate( invEvaluate(
                 codomainMap->invEvaluate(i) ) );
     }
@@ -232,12 +232,12 @@ bool HomGroupPresentation::simplify() {
     //         "map" appropriately.  Simplify the words in the codomain.
     //         Do the same for the inverse map if we have one.
     std::vector< GroupExpression > newMap( domain_.countGenerators() );
-    for (unsigned long i=0; i<newMap.size(); i++)
+    for (size_t i=0; i<newMap.size(); i++)
         newMap[i] = codomainMap->evaluate(evaluate(domainMap->invEvaluate(i)));
     std::vector< GroupExpression > newInvMap;
     if (inv_) {
         newInvMap.resize( codomain_.countGenerators() );
-        for (unsigned long i=0; i<newInvMap.size(); i++)
+        for (size_t i=0; i<newInvMap.size(); i++)
             newInvMap[i] = domainMap->evaluate(
                 invEvaluate( codomainMap->invEvaluate(i) ) );
     }
@@ -286,7 +286,7 @@ bool HomGroupPresentation::verifyIsomorphism() const {
     if (inv_->size() != codomain_.countGenerators())
         return false;
     // for every generator in the domain compute f^-1(f(x))x^-1 and reduce
-    for (unsigned long i=0; i<domain_.countGenerators(); i++) {
+    for (size_t i=0; i<domain_.countGenerators(); i++) {
         GroupExpression tempW( invEvaluate(evaluate(i)) );
         tempW.addTermLast( i, -1 );
         domain_.simplifyAndConjugate(tempW);
@@ -294,7 +294,7 @@ bool HomGroupPresentation::verifyIsomorphism() const {
             return false;
     }
     // for every generator in the codomain compute f(f^-1(x))x^-1 and reduce
-    for (unsigned long i=0; i<codomain_.countGenerators(); i++) {
+    for (size_t i=0; i<codomain_.countGenerators(); i++) {
         GroupExpression tempW( evaluate(invEvaluate(i)) );
         tempW.addTermLast( i, -1 );
         codomain_.simplifyAndConjugate(tempW);

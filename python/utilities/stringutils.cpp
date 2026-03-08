@@ -34,6 +34,8 @@
 #include "../helpers/docstrings.h"
 #include "../docstrings/utilities/stringutils.h"
 
+using regina::Integer;
+using regina::LargeInteger;
 using pybind11::overload_cast;
 
 void addStringUtils(pybind11::module_& m) {
@@ -48,18 +50,13 @@ void addStringUtils(pybind11::module_& m) {
     m.def("basicTokenise", static_cast<std::vector<std::string>(&)(
         const std::string&)>(regina::basicTokenise), rdoc::basicTokenise);
 
-    m.def("subscript",
-        &regina::subscript<long>, rdoc::subscript);
-    m.def("subscript", overload_cast<const regina::Integer&>(
-        &regina::subscript<false>), rdoc::subscript);
-    m.def("subscript", overload_cast<const regina::LargeInteger&>(
-        &regina::subscript<true>), rdoc::subscript);
-    m.def("superscript",
-        &regina::superscript<long>, rdoc::superscript);
-    m.def("superscript", overload_cast<const regina::Integer&>(
-        &regina::superscript<false>), rdoc::superscript);
-    m.def("superscript", overload_cast<const regina::LargeInteger&>(
-        &regina::superscript<true>), rdoc::superscript);
+    m.def("subscript", &regina::subscript<long>, rdoc::subscript);
+    m.def("subscript", &regina::subscript<Integer>, rdoc::subscript_2);
+    m.def("subscript", &regina::subscript<LargeInteger>, rdoc::subscript_2);
+    m.def("superscript", &regina::superscript<long>, rdoc::superscript);
+    m.def("superscript", &regina::superscript<Integer>, rdoc::superscript_2);
+    m.def("superscript", &regina::superscript<LargeInteger>,
+        rdoc::superscript_2);
 
     RDOC_SCOPE_END
 }

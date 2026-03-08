@@ -167,38 +167,48 @@ void SurfacesSummaryUI::refresh() {
     std::set<std::pair<int, int>> allTypesClosed, allTypesBounded;
     bool hasNonEmbClosed = false, hasNonEmbBounded = false;
 
-    regina::LargeInteger euler;
-    std::pair<int, int> type;
+    bool hasUnsolvedCases = false;
+
     for (const regina::NormalSurface& s :
             static_cast<const regina::NormalSurfaces&>(*surfaces)) {
         if (! s.isCompact())
             ++spun;
         else if (s.hasRealBoundary()) {
-            euler = s.eulerChar();
+            regina::LargeInteger euler = s.eulerChar();
             allECsBounded.insert(euler);
 
-            if (surfaces->isEmbeddedOnly() || s.embedded()) {
-                type = std::make_pair(boolIndex(s.isTwoSided()),
-                    boolIndex(s.isOrientable()));
-                allTypesBounded.insert(type);
-                ++countBounded[type.first][type.second][euler];
-            } else {
-                hasNonEmbBounded = true;
-                ++countNonEmbBounded[euler];
+            try {
+                if (surfaces->isEmbeddedOnly() || s.embedded()) {
+                    // These tests could throw an UnsolvedCase exception.
+                    int twoSided = boolIndex(s.isTwoSided());
+                    int orientable = boolIndex(s.isOrientable());
+                    allTypesBounded.emplace(twoSided, orientable);
+                    ++countBounded[twoSided][orientable][euler];
+                } else {
+                    hasNonEmbBounded = true;
+                    ++countNonEmbBounded[euler];
+                }
+            } catch (const regina::UnsolvedCase&) {
+                hasUnsolvedCases = true;
             }
             ++bounded;
         } else {
-            euler = s.eulerChar();
+            regina::LargeInteger euler = s.eulerChar();
             allECsClosed.insert(euler);
 
-            if (surfaces->isEmbeddedOnly() || s.embedded()) {
-                type = std::make_pair(boolIndex(s.isTwoSided()),
-                    boolIndex(s.isOrientable()));
-                allTypesClosed.insert(type);
-                ++countClosed[type.first][type.second][euler];
-            } else {
-                hasNonEmbClosed = true;
-                ++countNonEmbClosed[euler];
+            try {
+                if (surfaces->isEmbeddedOnly() || s.embedded()) {
+                    // These tests could throw an UnsolvedCase exception.
+                    int twoSided = boolIndex(s.isTwoSided());
+                    int orientable = boolIndex(s.isOrientable());
+                    allTypesClosed.emplace(twoSided, orientable);
+                    ++countClosed[twoSided][orientable][euler];
+                } else {
+                    hasNonEmbClosed = true;
+                    ++countNonEmbClosed[euler];
+                }
+            } catch (const regina::UnsolvedCase&) {
+                hasUnsolvedCases = true;
             }
             ++closed;
         }
@@ -222,6 +232,12 @@ void SurfacesSummaryUI::refresh() {
 
     if (closed == 0) {
         totClosed->setText(tr("No closed surfaces."));
+        tableClosed->hide();
+    } else if (hasUnsolvedCases) {
+        if (closed == 1)
+            totClosed->setText(tr("1 closed surface."));
+        else
+            totClosed->setText(tr("%1 closed surfaces.").arg(closed));
         tableClosed->hide();
     } else {
         if (closed == 1)
@@ -277,6 +293,12 @@ void SurfacesSummaryUI::refresh() {
 
         if (bounded == 0) {
             totBounded->setText(tr("No bounded surfaces."));
+            tableBounded->hide();
+        } else if (hasUnsolvedCases) {
+            if (bounded == 1)
+                totBounded->setText(tr("1 bounded surface."));
+            else
+                totBounded->setText(tr("%1 bounded surfaces.").arg(bounded));
             tableBounded->hide();
         } else {
             if (bounded == 1)

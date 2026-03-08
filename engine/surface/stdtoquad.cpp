@@ -37,7 +37,7 @@ namespace regina {
 void NormalSurfaces::buildReducedFromStandard(
         const std::vector<NormalSurface>& stdList) {
     // Get the empty triangulation out of the way now.
-    unsigned long n = triangulation_->size();
+    size_t n = triangulation_->size();
     if (n == 0)
         return;
 
@@ -58,7 +58,6 @@ void NormalSurfaces::buildReducedFromStandard(
     // where, for every quad coordinate where S is zero, T is zero also.
     // For almost normal surfaces, simply replace "quad coordinate" with
     // "quad or oct coordinate".
-    unsigned tet;
     for (size_t i = 0; i < nUse; ++i) {
         if (! use[i])
             continue;
@@ -72,7 +71,7 @@ void NormalSurfaces::buildReducedFromStandard(
 
             dominates = true;
             strict = false;
-            for (tet = 0; tet < n && dominates; ++tet) {
+            for (size_t tet = 0; tet < n && dominates; ++tet) {
                 // Check the zero/non-zero status of the quads.
                 for (int type = 0; type < 3; ++type) {
                     if (use[i]->quads(tet, type) == 0 &&
