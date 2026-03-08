@@ -1338,6 +1338,137 @@ Returns:
     the groups of this link obtained by the "native" and "reflected"
     Silver-Williams presentations, as described above.)doc";
 
+// Docstring regina::python::doc::Link_::fromBraid
+static const char *fromBraid =
+R"doc(Creates a new classical link from a braid word, presented as a string.
+
+For a braid on *n* strands (not to be confused with strands of a link
+diagram), orient the strands from left to right, and label the strands
+in order from bottom to top by 0 to *n* - 1 (inclusive). A braid word
+for such an *n*-strand braid is given by a (nonempty) sequence of
+nonzero integers between 1 - *n* and *n* - 1 (inclusive), in which
+either 1 - *n* or *n* - 1 appears at least once; in other words, we
+assume that there is at least one crossing involving the uppermost
+strand (we make no such assumption for the lowermost strand).
+
+* A positive integer *s* in the braid word indicates an exchange of
+  strands *s* - 1 and *s* via a positive crossing.
+
+```
+  ___   ___
+     \ /
+      \
+  ___/ \___
+```
+
+* A negative integer -*s* in the braid word indicates an exchange of
+  strands *s* - 1 and *s* via a negative crossing.
+
+```
+  ___   ___
+     \ /
+      /
+  ___/ \___
+```
+
+As an example, the braid word
+
+```
+1 -3 -3 2 1
+```
+
+describes the following 4-strand braid:
+
+```
+_________   ___   _______________
+         \ /   \ /
+          /     /
+_________/ \___/ \___   _________
+                     \ /
+                      \
+___   _______________/ \___   ___
+   \ /                     \ /
+    \                       \
+___/ \_____________________/ \___
+```
+
+The corresponding link is constructed by taking the closure of the
+braid; that is, by taking strand *s* on the right and joining it with
+strand *s* on the left, for each *s* between 0 and *n* - 1
+(inclusive). Depending on how the braid word permutes the strands as
+we go from left to right, this produces a link with up to *n*
+components. For example, in the 4-strand example above, the closure
+will be a 3-component link.
+
+The conventions for braids described above are chosen to be consistent
+with those used in SnapPy 3.0/Spherogram 2.0 and newer.
+
+For the special case where the braid word is empty, this routine
+returns a zero-crossing unknot.
+
+There are two variants of this routine. This variant takes a single
+string, where the integers have been combined together and separated
+by whitespace. The other variant takes a sequence of integers, defined
+by a pair of iterators.
+
+In this variant (the string variant), the exact form of the whitespace
+does not matter, and additional whitespace at the beginning or end of
+the string is allowed.
+
+Exception ``InvalidArgument``:
+    The given string was not a valid braid word for a classical link.
+
+Author:
+    Alex He
+
+Parameter ``str``:
+    a braid word for a classical link, as described above.
+
+Returns:
+    the reconstructed link.)doc";
+
+// Docstring regina::python::doc::Link_::fromBraid_2
+static const char *fromBraid_2 =
+R"doc(Creates a new classical link from a braid word, presented as an
+integer sequence.
+
+See fromBraid(const std::string&) for a full description of the
+notation for braid words, as well as a detailed discussion of how
+Regina constructs classical links from such notation.
+
+This routine is a variant of fromBraid(const std::string&) which,
+instead of taking a human-readable string, takes a machine-readable
+sequence of integers. This sequence is given by passing a pair of
+begin/end iterators.
+
+Precondition:
+    *Iterator* is a random access iterator type, and dereferencing
+    such an iterator produces a native C++ integer. (The specific
+    native C++ integer type being used will be deduced from the type
+    *Iterator*.)
+
+Exception ``InvalidArgument``:
+    The given sequence was not a valid braid word for a classical
+    link.
+
+Python:
+    Instead of a pair of begin and past-the-end iterators, this
+    routine takes a sequence (such as a Python list) of integers.
+
+Author:
+    Alex He
+
+Parameter ``begin``:
+    an iterator that points to the beginning of the sequence of
+    integers for the braid word for a classical link.
+
+Parameter ``end``:
+    an iterator that points past the end of the sequence of integers
+    for the braid word for a classical link.
+
+Returns:
+    the reconstructed link.)doc";
+
 // Docstring regina::python::doc::Link_::fromDT
 static const char *fromDT =
 R"doc(Creates a new classical knot from either alphabetical or numerical

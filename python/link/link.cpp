@@ -187,6 +187,12 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
         .def_static("fromDT", [](const std::vector<int>& v) {
             return Link::fromDT(v.begin(), v.end());
         }, pybind11::arg("integers"), rdoc::fromDT_2)
+        .def_static("fromBraid", [](const std::string& s) {
+            return Link::fromBraid(s);
+        }, pybind11::arg("word"), rdoc::fromBraid)
+        .def_static("fromBraid", [](const std::vector<int>& v) {
+            return Link::fromBraid(v.begin(), v.end());
+        }, pybind11::arg("integers"), rdoc::fromBraid_2)
         .def_static("fromPD", [](const std::string& s) {
             return Link::fromPD(s);
         }, rdoc::fromPD)
