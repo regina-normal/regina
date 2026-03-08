@@ -210,8 +210,8 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * \param end a past-the-end iterator indicating the end of the list of
          * coordinates to constraint within each block.
          */
-        template <InputIteratorFor<int> iterator>
-        void addLocal(iterator begin, iterator end);
+        template <InputIteratorFor<int> Iterator>
+        void addLocal(Iterator begin, Iterator end);
         /**
          * Adds a new family of hard-coded local constraints to this set.
          *
@@ -255,8 +255,8 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * \param end a past-the-end iterator indicating the end of the list of
          * coordinates to constraint within each block.
          */
-        template <InputIteratorFor<int> iterator>
-        void addGlobal(iterator begin, iterator end);
+        template <InputIteratorFor<int> Iterator>
+        void addGlobal(Iterator begin, Iterator end);
         /**
          * Adds one new hard-coded global constraint to this set.
          *
@@ -426,15 +426,15 @@ inline ValidityConstraints::ValidityConstraints(int blockSize, size_t nBlocks,
     global_.reserve(reserveGlobal);
 }
 
-template <InputIteratorFor<int> iterator>
-inline void ValidityConstraints::addLocal(iterator begin, iterator end) {
+template <InputIteratorFor<int> Iterator>
+inline void ValidityConstraints::addLocal(Iterator begin, Iterator end) {
     local_.emplace_back(begin, end);
 }
 inline void ValidityConstraints::addLocal(std::initializer_list<int> pattern) {
     local_.emplace_back(pattern);
 }
-template <InputIteratorFor<int> iterator>
-inline void ValidityConstraints::addGlobal(iterator begin, iterator end) {
+template <InputIteratorFor<int> Iterator>
+inline void ValidityConstraints::addGlobal(Iterator begin, Iterator end) {
     global_.emplace_back(begin, end);
 }
 inline void ValidityConstraints::addGlobal(std::initializer_list<int> pattern) {

@@ -150,12 +150,12 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
          * \param end a past-the-end iterator indicating the end of the
          * collection of pairs.
          */
-        template <std::input_iterator iterator>
-        requires requires(iterator it) {
+        template <std::input_iterator Iterator>
+        requires requires(Iterator it) {
             { it->first } -> CanConstruct<DiagramSequence>;
             { it->second } -> CanConstruct<Laurent<Integer>>;
         }
-        Arrow(iterator begin, iterator end);
+        Arrow(Iterator begin, Iterator end);
 
         /**
          * Creates a new polynomial from a hard-coded collection of diagram
@@ -770,12 +770,12 @@ struct RingTraits<Arrow> {
 
 // Inline functions for Arrow
 
-template <std::input_iterator iterator>
-requires requires(iterator it) {
+template <std::input_iterator Iterator>
+requires requires(Iterator it) {
     { it->first } -> CanConstruct<Arrow::DiagramSequence>;
     { it->second } -> CanConstruct<Laurent<Integer>>;
 }
-inline Arrow::Arrow(iterator begin, iterator end) {
+inline Arrow::Arrow(Iterator begin, Iterator end) {
     for (auto it = begin; it != end; ++it) {
         DiagramSequence seq(it->first);
         Laurent<Integer> laurent(it->second);

@@ -301,8 +301,8 @@ class MarkedVector : private std::vector<T*> {
         /**
          * Empties this vector and refills it with the given range of items.
          *
-         * Calling this routine is equivalent to calling clear() followed by
-         * push_back() for each item in the range from \a begin to \a end.
+         * Calling this routine is equivalent to calling `clear()` followed by
+         * `push_back()` for each item in the range from \a begin to \a end.
          * Its implementation, however, is a little more efficient.
          *
          * The algorithm only makes a single pass through the given
@@ -313,9 +313,9 @@ class MarkedVector : private std::vector<T*> {
          * \param end an iterator that points past the end of the range of
          * items with which to refill this vector.
          */
-        template <InputIteratorFor<T*> iterator>
-        void refill(iterator begin, iterator end) {
-            iterator it = begin;
+        template <InputIteratorFor<T*> Iterator>
+        void refill(Iterator begin, Iterator end) {
+            Iterator it = begin;
             auto local = std::vector<T*>::begin();
             while (it != end && local != std::vector<T*>::end())
                 *local++ = *it++;

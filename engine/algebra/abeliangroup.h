@@ -155,8 +155,8 @@ class AbelianGroup :
          * \param endInvFac an iterator pointing past the end of the list of
          * invariant factors.
          */
-        template <BidirectionalIteratorFor<Integer> iterator>
-        AbelianGroup(size_t rank, iterator beginInvFac, iterator endInvFac);
+        template <BidirectionalIteratorFor<Integer> Iterator>
+        AbelianGroup(size_t rank, Iterator beginInvFac, Iterator endInvFac);
         /**
          * Deprecated constructor that creates a new group with the given rank
          * and invariant factors.
@@ -578,9 +578,9 @@ inline AbelianGroup::AbelianGroup(size_t rank,
     }
 }
 
-template <BidirectionalIteratorFor<Integer> iterator>
+template <BidirectionalIteratorFor<Integer> Iterator>
 inline AbelianGroup::AbelianGroup(size_t rank,
-        iterator beginInvFac, iterator endInvFac) : rank_(rank) {
+        Iterator beginInvFac, Iterator endInvFac) : rank_(rank) {
     using IntType = std::remove_cvref_t<decltype(*beginInvFac)>;
 
     if (beginInvFac == endInvFac)

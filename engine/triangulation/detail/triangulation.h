@@ -3507,15 +3507,15 @@ class TriangulationBase :
          * of the list of gluings.
          * \return the reconstructed triangulation.
          */
-        template <std::input_iterator iterator>
-        requires requires(iterator it) {
+        template <std::input_iterator Iterator>
+        requires requires(Iterator it) {
             { std::get<0>(*it) } -> std::convertible_to<size_t>;
             { std::get<1>(*it) } -> std::convertible_to<int>;
             { std::get<2>(*it) } -> std::convertible_to<size_t>;
             { std::get<3>(*it) } -> std::convertible_to<Perm<dim + 1>>;
         }
         static Triangulation<dim> fromGluings(size_t size,
-            iterator beginGluings, iterator endGluings);
+            Iterator beginGluings, Iterator endGluings);
 
         /**
          * Recovers a full triangulation from an isomorphism signature.
@@ -4173,9 +4173,9 @@ class TriangulationBase :
          *
          * \pre The skeleton of this triangulation has been computed.
          */
-        template <int subdim, InputIteratorFor<Face<dim, subdim>*> iterator>
+        template <int subdim, InputIteratorFor<Face<dim, subdim>*> Iterator>
         requires (subdim >= 0 && subdim < dim)
-        void reorderFaces(iterator begin, iterator end);
+        void reorderFaces(Iterator begin, Iterator end);
 
         /**
          * Tests whether this and the given triangulation have the same
@@ -4927,9 +4927,9 @@ inline auto TriangulationBase<dim>::pentachora() const
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int subdim, InputIteratorFor<Face<dim, subdim>*> iterator>
+template <int subdim, InputIteratorFor<Face<dim, subdim>*> Iterator>
 requires (subdim >= 0 && subdim < dim)
-inline void TriangulationBase<dim>::reorderFaces(iterator begin, iterator end) {
+inline void TriangulationBase<dim>::reorderFaces(Iterator begin, Iterator end) {
     std::get<subdim>(faces_).refill(begin, end);
 }
 
@@ -5330,15 +5330,15 @@ Triangulation<dim> TriangulationBase<dim>::tightDecode(std::istream& input) {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <std::input_iterator iterator>
-requires requires(iterator it) {
+template <std::input_iterator Iterator>
+requires requires(Iterator it) {
     { std::get<0>(*it) } -> std::convertible_to<size_t>;
     { std::get<1>(*it) } -> std::convertible_to<int>;
     { std::get<2>(*it) } -> std::convertible_to<size_t>;
     { std::get<3>(*it) } -> std::convertible_to<Perm<dim + 1>>;
 }
 Triangulation<dim> TriangulationBase<dim>::fromGluings(size_t size,
-        iterator beginGluings, iterator endGluings) {
+        Iterator beginGluings, Iterator endGluings) {
     Triangulation<dim> ans;
 
     // Note: new simplices are initialised with all adj_[i] null.

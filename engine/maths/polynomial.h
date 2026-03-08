@@ -170,8 +170,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
-        template <RandomAccessIteratorFor<T> iterator>
-        Polynomial(iterator begin, iterator end);
+        template <RandomAccessIteratorFor<T> Iterator>
+        Polynomial(Iterator begin, Iterator end);
 
         /**
          * Creates a new polynomial from a hard-coded sequence of coefficients.
@@ -241,8 +241,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
-        template <RandomAccessIteratorFor<T> iterator>
-        void init(iterator begin, iterator end);
+        template <RandomAccessIteratorFor<T> Iterator>
+        void init(Iterator begin, Iterator end);
 
         /**
          * Returns the degree of this polynomial.
@@ -932,8 +932,8 @@ inline Polynomial<T>::Polynomial(size_t degree) :
 }
 
 template <CoefficientDomain T>
-template <RandomAccessIteratorFor<T> iterator>
-inline Polynomial<T>::Polynomial(iterator begin, iterator end) :
+template <RandomAccessIteratorFor<T> Iterator>
+inline Polynomial<T>::Polynomial(Iterator begin, Iterator end) :
         coeff_(nullptr) {
     init(begin, end);
 }
@@ -995,8 +995,8 @@ inline void Polynomial<T>::init(size_t degree) {
 }
 
 template <CoefficientDomain T>
-template <RandomAccessIteratorFor<T> iterator>
-void Polynomial<T>::init(iterator begin, iterator end) {
+template <RandomAccessIteratorFor<T> Iterator>
+void Polynomial<T>::init(Iterator begin, Iterator end) {
     delete[] coeff_;
 
     if (begin == end) {

@@ -217,9 +217,9 @@ class DoubleDescription {
                  * the sequence is \a k then the <i>i</i>th hyperplane to
                  * intersect must be described by row \a k of \a subspace.
                  */
-                template <InputIteratorFor<long> iterator>
+                template <InputIteratorFor<long> Iterator>
                 RaySpec(size_t axis, const MatrixInt& subspace,
-                        iterator hypOrder) :
+                        Iterator hypOrder) :
                         Vector<IntegerType>(subspace.rows()),
                         facets_(subspace.columns()) {
                     for (size_t i = 0; i < subspace.columns(); ++i)

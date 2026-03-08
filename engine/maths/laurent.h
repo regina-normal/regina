@@ -188,8 +188,8 @@ class Laurent :
          * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
-        template <RandomAccessIteratorFor<T> iterator>
-        Laurent(long minExp, iterator begin, iterator end);
+        template <RandomAccessIteratorFor<T> Iterator>
+        Laurent(long minExp, Iterator begin, Iterator end);
 
         /**
          * Creates a new polynomial from a hard-coded sequence of coefficients.
@@ -267,8 +267,8 @@ class Laurent :
          * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
-        template <RandomAccessIteratorFor<T> iterator>
-        void init(long minExp, iterator begin, iterator end);
+        template <RandomAccessIteratorFor<T> Iterator>
+        void init(long minExp, Iterator begin, Iterator end);
 
         /**
          * Returns the smallest exponent that appears in this polynomial
@@ -941,8 +941,8 @@ inline Laurent<T>::Laurent(long exp) :
 }
 
 template <CoefficientDomain T>
-template <RandomAccessIteratorFor<T> iterator>
-inline Laurent<T>::Laurent(long minExp, iterator begin, iterator end) :
+template <RandomAccessIteratorFor<T> Iterator>
+inline Laurent<T>::Laurent(long minExp, Iterator begin, Iterator end) :
         coeff_(nullptr) {
     init(minExp, begin, end);
 }
@@ -1015,8 +1015,8 @@ inline void Laurent<T>::init(long exp) {
 }
 
 template <CoefficientDomain T>
-template <RandomAccessIteratorFor<T> iterator>
-void Laurent<T>::init(long minExp, iterator begin, iterator end) {
+template <RandomAccessIteratorFor<T> Iterator>
+void Laurent<T>::init(long minExp, Iterator begin, Iterator end) {
     delete[] coeff_;
 
     // Skip through any initial zero terms.

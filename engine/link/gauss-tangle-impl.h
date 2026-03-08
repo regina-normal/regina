@@ -47,8 +47,8 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
-template <RandomAccessIteratorFor<std::string> iterator>
-Tangle Tangle::fromOrientedGauss(iterator begin, iterator end) {
+template <RandomAccessIteratorFor<std::string> Iterator>
+Tangle Tangle::fromOrientedGauss(Iterator begin, Iterator end) {
     // Extract the number of crossings.
     size_t n = end - begin;
     if (n < 2)

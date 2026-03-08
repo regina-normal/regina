@@ -417,8 +417,8 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * past the end of the list) that gives the new set of allowable
          * Euler characteristics.
          */
-        template <InputIteratorFor<LargeInteger> iterator>
-        void setEulerChars(iterator beginEuler, iterator endEuler);
+        template <InputIteratorFor<LargeInteger> Iterator>
+        void setEulerChars(Iterator beginEuler, Iterator endEuler);
 
         /**
          * Adds the given Euler characteristic to the set of allowable
@@ -604,9 +604,9 @@ inline BoolSet SurfaceFilterProperties::realBoundary() const {
     return realBoundary_;
 }
 
-template <InputIteratorFor<LargeInteger> iterator>
+template <InputIteratorFor<LargeInteger> Iterator>
 inline void SurfaceFilterProperties::setEulerChars(
-        iterator beginEuler, iterator endEuler) {
+        Iterator beginEuler, Iterator endEuler) {
     PacketChangeSpan span(*this);
     eulerChar_.clear();
     eulerChar_.insert(beginEuler, endEuler);

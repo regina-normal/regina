@@ -196,13 +196,13 @@ class Laurent2 :
          * \param end a past-the-end iterator indicating the end of the set of
          * coefficients.
          */
-        template <std::input_iterator iterator>
-        requires requires(iterator it) {
+        template <std::input_iterator Iterator>
+        requires requires(Iterator it) {
             { std::get<0>(*it) } -> std::convertible_to<long>;
             { std::get<1>(*it) } -> std::convertible_to<long>;
             { std::get<2>(*it) } -> std::convertible_to<T>;
         }
-        Laurent2(iterator begin, iterator end);
+        Laurent2(Iterator begin, Iterator end);
 
         /**
          * Creates a new polynomial from a hard-coded collection of
@@ -832,13 +832,13 @@ inline Laurent2<T>::Laurent2(const Laurent2<U>& value) :
 }
 
 template <CoefficientDomain T>
-template <std::input_iterator iterator>
-requires requires(iterator it) {
+template <std::input_iterator Iterator>
+requires requires(Iterator it) {
     { std::get<0>(*it) } -> std::convertible_to<long>;
     { std::get<1>(*it) } -> std::convertible_to<long>;
     { std::get<2>(*it) } -> std::convertible_to<T>;
 }
-inline Laurent2<T>::Laurent2(iterator begin, iterator end) {
+inline Laurent2<T>::Laurent2(Iterator begin, Iterator end) {
     for (auto it = begin; it != end; ++it) {
         if (std::get<2>(*it) == 0)
             continue;

@@ -227,8 +227,8 @@ class Bitmask {
          * \param value the value that will be assigned to each of the
          * corresponding bits.
          */
-        template <InputIteratorFor<size_t> iterator>
-        void set(iterator indexBegin, iterator indexEnd, bool value) {
+        template <InputIteratorFor<size_t> Iterator>
+        void set(Iterator indexBegin, Iterator indexEnd, bool value) {
             Piece* base = mask;
             size_t offset = 0;
             size_t diff;
@@ -737,8 +737,8 @@ class Bitmask1 {
          * \param value the value that will be assigned to each of the
          * corresponding bits.
          */
-        template <InputIteratorFor<size_t> iterator>
-        void set(iterator indexBegin, iterator indexEnd, bool value) {
+        template <InputIteratorFor<size_t> Iterator>
+        void set(Iterator indexBegin, Iterator indexEnd, bool value) {
             for ( ; indexBegin != indexEnd; ++indexBegin) {
                 mask |= (T(1) << *indexBegin);
                 if (! value)
@@ -1162,8 +1162,8 @@ class Bitmask2 {
          * \param value the value that will be assigned to each of the
          * corresponding bits.
          */
-        template <InputIteratorFor<size_t> iterator>
-        void set(iterator indexBegin, iterator indexEnd, bool value) {
+        template <InputIteratorFor<size_t> Iterator>
+        void set(Iterator indexBegin, Iterator indexEnd, bool value) {
             // First deal with the bits stored in low.
             for ( ; indexBegin != indexEnd && *indexBegin < 8 * sizeof(T);
                     ++indexBegin) {

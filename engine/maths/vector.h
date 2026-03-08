@@ -175,8 +175,8 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * \param end a past-the-end iterator indicating the end of the
          * sequence of elements.
          */
-        template <RandomAccessIteratorFor<T> iterator>
-        inline Vector(iterator begin, iterator end) :
+        template <RandomAccessIteratorFor<T> Iterator>
+        inline Vector(Iterator begin, Iterator end) :
                 elts_(new T[end - begin]), end_(elts_ + (end - begin)) {
             std::copy(begin, end, elts_);
         }

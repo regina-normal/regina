@@ -1142,8 +1142,8 @@ class Tangle : public Output<Tangle> {
          * sequence of tokens for an oriented Gauss code.
          * \return the resulting tangle.
          */
-        template <RandomAccessIteratorFor<std::string> iterator>
-        static Tangle fromOrientedGauss(iterator begin, iterator end);
+        template <RandomAccessIteratorFor<std::string> Iterator>
+        static Tangle fromOrientedGauss(Iterator begin, Iterator end);
 
         /*@}*/
 
