@@ -44,7 +44,7 @@ using regina::Isomorphism;
  * minor convenience of not having to type out the template parameters for
  * FacetPairingTest every time it is used.
  */
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 class FacetPairingTest {
     protected:
         /**

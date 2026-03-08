@@ -38,6 +38,7 @@
 #endif
 
 #include "regina-core.h"
+#include "concepts/core.h"
 #include "core/output.h"
 #include "utilities/bitmask.h"
 
@@ -193,12 +194,9 @@ class TrieSet : public Output<TrieSet> {
          * Running time for insertion is O(\a n), where \a n is the
          * bitmask length.
          *
-         * \tparam T One of Regina's bitmask types, such as Bitmask, Bitmask1
-         * or Bitmask2.
-         *
          * \param entry the new set to insert.
          */
-        template <typename T>
+        template <ReginaBitmask T>
         void insert(const T& entry);
 
         /**
@@ -214,9 +212,6 @@ class TrieSet : public Output<TrieSet> {
          * for "typical" searches in the context of normal surface
          * enumeration, the running time is often significantly faster.
          *
-         * \tparam T One of Regina's bitmask types, such as Bitmask, Bitmask1
-         * or Bitmask2.
-         *
          * \param superset the object of the query: we are searching this
          * collection for a (non-strict) subset of this argument.
          * \param universeSize the number of elements in the underlying
@@ -225,7 +220,7 @@ class TrieSet : public Output<TrieSet> {
          * bits that the underlying bitmask type \a T can support.
          * \return \c true if a subset was found, or \c false otherwise.
          */
-        template <typename T>
+        template <ReginaBitmask T>
         bool hasSubset(const T& superset, size_t universeSize) const;
 
         /**
@@ -249,9 +244,6 @@ class TrieSet : public Output<TrieSet> {
          * \pre The sets \a exc1 and \a exc2 are distinct, and each is
          * contained in this collection precisely once.
          *
-         * \tparam T One of Regina's bitmask types, such as Bitmask, Bitmask1
-         * or Bitmask2.
-         *
          * \param subset the object of the query: we are searching this
          * collection for a (non-strict) superset of this argument.
          * \param exc1 the first set in the collection to be excluded
@@ -265,7 +257,7 @@ class TrieSet : public Output<TrieSet> {
          * \return \c true if a superset with the required properties
          * was found, or \c false otherwise.
          */
-        template <typename T>
+        template <ReginaBitmask T>
         bool hasExtraSuperset(const T& subset, const T& exc1, const T& exc2,
             size_t universeSize) const;
 
@@ -333,7 +325,7 @@ inline void TrieSet::swap(TrieSet& other) noexcept {
     std::swap(root_.descendants_, other.root_.descendants_);
 }
 
-template <typename T>
+template <ReginaBitmask T>
 void TrieSet::insert(const T& entry) {
     ++root_.descendants_;
 
@@ -358,7 +350,7 @@ void TrieSet::insert(const T& entry) {
     }
 }
 
-template <typename T>
+template <ReginaBitmask T>
 bool TrieSet::hasSubset(const T& superset, size_t universeSize) const {
     const Node** node = new const Node*[universeSize + 2];
 
@@ -395,7 +387,7 @@ bool TrieSet::hasSubset(const T& superset, size_t universeSize) const {
     return false;
 }
 
-template <typename T>
+template <ReginaBitmask T>
 bool TrieSet::hasExtraSuperset(const T& subset,
         const T& exc1, const T& exc2, size_t universeSize) const {
     const Node** node = new const Node*[universeSize + 2];

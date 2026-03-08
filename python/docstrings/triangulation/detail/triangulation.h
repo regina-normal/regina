@@ -63,8 +63,7 @@ Python:
     Triangulation<dim> is.
 
 Template parameter ``dim``:
-    the dimension of the triangulation. This must be between 2 and 15
-    inclusive.)doc";
+    the dimension of the triangulation.)doc";
 
 }
 
@@ -175,10 +174,7 @@ triangulation.
 .. deprecated::
     This routine has been renamed to subdivide(), both to shorten the
     name but also to make it clearer that this triangulation will be
-    modified directly.
-
-Precondition:
-    *dim* is one of Regina's standard dimensions.
+    modified directly. See subdivide() for further details.
 
 Exception ``LockViolation``:
     This triangulation contains at least one locked top-dimensional
@@ -407,8 +403,6 @@ Returns:
 constexpr const char *countEdges =
 R"doc(A dimension-specific alias for countFaces<1>().
 
-This alias is available for all dimensions *dim*.
-
 See countFaces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::countFaces
@@ -441,15 +435,11 @@ Returns:
 constexpr const char *countPentachora =
 R"doc(A dimension-specific alias for countFaces<4>().
 
-This alias is available for dimensions *dim* ≥ 4.
-
 See countFaces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::countTetrahedra
 constexpr const char *countTetrahedra =
 R"doc(A dimension-specific alias for countFaces<3>().
-
-This alias is available for dimensions *dim* ≥ 3.
 
 See countFaces() for further information.)doc";
 
@@ -457,15 +447,11 @@ See countFaces() for further information.)doc";
 constexpr const char *countTriangles =
 R"doc(A dimension-specific alias for countFaces<2>().
 
-This alias is available for all dimensions *dim*.
-
 See countFaces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::countVertices
 constexpr const char *countVertices =
 R"doc(A dimension-specific alias for countFaces<0>().
-
-This alias is available for all dimensions *dim*.
 
 See countFaces() for further information.)doc";
 
@@ -726,15 +712,11 @@ Returns:
 constexpr const char *edge =
 R"doc(A dimension-specific alias for face<1>().
 
-This alias is available for all dimensions *dim*.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::edges
 constexpr const char *edges =
 R"doc(A dimension-specific alias for faces<1>().
-
-This alias is available for all dimensions *dim*.
 
 See faces() for further information.)doc";
 
@@ -851,13 +833,12 @@ be found and processed. See the isIsomorphicTo() notes for details on
 this.
 
 For each isomorphism that is found, this routine will call *action*
-(which must be a function or some other callable object).
+(which must be a function or some other callable type).
 
-* The first argument to *action* must be of type ``(const
-  Isomorphism<dim>&)``; this will be a reference to the isomorphism
-  that was found. If *action* wishes to keep the isomorphism, it
-  should take a deep copy (not a reference), since the isomorphism may
-  be changed and reused after *action* returns.
+* The first argument to *action* will be a const reference to the
+  isomorphism that was found. If *action* wishes to keep the
+  isomorphism, it should take a deep copy (not a reference), since the
+  isomorphism may be changed and reused after *action* returns.
 
 * If there are any additional arguments supplied in the list *args*,
   then these will be passed as subsequent arguments to *action*.
@@ -888,7 +869,7 @@ Parameter ``other``:
     the triangulation to compare with this one.
 
 Parameter ``action``:
-    a function (or other callable object) to call for each isomorphism
+    a function (or other callable type) to call for each isomorphism
     that is found.
 
 Parameter ``args``:
@@ -912,13 +893,12 @@ incomplete and need not be onto), all such isomorphisms will be found
 and processed. See the isContainedIn() notes for details on this.
 
 For each isomorphism that is found, this routine will call *action*
-(which must be a function or some other callable object).
+(which must be a function or some other callable type).
 
-* The first argument to *action* must be of type ``(const
-  Isomorphism<dim>&)``; this will be a reference to the isomorphism
-  that was found. If *action* wishes to keep the isomorphism, it
-  should take a deep copy (not a reference), since the isomorphism may
-  be changed and reused after *action* returns.
+* The first argument to *action* will be a const reference to the
+  isomorphism that was found. If *action* wishes to keep the
+  isomorphism, it should take a deep copy (not a reference), since the
+  isomorphism may be changed and reused after *action* returns.
 
 * If there are any additional arguments supplied in the list *args*,
   then these will be passed as subsequent arguments to *action*.
@@ -950,7 +930,7 @@ Parameter ``other``:
     triangulation.
 
 Parameter ``action``:
-    a function (or other callable object) to call for each isomorphism
+    a function (or other callable type) to call for each isomorphism
     that is found.
 
 Parameter ``args``:
@@ -994,14 +974,14 @@ other things).
 
 The iterator range (*beginGluings*, *endGluings*) should encode the
 list of gluings for the triangulation. Each iterator in this range
-must dereference to a tuple of the form (*simp*, *facet*, *adj*,
-*gluing*); here *simp*, *facet* and *adj* are all integers, and
-*gluing* is of type Perm<dim+1>. Each such tuple indicates that facet
-*facet* of top-dimensional simplex number *simp* should be glued to
-top-dimensional simplex number *adj* using the permutation *gluing*.
-In other words, such a tuple encodes the same information as calling
-``simplex(simp).join(facet, simplex(adj), gluing)`` upon the
-triangulation being constructed.
+must dereference to a tuple (or tuple-like object) of the form
+(*simp*, *facet*, *adj*, *gluing*); here *simp*, *facet* and *adj* are
+all integers, and *gluing* is of type Perm<dim+1>. Each such tuple
+indicates that facet *facet* of top-dimensional simplex number *simp*
+should be glued to top-dimensional simplex number *adj* using the
+permutation *gluing*. In other words, such a tuple encodes the same
+information as calling ``simplex(simp).join(facet, simplex(adj),
+gluing)`` upon the triangulation being constructed.
 
 Every gluing should be encoded from _one direction only_. This means,
 for example, that to build a closed 3-manifold triangulation with *n*
@@ -1025,13 +1005,6 @@ tri = Triangulation3.fromGluings(2, [
     ( 0, 0, 1, Perm4(1,3,0,2) ), ( 0, 1, 1, Perm4(2,0,3,1) ),
     ( 0, 2, 1, Perm4(0,3,2,1) ), ( 0, 3, 1, Perm4(2,1,0,3) )])
 ```
-
-.. note::
-    The assumption is that the iterators dereference to a
-    std::tuple<size_t, int, size_t, Perm<dim+1>>. However, this is not
-    strictly necessary - the dereferenced type may be any type that
-    supports std::get (and for which std::get<0..3>() yields suitable
-    integer/permutation types).
 
 Exception ``InvalidArgument``:
     The given list of gluings does not correctly describe a
@@ -1210,8 +1183,7 @@ Precondition:
     The given *k*-face is a *k*-face of this triangulation.
 
 Template parameter ``k``:
-    the dimension of the given face. This must be 0, 1 or 2, and must
-    not exceed ``dim - 2``.
+    the dimension of the given face.
 
 Parameter ``f``:
     the *k*-face about which to perform the candidate move.
@@ -1258,8 +1230,7 @@ Precondition:
     The given *k*-face is a *k*-face of this triangulation.
 
 Template parameter ``k``:
-    the dimension of the given face. This must be between 0 and
-    (*dim*) inclusive.
+    the dimension of the given face.
 
 Parameter ``f``:
     the *k*-face about which to perform the candidate move.
@@ -1990,8 +1961,7 @@ Precondition:
     The given *k*-face is a *k*-face of this triangulation.
 
 Template parameter ``k``:
-    the dimension of the given face. This must be 0, 1 or 2, and must
-    not exceed ``dim - 2``.
+    the dimension of the given face.
 
 Parameter ``f``:
     the *k*-face about which to perform the move.
@@ -2093,8 +2063,7 @@ Python:
     returned in a Python tuple of size *k*.
 
 Template parameter ``k``:
-    the number of new top-dimensional simplices to add; this must be
-    non-negative.
+    the number of new top-dimensional simplices to add.
 
 Returns:
     an array containing all of the new simplices, in the order in
@@ -2212,8 +2181,7 @@ Precondition:
     The given *k*-face is a *k*-face of this triangulation.
 
 Template parameter ``k``:
-    the dimension of the given face. This must be between 0 and
-    (*dim*) inclusive.
+    the dimension of the given face.
 
 Parameter ``f``:
     the *k*-face about which to perform the move.
@@ -2246,8 +2214,7 @@ Precondition:
     The given *k*-face is a *k*-face of this triangulation.
 
 Template parameter ``k``:
-    the dimension of the given face. This must be between 0 and
-    (*dim*) inclusive.
+    the dimension of the given face.
 
 Parameter ``f``:
     the *k*-face about which to perform the move.
@@ -2283,8 +2250,6 @@ constexpr const char *pentachora =
 R"doc(A dimension-specific alias for faces<4>(), or an alias for simplices()
 in dimension *dim* = 4.
 
-This alias is available for dimensions *dim* ≥ 4.
-
 See faces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::pentachoron
@@ -2292,8 +2257,7 @@ constexpr const char *pentachoron =
 R"doc(A dimension-specific alias for face<4>(), or an alias for simplex() in
 dimension *dim* = 4.
 
-This alias is available for dimensions *dim* ≥ 4. It returns a non-
-const pentachoron pointer.
+This returns a non-const pentachoron pointer.
 
 See face() for further information.)doc";
 
@@ -2302,9 +2266,8 @@ constexpr const char *pentachoron_2 =
 R"doc(A dimension-specific alias for face<4>(), or an alias for simplex() in
 dimension *dim* = 4.
 
-This alias is available for dimensions *dim* ≥ 4. It returns a const
-pentachoron pointer in dimension *dim* = 4, and a non-const
-pentachoron pointer in all higher dimensions.
+This returns a const pentachoron pointer in dimension *dim* = 4, and a
+non-const pentachoron pointer in all higher dimensions.
 
 See face() for further information.)doc";
 
@@ -2744,11 +2707,10 @@ other words: sub-simplices are ordered first according to the original
 simplex that contains them, and then according to the lexicographical
 ordering of the corresponding permutations *p*.
 
-Precondition:
-    *dim* is one of Regina's standard dimensions. This precondition is
-    a safety net, since in higher dimensions the triangulation would
-    explode too quickly in size (and for the highest dimensions,
-    possibly beyond the limits of ``size_t``).
+As a safety net, this routine requires that *dim* must be one of
+Regina's standard dimensions. Otherwise in higher dimensions the
+triangulation would explode too quickly in size (and for the highest
+dimensions, possibly beyond the limits of ``size_t``).
 
 .. warning::
     In dimensions 3 and 4, both the labelling and ordering of sub-
@@ -2769,8 +2731,6 @@ constexpr const char *tetrahedra =
 R"doc(A dimension-specific alias for faces<3>(), or an alias for simplices()
 in dimension *dim* = 3.
 
-This alias is available for dimensions *dim* ≥ 3.
-
 See faces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::tetrahedron
@@ -2778,8 +2738,7 @@ constexpr const char *tetrahedron =
 R"doc(A dimension-specific alias for face<3>(), or an alias for simplex() in
 dimension *dim* = 3.
 
-This alias is available for dimensions *dim* ≥ 3. It returns a non-
-const tetrahedron pointer.
+This returns a non-const tetrahedron pointer.
 
 See face() for further information.)doc";
 
@@ -2788,9 +2747,8 @@ constexpr const char *tetrahedron_2 =
 R"doc(A dimension-specific alias for face<3>(), or an alias for simplex() in
 dimension *dim* = 3.
 
-This alias is available for dimensions *dim* ≥ 3. It returns a const
-tetrahedron pointer in dimension *dim* = 3, and a non-const
-tetrahedron pointer in all higher dimensions.
+This returns a const tetrahedron pointer in dimension *dim* = 3, and a
+non-const tetrahedron pointer in all higher dimensions.
 
 See face() for further information.)doc";
 
@@ -2827,7 +2785,7 @@ Precondition:
     actually be combinatorially identical).
 
 Template parameter ``subdim``:
-    the face dimension; this must be between 0 and *dim* inclusive.
+    the face dimension.
 
 Parameter ``other``:
     the face to translate.
@@ -2858,7 +2816,7 @@ Precondition:
     actually be combinatorially identical).
 
 Template parameter ``subdim``:
-    the face dimension; this must be between 0 and *dim*-1 inclusive.
+    the face dimension.
 
 Parameter ``other``:
     the face embedding to translate.
@@ -2871,8 +2829,7 @@ constexpr const char *triangle =
 R"doc(A dimension-specific alias for face<2>(), or an alias for simplex() in
 dimension *dim* = 2.
 
-This alias is available for all dimensions *dim*. It returns a non-
-const triangle pointer.
+This returns a non-const triangle pointer.
 
 See face() for further information.)doc";
 
@@ -2881,9 +2838,8 @@ constexpr const char *triangle_2 =
 R"doc(A dimension-specific alias for face<2>(), or an alias for simplex() in
 dimension *dim* = 2.
 
-This alias is available for all dimensions *dim*. It returns a const
-triangle pointer in dimension *dim* = 2, and a non-const triangle
-pointer in all higher dimensions.
+This returns a const triangle pointer in dimension *dim* = 2, and a
+non-const triangle pointer in all higher dimensions.
 
 See face() for further information.)doc";
 
@@ -2891,8 +2847,6 @@ See face() for further information.)doc";
 constexpr const char *triangles =
 R"doc(A dimension-specific alias for faces<2>(), or an alias for simplices()
 in dimension *dim* = 2.
-
-This alias is available for all dimensions.
 
 See faces() for further information.)doc";
 
@@ -2940,8 +2894,7 @@ Precondition:
     The given *k*-face is a *k*-face of this triangulation.
 
 Template parameter ``k``:
-    the dimension of the given face. This must be 0, 1 or 2, and must
-    not exceed ``dim - 2``.
+    the dimension of the given face.
 
 Parameter ``f``:
     the *k*-face about which to perform the move.
@@ -2973,15 +2926,11 @@ After this is routine called, hasLocks() will return ``False``.)doc";
 constexpr const char *vertex =
 R"doc(A dimension-specific alias for face<0>().
 
-This alias is available for all dimensions *dim*.
-
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::vertices
 constexpr const char *vertices =
 R"doc(A dimension-specific alias for faces<0>().
-
-This alias is available for all dimensions *dim*.
 
 See faces() for further information.)doc";
 
@@ -3001,8 +2950,7 @@ Precondition:
     The given *k*-face is a *k*-face of this triangulation.
 
 Template parameter ``k``:
-    the dimension of the given face. This must be 0, 1 or 2, and must
-    not exceed ``dim - 2``.
+    the dimension of the given face.
 
 Parameter ``f``:
     the *k*-face about which to perform the move.
@@ -3028,8 +2976,7 @@ Precondition:
     The given *k*-face is a *k*-face of this triangulation.
 
 Template parameter ``k``:
-    the dimension of the given face. This must be between 0 and
-    (*dim*) inclusive.
+    the dimension of the given face.
 
 Parameter ``f``:
     the *k*-face about which to perform the move.

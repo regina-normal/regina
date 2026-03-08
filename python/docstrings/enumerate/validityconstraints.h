@@ -151,10 +151,6 @@ can encode the constraint that there is at most one octagon in the
 entire surface by passing an iterator range that encodes the three
 integers 7, 8, 9.
 
-Precondition:
-    The iterator type *iterator*, when dereferenced, can be assigned
-    to a native C++ ``int``.
-
 Python:
     Instead of the iterators *begin* and *end*, this routine takes a
     python list of integers.
@@ -179,10 +175,6 @@ given relative to the start of each block.
 For example, to encode the quadrilateral constraints for normal
 surfaces in standard coordinates, you can pass an iterator range that
 encodes the three integers 4, 5, 6.
-
-Precondition:
-    The iterator type *iterator*, when dereferenced, can be assigned
-    to a native C++ ``int``.
 
 Python:
     Instead of the iterators *begin* and *end*, this routine takes a
@@ -219,11 +211,6 @@ Precondition:
 
 Python:
     This routine uses the bitmask type regina::Bitmask.
-
-Template parameter ``BitmaskType``:
-    the bitmask type used to encode each constraint; this must be one
-    of Regina's own bitmask types, such as Bitmask, Bitmask1 or
-    Bitmask2.
 
 Parameter ``len``:
     the total number of coordinates in the vectors being constrained.
@@ -263,11 +250,6 @@ Precondition:
 
 Python:
     This routine uses the bitmask type regina::Bitmask.
-
-Template parameter ``BitmaskType``:
-    the bitmask type used to encode each constraint; this must be one
-    of Regina's own bitmask types, such as Bitmask, Bitmask1 or
-    Bitmask2.
 
 Returns:
     the list of bitmasks describing the full set of validity

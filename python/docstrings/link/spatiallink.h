@@ -106,10 +106,9 @@ sequences of points in 3-space.
 
 Each element of the given sequence should represent a separate link
 component. Each component should be given as a sequence of at least
-three points in 3-space (any reasonable container type will do; see
-the requirements for the *iterator* type below). These are the points
-that will be stored directly in the Component structure, which means
-that to form the actual geometry of the link component:
+three nodes (i.e., points in 3-space). These are the points that will
+be stored directly in the Component structure, which means that to
+form the actual geometry of the link component:
 
 * each node in the sequence is joined by a straight line segment to
   the node that follows it (and likewise, the last node is joined to
@@ -119,21 +118,31 @@ that to form the actual geometry of the link component:
   the first node to the last (and then cycling back to the front of
   the sequence again).
 
+Regarding types:
+
+* The outermost sequence (representing components) is presented as a
+  pair of *begin* and *end* iterators, which are passed as arguments
+  to this routine.
+
+* Each such iterator, when dereferenced, should give a container of
+  nodes. These containers should have their own ``begin()`` and
+  ``end()`` functions for iteration, and _their_ elements (i.e., the
+  individual nodes) should be convertible to the type
+  ``Vector3D<double>``.
+
+For example, your code might look like:
+
+```
+std::vector<std::vector<std::array<double, 3>>> data = ...;
+SpatialLink link(data.begin(), data.end());
+```
+
 This constructor induces a deep copy of the given data.
 
 Python:
     Instead of the iterators *begin* and *end*, this routine takes
     either (i) a Python list of lists of triples of real numbers, or
     (ii) a Python list of lists of Vector3D objects.
-
-Template parameter ``iterator``:
-    the iterator type used to access the full sequence of nodes in
-    each link component. This must satisfy the following requirements:
-    (i) when dereferenced, the resulting object (which represents a
-    single link component) has appropriate ``begin()`` and ``end()``
-    functions; and (ii) when _those_ iterators are dereferenced, the
-    resulting object (which represents an individual point along some
-    link component) is convertible to a Vector3D<double>.
 
 Parameter ``begin``:
     the beginning of the sequence of link components.

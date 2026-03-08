@@ -37,9 +37,7 @@
 
 #include "../packetui.h"
 
-template <class PacketType, class Sanitise>
-class DocWidget;
-
+template <typename, typename> class DocWidget;
 class DocWidgetNoSanitise;
 
 namespace regina {

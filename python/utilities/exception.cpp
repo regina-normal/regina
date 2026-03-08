@@ -66,6 +66,12 @@ void addException(pybind11::module_& m) {
         "LockViolation", rdoc::LockViolation);
     regina::python::registerReginaException<regina::ImpossibleScenario>(m,
         "ImpossibleScenario", rdoc::ImpossibleScenario);
+    regina::python::registerReginaException<regina::NumericalError>(m,
+        "NumericalError", rdoc::NumericalError);
+    regina::python::registerReginaException<regina::IntegerOverflow>(m,
+        "IntegerOverflow", rdoc::IntegerOverflow);
+    regina::python::registerReginaException<regina::DivisionByZero>(m,
+        "DivisionByZero", rdoc::DivisionByZero);
     regina::python::registerReginaException<regina::SnapPeaUnsolvedCase>(m,
         "SnapPeaUnsolvedCase", rdoc::SnapPeaUnsolvedCase);
     regina::python::registerReginaException<regina::SnapPeaIsNull>(m,

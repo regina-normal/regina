@@ -1,0 +1,315 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Test Suite                                                            *
+ *                                                                        *
+ *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  For further details contact Ben Burton (bab@debian.org).              *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  As an exception, when this program is distributed through (i) the     *
+ *  App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or     *
+ *  (iii) Google Play by Google Inc., then that store may impose any      *
+ *  digital rights management, device limits and/or redistribution        *
+ *  restrictions that are required by its terms of service.               *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public License     *
+ *  along with this program. If not, see <https://www.gnu.org/licenses/>. *
+ *                                                                        *
+ **************************************************************************/
+
+#include "concepts/io.h"
+#include "concepts/iterator.h"
+#include "concepts/maths.h"
+#include "link/link.h"
+#include "maths/arrow.h"
+#include "maths/cyclotomic.h"
+#include "maths/integer.h"
+#include "maths/laurent.h"
+#include "maths/laurent2.h"
+#include "maths/matrix.h"
+#include "maths/matrix2.h"
+#include "maths/polynomial.h"
+#include "maths/rational.h"
+#include "maths/vector.h"
+#include "packet/container.h"
+#include "surface/surfacefilter.h"
+
+using regina::Integer;
+using regina::LargeInteger;
+using regina::MatrixInt;
+using regina::NativeInteger;
+using regina::Rational;
+using regina::Vector;
+
+using regina::ArbitraryPrecisionIntegerVector;
+using regina::CppInteger;
+using regina::IntegerVector;
+using regina::SignedCppInteger;
+using regina::StandardCppInteger;
+using regina::UnsignedCppInteger;
+
+namespace {
+    template <typename T>
+    class SubVector : public Vector<T> {};
+}
+
+static_assert(CppInteger<char>);
+static_assert(StandardCppInteger<char>);
+
+static_assert(CppInteger<signed char>);
+static_assert(StandardCppInteger<signed char>);
+static_assert(SignedCppInteger<signed char>);
+static_assert(! UnsignedCppInteger<signed char>);
+
+static_assert(CppInteger<unsigned char>);
+static_assert(StandardCppInteger<unsigned char>);
+static_assert(! SignedCppInteger<unsigned char>);
+static_assert(UnsignedCppInteger<unsigned char>);
+
+static_assert(CppInteger<int>);
+static_assert(StandardCppInteger<int>);
+static_assert(SignedCppInteger<int>);
+static_assert(! UnsignedCppInteger<int>);
+
+static_assert(CppInteger<unsigned>);
+static_assert(StandardCppInteger<unsigned>);
+static_assert(! SignedCppInteger<unsigned>);
+static_assert(UnsignedCppInteger<unsigned>);
+
+static_assert(CppInteger<size_t>);
+static_assert(StandardCppInteger<size_t>);
+static_assert(! SignedCppInteger<size_t>);
+static_assert(UnsignedCppInteger<size_t>);
+
+static_assert(CppInteger<ssize_t>);
+static_assert(StandardCppInteger<ssize_t>);
+static_assert(SignedCppInteger<ssize_t>);
+static_assert(! UnsignedCppInteger<ssize_t>);
+
+#if defined(INT128_AVAILABLE)
+// 128-bit integers might or might not be standard C++ types.
+// Therefore we do not test adherence to StandardCppInteger here.
+static_assert(CppInteger<regina::Int128>);
+static_assert(SignedCppInteger<regina::Int128>);
+static_assert(! UnsignedCppInteger<regina::Int128>);
+
+static_assert(CppInteger<regina::UInt128>);
+static_assert(! SignedCppInteger<regina::UInt128>);
+static_assert(UnsignedCppInteger<regina::UInt128>);
+#endif
+
+static_assert(! CppInteger<bool>);
+static_assert(! StandardCppInteger<bool>);
+static_assert(! SignedCppInteger<bool>);
+static_assert(! UnsignedCppInteger<bool>);
+
+static_assert(! CppInteger<Integer>);
+static_assert(! StandardCppInteger<Integer>);
+static_assert(! SignedCppInteger<Integer>);
+static_assert(! UnsignedCppInteger<Integer>);
+
+static_assert(! CppInteger<LargeInteger>);
+static_assert(! StandardCppInteger<LargeInteger>);
+static_assert(! SignedCppInteger<LargeInteger>);
+static_assert(! UnsignedCppInteger<LargeInteger>);
+
+static_assert(! CppInteger<NativeInteger<8>>);
+static_assert(! StandardCppInteger<NativeInteger<8>>);
+static_assert(! SignedCppInteger<NativeInteger<8>>);
+static_assert(! UnsignedCppInteger<NativeInteger<8>>);
+
+static_assert(ArbitraryPrecisionIntegerVector<Vector<Integer>>);
+static_assert(IntegerVector<Vector<Integer>>);
+
+static_assert(ArbitraryPrecisionIntegerVector<SubVector<Integer>>);
+static_assert(IntegerVector<SubVector<Integer>>);
+
+static_assert(! ArbitraryPrecisionIntegerVector<Vector<NativeInteger<8>>>);
+static_assert(IntegerVector<Vector<NativeInteger<8>>>);
+
+static_assert(! ArbitraryPrecisionIntegerVector<SubVector<NativeInteger<8>>>);
+static_assert(IntegerVector<SubVector<NativeInteger<8>>>);
+
+static_assert(! ArbitraryPrecisionIntegerVector<Vector<int>>);
+static_assert(! IntegerVector<Vector<int>>);
+
+static_assert(! ArbitraryPrecisionIntegerVector<SubVector<int>>);
+static_assert(! IntegerVector<SubVector<int>>);
+
+static_assert(! ArbitraryPrecisionIntegerVector<MatrixInt>);
+static_assert(! IntegerVector<MatrixInt>);
+
+static_assert(regina::IntegerCompatible<char>);
+static_assert(regina::IntegerCompatible<int>);
+static_assert(regina::IntegerCompatible<unsigned>);
+static_assert(regina::IntegerCompatible<Integer>);
+static_assert(regina::IntegerCompatible<LargeInteger>);
+static_assert(regina::IntegerCompatible<Rational>);
+static_assert(! regina::IntegerCompatible<regina::Matrix2>);
+static_assert(! regina::IntegerCompatible<regina::Arrow>);
+static_assert(! regina::IntegerCompatible<regina::Polynomial<Integer>>);
+static_assert(! regina::IntegerCompatible<regina::Polynomial<Rational>>);
+static_assert(! regina::IntegerCompatible<regina::Laurent<Integer>>);
+static_assert(! regina::IntegerCompatible<regina::Laurent2<Integer>>);
+
+static_assert(regina::IntegerComparable<char>);
+static_assert(regina::IntegerComparable<int>);
+static_assert(regina::IntegerComparable<unsigned>);
+static_assert(regina::IntegerComparable<Integer>);
+static_assert(regina::IntegerComparable<LargeInteger>);
+static_assert(regina::IntegerComparable<Rational>);
+static_assert(! regina::IntegerComparable<regina::Matrix2>);
+static_assert(! regina::IntegerComparable<regina::Arrow>);
+static_assert(! regina::IntegerComparable<regina::Polynomial<Integer>>);
+static_assert(! regina::IntegerComparable<regina::Polynomial<Rational>>);
+static_assert(! regina::IntegerComparable<regina::Laurent<Integer>>);
+static_assert(! regina::IntegerComparable<regina::Laurent2<Integer>>);
+
+static_assert(regina::Ring<int>);
+static_assert(! regina::Ring<unsigned>);
+static_assert(regina::RingLike<unsigned>);
+static_assert(regina::Ring<Integer>);
+static_assert(regina::Ring<LargeInteger>);
+static_assert(regina::Ring<Rational>);
+static_assert(regina::Ring<regina::Matrix2>);
+static_assert(regina::Ring<regina::Arrow>);
+static_assert(regina::Ring<regina::Polynomial<Integer>>);
+static_assert(regina::Ring<regina::Polynomial<Rational>>);
+static_assert(regina::Ring<regina::Laurent<Integer>>);
+static_assert(regina::Ring<regina::Laurent2<Integer>>);
+static_assert(! regina::Ring<regina::Cyclotomic>);
+static_assert(regina::RingLike<regina::Cyclotomic>);
+
+static_assert(! regina::Domain<int>);
+static_assert(! regina::Domain<unsigned>);
+static_assert(regina::Domain<Integer>);
+static_assert(regina::Domain<LargeInteger>);
+static_assert(regina::Domain<Rational>);
+static_assert(! regina::Domain<regina::Matrix2>);
+static_assert(regina::Domain<regina::Arrow>);
+static_assert(regina::Domain<regina::Polynomial<Integer>>);
+static_assert(regina::Domain<regina::Polynomial<Rational>>);
+static_assert(regina::Domain<regina::Laurent<Integer>>);
+static_assert(regina::Domain<regina::Laurent2<Integer>>);
+static_assert(! regina::Domain<regina::Cyclotomic>);
+
+static_assert(! regina::IntegralDomain<int>);
+static_assert(! regina::IntegralDomain<unsigned>);
+static_assert(regina::IntegralDomain<Integer>);
+static_assert(regina::IntegralDomain<LargeInteger>);
+static_assert(regina::IntegralDomain<Rational>);
+static_assert(! regina::IntegralDomain<regina::Matrix2>);
+static_assert(regina::IntegralDomain<regina::Arrow>);
+static_assert(regina::IntegralDomain<regina::Polynomial<Integer>>);
+static_assert(regina::IntegralDomain<regina::Polynomial<Rational>>);
+static_assert(regina::IntegralDomain<regina::Laurent<Integer>>);
+static_assert(regina::IntegralDomain<regina::Laurent2<Integer>>);
+static_assert(! regina::IntegralDomain<regina::Cyclotomic>);
+
+static_assert(! regina::CoefficientDomain<int>);
+static_assert(! regina::CoefficientDomain<unsigned>);
+static_assert(regina::CoefficientDomain<Integer>);
+static_assert(regina::CoefficientDomain<LargeInteger>);
+static_assert(regina::CoefficientDomain<Rational>);
+static_assert(! regina::CoefficientDomain<regina::Matrix2>);
+static_assert(! regina::CoefficientDomain<regina::Arrow>);
+static_assert(! regina::CoefficientDomain<regina::Polynomial<Integer>>);
+static_assert(! regina::CoefficientDomain<regina::Polynomial<Rational>>);
+static_assert(! regina::CoefficientDomain<regina::Laurent<Integer>>);
+static_assert(! regina::CoefficientDomain<regina::Laurent2<Integer>>);
+static_assert(! regina::CoefficientDomain<regina::Cyclotomic>);
+
+static_assert(! regina::Field<int>);
+static_assert(! regina::Field<unsigned>);
+static_assert(! regina::Field<Integer>);
+static_assert(! regina::Field<LargeInteger>);
+static_assert(regina::Field<Rational>);
+static_assert(! regina::Field<regina::Matrix2>);
+static_assert(! regina::Field<regina::Arrow>);
+static_assert(! regina::Field<regina::Polynomial<Integer>>);
+static_assert(! regina::Field<regina::Polynomial<Rational>>);
+static_assert(! regina::Field<regina::Laurent<Integer>>);
+static_assert(! regina::Field<regina::Laurent2<Integer>>);
+static_assert(! regina::Field<regina::Cyclotomic>);
+
+static_assert(regina::StandardStringifiable<int>);
+static_assert(regina::StandardStringifiable<long>);
+static_assert(regina::StandardStringifiable<long long>);
+static_assert(regina::StandardStringifiable<unsigned>);
+static_assert(regina::StandardStringifiable<unsigned long>);
+static_assert(regina::StandardStringifiable<unsigned long long>);
+static_assert(regina::StandardStringifiable<float>);
+static_assert(regina::StandardStringifiable<double>);
+static_assert(regina::StandardStringifiable<long double>);
+// Characters should be stringifiable via std::to_string(signed/unsigned int).
+static_assert(regina::StandardStringifiable<signed char>);
+static_assert(regina::StandardStringifiable<unsigned char>);
+static_assert(! regina::StandardStringifiable<int*>);
+
+static_assert(regina::Readable<signed char>);
+static_assert(regina::Readable<int>);
+static_assert(regina::Readable<long>);
+static_assert(regina::Readable<long long>);
+static_assert(regina::Readable<unsigned char>);
+static_assert(regina::Readable<unsigned>);
+static_assert(regina::Readable<unsigned long>);
+static_assert(regina::Readable<unsigned long long>);
+static_assert(regina::Readable<float>);
+static_assert(regina::Readable<double>);
+static_assert(regina::Readable<long double>);
+// Pointers should be writeable but not readable.
+static_assert(! regina::Readable<int*>);
+static_assert(! regina::Readable<regina::Arrow>);
+
+static_assert(regina::Writeable<signed char>);
+static_assert(regina::Writeable<int>);
+static_assert(regina::Writeable<long>);
+static_assert(regina::Writeable<long long>);
+static_assert(regina::Writeable<unsigned char>);
+static_assert(regina::Writeable<unsigned>);
+static_assert(regina::Writeable<unsigned long>);
+static_assert(regina::Writeable<unsigned long long>);
+static_assert(regina::Writeable<float>);
+static_assert(regina::Writeable<double>);
+static_assert(regina::Writeable<long double>);
+// Pointers should be writeable but not readable.
+static_assert(regina::Writeable<int*>);
+static_assert(regina::Writeable<regina::Arrow>);
+
+static_assert(regina::InherentlyTightEncodable<Integer>);
+static_assert(regina::InherentlyTightEncodable<LargeInteger>);
+static_assert(regina::InherentlyTightEncodable<Vector<Integer>>);
+static_assert(! regina::InherentlyTightEncodable<int>);
+// NativeInteger does not yet support tight encodings.
+static_assert(! regina::InherentlyTightEncodable<NativeInteger<8>>);
+
+static_assert(regina::PacketClass<regina::Container>);
+static_assert(regina::PacketClass<regina::PacketOf<regina::Link>>);
+static_assert(! regina::PacketClass<regina::Link>);
+static_assert(! regina::PacketClass<regina::Packet>);
+static_assert(regina::PacketClass<regina::SurfaceFilter>);
+static_assert(regina::PacketClass<regina::SurfaceFilterCombination>);
+
+static_assert(regina::InputIteratorFor<std::vector<int>::iterator, int>);
+static_assert(regina::InputIteratorFor<std::vector<int>::const_iterator, int>);
+
+static_assert(! regina::SelfSentinelInputIterator<std::vector<int>::iterator>);
+static_assert(regina::SelfSentinelInputIterator<regina::ChildIterator<true>>);
+static_assert(regina::SelfSentinelInputIterator<regina::ChildIterator<false>>);
+
+static_assert(! regina::PacketIterator<std::vector<int>::iterator>);
+static_assert(regina::PacketIterator<regina::ChildIterator<true>>);
+static_assert(regina::PacketIterator<regina::ChildIterator<false>>);
+static_assert(regina::PacketIterator<regina::SubtreeIterator<true>>);
+static_assert(regina::PacketIterator<regina::SubtreeIterator<false>>);

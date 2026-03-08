@@ -52,8 +52,7 @@ namespace regina {
 template <typename Iterator>
 Link Link::fromDT(Iterator begin, Iterator end) {
     using InputInt = typename std::iterator_traits<Iterator>::value_type;
-    static_assert(std::is_integral_v<InputInt> &&
-        ! std::is_unsigned_v<InputInt>, "fromDT(): the iterator type "
+    static_assert(SignedCppInteger<InputInt>, "fromDT(): the iterator type "
         "needs to dereference to give a native signed C++ integer type.");
 
     // Extract the number of crossings.

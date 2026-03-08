@@ -176,9 +176,6 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * any missing coefficients are assumed to be zero.  In particular,
          * an empty sequence is allowed (and represents the zero field element).
          *
-         * \pre Rationals can be assigned values from dereferenced iterators
-         * of type \a iterator.
-         *
          * \python Instead of a pair of iterators, this routine
          * takes a python list of coefficients.
          *
@@ -189,7 +186,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
-        template <typename iterator>
+        template <InputIteratorFor<Rational> iterator>
         Cyclotomic(size_t field, iterator begin, iterator end);
         /**
          * Creates a new field element from a hard-coded sequence of
@@ -878,7 +875,7 @@ inline Cyclotomic::Cyclotomic(size_t field, size_t degree, Rational* coeff) :
         field_(field), degree_(degree), coeff_(coeff) {
 }
 
-template <typename iterator>
+template <InputIteratorFor<Rational> iterator>
 inline Cyclotomic::Cyclotomic(size_t field, iterator begin, iterator end) :
         field_(field), degree_(cyclotomic(field).degree()),
         coeff_(new Rational[degree_]) {

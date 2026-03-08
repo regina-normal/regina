@@ -37,7 +37,7 @@
 #define __REGINA_TREECONSTRAINT_H
 #endif
 
-#include "enumerate/treelp.h" // for LPSystem
+#include "enumerate/treelp.h"
 #include "maths/integer.h"
 #include "surface/normalcoords.h"
 #include "surface/normalsurface.h"
@@ -46,88 +46,92 @@
 namespace regina {
 
 class AngleStructure;
-
-template <typename IntType> class LPMatrix;
-template <class LPConstraint> struct LPCol;
-template <class LPConstraint> class LPInitialTableaux;
-template <class LPConstraint, typename IntType> class LPData;
-
 class LPConstraintNone;
 
+#ifdef __APIDOCS
 /**
- * A base class for additional linear constraints that we can add to the
- * tableaux of normal surface or angle structure matching equations.  This is
- * used with TreeEnumeration, TreeSingleSoln and related algorithms for
- * enumerating and locating normal surfaces or angle structures in a
- * 3-manifold triangulation.  See the LPInitialTableaux class notes for
- * details on how these constraints interact with the tableaux of
- * matching equations.
+ * A documentation-only class describing the expected behaviour of
+ * linear constraint types.
  *
- * The linear constraints may be equalities or inequalities, and there
- * may be more than one such constraint.  If all constraints are
- * homogeneous equalities, the class should derive from LPConstraintSubspace
- * instead (not this base class).
+ * Regina supports _linear constraint types_, which describe different
+ * families of linear constraints that can be used with Regina's linear
+ * programming machinery.  These constraints are added to the tableaux of
+ * normal surface or angle structure matching equations, as part of the
+ * TreeEnumeration, TreeSingleSoln and related algorithms for enumerating and
+ * locating normal surfaces or angle structures in a 3-manifold triangulation.
  *
- * In angle structure coordinates, these linear constraints must _not_
- * involve the scaling coordinate (the final coordinate that is used to
- * convert the angle structure polytope into a polyhedral cone).
- * The coefficient for the final scaling coordinate in each additional
- * linear constraint will be assumed to be zero.
+ * This LPConstraintAPI class is a documentation-only class (it is not actually
+ * built into Regina).  Its purpose is to describe in detail the interface
+ * that a linear constraint type should provide.
  *
- * Bear in mind that the tableaux that these constraints are working with will
- * not necessarily use the same coordinates as the underlying enumeration task
- * (e.g., the tableaux will never include separate columns for octagon
- * coordinates).  See LPInitialTableaux for a more detailed discussion of this.
+ * Regarding the mathematical form of the linear constraints:
  *
- * This base class provides no functionality.  For documentation's sake
- * only, the notes here describe the functionality that any subclass
- * _must_ implement.  We note again that LPConstraintBase does not
- * provide any implementations at all, and subclasses are completely
- * responsible for their own implementations.
+ * - Typically only one linear constraint _type_ would be used with a normal
+ *   surface or angle structure enumeration/location algorithm.  However,
+ *   a single type can describe several simultaneous linear equations and/or
+ *   inequalities (see LPConstraintNonSpun for an example of this).
  *
- * All constraint classes provide their functionality through static routines:
- * they do not contain any member data, and it is unnecessary (but harmless) to
- * construct them.
+ * - The enumeration LPConstraintType describes what form each individual
+ *   constraint takes (in particular, whether it is an equality or an
+ *   inequality).  See the LPInitialTableaux class notes for details on how
+ *   these different forms of constraint interact with the tableaux of normal
+ *   surface or angle structure matching equations.
  *
- * These linear constraint classes are designed mainly to act as C++ template
- * arguments, and end users will typically not need to construct their own
- * object of these classes.  Instead, to use a linear constraint class, pass it
- * as a template parameter to one of the tree traversal subclasses
- * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ * - When working in angle structure coordinates, these linear constraints
+ *   must _not_ involve the scaling coordinate (the final coordinate that is
+ *   used to convert the angle structure polytope into a polyhedral cone).
+ *   Instead, the coefficient for the final scaling coordinate in each
+ *   additional linear constraint will be assumed to be zero.
  *
- * \python This base class is not present, but all of the "real" linear
- * constraint subclasses are available.  However, as noted above, it is rare
- * that you would need to access any of these constraint classes directly
- * through Python.  Instead, to use a linear constraint class, you would
- * typically create a tree traversal object with the appropriate class suffix
- * (e.g., one such Python class is \c TreeEnumeration_NonSpun).
+ * - Bear in mind that the tableaux that these linear constraints are working
+ *   with will not necessarily use the same coordinates as the underlying
+ *   normal surface or angle structure enumeration task (e.g., the tableaux
+ *   will never include separate columns for octagon coordinates).  See
+ *   LPInitialTableaux for a more detailed discussion of this.
+ *
+ * All constraint types provide their functionality through static members
+ * and static routines: they do not contain any member data, and it is
+ * unnecessary (but harmless) to construct them.  Instead constraint types
+ * are typically used as C++ template arguments (in particular, template
+ * arguments for tree traversal classes such as TreeEnumeration,
+ * TreeSingleSolution, and TautEnumeration).
+ *
+ * \python Whilst Regina's linear constraint types are available, it is rare
+ * that you would need to access any of these types directly through Python.
+ * Instead, to use a linear constraint type, you would typically create a tree
+ * traversal object whose class name includes the constraint type as a suffix
+ * (e.g., `TreeEnumeration_NonSpun`, which represents the C++ class
+ * `TreeEnumeration<LPConstraintNonSpun>`).
  *
  * \apinotfinal
  *
  * \ingroup enumerate
  */
-class LPConstraintBase {
-#ifdef __APIDOCS
+class LPConstraintAPI {
     public:
         /**
-         * The number of additional linear constraints that we impose.
-         * Each constraint will generate one new variable (column)
+         * Identifies the type (equality vs inequality) of each additional
+         * linear constraint that we impose.
+         *
+         * This array should have one element for each individual constraint.
+         * In turn, each constraint will generate one new variable (column)
          * and one new equation (row) in the tableaux.
+         *
+         * The preferred way to access the _number_ of constraints at compile
+         * time is to use `constraints.size()`.
+         *
+         * The array elements must be of type \a LPConstraintType; however,
+         * the number of elements may be any non-negative integer (here in
+         * this API documentation we use `1` just as an example).
          */
-        static constexpr int nConstraints = 0;
+        static constexpr std::array<LPConstraintType, 1> constraints { };
 
         /**
-         * The type used to store each coefficient for each of these
+         * The type used to store each coefficient for each of our
          * additional linear constraints.
          *
-         * The type should:
-         *
-         * - be able to be constructed or assigned from the value 0;
-         *
-         * - support multiplication of the form `IntType * Coefficient`
-         *   and assignment of the form `IntType = Coefficient`,
-         *   where \a IntType is any integer type that could be used with
-         *   the LPData and LPMatrix classes that use these constraints.
+         * This may be any signed native C++ integer type (here in this API
+         * documentation we use `int` just as an example).
          */
         using Coefficient = int;
 
@@ -139,9 +143,8 @@ class LPConstraintBase {
          * The LPData class offers support for octagonal almost normal
          * surfaces, in which exactly one tetrahedron is allowed to have
          * exactly one octagon type.  We represent such an octagon as a
-         * _pair_ of incompatible quadrilaterals within the same
-         * tetrahedron.  See the LPData class notes for details on how
-         * this works.
+         * _pair_ of incompatible quadrilaterals within the same tetrahedron.
+         * See the LPData class notes for details on how this works.
          *
          * In some settings, our extra linear constraints must behave
          * differently in the presence of octagons (i.e., the coefficient
@@ -156,64 +159,62 @@ class LPConstraintBase {
          *
          * This adjustment is not used with angle structure coordinates.
          *
-         * Currently this is a _very_ blunt mechanism: it assumes that
-         * the adjustment can be made by adding a compile-time constant,
-         * and it assumes that if there are multiple constraints (i.e.,
-         * \a nConstraints > 1) then they can all be adjusted in the same way.
-         * This mechanism will be made more flexible if/when this becomes
-         * necessary.
+         * Currently this is a _very_ blunt mechanism: it assumes that the
+         * adjustment can be made by adding a compile-time constant, and it
+         * assumes that if there are multiple constraints (i.e.,
+         * `constraints.size() > 1`), then then they can all be adjusted in
+         * the same way.  This mechanism will be made more flexible if/when
+         * this becomes necessary.
+         *
+         * If your constraint type will not be working with octagons at all,
+         * simply declare this constant as zero.
          */
-        static constexpr Coefficient octAdjustment = 0;
+        static constexpr Coefficient octAdjustment { 0 };
 
         /**
-         * Explicitly constructs equations for the linear function(s)
-         * constrained by this class.  Specifically, this routine takes an
-         * array of columns in the initial tableaux and fills in the necessary
-         * coefficient data.
+         * Explicitly builds equations for the linear function(s) constrained
+         * by this class.  Specifically, this routine takes an array of columns
+         * in the initial tableaux and fills in the necessary coefficient data.
          *
          * More precisely: recall that, for each linear function, the initial
          * tableaux acquires one new variable \a x_i that evaluates this linear
          * function f(x).  This routine must create the corresponding row that
-         * sets `f(x) - x_i = 0`.  Thus it must construct the
-         * coefficients of f(x) in the columns corresponding to normal
-         * coordinates, and it must also set a coefficient of -1 in the
-         * column for the corresponding new variable.
+         * sets `f(x) - x_i = 0`.  Thus it must construct the coefficients of
+         * `f(x)` in the columns corresponding to normal coordinates, and it
+         * must also set a coefficient of -1 in the column for the
+         * corresponding new variable.
          *
          * As described in the LPInitialTableaux class notes, it might not be
          * possible to construct the linear functions (since the underlying
          * triangulation might not satisfy the necessary requirements).
-         * In such cases this routine should throw an exception, as
-         * described below, and the corresponding constraint class
-         * _must_ mention this possibility in its class documentation.
+         * In such cases this routine should throw an exception, as described
+         * below, and your constraint class _must_ mention this possibility
+         * in its class documentation.
          *
-         * If you are implementing this routine in a subclass that
+         * If you are implementing this routine for a constraint type that
          * works with angle structure coordinates, remember that your
          * linear constraints must not interact with the scaling coordinate
          * (the final angle structure coordinate that is used to projectivise
          * the angle structure polytope into a polyhedral cone).  Your
-         * implementation of this routine _must_ ensure that your
-         * linear constraints all have coefficient zero in this column.
+         * implementation of `addRows()` _must_ leave all of your constraint
+         * coefficients in this column as zero.
          *
          * The precise form of the linear function(s) will typically depend
          * upon the underlying triangulation, as well as the permutation that
          * indicates which columns of the initial tableaux correspond to which
-         * normal or angle structure coordinates.  All of this information is
-         * read from the given initial tableaux \a init.
-         *
-         * Note that the tableaux \a init may still be under construction (and
-         * indeed, the column array \a col to be filled will typically be the
-         * internal column array from \a init itself).  This routine should not
-         * read any of the tableaux entries; it should only access the
-         * underlying triangulation (LPInitialTableaux.tri()) and the
-         * permutation of columns (LPInitialTableaux.columnPerm()).
-         *
-         * For each subclass \a Sub of LPConstraintBase, the array \a col
-         * must be an array of objects of type LPCol<Sub>, and the tableaux
-         * \a init must be of type LPInitialTableaux<Sub>.
+         * normal or angle structure coordinates.  All of this information
+         * will be accessible via the arguments to `addRows()`.
+         * Note that the number of columns is _not_ passed as an argument;
+         * instead you would typically deduce this from `tri.size()` and
+         * knowledge of the particular type of constraint.  For example,
+         * if you are implementing a single linear constraint that works with
+         * standard normal coordinates, the number of columns would be
+         * `7 * tri.size() + 1`.
          *
          * This routine should only write to the coefficients stored in
-         * LPCol::extra.  You may assume that these coefficients have all been
-         * initialised to zero by the LPCol constructor.
+         * `col[...].extra`.  Your implementation of `addRows()` may assume
+         * that these coefficients have already been initialised to zero
+         * (this is done automatically by the LPCol constructor).
          *
          * \pre For all columns in the array \a col, the members
          * LPCol::extra have all been initialised to zero.
@@ -230,45 +231,26 @@ class LPConstraintBase {
          * throw exceptions in this way _must_ describe this behaviour in its
          * own class documentation.
          *
-         * \python The argument \a col is not present, since LPCol is
-         * only designed to be used as part of the internal data storage for
-         * LPInitialTableaux.  Instead, this routine returns a Python list of
-         * constraints, where each constraint is presented as a Python list of
-         * coefficients.  Each of these inner lists will have size
-         * init.columns().
+         * \python The array \a columnPerm should be presented as a Python
+         * list of integers.  Moreover, the argument \a col is not present
+         * at all, since LPCol is an internal class, not for general use.
+         * Instead, this routine returns a Python list of constraints, where
+         * each constraint is presented as a Python list of coefficients.
+         * Each of these inner lists will have size equal to the number of
+         * columns.
          *
-         * \param col the array of columns as stored in the initial
-         * tableaux (i.e., the data member LPInitialTableaux::col_).
-         * \param init the tableaux through which this routine can acces
-         * the underlying triangulation and permutation of columns.
-         * Typically this will be the tableaux holding the column array \a col.
+         * \param col the array of columns as stored in the initial tableaux,
+         * presented as a C-style array.  These are the same columns that are
+         * stored in the data member `LPInitialTableaux<...>::col_`.
+         * \param tri the underlying triangulation.
+         * \param columnPerm the permutation that indicates which columns of
+         * the initial tableaux correspond to which normal or angle structure
+         * coordinates, presented as a C-style array.  This is the same
+         * permutation that would be returned by
+         * `LPInitialTableaux<...>::columnPerm()`.
          */
-        static void addRows(LPCol<LPConstraintBase>* col,
-            const LPInitialTableaux<LPConstraintBase>& init);
-
-        /**
-         * Explicitly constraints each of these linear functions to an
-         * equality or inequality in the underlying tableaux.  This will
-         * typically consist of a series of calls to LPData::constrainZero()
-         * and/or LPData::constrainPositive().
-         *
-         * The variables for these extra linear functions are stored in
-         * columns `numCols - nConstraints`, ..., `numCols - 1`
-         * of the given tableaux, and so your calls to LPData::constrainZero()
-         * and/or LPData::constrainPositive() should operate on these
-         * (and only these) columns.
-         * 
-         * \pre These column coefficients belong to the initial starting
-         * tableaux (LPInitialTableaux) from which the given tableaux is
-         * derived.
-         *
-         * \param lp the tableaux in which to constrain these linear
-         * functions.
-         * \param numCols the number of columns in the given tableaux.
-         */
-        template <typename IntType>
-        static void constrain(LPData<LPConstraintNone, IntType>& lp,
-            size_t numCols);
+        static void addRows(detail::LPCol<constraints.size(), Coefficient>* col,
+            const Triangulation<3>& tri, const size_t* columnPerm);
 
         /**
          * Ensures that the given normal surface satisfies the extra
@@ -278,7 +260,7 @@ class LPConstraintBase {
          * linear function(s), but instead runs independent tests.
          * For instance, if this class is used to constraint Euler
          * characteristic, then ideally this routine would call
-         * s.eulerChar() and test the return value of that routine instead.
+         * `s.eulerChar()` and test the return value of that routine instead.
          *
          * If these linear constraints work with angle structure coordinates
          * (not normal or almost normal surfaces), then this routine should
@@ -334,38 +316,50 @@ class LPConstraintBase {
          * also supported by this specific constraint class.
          */
         static bool supported(NormalEncoding enc);
-#endif
 };
+#endif
 
 /**
- * A subclass of LPConstraintBase used for constraints defined entirely
- * by homogeneous linear equations.
+ * A deprecated class that used to be a base class for different types of
+ * linear programming constraints.
  *
- * Any set of constraints defined entirely by homogeneous linear
- * equations should derive from LPConstraintSubspace, not LPConstraintBase.
- * In other words, any set of constraints derived from LPConstraintSubspace
- * should simply restrict our attention to a vector subspace of the
- * normal surface or angle structure coordinate system.
+ * \deprecated Linear constraint types no longer need to derive from
+ * LPConstraintBase; instead they should adhere to the LPConstraint concept.
+ * See the documentation-only class LPConstraintAPI for full details on
+ * exactly how the interface for a linear constraint type should behave.
  *
- * This class does not provide any additional functionality.  It is
- * merely a convenience to help describe and enforce preconditions.
- *
- * \nopython This base class is not present, but all of the "real" linear
- * constraint subclasses are available.  See the LPConstraintBase class notes
- * for further details on accessing linear constraints from within Python.
- *
- * \apinotfinal
+ * \nopython See the LPConstraintAPI documentation for details on accessing
+ * linear constraints from within Python.
  *
  * \ingroup enumerate
  */
-class LPConstraintSubspace : public LPConstraintBase {
+class [[deprecated]] LPConstraintBase {
+};
+
+/**
+ * A deprecated class that used to be a base class for linear programming
+ * constraints defined entirely by homogeneous linear equations.
+ *
+ * \deprecated Constraint types for homogeneous linear equations no longer need
+ * to derive from LPConstraintSubspace (or LPConstraintBase); instead they
+ * should adhere to the LPSubspace concept.  In particular, their `constraints`
+ * arrays should consist only of values `LPConstraintType::Zero`.
+ * See the documentation-only class LPConstraintAPI for full details on
+ * exactly how the interface for a linear constraint type should behave.
+ *
+ * \nopython See the LPConstraintAPI documentation for details on accessing
+ * linear constraints from within Python.
+ *
+ * \ingroup enumerate
+ */
+class [[deprecated]] LPConstraintSubspace {
 };
 
 /**
  * A do-nothing class that imposes no additional linear constraints on
  * the tableaux of normal surface or angle structure matching equations.
  *
- * See the LPConstraintBase class notes for details on all member functions.
+ * See the LPConstraintAPI documentation for details on all member functions.
  *
  * These linear constraint classes are designed mainly to act as C++ template
  * arguments, and end users will typically not need to construct their own
@@ -379,24 +373,21 @@ class LPConstraintSubspace : public LPConstraintBase {
  * suffix at all (since LPConstraintNone is the default behaviour).  For
  * example, the Python classes \c TreeEnumeration, \c TreeSingleSoln_BanBoundary
  * and \c TautEnumeration all use this do-nothing LPConstraintNone class.  See
- * the LPConstraintBase class notes for further details on accessing other
+ * the LPConstraintAPI documentation for further details on accessing other
  * types of linear constraints from within Python.
  *
  * \apinotfinal
  *
  * \ingroup enumerate
  */
-class LPConstraintNone : public LPConstraintSubspace {
+class LPConstraintNone {
     public:
-        static constexpr int nConstraints = 0;
+        static constexpr std::array<LPConstraintType, 0> constraints {};
         using Coefficient = int;
         static constexpr Coefficient octAdjustment = 0;
 
-        static void addRows(LPCol<regina::LPConstraintNone>*,
-            const LPInitialTableaux<LPConstraintNone>& init);
-        template<typename IntType>
-        static void constrain(
-            LPData<regina::LPConstraintNone, IntType>&, size_t);
+        static void addRows(detail::LPCol<constraints.size(), Coefficient>*,
+            const Triangulation<3>&, const size_t*);
         static bool verify(const NormalSurface&);
         static bool verify(const AngleStructure&);
         static bool supported(NormalEncoding enc);
@@ -417,7 +408,7 @@ class LPConstraintNone : public LPConstraintSubspace {
  * is used to ensure we do not have more than two octagons when searching for
  * a normal or almost normal sphere in the 3-sphere recognition algorithm).
  *
- * See the LPConstraintBase class notes for details on all member functions.
+ * See the LPConstraintAPI documentation for details on all member functions.
  *
  * These linear constraint classes are designed mainly to act as C++ template
  * arguments, and end users will typically not need to construct their own
@@ -433,17 +424,16 @@ class LPConstraintNone : public LPConstraintSubspace {
  * through Python.  Instead, to use a linear constraint class, you would
  * typically create a tree traversal object with the appropriate class suffix
  * (e.g., one such Python class is \c TreeSingleSolution_EulerPositive).
- * See the LPConstraintBase class notes for further details.
+ * See the LPConstraintAPI documentation for further details.
  *
  * \apinotfinal
  *
  * \ingroup enumerate
  */
-class LPConstraintEulerPositive : public LPConstraintBase {
+class LPConstraintEulerPositive {
     public:
-        static constexpr int nConstraints = 1;
+        static constexpr std::array constraints { LPConstraintType::Positive };
         using Coefficient = int;
-
         // Suppose we are using two quad columns to represent a single octagon.
         //
         // The adjustment in this case is to subtract two from the overall
@@ -456,12 +446,8 @@ class LPConstraintEulerPositive : public LPConstraintBase {
         static constexpr Coefficient octAdjustment = -1;
 
         static void addRows(
-            LPCol<regina::LPConstraintEulerPositive>* col,
-            const LPInitialTableaux<LPConstraintEulerPositive>& init);
-        template<typename IntType>
-        static void constrain(
-            LPData<regina::LPConstraintEulerPositive, IntType>& lp,
-            size_t numCols);
+            detail::LPCol<constraints.size(), Coefficient>* col,
+            const Triangulation<3>& tri, const size_t* columnPerm);
         static bool verify(const NormalSurface& s);
         static bool verify(const AngleStructure&);
         static bool supported(NormalEncoding enc);
@@ -478,7 +464,7 @@ class LPConstraintEulerPositive : public LPConstraintBase {
  * This constraint currently only works with normal (and _not_ almost normal)
  * coordinates.
  *
- * See the LPConstraintBase class notes for details on all member functions.
+ * See the LPConstraintAPI documentation for details on all member functions.
  *
  * These linear constraint classes are designed mainly to act as C++ template
  * arguments, and end users will typically not need to construct their own
@@ -494,25 +480,21 @@ class LPConstraintEulerPositive : public LPConstraintBase {
  * through Python.  Instead, to use a linear constraint class, you would
  * typically create a tree traversal object with the appropriate class suffix
  * (e.g., one such Python class is \c TreeEnumeration_EulerZero).
- * See the LPConstraintBase class notes for further details.
+ * See the LPConstraintAPI documentation for further details.
  *
  * \apinotfinal
  *
  * \ingroup enumerate
  */
-class LPConstraintEulerZero : public LPConstraintSubspace {
+class LPConstraintEulerZero {
     public:
-        static constexpr int nConstraints = 1;
+        static constexpr std::array constraints { LPConstraintType::Zero };
         using Coefficient = int;
         static constexpr Coefficient octAdjustment = 0;
 
         static void addRows(
-            LPCol<regina::LPConstraintEulerZero>* col,
-            const LPInitialTableaux<LPConstraintEulerZero>& init);
-        template<typename IntType>
-        static void constrain(
-            LPData<regina::LPConstraintEulerZero, IntType>& lp,
-            size_t numCols);
+            detail::LPCol<constraints.size(), Coefficient>* col,
+            const Triangulation<3>& tri, const size_t* columnPerm);
         static bool verify(const NormalSurface& s);
         static bool verify(const AngleStructure&);
         static bool supported(NormalEncoding enc);
@@ -534,7 +516,7 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
  * This is _not_ explicitly checked; instead it appears as a
  * precondition (see below).
  *
- * See the LPConstraintBase class notes for details on all member functions.
+ * See the LPConstraintAPI documentation for details on all member functions.
  *
  * These linear constraint classes are designed mainly to act as C++ template
  * arguments, and end users will typically not need to construct their own
@@ -559,25 +541,22 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
  * through Python.  Instead, to use a linear constraint class, you would
  * typically create a tree traversal object with the appropriate class suffix
  * (e.g., one such Python class is \c TreeEnumeration_NonSpun).
- * See the LPConstraintBase class notes for further details.
+ * See the LPConstraintAPI documentation for further details.
  *
  * \apinotfinal
  *
  * \ingroup enumerate
  */
-class LPConstraintNonSpun : public LPConstraintSubspace {
+class LPConstraintNonSpun {
     public:
-        static constexpr int nConstraints = 2;
+        static constexpr std::array constraints
+            { LPConstraintType::Zero, LPConstraintType::Zero };
         using Coefficient = long;
         static constexpr Coefficient octAdjustment = 0;
 
         static void addRows(
-            LPCol<regina::LPConstraintNonSpun>* col,
-            const LPInitialTableaux<LPConstraintNonSpun>& init);
-        template <typename IntType>
-        static void constrain(
-            LPData<regina::LPConstraintNonSpun, IntType>& lp,
-            size_t numCols);
+            detail::LPCol<constraints.size(), Coefficient>* col,
+            const Triangulation<3>& tri, const size_t* columnPerm);
         static bool verify(const NormalSurface& s);
         static bool verify(const AngleStructure&);
         static bool supported(NormalEncoding enc);
@@ -601,7 +580,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  * All of these constraints operate only on normal or angle structure
  * coordinates in the underlying tableaux (and in particular not the
  * additional variables introduced by additional linear constraints,
- * as described by LPConstraintBase and its subclasses).
+ * as described in the LPConstraintAPI documentation).
  *
  * Currently marking is used in the following ways:
  *
@@ -670,13 +649,13 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
                  coordinates (e.g., banned normal disc types).
                  The size of this array is the number of normal or angle
                  structure coordinates (so we explicitly exclude extra columns
-                 that arise from the template parameter LPConstraint. */
+                 that arise from the LPConstraint parameter also). */
         bool* marked_;
             /**< Indicates which columns of a tableaux correspond to marked
                  coordinates (e.g., marked normal disc types).
                  The size of this array is the number of normal or angle
                  structure coordinates (so we explicitly exclude extra columns
-                 that arise from the template parameter LPConstraint. */
+                 that arise from the LPConstraint parameter also). */
 
     public:
         /**
@@ -694,8 +673,8 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          * \param init the original starting tableaux being used for this
          * enumeration task.
          */
-        template <class LPConstraint>
-        BanConstraintBase(const LPInitialTableaux<LPConstraint>& init);
+        template <LPConstraint Constraint>
+        BanConstraintBase(const LPInitialTableaux<Constraint>& init);
 
         /**
          * Destroys this object and all associated data.
@@ -710,8 +689,8 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          *
          * \param lp the tableaux in which to enforce the bans.
          */
-        template <class LPConstraint, typename IntType>
-        void enforceBans(LPData<LPConstraint, IntType>& lp) const;
+        template <LPConstraint Constraint, typename IntType>
+        void enforceBans(LPData<Constraint, IntType>& lp) const;
 
         /**
          * Identifies whether the given column of the tableaux corresponds to
@@ -822,11 +801,11 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
  */
 class BanNone : public ShortOutput<BanNone> {
     public:
-        template <class LPConstraint>
-        BanNone(const LPInitialTableaux<LPConstraint>&) {}
+        template <LPConstraint Constraint>
+        BanNone(const LPInitialTableaux<Constraint>&) {}
 
-        template <class LPConstraint, typename IntType>
-        void enforceBans(LPData<LPConstraint, IntType>&) const {}
+        template <LPConstraint Constraint, typename IntType>
+        void enforceBans(LPData<Constraint, IntType>&) const {}
 
         bool operator == (const BanNone&) const { return true; }
 
@@ -895,8 +874,8 @@ class BanBoundary : public BanConstraintBase {
          * enumeration task.  This tableaux must work with normal or almost
          * normal surface coordinates (not angle structure coordinates).
          */
-        template <class LPConstraint>
-        BanBoundary(const LPInitialTableaux<LPConstraint>& init);
+        template <LPConstraint Constraint>
+        BanBoundary(const LPInitialTableaux<Constraint>& init);
 
         static bool supported(NormalEncoding enc);
 };
@@ -959,8 +938,8 @@ class BanEdge : public BanConstraintBase {
          * normal surface coordinates (not angle structure coordinates).
          * \param edge the specific edge that our normal discs must not meet.
          */
-        template <class LPConstraint>
-        BanEdge(const LPInitialTableaux<LPConstraint>& init, Edge<3>* edge);
+        template <LPConstraint Constraint>
+        BanEdge(const LPInitialTableaux<Constraint>& init, Edge<3>* edge);
 
         static bool supported(NormalEncoding enc);
 };
@@ -1028,8 +1007,8 @@ class BanTorusBoundary : public BanConstraintBase {
          * enumeration task.  This tableaux must work with normal or almost
          * normal surface coordinates (not angle structure coordinates).
          */
-        template <class LPConstraint>
-        BanTorusBoundary(const LPInitialTableaux<LPConstraint>& init);
+        template <LPConstraint Constraint>
+        BanTorusBoundary(const LPInitialTableaux<Constraint>& init);
 
         static bool supported(NormalEncoding enc);
 };
@@ -1043,13 +1022,8 @@ namespace regina {
 // Inline functions
 
 inline void LPConstraintNone::addRows(
-        LPCol<regina::LPConstraintNone>*,
-        const LPInitialTableaux<LPConstraintNone>& init) {
-}
-
-template <typename IntType>
-inline void LPConstraintNone::constrain(
-        LPData<regina::LPConstraintNone, IntType>&, size_t) {
+        detail::LPCol<constraints.size(), Coefficient>*,
+        const Triangulation<3>&, const size_t*) {
 }
 
 inline bool LPConstraintNone::verify(const NormalSurface&) {
@@ -1062,13 +1036,6 @@ inline bool LPConstraintNone::verify(const AngleStructure&) {
 
 inline bool LPConstraintNone::supported(NormalEncoding) {
     return true;
-}
-
-template <typename IntType>
-inline void LPConstraintEulerPositive::constrain(
-        LPData<regina::LPConstraintEulerPositive, IntType>& lp,
-        size_t numCols) {
-    lp.constrainPositive(numCols - 1);
 }
 
 inline bool LPConstraintEulerPositive::verify(const NormalSurface& s) {
@@ -1084,12 +1051,6 @@ inline bool LPConstraintEulerPositive::supported(NormalEncoding enc) {
     return enc.storesTriangles();
 }
 
-template <typename IntType>
-inline void LPConstraintEulerZero::constrain(
-        LPData<regina::LPConstraintEulerZero, IntType>& lp, size_t numCols) {
-    lp.constrainZero(numCols - 1);
-}
-
 inline bool LPConstraintEulerZero::verify(const NormalSurface& s) {
     return (s.eulerChar() == 0);
 }
@@ -1101,13 +1062,6 @@ inline bool LPConstraintEulerZero::verify(const AngleStructure&) {
 inline bool LPConstraintEulerZero::supported(NormalEncoding enc) {
     // Note: storesTriangles() will ensure we are not using angle structures.
     return (enc.storesTriangles() && ! enc.storesOctagons());
-}
-
-template <typename IntType>
-inline void LPConstraintNonSpun::constrain(
-        LPData<regina::LPConstraintNonSpun, IntType>& lp, size_t numCols) {
-    lp.constrainZero(numCols - 2);
-    lp.constrainZero(numCols - 1);
 }
 
 inline bool LPConstraintNonSpun::verify(const NormalSurface& s) {
@@ -1122,9 +1076,9 @@ inline bool LPConstraintNonSpun::supported(NormalEncoding enc) {
     return ! (enc.storesTriangles() || enc.storesAngles());
 }
 
-template <class LPConstraint>
+template <LPConstraint Constraint>
 inline BanConstraintBase::BanConstraintBase(
-        const LPInitialTableaux<LPConstraint>& init) :
+        const LPInitialTableaux<Constraint>& init) :
         tri_(init.tri()), system_(init.system()) {
     const size_t nCols = system_.coords(tri_.size());
     banned_ = new bool[nCols];
@@ -1138,8 +1092,8 @@ inline BanConstraintBase::~BanConstraintBase() {
     delete[] marked_;
 }
 
-template <class LPConstraint, typename IntType>
-inline void BanConstraintBase::enforceBans(LPData<LPConstraint, IntType>& lp)
+template <LPConstraint Constraint, typename IntType>
+inline void BanConstraintBase::enforceBans(LPData<Constraint, IntType>& lp)
         const {
     for (size_t i = 0; i < lp.coordinateColumns(); ++i)
         if (banned_[i])

@@ -120,6 +120,10 @@ void addPacketType(pybind11::module_& m) {
         ;
     regina::python::no_eq_static(i);
 
+    RDOC_SCOPE_SWITCH_MAIN
+
+    m.def("isTriangulation", regina::isTriangulation, rdoc::isTriangulation);
+
     RDOC_SCOPE_END
 }
 

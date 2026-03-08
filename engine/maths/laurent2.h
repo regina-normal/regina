@@ -39,8 +39,10 @@
 
 #include "utilities/stringutils.h"
 #include "utilities/tightencoding.h"
+#include "concepts/io.h"
 #include "core/output.h"
 #include <iostream>
+#include <iterator>
 #include <map>
 
 namespace regina {
@@ -50,18 +52,6 @@ namespace regina {
  * coefficients of type \a T.  A Laurent polynomial differs from an ordinary
  * polynomial in that it allows negative exponents (so, for example, you can
  * represent a polynomial such as `2 + 3x² + y/x - 1/y³`).
- *
- * The type \a T must represent a ring with no zero divisors.
- * In particular, it must:
- *
- * - support basic arithmetic operations;
- * - support assignments of the form `x = int` and
- *   tests of the form `x == int` and `x < int`;
- * - have a default constructor that assigns an explicit value of zero.
- *
- * This means that Regina's numerical types such as Integer and Rational
- * are supported, but native data types such as int and long are not
- * (since they have no zero-initialising default constructor).
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -76,16 +66,16 @@ namespace regina {
  * \python In Python, the class Laurent2 refers to the specific
  * template class Laurent2<Integer>.
  *
+ * \tparam T the coefficient type.  A typical coefficient type would be
+ * Integer or Rational.  Note that native C++ integer types are _not_
+ * supported (since they have no zero-initialising default constructor).
+ *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 class Laurent2 :
         public ShortOutput<Laurent2<T>, true>,
         public TightEncodable<Laurent2<T>> {
-    static_assert(! std::is_integral_v<T>,
-        "Laurent2<T> requires the type T to have a default constructor that "
-        "assigns a value of zero.");
-
     public:
         using Coefficient = T;
             /**< The type of each coefficient of the polynomial. */
@@ -171,22 +161,21 @@ class Laurent2 :
          *
          * This constructor induces a deep copy of \a value.
          *
-         * \pre Objects of type \a T can be assigned values of type \a U.
-         *
          * \nopython Python only supports Laurent polynomials with one type of
          * coefficient (the case where \a T is Integer).  Therefore
          * Python users can use the non-templated copy constructor.
          *
          * \param value the polynomial to clone.
          */
-        template <typename U>
+        template <CoefficientDomain U>
+        requires std::assignable_from<T&, U>
         Laurent2(const Laurent2<U>& value);
 
         /**
          * Creates a new polynomial from the given collection of coefficients.
          *
          * The coefficients should be presented as a collection of tuples of
-         * the form (\a d, \a e, \a v), each representing a term of the form
+         * the form `(d, e, v)`, each representing a term of the form
          * `v x^d y^e`.
          *
          * The tuples may be given in any order.
@@ -200,24 +189,17 @@ class Laurent2 :
          * \python Instead of the iterators \a begin and \a end,
          * this routine takes a python list of tuples.
          *
-         * \tparam iterator an iterator type which, when dereferenced, gives a
-         * std::tuple of the form (\a d, \a e, \a v), where \a d and \a e can
-         * be assigned to long integers, and where \a v can be assigned to
-         * type \a T.
-         *
-         * \tparam deref a dummy argument that should be ignored.  This is
-         * present to ensure that \a iterator can be dereferenced, so that
-         * a call such as Laurent2(int, int) falls through to the (long, long)
-         * constructor, and not this iterator-based constructor instead.
-         * Once we support a greater subset of C++20, this will be enforced
-         * through concepts instead.
-         *
          * \param begin the beginning of the set of coefficients, as outlined
          * above.
          * \param end a past-the-end iterator indicating the end of the set of
          * coefficients.
          */
-        template <typename iterator, typename deref = decltype(*iterator())>
+        template <std::input_iterator iterator>
+        requires requires(iterator it) {
+            { std::get<0>(*it) } -> std::convertible_to<long>;
+            { std::get<1>(*it) } -> std::convertible_to<long>;
+            { std::get<2>(*it) } -> std::convertible_to<T>;
+        }
         Laurent2(iterator begin, iterator end);
 
         /**
@@ -388,7 +370,8 @@ class Laurent2 :
          * \param value the polynomial to copy.
          * \return a reference to this polynomial.
          */
-        template <typename U>
+        template <CoefficientDomain U>
+        requires std::assignable_from<T&, U>
         Laurent2& operator = (const Laurent2<U>& value);
 
         /**
@@ -550,16 +533,13 @@ class Laurent2 :
          * Writes the tight encoding of this polynomial to the given output
          * stream.  See the page on \ref tight "tight encodings" for details.
          *
-         * \pre The coefficient type \a T must have a corresponding
-         * tightEncode() function.  This is true for Regina's arbitrary
-         * precision integer types (Integer and LargeInteger).
-         *
          * \nopython Use tightEncoding() instead, which returns a string.
          *
          * \param out the output stream to which the encoded string will
          * be written.
          */
-        void tightEncode(std::ostream& out) const;
+        void tightEncode(std::ostream& out) const
+            requires InherentlyTightEncodable<T>;
 
         /**
          * Reconstructs a polynomial from its given tight encoding.
@@ -573,10 +553,6 @@ class Laurent2 :
          * immediately after the encoding, without skipping any trailing
          * whitespace.
          *
-         * \pre The coefficient type \a T must have a corresponding static
-         * tightDecode() function.  This is true for Regina's arbitrary
-         * precision integer types (Integer and LargeInteger).
-         *
          * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of a two-variable Laurent polynomial.
          *
@@ -587,7 +563,8 @@ class Laurent2 :
          * for a two-variable Laurent polynomial.
          * \return the polynomial represented by the given tight encoding.
          */
-        static Laurent2 tightDecode(std::istream& input);
+        static Laurent2 tightDecode(std::istream& input)
+            requires InherentlyTightEncodable<T>;
 
     private:
         /**
@@ -595,22 +572,13 @@ class Laurent2 :
          */
         void removeZeroes();
 
-    template <typename U>
+    template <CoefficientDomain U>
     friend Laurent2<U> operator * (const Laurent2<U>&, const Laurent2<U>&);
 
     // For the time being, allow Link::homflyAZtoLM() to do low-level
     // operations on these polynomials.
     friend class Link;
 };
-
-#ifndef __DOXYGEN
-// Don't confuse doxygen with specialisations.
-template <typename T>
-struct RingTraits<Laurent2<T>> {
-    inline static const Laurent2<T> zero;
-    inline static const Laurent2<T> one { { 0, 0, 1 } };
-};
-#endif // __DOXYGEN
 
 /**
  * Swaps the contents of the given polynomials.
@@ -623,7 +591,7 @@ struct RingTraits<Laurent2<T>> {
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 void swap(Laurent2<T>& a, Laurent2<T>& b) noexcept;
 
 /**
@@ -638,7 +606,7 @@ void swap(Laurent2<T>& a, Laurent2<T>& b) noexcept;
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent2<T> operator * (Laurent2<T> poly,
     const typename Laurent2<T>::Coefficient& scalar);
 
@@ -654,7 +622,7 @@ Laurent2<T> operator * (Laurent2<T> poly,
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
     Laurent2<T> poly);
 
@@ -674,7 +642,7 @@ Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent2<T> operator / (Laurent2<T> poly,
     const typename Laurent2<T>::Coefficient& scalar);
 
@@ -689,7 +657,7 @@ Laurent2<T> operator / (Laurent2<T> poly,
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent2<T> operator + (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
 
 /**
@@ -703,7 +671,7 @@ Laurent2<T> operator + (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent2<T> operator + (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
 
 /**
@@ -717,7 +685,7 @@ Laurent2<T> operator + (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
 
 /**
@@ -731,7 +699,7 @@ Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
 
 /**
@@ -742,7 +710,7 @@ Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent2<T> operator - (Laurent2<T> arg);
 
 /**
@@ -756,7 +724,7 @@ Laurent2<T> operator - (Laurent2<T> arg);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent2<T> operator - (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
 
 /**
@@ -770,7 +738,7 @@ Laurent2<T> operator - (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent2<T> operator - (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
 
 /**
@@ -784,7 +752,7 @@ Laurent2<T> operator - (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent2<T> operator - (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
 
 /**
@@ -798,7 +766,7 @@ Laurent2<T> operator - (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent2<T> operator - (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
 
 /**
@@ -812,25 +780,40 @@ Laurent2<T> operator - (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
  *
  * \ingroup maths
  */
-template <typename T>
+template <CoefficientDomain T>
 Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
 
-template <typename T>
+#ifndef __DOXYGEN
+// Don't confuse doxygen with specialisations.
+template <CoefficientDomain T>
+struct RingTraits<Laurent2<T>> {
+    inline static const Laurent2<T> zero;
+    inline static const Laurent2<T> one { { 0, 0, 1 } };
+    static constexpr bool commutative = RingTraits<T>::commutative;
+    static constexpr bool zeroInitialised = true;
+    static constexpr bool zeroDivisors = false; // since T is a domain
+    static constexpr bool inverses = false;
+};
+#endif // __DOXYGEN
+
+// Inline functions and constants for Laurent2:
+
+template <CoefficientDomain T>
 const T Laurent2<T>::zero_(0);
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T>::Laurent2(long xExp, long yExp) {
     coeff_.emplace(Exponents(xExp, yExp), 1);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T>::Laurent2(const Laurent2<T>& value) :
         coeff_(value.coeff_) {
     // TODO: Use default implementation.
     // std::cerr << "Laurent2: deep copy (init)" << std::endl;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Laurent2<T>::Laurent2(const Laurent2<T>& toShift, long xShift, long yShift) {
     for (const auto& entry : toShift.coeff_)
         coeff_.emplace_hint(coeff_.end(),
@@ -838,15 +821,21 @@ Laurent2<T>::Laurent2(const Laurent2<T>& toShift, long xShift, long yShift) {
                 entry.first.second + yShift), entry.second);
 }
 
-template <typename T>
-template <typename U>
+template <CoefficientDomain T>
+template <CoefficientDomain U>
+requires std::assignable_from<T&, U>
 inline Laurent2<T>::Laurent2(const Laurent2<U>& value) :
         coeff_(value.coeff_) {
     // std::cerr << "Laurent2: deep copy (init)" << std::endl;
 }
 
-template <typename T>
-template <typename iterator, typename deref>
+template <CoefficientDomain T>
+template <std::input_iterator iterator>
+requires requires(iterator it) {
+    { std::get<0>(*it) } -> std::convertible_to<long>;
+    { std::get<1>(*it) } -> std::convertible_to<long>;
+    { std::get<2>(*it) } -> std::convertible_to<T>;
+}
 inline Laurent2<T>::Laurent2(iterator begin, iterator end) {
     for (auto it = begin; it != end; ++it) {
         if (std::get<2>(*it) == 0)
@@ -863,7 +852,7 @@ inline Laurent2<T>::Laurent2(iterator begin, iterator end) {
     }
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T>::Laurent2(
         std::initializer_list<std::tuple<long, long, T>> coefficients) {
     for (const auto& c : coefficients) {
@@ -877,28 +866,28 @@ inline Laurent2<T>::Laurent2(
     }
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Laurent2<T>::init() {
     coeff_.clear();
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Laurent2<T>::initExp(long xExp, long yExp) {
     coeff_.clear();
     coeff_.emplace(Exponents(xExp, yExp), 1);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Laurent2<T>::init(long xExp, long yExp) {
     initExp(xExp, yExp);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline bool Laurent2<T>::isZero() const {
     return coeff_.empty();
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline const T& Laurent2<T>::operator () (long xExp, long yExp) const {
     auto it = coeff_.find(Exponents(xExp, yExp));
     if (it == coeff_.end())
@@ -907,7 +896,7 @@ inline const T& Laurent2<T>::operator () (long xExp, long yExp) const {
         return it->second;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 void Laurent2<T>::set(long xExp, long yExp, const T& value) {
     if (value == 0) {
         coeff_.erase(Exponents(xExp, yExp));
@@ -920,18 +909,18 @@ void Laurent2<T>::set(long xExp, long yExp, const T& value) {
     }
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline bool Laurent2<T>::operator == (const Laurent2<T>& rhs) const {
     return coeff_ == rhs.coeff_;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline std::strong_ordering Laurent2<T>::operator <=> (const Laurent2<T>& rhs)
         const {
     return coeff_ <=> rhs.coeff_;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<T>& other) {
     // TODO: Use default implementation.
     // std::cerr << "Laurent2: deep copy (=)" << std::endl;
@@ -942,8 +931,9 @@ inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<T>& other) {
 #ifndef __DOXYGEN
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
-template <typename T>
-template <typename U>
+template <CoefficientDomain T>
+template <CoefficientDomain U>
+requires std::assignable_from<T&, U>
 inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<U>& other) {
     // std::cerr << "Laurent2: deep copy (=)" << std::endl;
     coeff_ = other.coeff_;
@@ -951,18 +941,18 @@ inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<U>& other) {
 }
 #endif // __DOXYGEN
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Laurent2<T>::swap(Laurent2<T>& other) noexcept {
     std::swap(coeff_, other.coeff_);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Laurent2<T>::negate() {
     for (auto& c : coeff_)
         c.second = -c.second;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Laurent2<T>::invertX() {
     std::map<Exponents, T> newCoeff;
     for (const auto& c : coeff_)
@@ -971,7 +961,7 @@ inline void Laurent2<T>::invertX() {
     coeff_ = std::move(newCoeff);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void Laurent2<T>::invertY() {
     std::map<Exponents, T> newCoeff;
     for (const auto& c : coeff_)
@@ -980,7 +970,7 @@ inline void Laurent2<T>::invertY() {
     coeff_ = std::move(newCoeff);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T>& Laurent2<T>::operator *= (const T& scalar) {
     if (scalar == 0) {
         // All coefficients become zero.
@@ -993,7 +983,7 @@ inline Laurent2<T>& Laurent2<T>::operator *= (const T& scalar) {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T>& Laurent2<T>::operator /= (const T& scalar) {
     for (auto& c : coeff_)
         c.second /= scalar;
@@ -1003,7 +993,7 @@ inline Laurent2<T>& Laurent2<T>::operator /= (const T& scalar) {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Laurent2<T>& Laurent2<T>::operator += (const Laurent2<T>& other) {
     // This works even if &other == this, since in this case there are
     // no insertions or deletions.
@@ -1018,7 +1008,7 @@ Laurent2<T>& Laurent2<T>::operator += (const Laurent2<T>& other) {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Laurent2<T>& Laurent2<T>::operator -= (const Laurent2<T>& other) {
     // This works even if &other == this, since in this case there are
     // no insertions or deletions.
@@ -1034,7 +1024,7 @@ Laurent2<T>& Laurent2<T>::operator -= (const Laurent2<T>& other) {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 Laurent2<T>& Laurent2<T>::operator *= (const Laurent2<T>& other) {
     if (isZero())
         return *this;
@@ -1065,7 +1055,7 @@ Laurent2<T>& Laurent2<T>::operator *= (const Laurent2<T>& other) {
     return *this;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 void Laurent2<T>::writeTextShort(std::ostream& out, bool utf8,
         const char* varX, const char* varY) const {
     if (isZero()) {
@@ -1132,7 +1122,7 @@ void Laurent2<T>::writeTextShort(std::ostream& out, bool utf8,
     }
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline std::string Laurent2<T>::str(const char* varX, const char* varY)
         const {
     // Make sure that python will be able to find the inherited str().
@@ -1145,7 +1135,7 @@ inline std::string Laurent2<T>::str(const char* varX, const char* varY)
     return out.str();
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline std::string Laurent2<T>::utf8(const char* varX, const char* varY)
         const {
     std::ostringstream out;
@@ -1153,7 +1143,7 @@ inline std::string Laurent2<T>::utf8(const char* varX, const char* varY)
     return out.str();
 }
 
-template <typename T>
+template <CoefficientDomain T>
 void Laurent2<T>::removeZeroes() {
     auto it = coeff_.begin();
     while (it != coeff_.end())
@@ -1163,12 +1153,12 @@ void Laurent2<T>::removeZeroes() {
             ++it;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline void swap(Laurent2<T>& a, Laurent2<T>& b) noexcept {
     a.swap(b);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T> operator * (Laurent2<T> poly,
         const typename Laurent2<T>::Coefficient& scalar) {
     // When the argument poly is an lvalue reference, we perform a deep copy
@@ -1180,7 +1170,7 @@ inline Laurent2<T> operator * (Laurent2<T> poly,
     return poly;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
         Laurent2<T> poly) {
     // See the notes above on a possible optimisation for scalar == 0.
@@ -1188,63 +1178,63 @@ inline Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
     return poly;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T> operator / (Laurent2<T> poly,
         const typename Laurent2<T>::Coefficient& scalar) {
     poly /= scalar;
     return poly;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T> operator + (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
     // We have to make a deep copy since both arguments are read-only.
     return std::move(Laurent2<T>(lhs) += rhs);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T> operator + (Laurent2<T>&& lhs, const Laurent2<T>& rhs) {
     return std::move(lhs += rhs);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs) {
     return std::move(rhs += lhs);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs) {
     return std::move(lhs += rhs);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T> operator - (Laurent2<T> arg) {
     arg.negate();
     return arg;
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T> operator - (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
     // We have to make a deep copy since both arguments are read-only.
     return std::move(Laurent2<T>(lhs) -= rhs);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T> operator - (Laurent2<T>&& lhs, const Laurent2<T>& rhs) {
     return std::move(lhs -= rhs);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T> operator - (const Laurent2<T>& lhs, Laurent2<T>&& rhs) {
     rhs.negate();
     return std::move(rhs += lhs);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T> operator - (Laurent2<T>&& lhs, Laurent2<T>&& rhs) {
     return std::move(lhs -= rhs);
 }
 
-template <typename T>
+template <CoefficientDomain T>
 inline Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
     if (lhs.isZero() || rhs.isZero())
         return Laurent2<T>(); // zero
@@ -1267,8 +1257,9 @@ inline Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
     return ans;
 }
 
-template <typename T>
-inline void Laurent2<T>::tightEncode(std::ostream& out) const {
+template <CoefficientDomain T>
+inline void Laurent2<T>::tightEncode(std::ostream& out) const
+        requires InherentlyTightEncodable<T> {
     for (const auto& c : coeff_) {
         // Write the coefficient (which must be non-zero) before the exponents.
         // This way we can use tightEncode(0) as an unambiguous terminator.
@@ -1279,8 +1270,9 @@ inline void Laurent2<T>::tightEncode(std::ostream& out) const {
     T().tightEncode(out); // The zero terminator
 }
 
-template <typename T>
-inline Laurent2<T> Laurent2<T>::tightDecode(std::istream& input) {
+template <CoefficientDomain T>
+inline Laurent2<T> Laurent2<T>::tightDecode(std::istream& input)
+        requires InherentlyTightEncodable<T> {
     Laurent2 ans;
 
     while (true) {

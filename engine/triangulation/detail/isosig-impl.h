@@ -50,12 +50,13 @@
 
 namespace regina::detail {
 
-template <int dim>
-template <class Encoding>
+template <int dim> requires (supportedDim(dim))
+template <IsoSigEncoding<dim> Encoding>
 typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
         size_t simp, const Perm<dim+1>& vertices,
         Isomorphism<dim>* relabelling) const {
     // Only process the component that simp belongs to.
+    // In particular, this component must be non-empty.
 
     // ---------------------------------------------------------------------
     // Data for reconstructing a triangulation from an isomorphism signature
@@ -228,8 +229,8 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
     return ans;
 }
 
-template <int dim>
-template <class Type, class Encoding>
+template <int dim> requires (supportedDim(dim))
+template <IsoSigType<dim> Type, IsoSigEncoding<dim> Encoding>
 typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
     if (isEmpty())
         return Encoding::emptySig();
@@ -264,8 +265,8 @@ typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
     return ans;
 }
 
-template <int dim>
-template <class Type, class Encoding>
+template <int dim> requires (supportedDim(dim))
+template <IsoSigType<dim> Type, IsoSigEncoding<dim> Encoding>
 std::pair<typename Encoding::Signature, Isomorphism<dim>>
         TriangulationBase<dim>::isoSigDetail() const {
     // Make sure the user is not trying to do something illegal.
@@ -311,7 +312,7 @@ std::pair<typename Encoding::Signature, Isomorphism<dim>>
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
     Base64SigDecoder dec(sig.begin(), sig.end()); // skips leading whitespace
 
@@ -466,7 +467,7 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
     Base64SigDecoder dec(sig.begin(), sig.end()); // skips leading whitespace
     try {

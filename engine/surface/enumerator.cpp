@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include <iterator>
+#include <limits>
 #include <thread>
 #include "enumerate/doubledescription.h"
 #include "enumerate/hilbertcd.h"
@@ -43,13 +44,6 @@
 #include "triangulation/dim3.h"
 
 namespace regina {
-
-#ifdef INT128_AVAILABLE
-/**
- * The largest possible signed 128-bit integer,
- */
-const Integer maxSigned128(NativeInteger<16>(~(IntOfSize<16>::type(1) << 127)));
-#endif
 
 namespace {
     /**
@@ -438,7 +432,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
         // std::cerr << "Using NativeLong." << std::endl;
         fillVertexTreeWith<NativeLong>();
 #ifdef INT128_AVAILABLE
-    } else if (worst <= maxSigned128) {
+    } else if (worst <= std::numeric_limits<regina::Int128>::max()) {
         // std::cerr << "Using NativeInteger<16>." << std::endl;
         fillVertexTreeWith<NativeInteger<16> >();
 #endif
@@ -448,7 +442,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     }
 }
 
-template <typename Integer>
+template <ReginaInteger IntType>
 void NormalSurfaces::Enumerator::fillVertexTreeWith() {
     if (useNonSpunConstraint(list_->coords_)) {
         // LPConstraintNonSpun can fail to construct the tableaux constraints,
@@ -457,7 +451,7 @@ void NormalSurfaces::Enumerator::fillVertexTreeWith() {
         // the matching equations as the first step of the enumeration process,
         // we are assured that LPConstraintNonSpun can be used without problems.
         // TODO: Convert TreeEnumeration to use SnapshotRef
-        TreeEnumeration<LPConstraintNonSpun, BanNone, Integer> search(
+        TreeEnumeration<LPConstraintNonSpun, BanNone, IntType> search(
             *list_->triangulation_, list_->coords_);
         while (search.next(tracker_)) {
             list_->surfaces_.push_back(search.buildSurface());
@@ -466,7 +460,7 @@ void NormalSurfaces::Enumerator::fillVertexTreeWith() {
         }
     } else {
         // TODO: Convert TreeEnumeration to use SnapshotRef
-        TreeEnumeration<LPConstraintNone, BanNone, Integer> search(
+        TreeEnumeration<LPConstraintNone, BanNone, IntType> search(
             *list_->triangulation_, list_->coords_);
         while (search.next(tracker_)) {
             list_->surfaces_.push_back(search.buildSurface());
@@ -634,9 +628,10 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
         v.reserve(eqns_.columns());
         for (size_t c = 0; c < eqns_.columns(); ++c) {
             const Integer& entry(eqns_.entry(r, c));
-            if (entry.isNative())
-                v.emplace_back(entry.longValue());
-            else
+            if (entry.isNative()) {
+                // Since entry is native, unsafeValue() must succeed.
+                v.emplace_back(entry.unsafeValue<long>());
+            } else
                 v.emplace_back(entry.rawData());
         }
         input.push_back(std::move(v));

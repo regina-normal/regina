@@ -46,7 +46,7 @@ Each signature produced will have its cycles ordered by decreasing
 length. Each cycle will have at least half of its symbols lower-case.
 
 For each signature that is generated, this routine will call *action*
-(which must be a function or some other callable object).
+(which must be a function or some other callable type).
 
 * The first argument to *action* must be a const reference to a
   Signature. This will be the signature that was found. If *action*
@@ -62,7 +62,8 @@ For each signature that is generated, this routine will call *action*
 * If there are any additional arguments supplied in the list *args*,
   then these will be passed as subsequent arguments to *action*.
 
-* *action* must return ``void``.
+* The return value of *action* will be ignored; typically it would
+  return ``void``.
 
 .. warning::
     Currently upper-case symbols in signatures are not supported by
@@ -79,7 +80,7 @@ Parameter ``order``:
     the order of signatures to generate.
 
 Parameter ``action``:
-    a function (or other callable object) to call for each signature
+    a function (or other callable type) to call for each signature
     that is found.
 
 Parameter ``args``:

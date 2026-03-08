@@ -46,14 +46,9 @@
 
 namespace regina::detail {
 
-template <int dim>
-template <int k>
+template <int dim> requires (supportedDim(dim))
+template <int k> requires (k > 0 && k < (standardDim(dim) ? dim : dim - 1))
 AbelianGroup TriangulationBase<dim>::homology() const {
-    if constexpr (standardDim(dim))
-        static_assert(1 <= k && k <= dim - 1);
-    else
-        static_assert(1 <= k && k <= dim - 2);
-
     if (isEmpty())
         return AbelianGroup();
 
@@ -67,22 +62,22 @@ AbelianGroup TriangulationBase<dim>::homology() const {
         // Build a presentation matrix.
         // Each non-boundary not-in-forest (dim-1)-face is a generator.
         // Each non-boundary (dim-2)-face is a relation.
-        long nBdryRidges = 0;
+        size_t nBdryRidges = 0;
         for (auto bc : boundaryComponents())
             nBdryRidges += bc->countRidges();
 
-        // Cast away all unsignedness in case we run into problems subtracting.
-        long nGens = static_cast<long>(countFaces<dim-1>())
-            - static_cast<long>(countBoundaryFacets())
-            + static_cast<long>(countComponents())
-            - static_cast<long>(size());
-        long nRels = static_cast<long>(countFaces<dim-2>()) - nBdryRidges;
+        // Note: As we walk from left to right through the following
+        // expressions, the intermediate calculations should never
+        // become negative.
+        size_t nGens = countFaces<dim-1>() - countBoundaryFacets()
+            + countComponents() - size();
+        size_t nRels = countFaces<dim-2>() - nBdryRidges;
 
         MatrixInt pres(nRels, nGens);
 
         // Find out which (dim-1)-face corresponds to which generator.
-        long* genIndex = new long[countFaces<dim-1>()];
-        long i = 0;
+        size_t* genIndex = new size_t[countFaces<dim-1>()];
+        size_t i = 0;
         for (Face<dim, dim-1>* f : faces<dim-1>())
             if (! (f->isBoundary() || f->inMaximalForest()))
                 genIndex[f->index()] = i++;
@@ -171,7 +166,7 @@ AbelianGroup TriangulationBase<dim>::homology() const {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 const GroupPresentation& TriangulationBase<dim>::group() const {
     if (fundGroup_.has_value())
         return *fundGroup_;
@@ -187,18 +182,17 @@ const GroupPresentation& TriangulationBase<dim>::group() const {
     // Each non-boundary not-in-forest (dim-1)-face is a generator.
     // Each non-boundary (dim-2)-face is a relation.
 
-    // Cast away all unsignedness in case we run into problems subtracting.
-    long nGens = static_cast<long>(countFaces<dim-1>())
-        - static_cast<long>(countBoundaryFacets())
-        + static_cast<long>(countComponents())
-        - static_cast<long>(size());
+    // Note: As we walk from left to right through the following expression,
+    // the intermediate calculations should never become negative.
+    size_t nGens = countFaces<dim-1>() - countBoundaryFacets()
+        + countComponents() - size();
 
     // Insert the generators.
     ans.addGenerator(nGens);
 
     // Find out which (dim-1)-face corresponds to which generator.
-    long* genIndex = new long[countFaces<dim-1>()];
-    long i = 0;
+    size_t* genIndex = new size_t[countFaces<dim-1>()];
+    size_t i = 0;
     for (Face<dim, dim-1>* f : faces<dim-1>())
         if (! (f->isBoundary() || f->inMaximalForest()))
             genIndex[f->index()] = i++;
@@ -239,10 +233,9 @@ const GroupPresentation& TriangulationBase<dim>::group() const {
     return *(fundGroup_ = std::move(ans));
 }
 
-template <int dim>
-template <int subdim>
+template <int dim> requires (supportedDim(dim))
+template <int subdim> requires (subdim > 0 && subdim <= dim)
 MatrixInt TriangulationBase<dim>::boundaryMap() const {
-    static_assert(subdim > 0 && subdim <= dim);
     MatrixInt ans(countFaces<subdim - 1>(), countFaces<subdim>());
 
     if constexpr (subdim == dim) {
@@ -322,12 +315,10 @@ MatrixInt TriangulationBase<dim>::boundaryMap() const {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <int subdim>
+requires (subdim > 0 && subdim <= (standardDim(dim) ? dim : dim - 1))
 MatrixInt TriangulationBase<dim>::dualBoundaryMap() const {
-    static_assert(subdim >= 1 && subdim <= dim);
-    static_assert(standardDim(dim) || subdim < dim);
-
     ensureSkeleton();
 
     if constexpr (subdim == 1) {
@@ -410,11 +401,9 @@ MatrixInt TriangulationBase<dim>::dualBoundaryMap() const {
     }
 }
 
-template <int dim>
-template <int subdim>
+template <int dim> requires (supportedDim(dim))
+template <int subdim> requires (subdim >= 0 && subdim < dim)
 MatrixInt TriangulationBase<dim>::dualToPrimal() const {
-    static_assert(subdim >= 0 && subdim < dim);
-
     ensureSkeleton();
 
     if constexpr (subdim == 0) {

@@ -34,10 +34,9 @@
  *
  *  This file is \a not included automatically by tightencoding.h.
  *  However, most end users should not need to include it, since Regina's
- *  calculation engine provides full explicit instantiations for all of the
- *  types that have corresponding global tightEncode() functions
- *  (e.g., signed and unsigned \c int, \c long, and \c long \c long, plus
- *  regina::Integer and regina::LargeInteger).
+ *  calculation engine provides full explicit instantiations for typical
+ *  template parameters.  See the documentation for individual routines for
+ *  further details.
  */
 
 #ifndef __REGINA_TIGHTENCODING_IMPL_H
@@ -50,19 +49,15 @@
 
 namespace regina::detail {
 
-template <typename Int>
-void tightEncodeInteger(std::ostream& out, Int value) {
-    static_assert((std::is_integral_v<Int> && ! std::is_same_v<Int, bool>)
-            || IsReginaArbitraryPrecisionInteger<Int>::value,
-        "tightEncodeInteger() requires either a native C++ integer type "
-        "or one of Regina's arbitrary precision integer types.");
-
+template <typename IntType>
+requires CppInteger<IntType> || ArbitraryPrecisionInteger<IntType>
+void tightEncodeInteger(std::ostream& out, IntType value) {
     // Here we use the 90 values 33..122 as "digit" characters,
     // and the four values 123..126 as different types of markers.
     // As characters, the four markers are: { | } ~
 
     // Get the special case of infinity out of the way.
-    if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
+    if constexpr (ArbitraryPrecisionInteger<IntType>) {
         if (value.isInfinite()) {
             out << "{}";
             return;
@@ -70,17 +65,18 @@ void tightEncodeInteger(std::ostream& out, Int value) {
     }
 
     // The best-case scenario: a single "digit" character.
-    if constexpr (std::is_unsigned_v<Int>) {
+    if constexpr (UnsignedCppInteger<IntType>) {
         if (value <= 45) {
-            out << char(value + 77); // char <= 122
+            out << char(value + 77); // char ≤ 122
             return;
         }
     } else {
         if (value > -45 && value <= 45) {
-            if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-                out << char(value.longValue() + 77); // 33 <= char <= 122
+            if constexpr (ArbitraryPrecisionInteger<IntType>) {
+                out << char(value.template unsafeValue<int>() + 77);
+                    // 33 ≤ char ≤ 122
             } else {
-                out << char(value + 77); // 33 <= char <= 122
+                out << char(value + 77); // 33 ≤ char ≤ 122
             }
             return;
         }
@@ -93,15 +89,15 @@ void tightEncodeInteger(std::ostream& out, Int value) {
         value -= 45;
 
     // The next-best scenario: marker plus one "digit" character.
-    if constexpr (std::is_unsigned_v<Int>) {
+    if constexpr (UnsignedCppInteger<IntType>) {
         if (value <= 45) {
             out << '~' << char(value + 77);
             return;
         }
     } else {
         if (value > -45 && value <= 45) {
-            if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-                out << '~' << char(value.longValue() + 77);
+            if constexpr (ArbitraryPrecisionInteger<IntType>) {
+                out << '~' << char(value.template unsafeValue<int>() + 77);
             } else {
                 out << '~' << char(value + 77);
             }
@@ -116,7 +112,7 @@ void tightEncodeInteger(std::ostream& out, Int value) {
         value -= 45;
 
     // The next-best scenario: marker plus two "digit" characters.
-    if constexpr (std::is_unsigned_v<Int>) {
+    if constexpr (UnsignedCppInteger<IntType>) {
         if (value <= 4050) {
             // Note: T could be char, so cast to an unsigned int before we
             // start doing any arithmetic.
@@ -129,10 +125,11 @@ void tightEncodeInteger(std::ostream& out, Int value) {
             // Note: T could be char, so cast to an int before we
             // start doing any arithmetic.
             int i;
-            if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-                i = int(value.longValue()) + 4049; // 0 <= i < 8100 = 90*90
+            if constexpr (ArbitraryPrecisionInteger<IntType>) {
+                i = value.template unsafeValue<int>() + 4049;
+                    // 0 ≤ i < 8100 = 90*90
             } else {
-                i = int(value) + 4049; // 0 <= i < 8100 = 90*90
+                i = int(value) + 4049; // 0 ≤ i < 8100 = 90*90
             }
             out << '|' << char((i % 90) + 33) << char((i / 90) + 33);
             return;
@@ -147,7 +144,7 @@ void tightEncodeInteger(std::ostream& out, Int value) {
         value -= 4050;
 
     // The next-best scenario: marker plus three "digit" characters.
-    if constexpr (std::is_unsigned_v<Int>) {
+    if constexpr (UnsignedCppInteger<IntType>) {
         if (value <= 364500) {
             // Note: T could still be unsigned short, so cast to an
             // unsigned long before we start doing any arithmetic.
@@ -163,10 +160,11 @@ void tightEncodeInteger(std::ostream& out, Int value) {
             // Note: T could still be short int, so cast to a long before
             // we start doing any arithmetic.
             long i;
-            if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-                i = value.longValue() + 364499; // 0 <= i < 729000 = 90^3
+            if constexpr (ArbitraryPrecisionInteger<IntType>) {
+                i = value.template unsafeValue<long>() + 364499;
+                    // 0 ≤ i < 729000 = 90^3
             } else {
-                i = long(value) + 364499; // 0 <= i < 729000 = 90^3
+                i = long(value) + 364499; // 0 ≤ i < 729000 = 90^3
             }
             out << '}' << char((i % 90) + 33);
             i /= 90;
@@ -189,14 +187,14 @@ void tightEncodeInteger(std::ostream& out, Int value) {
     // (4) marker to terminate
 
     int next;
-    if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
+    if constexpr (ArbitraryPrecisionInteger<IntType>) {
         // value might be out of bounds for a native integer,
         // but (value % 45) will not.
-        next = (value % 45).template nativeValue<sizeof(int)>();
+        next = (value % 45).template unsafeValue<int>();
     } else {
         next = value % 45;
     }
-    if constexpr (std::is_unsigned_v<Int>) {
+    if constexpr (UnsignedCppInteger<IntType>) {
         if (value > 0) {
             value /= 45;
         } else {
@@ -216,8 +214,10 @@ void tightEncodeInteger(std::ostream& out, Int value) {
     out << '{' << char(next + 33);
 
     while (value > 0) {
-        if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-            out << char((value % 90).longValue() + 33);
+        if constexpr (ArbitraryPrecisionInteger<IntType>) {
+            // value might be out of bounds for a native integer,
+            // but (value % 90) will not.
+            out << char((value % 90).template unsafeValue<int>() + 33);
         } else {
             out << char((value % 90) + 33);
         }
@@ -227,14 +227,11 @@ void tightEncodeInteger(std::ostream& out, Int value) {
     out << '}';
 }
 
-template <typename Int, typename iterator>
-Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
-    static_assert((std::is_integral_v<Int> && ! std::is_same_v<Int, bool>)
-            || IsReginaArbitraryPrecisionInteger<Int>::value,
-        "tightEncodeInteger() requires either a native C++ integer type "
-        "or one of Regina's arbitrary precision integer types.");
-
-    Int result;
+template <typename IntType, CharIterator iterator>
+requires CppInteger<IntType> || ArbitraryPrecisionInteger<IntType>
+IntType tightDecodeInteger(iterator start, iterator limit,
+        bool noTrailingData) {
+    IntType result;
     bool overflow = false;
 
     if (start == limit)
@@ -242,7 +239,7 @@ Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
     signed char c = *start++;
     if (c >= 33 && c <= 122) {
         // The result will fit into a single byte.
-        if constexpr (std::is_unsigned_v<Int>) {
+        if constexpr (UnsignedCppInteger<IntType>) {
             if (c < 77)
                 throw InvalidInput("The tight encoding describes "
                     "a negative integer but the integer type is unsigned");
@@ -256,7 +253,7 @@ Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
         if (c < 33 || c > 122) {
             throw InvalidInput("The tight encoding is invalid");
         } else if (c <= 77) {
-            if constexpr (std::is_unsigned_v<Int>) {
+            if constexpr (UnsignedCppInteger<IntType>) {
                 throw InvalidInput("The tight encoding describes "
                     "a negative integer but the integer type is unsigned");
             }
@@ -283,13 +280,13 @@ Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
 
         if (val < 4050) {
             // This encodes a negative number.
-            if constexpr (std::is_unsigned_v<Int>) {
+            if constexpr (UnsignedCppInteger<IntType>) {
                 throw InvalidInput("The tight encoding describes "
                     "a negative integer but the integer type is unsigned");
             }
-            if constexpr (std::is_integral_v<Int> && sizeof(Int) == 1) {
+            if constexpr (CppInteger<IntType> && sizeof(IntType) == 1) {
                 // One byte might not be enough.
-                if (val < 4139 + int(std::numeric_limits<Int>::min())) {
+                if (val < 4139 + int(std::numeric_limits<IntType>::min())) {
                     overflow = true;
                     goto endDecoding;
                 }
@@ -297,9 +294,9 @@ Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
             result = val - 4139;
         } else {
             // This encodes a positive number.
-            if constexpr (std::is_integral_v<Int> && sizeof(Int) == 1) {
+            if constexpr (CppInteger<IntType> && sizeof(IntType) == 1) {
                 // One byte might not be enough.
-                if (val > 3959 + int(std::numeric_limits<Int>::max())) {
+                if (val > 3959 + int(std::numeric_limits<IntType>::max())) {
                     overflow = true;
                     goto endDecoding;
                 }
@@ -332,26 +329,26 @@ Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
 
         if (val < 364500) {
             // This encodes a negative number.
-            if constexpr (std::is_unsigned_v<Int>) {
+            if constexpr (UnsignedCppInteger<IntType>) {
                 throw InvalidInput("The tight encoding describes "
                     "a negative integer but the integer type is unsigned");
             }
-            if constexpr (std::is_integral_v<Int> && sizeof(Int) < 4) {
-                if (val < 368639 + long(std::numeric_limits<Int>::min())) {
+            if constexpr (CppInteger<IntType> && sizeof(IntType) < 4) {
+                if (val < 368639 + long(std::numeric_limits<IntType>::min())) {
                     overflow = true;
                     goto endDecoding;
                 }
             }
-            result = static_cast<Int>(val - 368639);
+            result = static_cast<IntType>(val - 368639);
         } else {
             // This encodes a positive number.
-            if constexpr (std::is_integral_v<Int> && sizeof(Int) < 4) {
-                if (val > 360359 + long(std::numeric_limits<Int>::max())) {
+            if constexpr (CppInteger<IntType> && sizeof(IntType) < 4) {
+                if (val > 360359 + long(std::numeric_limits<IntType>::max())) {
                     overflow = true;
                     goto endDecoding;
                 }
             }
-            result = static_cast<Int>(val - 360359);
+            result = static_cast<IntType>(val - 360359);
         }
     } else if (c == '{') {
         if (start == limit)
@@ -359,7 +356,7 @@ Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
         c = *start++;
         if (c == '}') {
             // This encodes infinity.
-            if constexpr (std::is_same_v<Int, regina::IntegerBase<true>>)
+            if constexpr (std::is_same_v<IntType, regina::IntegerBase<true>>)
                 result.makeInfinite();
             else
                 throw InvalidInput("The tight encoding represents "
@@ -367,13 +364,13 @@ Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
                     "integer type");
         } else if (c < 33 || c > 122) {
             throw InvalidInput("The tight encoding is invalid");
-        } else if constexpr (sizeof(Int) < 4) {
+        } else if constexpr (sizeof(IntType) < 4) {
             // The result needs at least 4 bytes, possibly more.
             // This *will* overflow.
 
             // We still do the negativity check, since as a general rule
             // we prioritise "type is unsigned" errors over "type too small".
-            if constexpr (std::is_unsigned_v<Int>)
+            if constexpr (UnsignedCppInteger<IntType>)
                 if (c > 77)
                     throw InvalidInput("The tight encoding describes "
                         "a negative integer but the integer type is unsigned");
@@ -383,14 +380,14 @@ Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
         } else {
             // The result needs at least 4 bytes, but possibly more.
             // In this if/else branch we have a compile-time guarantee that
-            // Int has >= 4 bytes.  This *might* overflow - we won't know
+            // IntType has >= 4 bytes.  This *might* overflow - we won't know
             // until we see more of the encoding.
 
             // Identify whether this encodes a positive or negative number.
             bool negative = (c > 77);
 
             if (negative) {
-                if constexpr (std::is_unsigned_v<Int>) {
+                if constexpr (UnsignedCppInteger<IntType>) {
                     throw InvalidInput("The tight encoding describes "
                         "a negative integer but the integer type is unsigned");
                 }
@@ -401,7 +398,7 @@ Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
                 result += c;
             }
 
-            Int coeff = 45, coeffPrev = 0;
+            IntType coeff = 45, coeffPrev = 0;
             while (true) {
                 if (start == limit)
                     throw InvalidInput("The tight encoding is incomplete");
@@ -416,8 +413,8 @@ Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
                     // This or a higher power should appear with a non-zero
                     // coefficient (either now or later in the encoding),
                     // so if this overflows then we can bail now.
-                    if constexpr (std::is_integral_v<Int>) {
-                        if (coeff > regina::maxSafeFactor<Int, 90>) {
+                    if constexpr (CppInteger<IntType>) {
+                        if (coeff > regina::maxSafeFactor<IntType, 90>) {
                             overflow = true;
                             goto endDecoding;
                         }
@@ -425,7 +422,7 @@ Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
                     coeff *= 90;
                 }
 
-                if constexpr (! std::is_integral_v<Int>) {
+                if constexpr (! CppInteger<IntType>) {
                     if (negative)
                         result -= (coeff * (c - 33));
                     else
@@ -433,15 +430,15 @@ Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
                 } else {
                     // We have to be careful about overflow here.
                     // First work out what we need to add/subtract.
-                    Int term;
+                    IntType term;
                     if (coeffPrev == 0) {
                         // This will not overflow.
-                        term = coeff * static_cast<Int>(c - 33);
+                        term = coeff * static_cast<IntType>(c - 33);
                     } else {
                         // The first multiplication here will
                         // not overflow; the second might.
-                        term = coeffPrev * static_cast<Int>(c - 33);
-                        if (term > regina::maxSafeFactor<Int, 90>) {
+                        term = coeffPrev * static_cast<IntType>(c - 33);
+                        if (term > regina::maxSafeFactor<IntType, 90>) {
                             overflow = true;
                             goto endDecoding;
                         }
@@ -450,7 +447,7 @@ Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
                     // Now see if it's safe to add/subtract.
                     if (negative) {
                         if (result >=
-                                std::numeric_limits<Int>::min() + term)
+                                std::numeric_limits<IntType>::min() + term)
                             result -= term;
                         else {
                             overflow = true;
@@ -458,7 +455,7 @@ Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
                         }
                     } else {
                         if (result <=
-                                std::numeric_limits<Int>::max() - term)
+                                std::numeric_limits<IntType>::max() - term)
                             result += term;
                         else {
                             overflow = true;
@@ -481,30 +478,26 @@ endDecoding:
     return result;
 }
 
-template <typename Int>
-void tightEncodeIndex(std::ostream& out, Int value) {
-    static_assert(std::is_unsigned_v<Int> || std::is_same_v<Int, ssize_t>,
-        "tightEncodeIndex() requires either ssize_t or an unsigned native "
-        "C++ integer type.");
-    static_assert(sizeof(Int) >= 2,
-        "tightEncodeIndex() requires an integer type with at least 16 bits.");
-
+template <typename IntType>
+requires std::same_as<IntType, ssize_t> ||
+    (UnsignedCppInteger<IntType> && (sizeof(IntType) >= 2))
+void tightEncodeIndex(std::ostream& out, IntType value) {
     // Here we use the 90 values 33..122 as "digit" characters,
     // and the four values 123..126 as different types of markers.
     // As characters, the four markers are: { | } ~
 
-    if constexpr (! std::is_unsigned_v<Int>)
+    if constexpr (! UnsignedCppInteger<IntType>)
         if (value < -1)
             throw InvalidArgument("tightEncodeIndex() can only encode "
                 "integers >= -1");
 
     if (value <= 88) {
-        out << char(value + 34); // 33 <= char <= 122
+        out << char(value + 34); // 33 ≤ char ≤ 122
         return;
     }
 
     if (value <= 178) {
-        out << '~' << char(value - 56); // 33 <= char <= 122
+        out << '~' << char(value - 56); // 33 ≤ char ≤ 122
         return;
     }
 
@@ -514,7 +507,7 @@ void tightEncodeIndex(std::ostream& out, Int value) {
         return;
     }
 
-    if constexpr (sizeof(Int) == 2) {
+    if constexpr (sizeof(IntType) == 2) {
         // The next bound of 737278 is too large for our integer type.
         value -= 8279;
         out << '}' << char((value % 90) + 33);
@@ -546,15 +539,11 @@ void tightEncodeIndex(std::ostream& out, Int value) {
     }
 }
 
-template <typename Int>
-Int tightDecodeIndex(std::istream& input) {
-    static_assert(std::is_unsigned_v<Int> || std::is_same_v<Int, ssize_t>,
-        "tightDecodeIndex() requires either ssize_t or an unsigned native "
-        "C++ integer type.");
-    static_assert(sizeof(Int) >= 2,
-        "tightDecodeIndex() requires an integer type with at least 16 bits.");
-
-    Int result;
+template <typename IntType>
+requires std::same_as<IntType, ssize_t> ||
+    (UnsignedCppInteger<IntType> && (sizeof(IntType) >= 2))
+IntType tightDecodeIndex(std::istream& input) {
+    IntType result;
     bool overflow = false;
 
     std::istreambuf_iterator<char> start(input);
@@ -564,7 +553,7 @@ Int tightDecodeIndex(std::istream& input) {
         throw InvalidInput("The tight encoding is incomplete");
     signed char c = *start++;
     if (c >= 33 && c <= 122) {
-        if constexpr (std::is_unsigned_v<Int>) {
+        if constexpr (UnsignedCppInteger<IntType>) {
             if (c == 33)
                 throw InvalidInput("The tight encoding describes "
                     "a negative index but the integer type is unsigned");
@@ -593,7 +582,7 @@ Int tightDecodeIndex(std::istream& input) {
         c = (*start++) - 33;
         if (c < 0 || c >= 90)
             throw InvalidInput("The tight encoding is invalid");
-        result += 90 * static_cast<Int>(c);
+        result += 90 * static_cast<IntType>(c);
     } else if (c == '}') {
         // This is the first case where we could encounter overflow,
         // since the result could require either 2 or 4 bytes.
@@ -623,26 +612,26 @@ Int tightDecodeIndex(std::istream& input) {
             throw InvalidInput("The tight encoding is invalid");
         val += 8100 * static_cast<int>(c);
 
-        if constexpr (sizeof(Int) < 4) {
-            if (val > long(std::numeric_limits<Int>::max())) {
+        if constexpr (sizeof(IntType) < 4) {
+            if (val > long(std::numeric_limits<IntType>::max())) {
                 overflow = true;
                 goto endDecoding;
             }
         }
-        result = static_cast<Int>(val);
+        result = static_cast<IntType>(val);
     } else if (c == '{') {
         // The result needs at least 4 bytes, possibly more.
-        if constexpr (sizeof(Int) < 4) {
+        if constexpr (sizeof(IntType) < 4) {
             // This *will* overflow.
             overflow = true;
             goto endDecoding;
         } else {
             // In this if/else branch we have a compile-time guarantee that
-            // Int has >= 4 bytes.  This *might* overflow - we won't know
+            // IntType has >= 4 bytes.  This *might* overflow - we won't know
             // until we see more of the encoding.
 
             result = 737279;
-            Int coeff = 1, coeffPrev = 0;
+            IntType coeff = 1, coeffPrev = 0;
             while (true) {
                 if (start == limit)
                     throw InvalidInput("The tight encoding is incomplete");
@@ -659,7 +648,7 @@ Int tightDecodeIndex(std::istream& input) {
                     // This or a higher power should appear with a non-zero
                     // coefficient (either now or later in the encoding),
                     // so if this overflows then we can bail now.
-                    if (coeff > regina::maxSafeFactor<Int, 90>) {
+                    if (coeff > regina::maxSafeFactor<IntType, 90>) {
                         overflow = true;
                         goto endDecoding;
                     }
@@ -668,22 +657,22 @@ Int tightDecodeIndex(std::istream& input) {
 
                 // We have to be careful about overflow here.
                 // First work out what we need to add.
-                Int term;
+                IntType term;
                 if (coeffPrev == 0) {
                     // This will not overflow.
-                    term = coeff * static_cast<Int>(c - 33);
+                    term = coeff * static_cast<IntType>(c - 33);
                 } else {
                     // The first multiplication here will
                     // not overflow; the second might.
-                    term = coeffPrev * static_cast<Int>(c - 33);
-                    if (term > regina::maxSafeFactor<Int, 90>) {
+                    term = coeffPrev * static_cast<IntType>(c - 33);
+                    if (term > regina::maxSafeFactor<IntType, 90>) {
                         overflow = true;
                         goto endDecoding;
                     }
                     term *= 90;
                 }
                 // Now see if it's safe to add.
-                if (result <= std::numeric_limits<Int>::max() - term)
+                if (result <= std::numeric_limits<IntType>::max() - term)
                     result += term;
                 else {
                     overflow = true;

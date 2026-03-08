@@ -69,13 +69,12 @@ namespace regina {
  * (e.g., Component2 and Component3 for dimensions 2 and 3).
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \headerfile triangulation/generic.h
  *
  * \ingroup generic
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class Component : public detail::ComponentBase<dim> {
     static_assert(! standardDim(dim),
         "The generic implementation of Component<dim> "

@@ -39,9 +39,8 @@ Python:
 
 Template parameter ``T``:
     the enumeration type holding the individual flags that can be
-    combined. This may be a scoped or unscoped enumeration; however,
-    for now we do insist that the underlying native integer type is
-    ``int``.)doc";
+    combined. This may be a scoped or unscoped enumeration, based upon
+    any underlying native C++ integer type.)doc";
 
 namespace Flags_ {
 
@@ -210,6 +209,18 @@ Parameter ``rhs``:
 Returns:
     a reference to this flag set.)doc";
 
+// Docstring regina::python::doc::Flags_::baseValue
+constexpr const char *baseValue =
+R"doc(Returns the native C++ integer representation of this set. This is
+suitable for file input and/or output.
+
+.. warning::
+    This function should not be used widely, since it effectively
+    works around inbuilt type safety mechanisms.
+
+Returns:
+    the native C++ integer value of this set.)doc";
+
 // Docstring regina::python::doc::Flags_::clear
 constexpr const char *clear =
 R"doc(Clears all bits from this set that appear in the given flag.
@@ -286,10 +297,29 @@ Parameter ``third``:
 Parameter ``last``:
     the lowest-priority flag.)doc";
 
+// Docstring regina::python::doc::Flags_::fromBase
+constexpr const char *fromBase =
+R"doc(Returns the set corresponding to the given native C++ integer value.
+This is suitable for file input and/or output.
+
+.. warning::
+    This function should not be used widely, since it effectively
+    works around inbuilt type safety mechanisms.
+
+Returns:
+    the set corresponding to the given native C++ integer value.)doc";
+
 // Docstring regina::python::doc::Flags_::fromInt
 constexpr const char *fromInt =
-R"doc(Returns the set corresponding to the given integer value. This is
-suitable for file input and/or output.
+R"doc(Deprecated function that returns the set corresponding to the given
+integer value. This is suitable for file input and/or output.
+
+.. deprecated::
+    Use fromBase() instead, which makes no assumptions about the
+    underlying native C++ integer type. This routine should, however,
+    still be safe for all of the flag types currently used in Regina,
+    since they are all based on scoped enumerations with the default
+    underlying base type of ``int``.
 
 .. warning::
     This function should not be used widely, since it effectively
@@ -328,8 +358,15 @@ Returns:
 
 // Docstring regina::python::doc::Flags_::intValue
 constexpr const char *intValue =
-R"doc(Returns the integer representation of this set. This is suitable for
-file input and/or output.
+R"doc(Deprecated function that returns the integer representation of this
+set. This is suitable for file input and/or output.
+
+.. deprecated::
+    Use baseValue() instead, which makes no assumptions about the
+    underlying native C++ integer type. This routine should, however,
+    still be safe for all of the flag types currently used in Regina,
+    since they are all based on scoped enumerations with the default
+    underlying base type of ``int``.
 
 .. warning::
     This function should not be used widely, since it effectively

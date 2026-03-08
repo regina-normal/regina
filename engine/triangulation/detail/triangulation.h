@@ -46,6 +46,7 @@
 #include <variant>
 #include <vector>
 #include "regina-core.h"
+#include "concepts/core.h"
 #include "core/output.h"
 #include "algebra/abeliangroup.h"
 #include "algebra/grouppresentation.h"
@@ -58,6 +59,7 @@
 #include "triangulation/generic/isomorphism.h"
 #include "triangulation/generic/simplex.h"
 #include "triangulation/isosigencoding.h"
+#include "triangulation/isosigtype.h"
 #include "utilities/exception.h"
 #include "utilities/listview.h"
 #include "utilities/snapshot.h"
@@ -66,38 +68,40 @@
 
 namespace regina {
 
-template <int dim> class FacetPairing;
-template <int dim> class IsoSigClassic;
-template <int dim> class XMLLegacySimplicesReader;
-template <int dim> class XMLTriangulationReader;
+template <int dim> requires (supportedDim(dim)) class FacetPairing;
+template <int dim> requires (supportedDim(dim)) class XMLLegacySimplicesReader;
+template <int dim> requires (supportedDim(dim)) class XMLTriangulationReader;
 
 /**
- * Contains implementation details and common functionality for Regina's
- * dimension-agnostic classes.
+ * Hides away implementation details, and also provides common functionality
+ * for Regina's dimension-agnostic triangulation code.
  *
- * For most of Regina's dimension-agnostic classes, such as
- * Triangulation<dim>, Simplex<dim> and Face<dim, subdim>, the bulk of
- * the implementation is hidden away in the namespace regina::detail.
+ * End users should never need to refer to the namespace regina::detail
+ * directly.
  *
- * Regina's main classes acquire their functionality through inheritance.
- * For example, the end-user class regina::Triangulation<dim> inherits
- * most of its functionality from the implementation class
- * regina::detail::TriangulationBase<dim>.
+ * Regarding triangulations:
  *
- * Because of this inheritance, there is typically no need for
- * end users to explicitly refer to the namespace regina::detail.
+ * - For Regina's triangulation-related classes, such as `Triangulation<dim>`,
+ *   `Simplex<dim>` and `Face<dim, subdim>`, regina::detail provides code that
+ *   is shared across all dimensions (as opposed to code that is specialised
+ *   for dimensions 2, 3 and 4).
  *
- * Since regina::detail contains implementation details, its
- * classes are subject to change between releases.  Specifically:
+ * - Regina's end-user classes acquire this functionality through inheritance.
+ *   For example, the end-user class `regina::Triangulation<dim>` inherits
+ *   most of its functionality from its parent class
+ *   `regina::detail::TriangulationBase<dim>`.
  *
- * - All member functions that are inherited and exposed by the end-user
- *   classes in regina (e.g., Triangulation, Simplex, Face and so on) may be
- *   considered part of Regina's official API, and will be supported from
- *   release to release.
+ * Since regina::detail contains implementation details, its classes are
+ * subject to change between releases.  Specifically:
+ *
+ * - All functions that are inherited and exposed by Regina's end-user classes
+ *   (e.g., those member functions of `TriangulationBase<dim>` that are
+ *   exposed by `Triangulation<dim>`) may be considered part of Regina's
+ *   official API, and will be supported from release to release.
  *
  * - In constrast, any methods that are not exposed by the end-user classes
  *   (including the names and inheritance structure of classes within
- *   regina::detail) might change in subsequent releases without notice.
+ *   regina::detail) might change between releases without notice.
  */
 namespace detail {
 
@@ -127,19 +131,16 @@ namespace detail {
  * Triangulation<dim> is.
  *
  * \tparam dim the dimension of the triangulation.
- * This must be between 2 and 15 inclusive.
  *
  * \ingroup detail
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class TriangulationBase :
         public Snapshottable<Triangulation<dim>>,
         public PacketData<Triangulation<dim>>,
         public Output<Triangulation<dim>>,
         public TightEncodable<Triangulation<dim>>,
         protected TopologyLockable {
-    static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
-
     public:
         using typename PacketData<Triangulation<dim>>::PacketChangeSpan;
         using typename PacketData<Triangulation<dim>>::PacketChangeGroup;
@@ -154,7 +155,7 @@ class TriangulationBase :
 
     private:
         /**
-         * The sequence of all subface dimensions 0,...,(<i>dim</i>-1).
+         * The sequence of all subface dimensions `0,...,(dim-1)`.
          */
         using subdimensions = std::make_integer_sequence<int, dim>;
 
@@ -169,7 +170,7 @@ class TriangulationBase :
 
         decltype(seqToFaces(subdimensions())) faces_;
             /**< A tuple of vectors holding all faces of this triangulation.
-                 Specifically, std::get<k>(faces_)[i] is a pointer to the
+                 Specifically, `std::get<k>(faces_)[i]` is a pointer to the
                  ith k-face of the triangulation. */
 
         /**
@@ -428,13 +429,12 @@ class TriangulationBase :
          * runtime argument, and the new top-dimensional simplices will
          * be returned in a Python tuple of size \a k.
          *
-         * \tparam k the number of new top-dimensional simplices to add;
-         * this must be non-negative.
+         * \tparam k the number of new top-dimensional simplices to add.
          *
          * \return an array containing all of the new simplices, in the order
          * in which they were added.
          */
-        template <int k>
+        template <int k> requires (k >= 0)
         std::array<Simplex<dim>*, k> newSimplices();
         /**
          * Creates \a k new top-dimensional simplices and adds them to this
@@ -644,12 +644,11 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `countFaces(subdim)`.
          *
-         * \tparam subdim the face dimension; this must be between 0 and
-         * \a dim inclusive.
+         * \tparam subdim the face dimension.
          *
          * \return the number of <i>subdim</i>-faces.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim <= dim)
         size_t countFaces() const;
 
         /**
@@ -679,16 +678,12 @@ class TriangulationBase :
         /**
          * A dimension-specific alias for countFaces<0>().
          *
-         * This alias is available for all dimensions \a dim.
-         *
          * See countFaces() for further information.
          */
         size_t countVertices() const;
 
         /**
          * A dimension-specific alias for countFaces<1>().
-         *
-         * This alias is available for all dimensions \a dim.
          *
          * See countFaces() for further information.
          */
@@ -697,8 +692,6 @@ class TriangulationBase :
         /**
          * A dimension-specific alias for countFaces<2>().
          *
-         * This alias is available for all dimensions \a dim.
-         *
          * See countFaces() for further information.
          */
         size_t countTriangles() const;
@@ -706,20 +699,18 @@ class TriangulationBase :
         /**
          * A dimension-specific alias for countFaces<3>().
          *
-         * This alias is available for dimensions \a dim ≥ 3.
-         *
          * See countFaces() for further information.
          */
-        size_t countTetrahedra() const;
+        size_t countTetrahedra() const
+            requires (dim >= 3);
 
         /**
          * A dimension-specific alias for countFaces<4>().
          *
-         * This alias is available for dimensions \a dim ≥ 4.
-         *
          * See countFaces() for further information.
          */
-        size_t countPentachora() const;
+        size_t countPentachora() const
+            requires (dim >= 4);
 
         /**
          * Returns the f-vector of this triangulation, which counts the
@@ -827,12 +818,11 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `faces(subdim)`.
          *
-         * \tparam subdim the face dimension; this must be between 0 and
-         * <i>dim</i>-1 inclusive.
+         * \tparam subdim the face dimension.
          *
          * \return access to the list of all <i>subdim</i>-faces.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < dim)
         auto faces() const;
 
         /**
@@ -867,16 +857,12 @@ class TriangulationBase :
         /**
          * A dimension-specific alias for faces<0>().
          *
-         * This alias is available for all dimensions \a dim.
-         *
          * See faces() for further information.
          */
         auto vertices() const;
 
         /**
          * A dimension-specific alias for faces<1>().
-         *
-         * This alias is available for all dimensions \a dim.
          *
          * See faces() for further information.
          */
@@ -886,8 +872,6 @@ class TriangulationBase :
          * A dimension-specific alias for faces<2>(), or an alias for
          * simplices() in dimension \a dim = 2.
          *
-         * This alias is available for all dimensions.
-         *
          * See faces() for further information.
          */
         auto triangles() const;
@@ -896,21 +880,19 @@ class TriangulationBase :
          * A dimension-specific alias for faces<3>(), or an alias for
          * simplices() in dimension \a dim = 3.
          *
-         * This alias is available for dimensions \a dim ≥ 3.
-         *
          * See faces() for further information.
          */
-        auto tetrahedra() const;
+        auto tetrahedra() const
+            requires (dim >= 3);
 
         /**
          * A dimension-specific alias for faces<4>(), or an alias for
          * simplices() in dimension \a dim = 4.
          *
-         * This alias is available for dimensions \a dim ≥ 4.
-         *
          * See faces() for further information.
          */
-        auto pentachora() const;
+        auto pentachora() const
+            requires (dim >= 4);
 
         /**
          * Returns the requested connected component of this triangulation.
@@ -944,14 +926,13 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `face(subdim, index)`.
          *
-         * \tparam subdim the face dimension; this must be between 0 and
-         * <i>dim</i>-1 inclusive.
+         * \tparam subdim the face dimension.
          *
          * \param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
          * \return the requested face.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < dim)
         Face<dim, subdim>* face(size_t index) const;
 
         /**
@@ -990,16 +971,12 @@ class TriangulationBase :
         /**
          * A dimension-specific alias for face<0>().
          *
-         * This alias is available for all dimensions \a dim.
-         *
          * See face() for further information.
          */
         Face<dim, 0>* vertex(size_t index) const;
 
         /**
          * A dimension-specific alias for face<1>().
-         *
-         * This alias is available for all dimensions \a dim.
          *
          * See face() for further information.
          */
@@ -1009,8 +986,7 @@ class TriangulationBase :
          * A dimension-specific alias for face<2>(), or an alias for
          * simplex() in dimension \a dim = 2.
          *
-         * This alias is available for all dimensions \a dim.
-         * It returns a non-const triangle pointer.
+         * This returns a non-const triangle pointer.
          *
          * See face() for further information.
          */
@@ -1020,8 +996,7 @@ class TriangulationBase :
          * A dimension-specific alias for face<2>(), or an alias for
          * simplex() in dimension \a dim = 2.
          *
-         * This alias is available for all dimensions \a dim.
-         * It returns a const triangle pointer in dimension \a dim = 2,
+         * This returns a const triangle pointer in dimension \a dim = 2,
          * and a non-const triangle pointer in all higher dimensions.
          *
          * See face() for further information.
@@ -1032,47 +1007,47 @@ class TriangulationBase :
          * A dimension-specific alias for face<3>(), or an alias for
          * simplex() in dimension \a dim = 3.
          *
-         * This alias is available for dimensions \a dim ≥ 3.
-         * It returns a non-const tetrahedron pointer.
+         * This returns a non-const tetrahedron pointer.
          *
          * See face() for further information.
          */
-        auto tetrahedron(size_t index);
+        auto tetrahedron(size_t index)
+            requires (dim >= 3);
 
         /**
          * A dimension-specific alias for face<3>(), or an alias for
          * simplex() in dimension \a dim = 3.
          *
-         * This alias is available for dimensions \a dim ≥ 3.
-         * It returns a const tetrahedron pointer in dimension \a dim = 3,
+         * This returns a const tetrahedron pointer in dimension \a dim = 3,
          * and a non-const tetrahedron pointer in all higher dimensions.
          *
          * See face() for further information.
          */
-        auto tetrahedron(size_t index) const;
+        auto tetrahedron(size_t index) const
+            requires (dim >= 3);
 
         /**
          * A dimension-specific alias for face<4>(), or an alias for
          * simplex() in dimension \a dim = 4.
          *
-         * This alias is available for dimensions \a dim ≥ 4.
-         * It returns a non-const pentachoron pointer.
+         * This returns a non-const pentachoron pointer.
          *
          * See face() for further information.
          */
-        auto pentachoron(size_t index);
+        auto pentachoron(size_t index)
+            requires (dim >= 4);
 
         /**
          * A dimension-specific alias for face<4>(), or an alias for
          * simplex() in dimension \a dim = 4.
          *
-         * This alias is available for dimensions \a dim ≥ 4.
-         * It returns a const pentachoron pointer in dimension \a dim = 4,
+         * This returns a const pentachoron pointer in dimension \a dim = 4,
          * and a non-const pentachoron pointer in all higher dimensions.
          *
          * See face() for further information.
          */
-        auto pentachoron(size_t index) const;
+        auto pentachoron(size_t index) const
+            requires (dim >= 4);
 
         /**
          * Translates a face of some other triangulation into the corresponding
@@ -1105,13 +1080,12 @@ class TriangulationBase :
          * above, in typical scenarios both triangulations would actually be
          * combinatorially identical).
          *
-         * \tparam subdim the face dimension; this must be between 0 and
-         * <i>dim</i> inclusive.
+         * \tparam subdim the face dimension.
          *
          * \param other the face to translate.
          * \return the corresponding face of this triangulation.
          */
-        template <int subdim>
+        template <int subdim> requires (0 <= subdim && subdim <= dim)
         Face<dim, subdim>* translate(const Face<dim, subdim>* other) const;
 
         /**
@@ -1134,13 +1108,12 @@ class TriangulationBase :
          * above, in typical scenarios both triangulations would actually be
          * combinatorially identical).
          *
-         * \tparam subdim the face dimension; this must be between 0 and
-         * <i>dim</i>-1 inclusive.
+         * \tparam subdim the face dimension.
          *
          * \param other the face embedding to translate.
          * \return the corresponding face embedding in this triangulation.
          */
-        template <int subdim>
+        template <int subdim> requires (0 <= subdim && subdim < dim)
         FaceEmbedding<dim, subdim> translate(
             const FaceEmbedding<dim, subdim>& other) const;
 
@@ -1246,12 +1219,11 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `countBoundaryFaces(subdim)`.
          *
-         * \tparam subdim the face dimension; this must be between 0 and
-         * <i>dim</i>-1 inclusive.
+         * \tparam subdim the face dimension.
          *
          * \return the number of boundary <i>subdim</i>-faces.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < dim)
         size_t countBoundaryFaces() const;
 
         /**
@@ -1493,14 +1465,12 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `homology(k)`.
          *
-         * \tparam k the dimension of the homology group to return;
-         * this must be between 1 and (\a dim - 1) inclusive if \a dim is
-         * one of Regina's \ref stddim "standard dimensions", or between
-         * 1 and (\a dim - 2) inclusive if not.
+         * \tparam k the dimension of the homology group to return.
          *
          * \return the <i>k</i>th homology group.
          */
         template <int k = 1>
+        requires (k > 0 && k < (standardDim(dim) ? dim : dim - 1))
         AbelianGroup homology() const;
 
         /**
@@ -1588,13 +1558,12 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `markedHomology(k)`.
          *
-         * \tparam k the dimension of the homology group to compute; this must
-         * be between 1 and (<i>dim</i>-1) inclusive.
+         * \tparam k the dimension of the homology group to compute.
          *
          * \return the <i>k</i>th homology group of the union of all
          * simplices in this triangulation, as described above.
          */
-        template <int k = 1>
+        template <int k = 1> requires (k > 0 && k < dim)
         MarkedAbelianGroup markedHomology() const;
 
         /**
@@ -1668,13 +1637,12 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `boundaryMap(subdim)`.
          *
-         * \tparam subdim the face dimension; this must be between 1 and
-         * \a dim inclusive.
+         * \tparam subdim the face dimension.
          *
          * \return the boundary map from <i>subdim</i>-faces to
          * (<i>subdim</i>-1)-faces.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim > 0 && subdim <= dim)
         MatrixInt boundaryMap() const;
 
         /**
@@ -1753,14 +1721,13 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `dualBoundaryMap(subdim)`.
          *
-         * \tparam subdim the dual face dimension; this must be between
-         * 1 and \a dim inclusive if \a dim is one of Regina's standard
-         * dimensions, or between 1 and (\a dim - 1) inclusive otherwise.
+         * \tparam subdim the dual face dimension.
          *
          * \return the boundary map from dual <i>subdim</i>-faces to
          * dual (<i>subdim</i>-1)-faces.
          */
         template <int subdim>
+        requires (subdim > 0 && subdim <= (standardDim(dim) ? dim : dim - 1))
         MatrixInt dualBoundaryMap() const;
 
         /**
@@ -1879,13 +1846,12 @@ class TriangulationBase :
          *
          * \nopython Instead use the variant `dualToPrimal(subdim)`.
          *
-         * \tparam subdim the chain dimension; this must be between
-         * 0 and (\a dim - 1) inclusive.
+         * \tparam subdim the chain dimension.
          *
          * \return the map from dual <i>subdim</i>-chains to primal
          * <i>subdim</i>-chains.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < dim)
         MatrixInt dualToPrimal() const;
 
         /**
@@ -2091,14 +2057,13 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
-         * \tparam k the dimension of the given face.  This must be
-         * between 0 and (\a dim) inclusive.
+         * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the move.
          * \return \c true if and only if the requested move was able to be
          * performed.
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= dim)
         bool pachner(Face<dim, k>* f);
 
         /**
@@ -2135,12 +2100,11 @@ class TriangulationBase :
          * \exception LockViolation This move would violate a simplex or facet
          * lock.  This exception will be thrown before any changes are made.
          *
-         * \tparam k the dimension of the given face.  This must be
-         * between 0 and (\a dim) inclusive.
+         * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the move.
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= dim)
         void pachner(Face<dim, k>* f, Unprotected);
 
         /**
@@ -2208,14 +2172,13 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
-         * \tparam k the dimension of the given face.  This must be 0, 1 or 2,
-         * and must not exceed `dim - 2`.
+         * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the move.
          * \return \c true if and only if the requested move was able to be
          * performed.
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
         bool move20(Face<dim, k>* f);
 
         /**
@@ -2295,13 +2258,12 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
-         * \tparam k the dimension of the given face.  This must be
-         * between 0 and (\a dim) inclusive.
+         * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the candidate move.
          * \return \c true if and only if the requested move can be performed.
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= dim)
         bool hasPachner(Face<dim, k>* f) const;
 
         /**
@@ -2315,13 +2277,12 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
-         * \tparam k the dimension of the given face.  This must be 0, 1 or 2,
-         * and must not exceed `dim - 2`.
+         * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the candidate move.
          * \return \c true if and only if the requested move can be performed.
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
         bool has20(Face<dim, k>* f) const;
 
         /**
@@ -2362,14 +2323,13 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
-         * \tparam k the dimension of the given face.  This must be
-         * between 0 and (\a dim) inclusive.
+         * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the move.
          * \return The new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= dim)
         std::optional<Triangulation<dim>> withPachner(Face<dim, k>* f) const;
 
         /**
@@ -2386,14 +2346,13 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
-         * \tparam k the dimension of the given face.  This must be 0, 1 or 2,
-         * and must not exceed `dim - 2`.
+         * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the move.
          * \return The new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
         std::optional<Triangulation<dim>> with20(Face<dim, k>* f) const;
 
         /**
@@ -2445,8 +2404,7 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
-         * \tparam k the dimension of the given face.  This must be
-         * between 0 and (\a dim) inclusive.
+         * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the move.
          * \param ignored an argument that is ignored.  In earlier versions of
@@ -2456,7 +2414,7 @@ class TriangulationBase :
          * assuming the move is allowed.
          * \return \c true if and only if the requested move could be performed.
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= dim)
         [[deprecated]] bool pachner(Face<dim, k>* f, bool ignored,
             bool perform = true);
 
@@ -2480,8 +2438,7 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
-         * \tparam k the dimension of the given face.  This must be 0, 1 or 2,
-         * and must not exceed `dim - 2`.
+         * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the move.
          * \param ignored an argument that is ignored.  In earlier versions of
@@ -2491,7 +2448,7 @@ class TriangulationBase :
          * assuming the move is allowed.
          * \return \c true if and only if the requested move could be performed.
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
         [[deprecated]] bool twoZeroMove(Face<dim, k>* f, bool ignored,
             bool perform = true);
 
@@ -2644,10 +2601,10 @@ class TriangulationBase :
          * according to the lexicographical ordering of the corresponding
          * permutations \a p.
          *
-         * \pre \a dim is one of Regina's standard dimensions.
-         * This precondition is a safety net, since in higher dimensions the
-         * triangulation would explode too quickly in size (and for the
-         * highest dimensions, possibly beyond the limits of \c size_t).
+         * As a safety net, this routine requires that \a dim must be one of
+         * Regina's \ref stddim "standard dimensions".  Otherwise in higher
+         * dimensions the triangulation would explode too quickly in size (and
+         * for the highest dimensions, possibly beyond the limits of \c size_t).
          *
          * \warning In dimensions 3 and 4, both the labelling and ordering of
          * sub-simplices in the subdivided triangulation has changed as of
@@ -2667,7 +2624,8 @@ class TriangulationBase :
          * subdivision, which may change properties such as
          * Triangulation<4>::knownSimpleLinks).
          */
-        void subdivide();
+        void subdivide()
+            requires (standardDim(dim));
 
         /**
          * Deprecated routine that performs a barycentric subdivision of the
@@ -2675,9 +2633,7 @@ class TriangulationBase :
          *
          * \deprecated This routine has been renamed to subdivide(), both to
          * shorten the name but also to make it clearer that this triangulation
-         * will be modified directly.
-         *
-         * \pre \a dim is one of Regina's standard dimensions.
+         * will be modified directly.  See subdivide() for further details.
          *
          * \exception LockViolation This triangulation contains at least one
          * locked top-dimensional simplex and/or facet.  This exception will be
@@ -2685,7 +2641,8 @@ class TriangulationBase :
          * Simplex<dim>::lockFacet() for further details on how such locks work
          * and what their implications are.
          */
-        [[deprecated]] void barycentricSubdivision();
+        [[deprecated]] void barycentricSubdivision()
+            requires (standardDim(dim));
 
         /**
          * Converts each real boundary component into a cusp (i.e., an
@@ -2913,10 +2870,9 @@ class TriangulationBase :
          * details on this.
          *
          * For each isomorphism that is found, this routine will call
-         * \a action (which must be a function or some other callable object).
+         * \a action (which must be a function or some other callable type).
          *
-         * - The first argument to \a action must be of type
-         *   `(const Isomorphism<dim>&)`; this will be a reference to
+         * - The first argument to \a action will be a const reference to
          *   the isomorphism that was found.  If \a action wishes to keep the
          *   isomorphism, it should take a deep copy (not a reference), since
          *   the isomorphism may be changed and reused after \a action returns.
@@ -2947,7 +2903,7 @@ class TriangulationBase :
          * found.
          *
          * \param other the triangulation to compare with this one.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each isomorphism that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial isomorphism argument.
@@ -2955,6 +2911,7 @@ class TriangulationBase :
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
+        requires TerminatingCallback<Action, const Isomorphism<dim>&, Args...>
         bool findAllIsomorphisms(const Triangulation<dim>& other,
             Action&& action, Args&&... args) const;
 
@@ -2970,10 +2927,9 @@ class TriangulationBase :
          * details on this.
          *
          * For each isomorphism that is found, this routine will call
-         * \a action (which must be a function or some other callable object).
+         * \a action (which must be a function or some other callable type).
          *
-         * - The first argument to \a action must be of type
-         *   `(const Isomorphism<dim>&)`; this will be a reference to
+         * - The first argument to \a action will be a const reference to
          *   the isomorphism that was found.  If \a action wishes to keep the
          *   isomorphism, it should take a deep copy (not a reference), since
          *   the isomorphism may be changed and reused after \a action returns.
@@ -3005,7 +2961,7 @@ class TriangulationBase :
          *
          * \param other the triangulation in which to search for
          * isomorphic copies of this triangulation.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each isomorphism that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial isomorphism argument.
@@ -3013,6 +2969,7 @@ class TriangulationBase :
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
+        requires TerminatingCallback<Action, const Isomorphism<dim>&, Args...>
         bool findAllSubcomplexesIn(const Triangulation<dim>& other,
             Action&& action, Args&&... args) const;
 
@@ -3201,7 +3158,7 @@ class TriangulationBase :
          *   its main advantage is that it is consistent with the original
          *   implementation of isomorphism signatures in Regina 4.90.
          *
-         * - The \a Encoding parameter controls how Regina encodes a canonical
+         * - The \a Encoding parameter controls how Regina packs a canonical
          *   labelling into a final signature.  The default encoding
          *   IsoSigPrintable returns a std::string consisting entirely of
          *   printable characters in the 7-bit ASCII range.  Importantly, this
@@ -3212,21 +3169,14 @@ class TriangulationBase :
          * You may instead pass your own type and/or encoding parameters as
          * template arguments.  Currently this facility is for internal use
          * only, and the requirements for type and encoding parameters may
-         * change in future versions of Regina.  At present:
+         * change in future versions of Regina.  See the IsoSigTypeAPI and
+         * IsoSigEncodingAPI documentation for how the \a Type and \a Encoding
+         * classes should behave.
          *
-         * - The \a Type parameter should be a class that is constructible
-         *   from a componenent reference, and that offers the member functions
-         *   `simplex()`, `perm()` and `next()`; see the implementation of
-         *   IsoSigClassic for details.
-         *
-         * - The \a Encoding parameter should be a class that offers a
-         *   \a Signature type alias, and static functions `emptySig()` and
-         *   `encode()`.  See the implementation of IsoSigPrintable for details.
-         *
-         * - If you wish to produce an isomorphism signature that ignores
-         *   simplex and/or facet locks then you can use an encoding whose
-         *   `encode()` function ignores the final \a locks argument, such as
-         *   IsoSigPrintableLockFree.
+         * Note that, if you wish to produce an isomorphism signature that
+         * ignores simplex and/or facet locks then you can use an encoding whose
+         * `encode()` function ignores the final \a locks argument, such as
+         * IsoSigPrintableLockFree.
          *
          * For a full and precise description of the classic isomorphism
          * signature format for 3-manifold triangulations, see
@@ -3252,8 +3202,8 @@ class TriangulationBase :
          *
          * \return the isomorphism signature of this triangulation.
          */
-        template <class Type = IsoSigClassic<dim>,
-            class Encoding = IsoSigPrintable<dim>>
+        template <IsoSigType<dim> Type = IsoSigClassic<dim>,
+            IsoSigEncoding<dim> Encoding = IsoSigPrintable<dim>>
         typename Encoding::Signature isoSig() const;
 
         /**
@@ -3274,8 +3224,8 @@ class TriangulationBase :
          *
          * \return the isomorphism signature of this triangulation.
          */
-        template <class Type = IsoSigClassic<dim>,
-            class Encoding = IsoSigPrintable<dim>>
+        template <IsoSigType<dim> Type = IsoSigClassic<dim>,
+            IsoSigEncoding<dim> Encoding = IsoSigPrintable<dim>>
         typename Encoding::Signature sig() const;
 
         /**
@@ -3325,8 +3275,8 @@ class TriangulationBase :
          * triangulation, and (ii) the isomorphism between this triangulation
          * and the triangulation that would be reconstructed from fromIsoSig().
          */
-        template <class Type = IsoSigClassic<dim>,
-            class Encoding = IsoSigPrintable<dim>>
+        template <IsoSigType<dim> Type = IsoSigClassic<dim>,
+            IsoSigEncoding<dim> Encoding = IsoSigPrintable<dim>>
         std::pair<typename Encoding::Signature, Isomorphism<dim>> isoSigDetail()
             const;
 
@@ -3505,8 +3455,8 @@ class TriangulationBase :
          * amongst other things).
          *
          * The iterator range (\a beginGluings, \a endGluings) should encode
-         * the list of gluings for the triangulation.  Each iterator in
-         * this range must dereference to a tuple of the form
+         * the list of gluings for the triangulation.  Each iterator in this
+         * range must dereference to a tuple (or tuple-like object) of the form
          * (\a simp, \a facet, \a adj, \a gluing); here \a simp, \a facet
          * and \a adj are all integers, and \a gluing is of type Perm<dim+1>.
          * Each such tuple indicates that facet \a facet of top-dimensional
@@ -3540,12 +3490,6 @@ class TriangulationBase :
          *     ( 0, 2, 1, Perm4(0,3,2,1) ), ( 0, 3, 1, Perm4(2,1,0,3) )])
          * \endcode
          *
-         * \note The assumption is that the iterators dereference to a
-         * std::tuple<size_t, int, size_t, Perm<dim+1>>.  However, this is
-         * not strictly necessary - the dereferenced type may be any type that
-         * supports std::get (and for which std::get<0..3>() yields suitable
-         * integer/permutation types).
-         *
          * \exception InvalidArgument The given list of gluings does not
          * correctly describe a triangulation with \a size top-dimensional
          * simplices.
@@ -3561,9 +3505,15 @@ class TriangulationBase :
          * of the list of gluings.
          * \return the reconstructed triangulation.
          */
-        template <typename Iterator>
+        template <std::input_iterator iterator>
+        requires requires(iterator it) {
+            { std::get<0>(*it) } -> std::convertible_to<size_t>;
+            { std::get<1>(*it) } -> std::convertible_to<int>;
+            { std::get<2>(*it) } -> std::convertible_to<size_t>;
+            { std::get<3>(*it) } -> std::convertible_to<Perm<dim + 1>>;
+        }
         static Triangulation<dim> fromGluings(size_t size,
-            Iterator beginGluings, Iterator endGluings);
+            iterator beginGluings, iterator endGluings);
 
         /**
          * Recovers a full triangulation from an isomorphism signature.
@@ -3802,7 +3752,7 @@ class TriangulationBase :
          * The return value for this routine is the same as for newSimplices().
          * See newSimplices() for further details.
          */
-        template <int k>
+        template <int k> requires (k >= 0)
         std::array<Simplex<dim>*, k> newSimplicesRaw();
 
         /**
@@ -3968,9 +3918,8 @@ class TriangulationBase :
          * that we will need to keep until we drop support for gcc8.
          *
          * \tparam subdim the dimension of the faces to compute.
-         * This must be between 0 and (\a dim - 1) inclusive.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < dim)
         static void calculateFaces(TriangulationBase<dim>* tri);
 
         /**
@@ -3993,7 +3942,7 @@ class TriangulationBase :
          *
          * See calculateRealBoundary() for further details.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < dim)
         void calculateBoundaryFaces(BoundaryComponent<dim>* bc,
             Face<dim, dim-1>* facet);
 
@@ -4010,7 +3959,7 @@ class TriangulationBase :
          * in the correct order.  It does not matter if the internal data for
          * these cloned facial objects is not yet completely filled.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < dim)
         Face<dim, subdim>* clonedFace(const Face<dim, subdim>* src) const;
 
         /**
@@ -4070,7 +4019,7 @@ class TriangulationBase :
          * \return \c true if the requested checks pass, or if \a check was
          * \c false (which means no checks were performed at all).
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= dim)
         bool internalPachner(Face<dim, k>* f, bool check, bool perform);
 
         /**
@@ -4093,7 +4042,7 @@ class TriangulationBase :
          * \return \c true if the requested checks pass, or if \a check was
          * \c false (which means no checks were performed at all).
          */
-        template <int k>
+        template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
         bool internal20(Face<dim, k>* f, bool check, bool perform);
 
         /**
@@ -4123,8 +4072,8 @@ class TriangulationBase :
         /**
          * Internal to isoSig().
          *
-         * Constructs a candidate isomorphism signature for a single
-         * component of this triangulation.  This candidate signature
+         * Constructs a candidate isomorphism signature for a single non-empty
+         * connected component of this triangulation.  This candidate signature
          * assumes that the given simplex with the given labelling
          * of its vertices becomes simplex zero with vertices
          * 0,...,\a dim under the "canonical isomorphism".
@@ -4137,7 +4086,7 @@ class TriangulationBase :
          * constructed for the correct number of simplices.
          * \return the candidate isomorphism signature.
          */
-        template <class Encoding>
+        template <IsoSigEncoding<dim> Encoding>
         typename Encoding::Signature isoSigFrom(size_t simp,
             const Perm<dim+1>& vertices, Isomorphism<dim>* relabelling) const;
 
@@ -4171,7 +4120,7 @@ class TriangulationBase :
          * \param complete \c true if isomorphisms must be
          * onto and boundary complete, or \c false if neither of these
          * restrictions should be imposed.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each isomorphism that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial isomorphism argument.
@@ -4179,6 +4128,7 @@ class TriangulationBase :
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
+        requires TerminatingCallback<Action, const Isomorphism<dim>&, Args...>
         bool findIsomorphisms(const Triangulation<dim>& other,
                 bool complete, Action&& action, Args&&... args) const;
 
@@ -4221,8 +4171,9 @@ class TriangulationBase :
          *
          * \pre The skeleton of this triangulation has been computed.
          */
-        template <int subdim, typename Iterator>
-        void reorderFaces(Iterator begin, Iterator end);
+        template <int subdim, InputIteratorFor<Face<dim, subdim>*> iterator>
+        requires (subdim >= 0 && subdim < dim)
+        void reorderFaces(iterator begin, iterator end);
 
         /**
          * Tests whether this and the given triangulation have the same
@@ -4238,7 +4189,7 @@ class TriangulationBase :
          * \return \c true if and only if the <i>useDim</i>-face
          * degree sequences are equal.
          */
-        template <int useDim>
+        template <int useDim> requires (useDim >= 0 && useDim < dim)
         bool sameDegreesAt(const TriangulationBase& other) const;
         /**
          * Tests whether this and the given triangulation have the same
@@ -4256,7 +4207,7 @@ class TriangulationBase :
          * \return \c true if and only if all degree sequences considered
          * are equal.
          */
-        template <int... useDim>
+        template <int... useDim> requires ((useDim >= 0 && useDim < dim) && ...)
         bool sameDegreesAt(const TriangulationBase& other,
             std::integer_sequence<int, useDim...>) const;
 
@@ -4379,7 +4330,11 @@ class TriangulationBase :
                     delete;
         };
 
-    template <int> friend class BoundaryComponentBase;
+    // BoundaryComponent<dim>::buildRealBoundary() calls
+    // Triangulation<dim-1>::reorderFaces().
+    template <int dim_> requires (supportedDim(dim_))
+    friend class regina::detail::BoundaryComponentBase;
+
     friend class regina::XMLLegacySimplicesReader<dim>;
     friend class regina::XMLSimplexReader<dim>;
     friend class regina::XMLTriangulationReader<dim>;
@@ -4403,9 +4358,9 @@ class TriangulationBase :
  * \param lhs the triangulation whose contents should be swapped with \a rhs.
  * \param rhs the triangulation whose contents should be swapped with \a lhs.
  *
- * \ingroup detail
+ * \ingroup triangulation
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void swap(Triangulation<dim>& lhs, Triangulation<dim>& rhs) {
     lhs.swap(rhs);
 }
@@ -4414,18 +4369,18 @@ namespace detail {
 
 // Inline functions for TriangulationBase
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline TriangulationBase<dim>::TriangulationBase() :
         calculatedSkeleton_(false) {
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline TriangulationBase<dim>::TriangulationBase(
         const TriangulationBase<dim>& src) :
         TriangulationBase(src, true, true) {
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& src,
         bool cloneProps, bool cloneLocks) :
         Snapshottable<Triangulation<dim>>(src),
@@ -4475,7 +4430,7 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& src,
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 TriangulationBase<dim>::TriangulationBase(TriangulationBase<dim>&& src)
         noexcept :
         Snapshottable<Triangulation<dim>>(std::move(src)),
@@ -4499,7 +4454,7 @@ TriangulationBase<dim>::TriangulationBase(TriangulationBase<dim>&& src)
         s->tri_ = static_cast<Triangulation<dim>*>(this);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 TriangulationBase<dim>& TriangulationBase<dim>::operator =
         (const TriangulationBase<dim>& src) {
     if (std::addressof(src) == this)
@@ -4560,7 +4515,7 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
     return *this;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 TriangulationBase<dim>& TriangulationBase<dim>::operator =
         (TriangulationBase<dim>&& src) {
     Snapshottable<Triangulation<dim>>::operator =(std::move(src));
@@ -4601,33 +4556,33 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
     return *this;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline TriangulationBase<dim>::~TriangulationBase() {
     for (auto s : simplices_)
         delete s;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t TriangulationBase<dim>::size() const {
     return simplices_.size();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::simplices() const {
     return ListView(simplices_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Simplex<dim>* TriangulationBase<dim>::simplex(size_t index) {
     return simplices_[index];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline const Simplex<dim>* TriangulationBase<dim>::simplex(size_t index) const {
     return simplices_[index];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Simplex<dim>* TriangulationBase<dim>::newSimplex() {
     ChangeAndClearSpan<> span(*this);
 
@@ -4636,19 +4591,16 @@ Simplex<dim>* TriangulationBase<dim>::newSimplex() {
     return s;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Simplex<dim>* TriangulationBase<dim>::newSimplexRaw() {
     auto* s = new Simplex<dim>(static_cast<Triangulation<dim>*>(this));
     simplices_.push_back(s);
     return s;
 }
 
-template <int dim>
-template <int k>
+template <int dim> requires (supportedDim(dim))
+template <int k> requires (k >= 0)
 std::array<Simplex<dim>*, k> TriangulationBase<dim>::newSimplices() {
-    static_assert(k >= 0,
-        "The template argument k to newSimplices() must be non-negative.");
-
     ChangeAndClearSpan<> span(*this);
 
     std::array<Simplex<dim>*, k> ans;
@@ -4659,12 +4611,9 @@ std::array<Simplex<dim>*, k> TriangulationBase<dim>::newSimplices() {
     return ans;
 }
 
-template <int dim>
-template <int k>
+template <int dim> requires (supportedDim(dim))
+template <int k> requires (k >= 0)
 inline std::array<Simplex<dim>*, k> TriangulationBase<dim>::newSimplicesRaw() {
-    static_assert(k >= 0,
-        "The template argument k to newSimplicesRaw() must be non-negative.");
-
     std::array<Simplex<dim>*, k> ans;
     for (int i = 0; i < k; ++i)
         simplices_.push_back(ans[i] = new Simplex<dim>(
@@ -4672,7 +4621,7 @@ inline std::array<Simplex<dim>*, k> TriangulationBase<dim>::newSimplicesRaw() {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::newSimplices(size_t k) {
     ChangeAndClearSpan<> span(*this);
 
@@ -4681,7 +4630,7 @@ void TriangulationBase<dim>::newSimplices(size_t k) {
             static_cast<Triangulation<dim>*>(this)));
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Simplex<dim>* TriangulationBase<dim>::newSimplex(const std::string& desc) {
     ChangeAndClearSpan<> span(*this);
 
@@ -4690,7 +4639,7 @@ Simplex<dim>* TriangulationBase<dim>::newSimplex(const std::string& desc) {
     return s;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void TriangulationBase<dim>::removeSimplex(Simplex<dim>* simplex) {
     if (simplex->lockMask() != 0)
         throw LockViolation("An attempt was made to remove a "
@@ -4706,14 +4655,14 @@ inline void TriangulationBase<dim>::removeSimplex(Simplex<dim>* simplex) {
     delete simplex;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void TriangulationBase<dim>::removeSimplexRaw(Simplex<dim>* simplex) {
     simplex->isolateRaw();
     simplices_.erase(simplices_.begin() + simplex->index());
     delete simplex;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void TriangulationBase<dim>::removeSimplexAt(size_t index) {
     Simplex<dim>* simplex = simplices_[index];
     if (simplex->lockMask() != 0)
@@ -4730,7 +4679,7 @@ inline void TriangulationBase<dim>::removeSimplexAt(size_t index) {
     delete simplex;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void TriangulationBase<dim>::removeAllSimplices() {
     if (hasLocks())
         throw LockViolation("An attempt was made to remove all "
@@ -4744,7 +4693,7 @@ inline void TriangulationBase<dim>::removeAllSimplices() {
     simplices_.clear();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::moveContentsTo(Triangulation<dim>& dest) {
     if (isEmpty())
         return;
@@ -4768,7 +4717,7 @@ void TriangulationBase<dim>::moveContentsTo(Triangulation<dim>& dest) {
     simplices_.clear();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool TriangulationBase<dim>::hasLocks() const {
     for (auto s : simplices_)
         if (s->locks_)
@@ -4776,7 +4725,7 @@ bool TriangulationBase<dim>::hasLocks() const {
     return false;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::lockBoundary() {
     // We could do this without the skeleton, but this would require a full
     // scan through all top-dimensional simplices.  Instead we guess that the
@@ -4796,7 +4745,7 @@ void TriangulationBase<dim>::lockBoundary() {
             f->lock();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::unlockAll() {
     auto it = simplices_.begin();
     for ( ; it != simplices_.end(); ++it)
@@ -4815,20 +4764,20 @@ void TriangulationBase<dim>::unlockAll() {
         (*it)->locks_ = 0;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t TriangulationBase<dim>::countComponents() const {
     ensureSkeleton();
     return components_.size();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t TriangulationBase<dim>::countBoundaryComponents() const {
     ensureSkeleton();
     return boundaryComponents_.size();
 }
 
-template <int dim>
-template <int subdim>
+template <int dim> requires (supportedDim(dim))
+template <int subdim> requires (subdim >= 0 && subdim <= dim)
 inline size_t TriangulationBase<dim>::countFaces() const {
     if constexpr (subdim == dim)
         return size();
@@ -4838,7 +4787,7 @@ inline size_t TriangulationBase<dim>::countFaces() const {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t TriangulationBase<dim>::countFaces(int subdim) const {
     if (subdim == dim)
         return size();
@@ -4850,19 +4799,19 @@ inline size_t TriangulationBase<dim>::countFaces(int subdim) const {
     });
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t TriangulationBase<dim>::countVertices() const {
     ensureSkeleton();
     return std::get<0>(faces_).size();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t TriangulationBase<dim>::countEdges() const {
     ensureSkeleton();
     return std::get<1>(faces_).size();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t TriangulationBase<dim>::countTriangles() const {
     if constexpr (dim == 2) {
         return simplices_.size();
@@ -4872,10 +4821,9 @@ inline size_t TriangulationBase<dim>::countTriangles() const {
     }
 }
 
-template <int dim>
-inline size_t TriangulationBase<dim>::countTetrahedra() const {
-    static_assert(dim >= 3, "countTetrahedra() is only available "
-        "for triangulations of dimension >= 3.");
+template <int dim> requires (supportedDim(dim))
+inline size_t TriangulationBase<dim>::countTetrahedra() const
+        requires (dim >= 3) {
     if constexpr (dim == 3) {
         return simplices_.size();
     } else {
@@ -4884,10 +4832,9 @@ inline size_t TriangulationBase<dim>::countTetrahedra() const {
     }
 }
 
-template <int dim>
-inline size_t TriangulationBase<dim>::countPentachora() const {
-    static_assert(dim >= 4, "countPentachora() is only available "
-        "for triangulations of dimension >= 4.");
+template <int dim> requires (supportedDim(dim))
+inline size_t TriangulationBase<dim>::countPentachora() const
+        requires (dim >= 4) {
     if constexpr (dim == 4) {
         return simplices_.size();
     } else {
@@ -4896,7 +4843,7 @@ inline size_t TriangulationBase<dim>::countPentachora() const {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline std::vector<size_t> TriangulationBase<dim>::fVector() const {
     ensureSkeleton();
     return std::apply([this](auto&&... kFaces) {
@@ -4904,26 +4851,26 @@ inline std::vector<size_t> TriangulationBase<dim>::fVector() const {
     }, faces_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::components() const {
     ensureSkeleton();
     return ListView(components_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::boundaryComponents() const {
     ensureSkeleton();
     return ListView(boundaryComponents_);
 }
 
-template <int dim>
-template <int subdim>
+template <int dim> requires (supportedDim(dim))
+template <int subdim> requires (subdim >= 0 && subdim < dim)
 inline auto TriangulationBase<dim>::faces() const {
     ensureSkeleton();
     return ListView(std::get<subdim>(faces_));
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::faces(int subdim) const {
     if (subdim < 0 || subdim >= dim)
         throw InvalidArgument("faces(): unsupported face dimension");
@@ -4933,19 +4880,19 @@ inline auto TriangulationBase<dim>::faces(int subdim) const {
     });
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::vertices() const {
     ensureSkeleton();
     return ListView(std::get<0>(faces_));
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::edges() const {
     ensureSkeleton();
     return ListView(std::get<1>(faces_));
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::triangles() const {
     if constexpr (dim == 2) {
         return ListView(simplices_);
@@ -4955,10 +4902,9 @@ inline auto TriangulationBase<dim>::triangles() const {
     }
 }
 
-template <int dim>
-inline auto TriangulationBase<dim>::tetrahedra() const {
-    static_assert(dim >= 3, "tetrahedra() is only available "
-        "for triangulations of dimension >= 3.");
+template <int dim> requires (supportedDim(dim))
+inline auto TriangulationBase<dim>::tetrahedra() const
+        requires (dim >= 3) {
     if constexpr (dim == 3) {
         return ListView(simplices_);
     } else {
@@ -4967,10 +4913,9 @@ inline auto TriangulationBase<dim>::tetrahedra() const {
     }
 }
 
-template <int dim>
-inline auto TriangulationBase<dim>::pentachora() const {
-    static_assert(dim >= 4, "pentachora() is only available "
-        "for triangulations of dimension >= 4.");
+template <int dim> requires (supportedDim(dim))
+inline auto TriangulationBase<dim>::pentachora() const
+        requires (dim >= 4) {
     if constexpr (dim == 4) {
         return ListView(simplices_);
     } else {
@@ -4979,33 +4924,34 @@ inline auto TriangulationBase<dim>::pentachora() const {
     }
 }
 
-template <int dim>
-template <int subdim, typename Iterator>
-inline void TriangulationBase<dim>::reorderFaces(Iterator begin, Iterator end) {
+template <int dim> requires (supportedDim(dim))
+template <int subdim, InputIteratorFor<Face<dim, subdim>*> iterator>
+requires (subdim >= 0 && subdim < dim)
+inline void TriangulationBase<dim>::reorderFaces(iterator begin, iterator end) {
     std::get<subdim>(faces_).refill(begin, end);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Component<dim>* TriangulationBase<dim>::component(size_t index) const {
     ensureSkeleton();
     return components_[index];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline BoundaryComponent<dim>* TriangulationBase<dim>::boundaryComponent(
         size_t index) const {
     ensureSkeleton();
     return boundaryComponents_[index];
 }
 
-template <int dim>
-template <int subdim>
+template <int dim> requires (supportedDim(dim))
+template <int subdim> requires (subdim >= 0 && subdim < dim)
 inline Face<dim, subdim>* TriangulationBase<dim>::face(size_t index) const {
     ensureSkeleton();
     return std::get<subdim>(faces_)[index];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::face(int subdim, size_t index) const {
     if (subdim < 0 || subdim >= dim)
         throw InvalidArgument("face(): unsupported face dimension");
@@ -5015,19 +4961,19 @@ inline auto TriangulationBase<dim>::face(int subdim, size_t index) const {
     });
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Face<dim, 0>* TriangulationBase<dim>::vertex(size_t index) const {
     ensureSkeleton();
     return std::get<0>(faces_)[index];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Face<dim, 1>* TriangulationBase<dim>::edge(size_t index) const {
     ensureSkeleton();
     return std::get<1>(faces_)[index];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::triangle(size_t index) {
     if constexpr (dim == 2) {
         return simplices_[index];
@@ -5037,7 +4983,7 @@ inline auto TriangulationBase<dim>::triangle(size_t index) {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::triangle(size_t index) const {
     if constexpr (dim == 2) {
         return simplices_[index];
@@ -5047,10 +4993,9 @@ inline auto TriangulationBase<dim>::triangle(size_t index) const {
     }
 }
 
-template <int dim>
-inline auto TriangulationBase<dim>::tetrahedron(size_t index) {
-    static_assert(dim >= 3, "tetrahedron() is only available "
-        "for triangulations of dimension >= 3.");
+template <int dim> requires (supportedDim(dim))
+inline auto TriangulationBase<dim>::tetrahedron(size_t index)
+        requires (dim >= 3) {
     if constexpr (dim == 3) {
         return simplices_[index];
     } else {
@@ -5059,10 +5004,9 @@ inline auto TriangulationBase<dim>::tetrahedron(size_t index) {
     }
 }
 
-template <int dim>
-inline auto TriangulationBase<dim>::tetrahedron(size_t index) const {
-    static_assert(dim >= 3, "tetrahedron() is only available "
-        "for triangulations of dimension >= 3.");
+template <int dim> requires (supportedDim(dim))
+inline auto TriangulationBase<dim>::tetrahedron(size_t index) const
+        requires (dim >= 3) {
     if constexpr (dim == 3) {
         return simplices_[index];
     } else {
@@ -5071,10 +5015,9 @@ inline auto TriangulationBase<dim>::tetrahedron(size_t index) const {
     }
 }
 
-template <int dim>
-inline auto TriangulationBase<dim>::pentachoron(size_t index) {
-    static_assert(dim >= 4, "pentachoron() is only available "
-        "for triangulations of dimension >= 4.");
+template <int dim> requires (supportedDim(dim))
+inline auto TriangulationBase<dim>::pentachoron(size_t index)
+        requires (dim >= 4) {
     if constexpr (dim == 4) {
         return simplices_[index];
     } else {
@@ -5083,10 +5026,9 @@ inline auto TriangulationBase<dim>::pentachoron(size_t index) {
     }
 }
 
-template <int dim>
-inline auto TriangulationBase<dim>::pentachoron(size_t index) const {
-    static_assert(dim >= 4, "pentachoron() is only available "
-        "for triangulations of dimension >= 4.");
+template <int dim> requires (supportedDim(dim))
+inline auto TriangulationBase<dim>::pentachoron(size_t index) const
+        requires (dim >= 4) {
     if constexpr (dim == 4) {
         return simplices_[index];
     } else {
@@ -5095,13 +5037,10 @@ inline auto TriangulationBase<dim>::pentachoron(size_t index) const {
     }
 }
 
-template <int dim>
-template <int subdim>
+template <int dim> requires (supportedDim(dim))
+template <int subdim> requires (0 <= subdim && subdim <= dim)
 inline Face<dim, subdim>* TriangulationBase<dim>::translate(
         const Face<dim, subdim>* other) const {
-    static_assert(0 <= subdim && subdim <= dim, "translate() for faces "
-        "requires a facial dimension between 0 and dim inclusive.");
-
     if (other) {
         if constexpr (subdim < dim) {
             const auto& emb = other->front();
@@ -5113,28 +5052,24 @@ inline Face<dim, subdim>* TriangulationBase<dim>::translate(
         return nullptr;
 }
 
-template <int dim>
-template <int subdim>
+template <int dim> requires (supportedDim(dim))
+template <int subdim> requires (0 <= subdim && subdim < dim)
 inline FaceEmbedding<dim, subdim> TriangulationBase<dim>::translate(
         const FaceEmbedding<dim, subdim>& other) const {
-    static_assert(0 <= subdim && subdim < dim,
-        "translate() for face embeddings requires a facial dimension between "
-        "0 and dim-1 inclusive.");
-
     return { simplices_[other.simplex()->index()], other.vertices() };
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetPairing<dim> TriangulationBase<dim>::pairing() const {
     return FacetPairing<dim>(static_cast<const Triangulation<dim>&>(*this));
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool TriangulationBase<dim>::isEmpty() const {
     return simplices_.empty();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool TriangulationBase<dim>::isValid() const {
     if constexpr (dim == 2) {
         // There is nothing that can go wrong in dimension 2.
@@ -5145,28 +5080,26 @@ inline bool TriangulationBase<dim>::isValid() const {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool TriangulationBase<dim>::hasBoundaryFacets() const {
     ensureSkeleton();
     return nBoundaryFaces_[dim - 1] > 0;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t TriangulationBase<dim>::countBoundaryFacets() const {
     ensureSkeleton();
     return nBoundaryFaces_[dim - 1];
 }
 
-template <int dim>
-template <int subdim>
+template <int dim> requires (supportedDim(dim))
+template <int subdim> requires (subdim >= 0 && subdim < dim)
 inline size_t TriangulationBase<dim>::countBoundaryFaces() const {
-    static_assert(subdim >= 0 && subdim < dim,
-        "countBoundaryFaces() requires 0 <= subdim < dim.");
     ensureSkeleton();
     return nBoundaryFaces_[subdim];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t TriangulationBase<dim>::countBoundaryFaces(int subdim) const {
     if (subdim < 0 || subdim >= dim)
         throw InvalidArgument(
@@ -5177,19 +5110,19 @@ inline size_t TriangulationBase<dim>::countBoundaryFaces(int subdim) const {
     });
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool TriangulationBase<dim>::isOrientable() const {
     ensureSkeleton();
     return orientable_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool TriangulationBase<dim>::isConnected() const {
     ensureSkeleton();
     return (components_.size() <= 1);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool TriangulationBase<dim>::operator == (const TriangulationBase<dim>& other)
         const {
     if (simplices_.size() != other.simplices_.size())
@@ -5215,7 +5148,7 @@ bool TriangulationBase<dim>::operator == (const TriangulationBase<dim>& other)
     return true;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline std::optional<Isomorphism<dim>> TriangulationBase<dim>::isIsomorphicTo(
         const Triangulation<dim>& other) const {
     std::optional<Isomorphism<dim>> ans;
@@ -5226,7 +5159,7 @@ inline std::optional<Isomorphism<dim>> TriangulationBase<dim>::isIsomorphicTo(
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline std::optional<Isomorphism<dim>> TriangulationBase<dim>::isContainedIn(
         const Triangulation<dim>& other) const {
     std::optional<Isomorphism<dim>> ans;
@@ -5237,8 +5170,9 @@ inline std::optional<Isomorphism<dim>> TriangulationBase<dim>::isContainedIn(
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <typename Action, typename... Args>
+requires TerminatingCallback<Action, const Isomorphism<dim>&, Args...>
 inline bool TriangulationBase<dim>::findAllIsomorphisms(
         const Triangulation<dim>& other, Action&& action, Args&&... args)
         const {
@@ -5246,8 +5180,9 @@ inline bool TriangulationBase<dim>::findAllIsomorphisms(
         std::forward<Args>(args)...);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <typename Action, typename... Args>
+requires TerminatingCallback<Action, const Isomorphism<dim>&, Args...>
 inline bool TriangulationBase<dim>::findAllSubcomplexesIn(
         const Triangulation<dim>& other, Action&& action, Args&&... args)
         const {
@@ -5255,7 +5190,7 @@ inline bool TriangulationBase<dim>::findAllSubcomplexesIn(
         std::forward<Args>(args)...);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::insertTriangulation(
         const Triangulation<dim>& source) {
     if (source.isEmpty())
@@ -5292,7 +5227,7 @@ void TriangulationBase<dim>::insertTriangulation(
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::insertTriangulation(Triangulation<dim>&& source) {
     if (source.isEmpty())
         return;
@@ -5314,12 +5249,12 @@ void TriangulationBase<dim>::insertTriangulation(Triangulation<dim>&& source) {
     source.simplices_.clear();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 std::string TriangulationBase<dim>::dumpConstruction() const {
     return source(Language::Cxx);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::tightEncode(std::ostream& out) const {
     regina::detail::tightEncodeIndex(out, size());
 
@@ -5350,7 +5285,7 @@ void TriangulationBase<dim>::tightEncode(std::ostream& out) const {
                 regina::detail::tightEncodeNoIndex(out);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Triangulation<dim> TriangulationBase<dim>::tightDecode(std::istream& input) {
     auto size = regina::detail::tightDecodeIndex<size_t>(input);
 
@@ -5392,10 +5327,16 @@ Triangulation<dim> TriangulationBase<dim>::tightDecode(std::istream& input) {
     return ans;
 }
 
-template <int dim>
-template <typename Iterator>
+template <int dim> requires (supportedDim(dim))
+template <std::input_iterator iterator>
+requires requires(iterator it) {
+    { std::get<0>(*it) } -> std::convertible_to<size_t>;
+    { std::get<1>(*it) } -> std::convertible_to<int>;
+    { std::get<2>(*it) } -> std::convertible_to<size_t>;
+    { std::get<3>(*it) } -> std::convertible_to<Perm<dim + 1>>;
+}
 Triangulation<dim> TriangulationBase<dim>::fromGluings(size_t size,
-        Iterator beginGluings, Iterator endGluings) {
+        iterator beginGluings, iterator endGluings) {
     Triangulation<dim> ans;
 
     // Note: new simplices are initialised with all adj_[i] null.
@@ -5403,67 +5344,72 @@ Triangulation<dim> TriangulationBase<dim>::fromGluings(size_t size,
         ans.simplices_.push_back(new Simplex<dim>(&ans));
 
     for (auto it = beginGluings; it != endGluings; ++it) {
-        if (std::get<0>(*it) >= size)
+        size_t srcIndex = std::get<0>(*it);
+        if (srcIndex >= size)
             throw InvalidArgument(
                 "fromGluings(): source simplex out of range");
-        if (std::get<2>(*it) >= size)
+
+        size_t destIndex = std::get<2>(*it);
+        if (destIndex >= size)
             throw InvalidArgument(
                 "fromGluings(): adjacent simplex out of range");
-        if (std::get<1>(*it) < 0 || std::get<1>(*it) > dim)
+
+        int srcFacet = std::get<1>(*it);
+        if (srcFacet < 0 || srcFacet > dim)
             throw InvalidArgument(
                 "fromGluings(): facet number out of range");
 
-        Simplex<dim>* s = ans.simplices_[std::get<0>(*it)];
-        Simplex<dim>* adj = ans.simplices_[std::get<2>(*it)];
-        int facet = std::get<1>(*it);
+        Simplex<dim>* src = ans.simplices_[srcIndex];
+        Simplex<dim>* dest = ans.simplices_[destIndex];
 
-        if (s->adj_[facet])
+        Perm<dim + 1> gluing = std::get<3>(*it);
+        if (src->adj_[srcFacet])
             throw InvalidArgument(
                 "fromGluings(): source facet already glued to something");
-        if (adj->adj_[std::get<3>(*it)[facet]])
+        if (dest->adj_[gluing[srcFacet]])
             throw InvalidArgument(
                 "fromGluings(): destination facet already glued to something");
-        if (s == adj && std::get<3>(*it)[facet] == facet)
+        if (src == dest && gluing[srcFacet] == srcFacet)
             throw InvalidArgument(
                 "fromGluings(): a facet cannot be glued to itself");
 
-        s->adj_[facet] = adj;
-        s->gluing_[facet] = std::get<3>(*it);
+        src->adj_[srcFacet] = dest;
+        src->gluing_[srcFacet] = gluing;
 
-        adj->adj_[std::get<3>(*it)[facet]] = s;
-        adj->gluing_[std::get<3>(*it)[facet]] = std::get<3>(*it).inverse();
+        dest->adj_[gluing[srcFacet]] = src;
+        dest->gluing_[gluing[srcFacet]] = gluing.inverse();
     }
 
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Triangulation<dim> TriangulationBase<dim>::fromGluings(size_t size,
         std::initializer_list<std::tuple<size_t, int, size_t, Perm<dim+1>>>
         gluings) {
     return fromGluings(size, gluings.begin(), gluings.end());
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline std::string TriangulationBase<dim>::dot(bool labels) const {
     std::ostringstream ans;
     writeDot(ans, labels);
     return ans.str();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void TriangulationBase<dim>::ensureSkeleton() const {
     if (! calculatedSkeleton_)
         const_cast<Triangulation<dim>*>(
             static_cast<const Triangulation<dim>*>(this))->calculateSkeleton();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool TriangulationBase<dim>::calculatedSkeleton() const {
     return calculatedSkeleton_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool TriangulationBase<dim>::isOriented() const {
     // Calling isOrientable() will force a skeletal calculation if this
     // has not been done already.
@@ -5477,7 +5423,7 @@ bool TriangulationBase<dim>::isOriented() const {
     return true;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline long TriangulationBase<dim>::eulerCharTri() const {
     ensureSkeleton();
     return std::apply([this](auto&&... kFaces) {
@@ -5485,7 +5431,7 @@ inline long TriangulationBase<dim>::eulerCharTri() const {
     }, faces_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::orient() {
     ensureSkeleton();
 
@@ -5521,7 +5467,7 @@ void TriangulationBase<dim>::orient() {
         }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::reflect() {
     ensureSkeleton();
 
@@ -5546,7 +5492,7 @@ void TriangulationBase<dim>::reflect() {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Isomorphism<dim> TriangulationBase<dim>::randomiseLabelling(
         bool preserveOrientation) {
     auto iso = Isomorphism<dim>::random(size(), preserveOrientation);
@@ -5555,73 +5501,53 @@ inline Isomorphism<dim> TriangulationBase<dim>::randomiseLabelling(
     return iso;
 }
 
-template <int dim>
-template <int k>
+template <int dim> requires (supportedDim(dim))
+template <int k> requires (k >= 0 && k <= dim)
 inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f) {
-    static_assert(0 <= k && k <= dim, "pachner() requires a "
-        "facial dimension between 0 and dim inclusive.");
-
     return internalPachner(f, true, true);
 }
 
-template <int dim>
-template <int k>
+template <int dim> requires (supportedDim(dim))
+template <int k> requires (k >= 0 && k <= dim)
 inline void TriangulationBase<dim>::pachner(Face<dim, k>* f, Unprotected) {
-    static_assert(0 <= k && k <= dim, "pachner() requires a "
-        "facial dimension between 0 and dim inclusive.");
-
     internalPachner(f, false, true);
 }
 
-template <int dim>
-template <int k>
+template <int dim> requires (supportedDim(dim))
+template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
 inline bool TriangulationBase<dim>::move20(Face<dim, k>* f) {
-    static_assert(0 <= k && k <= 2 && k <= dim - 2,
-        "move20() requires a facial dimension of 0, 1 or 2 that does "
-        "not exceed dim - 2.");
-
     return internal20(f, true, true);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool TriangulationBase<dim>::shellBoundary(Simplex<dim>* s) {
     return internalShellBoundary(s, true, true);
 }
 
-template <int dim>
-template <int k>
+template <int dim> requires (supportedDim(dim))
+template <int k> requires (k >= 0 && k <= dim)
 bool TriangulationBase<dim>::hasPachner(Face<dim, k>* f) const {
-    static_assert(0 <= k && k <= dim, "hasPachner() requires a "
-        "facial dimension between 0 and dim inclusive.");
-
     return const_cast<TriangulationBase<dim>*>(this)->internalPachner(f,
         true, false);
 }
 
-template <int dim>
-template <int k>
+template <int dim> requires (supportedDim(dim))
+template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
 bool TriangulationBase<dim>::has20(Face<dim, k>* f) const {
-    static_assert(0 <= k && k <= 2 && k <= dim - 2,
-        "has20() requires a facial dimension of 0, 1 or 2 that does "
-        "not exceed dim - 2.");
-
     return const_cast<TriangulationBase<dim>*>(this)->internal20(f,
         true, false);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool TriangulationBase<dim>::hasShellBoundary(Simplex<dim>* s) const {
     return const_cast<TriangulationBase<dim>*>(this)->internalShellBoundary(s,
         true, false);
 }
 
-template <int dim>
-template <int k>
+template <int dim> requires (supportedDim(dim))
+template <int k> requires (k >= 0 && k <= dim)
 std::optional<Triangulation<dim>> TriangulationBase<dim>::withPachner(
         Face<dim, k>* f) const {
-    static_assert(0 <= k && k <= dim, "withPachner() requires a "
-        "facial dimension between 0 and dim inclusive.");
-
     if (! hasPachner(f))
         return {};
 
@@ -5631,14 +5557,10 @@ std::optional<Triangulation<dim>> TriangulationBase<dim>::withPachner(
     return ans;
 }
 
-template <int dim>
-template <int k>
+template <int dim> requires (supportedDim(dim))
+template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
 std::optional<Triangulation<dim>> TriangulationBase<dim>::with20(
         Face<dim, k>* f) const {
-    static_assert(0 <= k && k <= 2 && k <= dim - 2,
-        "with20() requires a facial dimension of 0, 1 or 2 that does "
-        "not exceed dim - 2.");
-
     if (! has20(f))
         return {};
 
@@ -5648,7 +5570,7 @@ std::optional<Triangulation<dim>> TriangulationBase<dim>::with20(
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 std::optional<Triangulation<dim>> TriangulationBase<dim>::withShellBoundary(
         Simplex<dim>* s) const {
     if (! hasShellBoundary(s))
@@ -5660,49 +5582,43 @@ std::optional<Triangulation<dim>> TriangulationBase<dim>::withShellBoundary(
     return ans;
 }
 
-template <int dim>
-template <int k>
+template <int dim> requires (supportedDim(dim))
+template <int k> requires (k >= 0 && k <= dim)
 inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool,
         bool perform) {
-    static_assert(0 <= k && k <= dim, "pachner() requires a "
-        "facial dimension between 0 and dim inclusive.");
-
     return internalPachner(f, true, perform);
 }
 
-template <int dim>
-template <int k>
+template <int dim> requires (supportedDim(dim))
+template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
 inline bool TriangulationBase<dim>::twoZeroMove(Face<dim, k>* f, bool,
         bool perform) {
-    static_assert(0 <= k && k <= 2 && k <= dim - 2,
-        "twoZeroMove() requires a facial dimension of 0, 1 or 2 that does "
-        "not exceed dim - 2.");
-
     return internal20(f, true, perform);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool TriangulationBase<dim>::shellBoundary(Simplex<dim>* s, bool,
         bool perform) {
     return internalShellBoundary(s, true, perform);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::makeDoubleCover() {
     *this = doubleCover();
 }
 
-template <int dim>
-inline void TriangulationBase<dim>::barycentricSubdivision() {
+template <int dim> requires (supportedDim(dim))
+inline void TriangulationBase<dim>::barycentricSubdivision()
+        requires (standardDim(dim)) {
     subdivide();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool TriangulationBase<dim>::finiteToIdeal() {
     return makeIdeal();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 std::vector<Triangulation<dim>>
         TriangulationBase<dim>::triangulateComponents() const {
     // Knock off the empty triangulation first.
@@ -5742,19 +5658,19 @@ std::vector<Triangulation<dim>>
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline const GroupPresentation& TriangulationBase<dim>::fundamentalGroup()
         const {
     return group();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void TriangulationBase<dim>::setGroupPresentation(
         GroupPresentation pres) {
     fundGroup_ = std::move(pres);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void TriangulationBase<dim>::simplifiedFundamentalGroup(
         GroupPresentation pres) {
     // Reimplement instead of calling setGroupPresentation(), to avoid two
@@ -5762,7 +5678,7 @@ inline void TriangulationBase<dim>::simplifiedFundamentalGroup(
     fundGroup_ = std::move(pres);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline AbelianGroup TriangulationBase<dim>::homology(int k) const {
     // upperBound is one more than the largest allowed k.
     constexpr int upperBound = (standardDim(dim) ? dim : (dim - 1));
@@ -5774,11 +5690,9 @@ inline AbelianGroup TriangulationBase<dim>::homology(int k) const {
     });
 }
 
-template <int dim>
-template <int k>
+template <int dim> requires (supportedDim(dim))
+template <int k> requires (k > 0 && k < dim)
 inline MarkedAbelianGroup TriangulationBase<dim>::markedHomology() const {
-    static_assert(1 <= k && k < dim);
-
     if (isEmpty())
         throw FailedPrecondition("markedHomology(): triangulation is empty");
     if (! isValid())
@@ -5787,7 +5701,7 @@ inline MarkedAbelianGroup TriangulationBase<dim>::markedHomology() const {
     return MarkedAbelianGroup(boundaryMap<k>(), boundaryMap<k + 1>());
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline MarkedAbelianGroup TriangulationBase<dim>::markedHomology(int k) const {
     if (k < 1 || k >= dim)
         throw InvalidArgument(
@@ -5798,7 +5712,7 @@ inline MarkedAbelianGroup TriangulationBase<dim>::markedHomology(int k) const {
     });
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline MatrixInt TriangulationBase<dim>::boundaryMap(int subdim) const {
     if (subdim < 1 || subdim > dim)
         throw InvalidArgument("boundaryMap(): unsupported face dimension");
@@ -5808,7 +5722,7 @@ inline MatrixInt TriangulationBase<dim>::boundaryMap(int subdim) const {
     });
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline MatrixInt TriangulationBase<dim>::dualBoundaryMap(int subdim) const {
     constexpr int maxSubdim = (standardDim(dim) ? dim : dim - 1);
     if (subdim < 1 || subdim > maxSubdim)
@@ -5820,7 +5734,7 @@ inline MatrixInt TriangulationBase<dim>::dualBoundaryMap(int subdim) const {
     });
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline MatrixInt TriangulationBase<dim>::dualToPrimal(int subdim) const {
     if (subdim < 0 || subdim >= dim)
         throw InvalidArgument(
@@ -5831,7 +5745,7 @@ inline MatrixInt TriangulationBase<dim>::dualToPrimal(int subdim) const {
     });
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void TriangulationBase<dim>::writeXMLBaseProperties(std::ostream& out) const {
     if (fundGroup_.has_value()) {
         out << "  <fundgroup>\n";
@@ -5845,8 +5759,8 @@ void TriangulationBase<dim>::writeXMLBaseProperties(std::ostream& out) const {
     }
 }
 
-template <int dim>
-template <int subdim>
+template <int dim> requires (supportedDim(dim))
+template <int subdim> requires (subdim >= 0 && subdim < dim)
 inline Face<dim, subdim>* TriangulationBase<dim>::clonedFace(
         const Face<dim, subdim>* src) const {
     // This is a tiny function; it exists mainly to help in scenarios where
@@ -5855,7 +5769,7 @@ inline Face<dim, subdim>* TriangulationBase<dim>::clonedFace(
     return std::get<subdim>(faces_)[src->index()];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 template <typename FaceList>
 inline void TriangulationBase<dim>::cloneBoundaryFaces(
         BoundaryComponent<dim>* bc, const FaceList& srcFaces) {
@@ -5865,49 +5779,43 @@ inline void TriangulationBase<dim>::cloneBoundaryFaces(
         bc->push_back(clonedFace(f));
 }
 
-template <int dim>
-template <class Type, class Encoding>
+template <int dim> requires (supportedDim(dim))
+template <IsoSigType<dim> Type, IsoSigEncoding<dim> Encoding>
 inline typename Encoding::Signature TriangulationBase<dim>::sig() const {
     return isoSig<Type, Encoding>();
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Triangulation<dim> TriangulationBase<dim>::fromSig(
         const std::string& sig) {
     return TriangulationBase<dim>::fromIsoSig(sig);
 }
 
-template <int dim>
-template <int useDim>
+template <int dim> requires (supportedDim(dim))
+template <int useDim> requires (useDim >= 0 && useDim < dim)
 bool TriangulationBase<dim>::sameDegreesAt(const TriangulationBase<dim>& other)
         const {
     // We may assume that # faces is the same for both triangulations.
     size_t n = std::get<useDim>(faces_).size();
 
-    auto* deg1 = new size_t[n];
-    auto* deg2 = new size_t[n];
+    FixedArray<size_t> deg1(n);
+    FixedArray<size_t> deg2(n);
 
-    size_t* p;
-    p = deg1;
+    auto p = deg1.begin();
     for (auto f : std::get<useDim>(faces_))
         *p++ = f->degree();
-    p = deg2;
+    p = deg2.begin();
     for (auto f : std::get<useDim>(other.faces_))
         *p++ = f->degree();
 
-    std::sort(deg1, deg1 + n);
-    std::sort(deg2, deg2 + n);
+    std::sort(deg1.begin(), deg1.end());
+    std::sort(deg2.begin(), deg2.end());
 
-    bool ans = std::equal(deg1, deg1 + n, deg2);
-
-    delete[] deg1;
-    delete[] deg2;
-
-    return ans;
+    return std::equal(deg1.begin(), deg1.end(), deg2.begin());
 }
 
-template <int dim>
-template <int... useDim>
+template <int dim> requires (supportedDim(dim))
+template <int... useDim> requires ((useDim >= 0 && useDim < dim) && ...)
 inline bool TriangulationBase<dim>::sameDegreesAt(
         const TriangulationBase& other,
         std::integer_sequence<int, useDim...>) const {

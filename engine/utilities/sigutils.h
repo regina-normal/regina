@@ -42,9 +42,10 @@
 #include <cstdint>
 #include <string>
 #include "regina-core.h"
+#include "concepts/core.h"
+#include "concepts/iterator.h"
 #include "utilities/exception.h"
 #include "utilities/fixedarray.h"
-#include "utilities/intutils.h"
 
 namespace regina {
 
@@ -121,9 +122,9 @@ struct [[deprecated]] Base64SigEncoding {
     }
 
     /**
-     * Append a base64 encoding of the given integer to the given string.
-     * The integer will be broken into \a nChars distinct 6-bit blocks, and
-     * the lowest-significance blocks will be written first.
+     * Append a base64 encoding of the given native C++ integer to the given
+     * string.  The integer will be broken into \a nChars distinct 6-bit blocks,
+     * and the lowest-significance blocks will be written first.
      *
      * The inverse to this routine is decodeInt().
      *
@@ -133,18 +134,12 @@ struct [[deprecated]] Base64SigEncoding {
      * \python The template argument \a IntType is taken to be a
      * native C++ \c long.
      *
-     * \tparam IntType a native C++ integer type, such as \c uint8_t, or
-     * \c unsigned, or `long long`.
-     *
      * \param s the string that resulting characters should be appended to.
      * \param val the integer to encode.
      * \param nChars the number of base64 characters to use.
      */
-    template <typename IntType>
+    template <CppInteger IntType>
     static void encodeInt(std::string& s, IntType val, int nChars) {
-        static_assert(is_cpp_integer_v<IntType>,
-            "encodeInt() requires IntType to be a native C++ integer type.");
-
         for ( ; nChars > 0; --nChars) {
             s += encodeSingle(val & 0x3F);
             val >>= 6;
@@ -159,6 +154,11 @@ struct [[deprecated]] Base64SigEncoding {
      * base64 characters, each containing 6 bits of the integer,
      * with the lowest-significance bits encoded in the first characters.
      *
+     * The result will be assembled using the integer type \a IntType,
+     * via bitwise OR and bitwise shift lefts.  It is assumed that the
+     * programmer has chosen an integer type large enough to contain whatever
+     * values they expect to read.
+     *
      * The inverse to this routine is encodeInt().
      *
      * \pre The given string contains at least \a nChars characters.
@@ -166,22 +166,13 @@ struct [[deprecated]] Base64SigEncoding {
      * \python The template argument \a IntType is taken to be a
      * native C++ \c long.
      *
-     * \tparam IntType a native C++ integer type, such as \c uint8_t,
-     * or \c unsigned, or `long long`.  The result will be
-     * assembled using bitwise OR and bitwise shift lefts, and it is
-     * assumed that the programmer has chosen an integer type large enough
-     * to contain whatever values they expect to read.
-     *
      * \param s the string from which the encoded base64 characters
      * should be read.
      * \param nChars the number of base64 characters to read.
      * \return the native integer that was encoded.
      */
-    template <typename IntType>
+    template <CppInteger IntType>
     static IntType decodeInt(const char* s, int nChars) {
-        static_assert(is_cpp_integer_v<IntType>,
-            "decodeInt() requires IntType to be a native C++ integer type.");
-
         IntType ans = 0;
         for (int i = 0; i < nChars; ++i)
             ans |= (static_cast<IntType>(decodeSingle(s[i])) << (6 * i));
@@ -203,13 +194,12 @@ struct [[deprecated]] Base64SigEncoding {
      *
      * \param trits an input iterator pointing to the first trit to encode;
      * it must be possible to read and advance this iterator at least
-     * \a nTrits times.  Each trit will be cast to a \c uint8_t, and must take
-     * the value 0, 1 or 2.
+     * \a nTrits times.  Each trit must take the value 0, 1 or 2.
      * \param nTrits the number of trits to encode; this must be at most 3.
      * \return the resulting printable base64 character.
      */
-    template <typename InputIterator>
-    static char encodeTrits(InputIterator trits, int nTrits) {
+    template <InputIteratorFor<uint8_t> iterator>
+    static char encodeTrits(iterator trits, int nTrits) {
         uint8_t ans = 0;
         if (nTrits >= 1)
             ans |= static_cast<uint8_t>(*trits++);
@@ -266,15 +256,14 @@ struct [[deprecated]] Base64SigEncoding {
      * \param c the base64 character to decode.
      * \param result an output iterator pointing to the location where the
      * resulting trits will be stored; it must be possible to write and advance
-     * this iterator at least three times.  Each trit will be written as a
-     * \c uint8_t.
+     * this iterator at least three times.
      */
-    template <typename OutputIterator>
-    static void decodeTrits(char c, OutputIterator result) {
+    template <std::output_iterator<uint8_t> iterator>
+    static void decodeTrits(char c, iterator result) {
         auto val = static_cast<uint8_t>(decodeSingle(c));
-        *result++ = val & 3;
-        *result++ = (val >> 2) & 3;
-        *result++ = (val >> 4) & 3;
+        *result++ = static_cast<uint8_t>(val & 3);
+        *result++ = static_cast<uint8_t>((val >> 2) & 3);
+        *result++ = static_cast<uint8_t>((val >> 4) & 3);
     }
 
     /**
@@ -378,16 +367,10 @@ class Base64SigEncoder {
          * \python The template argument \a IntType is taken to be a
          * native C++ \c long.
          *
-         * \tparam IntType a native C++ integer type.
-         *
          * \param c an integer between 0 and 63 inclusive.
          */
-        template <typename IntType>
+        template <CppInteger IntType>
         void encodeSingle(IntType c) {
-            static_assert(is_cpp_integer_v<IntType>,
-                "Base64SigEncoder::encodeSingle() requires IntType to be a "
-                "native C++ integer type.");
-
             if (c < 0)
                 throw InvalidArgument("Base64SigEncoder::encodeSingle(): "
                     "integer argument cannot be negative");
@@ -456,8 +439,8 @@ class Base64SigEncoder {
         }
 
         /**
-         * Encodes the given non-negative integer using a fixed number of
-         * base64 characters.
+         * Encodes the given non-negative native C++ integer using a fixed
+         * number of base64 characters.
          *
          * Specifically, the integer \a val will be broken into \a nChars
          * distinct 6-bit blocks, which will be encoded in order from lowest
@@ -471,18 +454,12 @@ class Base64SigEncoder {
          * \python The template argument \a IntType is taken to be a
          * native C++ \c long.
          *
-         * \tparam IntType a native C++ integer type.
-         *
          * \param val the non-negative integer to encode.
          * \param nChars the number of base64 characters to use; typically
          * this would be obtained through an earlier call to encodeSize().
          */
-        template <typename IntType>
+        template <CppInteger IntType>
         void encodeInt(IntType val, int nChars) {
-            static_assert(is_cpp_integer_v<IntType>,
-                "Base64SigEncoder::encodeInt() requires IntType to be a "
-                "native C++ integer type.");
-
             if (val < 0)
                 throw InvalidArgument("Base64SigEncoder::encodeInt(): "
                     "integer argument cannot be negative");
@@ -498,8 +475,8 @@ class Base64SigEncoder {
         }
 
         /**
-         * Encodes a sequence of non-negative integers, each using a fixed
-         * number of base64 characters.
+         * Encodes a sequence of non-negative native C++ integers, each using a
+         * fixed number of base64 characters.
          *
          * Each integer in the sequence will be encoded using encodeInt().
          * That is, each integer will be broken into \a nChars distinct
@@ -515,9 +492,6 @@ class Base64SigEncoder {
          * a Python sequence of integers.  Each Python integer will be read as
          * a native C++ `long`.
          *
-         * \tparam Iterator an input iterator which, when dereferenced,
-         * gives a native C++ integer type.
-         *
          * \param begin an iterator pointing to the first integer to encode.
          * \param end a past-the-end iterator pointing beyond the last integer
          * to encode.
@@ -525,8 +499,9 @@ class Base64SigEncoder {
          * integer; typically this would be obtained through an earlier call
          * to encodeSize().
          */
-        template <typename Iterator>
-        void encodeInts(Iterator begin, Iterator end, int nChars) {
+        template <std::input_iterator iterator>
+        requires CppInteger<typename std::iterator_traits<iterator>::value_type>
+        void encodeInts(iterator begin, iterator end, int nChars) {
             for (auto it = begin; it != end; ++it)
                 encodeInt(*it, nChars);
         }
@@ -540,8 +515,8 @@ class Base64SigEncoder {
          * significance.  (The last base64 character might of course encode
          * just one or two trits instead.)
          *
-         * Each trit will be obtained by dereferencing an iterator and casting
-         * to \c uint8_t, and (as noted above) must take the value 0, 1 or 2.
+         * Each trit will be obtained by dereferencing an iterator, which
+         * (as noted above) must yield the value 0, 1 or 2.
          *
          * The inverse to this routine is Base64SigDecoder::decodeTrits(),
          * though that function only decodes three trits at a time.
@@ -549,15 +524,12 @@ class Base64SigEncoder {
          * \python This routine takes a single argument, which is a Python
          * sequence of integer trits.
          *
-         * \tparam Iterator an input iterator which, when dereferenced,
-         * can be cast as a native C++ unsigned 8-bit integer (`uint8_t`).
-         *
          * \param beginTrits an iterator pointing to the first trit to encode.
          * \param endTrits a past-the-end iterator pointing beyond the last
          * trit to encode.
          */
-        template <typename Iterator>
-        void encodeTrits(Iterator beginTrits, Iterator endTrits) {
+        template <InputIteratorFor<uint8_t> iterator>
+        void encodeTrits(iterator beginTrits, iterator endTrits) {
             auto it = beginTrits;
             while (it != endTrits) {
                 uint8_t packed = static_cast<uint8_t>(*it++);
@@ -616,11 +588,10 @@ class Base64SigEncoder {
  * \python The type \a Iterator is an implementation detail, and is hidden
  * from Python users.  Just use the unadorned type name `Base64SigDecoder`.
  *
- * \tparam Iterator a forward iterator whose associated value type is `char`.
- *
  * \ingroup utilities
  */
-template <typename Iterator>
+template <CharIterator Iterator>
+requires std::forward_iterator<Iterator>
 class Base64SigDecoder {
     private:
         Iterator next_;
@@ -630,11 +601,6 @@ class Base64SigDecoder {
                  location, as is usual for an iterator range). */
 
     public:
-        static_assert(
-            std::is_same_v<typename std::iterator_traits<Iterator>::value_type,
-                char>,
-            "Base64SigDecoder requires iterators over characters.");
-
         /**
          * Creates a new decoder for the given encoded string.
          *
@@ -728,17 +694,11 @@ class Base64SigDecoder {
          * \python The template argument \a IntType is taken to be a
          * native C++ \c long.
          *
-         * \tparam IntType a native C++ integer type.
-         *
          * \return the corresponding integer, which will be between 0 and 63
          * inclusive.
          */
-        template <typename IntType>
+        template <CppInteger IntType>
         IntType decodeSingle() {
-            static_assert(is_cpp_integer_v<IntType>,
-                "Base64SigDecoder::decodeSingle() requires IntType to be a "
-                "native C++ integer type.");
-
             if (next_ == end_)
                 throw InvalidInput("Base64SigDecoder: "
                     "unexpected end of encoded string");
@@ -801,12 +761,17 @@ class Base64SigDecoder {
          * Decodes the next non-negative integer value, assuming this uses
          * a fixed number of base64 characters.  This integer value would
          * typically have been encoded using Base64SigEncoder::encodeInt(),
-         * with the same \a nChars argument.
+         * using the same \a nChars argument.
          *
          * Specifically, it will be assumed that the integer has been broken
          * into \a nChars 6-bit blocks, with each block encoded as a single
          * base64 character, and with the blocks presented in order from
          * lowest to highest significance.
+         *
+         * The result will be assembled using the integer type \a IntType,
+         * via bitwise OR and bitwise shift lefts.  It is assumed that the
+         * programmer has chosen an integer type large enough to contain
+         * whatever values they expect to read.
          *
          * The inverse to this routine is Base64SigEncoder::encodeInt().
          *
@@ -817,20 +782,11 @@ class Base64SigDecoder {
          * \python The template argument \a IntType is taken to be a
          * native C++ \c long.
          *
-         * \tparam IntType a native C++ integer type.  The result will be
-         * assembled using bitwise OR and bitwise shift lefts, and it is
-         * assumed that the programmer has chosen an integer type large enough
-         * to contain whatever values they expect to read.
-         *
          * \param nChars the number of base64 characters to read.
          * \return the integer that was decoded.
          */
-        template <typename IntType>
+        template <CppInteger IntType>
         IntType decodeInt(int nChars) {
-            static_assert(is_cpp_integer_v<IntType>,
-                "Base64SigDecoder::decodeInt() requires IntType to be a "
-                "native C++ integer type.");
-
             IntType ans = 0;
             for (int i = 0; i < nChars; ++i)
                 ans |= (decodeSingle<IntType>() << (6 * i));
@@ -839,15 +795,22 @@ class Base64SigDecoder {
 
         /**
          * Decodes a sequence of non-negative integer values, assuming that
-         * each individual value uses a fixed number of base64 characters.
-         * Each such integer value would typically have been encoded using
+         * each individual value uses a fixed number of base64 characters,
+         * and returns these as native C++ integers via an output iterator.
+         * Each integer to be decoded would typically have been encoded using
          * Base64SigEncoder::encodeInt() or Base64SigEncoder::encodeInts(),
-         * with the same \a nChars argument.
+         * using the same \a nChars argument.
          *
          * Specifically, it will be assumed that each integer has been broken
          * into \a nChars 6-bit blocks, with each block encoded as a single
          * base64 character, and with the blocks presented in order from
          * lowest to highest significance.
+         *
+         * Each resulting integer will be assembled using the output iterator's
+         * `value_type`, via bitwise OR and bitwise shift lefts.  It is assumed
+         * that the programmer has chosen an output iterator whose `value_type`
+         * is large enough to contain whatever integer values they expect to
+         * read.
          *
          * The inverse to this routine is Base64SigEncoder::encodeInts().
          *
@@ -859,12 +822,6 @@ class Base64SigDecoder {
          * not take an output iterator, but instead returns the sequence of
          * integers that were decoded.
          *
-         * \tparam OutputIterator an output iterator whose associated value type
-         * is a native C++ integer type.  Each integer that is decoded will be
-         * assembled using bitwise OR and bitwise shift lefts, and it is
-         * assumed that the programmer has chosen an integer type large enough
-         * to contain whatever values they expect to read.
-         *
          * \param output an iterator to use for output.  Each integer that
          * is decoded will be passed to this iterator using the usual
          * dereference-assign-increment pattern (`*output++ = value`).
@@ -873,18 +830,19 @@ class Base64SigDecoder {
          * \param count the number of integers to decode.
          * \param nChars the number of base64 characters to read.
          */
-        template <typename OutputIterator>
-        void decodeInts(OutputIterator output, size_t count, int nChars) {
-            using IntType =
-                typename std::iterator_traits<OutputIterator>::value_type;
+        template <std::output_iterator<int> iterator>
+        requires CppInteger<typename std::iterator_traits<iterator>::value_type>
+        void decodeInts(iterator output, size_t count, int nChars) {
+            using IntType = typename std::iterator_traits<iterator>::value_type;
             for (size_t i = 0; i < count; ++i)
                 *output++ = decodeInt<IntType>(nChars);
         }
 
         /**
          * Decodes a sequence of non-negative integer values, assuming that
-         * each individual value uses a fixed number of base64 characters.
-         * Each such integer value would typically have been encoded using
+         * each individual value uses a fixed number of base64 characters,
+         * and returns these as an array of native C++ integers.
+         * Each integer to be decoded would typically have been encoded using
          * Base64SigEncoder::encodeInt() or Base64SigEncoder::encodeInts(),
          * with the same \a nChars argument.
          *
@@ -892,6 +850,11 @@ class Base64SigDecoder {
          * into \a nChars 6-bit blocks, with each block encoded as a single
          * base64 character, and with the blocks presented in order from
          * lowest to highest significance.
+         *
+         * Each resulting integer will be assembled using the integer type
+         * \a IntType, via bitwise OR and bitwise shift lefts.  It is assumed
+         * that the programmer has chosen an integer type large enough to
+         * contain whatever values they expect to read.
          *
          * The inverse to this routine is Base64SigEncoder::encodeInts().
          *
@@ -902,16 +865,11 @@ class Base64SigDecoder {
          * \python The template argument \a IntType is taken to be a
          * native C++ \c long.  This routine returns a Python list of integers.
          *
-         * \tparam IntType a native C++ integer type.  The result will be
-         * assembled using bitwise OR and bitwise shift lefts, and it is
-         * assumed that the programmer has chosen an integer type large enough
-         * to contain whatever values they expect to read.
-         *
          * \param count the number of integers to decode.
          * \param nChars the number of base64 characters to read.
          * \return the sequence of integers that were decoded.
          */
-        template <typename IntType>
+        template <CppInteger IntType>
         FixedArray<IntType> decodeInts(size_t count, int nChars) {
             FixedArray<IntType> ans(count);
             for (auto it = ans.begin(); it != ans.end(); ++it)
@@ -935,15 +893,14 @@ class Base64SigDecoder {
          *
          * \param result an output iterator pointing to the location where the
          * resulting trits will be stored; it must be possible to write and
-         * advance this iterator at least three times.  Each trit will be
-         * written as a \c uint8_t.
+         * advance this iterator at least three times.
          */
-        template <typename OutputIterator>
-        void decodeTrits(OutputIterator result) {
+        template <std::output_iterator<uint8_t> iterator>
+        void decodeTrits(iterator result) {
             uint8_t val = decodeSingle<uint8_t>();
-            *result++ = val & 3;
-            *result++ = (val >> 2) & 3;
-            *result++ = (val >> 4) & 3;
+            *result++ = static_cast<uint8_t>(val & 3);
+            *result++ = static_cast<uint8_t>((val >> 2) & 3);
+            *result++ = static_cast<uint8_t>((val >> 4) & 3);
         }
 
         /**

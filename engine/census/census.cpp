@@ -28,8 +28,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "regina-config.h" // For key-value store macros
-
 #include <algorithm>
 #include <cstdlib>
 #include <functional>

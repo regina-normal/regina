@@ -59,6 +59,7 @@ DiscSetTet : class -> EqualityType.BY_VALUE
 DiscSpec : class -> EqualityType.BY_VALUE
 DiscSpecIterator : class -> EqualityType.BY_VALUE
 DiscType : class -> EqualityType.BY_VALUE
+DivisionByZero : exception
 DoubleDescription : class -> EqualityType.NEVER_INSTANTIATED
 Edge2 : alias -> Face2_1
 Edge3 : alias -> Face3_1
@@ -225,6 +226,7 @@ HyperListFlags : alias -> enum HyperList
 HyperbolicMinSearcher : class -> EqualityType.BY_REFERENCE
 ImpossibleScenario : exception
 Integer : class -> EqualityType.BY_VALUE
+IntegerOverflow : exception
 IntersectionForm : class -> EqualityType.BY_VALUE
 InvalidArgument : exception
 InvalidInput : exception
@@ -274,6 +276,7 @@ LPConstraintEulerPositive : class -> EqualityType.NEVER_INSTANTIATED
 LPConstraintEulerZero : class -> EqualityType.NEVER_INSTANTIATED
 LPConstraintNonSpun : class -> EqualityType.NEVER_INSTANTIATED
 LPConstraintNone : class -> EqualityType.NEVER_INSTANTIATED
+LPConstraintType : enum
 LPData : class -> EqualityType.DISABLED
 LPData_EulerPositive : class -> EqualityType.DISABLED
 LPData_EulerZero : class -> EqualityType.DISABLED
@@ -327,6 +330,7 @@ NormalSurface : class -> EqualityType.BY_VALUE
 NormalSurfaces : class -> EqualityType.BY_VALUE
 NormalTransform : enum
 NotImplemented : exception
+NumericalError : exception
 Packet : class -> EqualityType.NEVER_INSTANTIATED
 PacketChildren : class -> EqualityType.BY_VALUE
 PacketDescendants : class -> EqualityType.BY_VALUE
@@ -550,10 +554,6 @@ TreeEnumeration : class -> EqualityType.BY_REFERENCE
 TreeEnumeration_BanBoundary : class -> EqualityType.BY_REFERENCE
 TreeEnumeration_BanEdge : class -> EqualityType.BY_REFERENCE
 TreeEnumeration_BanTorusBoundary : class -> EqualityType.BY_REFERENCE
-TreeEnumeration_EulerPositive : class -> EqualityType.BY_REFERENCE
-TreeEnumeration_EulerPositive_BanBoundary : class -> EqualityType.BY_REFERENCE
-TreeEnumeration_EulerPositive_BanEdge : class -> EqualityType.BY_REFERENCE
-TreeEnumeration_EulerPositive_BanTorusBoundary : class -> EqualityType.BY_REFERENCE
 TreeEnumeration_EulerZero : class -> EqualityType.BY_REFERENCE
 TreeEnumeration_EulerZero_BanBoundary : class -> EqualityType.BY_REFERENCE
 TreeEnumeration_EulerZero_BanEdge : class -> EqualityType.BY_REFERENCE
@@ -649,6 +649,7 @@ gcd : function
 gcdWithCoeffs : function
 hasInt128 : function
 isBase64 : function
+isTriangulation : function
 lcm : function
 makeAngleEquations : function
 makeEmbeddedConstraints : function
@@ -679,6 +680,7 @@ stringToToken : function
 stripWhitespace : function
 subscript : function
 superscript : function
+supportedDim : function
 swap : function
 testEngine : function
 tightDecoding : function

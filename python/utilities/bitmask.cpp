@@ -32,7 +32,6 @@
 #include <pybind11/operators.h>
 #include "utilities/bitmask.h"
 #include "utilities/exception.h"
-#include "utilities/intutils.h"
 #include "../helpers.h"
 #include "../docstrings/utilities/bitmask.h"
 
@@ -40,7 +39,7 @@ using regina::Bitmask;
 using regina::Bitmask1;
 using regina::Bitmask2;
 
-template <class B>
+template <typename B>
 void addBitmaskOpt(pybind11::module_& m, const char* name) {
     // B could be an instance of either Bitmask1 or Bitmask2, but since the
     // Python docs are essentially the same we will just use Bitmask1 here.
@@ -145,9 +144,8 @@ void addBitmask(pybind11::module_& m) {
     addBitmaskOpt<Bitmask1<uint32_t>>(m, "Bitmask32");
     addBitmaskOpt<Bitmask1<uint64_t>>(m, "Bitmask64");
     #ifdef INT128_AVAILABLE
-    addBitmaskOpt<Bitmask1<regina::IntOfSize<16>::utype>>(m, "Bitmask128");
-    addBitmaskOpt<Bitmask2<regina::IntOfSize<16>::utype,
-        regina::IntOfSize<16>::utype>>(m, "Bitmask256");
+    addBitmaskOpt<Bitmask1<regina::UInt128>>(m, "Bitmask128");
+    addBitmaskOpt<Bitmask2<regina::UInt128, regina::UInt128>>(m, "Bitmask256");
     #else
     addBitmaskOpt<Bitmask2<uint64_t, uint64_t>>(m, "Bitmask128");
     #endif

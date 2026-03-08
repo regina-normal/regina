@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include "enumerate/treetraversal.h"
+#include "manifold/snappeacensusmfd.h"
 #include "split/signature.h"
 #include "surface/normalsurfaces.h"
 #include "triangulation/example3.h"
@@ -88,7 +89,7 @@ TEST(NormalSurfacesTest, defaultArgs) {
 
 // Use std::tuple for the free comparison operators.
 using CompactProfile = std::tuple<
-    long    /* euler char */,
+    regina::Integer /* euler char */,
     bool    /* orientable? */,
     bool    /* two-sided? */,
     bool    /* has real boundary? */,
@@ -105,7 +106,7 @@ static std::vector<CompactProfile> sortedCompactProfiles(
         EXPECT_TRUE(s.isCompact());
         EXPECT_TRUE(s.isConnected());
         auto edgeLinks = s.isThinEdgeLink();
-        found.push_back({ s.eulerChar().longValue(),
+        found.push_back({ s.eulerChar(),
             s.isOrientable(), s.isTwoSided(), s.hasRealBoundary(),
             s.isVertexLinking(), (edgeLinks.first == nullptr ? 0 :
                 edgeLinks.second == nullptr ? 1 : 2),
@@ -369,7 +370,7 @@ TEST(NormalSurfacesTest, norSFS) {
 
 // Use std::tuple for the free comparison operators.
 using NonCompactProfile = std::tuple<
-    long    /* euler char, or always 0 for non-compact surfaces */,
+    regina::Integer /* euler char, or always 0 for non-compact surfaces */,
     bool    /* orientable?, or always false for non-compact surfaces */,
     bool    /* two-sided?, or always false for non-compact surfaces */,
     bool    /* compact? */,
@@ -387,7 +388,7 @@ static std::vector<NonCompactProfile> sortedNonCompactProfiles(
         auto edgeLinks = s.isThinEdgeLink();
         if (s.isCompact()) {
             EXPECT_TRUE(s.isConnected());
-            found.push_back({ s.eulerChar().longValue(),
+            found.push_back({ s.eulerChar(),
                 s.isOrientable(), s.isTwoSided(),
                 true, s.hasRealBoundary(),
                 s.isVertexLinking(), (edgeLinks.first == nullptr ? 0 :
@@ -705,48 +706,48 @@ TEST(NormalSurfacesTest, treeVsDD) {
 }
 
 template <NormalCoords coords>
-static void verifyFundPrimalVsDual(const Triangulation<3>& tri,
-        const char* name) {
+static void verifyFundAlgorithms(const Triangulation<3>& tri,
+        const char* name, NormalAlg alg1, NormalAlg alg2) {
     SCOPED_TRACE_CSTRING(name);
 
-    std::unique_ptr<NormalSurfaces> primal;
-    std::unique_ptr<NormalSurfaces> dual;
+    std::unique_ptr<NormalSurfaces> surfaces1;
+    std::unique_ptr<NormalSurfaces> surfaces2;
 
     try {
-        primal = std::make_unique<NormalSurfaces>(tri, coords,
-            NormalList::Fundamental, NormalAlg::HilbertPrimal);
+        surfaces1 = std::make_unique<NormalSurfaces>(tri, coords,
+            NormalList::Fundamental, alg1);
     } catch (const regina::InvalidArgument&) {
     } catch (const regina::UnsolvedCase&) {
     }
     try {
-        dual = std::make_unique<NormalSurfaces>(tri, coords,
-            NormalList::Fundamental, NormalAlg::HilbertDual);
+        surfaces2 = std::make_unique<NormalSurfaces>(tri, coords,
+            NormalList::Fundamental, alg2);
     } catch (const regina::InvalidArgument&) {
     } catch (const regina::UnsolvedCase&) {
     }
 
-    EXPECT_EQ(bool(primal), bool(dual));
+    EXPECT_EQ(bool(surfaces1), bool(surfaces2));
 
-    if (! primal) {
+    if (! surfaces1) {
         // Enumeration failed.
-        EXPECT_FALSE(dual);
+        EXPECT_FALSE(surfaces2);
         if constexpr (coords != NormalCoords::QuadClosed &&
                 coords != NormalCoords::QuadOctClosed)
             ADD_FAILURE() << "Enumeration should not fail in this "
                 "coordinate system";
     } else {
         // Enumeration should have succeeded.
-        ASSERT_TRUE(dual);
+        ASSERT_TRUE(surfaces2);
 
         if (! tri.isEmpty()) {
-            EXPECT_TRUE(primal->algorithm().has(NormalAlg::HilbertPrimal));
-            EXPECT_FALSE(primal->algorithm().has(NormalAlg::HilbertDual));
+            EXPECT_TRUE(surfaces1->algorithm().has(alg1));
+            EXPECT_FALSE(surfaces1->algorithm().has(alg2));
 
-            EXPECT_FALSE(dual->algorithm().has(NormalAlg::HilbertPrimal));
-            EXPECT_TRUE(dual->algorithm().has(NormalAlg::HilbertDual));
+            EXPECT_FALSE(surfaces2->algorithm().has(alg1));
+            EXPECT_TRUE(surfaces2->algorithm().has(alg2));
         }
 
-        EXPECT_EQ(*primal, *dual);
+        EXPECT_EQ(*surfaces1, *surfaces2);
     }
 }
 
@@ -754,10 +755,14 @@ template <NormalCoords coords>
 static void fundPrimalVsDualDetail() {
     SCOPED_TRACE_NUMERIC(static_cast<int>(coords));
 
-    runCensusMinClosed(verifyFundPrimalVsDual<coords>, true);
-    runCensusAllClosed(verifyFundPrimalVsDual<coords>, true);
-    runCensusAllBounded(verifyFundPrimalVsDual<coords>, true);
-    runCensusAllIdeal(verifyFundPrimalVsDual<coords>, true);
+    auto cmp = [](const Triangulation<3>& tri, const char* name) {
+        verifyFundAlgorithms<coords>(tri, name,
+            NormalAlg::HilbertPrimal, NormalAlg::HilbertDual);
+    };
+    runCensusMinClosed(cmp, true);
+    runCensusAllClosed(cmp, true);
+    runCensusAllBounded(cmp, true);
+    runCensusAllIdeal(cmp, true);
 }
 
 TEST(NormalSurfacesTest, fundPrimalVsDual) {
@@ -767,6 +772,20 @@ TEST(NormalSurfacesTest, fundPrimalVsDual) {
     fundPrimalVsDualDetail<NormalCoords::AlmostNormal>();
     fundPrimalVsDualDetail<NormalCoords::QuadClosed>();
     fundPrimalVsDualDetail<NormalCoords::QuadOctClosed>();
+}
+
+TEST(NormalSurfacesTest, fundDualVsCD) {
+    // The Contejean-Devie algorithm is very slow, and people should not be
+    // using it.  Here we are just giving a proof-of-life that it still works,
+    // but on very small triangulations.
+    // In all of the following examples, there are more fundamental surfaces
+    // than vertex surfaces.
+    verifyFundAlgorithms<NormalCoords::Standard>(
+        Example<3>::lst(1, 4), "LST(1,4,5)",
+        NormalAlg::HilbertDual, NormalAlg::HilbertCD);
+    verifyFundAlgorithms<NormalCoords::Quad>(
+        Triangulation<3>::fromIsoSig("dLQbccchhfo"), "m009",
+        NormalAlg::HilbertDual, NormalAlg::HilbertCD);
 }
 
 static void verifyEulerConstraints(const Triangulation<3>& tri,
@@ -859,14 +878,16 @@ TEST(NormalSurfacesTest, disjoint) {
         auto s2 = t.edge(0)->linkingSurface().first;
         auto s = s1 + s2;
 
-        auto c = s.components();
+        std::vector<NormalSurface> c;
+
+        EXPECT_NO_THROW({ c = s.components(); });
         ASSERT_EQ(c.size(), 2);
         EXPECT_EQ(c[0], s1);
         EXPECT_EQ(c[1], s2);
 
         // Here's where it used to break - when components() was called for
         // the second time.
-        c = s.components();
+        EXPECT_NO_THROW({ c = s.components(); });
         ASSERT_EQ(c.size(), 2);
         EXPECT_EQ(c[0], s1);
         EXPECT_EQ(c[1], s2);

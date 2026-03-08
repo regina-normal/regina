@@ -29,7 +29,6 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "regina-config.h"
 #include "packet/packet.h"
 
 // UI includes:

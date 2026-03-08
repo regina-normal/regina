@@ -37,7 +37,7 @@
 
 using regina::Component;
 
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 void addComponent(pybind11::module_& m, pybind11::module_& internal,
         const char* name) {
     // We use the global scope here because all of Component's members are

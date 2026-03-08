@@ -51,9 +51,9 @@
 namespace regina {
 
 class Link;
-template <int dim> class Triangulation;
+template <int dim> requires (supportedDim(dim)) class Triangulation;
 
-template <class ObjectType>
+template <typename ObjectType>
 std::shared_ptr<Container> readSigList(const char *filename, unsigned colSigs,
         int colLabels, unsigned long ignoreLines) {
     // Open the file.

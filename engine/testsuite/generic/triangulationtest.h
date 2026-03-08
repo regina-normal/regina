@@ -55,7 +55,7 @@ static constexpr size_t HOMOLOGY_THRESHOLD = 40;
  * is to not change the triangulation, but just to force it to forget its
  * cached properties.
  */
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 static void clearProperties(const Triangulation<dim>& tri) {
     // Make and undo a trivial modification that will cause all
     // computed properties to be flushed.
@@ -70,7 +70,7 @@ static void clearProperties(const Triangulation<dim>& tri) {
  * as a base class, since this base class provides example triangulations
  * that can be shared between tests.
  */
-template <int dim>
+template <int dim> requires (regina::supportedDim(dim))
 class TriangulationTest : public testing::Test {
     public:
         struct TestCase {
@@ -851,9 +851,9 @@ class TriangulationTest : public testing::Test {
 
         static void verifyBoundaryLabellingDetail(
                 const regina::BoundaryComponent<dim>* bc,
-                const regina::Triangulation<dim - 1>& built,
-                const char* context) {
-            static_assert(dim > 2);
+                const regina::TriangulationTraits<dim>::Lower& built,
+                const char* context)
+                requires (dim > 2) {
             static_assert(regina::BoundaryComponent<dim>::allFaces);
 
             SCOPED_TRACE_CSTRING(context);

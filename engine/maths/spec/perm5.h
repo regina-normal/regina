@@ -557,7 +557,7 @@ class Perm<5> {
          * \param code the first-generation code that will determine the
          * new value of this permutation.
          */
-        void setPermCode1(Code1 code);
+        constexpr void setPermCode1(Code1 code);
 
         /**
          * Sets this permutation to that represented by the given
@@ -572,7 +572,7 @@ class Perm<5> {
          * \param code the second-generation code that will determine the
          * new value of this permutation.
          */
-        void setPermCode2(Code2 code);
+        constexpr void setPermCode2(Code2 code);
 
         /**
          * Creates a permutation from the given first-generation
@@ -683,7 +683,7 @@ class Perm<5> {
          * to this permutation.
          * \return a reference to this permutation.
          */
-        Perm<5>& operator = (const Perm<5>& cloneMe) = default;
+        constexpr Perm<5>& operator = (const Perm<5>& cloneMe) = default;
 
         /**
          * Returns the composition of this permutation with the given
@@ -982,7 +982,7 @@ class Perm<5> {
          *
          * \return a reference to this permutation after the increment.
          */
-        Perm<5>& operator ++();
+        constexpr Perm<5>& operator ++();
 
         /**
          * A postincrement operator that changes this to be the next permutation
@@ -1068,7 +1068,7 @@ class Perm<5> {
          * returned with equal probability).
          * \return a random permutation.
          */
-        template <class URBG>
+        template <typename URBG>
         static Perm rand(URBG&& gen, bool even = false);
 
         /**
@@ -1232,7 +1232,7 @@ class Perm<5> {
          * \param from the first integer whose image should be reset.
          * This must be between 0 and 5 inclusive.
          */
-        void clear(unsigned from);
+        constexpr void clear(unsigned from);
 
         /**
          * Returns the index of this permutation in the Perm<5>::Sn array.
@@ -1621,8 +1621,6 @@ class Perm<5> {
          * \exception InvalidInput The given iterator does not point to
          * a tight encoding of a 5-element permutation.
          *
-         * \tparam iterator an input iterator type.
-         *
          * \param start an iterator that points to the beginning of a
          * tight encoding.
          * \param limit an iterator that, if reached, indicates that no more
@@ -1632,7 +1630,7 @@ class Perm<5> {
          * allowed to be additional unread data.
          * \return the permutation represented by the given tight encoding.
          */
-        template <typename iterator>
+        template <CharIterator iterator>
         static Perm tightDecode(iterator start, iterator limit,
             bool noTrailingData);
 
@@ -1701,7 +1699,7 @@ inline constexpr Perm<5>::Code2 Perm<5>::permCode2() const {
     return code2_;
 }
 
-inline void Perm<5>::setPermCode1(Code1 code) {
+inline constexpr void Perm<5>::setPermCode1(Code1 code) {
     code2_ = static_cast<Code2>(S5Index(
         code & 0x07,
         (code >> 3) & 0x07,
@@ -1710,7 +1708,7 @@ inline void Perm<5>::setPermCode1(Code1 code) {
         (code >> 12) & 0x07));
 }
 
-inline void Perm<5>::setPermCode2(Code2 code) {
+inline constexpr void Perm<5>::setPermCode2(Code2 code) {
     code2_ = code;
 }
 
@@ -1848,7 +1846,7 @@ inline constexpr bool Perm<5>::isIdentity() const {
     return (code2_ == 0);
 }
 
-inline Perm<5>& Perm<5>::operator ++() {
+inline constexpr Perm<5>& Perm<5>::operator ++() {
     if (++code2_ == 120)
         code2_ = 0;
     return *this;
@@ -1879,7 +1877,7 @@ inline Perm<5> Perm<5>::rand(bool even) {
 #ifndef __DOXYGEN
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
-template <class URBG>
+template <typename URBG>
 inline Perm<5> Perm<5>::rand(URBG&& gen, bool even) {
     if (even) {
         std::uniform_int_distribution<short> d(0, 59);
@@ -1933,7 +1931,7 @@ inline Perm<5> Perm<5>::tightDecode(std::istream& input) {
 #ifndef __DOXYGEN
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
-template <typename iterator>
+template <CharIterator iterator>
 Perm<5> Perm<5>::tightDecode(iterator start, iterator limit,
         bool noTrailingData) {
     if (start == limit)

@@ -35,7 +35,7 @@
 
 namespace regina {
 
-void NormalSurface::calculateBoundaries() const {
+void NormalSurface::calculateBoundaries() const try {
     /*
     Counts the number of boundary curves by transforming the boundary curves
     into a collection of "interval isometries", and counting the number of
@@ -46,17 +46,21 @@ void NormalSurface::calculateBoundaries() const {
     since this routine works only with boundary curves, which are necessarily
     closed, this implementation is dramatically simpler than the much more
     general algorithm originally given by Agol, Hass and Thurston.
+
+    Be aware that the Integer-to-size_t conversions in this routine could throw
+    an IntegerOverflow exception, which is caught at the end of this
+    function try block.
     */
 
     const Triangulation<3>& tri = triangulation();
 
     // Assign intervals to each boundary edge of tri, where the length of the
     // assigned interval corresponds to the weight of the given surf at edge i.
-    std::map<long, std::pair<long, long>> intervals;
-    long weight, totalWeight = 0;
-    for (const Edge<3>* e : tri.edges())
+    std::map<size_t, std::pair<size_t, size_t>> intervals;
+    size_t totalWeight = 0;
+    for (auto e : tri.edges())
         if (e->isBoundary()) {
-            weight = edgeWeight(e->index()).longValue();
+            size_t weight = edgeWeight(e->index()).safeValue<size_t>();
             intervals[e->index()] =
                 std::make_pair(totalWeight, totalWeight + weight);
             totalWeight += weight;
@@ -64,8 +68,8 @@ void NormalSurface::calculateBoundaries() const {
 
     // Encode interval isometries as a vector mapping each number k to the
     // set of all images of k under the isometries.
-    std::vector<std::vector<long>> mappings(totalWeight);
-    for (const Triangle<3>* face : tri.triangles()) {
+    std::vector<std::vector<size_t>> mappings(totalWeight);
+    for (auto face : tri.triangles()) {
         if (! face->isBoundary())
             continue;
 
@@ -87,11 +91,11 @@ void NormalSurface::calculateBoundaries() const {
             auto interval1 = intervals[ face->edge(index1)->index() ];
             bool reverseInterval1 = (edgeMap1[0] != v);
 
-            long nArcs = arcs(face->index(), v).longValue();
-            for (long j = 0; j < nArcs; ++j) {
-                long num0 = (reverseInterval0 ?
+            size_t nArcs = arcs(face->index(), v).safeValue<size_t>();
+            for (size_t j = 0; j < nArcs; ++j) {
+                size_t num0 = (reverseInterval0 ?
                     interval0.second - 1 - j : interval0.first + j);
-                long num1 = (reverseInterval1 ?
+                size_t num1 = (reverseInterval1 ?
                     interval1.second - 1 - j : interval1.first + j);
                 mappings[num0].push_back(num1);
                 mappings[num1].push_back(num0);
@@ -104,18 +108,17 @@ void NormalSurface::calculateBoundaries() const {
     // "marking" points which have already been visited. This is dramatically
     // simpler than the much more general algorithm given by Agol, Hass and
     // Thurston (2006).
-    bool* marked = new bool[totalWeight];
-    std::fill(marked, marked + totalWeight, false);
+    FixedArray<bool> marked(totalWeight, false);
 
-    long orbits = 0;
-    long markNext = 0;
+    size_t orbits = 0;
+    size_t markNext = 0;
     while (true) {
         while (markNext < totalWeight && marked[markNext])
             ++markNext;
         if (markNext == totalWeight)
             break;
 
-        long currentPoint = markNext++;
+        size_t currentPoint = markNext++;
 
         // Traverse the orbit containing currentPoint until all points in the
         // orbit have been "marked".
@@ -134,8 +137,10 @@ void NormalSurface::calculateBoundaries() const {
         ++orbits;
     }
 
-    delete[] marked;
     boundaries_ = orbits;
+} catch (const IntegerOverflow&) {
+    throw UnsolvedCase("This surface has too many boundary arcs "
+        "for this computation to proceed");
 }
 
 } // namespace regina

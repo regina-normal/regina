@@ -40,6 +40,8 @@
 #include <algorithm>
 #include <cstddef>
 #include <vector>
+#include "concepts/core.h"
+#include "concepts/iterator.h"
 #include "core/output.h"
 
 namespace regina {
@@ -197,9 +199,6 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * normal surfaces in standard coordinates, you can pass an
          * iterator range that encodes the three integers 4, 5, 6.
          *
-         * \pre The iterator type \a iterator, when dereferenced, can be
-         * assigned to a native C++ \c int.
-         *
          * \python Instead of the iterators \a begin and \a end,
          * this routine takes a python list of integers.
          *
@@ -209,7 +208,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * \param end a past-the-end iterator indicating the end of the list of
          * coordinates to constraint within each block.
          */
-        template <typename iterator>
+        template <InputIteratorFor<int> iterator>
         void addLocal(iterator begin, iterator end);
         /**
          * Adds a new family of hard-coded local constraints to this set.
@@ -245,9 +244,6 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * in the entire surface by passing an iterator range that
          * encodes the three integers 7, 8, 9.
          *
-         * \pre The iterator type \a iterator, when dereferenced, can be
-         * assigned to a native C++ \c int.
-         *
          * \python Instead of the iterators \a begin and \a end,
          * this routine takes a python list of integers.
          *
@@ -257,7 +253,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * \param end a past-the-end iterator indicating the end of the list of
          * coordinates to constraint within each block.
          */
-        template <typename iterator>
+        template <InputIteratorFor<int> iterator>
         void addGlobal(iterator begin, iterator end);
         /**
          * Adds one new hard-coded global constraint to this set.
@@ -309,16 +305,12 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          *
          * \python This routine uses the bitmask type regina::Bitmask.
          *
-         * \tparam BitmaskType the bitmask type used to encode each constraint;
-         * this must be one of Regina's own bitmask types, such as Bitmask,
-         * Bitmask1 or Bitmask2.
-         *
          * \param len the total number of coordinates in the vectors being
          * constrained.  Each bitmask will be created with this length.
          * \return the list of bitmasks describing the full set of validity
          * constraints.
          */
-        template <typename BitmaskType>
+        template <ReginaBitmask BitmaskType>
         std::vector<BitmaskType> bitmasks(size_t len) const;
 
         /**
@@ -349,14 +341,10 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          *
          * \python This routine uses the bitmask type regina::Bitmask.
          *
-         * \tparam BitmaskType the bitmask type used to encode each constraint;
-         * this must be one of Regina's own bitmask types, such as Bitmask,
-         * Bitmask1 or Bitmask2.
-         *
          * \return the list of bitmasks describing the full set of validity
          * constraints.
          */
-        template <typename BitmaskType>
+        template <ReginaBitmask BitmaskType>
         std::vector<BitmaskType> bitmasks() const;
 
         /**
@@ -436,14 +424,14 @@ inline ValidityConstraints::ValidityConstraints(int blockSize, size_t nBlocks,
     global_.reserve(reserveGlobal);
 }
 
-template <typename iterator>
+template <InputIteratorFor<int> iterator>
 inline void ValidityConstraints::addLocal(iterator begin, iterator end) {
     local_.emplace_back(begin, end);
 }
 inline void ValidityConstraints::addLocal(std::initializer_list<int> pattern) {
     local_.emplace_back(pattern);
 }
-template <typename iterator>
+template <InputIteratorFor<int> iterator>
 inline void ValidityConstraints::addGlobal(iterator begin, iterator end) {
     global_.emplace_back(begin, end);
 }
@@ -458,7 +446,7 @@ inline void ValidityConstraints::swap(ValidityConstraints& other) noexcept {
     global_.swap(other.global_);
 }
 
-template <typename BitmaskType>
+template <ReginaBitmask BitmaskType>
 std::vector<BitmaskType> ValidityConstraints::bitmasks(size_t len) const {
     std::vector<BitmaskType> ans;
     ans.reserve(local_.size() * nBlocks_ + global_.size());
@@ -486,7 +474,7 @@ std::vector<BitmaskType> ValidityConstraints::bitmasks(size_t len) const {
     return ans;
 }
 
-template <typename BitmaskType>
+template <ReginaBitmask BitmaskType>
 inline std::vector<BitmaskType> ValidityConstraints::bitmasks() const {
     return bitmasks<BitmaskType>(blockSize_ * nBlocks_);
 }

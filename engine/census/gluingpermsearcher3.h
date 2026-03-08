@@ -40,6 +40,7 @@
 
 #include <functional>
 #include <memory>
+#include "concepts/core.h"
 #include "core/output.h"
 #include "census/gluingperms.h"
 #include "census/gluingpermsearcher.h"
@@ -274,7 +275,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * given set of automorphisms of the given face pairing.
          *
          * For each permutation set that is generated, this routine will call
-         * \a action (which must be a function or some other callable object).
+         * \a action (which must be a function or some other callable type).
          *
          * - The first argument to \a action must be a const reference to a
          *   GluingPerms<3>.  This will be the permutation set that was found.
@@ -285,7 +286,8 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
          *
-         * - \a action must return \c void.
+         * - The return value of \a action will be ignored; typically it would
+         *   return \c void.
          *
          * It is possible to run only a partial search, branching to a
          * given depth but no further; for this you should use the
@@ -298,12 +300,13 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * additional arguments beyond the initial gluing permutation set
          * (and therefore the additional \a args list is omitted here).
          *
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each permutation set that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial permutation set argument.
          */
         template <typename Action, typename... Args>
+        requires VoidCallback<Action, const GluingPerms<3>&, Args...>
         void runSearch(Action&& action, Args&&... args);
 
         /**
@@ -344,12 +347,13 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          *
          * \param maxDepth the depth of the partial search to run.
          * A negative number indicates that a full search should be run.
-         * \param action a function (or other callable object) to call
+         * \param action a function (or other callable type) to call
          * for each permutation set (partial or complete) that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial permutation set argument.
          */
         template <typename Action, typename... Args>
+        requires VoidCallback<Action, const GluingPerms<3>&, Args...>
         void partialSearch(long maxDepth, Action&& action, Args&&... args);
 
         /**
@@ -514,6 +518,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * (and therefore the additional \a args list is omitted here).
          */
         template <typename Action, typename... Args>
+        requires VoidCallback<Action, const GluingPerms<3>&, Args...>
         static void findAllPerms(FacetPairing<3> pairing,
                 FacetPairing<3>::IsoList autos, bool orientableOnly,
                 bool finiteOnly, Flags<CensusPurge> purge,
@@ -2754,6 +2759,7 @@ class HyperbolicMinSearcher : public EulerSearcher {
 // Inline functions for GluingPermSearcher<3>
 
 template <typename Action, typename... Args>
+requires VoidCallback<Action, const GluingPerms<3>&, Args...>
 inline void GluingPermSearcher<3>::runSearch(Action&& action, Args&&... args) {
     // Delegate to a de-templatised function.
     searchImpl(-1, ActionWrapper([&](const regina::GluingPerms<3>& p) {
@@ -2762,6 +2768,7 @@ inline void GluingPermSearcher<3>::runSearch(Action&& action, Args&&... args) {
 }
 
 template <typename Action, typename... Args>
+requires VoidCallback<Action, const GluingPerms<3>&, Args...>
 inline void GluingPermSearcher<3>::partialSearch(long maxDepth,
         Action&& action, Args&&... args) {
     // Delegate to a de-templatised function.
@@ -2859,6 +2866,7 @@ inline std::unique_ptr<GluingPermSearcher<3>>
 }
 
 template <typename Action, typename... Args>
+requires VoidCallback<Action, const GluingPerms<3>&, Args...>
 inline void GluingPermSearcher<3>::findAllPerms(FacetPairing<3> pairing,
         FacetPairing<3>::IsoList autos, bool orientableOnly, bool finiteOnly,
         Flags<CensusPurge> purge, Action&& action, Args&&... args) {

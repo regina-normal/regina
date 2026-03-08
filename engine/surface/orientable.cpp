@@ -51,7 +51,7 @@ namespace {
     };
 }
 
-void NormalSurface::calculateOrientable() const {
+void NormalSurface::calculateOrientable() const try {
     // This is going to be ghastly.
     // We will create an orientation and side selection for every disc.
 
@@ -67,6 +67,7 @@ void NormalSurface::calculateOrientable() const {
     // All right.  Off we go.
     DiscSetSurfaceData<OrientData> orients(*this);
         // Stores the orientation of each disc.
+        // Could throw an IntegerOverflow.
     std::queue<DiscSpec> discQueue;
         // A queue of discs whose orientations must be propagated.
     DiscSpecIterator it(orients);
@@ -204,6 +205,9 @@ void NormalSurface::calculateOrientable() const {
         twoSided_ = true;
     if (! connected_.has_value())
         connected_ = true;
+} catch (const IntegerOverflow&) {
+    throw UnsolvedCase("This surface has too many normal discs "
+        "for this computation to proceed");
 }
 
 } // namespace regina

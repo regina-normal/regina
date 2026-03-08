@@ -43,8 +43,8 @@
 namespace regina {
 
 /**
- * Identifies a single normal or almost normal disc type within a
- * triangulation.
+ * Identifies a single normal or almost normal disc type within a triangulation,
+ * where the numbering scheme for disc types is left up to the user.
  *
  * A disc type is identified by a tetrahedron index (the data member
  * \a tetIndex), and a disc type within that tetrahedron (the data
@@ -114,7 +114,7 @@ struct DiscType {
      *
      * \return a reference to this disc type.
      */
-    DiscType& operator = (const DiscType&) = default;
+    constexpr DiscType& operator = (const DiscType&) = default;
     /**
      * Determines if this and the given disc type are identical.
      *

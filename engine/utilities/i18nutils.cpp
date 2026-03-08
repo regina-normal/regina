@@ -32,7 +32,6 @@
 #include <cstddef>
 #include <cstring>
 #include <clocale>
-#include "regina-config.h"
 #include "utilities/i18nutils.h"
 
 #ifdef LANGINFO_FOUND

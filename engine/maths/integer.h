@@ -40,34 +40,23 @@
 #include <climits>
 #include <cstdint> // MPIR (and thus SAGE) needs this *before* gmp.h.
 #include <cstddef> // OSX needs this before gmp.h to avoid a ::ptrdiff_t error.
+#include <limits>
 #include <tuple>
 #include <gmp.h>
 #include "regina-core.h"
+#include "concepts/core.h"
 #include "maths/ring.h"
 #include "utilities/exception.h"
+#include "utilities/stringutils.h"
 #include "utilities/tightencoding.h"
 
-/**
- * \hideinitializer
- *
- * An internal copy of the GMP signed comparison optimisations.
- * This macro should not be used outside this class.
- *
- * By making our own copy of such optimisation macros we can use
- * C++-style casts instead of C-style casts and avoid noisy compiler
- * warnings.  I'd love a better way of doing this.
- *
- * \ingroup maths
- */
-#ifdef __GNUC__
-    #define mpz_cmp_si_cpp(z, si) \
-        (__builtin_constant_p(si) && (si) == 0 ? mpz_sgn(z) : \
-        __builtin_constant_p(si) && (si) > 0 ? _mpz_cmp_ui(z, \
-            static_cast<unsigned long>(si)) : \
-        _mpz_cmp_si(z, si))
-#else
-    #define mpz_cmp_si_cpp(z, si) _mpz_cmp_si(z, si)
-#endif
+// Regina assumes in many places that a byte contains exactly 8 bits.
+// I believe this mandated for POSIX systems.  I'm not sure if anyone has ever
+// tried to build regina on a platform where this assumption fails, but the
+// C++ standard allows other byte sizes and so we should enforce it somewhere.
+static_assert(CHAR_BIT == 8, "Regina works under the assumption that a byte "
+    "is precisely 8 bits, which is not true on your platform.  Please contact "
+    "the Regina developers.");
 
 namespace regina {
 
@@ -78,13 +67,15 @@ class NativeInteger;
 class python_int; // Represents a Python arbitrary-precision integer.
 #endif
 
+namespace detail {
+
 /**
  * Internal base classes for use with IntegerBase, templated on whether we
  * should support infinity as an allowed value.
  *
  * See the IntegerBase class notes for details.
  *
- * \ingroup maths
+ * \ingroup detail
  */
 template <bool withInfinity>
 struct InfinityBase;
@@ -96,7 +87,7 @@ struct InfinityBase;
  *
  * End users should not use this class directly.
  *
- * \ingroup maths
+ * \ingroup detail
  */
 template <>
 struct InfinityBase<true> {
@@ -108,34 +99,14 @@ struct InfinityBase<true> {
  * An empty internal base class inherited by Integer, which does not
  * support infinity as an allowed value.
  *
- * \ingroup maths
+ * \ingroup detail
  */
 template <>
 struct InfinityBase<false> {
 };
 #endif // __DOXYGEN
 
-namespace detail {
-    /**
-     * Returns a raw GMP integer holding the given value.
-     *
-     * \nopython
-     *
-     * \param value the value to assign to the new GMP integer.
-     * \return a corresponding newly created and initialised GMP integer.
-     */
-    mpz_ptr mpz_from_ll(long long value);
-
-    /**
-     * Returns a raw GMP integer holding the given value.
-     *
-     * \nopython
-     *
-     * \param value the value to assign to the new GMP integer.
-     * \return a corresponding newly created and initialised GMP integer.
-     */
-    mpz_ptr mpz_from_ull(unsigned long long value);
-}
+} // namespace detail
 
 /**
  * Represents an arbitrary precision integer.
@@ -181,7 +152,7 @@ namespace detail {
  * \ingroup maths
  */
 template <bool withInfinity = false>
-class IntegerBase : private InfinityBase<withInfinity> {
+class IntegerBase : private detail::InfinityBase<withInfinity> {
     public:
         /**
          * A compile-time constant indicating whether this integer type
@@ -219,59 +190,14 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         IntegerBase();
         /**
-         * Initialises this integer to the given value.
+         * Initialises this integer to the given native C++ value.
          *
-         * \nopython In Python, the only native-integer constructor
-         * is IntegerBase(long).
-         *
-         * \param value the new value of this integer.
-         */
-        IntegerBase(int value);
-        /**
-         * Initialises this integer to the given value.
-         *
-         * \nopython In Python, the only native-integer constructor
-         * is IntegerBase(long).
+         * \python It is assumed that the type \a IntType is \c long.
          *
          * \param value the new value of this integer.
          */
-        IntegerBase(unsigned value);
-        /**
-         * Initialises this integer to the given value.
-         *
-         * \python In Python, this is the only native-integer
-         * constructor available.
-         *
-         * \param value the new value of this integer.
-         */
-        IntegerBase(long value);
-        /**
-         * Initialises this integer to the given value.
-         *
-         * \nopython In Python, the only native-integer constructor
-         * is IntegerBase(long).
-         *
-         * \param value the new value of this integer.
-         */
-        IntegerBase(unsigned long value);
-        /**
-         * Initialises this integer to the given value.
-         *
-         * \nopython In Python, the only native-integer constructor
-         * is IntegerBase(long).
-         *
-         * \param value the new value of this integer.
-         */
-        IntegerBase(long long value);
-        /**
-         * Initialises this integer to the given value.
-         *
-         * \nopython In Python, the only native-integer constructor
-         * is IntegerBase(long).
-         *
-         * \param value the new value of this integer.
-         */
-        IntegerBase(unsigned long long value);
+        template <CppInteger IntType>
+        IntegerBase(IntType value);
         /**
          * Initialises this integer to the given value.
          *
@@ -308,13 +234,6 @@ class IntegerBase : private InfinityBase<withInfinity> {
         IntegerBase(IntegerBase<! withInfinity>&& src) noexcept;
         /**
          * Initialises this integer to the given value.
-         *
-         * \pre If \a bytes is larger than sizeof(long), then
-         * \a bytes is a strict _multiple_ of sizeof(long).  For
-         * instance, if longs are 8 bytes then you can use \a bytes=16
-         * but not \a bytes=12.  This restriction is enforced through a
-         * compile-time assertion, but may be lifted in future versions
-         * of Regina.
          *
          * \nopython This is because the NativeInteger classes are not
          * available to Python users.
@@ -455,74 +374,121 @@ class IntegerBase : private InfinityBase<withInfinity> {
          *
          * \return \c true if and only if this integer is infinity.
          */
-        bool isInfinite() const;
+        constexpr bool isInfinite() const {
+            if constexpr (withInfinity)
+                return detail::InfinityBase<withInfinity>::infinite_;
+            else
+                return false;
+        }
 
         /**
          * Sets this integer to be infinity.
-         *
-         * If the template parameter \a withInfinity is \c false,
-         * this routine safely does nothing.
          */
-        inline void makeInfinite();
+        inline void makeInfinite() requires (withInfinity) {
+            detail::InfinityBase<withInfinity>::infinite_ = true;
+            if (large_)
+                clearLarge();
+        }
 
         /**
-         * Returns the value of this integer as a long.
-         *
-         * It is the programmer's reponsibility to ensure that this integer
-         * is within the required range.  If this integer is too large or
-         * small to fit into a long, then the result will be undefined.
-         *
-         * Note that, assuming the value is within the required range,
-         * this routine will give correct results regardless of whether the
-         * underlying representation is a native or large integer.
-         *
-         * \pre This integer is not infinity.
-         *
-         * \return the value of this integer.
-         */
-        long longValue() const;
-        /**
-         * Returns the value of this integer as a long, or throws an
-         * exception if this is not possible.
+         * Returns the value of this integer as a native C++ integer of the
+         * given type, or throws an exception if this is not possible.
          *
          * If this integer is within the required range, regardless of
          * whether the underlying representation is a native or large integer,
          * this routine will return the correct result.
          *
-         * \exception NoSolution This integer is too large or small to fit
-         * into a long.
+         * Note that both signed and unsigned native integer types are
+         * supported here.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \exception IntegerOverflow This integer does not fit into the range
+         * of the given native C++ integer type.
          *
          * \return the value of this integer.
          */
-        long safeLongValue() const;
+        template <CppInteger IntType>
+        IntType safeValue() const;
         /**
-         * Returns the value of this integer as a native integer of some
-         * fixed byte length.
+         * Returns the value of this integer as a native C++ integer of the
+         * given type, leaving the programmer responsible for range checking.
          *
-         * It is the programmer's reponsibility to ensure that this integer
-         * is within the required range.  If this integer is too large or
-         * small to fit into the return type, then the result will be undefined.
+         * Note that both signed and unsigned native integer types are
+         * supported here.
          *
-         * Note that, assuming the value is within the required range,
-         * this routine will give correct results regardless of whether the
-         * underlying representation is a native or large integer.
+         * \pre This integer is within the required range for the type
+         * \a IntType.  It does not matter whether the underlying
+         * representation for this integer is a native or large integer.
          *
-         * \pre If \a bytes is larger than sizeof(long), then
-         * \a bytes is a strict _multiple_ of sizeof(long).  For
-         * instance, if longs are 8 bytes then you can use this routine
-         * with \a bytes=4 or \a bytes=16 but not \a bytes=12.
-         * This restriction is enforced through a compile-time assertion,
-         * but may be lifted in future versions of Regina.
+         * \warning You should _only_ use this routine if you know in advance
+         * that this integer is within the required range.  Otherwise you
+         * should call safeValue() instead, which performs range checking and
+         * throws an exception if this fails.
          *
-         * \pre This integer is not infinity.
+         * \python It is assumed that the type \a IntType is \c long.
          *
-         * \nopython Python users can use the non-templated longValue()
-         * function instead.
+         * \return the value of this integer.
+         */
+        template <CppInteger IntType>
+        IntType unsafeValue() const;
+        /**
+         * Deprecated routine that returns the value of this integer as a
+         * native C++ \c long, or throws an exception if this is not possible.
+         *
+         * If this integer is within the required range, regardless of
+         * whether the underlying representation is a native or large integer,
+         * this routine will return the correct result.
+         *
+         * \deprecated C++ users should now call `safeValue<long>()` (with a
+         * different template parameter if you wish to work with a different
+         * native C++ integer type instead of \c long).  Python users should
+         * just call `safeValue()`.
+         *
+         * \exception IntegerOverflow This integer is too large or small to fit
+         * into a \c long.
+         *
+         * \return the value of this integer.
+         */
+        [[deprecated]] long safeLongValue() const;
+        /**
+         * Deprecated routine that returns the value of this integer as a
+         * native C++ \c long, with no range checking.
+         *
+         * \deprecated C++ users should now call `unsafeValue<long>()` (with a
+         * different template parameter if you wish to work with a different
+         * native C++ integer type instead of \c long).  Python users should
+         * just call `unsafeValue()`.
+         *
+         * \pre This integer is within the required range for a native C++
+         * \c long.  It does not matter whether the underlying representation
+         * for this integer is a native or large integer.
+         *
+         * \return the value of this integer.
+         */
+        [[deprecated]] long longValue() const;
+        /**
+         * Deprecated function that returns the value of this integer as a
+         * native integer of some fixed byte length, with no range checking.
+         *
+         * \deprecated If you want range checking, use safeValue().  If you
+         * know the integer will be within range then you can use unsafeValue()
+         * (which makes your responsibilities more obvious to a casual reader).
+         * Note that both safeValue() and unsafeValue() take a C++ integer type
+         * as their template parameter, not the number of bytes.
+         *
+         * \pre This integer is within the required range for the type
+         * \a IntType.  It does not matter whether the underlying
+         * representation for this integer is a native or large integer.
+         *
+         * \nopython Python does not have the diversity of integer types that
+         * C++ does, and so this function is not so important.  Python users
+         * can simply call safeValue(), unsafeValue(), or pythonValue() instead.
          *
          * \return the value of this integer.
          */
         template <int bytes>
-        typename IntOfSize<bytes>::type nativeValue() const;
+        [[deprecated]] typename IntOfSize<bytes>::type nativeValue() const;
         /**
          * Returns the value of this integer as a string in the given
          * base.  If not specified, the base defaults to 10.
@@ -603,47 +569,21 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         IntegerBase& operator = (IntegerBase<! withInfinity>&& src) noexcept;
         /**
-         * Sets this integer to the given value.
+         * Sets this integer to the given native C++ value.
          *
          * \param value the new value of this integer.
          * \return a reference to this integer with its new value.
          */
-        IntegerBase& operator =(int value);
+        template <CppInteger IntType>
+        IntegerBase& operator =(IntType value);
         /**
          * Sets this integer to the given value.
          *
          * \param value the new value of this integer.
          * \return a reference to this integer with its new value.
          */
-        IntegerBase& operator =(unsigned value);
-        /**
-         * Sets this integer to the given value.
-         *
-         * \param value the new value of this integer.
-         * \return a reference to this integer with its new value.
-         */
-        IntegerBase& operator =(long value);
-        /**
-         * Sets this integer to the given value.
-         *
-         * \param value the new value of this integer.
-         * \return a reference to this integer with its new value.
-         */
-        IntegerBase& operator =(unsigned long value);
-        /**
-         * Sets this integer to the given value.
-         *
-         * \param value the new value of this integer.
-         * \return a reference to this integer with its new value.
-         */
-        IntegerBase& operator =(long long value);
-        /**
-         * Sets this integer to the given value.
-         *
-         * \param value the new value of this integer.
-         * \return a reference to this integer with its new value.
-         */
-        IntegerBase& operator =(unsigned long long value);
+        template <int bytes>
+        IntegerBase& operator =(const NativeInteger<bytes>& value);
         /**
          * Sets this integer to the given value which is
          * represented as a string of digits in base 10.
@@ -702,28 +642,37 @@ class IntegerBase : private InfinityBase<withInfinity> {
          * \return \c true if and only if this and the given integer are
          * equal.
          */
-        bool operator ==(const IntegerBase& rhs) const;
+        template <bool rhsWithInfinity>
+        bool operator ==(const IntegerBase<rhsWithInfinity>& rhs) const;
         /**
-         * Determines if this is equal to the given integer.
+         * Determines if this is equal to the given native C++ integer.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
          *
          * \param rhs the integer with which this will be compared.
          * \return \c true if and only if this and the given integer are
          * equal.
          */
-        bool operator ==(const IntegerBase<! withInfinity>& rhs) const;
+        template <CppInteger IntType>
+        bool operator ==(IntType rhs) const;
         /**
          * Determines if this is equal to the given integer.
+         *
+         * \nopython This is because the NativeInteger classes are not
+         * available to Python users.
          *
          * \param rhs the integer with which this will be compared.
          * \return \c true if and only if this and the given integer are
          * equal.
          */
-        bool operator ==(long rhs) const;
+        template <int bytes>
+        bool operator ==(const NativeInteger<bytes>& rhs) const;
         /**
          * Compares this to the given integer.
          *
          * This is a numerical comparison; that is, it uses the usual ordering
-         * of the integers. Infinity is considered greater than any integer.
+         * of the integers. Infinity is considered greater than any finite
+         * integer.
          *
          * This generates all of the usual comparison operators, including
          * `<`, `<=`, `>`, and `>=`.
@@ -735,9 +684,11 @@ class IntegerBase : private InfinityBase<withInfinity> {
          * \return The result of the numerical comparison between this and
          * the given integer.
          */
-        std::strong_ordering operator <=> (const IntegerBase& rhs) const;
+        template <bool rhsWithInfinity>
+        std::strong_ordering operator <=> (
+            const IntegerBase<rhsWithInfinity>& rhs) const;
         /**
-         * Compares this to the given integer.
+         * Compares this to the given native C++ integer.
          *
          * This is a numerical comparison; that is, it uses the usual ordering
          * of the integers. Infinity is considered greater than any integer.
@@ -747,12 +698,33 @@ class IntegerBase : private InfinityBase<withInfinity> {
          *
          * \python This spaceship operator `x <=> y` is not available, but the
          * other comparison operators that it generates _are_ available.
+         * It is assumed that the type \a IntType is \c long.
          *
          * \param rhs the integer with which this will be compared.
          * \return The result of the numerical comparison between this and
          * the given integer.
          */
-        std::strong_ordering operator <=> (long rhs) const;
+        template <CppInteger IntType>
+        std::strong_ordering operator <=> (IntType rhs) const;
+        /**
+         * Compares this to the given integer.
+         *
+         * This is a numerical comparison; that is, it uses the usual ordering
+         * of the integers. Infinity is considered greater than any integer.
+         *
+         * This generates all of the usual comparison operators, including
+         * `<`, `<=`, `>`, and `>=`.
+         *
+         * \nopython This is because the NativeInteger classes are not
+         * available to Python users.
+         *
+         * \param rhs the integer with which this will be compared.
+         * \return The result of the numerical comparison between this and
+         * the given integer.
+         */
+        template <int bytes>
+        std::strong_ordering operator <=> (const NativeInteger<bytes>& rhs)
+            const;
 
         /**
          * The preincrement operator.
@@ -814,16 +786,19 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         IntegerBase operator +(const IntegerBase& other) const;
         /**
-         * Adds this to the given integer and returns the result.
+         * Adds this to the given native C++ integer and returns the result.
          * This integer is not changed.
          *
          * If either term of the sum is infinite, the result will be
          * infinity.
          *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
          * \param other the integer to add to this integer.
          * \return the sum \a this plus \a other.
          */
-        IntegerBase operator +(long other) const;
+        template <CppInteger IntType>
+        IntegerBase operator +(IntType other) const;
         /**
          * Subtracts the given integer from this and returns the result.
          * This integer is not changed.
@@ -836,16 +811,20 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         IntegerBase operator -(const IntegerBase& other) const;
         /**
-         * Subtracts the given integer from this and returns the result.
+         * Subtracts the given native C++ integer from this and returns
+         * the result.
          * This integer is not changed.
          *
          * If either term of the difference is infinite, the result will be
          * infinity.
          *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
          * \param other the integer to subtract from this integer.
          * \return the difference \a this minus \a other.
          */
-        IntegerBase operator -(long other) const;
+        template <CppInteger IntType>
+        IntegerBase operator -(IntType other) const;
         /**
          * Multiplies this by the given integer and returns the
          * result.
@@ -859,68 +838,78 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         IntegerBase operator *(const IntegerBase& other) const;
         /**
-         * Multiplies this by the given integer and returns the
+         * Multiplies this by the given native C++ integer and returns the
          * result.
          * This integer is not changed.
          *
          * If either factor of the product is infinite, the result will be
          * infinity.
          *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
          * \param other the integer to multiply by this integer.
          * \return the product \a this times \a other.
          */
-        IntegerBase operator *(long other) const;
+        template <CppInteger IntType>
+        IntegerBase operator *(IntType other) const;
         /**
          * Divides this by the given integer and returns the result.
-         * The result will be truncated to an integer, i.e. rounded
+         * The result will be truncated to an integer, i.e., rounded
          * towards zero.
          * This integer is not changed.
          *
          * If \a other is known to divide this integer exactly,
          * divExact() should be used instead.
          *
-         * Infinity divided by anything will return infinity.
-         * Anything finite divided by infinity will return zero.
-         * Anything finite divided by zero will return infinity.
+         * Regarding special cases:
+         *
+         * - infinity divided by anything will return infinity;
+         * - anything divided by zero will likewise return infinity;
+         * - anything finite divided by infinity will return zero.
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
-         * \pre If this class does not support infinity, then
-         * \a other must be non-zero.
+         * \exception DivisionByZero The argument \a other is zero, but this
+         * class does not support infinity.
          *
          * \param other the integer to divide this by.
          * \return the quotient \a this divided by \a other.
          */
         IntegerBase operator /(const IntegerBase& other) const;
         /**
-         * Divides this by the given integer and returns the result.
-         * The result will be truncated to an integer, i.e. rounded
+         * Divides this by the given native C++ integer and returns the result.
+         * The result will be truncated to an integer, i.e., rounded
          * towards zero.
          * This integer is not changed.
          *
          * If \a other is known to divide this integer exactly,
          * divExact() should be used instead.
          *
-         * Infinity divided by anything will return infinity.
-         * Anything finite divided by zero will return infinity.
+         * Regarding special cases:
+         *
+         * - infinity divided by anything will return infinity;
+         * - anything divided by zero will likewise return infinity.
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
-         * \pre If this class does not support infinity, then
-         * \a other must be non-zero.
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \exception DivisionByZero The argument \a other is zero, but this
+         * class does not support infinity.
          *
          * \param other the integer to divide this by.
          * \return the quotient \a this divided by \a other.
          */
-        IntegerBase operator /(long other) const;
+        template <CppInteger IntType>
+        IntegerBase operator /(IntType other) const;
         /**
          * Divides this by the given integer and returns the result.
          * This can only be used when the given integer divides into
          * this exactly, and for large integers can be much faster than
          * ordinary division.  This integer is not changed.
          *
-         * \pre The given integer divides exactly into
-         * this integer, i.e. \a this divided by \a other is an integer.
+         * \pre The given integer divides exactly into this integer,
+         * i.e., \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          * \pre Neither this nor \a other is infinite.
          *
@@ -929,52 +918,69 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         IntegerBase divExact(const IntegerBase& other) const;
         /**
-         * Divides this by the given integer and returns the result.
+         * Divides this by the given native C++ integer and returns the result.
          * This can only be used when the given integer divides into
          * this exactly, and for large integers can be much faster than
          * ordinary division.  This integer is not changed.
          *
-         * \pre The given integer divides exactly into
-         * this integer, i.e. \a this divided by \a other is an integer.
+         * \pre The given integer divides exactly into this integer,
+         * i.e., \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          * \pre This integer is not infinite.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
          *
          * \param other the integer to divide this by.
          * \return the quotient \a this divided by \a other.
          */
-        IntegerBase divExact(long other) const;
+        template <CppInteger IntType>
+        IntegerBase divExact(IntType other) const;
         /**
          * Determines the remainder when this integer is divided by the
          * given integer.  If non-zero, the result will have the same sign
          * as this integer.
          * This integer is not changed.
          *
-         * For a division routine that always returns a non-negative
+         * Regarding special cases:
+         *
+         * - any finite \a x modulo infinity will return \a x;
+         * - infinity modulo anything non-zero will return zero.
+         *
+         * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
-         * \pre \a other is not zero.
-         * \pre Neither this nor \a other is infinite.
+         * \exception DivisionByZero The argument \a other is zero.
+         * Note that, unlike the division operators, this exception will be
+         # thrown even if this class supports infinity.
          *
          * \param other the integer to divide this by.
          * \return the remainder \a this modulo \a other.
          */
         IntegerBase operator %(const IntegerBase& other) const;
         /**
-         * Determines the remainder when this integer is divided by the
-         * given integer.  If non-zero, the result will have the same sign
+         * Determines the remainder when this integer is divided by the given
+         * native C++ integer.  If non-zero, the result will have the same sign
          * as this integer.
          * This integer is not changed.
          *
-         * For a division routine that always returns a non-negative
+         * Regarding special cases:
+         *
+         * - infinity modulo anything non-zero will return zero.
+         *
+         * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
-         * \pre \a other is not zero.
-         * \pre This integer is not infinite.
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \exception DivisionByZero The argument \a other is zero.
+         * Note that, unlike the division operators, this exception will be
+         # thrown even if this class supports infinity.
          *
          * \param other the integer to divide this by.
          * \return the remainder \a this modulo \a other.
          */
-        IntegerBase operator %(long other) const;
+        template <CppInteger IntType>
+        IntegerBase operator %(IntType other) const;
 
         /**
          * Uses the division algorithm to obtain a quotient and
@@ -1036,10 +1042,13 @@ class IntegerBase : private InfinityBase<withInfinity> {
          * If either term of the sum is infinite, the result will be
          * infinity.
          *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
          * \param other the integer to add to this integer.
          * \return a reference to this integer with its new value.
          */
-        IntegerBase& operator +=(long other);
+        template <CppInteger IntType>
+        IntegerBase& operator +=(IntType other);
         /**
          * Subtracts the given integer from this.
          * This integer is changed to reflect the result.
@@ -1058,12 +1067,15 @@ class IntegerBase : private InfinityBase<withInfinity> {
          * If either term of the difference is infinite, the result will be
          * infinity.
          *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
          * \param other the integer to subtract from this integer.
          * \return a reference to this integer with its new value.
          */
-        IntegerBase& operator -=(long other);
+        template <CppInteger IntType>
+        IntegerBase& operator -=(IntType other);
         /**
-         * Multiplies the given integer by this.
+         * Multiplies this by the given integer.
          * This integer is changed to reflect the result.
          *
          * If either factor of the product is infinite, the result will be
@@ -1074,67 +1086,77 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         IntegerBase& operator *=(const IntegerBase& other);
         /**
-         * Multiplies the given integer by this.
+         * Multiplies this by the given native C++ integer.
          * This integer is changed to reflect the result.
          *
          * If either factor of the product is infinite, the result will be
          * infinity.
          *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
          * \param other the integer to multiply with this integer.
          * \return a reference to this integer with its new value.
          */
-        IntegerBase& operator *=(long other);
+        template <CppInteger IntType>
+        IntegerBase& operator *=(IntType other);
         /**
          * Divides this by the given integer.
-         * The result will be truncated to an integer, i.e. rounded
+         * The result will be truncated to an integer, i.e., rounded
          * towards zero.
          * This integer is changed to reflect the result.
          *
          * If \a other is known to divide this integer exactly,
          * divByExact() should be used instead.
          *
-         * Infinity divided by anything will return infinity.
-         * Anything finite divided by infinity will return zero.
-         * Anything finite divided by zero will return infinity.
+         * Regarding special cases:
+         *
+         * - infinity divided by anything will return infinity;
+         * - anything divided by zero will likewise return infinity;
+         * - anything finite divided by infinity will return zero.
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
-         * \pre If this class does not support infinity, then
-         * \a other must be non-zero.
+         * \exception DivisionByZero The argument \a other is zero, but this
+         * class does not support infinity.
          *
          * \param other the integer to divide this by.
          * \return a reference to this integer with its new value.
          */
         IntegerBase& operator /=(const IntegerBase& other);
         /**
-         * Divides this by the given integer.
-         * The result will be truncated to an integer, i.e. rounded
+         * Divides this by the given native C++ integer.
+         * The result will be truncated to an integer, i.e., rounded
          * towards zero.
          * This integer is changed to reflect the result.
          *
          * If \a other is known to divide this integer exactly,
          * divByExact() should be used instead.
          *
-         * Infinity divided by anything will return infinity.
-         * Anything finite divided by zero will return infinity.
+         * Regarding special cases:
+         *
+         * - infinity divided by anything will return infinity;
+         * - anything divided by zero will likewise return infinity.
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
-         * \pre If this class does not support infinity, then
-         * \a other must be non-zero.
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \exception DivisionByZero The argument \a other is zero, but this
+         * class does not support infinity.
          *
          * \param other the integer to divide this by.
          * \return a reference to this integer with its new value.
          */
-        IntegerBase& operator /=(long other);
+        template <CppInteger IntType>
+        IntegerBase& operator /=(IntType other);
         /**
          * Divides this by the given integer.
          * This can only be used when the given integer divides into
          * this exactly, and for large integers this is much faster than
          * ordinary division.  This integer is changed to reflect the result.
          *
-         * \pre The given integer divides exactly into
-         * this integer, i.e. \a this divided by \a other is an integer.
+         * \pre The given integer divides exactly into this integer,
+         * i.e., \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          * \pre Neither this nor \a other is infinite.
          *
@@ -1148,26 +1170,35 @@ class IntegerBase : private InfinityBase<withInfinity> {
          * this exactly, and for large integers this is much faster than
          * ordinary division.  This integer is changed to reflect the result.
          *
-         * \pre The given integer divides exactly into
-         * this integer, i.e. \a this divided by \a other is an integer.
+         * \pre The given integer divides exactly into this integer,
+         * i.e., \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          * \pre This integer is not infinite.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
          *
          * \param other the integer to divide this by.
          * \return a reference to this integer with its new value.
          */
-        IntegerBase& divByExact(long other);
+        template <CppInteger IntType>
+        IntegerBase& divByExact(IntType other);
         /**
          * Reduces this integer modulo the given integer.
          * If non-zero, the result will have the same sign as the original
          * value of this integer.
          * This integer is changed to reflect the result.
          *
-         * For a mod routine that always returns a non-negative
+         * Regarding special cases:
+         *
+         * - any finite \a x modulo infinity will return \a x;
+         * - infinity modulo anything non-zero will return zero.
+         *
+         * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
-         * \pre \a other is not zero.
-         * \pre Neither this nor \a other is infinite.
+         * \exception DivisionByZero The argument \a other is zero.
+         * Note that, unlike the division operators, this exception will be
+         # thrown even if this class supports infinity.
          *
          * \param other the integer modulo which this integer will be
          * reduced.
@@ -1175,22 +1206,29 @@ class IntegerBase : private InfinityBase<withInfinity> {
          */
         IntegerBase& operator %=(const IntegerBase& other);
         /**
-         * Reduces this integer modulo the given integer.
+         * Reduces this integer modulo the given native C++ integer.
          * If non-zero, the result will have the same sign as the original
          * value of this integer.
          * This integer is changed to reflect the result.
          *
-         * For a mod routine that always returns a non-negative
+         * Regarding special cases:
+         *
+         * - infinity modulo anything non-zero will return zero.
+         *
+         * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
-         * \pre \a other is not zero.
-         * \pre This integer is not infinite.
+         * \python It is assumed that the type \a IntType is \c long.
          *
-         * \param other the integer modulo which this integer will be
-         * reduced.
+         * \exception DivisionByZero The argument \a other is zero.
+         * Note that, unlike the division operators, this exception will be
+         # thrown even if this class supports infinity.
+         *
+         * \param other the integer modulo which this integer will be reduced.
          * \return a reference to this integer with its new value.
          */
-        IntegerBase& operator %=(long other);
+        template <CppInteger IntType>
+        IntegerBase& operator %=(IntType other);
         /**
          * Negates this integer.
          * This integer is changed to reflect the result.
@@ -1600,22 +1638,20 @@ class IntegerBase : private InfinityBase<withInfinity> {
         /**
          * Initialises this integer to infinity.
          * All parameters are ignored.
-         *
-         * This constructor is only defined if \a withInfinity is \c true.
-         * Any attempt to use it when \a withInfinity is \c false
-         * will generate a linker error.
          */
-        IntegerBase(bool, bool);
+        constexpr IntegerBase(bool, bool) requires (withInfinity) :
+                large_(nullptr) {
+            detail::InfinityBase<withInfinity>::infinite_ = true;
+        }
 
         /**
          * Sets this integer to be finite.
          * Its new value will be determined by the current contents of
          * \a small_ which will not be touched.
-         *
-         * If the template parameter \a withInfinity is \c false,
-         * this routine safely does nothing.
          */
-        inline void makeFinite();
+        constexpr inline void makeFinite() requires (withInfinity) {
+            detail::InfinityBase<withInfinity>::infinite_ = false;
+        }
 
         /**
          * Converts this integer from a native C/C++ long representation
@@ -1665,15 +1701,6 @@ class IntegerBase : private InfinityBase<withInfinity> {
         const IntegerBase<withInfinity_>& large);
 };
 
-#ifndef __DOXYGEN
-// Don't confuse doxygen with specialisations.
-template <bool withInfinity>
-struct RingTraits<IntegerBase<withInfinity>> {
-    inline static const IntegerBase<withInfinity> zero;
-    inline static const IntegerBase<withInfinity> one { 1 };
-};
-#endif // __DOXYGEN
-
 /**
  * LargeInteger is a type alias for IntegerBase<true>, which offers
  * arbitrary precision integers with support for infinity.
@@ -1718,8 +1745,10 @@ std::ostream& operator << (std::ostream& out,
     const IntegerBase<withInfinity>& i);
 
 /**
- * Adds the given native integer to the given large integer.
+ * Adds the given native C++ integer to the given large integer.
  * If the large integer is infinite, the result will also be infinity.
+ *
+ * \python It is assumed that the type \a IntType is \c long.
  *
  * \param lhs the native integer to add.
  * \param rhs the large integer to add.
@@ -1727,13 +1756,15 @@ std::ostream& operator << (std::ostream& out,
  *
  * \ingroup maths
  */
-template <bool withInfinity>
-IntegerBase<withInfinity> operator + (long lhs,
+template <bool withInfinity, CppInteger IntType>
+IntegerBase<withInfinity> operator + (IntType lhs,
     const IntegerBase<withInfinity>& rhs);
 
 /**
- * Multiplies the given native integer with the given large integer.
+ * Multiplies the given native C++ integer with the given large integer.
  * If the large integer is infinite, the result will also be infinity.
+ *
+ * \python It is assumed that the type \a IntType is \c long.
  *
  * \param lhs the native integer to multiply.
  * \param rhs the large integer to multiply.
@@ -1741,8 +1772,8 @@ IntegerBase<withInfinity> operator + (long lhs,
  *
  * \ingroup maths
  */
-template <bool withInfinity>
-IntegerBase<withInfinity> operator * (long lhs,
+template <bool withInfinity, CppInteger IntType>
+IntegerBase<withInfinity> operator * (IntType lhs,
     const IntegerBase<withInfinity>& rhs);
 
 /**
@@ -1781,6 +1812,19 @@ void tightEncode(std::ostream& out, IntegerBase<withInfinity> value);
  */
 template <bool withInfinity>
 std::string tightEncoding(IntegerBase<withInfinity> value);
+
+#ifndef __DOXYGEN
+// Don't confuse doxygen with specialisations.
+template <bool withInfinity>
+struct RingTraits<IntegerBase<withInfinity>> {
+    inline static const IntegerBase<withInfinity> zero;
+    inline static const IntegerBase<withInfinity> one { 1 };
+    static constexpr bool commutative = true;
+    static constexpr bool zeroInitialised = true;
+    static constexpr bool zeroDivisors = false;
+    static constexpr bool inverses = false;
+};
+#endif // __DOXYGEN
 
 /**
  * A wrapper class for a native, fixed-precision integer type of the
@@ -1831,21 +1875,22 @@ class NativeInteger {
         /**
          * Initialises this integer to zero.
          */
-        NativeInteger();
+        constexpr NativeInteger();
         /**
          * Initialises this integer to the given value.
          *
          * \param value the new value of this integer.
          */
-        NativeInteger(Native value);
+        constexpr NativeInteger(Native value);
         /**
          * Initialises this integer to the given value.
          *
          * \param value the new value of this integer.
          */
-        NativeInteger(const NativeInteger<bytes>& value);
+        constexpr NativeInteger(const NativeInteger<bytes>& value);
         /**
-         * Initialises this integer to the given value.
+         * Deprecated constructor that initialises this to the given arbitrary
+         * precision integer, with no range checking.
          *
          * This constructor is marked as explicit in the hope of
          * avoiding accidental (and unintentional) mixing of integer classes.
@@ -1855,26 +1900,28 @@ class NativeInteger {
          * small to fit into this native type, then this new NativeInteger
          * will have an undefined initial value.
          *
-         * \pre If \a bytes is larger than sizeof(long), then
-         * \a bytes is a strict _multiple_ of sizeof(long).  For
-         * instance, if longs are 8 bytes then you can use this
-         * routine with \a bytes=16 but not \a bytes=12.
-         * This restriction is enforced through a compile-time assertion,
-         * but may be lifted in future versions of Regina.
+         * \deprecated You should explicitly specify how you plan to deal with
+         * range checking.  If (as with this constructor) you know that the
+         * given integer is within range, you should initialise this as
+         * `NativeInteger(value.unsafeValue<Native>)`.  If you want Regina to
+         * look after range checking for you (and throw an exception if this
+         * fails), you should use `NativeInteger(value.safeValue<Native>)`.
          *
-         * \pre The given integer is not infinity.
+         * \pre The given integer is within the required range; that is, it
+         * can fit within a signed integer of the chosen byte length.
          *
          * \param value the new value of this integer.
          */
         template <bool withInfinity>
-        explicit NativeInteger(const IntegerBase<withInfinity>& value);
+        [[deprecated]] explicit NativeInteger(
+            const IntegerBase<withInfinity>& value);
 
         /**
          * Returns whether or not this integer is zero.
          *
          * \return \c true if and only if this integer is zero.
          */
-        bool isZero() const;
+        constexpr bool isZero() const;
 
         /**
          * Returns the sign of this integer.
@@ -1882,13 +1929,13 @@ class NativeInteger {
          * \return +1, -1 or 0 according to whether this integer is
          * positive, negative or zero.
          */
-        int sign() const;
+        constexpr int sign() const;
         /**
          * Returns the value of this integer in its native type.
          *
          * \return the value of this integer.
          */
-        Native nativeValue() const;
+        constexpr Native nativeValue() const;
         /**
          * Returns the string representation of this integer in base 10.
          *
@@ -1902,20 +1949,20 @@ class NativeInteger {
          * \param value the new value of this integer.
          * \return a reference to this integer with its new value.
          */
-        NativeInteger& operator =(const NativeInteger& value);
+        constexpr NativeInteger& operator =(const NativeInteger& value);
         /**
          * Sets this integer to the given value.
          *
          * \param value the new value of this integer.
          * \return a reference to this integer with its new value.
          */
-        NativeInteger& operator =(Native value);
+        constexpr NativeInteger& operator =(Native value);
         /**
          * Swaps the values of this and the given integer.
          *
          * \param other the integer whose value will be swapped with this.
          */
-        void swap(NativeInteger& other) noexcept;
+        constexpr void swap(NativeInteger& other) noexcept;
 
         /**
          * Determines if this is equal to the given integer.
@@ -1924,7 +1971,7 @@ class NativeInteger {
          * \return \c true if and only if this and the given integer are
          * equal.
          */
-        bool operator ==(const NativeInteger& rhs) const;
+        constexpr bool operator ==(const NativeInteger& rhs) const;
         /**
          * Determines if this is equal to the given integer.
          *
@@ -1932,7 +1979,7 @@ class NativeInteger {
          * \return \c true if and only if this and the given integer are
          * equal.
          */
-        bool operator ==(Native rhs) const;
+        constexpr bool operator ==(Native rhs) const;
         /**
          * Compares this to the given integer.
          *
@@ -1949,7 +1996,8 @@ class NativeInteger {
          * \return The result of the numerical comparison between this and
          * the given integer.
          */
-        std::strong_ordering operator <=> (const NativeInteger& rhs) const;
+        constexpr std::strong_ordering operator <=> (const NativeInteger& rhs)
+            const;
         /**
          * Compares this to the given integer.
          *
@@ -1966,7 +2014,7 @@ class NativeInteger {
          * \return The result of the numerical comparison between this and
          * the given integer.
          */
-        std::strong_ordering operator <=> (Native rhs) const;
+        constexpr std::strong_ordering operator <=> (Native rhs) const;
 
         /**
          * The preincrement operator.
@@ -1975,7 +2023,7 @@ class NativeInteger {
          *
          * \return a reference to this integer after the increment.
          */
-        NativeInteger& operator ++();
+        constexpr NativeInteger& operator ++();
 
         /**
          * The postincrement operator.
@@ -1985,7 +2033,7 @@ class NativeInteger {
          * \return a copy of this integer before the
          * increment took place.
          */
-        NativeInteger operator ++(int);
+        constexpr NativeInteger operator ++(int);
 
         /**
          * The predecrement operator.
@@ -1994,7 +2042,7 @@ class NativeInteger {
          *
          * \return a reference to this integer after the decrement.
          */
-        NativeInteger& operator --();
+        constexpr NativeInteger& operator --();
 
         /**
          * The postdecrement operator.
@@ -2004,7 +2052,7 @@ class NativeInteger {
          * \return a copy of this integer before the
          * decrement took place.
          */
-        NativeInteger operator --(int);
+        constexpr NativeInteger operator --(int);
 
         /**
          * Adds this to the given integer and returns the result.
@@ -2013,7 +2061,7 @@ class NativeInteger {
          * \param other the integer to add to this integer.
          * \return the sum \a this plus \a other.
          */
-        NativeInteger operator +(const NativeInteger& other) const;
+        constexpr NativeInteger operator +(const NativeInteger& other) const;
         /**
          * Adds this to the given integer and returns the result.
          * This integer is not changed.
@@ -2021,7 +2069,7 @@ class NativeInteger {
          * \param other the integer to add to this integer.
          * \return the sum \a this plus \a other.
          */
-        NativeInteger operator +(Native other) const;
+        constexpr NativeInteger operator +(Native other) const;
         /**
          * Subtracts the given integer from this and returns the result.
          * This integer is not changed.
@@ -2029,7 +2077,7 @@ class NativeInteger {
          * \param other the integer to subtract from this integer.
          * \return the difference \a this minus \a other.
          */
-        NativeInteger operator -(const NativeInteger& other) const;
+        constexpr NativeInteger operator -(const NativeInteger& other) const;
         /**
          * Subtracts the given integer from this and returns the result.
          * This integer is not changed.
@@ -2037,7 +2085,7 @@ class NativeInteger {
          * \param other the integer to subtract from this integer.
          * \return the difference \a this minus \a other.
          */
-        NativeInteger operator -(Native other) const;
+        constexpr NativeInteger operator -(Native other) const;
         /**
          * Multiplies this by the given integer and returns the
          * result.
@@ -2046,7 +2094,7 @@ class NativeInteger {
          * \param other the integer to multiply by this integer.
          * \return the product \a this times \a other.
          */
-        NativeInteger operator *(const NativeInteger& other) const;
+        constexpr NativeInteger operator *(const NativeInteger& other) const;
         /**
          * Multiplies this by the given integer and returns the
          * result.
@@ -2055,85 +2103,105 @@ class NativeInteger {
          * \param other the integer to multiply by this integer.
          * \return the product \a this times \a other.
          */
-        NativeInteger operator *(Native other) const;
+        constexpr NativeInteger operator *(Native other) const;
         /**
          * Divides this by the given integer and returns the result.
-         * The result will be truncated to an integer, i.e. rounded
+         * The result will be truncated to an integer, i.e., rounded
          * towards zero.
          * This integer is not changed.
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
-         * \pre \a other must be non-zero.
+         * \exception DivisionByZero The argument \a other is zero.
          *
          * \param other the integer to divide this by.
          * \return the quotient \a this divided by \a other.
          */
-        NativeInteger operator /(const NativeInteger& other) const;
+        constexpr NativeInteger operator /(const NativeInteger& other) const;
         /**
          * Divides this by the given integer and returns the result.
-         * The result will be truncated to an integer, i.e. rounded
+         * The result will be truncated to an integer, i.e., rounded
          * towards zero.
          * This integer is not changed.
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
-         * \pre \a other must be non-zero.
+         * \exception DivisionByZero The argument \a other is zero.
          *
          * \param other the integer to divide this by.
          * \return the quotient \a this divided by \a other.
          */
-        NativeInteger operator /(Native other) const;
+        constexpr NativeInteger operator /(Native other) const;
         /**
          * Divides this by the given integer and returns the result.
-         * For native integers, this is identical to operator /.
+         * This integer is not changed.
          *
+         * This function is provided for consistency with Integer::divExact()
+         * and LargeInteger::divExact(), and in the spirit of those functions,
+         * it should only be used when the given integer divides into this
+         * exactly.  However, the implementation for NativeInteger just uses
+         * the native operator `/`, and so (unlike for arbitrary precision
+         * integers) there is no real performance gain in using `x.divExact(y)`
+         * instead of `x / y`.
+         *
+         * \pre The given integer divides exactly into this integer,
+         * i.e., \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          *
          * \param other the integer to divide this by.
          * \return the quotient \a this divided by \a other.
          */
-        NativeInteger divExact(const NativeInteger& other) const;
+        constexpr NativeInteger divExact(const NativeInteger& other) const;
         /**
          * Divides this by the given integer and returns the result.
-         * For native integers, this is identical to operator /.
+         * This integer is not changed.
          *
+         * This function is provided for consistency with Integer::divExact()
+         * and LargeInteger::divExact(), and in the spirit of those functions,
+         * it should only be used when the given integer divides into this
+         * exactly.  However, the implementation for NativeInteger just uses
+         * the native operator `/`, and so (unlike for arbitrary precision
+         * integers) there is no real performance gain in using `x.divExact(y)`
+         * instead of `x / y`.
+         *
+         * \pre The given integer divides exactly into this integer,
+         * i.e., \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          *
          * \param other the integer to divide this by.
          * \return the quotient \a this divided by \a other.
          */
-        NativeInteger divExact(Native other) const;
+        constexpr NativeInteger divExact(Native other) const;
         /**
          * Determines the remainder when this integer is divided by the
          * given integer.  If non-zero, the result will have the same sign
          * as this integer.
          * This integer is not changed.
          *
-         * For a division routine that always returns a non-negative
+         * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
-         * \pre \a other is not zero.
+         * \exception DivisionByZero The argument \a other is zero.
          *
          * \param other the integer to divide this by.
          * \return the remainder \a this modulo \a other.
          */
-        NativeInteger operator %(const NativeInteger& other) const;
+        constexpr NativeInteger operator %(const NativeInteger& other) const;
         /**
          * Determines the remainder when this integer is divided by the
          * given integer.  If non-zero, the result will have the same sign
          * as this integer.
          * This integer is not changed.
          *
-         * For a division routine that always returns a non-negative
+         * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
-         * \pre \a other is not zero.
+         * \exception DivisionByZero The argument \a other is zero.
          *
          * \param other the integer to divide this by.
          * \return the remainder \a this modulo \a other.
          */
-        NativeInteger operator %(Native other) const;
+        constexpr NativeInteger operator %(Native other) const;
 
         /**
          * Uses the division algorithm to obtain a quotient and
@@ -2162,7 +2230,7 @@ class NativeInteger {
          * \return the pair (\a q, \a r), where \a q is the quotient and
          * \a r is the remainder, as described above.
          */
-        std::pair<NativeInteger, NativeInteger> divisionAlg(
+        constexpr std::pair<NativeInteger, NativeInteger> divisionAlg(
             const NativeInteger& divisor) const;
 
         /**
@@ -2171,7 +2239,7 @@ class NativeInteger {
          *
          * \return the negative of this integer.
          */
-        NativeInteger operator -() const;
+        constexpr NativeInteger operator -() const;
 
         /**
          * Adds the given integer to this.
@@ -2180,7 +2248,7 @@ class NativeInteger {
          * \param other the integer to add to this integer.
          * \return a reference to this integer with its new value.
          */
-        NativeInteger& operator +=(const NativeInteger& other);
+        constexpr NativeInteger& operator +=(const NativeInteger& other);
         /**
          * Adds the given integer to this.
          * This integer is changed to reflect the result.
@@ -2188,7 +2256,7 @@ class NativeInteger {
          * \param other the integer to add to this integer.
          * \return a reference to this integer with its new value.
          */
-        NativeInteger& operator +=(Native other);
+        constexpr NativeInteger& operator +=(Native other);
         /**
          * Subtracts the given integer from this.
          * This integer is changed to reflect the result.
@@ -2196,7 +2264,7 @@ class NativeInteger {
          * \param other the integer to subtract from this integer.
          * \return a reference to this integer with its new value.
          */
-        NativeInteger& operator -=(const NativeInteger& other);
+        constexpr NativeInteger& operator -=(const NativeInteger& other);
         /**
          * Subtracts the given integer from this.
          * This integer is changed to reflect the result.
@@ -2204,7 +2272,7 @@ class NativeInteger {
          * \param other the integer to subtract from this integer.
          * \return a reference to this integer with its new value.
          */
-        NativeInteger& operator -=(Native other);
+        constexpr NativeInteger& operator -=(Native other);
         /**
          * Multiplies the given integer by this.
          * This integer is changed to reflect the result.
@@ -2212,7 +2280,7 @@ class NativeInteger {
          * \param other the integer to multiply with this integer.
          * \return a reference to this integer with its new value.
          */
-        NativeInteger& operator *=(const NativeInteger& other);
+        constexpr NativeInteger& operator *=(const NativeInteger& other);
         /**
          * Multiplies the given integer by this.
          * This integer is changed to reflect the result.
@@ -2220,92 +2288,112 @@ class NativeInteger {
          * \param other the integer to multiply with this integer.
          * \return a reference to this integer with its new value.
          */
-        NativeInteger& operator *=(Native other);
+        constexpr NativeInteger& operator *=(Native other);
         /**
          * Divides this by the given integer.
-         * The result will be truncated to an integer, i.e. rounded
+         * The result will be truncated to an integer, i.e., rounded
          * towards zero.
          * This integer is changed to reflect the result.
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
-         * \pre \a other must be non-zero.
+         * \exception DivisionByZero The argument \a other is zero.
          *
          * \param other the integer to divide this by.
          * \return a reference to this integer with its new value.
          */
-        NativeInteger& operator /=(const NativeInteger& other);
+        constexpr NativeInteger& operator /=(const NativeInteger& other);
         /**
          * Divides this by the given integer.
-         * The result will be truncated to an integer, i.e. rounded
+         * The result will be truncated to an integer, i.e., rounded
          * towards zero.
          * This integer is changed to reflect the result.
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
-         * \pre \a other must be non-zero.
+         * \exception DivisionByZero The argument \a other is zero.
          *
          * \param other the integer to divide this by.
          * \return a reference to this integer with its new value.
          */
-        NativeInteger& operator /=(Native other);
+        constexpr NativeInteger& operator /=(Native other);
         /**
          * Divides this by the given integer.
-         * For native integers, this routine is identical to operator /=.
+         * This integer is changed to reflect the result.
          *
+         * This function is provided for consistency with Integer::divByExact()
+         * and LargeInteger::divByExact(), and in the spirit of those functions,
+         * it should only be used when the given integer divides into this
+         * exactly.  However, the implementation for NativeInteger just uses
+         * the native operator `/=`, and so (unlike for arbitrary precision
+         * integers) there is no real performance gain in using
+         * `x.divByExact(y)` instead of `x /= y`.
+         *
+         * \pre The given integer divides exactly into this integer,
+         * i.e., \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          *
          * \param other the integer to divide this by.
          * \return a reference to this integer with its new value.
          */
-        NativeInteger& divByExact(const NativeInteger& other);
+        constexpr NativeInteger& divByExact(const NativeInteger& other);
         /**
          * Divides this by the given integer.
-         * For native integers, this routine is identical to operator /=.
+         * This integer is changed to reflect the result.
          *
+         * This function is provided for consistency with Integer::divByExact()
+         * and LargeInteger::divByExact(), and in the spirit of those functions,
+         * it should only be used when the given integer divides into this
+         * exactly.  However, the implementation for NativeInteger just uses
+         * the native operator `/=`, and so (unlike for arbitrary precision
+         * integers) there is no real performance gain in using
+         * `x.divByExact(y)` instead of `x /= y`.
+         *
+         * \pre The given integer divides exactly into this integer,
+         * i.e., \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          *
          * \param other the integer to divide this by.
          * \return a reference to this integer with its new value.
          */
-        NativeInteger& divByExact(Native other);
+        constexpr NativeInteger& divByExact(Native other);
         /**
          * Reduces this integer modulo the given integer.
          * If non-zero, the result will have the same sign as the original
          * value of this integer.
          * This integer is changed to reflect the result.
          *
-         * For a mod routine that always returns a non-negative
+         * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
-         * \pre \a other is not zero.
+         * \exception DivisionByZero The argument \a other is zero.
          *
          * \param other the integer modulo which this integer will be
          * reduced.
          * \return a reference to this integer with its new value.
          */
-        NativeInteger& operator %=(const NativeInteger& other);
+        constexpr NativeInteger& operator %=(const NativeInteger& other);
         /**
          * Reduces this integer modulo the given integer.
          * If non-zero, the result will have the same sign as the original
          * value of this integer.
          * This integer is changed to reflect the result.
          *
-         * For a mod routine that always returns a non-negative
+         * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
          *
-         * \pre \a other is not zero.
+         * \exception DivisionByZero The argument \a other is zero.
          *
          * \param other the integer modulo which this integer will be
          * reduced.
          * \return a reference to this integer with its new value.
          */
-        NativeInteger& operator %=(Native other);
+        constexpr NativeInteger& operator %=(Native other);
         /**
          * Negates this integer.
          * This integer is changed to reflect the result.
          */
-        void negate();
+        constexpr void negate();
         /**
          * Sets this integer to be the greatest common divisor of this
          * and the given integer.
@@ -2316,7 +2404,7 @@ class NativeInteger {
          * \param other the integer whose greatest common divisor with
          * this will be found.
          */
-        void gcdWith(const NativeInteger& other);
+        constexpr void gcdWith(const NativeInteger& other);
         /**
          * Determines the greatest common divisor of this and the given
          * integer.  This integer is not changed.
@@ -2329,7 +2417,7 @@ class NativeInteger {
          * \return the greatest common divisor of this and the given
          * integer.
          */
-        NativeInteger gcd(const NativeInteger& other) const;
+        constexpr NativeInteger gcd(const NativeInteger& other) const;
 
         /**
          * Returns whether this integer is infinity.
@@ -2340,7 +2428,9 @@ class NativeInteger {
          *
          * \return \c false, since a NativeInteger can never be infinity.
          */
-        bool isInfinite() const;
+        constexpr bool isInfinite() const {
+            return false;
+        }
         /**
          * A do-nothing routine that ensures that this integer is using a
          * native C/C++ integer representation.
@@ -2350,7 +2440,7 @@ class NativeInteger {
          * for compatibility with Regina's arbitrary-precision Integer and
          * LargeInteger classes.
          */
-        void tryReduce();
+        constexpr void tryReduce();
 
 #ifndef __DOXYGEN
     // Doxygen is not able to match this up to the documented version below.
@@ -2359,15 +2449,6 @@ class NativeInteger {
         const NativeInteger<bytes_>& large);
 #endif
 };
-
-#ifndef __DOXYGEN
-// Don't confuse doxygen with specialisations.
-template <int bytes>
-struct RingTraits<NativeInteger<bytes>> {
-    static constexpr NativeInteger<bytes> zero { };
-    static constexpr NativeInteger<bytes> one { 1 };
-};
-#endif // __DOXYGEN
 
 /**
  * Swaps the contents of the given integers.
@@ -2383,10 +2464,13 @@ struct RingTraits<NativeInteger<bytes>> {
  * \ingroup maths
  */
 template <int bytes>
-void swap(NativeInteger<bytes>& a, NativeInteger<bytes>& b) noexcept;
+constexpr void swap(NativeInteger<bytes>& a, NativeInteger<bytes>& b) noexcept;
 
 /**
  * Writes the given integer to the given output stream.
+ *
+ * The output will always be numerical, even if the underlying native
+ * C++ type is equivalent to `signed char` (i.e., `bytes == 1`).
  *
  * \param out the output stream to which to write.
  * \param i the integer to write.
@@ -2407,6 +2491,76 @@ std::ostream& operator << (std::ostream& out, const NativeInteger<bytes>& i);
  */
 using NativeLong = NativeInteger<sizeof(long)>;
 
+#ifndef __DOXYGEN
+// Don't confuse doxygen with specialisations.
+template <int bytes>
+struct RingTraits<NativeInteger<bytes>> {
+    static constexpr NativeInteger<bytes> zero { };
+    static constexpr NativeInteger<bytes> one { 1 };
+    static constexpr bool commutative = true;
+    static constexpr bool zeroInitialised = true;
+    static constexpr bool zeroDivisors = true;
+    static constexpr bool inverses = false;
+};
+#endif // __DOXYGEN
+
+// Implementation details
+
+namespace detail {
+
+/**
+ * Negates the given signed native C++ integer, and returns the result as an
+ * unsigned native C++ integer of the same size.  The result should always be
+ * correct (i.e., there should never be an overflow condition).
+ *
+ * \pre The result will be non-negative; that is, `x ≤ 0`.
+ *
+ * \param x the signed integer to negate.
+ * \return a corresponding unsigned representation of `-x`.
+ *
+ * \ingroup detail
+ */
+template <SignedCppInteger IntType>
+inline regina::make_unsigned_cpp_t<IntType> negateToUnsignedType(IntType x) {
+    // C++20 mandates a two's complement representation.
+    if (x == std::numeric_limits<IntType>::min()) {
+        // Negating x would be a signed overflow, which the C++ standard
+        // says is undefined behaviour.  However, casting x directly as the
+        // unsigned type will do the right thing.
+        return static_cast<regina::make_unsigned_cpp_t<IntType>>(x);
+    } else {
+        return static_cast<regina::make_unsigned_cpp_t<IntType>>(-x);
+    }
+}
+
+/**
+ * Returns the difference between two signed native C++ integers, and returns
+ * the result as an unsigned native C++ integer of the same size.  The result
+ * should always be correct (i.e., there should never be an overflow condition).
+ *
+ * \pre The result will be non-negative; that is, `x ≥ y` (as signed types).
+ *
+ * \param x the first signed integer to use in the subtraction.
+ * \param y the second signed integer to use in the subtraction.
+ * \return a corresponding unsigned representation of `x - y`.
+ *
+ * \ingroup detail
+ */
+template <SignedCppInteger IntType>
+inline regina::make_unsigned_cpp_t<IntType> differenceAsUnsigned(
+        IntType x, IntType y) {
+    // C++20 mandates a two's complement representation.
+    // The C++ standard says both unsigned overflow and casting to unsigned
+    // types always do the right thing (arithmetic modulo 2^bits), whereas
+    // signed overflow is undefined.
+    // So: we can just do everything in the unsigned type.  All errors will be
+    // modulo 2^bits, and we know that the answer is in the range [0, 2^bits).
+    return static_cast<regina::make_unsigned_cpp_t<IntType>>(x) -
+        static_cast<regina::make_unsigned_cpp_t<IntType>>(y);
+}
+
+} // namespace detail
+
 // Inline functions for IntegerBase
 
 template <bool withInfinity>
@@ -2422,61 +2576,62 @@ inline IntegerBase<withInfinity>::IntegerBase() : small_(0), large_(nullptr) {
 }
 
 template <bool withInfinity>
-inline IntegerBase<withInfinity>::IntegerBase(int value) :
+template <CppInteger IntType>
+inline IntegerBase<withInfinity>::IntegerBase(IntType value) :
         small_(value), large_(nullptr) {
-}
-
-template <bool withInfinity>
-inline IntegerBase<withInfinity>::IntegerBase(unsigned value) : small_(value) {
-    // Detect overflow.
-    if (small_ < 0) {
-        large_ = new __mpz_struct[1];
-        mpz_init_set_ui(large_, value);
-    } else
-        large_ = nullptr;
-}
-
-template <bool withInfinity>
-inline IntegerBase<withInfinity>::IntegerBase(long value) :
-        small_(value), large_(nullptr) {
-}
-
-template <bool withInfinity>
-inline IntegerBase<withInfinity>::IntegerBase(unsigned long value) :
-        small_(value) {
-    // Detect overflow.
-    if (small_ < 0) {
-        large_ = new __mpz_struct[1];
-        mpz_init_set_ui(large_, value);
-    } else
-        large_ = nullptr;
-}
-
-template <bool withInfinity>
-inline IntegerBase<withInfinity>::IntegerBase(long long value) :
-        small_(static_cast<long>(value)), large_(nullptr) {
-    // Detect overflow.
-    if constexpr (sizeof(long) < sizeof(long long))
-        if (small_ != value)
-            large_ = regina::detail::mpz_from_ll(value);
-}
-
-template <bool withInfinity>
-inline IntegerBase<withInfinity>::IntegerBase(unsigned long long value) :
-        small_(static_cast<long>(value)), large_(nullptr) {
-    // Detect overflow.
-    // This could occur even if long and long long have the same size,
-    // due to the discrepancy between signed and unsigned ranges.
-    if (small_ < 0 || static_cast<unsigned long long>(small_) != value)
-        large_ = regina::detail::mpz_from_ull(value);
+    if constexpr (sizeof(IntType) == sizeof(long) &&
+            regina::is_unsigned_cpp_integer_v<IntType>) {
+        // Detect overflow.
+        if (small_ < 0) {
+            large_ = new __mpz_struct[1];
+            mpz_init_set_ui(large_, value);
+        }
+    } else if constexpr (sizeof(IntType) > sizeof(long)) {
+        if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+            // Detect overflow.
+            if (small_ != value) {
+                large_ = new __mpz_struct[1];
+                mpz_init(large_);
+                if (value >= 0) {
+                    mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
+                        0 /* native endianness */, 0 /* full words */, &value);
+                } else {
+                    // mpz_import assumes an unsigned type.
+                    // C++20 mandates a two's complement representation, and
+                    // we use that here.
+                    if (value != std::numeric_limits<IntType>::min())
+                        value = -value;
+                    // In all cases - including min() where we did not negate -
+                    // if we treat the type as unsigned we get |original value|.
+                    mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
+                        0 /* native endianness */, 0 /* full words */, &value);
+                    mpz_neg(large_, large_);
+                }
+            }
+        } else {
+            // Detect overflow.  Here we need to be careful about comparisons
+            // between signed and unsigned.
+            if (small_ < 0 || static_cast<IntType>(small_) != value) {
+                large_ = new __mpz_struct[1];
+                mpz_init(large_);
+                mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
+                    0 /* native endianness */, 0 /* full words */, &value);
+            }
+        }
+    }
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity>::IntegerBase(const IntegerBase& value) {
-    if (value.isInfinite()) {
-        large_ = nullptr;
-        makeInfinite();
-    } else if (value.large_) {
+    if constexpr (withInfinity) {
+        if (value.isInfinite()) {
+            large_ = nullptr;
+            makeInfinite();
+            return;
+        }
+    }
+
+    if (value.large_) {
         large_ = new __mpz_struct[1];
         mpz_init_set(large_, value.large_);
     } else {
@@ -2501,7 +2656,7 @@ inline IntegerBase<withInfinity>::IntegerBase(
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity>::IntegerBase(IntegerBase&& src) noexcept :
-        InfinityBase<withInfinity>(src),
+        detail::InfinityBase<withInfinity>(src),
         small_(src.small_), large_(src.large_) {
     src.large_ = nullptr;
 }
@@ -2517,23 +2672,7 @@ inline IntegerBase<withInfinity>::IntegerBase(
 template <bool withInfinity>
 template <int bytes>
 inline IntegerBase<withInfinity>::IntegerBase(
-        const NativeInteger<bytes>& value) :
-        // This cast may lose information, but we will fix this in a moment.
-        small_(static_cast<long>(value.nativeValue())), large_(nullptr) {
-    static_assert(bytes % sizeof(long) == 0,
-        "IntegerBase native constructor: native integer must partition exactly into long integers.");
-    if (sizeof(long) < bytes && value.nativeValue() != static_cast<typename IntOfSize<bytes>::type>(small_)) {
-        // It didn't fit.  Take things one long at a time.
-        unsigned blocks = bytes / sizeof(long);
-        large_ = new __mpz_struct[1];
-        mpz_init_set_si(large_, static_cast<long>(
-            value.nativeValue() >> ((blocks - 1) * 8 * sizeof(long))));
-        for (unsigned i = 2; i <= blocks; ++i) {
-            mpz_mul_2exp(large_, large_, 8 * sizeof(long));
-            mpz_add_ui(large_, large_, static_cast<unsigned long>(
-                value.nativeValue() >> ((blocks - i) * 8 * sizeof(long))));
-        }
-    }
+        const NativeInteger<bytes>& value) : IntegerBase(value.nativeValue()) {
 }
 
 template <bool withInfinity>
@@ -2545,68 +2684,6 @@ inline IntegerBase<withInfinity>::IntegerBase(double value) : large_(nullptr) {
 
     // Now switch to a small representation if we can.
     tryReduce();
-}
-
-template <bool withInfinity>
-template <int bytes>
-typename IntOfSize<bytes>::type IntegerBase<withInfinity>::nativeValue() const {
-    using Native = typename IntOfSize<bytes>::type;
-    using UNative = typename IntOfSize<bytes>::utype;
-
-    if constexpr (bytes <= sizeof(long)) {
-        // Since the requested type can fit inside a long, we can just
-        // extract the long value and cast down.
-        return static_cast<Native>(longValue());
-    } else {
-        // The requested type is too big to fit inside a long.
-        if (! large_) {
-            // We are holding a native long, and so this is already
-            // safe to cast directly to the (larger) requested native type.
-            return longValue();
-        }
-
-        // This is a GMP integer, and the requested native type is too
-        // large for a long.  We will need to piece together the result
-        // one long-sized chunk at a time.
-        static_assert(bytes % sizeof(long) == 0,
-            "IntegerBase::nativeValue(): native integer must partition "
-            "exactly into long integers.");
-
-        // We treat positive and negative numbers differently,
-        // because mpz_get_ui() *ignores* sign.  Gulp.
-        int sign = mpz_sgn(large_);
-        if (sign == 0)
-            return 0;
-
-        Native ans = 0;
-        unsigned blocks = bytes / sizeof(long);
-
-        mpz_t tmp;
-        mpz_init_set(tmp, large_);
-
-        if (sign > 0) {
-            // The positive case.
-            for (unsigned i = 0; i < blocks - 1; ++i) {
-                ans += (static_cast<UNative>(mpz_get_ui(tmp))
-                    << (i * 8 * sizeof(long)));
-                mpz_fdiv_q_2exp(tmp, tmp, 8 * sizeof(long));
-            }
-            ans += (static_cast<Native>(mpz_get_ui(tmp))
-                << ((blocks - 1) * 8 * sizeof(long)));
-        } else {
-            // The negative case.
-            for (unsigned i = 0; i < blocks - 1; ++i) {
-                ans -= (static_cast<UNative>(mpz_get_ui(tmp))
-                    << (i * 8 * sizeof(long)));
-                mpz_tdiv_q_2exp(tmp, tmp, 8 * sizeof(long));
-            }
-            ans += (static_cast<Native>(mpz_get_si(tmp))
-                << ((blocks - 1) * 8 * sizeof(long)));
-        }
-
-        mpz_clear(tmp);
-        return ans;
-    }
 }
 
 template <bool withInfinity>
@@ -2625,46 +2702,30 @@ inline IntegerBase<withInfinity>::~IntegerBase() {
 
 template <bool withInfinity>
 inline bool IntegerBase<withInfinity>::isNative() const {
-    return (! isInfinite()) && (! large_);
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return false;
+
+    return (! large_);
 }
 
 template <bool withInfinity>
 inline bool IntegerBase<withInfinity>::isZero() const {
-    return (! isInfinite()) &&
-        (((! large_) && (! small_)) || (large_ && mpz_sgn(large_) == 0));
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return false;
+
+    return (((! large_) && (! small_)) || (large_ && mpz_sgn(large_) == 0));
 }
 
 template <bool withInfinity>
 inline int IntegerBase<withInfinity>::sign() const {
-    return (isInfinite() ? 1 :
-        large_ ? mpz_sgn(large_) :
-        small_ > 0 ? 1 : small_ < 0 ? -1 : 0);
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return 1;
+
+    return (large_ ? mpz_sgn(large_) : small_ > 0 ? 1 : small_ < 0 ? -1 : 0);
 }
-
-#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
-
-template <>
-inline bool IntegerBase<true>::isInfinite() const {
-    return infinite_;
-}
-
-template <>
-inline bool IntegerBase<false>::isInfinite() const {
-    return false;
-}
-
-template <>
-inline void IntegerBase<true>::makeInfinite() {
-    infinite_ = true;
-    if (large_)
-        clearLarge();
-}
-
-template <>
-inline void IntegerBase<false>::makeInfinite() {
-}
-
-#endif // __DOXYGEN
 
 template <bool withInfinity>
 inline std::string IntegerBase<withInfinity>::str() const {
@@ -2672,38 +2733,203 @@ inline std::string IntegerBase<withInfinity>::str() const {
 }
 
 template <bool withInfinity>
-inline long IntegerBase<withInfinity>::longValue() const {
-    return (large_ ? mpz_get_si(large_) : small_);
+template <CppInteger IntType>
+IntType IntegerBase<withInfinity>::safeValue() const {
+    if constexpr (withInfinity)
+        if (isInfinite())
+            throw IntegerOverflow();
+
+    using limits = std::numeric_limits<IntType>;
+
+    if (large_) {
+        // We have a GMP integer.
+        if constexpr (sizeof(IntType) <= sizeof(long)) {
+            // Optimise for small native types.
+            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+                if (mpz_sgn(large_) >= 0 &&
+                        mpz_cmp_ui(large_, limits::max()) <= 0)
+                    return static_cast<IntType>(mpz_get_ui(large_));
+                else
+                    throw IntegerOverflow();
+            } else {
+                if (mpz_cmp_si(large_, limits::max()) <= 0 &&
+                        mpz_cmp_si(large_, limits::min()) >= 0)
+                    return static_cast<IntType>(mpz_get_si(large_));
+                else
+                    throw IntegerOverflow();
+            }
+        } else {
+            int sign = mpz_sgn(large_);
+            if (sign == 0)
+                return 0;
+
+            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+                if (sign < 0)
+                    throw IntegerOverflow();
+
+                // We have a strictly positive GMP integer.
+                size_t count;
+                auto* result = mpz_export(nullptr, &count, 1 /* word order */,
+                    sizeof(IntType), 0 /* native endianness */,
+                    0 /* full words */, large_);
+                // We should have count > 0.
+                if (count == 1) {
+                    IntType ans = *static_cast<IntType*>(result);
+                    free(result);
+                    return ans;
+                } else {
+                    free(result);
+                    throw IntegerOverflow();
+                }
+            } else {
+                // Fetch the absolute value of our GMP integer, which we know to
+                // be non-zero.
+                size_t count;
+                auto* result = mpz_export(nullptr, &count, 1 /* word order */,
+                    sizeof(IntType), 0 /* native endianness */,
+                    0 /* full words */, large_);
+                // We should have count > 0.
+                if (count == 1) {
+                    IntType absVal = *static_cast<IntType*>(result);
+                    free(result);
+
+                    // Note that IntType is signed, and so absVal will in fact
+                    // appear negative if and only if its highest bit is set.
+                    if (absVal >= 0) {
+                        // The highest bit is not set.
+                        // There will be no overflow.
+                        return (sign > 0 ? absVal : -absVal);
+                    } else {
+                        // The highest bit is set.
+                        // There will be overflow - however, this overflow will
+                        // actually wrap around to give the correct result if
+                        // (and only if) our integer is the minimum possible
+                        // IntVal (-100..0 in binary).
+                        if (sign < 0 && absVal == limits::min())
+                            return absVal;
+                        else
+                            throw IntegerOverflow();
+                    }
+                } else {
+                    free(result);
+                    throw IntegerOverflow();
+                }
+            }
+        }
+    } else {
+        // We have a native long integer.
+        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if (small_ < 0)
+                throw IntegerOverflow();
+
+            // We have a _non-negative_ native long integer.
+            if constexpr (sizeof(long) <= sizeof(IntType)) {
+                // Any non-negative long can fit inside IntType.
+                return static_cast<IntType>(small_);
+            } else {
+                // We need to test for overflow.
+                // The following test is fine, since in this scenario the
+                // maximum IntType can be happily represented as a signed long.
+                if (small_ > limits::max())
+                    throw IntegerOverflow();
+                return static_cast<IntType>(small_);
+            }
+        } else {
+            if constexpr (sizeof(long) <= sizeof(IntType)) {
+                // Our native long can fit inside IntType.
+                return static_cast<IntType>(small_);
+            } else {
+                // We need to test for overflow.
+                // The following test is fine, since in this scenario the
+                // upper and lower bounds on IntType can both be happily
+                // represented as a signed long.
+                if (small_ < limits::min() || small_ > limits::max())
+                    throw IntegerOverflow();
+                return static_cast<IntType>(small_);
+            }
+        }
+    }
+}
+
+template <bool withInfinity>
+template <CppInteger IntType>
+IntType IntegerBase<withInfinity>::unsafeValue() const {
+    // Here we follow the logic for unsafeValue(), but without the bounds
+    // checking.
+    if (large_) {
+        // We have a GMP integer.
+        if constexpr (sizeof(IntType) <= sizeof(long)) {
+            // Optimise for small native types.
+            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>)
+                return static_cast<IntType>(mpz_get_ui(large_));
+            else
+                return static_cast<IntType>(mpz_get_si(large_));
+        } else {
+            int sign = mpz_sgn(large_);
+            if (sign == 0)
+                return 0;
+
+            // Fetch the absolute value of our GMP integer.
+            auto* result = mpz_export(nullptr, nullptr, 1 /* word order */,
+                sizeof(IntType), 0 /* native endianness */, 0 /* full words */,
+                large_);
+            // We should have result != null, since our GMP integer is non-zero.
+            IntType absVal = *static_cast<IntType*>(result);
+            free(result);
+
+            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+                return absVal;
+            } else {
+                if (absVal >= 0) {
+                    return (sign > 0 ? absVal : -absVal);
+                } else {
+                    // C++20 guarantees a two's complement representation for
+                    // signed integers.  Therefore the only legitimate situation
+                    // in which absVal appears negative is if our integer is the
+                    // minimum possible IntType, i.e., -2^(bits-1).
+                    // In this case, absVal is already the correct answer.
+                    return absVal;
+                }
+            }
+        }
+    } else {
+        // We have a native long integer.
+        return static_cast<IntType>(small_);
+    }
 }
 
 template <bool withInfinity>
 inline long IntegerBase<withInfinity>::safeLongValue() const {
-    if constexpr (withInfinity)
-        if (isInfinite())
-            throw NoSolution();
+    return safeValue<long>();
+}
 
-    if (large_) {
-        if (mpz_cmp_si(large_, LONG_MAX) <= 0 &&
-                mpz_cmp_si(large_, LONG_MIN) >= 0)
-            return mpz_get_si(large_);
-        else
-            throw NoSolution();
-    } else
-        return small_;
+template <bool withInfinity>
+inline long IntegerBase<withInfinity>::longValue() const {
+    return unsafeValue<long>();
+}
+
+template <bool withInfinity>
+template <int bytes>
+inline typename IntOfSize<bytes>::type IntegerBase<withInfinity>::nativeValue()
+        const {
+    return unsafeValue<typename IntOfSize<bytes>::type>();
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         const IntegerBase& value) {
+    if constexpr (withInfinity) {
+        if (value.isInfinite()) {
+            makeInfinite();
+            return *this;
+        }
+        makeFinite();
+    }
+
     // We assume that mpz_set() is fine with self-assignment, since:
     // - the GMP docs state that output and input variables can be the same;
     // - the libgmpxx classes do not special-case self-assignment.
     // The C++ test suite tests self-assignment of Integers also.
-    if (value.isInfinite()) {
-        makeInfinite();
-        return *this;
-    }
-    makeFinite();
     if (value.large_) {
         if (large_)
             mpz_set(large_, value.large_);
@@ -2722,7 +2948,9 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         const IntegerBase<! withInfinity>& value) {
-    makeFinite(); // Either this or src does not support infinity.
+    if constexpr (withInfinity)
+        makeFinite(); // The given value cannot be infinity.
+
     if (value.large_) {
         if (large_)
             mpz_set(large_, value.large_);
@@ -2742,7 +2970,7 @@ template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         IntegerBase&& src) noexcept {
     if constexpr (withInfinity)
-        InfinityBase<true>::infinite_ = src.infinite_;
+        detail::InfinityBase<true>::infinite_ = src.infinite_;
     small_ = src.small_;
     std::swap(large_, src.large_);
     // Let src dispose of the original large_, if it was non-null.
@@ -2752,7 +2980,9 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         IntegerBase<! withInfinity>&& src) noexcept {
-    makeFinite(); // Either this or src does not support infinity.
+    if constexpr (withInfinity)
+        makeFinite(); // The given value cannot be infinity.
+
     small_ = src.small_;
     std::swap(large_, src.large_);
     // Let src dispose of the original large_, if it was non-null.
@@ -2760,104 +2990,85 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
 }
 
 template <bool withInfinity>
+template <CppInteger IntType>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
-        int value) {
-    makeFinite();
-    small_ = value;
-    if (large_)
-        clearLarge();
-    return *this;
-}
+        IntType value) {
+    if constexpr (withInfinity)
+        makeFinite();
 
-template <bool withInfinity>
-inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
-        unsigned value) {
-    makeFinite();
     small_ = value;
 
-    // Did we overflow?
-    if (small_ < 0) {
-        // Yes, it's an overflow: just a bit too large for a signed long
-        // (literally).
-        if (large_)
-            mpz_set_ui(large_, value);
-        else {
-            large_ = new __mpz_struct[1];
-            mpz_init_set_ui(large_, value);
+    // Test for overflow, if we need to.
+    if constexpr (sizeof(IntType) == sizeof(long) &&
+            regina::is_unsigned_cpp_integer_v<IntType>) {
+        if (small_ < 0) {
+            if (large_)
+                mpz_set_ui(large_, value);
+            else {
+                large_ = new __mpz_struct[1];
+                mpz_init_set_ui(large_, value);
+            }
+        } else {
+            // No overflow occurred.
+            if (large_)
+                clearLarge();
         }
-    } else if (large_) {
-        // No overflow, but we must clear out any old large integer value.
-        clearLarge();
-    }
-    return *this;
-}
-
-template <bool withInfinity>
-inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
-        long value) {
-    makeFinite();
-    small_ = value;
-    if (large_)
-        clearLarge();
-    return *this;
-}
-
-template <bool withInfinity>
-inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
-        unsigned long value) {
-    makeFinite();
-    small_ = value;
-
-    // Did we overflow?
-    if (small_ < 0) {
-        // Yes, it's an overflow: just a bit too large for a signed long
-        // (literally).
-        if (large_)
-            mpz_set_ui(large_, value);
-        else {
-            large_ = new __mpz_struct[1];
-            mpz_init_set_ui(large_, value);
+    } else if constexpr (sizeof(IntType) > sizeof(long)) {
+        if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+            if (small_ != value) {
+                if (! large_) {
+                    large_ = new __mpz_struct[1];
+                    mpz_init(large_);
+                }
+                if (value >= 0) {
+                    mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
+                        0 /* native endianness */, 0 /* full words */, &value);
+                } else {
+                    // mpz_import assumes an unsigned type.
+                    // C++20 mandates a two's complement representation, and
+                    // we use that here.
+                    if (value != std::numeric_limits<IntType>::min())
+                        value = -value;
+                    // In all cases - including min() where we did not negate -
+                    // if we treat the type as unsigned we get |original value|.
+                    mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
+                        0 /* native endianness */, 0 /* full words */, &value);
+                    mpz_neg(large_, large_);
+                }
+            } else {
+                // No overflow occurred.
+                if (large_)
+                    clearLarge();
+            }
+        } else {
+            // Be careful about comparisons between signed and unsigned.
+            if (small_ < 0 || static_cast<IntType>(small_) != value) {
+                if (! large_) {
+                    large_ = new __mpz_struct[1];
+                    mpz_init(large_);
+                }
+                mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
+                    0 /* native endianness */, 0 /* full words */, &value);
+            } else {
+                // No overflow occurred.
+                if (large_)
+                    clearLarge();
+            }
         }
-    } else if (large_) {
-        // No overflow, but we must clear out any old large integer value.
-        clearLarge();
+    } else {
+        // IntType is small enough that overflow is impossible.
+        if (large_)
+            clearLarge();
     }
-    return *this;
-}
-
-template <bool withInfinity>
-inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
-        long long value) {
-    makeFinite();
-    if (large_)
-        clearLarge();
-
-    small_ = value;
-
-    // Detect overflow.
-    if constexpr (sizeof(long) < sizeof(long long))
-        if (small_ != value)
-            large_ = regina::detail::mpz_from_ll(value);
 
     return *this;
 }
 
 template <bool withInfinity>
+template <int bytes>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
-        unsigned long long value) {
-    makeFinite();
-    if (large_)
-        clearLarge();
-
-    small_ = value;
-
-    // Detect overflow.
-    // This could occur even if long and long long have the same size,
-    // due to the discrepancy between signed and unsigned ranges.
-    if (small_ < 0 || static_cast<unsigned long long>(small_) != value)
-        large_ = regina::detail::mpz_from_ull(value);
-
-    return *this;
+        const NativeInteger<bytes>& value) {
+    return (*this) = value.nativeValue();
 }
 
 template <bool withInfinity>
@@ -2871,113 +3082,168 @@ template <bool withInfinity>
 inline void IntegerBase<withInfinity>::swap(IntegerBase& other) noexcept {
     // This should just work, since large_ is a pointer.
     if constexpr (withInfinity)
-        std::swap(InfinityBase<true>::infinite_,
-            other.InfinityBase<true>::infinite_);
+        std::swap(detail::InfinityBase<true>::infinite_,
+            other.detail::InfinityBase<true>::infinite_);
     std::swap(small_, other.small_);
     std::swap(large_, other.large_);
 }
 
 template <bool withInfinity>
-inline bool IntegerBase<withInfinity>::operator ==(const IntegerBase& rhs)
-        const {
-    if (isInfinite() && rhs.isInfinite())
-        return true;
-    else if (isInfinite() || rhs.isInfinite())
-        return false;
-    else if (large_) {
-        if (rhs.large_)
-            return (mpz_cmp(large_, rhs.large_) == 0);
-        else
-            return (mpz_cmp_si_cpp(large_, rhs.small_) == 0);
-    } else {
-        if (rhs.large_)
-            return (mpz_cmp_si_cpp(rhs.large_, small_) == 0);
-        else
-            return (small_ == rhs.small_);
-    }
-}
-
-template <bool withInfinity>
+template <bool rhsWithInfinity>
 inline bool IntegerBase<withInfinity>::operator ==(
-        const IntegerBase<! withInfinity>& rhs) const {
-    // The types are different, so both cannot be infinity.
-    if (isInfinite() || rhs.isInfinite())
-        return false;
-    else if (large_) {
+        const IntegerBase<rhsWithInfinity>& rhs) const {
+    if constexpr (withInfinity && rhsWithInfinity)
+        if (isInfinite() && rhs.isInfinite())
+            return true;
+    if constexpr (withInfinity || rhsWithInfinity)
+        if (isInfinite() || rhs.isInfinite())
+            return false;
+
+    if (large_) {
         if (rhs.large_)
             return (mpz_cmp(large_, rhs.large_) == 0);
         else
-            return (mpz_cmp_si_cpp(large_, rhs.small_) == 0);
+            return (mpz_cmp_si(large_, rhs.small_) == 0);
     } else {
         if (rhs.large_)
-            return (mpz_cmp_si_cpp(rhs.large_, small_) == 0);
+            return (mpz_cmp_si(rhs.large_, small_) == 0);
         else
             return (small_ == rhs.small_);
     }
 }
 
 template <bool withInfinity>
-inline bool IntegerBase<withInfinity>::operator ==(long rhs) const {
-    if (isInfinite())
-        return false;
-    else if (large_)
-        return (mpz_cmp_si_cpp(large_, rhs) == 0);
-    else
-        return (small_ == rhs);
+template <CppInteger IntType>
+inline bool IntegerBase<withInfinity>::operator ==(IntType rhs) const {
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return false;
+
+    if (large_) {
+        if constexpr (sizeof(IntType) <= sizeof(long)) {
+            if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+                return (mpz_cmp_si(large_, rhs) == 0);
+            } else {
+                return (mpz_cmp_ui(large_, rhs) == 0);
+            }
+        } else {
+            // TODO: Improve this.
+            return *this == IntegerBase(rhs);
+        }
+    } else {
+        if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+            return (small_ == rhs);
+        } else {
+            // Be careful: small_ is signed, but rhs is unsigned.
+            // Testing small_ == rhs might convert small_ to unsigned before
+            // the comparison.
+            return (small_ >= 0 && small_ == rhs);
+        }
+    }
 }
 
 template <bool withInfinity>
+template <int bytes>
+inline bool IntegerBase<withInfinity>::operator ==(
+        const NativeInteger<bytes>& rhs) const {
+    return (*this) == rhs.nativeValue();
+}
+
+template <bool withInfinity>
+template <bool rhsWithInfinity>
 inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
-        const IntegerBase& rhs) const {
-    if (isInfinite())
-        return rhs.isInfinite() ? std::strong_ordering::equal :
-            std::strong_ordering::greater;
-    else if (rhs.isInfinite())
-        return std::strong_ordering::less;
-    else if (large_) {
+        const IntegerBase<rhsWithInfinity>& rhs) const {
+    if constexpr (withInfinity) {
+        if (isInfinite()) {
+            if constexpr (rhsWithInfinity)
+                if (rhs.isInfinite())
+                    return std::strong_ordering::equal;
+            return std::strong_ordering::greater;
+        }
+    }
+    if constexpr (rhsWithInfinity) {
+        if (rhs.isInfinite())
+            return std::strong_ordering::less;
+    }
+
+    if (large_) {
         if (rhs.large_)
             return (mpz_cmp(large_, rhs.large_) <=> 0);
         else
-            return (mpz_cmp_si_cpp(large_, rhs.small_) <=> 0);
+            return (mpz_cmp_si(large_, rhs.small_) <=> 0);
     } else {
         if (rhs.large_)
-            return (0 <=> mpz_cmp_si_cpp(rhs.large_, small_)); // back-to-front
+            return (0 <=> mpz_cmp_si(rhs.large_, small_)); // back-to-front
         else
             return (small_ <=> rhs.small_);
     }
 }
 
 template <bool withInfinity>
-inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (long rhs)
-        const {
-    if (isInfinite())
-        return std::strong_ordering::greater;
-    else if (large_)
-        return (mpz_cmp_si_cpp(large_, rhs) <=> 0);
-    else
-        return (small_ <=> rhs);
+template <CppInteger IntType>
+inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
+        IntType rhs) const {
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return std::strong_ordering::greater;
+
+    if (large_) {
+        if constexpr (sizeof(IntType) <= sizeof(long)) {
+            if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+                return (mpz_cmp_si(large_, rhs) <=> 0);
+            } else {
+                return (mpz_cmp_ui(large_, rhs) <=> 0);
+            }
+        } else {
+            // TODO: Improve this.
+            return *this <=> IntegerBase(rhs);
+        }
+    } else {
+        if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+            // Both small_ and rhs are signed.
+            return (small_ <=> rhs);
+        } else {
+            // Be careful: small_ is signed, but rhs is unsigned.
+            if (small_ < 0)
+                return std::strong_ordering::less;
+            else {
+                // Cast small_ to an unsigned type that can contain its value.
+                return (static_cast<unsigned long>(small_) <=> rhs);
+            }
+        }
+    }
+}
+
+template <bool withInfinity>
+template <int bytes>
+inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
+        const NativeInteger<bytes>& rhs) const {
+    return (*this) <=> rhs.nativeValue();
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator ++() {
-    if (! isInfinite()) {
-        if (large_)
-            mpz_add_ui(large_, large_, 1);
-        else if (small_ != LONG_MAX)
-            ++small_;
-        else {
-            // This is the point at which we overflow.
-            forceLarge();
-            mpz_add_ui(large_, large_, 1);
-        }
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
+
+    if (large_)
+        mpz_add_ui(large_, large_, 1);
+    else if (small_ != LONG_MAX)
+        ++small_;
+    else {
+        // This is the point at which we overflow.
+        forceLarge();
+        mpz_add_ui(large_, large_, 1);
     }
     return *this;
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator ++(int) {
-    if (isInfinite())
-        return *this;
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
 
     // Hrmph, just do the standard thing for now.
     // It's not clear how much microoptimisation will help..?
@@ -2988,24 +3254,27 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator ++(int) {
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator --() {
-    if (! isInfinite()) {
-        if (large_)
-            mpz_sub_ui(large_, large_, 1);
-        else if (small_ != LONG_MIN)
-            --small_;
-        else {
-            // This is the point at which we overflow.
-            forceLarge();
-            mpz_sub_ui(large_, large_, 1);
-        }
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
+
+    if (large_)
+        mpz_sub_ui(large_, large_, 1);
+    else if (small_ != LONG_MIN)
+        --small_;
+    else {
+        // This is the point at which we overflow.
+        forceLarge();
+        mpz_sub_ui(large_, large_, 1);
     }
     return *this;
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator --(int) {
-    if (isInfinite())
-        return *this;
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
 
     // Hrmph, just do the standard thing for now.
     // It's not clear how much microoptimisation will help..?
@@ -3017,22 +3286,15 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator --(int) {
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
         const IntegerBase& other) const {
-    if (isInfinite())
-        return *this;
-    if (other.isInfinite())
-        return other;
-
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans += other;
 }
 
 template <bool withInfinity>
+template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
-        long other) const {
-    if (isInfinite())
-        return *this;
-
+        IntType other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans += other;
@@ -3041,22 +3303,15 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
         const IntegerBase& other) const {
-    if (isInfinite())
-        return *this;
-    if (other.isInfinite())
-        return other;
-
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans -= other;
 }
 
 template <bool withInfinity>
+template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
-        long other) const {
-    if (isInfinite())
-        return *this;
-
+        IntType other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans -= other;
@@ -3065,22 +3320,15 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
         const IntegerBase& other) const {
-    if (isInfinite())
-        return *this;
-    if (other.isInfinite())
-        return other;
-
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans *= other;
 }
 
 template <bool withInfinity>
+template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
-        long other) const {
-    if (isInfinite())
-        return *this;
-
+        IntType other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans *= other;
@@ -3089,32 +3337,15 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
         const IntegerBase& other) const {
-    if (isInfinite())
-        return *this;
-    if (other.isInfinite())
-        return (long)0;
-    if (other.isZero()) {
-        IntegerBase ans;
-        ans.makeInfinite();
-        return ans;
-    }
-
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans /= other;
 }
 
 template <bool withInfinity>
+template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
-        long other) const {
-    if (isInfinite())
-        return *this;
-    if (other == 0) {
-        IntegerBase ans;
-        ans.makeInfinite();
-        return ans;
-    }
-
+        IntType other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans /= other;
@@ -3129,8 +3360,9 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::divExact(
 }
 
 template <bool withInfinity>
-inline IntegerBase<withInfinity> IntegerBase<withInfinity>::divExact(long other)
-        const {
+template <CppInteger IntType>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::divExact(
+        IntType other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans.divByExact(other);
@@ -3145,8 +3377,9 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator %(
 }
 
 template <bool withInfinity>
+template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator %(
-        long other) const {
+        IntType other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return ans %= other;
@@ -3154,8 +3387,10 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator %(
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -() const {
-    if (isInfinite())
-        return *this;
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
+
     if (large_) {
         IntegerBase ans;
         ans.large_ = new __mpz_struct[1];
@@ -3176,12 +3411,15 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -() const {
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
         const IntegerBase& other) {
-    if (isInfinite())
-        return *this;
-    else if (other.isInfinite()) {
-        makeInfinite();
-        return *this;
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return *this;
+        else if (other.isInfinite()) {
+            makeInfinite();
+            return *this;
+        }
     }
+
     if (other.large_) {
         if (! large_)
             forceLarge();
@@ -3192,14 +3430,81 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
 }
 
 template <bool withInfinity>
+template <CppInteger IntType>
+IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
+        IntType other) {
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
+
+    if (! large_) {
+        // Use native arithmetic if we can.
+        // Note: both signed and unsigned integer _conversion_ are guaranteed
+        // to be correct modulo 2^bits (as of C++20); however, signed integer
+        // _arithmetic_ has undefined overflow behaviour.  Be careful.
+        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if (other <= detail::differenceAsUnsigned(LONG_MAX, small_)) {
+                // A consequence: 0 ≤ other ≤ ULONG_MAX.
+                // If sizeof(IntType) < sizeof(long) then I understand the
+                // operation takes place via long, and this is fine since
+                // other will fit into a long.
+                // If sizeof(IntType) ≥ sizeof(long) then I understand the
+                // operation takes place via IntType (which is unsigned,
+                // and therefore overflow behaviour is well-defined).
+                // Casting small_ up, performing the addition and then
+                // casting the result down could all introduce errors; however,
+                // I understand these errors are all guaranteed to be
+                // ± 2^long_bits and/or ± 2^IntType_bits, which means the
+                // final result should still be correct.
+                small_ += other;
+                return *this;
+            }
+        } else {
+            if ((other >= 0 && small_ <= (LONG_MAX - other)) ||
+                    (other < 0 && small_ >= (LONG_MIN - other))) {
+                // A consequence: -ULONG_MAX ≤ other ≤ ULONG_MAX.
+                // If other does not fit into a long, then we must have
+                // sizeof(IntType) > sizeof(long).  I understand this means the
+                // operation takes place via IntType (correctly) and then gets
+                // cast down to long (again correctly).
+                small_ += other;
+                return *this;
+            }
+        }
+        // It will overflow.
+        // Fall back to the large integer arithmetic in the next block.
+        forceLarge();
+    }
+
+    // And now we're down to large integer arithmetic (large != null).
+    if constexpr (sizeof(IntType) <= sizeof(long)) {
+        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            mpz_add_ui(large_, large_, other);
+        } else if (other >= 0) {
+            mpz_add_ui(large_, large_, other);
+        } else {
+            mpz_sub_ui(large_, large_, detail::negateToUnsignedType(other));
+        }
+    } else {
+        // TODO: Improve this.
+        return (*this) += IntegerBase(other);
+    }
+
+    return *this;
+}
+
+template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
         const IntegerBase& other) {
-    if (isInfinite())
-        return *this;
-    else if (other.isInfinite()) {
-        makeInfinite();
-        return *this;
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return *this;
+        else if (other.isInfinite()) {
+            makeInfinite();
+            return *this;
+        }
     }
+
     if (other.large_) {
         if (! large_)
             forceLarge();
@@ -3210,9 +3515,294 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
 }
 
 template <bool withInfinity>
+template <CppInteger IntType>
+IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
+        IntType other) {
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
+
+    if (! large_) {
+        // Use native arithmetic if we can.
+        // Note: both signed and unsigned integer _conversion_ are guaranteed
+        // to be correct modulo 2^bits (as of C++20); however, signed integer
+        // _arithmetic_ has undefined overflow behaviour.  Be careful.
+        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if (other <= detail::differenceAsUnsigned(small_, LONG_MIN)) {
+                // A consequence: 0 ≤ other ≤ ULONG_MAX.
+                // If sizeof(IntType) < sizeof(long) then I understand the
+                // operation takes place via long, and this is fine since
+                // other will fit into a long.
+                // If sizeof(IntType) ≥ sizeof(long) then I understand the
+                // operation takes place via IntType (which is unsigned,
+                // and therefore overflow behaviour is well-defined).
+                // Casting small_ up, performing the subtraction and then
+                // casting the result down could all introduce errors; however,
+                // I understand these errors are all guaranteed to be
+                // ± 2^long_bits and/or ± 2^IntType_bits, which means the
+                // final result should still be correct.
+                small_ -= other;
+                return *this;
+            }
+        } else {
+            if ((other >= 0 && small_ >= other + LONG_MIN) ||
+                    (other < 0 && small_ <= other + LONG_MAX)) {
+                // A consequence: -ULONG_MAX ≤ other ≤ ULONG_MAX.
+                // If other does not fit into a long, then we must have
+                // sizeof(IntType) > sizeof(long).  I understand this means the
+                // operation takes place via IntType (correctly) and then gets
+                // cast down to long (again correctly).
+                small_ -= other;
+                return *this;
+            }
+        }
+        // It will overflow.
+        // Fall back to the large integer arithmetic in the next block.
+        forceLarge();
+    }
+
+    // And now we're down to large integer arithmetic (large != null).
+    if constexpr (sizeof(IntType) <= sizeof(long)) {
+        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            mpz_sub_ui(large_, large_, other);
+        } else if (other >= 0) {
+            mpz_sub_ui(large_, large_, other);
+        } else {
+            mpz_add_ui(large_, large_, detail::negateToUnsignedType(other));
+        }
+    } else {
+        // TODO: Improve this.
+        return (*this) -= IntegerBase(other);
+    }
+
+    return *this;
+}
+
+template <bool withInfinity>
+template <CppInteger IntType>
+IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
+        IntType other) {
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
+
+    if constexpr (sizeof(IntType) <= sizeof(long)) {
+        if (large_) {
+            if (other == 0) {
+                clearLarge();
+                small_ = 0;
+            } else if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+                mpz_mul_si(large_, large_, other);
+            } else {
+                mpz_mul_ui(large_, large_, other);
+            }
+        } else {
+            using Wide = IntOfSize<2 * sizeof(long)>::type;
+            // Note: even if other is unsigned, casting it to Wide will do the
+            // cast correctly, and the multiplication should not overflow.
+            Wide ans = static_cast<Wide>(small_) * static_cast<Wide>(other);
+            if (ans > LONG_MAX || ans < LONG_MIN) {
+                // Overflow.
+                large_ = new __mpz_struct[1];
+                mpz_init_set_si(large_, small_);
+                if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+                    mpz_mul_si(large_, large_, other);
+                } else {
+                    mpz_mul_ui(large_, large_, other);
+                }
+            } else
+                small_ = static_cast<long>(ans);
+        }
+        return *this;
+    } else {
+        // Before we pull out the heavy machinery, look for more easy solutions.
+        // (The test below does not capture _all_ representations of zero, but
+        // it _does_ capture the ones that are trivial to test.)
+        if ((! large_) && small_ == 0)
+            return *this;
+
+        // TODO: Improve this.
+        return (*this) *= IntegerBase(other);
+    }
+}
+
+template <bool withInfinity>
+template <CppInteger IntType>
+IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(
+        IntType other) {
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return *this;
+        if (other == 0) {
+            makeInfinite();
+            return *this;
+        }
+    } else {
+        if (other == 0)
+            throw DivisionByZero();
+    }
+
+    if (large_) {
+        if constexpr (sizeof(IntType) <= sizeof(long)) {
+            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+                mpz_tdiv_q_ui(large_, large_, other);
+            } else if (other >= 0) {
+                mpz_tdiv_q_ui(large_, large_, other);
+            } else {
+                mpz_tdiv_q_ui(large_, large_,
+                    detail::negateToUnsignedType(other));
+                mpz_neg(large_, large_);
+            }
+        } else {
+            // TODO: Improve this.
+            return (*this) /= IntegerBase(other);
+        }
+    } else {
+        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            // We can do this all in native arithmetic.
+            if constexpr (sizeof(IntType) < sizeof(long))
+                small_ /= static_cast<long>(other);
+            else if (other <= static_cast<unsigned long>(LONG_MAX))
+                small_ /= static_cast<long>(other);
+            else if (other == static_cast<unsigned long>(LONG_MAX) + 1)
+                small_ = (small_ == LONG_MIN ? -1 : 0);
+            else
+                small_ = 0;
+        } else if (small_ == LONG_MIN && other == -1) {
+            // This is the special case where we must switch from native to
+            // large integers.
+            large_ = new __mpz_struct[1];
+            mpz_init_set_ui(large_, static_cast<unsigned long>(LONG_MAX) + 1);
+        } else {
+            // We can do this all in native arithmetic.
+            if constexpr (sizeof(IntType) <= sizeof(long))
+                small_ /= other;
+            else if (other >= LONG_MIN && other <= LONG_MAX)
+                small_ /= static_cast<long>(other);
+            else if (other == static_cast<IntType>(LONG_MAX) + 1)
+                small_ = (small_ == LONG_MIN ? -1 : 0);
+            else
+                small_ = 0; // since |other| > |small|
+        }
+    }
+    return *this;
+}
+
+template <bool withInfinity>
+template <CppInteger IntType>
+IntegerBase<withInfinity>& IntegerBase<withInfinity>::divByExact(
+        IntType other) {
+    // Preconditions: this is finite; other ≠ 0; (this / other) is an integer.
+    if constexpr (sizeof(IntType) <= sizeof(long)) {
+        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if (large_) {
+                mpz_divexact_ui(large_, large_, other);
+            } else {
+                // We can do this entirely in native arithmetic.
+                // Our precondition implies: other ≤ |small_|, or small_ == 0
+                // (and if small_ == 0 then there is nothing to do).
+                if (small_ != 0) {
+                    // We have other ≤ |small_|.  The only case where we
+                    // _cannot_ fit other into a signed long is if
+                    // other == |LONG_MIN| (and therefore small_ == LONG_MIN).
+                    if (other == static_cast<unsigned long>(LONG_MIN))
+                        small_ = -1;
+                    else
+                        small_ /= static_cast<long>(other);
+                }
+            }
+        } else {
+            if (large_) {
+                if (other >= 0)
+                    mpz_divexact_ui(large_, large_, other);
+                else {
+                    mpz_divexact_ui(large_, large_,
+                        detail::negateToUnsignedType(other));
+                    mpz_neg(large_, large_);
+                }
+            } else if (small_ == LONG_MIN && other == -1) {
+                // This is the special case where we must switch from native to
+                // large integers.
+                large_ = new __mpz_struct[1];
+                mpz_init_set_ui(large_,
+                    static_cast<unsigned long>(LONG_MAX) + 1);
+            } else {
+                // We can do this entirely in signed native arithmetic.
+                small_ /= other;
+            }
+        }
+        return *this;
+    } else {
+        // TODO: Improve this.
+        return divByExact(IntegerBase(other));
+    }
+}
+
+template <bool withInfinity>
+template <CppInteger IntType>
+IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
+        IntType other) {
+    if (other == 0)
+        throw DivisionByZero();
+    if constexpr (withInfinity)
+        if (isInfinite()) {
+            makeFinite();
+            small_ = 0;
+            return *this;
+        }
+
+    // Now we have this != infinity, other != 0.
+    if (large_) {
+        if constexpr (sizeof(IntType) <= sizeof(long)) {
+            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+                mpz_tdiv_r_ui(large_, large_, other);
+            } else if (other >= 0) {
+                mpz_tdiv_r_ui(large_, large_, other);
+            } else {
+                // We use the fact that (this % other) == (this % |other|).
+                mpz_tdiv_r_ui(large_, large_,
+                    detail::negateToUnsignedType(other));
+            }
+            if constexpr (sizeof(IntType) < sizeof(long))
+                forceReduce();
+        } else {
+            // TODO: Improve this.
+            return (*this) %= IntegerBase(other);
+        }
+    } else {
+        // We can do this all in native arithmetic.
+        // Note: some compilers crash on LONG_MIN % -1.
+        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if constexpr (sizeof(IntType) < sizeof(long))
+                small_ %= static_cast<long>(other);
+            else if (other <= static_cast<unsigned long>(LONG_MAX))
+                small_ %= static_cast<long>(other);
+            else if (other == static_cast<unsigned long>(LONG_MAX) + 1 &&
+                    small_ == LONG_MIN)
+                small_ = 0;
+            // Otherwise we have |other| > |small_|, so small_ remains fixed.
+        } else if (other == -1) {
+            small_ = 0;
+        } else {
+            if constexpr (sizeof(IntType) <= sizeof(long))
+                small_ %= other;
+            else if (other >= LONG_MIN && other <= LONG_MAX)
+                small_ %= static_cast<long>(other);
+            else if (other == static_cast<IntType>(LONG_MAX) + 1 &&
+                    small_ == LONG_MIN)
+                small_ = 0;
+            // Otherwise we have |other| > |small_|, so small_ remains fixed.
+        }
+    }
+    return *this;
+}
+
+template <bool withInfinity>
 inline void IntegerBase<withInfinity>::negate() {
-    if (isInfinite())
-        return;
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return;
+
     if (large_)
         mpz_neg(large_, large_);
     else if (small_ == LONG_MIN) {
@@ -3225,8 +3815,10 @@ inline void IntegerBase<withInfinity>::negate() {
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::abs() const {
-    if (isInfinite())
-        return *this;
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this;
+
     if (large_) {
         IntegerBase ans;
         ans.large_ = new __mpz_struct[1];
@@ -3262,14 +3854,14 @@ IntegerBase<withInfinity> IntegerBase<withInfinity>::lcm(
     return ans;
 }
 
-template <bool withInfinity>
-inline IntegerBase<withInfinity> operator +(long lhs,
+template <bool withInfinity, CppInteger IntType>
+inline IntegerBase<withInfinity> operator +(IntType lhs,
         const IntegerBase<withInfinity>& rhs) {
     return rhs + lhs;
 }
 
-template <bool withInfinity>
-inline IntegerBase<withInfinity> operator *(long lhs,
+template <bool withInfinity, CppInteger IntType>
+inline IntegerBase<withInfinity> operator *(IntType lhs,
         const IntegerBase<withInfinity>& rhs) {
     return rhs * lhs;
 }
@@ -3287,7 +3879,9 @@ inline std::tuple<IntegerBase<withInfinity>, IntegerBase<withInfinity>,
 
 template <bool withInfinity>
 inline void IntegerBase<withInfinity>::setRaw(mpz_srcptr fromData) {
-    makeFinite();
+    if constexpr (withInfinity)
+        makeFinite();
+
     if (! large_) {
         large_ = new __mpz_struct[1];
         mpz_init_set(large_, fromData);
@@ -3402,23 +3996,6 @@ inline void IntegerBase<withInfinity>::forceReduce() {
 #ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
 
 template <>
-inline void IntegerBase<true>::makeFinite() {
-    infinite_ = false;
-}
-
-template <>
-inline void IntegerBase<false>::makeFinite() {
-}
-
-// This definition must come *after* the definition of makeInfinite()
-// to keep the compiler happy.
-template <>
-inline IntegerBase<true>::IntegerBase(bool, bool) : large_(nullptr) {
-    // The infinity constructor.
-    makeInfinite();
-}
-
-template <>
 inline const IntegerBase<true> IntegerBase<true>::infinity(false, false);
 
 #endif // __DOXYGEN
@@ -3444,189 +4021,198 @@ std::string tightEncoding(IntegerBase<withInfinity> value) {
 // Inline functions for NativeInteger
 
 template <int bytes>
-inline NativeInteger<bytes>::NativeInteger() : data_(0) {
+inline constexpr NativeInteger<bytes>::NativeInteger() : data_(0) {
 }
 
 template <int bytes>
-inline NativeInteger<bytes>::NativeInteger(Native value) : data_(value) {
+inline constexpr NativeInteger<bytes>::NativeInteger(Native value) : data_(
+        value) {
 }
 
 template <int bytes>
-inline NativeInteger<bytes>::NativeInteger(
-        const NativeInteger<bytes>& value) :
-        data_(value.data_) {
+inline constexpr NativeInteger<bytes>::NativeInteger(
+        const NativeInteger<bytes>& value) : data_(value.data_) {
 }
 
 template <int bytes>
 template <bool withInfinity>
 inline NativeInteger<bytes>::NativeInteger(
         const IntegerBase<withInfinity>& value) :
-        data_(value.template nativeValue<bytes>()) {
+        data_(value.template unsafeValue<Native>()) {
 }
 
 template <int bytes>
-inline bool NativeInteger<bytes>::isZero() const {
+inline constexpr bool NativeInteger<bytes>::isZero() const {
     return (data_ == 0);
 }
 
 template <int bytes>
-inline int NativeInteger<bytes>::sign() const {
+inline constexpr int NativeInteger<bytes>::sign() const {
     return (data_ > 0 ? 1 : data_ < 0 ? -1 : 0);
 }
 
 template <int bytes>
-inline typename NativeInteger<bytes>::Native NativeInteger<bytes>::
+inline constexpr typename NativeInteger<bytes>::Native NativeInteger<bytes>::
         nativeValue() const {
     return data_;
 }
 
 template <int bytes>
 inline std::string NativeInteger<bytes>::str() const {
-    // The standard library supports long long, but not necessarily 128-bit
-    // integers.  If we are beyond the realm of long long, go via Integer/GMP.
-    if constexpr (bytes <= sizeof(long long))
+    if constexpr (StandardStringifiable<Native>) {
         return std::to_string(data_);
-    else
-        return Integer(*this).str();
+    } else {
+        return regina::toString(data_);
+    }
 }
 
 template <int bytes>
-inline NativeInteger<bytes>& NativeInteger<bytes>::operator =(
+inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator =(
         const NativeInteger<bytes>& value) {
     data_ = value.data_;
     return *this;
 }
 
 template <int bytes>
-inline NativeInteger<bytes>& NativeInteger<bytes>::operator =(Native value) {
+inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator =(
+        Native value) {
     data_ = value;
     return *this;
 }
 
 template <int bytes>
-inline void NativeInteger<bytes>::swap(NativeInteger<bytes>& other) noexcept {
+inline constexpr void NativeInteger<bytes>::swap(NativeInteger<bytes>& other)
+        noexcept {
     std::swap(data_, other.data_);
 }
 
 template <int bytes>
-inline bool NativeInteger<bytes>::operator ==(
+inline constexpr bool NativeInteger<bytes>::operator ==(
         const NativeInteger<bytes>& rhs) const {
     return (data_ == rhs.data_);
 }
 
 template <int bytes>
-inline bool NativeInteger<bytes>::operator ==(Native rhs) const {
+inline constexpr bool NativeInteger<bytes>::operator ==(Native rhs) const {
     return (data_ == rhs);
 }
 
 template <int bytes>
-inline std::strong_ordering NativeInteger<bytes>::operator <=> (
+inline constexpr std::strong_ordering NativeInteger<bytes>::operator <=> (
         const NativeInteger& rhs) const {
     return data_ <=> rhs.data_;
 }
 
 template <int bytes>
-inline std::strong_ordering NativeInteger<bytes>::operator <=> (Native rhs)
-        const {
+inline constexpr std::strong_ordering NativeInteger<bytes>::operator <=> (
+        Native rhs) const {
     return data_ <=> rhs;
 }
 
 template <int bytes>
-inline NativeInteger<bytes>& NativeInteger<bytes>::operator ++() {
+inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator ++() {
     ++data_;
     return *this;
 }
 
 template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::operator ++(int) {
+inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator ++(int) {
     return NativeInteger<bytes>(data_++);
 }
 
 template <int bytes>
-inline NativeInteger<bytes>& NativeInteger<bytes>::operator --() {
+inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator --() {
     --data_;
     return *this;
 }
 
 template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::operator --(int) {
+inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator --(int) {
     return NativeInteger<bytes>(data_--);
 }
 
 template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::operator +(
+inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator +(
         const NativeInteger<bytes>& other) const {
     return NativeInteger<bytes>(data_ + other.data_);
 }
 
 template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::operator +(
+inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator +(
         Native other) const {
     return NativeInteger<bytes>(data_ + other);
 }
 
 template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::operator -(
+inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator -(
         const NativeInteger<bytes>& other) const {
     return NativeInteger<bytes>(data_ - other.data_);
 }
 
 template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::operator -(
+inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator -(
         Native other) const {
     return NativeInteger<bytes>(data_ - other);
 }
 
 template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::operator *(
+inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator *(
         const NativeInteger<bytes>& other) const {
     return NativeInteger<bytes>(data_ * other.data_);
 }
 
 template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::operator *(
+inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator *(
         Native other) const {
     return NativeInteger<bytes>(data_ * other);
 }
 
 template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::operator /(
+inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator /(
+        const NativeInteger<bytes>& other) const {
+    if (other.data_ == 0)
+        throw DivisionByZero();
+    return NativeInteger<bytes>(data_ / other.data_);
+}
+
+template <int bytes>
+inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator /(
+        Native other) const {
+    if (other == 0)
+        throw DivisionByZero();
+    return NativeInteger<bytes>(data_ / other);
+}
+
+template <int bytes>
+inline constexpr NativeInteger<bytes> NativeInteger<bytes>::divExact(
         const NativeInteger<bytes>& other) const {
     return NativeInteger<bytes>(data_ / other.data_);
 }
 
 template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::operator /(
+inline constexpr NativeInteger<bytes> NativeInteger<bytes>::divExact(
         Native other) const {
     return NativeInteger<bytes>(data_ / other);
 }
 
 template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::divExact(
+inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator %(
         const NativeInteger<bytes>& other) const {
-    return NativeInteger<bytes>(data_ / other.data_);
-}
-
-template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::divExact(
-        Native other) const {
-    return NativeInteger<bytes>(data_ / other);
-}
-
-template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::operator %(
-        const NativeInteger<bytes>& other) const {
+    if (other.data_ == 0)
+        throw DivisionByZero();
     return NativeInteger<bytes>(data_ % other.data_);
 }
 
 template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::operator %(
+inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator %(
         Native other) const {
+    if (other == 0)
+        throw DivisionByZero();
     return NativeInteger<bytes>(data_ % other);
 }
 
 template <int bytes>
-inline std::pair<NativeInteger<bytes>, NativeInteger<bytes>>
+inline constexpr std::pair<NativeInteger<bytes>, NativeInteger<bytes>>
         NativeInteger<bytes>::divisionAlg(const NativeInteger& divisor) const {
     if (divisor == 0)
         return { 0, data_ };
@@ -3652,100 +4238,110 @@ inline std::pair<NativeInteger<bytes>, NativeInteger<bytes>>
 }
 
 template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::operator -() const {
+inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator -() const {
     return NativeInteger<bytes>(- data_);
 }
 
 template <int bytes>
-inline NativeInteger<bytes>& NativeInteger<bytes>::operator += (
+inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator += (
         const NativeInteger<bytes>& other) {
     data_ += other.data_;
     return *this;
 }
 
 template <int bytes>
-inline NativeInteger<bytes>& NativeInteger<bytes>::operator += (
+inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator += (
         Native other) {
     data_ += other;
     return *this;
 }
 
 template <int bytes>
-inline NativeInteger<bytes>& NativeInteger<bytes>::operator -= (
+inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator -= (
         const NativeInteger<bytes>& other) {
     data_ -= other.data_;
     return *this;
 }
 
 template <int bytes>
-inline NativeInteger<bytes>& NativeInteger<bytes>::operator -= (
+inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator -= (
         Native other) {
     data_ -= other;
     return *this;
 }
 
 template <int bytes>
-inline NativeInteger<bytes>& NativeInteger<bytes>::operator *= (
+inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator *= (
         const NativeInteger<bytes>& other) {
     data_ *= other.data_;
     return *this;
 }
 
 template <int bytes>
-inline NativeInteger<bytes>& NativeInteger<bytes>::operator *= (
+inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator *= (
         Native other) {
     data_ *= other;
     return *this;
 }
 
 template <int bytes>
-inline NativeInteger<bytes>& NativeInteger<bytes>::operator /= (
+inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator /= (
+        const NativeInteger<bytes>& other) {
+    if (other.data_ == 0)
+        throw DivisionByZero();
+    data_ /= other.data_;
+    return *this;
+}
+
+template <int bytes>
+inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator /= (
+        Native other) {
+    if (other == 0)
+        throw DivisionByZero();
+    data_ /= other;
+    return *this;
+}
+
+template <int bytes>
+inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::divByExact(
         const NativeInteger<bytes>& other) {
     data_ /= other.data_;
     return *this;
 }
 
 template <int bytes>
-inline NativeInteger<bytes>& NativeInteger<bytes>::operator /= (
+inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::divByExact(
         Native other) {
     data_ /= other;
     return *this;
 }
 
 template <int bytes>
-inline NativeInteger<bytes>& NativeInteger<bytes>::divByExact(
+inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator %= (
         const NativeInteger<bytes>& other) {
-    data_ /= other.data_;
-    return *this;
-}
-
-template <int bytes>
-inline NativeInteger<bytes>& NativeInteger<bytes>::divByExact(Native other) {
-    data_ /= other;
-    return *this;
-}
-
-template <int bytes>
-inline NativeInteger<bytes>& NativeInteger<bytes>::operator %= (
-        const NativeInteger<bytes>& other) {
+    if (other.data_ == 0)
+        throw DivisionByZero();
     data_ %= other.data_;
     return *this;
 }
 
 template <int bytes>
-inline NativeInteger<bytes>& NativeInteger<bytes>::operator %= (
+inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator %= (
         Native other) {
+    if (other == 0)
+        throw DivisionByZero();
     data_ %= other;
     return *this;
 }
 
 template <int bytes>
-inline void NativeInteger<bytes>::negate() {
+inline constexpr void NativeInteger<bytes>::negate() {
     data_ = - data_;
 }
 
 template <int bytes>
-void NativeInteger<bytes>::gcdWith(const NativeInteger<bytes>& other) {
+constexpr void NativeInteger<bytes>::gcdWith(const NativeInteger<bytes>& other)
+        {
     Native a = data_;
     Native b = other.data_;
 
@@ -3804,7 +4400,7 @@ void NativeInteger<bytes>::gcdWith(const NativeInteger<bytes>& other) {
 }
 
 template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::gcd(
+inline constexpr NativeInteger<bytes> NativeInteger<bytes>::gcd(
         const NativeInteger<bytes>& other) const {
     NativeInteger<bytes> ans(data_);
     ans.gcdWith(other);
@@ -3812,27 +4408,38 @@ inline NativeInteger<bytes> NativeInteger<bytes>::gcd(
 }
 
 template <int bytes>
-inline bool NativeInteger<bytes>::isInfinite() const {
-    return false;
-}
-
-template <int bytes>
-inline void NativeInteger<bytes>::tryReduce() {
+inline constexpr void NativeInteger<bytes>::tryReduce() {
 }
 
 template <int bytes>
 inline std::ostream& operator << (std::ostream& out,
         const NativeInteger<bytes>& i) {
-    // The standard library supports long long, but not necessarily 128-bit
-    // integers.  If we are beyond the realm of long long, go via Integer/GMP.
-    if constexpr (bytes <= sizeof(long long))
+    if constexpr (bytes <= sizeof(char)) {
+        // Make sure the ostream operator write this as an int, not a char.
+        return out << int(i.data_);
+    } else if constexpr (Writeable<typename NativeInteger<bytes>::Native>) {
         return out << i.data_;
-    else
-        return out << Integer(i);
+    } else {
+        // Presumably this is a 128-bit integer, for which std::to_string()
+        // and/or std::ostream output do not exist on some platforms.
+        static_assert(bytes >= 16,
+            "std::ostream output should be available for all native C++ "
+            "integer types with < 128 bits.  Please report this to the "
+            "Regina developers.");
+
+        // We still try to use native numerical ostream output where possible.
+        if (i.data_ <= LLONG_MAX && i.data_ >= LLONG_MIN) {
+            return out << static_cast<long long>(i.data_);
+        } else {
+            // Fall back to string output.
+            return out << i.str();
+        }
+    }
 }
 
 template <int bytes>
-inline void swap(NativeInteger<bytes>& a, NativeInteger<bytes>& b) noexcept {
+inline constexpr void swap(NativeInteger<bytes>& a, NativeInteger<bytes>& b)
+        noexcept {
     a.swap(b);
 }
 

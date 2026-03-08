@@ -29,6 +29,7 @@ if (${REGINA_INSTALL_DEV})
     arrow.h
     binom.h
     cyclotomic.h
+    forward.h
     integer.h
     laurent.h
     laurent2.h

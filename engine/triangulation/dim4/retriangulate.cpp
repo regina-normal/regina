@@ -56,7 +56,7 @@ namespace detail {
 
         static constexpr const char* progressStage = "Exploring triangulations";
 
-        template <class Retriangulator>
+        template <typename Retriangulator>
         static void propagateFrom(const std::string& sig, size_t maxSize,
                 Retriangulator* retriang) {
             Triangulation<4> t = Triangulation<4>::fromIsoSig(sig);

@@ -196,11 +196,26 @@ static const char *fromByteCode =
 R"doc(Creates a boolean set from the given byte code. See byteCode() for
 more information on byte codes.
 
-Precondition:
-    *code* is 0, 1, 2 or 3.
+Exception ``InvalidArgument``:
+    The given argument was not a valid byte code (i.e., it was not 0,
+    1, 2 or 3).
 
 Parameter ``code``:
     the byte code from which the new set will be created.)doc";
+
+// Docstring regina::python::doc::BoolSet_::fromStringCode
+static const char *fromStringCode =
+R"doc(Creates a boolean set from the given string code. See stringCode() for
+more information on string codes.
+
+Both upper-case and lower-case codes (or a mix of the two) are
+accepted by this routine.
+
+Exception ``InvalidArgument``:
+    The given argument was not a valid string code.
+
+Parameter ``code``:
+    the string code from which the new set will be created.)doc";
 
 // Docstring regina::python::doc::BoolSet_::full
 static const char *full =
@@ -241,7 +256,7 @@ static const char *setByteCode =
 R"doc(Sets this to be the boolean set represented by the given byte code.
 See byteCode() for more information on byte codes.
 
-If *code* is not a value byte code, then this routine will do nothing
+If *code* is not a valid byte code, then this routine will do nothing
 and return ``False``.
 
 Parameter ``code``:
@@ -255,7 +270,10 @@ static const char *setStringCode =
 R"doc(Sets this to be the boolean set represented by the given string code.
 See stringCode() for more information on string codes.
 
-If *code* is not a value string code, then this routine will do
+Both upper-case and lower-case codes (or a mix of the two) are
+accepted by this routine.
+
+If *code* is not a valid string code, then this routine will do
 nothing and return ``False``.
 
 Parameter ``code``:
@@ -271,11 +289,13 @@ are a more human-readable alternative to byte codes; in particular,
 they are used in XML data files.
 
 Every string code contains precisely two characters (plus a
-terminating null). Sets {}, {true}, {false} and {true, false} have
-string codes ``--``, ``T-``, ``-F`` and ``TF`` respectively.
+terminating null). The sets ``{}``, ``{true}``, ``{false}`` and
+``{true, false}`` have string codes ``--``, ``T-``, ``-F`` and ``TF``
+respectively.
 
 Returns:
-    the two-character string code representing this set.)doc";
+    the two-character string code representing this set. Any letters
+    in this code will be upper-case.)doc";
 
 }
 

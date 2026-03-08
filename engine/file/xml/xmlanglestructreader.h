@@ -55,8 +55,9 @@ class XMLAngleStructureReader : public XMLElementReader {
             /**< The angle structure currently being read. */
         SnapshotRef<Triangulation<3>> tri_;
             /**< The triangulation on which this angle structure is placed. */
-        long vecLen;
-            /**< The length of corresponding angle structure vector. */
+        ssize_t vecLen;
+            /**< The length of the corresponding angle structure vector,
+                 or -1 if this is unknown. */
 
     public:
         /**

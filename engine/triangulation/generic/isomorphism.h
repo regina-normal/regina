@@ -101,19 +101,17 @@ namespace regina {
  * (e.g., Isomorphism2 and Isomorphism3 for dimensions 2 and 3).
  *
  * \tparam dim the dimension of the triangulations that this isomorphism
- * class works with.  This must be between 2 and 15 inclusive.
+ * class works with.
  *
  * \headerfile triangulation/generic.h
  *
  * \ingroup generic
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 class Isomorphism :
         public Output<Isomorphism<dim>>,
         public TightEncodable<Isomorphism<dim>>,
         public alias::IsomorphismImage<Isomorphism<dim>, dim> {
-    static_assert(dim >= 2, "Isomorphism requires dimension >= 2.");
-
     protected:
         size_t size_;
             /**< The number of simplices in the source triangulation. */
@@ -582,9 +580,6 @@ class Isomorphism :
          * iteration, then this operator will "wrap around" and set this
          * to the identity.
          *
-         * \pre The class Perm<dim+1> supports the preincrement operator;
-         * currently this means that \a dim must be at most 6.
-         *
          * \python This routine is named inc() since Python does
          * not support the increment operator.  Unlike other Regina
          * classes, here inc() wraps the preincrement operator (not the
@@ -616,9 +611,6 @@ class Isomorphism :
          * the preincrement operator (since it involves a deep copy of a
          * large object).  You should use the preincrement operator unless
          * you actually need a copy of the old value of this isomorphism.
-         *
-         * \pre The class Perm<dim+1> supports the preincrement operator;
-         * currently this means that \a dim must be at most 6.
          *
          * \nopython The preincrement operator is present in Python as the
          * member function inc().  (Note that this is different from other
@@ -752,19 +744,19 @@ class Isomorphism :
  *
  * \ingroup generic
  */
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void swap(Isomorphism<dim>& a, Isomorphism<dim>& b) noexcept;
 
 // Inline functions for Isomorphism
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Isomorphism<dim>::Isomorphism(size_t nSimplices) :
         size_(nSimplices),
         simpImage_(new ssize_t[nSimplices]),
         facetPerm_(new Perm<dim+1>[nSimplices]) {
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Isomorphism<dim>::Isomorphism(const Isomorphism<dim>& src) :
         size_(src.size_),
         simpImage_(new ssize_t[src.size_]),
@@ -776,7 +768,7 @@ inline Isomorphism<dim>::Isomorphism(const Isomorphism<dim>& src) :
     std::copy(src.facetPerm_, src.facetPerm_ + src.size_, facetPerm_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Isomorphism<dim>::Isomorphism(Isomorphism<dim>&& src) noexcept:
         size_(src.size_),
         simpImage_(src.simpImage_),
@@ -785,13 +777,13 @@ inline Isomorphism<dim>::Isomorphism(Isomorphism<dim>&& src) noexcept:
     src.facetPerm_ = nullptr;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Isomorphism<dim>::~Isomorphism() {
     delete[] simpImage_;
     delete[] facetPerm_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Isomorphism<dim>& Isomorphism<dim>::operator = (const Isomorphism<dim>& src) {
     // std::copy() exhibits undefined behaviour in the case of self-assignment.
     if (std::addressof(src) == this)
@@ -815,7 +807,7 @@ Isomorphism<dim>& Isomorphism<dim>::operator = (const Isomorphism<dim>& src) {
     return *this;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Isomorphism<dim>& Isomorphism<dim>::operator = (Isomorphism<dim>&& src)
         noexcept{
     size_ = src.size_;
@@ -825,46 +817,46 @@ Isomorphism<dim>& Isomorphism<dim>::operator = (Isomorphism<dim>&& src)
     return *this;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void Isomorphism<dim>::swap(Isomorphism<dim>& other) noexcept {
     std::swap(size_, other.size_);
     std::swap(simpImage_, other.simpImage_);
     std::swap(facetPerm_, other.facetPerm_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline size_t Isomorphism<dim>::size() const {
     return size_;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline ssize_t& Isomorphism<dim>::simpImage(size_t sourceSimp) {
     return simpImage_[sourceSimp];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline ssize_t Isomorphism<dim>::simpImage(size_t sourceSimp) const {
     return simpImage_[sourceSimp];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Perm<dim+1>& Isomorphism<dim>::facetPerm(size_t sourceSimp) {
     return facetPerm_[sourceSimp];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Perm<dim+1> Isomorphism<dim>::facetPerm(size_t sourceSimp) const {
     return facetPerm_[sourceSimp];
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetSpec<dim> Isomorphism<dim>::operator [] (
         const FacetSpec<dim>& source) const {
     return FacetSpec<dim>(simpImage_[source.simp],
         facetPerm_[source.simp][source.facet]);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 bool Isomorphism<dim>::isIdentity() const {
     for (size_t p = 0; p < size_; ++p) {
         if (simpImage_[p] != static_cast<ssize_t>(p))
@@ -875,7 +867,7 @@ bool Isomorphism<dim>::isIdentity() const {
     return true;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Triangulation<dim> Isomorphism<dim>::operator ()(
         const Triangulation<dim>& original) const {
     if (original.size() != size_)
@@ -931,7 +923,7 @@ Triangulation<dim> Isomorphism<dim>::operator ()(
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline FacetSpec<dim> Isomorphism<dim>::operator ()(const FacetSpec<dim>& f)
         const {
     if (f.simp >= 0 && f.simp < static_cast<ssize_t>(size_)) {
@@ -942,7 +934,7 @@ inline FacetSpec<dim> Isomorphism<dim>::operator ()(const FacetSpec<dim>& f)
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 FacetPairing<dim> Isomorphism<dim>::operator ()(
         const FacetPairing<dim>& p) const {
     if (p.size() != size_)
@@ -957,18 +949,18 @@ FacetPairing<dim> Isomorphism<dim>::operator ()(
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Triangulation<dim> Isomorphism<dim>::apply(
         const Triangulation<dim>& original) const {
     return (*this)(original);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void Isomorphism<dim>::applyInPlace(Triangulation<dim>& tri) const {
     tri = (*this)(tri);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Isomorphism<dim> Isomorphism<dim>::operator * (const Isomorphism& rhs) const {
     Isomorphism<dim> ans(rhs.size_);
     for (size_t i = 0; i < rhs.size_; ++i) {
@@ -978,7 +970,7 @@ Isomorphism<dim> Isomorphism<dim>::operator * (const Isomorphism& rhs) const {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Isomorphism<dim> Isomorphism<dim>::operator * (Isomorphism&& rhs) const {
     // We will construct the result by overwriting rhs.
     for (size_t i = 0; i < rhs.size_; ++i) {
@@ -988,7 +980,7 @@ Isomorphism<dim> Isomorphism<dim>::operator * (Isomorphism&& rhs) const {
     return std::move(rhs);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Isomorphism<dim> Isomorphism<dim>::inverse() const {
     Isomorphism<dim> ans(size_);
     for (size_t i = 0; i < size_; ++i) {
@@ -998,12 +990,8 @@ Isomorphism<dim> Isomorphism<dim>::inverse() const {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Isomorphism<dim>& Isomorphism<dim>::operator ++() {
-    static_assert(dim <= 6,
-        "Currently the Isomorphism<dim> pre/postincrement operators "
-        "are only available for dimensions dim <= 6.");
-
     if (size_ == 0)
         return *this;
 
@@ -1015,14 +1003,14 @@ Isomorphism<dim>& Isomorphism<dim>::operator ++() {
     return *this;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Isomorphism<dim> Isomorphism<dim>::operator ++(int) {
     Isomorphism<dim> prev(*this);
     ++(*this);
     return prev;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 void Isomorphism<dim>::tightEncode(std::ostream& out) const {
     regina::detail::tightEncodeIndex(out, size_);
     for (size_t i = 0; i < size_; ++i)
@@ -1043,7 +1031,7 @@ void Isomorphism<dim>::tightEncode(std::ostream& out) const {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Isomorphism<dim> Isomorphism<dim>::tightDecode(std::istream& input) {
     auto n = regina::detail::tightDecodeIndex<size_t>(input);
     Isomorphism ans(n);
@@ -1078,7 +1066,7 @@ Isomorphism<dim> Isomorphism<dim>::tightDecode(std::istream& input) {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void Isomorphism<dim>::writeTextShort(std::ostream& out) const {
     for (size_t i = 0; i < size_; ++i) {
         if (i > 0)
@@ -1087,20 +1075,20 @@ inline void Isomorphism<dim>::writeTextShort(std::ostream& out) const {
     }
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void Isomorphism<dim>::writeTextLong(std::ostream& out) const {
     for (size_t i = 0; i < size_; ++i)
         out << i << " -> " << simpImage_[i] << " (" << facetPerm_[i] << ")\n";
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline bool Isomorphism<dim>::operator == (const Isomorphism& other) const {
     return size_ == other.size_ &&
         std::equal(simpImage_, simpImage_ + size_, other.simpImage_) &&
         std::equal(facetPerm_, facetPerm_ + size_, other.facetPerm_);
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline Isomorphism<dim> Isomorphism<dim>::identity(size_t nSimplices) {
     Isomorphism<dim> id(nSimplices);
     for (size_t i = 0; i < nSimplices; ++i)
@@ -1108,7 +1096,7 @@ inline Isomorphism<dim> Isomorphism<dim>::identity(size_t nSimplices) {
     return id;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 Isomorphism<dim> Isomorphism<dim>::random(size_t nSimplices, bool even) {
     Isomorphism<dim> ans(nSimplices);
 
@@ -1131,7 +1119,7 @@ Isomorphism<dim> Isomorphism<dim>::random(size_t nSimplices, bool even) {
     return ans;
 }
 
-template <int dim>
+template <int dim> requires (supportedDim(dim))
 inline void swap(Isomorphism<dim>& a, Isomorphism<dim>& b) noexcept {
     a.swap(b);
 }

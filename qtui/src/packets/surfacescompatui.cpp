@@ -211,7 +211,12 @@ void SurfacesCompatibilityUI::refresh() {
         matrixLocal->fillLocal(*surfaces);
     } else {
         stack->setCurrentWidget(layerGlobal);
-        matrixGlobal->fillGlobal(*surfaces);
+        try {
+            matrixGlobal->fillGlobal(*surfaces);
+        } catch (const regina::UnsolvedCase&) {
+            setMessage(Message::Overflow);
+            stack->setCurrentWidget(layerNone);
+        }
     }
 
     chooseMatrix->setEnabled(true);
@@ -226,6 +231,13 @@ void SurfacesCompatibilityUI::setMessage(Message msg) {
                 "If you wish to compute these matrices (and if you have "
                 "enough time and memory), then please press the "
                 "<i>Calculate</i> button above.</qt>"));
+            break;
+
+        case Message::Overflow:
+            layerNone->setText(tr("I cannot compute the global compatibility "
+                "matrix. This is because some surface in this list has "
+                "coordinates so large that its normal discs cannot "
+                "fit in memory on this hardware."));
             break;
 
         case Message::NonEmbedded:
@@ -252,7 +264,13 @@ void SurfacesCompatibilityUI::changeLayer(int index) {
             ReginaPrefSet::CompatMatrix::Local;
     } else {
         stack->setCurrentWidget(layerGlobal);
-        matrixGlobal->fillGlobal(*surfaces);
+        try {
+            matrixGlobal->fillGlobal(*surfaces);
+        } catch (const regina::UnsolvedCase&) {
+            setMessage(Message::Overflow);
+            stack->setCurrentWidget(layerNone);
+            return;
+        }
         ReginaPrefSet::global().surfacesInitialCompat =
             ReginaPrefSet::CompatMatrix::Global;
     }
