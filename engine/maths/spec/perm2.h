@@ -1023,8 +1023,8 @@ class Perm<2> {
          * allowed to be additional unread data.
          * \return the permutation represented by the given tight encoding.
          */
-        template <CharIterator iterator>
-        static Perm tightDecode(iterator start, iterator limit,
+        template <CharIterator Iterator>
+        static Perm tightDecode(Iterator start, Iterator limit,
             bool noTrailingData);
 
     friend class PermSn<2, PermOrder::Sign>;
@@ -1209,8 +1209,8 @@ inline Perm<2> Perm<2>::tightDecode(std::istream& input) {
 #ifndef __DOXYGEN
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
-template <CharIterator iterator>
-Perm<2> Perm<2>::tightDecode(iterator start, iterator limit,
+template <CharIterator Iterator>
+Perm<2> Perm<2>::tightDecode(Iterator start, Iterator limit,
         bool noTrailingData) {
     if (start == limit)
         throw InvalidInput("The tight encoding is incomplete");

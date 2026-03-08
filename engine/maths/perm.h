@@ -1426,8 +1426,8 @@ class Perm {
          * allowed to be additional unread data.
          * \return the permutation represented by the given tight encoding.
          */
-        template <CharIterator iterator>
-        static Perm tightDecode(iterator start, iterator limit,
+        template <CharIterator Iterator>
+        static Perm tightDecode(Iterator start, Iterator limit,
             bool noTrailingData);
 
     friend class PermSn<n, PermOrder::Sign>;
@@ -2251,8 +2251,8 @@ std::string Perm<n>::tightEncoding() const {
 // thinks this is a new non-static function instead.
 #ifndef __DOXYGEN
 template <int n>
-template <CharIterator iterator>
-Perm<n> Perm<n>::tightDecode(iterator start, iterator limit,
+template <CharIterator Iterator>
+Perm<n> Perm<n>::tightDecode(Iterator start, Iterator limit,
         bool noTrailingData) {
     // Ensure that our calculations will not overflow, even when reading
     // an *invalid* encoding.  Here we note that:

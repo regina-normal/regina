@@ -56,9 +56,9 @@ namespace detail {
     requires CppInteger<IntType> || ArbitraryPrecisionInteger<IntType>
     void tightEncodeInteger(std::ostream&, IntType);
 
-    template <typename IntType, CharIterator iterator>
+    template <typename IntType, CharIterator Iterator>
     requires CppInteger<IntType> || ArbitraryPrecisionInteger<IntType>
-    IntType tightDecodeInteger(iterator, iterator, bool);
+    IntType tightDecodeInteger(Iterator, Iterator, bool);
 }
 
 /*! \page tight Tight encodings of data
@@ -519,9 +519,9 @@ namespace detail {
      *
      * \ingroup detail
      */
-    template <typename IntType, CharIterator iterator>
+    template <typename IntType, CharIterator Iterator>
     requires CppInteger<IntType> || ArbitraryPrecisionInteger<IntType>
-    IntType tightDecodeInteger(iterator start, iterator limit,
+    IntType tightDecodeInteger(Iterator start, Iterator limit,
         bool noTrailingData);
 
     /**

@@ -229,9 +229,9 @@ void tightEncodeInteger(std::ostream& out, IntType value) {
     out << '}';
 }
 
-template <typename IntType, CharIterator iterator>
+template <typename IntType, CharIterator Iterator>
 requires CppInteger<IntType> || ArbitraryPrecisionInteger<IntType>
-IntType tightDecodeInteger(iterator start, iterator limit,
+IntType tightDecodeInteger(Iterator start, Iterator limit,
         bool noTrailingData) {
     IntType result;
     bool overflow = false;
