@@ -218,6 +218,8 @@ Version 7.5  [ TODO ]
               specialisation.
             - For the iterator-based constructor, the old recommendation that
               the iterator type be random access is now a hard requirement.
+        Class Vector3D<Real>:
+            - New assignment operator that takes a std::array<Real, 3>.
         Function isTriangulation():
             - New function that converts a packet type constant into a
               triangulation dimension.

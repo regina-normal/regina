@@ -39,7 +39,9 @@
 
 #include <array>
 #include <cmath>
+#include <concepts>
 #include <iostream>
+#include <type_traits>
 #include "regina-core.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
@@ -63,7 +65,7 @@ namespace regina {
  *
  * \ingroup maths
  */
-template <typename Real = double>
+template <std::floating_point Real = double>
 struct Vector3D {
     /**
      * The first (x) coordinate of the vector.
@@ -101,7 +103,7 @@ struct Vector3D {
     /**
      * Creates a new vector with the given coordinates.
      *
-     * \param coordinates array whose three elements are the \a x,
+     * \param coordinates an array whose three elements are the \a x,
      * \a y and \a z coordinate respectively.
      */
     constexpr Vector3D(const std::array<Real, 3>& coordinates) :
@@ -114,6 +116,20 @@ struct Vector3D {
      * \return a reference to this vector.
      */
     constexpr Vector3D& operator = (const Vector3D&) = default;
+
+    /**
+     * Sets the coordinates of this vector to the given values.
+     *
+     * \param coordinates an array whose three elements are the new \a x,
+     * \a y and \a z coordinate respectively.
+     * \return a reference to this vector.
+     */
+    constexpr Vector3D& operator = (const std::array<Real, 3>& coordinates) {
+        x = coordinates[0];
+        y = coordinates[1];
+        z = coordinates[2];
+        return *this;
+    }
 
     /**
      * Determines if this and the given vector have the same coordinates.
@@ -288,6 +304,21 @@ struct Vector3D {
     }
 };
 
+// We need to specify the common type to use when working with both
+// Vector3D<Real> and std::array<Real, 3>, since conversions exist in both
+// directions.
+
+} // namespace regina
+template <std::floating_point Real>
+struct std::common_type<regina::Vector3D<Real>, std::array<Real, 3>> {
+    using type = regina::Vector3D<Real>;
+};
+template <std::floating_point Real>
+struct std::common_type<std::array<Real, 3>, regina::Vector3D<Real>> {
+    using type = regina::Vector3D<Real>;
+};
+namespace regina {
+
 /**
  * Writes the given vector to the given output stream.
  * The vector will be written as a triple `(x, y, z)`.
@@ -298,7 +329,7 @@ struct Vector3D {
  *
  * \ingroup maths
  */
-template <typename Real>
+template <std::floating_point Real>
 std::ostream& operator << (std::ostream& out, const Vector3D<Real>& v) {
     return out << '(' << v.x << ", " << v.y << ", " << v.z << ')';
 }
@@ -326,7 +357,7 @@ std::ostream& operator << (std::ostream& out, const Vector3D<Real>& v) {
  *
  * \ingroup maths
  */
-template <typename Real = double>
+template <std::floating_point Real = double>
 struct Segment3D {
     /**
      * The first endpoint (u) of this line segment.
@@ -508,7 +539,7 @@ struct Segment3D {
  *
  * \ingroup maths
  */
-template <typename Real>
+template <std::floating_point Real>
 std::ostream& operator << (std::ostream& out, const Segment3D<Real>& s) {
     return out << '[' << s.u << ", " << s.v << ']';
 }
@@ -543,7 +574,7 @@ std::ostream& operator << (std::ostream& out, const Segment3D<Real>& s) {
  *
  * \ingroup maths
  */
-template <typename Real = double>
+template <std::floating_point Real = double>
 class Matrix3D {
     private:
         std::array<std::array<Real, 3>, 3> m_ {
@@ -746,7 +777,7 @@ class Matrix3D {
  *
  * \ingroup maths
  */
-template <typename Real>
+template <std::floating_point Real>
 std::ostream& operator << (std::ostream& out, const Matrix3D<Real>& m) {
     return out << "[[ " << m[0][0] << ' ' << m[0][1] << ' ' << m[0][2]
         << " ] [ " << m[1][0] << ' ' << m[1][1] << ' ' << m[1][2]
@@ -806,7 +837,7 @@ std::ostream& operator << (std::ostream& out, const Matrix3D<Real>& m) {
  *
  * \ingroup maths
  */
-template <typename Real = double>
+template <std::floating_point Real = double>
 class Rotation3D {
     private:
         std::array<Real, 4> q_ { 1.0, 0.0, 0.0, 0.0 };
@@ -1028,7 +1059,7 @@ class Rotation3D {
  *
  * \ingroup maths
  */
-template <typename Real>
+template <std::floating_point Real>
 std::ostream& operator << (std::ostream& out, const Rotation3D<Real>& rot) {
     return out << '(' << rot[0] << ", " << rot[1] << ", " << rot[2] << ", "
         << rot[3] << ')';

@@ -172,34 +172,37 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
         SpatialLink(SpatialLink&&) noexcept = default;
 
         /**
-         * Creates a new link whose components are supplied by the given
-         * sequences of points in 3-space.
+         * Creates a new link whose components are given by sequences of
+         * points in 3-space.
          *
-         * Each element of the given sequence should represent a separate link
-         * component.  Each component should be given as a sequence of at least
-         * three nodes (i.e., points in 3-space).  These are the points that
-         * will be stored directly in the Component structure, which means that
-         * to form the actual geometry of the link component:
+         * The input is presented as a sequence of sequences:
          *
-         * - each node in the sequence is joined by a straight line segment
-         *   to the node that follows it (and likewise, the last node is
-         *   joined to the first);
+         * - Each element of the "outer" sequence (defined by the \a begin and
+         *   \a end iterator arguments to this routine) should be an "inner"
+         *   sequence representing a single link component.
          *
-         * - the orientation of the link component follows the path in order
-         *   from the first node to the last (and then cycling back to the
-         *   front of the sequence again).
+         * - Each "inner" sequence (i.e., each individual link component)
+         *   should be a sequence of nodes (i.e., points in 3-space).  These
+         *   are the points that will be stored directly in the Component
+         *   structure, which means that to form the actual geometry of the
+         *   link component:
          *
-         * Regarding types:
+         *   - each node in the sequence is joined by a straight line segment
+         *     to the node that follows it, and likewise, the last node is
+         *     joined to the first;
          *
-         * - The outermost sequence (representing components) is presented as
-         *   a pair of \a begin and \a end iterators, which are passed as
-         *   arguments to this routine.
+         *   - the orientation of the link component follows the path in order
+         *     from the first node to the last (and then cycling back to the
+         *     front of the sequence again).
          *
-         * - Each such iterator, when dereferenced, should give a container
-         *   of nodes.  These containers should have their own `begin()` and
-         *   `end()` functions for iteration, and _their_ elements (i.e., the
-         *   individual nodes) should be convertible to the type
-         *   `Vector3D<double>`.
+         * - In particular, each "inner" sequence must contain at least three
+         *   nodes (the minimum required for an embedded piecewise-linear cycle
+         *   in 3-space).
+         *
+         * This routine does not insist on any specific types for the sequences,
+         * as long as the outer and inner sequences all support iteration,
+         * and the elements of the inner sequences can be converted to the
+         * node type `Vector3D<double>`.
          *
          * For example, your code might look like:
          *
@@ -214,17 +217,14 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          * takes either (i) a Python list of lists of triples of real numbers,
          * or (ii) a Python list of lists of Vector3D objects.
          *
-         * \param begin the beginning of the sequence of link components.
-         * \param end a past-the-end iterator indicating the end of the
+         * \param begin the beginning of the outer sequence of link components.
+         * \param end a past-the-end iterator indicating the end of the outer
          * sequence of components.
          */
         template <std::input_iterator iterator>
-        requires
-            Iterable<typename std::iterator_traits<iterator>::value_type> &&
-            requires(iterator it) {
-                requires std::convertible_to<decltype(*it->begin()),
-                    Vector3D<double>>;
-            }
+        requires IterableFor<
+            typename std::iterator_traits<iterator>::value_type,
+            Vector3D<double>>
         SpatialLink(iterator begin, iterator end);
 
         /**
@@ -784,16 +784,9 @@ void swap(SpatialLink& lhs, SpatialLink& rhs);
 // Inline functions for SpatialLink
 
 template <std::input_iterator iterator>
-requires
-    Iterable<typename std::iterator_traits<iterator>::value_type> &&
-    requires(iterator it) {
-        requires std::convertible_to<decltype(*it->begin()), Vector3D<double>>;
-    }
+requires IterableFor<typename std::iterator_traits<iterator>::value_type,
+    Vector3D<double>>
 SpatialLink::SpatialLink(iterator begin, iterator end) {
-    static_assert(std::is_convertible_v<decltype(*(begin->begin())), Node>,
-        "The SpatialLink iterator constructor requires each inner list element "
-        "to be convertible to a SpatialLink::Node (i.e., Vector3D<double>).");
-
     while (begin != end) {
         auto& comp = components_.emplace_back();
         for (const auto& node : *begin)
