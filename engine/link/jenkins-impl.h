@@ -45,15 +45,13 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
-template <typename Iterator>
+template <std::input_iterator Iterator>
+requires SignedCppInteger<std::iter_value_t<Iterator>>
 Link Link::fromJenkins(Iterator begin, Iterator end) {
     if (begin == end)
         throw InvalidArgument("fromJenkins(): missing number of components");
 
-    using InputInt = std::remove_cv_t<std::remove_reference_t<decltype(*begin)>>;
-    static_assert(SignedCppInteger<InputInt>, "fromJenkins(): the iterator type "
-        "needs to dereference to give a native signed C++ integer type.");
-
+    using InputInt = std::iter_value_t<Iterator>;
     InputInt val = *begin++;
     if (val < 0)
         throw InvalidArgument("fromJenkins(): invalid number of components");

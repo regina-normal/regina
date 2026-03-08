@@ -221,11 +221,9 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          * \param end a past-the-end iterator indicating the end of the outer
          * sequence of components.
          */
-        template <std::input_iterator iterator>
-        requires IterableFor<
-            typename std::iterator_traits<iterator>::value_type,
-            Vector3D<double>>
-        SpatialLink(iterator begin, iterator end);
+        template <std::input_iterator Iterator>
+        requires IterableFor<std::iter_value_t<Iterator>, Vector3D<double>>
+        SpatialLink(Iterator begin, Iterator end);
 
         /**
          * Creates a new link whose components are given by hard-coded
@@ -783,10 +781,9 @@ void swap(SpatialLink& lhs, SpatialLink& rhs);
 
 // Inline functions for SpatialLink
 
-template <std::input_iterator iterator>
-requires IterableFor<typename std::iterator_traits<iterator>::value_type,
-    Vector3D<double>>
-SpatialLink::SpatialLink(iterator begin, iterator end) {
+template <std::input_iterator Iterator>
+requires IterableFor<std::iter_value_t<Iterator>, Vector3D<double>>
+SpatialLink::SpatialLink(Iterator begin, Iterator end) {
     while (begin != end) {
         auto& comp = components_.emplace_back();
         for (const auto& node : *begin)

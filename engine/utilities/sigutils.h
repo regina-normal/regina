@@ -502,7 +502,7 @@ class Base64SigEncoder {
          * to encodeSize().
          */
         template <std::input_iterator iterator>
-        requires CppInteger<typename std::iterator_traits<iterator>::value_type>
+        requires CppInteger<std::iter_value_t<iterator>>
         void encodeInts(iterator begin, iterator end, int nChars) {
             for (auto it = begin; it != end; ++it)
                 encodeInt(*it, nChars);
@@ -833,11 +833,10 @@ class Base64SigDecoder {
          * \param nChars the number of base64 characters to read.
          */
         template <std::output_iterator<int> iterator>
-        requires CppInteger<typename std::iterator_traits<iterator>::value_type>
+        requires CppInteger<std::iter_value_t<iterator>>
         void decodeInts(iterator output, size_t count, int nChars) {
-            using IntType = typename std::iterator_traits<iterator>::value_type;
             for (size_t i = 0; i < count; ++i)
-                *output++ = decodeInt<IntType>(nChars);
+                *output++ = decodeInt<std::iter_value_t<iterator>>(nChars);
         }
 
         /**

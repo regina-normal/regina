@@ -39,6 +39,7 @@
 
 #include <array>
 #include <functional>
+#include <iterator>
 #include <optional>
 #include <vector>
 #include "regina-core.h"
@@ -6149,11 +6150,6 @@ class Link :
          * sequence of integers.  This sequence is given by passing a
          * pair of begin/end iterators.
          *
-         * \pre \a Iterator is a random access iterator type, and
-         * dereferencing such an iterator produces a native C++ integer.
-         * (The specific native C++ integer type being used will be deduced
-         * from the type \a Iterator.)
-         *
          * \warning In general, the classical Gauss code does not contain
          * enough information to uniquely reconstruct a classical knot.
          * For prime knots, both a knot and its reflection can be described by
@@ -6176,7 +6172,8 @@ class Link :
          * sequence of integers for a classical Gauss code.
          * \return the reconstructed knot.
          */
-        template <typename Iterator>
+        template <std::random_access_iterator Iterator>
+        requires SignedCppInteger<std::iter_value_t<Iterator>>
         static Link fromGauss(Iterator begin, Iterator end);
 
         /**
@@ -6458,11 +6455,6 @@ class Link :
          * sequence of integers.  This sequence is given by passing a
          * pair of begin/end iterators.
          *
-         * \pre \a Iterator is a forward iterator type, and
-         * dereferencing such an iterator produces a native C++ integer.
-         * (The specific native C++ integer type being used will be deduced
-         * from the type \a Iterator.)
-         *
          * \exception InvalidArgument The given sequence was not a valid
          * encoding of a classical or virtual link in Jenkins' format.
          *
@@ -6475,7 +6467,8 @@ class Link :
          * sequence of integers that describes a link.
          * \return the reconstructed link.
          */
-        template <typename Iterator>
+        template <std::input_iterator Iterator>
+        requires SignedCppInteger<std::iter_value_t<Iterator>>
         static Link fromJenkins(Iterator begin, Iterator end);
 
         /**
@@ -6554,11 +6547,6 @@ class Link :
          * Dowker-Thistlethwaite notation, but for this you will need to use
          * the string-based variant of fromDT().
          *
-         * \pre \a Iterator is a random access iterator type, and
-         * dereferencing such an iterator produces a native C++ integer.
-         * (The specific native C++ integer type being used will be deduced
-         * from the type \a Iterator.)
-         *
          * \warning In general, Dowker-Thistlethwaite notation does not contain
          * enough information to uniquely reconstruct a classical knot.
          * For prime knots, both a knot and its reflection can be described by
@@ -6581,7 +6569,8 @@ class Link :
          * for a classical knot.
          * \return the reconstructed knot.
          */
-        template <typename Iterator>
+        template <std::random_access_iterator Iterator>
+        requires SignedCppInteger<std::iter_value_t<Iterator>>
         static Link fromDT(Iterator begin, Iterator end);
 
         /**
