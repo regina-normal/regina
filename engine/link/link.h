@@ -5946,32 +5946,33 @@ class Link :
          * amongst other things).
          *
          * For the purposes of this routine, we number the crossings
-         * 1, 2, ..., \a n.  The information that you must pass to this
-         * routine is the following:
+         * 1, 2, ..., \a n.  The information that you pass to this routine is
+         * encoded in two sequences:
          *
-         * - The first iterator range (\a beginSigns, \a endSigns)
-         *   encodes the signs of crossings 1, ..., \a n in order.
-         *   Each iterator in this range must dereference to either +1 or -1.
+         * - The first sequence, defined by the iterator range
+         *   (\a beginSigns, \a endSigns), encodes the signs of crossings
+         *   `1,...,n` in order.  Each element of this sequence must be ±1.
          *
-         * - The second iterator range (\a beginComponents, \a endComponents)
-         *   identifies the individual components of the link.
-         *   Each iterator in this range must dereference to a container
-         *   that has a size() function and supports range-based \c for loops
-         *   (so standard C++ container classes such as std::vector<int> and
-         *   std::list<int> are fine).
+         * - The second sequence, defined by the iterator range
+         *   (\a beginComponents, \a endComponents), encodes the individual
+         *   components of the link.  This is actually a sequence of sequences:
+         *   each link component is defined by an "inner" sequence of integers,
+         *   listing the crossings that you visit in order when traversing
+         *   the component.  A positive integer \a i indicates that you pass
+         *   over crossing \a i, and a negative integer -\a i indicates that
+         *   you pass under crossing \a i.
          *
-         * - The container for each component must be filled with integers,
-         *   which identify the crossings you visit in order when traversing
-         *   the component.  A positive entry \a i indicates that you pass
-         *   over crossing \a i, and a negative entry -\a i indicates that you
-         *   pass under crossing \a i.
+         * - To encode a component with no crossings, your inner sequence may
+         *   be empty, or may contain the single integer 0 (either is fine).
          *
-         * - To encode a component with no crossings, you may use either an
-         *   empty container or a container containing the single integer 0.
+         * This routine does not insist on any specific types for the
+         * sequences, as long as all sequences support iteration (this
+         * includes the outer sequences for signs and components, as well as
+         * the inner sequences of crossings for each individual component).
          *
          * Be aware that, once the link has been constructed, the crossings
-         * 1, ..., \a n will have been reindexed as 0, ..., <i>n</i>-1
-         * (since every Link object numbers its crossings starting from 0).
+         * `1,...,n` will have been reindexed as `0,...,n-1` (since every Link
+         * object numbers its crossings starting from 0).
          *
          * As an example, Python users can construct the left-hand trefoil and
          * the Hopf link as follows:
@@ -5984,24 +5985,34 @@ class Link :
          * \exception InvalidArgument A link could not be reconstructed from
          * the given data.
          *
-         * \python The signs should be passed as a single Python list of
-         * integers (not an iterator pair).  Likewise, the components should be
-         * passed as a Python list of lists of integers (not an iterator pair).
-         * In the case of a knot (which has only one component), you are
-         * welcome to replace the list of lists `[[...]]` with a
-         * single list `[...]`; however, be aware that a single empty list `[ ]`
-         * will be interpreted as an empty link (not a zero-crossing unknot).
+         * \python The sequence of signs should be passed as a single Python
+         * list of integers (not an iterator pair).  Likewise, the sequence of
+         * components should be passed as a Python list of lists of integers
+         * (not an iterator pair).  In the case of a knot (which has only one
+         * component), you are welcome to replace the list of lists `[[...]]`
+         * with a single list `[...]`; however, be aware that a single empty
+         * list `[ ]` will be interpreted as an empty link (not a zero-crossing
+         * unknot).
          *
-         * \param beginSigns the beginning of the list of crossing signs.
+         * \param beginSigns the beginning of the sequence of crossing signs.
          * \param endSigns a past-the-end iterator indicating the end of
-         * the list of crossing signs.
-         * \param beginComponents the beginning of the list of containers
-         * describing each link component.
+         * the sequence of crossing signs.
+         * \param beginComponents the beginning of the sequence of link
+         * components.
          * \param endComponents a past-the-end iterator indicating the
-         * end of the list of link components.
+         * end of the sequence of link components.
          * \return the reconstructed link.
          */
-        template <typename SignIterator, typename ComponentIterator>
+        template <std::input_iterator SignIterator,
+            std::input_iterator ComponentIterator>
+        requires
+            SignedCppInteger<std::iter_value_t<SignIterator>> &&
+            Iterable<std::iter_value_t<ComponentIterator>> &&
+            requires (ComponentIterator it) {
+                // We use + here to decay the inner sequence element to a plain
+                // value type.  In C++23, we can replace +(...) with auto(...).
+                { +(*it->begin()) } -> SignedCppInteger;
+            }
         static Link fromData(SignIterator beginSigns, SignIterator endSigns,
             ComponentIterator beginComponents, ComponentIterator endComponents);
 
@@ -6680,14 +6691,11 @@ class Link :
          * sequence of 4-tuples of integers.  This sequence is given by
          * passing a pair of begin/end iterators.
          *
-         * \pre \a Iterator is a random access iterator type.
-         *
-         * \pre If \a it is such an iterator, then `(*it)[0]`,
-         * `(*it)[1]`, `(*it)[2]` and `(*it)[3]`
-         * will give the elements of the corresponding 4-tuple, which
-         * can then be treated as native C++ integers.  (The specific native
-         * C++ integer type being used will be deduced from the type
-         * \a Iterator.)
+         * For each individual 4-tuple \a t, the elements of \a t will be
+         * accessed via the subscript operator; that is, `t[0], ..., t[3]`.
+         * This means you have many choices for your tuple type: valid examples
+         * include `std::array<long, 4>`, `std::vector<int>`, Regina's own
+         * `FixedArray<long>`, or a C-style array `int[4]`.
          *
          * \warning If the link contains any components that sit completely
          * above all other link components (in other words, link components
@@ -6711,7 +6719,12 @@ class Link :
          * sequence of 4-tuples for a planar diagram code.
          * \return the reconstructed link.
          */
-        template <typename Iterator>
+        template <std::random_access_iterator Iterator>
+        requires requires (Iterator it, int index) {
+            // We use + here to decay the tuple element to a plain value type.
+            // In C++23, we can replace +(*it)[index] with auto((*it)[index]).
+            { +(*it)[index] } -> CppInteger;
+        }
         static Link fromPD(Iterator begin, Iterator end);
 
         /*@}*/

@@ -164,10 +164,9 @@ concept PacketIterator =
 template <typename T>
 concept Iterable =
     requires(T x) {
-        { x.begin() };
+        { x.begin() } -> std::forward_iterator;
         { x.end() };
         requires std::same_as<decltype(x.begin()), decltype(x.end())>;
-        requires std::forward_iterator<decltype(x.begin())>;
     };
 
 /**

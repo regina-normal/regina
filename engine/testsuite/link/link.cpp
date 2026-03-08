@@ -3869,6 +3869,48 @@ TEST_F(LinkTest, sig) {
     EXPECT_EQ(virtualDisconnected.link.sig(), "cabcacbjpcabcabjpcababdp");
 }
 
+static void verifyFromData(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    for (int useZeroForEmpty = 0; useZeroForEmpty <= 1; ++useZeroForEmpty) {
+        SCOPED_TRACE_NUMERIC(useZeroForEmpty);
+
+        std::vector<int> signs;
+        signs.reserve(link.size());
+        for (auto c : link.crossings())
+            signs.push_back(c->sign());
+
+        std::vector<std::vector<int>> components;
+        components.reserve(link.countComponents());
+        for (auto c : link.components()) {
+            std::vector<int> comp;
+            if (! c) {
+                if (useZeroForEmpty)
+                    comp.push_back(0);
+            } else {
+                regina::StrandRef s = c;
+                do {
+                    int index = static_cast<int>(s.crossing()->index()) + 1;
+                    comp.push_back(s.strand() == 1 ? index : -index);
+                    ++s;
+                } while (s != c);
+            }
+            components.push_back(std::move(comp));
+        }
+
+        Link recon;
+        ASSERT_NO_THROW({ recon = Link::fromData(signs.begin(), signs.end(),
+            components.begin(), components.end()); });
+
+        // This should reconstruct the labelling precisely.
+        EXPECT_EQ(recon, link);
+    }
+}
+
+TEST_F(LinkTest, fromData) {
+    testManualCases(verifyFromData);
+}
+
 static void verifyGaussAndDT(const TestCase& test,
         bool testGauss = true, bool testDT = true) {
     SCOPED_TRACE_CSTRING(test.name);

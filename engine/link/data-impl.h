@@ -153,13 +153,17 @@ void Link::addComponents(size_t strandsRemaining,
     addComponents(strandsRemaining - component.size(), otherComponents...);
 }
 
-template <typename SignIterator, typename ComponentIterator>
+template <std::input_iterator SignIterator,
+    std::input_iterator ComponentIterator>
+requires
+    SignedCppInteger<std::iter_value_t<SignIterator>> &&
+    Iterable<std::iter_value_t<ComponentIterator>> &&
+    requires (ComponentIterator it) {
+        { +(*it->begin()) } -> SignedCppInteger;
+    }
 Link Link::fromData(SignIterator beginSigns, SignIterator endSigns,
         ComponentIterator beginComponents, ComponentIterator endComponents) {
-    using InputInt = std::remove_cv_t<std::remove_reference_t<
-        decltype(*beginComponents->begin())>>;
-    static_assert(SignedCppInteger<InputInt>, "fromData(): the iterator type "
-        "needs to dereference to give a native signed C++ integer type.");
+    using InputInt = std::remove_cvref_t<decltype(*beginComponents->begin())>;
 
     Link ans;
 
@@ -181,16 +185,24 @@ Link Link::fromData(SignIterator beginSigns, SignIterator endSigns,
     const auto maxCrossing = static_cast<InputInt>(n);
 
     for (auto cit = beginComponents; cit != endComponents; ++cit) {
-        if (cit->size() == 0) {
+        auto it = cit->begin();
+        if (it == cit->end()) {
             // Support an empty component via { }.
             ans.components_.emplace_back();
-        } else if (cit->size() == 1 && *cit->begin() == 0) {
+        } else if (*it == 0) {
             // Support an empty component via { 0 }.
-            ans.components_.emplace_back();
+            if (++it == cit->end())
+                ans.components_.emplace_back();
+            else
+                throw InvalidArgument("fromData(): crossing out of range");
         } else {
+            // Support a component with actual crossings (all of which should
+            // be described by non-zero integers).
             bool first = true;
+            size_t size = 0;
             StrandRef curr, prev;
-            for (auto c : *cit) {
+            for ( ; it != cit->end(); ++it, ++size) {
+                InputInt c = *it;
                 if (c == 0 || c > maxCrossing || c < -maxCrossing)
                     throw InvalidArgument("fromData(): crossing out of range");
                 if (c > 0)
@@ -228,7 +240,7 @@ Link Link::fromData(SignIterator beginSigns, SignIterator endSigns,
                     "into same strand of crossing");
             curr.crossing()->prev_[curr.strand()] = prev;
 
-            strandsFound += cit->size();
+            strandsFound += size;
         }
     }
 

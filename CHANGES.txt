@@ -132,6 +132,9 @@ Version 7.5  [ TODO ]
             - Removed the Boost Graph Library (BGL) interface for links
               (link/graph.h).  This is because Regina has not used Boost since
               December 2021, and so this code is essentially untested nowadays.
+            - The iterator-based variant of fromData() now has simpler
+              requirements on the component sequences (in particular, iteration
+              no longer needs to be random access).
         Class LPCol<...>:
             - This is now an internal class in the namespace regina::detail,
               and its template parameters have changed.  End users should have
