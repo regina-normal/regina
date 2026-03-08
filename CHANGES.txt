@@ -16,6 +16,13 @@ Version 7.5  [ TODO ]
           now enforced by the compiler.
         - More use of constexpr throughout the calculation engine.
     ENGINE:
+        Class AbelianGroup:
+            - The constructor that takes invariant factors as a container
+              is deprecated, and replaced by a new constructor that takes
+              invariant factors as a pair of iterators.  The type requirements
+              for the old deprecated constructor have changed slightly (in
+              particular, the container type now needs bidirectional iterators,
+              but no longer needs to support rbegin() and rend()).
         Class BitManipulatorByType<...>:
             - This is now an internal class in the namespace regina::detail.
               You should never need to refer to this class directly; instead

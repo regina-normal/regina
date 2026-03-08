@@ -16,8 +16,8 @@ static const char *AbelianGroup =
 R"doc(Represents a finitely generated abelian group.
 
 The torsion elements of the group are stored in terms of their
-invariant factors. For instance, Z_2+Z_3 will appear as Z_6, and
-Z_2+Z_2+Z_3 will appear as Z_2+Z_6.
+invariant factors. For instance, ``Z_2 + Z_3`` will appear as ``Z_6``,
+and ``Z_2 + Z_2 + Z_3`` will appear as ``Z_2 + Z_6``.
 
 In general the factors will appear as Z_*d0*+...+Z_*dn*, where the
 invariant factors *di* are all greater than 1 and satisfy
@@ -91,24 +91,29 @@ Parameter ``rank``:
 static const char *__init_2 =
 R"doc(Creates a new group with the given rank and invariant factors.
 
+The invariant factors should be given as a sequence ``d0, d1, ...``,
+as described in the class notes, where each invariant factor is
+greater than 1 and divides the invariant factor after it.
+
 Exception ``InvalidArgument``:
     The invariant factors were not all greater than 1, and/or they did
     not satisfy the divisibily requirement (where each invariant
     factor must divide the one after it).
 
-Template parameter ``Container``:
-    a container or view that supports reverse iteration via rbegin(),
-    rend(), that has an empty() function, and whose elements may be of
-    a native C++ integer type or one of Regina's own integer types. A
-    suitable example might be std::vector<int>.
+Python:
+    Instead of using a pair of iterators, you should pass the
+    invariant factors as a Python list.
 
 Parameter ``rank``:
     the rank of the new group (i.e., the number of copies of *Z*).
 
-Parameter ``invFac``:
-    the list of invariant factors *d0*, *d1*, ..., as described in the
-    class notes, where each invariant factor is greater than 1 and
-    divides the invariant factor after it.)doc";
+Parameter ``beginInvFac``:
+    an interator pointing to the beginning of the list of invariant
+    factors, as described above.
+
+Parameter ``endInvFac``:
+    an iterator pointing past the end of the list of invariant
+    factors.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::__init_3
 static const char *__init_3 =
