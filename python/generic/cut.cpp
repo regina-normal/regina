@@ -54,7 +54,7 @@ void addCut(pybind11::module_& m) {
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def(pybind11::init<size_t, size_t>(), rdoc::__init_2)
         .def(pybind11::init<const Cut&>(), rdoc::__copy)
-        .def(pybind11::init([](const std::vector<int> sides) {
+        .def(pybind11::init([](const std::vector<int>& sides) {
             return new Cut(sides.begin(), sides.end());
         }), pybind11::arg("sides"), rdoc::__init_3)
         .def("side", &Cut::side, rdoc::side)
