@@ -67,7 +67,7 @@ template <typename T, typename Element>
 concept ConstRefArrayOf =
     std::is_reference_v<T> &&
     std::is_const_v<std::remove_reference_t<T>> &&
-    ArrayOf<std::remove_const_t<std::remove_reference_t<T>>, Element>;
+    ArrayOf<std::remove_cvref_t<T>, Element>;
 
 } // namespace regina
 

@@ -135,8 +135,7 @@ concept SelfSentinelInputIterator =
 template <typename T>
 concept CharIterator =
     std::input_iterator<T> &&
-    std::same_as<char, std::remove_const_t<std::remove_reference_t<
-        decltype(*std::declval<T&>())>>>;
+    std::same_as<char, std::remove_cvref_t<decltype(*std::declval<T&>())>>;
 
 /**
  * An input iterator that iterates over packets.
