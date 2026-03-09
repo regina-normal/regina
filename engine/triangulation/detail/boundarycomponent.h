@@ -596,8 +596,6 @@ class BoundaryComponentBase :
          * <i>dim</i>-manifold anyway, and so if you do have pinched faces
          * then you almost certainly have bigger problems to deal with.
          *
-         * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
-         *
          * \warning If this boundary component itself forms an ideal
          * (<i>dim</i>-1)-dimensional triangulation, then again this result
          * is well-defined but topologically meaningless (since it is
@@ -609,10 +607,8 @@ class BoundaryComponentBase :
          *
          * \return the Euler characteristic of this boundary component.
          */
-        long eulerChar() const {
-            static_assert(allFaces,
-                "BoundaryComponent<dim>::eulerChar() can only be used "
-                "when dim is one of Regina's standard dimensions.");
+        long eulerChar() const requires (standardDim(dim)) {
+            static_assert(allFaces); // just to be sure
             if constexpr (dim == 2) {
                 // There is only one possible answer here.
                 return 0;
@@ -861,14 +857,13 @@ class BoundaryComponentBase :
          * \param face the face to append to the list.
          */
         template <int subdim>
+        requires (subdim < dim && subdim >= (standardDim(dim) ? 0 : dim - 2))
         void push_back(Face<dim, subdim>* face) {
             if constexpr ((! allFaces) && subdim == dim - 2) {
                 // We don't store (dim-2)-faces, but we do count them.
                 ++nRidges_.value;
             } else {
-                static_assert(tupleIndex(subdim) >= 0,
-                    "BoundaryComponentBase::push_back() does not support "
-                    "this (dim, subdim) combination.");
+                static_assert(tupleIndex(subdim) >= 0); // just to be sure
                 std::get<tupleIndex(subdim)>(faces_).push_back(face);
             }
         }

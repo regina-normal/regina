@@ -391,10 +391,6 @@ bool Triangulation<3>::hasSplittingSurface() const {
 template <int subdim> requires (subdim >= 0 && subdim < 3)
 std::pair<NormalSurface, bool> Triangulation<3>::linkingSurface(
         const Face<3, subdim>& face) const {
-    static_assert(0 <= subdim && subdim < 3,
-        "Triangulation<3>::linkingSurface() requires a face of dimension "
-        "0, 1 or 2.");
-
     Vector<LargeInteger> coords(7 * size());
     bool thin = true;
 

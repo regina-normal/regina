@@ -1025,10 +1025,7 @@ bool TriangulationBase<dim>::internal20(Face<dim, k>* f, bool check,
 
 template <int dim> requires (supportedDim(dim))
 bool TriangulationBase<dim>::internalShellBoundary(Simplex<dim>* s,
-        bool check, bool perform) {
-    static_assert(standardDim(dim),
-        "Boundary shelling moves are only available in standard dimensions.");
-
+        bool check, bool perform) requires (standardDim(dim)) {
     if (s->isLocked()) {
         if (check)
             return false;

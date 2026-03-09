@@ -37,10 +37,6 @@ namespace regina {
 template <int subdim> requires (subdim >= 0 && subdim < 4)
 std::pair<NormalHypersurface, bool> Triangulation<4>::linkingSurface(
         const Face<4, subdim>& face) const {
-    static_assert(0 <= subdim && subdim < 4,
-        "Triangulation<4>::linkingSurface() requires a face of dimension "
-        "0, 1, 2 or 3.");
-
     Vector<LargeInteger> coords(15 * size());
     bool thin = true;
 

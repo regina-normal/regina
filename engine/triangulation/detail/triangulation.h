@@ -2238,15 +2238,13 @@ class TriangulationBase :
          * (faces, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects can no longer be used.
          *
-         * \pre The dimension \a dim is one of Regina's
-         * \ref stddim "standard dimensions".
          * \pre The given simplex is a simplex of this triangulation.
          *
          * \param s the top-dimensional simplex upon which to perform the move.
          * \return \c true if and only if the requested move was able to be
          * performed.
          */
-        bool shellBoundary(Simplex<dim>* s);
+        bool shellBoundary(Simplex<dim>* s) requires (standardDim(dim));
 
         /**
          * Determines whether it is possible to perform a
@@ -2300,15 +2298,14 @@ class TriangulationBase :
          * For more detail on boundary shelling moves and when they can be
          * performed, see shellBoundary().
          *
-         * \pre The dimension \a dim is one of Regina's
-         * \ref stddim "standard dimensions".
          * \pre The given simplex is a simplex of this triangulation.
          *
          * \param s the top-dimensional simplex upon which to perform the
          * candidate move.
          * \return \c true if and only if the requested move can be performed.
          */
-        bool hasShellBoundary(Simplex<dim>* s) const;
+        bool hasShellBoundary(Simplex<dim>* s) const
+            requires (standardDim(dim));
 
         /**
          * If possible, returns the triangulation obtained by performing a
@@ -2374,8 +2371,6 @@ class TriangulationBase :
          * For more detail on boundary shelling moves and when they can be
          * performed, see shellBoundary().
          *
-         * \pre The dimension \a dim is one of Regina's
-         * \ref stddim "standard dimensions".
          * \pre The given simplex is a simplex of this triangulation.
          *
          * \param s the top-dimensional simplex upon which to perform the move.
@@ -2383,7 +2378,7 @@ class TriangulationBase :
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Triangulation<dim>> withShellBoundary(Simplex<dim>* s)
-            const;
+            const requires (standardDim(dim));
 
         /**
          * Deprecated routine that tests for and optionally performs a
@@ -2477,8 +2472,6 @@ class TriangulationBase :
          * call hasShellBoundary().  If you wish to both check and perform the
          * move, call shellBoundary() without the two extra boolean arguments.
          *
-         * \pre The dimension \a dim is one of Regina's
-         * \ref stddim "standard dimensions".
          * \pre The given simplex is a simplex of this triangulation.
          *
          * \param s the top-dimensional simplex upon which to perform the move.
@@ -2490,7 +2483,7 @@ class TriangulationBase :
          * \return \c true if and only if the requested move could be performed.
          */
         [[deprecated]] bool shellBoundary(Simplex<dim>* s, bool ignored,
-            bool perform = true);
+            bool perform = true) requires (standardDim(dim));
 
         /*@}*/
         /**
@@ -4051,8 +4044,6 @@ class TriangulationBase :
          * Implements testing for and/or performing boundary shelling moves.
          * See shellBoundary() for details on what the location arguments mean.
          *
-         * \pre The dimension \a dim is one of Regina's
-         * \ref stddim "standard dimensions".
          * \pre The arguments \a check and \a perform are not both \c false.
          * \pre If \a perform is \c true but \a check is \c false, then it must
          * be known in advance that the requested move is legal and will not
@@ -4069,7 +4060,8 @@ class TriangulationBase :
          * \return \c true if the requested checks pass, or if \a check was
          * \c false (which means no checks were performed at all).
          */
-        bool internalShellBoundary(Simplex<dim>* s, bool check, bool perform);
+        bool internalShellBoundary(Simplex<dim>* s, bool check, bool perform)
+            requires (standardDim(dim));
 
         /**
          * Internal to isoSig().
@@ -5522,7 +5514,8 @@ inline bool TriangulationBase<dim>::move20(Face<dim, k>* f) {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline bool TriangulationBase<dim>::shellBoundary(Simplex<dim>* s) {
+inline bool TriangulationBase<dim>::shellBoundary(Simplex<dim>* s)
+        requires (standardDim(dim)) {
     return internalShellBoundary(s, true, true);
 }
 
@@ -5541,7 +5534,8 @@ bool TriangulationBase<dim>::has20(Face<dim, k>* f) const {
 }
 
 template <int dim> requires (supportedDim(dim))
-bool TriangulationBase<dim>::hasShellBoundary(Simplex<dim>* s) const {
+bool TriangulationBase<dim>::hasShellBoundary(Simplex<dim>* s) const
+        requires (standardDim(dim)) {
     return const_cast<TriangulationBase<dim>*>(this)->internalShellBoundary(s,
         true, false);
 }
@@ -5574,7 +5568,7 @@ std::optional<Triangulation<dim>> TriangulationBase<dim>::with20(
 
 template <int dim> requires (supportedDim(dim))
 std::optional<Triangulation<dim>> TriangulationBase<dim>::withShellBoundary(
-        Simplex<dim>* s) const {
+        Simplex<dim>* s) const requires (standardDim(dim)) {
     if (! hasShellBoundary(s))
         return {};
 
@@ -5600,7 +5594,7 @@ inline bool TriangulationBase<dim>::twoZeroMove(Face<dim, k>* f, bool,
 
 template <int dim> requires (supportedDim(dim))
 inline bool TriangulationBase<dim>::shellBoundary(Simplex<dim>* s, bool,
-        bool perform) {
+        bool perform) requires (standardDim(dim)) {
     return internalShellBoundary(s, true, perform);
 }
 
