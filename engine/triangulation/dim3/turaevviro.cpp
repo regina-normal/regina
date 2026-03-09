@@ -879,19 +879,13 @@ namespace {
 
         FixedArray<SolnSet*> partial(nBags, nullptr);
 
-        std::pair<SolnIterator, bool> existingSoln;
         size_t tetEdge[6];
         int colour[6];
-        int level;
-        bool ok;
 
         FixedArray<size_t> overlap(nEdges);
-        size_t nOverlap;
-        size_t nLeft, nRight;
         std::pair<
             typename FixedArray<SolnIterator>::iterator,
             typename FixedArray<SolnIterator>::iterator> subrange, subrange2;
-        double increment, percent;
 
         // For each new tetrahedron that appears in a forget bag, we
         // colour its edges in the order 5,4,3,2,1,0.
@@ -976,8 +970,8 @@ namespace {
 
                 partial[index] = new SolnSet;
 
-                increment = 100.0 / partial[child->index()]->size();
-                percent = 0;
+                double increment = 100.0 / partial[child->index()]->size();
+                double percent = 0;
 
                 for (const auto& soln : *partial[child->index()]) {
                     if (tracker) {
@@ -989,7 +983,7 @@ namespace {
                         colour[i] = (choiceType[i] < 0 ?
                             soln.first[tetEdge[i]] : -1);
 
-                    level = 5;
+                    int level = 5;
                     while (level < 6) {
                         if (level < 0) {
                             // We have an admissible partial colouring.
@@ -1018,7 +1012,7 @@ namespace {
                             // Finally, insert the solution into the
                             // lookup table, aggregating with existing
                             // solutions if need be.
-                            existingSoln = partial[index]->try_emplace(
+                            auto existingSoln = partial[index]->try_emplace(
                                 std::move(seq), std::move(val));
                             if (! existingSoln.second)
                                 existingSoln.first->second += val;
@@ -1044,7 +1038,7 @@ namespace {
                             }
                         }
 
-                        ok = true;
+                        bool ok = true;
                         if (level == 3 && ! init.isAdmissible(
                                 colour[3], colour[4], colour[5]))
                             ok = false;
@@ -1090,38 +1084,45 @@ namespace {
                 child = bag->children();
                 sibling = child->sibling();
 
-                nOverlap = 0;
+                size_t nOverlap = 0;
                 for (size_t i = 0; i < nEdges; ++i)
                     if (seenDegree[child->index()][i] != 0 &&
                             seenDegree[sibling->index()][i] != 0)
                     overlap[nOverlap++] = i;
 
-                LightweightSequence<int>::SubsequenceCompareFirst compare(
-                    overlap.begin(), overlap.begin() + nOverlap);
+                auto cmp = [overlap, nOverlap](SolnIterator a, SolnIterator b) {
+                    for (size_t i = 0; i < nOverlap; ++i) {
+                        std::strong_ordering c =
+                            a->first[overlap[i]] <=> b->first[overlap[i]];
+                        if (c != std::strong_ordering::equal)
+                            return c;
+                    }
+                    return std::strong_ordering::equal;
+                };
 
                 if (tracker && tracker->isCancelled())
                     break;
 
-                nLeft = 0;
+                size_t nLeft = 0;
                 FixedArray<SolnIterator> leftIndexed(
                     partial[child->index()]->size());
                 for (auto it = partial[child->index()]->begin();
                         it != partial[child->index()]->end(); ++it)
                     leftIndexed[nLeft++] = it;
                 std::sort(leftIndexed.begin(), leftIndexed.begin() + nLeft,
-                    compare);
+                    [&cmp](auto a, auto b) { return cmp(a, b) < 0; });
 
                 if (tracker && tracker->isCancelled())
                     break;
 
-                nRight = 0;
+                size_t nRight = 0;
                 FixedArray<SolnIterator> rightIndexed(
                     partial[sibling->index()]->size());
                 for (auto it = partial[sibling->index()]->begin();
                         it != partial[sibling->index()]->end(); ++it)
                     rightIndexed[nRight++] = it;
                 std::sort(rightIndexed.begin(), rightIndexed.begin() + nRight,
-                    compare);
+                    [&cmp](auto a, auto b) { return cmp(a, b) < 0; });
 
                 subrange.second = leftIndexed.begin();
                 subrange2.second = rightIndexed.begin();
@@ -1129,7 +1130,7 @@ namespace {
                 while (subrange.second != leftIndexed.begin() + nLeft &&
                         subrange2.second != rightIndexed.begin() + nRight) {
                     if (tracker) {
-                        percent = 100.0 * (
+                        double percent = 100.0 * (
                             (subrange.second - leftIndexed.begin()) +
                             (subrange2.second - rightIndexed.begin())) /
                             (nLeft + nRight);
@@ -1139,22 +1140,22 @@ namespace {
 
                     subrange.first = subrange.second;
                     while (subrange.second != leftIndexed.begin() + nLeft &&
-                            compare.equal(*subrange.first, *subrange.second))
+                            cmp(*subrange.first, *subrange.second) == 0)
                         ++subrange.second;
 
                     subrange2.first = subrange2.second;
                     while (subrange2.first != rightIndexed.begin() + nRight &&
-                            compare.less(*subrange2.first, *subrange.first))
+                            cmp(*subrange2.first, *subrange.first) < 0)
                         ++subrange2.first;
 
                     if (subrange2.first == rightIndexed.begin() + nRight)
                         break;
-                    if (compare.less(*subrange.first, *subrange2.first))
+                    if (cmp(*subrange.first, *subrange2.first) < 0)
                         continue;
 
                     subrange2.second = subrange2.first;
                     while (subrange2.second != rightIndexed.begin() + nRight &&
-                            compare.equal(*subrange2.first, *subrange2.second))
+                            cmp(*subrange2.first, *subrange2.second) == 0)
                         ++subrange2.second;
 
                     for (auto subit = subrange.first;
@@ -1175,7 +1176,7 @@ namespace {
                                 else
                                     seq[i] = ((*subit2)->first)[i];
 
-                            existingSoln = partial[index]->try_emplace(
+                            auto existingSoln = partial[index]->try_emplace(
                                 std::move(seq), std::move(val));
                             if (! existingSoln.second)
                                 existingSoln.first->second += val;

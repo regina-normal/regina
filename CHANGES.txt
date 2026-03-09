@@ -128,6 +128,11 @@ Version 7.5  [ TODO ]
         Class Laurent<T>:
             - For the iterator-based constructor and init() routine, the
               iterator type is now required to be random access.
+        Class LightweightSequence<T>:
+            - Removed the inner class SubsequenceCompareFirst<...>.
+              This was a very specialised class designed specifically for
+              the Turaev-Viro algorithm; it has been replaced by a lambda
+              directly in the Turaev-Viro code instead.
         Class Link:
             - Removed the Boost Graph Library (BGL) interface for links
               (link/graph.h).  This is because Regina has not used Boost since
