@@ -154,9 +154,33 @@ TEST(SFSTest, construct) {
             buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0, {} ),
             "D x S1" );
 
-    //TODO Construct some "generic" orientable SFS that we can test with
+    // Verify that we reconstruct the correct structure for some SFS's fibred
+    // over S^2 with >= 3 exceptional fibres.
+    verifyStructureOrientable(
+            buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
+                { SFSFibre(2, 1), SFSFibre(5, 1), SFSFibre(5, -2) } ) );
+    verifyStructureOrientable(
+            buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
+                { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2) } ) );
+    verifyStructureOrientable(
+            buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
+                { SFSFibre(2, 1), SFSFibre(5, 1), SFSFibre(5, -2),
+                SFSFibre(2, 3) } ) );
+    verifyStructureOrientable(
+            buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
+                { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2),
+                SFSFibre(7, -3) } ) );
+    verifyStructureOrientable(
+            buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
+                { SFSFibre(2, 1), SFSFibre(5, 1), SFSFibre(5, -2),
+                SFSFibre(2, 3), SFSFibre(8, 3) } ) );
+    verifyStructureOrientable(
+            buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
+                { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2),
+                SFSFibre(7, -3), SFSFibre(5, -2), SFSFibre(5, 8) } ) );
+
+    //TODO Construct some more "generic" orientable SFS that we can test with
     //      verifyStructureOrientable().
-    //      --- Fibred over S^2 with >= 3 exceptional fibres.
     //      --- Orientable circle bundles with Euler number 0.
     //      --- Some examples covered by the most generic construction.
 }
