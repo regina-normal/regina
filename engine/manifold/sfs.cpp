@@ -1002,7 +1002,7 @@ namespace {
     }
 
     int TriSolidTorus::flipSlope(unsigned square) {
-        Triangulation<3> tri = coreTet_[0]->triangulation();
+        Triangulation<3>& tri = coreTet_[0]->triangulation();
         if ( layerTet_[square] ) {
             // This is the easy case: we can flip the slope by simply removing
             // the previously layered tetrahedron.

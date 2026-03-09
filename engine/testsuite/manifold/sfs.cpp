@@ -116,10 +116,13 @@ void verifyStructureOrientable(const SFSpace& sfs) {
     // given sfs is sufficiently generic.
     SFSpace reduced(sfs);
     reduced.reduce();
+    SCOPED_TRACE( reduced.name() );
+
+    ASSERT_NO_THROW( sfs.construct() );
     auto blockedSFS = BlockedSFS::recognise( sfs.construct() );
-    EXPECT_TRUE(blockedSFS);
+    ASSERT_TRUE(blockedSFS);
     auto blockedManifold = blockedSFS->manifold();
-    EXPECT_TRUE(blockedManifold);
+    ASSERT_TRUE(blockedManifold);
     SFSpace compare = dynamic_cast<SFSpace&>(*blockedManifold);
     if ( reduced.baseClass() == SFSpace::Class::o1 or
             reduced.baseClass() == SFSpace::Class::n2 ) {
@@ -154,33 +157,53 @@ TEST(SFSTest, construct) {
             buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0, {} ),
             "D x S1" );
 
-    // Verify that we reconstruct the correct structure for some SFS's fibred
-    // over S^2 with >= 3 exceptional fibres.
-    verifyStructureOrientable(
-            buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
-                { SFSFibre(2, 1), SFSFibre(5, 1), SFSFibre(5, -2) } ) );
-    verifyStructureOrientable(
-            buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
-                { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2) } ) );
-    verifyStructureOrientable(
-            buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
-                { SFSFibre(2, 1), SFSFibre(5, 1), SFSFibre(5, -2),
-                SFSFibre(2, 3) } ) );
-    verifyStructureOrientable(
-            buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
-                { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2),
-                SFSFibre(7, -3) } ) );
-    verifyStructureOrientable(
-            buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
-                { SFSFibre(2, 1), SFSFibre(5, 1), SFSFibre(5, -2),
-                SFSFibre(2, 3), SFSFibre(8, 3) } ) );
-    verifyStructureOrientable(
-            buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
-                { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2),
-                SFSFibre(7, -3), SFSFibre(5, -2), SFSFibre(5, 8) } ) );
+    {
+        SCOPED_TRACE("SFS over S^2 with >= 3 exceptional fibres");
 
-    //TODO Construct some more "generic" orientable SFS that we can test with
-    //      verifyStructureOrientable().
-    //      --- Orientable circle bundles with Euler number 0.
-    //      --- Some examples covered by the most generic construction.
+        verifyStructureOrientable(
+                buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
+                    { SFSFibre(2, 1), SFSFibre(5, 1), SFSFibre(5, -2) } ) );
+        verifyStructureOrientable(
+                buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
+                    { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2) } ) );
+        verifyStructureOrientable(
+                buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
+                    { SFSFibre(2, 1), SFSFibre(5, 1), SFSFibre(5, -2),
+                    SFSFibre(2, 3) } ) );
+        verifyStructureOrientable(
+                buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
+                    { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2),
+                    SFSFibre(7, -3) } ) );
+        verifyStructureOrientable(
+                buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
+                    { SFSFibre(2, 1), SFSFibre(5, 1), SFSFibre(5, -2),
+                    SFSFibre(2, 3), SFSFibre(8, 3) } ) );
+        verifyStructureOrientable(
+                buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
+                    { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2),
+                    SFSFibre(7, -3), SFSFibre(5, -2), SFSFibre(5, 8) } ) );
+    }
+
+    {
+        SCOPED_TRACE("Orientable circle bundles with Euler number 0");
+
+        verifyStructureOrientable(
+                buildSFS( SFSpace::Class::o1, 2, 0, 0, 0, 0, {} ) );
+        verifyStructureOrientable(
+                buildSFS( SFSpace::Class::bo1, 0, 2, 0, 0, 0, {} ) );
+        verifyStructureOrientable(
+                buildSFS( SFSpace::Class::bo1, 1, 1, 0, 0, 0, {} ) );
+        verifyStructureOrientable(
+                buildSFS( SFSpace::Class::n2, 2, 0, 0, 0, 0, {} ) );
+        verifyStructureOrientable(
+                buildSFS( SFSpace::Class::bn2, 1, 2, 0, 0, 0, {} ) );
+        verifyStructureOrientable(
+                buildSFS( SFSpace::Class::bn2, 2, 1, 0, 0, 0, {} ) );
+    }
+
+    {
+        SCOPED_TRACE("Generic construction for orientable SFS");
+
+        //TODO
+    }
 }
