@@ -46,7 +46,7 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
         .def("swap", &TypeTrie<nTypes>::swap, rdoc::swap)
         .def("clear", &TypeTrie<nTypes>::clear, rdoc::clear)
         .def("insert", [](TypeTrie<nTypes>& t, pybind11::list arg) {
-            char* c = new char[arg.size() + 1];
+            uint8_t* c = new uint8_t[arg.size() + 1];
             size_t len = 0;
             try {
                 int type;
@@ -57,7 +57,7 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
                         throw regina::InvalidArgument(
                             "Element of type vector is out of range");
                     }
-                    c[len++] = static_cast<char>(type);
+                    c[len++] = static_cast<uint8_t>(type);
                 }
             } catch (pybind11::cast_error const&) {
                 delete[] c;
@@ -69,7 +69,7 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
             delete[] c;
         }, pybind11::arg("entry"), rdoc::insert)
         .def("dominates", [](const TypeTrie<nTypes>& t, pybind11::list arg) {
-            char* c = new char[arg.size() + 1];
+            uint8_t* c = new uint8_t[arg.size() + 1];
             size_t len = 0;
             try {
                 int type;
@@ -80,7 +80,7 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
                         throw regina::InvalidArgument(
                             "Element of type vector is out of range");
                     }
-                    c[len++] = static_cast<char>(type);
+                    c[len++] = static_cast<uint8_t>(type);
                 }
             } catch (pybind11::cast_error const&) {
                 delete[] c;

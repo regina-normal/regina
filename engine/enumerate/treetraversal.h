@@ -194,11 +194,10 @@ class TreeTraversal :
                  at any given time during the backtracking search. */
 
         // Details of the current state of the backtracking search:
-        char* type_;
+        uint8_t* type_;
             /**< The current working type vector.  As the search runs,
-                 we modify this type vector in-place.  Any types beyond
-                 the current level in the search tree will always be set
-                 to zero. */
+                 we modify this type vector in-place.  Any types beyond the
+                 current level in the search tree will always be set to zero. */
         size_t* typeOrder_;
             /**< A permutation of 0,...,\a nTypes_-1 that indicates in
                  which order we select types: the first type we select
@@ -1566,7 +1565,7 @@ TreeTraversal<Constraint, Ban, IntType>::TreeTraversal(
             (branchesPerQuad - 1) * nTets_ +
                 (branchesPerTri - 1) * nTets_ * 4 + 1 :
             (branchesPerQuad - 1) * nTets_ + 1),
-        type_(new char[nTypes_ + 1]),
+        type_(new uint8_t[nTypes_ + 1]),
         typeOrder_(new size_t[nTypes_]),
         level_(0),
         octLevel_(enc_.storesOctagons() ? -1 : static_cast<ssize_t>(nTypes_)),

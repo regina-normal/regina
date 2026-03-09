@@ -161,6 +161,9 @@ Version 8.0  [ TODO ]
               details on how a linear programming constraint type should behave.
         Enum LPConstraintType:
             - New enumeration for use with the various LPConstraint classes.
+        Class LPData:
+            - Routine extractSolution() now requires a uint8_t array instead of
+              a char array for the type vector.
         Class LPInitialTableaux<Constraint>:
             - Removed the copy assignment operator (since this class now uses
               FixedArray internally, which is not copy-assignable).  If you
@@ -243,6 +246,9 @@ Version 8.0  [ TODO ]
         Struct TriangulationTraits<dim>:
             - New traits type to help with generic code for working with
               triangulations of different dimensions.
+        Class TypeTrie:
+            - Now uses uint8_t instead of char for vector elements.  This
+              affects the argument types for insert() and dominates().
         Class Vector<T>:
             - Now requires the element type T to have a RingTraits
               specialisation.

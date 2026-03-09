@@ -55,12 +55,9 @@ namespace regina {
  * for decision problems in knot theory and 3-manifold topology",
  * Burton and Ozlen, Algorithmica 65:4 (2013), pp. 772-801.
  *
- * A type vector is a sequence of digits, each between 0 and `nTypes-1`
- * inclusive.  Type vectors are represented as arrays of characters:
- * these are not strings, but simply sequences of one-byte integers.
- * In particular, you cannot print them (since they use raw integer
- * values, not ASCII digits).  The length of a type vector must be
- * passed alongside it (i.e., there is no special terminating character).
+ * A type vector is a sequence of integers, each between 0 and `nTypes-1`
+ * inclusive.  The length of a type vector must be passed alongside it
+ * (i.e., there is no special terminating value).
  *
  * A type vector \a v is said to _dominate_ \a u if, for each position
  * \a i, either `v[i] == u[i]` or else `u[i] == 0`.  So, for instance,
@@ -68,11 +65,10 @@ namespace regina {
  * Domination is a partial order, not a total order: for instance,
  * neither of `(1,0,2,0)` or `(1,0,3,0)` dominates the other.
  *
- * We assume that all type vectors used in this trie have the same
- * length.  This is important, since we optimise the implementation by
- * ignoring trailing zeroes, which means that this trie cannot distinguish
- * between a vector \a v and the same vector with additional zeroes
- * appended to its end.
+ * We assume that all type vectors used in this trie have the same length.
+ * This is important, since we optimise the implementation by ignoring
+ * trailing zeroes, which means that this trie cannot distinguish between a
+ * vector \a v and the same vector with additional zeroes appended to its end.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -216,7 +212,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * \param entry the type vector to insert.
          * \param len the number of elements in the given type vector.
          */
-        void insert(const char* entry, size_t len);
+        void insert(const uint8_t* entry, size_t len);
 
         /**
          * Determines whether the given type vector dominates any vector
@@ -236,7 +232,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * \return \c true if and only if \a vec dominates some type
          * vector stored in this trie.
          */
-        bool dominates(const char* vec, size_t len) const;
+        bool dominates(const uint8_t* vec, size_t len) const;
 
         /**
          * Writes a short text representation of this object to the
@@ -383,14 +379,14 @@ inline void TypeTrie<nTypes>::clear() {
 }
 
 template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
-void TypeTrie<nTypes>::insert(const char* entry, size_t len) {
+void TypeTrie<nTypes>::insert(const uint8_t* entry, size_t len) {
     // Strip off trailing zeroes.
     while (len > 0 && ! entry[len - 1])
         --len;
 
     // Insert this type vector, creating new nodes only when required.
     Node* node = &root_;
-    const char* next = entry;
+    const uint8_t* next = entry;
     for (size_t pos = 0; pos < len; ++pos, ++next) {
         if (! node->child_[*next])
             node->child_[*next] = new Node();
@@ -400,7 +396,7 @@ void TypeTrie<nTypes>::insert(const char* entry, size_t len) {
 }
 
 template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
-bool TypeTrie<nTypes>::dominates(const char* vec, size_t len) const {
+bool TypeTrie<nTypes>::dominates(const uint8_t* vec, size_t len) const {
     // Strip off trailing zeroes.
     while (len > 0 && ! vec[len - 1])
         --len;

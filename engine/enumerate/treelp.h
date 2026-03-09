@@ -1807,7 +1807,8 @@ class LPData : public Output<LPData<Constraint, IntType>> {
         /**
          * Extracts the values of the individual variables from the
          * current basis, with some modifications (as described below).
-         * The values of the variables will be returned in vector form.
+         * The values of the variables will be returned in vector form,
+         * using type \a Ray.
          *
          * The modifications are as follows:
          *
@@ -1834,9 +1835,6 @@ class LPData : public Output<LPData<Constraint, IntType>> {
          * additional columns arising from the LPConstraint template parameter
          * are exempt from this requirement.
          *
-         * \pre The precision of integers in \a Ray is at least as
-         * large as the precision of \a IntType (as used by LPData).
-         *
          * \python The type vector should be passed as a Python list of
          * integers (for example, in the enumeration of normal surfaces, there
          * would be one integer per tetrahedron, each equal to 0, 1, 2 or 3).
@@ -1856,7 +1854,8 @@ class LPData : public Output<LPData<Constraint, IntType>> {
          * This vector will have length origTableaux_->coordinateColumns().
          */
         template <IntegerVector Ray>
-        Ray extractSolution(const char* type) const;
+        requires (FaithfulAssignment<IntType, typename Ray::value_type>::value)
+        Ray extractSolution(const uint8_t* type) const;
 
         /**
          * Writes a short text representation of this object to the

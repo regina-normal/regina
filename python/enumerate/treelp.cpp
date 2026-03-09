@@ -126,7 +126,7 @@ void addLPData(pybind11::module_& m, const char* name) {
             // expected length of the type vector, and so we cannot sanity-check
             // the size of t right now.  Probably we should add an access
             // function to LPData that lets us view the original tableaux.
-            char* types = new char[t.size()];
+            uint8_t* types = new uint8_t[t.size()];
             std::copy(t.begin(), t.end(), types);
             auto ans = d.template extractSolution<regina::VectorInt>(types);
             delete[] types;
