@@ -32,7 +32,7 @@ static const char *Language = R"doc(Represents different programming languages t
 
 // Docstring regina::python::doc::maxDim
 static const char *maxDim =
-R"doc(Indicates that largest dimension of triangulation that Regina can work
+R"doc(Indicates the largest dimension of triangulation that Regina can work
 with.
 
 If Regina was built with the ``REGINA_HIGHDIM`` option, then this will
@@ -46,6 +46,21 @@ See also:
 
 See also:
     standardDim())doc";
+
+// Docstring regina::python::doc::maxPermDegree
+static const char *maxPermDegree =
+R"doc(Indicates the largest degree of permutation that Regina natively
+supports.
+
+This is the largest integer *n* for which the class ``Perm<n>`` is
+available.
+
+At present this is hard-coded to 16, which is the largest *n* for
+which a permutation image pack can fit into an unsigned 64-bit
+integer.
+
+Returns:
+    Regina's largest supported degree of permutation.)doc";
 
 // Docstring regina::python::doc::standardDim
 static const char *standardDim =

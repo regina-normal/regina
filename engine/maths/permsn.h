@@ -49,7 +49,7 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
-template <int n> class Perm;
+template <int n> requires (2 <= n && n <= maxPermDegree()) class Perm;
 
 /**
  * A lightweight array-like object that supports fast lookup and iteration
@@ -88,11 +88,11 @@ template <int n> class Perm;
  *
  * Regarding time complexity:
  *
- * - For \a n ≤ 7, iteration steps and index-based lookup are both extremely
+ * - For `n ≤ 7`, iteration steps and index-based lookup are both extremely
  *   fast constant time.  Iterators are random-access (and satisfy all of the
  *   expected time complexity constraints that come with this).
  *
- * - For \a n ≥ 8, the time for a single iteration step is in linear in \a n,
+ * - For `n ≥ 8`, the time for a single iteration step is in linear in \a n,
  *   and index-based lookup is currently _quadratic_ in \a n.  Iterators are
  *   merely forward iterators, not random access.
  *
@@ -105,7 +105,6 @@ template <int n> class Perm;
  * or PermSn5_Lex).
  *
  * \tparam n the number of objects being permuted.
- * This must be between 2 and 16 inclusive.
  * \tparam order the way in which this class orders permutations for the
  * purposes of indexing and iteration.
  * \tparam codeType the constant `Perm<n>::codeType`.  You should allow the
@@ -114,6 +113,7 @@ template <int n> class Perm;
  * \ingroup maths
  */
 template <int n, PermOrder order, PermCodeType codeType = Perm<n>::codeType>
+requires (2 <= n && n <= maxPermDegree())
 struct PermSn {
     // This generic implementation is for n ≥ 8 (where codeType is Images).
     // There is a specialisation below for n ≤ 7.
@@ -712,15 +712,16 @@ namespace detail {
  * deprecated constants such as `Perm4.S3`).
  *
  * \tparam n indicates the return type: permutations of \a m objects will be
- * returned as the larger type `Perm<n>`.  It is required that `2 ≤ n ≤ 5`.
+ * returned as the larger type `Perm<n>`.
  * \tparam m the number of objects being permuted in the group \a S_m that we
- * are enumerating.  It is required that `1 ≤ m < n`.
+ * are enumerating.
  * \tparam order the way in which this class orders permutations for the
  * purposes of indexing.
  *
  * \ingroup detail
  */
 template <int n, int m, PermOrder order = PermOrder::Sign>
+requires (1 <= m && m < n && n <= 5)
 #ifdef __APIDOCS
 struct PermSubSn {
     /**
@@ -778,8 +779,6 @@ struct PermSubSn;
 
 template <int n, PermOrder order>
 struct PermSubSn<n, 1, order> {
-    static_assert(n > 1);
-
     static constexpr Perm<n> at(int) {
         return {};
     }
@@ -799,8 +798,6 @@ struct PermSubSn<n, 1, order> {
 
 template <int n, PermOrder order>
 struct PermSubSn<n, 2, order> {
-    static_assert(n > 2);
-
     static constexpr Perm<n> at(int index) {
         return (index == 0 ? Perm<n>() : Perm<n>(0, 1) /* pair swap */);
     }
@@ -820,7 +817,6 @@ struct PermSubSn<n, 2, order> {
 
 template <int n, PermOrder order>
 struct PermSubSn<n, 3, order> {
-    static_assert(n > 3);
     static_assert(Perm<n>::codeType == PermCodeType::Index);
 
     private:
@@ -857,7 +853,6 @@ struct PermSubSn<n, 3, order> {
 
 template <int n, PermOrder order>
 struct PermSubSn<n, 4, order> {
-    static_assert(n > 4);
     static_assert(Perm<n>::codeType == PermCodeType::Index);
 
     private:

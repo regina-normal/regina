@@ -272,6 +272,7 @@ a new Python session.)doc");
     m.def("supportedDim", regina::supportedDim, rdoc::supportedDim);
     m.def("standardDim", regina::standardDim, rdoc::standardDim);
     m.def("maxDim", regina::maxDim, rdoc::maxDim);
+    m.def("maxPermDegree", regina::maxPermDegree, rdoc::maxPermDegree);
 
     // From core/engine.h:
     m.def("versionString", regina::versionString, rdoc::versionString);

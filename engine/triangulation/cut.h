@@ -55,7 +55,7 @@ template <int dim> requires (supportedDim(dim)) class FacetPairing;
 template <int dim> requires (supportedDim(dim)) struct FacetSpec;
 template <int dim> requires (supportedDim(dim)) class Isomorphism;
 template <int dim> requires (supportedDim(dim)) class Triangulation;
-template <int n> class Perm;
+template <int n> requires (2 <= n && n <= maxPermDegree()) class Perm;
 
 /**
  * A cut that separates a triangulation, facet pairing or link diagram into

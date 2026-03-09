@@ -46,7 +46,7 @@ class QToolBar;
 
 namespace regina {
     class Packet;
-    template <int> class Perm;
+    template <int n> requires (2 <= n && n <= maxPermDegree()) class Perm;
 };
 
 class GluingsModel2 : public QAbstractItemModel {

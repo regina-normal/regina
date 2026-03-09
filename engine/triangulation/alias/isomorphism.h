@@ -43,7 +43,7 @@
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
-    template <int> class Perm;
+    template <int n> requires (2 <= n && n <= maxPermDegree()) class Perm;
 }
 
 namespace regina::alias {

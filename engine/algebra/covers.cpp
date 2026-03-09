@@ -295,9 +295,9 @@ namespace {
         return ans;
 #endif
         // Option 2: Binary search.
-        return std::lower_bound(regina::detail::permClassRep,
-            regina::detail::permClassRep + PermClass<n>::count, index) -
-            regina::detail::permClassRep;
+        return std::lower_bound(regina::detail::permClassRep.begin(),
+            regina::detail::permClassRep.begin() + PermClass<n>::count, index) -
+            regina::detail::permClassRep.begin();
     }
 
     /**

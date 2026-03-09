@@ -245,6 +245,9 @@ Version 7.5  [ TODO ]
         Function isTriangulation():
             - New function that converts a packet type constant into a
               triangulation dimension.
+        Function maxPermDegree():
+            - New constexpr function that returns the largest supported degree
+              of permutation.
         Function subscript(), superscript():
             - When passing one of Regina's integer types, there is now a
               precondition that the given value is not infinity.

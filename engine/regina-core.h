@@ -109,7 +109,7 @@ constexpr bool standardDim(int dim) {
 }
 
 /**
- * Indicates that largest dimension of triangulation that Regina can work with.
+ * Indicates the largest dimension of triangulation that Regina can work with.
  *
  * If Regina was built with the \c REGINA_HIGHDIM option, then this will be 15;
  * otherwise it will be 8 (the default for ordinary builds).
@@ -127,6 +127,22 @@ constexpr int maxDim() {
 #else
     return 8;
 #endif
+}
+
+/**
+ * Indicates the largest degree of permutation that Regina natively supports.
+ *
+ * This is the largest integer \a n for which the class `Perm<n>` is available.
+ *
+ * At present this is hard-coded to 16, which is the largest \a n for which a
+ * permutation image pack can fit into an unsigned 64-bit integer.
+ *
+ * \return Regina's largest supported degree of permutation.
+ *
+ * \ingroup engine
+ */
+constexpr int maxPermDegree() {
+    return 16;
 }
 
 #ifdef __DOXYGEN
