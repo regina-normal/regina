@@ -95,8 +95,6 @@ namespace regina::detail {
     template <int dim, int k>
     requires (supportedDim(dim) && k > 0 && k < dim)
     Perm<dim + 1> movePerm(int oldSimp, int newSimp) {
-        static_assert(0 < k && k < dim,
-            "movePerm() may not be called for 0-faces or dim-faces.");
         static_assert(! standardDim(dim),
             "The generic movePerm() implementation cannot be used in "
             "standard dimensions.");

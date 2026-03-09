@@ -234,28 +234,22 @@ class BoundaryComponentBase :
          *
          * \tparam subdim the dimension of the faces to query.  If \a dim is
          * one of Regina's \ref stddim "standard dimensions", then \a subdim
-         * must be between 0 and <i>dim</i>-1 inclusive.  Otherwise, the only
-         * allowable values of \a subdim are the facet dimension (<i>dim</i>-1)
-         * and the ridge dimension (<i>dim</i>-2).
+         * must be between 0 and `dim-1` inclusive.  Otherwise, the only
+         * allowable values of \a subdim are the facet dimension (`dim-1`)
+         * and the ridge dimension (`dim-2`).
          *
          * \return the number of <i>subdim</i>-faces.
          */
         template <int subdim>
+        requires (subdim < dim && subdim >= (standardDim(dim) ? 0 : dim - 2))
         size_t countFaces() const {
             if constexpr (allFaces) {
-                static_assert(subdim >= 0 && subdim < dim,
-                    "BoundaryComponent::countFaces() cannot be used with "
-                    "this (dim, subdim) combination.");
                 return std::get<tupleIndex(subdim)>(faces_).size();
             } else {
-                if constexpr (subdim == dim - 2) {
+                if constexpr (subdim == dim - 2)
                     return nRidges_.value;
-                } else {
-                    static_assert(subdim == dim - 1,
-                        "BoundaryComponent::countFaces() cannot be used with "
-                        "this (dim, subdim) combination.");
+                else
                     return std::get<tupleIndex(subdim)>(faces_).size();
-                }
             }
         }
 
@@ -371,16 +365,15 @@ class BoundaryComponentBase :
          *
          * \tparam subdim the dimension of the faces to query.  If \a dim is
          * one of Regina's \ref stddim "standard dimensions", then \a subdim
-         * must be between 0 and <i>dim</i>-1 inclusive.  Otherwise, the only
-         * allowable value of \a subdim is the facet dimension (<i>dim</i>-1).
+         * must be between 0 and `dim-1` inclusive.  Otherwise, the only
+         * allowable value of \a subdim is the facet dimension (`dim-1`).
          *
          * \return access to the list of all <i>subdim</i>-faces.
          */
         template <int subdim>
+        requires (subdim == dim - 1 ||
+            (standardDim(dim) && subdim >= 0 && subdim < dim))
         auto faces() const {
-            static_assert(tupleIndex(subdim) >= 0,
-                "BoundaryComponent::faces() cannot be used with this "
-                "(dim, subdim) combination.");
             return ListView(std::get<tupleIndex(subdim)>(faces_));
         }
 
@@ -472,18 +465,17 @@ class BoundaryComponentBase :
          *
          * \tparam subdim the dimension of the faces to query.  If \a dim is
          * one of Regina's \ref stddim "standard dimensions", then \a subdim
-         * must be between 0 and <i>dim</i>-1 inclusive.  Otherwise, the only
-         * allowable value of \a subdim is the facet dimension (<i>dim</i>-1).
+         * must be between 0 and `dim-1` inclusive.  Otherwise, the only
+         * allowable value of \a subdim is the facet dimension (`dim-1`).
          *
          * \param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
          * \return the requested face.
          */
         template <int subdim>
+        requires (subdim == dim - 1 ||
+            (standardDim(dim) && subdim >= 0 && subdim < dim))
         Face<dim, subdim>* face(size_t index) const {
-            static_assert(tupleIndex(subdim) >= 0,
-                "BoundaryComponent::face() cannot be used with this "
-                "(dim, subdim) combination.");
             return std::get<tupleIndex(subdim)>(faces_)[index];
         }
 

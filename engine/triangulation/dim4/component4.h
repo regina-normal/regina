@@ -102,12 +102,11 @@ class Component<4> : public detail::ComponentBase<4> {
          * `countFaces(subdim)`; that is, the template parameter
          * \a subdim becomes the first argument of the function.
          *
-         * \tparam subdim the face dimension; this must be between 0 and 4
-         * inclusive.
+         * \tparam subdim the face dimension.
          *
          * \return the number of <i>subdim</i>-faces.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim <= 4)
         size_t countFaces() const;
 
         /**
@@ -139,12 +138,11 @@ class Component<4> : public detail::ComponentBase<4> {
          * Python users should call this function in the form
          * `faces(subdim)`.
          *
-         * \tparam subdim the face dimension; this must be between 0 and 3
-         * inclusive.
+         * \tparam subdim the face dimension.
          *
          * \return access to the list of all <i>subdim</i>-faces.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < 4)
         auto faces() const;
 
         /**
@@ -158,14 +156,13 @@ class Component<4> : public detail::ComponentBase<4> {
          * `face(subdim, index)`; that is, the template parameter
          * \a subdim becomes the first argument of the function.
          *
-         * \tparam subdim the face dimension; this must be between 0 and 3
-         * inclusive.
+         * \tparam subdim the face dimension.
          *
          * \param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
          * \return the requested face.
          */
-        template <int subdim>
+        template <int subdim> requires (subdim >= 0 && subdim < 4)
         Face<4, subdim>* face(size_t index) const;
 
         /**
