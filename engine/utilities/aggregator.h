@@ -181,7 +181,7 @@ class MaxAggregator {
          * \param other the aggregator whose contents are to be swapped with
          * this.
          */
-        constexpr void swap(MarkedVector<T>& other) noexcept
+        constexpr void swap(MaxAggregator& other) noexcept
                 requires std::swappable<T> {
             using std::swap;
             swap(max_, other.max_); // uses T's swap operation, if defined
