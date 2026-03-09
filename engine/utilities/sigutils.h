@@ -229,12 +229,9 @@ struct [[deprecated]] Base64SigEncoding {
      * the value 0, 1 or 2.
      * \return the resulting printable base64 character.
      */
-    template <int nTrits>
+    template <int nTrits> requires (nTrits >= 0 && nTrits <= 3)
     static constexpr char encodeTrits(
             const std::array<uint8_t, nTrits>& trits) {
-        static_assert(nTrits >= 0 && nTrits <= 3,
-            "encodeTrits() will only encode between 0 and 3 trits inclusive.");
-
         uint8_t ans = 0;
         if constexpr (nTrits >= 1)
             ans |= trits[0];
