@@ -184,7 +184,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * \nopython The postincrement operator is present in Python as the
      * member function inc().
      *
-     * \return A reference to this specifier.
+     * \return a reference to this specifier.
      */
     FacetSpec& operator ++ ();
     /**
@@ -199,7 +199,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * \python This routine is named inc() since python does not
      * support the increment operator.
      *
-     * \return A copy of this specifier before it was incremented.
+     * \return a copy of this specifier before it was incremented.
      */
     FacetSpec operator ++ (int);
     /**
@@ -214,7 +214,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * \nopython The postdecrement operator is present in Python as the
      * member function dec().
      *
-     * \return A reference to this specifier.
+     * \return a reference to this specifier.
      */
     FacetSpec& operator -- ();
     /**
@@ -229,7 +229,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * \python This routine is named dec() since python does not
      * support the decrement operator.
      *
-     * \return A copy of this specifier before it was decremented.
+     * \return a copy of this specifier before it was decremented.
      */
     FacetSpec operator -- (int);
 
@@ -258,7 +258,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * other comparison operators that it generates _are_ available.
      *
      * \param rhs the specifier to compare with this.
-     * \return The result of the comparison between this and the given
+     * \return the result of the comparison between this and the given
      * specifier.
      */
     std::strong_ordering operator <=> (const FacetSpec<dim>& rhs) const;
