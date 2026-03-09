@@ -211,7 +211,10 @@ class MaxAggregator {
             } else {
                 // Both aggregators have seen at least one atomic value.
                 auto cmp = max_ <=> rhs.max_;
-                return (cmp == 0 ? count_ <=> rhs.count_ : cmp);
+                if (cmp == 0)
+                    return count_ <=> rhs.count_;
+                else
+                    return cmp;
             }
         }
 
