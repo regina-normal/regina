@@ -389,22 +389,20 @@ struct IsReginaArbitraryPrecisionInteger<IntegerBase<withInfinity>> : public std
 
 /**
  * Returns the number of bits required to store integers in the range
- * 0,...,<i>n</i>-1.
- * This is simply the number of bits in the binary expansion of <i>n</i>-1.
+ * `0,...,n-1`.
+ * This is simply the number of bits in the binary expansion of `n-1`.
  *
  * If \a n is non-positive then this function will return 0.
  *
  * \python In Python, this routine fixes the integer type
  * \a IntType to be \c long.
  *
- * \tparam IntType any integer type, such as \c int, \c long, and so on.
- *
  * \param n any integer.
- * \return the number of bits required to store 0,...,<i>n</i>-1.
+ * \return the number of bits required to store `0,...,n-1`.
  *
  * \ingroup utilities
  */
-template <typename IntType>
+template <CppInteger IntType>
 constexpr int bitsRequired(IntType n) {
     return (n <= 1 ? 0 : (bitsRequired((n + 1) / 2)) + 1);
 }
@@ -424,14 +422,12 @@ constexpr int bitsRequired(IntType n) {
  * if \a IntType is an unsigned char then nextPowerOfTwo(255) will return 0.
  * Be sure that \a IntType is large enough for your requirements.
  *
- * \tparam IntType any integer type, such as \c int, \c long, and so on.
- *
  * \param n any integer.
- * \return the smallest integer power of two that is ≥ \a n.
+ * \return the smallest integer power of two that is `≥ n`.
  *
  * \ingroup utilities
  */
-template <typename IntType>
+template <CppInteger IntType>
 constexpr IntType nextPowerOfTwo(IntType n) {
     return (n <= 1 ? 1 : (nextPowerOfTwo((n + 1) / 2)) << 1);
 }
@@ -489,6 +485,10 @@ inline constexpr IntType minSafeFactor =
  */
 template <int bytes>
 struct IntOfSize {
+    static_assert(! supportsNativeIntegerSize(bytes),
+        "The generic implementation of IntOfSize should only be "
+        "used for unsupported native integer sizes.");
+
     /**
      * A native C++ signed integer type with exactly \a k bytes, where \a k is
      * the template parameter.
