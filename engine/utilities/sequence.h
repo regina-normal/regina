@@ -39,7 +39,7 @@
 
 #include <iostream>
 #include <concepts> // Don't include this first - see QTBUG-83160
-#include "regina-core.h"
+#include "concepts/iterator.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -373,37 +373,34 @@ class LightweightSequence {
          *
          * - We are interested in comparing just some, not necessarily all,
          *   of the elements of each sequence.  The indices of the elements
-         *   to compare are passed to the constructor of this comparison object.
+         *   to compare are passed to the constructor of this comparison object
+         *   via an iterator pair.
          *
          * - The actual objects that we compare are not the sequences
          *   themselves, but iterators that point to (key, value) pairs,
          *   whose keys are sequences.
          *
-         * More precisely: suppose the indices of the elements to
-         * compare are \a i0, \a i1, \a i2, ..., and that we are comparing
-         * iterators \a a, \a b.  Then this function object will consider the
-         * sequences `s = a->first` and `t = b->first`,
-         * and will lexicographically compare their subsequences
-         * `s[i0], s[i1], ...` and `t[i0], t[i1], ...`.
+         * More precisely: suppose the indices of the elements to compare are
+         * `i0, i1, i2, ...`, and that we are comparing iterators \a a, \a b.
+         * Then this function object will consider the sequences `s = a->first`
+         * and `t = b->first`, and will lexicographically compare their
+         * subsequences `s[i0], s[i1], ...` and `t[i0], t[i1], ...`.
          *
-         * Note that the indices \a i0, \a i1, ... do not need to be in
+         * Note that the indices `i0, i1, ...` do not need to be in
          * increasing order.
          *
-         * This class is meant to be lightweight: it merely stores a
-         * reference to the list of elements to compare, and it is safe
+         * This class is meant to be lightweight: it merely stores the endpoints
+         * of the list of indices of elements to compare, and it is safe
          * and fast to pass around by value.  The cost of this is that
-         * the caller _must_ ensure that the list of elements to compare
-         * (which is a C-style array) has a lifespan at least as long as
-         * this object.  This behaviour is new as of Regina 5.96; in past
-         * versions of Regina the list of elements was copied on construction.
+         * the caller _must_ ensure that the list of indices to compare
+         * (as passed to the constructor via an iterator pair) has a lifespan
+         * at least as long as this object.
          *
          * \tparam IndexIterator the iterator type used to store the range
          * of indices that define the subsequences being compared (that is,
-         * the range of indices \a i0, \a i1, \a i2, ...).  This would be
-         * deducible from the constructor arguments, were it not for a
-         * gcc bug (#79501) that prevents us from declaring a deduction guide.
+         * the range of indices `i0, i1, i2, ...`).
          */
-        template <typename IndexIterator>
+        template <ForwardIteratorFor<size_t> IndexIterator>
         class SubsequenceCompareFirst {
             private:
                 IndexIterator beginSub_;
@@ -510,12 +507,6 @@ class LightweightSequence {
                 template <typename SeqIterator>
                 bool operator () (SeqIterator a, SeqIterator b) const;
         };
-
-#if 0 // gcc bug #79501 (fixed in gcc-12) incorrectly marks this as an error.
-        template <typename IndexIterator>
-        SubsequenceCompareFirst(IndexIterator, IndexIterator) ->
-            SubsequenceCompareFirst<IndexIterator>;
-#endif
 
     private:
         /**
@@ -772,14 +763,14 @@ inline std::ostream& operator << (std::ostream& out,
 }
 
 template <std::default_initializable T>
-template <typename IndexIterator>
+template <ForwardIteratorFor<size_t> IndexIterator>
 inline LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
         SubsequenceCompareFirst(IndexIterator beginSub, IndexIterator endSub) :
         beginSub_(beginSub), endSub_(endSub) {
 }
 
 template <std::default_initializable T>
-template <typename IndexIterator>
+template <ForwardIteratorFor<size_t> IndexIterator>
 template <typename SeqIterator>
 inline bool LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
         equal(SeqIterator a, SeqIterator b) const {
@@ -790,7 +781,7 @@ inline bool LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
 }
 
 template <std::default_initializable T>
-template <typename IndexIterator>
+template <ForwardIteratorFor<size_t> IndexIterator>
 template <typename SeqIterator>
 inline bool LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
         less(SeqIterator a, SeqIterator b) const {
@@ -803,7 +794,7 @@ inline bool LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
 }
 
 template <std::default_initializable T>
-template <typename IndexIterator>
+template <ForwardIteratorFor<size_t> IndexIterator>
 template <typename SeqIterator>
 inline bool LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
         operator () (SeqIterator a, SeqIterator b) const {
