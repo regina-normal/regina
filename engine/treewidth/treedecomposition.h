@@ -1302,6 +1302,11 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * extra header, since Regina's calculation engine already includes
          * explicit instantiations for common types.
          *
+         * \exception NoSolution The cost type \a T is only partially ordered
+         * (not totally ordered), and this routine encountered two costs that
+         * were incomparable.  For example, this could happen if \a T is a
+         * floating-point type and one of the costs is `NaN`.
+         *
          * \python The \a costSame and \a costReverse arrays,
          * as well as \a costRoot if it is given, should be passed as
          * Python lists of real numbers.
@@ -1309,7 +1314,10 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * \tparam T the type being used to estimate costs.
          * As of Regina 7.5, zero plays no special role here (i.e., costs can
          * be positive or negative, and indeed costs do not need to be real
-         * numbers at all); it is only the total order on \a T that matters.
+         * numbers at all); it is only the ordering on \a T that matters.
+         * Although \a T does not need to be totally ordered, all of the costs
+         * that are passed must be comparable to each other; otherwise this
+         * routine might throw an exception.
          *
          * \param costSame An array of size() elements giving an
          * estimated cost of preserving each child-parent connection;
@@ -1320,7 +1328,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * This array may be \c null.
          */
         template <typename T>
-        requires std::regular<T> && std::totally_ordered<T>
+        requires std::regular<T> && std::three_way_comparable<T>
         void reroot(const T* costSame, const T* costReverse,
             const T* costRoot = nullptr);
 

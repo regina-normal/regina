@@ -86,7 +86,7 @@ TreeDecomposition::TreeDecomposition(
 }
 
 template <typename T>
-requires std::regular<T> && std::totally_ordered<T>
+requires std::regular<T> && std::three_way_comparable<T>
 void TreeDecomposition::reroot(const T* costSame, const T* costReverse,
         const T* costRoot) {
     if (size_ <= 1)
