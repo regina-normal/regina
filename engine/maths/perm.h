@@ -1445,7 +1445,7 @@ class Perm {
  *
  * \ingroup maths
  */
-template <int n> requires (2 <= n && n <= maxPermDegree())
+template <int n>
 inline std::ostream& operator << (std::ostream& out, const Perm<n>& p) {
     return (out << p.str());
 }
@@ -1682,7 +1682,7 @@ class PermClass {
  *
  * \ingroup maths
  */
-template <int n> requires (2 <= n && n <= maxPermDegree())
+template <int n>
 inline std::ostream& operator << (std::ostream& out, const PermClass<n>& c) {
     return (out << c.str());
 }

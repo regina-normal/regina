@@ -313,7 +313,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
  *
  * \ingroup triangulation
  */
-template <int dim> requires (supportedDim(dim))
+template <int dim>
 std::ostream& operator << (std::ostream& out, const FacetSpec<dim>& spec);
 
 // Inline functions for FacetSpec
@@ -417,7 +417,7 @@ inline std::strong_ordering FacetSpec<dim>::operator <=> (const FacetSpec& rhs)
         return facet <=> rhs.facet;
 }
 
-template <int dim> requires (supportedDim(dim))
+template <int dim>
 inline std::ostream& operator << (std::ostream& out,
         const FacetSpec<dim>& spec) {
     return out << spec.simp << ':' << spec.facet;

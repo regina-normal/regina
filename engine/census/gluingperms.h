@@ -677,7 +677,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
  *
  * \ingroup census
  */
-template <int dim> requires (supportedDim(dim))
+template <int dim>
 void swap(GluingPerms<dim>& a, GluingPerms<dim>& b) noexcept;
 
 // Inline functions for GluingPerms
@@ -811,7 +811,7 @@ inline bool GluingPerms<dim>::operator == (const GluingPerms& other) const {
         permIndices_ + (size() * (dim + 1)), other.permIndices_);
 }
 
-template <int dim> requires (supportedDim(dim))
+template <int dim>
 inline void swap(GluingPerms<dim>& a, GluingPerms<dim>& b) noexcept {
     a.swap(b);
 }

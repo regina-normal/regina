@@ -336,7 +336,7 @@ class MaxAggregator {
  * \ingroup utilities
  */
 template <typename T>
-requires std::regular<T> && std::three_way_comparable<T> && std::swappable<T>
+requires std::swappable<T>
 constexpr void swap(MaxAggregator<T>& a, MaxAggregator<T>& b) {
     a.swap(b);
 }
