@@ -1312,7 +1312,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * Python lists of real numbers.
          *
          * \tparam T the type being used to estimate costs.
-         * As of Regina 7.5, zero plays no special role here (i.e., costs can
+         * As of Regina 8.0, zero plays no special role here (i.e., costs can
          * be positive or negative, and indeed costs do not need to be real
          * numbers at all); it is only the ordering on \a T that matters.
          * Although \a T does not need to be totally ordered, all of the costs
