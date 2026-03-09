@@ -780,7 +780,7 @@ namespace {
                  * Initially these are all null, to indicate that there are no
                  * such layered tetrahedra.
                  */
-            std::array<std::array<Perm<4>, 3>, 2> layerRoles_;
+            std::array<std::array<Perm<4>, 2>, 3> layerRoles_;
                 /**
                  * Permutations specifying the roles played by the vertices of
                  * the layered tetrahedra (if any).
@@ -1070,11 +1070,10 @@ namespace {
             unsigned s, TriSolidTorus& other, Perm<3> gluing ) {
         // Check some of the preconditions.
         unsigned sOther = gluing[s];
-        //TODO Why does this sanity check give false positives?
-        //if ( isSquareGlued_[s] or other.isSquareGlued_[sOther] ) {
-        //    throw InvalidArgument(
-        //            "Can only glue squares that are currently unglued." );
-        //}
+        if ( isSquareGlued_[s] or other.isSquareGlued_[sOther] ) {
+            throw InvalidArgument(
+                    "Can only glue squares that are currently unglued." );
+        }
 
         // We need the two squares on either side of the gluing to have
         // opposite slopes.
