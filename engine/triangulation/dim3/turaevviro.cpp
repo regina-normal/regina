@@ -39,6 +39,7 @@
 #include "progress/progresstracker.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/dim3.h"
+#include "utilities/fixedarray.h"
 #include "utilities/sequence.h"
 #include <gmpxx.h>
 #include <map>
@@ -92,11 +93,11 @@ namespace {
             using TVResult = typename TuraevViroDetails<exact>::TVResult;
 
         private:
-            TVResult* bracket_;
+            FixedArray<TVResult> bracket_;
                 /**< The cached brackets [0], [1], ..., [r-1] . */
-            TVResult* fact_;
+            FixedArray<TVResult> fact_;
                 /**< The cached values [0]!, [1]!, ..., [r-1]! . */
-            TVResult* inv_;
+            FixedArray<TVResult> inv_;
                 /**< The cached inverses of the values stored in fact[]. */
 
         public:
@@ -106,15 +107,6 @@ namespace {
              * Requires r ≥ 3.
              */
             BracketFactorial(unsigned long r, unsigned long whichRoot);
-
-            /**
-             * Clean up memory.
-             */
-            ~BracketFactorial() {
-                delete[] bracket_;
-                delete[] fact_;
-                delete[] inv_;
-            }
 
             /**
              * Returns the single value [index] (with no factorial symbol).
@@ -144,9 +136,7 @@ namespace {
     template <>
     BracketFactorial<true>::BracketFactorial(
             unsigned long r, unsigned long whichRoot) :
-            bracket_(new TVResult[r]),
-            fact_(new TVResult[r]),
-            inv_(new TVResult[r]) {
+            bracket_(r), fact_(r), inv_(r) {
         bool halfField = (r % 2 != 0 && whichRoot % 2 == 0);
         bracket_[0].init(halfField ? r : 2 * r);
         bracket_[0][0] = 1;
@@ -183,9 +173,7 @@ namespace {
     template <>
     BracketFactorial<false>::BracketFactorial(
             unsigned long r, unsigned long whichRoot) :
-            bracket_(new TVResult[r]),
-            fact_(new TVResult[r]),
-            inv_(new TVResult[r]) {
+            bracket_(r), fact_(r), inv_(r) {
         TVResult angle = (std::numbers::pi_v<TVResult> * whichRoot) / r;
         bracket_[0] = bracket_[1] = fact_[0] = fact_[1] =
             inv_[0] = inv_[1] = 1.0;
@@ -452,12 +440,12 @@ namespace {
 
         // We first sort the edges by degree.
         size_t i, j;
-        auto* sortedEdges = new size_t[nEdges];
-        auto* edgePos = new size_t[nEdges];
+        FixedArray<size_t> sortedEdges(nEdges);
+        FixedArray<size_t> edgePos(nEdges);
 
         for (i = 0; i < nEdges; ++i)
             sortedEdges[i] = i;
-        std::sort(sortedEdges, sortedEdges + nEdges,
+        std::sort(sortedEdges.begin(), sortedEdges.end(),
             [&tri](size_t a, size_t b) {
                 return (tri.edge(a)->degree() > tri.edge(b)->degree());
             });
@@ -478,8 +466,8 @@ namespace {
                 tmp[emb.tetrahedron()->
                     triangle(emb.vertices()[2])->index()] = i;
         }
-        auto* triDone = new size_t[nTriangles];
-        auto* triDoneStart = new size_t[nEdges + 1];
+        FixedArray<size_t> triDone(nTriangles);
+        FixedArray<size_t> triDoneStart(nEdges + 1);
         triDoneStart[0] = 0;
         for (i = 0; i < nEdges; ++i) {
             triDoneStart[i + 1] = triDoneStart[i];
@@ -493,8 +481,8 @@ namespace {
         for (i = 0; i < nEdges; ++i)
             for (auto& emb : *tri.edge(sortedEdges[i]))
                 tmp[emb.tetrahedron()->index()] = i;
-        auto* tetDone = new size_t[nTet];
-        auto* tetDoneStart = new size_t[nEdges + 1];
+        FixedArray<size_t> tetDone(nTet);
+        FixedArray<size_t> tetDoneStart(nEdges + 1);
         tetDoneStart[0] = 0;
         for (i = 0; i < nEdges; ++i) {
             tetDoneStart[i + 1] = tetDoneStart[i];
@@ -505,13 +493,13 @@ namespace {
         delete[] tmp;
 
         // Caches for partially computed weights of colourings:
-        auto* edgeCache = new TVType[nEdges + 1];
+        FixedArray<TVType> edgeCache(nEdges + 1);
         init.initOne(edgeCache[0]);
 
-        auto* triangleCache = new TVType[nEdges + 1];
+        FixedArray<TVType> triangleCache(nEdges + 1);
         init.initOne(triangleCache[0]);
 
-        auto* tetCache = new TVType[nEdges + 1];
+        FixedArray<TVType> tetCache(nEdges + 1);
         init.initOne(tetCache[0]);
 
         // Run through all admissible colourings.
@@ -519,9 +507,8 @@ namespace {
         init.initZero(ans);
 
         // Now hunt for colourings.
-        auto* colour = new unsigned long[nEdges];
+        FixedArray<unsigned long> colour(nEdges, 0);
 
-        std::fill(colour, colour + nEdges, 0);
         ssize_t curr = 0;
         TVType valColour(init.halfField ? init.r : 2 * init.r);
         TVType tmpTVType(init.halfField ? init.r : 2 * init.r);
@@ -637,18 +624,6 @@ namespace {
                 colour[sortedEdges[curr]]++;
         }
 
-        delete[] colour;
-        delete[] sortedEdges;
-        delete[] edgePos;
-        delete[] triDone;
-        delete[] triDoneStart;
-        delete[] tetDone;
-        delete[] tetDoneStart;
-
-        delete[] edgeCache;
-        delete[] triangleCache;
-        delete[] tetCache;
-
         if (tracker) {
             delete[] coeff;
             if (tracker->isCancelled())
@@ -680,12 +655,12 @@ namespace {
         // of the search tree and the low-degree edges towards the leaves.
 
         // We first sort the edges by degree.
-        auto* sortedEdges = new size_t[nEdges];
-        auto* edgePos = new size_t[nEdges];
+        FixedArray<size_t> sortedEdges(nEdges);
+        FixedArray<size_t> edgePos(nEdges);
 
         for (size_t i = 0; i < nEdges; ++i)
             sortedEdges[i] = i;
-        std::sort(sortedEdges, sortedEdges + nEdges,
+        std::sort(sortedEdges.begin(), sortedEdges.end(),
             [&tri](size_t a, size_t b) {
                 return (tri.edge(a)->degree() > tri.edge(b)->degree());
             });
@@ -697,9 +672,8 @@ namespace {
         init.initZero(ans);
 
         // Now hunt for colourings.
-        auto* colour = new unsigned long[nEdges];
+        FixedArray<unsigned long> colour(nEdges, 0);
 
-        std::fill(colour, colour + nEdges, 0);
         ssize_t curr = 0;
         TVType valColour(init.halfField ? init.r : 2 * init.r);
         bool admissible;
@@ -801,10 +775,6 @@ namespace {
                 colour[sortedEdges[curr]]++;
         }
 
-        delete[] colour;
-        delete[] sortedEdges;
-        delete[] edgePos;
-
         if (tracker) {
             delete[] coeff;
             if (tracker->isCancelled())
@@ -857,7 +827,7 @@ namespace {
         // of its tetrahedra will be marked as seenDegree[i] = -1 (as
         // opposed to seenDegree[i] = tri.edge(i)->degree()).
         // This is simply to make such a condition easier to test.
-        auto* seenDegree = new LightweightSequence<int>[nBags];
+        FixedArray<LightweightSequence<int>> seenDegree(nBags);
 
         for (bag = d.first(); bag; bag = bag->next()) {
             size_t index = bag->index();
@@ -907,8 +877,7 @@ namespace {
         using SolnSet = std::map<LightweightSequence<int>, TVType>;
         using SolnIterator = typename SolnSet::iterator;
 
-        auto* partial = new SolnSet*[nBags];
-        std::fill(partial, partial + nBags, nullptr);
+        FixedArray<SolnSet*> partial(nBags, nullptr);
 
         std::pair<SolnIterator, bool> existingSoln;
         size_t tetEdge[6];
@@ -916,12 +885,12 @@ namespace {
         int level;
         bool ok;
 
-        auto* overlap = new size_t[nEdges];
+        FixedArray<size_t> overlap(nEdges);
         size_t nOverlap;
-        SolnIterator *leftIndexed, *rightIndexed;
         size_t nLeft, nRight;
-        SolnIterator *subit, *subit2;
-        std::pair<SolnIterator*, SolnIterator*> subrange, subrange2;
+        std::pair<
+            typename FixedArray<SolnIterator>::iterator,
+            typename FixedArray<SolnIterator>::iterator> subrange, subrange2;
         double increment, percent;
 
         // For each new tetrahedron that appears in a forget bag, we
@@ -1128,66 +1097,69 @@ namespace {
                     overlap[nOverlap++] = i;
 
                 LightweightSequence<int>::SubsequenceCompareFirst compare(
-                    overlap, overlap + nOverlap);
+                    overlap.begin(), overlap.begin() + nOverlap);
 
                 if (tracker && tracker->isCancelled())
                     break;
 
                 nLeft = 0;
-                leftIndexed = new SolnIterator[partial[child->index()]->size()];
+                FixedArray<SolnIterator> leftIndexed(
+                    partial[child->index()]->size());
                 for (auto it = partial[child->index()]->begin();
                         it != partial[child->index()]->end(); ++it)
                     leftIndexed[nLeft++] = it;
-                std::sort(leftIndexed, leftIndexed + nLeft, compare);
+                std::sort(leftIndexed.begin(), leftIndexed.begin() + nLeft,
+                    compare);
 
                 if (tracker && tracker->isCancelled())
                     break;
 
                 nRight = 0;
-                rightIndexed = new SolnIterator[
-                    partial[sibling->index()]->size()];
+                FixedArray<SolnIterator> rightIndexed(
+                    partial[sibling->index()]->size());
                 for (auto it = partial[sibling->index()]->begin();
                         it != partial[sibling->index()]->end(); ++it)
                     rightIndexed[nRight++] = it;
-                std::sort(rightIndexed, rightIndexed + nRight, compare);
+                std::sort(rightIndexed.begin(), rightIndexed.begin() + nRight,
+                    compare);
 
-                subrange.second = leftIndexed;
-                subrange2.second = rightIndexed;
+                subrange.second = leftIndexed.begin();
+                subrange2.second = rightIndexed.begin();
 
-                while (subrange.second != leftIndexed + nLeft &&
-                        subrange2.second != rightIndexed + nRight) {
+                while (subrange.second != leftIndexed.begin() + nLeft &&
+                        subrange2.second != rightIndexed.begin() + nRight) {
                     if (tracker) {
                         percent = 100.0 * (
-                            (subrange.second - leftIndexed) +
-                            (subrange2.second - rightIndexed)) /
+                            (subrange.second - leftIndexed.begin()) +
+                            (subrange2.second - rightIndexed.begin())) /
                             (nLeft + nRight);
                         if (! tracker->setPercent(percent))
                             break;
                     }
 
                     subrange.first = subrange.second;
-                    while (subrange.second != leftIndexed + nLeft &&
+                    while (subrange.second != leftIndexed.begin() + nLeft &&
                             compare.equal(*subrange.first, *subrange.second))
                         ++subrange.second;
 
                     subrange2.first = subrange2.second;
-                    while (subrange2.first != rightIndexed + nRight &&
+                    while (subrange2.first != rightIndexed.begin() + nRight &&
                             compare.less(*subrange2.first, *subrange.first))
                         ++subrange2.first;
 
-                    if (subrange2.first == rightIndexed + nRight)
+                    if (subrange2.first == rightIndexed.begin() + nRight)
                         break;
                     if (compare.less(*subrange.first, *subrange2.first))
                         continue;
 
                     subrange2.second = subrange2.first;
-                    while (subrange2.second != rightIndexed + nRight &&
+                    while (subrange2.second != rightIndexed.begin() + nRight &&
                             compare.equal(*subrange2.first, *subrange2.second))
                         ++subrange2.second;
 
-                    for (subit = subrange.first;
+                    for (auto subit = subrange.first;
                             subit != subrange.second; ++subit)
-                        for (subit2 = subrange2.first;
+                        for (auto subit2 = subrange2.first;
                                 subit2 != subrange2.second; ++subit2) {
                             // We have two compatible solutions.
                             // Combine them and store the corresponding
@@ -1210,9 +1182,6 @@ namespace {
                         }
                 }
 
-                delete[] leftIndexed;
-                delete[] rightIndexed;
-
                 delete partial[child->index()];
                 partial[child->index()] = nullptr;
 
@@ -1232,15 +1201,11 @@ namespace {
         // cleanup could be significant.
         // If we made it to the end, then the cleanup is O(1).
 
-        delete[] seenDegree;
-        delete[] overlap;
-
         if (tracker && tracker->isCancelled()) {
             // We don't know which elements of partial[] have been
             // deallocated, so check them all.
             for (size_t i = 0; i < nBags; ++i)
                 delete partial[i];
-            delete[] partial;
 
             return TuraevViroDetails<exact>::zero();
         }
@@ -1253,7 +1218,6 @@ namespace {
         TVType ans = partial[nBags - 1]->begin()->second;
 
         delete partial[nBags - 1];
-        delete[] partial;
 
         for (size_t i = 0; i < tri.countVertices(); i++)
             ans *= init.vertexContrib;
