@@ -307,7 +307,7 @@ struct safe_tuple_element_impl<pos, tuple, out_of_range, false> {
 #endif
 
 /**
- * An alternative to std::tuple_element that gracefully handles an
+ * Deprecated alternative to std::tuple_element that gracefully handles an
  * out-of-range index.
  *
  * If \a pos is a valid index into the tuple type \a tuple, then this
@@ -318,6 +318,10 @@ struct safe_tuple_element_impl<pos, tuple, out_of_range, false> {
  * (i.e., this is really a drop-in replacement for the C++17 type alias
  * std::tuple_element_t, and not the C++11 structure std::tuple_element).
  *
+ * \deprecated This is deprecated and will be removed from Regina in the near
+ * future, since its only purpose is to support CallableArg (which is also
+ * deprecated).
+ *
  * \tparam pos an index, which may take any integer value.
  * \tparam tuple a std::tuple type (which is allowed to include \c const and/or
  * \c volatile modifiers).
@@ -325,12 +329,13 @@ struct safe_tuple_element_impl<pos, tuple, out_of_range, false> {
  * into \a tuple.
  */
 template <int pos, typename tuple, typename out_of_range = void>
-using safe_tuple_element = typename regina::detail::safe_tuple_element_impl<
+using safe_tuple_element [[deprecated]] =
+    typename regina::detail::safe_tuple_element_impl<
     pos, tuple, out_of_range>::type;
 
 /**
- * A traits class that deduces the type of the argument in a given position
- * for a callable type.  It can (amongst other things) work with
+ * Deprecated traits class that deduces the type of the argument in a given
+ * position for a callable type.  It can (amongst other things) work with
  * function pointers, function references, member function pointers,
  * std::function wrappers, and lambdas.
  *
@@ -344,6 +349,10 @@ using safe_tuple_element = typename regina::detail::safe_tuple_element_impl<
  *
  * If \a Action does not take enough arguments for the given position \a pos,
  * then \a type will be \c void.
+ *
+ * \deprecated This is deprecated and will be removed from Regina in the near
+ * future, since its implementation is drifting increasibly further away from
+ * modern C++ standards.
  *
  * \tparam Action a callable type that takes at least one argument.
  * \tparam pos the index of the argument being requested.  Positions are

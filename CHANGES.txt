@@ -214,6 +214,9 @@ Version 7.5  [ TODO ]
         Class RingTraits:
             - Provides new compile-time constants zeroInitialised and
               zeroDivisors.
+        Class safe_tuple_element<...>:
+            - This is now deprecated, since its only purpose is to support
+              CallableArg (which is also deprecated).
         Class SubtreeIterator<const_>:
             - The type std::iterator_traits<SubtreeIterator<...>>::value_type
               is now just Packet (without any const qualifiers), regardless of
