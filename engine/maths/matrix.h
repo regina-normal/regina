@@ -228,13 +228,9 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \nopython
          *
-         * \tparam U the type of object held by the given matrix \a src.
-         * It must be possible to _assign_ an object of type \a U to an
-         * object of type \a T.
-         *
          * \param src the matrix to clone.
          */
-        template <typename U>
+        template <AssignableTo<T> U>
         explicit Matrix(const Matrix<U>& src) :
                 rows_(src.rows()), cols_(src.columns()) {
             if (src.initialised()) {
