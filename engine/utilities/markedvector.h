@@ -94,7 +94,9 @@ class MarkedElement {
          *
          * \return the index at which this object is stored.
          */
-        inline size_t markedIndex() const;
+        inline size_t markedIndex() const {
+            return marking_;
+        }
 
     template <typename T>
     friend class MarkedVector;
@@ -358,15 +360,6 @@ class MarkedVector : private std::vector<T*> {
  *
  * \ingroup utilities
  */
-template <typename T>
-void swap(MarkedVector<T>& a, MarkedVector<T>& b) noexcept;
-
-// Inline functions for MarkedElement
-
-inline size_t MarkedElement::markedIndex() const {
-    return marking_;
-}
-
 template <typename T>
 inline void swap(MarkedVector<T>& a, MarkedVector<T>& b) noexcept {
     a.swap(b);
