@@ -600,7 +600,7 @@ namespace detail {
  *
  * \ingroup detail
  */
-template <int nConstraints, typename Coefficient>
+template <size_t nConstraints, SignedCppInteger Coefficient>
 struct LPCol {
     int nPlus;
         /**< The total number of +1 entries in this column. */
@@ -644,12 +644,9 @@ struct LPCol {
     /**
      * Moves the contents of the given column into this new column.
      *
-     * This move operation is not marked \c noexcept, since this depends
-     * upon the underlying \a Coefficient type.
-     *
      * After this operation, the given column will no longer be usable.
      */
-    LPCol(LPCol&&) = default;
+    LPCol(LPCol&&) noexcept = default;
 
     /**
      * Sets this to be a copy of the given column.
@@ -661,14 +658,11 @@ struct LPCol {
     /**
      * Moves the contents of the given column into this column.
      *
-     * This move operation is not marked \c noexcept, since this depends
-     * upon the underlying \a Coefficient type.
-     *
      * After this operation, the given column will no longer be usable.
      *
      * \return a reference to this column.
      */
-    LPCol& operator = (LPCol&&) = default;
+    LPCol& operator = (LPCol&&) noexcept = default;
 
     /**
      * Adds the given entry in the given row to this column.
