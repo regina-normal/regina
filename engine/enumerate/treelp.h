@@ -62,7 +62,7 @@ class AngleStructure;
 class BanConstraintBase;
 class BanNone;
 class NormalSurface;
-namespace detail { template <int, typename> class LPCol; }
+namespace detail { template <size_t, SignedCppInteger> class LPCol; }
 
 /**
  * Indicates whether a linear constraint describes an equality or an inequality.
