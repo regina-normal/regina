@@ -55,7 +55,7 @@ namespace regina {
  * for decision problems in knot theory and 3-manifold topology",
  * Burton and Ozlen, Algorithmica 65:4 (2013), pp. 772-801.
  *
- * A type vector is a sequence of digits, each between 0 and \a nTypes-1
+ * A type vector is a sequence of digits, each between 0 and `nTypes-1`
  * inclusive.  Type vectors are represented as arrays of characters:
  * these are not strings, but simply sequences of one-byte integers.
  * In particular, you cannot print them (since they use raw integer
@@ -63,10 +63,10 @@ namespace regina {
  * passed alongside it (i.e., there is no special terminating character).
  *
  * A type vector \a v is said to _dominate_ \a u if, for each position
- * \a i, either v[i] == u[i] or else u[i] == 0.  So, for instance,
- * (1,0,2,3) dominates (1,0,2,0), which in turn dominates (1,0,0,0).
+ * \a i, either `v[i] == u[i]` or else `u[i] == 0`.  So, for instance,
+ * `(1,0,2,3)` dominates `(1,0,2,0)`, which in turn dominates `(1,0,0,0)`.
  * Domination is a partial order, not a total order: for instance,
- * neither of (1,0,2,0) or (1,0,3,0) dominates the other.
+ * neither of `(1,0,2,0)` or `(1,0,3,0)` dominates the other.
  *
  * We assume that all type vectors used in this trie have the same
  * length.  This is important, since we optimise the implementation by
@@ -80,16 +80,17 @@ namespace regina {
  * that the cost of moving is linear in the template parameter \a nTypes
  * (which, as noted below, is usually very small).
  *
- * \pre \a nTypes is between 1 and 256 inclusive.  The typical value for
- * \a nTypes for normal surface enumeration is either 4 or 7 (depending upon
- * whether we are supporting almost normal surfaces).
+ * \tparam nTypes specifies the range of possible values for the elements of
+ * the vectors that are stored.  For normal surface enumeration, typical values
+ * for \a nTypes would be 4 or 7 (depending upon whether we are supporting
+ * almost normal surfaces).
  *
  * \python This is available only for the template parameters
  * \a nTypes = 4 and 7, under the names TypeTrie4 and TypeTrie7 respectively.
  *
  * \ingroup enumerate
  */
-template <int nTypes>
+template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
 class TypeTrie : public Output<TypeTrie<nTypes>> {
     private:
         /**
@@ -270,19 +271,19 @@ void swap(TypeTrie<nTypes>& a, TypeTrie<nTypes>& b) noexcept;
 
 // Inline functions for TypeTrie
 
-template <int nTypes>
+template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
 inline TypeTrie<nTypes>::Node::Node() : elementHere_(false) {
     // NOLINTNEXTLINE(bugprone-sizeof-expression)
     ::memset(child_, 0, sizeof(Node*) * nTypes);
 }
 
-template <int nTypes>
+template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
 inline TypeTrie<nTypes>::Node::~Node() {
     for (int i = 0; i < nTypes; ++i)
         delete child_[i];
 }
 
-template <int nTypes>
+template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
 TypeTrie<nTypes>::TypeTrie(const TypeTrie& src) {
     // We don't know how deep the tree could get, so to avoid recursion
     // we use our own stack.
@@ -301,14 +302,14 @@ TypeTrie<nTypes>::TypeTrie(const TypeTrie& src) {
     }
 }
 
-template <int nTypes>
+template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
 inline TypeTrie<nTypes>::TypeTrie(TypeTrie&& src) noexcept {
     std::copy(src.root_.child_, src.root_.child_ + nTypes, root_.child_);
     std::fill(src.root_.child_, src.root_.child_ + nTypes, nullptr);
     root_.elementHere_ = src.root_.elementHere_;
 }
 
-template <int nTypes>
+template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
 TypeTrie<nTypes>& TypeTrie<nTypes>::operator = (const TypeTrie& src) {
     for (int i = 0; i < nTypes; ++i) {
         delete root_.child_[i];
@@ -333,7 +334,7 @@ TypeTrie<nTypes>& TypeTrie<nTypes>::operator = (const TypeTrie& src) {
     return *this;
 }
 
-template <int nTypes>
+template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
 inline TypeTrie<nTypes>& TypeTrie<nTypes>::operator = (TypeTrie&& src)
         noexcept {
     std::swap_ranges(root_.child_, root_.child_ + nTypes, src.root_.child_);
@@ -342,13 +343,13 @@ inline TypeTrie<nTypes>& TypeTrie<nTypes>::operator = (TypeTrie&& src)
     return *this;
 }
 
-template <int nTypes>
+template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
 inline void TypeTrie<nTypes>::swap(TypeTrie& other) noexcept {
     std::swap_ranges(root_.child_, root_.child_ + nTypes, other.root_.child_);
     std::swap(root_.elementHere_, other.root_.elementHere_);
 }
 
-template <int nTypes>
+template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
 bool TypeTrie<nTypes>::operator == (const TypeTrie& other) const {
     std::stack<std::pair<const Node*, const Node*>> toProcess;
     toProcess.push({&root_, &other.root_});
@@ -372,7 +373,7 @@ bool TypeTrie<nTypes>::operator == (const TypeTrie& other) const {
     return true;
 }
 
-template <int nTypes>
+template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
 inline void TypeTrie<nTypes>::clear() {
     for (int i = 0; i < nTypes; ++i) {
         delete root_.child_[i];
@@ -381,7 +382,7 @@ inline void TypeTrie<nTypes>::clear() {
     root_.elementHere_ = false;
 }
 
-template <int nTypes>
+template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
 void TypeTrie<nTypes>::insert(const char* entry, size_t len) {
     // Strip off trailing zeroes.
     while (len > 0 && ! entry[len - 1])
@@ -398,7 +399,7 @@ void TypeTrie<nTypes>::insert(const char* entry, size_t len) {
     node->elementHere_ = true;
 }
 
-template <int nTypes>
+template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
 bool TypeTrie<nTypes>::dominates(const char* vec, size_t len) const {
     // Strip off trailing zeroes.
     while (len > 0 && ! vec[len - 1])
@@ -462,7 +463,7 @@ bool TypeTrie<nTypes>::dominates(const char* vec, size_t len) const {
     return false;
 }
 
-template <int nTypes>
+template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
 inline void TypeTrie<nTypes>::writeTextShort(std::ostream& out) const {
     if (nTypes == 1)
         out << "Trie for 1 type";
@@ -470,7 +471,7 @@ inline void TypeTrie<nTypes>::writeTextShort(std::ostream& out) const {
         out << "Trie for " << nTypes << " types";
 }
 
-template <int nTypes>
+template <int nTypes> requires (1 <= nTypes && nTypes <= 256)
 void TypeTrie<nTypes>::writeTextLong(std::ostream& out) const {
     if (nTypes == 1)
         out << "Trie for 1 type:";
