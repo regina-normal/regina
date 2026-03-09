@@ -104,23 +104,23 @@ class MarkedElement {
 };
 
 /**
- * A vector of objects with fast, space-efficient reverse lookup of
+ * A vector of pointers with fast, space-efficient reverse lookup of array
+ * indices.
+ *
+ * This class derives from `std::vector<T*>`, and so provides fast forward
+ * lookups from array indices to objects of type \a T.  What MarkedVector
+ * provides in addition to this is fast reverse lookups from objects back to
  * array indices.
  *
- * This class derives from std::vector, and so provides fast forward
- * lookups from array indices to objects.  What MarkedVector provides
- * in addition to this is fast reverse lookups from objects back to
- * array indices.
- *
- * The way this class is able to provide fast constant-time reverse
- * lookups without consuming a great deal of space is by storing array indices
- * inside the objects themselves.  As a result, there are two
- * significant constraints:
+ * The way this class is able to provide fast constant-time reverse lookups
+ * without consuming a great deal of space is by storing array indices
+ * inside the objects themselves.  As a result, there are two significant
+ * constraints:
  *
  * - This class can only store objects derived from MarkedElement
  *   (which provides space for storing the array indices and handles
- *   their access control).  In particular, it cannot store native types
- *   such as \c int or predefined types such as \c std::string.
+ *   their access control).  In particular, type \a T cannot be a native type
+ *   such as `int`, or a standard C++ class such as `std::string`.
  *
  * - An object can only belong to one MarkedVector at a time.  Any
  *   attempt to insert an object into more than one MarkedVector at the
@@ -131,15 +131,16 @@ class MarkedElement {
  * \a const_iterator, \a begin, \a end, \a size, \a empty, \a front,
  * \a back, operator [], \a reserve, and \a clear (this subset may grow over
  * time if required).  In addition, any const method of std::vector can
- * be accessed through an explicit cast to const std::vector&.  To
+ * be accessed through an explicit cast to `const std::vector&`.  To
  * perform a reverse lookup (find the index at which an array is stored),
  * simply call the object's inherited method MarkedElement::markedIndex().
  *
  * Note that, like its parent std::vector, this class performs no memory
- * management.  In particular, elements (which are pointers to real objects)
- * are not destroyed when they are removed from a vector or when the vector
- * is eventually destroyed.  This class does, however, provide a convenience
- * method clear_destructive() to assist other code with its memory cleanup.
+ * management.  In particular, elements (which are pointers to objects of
+ * type \a T) are not destroyed when they are removed from a vector or when
+ * the vector is eventually destroyed.  This class does, however, provide a
+ * convenience method clear_destructive() to assist other code with its
+ * memory cleanup.
  *
  * Since an object can only belong to one MarkedVector at a time, this
  * class does not offer a copy constructor or copy assignment.  Instead it
@@ -151,7 +152,10 @@ class MarkedElement {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \pre The type \a T is a class derived from MarkedElement.
+ * \tparam T the class for which this vector stores pointers.  Type \a T must
+ * be derived from MarkedElement; however, in order to simplify forward
+ * declarations and header dependencies, we do not enforce this through
+ * constraints.
  *
  * \nopython
  *
