@@ -46,6 +46,7 @@
 #endif
 
 #include "triangulation/generic/triangulation.h"
+#include "utilities/typeutils.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -137,9 +138,9 @@ void TriangulationBase<dim>::calculateSkeleton() {
 
     std::fill(nBoundaryFaces_.begin(), nBoundaryFaces_.end(), 0);
 
-    std::apply([this](auto&&... kFaces) {
-        (calculateFaces<subdimOf<decltype(kFaces)>()>(this), ...);
-    }, faces_);
+    for_constexpr<0, dim>([this](auto subdim) {
+        calculateFaces<subdim>();
+    });
 
     // -----------------------------------------------------------------
     // Real boundary components
@@ -150,12 +151,12 @@ void TriangulationBase<dim>::calculateSkeleton() {
 
 template <int dim> requires (supportedDim(dim))
 template <int subdim> requires (subdim >= 0 && subdim < dim)
-void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
+void TriangulationBase<dim>::calculateFaces() {
     // Clear out all subdim-faces of all simplices.
     // These simplex-based arrays will be our markers for what faces
     // have or have not been seen yet.
     //
-    for (auto s : tri->simplices_)
+    for (auto s : simplices_)
         std::get<subdim>(s->faces_).fill(nullptr);
 
     if constexpr (subdim == dim - 1) {
@@ -170,7 +171,7 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
         // according to the truncated permutation labels that are displayed to
         // the user.  This means working through the faces of each simplex
         // in *reverse*.
-        for (auto s : tri->simplices_) {
+        for (auto s : simplices_) {
             for (facet = dim; facet >= 0; --facet) {
                 // Have we already checked out this facet from the other side?
                 if (std::get<dim-1>(s->faces_)[facet])
@@ -178,7 +179,7 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
 
                 // A new face!
                 f = new Face<dim, dim-1>(s->component_);
-                std::get<dim - 1>(tri->faces_).push_back(f);
+                std::get<dim - 1>(faces_).push_back(f);
                 auto map = Face<dim, dim-1>::ordering(facet);
 
                 adj = s->adjacentSimplex(facet);
@@ -227,14 +228,14 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
         int adjFace;
         Perm<dim+1> adjMap;
         int dir, exitFacet;
-        for (auto s : tri->simplices_) {
+        for (auto s : simplices_) {
             for (start = 0; start < FaceNumbering<dim, dim-2>::nFaces;
                     ++start) {
                 if (std::get<dim-2>(s->faces_)[start])
                     continue;
 
                 f = new Face<dim, dim-2>(s->component_);
-                std::get<dim - 2>(tri->faces_).push_back(f);
+                std::get<dim - 2>(faces_).push_back(f);
                 auto map = Face<dim, dim-2>::ordering(start);
                 if (map.sign() != s->orientation_)
                     map = map * Perm<dim + 1>(dim - 1, dim);
@@ -278,7 +279,7 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
                                             INVALID_IDENTIFICATION;
                                     else
                                         f->valid_.value = false;
-                                    tri->valid_ = s->component_->valid_ = false;
+                                    valid_ = s->component_->valid_ = false;
                                 }
                             }
                             break;
@@ -316,18 +317,18 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
         // be very large.
         // Each element in our queue is a pair (simplex, face).
         auto* queue = new std::pair<Simplex<dim>*, int>
-            [tri->size() * FaceNumbering<dim, subdim>::nFaces];
+            [size() * FaceNumbering<dim, subdim>::nFaces];
         unsigned queueStart, queueEnd;
         unsigned pos;
 
-        for (auto s : tri->simplices_) {
+        for (auto s : simplices_) {
             for (start = 0; start < FaceNumbering<dim, subdim>::nFaces;
                     ++start) {
                 if (std::get<subdim>(s->faces_)[start])
                     continue;
 
                 f = new Face<dim, subdim>(s->component_);
-                std::get<subdim>(tri->faces_).push_back(f);
+                std::get<subdim>(faces_).push_back(f);
                 auto map = Face<dim, subdim>::ordering(start);
                 if (map.sign() != s->orientation_)
                     map = map * Perm<dim + 1>(dim - 1, dim);
@@ -397,8 +398,7 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
                                                 INVALID_IDENTIFICATION;
                                         else
                                             f->valid_.value = false;
-                                        tri->valid_ =
-                                            s->component_->valid_ = false;
+                                        valid_ = s->component_->valid_ = false;
                                     }
 
                                     // Is the link non-orientable?

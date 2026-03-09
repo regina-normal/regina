@@ -3907,15 +3907,10 @@ class TriangulationBase :
          *
          * See calculateSkeleton() for further details.
          *
-         * This _should_ have been an ordinary member function (not static),
-         * but it caused an internal compiler error in gcc8 (see gcc bug #86594,
-         * which is fixed in gcc9).  Making the function static is a workaround
-         * that we will need to keep until we drop support for gcc8.
-         *
          * \tparam subdim the dimension of the faces to compute.
          */
         template <int subdim> requires (subdim >= 0 && subdim < dim)
-        static void calculateFaces(TriangulationBase<dim>* tri);
+        void calculateFaces();
 
         /**
          * Internal to calculateSkeleton().
