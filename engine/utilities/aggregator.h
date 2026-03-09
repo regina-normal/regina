@@ -37,7 +37,7 @@
 #define __REGINA_AGGREGATE_H
 #endif
 
-#include "regina-core.h"
+#include "utilities/exception.h"
 #include <concepts>
 #include <utility> // for std::swap
 
@@ -94,6 +94,47 @@ class MaxAggregator {
          * The aggregator that is passed will no longer be usable.
          */
         constexpr MaxAggregator(MaxAggregator&&) = default;
+
+        /**
+         * Determines whether or not this aggregator has encountered any
+         * atomic values at all.
+         *
+         * \return \c true if and only if this aggregator has _not_ yet
+         * encountered any atomic values.
+         */
+        constexpr bool empty() const {
+            return count_ == 0;
+        }
+
+        /**
+         * Returns the maximum atomic value that this aggregator has
+         * encountered so far.
+         *
+         * If no values have been encountered at all then this routine will
+         * throw an exception.
+         *
+         * \exception NoSolution No atomic values have yet been encountered.
+         *
+         * \return the maximum atomic value that has been encountered.
+         */
+        constexpr const T& value() const {
+            if (count_ == 0)
+                throw NoSolution();
+            return max_;
+        }
+
+        /**
+         * Returns the number of times that the current maximum atomic value
+         * has been encountered.
+         *
+         * If no values have been encountered at all then this routine will
+         * return zero.
+         *
+         * \return the number of times that the maximum has been encountered.
+         */
+        constexpr size_t count() const {
+            return count_;
+        }
 
         /**
          * Sets this to be a copy of the given aggregator.
