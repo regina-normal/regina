@@ -657,6 +657,7 @@ makeMatchingEquations : function
 makePacket : function
 make_packet : function
 maxDim : function
+maxPermDegree : function
 metricalSmithNormalForm : function
 modularInverse : function
 nextPowerOfTwo : function
