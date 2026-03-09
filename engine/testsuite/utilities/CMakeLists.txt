@@ -1,5 +1,6 @@
 # Files to compile
 SET ( FILES
+  aggregator.cpp
   base64.cpp
   bitmask.cpp
   boolset.cpp
