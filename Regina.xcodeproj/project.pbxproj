@@ -1584,6 +1584,7 @@
 		05C265C228307D0600232420 /* facetpairing-canonical-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C265C128307D0500232420 /* facetpairing-canonical-impl.h */; };
 		05C7A5C92DF7D9BA00CD4551 /* affineindex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C7A5C82DF7D9BA00CD4551 /* affineindex.cpp */; };
 		05C7A5CA2DF7D9BA00CD4551 /* affineindex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C7A5C82DF7D9BA00CD4551 /* affineindex.cpp */; };
+		05CAA38C2F5E48DE0059225D /* aggregator.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CAA38B2F5E48DE0059225D /* aggregator.h */; };
 		05CAE6012741C871007C93F3 /* validityconstraints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6002741C871007C93F3 /* validityconstraints.cpp */; };
 		05CAE60527427A8A007C93F3 /* ordering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE60327427A8A007C93F3 /* ordering.cpp */; };
 		05CAE60727427A8A007C93F3 /* maxadmissible.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE60427427A8A007C93F3 /* maxadmissible.cpp */; };
@@ -4352,6 +4353,7 @@
 		05C265B2282C947D00232420 /* facetpairing7.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing7.cpp; sourceTree = "<group>"; };
 		05C265C128307D0500232420 /* facetpairing-canonical-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "facetpairing-canonical-impl.h"; sourceTree = "<group>"; };
 		05C7A5C82DF7D9BA00CD4551 /* affineindex.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = affineindex.cpp; sourceTree = "<group>"; };
+		05CAA38B2F5E48DE0059225D /* aggregator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = aggregator.h; sourceTree = "<group>"; };
 		05CAE6002741C871007C93F3 /* validityconstraints.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = validityconstraints.cpp; sourceTree = "<group>"; };
 		05CAE60327427A8A007C93F3 /* ordering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ordering.cpp; sourceTree = "<group>"; };
 		05CAE60427427A8A007C93F3 /* maxadmissible.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = maxadmissible.cpp; sourceTree = "<group>"; };
@@ -6772,6 +6774,7 @@
 		052F9E5E180600FB00FAE4DF /* utilities */ = {
 			isa = PBXGroup;
 			children = (
+				05CAA38B2F5E48DE0059225D /* aggregator.h */,
 				052F9E5F180600FB00FAE4DF /* base64.cpp */,
 				052F9E60180600FB00FAE4DF /* base64.h */,
 				052F9E61180600FB00FAE4DF /* bitmanip.h */,
@@ -8965,6 +8968,7 @@
 				05431F841C40F3C9009BC072 /* sublattice_representation.h in Headers */,
 				0568742820C5D86B001C435B /* gauss-tangle-impl.h in Headers */,
 				052FA066180600FB00FAE4DF /* facepair.h in Headers */,
+				05CAA38C2F5E48DE0059225D /* aggregator.h in Headers */,
 				055114CE1DCC476A00EC753C /* pachner.h in Headers */,
 				052F9F40180600FB00FAE4DF /* matrix2.h in Headers */,
 				05888BD8283F0F8B00181D2D /* tightencoding-impl.h in Headers */,

@@ -25,6 +25,7 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    aggregator.h
     base64.h
     bitmanip.h
     bitmask.h
