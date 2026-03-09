@@ -1144,11 +1144,9 @@ class Perm<3> {
         /**
          * Converts between an index into Perm<3>::Sn and an index into
          * Perm<3>::orderedSn.  This conversion works in either direction.
-         *
-         * \tparam Int a native integer type; this would typically be
-         * either \c int or \a Code.
          */
-        template <typename Int>
+        template <CppInteger Int>
+        requires (sizeof(Int) >= sizeof(Code))
         static constexpr Int convOrderedUnordered(Int index);
 
         /**
@@ -1187,7 +1185,8 @@ class Perm<3> {
 
 // Inline functions for Perm<3>
 
-template <typename Int>
+template <CppInteger Int>
+requires (sizeof(Int) >= sizeof(Perm<3>::Code))
 inline constexpr Int Perm<3>::convOrderedUnordered(Int index) {
     // S3 is almost the same as orderedS3, except that we
     // swap indices 2 <--> 3.

@@ -1590,11 +1590,9 @@ class Perm<5> {
         /**
          * Converts between an index into Perm<5>::Sn and an index into
          * Perm<5>::orderedSn.  This conversion works in either direction.
-         *
-         * \tparam Int a native integer type; this would typically be
-         * either \c int or \a Code2.
          */
-        template <typename Int>
+        template <CppInteger Int>
+        requires (sizeof(Int) >= sizeof(Code2))
         static constexpr Int convOrderedUnordered(Int index);
 
         /**
@@ -1633,7 +1631,8 @@ class Perm<5> {
 
 // Inline functions for Perm<5>
 
-template <typename Int>
+template <CppInteger Int>
+requires (sizeof(Int) >= sizeof(Perm<5>::Code2))
 inline constexpr Int Perm<5>::convOrderedUnordered(Int index) {
     // S5 is almost the same as orderedS5, except that some pairs
     // S5[2i] <--> S5[2i+1] have been swapped to ensure that all

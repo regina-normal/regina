@@ -3156,11 +3156,9 @@ class Perm<6> {
         /**
          * Converts between an index into Perm<6>::Sn and an index into
          * Perm<6>::orderedSn.  This conversion works in either direction.
-         *
-         * \tparam Int a native integer type; this would typically be
-         * either \c int or \a Code2.
          */
-        template <typename Int>
+        template <CppInteger Int>
+        requires (sizeof(Int) >= sizeof(Code2))
         static constexpr Int convOrderedUnordered(Int index);
 
         /**
@@ -3199,7 +3197,8 @@ class Perm<6> {
 
 // Inline functions for Perm<6>
 
-template <typename Int>
+template <CppInteger Int>
+requires (sizeof(Int) >= sizeof(Perm<6>::Code2))
 inline constexpr Int Perm<6>::convOrderedUnordered(Int index) {
     // S6 is almost the same as orderedS6, except that some pairs
     // S6[2i] <--> S6[2i+1] have been swapped to ensure that all
