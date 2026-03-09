@@ -47,6 +47,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <iterator>
+#include <random>
 #include <string>
 #include "regina-core.h"
 #include "concepts/iterator.h"
@@ -1129,9 +1130,6 @@ class Perm {
          * The thread safety of this routine is of course dependent on
          * the thread safety of your uniform random bit generator \a gen.
          *
-         * \tparam URBG A type which, once any references are removed, must
-         * adhere to the C++ \a UniformRandomBitGenerator concept.
-         *
          * \nopython Python users are still able to use the non-thread-safe
          * variant without the \a gen argument.
          *
@@ -1142,8 +1140,8 @@ class Perm {
          * returned with equal probability).
          * \return a random permutation.
          */
-        template <typename URBG>
-        static Perm rand(URBG&& gen, bool even = false);
+        template <std::uniform_random_bit_generator URBG>
+        static Perm rand(URBG& gen, bool even = false);
 
         /**
          * Returns a string representation of this permutation.
@@ -2121,8 +2119,8 @@ Perm<n> Perm<n>::rand(bool even) {
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
 template <int n>
-template <typename URBG>
-Perm<n> Perm<n>::rand(URBG&& gen, bool even) {
+template <std::uniform_random_bit_generator URBG>
+Perm<n> Perm<n>::rand(URBG& gen, bool even) {
     // Note: This generic implementation of Perm covers 8 <= n <= 16.
     // The corresponding index types require 16, 32 or 64 bits.
     //

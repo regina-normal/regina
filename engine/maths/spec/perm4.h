@@ -1015,9 +1015,6 @@ class Perm<4> {
          * The thread safety of this routine is of course dependent on
          * the thread safety of your uniform random bit generator \a gen.
          *
-         * \tparam URBG A type which, once any references are removed, must
-         * adhere to the C++ \a UniformRandomBitGenerator concept.
-         *
          * \nopython Python users are still able to use the non-thread-safe
          * variant without the \a gen argument.
          *
@@ -1028,8 +1025,8 @@ class Perm<4> {
          * returned with equal probability).
          * \return a random permutation.
          */
-        template <typename URBG>
-        static Perm rand(URBG&& gen, bool even = false);
+        template <std::uniform_random_bit_generator URBG>
+        static Perm rand(URBG& gen, bool even = false);
 
         /**
          * Returns a string representation of this permutation.
@@ -1703,8 +1700,8 @@ inline Perm<4> Perm<4>::rand(bool even) {
 #ifndef __DOXYGEN
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
-template <typename URBG>
-inline Perm<4> Perm<4>::rand(URBG&& gen, bool even) {
+template <std::uniform_random_bit_generator URBG>
+inline Perm<4> Perm<4>::rand(URBG& gen, bool even) {
     if (even) {
         std::uniform_int_distribution<short> d(0, 11);
         return S4[2 * d(gen)];

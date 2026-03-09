@@ -38,6 +38,7 @@
 #endif
 
 #include <algorithm>
+#include <random>
 #include <vector>
 #include "concepts/iterator.h"
 
@@ -282,16 +283,12 @@ class MarkedVector : private std::vector<T*> {
          * The thread safety of this routine is dependent on the thread safety
          * of your uniform random bit generator \a gen.
          *
-         * \tparam URBG A type which, once any references are removed, must
-         * adhere to the C++ \a UniformRandomBitGenerator concept.
-         *
          * \param gen the source of randomness to use (e.g., one of the
          * many options provided in the C++ standard \c random header).
          */
-        template <typename URBG>
-        void shuffle(URBG&& gen) {
-            std::shuffle(std::vector<T*>::begin(), std::vector<T*>::end(),
-                std::forward<URBG>(gen));
+        template <std::uniform_random_bit_generator URBG>
+        void shuffle(URBG& gen) {
+            std::shuffle(std::vector<T*>::begin(), std::vector<T*>::end(), gen);
 
             size_t i = 0;
             for (auto obj : *this)
