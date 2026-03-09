@@ -38,7 +38,9 @@
 #endif
 
 #include "utilities/exception.h"
+#include <compare>
 #include <concepts>
+#include <type_traits>
 #include <utility> // for std::swap
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
@@ -51,7 +53,14 @@ namespace regina {
  *
  * We refer to individual values of type \a T as _atomic_ values.  This
  * structure maintains the maximum value encountered so far, along with the
- * number of atomic values encountered so far that are equal to that maximum.
+ * number of atomic values encountered so far that are equivalent to that
+ * maximum.
+ *
+ * Note that we do not require `T::operator <=>` to be a total order (this
+ * allows us to work with floating-point types, for example, where `NaN` is
+ * incomparable with any other value).  However, aggregating incomparable
+ * atomic values is an error, and may result in an exception being thrown.
+ * See aggregate() for further details.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  Its implementations of these rely upon type \a T; that is,
@@ -63,16 +72,25 @@ namespace regina {
  * \ingroup utilities
  */
 template <typename T>
-requires std::regular<T> && std::totally_ordered<T>
+requires std::regular<T> && std::three_way_comparable<T>
 class MaxAggregator {
+    public:
+        /**
+         * The result of a three-way comparison on type \a T.
+         *
+         * This would typically be one of the standard C++ ordering types,
+         * such as `std::strong_ordering`.
+         */
+        using OrderType = decltype(T() <=> T());
+
     private:
         T max_;
             /**< The maximum atomic value encountered so far.
-                 This is ignored if `count_ == 0`, since if `count_ == 0` then
-                 no atomic values have been encountered at all. */
+                 This is undefined if `count_ == 0. */
         size_t count_ { 0 };
-            /**< The number of times that \a max_ has been encountered so far
-                 as an atomic value. */
+            /**< The number of atomic values encountered so far that are
+                 equivalent to \a max_, or 0 if no atomic values have been
+                 encountered at all. */
 
     public:
         /**
@@ -124,13 +142,13 @@ class MaxAggregator {
         }
 
         /**
-         * Returns the number of times that the current maximum atomic value
-         * has been encountered.
+         * Returns the number of atomic values encountered so far that are
+         * equivalent to the current maximum.
          *
          * If no values have been encountered at all then this routine will
          * return zero.
          *
-         * \return the number of times that the maximum has been encountered.
+         * \return the number of values equivalent to the current maximum.
          */
         constexpr size_t count() const {
             return count_;
@@ -171,15 +189,15 @@ class MaxAggregator {
         }
 
         /**
-         * Determines whether this and the given aggregator hold the same
-         * maximum value with the same multiplicity.
+         * Determines whether this and the given aggregator hold equivalent
+         * maximum values with the same multiplicity.
          *
          * Two aggregators that have not encountered any atomic values at all
          * will be considered equal.
          *
          * \param rhs the aggregator to compare with this.
          * \return \c true if and only if this and the given aggregator hold
-         * the same value and multiplicity.
+         * equivalent values with the same multiplicity.
          */
         bool operator == (const MaxAggregator& rhs) const {
             if (count_ == 0)
@@ -192,26 +210,31 @@ class MaxAggregator {
          * Compares the results of this and the given aggregator.
          *
          * For aggregators \a x and \a y, `x < y` means that either \a x holds
-         * a smaller maximum value than \a y, or they hold the same value but
-         * \a x has encountered that value fewer times.
+         * a smaller maximum value than \a y, or they hold equivalent values
+         * but \a x has encountered that value fewer times.
          *
          * An aggregator that has not encountered any atomic values at all
          * is considered smaller than any aggregator that has.
+         *
+         * If type \a T is partially ordered but not totally ordered, then if
+         * \a x and \a y hold incomparable maximum values, the aggregators
+         * themselves will be considered incomparable also (i.e., this
+         * comparison will return `std::partial_ordering::unordered`).
          *
          * \param rhs the aggregator to compare with this.
          * \return the result of the comparison between this and the given
          * aggregator.
          */
-        std::strong_ordering operator <=> (const MaxAggregator& rhs) const {
+        OrderType operator <=> (const MaxAggregator& rhs) const {
             if (count_ == 0) {
-                return rhs.count_ == 0 ? std::strong_ordering::equal :
-                    std::strong_ordering::less;
+                return rhs.count_ == 0 ? OrderType::equivalent :
+                    OrderType::less;
             } else if (rhs.count_ == 0) {
-                return std::strong_ordering::greater;
+                return OrderType::greater;
             } else {
                 // Both aggregators have seen at least one atomic value.
                 auto cmp = max_ <=> rhs.max_;
-                if (cmp == 0)
+                if (cmp == OrderType::equivalent)
                     return count_ <=> rhs.count_;
                 else
                     return cmp;
@@ -242,6 +265,10 @@ class MaxAggregator {
         /**
          * Aggregates the given atomic value into the overall results.
          *
+         * \exception NoSolution Type \a T is only partially ordered,
+         * not totally ordered, and the given value is incomparable with the
+         * current maximum.
+         *
          * \param value any single atomic value.
          */
         constexpr void aggregate(const T& value) {
@@ -250,10 +277,13 @@ class MaxAggregator {
                 count_ = 1;
             } else {
                 auto cmp = max_ <=> value;
-                if (cmp < 0) {
+                if constexpr (std::is_same_v<OrderType, std::partial_ordering>)
+                    if (cmp == OrderType::unordered)
+                        throw NoSolution();
+                if (cmp == OrderType::less) {
                     max_ = value;
                     count_ = 1;
-                } else if (cmp == 0) {
+                } else if (cmp == OrderType::equivalent) {
                     ++count_;
                 }
             }
@@ -266,6 +296,10 @@ class MaxAggregator {
          * This is equivalent to aggregating every individual atomic value
          * that has previously been encountered by \a other.
          *
+         * \exception NoSolution Type \a T is only partially ordered,
+         * not totally ordered, and the maximum values held by this and the
+         * given aggregator are incomparable.
+         *
          * \param other the aggregator whose results should be incorporated
          * into this.
          */
@@ -276,9 +310,12 @@ class MaxAggregator {
                 *this = other;
             } else {
                 auto cmp = max_ <=> other.max_;
-                if (cmp < 0)
+                if constexpr (std::is_same_v<OrderType, std::partial_ordering>)
+                    if (cmp == OrderType::unordered)
+                        throw NoSolution();
+                if (cmp == OrderType::less)
                     *this = other;
-                else if (cmp == 0)
+                else if (cmp == OrderType::equivalent)
                     count_ += other.count_;
             }
         }
@@ -299,7 +336,7 @@ class MaxAggregator {
  * \ingroup utilities
  */
 template <typename T>
-requires std::regular<T> && std::totally_ordered<T> && std::swappable<T>
+requires std::regular<T> && std::three_way_comparable<T> && std::swappable<T>
 constexpr void swap(MaxAggregator<T>& a, MaxAggregator<T>& b) {
     a.swap(b);
 }
