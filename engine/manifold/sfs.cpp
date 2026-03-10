@@ -1134,6 +1134,10 @@ namespace {
 // Implementation of construct()
 // ------------------------------------------------------------------------
 Triangulation<3> SFSpace::construct() const {
+    //TODO For orientable SFS (which is all we work with at the moment), it
+    //      probably wouldn't be too much work to make sure that we always
+    //      construct an oriented triangulation.
+
     // Things that we don't deal with just yet.
     if (puncturesTwisted_ || reflectors_ || reflectorsTwisted_) {
         throw NotImplemented("SFSpace::construct() is currently not "
@@ -1149,12 +1153,8 @@ Triangulation<3> SFSpace::construct() const {
     }
 
     // We already know how to construct lens spaces.
-    Triangulation<3> ans;
     if (auto lens = isLensSpace()) {
-        //TODO Is this already oriented?
-        ans = lens->construct();
-        ans.orient();
-        return ans;
+        return lens->construct();
     }
 
     // For 2-sphere base, we keep the longstanding construction.
@@ -1162,6 +1162,7 @@ Triangulation<3> SFSpace::construct() const {
     if (genus_ == 0 and class_ == Class::o1) {
         // Since we've already dealt with lens spaces, we must have at least
         // three exceptional fibres.  Build a blocked structure.
+        Triangulation<3> ans;
         Tetrahedron<3> *a, *b, *c;
 
         // Begin with the first triangular solid torus.
@@ -1223,11 +1224,13 @@ Triangulation<3> SFSpace::construct() const {
     // If necessary, adjust the fibres that we will fill in to incorporate the
     // obstruction constant.
     std::list<SFSFibre> fibresToFill(fibres_);
+    unsigned long numFibresToFill = nFibres_;
     if ( punctures_ == 0 and b_ != 0 ) {
         long alpha, beta;
-        if ( fibresToFill.empty() ) {
+        if ( numFibresToFill == 0 ) {
             alpha = 1;
             beta = 0;
+            numFibresToFill = 1;
         } else {
             SFSFibre fibreToReplace( fibresToFill.back() );
             fibresToFill.pop_back();
@@ -1240,7 +1243,7 @@ Triangulation<3> SFSpace::construct() const {
     // If there are no fibres to fill at all, then the requested SFS is just
     // the orientable circle bundle (with Euler number 0, if the base surface
     // has no punctures) over the base surface.
-    if ( fibresToFill.empty() ) {
+    if ( numFibresToFill == 0 ) {
         // For the simplest cases, we just use the constructions that are
         // already implemented elsewhere. For all remaining cases, we simply
         // construct a baseSurface which we then pass to our generic circle
@@ -1249,11 +1252,7 @@ Triangulation<3> SFSpace::construct() const {
         if ( class_ == Class::o1 ) {
             // We already handled genus_ == 0 above, so genus_ >= 1.
             if ( genus_ == 1 ) {
-                //TODO Orient the Example<3> implementation so we don't have to
-                //      orient here.
-                ans = Example<3>::threeTorus();
-                ans.orient();
-                return ans;
+                return Example<3>::threeTorus();
             } else {
                 baseSurface = Example<2>::orientable( genus_, 0 );
             }
@@ -1266,11 +1265,7 @@ Triangulation<3> SFSpace::construct() const {
             }
         } else if ( class_ == Class::n2 ) {
             if ( genus_ == 1 ) {
-                //TODO Orient the Example<3> implementation so we don't have to
-                //      orient here.
-                ans = Example<3>::rp3rp3();
-                ans.orient();
-                return ans;
+                return Example<3>::rp3rp3();
             } else {
                 baseSurface = Example<2>::nonOrientable( genus_, 0 );
             }
@@ -1281,9 +1276,71 @@ Triangulation<3> SFSpace::construct() const {
         return bundle.tri_;
     }
 
-    //TODO
-    throw NotImplemented("Orientable SFS with non-2-sphere base is "
-            "coming soon!");
+    // For the comments below, we use the following notation:
+    //  --- Let k >= 0 be
+    //      --> 2*genus_ if the base surface is orientable, and
+    //      --> genus_ if the base surface is non-orientable.
+    //  --- Let p = punctures_ >= 0.
+    //  --- Let n = numFibresToFill >= 1.
+    // Because we've already handled all possibilities with 2-sphere base, we
+    // know that if k == 0, then p > 0.
+    //
+    // As outlined above, we construct the requested SFS by first building the
+    // OrientableCircleBundle over a suitable base triangulation, and then
+    // filling in the required fibres by attaching layered solid tori to the
+    // boundary squares of the OrientableCircleBundle.
+    //
+    // An obvious choice of base triangulation would just be the surface of
+    // the requested genus, with (p+n) boundary components. However, the
+    // implementation below does slightly better than this (in terms of number
+    // of tetrahedra) by exploiting the fact that the n boundary squares that
+    // we will fill in need not all belong to disjoint boundary components of
+    // the starting bundle.
+    std::unique_ptr<Triangulation<2>> unfilledBase;
+    std::unique_ptr<OrientableCircleBundle> bundleToFill;
+    FixedArray<TriSolidTorus*> bdryTriSolidTorus( numFibresToFill, nullptr );
+    FixedArray<unsigned> bdrySquare( numFibresToFill, 0 );
+    if ( genus_ == 0 and punctures_ == 1 ) {
+        // SFS over disc.
+
+        //TODO
+        throw NotImplemented("Orientable SFS over disc is coming soon!");
+    } else {
+        // SFS over either:
+        //  --- genus-0 surface with p >= 2; or
+        //  --- surface with k >= 1.
+        // In either case, we will start with a base surface that has one
+        // extra boundary component. The extra boundary is where we will fill
+        // in all the fibres, so if necessary we will adjust that boundary to
+        // have exactly one edge per fibre.
+
+        //TODO
+        throw NotImplemented("Orientable SFS over base neither "
+                "2-sphere nor disc is coming soon!");
+    }
+
+    // Now go through and perform the fillings.
+    auto fibreIt = fibresToFill.begin();
+    for (unsigned long i = 0; i < numFibresToFill; ++i) {
+        // To get consistent signs on all the fillings, we need the filled
+        // squares to have positive slope.
+        if ( bdryTriSolidTorus[i]->squareSlope( bdrySquare[i] ) == -1 ) {
+            bdryTriSolidTorus[i]->flipSlope( bdrySquare[i] );
+        }
+        SatAnnulus::attachLST(
+                bdryTriSolidTorus[i]->squareTet( bdrySquare[i], 0 ),
+                bdryTriSolidTorus[i]->squareRoles( bdrySquare[i], 0 ),
+                bdryTriSolidTorus[i]->squareTet( bdrySquare[i], 1 ),
+                bdryTriSolidTorus[i]->squareRoles( bdrySquare[i], 1 ),
+                fibreIt->alpha,
+                fibreIt->beta );
+        ++fibreIt;
+    }
+
+    // Because of all the fillings we just did, the bundleToFill's
+    // triangulation no longer triangulates the original bundle, but rather
+    // triangulates precisely the SFS that we wanted to construct.
+    return bundleToFill->tri_;
 }
 
 AbelianGroup SFSpace::homology() const {
