@@ -780,18 +780,29 @@ namespace {
                  * Initially these are all null, to indicate that there are no
                  * such layered tetrahedra.
                  */
-            std::array<std::array<Perm<4>, 2>, 3> layerRoles_;
-                /**
-                 * Permutations specifying the roles played by the vertices of
-                 * the layered tetrahedra (if any).
-                 *
-                 * The value of layerRoles_[s][t] is only meaningful when
-                 * layerTet_[s][t] is not nullptr.
-                 */
             bool isSquareGlued_[3] = { false, false, false };
                 /**
                  * Tracks whether each boundary square is glued to some other
                  * triangular solid torus.
+                 *
+                 * This is only used for sanity checking, and isn't strictly
+                 * necessary for the implementation.
+                 */
+            static constexpr Perm<4> layerRoles_[3][2] = {
+                { Perm<4>(0, 2, 3, 1), Perm<4>(1, 3, 2, 0) },
+                { Perm<4>(0, 3, 2, 1), Perm<4>(1, 2, 3, 0) },
+                { Perm<4>(0, 2, 3, 1), Perm<4>(1, 3, 2, 0) }
+            };
+                /**
+                 * Permutations specifying the roles played by the vertices of
+                 * the layered tetrahedra (if any).
+                 *
+                 * Comments in the implementation of flipSlope() explain how
+                 * layered tetrahedra are labelled, and hence explain these
+                 * roles permutations.
+                 *
+                 * The value of layerRoles_[s][t] is only meaningful when
+                 * layerTet_[s][t] is not nullptr.
                  */
             static constexpr int squareOrigSlope_[3] = {1, -1, 1};
                 /**
@@ -1039,18 +1050,10 @@ namespace {
             // Sanity check: roles sign is already -1, so the signs of our
             // relative gluing permutations should be +1 (as they indeed are).
             relativeGluing = { Perm<4>(2, 0, 1, 3), Perm<4>(3, 1, 0, 2) };
-
-            // Slope will become -1, so the sign of the new roles permutations
-            // needs to be +1 (as they indeed are).
-            layerRoles_[square] = { Perm<4>(0, 2, 3, 1), Perm<4>(1, 3, 2, 0) };
         } else {
             // Sanity check: roles sign is +1, so the signs of our relative
             // gluing permutations should be -1 (as they indeed are).
             relativeGluing = { Perm<4>(3, 0, 1, 2), Perm<4>(2, 1, 0, 3) };
-
-            // Slope will become +1, so the sign of the new roles permutations
-            // needs to be -1 (as they indeed are).
-            layerRoles_[square] = { Perm<4>(0, 3, 2, 1), Perm<4>(1, 2, 3, 0) };
         }
 
         // OK, actually perform the layering.
