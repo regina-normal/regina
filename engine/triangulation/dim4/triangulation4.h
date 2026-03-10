@@ -1680,6 +1680,35 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
 #include "triangulation/dim4/component4.h"
 namespace regina {
 
+#ifndef __APIDOCS
+namespace detail {
+    /**
+     * Provides domain-specific details for the 4-D retriangulation process.
+     *
+     * For propagation of 4-D triangulations, we do not make use of the
+     * options type `Retriangulator::PropagationOptions`.
+     */
+    template <>
+    struct RetriangulateParams<Triangulation<4>> {
+        static std::string sig(const Triangulation<4>& tri) {
+            // Choose a fast isosig type.
+            return tri.isoSig<IsoSigDegrees<4, 2>>();
+        }
+
+        static std::string rigidSig(const Triangulation<4>& tri) {
+            // Currently rigidity is not supported for triangulations.
+            return tri.isoSig<IsoSigDegrees<4, 2>>();
+        }
+
+        static constexpr const char* progressStage = "Exploring triangulations";
+
+        template <typename Retriangulator>
+        static void propagateFrom(const std::string& sig, size_t maxSize,
+                Retriangulator* retriang);
+    };
+} // namespace detail
+#endif // __APIDOCS
+
 // Inline functions for Triangulation<4>
 
 inline Triangulation<4>::~Triangulation() {

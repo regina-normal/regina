@@ -37,62 +37,42 @@
 namespace regina {
 
 namespace detail {
-    /**
-     * Provides domain-specific details for the 4-D retriangulation process.
-     *
-     * For propagation of 4-D triangulations, we do not make use of the
-     * options type `Retriangulator::PropagationOptions`.
-     */
-    template <>
-    struct RetriangulateParams<Triangulation<4>> {
-        static std::string sig(const Triangulation<4>& tri) {
-            return tri.isoSig<IsoSigDegrees<4, 2>>();
-        }
+    template <typename Retriangulator>
+    void RetriangulateParams<Triangulation<4>>::propagateFrom(
+            const std::string& sig, size_t maxSize, Retriangulator* retriang) {
+        Triangulation<4> t = Triangulation<4>::fromIsoSig(sig);
+        size_t i;
 
-        static std::string rigidSig(const Triangulation<4>& tri) {
-            // Currently rigidity is not supported for triangulations.
-            return tri.isoSig<IsoSigDegrees<4, 2>>();
-        }
+        for (i = 0; i < t.countVertices(); ++i)
+            if (auto alt = t.withPachner(t.vertex(i)))
+                if (retriang->candidate(std::move(*alt), sig))
+                    return;
 
-        static constexpr const char* progressStage = "Exploring triangulations";
+        for (i = 0; i < t.countEdges(); ++i)
+            if (auto alt = t.withPachner(t.edge(i)))
+                if (retriang->candidate(std::move(*alt), sig))
+                    return;
 
-        template <typename Retriangulator>
-        static void propagateFrom(const std::string& sig, size_t maxSize,
-                Retriangulator* retriang) {
-            Triangulation<4> t = Triangulation<4>::fromIsoSig(sig);
-            size_t i;
+        for (i = 0; i < t.countTriangles(); ++i)
+            if (auto alt = t.withPachner(t.triangle(i)))
+                if (retriang->candidate(std::move(*alt), sig))
+                    return;
 
-            for (i = 0; i < t.countVertices(); ++i)
-                if (auto alt = t.withPachner(t.vertex(i)))
+        if (t.size() + 2 <= maxSize)
+            for (i = 0; i < t.countTetrahedra(); ++i)
+                if (auto alt = t.withPachner(t.tetrahedron(i)))
                     if (retriang->candidate(std::move(*alt), sig))
                         return;
 
-            for (i = 0; i < t.countEdges(); ++i)
-                if (auto alt = t.withPachner(t.edge(i)))
-                    if (retriang->candidate(std::move(*alt), sig))
-                        return;
-
-            for (i = 0; i < t.countTriangles(); ++i)
-                if (auto alt = t.withPachner(t.triangle(i)))
-                    if (retriang->candidate(std::move(*alt), sig))
-                        return;
-
-            if (t.size() + 2 <= maxSize)
-                for (i = 0; i < t.countTetrahedra(); ++i)
-                    if (auto alt = t.withPachner(t.tetrahedron(i)))
-                        if (retriang->candidate(std::move(*alt), sig))
-                            return;
-
-            if (t.size() + 4 <= maxSize)
-                for (i = 0; i < t.size(); ++i) {
-                    // 1-5 moves are always legal.
-                    Triangulation<4> alt(t, false, true);
-                    alt.pachner(alt.pentachoron(i));
-                    if (retriang->candidate(std::move(alt), sig))
-                        return;
-                }
-        }
-    };
+        if (t.size() + 4 <= maxSize)
+            for (i = 0; i < t.size(); ++i) {
+                // 1-5 moves are always legal.
+                Triangulation<4> alt(t, false, true);
+                alt.pachner(alt.pentachoron(i));
+                if (retriang->candidate(std::move(alt), sig))
+                    return;
+            }
+    }
 } // namespace detail
 
 // Instantiate all necessary retriangulation template functions

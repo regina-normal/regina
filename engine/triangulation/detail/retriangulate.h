@@ -38,6 +38,7 @@
 #define __REGINA_RETRIANGULATE_H_DETAIL
 #endif
 
+#include <concepts>
 #include <functional>
 #include <string>
 #include "utilities/typeutils.h"
@@ -49,6 +50,103 @@ namespace regina {
 class ProgressTrackerOpen;
 
 namespace detail {
+
+/**
+ * Provides domain-specific details for the retriangulation or link
+ * rewriting process, specific to a particular triangulation or link class.
+ *
+ * Every class (e.g., regina::Triangulation<dim> or regina::Link) that uses
+ * Regina's generic retriangulation / link rewriting machinery must provide
+ * its own specialisation of RetriangulateParams.
+ *
+ * The specialisation should provide:
+ *
+ * - a template function
+ *   `static void propagateFrom<T>(sig, max, retriangulator)`,
+ *   as described below;
+ *
+ * - a static constexpr member `const char* progressStage`, which
+ *   returns the human-readable description of the processing stage that
+ *   will be set up in the progress tracker;
+ *
+ * - a function `static std::string sig(const Object&)`, which
+ *   returns the text signature that is used to identify a triangulation
+ *   or link up to the appropriate notion of combinatorial equivalence.
+ *
+ * - a function `static std::string rigidSig(const Object&)`, which returns
+ *   the same kind of text signature, but without allowing reflection, reversal
+ *   and/or rotation of link diagrams.  For triangulations, rigidity options
+ *   are currently ignored and so rigidSig() should return the same text
+ *   signature as sig().
+ *
+ * The function `static void propagateFrom<T>(sig, max, retriangulator)`
+ * takes the following arguments:
+ *
+ * - \a sig is the isomorphism signature of a triangulation or the knot
+ *   signature of a link (typically passed as a const std::string&);
+ * - \a max is the maximum size() of a triangulation or link that we are
+ *   allowed to consider (typically passed as a \c size_t);
+ * - \a retriangulator is the instance of the Retriangulator class that
+ *   is managing the overall retriangulation/rewriting process (which must be
+ *   passed as a pointer to type \a T).
+ *
+ * The template parameter \a T is the type of the managing Retriangulator class,
+ * with all of the Retriangulator template parameters filled in.
+ *
+ * The function should reconstruct a triangulation or link \a obj from \a sig;
+ * examine all possible moves from \a obj that do not exceed size \a max; and
+ * for each resulting triangulation/link \a alt, it should call
+ * `retriangulator->candidate(std::move(alt), sig)`.
+ * If \a Object uses options to control what moves are allowed (e.g., the link
+ * type indicating whether to allow virtual as well as classical moves), then
+ * these options can be accessed through the type `T::PropagationOptions`.
+ *
+ * The function should also check the return value each time it calls
+ * `retriangulator->candidate(...)`.  If the \a candidate
+ * function ever returns \c true then it should not try any further moves, but
+ * instead should clean up and return immediately.
+ *
+ * \apinotfinal
+ *
+ * \tparam Object the class that provides the retriangulation/rewriting
+ * function, such as regina::Triangulation<dim> or regina::Link.
+ * This class must also provide a two-argument copy constructor, where the
+ * second argument is a boolean indicating whether computed properties should
+ * be cloned.
+ *
+ */
+template <typename Object>
+struct RetriangulateParams;
+
+/**
+ * A class that can be used with Regina's generic retriangulation / link
+ * rewriting machinery.
+ *
+ * Examples of such classes are `Triangulation<3>`, `Triangulation<4>`, and
+ * Link.
+ *
+ * Regarding semantics:
+ *
+ * - This concept enforces the requirements for the specialisation
+ *   `RetriangulationParams<T>`.  See RetriangulationParams for a thorough
+ *   discussion of the semantic requirements here.
+ *
+ * - This concept also requires a copy constructor with an extra boolean
+ *   argument.  That boolean argument should indicate whether computed
+ *   properties are to be cloned.
+ *
+ * \ingroup triangulation
+ */
+template <typename T>
+concept Retriangulable =
+    std::constructible_from<T, const T&, bool> &&
+    requires (const T x) {
+        typename RetriangulateParams<T>;
+        { RetriangulateParams<T>::progressStage } ->
+            std::convertible_to<const char*>;
+        { RetriangulateParams<T>::sig(x) } -> std::same_as<std::string>;
+        { RetriangulateParams<T>::rigidSig(x) } -> std::same_as<std::string>;
+    };
 
 /**
  * Represents different options that can be used internally with a
@@ -113,7 +211,7 @@ enum {
  *
  * \ingroup detail
  */
-template <typename Object, bool withSig>
+template <Retriangulable Object, bool withSig>
 using RetriangulateActionFunc = std::conditional_t<withSig,
     std::function<bool(const std::string&, Object&&)>,
     std::function<bool(Object&&)>>;
@@ -165,8 +263,8 @@ using RetriangulateActionFunc = std::conditional_t<withSig,
  *
  * \ingroup detail
  */
-template <typename Object, bool withSig, int flags = RetriangulateDefault,
-    typename PropagationOptions = void>
+template <Retriangulable Object, bool withSig,
+    int flags = RetriangulateDefault, typename PropagationOptions = void>
 bool retriangulateInternal(const Object& obj, bool rigid, int height,
         int nThreads, ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action);
@@ -203,7 +301,7 @@ bool retriangulateInternal(const Object& obj, bool rigid, int height,
  *
  * \ingroup detail
  */
-template <typename Object, typename PropagationOptions = void>
+template <Retriangulable Object, typename PropagationOptions = void>
 bool simplifyExhaustiveInternal(Object& obj, int height,
         int threads, ProgressTrackerOpen* tracker) {
     // Make a place for the callback to put a simplified object, if it finds
@@ -268,7 +366,7 @@ bool simplifyExhaustiveInternal(Object& obj, int height,
  *
  * \ingroup detail
  */
-template <typename Object, typename PropagationOptions = void>
+template <Retriangulable Object, typename PropagationOptions = void>
 bool improveTreewidthInternal(Object& obj, ssize_t maxAttempts, int height,
         int threads, ProgressTrackerOpen* tracker) {
     // Make a place for the callback to put an improved object, if it finds

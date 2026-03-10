@@ -7313,6 +7313,40 @@ void swap(Link& lhs, Link& rhs);
 
 namespace regina {
 
+#ifndef __APIDOCS
+namespace detail {
+    /**
+     * Provides domain-specific details for the link rewriting process.
+     *
+     * For link propagation, we do make use of the options type
+     * `Retriangulator::PropagationOptions`.  This type should be one of:
+     *
+     * - `std::true_type`, to indicate that only classical Reidemeister moves
+     *   should be allowed;
+     *
+     * - `std::false_type`, to indicate that both classical and virtual
+     *   Reidemeister moves should be allowed.
+     */
+    template <>
+    struct RetriangulateParams<Link> {
+        static std::string sig(const Link& link) {
+            return link.sig();
+        }
+
+        static std::string rigidSig(const Link& link) {
+            // Do not allow reflection, reversal and/or rotation.
+            return link.sig(false, false, false);
+        }
+
+        static constexpr const char* progressStage = "Exploring diagrams";
+
+        template <typename Retriangulator>
+        static void propagateFrom(const std::string& sig, size_t maxSize,
+                Retriangulator* retri);
+    };
+} // namespace detail
+#endif // __APIDOCS
+
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)
 
