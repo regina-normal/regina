@@ -256,6 +256,9 @@ Version 8.0  [ TODO ]
               the iterator type be random access is now a hard requirement.
         Class Vector3D<Real>:
             - New assignment operator that takes a std::array<Real, 3>.
+        Functions forall_constexpr():
+            - New routine to support tests over a compile-time range of
+              integers (like for_constexpr(), but with a boolean return value).
         Function isTriangulation():
             - New function that converts a packet type constant into a
               triangulation dimension.

@@ -480,10 +480,9 @@ void TriangulationBase<dim>::calculateRealBoundary() {
 
             // Run through all faces of dimensions 0,...,(dim-3) within facet,
             // and include them in this boundary component.
-            std::apply([this, label, facet](auto&&... kFaces) {
-                (calculateBoundaryFaces<subdimOf<decltype(kFaces)>()>(
-                    label, facet), ...);
-            }, faces_);
+            for_constexpr<0, dim - 2>([this, label, facet](auto subdim) {
+                calculateBoundaryFaces<subdim>(label, facet);
+            });
 
             // Finally we process the (dim-2)-faces, and also use these to
             // locate adjacent boundary facets.
@@ -554,45 +553,42 @@ void TriangulationBase<dim>::calculateRealBoundary() {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int subdim> requires (subdim >= 0 && subdim < dim)
+template <int subdim> requires (subdim >= 0 && subdim <= dim - 3)
 void TriangulationBase<dim>::calculateBoundaryFaces(BoundaryComponent<dim>* bc,
         Face<dim, dim-1>* facet) {
-    // We do not process ridges (dim-2) or facets (dim-1).
-    if constexpr (subdim <= dim - 3) {
-        if constexpr (subdim == 0) {
-            // Treat vertices separately, since we can optimise the
-            // vertex number calculations in this case.
-            Simplex<dim>* simp = facet->front().simplex();
-            int facetNum = facet->front().face();
-            for (int i = 0; i <= dim; ++i)
-                if (i != facetNum) {
-                    Vertex<dim>* v = simp->vertex(i);
-                    // Note: in the case of (invalid) pinched faces,
-                    // v might already belong to some other boundary component.
-                    if (v->boundaryComponent_ != bc) {
-                        if (! v->boundaryComponent_)
-                            ++nBoundaryFaces_[0];
-                        v->boundaryComponent_ = bc;
-                        // If allFaces is false, then the boundary component
-                        // only wants to know about ridges and facets.
-                        if constexpr (BoundaryComponent<dim>::allFaces)
-                            bc->push_back(v);
-                    }
-                }
-        } else {
-            for (unsigned i = 0; i < binomSmall(dim, subdim + 1); ++i) {
-                Face<dim, subdim>* f = facet->template face<subdim>(i);
+    if constexpr (subdim == 0) {
+        // Treat vertices separately, since we can optimise the
+        // vertex number calculations in this case.
+        Simplex<dim>* simp = facet->front().simplex();
+        int facetNum = facet->front().face();
+        for (int i = 0; i <= dim; ++i)
+            if (i != facetNum) {
+                Vertex<dim>* v = simp->vertex(i);
                 // Note: in the case of (invalid) pinched faces,
-                // f might already belong to some other boundary component.
-                if (f->boundaryComponent_ != bc) {
-                    if (! f->boundaryComponent_)
-                        ++nBoundaryFaces_[subdim];
-                    f->boundaryComponent_ = bc;
-                    // If allFaces is false, then the boundary component only
-                    // wants to know about ridges and facets.
+                // v might already belong to some other boundary component.
+                if (v->boundaryComponent_ != bc) {
+                    if (! v->boundaryComponent_)
+                        ++nBoundaryFaces_[0];
+                    v->boundaryComponent_ = bc;
+                    // If allFaces is false, then the boundary component
+                    // only wants to know about ridges and facets.
                     if constexpr (BoundaryComponent<dim>::allFaces)
-                        bc->push_back(f);
+                        bc->push_back(v);
                 }
+            }
+    } else {
+        for (unsigned i = 0; i < binomSmall(dim, subdim + 1); ++i) {
+            Face<dim, subdim>* f = facet->template face<subdim>(i);
+            // Note: in the case of (invalid) pinched faces,
+            // f might already belong to some other boundary component.
+            if (f->boundaryComponent_ != bc) {
+                if (! f->boundaryComponent_)
+                    ++nBoundaryFaces_[subdim];
+                f->boundaryComponent_ = bc;
+                // If allFaces is false, then the boundary component only
+                // wants to know about ridges and facets.
+                if constexpr (BoundaryComponent<dim>::allFaces)
+                    bc->push_back(f);
             }
         }
     }

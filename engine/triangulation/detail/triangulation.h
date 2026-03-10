@@ -175,34 +175,6 @@ class TriangulationBase :
                  Specifically, `std::get<k>(faces_)[i]` is a pointer to the
                  ith k-face of the triangulation. */
 
-        /**
-         * A compile-time constant function that returns the facial dimension
-         * corresponding to an element of the \a faces_ tuple.
-         *
-         * This is to assist code that calls std::apply() on \a faces_,
-         * since functions in TriangulationBase have easy access to the
-         * tuple type but not the corresponding integer parameter pack
-         * of face dimensions.
-         *
-         * If \a f is an element of \a faces_, possibly with reference
-         * qualifiers, then the corresponding face dimension is:
-         *
-         * \code{.cpp}
-         * subdimOf<decltype(f)>()
-         * \endcode
-         *
-         * \tparam TupleElement the type of one of the members of \a faces,
-         * or a reference to such a type.
-         * \return the face dimension corresponding to \a TupleElement;
-         * this will be an integer between 0 and (<i>dim</i>-1) inclusive.
-         */
-        template <typename TupleElement>
-        static constexpr int subdimOf() {
-            return std::remove_pointer_t<
-                    typename std::remove_reference_t<TupleElement>::value_type
-                >::subdimension;
-        }
-
     protected:
         MarkedVector<Component<dim>> components_;
             /**< The connected components that form the triangulation.
@@ -3925,14 +3897,12 @@ class TriangulationBase :
          * Internal to calculateRealBoundary().
          *
          * This routine identifies and marks all <i>subdim</i>-faces within
-         * the given boundary facet.
-         *
-         * It does not handle ridges or facets, so if \a subdim is greater
-         * than <i>dim</i>-3 then this routine does nothing.
+         * the given boundary facet, with the exception that it does not
+         * handle ridges (`subdim == dim - 2`).
          *
          * See calculateRealBoundary() for further details.
          */
-        template <int subdim> requires (subdim >= 0 && subdim < dim)
+        template <int subdim> requires (subdim >= 0 && subdim <= dim - 3)
         void calculateBoundaryFaces(BoundaryComponent<dim>* bc,
             Face<dim, dim-1>* facet);
 

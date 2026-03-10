@@ -492,11 +492,9 @@ bool TriangulationBase<dim>::compatible(const Triangulation<dim>& other,
             return false;
 
         // Check that both triangulations have the same f-vector.
-        if (! std::apply([&other](auto&&... kFaces) {
-                    return ((kFaces.size() == std::get<
-                        subdimOf<decltype(kFaces)>()>(other.faces_).size())
-                        && ...);
-                }, faces_)) {
+        if (! forall_constexpr<0, dim>([this, &other](auto subdim) {
+            return countFaces<subdim>() == other.template countFaces<subdim>();
+        })) {
             return false;
         }
 
