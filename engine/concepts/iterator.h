@@ -164,8 +164,7 @@ template <typename T>
 concept Iterable =
     requires(T x) {
         { x.begin() } -> std::forward_iterator;
-        { x.end() };
-        requires std::same_as<decltype(x.begin()), decltype(x.end())>;
+        { x.end() } -> std::same_as<decltype(x.begin())>;
     };
 
 /**

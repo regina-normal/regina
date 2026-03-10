@@ -104,7 +104,7 @@ concept StandardStringifiable =
 template <typename T>
 concept InherentlyTightEncodable =
     requires(const T x, std::ostream& out, std::istream& in) {
-        { x.tightEncode(out) };
+        x.tightEncode(out);
         { T::tightDecode(in) } -> std::same_as<T>;
     };
 

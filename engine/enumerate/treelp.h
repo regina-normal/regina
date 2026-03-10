@@ -107,10 +107,10 @@ concept LPConstraint =
         requires SignedCppInteger<typename T::Coefficient>;
         { T::octAdjustment } -> std::same_as<const typename T::Coefficient&>;
 
-        { T::addRows(
+        T::addRows(
             (detail::LPCol<T::constraints.size(),
                 typename T::Coefficient>*)(nullptr),
-            tri, (const size_t*)(nullptr)) };
+            tri, (const size_t*)(nullptr));
         { T::verify(surface) } -> std::same_as<bool>;
         { T::verify(structure) } -> std::same_as<bool>;
         { T::supported(enc) } -> std::same_as<bool>;
