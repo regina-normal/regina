@@ -124,6 +124,7 @@ void verifyStructureOrientable(const SFSpace& sfs) {
     auto blockedManifold = blockedSFS->manifold();
     ASSERT_TRUE(blockedManifold);
     SFSpace compare = dynamic_cast<SFSpace&>(*blockedManifold);
+    compare.reduce();
     if ( reduced.baseClass() == SFSpace::Class::o1 or
             reduced.baseClass() == SFSpace::Class::n2 ) {
         // Closed orientable SFS, so the isomorphism class is determined not
@@ -259,9 +260,13 @@ TEST(SFSTest, construct) {
                 }
 
                 // Test with various sets of exceptional fibres.
-                verifyStructureOrientable(
-                        buildSFS( useClass, genus, punctures, 0, 0, 0,
-                            { SFSFibre(3, 1) } ) );
+                if ( signedGenus != -1 or punctures != 0 ) {
+                    // To avoid lens spaces, only do this test when the base
+                    // isn't a projective plane.
+                    verifyStructureOrientable(
+                            buildSFS( useClass, genus, punctures, 0, 0, 0,
+                                { SFSFibre(3, 1) } ) );
+                }
                 verifyStructureOrientable(
                         buildSFS( useClass, genus, punctures, 0, 0, 0,
                             { SFSFibre(5, 1), SFSFibre(5, -2) } ) );

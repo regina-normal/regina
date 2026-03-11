@@ -1237,7 +1237,7 @@ Triangulation<3> SFSpace::construct() const {
     // If necessary, adjust the fibres that we will fill in to incorporate the
     // obstruction constant.
     std::list<SFSFibre> fibresToFill(fibres_);
-    unsigned long numFibresToFill = nFibres_;
+    size_t numFibresToFill = nFibres_;
     if ( punctures_ == 0 and b_ != 0 ) {
         long alpha, beta;
         if ( numFibresToFill == 0 ) {
@@ -1311,8 +1311,8 @@ Triangulation<3> SFSpace::construct() const {
     // of tetrahedra) by exploiting the fact that the n marked boundary squares
     // need not all belong to disjoint boundary components of the bundle.
     Triangulation<2> baseSurface;
-    FixedArray<unsigned long> markedTriSolidTorusIndex(numFibresToFill);
-    FixedArray<unsigned long> markedSquareIndex(numFibresToFill);
+    FixedArray<size_t> markedTriSolidTorusIndex(numFibresToFill);
+    FixedArray<size_t> markedSquareIndex(numFibresToFill);
     if ( genus_ == 0 and punctures_ == 1 ) {
         // Base surface is a disc.
         if (numFibresToFill == 1) {
@@ -1330,7 +1330,7 @@ Triangulation<3> SFSpace::construct() const {
                 Example<2>::polygon( numFibresToFill - 1 ) );
 
         // Record the locations of the marked boundary squares.
-        for (unsigned long i = 0; i < numFibresToFill; ++i) {
+        for (size_t i = 0; i < numFibresToFill; ++i) {
             if ( i == numFibresToFill - 1 ) {
                 // Because of the labellings used by Example<2>::polygon(), the
                 // very last marked square needs to be handled differently from
@@ -1344,23 +1344,74 @@ Triangulation<3> SFSpace::construct() const {
         }
     } else {
         // Base surface has either:
-        //  --- k == 0 and n >= 2; or
+        //  --- k == 0 and p >= 2; or
         //  --- k >= 1.
         // In either case, we will start with a base surface that has one
         // extra boundary component. The extra boundary is where we will fill
         // in all the fibres, so if necessary we will adjust that boundary to
         // have exactly one edge per fibre.
+        if ( class_ == SFSpace::Class::o1 or class_ == SFSpace::Class::bo1 ) {
+            baseSurface.insertTriangulation(
+                    Example<2>::orientable( genus_, punctures_ + 1 ) );
+        } else {
+            baseSurface.insertTriangulation(
+                    Example<2>::nonOrientable( genus_, punctures_ + 1 ) );
+        }
+        size_t initSize = baseSurface.size();
+        size_t baseBdryEdgeIndex;
+        for ( Edge<2>* baseEdge : baseSurface.edges() ) {
+            if ( baseEdge->isBoundary() ) {
+                // Found a suitable boundary edge at which we can fill in all
+                // the exceptional fibres.
+                baseBdryEdgeIndex = baseEdge->index();
+                break;
+            }
+        }
+        auto baseBdryEdgeEmb = baseSurface.edge(baseBdryEdgeIndex)->front();
+        if ( numFibresToFill == 1 ) {
+            // We can simply fill along the square corresponding to the
+            // boundary edge that we just found.
+            markedTriSolidTorusIndex[0] = baseBdryEdgeEmb.triangle()->index();
+            markedSquareIndex[0] = baseBdryEdgeEmb.edge();
+        } else {
+            // Add extra boundary edges by attaching an (n+1)-sided polygon,
+            // constructed from n-1 triangles.
+            baseSurface.insertTriangulation(
+                    Example<2>::polygon( numFibresToFill - 1 ) );
+            if ( baseBdryEdgeEmb.vertices().sign() == -1 ) {
+                baseSurface.triangle(initSize)->join(
+                        2,
+                        baseBdryEdgeEmb.triangle(),
+                        baseBdryEdgeEmb.vertices() );
+            } else {
+                baseSurface.triangle(initSize)->join(
+                        2,
+                        baseBdryEdgeEmb.triangle(),
+                        baseBdryEdgeEmb.vertices() * Perm<3>(0, 1) );
+            }
 
-        //TODO
-        throw NotImplemented("Orientable SFS over base neither 2-sphere nor "
-                "disc is coming soon!");
+            // We will fill along the squares corresponding to the boundary
+            // edges of the polygon that we just attached.
+            for (size_t i = 0; i < numFibresToFill; ++i) {
+                if ( i == numFibresToFill - 1 ) {
+                    // As above, the very last marked square needs to be
+                    // handled differently from the others.
+                    markedTriSolidTorusIndex[i] =
+                        initSize + numFibresToFill - 2;
+                    markedSquareIndex[i] = 1;
+                } else {
+                    markedTriSolidTorusIndex[i] = initSize + i;
+                    markedSquareIndex[i] = 0;
+                }
+            }
+        }
     }
 
     // Build the OrientableCircleBundle over the baseSurface that we just
     // constructed, and perform the fillings on the marked boundary squares.
     OrientableCircleBundle bundleToFill(baseSurface);
     auto fibreIt = fibresToFill.begin();
-    for (unsigned long i = 0; i < numFibresToFill; ++i) {
+    for (size_t i = 0; i < numFibresToFill; ++i) {
         TriSolidTorus& triSolidTorus = bundleToFill.triSolidTorus[
             markedTriSolidTorusIndex[i] ];
 
