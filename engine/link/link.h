@@ -7315,18 +7315,6 @@ namespace regina {
 
 #ifndef __APIDOCS
 namespace detail {
-    /**
-     * Provides domain-specific details for the link rewriting process.
-     *
-     * For link propagation, we do make use of the options type
-     * `Retriangulator::PropagationOptions`.  This type should be one of:
-     *
-     * - `std::true_type`, to indicate that only classical Reidemeister moves
-     *   should be allowed;
-     *
-     * - `std::false_type`, to indicate that both classical and virtual
-     *   Reidemeister moves should be allowed.
-     */
     template <>
     struct RetriangulateParams<Link> {
         static std::string sig(const Link& link) {
@@ -7339,6 +7327,17 @@ namespace detail {
         }
 
         static constexpr const char* progressStage = "Exploring diagrams";
+
+        /**
+         * For link propagation, the available options are:
+         *
+         * - `true`, meaning that only classical Reidemeister moves should be
+         *    allowed;
+         *
+         * - `false`, meaning that both classical and virtual Reidemeister
+         *    moves should be allowed.
+         */
+        using PropagationOptions = bool;
 
         template <typename Retriangulator>
         static void propagateFrom(const std::string& sig, size_t maxSize,
@@ -7905,11 +7904,11 @@ inline bool Link::rewrite(int height, int threads,
             "rewrite() requires fewer than 64 link components");
     }
 
-    // The template option std::true_type means allow classical moves only.
+    // The propagation option `true` means allow classical moves only.
     if constexpr (TerminatingCallback<Action, Link&&, Args...>) {
         // Action takes just a link.
         return detail::retriangulateInternal<Link, false,
-            detail::RetriangulateDefault, std::true_type>(
+            detail::RetriangulateDefault, true>(
             *this, false /* rigid */, height, threads, tracker,
             [&](Link&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
@@ -7917,7 +7916,7 @@ inline bool Link::rewrite(int height, int threads,
     } else {
         // Action takes both a signature and a link.
         return detail::retriangulateInternal<Link, true,
-            detail::RetriangulateDefault, std::true_type>(
+            detail::RetriangulateDefault, true>(
             *this, false /* rigid */, height, threads, tracker,
             [&](const std::string& sig, Link&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
@@ -7938,12 +7937,11 @@ inline bool Link::rewriteVirtual(int height, int threads,
             "rewriteVirtual() requires fewer than 64 link components");
     }
 
-    // The template option std::false_type means allow both classical and
-    // virtual moves.
+    // The propagation option `false` means allow classical _and_ virtual moves.
     if constexpr (TerminatingCallback<Action, Link&&, Args...>) {
         // Action takes just a link.
         return detail::retriangulateInternal<Link, false,
-            detail::RetriangulateDefault, std::false_type>(
+            detail::RetriangulateDefault, false>(
             *this, false /* rigid */, height, threads, tracker,
             [&](Link&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
@@ -7951,7 +7949,7 @@ inline bool Link::rewriteVirtual(int height, int threads,
     } else {
         // Action takes both a signature and a link.
         return detail::retriangulateInternal<Link, true,
-            detail::RetriangulateDefault, std::false_type>(
+            detail::RetriangulateDefault, false>(
             *this, false /* rigid */, height, threads, tracker,
             [&](const std::string& sig, Link&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
@@ -7968,13 +7966,13 @@ inline bool Link::simplifyExhaustive(int height, int threads,
             "simplifyExhaustive() requires fewer than 64 link components");
     }
 
-    // The template option std::true_type means allow classical moves only,
-    // and std::false_type means allow both classical and virtual moves.
+    // The propagation option `true` means allow classical moves only,
+    // and `false` means allow both classical and virtual moves.
     if (isClassical())
-        return detail::simplifyExhaustiveInternal<Link, std::true_type>(
+        return detail::simplifyExhaustiveInternal<Link, true>(
             *this, height, threads, tracker);
     else
-        return detail::simplifyExhaustiveInternal<Link, std::false_type>(
+        return detail::simplifyExhaustiveInternal<Link, false>(
             *this, height, threads, tracker);
 }
 

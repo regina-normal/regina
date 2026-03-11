@@ -59,11 +59,11 @@ namespace detail {
  * Regina's generic retriangulation / link rewriting machinery must provide
  * its own specialisation of RetriangulateParams.
  *
- * The specialisation should provide:
+ * The specialisation must provide:
  *
  * - a template function
- *   `static void propagateFrom<T>(sig, max, retriangulator)`,
- *   as described below;
+ *   `static void propagateFrom<T>(sig, max, retriangulator)` and accompanying
+ *   type alias `PropagationOptions`, as described below;
  *
  * - a static constexpr member `const char* progressStage`, which
  *   returns the human-readable description of the processing stage that
@@ -97,14 +97,22 @@ namespace detail {
  * examine all possible moves from \a obj that do not exceed size \a max; and
  * for each resulting triangulation/link \a alt, it should call
  * `retriangulator->candidate(std::move(alt), sig)`.
- * If \a Object uses options to control what moves are allowed (e.g., the link
- * type indicating whether to allow virtual as well as classical moves), then
- * these options can be accessed through the type `T::PropagationOptions`.
  *
  * The function should also check the return value each time it calls
  * `retriangulator->candidate(...)`.  If the \a candidate
  * function ever returns \c true then it should not try any further moves, but
  * instead should clean up and return immediately.
+ *
+ * The type `PropagationOptions` holds options that control what moves are
+ * allowed (e.g., the link type uses such options to indicate whether to allow
+ * virtual as well as classical moves).  This type must be simple enough that
+ * its values can be used as template arguments (e.g., integer or enum types
+ * are fine but complex class types are not), and it must be default
+ * constructible.  See `RetriangulateParams<Link>` for an example where this
+ * type is non-trivial.  The function `propagateFrom<T>()` can access these
+ * options through the compile-time constant `T::options`.  If there are no
+ * such options, then you should define `PropagationOptions` to be the empty
+ * type `NoPropagationOptions`.
  *
  * \apinotfinal
  *
@@ -117,6 +125,20 @@ namespace detail {
  */
 template <typename Object>
 struct RetriangulateParams;
+
+/**
+ * An empty struct type used to indicate that a particular type of object
+ * (such as a triangulation or link type) has no options to control
+ * propagation to "nearby" objects.
+ *
+ * This type is used with Regina's retriangulation / link rewriting machinery,
+ * and would typically be used as the type
+ * `RetriangulateParams<Object>::PropagationOptions` in the case where there
+ * are no options available.
+ *
+ * See the RetriangulateParams documentation for further details.
+ */
+struct NoPropagationOptions {};
 
 /**
  * A class that can be used with Regina's generic retriangulation / link
@@ -142,6 +164,11 @@ concept Retriangulable =
     std::constructible_from<T, const T&, bool> &&
     requires (const T x) {
         typename RetriangulateParams<T>;
+
+        typename RetriangulateParams<T>::PropagationOptions;
+        requires std::default_initializable<
+            typename RetriangulateParams<T>::PropagationOptions>;
+
         { RetriangulateParams<T>::progressStage } ->
             std::convertible_to<const char*>;
         { RetriangulateParams<T>::sig(x) } -> std::same_as<std::string>;
@@ -149,10 +176,10 @@ concept Retriangulable =
     };
 
 /**
- * Represents different options that can be used internally with a
- * retriangulation or link rewriting function.
+ * Represents flags that control the behaviour of Regina's retriangulation /
+ * link rewriting machinery, and that apply to all supported object types.
  *
- * These options are intended to be used as template arguments.  As such,
+ * These flags are intended to be used as template arguments.  As such,
  * they are not wrapped into the safer Flags type (since C++20 does not allow
  * non-type template arguments with private members).  Instead this is an
  * unscoped enumeration, and these integer constants should be combined
@@ -160,7 +187,7 @@ concept Retriangulable =
  *
  * \ingroup detail
  */
-enum {
+enum RetriangulationFlags {
     /**
      * An empty flag, indicating that we should use default behaviour.
      */
@@ -181,6 +208,20 @@ enum {
      */
     RetriangulateNotFinished = 0x0002
 };
+
+/**
+ * The type used to hold options that control propagation to "nearby" objects
+ * in Regina's retriangulation / link rewriting machinery.  Unlike
+ * RetriangulationFlags, these options are specific to a particular \a Object
+ * type.
+ *
+ * The main reason for this type alias is to simplify the code that actually
+ * works with propagation options.
+ *
+ * \ingroup detail
+ */
+template <Retriangulable Object>
+using PropagationOptions = RetriangulateParams<Object>::PropagationOptions;
 
 /**
  * Declares the internal type used to store a callable action that is passed
@@ -239,12 +280,10 @@ using RetriangulateActionFunc = std::conditional_t<withSig,
  * text signature and a triangulation in its initial argument(s),
  * or \c false if we are storing an action whose argument list begins with
  * just a triangulation/link.
- * \tparam flags controls how the retriangulation/rewriting process is managed;
- * see the RetriangulationOptions enum for what can be included here.
- * \tparam PropagationOptions Any options needed to specify how objects should
- * be propagated to produce "nearby" objects.  The domain-specific propagation
- * function `RetriangulationParams<Object>::propagateFrom<Retriangulator>`
- * can access this parameter via the type `Retriangulator::PropagationOptions`.
+ * \tparam flags controls how the overall retriangulation/rewriting process is
+ * managed; see the RetriangulationFlags enum for what can be included here.
+ * \tparam options any options specific to the Object type that control
+ * propagation to "nearby" objects.
  *
  * \param obj the object being retriangulated or rewritten.
  * \param rigid \c true if link diagrams should never be reflected,
@@ -263,8 +302,8 @@ using RetriangulateActionFunc = std::conditional_t<withSig,
  *
  * \ingroup detail
  */
-template <Retriangulable Object, bool withSig,
-    int flags = RetriangulateDefault, typename PropagationOptions = void>
+template <Retriangulable Object, bool withSig, int flags = RetriangulateDefault,
+    PropagationOptions<Object> options = {}>
 bool retriangulateInternal(const Object& obj, bool rigid, int height,
         int nThreads, ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action);
@@ -284,10 +323,8 @@ bool retriangulateInternal(const Object& obj, bool rigid, int height,
  *
  * \tparam Object the class providing the exhaustive simplification function,
  * such as regina::Triangulation<dim> or regina::Link.
- * \tparam PropagationOptions Any options needed to specify how objects should
- * be propagated to produce "nearby" objects.  This will be passed through to
- * retriangulateInternal(), and is ultimately used by the domain-specific
- * function `RetriangulationParams<Object>::propagateFrom<Retriangulator>`.
+ * \tparam options any options specific to the Object type that control
+ * propagation to "nearby" objects.
  *
  * \param obj the object being simplified.
  * \param height the maximum number of top-dimensional simplices or crossings
@@ -301,7 +338,7 @@ bool retriangulateInternal(const Object& obj, bool rigid, int height,
  *
  * \ingroup detail
  */
-template <Retriangulable Object, typename PropagationOptions = void>
+template <Retriangulable Object, PropagationOptions<Object> options = {}>
 bool simplifyExhaustiveInternal(Object& obj, int height,
         int threads, ProgressTrackerOpen* tracker) {
     // Make a place for the callback to put a simplified object, if it finds
@@ -312,8 +349,8 @@ bool simplifyExhaustiveInternal(Object& obj, int height,
     std::unique_ptr<Object> simplified;
 
     size_t initSize = obj.size();
-    if (retriangulateInternal<Object, false, RetriangulateDefault,
-            PropagationOptions>(obj, true /* rigid */, height, threads, tracker,
+    if (retriangulateInternal<Object, false, RetriangulateDefault, options>(
+            obj, true /* rigid */, height, threads, tracker,
             [&simplified, initSize](Object&& alt) {
                 if (alt.size() < initSize) {
                     simplified.reset(new Object(std::move(alt)));
@@ -346,10 +383,8 @@ bool simplifyExhaustiveInternal(Object& obj, int height,
  *
  * \tparam Object the class providing the exhaustive treewidth improvement
  * function, such as regina::Triangulation<dim> or regina::Link.
- * \tparam PropagationOptions Any options needed to specify how objects should
- * be propagated to produce "nearby" objects.  This will be passed through to
- * retriangulateInternal(), and is ultimately used by the domain-specific
- * function `RetriangulationParams<Object>::propagateFrom<Retriangulator>`.
+ * \tparam options any options specific to the Object type that control
+ * propagation to "nearby" objects.
  *
  * \param obj the object whose greedy tree decomposition we hope to improve.
  * \param maxAttempts the maximum number of combinatorially distinct objects
@@ -366,7 +401,7 @@ bool simplifyExhaustiveInternal(Object& obj, int height,
  *
  * \ingroup detail
  */
-template <Retriangulable Object, typename PropagationOptions = void>
+template <Retriangulable Object, PropagationOptions<Object> options = {}>
 bool improveTreewidthInternal(Object& obj, ssize_t maxAttempts, int height,
         int threads, ProgressTrackerOpen* tracker) {
     // Make a place for the callback to put an improved object, if it finds
@@ -388,8 +423,8 @@ bool improveTreewidthInternal(Object& obj, ssize_t maxAttempts, int height,
 
     // Make a first attempt to reduce treewidth.
     if (retriangulateInternal<Object, false,
-            RetriangulateNoLocks | RetriangulateNotFinished,
-            PropagationOptions>(obj, true /* rigid */, height, threads, tracker,
+            RetriangulateNoLocks | RetriangulateNotFinished, options>(
+            obj, true /* rigid */, height, threads, tracker,
             [&improved, &attempts, &mutex_, &curr, init,
             maxAttempts](Object&& alt) {
                 size_t w = TreeDecomposition(alt).width();
@@ -431,8 +466,8 @@ bool improveTreewidthInternal(Object& obj, ssize_t maxAttempts, int height,
             init = curr;
 
             if (retriangulateInternal<Object, false,
-                    RetriangulateNoLocks | RetriangulateNotFinished,
-                    PropagationOptions>(*improved, true /* rigid */, height,
+                    RetriangulateNoLocks | RetriangulateNotFinished, options>(
+                    *improved, true /* rigid */, height,
                     threads, tracker, [&improved, &attempts, &mutex_, &curr,
                     init, maxAttempts](Object&& alt) {
                         size_t w = TreeDecomposition(alt).width();

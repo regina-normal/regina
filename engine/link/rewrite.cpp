@@ -38,11 +38,10 @@ namespace detail {
     template <typename Retriangulator>
     void RetriangulateParams<Link>::propagateFrom(const std::string& sig,
             size_t maxSize, Retriangulator* retri) {
-        // Recall that Retriangulator::PropagationOptions should be one of:
-        // - `std::true_type`, to allow only classical Reidemeister moves;
-        // - `std::false_type` to allow both classical and virtual moves.
-        constexpr bool classicalOnly =
-            Retriangulator::PropagationOptions::value;
+        // Recall that Retriangulator::options should be one of:
+        // - `true`, to allow only classical Reidemeister moves;
+        // - `false` to allow both classical and virtual moves.
+        constexpr bool classicalOnly = Retriangulator::options;
 
         Link t = Link::fromSig(sig);
 
@@ -302,33 +301,33 @@ namespace detail {
 // so the full implementation can stay out of the headers.
 
 template bool detail::retriangulateInternal<Link, true,
-    detail::RetriangulateDefault, std::true_type>(
+    detail::RetriangulateDefault, true>(
     const Link&, bool, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Link, true>&&);
 
 template bool detail::retriangulateInternal<Link, false,
-    detail::RetriangulateDefault, std::true_type>(
+    detail::RetriangulateDefault, true>(
     const Link&, bool, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Link, false>&&);
 
 template bool detail::retriangulateInternal<Link, true,
-    detail::RetriangulateDefault, std::false_type>(
+    detail::RetriangulateDefault, false>(
     const Link&, bool, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Link, true>&&);
 
 template bool detail::retriangulateInternal<Link, false,
-    detail::RetriangulateDefault, std::false_type>(
+    detail::RetriangulateDefault, false>(
     const Link&, bool, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Link, false>&&);
 
 template bool detail::retriangulateInternal<Link, false,
-    detail::RetriangulateNoLocks | detail::RetriangulateNotFinished,
-    std::true_type>(const Link&, bool, int, int, ProgressTrackerOpen*,
+    detail::RetriangulateNoLocks | detail::RetriangulateNotFinished, true>(
+    const Link&, bool, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Link, false>&&);
 
 template bool detail::retriangulateInternal<Link, false,
-    detail::RetriangulateNoLocks | detail::RetriangulateNotFinished,
-    std::false_type>(const Link&, bool, int, int, ProgressTrackerOpen*,
+    detail::RetriangulateNoLocks | detail::RetriangulateNotFinished, false>(
+    const Link&, bool, int, int, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Link, false>&&);
 
 } // namespace regina

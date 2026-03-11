@@ -110,17 +110,16 @@ class RetriangulateThreadSync<true> {
             done_ = true;
         }
 
-        template <typename RetriangulatorType>
-        void startThreads(int nThreads, ProgressTrackerOpen* tracker) {
+        template <typename Action, typename... Args>
+        requires std::invocable<Action, Args...>
+        void startThreads(int nThreads, Action&& action, Args&&... args) {
             nRunning_ = nThreads;
 
             FixedArray<std::thread> t(nThreads);
 
-            // In the std::thread constructor, we _must_ pass \c this as a
-            // pointer - otherwise we may end up making deep copies instead.
             for (int i = 0; i < nThreads; ++i)
-                t[i] = std::thread(&RetriangulatorType::processQueue,
-                    static_cast<RetriangulatorType*>(this), tracker);
+                t[i] = std::thread(std::forward<Action>(action),
+                    std::forward<Args>(args)...);
             for (int i = 0; i < nThreads; ++i)
                 t[i].join();
         }
@@ -196,9 +195,11 @@ class RetriangulateThreadSync<false> {
                 void unlock() {}
         };
 
-        template <typename RetriangulatorType>
-        void startThreads(unsigned, ProgressTrackerOpen* tracker) {
-            static_cast<RetriangulatorType*>(this)->processQueue(tracker);
+        template <typename Action, typename... Args>
+        requires std::invocable<Action, Args...>
+        void startThreads(int, Action&& action, Args&&... args) {
+            std::invoke(std::forward<Action>(action),
+                std::forward<Args>(args)...);
         }
 
         void wakeAllThreads() {
@@ -293,14 +294,16 @@ class RetriangulateSigGraph<false> : private std::set<std::string> {
  * \tparam withSig \c true if the action that was passed takes a
  * text signature as its initial argument (in addition to the
  * triangulation/link which is passed in all cases).
- * \tparam flags controls how the retriangulation/rewriting process is managed;
- * see the RetriangulationOptions enum for what can be included here.
+ * \tparam flags controls how the overall retriangulation/rewriting process is
+ * managed; see the RetriangulationFlags enum for what can be included here.
+ * \tparam options_ any options specific to the Object type that control
+ * propagation to "nearby" objects.
  */
 template <Retriangulable Object, bool threading, bool withSig, int flags,
-    typename PropagationOptions_>
+    PropagationOptions<Object> options_>
 class Retriangulator : public RetriangulateThreadSync<threading> {
     public:
-        using PropagationOptions = PropagationOptions_;
+        static constexpr PropagationOptions<Object> options = options_;
 
     private:
         // To switch on backtracing, just change the following type alias to
@@ -375,9 +378,9 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
 };
 
 template <Retriangulable Object, bool threading, bool withSig, int flags,
-    typename PropagationOptions>
-inline bool Retriangulator<Object, threading, withSig, flags,
-        PropagationOptions>::seed(const Object& obj) {
+    PropagationOptions<Object> options_>
+inline bool Retriangulator<Object, threading, withSig, flags, options_>::seed(
+        const Object& obj) {
     // We have to pass a *copy* of obj to action_, since action_ is
     // allowed to change the object that is passed to it.
     // This is inefficient, but at least it only happens once.
@@ -406,9 +409,9 @@ inline bool Retriangulator<Object, threading, withSig, flags,
 }
 
 template <Retriangulable Object, bool threading, bool withSig, int flags,
-    typename PropagationOptions>
-void Retriangulator<Object, threading, withSig, flags,
-        PropagationOptions>::processQueue(ProgressTrackerOpen* tracker) {
+    PropagationOptions<Object> options_>
+void Retriangulator<Object, threading, withSig, flags, options_>::processQueue(
+        ProgressTrackerOpen* tracker) {
     SigSet::iterator next;
 
     typename RetriangulateThreadSync<threading>::Lock lock(*this);
@@ -441,10 +444,9 @@ void Retriangulator<Object, threading, withSig, flags,
 }
 
 template <Retriangulable Object, bool threading, bool withSig, int flags,
-    typename PropagationOptions>
-bool Retriangulator<Object, threading, withSig, flags,
-        PropagationOptions>::candidate(Object&& alt,
-        const std::string& derivedFrom) {
+    PropagationOptions<Object> options_>
+bool Retriangulator<Object, threading, withSig, flags, options_>::candidate(
+        Object&& alt, const std::string& derivedFrom) {
     const std::string sig = (rigid_ ?
         RetriangulateParams<Object>::rigidSig(alt) :
         RetriangulateParams<Object>::sig(alt));
@@ -503,7 +505,7 @@ bool Retriangulator<Object, threading, withSig, flags,
 }
 
 template <Retriangulable Object, bool threading, bool withSig, int flags,
-    typename PropagationOptions>
+    PropagationOptions<Object> options>
 bool enumerateDetail(const Object& obj, bool rigid, int height, int nThreads,
         ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action) {
@@ -531,7 +533,7 @@ bool enumerateDetail(const Object& obj, bool rigid, int height, int nThreads,
     // The flag RetriangulateNotFinished is of no use to us inside the
     // Retriangulator class.
     using T = Retriangulator<Object, threading, withSig,
-        (flags & ~RetriangulateNotFinished), PropagationOptions>;
+        (flags & ~RetriangulateNotFinished), options>;
 
     T bfs(rigid, (height >= 0 ? obj.size() + height :
         std::numeric_limits<std::size_t>::max()), std::move(action), tracker);
@@ -542,7 +544,7 @@ bool enumerateDetail(const Object& obj, bool rigid, int height, int nThreads,
         }
         return true;
     }
-    bfs.template startThreads<T>(nThreads, tracker);
+    bfs.startThreads(nThreads, &T::processQueue, std::addressof(bfs), tracker);
 
     if constexpr (! (flags & RetriangulateNotFinished)) {
         if (tracker)
@@ -552,17 +554,15 @@ bool enumerateDetail(const Object& obj, bool rigid, int height, int nThreads,
 }
 
 template <Retriangulable Object, bool withSig, int flags,
-    typename PropagationOptions>
+    PropagationOptions<Object> options>
 bool retriangulateInternal(const Object& obj, bool rigid, int height,
         int nThreads, ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action) {
     if (nThreads <= 1) {
-        return enumerateDetail<Object, false, withSig, flags,
-            PropagationOptions>(
+        return enumerateDetail<Object, false, withSig, flags, options>(
             obj, rigid, height, nThreads, tracker, std::move(action));
     } else {
-        return enumerateDetail<Object, true, withSig, flags,
-            PropagationOptions>(
+        return enumerateDetail<Object, true, withSig, flags, options>(
             obj, rigid, height, nThreads, tracker, std::move(action));
     }
 }
