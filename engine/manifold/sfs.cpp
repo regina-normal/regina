@@ -1299,34 +1299,49 @@ Triangulation<3> SFSpace::construct() const {
     // Because we've already handled all the possibilities with 2-sphere base,
     // we know that if k == 0, then p >= 1.
     //
-    // As outlined above, we construct the requested SFS by first building the
-    // OrientableCircleBundle over a suitable base triangulation, and then
-    // filling in the required fibres by attaching layered solid tori to the
-    // boundary squares of the OrientableCircleBundle.
+    // As mentioned above (in less detail), we construct the SFS as follows:
+    //  (1) Build the OrientableCircleBundle over a suitable base
+    //      triangulation, and mark n boundary squares of this bundle.
+    //  (2) Fill in the n exceptional fibres by attaching a layered solid torus
+    //      (with suitable parameters) to each marked boundary square.
     //
     // An obvious choice of base triangulation would just be the surface of
     // the requested genus, with (p+n) boundary components. However, the
     // implementation below does slightly better than this (in terms of number
-    // of tetrahedra) by exploiting the fact that the n boundary squares that
-    // we will fill in need not all belong to disjoint boundary components of
-    // the starting bundle.
-    bool overDisc = ( genus_ == 0 and punctures_ == 1 );
+    // of tetrahedra) by exploiting the fact that the n marked boundary squares
+    // need not all belong to disjoint boundary components of the bundle.
     Triangulation<2> baseSurface;
-    if (overDisc) {
+    FixedArray<unsigned long> markedTriSolidTorusIndex(numFibresToFill);
+    FixedArray<unsigned long> markedSquareIndex(numFibresToFill);
+    if ( genus_ == 0 and punctures_ == 1 ) {
+        // Base surface is a disc.
         if (numFibresToFill == 1) {
-            // With base surface a disc and just one exceptional fibre, the
-            // specific Seifert fibration doesn't matter: up to homeomorphism,
-            // we just have a solid torus.
+            // With just one exceptional fibre, the specific Seifert fibration
+            // doesn't matter: up to homeomorphism, we just have a solid torus.
             return Example<3>::ballBundle();
         }
 
-        // We have n >= 2. For the base surface, we use an (n+1)-sided
+        // We have n >= 2. For the base triangulation, we use an (n+1)-sided
         // polygonal disc, constructed from n-1 triangles. The bundle over this
         // polygon will then have n+1 boundary squares; one of these will form
         // the boundary of the SFS, and we fill in the other n squares to
         // obtain the exceptional fibres.
         baseSurface.insertTriangulation(
                 Example<2>::polygon( numFibresToFill - 1 ) );
+
+        // Record the locations of the marked boundary squares.
+        for (unsigned long i = 0; i < numFibresToFill; ++i) {
+            if ( i == numFibresToFill - 1 ) {
+                // Because of the labellings used by Example<2>::polygon(), the
+                // very last marked square needs to be handled differently from
+                // the others.
+                markedTriSolidTorusIndex[i] = i - 1;
+                markedSquareIndex[i] = 1;
+            } else {
+                markedTriSolidTorusIndex[i] = i;
+                markedSquareIndex[i] = 0;
+            }
+        }
     } else {
         // Base surface has either:
         //  --- k == 0 and n >= 2; or
@@ -1342,36 +1357,8 @@ Triangulation<3> SFSpace::construct() const {
     }
 
     // Build the OrientableCircleBundle over the baseSurface that we just
-    // constructed, and mark the n boundary squares that we will fill in.
+    // constructed, and perform the fillings on the marked boundary squares.
     OrientableCircleBundle bundleToFill(baseSurface);
-    FixedArray<unsigned long> markedTriSolidTorusIndex(numFibresToFill);
-    FixedArray<unsigned long> markedSquareIndex(numFibresToFill);
-    if (overDisc) {
-        // We already dealt with solid tori (ie, the case p == 1) above, so we
-        // must have p >= 2.
-        for (unsigned long i = 0; i < numFibresToFill; ++i) {
-            if ( i == numFibresToFill - 1 ) {
-                // Because of the labellings used by Example<2>::polygon(), the
-                // very last marked square needs to be handled differently from
-                // the others.
-                markedTriSolidTorusIndex[i] = i - 1;
-                markedSquareIndex[i] = 1;
-            } else {
-                markedTriSolidTorusIndex[i] = i;
-                markedSquareIndex[i] = 0;
-            }
-        }
-    } else {
-        // As above, base surface has either:
-        //  --- k == 0 and n >= 2; or
-        //  --- k >= 1.
-
-        //TODO
-        throw NotImplemented("Orientable SFS over base neither 2-sphere nor "
-                "disc is coming soon!");
-    }
-
-    // Now go through and perform the fillings.
     auto fibreIt = fibresToFill.begin();
     for (unsigned long i = 0; i < numFibresToFill; ++i) {
         TriSolidTorus& triSolidTorus = bundleToFill.triSolidTorus[
