@@ -228,8 +228,62 @@ TEST(SFSTest, construct) {
     }
 
     {
-        SCOPED_TRACE("Generic construction for orientable SFS");
+        SCOPED_TRACE("Orientable SFS over base neither S^2 nor D^2");
 
-        //TODO
+        long signedGenus;
+        unsigned long genus, punctures;
+        SFSpace::Class useClass;
+        for (signedGenus = -2; signedGenus <= 2; ++signedGenus) {
+            for (punctures = 0; punctures <= 2; ++punctures) {
+                // Calculate genus and useClass for the base.
+                if (signedGenus == 0) {
+                    if (punctures < 2) {
+                        continue;
+                    }
+                    genus = 0;
+                    useClass = SFSpace::Class::bo1;
+                } else if (signedGenus > 0) {
+                    genus = signedGenus;
+                    if (punctures == 0) {
+                        useClass = SFSpace::Class::o1;
+                    } else {
+                        useClass = SFSpace::Class::bo1;
+                    }
+                } else {
+                    genus = -signedGenus;
+                    if (punctures == 0) {
+                        useClass = SFSpace::Class::n2;
+                    } else {
+                        useClass = SFSpace::Class::bn2;
+                    }
+                }
+
+                // Test with various sets of exceptional fibres.
+                verifyStructureOrientable(
+                        buildSFS( useClass, genus, punctures, 0, 0, 0,
+                            { SFSFibre(3, 1) } ) );
+                verifyStructureOrientable(
+                        buildSFS( useClass, genus, punctures, 0, 0, 0,
+                            { SFSFibre(5, 1), SFSFibre(5, -2) } ) );
+                verifyStructureOrientable(
+                        buildSFS( useClass, genus, punctures, 0, 0, 0,
+                            { SFSFibre(3, 1), SFSFibre(7, -2),
+                            SFSFibre(7, 2) } ) );
+                verifyStructureOrientable(
+                        buildSFS( useClass, genus, punctures, 0, 0, 0,
+                            { SFSFibre(3, 1), SFSFibre(7, -2),
+                            SFSFibre(7, 2), SFSFibre(7, -3) } ) );
+                verifyStructureOrientable(
+                        buildSFS( useClass, genus, punctures, 0, 0, 0,
+                            { SFSFibre(2, 1), SFSFibre(5, 1),
+                            SFSFibre(5, -2), SFSFibre(2, 3),
+                            SFSFibre(8, 3) } ) );
+                verifyStructureOrientable(
+                        buildSFS( useClass, genus, punctures, 0, 0, 0,
+                            { SFSFibre(3, 1), SFSFibre(7, -2),
+                            SFSFibre(7, 2), SFSFibre(7, -3),
+                            SFSFibre(5, -2), SFSFibre(5, 8) } ) );
+            }
+        }
     }
 }
