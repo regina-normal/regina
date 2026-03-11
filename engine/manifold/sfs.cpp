@@ -957,6 +957,8 @@ namespace {
      * A subset of the boundary squares of an OrientableCircleBundle that are
      * marked to indicate that these squares should be filled in by attaching
      * layered solid tori.
+     *
+     * This class guarantees that each marked square will have slope +1.
      */
     class MarkedSquares {
         private:
@@ -976,7 +978,25 @@ namespace {
                  */
 
         private:
-            //TODO Constructor(s)
+            /**
+             * Constructs an OrientableCircleBundle of the given type, with
+             * \a numSquaresToMark marked boundary squares.
+             *
+             * The constructed bundle will be of the given class, and the base
+             * surface will have the given genus. The boundary of the bundle
+             * will consist of \a numPunctures (unmarked) boundary squares
+             * which belong to \a numPunctures distinct boundary tori of the
+             * bundle, plus \a numSquaresToMark additional boundary squares
+             * which constitute the marked squares.
+             *
+             * \pre numSquaresToMark >= 1
+             * \pre If `genus == 0`, then `useClass == SFSpace::Class::bo1`
+             * \pre If `genus == 0`, then either `numPunctures == 1` and
+             * `numSquaresToMark >= 2`, or `numPunctures >= 2`
+             */
+            MarkedSquares(
+                    unsigned long numSquaresToMark, SFSpace::Class useClass,
+                    unsigned long genus, unsigned long numPunctures );
 
             /**
              * Returns a reference to the OrientableCircleBundle that contains
@@ -1029,6 +1049,41 @@ namespace {
 
     OrientableCircleBundle& MarkedSquares::bundle() {
         return *bundle_;
+    }
+
+    MarkedSquares::MarkedSquares(
+            unsigned long numSquaresToMark, SFSpace::Class useClass,
+            unsigned long genus, unsigned long numPunctures ) {
+        // Throughout the comments in this implementation, we use the following
+        // notation:
+        //  --- Let k >= 0 be
+        //      --> 2*genus if the base surface is orientable, and
+        //      --> genus if the base surface is non-orientable.
+        //  --- Let p = numPunctures >= 0.
+        //  --- Let n = numSquaresToMark >= 1.
+        // From the preconditions, we know that if k == 0, then p >= 1.
+        markedTriSolidTorus_.reserve(numSquaresToMark);
+        markedSquareIndex_.reserve(numSquaresToMark);
+        if ( genus == 0 and numPunctures == 1 ) {
+            // From the preconditions, n >= 2.
+            //
+            // Base surface is a disc. We will triangulate this disc using an
+            // (n+1)-sided polygonal disc, constructed from n-1 triangles.
+
+            //TODO Don't forget to ensure slope +1.
+            throw NotImplemented("Orientable SFS over disc is coming soon!");
+        }
+
+        // Base surface has either:
+        //  --- genus == 0 and numPunctures >= 2; or
+        //  --- genus >= 1.
+        // In either case, we will build a bundle with one extra boundary
+        // torus, and we will put all of the marked squares in this extra
+        // boundary torus.
+
+        //TODO Don't forget to ensure slope +1.
+        throw NotImplemented("Orientable SFS over base neither 2-sphere nor "
+                "disc is coming soon!");
     }
 
     Tetrahedron<3>* MarkedSquares::markedSquareTet(
@@ -1342,14 +1397,18 @@ Triangulation<3> SFSpace::construct() const {
         return bundle.tri_;
     }
 
-    // For the comments below, we use the following notation:
-    //  --- Let k >= 0 be
-    //      --> 2*genus_ if the base surface is orientable, and
-    //      --> genus_ if the base surface is non-orientable.
-    //  --- Let p = punctures_ >= 0.
-    //  --- Let n = numFibresToFill >= 1.
-    // Because we've already handled all possibilities with 2-sphere base, we
-    // know that if k == 0, then p > 0.
+    // If we have disc base and only one exceptional fibre, then the specific
+    // Seifert fibration doesn't matter: up to homeomorphism, what we have is
+    // just a solid torus.
+    if ( genus_ == 0 and punctures_ == 1 and numFibresToFill == 1 ) {
+        return Example<3>::ballBundle();
+    }
+
+    // Because we've already handled all the possibilities with 2-sphere base,
+    // and because we just handled all possible solid tori, we know that if
+    // genus_ == 0, then either:
+    //  --- punctures_ == 1 and numFibresToFill >= 2; or
+    //  --- punctures_ >= 2.
     //
     // As outlined above, we construct the requested SFS by first building the
     // OrientableCircleBundle over a suitable base triangulation, and then
@@ -1357,55 +1416,15 @@ Triangulation<3> SFSpace::construct() const {
     // boundary squares of the OrientableCircleBundle.
     //
     // An obvious choice of base triangulation would just be the surface of
-    // the requested genus, with (p+n) boundary components. However, the
-    // implementation below does slightly better than this (in terms of number
-    // of tetrahedra) by exploiting the fact that the n boundary squares that
-    // we will fill in need not all belong to disjoint boundary components of
-    // the starting bundle.
-    MarkedSquares squaresToFill;
-
-//    std::unique_ptr<Triangulation<2>> unfilledBase;
-//    std::unique_ptr<OrientableCircleBundle> bundleToFill;
-//    FixedArray<TriSolidTorus*> bdryTriSolidTorus( numFibresToFill, nullptr );
-//    FixedArray<unsigned> bdrySquare( numFibresToFill, 0 );
-    if ( genus_ == 0 and punctures_ == 1 ) {
-//        // SFS over disc.
-//        if (numFibresToFill == 1) {
-//            // There is no need to use the Seifert fibre structure. Up to
-//            // homeomorphism, we just have a solid torus.
-//            return Example<3>::ballBundle();
-//        }
-//
-//        // We now have n >= 2. Our base triangulation will be an (n+1)-sided
-//        // polygonal disc, constructed from n-1 triangles. We will fill in n
-//        // boundary squares of the OrientableCircleBundle over this polygon,
-//        // and the remaining square will then form the single boundary torus of
-//        // the required SFS.
-//
-//        //TODO
-        throw NotImplemented("Orientable SFS over disc is coming soon!");
-    } else {
-//        // SFS over either:
-//        //  --- genus-0 surface with p >= 2; or
-//        //  --- surface with k >= 1.
-//        // In either case, we will start with a base surface that has one
-//        // extra boundary component. The extra boundary is where we will fill
-//        // in all the fibres, so if necessary we will adjust that boundary to
-//        // have exactly one edge per fibre.
-//
-//        //TODO
-        throw NotImplemented("Orientable SFS over base neither "
-                "2-sphere nor disc is coming soon!");
-    }
-
-    // Now go through and perform the fillings.
+    // the requested genus, with `punctures_ + numFibresToFill` boundary
+    // components. However, the implementation below does slightly better than
+    // this (in terms of number of tetrahedra) by exploiting the fact that the
+    // boundary squares that we will fill in need not all belong to disjoint
+    // boundary components of the starting bundle.
+    MarkedSquares squaresToFill(
+            numFibresToFill, class_, genus_, punctures_ );
     auto fibreIt = fibresToFill.begin();
     for (unsigned long i = 0; i < numFibresToFill; ++i) {
-//        // To get consistent signs on all the fillings, we need the filled
-//        // squares to have positive slope.
-//        if ( bdryTriSolidTorus[i]->squareSlope( bdrySquare[i] ) == -1 ) {
-//            bdryTriSolidTorus[i]->flipSlope( bdrySquare[i] );
-//        }
         SatAnnulus::attachLST(
                 squaresToFill.markedSquareTet( i, 0 ),
                 squaresToFill.markedSquareRoles( i, 0 ),
