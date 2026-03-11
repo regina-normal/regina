@@ -158,7 +158,7 @@ TEST(SFSTest, construct) {
             "D x S1" );
 
     {
-        SCOPED_TRACE("SFS over S^2 with >= 3 exceptional fibres");
+        SCOPED_TRACE("Orientable SFS over S^2 with >= 3 exceptional fibres");
 
         verifyStructureOrientable(
                 buildSFS( SFSpace::Class::o1, 0, 0, 0, 0, 0,
@@ -199,6 +199,32 @@ TEST(SFSTest, construct) {
                 buildSFS( SFSpace::Class::bn2, 1, 2, 0, 0, 0, {} ) );
         verifyStructureOrientable(
                 buildSFS( SFSpace::Class::bn2, 2, 1, 0, 0, 0, {} ) );
+    }
+
+    {
+        SCOPED_TRACE("Orientable SFS over D^2 with >= 2 exceptional fibres");
+
+        verifyStructureOrientable(
+                buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0,
+                    { SFSFibre(5, 1), SFSFibre(5, -2) } ) );
+        verifyStructureOrientable(
+                buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0,
+                    { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2) } ) );
+        verifyStructureOrientable(
+                buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0,
+                    { SFSFibre(5, 1), SFSFibre(5, -2), SFSFibre(2, 3) } ) );
+        verifyStructureOrientable(
+                buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0,
+                    { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2),
+                    SFSFibre(7, -3) } ) );
+        verifyStructureOrientable(
+                buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0,
+                    { SFSFibre(2, 1), SFSFibre(5, 1), SFSFibre(5, -2),
+                    SFSFibre(2, 3), SFSFibre(8, 3) } ) );
+        verifyStructureOrientable(
+                buildSFS( SFSpace::Class::bo1, 0, 1, 0, 0, 0,
+                    { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2),
+                    SFSFibre(7, -3), SFSFibre(5, -2), SFSFibre(5, 8) } ) );
     }
 
     {
