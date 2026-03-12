@@ -1373,13 +1373,13 @@ bool Link::improveTreewidth(ssize_t maxAttempts, int height, int threads,
             "improveTreewidth() requires fewer than 64 link components");
     }
 
-    // The propagation option `true` means allow classical moves only,
-    // and `false` means allow both classical and virtual moves.
     if (isClassical())
-        return detail::improveTreewidthInternal<Link, true>(
+        return detail::improveTreewidthInternal<Link,
+                detail::PropagationOptions<Link>::ClassicalOnly>(
             *this, maxAttempts, height, threads, tracker);
     else
-        return detail::improveTreewidthInternal<Link, false>(
+        return detail::improveTreewidthInternal<Link,
+                detail::PropagationOptions<Link>::ClassicalAndVirtual>(
             *this, maxAttempts, height, threads, tracker);
 }
 

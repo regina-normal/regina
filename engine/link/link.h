@@ -7328,16 +7328,18 @@ namespace detail {
 
         static constexpr const char* progressStage = "Exploring diagrams";
 
-        /**
-         * For link propagation, the available options are:
-         *
-         * - `true`, meaning that only classical Reidemeister moves should be
-         *    allowed;
-         *
-         * - `false`, meaning that both classical and virtual Reidemeister
-         *    moves should be allowed.
-         */
-        using PropagationOptions = bool;
+        enum class PropagationOptions {
+            /**
+             * Indicates that only classical Reidemeister moves should be
+             * allowed.
+             */
+            ClassicalOnly,
+            /**
+             * Indicates that both classical and virtual Reidemeister moves
+             * should be allowed.
+             */
+            ClassicalAndVirtual
+        };
 
         template <typename Retriangulator>
         static void propagateFrom(const std::string& sig, size_t maxSize,
@@ -7904,11 +7906,11 @@ inline bool Link::rewrite(int height, int threads,
             "rewrite() requires fewer than 64 link components");
     }
 
-    // The propagation option `true` means allow classical moves only.
     if constexpr (TerminatingCallback<Action, Link&&, Args...>) {
         // Action takes just a link.
         return detail::retriangulateInternal<Link, false,
-            detail::RetriangulateDefault, true>(
+                detail::RetriangulateDefault,
+                detail::PropagationOptions<Link>::ClassicalOnly>(
             *this, false /* rigid */, height, threads, tracker,
             [&](Link&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
@@ -7916,7 +7918,8 @@ inline bool Link::rewrite(int height, int threads,
     } else {
         // Action takes both a signature and a link.
         return detail::retriangulateInternal<Link, true,
-            detail::RetriangulateDefault, true>(
+                detail::RetriangulateDefault,
+                detail::PropagationOptions<Link>::ClassicalOnly>(
             *this, false /* rigid */, height, threads, tracker,
             [&](const std::string& sig, Link&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
@@ -7937,11 +7940,11 @@ inline bool Link::rewriteVirtual(int height, int threads,
             "rewriteVirtual() requires fewer than 64 link components");
     }
 
-    // The propagation option `false` means allow classical _and_ virtual moves.
     if constexpr (TerminatingCallback<Action, Link&&, Args...>) {
         // Action takes just a link.
         return detail::retriangulateInternal<Link, false,
-            detail::RetriangulateDefault, false>(
+                detail::RetriangulateDefault,
+                detail::PropagationOptions<Link>::ClassicalAndVirtual>(
             *this, false /* rigid */, height, threads, tracker,
             [&](Link&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
@@ -7949,7 +7952,8 @@ inline bool Link::rewriteVirtual(int height, int threads,
     } else {
         // Action takes both a signature and a link.
         return detail::retriangulateInternal<Link, true,
-            detail::RetriangulateDefault, false>(
+                detail::RetriangulateDefault,
+                detail::PropagationOptions<Link>::ClassicalAndVirtual>(
             *this, false /* rigid */, height, threads, tracker,
             [&](const std::string& sig, Link&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
@@ -7966,13 +7970,13 @@ inline bool Link::simplifyExhaustive(int height, int threads,
             "simplifyExhaustive() requires fewer than 64 link components");
     }
 
-    // The propagation option `true` means allow classical moves only,
-    // and `false` means allow both classical and virtual moves.
     if (isClassical())
-        return detail::simplifyExhaustiveInternal<Link, true>(
+        return detail::simplifyExhaustiveInternal<Link,
+                detail::PropagationOptions<Link>::ClassicalOnly>(
             *this, height, threads, tracker);
     else
-        return detail::simplifyExhaustiveInternal<Link, false>(
+        return detail::simplifyExhaustiveInternal<Link,
+                detail::PropagationOptions<Link>::ClassicalAndVirtual>(
             *this, height, threads, tracker);
 }
 
