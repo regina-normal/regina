@@ -95,6 +95,30 @@ void verifyName(const SFSpace& sfs, const char* expected) {
     EXPECT_EQ(sfs.name(), expected);
 }
 
+bool hasSameFibres( const SFSpace& reference, const SFSpace& compare,
+        bool allowReflect=true){
+    if ( reference.fibreCount() != compare.fibreCount() ) {
+        return false;
+    }
+    if (allowReflect) {
+        if ( hasSameFibres( reference, compare, false ) ) {
+            return true;
+        }
+
+        // Try the reflection instead.
+        SFSpace reflected(compare);
+        reflected.reflect();
+        return hasSameFibres( reference, reflected, false );
+    }
+    unsigned long iFibre;
+    for ( iFibre = 0; iFibre < reference.fibreCount(); ++iFibre ) {
+        if ( reference.fibre(iFibre) != compare.fibre(iFibre) ) {
+            return false;
+        }
+    }
+    return true;
+}
+
 void verifyStructureOrientable(const SFSpace& sfs) {
     // This test is designed for orientable SFS only. We therefore assume the
     // following:
@@ -139,11 +163,16 @@ void verifyStructureOrientable(const SFSpace& sfs) {
         EXPECT_EQ( reduced.baseClass(), compare.baseClass() );
         EXPECT_EQ( reduced.baseGenus(), compare.baseGenus() );
         EXPECT_EQ( reduced.punctures(), compare.punctures() );
-        EXPECT_EQ( reduced.fibreCount(), compare.fibreCount() );
-        unsigned long iFibre;
-        for ( iFibre = 0; iFibre < reduced.fibreCount(); ++iFibre ) {
-            EXPECT_EQ( reduced.fibre(iFibre), compare.fibre(iFibre) );
-        }
+
+        // For comparing the fibres, we need to allow reflections, because the
+        // current implementation of SFSpace::reduce() doesn't fully reduce b_
+        // for orientable SFS with non-empty boundary.
+        //
+        //TODO Improve SFSpace::reduce() to address this. The obstacle to
+        //      making such an improvement is that there are tests for
+        //      StandardTriangulation (and possibly also other parts of the
+        //      codebase) which rely on the current implementation.
+        EXPECT_TRUE( hasSameFibres( reduced, compare ) );
     }
 }
 

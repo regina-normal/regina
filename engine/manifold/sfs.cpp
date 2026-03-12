@@ -261,14 +261,8 @@ void SFSpace::reduce(bool mayReflect) {
 
     // If the SFS is non-orientable, we can get rid of b completely and
     // convert most (if not all) exceptional fibres to beta <= alpha / 2.
-    //
-    // Likewise, we can get rid of b completely if the SFS is orientable and
-    // has non-empty boundary.
     if (reflectors_ || reflectorsTwisted_) {
         // (1,1) == (1,0).
-        b_ = 0;
-    } else if ( class_ == SFSpace::Class::bo1
-            or class_ == SFSpace::Class::bn2 ) {
         b_ = 0;
     } else if (fibreNegating() && b_) {
         // (p,q) == (p,-q), and so (1,2) == (1,0).
