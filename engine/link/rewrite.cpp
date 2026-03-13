@@ -33,10 +33,10 @@
 
 namespace regina::detail {
 
-template <typename Action, typename... Args>
+template <typename Action>
 void RetriangulateParams<Link>::propagateFrom(const std::string& sig,
         size_t maxSize, regina::detail::PropagationOptions<Link> options,
-        Action&& candidateAction, Args&&... preArgs) {
+        Action&& candidateAction) {
     using Options = regina::detail::PropagationOptions<Link>;
 
     Link t = Link::fromSig(sig);
@@ -57,8 +57,7 @@ void RetriangulateParams<Link>::propagateFrom(const std::string& sig,
             // equivalent under reflection of the entire diagram.
             Link alt(t, false);
             alt.r1(StrandRef(), 0 /* side */, 1 /* sign */);
-            if (std::invoke(std::forward<Action>(candidateAction),
-                    std::forward<Args>(preArgs)..., std::move(alt), sig))
+            if (candidateAction(std::move(alt), sig))
                 return;
         }
         if (options == Options::ClassicalAndVirtual && maxSize > 1) {
@@ -70,8 +69,7 @@ void RetriangulateParams<Link>::propagateFrom(const std::string& sig,
             for (int firstSide = 0; firstSide < 2; ++firstSide) {
                 Link alt(t, false);
                 alt.r2Virtual({}, firstSide, 1 /* firstStrand */);
-                if (std::invoke(std::forward<Action>(candidateAction),
-                        std::forward<Args>(preArgs)..., std::move(alt), sig))
+                if (candidateAction(std::move(alt), sig))
                     return;
             }
         }
@@ -86,14 +84,12 @@ void RetriangulateParams<Link>::propagateFrom(const std::string& sig,
 
     for (size_t i = 0; i < t.size(); ++i)
         if (auto alt = t.withR1(t.crossing(i)))
-            if (std::invoke(std::forward<Action>(candidateAction),
-                    std::forward<Args>(preArgs)..., std::move(*alt), sig))
+            if (candidateAction(std::move(*alt), sig))
                 return;
 
     for (size_t i = 0; i < t.size(); ++i)
         if (auto alt = t.withR2(t.crossing(i)))
-            if (std::invoke(std::forward<Action>(candidateAction),
-                    std::forward<Args>(preArgs)..., std::move(*alt), sig))
+            if (candidateAction(std::move(*alt), sig))
                 return;
 
     // Moves that preserve the number of crossings:
@@ -101,8 +97,7 @@ void RetriangulateParams<Link>::propagateFrom(const std::string& sig,
     for (size_t i = 0; i < t.size(); ++i)
         for (int side = 0; side < 2; ++side)
             if (auto alt = t.withR3(t.crossing(i), side))
-                if (std::invoke(std::forward<Action>(candidateAction),
-                        std::forward<Args>(preArgs)..., std::move(*alt), sig))
+                if (candidateAction(std::move(*alt), sig))
                     return;
 
     // All that remains is moves that increase the number of crossings.
@@ -124,9 +119,7 @@ void RetriangulateParams<Link>::propagateFrom(const std::string& sig,
                 for (int sign = -1; sign <= 1; sign += 2) {
                     Link alt(t, false);
                     alt.r1(alt.crossing(i)->strand(strand), side, sign);
-                    if (std::invoke(std::forward<Action>(candidateAction),
-                            std::forward<Args>(preArgs)...,
-                            std::move(alt), sig))
+                    if (candidateAction(std::move(alt), sig))
                         return;
                 }
     if (hasTrivial) {
@@ -135,8 +128,7 @@ void RetriangulateParams<Link>::propagateFrom(const std::string& sig,
             // equivalent under reversal of individual link components.
             Link alt(t, false);
             alt.r1(StrandRef(), 0, sign);
-            if (std::invoke(std::forward<Action>(candidateAction),
-                    std::forward<Args>(preArgs)..., std::move(alt), sig))
+            if (candidateAction(std::move(alt), sig))
                 return;
         }
     }
@@ -169,10 +161,7 @@ void RetriangulateParams<Link>::propagateFrom(const std::string& sig,
                                         side1,
                                         alt.crossing(cr2)->strand(str2),
                                         side2);
-                                    if (std::invoke(
-                                            std::forward<Action>(candidateAction),
-                                            std::forward<Args>(preArgs)...,
-                                            std::move(alt), sig))
+                                    if (candidateAction(std::move(alt), sig))
                                         return;
                                 }
                             }
@@ -190,10 +179,7 @@ void RetriangulateParams<Link>::propagateFrom(const std::string& sig,
                             alt.r2Virtual(
                                 alt.crossing(cr)->strand(strand),
                                 fSide, fStrand);
-                            if (std::invoke(
-                                    std::forward<Action>(candidateAction),
-                                    std::forward<Args>(preArgs)...,
-                                    std::move(alt), sig))
+                            if (candidateAction(std::move(alt), sig))
                                 return;
                         }
             if (hasTrivial) {
@@ -204,9 +190,7 @@ void RetriangulateParams<Link>::propagateFrom(const std::string& sig,
                 for (int firstSide = 0; firstSide < 2; ++firstSide) {
                     Link alt(t, false);
                     alt.r2Virtual({}, firstSide, 1 /* firstStrand */);
-                    if (std::invoke(std::forward<Action>(candidateAction),
-                            std::forward<Args>(preArgs)...,
-                            std::move(alt), sig))
+                    if (candidateAction(std::move(alt), sig))
                         return;
                 }
             }
@@ -292,10 +276,7 @@ void RetriangulateParams<Link>::propagateFrom(const std::string& sig,
                             alt.r2Virtual(
                                 alt.translate(uArc), uSide,
                                 alt.translate(lArc), lSide);
-                            if (std::invoke(
-                                    std::forward<Action>(candidateAction),
-                                    std::forward<Args>(preArgs)...,
-                                    std::move(alt), sig))
+                            if (candidateAction(std::move(alt), sig))
                                 return;
                         }
                     }

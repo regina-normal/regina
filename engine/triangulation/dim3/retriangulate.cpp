@@ -37,24 +37,21 @@
 namespace regina {
 
 namespace detail {
-    template <typename Action, typename... Args>
+    template <typename Action>
     void RetriangulateParams<Triangulation<3>>::propagateFrom(
             const std::string& sig, size_t maxSize,
-            NoPropagationOptions, Action&& candidateAction, Args&&... preArgs) {
+            NoPropagationOptions, Action&& candidateAction) {
         Triangulation<3> t = Triangulation<3>::fromIsoSig(sig);
         size_t i;
         for (i = 0; i < t.countEdges(); ++i)
             if (auto alt = t.withPachner(t.edge(i)))
-                if (std::invoke(std::forward<Action>(candidateAction),
-                        std::forward<Args>(preArgs)..., std::move(*alt), sig))
+                if (candidateAction(std::move(*alt), sig))
                     return;
 
         if (t.size() < maxSize)
             for (i = 0; i < t.countTriangles(); ++i)
                 if (auto alt = t.withPachner(t.triangle(i)))
-                    if (std::invoke(std::forward<Action>(candidateAction),
-                            std::forward<Args>(preArgs)...,
-                            std::move(*alt), sig))
+                    if (candidateAction(std::move(*alt), sig))
                         return;
     }
 } // namespace detail

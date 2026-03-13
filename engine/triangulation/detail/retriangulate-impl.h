@@ -433,7 +433,9 @@ void Retriangulator<Object, threading, withSig, flags, options_>::processQueue(
             lock.unlock();
             RetriangulateParams<Object>::propagateFrom(
                 SigSet::sigAt(next), maxSize_, options_,
-                &Retriangulator::candidate, this);
+                [this](Object&& alt, const std::string& derivedFrom) {
+                    return candidate(std::move(alt), derivedFrom);
+                });
             lock.lock();
         }
 

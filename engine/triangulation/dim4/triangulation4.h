@@ -1698,10 +1698,9 @@ namespace detail {
 
         using PropagationOptions = NoPropagationOptions;
 
-        template <typename Action, typename... Args>
+        template <typename Action>
         static void propagateFrom(const std::string& sig, size_t maxSize,
-                PropagationOptions options, Action&& candidateAction,
-                Args&&... preArgs);
+                PropagationOptions options, Action&& candidateAction);
     };
 } // namespace detail
 #endif // __APIDOCS
