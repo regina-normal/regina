@@ -61,9 +61,10 @@ namespace detail {
  *
  * The specialisation must provide:
  *
- * - a template function
- *   `static void propagateFrom<T>(sig, max, retriangulator)` and accompanying
- *   type alias `PropagationOptions`, as described below;
+ * - a template function `static void propagateFrom(sig, max, options, action)`
+ *   and accompanying type alias `PropagationOptions`, whose task is to identify
+ *   objects that are "nearby" to an input object (e.g., via Pachner moves or
+ *   Reidemeister moves), as described below;
  *
  * - a static constexpr member `const char* progressStage`, which
  *   returns the human-readable description of the processing stage that
@@ -79,40 +80,40 @@ namespace detail {
  *   are currently ignored and so rigidSig() should return the same text
  *   signature as sig().
  *
- * The function `static void propagateFrom<T>(sig, max, retriangulator)`
- * takes the following arguments:
+ * The function `static void propagateFrom(sig, max, options, action)` takes
+ * the following arguments:
  *
- * - \a sig is the isomorphism signature of a triangulation or the knot
- *   signature of a link (typically passed as a const std::string&);
- * - \a max is the maximum size() of a triangulation or link that we are
- *   allowed to consider (typically passed as a \c size_t);
- * - \a retriangulator is the instance of the Retriangulator class that
- *   is managing the overall retriangulation/rewriting process (which must be
- *   passed as a pointer to type \a T).
+ * - \a sig is an object signature (e.g., the isomorphism signature of a
+ *   triangulation or the knot signature of a link), typically passed as a
+ *   `const std::string&`;
+ * - \a max is the maximum size() of the "nearby" objects that we are allowed
+ *   to consider, typically passed as a `size_t`;
+ * - \a options controls which moves to "nearby" objects are allowed (as
+ *   discussed further below), and is of type `PropagationOptions`;
+ * - \a action (a template argument) is a callable object with the signature
+ *   `bool action(Object&&, const std::string&)`, which `propagateFrom()`
+ *   should call for each nearby object that it identifies.
  *
- * The template parameter \a T is the type of the managing Retriangulator class,
- * with all of the Retriangulator template parameters filled in.
+ * Your implementation of `propagateFrom()` should:
  *
- * The function should reconstruct a triangulation or link \a obj from \a sig;
- * examine all possible moves from \a obj that do not exceed size \a max; and
- * for each resulting triangulation/link \a alt, it should call
- * `retriangulator->candidate(std::move(alt), sig)`.
+ * - reconstruct a triangulation or link \a obj from \a sig;
+ * - examine all possible moves from \a obj to "nearby" objects that do not
+ *   exceed size \a max, using \a options to control which moves are allowed;
+ * - for each such "nearby" object \a alt, call `action(std::move(alt), sig)`;
+ * - check the return value from `action()`, and if this ever returns `true`
+ *   then stop trying moves, clean up and return immediately.
  *
- * The function should also check the return value each time it calls
- * `retriangulator->candidate(...)`.  If the \a candidate
- * function ever returns \c true then it should not try any further moves, but
- * instead should clean up and return immediately.
+ * Regarding the \a options argument:
  *
- * The type `PropagationOptions` holds options that control what moves are
- * allowed (e.g., the link type uses such options to indicate whether to allow
- * virtual as well as classical moves).  This type must be simple enough that
- * its values can be used as template arguments (e.g., integer or enum types
- * are fine but complex class types are not), and it must be default
- * constructible.  See `RetriangulateParams<Link>` for an example where this
- * type is non-trivial.  The function `propagateFrom<T>()` can access these
- * options through the compile-time constant `T::options`.  If there are no
- * such options, then you should define `PropagationOptions` to be the empty
- * type `NoPropagationOptions`.
+ * - this controls which moves are allowed (e.g., the link rewriting process
+ *   uses \a options to indicate whether to allow virtual as well as classical
+ *   moves);
+ * - its type `PropagationOptions` must be simple enough that its values can be
+ *   used as template arguments (e.g., integer or enum types are fine but
+ *   complex class types are not), and it must be default constructible;
+ * - if you do not need options then you should define `PropagationOptions`
+ *   to be the empty type `NoPropagationOptions`, and your `propagateFrom()`
+ *   should just ignore the \a options argument.
  *
  * \apinotfinal
  *
