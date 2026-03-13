@@ -7341,9 +7341,10 @@ namespace detail {
             ClassicalAndVirtual
         };
 
-        template <typename Retriangulator>
+        template <typename Action, typename... Args>
         static void propagateFrom(const std::string& sig, size_t maxSize,
-                Retriangulator* retri);
+                PropagationOptions options, Action&& candidateAction,
+                Args&&... preArgs);
     };
 } // namespace detail
 #endif // __APIDOCS

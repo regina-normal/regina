@@ -431,8 +431,9 @@ void Retriangulator<Object, threading, withSig, flags, options_>::processQueue(
             // since the C++ standard requires that insertion into a
             // std::set or std::map does not invalidate iterators.
             lock.unlock();
-            RetriangulateParams<Object>::template propagateFrom<Retriangulator>(
-                SigSet::sigAt(next), maxSize_, this);
+            RetriangulateParams<Object>::propagateFrom(
+                SigSet::sigAt(next), maxSize_, options_,
+                &Retriangulator::candidate, this);
             lock.lock();
         }
 
