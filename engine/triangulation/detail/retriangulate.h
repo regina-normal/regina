@@ -174,6 +174,11 @@ concept Retriangulable =
             std::convertible_to<const char*>;
         { RetriangulateParams<T>::sig(x) } -> std::same_as<std::string>;
         { RetriangulateParams<T>::rigidSig(x) } -> std::same_as<std::string>;
+    } &&
+    requires (const std::string sig, size_t max,
+            typename RetriangulateParams<T>::PropagationOptions options) {
+        RetriangulateParams<T>::propagateFrom(sig, max, options,
+            [](T&&, const std::string&) { return false; });
     };
 
 /**
