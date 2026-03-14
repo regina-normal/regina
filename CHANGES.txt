@@ -328,7 +328,7 @@ Version 8.0  [ TODO ]
             - Many new concepts:
               + AssignableTo, CanConstruct, CoefficientDomain,
                 ConcatenableSequence, Domain, Field, IntegralDomain,
-                ReginaBitmask, Ring, RingLike, StrictWeakOrder,
+                ReginaBitmask, Ring, RingLike, SameModCVRef, StrictWeakOrder,
                 TerminatingCallback, VoidCallback (defined in concepts/core.h)
               + AnyInteger, ArbitraryPrecisionInteger, CppInteger,
                 IntegerComparable, IntegerCompatible, ReginaInteger,
@@ -337,10 +337,11 @@ Version 8.0  [ TODO ]
               + InherentlyTightEncodable, Readable, StandardStringifiable,
                 Stringifiable, Writable (defined in concepts/io.h)
               + BidirectionalIterableFor, BidirectionalIteratorFor,
-                CharIterator, ForwardIteratorFor, InputIteratorFor, Iterable,
-                IterableFor, OutputIterator, PacketIterator,
-                RandomAccessIterableFor, RandomAccessIteratorFor,
-                SelfSentinelInputIterator (defined in concepts/iterator.h)
+                CharIterator, ForwardIteratorFor, IndexedContainer,
+                InputIteratorFor, Iterable, IterableFor, OutputIterator,
+                PacketIterator, RandomAccessIterableFor,
+                RandomAccessIteratorFor, SelfSentinelInputIterator (defined in
+                concepts/iterator.h)
               + ArbitraryPrecisionIntegerVector, IntegerVector,
                 SigReconstructible (defined in concepts/maths.h)
               + PacketClass, PacketHeldType (defined in concepts/packet.h)

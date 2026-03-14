@@ -55,20 +55,24 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
-template <ArbitraryPrecisionIntegerVector Ray, typename RayIterator,
-    VoidCallback<Ray&&> Action>
+template <ArbitraryPrecisionIntegerVector Ray,
+    std::forward_iterator RayIterator, VoidCallback<Ray&&> Action>
+requires
+    IndexedContainer<std::iter_value_t<RayIterator>> &&
+    ArbitraryPrecisionInteger<
+        typename std::iter_value_t<RayIterator>::value_type>
 void HilbertPrimal::enumerate(Action&& action,
-        const RayIterator& raysBegin, const RayIterator& raysEnd,
+        RayIterator beginExtremalRays, RayIterator endExtremalRays,
         const ValidityConstraints& constraints, ProgressTracker* tracker) {
-    if (raysBegin == raysEnd) {
-        // No extremal rays; no Hilbert basis.
+    if (beginExtremalRays == endExtremalRays) {
+        // No extremal rays -> no Hilbert basis.
         // (And.. we have no rays from which to get the dimension of the space.)
         return;
     }
 
     // Choose the slickest possible bitmask type that can hold dim bits.
-    usingBitmaskFor((*raysBegin).size() /* dimension of the space */,
-            [&action, raysBegin, raysEnd, &constraints, tracker]
+    usingBitmaskFor((*beginExtremalRays).size() /* dimension of the space */,
+            [&action, beginExtremalRays, endExtremalRays, &constraints, tracker]
             <ReginaBitmask BitmaskType>(size_t dim) {
         using IntegerType = typename Ray::value_type;
 
@@ -80,7 +84,7 @@ void HilbertPrimal::enumerate(Action&& action,
         if (tracker)
             tracker->setPercent(10);
         auto maxFaces = MaxAdmissible::enumerate<BitmaskType>(
-            raysBegin, raysEnd, constraints);
+            beginExtremalRays, endExtremalRays, constraints);
 
         // Now use normaliz to process each face.
         if (tracker)
@@ -90,7 +94,7 @@ void HilbertPrimal::enumerate(Action&& action,
         for (const auto& m : maxFaces) {
             // Locate the extremal rays that generate this face.
             std::vector<std::vector<mpz_class>> input;
-            for (auto rit = raysBegin; rit != raysEnd; ++rit)
+            for (auto rit = beginExtremalRays; rit != endExtremalRays; ++rit)
                 if (inFace(*rit, m)) {
                     std::vector<mpz_class>& v(input.emplace_back());
                     v.reserve(dim);
@@ -127,10 +131,13 @@ void HilbertPrimal::enumerate(Action&& action,
     });
 }
 
-template <typename VectorClass, ReginaBitmask BitmaskType>
+template <IndexedContainer VectorClass, ReginaBitmask BitmaskType>
+requires requires (const VectorClass::value_type element) {
+    { element == 0 } -> std::convertible_to<bool>;
+}
 bool HilbertPrimal::inFace(const VectorClass& ray, const BitmaskType& face) {
-    for (unsigned i = 0; i < ray.size(); ++i)
-        if ((! face.get(i)) && ray[i] > 0)
+    for (size_t i = 0; i < ray.size(); ++i)
+        if (! (face.get(i) || ray[i] == 0))
             return false;
     return true;
 }

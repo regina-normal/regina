@@ -38,7 +38,7 @@
 #endif
 
 #include <iterator>
-#include "regina-core.h"
+#include "concepts/core.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -237,6 +237,23 @@ template <typename T>
 concept OutputIterator =
     std::input_or_output_iterator<T> &&
     std::output_iterator<T, std::iter_value_t<T>>;
+
+/**
+ * A container-like type whose elements can be access via indexing.
+ *
+ * We do _not_ require that the elements be accessible via iteration.
+ * We do however require some other parts of a standard container interface,
+ * including `T::value_type` and `T::size()`.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept IndexedContainer =
+    requires (T x, size_t index) {
+        typename T::value_type;
+        { x.size() } -> std::convertible_to<size_t>;
+        { x[index] } -> SameModCVRef<typename T::value_type>;
+    };
 
 } // namespace regina
 

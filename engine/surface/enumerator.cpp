@@ -60,6 +60,12 @@ namespace {
      * constructor at the end of the first pass.
      */
     class NSShadowVector {
+        public:
+            using value_type = LargeInteger;
+            using size_type = Vector<LargeInteger>::size_type;
+            using reference = const LargeInteger&;
+            using const_reference = const LargeInteger&;
+
         private:
             const Vector<LargeInteger>& source_;
             NormalEncoding srcEnc_;

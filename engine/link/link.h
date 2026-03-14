@@ -6011,7 +6011,7 @@ class Link :
             requires (ComponentIterator it) {
                 // We use + here to decay the inner sequence element to a plain
                 // value type.  In C++23, we can replace +(...) with auto(...).
-                { +(*it->begin()) } -> SignedCppInteger;
+                { +(*(it->begin())) } -> SignedCppInteger;
             }
         static Link fromData(SignIterator beginSigns, SignIterator endSigns,
             ComponentIterator beginComponents, ComponentIterator endComponents);

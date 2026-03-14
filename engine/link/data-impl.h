@@ -159,7 +159,7 @@ requires
     SignedCppInteger<std::iter_value_t<SignIterator>> &&
     Iterable<std::iter_value_t<ComponentIterator>> &&
     requires (ComponentIterator it) {
-        { +(*it->begin()) } -> SignedCppInteger;
+        { +(*(it->begin())) } -> SignedCppInteger;
     }
 Link Link::fromData(SignIterator beginSigns, SignIterator endSigns,
         ComponentIterator beginComponents, ComponentIterator endComponents) {

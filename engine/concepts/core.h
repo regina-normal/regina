@@ -75,6 +75,19 @@ template <typename Source, typename Target>
 concept CanConstruct = std::constructible_from<Target, Source>;
 
 /**
+ * Indicates that types \a T and \a U are identical, after removing references
+ * and const/volatile qualifiers.
+ *
+ * So, for example, `std::same_as<const int&, int>` is `false`, but
+ * `SameModCVRef<const int&, int>` is `true`.
+ *
+ * \ingroup concepts
+ */
+template <typename T, typename U>
+concept SameModCVRef =
+    std::same_as<std::remove_cvref_t<T>, std::remove_cvref_t<U>>;
+
+/**
  * A type that has the necessary operations to behave like a mathematical ring.
  *
  * \ingroup concepts

@@ -91,6 +91,11 @@ static_assert(! regina::AssignableTo<NativeInteger<4>, int64_t&>);
 static_assert(! regina::AssignableTo<Integer, int16_t&>);
 static_assert(! regina::AssignableTo<LargeInteger, int16_t&>);
 
+static_assert(regina::SameModCVRef<const int&, int>);
+static_assert(regina::SameModCVRef<int, const int&>);
+static_assert(! std::same_as<const int&, int>);
+static_assert(! std::same_as<int, const int&>);
+
 static_assert(CppInteger<char>);
 static_assert(StandardCppInteger<char>);
 
