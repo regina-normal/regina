@@ -45,6 +45,7 @@
 
 #include "enumerate/treeconstraint.h"
 #include "triangulation/dim3.h"
+#include "utilities/fixedarray.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -149,13 +150,11 @@ BanTorusBoundary::BanTorusBoundary(
 
     // Which boundary faces are we banning?
     size_t nTriangles = tri_.countTriangles();
-    bool* banTriangle = new bool[nTriangles];
-    std::fill(banTriangle, banTriangle + nTriangles, false);
+    FixedArray<bool> banTriangle(nTriangles, false);
 
     // Which vertex links are we marking normal triangles around?
     size_t nVertices = tri_.countVertices();
-    bool* markVtx = new bool[nVertices];
-    std::fill(markVtx, markVtx + nVertices, false);
+    FixedArray<bool> markVtx(nVertices, false);
 
     BoundaryComponent<3>* bc;
     for (size_t i = 0; i < tri_.countBoundaryComponents(); ++i) {
@@ -211,9 +210,6 @@ BanTorusBoundary::BanTorusBoundary(
                     break;
                 }
         }
-
-    delete[] banTriangle;
-    delete[] markVtx;
 }
 
 } // namespace regina

@@ -301,12 +301,10 @@ void LPInitialTableaux<Constraint>::reorder(bool enumeration) {
         // from the last column to the first.
 
         // Track which rows have been processed so far.
-        bool* used = new bool[rank_];
-        std::fill(used, used + rank_, false);
+        FixedArray<bool> used(rank_, false);
 
         // Also track which tetrahedra have been used so far.
-        bool* touched = new bool[n];
-        std::fill(touched, touched + n, false);
+        FixedArray<bool> touched(n, false);
         size_t nTouched = 0;
 
         // Off we go, one row at a time.
@@ -419,9 +417,6 @@ void LPInitialTableaux<Constraint>::reorder(bool enumeration) {
             }
             ++nTouched;
         }
-
-        delete[] touched;
-        delete[] used;
     }
 
     // If we have extra variables for additional constraints or

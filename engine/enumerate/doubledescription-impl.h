@@ -84,7 +84,7 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
     size_t cols = subspace.columns() - facets_.bits();
 
     // Extract the set of columns that we actually care about.
-    auto* use = new size_t[cols];
+    FixedArray<size_t> use(cols);
     for (i = 0, j = 0; i < subspace.columns(); ++i)
         if (facets_.get(i)) {
             // We know in advance that this coordinate will be zero.
@@ -97,8 +97,7 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
     // If there are no equations then there must be only one non-zero
     // coordinate, and vice versa.
     if (cols == 1) {
-        dest[*use] = 1;
-        delete[] use;
+        dest[use.front()] = 1;
         return;
     }
 
@@ -106,7 +105,7 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
     // non-trivial equation relating them.
 
     // Form a submatrix for the equations, looking only at non-zero coordinates.
-    auto* m = new IntegerType[rows * cols];
+    FixedArray<IntegerType> m(rows * cols);
     for (i = 0; i < rows; ++i)
         for (j = 0; j < cols; ++j)
             m[i * cols + j] = subspace.entry(i, use[j]);
@@ -114,7 +113,7 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
     // Put this submatrix in echelon form; moreover, for the leading
     // entry in each row, set all other entries in the corresponding
     // column to zero.
-    auto* lead = new size_t[cols];
+    FixedArray<size_t> lead(cols);
     for (i = 0; i < cols; ++i)
         lead[i] = i;
 
@@ -180,13 +179,7 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
         dest[use[lead[i]]] = - (common * m[i * cols + lead[rows]]).
             divExact(m[i * cols + lead[i]]);
     dest[use[lead[rows]]] = common;
-
     dest.scaleDown();
-
-    // All done!
-    delete[] lead;
-    delete[] m;
-    delete[] use;
 }
 
 template <ArbitraryPrecisionIntegerVector Ray, VoidCallback<Ray&&> Action>
