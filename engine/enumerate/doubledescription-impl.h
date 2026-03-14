@@ -351,7 +351,7 @@ bool DoubleDescription::intersectHyperplane(
     for (auto* other : src)
         trie.insert(other->facets());
 
-    unsigned iterations = 0;
+    int iterations = 0;
     for (auto* p : pos)
         for (auto* n : neg) {
             // Test for cancellation, but not every time (since this

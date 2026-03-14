@@ -57,7 +57,7 @@ namespace regina {
 template <ArbitraryPrecisionIntegerVector Ray, VoidCallback<Ray&&> Action>
 void HilbertDual::enumerate(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
-        ProgressTracker* tracker, unsigned initialRows) {
+        ProgressTracker* tracker, size_t initialRows) {
     usingBitmaskFor(subspace.columns() /* dimension of the space */,
             [&action, &subspace, &constraints, tracker, initialRows]
             <ReginaBitmask BitmaskType>(size_t dim) {
@@ -71,7 +71,7 @@ void HilbertDual::enumerate(Action&& action,
         size_t nEqns = subspace.rows();
         if (nEqns == 0) {
             // No!  Just send back the unit vectors.
-            for (unsigned i = 0; i < dim; ++i) {
+            for (size_t i = 0; i < dim; ++i) {
                 Ray ans(dim);
                 ans[i] = IntegerType::one;
                 action(std::move(ans));
@@ -243,7 +243,7 @@ void HilbertDual::reduceBasis(
 template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 void HilbertDual::intersectHyperplane(
         std::vector<VecSpec<IntegerType, BitmaskType>*>& list,
-        const MatrixInt& subspace, unsigned row,
+        const MatrixInt& subspace, size_t row,
         const std::vector<BitmaskType>& constraintMasks) {
     // These must be linked lists because we need fast insertion and
     // deletion at arbitrary locations.

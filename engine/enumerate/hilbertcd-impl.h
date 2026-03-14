@@ -80,7 +80,6 @@ void HilbertCD::enumerate(Action&& action,
                 (*unitMatch[i])[j] = subspace.entry(j, i);
         }
 
-        unsigned stackSize;
         // All vectors/rays are created and destroyed.
         // Bitmasks on the other hand are reused.
         FixedArray<VecSpec<IntegerType, BitmaskType>*> coord(dim);
@@ -93,7 +92,7 @@ void HilbertCD::enumerate(Action&& action,
         // Push the zero vector.
         coord[0] = new VecSpec<IntegerType, BitmaskType>(dim);
         match[0] = new Vector<IntegerType>(nEqns);
-        stackSize = 1; // The zero vector is already on top.
+        size_t stackSize = 1; // The zero vector is already on top.
         bool first = true;
 
         VecSpec<IntegerType, BitmaskType> *c;

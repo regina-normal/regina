@@ -1262,8 +1262,8 @@ void LPData<Constraint, IntType>::makeFeasible() {
     for (size_t r = 0; r < rank_; ++r)
         currBasis.set(basis_[r], true);
     Bitmask oldBasis(currBasis);
-    unsigned long pow2 = 1;
-    unsigned long nPivots = 0;
+    size_t pow2 = 1;
+    size_t nPivots = 0;
 
     while (true) {
 #ifdef REGINA_COUNT_PIVOTS
@@ -1346,7 +1346,7 @@ template <LPConstraint Constraint, ReginaInteger IntType>
 void LPData<Constraint, IntType>::makeFeasibleAntiCycling() {
     ssize_t outCol;
 #ifdef REGINA_COUNT_PIVOTS
-    unsigned long nPivots = 0;
+    size_t Pivots = 0;
 #endif
     while (true) {
 #ifdef REGINA_COUNT_PIVOTS
