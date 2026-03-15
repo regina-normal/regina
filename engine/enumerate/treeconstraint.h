@@ -691,7 +691,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          *
          * \param lp the tableaux in which to enforce the bans.
          */
-        template <LPConstraint Constraint, typename IntType>
+        template <LPConstraint Constraint, ReginaInteger IntType>
         void enforceBans(LPData<Constraint, IntType>& lp) const;
 
         /**
@@ -806,7 +806,7 @@ class BanNone : public ShortOutput<BanNone> {
         template <LPConstraint Constraint>
         BanNone(const LPInitialTableaux<Constraint>&) {}
 
-        template <LPConstraint Constraint, typename IntType>
+        template <LPConstraint Constraint, ReginaInteger IntType>
         void enforceBans(LPData<Constraint, IntType>&) const {}
 
         bool operator == (const BanNone&) const { return true; }
@@ -1094,7 +1094,7 @@ inline BanConstraintBase::~BanConstraintBase() {
     delete[] marked_;
 }
 
-template <LPConstraint Constraint, typename IntType>
+template <LPConstraint Constraint, ReginaInteger IntType>
 inline void BanConstraintBase::enforceBans(LPData<Constraint, IntType>& lp)
         const {
     for (size_t i = 0; i < lp.coordinateColumns(); ++i)

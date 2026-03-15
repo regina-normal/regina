@@ -37,7 +37,8 @@
 namespace regina {
 
 namespace detail {
-    template <typename Action>
+    template <TerminatingCallback<Triangulation<3>&&, const std::string&>
+        Action>
     void RetriangulateParams<Triangulation<3>>::propagateFrom(
             const std::string& sig, size_t maxSize,
             NoPropagationOptions, Action&& candidateAction) {

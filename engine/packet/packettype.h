@@ -502,13 +502,13 @@ class PacketInfo {
  *
  * This variable is only meaningful when \a Held is not itself a packet type,
  * but instead is a standalone type that can (if desired) be wrapped in a
- * packet of type PacketOf<Held>.  Examples of such types include Link and
- * Triangulation<dim>.
+ * packet of type `PacketOf<Held>`.  Examples of such types include Link and
+ * `Triangulation<dim>`.
  *
  * In all other cases, this variable will be PacketType::None.
  *
  * In particular, if \a Held is a full packet type itself (such as Container,
- * Script, or PacketOf<...>), then this variable will be PacketType::None.
+ * Script, or `PacketOf<...>`), then this variable will be PacketType::None.
  *
  * \nopython
  *

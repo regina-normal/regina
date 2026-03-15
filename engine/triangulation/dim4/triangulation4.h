@@ -1698,7 +1698,8 @@ namespace detail {
 
         using PropagationOptions = NoPropagationOptions;
 
-        template <typename Action>
+        template <TerminatingCallback<Triangulation<4>&&, const std::string&>
+            Action>
         static void propagateFrom(const std::string& sig, size_t maxSize,
                 PropagationOptions options, Action&& candidateAction);
     };

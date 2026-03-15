@@ -33,7 +33,7 @@
 
 namespace regina::detail {
 
-template <typename Action>
+template <TerminatingCallback<Link&&, const std::string&> Action>
 void RetriangulateParams<Link>::propagateFrom(const std::string& sig,
         size_t maxSize, regina::detail::PropagationOptions<Link> options,
         Action&& candidateAction) {

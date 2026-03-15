@@ -77,7 +77,7 @@ template <typename T, bool supportsUtf8 = false> struct Output;
  * Moreover, if your class does not benefit from unicode characters (i.e.,
  * the short and utf8 outputs are identical), then you may omit the \a utf8
  * argument entirely; in this case, you must set the template argument
- * \a supportsUtf8 as \c false.  Both \a writeTextShort() and
+ * \a supportsUtf8 as `false`.  Both \a writeTextShort() and
  * \a writeTextLong() may take additional arguments, as long as they are
  * optional.
  *
@@ -86,7 +86,7 @@ template <typename T, bool supportsUtf8 = false> struct Output;
  *
  * In return, this class will provide the functions str(), utf8() and detail(),
  * which return the short, utf8 and detailed outputs respectively in
- * std::string format.  It will also provide a global operator << that
+ * std::string format.  It will also provide a global operator `<<` that
  * allows you to write objects of type \a T to an arbitrary output stream.
  *
  * If your class is simple and has no need for detailed output then it may
@@ -95,12 +95,12 @@ template <typename T, bool supportsUtf8 = false> struct Output;
  *
  * \tparam T the class that provides the implementations of
  * \a writeTextShort() and \a writeTextLong().  Typically this will be
- * your own class (i.e., your class \a C derives from Output<C>).
+ * your own class (i.e., your class \a C derives from `Output<C>`).
  * However, this may be deeper in the class hierarchy.
  *
- * \tparam supportsUtf8 \c true if the class \a T can make use of the
- * richer unicode character set, or \c false if the short and utf8 outputs
- * are identical.  If this is \c false then T::writeTextShort() will only
+ * \tparam supportsUtf8 `true` if the class \a T can make use of the
+ * richer unicode character set, or `false` if the short and utf8 outputs
+ * are identical.  If this is `false` then `T::writeTextShort()` will only
  * ever be called in the form `writeTextShort(std::ostream&)`,
  * and you may for simplicity omit the second boolean \a utf8 argument.
  * This Output base class will still provide a utf8() function, but it will
@@ -108,8 +108,8 @@ template <typename T, bool supportsUtf8 = false> struct Output;
  *
  * \note Every object of this class that is ever instantiated _must_ be
  * derived from the class \a T.  In other words, end users can construct
- * objects of type \a T (which derives from Output<T>), but they cannot
- * construct objects of the parent class Output<T> itself.
+ * objects of type \a T (which derives from `Output<T>`), but they cannot
+ * construct objects of the parent class `Output<T>` itself.
  *
  * \python Not present, but the output routines str(), utf8() and
  * detail() will be provided directly through the various subclasses.
@@ -202,9 +202,9 @@ std::ostream& operator << (std::ostream& out,
  * Typically this will be your own class (i.e., your class \a C derives from
  * ShortOutput<C>).  However, this may be deeper in the class hierarchy.
  *
- * \tparam supportsUtf8 \c true if the class \a T can make use of the
- * richer unicode character set, or \c false if the short and utf8 outputs
- * are identical.  If this is \c false then T::writeTextShort() will only
+ * \tparam supportsUtf8 `true` if the class \a T can make use of the
+ * richer unicode character set, or `false` if the short and utf8 outputs
+ * are identical.  If this is `false` then `T::writeTextShort()` will only
  * ever be called in the form `writeTextShort(std::ostream&)`,
  * and you may for simplicity omit the second boolean \a utf8 argument.
  * This ShortOutput base class will still provide a utf8() function, but it

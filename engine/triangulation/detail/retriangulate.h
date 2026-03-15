@@ -90,9 +90,9 @@ namespace detail {
  *   to consider, typically passed as a `size_t`;
  * - \a options controls which moves to "nearby" objects are allowed (as
  *   discussed further below), and is of type `PropagationOptions`;
- * - \a action (a template argument) is a callable object with the signature
- *   `bool action(Object&&, const std::string&)`, which `propagateFrom()`
- *   should call for each nearby object that it identifies.
+ * - \a action is a template argument that adheres to the concept
+ *   `TerminatingCallback<Link&&, const std::string&>`, and `propagateFrom()`
+ *   should call this for each nearby object that it identifies.
  *
  * Your implementation of `propagateFrom()` should:
  *

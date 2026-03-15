@@ -1777,7 +1777,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * if you need to avoid whitespace between the opening XML tag
          * and the packet contents then you should pass \c false instead.
          * \param attr any additional attributes to write to the XML tag;
-         * each attribute should a pair of the form (\a attribute, \a value).
+         * each attribute should a pair of the form (\a attribute, \a value),
+         * where \a value is of a type that can be written to an output stream.
          * When writing to the FileFormat::XmlGen2 format, this will be ignored.
          */
         template <typename... Args>

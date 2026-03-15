@@ -679,7 +679,7 @@ using make_unsigned_cpp_t = typename IntOfSize<sizeof(T)>::utype;
  *
  * \ingroup utilities
  */
-template <typename From, typename To>
+template <ReginaInteger From, ReginaInteger To>
 struct FaithfulAssignment;
 
 #ifndef __DOXYGEN
