@@ -61,6 +61,12 @@ class Dim2Test : public TriangulationTest<2> {
         TestCase norPunc3 { Example<2>::nonOrientable(2, 3),
             "Non-or, g=2 + 3 punctures" };
 
+        // Polygons.
+        TestCase poly1 { Example<2>::polygon(1), "Polygon, 1 side" };
+        TestCase poly2 { Example<2>::polygon(2), "Polygon, 2 sides" };
+        TestCase poly3 { Example<2>::polygon(3), "Polygon, 3 sides" };
+        TestCase poly4 { Example<2>::polygon(4), "Polygon, 4 sides" };
+
         // Disconnected triangulations (we build these in the constructor):
         TestCase disjoint2 { {}, "Torus U Mobius" };
         TestCase disjoint3 { {}, "KB U Annulus U S^2" };
@@ -94,6 +100,12 @@ class Dim2Test : public TriangulationTest<2> {
             f(orPunc3.tri, orPunc3.name);
             f(norPunc1.tri, norPunc1.name);
             f(norPunc3.tri, norPunc3.name);
+
+            // Polygons.
+            f(poly1.tri, poly1.name);
+            f(poly2.tri, poly2.name);
+            f(poly3.tri, poly3.name);
+            f(poly4.tri, poly4.name);
         }
 };
 
@@ -125,6 +137,12 @@ TEST_F(Dim2Test, validity) {
     verifyValid(orPunc3);
     verifyValid(norPunc1);
     verifyValid(norPunc3);
+
+    // Polygons.
+    verifyValid(poly1);
+    verifyValid(poly2);
+    verifyValid(poly3);
+    verifyValid(poly4);
 }
 TEST_F(Dim2Test, connectivity) {
     TriangulationTest<2>::connectivityGenericCases();
@@ -142,6 +160,12 @@ TEST_F(Dim2Test, connectivity) {
     EXPECT_TRUE(orPunc3.tri.isConnected());
     EXPECT_TRUE(norPunc1.tri.isConnected());
     EXPECT_TRUE(norPunc3.tri.isConnected());
+
+    // Polygons.
+    EXPECT_TRUE(poly1.tri.isConnected());
+    EXPECT_TRUE(poly2.tri.isConnected());
+    EXPECT_TRUE(poly3.tri.isConnected());
+    EXPECT_TRUE(poly4.tri.isConnected());
 }
 TEST_F(Dim2Test, orientability) {
     TriangulationTest<2>::orientabilityGenericCases();
@@ -159,6 +183,12 @@ TEST_F(Dim2Test, orientability) {
     EXPECT_TRUE(orPunc3.tri.isOrientable());
     EXPECT_FALSE(norPunc1.tri.isOrientable());
     EXPECT_FALSE(norPunc3.tri.isOrientable());
+
+    // Polygons.
+    EXPECT_TRUE(poly1.tri.isOrientable());
+    EXPECT_TRUE(poly2.tri.isOrientable());
+    EXPECT_TRUE(poly3.tri.isOrientable());
+    EXPECT_TRUE(poly4.tri.isOrientable());
 }
 TEST_F(Dim2Test, orientedExamples) {
     // Ensure that the orientable Example<2> constructions are oriented.
@@ -179,6 +209,12 @@ TEST_F(Dim2Test, orientedExamples) {
     EXPECT_TRUE(pants.tri.isOriented());
     EXPECT_TRUE(orPunc1.tri.isOriented());
     EXPECT_TRUE(orPunc3.tri.isOriented());
+
+    // Polygons.
+    EXPECT_TRUE(poly1.tri.isOriented());
+    EXPECT_TRUE(poly2.tri.isOriented());
+    EXPECT_TRUE(poly3.tri.isOriented());
+    EXPECT_TRUE(poly4.tri.isOriented());
 }
 
 TEST_F(Dim2Test, eulerChar) {
@@ -197,6 +233,12 @@ TEST_F(Dim2Test, eulerChar) {
     EXPECT_EQ(orPunc3.tri.eulerCharTri(), -5);
     EXPECT_EQ(norPunc1.tri.eulerCharTri(), -1);
     EXPECT_EQ(norPunc3.tri.eulerCharTri(), -3);
+
+    // Polygons.
+    EXPECT_EQ(poly1.tri.eulerCharTri(), 1);
+    EXPECT_EQ(poly2.tri.eulerCharTri(), 1);
+    EXPECT_EQ(poly3.tri.eulerCharTri(), 1);
+    EXPECT_EQ(poly4.tri.eulerCharTri(), 1);
 }
 TEST_F(Dim2Test, boundaryBasic) {
     TriangulationTest<2>::boundaryBasicGenericCases();
@@ -214,6 +256,12 @@ TEST_F(Dim2Test, boundaryBasic) {
     verifyBoundaryBasic(orPunc3, {0, 0, 0}, {}, {});
     verifyBoundaryBasic(norPunc1, {0}, {}, {});
     verifyBoundaryBasic(norPunc3, {0, 0, 0}, {}, {});
+
+    // Polygons.
+    verifyBoundaryBasic(poly1, {0}, {}, {});
+    verifyBoundaryBasic(poly2, {0}, {}, {});
+    verifyBoundaryBasic(poly3, {0}, {}, {});
+    verifyBoundaryBasic(poly4, {0}, {}, {});
 }
 TEST_F(Dim2Test, vertexLinksBasic) {
     TriangulationTest<2>::vertexLinksBasicGenericCases();
@@ -231,6 +279,12 @@ TEST_F(Dim2Test, vertexLinksBasic) {
     verifyVertexLinksBasic(orPunc3, 0, 3);
     verifyVertexLinksBasic(norPunc1, 0, 1);
     verifyVertexLinksBasic(norPunc3, 0, 3);
+
+    // Polygons.
+    verifyVertexLinksBasic(poly1, 1, 1);
+    verifyVertexLinksBasic(poly2, 1, 2);
+    verifyVertexLinksBasic(poly3, 0, 3);
+    verifyVertexLinksBasic(poly4, 0, 4);
 }
 TEST_F(Dim2Test, orient) {
     testManualCases(TriangulationTest<2>::verifyOrient);
@@ -300,6 +354,12 @@ TEST_F(Dim2Test, homologyH1) {
     EXPECT_EQ(orPunc3.tri.homology<1>(), regina::AbelianGroup(6));
     EXPECT_EQ(norPunc1.tri.homology<1>(), regina::AbelianGroup(2));
     EXPECT_EQ(norPunc3.tri.homology<1>(), regina::AbelianGroup(4));
+
+    // Polygons.
+    EXPECT_EQ(poly1.tri.homology<1>(), regina::AbelianGroup());
+    EXPECT_EQ(poly2.tri.homology<1>(), regina::AbelianGroup());
+    EXPECT_EQ(poly3.tri.homology<1>(), regina::AbelianGroup());
+    EXPECT_EQ(poly4.tri.homology<1>(), regina::AbelianGroup());
 }
 TEST_F(Dim2Test, fundGroup) {
     TriangulationTest<2>::fundGroupGenericCases();
@@ -318,6 +378,12 @@ TEST_F(Dim2Test, fundGroup) {
     EXPECT_EQ(orPunc3.tri.group().recogniseGroup(), "Free(6)");
     EXPECT_EQ(norPunc1.tri.group().recogniseGroup(), "Free(2)");
     EXPECT_EQ(norPunc3.tri.group().recogniseGroup(), "Free(4)");
+
+    // Polygons.
+    EXPECT_EQ(poly1.tri.group().recogniseGroup(), "0");
+    EXPECT_EQ(poly2.tri.group().recogniseGroup(), "0");
+    EXPECT_EQ(poly3.tri.group().recogniseGroup(), "0");
+    EXPECT_EQ(poly4.tri.group().recogniseGroup(), "0");
 }
 TEST_F(Dim2Test, chainComplex) {
     testManualCases(TriangulationTest<2>::verifyChainComplex);

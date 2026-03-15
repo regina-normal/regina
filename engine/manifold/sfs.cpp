@@ -1327,7 +1327,7 @@ Triangulation<3> SFSpace::construct() const {
         // the boundary of the SFS, and we fill in the other n squares to
         // obtain the exceptional fibres.
         baseSurface.insertTriangulation(
-                Example<2>::polygon( numFibresToFill - 1 ) );
+                Example<2>::polygon( numFibresToFill + 1 ) );
 
         // Record the locations of the marked boundary squares.
         for (size_t i = 0; i < numFibresToFill; ++i) {
@@ -1377,7 +1377,7 @@ Triangulation<3> SFSpace::construct() const {
             // Add extra boundary edges by attaching an (n+1)-sided polygon,
             // constructed from n-1 triangles.
             baseSurface.insertTriangulation(
-                    Example<2>::polygon( numFibresToFill - 1 ) );
+                    Example<2>::polygon( numFibresToFill + 1 ) );
             if ( baseBdryEdgeEmb.vertices().sign() == -1 ) {
                 baseSurface.triangle(initSize)->join(
                         2,

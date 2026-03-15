@@ -34,7 +34,7 @@
 
 namespace regina {
 
-Triangulation<2> Example<2>::orientable(unsigned genus, unsigned punctures) {
+Triangulation<2> Example<2>::orientable(size_t genus, size_t punctures) {
     // Small cases that don't fit into the general constructions below.
     if (genus == 0) {
         if (punctures == 0) {
@@ -52,15 +52,17 @@ Triangulation<2> Example<2>::orientable(unsigned genus, unsigned punctures) {
     if (punctures == 0) {
         // Already handled the sphere, so genus >= 1.
         //
-        // The size of a minimal triangulation is 4*genus - 2.
+        // The size of a minimal triangulation is n := 4*genus - 2, and we can
+        // build such a triangulation by gluing pairs of boundary edges of an
+        // (n + 2)-sided polygon.
         //
         // This is essentially the same as the old implementation, but without
         // the punctures part of the construction (which was non-minimal).
-        unsigned n = 4 * genus - 2;
-        ans = polygon(n);
+        size_t n = 4 * genus - 2;
+        ans = polygon(n + 2);
         ans.triangle(0)->join(2, ans.triangle(n - 1), Perm<3>(0, 2));
         ans.triangle(0)->join(0, ans.triangle(n - 1), Perm<3>(0, 1));
-        for (unsigned i = 1; i < genus; ++i) {
+        for (size_t i = 1; i < genus; ++i) {
             ans.triangle(4 * i - 3)->join(0, ans.triangle(4 * i - 1),
                 Perm<3>(1, 2));
             ans.triangle(4 * i - 2)->join(0, ans.triangle(4 * i),
@@ -69,10 +71,12 @@ Triangulation<2> Example<2>::orientable(unsigned genus, unsigned punctures) {
     } else if (punctures == 1) {
         // Already handled the disc, so genus >= 1.
         //
-        // The size of a minimal triangulation is 4*genus - 1.
-        ans = polygon( 4*genus - 1 );
-        for (unsigned handle = 0; handle < genus; ++handle) {
-            for (unsigned faceIndex : {4*handle, 4*handle + 1}) {
+        // The size of a minimal triangulation is n := 4*genus - 1, and we can
+        // build such a triangulation by gluing pairs of boundary edges of an
+        // (n + 2)-sided polygon.
+        ans = polygon( 4*genus + 1 );
+        for (size_t handle = 0; handle < genus; ++handle) {
+            for (size_t faceIndex : {4*handle, 4*handle + 1}) {
                 if ( faceIndex == 4*genus - 3 ) {
                     // The very last gluing needs to be handled differently
                     // from the others.
@@ -87,9 +91,11 @@ Triangulation<2> Example<2>::orientable(unsigned genus, unsigned punctures) {
     } else if (genus == 0) {
         // Already handled the sphere and the disc, so punctures >= 2.
         //
-        // The size of a minimal triangulation is 3*punctures - 4.
-        ans = polygon( 3*punctures - 4 );
-        for (unsigned i = 0; i < punctures - 1; ++i) {
+        // The size of a minimal triangulation is n := 3*punctures - 4, and we
+        // can build such a triangulation by gluing pairs of boundary edges of
+        // an (n + 2)-sided polygon.
+        ans = polygon( 3*punctures - 2 );
+        for (size_t i = 0; i < punctures - 1; ++i) {
             if (i == punctures - 2) {
                 // The very last gluing needs to be handled differently
                 // from the others.
@@ -115,7 +121,7 @@ Triangulation<2> Example<2>::orientable(unsigned genus, unsigned punctures) {
     return ans;
 }
 
-Triangulation<2> Example<2>::nonOrientable(unsigned genus, unsigned punctures) {
+Triangulation<2> Example<2>::nonOrientable(size_t genus, size_t punctures) {
     if (genus == 0)
         return orientable(0, punctures); // Just in case. *shrug*
     if (genus == 1 && punctures == 0)
@@ -126,22 +132,26 @@ Triangulation<2> Example<2>::nonOrientable(unsigned genus, unsigned punctures) {
     if (punctures == 0) {
         // Already handled RP^2, so genus >= 2.
         //
-        // The size of a minimal triangulation is 2*genus - 2.
+        // The size of a minimal triangulation is n := 2*genus - 2, and we can
+        // build such a triangulation by gluing pairs of boundary edges of an
+        // (n + 2)-sided polygon.
         //
         // This is essentially the same as the old implementation, but without
         // the punctures part of the construction (which was non-minimal).
-        unsigned n = 2 * genus - 2;
-        ans = polygon(n);
+        size_t n = 2 * genus - 2;
+        ans = polygon(n + 2);
         ans.triangle(0)->join(2, ans.triangle(n - 1), Perm<3>(2, 0, 1));
-        for (unsigned i = 1; i < genus; ++i)
+        for (size_t i = 1; i < genus; ++i)
             ans.triangle(2 * i - 2)->join(
                     0, ans.triangle(2 * i - 1), Perm<3>());
     } else if (punctures == 1) {
         // Trivially, we have genus >= 1.
         //
-        // The size of a minimal triangulation is 2*genus - 1.
-        ans = polygon(2*genus - 1);
-        for (unsigned crosscap = 0; crosscap < genus; ++crosscap) {
+        // The size of a minimal triangulation is n := 2*genus - 1, and we can
+        // build such a triangulation by gluing pairs of boundary edges of an
+        // (n + 2)-sided polygon.
+        ans = polygon(2*genus + 1);
+        for (size_t crosscap = 0; crosscap < genus; ++crosscap) {
             if (crosscap == genus - 1) {
                 // The very last gluing needs to be handled differently from
                 // the others.
@@ -168,26 +178,44 @@ Triangulation<2> Example<2>::nonOrientable(unsigned genus, unsigned punctures) {
     return ans;
 }
 
-Triangulation<2> Example<2>::polygon(unsigned n) {
-    // NOTE: The following routines all rely on this specific construction
+Triangulation<2> Example<2>::polygon(size_t n) {
+    Triangulation<2> ans;
+    switch (n) {
+        case 0:
+            return ans;
+        case 1:
+            ans.newTriangle();
+            ans.triangle(0)->join(
+                    2, ans.triangle(0), Perm<3>(1, 2) );
+            return ans;
+        case 2:
+            ans.newTriangles(2);
+            for (size_t i : {0, 1}) {
+                ans.triangle(i)->join(
+                        2, ans.triangle(1 - i), Perm<3>(1, 2) );
+            }
+            return ans;
+    }
+
+    // NOTE: The following routines rely on the specific construction below.
     //      --> Example<2>::orientable()
     //      --> Example<2>::nonOrientable()
     //      --> SFSpace::construct()
-    Triangulation<2> ans;
-    ans.newTriangles(n);
-    for (unsigned i = 1; i < n; ++i) {
-        ans.triangle(i)->join( 2, ans.triangle(i - 1), Perm<3>(1, 2) );
+    ans.newTriangles(n - 2);
+    for (size_t i = 1; i < n - 2; ++i) {
+        ans.triangle(i)->join(
+                2, ans.triangle(i - 1), Perm<3>(1, 2) );
     }
     return ans;
 }
 
-void Example<2>::addPunctures(Triangulation<2>& surf, unsigned punctures) {
+void Example<2>::addPunctures(Triangulation<2>& surf, size_t punctures) {
     // NOTE: The following routines rely on this specific construction
     //      --> Example<2>::orientable()
     //      --> Example<2>::nonOrientable()
     size_t initSize = surf.size();
-    surf.insertTriangulation( polygon(3*punctures - 3) );
-    for (unsigned i = 0; i < punctures - 1; ++i) {
+    surf.insertTriangulation( polygon(3*punctures - 1) );
+    for (size_t i = 0; i < punctures - 1; ++i) {
         surf.triangle( initSize + 3*i )->join(
                 0, surf.triangle( initSize + 3*i + 2 ), Perm<3>(1, 2) );
     }
