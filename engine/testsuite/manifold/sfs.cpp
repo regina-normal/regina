@@ -110,7 +110,7 @@ bool hasSameFibres( const SFSpace& reference, const SFSpace& compare,
         reflected.reflect();
         return hasSameFibres( reference, reflected, false );
     }
-    unsigned long iFibre;
+    size_t iFibre;
     for ( iFibre = 0; iFibre < reference.fibreCount(); ++iFibre ) {
         if ( reference.fibre(iFibre) != compare.fibre(iFibre) ) {
             return false;
@@ -261,7 +261,7 @@ TEST(SFSTest, construct) {
         SCOPED_TRACE("Orientable SFS over base neither S^2 nor D^2");
 
         long signedGenus;
-        unsigned long genus, punctures;
+        size_t genus, punctures;
         SFSpace::Class useClass;
         for (signedGenus = -2; signedGenus <= 2; ++signedGenus) {
             for (punctures = 0; punctures <= 2; ++punctures) {
