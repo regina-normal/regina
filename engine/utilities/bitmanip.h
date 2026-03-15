@@ -197,10 +197,26 @@ class BitManipulator : public regina::detail::BitManipulatorByType<T> {
          * \return the number of bits that are set.
          */
         inline static constexpr int bits(T x) {
-            // std::popcount() should be defined for all C++ standard integer
-            // types _and_ extended integer types (in particular, we should
-            // be fine to use this with 128-bit integers also).
-            return std::popcount(x);
+            // As I read the standard, std::popcount() should be defined for
+            // all C++ standard integer  types _and_ extended integer types
+            // (in particular, we should be fine to use this with 128-bit
+            // integers also).  However, in practice we find that gcc 14 does
+            // not support std::popcount(__uint128).  Therefore for now
+            // we will still treat 128-bit integers separately.
+            //
+            // TODO: Have some way to test at compile time whether
+            // std::popcount() is available for 128-bit integers.
+            if constexpr (sizeof(T) > sizeof(unsigned long long)) {
+                // We assume this is the 128-bit case described above,
+                // and in particular we assume that std::popcount() _is_
+                // available for integers of half the size.
+                static_assert(sizeof(T) <= sizeof(unsigned long long) * 2);
+                using HalfSize = typename IntOfSize<sizeof(T) / 2>::utype;
+                return std::popcount(static_cast<HalfSize>(x)) +
+                    std::popcount(static_cast<HalfSize>(x >> (4 * sizeof(T))));
+            } else {
+                return std::popcount(x);
+            }
         }
 
         /**
