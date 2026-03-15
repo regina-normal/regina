@@ -176,9 +176,8 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * The Manifold routines homology() and construct() are only
  * implemented in some cases.  The homology() routine is
  * implemented if and only if the base orbifold has no punctures.
- * The construct() routine is implemented only for lens spaces and
- * Seifert fibred spaces over the 2-sphere without punctures or reflector
- * boundaries.
+ * The construct() routine is implemented if and only if the Seifert fibred
+ * space is orientable.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
