@@ -901,22 +901,22 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * The graph is specified by an adjacency matrix, expressed
          * using Regina's own matrix type.
          *
-         * Each entry \a graph[i][j] will be treated as a boolean, indicating
+         * Each entry `graph[i][j]` will be treated as a boolean, indicating
          * whether the graph contains an arc from node \a i to node \a j.
          *
          * \exception InvalidArgument The adjacency matrix does not have
          * the same number of rows as columns.
          *
-         * \python The argument \a graph must be of type \c MatrixBool
+         * \python The argument \a graph must be of type `MatrixBool`
          * (which is the Python type corresponding to the C++ class
-         * Matrix<bool>).
+         * `Matrix<bool>`).
          *
          * \param graph the adjacency matrix of the graph.
          * \param alg the algorithm that should be used to compute the
          * tree decomposition; in particular, this specifies whether to
          * use a slow exact algorithm or a fast greedy algorithm.
          */
-        template <typename T>
+        template <std::convertible_to<bool> T>
         TreeDecomposition(const Matrix<T>& graph,
             TreeDecompositionAlg alg = TreeDecompositionAlg::Upper);
 
@@ -925,23 +925,17 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * The graph may be directed or undirected.
          *
          * The graph is specified by an adjacency matrix, given as a
-         * vector of rows:
-         *
-         * - The number of elements in each row should be equal to the
-         *   number of rows (i.e., the adjacency matrix should be square).
-         *
-         * - The individual elements of each row \a r should be accessible
-         *   using a range-based \c for loop over \a r.
-         *
-         * - Each entry in row \a i, column \a j will be treated as a boolean,
-         *   indicating whether the graph contains an arc from node \a i to
-         *   node \a j.
+         * vector of rows.  Each entry in each row will be treated as a
+         * boolean, where the entry in row \a i, column \a j indicates
+         * whether the graph contains an arc from node \a i to node \a j.
          *
          * An example of a suitable type for the adjacency matrix could be
-         * std::vector<std::vector<bool>>.
+         * `std::vector<std::vector<bool>>`.
          *
-         * \exception InvalidArgument The adjacency matrix does not have
-         * the same number of rows as columns.
+         * \pre The adjacency matrix is square.  That is, the number of elements
+         * in each row equals the total number of rows.
+         *
+         * \exception InvalidArgument The adjacency matrix is not square.
          *
          * \python The adjacency matrix should be given as a list of
          * lists.
@@ -951,7 +945,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * tree decomposition; in particular, this specifies whether to
          * use a slow exact algorithm or a fast greedy algorithm.
          */
-        template <typename Row>
+        template <IterableFor<bool> Row>
         TreeDecomposition(const std::vector<Row>& graph,
             TreeDecompositionAlg alg = TreeDecompositionAlg::Upper);
 
@@ -1697,7 +1691,7 @@ inline TreeDecomposition::TreeDecomposition(TreeDecomposition&& src) noexcept :
     src.root_ = nullptr;
 }
 
-template <typename T>
+template <std::convertible_to<bool> T>
 TreeDecomposition::TreeDecomposition(const Matrix<T>& graph,
         TreeDecompositionAlg alg) : width_(0), root_(nullptr) {
     if (graph.rows() != graph.columns())
@@ -1712,7 +1706,7 @@ TreeDecomposition::TreeDecomposition(const Matrix<T>& graph,
     construct(g, alg);
 }
 
-template <typename Row>
+template <IterableFor<bool> Row>
 TreeDecomposition::TreeDecomposition(const std::vector<Row>& graph,
         TreeDecompositionAlg alg) : width_(0), root_(nullptr) {
     size_t order = graph.size();
