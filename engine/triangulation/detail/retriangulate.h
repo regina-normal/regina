@@ -55,7 +55,7 @@ namespace detail {
  * Provides domain-specific details for the retriangulation or link
  * rewriting process, specific to a particular triangulation or link class.
  *
- * Every class (e.g., regina::Triangulation<dim> or regina::Link) that uses
+ * Every class (e.g., `Triangulation<dim>` or `Link`) that uses
  * Regina's generic retriangulation / link rewriting machinery must provide
  * its own specialisation of RetriangulateParams.
  *
@@ -92,7 +92,8 @@ namespace detail {
  *   discussed further below), and is of type `PropagationOptions`;
  * - \a action is a template argument that adheres to the concept
  *   `TerminatingCallback<Link&&, const std::string&>`, and `propagateFrom()`
- *   should call this for each nearby object that it identifies.
+ *   should call this for each nearby object that it identifies (as discussed
+ *   below).
  *
  * Your implementation of `propagateFrom()` should:
  *
@@ -115,14 +116,16 @@ namespace detail {
  *   to be the empty type `NoPropagationOptions`, and your `propagateFrom()`
  *   should just ignore the \a options argument.
  *
+ * Note that the retriangulation/rewriting machinery also requires \a Object
+ * to have a copy constructor that takes a second boolean argument, indicating
+ * whether computed properties should be cloned.  This (as well as the
+ * requirements on `RetriangulateParams<Object>`) is enforced by the concept
+ * `Retriangulable<Object>`.
+ *
  * \apinotfinal
  *
  * \tparam Object the class that provides the retriangulation/rewriting
- * function, such as regina::Triangulation<dim> or regina::Link.
- * This class must also provide a two-argument copy constructor, where the
- * second argument is a boolean indicating whether computed properties should
- * be cloned.
- *
+ * function, such as `Triangulation<dim>` or `Link`.
  */
 template <typename Object>
 struct RetriangulateParams;
