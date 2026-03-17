@@ -35,6 +35,7 @@
 #include "progress/progresstracker.h"
 #include "surface/normalsurface.h"
 #include "triangulation/dim3.h"
+#include "utilities/fixedarray.h"
 #include "utilities/xmlutils.h"
 #include <thread>
 
@@ -196,27 +197,25 @@ void AngleStructures::calculateSpanStrict() const {
     }
 
     // We run into trouble if there's a 0 or pi angle that never changes.
-    auto* fixedAngles = new Rational[nTets * 3];
+    FixedArray<Rational> fixedAngles(nTets * 3);
     size_t nFixed = 0;
 
     // Get the list of bad unchanging angles from the first structure.
     auto it = structures_.begin();
     const AngleStructure& first = *it;
 
-    Rational angle;
     for (size_t tet = 0; tet < nTets; tet++)
         for (int edges = 0; edges < 3; edges++) {
-            angle = first.angle(tet, edges);
+            Rational angle = first.angle(tet, edges);
             if (angle == Rational::zero || angle == Rational::one) {
                 fixedAngles[3 * tet + edges] = angle;
-                nFixed++;
+                ++nFixed;
             } else
                 fixedAngles[3 * tet + edges] = Rational::undefined;
         }
 
     if (nFixed == 0) {
         doesSpanStrict_ = true;
-        delete[] fixedAngles;
         return;
     }
 
@@ -231,10 +230,9 @@ void AngleStructures::calculateSpanStrict() const {
                 if (s.angle(tet, edges) != fixedAngles[3 * tet + edges]) {
                     // Here's a bad angle that finally changed.
                     fixedAngles[3 * tet + edges] = Rational::undefined;
-                    nFixed--;
+                    --nFixed;
                     if (nFixed == 0) {
                         doesSpanStrict_ = true;
-                        delete[] fixedAngles;
                         return;
                     }
                 }
@@ -243,7 +241,6 @@ void AngleStructures::calculateSpanStrict() const {
 
     // Some of the bad angles never changed.
     doesSpanStrict_ = false;
-    delete[] fixedAngles;
 }
 
 void AngleStructures::calculateSpanTaut() const {
