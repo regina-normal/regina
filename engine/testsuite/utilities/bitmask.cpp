@@ -274,7 +274,7 @@ TEST(BitmaskTest, lexOrder) {
 #endif
 }
 
-template <typename T, int k>
+template <regina::UnsignedCppInteger T, int k>
 static void verifyNextPermutationFor() {
     SCOPED_TRACE_TYPE(T);
     SCOPED_TRACE_NUMERIC(k);
@@ -302,7 +302,7 @@ static void verifyNextPermutationFor() {
     EXPECT_EQ(count, binomEdge(sizeof(T) * 8, k));
 }
 
-template <typename T>
+template <regina::UnsignedCppInteger T>
 static void verifyNextPermutation() {
     SCOPED_TRACE_TYPE(T);
 

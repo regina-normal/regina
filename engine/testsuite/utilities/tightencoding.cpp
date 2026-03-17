@@ -193,7 +193,7 @@ TEST(TightEncodingTest, integer) {
     verifyInteger("-10000000000000000000000000000000000000000000");
 }
 
-template <typename T>
+template <regina::AnyInteger T>
 static void verifyInfinityUsing(const std::string& enc) {
     SCOPED_TRACE_TYPE(T);
 

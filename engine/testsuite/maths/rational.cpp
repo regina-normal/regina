@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include "maths/rational.h"
+#include "utilities/intutils.h"
 
 #include "testhelper.h"
 
@@ -108,7 +109,7 @@ TEST(RationalTest, undefined) {
     verifyUndefined({ regina::LargeInteger::zero, regina::LargeInteger::zero });
 }
 
-template <typename T>
+template <regina::AnyInteger T>
 static void verifyInteger(T&& val) {
     Rational r(val);
     SCOPED_TRACE_REGINA(r);
