@@ -126,13 +126,9 @@ Precondition:
     representation described in the notes for vector().
 
 Python:
-    The supported types for the template parameter *U* are
+    The supported element types for the given vector are
     regina::Integer and regina::LargeInteger. You may also, if you
     prefer, pass *vector* as a Python list of integers.
-
-Template parameter ``U``:
-    the type of object held by the given vector. It must be possible
-    to assign an object of type *U* to a regina::Integer.
 
 Parameter ``triang``:
     the triangulation on which this angle structure lies.

@@ -61,7 +61,7 @@ template <bool> class PacketChildren;
 template <bool> class PacketDescendants;
 template <bool> class SubtreeIterator;
 template <typename Held> class PacketData;
-template <typename Held> class XMLWriter;
+// There are more forward declarations after we define packet-related concepts.
 
 /**
  * \defgroup packet Basic Packet Types
@@ -104,6 +104,8 @@ concept PacketHeldType =
     requires {
         { packetTypeHolds<T> } -> std::same_as<const PacketType&>;
     };
+
+template <PacketHeldType Held> class XMLWriter;
 
 /**
  * Defines various constants and virtual functions for a subclass of Packet.

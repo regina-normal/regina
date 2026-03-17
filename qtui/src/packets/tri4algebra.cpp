@@ -211,7 +211,11 @@ void Tri4HomologyFundUI::refresh() {
 }
 
 void Tri4HomologyFundUI::fundGroupSimplified() {
-    tri->setGroupPresentation(fgGroup->group());
+    // If we got this far, we should be connected.  However, double-check this
+    // now because it would be bad for setGroupPresentation() to throw an
+    // exception.
+    if (tri->isConnected())
+        tri->setGroupPresentation(fgGroup->group());
 }
 
 void Tri4HomologyFundUI::refreshLabels() {

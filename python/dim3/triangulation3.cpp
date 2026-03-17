@@ -349,18 +349,27 @@ void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
         .def("simplifiedFundamentalGroup", // deprecated
             &Triangulation<3>::setGroupPresentation,
             rbase::simplifiedFundamentalGroup)
+        .def("knowsGroup", &Triangulation<3>::knowsGroup, rbase::knowsGroup)
         .def("homology",
             static_cast<AbelianGroup (Triangulation<3>::*)(int) const>(
                 &Triangulation<3>::homology),
             pybind11::arg("k") = 1, rbase::homology)
+        .def("knowsHomology",
+            static_cast<bool (Triangulation<3>::*)(int) const>(
+                &Triangulation<3>::knowsHomology),
+            pybind11::arg("k") = 1, rbase::knowsHomology)
         .def("homologyRel", &Triangulation<3>::homologyRel,
             pybind11::return_value_policy::reference_internal,
             rdoc::homologyRel)
+        .def("knowsHomologyRel", &Triangulation<3>::knowsHomologyRel,
+            rdoc::knowsHomologyRel)
         .def("homologyBdry", &Triangulation<3>::homologyBdry,
             pybind11::return_value_policy::reference_internal,
             rdoc::homologyBdry)
         .def("homologyH2Z2", &Triangulation<3>::homologyH2Z2,
             rdoc::homologyH2Z2)
+        .def("knowsHomologyH2Z2", &Triangulation<3>::knowsHomologyH2Z2,
+            rdoc::knowsHomologyH2Z2)
         .def("markedHomology",
             static_cast<MarkedAbelianGroup (Triangulation<3>::*)(int) const>(
                 &Triangulation<3>::markedHomology),

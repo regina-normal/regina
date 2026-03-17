@@ -412,6 +412,25 @@ class AngleStructures :
          */
         bool spansStrict() const;
         /**
+         * Is it already known whether some convex combination of the angle
+         * structures in this list forms a strict angle structure?
+         * See AngleStructure::isStrict() for details on strict angle
+         * structures.
+         *
+         * If this property is already known, future calls to spansStrict()
+         * will be very fast (simply returning the precalculated value).
+         * Otherwise spansStrict() could be more expensive: although its
+         * running time is a small polynomial in the size of this list, the
+         * size of this list could be exponential in the number of tetrahedra.
+         *
+         * \warning This routine does not actually tell you _whether_ this
+         * angle structure list spans a strict angle structure; it merely
+         * tells you whether the answer has already been computed.
+         *
+         * \return \c true if and only if this property is already known.
+         */
+        bool knowsSpansStrict() const;
+        /**
          * Determines whether any angle structure in this list is a
          * taut structure.  Because taut structures always appear as
          * vertices of the angle structure solution space, this routine
@@ -423,6 +442,24 @@ class AngleStructures :
          * \return \c true if and only if a taut structure can be produced.
          */
         bool spansTaut() const;
+        /**
+         * Is it already known whether some angle structure in this list is a
+         * taut structure?  See AngleStructure::isTaut() for details on taut
+         * structures.
+         *
+         * If this property is already known, future calls to spansTaut()
+         * will be very fast (simply returning the precalculated value).
+         * Otherwise spansTaut() could be more expensive: although its
+         * running time is a small polynomial in the size of this list, the
+         * size of this list could be exponential in the number of tetrahedra.
+         *
+         * \warning This routine does not actually tell you _whether_ some
+         * angle structure in this list is a taut structure; it merely
+         * tells you whether the answer has already been computed.
+         *
+         * \return \c true if and only if this property is already known.
+         */
+        bool knowsSpansTaut() const;
 
         /**
          * Determines whether this and the given list contain the same
@@ -537,7 +574,6 @@ class AngleStructures :
 
     friend class regina::XMLAngleStructuresReader;
     friend class regina::XMLLegacyAngleStructuresReader;
-    friend class regina::XMLWriter<AngleStructures>;
 };
 
 /**
@@ -655,10 +691,18 @@ inline bool AngleStructures::spansStrict() const {
     return *doesSpanStrict_;
 }
 
+inline bool AngleStructures::knowsSpansStrict() const {
+    return doesSpanStrict_.has_value();
+}
+
 inline bool AngleStructures::spansTaut() const {
     if (! doesSpanTaut_.has_value())
         calculateSpanTaut();
     return *doesSpanTaut_;
+}
+
+inline bool AngleStructures::knowsSpansTaut() const {
+    return doesSpanTaut_.has_value();
 }
 
 template <StrictWeakOrder<const AngleStructure&> Comparison>

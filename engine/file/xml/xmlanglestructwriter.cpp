@@ -45,8 +45,8 @@ void XMLWriter<AngleStructures>::openPre() {
             << static_cast<int>(PacketType::AngleStructures) << '"';
     } else {
         out_ << R"(<angles tri=")" << triID_
-            << R"(" tautonly=")" << (data_.tautOnly_ ? 'T' : 'F')
-            << R"(" algorithm=")" << data_.algorithm_.baseValue() << '"';
+            << R"(" tautonly=")" << (data_.isTautOnly() ? 'T' : 'F')
+            << R"(" algorithm=")" << data_.algorithm().baseValue() << '"';
     }
 }
 
@@ -57,20 +57,20 @@ void XMLWriter<AngleStructures>::writeContent() {
     if (format_ == FileFormat::XmlGen2) {
         // Write the enumeration parameters in a separate angleparams element.
         out_ << "  <angleparams "
-            "tautonly=\"" << (data_.tautOnly_ ? 'T' : 'F') << "\" "
-            "algorithm=\"" << data_.algorithm_.baseValue() << "\"/>\n";
+            "tautonly=\"" << (data_.isTautOnly() ? 'T' : 'F') << "\" "
+            "algorithm=\"" << data_.algorithm().baseValue() << "\"/>\n";
     }
 
     // Write the individual structures.
-    for (const AngleStructure& a : data_.structures_)
-        a.writeXMLData(out_);
+    for (auto it = data_.begin(); it != data_.end(); ++it)
+        it->writeXMLData(out_);
 
     // Write the properties.
-    if (data_.doesSpanStrict_.has_value())
-        out_ << "  " << xmlValueTag("spanstrict", *data_.doesSpanStrict_)
+    if (data_.knowsSpansStrict())
+        out_ << "  " << xmlValueTag("spanstrict", data_.spansStrict())
             << '\n';
-    if (data_.doesSpanTaut_.has_value())
-        out_ << "  " << xmlValueTag("spantaut", *data_.doesSpanTaut_) << '\n';
+    if (data_.knowsSpansTaut())
+        out_ << "  " << xmlValueTag("spantaut", data_.spansTaut()) << '\n';
 }
 
 template <>

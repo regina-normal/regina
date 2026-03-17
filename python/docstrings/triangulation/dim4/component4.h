@@ -57,7 +57,7 @@ Python:
     function.
 
 Template parameter ``subdim``:
-    the face dimension; this must be between 0 and 4 inclusive.
+    the face dimension.
 
 Returns:
     the number of *subdim*-faces.)doc";
@@ -76,7 +76,7 @@ Python:
     function.
 
 Template parameter ``subdim``:
-    the face dimension; this must be between 0 and 3 inclusive.
+    the face dimension.
 
 Parameter ``index``:
     the index of the desired face, ranging from 0 to
@@ -115,7 +115,7 @@ Python:
     call this function in the form ``faces(subdim)``.
 
 Template parameter ``subdim``:
-    the face dimension; this must be between 0 and 3 inclusive.
+    the face dimension.
 
 Returns:
     access to the list of all *subdim*-faces.)doc";

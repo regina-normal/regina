@@ -1234,7 +1234,7 @@ routine should not be kept for later use. Instead, homologyBdry()
 should be called again; this will be instantaneous if the group has
 already been calculated.
 
-This routine is fairly fast, since it deduces the homology of each
+This routine is always fast, since it deduces the homology of each
 boundary component through knowing what kind of surface it is.
 
 Precondition:
@@ -1248,15 +1248,17 @@ Returns:
 
 // Docstring regina::python::doc::Triangulation_::homologyH2Z2
 static const char *homologyH2Z2 =
-R"doc(Returns the second homology group with coefficients in Z_2 for this
-triangulation. If this triangulation contains any ideal vertices, the
-homology group will be calculated as if each such vertex had been
-truncated. The algorithm used calculates the relative first homology
-group with respect to the boundary and uses homology and cohomology
+R"doc(Returns the second homology group with coefficients in ``Z_2`` for
+this triangulation. If this triangulation contains any ideal vertices,
+the homology group will be calculated as if each such vertex had been
+truncated.
+
+The underlying algorithm calculates the relative first homology group
+with respect to the boundary, and uses homology and cohomology
 theorems to deduce the second homology group.
 
-This group will simply be the direct sum of several copies of Z_2, so
-the number of Z_2 terms is returned.
+This group will simply be the direct sum of several copies of ``Z_2``,
+so the number of ``Z_2`` terms is returned.
 
 Precondition:
     This triangulation is valid.
@@ -1265,8 +1267,8 @@ Exception ``FailedPrecondition``:
     This triangulation is invalid.
 
 Returns:
-    the number of Z_2 terms in the second homology group with
-    coefficients in Z_2.)doc";
+    the number of ``Z_2`` terms in the second homology group with
+    coefficients in ``Z_2``.)doc";
 
 // Docstring regina::python::doc::Triangulation_::homologyRel
 static const char *homologyRel =
@@ -1876,6 +1878,44 @@ Returns:
 
 Author:
     Alex He)doc";
+
+// Docstring regina::python::doc::Triangulation_::knowsHomologyH2Z2
+static const char *knowsHomologyH2Z2 =
+R"doc(Is the second homology group with coefficients in ``Z_2`` already
+known (or trivial to calculate)? See homologyH2Z2() for further
+details.
+
+If this returns ``True`` then future calls to homologyH2Z2() will be
+very fast.
+
+Precondition:
+    This triangulation is valid.
+
+Exception ``FailedPrecondition``:
+    This triangulation is invalid.
+
+Returns:
+    ``True`` if and only if this property is already known or trivial
+    to calculate.)doc";
+
+// Docstring regina::python::doc::Triangulation_::knowsHomologyRel
+static const char *knowsHomologyRel =
+R"doc(Is the relative first homology group with respect to the boundary
+already known (or trivial to calculate)? See homologyRel() for further
+details.
+
+If this returns ``True`` then future calls to homologyRel() will be
+very fast.
+
+Precondition:
+    This triangulation is valid.
+
+Exception ``FailedPrecondition``:
+    This triangulation is invalid.
+
+Returns:
+    ``True`` if and only if this property is already known or trivial
+    to calculate.)doc";
 
 // Docstring regina::python::doc::Triangulation_::knowsIrreducible
 static const char *knowsIrreducible =

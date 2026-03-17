@@ -541,11 +541,6 @@ inline XMLElementReader*
     else if (subTagName == "H1")
         return new AbelianGroupPropertyReader(tri_->H1_);
 
-    if constexpr (dim == 3 || dim == 4) {
-        if (subTagName == "H2")
-            return new AbelianGroupPropertyReader(tri_->prop_.H2_);
-    }
-
     if constexpr (dim == 3) {
         // We don't read boundary component properties since they're stored
         // across multiple property tags and they're easy to calculate anyway.
@@ -557,10 +552,6 @@ inline XMLElementReader*
             bool b;
             if (valueOf(props.lookup("value"), b))
                 tri_->prop_.oneEfficient_ = b;
-        } else if (subTagName == "splitsfce") {
-            bool b;
-            if (valueOf(props.lookup("value"), b))
-                tri_->prop_.splittingSurface_ = b;
         } else if (subTagName == "threesphere") {
             bool b;
             if (valueOf(props.lookup("value"), b))
@@ -600,10 +591,12 @@ inline XMLElementReader*
             bool b;
             if (valueOf(props.lookup("haken"), b))
                 tri_->prop_.haken_ = b;
-        } else if (subTagName == "H1Rel")
+        } else if (subTagName == "H1Rel") {
             return new AbelianGroupPropertyReader(tri_->prop_.H1Rel_);
-        else if (subTagName == "H1Bdry")
-            return new AbelianGroupPropertyReader(tri_->prop_.H1Bdry_);
+        }
+    } else if constexpr (dim == 4) {
+        if (subTagName == "H2")
+            return new AbelianGroupPropertyReader(tri_->prop_.H2_);
     }
 
     return new XMLElementReader();

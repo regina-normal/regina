@@ -23,6 +23,8 @@ Version 8.0  [ TODO ]
               for the old deprecated constructor have changed slightly (in
               particular, the container type now needs bidirectional iterators,
               but no longer needs to support rbegin() and rend()).
+        Class AngleStructures:
+            - New routines knowsSpansStrict() and knowsSpansTaut().
         Class BitManipulatorByType<...>:
             - This is now an internal class in the namespace regina::detail.
               You should never need to refer to this class directly; instead
@@ -234,15 +236,25 @@ Version 8.0  [ TODO ]
               no longer treats zero in a special manner; it is only the total
               order on T that matters.
         Class Triangulation<dim>:
+            - Routines involving fundamental group now throw an exception if
+              the triangulation has > 1 component.  This is true also of
+              setGroupPresentation(), which now has ≤ 1 component as a new
+              precondition.
+            - New routines knowsHomology() and knowsGroup().
             - Removed the Boost Graph Library (BGL) interface for triangulations
               (triangulation/graph.h).  This is because Regina has not used
               Boost since December 2021, and so this code is essentially
               untested nowadays.
         Class Triangulation<3>:
+            - New routines knowsHomologyRel() and knowsHomologyH2Z2().
             - Routines hasCompressingDisc() and isHaken() now throw an
               exception if the underlying algorithms encounter an impossible
               memory requirement (typically due to some normal surface having
               a coordinate too large to fit into a size_t).
+            - Several properties (boundary homology, second homology,
+              existence of a splitting surface) are no longer save alongside
+              triangulations in data files, since they are easy to reconstruct
+              (in some cases, using other invariants that _are_ saved).
         Struct TriangulationTraits<dim>:
             - New traits type to help with generic code for working with
               triangulations of different dimensions.

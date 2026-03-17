@@ -872,7 +872,6 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
 
     friend class XMLNormalHypersurfacesReader;
     friend class XMLLegacyNormalHypersurfacesReader;
-    friend class XMLWriter<NormalHypersurfaces>;
 };
 
 /**

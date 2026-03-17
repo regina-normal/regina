@@ -757,7 +757,6 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
         void computeDefaultRadius();
 
     friend class XMLSpatialLinkReader;
-    friend class XMLWriter<SpatialLink>;
 };
 
 /**

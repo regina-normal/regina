@@ -7284,7 +7284,6 @@ class Link :
     friend class Tangle;
     friend class XMLLinkCrossingsReader;
     friend class XMLLinkComponentsReader;
-    friend class XMLWriter<Link>;
 };
 
 /**

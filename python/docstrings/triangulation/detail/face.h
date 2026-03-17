@@ -328,8 +328,7 @@ Python:
     the function.
 
 Template parameter ``lowerdim``:
-    the dimension of subface to examine. This must be between 0 and
-    (*subdim* - 1) inclusive.
+    the dimension of subface to examine.
 
 Parameter ``face``:
     the *lowerdim*-face of this *subdim*-face to examine. This should
@@ -392,8 +391,7 @@ Python:
     argument of the function.
 
 Template parameter ``lowerdim``:
-    the dimension of subface to examine. This must be between 0 and
-    (*subdim* - 1) inclusive.
+    the dimension of subface to examine.
 
 Parameter ``face``:
     the *lowerdim*-face of this *subdim*-face to examine. This should
@@ -416,10 +414,6 @@ satisfy both formsMobiusBand() and formsCone().
 The reason this routine is non-const is because the triangle type is
 cached when first computed.
 
-Precondition:
-    The facial dimension *subdim* is precisely 2, and the
-    triangulation dimension *dim* is at least 3.
-
 Returns:
     ``True`` if and only if this triangle forms a cone.)doc";
 
@@ -435,10 +429,6 @@ satisfy both formsMobiusBand() and formsCone().
 
 The reason this routine is non-const is because the triangle type is
 cached when first computed.
-
-Precondition:
-    The facial dimension *subdim* is precisely 2, and the
-    triangulation dimension *dim* is at least 3.
 
 Returns:
     ``True`` if and only if this triangle forms a Mobius band.)doc";
@@ -485,12 +475,9 @@ A face whose link is not appropriate will always be marked as invalid.
 Note that there are other types of invalid faces also. See isValid()
 for a full discussion of what it means for a face to be valid.
 
-Precondition:
-    The dimension *dim* is one of Regina's standard dimensions. Any
-    attempt to use this routine in higher dimensions *dim* will result
-    in a compile-time error. This is because testing for bad links in
-    higher dimensions can require solutions to problems that are
-    proven to be undecidable.
+This routine is only available when *dim* is one of Regina's standard
+dimensions, because testing for bad links in higher dimensions can
+require solutions to undecidable problems.
 
 Returns:
     ``True`` if the link of this face is not appropriate (thereby
@@ -523,9 +510,6 @@ to use.
 
 If the skeleton has already been computed, then this routine is very
 fast (since it just returns a precomputed answer).
-
-Precondition:
-    The facial dimension *subdim* is precisely *dim*-1.
 
 Returns:
     ``True`` if and only if this (*dim*-1)-face represents a dual edge
@@ -579,9 +563,6 @@ See Triangulation<dim>::hasLocks() for a convenient way to test
 whether any top-dimensional simplex and/or (*dim*-1)-face is locked
 across an entire triangulation.
 
-Precondition:
-    The facial dimension *subdim* is precisely *dim*-1.
-
 Returns:
     ``True`` if and only if this (*dim*-1)-face is locked.)doc";
 
@@ -589,9 +570,6 @@ Returns:
 constexpr const char *isLoop =
 R"doc(For edges, determines whether this face is a loop. A _loop_ is an edge
 whose two endpoints are identified.
-
-Precondition:
-    The facial dimension *subdim* is precisely 1.
 
 Returns:
     ``True`` if and only if this edge is a loop.)doc";
@@ -657,9 +635,6 @@ FaceEmbedding::vertices(). This labelling is independent of the vertex
 numbers in any top-dimensional simplices that contain *f*.
 
 Precondition:
-    The facial dimension *subdim* is precisely ``dim-1``.
-
-Precondition:
     This and the given face are distinct boundary facets of the same
     triangulation.
 
@@ -704,10 +679,7 @@ lock will nevertheless be preserved.
 This is equivalent to calling Simplex<dim>::lockFacet() from one of
 the simplices on either side of this (*dim*-1)-face.
 
-It is safe to call this function even if this face is already locked.
-
-Precondition:
-    The facial dimension *subdim* is precisely *dim*-1.)doc";
+It is safe to call this function even if this face is already locked.)doc";
 
 // Docstring regina::python::doc::detail::FaceBase_::pentachoron
 constexpr const char *pentachoron =
@@ -759,10 +731,6 @@ so the return value will likewise be undefined.
 The reason this routine is non-const is because the triangle type and
 subtype are cached when first computed.
 
-Precondition:
-    The facial dimension *subdim* is precisely 2, and the
-    triangulation dimension *dim* is at least 3.
-
 Returns:
     The vertex or edge number (0, 1 or 2) that plays a special role,
     or -1 if this triangle's combinatorial type has no special vertex
@@ -781,10 +749,6 @@ so the return value will likewise be undefined.
 
 The reason this routine is non-const is because the triangle type and
 subtype are cached when first computed.
-
-Precondition:
-    The facial dimension *subdim* is precisely 2, and the
-    triangulation dimension *dim* is at least 3.
 
 Returns:
     the combinatorial type of this triangle. This routine will never
@@ -813,10 +777,7 @@ unlocked.
 
 See Triangulation<dim>::unlockAll() for a convenient way to unlock all
 top-dimensional simplices and (*dim*-1)-faces across an entire
-triangulation.
-
-Precondition:
-    The facial dimension *subdim* is precisely *dim*-1.)doc";
+triangulation.)doc";
 
 // Docstring regina::python::doc::detail::FaceBase_::vertex
 constexpr const char *vertex =

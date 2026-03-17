@@ -25,8 +25,8 @@
      <row><entry namest="c1" nameend="c2">
 <synopsis>
 tri ::= (&xml-simplex;*,
-         &xml-fundgroup;?, &xml-H1;?, &xml-H1Bdry;?, &xml-H1Rel;?, &xml-H2;?,
-         &xml-splitsfce;?, &xml-zeroeff;?, &xml-oneeff;?,
+         &xml-fundgroup;?, &xml-H1;?, &xml-H1Rel;?, &xml-H2;?,
+         &xml-zeroeff;?, &xml-oneeff;?,
          &xml-threesphere;?, &xml-handlebody;?, &xml-txi;?,
          &xml-irreducible;?, &xml-compressingdisc;?, &xml-haken;?,
          &xml-tag;*,
@@ -111,27 +111,25 @@ tri ::= (&xml-simplex;*,
     </simplelist>.
    </para>
    <para>
-    For triangulations in dimensions&nbsp;3 and&nbsp;4,
-    the following child element may also occur:
-    <simplelist type="inline">
-     <member>&xml-H2;</member>
-    </simplelist>.
-   </para>
-   <para>
-    In addition, for triangulations in dimension&nbsp;3,
-    there are many more optional child elements:
+    For triangulations in dimension&nbsp;3,
+    the following child elements may also occur:
     <simplelist type="inline">
      <member>&xml-compressingdisc;</member>
-     <member>&xml-H1Bdry;</member>
      <member>&xml-H1Rel;</member>
      <member>&xml-haken;</member>
      <member>&xml-handlebody;</member>
      <member>&xml-irreducible;</member>
      <member>&xml-oneeff;</member>
-     <member>&xml-splitsfce;</member>
      <member>&xml-threesphere;</member>
      <member>&xml-txi;</member>
      <member>&xml-zeroeff;</member>
+    </simplelist>.
+   </para>
+   <para>
+    For triangulations in dimension&nbsp;4,
+    the following child element may also occur:
+    <simplelist type="inline">
+     <member>&xml-H2;</member>
     </simplelist>.
    </para>
    &packetchildren;
@@ -193,8 +191,6 @@ tri ::= (&xml-simplex;*,
   &lt;simplex&gt; 0 13 0 4 1 21 1 8 &lt;/simplex&gt;
   &lt;H1&gt;&lt;abeliangroup rank=&quot;1&quot;&gt; 2 &lt;/abeliangroup&gt;&lt;/H1&gt;
   &lt;H1Rel&gt;&lt;abeliangroup rank=&quot;1&quot;&gt; 2 &lt;/abeliangroup&gt;&lt;/H1Rel&gt;
-  &lt;H1Bdry&gt;&lt;abeliangroup rank=&quot;0&quot;&gt; &lt;/abeliangroup&gt;&lt;/H1Bdry&gt;
-  &lt;H2&gt;&lt;abeliangroup rank=&quot;0&quot;&gt; 2 &lt;/abeliangroup&gt;&lt;/H2&gt;
 &lt;/tri>
   </programlisting>
  </refsect1>

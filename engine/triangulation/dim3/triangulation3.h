@@ -771,6 +771,22 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         const AbelianGroup& homologyRel() const;
         /**
+         * Is the relative first homology group with respect to the boundary
+         * already known (or trivial to calculate)?  See homologyRel() for
+         * further details.
+         *
+         * If this returns `true` then future calls to homologyRel() will be
+         * very fast.
+         *
+         * \pre This triangulation is valid.
+         *
+         * \exception FailedPrecondition This triangulation is invalid.
+         *
+         * \return \c true if and only if this property is already known
+         * or trivial to calculate.
+         */
+        bool knowsHomologyRel() const;
+        /**
          * Returns the first homology group of the
          * boundary for this triangulation.
          * Note that ideal vertices are considered part of the boundary.
@@ -781,9 +797,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Instead, homologyBdry() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
-         * This routine is fairly fast, since it deduces the homology of
-         * each boundary component through knowing what kind of surface
-         * it is.
+         * This routine is always fast, since it deduces the homology of each
+         * boundary component through knowing what kind of surface it is.
          *
          * \pre This triangulation is valid.
          *
@@ -793,26 +808,42 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         const AbelianGroup& homologyBdry() const;
         /**
-         * Returns the second homology group with coefficients in Z_2
-         * for this triangulation.
-         * If this triangulation contains any ideal vertices,
-         * the homology group will be
-         * calculated as if each such vertex had been truncated.
-         * The algorithm used calculates the relative first homology group
-         * with respect to the boundary and uses homology and cohomology
+         * Returns the second homology group with coefficients in `Z_2` for
+         * this triangulation.  If this triangulation contains any ideal
+         * vertices, the homology group will be calculated as if each such
+         * vertex had been truncated.
+         *
+         * The underlying algorithm calculates the relative first homology
+         * group with respect to the boundary, and uses homology and cohomology
          * theorems to deduce the second homology group.
          *
          * This group will simply be the direct sum of several copies of
-         * Z_2, so the number of Z_2 terms is returned.
+         * `Z_2`, so the number of `Z_2` terms is returned.
          *
          * \pre This triangulation is valid.
          *
          * \exception FailedPrecondition This triangulation is invalid.
          *
-         * \return the number of Z_2 terms in the second homology group
-         * with coefficients in Z_2.
+         * \return the number of `Z_2` terms in the second homology group
+         * with coefficients in `Z_2`.
          */
-        unsigned long homologyH2Z2() const;
+        size_t homologyH2Z2() const;
+        /**
+         * Is the second homology group with coefficients in `Z_2` already
+         * known (or trivial to calculate)?  See homologyH2Z2() for further
+         * details.
+         *
+         * If this returns `true` then future calls to homologyH2Z2() will be
+         * very fast.
+         *
+         * \pre This triangulation is valid.
+         *
+         * \exception FailedPrecondition This triangulation is invalid.
+         *
+         * \return \c true if and only if this property is already known
+         * or trivial to calculate.
+         */
+        bool knowsHomologyH2Z2() const;
         /**
          * Computes the given Turaev-Viro state sum invariant of this
          * 3-manifold using exact arithmetic.
@@ -4970,7 +5001,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
     friend class regina::detail::TriangulationBase<3>;
     friend class PacketData<Triangulation<3>>;
     friend class regina::XMLTriangulationReader<3>;
-    friend class regina::XMLWriter<Triangulation<3>>;
 };
 
 /**
@@ -5326,10 +5356,26 @@ inline const AngleStructure& Triangulation<3>::generalAngleStructure() const {
         throw NoSolution();
 }
 
-inline unsigned long Triangulation<3>::homologyH2Z2() const {
+inline bool Triangulation<3>::knowsHomologyRel() const {
+    if (! isValid())
+        throw FailedPrecondition("Relative homology requires a "
+            "valid triangulation");
+    return prop_.H1Rel_.has_value();
+}
+
+inline size_t Triangulation<3>::homologyH2Z2() const {
     // The call to homologyRel() will test the validity precondition.
     const AbelianGroup& h1Rel = homologyRel();
     return h1Rel.rank() + h1Rel.torsionRank(2);
+}
+
+inline bool Triangulation<3>::knowsHomologyH2Z2() const {
+    if (! isValid())
+        throw FailedPrecondition("Second homology with Z_2 coefficients "
+            "requires a valid triangulation");
+    // This property is not cached, but it is trivial to compute if we
+    // already know relative first homology.
+    return prop_.H1Rel_.has_value();
 }
 
 inline const Triangulation<3>::TuraevViroSet&

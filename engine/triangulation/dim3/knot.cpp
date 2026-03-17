@@ -45,8 +45,8 @@ namespace {
     // If this routine returns false, then we have good reason to
     // believe that t is not a 3-sphere, though we cannot be certain.
     //
-    // It is assumed that t is a homology sphere (and so, in particular,
-    // we do not bother computing homology).
+    // It is assumed that t is a connected homology sphere (and so,
+    // in particular, we do not bother computing homology).
     //
     // It is possible that this routine will retriangulate t.
     //

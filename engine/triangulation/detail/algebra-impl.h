@@ -173,6 +173,10 @@ const GroupPresentation& TriangulationBase<dim>::group() const {
     if (fundGroup_.has_value())
         return *fundGroup_;
 
+    if (countComponents() > 1)
+        throw FailedPrecondition("Computing fundamental group requires "
+            "the triangulation to have ≤ 1 component");
+
     GroupPresentation ans;
 
     if (isEmpty())

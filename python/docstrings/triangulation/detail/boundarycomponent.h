@@ -111,9 +111,10 @@ Python:
 
 Template parameter ``subdim``:
     the dimension of the faces to query. If *dim* is one of Regina's
-    standard dimensions, then *subdim* must be between 0 and *dim*-1
+    standard dimensions, then *subdim* must be between 0 and ``dim-1``
     inclusive. Otherwise, the only allowable values of *subdim* are
-    the facet dimension (*dim*-1) and the ridge dimension (*dim*-2).
+    the facet dimension (``dim-1``) and the ridge dimension
+    (``dim-2``).
 
 Returns:
     the number of *subdim*-faces.)doc";
@@ -187,9 +188,6 @@ boundary. Of course such a triangulation cannot represent a
 *dim*-manifold anyway, and so if you do have pinched faces then you
 almost certainly have bigger problems to deal with.
 
-Precondition:
-    *dim* is one of Regina's standard dimensions.
-
 .. warning::
     If this boundary component itself forms an ideal
     (*dim*-1)-dimensional triangulation, then again this result is
@@ -223,9 +221,9 @@ Python:
 
 Template parameter ``subdim``:
     the dimension of the faces to query. If *dim* is one of Regina's
-    standard dimensions, then *subdim* must be between 0 and *dim*-1
+    standard dimensions, then *subdim* must be between 0 and ``dim-1``
     inclusive. Otherwise, the only allowable value of *subdim* is the
-    facet dimension (*dim*-1).
+    facet dimension (``dim-1``).
 
 Parameter ``index``:
     the index of the desired face, ranging from 0 to
@@ -265,9 +263,9 @@ Python:
 
 Template parameter ``subdim``:
     the dimension of the faces to query. If *dim* is one of Regina's
-    standard dimensions, then *subdim* must be between 0 and *dim*-1
+    standard dimensions, then *subdim* must be between 0 and ``dim-1``
     inclusive. Otherwise, the only allowable value of *subdim* is the
-    facet dimension (*dim*-1).
+    facet dimension (``dim-1``).
 
 Returns:
     access to the list of all *subdim*-faces.)doc";

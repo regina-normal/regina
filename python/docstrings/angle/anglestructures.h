@@ -242,6 +242,46 @@ Returns:
     structures only, or ``False`` if the enumeration procedure allowed
     for any angle structures.)doc";
 
+// Docstring regina::python::doc::AngleStructures_::knowsSpansStrict
+static const char *knowsSpansStrict =
+R"doc(Is it already known whether some convex combination of the angle
+structures in this list forms a strict angle structure? See
+AngleStructure::isStrict() for details on strict angle structures.
+
+If this property is already known, future calls to spansStrict() will
+be very fast (simply returning the precalculated value). Otherwise
+spansStrict() could be more expensive: although its running time is a
+small polynomial in the size of this list, the size of this list could
+be exponential in the number of tetrahedra.
+
+.. warning::
+    This routine does not actually tell you _whether_ this angle
+    structure list spans a strict angle structure; it merely tells you
+    whether the answer has already been computed.
+
+Returns:
+    ``True`` if and only if this property is already known.)doc";
+
+// Docstring regina::python::doc::AngleStructures_::knowsSpansTaut
+static const char *knowsSpansTaut =
+R"doc(Is it already known whether some angle structure in this list is a
+taut structure? See AngleStructure::isTaut() for details on taut
+structures.
+
+If this property is already known, future calls to spansTaut() will be
+very fast (simply returning the precalculated value). Otherwise
+spansTaut() could be more expensive: although its running time is a
+small polynomial in the size of this list, the size of this list could
+be exponential in the number of tetrahedra.
+
+.. warning::
+    This routine does not actually tell you _whether_ some angle
+    structure in this list is a taut structure; it merely tells you
+    whether the answer has already been computed.
+
+Returns:
+    ``True`` if and only if this property is already known.)doc";
+
 // Docstring regina::python::doc::AngleStructures_::size
 static const char *size =
 R"doc(Returns the number of angle structures stored in this list.

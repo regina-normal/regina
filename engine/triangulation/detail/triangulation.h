@@ -1343,6 +1343,9 @@ class TriangulationBase :
          * fundamental group with fillings, call
          * SnapPeaTriangulation::fundamentalGroupFilled() instead.
          *
+         * \exception FailedPrecondition This triangulation has more than one
+         * component.
+         *
          * \return the fundamental group.
          */
         const GroupPresentation& group() const;
@@ -1366,6 +1369,9 @@ class TriangulationBase :
          * Regina's Triangulation<3> class.)  If you wish to compute the
          * fundamental group with fillings, call
          * SnapPeaTriangulation::fundamentalGroupFilled() instead.
+         *
+         * \exception FailedPrecondition This triangulation has more than one
+         * component.
          *
          * \return the fundamental group.
          */
@@ -1391,8 +1397,13 @@ class TriangulationBase :
          *
          * Note that this routine will not fire a packet change event.
          *
+         * \pre This triangulation has at most one component.
+         *
          * \pre The given presentation \a pres is indeed a presentation of the
          * fundamental group of this triangulation, as described by group().
+         *
+         * \exception FailedPrecondition This triangulation has more than one
+         * component.
          *
          * \param pres a new presentation of the fundamental group of this
          * triangulation.
@@ -1406,8 +1417,13 @@ class TriangulationBase :
          *
          * \deprecated This routine has been renamed to setGroupPresentation().
          *
+         * \pre This triangulation has at most one component.
+         *
          * \pre The given presentation \a pres is indeed a presentation of the
          * fundamental group of this triangulation, as described by group().
+         *
+         * \exception FailedPrecondition This triangulation has more than one
+         * component.
          *
          * \param pres a new presentation of the fundamental group of this
          * triangulation.
@@ -1415,13 +1431,38 @@ class TriangulationBase :
         [[deprecated]] void simplifiedFundamentalGroup(GroupPresentation pres);
 
         /**
+         * Is a presentation of the fundamental group currently cached?
+         * See group() for further details.
+         *
+         * Calling `group()` is always fast, since the group presentation is
+         * easy to construct.  However, simplifying group presentations can be
+         * difficult, and it is even possible that you have used external tools
+         * to do this (see for example setGroupPresentation()).  Therefore
+         * Regina caches the group presentation once you have computed it (or
+         * further simplified it).
+         *
+         * In particular, if this routine returns `true` then future calls to
+         * `group()` will be very fast, and will not attempt to perform any
+         * further simplification.
+         *
+         * \pre This triangulation has at most one component.
+         *
+         * \exception FailedPrecondition This triangulation has more than one
+         * component.
+         *
+         * \return \c true if and only if the fundamental group is currently
+         * cached.
+         */
+        bool knowsGroup() const;
+
+        /**
          * Returns the <i>k</i>th homology group of this triangulation,
          * treating any ideal vertices as though they had been truncated.
          *
-         * For C++ programmers who know \a subdim at compile time, you should
-         * use this template function `homology<subdim>()`, which is
-         * slightly faster than passing \a subdim as an ordinary runtime
-         * argument to `homology(subdim)`.
+         * For C++ programmers who know \a k at compile time, you should
+         * use this template function `homology<k>()`, which is
+         * slightly faster than passing \a k as an ordinary runtime
+         * argument to `homology(k)`.
          *
          * See the non-templated homology(int) for full details on exactly what
          * this function computes.
@@ -1513,14 +1554,85 @@ class TriangulationBase :
         AbelianGroup homology(int k) const;
 
         /**
+         * Is the <i>k</i>th homology group already known?  See homology()
+         * for further details.
+         *
+         * If this returns `true` then future calls to `homology<k>()` will be
+         * very fast.
+         *
+         * This is only relevant for those homology groups that are cached
+         * by the corresponding `Triangulation<dim>` class.  Currently this
+         * means `k = 1` for triangulations of any dimension, or `k = 2` for
+         * triangulations of dimension four.  For any other `(dim, k)`
+         * combination, this routine is unavailable.
+         *
+         * For C++ programmers who know \a k at compile time, you should
+         * use this template function `knowsHomology<k>()`, which is
+         * slightly faster than passing \a k as an ordinary runtime
+         * argument to `knowsHomology(k)`.
+         *
+         * \pre If `k ≠ 1`, then this triangulation must be valid.
+         *
+         * \exception FailedPrecondition This triangulation is invalid, and
+         * the homology dimension \a k is not 1.
+         *
+         * \nopython Instead use the variant `knowsHomology(k)`.
+         *
+         * \tparam k the dimension of the homology group to query.
+         * This must be one of the `(dim, k)` combinations for which homology
+         * groups are cached, as discussed above.
+         *
+         * \return \c true if and only if this property is already known.
+         */
+        template <int k = 1> requires (k == 1 || (dim == 4 && k == 2))
+        bool knowsHomology() const;
+
+        /**
+         * Determines whether the <i>k</i>th homology group is already known,
+         * where the parameter \a k does not need to be known until runtime.
+         * See homology() for further details.
+         *
+         * If this returns `true` then future calls to `homology(k)` will be
+         * very fast.
+         *
+         * This is only relevant for those homology groups that are cached
+         * by the corresponding `Triangulation<dim>` class.  Currently this
+         * means `k = 1` for triangulations of any dimension, or `k = 2` for
+         * triangulations of dimension four.  For any other `(dim, k)`
+         * combination, this routine will throw an exception.
+         *
+         * For C++ programmers who know \a k at compile time, you are better
+         * off using the template function `knowsHomology<k>()` instead, which
+         * is slightly faster.
+         *
+         * \pre If `k ≠ 1`, then this triangulation must be valid.
+         *
+         * \exception FailedPrecondition This triangulation is invalid, and
+         * the homology dimension \a k is not 1.
+         *
+         * \exception InvalidArgument Homology groups are not cached for this
+         * combination `(dim, k)`, as discussed above.
+         *
+         * \python Like the C++ template function `homology<k>()`,
+         * you can omit the homology dimension \a k; this will default to 1.
+         *
+         * \param k the dimension of the homology group to query.
+         * This must be one of the `(dim, k)` combinations for which homology
+         * groups are cached, as discussed above.
+         *
+         * \return \c true if and only if this property is already known.
+         */
+        bool knowsHomology(int k) const;
+
+        /**
          * Returns the <i>k</i>th homology group of this triangulation,
          * without truncating ideal vertices, but with explicit coordinates
          * that track the individual <i>k</i>-faces of this triangulation.
          *
-         * For C++ programmers who know \a subdim at compile time, you should
-         * use this template function `markedHomology<subdim>()`, which is
-         * slightly faster than passing \a subdim as an ordinary runtime
-         * argument to `markedHomology(subdim)`.
+         * For C++ programmers who know \a k at compile time, you should
+         * use this template function `markedHomology<k>()`, which is
+         * slightly faster than passing \a k as an ordinary runtime
+         * argument to `markedHomology(k)`.
          *
          * See the non-templated markedHomology(int) for full details on what
          * this function computes, some important caveats to be aware of,
@@ -3856,20 +3968,6 @@ class TriangulationBase :
          */
         void swapBaseData(TriangulationBase<dim>& other);
 
-        /**
-         * Writes a chunk of XML containing properties of this triangulation.
-         * This routine covers those properties that are managed by this base
-         * class TriangulationBase and that have already been computed for this
-         * triangulation.
-         *
-         * This routine is typically called from within
-         * Triangulation<dim>::writeXMLPacketData().  The XML elements
-         * that it writes are child elements of the \c tri element.
-         *
-         * \param out the output stream to which the XML should be written.
-         */
-        void writeXMLBaseProperties(std::ostream& out) const;
-
     private:
         /**
          * Internal to calculateSkeleton().
@@ -4297,7 +4395,6 @@ class TriangulationBase :
     friend class regina::XMLLegacySimplicesReader<dim>;
     friend class regina::XMLSimplexReader<dim>;
     friend class regina::XMLTriangulationReader<dim>;
-    friend class regina::XMLWriter<Triangulation<dim>>;
 };
 
 } // namespace regina::detail -> namespace regina
@@ -5622,12 +5719,17 @@ std::vector<Triangulation<dim>>
 template <int dim> requires (supportedDim(dim))
 inline const GroupPresentation& TriangulationBase<dim>::fundamentalGroup()
         const {
+    // The call to group() will check the precondition on components and throw
+    // an exception if necessary.
     return group();
 }
 
 template <int dim> requires (supportedDim(dim))
 inline void TriangulationBase<dim>::setGroupPresentation(
         GroupPresentation pres) {
+    if (countComponents() > 1)
+        throw FailedPrecondition("Working with fundamental group requires "
+            "the triangulation to have ≤ 1 component");
     fundGroup_ = std::move(pres);
 }
 
@@ -5636,7 +5738,18 @@ inline void TriangulationBase<dim>::simplifiedFundamentalGroup(
         GroupPresentation pres) {
     // Reimplement instead of calling setGroupPresentation(), to avoid two
     // moves.
+    if (countComponents() > 1)
+        throw FailedPrecondition("Working with fundamental group requires "
+            "the triangulation to have ≤ 1 component");
     fundGroup_ = std::move(pres);
+}
+
+template <int dim> requires (supportedDim(dim))
+inline bool TriangulationBase<dim>::knowsGroup() const {
+    if (countComponents() > 1)
+        throw FailedPrecondition("Computing fundamental group requires "
+            "the triangulation to have ≤ 1 component");
+    return fundGroup_.has_value();
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -5649,6 +5762,30 @@ inline AbelianGroup TriangulationBase<dim>::homology(int k) const {
     return select_constexpr<1, upperBound, AbelianGroup>(k, [this](auto k) {
         return homology<k>();
     });
+}
+
+template <int dim> requires (supportedDim(dim))
+template <int k> requires (k == 1 || (dim == 4 && k == 2))
+inline bool TriangulationBase<dim>::knowsHomology() const {
+    if constexpr (dim == 4 && k == 2) {
+        return static_cast<const Triangulation<dim>*>(this)->
+            prop_.H2_.has_value();
+    } else {
+        static_assert(k == 1);
+        return H1_.has_value();
+    }
+}
+
+template <int dim> requires (supportedDim(dim))
+inline bool TriangulationBase<dim>::knowsHomology(int k) const {
+    if (k == 1)
+        return H1_.has_value();
+    if constexpr (dim == 4)
+        if (k == 2)
+            return static_cast<const Triangulation<dim>*>(this)->
+                prop_.H2_.has_value();
+    throw InvalidArgument("Homology groups are not cached for this "
+        "combination (dim, k) of triangulation and homology dimensions");
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -5704,20 +5841,6 @@ inline MatrixInt TriangulationBase<dim>::dualToPrimal(int subdim) const {
     return select_constexpr<0, dim, MatrixInt>(subdim, [this](auto k) {
         return dualToPrimal<k>();
     });
-}
-
-template <int dim> requires (supportedDim(dim))
-void TriangulationBase<dim>::writeXMLBaseProperties(std::ostream& out) const {
-    if (fundGroup_.has_value()) {
-        out << "  <fundgroup>\n";
-        fundGroup_->writeXMLData(out);
-        out << "  </fundgroup>\n";
-    }
-    if (H1_.has_value()) {
-        out << "  <H1>";
-        H1_->writeXMLData(out);
-        out << "</H1>\n";
-    }
 }
 
 template <int dim> requires (supportedDim(dim))

@@ -58,7 +58,7 @@ void XMLWriter<SpatialLink>::writeContent() {
     // Temporarily enable hexfloat format, which should be lossless.
     auto oldFlags = out_.flags();
     out_ << std::hexfloat;
-    for (const auto& c : data_.components_) {
+    for (const auto& c : data_.components()) {
         out_ << "  <component>\n";
         for (const auto& node : c) {
             out_ << "  <node> " << node.x << ' ' << node.y << ' ' << node.z

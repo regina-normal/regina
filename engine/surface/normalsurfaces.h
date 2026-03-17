@@ -1403,7 +1403,6 @@ class NormalSurfaces :
 
     friend class XMLNormalSurfacesReader;
     friend class XMLLegacyNormalSurfacesReader;
-    friend class XMLWriter<NormalSurfaces>;
 };
 
 /**

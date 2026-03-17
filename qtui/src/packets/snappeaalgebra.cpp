@@ -166,6 +166,8 @@ void SnapPeaAlgebraUI::refresh() {
         unfilledH1->setText(tri->homology().utf8().c_str());
     else
         unfilledH1->setText(tri->homology().str().c_str());
+    // Because our SnapPea triangulation is non-null, it should be connected
+    // (and so group() should not throw an exception).
     unfilledFundGroup->setGroup(tri->group());
 
     unfilledH1Title->show();

@@ -1119,6 +1119,9 @@ Precondition:
     fundamental group with fillings, call
     SnapPeaTriangulation::fundamentalGroupFilled() instead.
 
+Exception ``FailedPrecondition``:
+    This triangulation has more than one component.
+
 Returns:
     the fundamental group.)doc";
 
@@ -1166,6 +1169,9 @@ Precondition:
     Regina's Triangulation<3> class.) If you wish to compute the
     fundamental group with fillings, call
     SnapPeaTriangulation::fundamentalGroupFilled() instead.
+
+Exception ``FailedPrecondition``:
+    This triangulation has more than one component.
 
 Returns:
     the fundamental group.)doc";
@@ -1251,9 +1257,6 @@ discussion.
 
 For more detail on boundary shelling moves and when they can be
 performed, see shellBoundary().
-
-Precondition:
-    The dimension *dim* is one of Regina's standard dimensions.
 
 Precondition:
     The given simplex is a simplex of this triangulation.
@@ -1730,6 +1733,73 @@ Returns:
     triangulation, and (ii) the isomorphism between this triangulation
     and the triangulation that would be reconstructed from
     fromIsoSig().)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::knowsGroup
+constexpr const char *knowsGroup =
+R"doc(Is a presentation of the fundamental group currently cached? See
+group() for further details.
+
+Calling ``group()`` is always fast, since the group presentation is
+easy to construct. However, simplifying group presentations can be
+difficult, and it is even possible that you have used external tools
+to do this (see for example setGroupPresentation()). Therefore Regina
+caches the group presentation once you have computed it (or further
+simplified it).
+
+In particular, if this routine returns ``True`` then future calls to
+``group()`` will be very fast, and will not attempt to perform any
+further simplification.
+
+Precondition:
+    This triangulation has at most one component.
+
+Exception ``FailedPrecondition``:
+    This triangulation has more than one component.
+
+Returns:
+    ``True`` if and only if the fundamental group is currently cached.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::knowsHomology
+constexpr const char *knowsHomology =
+R"doc(Determines whether the *k*th homology group is already known, where
+the parameter *k* does not need to be known until runtime. See
+homology() for further details.
+
+If this returns ``True`` then future calls to ``homology(k)`` will be
+very fast.
+
+This is only relevant for those homology groups that are cached by the
+corresponding ``Triangulation<dim>`` class. Currently this means ``k =
+1`` for triangulations of any dimension, or ``k = 2`` for
+triangulations of dimension four. For any other ``(dim, k)``
+combination, this routine will throw an exception.
+
+For C++ programmers who know *k* at compile time, you are better off
+using the template function ``knowsHomology<k>()`` instead, which is
+slightly faster.
+
+Precondition:
+    If ``k ≠ 1``, then this triangulation must be valid.
+
+Exception ``FailedPrecondition``:
+    This triangulation is invalid, and the homology dimension *k* is
+    not 1.
+
+Exception ``InvalidArgument``:
+    Homology groups are not cached for this combination ``(dim, k)``,
+    as discussed above.
+
+Python:
+    Like the C++ template function ``homology<k>()``, you can omit the
+    homology dimension *k*; this will default to 1.
+
+Parameter ``k``:
+    the dimension of the homology group to query. This must be one of
+    the ``(dim, k)`` combinations for which homology groups are
+    cached, as discussed above.
+
+Returns:
+    ``True`` if and only if this property is already known.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::lockBoundary
 constexpr const char *lockBoundary =
@@ -2408,8 +2478,14 @@ all.
 Note that this routine will not fire a packet change event.
 
 Precondition:
+    This triangulation has at most one component.
+
+Precondition:
     The given presentation *pres* is indeed a presentation of the
     fundamental group of this triangulation, as described by group().
+
+Exception ``FailedPrecondition``:
+    This triangulation has more than one component.
 
 Parameter ``pres``:
     a new presentation of the fundamental group of this triangulation.)doc";
@@ -2469,9 +2545,6 @@ components, etc.) will be reconstructed, which means any pointers to
 old skeletal objects can no longer be used.
 
 Precondition:
-    The dimension *dim* is one of Regina's standard dimensions.
-
-Precondition:
     The given simplex is a simplex of this triangulation.
 
 Parameter ``s``:
@@ -2506,9 +2579,6 @@ discussion.
     hasShellBoundary(). If you wish to both check and perform the
     move, call shellBoundary() without the two extra boolean
     arguments.
-
-Precondition:
-    The dimension *dim* is one of Regina's standard dimensions.
 
 Precondition:
     The given simplex is a simplex of this triangulation.
@@ -2617,8 +2687,14 @@ presentation of the fundamental group to be changed by some other
     This routine has been renamed to setGroupPresentation().
 
 Precondition:
+    This triangulation has at most one component.
+
+Precondition:
     The given presentation *pres* is indeed a presentation of the
     fundamental group of this triangulation, as described by group().
+
+Exception ``FailedPrecondition``:
+    This triangulation has more than one component.
 
 Parameter ``pres``:
     a new presentation of the fundamental group of this triangulation.)doc";
@@ -2994,9 +3070,6 @@ This triangulation will not be changed.
 
 For more detail on boundary shelling moves and when they can be
 performed, see shellBoundary().
-
-Precondition:
-    The dimension *dim* is one of Regina's standard dimensions.
 
 Precondition:
     The given simplex is a simplex of this triangulation.

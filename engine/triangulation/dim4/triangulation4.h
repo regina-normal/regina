@@ -1667,7 +1667,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
     friend class regina::detail::SimplexBase<4>;
     friend class regina::detail::TriangulationBase<4>;
     friend class regina::XMLTriangulationReader<4>;
-    friend class regina::XMLWriter<Triangulation<4>>;
 };
 
 } // namespace regina

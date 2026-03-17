@@ -1500,6 +1500,10 @@ TEST_F(Dim3Test, fundGroup) {
 static void verifyFundGroupVsH1(const Triangulation<3>& tri, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
+    // Regina requires ≤ 1 component for group().
+    if (tri.countComponents() > 1)
+        return;
+
     regina::GroupPresentation g(tri.group());
     g.simplify();
 

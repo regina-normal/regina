@@ -270,7 +270,11 @@ void Tri3HomologyFundUI::refresh() {
 }
 
 void Tri3HomologyFundUI::fundGroupSimplified() {
-    tri->setGroupPresentation(fgGroup->group());
+    // If we got this far, we should be connected.  However, double-check this
+    // now because it would be bad for setGroupPresentation() to throw an
+    // exception.
+    if (tri->isConnected())
+        tri->setGroupPresentation(fgGroup->group());
 }
 
 void Tri3HomologyFundUI::refreshLabels() {

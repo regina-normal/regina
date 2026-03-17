@@ -40,6 +40,7 @@
 #include "regina-core.h"
 #include "file/fileformat.h"
 #include "maths/perm.h"
+#include "packet/packet.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -51,8 +52,8 @@ class NormalSurfaces;
 template <int dim> requires (supportedDim(dim)) class Triangulation;
 
 /**
- * Provides XMLWriter<T> with the class constant requiresTriangulation,
- * for the case where a Regina object of type \a T does not require its
+ * Provides XMLWriter<Held> with the class constant requiresTriangulation,
+ * for the case where a Regina object of type \a Held does not require its
  * underlying triangulation to be written to file before the object
  * itself is written.
  *
@@ -61,7 +62,7 @@ template <int dim> requires (supportedDim(dim)) class Triangulation;
 class XMLWriterRequiresNoTriangulation {
     public:
         /**
-         * Indicates whether a Regina object of type \a T requires its
+         * Indicates whether a Regina object of type \a Held requires its
          * underlying triangulation to be written to file before the
          * object itself is written.
          */
@@ -69,28 +70,28 @@ class XMLWriterRequiresNoTriangulation {
 };
 
 /**
- * Provides XMLWriter<T> with the class constant requiresTriangulation,
+ * Provides XMLWriter<Held> with the class constant requiresTriangulation,
  * plus other triangulation-related constants and functions, for the case
- * where a Regina object of type \a T requires its underlying triangulation
+ * where a Regina object of type \a Held requires its underlying triangulation
  * to be written to file before the object itself is written.
  *
  * See the XMLWriter template class for further details.
  */
-template <typename T>
+template <PacketHeldType Held>
 class XMLWriterRequiresTriangulation {
     public:
         /**
-         * Indicates whether a Regina object of type \a T requires its
+         * Indicates whether a Regina object of type \a Held requires its
          * underlying triangulation to be written to file before the
          * object itself is written.
          */
         static constexpr bool requiresTriangulation = true;
         /**
          * The dimension of the underlying triangulation for a Regina
-         * object of type \a T.
+         * object of type \a Held.
          */
-        static constexpr int dimension = std::remove_reference<
-            decltype(std::declval<T>().triangulation())>::type::dimension;
+        static constexpr int dimension = std::remove_reference_t<
+            decltype(std::declval<Held>().triangulation())>::dimension;
 
     protected:
         std::string triID_;
@@ -99,62 +100,59 @@ class XMLWriterRequiresTriangulation {
 
     public:
         /**
-         * Informs XMLWriter<T> that the underlying triangulation has
+         * Informs XMLWriter<Held> that the underlying triangulation has
          * been written to file, and that its packet ID is \a id.
          *
-         * This saves \a id in the field triID_, where XMLWriter<T> can
+         * This saves \a id in the field triID_, where XMLWriter<Held> can
          * then access it.
          */
         void wroteTriangulationID(std::string id) { triID_ = std::move(id); }
 };
 
 /**
- * Used to write one of Regina's objects to XML.  This is typically used
- * by wrapped packets: the XML output code for PacketOf<T> uses XMLWriter<T>
- * to do the "real" work.
+ * Used to write one of Regina's objects to XML.  This is used by wrapped
+ * packets: the XML output code for `PacketOf<Held>` uses `XMLWriter<Held>`
+ * to do the "real" work.  This means that \a Held should be the underlying
+ * mathematical type (e.g., Link and not `PacketOf<Link>`).
  *
  * By calling openPre(), openPost(), writeContent() and close() in turn,
  * this object should output a single XML element (typically with
  * internal character data and/or child elements) that represents a
- * single Regina object of type \a T.
+ * single Regina object of type \a Held.
  *
  * Some of Regina's data types (e.g., normal surface/hypersurface lists
  * and angle structure lists) require the underlying triangulation to be
  * written to file beforehand.  The user of this class is responsible for
  * making sure that this happens - specifically, this means:
  *
- * - you should check the class constant XMLWriter<T>::requiresTriangulation
+ * - you should check the class constant XMLWriter<Held>::requiresTriangulation
  *   to determine if the triangulation might need to be written;
  *
  * - if so, you should ensure that the triangulation has been written
- *   and then call XMLWriter<T>::wroteTriangulation(id) to communicate
+ *   and then call XMLWriter<Held>::wroteTriangulation(id) to communicate
  *   back to this class the corresponding packet ID;
  *
  * - only then can you call openPre() to begin writing this object to file.
  *
- * The generic implementation of PacketOf<T>::writeXMLPacketData()
+ * The generic implementation of PacketOf<Held>::writeXMLPacketData()
  * handles all of this correctly.  The constant requiresTriangulation
  * and the function wroteTriangulation() are inherited through
- * the helper class XMLWriterRequiresTriangulation<T>.
+ * the helper class XMLWriterRequiresTriangulation<Held>.
  *
- * For types that can be enclosed in a PacketOf<...> wrapper, \a T should be
- * the underlying mathematical type (so, for example, for links the type
- * \a T should be Link, not PacketOf<Link>).
- *
- * Most functions in this template class have no default implementations,
- * and instead require a specialisation for each type \a T that is to be
- * supported.  The only exceptions are the class constructor and openPost().
+ * Most functions in this template class have no default implementations, and
+ * instead require a specialisation for each supported mathematical type
+ * \a Held.  The only exceptions are the class constructor and openPost().
  */
-template <typename T>
+template <PacketHeldType Held>
 class XMLWriter :
         public std::conditional_t<
-                std::is_same_v<T, AngleStructures> ||
-                std::is_same_v<T, NormalHypersurfaces> ||
-                std::is_same_v<T, NormalSurfaces>,
-            XMLWriterRequiresTriangulation<T>,
+                std::is_same_v<Held, AngleStructures> ||
+                std::is_same_v<Held, NormalHypersurfaces> ||
+                std::is_same_v<Held, NormalSurfaces>,
+            XMLWriterRequiresTriangulation<Held>,
             XMLWriterRequiresNoTriangulation> {
     private:
-        const T& data_;
+        const Held& data_;
             /**< The object to be written in XML. */
         std::ostream& out_;
             /**< The output stream to which the XML will be written. */
@@ -173,7 +171,7 @@ class XMLWriter :
          * \param out the output stream to which the XML will be written.
          * \param format indicates which of Regina's XML file formats to use.
          */
-        XMLWriter(const T& data, std::ostream& out, FileFormat format);
+        XMLWriter(const Held& data, std::ostream& out, FileFormat format);
 
         /**
          * Writes the beginning of the opening XML element tag for the object
@@ -190,7 +188,7 @@ class XMLWriter :
          * should call openPost() to write the closing angle bracket.
          *
          * This function has no default implementation, and must be
-         * specialised for each support type \a T.
+         * specialised for each supported type \a Held.
          */
         void openPre();
 
@@ -204,7 +202,7 @@ class XMLWriter :
          * This function has a default implementation, which simply
          * writes a closing angle bracket and a newline.  You may still
          * specialise this if needed (e.g., if writing a newline is not
-         * appropriate for this particular type \a T).
+         * appropriate for this particular type \a Held).
          */
         void openPost();
 
@@ -218,7 +216,7 @@ class XMLWriter :
          * such as packet tags and/or child packets.
          *
          * This function has no default implementation, and must be
-         * specialised for each support type \a T.
+         * specialised for each supported type \a Held.
          */
         void writeContent();
 
@@ -226,7 +224,7 @@ class XMLWriter :
          * Writes the closing XML element tag for the object being written.
          *
          * This function has no default implementation, and must be
-         * specialised for each support type \a T.
+         * specialised for each supported type \a Held.
          */
         void close();
 };
@@ -254,13 +252,13 @@ class XMLWriter<Triangulation<dim>> {
         void close();
 };
 
-template <typename T>
-XMLWriter<T>::XMLWriter(const T& data, std::ostream& out, FileFormat format) :
-        data_(data), out_(out), format_(format) {
+template <PacketHeldType Held>
+XMLWriter<Held>::XMLWriter(const Held& data, std::ostream& out,
+        FileFormat format) : data_(data), out_(out), format_(format) {
 }
 
-template <typename T>
-void XMLWriter<T>::openPost() {
+template <PacketHeldType Held>
+void XMLWriter<Held>::openPost() {
     out_ << ">\n";
 }
 
