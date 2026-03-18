@@ -35,24 +35,17 @@
 #ifndef __SCRIPTUI_H
 #define __SCRIPTUI_H
 
-#include "packet/packet.h"
-
+#include "packet/script.h"
 #include "../packetui.h"
+#include "docwidget.h"
 
 #include <QStyledItemDelegate>
 
-template <typename, typename> class DocWidget;
-class DocWidgetFinalNewline;
 class EditTableView;
 class QAction;
 class QSplitter;
 class QPlainTextEdit;
 class QToolBar;
-
-namespace regina {
-    class Packet;
-    class Script;
-};
 
 class ScriptVarModel : public QAbstractItemModel {
     protected:

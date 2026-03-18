@@ -43,6 +43,8 @@
 #include "maths/rational.h"
 #include "maths/vector.h"
 #include "packet/container.h"
+#include "packet/script.h"
+#include "packet/text.h"
 #include "surface/surfacefilter.h"
 
 using regina::Integer;
@@ -332,6 +334,11 @@ static_assert(! regina::PacketClass<regina::Link>);
 static_assert(! regina::PacketClass<regina::Packet>);
 static_assert(regina::PacketClass<regina::SurfaceFilter>);
 static_assert(regina::PacketClass<regina::SurfaceFilterCombination>);
+
+static_assert(regina::TextPacket<regina::Text>);
+static_assert(regina::TextPacket<regina::Script>);
+static_assert(! regina::TextPacket<regina::Container>);
+static_assert(! regina::TextPacket<regina::Link>);
 
 static_assert(regina::PacketHeldType<regina::Link>);
 static_assert(! regina::PacketHeldType<regina::PacketOf<regina::Link>>);

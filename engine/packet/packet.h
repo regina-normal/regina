@@ -86,6 +86,21 @@ concept PacketClass =
     };
 
 /**
+ * A packet class that stores text (possibly alongside other data).
+ *
+ * Examples of this concept include Text and Script.
+ *
+ * \ingroup packet
+ */
+template <typename T>
+concept TextPacket =
+    PacketClass<T> &&
+    requires (T x, const std::string s) {
+        { x.text() } -> std::same_as<const std::string&>;
+        x.setText(s);
+    };
+
+/**
  * A data type (typically mathematical) that can be held within one of Regina's
  * wrapped packets.  Specifically, such a type \a T can be held in the wrapped
  * packet type `PacketOf<T>`.

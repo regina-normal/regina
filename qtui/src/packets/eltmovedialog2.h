@@ -39,7 +39,7 @@
 #include "triangulation/forward.h"
 #include "packet/packet.h"
 
-#include "reginaqt.h"
+#include "reginasupport.h"
 #include <QDialog>
 #include <vector>
 
@@ -114,8 +114,8 @@ class EltMoveDialog2 : public QDialog, public regina::PacketListener {
         void updateApply();
 
     private:
-        template <typename ChooserClass>
-        void updateStates(ChooserClass* chooser, QRadioButton* button);
+        template <Chooser C>
+        void updateStates(C* chooser, QRadioButton* button);
 };
 
 #endif

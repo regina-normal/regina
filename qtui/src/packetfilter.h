@@ -108,7 +108,7 @@ class TwoTypeFilter : public PacketFilter {
  * A packet filter that only accepts packets of either a given type
  * or any of its subclasses.
  *
- * The acceptance test will be performed by calling dynamic_cast<T*>
+ * The acceptance test will be performed by calling `dynamic_cast<T*>`
  * upon each packet being questioned.
  *
  * \tparam T the base class that we are filtering for.  This does _not_ need

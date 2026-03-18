@@ -402,7 +402,7 @@ class ReginaMain : public QMainWindow {
         /**
          * Generic packet operations.
          */
-        template <typename PacketCreatorClass>
+        template <std::derived_from<PacketCreator> PacketCreatorClass>
         void newPacket(const QString& dialogTitle);
 
         void importFile(const PacketImporter& importer,

@@ -54,14 +54,11 @@ namespace regina {
  * knot signature or isomorphism signature lists.
  *
  * Rather than creating new objects of this class, the globally
- * available object SigHandler<PacketType>::instance should always be used.
+ * available object `SigHandler<PacketType>::instance` should always be used.
  *
  * \tparam PacketType Indicates which types of signatures to import.
- * This must be either Link (indicating knot signatures), or one of the
- * Triangulation<dim> classes (indicating isomorphism signatures for
- * <i>dim</i>-dimensional triangulations).
  */
-template <typename PacketType>
+template <regina::SigReconstructible PacketType>
 class SigHandler : public PacketImporter {
     using PacketImporter::importData;
 
@@ -85,10 +82,10 @@ class SigHandler : public PacketImporter {
         SigHandler() = default;
 };
 
-template <typename PacketType>
+template <regina::SigReconstructible PacketType>
 const SigHandler<PacketType> SigHandler<PacketType>::instance;
 
-template <typename PacketType>
+template <regina::SigReconstructible PacketType>
 std::shared_ptr<regina::Packet> SigHandler<PacketType>::importData(
         const QString& fileName, ReginaMain* parentWidget) const {
     QString explnSuffix;

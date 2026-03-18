@@ -35,15 +35,9 @@
 #ifndef __TEXTUI_H
 #define __TEXTUI_H
 
+#include "packet/text.h"
 #include "../packetui.h"
-
-template <typename, typename> class DocWidget;
-class DocWidgetNoSanitise;
-
-namespace regina {
-    class Packet;
-    class Text;
-};
+#include "docwidget.h"
 
 /**
  * A packet interface for viewing text packets.

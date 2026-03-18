@@ -42,6 +42,21 @@
 class QWidget;
 
 /**
+ * A chooser that allows the user to select an object of an arbitrary type
+ * (specifically, of type `T::Choice`).
+ *
+ * The function `refresh()` should return `true` if and only if the chooser is
+ * non-empty after the refresh (i.e., at least one option is present).
+ */
+template <typename T>
+concept Chooser = requires (T x) {
+    typename T::Choice;
+    { x.selected() } -> std::same_as<typename T::Choice>;
+    x.select(std::declval<typename T::Choice>());
+    { x.refresh() } -> std::same_as<bool>;
+};
+
+/**
  * A class with miscellaneous support routines for Regina.
  *
  * The icon loading routines give correct results for full installations in

@@ -48,7 +48,7 @@
 #include "packets/snappeacreator.h"
 #include "packets/surfacescreator.h"
 
-template <typename PacketCreatorClass>
+template <std::derived_from<PacketCreator> PacketCreatorClass>
 void ReginaMain::newPacket(const QString& dialogTitle) {
     NewPacketDialog dlg(this, new PacketCreatorClass(this), packetTree,
         treeView->selectedPacket(), dialogTitle);

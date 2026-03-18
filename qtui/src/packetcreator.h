@@ -129,7 +129,7 @@ class PacketCreator {
  * The interface will contain no non-generic interface components, and
  * new packets will be created using the default constructor.
  */
-template <typename T>
+template <regina::PacketClass T>
 class BasicPacketCreator : public PacketCreator {
     public:
         /**

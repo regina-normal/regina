@@ -356,7 +356,8 @@ Version 8.0  [ TODO ]
                 concepts/iterator.h)
               + ArbitraryPrecisionIntegerVector, IntegerVector,
                 SigReconstructible (defined in concepts/maths.h)
-              + PacketClass, PacketHeldType (defined in concepts/packet.h)
+              + PacketClass, PacketHeldType, TextPacket(defined in
+                concepts/packet.h)
               + ArrayOf, ConstRefArrayOf (defined in concepts/array.h)
               + BanConstraint, LPConstraint, LPSubspace (defined in
                 enumerate/treelp.h)

@@ -49,12 +49,6 @@ namespace regina {
 };
 
 /**
- * A filter function, used to determine whether a given cusp
- * should appear in the list.
- */
-using CuspFilterFunc = bool (*)(const regina::Cusp&);
-
-/**
  * A widget through which a single cusp of some SnapPea triangulation
  * can be selected.  An optional filter may be applied to restrict the
  * available selections.
@@ -74,13 +68,21 @@ class CuspChooser : public QComboBox, public regina::PacketListener {
             CUSP_NO_SELECTION = -2
         };
 
+        using Choice = int;
+
+        /**
+         * A filter function, used to determine whether a given cusp
+         * should appear in the list.
+         */
+        using Filter = bool (*)(const regina::Cusp&);
+
     private:
         regina::SnapPeaTriangulation* tri_;
             /**< The triangulation whose cusps we are choosing from. */
-        CuspFilterFunc filter_;
+        Filter filter_;
             /**< A filter to restrict the available selections, or
                  \c null if no filter is necessary. */
-        std::vector<int> options_;
+        std::vector<Choice> options_;
             /**< A list of the available options to choose from. */
 
     public:
@@ -100,7 +102,7 @@ class CuspChooser : public QComboBox, public regina::PacketListener {
          * will be offered.
          */
         CuspChooser(regina::PacketOf<regina::SnapPeaTriangulation>* tri,
-                CuspFilterFunc filter, QWidget* parent,
+                Filter filter, QWidget* parent,
                 bool autoUpdate = true);
 
         /**
@@ -177,14 +179,14 @@ class CuspDialog : public QDialog {
          */
         CuspDialog(QWidget* parent,
             regina::PacketOf<regina::SnapPeaTriangulation>* tri,
-            CuspFilterFunc filter,
+            CuspChooser::Filter filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
         static int choose(QWidget* parent,
             regina::PacketOf<regina::SnapPeaTriangulation>* tri,
-            CuspFilterFunc filter,
+            CuspChooser::Filter filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);

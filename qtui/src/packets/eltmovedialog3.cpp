@@ -421,8 +421,8 @@ void EltMoveDialog3::packetWasRenamed(regina::Packet&) {
     name->setText(tri->humanLabel().c_str());
 }
 
-template <typename ChooserClass>
-void EltMoveDialog3::updateStates(ChooserClass* chooser, QRadioButton* button) {
+template <Chooser C>
+void EltMoveDialog3::updateStates(C* chooser, QRadioButton* button) {
     if (chooser->refresh()) {
         button->setEnabled(true);
         chooser->setEnabled(true);

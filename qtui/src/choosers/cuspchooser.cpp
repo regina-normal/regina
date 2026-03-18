@@ -41,8 +41,7 @@
 using regina::Cusp;
 
 CuspChooser::CuspChooser(regina::PacketOf<regina::SnapPeaTriangulation>* tri,
-        CuspFilterFunc filter, QWidget* parent,
-        bool autoUpdate) :
+        Filter filter, QWidget* parent, bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
@@ -105,7 +104,7 @@ bool CuspChooser::filterComplete(const Cusp& c) {
 
 CuspDialog::CuspDialog(QWidget* parent,
         regina::PacketOf<regina::SnapPeaTriangulation>* tri,
-        CuspFilterFunc filter,
+        CuspChooser::Filter filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) :
@@ -130,7 +129,7 @@ CuspDialog::CuspDialog(QWidget* parent,
 
 int CuspDialog::choose(QWidget* parent,
         regina::PacketOf<regina::SnapPeaTriangulation>* tri,
-        CuspFilterFunc filter,
+        CuspChooser::Filter filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) {

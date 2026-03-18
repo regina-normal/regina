@@ -40,15 +40,27 @@
 #include <QHash>
 #include <QPlainTextDocumentLayout>
 #include <QTextDocument>
+#include "packet/packet.h"
+
+using regina::TextPacket;
 
 class DocWidgetNoSanitise;
 class QTextDocument;
 
 /**
- * A widget for displaying and editing the text contents of a text-based
- * packet.  The template argument PacketType should be one of Regina's
- * text-based packet types, such as Text or Script.  In particular, it
- * must have the text-based member functions text() and setText().
+ * A class that can be used to "sanitise" Qt strings before passing their
+ * contents to Regina's calculation engine.  This sanitisation is performed
+ * by a static function `T::sanitise(QString&)`.
+ */
+template <typename T>
+concept StringSanitiser =
+    std::is_class_v<T> &&
+    requires (QString s) {
+        T::sanitise(s);
+    };
+
+/**
+ * A widget for displaying and editing the text contents of a text-based packet.
  *
  * This widget keeps an internal registry, through which each packet
  * is associated with a single QTextDocument.  This QTextDocument is
@@ -62,11 +74,10 @@ class QTextDocument;
  * force it to push changes at any time by calling commit().
  *
  * You can force the widget to "sanitise" the text by passing an extra
- * template parameter Sanitise.  This must be a class with a static
- * function void sanitise(QString&).  This will be applied to the text
- * contents of the widget before each push.
+ * template parameter Sanitise.  The class function `Sanitise::sanitise()`
+ * will be applied to the text contents of the widget before each push.
  */
-template <typename PacketType, typename Sanitise = DocWidgetNoSanitise>
+template <TextPacket PacketType, StringSanitiser Sanitise = DocWidgetNoSanitise>
 class DocWidget : public QPlainTextEdit {
     private:
         struct Details {
@@ -116,11 +127,11 @@ struct DocWidgetFinalNewline {
     static void sanitise(QString& str);
 };
 
-template <typename PacketType, typename Sanitise>
+template <TextPacket PacketType, StringSanitiser Sanitise>
 typename DocWidget<PacketType, Sanitise>::Registry
     DocWidget<PacketType, Sanitise>::registry_;
 
-template <typename PacketType, typename Sanitise>
+template <TextPacket PacketType, StringSanitiser Sanitise>
 DocWidget<PacketType, Sanitise>::DocWidget(
         PacketType* packet, QWidget* parent) :
         QPlainTextEdit(parent),
@@ -142,7 +153,7 @@ DocWidget<PacketType, Sanitise>::DocWidget(
     }
 }
 
-template <typename PacketType, typename Sanitise>
+template <TextPacket PacketType, StringSanitiser Sanitise>
 DocWidget<PacketType, Sanitise>::~DocWidget() {
     // We could be in the destructor because the user closed the packet pane,
     // or because the packet was destroyed elsewhere.
@@ -172,7 +183,7 @@ DocWidget<PacketType, Sanitise>::~DocWidget() {
     }
 }
 
-template <typename PacketType, typename Sanitise>
+template <TextPacket PacketType, StringSanitiser Sanitise>
 inline void DocWidget<PacketType, Sanitise>::refresh() {
     if (auto p = packet_.lock()) {
         // We have to jump through several hoops to preserve the cursor
@@ -185,7 +196,7 @@ inline void DocWidget<PacketType, Sanitise>::refresh() {
     }
 }
 
-template <typename PacketType, typename Sanitise>
+template <TextPacket PacketType, StringSanitiser Sanitise>
 inline void DocWidget<PacketType, Sanitise>::commit() {
     if (auto p = packet_.lock()) {
         QString text = toPlainText();
@@ -194,7 +205,7 @@ inline void DocWidget<PacketType, Sanitise>::commit() {
     }
 }
 
-template <typename PacketType, typename Sanitise>
+template <TextPacket PacketType, StringSanitiser Sanitise>
 inline void DocWidget<PacketType, Sanitise>::focusOutEvent(QFocusEvent* evt) {
     commit();
     QPlainTextEdit::focusOutEvent(evt);

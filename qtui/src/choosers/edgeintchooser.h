@@ -45,12 +45,6 @@
 #include <vector>
 
 /**
- * A filter function, used to determine whether a given edge with
- * integer argument should appear in the list.
- */
-using EdgeIntFilterFunc = bool (*)(regina::Edge<3>*, int);
-
-/**
  * A widget through which a single edge of some triangulation along with
  * an integer argument can be selected.  The integer argument must be
  * within a given range; it may, for example, indicate one of the two
@@ -70,14 +64,23 @@ using EdgeIntFilterFunc = bool (*)(regina::Edge<3>*, int);
  * classes do not use slots or signals, I believe this is okay.
  */
 class EdgeIntChooser : public QComboBox, public regina::PacketListener {
+    public:
+        using Choice = std::pair<regina::Edge<3>*, int>;
+
+        /**
+         * A filter function, used to determine whether a given edge with
+         * integer argument should appear in the list.
+         */
+        using Filter = bool (*)(regina::Edge<3>*, int);
+
     private:
         regina::Triangulation<3>* tri_;
             /**< The triangulation whose edges we are
                  choosing from. */
-        EdgeIntFilterFunc filter_;
+        Filter filter_;
             /**< A filter to restrict the available selections, or
                  \c null if no filter is necessary. */
-        std::vector<std::pair<regina::Edge<3>*, int> > options_;
+        std::vector<Choice> options_;
             /**< A list of the available options to choose from. */
         int argMin_, argMax_;
             /**< The allowable integer range. */
@@ -102,8 +105,7 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
          */
         EdgeIntChooser(regina::PacketOf<regina::Triangulation<3>>* tri,
                 int argMin, int argMax, const QString& argDesc,
-                EdgeIntFilterFunc filter, QWidget* parent,
-                bool autoUpdate = true);
+                Filter filter, QWidget* parent, bool autoUpdate = true);
 
         /**
          * Returns the currently selected edge and argument.
@@ -123,6 +125,7 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
          * The activated() signal will _not_ be emitted.
          */
         void select(regina::Edge<3>* option, int arg);
+        void select(const Choice& option);
 
         /**
          * Forces a manual refresh of the contents of this chooser.
@@ -173,7 +176,7 @@ class EdgeIntDialog : public QDialog {
         EdgeIntDialog(QWidget* parent,
             regina::PacketOf<regina::Triangulation<3>>* tri,
             int argMin, int argMax, const QString& argDesc,
-            EdgeIntFilterFunc filter,
+            EdgeIntChooser::Filter filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
@@ -181,11 +184,15 @@ class EdgeIntDialog : public QDialog {
         static std::pair<regina::Edge<3>*, int> choose(QWidget* parent,
             regina::PacketOf<regina::Triangulation<3>>* tri,
             int argMin, int argMax, const QString& argDesc,
-            EdgeIntFilterFunc filter,
+            EdgeIntChooser::Filter filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 };
+
+inline void EdgeIntChooser::select(const EdgeIntChooser::Choice& option) {
+    select(option.first, option.second);
+}
 
 inline bool EdgeIntChooser::refresh() {
     clear();
