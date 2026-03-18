@@ -1428,7 +1428,7 @@ class Bitmask2 {
  * whose template type parameter adheres to the concept ReginaBitmask.
  * The first argument passed to \a action will be the given number of bits;
  * any arguments supplied via \a args will be forwarded through as additional
- # arguments to \a action.  Any return value from \a action will be ignored.
+ * arguments to \a action.  Any return value from \a action will be ignored.
  *
  * As an example:
  *
