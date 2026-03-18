@@ -114,7 +114,7 @@ class EltMoveDialog2 : public QDialog, public regina::PacketListener {
         void updateApply();
 
     private:
-        template <Chooser C>
+        template <ObjectChooser C>
         void updateStates(C* chooser, QRadioButton* button);
 };
 

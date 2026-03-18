@@ -442,7 +442,7 @@ void EltMoveDialog4::packetWasRenamed(regina::Packet&) {
     name->setText(tri->humanLabel().c_str());
 }
 
-template <Chooser C>
+template <ObjectChooser C>
 void EltMoveDialog4::updateStates(C* chooser, QRadioButton* button) {
     if (chooser->refresh()) {
         button->setEnabled(true);

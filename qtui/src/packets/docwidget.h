@@ -36,7 +36,7 @@
 #ifndef __DOCREGISTRY_H
 #define __DOCREGISTRY_H
 
-#include "reginaqt.h"
+#include "reginasupport.h"
 #include <QHash>
 #include <QPlainTextDocumentLayout>
 #include <QTextDocument>
@@ -46,18 +46,6 @@ using regina::TextPacket;
 
 class DocWidgetNoSanitise;
 class QTextDocument;
-
-/**
- * A class that can be used to "sanitise" Qt strings before passing their
- * contents to Regina's calculation engine.  This sanitisation is performed
- * by a static function `T::sanitise(QString&)`.
- */
-template <typename T>
-concept StringSanitiser =
-    std::is_class_v<T> &&
-    requires (QString s) {
-        T::sanitise(s);
-    };
 
 /**
  * A widget for displaying and editing the text contents of a text-based packet.
