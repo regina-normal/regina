@@ -69,6 +69,26 @@ template <typename> class PacketOf;
  * Packet administration and some basic packet types.
  */
 
+namespace detail {
+    /**
+     * A compile-time boolean constant indicating whether the type \a T is
+     * equal to one of Regina's wrapped packet types.
+     *
+     * Subclasses are _not_ considered here: this is true if and only if
+     * `T` is a class of the form `PacketOf<...>`.
+     *
+     * \ingroup detail
+     */
+    template <typename T>
+    constexpr bool is_wrapped_packet_v = false;
+
+    #ifndef __DOXYGEN
+    // Hide specialisations from doxygen.
+    template <typename T>
+    constexpr bool is_wrapped_packet_v<PacketOf<T>> = true;
+    #endif
+}
+
 /**
  * A class that is equal to or derived from one of Regina's packet types.
  *
@@ -95,9 +115,7 @@ concept PacketClass =
  * \ingroup packet
  */
 template <typename T>
-concept WrappedPacket =
-    PacketClass<T> &&
-    requires(T x) { { PacketOf(x) } -> std::same_as<T>; };
+concept WrappedPacket = detail::is_wrapped_packet_v<T>;
 
 /**
  * A packet class that stores text (possibly alongside other data).
