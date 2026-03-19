@@ -52,7 +52,7 @@ void addBlockedSFSLoop(pybind11::module_& m) {
             rdoc::matchingReln)
         .def_static("recognise", &BlockedSFSLoop::recognise, rdoc::recognise)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
     regina::python::add_global_swap<BlockedSFSLoop>(m, rdoc::global_swap);

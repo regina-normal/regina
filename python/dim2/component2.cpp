@@ -87,7 +87,7 @@ void addComponent2(pybind11::module_& m, pybind11::module_& internal) {
             rdoc::countBoundaryEdges)
         .def_readonly_static("dimension", &Component<2>::dimension)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_END

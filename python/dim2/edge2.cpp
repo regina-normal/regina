@@ -62,7 +62,7 @@ void addEdge2(pybind11::module_& m, pybind11::module_& internal) {
         .def("edge", &EdgeEmbedding<2>::edge, rbase2::edge)
         .def("vertices", &EdgeEmbedding<2>::vertices, rbase::vertices)
     ;
-    regina::python::add_output(e);
+    regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rbase::__eq);
 
     // We use the global scope here because all of Face's members are
@@ -127,7 +127,7 @@ void addEdge2(pybind11::module_& m, pybind11::module_& internal) {
         .def_readonly_static("subdimension", &Edge<2>::subdimension)
         .def_readonly_static("hasNumberingTables", &Edge<2>::hasNumberingTables)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_END

@@ -82,7 +82,7 @@ void addSpatialLink(pybind11::module_& m, pybind11::module_& internal) {
         .def_static("fromKnotPlot", &SpatialLink::fromKnotPlot,
             rdoc::fromKnotPlot)
     ;
-    regina::python::add_output(l);
+    regina::python::add_output_rich(l);
     regina::python::packet_eq_operators(l, rdoc::__eq);
     regina::python::add_packet_data(l);
 

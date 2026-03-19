@@ -84,7 +84,7 @@ void addVectorOf(pybind11::module_& m, const char* className) {
         .def("scaleDown", &Vec::scaleDown, rdoc::scaleDown)
         .def_static("unit", &Vec::unit, rdoc::unit)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 

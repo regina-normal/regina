@@ -73,7 +73,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
                 &GluingPermSearcher<3>::fromTaggedData), rdoc::fromTaggedData)
         .def_readonly_static("dataTag", &GluingPermSearcher<3>::dataTag)
         ;
-    regina::python::add_output(g);
+    regina::python::add_output_rich(g);
     regina::python::add_eq_operators(g);
 
     RDOC_SCOPE_SWITCH(EulerSearcher)
@@ -91,7 +91,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
     // that provide str().  The work-to-benefit ratio is not worth it here;
     // we will just use the more basic inherited output routines from
     // GluingPermSearcher<3> instead.
-    regina::python::add_output(e);
+    regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e);
 
     RDOC_SCOPE_SWITCH(CompactSearcher)
@@ -102,7 +102,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
             bool, regina::CensusPurge>(), rdoc::__init)
         .def_readonly_static("dataTag", &CompactSearcher::dataTag)
         ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_SWITCH(ClosedPrimeMinSearcher)
@@ -113,7 +113,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
             rdoc::__init)
         .def_readonly_static("dataTag", &ClosedPrimeMinSearcher::dataTag)
         ;
-    regina::python::add_output(p);
+    regina::python::add_output_rich(p);
     regina::python::add_eq_operators(p);
 
     RDOC_SCOPE_SWITCH(HyperbolicMinSearcher)
@@ -124,7 +124,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
             rdoc::__init)
         .def_readonly_static("dataTag", &HyperbolicMinSearcher::dataTag)
         ;
-    regina::python::add_output(h);
+    regina::python::add_output_rich(h);
     regina::python::add_eq_operators(h);
 
     RDOC_SCOPE_END

@@ -125,7 +125,7 @@ void addGroupPresentation(pybind11::module_& m) {
             overload_cast<bool>(&GroupExpression::utf8, pybind11::const_),
             rdoc::utf8)
     ;
-    regina::python::add_output(c2);
+    regina::python::add_output_rich(c2);
     regina::python::add_eq_operators(c2, rdoc::__eq);
 
     regina::python::add_global_swap<GroupExpression>(m, rdoc::global_swap);
@@ -244,7 +244,7 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("gap", &GroupPresentation::gap,
             pybind11::arg("groupVariable") = "g", rdoc::gap)
     ;
-    regina::python::add_output(c3);
+    regina::python::add_output_rich(c3);
     regina::python::add_eq_operators(c3, rdoc::__eq);
 
     regina::python::add_global_swap<GroupPresentation>(m, rdoc::global_swap);

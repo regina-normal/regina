@@ -56,7 +56,7 @@ void addTriSolidTorus(pybind11::module_& m) {
         .def_static("recognise", &TriSolidTorus::recognise, rdoc::recognise)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
 
     regina::python::add_global_swap<TriSolidTorus>(m, rdoc::global_swap);
 

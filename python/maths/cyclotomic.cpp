@@ -94,7 +94,7 @@ void addCyclotomic(pybind11::module_& m) {
         .def("utf8", overload_cast<const char*>(
             &Cyclotomic::utf8, pybind11::const_), rdoc::utf8)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
     regina::python::add_global_swap<Cyclotomic>(m, rdoc::global_swap);

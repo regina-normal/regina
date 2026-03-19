@@ -54,7 +54,7 @@ void addSigIsomorphism(pybind11::module_& m) {
             pybind11::arg(), pybind11::arg("fromCycleGroup") = 0,
             rdoc::compareWithIdentity)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
     regina::python::add_global_swap<SigPartialIsomorphism>(m,

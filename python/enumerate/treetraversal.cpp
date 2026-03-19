@@ -91,7 +91,7 @@ void addTreeEnumeration(pybind11::module_& m, const char* name) {
         .def_static("writeTypes", &Tree::writeTypes, rdoc::writeTypes)
         .def_static("writeSurface", &Tree::writeSurface, rdoc::writeSurface)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_END
@@ -120,7 +120,7 @@ void addTautEnumeration(pybind11::module_& m, const char* name) {
         .def_static("writeStructure", &Tree::writeStructure,
             rdoc::writeStructure)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_END
@@ -140,7 +140,7 @@ void addTreeSingleSoln(pybind11::module_& m, const char* name) {
         .def("find", &Tree::find, rdoc::find)
         .def("cancel", &Tree::cancel, rdoc::cancel)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_END

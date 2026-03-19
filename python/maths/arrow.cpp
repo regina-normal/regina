@@ -145,7 +145,7 @@ void addArrow(pybind11::module_& m) {
         .def(pybind11::self * pybind11::self, rdoc_global::__mul_5)
         .def(- pybind11::self, rdoc_global::__sub)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);

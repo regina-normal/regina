@@ -51,7 +51,7 @@ void addSimpleSurfaceBundle(pybind11::module_& m) {
         .def_readonly_static("RP2xS1", &SimpleSurfaceBundle::RP2xS1)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
 
     regina::python::add_global_swap<SimpleSurfaceBundle>(m, rdoc::global_swap);
 

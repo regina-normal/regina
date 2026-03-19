@@ -91,7 +91,7 @@ void addAttachment(pybind11::module_& m) {
         .def("save", &Attachment::save, rdoc::save)
         .def_readonly_static("typeID", &Attachment::typeID)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::packet_eq_operators(c, rdoc::__eq);
 
     regina::python::add_global_swap<Attachment>(m, rdoc::global_swap);

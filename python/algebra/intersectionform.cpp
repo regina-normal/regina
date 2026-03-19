@@ -51,7 +51,7 @@ void addIntersectionForm(pybind11::module_& m) {
         .def("even", &IntersectionForm::even, rdoc::even)
         .def("odd", &IntersectionForm::odd, rdoc::odd)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
     regina::python::add_global_swap<IntersectionForm>(m, rdoc::global_swap);

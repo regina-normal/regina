@@ -47,7 +47,7 @@ void addHandlebody(pybind11::module_& m) {
         .def("genus", &Handlebody::genus, rdoc::genus)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
 
     regina::python::add_global_swap<Handlebody>(m, rdoc::global_swap);
 

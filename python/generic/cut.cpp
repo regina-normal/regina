@@ -228,7 +228,7 @@ void addCut(pybind11::module_& m) {
         .def("inc", &Cut::inc, rdoc::inc)
         .def("incFixedSizes", &Cut::incFixedSizes, rdoc::incFixedSizes)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
     regina::python::add_global_swap<Cut>(m, rdoc::global_swap);

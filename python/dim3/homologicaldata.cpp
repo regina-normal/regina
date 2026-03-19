@@ -90,7 +90,7 @@ void addHomologicalData(pybind11::module_& m) {
         .def("embeddabilityComment",
             &HomologicalData::embeddabilityComment, rdoc::embeddabilityComment)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::disable_eq_operators(c);
 
     regina::python::add_global_swap<HomologicalData>(m, rdoc::global_swap);

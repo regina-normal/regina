@@ -71,7 +71,7 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
     else if constexpr (subdim == 4)
         e.def("pentachoron", &FaceEmbedding<dim, subdim>::pentachoron,
             rbase2::pentachoron);
-    regina::python::add_output(e);
+    regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rbase::__eq);
 
     // We use the global scope here because all of Face's members are
@@ -184,7 +184,7 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
         c.def("inMaximalForest", &Face<dim, subdim>::inMaximalForest,
             rbase::inMaximalForest);
     }
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_END

@@ -145,7 +145,7 @@ void addTreeDecomposition(pybind11::module_& m) {
             pybind11::return_value_policy::reference, rdoc::sibling)
         .def("isLeaf", &TreeBag::isLeaf, rdoc::isLeaf)
     ;
-    regina::python::add_output(tb);
+    regina::python::add_output_rich(tb);
     regina::python::add_eq_operators(tb);
 
     RDOC_SCOPE_SWITCH(TreeDecomposition)
@@ -256,7 +256,7 @@ void addTreeDecomposition(pybind11::module_& m) {
             overload_cast<const std::string&>(&TreeDecomposition::fromPACE),
             rdoc::fromPACE)
     ;
-    regina::python::add_output(td);
+    regina::python::add_output_rich(td);
     regina::python::add_eq_operators(td, rdoc::__eq);
 
     regina::python::add_global_swap<TreeDecomposition>(m, rdoc::global_swap);

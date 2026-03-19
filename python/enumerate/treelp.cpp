@@ -89,7 +89,7 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
             &Tableaux::template fillInitialTableaux<Integer>,
             rdoc::fillInitialTableaux)
         ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     // We need to think more about what a comparison between tableaux should
     // test.  In the meantime, don't make a decision we might regret later.
     regina::python::disable_eq_operators(c);
@@ -133,7 +133,7 @@ void addLPData(pybind11::module_& m, const char* name) {
             return ans;
         }, rdoc::extractSolution)
         ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     // We need to think more about what a comparison between tableaux should
     // test.  Do we just compare basis indices?  Do we do a deep comparison of
     // all the internal data?  Let's not force a decision right now.
@@ -184,7 +184,7 @@ void addTreeLP(pybind11::module_& m) {
             rdoc::combRowAndNorm)
         .def("negateRow", &LPMatrix<Integer>::negateRow, rdoc::negateRow)
         ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
     regina::python::add_global_swap<LPMatrix<Integer>>(m, rdoc::global_swap);
@@ -200,7 +200,7 @@ void addTreeLP(pybind11::module_& m) {
         .def("quad", &LPSystem::quad, rdoc::quad)
         .def("coords", &LPSystem::coords, rdoc::coords)
         ;
-    regina::python::add_output(s);
+    regina::python::add_output_rich(s);
     regina::python::add_eq_operators(s, rdoc::__eq);
 
     addLPInitialTableaux<LPConstraintNone>(m, "LPInitialTableaux");

@@ -45,7 +45,7 @@ void addContainer(pybind11::module_& m) {
         .def("swap", &Container::swap, rdoc::swap)
         .def_readonly_static("typeID", &Container::typeID)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::packet_disable_eq_operators(c);
 
     regina::python::add_global_swap<Container>(m, rdoc::global_swap);

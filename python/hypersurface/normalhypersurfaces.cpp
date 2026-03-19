@@ -101,7 +101,7 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         }, pybind11::keep_alive<0, 1>(), // iterator keeps list alive
             rdoc::vectors)
     ;
-    regina::python::add_output(l);
+    regina::python::add_output_rich(l);
     regina::python::packet_eq_operators(l, rdoc::__eq);
     regina::python::add_packet_data(l);
 

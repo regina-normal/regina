@@ -67,7 +67,7 @@ void addPermGroup(pybind11::module_& m, const char* name) {
             rdoc::__iter__)
         .def_static("centraliser", &Group::centraliser, rdoc::centraliser)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
     RDOC_SCOPE_INNER_BEGIN(iterator)

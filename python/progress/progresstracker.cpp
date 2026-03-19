@@ -71,7 +71,7 @@ void addProgressTracker(pybind11::module_& m) {
         .def("setPercent", &ProgressTracker::setPercent, rdoc::setPercent)
         .def("setFinished", &ProgressTracker::setFinished, rdoc::setFinished)
     ;
-    regina::python::add_output(c1);
+    regina::python::add_output_rich(c1);
     // We inherit equality-by-reference from the base class.
 
     RDOC_SCOPE_SWITCH(ProgressTrackerOpen)
@@ -90,7 +90,7 @@ void addProgressTracker(pybind11::module_& m) {
         .def("setFinished", &ProgressTrackerOpen::setFinished,
             rdoc::setFinished)
     ;
-    regina::python::add_output(c2);
+    regina::python::add_output_rich(c2);
     // We inherit equality-by-reference from the base class.
 
     RDOC_SCOPE_SWITCH(ProgressTrackerObjective)
@@ -107,7 +107,7 @@ void addProgressTracker(pybind11::module_& m) {
         .def("setFinished", &ProgressTrackerObjective::setFinished,
             rdoc::setFinished)
     ;
-    regina::python::add_output(c3);
+    regina::python::add_output_rich(c3);
     // We inherit equality-by-reference from the base class.
 
     RDOC_SCOPE_END

@@ -50,7 +50,7 @@ void addSatBlockTypes(pybind11::module_& m) {
             rdoc_scope)
         .def("position", &SatMobius::position, rdoc::position)
     ;
-    regina::python::add_output(mob);
+    regina::python::add_output_rich(mob);
 
     RDOC_SCOPE_SWITCH(SatLST)
 
@@ -60,7 +60,7 @@ void addSatBlockTypes(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal, rdoc::lst)
         .def("roles", &SatLST::roles, rdoc::roles)
     ;
-    regina::python::add_output(lst);
+    regina::python::add_output_rich(lst);
 
     RDOC_SCOPE_SWITCH(SatTriPrism)
 
@@ -69,7 +69,7 @@ void addSatBlockTypes(pybind11::module_& m) {
         .def("isMajor", &SatTriPrism::isMajor, rdoc::isMajor)
         .def_static("model", &SatTriPrism::model, rdoc::model)
     ;
-    regina::python::add_output(tri);
+    regina::python::add_output_rich(tri);
 
     RDOC_SCOPE_SWITCH(SatCube)
 
@@ -77,7 +77,7 @@ void addSatBlockTypes(pybind11::module_& m) {
             rdoc_scope)
         .def_static("model", &SatCube::model, rdoc::model)
     ;
-    regina::python::add_output(cube);
+    regina::python::add_output_rich(cube);
 
     RDOC_SCOPE_SWITCH(SatReflectorStrip)
 
@@ -85,7 +85,7 @@ void addSatBlockTypes(pybind11::module_& m) {
             m, "SatReflectorStrip", rdoc_scope)
         .def_static("model", &SatReflectorStrip::model, rdoc::model)
     ;
-    regina::python::add_output(ref);
+    regina::python::add_output_rich(ref);
 
     RDOC_SCOPE_SWITCH(SatLayering)
 
@@ -94,7 +94,7 @@ void addSatBlockTypes(pybind11::module_& m) {
         .def("overHorizontal", &SatLayering::overHorizontal,
             rdoc::overHorizontal)
     ;
-    regina::python::add_output(l);
+    regina::python::add_output_rich(l);
 
     RDOC_SCOPE_END
 }

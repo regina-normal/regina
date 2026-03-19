@@ -154,7 +154,7 @@ void addNormalHypersurface(pybind11::module_& m) {
         .def(pybind11::self * regina::LargeInteger(), rdoc::__mul)
         .def(pybind11::self *= regina::LargeInteger(), rdoc::__imul)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
 

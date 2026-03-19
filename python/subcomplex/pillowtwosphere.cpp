@@ -48,7 +48,7 @@ void addPillowTwoSphere(pybind11::module_& m) {
             rdoc::triangleMapping)
         .def_static("recognise", &PillowTwoSphere::recognise, rdoc::recognise)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
     RDOC_SCOPE_END

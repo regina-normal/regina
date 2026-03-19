@@ -92,7 +92,7 @@ void addSatBlock(pybind11::module_& m) {
             rdoc::triangulation)
         .def("block", &SatBlockModel::block, rdoc::block)
     ;
-    regina::python::add_output(d);
+    regina::python::add_output_rich(d);
     regina::python::add_eq_operators(d, rdoc::__eq);
 
     regina::python::add_global_swap<SatBlockModel>(m, rdoc::global_swap);

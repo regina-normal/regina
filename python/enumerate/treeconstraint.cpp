@@ -129,7 +129,7 @@ void addBanConstraint(pybind11::module_& m, const char* name,
         .def("marked", &BanConstraint::marked, rdoc::marked)
         .def_static("supported", &BanConstraint::supported, rdoc::supported)
         ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
     RDOC_SCOPE_END

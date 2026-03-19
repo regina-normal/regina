@@ -406,7 +406,7 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
     #pragma GCC diagnostic pop
     #endif
     regina::python::isosig_options<2>(c);
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);
     regina::python::packet_eq_operators(c, rbase::__eq);
     regina::python::add_packet_data(c);

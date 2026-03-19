@@ -90,11 +90,11 @@ enum class ReprStyle {
  * the given output style.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * `regina::python::add_output(c, style)`, where \a c is the
+ * `regina::python::add_output_rich(c, style)`, where \a c is the
  * `pybind11::class_` object that wraps \a T.
  */
 template <RichStringifiable T, typename... options>
-void add_output(pybind11::class_<T, options...>& c,
+void add_output_rich(pybind11::class_<T, options...>& c,
         ReprStyle style = ReprStyle::Detailed) {
     c.def("str", pybind11::overload_cast<>(&T::str, pybind11::const_),
         doc::Output_::str);
@@ -144,8 +144,8 @@ void add_output(pybind11::class_<T, options...>& c,
  * for str().
  *
  * If the wrapped class \a T provides a full suite of rich string output
- * functions `str()`, `detail()` and `utf8()` then you should use `add_output`,
- * not `add_output_basic`.
+ * functions `str()`, `detail()` and `utf8()` then you should use
+ * `add_output_rich`, not `add_output_basic`.
  */
 template <Stringifiable T, typename... options>
 requires (! RichStringifiable<T>)
@@ -191,8 +191,8 @@ void add_output_basic(pybind11::class_<T, options...>& c,
  * `pybind11::class_` object that wraps \a T.
  *
  * If the wrapped class \a T provides a full suite of rich string output
- * functions `str()`, `detail()` and `utf8()` then you should use `add_output`,
- * not `add_output_ostream`.
+ * functions `str()`, `detail()` and `utf8()` then you should use
+ * `add_output_rich`, not `add_output_ostream`.
  */
 template <Writeable T, typename... options>
 requires (! RichStringifiable<T>)

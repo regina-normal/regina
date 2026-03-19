@@ -64,7 +64,7 @@ void addEdge3(pybind11::module_& m, pybind11::module_& internal) {
         .def("edge", &EdgeEmbedding<3>::edge, rbase2::edge)
         .def("vertices", &EdgeEmbedding<3>::vertices, rbase::vertices)
     ;
-    regina::python::add_output(e);
+    regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rbase::__eq);
 
     RDOC_SCOPE_SWITCH(Face)
@@ -157,7 +157,7 @@ versions of Regina.)doc")
     c.attr("edgeNumber") = wrapTableView(internal, Edge<3>::edgeNumber);
     c.attr("edgeVertex") = wrapTableView(internal, Edge<3>::edgeVertex);
 
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_END

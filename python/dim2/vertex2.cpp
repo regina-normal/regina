@@ -61,7 +61,7 @@ void addVertex2(pybind11::module_& m, pybind11::module_& internal) {
         .def("vertex", &VertexEmbedding<2>::vertex, rbase2::vertex)
         .def("vertices", &VertexEmbedding<2>::vertices, rbase::vertices)
     ;
-    regina::python::add_output(e);
+    regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rbase::__eq);
 
     // We use the global scope here because all of Face's members are
@@ -108,7 +108,7 @@ void addVertex2(pybind11::module_& m, pybind11::module_& internal) {
         .def_readonly_static("hasNumberingTables",
             &Vertex<2>::hasNumberingTables)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_END

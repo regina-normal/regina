@@ -56,7 +56,7 @@ void addSnappedTwoSphere(pybind11::module_& m) {
             overload_cast<const SnappedBall&, const SnappedBall&>(
             &SnappedTwoSphere::recognise), rdoc::recognise_2)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
     RDOC_SCOPE_END

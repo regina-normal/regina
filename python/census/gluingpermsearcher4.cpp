@@ -69,7 +69,7 @@ void addGluingPermSearcher4(pybind11::module_& m) {
                 &GluingPermSearcher<4>::fromTaggedData), rdoc::fromTaggedData)
         .def_readonly_static("dataTag", &GluingPermSearcher<4>::dataTag)
         ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_END

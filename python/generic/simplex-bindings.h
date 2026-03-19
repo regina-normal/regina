@@ -108,7 +108,7 @@ void addSimplex(pybind11::module_& m, const char* name) {
         .def_readonly_static("dimension", &Simplex<dim>::dimension)
         .def_readonly_static("subdimension", &Simplex<dim>::subdimension)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_END

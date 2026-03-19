@@ -98,7 +98,7 @@ void addComponent4(pybind11::module_& m, pybind11::module_& internal) {
             rdoc::countBoundaryTetrahedra)
         .def_readonly_static("dimension", &Component<4>::dimension)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_END

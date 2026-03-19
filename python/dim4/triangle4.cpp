@@ -64,7 +64,7 @@ void addTriangle4(pybind11::module_& m, pybind11::module_& internal) {
         .def("triangle", &TriangleEmbedding<4>::triangle, rbase2::triangle)
         .def("vertices", &TriangleEmbedding<4>::vertices, rbase::vertices)
     ;
-    regina::python::add_output(e);
+    regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rbase::__eq);
 
     RDOC_SCOPE_SWITCH(Face)
@@ -135,7 +135,7 @@ void addTriangle4(pybind11::module_& m, pybind11::module_& internal) {
     c.attr("triangleVertex") = wrapTableView(internal,
         Triangle<4>::triangleVertex);
 
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_END

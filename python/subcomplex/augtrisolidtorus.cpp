@@ -63,7 +63,7 @@ void addAugTriSolidTorus(pybind11::module_& m) {
         .def_readonly_static("CHAIN_AXIS", &AugTriSolidTorus::CHAIN_AXIS)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
 
     regina::python::add_global_swap<AugTriSolidTorus>(m, rdoc::global_swap);
 

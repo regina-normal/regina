@@ -64,7 +64,7 @@ void addTriangle3(pybind11::module_& m, pybind11::module_& internal) {
         .def("triangle", &TriangleEmbedding<3>::triangle, rbase2::triangle)
         .def("vertices", &TriangleEmbedding<3>::vertices, rbase::vertices)
     ;
-    regina::python::add_output(e);
+    regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rbase::__eq);
 
     RDOC_SCOPE_SWITCH(Face)
@@ -141,7 +141,7 @@ void addTriangle3(pybind11::module_& m, pybind11::module_& internal) {
         .def_readonly_static("hasNumberingTables",
             &Triangle<3>::hasNumberingTables)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<

@@ -121,7 +121,7 @@ void addSFSpace(pybind11::module_& m) {
     regina::python::add_eq_operators(s, rdoc::__eq);
     // Do not bind comparison operators, since these are already inherited
     // from Manifold and we do not want to hide those more general versions.
-    regina::python::add_output(s);
+    regina::python::add_output_rich(s);
 
     regina::python::add_global_swap<SFSpace>(m, rdoc::global_swap);
 

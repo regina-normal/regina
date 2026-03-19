@@ -95,7 +95,7 @@ void addIsomorphism3(pybind11::module_& m) {
             rdoc::random)
         .def_static("identity", &Isomorphism<3>::identity, rdoc::identity)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 

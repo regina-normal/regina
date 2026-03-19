@@ -67,7 +67,7 @@ void addVertex3(pybind11::module_& m, pybind11::module_& internal) {
         .def("vertex", &VertexEmbedding<3>::vertex, rbase2::vertex)
         .def("vertices", &VertexEmbedding<3>::vertices, rbase::vertices)
     ;
-    regina::python::add_output(e);
+    regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rbase::__eq);
 
     RDOC_SCOPE_SWITCH(Face)
@@ -141,7 +141,7 @@ being reserved for a different purpose in a future release.)doc")
         .def_readonly_static("hasNumberingTables",
             &Vertex<3>::hasNumberingTables)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<

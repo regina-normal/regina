@@ -89,7 +89,7 @@ void addAngleStructures(pybind11::module_& m) {
                 const regina::AngleStructure&)>&>,
             rdoc::sort)
     ;
-    regina::python::add_output(l);
+    regina::python::add_output_rich(l);
     regina::python::packet_eq_operators(l, rdoc::__eq);
     regina::python::add_packet_data(l);
 

@@ -105,7 +105,7 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
         .def("torsionInclusion", &MarkedAbelianGroup::torsionInclusion,
             rdoc::torsionInclusion)
     ;
-    regina::python::add_output(c1);
+    regina::python::add_output_rich(c1);
     regina::python::add_eq_operators(c1, rdoc::__eq);
 
     regina::python::add_global_swap<MarkedAbelianGroup>(m, rdoc::global_swap);
@@ -151,7 +151,7 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
         .def("inverseHom", &HomMarkedAbelianGroup::inverseHom, rdoc::inverseHom)
         .def(pybind11::self * pybind11::self, rdoc::__mul)
     ;
-    regina::python::add_output(c2);
+    regina::python::add_output_rich(c2);
     // Deciding what we want comparisons to *mean* requires some thought.
     // Let's not make a decision now that we might regret later.
     regina::python::disable_eq_operators(c2);

@@ -119,7 +119,7 @@ void addBoundaryComponent(pybind11::module_& m, pybind11::module_& internal,
         c.def("countPentachora", &BoundaryComponent<dim>::countPentachora,
             rbase::countPentachora);
     }
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_END

@@ -55,7 +55,7 @@ void addLayeredTorusBundle(pybind11::module_& m) {
             rdoc::recognise)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
 
     regina::python::add_global_swap<LayeredTorusBundle>(m, rdoc::global_swap);
 

@@ -71,7 +71,7 @@ auto add_packet_wrapper(pybind11::module_& m, const char* className) {
             doc::common::PacketOf_copy)
         .def_readonly_static("typeID", &regina::PacketOf<Held>::typeID)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
 
     m.def("make_packet", [](const Held& h) {
         // The C++ make_packet expects an rvalue reference.

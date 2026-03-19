@@ -54,7 +54,7 @@ void addBlockedSFSTriple(pybind11::module_& m) {
             rdoc::matchingReln)
         .def_static("recognise", &BlockedSFSTriple::recognise, rdoc::recognise)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
     regina::python::add_global_swap<BlockedSFSTriple>(m, rdoc::global_swap);

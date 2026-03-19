@@ -392,7 +392,7 @@ void addTriangulation(pybind11::module_& m, pybind11::module_& internal,
         #endif
     });
     regina::python::isosig_options<dim>(c);
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);
     regina::python::packet_eq_operators(c, rbase::__eq);
     regina::python::add_packet_data(c);

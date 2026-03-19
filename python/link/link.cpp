@@ -110,7 +110,7 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
         .def("next", &Crossing::next, rdoc::next)
         .def("prev", &Crossing::prev, rdoc::prev)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_SWITCH(Link)
@@ -616,7 +616,7 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
     #if defined(__GNUC__)
     #pragma GCC diagnostic pop
     #endif
-    regina::python::add_output(l);
+    regina::python::add_output_rich(l);
     regina::python::add_tight_encoding(l);
     regina::python::packet_eq_operators(l, rdoc::__eq);
     regina::python::add_packet_data(l);

@@ -67,7 +67,7 @@ void addTxICore(pybind11::module_& m) {
         .def("size", &TxIDiagonalCore::size, rdoc::size)
         .def("k", &TxIDiagonalCore::k, rdoc::k)
     ;
-    regina::python::add_output(d);
+    regina::python::add_output_rich(d);
 
     regina::python::add_global_swap<TxIDiagonalCore>(m, rdoc::global_swap);
 
@@ -79,7 +79,7 @@ void addTxICore(pybind11::module_& m) {
         .def(pybind11::init<const TxIParallelCore&>(), rdoc::__copy)
         .def("swap", &TxIParallelCore::swap, rdoc::swap)
     ;
-    regina::python::add_output(p);
+    regina::python::add_output_rich(p);
 
     regina::python::add_global_swap<TxIParallelCore>(m, rdoc::global_swap);
 

@@ -63,7 +63,7 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
             rbase2::tetrahedron)
         .def("vertices", &TetrahedronEmbedding<4>::vertices, rbase::vertices)
     ;
-    regina::python::add_output(e);
+    regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rbase::__eq);
 
     RDOC_SCOPE_SWITCH(Face)
@@ -135,7 +135,7 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
         .def_readonly_static("hasNumberingTables",
             &Tetrahedron<4>::hasNumberingTables)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_END

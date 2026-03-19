@@ -127,7 +127,7 @@ void addFacetPairing3(pybind11::module_& m) {
             pybind11::arg("nBdryFacets"), pybind11::arg("action"),
             rbase::findAllPairings)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rbase::__eq);
 
