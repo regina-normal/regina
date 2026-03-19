@@ -118,7 +118,7 @@ static void verifyInteger(T&& val) {
     if constexpr (regina::ReginaInteger<T>)
         valStr = val.str();
     else
-        valStr = std::to_string(val);
+        valStr = regina::toString(val);
 
     EXPECT_EQ(r.numerator(), val);
     EXPECT_EQ(r.denominator(), 1);
