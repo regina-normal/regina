@@ -197,7 +197,8 @@ void AngleStructures::calculateSpanStrict() const {
     }
 
     // We run into trouble if there's a 0 or pi angle that never changes.
-    FixedArray<Rational> fixedAngles(nTets * 3);
+    // Here, fixedAngles[i] == (-1, +1) for fixed angle (0, pi) respectively.
+    FixedArray<int> fixedAngles(nTets * 3);
     size_t nFixed = 0;
 
     // Get the list of bad unchanging angles from the first structure.
@@ -207,11 +208,14 @@ void AngleStructures::calculateSpanStrict() const {
     for (size_t tet = 0; tet < nTets; tet++)
         for (int edges = 0; edges < 3; edges++) {
             Rational angle = first.angle(tet, edges);
-            if (angle == Rational::zero || angle == Rational::one) {
-                fixedAngles[3 * tet + edges] = angle;
+            if (angle == Rational::zero) {
+                fixedAngles[3 * tet + edges] = -1;
+                ++nFixed;
+            } else if (angle == Rational::one) {
+                fixedAngles[3 * tet + edges] = 1;
                 ++nFixed;
             } else
-                fixedAngles[3 * tet + edges] = Rational::undefined;
+                fixedAngles[3 * tet + edges] = 0;
         }
 
     if (nFixed == 0) {
@@ -225,16 +229,20 @@ void AngleStructures::calculateSpanStrict() const {
         const AngleStructure& s = *it;
         for (size_t tet = 0; tet < nTets; tet++)
             for (int edges = 0; edges < 3; edges++) {
-                if (fixedAngles[3 * tet + edges] == Rational::undefined)
+                if (fixedAngles[3 * tet + edges] == 0)
                     continue;
-                if (s.angle(tet, edges) != fixedAngles[3 * tet + edges]) {
-                    // Here's a bad angle that finally changed.
-                    fixedAngles[3 * tet + edges] = Rational::undefined;
-                    --nFixed;
-                    if (nFixed == 0) {
-                        doesSpanStrict_ = true;
-                        return;
-                    }
+                if (fixedAngles[3 * tet + edges] < 0 &&
+                        s.angle(tet, edges) == Rational::zero)
+                    continue;
+                if (fixedAngles[3 * tet + edges] > 0 &&
+                        s.angle(tet, edges) == Rational::one)
+                    continue;
+                // Here's a bad angle that finally changed.
+                fixedAngles[3 * tet + edges] = 0;
+                --nFixed;
+                if (nFixed == 0) {
+                    doesSpanStrict_ = true;
+                    return;
                 }
             }
     }
