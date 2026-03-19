@@ -43,7 +43,7 @@ namespace regina::python {
 template <typename T>
 concept PythonSequence =
     std::derived_from<T, pybind11::object> &&
-    requires (T x, size_t i) {
+    requires(T x, size_t i) {
         { x[i] } -> std::convertible_to<pybind11::object>;
     };
 
@@ -53,7 +53,7 @@ concept PythonSequence =
  */
 template <typename T>
 concept PythonClassWrapper =
-    requires (T x) { { pybind11::class_(x) } -> std::same_as<T>; };
+    requires(T x) { { pybind11::class_(x) } -> std::same_as<T>; };
 
 /**
  * A Python class wrapper type for one of Regina's wrapped packet types.

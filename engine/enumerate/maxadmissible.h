@@ -118,7 +118,7 @@ class MaxAdmissible {
         template <ReginaBitmask BitmaskType, std::input_iterator RayIterator>
         requires
             IndexedContainer<std::iter_value_t<RayIterator>> &&
-            requires (RayIterator it, size_t index) {
+            requires(RayIterator it, size_t index) {
                 { (*it)[index] == 0 } -> std::convertible_to<bool>;
             }
         static std::vector<BitmaskType> enumerate(

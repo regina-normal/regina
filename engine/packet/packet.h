@@ -97,7 +97,7 @@ concept PacketClass =
 template <typename T>
 concept WrappedPacket =
     PacketClass<T> &&
-    requires (T x) { { PacketOf(x) } -> std::same_as<T>; };
+    requires(T x) { { PacketOf(x) } -> std::same_as<T>; };
 
 /**
  * A packet class that stores text (possibly alongside other data).
@@ -109,7 +109,7 @@ concept WrappedPacket =
 template <typename T>
 concept TextPacket =
     PacketClass<T> &&
-    requires (T x, const std::string s) {
+    requires(T x, const std::string s) {
         { x.text() } -> std::same_as<const std::string&>;
         x.setText(s);
     };

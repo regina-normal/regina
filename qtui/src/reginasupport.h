@@ -50,7 +50,7 @@ class QWidget;
  * non-empty after the refresh (i.e., at least one option is present).
  */
 template <typename T>
-concept ObjectChooser = requires (T x) {
+concept ObjectChooser = requires(T x) {
     typename T::Choice;
     { x.selected() } -> std::same_as<typename T::Choice>;
     x.select(std::declval<typename T::Choice>());
@@ -65,7 +65,7 @@ concept ObjectChooser = requires (T x) {
 template <typename T>
 concept StringSanitiser =
     std::is_class_v<T> &&
-    requires (QString s) {
+    requires(QString s) {
         T::sanitise(s);
     };
 

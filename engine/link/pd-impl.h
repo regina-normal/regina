@@ -49,7 +49,7 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 namespace regina {
 
 template <std::random_access_iterator Iterator>
-requires requires (Iterator it, int index) {
+requires requires(Iterator it, int index) {
     { +(*it)[index] } -> CppInteger;
 }
 Link Link::fromPD(Iterator begin, Iterator end) {

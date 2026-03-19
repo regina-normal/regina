@@ -166,7 +166,7 @@ struct NoPropagationOptions {};
 template <typename T>
 concept Retriangulable =
     std::constructible_from<T, const T&, bool> &&
-    requires (const T x) {
+    requires(const T x) {
         typename RetriangulateParams<T>;
 
         typename RetriangulateParams<T>::PropagationOptions;
@@ -178,7 +178,7 @@ concept Retriangulable =
         { RetriangulateParams<T>::sig(x) } -> std::same_as<std::string>;
         { RetriangulateParams<T>::rigidSig(x) } -> std::same_as<std::string>;
     } &&
-    requires (const std::string sig, size_t max,
+    requires(const std::string sig, size_t max,
             typename RetriangulateParams<T>::PropagationOptions options) {
         RetriangulateParams<T>::propagateFrom(sig, max, options,
             [](T&&, const std::string&) { return false; });

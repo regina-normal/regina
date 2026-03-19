@@ -6008,7 +6008,7 @@ class Link :
         requires
             SignedCppInteger<std::iter_value_t<SignIterator>> &&
             Iterable<std::iter_value_t<ComponentIterator>> &&
-            requires (ComponentIterator it) {
+            requires(ComponentIterator it) {
                 // We use + here to decay the inner sequence element to a plain
                 // value type.  In C++23, we can replace +(...) with auto(...).
                 { +(*(it->begin())) } -> SignedCppInteger;
@@ -6720,7 +6720,7 @@ class Link :
          * \return the reconstructed link.
          */
         template <std::random_access_iterator Iterator>
-        requires requires (Iterator it, int index) {
+        requires requires(Iterator it, int index) {
             // We use + here to decay the tuple element to a plain value type.
             // In C++23, we can replace +(*it)[index] with auto((*it)[index]).
             { +(*it)[index] } -> CppInteger;

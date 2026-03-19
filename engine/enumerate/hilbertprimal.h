@@ -221,7 +221,7 @@ class HilbertPrimal {
          * or \c false otherwise.
          */
         template <IndexedContainer VectorClass, ReginaBitmask BitmaskType>
-        requires requires (const VectorClass::value_type element) {
+        requires requires(const VectorClass::value_type element) {
             { element == 0 } -> std::convertible_to<bool>;
         }
         static bool inFace(const VectorClass& ray, const BitmaskType& face);

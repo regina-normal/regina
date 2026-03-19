@@ -158,7 +158,7 @@ template <std::input_iterator SignIterator,
 requires
     SignedCppInteger<std::iter_value_t<SignIterator>> &&
     Iterable<std::iter_value_t<ComponentIterator>> &&
-    requires (ComponentIterator it) {
+    requires(ComponentIterator it) {
         { +(*(it->begin())) } -> SignedCppInteger;
     }
 Link Link::fromData(SignIterator beginSigns, SignIterator endSigns,

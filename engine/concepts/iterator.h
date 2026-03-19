@@ -249,7 +249,7 @@ concept OutputIterator =
  */
 template <typename T>
 concept IndexedContainer =
-    requires (T x, size_t index) {
+    requires(T x, size_t index) {
         typename T::value_type;
         { x.size() } -> std::convertible_to<size_t>;
         { x[index] } -> SameModCVRef<typename T::value_type>;

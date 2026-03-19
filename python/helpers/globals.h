@@ -54,7 +54,7 @@ namespace python {
  * binding the wrong variant of `regina::swap()`.
  */
 template <typename T>
-requires requires (T x, T y) { regina::swap(x, y); }
+requires requires(T x, T y) { regina::swap(x, y); }
 inline void add_global_swap(pybind11::module_& m, const char* doc) {
     m.def("swap", static_cast<void(&)(T&, T&)>(regina::swap), doc);
 }

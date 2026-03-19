@@ -132,7 +132,7 @@ void HilbertPrimal::enumerate(Action&& action,
 }
 
 template <IndexedContainer VectorClass, ReginaBitmask BitmaskType>
-requires requires (const VectorClass::value_type element) {
+requires requires(const VectorClass::value_type element) {
     { element == 0 } -> std::convertible_to<bool>;
 }
 bool HilbertPrimal::inFace(const VectorClass& ray, const BitmaskType& face) {
