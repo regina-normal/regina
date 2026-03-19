@@ -160,8 +160,6 @@ dGVzdAo=
   <simplex> 0 13 0 4 1 21 1 8 </simplex>
   <H1><abeliangroup rank="1"> 2 </abeliangroup></H1>
   <H1Rel><abeliangroup rank="1"> 2 </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
 <surfaces tri="_" type="5" algorithm="16" coords="1" label="Quad vertex surfaces">
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
@@ -316,8 +314,6 @@ while t != None:
   <simplex> 5 15 3 0 4 9 6 5 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="2"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> </abeliangroup></H2>
 </tri>
 </container>
 </container>
@@ -354,8 +350,6 @@ dGVzdAo=
   <simplex> 0 13 0 4 1 21 1 8 </simplex>
   <H1><abeliangroup rank="1"> 2 </abeliangroup></H1>
   <H1Rel><abeliangroup rank="1"> 2 </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
 <surfaces tri="_" type="5" algorithm="16" coords="1" label="Quad vertex surfaces">
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
@@ -510,8 +504,6 @@ while t != None:
   <simplex> 5 15 3 0 4 9 6 5 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="2"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> </abeliangroup></H2>
 </tri>
 </container>
 </container>
@@ -550,8 +542,6 @@ dGVzdAo=
   <simplex> 0 13 0 4 1 21 1 8 </simplex>
   <H1><abeliangroup rank="1"> 2 </abeliangroup></H1>
   <H1Rel><abeliangroup rank="1"> 2 </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
 <surfaces tri="_" type="5" algorithm="16" coords="1" label="Quad vertex surfaces">
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
@@ -706,8 +696,6 @@ while t != None:
   <simplex> 5 15 3 0 4 9 6 5 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="2"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> </abeliangroup></H2>
 </tri>
 </container>
 </container>
@@ -746,8 +734,6 @@ dGVzdAo=
   <simplex> 0 13 0 4 1 21 1 8 </simplex>
   <H1><abeliangroup rank="1"> 2 </abeliangroup></H1>
   <H1Rel><abeliangroup rank="1"> 2 </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
 <surfaces tri="_" type="5" algorithm="16" coords="1" label="Quad vertex surfaces">
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
@@ -902,8 +888,6 @@ while t != None:
   <simplex> 5 15 3 0 4 9 6 5 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="2"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> </abeliangroup></H2>
 </tri>
 </container>
 </container>
@@ -935,8 +919,6 @@ dGVzdAo=
   <simplex> 0 13 0 4 1 21 1 8 </simplex>
   <H1><abeliangroup rank="1"> 2 </abeliangroup></H1>
   <H1Rel><abeliangroup rank="1"> 2 </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
 <surfaces tri="_" type="5" algorithm="16" coords="1" label="Quad vertex surfaces">
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
@@ -1110,8 +1092,6 @@ dGVzdAo=
   <simplex> 0 13 0 4 1 21 1 8 </simplex>
   <H1><abeliangroup rank="1"> 2 </abeliangroup></H1>
   <H1Rel><abeliangroup rank="1"> 2 </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
 <surfaces tri="_" type="5" algorithm="16" coords="1" label="Quad vertex surfaces">
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
@@ -1266,8 +1246,6 @@ while t != None:
   <simplex> 5 15 3 0 4 9 6 5 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="2"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> </abeliangroup></H2>
 </tri>
 </container>
 </container>
@@ -1305,8 +1283,6 @@ dGVzdAo=
   <simplex> 0 13 0 4 1 21 1 8 </simplex>
   <H1><abeliangroup rank="1"> 2 </abeliangroup></H1>
   <H1Rel><abeliangroup rank="1"> 2 </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
 <surfaces tri="_" type="5" algorithm="16" coords="1" label="Quad vertex surfaces">
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
@@ -1482,8 +1458,6 @@ dGVzdAo=
   <simplex> 0 13 0 4 1 21 1 8 </simplex>
   <H1><abeliangroup rank="1"> 2 </abeliangroup></H1>
   <H1Rel><abeliangroup rank="1"> 2 </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
 <surfaces tri="_" type="5" algorithm="16" coords="1" label="Quad vertex surfaces">
   <surface enc="535" len="21"> 0 1 1 1 4 1 7 1 8 1 11 1 14 1 15 1 16 1 17 1
@@ -1638,8 +1612,6 @@ while t != None:
   <simplex> 5 15 3 0 4 9 6 5 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="2"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> </abeliangroup></H2>
 </tri>
 </container>
 </container>

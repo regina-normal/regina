@@ -192,8 +192,6 @@ TEST: regconvert -2 @TESTDIR@/b5.rga
   </tetrahedra>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="2"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> </abeliangroup></H2>
 </packet> <!-- Triangulation -->
 </packet> <!-- Container (Container) -->
 </reginadata>
@@ -239,8 +237,6 @@ dGVzdAo=
   </tetrahedra>
   <H1><abeliangroup rank="1"> 2 </abeliangroup></H1>
   <H1Rel><abeliangroup rank="1"> 2 </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <packet type="Text" typeid="2"
 	label="Note">
   <text>There are in fact two triangulations of this 3-manifold with three tetrahedra.</text>
@@ -451,8 +447,6 @@ Output (compressed):
   </tetrahedra>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="2"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> </abeliangroup></H2>
 </packet> <!-- Triangulation -->
 </packet> <!-- Container (Container) -->
 </reginadata>
@@ -500,8 +494,6 @@ dGVzdAo=
   </tetrahedra>
   <H1><abeliangroup rank="1"> 2 </abeliangroup></H1>
   <H1Rel><abeliangroup rank="1"> 2 </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <packet type="Text" typeid="2"
 	label="Note">
   <text>There are in fact two triangulations of this 3-manifold with three tetrahedra.</text>
@@ -710,8 +702,6 @@ Output (compressed):
   </tetrahedra>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="2"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> </abeliangroup></H2>
 </packet> <!-- Triangulation -->
 </packet> <!-- Container (Container) -->
 </reginadata>
@@ -759,8 +749,6 @@ dGVzdAo=
   </tetrahedra>
   <H1><abeliangroup rank="1"> 2 </abeliangroup></H1>
   <H1Rel><abeliangroup rank="1"> 2 </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <packet type="Text" typeid="2"
 	label="Note">
   <text>There are in fact two triangulations of this 3-manifold with three tetrahedra.</text>
@@ -965,8 +953,6 @@ TEST: regconvert -2 -u @TESTDIR@/b5.rga
   </tetrahedra>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="2"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> </abeliangroup></H2>
 </packet> <!-- Triangulation -->
 </packet> <!-- Container (Container) -->
 </reginadata>
@@ -1012,8 +998,6 @@ dGVzdAo=
   </tetrahedra>
   <H1><abeliangroup rank="1"> 2 </abeliangroup></H1>
   <H1Rel><abeliangroup rank="1"> 2 </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <packet type="Text" typeid="2"
 	label="Note">
   <text>There are in fact two triangulations of this 3-manifold with three tetrahedra.</text>
@@ -1224,8 +1208,6 @@ Output:
   </tetrahedra>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="2"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> </abeliangroup></H2>
 </packet> <!-- Triangulation -->
 </packet> <!-- Container (Container) -->
 </reginadata>
@@ -1273,8 +1255,6 @@ dGVzdAo=
   </tetrahedra>
   <H1><abeliangroup rank="1"> 2 </abeliangroup></H1>
   <H1Rel><abeliangroup rank="1"> 2 </abeliangroup></H1Rel>
-  <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
-  <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <packet type="Text" typeid="2"
 	label="Note">
   <text>There are in fact two triangulations of this 3-manifold with three tetrahedra.</text>
