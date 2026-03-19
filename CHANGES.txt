@@ -212,6 +212,8 @@ Version 8.0  [ TODO ]
               placeholder to avoid compile errors.
         Class NumericalError:
             - New exception class.
+        Class OutputBase:
+            - Removed completely.
         Class PermClass<n>:
             - Everything in this class is now constexpr.
         Class Polynomial<T>:
