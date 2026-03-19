@@ -2291,6 +2291,14 @@ class SnapPeaTriangulation :
          */
         void writeTextLong(std::ostream& out) const;
 
+        // We inherit from both Output<SnapPeaTriangulation> and
+        // Output<Triangulation<3>>.  We need to resolve the ambiguous
+        // string output functions.
+
+        using Output<SnapPeaTriangulation>::str;
+        using Output<SnapPeaTriangulation>::utf8;
+        using Output<SnapPeaTriangulation>::detail;
+
         /*@}*/
 
     private:

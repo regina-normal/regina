@@ -98,7 +98,7 @@ class ExceptionCache {
  * however, it is also safe to use with subinterpreters (which, as of
  * pybind11 3.0.0rc3, `pybind11::register_exception()` is not).
  */
-template <typename ReginaExceptionType>
+template <std::derived_from<std::exception> ReginaExceptionType>
 PyObject* registerReginaException(pybind11::module_& m, const char* className,
         const char* docstring, pybind11::handle base) {
 #if REGINA_PYBIND11_VERSION == 3

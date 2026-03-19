@@ -340,14 +340,16 @@ Version 8.0  [ TODO ]
             - Many new concepts:
               + AssignableTo, CanConstruct, CoefficientDomain,
                 ConcatenableSequence, Domain, Field, IntegralDomain,
-                ReginaBitmask, Ring, RingLike, SameModCVRef, StrictWeakOrder,
-                TerminatingCallback, VoidCallback (defined in concepts/core.h)
+                ReginaBitmask, ReginaQitmask, Ring, RingLike, SameModCVRef,
+                StrictWeakOrder, TerminatingCallback, VoidCallback (defined in
+                concepts/core.h)
               + AnyInteger, ArbitraryPrecisionInteger, CppInteger,
                 IntegerComparable, IntegerCompatible, ReginaInteger,
                 StandardCppInteger, SignedCppInteger, UnsignedCppInteger
                 (defined in utilities/intutils.h)
-              + InherentlyTightEncodable, Readable, StandardStringifiable,
-                Stringifiable, Writable (defined in concepts/io.h)
+              + InherentlyTightEncodable, Readable, RichStringifiable,
+                StandardStringifiable, Stringifiable, Writable (defined in
+                concepts/io.h)
               + BidirectionalIterableFor, BidirectionalIteratorFor,
                 CharIterator, ForwardIteratorFor, IndexedContainer,
                 InputIteratorFor, Iterable, IterableFor, OutputIterator,
@@ -356,8 +358,8 @@ Version 8.0  [ TODO ]
                 concepts/iterator.h)
               + ArbitraryPrecisionIntegerVector, IntegerVector,
                 SigReconstructible (defined in concepts/maths.h)
-              + PacketClass, PacketHeldType, TextPacket(defined in
-                concepts/packet.h)
+              + PacketClass, PacketHeldType, TextPacket, WrappedPacket
+                (defined in concepts/packet.h)
               + ArrayOf, ConstRefArrayOf (defined in concepts/array.h)
               + BanConstraint, LPConstraint, LPSubspace (defined in
                 enumerate/treelp.h)

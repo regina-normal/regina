@@ -41,11 +41,9 @@ using regina::Integer;
 using regina::Laurent;
 
 namespace {
-    // PythonType should be pybind11::list, pybind11::tuple, or pybind11::args.
-    //
     // Only nElements will be extracted from arg.  Typically nElements would be
     // arg.size(); it may be smaller but it must not be larger.
-    template <typename PythonType>
+    template <regina::python::PythonSequence PythonType>
     Arrow::DiagramSequence sequenceArg(PythonType arg, size_t nElements) {
         Arrow::DiagramSequence seq(nElements);
         auto it = arg.begin();

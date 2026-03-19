@@ -49,11 +49,12 @@ namespace python {
  * Adds a Python binding for the overloaded global regina::swap function
  * for objects of type T, using the given docstring.
  *
- * This routine exists purely for safety: it uses static_cast (not C-style
+ * This routine exists purely for safety: it uses `static_cast` (not C-style
  * casts) to resolve the overload, so that there is no risk of accidentally
- * binding the wrong variant of regina::swap().
+ * binding the wrong variant of `regina::swap()`.
  */
 template <typename T>
+requires requires (T x, T y) { regina::swap(x, y); }
 inline void add_global_swap(pybind11::module_& m, const char* doc) {
     m.def("swap", static_cast<void(&)(T&, T&)>(regina::swap), doc);
 }

@@ -48,7 +48,7 @@ namespace regina::python {
  *
  * To use this for the C++ class `Triangulation<dim>`, simply call
  * `regina::python::isosig_options<dim>(c)`, where \a c is the
- * pybind11::class_ object that wraps `Triangulation<dim>`.
+ * `pybind11::class_` object that wraps `Triangulation<dim>`.
  */
 template <int dim, typename PythonClass>
 requires (regina::supportedDim(dim))

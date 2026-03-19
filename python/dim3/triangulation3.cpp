@@ -206,7 +206,7 @@ void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
         .def("countBoundaryComponents",
             &Triangulation<3>::countBoundaryComponents,
             rbase::countBoundaryComponents)
-        .def("countFaces", (regina::python::countFacesFunc<Triangulation<3>>)(
+        .def("countFaces", (regina::python::countFacesFunc<3>)(
             &Triangulation<3>::countFaces), rbase::countFaces)
         .def("countVertices", &Triangulation<3>::countVertices,
             rbase::countVertices)
@@ -218,8 +218,7 @@ void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::keep_alive<0, 1>(), rbase::components)
         .def("boundaryComponents", &Triangulation<3>::boundaryComponents,
             pybind11::keep_alive<0, 1>(), rbase::boundaryComponents)
-        .def("faces", (regina::python::facesFunc<Triangulation<3>>)(
-            &Triangulation<3>::faces),
+        .def("faces", (regina::python::facesFunc<3>)(&Triangulation<3>::faces),
             pybind11::keep_alive<0, 1>(), rbase::faces)
         .def("vertices", &Triangulation<3>::vertices,
             pybind11::keep_alive<0, 1>(), rbase::vertices)
@@ -233,8 +232,7 @@ void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
         .def("boundaryComponent", &Triangulation<3>::boundaryComponent,
             pybind11::return_value_policy::reference_internal,
             rbase::boundaryComponent)
-        .def("face", (regina::python::faceFunc<Triangulation<3>>)(
-            &Triangulation<3>::face),
+        .def("face", (regina::python::faceFunc<3>)(&Triangulation<3>::face),
             pybind11::return_value_policy::reference_internal, rbase::face)
         .def("vertex", &Triangulation<3>::vertex,
             pybind11::return_value_policy::reference_internal, rbase::vertex)

@@ -321,6 +321,22 @@ static_assert(regina::Writeable<long double>);
 static_assert(regina::Writeable<int*>);
 static_assert(regina::Writeable<regina::Arrow>);
 
+static_assert(regina::Stringifiable<regina::Arrow>);
+static_assert(regina::Stringifiable<regina::Link>);
+// Note: PacketOf<Link> derives from Output<Packet> and also Output<Link>.
+static_assert(regina::Stringifiable<regina::PacketOf<regina::Link>>);
+static_assert(regina::Stringifiable<regina::Integer>);
+static_assert(! regina::Stringifiable<bool>);
+static_assert(! regina::Stringifiable<std::pair<int, int>>);
+
+static_assert(regina::RichStringifiable<regina::Arrow>);
+static_assert(regina::RichStringifiable<regina::Link>);
+// Note: PacketOf<Link> derives from Output<Packet> and also Output<Link>.
+static_assert(regina::RichStringifiable<regina::PacketOf<regina::Link>>);
+static_assert(! regina::RichStringifiable<regina::Integer>);
+static_assert(! regina::RichStringifiable<bool>);
+static_assert(! regina::RichStringifiable<std::pair<int, int>>);
+
 static_assert(regina::InherentlyTightEncodable<Integer>);
 static_assert(regina::InherentlyTightEncodable<LargeInteger>);
 static_assert(regina::InherentlyTightEncodable<Vector<Integer>>);

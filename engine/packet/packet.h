@@ -60,7 +60,8 @@ class PacketListener;
 template <bool> class PacketChildren;
 template <bool> class PacketDescendants;
 template <bool> class SubtreeIterator;
-template <typename Held> class PacketData;
+template <typename> class PacketData;
+template <typename> class PacketOf;
 // There are more forward declarations after we define packet-related concepts.
 
 /**
@@ -84,6 +85,19 @@ concept PacketClass =
     requires {
         { T::typeID } -> std::same_as<const PacketType&>;
     };
+
+/**
+ * A class that is equal to one of Regina's wrapped packet types.
+ *
+ * Subclasses are _not_ considered here: we requires `T` to be precisely a
+ * class of the form `PacketOf<...>`.
+ *
+ * \ingroup packet
+ */
+template <typename T>
+concept WrappedPacket =
+    PacketClass<T> &&
+    requires (T x) { { PacketOf(x) } -> std::same_as<T>; };
 
 /**
  * A packet class that stores text (possibly alongside other data).
@@ -2270,10 +2284,21 @@ class PacketOf : public Packet, public Held {
         // We do not implement member or global swaps, since these can be
         // happily inherited via the Held base class.
 
+        // This class inherits from Output<...> via both Packet and Held.
+        // We resolve the ambiguity in PacketOf<...> by choosing the output
+        // routines from Held; moreover, we tell the output routines from
+        // Packet to outsource their work to Held also.
+
+        using Output<Held>::str;
+        using Output<Held>::utf8;
+        using Output<Held>::detail;
+
         void writeTextShort(std::ostream& out) const override {
+            // Tell Output<Packet> to use Held's ASCII-only output routines.
             Held::writeTextShort(out);
         }
         void writeTextLong(std::ostream& out) const override {
+            // Tell Output<Packet> to use Held's ASCII-only output routines.
             Held::writeTextLong(out);
         }
 

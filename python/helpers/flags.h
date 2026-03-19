@@ -60,14 +60,16 @@ namespace regina::python {
  * The extra string \a borDoc is the docstring that will be used for the
  * bitwise OR of two individual flags.
  *
- * The corresponding flags class is assumed to be regina::Flags<Enum>,
+ * The corresponding flags class is assumed to be `regina::Flags<Enum>`,
  * and will be given the Python class name `Flags_enumName`.
  *
- * This routine will define __str__ and __repr__ functions for the flags class,
- * so that users can easily see what value a combination of flags holds.  The
- * flag will be written in hexadecimal, using a minimum of \a hexWidth digits.
+ * This routine will define `__str__` and `__repr__` functions for the flags
+ * class, so that users can easily see what value a combination of flags holds.
+ * The flag will be written in hexadecimal, using a minimum of \a hexWidth
+ * digits.
  */
 template <typename Enum, int hexWidth = 4>
+requires (std::is_enum_v<Enum>)
 void add_flags(pybind11::module_& m, const std::string& enumName,
         std::initializer_list<std::tuple<const char*, Enum, const char*>>
             values,

@@ -39,7 +39,7 @@
 using pybind11::overload_cast;
 using regina::Polynomial;
 
-template <typename T>
+template <regina::CoefficientDomain T>
 void addPolynomialOver(pybind11::module_& m, const char* className) {
     RDOC_SCOPE_BEGIN(Polynomial)
 

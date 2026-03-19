@@ -28,38 +28,57 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file python/helpers.h
- *  \brief Various tools to assist with Python bindings for Regina.
- *
- *  This file automatically includes the most commonly-used headers from
- *  python/helpers/, but not all of the headers in python/helpers/.
- *  Specifically, it excludes those headers that introduce non-trivial
- *  complexity to the code and whose use is not widespread across Regina's
- *  Python bindings.
+/*! \file python/helpers/concepts.h
+ *  \brief C++ concepts for use with Regina's Python bindings.
  */
 
-#ifndef __HELPERS_H
-#ifndef __DOXYGEN
-#define __HELPERS_H
-#endif
+#include "packet/packet.h"
 
-// Include the core pybind11 headers, and make sure we're finding our own
-// patched versions and not some other system installation of pybind11.
-#include <pybind11/pybind11.h>
-#if !defined(REGINA_PYBIND11)
-#error "A system installation of pybind11 is being included instead of Regina's own patched version."
-#endif
+namespace regina::python {
 
-#include "helpers/concepts.h"
-#include "helpers/docstrings.h"
-#include "helpers/equality.h"
-// #include "helpers/flags.h"
-#include "helpers/gil.h"
-#include "helpers/globals.h"
-#include "helpers/output.h"
-#include "helpers/listview.h"
-// #include "helpers/packet.h"
-// #include "helpers/tableview.h"
-#include "helpers/tightencoding.h"
+/**
+ * A Python container type whose elements can be accessed via integer indexing.
+ * Examples are `pybind11::list`, `pybind11::tuple`, and `pybind11::args`.
+ */
+template <typename T>
+concept PythonSequence =
+    std::derived_from<T, pybind11::object> &&
+    requires (T x, size_t i) {
+        { x[i] } -> std::convertible_to<pybind11::object>;
+    };
 
-#endif
+/**
+ * A Python class wrapper type; that is, a type of the form
+ * `pybind11::class_<...>`.
+ */
+template <typename T>
+concept PythonClassWrapper =
+    requires (T x) { { pybind11::class_(x) } -> std::same_as<T>; };
+
+/**
+ * A Python class wrapper type for one of Regina's wrapped packet types.
+ * That is, \a T is a type of the form
+ * `pybind11::class_<regina::PacketOf<...>, ...>`.
+ */
+template <typename T>
+concept PythonWrappedPacketWrapper =
+    PythonClassWrapper<T> &&
+    requires {
+        typename T::type;
+        requires regina::WrappedPacket<typename T::type>;
+    };
+
+/**
+ * A Python class wrapper type whose corresponding C++ type can be held within
+ * one of Regina's wrapped packets.  That is, \a T is a type of the form
+ * `pybind11::class_<H, ...>` where \a H adheres to the concept PacketHeldType.
+ */
+template <typename T>
+concept PythonPacketHeldWrapper =
+    PythonClassWrapper<T> &&
+    requires {
+        typename T::type;
+        requires regina::PacketHeldType<typename T::type>;
+    };
+
+} // namespace regina::python

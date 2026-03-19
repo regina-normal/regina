@@ -37,32 +37,32 @@
 namespace regina::python {
 
 /**
- * Adds Python bindings for the class PacketOf<Held>, as well as corresponding
- * make_packet functions.
+ * Adds Python bindings for the class `PacketOf<Held>`, as well as corresponding
+ * `make_packet` functions.
  *
  * The new packet class will be given a deep copy constructor, which takes a
  * single argument of type const Held&, and also acts as a copy constructor
- * for PacketOf<Held>.
+ * for `PacketOf<Held>`.
  *
  * For all other Held constructors (except for the copy constructor), you will
  * need to add a corresponding "forwarding constructor" to this class by
- * calling add_packet_constructor() with the pybind11::class_ object that
+ * calling `add_packet_constructor()` with the `pybind11::class_` object that
  * this function returns.
  *
  * Aside from the constructors, the new packet class will (as a subclass
  * of Held) inherit the full interface from Held.
  *
- * Since all packet types are held by std::shared_ptr in their Python
+ * Since all packet types are held by `std::shared_ptr` in their Python
  * bindings, you _must_ ensure that the base class Held is likewise held by
- * std::shared_ptr (not the default std::unique_ptr that pybind11 uses
+ * `std::shared_ptr` (not the default `std::unique_ptr` that pybind11 uses
  * unless instructed otherwise).  If you do not do this, then Python
  * will raise an ImportError when loading Regina's module.
  *
  * Note that, when creating the bindings for the \a Held type, you should
- * use packet_eq_operators() and not add_eq_operators().  See
+ * use `packet_eq_operators()` and not `add_eq_operators()`.  See
  * python/helpers/equality.h for further details.
  */
-template <typename Held>
+template <PacketHeldType Held>
 auto add_packet_wrapper(pybind11::module_& m, const char* className) {
     auto c = pybind11::class_<regina::PacketOf<Held>, Held, regina::Packet,
             std::shared_ptr<regina::PacketOf<Held>>>(m, className,
@@ -94,46 +94,48 @@ auto add_packet_wrapper(pybind11::module_& m, const char* className) {
 }
 
 /**
- * Adds a Python constructor for PacketOf<Held> that forwards its arguments
+ * Adds a Python constructor for `PacketOf<Held>` that forwards its arguments
  * to a corresponding Held constructor.
  *
  * Specifically, if the type Held has a constructor that takes arguments
- * x, y, ..., z of types Tx, Ty, ..., Tz respectively, then this function will
- * add a corresponding constructor to the Python wrapper for PacketOf<Held>.
+ * `x, y, ..., z` of types `Tx, Ty, ..., Tz` respectively, then this function
+ * will add a corresponding constructor to the Python wrapper for
+ * `PacketOf<Held>`.
  *
- * At the Python level, this constructor looks like PacketOfHeld(x, y, .., z).
- * At the C++ level, it will call PacketOf<Held>(std::in_place, x, y, ..., z).
+ * At the Python level, this constructor looks like `PacketOfHeld(x, y, .., z)`.
+ * At the C++ level, it will call `PacketOf<Held>(std::in_place, x, y, ..., z)`.
  *
- * To add the wrapper, call add_packet_constructor<Tx, Ty, ...  Tz>(c, ...),
- * where c is the pybind11::class_ object returned from add_packet_wrapper()
- * (that is, the pybind11 wrapper for the C++ class PacketOf<Held>).  Any
+ * To add the wrapper, call `add_packet_constructor<Tx, Ty, ...  Tz>(c, ...)`,
+ * where c is the `pybind11::class_` object returned from `add_packet_wrapper()`
+ * (that is, the pybind11 wrapper for the C++ class `PacketOf<Held>`).  Any
  * additional arguments (e.g., a docstring) will be passed through to
- * class_.def().
+ * `class_.def()`.
  *
  * The additional \a options arguments are the usual pybind11 options
- * (for example, pybind11::arg objects to specify default arguments).
- * The types PythonClass and Options... are deduced automatically (as
- * opposed to the constructor argument types Args..., which must be
+ * (for example, `pybind11::arg` objects to specify default arguments).
+ * The types \a PythonClass and \a Options... are deduced automatically (as
+ * opposed to the constructor argument types \a Args..., which must be
  * explicitly specified as part of the template function call).
  */
-template <typename... Args, typename PythonClass, typename... Options>
-void add_packet_constructor(PythonClass& classWrapper, Options&&... options) {
+template <typename... Args, PythonWrappedPacketWrapper Class,
+    typename... Options>
+void add_packet_constructor(Class& classWrapper, Options&&... options) {
     classWrapper.def(pybind11::init([](Args... args) {
-        using WrappedType = typename PythonClass::type;
+        using WrappedType = typename Class::type;
         return new WrappedType(std::in_place, std::forward<Args>(args)...);
     }), std::forward<Options>(options)...);
 }
 
 /**
  * Adds wrappers for the member functions for a C++ type Held that are
- * inherited from PacketData<Held>.
+ * inherited from `PacketData<Held>`.
  *
- * The argument \a classWrapper should be the pybind11::class_ object
+ * The argument \a classWrapper should be the `pybind11::class_` object
  * that wraps the C++ class Held.
  */
-template <typename PythonClass>
-void add_packet_data(PythonClass& classWrapper) {
-    using DataType = regina::PacketData<typename PythonClass::type>;
+template <PythonPacketHeldWrapper Class>
+void add_packet_data(Class& classWrapper) {
+    using DataType = regina::PacketData<typename Class::type>;
     classWrapper
         .def("packet", pybind11::overload_cast<>(&DataType::packet),
             doc::common::PacketData_packet)

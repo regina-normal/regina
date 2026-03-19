@@ -37,12 +37,12 @@
 
 using pybind11::overload_cast;
 
-template <typename T>
+template <regina::ArbitraryPrecisionInteger T>
 void addVectorOf(pybind11::module_& m, const char* className) {
     using Vec = regina::Vector<T>;
 
-    // For now, T is one of Regina's arbitrary-precision integer classes.
-    // Fetch the _other_ integer type, for use with our constructors.
+    // Fetch the _other_ arbitrary precision integer type, for use with
+    // our constructors.
     using T_Alt = regina::IntegerBase<! T::supportsInfinity>;
 
     RDOC_SCOPE_BEGIN(Vector)

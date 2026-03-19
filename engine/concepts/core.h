@@ -46,6 +46,8 @@ namespace regina {
 class Bitmask;
 template <UnsignedCppInteger> class Bitmask1;
 template <UnsignedCppInteger, UnsignedCppInteger> class Bitmask2;
+template <UnsignedCppInteger> class Qitmask1;
+template <UnsignedCppInteger, UnsignedCppInteger> class Qitmask2;
 
 /**
  * \defgroup concepts Concepts
@@ -180,6 +182,16 @@ concept ReginaBitmask =
     std::same_as<T, Bitmask> ||
     requires(T x) { { Bitmask1(x) } -> std::same_as<T>; } ||
     requires(T x) { { Bitmask2(x) } -> std::same_as<T>; };
+
+/**
+ * One of Regina's own qitmask types.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept ReginaQitmask =
+    requires(T x) { { Qitmask1(x) } -> std::same_as<T>; } ||
+    requires(T x) { { Qitmask2(x) } -> std::same_as<T>; };
 
 /**
  * A type that holds some ordered sequence of data, and that supports

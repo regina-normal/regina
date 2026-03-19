@@ -39,7 +39,8 @@ using regina::Bitmask;
 using regina::Bitmask1;
 using regina::Bitmask2;
 
-template <typename B>
+template <regina::ReginaBitmask B>
+requires (! std::same_as<B, Bitmask>)
 void addBitmaskOpt(pybind11::module_& m, const char* name) {
     // B could be an instance of either Bitmask1 or Bitmask2, but since the
     // Python docs are essentially the same we will just use Bitmask1 here.

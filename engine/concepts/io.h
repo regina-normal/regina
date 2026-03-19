@@ -46,6 +46,8 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
+template <typename, bool> struct Output;
+
 /**
  * A type that can be written to an output stream.
  *
@@ -80,6 +82,22 @@ template <typename T>
 concept Stringifiable =
     requires(const T x) {
         { x.str() } -> std::same_as<std::string>;
+    };
+
+/**
+ * A class or struct type that supports Regina's rich string output interface,
+ * via member functions `str()`, `detail()`, and `utf8()`.
+ *
+ * Such types often (but are not required to) derive from `Output<...>`.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept RichStringifiable =
+    requires(const T x) {
+        { x.str() } -> std::same_as<std::string>;
+        { x.detail() } -> std::same_as<std::string>;
+        { x.utf8() } -> std::same_as<std::string>;
     };
 
 /**
