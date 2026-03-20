@@ -48,6 +48,7 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 namespace regina {
 
 template <typename... Args>
+requires (SignedCppInteger<Args> && ...)
 Link Link::fromData(std::initializer_list<int> crossingSigns,
         std::initializer_list<Args>... components) {
     Link ans;
@@ -67,6 +68,7 @@ inline void Link::addComponents(size_t strandsRemaining) {
 }
 
 template <typename... Args>
+requires (SignedCppInteger<Args> && ...)
 void Link::addComponents(size_t strandsRemaining,
         std::initializer_list<int> component,
         std::initializer_list<Args>... otherComponents) {

@@ -5933,6 +5933,7 @@ class Link :
          * \return the reconstructed link.
          */
         template <typename... Args>
+        requires (SignedCppInteger<Args> && ...)
         static Link fromData(std::initializer_list<int> crossingSigns,
             std::initializer_list<Args>... components);
 
@@ -6846,6 +6847,7 @@ class Link :
          * routine.
          */
         template <typename... Args>
+        requires (SignedCppInteger<Args> && ...)
         void addComponents(size_t strandsRemaining,
             std::initializer_list<int> component,
             std::initializer_list<Args>... otherComponents);
