@@ -62,6 +62,8 @@ Version 8.0  [ TODO ]
               regina::detail are now gone.
             - New class constant hasNumberingTables to indicate whether lookup
               tables are used for face numbering queries.
+        Class FaithfulAssignment:
+            - Deprecated, since this can be tested via std::common_type_t.
         Class FixedArray:
             - Now has a default constructor that creates an empty array.
         Class Flags<T>:

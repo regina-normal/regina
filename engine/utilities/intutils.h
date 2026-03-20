@@ -665,22 +665,24 @@ template <CppInteger T>
 using MakeUnsigned = typename IntOfSize<sizeof(T)>::utype;
 
 /**
- * Determines if an integer of type \a From can always be assigned to an
- * integer of type \a To with no loss of information.
+ * Deprecated struct for testing whether an integer of type \a From can always
+ * be assigned to an integer of type \a To with no loss of information.
  *
  * The result will be available through the compile-time boolean constant
- * FaithfulAssignment<From, To>::value.
+ * `FaithfulAssignment<From, To>::value`.
  *
  * Currently this is only implemented for Regina's own integer types
  * (Integer, LargeInteger and NativeInteger).  If you attempt to use this
  * with other types (e.g., int or long), this struct will be undefined.
+ *
+ * \deprecated Instead test `std::same_as<std::common_type_t<From, To>, To>`.
  *
  * \nopython
  *
  * \ingroup utilities
  */
 template <ReginaInteger From, ReginaInteger To>
-struct FaithfulAssignment;
+struct [[deprecated]] FaithfulAssignment;
 
 #ifndef __DOXYGEN
 template <int a, int b>
