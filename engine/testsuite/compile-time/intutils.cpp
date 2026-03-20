@@ -37,28 +37,36 @@ static_assert(regina::bitsRequired(33) == 6);
 static_assert(regina::nextPowerOfTwo(32) == 32);
 static_assert(regina::nextPowerOfTwo(33) == 64);
 
-static_assert(regina::FaithfulAssignment<
-    regina::NativeInteger<4>, regina::NativeInteger<4>>::value);
-static_assert(! regina::FaithfulAssignment<
-    regina::NativeInteger<8>, regina::NativeInteger<4>>::value);
-static_assert(regina::FaithfulAssignment<
-    regina::NativeInteger<4>, regina::NativeInteger<8>>::value);
-static_assert(regina::FaithfulAssignment<
-    regina::NativeInteger<4>, regina::Integer>::value);
-static_assert(regina::FaithfulAssignment<
-    regina::NativeInteger<4>, regina::LargeInteger>::value);
-static_assert(! regina::FaithfulAssignment<
-    regina::Integer, regina::NativeInteger<4>>::value);
-static_assert(regina::FaithfulAssignment<
-    regina::Integer, regina::Integer>::value);
-static_assert(regina::FaithfulAssignment<
-    regina::Integer, regina::LargeInteger>::value);
-static_assert(! regina::FaithfulAssignment<
-    regina::LargeInteger, regina::NativeInteger<4>>::value);
-static_assert(! regina::FaithfulAssignment<
-    regina::LargeInteger, regina::Integer>::value);
-static_assert(regina::FaithfulAssignment<
-    regina::LargeInteger, regina::LargeInteger>::value);
+static_assert(std::same_as<std::common_type_t<
+    regina::NativeInteger<4>, regina::NativeInteger<4>>,
+    regina::NativeInteger<4>>);
+#if 0
+// Native integers are not constructible/assignable from native integers of
+// different sizes.  Therefore NativeInteger<4> and NativeInteger<8> have no
+// common type.
+static_assert(std::same_as<std::common_type_t<
+    regina::NativeInteger<8>, regina::NativeInteger<4>>,
+    regina::NativeInteger<8>>);
+static_assert(std::same_as<std::common_type_t<
+    regina::NativeInteger<4>, regina::NativeInteger<8>>,
+    regina::NativeInteger<8>>);
+#endif
+static_assert(std::same_as<std::common_type_t<
+    regina::NativeInteger<4>, regina::Integer>, regina::Integer>);
+static_assert(std::same_as<std::common_type_t<
+    regina::NativeInteger<4>, regina::LargeInteger>, regina::LargeInteger>);
+static_assert(std::same_as<std::common_type_t<
+    regina::Integer, regina::NativeInteger<4>>, regina::Integer>);
+static_assert(std::same_as<std::common_type_t<
+    regina::Integer, regina::Integer>, regina::Integer>);
+static_assert(std::same_as<std::common_type_t<
+    regina::Integer, regina::LargeInteger>, regina::LargeInteger>);
+static_assert(std::same_as<std::common_type_t<
+    regina::LargeInteger, regina::NativeInteger<4>>, regina::LargeInteger>);
+static_assert(std::same_as<std::common_type_t<
+    regina::LargeInteger, regina::Integer>, regina::LargeInteger>);
+static_assert(std::same_as<std::common_type_t<
+    regina::LargeInteger, regina::LargeInteger>, regina::LargeInteger>);
 
 static_assert(! regina::CppInteger<bool>);
 static_assert(! regina::UnsignedCppInteger<bool>);

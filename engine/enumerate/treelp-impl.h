@@ -992,7 +992,8 @@ void LPData<Constraint, IntType>::writeTextLong(std::ostream& out) const {
 
 template <LPConstraint Constraint, ReginaInteger IntType>
 template <IntegerVector Ray>
-requires (FaithfulAssignment<IntType, typename Ray::value_type>::value)
+requires (std::same_as<std::common_type_t<IntType, typename Ray::value_type>,
+    typename Ray::value_type>)
 Ray LPData<Constraint, IntType>::extractSolution(const uint8_t* type) const {
     // Fetch details on how to undo the column permutation.
     const size_t* columnPerm = origTableaux_->columnPerm();

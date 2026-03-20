@@ -1806,10 +1806,9 @@ class LPData : public Output<LPData<Constraint, IntType>> {
          *
          * The modifications are as follows:
          *
-         * - We extract variables that correspond to the original
-         *   matching equations obtained from the underlying
-         *   triangulation, _not_ the current tableaux and _not_ even
-         *   the original starting tableaux stored in origTableaux_.
+         * - We extract variables that correspond to the original matching
+         *   equations obtained from the underlying triangulation, _not_ the
+         *   current tableaux and _not_ even the original starting tableaux.
          *   In other words, when we fill the resulting vector, we undo the
          *   column permutation described by LPInitialTableaux::columnPerm(),
          *   and we undo any changes of variable that were caused by
@@ -1834,6 +1833,11 @@ class LPData : public Output<LPData<Constraint, IntType>> {
          * would be one integer per tetrahedron, each equal to 0, 1, 2 or 3).
          * The template parameter \a Ray is taken to be Vector<Integer>.
          *
+         * \tparam Ray the vector type to use to return the extracted values.
+         * The `std::common_type_t` constraint on \a Ray ensures that no
+         * information will be lost (e.g., through overflow) when converting
+         * integers to the element type for \a Ray.
+         *
          * \param type the type vector corresponding to the current state of
          * this tableaux, indicating which variables were previously fixed as
          * positive via calls to constrainPositive().  This is necessary
@@ -1848,7 +1852,9 @@ class LPData : public Output<LPData<Constraint, IntType>> {
          * This vector will have length origTableaux_->coordinateColumns().
          */
         template <IntegerVector Ray>
-        requires (FaithfulAssignment<IntType, typename Ray::value_type>::value)
+        requires (std::same_as<
+            std::common_type_t<IntType, typename Ray::value_type>,
+            typename Ray::value_type>)
         Ray extractSolution(const uint8_t* type) const;
 
         /**
