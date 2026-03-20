@@ -147,6 +147,8 @@ concept TextPacket =
  */
 template <typename T>
 concept PacketHeldType =
+    std::copyable<T> &&
+    std::derived_from<T, Output<T>> &&
     std::derived_from<T, PacketData<T>> &&
     requires {
         { packetTypeHolds<T> } -> std::same_as<const PacketType&>;
@@ -264,24 +266,25 @@ template <PacketHeldType Held> class XMLWriter;
  *
  * To create a new wrapped packet type that holds an object of type \a Held:
  *
- * - Add a new type constant \a T to the PacketType enum;
+ * - Ensure that \a Held is copyable, assignable, and implements rich output
+ *   via the base class `Output<Held>`;
  *
- * - Add a specialisation of the template constant packetTypeHolds<Held>,
- *   which should take the value \a T;
+ * - Add a new case to the PacketType enum, and add a specialisation of the
+ *   constant `packetTypeHolds<Held>` which takes this as its value;
  *
  * - Add corresponding cases to the routines in PacketInfo;
  *
- * - Add PacketData<Held> as a new base class for \a Held (this is very
+ * - Add `PacketData<Held>` as a new base class for \a Held (this is very
  *   lightweight, just adding a single enum variable);
  *
- * - Add specialisations that implement the routines in XMLWriter<Held>, to
+ * - Add specialisations that implement the routines in `XMLWriter<Held>`, to
  *   support writing to file;
  *
- * - Add an appropriate case to XMLPacketReader::startSubElement(), to
+ * - Add an appropriate case to `XMLPacketReader::startSubElement()`, to
  *   support reading from file;
  *
  * - For every routine in \a Held that edits the packet contents, declare a
- *   Held::PacketChangeSpan on the stack while the modification takes place.
+ *   `Held::PacketChangeSpan` on the stack while the modification takes place.
  *   This is again lightweight (if an object does not belong to a packet
  *   then the cost is just two integer comparisions), and it will ensure that
  *   if the object _does_ belong to a packet then listeners are notified.
@@ -2170,12 +2173,15 @@ enum class PacketHeldBy {
  * will have a name of the form PacketOfHeld.  For example, the C++ class
  * Link is wrapped by the Python class \c PacketOfLink, and the C++ class
  * Triangulation<3> is wrapped by the Python class \c PacketOfTriangulation3.
+ *
+ * \tparam Held the mathematical object type being held by this type of packet.
+ * This type must adhere to all the requirements of the concept PacketHeldType.
  */
 template <typename Held>
 class PacketOf : public Packet, public Held {
-    // We can't make PacketHeldType<Held> a formal type requirement since this
-    // would end up being enforced within Held's parent class PacketData<Held>,
-    // before Held can be defined.  We can, however, assert it here instead.
+    // We cannot enforce constraints on Held, since the type PacketOf<Held>
+    // is resolved within PacketData<Held>, which is a parent class of Held.
+    // Nevertheless, we can assert them here.
     static_assert(PacketHeldType<Held>);
 
     REGINA_PACKET(packetTypeHolds<Held>, PacketInfo::name(typeID))
