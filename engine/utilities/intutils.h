@@ -239,155 +239,6 @@ concept IntegerComparable =
     std::totally_ordered_with<T, int>;
 
 /**
- * Deprecated compile-time boolean constant that indicates whether the type \a T
- * is a native C++ integer type, allowing for 128-bit integers also but
- * excluding booleans.
- *
- * \deprecated Instead use the equivalent concept `CppInteger<T>`.
- *
- * \nopython
- *
- * \ingroup utilities
- */
-template <typename T>
-[[deprecated]] inline constexpr bool is_cpp_integer_v = CppInteger<T>;
-
-/**
- * Deprecated compile-time boolean constant that indicates whether the type \a T
- * is a signed native C++ integer type, allowing for 128-bit integers also but
- * excluding booleans.
- *
- * \deprecated Instead use the equivalent concept `SignedCppInteger<T>`.
- *
- * \nopython
- *
- * \ingroup utilities
- */
-template <typename T>
-[[deprecated]] inline constexpr bool is_signed_cpp_integer_v =
-    SignedCppInteger<T>;
-
-/**
- * Deprecated compile-time boolean constant that indicates whether the type \a T
- * is an unsigned native C++ integer type, allowing for 128-bit integers also
- * but excluding booleans.
- *
- * \deprecated Instead use the equivalent concept `UnsignedCppInteger<T>`.
- *
- * \nopython
- *
- * \ingroup utilities
- */
-template <typename T>
-[[deprecated]] inline constexpr bool is_unsigned_cpp_integer_v =
-    UnsignedCppInteger<T>;
-
-/**
- * Deprecated traits class to determine if the type \a T is one of Regina's
- * own integer types (either arbitrary precision or fixed size).
- *
- * This is true precisely when \a T is one of the classes Integer,
- * LargeInteger, or NativeInteger<...>.
- *
- * The result will be available through the compile-time boolean constant
- * IsReginaInteger<T>::value.
- *
- * \deprecated Instead use the concept `ReginaInteger<T>`.
- *
- * \nopython
- *
- * \ingroup utilities
- */
-template <typename T>
-struct [[deprecated]] IsReginaInteger : public std::false_type {};
-
-/**
- * Deprecated traits class to determine if the type \a T is one of Regina's
- * arbitrary precision integer types.
- *
- * This is true only when \a T is one of the classes Integer or LargeInteger.
- *
- * The result will be available through the compile-time boolean constant
- * IsReginaArbitraryPrecisionInteger<T>::value.
- *
- * \deprecated Instead use the concept `ArbitraryPrecisionInteger<T>`.
- *
- * \nopython
- *
- * \ingroup utilities
- */
-template <typename T>
-struct [[deprecated]] IsReginaArbitraryPrecisionInteger : public std::false_type {};
-
-#ifndef __DOXYGEN
-
-#if defined(__GNUC__)
-// These specialisations are causing noisy deprecation warnings under gcc.
-// Silence them, since the specialisations need to stay until IsReginaInteger
-// is removed completely.
-#pragma GCC diagnostic push
-#if defined(__clang__)
-#pragma GCC diagnostic ignored "-Wdeprecated"
-#else
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
-#endif
-
-template <bool withInfinity>
-struct IsReginaInteger<IntegerBase<withInfinity>> : public std::true_type {};
-
-template <int bytes>
-struct IsReginaInteger<NativeInteger<bytes>> : public std::true_type {};
-
-template <bool withInfinity>
-struct IsReginaArbitraryPrecisionInteger<IntegerBase<withInfinity>> : public std::true_type {};
-
-#if defined(__GNUC__)
-#pragma GCC diagnostic pop
-#endif
-
-#endif // __DOXYGEN
-
-#ifndef __DOCSTRINGS
-/**
- * Conditionally enables a member function for a template class only
- * when the type \a T is one of Regina's own integer classes.
- *
- * This macro should be used as the return type for such a member function.
- * If \a T is one of Regina's own integer classes (Integer, LargeInteger
- * or NativeInteger), then the actual return type for the member function
- * will be the argument \a returnType.  Otherwise the member function will
- * be disabled, will not appear in the class at all, and will not generate
- * compile errors if it uses operations that \a T does not support.
- *
- * The implementation uses SFINAE to remove the member function without
- * compile errors.  A side-effect of this is that the member function will
- * now be a _template_ member function.  The user should never specify their
- * own template arguments, and indeed the template parameter pack \a Args in
- * the implementation is there precisely to stop users from doing this.
- *
- * \deprecated This macro is no longer used within Regina, since it makes code
- * unnecessarily difficult to read (especially by automated documentation
- * tools).  Regina now uses C++20 concepts instead to constraint access to
- * member functions.
- *
- * \pre The member function this macro is applied to is _not_ a
- * template member function (though, as noted above, this macro will
- * silently make it one).
- *
- * \apinotfinal
- *
- * \ingroup utilities
- */
-#define ENABLE_MEMBER_FOR_REGINA_INTEGER(T, returnType) \
-    template <typename... Args, typename Return = returnType> \
-    std::enable_if_t<ReginaInteger<T>, Return>
-#else
-// When generating docstrings, we want docs for all member functions.
-#define ENABLE_MEMBER_FOR_REGINA_INTEGER(T, returnType) returnType
-#endif
-
-/**
  * Returns the number of bits required to store integers in the range
  * `0,...,n-1`.
  * This is simply the number of bits in the binary expansion of `n-1`.
@@ -665,6 +516,87 @@ template <CppInteger T>
 using MakeUnsigned = typename IntOfSize<sizeof(T)>::utype;
 
 /**
+ * Deprecated compile-time boolean constant that indicates whether the type \a T
+ * is a native C++ integer type, allowing for 128-bit integers also but
+ * excluding booleans.
+ *
+ * \deprecated Instead use the equivalent concept `CppInteger<T>`.
+ *
+ * \nopython
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+[[deprecated]] inline constexpr bool is_cpp_integer_v = CppInteger<T>;
+
+/**
+ * Deprecated compile-time boolean constant that indicates whether the type \a T
+ * is a signed native C++ integer type, allowing for 128-bit integers also but
+ * excluding booleans.
+ *
+ * \deprecated Instead use the equivalent concept `SignedCppInteger<T>`.
+ *
+ * \nopython
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+[[deprecated]] inline constexpr bool is_signed_cpp_integer_v =
+    SignedCppInteger<T>;
+
+/**
+ * Deprecated compile-time boolean constant that indicates whether the type \a T
+ * is an unsigned native C++ integer type, allowing for 128-bit integers also
+ * but excluding booleans.
+ *
+ * \deprecated Instead use the equivalent concept `UnsignedCppInteger<T>`.
+ *
+ * \nopython
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+[[deprecated]] inline constexpr bool is_unsigned_cpp_integer_v =
+    UnsignedCppInteger<T>;
+
+/**
+ * Deprecated traits class to determine if the type \a T is one of Regina's
+ * own integer types (either arbitrary precision or fixed size).
+ *
+ * This is true precisely when \a T is one of the classes Integer,
+ * LargeInteger, or NativeInteger<...>.
+ *
+ * The result will be available through the compile-time boolean constant
+ * IsReginaInteger<T>::value.
+ *
+ * \deprecated Instead use the concept `ReginaInteger<T>`.
+ *
+ * \nopython
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+struct [[deprecated]] IsReginaInteger : public std::false_type {};
+
+/**
+ * Deprecated traits class to determine if the type \a T is one of Regina's
+ * arbitrary precision integer types.
+ *
+ * This is true only when \a T is one of the classes Integer or LargeInteger.
+ *
+ * The result will be available through the compile-time boolean constant
+ * IsReginaArbitraryPrecisionInteger<T>::value.
+ *
+ * \deprecated Instead use the concept `ArbitraryPrecisionInteger<T>`.
+ *
+ * \nopython
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+struct [[deprecated]] IsReginaArbitraryPrecisionInteger : public std::false_type {};
+
+/**
  * Deprecated struct for testing whether an integer of type \a From can always
  * be assigned to an integer of type \a To with no loss of information.
  *
@@ -685,6 +617,28 @@ template <ReginaInteger From, ReginaInteger To>
 struct [[deprecated]] FaithfulAssignment;
 
 #ifndef __DOXYGEN
+
+#if defined(__GNUC__)
+// These specialisations are causing noisy deprecation warnings under gcc.
+// Silence them, since the specialisations need to stay until these deprecated
+// types are removed completely.
+#pragma GCC diagnostic push
+#if defined(__clang__)
+#pragma GCC diagnostic ignored "-Wdeprecated"
+#else
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+#endif
+
+template <bool withInfinity>
+struct IsReginaInteger<IntegerBase<withInfinity>> : public std::true_type {};
+
+template <int bytes>
+struct IsReginaInteger<NativeInteger<bytes>> : public std::true_type {};
+
+template <bool withInfinity>
+struct IsReginaArbitraryPrecisionInteger<IntegerBase<withInfinity>> : public std::true_type {};
+
 template <int a, int b>
 struct FaithfulAssignment<NativeInteger<a>, NativeInteger<b>> :
     public std::integral_constant<bool, (a <= b)> {};
@@ -701,7 +655,50 @@ template <int bytes, bool withInfinity>
 struct FaithfulAssignment<IntegerBase<withInfinity>, NativeInteger<bytes>> :
     public std::false_type {};
 
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
+
 #endif // __DOXYGEN
+
+#ifndef __DOCSTRINGS
+/**
+ * Conditionally enables a member function for a template class only
+ * when the type \a T is one of Regina's own integer classes.
+ *
+ * This macro should be used as the return type for such a member function.
+ * If \a T is one of Regina's own integer classes (Integer, LargeInteger
+ * or NativeInteger), then the actual return type for the member function
+ * will be the argument \a returnType.  Otherwise the member function will
+ * be disabled, will not appear in the class at all, and will not generate
+ * compile errors if it uses operations that \a T does not support.
+ *
+ * The implementation uses SFINAE to remove the member function without
+ * compile errors.  A side-effect of this is that the member function will
+ * now be a _template_ member function.  The user should never specify their
+ * own template arguments, and indeed the template parameter pack \a Args in
+ * the implementation is there precisely to stop users from doing this.
+ *
+ * \deprecated This macro is no longer used within Regina, since it makes code
+ * unnecessarily difficult to read (especially by automated documentation
+ * tools).  Regina now uses C++20 concepts instead to constraint access to
+ * member functions.
+ *
+ * \pre The member function this macro is applied to is _not_ a
+ * template member function (though, as noted above, this macro will
+ * silently make it one).
+ *
+ * \apinotfinal
+ *
+ * \ingroup utilities
+ */
+#define ENABLE_MEMBER_FOR_REGINA_INTEGER(T, returnType) \
+    template <typename... Args, typename Return = returnType> \
+    std::enable_if_t<ReginaInteger<T>, Return>
+#else
+// When generating docstrings, we want docs for all member functions.
+#define ENABLE_MEMBER_FOR_REGINA_INTEGER(T, returnType) returnType
+#endif
 
 } // namespace regina
 
