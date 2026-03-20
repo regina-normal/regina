@@ -646,7 +646,7 @@ static_assert(! std::is_void<DoubleLong>(),
  * \ingroup utilities
  */
 template <CppInteger T>
-using make_signed_cpp_t = typename IntOfSize<sizeof(T)>::type;
+using MakeSigned = typename IntOfSize<sizeof(T)>::type;
 
 /**
  * Converts the given native C++ integer type into an unsigned integer type of
@@ -662,7 +662,7 @@ using make_signed_cpp_t = typename IntOfSize<sizeof(T)>::type;
  * \ingroup utilities
  */
 template <CppInteger T>
-using make_unsigned_cpp_t = typename IntOfSize<sizeof(T)>::utype;
+using MakeUnsigned = typename IntOfSize<sizeof(T)>::utype;
 
 /**
  * Determines if an integer of type \a From can always be assigned to an

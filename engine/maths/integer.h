@@ -2542,15 +2542,15 @@ namespace detail {
  * \ingroup detail
  */
 template <SignedCppInteger IntType>
-inline regina::make_unsigned_cpp_t<IntType> negateToUnsignedType(IntType x) {
+inline MakeUnsigned<IntType> negateToUnsignedType(IntType x) {
     // C++20 mandates a two's complement representation.
     if (x == std::numeric_limits<IntType>::min()) {
         // Negating x would be a signed overflow, which the C++ standard
         // says is undefined behaviour.  However, casting x directly as the
         // unsigned type will do the right thing.
-        return static_cast<regina::make_unsigned_cpp_t<IntType>>(x);
+        return static_cast<MakeUnsigned<IntType>>(x);
     } else {
-        return static_cast<regina::make_unsigned_cpp_t<IntType>>(-x);
+        return static_cast<MakeUnsigned<IntType>>(-x);
     }
 }
 
@@ -2568,16 +2568,15 @@ inline regina::make_unsigned_cpp_t<IntType> negateToUnsignedType(IntType x) {
  * \ingroup detail
  */
 template <SignedCppInteger IntType>
-inline regina::make_unsigned_cpp_t<IntType> differenceAsUnsigned(
-        IntType x, IntType y) {
+inline MakeUnsigned<IntType> differenceAsUnsigned(IntType x, IntType y) {
     // C++20 mandates a two's complement representation.
     // The C++ standard says both unsigned overflow and casting to unsigned
     // types always do the right thing (arithmetic modulo 2^bits), whereas
     // signed overflow is undefined.
     // So: we can just do everything in the unsigned type.  All errors will be
     // modulo 2^bits, and we know that the answer is in the range [0, 2^bits).
-    return static_cast<regina::make_unsigned_cpp_t<IntType>>(x) -
-        static_cast<regina::make_unsigned_cpp_t<IntType>>(y);
+    return static_cast<MakeUnsigned<IntType>>(x) -
+        static_cast<MakeUnsigned<IntType>>(y);
 }
 
 } // namespace detail

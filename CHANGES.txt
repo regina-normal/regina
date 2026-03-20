@@ -324,7 +324,7 @@ Version 8.0  [ TODO ]
             - Provides access to native 128-bit integers, if the platform
               supports them.  This is preferred to the old (and clumsier) way
               of accessing 128-bit types via the type aliases in IntOfSize<16>.
-        Type alias make_signed_cpp_t<T>, make_unsigned_cpp_t<T>:
+        Type alias MakeSigned<T>, MakeUnsigned<T>:
             - New alternatives to std::make_signed_t<T> and
               std::make_unsigned_t<T> that allow for 128-bit integers also.
         Constant is_cpp_integer_v<T>, is_signed_cpp_integer_v<T>,
