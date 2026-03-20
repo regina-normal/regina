@@ -78,105 +78,6 @@ requires (supportsNativeIntegerSize(bytes))
 class NativeInteger;
 
 /**
- * A compile-time boolean constant that indicates whether the type \a T is a
- * native C++ integer type, allowing for 128-bit integers also but excluding
- * booleans.
- *
- * Except for booleans, this is true precisely when either
- * `std::is_integral_v<T>` is true and/or \a T is a native 128-bit integer.
- *
- * Regina treats booleans differently: `is_cpp_integer_v<bool>` is false,
- * even though C++ `std::is_integral_v<bool>` is true, since Regina's
- * functions aim to identify native types that _behave_ like integers
- * arithmetically.
- *
- * The main reason for using this constant (as opposed to
- * `std::is_integral_v<T>`) is because the C++ standard constants treat
- * 128-bit integers differently under different compilers.
- *
- * \nopython
- *
- * \ingroup utilities
- */
-template <typename T>
-#if defined(INT128_AVAILABLE)
-    constexpr bool is_cpp_integer_v = (std::is_integral_v<T> ||
-        std::is_same_v<T, Int128> || std::is_same_v<T, UInt128>) &&
-        ! std::is_same_v<T, bool>;
-#else
-    constexpr bool is_cpp_integer_v = std::is_integral_v<T> &&
-        ! std::is_same_v<T, bool>;
-#endif
-
-/**
- * A compile-time boolean constant that indicates whether the type \a T is a
- * signed native C++ integer type, allowing for 128-bit integers also but
- * excluding booleans.
- *
- * Except for booleans, this is true precisely when (i) either
- * `std::is_integral_v<T>` is true and/or \a T is a native 128-bit integer,
- * and (ii) \a T is a signed type.
- *
- * Regina treats booleans differently: `is_signed_cpp_integer_v<bool>` is
- * false, even though C++ `std::is_integral_v<bool>` is true, since Regina's
- * functions aim to identify native types that _behave_ like integers
- * arithmetically.
- *
- * The main reason for using this constant (as opposed to
- * `std::is_integral_v<T>` and `std::is_signed_v<T>`) is because the
- * C++ standard constants treat 128-bit integers differently under
- * different compilers.
- *
- * \nopython
- *
- * \ingroup utilities
- */
-template <typename T>
-#if defined(INT128_AVAILABLE)
-    constexpr bool is_signed_cpp_integer_v =
-        ((std::is_integral_v<T> && std::is_signed_v<T>) ||
-        std::is_same_v<T, Int128>) && ! std::is_same_v<T, bool>;
-#else
-    constexpr bool is_signed_cpp_integer_v =
-        (std::is_integral_v<T> && std::is_signed_v<T>) &&
-        ! std::is_same_v<T, bool>;
-#endif
-
-/**
- * A compile-time boolean constant that indicates whether the type \a T is an
- * unsigned native C++ integer type, allowing for 128-bit integers also but
- * excluding booleans.
- *
- * Except for booleans, this is true precisely when (i) either
- * `std::is_integral_v<T>` is true and/or \a T is a native 128-bit integer,
- * and (ii) \a T is an unsigned type.
- *
- * Regina treats booleans differently: `is_unsigned_cpp_integer_v<bool>` is
- * false, even though C++ `std::is_integral_v<bool>` and
- * `std::is_unsigned_v<bool>` are both true, since Regina's functions aim to
- * identify native types that _behave_ like integers arithmetically.
- *
- * The main reason for using this constant (as opposed to
- * `std::is_integral_v<T>` and `std::is_unsigned_v<T>`)
- * is because the C++ standard constants treat 128-bit integers differently
- * under different compilers.
- *
- * \nopython
- *
- * \ingroup utilities
- */
-template <typename T>
-#if defined(INT128_AVAILABLE)
-    constexpr bool is_unsigned_cpp_integer_v =
-        ((std::is_integral_v<T> && std::is_unsigned_v<T>) ||
-        std::is_same_v<T, UInt128>) && ! std::is_same_v<T, bool>;
-#else
-    constexpr bool is_unsigned_cpp_integer_v =
-        (std::is_integral_v<T> && std::is_unsigned_v<T>) &&
-        ! std::is_same_v<T, bool>;
-#endif
-
-/**
  * One of the standard non-boolean C++ integer types, without making any
  * special accommodations for 128-bit integer compiler extensions.
  *
@@ -194,34 +95,89 @@ concept StandardCppInteger = std::integral<T> && ! std::same_as<T, bool>;
  * A native non-boolean C++ integer type, allowing for 128-bit integers also
  * if these are supported by the compiler.
  *
- * See the constant regina::is_cpp_integer_v for further details.
+ * Except for booleans, this concept is satisfied precisely when either
+ * `std::is_integral_v<T>` is true and/or \a T is a native 128-bit integer.
+ *
+ * Regina treats booleans differently: `CppInteger<bool>` is false,
+ * even though C++ `std::is_integral_v<bool>` is true, since Regina's
+ * functions aim to identify native types that _behave_ like integers
+ * arithmetically.
+ *
+ * The main reason for using this concept (as opposed to
+ * `std::is_integral_v<T>`) is because the C++ standard type traits treat
+ * 128-bit integers differently under different compilers.
  *
  * \ingroup utilities
  */
 template <typename T>
-concept CppInteger = is_cpp_integer_v<T>;
+concept CppInteger =
+#if defined(INT128_AVAILABLE)
+    (std::is_integral_v<T> || std::is_same_v<T, Int128> ||
+        std::is_same_v<T, UInt128>) &&
+#else
+    std::is_integral_v<T> &&
+#endif
+    ! std::is_same_v<T, bool>;
 
 /**
  * A signed native non-boolean C++ integer type, allowing for 128-bit integers
  * also if these are supported by the compiler.
  *
- * See the constant regina::is_signed_cpp_integer_v for further details.
+ * Except for booleans, this concept is satisfied precisely when (i) either
+ * `std::is_integral_v<T>` is true and/or \a T is a native 128-bit integer,
+ * and (ii) \a T is a signed type.
+ *
+ * Regina treats booleans differently: `SignedCppInteger<bool>` is
+ * false, even though C++ `std::is_integral_v<bool>` is true, since Regina's
+ * functions aim to identify native types that _behave_ like integers
+ * arithmetically.
+ *
+ * The main reason for using this constant (as opposed to
+ * `std::is_integral_v<T>` and `std::is_signed_v<T>`) is because the
+ * C++ standard type traits treat 128-bit integers differently under
+ * different compilers.
  *
  * \ingroup utilities
  */
 template <typename T>
-concept SignedCppInteger = is_signed_cpp_integer_v<T>;
+concept SignedCppInteger =
+#if defined(INT128_AVAILABLE)
+    ((std::is_integral_v<T> && std::is_signed_v<T>) ||
+        std::is_same_v<T, Int128>) &&
+#else
+    (std::is_integral_v<T> && std::is_signed_v<T>) &&
+#endif
+    ! std::is_same_v<T, bool>;
 
 /**
  * An unsigned native non-boolean C++ integer type, allowing for 128-bit
  * integers also if these are supported by the compiler.
  *
- * See the constant regina::is_unsigned_cpp_integer_v for further details.
+ * Except for booleans, this concept is satisfied precisely when (i) either
+ * `std::is_integral_v<T>` is true and/or \a T is a native 128-bit integer,
+ * and (ii) \a T is an unsigned type.
+ *
+ * Regina treats booleans differently: `UnsignedCppInteger<bool>` is
+ * false, even though C++ `std::is_integral_v<bool>` and
+ * `std::is_unsigned_v<bool>` are both true, since Regina's functions aim to
+ * identify native types that _behave_ like integers arithmetically.
+ *
+ * The main reason for using this constant (as opposed to
+ * `std::is_integral_v<T>` and `std::is_unsigned_v<T>`)
+ * is because the C++ standard type traits treat 128-bit integers differently
+ * under different compilers.
  *
  * \ingroup utilities
  */
 template <typename T>
-concept UnsignedCppInteger = is_unsigned_cpp_integer_v<T>;
+concept UnsignedCppInteger =
+#if defined(INT128_AVAILABLE)
+    ((std::is_integral_v<T> && std::is_unsigned_v<T>) ||
+        std::is_same_v<T, UInt128>) &&
+#else
+    (std::is_integral_v<T> && std::is_unsigned_v<T>) &&
+#endif
+    ! std::is_same_v<T, bool>;
 
 /**
  * One of Regina's arbitrary precision integer types (Integer or LargeInteger).
@@ -281,6 +237,50 @@ template <typename T>
 concept IntegerComparable =
     IntegerCompatible<T> &&
     std::totally_ordered_with<T, int>;
+
+/**
+ * Deprecated compile-time boolean constant that indicates whether the type \a T
+ * is a native C++ integer type, allowing for 128-bit integers also but
+ * excluding booleans.
+ *
+ * \deprecated Instead use the equivalent concept `CppInteger<T>`.
+ *
+ * \nopython
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+[[deprecated]] inline constexpr bool is_cpp_integer_v = CppInteger<T>;
+
+/**
+ * Deprecated compile-time boolean constant that indicates whether the type \a T
+ * is a signed native C++ integer type, allowing for 128-bit integers also but
+ * excluding booleans.
+ *
+ * \deprecated Instead use the equivalent concept `SignedCppInteger<T>`.
+ *
+ * \nopython
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+[[deprecated]] inline constexpr bool is_signed_cpp_integer_v =
+    SignedCppInteger<T>;
+
+/**
+ * Deprecated compile-time boolean constant that indicates whether the type \a T
+ * is an unsigned native C++ integer type, allowing for 128-bit integers also
+ * but excluding booleans.
+ *
+ * \deprecated Instead use the equivalent concept `UnsignedCppInteger<T>`.
+ *
+ * \nopython
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+[[deprecated]] inline constexpr bool is_unsigned_cpp_integer_v =
+    UnsignedCppInteger<T>;
 
 /**
  * Deprecated traits class to determine if the type \a T is one of Regina's

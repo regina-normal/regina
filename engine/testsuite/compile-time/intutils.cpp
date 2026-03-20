@@ -60,48 +60,48 @@ static_assert(! regina::FaithfulAssignment<
 static_assert(regina::FaithfulAssignment<
     regina::LargeInteger, regina::LargeInteger>::value);
 
-static_assert(! regina::is_cpp_integer_v<bool>);
-static_assert(! regina::is_unsigned_cpp_integer_v<bool>);
-static_assert(! regina::is_signed_cpp_integer_v<bool>);
+static_assert(! regina::CppInteger<bool>);
+static_assert(! regina::UnsignedCppInteger<bool>);
+static_assert(! regina::SignedCppInteger<bool>);
 
-static_assert(regina::is_cpp_integer_v<unsigned char>);
-static_assert(regina::is_unsigned_cpp_integer_v<unsigned char>);
-static_assert(! regina::is_signed_cpp_integer_v<unsigned char>);
+static_assert(regina::CppInteger<unsigned char>);
+static_assert(regina::UnsignedCppInteger<unsigned char>);
+static_assert(! regina::SignedCppInteger<unsigned char>);
 
-static_assert(regina::is_cpp_integer_v<signed char>);
-static_assert(! regina::is_unsigned_cpp_integer_v<signed char>);
-static_assert(regina::is_signed_cpp_integer_v<signed char>);
+static_assert(regina::CppInteger<signed char>);
+static_assert(! regina::UnsignedCppInteger<signed char>);
+static_assert(regina::SignedCppInteger<signed char>);
 
-static_assert(regina::is_cpp_integer_v<unsigned>);
-static_assert(regina::is_unsigned_cpp_integer_v<unsigned>);
-static_assert(! regina::is_signed_cpp_integer_v<unsigned>);
+static_assert(regina::CppInteger<unsigned>);
+static_assert(regina::UnsignedCppInteger<unsigned>);
+static_assert(! regina::SignedCppInteger<unsigned>);
 
-static_assert(regina::is_cpp_integer_v<int>);
-static_assert(! regina::is_unsigned_cpp_integer_v<int>);
-static_assert(regina::is_signed_cpp_integer_v<int>);
+static_assert(regina::CppInteger<int>);
+static_assert(! regina::UnsignedCppInteger<int>);
+static_assert(regina::SignedCppInteger<int>);
 
-static_assert(regina::is_cpp_integer_v<unsigned long long>);
-static_assert(regina::is_unsigned_cpp_integer_v<unsigned long long>);
-static_assert(! regina::is_signed_cpp_integer_v<unsigned long long>);
+static_assert(regina::CppInteger<unsigned long long>);
+static_assert(regina::UnsignedCppInteger<unsigned long long>);
+static_assert(! regina::SignedCppInteger<unsigned long long>);
 
-static_assert(regina::is_cpp_integer_v<long long>);
-static_assert(! regina::is_unsigned_cpp_integer_v<long long>);
-static_assert(regina::is_signed_cpp_integer_v<long long>);
+static_assert(regina::CppInteger<long long>);
+static_assert(! regina::UnsignedCppInteger<long long>);
+static_assert(regina::SignedCppInteger<long long>);
 
-static_assert(regina::is_cpp_integer_v<size_t>);
-static_assert(regina::is_unsigned_cpp_integer_v<size_t>);
-static_assert(! regina::is_signed_cpp_integer_v<size_t>);
+static_assert(regina::CppInteger<size_t>);
+static_assert(regina::UnsignedCppInteger<size_t>);
+static_assert(! regina::SignedCppInteger<size_t>);
 
-static_assert(regina::is_cpp_integer_v<ssize_t>);
-static_assert(! regina::is_unsigned_cpp_integer_v<ssize_t>);
-static_assert(regina::is_signed_cpp_integer_v<ssize_t>);
+static_assert(regina::CppInteger<ssize_t>);
+static_assert(! regina::UnsignedCppInteger<ssize_t>);
+static_assert(regina::SignedCppInteger<ssize_t>);
 
 #if defined(INT128_AVAILABLE)
-static_assert(regina::is_cpp_integer_v<regina::UInt128>);
-static_assert(regina::is_unsigned_cpp_integer_v<regina::UInt128>);
-static_assert(! regina::is_signed_cpp_integer_v<regina::UInt128>);
+static_assert(regina::CppInteger<regina::UInt128>);
+static_assert(regina::UnsignedCppInteger<regina::UInt128>);
+static_assert(! regina::SignedCppInteger<regina::UInt128>);
 
-static_assert(regina::is_cpp_integer_v<regina::Int128>);
-static_assert(! regina::is_unsigned_cpp_integer_v<regina::Int128>);
-static_assert(regina::is_signed_cpp_integer_v<regina::Int128>);
+static_assert(regina::CppInteger<regina::Int128>);
+static_assert(! regina::UnsignedCppInteger<regina::Int128>);
+static_assert(regina::SignedCppInteger<regina::Int128>);
 #endif

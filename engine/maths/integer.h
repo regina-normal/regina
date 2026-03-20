@@ -2601,14 +2601,14 @@ template <CppInteger IntType>
 inline IntegerBase<withInfinity>::IntegerBase(IntType value) :
         small_(value), large_(nullptr) {
     if constexpr (sizeof(IntType) == sizeof(long) &&
-            regina::is_unsigned_cpp_integer_v<IntType>) {
+            UnsignedCppInteger<IntType>) {
         // Detect overflow.
         if (small_ < 0) {
             large_ = new __mpz_struct[1];
             mpz_init_set_ui(large_, value);
         }
     } else if constexpr (sizeof(IntType) > sizeof(long)) {
-        if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+        if constexpr (SignedCppInteger<IntType>) {
             // Detect overflow.
             if (small_ != value) {
                 large_ = new __mpz_struct[1];
@@ -2766,7 +2766,7 @@ IntType IntegerBase<withInfinity>::safeValue() const {
         // We have a GMP integer.
         if constexpr (sizeof(IntType) <= sizeof(long)) {
             // Optimise for small native types.
-            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if constexpr (UnsignedCppInteger<IntType>) {
                 if (mpz_sgn(large_) >= 0 &&
                         mpz_cmp_ui(large_, limits::max()) <= 0)
                     return static_cast<IntType>(mpz_get_ui(large_));
@@ -2784,7 +2784,7 @@ IntType IntegerBase<withInfinity>::safeValue() const {
             if (sign == 0)
                 return 0;
 
-            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if constexpr (UnsignedCppInteger<IntType>) {
                 if (sign < 0)
                     throw IntegerOverflow();
 
@@ -2839,7 +2839,7 @@ IntType IntegerBase<withInfinity>::safeValue() const {
         }
     } else {
         // We have a native long integer.
-        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+        if constexpr (UnsignedCppInteger<IntType>) {
             if (small_ < 0)
                 throw IntegerOverflow();
 
@@ -2881,7 +2881,7 @@ IntType IntegerBase<withInfinity>::unsafeValue() const {
         // We have a GMP integer.
         if constexpr (sizeof(IntType) <= sizeof(long)) {
             // Optimise for small native types.
-            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>)
+            if constexpr (UnsignedCppInteger<IntType>)
                 return static_cast<IntType>(mpz_get_ui(large_));
             else
                 return static_cast<IntType>(mpz_get_si(large_));
@@ -2898,7 +2898,7 @@ IntType IntegerBase<withInfinity>::unsafeValue() const {
             IntType absVal = *static_cast<IntType*>(result);
             free(result);
 
-            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if constexpr (UnsignedCppInteger<IntType>) {
                 return absVal;
             } else {
                 if (absVal >= 0) {
@@ -3022,7 +3022,7 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
 
     // Test for overflow, if we need to.
     if constexpr (sizeof(IntType) == sizeof(long) &&
-            regina::is_unsigned_cpp_integer_v<IntType>) {
+            UnsignedCppInteger<IntType>) {
         if (small_ < 0) {
             if (large_)
                 mpz_set_ui(large_, value);
@@ -3036,7 +3036,7 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
                 clearLarge();
         }
     } else if constexpr (sizeof(IntType) > sizeof(long)) {
-        if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+        if constexpr (SignedCppInteger<IntType>) {
             if (small_ != value) {
                 if (! large_) {
                     large_ = new __mpz_struct[1];
@@ -3143,7 +3143,7 @@ inline bool IntegerBase<withInfinity>::operator ==(IntType rhs) const {
 
     if (large_) {
         if constexpr (sizeof(IntType) <= sizeof(long)) {
-            if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+            if constexpr (SignedCppInteger<IntType>) {
                 return (mpz_cmp_si(large_, rhs) == 0);
             } else {
                 return (mpz_cmp_ui(large_, rhs) == 0);
@@ -3153,7 +3153,7 @@ inline bool IntegerBase<withInfinity>::operator ==(IntType rhs) const {
             return *this == IntegerBase(rhs);
         }
     } else {
-        if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+        if constexpr (SignedCppInteger<IntType>) {
             return (small_ == rhs);
         } else {
             // Be careful: small_ is signed, but rhs is unsigned.
@@ -3211,7 +3211,7 @@ inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
 
     if (large_) {
         if constexpr (sizeof(IntType) <= sizeof(long)) {
-            if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+            if constexpr (SignedCppInteger<IntType>) {
                 return (mpz_cmp_si(large_, rhs) <=> 0);
             } else {
                 return (mpz_cmp_ui(large_, rhs) <=> 0);
@@ -3221,7 +3221,7 @@ inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
             return *this <=> IntegerBase(rhs);
         }
     } else {
-        if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+        if constexpr (SignedCppInteger<IntType>) {
             // Both small_ and rhs are signed.
             return (small_ <=> rhs);
         } else {
@@ -3464,7 +3464,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
         // Note: both signed and unsigned integer _conversion_ are guaranteed
         // to be correct modulo 2^bits (as of C++20); however, signed integer
         // _arithmetic_ has undefined overflow behaviour.  Be careful.
-        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+        if constexpr (UnsignedCppInteger<IntType>) {
             if (other <= detail::differenceAsUnsigned(LONG_MAX, small_)) {
                 // A consequence: 0 ≤ other ≤ ULONG_MAX.
                 // If sizeof(IntType) < sizeof(long) then I understand the
@@ -3500,7 +3500,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
 
     // And now we're down to large integer arithmetic (large != null).
     if constexpr (sizeof(IntType) <= sizeof(long)) {
-        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+        if constexpr (UnsignedCppInteger<IntType>) {
             mpz_add_ui(large_, large_, other);
         } else if (other >= 0) {
             mpz_add_ui(large_, large_, other);
@@ -3549,7 +3549,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
         // Note: both signed and unsigned integer _conversion_ are guaranteed
         // to be correct modulo 2^bits (as of C++20); however, signed integer
         // _arithmetic_ has undefined overflow behaviour.  Be careful.
-        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+        if constexpr (UnsignedCppInteger<IntType>) {
             if (other <= detail::differenceAsUnsigned(small_, LONG_MIN)) {
                 // A consequence: 0 ≤ other ≤ ULONG_MAX.
                 // If sizeof(IntType) < sizeof(long) then I understand the
@@ -3585,7 +3585,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
 
     // And now we're down to large integer arithmetic (large != null).
     if constexpr (sizeof(IntType) <= sizeof(long)) {
-        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+        if constexpr (UnsignedCppInteger<IntType>) {
             mpz_sub_ui(large_, large_, other);
         } else if (other >= 0) {
             mpz_sub_ui(large_, large_, other);
@@ -3613,7 +3613,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
             if (other == 0) {
                 clearLarge();
                 small_ = 0;
-            } else if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+            } else if constexpr (SignedCppInteger<IntType>) {
                 mpz_mul_si(large_, large_, other);
             } else {
                 mpz_mul_ui(large_, large_, other);
@@ -3627,7 +3627,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
                 // Overflow.
                 large_ = new __mpz_struct[1];
                 mpz_init_set_si(large_, small_);
-                if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+                if constexpr (SignedCppInteger<IntType>) {
                     mpz_mul_si(large_, large_, other);
                 } else {
                     mpz_mul_ui(large_, large_, other);
@@ -3666,7 +3666,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(
 
     if (large_) {
         if constexpr (sizeof(IntType) <= sizeof(long)) {
-            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if constexpr (UnsignedCppInteger<IntType>) {
                 mpz_tdiv_q_ui(large_, large_, other);
             } else if (other >= 0) {
                 mpz_tdiv_q_ui(large_, large_, other);
@@ -3680,7 +3680,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(
             return (*this) /= IntegerBase(other);
         }
     } else {
-        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+        if constexpr (UnsignedCppInteger<IntType>) {
             // We can do this all in native arithmetic.
             if constexpr (sizeof(IntType) < sizeof(long))
                 small_ /= static_cast<long>(other);
@@ -3716,7 +3716,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::divByExact(
         IntType other) {
     // Preconditions: this is finite; other ≠ 0; (this / other) is an integer.
     if constexpr (sizeof(IntType) <= sizeof(long)) {
-        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+        if constexpr (UnsignedCppInteger<IntType>) {
             if (large_) {
                 mpz_divexact_ui(large_, large_, other);
             } else {
@@ -3776,7 +3776,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
     // Now we have this != infinity, other != 0.
     if (large_) {
         if constexpr (sizeof(IntType) <= sizeof(long)) {
-            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if constexpr (UnsignedCppInteger<IntType>) {
                 mpz_tdiv_r_ui(large_, large_, other);
             } else if (other >= 0) {
                 mpz_tdiv_r_ui(large_, large_, other);
@@ -3794,7 +3794,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
     } else {
         // We can do this all in native arithmetic.
         // Note: some compilers crash on LONG_MIN % -1.
-        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+        if constexpr (UnsignedCppInteger<IntType>) {
             if constexpr (sizeof(IntType) < sizeof(long))
                 small_ %= static_cast<long>(other);
             else if (other <= static_cast<unsigned long>(LONG_MAX))
