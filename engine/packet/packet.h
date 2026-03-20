@@ -46,6 +46,7 @@
 #include <concepts> // Don't include this first - see QTBUG-83160
 
 #include "regina-core.h"
+#include "concepts/io.h"
 #include "core/output.h"
 #include "file/fileformat.h"
 #include "packet/packettype.h"
@@ -1829,11 +1830,11 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * if you need to avoid whitespace between the opening XML tag
          * and the packet contents then you should pass \c false instead.
          * \param attr any additional attributes to write to the XML tag;
-         * each attribute should a pair of the form (\a attribute, \a value),
-         * where \a value is of a type that can be written to an output stream.
+         * each attribute should a pair of the form (\a attribute, \a value).
          * When writing to the FileFormat::XmlGen2 format, this will be ignored.
          */
         template <typename... Args>
+        requires (Writeable<Args> && ...)
         void writeXMLHeader(std::ostream& out, const char* element,
             FileFormat format, bool anon, PacketRefs& refs,
             bool newline, std::pair<const char*, Args>... attr) const;
@@ -4323,6 +4324,7 @@ inline std::shared_ptr<const Packet> Packet::nextTreePacket(PacketType t)
 }
 
 template <typename... Args>
+requires (Writeable<Args> && ...)
 void Packet::writeXMLHeader(std::ostream& out, const char* element,
         FileFormat format, bool anon, PacketRefs& refs, bool newline,
         std::pair<const char*, Args>... args) const {
