@@ -345,6 +345,7 @@ static_assert(! regina::InherentlyTightEncodable<int>);
 static_assert(! regina::InherentlyTightEncodable<NativeInteger<8>>);
 
 static_assert(! regina::PacketClass<int>);
+static_assert(! regina::PacketClass<regina::Arrow>);
 static_assert(regina::PacketClass<regina::Container>);
 static_assert(regina::PacketClass<regina::PacketOf<regina::Link>>);
 static_assert(! regina::PacketClass<regina::Link>);
@@ -353,6 +354,7 @@ static_assert(regina::PacketClass<regina::SurfaceFilter>);
 static_assert(regina::PacketClass<regina::SurfaceFilterCombination>);
 
 static_assert(! regina::WrappedPacket<int>);
+static_assert(! regina::WrappedPacket<regina::Arrow>);
 static_assert(! regina::WrappedPacket<regina::Text>);
 static_assert(! regina::WrappedPacket<regina::Script>);
 static_assert(! regina::WrappedPacket<regina::Container>);
@@ -360,11 +362,14 @@ static_assert(! regina::WrappedPacket<regina::Link>);
 static_assert(regina::WrappedPacket<regina::PacketOf<regina::Link>>);
 
 static_assert(! regina::TextPacket<int>);
+static_assert(! regina::TextPacket<regina::Arrow>);
 static_assert(regina::TextPacket<regina::Text>);
 static_assert(regina::TextPacket<regina::Script>);
 static_assert(! regina::TextPacket<regina::Container>);
 static_assert(! regina::TextPacket<regina::Link>);
 
+static_assert(! regina::PacketHeldType<int>);
+static_assert(! regina::PacketHeldType<regina::Arrow>);
 static_assert(regina::PacketHeldType<regina::Link>);
 static_assert(! regina::PacketHeldType<regina::PacketOf<regina::Link>>);
 static_assert(! regina::PacketHeldType<regina::Container>);
