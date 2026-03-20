@@ -37,6 +37,7 @@
 #define __REGINA_SHORTARRAY_H
 #endif
 
+#include <concepts>
 #include <vector>
 #include "regina-core.h"
 
@@ -77,7 +78,7 @@ namespace regina {
  *
  * \ingroup utilities
  */
-template <typename T, size_t maxSize>
+template <std::semiregular T, size_t maxSize>
 class ShortArray {
     public:
         /**
