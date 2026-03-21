@@ -536,6 +536,15 @@ inline XMLElementReader*
         XMLTriangulationReader<dim>::startPropertySubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
+    // We might be reading properties for triangulations that do not support
+    // them (e.g., irreducibility for an an invalid triangulation).
+    // This does not matter: even if we store the values of these properties,
+    // the triangulation class gives no way to access them (since preconditions
+    // are tested for both the query routines and the corresponding knows...()
+    // routines).  Therefore we happily just read whatever properties we find
+    // and do not try to test any preconditions on the triangulation (which
+    // would slow down the file I/O).
+
     if (subTagName == "fundgroup")
         return new GroupPresentationPropertyReader(tri_->fundGroup_);
     else if (subTagName == "H1")

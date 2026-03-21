@@ -255,10 +255,17 @@ Version 8.0  [ TODO ]
               UnsolvedCase exception if the underlying algorithms encounter an
               impossible memory requirement (typically due to some normal
               surface having a coordinate too large to fit into a size_t).
-            - Routines isIrreducible(), knowsIrreducible(),
-              hasCompressingDisc(), knowsCompressingDisc(), isHaken() and
-              knowsHaken() now throw a FailedPrecondition exception if their
-              preconditions are not met.
+            - Routines isIrreducible(), hasCompressingDisc() and isHaken()
+              now throw a FailedPrecondition exception if their preconditions
+              are not met.
+            - Routines knowsIrreducible(), knowsCompressingDisc(), knowsHaken()
+              and knowsOneEfficient() no longer share the preconditions of their
+              respective query routines isIrreducible(), etc.; instead they
+              test these preconditions and return false if they fail.
+              In particular, knowsOneEfficient() no longer throws an exception.
+              The exception to this rule: irreducibility (a precondition of
+              hasCompressingDisc()) is expensive to test, and so remains an
+              untested precondition of knowsCompressingDisc() also.
             - All knows...() routines now take an optional boolean argument,
               indicating whether to consider trivial computations (the default),
               or to only check whether the value is already cached.

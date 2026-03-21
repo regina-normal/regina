@@ -1445,13 +1445,12 @@ class TriangulationBase :
          * `group()` will be very fast, and will not attempt to perform any
          * further simplification.
          *
-         * \pre This triangulation has at most one component.
-         *
-         * \exception FailedPrecondition This triangulation has more than one
-         * component.
+         * Note that group() requires a triangulation with at most one component
+         * as a precondition.  Therefore, if this triangulation has more than
+         * one component, knowsGroup() will return `false`.
          *
          * \return \c true if and only if the fundamental group is currently
-         * cached.
+         * cached, _and_ the preconditions for group() are satisfied.
          */
         bool knowsGroup() const;
 
@@ -5747,8 +5746,7 @@ inline void TriangulationBase<dim>::simplifiedFundamentalGroup(
 template <int dim> requires (supportedDim(dim))
 inline bool TriangulationBase<dim>::knowsGroup() const {
     if (countComponents() > 1)
-        throw FailedPrecondition("Computing fundamental group requires "
-            "the triangulation to have ≤ 1 component");
+        return false; // failed precondition
     return fundGroup_.has_value();
 }
 

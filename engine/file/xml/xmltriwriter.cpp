@@ -172,14 +172,12 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
     using regina::xml::xmlValueTag;
 
     // Properties for triangulations of all dimensions:
-    if (data_.countComponents() <= 1 && data_.knowsGroup()) {
-        // Note: knowsGroup() throws an exception with ≥ 1 component.
+    if (data_.knowsGroup()) {
         out_ << "  <fundgroup>\n";
         data_.group().writeXMLData(out_);
         out_ << "  </fundgroup>\n";
     }
     if (data_.template knowsHomology<1>()) {
-        // Note: knowsHomology<2>() throws an exception if data_ is invalid.
         out_ << "  <H1>";
         data_.template homology<1>().writeXMLData(out_);
         out_ << "</H1>\n";
@@ -187,46 +185,35 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
 
     // Additional properties that are specific to the triangulation dimension:
     if constexpr (dim == 3) {
-        if (data_.isValid() && data_.knowsHomologyRel()) {
-            // Note: knowsHomologyRel() throws an exception if data_ is invalid.
+        if (data_.knowsHomologyRel(true)) {
             out_ << "  <H1Rel>";
             data_.homologyRel().writeXMLData(out_);
             out_ << "</H1Rel>\n";
         }
-        if (data_.knowsZeroEfficient())
+        if (data_.knowsZeroEfficient(true))
             out_ << "  " << xmlValueTag("zeroeff", data_.isZeroEfficient())
                 << '\n';
-        // One-efficiency testing comes with several preconditions.
-        // The "valid and ideal" condition we test now, but the vertex link
-        // condition is a bit messier to test here and so instead we just catch
-        // the exception that is thrown if it fails.
-        if (data_.isValid() && data_.isIdeal()) {
-            try {
-                if (data_.knowsOneEfficient())
-                    out_ << "  " <<
-                        xmlValueTag("oneeff", data_.isOneEfficient()) << '\n';
-            } catch (FailedPrecondition&) {
-            }
-        }
-        if (data_.knowsSphere())
+        if (data_.knowsOneEfficient(true))
+            out_ << "  " << xmlValueTag("oneeff", data_.isOneEfficient())
+                << '\n';
+        if (data_.knowsSphere(true))
             out_ << "  " << xmlValueTag("threesphere",
                 data_.isSphere()) << '\n';
-        if (data_.knowsHandlebody())
+        if (data_.knowsHandlebody(true))
             out_ << "  " << xmlValueTag("handlebody",
                 data_.recogniseHandlebody()) << '\n';
-        if (data_.knowsTxI())
+        if (data_.knowsTxI(true))
             out_ << "  " << xmlValueTag("txi", data_.isTxI()) << '\n';
-        if (data_.knowsIrreducible())
+        if (data_.knowsIrreducible(true))
             out_ << "  " << xmlValueTag("irreducible",
                 data_.isIrreducible()) << '\n';
-        if (data_.knowsCompressingDisc())
+        if (data_.knowsCompressingDisc(true))
             out_ << "  " << xmlValueTag("compressingdisc",
                 data_.hasCompressingDisc()) << '\n';
-        if (data_.knowsHaken())
+        if (data_.knowsHaken(true))
             out_ << "  " << xmlValueTag("haken", data_.isHaken()) << '\n';
     } else if constexpr (dim == 4) {
-        if (data_.isValid() && data_.template knowsHomology<2>()) {
-            // Note: knowsHomology<2>() throws an exception if data_ is invalid.
+        if (data_.template knowsHomology<2>()) {
             out_ << "  <H2>";
             data_.template homology<2>().writeXMLData(out_);
             out_ << "</H2>\n";

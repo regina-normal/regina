@@ -360,14 +360,14 @@ void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::return_value_policy::reference_internal,
             rdoc::homologyRel)
         .def("knowsHomologyRel", &Triangulation<3>::knowsHomologyRel,
-            rdoc::knowsHomologyRel)
+            pybind11::arg("cachedOnly") = false, rdoc::knowsHomologyRel)
         .def("homologyBdry", &Triangulation<3>::homologyBdry,
             pybind11::return_value_policy::reference_internal,
             rdoc::homologyBdry)
         .def("homologyH2Z2", &Triangulation<3>::homologyH2Z2,
             rdoc::homologyH2Z2)
         .def("knowsHomologyH2Z2", &Triangulation<3>::knowsHomologyH2Z2,
-            rdoc::knowsHomologyH2Z2)
+            pybind11::arg("cachedOnly") = false, rdoc::knowsHomologyH2Z2)
         .def("markedHomology",
             static_cast<MarkedAbelianGroup (Triangulation<3>::*)(int) const>(
                 &Triangulation<3>::markedHomology),
@@ -412,11 +412,11 @@ void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
         .def("isZeroEfficient", &Triangulation<3>::isZeroEfficient,
             rdoc::isZeroEfficient)
         .def("knowsZeroEfficient", &Triangulation<3>::knowsZeroEfficient,
-            rdoc::knowsZeroEfficient)
+            pybind11::arg("cachedOnly") = false, rdoc::knowsZeroEfficient)
         .def("isOneEfficient", &Triangulation<3>::isOneEfficient,
             rdoc::isOneEfficient)
         .def("knowsOneEfficient", &Triangulation<3>::knowsOneEfficient,
-            rdoc::knowsOneEfficient)
+            pybind11::arg("cachedOnly") = false, rdoc::knowsOneEfficient)
         .def("hasSplittingSurface", &Triangulation<3>::hasSplittingSurface,
             rdoc::hasSplittingSurface)
         .def("nonTrivialSphereOrDisc",

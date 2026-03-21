@@ -1147,12 +1147,8 @@ bool Triangulation<3>::hasCompressingDisc() const {
 }
 
 bool Triangulation<3>::knowsCompressingDisc(bool cachedOnly) const {
-    if (! isValid())
-        throw FailedPrecondition("Testing for compressing discs requires a "
-            "valid triangulation");
-    if (isIdeal())
-        throw FailedPrecondition("Testing for compressing discs is not "
-            "available for ideal triangulations");
+    if ((! isValid()) || isIdeal())
+        return false; // failed precondition
 
     if (prop_.compressingDisc_.has_value())
         return true;

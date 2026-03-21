@@ -772,20 +772,28 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         const AbelianGroup& homologyRel() const;
         /**
          * Is the relative first homology group with respect to the boundary
-         * already known (or trivial to calculate)?  See homologyRel() for
+         * already known (or trivial to determine)?  See homologyRel() for
          * further details.
          *
          * If this returns `true` then future calls to homologyRel() will be
          * very fast.
          *
-         * \pre This triangulation is valid.
+         * Note that homologyRel() requires a valid triangulation as a
+         * precondition.  Therefore, if this triangulation is _not_ valid,
+         * knowsHomologyRel() will return `false`.
          *
-         * \exception FailedPrecondition This triangulation is invalid.
-         *
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * Currently this argument is ignored since this routine does not look
+         * for shortcuts that make relative homology trivial to compute;
+         * however, it is provided for compatibility with other `knows...()`
+         * routines.
          * \return \c true if and only if this property is already known
-         * or trivial to calculate.
+         * or trivial to calculate, _and_ the preconditions for homologyRel()
+         * are satisfied.
          */
-        bool knowsHomologyRel() const;
+        bool knowsHomologyRel(bool cachedOnly = false) const;
         /**
          * Returns the first homology group of the
          * boundary for this triangulation.
@@ -830,20 +838,28 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         size_t homologyH2Z2() const;
         /**
          * Is the second homology group with coefficients in `Z_2` already
-         * known (or trivial to calculate)?  See homologyH2Z2() for further
+         * known (or trivial to determine)?  See homologyH2Z2() for further
          * details.
          *
          * If this returns `true` then future calls to homologyH2Z2() will be
          * very fast.
          *
-         * \pre This triangulation is valid.
+         * Note that homologyH2Z2() requires a valid triangulation as a
+         * precondition.  Therefore, if this triangulation is _not_ valid,
+         * knowsHomologyH2Z2() will return `false`.
          *
-         * \exception FailedPrecondition This triangulation is invalid.
-         *
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * Currently this argument is ignored since this routine does not look
+         * for shortcuts that make second homology with `Z_2` coefficients
+         * trivial to compute; however, it is provided for compatibility with
+         * other `knows...()` routines.
          * \return \c true if and only if this property is already known
-         * or trivial to calculate.
+         * or trivial to calculate, _and_ the preconditions for homologyH2Z2()
+         * are satisfied.
          */
-        bool knowsHomologyH2Z2() const;
+        bool knowsHomologyH2Z2(bool cachedOnly = false) const;
         /**
          * Computes the given Turaev-Viro state sum invariant of this
          * 3-manifold using exact arithmetic.
@@ -1318,24 +1334,31 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * discs are vertex linking, and if it has no 2-sphere boundary
          * components.
          *
-         * \return \c true if and only if this triangulation is
-         * 0-efficient.
+         * \return \c true if and only if this triangulation is 0-efficient.
          */
         bool isZeroEfficient() const;
         /**
-         * Is it already known whether or not this triangulation is
-         * 0-efficient?  See isZeroEfficient() for further details.
+         * Is it already known (or trivial to determine) whether or not this
+         * triangulation is 0-efficient?  See isZeroEfficient() for further
+         * details.
          *
-         * If this property is already known, future calls to isZeroEfficient()
-         * will be very fast (simply returning the precalculated value).
+         * If this property is indeed already known, future calls to
+         * isZeroEfficient() will be very fast (simply returning the
+         * precalculated value).
          *
          * \warning This routine does not actually tell you _whether_
          * this triangulation is 0-efficient; it merely tells you whether
          * the answer has already been computed.
          *
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * Currently this argument is ignored since this routine does not look
+         * for shortcuts that make 0-efficiency trivial to compute; however,
+         * it is provided for compatibility with other `knows...()` routines.
          * \return \c true if and only if this property is already known.
          */
-        bool knowsZeroEfficient() const;
+        bool knowsZeroEfficient(bool cachedOnly = false) const;
         /**
          * Determines if this triangulation is 1-efficient.
          *
@@ -1361,25 +1384,31 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         bool isOneEfficient() const;
         /**
-         * Is it already known whether or not this triangulation is
-         * 1-efficient?  See isOneEfficient() for further details.
+         * Is it already known (or trivial to determine) whether or not this
+         * triangulation is 1-efficient?  See isOneEfficient() for further
+         * details.
          *
-         * If this property is already known, future calls to isOneEfficient()
-         * will be very fast (simply returning the precalculated value).
+         * If this property is indeed already known, future calls to
+         * isOneEfficient() will be very fast (simply returning the
+         * precalculated value).
          *
-         * \pre This is a valid ideal triangulation in which the link of every
-         * vertex is a torus or Klein bottle.
+         * Note that isOneEfficient() requires a valid ideal triangulation
+         * with only torus and/or Klein bottle vertex links as a precondition.
+         * Therefore, if this triangulation does _not_ satisfy those conditions,
+         * knowsOneEfficient() will return `false`.
          *
          * \warning This routine does not actually tell you _whether_
          * this triangulation is 1-efficient; it merely tells you whether
          * the answer has already been computed.
          *
-         * \exception FailedPrecondition This triangulation is invalid, empty,
-         * and/or has some vertex whose link is not a torus or Klein bottle.
-         *
-         * \return \c true if and only if this property is already known.
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * \return \c true if and only if this property is already known
+         * or trivial to calculate, _and_ the preconditions for isOneEfficient()
+         * are satisfied.
          */
-        bool knowsOneEfficient() const;
+        bool knowsOneEfficient(bool cachedOnly = false) const;
         /**
          * Determines whether this triangulation has a normal splitting
          * surface.  See NormalSurface::isSplitting() for details
@@ -3608,14 +3637,14 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * isIrreducible() will be very fast (simply returning the
          * precalculated value).
          *
+         * Note that isIrreducible() requires a valid, closed, orientable and
+         * connected triangulation as a precondition.  Therefore, if this
+         * triangulation is _not_ valid, closed, orientable and connected,
+         * then knowsIrreducible() will return `false`.
+         *
          * \warning This routine does not actually tell you _whether_
          * the underlying 3-manifold is irreducible; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
-         *
-         * \pre This triangulation is valid, closed, orientable, and connected.
-         *
-         * \exception FailedPrecondition This triangulation is not valid,
-         * closed, orientable, and connected.
          *
          * \param cachedOnly if `true`, this routine will only identify
          * whether the property is already cached, and will not attempt to
@@ -3624,7 +3653,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * for shortcuts that make irreducibility trivial to compute; however,
          * it is provided for compatibility with other `knows...()` routines.
          * \return \c true if and only if this property is already known
-         * or trivial to calculate.
+         * or trivial to calculate, _and_ the preconditions for isIrreducible()
+         * are satisfied.
          */
         bool knowsIrreducible(bool cachedOnly = false) const;
 
@@ -3712,28 +3742,27 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Otherwise a call to hasCompressingDisc() may potentially require more
          * significant work, and so this routine will return \c false.
          *
+         * Note that hasCompressingDisc() requires a valid, non-ideal
+         * triangulation of an irreducible 3-manifold as a precondition.
+         * This routine will test the valid and non-ideal conditions, and will
+         * return `false` if they fail.  Irreducibility is more expensive to
+         * test, and so it remains a precondition of knowsCompressingDisc()
+         * also.  It is the responsibility of the programmer to ensure that the
+         * underlying 3-manifold is irreducible before this routine is called.
+         *
          * \warning This routine does not actually tell you _whether_
          * the underlying 3-manifold has a compressing disc; it merely tells
          * you whether the answer has already been computed (or is very
          * easily computed).
          *
-         * \pre This triangulation is valid and is not ideal.  This precondition
-         * is easy to check, and so it will be tested (and an exception will be
-         * thrown if it fails).
-         *
-         * \pre The underlying 3-manifold is irreducible.  This precondition
-         * is _not_ easy to check, and so it will not be tested.  It is the
-         * responsibility of the programmer to ensure that it holds before
-         * this routine is called.
-         *
-         * \exception FailedPrecondition This triangulation is invalid
-         * and/or ideal.
+         * \pre The underlying 3-manifold is irreducible.
          *
          * \param cachedOnly if `true`, this routine will only identify
          * whether the property is already cached, and will not attempt to
          * compute it even if the computation will be trivial.
          * \return \c true if and only if this property is already known
-         * or trivial to calculate.
+         * or trivial to calculate, _and_ this triangulation is valid and
+         * non-ideal.
          */
         bool knowsCompressingDisc(bool cachedOnly = false) const;
 
@@ -3774,14 +3803,14 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * isHaken() will be very fast (simply returning the
          * precalculated value).
          *
+         * Note that isHaken() requires a valid, closed, orientable and
+         * connected triangulation as a precondition.  Therefore, if this
+         * triangulation is _not_ valid, closed, orientable and connected,
+         * then knowsHaken() will return `false`.
+         *
          * \warning This routine does not actually tell you _whether_
          * the underlying 3-manifold is Haken; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
-         *
-         * \pre This triangulation is valid, closed, orientable, and connected.
-         *
-         * \exception FailedPrecondition This triangulation is not valid,
-         * closed, orientable, and connected.
          *
          * \param cachedOnly if `true`, this routine will only identify
          * whether the property is already cached, and will not attempt to
@@ -3790,7 +3819,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * for shortcuts that make Hakenness trivial to compute; however, it is
          * provided for compatibility with other `knows...()` routines.
          * \return \c true if and only if this property is already known
-         * or trivial to calculate.
+         * or trivial to calculate, _and_ the preconditions for isHaken()
+         * are satisfied.
          */
         bool knowsHaken(bool cachedOnly = false) const;
 
@@ -5360,33 +5390,23 @@ inline void Triangulation<3>::reorderTetrahedraBFS(bool reverse) {
     reorderBFS(reverse);
 }
 
-inline bool Triangulation<3>::knowsZeroEfficient() const {
+inline bool Triangulation<3>::knowsZeroEfficient(bool) const {
     return prop_.zeroEfficient_.has_value();
 }
 
-inline bool Triangulation<3>::knowsOneEfficient() const {
-    // Check the preconditions before examining the cached value, since it's
-    // possible the 1-efficiency value was cached from a newer calculation
-    // engine that supports 1-efficiency testing in more settings.
-    if (! isValid()) {
-        throw FailedPrecondition(
-            "1-efficiency testing requires a valid triangulation");
-    }
-    if (! isIdeal()) {
-        // The empty triangulation is eliminated here.
-        throw FailedPrecondition(
-            "1-efficiency testing requires an ideal triangulation");
-    }
-    for (auto v : vertices()) {
+inline bool Triangulation<3>::knowsOneEfficient(bool cachedOnly) const {
+    // Check the preconditions first.
+    if (! (isValid() && isIdeal()))
+        return false; // failed precondition
+    for (auto v : vertices())
         if (v->linkType() != Vertex<3>::Link::Torus &&
                 v->linkType() != Vertex<3>::Link::KleinBottle)
-            throw FailedPrecondition(
-                "1-efficiency testing requires a triangulation whose "
-                "vertex links are all tori and/or Klein bottles");
-    }
+            return false; // failed precondition
 
     if (prop_.oneEfficient_.has_value())
         return true;
+    if (cachedOnly)
+        return false;
 
     // We might already know the answer from the 0-efficiency property,
     // since for the settings in which we are able to test 1-efficiency,
@@ -5420,10 +5440,10 @@ inline const AngleStructure& Triangulation<3>::generalAngleStructure() const {
         throw NoSolution();
 }
 
-inline bool Triangulation<3>::knowsHomologyRel() const {
+inline bool Triangulation<3>::knowsHomologyRel(bool) const {
     if (! isValid())
-        throw FailedPrecondition("Relative homology requires a "
-            "valid triangulation");
+        return false; // failed precondition
+
     return prop_.H1Rel_.has_value();
 }
 
@@ -5433,12 +5453,12 @@ inline size_t Triangulation<3>::homologyH2Z2() const {
     return h1Rel.rank() + h1Rel.torsionRank(2);
 }
 
-inline bool Triangulation<3>::knowsHomologyH2Z2() const {
+inline bool Triangulation<3>::knowsHomologyH2Z2(bool) const {
     if (! isValid())
-        throw FailedPrecondition("Second homology with Z_2 coefficients "
-            "requires a valid triangulation");
-    // This property is not cached, but it is trivial to compute if we
-    // already know relative first homology.
+        return false; // failed precondition
+
+    // This property is trivially deduced from H1Rel, and so instead of
+    // caching H2Z2 separately, we use the cache for H1Rel instead.
     return prop_.H1Rel_.has_value();
 }
 
@@ -5704,18 +5724,8 @@ inline void Triangulation<3>::puncture(Tetrahedron<3>* tet) {
 }
 
 inline bool Triangulation<3>::knowsIrreducible(bool) const {
-    if (! isValid())
-        throw FailedPrecondition("Irreducibility testing requires a "
-            "valid triangulation");
-    if (! isOrientable())
-        throw FailedPrecondition("Irreducibility testing requires an "
-            "orientable triangulation");
-    if (! isClosed())
-        throw FailedPrecondition("Irreducibility testing requires a "
-            "closed triangulation");
-    if (! isConnected())
-        throw FailedPrecondition("Irreducibility testing requires a "
-            "connected triangulation");
+    if (! (isValid() && isOrientable() && isClosed() && isConnected()))
+        return false; // failed precondition
 
     // If we ever add tests for whether irreducibility is trivial to compute
     // (even if it is not cached), these tests should go here, and should only
@@ -5725,18 +5735,8 @@ inline bool Triangulation<3>::knowsIrreducible(bool) const {
 }
 
 inline bool Triangulation<3>::knowsHaken(bool) const {
-    if (! isValid())
-        throw FailedPrecondition("Hakenness testing requires a "
-            "valid triangulation");
-    if (! isOrientable())
-        throw FailedPrecondition("Hakenness testing requires an "
-            "orientable triangulation");
-    if (! isClosed())
-        throw FailedPrecondition("Hakenness testing requires a "
-            "closed triangulation");
-    if (! isConnected())
-        throw FailedPrecondition("Hakenness testing requires a "
-            "connected triangulation");
+    if (! (isValid() && isOrientable() && isClosed() && isConnected()))
+        return false; // failed precondition
 
     // If we ever add tests for whether Hakenness is trivial to compute (even
     // if it is not cached), these tests should go here, and should only be
