@@ -1504,10 +1504,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * tells you whether the answer has already been computed (or is
          * very easily computed).
          *
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
          * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
-        bool knowsStrictAngleStructure() const;
+        bool knowsStrictAngleStructure(bool cachedOnly = false) const;
         /**
          * Returns a generalised angle structure on this triangulation,
          * if one exists.  A _generalised_ angle structure must satisfy the
@@ -3367,10 +3370,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * this triangulation forms a 3-sphere; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
          *
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
          * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
-        bool knowsSphere() const;
+        bool knowsSphere(bool cachedOnly = false) const;
         /**
          * Determines whether this is a triangulation of a 3-dimensional ball.
          *
@@ -3410,10 +3416,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * this triangulation forms a ball; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
          *
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
          * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
-        bool knowsBall() const;
+        bool knowsBall(bool cachedOnly = false) const;
         /**
          * Determines whether this is a triangulation of the solid
          * torus; that is, the unknot complement.  This routine can be
@@ -3454,10 +3463,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * this triangulation forms a solid torus; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
          *
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
          * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
-        bool knowsSolidTorus() const;
+        bool knowsSolidTorus(bool cachedOnly = false) const;
 
         /**
          * Determines whether this is a triangulation of an orientable
@@ -3503,12 +3515,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * whether the answer has already been computed (or is very easily
          * computed).
          *
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
          * \return \c true if and only if this property is already known or
          * trivial to calculate.
          *
          * \author Alex He
          */
-        bool knowsHandlebody() const;
+        bool knowsHandlebody(bool cachedOnly = false) const;
 
         /**
          * Determines whether or not the underlying 3-manifold is
@@ -3553,10 +3568,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * it merely tells you whether the answer has already been computed
          * (or is very easily computed).
          *
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
          * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
-        bool knowsTxI() const;
+        bool knowsTxI(bool cachedOnly = false) const;
 
         /**
          * Determines whether the underlying 3-manifold (which must be
@@ -3572,7 +3590,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \warning The algorithms used in this routine rely on normal
          * surface theory and might be slow for larger triangulations.
          *
-         * \pre This triangulation is valid, closed, orientable and connected.
+         * \pre This triangulation is valid, closed, orientable, and connected.
+         *
+         * \exception FailedPrecondition This triangulation is not valid,
+         * closed, orientable, and connected.
          *
          * \return \c true if and only if the underlying 3-manifold is
          * irreducible.
@@ -3591,12 +3612,21 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the underlying 3-manifold is irreducible; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
          *
-         * \pre This triangulation is valid, closed, orientable and connected.
+         * \pre This triangulation is valid, closed, orientable, and connected.
          *
+         * \exception FailedPrecondition This triangulation is not valid,
+         * closed, orientable, and connected.
+         *
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * Currently this argument is ignored since this routine does not look
+         * for shortcuts that make irreducibility trivial to compute; however,
+         * it is provided for compatibility with other `knows...()` routines.
          * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
-        bool knowsIrreducible() const;
+        bool knowsIrreducible(bool cachedOnly = false) const;
 
         /**
          * Searches for a compressing disc within the underlying
@@ -3633,8 +3663,14 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If this triangulation has no boundary components, this
          * routine will simply return \c false.
          *
-         * \pre This triangulation is valid and is not ideal.
-         * \pre The underlying 3-manifold is irreducible.
+         * \pre This triangulation is valid and is not ideal.  This precondition
+         * is easy to check, and so it will be tested (and an exception will be
+         * thrown if it fails).
+         *
+         * \pre The underlying 3-manifold is irreducible.  This precondition
+         * is _not_ easy to check, and so it will not be tested.  It is the
+         * responsibility of the programmer to ensure that it holds before
+         * this routine is called.
          *
          * \warning This routine can be infeasibly slow for large
          * triangulations (particularly those that are non-orientable
@@ -3643,6 +3679,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * perform "large" operations on these surfaces such as cutting along
          * them.  See hasSimpleCompressingDisc() for a "heuristic shortcut"
          * that is faster but might not give a definitive answer.
+         *
+         * \exception FailedPrecondition This triangulation is invalid
+         * and/or ideal.
          *
          * \exception UnsolvedCase Within the normal surface machinery this
          * algorithm has encountered an impossible memory requirement, due to
@@ -3678,13 +3717,25 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * you whether the answer has already been computed (or is very
          * easily computed).
          *
-         * \pre This triangulation is valid and is not ideal.
-         * \pre The underlying 3-manifold is irreducible.
+         * \pre This triangulation is valid and is not ideal.  This precondition
+         * is easy to check, and so it will be tested (and an exception will be
+         * thrown if it fails).
          *
+         * \pre The underlying 3-manifold is irreducible.  This precondition
+         * is _not_ easy to check, and so it will not be tested.  It is the
+         * responsibility of the programmer to ensure that it holds before
+         * this routine is called.
+         *
+         * \exception FailedPrecondition This triangulation is invalid
+         * and/or ideal.
+         *
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
          * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
-        bool knowsCompressingDisc() const;
+        bool knowsCompressingDisc(bool cachedOnly = false) const;
 
         /**
          * Determines whether the underlying 3-manifold (which
@@ -3694,11 +3745,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * Currently Hakenness testing is available only for irreducible
          * manifolds.  This routine will first test whether the manifold is
-         * irreducible and, if it is not, will return \c false immediately.
+         * irreducible and, if it is not, will return \c false without any
+         * further computation.
          *
-         * \pre This triangulation is valid, closed, orientable and connected.
+         * \pre This triangulation is valid, closed, orientable, and connected.
          *
          * \warning This routine could be very slow for larger triangulations.
+         *
+         * \exception FailedPrecondition This triangulation is not valid,
+         * closed, orientable, and connected.
          *
          * \exception UnsolvedCase Within the normal surface machinery this
          * algorithm has encountered an impossible memory requirement, due to
@@ -3723,12 +3778,21 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the underlying 3-manifold is Haken; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
          *
-         * \pre This triangulation is valid, closed, orientable and connected.
+         * \pre This triangulation is valid, closed, orientable, and connected.
          *
+         * \exception FailedPrecondition This triangulation is not valid,
+         * closed, orientable, and connected.
+         *
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * Currently this argument is ignored since this routine does not look
+         * for shortcuts that make Hakenness trivial to compute; however, it is
+         * provided for compatibility with other `knows...()` routines.
          * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
-        bool knowsHaken() const;
+        bool knowsHaken(bool cachedOnly = false) const;
 
         /**
          * Searches for a "simple" compressing disc inside this
@@ -5637,6 +5701,48 @@ inline void Triangulation<3>::puncture(Tetrahedron<3>* tet) {
         puncture(tet->triangle(0));
     else
         puncture(); // use the default location
+}
+
+inline bool Triangulation<3>::knowsIrreducible(bool) const {
+    if (! isValid())
+        throw FailedPrecondition("Irreducibility testing requires a "
+            "valid triangulation");
+    if (! isOrientable())
+        throw FailedPrecondition("Irreducibility testing requires an "
+            "orientable triangulation");
+    if (! isClosed())
+        throw FailedPrecondition("Irreducibility testing requires a "
+            "closed triangulation");
+    if (! isConnected())
+        throw FailedPrecondition("Irreducibility testing requires a "
+            "connected triangulation");
+
+    // If we ever add tests for whether irreducibility is trivial to compute
+    // (even if it is not cached), these tests should go here, and should only
+    // be used if the boolean argument to this routine is false.
+
+    return prop_.irreducible_.has_value();
+}
+
+inline bool Triangulation<3>::knowsHaken(bool) const {
+    if (! isValid())
+        throw FailedPrecondition("Hakenness testing requires a "
+            "valid triangulation");
+    if (! isOrientable())
+        throw FailedPrecondition("Hakenness testing requires an "
+            "orientable triangulation");
+    if (! isClosed())
+        throw FailedPrecondition("Hakenness testing requires a "
+            "closed triangulation");
+    if (! isConnected())
+        throw FailedPrecondition("Hakenness testing requires a "
+            "connected triangulation");
+
+    // If we ever add tests for whether Hakenness is trivial to compute (even
+    // if it is not cached), these tests should go here, and should only be
+    // used if the boolean argument to this routine is false.
+
+    return prop_.haken_.has_value();
 }
 
 inline const TreeDecomposition& Triangulation<3>::niceTreeDecomposition()

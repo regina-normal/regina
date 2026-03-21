@@ -252,9 +252,16 @@ Version 8.0  [ TODO ]
         Class Triangulation<3>:
             - New routines knowsHomologyRel() and knowsHomologyH2Z2().
             - Routines hasCompressingDisc() and isHaken() now throw an
-              exception if the underlying algorithms encounter an impossible
-              memory requirement (typically due to some normal surface having
-              a coordinate too large to fit into a size_t).
+              UnsolvedCase exception if the underlying algorithms encounter an
+              impossible memory requirement (typically due to some normal
+              surface having a coordinate too large to fit into a size_t).
+            - Routines isIrreducible(), knowsIrreducible(),
+              hasCompressingDisc(), knowsCompressingDisc(), isHaken() and
+              knowsHaken() now throw a FailedPrecondition exception if their
+              preconditions are not met.
+            - All knows...() routines now take an optional boolean argument,
+              indicating whether to consider trivial computations (the default),
+              or to only check whether the value is already cached.
             - Several properties (boundary homology, second homology,
               existence of a splitting surface) are no longer save alongside
               triangulations in data files, since they are easy to reconstruct

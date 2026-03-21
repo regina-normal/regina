@@ -434,6 +434,7 @@ void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
             rdoc::hasStrictAngleStructure)
         .def("knowsStrictAngleStructure",
             &Triangulation<3>::knowsStrictAngleStructure,
+            pybind11::arg("cachedOnly") = false,
             rdoc::knowsStrictAngleStructure)
         .def("generalAngleStructure",
             &Triangulation<3>::generalAngleStructure,
@@ -607,13 +608,15 @@ void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
             rbase::triangulateComponents)
         .def("summands", &Triangulation<3>::summands, rdoc::summands)
         .def("isSphere", &Triangulation<3>::isSphere, rdoc::isSphere)
-        .def("knowsSphere", &Triangulation<3>::knowsSphere, rdoc::knowsSphere)
+        .def("knowsSphere", &Triangulation<3>::knowsSphere,
+            pybind11::arg("cachedOnly") = false, rdoc::knowsSphere)
         .def("isBall", &Triangulation<3>::isBall, rdoc::isBall)
-        .def("knowsBall", &Triangulation<3>::knowsBall, rdoc::knowsBall)
+        .def("knowsBall", &Triangulation<3>::knowsBall,
+            pybind11::arg("cachedOnly") = false, rdoc::knowsBall)
         .def("isSolidTorus", &Triangulation<3>::isSolidTorus,
             rdoc::isSolidTorus)
         .def("knowsSolidTorus", &Triangulation<3>::knowsSolidTorus,
-            rdoc::knowsSolidTorus)
+            pybind11::arg("cachedOnly") = false, rdoc::knowsSolidTorus)
         .def("recogniseHandlebody", &Triangulation<3>::recogniseHandlebody,
             rdoc::recogniseHandlebody)
         .def("isHandlebody", [](const Triangulation<3>&) -> ssize_t {
@@ -633,22 +636,24 @@ instead, which does exactly what Triangulation3.isHandlebody() used to
 do in Regina 7.1.  The name isHandlebody() has _not_ been kept as an
 alias, to avoid people misinterpreting the return value as a boolean.)doc")
         .def("knowsHandlebody", &Triangulation<3>::knowsHandlebody,
-            rdoc::knowsHandlebody)
+            pybind11::arg("cachedOnly") = false, rdoc::knowsHandlebody)
         .def("isTxI", &Triangulation<3>::isTxI, rdoc::isTxI)
-        .def("knowsTxI", &Triangulation<3>::knowsTxI, rdoc::knowsTxI)
+        .def("knowsTxI", &Triangulation<3>::knowsTxI,
+            pybind11::arg("cachedOnly") = false, rdoc::knowsTxI)
         .def("isIrreducible", &Triangulation<3>::isIrreducible,
             rdoc::isIrreducible)
         .def("knowsIrreducible", &Triangulation<3>::knowsIrreducible,
-            rdoc::knowsIrreducible)
+            pybind11::arg("cachedOnly") = false, rdoc::knowsIrreducible)
         .def("hasCompressingDisc", &Triangulation<3>::hasCompressingDisc,
             rdoc::hasCompressingDisc)
         .def("knowsCompressingDisc", &Triangulation<3>::knowsCompressingDisc,
-            rdoc::knowsCompressingDisc)
+            pybind11::arg("cachedOnly") = false, rdoc::knowsCompressingDisc)
         .def("hasSimpleCompressingDisc",
             &Triangulation<3>::hasSimpleCompressingDisc,
             rdoc::hasSimpleCompressingDisc)
         .def("isHaken", &Triangulation<3>::isHaken, rdoc::isHaken)
-        .def("knowsHaken", &Triangulation<3>::knowsHaken, rdoc::knowsHaken)
+        .def("knowsHaken", &Triangulation<3>::knowsHaken,
+            pybind11::arg("cachedOnly") = false, rdoc::knowsHaken)
         .def("niceTreeDecomposition", &Triangulation<3>::niceTreeDecomposition,
             pybind11::return_value_policy::reference_internal,
             rdoc::niceTreeDecomposition)

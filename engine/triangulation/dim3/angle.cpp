@@ -35,12 +35,13 @@
 
 namespace regina {
 
-bool Triangulation<3>::knowsStrictAngleStructure() const {
+bool Triangulation<3>::knowsStrictAngleStructure(bool cachedOnly) const {
     if (std::holds_alternative<AngleStructure>(strictAngleStructure_))
         return true; // already known: a solution exists
-
     if (std::get<bool>(strictAngleStructure_))
         return true; // already known: no solution exists
+    if (cachedOnly)
+        return false;
 
     // There are some simple cases for which we can deduce the answer
     // automatically.

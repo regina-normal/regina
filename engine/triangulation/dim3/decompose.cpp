@@ -327,9 +327,11 @@ bool Triangulation<3>::isSphere() const {
     return true;
 }
 
-bool Triangulation<3>::knowsSphere() const {
+bool Triangulation<3>::knowsSphere(bool cachedOnly) const {
     if (prop_.threeSphere_.has_value())
         return true;
+    if (cachedOnly)
+        return false;
 
     // Run some very fast prelimiary tests before we give up and say no.
     if (! (isValid() && isClosed() && isOrientable() && isConnected())) {
@@ -381,9 +383,11 @@ bool Triangulation<3>::isBall() const {
     }
 }
 
-bool Triangulation<3>::knowsBall() const {
+bool Triangulation<3>::knowsBall(bool cachedOnly) const {
     if (prop_.handlebody_.has_value())
         return true;
+    if (cachedOnly)
+        return false;
 
     // Run some very fast prelimiary tests before we give up and say no.
     if (! (isValid() && isOrientable() && isConnected() &&
@@ -535,9 +539,11 @@ bool Triangulation<3>::isSolidTorus() const {
     }
 }
 
-bool Triangulation<3>::knowsSolidTorus() const {
+bool Triangulation<3>::knowsSolidTorus(bool cachedOnly) const {
     if (prop_.handlebody_.has_value())
         return true;
+    if (cachedOnly)
+        return false;
 
     // Run some very fast preliminary tests before we give up and say no.
     if (! (isValid() && isOrientable() && isConnected() &&
@@ -776,10 +782,11 @@ ssize_t Triangulation<3>::recogniseHandlebody() const {
     return *(prop_.handlebody_ = genus);
 }
 
-bool Triangulation<3>::knowsHandlebody() const {
-    if (prop_.handlebody_.has_value()) {
+bool Triangulation<3>::knowsHandlebody(bool cachedOnly) const {
+    if (prop_.handlebody_.has_value())
         return true;
-    }
+    if (cachedOnly)
+        return false;
 
     // Run some very fast preliminary tests before we give up and say no.
     // Note: an orientable 3-manifold implies that the boundary is also
@@ -849,9 +856,11 @@ bool Triangulation<3>::isTxI() const {
     return *(prop_.TxI_ = true);
 }
 
-bool Triangulation<3>::knowsTxI() const {
+bool Triangulation<3>::knowsTxI(bool cachedOnly) const {
     if (prop_.TxI_.has_value())
         return true;
+    if (cachedOnly)
+        return false;
 
     // Run some very fast prelimiary tests before we give up and say no.
     if (! (isValid() && isOrientable() && isConnected())) {
@@ -877,12 +886,22 @@ bool Triangulation<3>::knowsTxI() const {
 }
 
 bool Triangulation<3>::isIrreducible() const {
+    // Check basic preconditions.
+    if (! isValid())
+        throw FailedPrecondition("Irreducibility testing requires a "
+            "valid triangulation");
+    if (! isOrientable())
+        throw FailedPrecondition("Irreducibility testing requires an "
+            "orientable triangulation");
+    if (! isClosed())
+        throw FailedPrecondition("Irreducibility testing requires a "
+            "closed triangulation");
+    if (! isConnected())
+        throw FailedPrecondition("Irreducibility testing requires a "
+            "connected triangulation");
+
     if (prop_.irreducible_.has_value())
         return *prop_.irreducible_;
-
-    // Precondition checks.
-    if (! (isValid() && isClosed() && isOrientable() && isConnected()))
-        return false;
 
     // We will essentially carry out a connected sum decomposition, but
     // instead of keeping prime summands we will just count them and
@@ -1005,21 +1024,22 @@ bool Triangulation<3>::isIrreducible() const {
     return *(prop_.irreducible_ = true);
 }
 
-bool Triangulation<3>::knowsIrreducible() const {
-    return prop_.irreducible_.has_value();
-}
-
 bool Triangulation<3>::hasCompressingDisc() const {
-    // Note: the calls to isCompressingDisc() could throw an UnsolvedCase
-    // exception.
+    if (! isValid())
+        throw FailedPrecondition("Testing for compressing discs requires a "
+            "valid triangulation");
+    if (isIdeal())
+        throw FailedPrecondition("Testing for compressing discs is not "
+            "available for ideal triangulations");
 
     if (prop_.compressingDisc_.has_value())
         return *prop_.compressingDisc_;
 
+    // Note: the calls to isCompressingDisc() below could throw an UnsolvedCase
+    // exception.
+
     // Some sanity checks; also enforce preconditions.
     if (! hasBoundaryTriangles())
-        return *(prop_.compressingDisc_ = false);
-    if ((! isValid()) || isIdeal())
         return *(prop_.compressingDisc_ = false);
 
     long minBdryEuler = 2;
@@ -1126,9 +1146,18 @@ bool Triangulation<3>::hasCompressingDisc() const {
     }
 }
 
-bool Triangulation<3>::knowsCompressingDisc() const {
+bool Triangulation<3>::knowsCompressingDisc(bool cachedOnly) const {
+    if (! isValid())
+        throw FailedPrecondition("Testing for compressing discs requires a "
+            "valid triangulation");
+    if (isIdeal())
+        throw FailedPrecondition("Testing for compressing discs is not "
+            "available for ideal triangulations");
+
     if (prop_.compressingDisc_.has_value())
         return true;
+    if (cachedOnly)
+        return false;
 
     // Quickly check for non-spherical boundary components before we give up.
     for (auto bc : boundaryComponents())
@@ -1275,23 +1304,33 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
 }
 
 bool Triangulation<3>::isHaken() const {
-    // Note: Our calls to NormalSurface::isIncompressible() could throw an
-    // UnsolvedCase exception.
+    // Check basic preconditions.
+    if (! isValid())
+        throw FailedPrecondition("Hakenness testing requires a "
+            "valid triangulation");
+    if (! isOrientable())
+        throw FailedPrecondition("Hakenness testing requires an "
+            "orientable triangulation");
+    if (! isClosed())
+        throw FailedPrecondition("Hakenness testing requires a "
+            "closed triangulation");
+    if (! isConnected())
+        throw FailedPrecondition("Hakenness testing requires a "
+            "connected triangulation");
 
     if (prop_.haken_.has_value())
         return *prop_.haken_;
 
-    // Check basic preconditions.
-    if (! (isValid() && isOrientable() && isClosed() && isConnected()))
-        return false;
-
     // Irreducibility is not a precondition, but we promise to return
-    // false immediately if the triangulation is not irreducible.
+    // false if the triangulation is not irreducible.
     // Do not set the property in this situation.
+    //
+    // (Note: Our calls to NormalSurface::isIncompressible() could throw an
+    // UnsolvedCase exception.)
     if (! isIrreducible())
         return false;
 
-    // Okay: we are closed, connected, orientable and irreducible.
+    // Okay: we are valid, closed, connected, orientable, and irreducible.
     // Move to a copy of this triangulation, which we can mess with.
     Triangulation<3> t(*this, false, false);
     t.simplify();
@@ -1328,10 +1367,6 @@ bool Triangulation<3>::isHaken() const {
     }
 
     return *(prop_.haken_ = false);
-}
-
-bool Triangulation<3>::knowsHaken() const {
-    return prop_.haken_.has_value();
 }
 
 } // namespace regina
