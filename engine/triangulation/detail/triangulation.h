@@ -1447,12 +1447,12 @@ class TriangulationBase :
          *
          * Note that group() requires a triangulation with at most one component
          * as a precondition.  Therefore, if this triangulation has more than
-         * one component, knowsGroup() will return `false`.
+         * one component, cachedGroup() will return `false`.
          *
          * \return \c true if and only if the fundamental group is currently
          * cached, _and_ the preconditions for group() are satisfied.
          */
-        bool knowsGroup() const;
+        bool cachedGroup() const;
 
         /**
          * Returns the <i>k</i>th homology group of this triangulation,
@@ -1553,8 +1553,8 @@ class TriangulationBase :
         AbelianGroup homology(int k) const;
 
         /**
-         * Is the <i>k</i>th homology group already known?  See homology()
-         * for further details.
+         * Is the <i>k</i>th homology group already known (or trivial to
+         * determine)?  See homology() for further details.
          *
          * If this returns `true` then future calls to `homology<k>()` will be
          * very fast.
@@ -1565,15 +1565,14 @@ class TriangulationBase :
          * triangulations of dimension four.  For any other `(dim, k)`
          * combination, this routine is unavailable.
          *
+         * Note that if `k ≠ 1` then homology() requires a valid triangulation
+         * as a precondition.  Therefore, if `k ≠ 1` and this triangulation is
+         * _not_ valid, knowsHomology() will return `false`.
+         *
          * For C++ programmers who know \a k at compile time, you should
          * use this template function `knowsHomology<k>()`, which is
          * slightly faster than passing \a k as an ordinary runtime
          * argument to `knowsHomology(k)`.
-         *
-         * \pre If `k ≠ 1`, then this triangulation must be valid.
-         *
-         * \exception FailedPrecondition This triangulation is invalid, and
-         * the homology dimension \a k is not 1.
          *
          * \nopython Instead use the variant `knowsHomology(k)`.
          *
@@ -1581,15 +1580,23 @@ class TriangulationBase :
          * This must be one of the `(dim, k)` combinations for which homology
          * groups are cached, as discussed above.
          *
-         * \return \c true if and only if this property is already known.
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * Currently this argument is ignored since this routine does not look
+         * for shortcuts that make homology trivial to compute; however, it is
+         * provided for compatibility with other `knows...()` routines.
+         * \return \c true if and only if this property is already known or
+         * trivial to calculate, _and_ the validity preconditions for homology()
+         * are satisfied.
          */
         template <int k = 1> requires (k == 1 || (dim == 4 && k == 2))
-        bool knowsHomology() const;
+        bool knowsHomology(bool cachedOnly = false) const;
 
         /**
-         * Determines whether the <i>k</i>th homology group is already known,
-         * where the parameter \a k does not need to be known until runtime.
-         * See homology() for further details.
+         * Determines whether the <i>k</i>th homology group is already known
+         * (or trivial to determine), where the parameter \a k does not need to
+         * be known until runtime.  See homology() for further details.
          *
          * If this returns `true` then future calls to `homology(k)` will be
          * very fast.
@@ -1600,14 +1607,13 @@ class TriangulationBase :
          * triangulations of dimension four.  For any other `(dim, k)`
          * combination, this routine will throw an exception.
          *
+         * Note that if `k ≠ 1` then homology() requires a valid triangulation
+         * as a precondition.  Therefore, if `k ≠ 1` and this triangulation is
+         * _not_ valid, knowsHomology() will return `false`.
+         *
          * For C++ programmers who know \a k at compile time, you are better
          * off using the template function `knowsHomology<k>()` instead, which
          * is slightly faster.
-         *
-         * \pre If `k ≠ 1`, then this triangulation must be valid.
-         *
-         * \exception FailedPrecondition This triangulation is invalid, and
-         * the homology dimension \a k is not 1.
          *
          * \exception InvalidArgument Homology groups are not cached for this
          * combination `(dim, k)`, as discussed above.
@@ -1618,10 +1624,17 @@ class TriangulationBase :
          * \param k the dimension of the homology group to query.
          * This must be one of the `(dim, k)` combinations for which homology
          * groups are cached, as discussed above.
-         *
-         * \return \c true if and only if this property is already known.
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * Currently this argument is ignored since this routine does not look
+         * for shortcuts that make homology trivial to compute; however, it is
+         * provided for compatibility with other `knows...()` routines.
+         * \return \c true if and only if this property is already known or
+         * trivial to calculate, _and_ the validity preconditions for homology()
+         * are satisfied.
          */
-        bool knowsHomology(int k) const;
+        bool knowsHomology(int k, bool cachedOnly = false) const;
 
         /**
          * Returns the <i>k</i>th homology group of this triangulation,
@@ -5744,7 +5757,7 @@ inline void TriangulationBase<dim>::simplifiedFundamentalGroup(
 }
 
 template <int dim> requires (supportedDim(dim))
-inline bool TriangulationBase<dim>::knowsGroup() const {
+inline bool TriangulationBase<dim>::cachedGroup() const {
     if (countComponents() > 1)
         return false; // failed precondition
     return fundGroup_.has_value();
@@ -5764,10 +5777,10 @@ inline AbelianGroup TriangulationBase<dim>::homology(int k) const {
 
 template <int dim> requires (supportedDim(dim))
 template <int k> requires (k == 1 || (dim == 4 && k == 2))
-inline bool TriangulationBase<dim>::knowsHomology() const {
+inline bool TriangulationBase<dim>::knowsHomology(bool) const {
     if constexpr (dim == 4 && k == 2) {
         return static_cast<const Triangulation<dim>*>(this)->
-            prop_.H2_.has_value();
+            prop_.H2_.has_value() && isValid();
     } else {
         static_assert(k == 1);
         return H1_.has_value();
@@ -5775,13 +5788,13 @@ inline bool TriangulationBase<dim>::knowsHomology() const {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline bool TriangulationBase<dim>::knowsHomology(int k) const {
+inline bool TriangulationBase<dim>::knowsHomology(int k, bool) const {
     if (k == 1)
         return H1_.has_value();
     if constexpr (dim == 4)
         if (k == 2)
             return static_cast<const Triangulation<dim>*>(this)->
-                prop_.H2_.has_value();
+                prop_.H2_.has_value() && isValid();
     throw InvalidArgument("Homology groups are not cached for this "
         "combination (dim, k) of triangulation and homology dimensions");
 }

@@ -66,10 +66,10 @@ void XMLWriter<AngleStructures>::writeContent() {
         it->writeXMLData(out_);
 
     // Write the properties.
-    if (data_.knowsSpansStrict())
+    if (data_.knowsSpansStrict(true))
         out_ << "  " << xmlValueTag("spanstrict", data_.spansStrict())
             << '\n';
-    if (data_.knowsSpansTaut())
+    if (data_.knowsSpansTaut(true))
         out_ << "  " << xmlValueTag("spantaut", data_.spansTaut()) << '\n';
 }
 

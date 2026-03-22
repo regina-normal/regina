@@ -80,10 +80,10 @@ void addAngleStructures(pybind11::module_& m) {
             rdoc::__iter__)
         .def("spansStrict", &AngleStructures::spansStrict, rdoc::spansStrict)
         .def("knowsSpansStrict", &AngleStructures::knowsSpansStrict,
-            rdoc::knowsSpansStrict)
+            pybind11::arg("cachedOnly") = false, rdoc::knowsSpansStrict)
         .def("spansTaut", &AngleStructures::spansTaut, rdoc::spansTaut)
         .def("knowsSpansTaut", &AngleStructures::knowsSpansTaut,
-            rdoc::knowsSpansTaut)
+            pybind11::arg("cachedOnly") = false, rdoc::knowsSpansTaut)
         .def("sort", &AngleStructures::sort<const std::function<
             bool(const regina::AngleStructure&,
                 const regina::AngleStructure&)>&>,

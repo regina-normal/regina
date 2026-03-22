@@ -138,6 +138,9 @@ Version 8.0  [ TODO ]
               the Turaev-Viro algorithm; it has been replaced by a lambda
               directly in the Turaev-Viro code instead.
         Class Link:
+            - All knows...() routines now take an optional boolean argument,
+              indicating whether to consider trivial computations (the default),
+              or to only check whether the value is already cached.
             - Removed the Boost Graph Library (BGL) interface for links
               (link/graph.h).  This is because Regina has not used Boost since
               December 2021, and so this code is essentially untested nowadays.
@@ -244,7 +247,7 @@ Version 8.0  [ TODO ]
               the triangulation has > 1 component.  This is true also of
               setGroupPresentation(), which now has ≤ 1 component as a new
               precondition.
-            - New routines knowsHomology() and knowsGroup().
+            - New routines knowsHomology() and cachedGroup().
             - Removed the Boost Graph Library (BGL) interface for triangulations
               (triangulation/graph.h).  This is because Regina has not used
               Boost since December 2021, and so this code is essentially

@@ -5395,7 +5395,11 @@ inline bool Triangulation<3>::knowsZeroEfficient(bool) const {
 }
 
 inline bool Triangulation<3>::knowsOneEfficient(bool cachedOnly) const {
-    // Check the preconditions first.
+    // The preconditions are non-trivial; avoid checking them if we can.
+    if (cachedOnly && ! prop_.oneEfficient_.has_value())
+        return false;
+
+    // Check the preconditions now, before going further.
     if (! (isValid() && isIdeal()))
         return false; // failed precondition
     for (auto v : vertices())
@@ -5405,8 +5409,11 @@ inline bool Triangulation<3>::knowsOneEfficient(bool cachedOnly) const {
 
     if (prop_.oneEfficient_.has_value())
         return true;
-    if (cachedOnly)
-        return false;
+
+    // 1-efficiency is not yet cached.
+    // This means that cachedOnly is false (otherwise we would have returned
+    // at the very beginning of this routine).
+    // Look for ways in which the 1-efficiency computation might be trivial.
 
     // We might already know the answer from the 0-efficiency property,
     // since for the settings in which we are able to test 1-efficiency,
@@ -5441,10 +5448,7 @@ inline const AngleStructure& Triangulation<3>::generalAngleStructure() const {
 }
 
 inline bool Triangulation<3>::knowsHomologyRel(bool) const {
-    if (! isValid())
-        return false; // failed precondition
-
-    return prop_.H1Rel_.has_value();
+    return prop_.H1Rel_.has_value() && isValid();
 }
 
 inline size_t Triangulation<3>::homologyH2Z2() const {
@@ -5454,12 +5458,9 @@ inline size_t Triangulation<3>::homologyH2Z2() const {
 }
 
 inline bool Triangulation<3>::knowsHomologyH2Z2(bool) const {
-    if (! isValid())
-        return false; // failed precondition
-
     // This property is trivially deduced from H1Rel, and so instead of
-    // caching H2Z2 separately, we use the cache for H1Rel instead.
-    return prop_.H1Rel_.has_value();
+    // caching H2Z2 separately, we share the cache for H1Rel instead.
+    return prop_.H1Rel_.has_value() && isValid();
 }
 
 inline const Triangulation<3>::TuraevViroSet&
@@ -5724,25 +5725,13 @@ inline void Triangulation<3>::puncture(Tetrahedron<3>* tet) {
 }
 
 inline bool Triangulation<3>::knowsIrreducible(bool) const {
-    if (! (isValid() && isOrientable() && isClosed() && isConnected()))
-        return false; // failed precondition
-
-    // If we ever add tests for whether irreducibility is trivial to compute
-    // (even if it is not cached), these tests should go here, and should only
-    // be used if the boolean argument to this routine is false.
-
-    return prop_.irreducible_.has_value();
+    return prop_.irreducible_.has_value() &&
+        isValid() && isOrientable() && isClosed() && isConnected();
 }
 
 inline bool Triangulation<3>::knowsHaken(bool) const {
-    if (! (isValid() && isOrientable() && isClosed() && isConnected()))
-        return false; // failed precondition
-
-    // If we ever add tests for whether Hakenness is trivial to compute (even
-    // if it is not cached), these tests should go here, and should only be
-    // used if the boolean argument to this routine is false.
-
-    return prop_.haken_.has_value();
+    return prop_.haken_.has_value() &&
+        isValid() && isOrientable() && isClosed() && isConnected();
 }
 
 inline const TreeDecomposition& Triangulation<3>::niceTreeDecomposition()

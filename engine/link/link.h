@@ -3822,20 +3822,28 @@ class Link :
          */
         const Polynomial<Integer>& alexander() const;
         /**
-         * Is the Alexander polynomial of this knot already known?
-         * See alexander() for further details.
+         * Is the Alexander polynomial of this knot already known (or trivial
+         * to determine)?  See alexander() for further details.
          *
          * If this property is already known, future calls to alexander() will
          * be very fast (simply returning the precalculated value).
          *
-         * At present, Regina only computes Alexander polynomials for classical
-         * knots.  If this link is empty, has multiple components, or uses a
-         * virtual diagram, then this routine is still safe to call, and will
-         * simply return \c false.
+         * Note that alexander() requires a classical knot as a precondition.
+         * Therefore, if this link diagram is virtual, empty, or has multiple
+         * components, then knowsAlexander() will simply return `false`.
          *
-         * \return \c true if and only if this property is already known.
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * Currently this argument is ignored since this routine does not look
+         * for shortcuts that make Alexander polynomials trivial to compute;
+         * however, it is provided for compatibility with other `knows...()`
+         * routines.
+         * \return \c true if and only if this property is already known or
+         * trivial to calculate, _and_ the preconditions for alexander() are
+         * satisfied.
          */
-        bool knowsAlexander() const;
+        bool knowsAlexander(bool cachedOnly = false) const;
 
         /**
          * Returns the Kauffman bracket polynomial of this link diagram.
@@ -3935,15 +3943,19 @@ class Link :
         [[deprecated]] const Laurent<Integer>& bracket(
             Algorithm alg, ProgressTracker* tracker) const;
         /**
-         * Is the Kauffman bracket polynomial of this link diagram
-         * already known?  See bracket() for further details.
+         * Is the Kauffman bracket polynomial of this link diagram already
+         * known (or trivial to determine)?  See bracket() for further details.
          *
          * If this property is already known, future calls to bracket() will
          * be very fast (simply returning the precalculated value).
          *
-         * \return \c true if and only if this property is already known.
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * \return \c true if and only if this property is already known or
+         * trivial to calculate.
          */
-        bool knowsBracket() const;
+        bool knowsBracket(bool cachedOnly = false) const;
 
         /**
          * Returns the Jones polynomial of this link, but with all
@@ -4062,15 +4074,19 @@ class Link :
         [[deprecated]] const Laurent<Integer>& jones(
             Algorithm alg, ProgressTracker* tracker) const;
         /**
-         * Is the Jones polynomial of this link already known?
-         * See jones() for further details.
+         * Is the Jones polynomial of this link already known (or trivial to
+         * determine)?  See jones() for further details.
          *
          * If this property is already known, future calls to jones() will be
          * very fast (simply returning the precalculated value).
          *
-         * \return \c true if and only if this property is already known.
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * \return \c true if and only if this property is already known or
+         * trivial to calculate.
          */
-        bool knowsJones() const;
+        bool knowsJones(bool cachedOnly = false) const;
 
         /**
          * Returns the HOMFLY-PT polynomial of this classical link, as a
@@ -4283,20 +4299,29 @@ class Link :
         const Laurent2<Integer>& homfly(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
-         * Is the HOMFLY-PT polynomial of this link already known?
-         * See homflyAZ() and homflyLM() for further details.
+         * Is the HOMFLY-PT polynomial of this link already known (or trivial
+         * to determine)?  See homflyAZ() and homflyLM() for further details.
          *
          * If this property is already known, future calls to homfly(),
          * homflyAZ() and homflyLM() will all be very fast (simply returning
          * the precalculated values).
          *
-         * At present, Regina only computes HOMFLY-PT polynomials for classical
-         * links.  If this is a virtual (not classical) link diagram, then
-         * this routine is still safe to call, and will simply return \c false.
+         * Note that homflyAZ() and homflyLM() require a classical link diagram
+         * as a precondition.  Therefore, if this link diagram is virtual (not
+         * classical), then knowsHomfly() will simply return `false`.
          *
-         * \return \c true if and only if this property is already known.
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * Currently this argument is ignored since this routine does not look
+         * for shortcuts that make HOMFLY-PT polynomials trivial to compute;
+         * however, it is provided for compatibility with other `knows...()`
+         * routines.
+         * \return \c true if and only if this property is already known or
+         * trivial to calculate, _and_ the preconditions for homflyAZ() and
+         * homflyLM() are satisfied.
          */
-        bool knowsHomfly() const;
+        bool knowsHomfly(bool cachedOnly = false) const;
 
         /**
          * Converts between the (\a alpha, \a z) and (\a l, \a m)
@@ -4379,15 +4404,23 @@ class Link :
         const Arrow& arrow(Algorithm alg = Algorithm::Default,
             int threads = 1, ProgressTracker* tracker = nullptr) const;
         /**
-         * Is the normalised arrow polynomial of this link already known?
-         * See arrow() for further details.
+         * Is the normalised arrow polynomial of this link already known (or
+         * trivial to determine)?  See arrow() for further details.
          *
          * If this property is already known, future calls to arrow() will be
          * very fast (simply returning the precalculated value).
          *
-         * \return \c true if and only if this property is already known.
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * Currently this argument is ignored since this routine does not look
+         * for shortcuts that make arrow polynomials trivial to compute;
+         * however, it is provided for compatibility with other `knows...()`
+         * routines.
+         * \return \c true if and only if this property is already known or
+         * trivial to calculate.
          */
-        bool knowsArrow() const;
+        bool knowsArrow(bool cachedOnly = false) const;
 
         /**
          * Returns the affine index polynomial of this knot.  This polynomial
@@ -7605,24 +7638,36 @@ inline const Laurent2<Integer>& Link::homfly(Algorithm alg,
     return homflyAZ(alg, tracker);
 }
 
-inline bool Link::knowsAlexander() const {
-    return alexander_.has_value();
+inline bool Link::knowsAlexander(bool) const {
+    // Handle preconditions in a way that puts the most expensive tests last.
+    return alexander_.has_value() && components_.size() == 1 && isClassical();
 }
-inline bool Link::knowsBracket() const {
+inline bool Link::knowsBracket(bool cachedOnly) const {
+    if (bracket_.has_value())
+        return true;
+    if (cachedOnly)
+        return false;
+
     // If we know the arrow polynomial, then the Kauffman bracket and
     // Jones polynomial are trivial to deduce.
-    return bracket_.has_value() || arrow_.has_value();
+    return arrow_.has_value();
 }
-inline bool Link::knowsJones() const {
+inline bool Link::knowsJones(bool cachedOnly) const {
+    if (jones_.has_value())
+        return true;
+    if (cachedOnly)
+        return false;
+
     // If we know the arrow polynomial, then the Kauffman bracket and
     // Jones polynomial are trivial to deduce.
-    return jones_.has_value() || arrow_.has_value();
+    return arrow_.has_value();
 }
-inline bool Link::knowsHomfly() const {
+inline bool Link::knowsHomfly(bool) const {
     // Either both homflyAZ_ and homflyLM_ are known, or neither are known.
-    return homflyAZ_.has_value();
+    // Handle preconditions in a way that puts the most expensive tests last.
+    return homflyAZ_.has_value() && isClassical();
 }
-inline bool Link::knowsArrow() const {
+inline bool Link::knowsArrow(bool) const {
     return arrow_.has_value();
 }
 

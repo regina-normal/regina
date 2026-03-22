@@ -412,10 +412,10 @@ class AngleStructures :
          */
         bool spansStrict() const;
         /**
-         * Is it already known whether some convex combination of the angle
-         * structures in this list forms a strict angle structure?
-         * See AngleStructure::isStrict() for details on strict angle
-         * structures.
+         * Is it already known (or trivial to determine) whether some convex
+         * combination of the angle structures in this list forms a strict
+         * angle structure?  See AngleStructure::isStrict() for details on
+         * strict angle structures.
          *
          * If this property is already known, future calls to spansStrict()
          * will be very fast (simply returning the precalculated value).
@@ -427,9 +427,16 @@ class AngleStructures :
          * angle structure list spans a strict angle structure; it merely
          * tells you whether the answer has already been computed.
          *
-         * \return \c true if and only if this property is already known.
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * Currently this argument is ignored since this routine does not look
+         * for shortcuts that make this property trivial to compute; however,
+         * it is provided for compatibility with other `knows...()` routines.
+         * \return \c true if and only if this property is already known or
+         * trivial to compute.
          */
-        bool knowsSpansStrict() const;
+        bool knowsSpansStrict(bool cachedOnly = false) const;
         /**
          * Determines whether any angle structure in this list is a
          * taut structure.  Because taut structures always appear as
@@ -443,9 +450,9 @@ class AngleStructures :
          */
         bool spansTaut() const;
         /**
-         * Is it already known whether some angle structure in this list is a
-         * taut structure?  See AngleStructure::isTaut() for details on taut
-         * structures.
+         * Is it already known (or trivial to determine) whether some angle
+         * structure in this list is a taut structure?  See
+         * AngleStructure::isTaut() for details on taut structures.
          *
          * If this property is already known, future calls to spansTaut()
          * will be very fast (simply returning the precalculated value).
@@ -457,9 +464,16 @@ class AngleStructures :
          * angle structure in this list is a taut structure; it merely
          * tells you whether the answer has already been computed.
          *
-         * \return \c true if and only if this property is already known.
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * Currently this argument is ignored since this routine does not look
+         * for shortcuts that make this property trivial to compute; however,
+         * it is provided for compatibility with other `knows...()` routines.
+         * \return \c true if and only if this property is already known or
+         * trivial to compute.
          */
-        bool knowsSpansTaut() const;
+        bool knowsSpansTaut(bool cachedOnly = false) const;
 
         /**
          * Determines whether this and the given list contain the same
@@ -691,7 +705,7 @@ inline bool AngleStructures::spansStrict() const {
     return *doesSpanStrict_;
 }
 
-inline bool AngleStructures::knowsSpansStrict() const {
+inline bool AngleStructures::knowsSpansStrict(bool) const {
     return doesSpanStrict_.has_value();
 }
 
@@ -701,7 +715,7 @@ inline bool AngleStructures::spansTaut() const {
     return *doesSpanTaut_;
 }
 
-inline bool AngleStructures::knowsSpansTaut() const {
+inline bool AngleStructures::knowsSpansTaut(bool) const {
     return doesSpanTaut_.has_value();
 }
 

@@ -172,12 +172,12 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
     using regina::xml::xmlValueTag;
 
     // Properties for triangulations of all dimensions:
-    if (data_.knowsGroup()) {
+    if (data_.cachedGroup()) {
         out_ << "  <fundgroup>\n";
         data_.group().writeXMLData(out_);
         out_ << "  </fundgroup>\n";
     }
-    if (data_.template knowsHomology<1>()) {
+    if (data_.template knowsHomology<1>(true)) {
         out_ << "  <H1>";
         data_.template homology<1>().writeXMLData(out_);
         out_ << "</H1>\n";
@@ -213,7 +213,7 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
         if (data_.knowsHaken(true))
             out_ << "  " << xmlValueTag("haken", data_.isHaken()) << '\n';
     } else if constexpr (dim == 4) {
-        if (data_.template knowsHomology<2>()) {
+        if (data_.template knowsHomology<2>(true)) {
             out_ << "  <H2>";
             data_.template homology<2>().writeXMLData(out_);
             out_ << "</H2>\n";

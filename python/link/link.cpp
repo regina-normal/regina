@@ -349,12 +349,17 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::arrow)
         .def("affineIndex", &Link::affineIndex, rdoc::affineIndex)
-        .def("knowsAlexander", &Link::knowsAlexander, rdoc::knowsAlexander)
-        .def("knowsBracket", &Link::knowsBracket, rdoc::knowsBracket)
-        .def("knowsJones", &Link::knowsJones, rdoc::knowsJones)
-        .def("knowsHomfly", &Link::knowsHomfly, rdoc::knowsHomfly)
+        .def("knowsAlexander", &Link::knowsAlexander,
+            pybind11::arg("cachedOnly") = false, rdoc::knowsAlexander)
+        .def("knowsBracket", &Link::knowsBracket,
+            pybind11::arg("cachedOnly") = false, rdoc::knowsBracket)
+        .def("knowsJones", &Link::knowsJones,
+            pybind11::arg("cachedOnly") = false, rdoc::knowsJones)
+        .def("knowsHomfly", &Link::knowsHomfly,
+            pybind11::arg("cachedOnly") = false, rdoc::knowsHomfly)
         .def_static("homflyAZtoLM", &Link::homflyAZtoLM, rdoc::homflyAZtoLM)
-        .def("knowsArrow", &Link::knowsArrow, rdoc::knowsArrow)
+        .def("knowsArrow", &Link::knowsArrow,
+            pybind11::arg("cachedOnly") = false, rdoc::knowsArrow)
         .def("group", &Link::group,
             pybind11::arg("simplify") = true, rdoc::group)
         .def("groups", &Link::groups,

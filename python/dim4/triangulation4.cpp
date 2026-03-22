@@ -288,7 +288,7 @@ void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
         .def("simplifiedFundamentalGroup", // deprecated
             &Triangulation<4>::setGroupPresentation,
             rbase::simplifiedFundamentalGroup)
-        .def("knowsGroup", &Triangulation<4>::knowsGroup, rbase::knowsGroup)
+        .def("cachedGroup", &Triangulation<4>::cachedGroup, rbase::cachedGroup)
         .def("homology",
             static_cast<AbelianGroup (Triangulation<4>::*)(int) const>(
                 &Triangulation<4>::homology),
@@ -296,7 +296,8 @@ void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
         .def("knowsHomology",
             static_cast<bool (Triangulation<4>::*)(int) const>(
                 &Triangulation<4>::knowsHomology),
-            pybind11::arg("k") = 1, rbase::knowsHomology)
+            pybind11::arg("k") = 1, pybind11::arg("cachedOnly") = false,
+            rbase::knowsHomology)
         .def("markedHomology",
             static_cast<MarkedAbelianGroup (Triangulation<4>::*)(int) const>(
                 &Triangulation<4>::markedHomology),

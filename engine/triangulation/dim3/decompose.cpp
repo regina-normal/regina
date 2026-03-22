@@ -1147,20 +1147,29 @@ bool Triangulation<3>::hasCompressingDisc() const {
 }
 
 bool Triangulation<3>::knowsCompressingDisc(bool cachedOnly) const {
+    // Avoid checking the preconditions if we can.
+    if (cachedOnly && ! prop_.compressingDisc_.has_value())
+        return false;
+
+    // Check the preconditions now, before going further.
     if ((! isValid()) || isIdeal())
-        return false; // failed precondition
+        return false;
 
     if (prop_.compressingDisc_.has_value())
         return true;
-    if (cachedOnly)
-        return false;
+
+    // The existence of a compressing disc is not yet cached.
+    // This means that cachedOnly is false (otherwise we would have returned
+    // at the very beginning of this routine).
+    // Look for ways in which the compressing disc computation might be trivial.
 
     // Quickly check for non-spherical boundary components before we give up.
     for (auto bc : boundaryComponents())
         if (bc->eulerChar() < 2)
             return false;
 
-    // All boundary components are 2-spheres.
+    // All boundary components are 2-spheres, which means there can be
+    // no compressing discs.
     prop_.compressingDisc_ = false;
     return true;
 }
