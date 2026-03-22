@@ -115,8 +115,8 @@ concept StandardStringifiable =
     };
 
 /**
- * A type that has member functions for tight encoding and decoding, both via
- * strings and via input/output streams.
+ * A type that has member functions for tight encoding and decoding (both via
+ * strings and via input/output streams) and also hashing.
  *
  * \ingroup concepts
  */
@@ -128,6 +128,7 @@ concept InherentlyTightEncodable =
         { T::tightDecode(in) } -> std::same_as<T>;
         { x.tightEncoding() } -> std::same_as<std::string>;
         { T::tightDecoding(s) } -> std::same_as<T>;
+        { x.hash() } -> std::same_as<size_t>;
     };
 
 } // namespace regina
