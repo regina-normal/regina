@@ -1562,8 +1562,8 @@ class TriangulationBase :
          * This is only relevant for those homology groups that are cached
          * by the corresponding `Triangulation<dim>` class.  Currently this
          * means `k = 1` for triangulations of any dimension, or `k = 2` for
-         * triangulations of dimension four.  For any other `(dim, k)`
-         * combination, this routine is unavailable.
+         * triangulations of dimensions three and four.  For any other
+         * `(dim, k)` combination, this routine is unavailable.
          *
          * Note that if `k ≠ 1` then homology() requires a valid triangulation
          * as a precondition.  Therefore, if `k ≠ 1` and this triangulation is
@@ -1590,7 +1590,8 @@ class TriangulationBase :
          * trivial to calculate, _and_ the validity preconditions for homology()
          * are satisfied.
          */
-        template <int k = 1> requires (k == 1 || (dim == 4 && k == 2))
+        template <int k = 1>
+        requires (k == 1 || (k == 2 && dim >= 3 && dim <= 4))
         bool knowsHomology(bool cachedOnly = false) const;
 
         /**
@@ -1604,8 +1605,8 @@ class TriangulationBase :
          * This is only relevant for those homology groups that are cached
          * by the corresponding `Triangulation<dim>` class.  Currently this
          * means `k = 1` for triangulations of any dimension, or `k = 2` for
-         * triangulations of dimension four.  For any other `(dim, k)`
-         * combination, this routine will throw an exception.
+         * triangulations of dimensions three and four.  For any other
+         * `(dim, k)` combination, this routine will throw an exception.
          *
          * Note that if `k ≠ 1` then homology() requires a valid triangulation
          * as a precondition.  Therefore, if `k ≠ 1` and this triangulation is
@@ -5776,9 +5777,9 @@ inline AbelianGroup TriangulationBase<dim>::homology(int k) const {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k> requires (k == 1 || (dim == 4 && k == 2))
+template <int k> requires (k == 1 || (k == 2 && dim >= 3 && dim <= 4))
 inline bool TriangulationBase<dim>::knowsHomology(bool) const {
-    if constexpr (dim == 4 && k == 2) {
+    if constexpr (k == 2) {
         return static_cast<const Triangulation<dim>*>(this)->
             prop_.H2_.has_value() && isValid();
     } else {
@@ -5791,7 +5792,7 @@ template <int dim> requires (supportedDim(dim))
 inline bool TriangulationBase<dim>::knowsHomology(int k, bool) const {
     if (k == 1)
         return H1_.has_value();
-    if constexpr (dim == 4)
+    if constexpr (dim >= 3 && dim <= 4)
         if (k == 2)
             return static_cast<const Triangulation<dim>*>(this)->
                 prop_.H2_.has_value() && isValid();
