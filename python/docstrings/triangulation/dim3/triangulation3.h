@@ -969,10 +969,15 @@ If this triangulation has no boundary components, this routine will
 simply return ``False``.
 
 Precondition:
-    This triangulation is valid and is not ideal.
+    This triangulation is valid and is not ideal. This precondition is
+    easy to check, and so it will be tested (and an exception will be
+    thrown if it fails).
 
 Precondition:
-    The underlying 3-manifold is irreducible.
+    The underlying 3-manifold is irreducible. This precondition is
+    _not_ easy to check, and so it will not be tested. It is the
+    responsibility of the programmer to ensure that it holds before
+    this routine is called.
 
 .. warning::
     This routine can be infeasibly slow for large triangulations
@@ -982,6 +987,9 @@ Precondition:
     operations on these surfaces such as cutting along them. See
     hasSimpleCompressingDisc() for a "heuristic shortcut" that is
     faster but might not give a definitive answer.
+
+Exception ``FailedPrecondition``:
+    This triangulation is invalid and/or ideal.
 
 Exception ``UnsolvedCase``:
     Within the normal surface machinery this algorithm has encountered
@@ -1563,13 +1571,18 @@ incompressible surface.
 
 Currently Hakenness testing is available only for irreducible
 manifolds. This routine will first test whether the manifold is
-irreducible and, if it is not, will return ``False`` immediately.
+irreducible and, if it is not, will return ``False`` without any
+further computation.
 
 Precondition:
-    This triangulation is valid, closed, orientable and connected.
+    This triangulation is valid, closed, orientable, and connected.
 
 .. warning::
     This routine could be very slow for larger triangulations.
+
+Exception ``FailedPrecondition``:
+    This triangulation is not valid, closed, orientable, and
+    connected.
 
 Exception ``UnsolvedCase``:
     Within the normal surface machinery this algorithm has encountered
@@ -1608,7 +1621,11 @@ normal surfaces.
     and might be slow for larger triangulations.
 
 Precondition:
-    This triangulation is valid, closed, orientable and connected.
+    This triangulation is valid, closed, orientable, and connected.
+
+Exception ``FailedPrecondition``:
+    This triangulation is not valid, closed, orientable, and
+    connected.
 
 Returns:
     ``True`` if and only if the underlying 3-manifold is irreducible.)doc";
@@ -1791,6 +1808,11 @@ work, and so this routine will return ``False``.
     triangulation forms a ball; it merely tells you whether the answer
     has already been computed (or is very easily computed).
 
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial.
+
 Returns:
     ``True`` if and only if this property is already known or trivial
     to calculate.)doc";
@@ -1813,20 +1835,30 @@ hasCompressingDisc() and this routine will return ``True``.
 Otherwise a call to hasCompressingDisc() may potentially require more
 significant work, and so this routine will return ``False``.
 
+Note that hasCompressingDisc() requires a valid, non-ideal
+triangulation of an irreducible 3-manifold as a precondition. This
+routine will test the valid and non-ideal conditions, and will return
+``False`` if they fail. Irreducibility is more expensive to test, and
+so it remains a precondition of knowsCompressingDisc() also. It is the
+responsibility of the programmer to ensure that the underlying
+3-manifold is irreducible before this routine is called.
+
 .. warning::
     This routine does not actually tell you _whether_ the underlying
     3-manifold has a compressing disc; it merely tells you whether the
     answer has already been computed (or is very easily computed).
 
 Precondition:
-    This triangulation is valid and is not ideal.
-
-Precondition:
     The underlying 3-manifold is irreducible.
+
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial.
 
 Returns:
     ``True`` if and only if this property is already known or trivial
-    to calculate.)doc";
+    to calculate, _and_ this triangulation is valid and non-ideal.)doc";
 
 // Docstring regina::python::doc::Triangulation_::knowsHaken
 static const char *knowsHaken =
@@ -1836,17 +1868,27 @@ underlying 3-manifold is Haken? See isHaken() for further details.
 If this property is indeed already known, future calls to isHaken()
 will be very fast (simply returning the precalculated value).
 
+Note that isHaken() requires a valid, closed, orientable and connected
+triangulation as a precondition. Therefore, if this triangulation is
+_not_ valid, closed, orientable and connected, then knowsHaken() will
+return ``False``.
+
 .. warning::
     This routine does not actually tell you _whether_ the underlying
     3-manifold is Haken; it merely tells you whether the answer has
     already been computed (or is very easily computed).
 
-Precondition:
-    This triangulation is valid, closed, orientable and connected.
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial. Currently this argument is ignored
+    since this routine does not look for shortcuts that make Hakenness
+    trivial to compute; however, it is provided for compatibility with
+    other ``knows...()`` routines.
 
 Returns:
     ``True`` if and only if this property is already known or trivial
-    to calculate.)doc";
+    to calculate, _and_ the preconditions for isHaken() are satisfied.)doc";
 
 // Docstring regina::python::doc::Triangulation_::knowsHandlebody
 static const char *knowsHandlebody =
@@ -1872,6 +1914,11 @@ significant work, and so this routine will return ``False``.
     whether the answer has already been computed (or is very easily
     computed).
 
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial.
+
 Returns:
     ``True`` if and only if this property is already known or trivial
     to calculate.
@@ -1882,40 +1929,54 @@ Author:
 // Docstring regina::python::doc::Triangulation_::knowsHomologyH2Z2
 static const char *knowsHomologyH2Z2 =
 R"doc(Is the second homology group with coefficients in ``Z_2`` already
-known (or trivial to calculate)? See homologyH2Z2() for further
+known (or trivial to determine)? See homologyH2Z2() for further
 details.
 
 If this returns ``True`` then future calls to homologyH2Z2() will be
 very fast.
 
-Precondition:
-    This triangulation is valid.
+Note that homologyH2Z2() requires a valid triangulation as a
+precondition. Therefore, if this triangulation is _not_ valid,
+knowsHomologyH2Z2() will return ``False``.
 
-Exception ``FailedPrecondition``:
-    This triangulation is invalid.
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial. Currently this argument is ignored
+    since this routine does not look for shortcuts that make second
+    homology with ``Z_2`` coefficients trivial to compute; however, it
+    is provided for compatibility with other ``knows...()`` routines.
 
 Returns:
     ``True`` if and only if this property is already known or trivial
-    to calculate.)doc";
+    to calculate, _and_ the preconditions for homologyH2Z2() are
+    satisfied.)doc";
 
 // Docstring regina::python::doc::Triangulation_::knowsHomologyRel
 static const char *knowsHomologyRel =
 R"doc(Is the relative first homology group with respect to the boundary
-already known (or trivial to calculate)? See homologyRel() for further
+already known (or trivial to determine)? See homologyRel() for further
 details.
 
 If this returns ``True`` then future calls to homologyRel() will be
 very fast.
 
-Precondition:
-    This triangulation is valid.
+Note that homologyRel() requires a valid triangulation as a
+precondition. Therefore, if this triangulation is _not_ valid,
+knowsHomologyRel() will return ``False``.
 
-Exception ``FailedPrecondition``:
-    This triangulation is invalid.
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial. Currently this argument is ignored
+    since this routine does not look for shortcuts that make relative
+    homology trivial to compute; however, it is provided for
+    compatibility with other ``knows...()`` routines.
 
 Returns:
     ``True`` if and only if this property is already known or trivial
-    to calculate.)doc";
+    to calculate, _and_ the preconditions for homologyRel() are
+    satisfied.)doc";
 
 // Docstring regina::python::doc::Triangulation_::knowsIrreducible
 static const char *knowsIrreducible =
@@ -1927,41 +1988,58 @@ If this property is indeed already known, future calls to
 isIrreducible() will be very fast (simply returning the precalculated
 value).
 
+Note that isIrreducible() requires a valid, closed, orientable and
+connected triangulation as a precondition. Therefore, if this
+triangulation is _not_ valid, closed, orientable and connected, then
+knowsIrreducible() will return ``False``.
+
 .. warning::
     This routine does not actually tell you _whether_ the underlying
     3-manifold is irreducible; it merely tells you whether the answer
     has already been computed (or is very easily computed).
 
-Precondition:
-    This triangulation is valid, closed, orientable and connected.
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial. Currently this argument is ignored
+    since this routine does not look for shortcuts that make
+    irreducibility trivial to compute; however, it is provided for
+    compatibility with other ``knows...()`` routines.
 
 Returns:
     ``True`` if and only if this property is already known or trivial
-    to calculate.)doc";
+    to calculate, _and_ the preconditions for isIrreducible() are
+    satisfied.)doc";
 
 // Docstring regina::python::doc::Triangulation_::knowsOneEfficient
 static const char *knowsOneEfficient =
-R"doc(Is it already known whether or not this triangulation is 1-efficient?
-See isOneEfficient() for further details.
+R"doc(Is it already known (or trivial to determine) whether or not this
+triangulation is 1-efficient? See isOneEfficient() for further
+details.
 
-If this property is already known, future calls to isOneEfficient()
-will be very fast (simply returning the precalculated value).
+If this property is indeed already known, future calls to
+isOneEfficient() will be very fast (simply returning the precalculated
+value).
 
-Precondition:
-    This is a valid ideal triangulation in which the link of every
-    vertex is a torus or Klein bottle.
+Note that isOneEfficient() requires a valid ideal triangulation with
+only torus and/or Klein bottle vertex links as a precondition.
+Therefore, if this triangulation does _not_ satisfy those conditions,
+knowsOneEfficient() will return ``False``.
 
 .. warning::
     This routine does not actually tell you _whether_ this
     triangulation is 1-efficient; it merely tells you whether the
     answer has already been computed.
 
-Exception ``FailedPrecondition``:
-    This triangulation is invalid, empty, and/or has some vertex whose
-    link is not a torus or Klein bottle.
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial.
 
 Returns:
-    ``True`` if and only if this property is already known.)doc";
+    ``True`` if and only if this property is already known or trivial
+    to calculate, _and_ the preconditions for isOneEfficient() are
+    satisfied.)doc";
 
 // Docstring regina::python::doc::Triangulation_::knowsSolidTorus
 static const char *knowsSolidTorus =
@@ -1985,6 +2063,11 @@ significant work, and so this routine will return ``False``.
     This routine does not actually tell you _whether_ this
     triangulation forms a solid torus; it merely tells you whether the
     answer has already been computed (or is very easily computed).
+
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial.
 
 Returns:
     ``True`` if and only if this property is already known or trivial
@@ -2011,6 +2094,11 @@ significant work, and so this routine will return ``False``.
     triangulation forms a 3-sphere; it merely tells you whether the
     answer has already been computed (or is very easily computed).
 
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial.
+
 Returns:
     ``True`` if and only if this property is already known or trivial
     to calculate.)doc";
@@ -2030,6 +2118,11 @@ strictAngleStructure() and hasStrictAngleStructure() will be very fast
     triangulation supports a strict angle structure; it merely tells
     you whether the answer has already been computed (or is very
     easily computed).
+
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial.
 
 Returns:
     ``True`` if and only if this property is already known or trivial
@@ -2058,22 +2151,37 @@ work, and so this routine will return ``False``.
     merely tells you whether the answer has already been computed (or
     is very easily computed).
 
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial.
+
 Returns:
     ``True`` if and only if this property is already known or trivial
     to calculate.)doc";
 
 // Docstring regina::python::doc::Triangulation_::knowsZeroEfficient
 static const char *knowsZeroEfficient =
-R"doc(Is it already known whether or not this triangulation is 0-efficient?
-See isZeroEfficient() for further details.
+R"doc(Is it already known (or trivial to determine) whether or not this
+triangulation is 0-efficient? See isZeroEfficient() for further
+details.
 
-If this property is already known, future calls to isZeroEfficient()
-will be very fast (simply returning the precalculated value).
+If this property is indeed already known, future calls to
+isZeroEfficient() will be very fast (simply returning the
+precalculated value).
 
 .. warning::
     This routine does not actually tell you _whether_ this
     triangulation is 0-efficient; it merely tells you whether the
     answer has already been computed.
+
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial. Currently this argument is ignored
+    since this routine does not look for shortcuts that make
+    0-efficiency trivial to compute; however, it is provided for
+    compatibility with other ``knows...()`` routines.
 
 Returns:
     ``True`` if and only if this property is already known.)doc";

@@ -290,6 +290,30 @@ Parameter ``subdim``:
 Returns:
     the boundary map from *subdim*-faces to (*subdim*-1)-faces.)doc";
 
+// Docstring regina::python::doc::detail::TriangulationBase_::cachedGroup
+constexpr const char *cachedGroup =
+R"doc(Is a presentation of the fundamental group currently cached? See
+group() for further details.
+
+Calling ``group()`` is always fast, since the group presentation is
+easy to construct. However, simplifying group presentations can be
+difficult, and it is even possible that you have used external tools
+to do this (see for example setGroupPresentation()). Therefore Regina
+caches the group presentation once you have computed it (or further
+simplified it).
+
+In particular, if this routine returns ``True`` then future calls to
+``group()`` will be very fast, and will not attempt to perform any
+further simplification.
+
+Note that group() requires a triangulation with at most one component
+as a precondition. Therefore, if this triangulation has more than one
+component, cachedGroup() will return ``False``.
+
+Returns:
+    ``True`` if and only if the fundamental group is currently cached,
+    _and_ the preconditions for group() are satisfied.)doc";
+
 // Docstring regina::python::doc::detail::TriangulationBase_::component
 constexpr const char *component =
 R"doc(Returns the requested connected component of this triangulation.
@@ -1734,36 +1758,11 @@ Returns:
     and the triangulation that would be reconstructed from
     fromIsoSig().)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::knowsGroup
-constexpr const char *knowsGroup =
-R"doc(Is a presentation of the fundamental group currently cached? See
-group() for further details.
-
-Calling ``group()`` is always fast, since the group presentation is
-easy to construct. However, simplifying group presentations can be
-difficult, and it is even possible that you have used external tools
-to do this (see for example setGroupPresentation()). Therefore Regina
-caches the group presentation once you have computed it (or further
-simplified it).
-
-In particular, if this routine returns ``True`` then future calls to
-``group()`` will be very fast, and will not attempt to perform any
-further simplification.
-
-Precondition:
-    This triangulation has at most one component.
-
-Exception ``FailedPrecondition``:
-    This triangulation has more than one component.
-
-Returns:
-    ``True`` if and only if the fundamental group is currently cached.)doc";
-
 // Docstring regina::python::doc::detail::TriangulationBase_::knowsHomology
 constexpr const char *knowsHomology =
-R"doc(Determines whether the *k*th homology group is already known, where
-the parameter *k* does not need to be known until runtime. See
-homology() for further details.
+R"doc(Determines whether the *k*th homology group is already known (or
+trivial to determine), where the parameter *k* does not need to be
+known until runtime. See homology() for further details.
 
 If this returns ``True`` then future calls to ``homology(k)`` will be
 very fast.
@@ -1774,16 +1773,13 @@ corresponding ``Triangulation<dim>`` class. Currently this means ``k =
 triangulations of dimension four. For any other ``(dim, k)``
 combination, this routine will throw an exception.
 
+Note that if ``k ≠ 1`` then homology() requires a valid triangulation
+as a precondition. Therefore, if ``k ≠ 1`` and this triangulation is
+_not_ valid, knowsHomology() will return ``False``.
+
 For C++ programmers who know *k* at compile time, you are better off
 using the template function ``knowsHomology<k>()`` instead, which is
 slightly faster.
-
-Precondition:
-    If ``k ≠ 1``, then this triangulation must be valid.
-
-Exception ``FailedPrecondition``:
-    This triangulation is invalid, and the homology dimension *k* is
-    not 1.
 
 Exception ``InvalidArgument``:
     Homology groups are not cached for this combination ``(dim, k)``,
@@ -1798,8 +1794,18 @@ Parameter ``k``:
     the ``(dim, k)`` combinations for which homology groups are
     cached, as discussed above.
 
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial. Currently this argument is ignored
+    since this routine does not look for shortcuts that make homology
+    trivial to compute; however, it is provided for compatibility with
+    other ``knows...()`` routines.
+
 Returns:
-    ``True`` if and only if this property is already known.)doc";
+    ``True`` if and only if this property is already known or trivial
+    to calculate, _and_ the validity preconditions for homology() are
+    satisfied.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::lockBoundary
 constexpr const char *lockBoundary =
