@@ -51,12 +51,11 @@ namespace regina::detail {
 template <int dim> requires (supportedDim(dim))
 template <int k> requires (k > 0 && k < (standardDim(dim) ? dim : dim - 1))
 AbelianGroup TriangulationBase<dim>::homology() const {
-    if (isEmpty())
-        return AbelianGroup();
-
     if constexpr (k == 1) {
         if (H1_.has_value())
             return *H1_;
+        if (isEmpty())
+            return *(H1_ = AbelianGroup());
 
         // Calculate a maximal forest in the dual 1-skeleton.
         ensureSkeleton();
@@ -117,9 +116,9 @@ AbelianGroup TriangulationBase<dim>::homology() const {
 
         // Build the group from the presentation matrix and tidy up.
         return H1_.emplace(std::move(pres));
-    } else if constexpr (k == dim - 1 && dim == 3) {
-        // In dimension 3 we have both H1 and H1Rel, and so we can compute
-        // H2 from those.
+    } else if constexpr (k == 2 && dim >= 3 && dim <= 4) {
+        // We are computing H2, in a dimension where H2 is cached.
+
         if (! isValid())
             throw FailedPrecondition("Computing kth homology for k >= 2 "
                 "requires a valid triangulation");
@@ -127,40 +126,52 @@ AbelianGroup TriangulationBase<dim>::homology() const {
         const auto* tri = static_cast<const Triangulation<dim>*>(this);
         if (tri->prop_.H2_.has_value())
             return *tri->prop_.H2_;
-
         if (isEmpty())
             return *(tri->prop_.H2_ = AbelianGroup());
 
-        const AbelianGroup& h1Rel = tri->homologyRel();
+        if constexpr (dim == 3) {
+            // In dimension 3 we have both H1 and H1Rel, and so we can compute
+            // H2 from those.
 
-        // We know the only summands of H2 will be Z and Z_2.
-        AbelianGroup ans;
-        if (isOrientable()) {
-            // Same as H1Rel without the torsion elements.
-            ans.addRank(h1Rel.rank());
-        } else {
-            // Non-orientable!
-            // Z_2 rank = # closed cmpts - # closed orientable cmpts
-            for (auto c : components())
-                if (c->isClosed() && ! c->isOrientable())
-                    ans.addTorsion(2);
+            if (! H1_.has_value()) {
+                // Compute H1, which has the effect of caching it in H1_.
+                homology();
+                if (! H1_.has_value())
+                    throw ImpossibleScenario("H1 computed but not cached");
+            }
+            const AbelianGroup& h1Rel = tri->homologyRel();
 
-            if (H1_.has_value())
+            // We know the only summands of H2 will be Z and Z_2.
+            AbelianGroup ans;
+            if (isOrientable()) {
+                // Same as H1Rel without the torsion elements.
+                ans.addRank(h1Rel.rank());
+            } else {
+                // Non-orientable!
+                // Z_2 rank = # closed cmpts - # closed orientable cmpts
+                for (auto c : components())
+                    if (c->isClosed() && ! c->isOrientable())
+                        ans.addTorsion(2);
+
                 ans.addRank(h1Rel.rank() + h1Rel.torsionRank(2)
                     - H1_->torsionRank(2) - ans.countInvariantFactors());
-            else
-                ans.addRank(h1Rel.rank() + h1Rel.torsionRank(2)
-                    - homology().torsionRank(2) - ans.countInvariantFactors());
+            }
+            return *(tri->prop_.H2_ = std::move(ans));
+        } else {
+            // In dimension 4 we compute H2 using the dual chain complex.
+            return *(tri->prop_.H2_ =
+                AbelianGroup(dualBoundaryMap<2>(), dualBoundaryMap<3>()));
         }
-        return *(tri->prop_.H2_ = std::move(ans));
     } else {
-        // Here we handle the remaining cases:
-        //   2 <= k <= 3 in dimension 4;
+        // Here we handle the remaining cases, where homology is not cached:
+        //   k == 3 in dimension 4;
         //   2 <= k <= (dim-2) in higher dimensions.
 
         if (! isValid())
             throw FailedPrecondition("Computing kth homology for k >= 2 "
                 "requires a valid triangulation");
+        if (isEmpty())
+            return AbelianGroup();
 
         // At this point we know that the triangulation is valid and non-empty.
         // Compute the homology using the dual chain complex.
