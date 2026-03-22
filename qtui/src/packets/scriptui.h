@@ -47,6 +47,13 @@ class QSplitter;
 class QPlainTextEdit;
 class QToolBar;
 
+template <>
+inline void sanitiseText<regina::Script>(QString& text) {
+    // For scripts, we append a final newline if there is not one already.
+    if (! text.endsWith('\n'))
+        text += '\n';
+}
+
 class ScriptVarModel : public QAbstractItemModel {
     protected:
         /**
@@ -129,7 +136,7 @@ class ScriptUI : public QObject, public PacketUI,
         ScriptVarModel* model;
         EditTableView* varTable;
         QStyledItemDelegate* valueDelegate;
-        DocWidget<regina::Script, DocWidgetFinalNewline>* editWidget;
+        DocWidget<regina::Script>* editWidget;
         PacketEditIface* editIface;
 
         /**

@@ -55,7 +55,7 @@ class TextUI : public QObject, public PacketUI {
          * Internal components
          */
         QWidget* ui;
-        DocWidget<regina::Text, DocWidgetNoSanitise>* editWidget;
+        DocWidget<regina::Text>* editWidget;
         PacketEditIface* editIface;
 
     public:

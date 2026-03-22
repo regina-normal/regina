@@ -58,18 +58,6 @@ concept ObjectChooser = requires(T x) {
 };
 
 /**
- * A class that can be used to "sanitise" Qt strings before passing their
- * contents to Regina's calculation engine.  This sanitisation is performed
- * by a static function `T::sanitise(QString&)`.
- */
-template <typename T>
-concept StringSanitiser =
-    std::is_class_v<T> &&
-    requires(QString s) {
-        T::sanitise(s);
-    };
-
-/**
  * A class with miscellaneous support routines for Regina.
  *
  * The icon loading routines give correct results for full installations in
