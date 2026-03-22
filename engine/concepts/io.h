@@ -115,15 +115,19 @@ concept StandardStringifiable =
     };
 
 /**
- * A type that has member functions for tight encoding and decoding.
+ * A type that has member functions for tight encoding and decoding, both via
+ * strings and via input/output streams.
  *
  * \ingroup concepts
  */
 template <typename T>
 concept InherentlyTightEncodable =
-    requires(const T x, std::ostream& out, std::istream& in) {
+    requires(const T x, const std::string s,
+            std::ostream& out, std::istream& in) {
         x.tightEncode(out);
         { T::tightDecode(in) } -> std::same_as<T>;
+        { x.tightEncoding() } -> std::same_as<std::string>;
+        { T::tightDecoding(s) } -> std::same_as<T>;
     };
 
 } // namespace regina
