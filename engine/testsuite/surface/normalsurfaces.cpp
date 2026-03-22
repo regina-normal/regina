@@ -116,17 +116,17 @@ static std::vector<CompactProfile> sortedCompactProfiles(
     return found;
 }
 
-template <typename Profile, bool checkIndividualProfiles = true>
-using ExpectProfiles = std::conditional_t<checkIndividualProfiles,
-    std::initializer_list<Profile> /* individual profiles */,
+template <bool checkIndividualProfiles>
+using CompactProfilesOrCount = std::conditional_t<checkIndividualProfiles,
+    std::initializer_list<CompactProfile> /* individual surface profiles */,
     size_t /* number of surfaces only */>;
 
 template <bool individualStd = true, bool individualANStd = true>
 static void compareCompactProfiles(const Triangulation<3>& tri,
-        ExpectProfiles<CompactProfile> expectQuad,
-        ExpectProfiles<CompactProfile, individualStd> extraStd,
-        ExpectProfiles<CompactProfile, individualANStd> extraANStd) {
-    // extraANStd should imply extraStd.
+        std::initializer_list<CompactProfile> expectQuad,
+        CompactProfilesOrCount<individualStd> extraStd,
+        CompactProfilesOrCount<individualANStd> extraANStd) {
+    // individualANStd should imply individualStd.
     static_assert(individualStd || ! individualANStd);
 
     // We assume all surfaces should be compact and connected.
