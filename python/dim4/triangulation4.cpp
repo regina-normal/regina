@@ -294,7 +294,7 @@ void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
                 &Triangulation<4>::homology),
             pybind11::arg("k") = 1, rbase::homology)
         .def("knowsHomology",
-            static_cast<bool (Triangulation<4>::*)(int) const>(
+            static_cast<bool (Triangulation<4>::*)(int, bool) const>(
                 &Triangulation<4>::knowsHomology),
             pybind11::arg("k") = 1, pybind11::arg("cachedOnly") = false,
             rbase::knowsHomology)
