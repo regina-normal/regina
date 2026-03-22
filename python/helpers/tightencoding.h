@@ -51,14 +51,10 @@ namespace python {
  * <t>regina::python::add_tight_encoding(c, ...)</t>, where \a c is the
  * pybind11::class_ object that wraps \a T.
  */
-template <typename C, typename... options>
+template <regina::InherentlyTightEncodable C, typename... options>
+requires (! std::derived_from<C, regina::TightEncodable<C>>)
 void add_tight_encoding(pybind11::class_<C, options...>& c,
         const char* docEnc, const char* docDec, const char* docHash) {
-    static_assert(! std::is_base_of_v<TightEncodable<C>, C>,
-        "The docstring version of add_tight_encoding() should "
-        "only be used for classes that provide their own "
-        "custom tightEncoding(), tightDecoding() and hash() functions.");
-
     c.def("tightEncoding", &C::tightEncoding, docEnc);
     c.def("tightDecoding", &C::tightDecoding, docDec);
     c.def("__hash__", &C::hash, docHash);
@@ -76,12 +72,9 @@ void add_tight_encoding(pybind11::class_<C, options...>& c,
  * <t>regina::python::add_tight_encoding(c)</t>, where \a c is the
  * pybind11::class_ object that wraps \a T.
  */
-template <typename C, typename... options>
+template <regina::InherentlyTightEncodable C, typename... options>
+requires (std::derived_from<C, regina::TightEncodable<C>>)
 void add_tight_encoding(pybind11::class_<C, options...>& c) {
-    static_assert(std::is_base_of_v<TightEncodable<C>, C>,
-        "The no-docstring version of add_tight_encoding() should "
-        "only be used for classes C that derive from TightEncodable<C>.");
-
     c.def("tightEncoding", &C::tightEncoding,
         regina::python::doc::common::TightEncodable_encoding);
     c.def("tightDecoding", &C::tightDecoding,
