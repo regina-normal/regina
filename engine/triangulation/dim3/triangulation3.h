@@ -134,8 +134,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
                      with respect to the boundary. */
             std::optional<AbelianGroup> H1Bdry_;
                 /**< First homology group of the boundary. */
-            std::optional<AbelianGroup> H2_;
-                /**< Second homology group of the triangulation. */
 
             std::optional<bool> twoSphereBoundaryComponents_;
                 /**< Does the triangulation contain any 2-sphere boundary

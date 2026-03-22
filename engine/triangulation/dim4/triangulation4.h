@@ -126,20 +126,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
                  is computed (thereby allowing us to avoid costly 3-sphere or
                  3-ball recognition when the skeleton is computed later on). */
 
-        /**
-         * A struct that holds all of our calculated properties.
-         * This is a convenience so we can use its implicitly defined
-         * assignment operators and copy constructors.  It is mutable so that
-         * expensive read-only calculations can cache their results.
-         *
-         * All std::optional properties are std::nullopt if they have
-         * not yet been computed.
-         */
-        mutable struct {
-            std::optional<AbelianGroup> H2_;
-                /**< Second homology group of the triangulation. */
-        } prop_;
-
     public:
         /**
          * \name Constructors and Destructors
@@ -1757,7 +1743,6 @@ inline Triangulation<4>& Triangulation<4>::operator = (
     TriangulationBase<4>::operator = (src);
 
     vertexLinkSummary_ = src.vertexLinkSummary_;
-    prop_ = src.prop_;
 
     return *this;
 }
@@ -1774,7 +1759,6 @@ inline Triangulation<4>& Triangulation<4>::operator = (Triangulation&& src) {
     // The parent class assignment goes last, since its move invalidates src.
 
     vertexLinkSummary_ = src.vertexLinkSummary_;
-    prop_ = std::move(src.prop_);
 
     TriangulationBase<4>::operator = (std::move(src));
 

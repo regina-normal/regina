@@ -52,10 +52,10 @@ template <int dim> requires (supportedDim(dim))
 template <int k> requires (k > 0 && k < (standardDim(dim) ? dim : dim - 1))
 AbelianGroup TriangulationBase<dim>::homology() const {
     if constexpr (k == 1) {
-        if (H1_.has_value())
-            return *H1_;
+        if (homology_[0].has_value())
+            return *homology_[0];
         if (isEmpty())
-            return *(H1_ = AbelianGroup());
+            return *(homology_[0] = AbelianGroup());
 
         // Calculate a maximal forest in the dual 1-skeleton.
         ensureSkeleton();
@@ -115,31 +115,33 @@ AbelianGroup TriangulationBase<dim>::homology() const {
         delete[] genIndex;
 
         // Build the group from the presentation matrix and tidy up.
-        return H1_.emplace(std::move(pres));
-    } else if constexpr (k == 2 && dim >= 3 && dim <= 4) {
-        // We are computing H2, in a dimension where H2 is cached.
-
+        return homology_[0].emplace(std::move(pres));
+    } else if constexpr (k <= maxHomologyCache_) {
+        // Here we handle the cases where k > 1 and homology is cached.
         if (! isValid())
             throw FailedPrecondition("Computing kth homology for k >= 2 "
                 "requires a valid triangulation");
 
-        const auto* tri = static_cast<const Triangulation<dim>*>(this);
-        if (tri->prop_.H2_.has_value())
-            return *tri->prop_.H2_;
+        if (homology_[k - 1].has_value())
+            return *homology_[k - 1];
         if (isEmpty())
-            return *(tri->prop_.H2_ = AbelianGroup());
+            return *(homology_[k - 1] = AbelianGroup());
 
         if constexpr (dim == 3) {
-            // In dimension 3 we have both H1 and H1Rel, and so we can compute
+            // Here we are computing H2 in dimension 3.
+            static_assert(k == 2);
+
+            // Since we have access to both H1 and H1Rel, we can compute
             // H2 from those.
 
-            if (! H1_.has_value()) {
-                // Compute H1, which has the effect of caching it in H1_.
+            if (! homology_[0].has_value()) {
+                // Compute H1, which has the effect of caching it.
                 homology();
-                if (! H1_.has_value())
+                if (! homology_[0].has_value())
                     throw ImpossibleScenario("H1 computed but not cached");
             }
-            const AbelianGroup& h1Rel = tri->homologyRel();
+            const AbelianGroup& h1Rel =
+                static_cast<const Triangulation<dim>*>(this)->homologyRel();
 
             // We know the only summands of H2 will be Z and Z_2.
             AbelianGroup ans;
@@ -154,19 +156,17 @@ AbelianGroup TriangulationBase<dim>::homology() const {
                         ans.addTorsion(2);
 
                 ans.addRank(h1Rel.rank() + h1Rel.torsionRank(2)
-                    - H1_->torsionRank(2) - ans.countInvariantFactors());
+                    - homology_[0]->torsionRank(2)
+                    - ans.countInvariantFactors());
             }
-            return *(tri->prop_.H2_ = std::move(ans));
+            return *(homology_[1] = std::move(ans));
         } else {
-            // In dimension 4 we compute H2 using the dual chain complex.
-            return *(tri->prop_.H2_ =
-                AbelianGroup(dualBoundaryMap<2>(), dualBoundaryMap<3>()));
+            // In dimensions > 3 we compute H2 using the dual chain complex.
+            return *(homology_[k - 1] =
+                AbelianGroup(dualBoundaryMap<k>(), dualBoundaryMap<k + 1>()));
         }
     } else {
-        // Here we handle the remaining cases, where homology is not cached:
-        //   k == 3 in dimension 4;
-        //   2 <= k <= (dim-2) in higher dimensions.
-
+        // Here we handle the cases where k > 1 and homology is not cached.
         if (! isValid())
             throw FailedPrecondition("Computing kth homology for k >= 2 "
                 "requires a valid triangulation");

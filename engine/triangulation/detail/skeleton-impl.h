@@ -615,7 +615,8 @@ void TriangulationBase<dim>::clearBaseProperties() {
     // Clear properties.
     if (! topologyLocked()) {
         fundGroup_.reset();
-        H1_.reset();
+        for (auto& h : homology_)
+            h.reset();
     }
 }
 
@@ -642,7 +643,7 @@ void TriangulationBase<dim>::swapBaseData(TriangulationBase<dim>& other) {
     faces_.swap(other.faces_);
     nBoundaryFaces_.swap(other.nBoundaryFaces_);
     fundGroup_.swap(other.fundGroup_);
-    H1_.swap(other.H1_);
+    homology_.swap(other.homology_);
 }
 
 template <int dim> requires (supportedDim(dim))

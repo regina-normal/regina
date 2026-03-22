@@ -548,7 +548,7 @@ inline XMLElementReader*
     if (subTagName == "fundgroup")
         return new GroupPresentationPropertyReader(tri_->fundGroup_);
     else if (subTagName == "H1")
-        return new AbelianGroupPropertyReader(tri_->H1_);
+        return new AbelianGroupPropertyReader(tri_->homology_[0]);
 
     if constexpr (dim == 3) {
         // We don't read boundary component properties since they're stored
@@ -605,7 +605,7 @@ inline XMLElementReader*
         }
     } else if constexpr (dim == 4) {
         if (subTagName == "H2")
-            return new AbelianGroupPropertyReader(tri_->prop_.H2_);
+            return new AbelianGroupPropertyReader(tri_->homology_[1]);
     }
 
     return new XMLElementReader();

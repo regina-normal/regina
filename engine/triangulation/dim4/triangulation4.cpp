@@ -89,8 +89,6 @@ Triangulation<4>::Triangulation(const Triangulation& src, bool cloneProps,
     if (! cloneProps)
         return;
 
-    prop_ = src.prop_;
-
     // We do not need to copy any properties that are computed on demand with
     // the rest of the skeleton; however, at the time of writing there
     // are no such properties in the Triangulation<4> class anyway.
@@ -101,7 +99,6 @@ void Triangulation<4>::clearAllProperties() {
 
     if (! topologyLocked()) {
         vertexLinkSummary_ = -1; /* not yet computed */
-        prop_.H2_.reset();
     }
 }
 
@@ -120,9 +117,6 @@ void Triangulation<4>::swap(Triangulation<4>& other) {
 
     // Properties stored directly:
     std::swap(vertexLinkSummary_, other.vertexLinkSummary_);
-
-    // Properties stored using std::... helper classes:
-    prop_.H2_.swap(other.prop_.H2_);
 }
 
 IntersectionForm Triangulation<4>::intersectionForm() const {

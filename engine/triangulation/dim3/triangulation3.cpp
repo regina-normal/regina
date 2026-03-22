@@ -85,7 +85,6 @@ void Triangulation<3>::clearAllProperties() {
     if (! topologyLocked()) {
         prop_.H1Rel_.reset();
         prop_.H1Bdry_.reset();
-        prop_.H2_.reset();
         prop_.twoSphereBoundaryComponents_.reset();
         prop_.negativeIdealBoundaryComponents_.reset();
         prop_.threeSphere_.reset();
@@ -121,7 +120,6 @@ void Triangulation<3>::swap(Triangulation<3>& other) {
     // Properties stored using std::... helper classes:
     prop_.H1Rel_.swap(other.prop_.H1Rel_);
     prop_.H1Bdry_.swap(other.prop_.H1Bdry_);
-    prop_.H2_.swap(other.prop_.H2_);
 
     prop_.twoSphereBoundaryComponents_.swap(
         other.prop_.twoSphereBoundaryComponents_);

@@ -201,9 +201,14 @@ class TriangulationBase :
         mutable std::optional<GroupPresentation> fundGroup_;
             /**< Fundamental group of the triangulation.
                  This is std::nullopt if it has not yet been computed. */
-        mutable std::optional<AbelianGroup> H1_;
-            /**< First homology group of the triangulation.
-                 This is std::nullopt if it has not yet been computed. */
+        static constexpr int maxHomologyCache_ = (dim == 3 || dim == 4 ? 2 : 1);
+            /**< The maximum \a k for which we cache the <i>k</i>th homology
+                 group. */
+        mutable std::array<std::optional<AbelianGroup>, maxHomologyCache_>
+                homology_;
+            /**< The cached homology groups of the triangulation, beginning
+                 with H1.  Each element of this array is std::nullopt if the
+                 corresponding homology group has not yet been computed. */
 
     public:
         /**
@@ -4495,7 +4500,7 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& src,
     // Clone properties:
     if (cloneProps) {
         fundGroup_ = src.fundGroup_;
-        H1_ = src.H1_;
+        homology_ = src.homology_;
     }
 }
 
@@ -4508,7 +4513,7 @@ TriangulationBase<dim>::TriangulationBase(TriangulationBase<dim>&& src)
         calculatedSkeleton_(src.calculatedSkeleton_),
         orientable_(src.orientable_),
         fundGroup_(std::move(src.fundGroup_)),
-        H1_(std::move(src.H1_)) {
+        homology_(std::move(src.homology_)) {
     // For our simplices and skeletal components, we use swaps instead
     // of moves because we need to ensure that src's lists finish empty.
     // Otherwise src will try to destroy the objects that they contain.
@@ -4579,7 +4584,7 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
 
     // Clone other computed properties:
     fundGroup_ = src.fundGroup_;
-    H1_ = src.H1_;
+    homology_ = src.homology_;
 
     return *this;
 }
@@ -4618,7 +4623,7 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
     std::swap(calculatedSkeleton_, src.calculatedSkeleton_);
 
     fundGroup_ = std::move(src.fundGroup_);
-    H1_ = std::move(src.H1_);
+    homology_ = std::move(src.homology_);
 
     // Let src dispose of the original simplices and skeletal objects in
     // its own destructor.
@@ -5779,25 +5784,22 @@ inline AbelianGroup TriangulationBase<dim>::homology(int k) const {
 template <int dim> requires (supportedDim(dim))
 template <int k> requires (k == 1 || (k == 2 && dim >= 3 && dim <= 4))
 inline bool TriangulationBase<dim>::knowsHomology(bool) const {
-    if constexpr (k == 2) {
-        return static_cast<const Triangulation<dim>*>(this)->
-            prop_.H2_.has_value() && isValid();
-    } else {
-        static_assert(k == 1);
-        return H1_.has_value();
-    }
+    if constexpr (k == 1)
+        return homology_[0].has_value();
+    else
+        return homology_[k - 1].has_value() && isValid();
 }
 
 template <int dim> requires (supportedDim(dim))
 inline bool TriangulationBase<dim>::knowsHomology(int k, bool) const {
+    if (k < 1 || k > maxHomologyCache_)
+        throw InvalidArgument("Homology groups are not cached for this "
+            "combination (dim, k) of triangulation and homology dimensions");
+
     if (k == 1)
-        return H1_.has_value();
-    if constexpr (dim >= 3 && dim <= 4)
-        if (k == 2)
-            return static_cast<const Triangulation<dim>*>(this)->
-                prop_.H2_.has_value() && isValid();
-    throw InvalidArgument("Homology groups are not cached for this "
-        "combination (dim, k) of triangulation and homology dimensions");
+        return homology_[0].has_value();
+    else
+        return homology_[k - 1].has_value() && isValid();
 }
 
 template <int dim> requires (supportedDim(dim))
