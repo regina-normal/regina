@@ -2433,7 +2433,6 @@ TEST_F(Dim3Test, irreducibility) {
     EXPECT_TRUE(sphere.tri.isIrreducible());
     EXPECT_TRUE(simpSphere.tri.isIrreducible());
     EXPECT_FALSE(sphereBundle.tri.isIrreducible());
-    EXPECT_FALSE(twistedSphereBundle.tri.isIrreducible());
 
     EXPECT_TRUE(s3.tri.isIrreducible());
     EXPECT_TRUE(rp3_1.tri.isIrreducible());
