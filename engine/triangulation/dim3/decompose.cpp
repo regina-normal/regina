@@ -58,7 +58,7 @@ std::vector<Triangulation<3>> Triangulation<3>::summands() const {
     Triangulation<3>& start = toProcess.emplace(*this, false, false);
     start.simplify();
 
-    unsigned long initZ, initZ2, initZ3;
+    size_t initZ, initZ2, initZ3;
     {
         AbelianGroup homology = start.homology();
         initZ = homology.rank();
@@ -149,7 +149,7 @@ std::vector<Triangulation<3>> Triangulation<3>::summands() const {
 
     // Run a final homology check and put back our missing S2xS1, S2x~S1,
     // RP3 and L(3,1) terms.
-    unsigned long finalZ = 0, finalZ2 = 0, finalZ3 = 0;
+    size_t finalZ = 0, finalZ2 = 0, finalZ3 = 0;
     for (const Triangulation<3>& c : primeComponents) {
         AbelianGroup homology = c.homology();
         finalZ += homology.rank();
@@ -906,7 +906,7 @@ bool Triangulation<3>::isIrreducible() const {
     // We will essentially carry out a connected sum decomposition, but
     // instead of keeping prime summands we will just count them and
     // throw them away.
-    unsigned long summands = 0;
+    size_t summands = 0;
 
     std::stack<Triangulation<3>> toProcess;
 
@@ -914,7 +914,7 @@ bool Triangulation<3>::isIrreducible() const {
     Triangulation<3>& start = toProcess.emplace(*this, false, false);
     start.simplify();
 
-    unsigned long Z, Z2, Z3;
+    size_t Z, Z2, Z3;
     {
         AbelianGroup homology = start.homology();
         Z = homology.rank();
@@ -1211,7 +1211,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
     // This is important because we test whether a disc is a compressing
     // disc by cutting along it and looking for any *new* boundary
     // spheres that might result.
-    unsigned long origSphereCount = 0;
+    size_t origSphereCount = 0;
     for (auto bc : use.boundaryComponents())
         if (bc->eulerChar() == 2)
             ++origSphereCount;
@@ -1219,7 +1219,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
     // Look for a single internal triangle surrounded by three boundary edges.
     // It doesn't matter whether the edges and/or vertices are distinct.
     Edge<3> *e0, *e1, *e2;
-    unsigned long newSphereCount;
+    size_t newSphereCount;
     for (Triangle<3>* t : use.triangles()) {
         if (t->isBoundary())
             continue;
