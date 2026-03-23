@@ -48,24 +48,22 @@ template <typename T>
 using countFacesFunc = size_t (T::*)(int) const;
 
 /**
- * The type of the function pointer `Triangulation<dim>::face(subdim, index)`.
+ * The type of the function pointer `T::face(subdim, index)`.
  *
  * This can help distinguish the non-templated `face(subdim, index)` (which is
  * wrapped in Python) from the templated `face<subdim>(index)` (which is not).
  */
-template <int dim> requires (regina::supportedDim(dim))
-using faceFunc = decltype(regina::Triangulation<dim>().face(0, 0))
-    (regina::Triangulation<dim>::*)(int, size_t) const;
+template <typename T>
+using faceFunc = decltype(T().face(0, 0)) (T::*)(int, size_t) const;
 
 /**
- * The type of the function pointer `Triangulation<dim>::faces(subdim)`.
+ * The type of the function pointer `T::faces(subdim)`.
  *
  * This can help distinguish the non-templated `faces(subdim)` (which is
  * wrapped in Python) from the templated `faces<subdim>()` (which is not).
  */
-template <int dim> requires (regina::supportedDim(dim))
-using facesFunc = decltype(regina::Triangulation<dim>().faces(0))
-    (regina::Triangulation<dim>::*)(int) const;
+template <typename T>
+using facesFunc = decltype(T().faces(0)) (T::*)(int) const;
 
 /**
  * Implementation details for Python bindings of template member functions.
@@ -141,32 +139,38 @@ void invalidFaceDimension(const char* functionName, int minDim, int maxDim);
 
 /**
  * The Python binding for the C++ template member function
- * `T::faces<subdimArg>()`, where the valid range for the C++ template
- * parameter \a subdimArg is 0, ..., <i>dim</i>-1.
+ * `T::faces<subdim>()`, where the valid range for the C++ template
+ * parameter \a subdim is `0, ..., T::dimension-1`.
+ *
+ * This is used by Component<dim> and BoundaryComponent<dim>, all for
+ * standard dim only.
  *
  * The return value policy will be treated as
  * pybind11::return_value_policy::reference.
  */
 template <typename T>
-pybind11::object faces(const T& t, int subdimArg) {
-    if (subdimArg < 0 || subdimArg >= T::dimension)
-        invalidFaceDimension("faces", 0, T::dimension - 1);
-    return FaceHelper<T, T::dimension - 1>::facesFrom(t, subdimArg);
+pybind11::object faces(const T& t, int subdim) {
+    if (subdim < 0 || subdim >= T::dimension)
+        throw InvalidArgument("faces(): unsupported face dimension");
+    return FaceHelper<T, T::dimension - 1>::facesFrom(t, subdim);
 }
 
 /**
  * The Python binding for the C++ template member function
- * `T::face<subdimArg>(f)`, where the valid range for the C++ template
- * parameter \a subdimArg is 0, ..., <i>dim</i>-1.
+ * `T::face<subdim>(f)`, where the valid range for the C++ template
+ * parameter \a subdim is `0, ..., T::dimension-1`.
+ *
+ * This is used by Component<dim> and BoundaryComponent<dim>, all for
+ * standard dim only.
  *
  * The return value policy will be treated as
  * pybind11::return_value_policy::reference.
  */
 template <typename T>
-pybind11::object face(const T& t, int subdimArg, size_t f) {
-    if (subdimArg < 0 || subdimArg >= T::dimension)
-        invalidFaceDimension("face", 0, T::dimension - 1);
-    return FaceHelper<T, T::dimension - 1>::faceFrom(t, subdimArg, f);
+pybind11::object face(const T& t, int subdim, size_t f) {
+    if (subdim < 0 || subdim >= T::dimension)
+        throw InvalidArgument("face(): unsupported face dimension");
+    return FaceHelper<T, T::dimension - 1>::faceFrom(t, subdim, f);
 }
 
 /**
