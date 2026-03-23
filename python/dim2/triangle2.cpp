@@ -72,7 +72,7 @@ void addTriangle2(pybind11::module_& m) {
         .def("triangulation", &Triangle<2>::triangulation, rbase::triangulation)
         .def("component", &Triangle<2>::component,
             pybind11::return_value_policy::reference, rbase::component)
-        .def("face", &regina::python::face<Triangle<2>, 2, int>,
+        .def("face", &regina::python::face<2, 2>,
             pybind11::arg("subdim"), pybind11::arg("face"), rbase::face)
         .def("vertex", &Triangle<2>::vertex,
             pybind11::return_value_policy::reference, rbase::vertex)

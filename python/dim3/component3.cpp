@@ -62,14 +62,14 @@ void addComponent3(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::return_value_policy::reference, rbase::simplex)
         .def("tetrahedron", &Component<3>::tetrahedron,
             pybind11::return_value_policy::reference, rbase::tetrahedron)
-        .def("faces", &regina::python::faces<Component<3>, 3>,
+        .def("faces", &regina::python::faces<Component<3>>,
             pybind11::arg("subdim"), rdoc::faces)
         .def("vertices", &Component<3>::vertices, rbase::vertices)
         .def("edges", &Component<3>::edges, rbase::edges)
         .def("triangles", &Component<3>::triangles, rbase::triangles)
         .def("boundaryComponents", &Component<3>::boundaryComponents,
             rbase::boundaryComponents)
-        .def("face", &regina::python::face<Component<3>, 3, size_t>,
+        .def("face", &regina::python::face<Component<3>>,
             pybind11::arg("subdim"), pybind11::arg("index"), rdoc::face)
         .def("triangle", &Component<3>::triangle,
             pybind11::return_value_policy::reference, rbase::triangle)

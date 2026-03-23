@@ -97,11 +97,10 @@ using facesFunc = decltype(regina::Triangulation<dim>().faces(0))
  * \pre All of the functions in FaceHelper have the precondition that
  * `0 <= subdimArg <= subdim`.
  */
-template <typename T, int dim, int subdim>
-requires (dim >= 1 && dim <= maxDim() && subdim >= 0 && subdim <= dim)
+template <typename T, int subdim>
+requires (subdim >= 0 && subdim <= T::dimension)
 struct FaceHelper {
-    static pybind11::list facesFrom(const T& t, int subdimArg)
-    requires (regina::supportedDim(dim)) {
+    static pybind11::list facesFrom(const T& t, int subdimArg) {
         if constexpr (subdim == 0) {
             // Must have subdimArg == 0.
             pybind11::list ans;
@@ -115,12 +114,11 @@ struct FaceHelper {
                     ans.append(pybind11::cast(f));
                 return ans;
             } else
-                return FaceHelper<T, dim, subdim - 1>::facesFrom(t, subdimArg);
+                return FaceHelper<T, subdim-1>::facesFrom(t, subdimArg);
         }
     }
 
-    template <regina::CppInteger Index>
-    static pybind11::object faceFrom(const T& t, int subdimArg, Index f) {
+    static pybind11::object faceFrom(const T& t, int subdimArg, size_t f) {
         if constexpr (subdim == 0) {
             // Must have subdimArg == 0.
             return pybind11::cast(t.template face<0>(f));
@@ -128,8 +126,7 @@ struct FaceHelper {
             if (subdimArg == subdim)
                 return pybind11::cast(t.template face<subdim>(f));
             else
-                return FaceHelper<T, dim, subdim - 1>::
-                    template faceFrom<Index>(t, subdimArg, f);
+                return FaceHelper<T, subdim-1>::faceFrom(t, subdimArg, f);
         }
     }
 };
@@ -150,12 +147,11 @@ void invalidFaceDimension(const char* functionName, int minDim, int maxDim);
  * The return value policy will be treated as
  * pybind11::return_value_policy::reference.
  */
-template <typename T, int dim>
-requires (regina::supportedDim(dim))
+template <typename T>
 pybind11::object faces(const T& t, int subdimArg) {
-    if (subdimArg < 0 || subdimArg >= dim)
-        invalidFaceDimension("faces", 0, dim - 1);
-    return FaceHelper<T, dim, dim - 1>::facesFrom(t, subdimArg);
+    if (subdimArg < 0 || subdimArg >= T::dimension)
+        invalidFaceDimension("faces", 0, T::dimension - 1);
+    return FaceHelper<T, T::dimension - 1>::facesFrom(t, subdimArg);
 }
 
 /**
@@ -166,13 +162,39 @@ pybind11::object faces(const T& t, int subdimArg) {
  * The return value policy will be treated as
  * pybind11::return_value_policy::reference.
  */
-template <typename T, int dim, regina::CppInteger Index>
-requires (dim >= 1 && dim <= maxDim())
-pybind11::object face(const T& t, int subdimArg, Index f) {
-    if (subdimArg < 0 || subdimArg >= dim)
-        invalidFaceDimension("face", 0, dim - 1);
-    return FaceHelper<T, dim, dim - 1>::template faceFrom<Index>(
-        t, subdimArg, f);
+template <typename T>
+pybind11::object face(const T& t, int subdimArg, size_t f) {
+    if (subdimArg < 0 || subdimArg >= T::dimension)
+        invalidFaceDimension("face", 0, T::dimension - 1);
+    return FaceHelper<T, T::dimension - 1>::faceFrom(t, subdimArg, f);
+}
+
+/**
+ * The Python binding for the C++ template member function
+ * `Face<dim, subdim>::face<lowerdim>(f)`, where the valid range for
+ * the C++ template parameter \a lowerdim is `0, ..., subdim-1`.
+ *
+ * The return value policy will be treated as
+ * `pybind11::return_value_policy::reference`.
+ */
+template <int dim, int subdim>
+requires (subdim > 0)
+pybind11::object face(const Face<dim, subdim>& t, int lowerdim, int f) {
+    if (lowerdim < 0 || lowerdim >= subdim)
+        throw InvalidArgument("face(): unsupported subface dimension");
+
+    // Since the return type of face() depends on lowerdim, we convert return
+    // values to python objects now instead of letting pybind11 do it later.
+    //
+    // The cost: this circumvents pybind11's normal casting mechanism, and so
+    // we do not get the lifespan relationships that we would normally get from
+    // return_value_policy::reference_internal.  Instead we just get the
+    // default return value policy when passing a pointer to pybind11::cast(),
+    // which is pybind11::return_value_policy::reference.
+    return select_constexpr<0, subdim, pybind11::object>(lowerdim,
+            [&t, f](auto k) {
+        return pybind11::cast(t.template face<k>(f));
+    });
 }
 
 /**
@@ -184,7 +206,7 @@ template <int dim, int subdim>
 requires (subdim > 0)
 Perm<dim + 1> faceMapping(const Face<dim, subdim>& t, int lowerdim, int f) {
     if (lowerdim < 0 || lowerdim >= subdim)
-        invalidFaceDimension("faceMapping", 0, subdim - 1);
+        throw InvalidArgument("faceMapping(): unsupported subface dimension");
     return select_constexpr<0, subdim, Perm<dim + 1>>(lowerdim,
             [&t, f](auto k) {
         return t.template faceMapping<k>(f);

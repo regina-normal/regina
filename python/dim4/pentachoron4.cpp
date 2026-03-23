@@ -73,7 +73,7 @@ void addPentachoron4(pybind11::module_& m) {
             rbase::triangulation)
         .def("component", &Pentachoron<4>::component,
             pybind11::return_value_policy::reference, rbase::component)
-        .def("face", &regina::python::face<Pentachoron<4>, 4, int>,
+        .def("face", &regina::python::face<4, 4>,
             pybind11::arg("subdim"), pybind11::arg("face"), rbase::face)
         .def("vertex", &Pentachoron<4>::vertex,
             pybind11::return_value_policy::reference, rbase::vertex)

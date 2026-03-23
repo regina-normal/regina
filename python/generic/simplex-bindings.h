@@ -76,7 +76,7 @@ void addSimplex(pybind11::module_& m, const char* name) {
             rbase::triangulation)
         .def("component", &Simplex<dim>::component,
             pybind11::return_value_policy::reference, rbase::component)
-        .def("face", &regina::python::face<Simplex<dim>, dim, int>,
+        .def("face", &regina::python::face<dim, dim>,
             pybind11::arg("subdim"), pybind11::arg("face"), rbase::face)
         .def("vertex", &Simplex<dim>::vertex,
             pybind11::return_value_policy::reference, rbase::vertex)
