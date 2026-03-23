@@ -133,17 +133,17 @@ struct FaceHelper {
         }
     }
 
-    template <int permSize>
-    requires (subdim < dim && permSize > dim)
-    static Perm<permSize> faceMappingFrom(const T& t, int subdimArg, int f) {
+    static Perm<T::dimension + 1> faceMappingFrom(const T& t, int subdimArg,
+        int f)
+    requires (subdim < dim) {
         if constexpr (subdim == 0) {
             // Must have subdimArg == 0.
             return t.template faceMapping<0>(f);
         } else {
             if (subdimArg == subdim)
                 return t.template faceMapping<subdim>(f);
-            return FaceHelper<T, dim, subdim - 1>::
-                template faceMappingFrom<permSize>(t, subdimArg, f);
+            return FaceHelper<T, dim, subdim - 1>::faceMappingFrom(t, subdimArg,
+                f);
         }
     }
 };
@@ -192,16 +192,14 @@ pybind11::object face(const T& t, int subdimArg, Index f) {
 /**
  * The Python binding for the C++ template member function
  * `T::faceMapping<subdimArg>(f)`, where the valid range for the C++ template
- * parameter \a subdimArg is 0, ..., <i>dim</i>-1, and where the function
- * returns a permutation on permSize elements.
+ * parameter \a subdimArg is 0, ..., <i>dim</i>-1.
  */
-template <typename T, int dim, int permSize = dim + 1>
-requires (dim >= 1 && dim <= maxDim() && permSize > dim)
-Perm<permSize> faceMapping(const T& t, int subdimArg, int f) {
+template <typename T, int dim>
+requires (dim >= 1 && dim <= maxDim())
+Perm<T::dimension + 1> faceMapping(const T& t, int subdimArg, int f) {
     if (subdimArg < 0 || subdimArg >= dim)
         invalidFaceDimension("faceMapping", 0, dim - 1);
-    return FaceHelper<T, dim, dim - 1>::template faceMappingFrom<permSize>(
-        t, subdimArg, f);
+    return FaceHelper<T, dim, dim - 1>::faceMappingFrom(t, subdimArg, f);
 }
 
 } // namespace regina::python

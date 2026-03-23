@@ -94,7 +94,7 @@ void addTriangle4(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::return_value_policy::reference, rbase::vertex)
         .def("edge", &Triangle<4>::edge,
             pybind11::return_value_policy::reference, rbase::edge)
-        .def("faceMapping", &regina::python::faceMapping<Triangle<4>, 2, 5>,
+        .def("faceMapping", &regina::python::faceMapping<Triangle<4>, 2>,
             pybind11::arg("lowerdim"), pybind11::arg("face"),
             rbase::faceMapping)
         .def("vertexMapping", &Triangle<4>::vertexMapping, rbase::vertexMapping)
