@@ -130,7 +130,7 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
             pybind11::arg("lowerdim"), pybind11::arg("face"),
             rbase::face);
         c.def("faceMapping",
-            &regina::python::faceMapping<Face<dim, subdim>, subdim>,
+            &regina::python::faceMapping<dim, subdim>,
             pybind11::arg("lowerdim"), pybind11::arg("face"),
             rbase::faceMapping);
     }

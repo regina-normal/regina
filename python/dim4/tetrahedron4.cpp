@@ -97,7 +97,7 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::return_value_policy::reference, rbase::edge)
         .def("triangle", &Tetrahedron<4>::triangle,
             pybind11::return_value_policy::reference, rbase::triangle)
-        .def("faceMapping", &regina::python::faceMapping<Tetrahedron<4>, 3>,
+        .def("faceMapping", &regina::python::faceMapping<4, 3>,
             pybind11::arg("lowerdim"), pybind11::arg("face"),
             rbase::faceMapping)
         .def("vertexMapping", &Tetrahedron<4>::vertexMapping,

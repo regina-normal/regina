@@ -82,7 +82,7 @@ void addTriangle2(pybind11::module_& m) {
         .def("edge",
             overload_cast<int, int>(&Triangle<2>::edge, pybind11::const_),
             pybind11::return_value_policy::reference, rbase::edge_2)
-        .def("faceMapping", &regina::python::faceMapping<Triangle<2>, 2>,
+        .def("faceMapping", &regina::python::faceMapping<2, 2>,
             pybind11::arg("subdim"), pybind11::arg("face"), rbase::faceMapping)
         .def("vertexMapping", &Triangle<2>::vertexMapping, rbase::vertexMapping)
         .def("edgeMapping", &Triangle<2>::edgeMapping, rbase::edgeMapping)

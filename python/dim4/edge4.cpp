@@ -93,7 +93,7 @@ void addEdge4(pybind11::module_& m, pybind11::module_& internal) {
             rbase::face)
         .def("vertex", &Edge<4>::vertex,
             pybind11::return_value_policy::reference, rbase::vertex)
-        .def("faceMapping", &regina::python::faceMapping<Edge<4>, 1>,
+        .def("faceMapping", &regina::python::faceMapping<4, 1>,
             pybind11::arg("lowerdim"), pybind11::arg("face"),
             rbase::faceMapping)
         .def("vertexMapping", &Edge<4>::vertexMapping, rbase::vertexMapping)
