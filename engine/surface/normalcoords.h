@@ -805,6 +805,8 @@ class NormalInfo {
                     return "Unknown";
             }
         }
+
+        NormalInfo() = delete;
 };
 
 } // namespace regina

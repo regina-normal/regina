@@ -282,6 +282,8 @@ struct [[deprecated]] Base64SigEncoding {
                  static_cast<uint8_t>((val >> 2) & 3),
                  static_cast<uint8_t>((val >> 4) & 3) };
     }
+
+    Base64SigEncoding() = delete;
 };
 
 /**

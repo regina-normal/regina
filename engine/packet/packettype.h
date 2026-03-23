@@ -495,6 +495,8 @@ class PacketInfo {
                     return "Unknown";
             }
         }
+
+        PacketInfo() = delete;
 };
 
 /**

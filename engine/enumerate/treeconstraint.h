@@ -318,6 +318,8 @@ class LPConstraintAPI {
          * also supported by this specific constraint class.
          */
         static bool supported(NormalEncoding enc);
+
+        LPConstraintAPI() = delete;
 };
 #endif
 
@@ -393,6 +395,8 @@ class LPConstraintNone {
         static bool verify(const NormalSurface&);
         static bool verify(const AngleStructure&);
         static bool supported(NormalEncoding enc);
+
+        LPConstraintNone() = delete;
 };
 
 /**
@@ -453,6 +457,8 @@ class LPConstraintEulerPositive {
         static bool verify(const NormalSurface& s);
         static bool verify(const AngleStructure&);
         static bool supported(NormalEncoding enc);
+
+        LPConstraintEulerPositive() = delete;
 };
 
 /**
@@ -500,6 +506,8 @@ class LPConstraintEulerZero {
         static bool verify(const NormalSurface& s);
         static bool verify(const AngleStructure&);
         static bool supported(NormalEncoding enc);
+
+        LPConstraintEulerZero() = delete;
 };
 
 /**
@@ -562,6 +570,8 @@ class LPConstraintNonSpun {
         static bool verify(const NormalSurface& s);
         static bool verify(const AngleStructure&);
         static bool supported(NormalEncoding enc);
+
+        LPConstraintNonSpun() = delete;
 };
 
 /**

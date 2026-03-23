@@ -90,6 +90,8 @@ class BitManipulatorByType {
                 return 0;
             return t | ((((t & -t) / (x & -x)) >> 1) - 1);
         }
+
+        BitManipulatorByType() = delete;
 };
 
 // Specialisations for individual types.
@@ -110,6 +112,8 @@ class BitManipulatorByType<unsigned char> {
                 return 0;
             return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctz(x) + 1));
         }
+
+        BitManipulatorByType() = delete;
 };
 
 template <>
@@ -125,6 +129,8 @@ class BitManipulatorByType<unsigned int> {
                 return 0;
             return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctz(x) + 1));
         }
+
+        BitManipulatorByType() = delete;
 };
 
 template <>
@@ -140,6 +146,8 @@ class BitManipulatorByType<unsigned long> {
                 return 0;
             return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctzl(x) + 1));
         }
+
+        BitManipulatorByType() = delete;
 };
 
 template <>
@@ -155,6 +163,8 @@ class BitManipulatorByType<unsigned long long> {
                 return 0;
             return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctzll(x) + 1));
         }
+
+        BitManipulatorByType() = delete;
 };
 #endif // __GNUC__
 #endif // __DOXYGEN__
@@ -329,6 +339,8 @@ class BitManipulator : public regina::detail::BitManipulatorByType<T> {
             else
                 return std::partial_ordering::unordered;
         }
+
+        BitManipulator() = delete;
 };
 
 } // namespace regina

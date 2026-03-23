@@ -429,6 +429,8 @@ class HyperInfo {
                     return "Unknown";
             }
         }
+
+        HyperInfo() = delete;
 };
 
 } // namespace regina
