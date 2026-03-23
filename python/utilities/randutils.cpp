@@ -45,7 +45,18 @@ void addRandUtils(pybind11::module_& m) {
         .def_static("reseedWithDefault", &RandomEngine::reseedWithDefault,
             rdoc::reseedWithDefault)
     ;
-    regina::python::no_eq_static(c);
+
+    // So... RandomEngine is constructible in C++, but static-only in Python.
+    // We cannot call regina::python::no_eq_static(c), since RandomEngine does
+    // not satisfy the C++ non-constructible constraint.  Instead we won't do
+    // anything about ==/!= operators at all.  This shouldn't matter, since the
+    // class is non-constructible in Python and so Python users have no way to
+    // access such operators anyway.
+    //
+    // We should, however, let the users know what the situation is by
+    // providing an appropriate RandomEngine.equalityType.
+    //
+    c.attr("equalityType") = regina::python::EqualityType::NEVER_INSTANTIATED;
 
     RDOC_SCOPE_END
 }
