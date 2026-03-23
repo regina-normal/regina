@@ -50,8 +50,14 @@ namespace regina::python {
  * `regina::python::isosig_options<dim>(c)`, where \a c is the
  * `pybind11::class_` object that wraps `Triangulation<dim>`.
  */
-template <int dim, typename PythonClass>
-requires (regina::supportedDim(dim))
+template <int dim, PythonClassWrapper PythonClass>
+requires requires {
+    // We use nested requirements here because I believe this means that if
+    // supportedDim(dim) fails then the compiler will not even try to
+    // instantiate Triangulation<dim>.
+    requires (regina::supportedDim(dim));
+    requires (std::same_as<typename PythonClass::type, Triangulation<dim>>);
+}
 void isosig_options(PythonClass& classWrapper) {
     RDOC_SCOPE_BASE(detail::TriangulationBase)
 
