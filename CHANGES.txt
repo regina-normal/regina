@@ -15,6 +15,8 @@ Version 8.0  [ TODO ]
           project.  As a result, many constraints on template arguments are
           now enforced by the compiler.
         - More use of constexpr throughout the calculation engine.
+        - Classes designed for static use only (e.g., PacketInfo) now have
+          their default constructors explicitly disabled.
     ENGINE:
         Class AbelianGroup:
             - The constructor that takes invariant factors as a container
