@@ -56,7 +56,7 @@ void addRandUtils(pybind11::module_& m) {
     // We should, however, let the users know what the situation is by
     // providing an appropriate RandomEngine.equalityType.
     //
-    c.attr("equalityType") = regina::python::EqualityType::NEVER_INSTANTIATED;
+    c.attr("equalityType") = regina::python::EqualityType::NeverInstantiated;
 
     RDOC_SCOPE_END
 }

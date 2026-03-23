@@ -410,6 +410,10 @@ Version 8.0  [ TODO ]
           linear constraint LPConstraintEulerPositive was never meant to be
           used with TreeEnumeration (since the constraint does not map out a
           linear subspace).
+        - Renamed the EqualityType enum values BY_VALUE, BY_REFERENCE,
+          NEVER_INSTANTIATED, and DISABLED to ByValue, ByReference,
+          NeverInstantiated, and Disabled respectively.  The old names are
+          kept as deprecated enum values.
     UTILITIES:
         trisetcmp:
             - Now finds matches (or non-matches) in any dimension, not just

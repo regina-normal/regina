@@ -58,26 +58,53 @@ enum class EqualityType {
      * The objects are compared by value.  This means that the underlying
      * C++ operators == and != for the class \a C are used.
      */
-    BY_VALUE = 1,
+    ByValue = 1,
     /**
      * The objects are compared by reference.  This means that the
      * python operators == and != simply test whether \a x and \a y refer to
      * the same instance of the C++ class \a C.  In other words, they test
      * whether the underlying C++ _pointers_ to \a x and \a y are the same.
      */
-    BY_REFERENCE = 2,
+    ByReference = 2,
     /**
      * No objects of the class \a C are ever instantiated.  This means that
      * no comparisons are ever made.  An example of such a class is
      * Example<dim>, which consists entirely of static functions.
      */
-    NEVER_INSTANTIATED = 3,
+    NeverInstantiated = 3,
     /**
      * Objects of the class \a C cannot be compared by value (because
      * the comparison operators are not implemented), and they should not
      * be compared by reference (because they are passed around by value).
      */
-    DISABLED = 4
+    Disabled = 4,
+
+    /**
+     * Deprecated constant indicating that objects are compared by value.
+     *
+     * \deprecated This has been renamed to `ByValue`.
+     */
+    BY_VALUE [[deprecated]] = 1,
+    /**
+     * Deprecated constant indicating that objects are compared by reference.
+     *
+     * \deprecated This has been renamed to `ByReference`.
+     */
+    BY_REFERENCE [[deprecated]] = 2,
+    /**
+     * Deprecated constant indicating that no objects of the class \a C are
+     * ever instantiated.
+     *
+     * \deprecated This has been renamed to `NeverInstantiated`.
+     */
+    NEVER_INSTANTIATED [[deprecated]] = 3,
+    /**
+     * Deprecated constant indicating that objects cannot be compared by value
+     * but also should not be compared by reference.
+     *
+     * \deprecated This has been renamed to `Disabled`.
+     */
+    DISABLED [[deprecated]] = 4
 };
 
 #ifndef __DOCSTRINGS
@@ -108,7 +135,7 @@ inline bool invalidPacketComparison(const regina::Packet&,
  * argument will be used to generate the respective python docstrings.
  *
  * Furthermore, this will add an attribute \a equalityType to the python
- * wrapper class, which will be set to `EqualityType::BY_VALUE`.
+ * wrapper class, which will be set to `EqualityType::ByValue`.
  *
  * If \a T is a packet type (e.g., regina::Text) or is held by a wrapped
  * packet type (e.g., regina::Link), then you should use packet_eq_operators()
@@ -126,7 +153,7 @@ void add_eq_operators(pybind11::class_<T, options...>& c, const char* docEq) {
     c.def("__ne__", [](const T&, std::nullptr_t) { return true; },
         doc::common::neq_None);
 
-    c.attr("equalityType") = EqualityType::BY_VALUE;
+    c.attr("equalityType") = EqualityType::ByValue;
 }
 
 /**
@@ -140,7 +167,7 @@ void add_eq_operators(pybind11::class_<T, options...>& c, const char* docEq) {
  * Sensible docstrings for comparison-by-reference will be provided.
  *
  * Furthermore, this will add an attribute \a equalityType to the python
- * wrapper class, which will be set to `EqualityType::BY_REFERENCE`.
+ * wrapper class, which will be set to `EqualityType::ByReference`.
  *
  * This should _not_ be used for packet types (e.g., regina::Text) or classes
  * held by wrapped packet types (e.g., regina::Link), since packets should
@@ -159,7 +186,7 @@ void add_eq_operators(pybind11::class_<T, options...>& c) {
     c.def("__ne__", [](const T&, std::nullptr_t) { return true; },
         doc::common::neq_None);
 
-    c.attr("equalityType") = EqualityType::BY_REFERENCE;
+    c.attr("equalityType") = EqualityType::ByReference;
 }
 
 /**
@@ -217,7 +244,7 @@ void packet_disable_eq_operators(pybind11::class_<T, options...>& c) {
     c.def("__ne__", [](const T&, std::nullptr_t) { return true; },
         doc::common::neq_None);
 
-    c.attr("equalityType") = EqualityType::DISABLED;
+    c.attr("equalityType") = EqualityType::Disabled;
 }
 
 /**
@@ -239,7 +266,7 @@ void packet_disable_eq_operators(pybind11::class_<T, options...>& c) {
  *   for these operators will be provided.
  *
  * - The attribute \a equalityType will be added to the python wrapper class.
- *   Its value will be the EqualityType enum constant \a NEVER_INSTANTIATED.
+ *   Its value will be the EqualityType enum constant \a NeverInstantiated.
  *
  * This is similar in effect to no_eq_abstract(); the main difference here
  * is that different docstrings will be supplied.
@@ -255,7 +282,7 @@ void no_eq_static(pybind11::class_<T, options...>& c) {
 
     c.def("__eq__", func, doc::common::eq_none_static);
     c.def("__ne__", func, doc::common::eq_none_static);
-    c.attr("equalityType") = EqualityType::NEVER_INSTANTIATED;
+    c.attr("equalityType") = EqualityType::NeverInstantiated;
 }
 
 /**
@@ -278,7 +305,7 @@ void no_eq_static(pybind11::class_<T, options...>& c) {
  *   for these operators will be provided.
  *
  * - The attribute \a equalityType will be added to the python wrapper class.
- *   Its value will be the EqualityType enum constant \a NEVER_INSTANTIATED.
+ *   Its value will be the EqualityType enum constant \a NeverInstantiated.
  *
  * This is similar in effect to no_eq_static(); the main difference here
  * is that different docstrings will be supplied.
@@ -294,7 +321,7 @@ void no_eq_abstract(pybind11::class_<T, options...>& c) {
 
     c.def("__eq__", func, doc::common::eq_none_abstract);
     c.def("__ne__", func, doc::common::eq_none_abstract);
-    c.attr("equalityType") = EqualityType::NEVER_INSTANTIATED;
+    c.attr("equalityType") = EqualityType::NeverInstantiated;
 }
 
 /**
@@ -318,7 +345,7 @@ void no_eq_abstract(pybind11::class_<T, options...>& c) {
  *   docstrings for these operators will be provided.
  *
  * - The attribute \a equalityType will be added to the python wrapper class.
- *   Its value will be the EqualityType enum constant \a DISABLED.
+ *   Its value will be the EqualityType enum constant \a Disabled.
  */
 template <typename T, typename... options>
 requires (! std::equality_comparable<T>)
@@ -344,7 +371,7 @@ void disable_eq_operators(pybind11::class_<T, options...>& c) {
     c.def("__ne__", [](const T&, std::nullptr_t) { return true; },
         doc::common::neq_None);
 
-    c.attr("equalityType") = EqualityType::DISABLED;
+    c.attr("equalityType") = EqualityType::Disabled;
 }
 
 /**

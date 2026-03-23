@@ -306,3 +306,11 @@ cmp('Different Packets', Link(), Text(), True)
 
 t = Example3.poincare()
 cmp('HomologicalData', HomologicalData(t), HomologicalData(t))
+
+# ----------------------------------------------------------------------
+# Check that the deprecated EqualityType constants behave correctly:
+# ----------------------------------------------------------------------
+print(EqualityType.ByValue == EqualityType.BY_VALUE)
+print(EqualityType.ByValue == EqualityType.ByReference)
+print(EqualityType.ByValue)  # Should show ByValue
+print(EqualityType.BY_VALUE) # Should show ByValue

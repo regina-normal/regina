@@ -185,7 +185,7 @@ Edge 2, internal, degree 4: 0 (23), 1 (30), 1 (23), 1 (12)</programlisting>
 &gt;&gt;&gt; Example3.lens(8,3).homology() == AbelianGroup(0, [8])
 True
 &gt;&gt;&gt; AbelianGroup.equalityType
-&lt;EqualityType.BY_VALUE: 1&gt;</programlisting>
+&lt;EqualityType.ByValue: 1&gt;</programlisting>
    <para>
     In line with the &cpp; changes described below, &regina; now throws
     exceptions upon error in some settings instead of returning

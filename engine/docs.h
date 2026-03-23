@@ -357,12 +357,12 @@ namespace regina {
  *
  *  If you wish to find out how a particular class \a C behaves, you can
  *  examine the attribute `C.equalityType`.  This will return one of
- *  the values \c BY_VALUE, \c BY_REFERENCE, \c DISABLED or
- *  \c NEVER_INSTANTIATED respctively:
+ *  the values \c ByValue, \c ByReference, \c Disabled or
+ *  \c NeverInstantiated respctively:
  *
  *  \code{.unparsed}
  *  >>> print Triangulation3.equalityType
- *  BY_VALUE
+ *  ByValue
  *  \endcode
  *
  *  Packet subclasses are a special case: it is often meaningful to compare

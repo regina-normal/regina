@@ -52,7 +52,7 @@ to how the various types of output should be formatted.
 In return, this class will provide the functions str(), utf8() and
 detail(), which return the short, utf8 and detailed outputs
 respectively in std::string format. It will also provide a global
-operator << that allows you to write objects of type *T* to an
+operator ``<<`` that allows you to write objects of type *T* to an
 arbitrary output stream.
 
 If your class is simple and has no need for detailed output then it
@@ -62,47 +62,28 @@ implementation for *writeTextLong*().
 Template parameter ``T``:
     the class that provides the implementations of *writeTextShort*()
     and *writeTextLong*(). Typically this will be your own class
-    (i.e., your class *C* derives from Output<C>). However, this may
-    be deeper in the class hierarchy.
+    (i.e., your class *C* derives from ``Output<C>``). However, this
+    may be deeper in the class hierarchy.
 
 Template parameter ``supportsUtf8``:
     ``True`` if the class *T* can make use of the richer unicode
     character set, or ``False`` if the short and utf8 outputs are
-    identical. If this is ``False`` then T::writeTextShort() will only
-    ever be called in the form ``writeTextShort(std::ostream&)``, and
-    you may for simplicity omit the second boolean *utf8* argument.
-    This Output base class will still provide a utf8() function, but
-    it will return the same output as short().
+    identical. If this is ``False`` then ``T::writeTextShort()`` will
+    only ever be called in the form ``writeTextShort(std::ostream&)``,
+    and you may for simplicity omit the second boolean *utf8*
+    argument. This Output base class will still provide a utf8()
+    function, but it will return the same output as short().
 
 .. note::
     Every object of this class that is ever instantiated _must_ be
     derived from the class *T*. In other words, end users can
-    construct objects of type *T* (which derives from Output<T>), but
-    they cannot construct objects of the parent class Output<T>
-    itself.
+    construct objects of type *T* (which derives from ``Output<T>``),
+    but they cannot construct objects of the parent class
+    ``Output<T>`` itself.
 
 Python:
     Not present, but the output routines str(), utf8() and detail()
     will be provided directly through the various subclasses.)doc";
-
-// Docstring regina::python::doc::OutputBase
-constexpr const char *OutputBase =
-R"doc(Provides a type alias to help identify where in the class hierarchy
-the output functions T::str() and T::detail() are implemented.
-
-If *T* is a class derived (directly or indirectly) from some class
-Output<...>, then ``OutputBase<T>::type`` is defined to be this parent
-class Output<...>. If *T* is derived from multiple Output<...> classes
-(like SnapPeaTriangulation is), then this ambiguity will be resolved
-if possible by prioritising Output<T, ...>.
-
-If *T* is not derived from any class Output<...>, then
-``OutputBase<T>::type`` is defined to be *T* itself.
-
-This helper class can be useful when trying to disambiguate between
-the implementation of str() that is inherited from Output, versus an
-extended implementation of str() (perhaps with more arguments) that is
-implemented in the class *T* itself.)doc";
 
 // Docstring regina::python::doc::ShortOutput
 constexpr const char *ShortOutput =
@@ -132,11 +113,11 @@ Template parameter ``T``:
 Template parameter ``supportsUtf8``:
     ``True`` if the class *T* can make use of the richer unicode
     character set, or ``False`` if the short and utf8 outputs are
-    identical. If this is ``False`` then T::writeTextShort() will only
-    ever be called in the form ``writeTextShort(std::ostream&)``, and
-    you may for simplicity omit the second boolean *utf8* argument.
-    This ShortOutput base class will still provide a utf8() function,
-    but it will return the same output as short().
+    identical. If this is ``False`` then ``T::writeTextShort()`` will
+    only ever be called in the form ``writeTextShort(std::ostream&)``,
+    and you may for simplicity omit the second boolean *utf8*
+    argument. This ShortOutput base class will still provide a utf8()
+    function, but it will return the same output as short().
 
 Python:
     Not present, but the output routines str(), utf8() and detail()

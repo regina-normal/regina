@@ -787,7 +787,7 @@ class ListView_Triangulation3_vertices(pybind11_builtins.pybind11_object)
  |
  |  __hash__ = None
  |
- |  equalityType = <EqualityType.BY_VALUE: 1>
+ |  equalityType = <EqualityType.ByValue: 1>
  |
  |  ----------------------------------------------------------------------
  |  Static methods inherited from pybind11_builtins.pybind11_object:

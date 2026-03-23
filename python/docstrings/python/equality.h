@@ -29,24 +29,54 @@ namespace python::EqualityType_ {
 
 // Docstring regina::python::doc::python::EqualityType_::BY_REFERENCE
 static const char *BY_REFERENCE =
+R"doc(Deprecated constant indicating that objects are compared by reference.
+
+.. deprecated::
+    This has been renamed to ``ByReference``.)doc";
+
+// Docstring regina::python::doc::python::EqualityType_::BY_VALUE
+static const char *BY_VALUE =
+R"doc(Deprecated constant indicating that objects are compared by value.
+
+.. deprecated::
+    This has been renamed to ``ByValue``.)doc";
+
+// Docstring regina::python::doc::python::EqualityType_::ByReference
+static const char *ByReference =
 R"doc(The objects are compared by reference. This means that the python
 operators == and != simply test whether *x* and *y* refer to the same
 instance of the C++ class *C*. In other words, they test whether the
 underlying C++ _pointers_ to *x* and *y* are the same.)doc";
 
-// Docstring regina::python::doc::python::EqualityType_::BY_VALUE
-static const char *BY_VALUE =
+// Docstring regina::python::doc::python::EqualityType_::ByValue
+static const char *ByValue =
 R"doc(The objects are compared by value. This means that the underlying C++
 operators == and != for the class *C* are used.)doc";
 
 // Docstring regina::python::doc::python::EqualityType_::DISABLED
 static const char *DISABLED =
+R"doc(Deprecated constant indicating that objects cannot be compared by
+value but also should not be compared by reference.
+
+.. deprecated::
+    This has been renamed to ``Disabled``.)doc";
+
+// Docstring regina::python::doc::python::EqualityType_::Disabled
+static const char *Disabled =
 R"doc(Objects of the class *C* cannot be compared by value (because the
 comparison operators are not implemented), and they should not be
 compared by reference (because they are passed around by value).)doc";
 
 // Docstring regina::python::doc::python::EqualityType_::NEVER_INSTANTIATED
 static const char *NEVER_INSTANTIATED =
+R"doc(Deprecated constant indicating that no objects of the class *C* are
+ever instantiated.
+
+.. deprecated::
+    This has been renamed to ``NeverInstantiated``.)doc";
+
+// Docstring regina::python::doc::python::EqualityType_::NeverInstantiated
+static const char *NeverInstantiated =
 R"doc(No objects of the class *C* are ever instantiated. This means that no
 comparisons are ever made. An example of such a class is Example<dim>,
 which consists entirely of static functions.)doc";
