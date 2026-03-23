@@ -59,7 +59,9 @@ struct R1UpArg {
     int sign;
 
     R1UpArg() = default;
-    R1UpArg(const regina::StrandRef& s, int useSide, int useSign);
+    R1UpArg(const regina::StrandRef& s, int useSide, int useSign) :
+            strand(s), side(useSide), sign(useSign) {
+    }
     QString display() const;
 };
 
@@ -70,7 +72,8 @@ struct R1DownArg {
     regina::Crossing* crossing;
 
     R1DownArg() = default;
-    R1DownArg(regina::Crossing* c);
+    R1DownArg(regina::Crossing* c) : crossing(c) {
+    }
     QString display() const;
 };
 
@@ -82,7 +85,9 @@ struct R2UpArg {
     int side;
 
     R2UpArg() = default;
-    R2UpArg(const regina::StrandRef& s, int useSide);
+    R2UpArg(const regina::StrandRef& s, int useSide) :
+            strand(s), side(useSide) {
+    }
     QString display(int position) const;
 };
 
@@ -91,13 +96,15 @@ struct R2UpArg {
  */
 struct R2DownArg {
     regina::Crossing* crossing;
-    size_t displayCrossing[2];
+    std::array<size_t, 2> displayCrossing;
 
     R2DownArg() = default;
     R2DownArg(regina::Crossing* c);
     QString display() const;
 
-    bool operator < (const R2DownArg& rhs) const;
+    auto operator <=> (const R2DownArg& rhs) const {
+        return displayCrossing <=> rhs.displayCrossing;
+    }
 };
 
 /**
@@ -106,13 +113,15 @@ struct R2DownArg {
 struct R3Arg {
     regina::Crossing* crossing;
     int side;
-    size_t displayCrossing[3];
+    std::array<size_t, 3> displayCrossing;
 
     R3Arg() = default;
     R3Arg(regina::Crossing* c, int useSide);
     QString display() const;
 
-    bool operator < (const R3Arg& rhs) const;
+    auto operator <=> (const R3Arg& rhs) const {
+        return displayCrossing <=> rhs.displayCrossing;
+    }
 };
 
 /**
@@ -192,40 +201,5 @@ class LinkMoveDialog : public QDialog, public regina::PacketListener {
         void fill();
         void updateStates(QComboBox* chooser, QRadioButton* button);
 };
-
-inline R1UpArg::R1UpArg(const regina::StrandRef& s, int useSide, int useSign) :
-        strand(s), side(useSide), sign(useSign) {
-}
-
-inline R2UpArg::R2UpArg(const regina::StrandRef& s, int useSide) :
-        strand(s), side(useSide) {
-}
-
-inline R1DownArg::R1DownArg(regina::Crossing* c) : crossing(c) {
-}
-
-inline bool R2DownArg::operator < (const R2DownArg& rhs) const {
-    if (displayCrossing[0] < rhs.displayCrossing[0])
-        return true;
-    if (displayCrossing[0] > rhs.displayCrossing[0])
-        return false;
-    if (displayCrossing[1] < rhs.displayCrossing[1])
-        return true;
-    return false;
-}
-
-inline bool R3Arg::operator < (const R3Arg& rhs) const {
-    if (displayCrossing[0] < rhs.displayCrossing[0])
-        return true;
-    if (displayCrossing[0] > rhs.displayCrossing[0])
-        return false;
-    if (displayCrossing[1] < rhs.displayCrossing[1])
-        return true;
-    if (displayCrossing[1] > rhs.displayCrossing[1])
-        return false;
-    if (displayCrossing[2] < rhs.displayCrossing[2])
-        return true;
-    return false;
-}
 
 #endif
