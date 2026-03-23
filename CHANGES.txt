@@ -10,10 +10,9 @@ Regina - Software for low-dimensional topology
 Version 8.0  [ TODO ]
 
     GENERAL:
-        - Begun a move to use C++20 concepts and constraints instead of plain
-          English requirements for template arguments.  This is an ongoing
-          project.  As a result, many constraints on template arguments are
-          now enforced by the compiler.
+        - Regina now uses C++20 concepts and constraints instead of plain
+          English requirements for template arguments.  As a result, many
+          constraints on template arguments are now enforced by the compiler.
         - More use of constexpr throughout the calculation engine.
         - Classes designed for static use only (e.g., PacketInfo) now have
           their default constructors explicitly disabled.
