@@ -37,26 +37,15 @@
 namespace regina {
 
 std::strong_ordering GraphTriple::operator <=> (const GraphTriple& rhs) const {
-    {
-        auto cmp = centre_ <=> rhs.centre_;
-        if (cmp != std::strong_ordering::equal)
-            return cmp;
-    }
-    {
-        auto cmp = end_[0] <=> rhs.end_[0];
-        if (cmp != std::strong_ordering::equal)
-            return cmp;
-    }
-    {
-        auto cmp = end_[1] <=> rhs.end_[1];
-        if (cmp != std::strong_ordering::equal)
-            return cmp;
-    }
-    {
-        auto cmp = simplerThreeWay(matchingReln_[0], rhs.matchingReln_[0]);
-        if (cmp != std::strong_ordering::equal)
-            return cmp;
-    }
+    if (auto c = centre_ <=> rhs.centre_; c != 0)
+        return c;
+    if (auto c = end_[0] <=> rhs.end_[0]; c != 0)
+        return c;
+    if (auto c = end_[1] <=> rhs.end_[1]; c != 0)
+        return c;
+    if (auto c = simplerThreeWay(matchingReln_[0], rhs.matchingReln_[0]);
+            c != 0)
+        return c;
     return simplerThreeWay(matchingReln_[1], rhs.matchingReln_[1]);
 }
 

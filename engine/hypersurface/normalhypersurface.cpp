@@ -178,22 +178,16 @@ bool NormalHypersurface::operator == (const NormalHypersurface& other) const {
 std::weak_ordering NormalHypersurface::operator <=> (
         const NormalHypersurface& rhs) const {
     size_t nPents = triangulation_->size();
-    if (nPents != rhs.triangulation_->size())
-        return nPents <=> rhs.triangulation_->size();
+    if (auto c = nPents <=> rhs.triangulation_.size(); c != 0)
+        return c;
 
     for (size_t t = 0; t < nPents; ++t) {
-        for (int i = 0; i < 5; ++i) {
-            if (tetrahedra(t, i) < rhs.tetrahedra(t, i))
-                return std::weak_ordering::less;
-            if (tetrahedra(t, i) > rhs.tetrahedra(t, i))
-                return std::weak_ordering::greater;
-        }
-        for (int i = 0; i < 10; ++i) {
-            if (prisms(t, i) < rhs.prisms(t, i))
-                return std::weak_ordering::less;
-            if (prisms(t, i) > rhs.prisms(t, i))
-                return std::weak_ordering::greater;
-        }
+        for (int i = 0; i < 5; ++i)
+            if (auto c = tetrahedra(t, i) <=> rhs.tetrahedra(t, i); c != 0)
+                return c;
+        for (int i = 0; i < 10; ++i)
+            if (auto c = prisms(t, i) <=> rhs.prisms(t, i); c != 0)
+                return c;
     }
 
     // The hypersurfaces are equal.

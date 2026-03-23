@@ -37,8 +37,8 @@ namespace regina {
 
 std::weak_ordering AngleStructure::operator <=> (const AngleStructure& rhs)
         const {
-    if (triangulation_->size() != rhs.triangulation_->size())
-        return triangulation_->size() <=> rhs.triangulation_->size();
+    if (auto c = triangulation_->size() <=> rhs.triangulation_->size(); c != 0)
+        return c;
 
 #if defined(LEXCMP_FOUND)
     return std::lexicographical_compare_three_way(

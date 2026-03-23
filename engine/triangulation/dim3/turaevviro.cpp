@@ -1091,12 +1091,10 @@ namespace {
                     overlap[nOverlap++] = i;
 
                 auto cmp = [overlap, nOverlap](SolnIterator a, SolnIterator b) {
-                    for (size_t i = 0; i < nOverlap; ++i) {
-                        std::strong_ordering c =
-                            a->first[overlap[i]] <=> b->first[overlap[i]];
-                        if (c != std::strong_ordering::equal)
+                    for (size_t i = 0; i < nOverlap; ++i)
+                        if (auto c = a->first[overlap[i]] <=>
+                                b->first[overlap[i]]; c != 0)
                             return c;
-                    }
                     return std::strong_ordering::equal;
                 };
 

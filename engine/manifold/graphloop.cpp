@@ -37,10 +37,8 @@
 namespace regina {
 
 std::strong_ordering GraphLoop::operator <=> (const GraphLoop& rhs) const {
-    auto cmp = sfs_ <=> rhs.sfs_;
-    if (cmp != std::strong_ordering::equal)
-        return cmp;
-
+    if (auto c = sfs_ <=> rhs.sfs_; c != 0)
+        return c;
     return simplerThreeWay(matchingReln_, rhs.matchingReln_);
 }
 

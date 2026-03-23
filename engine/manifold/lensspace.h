@@ -207,17 +207,9 @@ inline bool LensSpace::operator == (const LensSpace& compare) const {
 
 inline std::strong_ordering LensSpace::operator <=> (const LensSpace& rhs)
         const {
-    if (p_ < rhs.p_)
-        return std::strong_ordering::less;
-    if (p_ > rhs.p_)
-        return std::strong_ordering::greater;
-
-    if (q_ < rhs.q_)
-        return std::strong_ordering::less;
-    if (q_ > rhs.q_)
-        return std::strong_ordering::greater;
-
-    return std::strong_ordering::equal;
+    if (auto c = p_ <=> rhs.p_; c != 0)
+        return c;
+    return q_ <=> rhs.q_;
 }
 
 inline bool LensSpace::isHyperbolic() const {

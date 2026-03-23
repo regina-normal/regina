@@ -37,12 +37,9 @@
 namespace regina {
 
 std::strong_ordering GraphPair::operator <=> (const GraphPair& rhs) const {
-    for (int i = 0; i < 2; ++i) {
-        auto cmp = sfs_[i] <=> rhs.sfs_[i];
-        if (cmp != std::strong_ordering::equal)
-            return cmp;
-    }
-
+    for (int i = 0; i < 2; ++i)
+        if (auto c = sfs_[i] <=> rhs.sfs_[i]; c != 0)
+            return c;
     return simplerThreeWay(matchingReln_, rhs.matchingReln_);
 }
 

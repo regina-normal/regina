@@ -90,31 +90,24 @@ std::weak_ordering SatBlock::operator <=> (const SatBlock& rhs) const {
         return std::weak_ordering::greater;
     if (lst1 && lst2) {
         // Order first by LST parameters, then by roles.
-        if (lst1->lst().meridinalCuts(2) < lst2->lst().meridinalCuts(2))
-            return std::weak_ordering::less;
-        if (lst1->lst().meridinalCuts(2) > lst2->lst().meridinalCuts(2))
-            return std::weak_ordering::greater;
-        if (lst1->lst().meridinalCuts(1) < lst2->lst().meridinalCuts(1))
-            return std::weak_ordering::less;
-        if (lst1->lst().meridinalCuts(1) > lst2->lst().meridinalCuts(1))
-            return std::weak_ordering::greater;
-        if (lst1->lst().meridinalCuts(0) < lst2->lst().meridinalCuts(0))
-            return std::weak_ordering::less;
-        if (lst1->lst().meridinalCuts(0) > lst2->lst().meridinalCuts(0))
-            return std::weak_ordering::greater;
+        if (auto c = lst1->lst().meridinalCuts(2) <=>
+                lst2->lst().meridinalCuts(2); c != 0)
+            return c;
+        if (auto c = lst1->lst().meridinalCuts(1) <=>
+                lst2->lst().meridinalCuts(1); c != 0)
+            return c;
+        if (auto c = lst1->lst().meridinalCuts(0) <=>
+                lst2->lst().meridinalCuts(0); c != 0)
+            return c;
 
         // Sorts by which edge group is joined to the vertical annulus
         // edges, then horizontal, then diagonal (though we won't bother
         // testing diagonal, since by that stage we will know the roles
         // permutations to be equal).
-        if (lst1->roles()[0] < lst2->roles()[0])
-            return std::weak_ordering::less;
-        if (lst1->roles()[0] > lst2->roles()[0])
-            return std::weak_ordering::greater;
-        if (lst1->roles()[1] < lst2->roles()[1])
-            return std::weak_ordering::less;
-        if (lst1->roles()[1] > lst2->roles()[1])
-            return std::weak_ordering::greater;
+        if (auto c = lst1->roles()[0] <=> lst2->roles()[0]; c != 0)
+            return c;
+        if (auto c = lst1->roles()[1] <=> lst2->roles()[1]; c != 0)
+            return c;
 
         // All equal.
         return std::weak_ordering::equivalent;

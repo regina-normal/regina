@@ -233,11 +233,9 @@ class MaxAggregator {
                 return OrderType::greater;
             } else {
                 // Both aggregators have seen at least one atomic value.
-                auto cmp = max_ <=> rhs.max_;
-                if (cmp == OrderType::equivalent)
-                    return count_ <=> rhs.count_;
-                else
-                    return cmp;
+                if (auto c = max_ <=> rhs.max_; c != 0)
+                    return c;
+                return count_ <=> rhs.count_;
             }
         }
 

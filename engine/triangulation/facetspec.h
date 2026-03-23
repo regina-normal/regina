@@ -409,12 +409,9 @@ inline bool FacetSpec<dim>::operator == (const FacetSpec& rhs) const {
 template <int dim> requires (supportedDim(dim))
 inline std::strong_ordering FacetSpec<dim>::operator <=> (const FacetSpec& rhs)
         const {
-    if (simp < rhs.simp)
-        return std::strong_ordering::less;
-    else if (simp > rhs.simp)
-        return std::strong_ordering::greater;
-    else
-        return facet <=> rhs.facet;
+    if (auto c = simp <=> rhs.simp; c != 0)
+        return c;
+    return facet <=> rhs.facet;
 }
 
 template <int dim>

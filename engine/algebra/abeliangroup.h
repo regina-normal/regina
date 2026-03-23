@@ -669,12 +669,9 @@ inline bool AbelianGroup::operator == (const AbelianGroup& rhs) const {
 
 inline std::strong_ordering AbelianGroup::operator <=> (const AbelianGroup& rhs)
         const {
-    if (rank_ < rhs.rank_)
-        return std::strong_ordering::less;
-    else if (rank_ > rhs.rank_)
-        return std::strong_ordering::greater;
-    else
-        return revInvFactors_ <=> rhs.revInvFactors_;
+    if (auto c = rank_ <=> rhs.rank_; c != 0)
+        return c;
+    return revInvFactors_ <=> rhs.revInvFactors_;
 }
 
 inline void AbelianGroup::tightEncode(std::ostream& out) const {

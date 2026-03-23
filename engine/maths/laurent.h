@@ -1141,22 +1141,13 @@ inline bool Laurent<T>::operator == (const Laurent<T>& rhs) const {
 
 template <CoefficientDomain T>
 std::strong_ordering Laurent<T>::operator <=> (const Laurent<T>& rhs) const {
-    if (minExp_ < rhs.minExp_)
-        return std::strong_ordering::less;
-    else if (minExp_ > rhs.minExp_)
-        return std::strong_ordering::greater;
-
-    if (maxExp_ < rhs.maxExp_)
-        return std::strong_ordering::less;
-    else if (maxExp_ > rhs.maxExp_)
-        return std::strong_ordering::greater;
-
+    if (auto c = minExp_ <=> rhs.minExp_; c != 0)
+        return c;
+    if (auto c = maxExp_ <=> rhs.maxExp_; c != 0)
+        return c;
     for (long i = minExp_; i <= maxExp_; ++i)
-        if ((*this)[i] < rhs[i])
-            return std::strong_ordering::less;
-        else if ((*this)[i] > rhs[i])
-            return std::strong_ordering::greater;
-
+        if (auto c = (*this)[i] <=> rhs[i]; c != 0)
+            return c;
     return std::strong_ordering::equal;
 }
 
