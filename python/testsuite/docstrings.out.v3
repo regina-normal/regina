@@ -837,25 +837,31 @@ class DivisionByZero(NumericalError)
  |  ----------------------------------------------------------------------
  |  Methods inherited from builtins.BaseException:
  |
+ |  __delattr__(self, name, /)
+ |      Implement delattr(self, name).
+ |
  |  __getattribute__(self, name, /)
  |      Return getattr(self, name).
  |
- |  __reduce__(self, /)
+ |  __reduce__(...)
  |      Helper for pickle.
  |
  |  __repr__(self, /)
  |      Return repr(self).
  |
- |  __setstate__(self, object, /)
+ |  __setattr__(self, name, value, /)
+ |      Implement setattr(self, name, value).
+ |
+ |  __setstate__(...)
  |
  |  __str__(self, /)
  |      Return str(self).
  |
- |  add_note(self, object, /)
+ |  add_note(...)
  |      Exception.add_note(note) --
  |      add a note to the exception
  |
- |  with_traceback(self, object, /)
+ |  with_traceback(...)
  |      Exception.with_traceback(tb) --
  |      set self.__traceback__ to tb and return self.
  |
