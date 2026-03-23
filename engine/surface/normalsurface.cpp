@@ -229,7 +229,7 @@ bool NormalSurface::operator == (const NormalSurface& other) const {
 std::weak_ordering NormalSurface::operator <=> (const NormalSurface& rhs)
         const {
     size_t nTet = triangulation_->size();
-    if (auto c = nTet <=> rhs.triangulation_.size(); c != 0)
+    if (auto c = nTet <=> rhs.triangulation_->size(); c != 0)
         return c;
 
     bool checkAlmostNormal =

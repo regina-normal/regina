@@ -178,7 +178,7 @@ bool NormalHypersurface::operator == (const NormalHypersurface& other) const {
 std::weak_ordering NormalHypersurface::operator <=> (
         const NormalHypersurface& rhs) const {
     size_t nPents = triangulation_->size();
-    if (auto c = nPents <=> rhs.triangulation_.size(); c != 0)
+    if (auto c = nPents <=> rhs.triangulation_->size(); c != 0)
         return c;
 
     for (size_t t = 0; t < nPents; ++t) {
