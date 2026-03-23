@@ -84,16 +84,16 @@ class Component<2> : public detail::ComponentBase<2> {
         /**
          * Returns the number of <i>subdim</i>-faces in this component.
          *
+         * This is the fastest way to count faces if you know \a subdim
+         * at compile time.
+         *
          * For convenience, this routine explicitly supports the case
          * \a subdim = 2.  This is _not_ the case for the routines
          * face() and faces(), which give access to individual faces
          * (the reason relates to the fact that triangles are built manually,
          * whereas lower-dimensional faces are deduced properties).
          *
-         * \python Python does not support templates.  Instead,
-         * Python users should call this function in the form
-         * `countFaces(subdim)`; that is, the template parameter
-         * \a subdim becomes the first argument of the function.
+         * \nopython Instead use the variant `countFaces(subdim)`.
          *
          * \tparam subdim the face dimension.
          *
@@ -101,6 +101,29 @@ class Component<2> : public detail::ComponentBase<2> {
          */
         template <int subdim> requires (subdim >= 0 && subdim <= 2)
         size_t countFaces() const;
+
+        /**
+         * Returns the number of <i>subdim</i>-faces in this component,
+         * where the face dimension does not need to be known until runtime.
+         *
+         * For C++ programmers who know \a subdim at compile time, you are
+         * better off using the template function `countFaces<subdim>()`
+         * instead, which is (slightly) faster.
+         *
+         * For convenience, this routine explicitly supports the case
+         * \a subdim = 2.  This is _not_ the case for the routines
+         * face() and faces(), which give access to individual faces
+         * (the reason relates to the fact that triangles are built manually,
+         * whereas lower-dimensional faces are deduced properties).
+         *
+         * \exception InvalidArgument The face dimension \a subdim is outside
+         * the supported range (i.e., negative or greater than 2).
+         *
+         * \param subdim the face dimension; this must be between 0 and 2
+         * inclusive.
+         * \return the number of <i>subdim</i>-faces.
+         */
+        size_t countFaces(int subdim) const;
 
         /**
          * Returns an object that allows iteration through and random access
@@ -191,6 +214,16 @@ class Component<2> : public detail::ComponentBase<2> {
 };
 
 // Inline functions for Component<2>
+
+inline size_t Component<2>::countFaces(int subdim) const {
+    switch (subdim) {
+        case 2: return size();
+        case 1: return edges_.size();
+        case 0: return vertices_.size();
+        default:
+            throw InvalidArgument("countFaces(): unsupported face dimension");
+    }
+}
 
 // Hide specialisations from doxygen, since it cannot handle them.
 #ifndef __DOXYGEN

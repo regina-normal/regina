@@ -47,8 +47,8 @@ void addComponent4(pybind11::module_& m, pybind11::module_& internal) {
         .def("size", &Component<4>::size, rbase::size)
         .def("countPentachora", &Component<4>::countPentachora,
             rbase::countPentachora)
-        .def("countFaces", &regina::python::countFaces<Component<4>, 4, 4>,
-            pybind11::arg("subdim"), rdoc::countFaces)
+        .def("countFaces", (regina::python::countFacesFunc<Component<4>>)(
+            &Component<4>::countFaces), rdoc::countFaces)
         .def("countTetrahedra", &Component<4>::countTetrahedra,
             rbase::countTetrahedra)
         .def("countTriangles", &Component<4>::countTriangles,

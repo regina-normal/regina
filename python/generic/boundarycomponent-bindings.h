@@ -59,17 +59,10 @@ void addBoundaryComponent(pybind11::module_& m, pybind11::module_& internal,
         .def("size", &BoundaryComponent<dim>::size, rbase::size)
         .def("countRidges", &BoundaryComponent<dim>::countRidges,
             rbase::countRidges)
-        .def("countFaces", [](const BoundaryComponent<dim>& b, int subdim) {
-            if (subdim == dim - 1)
-                return b.template countFaces<dim - 1>();
-            else if (subdim == dim - 2)
-                return b.template countFaces<dim - 2>();
-            else {
-                invalidFaceDimension("countFaces", dim - 2, dim - 1);
-                // This throws, but the compiler wants us to return a value.
-                return (size_t)0;
-            }
-        }, pybind11::arg("subdim"), rbase::countFaces)
+        .def("countFaces",
+            (regina::python::countFacesFunc<BoundaryComponent<dim>>)(
+                &BoundaryComponent<dim>::countFaces),
+            rbase::countFaces)
         .def("facets", &BoundaryComponent<dim>::facets, rbase::facets)
         .def("faces", [](const BoundaryComponent<dim>& b, int subdim) {
             if (subdim != dim - 1)

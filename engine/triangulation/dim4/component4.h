@@ -91,16 +91,16 @@ class Component<4> : public detail::ComponentBase<4> {
         /**
          * Returns the number of <i>subdim</i>-faces in this component.
          *
+         * This is the fastest way to count faces if you know \a subdim
+         * at compile time.
+         *
          * For convenience, this routine explicitly supports the case
          * \a subdim = 4.  This is _not_ the case for the routines
          * face() and faces(), which give access to individual faces
          * (the reason relates to the fact that pentachora are built manually,
          * whereas lower-dimensional faces are deduced properties).
          *
-         * \python Python does not support templates.  Instead,
-         * Python users should call this function in the form
-         * `countFaces(subdim)`; that is, the template parameter
-         * \a subdim becomes the first argument of the function.
+         * \nopython Instead use the variant `countFaces(subdim)`.
          *
          * \tparam subdim the face dimension.
          *
@@ -108,6 +108,29 @@ class Component<4> : public detail::ComponentBase<4> {
          */
         template <int subdim> requires (subdim >= 0 && subdim <= 4)
         size_t countFaces() const;
+
+        /**
+         * Returns the number of <i>subdim</i>-faces in this component,
+         * where the face dimension does not need to be known until runtime.
+         *
+         * For C++ programmers who know \a subdim at compile time, you are
+         * better off using the template function `countFaces<subdim>()`
+         * instead, which is (slightly) faster.
+         *
+         * For convenience, this routine explicitly supports the case
+         * \a subdim = 4.  This is _not_ the case for the routines
+         * face() and faces(), which give access to individual faces
+         * (the reason relates to the fact that pentachora are built manually,
+         * whereas lower-dimensional faces are deduced properties).
+         *
+         * \exception InvalidArgument The face dimension \a subdim is outside
+         * the supported range (i.e., negative or greater than 4).
+         *
+         * \param subdim the face dimension; this must be between 0 and 4
+         * inclusive.
+         * \return the number of <i>subdim</i>-faces.
+         */
+        size_t countFaces(int subdim) const;
 
         /**
          * Returns an object that allows iteration through and random access
@@ -216,6 +239,18 @@ class Component<4> : public detail::ComponentBase<4> {
 // Inline functions for Component<4>
 
 inline Component<4>::Component() : detail::ComponentBase<4>(), ideal_(false) {
+}
+
+inline size_t Component<4>::countFaces(int subdim) const {
+    switch (subdim) {
+        case 4: return size();
+        case 3: return tetrahedra_.size();
+        case 2: return triangles_.size();
+        case 1: return edges_.size();
+        case 0: return vertices_.size();
+        default:
+            throw InvalidArgument("countFaces(): unsupported face dimension");
+    }
 }
 
 #ifndef __DOXYGEN // Doxygen gets confused by the specialisations.

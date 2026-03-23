@@ -43,6 +43,7 @@
 #include "core/output.h"
 #include "triangulation/detail/strings.h"
 #include "triangulation/forward.h"
+#include "utilities/exception.h"
 #include "utilities/listview.h"
 #include "utilities/markedvector.h"
 #include "utilities/typeutils.h"
@@ -227,10 +228,10 @@ class BoundaryComponentBase :
         /**
          * Returns the number of <i>subdim</i>-faces in this boundary component.
          *
-         * \python Python does not support templates.  Instead,
-         * Python users should call this function in the form
-         * `countFaces(subdim)`; that is, the template parameter
-         * \a subdim becomes the first argument of the function.
+         * This is the fastest way to count faces if you know \a subdim
+         * at compile time.
+         *
+         * \nopython Instead use the variant `countFaces(subdim)`.
          *
          * \tparam subdim the dimension of the faces to query.  If \a dim is
          * one of Regina's \ref stddim "standard dimensions", then \a subdim
@@ -250,6 +251,45 @@ class BoundaryComponentBase :
                     return nRidges_.value;
                 else
                     return std::get<tupleIndex(subdim)>(faces_).size();
+            }
+        }
+
+        /**
+         * Returns the number of <i>subdim</i>-faces in this boundary component,
+         * where the face dimension does not need to be known until runtime.
+         *
+         * For C++ programmers who know \a subdim at compile time, you are
+         * better off using the template function `countFaces<subdim>()`
+         * instead, which is (slightly) faster.
+         *
+         * \exception InvalidArgument The face dimension \a subdim is outside
+         * the supported range.
+         *
+         * \param subdim the dimension of the faces to query.  If \a dim is
+         * one of Regina's \ref stddim "standard dimensions", then \a subdim
+         * must be between 0 and `dim-1` inclusive.  Otherwise, the only
+         * allowable values of \a subdim are the facet dimension (`dim-1`)
+         * and the ridge dimension (`dim-2`).
+         * \return the number of <i>subdim</i>-faces.
+         */
+        size_t countFaces(int subdim) const {
+            if constexpr (allFaces) {
+                if (subdim < 0 || subdim >= dim)
+                    throw InvalidArgument(
+                        "countFaces(): unsupported face dimension");
+                return select_constexpr<0, dim, size_t>(subdim, [this](auto k) {
+                    return std::get<tupleIndex(k)>(faces_).size();
+                });
+            } else {
+                switch (subdim) {
+                    case dim - 2:
+                        return nRidges_.value;
+                    case dim - 1:
+                        return std::get<tupleIndex(dim - 1)>(faces_).size();
+                    default:
+                        throw InvalidArgument(
+                            "countFaces(): unsupported face dimension");
+                }
             }
         }
 

@@ -38,19 +38,20 @@
 namespace regina::python {
 
 /**
- * The type of the function pointer `Triangulation<dim>::countFaces(subdim)`.
+ * The type of the function pointer `T::countFaces(subdim)`.
  *
- * This can help distinguish the non-templated `countFaces(subdim)`
- * from the templated `countFaces<subdim>()`.
+ * This can help distinguish non-templated functions of the form
+ * `T::countFaces(subdim)` (which are wrapped in Python) from templated
+ * functions `T::countFaces<subdim>()` (which are not).
  */
-template <int dim> requires (regina::supportedDim(dim))
-using countFacesFunc = size_t (regina::Triangulation<dim>::*)(int) const;
+template <typename T>
+using countFacesFunc = size_t (T::*)(int) const;
 
 /**
  * The type of the function pointer `Triangulation<dim>::face(subdim, index)`.
  *
- * This can help distinguish the non-templated `face(subdim, index)`
- * from the templated `face<subdim>(index)`.
+ * This can help distinguish the non-templated `face(subdim, index)` (which is
+ * wrapped in Python) from the templated `face<subdim>(index)` (which is not).
  */
 template <int dim> requires (regina::supportedDim(dim))
 using faceFunc = decltype(regina::Triangulation<dim>().face(0, 0))
@@ -59,8 +60,8 @@ using faceFunc = decltype(regina::Triangulation<dim>().face(0, 0))
 /**
  * The type of the function pointer `Triangulation<dim>::faces(subdim)`.
  *
- * This can help distinguish the non-templated `faces(subdim)`
- * from the templated `faces<subdim>()`.
+ * This can help distinguish the non-templated `faces(subdim)` (which is
+ * wrapped in Python) from the templated `faces<subdim>()` (which is not).
  */
 template <int dim> requires (regina::supportedDim(dim))
 using facesFunc = decltype(regina::Triangulation<dim>().faces(0))
@@ -70,10 +71,10 @@ using facesFunc = decltype(regina::Triangulation<dim>().faces(0))
  * Implementation details for Python bindings of template member functions.
  *
  * Python does not support templates, and so we bind C++ template member
- * functions (such as `Component::countFaces<subdim>()` or
- * `Simplex::face<subdim>())` by converting the C++ template argument \a subdim
- * into the the first argument of the Python function (i.e., the function in
- * Python has one more argument than in C++).
+ * functions (such as `Component::faces<subdim>()` or `Simplex::face<subdim>())`
+ * by converting the C++ template argument \a subdim into the the first
+ * argument of the Python function (i.e., the function in Python has one more
+ * argument than in C++).
  *
  * This helper class is designed to work with "auxiliary" types \a T such as
  * Component and BoundaryComponent, not the "primary" type
@@ -99,18 +100,6 @@ using facesFunc = decltype(regina::Triangulation<dim>().faces(0))
 template <typename T, int dim, int subdim>
 requires (dim >= 1 && dim <= maxDim() && subdim >= 0 && subdim <= dim)
 struct FaceHelper {
-    static size_t countFacesFrom(const T& t, int subdimArg)
-    requires (regina::supportedDim(dim)) {
-        if constexpr (subdim == 0) {
-            // Must have subdimArg == 0.
-            return t.template countFaces<0>();
-        } else {
-            if (subdimArg == subdim)
-                return t.template countFaces<subdim>();
-            return FaceHelper<T, dim, subdim - 1>::countFacesFrom(t, subdimArg);
-        }
-    }
-
     static pybind11::list facesFrom(const T& t, int subdimArg)
     requires (regina::supportedDim(dim)) {
         if constexpr (subdim == 0) {
@@ -166,19 +155,6 @@ struct FaceHelper {
  * range \a minDim, ..., \a maxDim.
  */
 void invalidFaceDimension(const char* functionName, int minDim, int maxDim);
-
-/**
- * The Python binding for the C++ template member function
- * `T::countFaces<subdimArg>()`, where the valid range for the C++ template
- * parameter \a subdimArg is 0, ..., \a maxSubdim.
- */
-template <typename T, int dim, int maxSubdim>
-requires (regina::supportedDim(dim) && maxSubdim >= 0 && maxSubdim <= dim)
-size_t countFaces(const T& t, int subdimArg) {
-    if (subdimArg < 0 || subdimArg > maxSubdim)
-        invalidFaceDimension("countFaces", 0, maxSubdim);
-    return FaceHelper<T, dim, maxSubdim>::countFacesFrom(t, subdimArg);
-}
 
 /**
  * The Python binding for the C++ template member function

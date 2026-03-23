@@ -138,7 +138,7 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
         .def("countBoundaryComponents",
             &Triangulation<2>::countBoundaryComponents,
             rbase::countBoundaryComponents)
-        .def("countFaces", (regina::python::countFacesFunc<2>)(
+        .def("countFaces", (regina::python::countFacesFunc<Triangulation<2>>)(
             &Triangulation<2>::countFaces), rbase::countFaces)
         .def("countVertices", &Triangulation<2>::countVertices,
             rbase::countVertices)
