@@ -38,13 +38,28 @@
 namespace regina::python {
 
 /**
+ * A type associated with triangulations that holds faces of different
+ * dimensions, and that offers Python-friendly `countFaces()`, `faces()` and
+ * `face()` functions that take the face dimension as a runtime argument.
+ *
+ * Examples of such types include `Triangulation<dim>`, `Component<dim>`, and
+ * `BoundaryComponent<dim>`.
+ */
+template <typename T>
+concept FaceHolder = requires (const T x, int subdim, size_t index) {
+    { x.countFaces(subdim) } -> std::same_as<size_t>;
+    x.faces(subdim);
+    x.face(subdim, index);
+};
+
+/**
  * The type of the function pointer `T::countFaces(subdim)`.
  *
  * This can help distinguish non-templated functions of the form
  * `T::countFaces(subdim)` (which are wrapped in Python) from templated
  * functions `T::countFaces<subdim>()` (which are not).
  */
-template <typename T>
+template <FaceHolder T>
 using countFacesFunc = size_t (T::*)(int) const;
 
 /**
@@ -53,7 +68,7 @@ using countFacesFunc = size_t (T::*)(int) const;
  * This can help distinguish the non-templated `face(subdim, index)` (which is
  * wrapped in Python) from the templated `face<subdim>(index)` (which is not).
  */
-template <typename T>
+template <FaceHolder T>
 using faceFunc = decltype(std::declval<T>().face(0, 0)) (T::*)(int, size_t)
     const;
 
@@ -63,7 +78,7 @@ using faceFunc = decltype(std::declval<T>().face(0, 0)) (T::*)(int, size_t)
  * This can help distinguish the non-templated `faces(subdim)` (which is
  * wrapped in Python) from the templated `faces<subdim>()` (which is not).
  */
-template <typename T>
+template <FaceHolder T>
 using facesFunc = decltype(std::declval<T>().faces(0)) (T::*)(int) const;
 
 /**
