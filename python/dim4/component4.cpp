@@ -60,7 +60,8 @@ void addComponent4(pybind11::module_& m, pybind11::module_& internal) {
             rbase::countBoundaryComponents)
         .def("simplices", &Component<4>::simplices, rbase::simplices)
         .def("pentachora", &Component<4>::pentachora, rbase::pentachora)
-        .def("faces", &regina::python::faces<Component<4>>,
+        .def("faces",
+            (regina::python::facesFunc<Component<4>>)(&Component<4>::faces),
             pybind11::arg("subdim"), rdoc::faces)
         .def("vertices", &Component<4>::vertices, rbase::vertices)
         .def("edges", &Component<4>::edges, rbase::edges)
@@ -72,8 +73,10 @@ void addComponent4(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::return_value_policy::reference, rbase::simplex)
         .def("pentachoron", &Component<4>::pentachoron,
             pybind11::return_value_policy::reference, rbase::pentachoron)
-        .def("face", &regina::python::face<Component<4>>,
-            pybind11::arg("subdim"), pybind11::arg("index"), rdoc::face)
+        .def("face",
+            (regina::python::faceFunc<Component<4>>)(&Component<4>::face),
+            pybind11::arg("subdim"), pybind11::arg("index"),
+            pybind11::return_value_policy::reference, rdoc::face)
         .def("tetrahedron", &Component<4>::tetrahedron,
             pybind11::return_value_policy::reference, rbase::tetrahedron)
         .def("triangle", &Component<4>::triangle,

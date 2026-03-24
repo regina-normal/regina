@@ -6,8 +6,8 @@ Dimension: 2
 Component 0:
 <class 'regina.engine.Component2'>
 [4, 6, 4]
-[<regina.Face2_0: Vertex 0, internal, degree 3: 0 (0), 2 (1), 3 (1)>, <regina.Face2_0: Vertex 1, internal, degree 3: 0 (1), 3 (2), 1 (1)>, <regina.Face2_0: Vertex 2, internal, degree 3: 0 (2), 1 (2), 2 (2)>, <regina.Face2_0: Vertex 3, internal, degree 3: 1 (0), 3 (0), 2 (0)>]
-[<regina.Face2_1: Edge 0, internal: 0 (01), 3 (12)>, <regina.Face2_1: Edge 1, internal: 2 (12), 0 (02)>, <regina.Face2_1: Edge 2, internal: 0 (12), 1 (12)>, <regina.Face2_1: Edge 3, internal: 3 (02), 1 (01)>, <regina.Face2_1: Edge 4, internal: 1 (02), 2 (02)>, <regina.Face2_1: Edge 5, internal: 2 (01), 3 (01)>]
+[ <regina.Face2_0: Vertex 0, internal, degree 3: 0 (0), 2 (1), 3 (1)>, <regina.Face2_0: Vertex 1, internal, degree 3: 0 (1), 3 (2), 1 (1)>, <regina.Face2_0: Vertex 2, internal, degree 3: 0 (2), 1 (2), 2 (2)>, <regina.Face2_0: Vertex 3, internal, degree 3: 1 (0), 3 (0), 2 (0)> ]
+[ <regina.Face2_1: Edge 0, internal: 0 (01), 3 (12)>, <regina.Face2_1: Edge 1, internal: 2 (12), 0 (02)>, <regina.Face2_1: Edge 2, internal: 0 (12), 1 (12)>, ..., <regina.Face2_1: Edge 5, internal: 2 (01), 3 (01)> ]
 
 <class 'regina.engine.PacketOfTriangulation2'>
 Dimension: 2
@@ -17,8 +17,8 @@ Dimension: 2
 Component 0:
 <class 'regina.engine.Component2'>
 [4, 6, 4]
-[<regina.Face2_0: Vertex 0, internal, degree 3: 0 (0), 2 (1), 3 (1)>, <regina.Face2_0: Vertex 1, internal, degree 3: 0 (1), 3 (2), 1 (1)>, <regina.Face2_0: Vertex 2, internal, degree 3: 0 (2), 1 (2), 2 (2)>, <regina.Face2_0: Vertex 3, internal, degree 3: 1 (0), 3 (0), 2 (0)>]
-[<regina.Face2_1: Edge 0, internal: 0 (01), 3 (12)>, <regina.Face2_1: Edge 1, internal: 2 (12), 0 (02)>, <regina.Face2_1: Edge 2, internal: 0 (12), 1 (12)>, <regina.Face2_1: Edge 3, internal: 3 (02), 1 (01)>, <regina.Face2_1: Edge 4, internal: 1 (02), 2 (02)>, <regina.Face2_1: Edge 5, internal: 2 (01), 3 (01)>]
+[ <regina.Face2_0: Vertex 0, internal, degree 3: 0 (0), 2 (1), 3 (1)>, <regina.Face2_0: Vertex 1, internal, degree 3: 0 (1), 3 (2), 1 (1)>, <regina.Face2_0: Vertex 2, internal, degree 3: 0 (2), 1 (2), 2 (2)>, <regina.Face2_0: Vertex 3, internal, degree 3: 1 (0), 3 (0), 2 (0)> ]
+[ <regina.Face2_1: Edge 0, internal: 0 (01), 3 (12)>, <regina.Face2_1: Edge 1, internal: 2 (12), 0 (02)>, <regina.Face2_1: Edge 2, internal: 0 (12), 1 (12)>, ..., <regina.Face2_1: Edge 5, internal: 2 (01), 3 (01)> ]
 
 <class 'regina.engine.Triangulation3'>
 Dimension: 3
@@ -28,9 +28,9 @@ Dimension: 3
 Component 0:
 <class 'regina.engine.Component3'>
 [5, 10, 10, 5]
-[<regina.Face3_0: Vertex 0, internal, degree 4: 0 (0), 2 (1), 3 (1), 4 (1)>, <regina.Face3_0: Vertex 1, internal, degree 4: 0 (1), 1 (1), 3 (2), 4 (2)>, <regina.Face3_0: Vertex 2, internal, degree 4: 0 (2), 1 (2), 2 (2), 4 (3)>, <regina.Face3_0: Vertex 3, internal, degree 4: 0 (3), 1 (3), 2 (3), 3 (3)>, <regina.Face3_0: Vertex 4, internal, degree 4: 1 (0), 2 (0), 3 (0), 4 (0)>]
-[<regina.Face3_1: Edge 0, internal, degree 3: 0 (01), 3 (12), 4 (12)>, <regina.Face3_1: Edge 1, internal, degree 3: 0 (02), 4 (13), 2 (12)>, <regina.Face3_1: Edge 2, internal, degree 3: 0 (03), 2 (13), 3 (13)>, <regina.Face3_1: Edge 3, internal, degree 3: 0 (12), 1 (12), 4 (23)>, <regina.Face3_1: Edge 4, internal, degree 3: 0 (13), 3 (23), 1 (13)>, <regina.Face3_1: Edge 5, internal, degree 3: 0 (23), 1 (23), 2 (23)>, <regina.Face3_1: Edge 6, internal, degree 3: 1 (01), 4 (02), 3 (02)>, <regina.Face3_1: Edge 7, internal, degree 3: 1 (02), 2 (02), 4 (03)>, <regina.Face3_1: Edge 8, internal, degree 3: 1 (03), 3 (03), 2 (03)>, <regina.Face3_1: Edge 9, internal, degree 3: 2 (01), 3 (01), 4 (01)>]
-[<regina.Face3_2: Triangle 0, internal: 0 (012), 4 (123)>, <regina.Face3_2: Triangle 1, internal: 3 (123), 0 (013)>, <regina.Face3_2: Triangle 2, internal: 0 (023), 2 (123)>, <regina.Face3_2: Triangle 3, internal: 1 (123), 0 (123)>, <regina.Face3_2: Triangle 4, internal: 4 (023), 1 (012)>, <regina.Face3_2: Triangle 5, internal: 1 (013), 3 (023)>, <regina.Face3_2: Triangle 6, internal: 2 (023), 1 (023)>, <regina.Face3_2: Triangle 7, internal: 2 (012), 4 (013)>, <regina.Face3_2: Triangle 8, internal: 3 (013), 2 (013)>, <regina.Face3_2: Triangle 9, internal: 4 (012), 3 (012)>]
+[ <regina.Face3_0: Vertex 0, internal, degree 4: 0 (0), 2 (1), 3 (1), 4 (1)>, <regina.Face3_0: Vertex 1, internal, degree 4: 0 (1), 1 (1), 3 (2), 4 (2)>, <regina.Face3_0: Vertex 2, internal, degree 4: 0 (2), 1 (2), 2 (2), 4 (3)>, <regina.Face3_0: Vertex 3, internal, degree 4: 0 (3), 1 (3), 2 (3), 3 (3)>, <regina.Face3_0: Vertex 4, internal, degree 4: 1 (0), 2 (0), 3 (0), 4 (0)> ]
+[ <regina.Face3_1: Edge 0, internal, degree 3: 0 (01), 3 (12), 4 (12)>, <regina.Face3_1: Edge 1, internal, degree 3: 0 (02), 4 (13), 2 (12)>, <regina.Face3_1: Edge 2, internal, degree 3: 0 (03), 2 (13), 3 (13)>, ..., <regina.Face3_1: Edge 9, internal, degree 3: 2 (01), 3 (01), 4 (01)> ]
+[ <regina.Face3_2: Triangle 0, internal: 0 (012), 4 (123)>, <regina.Face3_2: Triangle 1, internal: 3 (123), 0 (013)>, <regina.Face3_2: Triangle 2, internal: 0 (023), 2 (123)>, ..., <regina.Face3_2: Triangle 9, internal: 4 (012), 3 (012)> ]
 
 <class 'regina.engine.PacketOfTriangulation3'>
 Dimension: 3
@@ -40,9 +40,9 @@ Dimension: 3
 Component 0:
 <class 'regina.engine.Component3'>
 [5, 10, 10, 5]
-[<regina.Face3_0: Vertex 0, internal, degree 4: 0 (0), 2 (1), 3 (1), 4 (1)>, <regina.Face3_0: Vertex 1, internal, degree 4: 0 (1), 1 (1), 3 (2), 4 (2)>, <regina.Face3_0: Vertex 2, internal, degree 4: 0 (2), 1 (2), 2 (2), 4 (3)>, <regina.Face3_0: Vertex 3, internal, degree 4: 0 (3), 1 (3), 2 (3), 3 (3)>, <regina.Face3_0: Vertex 4, internal, degree 4: 1 (0), 2 (0), 3 (0), 4 (0)>]
-[<regina.Face3_1: Edge 0, internal, degree 3: 0 (01), 3 (12), 4 (12)>, <regina.Face3_1: Edge 1, internal, degree 3: 0 (02), 4 (13), 2 (12)>, <regina.Face3_1: Edge 2, internal, degree 3: 0 (03), 2 (13), 3 (13)>, <regina.Face3_1: Edge 3, internal, degree 3: 0 (12), 1 (12), 4 (23)>, <regina.Face3_1: Edge 4, internal, degree 3: 0 (13), 3 (23), 1 (13)>, <regina.Face3_1: Edge 5, internal, degree 3: 0 (23), 1 (23), 2 (23)>, <regina.Face3_1: Edge 6, internal, degree 3: 1 (01), 4 (02), 3 (02)>, <regina.Face3_1: Edge 7, internal, degree 3: 1 (02), 2 (02), 4 (03)>, <regina.Face3_1: Edge 8, internal, degree 3: 1 (03), 3 (03), 2 (03)>, <regina.Face3_1: Edge 9, internal, degree 3: 2 (01), 3 (01), 4 (01)>]
-[<regina.Face3_2: Triangle 0, internal: 0 (012), 4 (123)>, <regina.Face3_2: Triangle 1, internal: 3 (123), 0 (013)>, <regina.Face3_2: Triangle 2, internal: 0 (023), 2 (123)>, <regina.Face3_2: Triangle 3, internal: 1 (123), 0 (123)>, <regina.Face3_2: Triangle 4, internal: 4 (023), 1 (012)>, <regina.Face3_2: Triangle 5, internal: 1 (013), 3 (023)>, <regina.Face3_2: Triangle 6, internal: 2 (023), 1 (023)>, <regina.Face3_2: Triangle 7, internal: 2 (012), 4 (013)>, <regina.Face3_2: Triangle 8, internal: 3 (013), 2 (013)>, <regina.Face3_2: Triangle 9, internal: 4 (012), 3 (012)>]
+[ <regina.Face3_0: Vertex 0, internal, degree 4: 0 (0), 2 (1), 3 (1), 4 (1)>, <regina.Face3_0: Vertex 1, internal, degree 4: 0 (1), 1 (1), 3 (2), 4 (2)>, <regina.Face3_0: Vertex 2, internal, degree 4: 0 (2), 1 (2), 2 (2), 4 (3)>, <regina.Face3_0: Vertex 3, internal, degree 4: 0 (3), 1 (3), 2 (3), 3 (3)>, <regina.Face3_0: Vertex 4, internal, degree 4: 1 (0), 2 (0), 3 (0), 4 (0)> ]
+[ <regina.Face3_1: Edge 0, internal, degree 3: 0 (01), 3 (12), 4 (12)>, <regina.Face3_1: Edge 1, internal, degree 3: 0 (02), 4 (13), 2 (12)>, <regina.Face3_1: Edge 2, internal, degree 3: 0 (03), 2 (13), 3 (13)>, ..., <regina.Face3_1: Edge 9, internal, degree 3: 2 (01), 3 (01), 4 (01)> ]
+[ <regina.Face3_2: Triangle 0, internal: 0 (012), 4 (123)>, <regina.Face3_2: Triangle 1, internal: 3 (123), 0 (013)>, <regina.Face3_2: Triangle 2, internal: 0 (023), 2 (123)>, ..., <regina.Face3_2: Triangle 9, internal: 4 (012), 3 (012)> ]
 
 <class 'regina.engine.Triangulation4'>
 Dimension: 4
@@ -52,10 +52,10 @@ Dimension: 4
 Component 0:
 <class 'regina.engine.Component4'>
 [6, 15, 20, 15, 6]
-[<regina.Face4_0: Vertex 0, internal, degree 5: 0 (0), 2 (1), 3 (1), 4 (1), 5 (1)>, <regina.Face4_0: Vertex 1, internal, degree 5: 0 (1), 1 (1), 3 (2), 4 (2), 5 (2)>, <regina.Face4_0: Vertex 2, internal, degree 5: 0 (2), 1 (2), 2 (2), 4 (3), 5 (3)>, <regina.Face4_0: Vertex 3, internal, degree 5: 0 (3), 1 (3), 2 (3), 3 (3), 5 (4)>, <regina.Face4_0: Vertex 4, internal, degree 5: 0 (4), 1 (4), 2 (4), 3 (4), 4 (4)>, <regina.Face4_0: Vertex 5, internal, degree 5: 1 (0), 2 (0), 3 (0), 4 (0), 5 (0)>]
-[<regina.Face4_1: Edge 0, internal, degree 4: 0 (01), 3 (12), 4 (12), 5 (12)>, <regina.Face4_1: Edge 1, internal, degree 4: 0 (02), 2 (12), 4 (13), 5 (13)>, <regina.Face4_1: Edge 2, internal, degree 4: 0 (03), 2 (13), 3 (13), 5 (14)>, <regina.Face4_1: Edge 3, internal, degree 4: 0 (04), 2 (14), 3 (14), 4 (14)>, <regina.Face4_1: Edge 4, internal, degree 4: 0 (12), 1 (12), 4 (23), 5 (23)>, <regina.Face4_1: Edge 5, internal, degree 4: 0 (13), 1 (13), 3 (23), 5 (24)>, <regina.Face4_1: Edge 6, internal, degree 4: 0 (14), 1 (14), 3 (24), 4 (24)>, <regina.Face4_1: Edge 7, internal, degree 4: 0 (23), 1 (23), 2 (23), 5 (34)>, <regina.Face4_1: Edge 8, internal, degree 4: 0 (24), 1 (24), 2 (24), 4 (34)>, <regina.Face4_1: Edge 9, internal, degree 4: 0 (34), 1 (34), 2 (34), 3 (34)>, <regina.Face4_1: Edge 10, internal, degree 4: 1 (01), 3 (02), 4 (02), 5 (02)>, <regina.Face4_1: Edge 11, internal, degree 4: 1 (02), 2 (02), 4 (03), 5 (03)>, <regina.Face4_1: Edge 12, internal, degree 4: 1 (03), 2 (03), 3 (03), 5 (04)>, <regina.Face4_1: Edge 13, internal, degree 4: 1 (04), 2 (04), 3 (04), 4 (04)>, <regina.Face4_1: Edge 14, internal, degree 4: 2 (01), 3 (01), 4 (01), 5 (01)>]
-[<regina.Face4_2: Triangle 0, internal, degree 3: 0 (234), 1 (234), 2 (234)>, <regina.Face4_2: Triangle 1, internal, degree 3: 0 (134), 3 (234), 1 (134)>, <regina.Face4_2: Triangle 2, internal, degree 3: 0 (124), 1 (124), 4 (234)>, <regina.Face4_2: Triangle 3, internal, degree 3: 0 (123), 5 (234), 1 (123)>, <regina.Face4_2: Triangle 4, internal, degree 3: 0 (034), 2 (134), 3 (134)>, <regina.Face4_2: Triangle 5, internal, degree 3: 0 (024), 4 (134), 2 (124)>, <regina.Face4_2: Triangle 6, internal, degree 3: 0 (023), 2 (123), 5 (134)>, <regina.Face4_2: Triangle 7, internal, degree 3: 0 (014), 3 (124), 4 (124)>, <regina.Face4_2: Triangle 8, internal, degree 3: 0 (013), 5 (124), 3 (123)>, <regina.Face4_2: Triangle 9, internal, degree 3: 0 (012), 4 (123), 5 (123)>, <regina.Face4_2: Triangle 10, internal, degree 3: 1 (034), 3 (034), 2 (034)>, <regina.Face4_2: Triangle 11, internal, degree 3: 1 (024), 2 (024), 4 (034)>, <regina.Face4_2: Triangle 12, internal, degree 3: 1 (023), 5 (034), 2 (023)>, <regina.Face4_2: Triangle 13, internal, degree 3: 1 (014), 4 (024), 3 (024)>, <regina.Face4_2: Triangle 14, internal, degree 3: 1 (013), 3 (023), 5 (024)>, <regina.Face4_2: Triangle 15, internal, degree 3: 1 (012), 5 (023), 4 (023)>, <regina.Face4_2: Triangle 16, internal, degree 3: 2 (014), 3 (014), 4 (014)>, <regina.Face4_2: Triangle 17, internal, degree 3: 2 (013), 5 (014), 3 (013)>, <regina.Face4_2: Triangle 18, internal, degree 3: 2 (012), 4 (013), 5 (013)>, <regina.Face4_2: Triangle 19, internal, degree 3: 3 (012), 5 (012), 4 (012)>]
-[<regina.Face4_3: Tetrahedron 0, internal: 0 (0123), 5 (1234)>, <regina.Face4_3: Tetrahedron 1, internal: 4 (1234), 0 (0124)>, <regina.Face4_3: Tetrahedron 2, internal: 0 (0134), 3 (1234)>, <regina.Face4_3: Tetrahedron 3, internal: 2 (1234), 0 (0234)>, <regina.Face4_3: Tetrahedron 4, internal: 0 (1234), 1 (1234)>, <regina.Face4_3: Tetrahedron 5, internal: 5 (0234), 1 (0123)>, <regina.Face4_3: Tetrahedron 6, internal: 1 (0124), 4 (0234)>, <regina.Face4_3: Tetrahedron 7, internal: 3 (0234), 1 (0134)>, <regina.Face4_3: Tetrahedron 8, internal: 1 (0234), 2 (0234)>, <regina.Face4_3: Tetrahedron 9, internal: 2 (0123), 5 (0134)>, <regina.Face4_3: Tetrahedron 10, internal: 4 (0134), 2 (0124)>, <regina.Face4_3: Tetrahedron 11, internal: 2 (0134), 3 (0134)>, <regina.Face4_3: Tetrahedron 12, internal: 5 (0124), 3 (0123)>, <regina.Face4_3: Tetrahedron 13, internal: 3 (0124), 4 (0124)>, <regina.Face4_3: Tetrahedron 14, internal: 4 (0123), 5 (0123)>]
+[ <regina.Face4_0: Vertex 0, internal, degree 5: 0 (0), 2 (1), 3 (1), 4 (1), 5 (1)>, <regina.Face4_0: Vertex 1, internal, degree 5: 0 (1), 1 (1), 3 (2), 4 (2), 5 (2)>, <regina.Face4_0: Vertex 2, internal, degree 5: 0 (2), 1 (2), 2 (2), 4 (3), 5 (3)>, ..., <regina.Face4_0: Vertex 5, internal, degree 5: 1 (0), 2 (0), 3 (0), 4 (0), 5 (0)> ]
+[ <regina.Face4_1: Edge 0, internal, degree 4: 0 (01), 3 (12), 4 (12), 5 (12)>, <regina.Face4_1: Edge 1, internal, degree 4: 0 (02), 2 (12), 4 (13), 5 (13)>, <regina.Face4_1: Edge 2, internal, degree 4: 0 (03), 2 (13), 3 (13), 5 (14)>, ..., <regina.Face4_1: Edge 14, internal, degree 4: 2 (01), 3 (01), 4 (01), 5 (01)> ]
+[ <regina.Face4_2: Triangle 0, internal, degree 3: 0 (234), 1 (234), 2 (234)>, <regina.Face4_2: Triangle 1, internal, degree 3: 0 (134), 3 (234), 1 (134)>, <regina.Face4_2: Triangle 2, internal, degree 3: 0 (124), 1 (124), 4 (234)>, ..., <regina.Face4_2: Triangle 19, internal, degree 3: 3 (012), 5 (012), 4 (012)> ]
+[ <regina.Face4_3: Tetrahedron 0, internal: 0 (0123), 5 (1234)>, <regina.Face4_3: Tetrahedron 1, internal: 4 (1234), 0 (0124)>, <regina.Face4_3: Tetrahedron 2, internal: 0 (0134), 3 (1234)>, ..., <regina.Face4_3: Tetrahedron 14, internal: 4 (0123), 5 (0123)> ]
 
 <class 'regina.engine.PacketOfTriangulation4'>
 Dimension: 4
@@ -65,10 +65,10 @@ Dimension: 4
 Component 0:
 <class 'regina.engine.Component4'>
 [6, 15, 20, 15, 6]
-[<regina.Face4_0: Vertex 0, internal, degree 5: 0 (0), 2 (1), 3 (1), 4 (1), 5 (1)>, <regina.Face4_0: Vertex 1, internal, degree 5: 0 (1), 1 (1), 3 (2), 4 (2), 5 (2)>, <regina.Face4_0: Vertex 2, internal, degree 5: 0 (2), 1 (2), 2 (2), 4 (3), 5 (3)>, <regina.Face4_0: Vertex 3, internal, degree 5: 0 (3), 1 (3), 2 (3), 3 (3), 5 (4)>, <regina.Face4_0: Vertex 4, internal, degree 5: 0 (4), 1 (4), 2 (4), 3 (4), 4 (4)>, <regina.Face4_0: Vertex 5, internal, degree 5: 1 (0), 2 (0), 3 (0), 4 (0), 5 (0)>]
-[<regina.Face4_1: Edge 0, internal, degree 4: 0 (01), 3 (12), 4 (12), 5 (12)>, <regina.Face4_1: Edge 1, internal, degree 4: 0 (02), 2 (12), 4 (13), 5 (13)>, <regina.Face4_1: Edge 2, internal, degree 4: 0 (03), 2 (13), 3 (13), 5 (14)>, <regina.Face4_1: Edge 3, internal, degree 4: 0 (04), 2 (14), 3 (14), 4 (14)>, <regina.Face4_1: Edge 4, internal, degree 4: 0 (12), 1 (12), 4 (23), 5 (23)>, <regina.Face4_1: Edge 5, internal, degree 4: 0 (13), 1 (13), 3 (23), 5 (24)>, <regina.Face4_1: Edge 6, internal, degree 4: 0 (14), 1 (14), 3 (24), 4 (24)>, <regina.Face4_1: Edge 7, internal, degree 4: 0 (23), 1 (23), 2 (23), 5 (34)>, <regina.Face4_1: Edge 8, internal, degree 4: 0 (24), 1 (24), 2 (24), 4 (34)>, <regina.Face4_1: Edge 9, internal, degree 4: 0 (34), 1 (34), 2 (34), 3 (34)>, <regina.Face4_1: Edge 10, internal, degree 4: 1 (01), 3 (02), 4 (02), 5 (02)>, <regina.Face4_1: Edge 11, internal, degree 4: 1 (02), 2 (02), 4 (03), 5 (03)>, <regina.Face4_1: Edge 12, internal, degree 4: 1 (03), 2 (03), 3 (03), 5 (04)>, <regina.Face4_1: Edge 13, internal, degree 4: 1 (04), 2 (04), 3 (04), 4 (04)>, <regina.Face4_1: Edge 14, internal, degree 4: 2 (01), 3 (01), 4 (01), 5 (01)>]
-[<regina.Face4_2: Triangle 0, internal, degree 3: 0 (234), 1 (234), 2 (234)>, <regina.Face4_2: Triangle 1, internal, degree 3: 0 (134), 3 (234), 1 (134)>, <regina.Face4_2: Triangle 2, internal, degree 3: 0 (124), 1 (124), 4 (234)>, <regina.Face4_2: Triangle 3, internal, degree 3: 0 (123), 5 (234), 1 (123)>, <regina.Face4_2: Triangle 4, internal, degree 3: 0 (034), 2 (134), 3 (134)>, <regina.Face4_2: Triangle 5, internal, degree 3: 0 (024), 4 (134), 2 (124)>, <regina.Face4_2: Triangle 6, internal, degree 3: 0 (023), 2 (123), 5 (134)>, <regina.Face4_2: Triangle 7, internal, degree 3: 0 (014), 3 (124), 4 (124)>, <regina.Face4_2: Triangle 8, internal, degree 3: 0 (013), 5 (124), 3 (123)>, <regina.Face4_2: Triangle 9, internal, degree 3: 0 (012), 4 (123), 5 (123)>, <regina.Face4_2: Triangle 10, internal, degree 3: 1 (034), 3 (034), 2 (034)>, <regina.Face4_2: Triangle 11, internal, degree 3: 1 (024), 2 (024), 4 (034)>, <regina.Face4_2: Triangle 12, internal, degree 3: 1 (023), 5 (034), 2 (023)>, <regina.Face4_2: Triangle 13, internal, degree 3: 1 (014), 4 (024), 3 (024)>, <regina.Face4_2: Triangle 14, internal, degree 3: 1 (013), 3 (023), 5 (024)>, <regina.Face4_2: Triangle 15, internal, degree 3: 1 (012), 5 (023), 4 (023)>, <regina.Face4_2: Triangle 16, internal, degree 3: 2 (014), 3 (014), 4 (014)>, <regina.Face4_2: Triangle 17, internal, degree 3: 2 (013), 5 (014), 3 (013)>, <regina.Face4_2: Triangle 18, internal, degree 3: 2 (012), 4 (013), 5 (013)>, <regina.Face4_2: Triangle 19, internal, degree 3: 3 (012), 5 (012), 4 (012)>]
-[<regina.Face4_3: Tetrahedron 0, internal: 0 (0123), 5 (1234)>, <regina.Face4_3: Tetrahedron 1, internal: 4 (1234), 0 (0124)>, <regina.Face4_3: Tetrahedron 2, internal: 0 (0134), 3 (1234)>, <regina.Face4_3: Tetrahedron 3, internal: 2 (1234), 0 (0234)>, <regina.Face4_3: Tetrahedron 4, internal: 0 (1234), 1 (1234)>, <regina.Face4_3: Tetrahedron 5, internal: 5 (0234), 1 (0123)>, <regina.Face4_3: Tetrahedron 6, internal: 1 (0124), 4 (0234)>, <regina.Face4_3: Tetrahedron 7, internal: 3 (0234), 1 (0134)>, <regina.Face4_3: Tetrahedron 8, internal: 1 (0234), 2 (0234)>, <regina.Face4_3: Tetrahedron 9, internal: 2 (0123), 5 (0134)>, <regina.Face4_3: Tetrahedron 10, internal: 4 (0134), 2 (0124)>, <regina.Face4_3: Tetrahedron 11, internal: 2 (0134), 3 (0134)>, <regina.Face4_3: Tetrahedron 12, internal: 5 (0124), 3 (0123)>, <regina.Face4_3: Tetrahedron 13, internal: 3 (0124), 4 (0124)>, <regina.Face4_3: Tetrahedron 14, internal: 4 (0123), 5 (0123)>]
+[ <regina.Face4_0: Vertex 0, internal, degree 5: 0 (0), 2 (1), 3 (1), 4 (1), 5 (1)>, <regina.Face4_0: Vertex 1, internal, degree 5: 0 (1), 1 (1), 3 (2), 4 (2), 5 (2)>, <regina.Face4_0: Vertex 2, internal, degree 5: 0 (2), 1 (2), 2 (2), 4 (3), 5 (3)>, ..., <regina.Face4_0: Vertex 5, internal, degree 5: 1 (0), 2 (0), 3 (0), 4 (0), 5 (0)> ]
+[ <regina.Face4_1: Edge 0, internal, degree 4: 0 (01), 3 (12), 4 (12), 5 (12)>, <regina.Face4_1: Edge 1, internal, degree 4: 0 (02), 2 (12), 4 (13), 5 (13)>, <regina.Face4_1: Edge 2, internal, degree 4: 0 (03), 2 (13), 3 (13), 5 (14)>, ..., <regina.Face4_1: Edge 14, internal, degree 4: 2 (01), 3 (01), 4 (01), 5 (01)> ]
+[ <regina.Face4_2: Triangle 0, internal, degree 3: 0 (234), 1 (234), 2 (234)>, <regina.Face4_2: Triangle 1, internal, degree 3: 0 (134), 3 (234), 1 (134)>, <regina.Face4_2: Triangle 2, internal, degree 3: 0 (124), 1 (124), 4 (234)>, ..., <regina.Face4_2: Triangle 19, internal, degree 3: 3 (012), 5 (012), 4 (012)> ]
+[ <regina.Face4_3: Tetrahedron 0, internal: 0 (0123), 5 (1234)>, <regina.Face4_3: Tetrahedron 1, internal: 4 (1234), 0 (0124)>, <regina.Face4_3: Tetrahedron 2, internal: 0 (0134), 3 (1234)>, ..., <regina.Face4_3: Tetrahedron 14, internal: 4 (0123), 5 (0123)> ]
 
 <class 'regina.engine.Triangulation5'>
 Dimension: 5
@@ -88,8 +88,8 @@ Dimension: 2
 Component 0:
 <class 'regina.engine.Component2'>
 [1, 2, 1]
-[<regina.Face2_0: Vertex 0, boundary, degree 3: 0 (2), 0 (1), 0 (0)>]
-[<regina.Face2_1: Edge 0, internal: 0 (01), 0 (12)>, <regina.Face2_1: Edge 1, boundary: 0 (20)>]
+[ <regina.Face2_0: Vertex 0, boundary, degree 3: 0 (2), 0 (1), 0 (0)> ]
+[ <regina.Face2_1: Edge 0, internal: 0 (01), 0 (12)>, <regina.Face2_1: Edge 1, boundary: 0 (20)> ]
 
 Boundary Component 0:
 <class 'regina.engine.BoundaryComponent2'>
@@ -105,8 +105,8 @@ Dimension: 2
 Component 0:
 <class 'regina.engine.Component2'>
 [1, 2, 1]
-[<regina.Face2_0: Vertex 0, boundary, degree 3: 0 (2), 0 (1), 0 (0)>]
-[<regina.Face2_1: Edge 0, internal: 0 (01), 0 (12)>, <regina.Face2_1: Edge 1, boundary: 0 (20)>]
+[ <regina.Face2_0: Vertex 0, boundary, degree 3: 0 (2), 0 (1), 0 (0)> ]
+[ <regina.Face2_1: Edge 0, internal: 0 (01), 0 (12)>, <regina.Face2_1: Edge 1, boundary: 0 (20)> ]
 
 Boundary Component 0:
 <class 'regina.engine.BoundaryComponent2'>
@@ -122,9 +122,9 @@ Dimension: 3
 Component 0:
 <class 'regina.engine.Component3'>
 [2, 6, 6, 2]
-[<regina.Face3_0: Vertex 0, boundary, degree 5: 0 (0), 1 (1), 0 (2), 1 (2), 0 (3)>, <regina.Face3_0: Vertex 1, boundary, degree 3: 0 (1), 1 (0), 1 (3)>]
-[<regina.Face3_1: Edge 0, boundary, degree 2: 1 (13), 0 (01)>, <regina.Face3_1: Edge 1, boundary, degree 3: 0 (02), 1 (12), 0 (23)>, <regina.Face3_1: Edge 2, boundary, degree 1: 0 (03)>, <regina.Face3_1: Edge 3, boundary, degree 3: 1 (32), 0 (12), 1 (01)>, <regina.Face3_1: Edge 4, boundary, degree 2: 1 (02), 0 (13)>, <regina.Face3_1: Edge 5, boundary, degree 1: 1 (03)>]
-[<regina.Face3_2: Triangle 0, internal: 0 (012), 1 (132)>, <regina.Face3_2: Triangle 1, boundary: 0 (031)>, <regina.Face3_2: Triangle 2, boundary: 0 (023)>, <regina.Face3_2: Triangle 3, internal: 1 (012), 0 (123)>, <regina.Face3_2: Triangle 4, boundary: 1 (031)>, <regina.Face3_2: Triangle 5, boundary: 1 (023)>]
+[ <regina.Face3_0: Vertex 0, boundary, degree 5: 0 (0), 1 (1), 0 (2), 1 (2), 0 (3)>, <regina.Face3_0: Vertex 1, boundary, degree 3: 0 (1), 1 (0), 1 (3)> ]
+[ <regina.Face3_1: Edge 0, boundary, degree 2: 1 (13), 0 (01)>, <regina.Face3_1: Edge 1, boundary, degree 3: 0 (02), 1 (12), 0 (23)>, <regina.Face3_1: Edge 2, boundary, degree 1: 0 (03)>, ..., <regina.Face3_1: Edge 5, boundary, degree 1: 1 (03)> ]
+[ <regina.Face3_2: Triangle 0, internal: 0 (012), 1 (132)>, <regina.Face3_2: Triangle 1, boundary: 0 (031)>, <regina.Face3_2: Triangle 2, boundary: 0 (023)>, ..., <regina.Face3_2: Triangle 5, boundary: 1 (023)> ]
 
 Boundary Component 0:
 <class 'regina.engine.BoundaryComponent3'>
@@ -141,9 +141,9 @@ Dimension: 3
 Component 0:
 <class 'regina.engine.Component3'>
 [2, 6, 6, 2]
-[<regina.Face3_0: Vertex 0, boundary, degree 5: 0 (0), 1 (1), 0 (2), 1 (2), 0 (3)>, <regina.Face3_0: Vertex 1, boundary, degree 3: 0 (1), 1 (0), 1 (3)>]
-[<regina.Face3_1: Edge 0, boundary, degree 2: 1 (13), 0 (01)>, <regina.Face3_1: Edge 1, boundary, degree 3: 0 (02), 1 (12), 0 (23)>, <regina.Face3_1: Edge 2, boundary, degree 1: 0 (03)>, <regina.Face3_1: Edge 3, boundary, degree 3: 1 (32), 0 (12), 1 (01)>, <regina.Face3_1: Edge 4, boundary, degree 2: 1 (02), 0 (13)>, <regina.Face3_1: Edge 5, boundary, degree 1: 1 (03)>]
-[<regina.Face3_2: Triangle 0, internal: 0 (012), 1 (132)>, <regina.Face3_2: Triangle 1, boundary: 0 (031)>, <regina.Face3_2: Triangle 2, boundary: 0 (023)>, <regina.Face3_2: Triangle 3, internal: 1 (012), 0 (123)>, <regina.Face3_2: Triangle 4, boundary: 1 (031)>, <regina.Face3_2: Triangle 5, boundary: 1 (023)>]
+[ <regina.Face3_0: Vertex 0, boundary, degree 5: 0 (0), 1 (1), 0 (2), 1 (2), 0 (3)>, <regina.Face3_0: Vertex 1, boundary, degree 3: 0 (1), 1 (0), 1 (3)> ]
+[ <regina.Face3_1: Edge 0, boundary, degree 2: 1 (13), 0 (01)>, <regina.Face3_1: Edge 1, boundary, degree 3: 0 (02), 1 (12), 0 (23)>, <regina.Face3_1: Edge 2, boundary, degree 1: 0 (03)>, ..., <regina.Face3_1: Edge 5, boundary, degree 1: 1 (03)> ]
+[ <regina.Face3_2: Triangle 0, internal: 0 (012), 1 (132)>, <regina.Face3_2: Triangle 1, boundary: 0 (031)>, <regina.Face3_2: Triangle 2, boundary: 0 (023)>, ..., <regina.Face3_2: Triangle 5, boundary: 1 (023)> ]
 
 Boundary Component 0:
 <class 'regina.engine.BoundaryComponent3'>
@@ -160,10 +160,10 @@ Dimension: 4
 Component 0:
 <class 'regina.engine.Component4'>
 [1, 4, 6, 4, 1]
-[<regina.Face4_0: Vertex 0, boundary, degree 5: 0 (0), 0 (1), 0 (2), 0 (3), 0 (4)>]
-[<regina.Face4_1: Edge 0, boundary, degree 4: 0 (01), 0 (12), 0 (23), 0 (34)>, <regina.Face4_1: Edge 1, boundary, degree 3: 0 (02), 0 (13), 0 (24)>, <regina.Face4_1: Edge 2, boundary, degree 2: 0 (03), 0 (14)>, <regina.Face4_1: Edge 3, boundary, degree 1: 0 (04)>]
-[<regina.Face4_2: Triangle 0, boundary, degree 3: 0 (234), 0 (123), 0 (012)>, <regina.Face4_2: Triangle 1, boundary, degree 2: 0 (023), 0 (134)>, <regina.Face4_2: Triangle 2, boundary, degree 2: 0 (124), 0 (013)>, <regina.Face4_2: Triangle 3, boundary, degree 1: 0 (034)>, <regina.Face4_2: Triangle 4, boundary, degree 1: 0 (024)>, <regina.Face4_2: Triangle 5, boundary, degree 1: 0 (014)>]
-[<regina.Face4_3: Tetrahedron 0, internal: 0 (0123), 0 (1234)>, <regina.Face4_3: Tetrahedron 1, boundary: 0 (0142)>, <regina.Face4_3: Tetrahedron 2, boundary: 0 (0134)>, <regina.Face4_3: Tetrahedron 3, boundary: 0 (0243)>]
+[ <regina.Face4_0: Vertex 0, boundary, degree 5: 0 (0), 0 (1), 0 (2), 0 (3), 0 (4)> ]
+[ <regina.Face4_1: Edge 0, boundary, degree 4: 0 (01), 0 (12), 0 (23), 0 (34)>, <regina.Face4_1: Edge 1, boundary, degree 3: 0 (02), 0 (13), 0 (24)>, <regina.Face4_1: Edge 2, boundary, degree 2: 0 (03), 0 (14)>, <regina.Face4_1: Edge 3, boundary, degree 1: 0 (04)> ]
+[ <regina.Face4_2: Triangle 0, boundary, degree 3: 0 (234), 0 (123), 0 (012)>, <regina.Face4_2: Triangle 1, boundary, degree 2: 0 (023), 0 (134)>, <regina.Face4_2: Triangle 2, boundary, degree 2: 0 (124), 0 (013)>, ..., <regina.Face4_2: Triangle 5, boundary, degree 1: 0 (014)> ]
+[ <regina.Face4_3: Tetrahedron 0, internal: 0 (0123), 0 (1234)>, <regina.Face4_3: Tetrahedron 1, boundary: 0 (0142)>, <regina.Face4_3: Tetrahedron 2, boundary: 0 (0134)>, <regina.Face4_3: Tetrahedron 3, boundary: 0 (0243)> ]
 
 Boundary Component 0:
 <class 'regina.engine.BoundaryComponent4'>
@@ -181,10 +181,10 @@ Dimension: 4
 Component 0:
 <class 'regina.engine.Component4'>
 [1, 4, 6, 4, 1]
-[<regina.Face4_0: Vertex 0, boundary, degree 5: 0 (0), 0 (1), 0 (2), 0 (3), 0 (4)>]
-[<regina.Face4_1: Edge 0, boundary, degree 4: 0 (01), 0 (12), 0 (23), 0 (34)>, <regina.Face4_1: Edge 1, boundary, degree 3: 0 (02), 0 (13), 0 (24)>, <regina.Face4_1: Edge 2, boundary, degree 2: 0 (03), 0 (14)>, <regina.Face4_1: Edge 3, boundary, degree 1: 0 (04)>]
-[<regina.Face4_2: Triangle 0, boundary, degree 3: 0 (234), 0 (123), 0 (012)>, <regina.Face4_2: Triangle 1, boundary, degree 2: 0 (023), 0 (134)>, <regina.Face4_2: Triangle 2, boundary, degree 2: 0 (124), 0 (013)>, <regina.Face4_2: Triangle 3, boundary, degree 1: 0 (034)>, <regina.Face4_2: Triangle 4, boundary, degree 1: 0 (024)>, <regina.Face4_2: Triangle 5, boundary, degree 1: 0 (014)>]
-[<regina.Face4_3: Tetrahedron 0, internal: 0 (0123), 0 (1234)>, <regina.Face4_3: Tetrahedron 1, boundary: 0 (0142)>, <regina.Face4_3: Tetrahedron 2, boundary: 0 (0134)>, <regina.Face4_3: Tetrahedron 3, boundary: 0 (0243)>]
+[ <regina.Face4_0: Vertex 0, boundary, degree 5: 0 (0), 0 (1), 0 (2), 0 (3), 0 (4)> ]
+[ <regina.Face4_1: Edge 0, boundary, degree 4: 0 (01), 0 (12), 0 (23), 0 (34)>, <regina.Face4_1: Edge 1, boundary, degree 3: 0 (02), 0 (13), 0 (24)>, <regina.Face4_1: Edge 2, boundary, degree 2: 0 (03), 0 (14)>, <regina.Face4_1: Edge 3, boundary, degree 1: 0 (04)> ]
+[ <regina.Face4_2: Triangle 0, boundary, degree 3: 0 (234), 0 (123), 0 (012)>, <regina.Face4_2: Triangle 1, boundary, degree 2: 0 (023), 0 (134)>, <regina.Face4_2: Triangle 2, boundary, degree 2: 0 (124), 0 (013)>, ..., <regina.Face4_2: Triangle 5, boundary, degree 1: 0 (014)> ]
+[ <regina.Face4_3: Tetrahedron 0, internal: 0 (0123), 0 (1234)>, <regina.Face4_3: Tetrahedron 1, boundary: 0 (0142)>, <regina.Face4_3: Tetrahedron 2, boundary: 0 (0134)>, <regina.Face4_3: Tetrahedron 3, boundary: 0 (0243)> ]
 
 Boundary Component 0:
 <class 'regina.engine.BoundaryComponent4'>

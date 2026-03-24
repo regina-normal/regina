@@ -46,6 +46,8 @@
 #define __REGINA_COMPONENT3_H
 #endif
 
+#include <variant>
+
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
@@ -132,7 +134,8 @@ class Component<3> : public detail::ComponentBase<3> {
 
         /**
          * Returns an object that allows iteration through and random access
-         * to all <i>subdim</i>-faces in this component.
+         * to all <i>subdim</i>-faces in this component, in a way that is
+         * optimised for C++ programmers.
          *
          * The object that is returned is lightweight, and can be happily
          * copied by value.  The C++ type of the object is subject to change,
@@ -155,9 +158,7 @@ class Component<3> : public detail::ComponentBase<3> {
          * Therefore it is best to treat this object as temporary only,
          * and to call faces() again each time you need it.
          *
-         * \python Python does not support templates.  Instead,
-         * Python users should call this function in the form
-         * `faces(subdim)`.
+         * \nopython Instead use the variant `faces(subdim)`.
          *
          * \tparam subdim the face dimension.
          *
@@ -167,15 +168,41 @@ class Component<3> : public detail::ComponentBase<3> {
         auto faces() const;
 
         /**
-         * Returns the requested <i>subdim</i>-face in this component.
+         * Returns an object that allows iteration through and random access
+         * to all <i>subdim</i>-faces in this component, in a way that is
+         * optimised for Python programmers.
+         *
+         * C++ users should not use this routine.  The return type must be
+         * fixed at compile time, and so it is typically a `std::variant` that
+         * can hold any of the lightweight return types from the templated
+         * `faces<subdim>()` function.  This means that the return value will
+         * still need compile-time knowledge of \a subdim to extract and
+         * use the appropriate face objects.  However, once you know \a subdim
+         * at compile time, you are much better off using the (simpler and
+         * faster) routine `faces<subdim>()` instead.
+         *
+         * For Python users, this routine is much more useful: the return type
+         * can be chosen at runtime, and so this routine returns a single
+         * lightweight object granting access to all of the <i>subdim</i>-faces
+         * of the component, which you can use immediately.
+         *
+         * \exception InvalidArgument The face dimension \a subdim is outside
+         * the supported range (i.e., negative, or greater than 2).
+         *
+         * \param subdim the face dimension; this must be between 0 and 2
+         * inclusive.
+         * \return access to the list of all <i>subdim</i>-faces.
+         */
+        auto faces(int subdim) const;
+
+        /**
+         * Returns the requested <i>subdim</i>-face in this component, in a
+         * way that is optimised for C++ programmers.
          *
          * Note that the index of a face in the component need
          * not be the index of the same face in the overall triangulation.
          *
-         * \python Python does not support templates.  Instead,
-         * Python users should call this function in the form
-         * `face(subdim, index)`; that is, the template parameter
-         * \a subdim becomes the first argument of the function.
+         * \nopython Instead use the variant `face(subdim, index)`.
          *
          * \tparam subdim the face dimension.
          *
@@ -185,6 +212,41 @@ class Component<3> : public detail::ComponentBase<3> {
          */
         template <int subdim> requires (subdim >= 0 && subdim < 3)
         Face<3, subdim>* face(size_t index) const;
+
+        /**
+         * Returns the requested <i>subdim</i>-face in this component, in a
+         * way that is optimised for Python programmers.
+         *
+         * C++ users should not use this routine.  The return type must be
+         * fixed at compile time, and so it is typically a `std::variant` that
+         * could store a pointer to any class `Face<3, ...>`.  This means you
+         * cannot access the face directly: you will still need some kind of
+         * compile-time knowledge of \a subdim before you can extract and use
+         * an appropriate `Face<3, subdim>` object from \a v.  However, once
+         * you know \a subdim at compile time, you are better off using the
+         * (simpler and faster) routine `face<subdim>()` instead.
+         *
+         * For Python users, this routine is much more useful: the return type
+         * can be chosen at runtime, and so this routine simply returns a
+         * `Face<3, subdim>` object of the appropriate face dimension that
+         * you can use immediately.
+         *
+         * The specific return type for C++ programmers will be
+         * `std::variant<Face<3, 0>*, Face<3, 1>*, Face<3, 2>*>`.
+         *
+         * Note that the index of a face in the component need
+         * not be the index of the same face in the overall triangulation.
+         *
+         * \exception InvalidArgument The face dimension \a subdim is outside
+         * the supported range (i.e., negative, or greater than 2).
+         *
+         * \param subdim the face dimension; this must be between 0 and 2
+         * inclusive.
+         * \param index the index of the desired face, ranging from 0 to
+         * countFaces<subdim>()-1 inclusive.
+         * \return the requested face.
+         */
+        auto face(int subdim, size_t index) const;
 
         /**
          * A dimension-specific alias for hasBoundaryFacets().
@@ -269,6 +331,19 @@ inline size_t Component<3>::countFaces<0>() const {
 }
 #endif // ! __DOXYGEN
 
+inline auto Component<3>::faces(int subdim) const {
+    using Return = std::variant<
+        decltype(ListView(vertices_)),
+        decltype(ListView(edges_)),
+        decltype(ListView(triangles_))>;
+    switch (subdim) {
+        case 0: return Return(ListView(vertices_));
+        case 1: return Return(ListView(edges_));
+        case 2: return Return(ListView(triangles_));
+        default: throw InvalidArgument("faces(): unsupported face dimension");
+    }
+}
+
 // Hide specialisations from doxygen, since it cannot handle them.
 #ifndef __DOXYGEN
 template <>
@@ -285,7 +360,20 @@ template <>
 inline auto Component<3>::faces<0>() const {
     return ListView(vertices_);
 }
+#endif // ! __DOXYGEN
 
+inline auto Component<3>::face(int subdim, size_t index) const {
+    using Return = std::variant<Face<3, 0>*, Face<3, 1>*, Face<3, 2>*>;
+    switch (subdim) {
+        case 0: return Return(vertices_[index]);
+        case 1: return Return(edges_[index]);
+        case 2: return Return(triangles_[index]);
+        default: throw InvalidArgument("face(): unsupported face dimension");
+    }
+}
+
+// Hide specialisations from doxygen, since it cannot handle them.
+#ifndef __DOXYGEN
 template <>
 inline Triangle<3>* Component<3>::face<2>(size_t index) const {
     return triangles_[index];

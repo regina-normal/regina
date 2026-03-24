@@ -49,8 +49,8 @@ Version 8.0  [ TODO ]
               is now just Packet (without any const qualifiers), regardless of
               whether the ChildIterator argument const_ is true or false.
         Class Component<dim>:
-            - Added a variant of countFaces() that takes the face dimension as
-              a runtime argument (not a template parameter).
+            - Added variants of countFaces(), faces() and face() that take the
+              face dimension as a runtime argument (not a template parameter).
         Class Cut:
             - For the iterator-based constructor, the old recommendation that
               the iterator type be random access is now a hard requirement.
