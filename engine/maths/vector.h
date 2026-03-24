@@ -356,7 +356,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          *
          * \nocpp For C++ users, Vector provides the usual begin() and end()
          * functions instead.  In particular, you can iterate over the elements
-         * of this list in the usual way using a range-based \c for loop.
+         * of this list in the usual way using a range-based `for` loop.
          *
          * \return an iterator over the elements of this vector.
          */

@@ -544,11 +544,11 @@ class FaceBase :
          *
          * The object that is returned is lightweight, and can be happily
          * copied by value.  The C++ type of the object is subject to change,
-         * so C++ users should use \c auto (just like this declaration does).
+         * so C++ users should use `auto` (just like this declaration does).
          *
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
-         * range-based \c for loops.  The elements of the list will be
+         * range-based `for` loops.  The elements of the list will be
          * read-only objects of type FaceEmbedding<dim, subdim>.  For
          * example, your code might look like:
          *
@@ -601,7 +601,7 @@ class FaceBase :
          * The type that is returned will be a lightweight iterator type,
          * guaranteed to satisfy the C++ LegacyRandomAccessIterator requirement.
          * The precise C++ type of the iterator is subject to change, so
-         * C++ users should use \c auto (just like this declaration does).
+         * C++ users should use `auto` (just like this declaration does).
          *
          * Iterating from begin() to end() (that is, iterating directly over a
          * face) is equivalent to iterating over embeddings().  Iterating
@@ -645,7 +645,7 @@ class FaceBase :
          * The type that is returned will be a lightweight iterator type,
          * guaranteed to satisfy the C++ LegacyRandomAccessIterator requirement.
          * The precise C++ type of the iterator is subject to change, so
-         * C++ users should use \c auto (just like this declaration does).
+         * C++ users should use `auto` (just like this declaration does).
          *
          * \nopython For Python users, Face implements the Python iterable
          * interface.  You can iterate over this face in the same way that

@@ -514,7 +514,7 @@ class PermGroup : public Output<PermGroup<n, cached>> {
          *
          * \nocpp For C++ users, PermGroup provides the usual begin() and end()
          * functions instead.  In particular, you can iterate over the elements
-         * of this group in the usual way using a range-based \c for loop.
+         * of this group in the usual way using a range-based `for` loop.
          *
          * \return an iterator over the elements of this group.
          */

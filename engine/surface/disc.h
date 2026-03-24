@@ -1014,7 +1014,7 @@ class DiscSetSurfaceDataImpl {
          * normal discs in the underlying normal surface.
          *
          * These begin() and end() routines allow you to iterate through
-         * all normal discs using a range-based \c for loop:
+         * all normal discs using a range-based `for` loop:
          *
          * \code{.cpp}
          * for (const DiscSpec& s : surfaceData) { ... }
@@ -1036,7 +1036,7 @@ class DiscSetSurfaceDataImpl {
          * normal discs in the underlying normal surface.
          *
          * These begin() and end() routines allow you to iterate through
-         * all normal discs using a range-based \c for loop.
+         * all normal discs using a range-based `for` loop.
          * See the begin() documentation for further details.
          *
          * \nopython For Python users, this class implements the Python iterable
@@ -1069,7 +1069,7 @@ class DiscSetSurfaceDataImpl {
          * \nocpp For C++ users, this class provides the usual begin() and
          * end() functions instead.  In particular, you can iterate over
          * all normal discs in the underlying normal surface in the usual way
-         * using a range-based \c for loop.
+         * using a range-based `for` loop.
          *
          * \return an iterator over all normal discs.
          */
@@ -1125,7 +1125,7 @@ using DiscSetSurface = DiscSetSurfaceDataImpl<DiscSetTet>;
  *
  * This class is designed to work alongside DiscSetSurfaceDataImpl<TetData>.
  * Typically you would not need to specify the template argument \a TetData;
- * for copy initialisation you can use the \c auto type, and when constructing
+ * for copy initialisation you can use the `auto` type, and when constructing
  * from a DiscSetSurfaceData<T> the template argument can be automatically
  * deduced.
  *

@@ -252,11 +252,11 @@ class Tangle : public Output<Tangle> {
          *
          * The object that is returned is lightweight, and can be happily
          * copied by value.  The C++ type of the object is subject to change,
-         * so C++ users should use \c auto (just like this declaration does).
+         * so C++ users should use `auto` (just like this declaration does).
          *
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
-         * range-based \c for loops.  Note that the elements of the list
+         * range-based `for` loops.  Note that the elements of the list
          * will be pointers, so your code might look like:
          *
          * \code{.cpp}

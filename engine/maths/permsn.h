@@ -67,7 +67,7 @@ template <int n> requires (2 <= n && n <= maxPermDegree()) class Perm;
  *   also use the standard `len()` function in Python.
  *
  * - Iteration.  Here you would typically iterate over `Perm<n>::Sn` in a
- *   range-based \c for loop, or use begin/end pairs such as
+ *   range-based `for` loop, or use begin/end pairs such as
  *   `Perm<n>::Sn.begin()` and `Perm<n>::Sn.end()`.
  *
  * Regarding indices and iteration:
@@ -154,7 +154,7 @@ struct PermSn {
      *   access iterator (\a n ≤ 7) or a forward iterator (\a n ≥ 8).  Using
      *   `Perm<n>::Sn` as an example, you would typically access iterators
      *   either via `Perm<n>::Sn.begin()` and `Perm<n>::Sn.end()`, or by using
-     *   a range-based \c for loop over `Perm<n>::Sn`.
+     *   a range-based `for` loop over `Perm<n>::Sn`.
      *
      * - In Python, this class and PermSn together implement the expected
      *   interface for Python iterators.  Using `Perm4.Sn` as an example, you
@@ -503,7 +503,7 @@ struct PermSn {
      *
      * \nocpp For C++ users, PermSn provides the usual begin() and end()
      * functions instead.  In particular, you can iterate over all permutations
-     * in the usual way using a range-based \c for loop.
+     * in the usual way using a range-based `for` loop.
      *
      * \return an iterator over all permutations of \a n objects.
      */

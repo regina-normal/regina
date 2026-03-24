@@ -342,7 +342,7 @@ class AngleStructures :
          * structures.
          *
          * These begin() and end() functions allow you to iterate through all
-         * angle structures in this list using a range-based \c for loop:
+         * angle structures in this list using a range-based `for` loop:
          *
          * \code{.cpp}
          * AngleStructures list(...);
@@ -352,7 +352,7 @@ class AngleStructures :
          * The type that is returned will be a lightweight iterator type,
          * guaranteed to satisfy the C++ LegacyRandomAccessIterator requirement.
          * The precise C++ type of the iterator is subject to change, so
-         * C++ users should use \c auto (just like this declaration does).
+         * C++ users should use `auto` (just like this declaration does).
          *
          * \nopython For Python users, AngleStructures implements the Python
          * iterable interface.  You can iterate over the angle structures in
@@ -367,7 +367,7 @@ class AngleStructures :
          * structures.
          *
          * These begin() and end() functions allow you to iterate through all
-         * angle structures in this list using a range-based \c for loop.
+         * angle structures in this list using a range-based `for` loop.
          * See the begin() documentation for further details.
          *
          * \nopython For Python users, AngleStructures implements the Python
@@ -394,7 +394,7 @@ class AngleStructures :
          * \nocpp For C++ users, AngleStructures provides the usual begin()
          * and end() functions instead.  In particular, you can iterate over
          * the angle structures in this list in the usual way using a
-         * range-based \c for loop.
+         * range-based `for` loop.
          *
          * \return an iterator over the angle structures in this list.
          */

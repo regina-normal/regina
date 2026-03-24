@@ -87,7 +87,7 @@ namespace regina {
  * in converting back and forth between the second-generation codes
  * (which are used internally by Perm<4>).
  *
- * You can iterate through all permutations using a range-based \c for loop
+ * You can iterate through all permutations using a range-based `for` loop
  * over \a Sn, and this will be extremely fast in both C++ and Python:
  *
  * \code{.cpp}
@@ -95,7 +95,7 @@ namespace regina {
  * \endcode
  *
  * This behaviour does not generalise to the large permutation classes Perm<n>
- * with \a n ≥ 8, which are not as tightly optimised: such range-based \c for
+ * with \a n ≥ 8, which are not as tightly optimised: such range-based `for`
  * loops are still supported for \a n ≥ 8 but will be significantly slower in
  * Python than in C++.  See the generic Perm class notes for further details.
  *
@@ -201,7 +201,7 @@ class Perm<4> {
          * between 0 and 23 inclusive.
          *
          * You can also iterate over all permutations in \a Sn using a
-         * range-based \c for loop:
+         * range-based `for` loop:
          *
          * \code{.cpp}
          * for (auto p : Perm<4>::Sn) { ... }
@@ -255,7 +255,7 @@ class Perm<4> {
          * must be between 0 and 23 inclusive.
          *
          * You can also iterate over all permutations in \a orderedSn using a
-         * range-based \c for loop:
+         * range-based `for` loop:
          *
          * \code{.cpp}
          * for (auto p : Perm<4>::orderedSn) { ... }

@@ -512,7 +512,7 @@ class TableView {
          * \nocpp For C++ users, TableView provides the usual begin() and end()
          * functions instead.  In particular, you can iterate over the
          * subarrays or elements of this table in the usual way using a
-         * range-based \c for loop.
+         * range-based `for` loop.
          *
          * \return an iterator over the subarrays or elements of this table.
          */

@@ -1072,7 +1072,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * returned by begin() will always point to this packet itself.
          *
          * In C++, these begin() and end() routines allow you to iterate through
-         * an entire packet subtree using range-based \c for loops:
+         * an entire packet subtree using range-based `for` loops:
          *
          * \code{.cpp}
          * std::shared_ptr<Packet> subtree = ...;
@@ -1081,7 +1081,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * Since Regina 7.0, the return type is templated in order to support
          * both const and non-const iteration.  It is recommended that you
-         * just use \c auto if you need to store a local copy of the returned
+         * just use `auto` if you need to store a local copy of the returned
          * iterator.
          *
          * See also descendants() for iterating through just the strict
@@ -1103,7 +1103,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * packets in the subtree rooted at this packet.
          *
          * In C++, these begin() and end() routines allow you to iterate through
-         * an entire packet subtree using range-based \c for loops.
+         * an entire packet subtree using range-based `for` loops.
          *
          * See the begin() documentation for further details.
          *
@@ -1125,7 +1125,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * returned by begin() will always point to this packet itself.
          *
          * In C++, these begin() and end() routines allow you to iterate through
-         * an entire packet subtree using range-based \c for loops:
+         * an entire packet subtree using range-based `for` loops:
          *
          * \code{.cpp}
          * std::shared_ptr<const Packet> subtree = ...;
@@ -1134,7 +1134,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * Since Regina 7.0, the return type is templated in order to support
          * both const and non-const iteration.  It is recommended that you
-         * just use \c auto if you need to store a local copy of the returned
+         * just use `auto` if you need to store a local copy of the returned
          * iterator.
          *
          * See also descendants() for iterating through just the strict
@@ -1156,7 +1156,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * in the subtree rooted at this packet.
          *
          * In C++, these begin() and end() routines allow you to iterate through
-         * an entire packet subtree using range-based \c for loops.
+         * an entire packet subtree using range-based `for` loops.
          *
          * See the begin() documentation for further details.
          *
@@ -1200,7 +1200,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \nocpp For C++ users, Packet provides the usual begin() and end()
          * functions instead.  In particular, you can iterate over a packet
-         * subtree in the usual C++ way using a range-based \c for loop.
+         * subtree in the usual C++ way using a range-based `for` loop.
          *
          * \return an iterator over the subtree rooted at this packet.
          */
@@ -1219,7 +1219,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * before its own descendants.
          *
          * This routine allows you to iterate through all strict descendants
-         * of a given packet using range-based \c for loops:
+         * of a given packet using range-based `for` loops:
          *
          * \code{.cpp}
          * std::shared_ptr<Packet> parent = ...;
@@ -1241,7 +1241,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * Since Regina 7.0, the return type is templated in order to support
          * both const and non-const iteration.  It is recommended that you
-         * just use \c auto if you need to store a local copy of the returned
+         * just use `auto` if you need to store a local copy of the returned
          * object.
          *
          * See also begin() and end() for iterating through the entire
@@ -1265,7 +1265,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * before its own descendants.
          *
          * This routine allows you to iterate through all strict descendants
-         * of a given packet using range-based \c for loops:
+         * of a given packet using range-based `for` loops:
          *
          * \code{.cpp}
          * std::shared_ptr<const Packet> parent = ...;
@@ -1279,7 +1279,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * Since Regina 7.0, the return type is templated in order to support
          * both const and non-const iteration.  It is recommended that you
-         * just use \c auto if you need to store a local copy of the returned
+         * just use `auto` if you need to store a local copy of the returned
          * object.
          *
          * See also begin() and end() for iterating through the entire
@@ -1296,7 +1296,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * immediate children of this packet.
          *
          * This routine allows you to iterate through the immediate children
-         * of a given packet using range-based \c for loops:
+         * of a given packet using range-based `for` loops:
          *
          * \code{.cpp}
          * std::shared_ptr<Packet> parent = ...;
@@ -1318,7 +1318,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * Since Regina 7.0, the return type is templated in order to support
          * both const and non-const iteration.  It is recommended that you
-         * just use \c auto if you need to store a local copy of the returned
+         * just use `auto` if you need to store a local copy of the returned
          * object.
          *
          * See begin() and end(), as well as descendants(), for iterating
@@ -1334,7 +1334,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * immediate children of this packet.
          *
          * This routine allows you to iterate through the immediate children
-         * of a given packet using range-based \c for loops:
+         * of a given packet using range-based `for` loops:
          *
          * \code{.cpp}
          * std::shared_ptr<const Packet> parent = ...;
@@ -1348,7 +1348,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * Since Regina 7.0, the return type is templated in order to support
          * both const and non-const iteration.  It is recommended that you
-         * just use \c auto if you need to store a local copy of the returned
+         * just use `auto` if you need to store a local copy of the returned
          * object.
          *
          * See begin() and end(), as well as descendants(), for iterating
@@ -3083,7 +3083,7 @@ class SubtreeIterator {
          * subtree, or (ii) the PacketDescendant object returned by
          * Packet::descendants().  In particular, this allows you to iterate
          * through a packet subtree (including or excluding the subtree root
-         * respectively) using a range-based \c for loop.
+         * respectively) using a range-based `for` loop.
          *
          * \return an iterator over all members of the relevant packet subtree.
          */
@@ -3183,7 +3183,7 @@ class SubtreeIterator {
  * given packet.
  *
  * The purpose of this class is to support iteration through all children of a
- * packet \a p using range-based \c for loops:
+ * packet \a p using range-based `for` loops:
  *
  * \code{.cpp}
  * std::shared_ptr<Packet> parent = ...;
@@ -3298,7 +3298,7 @@ class PacketChildren {
          * \nocpp For C++ users, PacketChildren provides the usual
          * begin() and end() functions instead.  In particular, this
          * allows you to iterate through all immediate child packets
-         * in the usual way using a range-based \c for loop.
+         * in the usual way using a range-based `for` loop.
          *
          * \return an iterator over all immediate child packets.
          */
@@ -3320,7 +3320,7 @@ class PacketChildren {
  * given packet.
  *
  * The purpose of this class is to support iteration through all strict
- * descendants of a packet \a p using range-based \c for loops:
+ * descendants of a packet \a p using range-based `for` loops:
  *
  * \code{.cpp}
  * std::shared_ptr<Packet> parent = ...;
@@ -3432,7 +3432,7 @@ class PacketDescendants {
          * \nocpp For C++ users, PacketDescendants provides the usual
          * begin() and end() functions instead.  In particular, this
          * allows you to iterate through all strict descendant packets
-         * in the usual way using a range-based \c for loop.
+         * in the usual way using a range-based `for` loop.
          *
          * \return an iterator over all strict descendant packets.
          */

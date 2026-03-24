@@ -416,7 +416,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * hypersurfaces.
          *
          * These begin() and end() functions allow you to iterate through all
-         * hypersurfaces in this list using a range-based \c for loop:
+         * hypersurfaces in this list using a range-based `for` loop:
          *
          * \code{.cpp}
          * NormalHypersurfaces list(...);
@@ -426,7 +426,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * The type that is returned will be a lightweight iterator type,
          * guaranteed to satisfy the C++ LegacyRandomAccessIterator requirement.
          * The precise C++ type of the iterator is subject to change, so
-         * C++ users should use \c auto (just like this declaration does).
+         * C++ users should use `auto` (just like this declaration does).
          *
          * \nopython For Python users, NormalHypersurfaces implements the Python
          * iterable interface.  You can iterate over the normal hypersurfaces in
@@ -440,7 +440,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * Returns a C++ iterator beyond the end of this list of hypersurfaces.
          *
          * These begin() and end() routines allow you to iterate through all
-         * hypersurfaces in this list using a range-based \c for loop.
+         * hypersurfaces in this list using a range-based `for` loop.
          * See the begin() documentation for further details.
          *
          * \nopython For Python users, NormalHypersurfaces implements the Python
@@ -467,7 +467,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * \nocpp For C++ users, NormalHypersurfaces provides the usual begin()
          * and end() functions instead.  In particular, you can iterate over
          * the normal hypersurfaces in this list in the usual way using a
-         * range-based \c for loop.
+         * range-based `for` loop.
          *
          * \return an iterator over the normal hypersurfaces in this list.
          */

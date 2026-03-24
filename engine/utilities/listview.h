@@ -83,7 +83,7 @@ namespace regina {
  *   Once again, there is no need to explicitly specify the ListView template
  *   arguments.
  *
- * End users should always store ListView objects using \c auto, not by
+ * End users should always store ListView objects using `auto`, not by
  * explicitly writing out the full ListView type.  One reason for this
  * is that, now that Regina has moved to C++20, the ListView class will most
  * likely be removed completely (in favour of the new C++20 ranges library).
@@ -256,7 +256,7 @@ class ListView {
          *
          * \nocpp For C++ users, ListView provides the usual begin() and end()
          * functions instead.  In particular, you can iterate over the elements
-         * of this list in the usual way using a range-based \c for loop.
+         * of this list in the usual way using a range-based `for` loop.
          *
          * \return an iterator over the elements of this list.
          */
@@ -455,7 +455,7 @@ class ListView<Element*> {
          *
          * \nocpp For C++ users, ListView provides the usual begin() and end()
          * functions instead.  In particular, you can iterate over the elements
-         * of this list in the usual way using a range-based \c for loop.
+         * of this list in the usual way using a range-based `for` loop.
          *
          * \return an iterator over the elements of this list.
          */
@@ -637,7 +637,7 @@ class ListView<Element[n]> {
          *
          * \nocpp For C++ users, ListView provides the usual begin() and end()
          * functions instead.  In particular, you can iterate over the elements
-         * of this list in the usual way using a range-based \c for loop.
+         * of this list in the usual way using a range-based `for` loop.
          *
          * \return an iterator over the elements of this list.
          */

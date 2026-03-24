@@ -467,7 +467,7 @@ class Perm {
          * between 0 and `n!-1` inclusive.
          *
          * You can also iterate over all permutations in \a Sn using a
-         * range-based \c for loop:
+         * range-based `for` loop:
          *
          * \code{.cpp}
          * for (auto p : Perm<n>::Sn) { ... }
@@ -500,7 +500,7 @@ class Perm {
          * between 0 and `n!-1` inclusive.
          *
          * You can also iterate over all permutations in \a orderedSn using a
-         * range-based \c for loop:
+         * range-based `for` loop:
          *
          * \code{.cpp}
          * for (auto p : Perm<n>::orderedSn) { ... }

@@ -77,7 +77,7 @@ namespace regina {
  *
  * Each such appearance is described by a single FaceEmbedding object.  You can
  * iterate through these appearances using begin() and end(), or using a
- * range-based \c for loop:
+ * range-based `for` loop:
  *
  * \code{.cpp}
  * for (auto& emb : face) { ... }
