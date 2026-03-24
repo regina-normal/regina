@@ -257,6 +257,10 @@ __END__
         my $link_flags = '@PERL_RECONFIG_LINK_FLAGS@';
         $include_flags =~ s/\$/\$\$/g;
         $link_flags =~ s/\$/\$\$/g;
+        if ($os eq 'Darwin') {
+            # Ensure that install_name_tool won't run into trouble.
+            $link_flags .= ' -Wl,-headerpad_max_install_names';
+        }
 
         my $make_prog_dir = sanitise_for_makefile_recipe($prog_dir);
         my $make_src_dir;
