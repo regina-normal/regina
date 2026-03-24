@@ -693,7 +693,7 @@ class Link :
                  crossings, then it is represented in this array by a
                  null reference. */
 
-        mutable ssize_t virtualGenus_;
+        mutable ssize_t virtualGenus_ { -1 };
             /**< The virtual genus of the link diagram, or -1 if this has not
                  yet been computed. */
         mutable std::optional<Polynomial<Integer>> alexander_;
@@ -3790,6 +3790,35 @@ class Link :
          * \return \a k parallel copies of this link.
          */
         Link parallel(int k, Framing framing = Framing::Seifert) const;
+
+        /**
+         * Returns the parity projection of this knot.
+         *
+         * This is an operation on virtual knots, which removes all odd
+         * crossings.  A crossing \a c is _odd_ if, when traversing the knot,
+         * we pass through an odd number of crossings between the over-strand
+         * and the under-strand of \a c.  By _removing_ a crossing \a c, we
+         * mean the same operation as calling `makeVirtual(c)`: the incoming
+         * and outgoing upper strands of \a c are merged into one, and the
+         * incoming and outgoing lower strands of \a c are merged into one.
+         *
+         * This routine cannot work with multiple-component links.  If this
+         * link has more than one component, then this routine will throw an
+         * exception.
+         *
+         * For a classical knot, this operation simply returns an identical
+         * diagram.
+         *
+         * This link will not be modified.
+         *
+         * \pre This link has at most one component (i.e., it is either a knot
+         * or the empty link).
+         *
+         * \exception FailedPrecondition This link has multiple components.
+         *
+         * \return the parity projection of this knot.
+         */
+        Link parityProjection() const;
 
         /**
          * Returns the Alexander polynomial of this classical knot.
@@ -7524,10 +7553,10 @@ inline Crossing::Crossing(int sign) : sign_(sign) {
 
 // Inline functions for Link
 
-inline Link::Link() : virtualGenus_(-1) {
+inline Link::Link() {
 }
 
-inline Link::Link(size_t unknots) : virtualGenus_(-1) {
+inline Link::Link(size_t unknots) {
     components_.resize(unknots);
     std::fill(components_.begin(), components_.end(), StrandRef());
 }

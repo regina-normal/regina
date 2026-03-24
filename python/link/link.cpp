@@ -275,6 +275,8 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
         .def("parallel", &Link::parallel,
             pybind11::arg(), pybind11::arg("framing") = Framing::Seifert,
             rdoc::parallel)
+        .def("parityProjection", &Link::parityProjection,
+            rdoc::parityProjection)
         .def("isConnected", &Link::isConnected, rdoc::isConnected)
         .def("connected", &Link::connected, rdoc::connected)
         .def("diagramComponents", &Link::diagramComponents,

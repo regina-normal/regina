@@ -37,7 +37,7 @@
 
 namespace regina {
 
-Link::Link(const Link& cloneMe, bool cloneProps) : virtualGenus_(-1) {
+Link::Link(const Link& cloneMe, bool cloneProps) {
     crossings_.reserve(cloneMe.crossings_.size());
     for (Crossing* c : cloneMe.crossings_)
         crossings_.push_back(new Crossing(c->sign()));
@@ -1360,6 +1360,71 @@ Link Link::parallel(int k, Framing framing) const {
                 ans.crossings_[startL + i * startDelta]->
                     strand(startStrand));
     }
+
+    return ans;
+}
+
+Link Link::parityProjection() const {
+    if (components_.size() > 1)
+        throw FailedPrecondition("parityProjection() requires at most one "
+            "link component");
+    if (crossings_.empty()) {
+        // Either we have a 0-crossing unknot or the empty link.
+        // In both cases this is a no-op: return a copy of this link.
+        return { *this };
+    }
+
+    // Identify which crossings are even, and for those that are, create a new
+    // crossing for the new link.
+    FixedArray<ssize_t> firstSeen(crossings_.size(), -1);
+    FixedArray<Crossing*> copy(crossings_.size(), nullptr);
+    size_t nEven = 0;
+
+    StrandRef start = components_.front();
+    StrandRef s = start;
+    ssize_t pos = 0;
+    do {
+        size_t idx = s.crossing()->index();
+        if (firstSeen[idx] < 0)
+            firstSeen[idx] = pos;
+        else if ((pos ^ firstSeen[idx]) & 1) {
+            copy[idx] = new Crossing(s.crossing()->sign());
+            ++nEven;
+        }
+
+        ++pos;
+        ++s;
+    } while (s != start);
+
+    if (nEven == 0)
+        return { 1 }; // no crossings survive -> 0-crossing unknot
+
+    // Build the new link.
+    // We know that at least one crossing survives.
+    Link ans;
+    for (auto c : copy)
+        if (c)
+            ans.crossings_.push_back(c);
+
+    start = components_.front();
+    s = start;
+    StrandRef prev;
+    do {
+        if (Crossing* cAlt = copy[s.crossing()->index()]) {
+            // This crossing survives!
+            StrandRef sAlt(cAlt, s.strand());
+            if (! prev) {
+                prev = sAlt;
+                ans.components_.push_back(sAlt);
+            } else {
+                join(prev, sAlt);
+                prev = sAlt;
+            }
+        }
+
+        ++s;
+    } while (s != start);
+    join(prev, ans.components_.front());
 
     return ans;
 }

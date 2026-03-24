@@ -145,6 +145,7 @@ Version 8.0  [ TODO ]
               the Turaev-Viro algorithm; it has been replaced by a lambda
               directly in the Turaev-Viro code instead.
         Class Link:
+            - New routine parityProjection().
             - All knows...() routines now take an optional boolean argument,
               indicating whether to consider trivial computations (the default),
               or to only check whether the value is already cached.

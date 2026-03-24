@@ -54,11 +54,6 @@ Currently this class does not support circular graph components
 (which, in a link diagram, would correspond to zero-crossing unknot
 components of the link).
 
-For Boost users: if you wish to study the underlying graph of an
-existing link, you do not need to create a ModelLinkGraph - instead
-you can include link/graph.h and then use Link directly as a directed
-graph type with the Boost Graph Library.
-
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";

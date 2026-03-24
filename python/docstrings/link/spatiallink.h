@@ -101,34 +101,36 @@ Returns:
 
 // Docstring regina::python::doc::SpatialLink_::__init
 static const char *__init =
-R"doc(Creates a new link whose components are supplied by the given
-sequences of points in 3-space.
+R"doc(Creates a new link whose components are given by sequences of points
+in 3-space.
 
-Each element of the given sequence should represent a separate link
-component. Each component should be given as a sequence of at least
-three nodes (i.e., points in 3-space). These are the points that will
-be stored directly in the Component structure, which means that to
-form the actual geometry of the link component:
+The input is presented as a sequence of sequences:
+
+* Each element of the "outer" sequence (defined by the *begin* and
+  *end* iterator arguments to this routine) should be an "inner"
+  sequence representing a single link component.
+
+* Each "inner" sequence (i.e., each individual link component) should
+  be a sequence of nodes (i.e., points in 3-space). These are the
+  points that will be stored directly in the Component structure,
+  which means that to form the actual geometry of the link component:
 
 * each node in the sequence is joined by a straight line segment to
-  the node that follows it (and likewise, the last node is joined to
-  the first);
+  the node that follows it, and likewise, the last node is joined to
+  the first;
 
 * the orientation of the link component follows the path in order from
   the first node to the last (and then cycling back to the front of
   the sequence again).
 
-Regarding types:
+* In particular, each "inner" sequence must contain at least three
+  nodes (the minimum required for an embedded piecewise-linear cycle
+  in 3-space).
 
-* The outermost sequence (representing components) is presented as a
-  pair of *begin* and *end* iterators, which are passed as arguments
-  to this routine.
-
-* Each such iterator, when dereferenced, should give a container of
-  nodes. These containers should have their own ``begin()`` and
-  ``end()`` functions for iteration, and _their_ elements (i.e., the
-  individual nodes) should be convertible to the type
-  ``Vector3D<double>``.
+This routine does not insist on any specific types for the sequences,
+as long as the outer and inner sequences all support iteration, and
+the elements of the inner sequences can be converted to the node type
+``Vector3D<double>``.
 
 For example, your code might look like:
 
@@ -145,11 +147,11 @@ Python:
     (ii) a Python list of lists of Vector3D objects.
 
 Parameter ``begin``:
-    the beginning of the sequence of link components.
+    the beginning of the outer sequence of link components.
 
 Parameter ``end``:
-    a past-the-end iterator indicating the end of the sequence of
-    components.)doc";
+    a past-the-end iterator indicating the end of the outer sequence
+    of components.)doc";
 
 // Docstring regina::python::doc::SpatialLink_::clearRadius
 static const char *clearRadius =
