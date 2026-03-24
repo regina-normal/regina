@@ -89,6 +89,7 @@ def test(t):
         if not standardDim(dim):
             subdimRange = [dim - 1] # for face() / faces()
         for d in subdimRange:
+            print(b.faces(d))
             i = 0
             for f in b.faces(d):
                 if i > b.countFaces(d):

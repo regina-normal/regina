@@ -63,19 +63,14 @@ void addBoundaryComponent(pybind11::module_& m, pybind11::module_& internal,
                 &BoundaryComponent<dim>::countFaces),
             rbase::countFaces)
         .def("facets", &BoundaryComponent<dim>::facets, rbase::facets)
-        .def("faces", [](const BoundaryComponent<dim>& b, int subdim) {
-            if (subdim != dim - 1)
-                regina::python::invalidFaceDimension("faces", dim - 1, dim - 1);
-            return b.template faces<dim - 1>();
-        }, pybind11::arg("subdim"), rbase::faces)
+        .def("faces", (regina::python::facesFunc<BoundaryComponent<dim>>)(
+                &BoundaryComponent<dim>::faces),
+            pybind11::arg("subdim"), rbase::faces)
         .def("facet", &BoundaryComponent<dim>::facet,
             pybind11::return_value_policy::reference, rbase::facet)
-        .def("face", [](const BoundaryComponent<dim>& b, int subdim,
-                size_t index) {
-            if (subdim != dim - 1)
-                regina::python::invalidFaceDimension("face", dim - 1, dim - 1);
-            return b.template face<dim - 1>(index);
-        }, pybind11::return_value_policy::reference,
+        .def("face", (regina::python::faceFunc<BoundaryComponent<dim>>)(
+                &BoundaryComponent<dim>::face),
+            pybind11::return_value_policy::reference,
             pybind11::arg("subdim"), pybind11::arg("index"), rbase::face)
         .def("component", &BoundaryComponent<dim>::component,
             pybind11::return_value_policy::reference, rbase::component)

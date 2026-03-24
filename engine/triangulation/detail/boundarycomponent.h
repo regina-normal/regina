@@ -376,7 +376,8 @@ class BoundaryComponentBase :
 
         /**
          * Returns an object that allows iteration through and random access
-         * to all <i>subdim</i>-faces in this boundary component.
+         * to all <i>subdim</i>-faces in this boundary component, in a way
+         * that is optimised for C++ programmers.
          *
          * The object that is returned is lightweight, and can be happily
          * copied by value.  The C++ type of the object is subject to change,
@@ -399,9 +400,7 @@ class BoundaryComponentBase :
          * Therefore it is best to treat this object as temporary only,
          * and to call faces() again each time you need it.
          *
-         * \python Python does not support templates.  Instead,
-         * Python users should call this function in the form
-         * `faces(subdim)`.
+         * \nopython Instead use the variant `faces(subdim)`.
          *
          * \tparam subdim the dimension of the faces to query.  If \a dim is
          * one of Regina's \ref stddim "standard dimensions", then \a subdim
@@ -415,6 +414,51 @@ class BoundaryComponentBase :
             (standardDim(dim) && subdim >= 0 && subdim < dim))
         auto faces() const {
             return ListView(std::get<tupleIndex(subdim)>(faces_));
+        }
+
+        /**
+         * Returns an object that allows iteration through and random access
+         * to all <i>subdim</i>-faces in this boundary component, in a way
+         * that is optimised for Python programmers.
+         *
+         * C++ users should not use this routine.  The return type must be
+         * fixed at compile time, and so it is typically a `std::variant` that
+         * can hold any of the lightweight return types from the templated
+         * `faces<subdim>()` function.  This means that the return value will
+         * still need compile-time knowledge of \a subdim to extract and
+         * use the appropriate face objects.  However, once you know \a subdim
+         * at compile time, you are much better off using the (simpler and
+         * faster) routine `faces<subdim>()` instead.
+         *
+         * For Python users, this routine is much more useful: the return type
+         * can be chosen at runtime, and so this routine returns a Python list
+         * of `Face<dim, subdim>` objects (holding all the <i>subdim</i>-faces
+         * of the triangulation), which you can use immediately.
+         *
+         * \exception InvalidArgument The face dimension \a subdim is outside
+         * the supported range, as described below.
+         *
+         * \param subdim the dimension of the faces to query.  If \a dim is
+         * one of Regina's \ref stddim "standard dimensions", then \a subdim
+         * must be between 0 and `dim-1` inclusive.  Otherwise, the only
+         * allowable value of \a subdim is the facet dimension (`dim-1`).
+         * \return access to the list of all <i>subdim</i>-faces.
+         */
+        auto faces(int subdim) const {
+            if constexpr (allFaces) {
+                if (subdim < 0 || subdim >= dim)
+                    throw InvalidArgument(
+                        "faces(): unsupported face dimension");
+                return select_constexpr_as_variant<0, dim>(subdim,
+                        [this](auto k) {
+                    return ListView(std::get<tupleIndex(k)>(faces_));
+                });
+            } else {
+                if (subdim != dim - 1)
+                    throw InvalidArgument(
+                        "faces(): unsupported face dimension");
+                return ListView(std::get<tupleIndex(dim-1)>(faces_));
+            }
         }
 
         /**
@@ -488,7 +532,8 @@ class BoundaryComponentBase :
         }
 
         /**
-         * Returns the requested <i>subdim</i>-face in this boundary component.
+         * Returns the requested <i>subdim</i>-face in this boundary component,
+         * in a way that is optimised for C++ programmers.
          *
          * Note that the index of a face in the boundary component need
          * not be the index of the same face in the overall triangulation.
@@ -498,10 +543,7 @@ class BoundaryComponentBase :
          * index of the corresponding <i>subdim</i>-face in the
          * (<i>dim</i>-1)-manifold triangulation returned by build().
          *
-         * \python Python does not support templates.  Instead,
-         * Python users should call this function in the form
-         * `face(subdim, index)`; that is, the template parameter
-         * \a subdim becomes the first argument of the function.
+         * \nopython Instead use the variant `face(subdim, index)`.
          *
          * \tparam subdim the dimension of the faces to query.  If \a dim is
          * one of Regina's \ref stddim "standard dimensions", then \a subdim
@@ -517,6 +559,63 @@ class BoundaryComponentBase :
             (standardDim(dim) && subdim >= 0 && subdim < dim))
         Face<dim, subdim>* face(size_t index) const {
             return std::get<tupleIndex(subdim)>(faces_)[index];
+        }
+
+        /**
+         * Returns the requested <i>subdim</i>-face in this boundary component,
+         * in a way that is optimised for Python programmers.
+         *
+         * C++ users should not use this routine.  The return type must be
+         * fixed at compile time, and so it is typically a `std::variant` that
+         * could store a pointer to any class `Face<dim, ...>`.  This means you
+         * cannot access the face directly: you will still need some kind of
+         * compile-time knowledge of \a subdim before you can extract and use
+         * an appropriate `Face<dim, subdim>` object from \a v.  However, once
+         * you know \a subdim at compile time, you are better off using the
+         * (simpler and faster) routine `face<subdim>()` instead.
+         *
+         * For Python users, this routine is much more useful: the return type
+         * can be chosen at runtime, and so this routine simply returns a
+         * `Face<dim, subdim>` object of the appropriate face dimension that
+         * you can use immediately.
+         *
+         * The specific return type for C++ programmers will be
+         * `std::variant<Face<dim, 0>*, ..., Face<dim, dim-1>*>` if \a dim is
+         * one of Regina's \ref stddim "standard dimensions", or just
+         * `Face<dim, dim-1>*` if not.
+         *
+         * Note that the index of a face in the boundary component need
+         * not be the index of the same face in the overall triangulation.
+         * However, if this is a real boundary component (i.e., it is built
+         * from one or more (<i>dim</i>-1)-faces), then the index of each
+         * <i>subdim</i>-face in this boundary component will match the
+         * index of the corresponding <i>subdim</i>-face in the
+         * (<i>dim</i>-1)-manifold triangulation returned by build().
+         *
+         * \exception InvalidArgument The face dimension \a subdim is outside
+         * the supported range, as described below.
+         *
+         * \param subdim the dimension of the faces to query.  If \a dim is
+         * one of Regina's \ref stddim "standard dimensions", then \a subdim
+         * must be between 0 and `dim-1` inclusive.  Otherwise, the only
+         * allowable value of \a subdim is the facet dimension (`dim-1`).
+         * \param index the index of the desired face, ranging from 0 to
+         * `countFaces(subdim)-1` inclusive.
+         * \return the requested face.
+         */
+        auto face(int subdim, size_t index) const {
+            if constexpr (allFaces) {
+                if (subdim < 0 || subdim >= dim)
+                    throw InvalidArgument("face(): unsupported face dimension");
+                return select_constexpr_as_variant<0, dim>(subdim,
+                        [this, index](auto k) {
+                    return std::get<tupleIndex(k)>(faces_)[index];
+                });
+            } else {
+                if (subdim != dim - 1)
+                    throw InvalidArgument("face(): unsupported face dimension");
+                return std::get<tupleIndex(dim-1)>(faces_)[index];
+            }
         }
 
         /**

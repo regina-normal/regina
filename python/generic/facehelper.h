@@ -54,7 +54,8 @@ using countFacesFunc = size_t (T::*)(int) const;
  * wrapped in Python) from the templated `face<subdim>(index)` (which is not).
  */
 template <typename T>
-using faceFunc = decltype(T().face(0, 0)) (T::*)(int, size_t) const;
+using faceFunc = decltype(std::declval<T>().face(0, 0)) (T::*)(int, size_t)
+    const;
 
 /**
  * The type of the function pointer `T::faces(subdim)`.
@@ -63,7 +64,7 @@ using faceFunc = decltype(T().face(0, 0)) (T::*)(int, size_t) const;
  * wrapped in Python) from the templated `faces<subdim>()` (which is not).
  */
 template <typename T>
-using facesFunc = decltype(T().faces(0)) (T::*)(int) const;
+using facesFunc = decltype(std::declval<T>().faces(0)) (T::*)(int) const;
 
 /**
  * Implementation details for Python bindings of template member functions.

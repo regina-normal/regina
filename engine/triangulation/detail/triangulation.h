@@ -777,11 +777,11 @@ class TriangulationBase :
          *
          * The object that is returned is lightweight, and can be happily
          * copied by value.  The C++ type of the object is subject to change,
-         * so C++ users should use \c auto (just like this declaration does).
+         * so C++ users should use `auto` (just like this declaration does).
          *
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
-         * range-based \c for loops.  Note that the elements of the list
+         * range-based `for` loops.  Note that the elements of the list
          * will be pointers, so your code might look like:
          *
          * \code{.cpp}
@@ -919,21 +919,21 @@ class TriangulationBase :
          * in a way that is optimised for Python programmers.
          *
          * For C++ users, this routine is not very useful: since precise types
-         * must be know at compile time, this routine returns a std::variant
-         * \a v that could store a pointer to any class Face<dim, ...>.
+         * must be know at compile time, this routine returns a `std::variant`
+         * \a v that could store a pointer to any class `Face<dim, ...>`.
          * This means you cannot access the face directly: you will still need
          * some kind of compile-time knowledge of \a subdim before you can
-         * extract and use an appropriate Face<dim, subdim> object from \a v.
+         * extract and use an appropriate `Face<dim, subdim>` object from \a v.
          * However, once you know \a subdim at compile time, you are better off
-         * using the (simpler and faster) routine face<subdim>() instead.
+         * using the (simpler and faster) routine `face<subdim>()` instead.
          *
          * For Python users, this routine is much more useful: the return type
          * can be chosen at runtime, and so this routine simply returns a
-         * Face<dim, subdim> object of the appropriate face dimension that
+         * `Face<dim, subdim>` object of the appropriate face dimension that
          * you can use immediately.
          *
          * The specific return type for C++ programmers will be
-         * std::variant<Face<dim, 0>*, ..., Face<dim, dim-1>*>.
+         * `std::variant<Face<dim, 0>*, ..., Face<dim, dim-1>*>`.
          *
          * \exception InvalidArgument The face dimension \a subdim is outside
          * the supported range (i.e., negative, or greater than or equal to
@@ -942,7 +942,7 @@ class TriangulationBase :
          * \param subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.
          * \param index the index of the desired face, ranging from 0 to
-         * countFaces<subdim>()-1 inclusive.
+         * `countFaces<subdim>()-1` inclusive.
          * \return the requested face.
          */
         auto face(int subdim, size_t index) const;

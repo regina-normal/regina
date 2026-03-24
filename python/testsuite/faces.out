@@ -74,6 +74,8 @@ Component 0:
 Boundary Component 0:
 <class 'regina.engine.BoundaryComponent2'>
 [1, 1]
+[ <regina.Face2_0: Vertex 0, boundary, degree 3: 0 (2), 0 (1), 0 (0)> ]
+[ <regina.Face2_1: Edge 1, boundary: 0 (20)> ]
 
 <class 'regina.engine.PacketOfTriangulation2'>
 Dimension: 2
@@ -87,6 +89,8 @@ Component 0:
 Boundary Component 0:
 <class 'regina.engine.BoundaryComponent2'>
 [1, 1]
+[ <regina.Face2_0: Vertex 0, boundary, degree 3: 0 (2), 0 (1), 0 (0)> ]
+[ <regina.Face2_1: Edge 1, boundary: 0 (20)> ]
 
 <class 'regina.engine.Triangulation3'>
 Dimension: 3
@@ -100,6 +104,9 @@ Component 0:
 Boundary Component 0:
 <class 'regina.engine.BoundaryComponent3'>
 [2, 6, 4]
+[ <regina.Face3_0: Vertex 0, boundary, degree 5: 0 (0), 1 (1), 0 (2), 1 (2), 0 (3)>, <regina.Face3_0: Vertex 1, boundary, degree 3: 0 (1), 1 (0), 1 (3)> ]
+[ <regina.Face3_1: Edge 4, boundary, degree 2: 1 (02), 0 (13)>, <regina.Face3_1: Edge 2, boundary, degree 1: 0 (03)>, <regina.Face3_1: Edge 0, boundary, degree 2: 1 (13), 0 (01)>, ..., <regina.Face3_1: Edge 1, boundary, degree 3: 0 (02), 1 (12), 0 (23)> ]
+[ <regina.Face3_2: Triangle 1, boundary: 0 (031)>, <regina.Face3_2: Triangle 5, boundary: 1 (023)>, <regina.Face3_2: Triangle 2, boundary: 0 (023)>, <regina.Face3_2: Triangle 4, boundary: 1 (031)> ]
 
 <class 'regina.engine.PacketOfTriangulation3'>
 Dimension: 3
@@ -113,6 +120,9 @@ Component 0:
 Boundary Component 0:
 <class 'regina.engine.BoundaryComponent3'>
 [2, 6, 4]
+[ <regina.Face3_0: Vertex 0, boundary, degree 5: 0 (0), 1 (1), 0 (2), 1 (2), 0 (3)>, <regina.Face3_0: Vertex 1, boundary, degree 3: 0 (1), 1 (0), 1 (3)> ]
+[ <regina.Face3_1: Edge 4, boundary, degree 2: 1 (02), 0 (13)>, <regina.Face3_1: Edge 2, boundary, degree 1: 0 (03)>, <regina.Face3_1: Edge 0, boundary, degree 2: 1 (13), 0 (01)>, ..., <regina.Face3_1: Edge 1, boundary, degree 3: 0 (02), 1 (12), 0 (23)> ]
+[ <regina.Face3_2: Triangle 1, boundary: 0 (031)>, <regina.Face3_2: Triangle 5, boundary: 1 (023)>, <regina.Face3_2: Triangle 2, boundary: 0 (023)>, <regina.Face3_2: Triangle 4, boundary: 1 (031)> ]
 
 <class 'regina.engine.Triangulation4'>
 Dimension: 4
@@ -126,6 +136,10 @@ Component 0:
 Boundary Component 0:
 <class 'regina.engine.BoundaryComponent4'>
 [1, 4, 6, 3]
+[ <regina.Face4_0: Vertex 0, boundary, degree 5: 0 (0), 0 (1), 0 (2), 0 (3), 0 (4)> ]
+[ <regina.Face4_1: Edge 0, boundary, degree 4: 0 (01), 0 (12), 0 (23), 0 (34)>, <regina.Face4_1: Edge 3, boundary, degree 1: 0 (04)>, <regina.Face4_1: Edge 1, boundary, degree 3: 0 (02), 0 (13), 0 (24)>, <regina.Face4_1: Edge 2, boundary, degree 2: 0 (03), 0 (14)> ]
+[ <regina.Face4_2: Triangle 2, boundary, degree 2: 0 (124), 0 (013)>, <regina.Face4_2: Triangle 4, boundary, degree 1: 0 (024)>, <regina.Face4_2: Triangle 5, boundary, degree 1: 0 (014)>, ..., <regina.Face4_2: Triangle 3, boundary, degree 1: 0 (034)> ]
+[ <regina.Face4_3: Tetrahedron 1, boundary: 0 (0142)>, <regina.Face4_3: Tetrahedron 2, boundary: 0 (0134)>, <regina.Face4_3: Tetrahedron 3, boundary: 0 (0243)> ]
 
 <class 'regina.engine.PacketOfTriangulation4'>
 Dimension: 4
@@ -139,6 +153,10 @@ Component 0:
 Boundary Component 0:
 <class 'regina.engine.BoundaryComponent4'>
 [1, 4, 6, 3]
+[ <regina.Face4_0: Vertex 0, boundary, degree 5: 0 (0), 0 (1), 0 (2), 0 (3), 0 (4)> ]
+[ <regina.Face4_1: Edge 0, boundary, degree 4: 0 (01), 0 (12), 0 (23), 0 (34)>, <regina.Face4_1: Edge 3, boundary, degree 1: 0 (04)>, <regina.Face4_1: Edge 1, boundary, degree 3: 0 (02), 0 (13), 0 (24)>, <regina.Face4_1: Edge 2, boundary, degree 2: 0 (03), 0 (14)> ]
+[ <regina.Face4_2: Triangle 2, boundary, degree 2: 0 (124), 0 (013)>, <regina.Face4_2: Triangle 4, boundary, degree 1: 0 (024)>, <regina.Face4_2: Triangle 5, boundary, degree 1: 0 (014)>, ..., <regina.Face4_2: Triangle 3, boundary, degree 1: 0 (034)> ]
+[ <regina.Face4_3: Tetrahedron 1, boundary: 0 (0142)>, <regina.Face4_3: Tetrahedron 2, boundary: 0 (0134)>, <regina.Face4_3: Tetrahedron 3, boundary: 0 (0243)> ]
 
 <class 'regina.engine.Triangulation5'>
 Dimension: 5
@@ -148,6 +166,7 @@ Dimension: 5
 Boundary Component 0:
 <class 'regina.engine.BoundaryComponent5'>
 [20, 8]
+[ <regina.Face5_4: Pentachoron 1, boundary: 0 (01253)>, <regina.Face5_4: Pentachoron 7, boundary: 1 (01245)>, <regina.Face5_4: Pentachoron 4, boundary: 0 (02345)>, ..., <regina.Face5_4: Pentachoron 8, boundary: 1 (01354)> ]
 
 <class 'regina.engine.PacketOfTriangulation5'>
 Dimension: 5
@@ -157,4 +176,5 @@ Dimension: 5
 Boundary Component 0:
 <class 'regina.engine.BoundaryComponent5'>
 [20, 8]
+[ <regina.Face5_4: Pentachoron 1, boundary: 0 (01253)>, <regina.Face5_4: Pentachoron 7, boundary: 1 (01245)>, <regina.Face5_4: Pentachoron 4, boundary: 0 (02345)>, ..., <regina.Face5_4: Pentachoron 8, boundary: 1 (01354)> ]
 

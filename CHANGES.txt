@@ -39,8 +39,8 @@ Version 8.0  [ TODO ]
               + New routine fromStringCode(), which likewise throws an exception
                 if the given string code is not valid.
         Class BoundaryComponent<dim>:
-            - Added a variant of countFaces() that takes the face dimension as
-              a runtime argument (not a template parameter).
+            - Added variants of countFaces(), faces() and face() that take the
+              face dimension as a runtime argument (not a template parameter).
         Class CallableArg<...>:
             - This is now deprecated, since its implementation is drifting
               increasingly further away from modern C++ standards.
