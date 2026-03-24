@@ -207,7 +207,9 @@ concept ReginaInteger =
  * integer types.
  *
  * This concept excludes `bool`, and does not make any special accommodations
- * for 128-bit integer compiler extensions.
+ * for 128-bit integer compiler extensions (which are not standard C++).
+ * This means that 128-bit integers might or might not pass this test,
+ * depending on your compiler.
  *
  * \ingroup utilities
  */
