@@ -61,6 +61,7 @@ def test(t):
         print(c.__class__)
         print([c.countFaces(d) for d in range(dim+1)])
         for d in range(dim):
+            print(c.faces(d))
             i = 0
             for f in c.faces(d):
                 if i > c.countFaces(d):
