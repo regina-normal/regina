@@ -39,12 +39,9 @@ void addFaceNumbering(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN_MAIN
 
     m.def("faceOppositeEdge", [](int dim, int i, int j) -> int {
-        // Although select_constexpr() will throw an exception if dim is
-        // out of range, the message will be difficult for users to understand.
-        // Check again here so we can give a more meaningful error.
         if (dim < 2 || dim > regina::maxDim())
-            regina::python::invalidFaceDimension("faceOppositeEdge", 2,
-                regina::maxDim());
+            throw regina::InvalidArgument(
+                "faceOppositeEdge(): unsupported dimension");
         return regina::select_constexpr<2, regina::maxDim() + 1, int>(dim,
                 [=](auto d) {
             return regina::faceOppositeEdge<d>(i, j);

@@ -9,7 +9,6 @@ SET ( FILES
   face6.cpp
   face7.cpp
   face8.cpp
-  facehelper.cpp
   facenumbering.cpp
   facetpairing2.cpp
   facetpairing4.cpp

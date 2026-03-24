@@ -67,14 +67,6 @@ template <typename T>
 using facesFunc = decltype(std::declval<T>().faces(0)) (T::*)(int) const;
 
 /**
- * Throws an exception.  The error message will state that the argument
- * for the face dimension (which should be the first argument of the original
- * function, corresponding to the C++ template argument) must be in the
- * range \a minDim, ..., \a maxDim.
- */
-void invalidFaceDimension(const char* functionName, int minDim, int maxDim);
-
-/**
  * The Python binding for the C++ template member function
  * `Face<dim, subdim>::face<lowerdim>(f)`, where the valid range for
  * the C++ template parameter \a lowerdim is `0, ..., subdim-1`.

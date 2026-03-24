@@ -527,7 +527,6 @@
 		05431F8C1C40F40D009BC072 /* offload_handler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F561C40F3C9009BC072 /* offload_handler.cpp */; };
 		05431FA91C40F5A2009BC072 /* perm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FA51C40F599009BC072 /* perm.cpp */; };
 		05431FAA1C40F5A2009BC072 /* perm2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FA61C40F599009BC072 /* perm2.cpp */; };
-		05431FC11C40F5D4009BC072 /* facehelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FAF1C40F5CA009BC072 /* facehelper.cpp */; };
 		05431FC41C40F5D4009BC072 /* pygeneric.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FB31C40F5CA009BC072 /* pygeneric.cpp */; };
 		05431FCC1C40F653009BC072 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FCA1C40F641009BC072 /* facetpairing3.cpp */; };
 		05431FCF1C40F663009BC072 /* intutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FCD1C40F65D009BC072 /* intutils.cpp */; };
@@ -3027,7 +3026,6 @@
 		05431FA51C40F599009BC072 /* perm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = perm.cpp; sourceTree = "<group>"; };
 		05431FA61C40F599009BC072 /* perm2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = perm2.cpp; sourceTree = "<group>"; };
 		05431FAC1C40F5CA009BC072 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		05431FAF1C40F5CA009BC072 /* facehelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facehelper.cpp; sourceTree = "<group>"; };
 		05431FB01C40F5CA009BC072 /* facehelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facehelper.h; sourceTree = "<group>"; };
 		05431FB31C40F5CA009BC072 /* pygeneric.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pygeneric.cpp; sourceTree = "<group>"; };
 		05431FC81C40F607009BC072 /* equality.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = equality.h; sourceTree = "<group>"; };
@@ -7163,7 +7161,6 @@
 				05CAFB441C4CEA020001C253 /* face13.cpp */,
 				05CAFB451C4CEA020001C253 /* face14.cpp */,
 				05CAFB461C4CEA020001C253 /* face15.cpp */,
-				05431FAF1C40F5CA009BC072 /* facehelper.cpp */,
 				05431FB01C40F5CA009BC072 /* facehelper.h */,
 				05FFD2692900C75900E0F61C /* facenumbering.cpp */,
 				057EE4421C6009E600C4D155 /* facetpairing-bindings.h */,
@@ -9922,7 +9919,6 @@
 				050F5DF91B9BAB9C00C1F681 /* matrix2.cpp in Sources */,
 				057EE4E11C600A3600C4D155 /* facetpairing6.cpp in Sources */,
 				0550010C1C4D9EF900501C24 /* face8.cpp in Sources */,
-				05431FC11C40F5D4009BC072 /* facehelper.cpp in Sources */,
 				05754D18258D834E00236ED7 /* randutils.cpp in Sources */,
 				0591E81D1C4F763B00793A9C /* pydim4.cpp in Sources */,
 				057EE4E31C600A3600C4D155 /* facetpairing8.cpp in Sources */,
