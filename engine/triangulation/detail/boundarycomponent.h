@@ -431,9 +431,9 @@ class BoundaryComponentBase :
          * faster) routine `faces<subdim>()` instead.
          *
          * For Python users, this routine is much more useful: the return type
-         * can be chosen at runtime, and so this routine returns a Python list
-         * of `Face<dim, subdim>` objects (holding all the <i>subdim</i>-faces
-         * of the triangulation), which you can use immediately.
+         * can be chosen at runtime, and so this routine returns a single
+         * lightweight object granting access to all of the <i>subdim</i>-faces
+         * of the boundary component, which you can use immediately.
          *
          * \exception InvalidArgument The face dimension \a subdim is outside
          * the supported range, as described below.
