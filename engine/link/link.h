@@ -41,6 +41,7 @@
 #include <functional>
 #include <iterator>
 #include <optional>
+#include <ranges>
 #include <vector>
 #include "regina-core.h"
 #include "algebra/grouppresentation.h"
@@ -55,7 +56,6 @@
 #include "triangulation/detail/retriangulate.h"
 #include "utilities/exception.h"
 #include "utilities/fixedarray.h"
-#include "utilities/listview.h"
 #include "utilities/markedvector.h"
 #include "utilities/tightencoding.h"
 #include "utilities/topologylock.h"
@@ -7581,7 +7581,7 @@ inline Crossing* Link::crossing(size_t index) const {
 }
 
 inline auto Link::crossings() const {
-    return ListView(crossings_);
+    return std::views::all(crossings_);
 }
 
 inline StrandRef Link::component(size_t index) const {
@@ -7589,7 +7589,7 @@ inline StrandRef Link::component(size_t index) const {
 }
 
 inline auto Link::components() const {
-    return ListView(components_);
+    return std::views::all(components_);
 }
 
 inline StrandRef Link::strand(ssize_t id) const {

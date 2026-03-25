@@ -2608,7 +2608,6 @@
 		0518BA2E29D595D00020ADC1 /* tidy_peripheral_curves.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tidy_peripheral_curves.cpp; sourceTree = "<group>"; };
 		0518BA3529D595DB0020ADC1 /* triangulations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulations.cpp; sourceTree = "<group>"; };
 		0518BA3629D595DB0020ADC1 /* unix_file_io.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = unix_file_io.cpp; sourceTree = "<group>"; };
-		05199A2C25C63AED0006B8FA /* listview.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = listview.h; sourceTree = "<group>"; };
 		05199A2D25C63B3C0006B8FA /* sageSetup.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = sageSetup.py; path = regina/sageSetup.py; sourceTree = "<group>"; };
 		05199A2E25C63B7E0006B8FA /* memory3.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = memory3.test; sourceTree = "<group>"; };
 		05199A2F25C63B7F0006B8FA /* file3.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = file3.rga; sourceTree = "<group>"; };
@@ -2640,6 +2639,7 @@
 		05226DED27422C81000A45D5 /* hilbertprimal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hilbertprimal.cpp; sourceTree = "<group>"; };
 		05226DEE27422C81000A45D5 /* doubledescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = doubledescription.cpp; sourceTree = "<group>"; };
 		05226DEF27422C82000A45D5 /* hilbertcd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hilbertcd.cpp; sourceTree = "<group>"; };
+		052274BD2F7367730054172A /* view.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = view.h; sourceTree = "<group>"; };
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
 		052774101C55743E00140918 /* hypercreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypercreator.cpp; sourceTree = "<group>"; };
@@ -7219,11 +7219,11 @@
 				05098B0228FC110B005E4716 /* flags.h */,
 				055CF2B728C817E000CA9034 /* gil.h */,
 				05098A6828F24CD8005E4716 /* globals.h */,
-				05199A2C25C63AED0006B8FA /* listview.h */,
 				05D81A8B1C66B0E500DDCE64 /* output.h */,
 				05772EDD270CFAB300D26D8A /* packet.h */,
 				05098AFE28FC0DEC005E4716 /* tableview.h */,
 				0530FEFF284595580069B227 /* tightencoding.h */,
+				052274BD2F7367730054172A /* view.h */,
 			);
 			path = helpers;
 			sourceTree = "<group>";

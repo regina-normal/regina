@@ -113,7 +113,7 @@ void addVertex2(pybind11::module_& m, pybind11::module_& internal) {
 
     RDOC_SCOPE_END
 
-    regina::python::addListView<
+    regina::python::addStdView<
         decltype(std::declval<Vertex<2>>().embeddings())>(internal,
         "Face2_0_embeddings");
 

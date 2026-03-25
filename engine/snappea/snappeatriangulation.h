@@ -2599,7 +2599,7 @@ inline const Cusp& SnapPeaTriangulation::cusp(unsigned whichCusp) const {
 }
 
 inline auto SnapPeaTriangulation::cusps() const {
-    return ListView(cusp_, countBoundaryComponents());
+    return std::views::counted(cusp_, countBoundaryComponents());
 }
 
 inline SnapPeaTriangulation SnapPeaTriangulation::protoCanonize() const {

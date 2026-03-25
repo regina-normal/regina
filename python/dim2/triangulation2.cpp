@@ -414,15 +414,15 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::packet_eq_operators(c, rbase::__eq);
     regina::python::add_packet_data(c);
 
-    regina::python::addListView<decltype(Triangulation<2>().vertices())>(
+    regina::python::addStdView<decltype(Triangulation<2>().vertices())>(
         internal, "Triangulation2_vertices");
-    regina::python::addListView<decltype(Triangulation<2>().edges())>(
+    regina::python::addStdView<decltype(Triangulation<2>().edges())>(
         internal, "Triangulation2_edges");
-    regina::python::addListView<decltype(Triangulation<2>().triangles())>(
+    regina::python::addStdView<decltype(Triangulation<2>().triangles())>(
         internal, "Triangulation2_triangles");
-    regina::python::addListView<decltype(Triangulation<2>().components())>(
+    regina::python::addStdView<decltype(Triangulation<2>().components())>(
         internal, "Triangulation2_components");
-    regina::python::addListView<
+    regina::python::addStdView<
         decltype(Triangulation<2>().boundaryComponents())>(
         internal, "Triangulation2_boundaryComponents");
 

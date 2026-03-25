@@ -37,8 +37,8 @@
 #define __REGINA_TANGLE_H
 #endif
 
+#include <ranges>
 #include "link/link.h"
-#include "utilities/listview.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -1293,7 +1293,7 @@ inline Crossing* Tangle::crossing(size_t index) const {
 }
 
 inline auto Tangle::crossings() const {
-    return ListView(crossings_);
+    return std::views::all(crossings_);
 }
 
 inline StrandRef Tangle::begin(int string) const {

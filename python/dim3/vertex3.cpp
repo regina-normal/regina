@@ -144,7 +144,7 @@ being reserved for a different purpose in a future release.)doc")
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
-    regina::python::addListView<
+    regina::python::addStdView<
         decltype(std::declval<Vertex<3>>().embeddings())>(internal,
         "Face3_0_embeddings");
 

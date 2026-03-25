@@ -37,6 +37,7 @@
  *  \brief Implementation details for boundary components of triangulations.
  */
 
+#include <ranges>
 #include <tuple>
 #include <vector>
 #include "regina-core.h"
@@ -44,7 +45,6 @@
 #include "triangulation/detail/strings.h"
 #include "triangulation/forward.h"
 #include "utilities/exception.h"
-#include "utilities/listview.h"
 #include "utilities/markedvector.h"
 #include "utilities/typeutils.h"
 
@@ -371,7 +371,7 @@ class BoundaryComponentBase :
          * \return access to the list of all (<i>dim</i>-1)-faces.
          */
         auto facets() const {
-            return ListView(std::get<tupleIndex(dim-1)>(faces_));
+            return std::views::all(std::get<tupleIndex(dim-1)>(faces_));
         }
 
         /**
@@ -413,7 +413,7 @@ class BoundaryComponentBase :
         requires (subdim == dim - 1 ||
             (standardDim(dim) && subdim >= 0 && subdim < dim))
         auto faces() const {
-            return ListView(std::get<tupleIndex(subdim)>(faces_));
+            return std::views::all(std::get<tupleIndex(subdim)>(faces_));
         }
 
         /**
@@ -451,13 +451,13 @@ class BoundaryComponentBase :
                         "faces(): unsupported face dimension");
                 return select_constexpr_as_variant<0, dim>(subdim,
                         [this](auto k) {
-                    return ListView(std::get<tupleIndex(k)>(faces_));
+                    return std::views::all(std::get<tupleIndex(k)>(faces_));
                 });
             } else {
                 if (subdim != dim - 1)
                     throw InvalidArgument(
                         "faces(): unsupported face dimension");
-                return ListView(std::get<tupleIndex(dim-1)>(faces_));
+                return std::views::all(std::get<tupleIndex(dim-1)>(faces_));
             }
         }
 
@@ -468,7 +468,7 @@ class BoundaryComponentBase :
          */
         auto vertices() const
                 requires (standardDim(dim)) {
-            return ListView(std::get<tupleIndex(0)>(faces_));
+            return std::views::all(std::get<tupleIndex(0)>(faces_));
         }
 
         /**
@@ -478,7 +478,7 @@ class BoundaryComponentBase :
          */
         auto edges() const
                 requires (standardDim(dim)) {
-            return ListView(std::get<tupleIndex(1)>(faces_));
+            return std::views::all(std::get<tupleIndex(1)>(faces_));
         }
 
         /**
@@ -488,7 +488,7 @@ class BoundaryComponentBase :
          */
         auto triangles() const
                 requires (standardDim(dim) && dim > 2) {
-            return ListView(std::get<tupleIndex(2)>(faces_));
+            return std::views::all(std::get<tupleIndex(2)>(faces_));
         }
 
         /**
@@ -498,7 +498,7 @@ class BoundaryComponentBase :
          */
         auto tetrahedra() const
                 requires (standardDim(dim) && dim > 3) {
-            return ListView(std::get<tupleIndex(3)>(faces_));
+            return std::views::all(std::get<tupleIndex(3)>(faces_));
         }
 
         /**
@@ -508,7 +508,7 @@ class BoundaryComponentBase :
          */
         auto pentachora() const
                 requires (dim == 5) {
-            return ListView(std::get<tupleIndex(4)>(faces_));
+            return std::views::all(std::get<tupleIndex(4)>(faces_));
         }
 
         /**

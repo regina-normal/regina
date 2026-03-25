@@ -122,7 +122,7 @@ void addVertex4(pybind11::module_& m, pybind11::module_& internal) {
 
     RDOC_SCOPE_END
 
-    regina::python::addListView<
+    regina::python::addStdView<
         decltype(std::declval<Vertex<4>>().embeddings())>(internal,
         "Face4_0_embeddings");
 

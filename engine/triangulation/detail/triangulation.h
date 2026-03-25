@@ -41,6 +41,7 @@
 #include <iostream>
 #include <memory>
 #include <optional>
+#include <ranges>
 #include <sstream>
 #include <string>
 #include <variant>
@@ -61,7 +62,6 @@
 #include "triangulation/isosigencoding.h"
 #include "triangulation/isosigtype.h"
 #include "utilities/exception.h"
-#include "utilities/listview.h"
 #include "utilities/snapshot.h"
 #include "utilities/tightencoding.h"
 #include "utilities/topologylock.h"
@@ -4643,7 +4643,7 @@ inline size_t TriangulationBase<dim>::size() const {
 
 template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::simplices() const {
-    return ListView(simplices_);
+    return std::views::all(simplices_);
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -4928,20 +4928,20 @@ inline std::vector<size_t> TriangulationBase<dim>::fVector() const {
 template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::components() const {
     ensureSkeleton();
-    return ListView(components_);
+    return std::views::all(components_);
 }
 
 template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::boundaryComponents() const {
     ensureSkeleton();
-    return ListView(boundaryComponents_);
+    return std::views::all(boundaryComponents_);
 }
 
 template <int dim> requires (supportedDim(dim))
 template <int subdim> requires (subdim >= 0 && subdim < dim)
 inline auto TriangulationBase<dim>::faces() const {
     ensureSkeleton();
-    return ListView(std::get<subdim>(faces_));
+    return std::views::all(std::get<subdim>(faces_));
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -4957,22 +4957,22 @@ inline auto TriangulationBase<dim>::faces(int subdim) const {
 template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::vertices() const {
     ensureSkeleton();
-    return ListView(std::get<0>(faces_));
+    return std::views::all(std::get<0>(faces_));
 }
 
 template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::edges() const {
     ensureSkeleton();
-    return ListView(std::get<1>(faces_));
+    return std::views::all(std::get<1>(faces_));
 }
 
 template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::triangles() const {
     if constexpr (dim == 2) {
-        return ListView(simplices_);
+        return std::views::all(simplices_);
     } else {
         ensureSkeleton();
-        return ListView(std::get<2>(faces_));
+        return std::views::all(std::get<2>(faces_));
     }
 }
 
@@ -4980,10 +4980,10 @@ template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::tetrahedra() const
         requires (dim >= 3) {
     if constexpr (dim == 3) {
-        return ListView(simplices_);
+        return std::views::all(simplices_);
     } else {
         ensureSkeleton();
-        return ListView(std::get<3>(faces_));
+        return std::views::all(std::get<3>(faces_));
     }
 }
 
@@ -4991,10 +4991,10 @@ template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::pentachora() const
         requires (dim >= 4) {
     if constexpr (dim == 4) {
-        return ListView(simplices_);
+        return std::views::all(simplices_);
     } else {
         ensureSkeleton();
-        return ListView(std::get<4>(faces_));
+        return std::views::all(std::get<4>(faces_));
     }
 }
 

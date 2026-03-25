@@ -307,11 +307,11 @@ inline size_t Component<2>::countFaces<0>() const {
 
 inline auto Component<2>::faces(int subdim) const {
     using Return = std::variant<
-        decltype(ListView(vertices_)),
-        decltype(ListView(edges_))>;
+        decltype(std::views::all(vertices_)),
+        decltype(std::views::all(edges_))>;
     switch (subdim) {
-        case 0: return Return(ListView(vertices_));
-        case 1: return Return(ListView(edges_));
+        case 0: return Return(std::views::all(vertices_));
+        case 1: return Return(std::views::all(edges_));
         default: throw InvalidArgument("faces(): unsupported face dimension");
     }
 }
@@ -320,12 +320,12 @@ inline auto Component<2>::faces(int subdim) const {
 #ifndef __DOXYGEN
 template <>
 inline auto Component<2>::faces<1>() const {
-    return ListView(edges_);
+    return std::views::all(edges_);
 }
 
 template <>
 inline auto Component<2>::faces<0>() const {
-    return ListView(vertices_);
+    return std::views::all(vertices_);
 }
 #endif // ! __DOXYGEN
 

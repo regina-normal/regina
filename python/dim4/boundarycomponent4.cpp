@@ -112,16 +112,16 @@ void addBoundaryComponent4(pybind11::module_& m, pybind11::module_& internal) {
 
     RDOC_SCOPE_END
 
-    regina::python::addListView<
+    regina::python::addStdView<
         decltype(std::declval<BoundaryComponent<4>>().vertices())>(internal,
         "BoundaryComponent4_vertices");
-    regina::python::addListView<
+    regina::python::addStdView<
         decltype(std::declval<BoundaryComponent<4>>().edges())>(internal,
         "BoundaryComponent4_edges");
-    regina::python::addListView<
+    regina::python::addStdView<
         decltype(std::declval<BoundaryComponent<4>>().triangles())>(internal,
         "BoundaryComponent4_triangles");
-    regina::python::addListView<
+    regina::python::addStdView<
         decltype(std::declval<BoundaryComponent<4>>().tetrahedra())>(internal,
         "BoundaryComponent4_tetrahedra");
 }

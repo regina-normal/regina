@@ -38,11 +38,11 @@
 #define __REGINA_SPATIALLINK_H
 #endif
 
+#include <ranges>
 #include <vector>
 #include "concepts/iterator.h"
 #include "maths/3d.h"
 #include "packet/packet.h"
-#include "utilities/listview.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -812,7 +812,7 @@ inline const SpatialLink::Component& SpatialLink::component(size_t index)
 }
 
 inline auto SpatialLink::components() const {
-    return ListView(components_);
+    return std::views::all(components_);
 }
 
 inline size_t SpatialLink::componentSize(size_t componentIndex) const {

@@ -108,10 +108,10 @@ void addComponent4(pybind11::module_& m, pybind11::module_& internal) {
 
     // No need for lower-dimensional faces here, since these reuse the same
     // ListView classes as Triangulation2.
-    regina::python::addListView<
+    regina::python::addStdView<
         decltype(std::declval<Component<4>>().pentachora())>(internal,
         "Component4_simplices");
-    regina::python::addListView<
+    regina::python::addStdView<
         decltype(std::declval<Component<4>>().boundaryComponents())>(internal,
         "Component4_boundaryComponents");
 }

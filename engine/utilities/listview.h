@@ -46,7 +46,7 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 namespace regina {
 
 /**
- * A lightweight object that can be used for iteration and random access
+ * Deprecated lightweight type that can be used for iteration and random access
  * to all elements of a given list.
  *
  * This access is read-only, in the sense that both the list itself and the
@@ -91,12 +91,15 @@ namespace regina {
  * ListView objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
  *
- * \python The ListView classes are deliberately difficult to access: they
- * live within their own private Python namespaces, and are all give the same
- * class name (\a ListView).  You would typically only interact with a ListView
- * when it is returned from a function (e.g., `Link.crossings()`),
- * and in most cases you would simply iterate over this resulting ListView
- * without ever knowing its exact type.
+ * \deprecated This class is no longer used, since Regina now uses C++20 which
+ * offers similar functionality through the new `std::ranges` library.  In
+ * particular, wherever Regina used to return a ListView, it now returns a
+ * standard lightweight C++20 view.
+ *
+ * \nopython These types were returned from functions but never intended to be
+ * referenced explicitly through Python.  Therefore, now that ListView is no
+ * longer used anywhere within Regina, the Python bindings for the various
+ * ListView classes have been removed.
  *
  * \tparam Container the internal type of the list that this object grants
  * access to.  This type must support at least the same operations as this
@@ -107,7 +110,7 @@ namespace regina {
  * \ingroup utilities
  */
 template <typename Container>
-class ListView {
+class [[deprecated]] ListView {
     static_assert(std::is_class_v<Container>,
         "The generic ListView implementation should only be used for "
         "container classes, such as std::vector or regina::MarkedVector.");

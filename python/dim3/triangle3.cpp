@@ -144,7 +144,7 @@ void addTriangle3(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
-    regina::python::addListView<
+    regina::python::addStdView<
         decltype(std::declval<Triangle<3>>().embeddings())>(internal,
         "Face3_2_embeddings");
 

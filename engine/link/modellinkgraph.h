@@ -38,13 +38,13 @@
 #endif
 
 #include <array>
+#include <ranges>
 #include <vector>
 #include "concepts/core.h"
 #include "core/output.h"
 #include "utilities/exception.h"
 #include "utilities/fixedarray.h"
 #include "utilities/flags.h"
-#include "utilities/listview.h"
 #include "utilities/markedvector.h"
 #include "utilities/tightencoding.h"
 
@@ -2334,7 +2334,7 @@ inline ModelLinkGraphNode* ModelLinkGraph::node(size_t index) const {
 }
 
 inline auto ModelLinkGraph::nodes() const {
-    return ListView(nodes_);
+    return std::views::all(nodes_);
 }
 
 inline ModelLinkGraph& ModelLinkGraph::operator = (ModelLinkGraph&& src)
@@ -2425,7 +2425,7 @@ inline const ModelLinkGraphArc& ModelLinkGraphCells::arc(size_t cell,
 }
 
 inline auto ModelLinkGraphCells::arcs(size_t cell) const {
-    return ListView(arcs_.begin() + start_[cell],
+    return std::ranges::subrange(arcs_.begin() + start_[cell],
         arcs_.begin() + start_[cell + 1]);
 }
 

@@ -345,15 +345,15 @@ inline size_t Component<4>::countFaces<0>() const {
 
 inline auto Component<4>::faces(int subdim) const {
     using Return = std::variant<
-        decltype(ListView(vertices_)),
-        decltype(ListView(edges_)),
-        decltype(ListView(triangles_)),
-        decltype(ListView(tetrahedra_))>;
+        decltype(std::views::all(vertices_)),
+        decltype(std::views::all(edges_)),
+        decltype(std::views::all(triangles_)),
+        decltype(std::views::all(tetrahedra_))>;
     switch (subdim) {
-        case 0: return Return(ListView(vertices_));
-        case 1: return Return(ListView(edges_));
-        case 2: return Return(ListView(triangles_));
-        case 3: return Return(ListView(tetrahedra_));
+        case 0: return Return(std::views::all(vertices_));
+        case 1: return Return(std::views::all(edges_));
+        case 2: return Return(std::views::all(triangles_));
+        case 3: return Return(std::views::all(tetrahedra_));
         default: throw InvalidArgument("faces(): unsupported face dimension");
     }
 }
@@ -362,22 +362,22 @@ inline auto Component<4>::faces(int subdim) const {
 #ifndef __DOXYGEN
 template <>
 inline auto Component<4>::faces<3>() const {
-    return ListView(tetrahedra_);
+    return std::views::all(tetrahedra_);
 }
 
 template <>
 inline auto Component<4>::faces<2>() const {
-    return ListView(triangles_);
+    return std::views::all(triangles_);
 }
 
 template <>
 inline auto Component<4>::faces<1>() const {
-    return ListView(edges_);
+    return std::views::all(edges_);
 }
 
 template <>
 inline auto Component<4>::faces<0>() const {
-    return ListView(vertices_);
+    return std::views::all(vertices_);
 }
 #endif // ! __DOXYGEN
 

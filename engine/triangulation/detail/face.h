@@ -1369,7 +1369,7 @@ inline const FaceEmbedding<dim, subdim>& FaceBase<dim, subdim>::embedding(
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 inline auto FaceBase<dim, subdim>::embeddings() const {
-    return ListView(embeddings_);
+    return std::views::all(embeddings_);
 }
 
 template <int dim, int subdim>

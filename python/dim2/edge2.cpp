@@ -132,7 +132,7 @@ void addEdge2(pybind11::module_& m, pybind11::module_& internal) {
 
     RDOC_SCOPE_END
 
-    regina::python::addListView<
+    regina::python::addStdView<
         decltype(std::declval<Edge<2>>().embeddings())>(internal,
         "Face2_1_embeddings");
 
