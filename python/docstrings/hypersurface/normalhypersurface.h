@@ -223,13 +223,9 @@ Precondition:
     encoding. This will not be checked!
 
 Python:
-    The supported types for the template parameter *U* are
+    The supported element types for the given vector are
     regina::Integer and regina::LargeInteger. You may also, if you
     prefer, pass *vector* as a Python list of integers.
-
-Template parameter ``U``:
-    the type of object held by the given vector. It must be possible
-    to assign an object of type *U* to a regina::LargeInteger.
 
 Parameter ``triang``:
     the triangulation in which this normal hypersurface resides.
@@ -269,13 +265,9 @@ Precondition:
     ``HyperEncoding(coords)``. This will not be checked!
 
 Python:
-    The supported types for the template parameter *U* are
+    The supported element types for the given vector are
     regina::Integer and regina::LargeInteger. You may also, if you
     prefer, pass *vector* as a Python list of integers.
-
-Template parameter ``U``:
-    the type of object held by the given vector. It must be possible
-    to assign an object of type *U* to a regina::LargeInteger.
 
 Parameter ``triang``:
     the triangulation in which this normal hypersurface resides.

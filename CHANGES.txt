@@ -51,6 +51,8 @@ Version 8.0  [ TODO ]
         Class Component<dim>:
             - Added variants of countFaces(), faces() and face() that take the
               face dimension as a runtime argument (not a template parameter).
+        Class Crossing:
+            - New routine chordIndex().
         Class Cut:
             - For the iterator-based constructor, the old recommendation that
               the iterator type be random access is now a hard requirement.

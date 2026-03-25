@@ -174,6 +174,44 @@ functions.)doc";
 
 namespace Crossing_ {
 
+// Docstring regina::python::doc::Crossing_::chordIndex
+static const char *chordIndex =
+R"doc(Returns the chord index of this crossing in a knot diagram.
+
+The _chord index_ examines all of the other crossings that are passed
+when traversing the knot between the upper and lower strands of this
+crossing, not counting this crossing itself. For each other crossing
+that we pass:
+
+* we add ``+1`` each time we pass a positive crossing on the upper
+  strand, or a negative crossing on the lower strand;
+
+* we add ``-1`` each time we pass a positive crossing on the lower
+  strand, or a negative crossing on the upper strand.
+
+We then take the absolute value of the resulting sum (which means we
+get the same result regardless of whether we walked from the upper
+strand to the lower strand of this crossing, or from the lower strand
+to the upper strand).
+
+The chord index is only interesting for virtual knots. In a classical
+knot diagram, every crossing will have chord index zero. Note also
+that the _parity_ of a crossing (in the sense used by
+Link::oddWrithe()) is precisely the parity of its chord index.
+
+Precondition:
+    The link containing this crossing has exactly one component (i.e.,
+    it is a knot).
+
+Exception ``FailedPrecondition``:
+    The link containing this crossing was found to have multiple
+    components. This is not explicitly tested, but it will be noticed
+    if the upper and lower strands of this crossing belong to
+    different link components.
+
+Returns:
+    the chord index of this crossing.)doc";
+
 // Docstring regina::python::doc::Crossing_::index
 static const char *index =
 R"doc(Returns the index of this crossing within the overall link. If the
@@ -4019,22 +4057,40 @@ Returns:
 static const char *parityProjection =
 R"doc(Returns the parity projection of this knot.
 
-This is an operation on virtual knots, which removes all odd
-crossings. A crossing *c* is _odd_ if, when traversing the knot, we
-pass through an odd number of crossings between the over-strand and
-the under-strand of *c*. By _removing_ a crossing *c*, we mean the
-same operation as calling `makeVirtual(c)`: the incoming and outgoing
-upper strands of *c* are merged into one, and the incoming and
-outgoing lower strands of *c* are merged into one.
+This is an operation on virtual knots, which removes all crossings
+whose chord index fails a given parity condition. The parity condition
+is determined by the argument *modBase:*
 
-This routine cannot work with multiple-component links. If this link
-has more than one component, then this routine will throw an
+* If ``modBase = 0``, then we remove all crossings with non-zero chord
+  index.
+
+* If ``modBase > 0``, then we remove all crossings whose chord index
+  is not a multiple of *modBase*.
+
+A common setting (and the default here) is ``modBase = 2``, where we
+remove all odd crossings and keep all even crossings. Here we use
+_odd_ and _even_ in the same sense as oddWrithe(): a crossing *c* is
+_odd_ if, when traversing the knot, we pass through an odd number of
+crossings between the over-strand and the under-strand of *c*.
+
+By _removing_ a crossing *c*, we mean the same operation as calling
+`makeVirtual(c)`: the incoming and outgoing upper strands of *c* will
+be merged into one, and the incoming and outgoing lower strands of *c*
+will be merged into one. It is possible that _all_ of the crossings in
+the diagram will be removed, in which case the result will be a
+0-crossing unknot.
+
+Parity projection cannot work with multiple-component links. If this
+link has more than one component, then this routine will throw an
 exception.
 
-For a classical knot, this operation simply returns an identical
-diagram.
+Parity projection is only interesting for virtual knots. In a
+classical knot diagram, chord indices are always zero, and so the
+parity projection will always return an identical copy of the original
+knot diagram.
 
-This link will not be modified.
+This knot diagram will not be modified. Instead, this routine will
+return a new diagram with the relevant crossings removed.
 
 Precondition:
     This link has at most one component (i.e., it is either a knot or
@@ -4043,8 +4099,12 @@ Precondition:
 Exception ``FailedPrecondition``:
     This link has multiple components.
 
+Parameter ``modBase``:
+    the modular base that determines the exact parity condition to
+    test, as described above.
+
 Returns:
-    the parity projection of this knot.)doc";
+    the resulting parity projection of this knot.)doc";
 
 // Docstring regina::python::doc::Link_::pd
 static const char *pd =

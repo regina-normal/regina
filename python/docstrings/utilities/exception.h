@@ -138,7 +138,10 @@ also does not include SnapshotWriteError, which is part of the generic
 (non-mathematical) snapshotting machinery.
 
 Details of the error can be accessed through the inherited member
-function what().)doc";
+function what().
+
+Python:
+    This uses Python's ``RuntimeError`` as its base class.)doc";
 
 // Docstring regina::python::doc::SnapPeaIsNull
 static const char *SnapPeaIsNull =

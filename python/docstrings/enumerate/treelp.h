@@ -115,9 +115,6 @@ This class has been optimised to ensure that you only have one octagon
 type declared at any given time (which is consistent with the
 constraints of almost normal surface theory).
 
-All tableaux elements are of the integer class *IntType*, which is
-supplied as a template argument.
-
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. However, due to the unusual create-reserve-
 initialise procedure, it does not support copying (either by copy
@@ -136,6 +133,24 @@ Python:
     Regina namespace to see which constraint classes are supported
     under Python. In all cases, the IntType parameter is taken to be
     regina::Integer.
+
+Template parameter ``Constraint``:
+    a specification of any extra linear constraints that should be
+    enforced, or LPConstraintNone if there are none. See the notes
+    above for details.
+
+Template parameter ``IntType``:
+    the integer type to use throughout this class, including for all
+    tableaux elements as well as the matrix of row operations that we
+    apply to the original starting tableaux. The only place this
+    integer type is _not_ used is for intermediate calculations when
+    finding an initial basis using Gauss-Jordan elimination (which
+    always uses arbitrary-precision integers). If you are using a
+    fixed-precision integer type here (such as NativeInteger), be
+    aware that there will be no testing for overflow: it is your
+    responsibility to prove in advance that overflow will never occur
+    as you operate on the tableaux via routines such as
+    constraintZero(), constraintPositive(), and constraintOct().
 
 .. warning::
     The API for this class or function has not yet been finalised.
@@ -478,18 +493,17 @@ Returns:
 static const char *extractSolution =
 R"doc(Extracts the values of the individual variables from the current
 basis, with some modifications (as described below). The values of the
-variables will be returned in vector form.
+variables will be returned in vector form, using type *Ray*.
 
 The modifications are as follows:
 
 * We extract variables that correspond to the original matching
   equations obtained from the underlying triangulation, _not_ the
-  current tableaux and _not_ even the original starting tableaux
-  stored in origTableaux_. In other words, when we fill the resulting
-  vector, we undo the column permutation described by
-  LPInitialTableaux::columnPerm(), and we undo any changes of variable
-  that were caused by calls to constrainPositive() and/or
-  constrainOct().
+  current tableaux and _not_ even the original starting tableaux. In
+  other words, when we fill the resulting vector, we undo the column
+  permutation described by LPInitialTableaux::columnPerm(), and we
+  undo any changes of variable that were caused by calls to
+  constrainPositive() and/or constrainOct().
 
 * To ensure that the variables are all integers, we scale the
   resulting vector by the smallest positive rational multiple for
@@ -506,15 +520,17 @@ Precondition:
     columns arising from the LPConstraint template parameter are
     exempt from this requirement.
 
-Precondition:
-    The precision of integers in *Ray* is at least as large as the
-    precision of *IntType* (as used by LPData).
-
 Python:
     The type vector should be passed as a Python list of integers (for
     example, in the enumeration of normal surfaces, there would be one
     integer per tetrahedron, each equal to 0, 1, 2 or 3). The template
     parameter *Ray* is taken to be Vector<Integer>.
+
+Template parameter ``Ray``:
+    the vector type to use to return the extracted values. The
+    ``std::common_type_t`` constraint on *Ray* ensures that no
+    information will be lost (e.g., through overflow) when converting
+    integers to the element type for *Ray*.
 
 Parameter ``type``:
     the type vector corresponding to the current state of this

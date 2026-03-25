@@ -51,12 +51,12 @@ Regarding indices and iteration:
 
 Regarding time complexity:
 
-* For *n* ≤ 7, iteration steps and index-based lookup are both
+* For ``n ≤ 7``, iteration steps and index-based lookup are both
   extremely fast constant time. Iterators are random-access (and
   satisfy all of the expected time complexity constraints that come
   with this).
 
-* For *n* ≥ 8, the time for a single iteration step is in linear in
+* For ``n ≥ 8``, the time for a single iteration step is in linear in
   *n*, and index-based lookup is currently _quadratic_ in *n*.
   Iterators are merely forward iterators, not random access.
 
@@ -70,8 +70,7 @@ Python:
     PermSn3_Sign, or PermSn5_Lex).
 
 Template parameter ``n``:
-    the number of objects being permuted. This must be between 2 and
-    16 inclusive.
+    the number of objects being permuted.
 
 Template parameter ``order``:
     the way in which this class orders permutations for the purposes
@@ -270,10 +269,9 @@ this type are essentially identical.
     ``Perm<n>::extend(Perm<m>::Sn[i])``.
 
 Python:
-    This class does not live inside an inner ``detail`` namespace,
-    though as an internal class it is subject to change or removal
-    without notice (see the warning above). Moreover, Python does not
-    support templates, and so the name of this class is constructed by
+    As an internal class, this is subject to change or removal without
+    notice (see the warning above). Moreover, Python does not support
+    templates, and so the name of this class is constructed by
     appending *n*, *m* and *order* as suffixes (e.g.,
     PermSubSn4_3_Sign, or PermSubSn5_3_Lex). The only template
     parameters that are bound in Python are those that are used in
@@ -282,12 +280,11 @@ Python:
 
 Template parameter ``n``:
     indicates the return type: permutations of *m* objects will be
-    returned as the larger type ``Perm<n>``. It is required that ``2 ≤
-    n ≤ 5``.
+    returned as the larger type ``Perm<n>``.
 
 Template parameter ``m``:
     the number of objects being permuted in the group *S_m* that we
-    are enumerating. It is required that ``1 ≤ m < n``.
+    are enumerating.
 
 Template parameter ``order``:
     the way in which this class orders permutations for the purposes
