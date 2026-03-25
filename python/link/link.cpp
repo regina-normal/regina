@@ -109,6 +109,7 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
         .def("strand", &Crossing::strand, rdoc::strand)
         .def("next", &Crossing::next, rdoc::next)
         .def("prev", &Crossing::prev, rdoc::prev)
+        .def("chordIndex", &Crossing::chordIndex, rdoc::chordIndex)
     ;
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
@@ -276,7 +277,7 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::arg(), pybind11::arg("framing") = Framing::Seifert,
             rdoc::parallel)
         .def("parityProjection", &Link::parityProjection,
-            rdoc::parityProjection)
+            pybind11::arg("modBase") = 2, rdoc::parityProjection)
         .def("isConnected", &Link::isConnected, rdoc::isConnected)
         .def("connected", &Link::connected, rdoc::connected)
         .def("diagramComponents", &Link::diagramComponents,

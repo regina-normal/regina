@@ -37,6 +37,24 @@
 
 namespace regina {
 
+size_t Crossing::chordIndex() const {
+    long ans = 0;
+    StrandRef s = const_cast<Crossing*>(this)->upper();
+    for (++s; s.crossing() != this; ++s) {
+        if (s.strand() > 0)
+            ans += s.crossing()->sign();
+        else
+            ans -= s.crossing()->sign();
+    }
+    if (s.strand() > 0) {
+        // We returned to the upper strand without ever seeing the lower
+        // strand.  This cannot be a (virtual) knot diagram.
+        throw FailedPrecondition("Chord index requires the crossing "
+            "to belong to a single-component link");
+    }
+    return std::abs(ans);
+}
+
 Link::Link(const Link& cloneMe, bool cloneProps) {
     crossings_.reserve(cloneMe.crossings_.size());
     for (Crossing* c : cloneMe.crossings_)
@@ -1364,7 +1382,7 @@ Link Link::parallel(int k, Framing framing) const {
     return ans;
 }
 
-Link Link::parityProjection() const {
+Link Link::parityProjection(size_t modBase) const {
     if (components_.size() > 1)
         throw FailedPrecondition("parityProjection() requires at most one "
             "link component");
@@ -1374,34 +1392,68 @@ Link Link::parityProjection() const {
         return { *this };
     }
 
-    // Identify which crossings are even, and for those that are, create a new
-    // crossing for the new link.
-    FixedArray<ssize_t> firstSeen(crossings_.size(), -1);
+    // Identify which crossings satisfy the parity condition, and for those
+    // that do, create a new crossing for the new link.
+    // We test the parity condition for all crossings in a single traversal of
+    // the knot, by keeping a running total of the +1/-1 signs as we walk past
+    // each crossing.
+    FixedArray<bool> seen(crossings_.size(), false);
+    FixedArray<long> firstSignSum(crossings_.size());
     FixedArray<Crossing*> copy(crossings_.size(), nullptr);
-    size_t nEven = 0;
+    long signSum = 0;
+    size_t nKept = 0;
 
     StrandRef start = components_.front();
     StrandRef s = start;
-    ssize_t pos = 0;
     do {
         size_t idx = s.crossing()->index();
-        if (firstSeen[idx] < 0)
-            firstSeen[idx] = pos;
-        else if ((pos ^ firstSeen[idx]) & 1) {
-            copy[idx] = new Crossing(s.crossing()->sign());
-            ++nEven;
+        if (seen[idx]) {
+            // This is the second time we've walked past this crossing.
+            // Examine the running total now, immediately _before_ passing
+            // the crossing for the second time, and compare it to the sum as it
+            // was immediately _after_ passing the crossing for the first time.
+            if (modBase == 0) {
+                if (firstSignSum[idx] == signSum) {
+                    copy[idx] = new Crossing(s.crossing()->sign());
+                    ++nKept;
+                }
+            } else {
+                if ((firstSignSum[idx] - signSum) % modBase == 0) {
+                    copy[idx] = new Crossing(s.crossing()->sign());
+                    ++nKept;
+                }
+            }
         }
 
-        ++pos;
+        if (s.strand() > 0)
+            signSum += s.crossing()->sign();
+        else
+            signSum -= s.crossing()->sign();
+
+        if (! seen[idx]) {
+            // This is the first time we've walked past this crossing.  Record
+            // the running total as it is now, immediately _after_ passing the
+            // crossing.
+            firstSignSum[idx] = signSum;
+            seen[idx] = true;
+        }
+
         ++s;
     } while (s != start);
 
-    if (nEven == 0)
-        return { 1 }; // no crossings survive -> 0-crossing unknot
+    if (nKept == 0) {
+        // No crossings survive, so return the 0-crossing unknot.
+        // Note that there are no newly created Crossing objects to destroy.
+        return { 1 };
+    }
 
-    // Build the new link.
+    // Build the new knot.
     // We know that at least one crossing survives.
+    // We try to be kind to the user: we insert the crossings in the same order
+    // as in the original link, and we mark the new component's starting point
+    // as the first surviving strand from the original knot traversal.
     Link ans;
+    ans.crossings_.reserve(nKept);
     for (auto c : copy)
         if (c)
             ans.crossings_.push_back(c);
@@ -1413,13 +1465,11 @@ Link Link::parityProjection() const {
         if (Crossing* cAlt = copy[s.crossing()->index()]) {
             // This crossing survives!
             StrandRef sAlt(cAlt, s.strand());
-            if (! prev) {
-                prev = sAlt;
+            if (! prev)
                 ans.components_.push_back(sAlt);
-            } else {
+            else
                 join(prev, sAlt);
-                prev = sAlt;
-            }
+            prev = sAlt;
         }
 
         ++s;
