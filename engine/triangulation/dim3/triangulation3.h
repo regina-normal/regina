@@ -1763,6 +1763,40 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * that it is capable of performing such a change.
          */
         bool simplifyToLocalMinimum(bool perform = true);
+        /**
+         * Attempts to simplify this triangulation by performing random 2-3
+         * moves, and then attempting to simplify back down.
+         *
+         * This is a well-climbing heuristic that can be used when simplify()
+         * fails. It draws heavily from SnapPea's `randomize_triangulation()`.
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
+         *
+         * If any tetrahedra and/or triangles are locked, these locks will be
+         * respected: that is, this routine will avoid any moves that would
+         * violate these locks (and in particular, no LockViolation exceptions
+         * should be thrown).  Of course, however, having locks may make the
+         * simplification less effective in reducing the number of tetrahedra.
+         *
+         * \warning The specific behaviour of this routine is likely to change
+         * between releases.
+         *
+         * \param max23 the maximum number of random 2-3 moves to perform.
+         * If this is -1, then this routine will use the default value
+         * `4 * size()`.
+         * \param alwaysModify `true` if this triangulation should always be
+         * modified after this operation, even if the final endpoint has _more_
+         * tetrahedra than the triangulation began with, or `false` if this
+         * triangulation should only be modified if this operation succeeded in
+         * strictly reducing the total number of tetrahedra.
+         *
+         * \return `true` if and only if the number of tetrahedra was strictly
+         * reduced.
+         *
+         * \author Alex He
+         */
+        bool randomise( ssize_t max23 = -1, bool alwaysModify = false );
 
         /**
          * Attempts to simplify this triangulation using a slow but
@@ -5027,6 +5061,14 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \c false (which means no checks were performed at all).
          */
         bool internalCollapseEdge(Edge<3>* e, bool check, bool perform);
+
+        /**
+         * Implements a descent using only 2-0 and 2-1 moves, which is used
+         * internally in randomise().
+         *
+         * \author Alex He
+         */
+        void randomiseDescentInternal();
 
         /**
          * Implements truncate() and truncateIdeal().

@@ -519,5 +519,78 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
     return changed;
 }
 
+bool Triangulation<3>::randomise(ssize_t max23, bool alwaysModify) {
+    if ( (not alwaysModify) and size() <= 1 ) {
+        return false;
+    }
+
+    // For our default max23, we follow SnapPea and make it proportional to
+    // size(). We also follow SnapPea in choosing the constant of
+    // proportionality to be 4.
+    if ( max23 < 0 ) {
+        max23 = 4 * size();
+    }
+    size_t origSize = size();
+
+    // Set up a temporary working triangulation, just in case we end up making
+    // things worse, not better.
+    Triangulation<3> working( *this, false, true );
+
+    // Random 2-3 moves.
+    for ( ssize_t i = 0; i < max23; ++i ) {
+        // Pick a random triangle through which to do a 2-3 move.
+        Triangle<3>* triangle = working.triangle(
+                RandomEngine::rand( working.countTriangles() ) );
+        if ( not working.pachner(triangle) ) {
+            continue;
+        }
+
+        // Use 2-0 and 2-1 moves to try to force future 2-3 moves and the
+        // eventual full simplification to go somewhere new.
+        working.randomiseDescentInternal();
+        if ( working.size() < origSize ) {
+            // We already simplified, so we might as well stop now.
+            swap(working);
+            return true;
+        }
+    }
+
+    // Finish up by trying really hard to simplify. The built-in randomness
+    // should hopefully help to take us somewhere new.
+    bool simplified = true;
+    while (simplified) {
+        simplified = working.simplify();
+    }
+    bool successfullyReduced = ( working.size() < origSize );
+    if ( successfullyReduced or alwaysModify ) {
+        swap(working);
+    }
+    return successfullyReduced;
+}
+
+void Triangulation<3>::randomiseDescentInternal() {
+    bool changed = true;
+    while (changed) {
+        changed = false;
+        for ( Edge<3>* edge : edges() ) {
+            // Try a 2-0 move.
+            if ( move20(edge) ) {
+                changed = true;
+                break;
+            }
+
+            // Try a 2-1 move.
+            if ( move21( edge, 0 ) ) {
+                changed = true;
+                break;
+            }
+            if ( move21( edge, 1 ) ) {
+                changed = true;
+                break;
+            }
+        }
+    }
+}
+
 } // namespace regina
 

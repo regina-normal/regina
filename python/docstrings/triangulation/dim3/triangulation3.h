@@ -3417,6 +3417,10 @@ Parameter ``tet``:
     the tetrahedron indicating where the puncture will be taken. This
     may be ``None``, in which case tetrahedron 0 will be used.)doc";
 
+// Make it build. This will be overwritten by gendocs.sh
+static const char *randomise =
+R"doc()doc";
+
 // Docstring regina::python::doc::Triangulation_::recogniseHandlebody
 static const char *recogniseHandlebody =
 R"doc(Determines whether this is a triangulation of an orientable
