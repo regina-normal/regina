@@ -15,10 +15,10 @@ boundaryComponents(...)
     by value. The C++ type of the object is subject to change, so C++
     users should use ``auto`` (just like this declaration does).
 
-    The returned object is guaranteed to be an instance of ListView, which
-    means it offers basic container-like functions and supports range-
-    based ``for`` loops. Note that the elements of the list will be
-    pointers, so your code might look like:
+    The returned object is guaranteed to be a lightweight view type from
+    the ``std::ranges`` library, which means it supports range-based
+    ``for`` loops. Note that the elements of the view will be pointers, so
+    your code might look like:
 
     ```
     for (BoundaryComponent<dim>* b : tri.boundaryComponents()) { ... }
@@ -46,10 +46,10 @@ components(...)
     by value. The C++ type of the object is subject to change, so C++
     users should use ``auto`` (just like this declaration does).
 
-    The returned object is guaranteed to be an instance of ListView, which
-    means it offers basic container-like functions and supports range-
-    based ``for`` loops. Note that the elements of the list will be
-    pointers, so your code might look like:
+    The returned object is guaranteed to be a lightweight view type from
+    the ``std::ranges`` library, which means it supports range-based
+    ``for`` loops. Note that the elements of the view will be pointers, so
+    your code might look like:
 
     ```
     for (Component<dim>* c : tri.components()) { ... }
@@ -75,16 +75,17 @@ faces(...)
     for Python programmers.
 
     C++ users should not use this routine. The return type must be fixed
-    at compile time, and so it is a std::variant that can hold any of the
-    lightweight return types from the templated faces<subdim>() function.
-    This means that the return value will still need compile-time
-    knowledge of *subdim* to extract and use the appropriate face objects.
-    However, once you know *subdim* at compile time, you are much better
-    off using the (simpler and faster) routine faces<subdim>() instead.
+    at compile time, and so it is typically a ``std::variant`` that can
+    hold any of the lightweight view types returned from the templated
+    ``faces<subdim>()`` function. This means that the return value will
+    still need compile-time knowledge of *subdim* to extract and use the
+    appropriate face objects. However, once you know *subdim* at compile
+    time, you are much better off using the (simpler and faster) routine
+    ``faces<subdim>()`` instead.
 
     For Python users, this routine is much more useful: the return type
     can be chosen at runtime, and so this routine returns a single
-    lightweight object granting access to all of the *subdim*-faces of the
+    lightweight view granting access to all of the *subdim*-faces of the
     triangulation, which you can use immediately.
 
     Exception ``InvalidArgument``:
@@ -148,10 +149,10 @@ simplices(...)
     by value. The C++ type of the object is subject to change, so C++
     users should use ``auto`` (just like this declaration does).
 
-    The returned object is guaranteed to be an instance of View, which
-    means it offers basic container-like functions and supports range-
-    based ``for`` loops. Note that the elements of the list will be
-    pointers, so your code might look like:
+    The returned object is guaranteed to be a lightweight view type from
+    the ``std::ranges`` library, which means it supports range-based
+    ``for`` loops. Note that the elements of the view will be pointers, so
+    your code might look like:
 
     ```
     for (Simplex<dim>* s : tri.simplices()) { ... }
@@ -177,16 +178,17 @@ faces(...)
     for Python programmers.
 
     C++ users should not use this routine. The return type must be fixed
-    at compile time, and so it is a std::variant that can hold any of the
-    lightweight return types from the templated faces<subdim>() function.
-    This means that the return value will still need compile-time
-    knowledge of *subdim* to extract and use the appropriate face objects.
-    However, once you know *subdim* at compile time, you are much better
-    off using the (simpler and faster) routine faces<subdim>() instead.
+    at compile time, and so it is typically a ``std::variant`` that can
+    hold any of the lightweight view types returned from the templated
+    ``faces<subdim>()`` function. This means that the return value will
+    still need compile-time knowledge of *subdim* to extract and use the
+    appropriate face objects. However, once you know *subdim* at compile
+    time, you are much better off using the (simpler and faster) routine
+    ``faces<subdim>()`` instead.
 
     For Python users, this routine is much more useful: the return type
     can be chosen at runtime, and so this routine returns a single
-    lightweight object granting access to all of the *subdim*-faces of the
+    lightweight view granting access to all of the *subdim*-faces of the
     triangulation, which you can use immediately.
 
     Exception ``InvalidArgument``:
@@ -251,11 +253,11 @@ embeddings(...)
     by value. The C++ type of the object is subject to change, so C++
     users should use ``auto`` (just like this declaration does).
 
-    The returned object is guaranteed to be an instance of View, which
-    means it offers basic container-like functions and supports range-
-    based ``for`` loops. The elements of the list will be read-only
-    objects of type FaceEmbedding<dim, subdim>. For example, your code
-    might look like:
+    The returned object is guaranteed to be a lightweight view type from
+    the ``std::ranges`` library, which means it supports range-based
+    ``for`` loops. The elements of the list will be read-only objects of
+    type ``FaceEmbedding<dim, subdim>``. For example, your code might look
+    like:
 
     ```
     Face<dim, subdim>* face = ...;
@@ -302,11 +304,11 @@ embeddings(...)
     by value. The C++ type of the object is subject to change, so C++
     users should use ``auto`` (just like this declaration does).
 
-    The returned object is guaranteed to be an instance of View, which
-    means it offers basic container-like functions and supports range-
-    based ``for`` loops. The elements of the list will be read-only
-    objects of type FaceEmbedding<dim, subdim>. For example, your code
-    might look like:
+    The returned object is guaranteed to be a lightweight view type from
+    the ``std::ranges`` library, which means it supports range-based
+    ``for`` loops. The elements of the list will be read-only objects of
+    type ``FaceEmbedding<dim, subdim>``. For example, your code might look
+    like:
 
     ```
     Face<dim, subdim>* face = ...;
@@ -613,18 +615,14 @@ class View_Triangulation3_vertices(pybind11_builtins.pybind11_object)
  |      __eq__(*args, **kwargs)
  |      Overloaded function.
  |
- |      1. __eq__(self: <internal>.View[regina.Vertex3], arg0: <internal>.View[regina.Vertex3]) -> bool
+ |      1. __eq__(self: <internal>.View[regina.Vertex3], arg0: <internal>.View[regina.Vertex3]) -> None
  |
- |      Determines whether this and the given list view are accessing the same
- |      underlying container.
+ |      Disabled for objects of this type.
  |
- |      Here the containers are compared by _reference_ (i.e., they must be
- |      the same container object at the same location in memory; it is not
- |      enough to be two containers with identical contents).
- |
- |      Returns:
- |          ``True`` if and only if this and the given list use the same
- |          underlying container.
+ |      Objects of this type use value semantics, which means that the
+ |      operators == and != should compare by value (i.e., they test whether
+ |      two objects have the same contents). However, Regina does not
+ |      currently implement such a test for objects of this type.
  |
  |      2. __eq__(self: <internal>.View[regina.Vertex3], arg0: None) -> bool
  |
@@ -634,36 +632,30 @@ class View_Triangulation3_vertices(pybind11_builtins.pybind11_object)
  |  __getitem__(...)
  |      __getitem__(self: <internal>.View[regina.Vertex3], arg0: typing.SupportsInt) -> regina.Vertex3
  |
- |      Returns the requested element of this list.
+ |      Returns the requested element of this view.
  |
  |      Parameter ``index``:
  |          indicates which element to return; this must be between 0 and
- |          size()-1 inclusive.
+ |          ``size()-1`` inclusive.
  |
  |      Returns:
- |          the (*index*)th element in this list.
+ |          the (*index*)th element in this view.
  |
- |  __init__(...)
- |      __init__(self: regina.internal.View_Triangulation3_vertices, arg0: <internal>.View[regina.Vertex3]) -> None
- |
- |      Creates a new copy of the given list view.
+ |  __init__(self, /, *args, **kwargs)
+ |      Initialize self.  See help(type(self)) for accurate signature.
  |
  |  __iter__(...)
  |      __iter__(self: <internal>.View[regina.Vertex3]) -> collections.abc.Iterator[regina.Vertex3]
  |
- |      Returns a Python iterator over the elements of this list.
+ |      Returns a Python iterator over the elements of this view.
  |
  |      Returns:
- |          an iterator over the elements of this list.
+ |          an iterator over the elements of this view.
  |
  |  __len__(...)
  |      __len__(self: <internal>.View[regina.Vertex3]) -> int
  |
- |      Returns the number of elements in this list.
- |
- |      Python:
- |          This is also used to implement the Python special method
- |          __len__().
+ |      Returns the number of elements in this view.
  |
  |      Returns:
  |          the number of elements.
@@ -785,31 +777,25 @@ class DivisionByZero(NumericalError)
  |  ----------------------------------------------------------------------
  |  Methods inherited from builtins.BaseException:
  |
- |  __delattr__(self, name, /)
- |      Implement delattr(self, name).
- |
  |  __getattribute__(self, name, /)
  |      Return getattr(self, name).
  |
- |  __reduce__(...)
+ |  __reduce__(self, /)
  |      Helper for pickle.
  |
  |  __repr__(self, /)
  |      Return repr(self).
  |
- |  __setattr__(self, name, value, /)
- |      Implement setattr(self, name, value).
- |
- |  __setstate__(...)
+ |  __setstate__(self, object, /)
  |
  |  __str__(self, /)
  |      Return str(self).
  |
- |  add_note(...)
+ |  add_note(self, object, /)
  |      Exception.add_note(note) --
  |      add a note to the exception
  |
- |  with_traceback(...)
+ |  with_traceback(self, object, /)
  |      Exception.with_traceback(tb) --
  |      set self.__traceback__ to tb and return self.
  |
