@@ -2642,6 +2642,8 @@
 		052274BD2F7367730054172A /* view.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = view.h; sourceTree = "<group>"; };
 		052274BE2F73CE8D0054172A /* view.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = view.out; sourceTree = "<group>"; };
 		052274BF2F73CE8D0054172A /* view.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = view.test; sourceTree = "<group>"; };
+		052274C02F73CEBD0054172A /* aggregator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = aggregator.h; sourceTree = "<group>"; };
+		052274C12F73CF140054172A /* compat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compat.h; sourceTree = "<group>"; };
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
 		052774101C55743E00140918 /* hypercreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypercreator.cpp; sourceTree = "<group>"; };
@@ -5072,10 +5074,12 @@
 		05098A7E28F24D98005E4716 /* utilities */ = {
 			isa = PBXGroup;
 			children = (
+				052274C02F73CEBD0054172A /* aggregator.h */,
 				05098A8128F24D98005E4716 /* base64.h */,
 				05098A8928F24D98005E4716 /* bitmanip.h */,
 				05098A8528F24D98005E4716 /* bitmask.h */,
 				05098A8328F24D98005E4716 /* boolset.h */,
+				052274C12F73CF140054172A /* compat.h */,
 				05098A8B28F24D98005E4716 /* exception.h */,
 				051806AD2C2BC447001470F1 /* fixedarray.h */,
 				05098AB928F62200005E4716 /* flags.h */,
