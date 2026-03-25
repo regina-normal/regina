@@ -216,6 +216,11 @@ for f in t.tetrahedra():
 
 for f in t.pentachora():
 	print(f.str(), ':', f.index())
+	for e in f.embeddings():
+		print(e)
+
+for f in t.simplices():
+	print(f.str(), ':', f.index())
 
 for c in t.boundaryComponents():
 	print(c.str(), ':', c.index())

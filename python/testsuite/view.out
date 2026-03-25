@@ -388,10 +388,17 @@ Tetrahedron 8, boundary, degree 1: 0 (0135) : 8
 Tetrahedron 9, boundary, degree 1: 0 (0125) : 9
 0 (0125)
 Pentachoron 0, internal: 0 (01234), 0 (12345) : 0
+0 (01234)
+0 (12345)
 Pentachoron 1, boundary: 0 (01253) : 1
+0 (01253)
 Pentachoron 2, boundary: 0 (01245) : 2
+0 (01245)
 Pentachoron 3, boundary: 0 (01354) : 3
+0 (01354)
 Pentachoron 4, boundary: 0 (02345) : 4
+0 (02345)
+5-simplex 0: 01234 -> 0 (12345), 12345 -> 0 (01234) : 0
 Boundary component 0: 0 (01253), 0 (01245), 0 (02345), 0 (01354) : 0
 Pentachoron 1, boundary: 0 (01253) : 1
 Pentachoron 2, boundary: 0 (01245) : 2
