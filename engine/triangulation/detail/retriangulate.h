@@ -178,9 +178,15 @@ concept Retriangulable =
         { RetriangulateParams<T>::sig(x) } -> std::same_as<std::string>;
         { RetriangulateParams<T>::rigidSig(x) } -> std::same_as<std::string>;
 
+        #if defined(__GNUC__) && ! defined(__clang__)
+        // The constraint on propagateFrom() causes an internal compiler error
+        // under gcc-13 and gcc-14 (this is fixed in gcc-15).  For now we only
+        // enforce the constraint under clang, which handles it fine.
+        #else
         RetriangulateParams<T>::propagateFrom(sig, max,
             typename RetriangulateParams<T>::PropagationOptions(),
             [](T&&, const std::string&) { return false; });
+        #endif
     };
 
 /**
