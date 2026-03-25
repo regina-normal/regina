@@ -46,7 +46,7 @@ namespace regina::python {
  * `BoundaryComponent<dim>`.
  */
 template <typename T>
-concept FaceHolder = requires (const T x, int subdim, size_t index) {
+concept FaceHolder = requires(const T x, int subdim, size_t index) {
     { x.countFaces(subdim) } -> std::same_as<size_t>;
     x.faces(subdim);
     x.face(subdim, index);
