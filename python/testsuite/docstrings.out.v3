@@ -727,9 +727,10 @@ class View_Triangulation3_vertices(pybind11_builtins.pybind11_object)
  |
  |  __hash__ = None
  |
- |  equalityType = <EqualityType.ByValue: 1>
- |      The objects are compared by value. This means that the underlying C++
- |      operators == and != for the class *C* are used.
+ |  equalityType = <EqualityType.Disabled: 4>
+ |      Objects of the class *C* cannot be compared by value (because the
+ |      comparison operators are not implemented), and they should not be
+ |      compared by reference (because they are passed around by value).
  |
  |
  |  ----------------------------------------------------------------------
