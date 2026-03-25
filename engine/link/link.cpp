@@ -1418,7 +1418,10 @@ Link Link::parityProjection(size_t modBase) const {
                     ++nKept;
                 }
             } else {
-                if ((firstSignSum[idx] - signSum) % modBase == 0) {
+                // Beware: the sign sums are signed, but modBase is unsigned.
+                // We do not want negative numbers to be treated as enormous
+                // positive numbers here.
+                if (std::abs(firstSignSum[idx] - signSum) % modBase == 0) {
                     copy[idx] = new Crossing(s.crossing()->sign());
                     ++nKept;
                 }
