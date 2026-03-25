@@ -1032,10 +1032,10 @@ class Link :
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based `for` loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Note that the elements of the view will be pointers,
+         * so your code might look like:
          *
          * \code{.cpp}
          * for (Crossing* c : link.crossings()) { ... }
@@ -1088,13 +1088,13 @@ class Link :
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based `for` loops.  Each element of the list will be
-         * a starting strand for some component; more precisely, iterating
-         * through this list is equivalent to calling `component(0)`,
-         * `component(1)`, ..., `component(countComponents()-1)`
-         * in turn.  As an example, your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Each element of the list will be a starting strand
+         * for some component; more precisely, iterating through this list is
+         * equivalent to calling `component(0)`, `component(1)`, ...,
+         * `component(countComponents()-1)` in turn.  As an example, your code
+         * might look like:
          *
          * \code{.cpp}
          * for (const StrandRef& c : link.components()) { ... }

@@ -192,7 +192,7 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
     regina::python::addStdView<
         decltype(std::declval<Face<dim, subdim>>().embeddings())>(internal,
         (std::string(name) + "_embeddings").c_str());
-    // The name we give to the next ListView class is not in the typical form
+    // The name we give to the next view class is not in the typical form
     // Triangulation<dim>_faces<subdim>; however, this is an internal class,
     // and the name we do use is easy to build from what we already know.
     regina::python::addStdView<

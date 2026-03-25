@@ -736,10 +736,10 @@ class ModelLinkGraph :
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based `for` loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Note that the elements of the view will be pointers,
+         * so your code might look like:
          *
          * \code{.cpp}
          * for (ModelLinkGraphNode* n : graph.nodes()) { ... }
@@ -2014,11 +2014,10 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based `for` loops.  The elements of the list will be
-         * read-only objects of type ModelLinkGraphArc, and so your code might
-         * look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  The elements of the list will be read-only objects of
+         * type ModelLinkGraphArc, and so your code might look like:
          *
          * \code{.cpp}
          * for (const ModelLinkGraphArc& a : cells.arcs(cell)) { ... }

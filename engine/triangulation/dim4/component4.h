@@ -143,10 +143,10 @@ class Component<4> : public detail::ComponentBase<4> {
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based `for` loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Note that the elements of the view will be pointers,
+         * so your code might look like:
          *
          * \code{.cpp}
          * for (Face<dim, subdim>* f : comp.faces<subdim>()) { ... }
@@ -174,9 +174,9 @@ class Component<4> : public detail::ComponentBase<4> {
          * to all <i>subdim</i>-faces in this component, in a way that is
          * optimised for Python programmers.
          *
-         * C++ users should not use this routine.  The return type must be
-         * fixed at compile time, and so it is typically a `std::variant` that
-         * can hold any of the lightweight return types from the templated
+         * C++ users should not use this routine.  The return type must be fixed
+         * at compile time, and so it is typically a `std::variant` that can
+         * hold any of the lightweight view types returned from the templated
          * `faces<subdim>()` function.  This means that the return value will
          * still need compile-time knowledge of \a subdim to extract and
          * use the appropriate face objects.  However, once you know \a subdim
@@ -185,7 +185,7 @@ class Component<4> : public detail::ComponentBase<4> {
          *
          * For Python users, this routine is much more useful: the return type
          * can be chosen at runtime, and so this routine returns a single
-         * lightweight object granting access to all of the <i>subdim</i>-faces
+         * lightweight view granting access to all of the <i>subdim</i>-faces
          * of the component, which you can use immediately.
          *
          * \exception InvalidArgument The face dimension \a subdim is outside
