@@ -50,6 +50,7 @@
 #include "utilities/typeutils.h"
 #include <algorithm>
 #include <deque>
+#include <ranges>
 #include <vector>
 
 ENSURE_ESSENTIAL_REGINA_HEADERS

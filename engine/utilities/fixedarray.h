@@ -39,6 +39,7 @@
 
 #include <algorithm>
 #include <concepts>
+#include <cstddef>
 #include "regina-core.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS

@@ -221,15 +221,15 @@ static const char *PacketData =
 R"doc(A lightweight helper class that allows an object of type *Held* to
 connect with the wrapped packet class that contains it.
 
-For every wrapped packet type of the form PacketOf<Held>, the
-corresponding class *Held* must derive from PacketData<Held>. See the
-Packet class notes for more information about packets, and for what
-else must be implemented for each wrapped packet type.
+For every wrapped packet type of the form ``PacketOf<Held>``, the
+corresponding class *Held* must derive from ``PacketData<Held>``. See
+the Packet class notes for more information about packets, and for
+what else must be implemented for each wrapped packet type.
 
 This base class is extremely lightweight: the only data that it
 contains is a single PacketHeldBy enumeration value. All of the class
 constructors set this value to PacketHeldBy::None; it is the
-responsibility of subclasses (e.g., PacketOf<Held>) to change this
+responsibility of subclasses (e.g., ``PacketOf<Held>``) to change this
 where necessary.
 
 Python:

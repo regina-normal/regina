@@ -112,7 +112,7 @@ Python programmers.
 
 C++ users should not use this routine. The return type must be fixed
 at compile time, and so it is typically a ``std::variant`` that can
-hold any of the lightweight return types from the templated
+hold any of the lightweight view types returned from the templated
 ``faces<subdim>()`` function. This means that the return value will
 still need compile-time knowledge of *subdim* to extract and use the
 appropriate face objects. However, once you know *subdim* at compile
@@ -121,7 +121,7 @@ time, you are much better off using the (simpler and faster) routine
 
 For Python users, this routine is much more useful: the return type
 can be chosen at runtime, and so this routine returns a single
-lightweight object granting access to all of the *subdim*-faces of the
+lightweight view granting access to all of the *subdim*-faces of the
 component, which you can use immediately.
 
 Exception ``InvalidArgument``:

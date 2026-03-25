@@ -22,30 +22,27 @@ are non-const pointers then this means that the _pointers_ cannot be
 reassigned to point to different objects, but the objects they _point_
 to can still be modified.)
 
-This class is in a sense a multi-dimensional analogue to TableView
-(though it does also support one-dimensional tables).
+This class is in a sense a multi-dimensional analogue to standard C++
+views from the ``std::ranges`` library (though it does also support
+one-dimensional tables).
 
-Where this class differs from ListView is:
+Where this class differs from standard C++ views is:
 
-* TableView supports multi-dimensional tables, whereas ListView only
-  supports one-dimensional lists.
-
-* TableView offers a smaller set of member functions, whereas ListView
-  has a richer interface.
+* TableView supports multi-dimensional tables, whereas standard C++
+  views only supports one-dimensional lists.
 
 * TableView is (for now) only designed to work with fixed-size C-style
   arrays of the form ``Element[a][b]...[z]``, where the array
-  dimensions are compile-time constants. In contrast, ListView can
-  also work with rich C++ container classes and variable-sized C-style
-  arrays.
+  dimensions are compile-time constants. In contrast, standard C++
+  views can work with a variety of different container types.
 
-* While ListView has a purpose in C++ (to hide the "real" type used by
-  the underlying implementation), TableView is primary for the Python
-  bindings: its main benefit is to strictly enforce read-only access
-  (since Python loses all knowledge of constness, and sometimes allows
-  users to change things that they should not). Typically TableView
-  would be used to wrap global constant arrays (such as
-  regina::quadDefn, or regina::Edge<3>::edgeNumber).
+* While standard C++ views have a purpose in C++ (to hide the "real"
+  type used by the underlying implementation), TableView is primary
+  for the Python bindings: its main benefit is to strictly enforce
+  read-only access (since Python loses all knowledge of constness, and
+  sometimes allows users to change things that they should not).
+  Typically TableView would be used to wrap global constant arrays
+  (such as regina::quadDefn, or regina::Edge<3>::edgeNumber).
 
 TableView comes with deduction guides for tables of dimension ≤ 3.
 This means that you can simply create a TableView using the syntax

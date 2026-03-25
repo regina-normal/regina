@@ -39,10 +39,10 @@ Every class Face<dim, subdim> inherits from this class, which means
 you can access these routines as Face<dim, subdim>::ordering(),
 Face<dim, subdim>::faceNumber(), and so on.
 
-An advantage of referring to FaceNumbering<dim, subdim> directly (as
-opposed to Face<dim, subdim>) is that its header is lightweight: it
-does not pull in the large and complex headers required by Face<dim,
-subdim>.
+An advantage of referring to ``FaceNumbering<dim, subdim>`` directly
+(as opposed to ``Face<dim, subdim>``) is that its header is
+lightweight: it does not pull in the large and complex headers
+required by ``Face<dim, subdim>``.
 
 This class is specialised (and optimised) in Regina's standard
 dimensions.

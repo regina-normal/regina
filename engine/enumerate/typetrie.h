@@ -39,6 +39,7 @@
 
 #include "regina-core.h"
 #include "core/output.h"
+#include <cstdint>
 #include <cstring>
 #include <stack>
 #include <vector>
