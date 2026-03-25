@@ -41,7 +41,12 @@ See countBoundaryFacets() for further information.)doc";
 
 // Docstring regina::python::doc::Component_::countFaces
 static const char *countFaces =
-R"doc(Returns the number of *subdim*-faces in this component.
+R"doc(Returns the number of *subdim*-faces in this component, where the face
+dimension does not need to be known until runtime.
+
+For C++ programmers who know *subdim* at compile time, you are better
+off using the template function ``countFaces<subdim>()`` instead,
+which is (slightly) faster.
 
 For convenience, this routine explicitly supports the case *subdim* =
 3. This is _not_ the case for the routines face() and faces(), which
@@ -49,33 +54,47 @@ give access to individual faces (the reason relates to the fact that
 tetrahedra are built manually, whereas lower-dimensional faces are
 deduced properties).
 
-Python:
-    Python does not support templates. Instead, Python users should
-    call this function in the form ``countFaces(subdim)``; that is,
-    the template parameter *subdim* becomes the first argument of the
-    function.
+Exception ``InvalidArgument``:
+    The face dimension *subdim* is outside the supported range (i.e.,
+    negative or greater than 3).
 
-Template parameter ``subdim``:
-    the face dimension.
+Parameter ``subdim``:
+    the face dimension; this must be between 0 and 3 inclusive.
 
 Returns:
     the number of *subdim*-faces.)doc";
 
 // Docstring regina::python::doc::Component_::face
 static const char *face =
-R"doc(Returns the requested *subdim*-face in this component.
+R"doc(Returns the requested *subdim*-face in this component, in a way that
+is optimised for Python programmers.
+
+C++ users should not use this routine. The return type must be fixed
+at compile time, and so it is typically a ``std::variant`` that could
+store a pointer to any class ``Face<3, ...>``. This means you cannot
+access the face directly: you will still need some kind of compile-
+time knowledge of *subdim* before you can extract and use an
+appropriate ``Face<3, subdim>`` object from *v*. However, once you
+know *subdim* at compile time, you are better off using the (simpler
+and faster) routine ``face<subdim>()`` instead.
+
+For Python users, this routine is much more useful: the return type
+can be chosen at runtime, and so this routine simply returns a
+``Face<3, subdim>`` object of the appropriate face dimension that you
+can use immediately.
+
+The specific return type for C++ programmers will be
+``std::variant<Face<3, 0>*, Face<3, 1>*, Face<3, 2>*>``.
 
 Note that the index of a face in the component need not be the index
 of the same face in the overall triangulation.
 
-Python:
-    Python does not support templates. Instead, Python users should
-    call this function in the form ``face(subdim, index)``; that is,
-    the template parameter *subdim* becomes the first argument of the
-    function.
+Exception ``InvalidArgument``:
+    The face dimension *subdim* is outside the supported range (i.e.,
+    negative, or greater than 2).
 
-Template parameter ``subdim``:
-    the face dimension.
+Parameter ``subdim``:
+    the face dimension; this must be between 0 and 2 inclusive.
 
 Parameter ``index``:
     the index of the desired face, ranging from 0 to
@@ -87,34 +106,29 @@ Returns:
 // Docstring regina::python::doc::Component_::faces
 static const char *faces =
 R"doc(Returns an object that allows iteration through and random access to
-all *subdim*-faces in this component.
+all *subdim*-faces in this component, in a way that is optimised for
+Python programmers.
 
-The object that is returned is lightweight, and can be happily copied
-by value. The C++ type of the object is subject to change, so C++
-users should use ``auto`` (just like this declaration does).
+C++ users should not use this routine. The return type must be fixed
+at compile time, and so it is typically a ``std::variant`` that can
+hold any of the lightweight return types from the templated
+``faces<subdim>()`` function. This means that the return value will
+still need compile-time knowledge of *subdim* to extract and use the
+appropriate face objects. However, once you know *subdim* at compile
+time, you are much better off using the (simpler and faster) routine
+``faces<subdim>()`` instead.
 
-The returned object is guaranteed to be an instance of ListView, which
-means it offers basic container-like functions and supports range-
-based ``for`` loops. Note that the elements of the list will be
-pointers, so your code might look like:
+For Python users, this routine is much more useful: the return type
+can be chosen at runtime, and so this routine returns a single
+lightweight object granting access to all of the *subdim*-faces of the
+component, which you can use immediately.
 
-```
-for (Face<dim, subdim>* f : comp.faces<subdim>()) { ... }
-```
+Exception ``InvalidArgument``:
+    The face dimension *subdim* is outside the supported range (i.e.,
+    negative, or greater than 2).
 
-The object that is returned will remain valid only for as long as this
-component object exists. In particular, the object will become invalid
-any time that the triangulation changes (since all component objects
-will be destroyed and others rebuilt in their place). Therefore it is
-best to treat this object as temporary only, and to call faces() again
-each time you need it.
-
-Python:
-    Python does not support templates. Instead, Python users should
-    call this function in the form ``faces(subdim)``.
-
-Template parameter ``subdim``:
-    the face dimension.
+Parameter ``subdim``:
+    the face dimension; this must be between 0 and 2 inclusive.
 
 Returns:
     access to the list of all *subdim*-faces.)doc";

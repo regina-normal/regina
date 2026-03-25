@@ -20,18 +20,16 @@ vertex normal surfaces, as described in "A tree traversal algorithm
 for decision problems in knot theory and 3-manifold topology", Burton
 and Ozlen, Algorithmica 65:4 (2013), pp. 772-801.
 
-A type vector is a sequence of digits, each between 0 and *nTypes*-1
-inclusive. Type vectors are represented as arrays of characters: these
-are not strings, but simply sequences of one-byte integers. In
-particular, you cannot print them (since they use raw integer values,
-not ASCII digits). The length of a type vector must be passed
-alongside it (i.e., there is no special terminating character).
+A type vector is a sequence of integers, each between 0 and
+``nTypes-1`` inclusive. The length of a type vector must be passed
+alongside it (i.e., there is no special terminating value).
 
 A type vector *v* is said to _dominate_ *u* if, for each position *i*,
-either v[i] == u[i] or else u[i] == 0. So, for instance, (1,0,2,3)
-dominates (1,0,2,0), which in turn dominates (1,0,0,0). Domination is
-a partial order, not a total order: for instance, neither of (1,0,2,0)
-or (1,0,3,0) dominates the other.
+either ``v[i] == u[i]`` or else ``u[i] == 0``. So, for instance,
+``(1,0,2,3)`` dominates ``(1,0,2,0)``, which in turn dominates
+``(1,0,0,0)``. Domination is a partial order, not a total order: for
+instance, neither of ``(1,0,2,0)`` or ``(1,0,3,0)`` dominates the
+other.
 
 We assume that all type vectors used in this trie have the same
 length. This is important, since we optimise the implementation by
@@ -45,10 +43,11 @@ possible, even when passing or returning objects by value. However, be
 aware that the cost of moving is linear in the template parameter
 *nTypes* (which, as noted below, is usually very small).
 
-Precondition:
-    *nTypes* is between 1 and 256 inclusive. The typical value for
-    *nTypes* for normal surface enumeration is either 4 or 7
-    (depending upon whether we are supporting almost normal surfaces).
+Template parameter ``nTypes``:
+    specifies the range of possible values for the elements of the
+    vectors that are stored. For normal surface enumeration, typical
+    values for *nTypes* would be 4 or 7 (depending upon whether we are
+    supporting almost normal surfaces).
 
 Python:
     This is available only for the template parameters *nTypes* = 4

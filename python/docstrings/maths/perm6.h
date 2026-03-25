@@ -518,18 +518,16 @@ Returns:
 
 // Docstring regina::python::doc::Perm_::contract
 static const char *contract =
-R"doc(Restricts a *k*-element permutation to an 6-element permutation, where
-*k* > 6.
+R"doc(Restricts a *k*-element permutation to a 6-element permutation, where
+``k > 6``.
 
-The resulting permutation will map 0,...,5 to their respective images
-under *p*, and will ignore the "unused" images *p*[6],...,*p*[*k*-1].
+The resulting permutation will map ``0,...,5`` to their respective
+images under *p*, and will ignore the "unused" images
+``p[6],...,p[k-1]``.
 
 Precondition:
-    The given permutation maps 0,...,5 to 0,...,5 in some order.
-
-Template parameter ``k``:
-    the number of elements for the input permutation; this must be
-    strictly greater than 6.
+    The given permutation maps ``0,...,5`` to ``0,...,5`` in some
+    order.
 
 Parameter ``p``:
     a permutation on *k* elements.
@@ -539,16 +537,12 @@ Returns:
 
 // Docstring regina::python::doc::Perm_::extend
 static const char *extend =
-R"doc(Extends a *k*-element permutation to a 6-element permutation, where 2
-≤ *k* < 6.
+R"doc(Extends a *k*-element permutation to a 6-element permutation, where
+``2 ≤ k < 6``.
 
-The resulting permutation will map 0,...,*k*-1 to their respective
-images under *p*, and will map the "unused" elements *k*,...,5 to
+The resulting permutation will map ``0,...,k-1`` to their respective
+images under *p*, and will map the "unused" elements ``k,...,5`` to
 themselves.
-
-Template parameter ``k``:
-    the number of elements for the input permutation; this must be 2,
-    3, 4 or 5.
 
 Parameter ``p``:
     a permutation on *k* elements.

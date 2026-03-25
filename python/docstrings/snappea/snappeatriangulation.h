@@ -47,7 +47,10 @@ description so they can be created without allocating further
 resources).
 
 Details of the error can be accessed through the inherited member
-function what().)doc";
+function what().
+
+Python:
+    This uses Python's ``RuntimeError`` as its base class.)doc";
 
 // Docstring regina::python::doc::SnapPeaMemoryFull
 static const char *SnapPeaMemoryFull =
@@ -62,7 +65,10 @@ description so they can be created without allocating further
 resources).
 
 Details of the error can be accessed through the member function
-what().)doc";
+what().
+
+Python:
+    This uses Python's ``RuntimeError`` as its base class.)doc";
 
 // Docstring regina::python::doc::SnapPeaTriangulation
 static const char *SnapPeaTriangulation =

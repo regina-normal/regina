@@ -244,9 +244,10 @@ Returns:
 
 // Docstring regina::python::doc::AngleStructures_::knowsSpansStrict
 static const char *knowsSpansStrict =
-R"doc(Is it already known whether some convex combination of the angle
-structures in this list forms a strict angle structure? See
-AngleStructure::isStrict() for details on strict angle structures.
+R"doc(Is it already known (or trivial to determine) whether some convex
+combination of the angle structures in this list forms a strict angle
+structure? See AngleStructure::isStrict() for details on strict angle
+structures.
 
 If this property is already known, future calls to spansStrict() will
 be very fast (simply returning the precalculated value). Otherwise
@@ -259,14 +260,23 @@ be exponential in the number of tetrahedra.
     structure list spans a strict angle structure; it merely tells you
     whether the answer has already been computed.
 
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial. Currently this argument is ignored
+    since this routine does not look for shortcuts that make this
+    property trivial to compute; however, it is provided for
+    compatibility with other ``knows...()`` routines.
+
 Returns:
-    ``True`` if and only if this property is already known.)doc";
+    ``True`` if and only if this property is already known or trivial
+    to compute.)doc";
 
 // Docstring regina::python::doc::AngleStructures_::knowsSpansTaut
 static const char *knowsSpansTaut =
-R"doc(Is it already known whether some angle structure in this list is a
-taut structure? See AngleStructure::isTaut() for details on taut
-structures.
+R"doc(Is it already known (or trivial to determine) whether some angle
+structure in this list is a taut structure? See
+AngleStructure::isTaut() for details on taut structures.
 
 If this property is already known, future calls to spansTaut() will be
 very fast (simply returning the precalculated value). Otherwise
@@ -279,8 +289,17 @@ be exponential in the number of tetrahedra.
     structure in this list is a taut structure; it merely tells you
     whether the answer has already been computed.
 
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial. Currently this argument is ignored
+    since this routine does not look for shortcuts that make this
+    property trivial to compute; however, it is provided for
+    compatibility with other ``knows...()`` routines.
+
 Returns:
-    ``True`` if and only if this property is already known.)doc";
+    ``True`` if and only if this property is already known or trivial
+    to compute.)doc";
 
 // Docstring regina::python::doc::AngleStructures_::size
 static const char *size =

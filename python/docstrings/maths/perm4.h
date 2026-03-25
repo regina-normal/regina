@@ -476,18 +476,16 @@ Returns:
 
 // Docstring regina::python::doc::Perm_::contract
 static const char *contract =
-R"doc(Restricts a *k*-element permutation to an 4-element permutation, where
-*k* > 4.
+R"doc(Restricts a *k*-element permutation to a 4-element permutation, where
+``k > 4``.
 
-The resulting permutation will map 0,...,3 to their respective images
-under *p*, and will ignore the "unused" images *p*[4],...,*p*[*k*-1].
+The resulting permutation will map ``0,...,3`` to their respective
+images under *p*, and will ignore the "unused" images
+``p[4],...,p[k-1]``.
 
 Precondition:
-    The given permutation maps 0,...,3 to 0,...,3 in some order.
-
-Template parameter ``k``:
-    the number of elements for the input permutation; this must be
-    strictly greater than 4.
+    The given permutation maps ``0,...,3`` to ``0,...,3`` in some
+    order.
 
 Parameter ``p``:
     a permutation on *k* elements.
@@ -497,16 +495,12 @@ Returns:
 
 // Docstring regina::python::doc::Perm_::extend
 static const char *extend =
-R"doc(Extends a *k*-element permutation to a 4-element permutation, where 2
-≤ *k* < 4.
+R"doc(Extends a *k*-element permutation to a 4-element permutation, where
+``2 ≤ k < 4``.
 
-The resulting permutation will map 0,...,*k*-1 to their respective
-images under *p*, and will map the "unused" elements *k*,...,3 to
+The resulting permutation will map ``0,...,k-1`` to their respective
+images under *p*, and will map the "unused" elements ``k,...,3`` to
 themselves.
-
-Template parameter ``k``:
-    the number of elements for the input permutation; this must be 2
-    or 3.
 
 Parameter ``p``:
     a permutation on *k* elements.

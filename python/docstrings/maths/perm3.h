@@ -446,18 +446,14 @@ Returns:
 
 // Docstring regina::python::doc::Perm_::contract
 static const char *contract =
-R"doc(Restricts a *k*-element permutation to an 3-element permutation, where
-*k* > 3.
+R"doc(Restricts a *k*-element permutation to a 3-element permutation, where
+``k > 3``.
 
 The resulting permutation will map 0,1,2 to their respective images
-under *p*, and will ignore the "unused" images *p*[3],...,*p*[*k*-1].
+under *p*, and will ignore the "unused" images ``p[3],...,p[k-1]``.
 
 Precondition:
     The given permutation maps 0,1,2 to 0,1,2 in some order.
-
-Template parameter ``k``:
-    the number of elements for the input permutation; this must be
-    strictly greater than 3.
 
 Parameter ``p``:
     a permutation on *k* elements.
@@ -467,17 +463,13 @@ Returns:
 
 // Docstring regina::python::doc::Perm_::extend
 static const char *extend =
-R"doc(Extends a *k*-element permutation to an 3-element permutation. where 2
-≤ *k* < 3. The only possible value of *k* is 2, but this routine is
-kept as a template function for consistency with the other classes'
+R"doc(Extends a *k*-element permutation to an 3-element permutation. where
+``2 ≤ k < 3``. The only possible value of *k* is 2, but this routine
+is kept as a template function for consistency with the other classes'
 Perm<n>::extend() routines.
 
 The resulting permutation will map 0,1 to their respective images
 under *p*, and will map the "unused" element 3 to itself.
-
-Template parameter ``k``:
-    the number of elements for the input permutation; this must be
-    exactly 2.
 
 Parameter ``p``:
     a permutation on two elements.

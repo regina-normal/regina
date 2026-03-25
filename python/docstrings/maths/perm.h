@@ -20,7 +20,8 @@ such permutations are used to describe simplex gluings in
 Perm objects are small enough to pass by value and swap with
 std::swap(), with no need to use references, specialised move
 operations or custom swap functions. The trade-off is that, for this
-to be possible, the Perm template class can only work with *n* ≤ 16.
+to be possible, the Perm template class can only work with ``n ≤
+maxPermDegree()``, which is currently hard-coded as ``n ≤ 16``.
 
 Each permutation has an internal code, which is a single native
 integer that is sufficient to reconstruct the entire permutation. Thus
@@ -28,28 +29,28 @@ the internal code may be a useful means for passing permutation
 objects to and from the engine. These codes are constructed as
 follows:
 
-* For 8 ≤ *n* ≤ 16, the code is an _image pack_: essentially a packed
+* For ``8 ≤ n``, the code is an _image pack_: essentially a packed
   array that holds the images of 0,...,*n*-1 in a single native
   integer type. More precisely, this is an unsigned integer of type
   *ImagePack*, whose lowest *imageBits* bits represent the image of 0,
   whose next lowest *imageBits* bits represent the image of 1, and so
   on. This scheme is consistent with the old first-generation codes
-  for *n* = 4,...,7, which are still supported but no longer used
+  for ``n = 4,...,7``, which are still supported but no longer used
   internally.
 
-* For *n* ≤ 7, the code is an index into a hard-coded list of all
+* For ``n ≤ 7``, the code is an index into a hard-coded list of all
   possible permutations; more precisely, an index into the symmetric
-  group Perm<n>::Sn. The ordering of Perm<n>::Sn is "almost
-  lexicographic", in that we swap some pairs of indices (2*k*, 2*k*+1)
+  group ``Perm<n>::Sn``. The ordering of ``Perm<n>::Sn`` is "almost
+  lexicographic", in that we swap some pairs of indices ``(2k, 2k+1)``
   to ensure that the even permutations are precisely those with even
   indices.
 
-For *n* = 2,...,5 (which appear throughout 2-, 3- and 4-manifold
+For ``n = 2,...,5`` (which appear throughout 2-, 3- and 4-manifold
 triangulations), this template is specialised: the code is highly
-optimised and also offers some extra functionality. For *n* = 6,7,
+optimised and also offers some extra functionality. For ``n = 6,7``,
 this template is again specialised and highly optimised, and it offers
-some extra functionality but not as much as Perm<5> and below. For *n*
-≥ 8, this template is generic and most operations require more time
+some extra functionality but not as much as Perm<5> and below. For ``n
+≥ 8``, this template is generic and most operations require more time
 (in particular, there are no harded-coded lookup tables).
 
 You can iterate through all permutations using a range-based ``for``
@@ -59,22 +60,21 @@ loop over `Perm<n>::Sn`:
 for (auto p : Perm<n>::Sn) { ... }
 ```
 
-For the optimised permutation classes *n* ≤ 7, this iteration will be
-extremely fast in both C++ and Python. For the larger permutation
-classes *n* ≥ 8, this will still be reasonably fast in C++ (since it
+For the optimised permutation classes ``n ≤ 7``, this iteration will
+be extremely fast in both C++ and Python. For the larger permutation
+classes ``n ≥ 8``, this will still be reasonably fast in C++ (since it
 uses the increment operator internally), but it will be slower in
 Python (since it reconstructs ``Sn[i]`` for each integer *i*). If you
-are in Python and you need to iterate over all permutations for *n* ≥
-8, you may wish to implement a loop using ``Perm<n>.inc()``.
+are in Python and you need to iterate over all permutations for ``n ≥
+8``, you may wish to implement a loop using ``Perm<n>.inc()``.
 
 Python:
-    Python does not support templates. For each *n* = 2,...,16, this
-    class is available in Python under the corresponding name Perm2,
-    Perm3, ..., Perm16.
+    Python does not support templates. Instead, you should append the
+    integer *n* to the class name. For example, the C++ class
+    ``Perm<4>`` is available in Python under the name ``Perm4``.
 
 Template parameter ``n``:
-    the number of objects being permuted. This must be between 2 and
-    16 inclusive.)doc";
+    the number of objects being permuted.)doc";
 
 // Docstring regina::python::doc::PermClass
 static const char *PermClass =
@@ -100,13 +100,13 @@ about copying PermClass objects, and work with them in-place where
 possible.
 
 Python:
-    Python does not support templates. For each *n* = 2,...,16, this
-    class is available in Python under the corresponding name
-    PermClass2, PermClass3, ..., PermClass16.
+    Python does not support templates. Instead, you should append the
+    integer *n* to the class name. For example, the C++ class
+    ``PermClass<4>`` is available in Python under the name
+    ``PermClass4``.
 
 Template parameter ``n``:
-    the number of objects being permuted. This must be between 2 and
-    16 inclusive.)doc";
+    the number of objects being permuted.)doc";
 
 // Docstring regina::python::doc::PermCodeType
 static const char *PermCodeType =
@@ -698,19 +698,15 @@ Returns:
 // Docstring regina::python::doc::Perm_::contract
 static const char *contract =
 R"doc(Restricts a *k*-element permutation to an *n*-element permutation,
-where *k* > *n*.
+where ``k > n``.
 
-The resulting permutation will map 0,...,*n*-1 to their respective
+The resulting permutation will map ``0,...,n-1`` to their respective
 images under *p*, and will ignore the "unused" images
-*p*[*n*],...,*p*[*k*-1].
+``p[n],...,p[k-1]``.
 
 Precondition:
-    The given permutation maps 0,...,*n*-1 to 0,...,*n*-1 in some
+    The given permutation maps ``0,...,n-1`` to ``0,...,n-1`` in some
     order.
-
-Template parameter ``k``:
-    the number of elements for the input permutation; this must be
-    strictly greater than *n*.
 
 Parameter ``p``:
     a permutation on *k* elements.
@@ -721,15 +717,11 @@ Returns:
 // Docstring regina::python::doc::Perm_::extend
 static const char *extend =
 R"doc(Extends a *k*-element permutation to an *n*-element permutation, where
-2 ≤ *k* < *n*.
+``2 ≤ k < n``.
 
-The resulting permutation will map 0,...,*k*-1 to their respective
-images under *p*, and will map the "unused" elements *k*,...,*n*-1 to
+The resulting permutation will map ``0,...,k-1`` to their respective
+images under *p*, and will map the "unused" elements ``k,...,n-1`` to
 themselves.
-
-Template parameter ``k``:
-    the number of elements for the input permutation; this must be at
-    least 2, and strictly less than *n*.
 
 Parameter ``p``:
     a permutation on *k* elements.
@@ -1064,7 +1056,7 @@ trailing whitespace), then it will be treated as an invalid encoding
 (i.e., this routine will throw an exception).
 
 Tight encodings are fast to work with for small permutation classes
-(*n* ≤ 7), but slower for larger permutation classes (8 ≤ *n* ≤ 16).
+(``n ≤ 7``), but slower for larger permutation classes (``8 ≤ n``).
 See tightEncoding() for further details.
 
 Exception ``InvalidArgument``:
@@ -1084,9 +1076,9 @@ encodings for details.
 
 For all permutation classes Perm<n>, the tight encoding is based on
 the index into the full permutation group *S_n*. For smaller
-permutation classes (*n* ≤ 7), such encodings are very fast to work
+permutation classes (``n ≤ 7``), such encodings are very fast to work
 with since the *S_n* index is used as the internal permutation code.
-For larger permutation classes however (8 ≤ *n* ≤ 16), the *S_n* index
+For larger permutation classes however (``8 ≤ n``), the *S_n* index
 requires some non-trivial work to compute.
 
 Returns:

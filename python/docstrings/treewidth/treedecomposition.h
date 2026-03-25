@@ -621,7 +621,7 @@ directed or undirected.
 The graph is specified by an adjacency matrix, expressed using
 Regina's own matrix type.
 
-Each entry *graph*[i][j] will be treated as a boolean, indicating
+Each entry ``graph[i][j]`` will be treated as a boolean, indicating
 whether the graph contains an arc from node *i* to node *j*.
 
 Exception ``InvalidArgument``:
@@ -630,7 +630,7 @@ Exception ``InvalidArgument``:
 
 Python:
     The argument *graph* must be of type ``MatrixBool`` (which is the
-    Python type corresponding to the C++ class Matrix<bool>).
+    Python type corresponding to the C++ class ``Matrix<bool>``).
 
 Parameter ``graph``:
     the adjacency matrix of the graph.
@@ -646,24 +646,19 @@ R"doc(Builds a tree decomposition of an arbitrary graph. The graph may be
 directed or undirected.
 
 The graph is specified by an adjacency matrix, given as a vector of
-rows:
-
-* The number of elements in each row should be equal to the number of
-  rows (i.e., the adjacency matrix should be square).
-
-* The individual elements of each row *r* should be accessible using a
-  range-based ``for`` loop over *r*.
-
-* Each entry in row *i*, column *j* will be treated as a boolean,
-  indicating whether the graph contains an arc from node *i* to node
-  *j*.
+rows. Each entry in each row will be treated as a boolean, where the
+entry in row *i*, column *j* indicates whether the graph contains an
+arc from node *i* to node *j*.
 
 An example of a suitable type for the adjacency matrix could be
-std::vector<std::vector<bool>>.
+``std::vector<std::vector<bool>>``.
+
+Precondition:
+    The adjacency matrix is square. That is, the number of elements in
+    each row equals the total number of rows.
 
 Exception ``InvalidArgument``:
-    The adjacency matrix does not have the same number of rows as
-    columns.
+    The adjacency matrix is not square.
 
 Python:
     The adjacency matrix should be given as a list of lists.
@@ -1066,14 +1061,24 @@ contents of the bags will not change. However:
 If the given bag is already the root bag, then this routine does
 nothing (and in particular, types and subtypes are preserved).
 
+Exception ``NoSolution``:
+    The cost type *T* is only partially ordered (not totally ordered),
+    and this routine encountered two costs that were incomparable. For
+    example, this could happen if *T* is a floating-point type and one
+    of the costs is ``NaN``.
+
 Python:
     The *costSame* and *costReverse* arrays, as well as *costRoot* if
     it is given, should be passed as Python lists of real numbers.
 
 Template parameter ``T``:
-    the type being used to estimate costs. It must be possible to
-    assign 0 to a variable of type *T* using both constructors and the
-    assignment operator.
+    the type being used to estimate costs. As of Regina 8.0, zero
+    plays no special role here (i.e., costs can be positive or
+    negative, and indeed costs do not need to be real numbers at all);
+    it is only the ordering on *T* that matters. Although *T* does not
+    need to be totally ordered, all of the costs that are passed must
+    be comparable to each other; otherwise this routine might throw an
+    exception.
 
 Parameter ``costSame``:
     An array of size() elements giving an estimated cost of preserving

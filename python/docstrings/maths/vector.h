@@ -196,11 +196,6 @@ Python:
     Using this constructor, Python allows you to construct a
     Vector<Integer> from a Vector<LargeInteger> or vice versa.
 
-Template parameter ``U``:
-    the type of object held by the given vector *src*. It must be
-    possible to _assign_ an object of type *U* to an object of type
-    *T*.
-
 Parameter ``src``:
     the vector to clone.)doc";
 

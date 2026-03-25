@@ -43,14 +43,13 @@ possible.
 
 Python:
     Python does not support templates. In Python, the "vanilla" non-
-    cached variants ``Perm<n>`` are available under the names
-    PermGroup2, PermGroup3, ..., PermGroup16, and the cached variants
-    ``Perm<n, true>`` are available under the names PermGroup2_Cached,
-    PermGroup3_Cached, ..., PermGroup16_Cached.
+    cached variants ``PermGroup<n>`` are available under the names
+    PermGroup2, PermGroup3, …, and the cached variants ``Perm<n,
+    true>`` are available under the names PermGroup2_Cached,
+    PermGroup3_Cached, ….
 
 Template parameter ``n``:
-    the number of objects being permuted. This must be between 2 and
-    16 inclusive.
+    the number of objects being permuted.
 
 Template parameter ``cached``:
     ``True`` if we should use precomputation-assisted routines such as
