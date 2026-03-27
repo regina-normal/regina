@@ -35,8 +35,16 @@
 #ifndef __SPATIALLINKUI_H
 #define __SPATIALLINKUI_H
 
-#include "link/spatiallink.h"
+// The headers _must_ appear in this order (packetui.h before spatiallink.h).
+// Otherwise moc fails on ubuntu noble (24.04) with the following error:
+//     usr/include/c++/13/concept:46:1: error: Parse error at "std"
+// I have not seen this on any other platform (or with any other source file
+// here in the GUI), and I have no idea what is going on.  However, placing
+// Qt-related headers (packetui.h) before the concept-heavy headers
+// (spatiallink.h) seems to fix things.
+//
 #include "../packetui.h"
+#include "link/spatiallink.h"
 
 class QLabel;
 class QPushButton;
