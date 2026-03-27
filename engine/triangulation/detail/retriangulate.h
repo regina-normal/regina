@@ -100,7 +100,9 @@ namespace detail {
  * - reconstruct a triangulation or link \a obj from \a sig;
  * - examine all possible moves from \a obj to "nearby" objects that do not
  *   exceed size \a max, using \a options to control which moves are allowed;
- * - for each such "nearby" object \a alt, call `action(std::move(alt), sig)`;
+ * - for each such "nearby" object \a alt, call `action(std::move(alt), sig)`,
+ *   noting that \a sig is the original signature passed to `propagateFrom()`,
+ *   _not_ the signature of the newly-constructed nearby object;
  * - check the return value from `action()`, and if this ever returns `true`
  *   then stop trying moves, clean up and return immediately.
  *
