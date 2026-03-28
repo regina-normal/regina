@@ -212,10 +212,10 @@ The object that is returned is lightweight, and can be happily copied
 by value. The C++ type of the object is subject to change, so C++
 users should use ``auto`` (just like this declaration does).
 
-The returned object is guaranteed to be an instance of ListView, which
-means it offers basic container-like functions and supports range-
-based ``for`` loops. Note that the elements of the list will be
-pointers, so your code might look like:
+The returned object is guaranteed to be a lightweight view type from
+the ``std::ranges`` library, which means it supports range-based
+``for`` loops. Note that the elements of the view will be pointers, so
+your code might look like:
 
 ```
 for (BoundaryComponent<dim>* b : tri.boundaryComponents()) { ... }
@@ -338,10 +338,10 @@ The object that is returned is lightweight, and can be happily copied
 by value. The C++ type of the object is subject to change, so C++
 users should use ``auto`` (just like this declaration does).
 
-The returned object is guaranteed to be an instance of ListView, which
-means it offers basic container-like functions and supports range-
-based ``for`` loops. Note that the elements of the list will be
-pointers, so your code might look like:
+The returned object is guaranteed to be a lightweight view type from
+the ``std::ranges`` library, which means it supports range-based
+``for`` loops. Note that the elements of the view will be pointers, so
+your code might look like:
 
 ```
 for (Component<dim>* c : tri.components()) { ... }
@@ -787,21 +787,21 @@ R"doc(Returns the requested *subdim*-face of this triangulation, in a way
 that is optimised for Python programmers.
 
 For C++ users, this routine is not very useful: since precise types
-must be know at compile time, this routine returns a std::variant *v*
-that could store a pointer to any class Face<dim, ...>. This means you
-cannot access the face directly: you will still need some kind of
-compile-time knowledge of *subdim* before you can extract and use an
-appropriate Face<dim, subdim> object from *v*. However, once you know
-*subdim* at compile time, you are better off using the (simpler and
-faster) routine face<subdim>() instead.
+must be know at compile time, this routine returns a ``std::variant``
+*v* that could store a pointer to any class ``Face<dim, ...>``. This
+means you cannot access the face directly: you will still need some
+kind of compile-time knowledge of *subdim* before you can extract and
+use an appropriate ``Face<dim, subdim>`` object from *v*. However,
+once you know *subdim* at compile time, you are better off using the
+(simpler and faster) routine ``face<subdim>()`` instead.
 
 For Python users, this routine is much more useful: the return type
 can be chosen at runtime, and so this routine simply returns a
-Face<dim, subdim> object of the appropriate face dimension that you
-can use immediately.
+``Face<dim, subdim>`` object of the appropriate face dimension that
+you can use immediately.
 
 The specific return type for C++ programmers will be
-std::variant<Face<dim, 0>*, ..., Face<dim, dim-1>*>.
+``std::variant<Face<dim, 0>*, ..., Face<dim, dim-1>*>``.
 
 Exception ``InvalidArgument``:
     The face dimension *subdim* is outside the supported range (i.e.,
@@ -812,7 +812,7 @@ Parameter ``subdim``:
 
 Parameter ``index``:
     the index of the desired face, ranging from 0 to
-    countFaces<subdim>()-1 inclusive.
+    ``countFaces<subdim>()-1`` inclusive.
 
 Returns:
     the requested face.)doc";
@@ -824,17 +824,18 @@ all *subdim*-faces of this triangulation, in a way that is optimised
 for Python programmers.
 
 C++ users should not use this routine. The return type must be fixed
-at compile time, and so it is a std::variant that can hold any of the
-lightweight return types from the templated faces<subdim>() function.
-This means that the return value will still need compile-time
-knowledge of *subdim* to extract and use the appropriate face objects.
-However, once you know *subdim* at compile time, you are much better
-off using the (simpler and faster) routine faces<subdim>() instead.
+at compile time, and so it is typically a ``std::variant`` that can
+hold any of the lightweight view types returned from the templated
+``faces<subdim>()`` function. This means that the return value will
+still need compile-time knowledge of *subdim* to extract and use the
+appropriate face objects. However, once you know *subdim* at compile
+time, you are much better off using the (simpler and faster) routine
+``faces<subdim>()`` instead.
 
 For Python users, this routine is much more useful: the return type
-can be chosen at runtime, and so this routine returns a Python list of
-Face<dim, subdim> objects (holding all the *subdim*-faces of the
-triangulation), which you can use immediately.
+can be chosen at runtime, and so this routine returns a single
+lightweight view granting access to all of the *subdim*-faces of the
+triangulation, which you can use immediately.
 
 Exception ``InvalidArgument``:
     The face dimension *subdim* is outside the supported range (i.e.,
@@ -1770,8 +1771,8 @@ very fast.
 This is only relevant for those homology groups that are cached by the
 corresponding ``Triangulation<dim>`` class. Currently this means ``k =
 1`` for triangulations of any dimension, or ``k = 2`` for
-triangulations of dimension four. For any other ``(dim, k)``
-combination, this routine will throw an exception.
+triangulations of dimensions three and four. For any other ``(dim,
+k)`` combination, this routine will throw an exception.
 
 Note that if ``k ≠ 1`` then homology() requires a valid triangulation
 as a precondition. Therefore, if ``k ≠ 1`` and this triangulation is
@@ -2664,10 +2665,10 @@ The object that is returned is lightweight, and can be happily copied
 by value. The C++ type of the object is subject to change, so C++
 users should use ``auto`` (just like this declaration does).
 
-The returned object is guaranteed to be an instance of ListView, which
-means it offers basic container-like functions and supports range-
-based ``for`` loops. Note that the elements of the list will be
-pointers, so your code might look like:
+The returned object is guaranteed to be a lightweight view type from
+the ``std::ranges`` library, which means it supports range-based
+``for`` loops. Note that the elements of the view will be pointers, so
+your code might look like:
 
 ```
 for (Simplex<dim>* s : tri.simplices()) { ... }

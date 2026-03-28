@@ -37,8 +37,8 @@
 #define __REGINA_TANGLE_H
 #endif
 
+#include <ranges>
 #include "link/link.h"
-#include "utilities/listview.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -254,10 +254,10 @@ class Tangle : public Output<Tangle> {
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based `for` loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Note that the elements of the view will be pointers,
+         * so your code might look like:
          *
          * \code{.cpp}
          * for (Crossing* c : tangle.crossings()) { ... }
@@ -1293,7 +1293,7 @@ inline Crossing* Tangle::crossing(size_t index) const {
 }
 
 inline auto Tangle::crossings() const {
-    return ListView(crossings_);
+    return std::views::all(crossings_);
 }
 
 inline StrandRef Tangle::begin(int string) const {

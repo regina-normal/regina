@@ -141,10 +141,10 @@ class Component<3> : public detail::ComponentBase<3> {
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based `for` loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Note that the elements of the view will be pointers,
+         * so your code might look like:
          *
          * \code{.cpp}
          * for (Face<dim, subdim>* f : comp.faces<subdim>()) { ... }
@@ -172,9 +172,9 @@ class Component<3> : public detail::ComponentBase<3> {
          * to all <i>subdim</i>-faces in this component, in a way that is
          * optimised for Python programmers.
          *
-         * C++ users should not use this routine.  The return type must be
-         * fixed at compile time, and so it is typically a `std::variant` that
-         * can hold any of the lightweight return types from the templated
+         * C++ users should not use this routine.  The return type must be fixed
+         * at compile time, and so it is typically a `std::variant` that can
+         * hold any of the lightweight rview types returned from the templated
          * `faces<subdim>()` function.  This means that the return value will
          * still need compile-time knowledge of \a subdim to extract and
          * use the appropriate face objects.  However, once you know \a subdim
@@ -183,7 +183,7 @@ class Component<3> : public detail::ComponentBase<3> {
          *
          * For Python users, this routine is much more useful: the return type
          * can be chosen at runtime, and so this routine returns a single
-         * lightweight object granting access to all of the <i>subdim</i>-faces
+         * lightweight view granting access to all of the <i>subdim</i>-faces
          * of the component, which you can use immediately.
          *
          * \exception InvalidArgument The face dimension \a subdim is outside
@@ -333,13 +333,13 @@ inline size_t Component<3>::countFaces<0>() const {
 
 inline auto Component<3>::faces(int subdim) const {
     using Return = std::variant<
-        decltype(ListView(vertices_)),
-        decltype(ListView(edges_)),
-        decltype(ListView(triangles_))>;
+        decltype(std::views::all(vertices_)),
+        decltype(std::views::all(edges_)),
+        decltype(std::views::all(triangles_))>;
     switch (subdim) {
-        case 0: return Return(ListView(vertices_));
-        case 1: return Return(ListView(edges_));
-        case 2: return Return(ListView(triangles_));
+        case 0: return Return(std::views::all(vertices_));
+        case 1: return Return(std::views::all(edges_));
+        case 2: return Return(std::views::all(triangles_));
         default: throw InvalidArgument("faces(): unsupported face dimension");
     }
 }
@@ -348,17 +348,17 @@ inline auto Component<3>::faces(int subdim) const {
 #ifndef __DOXYGEN
 template <>
 inline auto Component<3>::faces<2>() const {
-    return ListView(triangles_);
+    return std::views::all(triangles_);
 }
 
 template <>
 inline auto Component<3>::faces<1>() const {
-    return ListView(edges_);
+    return std::views::all(edges_);
 }
 
 template <>
 inline auto Component<3>::faces<0>() const {
-    return ListView(vertices_);
+    return std::views::all(vertices_);
 }
 #endif // ! __DOXYGEN
 

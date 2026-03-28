@@ -1046,6 +1046,109 @@ TEST_F(LinkTest, parallel) {
     testManualCases(verifyParallel);
 }
 
+static void verifyClassicalChordIndex(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    if (link.size() == 0)
+        return; // no crossings to test
+
+    // We have ≥ 1 crossing, and so ≥ 1 component.
+
+    if (link.countComponents() == 1) {
+        for (auto c : link.crossings())
+            EXPECT_EQ(c->chordIndex(), 0);
+    } else if (link.countDiagramComponents() == 1) {
+        // There must be some crossing whose two strands do not connect via
+        // link traversal.
+        EXPECT_THROW({
+            for (auto c : link.crossings())
+                c->chordIndex();
+        }, FailedPrecondition);
+    }
+}
+
+static void verifyChordIndex(const TestCase& test,
+        std::initializer_list<size_t> expectedSorted) {
+    SCOPED_TRACE_CSTRING(test.name);
+
+    ASSERT_EQ(std::ranges::size(expectedSorted), test.link.size());
+
+    regina::FixedArray<size_t> found(test.link.size());
+    for (size_t i = 0; i < test.link.size(); ++i)
+        found[i] = test.link.crossing(i)->chordIndex();
+    std::ranges::sort(found);
+
+    size_t i = 0;
+    for (size_t expect : expectedSorted)
+        EXPECT_EQ(found[i++], expect);
+}
+
+TEST_F(LinkTest, chordIndex) {
+    testManualCases(verifyClassicalChordIndex, false /* no Gordian unknot */,
+        false /* classical only */);
+
+    // Some virtual knots:
+    verifyChordIndex(virtualTrefoil, { 1, 1 });
+    verifyChordIndex(kishino, { 1, 1, 1, 1 });
+    verifyChordIndex(gpv, { 1, 1, 1, 1 });
+
+    // The following case comes from a 9-crossing pair of virtual knots that
+    // are difficult to distinguish:
+    // iabcdefdacebghfgh-aflta, iabcdefgebdfchagh-aflnp
+    // Both have the same sorted chord indices.
+    TestCase mixed { Link("iabcdefdacebghfgh-aflta"), "Mixed indices" };
+    verifyChordIndex(mixed, { 0, 0, 1, 2, 2, 2, 2, 3 });
+}
+
+static void verifyClassicalParityProjection(const Link& link,
+        const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    if (link.countComponents() > 1)
+        return;
+
+    EXPECT_EQ(link.parityProjection(0), link);
+    EXPECT_EQ(link.parityProjection(2), link);
+    EXPECT_EQ(link.parityProjection(3), link);
+}
+
+static void verifyParityProjectionSize(const TestCase& test, size_t modBase,
+        size_t expect) {
+    SCOPED_TRACE_CSTRING(test.name);
+    SCOPED_TRACE_NUMERIC(modBase);
+
+    Link proj = test.link.parityProjection(modBase);
+    EXPECT_EQ(proj.countComponents(), test.link.countComponents());
+    EXPECT_EQ(proj.size(), expect);
+}
+
+TEST_F(LinkTest, parityProjection) {
+    testManualCases(verifyClassicalParityProjection,
+        false /* no Gordian unknot */, false /* classical only */);
+
+    // Some virtual knots where no crossings survive, because all crossings
+    // have chord index 1:
+    verifyParityProjectionSize(virtualTrefoil, 0, 0);
+    verifyParityProjectionSize(virtualTrefoil, 2, 0);
+    verifyParityProjectionSize(virtualTrefoil, 3, 0);
+
+    verifyParityProjectionSize(kishino, 0, 0);
+    verifyParityProjectionSize(kishino, 2, 0);
+    verifyParityProjectionSize(kishino, 3, 0);
+
+    verifyParityProjectionSize(gpv, 0, 0);
+    verifyParityProjectionSize(gpv, 2, 0);
+    verifyParityProjectionSize(gpv, 3, 0);
+
+    // A virtual knot where chord indices 0, 1, 2, 3 all appear,
+    // taken from the chordIndex test above:
+    TestCase mixed { Link("iabcdefdacebghfgh-aflta"), "Mixed indices" };
+    verifyParityProjectionSize(mixed, 0, 2);
+    verifyParityProjectionSize(mixed, 2, 6);
+    verifyParityProjectionSize(mixed, 3, 3);
+    verifyParityProjectionSize(mixed, 4, 2);
+}
+
 static void verifyAlexander(const TestCase& test,
         const regina::Polynomial<regina::Integer>& expected) {
     SCOPED_TRACE_CSTRING(test.name);

@@ -130,28 +130,30 @@ To create a new innate packet type:
 To create a new wrapped packet type that holds an object of type
 *Held:*
 
-* Add a new type constant *T* to the PacketType enum;
+* Ensure that *Held* is copyable, assignable, and implements rich
+  output via the base class ``Output<Held>``;
 
-* Add a specialisation of the template constant packetTypeHolds<Held>,
-  which should take the value *T*;
+* Add a new case to the PacketType enum, and add a specialisation of
+  the constant ``packetTypeHolds<Held>`` which takes this as its
+  value;
 
 * Add corresponding cases to the routines in PacketInfo;
 
-* Add PacketData<Held> as a new base class for *Held* (this is very
-  lightweight, just adding a single enum variable);
+* Add ``PacketData<Held>`` as a new base class for *Held* (this is
+  very lightweight, just adding a single enum variable);
 
-* Add specialisations that implement the routines in XMLWriter<Held>,
-  to support writing to file;
+* Add specialisations that implement the routines in
+  ``XMLWriter<Held>``, to support writing to file;
 
-* Add an appropriate case to XMLPacketReader::startSubElement(), to
-  support reading from file;
+* Add an appropriate case to ``XMLPacketReader::startSubElement()``,
+  to support reading from file;
 
 * For every routine in *Held* that edits the packet contents, declare
-  a Held::PacketChangeSpan on the stack while the modification takes
-  place. This is again lightweight (if an object does not belong to a
-  packet then the cost is just two integer comparisions), and it will
-  ensure that if the object _does_ belong to a packet then listeners
-  are notified.
+  a ``Held::PacketChangeSpan`` on the stack while the modification
+  takes place. This is again lightweight (if an object does not belong
+  to a packet then the cost is just two integer comparisions), and it
+  will ensure that if the object _does_ belong to a packet then
+  listeners are notified.
 
 External objects can listen for events on packets, such as when
 packets are changed or about to be destroyed. This is useful (for
@@ -219,15 +221,15 @@ static const char *PacketData =
 R"doc(A lightweight helper class that allows an object of type *Held* to
 connect with the wrapped packet class that contains it.
 
-For every wrapped packet type of the form PacketOf<Held>, the
-corresponding class *Held* must derive from PacketData<Held>. See the
-Packet class notes for more information about packets, and for what
-else must be implemented for each wrapped packet type.
+For every wrapped packet type of the form ``PacketOf<Held>``, the
+corresponding class *Held* must derive from ``PacketData<Held>``. See
+the Packet class notes for more information about packets, and for
+what else must be implemented for each wrapped packet type.
 
 This base class is extremely lightweight: the only data that it
 contains is a single PacketHeldBy enumeration value. All of the class
 constructors set this value to PacketHeldBy::None; it is the
-responsibility of subclasses (e.g., PacketOf<Held>) to change this
+responsibility of subclasses (e.g., ``PacketOf<Held>``) to change this
 where necessary.
 
 Python:
@@ -397,7 +399,12 @@ Python:
     name of the form PacketOfHeld. For example, the C++ class Link is
     wrapped by the Python class ``PacketOfLink``, and the C++ class
     Triangulation<3> is wrapped by the Python class
-    ``PacketOfTriangulation3``.)doc";
+    ``PacketOfTriangulation3``.
+
+Template parameter ``Held``:
+    the mathematical object type being held by this type of packet.
+    This type must adhere to all the requirements of the concept
+    PacketHeldType.)doc";
 
 // Docstring regina::python::doc::PacketShell
 static const char *PacketShell =

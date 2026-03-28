@@ -41,6 +41,7 @@
 #include <functional>
 #include <iterator>
 #include <optional>
+#include <ranges>
 #include <vector>
 #include "regina-core.h"
 #include "algebra/grouppresentation.h"
@@ -55,7 +56,6 @@
 #include "triangulation/detail/retriangulate.h"
 #include "utilities/exception.h"
 #include "utilities/fixedarray.h"
-#include "utilities/listview.h"
 #include "utilities/markedvector.h"
 #include "utilities/tightencoding.h"
 #include "utilities/topologylock.h"
@@ -567,6 +567,41 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
         StrandRef prev(int strand) const;
 
         /**
+         * Returns the chord index of this crossing in a knot diagram.
+         *
+         * The _chord index_ examines all of the other crossings that are
+         * passed when traversing the knot between the upper and lower
+         * strands of this crossing, not counting this crossing itself.
+         * For each other crossing that we pass:
+         *
+         * - we add `+1` each time we pass a positive crossing on the
+         *   upper strand, or a negative crossing on the lower strand;
+         * - we add `-1` each time we pass a positive crossing on the
+         *   lower strand, or a negative crossing on the upper strand.
+         *
+         * We then take the absolute value of the resulting sum (which means
+         * we get the same result regardless of whether we walked from the
+         * upper strand to the lower strand of this crossing, or from the
+         * lower strand to the upper strand).
+         *
+         * The chord index is only interesting for virtual knots.  In a
+         * classical knot diagram, every crossing will have chord index zero.
+         * Note also that the _parity_ of a crossing (in the sense used by
+         * Link::oddWrithe()) is precisely the parity of its chord index.
+         *
+         * \pre The link containing this crossing has exactly one component
+         * (i.e., it is a knot).
+         *
+         * \exception FailedPrecondition The link containing this crossing was
+         * found to have multiple components.  This is not explicitly tested,
+         * but it will be noticed if the upper and lower strands of this
+         * crossing belong to different link components.
+         *
+         * \return the chord index of this crossing.
+         */
+        size_t chordIndex() const;
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -693,7 +728,7 @@ class Link :
                  crossings, then it is represented in this array by a
                  null reference. */
 
-        mutable ssize_t virtualGenus_;
+        mutable ssize_t virtualGenus_ { -1 };
             /**< The virtual genus of the link diagram, or -1 if this has not
                  yet been computed. */
         mutable std::optional<Polynomial<Integer>> alexander_;
@@ -997,10 +1032,10 @@ class Link :
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based `for` loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Note that the elements of the view will be pointers,
+         * so your code might look like:
          *
          * \code{.cpp}
          * for (Crossing* c : link.crossings()) { ... }
@@ -1053,13 +1088,13 @@ class Link :
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based `for` loops.  Each element of the list will be
-         * a starting strand for some component; more precisely, iterating
-         * through this list is equivalent to calling `component(0)`,
-         * `component(1)`, ..., `component(countComponents()-1)`
-         * in turn.  As an example, your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Each element of the list will be a starting strand
+         * for some component; more precisely, iterating through this list is
+         * equivalent to calling `component(0)`, `component(1)`, ...,
+         * `component(countComponents()-1)` in turn.  As an example, your code
+         * might look like:
          *
          * \code{.cpp}
          * for (const StrandRef& c : link.components()) { ... }
@@ -3790,6 +3825,56 @@ class Link :
          * \return \a k parallel copies of this link.
          */
         Link parallel(int k, Framing framing = Framing::Seifert) const;
+
+        /**
+         * Returns the parity projection of this knot.
+         *
+         * This is an operation on virtual knots, which removes all crossings
+         * whose chord index fails a given parity condition.  The parity
+         * condition is determined by the argument \a modBase:
+         *
+         * - If `modBase = 0`, then we remove all crossings with non-zero
+         *   chord index.
+         *
+         * - If `modBase > 0`, then we remove all crossings whose chord index
+         *   is not a multiple of \a modBase.
+         *
+         * A common setting (and the default here) is `modBase = 2`, where
+         * we remove all odd crossings and keep all even crossings.  Here we
+         * use _odd_ and _even_ in the same sense as oddWrithe(): a crossing
+         * \a c is _odd_ if, when traversing the knot, we pass through an odd
+         * number of crossings between the over-strand and the under-strand
+         * of \a c.
+         *
+         * By _removing_ a crossing \a c, we mean the same operation as calling
+         * `makeVirtual(c)`: the incoming and outgoing upper strands of \a c
+         * will be merged into one, and the incoming and outgoing lower strands
+         * of \a c will be merged into one.  It is possible that _all_ of the
+         * crossings in the diagram will be removed, in which case the result
+         * will be a 0-crossing unknot.
+         *
+         * Parity projection cannot work with multiple-component links.
+         * If this link has more than one component, then this routine will
+         * throw an exception.
+         *
+         * Parity projection is only interesting for virtual knots.  In a
+         * classical knot diagram, chord indices are always zero, and so the
+         * parity projection will always return an identical copy of the
+         * original knot diagram.
+         *
+         * This knot diagram will not be modified.  Instead, this routine will
+         * return a new diagram with the relevant crossings removed.
+         *
+         * \pre This link has at most one component (i.e., it is either a knot
+         * or the empty link).
+         *
+         * \exception FailedPrecondition This link has multiple components.
+         *
+         * \param modBase the modular base that determines the exact parity
+         * condition to test, as described above.
+         * \return the resulting parity projection of this knot.
+         */
+        Link parityProjection(size_t modBase = 2) const;
 
         /**
          * Returns the Alexander polynomial of this classical knot.
@@ -7524,10 +7609,10 @@ inline Crossing::Crossing(int sign) : sign_(sign) {
 
 // Inline functions for Link
 
-inline Link::Link() : virtualGenus_(-1) {
+inline Link::Link() {
 }
 
-inline Link::Link(size_t unknots) : virtualGenus_(-1) {
+inline Link::Link(size_t unknots) {
     components_.resize(unknots);
     std::fill(components_.begin(), components_.end(), StrandRef());
 }
@@ -7552,7 +7637,7 @@ inline Crossing* Link::crossing(size_t index) const {
 }
 
 inline auto Link::crossings() const {
-    return ListView(crossings_);
+    return std::views::all(crossings_);
 }
 
 inline StrandRef Link::component(size_t index) const {
@@ -7560,7 +7645,7 @@ inline StrandRef Link::component(size_t index) const {
 }
 
 inline auto Link::components() const {
-    return ListView(components_);
+    return std::views::all(components_);
 }
 
 inline StrandRef Link::strand(ssize_t id) const {

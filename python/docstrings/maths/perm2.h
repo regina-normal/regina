@@ -413,17 +413,13 @@ Returns:
 // Docstring regina::python::doc::Perm_::contract
 static const char *contract =
 R"doc(Restricts a *k*-element permutation to an 2-element permutation, where
-*k* > 2.
+``k > 2``.
 
 The resulting permutation will map 0,1 to their respective images
-under *p*, and will ignore the "unused" images *p*[2],...,*p*[*k*-1].
+under *p*, and will ignore the "unused" images ``p[2],...,p[k-1]``.
 
 Precondition:
     The given permutation maps 0,1 to 0,1 in some order.
-
-Template parameter ``k``:
-    the number of elements for the input permutation; this must be
-    strictly greater than 2.
 
 Parameter ``p``:
     a permutation on *k* elements.

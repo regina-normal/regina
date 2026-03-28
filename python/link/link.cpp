@@ -109,6 +109,7 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
         .def("strand", &Crossing::strand, rdoc::strand)
         .def("next", &Crossing::next, rdoc::next)
         .def("prev", &Crossing::prev, rdoc::prev)
+        .def("chordIndex", &Crossing::chordIndex, rdoc::chordIndex)
     ;
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
@@ -275,6 +276,8 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
         .def("parallel", &Link::parallel,
             pybind11::arg(), pybind11::arg("framing") = Framing::Seifert,
             rdoc::parallel)
+        .def("parityProjection", &Link::parityProjection,
+            pybind11::arg("modBase") = 2, rdoc::parityProjection)
         .def("isConnected", &Link::isConnected, rdoc::isConnected)
         .def("connected", &Link::connected, rdoc::connected)
         .def("diagramComponents", &Link::diagramComponents,
@@ -626,9 +629,9 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::packet_eq_operators(l, rdoc::__eq);
     regina::python::add_packet_data(l);
 
-    regina::python::addListView<decltype(Link().crossings())>(internal,
+    regina::python::addStdView<decltype(Link().crossings())>(internal,
         "Link_crossings");
-    regina::python::addListView<decltype(Link().components())>(internal,
+    regina::python::addStdView<decltype(Link().components())>(internal,
         "Link_components");
 
     auto wrap = regina::python::add_packet_wrapper<Link>(m, "PacketOfLink");

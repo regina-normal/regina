@@ -272,8 +272,9 @@ void add_output_custom(pybind11::class_<T, options...>& c,
 /**
  * Adds custom string output functions to the python bindings for a C++ class,
  * using the given "fake" class name in the python `__repr__` function.
- * This is useful for internal classes (such as ListView and TableView classes)
- * whose corresponding python class names are both unwieldy and unimportant.
+ * This is useful for internal classes (such as standard C++ view classes and
+ * Regina's own TableView classes) whose corresponding python class names are
+ * both unwieldy and unimportant.
  *
  * This will add a function `__str__` to the python class to provide "native"
  * Python string output.  The implementation will call \a outputFunction,

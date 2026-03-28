@@ -41,6 +41,7 @@
 #include <iostream>
 #include <memory>
 #include <optional>
+#include <ranges>
 #include <sstream>
 #include <string>
 #include <variant>
@@ -61,7 +62,6 @@
 #include "triangulation/isosigencoding.h"
 #include "triangulation/isosigtype.h"
 #include "utilities/exception.h"
-#include "utilities/listview.h"
 #include "utilities/snapshot.h"
 #include "utilities/tightencoding.h"
 #include "utilities/topologylock.h"
@@ -326,10 +326,10 @@ class TriangulationBase :
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based `for` loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Note that the elements of the view will be pointers,
+         * so your code might look like:
          *
          * \code{.cpp}
          * for (Simplex<dim>* s : tri.simplices()) { ... }
@@ -716,10 +716,10 @@ class TriangulationBase :
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based `for` loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Note that the elements of the view will be pointers,
+         * so your code might look like:
          *
          * \code{.cpp}
          * for (Component<dim>* c : tri.components()) { ... }
@@ -750,10 +750,10 @@ class TriangulationBase :
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based `for` loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Note that the elements of the view will be pointers,
+         * so your code might look like:
          *
          * \code{.cpp}
          * for (BoundaryComponent<dim>* b : tri.boundaryComponents()) { ... }
@@ -779,10 +779,10 @@ class TriangulationBase :
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based `for` loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Note that the elements of the view will be pointers,
+         * so your code might look like:
          *
          * \code{.cpp}
          * for (Face<dim, subdim>* f : tri.faces<subdim>()) { ... }
@@ -809,18 +809,18 @@ class TriangulationBase :
          * to all <i>subdim</i>-faces of this triangulation, in a way
          * that is optimised for Python programmers.
          *
-         * C++ users should not use this routine.  The return type must be
-         * fixed at compile time, and so it is a std::variant that can hold
-         * any of the lightweight return types from the templated
-         * faces<subdim>() function.  This means that the return value will
+         * C++ users should not use this routine.  The return type must be fixed
+         * at compile time, and so it is typically a `std::variant` that can
+         * hold any of the lightweight view types returned from the templated
+         * `faces<subdim>()` function.  This means that the return value will
          * still need compile-time knowledge of \a subdim to extract and
          * use the appropriate face objects.  However, once you know \a subdim
          * at compile time, you are much better off using the (simpler and
-         * faster) routine faces<subdim>() instead.
+         * faster) routine `faces<subdim>()` instead.
          *
          * For Python users, this routine is much more useful: the return type
          * can be chosen at runtime, and so this routine returns a single
-         * lightweight object granting access to all of the <i>subdim</i>-faces
+         * lightweight view granting access to all of the <i>subdim</i>-faces
          * of the triangulation, which you can use immediately.
          *
          * \exception InvalidArgument The face dimension \a subdim is outside
@@ -4643,7 +4643,7 @@ inline size_t TriangulationBase<dim>::size() const {
 
 template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::simplices() const {
-    return ListView(simplices_);
+    return std::views::all(simplices_);
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -4928,20 +4928,20 @@ inline std::vector<size_t> TriangulationBase<dim>::fVector() const {
 template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::components() const {
     ensureSkeleton();
-    return ListView(components_);
+    return std::views::all(components_);
 }
 
 template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::boundaryComponents() const {
     ensureSkeleton();
-    return ListView(boundaryComponents_);
+    return std::views::all(boundaryComponents_);
 }
 
 template <int dim> requires (supportedDim(dim))
 template <int subdim> requires (subdim >= 0 && subdim < dim)
 inline auto TriangulationBase<dim>::faces() const {
     ensureSkeleton();
-    return ListView(std::get<subdim>(faces_));
+    return std::views::all(std::get<subdim>(faces_));
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -4957,22 +4957,22 @@ inline auto TriangulationBase<dim>::faces(int subdim) const {
 template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::vertices() const {
     ensureSkeleton();
-    return ListView(std::get<0>(faces_));
+    return std::views::all(std::get<0>(faces_));
 }
 
 template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::edges() const {
     ensureSkeleton();
-    return ListView(std::get<1>(faces_));
+    return std::views::all(std::get<1>(faces_));
 }
 
 template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::triangles() const {
     if constexpr (dim == 2) {
-        return ListView(simplices_);
+        return std::views::all(simplices_);
     } else {
         ensureSkeleton();
-        return ListView(std::get<2>(faces_));
+        return std::views::all(std::get<2>(faces_));
     }
 }
 
@@ -4980,10 +4980,10 @@ template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::tetrahedra() const
         requires (dim >= 3) {
     if constexpr (dim == 3) {
-        return ListView(simplices_);
+        return std::views::all(simplices_);
     } else {
         ensureSkeleton();
-        return ListView(std::get<3>(faces_));
+        return std::views::all(std::get<3>(faces_));
     }
 }
 
@@ -4991,10 +4991,10 @@ template <int dim> requires (supportedDim(dim))
 inline auto TriangulationBase<dim>::pentachora() const
         requires (dim >= 4) {
     if constexpr (dim == 4) {
-        return ListView(simplices_);
+        return std::views::all(simplices_);
     } else {
         ensureSkeleton();
-        return ListView(std::get<4>(faces_));
+        return std::views::all(std::get<4>(faces_));
     }
 }
 

@@ -174,6 +174,44 @@ functions.)doc";
 
 namespace Crossing_ {
 
+// Docstring regina::python::doc::Crossing_::chordIndex
+static const char *chordIndex =
+R"doc(Returns the chord index of this crossing in a knot diagram.
+
+The _chord index_ examines all of the other crossings that are passed
+when traversing the knot between the upper and lower strands of this
+crossing, not counting this crossing itself. For each other crossing
+that we pass:
+
+* we add ``+1`` each time we pass a positive crossing on the upper
+  strand, or a negative crossing on the lower strand;
+
+* we add ``-1`` each time we pass a positive crossing on the lower
+  strand, or a negative crossing on the upper strand.
+
+We then take the absolute value of the resulting sum (which means we
+get the same result regardless of whether we walked from the upper
+strand to the lower strand of this crossing, or from the lower strand
+to the upper strand).
+
+The chord index is only interesting for virtual knots. In a classical
+knot diagram, every crossing will have chord index zero. Note also
+that the _parity_ of a crossing (in the sense used by
+Link::oddWrithe()) is precisely the parity of its chord index.
+
+Precondition:
+    The link containing this crossing has exactly one component (i.e.,
+    it is a knot).
+
+Exception ``FailedPrecondition``:
+    The link containing this crossing was found to have multiple
+    components. This is not explicitly tested, but it will be noticed
+    if the upper and lower strands of this crossing belong to
+    different link components.
+
+Returns:
+    the chord index of this crossing.)doc";
+
 // Docstring regina::python::doc::Crossing_::index
 static const char *index =
 R"doc(Returns the index of this crossing within the overall link. If the
@@ -849,11 +887,11 @@ The object that is returned is lightweight, and can be happily copied
 by value. The C++ type of the object is subject to change, so C++
 users should use ``auto`` (just like this declaration does).
 
-The returned object is guaranteed to be an instance of ListView, which
-means it offers basic container-like functions and supports range-
-based ``for`` loops. Each element of the list will be a starting
-strand for some component; more precisely, iterating through this list
-is equivalent to calling ``component(0)``, ``component(1)``, ...,
+The returned object is guaranteed to be a lightweight view type from
+the ``std::ranges`` library, which means it supports range-based
+``for`` loops. Each element of the list will be a starting strand for
+some component; more precisely, iterating through this list is
+equivalent to calling ``component(0)``, ``component(1)``, ...,
 ``component(countComponents()-1)`` in turn. As an example, your code
 might look like:
 
@@ -1025,10 +1063,10 @@ The object that is returned is lightweight, and can be happily copied
 by value. The C++ type of the object is subject to change, so C++
 users should use ``auto`` (just like this declaration does).
 
-The returned object is guaranteed to be an instance of ListView, which
-means it offers basic container-like functions and supports range-
-based ``for`` loops. Note that the elements of the list will be
-pointers, so your code might look like:
+The returned object is guaranteed to be a lightweight view type from
+the ``std::ranges`` library, which means it supports range-based
+``for`` loops. Note that the elements of the view will be pointers, so
+your code might look like:
 
 ```
 for (Crossing* c : link.crossings()) { ... }
@@ -1417,12 +1455,6 @@ Thistlethwaite notation. Regina does understand alphabetic Dowker-
 Thistlethwaite notation, but for this you will need to use the string-
 based variant of fromDT().
 
-Precondition:
-    *Iterator* is a random access iterator type, and dereferencing
-    such an iterator produces a native C++ integer. (The specific
-    native C++ integer type being used will be deduced from the type
-    *Iterator*.)
-
 .. warning::
     In general, Dowker-Thistlethwaite notation does not contain enough
     information to uniquely reconstruct a classical knot. For prime
@@ -1463,32 +1495,33 @@ at runtime (which makes it accessible to Python, amongst other
 things).
 
 For the purposes of this routine, we number the crossings 1, 2, ...,
-*n*. The information that you must pass to this routine is the
-following:
+*n*. The information that you pass to this routine is encoded in two
+sequences:
 
-* The first iterator range (*beginSigns*, *endSigns*) encodes the
-  signs of crossings 1, ..., *n* in order. Each iterator in this range
-  must dereference to either +1 or -1.
+* The first sequence, defined by the iterator range (*beginSigns*,
+  *endSigns*), encodes the signs of crossings ``1,...,n`` in order.
+  Each element of this sequence must be ±1.
 
-* The second iterator range (*beginComponents*, *endComponents*)
-  identifies the individual components of the link. Each iterator in
-  this range must dereference to a container that has a size()
-  function and supports range-based ``for`` loops (so standard C++
-  container classes such as std::vector<int> and std::list<int> are
-  fine).
-
-* The container for each component must be filled with integers, which
-  identify the crossings you visit in order when traversing the
-  component. A positive entry *i* indicates that you pass over
-  crossing *i*, and a negative entry -*i* indicates that you pass
+* The second sequence, defined by the iterator range
+  (*beginComponents*, *endComponents*), encodes the individual
+  components of the link. This is actually a sequence of sequences:
+  each link component is defined by an "inner" sequence of integers,
+  listing the crossings that you visit in order when traversing the
+  component. A positive integer *i* indicates that you pass over
+  crossing *i*, and a negative integer -*i* indicates that you pass
   under crossing *i*.
 
-* To encode a component with no crossings, you may use either an empty
-  container or a container containing the single integer 0.
+* To encode a component with no crossings, your inner sequence may be
+  empty, or may contain the single integer 0 (either is fine).
 
-Be aware that, once the link has been constructed, the crossings 1,
-..., *n* will have been reindexed as 0, ..., *n*-1 (since every Link
-object numbers its crossings starting from 0).
+This routine does not insist on any specific types for the sequences,
+as long as all sequences support iteration (this includes the outer
+sequences for signs and components, as well as the inner sequences of
+crossings for each individual component).
+
+Be aware that, once the link has been constructed, the crossings
+``1,...,n`` will have been reindexed as ``0,...,n-1`` (since every
+Link object numbers its crossings starting from 0).
 
 As an example, Python users can construct the left-hand trefoil and
 the Hopf link as follows:
@@ -1502,27 +1535,27 @@ Exception ``InvalidArgument``:
     A link could not be reconstructed from the given data.
 
 Python:
-    The signs should be passed as a single Python list of integers
-    (not an iterator pair). Likewise, the components should be passed
-    as a Python list of lists of integers (not an iterator pair). In
-    the case of a knot (which has only one component), you are welcome
-    to replace the list of lists ``[[...]]`` with a single list
-    ``[...]``; however, be aware that a single empty list ``[ ]`` will
-    be interpreted as an empty link (not a zero-crossing unknot).
+    The sequence of signs should be passed as a single Python list of
+    integers (not an iterator pair). Likewise, the sequence of
+    components should be passed as a Python list of lists of integers
+    (not an iterator pair). In the case of a knot (which has only one
+    component), you are welcome to replace the list of lists
+    ``[[...]]`` with a single list ``[...]``; however, be aware that a
+    single empty list ``[ ]`` will be interpreted as an empty link
+    (not a zero-crossing unknot).
 
 Parameter ``beginSigns``:
-    the beginning of the list of crossing signs.
+    the beginning of the sequence of crossing signs.
 
 Parameter ``endSigns``:
-    a past-the-end iterator indicating the end of the list of crossing
-    signs.
+    a past-the-end iterator indicating the end of the sequence of
+    crossing signs.
 
 Parameter ``beginComponents``:
-    the beginning of the list of containers describing each link
-    component.
+    the beginning of the sequence of link components.
 
 Parameter ``endComponents``:
-    a past-the-end iterator indicating the end of the list of link
+    a past-the-end iterator indicating the end of the sequence of link
     components.
 
 Returns:
@@ -1612,12 +1645,6 @@ instead of taking a human-readable string, takes a machine-readable
 sequence of integers. This sequence is given by passing a pair of
 begin/end iterators.
 
-Precondition:
-    *Iterator* is a random access iterator type, and dereferencing
-    such an iterator produces a native C++ integer. (The specific
-    native C++ integer type being used will be deduced from the type
-    *Iterator*.)
-
 .. warning::
     In general, the classical Gauss code does not contain enough
     information to uniquely reconstruct a classical knot. For prime
@@ -1704,11 +1731,6 @@ This routine is a variant of fromJenkins(const std::string&) which,
 instead of taking a human-readable string, takes a machine-readable
 sequence of integers. This sequence is given by passing a pair of
 begin/end iterators.
-
-Precondition:
-    *Iterator* is a forward iterator type, and dereferencing such an
-    iterator produces a native C++ integer. (The specific native C++
-    integer type being used will be deduced from the type *Iterator*.)
 
 Exception ``InvalidArgument``:
     The given sequence was not a valid encoding of a classical or
@@ -1968,15 +1990,11 @@ of taking a human-readable string, takes a machine-readable sequence
 of 4-tuples of integers. This sequence is given by passing a pair of
 begin/end iterators.
 
-Precondition:
-    *Iterator* is a random access iterator type.
-
-Precondition:
-    If *it* is such an iterator, then ``(*it)[0]``, ``(*it)[1]``,
-    ``(*it)[2]`` and ``(*it)[3]`` will give the elements of the
-    corresponding 4-tuple, which can then be treated as native C++
-    integers. (The specific native C++ integer type being used will be
-    deduced from the type *Iterator*.)
+For each individual 4-tuple *t*, the elements of *t* will be accessed
+via the subscript operator; that is, ``t[0], ..., t[3]``. This means
+you have many choices for your tuple type: valid examples include
+``std::array<long, 4>``, ``std::vector<int>``, Regina's own
+``FixedArray<long>``, or a C-style array ``int[4]``.
 
 .. warning::
     If the link contains any components that sit completely above all
@@ -3510,68 +3528,108 @@ Returns:
 
 // Docstring regina::python::doc::Link_::knowsAlexander
 static const char *knowsAlexander =
-R"doc(Is the Alexander polynomial of this knot already known? See
-alexander() for further details.
+R"doc(Is the Alexander polynomial of this knot already known (or trivial to
+determine)? See alexander() for further details.
 
 If this property is already known, future calls to alexander() will be
 very fast (simply returning the precalculated value).
 
-At present, Regina only computes Alexander polynomials for classical
-knots. If this link is empty, has multiple components, or uses a
-virtual diagram, then this routine is still safe to call, and will
-simply return ``False``.
+Note that alexander() requires a classical knot as a precondition.
+Therefore, if this link diagram is virtual, empty, or has multiple
+components, then knowsAlexander() will simply return ``False``.
+
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial. Currently this argument is ignored
+    since this routine does not look for shortcuts that make Alexander
+    polynomials trivial to compute; however, it is provided for
+    compatibility with other ``knows...()`` routines.
 
 Returns:
-    ``True`` if and only if this property is already known.)doc";
+    ``True`` if and only if this property is already known or trivial
+    to calculate, _and_ the preconditions for alexander() are
+    satisfied.)doc";
 
 // Docstring regina::python::doc::Link_::knowsArrow
 static const char *knowsArrow =
-R"doc(Is the normalised arrow polynomial of this link already known? See
-arrow() for further details.
+R"doc(Is the normalised arrow polynomial of this link already known (or
+trivial to determine)? See arrow() for further details.
 
 If this property is already known, future calls to arrow() will be
 very fast (simply returning the precalculated value).
 
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial. Currently this argument is ignored
+    since this routine does not look for shortcuts that make arrow
+    polynomials trivial to compute; however, it is provided for
+    compatibility with other ``knows...()`` routines.
+
 Returns:
-    ``True`` if and only if this property is already known.)doc";
+    ``True`` if and only if this property is already known or trivial
+    to calculate.)doc";
 
 // Docstring regina::python::doc::Link_::knowsBracket
 static const char *knowsBracket =
-R"doc(Is the Kauffman bracket polynomial of this link diagram already known?
-See bracket() for further details.
+R"doc(Is the Kauffman bracket polynomial of this link diagram already known
+(or trivial to determine)? See bracket() for further details.
 
 If this property is already known, future calls to bracket() will be
 very fast (simply returning the precalculated value).
 
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial.
+
 Returns:
-    ``True`` if and only if this property is already known.)doc";
+    ``True`` if and only if this property is already known or trivial
+    to calculate.)doc";
 
 // Docstring regina::python::doc::Link_::knowsHomfly
 static const char *knowsHomfly =
-R"doc(Is the HOMFLY-PT polynomial of this link already known? See homflyAZ()
-and homflyLM() for further details.
+R"doc(Is the HOMFLY-PT polynomial of this link already known (or trivial to
+determine)? See homflyAZ() and homflyLM() for further details.
 
 If this property is already known, future calls to homfly(),
 homflyAZ() and homflyLM() will all be very fast (simply returning the
 precalculated values).
 
-At present, Regina only computes HOMFLY-PT polynomials for classical
-links. If this is a virtual (not classical) link diagram, then this
-routine is still safe to call, and will simply return ``False``.
+Note that homflyAZ() and homflyLM() require a classical link diagram
+as a precondition. Therefore, if this link diagram is virtual (not
+classical), then knowsHomfly() will simply return ``False``.
+
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial. Currently this argument is ignored
+    since this routine does not look for shortcuts that make HOMFLY-PT
+    polynomials trivial to compute; however, it is provided for
+    compatibility with other ``knows...()`` routines.
 
 Returns:
-    ``True`` if and only if this property is already known.)doc";
+    ``True`` if and only if this property is already known or trivial
+    to calculate, _and_ the preconditions for homflyAZ() and
+    homflyLM() are satisfied.)doc";
 
 // Docstring regina::python::doc::Link_::knowsJones
 static const char *knowsJones =
-R"doc(Is the Jones polynomial of this link already known? See jones() for
-further details.
+R"doc(Is the Jones polynomial of this link already known (or trivial to
+determine)? See jones() for further details.
 
 If this property is already known, future calls to jones() will be
 very fast (simply returning the precalculated value).
 
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial.
+
 Returns:
-    ``True`` if and only if this property is already known.)doc";
+    ``True`` if and only if this property is already known or trivial
+    to calculate.)doc";
 
 // Docstring regina::python::doc::Link_::linking
 static const char *linking =
@@ -3994,6 +4052,59 @@ Parameter ``framing``:
 
 Returns:
     *k* parallel copies of this link.)doc";
+
+// Docstring regina::python::doc::Link_::parityProjection
+static const char *parityProjection =
+R"doc(Returns the parity projection of this knot.
+
+This is an operation on virtual knots, which removes all crossings
+whose chord index fails a given parity condition. The parity condition
+is determined by the argument *modBase:*
+
+* If ``modBase = 0``, then we remove all crossings with non-zero chord
+  index.
+
+* If ``modBase > 0``, then we remove all crossings whose chord index
+  is not a multiple of *modBase*.
+
+A common setting (and the default here) is ``modBase = 2``, where we
+remove all odd crossings and keep all even crossings. Here we use
+_odd_ and _even_ in the same sense as oddWrithe(): a crossing *c* is
+_odd_ if, when traversing the knot, we pass through an odd number of
+crossings between the over-strand and the under-strand of *c*.
+
+By _removing_ a crossing *c*, we mean the same operation as calling
+`makeVirtual(c)`: the incoming and outgoing upper strands of *c* will
+be merged into one, and the incoming and outgoing lower strands of *c*
+will be merged into one. It is possible that _all_ of the crossings in
+the diagram will be removed, in which case the result will be a
+0-crossing unknot.
+
+Parity projection cannot work with multiple-component links. If this
+link has more than one component, then this routine will throw an
+exception.
+
+Parity projection is only interesting for virtual knots. In a
+classical knot diagram, chord indices are always zero, and so the
+parity projection will always return an identical copy of the original
+knot diagram.
+
+This knot diagram will not be modified. Instead, this routine will
+return a new diagram with the relevant crossings removed.
+
+Precondition:
+    This link has at most one component (i.e., it is either a knot or
+    the empty link).
+
+Exception ``FailedPrecondition``:
+    This link has multiple components.
+
+Parameter ``modBase``:
+    the modular base that determines the exact parity condition to
+    test, as described above.
+
+Returns:
+    the resulting parity projection of this knot.)doc";
 
 // Docstring regina::python::doc::Link_::pd
 static const char *pd =

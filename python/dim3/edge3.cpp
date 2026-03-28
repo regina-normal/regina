@@ -162,7 +162,7 @@ versions of Regina.)doc")
 
     RDOC_SCOPE_END
 
-    regina::python::addListView<
+    regina::python::addStdView<
         decltype(std::declval<Edge<3>>().embeddings())>(internal,
         "Face3_1_embeddings");
 

@@ -38,13 +38,13 @@
 #endif
 
 #include <array>
+#include <ranges>
 #include <vector>
 #include "concepts/core.h"
 #include "core/output.h"
 #include "utilities/exception.h"
 #include "utilities/fixedarray.h"
 #include "utilities/flags.h"
-#include "utilities/listview.h"
 #include "utilities/markedvector.h"
 #include "utilities/tightencoding.h"
 
@@ -736,10 +736,10 @@ class ModelLinkGraph :
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based `for` loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Note that the elements of the view will be pointers,
+         * so your code might look like:
          *
          * \code{.cpp}
          * for (ModelLinkGraphNode* n : graph.nodes()) { ... }
@@ -2014,11 +2014,10 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based `for` loops.  The elements of the list will be
-         * read-only objects of type ModelLinkGraphArc, and so your code might
-         * look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  The elements of the list will be read-only objects of
+         * type ModelLinkGraphArc, and so your code might look like:
          *
          * \code{.cpp}
          * for (const ModelLinkGraphArc& a : cells.arcs(cell)) { ... }
@@ -2334,7 +2333,7 @@ inline ModelLinkGraphNode* ModelLinkGraph::node(size_t index) const {
 }
 
 inline auto ModelLinkGraph::nodes() const {
-    return ListView(nodes_);
+    return std::views::all(nodes_);
 }
 
 inline ModelLinkGraph& ModelLinkGraph::operator = (ModelLinkGraph&& src)
@@ -2425,7 +2424,7 @@ inline const ModelLinkGraphArc& ModelLinkGraphCells::arc(size_t cell,
 }
 
 inline auto ModelLinkGraphCells::arcs(size_t cell) const {
-    return ListView(arcs_.begin() + start_[cell],
+    return std::ranges::subrange(arcs_.begin() + start_[cell],
         arcs_.begin() + start_[cell + 1]);
 }
 

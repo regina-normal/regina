@@ -2608,7 +2608,6 @@
 		0518BA2E29D595D00020ADC1 /* tidy_peripheral_curves.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tidy_peripheral_curves.cpp; sourceTree = "<group>"; };
 		0518BA3529D595DB0020ADC1 /* triangulations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulations.cpp; sourceTree = "<group>"; };
 		0518BA3629D595DB0020ADC1 /* unix_file_io.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = unix_file_io.cpp; sourceTree = "<group>"; };
-		05199A2C25C63AED0006B8FA /* listview.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = listview.h; sourceTree = "<group>"; };
 		05199A2D25C63B3C0006B8FA /* sageSetup.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = sageSetup.py; path = regina/sageSetup.py; sourceTree = "<group>"; };
 		05199A2E25C63B7E0006B8FA /* memory3.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = memory3.test; sourceTree = "<group>"; };
 		05199A2F25C63B7F0006B8FA /* file3.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = file3.rga; sourceTree = "<group>"; };
@@ -2640,6 +2639,11 @@
 		05226DED27422C81000A45D5 /* hilbertprimal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hilbertprimal.cpp; sourceTree = "<group>"; };
 		05226DEE27422C81000A45D5 /* doubledescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = doubledescription.cpp; sourceTree = "<group>"; };
 		05226DEF27422C82000A45D5 /* hilbertcd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hilbertcd.cpp; sourceTree = "<group>"; };
+		052274BD2F7367730054172A /* view.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = view.h; sourceTree = "<group>"; };
+		052274BE2F73CE8D0054172A /* view.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = view.out; sourceTree = "<group>"; };
+		052274BF2F73CE8D0054172A /* view.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = view.test; sourceTree = "<group>"; };
+		052274C02F73CEBD0054172A /* aggregator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = aggregator.h; sourceTree = "<group>"; };
+		052274C12F73CF140054172A /* compat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compat.h; sourceTree = "<group>"; };
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
 		052774101C55743E00140918 /* hypercreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypercreator.cpp; sourceTree = "<group>"; };
@@ -4413,8 +4417,6 @@
 		05CAE6902747227D007C93F3 /* treedecomp.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = treedecomp.out; sourceTree = "<group>"; };
 		05CAE6912747E617007C93F3 /* treeconstraint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = treeconstraint.cpp; sourceTree = "<group>"; };
 		05CAE6942747E62C007C93F3 /* treeconstraint-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "treeconstraint-impl.h"; sourceTree = "<group>"; };
-		05CAE6962749F504007C93F3 /* listview.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = listview.out; sourceTree = "<group>"; };
-		05CAE6972749F505007C93F3 /* listview.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = listview.test; sourceTree = "<group>"; };
 		05CAE698274AA785007C93F3 /* isosigencoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isosigencoding.h; sourceTree = "<group>"; };
 		05CAE699274AA785007C93F3 /* isosigtype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isosigtype.h; sourceTree = "<group>"; };
 		05CAE6A2274B0FC2007C93F3 /* isosig-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "isosig-bindings.h"; sourceTree = "<group>"; };
@@ -5072,10 +5074,12 @@
 		05098A7E28F24D98005E4716 /* utilities */ = {
 			isa = PBXGroup;
 			children = (
+				052274C02F73CEBD0054172A /* aggregator.h */,
 				05098A8128F24D98005E4716 /* base64.h */,
 				05098A8928F24D98005E4716 /* bitmanip.h */,
 				05098A8528F24D98005E4716 /* bitmask.h */,
 				05098A8328F24D98005E4716 /* boolset.h */,
+				052274C12F73CF140054172A /* compat.h */,
 				05098A8B28F24D98005E4716 /* exception.h */,
 				051806AD2C2BC447001470F1 /* fixedarray.h */,
 				05098AB928F62200005E4716 /* flags.h */,
@@ -5781,8 +5785,6 @@
 				050F5D951B9BAB9C00C1F681 /* knotted-Y.orb */,
 				05199A3225C63B7F0006B8FA /* listener.out */,
 				05199A3725C63B7F0006B8FA /* listener.test */,
-				05CAE6962749F504007C93F3 /* listview.out */,
-				05CAE6972749F505007C93F3 /* listview.test */,
 				05CAE6862746878C007C93F3 /* lookup.out */,
 				05CAE6852746878C007C93F3 /* lookup.test */,
 				0553FB9B2AF2117200BE89A7 /* lst.out */,
@@ -5865,6 +5867,8 @@
 				050F5DA51B9BAB9C00C1F681 /* trigeneral.test */,
 				0577E6EB1F97088000CBDF15 /* utf8.out */,
 				0577E6ED1F97088200CBDF15 /* utf8.test */,
+				052274BE2F73CE8D0054172A /* view.out */,
+				052274BF2F73CE8D0054172A /* view.test */,
 				05E221DF2CEC2545009D5D4E /* whitehead.tri */,
 			);
 			path = testsuite;
@@ -7219,11 +7223,11 @@
 				05098B0228FC110B005E4716 /* flags.h */,
 				055CF2B728C817E000CA9034 /* gil.h */,
 				05098A6828F24CD8005E4716 /* globals.h */,
-				05199A2C25C63AED0006B8FA /* listview.h */,
 				05D81A8B1C66B0E500DDCE64 /* output.h */,
 				05772EDD270CFAB300D26D8A /* packet.h */,
 				05098AFE28FC0DEC005E4716 /* tableview.h */,
 				0530FEFF284595580069B227 /* tightencoding.h */,
+				052274BD2F7367730054172A /* view.h */,
 			);
 			path = helpers;
 			sourceTree = "<group>";
@@ -11354,7 +11358,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7.4.1.0;
+				CURRENT_PROJECT_VERSION = 8.0.0;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_ASSET_PATHS = "\"swiftui/Preview Content\"";
 				DEVELOPMENT_TEAM = 67JTSH67LZ;
@@ -11384,7 +11388,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 7.4.1;
+				MARKETING_VERSION = 8.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = org.computop.regina.ios.Regina;
@@ -11422,7 +11426,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 7.4.1.0;
+				CURRENT_PROJECT_VERSION = 8.0.0;
 				DEVELOPMENT_ASSET_PATHS = "\"swiftui/Preview Content\"";
 				DEVELOPMENT_TEAM = 67JTSH67LZ;
 				ENABLE_PREVIEWS = YES;
@@ -11449,7 +11453,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 7.4.1;
+				MARKETING_VERSION = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = org.computop.regina.ios.Regina;
@@ -12051,7 +12055,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 7.4.1;
+				MARKETING_VERSION = 8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
 				PRODUCT_NAME = Regina;
 				REGINA_PYTHON_FRAMEWORK = Python3;
@@ -12100,7 +12104,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 7.4.1;
+				MARKETING_VERSION = 8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
 				PRODUCT_NAME = Regina;
 				REGINA_PYTHON_FRAMEWORK = Python3;

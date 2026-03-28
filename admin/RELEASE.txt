@@ -7,13 +7,12 @@ Program version:
     CMakeLists.txt (PACKAGE_VERSION)
     docs/man/*.1 (windows executable path)
     qtui/src/org.computop.regina.metainfo.xml (new entry in <release>)
-    qtui/doc/regina/about.docbook (plain citation, bibTeX citation)
     qtui/doc/regina/index.docbook (&regversion;, &regdate;, copyrightyears)
     qtui/doc/regina/manonly.docbook (&regversion;)
     qtui/doc/regina/python.docbook (python session banner)
     qtui/doc/regina-xml/index.docbook (&regversion;, &regdate;, copyrightyears)
     preconfig/*/regina-config.h (PACKAGE_* macros)
-    Regina.xcodeproject/project.pbxproj (CURRENT_PROJECT_VERSION x4,
+    Regina.xcodeproject/project.pbxproj (CURRENT_PROJECT_VERSION x2,
                                          MARKETING_VERSION x4)
     www/index.html (last updated, current version, contents, news,
                     filenames, what's new)
@@ -22,6 +21,7 @@ Program version:
 Plus copyright years in:
     engine/doxygen/doc-footer.html
     python/modulemain.cpp
+    qtui/doc/regina/about.docbook (plain citation, bibTeX citation)
     qtui/src/regina.plist
     qtui/src/reginaabout.cpp (several places)
     ... and the copyright statement in the license (see below)

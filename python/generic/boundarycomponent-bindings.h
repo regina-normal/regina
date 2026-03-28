@@ -111,7 +111,7 @@ void addBoundaryComponent(pybind11::module_& m, pybind11::module_& internal,
 
     RDOC_SCOPE_END
 
-    regina::python::addListView<
+    regina::python::addStdView<
         decltype(std::declval<BoundaryComponent<dim>>().facets())>(internal,
         (std::string(name) + "_facets").c_str());
 }

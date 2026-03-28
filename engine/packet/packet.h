@@ -2100,22 +2100,23 @@ class Packet : public std::enable_shared_from_this<Packet>,
  *
  * These constants indicate whether an object of type \a Held is in fact part
  * of the inherited interface for a derived class of Held, which is typically
- * the wrapped packet type PacketOf<Held>.  These constants are used as a
+ * the wrapped packet type `PacketOf<Held>`.  These constants are used as a
  * lightweight (and significantly less rich) replacement for polymorphism,
  * virtual functions and dynamic casts.
  *
  * These constants only know about two types of relationships:
  *
- * - an object of type \a Held being part of a larger PacketOf<Held>
+ * - an object of type \a Held being part of a larger `PacketOf`<Held>`
  *   (indicated by the constant PacketHeldBy::Packet);
  *
- * - an object of type Triangulation<3> being part of a larger
+ * - an object of type `Triangulation<3>` being part of a larger
  *   SnapPeaTriangulation (indicated by the constant PacketHeldBy::SnapPea).
  *
- * Of course, a Triangulation<3> could belong to a SnapPeaTriangulation which is
- * then held by a PacketOf<SnapPeaTriangulation>.  In this case the inherited
- * PacketData<Triangulation<3>> will store PacketHeldBy::SnapPea, and the
- * inherited PacketData<SnapPeaTriangulation> will store PacketHeldBy::Packet.
+ * Of course, a `Triangulation<3>` could belong to a SnapPeaTriangulation which
+ * is then held by a `PacketOf<SnapPeaTriangulation>`.  In this case the
+ * inherited `PacketData<Triangulation<3>>` will store PacketHeldBy::SnapPea,
+ * and the inherited `PacketData<SnapPeaTriangulation>` will store
+ * PacketHeldBy::Packet.
  *
  * \nopython
  */
@@ -2338,15 +2339,15 @@ class PacketOf : public Packet, public Held {
  * A lightweight helper class that allows an object of type \a Held to connect
  * with the wrapped packet class that contains it.
  *
- * For every wrapped packet type of the form PacketOf<Held>, the corresponding
- * class \a Held must derive from PacketData<Held>.  See the Packet class
+ * For every wrapped packet type of the form `PacketOf<Held>`, the corresponding
+ * class \a Held must derive from `PacketData<Held>`.  See the Packet class
  * notes for more information about packets, and for what else must be
  * implemented for each wrapped packet type.
  *
  * This base class is extremely lightweight: the only data that it contains
  * is a single PacketHeldBy enumeration value.  All of the class constructors
  * set this value to PacketHeldBy::None; it is the responsibility of subclasses
- * (e.g., PacketOf<Held>) to change this where necessary.
+ * (e.g., `PacketOf<Held>`) to change this where necessary.
  *
  * \python Not present, but the routines anonID() and packet() will be
  * provided directly through the various subclasses.
@@ -2356,8 +2357,8 @@ class PacketData {
     protected:
         PacketHeldBy heldBy_ { PacketHeldBy::None };
             /**< Indicates whether this \a Held object is in fact the
-                 inherited data for a PacketOf<Held>.  As a special case,
-                 this field is also used to indicate when a Triangulation<3>
+                 inherited data for a `PacketOf<Held>`.  As a special case,
+                 this field is also used to indicate when a `Triangulation<3>`
                  is in fact the inherited data for a SnapPeaTriangulation.
                  See the PacketHeldBy enumeration for more details on
                  the different values that this data member can take. */

@@ -328,6 +328,8 @@ class MaxAggregator {
  * This operation is not marked `noexcept`, since its throwing behaviour
  * depends upon the throwing behaviour of the swap operation for type \a T.
  *
+ * \nopython
+ *
  * \param a the first aggregator whose contents should be swapped.
  * \param b the second aggregator whose contents should be swapped.
  *

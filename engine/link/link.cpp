@@ -37,7 +37,25 @@
 
 namespace regina {
 
-Link::Link(const Link& cloneMe, bool cloneProps) : virtualGenus_(-1) {
+size_t Crossing::chordIndex() const {
+    long ans = 0;
+    StrandRef s = const_cast<Crossing*>(this)->upper();
+    for (++s; s.crossing() != this; ++s) {
+        if (s.strand() > 0)
+            ans += s.crossing()->sign();
+        else
+            ans -= s.crossing()->sign();
+    }
+    if (s.strand() > 0) {
+        // We returned to the upper strand without ever seeing the lower
+        // strand.  This cannot be a (virtual) knot diagram.
+        throw FailedPrecondition("Chord index requires the crossing "
+            "to belong to a single-component link");
+    }
+    return std::abs(ans);
+}
+
+Link::Link(const Link& cloneMe, bool cloneProps) {
     crossings_.reserve(cloneMe.crossings_.size());
     for (Crossing* c : cloneMe.crossings_)
         crossings_.push_back(new Crossing(c->sign()));
@@ -1360,6 +1378,106 @@ Link Link::parallel(int k, Framing framing) const {
                 ans.crossings_[startL + i * startDelta]->
                     strand(startStrand));
     }
+
+    return ans;
+}
+
+Link Link::parityProjection(size_t modBase) const {
+    if (components_.size() > 1)
+        throw FailedPrecondition("parityProjection() requires at most one "
+            "link component");
+    if (crossings_.empty()) {
+        // Either we have a 0-crossing unknot or the empty link.
+        // In both cases this is a no-op: return a copy of this link.
+        return { *this };
+    }
+
+    // Identify which crossings satisfy the parity condition, and for those
+    // that do, create a new crossing for the new link.
+    // We test the parity condition for all crossings in a single traversal of
+    // the knot, by keeping a running total of the +1/-1 signs as we walk past
+    // each crossing.
+    FixedArray<bool> seen(crossings_.size(), false);
+    FixedArray<long> firstSignSum(crossings_.size());
+    FixedArray<Crossing*> copy(crossings_.size(), nullptr);
+    long signSum = 0;
+    size_t nKept = 0;
+
+    StrandRef start = components_.front();
+    StrandRef s = start;
+    do {
+        size_t idx = s.crossing()->index();
+        if (seen[idx]) {
+            // This is the second time we've walked past this crossing.
+            // Examine the running total now, immediately _before_ passing
+            // the crossing for the second time, and compare it to the sum as it
+            // was immediately _after_ passing the crossing for the first time.
+            if (modBase == 0) {
+                if (firstSignSum[idx] == signSum) {
+                    copy[idx] = new Crossing(s.crossing()->sign());
+                    ++nKept;
+                }
+            } else {
+                // Beware: the sign sums are signed, but modBase is unsigned.
+                // We do not want negative numbers to be treated as enormous
+                // positive numbers here.
+                if (std::abs(firstSignSum[idx] - signSum) % modBase == 0) {
+                    copy[idx] = new Crossing(s.crossing()->sign());
+                    ++nKept;
+                }
+            }
+        }
+
+        if (s.strand() > 0)
+            signSum += s.crossing()->sign();
+        else
+            signSum -= s.crossing()->sign();
+
+        if (! seen[idx]) {
+            // This is the first time we've walked past this crossing.  Record
+            // the running total as it is now, immediately _after_ passing the
+            // crossing.
+            firstSignSum[idx] = signSum;
+            seen[idx] = true;
+        }
+
+        ++s;
+    } while (s != start);
+
+    if (nKept == 0) {
+        // No crossings survive, so return the 0-crossing unknot.
+        // Note that there are no newly created Crossing objects to destroy.
+        return { 1 };
+    }
+
+    // Build the new knot.
+    // We know that at least one crossing survives.
+    // We try to be kind to the user: we insert the crossings in the same order
+    // as in the original link, and we mark the new component's starting point
+    // as the first surviving strand from the original knot traversal.
+    Link ans;
+    ans.crossings_.reserve(nKept);
+    for (auto c : copy)
+        if (c)
+            ans.crossings_.push_back(c);
+
+    start = components_.front();
+    s = start;
+    StrandRef prev;
+    do {
+        if (Crossing* cAlt = copy[s.crossing()->index()]) {
+            // This crossing survives!
+            StrandRef sAlt(cAlt, s.strand());
+            if (! prev)
+                ans.components_.push_back(sAlt);
+            else
+                join(prev, sAlt);
+            prev = sAlt;
+        }
+
+        ++s;
+    } while (s != start);
+    join(prev, ans.components_.front());
 
     return ans;
 }

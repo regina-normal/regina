@@ -69,10 +69,10 @@ void addComponent(pybind11::module_& m, pybind11::module_& internal,
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);
 
-    regina::python::addListView<
+    regina::python::addStdView<
         decltype(std::declval<Component<dim>>().simplices())>(internal,
         (std::string(name) + "_simplices").c_str());
-    regina::python::addListView<
+    regina::python::addStdView<
         decltype(std::declval<Component<dim>>().boundaryComponents())>(internal,
         (std::string(name) + "_boundaryComponents").c_str());
 

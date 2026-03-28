@@ -37,12 +37,12 @@
  *  \brief Implementation details for connected components of triangulations.
  */
 
+#include <ranges>
 #include <vector>
 #include "regina-core.h"
 #include "core/output.h"
 #include "triangulation/forward.h"
 #include "triangulation/detail/strings.h"
-#include "utilities/listview.h"
 #include "utilities/markedvector.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
@@ -123,10 +123,10 @@ class ComponentBase :
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based `for` loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Note that the elements of the view will be pointers,
+         * so your code might look like:
          *
          * \code{.cpp}
          * for (Simplex<dim>* s : comp.simplices()) { ... }
@@ -254,10 +254,10 @@ class ComponentBase :
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based `for` loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Note that the elements of the view will be pointers,
+         * so your code might look like:
          *
          * \code{.cpp}
          * for (BoundaryComponent<dim>* bc : comp.boundaryComponents()) { ... }
@@ -420,7 +420,7 @@ inline size_t ComponentBase<dim>::size() const {
 
 template <int dim> requires (supportedDim(dim))
 inline auto ComponentBase<dim>::simplices() const {
-    return ListView(simplices_);
+    return std::views::all(simplices_);
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -479,7 +479,7 @@ template <int dim> requires (supportedDim(dim))
 inline auto ComponentBase<dim>::triangles() const
         requires (standardDim(dim)) {
     if constexpr (dim == 2)
-        return ListView(simplices_);
+        return std::views::all(simplices_);
     else
         return static_cast<const Component<dim>*>(this)->template faces<2>();
 }
@@ -488,7 +488,7 @@ template <int dim> requires (supportedDim(dim))
 inline auto ComponentBase<dim>::tetrahedra() const
         requires (standardDim(dim) && dim >= 3) {
     if constexpr (dim == 3)
-        return ListView(simplices_);
+        return std::views::all(simplices_);
     else
         return static_cast<const Component<dim>*>(this)->template faces<3>();
 }
@@ -497,14 +497,14 @@ template <int dim> requires (supportedDim(dim))
 inline auto ComponentBase<dim>::pentachora() const
         requires (standardDim(dim) && dim >= 4) {
     if constexpr (dim == 4)
-        return ListView(simplices_);
+        return std::views::all(simplices_);
     else
         return static_cast<const Component<dim>*>(this)->template faces<4>();
 }
 
 template <int dim> requires (supportedDim(dim))
 inline auto ComponentBase<dim>::boundaryComponents() const {
-    return ListView(boundaryComponents_);
+    return std::views::all(boundaryComponents_);
 }
 
 template <int dim> requires (supportedDim(dim))

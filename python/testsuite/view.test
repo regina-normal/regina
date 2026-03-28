@@ -4,7 +4,7 @@
 # Copyright (c) 2019-2025, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Tests iteration with C++ functions that return a ListView.
+# Tests iteration with C++ functions that return a standard C++ view.
 #
 # This file is a single component of Regina's python test suite.  To run
 # the python test suite, move to the main python directory in the source
@@ -215,6 +215,11 @@ for f in t.tetrahedra():
 		print(e)
 
 for f in t.pentachora():
+	print(f.str(), ':', f.index())
+	for e in f.embeddings():
+		print(e)
+
+for f in t.simplices():
 	print(f.str(), ':', f.index())
 
 for c in t.boundaryComponents():

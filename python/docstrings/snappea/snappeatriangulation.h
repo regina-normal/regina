@@ -47,7 +47,10 @@ description so they can be created without allocating further
 resources).
 
 Details of the error can be accessed through the inherited member
-function what().)doc";
+function what().
+
+Python:
+    This uses Python's ``RuntimeError`` as its base class.)doc";
 
 // Docstring regina::python::doc::SnapPeaMemoryFull
 static const char *SnapPeaMemoryFull =
@@ -62,7 +65,10 @@ description so they can be created without allocating further
 resources).
 
 Details of the error can be accessed through the member function
-what().)doc";
+what().
+
+Python:
+    This uses Python's ``RuntimeError`` as its base class.)doc";
 
 // Docstring regina::python::doc::SnapPeaTriangulation
 static const char *SnapPeaTriangulation =
@@ -801,10 +807,10 @@ The object that is returned is lightweight, and can be happily copied
 by value. The C++ type of the object is subject to change, so C++
 users should use ``auto`` (just like this declaration does).
 
-The returned object is guaranteed to be an instance of ListView, which
-means it offers basic container-like functions and supports range-
-based ``for`` loops. The elements of the list will be read-only
-objects of type Cusp. For example, your code might look like:
+The returned object is guaranteed to be a lightweight view type from
+the ``std::ranges`` library, which means it supports range-based
+``for`` loops. The elements of the list will be read-only objects of
+type Cusp. For example, your code might look like:
 
 ```
 for (const Cusp& c : tri->cusps()) { ... }

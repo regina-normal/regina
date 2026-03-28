@@ -28,9 +28,8 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file python/helpers/listview.h
- *  \brief Assists with wrapping instances of Regina's lightweight ListView
- *  template class.
+/*! \file python/helpers/tableview.h
+ *  \brief Assists with wrapping instances of Regina's TableView template class.
  *
  *  This header is _not_ included automatically by python/helpers.h.
  *  If you need it, you will need to include it yourself.
@@ -81,7 +80,7 @@ inline constexpr const char* tableViewElementName<regina::Perm<4>> = "Perm4";
  * multiple times for the same TableView class).  This is to support
  * wrapTableView(), which might be used to wrap several global constant
  * arrays of the same type and dimensions.  Note that this behaviour is
- * different from addListView, which will throw an exception if called for
+ * different from addStdView(), which will throw an exception if called for
  * the same type more than once.
  *
  * Return value policies work as follows:
@@ -97,7 +96,7 @@ inline constexpr const char* tableViewElementName<regina::Perm<4>> = "Perm4";
  *   you will need to indicate this when wrapping whatever function returns a
  *   TableView.  This is generally not necessary, since TableView objects
  *   in Regina typically refer to global constant arrays; however, for further
- *   discussion on this issue you can see the addListView() documentation.
+ *   discussion on this issue you can see the addStdView() documentation.
  */
 template <typename Element, int dim1, int... dim>
 void addTableView(pybind11::module_& internal) {
@@ -135,7 +134,7 @@ void addTableView(pybind11::module_& internal) {
         }, Policy, rdoc::__array)
         .def("__iter__", [](const T& view) {
             return pybind11::make_iterator<Policy>(view.begin(), view.end());
-        }, pybind11::keep_alive<0, 1>(), // iterator keeps ListView alive
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps TableView alive
             rdoc::__iter__)
         ;
     c.attr("dimension") = T::dimension;

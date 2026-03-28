@@ -51,6 +51,8 @@ Version 8.0  [ TODO ]
         Class Component<dim>:
             - Added variants of countFaces(), faces() and face() that take the
               face dimension as a runtime argument (not a template parameter).
+        Class Crossing:
+            - New routine chordIndex().
         Class Cut:
             - For the iterator-based constructor, the old recommendation that
               the iterator type be random access is now a hard requirement.
@@ -145,6 +147,7 @@ Version 8.0  [ TODO ]
               the Turaev-Viro algorithm; it has been replaced by a lambda
               directly in the Turaev-Viro code instead.
         Class Link:
+            - New routine parityProjection().
             - All knows...() routines now take an optional boolean argument,
               indicating whether to consider trivial computations (the default),
               or to only check whether the value is already cached.
@@ -154,6 +157,10 @@ Version 8.0  [ TODO ]
             - The iterator-based variant of fromData() now has simpler
               requirements on the component sequences (in particular, iteration
               no longer needs to be random access).
+        Class ListView<...>:
+            - Deprecated and no longer used.  Wherever Regina used to return
+              a ListView, it now returns a lightweight view from the new C++20
+              std::ranges library.
         Class LPCol<...>:
             - This is now an internal class in the namespace regina::detail,
               and its template parameters have changed.  End users should have
@@ -419,6 +426,13 @@ Version 8.0  [ TODO ]
           NEVER_INSTANTIATED, and DISABLED to ByValue, ByReference,
           NeverInstantiated, and Disabled respectively.  The old names are
           kept as deprecated enum values.
+        - Since ListView has been replaced by C++20 views from the std::ranges
+          library, the Python types that wrap these views have changed (though
+          users should not need to refer to these types explicitly anyway).
+          The interface is mostly the same, but equality/inequality tests on
+          the views themselves are no longer supported and will now throw an
+          exception.  (Of course you can still test equality/inequality of the
+          individual elements of these views.)
     UTILITIES:
         trisetcmp:
             - Now finds matches (or non-matches) in any dimension, not just

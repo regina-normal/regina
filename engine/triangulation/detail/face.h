@@ -50,6 +50,7 @@
 #include "utilities/typeutils.h"
 #include <algorithm>
 #include <deque>
+#include <ranges>
 #include <vector>
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
@@ -524,7 +525,7 @@ class FaceBase :
          *
          * For convenience, you can also use begin() and end() to iterate
          * through all such appearances, or equivalently you can iterate
-         * over the lightweight object returned by embeddings().
+         * over the lightweight view returned by embeddings().
          *
          * In most cases, the ordering of appearances is arbitrary.
          * The exception is for codimension 2, where these appearances
@@ -546,11 +547,11 @@ class FaceBase :
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based `for` loops.  The elements of the list will be
-         * read-only objects of type FaceEmbedding<dim, subdim>.  For
-         * example, your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  The elements of the list will be read-only objects of
+         * type `FaceEmbedding<dim, subdim>`.  For example, your code might
+         * look like:
          *
          * \code{.cpp}
          * Face<dim, subdim>* face = ...;
@@ -1369,7 +1370,7 @@ inline const FaceEmbedding<dim, subdim>& FaceBase<dim, subdim>::embedding(
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 inline auto FaceBase<dim, subdim>::embeddings() const {
-    return ListView(embeddings_);
+    return std::views::all(embeddings_);
 }
 
 template <int dim, int subdim>
