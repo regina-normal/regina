@@ -197,6 +197,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
                      if the computation has not yet been attempted, or \c true
                      if it is confirmed that no such angle structure exists. */
 
+        /**
+         * Represents different contexts in which a member function might try
+         * to simplify a triangulation.
+         */
+        enum class SimplifyContext {
+            /**
+             * Indicates that we want to use all available techniques to
+             * simplify the triangulation as much as possible.
+             */
+            Best,
+            /**
+             * Indicates that we are within a "down" sequence of randomise().
+             * Only 2-0 edge moves, 2-1 edge moves, 2-0 vertex moves and 4-4
+             * moves will be considered.
+             */
+            RandomiseDescent
+        };
+
     public:
         /**
          * \name Constructors and Destructors
@@ -5063,14 +5081,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         bool internalCollapseEdge(Edge<3>* e, bool check, bool perform);
 
         /**
-         * Implements a descent using only 2-0 and 2-1 moves, which is used
-         * internally in randomise().
-         *
-         * \author Alex He
-         */
-        void randomiseDescentInternal();
-
-        /**
          * Implements truncate() and truncateIdeal().
          *
          * If \a vertex is non-null, this truncates just the given vertex.
@@ -5080,6 +5090,38 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \return \c true if and only if the triangulation was changed.
          */
         bool truncateInternal(Vertex<3>* vertex, bool lockBoundary);
+
+        /**
+         * Implements simplifyToLocalMinimum().
+         *
+         * The template argument \a SimplifyContext indicates the context of
+         * the simplification, which determines the moves that we are allowed
+         * to use.
+         *
+         * If \a perform is `true` (the default), then if this routine does
+         * actually change the triangulation, it is guaranteed that this change
+         * will have reduced the total number of tetrahedra.
+         *
+         * See simplifyToLocalMinimum() for further details.
+         */
+        template <SimplifyContext>
+        bool simplifyToLocalMinimumInternal(bool perform = true);
+
+        /**
+         * Implements simplify().
+         *
+         * The template argument \a SimplifyContext indicates the context of
+         * the simplification, which determines the moves that we are allowed
+         * to use.
+         *
+         * If this routine does actually change the triangulation, then it is
+         * guaranteed that this change will have reduced the total number of
+         * tetrahedra.
+         *
+         * See simplify() for further details.
+         */
+        template <SimplifyContext>
+        bool simplifyInternal();
 
         void stretchBoundaryForestFromVertex(Vertex<3>*, std::set<Edge<3>*>&,
                 std::set<Vertex<3>*>&) const;
@@ -5506,6 +5548,14 @@ inline bool Triangulation<3>::knowsHomologyH2Z2(bool) const {
 inline const Triangulation<3>::TuraevViroSet&
         Triangulation<3>::allCalculatedTuraevViro() const {
     return prop_.turaevViroCache_;
+}
+
+inline bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
+    return simplifyToLocalMinimumInternal<SimplifyContext::Best>(perform);
+}
+
+inline bool Triangulation<3>::simplify() {
+    return simplifyInternal<SimplifyContext::Best>();
 }
 
 inline bool Triangulation<3>::intelligentSimplify() {

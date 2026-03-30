@@ -181,33 +181,38 @@ startLoop:
     }
 }
 
-bool Triangulation<3>::simplify() {
+template <Triangulation<3>::SimplifyContext context>
+bool Triangulation<3>::simplifyInternal() {
     bool changed;
 
     { // Begin scope for change event block.
         PacketChangeGroup span(*this);
 
         // Reduce to a local minimum.
-        changed = simplifyToLocalMinimum(true);
+        changed = simplifyToLocalMinimumInternal<context>(true);
 
-        // If we still haven't minimised vertices, try to do this now.
-        // We will throw this away if it increases the number of tetrahedra,
-        // but even if the size stays the same we will keep it since
-        // fewer vertices is generally better.
-        if (isValid() && ! hasMinimalVertices()) {
-            Triangulation<3> tmp(*this, false, true);
-            try {
-                tmp.minimiseVertices();
-            } catch (LockViolation&) {
-                // Calling minimiseVertices() could cause a lock violation if
-                // there are locked boundary triangles.  In this case it could
-                // still have performed some moves, and it guarantees that the
-                // resulting triangulation is sensible.  Keep whatever we got.
-            }
-            tmp.simplifyToLocalMinimum(true);
-            if (tmp.size() <= size()) {
-                swap(tmp);
-                changed = true;
+        // At least for now, intermediate "down" sequences in randomise()
+        // won't bother with minimising vertices.
+        if constexpr ( context != SimplifyContext::RandomiseDescent ) {
+            // If we still haven't minimised vertices, try to do this now.
+            // We will throw this away if it increases the number of tetrahedra,
+            // but even if the size stays the same we will keep it since
+            // fewer vertices is generally better.
+            if (isValid() && ! hasMinimalVertices()) {
+                Triangulation<3> tmp(*this, false, true);
+                try {
+                    tmp.minimiseVertices();
+                } catch (LockViolation&) {
+                    // Calling minimiseVertices() could cause a lock violation if
+                    // there are locked boundary triangles.  In this case it could
+                    // still have performed some moves, and it guarantees that the
+                    // resulting triangulation is sensible.  Keep whatever we got.
+                }
+                tmp.simplifyToLocalMinimum(true);
+                if (tmp.size() <= size()) {
+                    swap(tmp);
+                    changed = true;
+                }
             }
         }
 
@@ -229,11 +234,17 @@ bool Triangulation<3>::simplify() {
             // If we've already simplified then there's no need to use a
             // separate clone since we won't need to undo further changes.
             //
+            // Also, if we are in an intermediate "down" sequence of
+            // randomise(), then we are happy to make some random changes even
+            // if they don't immediately help to improve the triangulation.
+            //
             // If we are cloning the triangulation, ensure we clone the locks
             // also.
-            if (changed)
+            if constexpr ( context == SimplifyContext::RandomiseDescent ) {
                 use = this;
-            else {
+            } else if (changed) {
+                use = this;
+            } else {
                 use = new Triangulation<3>(*this, false, true);
             }
 
@@ -262,7 +273,7 @@ bool Triangulation<3>::simplify() {
                 use->move44(fourFourChoice.first, fourFourChoice.second);
 
                 // See if we can simplify now.
-                if (use->simplifyToLocalMinimum(true)) {
+                if (use->simplifyToLocalMinimumInternal<context>(true)) {
                     // We have successfully simplified!
                     // Start all over again.
                     fourFourAttempts = fourFourCap = 0;
@@ -283,6 +294,11 @@ bool Triangulation<3>::simplify() {
 
             // At this point we have decided that 4-4 moves will help us
             // no more.
+            if constexpr ( context == SimplifyContext::RandomiseDescent ) {
+                // At least for now, intermediate "down" sequences in
+                // randomise() won't bother with open and close book moves.
+                break;
+            }
 
             // --- Open book and close book moves ---
 
@@ -364,35 +380,51 @@ bool Triangulation<3>::simplify() {
     return changed;
 }
 
-bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
+// Instantiate all variants of simplifyInternal().
+template bool Triangulation<3>::simplifyInternal<
+    Triangulation<3>::SimplifyContext::Best>();
+template bool Triangulation<3>::simplifyInternal<
+    Triangulation<3>::SimplifyContext::RandomiseDescent>();
+
+template <Triangulation<3>::SimplifyContext context>
+bool Triangulation<3>::simplifyToLocalMinimumInternal(bool perform) {
     if (! perform) {
         ensureSkeleton();
 
-        // Try to reduce the number of vertices.
-        if (countVertices() > components().size() &&
-                countVertices() > countBoundaryComponents()) {
-            for (Edge<3>* edge : edges()) {
+        // At least for now, intermediate "down" sequences in randomise()
+        // won't bother with edge collapses.
+        if constexpr ( context != SimplifyContext::RandomiseDescent ) {
+            // Try to reduce the number of vertices.
+            if (countVertices() > components().size() &&
+                    countVertices() > countBoundaryComponents()) {
+                for (Edge<3>* edge : edges()) {
 #ifdef PINCH_NOT_COLLAPSE
-                if (edge->vertex(0) != edge->vertex(1) &&
-                        (edge->vertex(0)->linkType() == Vertex<3>::SPHERE ||
-                         edge->vertex(1)->linkType() == Vertex<3>::SPHERE)) {
-                    // There must be a pinch-edge move here.
-                    // Note: this *increases* the number of tetrahedra.
-                    // We return true anyway, since this matches the behaviour
-                    // when perform == true.
-                    return true;
-                }
+                    if (edge->vertex(0) != edge->vertex(1) &&
+                            (edge->vertex(0)->linkType() == Vertex<3>::SPHERE ||
+                             edge->vertex(1)->linkType() == Vertex<3>::SPHERE)) {
+                        // There must be a pinch-edge move here.
+                        // Note: this *increases* the number of tetrahedra.
+                        // We return true anyway, since this matches the behaviour
+                        // when perform == true.
+                        return true;
+                    }
 #else
-                if (hasCollapseEdge(edge))
-                    return true;
+                    if (hasCollapseEdge(edge))
+                        return true;
 #endif
+                }
             }
         }
 
+
         // Look for internal simplifications.
         for (Edge<3>* edge : edges()) {
-            if (hasPachner(edge))
-                return true;
+            if constexpr ( context != SimplifyContext::RandomiseDescent ) {
+                // Intermediate "down" sequences in randomise() should not
+                // use 3-2 moves.
+                if (hasPachner(edge))
+                    return true;
+            }
             if (has20(edge))
                 return true;
             if (has21(edge, 0))
@@ -404,14 +436,18 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
             if (has20(vertex))
                 return true;
 
-        // Look for boundary simplifications.
-        if (hasBoundaryTriangles()) {
-            for (BoundaryComponent<3>* bc : boundaryComponents()) {
-                // Run through triangles of this boundary component looking
-                // for shell boundary moves.
-                for (Triangle<3>* f : bc->facets())
-                    if (hasShellBoundary(f->front().tetrahedron()))
-                        return true;
+        // At least for now, intermediate "down" sequences in randomise()
+        // won't bother with boundary simplifications.
+        if constexpr ( context != SimplifyContext::RandomiseDescent ) {
+            // Look for boundary simplifications.
+            if (hasBoundaryTriangles()) {
+                for (BoundaryComponent<3>* bc : boundaryComponents()) {
+                    // Run through triangles of this boundary component looking
+                    // for shell boundary moves.
+                    for (Triangle<3>* f : bc->facets())
+                        if (hasShellBoundary(f->front().tetrahedron()))
+                            return true;
+                }
             }
         }
 
@@ -428,39 +464,47 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
             changedNow = false;
             ensureSkeleton();
 
-            // Try to reduce the number of vertices.
-            if (countVertices() > components().size() &&
-                    countVertices() > countBoundaryComponents()) {
-                for (Edge<3>* edge : edges()) {
+            // At least for now, intermediate "down" sequences in randomise()
+            // won't bother with edge collapses.
+            if constexpr ( context != SimplifyContext::RandomiseDescent ) {
+                // Try to reduce the number of vertices.
+                if (countVertices() > components().size() &&
+                        countVertices() > countBoundaryComponents()) {
+                    for (Edge<3>* edge : edges()) {
 #ifdef PINCH_NOT_COLLAPSE
-                    if (edge->vertex(0) != edge->vertex(1) &&
-                            (edge->vertex(0)->linkType() == Vertex<3>::SPHERE ||
-                             edge->vertex(1)->linkType() == Vertex<3>::SPHERE)) {
-                        // Note: this *increases* the number of tetrahedra.
-                        pinchEdge(edge);
-                        changedNow = changed = true;
-                        break;
-                    }
+                        if (edge->vertex(0) != edge->vertex(1) &&
+                                (edge->vertex(0)->linkType() == Vertex<3>::SPHERE ||
+                                 edge->vertex(1)->linkType() == Vertex<3>::SPHERE)) {
+                            // Note: this *increases* the number of tetrahedra.
+                            pinchEdge(edge);
+                            changedNow = changed = true;
+                            break;
+                        }
 #else
-                    if (collapseEdge(edge)) {
-                        changedNow = changed = true;
-                        break;
-                    }
+                        if (collapseEdge(edge)) {
+                            changedNow = changed = true;
+                            break;
+                        }
 #endif
-                }
-                if (changedNow) {
-                    if (perform)
-                        continue;
-                    else
-                        return true;
+                    }
+                    if (changedNow) {
+                        if (perform)
+                            continue;
+                        else
+                            return true;
+                    }
                 }
             }
 
             // Look for internal simplifications.
             for (Edge<3>* edge : edges()) {
-                if (pachner(edge)) {
-                    changedNow = changed = true;
-                    break;
+                if constexpr ( context != SimplifyContext::RandomiseDescent ) {
+                    // Intermediate "down" sequences in randomise() should not
+                    // use 3-2 moves.
+                    if (pachner(edge)) {
+                        changedNow = changed = true;
+                        break;
+                    }
                 }
                 if (move20(edge)) {
                     changedNow = changed = true;
@@ -493,24 +537,28 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
                     return true;
             }
 
-            // Look for boundary simplifications.
-            if (hasBoundaryTriangles()) {
-                for (BoundaryComponent<3>* bc : boundaryComponents()) {
-                    // Run through triangles of this boundary component looking
-                    // for shell boundary moves.
-                    for (Triangle<3>* f : bc->facets())
-                        if (shellBoundary(f->front().tetrahedron())) {
-                            changedNow = changed = true;
+            // At least for now, intermediate "down" sequences in randomise()
+            // won't bother with boundary simplifications.
+            if constexpr ( context != SimplifyContext::RandomiseDescent ) {
+                // Look for boundary simplifications.
+                if (hasBoundaryTriangles()) {
+                    for (BoundaryComponent<3>* bc : boundaryComponents()) {
+                        // Run through triangles of this boundary component looking
+                        // for shell boundary moves.
+                        for (Triangle<3>* f : bc->facets())
+                            if (shellBoundary(f->front().tetrahedron())) {
+                                changedNow = changed = true;
+                                break;
+                            }
+                        if (changedNow)
                             break;
-                        }
-                    if (changedNow)
-                        break;
-                }
-                if (changedNow) {
-                    if (perform)
-                        continue;
-                    else
-                        return true;
+                    }
+                    if (changedNow) {
+                        if (perform)
+                            continue;
+                        else
+                            return true;
+                    }
                 }
             }
         }
@@ -518,6 +566,12 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
 
     return changed;
 }
+
+// Instantiate all variants of simplifyToLocalMinimumInternal().
+template bool Triangulation<3>::simplifyToLocalMinimumInternal<
+    Triangulation<3>::SimplifyContext::Best>(bool);
+template bool Triangulation<3>::simplifyToLocalMinimumInternal<
+    Triangulation<3>::SimplifyContext::RandomiseDescent>(bool);
 
 bool Triangulation<3>::randomise(ssize_t max23, bool alwaysModify) {
     if ( (not alwaysModify) and size() <= 1 ) {
@@ -545,9 +599,9 @@ bool Triangulation<3>::randomise(ssize_t max23, bool alwaysModify) {
             continue;
         }
 
-        // Use 2-0 and 2-1 moves to try to force future 2-3 moves and the
+        // Use 2-0, 2-1 and 4-4 moves to try to force future 2-3 moves and the
         // eventual full simplification to go somewhere new.
-        working.randomiseDescentInternal();
+        working.simplifyInternal<SimplifyContext::RandomiseDescent>();
         if ( working.size() < origSize ) {
             // We already simplified, so we might as well stop now.
             swap(working);
@@ -555,41 +609,19 @@ bool Triangulation<3>::randomise(ssize_t max23, bool alwaysModify) {
         }
     }
 
-    // Finish up by trying really hard to simplify. The built-in randomness
-    // should hopefully help to take us somewhere new.
-    bool simplified = true;
+    // Finish up by trying really hard to simplify (using the full
+    // simplification routine, not just the internal routine that we use for
+    // intermediate "down" sequences). The built-in randomness should hopefully
+    // help to take us somewhere new.
+    bool simplified = working.simplify(); // Did working.simplify() succeed?
     while (simplified) {
         simplified = working.simplify();
     }
-    bool successfullyReduced = ( working.size() < origSize );
-    if ( successfullyReduced or alwaysModify ) {
+    simplified = ( working.size() < origSize ); // Did we reduce size overall?
+    if ( simplified or alwaysModify ) {
         swap(working);
     }
-    return successfullyReduced;
-}
-
-void Triangulation<3>::randomiseDescentInternal() {
-    bool changed = true;
-    while (changed) {
-        changed = false;
-        for ( Edge<3>* edge : edges() ) {
-            // Try a 2-0 move.
-            if ( move20(edge) ) {
-                changed = true;
-                break;
-            }
-
-            // Try a 2-1 move.
-            if ( move21( edge, 0 ) ) {
-                changed = true;
-                break;
-            }
-            if ( move21( edge, 1 ) ) {
-                changed = true;
-                break;
-            }
-        }
-    }
+    return simplified;
 }
 
 } // namespace regina
