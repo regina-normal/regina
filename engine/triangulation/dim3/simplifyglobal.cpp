@@ -191,9 +191,9 @@ bool Triangulation<3>::simplifyInternal() {
         // Reduce to a local minimum.
         changed = simplifyToLocalMinimumInternal<context>(true);
 
-        // At least for now, intermediate "down" sequences in randomise()
+        // At least for now, intermediate "down" sequences in simplifyUpDown()
         // won't bother with minimising vertices.
-        if constexpr ( context != SimplifyContext::RandomiseDescent ) {
+        if constexpr ( context != SimplifyContext::UpDownDescent ) {
             // If we still haven't minimised vertices, try to do this now.
             // We will throw this away if it increases the number of tetrahedra,
             // but even if the size stays the same we will keep it since
@@ -235,12 +235,13 @@ bool Triangulation<3>::simplifyInternal() {
             // separate clone since we won't need to undo further changes.
             //
             // Also, if we are in an intermediate "down" sequence of
-            // randomise(), then we are happy to make some random changes even
-            // if they don't immediately help to improve the triangulation.
+            // simplifyUpDown(), then we are happy to make some random changes
+            // even if they don't immediately help to improve the
+            // triangulation.
             //
             // If we are cloning the triangulation, ensure we clone the locks
             // also.
-            if constexpr ( context == SimplifyContext::RandomiseDescent ) {
+            if constexpr ( context == SimplifyContext::UpDownDescent ) {
                 use = this;
             } else if (changed) {
                 use = this;
@@ -294,9 +295,10 @@ bool Triangulation<3>::simplifyInternal() {
 
             // At this point we have decided that 4-4 moves will help us
             // no more.
-            if constexpr ( context == SimplifyContext::RandomiseDescent ) {
+            if constexpr ( context == SimplifyContext::UpDownDescent ) {
                 // At least for now, intermediate "down" sequences in
-                // randomise() won't bother with open and close book moves.
+                // simplifyUpDown() won't bother with open and close book
+                // moves.
                 break;
             }
 
@@ -384,16 +386,16 @@ bool Triangulation<3>::simplifyInternal() {
 template bool Triangulation<3>::simplifyInternal<
     Triangulation<3>::SimplifyContext::Best>();
 template bool Triangulation<3>::simplifyInternal<
-    Triangulation<3>::SimplifyContext::RandomiseDescent>();
+    Triangulation<3>::SimplifyContext::UpDownDescent>();
 
 template <Triangulation<3>::SimplifyContext context>
 bool Triangulation<3>::simplifyToLocalMinimumInternal(bool perform) {
     if (! perform) {
         ensureSkeleton();
 
-        // At least for now, intermediate "down" sequences in randomise()
+        // At least for now, intermediate "down" sequences in simplifyUpDown()
         // won't bother with edge collapses.
-        if constexpr ( context != SimplifyContext::RandomiseDescent ) {
+        if constexpr ( context != SimplifyContext::UpDownDescent ) {
             // Try to reduce the number of vertices.
             if (countVertices() > components().size() &&
                     countVertices() > countBoundaryComponents()) {
@@ -419,8 +421,8 @@ bool Triangulation<3>::simplifyToLocalMinimumInternal(bool perform) {
 
         // Look for internal simplifications.
         for (Edge<3>* edge : edges()) {
-            if constexpr ( context != SimplifyContext::RandomiseDescent ) {
-                // Intermediate "down" sequences in randomise() should not
+            if constexpr ( context != SimplifyContext::UpDownDescent ) {
+                // Intermediate "down" sequences in simplifyUpDown() should not
                 // use 3-2 moves.
                 if (hasPachner(edge))
                     return true;
@@ -436,9 +438,9 @@ bool Triangulation<3>::simplifyToLocalMinimumInternal(bool perform) {
             if (has20(vertex))
                 return true;
 
-        // At least for now, intermediate "down" sequences in randomise()
+        // At least for now, intermediate "down" sequences in simplifyUpDown()
         // won't bother with boundary simplifications.
-        if constexpr ( context != SimplifyContext::RandomiseDescent ) {
+        if constexpr ( context != SimplifyContext::UpDownDescent ) {
             // Look for boundary simplifications.
             if (hasBoundaryTriangles()) {
                 for (BoundaryComponent<3>* bc : boundaryComponents()) {
@@ -464,9 +466,9 @@ bool Triangulation<3>::simplifyToLocalMinimumInternal(bool perform) {
             changedNow = false;
             ensureSkeleton();
 
-            // At least for now, intermediate "down" sequences in randomise()
-            // won't bother with edge collapses.
-            if constexpr ( context != SimplifyContext::RandomiseDescent ) {
+            // At least for now, intermediate "down" sequences in
+            // simplifyUpDown() won't bother with edge collapses.
+            if constexpr ( context != SimplifyContext::UpDownDescent ) {
                 // Try to reduce the number of vertices.
                 if (countVertices() > components().size() &&
                         countVertices() > countBoundaryComponents()) {
@@ -498,9 +500,9 @@ bool Triangulation<3>::simplifyToLocalMinimumInternal(bool perform) {
 
             // Look for internal simplifications.
             for (Edge<3>* edge : edges()) {
-                if constexpr ( context != SimplifyContext::RandomiseDescent ) {
-                    // Intermediate "down" sequences in randomise() should not
-                    // use 3-2 moves.
+                if constexpr ( context != SimplifyContext::UpDownDescent ) {
+                    // Intermediate "down" sequences in simplifyUpDown() should
+                    // not use 3-2 moves.
                     if (pachner(edge)) {
                         changedNow = changed = true;
                         break;
@@ -537,14 +539,14 @@ bool Triangulation<3>::simplifyToLocalMinimumInternal(bool perform) {
                     return true;
             }
 
-            // At least for now, intermediate "down" sequences in randomise()
-            // won't bother with boundary simplifications.
-            if constexpr ( context != SimplifyContext::RandomiseDescent ) {
+            // At least for now, intermediate "down" sequences in
+            // simplifyUpDown() won't bother with boundary simplifications.
+            if constexpr ( context != SimplifyContext::UpDownDescent ) {
                 // Look for boundary simplifications.
                 if (hasBoundaryTriangles()) {
                     for (BoundaryComponent<3>* bc : boundaryComponents()) {
-                        // Run through triangles of this boundary component looking
-                        // for shell boundary moves.
+                        // Run through triangles of this boundary component
+                        // looking for shell boundary moves.
                         for (Triangle<3>* f : bc->facets())
                             if (shellBoundary(f->front().tetrahedron())) {
                                 changedNow = changed = true;
@@ -571,9 +573,9 @@ bool Triangulation<3>::simplifyToLocalMinimumInternal(bool perform) {
 template bool Triangulation<3>::simplifyToLocalMinimumInternal<
     Triangulation<3>::SimplifyContext::Best>(bool);
 template bool Triangulation<3>::simplifyToLocalMinimumInternal<
-    Triangulation<3>::SimplifyContext::RandomiseDescent>(bool);
+    Triangulation<3>::SimplifyContext::UpDownDescent>(bool);
 
-bool Triangulation<3>::randomise(ssize_t max23, bool alwaysModify) {
+bool Triangulation<3>::simplifyUpDown(ssize_t max23, bool alwaysModify) {
     if ( (not alwaysModify) and size() <= 1 ) {
         return false;
     }
@@ -601,7 +603,7 @@ bool Triangulation<3>::randomise(ssize_t max23, bool alwaysModify) {
 
         // Use 2-0, 2-1 and 4-4 moves to try to force future 2-3 moves and the
         // eventual full simplification to go somewhere new.
-        working.simplifyInternal<SimplifyContext::RandomiseDescent>();
+        working.simplifyInternal<SimplifyContext::UpDownDescent>();
         if ( working.size() < origSize ) {
             // We already simplified, so we might as well stop now.
             swap(working);

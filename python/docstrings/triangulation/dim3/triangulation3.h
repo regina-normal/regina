@@ -3418,7 +3418,7 @@ Parameter ``tet``:
     may be ``None``, in which case tetrahedron 0 will be used.)doc";
 
 // Make it build. This will be overwritten by gendocs.sh
-static const char *randomise =
+static const char *simplifyUpDown =
 R"doc()doc";
 
 // Docstring regina::python::doc::Triangulation_::recogniseHandlebody

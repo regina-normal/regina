@@ -208,11 +208,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
              */
             Best,
             /**
-             * Indicates that we are within a "down" sequence of randomise().
-             * Only 2-0 edge moves, 2-1 edge moves, 2-0 vertex moves and 4-4
-             * moves will be considered.
+             * Indicates that we are within a "down" sequence of
+             * simplifyUpDown(). Only 2-0 edge moves, 2-1 edge moves,
+             * 2-0 vertex moves and 4-4 moves will be considered.
              */
-            RandomiseDescent
+            UpDownDescent
         };
 
     public:
@@ -1781,12 +1781,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * that it is capable of performing such a change.
          */
         bool simplifyToLocalMinimum(bool perform = true);
+
         /**
-         * Attempts to simplify this triangulation by performing random 2-3
-         * moves, and then attempting to simplify back down.
+         * Attempts to simplify this triangulation by performing many random
+         * 2-3 moves, and attempting to simplify back down.
          *
-         * This is a well-climbing heuristic that can be used when simplify()
-         * fails. It draws heavily from SnapPea's `randomize_triangulation()`.
+         * This is a well-climbing heuristic that can be used when `simplify()`
+         * fails. In detail, this routine attempts to climb out of a well by
+         * performing a sequence of random 2-3 moves, interspersed with
+         * attempted simplifications that avoid 3-2 moves (and hence avoid
+         * directly undoing the random 2-3 moves); such intermediate
+         * simplifications use random 4-4 moves, together with all possible
+         * 2-0 edge moves, 2-1 moves, and 2-0 vertex moves. This routine then
+         * runs `simplify()` on the resulting triangulation, with the hope that
+         * this will avoid the well that we just climbed out from.
+         *
+         * This routine is partly inspired by techniques used in both the
+         * `Triangulation<4>::simplifyUpDown()` routine (which predates this
+         * routine), as well as SnapPea's `randomize_triangulation()` routine.
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
@@ -1814,7 +1826,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \author Alex He
          */
-        bool randomise( ssize_t max23 = -1, bool alwaysModify = false );
+        bool simplifyUpDown( ssize_t max23 = -1, bool alwaysModify = false );
 
         /**
          * Attempts to simplify this triangulation using a slow but
