@@ -77,18 +77,22 @@ namespace {
      * An individual term in the (crossing, strand, sign) ... sequence
      * that we are trying to minimise when creating a signature.
      */
-    struct SigData {
+    struct LinkSigTerm {
         size_t crossing;
         int strand;
         int sign;
 
-        bool operator < (const SigData& rhs) const {
-            if (crossing < rhs.crossing) return true;
-            if (crossing > rhs.crossing) return false;
-            if (strand > rhs.strand) return true; /* upper first */
-            if (strand < rhs.strand) return false;
-            if (sign > rhs.sign) return true; /* positive first */
-            return false;
+        bool operator == (const LinkSigTerm&) const = default;
+
+        std::strong_ordering operator <=> (const LinkSigTerm& rhs) const {
+            // Smaller crossing indices first.
+            if (auto c = crossing <=> rhs.crossing; c != 0)
+                return c;
+            // Upper strands before lower.
+            if (auto c = rhs.strand <=> strand; c != 0)
+                return c;
+            // Positive crossings before negative.
+            return rhs.sign <=> sign;
         }
 
         void makeSentinel(size_t diagramSize) {
@@ -97,41 +101,45 @@ namespace {
         }
     };
 
-    struct SigSequence {
-        size_t crossings;
-        FixedArray<SigData> data;
+    struct LinkSigTraversal : public FixedArray<LinkSigTerm> {
+        LinkSigTraversal(const Link& link) : FixedArray<LinkSigTerm>(
+                2 * link.size() + link.countComponents() - 1) {
+        }
+    };
 
-        SigSequence(const Link& link) :
-                crossings(link.size()),
-                data(2 * link.size() + link.countComponents() - 1) {
+    struct LinkSigData {
+        size_t crossings;
+        LinkSigTraversal data;
+
+        LinkSigData(const Link& link) : crossings(link.size()), data(link) {
         }
 
-        SigSequence(const SigSequence&) = default;
-        SigSequence(SigSequence&&) noexcept = default;
-        SigSequence& operator = (const SigSequence&) = delete;
-        SigSequence& operator = (SigSequence&&) noexcept = default;
+        LinkSigData(const LinkSigData&) = default;
+        LinkSigData(LinkSigData&&) noexcept = default;
+        LinkSigData& operator = (const LinkSigData&) = delete;
+        LinkSigData& operator = (LinkSigData&&) noexcept = default;
 
-        void swap(SigSequence& other) noexcept {
+        void swap(LinkSigData& other) noexcept {
             std::swap(crossings, other.crossings);
             data.swap(other.data);
         }
 
-        bool operator < (const SigSequence& rhs) const {
-            // Number of crossings, descending:
-            if (crossings < rhs.crossings) return false;
-            if (crossings > rhs.crossings) return true;
+        bool operator == (const LinkSigData&) const = default;
 
-            // Length of the sequence, descending:
-            if (data.size() < rhs.data.size()) return false;
-            if (data.size() > rhs.data.size()) return true;
-
-            // Lexicographical sequence data, ascending:
-            return std::lexicographical_compare(data.begin(), data.end(),
-                rhs.data.begin(), rhs.data.end());
+        std::strong_ordering operator <=> (const LinkSigData& rhs) const {
+            // More crossings first.
+            if (auto c = rhs.crossings <=> crossings; c != 0)
+                return c;
+            // Longer sequences first.
+            if (auto c = rhs.data.size() <=> data.size(); c != 0)
+                return c;
+            // Lexicographically smaller sequences first.
+            return std::lexicographical_compare_three_way(
+                data.begin(), data.end(), rhs.data.begin(), rhs.data.end());
         }
     };
 
-    void swap(SigSequence& a, SigSequence& b) noexcept {
+    void swap(LinkSigData& a, LinkSigData& b) noexcept {
         a.swap(b);
     };
 
@@ -194,7 +202,7 @@ namespace {
      * \pre link is a non-empty connected diagram with at least one crossing
      * and fewer than 64 link components.
      */
-    SigSequence sigSequenceConnected(const Link& link,
+    LinkSigData sigSequenceConnected(const Link& link,
             BoolSet reflectionOptions, bool allowReversal,
             BoolSet rotationOptions) {
         const size_t n = link.size();
@@ -202,8 +210,8 @@ namespace {
 
         // Details of the sequence we are trying to minimise,
         // including sentinels:
-        SigSequence best(link);
-        FixedArray<SigData> curr(best.data.size());
+        LinkSigData best(link);
+        LinkSigTraversal curr(link);
         bool firstAttempt = true;
 
         // The image and preimage for each crossing:
@@ -352,7 +360,7 @@ namespace {
     /**
      * Encodes the signature sequence for a single connected link diagram.
      */
-    void encodeSigSequence(Base64SigEncoder& enc, const SigSequence& seq) {
+    void encodeSigData(Base64SigEncoder& enc, const LinkSigData& seq) {
         // Text: n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
 
         // Output crossings in order.
@@ -426,7 +434,7 @@ std::string Link::sig(bool allowReflection, bool allowReversal,
 
     if (isConnected()) {
         // This is the easy case.
-        encodeSigSequence(enc, sigSequenceConnected(*this,
+        encodeSigData(enc, sigSequenceConnected(*this,
             allowReflection ? BoolSet(true, true) /* both options */ :
                 BoolSet(false) /* false only */,
             allowReversal,
@@ -442,7 +450,7 @@ std::string Link::sig(bool allowReflection, bool allowReversal,
         auto components = diagramComponents();
         size_t nTrivial = 0;
 
-        std::vector<SigSequence> bits;
+        std::vector<LinkSigData> bits;
         for (auto c : components) {
             if (c.size() == 0) {
                 // This is a zero-crossing unknot component.
@@ -456,7 +464,7 @@ std::string Link::sig(bool allowReflection, bool allowReversal,
 
         // ... and again with reflection and/or rotation.
         if (allowReflection) {
-            std::vector<SigSequence> alt;
+            std::vector<LinkSigData> alt;
             for (auto c : components) {
                 if (c.size() > 0)
                     alt.push_back(sigSequenceConnected(c,
@@ -467,7 +475,7 @@ std::string Link::sig(bool allowReflection, bool allowReversal,
                 alt.swap(bits);
         }
         if (allowRotation) {
-            std::vector<SigSequence> alt;
+            std::vector<LinkSigData> alt;
             for (auto c : components) {
                 if (c.size() > 0)
                     alt.push_back(sigSequenceConnected(c,
@@ -478,7 +486,7 @@ std::string Link::sig(bool allowReflection, bool allowReversal,
                 alt.swap(bits);
         }
         if (allowReflection && allowRotation) {
-            std::vector<SigSequence> alt;
+            std::vector<LinkSigData> alt;
             for (auto c : components) {
                 if (c.size() > 0)
                     alt.push_back(sigSequenceConnected(c,
@@ -490,7 +498,7 @@ std::string Link::sig(bool allowReflection, bool allowReversal,
         }
 
         for (const auto& seq : bits)
-            encodeSigSequence(enc, seq);
+            encodeSigData(enc, seq);
         for (size_t i = 0; i < nTrivial; ++i)
             enc.encodeSize(0);
     }
