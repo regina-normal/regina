@@ -560,7 +560,7 @@ def extract(filename, node, namespace, output):
                 fullname = fullname + namespace + '::'
             fullname += name
 
-            if node.raw_comment is None:
+            if node.raw_comment is None or node.raw_comment == '':
                 # print('    Undocumented:', fullname, '-- skipping')
                 return
 
