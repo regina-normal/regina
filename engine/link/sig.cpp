@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include "link/linksig-impl.h"
+#include "utilities/bitmask.h"
 #include "utilities/fixedarray.h"
 #include "utilities/sigutils.h"
 
@@ -280,8 +281,8 @@ std::string LinkSigPrintable::encode(const LinkSigData& data) {
 
     // Output crossings in order.
     int charsPerInt = enc.encodeSize(data.size());
-    for (const auto& dat : data.sequence())
-        enc.encodeInt(dat.crossing, charsPerInt);
+    for (const auto& term : data.sequence())
+        enc.encodeInt(term.crossing, charsPerInt);
 
     // Output strands and signs, each as a packed sequence of bits.
     // Note: both the strands and the signs could be written using n bits
@@ -340,54 +341,43 @@ std::string LinkSigCompact::encodeUnknot() {
 }
 
 std::string LinkSigCompact::encode(const LinkSigData& data) {
-    // Text: n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
+    // We write:
+    // - the integer n;
+    // - n crossing indices for those crossings seen for the second time,
+    //   in traversal order;
+    // - 4n packed bits:
+    //   * 2n "first time seeing this crossing?" bits, in traversal order;
+    //   * n "first strand seen for this crossing" bits, in crossing order;
+    //   * n sign bits, in crossing order.
+    //
+    // By minimality, we can assume that each crossing seen for the _first_
+    // time uses the next available crossing index.
+    //
+    // All 4n bits are written in a single pack (i.e., we don't artificially
+    // move to the next base64 character at the 2n mark and/or the 3n mark).
 
     Base64SigEncoder enc;
-
-    // Output crossings in order.
     int charsPerInt = enc.encodeSize(data.size());
-    for (const auto& dat : data.sequence())
-        enc.encodeInt(dat.crossing, charsPerInt);
 
-    // Output strands and signs, each as a packed sequence of bits.
-    // Note: both the strands and the signs could be written using n bits
-    // each, not 2n bits each (we are basically writing everything twice) -
-    // however, the old knot signatures wrote 2n bits and it would be bad
-    // to break compatibility with those.  Ah well.  An extra 2n bits ~ n/3
-    // chars is not the end of the world: it only multiplies the length of
-    // the signature by 7/6 (or less, if ints require more than one char).
-    int val = 0, bit = 0;
+    Bitmask bits(2 * data.size());
+    FixedArray<bool> seen(data.size(), false);
 
+    size_t pos = 0;
     for (const auto& term : data.sequence()) {
-        if (term.crossing == data.size())
-            continue; // this is a sentinel
-        if (term.strand)
-            val |= (1 << bit);
-        if (++bit == 6) {
-            enc.encodeSingle(val);
-            val = bit = 0;
+        if (seen[term.crossing]) {
+            enc.encodeInt(term.crossing, charsPerInt);
+        } else {
+            bits.set(pos, true);
+            if (term.strand)
+                bits.set(data.size() * 2 + term.crossing, true);
+            if (term.sign > 0)
+                bits.set(data.size() * 3 + term.crossing, true);
+            seen[term.crossing] = true;
         }
-    }
-    if (bit) {
-        enc.encodeSingle(val);
-        val = bit = 0;
+        ++pos;
     }
 
-    for (const auto& term : data.sequence()) {
-        if (term.crossing == data.size())
-            continue; // this is a sentinel
-        if (term.sign > 0)
-            val |= (1 << bit);
-        if (++bit == 6) {
-            enc.encodeSingle(val);
-            val = bit = 0;
-        }
-    }
-    if (bit) {
-        enc.encodeSingle(val);
-        val = bit = 0; // we could drop this, but it helps for readability.
-    }
-
+    enc.encodeBits(4 * data.size(), bits);
     return std::move(enc).str();
 }
 
@@ -422,6 +412,14 @@ Link Link::fromSig(const std::string& sig) {
                 ans.components_.emplace_back();
                 continue;
             }
+
+            // The total length of a signature for a knot (i.e., assuming
+            // exactly one link component) should be:
+            // - standard: charsPerInt * (2n + 1) + 2 * ceil(n / 3)
+            // - compact: charsPerInt * (n + 1) + ceil(2n / 3)
+            //
+            // The compact length is always strictly smaller for n > 0, and so
+            // we should be able to detect if a compact signature has been used.
 
             FixedArray<size_t> crossing(2 * n);
             FixedArray<int> sign(2 * n);
