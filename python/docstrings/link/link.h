@@ -3500,6 +3500,10 @@ component knots; moreover the old name "knot signatures" can still be
 found in the literature. While this routine is not deprecated, it is
 recommended to use sig() in new code.
 
+This alias is only available for Regina's default signature encoding.
+If you wish to use a non-default encoding, you will need to call sig()
+instead.
+
 See sig() for further details.
 
 Exception ``NotImplemented``:
@@ -5410,26 +5414,56 @@ link components. Specifically:
   than this. If there are 64 or more link components then this routine
   will throw an exception.
 
-The signature is constructed entirely of printable characters, and has
-length proportional to ``n log n``, where *n* is the number of
-crossings.
+Regina supports different _encodings_ for signatures, as determined by
+the template parameter *Encoding:*
+
+* An encoding controls how Regina packs the combinatorial information
+  into a final signature.
+
+* The default encoding LinkSigPrintable returns a ``std::string``
+  consisting entirely of printable characters in the 7-bit ASCII
+  range, and is consistent with the signatures that were produced in
+  Regina ≤ 7.x (before encodings were supported). For typical users,
+  this is all that you should ever need.
+
+* Custom encodings are currently for internal use only, and the
+  requirements for the *Encoding* parameter may change in future
+  versions of Regina. See the LinkSigEncodingAPI documentation for the
+  current requirements.
 
 The routine fromSig() can be used to recover a link diagram from its
-signature. The resulting diagram might not be identical to the
-original, but it will be related by zero or more applications of
-relabelling, and (according to the arguments) reflection of the
-diagram, rotation of the diagram, and/or reversal of individual link
-components.
+signature (but only if the default encoding has been used). The
+resulting diagram might not be identical to the original, but it will
+be related by zero or more applications of relabelling, and (according
+to the arguments) reflection of the diagram, rotation of the diagram,
+and/or reversal of individual link components.
 
-The running time is quadratic in the number of crossings and (if we
-allow reversal, which is the default) exponential in the number of
-link components. For this reason, signatures should not be used for
-links with a large number of components.
+The size of a signature is proportional to ``n log n``, where *n* is
+the number of crossings in the link diagram.
 
-This routine runs in quadratic time.
+The running time to compute a signature is quadratic in the number of
+crossings and (if we allow reversal, which is the default) exponential
+in the number of link components. For this reason, signatures should
+not be used for links with a large number of components.
 
 Exception ``NotImplemented``:
     This link diagram has 64 or more link components.
+
+Exception ``FailedPrecondition``:
+    This link diagram does not satisfy the additional preconditions
+    required by the chosen encoding. These preconditions will be
+    tested via the routine ``Encoding::satisfiesPreconditions()``. If
+    you are using the default encoding (LinkSigPrintable), then there
+    are no extra preconditions to worry about, and this exception will
+    not be thrown.
+
+Python:
+    Although this is a templated function, all of the encodings
+    supplied with Regina are available to Python users. To use the
+    default encoding, just call ``sig()``. To use a non-default
+    encoding, add a suffix ``_Encoding`` where *Encoding* is an
+    abbreviated version of the encoding type (e.g., ``sig_Compact()``
+    to use the encoding LinkSigCompact).
 
 Parameter ``allowReflection``:
     ``True`` if reflecting the entire link diagram should preserve the

@@ -55,7 +55,7 @@ R"doc(The default encoding to use for isomorphism signatures.
 
 This printable encoding is consistent with the original isomorphism
 signatures that were implemented in Regina 4.90. It represents an
-isomorphism signature as a std::string, using only printable
+isomorphism signature as a ``std::string``, using only printable
 characters from the 7-bit ASCII range.
 
 As of Regina 7.4, if *supportLocks* is ``True`` (the default), then
@@ -101,7 +101,7 @@ example, under Regina's default encoding, the signature for the empty
 triangulation is the non-empty string ``a``.
 
 Returns:
-    The isomorphism signature of the empty triangulation.)doc";
+    the isomorphism signature of the empty triangulation.)doc";
 
 // Docstring regina::python::doc::IsoSigEncodingAPI_::encode
 constexpr const char *encode =
