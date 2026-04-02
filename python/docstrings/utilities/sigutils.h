@@ -109,6 +109,37 @@ Parameter ``skipInitialWhitespace``:
     ``True`` if the current position should immediately advance past
     any initial whitespace in the given string.)doc";
 
+// Docstring regina::python::doc::Base64SigDecoder_::decodeBits
+static const char *decodeBits =
+R"doc(Decodes a sequence of bits, and returns these in the form of a
+bitmask. The bits would typically have been encoded using
+Base64SigEncoder::encodeBits() with the same *count* argument.
+
+Specifically, it will be assumed that the bits have been packed six at
+a time into base64 characters, and that for each underlying 6-bit
+integer, the bits are stored in order from lowest to highest
+significance.
+
+The inverse to this routine is Base64SigEncoder::encodeBits().
+
+Exception ``InvalidInput``:
+    There are not enough characters available in the encoded string to
+    hold the requested number of bits, and/or a character was
+    encountered that was not a valid base64 character.
+
+Python:
+    The template argument *BitmaskType* is taken to be Bitmask.
+
+Template parameter ``BitmaskType``:
+    the bitmask type to return; this must be capable of holding at
+    least *count* bits.
+
+Parameter ``count``:
+    the number of bits to decode.
+
+Returns:
+    a bitmask holding the bits that were decoded.)doc";
+
 // Docstring regina::python::doc::Base64SigDecoder_::decodeInt
 static const char *decodeInt =
 R"doc(Decodes the next non-negative integer value, assuming this uses a
@@ -327,12 +358,12 @@ The inverse to this routine is Base64SigDecoder::decodeBits().
 Python:
     The template argument *BitmaskType* is taken to be Bitmask.
 
-Parameter ``nBits``:
+Parameter ``count``:
     the number of bits to encode.
 
 Parameter ``bits``:
     a bitmask holding the bits to encode; this must be capable of
-    holding at least *nBits* bits.)doc";
+    holding at least *count* bits.)doc";
 
 // Docstring regina::python::doc::Base64SigEncoder_::encodeInt
 static const char *encodeInt =

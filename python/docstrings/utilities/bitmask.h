@@ -790,8 +790,7 @@ R"doc(Creates a new bitmask of the given length with all bits set to
 ``False``.
 
 Parameter ``length``:
-    the number of bits stored in this bitmask; this must be at least
-    one.)doc";
+    the number of bits stored in this bitmask.)doc";
 
 // Docstring regina::python::doc::Bitmask_::__ior
 static const char *__ior =
@@ -988,8 +987,7 @@ This routine can be used to change the length (number of bits) of the
 bitmask if desired.
 
 Parameter ``length``:
-    the number of bits to store in this bitmask; this must be at least
-    one.)doc";
+    the number of bits to store in this bitmask.)doc";
 
 // Docstring regina::python::doc::Bitmask_::set
 static const char *set =

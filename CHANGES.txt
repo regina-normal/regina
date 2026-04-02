@@ -26,6 +26,8 @@ Version 8.0  [ TODO ]
               but no longer needs to support rbegin() and rend()).
         Class AngleStructures:
             - New routines knowsSpansStrict() and knowsSpansTaut().
+        Class Base64SigDecoder:
+            - New routine decodeBits().
         Class Base64SigEncoder:
             - New routine encodeBits().
         Class BitManipulatorByType<...>:
@@ -33,6 +35,8 @@ Version 8.0  [ TODO ]
               You should never need to refer to this class directly; instead
               you can access its functionality through the end-user class
               BitManipulator<...>.
+        Class Bitmask:
+            - This class now supports bitmasks of length zero.
         Class BoolSet:
             - Regarding byte codes and string codes:
               + New type alias ByteCode.

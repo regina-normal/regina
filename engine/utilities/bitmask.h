@@ -132,8 +132,7 @@ class Bitmask {
          * Creates a new bitmask of the given length with all bits set to
          * \c false.
          *
-         * \param length the number of bits stored in this bitmask; this must
-         * be at least one.
+         * \param length the number of bits stored in this bitmask.
          */
         Bitmask(size_t length);
 
@@ -265,8 +264,7 @@ class Bitmask {
          * This routine can be used to change the length (number of
          * bits) of the bitmask if desired.
          *
-         * \param length the number of bits to store in this bitmask; this
-         * must be at least one.
+         * \param length the number of bits to store in this bitmask.
          */
         void reset(size_t length);
 
@@ -1481,7 +1479,7 @@ inline Bitmask::Bitmask() : pieces(0), mask(nullptr) {
 }
 
 inline Bitmask::Bitmask(size_t length) :
-        pieces((length - 1) / (8 * sizeof(Piece)) + 1),
+        pieces(length > 0 ? (length - 1) / (8 * sizeof(Piece)) + 1 : 0),
         mask(new Piece[pieces]) {
     std::fill(mask, mask + pieces, 0);
 }
@@ -1507,7 +1505,7 @@ inline void Bitmask::reset() {
 inline void Bitmask::reset(size_t length) {
     delete[] mask;
 
-    pieces = (length - 1) / (8 * sizeof(Piece)) + 1;
+    pieces = (length > 0 ? (length - 1) / (8 * sizeof(Piece)) + 1 : 0);
     mask = new Piece[pieces];
 
     std::fill(mask, mask + pieces, 0);

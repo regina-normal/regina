@@ -166,6 +166,8 @@ void addSigUtils(pybind11::module_& m) {
                 ans.append(dec.decodeInt<long>(nChars));
             return ans;
         })
+        .def("decodeBits", &Decoder::decodeBits<regina::Bitmask>,
+            rdoc::decodeBits)
         // overload_cast cannot handle template vs non-template overloads.
         .def("decodeTrits", static_cast<std::array<uint8_t, 3>(Decoder::*)()>(
                 &Decoder::decodeTrits),

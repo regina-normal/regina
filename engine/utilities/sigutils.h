@@ -520,13 +520,13 @@ class Base64SigEncoder {
          *
          * \python The template argument \a BitmaskType is taken to be Bitmask.
          *
-         * \param nBits the number of bits to encode.
+         * \param count the number of bits to encode.
          * \param bits a bitmask holding the bits to encode; this must be
-         * capable of holding at least \a nBits bits.
+         * capable of holding at least \a count bits.
          */
         template <ReginaBitmask BitmaskType>
-        void encodeBits(size_t nBits, const BitmaskType& bits) {
-            if (nBits == 0)
+        void encodeBits(size_t count, const BitmaskType& bits) {
+            if (count == 0)
                 return;
             size_t pos = 0;
             while (true) {
@@ -534,7 +534,7 @@ class Base64SigEncoder {
                 for (int j = 0; j < 6; ++j) {
                     if (bits.get(pos++))
                         packed |= (1 << j);
-                    if (pos == nBits) {
+                    if (pos == count) {
                         encodeSingle(packed);
                         return;
                     }
@@ -911,6 +911,48 @@ class Base64SigDecoder {
             for (auto it = ans.begin(); it != ans.end(); ++it)
                 *it = decodeInt<IntType>(nChars);
             return ans;
+        }
+
+        /**
+         * Decodes a sequence of bits, and returns these in the form of a
+         * bitmask.  The bits would typically have been encoded using
+         * Base64SigEncoder::encodeBits() with the same \a count argument.
+         *
+         * Specifically, it will be assumed that the bits have been packed six
+         * at a time into base64 characters, and that for each underlying 6-bit
+         * integer, the bits are stored in order from lowest to highest
+         * significance.
+         *
+         * The inverse to this routine is Base64SigEncoder::encodeBits().
+         *
+         * \exception InvalidInput There are not enough characters available in
+         * the encoded string to hold the requested number of bits, and/or a
+         * character was encountered that was not a valid base64 character.
+         *
+         * \python The template argument \a BitmaskType is taken to be Bitmask.
+         *
+         * \tparam BitmaskType the bitmask type to return; this must be
+         * capable of holding at least \a count bits.
+         *
+         * \param count the number of bits to decode.
+         * \return a bitmask holding the bits that were decoded.
+         */
+        template <ReginaBitmask BitmaskType>
+        BitmaskType decodeBits(size_t count) {
+            BitmaskType bits(count);
+            if (count == 0)
+                return bits;
+
+            size_t pos = 0;
+            while (true) {
+                uint8_t packed = decodeSingle<uint8_t>();
+                for (int j = 0; j < 6; ++j) {
+                    if (packed & (1 << j))
+                        bits.set(pos, true);
+                    if (++pos == count)
+                        return bits;
+                }
+            }
         }
 
         /**
