@@ -305,6 +305,8 @@ class LinkSigData {
  * This global routine simply calls LinkSigData::swap(); it is provided so
  * that LinkSigData meets the C++ Swappable requirements.
  *
+ * \nopython
+ *
  * \param a the first component data set whose contents should be swapped.
  * \param b the second component data set whose contents should be swapped.
  *
