@@ -312,6 +312,28 @@ Parameter ``c``:
     used in this base64 encoding; however, ideally it should be
     printable.)doc";
 
+// Docstring regina::python::doc::Base64SigEncoder_::encodeBits
+static const char *encodeBits =
+R"doc(Encodes a sequence of bits.
+
+The bits will be packed into base64 characters, six at a time. For
+each individual base64 character, the six bits will use bits of the
+underlying 6-bit integer in order from lowest to highest significance.
+(The last base64 character might of course encode fewer than six bits
+instead.)
+
+The inverse to this routine is Base64SigDecoder::decodeBits().
+
+Python:
+    The template argument *BitmaskType* is taken to be Bitmask.
+
+Parameter ``nBits``:
+    the number of bits to encode.
+
+Parameter ``bits``:
+    a bitmask holding the bits to encode; this must be capable of
+    holding at least *nBits* bits.)doc";
+
 // Docstring regina::python::doc::Base64SigEncoder_::encodeInt
 static const char *encodeInt =
 R"doc(Encodes the given non-negative native C++ integer using a fixed number

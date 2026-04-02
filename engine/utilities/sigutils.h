@@ -508,6 +508,42 @@ class Base64SigEncoder {
         }
 
         /**
+         * Encodes a sequence of bits.
+         *
+         * The bits will be packed into base64 characters, six at a time.
+         * For each individual base64 character, the six bits will use bits
+         * of the underlying 6-bit integer in order from lowest to highest
+         * significance.  (The last base64 character might of course encode
+         * fewer than six bits instead.)
+         *
+         * The inverse to this routine is Base64SigDecoder::decodeBits().
+         *
+         * \python The template argument \a BitmaskType is taken to be Bitmask.
+         *
+         * \param nBits the number of bits to encode.
+         * \param bits a bitmask holding the bits to encode; this must be
+         * capable of holding at least \a nBits bits.
+         */
+        template <ReginaBitmask BitmaskType>
+        void encodeBits(size_t nBits, const BitmaskType& bits) {
+            if (nBits == 0)
+                return;
+            size_t pos = 0;
+            while (true) {
+                uint8_t packed = 0;
+                for (int j = 0; j < 6; ++j) {
+                    if (bits.get(pos++))
+                        packed |= (1 << j);
+                    if (pos == nBits) {
+                        encodeSingle(packed);
+                        return;
+                    }
+                }
+                encodeSingle(packed);
+            }
+        }
+
+        /**
          * Encodes a sequence of trits.  A _trit_ is either 0, 1 or 2.
          *
          * The trits will be packed into base64 characters, three at a time.

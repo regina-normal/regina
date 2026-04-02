@@ -30,6 +30,7 @@
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include "utilities/bitmask.h"
 #include "utilities/sigutils.h"
 #include "../helpers.h"
 #include "../docstrings/utilities/sigutils.h"
@@ -130,6 +131,8 @@ void addSigUtils(pybind11::module_& m) {
             [](Base64SigEncoder& enc, const std::vector<long>& v, int nChars) {
                 enc.encodeInts(v.begin(), v.end(), nChars);
             }, rdoc::encodeInts)
+        .def("encodeBits", &Base64SigEncoder::encodeBits<regina::Bitmask>,
+            rdoc::encodeBits)
         .def("encodeTrits",
             [](Base64SigEncoder& enc, const std::vector<uint8_t>& v) {
                 enc.encodeTrits(v.begin(), v.end());

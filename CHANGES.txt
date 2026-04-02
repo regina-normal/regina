@@ -26,6 +26,8 @@ Version 8.0  [ TODO ]
               but no longer needs to support rbegin() and rend()).
         Class AngleStructures:
             - New routines knowsSpansStrict() and knowsSpansTaut().
+        Class Base64SigEncoder:
+            - New routine encodeBits().
         Class BitManipulatorByType<...>:
             - This is now an internal class in the namespace regina::detail.
               You should never need to refer to this class directly; instead
