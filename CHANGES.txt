@@ -148,6 +148,8 @@ Version 8.0  [ TODO ]
               directly in the Turaev-Viro code instead.
         Class Link:
             - New routine parityProjection().
+            - Routine sig() now supports different encodings, via a new
+              template parameter.
             - All knows...() routines now take an optional boolean argument,
               indicating whether to consider trivial computations (the default),
               or to only check whether the value is already cached.
@@ -157,6 +159,9 @@ Version 8.0  [ TODO ]
             - The iterator-based variant of fromData() now has simpler
               requirements on the component sequences (in particular, iteration
               no longer needs to be random access).
+        Class LinkSigData, LinkSigEncodingAPI, LinkSigPrintable:
+            - New types to support the generation of knot/link signatures.
+            - Note that LinkSigEncodingAPI is for documentation only.
         Class ListView<...>:
             - Deprecated and no longer used.  Wherever Regina used to return
               a ListView, it now returns a lightweight view from the new C++20
@@ -402,6 +407,7 @@ Version 8.0  [ TODO ]
               + ArrayOf, ConstRefArrayOf (defined in concepts/array.h)
               + BanConstraint, LPConstraint, LPSubspace (defined in
                 enumerate/treelp.h)
+              + LinkSigEncoding (defined in link/linksig.h)
               + IsoSigEncoding (defined in triangulation/isosigencoding.h)
               + IsoSigType (defined in triangulation/isosigtype.h)
     FILE FORMAT:

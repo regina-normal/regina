@@ -98,7 +98,7 @@ class IsoSigEncodingAPI {
          * For example, under Regina's default encoding, the signature for
          * the empty triangulation is the non-empty string `a`.
          *
-         * \return The isomorphism signature of the empty triangulation.
+         * \return the isomorphism signature of the empty triangulation.
          */
         static Signature emptySig();
 
@@ -201,7 +201,7 @@ concept IsoSigEncoding =
  *
  * This printable encoding is consistent with the original isomorphism
  * signatures that were implemented in Regina 4.90.  It represents an
- * isomorphism signature as a std::string, using only printable characters
+ * isomorphism signature as a `std::string`, using only printable characters
  * from the 7-bit ASCII range.
  *
  * As of Regina 7.4, if \a supportLocks is \c true (the default), then this

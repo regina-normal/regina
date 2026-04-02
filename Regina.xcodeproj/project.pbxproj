@@ -234,6 +234,8 @@
 		05199A3925C63BEA0006B8FA /* sageSetup.py in Copy Python Scripts */ = {isa = PBXBuildFile; fileRef = 05199A2D25C63B3C0006B8FA /* sageSetup.py */; };
 		05199A5C25C63CCE0006B8FA /* listview.h in Headers */ = {isa = PBXBuildFile; fileRef = 05199A5A25C63CCE0006B8FA /* listview.h */; };
 		05199A5D25C63CCE0006B8FA /* typeutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05199A5B25C63CCE0006B8FA /* typeutils.h */; };
+		051A407F2F7D6AC000106DCA /* linksig.h in Headers */ = {isa = PBXBuildFile; fileRef = 051A407E2F7D6AC000106DCA /* linksig.h */; };
+		051A40812F7DE59500106DCA /* linksig-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 051A40802F7DE59500106DCA /* linksig-impl.h */; };
 		051AEB022AEB6F8F00960BBF /* regina-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 051AEAFE2AEB6F8F00960BBF /* regina-doc-64.png */; };
 		051AEB032AEB6F8F00960BBF /* snappea-doc-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 051AEAFF2AEB6F8F00960BBF /* snappea-doc-320.png */; };
 		051AEB042AEB6F8F00960BBF /* regina-doc-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 051AEB002AEB6F8F00960BBF /* regina-doc-320.png */; };
@@ -2622,6 +2624,8 @@
 		05199A3825C63B7F0006B8FA /* iterators.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = iterators.test; sourceTree = "<group>"; };
 		05199A5A25C63CCE0006B8FA /* listview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = listview.h; sourceTree = "<group>"; };
 		05199A5B25C63CCE0006B8FA /* typeutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = typeutils.h; sourceTree = "<group>"; };
+		051A407E2F7D6AC000106DCA /* linksig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = linksig.h; sourceTree = "<group>"; };
+		051A40802F7DE59500106DCA /* linksig-impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "linksig-impl.h"; sourceTree = "<group>"; };
 		051AEAFE2AEB6F8F00960BBF /* regina-doc-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "regina-doc-64.png"; sourceTree = "<group>"; };
 		051AEAFF2AEB6F8F00960BBF /* snappea-doc-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "snappea-doc-320.png"; sourceTree = "<group>"; };
 		051AEB002AEB6F8F00960BBF /* regina-doc-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "regina-doc-320.png"; sourceTree = "<group>"; };
@@ -8044,6 +8048,8 @@
 				05ACC9F22AFC674C000CF07F /* knotplot.cpp */,
 				05721EE01F97153C00A83FFC /* link.cpp */,
 				05721EDF1F97153C00A83FFC /* link.h */,
+				051A407E2F7D6AC000106DCA /* linksig.h */,
+				051A40802F7DE59500106DCA /* linksig-impl.h */,
 				05870CB11FAD250900835F9E /* modellinkgraph.cpp */,
 				05870CB01FAD250900835F9E /* modellinkgraph.h */,
 				0512E08C26DF34AF00DDB222 /* modellinkgraph-impl.h */,
@@ -8943,6 +8949,7 @@
 				05135AE028347BF600C4BFDC /* cut.h in Headers */,
 				0583656318DB8876008B08D9 /* end_namespace.h in Headers */,
 				05F0A00C1DBF078800117BFC /* vertex4.h in Headers */,
+				051A40812F7DE59500106DCA /* linksig-impl.h in Headers */,
 				052F9EF5180600FB00FAE4DF /* treelp-impl.h in Headers */,
 				051806AC2C2B9512001470F1 /* fixedarray.h in Headers */,
 				052F9F4B180600FB00FAE4DF /* rational.h in Headers */,
@@ -9070,6 +9077,7 @@
 				059802F526683C6D002D5D57 /* xmlalgebrareader.h in Headers */,
 				057FDAF92EE7E2B4000C706E /* maths.h in Headers */,
 				053CAB2F1DA710FE00A92F98 /* perm5.h in Headers */,
+				051A407F2F7D6AC000106DCA /* linksig.h in Headers */,
 				052F9F66180600FB00FAE4DF /* progresstracker.h in Headers */,
 				05721EEE1F97153E00A83FFC /* gauss-impl.h in Headers */,
 				052FA02C180600FB00FAE4DF /* disctype.h in Headers */,

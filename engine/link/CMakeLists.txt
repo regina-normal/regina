@@ -48,6 +48,8 @@ if (${REGINA_INSTALL_DEV})
     gauss-tangle-impl.h
     jenkins-impl.h
     link.h
+    linksig.h
+    linksig-impl.h
     modellinkgraph.h
     modellinkgraph-impl.h
     pd-impl.h

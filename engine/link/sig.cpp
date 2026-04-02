@@ -28,121 +28,13 @@
  *                                                                        *
  **************************************************************************/
 
-#include "link/link.h"
+#include "link/linksig-impl.h"
 #include "utilities/fixedarray.h"
 #include "utilities/sigutils.h"
 
 namespace regina {
 
-// Regina ≤ 7.3 - the original knot signatures:
-//
-// - Minimise: (crossing, strand, sign) ... (crossing, strand, sign)
-// - Ordering: crossing by ID; strand upper first; sign positive first
-// - Text: n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
-//
-// Regina ≥ 7.4 - extending to all link diagrams:
-//
-// - For a connected diagram with multiple components:
-//
-//   * In the sequence above, insert a sentinel (n, 0, 0) between different
-//     link components (but not after the final component).
-//   * In the text output, include sentinels in the list of crossings (but
-//     not in the strand/sign bits).
-//
-// - For more than one connected component:
-//
-//   * Build the sequence for each connected component, with each sequence
-//     treated as a standalone link diagram (so we reuse crossing numbers).
-//   * Sort these sequences, then concatenate the corresponding signatures.
-//     The ordering (which seems natural for describing a link diagram) is by:
-//     + the number of crossings, descending;
-//     + the length of the sequence (i.e., # link components), descending;
-//     + lexicographical ordering on the sequences themselves, ascending.
-//   * If we allow reflection of the entire diagram, then we do all of this
-//     once without reflection and once with reflection, and take the first
-//     "sequence of sequences" under the same ordering as above.
-//
-// - For the special case of the empty link:
-//
-//   * We cannot encode the sequence [ 0 ] since this already represents the
-//     0-crossing unknot: instead we cheat and give the empty link a symbol
-//     that is not part of our usual base64 set (Base64SigEncoder::spare[0]).
-//
-// Signature creation without allowing reversal of link components is
-// polynomial time in the number of crossings.  If we do allow reversal then
-// we must multiply this by an exponential in the number of link components.
-
 namespace {
-    /**
-     * An individual term in the (crossing, strand, sign) ... sequence
-     * that we are trying to minimise when creating a signature.
-     */
-    struct LinkSigTerm {
-        size_t crossing;
-        int strand;
-        int sign;
-
-        bool operator == (const LinkSigTerm&) const = default;
-
-        std::strong_ordering operator <=> (const LinkSigTerm& rhs) const {
-            // Smaller crossing indices first.
-            if (auto c = crossing <=> rhs.crossing; c != 0)
-                return c;
-            // Upper strands before lower.
-            if (auto c = rhs.strand <=> strand; c != 0)
-                return c;
-            // Positive crossings before negative.
-            return rhs.sign <=> sign;
-        }
-
-        void makeSentinel(size_t diagramSize) {
-            crossing = diagramSize;
-            strand = sign = 0;
-        }
-    };
-
-    struct LinkSigTraversal : public FixedArray<LinkSigTerm> {
-        LinkSigTraversal(const Link& link) : FixedArray<LinkSigTerm>(
-                2 * link.size() + link.countComponents() - 1) {
-        }
-    };
-
-    struct LinkSigData {
-        size_t crossings;
-        LinkSigTraversal data;
-
-        LinkSigData(const Link& link) : crossings(link.size()), data(link) {
-        }
-
-        LinkSigData(const LinkSigData&) = default;
-        LinkSigData(LinkSigData&&) noexcept = default;
-        LinkSigData& operator = (const LinkSigData&) = delete;
-        LinkSigData& operator = (LinkSigData&&) noexcept = default;
-
-        void swap(LinkSigData& other) noexcept {
-            std::swap(crossings, other.crossings);
-            data.swap(other.data);
-        }
-
-        bool operator == (const LinkSigData&) const = default;
-
-        std::strong_ordering operator <=> (const LinkSigData& rhs) const {
-            // More crossings first.
-            if (auto c = rhs.crossings <=> crossings; c != 0)
-                return c;
-            // Longer sequences first.
-            if (auto c = rhs.data.size() <=> data.size(); c != 0)
-                return c;
-            // Lexicographically smaller sequences first.
-            return std::lexicographical_compare_three_way(
-                data.begin(), data.end(), rhs.data.begin(), rhs.data.end());
-        }
-    };
-
-    void swap(LinkSigData& a, LinkSigData& b) noexcept {
-        a.swap(b);
-    };
-
     /**
      * A convenience struct that makes it easy to analyse how a link behaves
      * under a particular choice of reflection/reversal/rotation.
@@ -195,312 +87,239 @@ namespace {
                 return reflect ? c->sign() : -(c->sign());
         }
     };
+}
 
-    /**
-     * Computes the signature sequence for a single connected link diagram.
-     *
-     * \pre link is a non-empty connected diagram with at least one crossing
-     * and fewer than 64 link components.
-     */
-    LinkSigData sigSequenceConnected(const Link& link,
-            BoolSet reflectionOptions, bool allowReversal,
-            BoolSet rotationOptions) {
-        const size_t n = link.size();
-        Symmetries sym(link);
+/**
+ * Computes the signature sequence for a single connected link diagram.
+ *
+ * \pre link is a non-empty connected diagram with at least one crossing
+ * and fewer than 64 link components.
+ */
+LinkSigData::LinkSigData(const Link& link, BoolSet reflectionOptions,
+        bool allowReversal, BoolSet rotationOptions) :
+        size_(link.size()),
+        sequence_(2 * link.size() + link.countComponents() - 1) {
+    Symmetries sym(link);
 
-        // Details of the sequence we are trying to minimise,
-        // including sentinels:
-        LinkSigData best(link);
-        LinkSigTraversal curr(link);
-        bool firstAttempt = true;
+    // Details of the sequence we are trying to minimise,
+    // including sentinels:
+    LinkSigData::Traversal curr(sequence_.size());
+    bool firstAttempt = true;
 
-        // The image and preimage for each crossing:
-        FixedArray<ssize_t> image(n);
-        FixedArray<ssize_t> preimage(n);
+    // The image and preimage for each crossing:
+    FixedArray<ssize_t> image(size_);
+    FixedArray<ssize_t> preimage(size_);
 
-        // We can always guarantee to make the first (crossing, strand, sign)
-        // tuple (0, 1, ?).  Can we make the _sign_ positive, i.e., (0, 1, 1)?
-        bool startPositive;
-        if (reflectionOptions.full()) {
-            startPositive = true;
-        } else if (allowReversal && link.countComponents() > 1) {
-            // The link diagram is connected, which means there is some crossing
-            // where two different components cross, and *that* crossing can be
-            // made positive by reversing only one of those two link components.
-            startPositive = true;
-        } else {
-            // We cannot change any crossing signs.
-            startPositive = false;
-            int aim = (reflectionOptions.hasFalse() ? 1 : -1);
-            for (auto c : link.crossings())
-                if (c->sign() == aim) {
-                    startPositive = true;
-                    break;
-                }
-        }
-
-        // How many times have we visited each crossing?
-        // (0, 1, 2, 3) = (never, lower only, upper only, both).
-        // Indices are images under our relabelling.
-        // Upper/lower strands are original, not rotated.
-        FixedArray<int> seen(n);
-
-        // The orientations of all link components will be held in a 64-bit
-        // bitmask (0 means original, 1 means reversed).  Here we make a
-        // past-the-end value indicating when all such choices have been
-        // exhausted.
-        const uint64_t reverseEnd =
-            (allowReversal ? (uint64_t(1) << link.countComponents()) : 1);
-
-        // Off we go!
-        for (sym.reflect = (reflectionOptions.hasFalse() ? 0 : 1);
-                sym.reflect < (reflectionOptions.hasTrue() ? 2 : 1);
-                ++sym.reflect) {
-            for (sym.reverse = 0; sym.reverse != reverseEnd; ++sym.reverse) {
-                for (auto start : link.crossings()) {
-                    int startSign = sym.apparentSign(start);
-                    if (startPositive && startSign < 0)
-                        continue;
-
-                    for (sym.rotate = (rotationOptions.hasFalse() ? 0 : 1);
-                            sym.rotate < (rotationOptions.hasTrue() ? 2 : 1);
-                            ++sym.rotate) {
-                        // Follow the link around from this starting point,
-                        // using the chosen set of component orientations.
-
-                        std::fill(image.begin(), image.end(), -1);
-                        std::fill(preimage.begin(), preimage.end(), -1);
-                        std::fill(seen.begin(), seen.end(), 0);
-
-                        image[start->index()] = 0;
-                        preimage[0] = start->index();
-                        size_t nextUnused = 1;
-
-                        StrandRef compStart = start->strand(sym.rotate ? 0 : 1);
-                        bool compReverse = sym.isReversed(compStart);
-
-                        curr[0].crossing = 0;
-                        curr[0].strand = 1;
-                        curr[0].sign = startSign;
-                        seen[0] |= (compStart.strand() + 1);
-
-                        // Since we already checked the sign of the start
-                        // crossing, we know that every time we reach this
-                        // point in the loop the value of curr[0] will be
-                        // initialised the same way.  Therefore there is no
-                        // need to test it against best.data[0].
-                        bool currBetter = firstAttempt;
-
-                        StrandRef s = compStart;
-                        if (compReverse)
-                            --s;
-                        else
-                            ++s;
-                        for (size_t pos = 1; pos < curr.size(); ++pos) {
-                            if (s == compStart && curr[pos-1].crossing != n) {
-                                // We are at the start of the component, and it
-                                // is not because we just started the component
-                                // now.  We must have finished traversing this
-                                // component.
-                                curr[pos].makeSentinel(n);
-
-                                // Find the smallest possible starting point for
-                                // the next component.  Since the link diagram
-                                // is connected, this will be at a crossing that
-                                // we've already seen.
-                                size_t i = image[compStart.crossing()->index()];
-                                while (seen[i] == 3)
-                                    ++i;
-                                compStart = link.crossing(preimage[i])->strand(
-                                    seen[i] == 1 /* lower seen */ ? 1 : 0);
-                                compReverse = sym.isReversed(compStart);
-                                s = compStart;
-                            } else {
-                                size_t idx = s.crossing()->index();
-                                if (image[idx] < 0) {
-                                    // This is a new crossing.
-                                    preimage[nextUnused] = idx;
-                                    image[idx] = nextUnused++;
-                                }
-
-                                curr[pos].crossing = image[idx];
-                                curr[pos].strand = sym.apparentStrand(s);
-                                curr[pos].sign = sym.apparentSign(s.crossing());
-                                seen[image[idx]] |= (s.strand() + 1);
-
-                                if (compReverse)
-                                    --s;
-                                else
-                                    ++s;
-                            }
-
-                            if (! currBetter) {
-                                if (curr[pos] < best.data[pos])
-                                    currBetter = true;
-                                else if (best.data[pos] < curr[pos])
-                                    goto noncanonical;
-                            }
-                        }
-
-                        if (currBetter) {
-                            curr.swap(best.data);
-                            firstAttempt = false;
-                        }
-
-                        noncanonical:
-                            ;
-                    }
-                }
+    // We can always guarantee to make the first (crossing, strand, sign)
+    // tuple (0, 1, ?).  Can we make the _sign_ positive, i.e., (0, 1, 1)?
+    bool startPositive;
+    if (reflectionOptions.full()) {
+        startPositive = true;
+    } else if (allowReversal && link.countComponents() > 1) {
+        // The link diagram is connected, which means there is some crossing
+        // where two different components cross, and *that* crossing can be
+        // made positive by reversing only one of those two link components.
+        startPositive = true;
+    } else {
+        // We cannot change any crossing signs.
+        startPositive = false;
+        int aim = (reflectionOptions.hasFalse() ? 1 : -1);
+        for (auto c : link.crossings())
+            if (c->sign() == aim) {
+                startPositive = true;
+                break;
             }
-        }
-
-        return best;
     }
 
-    /**
-     * Encodes the signature sequence for a single connected link diagram.
-     */
-    void encodeSigData(Base64SigEncoder& enc, const LinkSigData& seq) {
-        // Text: n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
+    // How many times have we visited each crossing?
+    // (0, 1, 2, 3) = (never, lower only, upper only, both).
+    // Indices are images under our relabelling.
+    // Upper/lower strands are original, not rotated.
+    FixedArray<int> seen(size_);
 
-        // Output crossings in order.
-        int charsPerInt = enc.encodeSize(seq.crossings);
-        for (const auto& dat : seq.data)
-            enc.encodeInt(dat.crossing, charsPerInt);
+    // The orientations of all link components will be held in a 64-bit
+    // bitmask (0 means original, 1 means reversed).  Here we make a
+    // past-the-end value indicating when all such choices have been
+    // exhausted.
+    const uint64_t reverseEnd =
+        (allowReversal ? (uint64_t(1) << link.countComponents()) : 1);
 
-        // Output strands and signs, each as a packed sequence of bits.
-        // Note: both the strands and the signs could be written using n bits
-        // each, not 2n bits each (we are basically writing everything twice) -
-        // however, the old knot signatures wrote 2n bits and it would be bad
-        // to break compatibility with those.  Ah well.  An extra 2n bits ~ n/3
-        // chars is not the end of the world: it only multiplies the length of
-        // the signature by 7/6 (or less, if ints require more than one char).
-        int val = 0, bit = 0;
+    // Off we go!
+    for (sym.reflect = (reflectionOptions.hasFalse() ? 0 : 1);
+            sym.reflect < (reflectionOptions.hasTrue() ? 2 : 1);
+            ++sym.reflect) {
+        for (sym.reverse = 0; sym.reverse != reverseEnd; ++sym.reverse) {
+            for (auto start : link.crossings()) {
+                int startSign = sym.apparentSign(start);
+                if (startPositive && startSign < 0)
+                    continue;
 
-        for (const auto& data : seq.data) {
-            if (data.crossing == seq.crossings)
-                continue; // this is a sentinel
-            if (data.strand)
-                val |= (1 << bit);
-            if (++bit == 6) {
-                enc.encodeSingle(val);
-                val = bit = 0;
+                for (sym.rotate = (rotationOptions.hasFalse() ? 0 : 1);
+                        sym.rotate < (rotationOptions.hasTrue() ? 2 : 1);
+                        ++sym.rotate) {
+                    // Follow the link around from this starting point,
+                    // using the chosen set of component orientations.
+
+                    std::fill(image.begin(), image.end(), -1);
+                    std::fill(preimage.begin(), preimage.end(), -1);
+                    std::fill(seen.begin(), seen.end(), 0);
+
+                    image[start->index()] = 0;
+                    preimage[0] = start->index();
+                    size_t nextUnused = 1;
+
+                    StrandRef compStart = start->strand(sym.rotate ? 0 : 1);
+                    bool compReverse = sym.isReversed(compStart);
+
+                    curr[0].crossing = 0;
+                    curr[0].strand = 1;
+                    curr[0].sign = startSign;
+                    seen[0] |= (compStart.strand() + 1);
+
+                    // Since we already checked the sign of the start
+                    // crossing, we know that every time we reach this
+                    // point in the loop the value of curr[0] will be
+                    // initialised the same way.  Therefore there is no
+                    // need to test it against sequence_[0].
+                    bool currBetter = firstAttempt;
+
+                    StrandRef s = compStart;
+                    if (compReverse)
+                        --s;
+                    else
+                        ++s;
+                    for (size_t pos = 1; pos < curr.size(); ++pos) {
+                        if (s == compStart && curr[pos-1].crossing != size_) {
+                            // We are at the start of the component, and it
+                            // is not because we just started the component
+                            // now.  We must have finished traversing this
+                            // component.
+                            curr[pos].makeSentinel(size_);
+
+                            // Find the smallest possible starting point for
+                            // the next component.  Since the link diagram
+                            // is connected, this will be at a crossing that
+                            // we've already seen.
+                            size_t i = image[compStart.crossing()->index()];
+                            while (seen[i] == 3)
+                                ++i;
+                            compStart = link.crossing(preimage[i])->strand(
+                                seen[i] == 1 /* lower seen */ ? 1 : 0);
+                            compReverse = sym.isReversed(compStart);
+                            s = compStart;
+                        } else {
+                            size_t idx = s.crossing()->index();
+                            if (image[idx] < 0) {
+                                // This is a new crossing.
+                                preimage[nextUnused] = idx;
+                                image[idx] = nextUnused++;
+                            }
+
+                            curr[pos].crossing = image[idx];
+                            curr[pos].strand = sym.apparentStrand(s);
+                            curr[pos].sign = sym.apparentSign(s.crossing());
+                            seen[image[idx]] |= (s.strand() + 1);
+
+                            if (compReverse)
+                                --s;
+                            else
+                                ++s;
+                        }
+
+                        if (! currBetter) {
+                            auto c = curr[pos] <=> sequence_[pos];
+                            if (c < 0)
+                                currBetter = true;
+                            else if (c > 0)
+                                goto noncanonical;
+                        }
+                    }
+
+                    if (currBetter) {
+                        curr.swap(sequence_);
+                        firstAttempt = false;
+                    }
+
+                    noncanonical:
+                        ;
+                }
             }
-        }
-        if (bit) {
-            enc.encodeSingle(val);
-            val = bit = 0;
-        }
-
-        for (const auto& data : seq.data) {
-            if (data.crossing == seq.crossings)
-                continue; // this is a sentinel
-            if (data.sign > 0)
-                val |= (1 << bit);
-            if (++bit == 6) {
-                enc.encodeSingle(val);
-                val = bit = 0;
-            }
-        }
-        if (bit) {
-            enc.encodeSingle(val);
-            val = bit = 0; // we could drop this, but it helps for readability.
         }
     }
 }
 
-std::string Link::sig(bool allowReflection, bool allowReversal,
-        bool allowRotation) const {
-    if (components_.size() >= 64)
-        throw NotImplemented("Signatures are only implemented for "
-            "fewer than 64 link components");
+// The string encoding used in Regina ≤ 7.x:
+//
+// - For a non-empty connected link diagram:
+//
+//   * n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
+//
+//   * Sentinels (n, 0, 0) in the LinkSigData sequence appear in the list of
+//     crossings but not in the strand/sign bits.
+//
+// - For the special case of the empty link:
+//
+//   * We cannot encode the sequence [ 0 ] since this already represents the
+//     0-crossing unknot: instead we cheat and give the empty link a symbol
+//     that is not part of our usual base64 set (Base64SigEncoder::spare[0]).
 
-    // Get the zero-crossing cases out of the way first.
-    if (size() == 0) {
-        if (isEmpty()) {
-            return { Base64SigEncoder::spare[0] };
-        } else {
-            // Since the diagram is connected, we must have a 0-crossing unlink.
-            Base64SigEncoder enc;
-            for (size_t i = 0; i < components_.size(); ++i)
-                enc.encodeSize(0);
-            return std::move(enc).str();
-        }
-    }
+std::string LinkSigPrintable::encodeEmpty() {
+    return { Base64SigEncoder::spare[0] };
+}
 
-    // We have at least one crossing, and therefore at least one component.
+std::string LinkSigPrintable::encodeUnknot() {
+    Base64SigEncoder enc;
+    enc.encodeSize(0);
+    return std::move(enc).str();
+}
+
+std::string LinkSigPrintable::encode(const LinkSigData& data) {
+    // Text: n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
 
     Base64SigEncoder enc;
 
-    if (isConnected()) {
-        // This is the easy case.
-        encodeSigData(enc, sigSequenceConnected(*this,
-            allowReflection ? BoolSet(true, true) /* both options */ :
-                BoolSet(false) /* false only */,
-            allowReversal,
-            allowRotation ? BoolSet(true, true) /* both options */ :
-                BoolSet(false) /* false only */));
-    } else {
-        // We need to build a sequence for each connected component.
-        // For now we will not worry too much about overhead since people
-        // should not be doing intense work with disconnected link diagrams
-        // in practice (?).
-        //
-        // Do this first without reflection or rotation.
-        auto components = diagramComponents();
-        size_t nTrivial = 0;
+    // Output crossings in order.
+    int charsPerInt = enc.encodeSize(data.size());
+    for (const auto& dat : data.sequence())
+        enc.encodeInt(dat.crossing, charsPerInt);
 
-        std::vector<LinkSigData> bits;
-        for (auto c : components) {
-            if (c.size() == 0) {
-                // This is a zero-crossing unknot component.
-                ++nTrivial;
-            } else {
-                bits.push_back(sigSequenceConnected(c,
-                    { false }, allowReversal, { false }));
-            }
-        }
-        std::sort(bits.begin(), bits.end());
+    // Output strands and signs, each as a packed sequence of bits.
+    // Note: both the strands and the signs could be written using n bits
+    // each, not 2n bits each (we are basically writing everything twice) -
+    // however, the old knot signatures wrote 2n bits and it would be bad
+    // to break compatibility with those.  Ah well.  An extra 2n bits ~ n/3
+    // chars is not the end of the world: it only multiplies the length of
+    // the signature by 7/6 (or less, if ints require more than one char).
+    int val = 0, bit = 0;
 
-        // ... and again with reflection and/or rotation.
-        if (allowReflection) {
-            std::vector<LinkSigData> alt;
-            for (auto c : components) {
-                if (c.size() > 0)
-                    alt.push_back(sigSequenceConnected(c,
-                        { true }, allowReversal, { false }));
-            }
-            std::sort(alt.begin(), alt.end());
-            if (alt < bits)
-                alt.swap(bits);
+    for (const auto& term : data.sequence()) {
+        if (term.crossing == data.size())
+            continue; // this is a sentinel
+        if (term.strand)
+            val |= (1 << bit);
+        if (++bit == 6) {
+            enc.encodeSingle(val);
+            val = bit = 0;
         }
-        if (allowRotation) {
-            std::vector<LinkSigData> alt;
-            for (auto c : components) {
-                if (c.size() > 0)
-                    alt.push_back(sigSequenceConnected(c,
-                        { false }, allowReversal, { true }));
-            }
-            std::sort(alt.begin(), alt.end());
-            if (alt < bits)
-                alt.swap(bits);
-        }
-        if (allowReflection && allowRotation) {
-            std::vector<LinkSigData> alt;
-            for (auto c : components) {
-                if (c.size() > 0)
-                    alt.push_back(sigSequenceConnected(c,
-                        { true }, allowReversal, { true }));
-            }
-            std::sort(alt.begin(), alt.end());
-            if (alt < bits)
-                alt.swap(bits);
-        }
+    }
+    if (bit) {
+        enc.encodeSingle(val);
+        val = bit = 0;
+    }
 
-        for (const auto& seq : bits)
-            encodeSigData(enc, seq);
-        for (size_t i = 0; i < nTrivial; ++i)
-            enc.encodeSize(0);
+    for (const auto& term : data.sequence()) {
+        if (term.crossing == data.size())
+            continue; // this is a sentinel
+        if (term.sign > 0)
+            val |= (1 << bit);
+        if (++bit == 6) {
+            enc.encodeSingle(val);
+            val = bit = 0;
+        }
+    }
+    if (bit) {
+        enc.encodeSingle(val);
+        val = bit = 0; // we could drop this, but it helps for readability.
     }
 
     return std::move(enc).str();
@@ -638,6 +457,8 @@ Link Link::fromSig(const std::string& sig) {
             "fromSig(): incomplete or invalid base64 encoding");
     }
 }
+
+template std::string Link::sig<LinkSigPrintable>(bool, bool, bool) const;
 
 } // namespace regina
 

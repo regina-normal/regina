@@ -414,7 +414,7 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::arg("allowReversal") = true,
             pybind11::arg("allowRotation") = true,
             rdoc::knotSig)
-        .def("sig", &Link::sig,
+        .def("sig", &Link::sig<>,
             pybind11::arg("allowReflection") = true,
             pybind11::arg("allowReversal") = true,
             pybind11::arg("allowRotation") = true,
