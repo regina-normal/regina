@@ -5899,6 +5899,13 @@ class Link :
          * \exception NotImplemented This link diagram has 64 or more link
          * components.
          *
+         * \exception FailedPrecondition This link diagram does not satisfy
+         * the additional preconditions required by the chosen encoding.
+         * These preconditions will be tested via the routine
+         * `Encoding::satisfiesPreconditions()`.  If you are using the default
+         * encoding (LinkSigPrintable), then there are no extra preconditions
+         * to worry about, and this exception will not be thrown.
+         *
          * \python Although this is a templated function, all of the encodings
          * supplied with Regina are available to Python users.  To use the
          * default encoding, just call `sig()`.  To use a non-default encoding,

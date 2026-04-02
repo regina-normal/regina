@@ -325,6 +325,72 @@ std::string LinkSigPrintable::encode(const LinkSigData& data) {
     return std::move(enc).str();
 }
 
+bool LinkSigCompact::satisfiesPreconditions(const Link& link) {
+    return link.countComponents() <= 1;
+}
+
+std::string LinkSigCompact::encodeEmpty() {
+    return { Base64SigEncoder::spare[0] };
+}
+
+std::string LinkSigCompact::encodeUnknot() {
+    Base64SigEncoder enc;
+    enc.encodeSize(0);
+    return std::move(enc).str();
+}
+
+std::string LinkSigCompact::encode(const LinkSigData& data) {
+    // Text: n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
+
+    Base64SigEncoder enc;
+
+    // Output crossings in order.
+    int charsPerInt = enc.encodeSize(data.size());
+    for (const auto& dat : data.sequence())
+        enc.encodeInt(dat.crossing, charsPerInt);
+
+    // Output strands and signs, each as a packed sequence of bits.
+    // Note: both the strands and the signs could be written using n bits
+    // each, not 2n bits each (we are basically writing everything twice) -
+    // however, the old knot signatures wrote 2n bits and it would be bad
+    // to break compatibility with those.  Ah well.  An extra 2n bits ~ n/3
+    // chars is not the end of the world: it only multiplies the length of
+    // the signature by 7/6 (or less, if ints require more than one char).
+    int val = 0, bit = 0;
+
+    for (const auto& term : data.sequence()) {
+        if (term.crossing == data.size())
+            continue; // this is a sentinel
+        if (term.strand)
+            val |= (1 << bit);
+        if (++bit == 6) {
+            enc.encodeSingle(val);
+            val = bit = 0;
+        }
+    }
+    if (bit) {
+        enc.encodeSingle(val);
+        val = bit = 0;
+    }
+
+    for (const auto& term : data.sequence()) {
+        if (term.crossing == data.size())
+            continue; // this is a sentinel
+        if (term.sign > 0)
+            val |= (1 << bit);
+        if (++bit == 6) {
+            enc.encodeSingle(val);
+            val = bit = 0;
+        }
+    }
+    if (bit) {
+        enc.encodeSingle(val);
+        val = bit = 0; // we could drop this, but it helps for readability.
+    }
+
+    return std::move(enc).str();
+}
+
 Link Link::fromSig(const std::string& sig) {
     Link ans;
 
@@ -459,6 +525,7 @@ Link Link::fromSig(const std::string& sig) {
 }
 
 template std::string Link::sig<LinkSigPrintable>(bool, bool, bool) const;
+template std::string Link::sig<LinkSigCompact>(bool, bool, bool) const;
 
 } // namespace regina
 

@@ -419,6 +419,11 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::arg("allowReversal") = true,
             pybind11::arg("allowRotation") = true,
             rdoc::sig)
+        .def("sig_Compact", &Link::sig<regina::LinkSigCompact>,
+            pybind11::arg("allowReflection") = true,
+            pybind11::arg("allowReversal") = true,
+            pybind11::arg("allowRotation") = true,
+            rdoc::sig)
         .def("source", &Link::source,
             // The default should be Language::Current, but in C++ that
             // evaluates to Language::Cxx.  We need it to evaluate to

@@ -69,6 +69,9 @@ typename Encoding::Signature Link::sig(bool allowReflection, bool allowReversal,
     if (components_.size() >= 64)
         throw NotImplemented("Signatures are only implemented for "
             "fewer than 64 link components");
+    if (! Encoding::satisfiesPreconditions(*this))
+        throw FailedPrecondition("This link is not supported by the chosen "
+            "signature encoding - try using the default encoding instead");
 
     // Get the zero-crossing cases out of the way first.
     if (components_.empty()) {
