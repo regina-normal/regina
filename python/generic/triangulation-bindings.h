@@ -35,7 +35,6 @@
 #include "../helpers/packet.h"
 #include "triangulation/facetpairing.h"
 #include "triangulation/generic.h"
-#include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "utilities/typeutils.h"
 #include "../generic/facehelper.h"

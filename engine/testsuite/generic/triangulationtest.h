@@ -32,7 +32,6 @@
 #include "algebra/grouppresentation.h"
 #include "packet/container.h"
 #include "triangulation/example.h"
-#include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "utilities/typeutils.h"
 

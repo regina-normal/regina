@@ -44,7 +44,6 @@
 
 #include <algorithm>
 #include "triangulation/generic/triangulation.h"
-#include "triangulation/isosigtype.h"
 #include "utilities/fixedarray.h"
 #include "utilities/sigutils.h"
 

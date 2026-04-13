@@ -29,7 +29,6 @@
  **************************************************************************/
 
 #include "triangulation/dim4.h"
-#include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "triangulation/detail/retriangulate-impl.h"
 

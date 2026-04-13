@@ -42,7 +42,6 @@
 #include "surface/normalsurface.h"
 #include "triangulation/example3.h"
 #include "triangulation/facetpairing3.h"
-#include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "../generic/facehelper.h"
 #include "../docstrings/triangulation/dim3/triangulation3.h"

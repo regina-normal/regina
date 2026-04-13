@@ -38,7 +38,6 @@
 #include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
 #include "triangulation/facetpairing.h"
-#include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "../generic/facehelper.h"
 #include "../docstrings/triangulation/dim4/triangulation4.h"

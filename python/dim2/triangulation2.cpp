@@ -36,7 +36,6 @@
 #include "algebra/grouppresentation.h"
 #include "triangulation/dim2.h"
 #include "triangulation/facetpairing.h"
-#include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "../generic/facehelper.h"
 #include "../docstrings/triangulation/dim2/triangulation2.h"
