@@ -116,6 +116,8 @@ for dir in $dirs; do
         triangulation/forward.h ) ;;
         triangulation/generic.h ) ;;
         triangulation/graph.h ) ;;
+        triangulation/isosigencoding.h ) ;;
+        triangulation/isosigtype.h ) ;;
         triangulation/pachner.h ) ;;
         utilities/markedvector.h ) ;;
         utilities/memstream.h ) ;;

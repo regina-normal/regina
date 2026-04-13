@@ -38,6 +38,7 @@
 		05048A2126B274650088C978 /* perm6.h in Headers */ = {isa = PBXBuildFile; fileRef = 05048A1F26B274650088C978 /* perm6.h */; };
 		05048A2226B274650088C978 /* perm6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05048A2026B274650088C978 /* perm6.cpp */; };
 		0504D3592DE59396003453CE /* arrow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0504D3582DE59396003453CE /* arrow.cpp */; };
+		050613572F8DA057009CF16A /* isosig.h in Headers */ = {isa = PBXBuildFile; fileRef = 050613562F8DA057009CF16A /* isosig.h */; };
 		0507C5A71C54495D00D1C86C /* eltmovedialog4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0507C5A31C54494E00D1C86C /* eltmovedialog4.cpp */; };
 		0507C5A81C54497200D1C86C /* eltmovedialog4.h in Sources */ = {isa = PBXBuildFile; fileRef = 0507C5A41C54494E00D1C86C /* eltmovedialog4.h */; };
 		05098A6628F24CBC005E4716 /* typeutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05098A6528F24CBC005E4716 /* typeutils.cpp */; };
@@ -2142,6 +2143,8 @@
 		05048A1F26B274650088C978 /* perm6.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm6.h; sourceTree = "<group>"; };
 		05048A2026B274650088C978 /* perm6.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = perm6.cpp; sourceTree = "<group>"; };
 		0504D3582DE59396003453CE /* arrow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = arrow.cpp; sourceTree = "<group>"; };
+		050613562F8DA057009CF16A /* isosig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = isosig.h; sourceTree = "<group>"; };
+		050613582F8DA075009CF16A /* isosig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = isosig.h; sourceTree = "<group>"; };
 		0506EC1C19F65B43003E455B /* iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhone.storyboard; sourceTree = "<group>"; };
 		0507C5A31C54494E00D1C86C /* eltmovedialog4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = eltmovedialog4.cpp; sourceTree = "<group>"; };
 		0507C5A41C54494E00D1C86C /* eltmovedialog4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eltmovedialog4.h; sourceTree = "<group>"; };
@@ -2292,7 +2295,6 @@
 		05098B252900186E005E4716 /* face.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = face.h; sourceTree = "<group>"; };
 		05098B262900186E005E4716 /* example4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = example4.h; sourceTree = "<group>"; };
 		05098B272900186E005E4716 /* facetpairing3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facetpairing3.h; sourceTree = "<group>"; };
-		05098B282900186E005E4716 /* isosigencoding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = isosigencoding.h; sourceTree = "<group>"; };
 		05098B292900186E005E4716 /* example3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = example3.h; sourceTree = "<group>"; };
 		05098B2A2900186E005E4716 /* cut.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cut.h; sourceTree = "<group>"; };
 		05098B2B2900186E005E4716 /* example2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = example2.h; sourceTree = "<group>"; };
@@ -2305,7 +2307,6 @@
 		05098B3D2900186E005E4716 /* face.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = face.h; sourceTree = "<group>"; };
 		05098B3E2900186E005E4716 /* facepair.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facepair.h; sourceTree = "<group>"; };
 		05098B3F2900186E005E4716 /* facenumbering.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facenumbering.h; sourceTree = "<group>"; };
-		05098B402900186E005E4716 /* isosigtype.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = isosigtype.h; sourceTree = "<group>"; };
 		05098B412900186E005E4716 /* facetspec.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facetspec.h; sourceTree = "<group>"; };
 		05098B432900186E005E4716 /* tangle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tangle.h; sourceTree = "<group>"; };
 		05098B442900186E005E4716 /* link.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = link.h; sourceTree = "<group>"; };
@@ -5295,8 +5296,7 @@
 				05098B272900186E005E4716 /* facetpairing3.h */,
 				05098B412900186E005E4716 /* facetspec.h */,
 				05098B362900186E005E4716 /* generic */,
-				05098B282900186E005E4716 /* isosigencoding.h */,
-				05098B402900186E005E4716 /* isosigtype.h */,
+				050613582F8DA075009CF16A /* isosig.h */,
 			);
 			path = triangulation;
 			sourceTree = "<group>";
@@ -6770,6 +6770,7 @@
 				055114D11DCC71A700EC753C /* facetspec.h */,
 				058C305E1DCAF6F8006162D2 /* forward.h */,
 				058E398C1DCBC67C00D463A4 /* generic.h */,
+				050613562F8DA057009CF16A /* isosig.h */,
 				05CAE698274AA785007C93F3 /* isosigencoding.h */,
 				05CAE699274AA785007C93F3 /* isosigtype.h */,
 				055114CC1DCC476A00EC753C /* pachner.h */,
@@ -8959,6 +8960,7 @@
 				05CBE6ED273B6504009F0674 /* validityconstraints.h in Headers */,
 				0591E7DB1C4F750200793A9C /* hypercoords.h in Headers */,
 				0582FDE82731FE0900203AE7 /* attachment.h in Headers */,
+				050613572F8DA057009CF16A /* isosig.h in Headers */,
 				05721F001F9715C700A83FFC /* laurent.h in Headers */,
 				052FA09F180600FB00FAE4DF /* stringutils.h in Headers */,
 				052F9EA4180600FB00FAE4DF /* gluingperms-impl.h in Headers */,

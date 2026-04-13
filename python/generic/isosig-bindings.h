@@ -30,13 +30,10 @@
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-#include "triangulation/forward.h"
-#include "triangulation/isosigencoding.h"
-#include "triangulation/isosigtype.h"
+#include "triangulation/isosig.h"
 #include "utilities/exception.h"
 #include "../helpers.h"
-#include "../docstrings/triangulation/isosigencoding.h"
-#include "../docstrings/triangulation/isosigtype.h"
+#include "../docstrings/triangulation/isosig.h"
 
 using regina::Perm;
 

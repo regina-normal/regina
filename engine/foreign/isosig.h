@@ -32,9 +32,9 @@
  *  \brief Allows reading lists of isomorphism signatures and knot signatures.
  */
 
-#ifndef __REGINA_ISOSIG_H
+#ifndef __REGINA_FOREIGN_ISOSIG_H
 #ifndef __DOXYGEN
-#define __REGINA_ISOSIG_H
+#define __REGINA_FOREIGN_ISOSIG_H
 #endif
 
 #include "concepts/maths.h"

@@ -416,6 +416,9 @@ Version 8.0  [ TODO ]
               + LinkSigEncoding (defined in link/linksig.h)
               + IsoSigEncoding (defined in triangulation/isosigencoding.h)
               + IsoSigType (defined in triangulation/isosigtype.h)
+        Header triangulation/isosigencoding.h, triangulation/isosigtype.h:
+            - Merged into the new header triangulation/isosig.h.  The old
+              headers are kept but deprecated.
     FILE FORMAT:
         - When reading a second-generation XML file (from Regina 3.0-6.0.1),
           a misconstructed surface filter now results in the entire filter
