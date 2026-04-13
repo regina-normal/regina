@@ -32,6 +32,7 @@
 #include <bit> // for std::endian
 #include <cctype>
 #include <cstring>
+#include <cstdint>
 #include <fstream>
 #include <iostream>
 #include "link/spatiallink.h"
