@@ -63,6 +63,8 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
     // Data for reconstructing a triangulation from an isomorphism signature
     // ---------------------------------------------------------------------
 
+    Component<dim>* comp = simplex(simp)->component();
+
     // The number of simplices.
     size_t nSimp = size();
 
@@ -74,15 +76,18 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
     // These actions are stored in lexicographical order by (simplex, facet),
     // but only once for each facet (so we "skip" gluings that we've
     // already seen from the other direction).
-    size_t nFacets = ((dim + 1) * size() + countBoundaryFacets()) / 2;
+    const size_t nFacets = ((dim + 1) * comp->size() +
+        comp->countBoundaryFacets()) / 2;
     FixedArray<uint8_t> facetAction(nFacets);
 
     // What are the destination simplices and gluing permutations for
     // each facet under case #2 above?
     // For gluing permutations, we store the index of the permutation in
     // Perm<dim+1>::orderedSn.
-    FixedArray<size_t> joinDest(nFacets);
-    FixedArray<typename Perm<dim+1>::Index> joinGluing(nFacets);
+    const size_t nJoins = nFacets - comp->countBoundaryFacets() - comp->size()
+        + 1;
+    FixedArray<size_t> joinDest(nJoins);
+    FixedArray<typename Perm<dim+1>::Index> joinGluing(nJoins);
 
     // The lock masks for each simplex in the component.
     // This will remain null until actual locks are found.
@@ -214,8 +219,8 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
     // into C-style arrays; however, in the long term we should change the
     // Encoding interface to be templated and take iterators instead.
     typename Encoding::Signature ans = Encoding::encode(simpImg,
-        facetPos, facetAction.begin(),
-        joinPos, joinDest.begin(), joinGluing.begin(),
+        nFacets, facetAction.begin(),
+        nJoins, joinDest.begin(), joinGluing.begin(),
         lockMasks);
 
     // Record the canonical isomorphism if required.
