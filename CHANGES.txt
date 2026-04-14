@@ -140,6 +140,10 @@ Version 8.0  [ TODO ]
         Class IsoSigEncodingAPI, IsoSigTypeAPI:
             - New documentation-only classes that explain how encodings and
               signature types for isomorphism signatures are expected to behave.
+        Class IsoSigPrintable<...>, IsoSigPrintableLockFree<...>:
+            - The facet actions and join details are now passed via FixedArray
+              references (not C-style arrays), and the array sizes no longer
+              need to be passed separately.
         Struct IsReginaArbitraryPrecisionInteger<T>, IsReginaInteger<T>:
             - Now deprecated, in favour of the new concepts
               ArbitraryPrecisionInteger<T> and ReginaInteger<T>.
@@ -274,6 +278,9 @@ Version 8.0  [ TODO ]
               setGroupPresentation(), which now has ≤ 1 component as a new
               precondition.
             - New routines knowsHomology() and cachedGroup().
+            - The interface for isomorphism signature encodings has changed;
+              see the changelog for IsoSigPrintable / IsoSigPrintableLockFree
+              for details.
             - Removed the Boost Graph Library (BGL) interface for triangulations
               (triangulation/graph.h).  This is because Regina has not used
               Boost since December 2021, and so this code is essentially

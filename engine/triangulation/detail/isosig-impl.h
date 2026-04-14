@@ -213,15 +213,8 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
     }
 
     // We have all we need.  Pack it all together into a string.
-    //
-    // Note: Encoding::encode takes C-style arrays, whereas we have FixedArrays.
-    // For now we use the fact that FixedArray iterators are just pointers
-    // into C-style arrays; however, in the long term we should change the
-    // Encoding interface to be templated and take iterators instead.
     typename Encoding::Signature ans = Encoding::encode(simpImg,
-        nFacets, facetAction.begin(),
-        nJoins, joinDest.begin(), joinGluing.begin(),
-        lockMasks);
+        facetAction, joinDest, joinGluing, lockMasks);
 
     // Record the canonical isomorphism if required.
     if (relabelling)

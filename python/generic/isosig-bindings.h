@@ -184,15 +184,12 @@ void addIsoSigPrintable(pybind11::module_& m, const char* name) {
             if (joinDest.size() != joinGluing.size())
                 throw regina::InvalidArgument("The arguments "
                     "joinDest and joinGluing must be lists of the same size");
-            return Encoding::encode(size, facetAction.size(),
-                facetAction.data(), joinDest.size(), joinDest.data(),
-                joinGluing.data(),
+            return Encoding::encode(size,
+                { facetAction.begin(), facetAction.end() },
+                { joinDest.begin(), joinDest.end() },
+                { joinGluing.begin(), joinGluing.end() },
                 (lockMasks ? lockMasks->data() : nullptr));
-        }, pybind11::arg("size"), pybind11::arg("facetAction"),
-            pybind11::arg("joinDest"), pybind11::arg("joinGluing"),
-            pybind11::arg("lockMasks"),
-            rbase::encode)
-        ;
+        }, rbase::encode);
     regina::python::no_eq_static(s);
 
     RDOC_SCOPE_END

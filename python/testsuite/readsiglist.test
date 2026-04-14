@@ -71,3 +71,8 @@ except InvalidArgument:
     print('Caught exception')
 print()
 
+# While we're here... test the type conversions for isosig encodings.
+# The following compressed gluings table gives the figure eight knot complement.
+
+print(IsoSigPrintable3.encode(2, [1,2,2,2], [1,1,1], [8,7,19], None))
+

@@ -139,26 +139,21 @@ class IsoSigEncodingAPI {
          * \python The arrays \a facetAction, \a joinDest, \a joinGluing and
          * \a lockMasks should each be passed as Python lists of integers;
          * the argument \a lockMasks may be `None`.
-         * The arguments \a nFacetActions and \a nJoins are not present,
-         * since Python lists already know their own sizes.
          *
          * \param size a strictly positive integer.  (This represents the
          * number of top-dimensional simplices in the component.)
-         * \param nFacetActions the strictly positive size of the array
-         * \a facetAction.
-         * \param facetAction a non-empty array of size \a nFacetActions,
-         * where each element is either 0, 1 or 2.  (This encodes which facets
-         * of top-dimensional simplices are boundary, joined to a new simplex,
-         * or joined to an earlier simplex.)
-         * \param nJoins the non-negative size of the arrays \a joinDest and
-         * \a joinGluing.
-         * \param joinDest a possibly empty array of size \a nJoins, each of
-         * whose elements are integers in the range `0,...,size-1` inclusive.
-         * (This represents the indices of top-dimensional simplices to which
-         * various gluings are being made.)
-         * \param joinGluing a possibly empty array of size \a nJoins, each of
-         * which is an arbitrary permutation of `dim+1` elements.  (This
-         * represents various gluing permutations.)
+         * \param facetAction a non-empty array where each element is either
+         * 0, 1 or 2.  (This encodes which facets of top-dimensional simplices
+         * are boundary, joined to a new simplex, or joined to an earlier
+         * simplex.)
+         * \param joinDest a possibly empty array, each of whose elements are
+         * integers in the range `0,...,size-1` inclusive.  (This represents
+         * the indices of top-dimensional simplices to which various gluings
+         * are being made.)
+         * \param joinGluing a possibly empty array of the same size as
+         * \a joinDest, each element of which is the ordered `S_n` index of an
+         * arbitrary permutation of `dim+1` elements.  (This represents various
+         * gluing permutations.)
          * \param lockMasks either a non-empty array of size \a size, each
          * of whose elements is a lock mask (representing all of the
          * simplex/facet locks in the triangulation), or else \c null if the
@@ -170,9 +165,9 @@ class IsoSigEncodingAPI {
          * isomorphism signature.
          */
         static Signature encode(size_t size,
-                size_t nFacetActions, const uint8_t* facetAction,
-                size_t nJoins, const size_t* joinDest,
-                const typename Perm<dim+1>::Index* joinGluing,
+                const FixedArray<uint8_t>& facetAction,
+                const FixedArray<size_t>& joinDest,
+                const FixedArray<typename Perm<dim+1>::Index>& joinGluing,
                 const typename Simplex<dim>::LockMask* lockMasks);
 };
 #endif // __APIDOCS
@@ -192,14 +187,15 @@ class IsoSigEncodingAPI {
  */
 template <typename T, int dim>
 concept IsoSigEncoding =
-    requires {
+    requires(size_t size,
+            const FixedArray<uint8_t> facetAction,
+            const FixedArray<size_t> joinDest,
+            const FixedArray<typename Perm<dim+1>::Index> joinGluing,
+            const typename Simplex<dim>::LockMask* lockMasks) {
         typename T::Signature;
         requires ConcatenableSequence<typename T::Signature>;
         { T::emptySig() } -> std::convertible_to<typename T::Signature>;
-        { T::encode((size_t)(0), (size_t)(0), (const uint8_t*)(nullptr),
-            (size_t)(0), (const size_t*)(nullptr),
-            (const typename Perm<dim+1>::Index*)(nullptr),
-            (const typename Simplex<dim>::LockMask*)(nullptr)) } ->
+        { T::encode(size, facetAction, joinDest, joinGluing, lockMasks) } ->
             std::convertible_to<typename T::Signature>;
     };
 
@@ -256,16 +252,16 @@ class IsoSigPrintable {
         }
 
         static Signature encode(size_t size,
-                size_t nFacetActions, const uint8_t* facetAction,
-                size_t nJoins, const size_t* joinDest,
-                const typename Perm<dim+1>::Index* joinGluing,
+                const FixedArray<uint8_t>& facetAction,
+                const FixedArray<size_t>& joinDest,
+                const FixedArray<typename Perm<dim+1>::Index>& joinGluing,
                 const typename Simplex<dim>::LockMask* lockMasks) {
             Base64SigEncoder enc;
 
             int nChars = enc.encodeSize(size);
-            enc.encodeTrits(facetAction, facetAction + nFacetActions);
-            enc.encodeInts(joinDest, joinDest + nJoins, nChars);
-            enc.encodeInts(joinGluing, joinGluing + nJoins, charsPerPerm);
+            enc.encodeTrits(facetAction.begin(), facetAction.end());
+            enc.encodeInts(joinDest.begin(), joinDest.end(), nChars);
+            enc.encodeInts(joinGluing.begin(), joinGluing.end(), charsPerPerm);
             if constexpr (supportLocks) {
                 if (lockMasks) {
                     // Each lock mask holds dim+2 bits.
