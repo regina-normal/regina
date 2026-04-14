@@ -81,6 +81,7 @@ Version 8.0  [ TODO ]
             - Deprecated, since this can be tested via std::common_type_t.
         Class FixedArray:
             - Now has a default constructor that creates an empty array.
+            - New constructor that takes an iterator range.
         Class Flags<T>:
             - Updated to support enumerations with any base C++ integer type,
               not just int.

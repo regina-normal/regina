@@ -40,7 +40,7 @@
 #include <algorithm>
 #include <concepts>
 #include <cstddef>
-#include "regina-core.h"
+#include "concepts/iterator.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -154,6 +154,19 @@ class FixedArray {
                 requires std::copyable<T> :
                 data_(new T[src.size_]), size_(src.size_) {
             std::copy(src.data_, src.data_ + src.size_, data_);
+        }
+
+        /**
+         * Makes a new deep copy of the sequence bounded by the given iterators.
+         *
+         * \param begin an iterator pointing to the beginning of the sequence
+         * to copy.
+         * \param end an iterator pointing past the end of the sequence to copy.
+         */
+        template <RandomAccessIteratorFor<T> Iterator>
+        FixedArray(Iterator begin, Iterator end) : size_(end - begin) {
+            data_ = new T[size_];
+            std::copy(begin, end, data_);
         }
 
         /**
