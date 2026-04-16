@@ -680,7 +680,7 @@ class Base64SigEncoder {
  * \ingroup utilities
  */
 template <CharIterator Iterator>
-requires std::forward_iterator<Iterator>
+requires std::bidirectional_iterator<Iterator>
 class Base64SigDecoder {
     private:
         Iterator next_;
@@ -697,23 +697,37 @@ class Base64SigDecoder {
          * This iterator range must remain valid for the entire lifespan
          * of this decoder.
          *
+         * \warning As of Regina 8.0, the meaning of the \a stripWhitespace
+         * argument has changed.  Previously, it only skipped past _initial_
+         * whitespace, and calls to `done()` would by default read ahead to
+         * ignore _final_ whitespace.  Now passing \a stripWhitespace as `true`
+         * will ignore whitespace at _both_ ends of the string at the point of
+         * construction, and calls to `done()` will simply test whether we have
+         * reached the pre-computed endpoint.  So: the _default_ behaviour
+         * remains the same, but if you are passing a custom constructor
+         * argument for \a stripWhitespace and/or a custom boolean argument to
+         * `done()`, then beware: the behaviour might have changed.
+         *
          * \python Instead of an iterator range, this constructor takes a
          * Python string.  In Python (but not C++), the decoder will also keep
          * a deep copy of the string, to ensure the lifespan requirements.
          *
-         * \param encoding an iterator pointing to the beginning of the
+         * \param beginEncoding an iterator pointing to the beginning of the
          * encoded string.
-         * \param end a past-the-end iterator that marks the end of the
+         * \param endEncoding a past-the-end iterator that marks the end of the
          * encoded string.
-         * \param skipInitialWhitespace \c true if the current position should
-         * immediately advance past any initial whitespace in the given string.
+         * \param stripWhitespace \c true if the given bounds should be
+         * squeezed inwards to ignore whitespace at both the beginning and
+         * the end of the encoded string.
          */
-        Base64SigDecoder(Iterator encoding, Iterator end,
-                bool skipInitialWhitespace = true) :
-                next_(encoding), end_(end) {
-            if (skipInitialWhitespace) {
+        Base64SigDecoder(Iterator beginEncoding, Iterator endEncoding,
+                bool stripWhitespace = true) :
+                next_(beginEncoding), end_(endEncoding) {
+            if (stripWhitespace) {
                 while (next_ != end_ && ::isspace(*next_))
                     ++next_;
+                while (next_ != end_ && ::isspace(*std::prev(end_)))
+                    --end_;
             }
         }
 
@@ -732,6 +746,39 @@ class Base64SigDecoder {
          * Determines whether the current position has reached the end of the
          * string.
          *
+         * \warning As of Regina 8.0, this behaviour has changed.  Previously,
+         * calling `done()` with no arguments would ignore any final whitespace
+         * at the end of the string.  Now it simply tests whether we have
+         * reached the end of the string.  However, combined with the changes
+         * to the constructor, this yields the same default behaviour as before,
+         * since `Base64SigDecoder(beginEncoding, endEncoding)` will now by
+         * default move the endpoints of the string to ignore whitespace at both
+         * ends of the string (not just the start).  Nevertheless, if you
+         * passed an extra boolean argument to the constructor then beware:
+         * the behaviour of `done()` might have changed.
+         *
+         * \return \c true if and only if the current position is the end of
+         * the string.
+         */
+        bool done() const {
+            return next_ == end_;
+        }
+
+        /**
+         * Deprecated routine that determines whether the current position has
+         * reached the end of the string, optionally ignoring any final
+         * whitespace.
+         *
+         * \deprecated As of Regina 8.0, you should control whitespace handling
+         * by passing an extra boolean argument to the class constructor, not
+         * to done().  If you use the default behaviour for both the constructor
+         * and done() (i.e., without extra boolean arguments), then you will get
+         * the same behaviour as in previous versions of Regina (i.e.,
+         * whitespace will be ignored at both ends of the encoded string).
+         * However, if you explicitly pass boolean arguments to the constructor
+         * and/or done() then the behaviour might have changed; for details see
+         * the documentation for these individual routines.
+         *
          * \param ignoreWhitespace \c true if we should ignore any trailing
          * whitespace.  If there is whitespace at the current position, the
          * current position will not be changed; this will merely make the
@@ -739,7 +786,7 @@ class Base64SigDecoder {
          * \return \c true if and only if the current position is the end of
          * the string.
          */
-        bool done(bool ignoreWhitespace = true) const {
+        [[deprecated]] bool done(bool ignoreWhitespace) const {
             if (ignoreWhitespace) {
                 for (Iterator pos = next_; pos != end_; ++pos)
                     if (! ::isspace(*pos))

@@ -94,20 +94,33 @@ R"doc(Creates a new decoder for the given encoded string.
 The string itself should be passed as an iterator range. This iterator
 range must remain valid for the entire lifespan of this decoder.
 
+.. warning::
+    As of Regina 8.0, the meaning of the *stripWhitespace* argument
+    has changed. Previously, it only skipped past _initial_
+    whitespace, and calls to ``done()`` would by default ignore
+    _final_ whitespace. Now passing *stripWhitespace* as ``True`` will
+    ignore whitespace at _both_ ends of the string at the point of
+    construction, and calls to ``done()`` will simply test whether we
+    have reached the pre-computed endpoint. So: the default behaviour
+    remains the same, but if you are passing a custom constructor
+    argument for *stripWhitespace* and/or a custom boolean argument to
+    ``done()``, then beware: the behaviour might have changed.
+
 Python:
     Instead of an iterator range, this constructor takes a Python
     string. In Python (but not C++), the decoder will also keep a deep
     copy of the string, to ensure the lifespan requirements.
 
-Parameter ``encoding``:
+Parameter ``beginEncoding``:
     an iterator pointing to the beginning of the encoded string.
 
-Parameter ``end``:
+Parameter ``endEncoding``:
     a past-the-end iterator that marks the end of the encoded string.
 
-Parameter ``skipInitialWhitespace``:
-    ``True`` if the current position should immediately advance past
-    any initial whitespace in the given string.)doc";
+Parameter ``stripWhitespace``:
+    ``True`` if the given bounds should be squeezed inwards to ignore
+    whitespace at both the beginning and the end of the encoded
+    string.)doc";
 
 // Docstring regina::python::doc::Base64SigDecoder_::decodeBits
 static const char *decodeBits =
@@ -281,6 +294,41 @@ Returns:
 static const char *done =
 R"doc(Determines whether the current position has reached the end of the
 string.
+
+.. warning::
+    As of Regina 8.0, this behaviour has changed. Previously, calling
+    ``done()`` with no arguments would ignore any final whitespace at
+    the end of the string. Now it simply tests whether we have reached
+    the end of the string. However, combined with the changes to the
+    constructor, this yields the same behaviour as before, since
+    ``Base64SigDecoder(beginEncoding, endEncoding)`` will now by
+    default move the endpoints of the string to ignore whitespace at
+    both ends of the string (not just the start). Nevertheless, if you
+    are passing a custom constructor argument for *stripWhitespace*
+    and/or a custom boolean argument to ``done()``, then beware: the
+    behaviour might have changed.
+
+Returns:
+    ``True`` if and only if the current position is the end of the
+    string.)doc";
+
+// Docstring regina::python::doc::Base64SigDecoder_::done_2
+static const char *done_2 =
+R"doc(Deprecated routine that determines whether the current position has
+reached the end of the string, optionally ignoring any final
+whitespace.
+
+.. deprecated::
+    As of Regina 8.0, you should pass an extra boolean argument to the
+    class constructor, not a boolean argument to done(), to control
+    whether whitespace is ignored. If you use the default behaviour
+    for both the constructor and done() (i.e., without extra boolean
+    arguments), then you will get the same behaviour as in previous
+    versions of Regina (i.e., whitespace will be ignored at both ends
+    of the encoded string). If you explicitly pass boolean arguments
+    to the constructor and/or done() then the behaviour might have
+    changed; for details see the documentation for these individual
+    routines.
 
 Parameter ``ignoreWhitespace``:
     ``True`` if we should ignore any trailing whitespace. If there is

@@ -380,7 +380,7 @@ std::string LinkSigCompact::encode(const LinkSigData& data) {
 Link Link::fromSig(const std::string& sig) {
     Link ans;
 
-    Base64SigDecoder dec(sig.begin(), sig.end()); // skips leading whitespace
+    Base64SigDecoder dec(sig.begin(), sig.end()); // strips whitespace
 
     // Get the empty link out of the way first.
     switch (dec.peek()) {

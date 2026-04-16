@@ -28,6 +28,17 @@ Version 8.0  [ TODO ]
             - New routines knowsSpansStrict() and knowsSpansTaut().
         Class Base64SigDecoder:
             - New routine decodeBits().
+            - Now requires its underlying character iterator type to be
+              bidirectional (not just a forward iterator).
+            - The constructor argument to strip whitespace (which defaults to
+              true) now ignores whitespace at _both_ ends of the string, not
+              just the start.  Moreover, calling done() with no arguments will
+              _not_ ignore final whitespace any more.  Together these changes
+              reproduce the same default behaviour as before (but more
+              efficiently).  However, beware: if you are passing custom
+              arguments regarding the stripping of whitespace then individually
+              these are changes in behaviour.  The variant of done() that
+              skips final whitespace is now deprecated.
         Class Base64SigEncoder:
             - New routine encodeBits().
             - Added variants of encodeInts() and encodeTrits() that take an

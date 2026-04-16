@@ -57,9 +57,9 @@ namespace regina::python {
 
     class Base64SigDecoder_Copy : private StringStorage, public Decoder {
         public:
-            Base64SigDecoder_Copy(std::string str, bool skipInitialWhitespace) :
+            Base64SigDecoder_Copy(std::string str, bool stripWhitespace) :
                     StringStorage(std::move(str)),
-                    Decoder(str_.begin(), str_.end(), skipInitialWhitespace) {
+                    Decoder(str_.begin(), str_.end(), stripWhitespace) {
             }
     };
 }
@@ -150,8 +150,25 @@ void addSigUtils(pybind11::module_& m) {
             pybind11::arg(), pybind11::arg("skipInitialWhitespace") = true,
             rdoc::__init)
         .def("skipWhitespace", &Decoder::skipWhitespace, rdoc::skipWhitespace)
-        .def("done", &Decoder::done,
-            pybind11::arg("ignoreWhitespace") = true, rdoc::done)
+        .def("done",
+            pybind11::overload_cast<>(&Decoder::done, pybind11::const_),
+            rdoc::done)
+        #if defined(__GNUC__)
+        // The routine done(bool) is deprecated, but we still need to bind it.
+        // Silence the inevitable deprecation warning that will occur.
+        #pragma GCC diagnostic push
+        #if defined(__clang__)
+        #pragma GCC diagnostic ignored "-Wdeprecated"
+        #else
+        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        #endif
+        #endif
+        .def("done",
+            pybind11::overload_cast<bool>(&Decoder::done, pybind11::const_),
+            rdoc::done_2) // deprecated
+        #if defined(__GNUC__)
+        #pragma GCC diagnostic pop
+        #endif
         .def("peek", &Decoder::peek, rdoc::peek)
         .def("skip", &Decoder::skip, rdoc::skip)
         .def("decodeSingle", &Decoder::decodeSingle<long>, rdoc::decodeSingle)
