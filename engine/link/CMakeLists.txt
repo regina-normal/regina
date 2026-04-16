@@ -17,6 +17,7 @@ SET ( FILES
   jones.cpp
   knotplot.cpp
   link.cpp
+  linksig.cpp
   modellinkgraph.cpp
   operations.cpp
   pass.cpp
@@ -25,7 +26,6 @@ SET ( FILES
   reidemeister.cpp
   reidemeister-tangle.cpp
   rewrite.cpp
-  sig.cpp
   simplify.cpp
   spatiallink.cpp
   tangle.cpp

@@ -307,6 +307,9 @@ LayeredTorusBundle : class -> EqualityType.ByValue
 Layering : class -> EqualityType.ByValue
 LensSpace : class -> EqualityType.ByValue
 Link : class -> EqualityType.ByValue
+LinkSigCompact : class -> EqualityType.NeverInstantiated
+LinkSigData : class -> EqualityType.ByValue
+LinkSigPrintable : class -> EqualityType.NeverInstantiated
 Locale : class -> EqualityType.NeverInstantiated
 LockViolation : exception
 Manifold : class -> EqualityType.NeverInstantiated

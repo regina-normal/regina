@@ -32,6 +32,10 @@
  *  \brief Deals with classical and virtual knots and links.
  */
 
+// Put this before the header guard, since there is a very precise order in
+// which the different parts of link.h and linksig.h need to be included.
+#include "link/linksig.h"
+
 #ifndef __REGINA_LINK_H
 #ifndef __DOXYGEN
 #define __REGINA_LINK_H
@@ -45,7 +49,6 @@
 #include <vector>
 #include "regina-core.h"
 #include "algebra/grouppresentation.h"
-#include "link/linksig.h"
 #include "maths/arrow.h"
 #include "maths/integer.h"
 #include "maths/laurent.h"

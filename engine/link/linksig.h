@@ -75,8 +75,6 @@ class Link;
  *
  * \apinotfinal
  *
- * \nopython
- *
  * \ingroup link
  */
 class LinkSigData {
@@ -92,14 +90,25 @@ class LinkSigData {
          * operators are provided automatically by the compiler.  These objects
          * are small enough to pass by value and swap with `std::swap()`, with
          * no need for any specialised move operations or swap functions.
+         *
+         * \python This is a read-only struct: its data members cannot be
+         * modified.  Moreover, objects of this type cannot be explicitly
+         * constructed; instead you would typically retrieve them from a link
+         * diagram data set by calling `LinkSigData::traversal()`.
          */
         struct Term {
+            /**
+             * The zero-based crossing index.
+             */
             size_t crossing;
-                /**< The zero-based crossing index. */
+            /**
+             * 0 or 1 for the lower or upper strand respectively.
+             */
             int strand;
-                /**< 0 or 1 for the lower or upper strand respectively. */
+            /**
+             * ±1 indicating the sign of the crossing.
+             */
             int sign;
-                /**< ±1 indicating the sign of the crossing. */
 
             /**
              * Determines whether this and the given triple are identical.
@@ -209,18 +218,11 @@ class LinkSigData {
         }
 
         /**
-         * Gives read-write access to the full sequence of triples that
-         * describe this diagram component.
-         *
-         * \return a reference to the full sequence of triples.
-         */
-        Traversal& sequence() {
-            return sequence_;
-        }
-
-        /**
          * Gives read-only access to the full sequence of triples that
          * describe this diagram component.
+         *
+         * \python This routine returns a deep copy (not a reference), in the
+         * form of a Python list.
          *
          * \return a reference to the full sequence of triples.
          */
@@ -305,8 +307,6 @@ class LinkSigData {
  * This global routine simply calls LinkSigData::swap(); it is provided so
  * that LinkSigData meets the C++ Swappable requirements.
  *
- * \nopython
- *
  * \param a the first component data set whose contents should be swapped.
  * \param b the second component data set whose contents should be swapped.
  *
@@ -336,8 +336,10 @@ inline void swap(LinkSigData& a, LinkSigData& b) noexcept {
  * (but harmless) to construct them.  Instead encoding classes are typically
  * used as C++ template arguments for functions such as `Link::sig()`.
  *
- * \nopython To use a knot/link signature encoding class, you would typically
- * call a modified form of `Link::sig()`.  See `Link::sig()` for details.
+ * \python Whilst Regina's encoding classes are available, it is rare that you
+ * would need to access these directly through Python.  Instead, to use a
+ * knot/link signature encoding class, you would typically call a modified
+ * form of `Link::sig()`.  See `Link::sig()` for details.
  *
  * \apinotfinal
  *
@@ -439,8 +441,6 @@ concept LinkSigEncoding =
  * Typical users would have no need to create objects of this class or call
  * any of its functions directly.
  *
- * \nopython
- *
  * \apinotfinal
  *
  * \ingroup link
@@ -449,7 +449,10 @@ class LinkSigPrintable {
     public:
         using Signature = std::string;
 
-        static bool satisfiesPreconditions(const Link&) { return true; }
+        static bool satisfiesPreconditions(const Link&) {
+            return true;
+        }
+
         static Signature encodeEmpty();
         static Signature encodeUnknot();
         static Signature encode(const LinkSigData& data);
@@ -457,6 +460,15 @@ class LinkSigPrintable {
         // Make this class non-constructible.
         LinkSigPrintable() = delete;
 };
+
+} // namespace regina
+
+// At this point we need the full Link class description, since
+// LinkSigCompact requires it.
+
+#include "link/link.h"
+
+namespace regina {
 
 /**
  * A compact string-based encoding for use with knot signatures.
@@ -478,8 +490,6 @@ class LinkSigPrintable {
  * Typical users would have no need to create objects of this class or call
  * any of its functions directly.
  *
- * \nopython
- *
  * \apinotfinal
  *
  * \ingroup link
@@ -488,7 +498,10 @@ class LinkSigCompact {
     public:
         using Signature = std::string;
 
-        static bool satisfiesPreconditions(const Link& link);
+        static bool satisfiesPreconditions(const Link& link) {
+            return link.countComponents() <= 1;
+        }
+
         static Signature encodeEmpty();
         static Signature encodeUnknot();
         static Signature encode(const LinkSigData& data);

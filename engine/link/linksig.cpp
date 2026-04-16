@@ -326,10 +326,6 @@ std::string LinkSigPrintable::encode(const LinkSigData& data) {
     return std::move(enc).str();
 }
 
-bool LinkSigCompact::satisfiesPreconditions(const Link& link) {
-    return link.countComponents() <= 1;
-}
-
 std::string LinkSigCompact::encodeEmpty() {
     return { Base64SigEncoder::spare[0] };
 }
