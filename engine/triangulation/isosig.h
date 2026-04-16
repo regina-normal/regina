@@ -535,11 +535,9 @@ class IsoSigPrintable {
             Base64SigEncoder enc;
 
             int nChars = enc.encodeSize(data.size());
-            enc.encodeTrits(data.facetTypes().begin(), data.facetTypes().end());
-            enc.encodeInts(data.joinDests().begin(), data.joinDests().end(),
-                nChars);
-            enc.encodeInts(data.gluings().begin(), data.gluings().end(),
-                charsPerPerm);
+            enc.encodeTrits(data.facetTypes());
+            enc.encodeInts(data.joinDests(), nChars);
+            enc.encodeInts(data.gluings(), charsPerPerm);
             if constexpr (supportLocks) {
                 if (data.hasLocks()) {
                     // Each lock mask holds dim+2 bits.

@@ -393,8 +393,8 @@ Parameter ``nChars``:
 
 // Docstring regina::python::doc::Base64SigEncoder_::encodeInts
 static const char *encodeInts =
-R"doc(Encodes a sequence of non-negative native C++ integers, each using a
-fixed number of base64 characters.
+R"doc(Encodes a sequence of non-negative native C++ integers (given by an
+input range), each using a fixed number of base64 characters.
 
 Each integer in the sequence will be encoded using encodeInt(). That
 is, each integer will be broken into *nChars* distinct 6-bit blocks,
@@ -407,16 +407,11 @@ Exception ``InvalidArgument``:
     ``6 × nChars`` bits.
 
 Python:
-    Instead of a begin/end pair of iterators, this routine takes a
-    Python sequence of integers. Each Python integer will be read as a
-    native C++ ``long``.
+    The argument *sequence* should be a Python list of integers, each
+    of which will be read as a native C++ ``long``.
 
-Parameter ``begin``:
-    an iterator pointing to the first integer to encode.
-
-Parameter ``end``:
-    a past-the-end iterator pointing beyond the last integer to
-    encode.
+Parameter ``sequence``:
+    the sequence of integers to encode.
 
 Parameter ``nChars``:
     the number of base64 characters to use for each integer; typically
@@ -467,7 +462,8 @@ Returns:
 
 // Docstring regina::python::doc::Base64SigEncoder_::encodeTrits
 static const char *encodeTrits =
-R"doc(Encodes a sequence of trits. A _trit_ is either 0, 1 or 2.
+R"doc(Encodes a sequence of trits (given by an input range). A _trit_ is
+either 0, 1 or 2.
 
 The trits will be packed into base64 characters, three at a time. For
 each individual base64 character, the three trits will use bits of the
@@ -475,21 +471,15 @@ underlying 6-bit integer in order from lowest to highest significance.
 (The last base64 character might of course encode just one or two
 trits instead.)
 
-Each trit will be obtained by dereferencing an iterator, which (as
-noted above) must yield the value 0, 1 or 2.
-
 The inverse to this routine is Base64SigDecoder::decodeTrits(), though
 that function only decodes three trits at a time.
 
 Python:
-    This routine takes a single argument, which is a Python sequence
-    of integer trits.
+    The argument *trits* should be a Python list.
 
-Parameter ``beginTrits``:
-    an iterator pointing to the first trit to encode.
-
-Parameter ``endTrits``:
-    a past-the-end iterator pointing beyond the last trit to encode.)doc";
+Parameter ``trits``:
+    the sequence of trits to encode. Each element of this sequence
+    must be 0, 1 or 2.)doc";
 
 // Docstring regina::python::doc::Base64SigEncoder_::str
 static const char *str =

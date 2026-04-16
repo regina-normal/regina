@@ -40,6 +40,7 @@
 
 #include <array>
 #include <cstdint>
+#include <ranges>
 #include <string>
 #include "regina-core.h"
 #include "concepts/core.h"
@@ -476,8 +477,8 @@ class Base64SigEncoder {
         }
 
         /**
-         * Encodes a sequence of non-negative native C++ integers, each using a
-         * fixed number of base64 characters.
+         * Encodes a sequence of non-negative native C++ integers (given by a
+         * pair of iterators), each using a fixed number of base64 characters.
          *
          * Each integer in the sequence will be encoded using encodeInt().
          * That is, each integer will be broken into \a nChars distinct
@@ -489,9 +490,7 @@ class Base64SigEncoder {
          * \exception InvalidArgument Some integer in the sequence is negative,
          * or requires more than `6 × nChars` bits.
          *
-         * \python Instead of a begin/end pair of iterators, this routine takes
-         * a Python sequence of integers.  Each Python integer will be read as
-         * a native C++ `long`.
+         * \nopython
          *
          * \param begin an iterator pointing to the first integer to encode.
          * \param end a past-the-end iterator pointing beyond the last integer
@@ -505,6 +504,35 @@ class Base64SigEncoder {
         void encodeInts(Iterator begin, Iterator end, int nChars) {
             for (auto it = begin; it != end; ++it)
                 encodeInt(*it, nChars);
+        }
+
+        /**
+         * Encodes a sequence of non-negative native C++ integers (given by an
+         * input range), each using a fixed number of base64 characters.
+         *
+         * Each integer in the sequence will be encoded using encodeInt().
+         * That is, each integer will be broken into \a nChars distinct
+         * 6-bit blocks, which will be encoded in order from lowest to highest
+         * significance.
+         *
+         * The inverse to this routine is Base64SigDecoder::decodeInts().
+         *
+         * \exception InvalidArgument Some integer in the sequence is negative,
+         * or requires more than `6 × nChars` bits.
+         *
+         * \python The argument \a sequence should be a Python list of
+         * integers, each of which will be read as a native C++ `long`.
+         *
+         * \param sequence the sequence of integers to encode.
+         * \param nChars the number of base64 characters to use for each
+         * integer; typically this would be obtained through an earlier call
+         * to encodeSize().
+         */
+        template <std::ranges::input_range Range>
+        requires CppInteger<std::ranges::range_value_t<Range>>
+        void encodeInts(Range&& sequence, int nChars) {
+            for (auto i : sequence)
+                encodeInt(i, nChars);
         }
 
         /**
@@ -544,7 +572,8 @@ class Base64SigEncoder {
         }
 
         /**
-         * Encodes a sequence of trits.  A _trit_ is either 0, 1 or 2.
+         * Encodes a sequence of trits (given by a pair of iterators).
+         * A _trit_ is either 0, 1 or 2.
          *
          * The trits will be packed into base64 characters, three at a time.
          * For each individual base64 character, the three trits will use bits
@@ -558,8 +587,7 @@ class Base64SigEncoder {
          * The inverse to this routine is Base64SigDecoder::decodeTrits(),
          * though that function only decodes three trits at a time.
          *
-         * \python This routine takes a single argument, which is a Python
-         * sequence of integer trits.
+         * \nopython
          *
          * \param beginTrits an iterator pointing to the first trit to encode.
          * \param endTrits a past-the-end iterator pointing beyond the last
@@ -582,6 +610,30 @@ class Base64SigEncoder {
                 packed |= (static_cast<uint8_t>(*it++) << 4);
                 encodeSingle(packed);
             }
+        }
+
+        /**
+         * Encodes a sequence of trits (given by an input range).
+         * A _trit_ is either 0, 1 or 2.
+         *
+         * The trits will be packed into base64 characters, three at a time.
+         * For each individual base64 character, the three trits will use bits
+         * of the underlying 6-bit integer in order from lowest to highest
+         * significance.  (The last base64 character might of course encode
+         * just one or two trits instead.)
+         *
+         * The inverse to this routine is Base64SigDecoder::decodeTrits(),
+         * though that function only decodes three trits at a time.
+         *
+         * \python The argument \a trits should be a Python list.
+         *
+         * \param trits the sequence of trits to encode.  Each element of this
+         * sequence must be 0, 1 or 2.
+         */
+        template <std::ranges::input_range Range>
+        requires std::convertible_to<std::ranges::range_value_t<Range>, uint8_t>
+        void encodeTrits(Range&& trits) {
+            encodeTrits(std::ranges::begin(trits), std::ranges::end(trits));
         }
 
         /**

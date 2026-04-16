@@ -128,15 +128,15 @@ void addSigUtils(pybind11::module_& m) {
         .def("encodeSize", &Base64SigEncoder::encodeSize, rdoc::encodeSize)
         .def("encodeInt", &Base64SigEncoder::encodeInt<long>, rdoc::encodeInt)
         .def("encodeInts",
-            [](Base64SigEncoder& enc, const std::vector<long>& v, int nChars) {
-                enc.encodeInts(v.begin(), v.end(), nChars);
-            }, rdoc::encodeInts)
+            pybind11::overload_cast<const std::vector<long>&, int>(
+                &Base64SigEncoder::encodeInts<const std::vector<long>&>),
+            rdoc::encodeInts)
         .def("encodeBits", &Base64SigEncoder::encodeBits<regina::Bitmask>,
             rdoc::encodeBits)
         .def("encodeTrits",
-            [](Base64SigEncoder& enc, const std::vector<uint8_t>& v) {
-                enc.encodeTrits(v.begin(), v.end());
-            }, rdoc::encodeTrits)
+            pybind11::overload_cast<const std::vector<uint8_t>&>(
+                &Base64SigEncoder::encodeTrits<const std::vector<uint8_t>&>),
+            rdoc::encodeTrits)
         .def("append", &Base64SigEncoder::append, rdoc::append)
         .def_readonly_static("spare", &Base64SigEncoder::spare)
     ;

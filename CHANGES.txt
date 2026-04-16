@@ -30,6 +30,8 @@ Version 8.0  [ TODO ]
             - New routine decodeBits().
         Class Base64SigEncoder:
             - New routine encodeBits().
+            - Added variants of encodeInts() and encodeTrits() that take an
+              input range instead of an iterator pair.
         Class BitManipulatorByType<...>:
             - This is now an internal class in the namespace regina::detail.
               You should never need to refer to this class directly; instead
