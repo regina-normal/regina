@@ -170,6 +170,7 @@ void addSigUtils(pybind11::module_& m) {
         #pragma GCC diagnostic pop
         #endif
         .def("peek", &Decoder::peek, rdoc::peek)
+        .def("remaining", &Decoder::remaining, rdoc::remaining)
         .def("skip", &Decoder::skip, rdoc::skip)
         .def("decodeSingle", &Decoder::decodeSingle<long>, rdoc::decodeSingle)
         .def("decodeSize", &Decoder::decodeSize, rdoc::decodeSize)

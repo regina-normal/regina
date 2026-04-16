@@ -27,7 +27,7 @@ Version 8.0  [ TODO ]
         Class AngleStructures:
             - New routines knowsSpansStrict() and knowsSpansTaut().
         Class Base64SigDecoder:
-            - New routine decodeBits().
+            - New routines remaining() and decodeBits().
             - Now requires its underlying character iterator type to be
               bidirectional (not just a forward iterator).
             - The constructor argument to strip whitespace (which defaults to

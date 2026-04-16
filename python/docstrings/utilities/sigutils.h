@@ -97,14 +97,15 @@ range must remain valid for the entire lifespan of this decoder.
 .. warning::
     As of Regina 8.0, the meaning of the *stripWhitespace* argument
     has changed. Previously, it only skipped past _initial_
-    whitespace, and calls to ``done()`` would by default ignore
-    _final_ whitespace. Now passing *stripWhitespace* as ``True`` will
-    ignore whitespace at _both_ ends of the string at the point of
-    construction, and calls to ``done()`` will simply test whether we
-    have reached the pre-computed endpoint. So: the default behaviour
-    remains the same, but if you are passing a custom constructor
-    argument for *stripWhitespace* and/or a custom boolean argument to
-    ``done()``, then beware: the behaviour might have changed.
+    whitespace, and calls to ``done()`` would by default read ahead to
+    ignore _final_ whitespace. Now passing *stripWhitespace* as
+    ``True`` will ignore whitespace at _both_ ends of the string at
+    the point of construction, and calls to ``done()`` will simply
+    test whether we have reached the pre-computed endpoint. So: the
+    _default_ behaviour remains the same, but if you are passing a
+    custom constructor argument for *stripWhitespace* and/or a custom
+    boolean argument to ``done()``, then beware: the behaviour might
+    have changed.
 
 Python:
     Instead of an iterator range, this constructor takes a Python
@@ -300,13 +301,12 @@ string.
     ``done()`` with no arguments would ignore any final whitespace at
     the end of the string. Now it simply tests whether we have reached
     the end of the string. However, combined with the changes to the
-    constructor, this yields the same behaviour as before, since
-    ``Base64SigDecoder(beginEncoding, endEncoding)`` will now by
+    constructor, this yields the same default behaviour as before,
+    since ``Base64SigDecoder(beginEncoding, endEncoding)`` will now by
     default move the endpoints of the string to ignore whitespace at
     both ends of the string (not just the start). Nevertheless, if you
-    are passing a custom constructor argument for *stripWhitespace*
-    and/or a custom boolean argument to ``done()``, then beware: the
-    behaviour might have changed.
+    passed an extra boolean argument to the constructor then beware:
+    the behaviour of ``done()`` might have changed.
 
 Returns:
     ``True`` if and only if the current position is the end of the
@@ -319,16 +319,15 @@ reached the end of the string, optionally ignoring any final
 whitespace.
 
 .. deprecated::
-    As of Regina 8.0, you should pass an extra boolean argument to the
-    class constructor, not a boolean argument to done(), to control
-    whether whitespace is ignored. If you use the default behaviour
-    for both the constructor and done() (i.e., without extra boolean
-    arguments), then you will get the same behaviour as in previous
-    versions of Regina (i.e., whitespace will be ignored at both ends
-    of the encoded string). If you explicitly pass boolean arguments
-    to the constructor and/or done() then the behaviour might have
-    changed; for details see the documentation for these individual
-    routines.
+    As of Regina 8.0, you should control whitespace handling by
+    passing an extra boolean argument to the class constructor, not to
+    done(). If you use the default behaviour for both the constructor
+    and done() (i.e., without extra boolean arguments), then you will
+    get the same behaviour as in previous versions of Regina (i.e.,
+    whitespace will be ignored at both ends of the encoded string).
+    However, if you explicitly pass boolean arguments to the
+    constructor and/or done() then the behaviour might have changed;
+    for details see the documentation for these individual routines.
 
 Parameter ``ignoreWhitespace``:
     ``True`` if we should ignore any trailing whitespace. If there is
@@ -360,6 +359,17 @@ The current position will not move.
 Returns:
     the character at the current position, or 0 if there are no more
     characters available.)doc";
+
+// Docstring regina::python::doc::Base64SigDecoder_::remaining
+static const char *remaining =
+R"doc(Returns the number of characters remaining in the encoded string,
+counting from the current position onwards.
+
+The routine ``done()`` will return ``True`` if and only if
+``remaining()`` returns zero.
+
+Returns:
+    the number of characters remaining.)doc";
 
 // Docstring regina::python::doc::Base64SigDecoder_::skip
 static const char *skip =

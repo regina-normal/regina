@@ -809,6 +809,20 @@ class Base64SigDecoder {
         }
 
         /**
+         * Returns the number of characters remaining in the encoded string,
+         * counting from the current position onwards.
+         *
+         * The routine `done()` will return `true` if and only if `remaining()`
+         * returns zero.
+         *
+         * \return the number of characters remaining.
+         */
+        size_t remaining() const
+                requires std::random_access_iterator<Iterator> {
+            return end_ - next_;
+        }
+
+        /**
          * Advances to the next position in the encoded string.
          *
          * \pre The current position has not yet reached the end of the string.
