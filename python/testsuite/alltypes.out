@@ -237,6 +237,13 @@ IsoSigClassic5 : class -> EqualityType.Disabled
 IsoSigClassic6 : class -> EqualityType.Disabled
 IsoSigClassic7 : class -> EqualityType.Disabled
 IsoSigClassic8 : class -> EqualityType.Disabled
+IsoSigData2 : class -> EqualityType.ByValue
+IsoSigData3 : class -> EqualityType.ByValue
+IsoSigData4 : class -> EqualityType.ByValue
+IsoSigData5 : class -> EqualityType.ByValue
+IsoSigData6 : class -> EqualityType.ByValue
+IsoSigData7 : class -> EqualityType.ByValue
+IsoSigData8 : class -> EqualityType.ByValue
 IsoSigEdgeDegrees2 : class -> EqualityType.Disabled
 IsoSigEdgeDegrees3 : class -> EqualityType.Disabled
 IsoSigEdgeDegrees4 : class -> EqualityType.Disabled

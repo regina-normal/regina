@@ -38,6 +38,85 @@ Python:
     by appending the dimension as a suffix (e.g., IsoSigClassic2 and
     IsoSigClassic3 for dimensions 2 and 3).)doc";
 
+// Docstring regina::python::doc::IsoSigData
+static const char *IsoSigData =
+R"doc(Holds all of the data required to reconstruct a single non-empty
+connected component of a *dim*-dimensional triangulation, up to
+relabelling. This is a halfway point between isomorphism signatures
+and triangulations: the data is small and uses simple
+numerical/combinatorial types, and is easy to encode or decode in an
+appropriate signature form (e.g., a base64 string).
+
+Specifically, this data encodes a "compressed" gluings table for a
+"canonical" labelling of a triangulation component. Both the notions
+of "compressed" and "canonical" involve stepping through the facets of
+top-dimensional simplices in the usual order (simplex 0, facets
+``0,...,dim``; then simplex 1, facets ``0,...,dim``; and so on). Some
+of these facets will be boundary (i.e., unglued), some will be glued
+to "new" facets that we have not yet stepped through, and some will be
+glued to "old" facets (i.e., we have already seen the same
+`(dim-1)`-face from the other side).
+
+To be _canonical_:
+
+_ We require that each time we see a new facet whose gluing partner
+comes from a previously-unseen simplex, then that partner simplex uses
+the next available simplex label and the gluing uses the identity
+permutation. So, for example, the first facet of simplex 0 that is
+glued to some _other_ simplex must be glued to simplex 1 using the
+identity permutation.
+
+* The condition above ensures that, once we have chosen which top-
+  dimensional simplex will be simplex 0 and how its vertices
+  ``0,...,dim`` will be labelled, the labelling of the remaining
+  simplices and their vertices will be uniquely determined (and can be
+  computed in linear time).
+
+* Your chosen signature _type_ may impose further requirements on the
+  choice of simplex 0 and its vertex labels; see IsoSigTypeAPI for
+  details.
+
+Given a canonical labelling, a _compressed_ gluings table holds the
+following information:
+
+* For each facet *f* that we step through in order, _ignoring_ those
+  glued to "old" facets, we record whether *f* is: boundary (type 0);
+  glued to a "new" facet of a previously-unseen simplex using the
+  identity permutation (type 1); or glued to a "new" facet of a
+  simplex that has been seen before (type 2). This is stored in array
+  whose length is the total number of `(dim-1)`-faces in the
+  triangulation component.
+
+* For each facet of type 2, we record the top-dimensional simplex
+  number that it is glued to. This is stored in an array whose length
+  is the total number of facets of type 2.
+
+* For each facet of type 2, we record the ordered ``S_n`` index of the
+  specific gluing permutation, again using an array whose length is
+  the total number of facets of type 2.
+
+* Finally, if (and only if) there are any simplex or facet locks in
+  this triangulation component, we also record the lock masks of all
+  top-dimensional simplices in order (simplex ``0,1,2,...``).
+
+An isomorphism signature _encoding_ is responsible for encoding this
+data in its final signature form (e.g., a base64 string), and the
+final isomorphism signature will use the labelling that minimises this
+encoding (under the inherent ordering of the resulting signature
+type).
+
+This class implements C++ move semantics and adheres to the C++
+Swappable requirement. It is designed to avoid deep copies wherever
+possible, even when passing or returning objects by value.
+
+.. warning::
+    The API for this class or function has not yet been finalised.
+    This means that the interface may change in new versions of
+    Regina, without maintaining backward compatibility. If you use
+    this class directly in your own code, please check the detailed
+    changelog with each new release to see if you need to make changes
+    to your code.)doc";
+
 // Docstring regina::python::doc::IsoSigDegrees
 static const char *IsoSigDegrees =
 R"doc(Defines an alternate type of isomorphism signature based on degree
@@ -213,6 +292,196 @@ Python:
     changelog with each new release to see if you need to make changes
     to your code.)doc";
 
+namespace IsoSigData_ {
+
+// Docstring regina::python::doc::IsoSigData_::__copy
+static const char *__copy = R"doc(Makes a new deep copy of the given data set.)doc";
+
+// Docstring regina::python::doc::IsoSigData_::__eq
+static const char *__eq =
+R"doc(Determines whether this and the given triangulation component data
+hold identical information.
+
+Returns:
+    ``True`` if and only if this and the given data are identical.)doc";
+
+// Docstring regina::python::doc::IsoSigData_::__init
+static const char *__init =
+R"doc(Allocates space for a data set for the given triangulation component.
+
+The arrays that make up this data set will be initialised to the
+correct sizes, but the individual array elements will be left
+uninitialised. You will need to call fillFrom() before this data set
+can be used (i.e., before any other methods are called).
+
+Parameter ``comp``:
+    the triangulation component that we intend to encode.)doc";
+
+// Docstring regina::python::doc::IsoSigData_::facetTypes
+static const char *facetTypes =
+R"doc(Gives read-only access to the array of facet types, as described in
+the class notes.
+
+This will be an array of integers, each taking the value 0, 1 or 2,
+and each indicating whether a particular facet of a top-dimensional
+simplex is boundary (0), glued to a "new" facet of a previously-unseen
+simplex (1), or glued to a "new" facet of a simplex that has been seen
+before (2). Facets that are glued to "old" facets (i.e., facets that
+represent internal `(dim-1)`-faces of the triangulation and have
+already been seen from the other side) are not represented in this
+array.
+
+The length of the array will be the total number of `(dim-1)`-faces in
+the triangulation component being encoded.
+
+Python:
+    This routine returns a deep copy (not a reference), in the form of
+    a Python list.
+
+Returns:
+    a reference to the array of facet types.)doc";
+
+// Docstring regina::python::doc::IsoSigData_::fillFrom
+static const char *fillFrom =
+R"doc(Determines the (unique) canonical labelling of the triangulation
+component for a particular choice of simplex 0 and vertices
+``0,...,dim``, and fills this structure with the corresponding
+compressed gluings table.
+
+See the class notes for full details on canonical labellings. In the
+gluings table that we build here, *simplex* will be labelled as
+simplex 0, and its vertices ``vertices[0],...,vertices[dim]`` will be
+labelled as vertices ``0,...,dim``.
+
+This routine may be (and typically will be) called many times for
+different choices of *simplex* and *vertices*; this is perfectly safe,
+and each subsequent call to fillFrom() will overwrite the previously-
+stored gluings table.
+
+Precondition:
+    The given simplex belongs to the triangulation component that was
+    originally passed to the IsoSigData constructor.
+
+Precondition:
+    If the isomorphism *relabelling* is non-null, then it must have
+    been constructed for *size* top-dimensional simplices, where
+    *size* is the size of the entire _triangulation_, not just the
+    component being encoded.
+
+Parameter ``simplex``:
+    any top-dimensional simplex in the triangulation component being
+    encoded.
+
+Parameter ``vertices``:
+    any ordering of the vertices of the given simplex.
+
+Parameter ``relabelling``:
+    if non-null, this isomorphism will be filled with the isomorphism
+    from the original triangulation to the canonical labelling. If the
+    underlying triangulation has multiple components, then only the
+    information relating to this component will be changed; other
+    simplex/vertex images in *relabelling* will be left untouched.)doc";
+
+// Docstring regina::python::doc::IsoSigData_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given triangulation component data sets.
+
+This global routine simply calls ``IsoSigData<dim>::swap()``; it is
+provided so that IsoSigData meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first component data set whose contents should be swapped.
+
+Parameter ``b``:
+    the second component data set whose contents should be swapped.)doc";
+
+// Docstring regina::python::doc::IsoSigData_::gluings
+static const char *gluings =
+R"doc(Gives read-only access to the array of gluing permutations, as
+described in the class notes.
+
+The length of this array will be the number of facets of top-
+dimensional simplices of type 2 (as described in the class notes, and
+as indicated by the facetTypes() array).
+
+Each element of this array holds the ordered ``S_n`` index of the
+gluing permutation for the relevant facet.
+
+Python:
+    This routine returns a deep copy (not a reference), in the form of
+    a Python list.
+
+Returns:
+    a reference to the array of gluing permutations.)doc";
+
+// Docstring regina::python::doc::IsoSigData_::hasLocks
+static const char *hasLocks =
+R"doc(Indicates whether the triangulation component being encoded has any
+simplex or facet locks.
+
+This will be ``True`` if and only if the array returned by locks() is
+non-empty.
+
+Returns:
+    a reference to the (possibly empty) array of lock masks.)doc";
+
+// Docstring regina::python::doc::IsoSigData_::joinDests
+static const char *joinDests =
+R"doc(Gives read-only access to the array of gluing destinations, as
+described in the class notes.
+
+The length of this array will be the number of facets of top-
+dimensional simplices of type 2 (as described in the class notes, and
+as indicated by the facetTypes() array).
+
+Each element of this array indicates the index of the top-dimensional
+simplex to which the relevant facet is glued.
+
+Python:
+    This routine returns a deep copy (not a reference), in the form of
+    a Python list.
+
+Returns:
+    a reference to the array of gluing destinations.)doc";
+
+// Docstring regina::python::doc::IsoSigData_::locks
+static const char *locks =
+R"doc(Gives read-only access to the array of lock masks, as described in the
+class notes.
+
+If the triangulation component being encoded has no simplex or facet
+locks, then this will be an empty array. Otherwise it will be an array
+whose length is the total number of top-dimensional simplices in the
+component, and whose elements are the lock masks for the individual
+simplices (as indicated by `Simplex<dim>`::lockMask()`).
+
+Python:
+    This routine returns a deep copy (not a reference), in the form of
+    a Python list.
+
+Returns:
+    a reference to the array of lock masks.)doc";
+
+// Docstring regina::python::doc::IsoSigData_::size
+static const char *size =
+R"doc(Returns the total number of top-dimensional simplices in the connected
+triangulation component that this data set describes.
+
+Returns:
+    the total number of top-dimensional simplices.)doc";
+
+// Docstring regina::python::doc::IsoSigData_::swap
+static const char *swap =
+R"doc(Swaps the contents of this and the given triangulation component data.
+
+This routine will behave correctly if *other* is in fact this data
+set.
+
+Parameter ``other``:
+    the component data whose contents should be swapped with this.)doc";
+
+}
+
 namespace IsoSigEncodingAPI_ {
 
 // Docstring regina::python::doc::IsoSigEncodingAPI_::emptySig
@@ -232,73 +501,32 @@ static const char *encode =
 R"doc(Encodes a "compressed" gluings table for a single non-empty connected
 component of a *dim*-dimensional triangulation.
 
-The compressed gluings table is passed into this routine via a series
-of integers and arrays. The encoding does not need to know what these
-mean or where they came from; its only job is to pack them into the
-final *Signature* format. For example, Regina's default encoding
-(IsoSigPrintable) uses a combination of bit-packing and base64
-encoding to convert the given data into a string.
+The job of this routine is to pack the information stored in
+``IsoSigData<dim>`` into the final *Signature* format. For example,
+Regina's default encoding (IsoSigPrintable) uses a combination of bit-
+packing and base64 encoding to convert the data into a string.
 
-The initial *size* argument will need to be encoded; however, after
-this it is not necessary to encode the sizes of the various arrays,
-since these are already implicitly encoded by the array contents.
-Specifically:
+The size ``data.size()`` will need to be encoded; however, after this
+it is not necessary to encode the sizes of the various arrays, since
+these are already implied by the array contents. Specifically:
 
-* by using *size* and sequentially reading the contents of the
-  *facetAction* array, it is possible for a reader to deduce the point
-  at which the *facetAction* array ends;
+* by using ``data.size()`` and sequentially reading the contents of
+  ``data.facetTypes()``, it is possible for a reader to deduce the
+  point at which the array ``data.facetTypes()`` ends;
 
-* by using *size* and the contents of the *facetAction* array, it is
-  possible for a reader to precompute the length of the *joinDest* and
-  *joinGluing* arrays;
+* by using ``data.size()`` and the contents of ``data.facetTypes()``,
+  it is possible for a reader to precompute the length of the arrays
+  ``data.joinDests()`` and ``data.gluings()``;
 
-* if the *lockMasks* arrays is non-null, then its length will be the
-  already-encoded quantity *size*.
+* if the array ``data.locks()`` is non-empty, then its length will be
+  the already-encoded quantity ``data.size()``.
 
-Python:
-    The arrays *facetAction*, *joinDest*, *joinGluing* and *lockMasks*
-    should each be passed as Python lists of integers; the argument
-    *lockMasks* may be ``None``. The arguments *nFacetActions* and
-    *nJoins* are not present, since Python lists already know their
-    own sizes.
-
-Parameter ``size``:
-    a strictly positive integer. (This represents the number of top-
-    dimensional simplices in the component.)
-
-Parameter ``nFacetActions``:
-    the strictly positive size of the array *facetAction*.
-
-Parameter ``facetAction``:
-    a non-empty array of size *nFacetActions*, where each element is
-    either 0, 1 or 2. (This encodes which facets of top-dimensional
-    simplices are boundary, joined to a new simplex, or joined to an
-    earlier simplex.)
-
-Parameter ``nJoins``:
-    the non-negative size of the arrays *joinDest* and *joinGluing*.
-
-Parameter ``joinDest``:
-    a possibly empty array of size *nJoins*, each of whose elements
-    are integers in the range ``0,...,size-1`` inclusive. (This
-    represents the indices of top-dimensional simplices to which
-    various gluings are being made.)
-
-Parameter ``joinGluing``:
-    a possibly empty array of size *nJoins*, each of which is an
-    arbitrary permutation of ``dim+1`` elements. (This represents
-    various gluing permutations.)
-
-Parameter ``lockMasks``:
-    either a non-empty array of size *size*, each of whose elements is
-    a lock mask (representing all of the simplex/facet locks in the
-    triangulation), or else ``None`` if the triangulation component
-    being encoded has no locks at all (a common scenario that is worth
-    optimising for). If this argument is non-null, then at least one
-    of the lock masks in the array will be non-zero.
+Parameter ``data``:
+    the compressed gluings table to be encoded.
 
 Returns:
-    the given data encoded in the form of an isomorphism signature.)doc";
+    the given gluings table encoded in the form of an isomorphism
+    signature.)doc";
 
 }
 

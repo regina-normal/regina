@@ -157,6 +157,21 @@ class ComponentBase :
         Simplex<dim>* simplex(size_t index) const;
 
         /**
+         * Identifies whether any top-dimensional simplices in this component
+         * and/or any of their facets are locked.
+         *
+         * In short, locking a top-dimensional simplex and/or some of its
+         * facets means that that the simplex and/or facets must not be
+         * changed.  See Simplex<dim>::lock() and Simplex<dim>::lockFacet()
+         * for full details on how locks work and what their implications are.
+         *
+         * \return \c true if and only if there is at least one locked
+         * top-dimensional simplex or at least one locked facet of a
+         * top-dimensional simplex within this component.
+         */
+        bool hasLocks() const;
+
+        /**
          * A dimension-specific alias for countFaces<0>().
          *
          * See countFaces() for further information.
@@ -426,6 +441,14 @@ inline auto ComponentBase<dim>::simplices() const {
 template <int dim> requires (supportedDim(dim))
 inline Simplex<dim>* ComponentBase<dim>::simplex(size_t index) const {
     return simplices_[index];
+}
+
+template <int dim> requires (supportedDim(dim))
+inline bool ComponentBase<dim>::hasLocks() const {
+    for (auto s : simplices_)
+        if (s->lockMask())
+            return true;
+    return false;
 }
 
 template <int dim> requires (supportedDim(dim))

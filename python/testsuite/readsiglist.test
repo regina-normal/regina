@@ -71,8 +71,14 @@ except InvalidArgument:
     print('Caught exception')
 print()
 
-# While we're here... test the type conversions for isosig encodings.
-# The following compressed gluings table gives the figure eight knot complement.
+# While we're here... test isosig encodings.
 
-print(IsoSigPrintable3.encode(2, [1,2,2,2], [1,1,1], [8,7,19], None))
+tri = Triangulation3.fromIsoSig('cPcbbbiht') # figure eight knot complement
+data = IsoSigData3(tri.component(0))
+data.fillFrom(tri.simplex(0), Perm4())
+print(data.facetTypes())
+print(data.joinDests())
+print(data.gluings())
+print(data.locks())
+print(IsoSigPrintable3.encode(data))
 

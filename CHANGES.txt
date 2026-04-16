@@ -57,6 +57,7 @@ Version 8.0  [ TODO ]
         Class Component<dim>:
             - Added variants of countFaces(), faces() and face() that take the
               face dimension as a runtime argument (not a template parameter).
+            - New routine hasLocks().
         Class Crossing:
             - New routine chordIndex().
         Class Cut:
@@ -140,10 +141,10 @@ Version 8.0  [ TODO ]
         Class IsoSigEncodingAPI, IsoSigTypeAPI:
             - New documentation-only classes that explain how encodings and
               signature types for isomorphism signatures are expected to behave.
-        Class IsoSigPrintable<...>, IsoSigPrintableLockFree<...>:
-            - The facet actions and join details are now passed via FixedArray
-              references (not C-style arrays), and the array sizes no longer
-              need to be passed separately.
+        Class IsoSigData, IsoSigPrintable, IsoSigPrintableLockFree:
+            - The data to encode for isomorphism signatures is now supplied to
+              encoding classes via the new type IsoSigData<dim>.  The old
+              behaviour (passing C-style arrays) is no longer supported.
         Struct IsReginaArbitraryPrecisionInteger<T>, IsReginaInteger<T>:
             - Now deprecated, in favour of the new concepts
               ArbitraryPrecisionInteger<T> and ReginaInteger<T>.

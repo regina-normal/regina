@@ -62,6 +62,7 @@ void addComponent3(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::return_value_policy::reference, rbase::simplex)
         .def("tetrahedron", &Component<3>::tetrahedron,
             pybind11::return_value_policy::reference, rbase::tetrahedron)
+        .def("hasLocks", &Component<3>::hasLocks, rbase::hasLocks)
         .def("faces",
             (regina::python::facesFunc<Component<3>>)(&Component<3>::faces),
             pybind11::arg("subdim"), rdoc::faces)

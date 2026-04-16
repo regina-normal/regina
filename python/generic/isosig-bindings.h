@@ -35,8 +35,6 @@
 #include "../helpers.h"
 #include "../docstrings/triangulation/isosig.h"
 
-using regina::Perm;
-
 namespace regina::python {
 
 /**
@@ -164,6 +162,54 @@ void addIsoSigRidgeDegrees(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
+template <int dim>
+requires (regina::supportedDim(dim))
+void addIsoSigData(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(IsoSigData)
+
+    using Data = regina::IsoSigData<dim>;
+    auto s = pybind11::class_<Data>(m, name, rdoc_scope)
+        .def(pybind11::init<regina::Component<dim>*>(), rdoc::__init)
+        .def(pybind11::init<const Data&>(), rdoc::__copy)
+        .def("size", &Data::size, rdoc::size)
+        .def("facetTypes", [](const Data& data) {
+            pybind11::list ans;
+            for (auto f : data.facetTypes())
+                ans.append(f);
+            return ans;
+        }, rdoc::facetTypes)
+        .def("joinDests", [](const Data& data) {
+            pybind11::list ans;
+            for (auto f : data.joinDests())
+                ans.append(f);
+            return ans;
+        }, rdoc::joinDests)
+        .def("gluings", [](const Data& data) {
+            pybind11::list ans;
+            for (auto f : data.gluings())
+                ans.append(f);
+            return ans;
+        }, rdoc::gluings)
+        .def("locks", [](const Data& data) {
+            pybind11::list ans;
+            for (auto f : data.locks())
+                ans.append(f);
+            return ans;
+        }, rdoc::locks)
+        .def("hasLocks", &Data::hasLocks, rdoc::hasLocks)
+        .def("fillFrom", &Data::fillFrom,
+            pybind11::arg("simplex"), pybind11::arg("vertices"),
+            pybind11::arg("relabelling") = nullptr,
+            rdoc::fillFrom)
+        .def("swap", &Data::swap, rdoc::swap)
+        ;
+    regina::python::add_eq_operators(s, rdoc::__eq);
+
+    regina::python::add_global_swap<Data>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
+}
+
 template <int dim, bool supportLocks>
 requires (regina::supportedDim(dim))
 void addIsoSigPrintable(pybind11::module_& m, const char* name) {
@@ -174,22 +220,8 @@ void addIsoSigPrintable(pybind11::module_& m, const char* name) {
     auto s = pybind11::class_<Encoding>(m, name, rdoc::IsoSigPrintable)
         .def_readonly_static("charsPerPerm", &Encoding::charsPerPerm)
         .def_static("emptySig", &Encoding::emptySig, rbase::emptySig)
-        .def_static("encode", [](
-                size_t size,
-                const std::vector<uint8_t>& facetAction,
-                const std::vector<size_t>& joinDest,
-                const std::vector<typename Perm<dim+1>::Index>& joinGluing,
-                const std::optional<std::vector<
-                    typename regina::Simplex<dim>::LockMask>> lockMasks) {
-            if (joinDest.size() != joinGluing.size())
-                throw regina::InvalidArgument("The arguments "
-                    "joinDest and joinGluing must be lists of the same size");
-            return Encoding::encode(size,
-                { facetAction.begin(), facetAction.end() },
-                { joinDest.begin(), joinDest.end() },
-                { joinGluing.begin(), joinGluing.end() },
-                (lockMasks ? lockMasks->data() : nullptr));
-        }, rbase::encode);
+        .def_static("encode", &Encoding::encode, rbase::encode)
+        ;
     regina::python::no_eq_static(s);
 
     RDOC_SCOPE_END

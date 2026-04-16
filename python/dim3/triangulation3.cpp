@@ -31,8 +31,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
 #include <pybind11/stl.h>
-#include "../helpers.h"
-#include "../helpers/packet.h"
 #include "algebra/grouppresentation.h"
 #include "angle/anglestructure.h"
 #include "link/link.h"
@@ -43,6 +41,8 @@
 #include "triangulation/example3.h"
 #include "triangulation/facetpairing3.h"
 #include "triangulation/detail/isosig-impl.h"
+#include "../helpers.h"
+#include "../helpers/packet.h"
 #include "../generic/facehelper.h"
 #include "../docstrings/triangulation/dim3/triangulation3.h"
 #include "../docstrings/triangulation/detail/triangulation.h"
@@ -952,6 +952,7 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
     addIsoSigEdgeDegrees<3>(m, "IsoSigEdgeDegrees3");
     // IsoSigEdgeDegrees<3> and IsoSigRidgeDegrees<3> are the same type.
     m.attr("IsoSigRidgeDegrees3") = m.attr("IsoSigEdgeDegrees3");
+    addIsoSigData<3>(m, "IsoSigData3");
     addIsoSigPrintable<3, true>(m, "IsoSigPrintable3");
     addIsoSigPrintable<3, false>(m, "IsoSigPrintableLockFree3");
 }

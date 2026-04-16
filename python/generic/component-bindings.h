@@ -54,6 +54,7 @@ void addComponent(pybind11::module_& m, pybind11::module_& internal,
         .def("simplices", &Component<dim>::simplices, rbase::simplices)
         .def("simplex", &Component<dim>::simplex,
             pybind11::return_value_policy::reference, rbase::simplex)
+        .def("hasLocks", &Component<dim>::hasLocks, rbase::hasLocks)
         .def("boundaryComponents", &Component<dim>::boundaryComponents,
             rbase::boundaryComponents)
         .def("boundaryComponent", &Component<dim>::boundaryComponent,

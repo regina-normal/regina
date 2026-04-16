@@ -31,12 +31,12 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
 #include <pybind11/stl.h>
-#include "../helpers.h"
-#include "../helpers/packet.h"
 #include "algebra/grouppresentation.h"
 #include "triangulation/dim2.h"
 #include "triangulation/facetpairing.h"
 #include "triangulation/detail/isosig-impl.h"
+#include "../helpers.h"
+#include "../helpers/packet.h"
 #include "../generic/facehelper.h"
 #include "../docstrings/triangulation/dim2/triangulation2.h"
 #include "../docstrings/triangulation/detail/triangulation.h"
@@ -447,6 +447,7 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
     addIsoSigClassic<2>(m, "IsoSigClassic2");
     addIsoSigEdgeDegrees<2>(m, "IsoSigEdgeDegrees2");
     addIsoSigRidgeDegrees<2>(m, "IsoSigRidgeDegrees2");
+    addIsoSigData<2>(m, "IsoSigData2");
     addIsoSigPrintable<2, true>(m, "IsoSigPrintable2");
     addIsoSigPrintable<2, false>(m, "IsoSigPrintableLockFree2");
 }

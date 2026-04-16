@@ -4144,27 +4144,6 @@ class TriangulationBase :
             requires (standardDim(dim));
 
         /**
-         * Internal to isoSig().
-         *
-         * Constructs a candidate isomorphism signature for a single non-empty
-         * connected component of this triangulation.  This candidate signature
-         * assumes that the given simplex with the given labelling
-         * of its vertices becomes simplex zero with vertices
-         * 0,...,\a dim under the "canonical isomorphism".
-         *
-         * \param simp the index of some top-dimensional simplex in this
-         * triangulation.
-         * \param vertices some ordering of the vertices of the given simplex.
-         * \param relabelling if this is non-null, it will be filled with the
-         * canonical isomorphism; in this case it must already have been
-         * constructed for the correct number of simplices.
-         * \return the candidate isomorphism signature.
-         */
-        template <IsoSigEncoding<dim> Encoding>
-        typename Encoding::Signature isoSigFrom(size_t simp,
-            const Perm<dim+1>& vertices, Isomorphism<dim>* relabelling) const;
-
-        /**
          * Determines if an isomorphic copy of this triangulation is
          * contained within the given triangulation.
          *

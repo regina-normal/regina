@@ -42,6 +42,7 @@ void addTriangulations14(pybind11::module_& m, pybind11::module_& internal) {
     addIsoSigClassic<14>(m, "IsoSigClassic14");
     addIsoSigEdgeDegrees<14>(m, "IsoSigEdgeDegrees14");
     addIsoSigRidgeDegrees<14>(m, "IsoSigRidgeDegrees14");
+    addIsoSigData<14>(m, "IsoSigData14");
     addIsoSigPrintable<14, true>(m, "IsoSigPrintable14");
     addIsoSigPrintable<14, false>(m, "IsoSigPrintableLockFree14");
 

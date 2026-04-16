@@ -37,8 +37,6 @@
 
 namespace regina::detail {
 
-template std::string TriangulationBase<15>::isoSigFrom
-    <IsoSigPrintable<15>>(size_t, const Perm<16>&, Isomorphism<15>*) const;
 template std::string TriangulationBase<15>::isoSig<
     IsoSigClassic<15>, IsoSigPrintable<15>>() const;
 template std::pair<std::string, Isomorphism<15>>

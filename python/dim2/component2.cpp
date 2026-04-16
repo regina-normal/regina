@@ -56,6 +56,7 @@ void addComponent2(pybind11::module_& m, pybind11::module_& internal) {
             rbase::countBoundaryComponents)
         .def("simplices", &Component<2>::simplices, rbase::simplices)
         .def("triangles", &Component<2>::triangles, rbase::triangles)
+        .def("hasLocks", &Component<2>::hasLocks, rbase::hasLocks)
         .def("faces",
             (regina::python::facesFunc<Component<2>>)(&Component<2>::faces),
             pybind11::arg("subdim"), rdoc::faces)

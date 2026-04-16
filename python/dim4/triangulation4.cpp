@@ -31,14 +31,14 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
 #include <pybind11/stl.h>
-#include "../helpers.h"
-#include "../helpers/packet.h"
 #include "algebra/grouppresentation.h"
 #include "algebra/intersectionform.h"
 #include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
 #include "triangulation/facetpairing.h"
 #include "triangulation/detail/isosig-impl.h"
+#include "../helpers.h"
+#include "../helpers/packet.h"
 #include "../generic/facehelper.h"
 #include "../docstrings/triangulation/dim4/triangulation4.h"
 #include "../docstrings/triangulation/detail/triangulation.h"
@@ -628,6 +628,7 @@ void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
     addIsoSigClassic<4>(m, "IsoSigClassic4");
     addIsoSigEdgeDegrees<4>(m, "IsoSigEdgeDegrees4");
     addIsoSigRidgeDegrees<4>(m, "IsoSigRidgeDegrees4");
+    addIsoSigData<4>(m, "IsoSigData4");
     addIsoSigPrintable<4, true>(m, "IsoSigPrintable4");
     addIsoSigPrintable<4, false>(m, "IsoSigPrintableLockFree4");
 }

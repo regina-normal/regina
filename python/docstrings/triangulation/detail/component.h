@@ -156,6 +156,21 @@ to an adjacent simplex.
 Returns:
     ``True`` if and only if this component has boundary facet(s).)doc";
 
+// Docstring regina::python::doc::detail::ComponentBase_::hasLocks
+constexpr const char *hasLocks =
+R"doc(Identifies whether any top-dimensional simplices in this component
+and/or any of their facets are locked.
+
+In short, locking a top-dimensional simplex and/or some of its facets
+means that that the simplex and/or facets must not be changed. See
+Simplex<dim>::lock() and Simplex<dim>::lockFacet() for full details on
+how locks work and what their implications are.
+
+Returns:
+    ``True`` if and only if there is at least one locked top-
+    dimensional simplex or at least one locked facet of a top-
+    dimensional simplex within this component.)doc";
+
 // Docstring regina::python::doc::detail::ComponentBase_::index
 constexpr const char *index =
 R"doc(Returns the index of this component within the underlying
