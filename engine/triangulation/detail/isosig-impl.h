@@ -129,8 +129,8 @@ void IsoSigData<dim>::fillFrom(const Simplex<dim>* simplex,
                         // Skip this facet entirely.
                     } else {
                         // Record the full details of the gluing.
-                        joinDest_[joinPos] = image[dest];
-                        joinGluing_[joinPos] = (vertexMap[dest] *
+                        adjSimplex_[joinPos] = image[dest];
+                        adjGluing_[joinPos] = (vertexMap[dest] *
                                 s->adjacentGluing(facetSrc) *
                                 vertexMap[simpSrc].inverse()).
                             orderedSnIndex();
@@ -171,7 +171,7 @@ template <int dim> requires (supportedDim(dim))
 template <IsoSigType<dim> Type, IsoSigEncoding<dim> Encoding>
 typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
     if (isEmpty())
-        return Encoding::emptySig();
+        return Encoding::encodeEmpty();
 
     // The triangulation is non-empty.  Get a signature string for each
     // connected component.

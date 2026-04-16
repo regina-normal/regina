@@ -317,6 +317,44 @@ can be used (i.e., before any other methods are called).
 Parameter ``comp``:
     the triangulation component that we intend to encode.)doc";
 
+// Docstring regina::python::doc::IsoSigData_::adjacentGluings
+static const char *adjacentGluings =
+R"doc(Gives read-only access to the array of gluing permutations, as
+described in the class notes.
+
+The length of this array will be the number of facets of top-
+dimensional simplices of type 2 (as described in the class notes, and
+as indicated by the facetTypes() array).
+
+Each element of this array holds the ordered ``S_n`` index of the
+gluing permutation for the relevant facet.
+
+Python:
+    This routine returns a deep copy (not a reference), in the form of
+    a Python list.
+
+Returns:
+    a reference to the array of gluing permutations.)doc";
+
+// Docstring regina::python::doc::IsoSigData_::adjacentSimplices
+static const char *adjacentSimplices =
+R"doc(Gives read-only access to the array of gluing destinations, as
+described in the class notes.
+
+The length of this array will be the number of facets of top-
+dimensional simplices of type 2 (as described in the class notes, and
+as indicated by the facetTypes() array).
+
+Each element of this array indicates the index of the top-dimensional
+simplex to which the relevant facet is glued.
+
+Python:
+    This routine returns a deep copy (not a reference), in the form of
+    a Python list.
+
+Returns:
+    a reference to the array of gluing destinations.)doc";
+
 // Docstring regina::python::doc::IsoSigData_::facetTypes
 static const char *facetTypes =
 R"doc(Gives read-only access to the array of facet types, as described in
@@ -395,25 +433,6 @@ Parameter ``a``:
 Parameter ``b``:
     the second component data set whose contents should be swapped.)doc";
 
-// Docstring regina::python::doc::IsoSigData_::gluings
-static const char *gluings =
-R"doc(Gives read-only access to the array of gluing permutations, as
-described in the class notes.
-
-The length of this array will be the number of facets of top-
-dimensional simplices of type 2 (as described in the class notes, and
-as indicated by the facetTypes() array).
-
-Each element of this array holds the ordered ``S_n`` index of the
-gluing permutation for the relevant facet.
-
-Python:
-    This routine returns a deep copy (not a reference), in the form of
-    a Python list.
-
-Returns:
-    a reference to the array of gluing permutations.)doc";
-
 // Docstring regina::python::doc::IsoSigData_::hasLocks
 static const char *hasLocks =
 R"doc(Indicates whether the triangulation component being encoded has any
@@ -424,25 +443,6 @@ non-empty.
 
 Returns:
     a reference to the (possibly empty) array of lock masks.)doc";
-
-// Docstring regina::python::doc::IsoSigData_::joinDests
-static const char *joinDests =
-R"doc(Gives read-only access to the array of gluing destinations, as
-described in the class notes.
-
-The length of this array will be the number of facets of top-
-dimensional simplices of type 2 (as described in the class notes, and
-as indicated by the facetTypes() array).
-
-Each element of this array indicates the index of the top-dimensional
-simplex to which the relevant facet is glued.
-
-Python:
-    This routine returns a deep copy (not a reference), in the form of
-    a Python list.
-
-Returns:
-    a reference to the array of gluing destinations.)doc";
 
 // Docstring regina::python::doc::IsoSigData_::locks
 static const char *locks =
@@ -484,18 +484,6 @@ Parameter ``other``:
 
 namespace IsoSigEncodingAPI_ {
 
-// Docstring regina::python::doc::IsoSigEncodingAPI_::emptySig
-static const char *emptySig =
-R"doc(Encodes the isomorphism signature of the empty *dim*-dimensional
-triangulation.
-
-Note that this would typically _not_ be an empty signature. For
-example, under Regina's default encoding, the signature for the empty
-triangulation is the non-empty string ``a``.
-
-Returns:
-    the isomorphism signature of the empty triangulation.)doc";
-
 // Docstring regina::python::doc::IsoSigEncodingAPI_::encode
 static const char *encode =
 R"doc(Encodes a "compressed" gluings table for a single non-empty connected
@@ -516,7 +504,7 @@ these are already implied by the array contents. Specifically:
 
 * by using ``data.size()`` and the contents of ``data.facetTypes()``,
   it is possible for a reader to precompute the length of the arrays
-  ``data.joinDests()`` and ``data.gluings()``;
+  ``data.adjacentSimplices()`` and ``data.adjacentGluings()``;
 
 * if the array ``data.locks()`` is non-empty, then its length will be
   the already-encoded quantity ``data.size()``.
@@ -527,6 +515,18 @@ Parameter ``data``:
 Returns:
     the given gluings table encoded in the form of an isomorphism
     signature.)doc";
+
+// Docstring regina::python::doc::IsoSigEncodingAPI_::encodeEmpty
+static const char *encodeEmpty =
+R"doc(Encodes the isomorphism signature of the empty *dim*-dimensional
+triangulation.
+
+Note that this would typically _not_ be an empty signature. For
+example, under Regina's default encoding, the signature for the empty
+triangulation is the non-empty string ``a``.
+
+Returns:
+    the isomorphism signature of the empty triangulation.)doc";
 
 }
 

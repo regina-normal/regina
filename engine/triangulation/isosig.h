@@ -129,10 +129,10 @@ class IsoSigData {
         FixedArray<uint8_t> facetType_;
             /**< The facet types, as described above; each element of this
                  array will be 0, 1 or 2. */
-        FixedArray<size_t> joinDest_;
+        FixedArray<size_t> adjSimplex_;
             /**< For facets of type 2, the simplex numbers that the facets are
                  glued to. */
-        FixedArray<typename Perm<dim + 1>::Index> joinGluing_;
+        FixedArray<typename Perm<dim + 1>::Index> adjGluing_;
             /**< For facets of type 2, the corresponding gluing permutations. */
         FixedArray<typename Simplex<dim>::LockMask> locks_;
             /**< The lock masks of all top-dimensional simplices, or the empty
@@ -152,9 +152,9 @@ class IsoSigData {
         IsoSigData(Component<dim>* comp) :
                 size_(comp->size()),
                 facetType_(((dim+1) * size_ + comp->countBoundaryFacets()) / 2),
-                joinDest_(facetType_.size() - comp->countBoundaryFacets()
+                adjSimplex_(facetType_.size() - comp->countBoundaryFacets()
                     - size_ + 1),
-                joinGluing_(joinDest_.size()),
+                adjGluing_(adjSimplex_.size()),
                 locks_(comp->hasLocks() ? size_ : 0) {
         }
 
@@ -220,8 +220,8 @@ class IsoSigData {
          *
          * \return a reference to the array of gluing destinations.
          */
-        const FixedArray<size_t>& joinDests() const {
-            return joinDest_;
+        const FixedArray<size_t>& adjacentSimplices() const {
+            return adjSimplex_;
         }
         /**
          * Gives read-only access to the array of gluing permutations, as
@@ -239,8 +239,9 @@ class IsoSigData {
          *
          * \return a reference to the array of gluing permutations.
          */
-        const FixedArray<typename Perm<dim + 1>::Index>& gluings() const {
-            return joinGluing_;
+        const FixedArray<typename Perm<dim + 1>::Index>& adjacentGluings()
+                const {
+            return adjGluing_;
         }
         /**
          * Gives read-only access to the array of lock masks, as described in
@@ -339,8 +340,8 @@ class IsoSigData {
         void swap(IsoSigData& other) noexcept {
             std::swap(size_, other.size_);
             facetType_.swap(other.facetType_);
-            joinDest_.swap(other.joinDest_);
-            joinGluing_.swap(other.joinGluing_);
+            adjSimplex_.swap(other.adjSimplex_);
+            adjGluing_.swap(other.adjGluing_);
             locks_.swap(other.locks_);
         }
 
@@ -423,7 +424,7 @@ class IsoSigEncodingAPI {
          *
          * \return the isomorphism signature of the empty triangulation.
          */
-        static Signature emptySig();
+        static Signature encodeEmpty();
 
         /**
          * Encodes a "compressed" gluings table for a single non-empty
@@ -444,7 +445,7 @@ class IsoSigEncodingAPI {
          *
          * - by using `data.size()` and the contents of `data.facetTypes()`,
          *   it is possible for a reader to precompute the length of the arrays
-         *   `data.joinDests()` and `data.gluings()`;
+         *   `data.adjacentSimplices()` and `data.adjacentGluings()`;
          *
          * - if the array `data.locks()` is non-empty, then its length will be
          *   the already-encoded quantity `data.size()`.
@@ -475,7 +476,7 @@ concept IsoSigEncoding =
     requires(const IsoSigData<dim> data) {
         typename T::Signature;
         requires ConcatenableSequence<typename T::Signature>;
-        { T::emptySig() } -> std::convertible_to<typename T::Signature>;
+        { T::encodeEmpty() } -> std::convertible_to<typename T::Signature>;
         { T::encode(data) } -> std::convertible_to<typename T::Signature>;
     };
 
@@ -525,7 +526,7 @@ class IsoSigPrintable {
 
         using Signature = std::string;
 
-        static Signature emptySig() {
+        static Signature encodeEmpty() {
             Base64SigEncoder enc;
             enc.encodeSingle(0);
             return std::move(enc).str();
@@ -536,8 +537,8 @@ class IsoSigPrintable {
 
             int nChars = enc.encodeSize(data.size());
             enc.encodeTrits(data.facetTypes());
-            enc.encodeInts(data.joinDests(), nChars);
-            enc.encodeInts(data.gluings(), charsPerPerm);
+            enc.encodeInts(data.adjacentSimplices(), nChars);
+            enc.encodeInts(data.adjacentGluings(), charsPerPerm);
             if constexpr (supportLocks) {
                 if (data.hasLocks()) {
                     // Each lock mask holds dim+2 bits.

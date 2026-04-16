@@ -178,18 +178,18 @@ void addIsoSigData(pybind11::module_& m, const char* name) {
                 ans.append(f);
             return ans;
         }, rdoc::facetTypes)
-        .def("joinDests", [](const Data& data) {
+        .def("adjacentSimplices", [](const Data& data) {
             pybind11::list ans;
-            for (auto f : data.joinDests())
+            for (auto f : data.adjacentSimplices())
                 ans.append(f);
             return ans;
-        }, rdoc::joinDests)
-        .def("gluings", [](const Data& data) {
+        }, rdoc::adjacentSimplices)
+        .def("adjacentGluings", [](const Data& data) {
             pybind11::list ans;
-            for (auto f : data.gluings())
+            for (auto f : data.adjacentGluings())
                 ans.append(f);
             return ans;
-        }, rdoc::gluings)
+        }, rdoc::adjacentGluings)
         .def("locks", [](const Data& data) {
             pybind11::list ans;
             for (auto f : data.locks())
@@ -219,7 +219,7 @@ void addIsoSigPrintable(pybind11::module_& m, const char* name) {
     using Encoding = regina::IsoSigPrintable<dim, supportLocks>;
     auto s = pybind11::class_<Encoding>(m, name, rdoc::IsoSigPrintable)
         .def_readonly_static("charsPerPerm", &Encoding::charsPerPerm)
-        .def_static("emptySig", &Encoding::emptySig, rbase::emptySig)
+        .def_static("encodeEmpty", &Encoding::encodeEmpty, rbase::encodeEmpty)
         .def_static("encode", &Encoding::encode, rbase::encode)
         ;
     regina::python::no_eq_static(s);
