@@ -355,7 +355,7 @@ std::string LinkSigCompact::encode(const LinkSigData& data) {
     Base64SigEncoder enc;
     int charsPerInt = enc.encodeSize(data.size());
 
-    Bitmask bits(2 * data.size());
+    Bitmask bits(4 * data.size());
     FixedArray<bool> seen(data.size(), false);
 
     size_t pos = 0;
