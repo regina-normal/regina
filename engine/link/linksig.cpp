@@ -414,16 +414,16 @@ Link Link::fromSig(const std::string& sig) {
             // the signature has the expected length.
 
             FixedArray<bool> seen(n, false);
-            FixedArray<size_t> crossing(n);
+            FixedArray<size_t> revisited(n);
             for (size_t i = 0; i < n; ++i) {
-                crossing[i] = dec.decodeInt<size_t>(charsPerInt);
-                if (crossing[i] >= n)
+                revisited[i] = dec.decodeInt<size_t>(charsPerInt);
+                if (revisited[i] >= n)
                     throw InvalidArgument("fromSig(): "
                         "invalid crossing number");
-                if (seen[crossing[i]])
+                if (seen[revisited[i]])
                     throw InvalidArgument("fromSig(): "
                         "repeated crossing number");
-                seen[crossing[i]] = true;
+                seen[revisited[i]] = true;
             }
 
             Bitmask bits = dec.decodeBits<Bitmask>(4 * n);
@@ -439,21 +439,21 @@ Link Link::fromSig(const std::string& sig) {
             size_t nextIndex = 0;
             size_t nextRevisit = 0;
             StrandRef prev;
+            Crossing* c;
+            int strand;
             for (size_t i = 0; i < 2 * n; ++i) {
                 bool firstVisit = bits.get(i);
-                Crossing* c;
-                int strand;
                 if (firstVisit) {
                     if (nextIndex == n)
                         throw InvalidArgument("fromSig(): "
                             "too many first-time crossings");
-                    strand = bits.get(2 * n + nextIndex);
+                    strand = bits.get(2 * n + nextIndex) ? 1 : 0;
                     c = ans.crossings_[nextIndex++];
                 } else {
                     if (nextRevisit == n)
                         throw InvalidArgument("fromSig(): "
                             "too many revisited crossings");
-                    size_t index = crossing[nextRevisit++];
+                    size_t index = revisited[nextRevisit++];
                     if (index >= nextIndex)
                         throw InvalidArgument("fromSig(): "
                             "invalid revisited crossing");
