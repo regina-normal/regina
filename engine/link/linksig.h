@@ -449,9 +449,7 @@ class LinkSigPrintable {
     public:
         using Signature = std::string;
 
-        static bool satisfiesPreconditions(const Link&) {
-            return true;
-        }
+        inline static bool satisfiesPreconditions(const Link&);
 
         static Signature encodeEmpty();
         static Signature encodeUnknot();
@@ -460,15 +458,6 @@ class LinkSigPrintable {
         // Make this class non-constructible.
         LinkSigPrintable() = delete;
 };
-
-} // namespace regina
-
-// At this point we need the full Link class description, since
-// LinkSigCompact requires it.
-
-#include "link/link.h"
-
-namespace regina {
 
 /**
  * A compact string-based encoding for use with knot signatures.
@@ -498,9 +487,7 @@ class LinkSigCompact {
     public:
         using Signature = std::string;
 
-        static bool satisfiesPreconditions(const Link& link) {
-            return link.countComponents() <= 1;
-        }
+        inline static bool satisfiesPreconditions(const Link& link);
 
         static Signature encodeEmpty();
         static Signature encodeUnknot();
@@ -509,6 +496,23 @@ class LinkSigCompact {
         // Make this class non-constructible.
         LinkSigCompact() = delete;
 };
+
+} // namespace regina
+
+// At this point we need the full Link class description, since
+// the inline functions below requires it.
+
+#include "link/link.h"
+
+namespace regina {
+
+inline bool LinkSigPrintable::satisfiesPreconditions(const Link&) {
+    return true;
+}
+
+inline bool LinkSigCompact::satisfiesPreconditions(const Link& link) {
+    return link.countComponents() <= 1;
+}
 
 } // namespace regina
 
