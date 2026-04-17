@@ -175,9 +175,12 @@ Version 8.0  [ TODO ]
         Class Link:
             - New routine parityProjection().
             - Routine sig() now supports different encodings, via a new
-              template parameter.  In particular, sig<LinkSigCompact>() gives
-              significantly shorter signatures than the default encoding
-              (which is compatible with older versions of Regina).
+              template parameter.  In particular, sig<LinkSigCompact>() (or
+              sig_Compact() for Python users) gives significantly shorter
+              signatures than the default encoding (which is compatible with
+              older versions of Regina).  Likewise, fromSig() can now
+              reconstruct link diagrams from signatures made with the compact
+              encoding as well as the default encoding.
             - All knows...() routines now take an optional boolean argument,
               indicating whether to consider trivial computations (the default),
               or to only check whether the value is already cached.

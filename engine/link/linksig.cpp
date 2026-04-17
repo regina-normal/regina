@@ -397,25 +397,110 @@ Link Link::fromSig(const std::string& sig) {
     }
 
     try {
-        while (! dec.done()) {
-            // Read one connected component of the link diagram at a time.
-            // Note: the call to dec.done() ignores whitespace, but if there
-            // _is_ internal whitespace between components then this will be
-            // caught by decodeSize() below.
-            auto [ n, charsPerInt ] = dec.decodeSize();
+        // The total length of a signature for a knot (i.e., assuming
+        // exactly one link component), not including the initial writing of
+        // n and charsPerInt, should be:
+        // - standard: charsPerInt * 2n + 2 * ceil(n / 3)
+        // - compact: charsPerInt * n + ceil(2n / 3)
+        //
+        // The compact length is always strictly smaller for n > 0, and so
+        // we should be able to detect if a compact signature has been used.
+        // (For n == 0, the compact and standard signatures are the same.)
+
+        auto [ n, charsPerInt ] = dec.decodeSize();
+        if (n > 0 && dec.remaining() == charsPerInt * n + (2 * n + 2) / 3) {
+            // We have a compact signature for a single connected diagram
+            // component with a positive number of crossings, and we know that
+            // the signature has the expected length.
+
+            FixedArray<bool> seen(n, false);
+            FixedArray<size_t> crossing(n);
+            for (size_t i = 0; i < n; ++i) {
+                crossing[i] = dec.decodeInt<size_t>(charsPerInt);
+                if (crossing[i] >= n)
+                    throw InvalidArgument("fromSig(): "
+                        "invalid crossing number");
+                if (seen[crossing[i]])
+                    throw InvalidArgument("fromSig(): "
+                        "repeated crossing number");
+                seen[crossing[i]] = true;
+            }
+
+            Bitmask bits = dec.decodeBits<Bitmask>(4 * n);
+
+            // At this point we are finished with our base64 decoder.
+            // Remember: we already know that the signature has the correct
+            // length, so there should be nothing left unread at this point.
+
+            for (size_t i = 0; i < n; ++i)
+                ans.crossings_.push_back(
+                    new Crossing(bits.get(3 * n + i) ? 1 : -1));
+
+            size_t nextIndex = 0;
+            size_t nextRevisit = 0;
+            StrandRef prev;
+            for (size_t i = 0; i < 2 * n; ++i) {
+                bool firstVisit = bits.get(i);
+                Crossing* c;
+                int strand;
+                if (firstVisit) {
+                    if (nextIndex == n)
+                        throw InvalidArgument("fromSig(): "
+                            "too many first-time crossings");
+                    strand = bits.get(2 * n + nextIndex);
+                    c = ans.crossings_[nextIndex++];
+                } else {
+                    if (nextRevisit == n)
+                        throw InvalidArgument("fromSig(): "
+                            "too many revisited crossings");
+                    size_t index = crossing[nextRevisit++];
+                    if (index >= nextIndex)
+                        throw InvalidArgument("fromSig(): "
+                            "invalid revisited crossing");
+                    strand = bits.get(2 * n + index) ? 0 : 1;
+                    c = ans.crossings_[index];
+                }
+
+                StrandRef s(c, strand);
+                if (prev)
+                    ans.join(prev, s);
+                else
+                    ans.components_.push_back(s);
+                prev = s;
+            }
+            ans.join(prev, ans.components_.front());
+
+            return ans;
+        }
+
+        // We have a standard signature (the kind used before Regina 8.0),
+        // and this could be a concatenation of multiple diagram components.
+        //
+        // Read one connected component of the link diagram at a time.
+        while (true) {
+            // If ans.components_ is empty, then this is our first iteration
+            // through the loop, and so we expect to see at least one diagram
+            // component.  We already read n and charsPerInt for this component
+            // (when testing above for a compact signature).
+            //
+            // If ans.components_ is non-empty, then either we are completely
+            // finished, or we are positioned at the beginning of the next
+            // diagram component (and we have _not_ read n or charsPerInt).
+
+            if (! ans.components_.empty()) {
+                if (dec.done())
+                    return ans;
+                std::tie(n, charsPerInt) = dec.decodeSize();
+            }
+
+            // Finish off the current component, for which we have read n and
+            // charsPerInt but nothing further.
+
             if (n == 0) {
                 // Zero-crossing unknot.
                 ans.components_.emplace_back();
                 continue;
             }
-
-            // The total length of a signature for a knot (i.e., assuming
-            // exactly one link component) should be:
-            // - standard: charsPerInt * (2n + 1) + 2 * ceil(n / 3)
-            // - compact: charsPerInt * (n + 1) + ceil(2n / 3)
-            //
-            // The compact length is always strictly smaller for n > 0, and so
-            // we should be able to detect if a compact signature has been used.
 
             FixedArray<size_t> crossing(2 * n);
             FixedArray<int> sign(2 * n);
@@ -509,8 +594,6 @@ Link Link::fromSig(const std::string& sig) {
                 next->prev_[strand[nextIdx]].strand_ = strand[i];
             }
         }
-
-        return ans;
     } catch (const InvalidInput&) {
         // Any exception caught here was thrown by Base64SigDecoder.
         throw InvalidArgument(

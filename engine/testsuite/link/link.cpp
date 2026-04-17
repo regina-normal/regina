@@ -43,6 +43,8 @@ using regina::FailedPrecondition;
 using regina::GroupPresentation;
 using regina::InvalidArgument;
 using regina::Link;
+using regina::LinkSigCompact;
+using regina::LinkSigPrintable;
 using regina::Triangulation;
 using regina::StrandRef;
 
@@ -3646,61 +3648,67 @@ TEST_F(LinkTest, graft) {
     testManualCases(verifyGraft, false /* gordian */);
 }
 
+template <regina::LinkSigEncoding Encoding>
 static void verifySig(const Link& link, bool reflect, bool reverse,
         bool rotate) {
     SCOPED_TRACE_NUMERIC(reflect);
     SCOPED_TRACE_NUMERIC(reverse);
     SCOPED_TRACE_NUMERIC(rotate);
 
-    std::string sig = link.sig(reflect, reverse, rotate);
+    if (! Encoding::satisfiesPreconditions(link)) {
+        EXPECT_THROW({ link.sig<Encoding>(); }, FailedPrecondition);
+        return;
+    }
+
+    std::string sig = link.sig<Encoding>(reflect, reverse, rotate);
     EXPECT_FALSE(sig.empty());
 
     if (reflect) {
         Link alt(link, false);
         alt.reflect();
-        EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+        EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
     }
     if (reverse) {
         Link alt(link, false);
         alt.reverse();
-        EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+        EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
 
         for (size_t i = 1; i < alt.countComponents(); ++i) {
             alt.reverse(alt.component(i));
-            EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+            EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
         }
     }
     if (rotate) {
         Link alt(link, false);
         alt.rotate();
-        EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+        EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
     }
     if (reflect && rotate) {
         Link alt(link, false);
         alt.reflect();
         alt.rotate();
-        EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+        EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
     }
     if (reflect && reverse) {
         Link alt(link, false);
         alt.reflect();
         alt.reverse();
-        EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+        EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
 
         for (size_t i = 1; i < alt.countComponents(); ++i) {
             alt.reverse(alt.component(i));
-            EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+            EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
         }
     }
     if (rotate && reverse) {
         Link alt(link, false);
         alt.rotate();
         alt.reverse();
-        EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+        EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
 
         for (size_t i = 1; i < alt.countComponents(); ++i) {
             alt.reverse(alt.component(i));
-            EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+            EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
         }
     }
     if (reflect && rotate && reverse) {
@@ -3708,11 +3716,11 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
         alt.reflect();
         alt.rotate();
         alt.reverse();
-        EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+        EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
 
         for (size_t i = 1; i < alt.countComponents(); ++i) {
             alt.reverse(alt.component(i));
-            EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+            EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
         }
     }
 
@@ -3729,7 +3737,7 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
         else
             EXPECT_EQ(recon.oddWrithe(), link.oddWrithe());
     }
-    EXPECT_EQ(recon.sig(reflect, reverse, rotate), sig);
+    EXPECT_EQ(recon.sig<Encoding>(reflect, reverse, rotate), sig);
     if (link.size() <= JONES_THRESHOLD) {
         if (reverse && link.countComponents() > 1) {
             // We could reverse some but not all components, which will do
@@ -3751,21 +3759,23 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
     EXPECT_NO_THROW({ EXPECT_EQ(Link(sig), recon); });
 }
 
+template <regina::LinkSigEncoding Encoding>
 static void verifySig(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
-    verifySig(link, true, true, true);
-    verifySig(link, true, false, true);
-    verifySig(link, false, true, true);
-    verifySig(link, false, false, true);
-    verifySig(link, true, true, false);
-    verifySig(link, true, false, false);
-    verifySig(link, false, true, false);
-    verifySig(link, false, false, false);
+    verifySig<Encoding>(link, true, true, true);
+    verifySig<Encoding>(link, true, false, true);
+    verifySig<Encoding>(link, false, true, true);
+    verifySig<Encoding>(link, false, false, true);
+    verifySig<Encoding>(link, true, true, false);
+    verifySig<Encoding>(link, true, false, false);
+    verifySig<Encoding>(link, false, true, false);
+    verifySig<Encoding>(link, false, false, false);
 }
 
 TEST_F(LinkTest, sig) {
-    testManualCases(verifySig);
+    testManualCases(verifySig<LinkSigPrintable>);
+    testManualCases(verifySig<LinkSigCompact>);
 
     // Test signatures that respect / ignore reflection:
     EXPECT_EQ(trefoilRight.link.sig(true, true),  "dabcabcv-");
