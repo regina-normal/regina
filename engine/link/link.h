@@ -7484,12 +7484,19 @@ namespace detail {
     template <>
     struct RetriangulateParams<Link> {
         static std::string sig(const Link& link) {
-            return link.sig();
+            // Choose a sig encoding that uses less memory, if possible.
+            if (LinkSigCompact::satisfiesPreconditions(link))
+                return link.sig<LinkSigCompact>();
+            else
+                return link.sig();
         }
 
         static std::string rigidSig(const Link& link) {
             // Do not allow reflection, reversal and/or rotation.
-            return link.sig(false, false, false);
+            if (LinkSigCompact::satisfiesPreconditions(link))
+                return link.sig<LinkSigCompact>(false, false, false);
+            else
+                return link.sig(false, false, false);
         }
 
         static constexpr const char* progressStage = "Exploring diagrams";
