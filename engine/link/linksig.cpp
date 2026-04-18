@@ -288,9 +288,8 @@ std::string LinkSigPrintable::encode(const LinkSigData& data) {
     // Note: both the strands and the signs could be written using n bits
     // each, not 2n bits each (we are basically writing everything twice) -
     // however, the old knot signatures wrote 2n bits and it would be bad
-    // to break compatibility with those.  Ah well.  An extra 2n bits ~ n/3
-    // chars is not the end of the world: it only multiplies the length of
-    // the signature by 7/6 (or less, if ints require more than one char).
+    // to break compatibility with those.  Also, if memory is at a premium
+    // then you should be using LinkSigCompact (not LinkSigPrintable) anyway.
     int val = 0, bit = 0;
 
     for (const auto& term : data.sequence()) {
@@ -339,12 +338,12 @@ std::string LinkSigCompact::encodeUnknot() {
 std::string LinkSigCompact::encode(const LinkSigData& data) {
     // We write:
     // - the integer n;
-    // - n crossing indices for those crossings seen for the second time,
-    //   in traversal order;
     // - 4n packed bits:
-    //   * 2n "first time seeing this crossing?" bits, in traversal order;
-    //   * n "first strand seen for this crossing" bits, in crossing order;
-    //   * n sign bits, in crossing order.
+    //   * 2n "first time seeing this crossing?" bits (in traversal order),
+    //   * n "first strand seen for this crossing" bits (in crossing order),
+    //   * n sign bits (in crossing order);
+    // - n crossing indices for those crossings seen for the second time
+    //   (in traversal order).
     //
     // By minimality, we can assume that each crossing seen for the _first_
     // time uses the next available crossing index.
@@ -357,11 +356,13 @@ std::string LinkSigCompact::encode(const LinkSigData& data) {
 
     Bitmask bits(4 * data.size());
     FixedArray<bool> seen(data.size(), false);
+    FixedArray<size_t> revisited(data.size());
 
     size_t pos = 0;
+    size_t nextRevisit = 0;
     for (const auto& term : data.sequence()) {
         if (seen[term.crossing]) {
-            enc.encodeInt(term.crossing, charsPerInt);
+            revisited[nextRevisit++] = term.crossing;
         } else {
             bits.set(pos, true);
             if (term.strand)
@@ -374,6 +375,7 @@ std::string LinkSigCompact::encode(const LinkSigData& data) {
     }
 
     enc.encodeBits(4 * data.size(), bits);
+    enc.encodeInts(revisited, charsPerInt);
     return std::move(enc).str();
 }
 
@@ -397,47 +399,37 @@ Link Link::fromSig(const std::string& sig) {
     }
 
     try {
-        // The total length of a signature for a knot (i.e., assuming
-        // exactly one link component), not including the initial writing of
-        // n and charsPerInt, should be:
-        // - standard: charsPerInt * 2n + 2 * ceil(n / 3)
-        // - compact: charsPerInt * n + ceil(2n / 3)
+        // For n == 0, the compact and standard signatures are the same
+        // (and contain nothing beyond the initial encoded size).
         //
-        // The compact length is always strictly smaller for n > 0, and so
-        // we should be able to detect if a compact signature has been used.
-        // (For n == 0, the compact and standard signatures are the same.)
+        // For n > 0, looking past the initial encoded (n, charsPerInt):
+        //
+        // - A standard signature must follow with 'a' (which encodes 0),
+        //   since in a canonical labelling the first crossing visited must be
+        //   crossing 0.  This is true regardless of charsPerInt, since for
+        //   larger charsPerInt we encode 0 as 'aa..a'.
+        //
+        // - A compact signature must follow with something other than 'a'.
+        //   This is because what follows is a bit pack in which bit 0 must be
+        //   set, since the first visited crossing must be previously-unseen.
 
         auto [ n, charsPerInt ] = dec.decodeSize();
-        if (n > 0 && dec.remaining() == charsPerInt * n + (2 * n + 2) / 3) {
+        if (n > 0 && dec.peek() != 'a' /* encodes 0 */) {
             // We have a compact signature for a single connected diagram
-            // component with a positive number of crossings, and we know that
-            // the signature has the expected length.
-
-            FixedArray<bool> seen(n, false);
-            FixedArray<size_t> revisited(n);
-            for (size_t i = 0; i < n; ++i) {
-                revisited[i] = dec.decodeInt<size_t>(charsPerInt);
-                if (revisited[i] >= n)
-                    throw InvalidArgument("fromSig(): "
-                        "invalid crossing number");
-                if (seen[revisited[i]])
-                    throw InvalidArgument("fromSig(): "
-                        "repeated crossing number");
-                seen[revisited[i]] = true;
-            }
+            // component with a positive number of crossings.
+            //
+            // It is possible that peek() returned 0 (i.e., we already reached
+            // the end of the encoded string); however, this will be picked up
+            // in the call to decodeBits() immediately below.
 
             Bitmask bits = dec.decodeBits<Bitmask>(4 * n);
-
-            // At this point we are finished with our base64 decoder.
-            // Remember: we already know that the signature has the correct
-            // length, so there should be nothing left unread at this point.
 
             for (size_t i = 0; i < n; ++i)
                 ans.crossings_.push_back(
                     new Crossing(bits.get(3 * n + i) ? 1 : -1));
 
+            FixedArray<bool> seen(n, false);
             size_t nextIndex = 0;
-            size_t nextRevisit = 0;
             StrandRef prev;
             Crossing* c;
             int strand;
@@ -450,13 +442,14 @@ Link Link::fromSig(const std::string& sig) {
                     strand = bits.get(2 * n + nextIndex) ? 1 : 0;
                     c = ans.crossings_[nextIndex++];
                 } else {
-                    if (nextRevisit == n)
-                        throw InvalidArgument("fromSig(): "
-                            "too many revisited crossings");
-                    size_t index = revisited[nextRevisit++];
+                    size_t index = dec.decodeInt<size_t>(charsPerInt);
                     if (index >= nextIndex)
                         throw InvalidArgument("fromSig(): "
                             "invalid revisited crossing");
+                    if (seen[index])
+                        throw InvalidArgument("fromSig(): "
+                            "multiply-revisited crossing");
+                    seen[index] = true;
                     strand = bits.get(2 * n + index) ? 0 : 1;
                     c = ans.crossings_[index];
                 }
@@ -469,6 +462,10 @@ Link Link::fromSig(const std::string& sig) {
                 prev = s;
             }
             ans.join(prev, ans.components_.front());
+
+            if (! dec.done())
+                throw InvalidArgument("fromSig(): compact signature has "
+                    "unexpected trailing characters");
 
             return ans;
         }
