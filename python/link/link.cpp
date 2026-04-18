@@ -92,6 +92,7 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
         .def("next", &StrandRef::next, rdoc::next)
         .def("prev", &StrandRef::prev, rdoc::prev)
         .def("jump", &StrandRef::jump, rdoc::jump)
+        .def("reset", &StrandRef::reset, rdoc::reset)
         .def("__bool__", &StrandRef::operator bool, rdoc::__as_bool)
     ;
     regina::python::add_output_ostream(s);

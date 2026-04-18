@@ -382,6 +382,14 @@ class StrandRef {
         void jump();
 
         /**
+         * Converts this into a null reference.
+         *
+         * The pointer returned by crossing() will be \c null,
+         * and the integer returned by strand() will be 0.
+         */
+        void reset();
+
+        /**
          * Tests whether this is a non-null reference.
          *
          * \return \c true if this is not a null reference (i.e., crossing()
@@ -7610,6 +7618,11 @@ inline StrandRef StrandRef::prev() const {
 
 inline void StrandRef::jump() {
     strand_ ^= 1;
+}
+
+inline void StrandRef::reset() {
+    crossing_ = nullptr;
+    strand_ = 0;
 }
 
 inline StrandRef::operator bool() const {

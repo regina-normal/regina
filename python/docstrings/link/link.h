@@ -6484,6 +6484,13 @@ Precondition:
 Returns:
     the crossing reference that precedes this.)doc";
 
+// Docstring regina::python::doc::StrandRef_::reset
+static const char *reset =
+R"doc(Converts this into a null reference.
+
+The pointer returned by crossing() will be ``None``, and the integer
+returned by strand() will be 0.)doc";
+
 // Docstring regina::python::doc::StrandRef_::strand
 static const char *strand =
 R"doc(Indicates whether this reference points to the upper or lower strand
