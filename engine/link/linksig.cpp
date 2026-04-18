@@ -361,17 +361,25 @@ std::string LinkSigCompact::encode(const LinkSigData& data) {
     size_t pos = 0;
     size_t nextRevisit = 0;
     for (const auto& term : data.sequence()) {
-        if (term.crossing == data.size() || seen[term.crossing]) {
+        if (term.crossing == data.size()) {
+            // This is a sentinel, and should have no presence in bits.
+            revisited[nextRevisit++] = data.size();
+        } else if (seen[term.crossing]) {
+            // This is a revisited crossing: the corresponding "first time?"
+            // bit should be false (which it already is).
             revisited[nextRevisit++] = term.crossing;
+            ++pos;
         } else {
+            // This is a new crossing: the corresponding "first time?" bit
+            // should be true, and the strand/sign bits should be set also.
             bits.set(pos, true);
             if (term.strand)
                 bits.set(data.size() * 2 + term.crossing, true);
             if (term.sign > 0)
                 bits.set(data.size() * 3 + term.crossing, true);
             seen[term.crossing] = true;
+            ++pos;
         }
-        ++pos;
     }
 
     enc.encodeBits(4 * data.size(), bits);
@@ -431,6 +439,7 @@ Link Link::fromSig(const std::string& sig) {
 
                 Bitmask bits = dec.decodeBits<Bitmask>(4 * n);
 
+                size_t base = ans.crossings_.size();
                 for (size_t i = 0; i < n; ++i)
                     ans.crossings_.push_back(
                         new Crossing(bits.get(3 * n + i) ? 1 : -1));
@@ -452,7 +461,8 @@ Link Link::fromSig(const std::string& sig) {
                             throw InvalidArgument("fromSig(): "
                                 "too many first-time crossings");
                         strand = bits.get(2 * n + nextIndex) ? 1 : 0;
-                        c = ans.crossings_[nextIndex++];
+                        c = ans.crossings_[base + nextIndex];
+                        ++nextIndex;
                     } else {
                         size_t index = dec.decodeInt<size_t>(charsPerInt);
                         if (index == n) {
@@ -473,7 +483,7 @@ Link Link::fromSig(const std::string& sig) {
                                 "multiply-revisited crossing");
                         seen[index] = true;
                         strand = bits.get(2 * n + index) ? 0 : 1;
-                        c = ans.crossings_[index];
+                        c = ans.crossings_[base + index];
                     }
 
                     StrandRef s(c, strand);
