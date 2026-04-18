@@ -357,18 +357,6 @@ class LinkSigEncodingAPI {
         using Signature = std::string;
 
         /**
-         * Verifies that the given link satisfies any extra preconditions
-         * specific to this encoding.  For encodings such as LinkSigPrintable
-         * that have no extra preconditions, this routine should just return
-         * `true`.
-         *
-         * This routine does not need to re-test any preconditions that are
-         * already enforced by Link::sig() (e.g., requiring less than 64 link
-         * components).
-         */
-        static bool satisfiesPreconditions(const Link& link);
-
-        /**
          * Encodes the signature of the empty link.
          *
          * Note that this would typically _not_ be an empty signature.
@@ -422,7 +410,6 @@ concept LinkSigEncoding =
     requires(const Link link, const LinkSigData data) {
         typename T::Signature;
         requires ConcatenableSequence<typename T::Signature>;
-        { T::satisfiesPreconditions(link) } -> std::convertible_to<bool>;
         { T::encodeEmpty() } -> std::convertible_to<typename T::Signature>;
         { T::encodeUnknot() } -> std::convertible_to<typename T::Signature>;
         { T::encode(data) } -> std::convertible_to<typename T::Signature>;
@@ -449,8 +436,6 @@ class LinkSigPrintable {
     public:
         using Signature = std::string;
 
-        inline static bool satisfiesPreconditions(const Link&);
-
         static Signature encodeEmpty();
         static Signature encodeUnknot();
         static Signature encode(const LinkSigData& data);
@@ -460,11 +445,7 @@ class LinkSigPrintable {
 };
 
 /**
- * A compact string-based encoding for use with knot signatures.
- *
- * This encoding is currenty designed for knots only: it _cannot_ be used with
- * links containing multiple topological components, though it _can_ be used
- * for the empty link.
+ * A compact string-based encoding for use with knot/link signatures.
  *
  * Like LinkSigPrintable, this encodes a signature as a `std::string` using
  * only printable characters from the 7-bit ASCII range.  However, the strings
@@ -487,8 +468,6 @@ class LinkSigCompact {
     public:
         using Signature = std::string;
 
-        inline static bool satisfiesPreconditions(const Link& link);
-
         static Signature encodeEmpty();
         static Signature encodeUnknot();
         static Signature encode(const LinkSigData& data);
@@ -496,23 +475,6 @@ class LinkSigCompact {
         // Make this class non-constructible.
         LinkSigCompact() = delete;
 };
-
-} // namespace regina
-
-// At this point we need the full Link class description, since
-// the inline functions below requires it.
-
-#include "link/link.h"
-
-namespace regina {
-
-inline bool LinkSigPrintable::satisfiesPreconditions(const Link&) {
-    return true;
-}
-
-inline bool LinkSigCompact::satisfiesPreconditions(const Link& link) {
-    return link.countComponents() <= 1;
-}
 
 } // namespace regina
 

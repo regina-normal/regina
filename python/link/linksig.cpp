@@ -29,7 +29,7 @@
  **************************************************************************/
 
 #include "pybind11/pybind11.h"
-#include "link/linksig.h"
+#include "link/link.h"
 #include "../helpers.h"
 #include "../docstrings/link/linksig.h"
 
@@ -81,9 +81,6 @@ void addLinkSig(pybind11::module_& m) {
     {
         auto c = pybind11::class_<LinkSigPrintable>(m, "LinkSigPrintable",
                 rdoc::LinkSigPrintable)
-            .def_static("satisfiesPreconditions",
-                &LinkSigPrintable::satisfiesPreconditions,
-                rbase::satisfiesPreconditions)
             .def_static("encodeEmpty", &LinkSigPrintable::encodeEmpty,
                 rbase::encodeEmpty)
             .def_static("encodeUnknot", &LinkSigPrintable::encodeUnknot,
@@ -95,9 +92,6 @@ void addLinkSig(pybind11::module_& m) {
     {
         auto c = pybind11::class_<LinkSigCompact>(m, "LinkSigCompact",
                 rdoc::LinkSigCompact)
-            .def_static("satisfiesPreconditions",
-                &LinkSigCompact::satisfiesPreconditions,
-                rbase::satisfiesPreconditions)
             .def_static("encodeEmpty", &LinkSigCompact::encodeEmpty,
                 rbase::encodeEmpty)
             .def_static("encodeUnknot", &LinkSigCompact::encodeUnknot,

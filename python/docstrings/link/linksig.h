@@ -13,11 +13,7 @@ namespace regina::python::doc {
 
 // Docstring regina::python::doc::LinkSigCompact
 static const char *LinkSigCompact =
-R"doc(A compact string-based encoding for use with knot signatures.
-
-This encoding is currenty designed for knots only: it _cannot_ be used
-with links containing multiple topological components, though it _can_
-be used for the empty link.
+R"doc(A compact string-based encoding for use with knot/link signatures.
 
 Like LinkSigPrintable, this encodes a signature as a ``std::string``
 using only printable characters from the 7-bit ASCII range. However,
@@ -350,16 +346,6 @@ R"doc(Encodes the signature of the zero-crossing unknot diagram.
 
 Returns:
     the signature of the zero-crossing unknot.)doc";
-
-// Docstring regina::python::doc::LinkSigEncodingAPI_::satisfiesPreconditions
-static const char *satisfiesPreconditions =
-R"doc(Verifies that the given link satisfies any extra preconditions
-specific to this encoding. For encodings such as LinkSigPrintable that
-have no extra preconditions, this routine should just return ``True``.
-
-This routine does not need to re-test any preconditions that are
-already enforced by Link::sig() (e.g., requiring less than 64 link
-components).)doc";
 
 }
 

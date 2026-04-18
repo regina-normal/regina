@@ -342,8 +342,8 @@ std::string LinkSigCompact::encode(const LinkSigData& data) {
     //   * 2n "first time seeing this crossing?" bits (in traversal order),
     //   * n "first strand seen for this crossing" bits (in crossing order),
     //   * n sign bits (in crossing order);
-    // - n crossing indices for those crossings seen for the second time
-    //   (in traversal order).
+    // - crossing indices for those crossings seen for the second time,
+    //   as well as sentinels separating link components (in traversal order).
     //
     // By minimality, we can assume that each crossing seen for the _first_
     // time uses the next available crossing index.
@@ -356,12 +356,12 @@ std::string LinkSigCompact::encode(const LinkSigData& data) {
 
     Bitmask bits(4 * data.size());
     FixedArray<bool> seen(data.size(), false);
-    FixedArray<size_t> revisited(data.size());
+    FixedArray<size_t> revisited(data.sequence().size() - data.size());
 
     size_t pos = 0;
     size_t nextRevisit = 0;
     for (const auto& term : data.sequence()) {
-        if (seen[term.crossing]) {
+        if (term.crossing == data.size() || seen[term.crossing]) {
             revisited[nextRevisit++] = term.crossing;
         } else {
             bits.set(pos, true);
@@ -399,198 +399,196 @@ Link Link::fromSig(const std::string& sig) {
     }
 
     try {
-        // For n == 0, the compact and standard signatures are the same
-        // (and contain nothing beyond the initial encoded size).
-        //
-        // For n > 0, looking past the initial encoded (n, charsPerInt):
-        //
-        // - A standard signature must follow with 'a' (which encodes 0),
-        //   since in a canonical labelling the first crossing visited must be
-        //   crossing 0.  This is true regardless of charsPerInt, since for
-        //   larger charsPerInt we encode 0 as 'aa..a'.
-        //
-        // - A compact signature must follow with something other than 'a'.
-        //   This is because what follows is a bit pack in which bit 0 must be
-        //   set, since the first visited crossing must be previously-unseen.
+        while (! dec.done()) {
+            // Read one connected component of the link diagram at a time.
 
-        auto [ n, charsPerInt ] = dec.decodeSize();
-        if (n > 0 && dec.peek() != 'a' /* encodes 0 */) {
-            // We have a compact signature for a single connected diagram
-            // component with a positive number of crossings.
+            auto [ n, charsPerInt ] = dec.decodeSize();
+
+            // For n == 0, the compact and standard signatures are the same
+            // (and contain nothing beyond the initial encoded size).
             //
-            // It is possible that peek() returned 0 (i.e., we already reached
-            // the end of the encoded string); however, this will be picked up
-            // in the call to decodeBits() immediately below.
-
-            Bitmask bits = dec.decodeBits<Bitmask>(4 * n);
-
-            for (size_t i = 0; i < n; ++i)
-                ans.crossings_.push_back(
-                    new Crossing(bits.get(3 * n + i) ? 1 : -1));
-
-            FixedArray<bool> seen(n, false);
-            size_t nextIndex = 0;
-            StrandRef prev;
-            Crossing* c;
-            int strand;
-            for (size_t i = 0; i < 2 * n; ++i) {
-                bool firstVisit = bits.get(i);
-                if (firstVisit) {
-                    if (nextIndex == n)
-                        throw InvalidArgument("fromSig(): "
-                            "too many first-time crossings");
-                    strand = bits.get(2 * n + nextIndex) ? 1 : 0;
-                    c = ans.crossings_[nextIndex++];
-                } else {
-                    size_t index = dec.decodeInt<size_t>(charsPerInt);
-                    if (index >= nextIndex)
-                        throw InvalidArgument("fromSig(): "
-                            "invalid revisited crossing");
-                    if (seen[index])
-                        throw InvalidArgument("fromSig(): "
-                            "multiply-revisited crossing");
-                    seen[index] = true;
-                    strand = bits.get(2 * n + index) ? 0 : 1;
-                    c = ans.crossings_[index];
-                }
-
-                StrandRef s(c, strand);
-                if (prev)
-                    ans.join(prev, s);
-                else
-                    ans.components_.push_back(s);
-                prev = s;
-            }
-            ans.join(prev, ans.components_.front());
-
-            if (! dec.done())
-                throw InvalidArgument("fromSig(): compact signature has "
-                    "unexpected trailing characters");
-
-            return ans;
-        }
-
-        // We have a standard signature (the kind used before Regina 8.0),
-        // and this could be a concatenation of multiple diagram components.
-        //
-        // Read one connected component of the link diagram at a time.
-        while (true) {
-            // If ans.components_ is empty, then this is our first iteration
-            // through the loop, and so we expect to see at least one diagram
-            // component.  We already read n and charsPerInt for this component
-            // (when testing above for a compact signature).
+            // For n > 0, looking past the initial encoded (n, charsPerInt):
             //
-            // If ans.components_ is non-empty, then either we are completely
-            // finished, or we are positioned at the beginning of the next
-            // diagram component (and we have _not_ read n or charsPerInt).
-
-            if (! ans.components_.empty()) {
-                if (dec.done())
-                    return ans;
-                std::tie(n, charsPerInt) = dec.decodeSize();
-            }
-
-            // Finish off the current component, for which we have read n and
-            // charsPerInt but nothing further.
+            // - A standard signature must follow with 'a' (which encodes 0),
+            //   since in a canonical labelling the first crossing visited must
+            //   be crossing 0.  This is true regardless of charsPerInt, since
+            //   for larger charsPerInt we encode 0 as 'aa..a'.
+            //
+            // - A compact signature must follow with something other than 'a'.
+            //   This is because what follows is a bit pack with bit 0 set,
+            //   since the first visited crossing must be previously-unseen.
 
             if (n == 0) {
                 // Zero-crossing unknot.
                 ans.components_.emplace_back();
-                continue;
-            }
+            } else if (dec.peek() != 'a' /* encodes 0 */) {
+                // We have a compact signature for a single connected diagram
+                // component with a positive number of crossings.
+                //
+                // Note: peek() above might have returned 0 (i.e., we already
+                // reached the end of the encoded string); however, this will
+                // be picked up in the call to decodeBits() immediately below.
 
-            FixedArray<size_t> crossing(2 * n);
-            FixedArray<int> sign(2 * n);
-            FixedArray<int> strand(2 * n);
+                Bitmask bits = dec.decodeBits<Bitmask>(4 * n);
 
-            // A connected _virtual_ diagram with n ≥ 1 crossings can have up
-            // to n+1 link components.  Here compStart[i] is the index into
-            // crossing[] at which component i begins, and we terminate
-            // compStart[] with an extra value of 2n.
-            FixedArray<size_t> compStart(n + 2);
+                for (size_t i = 0; i < n; ++i)
+                    ans.crossings_.push_back(
+                        new Crossing(bits.get(3 * n + i) ? 1 : -1));
 
-            size_t i = 0;    // next index into crossing[] to read
-            size_t comp = 0; // current component being read
-            compStart[0] = 0;
-            while (i < 2 * n) {
-                crossing[i] = dec.decodeInt<size_t>(charsPerInt);
-                if (crossing[i] < n) {
-                    ++i;
-                } else if (crossing[i] == n) {
-                    // A sentinel indicating the start of a new link component.
-                    compStart[++comp] = i;
-                } else {
+                // Note: since the diagram component is connected and the
+                // labelling is canonical, sentinels (which separate
+                // topological link components) must always be followed by a
+                // revisited crossing.
+
+                FixedArray<bool> seen(n, false);
+                size_t nextIndex = 0;
+                StrandRef prev;
+                Crossing* c;
+                int strand;
+                for (size_t i = 0; i < 2 * n; ++i) {
+                    bool firstVisit = bits.get(i);
+                    if (firstVisit) {
+                        if (nextIndex == n)
+                            throw InvalidArgument("fromSig(): "
+                                "too many first-time crossings");
+                        strand = bits.get(2 * n + nextIndex) ? 1 : 0;
+                        c = ans.crossings_[nextIndex++];
+                    } else {
+                        size_t index = dec.decodeInt<size_t>(charsPerInt);
+                        if (index == n) {
+                            // We are starting a new topological link component.
+                            if (prev)
+                                ans.join(prev, ans.components_.back());
+                            else
+                                throw InvalidArgument("fromSig(): "
+                                    "missing topological link component");
+                            prev.reset();
+                            index = dec.decodeInt<size_t>(charsPerInt);
+                        }
+                        if (index >= nextIndex)
+                            throw InvalidArgument("fromSig(): "
+                                "invalid revisited crossing");
+                        if (seen[index])
+                            throw InvalidArgument("fromSig(): "
+                                "multiply-revisited crossing");
+                        seen[index] = true;
+                        strand = bits.get(2 * n + index) ? 0 : 1;
+                        c = ans.crossings_[index];
+                    }
+
+                    StrandRef s(c, strand);
+                    if (prev)
+                        ans.join(prev, s);
+                    else
+                        ans.components_.push_back(s);
+                    prev = s;
+                }
+                if (prev)
+                    ans.join(prev, ans.components_.back());
+                else
                     throw InvalidArgument("fromSig(): "
-                        "invalid destination crossing");
-                }
-            }
-            compStart[++comp] = 2 * n;
+                        "missing topological link component");
+            } else {
+                // We have a standard signature (the kind used before
+                // Regina 8.0) for a single connected diagram component with a
+                // positive number of crossings.
 
-            for (i = 0; i < 2 * n; i += 6) {
-                unsigned bits = dec.decodeSingle<unsigned>();
-                for (int j = 0; j < 6 && i + j < 2 * n; ++j) {
-                    strand[i + j] = (bits & 1);
-                    bits >>= 1;
-                }
-                if (bits) {
-                    throw InvalidArgument(
-                        "fromSig(): extraneous strand bits");
-                }
-            }
-            for (i = 0; i < 2 * n; i += 6) {
-                unsigned bits = dec.decodeSingle<unsigned>();
-                for (int j = 0; j < 6 && i + j < 2 * n; ++j) {
-                    sign[i + j] = ((bits & 1) ? 1 : -1);
-                    bits >>= 1;
-                }
-                if (bits) {
-                    throw InvalidArgument(
-                        "fromSig(): extraneous sign bits");
-                }
-            }
+                FixedArray<size_t> crossing(2 * n);
+                FixedArray<int> sign(2 * n);
+                FixedArray<int> strand(2 * n);
 
-            // At this point we are finished with our base64 decoder.
+                // A connected _virtual_ diagram with n ≥ 1 crossings can have
+                // up to n+1 link components.  Here compStart[i] is the index
+                // into crossing[] at which component i begins, and we terminate
+                // compStart[] with an extra value of 2n.
+                FixedArray<size_t> compStart(n + 2);
 
-            size_t base = ans.crossings_.size();
-            for (i = 0; i < n; ++i)
-                ans.crossings_.push_back(new Crossing());
+                size_t i = 0;    // next index into crossing[] to read
+                size_t comp = 0; // current component being read
+                compStart[0] = 0;
+                while (i < 2 * n) {
+                    crossing[i] = dec.decodeInt<size_t>(charsPerInt);
+                    if (crossing[i] < n) {
+                        ++i;
+                    } else if (crossing[i] == n) {
+                        // A sentinel, i.e., the start of a new link component.
+                        compStart[++comp] = i;
+                    } else {
+                        throw InvalidArgument("fromSig(): "
+                            "invalid destination crossing");
+                    }
+                }
+                compStart[++comp] = 2 * n;
 
-            comp = 0;
-            for (i = 0; i < 2 * n; ++i) {
-                Crossing* cr = ans.crossings_[base + crossing[i]];
-                if (cr->sign_ == 0)
-                    cr->sign_ = sign[i];
-                else if (cr->sign_ != sign[i]) {
-                    throw InvalidArgument(
-                        "fromSig(): inconsistent crossing signs");
+                for (i = 0; i < 2 * n; i += 6) {
+                    unsigned bits = dec.decodeSingle<unsigned>();
+                    for (int j = 0; j < 6 && i + j < 2 * n; ++j) {
+                        strand[i + j] = (bits & 1);
+                        bits >>= 1;
+                    }
+                    if (bits) {
+                        throw InvalidArgument(
+                            "fromSig(): extraneous strand bits");
+                    }
+                }
+                for (i = 0; i < 2 * n; i += 6) {
+                    unsigned bits = dec.decodeSingle<unsigned>();
+                    for (int j = 0; j < 6 && i + j < 2 * n; ++j) {
+                        sign[i + j] = ((bits & 1) ? 1 : -1);
+                        bits >>= 1;
+                    }
+                    if (bits) {
+                        throw InvalidArgument(
+                            "fromSig(): extraneous sign bits");
+                    }
                 }
 
-                if (cr->next_[strand[i]].crossing_) {
-                    throw InvalidArgument(
-                        "fromSig(): invalid outgoing connection");
-                }
+                // At this point we are finished with our base64 decoder.
 
-                size_t nextIdx;
-                Crossing* next;
-                if (i + 1 == compStart[comp + 1]) {
-                    nextIdx = compStart[comp];
-                    next = ans.crossings_[base + crossing[nextIdx]];
-                    ans.components_.push_back(next->strand(strand[nextIdx]));
-                    ++comp;
-                } else {
-                    nextIdx = i + 1;
-                    next = ans.crossings_[base + crossing[nextIdx]];
-                }
-                cr->next_[strand[i]].crossing_ = next;
-                cr->next_[strand[i]].strand_ = strand[nextIdx];
+                size_t base = ans.crossings_.size();
+                for (i = 0; i < n; ++i)
+                    ans.crossings_.push_back(new Crossing());
 
-                if (next->prev_[strand[nextIdx]])
-                    throw InvalidArgument(
-                        "fromSig(): invalid incoming connection");
-                next->prev_[strand[nextIdx]].crossing_ = cr;
-                next->prev_[strand[nextIdx]].strand_ = strand[i];
+                comp = 0;
+                for (i = 0; i < 2 * n; ++i) {
+                    Crossing* cr = ans.crossings_[base + crossing[i]];
+                    if (cr->sign_ == 0)
+                        cr->sign_ = sign[i];
+                    else if (cr->sign_ != sign[i]) {
+                        throw InvalidArgument(
+                            "fromSig(): inconsistent crossing signs");
+                    }
+
+                    if (cr->next_[strand[i]].crossing_) {
+                        throw InvalidArgument(
+                            "fromSig(): invalid outgoing connection");
+                    }
+
+                    size_t nextIdx;
+                    Crossing* next;
+                    if (i + 1 == compStart[comp + 1]) {
+                        nextIdx = compStart[comp];
+                        next = ans.crossings_[base + crossing[nextIdx]];
+                        ans.components_.push_back(
+                            next->strand(strand[nextIdx]));
+                        ++comp;
+                    } else {
+                        nextIdx = i + 1;
+                        next = ans.crossings_[base + crossing[nextIdx]];
+                    }
+                    cr->next_[strand[i]].crossing_ = next;
+                    cr->next_[strand[i]].strand_ = strand[nextIdx];
+
+                    if (next->prev_[strand[nextIdx]])
+                        throw InvalidArgument(
+                            "fromSig(): invalid incoming connection");
+                    next->prev_[strand[nextIdx]].crossing_ = cr;
+                    next->prev_[strand[nextIdx]].strand_ = strand[i];
+                }
             }
         }
+
+        return ans;
     } catch (const InvalidInput&) {
         // Any exception caught here was thrown by Base64SigDecoder.
         throw InvalidArgument(

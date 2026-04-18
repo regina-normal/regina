@@ -3655,11 +3655,6 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
     SCOPED_TRACE_NUMERIC(reverse);
     SCOPED_TRACE_NUMERIC(rotate);
 
-    if (! Encoding::satisfiesPreconditions(link)) {
-        EXPECT_THROW({ link.sig<Encoding>(); }, FailedPrecondition);
-        return;
-    }
-
     std::string sig = link.sig<Encoding>(reflect, reverse, rotate);
     EXPECT_FALSE(sig.empty());
 

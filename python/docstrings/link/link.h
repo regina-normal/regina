@@ -2030,6 +2030,10 @@ static const char *fromSig =
 R"doc(Recovers a classical or virtual link diagram from its knot/link
 signature. See sig() for more information on these signatures.
 
+This reconstruction will only work if the given signature uses either
+the default encoding LinkSigPrintable or the compact encoding
+LinkSigCompact.
+
 Calling sig() followed by fromSig() is not guaranteed to produce an
 _identical_ link diagram to the original, but it is guaranteed to
 produce one that is related by zero or more applications of
@@ -3500,9 +3504,9 @@ component knots; moreover the old name "knot signatures" can still be
 found in the literature. While this routine is not deprecated, it is
 recommended to use sig() in new code.
 
-This alias is only available for Regina's default signature encoding.
-If you wish to use a non-default encoding, you will need to call sig()
-instead.
+This alias is only available for Regina's default signature encoding
+LinkSigPrintable. If you wish to use a non-default encoding, you will
+need to call sig() instead.
 
 See sig() for further details.
 
@@ -5426,17 +5430,23 @@ the template parameter *Encoding:*
   Regina ≤ 7.x (before encodings were supported). For typical users,
   this is all that you should ever need.
 
-* Custom encodings are currently for internal use only, and the
+* The encoding LinkSigCompact likewise returns a printable 7-bit ASCII
+  ``std::string``, but is significantly shorter (a little over half
+  the length of LinkSigPrintable). This can be used when memory needs
+  to be carefully conserved.
+
+* Other custom encodings are currently for internal use only, and the
   requirements for the *Encoding* parameter may change in future
   versions of Regina. See the LinkSigEncodingAPI documentation for the
   current requirements.
 
 The routine fromSig() can be used to recover a link diagram from its
-signature (but only if the default encoding has been used). The
-resulting diagram might not be identical to the original, but it will
-be related by zero or more applications of relabelling, and (according
-to the arguments) reflection of the diagram, rotation of the diagram,
-and/or reversal of individual link components.
+signature (but only if the default encoding LinkSigPrintable or the
+compact encoding LinkSigCompact was used). The resulting diagram might
+not be identical to the original, but it will be related by zero or
+more applications of relabelling, and (according to the arguments)
+reflection of the diagram, rotation of the diagram, and/or reversal of
+individual link components.
 
 The size of a signature is proportional to ``n log n``, where *n* is
 the number of crossings in the link diagram.
@@ -5448,14 +5458,6 @@ not be used for links with a large number of components.
 
 Exception ``NotImplemented``:
     This link diagram has 64 or more link components.
-
-Exception ``FailedPrecondition``:
-    This link diagram does not satisfy the additional preconditions
-    required by the chosen encoding. These preconditions will be
-    tested via the routine ``Encoding::satisfiesPreconditions()``. If
-    you are using the default encoding (LinkSigPrintable), then there
-    are no extra preconditions to worry about, and this exception will
-    not be thrown.
 
 Python:
     Although this is a templated function, all of the encodings

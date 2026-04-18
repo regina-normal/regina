@@ -5916,13 +5916,6 @@ class Link :
          * \exception NotImplemented This link diagram has 64 or more link
          * components.
          *
-         * \exception FailedPrecondition This link diagram does not satisfy
-         * the additional preconditions required by the chosen encoding.
-         * These preconditions will be tested via the routine
-         * `Encoding::satisfiesPreconditions()`.  If you are using the default
-         * encoding (LinkSigPrintable), then there are no extra preconditions
-         * to worry about, and this exception will not be thrown.
-         *
          * \python Although this is a templated function, all of the encodings
          * supplied with Regina are available to Python users.  To use the
          * default encoding, just call `sig()`.  To use a non-default encoding,
@@ -7492,19 +7485,13 @@ namespace detail {
     template <>
     struct RetriangulateParams<Link> {
         static std::string sig(const Link& link) {
-            // Choose a sig encoding that uses less memory, if possible.
-            if (LinkSigCompact::satisfiesPreconditions(link))
-                return link.sig<LinkSigCompact>();
-            else
-                return link.sig();
+            // Choose a sig encoding that uses less memory.
+            return link.sig<LinkSigCompact>();
         }
 
         static std::string rigidSig(const Link& link) {
             // Do not allow reflection, reversal and/or rotation.
-            if (LinkSigCompact::satisfiesPreconditions(link))
-                return link.sig<LinkSigCompact>(false, false, false);
-            else
-                return link.sig(false, false, false);
+            return link.sig<LinkSigCompact>(false, false, false);
         }
 
         static constexpr const char* progressStage = "Exploring diagrams";
