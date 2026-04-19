@@ -43,6 +43,7 @@ if (${REGINA_INSTALL_DEV})
     facetpairing3.h
     facetspec.h
     generic.h
+    isosig.h
     isosigencoding.h
     isosigtype.h
     pachner.h
