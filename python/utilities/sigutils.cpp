@@ -153,22 +153,6 @@ void addSigUtils(pybind11::module_& m) {
         .def("done",
             pybind11::overload_cast<>(&Decoder::done, pybind11::const_),
             rdoc::done)
-        #if defined(__GNUC__)
-        // The routine done(bool) is deprecated, but we still need to bind it.
-        // Silence the inevitable deprecation warning that will occur.
-        #pragma GCC diagnostic push
-        #if defined(__clang__)
-        #pragma GCC diagnostic ignored "-Wdeprecated"
-        #else
-        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        #endif
-        #endif
-        .def("done",
-            pybind11::overload_cast<bool>(&Decoder::done, pybind11::const_),
-            rdoc::done_2) // deprecated
-        #if defined(__GNUC__)
-        #pragma GCC diagnostic pop
-        #endif
         .def("peek", &Decoder::peek, rdoc::peek)
         .def("remaining", &Decoder::remaining, rdoc::remaining)
         .def("skip", &Decoder::skip, rdoc::skip)
@@ -192,6 +176,22 @@ void addSigUtils(pybind11::module_& m) {
             rdoc::decodeTrits)
         .def_static("isValid", &Decoder::isValid, rdoc::isValid)
     ;
+    #if defined(__GNUC__)
+    // The routine done(bool) is deprecated, but we still need to bind it.
+    // Silence the inevitable deprecation warning that will occur.
+    #pragma GCC diagnostic push
+    #if defined(__clang__)
+    #pragma GCC diagnostic ignored "-Wdeprecated"
+    #else
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    #endif
+    #endif
+    d.def("done",
+        pybind11::overload_cast<bool>(&Decoder::done, pybind11::const_),
+        rdoc::done_2); // deprecated
+    #if defined(__GNUC__)
+    #pragma GCC diagnostic pop
+    #endif
     regina::python::add_eq_operators(d);
 
     RDOC_SCOPE_END
