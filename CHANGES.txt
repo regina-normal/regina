@@ -479,6 +479,9 @@ Version 8.0  [ TODO ]
           exception.  (Of course you can still test equality/inequality of the
           individual elements of these views.)
     UTILITIES:
+        retriangulate:
+            - Option --anysig is now relevant for knots and links also, not
+              just triangulations.
         trisetcmp:
             - Now finds matches (or non-matches) in any dimension, not just
               dimensions 3 and 4.

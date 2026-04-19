@@ -220,6 +220,17 @@ Smaller link: iabcdeafghcdebfghxveJhp
 --------------------
 Exit code: 0
 ============================================================
+TEST: retriangulate -ka kabcdefghijbefgdcjahixfvbdwGd
+--------------------
+k-paCvdgbefgdcjahi
+k-DaCnJhacdebjihfg
+k-1aCnJhacdejibhfg
+iFhWTJdacdebfgh
+Link is non-minimal!
+Smaller link: iFhWTJdacdebfgh
+--------------------
+Exit code: 0
+============================================================
 TEST: retriangulate -l -k -h 2 a
 --------------------
 a

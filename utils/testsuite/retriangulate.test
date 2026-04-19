@@ -48,6 +48,7 @@ retriangulate -h 2 -t 2 hLLAAkbdceefggdonxdjxn
 # testutil retriangulate -h 3 -t 2 hLLAAkbdceefggdonxdjxn
 retriangulate -4 eLMQcbcddcddaaaa8a8a8a8a8a
 retriangulate -k kabcdefghijbefgdcjahixfvbdwGd
+retriangulate -ka kabcdefghijbefgdcjahixfvbdwGd
 # --- showing all signatures visited:
 retriangulate -l -k -h 2 a
 retriangulate -l -k -V -h 2 a

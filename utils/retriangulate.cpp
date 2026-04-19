@@ -127,24 +127,50 @@ void process(const regina::Link& link) {
             const std::string& sig, const regina::Link& k) {
         if (k.size() > link.size()) {
             if (showAll) {
-                std::lock_guard<std::mutex> lock(mutex);
-                std::cout << sig << std::endl;
-                ++nSolns;
+                if (internalSig) {
+                    std::lock_guard<std::mutex> lock(mutex);
+                    std::cout << sig << std::endl;
+                    ++nSolns;
+                } else {
+                    // Recompute the signature using LinkSigPrintable.
+                    std::string classic = k.sig();
+
+                    std::lock_guard<std::mutex> lock(mutex);
+                    std::cout << classic << std::endl;
+                    ++nSolns;
+                }
             }
             return false;
         }
 
-        std::lock_guard<std::mutex> lock(mutex);
-        std::cout << sig << std::endl;
+        if (internalSig) {
+            std::lock_guard<std::mutex> lock(mutex);
+            std::cout << sig << std::endl;
 
-        if (k.size() < link.size()) {
-            nonMinimal = true;
-            simpler = sig;
-            return true;
+            if (k.size() < link.size()) {
+                nonMinimal = true;
+                simpler = sig;
+                return true;
+            }
+
+            ++nSolns;
+            return false;
+        } else {
+            // Recompute the signature using LockSigPrintable.
+            std::string classic = k.sig();
+
+            std::lock_guard<std::mutex> lock(mutex);
+            std::cout << classic << std::endl;
+
+            if (k.size() < link.size()) {
+                nonMinimal = true;
+                simpler = std::move(classic);
+                return true;
+            }
+
+            ++nSolns;
+            return false;
         }
-
-        ++nSolns;
-        return false;
     };
 
     if (virtualMoves || ! (classicalMoves || link.isClassical()))
