@@ -3772,11 +3772,19 @@ TEST_F(LinkTest, sig) {
     testManualCases(verifySig<LinkSigPrintable>);
     testManualCases(verifySig<LinkSigCompact>);
 
+    // Unless specified otherwise, all _compact_ signatures below were computed
+    // using Regina 8.0.
+
     // Test signatures that respect / ignore reflection:
     EXPECT_EQ(trefoilRight.link.sig(true, true),  "dabcabcv-");
     EXPECT_EQ(trefoilRight.link.sig(false, true), "dabcabcv-");
     EXPECT_EQ(trefoilLeft.link.sig(true, true),   "dabcabcv-");
     EXPECT_EQ(trefoilLeft.link.sig(false, true) , "dabcabcva");
+
+    EXPECT_EQ(trefoilRight.link.sig<LinkSigCompact>(true, true),  "dh9abc");
+    EXPECT_EQ(trefoilRight.link.sig<LinkSigCompact>(false, true), "dh9abc");
+    EXPECT_EQ(trefoilLeft.link.sig<LinkSigCompact>(true, true),   "dh9abc");
+    EXPECT_EQ(trefoilLeft.link.sig<LinkSigCompact>(false, true) , "dhfabc");
 
     // Test that reflection applies to the entire diagram only, not individual
     // connected components:
@@ -3785,24 +3793,32 @@ TEST_F(LinkTest, sig) {
         l.insertLink(ExampleLink::trefoilRight());
         EXPECT_EQ(l.sig(true, true), "dabcabcv-dabcabcv-");
         EXPECT_EQ(l.sig(false, true), "dabcabcv-dabcabcv-");
+        EXPECT_EQ(l.sig<LinkSigCompact>(true, true), "dh9abcdh9abc");
+        EXPECT_EQ(l.sig<LinkSigCompact>(false, true), "dh9abcdh9abc");
     }
     {
         Link l = ExampleLink::trefoilRight();
         l.insertLink(ExampleLink::trefoilLeft());
         EXPECT_EQ(l.sig(true, true), "dabcabcv-dabcabcva");
         EXPECT_EQ(l.sig(false, true), "dabcabcv-dabcabcva");
+        EXPECT_EQ(l.sig<LinkSigCompact>(true, true), "dh9abcdhfabc");
+        EXPECT_EQ(l.sig<LinkSigCompact>(false, true), "dh9abcdhfabc");
     }
     {
         Link l = ExampleLink::trefoilLeft();
         l.insertLink(ExampleLink::trefoilRight());
         EXPECT_EQ(l.sig(true, true), "dabcabcv-dabcabcva");
         EXPECT_EQ(l.sig(false, true), "dabcabcv-dabcabcva");
+        EXPECT_EQ(l.sig<LinkSigCompact>(true, true), "dh9abcdhfabc");
+        EXPECT_EQ(l.sig<LinkSigCompact>(false, true), "dh9abcdhfabc");
     }
     {
         Link l = ExampleLink::trefoilLeft();
         l.insertLink(ExampleLink::trefoilLeft());
         EXPECT_EQ(l.sig(true, true), "dabcabcv-dabcabcv-");
         EXPECT_EQ(l.sig(false, true), "dabcabcvadabcabcva");
+        EXPECT_EQ(l.sig<LinkSigCompact>(true, true), "dh9abcdh9abc");
+        EXPECT_EQ(l.sig<LinkSigCompact>(false, true), "dhfabcdhfabc");
     }
 
     // A link where all four reflection/reversal options give different sigs:
@@ -3812,6 +3828,10 @@ TEST_F(LinkTest, sig) {
     EXPECT_EQ(asymmetric.sig(true, false),  "gaabcdefdcbefPQ--");
     EXPECT_EQ(asymmetric.sig(false, true),  "gaabcdefbcfedPQaa");
     EXPECT_EQ(asymmetric.sig(false, false), "gaabcdefdcbefPQaa");
+    EXPECT_EQ(asymmetric.sig<LinkSigCompact>(true, true),   "g9bv-abcfed");
+    EXPECT_EQ(asymmetric.sig<LinkSigCompact>(true, false),  "g9bv-adcbef");
+    EXPECT_EQ(asymmetric.sig<LinkSigCompact>(false, true),  "g9bvaabcfed");
+    EXPECT_EQ(asymmetric.sig<LinkSigCompact>(false, false), "g9bvaadcbef");
 
     // For the Hopf link, reversing one component is the same as reflection.
     {
@@ -3822,6 +3842,10 @@ TEST_F(LinkTest, sig) {
         EXPECT_EQ(hopfNegative.sig(true, false), "cabcabjp");
         EXPECT_EQ(hopfNegative.sig(false, true), "cabcabjp");
         EXPECT_EQ(hopfNegative.sig(false, false), "cabcabja");
+        EXPECT_EQ(hopfNegative.sig<LinkSigCompact>(true, true), "ctdcab");
+        EXPECT_EQ(hopfNegative.sig<LinkSigCompact>(true, false), "ctdcab");
+        EXPECT_EQ(hopfNegative.sig<LinkSigCompact>(false, true), "ctdcab");
+        EXPECT_EQ(hopfNegative.sig<LinkSigCompact>(false, false), "ctacab");
     }
 
     // The virtual trefoil is the same under rotation but not reflection.
@@ -3838,21 +3862,37 @@ TEST_F(LinkTest, sig) {
         EXPECT_EQ(rot.sig(true, true, true), "cababdp");
         EXPECT_EQ(ref.sig(true, true, true), "cababdp");
         EXPECT_EQ(both.sig(true, true, true), "cababdp");
+        EXPECT_EQ(link.sig<LinkSigCompact>(true, true, true), "cZdab");
+        EXPECT_EQ(rot.sig<LinkSigCompact>(true, true, true), "cZdab");
+        EXPECT_EQ(ref.sig<LinkSigCompact>(true, true, true), "cZdab");
+        EXPECT_EQ(both.sig<LinkSigCompact>(true, true, true), "cZdab");
 
         EXPECT_EQ(link.sig(true, true, false), "cababdp");
         EXPECT_EQ(rot.sig(true, true, false), "cababdp");
         EXPECT_EQ(ref.sig(true, true, false), "cababdp");
         EXPECT_EQ(both.sig(true, true, false), "cababdp");
+        EXPECT_EQ(link.sig<LinkSigCompact>(true, true, false), "cZdab");
+        EXPECT_EQ(rot.sig<LinkSigCompact>(true, true, false), "cZdab");
+        EXPECT_EQ(ref.sig<LinkSigCompact>(true, true, false), "cZdab");
+        EXPECT_EQ(both.sig<LinkSigCompact>(true, true, false), "cZdab");
 
         EXPECT_EQ(link.sig(false, true, true), "cababdp");
         EXPECT_EQ(rot.sig(false, true, true), "cababdp");
         EXPECT_EQ(ref.sig(false, true, true), "cababda"); // different
         EXPECT_EQ(both.sig(false, true, true), "cababda"); // different
+        EXPECT_EQ(link.sig<LinkSigCompact>(false, true, true), "cZdab");
+        EXPECT_EQ(rot.sig<LinkSigCompact>(false, true, true), "cZdab");
+        EXPECT_EQ(ref.sig<LinkSigCompact>(false, true, true), "cZaab"); // ≠
+        EXPECT_EQ(both.sig<LinkSigCompact>(false, true, true), "cZaab"); // ≠
 
         EXPECT_EQ(link.sig(false, true, false), "cababdp");
         EXPECT_EQ(rot.sig(false, true, false), "cababdp");
         EXPECT_EQ(ref.sig(false, true, false), "cababda"); // different
         EXPECT_EQ(both.sig(false, true, false), "cababda"); // different
+        EXPECT_EQ(link.sig<LinkSigCompact>(false, true, false), "cZdab");
+        EXPECT_EQ(rot.sig<LinkSigCompact>(false, true, false), "cZdab");
+        EXPECT_EQ(ref.sig<LinkSigCompact>(false, true, false), "cZaab"); // ≠
+        EXPECT_EQ(both.sig<LinkSigCompact>(false, true, false), "cZaab"); // ≠
     }
 
     // The GPV virtual knot gives four different sigs under all four
@@ -3870,22 +3910,38 @@ TEST_F(LinkTest, sig) {
         EXPECT_EQ(rot.sig(true, true, true), "eabacdcdbZa-d");
         EXPECT_EQ(ref.sig(true, true, true), "eabacdcdbZa-d");
         EXPECT_EQ(both.sig(true, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(link.sig<LinkSigCompact>(true, true, true), "eBSpacdb");
+        EXPECT_EQ(rot.sig<LinkSigCompact>(true, true, true), "eBSpacdb");
+        EXPECT_EQ(ref.sig<LinkSigCompact>(true, true, true), "eBSpacdb");
+        EXPECT_EQ(both.sig<LinkSigCompact>(true, true, true), "eBSpacdb");
 
         EXPECT_EQ(link.sig(true, true, false), "eabcbcdadZa-d"); // different
         EXPECT_EQ(rot.sig(true, true, false), "eabacdcdbZa-d");
         EXPECT_EQ(ref.sig(true, true, false), "eabcbcdadZa-d"); // different
         EXPECT_EQ(both.sig(true, true, false), "eabacdcdbZa-d");
+        EXPECT_EQ(link.sig<LinkSigCompact>(true, true, false), "eNSpbcad"); // ≠
+        EXPECT_EQ(rot.sig<LinkSigCompact>(true, true, false), "eBSpacdb");
+        EXPECT_EQ(ref.sig<LinkSigCompact>(true, true, false), "eNSpbcad"); // ≠
+        EXPECT_EQ(both.sig<LinkSigCompact>(true, true, false), "eBSpacdb");
 
         EXPECT_EQ(link.sig(false, true, true), "eabacdcdbZaaa"); // different
         EXPECT_EQ(rot.sig(false, true, true), "eabacdcdbZaaa"); // different
         EXPECT_EQ(ref.sig(false, true, true), "eabacdcdbZa-d");
         EXPECT_EQ(both.sig(false, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(link.sig<LinkSigCompact>(false, true, true), "eBSaacdb"); // ≠
+        EXPECT_EQ(rot.sig<LinkSigCompact>(false, true, true), "eBSaacdb"); // ≠
+        EXPECT_EQ(ref.sig<LinkSigCompact>(false, true, true), "eBSpacdb");
+        EXPECT_EQ(both.sig<LinkSigCompact>(false, true, true), "eBSpacdb");
 
         // Four different signatures here:
         EXPECT_EQ(link.sig(false, true, false), "eabcbcdadZaaa");
         EXPECT_EQ(rot.sig(false, true, false), "eabacdcdbZaaa");
         EXPECT_EQ(ref.sig(false, true, false), "eabcbcdadZa-d");
         EXPECT_EQ(both.sig(false, true, false), "eabacdcdbZa-d");
+        EXPECT_EQ(link.sig<LinkSigCompact>(false, true, false), "eNSabcad");
+        EXPECT_EQ(rot.sig<LinkSigCompact>(false, true, false), "eBSaacdb");
+        EXPECT_EQ(ref.sig<LinkSigCompact>(false, true, false), "eNSpbcad");
+        EXPECT_EQ(both.sig<LinkSigCompact>(false, true, false), "eBSpacdb");
     }
 
     // The Kishino knot is symmetric under both reflection and rotation, if we
@@ -3904,31 +3960,51 @@ TEST_F(LinkTest, sig) {
         EXPECT_EQ(rot.sig(true, true, true), "eabacdcdblbTa");
         EXPECT_EQ(ref.sig(true, true, true), "eabacdcdblbTa");
         EXPECT_EQ(both.sig(true, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(link.sig<LinkSigCompact>(true, true, true), "eBCfacdb");
+        EXPECT_EQ(rot.sig<LinkSigCompact>(true, true, true), "eBCfacdb");
+        EXPECT_EQ(ref.sig<LinkSigCompact>(true, true, true), "eBCfacdb");
+        EXPECT_EQ(both.sig<LinkSigCompact>(true, true, true), "eBCfacdb");
 
         EXPECT_EQ(link.sig(true, true, false), "eabacdcdblbTa");
         EXPECT_EQ(rot.sig(true, true, false), "eabacdcdblbTa");
         EXPECT_EQ(ref.sig(true, true, false), "eabacdcdblbTa");
         EXPECT_EQ(both.sig(true, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(link.sig<LinkSigCompact>(true, true, false), "eBCfacdb");
+        EXPECT_EQ(rot.sig<LinkSigCompact>(true, true, false), "eBCfacdb");
+        EXPECT_EQ(ref.sig<LinkSigCompact>(true, true, false), "eBCfacdb");
+        EXPECT_EQ(both.sig<LinkSigCompact>(true, true, false), "eBCfacdb");
 
         EXPECT_EQ(link.sig(false, true, true), "eabacdcdblbTa");
         EXPECT_EQ(rot.sig(false, true, true), "eabacdcdblbTa");
         EXPECT_EQ(ref.sig(false, true, true), "eabacdcdblbTa");
         EXPECT_EQ(both.sig(false, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(link.sig<LinkSigCompact>(false, true, true), "eBCfacdb");
+        EXPECT_EQ(rot.sig<LinkSigCompact>(false, true, true), "eBCfacdb");
+        EXPECT_EQ(ref.sig<LinkSigCompact>(false, true, true), "eBCfacdb");
+        EXPECT_EQ(both.sig<LinkSigCompact>(false, true, true), "eBCfacdb");
 
         EXPECT_EQ(link.sig(false, true, false), "eabacdcdblbTa");
         EXPECT_EQ(rot.sig(false, true, false), "eabacdcdblbTa");
         EXPECT_EQ(ref.sig(false, true, false), "eabacdcdblbTa");
         EXPECT_EQ(both.sig(false, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(link.sig<LinkSigCompact>(false, true, false), "eBCfacdb");
+        EXPECT_EQ(rot.sig<LinkSigCompact>(false, true, false), "eBCfacdb");
+        EXPECT_EQ(ref.sig<LinkSigCompact>(false, true, false), "eBCfacdb");
+        EXPECT_EQ(both.sig<LinkSigCompact>(false, true, false), "eBCfacdb");
 
         EXPECT_EQ(link.sig(false, false, false), "eabcbcdadTalb"); // different
         EXPECT_EQ(rot.sig(false, false, false), "eabacdcdblbTa");
         EXPECT_EQ(ref.sig(false, false, false), "eabacdcdblbTa");
         EXPECT_EQ(both.sig(false, false, false), "eabcbcdadTalb"); // different
+        EXPECT_EQ(link.sig<LinkSigCompact>(false, false, false), "eN0dbcad");
+        EXPECT_EQ(rot.sig<LinkSigCompact>(false, false, false), "eBCfacdb");
+        EXPECT_EQ(ref.sig<LinkSigCompact>(false, false, false), "eBCfacdb");
+        EXPECT_EQ(both.sig<LinkSigCompact>(false, false, false), "eN0dbcad");
     }
 
-    // Verify some signatures against actual hard-coded strings, to ensure
-    // that the single-component knot signature format from Regina ≤ 7.3
-    // matches the more general format in Regina ≥ 7.4.
+    // Verify some standard signatures against actual hard-coded strings, to
+    // ensure that the single-component knot signature format from Regina ≤ 7.3
+    // matches the more general link signature format in Regina ≥ 7.4.
     //
     // The following knot signatures were all computed using Regina 7.3.
     EXPECT_EQ(unknot0.link.sig(), "a");
@@ -3948,9 +4024,9 @@ TEST_F(LinkTest, sig) {
     EXPECT_EQ(rht_rht.link.sig(), "gabcabcdefdefvv--");
     EXPECT_EQ(rht_lht.link.sig(), "gabcabcdefdefvv-a");
 
-    // Add some hard-coded classical link signatures and virtual knot/link
-    // signatures (both of which are new to Regina 7.4), to ensure that nothing
-    // changes as we optimise the underlying algorithms in later releases.
+    // Add some hard-coded standard signatures for classical links and virtual
+    // knots/links (both signature types are new to Regina 7.4), to ensure that
+    // nothing changes as we optimise the code in later releases.
     // Unless indicated otherwise, all signatures below were computed using
     // Regina 7.4.
     EXPECT_EQ(empty.link.sig(), "_"); // verified by hand
@@ -3975,6 +4051,52 @@ TEST_F(LinkTest, sig) {
     EXPECT_EQ(virtualTrefoilx2.link.sig(),
         "mabcadefghcijmbkldkijlefghNI8OF4-d");
     EXPECT_EQ(virtualDisconnected.link.sig(), "cabcacbjpcabcabjpcababdp");
+
+    // Likewise, verify some compact signatures against hard-coded strings to
+    // ensure that nothing changes in future releases.
+    //
+    // The following compact signatures were all computed using Regina 8.0.
+    EXPECT_EQ(unknot0.link.sig<LinkSigCompact>(), "a");
+    EXPECT_EQ(unknot1.link.sig<LinkSigCompact>(), "bna");
+    EXPECT_EQ(unknot3.link.sig<LinkSigCompact>(), "dhVabc");
+    EXPECT_EQ(unknotMonster.link.sig<LinkSigCompact>(), "k-paCvdgbefgdcjahi");
+    EXPECT_EQ(unknotGordian.link.sig<LinkSigCompact>(), "-cnc-----RZUTpZLR---3-ZAo+6rRSZLzseQGiraiiaiaaaaaaaVB3NN9VV7FowkgnLvTrmBRm+w2tz5txSv-NFKLI-hNZ3xlLvatapaoalahaeabajaNafaQaUauaGazaBadb+aEaxa4aqaJaLamaobibxb-aSaca0aVaHaraGbmbMbfbubRbzbAbSbsb5bgbNb2b1blbZbnaKaJbXaWb1aUbdaRaab+b7bvbPbjbbc3bLbpbMakadcIbHbIaYbsaFb6ayaDbCbDa8a9b8bybQbwbhc6btb-bcbqbjcKbnb0bcckbicObhbac4bebrbmcbbgcTbBb9alcCa7aAakc5aEbwaFaaaTa2afcVbPagaZaYaOaiaecWaXb3a");
+    EXPECT_EQ(trefoilLeft.link.sig<LinkSigCompact>(), "dh9abc");
+    EXPECT_EQ(trefoilRight.link.sig<LinkSigCompact>(), "dh9abc");
+    EXPECT_EQ(trefoil_r1x2.link.sig<LinkSigCompact>(), "f9W+baebcd");
+    EXPECT_EQ(trefoil_r1x6.link.sig<LinkSigCompact>(), "jTnjN8vacegbhdif");
+    EXPECT_EQ(figureEight.link.sig<LinkSigCompact>(), "epudbadc");
+    EXPECT_EQ(figureEight_r1x2.link.sig<LinkSigCompact>(), "gDd7nabfdce");
+    EXPECT_EQ(conway.link.sig<LinkSigCompact>(), "lV5mWM6jabcdefgaijkh");
+    EXPECT_EQ(kinoshitaTerasaka.link.sig<LinkSigCompact>(),
+        "l-flW2UPbaefhbdijckg");
+    EXPECT_EQ(gst.link.sig<LinkSigCompact>(), "W---Dg9J0rqYtMeaaFyCrzkT2V7-paa4KeinohvapgubzBqftcAGCHsrIDjmNOklSPyFKdLMJExwRUTQV");
+    EXPECT_EQ(rht_rht.link.sig<LinkSigCompact>(), "ghhT-abcdef");
+    EXPECT_EQ(rht_lht.link.sig<LinkSigCompact>(), "ghhThabcdef");
+
+    EXPECT_EQ(empty.link.sig<LinkSigCompact>(), "_");
+    EXPECT_EQ(hopf.link.sig<LinkSigCompact>(), "ctdcab");
+    EXPECT_EQ(whitehead.link.sig<LinkSigCompact>(), "f3q7aafbced");
+    EXPECT_EQ(borromean.link.sig<LinkSigCompact>(), "gVc1Jgacgbfde");
+    EXPECT_EQ(trefoil_unknot_overlap.link.sig<LinkSigCompact>(), "fFWDdadefbc");
+    EXPECT_EQ(adams6_28.link.sig<LinkSigCompact>(), "g3bT-adgbcef");
+
+    EXPECT_EQ(unlink2_0.link.sig<LinkSigCompact>(), "aa");
+    EXPECT_EQ(unlink3_0.link.sig<LinkSigCompact>(), "aaa");
+    EXPECT_EQ(unlink2_r2.link.sig<LinkSigCompact>(), "cZbcab");
+    EXPECT_EQ(unlink2_r1r1.link.sig<LinkSigCompact>(), "bnabfa");
+    EXPECT_EQ(trefoil_unknot0.link.sig<LinkSigCompact>(), "dh9abca");
+    EXPECT_EQ(trefoil_unknot1.link.sig<LinkSigCompact>(), "dh9abcbfa");
+
+    EXPECT_EQ(virtualTrefoil.link.sig<LinkSigCompact>(), "cZdab");
+    EXPECT_EQ(kishino.link.sig<LinkSigCompact>(), "eBCfacdb");
+    EXPECT_EQ(gpv.link.sig<LinkSigCompact>(), "eBSpacdb");
+    EXPECT_EQ(virtualLink2.link.sig<LinkSigCompact>(), "bnba");
+    EXPECT_EQ(virtualLink3.link.sig<LinkSigCompact>(), "ctdcacb");
+    EXPECT_EQ(virtualTrefoilx2.link.sig<LinkSigCompact>(),
+        "m33gaxPp8acmbdkijlefgh");
+    EXPECT_EQ(virtualDisconnected.link.sig<LinkSigCompact>(),
+        "ctdcacbctdcabcZdab");
 }
 
 static void verifyFromData(const Link& link, const char* name) {
