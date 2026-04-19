@@ -121,32 +121,32 @@ LST(1,2,3) vs L(8,3) -> subcomplexes, stop after 5
     search ran to completion, count: 4
 
 Trefoil -> display, height = 0, threads = 1
-    dabcabcv- 3
+    dh9abc 3
 Trefoil -> display, height = 0, threads = 2
-    dabcabcv- 3
+    dh9abc 3
 
 Figure eight knot -> stop after 10, height = 1, threads = 1
     search ran to completion, count: 8
 Figure eight knot -> stop after 10, height = 1, threads = 2
     search ran to completion, count: 8
 Figure eight knot -> collect, height = 1, threads = 1
-    eabcdbadcvbZa
-    faabcdbedcePkBg
-    faabcdbedcePkNj
-    faabcdbedcevfBg
-    faabcdbedcevfNj
-    faabcdecbedPkpd
-    faabcdecbedvfpd
-    fabcadebcedtg5m
+    epudbadc
+    f3Wkdabced
+    f9W6aacbed
+    f9q9aacbed
+    fDXEcabdce
+    fDXUbabdce
+    fDrPbabdce
+    fDrzcabdce
 Figure eight knot -> collect, height = 1, threads = 2
-    eabcdbadcvbZa
-    faabcdbedcePkBg
-    faabcdbedcePkNj
-    faabcdbedcevfBg
-    faabcdbedcevfNj
-    faabcdecbedPkpd
-    faabcdecbedvfpd
-    fabcadebcedtg5m
+    epudbadc
+    f3Wkdabced
+    f9W6aacbed
+    f9q9aacbed
+    fDXEcabdce
+    fDXUbabdce
+    fDrPbabdce
+    fDrzcabdce
 
 Monster unknot -> stop after 10, height = 1, threads = 1
     search terminated early, count: 10
