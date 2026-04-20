@@ -151,9 +151,9 @@ Version 8.0  [ TODO ]
         Class Isomorphism<dim>:
             - The increment operators are now available in all dimensions
               (not just dimensions ≤ 6).
-        Class IsoSigEncodingAPI, IsoSigTypeAPI:
-            - New documentation-only classes that explain how encodings and
-              signature types for isomorphism signatures are expected to behave.
+        Class IsoSigTypeAPI:
+            - New documentation-only class that explains how signature types
+              for isomorphism signatures are expected to behave.
         Class IsoSigData, IsoSigPrintable, IsoSigPrintableLockFree:
             - The data to encode for isomorphism signatures is now supplied to
               encoding classes via the new type IsoSigData<dim>.  The old

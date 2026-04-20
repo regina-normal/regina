@@ -1626,8 +1626,9 @@ currently determined by the template parameters *Type* and *Encoding:*
 You may instead pass your own type and/or encoding parameters as
 template arguments. Currently this facility is for internal use only,
 and the requirements for type and encoding parameters may change in
-future versions of Regina. See the IsoSigTypeAPI and IsoSigEncodingAPI
-documentation for how the *Type* and *Encoding* classes should behave.
+future versions of Regina. See the IsoSigTypeAPI class documentation
+and the IsoSigEncoding concept documentation for the current
+requirements.
 
 Note that, if you wish to produce an isomorphism signature that
 ignores simplex and/or facet locks then you can use an encoding whose

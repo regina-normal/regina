@@ -213,14 +213,13 @@ void addIsoSigData(pybind11::module_& m, const char* name) {
 template <int dim, bool supportLocks>
 requires (regina::supportedDim(dim))
 void addIsoSigPrintable(pybind11::module_& m, const char* name) {
-    RDOC_SCOPE_BEGIN_MAIN
-    RDOC_SCOPE_BASE(IsoSigEncodingAPI)
+    RDOC_SCOPE_BEGIN(IsoSigPrintable)
 
     using Encoding = regina::IsoSigPrintable<dim, supportLocks>;
-    auto s = pybind11::class_<Encoding>(m, name, rdoc::IsoSigPrintable)
+    auto s = pybind11::class_<Encoding>(m, name, rdoc_scope)
         .def_readonly_static("charsPerPerm", &Encoding::charsPerPerm)
-        .def_static("encodeEmpty", &Encoding::encodeEmpty, rbase::encodeEmpty)
-        .def_static("encode", &Encoding::encode, rbase::encode)
+        .def_static("encodeEmpty", &Encoding::encodeEmpty, rdoc::encodeEmpty)
+        .def_static("encode", &Encoding::encode, rdoc::encode)
         ;
     regina::python::no_eq_static(s);
 

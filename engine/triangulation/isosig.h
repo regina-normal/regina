@@ -370,102 +370,41 @@ inline void swap(IsoSigData<dim>& a, IsoSigData<dim>& b) noexcept {
     a.swap(b);
 };
 
-#ifdef __APIDOCS
-/**
- * A documentation-only class describing the expected behaviour of isomorphism
- * signature encodings.
- *
- * Regina supports different _encodings_ for isomorphism signatures of
- * triangulations.  Essentially, the job of an encoding algorithm is to pack
- * a "compressed" gluings table into a small piece of data (such as a string)
- * that can be easily saved and/or passed around.
- *
- * This IsoSigEncodingAPI class is a documentation-only class (it is not
- * actually built into Regina).  Its purpose is to describe in detail the
- * tasks that an isomorphism signature encoding is expected to perform, and the
- * interface that the corresponding C++ class should provide.
- *
- * All encoding classes provide their functionality through static members and
- * static routines: they do not contain any member data, and it is unnecessary
- * (but harmless) to construct them.  Instead encoding classes are typically
- * used as C++ template arguments for functions such as
- * `Triangulation<dim>::isoSig()` and `Triangulation<dim>::isoSigDetail()`.
- *
- * \python Whilst Regina's encoding classes are available, it is rare that you
- * would need to access these directly through Python.  Instead, to use an
- * isomorphism signature encoding class, you would typically call a modified
- * form of `Triangulation<dim>::isoSig()` or
- * `Triangulation<dim>::isoSigDetail()`  See `Triangulation<dim>::isoSig()`
- * for further details.
- *
- * \apinotfinal
- *
- * \ingroup triangulation
- */
-template <int dim> requires (supportedDim(dim))
-class IsoSigEncodingAPI {
-    public:
-        /**
-         * The data type that this encoding uses to hold the final
-         * isomorphism signature.
-         *
-         * This API documentation shows `std::string` as an example, but this
-         * may be any type that adheres to the concept ConcatenableSequence.
-         */
-        using Signature = std::string;
-
-        /**
-         * Encodes the isomorphism signature of the empty
-         * <i>dim</i>-dimensional triangulation.
-         *
-         * Note that this would typically _not_ be an empty signature.
-         * For example, under Regina's default encoding, the signature for
-         * the empty triangulation is the non-empty string `a`.
-         *
-         * \return the isomorphism signature of the empty triangulation.
-         */
-        static Signature encodeEmpty();
-
-        /**
-         * Encodes a "compressed" gluings table for a single non-empty
-         * connected component of a <i>dim</i>-dimensional triangulation.
-         *
-         * The job of this routine is to pack the information stored in
-         * `IsoSigData<dim>` into the final \a Signature format.  For example,
-         * Regina's default encoding (IsoSigPrintable) uses a combination of
-         * bit-packing and base64 encoding to convert the data into a string.
-         *
-         * The size `data.size()` will need to be encoded; however, after this
-         * it is not necessary to encode the sizes of the various arrays,
-         * since these are already implied by the array contents.  Specifically:
-         *
-         * - by using `data.size()` and sequentially reading the contents of
-         *   `data.facetTypes()`, it is possible for a reader to deduce the
-         *   point at which the array `data.facetTypes()` ends;
-         *
-         * - by using `data.size()` and the contents of `data.facetTypes()`,
-         *   it is possible for a reader to precompute the length of the arrays
-         *   `data.adjacentSimplices()` and `data.adjacentGluings()`;
-         *
-         * - if the array `data.locks()` is non-empty, then its length will be
-         *   the already-encoded quantity `data.size()`.
-         *
-         * \param data the compressed gluings table to be encoded.
-         * \return the given gluings table encoded in the form of an
-         * isomorphism signature.
-         */
-        static Signature encode(const IsoSigData<dim>& data);
-};
-#endif // __APIDOCS
-
 /**
  * Represents an encoding that can be used for isomorphism signatures
  * of triangulations.  Essentially, the job of an encoding algorithm is to
- * pack the gluings table into a small piece of data (such as a string)
- * that is easily transported.
+ * pack the gluings table for a single triangulation component into a small
+ * piece of data (such as a string) that is easily transported.
  *
- * See IsoSigEncodingAPI for further information, including a thorough
- * description of how an encoding class is expected to behave.
+ * An encoding should provide a type alias `Signature`, indicating the type
+ * that holds the final isomorphism signature (e.g., `std::string`).
+ * In addition, it should provide the following static routines:
+ *
+ * - `encodeEmpty()`, which encodes the empty <i>dim</i>-dimensional
+ *   triangulation;
+ *
+ * - `encode(const IsoSigData<dim>&)`, which encodes the gluings table for a
+ *   single connected component of a <i>dim</i>-dimensional triangulation.
+ *   This routine may assume that the component is non-empty, and that it uses
+ *   a canonical labelling in the sense described in the IsoSigData class notes.
+ *
+ * Both routines should return the type `Signature`.
+ *
+ * Note that `encode()` can be economical about what information it writes:
+ * although `data.size()` will need to be encoded, it is not necessary to
+ * encode the sizes of the various supporting arrays, since their sizes are
+ * implied by their contents.  Specifically:
+ *
+ * - by using `data.size()` and sequentially reading the contents of
+ *   `data.facetTypes()`, it is possible for a reader to deduce the
+ *   point at which the array `data.facetTypes()` ends;
+ *
+ * - by using `data.size()` and the contents of `data.facetTypes()`,
+ *   it is possible for a reader to precompute the length of the arrays
+ *   `data.adjacentSimplices()` and `data.adjacentGluings()`;
+ *
+ * - if the array `data.locks()` is non-empty, then its length will be
+ *   `data.size()`.
  *
  * \apinotfinal
  *
@@ -495,18 +434,24 @@ concept IsoSigEncoding =
  * locks, then the resulting signature will be the same as produced by earlier
  * versions of Regina, before locks were implemented.
  *
- * See the IsoSigEncodingAPI documentation for details on all member functions.
+ * See the IsoSigEncoding concept documentation for general details on
+ * encodings for isomorphism signatures.
  *
  * This class is designed to be used as a template parameter for
  * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
- * Typical users would have no need to create objects of this class or
- * call any of its functions directly.
+ * Typical users would have no need to call any of its functions directly.
  *
- * \python Python does not support templates.  For encodings that do support
- * locks (the default), Python users can just append the dimension as a suffix
- * (e.g., IsoSigPrintable2 and IsoSigPrintable3 for dimensions 2 and 3).
- * For encodings that do not support locks, Python users should use the
- * type aliases IsoSigPrintableLockFree2, IsoSigPrintableLockFree3, and so on.
+ * \python Python does not support C++ templates.  To _use_ this encoding in
+ * Python: if \a supportLocks is `true` (the default), call the relevant
+ * signature function with no extra suffix (e.g., `Triangulation::isoSig()` or
+ * `Triangulation::isoSigDetail()`); if \a supportLocks is `false`, use an
+ * extra `_LockFree` suffix (e.g., `Triangulation::isoSig_LockFree()` or
+ * `Triangulation::isoSigDetail_LockFree()`).
+ * To access this encoding _class_ (which you would typically not need to do):
+ * if \a supportLocks is `true`, append the dimension as a suffix (e.g.,
+ * `IsoSigPrintable2` and `IsoSigPrintable3` for dimensions 2 and 3);
+ * if \a supportLocks is `false`, use the type aliases
+ * `IsoSigPrintableLockFree2`, `IsoSigPrintableLockFree3`, and so on.
  *
  * \apinotfinal
  *
@@ -524,14 +469,36 @@ class IsoSigPrintable {
         static constexpr int charsPerPerm =
             ((regina::bitsRequired(Perm<(dim)+1>::nPerms) + 5) / 6);
 
+        /**
+         * The data type that this encoding uses to hold the final signature.
+         */
         using Signature = std::string;
 
+        /**
+         * Encodes the isomorphism signature of the empty
+         * <i>dim</i>-dimensional triangulation.
+         *
+         * Note that IsoSigPrintable does _not_ return an empty signature for
+         * this; instead it returns the non-empty string `a`.
+         *
+         * \return the isomorphism signature of the empty triangulation.
+         */
         static Signature encodeEmpty() {
             Base64SigEncoder enc;
             enc.encodeSingle(0);
             return std::move(enc).str();
         }
 
+        /**
+         * Encodes a single connected component of a <i>dim</i>-dimensional
+         * triangulation.
+         *
+         * \pre The given component is non-empty, and uses a canonical labelling
+         * in the sense described in the IsoSigData class notes.
+         *
+         * \param data the compressed gluings table for the component to encode.
+         * \return the given gluings table encoded as an isomorphism signature.
+         */
         static Signature encode(const IsoSigData<dim>& data) {
             Base64SigEncoder enc;
 
@@ -575,15 +542,19 @@ class IsoSigPrintable {
  * IsoSigPrintable, this encoding represents an isomorphism signature as a
  * std::string using only printable characters from the 7-bit ASCII range.
  *
- * See the IsoSigEncodingAPI documentation for details on all member functions.
+ * See the IsoSigEncoding concept documentation for general details on
+ * encodings for isomorphism signatures.
  *
  * This class is designed to be used as a template parameter for
  * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
- * Typical users would have no need to create objects of this class or
- * call any of its functions directly.
+ * Typical users would have no need to call any of its functions directly.
  *
- * \python Python does not support templates.  Instead this class can be used
- * by appending the dimension as a suffix (e.g., IsoSigPrintableLockFree2 and
+ * \python Python does not support C++ templates.  To _use_ this encoding in
+ * Python, you should call the relevant signature function with an extra
+ * `_LockFree` suffix (e.g., `Triangulation::isoSig_LockFree()` or
+ * `Triangulation::isoSigDetail_LockFree()`).
+ * To access this encoding _class_ (which you would typically not need to do),
+ * append the dimension as a suffix (e.g., IsoSigPrintableLockFree2 and
  * IsoSigPrintableLockFree3 for dimensions 2 and 3).
  *
  * \apinotfinal

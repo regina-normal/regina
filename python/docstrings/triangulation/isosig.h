@@ -149,44 +149,6 @@ Python:
     IsoSigEdgeDegrees3 to work with edge degrees in 3-manifold
     triangulations).)doc";
 
-// Docstring regina::python::doc::IsoSigEncodingAPI
-static const char *IsoSigEncodingAPI =
-R"doc(A documentation-only class describing the expected behaviour of
-isomorphism signature encodings.
-
-Regina supports different _encodings_ for isomorphism signatures of
-triangulations. Essentially, the job of an encoding algorithm is to
-pack a "compressed" gluings table into a small piece of data (such as
-a string) that can be easily saved and/or passed around.
-
-This IsoSigEncodingAPI class is a documentation-only class (it is not
-actually built into Regina). Its purpose is to describe in detail the
-tasks that an isomorphism signature encoding is expected to perform,
-and the interface that the corresponding C++ class should provide.
-
-All encoding classes provide their functionality through static
-members and static routines: they do not contain any member data, and
-it is unnecessary (but harmless) to construct them. Instead encoding
-classes are typically used as C++ template arguments for functions
-such as ``Triangulation<dim>::isoSig()`` and
-``Triangulation<dim>::isoSigDetail()``.
-
-Python:
-    Whilst Regina's encoding classes are available, it is rare that
-    you would need to access these directly through Python. Instead,
-    to use an isomorphism signature encoding class, you would
-    typically call a modified form of ``Triangulation<dim>::isoSig()``
-    or ``Triangulation<dim>::isoSigDetail()`` See
-    ``Triangulation<dim>::isoSig()`` for further details.
-
-.. warning::
-    The API for this class or function has not yet been finalised.
-    This means that the interface may change in new versions of
-    Regina, without maintaining backward compatibility. If you use
-    this class directly in your own code, please check the detailed
-    changelog with each new release to see if you need to make changes
-    to your code.)doc";
-
 // Docstring regina::python::doc::IsoSigPrintable
 static const char *IsoSigPrintable =
 R"doc(The default encoding to use for isomorphism signatures.
@@ -203,21 +165,28 @@ triangulation in question does not actually have any simplex and/or
 facet locks, then the resulting signature will be the same as produced
 by earlier versions of Regina, before locks were implemented.
 
-See the IsoSigEncodingAPI documentation for details on all member
-functions.
+See the IsoSigEncoding concept documentation for general details on
+encodings for isomorphism signatures.
 
 This class is designed to be used as a template parameter for
 Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
-Typical users would have no need to create objects of this class or
-call any of its functions directly.
+Typical users would have no need to call any of its functions
+directly.
 
 Python:
-    Python does not support templates. For encodings that do support
-    locks (the default), Python users can just append the dimension as
-    a suffix (e.g., IsoSigPrintable2 and IsoSigPrintable3 for
-    dimensions 2 and 3). For encodings that do not support locks,
-    Python users should use the type aliases IsoSigPrintableLockFree2,
-    IsoSigPrintableLockFree3, and so on.
+    Python does not support C++ templates. To _use_ this encoding in
+    Python: if *supportLocks* is ``True`` (the default), call the
+    relevant signature function with no extra suffix (e.g.,
+    ``Triangulation::isoSig()`` or ``Triangulation::isoSigDetail()``);
+    if *supportLocks* is ``False``, use an extra ``_LockFree`` suffix
+    (e.g., ``Triangulation::isoSig_LockFree()`` or
+    ``Triangulation::isoSigDetail_LockFree()``). To access this
+    encoding _class_ (which you would typically not need to do): if
+    *supportLocks* is ``True``, append the dimension as a suffix
+    (e.g., ``IsoSigPrintable2`` and ``IsoSigPrintable3`` for
+    dimensions 2 and 3); if *supportLocks* is ``False``, use the type
+    aliases ``IsoSigPrintableLockFree2``,
+    ``IsoSigPrintableLockFree3``, and so on.
 
 .. warning::
     The API for this class or function has not yet been finalised.
@@ -482,48 +451,30 @@ Parameter ``other``:
 
 }
 
-namespace IsoSigEncodingAPI_ {
+namespace IsoSigPrintable_ {
 
-// Docstring regina::python::doc::IsoSigEncodingAPI_::encode
+// Docstring regina::python::doc::IsoSigPrintable_::encode
 static const char *encode =
-R"doc(Encodes a "compressed" gluings table for a single non-empty connected
-component of a *dim*-dimensional triangulation.
+R"doc(Encodes a single connected component of a *dim*-dimensional
+triangulation.
 
-The job of this routine is to pack the information stored in
-``IsoSigData<dim>`` into the final *Signature* format. For example,
-Regina's default encoding (IsoSigPrintable) uses a combination of bit-
-packing and base64 encoding to convert the data into a string.
-
-The size ``data.size()`` will need to be encoded; however, after this
-it is not necessary to encode the sizes of the various arrays, since
-these are already implied by the array contents. Specifically:
-
-* by using ``data.size()`` and sequentially reading the contents of
-  ``data.facetTypes()``, it is possible for a reader to deduce the
-  point at which the array ``data.facetTypes()`` ends;
-
-* by using ``data.size()`` and the contents of ``data.facetTypes()``,
-  it is possible for a reader to precompute the length of the arrays
-  ``data.adjacentSimplices()`` and ``data.adjacentGluings()``;
-
-* if the array ``data.locks()`` is non-empty, then its length will be
-  the already-encoded quantity ``data.size()``.
+Precondition:
+    The given component is non-empty, and uses a canonical labelling
+    in the sense described in the IsoSigData class notes.
 
 Parameter ``data``:
-    the compressed gluings table to be encoded.
+    the compressed gluings table for the component to encode.
 
 Returns:
-    the given gluings table encoded in the form of an isomorphism
-    signature.)doc";
+    the given gluings table encoded as an isomorphism signature.)doc";
 
-// Docstring regina::python::doc::IsoSigEncodingAPI_::encodeEmpty
+// Docstring regina::python::doc::IsoSigPrintable_::encodeEmpty
 static const char *encodeEmpty =
 R"doc(Encodes the isomorphism signature of the empty *dim*-dimensional
 triangulation.
 
-Note that this would typically _not_ be an empty signature. For
-example, under Regina's default encoding, the signature for the empty
-triangulation is the non-empty string ``a``.
+Note that IsoSigPrintable does _not_ return an empty signature for
+this; instead it returns the non-empty string ``a``.
 
 Returns:
     the isomorphism signature of the empty triangulation.)doc";
