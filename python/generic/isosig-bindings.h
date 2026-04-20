@@ -113,15 +113,14 @@ void isosig_options(PythonClass& classWrapper) {
 
 template <int dim> requires (regina::supportedDim(dim))
 void addIsoSigClassic(pybind11::module_& m, const char* name) {
-    RDOC_SCOPE_BEGIN_MAIN
-    RDOC_SCOPE_BASE(IsoSigTypeAPI)
+    RDOC_SCOPE_BEGIN(IsoSigClassic)
 
     using Type = regina::IsoSigClassic<dim>;
-    auto s = pybind11::class_<Type>(m, name, rdoc::IsoSigClassic)
-        .def(pybind11::init<const regina::Component<dim>&>(), rbase::__init)
-        .def("simplex", &Type::simplex, rbase::simplex)
-        .def("perm", &Type::perm, rbase::perm)
-        .def("next", &Type::next, rbase::next)
+    auto s = pybind11::class_<Type>(m, name, rdoc_scope)
+        .def(pybind11::init<const regina::Component<dim>&>(), rdoc::__init)
+        .def("simplex", &Type::simplex, rdoc::simplex)
+        .def("perm", &Type::perm, rdoc::perm)
+        .def("next", &Type::next, rdoc::next)
         ;
     regina::python::disable_eq_operators(s);
 
@@ -130,15 +129,14 @@ void addIsoSigClassic(pybind11::module_& m, const char* name) {
 
 template <int dim> requires (regina::supportedDim(dim))
 void addIsoSigEdgeDegrees(pybind11::module_& m, const char* name) {
-    RDOC_SCOPE_BEGIN_MAIN
-    RDOC_SCOPE_BASE(IsoSigTypeAPI)
+    RDOC_SCOPE_BEGIN(IsoSigDegrees)
 
     using Type = regina::IsoSigEdgeDegrees<dim>;
-    auto s = pybind11::class_<Type>(m, name, rdoc::IsoSigDegrees)
-        .def(pybind11::init<const regina::Component<dim>&>(), rbase::__init)
-        .def("simplex", &Type::simplex, rbase::simplex)
-        .def("perm", &Type::perm, rbase::perm)
-        .def("next", &Type::next, rbase::next)
+    auto s = pybind11::class_<Type>(m, name, rdoc_scope)
+        .def(pybind11::init<const regina::Component<dim>&>(), rdoc::__init)
+        .def("simplex", &Type::simplex, rdoc::simplex)
+        .def("perm", &Type::perm, rdoc::perm)
+        .def("next", &Type::next, rdoc::next)
         ;
     regina::python::disable_eq_operators(s);
 
@@ -147,15 +145,14 @@ void addIsoSigEdgeDegrees(pybind11::module_& m, const char* name) {
 
 template <int dim> requires (regina::supportedDim(dim))
 void addIsoSigRidgeDegrees(pybind11::module_& m, const char* name) {
-    RDOC_SCOPE_BEGIN_MAIN
-    RDOC_SCOPE_BASE(IsoSigTypeAPI)
+    RDOC_SCOPE_BEGIN(IsoSigDegrees)
 
     using Type = regina::IsoSigRidgeDegrees<dim>;
-    auto s = pybind11::class_<Type>(m, name, rdoc::IsoSigDegrees)
-        .def(pybind11::init<const regina::Component<dim>&>(), rbase::__init)
-        .def("simplex", &Type::simplex, rbase::simplex)
-        .def("perm", &Type::perm, rbase::perm)
-        .def("next", &Type::next, rbase::next)
+    auto s = pybind11::class_<Type>(m, name, rdoc_scope)
+        .def(pybind11::init<const regina::Component<dim>&>(), rdoc::__init)
+        .def("simplex", &Type::simplex, rdoc::simplex)
+        .def("perm", &Type::perm, rdoc::perm)
+        .def("next", &Type::next, rdoc::next)
         ;
     regina::python::disable_eq_operators(s);
 
