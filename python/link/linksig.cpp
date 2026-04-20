@@ -74,32 +74,28 @@ void addLinkSig(pybind11::module_& m) {
     regina::python::add_cmp_operators(t, rdoc_inner::__cmp);
 
     RDOC_SCOPE_INNER_END
+    RDOC_SCOPE_SWITCH(LinkSigPrintable)
 
-    RDOC_SCOPE_SWITCH_MAIN
-    RDOC_SCOPE_BASE(LinkSigEncodingAPI)
+    auto c = pybind11::class_<LinkSigPrintable>(m, "LinkSigPrintable",
+            rdoc_scope)
+        .def_static("encodeEmpty", &LinkSigPrintable::encodeEmpty,
+            rdoc::encodeEmpty)
+        .def_static("encodeUnknot", &LinkSigPrintable::encodeUnknot,
+            rdoc::encodeUnknot)
+        .def_static("encode", &LinkSigPrintable::encode, rdoc::encode)
+        ;
+    regina::python::no_eq_static(c);
 
-    {
-        auto c = pybind11::class_<LinkSigPrintable>(m, "LinkSigPrintable",
-                rdoc::LinkSigPrintable)
-            .def_static("encodeEmpty", &LinkSigPrintable::encodeEmpty,
-                rbase::encodeEmpty)
-            .def_static("encodeUnknot", &LinkSigPrintable::encodeUnknot,
-                rbase::encodeUnknot)
-            .def_static("encode", &LinkSigPrintable::encode, rbase::encode)
-            ;
-        regina::python::no_eq_static(c);
-    }
-    {
-        auto c = pybind11::class_<LinkSigCompact>(m, "LinkSigCompact",
-                rdoc::LinkSigCompact)
-            .def_static("encodeEmpty", &LinkSigCompact::encodeEmpty,
-                rbase::encodeEmpty)
-            .def_static("encodeUnknot", &LinkSigCompact::encodeUnknot,
-                rbase::encodeUnknot)
-            .def_static("encode", &LinkSigCompact::encode, rbase::encode)
-            ;
-        regina::python::no_eq_static(c);
-    }
+    RDOC_SCOPE_SWITCH(LinkSigCompact)
+
+    auto c = pybind11::class_<LinkSigCompact>(m, "LinkSigCompact", rdoc_scope)
+        .def_static("encodeEmpty", &LinkSigCompact::encodeEmpty,
+            rdoc::encodeEmpty)
+        .def_static("encodeUnknot", &LinkSigCompact::encodeUnknot,
+            rdoc::encodeUnknot)
+        .def_static("encode", &LinkSigCompact::encode, rdoc::encode)
+        ;
+    regina::python::no_eq_static(c);
 
     RDOC_SCOPE_END
 }

@@ -316,90 +316,28 @@ inline void swap(LinkSigData& a, LinkSigData& b) noexcept {
     a.swap(b);
 };
 
-#ifdef __APIDOCS
-/**
- * A documentation-only class describing the expected behaviour of knot/link
- * signature encodings.
- *
- * Regina supports different _encodings_ for knot/link signatures.
- * Essentially, the job of an encoding algorithm is to pack the information
- * describing a single labelled diagram component into a small piece of data
- * (such as a string) that can be easily saved and/or passed around.
- *
- * This LinkSigEncodingAPI class is a documentation-only class (it is not
- * actually built into Regina).  Its purpose is to describe in detail the
- * tasks that a knot/link signature encoding is expected to perform, and the
- * interface that the corresponding C++ class should provide.
- *
- * All encoding classes provide their functionality through static members and
- * static routines: they do not contain any member data, and it is unnecessary
- * (but harmless) to construct them.  Instead encoding classes are typically
- * used as C++ template arguments for functions such as `Link::sig()`.
- *
- * \python Whilst Regina's encoding classes are available, it is rare that you
- * would need to access these directly through Python.  Instead, to use a
- * knot/link signature encoding class, you would typically call a modified
- * form of `Link::sig()`.  See `Link::sig()` for details.
- *
- * \apinotfinal
- *
- * \ingroup link
- */
-class LinkSigEncodingAPI {
-    public:
-        /**
-         * The data type that this encoding uses to hold the final knot/link
-         * signature.
-         *
-         * This API documentation shows `std::string` as an example, but this
-         * may be any type that adheres to the concept ConcatenableSequence.
-         */
-        using Signature = std::string;
-
-        /**
-         * Encodes the signature of the empty link.
-         *
-         * Note that this would typically _not_ be an empty signature.
-         * For example, under Regina's default encoding, the signature for the
-         * empty link is the non-empty string `_`.
-         *
-         * \return the signature of the empty link.
-         */
-        static Signature encodeEmpty();
-
-        /**
-         * Encodes the signature of the zero-crossing unknot diagram.
-         *
-         * \return the signature of the zero-crossing unknot.
-         */
-        static Signature encodeUnknot();
-
-        /**
-         * Encodes the given information describing a single connected diagram
-         * component.
-         *
-         * \pre The diagram component being described has at least one crossing.
-         *
-         * \pre The given data set is minimal amongst all applicable
-         * relabellings of the underlying connected link diagram.  (Here
-         * "applicable" accounts for the fact that reflection, reversal
-         * and/or rotation may or may not be allowed depending upon context.)
-         *
-         * \param data the data describing a connected diagram component.
-         * \return the given data encoded in the form of a knot/link signature.
-         */
-        static Signature encode(const LinkSigData& data);
-};
-#endif // __APIDOCS
-
 /**
  * Represents an encoding that can be used for knot/link signatures.
  * Essentially, the job of an encoding algorithm is to pack the information
  * describing a single connected diagram component into a small piece of data
  * (such as a string) that is easily transported.
  *
- * See LinkSigEncodingAPI for further information, including a thorough
- * description of how an encoding class is expected to behave.
+ * An encoding should provide a type alias `Signature`, indicating the type
+ * that holds the final knot/link signature (e.g., `std::string`).  In addition,
+ * it should provide the following static routines:
+ *
+ * - `encodeEmpty()`, which encodes the empty link;
+ *
+ * - `encodeUnknot()`, which encodes the zero-crossing unknot diagram;
+ *
+ * - `encode(const LinkSigData&)`, which encodes the information describing a
+ *   single connected diagram component.  This routine may assume that the
+ *   given data set has at least one crossing, and is minimal amongst all
+ *   allowed relabellings of the underlying connected link diagram.  (Here
+ *   "allowed" accounts for the fact that reflection, reversal and/or rotation
+ *   may or may not be permitted depending upon context.)
+ *
+ * All three routines should return the type `Signature`.
  *
  * \apinotfinal
  *
@@ -422,11 +360,15 @@ concept LinkSigEncoding =
  * in Regina ≤ 7.x.  It represents a signature as a `std::string`, using only
  * printable characters from the 7-bit ASCII range.
  *
- * See the LinkSigEncodingAPI documentation for details on all member functions.
+ * See the LinkSigEncoding concept documentation for general details on
+ * encodings for knot/link signatures.
  *
  * This class is designed to be used as a template parameter for Link::sig().
- * Typical users would have no need to create objects of this class or call
- * any of its functions directly.
+ * Typical users would have no need to call any of its functions directly.
+ *
+ * \python Python does not support C++ templates.  To use this encoding in
+ * Python, you can simply call `Link::sig()` (since this encoding is the
+ * default).
  *
  * \apinotfinal
  *
@@ -434,10 +376,42 @@ concept LinkSigEncoding =
  */
 class LinkSigPrintable {
     public:
+        /**
+         * The data type that this encoding uses to hold the final signature.
+         */
         using Signature = std::string;
 
+        /**
+         * Encodes the signature of the empty link.
+         *
+         * Note that LinkSigPrintable and LinkSigCompact do _not_ return an
+         * empty signature for this; instead they both return the special
+         * string `_`.
+         *
+         * \return the signature of the empty link.
+         */
         static Signature encodeEmpty();
+
+        /**
+         * Encodes the signature of the zero-crossing unknot diagram.
+         *
+         * Both LinkSigPrintable and LinkSigCompact return the same signature
+         * `a` in this case.
+         *
+         * \return the signature of the empty link.
+         */
         static Signature encodeUnknot();
+
+        /**
+         * Encodes a single connected diagram component.
+         *
+         * \pre The given diagram component has at least one crossing, and is
+         * minimal amongst all allowed relabellings of the underlying connected
+         * link diagram.
+         *
+         * \param data the data describing a connected diagram component.
+         * \return the given data encoded as a knot/link signature.
+         */
         static Signature encode(const LinkSigData& data);
 
         // Make this class non-constructible.
@@ -454,11 +428,14 @@ class LinkSigPrintable {
  * that were used in Regina ≤ 7.x; they are designed for scenarios where
  * memory usage needs to be kept as small as possible.
  *
- * See the LinkSigEncodingAPI documentation for details on all member functions.
+ * See the LinkSigEncoding concept documentation for general details on
+ * encodings for knot/link signatures.
  *
  * This class is designed to be used as a template parameter for Link::sig().
- * Typical users would have no need to create objects of this class or call
- * any of its functions directly.
+ * Typical users would have no need to call any of its functions directly.
+ *
+ * \python Python does not support C++ templates.  To use this encoding in
+ * Python, you can call `Link::sig_Compact()`.
  *
  * \apinotfinal
  *
@@ -466,10 +443,42 @@ class LinkSigPrintable {
  */
 class LinkSigCompact {
     public:
+        /**
+         * The data type that this encoding uses to hold the final signature.
+         */
         using Signature = std::string;
 
+        /**
+         * Encodes the signature of the empty link.
+         *
+         * Note that LinkSigPrintable and LinkSigCompact do _not_ return an
+         * empty signature for this; instead they both return the special
+         * string `_`.
+         *
+         * \return the signature of the empty link.
+         */
         static Signature encodeEmpty();
+
+        /**
+         * Encodes the signature of the zero-crossing unknot diagram.
+         *
+         * Both LinkSigPrintable and LinkSigCompact return the same signature
+         * `a` in this case.
+         *
+         * \return the signature of the empty link.
+         */
         static Signature encodeUnknot();
+
+        /**
+         * Encodes a single connected diagram component.
+         *
+         * \pre The given diagram component has at least one crossing, and is
+         * minimal amongst all allowed relabellings of the underlying connected
+         * link diagram.
+         *
+         * \param data the data describing a connected diagram component.
+         * \return the given data encoded as a knot/link signature.
+         */
         static Signature encode(const LinkSigData& data);
 
         // Make this class non-constructible.

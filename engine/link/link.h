@@ -5893,8 +5893,8 @@ class Link :
          *
          * - Other custom encodings are currently for internal use only, and the
          *   requirements for the \a Encoding parameter may change in future
-         *   versions of Regina.  See the LinkSigEncodingAPI documentation for
-         *   the current requirements.
+         *   versions of Regina.  See the LinkSigEncoding concept documentation
+         *   for the current requirements.
          *
          * The routine fromSig() can be used to recover a link diagram from
          * its signature (but only if the default encoding LinkSigPrintable or
