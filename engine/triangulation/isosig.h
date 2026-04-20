@@ -83,7 +83,8 @@ class FaceNumbering;
  *   will be uniquely determined (and can be computed in linear time).
  *
  * - Your chosen signature _type_ may impose further requirements on the
- *   choice of simplex 0 and its vertex labels; see IsoSigTypeAPI for details.
+ *   choice of simplex 0 and its vertex labels; see the IsoSigType concept
+ *   documentation for details.
  *
  * Given a canonical labelling, a _compressed_ gluings table holds the
  * following information:
@@ -438,7 +439,7 @@ concept IsoSigEncoding =
  * encodings for isomorphism signatures.
  *
  * This class is designed to be used as a template parameter for
- * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
+ * `Triangulation<dim>::isoSig()` and `Triangulation<dim>::isoSigDetail()`.
  * Typical users would have no need to call any of its functions directly.
  *
  * \python Python does not support C++ templates.  To _use_ this encoding in
@@ -546,7 +547,7 @@ class IsoSigPrintable {
  * encodings for isomorphism signatures.
  *
  * This class is designed to be used as a template parameter for
- * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
+ * `Triangulation<dim>::isoSig()` and `Triangulation<dim>::isoSigDetail()`.
  * Typical users would have no need to call any of its functions directly.
  *
  * \python Python does not support C++ templates.  To _use_ this encoding in
@@ -554,8 +555,8 @@ class IsoSigPrintable {
  * `_LockFree` suffix (e.g., `Triangulation::isoSig_LockFree()` or
  * `Triangulation::isoSigDetail_LockFree()`).
  * To access this encoding _class_ (which you would typically not need to do),
- * append the dimension as a suffix (e.g., IsoSigPrintableLockFree2 and
- * IsoSigPrintableLockFree3 for dimensions 2 and 3).
+ * append the dimension as a suffix (e.g., `IsoSigPrintableLockFree2` and
+ * `IsoSigPrintableLockFree3` for dimensions 2 and 3).
  *
  * \apinotfinal
  *
@@ -564,133 +565,56 @@ class IsoSigPrintable {
 template <int dim> requires (supportedDim(dim))
 using IsoSigPrintableLockFree = IsoSigPrintable<dim, false>;
 
-#ifdef __APIDOCS
 /**
- * A documentation-only class describing the expected behaviour of
- * types of isomorphism signatures.
- *
- * Regina supports different _types_ of isomomorphism signatures of
+ * Represents a signature type that can be used for isomorphism signatures of
  * triangulations.  Essentially, the job of a signature type is to help Regina
  * determine which labelling of a triangulation is "canonical".  Different
  * signature types will make different trade-offs between factors such as
  * speed, accessibility, backward compatibility and so on, typically resulting
  * in different notions of "canonical" as a consequence.
  *
- * This IsoSigTypeAPI class is a documentation-only class (it is not
- * actually built into Regina).  Its purpose is to describe in detail the
- * tasks that an isomorphism signature type is expected to perform, and the
- * interface that the corresponding C++ class should provide.
+ * More specifically, a signature type is described by a class (implementing
+ * this IsoSigType concept), which works with a single component \a c of a
+ * <i>dim</i>-dimenensional triangulation.  The sole task of this class is to
+ * iterate through a selection of combinations `(s, p)`, each of which
+ * identifies a "starting simplex" of \a c and a "starting labelling" of its
+ * vertices.  Here \a s is a top-dimensional simplex in \a c that will act as
+ * the "starting simplex", and \a p is a permutation that maps the vertices
+ * of \a s to the "starting labelling" `0,1,...,dim`.
  *
- * A signature type class such as this works with a single component \a c of
- * a <i>dim</i>-dimenensional triangulation.  The sole task of a type class
- * is to iterate through a selection of combinations `(s, p)`, each
- * of which identifies a "starting simplex" and a "starting labelling"
- * of its vertices.  Here \a s is a top-dimensional simplex in \a c that
- * will act as the "starting simplex", and \a p is a permutation that maps
- * the vertices of \a s to the "starting labelling" `0,1,...,dim`.
+ * Not all possible pairs `(s, p)` need to be offered during this iteration
+ * (indeed, it is ability to prune the candidate pairs `(s, p)` that make some
+ * signature types faster than others).  However, we do require:
  *
- * The properties that any signature type must satisfy are:
+ * - At least one candidate pair `(s, p)` must be offered.
  *
- * - The selection of combinations `(s, p)` is always non-empty.
+ * - If we relabel the top-dimensional simplices of \a c and/or their vertices,
+ *   then the candidate pairs `(s, p)` that are offered will be the _same set_,
+ *   just modified according to this relabelling.  In other words, relabelling
+ *   does not change the set of candidate pairs in any way beyond the
+ *   relabelling itself.
  *
- * - If we reorder the top-dimensional simplices of \a c and/or relabel
- *   their individual vertices, then the combinations `(s, p)` that
- *   this type class produces will be the same set, but modified
- *   according to this reordering/relabelling.  In other words, the
- *   starting simplices and their starting labellings can in theory
- *   be completely deduced from an _unlabelled_ triangulation component.
+ * An instance of a signature type class acts like an iterator: it holds a
+ * single candidate combination `(s, p)`.  In this sense, it must provide the
+ * following functions:
  *
- * An instance of a signature type class is like an iterator: it holds a
- * single candidate combination `(s, p)`.  The constructor must
- * initialise the instance to store the first candidate combination; you
- * can then query the current combination by calling simplex() and perm(),
- * and you can advance to the next combination by calling next().
+ * - a class constructor `T(const Component<dim>&)`, which sets the "iterator"
+ *   to the first candidate pair `(s, p)` for the given component;
  *
- * End users should typically not need to create instances of isomorphism
- * signature type classes.  Instead you would typically use such classes as
- * C++ template arguments for functions such as
- * `Triangulation<dim>::isoSig()` and `Triangulation<dim>::isoSigDetail()`.
+ * - a query routine `size_t simplex() const`, which returns the index of the
+ *   current "starting simplex" \a s within the component \a c (this might
+ *   _not_ be the index of \a s within the overall triangulation);
  *
- * \python Whilst Regina's signature type classes are available, it is rare
- * that you would need to access these directly through Python.  Instead, to use
- * an isomorphism signature type, you would typically call a modified form of
- * `Triangulation<dim>::isoSig()` or `Triangulation<dim>::isoSigDetail()`.
- * See `Triangulation<dim>::isoSig()` for further details.
+ * - a query routine `Perm<dim+1> perm() const`, which returns the current
+ *   "starting labelling" \a p (mapping the vertices of \a s to `0,1,...,dim`);
  *
- * \apinotfinal
+ * - a routine `bool next()`, which advances this "iterator" to the next
+ *   candidate pair `(s, p)`, returning `true` if this successful or `false`
+ *   if there are no more candidate pairs.
  *
- * \ingroup triangulation
- */
-template <int dim> requires (supportedDim(dim))
-class IsoSigTypeAPI {
-    public:
-        /**
-         * Initialises this object to iterate through candidate
-         * "starting simplices" \a s and "starting labellings" \a p for the
-         * given triangulation component.  See the IsoSigTypeAPI class
-         * documentation for details.
-         *
-         * This object will initially be set to hold the first candidate pair
-         * `(s, p)`.
-         *
-         * \param comp the triangulation component that we are examining.
-         */
-        IsoSigTypeAPI(const Component<dim>& comp);
-
-        /**
-         * Returns the current starting simplex \a s.
-         *
-         * See the IsoSigTypeAPI class documentation for further details.
-         *
-         * \pre This object is holding a valid candidate pair `(s, p)`;
-         * that is, next() has not yet returned \c false.
-         *
-         * \return the index of the current starting simplex with
-         * respect to the triangulation component under consideration.
-         * Note that, for a disconnected triangulation, this is _not_
-         * necessarily the same as Simplex::index() (which gives the
-         * index with respect to the overall triangulation).
-         */
-        size_t simplex() const;
-
-        /**
-         * Returns the current starting labelling \a p of the vertices
-         * of the current starting simplex.
-         *
-         * See the IsoSigTypeAPI class documentation for further details.
-         *
-         * \pre This object is holding a valid candidate pair `(s, p)`;
-         * that is, next() has not yet returned \c false.
-         *
-         * \return the starting labelling, given as a permutation that
-         * maps the current vertex labels of the starting simplex \a s
-         * to the "canonical" labels `0,1,...,dim`.
-         */
-        Perm<dim + 1> perm() const;
-
-        /**
-         * Advances this object to the next candidate pair `(s, p)`.
-         *
-         * See the IsoSigTypeAPI class documentation for further details.
-         *
-         * \pre This object is holding a valid candidate pair `(s, p)`;
-         * that is, next() has not yet returned \c false.
-         *
-         * \return \c true if this was successful, or \c false if there
-         * is no next candidate pair (i.e., the current candidate pair
-         * is the last).
-         */
-        bool next();
-};
-#endif // __APIDOCS
-
-/**
- * Represents a signature type that can be used for isomorphism signatures of
- * triangulations.  Essentially, the job of a signature type is to help Regina
- * determine which labelling of a triangulation is "canonical".
- *
- * See IsoSigTypeAPI for further information, including a thorough description
- * of how a signature type class is expected to behave.
+ * The routines `simplex()`, `perm()` and `next()` may all assume that the
+ * "iterator" is describing a valid candidate pair `(s, p)`; that is, `next()`
+ * has not yet returned `false`.
  *
  * \apinotfinal
  *
@@ -713,12 +637,13 @@ concept IsoSigType =
  * it is consistent with the original isomorphism signatures that were
  * implemented in Regina 4.90.
  *
- * See the IsoSigTypeAPI documentation for details on all member functions,
- * and on how isomorphism signature types work in general.
+ * See the IsoSigType concept documentation for a discussion of how
+ * isomorphism signature types act as "iterators" through candidate pairs
+ * `(s, p)`, where \a s is a "starting simplex" within some triangulation
+ * component \a c, and \a p describes a "starting labelling" of its vertices.
  *
- * This classic signature type is trivial: it considers _all_ possible
- * "starting simplices" \a s, and all `(dim+1)!` possible
- * "starting labellings" \a p.
+ * This classic signature type is trivial: it considers _all_ possible pairs
+ * `(s, p)`, without any pruning.
  *
  * This class is designed to be used as a template parameter for
  * `Triangulation<dim>::isoSig()` and `Triangulation<dim>::isoSigDetail()`.
@@ -727,7 +652,15 @@ concept IsoSigType =
  *
  * \python Python does not support templates.  Instead this class
  * can be used by appending the dimension as a suffix (e.g.,
- * IsoSigClassic2 and IsoSigClassic3 for dimensions 2 and 3).
+ *
+ * \python Python does not support C++ templates.  To _use_ this signature type
+ * in Python, just call the relevant signature function with no extra suffix
+ * (e.g., `Triangulation::isoSig()` or `Triangulation::isoSigDetail()`), since
+ * this signature type is the default.  To access this type _class_ (which you
+ * would typically not need to do), append the dimension as a suffix
+ * (e.g., IsoSigClassic2 and IsoSigClassic3 for dimensions 2 and 3).
+ *
+ * \apinotfinal
  *
  * \ingroup triangulation
  */
@@ -746,18 +679,52 @@ class IsoSigClassic {
                  This is an index into Perm<dim + 1>::orderedSn. */
 
     public:
+        /**
+         * Initialises this "iterator" to the first candidate pair `(s, p)`
+         * for the given triangulation component.
+         *
+         * \param comp the triangulation component that we are examining.
+         */
         IsoSigClassic(const Component<dim>& comp) :
                 size_(comp.size()), simp_(0), perm_(0) {
         }
 
+        /**
+         * Returns the index of the current starting simplex \a s within the
+         * relevant triangulation component.
+         *
+         * \pre This "iterator" is holding a valid candidate pair `(s, p)`;
+         * that is, next() has not yet returned `false`.
+         *
+         * \return the index within the component of the starting simplex \a s.
+         */
         size_t simplex() const {
             return simp_;
         }
 
+        /**
+         * Returns the current starting labelling \a p of the vertices
+         * of the current starting simplex \a s.  This maps the vertices
+         * of \a s to the "canonical" labels `0,1,...,dim`.
+         *
+         * \pre This "iterator" is holding a valid candidate pair `(s, p)`;
+         * that is, next() has not yet returned `false`.
+         *
+         * \return the starting labelling \a p.
+         */
         Perm<dim + 1> perm() const {
             return Perm<dim + 1>::orderedSn[perm_];
         }
 
+        /**
+         * Advances this "iterator" to the next candidate pair `(s, p)`.
+         *
+         * \pre This "iterator" is holding a valid candidate pair `(s, p)`;
+         * that is, next() has not yet returned `false`.
+         *
+         * \return \c true if this was successful, or \c false if there
+         * are no more candidate pairs.
+         */
         bool next() {
             if (++perm_ == Perm<dim + 1>::nPerms) {
                 perm_ = 0;
@@ -784,22 +751,26 @@ class IsoSigClassic {
  * The hope is that this eliminates a large number of potential starting
  * simplices without adding an enormous amount of computational overhead.
  *
- * See the IsoSigTypeAPI documentation for details on all member functions,
- * and on how isomorphism signature types work in general.
+ * See the IsoSigType concept documentation for a discussion of how
+ * isomorphism signature types act as "iterators" through candidate pairs
+ * `(s, p)`, where \a s is a "starting simplex" within some triangulation
+ * component \a c, and \a p describes a "starting labelling" of its vertices.
  *
  * This class is designed to be used as a template parameter for
  * `Triangulation<dim>::isoSig()` and `Triangulation<dim>::isoSigDetail()`.
  * Typical users would have no need to create objects of this class or
  * call any of its functions directly.
  *
- * \python Python does not support templates, and there are far
- * too many of these classes to wrap.  Currently Python supports only
- * the cases where \a subdim is 1 or <i>dim</i>-2, using the type aliases
- * IsoSigEdgeDegrees and IsoSigRidgeDegrees respectively (these cover
- * all the variants that Regina currently uses internally).
- * You can access the corresponding classes by appending the appending the
- * dimension as a suffix to the type alias (e.g., you can use
- * IsoSigEdgeDegrees3 to work with edge degrees in 3-manifold triangulations).
+ * \python Python does not support C++ templates, and there are far too many of
+ * these classes to wrap.  Currently Python supports only the cases where
+ * \a subdim is 1 or <i>dim</i>-2, using the type aliases IsoSigEdgeDegrees and
+ * IsoSigRidgeDegrees respectively (these cover all the variants that Regina
+ * currently uses internally).  To _use_ the corresponding signature type,
+ * call the relevant signature function with an extra `_EdgeDegrees` or
+ * `_RidgeDegrees` suffix (e.g., `Triangulation::isoSig_EdgeDegrees()` or
+ * `Triangulation::isoSigDetail_EdgeDegrees()`).  To access the corresponding
+ * signature type _class_ (which you would typically not need to do), append
+ * the dimension as a suffix to the type alias (e.g., `IsoSigEdgeDegrees3`).
  *
  * \ingroup triangulation
  */
@@ -862,6 +833,12 @@ class IsoSigDegrees {
                  This is an index into Perm<dim + 1>::orderedSn. */
 
     public:
+        /**
+         * Initialises this "iterator" to the first candidate pair `(s, p)`
+         * for the given triangulation component.
+         *
+         * \param comp the triangulation component that we are examining.
+         */
         IsoSigDegrees(const Component<dim>& comp) :
                 marks_(comp.size()), perm_(0) {
             // We set smallest_ to the first simplex with minimal subdim-face
@@ -877,14 +854,42 @@ class IsoSigDegrees {
             simp_ = smallest_;
         }
 
+        /**
+         * Returns the index of the current starting simplex \a s within the
+         * relevant triangulation component.
+         *
+         * \pre This "iterator" is holding a valid candidate pair `(s, p)`;
+         * that is, next() has not yet returned `false`.
+         *
+         * \return the index within the component of the starting simplex \a s.
+         */
         size_t simplex() const {
             return simp_;
         }
 
+        /**
+         * Returns the current starting labelling \a p of the vertices
+         * of the current starting simplex \a s.  This maps the vertices
+         * of \a s to the "canonical" labels `0,1,...,dim`.
+         *
+         * \pre This "iterator" is holding a valid candidate pair `(s, p)`;
+         * that is, next() has not yet returned `false`.
+         *
+         * \return the starting labelling \a p.
+         */
         Perm<dim + 1> perm() const {
             return Perm<dim + 1>::orderedSn[perm_];
         }
 
+        /**
+         * Advances this "iterator" to the next candidate pair `(s, p)`.
+         *
+         * \pre This "iterator" is holding a valid candidate pair `(s, p)`;
+         * that is, next() has not yet returned `false`.
+         *
+         * \return \c true if this was successful, or \c false if there
+         * are no more candidate pairs.
+         */
         bool next() {
             if (++perm_ == Perm<dim + 1>::nPerms) {
                 perm_ = 0;
@@ -907,9 +912,12 @@ class IsoSigDegrees {
  * Defines an alternate type of isomorphism signature based on edge degree
  * sequences.  See IsoSigDegrees for further discussion.
  *
- * \python Python does not support templates.  You can access these
- * classes by appending the appending the dimension as a suffix (e.g., use
- * IsoSigEdgeDegrees3 to use edge degrees in 3-manifold triangulations).
+ * \python Python does not support C++ templates.  To _use_ this signature type,
+ * call the relevant signature function with an extra `_EdgeDegrees` suffix
+ * (e.g., `Triangulation::isoSig_EdgeDegrees()` or
+ * `Triangulation::isoSigDetail_EdgeDegrees()`).  To access the corresponding
+ * signature type _class_ (which you would typically not need to do), append
+ * the dimension as a suffix to the type alias (e.g., `IsoSigEdgeDegrees3`).
  *
  * \ingroup triangulation
  */
@@ -920,9 +928,12 @@ using IsoSigEdgeDegrees = IsoSigDegrees<dim, 1>;
  * Defines an alternate type of isomorphism signature based on degree
  * sequences of (<i>dim</i>-2)-faces.  See IsoSigDegrees for further discussion.
  *
- * \python Python does not support templates.  You can access these
- * classes by appending the appending the dimension as a suffix (e.g., use
- * IsoSigRidgeDegrees4 to use triangle degrees in 4-manifold triangulations).
+ * \python Python does not support C++ templates.  To _use_ this signature type,
+ * call the relevant signature function with an extra `_RidgeDegrees` suffix
+ * (e.g., `Triangulation::isoSig_RidgeDegrees()` or
+ * `Triangulation::isoSigDetail_RidgeDegrees()`).  To access the corresponding
+ * signature type _class_ (which you would typically not need to do), append
+ * the dimension as a suffix to the type alias (e.g., `IsoSigRidgeDegrees4`).
  *
  * \ingroup triangulation
  */

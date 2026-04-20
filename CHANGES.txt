@@ -151,9 +151,6 @@ Version 8.0  [ TODO ]
         Class Isomorphism<dim>:
             - The increment operators are now available in all dimensions
               (not just dimensions ≤ 6).
-        Class IsoSigTypeAPI:
-            - New documentation-only class that explains how signature types
-              for isomorphism signatures are expected to behave.
         Class IsoSigData, IsoSigPrintable, IsoSigPrintableLockFree:
             - The data to encode for isomorphism signatures is now supplied to
               encoding classes via the new type IsoSigData<dim>.  The old
@@ -444,8 +441,7 @@ Version 8.0  [ TODO ]
               + BanConstraint, LPConstraint, LPSubspace (defined in
                 enumerate/treelp.h)
               + LinkSigEncoding (defined in link/linksig.h)
-              + IsoSigEncoding (defined in triangulation/isosigencoding.h)
-              + IsoSigType (defined in triangulation/isosigtype.h)
+              + IsoSigEncoding, IsoSigType (defined in triangulation/isosig.h)
         Header triangulation/isosigencoding.h, triangulation/isosigtype.h:
             - Merged into the new header triangulation/isosig.h.  The old
               headers are kept but deprecated.
