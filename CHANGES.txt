@@ -187,9 +187,8 @@ Version 8.0  [ TODO ]
             - The iterator-based variant of fromData() now has simpler
               requirements on the component sequences (in particular, iteration
               no longer needs to be random access).
-        Class LinkSigData, LinkSigEncodingAPI, LinkSigPrintable, LinkSigCompact:
+        Class LinkSigData, LinkSigPrintable, LinkSigCompact:
             - New types to support the generation of knot/link signatures.
-            - Note that LinkSigEncodingAPI is for documentation only.
         Class ListView<...>:
             - Deprecated and no longer used.  Wherever Regina used to return
               a ListView, it now returns a lightweight view from the new C++20
