@@ -123,6 +123,8 @@ void addSigUtils(pybind11::module_& m) {
             static_cast<const std::string&(Base64SigEncoder::*)() const &>(
                 &Base64SigEncoder::str),
             rdoc::str)
+        .def_static("integerWidth", &Base64SigEncoder::integerWidth,
+            rdoc::integerWidth)
         .def("encodeSingle", &Base64SigEncoder::encodeSingle<long>,
             rdoc::encodeSingle)
         .def("encodeSize", &Base64SigEncoder::encodeSize, rdoc::encodeSize)

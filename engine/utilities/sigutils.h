@@ -392,6 +392,24 @@ class Base64SigEncoder {
         }
 
         /**
+         * Returns the smallest number of base64 characters required to encode
+         * any integer between 0 and \a size inclusive.
+         *
+         * For example, `integerWidth(63) == 1`, and `integerWidth(64) == 2`.
+         * the special case `size = 0`, this function will return 1.
+         *
+         * \return the number of base64 characters required.
+         */
+        static constexpr int integerWidth(size_t size) {
+            int ans = 0;
+            do {
+                size >>= 6;
+                ++ans;
+            } while (size > 0);
+            return ans;
+        }
+
+        /**
          * Encodes the given non-negative integer (typically representing the
          * size of some object), without knowing in advance how many base64
          * characters will be required.
@@ -400,13 +418,13 @@ class Base64SigEncoder {
          * top-dimensional simplices in a triangulation, or the number of
          * crossings in a link diagram.
          *
-         * This routine also computes the smallest integer \a b with the
-         * property that any integer \a x between 0 and \a size inclusive can
-         * be encoded using \a b base64 characters.  In other words, any such
-         * \a x can be encoded by calling `encodeInt(x, b)`.  Typically
-         * these \a x would be _indices_ into an object (e.g., top-dimensional
-         * simplex numbers, or crossing numbers).  Note that encodeSize()
-         * itself might write more than \a b characters.
+         * This routine also computes (and returns) the smallest number of
+         * base64 characters required to encode any integer \a x between 0 and
+         * \a size inclusive.  In other words, it returns the smallest \a b for
+         * which any such \a x can be encoded by calling `encodeInt(x, b)`.
+         * Typically such an \a x would be an _index_ into an object (e.g.,
+         * a top-dimensional simplex number, or a crossing index).  Note that
+         * encodeSize() itself might write more than \a b characters.
          *
          * The inverse to this routine is Base64SigDecoder::decodeSize().
          *
@@ -427,12 +445,7 @@ class Base64SigEncoder {
             } else {
                 // For large objects, start with a special marker followed by
                 // the number of characters per integer.
-                int charsPerInt = 0;
-                size_t tmp = size;
-                while (tmp > 0) {
-                    tmp >>= 6;
-                    ++charsPerInt;
-                }
+                int charsPerInt = integerWidth(size);
                 encodeSingle(63);
                 encodeSingle(charsPerInt);
                 encodeInt(size, charsPerInt);

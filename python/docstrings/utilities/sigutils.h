@@ -28,7 +28,7 @@ this position accordingly (but never beyond the end of the string).
 
 This base64 encoding uses the characters: ``a..zA..Z0..9+-``
 
-Baes64 decoders are single-use objects: they cannot be copied, moved
+Base64 decoders are single-use objects: they cannot be copied, moved
 or swapped.
 
 .. warning::
@@ -55,7 +55,7 @@ str() to extract the resulting base64 string.
 
 This base64 encoding uses the characters: ``a..zA..Z0..9+-``
 
-Baes64 encoders are single-use objects: they cannot be copied, moved
+Base64 encoders are single-use objects: they cannot be copied, moved
 or swapped.
 
 .. warning::
@@ -501,13 +501,13 @@ A typical use case would be where *size* represents the number of top-
 dimensional simplices in a triangulation, or the number of crossings
 in a link diagram.
 
-This routine also computes the smallest integer *b* with the property
-that any integer *x* between 0 and *size* inclusive can be encoded
-using *b* base64 characters. In other words, any such *x* can be
-encoded by calling ``encodeInt(x, b)``. Typically these *x* would be
-_indices_ into an object (e.g., top-dimensional simplex numbers, or
-crossing numbers). Note that encodeSize() itself might write more than
-*b* characters.
+This routine also computes (and returns) the smallest number of base64
+characters required to encode any integer *x* between 0 and *size*
+inclusive. In other words, it returns the smallest *b* for which any
+such *x* can be encoded by calling ``encodeInt(x, b)``. Typically such
+an *x* would be an _index_ into an object (e.g., a top-dimensional
+simplex number, or a crossing index). Note that encodeSize() itself
+might write more than *b* characters.
 
 The inverse to this routine is Base64SigDecoder::decodeSize().
 
@@ -538,6 +538,17 @@ Python:
 Parameter ``trits``:
     the sequence of trits to encode. Each element of this sequence
     must be 0, 1 or 2.)doc";
+
+// Docstring regina::python::doc::Base64SigEncoder_::integerWidth
+static const char *integerWidth =
+R"doc(Returns the smallest number of base64 characters required to encode
+any integer between 0 and *size* inclusive.
+
+For example, ``integerWidth(63) == 1``, and ``integerWidth(64) == 2``.
+the special case ``size = 0``, this function will return 1.
+
+Returns:
+    the number of base64 characters required.)doc";
 
 // Docstring regina::python::doc::Base64SigEncoder_::str
 static const char *str =
