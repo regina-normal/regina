@@ -144,6 +144,22 @@ Both LinkSigPrintable and LinkSigCompact return the same signature
 Returns:
     the signature of the empty link.)doc";
 
+// Docstring regina::python::doc::LinkSigCompact_::length
+static const char *length =
+R"doc(Precomputes the length of the signature that encodes the given
+connected diagram component.
+
+Precondition:
+    The given diagram component has at least one crossing, and is
+    minimal amongst all allowed relabellings of the underlying
+    connected link diagram.
+
+Parameter ``data``:
+    the data describing a connected diagram component.
+
+Returns:
+    the length of the knot/link signature that encodes *data*.)doc";
+
 }
 
 namespace LinkSigData_ {
@@ -354,6 +370,22 @@ Both LinkSigPrintable and LinkSigCompact return the same signature
 
 Returns:
     the signature of the empty link.)doc";
+
+// Docstring regina::python::doc::LinkSigPrintable_::length
+static const char *length =
+R"doc(Precomputes the length of the signature that encodes the given
+connected diagram component.
+
+Precondition:
+    The given diagram component has at least one crossing, and is
+    minimal amongst all allowed relabellings of the underlying
+    connected link diagram.
+
+Parameter ``data``:
+    the data describing a connected diagram component.
+
+Returns:
+    the length of the knot/link signature that encodes *data*.)doc";
 
 }
 

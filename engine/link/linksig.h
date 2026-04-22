@@ -414,6 +414,19 @@ class LinkSigPrintable {
          */
         static Signature encode(const LinkSigData& data);
 
+        /**
+         * Precomputes the length of the signature that encodes the given
+         * connected diagram component.
+         *
+         * \pre The given diagram component has at least one crossing, and is
+         * minimal amongst all allowed relabellings of the underlying connected
+         * link diagram.
+         *
+         * \param data the data describing a connected diagram component.
+         * \return the length of the knot/link signature that encodes \a data.
+         */
+        static size_t length(const LinkSigData& data);
+
         // Make this class non-constructible.
         LinkSigPrintable() = delete;
 };
@@ -480,6 +493,19 @@ class LinkSigCompact {
          * \return the given data encoded as a knot/link signature.
          */
         static Signature encode(const LinkSigData& data);
+
+        /**
+         * Precomputes the length of the signature that encodes the given
+         * connected diagram component.
+         *
+         * \pre The given diagram component has at least one crossing, and is
+         * minimal amongst all allowed relabellings of the underlying connected
+         * link diagram.
+         *
+         * \param data the data describing a connected diagram component.
+         * \return the length of the knot/link signature that encodes \a data.
+         */
+        static size_t length(const LinkSigData& data);
 
         // Make this class non-constructible.
         LinkSigCompact() = delete;

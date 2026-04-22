@@ -83,6 +83,7 @@ void addLinkSig(pybind11::module_& m) {
         .def_static("encodeUnknot", &LinkSigPrintable::encodeUnknot,
             rdoc::encodeUnknot)
         .def_static("encode", &LinkSigPrintable::encode, rdoc::encode)
+        .def_static("length", &LinkSigPrintable::length, rdoc::length)
         ;
     regina::python::no_eq_static(c);
 
@@ -94,6 +95,7 @@ void addLinkSig(pybind11::module_& m) {
         .def_static("encodeUnknot", &LinkSigCompact::encodeUnknot,
             rdoc::encodeUnknot)
         .def_static("encode", &LinkSigCompact::encode, rdoc::encode)
+        .def_static("length", &LinkSigCompact::length, rdoc::length)
         ;
     regina::python::no_eq_static(c);
 

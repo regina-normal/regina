@@ -274,6 +274,20 @@ std::string LinkSigPrintable::encodeUnknot() {
     return std::move(enc).str();
 }
 
+size_t LinkSigPrintable::length(const LinkSigData& data) {
+    size_t ans;
+    if (data.size() < 63) {
+        // The integer width is 1, and does not need to be explicitly encoded.
+        ans = 1 + data.sequence().size();
+    } else {
+        // We begin with two extra characters: 63 (which acts as a marker that
+        // the link component is large), and the encoding of the integer width.
+        int width = Base64SigEncoder::integerWidth(data.size());
+        ans = 2 + (1 + data.sequence().size()) * width;
+    }
+    return ans + 2 * ((data.size() + 2) / 3);
+}
+
 std::string LinkSigPrintable::encode(const LinkSigData& data) {
     // Text: n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
 
@@ -333,6 +347,20 @@ std::string LinkSigCompact::encodeUnknot() {
     Base64SigEncoder enc;
     enc.encodeSize(0);
     return std::move(enc).str();
+}
+
+size_t LinkSigCompact::length(const LinkSigData& data) {
+    size_t ans;
+    if (data.size() < 63) {
+        // The integer width is 1, and does not need to be explicitly encoded.
+        ans = 1 + data.sequence().size() - data.size();
+    } else {
+        // We begin with two extra characters: 63 (which acts as a marker that
+        // the link component is large), and the encoding of the integer width.
+        int width = Base64SigEncoder::integerWidth(data.size());
+        ans = 2 + (1 + data.sequence().size() - data.size()) * width;
+    }
+    return ans + (2 * data.size() + 2) / 3;
 }
 
 std::string LinkSigCompact::encode(const LinkSigData& data) {
