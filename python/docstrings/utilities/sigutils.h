@@ -85,6 +85,21 @@ This base64 encoding uses the characters: ``a..zA..Z0..9+-``
     Base64SigEncoder and Base64SigDecoder, which carry state and have
     better error handling.)doc";
 
+// Docstring regina::python::doc::PackedSigEncoder
+static const char *PackedSigEncoder =
+R"doc(A helper class for writing signatures that pack information as tightly
+as possible into byte sequences. These signatures use ``std::string``
+but are typically _not_ printable, and indeed they may even contain
+null characters (which means they are not convertible to C-style
+strings).
+
+To use this class: create a new PackedSigEncoder, call one or more of
+its member functions to write values to the encoding, and then call
+bytes() to extract the resulting byte sequence.
+
+Packed encoders are single-use objects: they cannot be copied, moved
+or swapped.)doc";
+
 namespace Base64SigDecoder_ {
 
 // Docstring regina::python::doc::Base64SigDecoder_::__init
@@ -515,8 +530,8 @@ Parameter ``size``:
     the non-negative integer to encode.
 
 Returns:
-    nChars the number of base64 characters required to write any
-    integer between 0 and *size* inclusive.)doc";
+    the number of base64 characters required to write any integer
+    between 0 and *size* inclusive.)doc";
 
 // Docstring regina::python::doc::Base64SigEncoder_::encodeTrits
 static const char *encodeTrits =
@@ -545,7 +560,7 @@ R"doc(Returns the smallest number of base64 characters required to encode
 any integer between 0 and *size* inclusive.
 
 For example, ``integerWidth(63) == 1``, and ``integerWidth(64) == 2``.
-the special case ``size = 0``, this function will return 1.
+In the special case ``size = 0``, this function will return 1.
 
 Returns:
     the number of base64 characters required.)doc";
@@ -556,7 +571,7 @@ R"doc(Pre-allocates the given amount of space for the entire base64
 encoding.
 
 This calls ``std::string::reserve(capacity)``. The intent is to avoid
-unnecessary reallocations as the signature is constructed, and also to
+unnecessary reallocations as the encoding is constructed, and also to
 avoid allocating more memory than is required.
 
 It is harmless if *capacity* ends up being smaller or larger than the
@@ -707,6 +722,166 @@ R"doc(Is the given character a valid base64 character?
 Returns:
     ``True`` if and only if the given character is one of the 64
     printable characters described in the class notes.)doc";
+
+}
+
+namespace PackedSigEncoder_ {
+
+// Docstring regina::python::doc::PackedSigEncoder_::__default
+static const char *__default = R"doc(Creates a new encoder, with an empty byte sequence.)doc";
+
+// Docstring regina::python::doc::PackedSigEncoder_::bytes
+static const char *bytes =
+R"doc(Returns the byte sequence that has been constructed thus far.
+
+Returns:
+    The current byte sequence.)doc";
+
+// Docstring regina::python::doc::PackedSigEncoder_::encodeBits
+static const char *encodeBits =
+R"doc(Encodes a sequence of bits.
+
+The bits will be packed into bytes, eight at a time. Within each
+individual byte, the eight bits will be stored in order from lowest to
+highest significance. (The last byte might of course hold fewer than
+eight bits.)
+
+The inverse to this routine is PackedSigDecoder::decodeBits().
+
+Python:
+    The template argument *BitmaskType* is taken to be Bitmask.
+
+Parameter ``count``:
+    the number of bits to encode.
+
+Parameter ``bits``:
+    a bitmask holding the bits to encode; this must be capable of
+    holding at least *count* bits.)doc";
+
+// Docstring regina::python::doc::PackedSigEncoder_::encodeInt
+static const char *encodeInt =
+R"doc(Encodes the given non-negative native C++ integer using a fixed number
+of bytes.
+
+The bytes will be encoded in order from lowest to highest
+significance.
+
+The inverse to this routine is PackedSigDecoder::decodeInt().
+
+Exception ``InvalidArgument``:
+    The given integer *val* is negative, or requires more than the
+    given number of bytes.
+
+Python:
+    The template argument *IntType* is taken to be a native C++
+    ``long``.
+
+Parameter ``val``:
+    the non-negative integer to encode.
+
+Parameter ``nBytes``:
+    the number of bytes to use; typically this would be obtained
+    through an earlier call to encodeSize().)doc";
+
+// Docstring regina::python::doc::PackedSigEncoder_::encodeInts
+static const char *encodeInts =
+R"doc(Encodes a sequence of non-negative native C++ integers (given by an
+input range), each using a fixed number of bytes.
+
+Each integer in the sequence will be encoded using encodeInt(). That
+is, each integer will be broken into *nBytes* distinct bytes, which
+will be encoded in order from lowest to highest significance.
+
+The inverse to this routine is PackedSigDecoder::decodeInts().
+
+Exception ``InvalidArgument``:
+    Some integer in the sequence is negative, or requires more than
+    the given number of bytes.
+
+Python:
+    The argument *sequence* should be a Python list of integers, each
+    of which will be read as a native C++ ``long``.
+
+Parameter ``sequence``:
+    the sequence of integers to encode.
+
+Parameter ``nBytes``:
+    the number of bytes to use for each integer; typically this would
+    be obtained through an earlier call to encodeSize().)doc";
+
+// Docstring regina::python::doc::PackedSigEncoder_::encodeSize
+static const char *encodeSize =
+R"doc(Encodes the given non-negative integer (typically representing the
+size of some object), without knowing in advance how many bytes will
+be required.
+
+A typical use case would be where *size* represents the number of top-
+dimensional simplices in a triangulation, or the number of crossings
+in a link diagram.
+
+This routine also computes the smallest integer *b* with the property
+that any integer *x* between 0 and *size* inclusive can be encoded
+using *b* bytes. In other words, any such *x* can be encoded by
+calling ``encodeInt(x, b)``. Typically these *x* would be _indices_
+into an object (e.g., top-dimensional simplex numbers, or crossing
+numbers). Note that encodeSize() itself might write more than *b*
+bytes.
+
+The inverse to this routine is PackedSigDecoder::decodeSize().
+
+Parameter ``size``:
+    the non-negative integer to encode.
+
+Returns:
+    the number of bytes required to write any integer between 0 and
+    *size* inclusive.)doc";
+
+// Docstring regina::python::doc::PackedSigEncoder_::encodeTrits
+static const char *encodeTrits =
+R"doc(Encodes a sequence of trits (given by an input range). A _trit_ is
+either 0, 1 or 2.
+
+The trits will be packed into bytes, four at a time. Within each
+individual byte, the four trits will use bits in order from lowest to
+highest significance. (The last byte might of course hold fewer than
+four trits.)
+
+The inverse to this routine is PackedSigDecoder::decodeTrits(), though
+that function only decodes four trits at a time.
+
+Python:
+    The argument *trits* should be a Python list.
+
+Parameter ``trits``:
+    the sequence of trits to encode. Each element of this sequence
+    must be 0, 1 or 2.)doc";
+
+// Docstring regina::python::doc::PackedSigEncoder_::integerWidth
+static const char *integerWidth =
+R"doc(Returns the smallest number of bytes required to encode any integer
+between 0 and *size* inclusive.
+
+For example, ``integerWidth(255) == 1``, and ``integerWidth(256) ==
+2``. In the special case ``size = 0``, this function will return 1.
+
+Returns:
+    the number of bytes required.)doc";
+
+// Docstring regina::python::doc::PackedSigEncoder_::reserve
+static const char *reserve =
+R"doc(Pre-allocates the given amount of space for the entire encoding.
+
+This calls ``std::string::reserve(capacity)``. The intent is to avoid
+unnecessary reallocations as the encoding is constructed, and also to
+avoid allocating more memory than is required.
+
+It is harmless if *capacity* ends up being smaller or larger than the
+final byte length of the encoding; however, this routine will of
+course be more effective if *capacity* is accurate.
+
+Parameter ``capacity``:
+    the expected byte length of the _entire_ encoding (not just the
+    portion that is not yet encoded).)doc";
 
 }
 

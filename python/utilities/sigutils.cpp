@@ -37,6 +37,7 @@
 
 using regina::Base64SigEncoder;
 using regina::Base64SigEncoding;
+using regina::PackedSigEncoder;
 
 using Decoder = regina::Base64SigDecoder<std::string::const_iterator>;
 
@@ -116,7 +117,7 @@ void addSigUtils(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(Base64SigEncoder)
 
-    auto e = pybind11::class_<Base64SigEncoder>(m, "Base64SigEncoder",
+    auto be = pybind11::class_<Base64SigEncoder>(m, "Base64SigEncoder",
             rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
         .def("str",
@@ -143,11 +144,11 @@ void addSigUtils(pybind11::module_& m) {
         .def("reserve", &Base64SigEncoder::reserve, rdoc::reserve)
         .def_readonly_static("spare", &Base64SigEncoder::spare)
     ;
-    regina::python::add_eq_operators(e);
+    regina::python::add_eq_operators(be);
 
     RDOC_SCOPE_SWITCH(Base64SigDecoder)
 
-    auto d = pybind11::class_<regina::python::Base64SigDecoder_Copy>(m,
+    auto bd = pybind11::class_<regina::python::Base64SigDecoder_Copy>(m,
             "Base64SigDecoder", rdoc_scope)
         .def(pybind11::init<const std::string&, bool>(),
             pybind11::arg(), pybind11::arg("skipInitialWhitespace") = true,
@@ -189,13 +190,40 @@ void addSigUtils(pybind11::module_& m) {
     #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     #endif
     #endif
-    d.def("done",
+    bd.def("done",
         pybind11::overload_cast<bool>(&Decoder::done, pybind11::const_),
         rdoc::done_2); // deprecated
     #if defined(__GNUC__)
     #pragma GCC diagnostic pop
     #endif
-    regina::python::add_eq_operators(d);
+    regina::python::add_eq_operators(bd);
+
+    RDOC_SCOPE_SWITCH(PackedSigEncoder)
+
+    auto pe = pybind11::class_<PackedSigEncoder>(m, "PackedSigEncoder",
+            rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def("bytes",
+            static_cast<const std::string&(PackedSigEncoder::*)() const &>(
+                &PackedSigEncoder::bytes),
+            rdoc::bytes)
+        .def_static("integerWidth", &PackedSigEncoder::integerWidth,
+            rdoc::integerWidth)
+        .def("encodeSize", &PackedSigEncoder::encodeSize, rdoc::encodeSize)
+        .def("encodeInt", &PackedSigEncoder::encodeInt<long>, rdoc::encodeInt)
+        .def("encodeInts",
+            pybind11::overload_cast<const std::vector<long>&, int>(
+                &PackedSigEncoder::encodeInts<const std::vector<long>&>),
+            rdoc::encodeInts)
+        .def("encodeBits", &PackedSigEncoder::encodeBits<regina::Bitmask>,
+            rdoc::encodeBits)
+        .def("encodeTrits",
+            pybind11::overload_cast<const std::vector<uint8_t>&>(
+                &PackedSigEncoder::encodeTrits<const std::vector<uint8_t>&>),
+            rdoc::encodeTrits)
+        .def("reserve", &PackedSigEncoder::reserve, rdoc::reserve)
+    ;
+    regina::python::add_eq_operators(pe);
 
     RDOC_SCOPE_END
 }

@@ -396,7 +396,7 @@ class Base64SigEncoder {
          * any integer between 0 and \a size inclusive.
          *
          * For example, `integerWidth(63) == 1`, and `integerWidth(64) == 2`.
-         * the special case `size = 0`, this function will return 1.
+         * In the special case `size = 0`, this function will return 1.
          *
          * \return the number of base64 characters required.
          */
@@ -429,8 +429,8 @@ class Base64SigEncoder {
          * The inverse to this routine is Base64SigDecoder::decodeSize().
          *
          * \param size the non-negative integer to encode.
-         * \return nChars the number of base64 characters required to write
-         * any integer between 0 and \a size inclusive.
+         * \return the number of base64 characters required to write any
+         * integer between 0 and \a size inclusive.
          */
         int encodeSize(size_t size) {
             // There is a theoretical upper limit on \a size: the return value
@@ -445,11 +445,11 @@ class Base64SigEncoder {
             } else {
                 // For large objects, start with a special marker followed by
                 // the number of characters per integer.
-                int charsPerInt = integerWidth(size);
+                int width = integerWidth(size);
                 encodeSingle(63);
-                encodeSingle(charsPerInt);
-                encodeInt(size, charsPerInt);
-                return charsPerInt;
+                encodeSingle(width);
+                encodeInt(size, width);
+                return width;
             }
         }
 
@@ -665,7 +665,7 @@ class Base64SigEncoder {
          * encoding.
          *
          * This calls `std::string::reserve(capacity)`.  The intent is to
-         * avoid unnecessary reallocations as the signature is constructed,
+         * avoid unnecessary reallocations as the encoding is constructed,
          * and also to avoid allocating more memory than is required.
          *
          * It is harmless if \a capacity ends up being smaller or larger than
@@ -1161,6 +1161,333 @@ class Base64SigDecoder {
 
         Base64SigDecoder(const Base64SigDecoder&) = delete;
         Base64SigDecoder& operator = (const Base64SigDecoder&) = delete;
+};
+
+/**
+ * A helper class for writing signatures that pack information as tightly as
+ * possible into byte sequences.  These signatures use `std::string` but are
+ * typically _not_ printable, and indeed they may even contain null characters
+ * (which means they are not convertible to C-style strings).
+ *
+ * To use this class: create a new PackedSigEncoder, call one or more of its
+ * member functions to write values to the encoding, and then call bytes() to
+ * extract the resulting byte sequence.
+ *
+ * Packed encoders are single-use objects: they cannot be copied, moved or
+ * swapped.
+ *
+ * \ingroup utilities
+ */
+class PackedSigEncoder {
+    private:
+        std::string bytes_;
+            /**< The byte sequence that has been constructed thus far. */
+
+    public:
+        /**
+         * Creates a new encoder, with an empty byte sequence.
+         */
+        PackedSigEncoder() = default;
+
+        /**
+         * Returns the byte sequence that has been constructed thus far.
+         *
+         * \return The current byte sequence.
+         */
+        const std::string& bytes() const & {
+            return bytes_;
+        }
+
+        /**
+         * Moves the byte sesquence that has been constructed thus far
+         * out of this encoder.
+         *
+         * After calling this function, this encoder object will be unusable.
+         *
+         * \nopython Instead use the variant of bytes() that returns its byte
+         * sequence by constant reference.
+         *
+         * \return The current byte sequence.
+         */
+        std::string&& bytes() && {
+            return std::move(bytes_);
+        }
+
+        /**
+         * Returns the smallest number of bytes required to encode any integer
+         * between 0 and \a size inclusive.
+         *
+         * For example, `integerWidth(255) == 1`, and `integerWidth(256) == 2`.
+         * In the special case `size = 0`, this function will return 1.
+         *
+         * \return the number of bytes required.
+         */
+        static constexpr int integerWidth(size_t size) {
+            int ans = 0;
+            do {
+                size >>= 8;
+                ++ans;
+            } while (size > 0);
+            return ans;
+        }
+
+        /**
+         * Encodes the given non-negative integer (typically representing the
+         * size of some object), without knowing in advance how many bytes
+         * will be required.
+         *
+         * A typical use case would be where \a size represents the number of
+         * top-dimensional simplices in a triangulation, or the number of
+         * crossings in a link diagram.
+         *
+         * This routine also computes the smallest integer \a b with the
+         * property that any integer \a x between 0 and \a size inclusive can
+         * be encoded using \a b bytes.  In other words, any such \a x can be
+         * encoded by calling `encodeInt(x, b)`.  Typically these \a x would be
+         * _indices_ into an object (e.g., top-dimensional simplex numbers, or
+         * crossing numbers).  Note that encodeSize() itself might write more
+         * than \a b bytes.
+         *
+         * The inverse to this routine is PackedSigDecoder::decodeSize().
+         *
+         * \param size the non-negative integer to encode.
+         * \return the number of bytes required to write any integer between
+         * 0 and \a size inclusive.
+         */
+        int encodeSize(size_t size) {
+            // There is a theoretical upper limit on \a size: the return value
+            // b must fit into a native int.  Even if int is only 16-bit, this
+            // translates to size < 2^(8×2^15), which is not going to be a
+            // problem for any native IntType.
+
+            if (size < 0xff) {
+                // Keep it simple for small objects: 1 byte per integer.
+                bytes_.push_back(size);
+                return 1;
+            } else {
+                // For large objects, start with a special marker followed by
+                // the number of bytes per integer.
+                int width = integerWidth(size);
+                bytes_.push_back(0xff);
+                bytes_.push_back(width);
+                encodeInt(size, width);
+                return width;
+            }
+        }
+
+        /**
+         * Encodes the given non-negative native C++ integer using a fixed
+         * number of bytes.
+         *
+         * The bytes will be encoded in order from lowest to highest
+         * significance.
+         *
+         * The inverse to this routine is PackedSigDecoder::decodeInt().
+         *
+         * \exception InvalidArgument The given integer \a val is negative,
+         * or requires more than the given number of bytes.
+         *
+         * \python The template argument \a IntType is taken to be a
+         * native C++ \c long.
+         *
+         * \param val the non-negative integer to encode.
+         * \param nBytes the number of bytes to use; typically this would be
+         * obtained through an earlier call to encodeSize().
+         */
+        template <CppInteger IntType>
+        void encodeInt(IntType val, int nBytes) {
+            if (val < 0)
+                throw InvalidArgument("PackedSigEncoder::encodeInt(): "
+                    "integer argument cannot be negative");
+
+            for ( ; nBytes > 0; --nBytes) {
+                bytes_.push_back(static_cast<uint8_t>(val));
+                val >>= 8;
+            }
+
+            if (val != 0)
+                throw InvalidArgument("PackedSigEncoder::encodeInt(): "
+                    "integer argument out of range");
+        }
+
+        /**
+         * Encodes a sequence of non-negative native C++ integers (given by a
+         * pair of iterators), each using a fixed number of bytes.
+         *
+         * Each integer in the sequence will be encoded using encodeInt().
+         * That is, each integer will be broken into \a nBytes distinct bytes,
+         * which will be encoded in order from lowest to highest significance.
+         *
+         * The inverse to this routine is PackedSigDecoder::decodeInts().
+         *
+         * \exception InvalidArgument Some integer in the sequence is negative,
+         * or requires more than the given number of bytes.
+         *
+         * \nopython
+         *
+         * \param begin an iterator pointing to the first integer to encode.
+         * \param end a past-the-end iterator pointing beyond the last integer
+         * to encode.
+         * \param nBytes the number of bytes to use for each integer; typically
+         * this would be obtained through an earlier call to encodeSize().
+         */
+        template <std::input_iterator Iterator>
+        requires CppInteger<std::iter_value_t<Iterator>>
+        void encodeInts(Iterator begin, Iterator end, int nBytes) {
+            for (auto it = begin; it != end; ++it)
+                encodeInt(*it, nBytes);
+        }
+
+        /**
+         * Encodes a sequence of non-negative native C++ integers (given by an
+         * input range), each using a fixed number of bytes.
+         *
+         * Each integer in the sequence will be encoded using encodeInt().
+         * That is, each integer will be broken into \a nBytes distinct bytes,
+         * which will be encoded in order from lowest to highest significance.
+         *
+         * The inverse to this routine is PackedSigDecoder::decodeInts().
+         *
+         * \exception InvalidArgument Some integer in the sequence is negative,
+         * or requires more than the given number of bytes.
+         *
+         * \python The argument \a sequence should be a Python list of
+         * integers, each of which will be read as a native C++ `long`.
+         *
+         * \param sequence the sequence of integers to encode.
+         * \param nBytes the number of bytes to use for each integer; typically
+         * this would be obtained through an earlier call to encodeSize().
+         */
+        template <std::ranges::input_range Range>
+        requires CppInteger<std::ranges::range_value_t<Range>>
+        void encodeInts(Range&& sequence, int nBytes) {
+            for (auto i : sequence)
+                encodeInt(i, nBytes);
+        }
+
+        /**
+         * Encodes a sequence of bits.
+         *
+         * The bits will be packed into bytes, eight at a time.  Within each
+         * individual byte, the eight bits will be stored in order from lowest
+         * to highest significance.  (The last byte might of course hold
+         * fewer than eight bits.)
+         *
+         * The inverse to this routine is PackedSigDecoder::decodeBits().
+         *
+         * \python The template argument \a BitmaskType is taken to be Bitmask.
+         *
+         * \param count the number of bits to encode.
+         * \param bits a bitmask holding the bits to encode; this must be
+         * capable of holding at least \a count bits.
+         */
+        template <ReginaBitmask BitmaskType>
+        void encodeBits(size_t count, const BitmaskType& bits) {
+            if (count == 0)
+                return;
+            size_t pos = 0;
+            while (true) {
+                uint8_t packed = 0;
+                for (int j = 0; j < 8; ++j) {
+                    if (bits.get(pos++))
+                        packed |= (1 << j);
+                    if (pos == count) {
+                        bytes_.push_back(packed);
+                        return;
+                    }
+                }
+                bytes_.push_back(packed);
+            }
+        }
+
+        /**
+         * Encodes a sequence of trits (given by a pair of iterators).
+         * A _trit_ is either 0, 1 or 2.
+         *
+         * The trits will be packed into bytes, four at a time.  Within each
+         * individual byte, the four trits will use bits in order from lowest
+         * to highest significance.  (The last byte might of course hold fewer
+         * than four trits.)
+         *
+         * Each trit will be obtained by dereferencing an iterator, which
+         * (as noted above) must yield the value 0, 1 or 2.
+         *
+         * The inverse to this routine is PackedSigDecoder::decodeTrits(),
+         * though that function only decodes four trits at a time.
+         *
+         * \nopython
+         *
+         * \param beginTrits an iterator pointing to the first trit to encode.
+         * \param endTrits a past-the-end iterator pointing beyond the last
+         * trit to encode.
+         */
+        template <InputIteratorFor<uint8_t> Iterator>
+        void encodeTrits(Iterator beginTrits, Iterator endTrits) {
+            auto it = beginTrits;
+            while (it != endTrits) {
+                uint8_t packed = static_cast<uint8_t>(*it++);
+                if (it == endTrits) {
+                    bytes_.push_back(packed);
+                    return;
+                }
+                packed |= (static_cast<uint8_t>(*it++) << 2);
+                if (it == endTrits) {
+                    bytes_.push_back(packed);
+                    return;
+                }
+                packed |= (static_cast<uint8_t>(*it++) << 4);
+                if (it == endTrits) {
+                    bytes_.push_back(packed);
+                    return;
+                }
+                packed |= (static_cast<uint8_t>(*it++) << 6);
+                bytes_.push_back(packed);
+            }
+        }
+
+        /**
+         * Encodes a sequence of trits (given by an input range).
+         * A _trit_ is either 0, 1 or 2.
+         *
+         * The trits will be packed into bytes, four at a time.  Within each
+         * individual byte, the four trits will use bits in order from lowest
+         * to highest significance.  (The last byte might of course hold fewer
+         * than four trits.)
+         *
+         * The inverse to this routine is PackedSigDecoder::decodeTrits(),
+         * though that function only decodes four trits at a time.
+         *
+         * \python The argument \a trits should be a Python list.
+         *
+         * \param trits the sequence of trits to encode.  Each element of this
+         * sequence must be 0, 1 or 2.
+         */
+        template <std::ranges::input_range Range>
+        requires std::convertible_to<std::ranges::range_value_t<Range>, uint8_t>
+        void encodeTrits(Range&& trits) {
+            encodeTrits(std::ranges::begin(trits), std::ranges::end(trits));
+        }
+
+        /**
+         * Pre-allocates the given amount of space for the entire encoding.
+         *
+         * This calls `std::string::reserve(capacity)`.  The intent is to
+         * avoid unnecessary reallocations as the encoding is constructed,
+         * and also to avoid allocating more memory than is required.
+         *
+         * It is harmless if \a capacity ends up being smaller or larger than
+         * the final byte length of the encoding; however, this routine will of
+         * course be more effective if \a capacity is accurate.
+         *
+         * \param capacity the expected byte length of the _entire_ encoding
+         * (not just the portion that is not yet encoded).
+         */
+        void reserve(size_t capacity) {
+            bytes_.reserve(capacity);
+        }
+
+        PackedSigEncoder(const PackedSigEncoder&) = delete;
+        PackedSigEncoder& operator = (const PackedSigEncoder&) = delete;
 };
 
 } // namespace regina
