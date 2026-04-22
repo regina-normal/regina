@@ -3657,6 +3657,11 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
 
     std::string sig = link.sig<Encoding>(reflect, reverse, rotate);
     EXPECT_FALSE(sig.empty());
+    #if 0
+    // Here we can see how effective std::string::reserve() is.
+    std::cerr << sig.size() << ' ' << sig.capacity() << ' '
+        << link.size() << ' ' << link.countComponents() << std::endl;
+    #endif
 
     if (reflect) {
         Link alt(link, false);
