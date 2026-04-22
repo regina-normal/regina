@@ -140,6 +140,7 @@ void addSigUtils(pybind11::module_& m) {
                 &Base64SigEncoder::encodeTrits<const std::vector<uint8_t>&>),
             rdoc::encodeTrits)
         .def("append", &Base64SigEncoder::append, rdoc::append)
+        .def("reserve", &Base64SigEncoder::reserve, rdoc::reserve)
         .def_readonly_static("spare", &Base64SigEncoder::spare)
     ;
     regina::python::add_eq_operators(e);

@@ -660,6 +660,25 @@ class Base64SigEncoder {
             base64_ += c;
         }
 
+        /**
+         * Pre-allocates the given amount of space for the entire base64
+         * encoding.
+         *
+         * This calls `std::string::reserve(capacity)`.  The intent is to
+         * avoid unnecessary reallocations as the signature is constructed,
+         * and also to avoid allocating more memory than is required.
+         *
+         * It is harmless if \a capacity ends up being smaller or larger than
+         * the final length of the encoding; however, this routine will of
+         * course be more effective if \a capacity is accurate.
+         *
+         * \param capacity the expected length of the _entire_ base64 encoding
+         * (not just the portion that is not yet encoded).
+         */
+        void reserve(size_t capacity) {
+            base64_.reserve(capacity);
+        }
+
         Base64SigEncoder(const Base64SigEncoder&) = delete;
         Base64SigEncoder& operator = (const Base64SigEncoder&) = delete;
 };

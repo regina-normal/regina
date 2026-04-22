@@ -550,6 +550,23 @@ the special case ``size = 0``, this function will return 1.
 Returns:
     the number of base64 characters required.)doc";
 
+// Docstring regina::python::doc::Base64SigEncoder_::reserve
+static const char *reserve =
+R"doc(Pre-allocates the given amount of space for the entire base64
+encoding.
+
+This calls ``std::string::reserve(capacity)``. The intent is to avoid
+unnecessary reallocations as the signature is constructed, and also to
+avoid allocating more memory than is required.
+
+It is harmless if *capacity* ends up being smaller or larger than the
+final length of the encoding; however, this routine will of course be
+more effective if *capacity* is accurate.
+
+Parameter ``capacity``:
+    the expected length of the _entire_ base64 encoding (not just the
+    portion that is not yet encoded).)doc";
+
 // Docstring regina::python::doc::Base64SigEncoder_::str
 static const char *str =
 R"doc(Returns the base64 encoding that has been constructed thus far.

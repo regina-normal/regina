@@ -147,6 +147,9 @@ typename Encoding::Signature Link::sig(bool allowReflection, bool allowReversal,
         }
 
         typename Encoding::Signature sig;
+        // TODO: It might be nice to reserve the right amount of space here.
+        // This is already being done for connected diagrams by the individual
+        // encoding algorithms, directly within Encoding::encode().
         for (const auto& data : bits)
             sig += Encoding::encode(data);
         for (size_t i = 0; i < nTrivial; ++i)

@@ -41,6 +41,7 @@ Version 8.0  [ TODO ]
               skips final whitespace is now deprecated.
         Class Base64SigEncoder:
             - New routine encodeBits().
+            - New routine reserve().
             - New static routine integerWidth().
             - Added variants of encodeInts() and encodeTrits() that take an
               input range instead of an iterator pair.

@@ -292,6 +292,7 @@ std::string LinkSigPrintable::encode(const LinkSigData& data) {
     // Text: n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
 
     Base64SigEncoder enc;
+    enc.reserve(length(data));
 
     // Output crossings in order.
     int charsPerInt = enc.encodeSize(data.size());
@@ -380,6 +381,8 @@ std::string LinkSigCompact::encode(const LinkSigData& data) {
     // move to the next base64 character at the 2n mark and/or the 3n mark).
 
     Base64SigEncoder enc;
+    enc.reserve(length(data));
+
     int charsPerInt = enc.encodeSize(data.size());
 
     Bitmask bits(4 * data.size());

@@ -3766,6 +3766,12 @@ static void verifySig(const Link& link, const char* name) {
     verifySig<Encoding>(link, true, false, false);
     verifySig<Encoding>(link, false, true, false);
     verifySig<Encoding>(link, false, false, false);
+
+    // Verify the precomputed length of the signature.
+    if (link.size() > 0 && link.isConnected()) {
+        regina::LinkSigData data(link, false, false, false);
+        EXPECT_EQ(Encoding::length(data), Encoding::encode(data).size());
+    }
 }
 
 TEST_F(LinkTest, sig) {
