@@ -298,7 +298,7 @@ struct [[deprecated]] Base64SigEncoding {
  *
  * This base64 encoding uses the characters: `a..zA..Z0..9+-`
  *
- * Baes64 encoders are single-use objects: they cannot be copied, moved or
+ * Base64 encoders are single-use objects: they cannot be copied, moved or
  * swapped.
  *
  * \warning Note that this base64 encoding uses a different set of
@@ -666,7 +666,7 @@ class Base64SigEncoder {
  *
  * This base64 encoding uses the characters: `a..zA..Z0..9+-`
  *
- * Baes64 decoders are single-use objects: they cannot be copied, moved or
+ * Base64 decoders are single-use objects: they cannot be copied, moved or
  * swapped.
  *
  * \warning Note that this base64 encoding uses a different set of
