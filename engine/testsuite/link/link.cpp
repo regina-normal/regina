@@ -3772,6 +3772,30 @@ TEST_F(LinkTest, sig) {
     testManualCases(verifySig<LinkSigPrintable>);
     testManualCases(verifySig<LinkSigCompact>);
 
+    // Test knots with 62, 63 and 64 crossings, where the base64 integer width
+    // changes from 1 (not encoded) to 1 (encoded) and then to 2 (encoded).
+    {
+        Link link = ExampleLink::torus(3, 31);
+        EXPECT_EQ(link.size(), 62);
+        EXPECT_EQ(link.countComponents(), 1);
+        verifySig<LinkSigPrintable>(link, "Torus(3, 31)");
+        verifySig<LinkSigCompact>(link, "Torus(3, 31)");
+    }
+    {
+        Link link = ExampleLink::torus(8, 9);
+        EXPECT_EQ(link.size(), 63);
+        EXPECT_EQ(link.countComponents(), 1);
+        verifySig<LinkSigPrintable>(link, "Torus(8, 9)");
+        verifySig<LinkSigCompact>(link, "Torus(8, 9)");
+    }
+    {
+        Link link = ExampleLink::torus(5, 16);
+        EXPECT_EQ(link.size(), 64);
+        EXPECT_EQ(link.countComponents(), 1);
+        verifySig<LinkSigPrintable>(link, "Torus(5, 16)");
+        verifySig<LinkSigCompact>(link, "Torus(5, 16)");
+    }
+
     // Unless specified otherwise, all _compact_ signatures below were computed
     // using Regina 8.0.
 
