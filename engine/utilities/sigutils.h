@@ -53,6 +53,239 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 namespace regina {
 
 /**
+ * A raw sequence of bytes.
+ *
+ * Such sequences are (for example) used in Regina for low-memory encodings of
+ * isomorphism signatures and knot/link signatures.
+ *
+ * At present, the public interface for ByteSequence is very limited: it only
+ * offers what Regina needs for its own functionality.  This interface may be
+ * expanded in future versions of Regina.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
+ * \nopython Wherever a ByteSequence is pass into or returned from a function
+ * in C++, the corresponding Python function will use a Python `bytes` object
+ * instead.
+ *
+ * \ingroup utilities
+ */
+class ByteSequence {
+    public:
+        /**
+         * A reference to an individual byte.
+         */
+        using reference = char&;
+        /**
+         * A constant reference to an individual byte.
+         */
+        using const_reference = char const&;
+        /**
+         * A random-access iterator that gives read-write access to the
+         * bytes in this sequence.
+         */
+        using iterator = std::string::iterator;
+        /**
+         * A random-access iterator that gives read-only access to the
+         * bytes in this sequence.
+         */
+        using const_iterator = std::string::const_iterator;
+        /**
+         * The type of an individual byte in this sequence.
+         */
+        using value_type = std::string::value_type;
+
+    private:
+        std::string data_;
+            /**< The byte sequence being held.  This will typically _not_ be a
+                 printable string, and may contain null characters. */
+
+    public:
+        /**
+         * Constructs a new empty byte sequence.
+         */
+        ByteSequence() = default;
+        /**
+         * Makes a new deep copy of the given byte sequence.
+         */
+        ByteSequence(const ByteSequence&) = default;
+        /**
+         * Moves the contents of the given byte sequence into this new
+         * sequence.  This is a fast (constant time) operation.
+         *
+         * The sequence that was passed will no longer be usable.
+         */
+        ByteSequence(ByteSequence&&) noexcept = default;
+        /**
+         * Sets this to be a deep copy of the given byte sequence.
+         *
+         * \return a reference to this byte sequence.
+         */
+        ByteSequence& operator = (const ByteSequence&) = default;
+        /**
+         * Moves the contents of the given byte sequence into this sequence.
+         * This is a fast (constant time) operation.
+         *
+         * The sequence that was passed will no longer be usable.
+         *
+         * \return a reference to this byte sequence.
+         */
+        ByteSequence& operator = (ByteSequence&&) = default;
+        /**
+         * Determines whether this and the given sequence are identical.
+         *
+         * \return \c true if and only if this and the given sequence are
+         * identical.
+         */
+        bool operator == (const ByteSequence&) const = default;
+        /**
+         * Compares two byte sequences lexigraphically.
+         *
+         * This operator generates all of the usual comparison operators,
+         * including `<`, `<=`, `>`, and `>=`.
+         *
+         * \return the result of the lexicographical comparison between this
+         * and the given sequence.
+         */
+        std::strong_ordering operator <=> (const ByteSequence&) const = default;
+
+        /**
+         * Determines whether this sequence is empty.
+         *
+         * \return `true` if and only if this sequence is empty.
+         */
+        bool empty() const {
+            return data_.empty();
+        }
+        /**
+         * Returns the number of bytes in this sequence.
+         *
+         * \return the length of this sequence.
+         */
+        size_t size() const {
+            return data_.size();
+        }
+        /**
+         * Returns a read-write random-access iterator pointing to the
+         * first byte in this sequence.
+         *
+         * \return a read-write begin iterator.
+         */
+        iterator begin() {
+            return data_.begin();
+        }
+        /**
+         * Returns a read-only random-access iterator pointing to the
+         * first byte in this sequence.
+         *
+         * \return a read-only begin iterator.
+         */
+        const_iterator begin() const {
+            return data_.begin();
+        }
+        /**
+         * Returns a read-write random-access iterator pointing beyond the
+         * last byte in this sequence.
+         *
+         * Note that, because this iterator is past-the-end, it must not be
+         * dereferenced.
+         *
+         * \return a read-write end iterator.
+         */
+        iterator end() {
+            return data_.end();
+        }
+        /**
+         * Returns a read-only random-access iterator pointing beyond the
+         * last byte in this sequence.
+         *
+         * Note that, because this iterator is past-the-end, it must not be
+         * dereferenced.
+         *
+         * \return a read-only end iterator.
+         */
+        const_iterator end() const {
+            return data_.end();
+        }
+
+        /**
+         * Appends the given byte to the end of this sequence.
+         *
+         * \param byte the byte to append.
+         */
+        void push_back(char byte) {
+            data_.push_back(byte);
+        }
+        /**
+         * Appends the given sequence to the end of this sequence.
+         *
+         * \param rhs the sequence to append.
+         * \return a reference to this sequence.
+         */
+        ByteSequence& operator += (const ByteSequence& rhs) {
+            data_ += rhs.data_;
+            return *this;
+        }
+        /**
+         * Swaps the contents of this and the given byte sequence.
+         *
+         * \param other the sequence whose contents are to be swapped with this.
+         */
+        void swap(ByteSequence& other) {
+            data_.swap(other.data_);
+        }
+        /**
+         * Increases the capacity of the internal data storage if necessary
+         * to allow for the given number of bytes.
+         *
+         * Internally, this calls `std::string::reserve(capacity)`.
+         * The intent is to avoid unnecessary reallocations as the sequence
+         * grows, and also to avoid allocating more memory than necessary.
+         *
+         * \warning Calling this function may invalide iterators as well as
+         * references to individual bytes.
+         *
+         * \param capacity the number of bytes that you anticipate storing.
+         */
+        void reserve(size_t capacity) {
+            data_.reserve(capacity);
+        }
+        /**
+         * Returns this byte sequence in the form of a C++ string.
+         *
+         * This returns a reference (not a deep copy), since ByteSequence uses
+         * `std::string` for its internal storage.
+         *
+         * \warning The string that is returned will typically not be printable,
+         * and may contain null characters.
+         *
+         * \return this sequence as a C++ string.
+         */
+        const std::string& asString() const {
+            return data_;
+        }
+};
+
+/**
+ * Swaps the contents of the given byte sequences.
+ *
+ * This global routine simply calls ByteSequence::swap(); it is provided
+ * so that ByteSequence meets the C++ Swappable requirements.
+ *
+ * \nopython
+ *
+ * \param a the first byte sequence whose contents should be swapped.
+ * \param b the second byte sequence whose contents should be swapped.
+ *
+ * \ingroup utilities
+ */
+inline void swap(ByteSequence& a, ByteSequence& b) noexcept {
+    a.swap(b);
+}
+
+/**
  * A deprecated set of helper tools for signatures that use base64 encodings.
  * These are (in particular) used in the default encodings for Regina's
  * own isomorphism signatures and knot signatures.
@@ -1182,7 +1415,7 @@ class Base64SigDecoder {
  */
 class PackedSigEncoder {
     private:
-        std::string bytes_;
+        ByteSequence bytes_;
             /**< The byte sequence that has been constructed thus far. */
 
     public:
@@ -1198,7 +1431,7 @@ class PackedSigEncoder {
          *
          * \return The current byte sequence.
          */
-        const std::string& bytes() const & {
+        const ByteSequence& bytes() const & {
             return bytes_;
         }
 
@@ -1213,7 +1446,7 @@ class PackedSigEncoder {
          *
          * \return The current byte sequence.
          */
-        std::string&& bytes() && {
+        ByteSequence&& bytes() && {
             return std::move(bytes_);
         }
 
@@ -1475,7 +1708,7 @@ class PackedSigEncoder {
         /**
          * Pre-allocates the given amount of space for the entire encoding.
          *
-         * This calls `std::string::reserve(capacity)`.  The intent is to
+         * This calls `ByteSequence::reserve(capacity)`.  The intent is to
          * avoid unnecessary reallocations as the encoding is constructed,
          * and also to avoid allocating more memory than is required.
          *

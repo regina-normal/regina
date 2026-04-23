@@ -209,7 +209,10 @@ template <typename T>
 concept ConcatenableSequence =
     std::regular<T> &&
     std::totally_ordered<T> &&
-    requires(T x, const T y) { { x += y } -> std::same_as<T&>; };
+    requires(T x, const T y) {
+        { y.size() } -> std::same_as<size_t>;
+        { x += y } -> std::same_as<T&>;
+    };
 
 /**
  * A callable type that acts as a strict weak order on the given argument type.

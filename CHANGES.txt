@@ -62,6 +62,8 @@ Version 8.0  [ TODO ]
         Class BoundaryComponent<dim>:
             - Added variants of countFaces(), faces() and face() that take the
               face dimension as a runtime argument (not a template parameter).
+        Class ByteSequence:
+            - New class to support small-memory signature encodings.
         Class CallableArg<...>:
             - This is now deprecated, since its implementation is drifting
               increasingly further away from modern C++ standards.

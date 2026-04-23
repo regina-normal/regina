@@ -55,6 +55,7 @@ namespace regina::python {
     struct StringStorage {
         std::string str_;
         StringStorage(std::string&& str) : str_(std::move(str)) {}
+        StringStorage(const std::string_view& view) : str_(view) {}
     };
 
     class Base64SigDecoder_Copy : private StringStorage, public Base64Decoder {
@@ -67,8 +68,8 @@ namespace regina::python {
 
     class PackedSigDecoder_Copy : private StringStorage, public PackedDecoder {
         public:
-            PackedSigDecoder_Copy(std::string str) :
-                    StringStorage(std::move(str)),
+            PackedSigDecoder_Copy(pybind11::bytes bytes) :
+                    StringStorage(std::string_view(bytes)),
                     PackedDecoder(str_.begin(), str_.end()) {
             }
     };
@@ -215,10 +216,9 @@ void addSigUtils(pybind11::module_& m) {
     auto pe = pybind11::class_<PackedSigEncoder>(m, "PackedSigEncoder",
             rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
-        .def("bytes",
-            static_cast<const std::string&(PackedSigEncoder::*)() const &>(
-                &PackedSigEncoder::bytes),
-            rdoc::bytes)
+        .def("bytes", [](const PackedSigEncoder& enc) {
+            return pybind11::bytes(enc.bytes().asString());
+        }, rdoc::bytes)
         .def_static("integerWidth", &PackedSigEncoder::integerWidth,
             rdoc::integerWidth)
         .def("encodeSize", &PackedSigEncoder::encodeSize, rdoc::encodeSize)
@@ -241,7 +241,7 @@ void addSigUtils(pybind11::module_& m) {
 
     auto pd = pybind11::class_<regina::python::PackedSigDecoder_Copy>(m,
             "PackedSigDecoder", rdoc_scope)
-        .def(pybind11::init<const std::string&>(), rdoc::__init)
+        .def(pybind11::init<pybind11::bytes>(), rdoc::__init)
         .def("done", &PackedDecoder::done, rdoc::done)
         .def("remaining", &PackedDecoder::remaining, rdoc::remaining)
         .def("next", &PackedDecoder::next<long>, rdoc::next)
