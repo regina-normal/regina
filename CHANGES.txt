@@ -267,6 +267,9 @@ Version 8.0  [ TODO ]
             - New exception class.
         Class OutputBase:
             - Removed completely.
+        Class PackedSigEncoder, PackedSigDecoder:
+            - New class to support signatures that use (unprintable) packed
+              byte sequences.
         Class PermClass<n>:
             - Everything in this class is now constexpr.
         Class Polynomial<T>:

@@ -39,28 +39,37 @@ using regina::Base64SigEncoder;
 using regina::Base64SigEncoding;
 using regina::PackedSigEncoder;
 
-using Decoder = regina::Base64SigDecoder<std::string::const_iterator>;
+using Base64Decoder = regina::Base64SigDecoder<std::string::const_iterator>;
+using PackedDecoder = regina::PackedSigDecoder<std::string::const_iterator>;
 
 namespace regina::python {
-    // For Python (but not C++), we need Base64SigDecoder to keep a deep copy
-    // of the base64 string.
+    // For Python (but not C++), we need Base64SigDecoder and PackedSigDecoder
+    // to keep a deep copy of the base64 string / byte sequence.
     //
     // Awkwardly, we need to copy the string _before_ passing its iterators to
-    // the Base64Decoder constructor, which means we can't just keep the string
-    // as member variable (since base classes are initialised first).
+    // the relevant decoder constructor, which means we can't just keep the
+    // string as member variable (since base classes are initialised first).
     // Instead we use _another_ base class holding the string, which is
-    // initialised before Base64Decoder. Bleh.
+    // initialised before Base64SigDecoder / PackedSigDecoder. Bleh.
 
     struct StringStorage {
         std::string str_;
         StringStorage(std::string&& str) : str_(std::move(str)) {}
     };
 
-    class Base64SigDecoder_Copy : private StringStorage, public Decoder {
+    class Base64SigDecoder_Copy : private StringStorage, public Base64Decoder {
         public:
             Base64SigDecoder_Copy(std::string str, bool stripWhitespace) :
                     StringStorage(std::move(str)),
-                    Decoder(str_.begin(), str_.end(), stripWhitespace) {
+                    Base64Decoder(str_.begin(), str_.end(), stripWhitespace) {
+            }
+    };
+
+    class PackedSigDecoder_Copy : private StringStorage, public PackedDecoder {
+        public:
+            PackedSigDecoder_Copy(std::string str) :
+                    StringStorage(std::move(str)),
+                    PackedDecoder(str_.begin(), str_.end()) {
             }
     };
 }
@@ -153,16 +162,18 @@ void addSigUtils(pybind11::module_& m) {
         .def(pybind11::init<const std::string&, bool>(),
             pybind11::arg(), pybind11::arg("skipInitialWhitespace") = true,
             rdoc::__init)
-        .def("skipWhitespace", &Decoder::skipWhitespace, rdoc::skipWhitespace)
+        .def("skipWhitespace", &Base64Decoder::skipWhitespace,
+            rdoc::skipWhitespace)
         .def("done",
-            pybind11::overload_cast<>(&Decoder::done, pybind11::const_),
+            pybind11::overload_cast<>(&Base64Decoder::done, pybind11::const_),
             rdoc::done)
-        .def("peek", &Decoder::peek, rdoc::peek)
-        .def("remaining", &Decoder::remaining, rdoc::remaining)
-        .def("skip", &Decoder::skip, rdoc::skip)
-        .def("decodeSingle", &Decoder::decodeSingle<long>, rdoc::decodeSingle)
-        .def("decodeSize", &Decoder::decodeSize, rdoc::decodeSize)
-        .def("decodeInt", &Decoder::decodeInt<long>, rdoc::decodeInt)
+        .def("peek", &Base64Decoder::peek, rdoc::peek)
+        .def("remaining", &Base64Decoder::remaining, rdoc::remaining)
+        .def("skip", &Base64Decoder::skip, rdoc::skip)
+        .def("decodeSingle", &Base64Decoder::decodeSingle<long>,
+            rdoc::decodeSingle)
+        .def("decodeSize", &Base64Decoder::decodeSize, rdoc::decodeSize)
+        .def("decodeInt", &Base64Decoder::decodeInt<long>, rdoc::decodeInt)
         .def("decodeInts", [](regina::python::Base64SigDecoder_Copy& dec,
                 size_t count, int nChars) {
             // Reimplement this using decodeInt(), since the iterators for
@@ -172,13 +183,14 @@ void addSigUtils(pybind11::module_& m) {
                 ans.append(dec.decodeInt<long>(nChars));
             return ans;
         })
-        .def("decodeBits", &Decoder::decodeBits<regina::Bitmask>,
+        .def("decodeBits", &Base64Decoder::decodeBits<regina::Bitmask>,
             rdoc::decodeBits)
         // overload_cast cannot handle template vs non-template overloads.
-        .def("decodeTrits", static_cast<std::array<uint8_t, 3>(Decoder::*)()>(
-                &Decoder::decodeTrits),
+        .def("decodeTrits",
+            static_cast<std::array<uint8_t, 3>(Base64Decoder::*)()>(
+                &Base64Decoder::decodeTrits),
             rdoc::decodeTrits)
-        .def_static("isValid", &Decoder::isValid, rdoc::isValid)
+        .def_static("isValid", &Base64Decoder::isValid, rdoc::isValid)
     ;
     #if defined(__GNUC__)
     // The routine done(bool) is deprecated, but we still need to bind it.
@@ -191,7 +203,7 @@ void addSigUtils(pybind11::module_& m) {
     #endif
     #endif
     bd.def("done",
-        pybind11::overload_cast<bool>(&Decoder::done, pybind11::const_),
+        pybind11::overload_cast<bool>(&Base64Decoder::done, pybind11::const_),
         rdoc::done_2); // deprecated
     #if defined(__GNUC__)
     #pragma GCC diagnostic pop
@@ -224,6 +236,35 @@ void addSigUtils(pybind11::module_& m) {
         .def("reserve", &PackedSigEncoder::reserve, rdoc::reserve)
     ;
     regina::python::add_eq_operators(pe);
+
+    RDOC_SCOPE_SWITCH(PackedSigDecoder)
+
+    auto pd = pybind11::class_<regina::python::PackedSigDecoder_Copy>(m,
+            "PackedSigDecoder", rdoc_scope)
+        .def(pybind11::init<const std::string&>(), rdoc::__init)
+        .def("done", &PackedDecoder::done, rdoc::done)
+        .def("remaining", &PackedDecoder::remaining, rdoc::remaining)
+        .def("next", &PackedDecoder::next<long>, rdoc::next)
+        .def("decodeSize", &PackedDecoder::decodeSize, rdoc::decodeSize)
+        .def("decodeInt", &PackedDecoder::decodeInt<long>, rdoc::decodeInt)
+        .def("decodeInts", [](regina::python::PackedSigDecoder_Copy& dec,
+                size_t count, int nChars) {
+            // Reimplement this using decodeInt(), since the iterators for
+            // pybind11::list have the wrong value type.
+            pybind11::list ans;
+            for (size_t i = 0; i < count; ++i)
+                ans.append(dec.decodeInt<long>(nChars));
+            return ans;
+        })
+        .def("decodeBits", &PackedDecoder::decodeBits<regina::Bitmask>,
+            rdoc::decodeBits)
+        // overload_cast cannot handle template vs non-template overloads.
+        .def("decodeTrits",
+            static_cast<std::array<uint8_t, 4>(PackedDecoder::*)()>(
+                &PackedDecoder::decodeTrits),
+            rdoc::decodeTrits)
+    ;
+    regina::python::add_eq_operators(pd);
 
     RDOC_SCOPE_END
 }

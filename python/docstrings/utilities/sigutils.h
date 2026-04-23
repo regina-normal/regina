@@ -85,6 +85,28 @@ This base64 encoding uses the characters: ``a..zA..Z0..9+-``
     Base64SigEncoder and Base64SigDecoder, which carry state and have
     better error handling.)doc";
 
+// Docstring regina::python::doc::PackedSigDecoder
+static const char *PackedSigDecoder =
+R"doc(A helper class for reading signatures that are encoded as packed byte
+sequences.
+
+To use this class: create a new PackedSigDecoder by passing details of
+the encoded byte sequence to its constructor, and then call its
+``decode...()`` member functions to read values sequentially from the
+encoding.
+
+This class will keep track of a current position in the encoded byte
+sequence. Each call to a ``decode...()`` member function will advance
+this position accordingly (but never beyond the end of the sequence).
+
+Packed decoders are single-use objects: they cannot be copied, moved
+or swapped.
+
+Python:
+    The type *Iterator* is an implementation detail, and is hidden
+    from Python users. Just use the unadorned type name
+    ``PackedSigDecoder``.)doc";
+
 // Docstring regina::python::doc::PackedSigEncoder
 static const char *PackedSigEncoder =
 R"doc(A helper class for writing signatures that pack information as tightly
@@ -209,7 +231,7 @@ R"doc(Decodes a sequence of non-negative integer values, assuming that each
 individual value uses a fixed number of base64 characters, and returns
 these as an array of native C++ integers. Each integer to be decoded
 would typically have been encoded using Base64SigEncoder::encodeInt()
-or Base64SigEncoder::encodeInts(), with the same *nChars* argument.
+or Base64SigEncoder::encodeInts(), using the same *nChars* argument.
 
 Specifically, it will be assumed that each integer has been broken
 into *nChars* 6-bit blocks, with each block encoded as a single base64
@@ -236,7 +258,7 @@ Parameter ``count``:
     the number of integers to decode.
 
 Parameter ``nChars``:
-    the number of base64 characters to read.
+    the number of base64 characters to read for each integer.
 
 Returns:
     the sequence of integers that were decoded.)doc";
@@ -725,6 +747,205 @@ Returns:
 
 }
 
+namespace PackedSigDecoder_ {
+
+// Docstring regina::python::doc::PackedSigDecoder_::__init
+static const char *__init =
+R"doc(Creates a new decoder for the given encoded byte sequence.
+
+The byte sequence should be passed as an iterator range. This iterator
+range must remain valid for the entire lifespan of this decoder.
+
+Python:
+    Instead of an iterator range, this constructor takes a Python
+    ``bytes`` object. In Python (but not C++), the decoder will also
+    keep a deep copy of the byte sequence, to ensure the lifespan
+    requirements.
+
+Parameter ``beginEncoding``:
+    an iterator pointing to the beginning of the encoded byte
+    sequence.
+
+Parameter ``endEncoding``:
+    a past-the-end iterator that marks the end of the encoded byte
+    sequence.)doc";
+
+// Docstring regina::python::doc::PackedSigDecoder_::decodeBits
+static const char *decodeBits =
+R"doc(Decodes a sequence of bits, and returns these in the form of a
+bitmask. The bits would typically have been encoded using
+PackedSigEncoder::encodeBits() with the same *count* argument.
+
+Specifically, it will be assumed that the bits have been packed eight
+at a time into bytes, and that within each byte the bits are stored in
+order from lowest to highest significance.
+
+The inverse to this routine is PackedSigEncoder::encodeBits().
+
+Exception ``InvalidInput``:
+    There are not enough bytes available in the encoded byte sequence
+    to hold the requested number of bits.
+
+Python:
+    The template argument *BitmaskType* is taken to be Bitmask.
+
+Template parameter ``BitmaskType``:
+    the bitmask type to return; this must be capable of holding at
+    least *count* bits.
+
+Parameter ``count``:
+    the number of bits to decode.
+
+Returns:
+    a bitmask holding the bits that were decoded.)doc";
+
+// Docstring regina::python::doc::PackedSigDecoder_::decodeInt
+static const char *decodeInt =
+R"doc(Decodes the next non-negative integer value, assuming this uses a
+fixed number of bytes. This integer value would typically have been
+encoded using PackedSigEncoder::encodeInt(), using the same *nBytes*
+argument.
+
+Specifically, it will be assumed that the integer has been broken into
+*nBytes* bytes, in order from lowest to highest significance.
+
+The result will be assembled using the integer type *IntType*, via
+bitwise OR and bitwise shift lefts. It is assumed that the programmer
+has chosen an integer type of size at least *nBytes* bytes.
+
+The inverse to this routine is PackedSigEncoder::encodeInt().
+
+Exception ``InvalidInput``:
+    There are fewer than *nBytes* bytes available in the encoded byte
+    sequence.
+
+Python:
+    The template argument *IntType* is taken to be a native C++
+    ``long``.
+
+Parameter ``nBytes``:
+    the number of bytes to read.
+
+Returns:
+    the integer that was decoded.)doc";
+
+// Docstring regina::python::doc::PackedSigDecoder_::decodeInts
+static const char *decodeInts =
+R"doc(Decodes a sequence of non-negative integer values, assuming that each
+individual value uses a fixed number of bytes, and returns these as an
+array of native C++ integers. Each integer to be decoded would
+typically have been encoded using PackedSigEncoder::encodeInt() or
+PackedSigEncoder::encodeInts(), using the same *nBytes* argument.
+
+Specifically, it will be assumed that each integer has been broken
+into *nBytes* bytes, in order from lowest to highest significance.
+
+Each resulting integer will be assembled using the integer type
+*IntType*, via bitwise OR and bitwise shift lefts. It is assumed that
+the programmer has chosen an integer type of size at least *nBytes*
+bytes.
+
+The inverse to this routine is PackedSigEncoder::encodeInts().
+
+Exception ``InvalidInput``:
+    There are fewer than ``count × nBytes`` bytes available in the
+    encoded byte sequence.
+
+Python:
+    The template argument *IntType* is taken to be a native C++
+    ``long``. This routine returns a Python list of integers.
+
+Parameter ``count``:
+    the number of integers to decode.
+
+Parameter ``nBytes``:
+    the number of bytes to read for each integer.
+
+Returns:
+    the sequence of integers that were decoded.)doc";
+
+// Docstring regina::python::doc::PackedSigDecoder_::decodeSize
+static const char *decodeSize =
+R"doc(Decodes the next non-negative integer value (typically representing
+the size of some object), without knowing in advance how many bytes
+were used to encode it. This integer value must have been encoded
+using PackedSigEncoder::encodeSize().
+
+A typical use case would be where *size* represents the number of top-
+dimensional simplices in a triangulation, or the number of crossings
+in a link diagram.
+
+This routine also returns the smallest integer *b* with the property
+that any integer *x* between 0 and *size* inclusive can be encoded
+using *b* bytes. Typically these *x* would be _indices_ into an object
+(e.g., top-dimensional simplex numbers, or crossing numbers). More
+precisely, *b* is the same integer that was returned when *size* was
+encoded using encodeSize(). Typically you would pass *b* to subsequent
+calls to decodeInt().
+
+The inverse to this routine is PackedSigEncoder::encodeSize().
+
+Exception ``InvalidInput``:
+    There are not enough bytes available in the encoded byte sequence.
+
+Returns:
+    a pair (*size*, *b*), where *size* is the integer that was
+    decoded, and *b* is the number of bytes described above.)doc";
+
+// Docstring regina::python::doc::PackedSigDecoder_::decodeTrits
+static const char *decodeTrits =
+R"doc(Decodes four trits from a single byte, and returns these as a fixed-
+size array. A _trit_ is either 0, 1 or 2.
+
+The inverse to this routine is PackedSigEncoder::encodeTrits(); see
+that routine for details of the encoding.
+
+Exception ``InvalidInput``:
+    There are no more bytes remaining in the encoded byte sequence.
+
+Returns:
+    an array containing the four trits that were decoded.)doc";
+
+// Docstring regina::python::doc::PackedSigDecoder_::done
+static const char *done =
+R"doc(Determines whether the current position has reached the end of the
+byte sequence.
+
+Returns:
+    ``True`` if and only if the current position is the end of the
+    byte sequence.)doc";
+
+// Docstring regina::python::doc::PackedSigDecoder_::next
+static const char *next =
+R"doc(Returns the next byte in the encoded byte sequence.
+
+The byte will be treated as an unsigned integer (regardless of whether
+the native ``char`` type is signed or unsigned).
+
+Exception ``InvalidInput``:
+    There are no more bytes remaining in the encoded byte sequence.
+
+Python:
+    The template argument *IntType* is taken to be a native C++
+    ``long``.
+
+Returns:
+    the corresponding integer, which will be between 0 and 255
+    inclusive.)doc";
+
+// Docstring regina::python::doc::PackedSigDecoder_::remaining
+static const char *remaining =
+R"doc(Returns the number of bytes remaining in the encoded byte sequence,
+counting from the current position onwards.
+
+The routine ``done()`` will return ``True`` if and only if
+``remaining()`` returns zero.
+
+Returns:
+    the number of bytes remaining.)doc";
+
+}
+
 namespace PackedSigEncoder_ {
 
 // Docstring regina::python::doc::PackedSigEncoder_::__default
@@ -733,6 +954,9 @@ static const char *__default = R"doc(Creates a new encoder, with an empty byte s
 // Docstring regina::python::doc::PackedSigEncoder_::bytes
 static const char *bytes =
 R"doc(Returns the byte sequence that has been constructed thus far.
+
+Python:
+    This routine returns a Python ``bytes`` object.
 
 Returns:
     The current byte sequence.)doc";
