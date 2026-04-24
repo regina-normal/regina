@@ -78,6 +78,37 @@ possible, even when passing or returning objects by value.
     changelog with each new release to see if you need to make changes
     to your code.)doc";
 
+// Docstring regina::python::doc::LinkSigPacked
+static const char *LinkSigPacked =
+R"doc(A small-memory byte-based encoding for use with knot/link signatures.
+
+This uses a similar "compression" of the combinatorial link data as
+LinkSigCompact; however, it encodes this data in a byte sequence using
+all eight bits per byte (as opposed to LinkSigCompact, which only
+encodes six bits per byte but creates a printable string as a result).
+
+This encoding is intended for scenarios where memory use needs to be
+kept as small as possible.
+
+See the LinkSigEncoding concept documentation for general details on
+encodings for knot/link signatures.
+
+This class is designed to be used as a template parameter for
+Link::sig(). Typical users would have no need to call any of its
+functions directly.
+
+Python:
+    Python does not support C++ templates. To use this encoding in
+    Python, you can call ``Link::sig_Packed()``.
+
+.. warning::
+    The API for this class or function has not yet been finalised.
+    This means that the interface may change in new versions of
+    Regina, without maintaining backward compatibility. If you use
+    this class directly in your own code, please check the detailed
+    changelog with each new release to see if you need to make changes
+    to your code.)doc";
+
 // Docstring regina::python::doc::LinkSigPrintable
 static const char *LinkSigPrintable =
 R"doc(The default encoding to use for knot/link signatures.
@@ -142,7 +173,7 @@ Both LinkSigPrintable and LinkSigCompact return the same signature
 ``a`` in this case.
 
 Returns:
-    the signature of the empty link.)doc";
+    the signature of the zero-crossing unknot.)doc";
 
 // Docstring regina::python::doc::LinkSigCompact_::length
 static const char *length =
@@ -334,6 +365,58 @@ static const char *strand = R"doc(0 or 1 for the lower or upper strand respectiv
 
 }
 
+namespace LinkSigPacked_ {
+
+// Docstring regina::python::doc::LinkSigPacked_::encode
+static const char *encode =
+R"doc(Encodes a single connected diagram component.
+
+Precondition:
+    The given diagram component has at least one crossing, and is
+    minimal amongst all allowed relabellings of the underlying
+    connected link diagram.
+
+Parameter ``data``:
+    the data describing a connected diagram component.
+
+Returns:
+    the given data encoded as a knot/link signature.)doc";
+
+// Docstring regina::python::doc::LinkSigPacked_::encodeEmpty
+static const char *encodeEmpty =
+R"doc(Encodes the signature of the empty link.
+
+For LinkSigPacked (unlike Regina's string-based encodings), this will
+simply be an empty sequence.
+
+Returns:
+    the signature of the empty link.)doc";
+
+// Docstring regina::python::doc::LinkSigPacked_::encodeUnknot
+static const char *encodeUnknot =
+R"doc(Encodes the signature of the zero-crossing unknot diagram.
+
+Returns:
+    the signature of the zero-crossing unknot.)doc";
+
+// Docstring regina::python::doc::LinkSigPacked_::length
+static const char *length =
+R"doc(Precomputes the length of the signature that encodes the given
+connected diagram component.
+
+Precondition:
+    The given diagram component has at least one crossing, and is
+    minimal amongst all allowed relabellings of the underlying
+    connected link diagram.
+
+Parameter ``data``:
+    the data describing a connected diagram component.
+
+Returns:
+    the length of the knot/link signature that encodes *data*.)doc";
+
+}
+
 namespace LinkSigPrintable_ {
 
 // Docstring regina::python::doc::LinkSigPrintable_::encode
@@ -369,7 +452,7 @@ Both LinkSigPrintable and LinkSigCompact return the same signature
 ``a`` in this case.
 
 Returns:
-    the signature of the empty link.)doc";
+    the signature of the zero-crossing unknot.)doc";
 
 // Docstring regina::python::doc::LinkSigPrintable_::length
 static const char *length =

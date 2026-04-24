@@ -37,6 +37,7 @@ using regina::BoolSet;
 using regina::Link;
 using regina::LinkSigCompact;
 using regina::LinkSigData;
+using regina::LinkSigPacked;
 using regina::LinkSigPrintable;
 
 void addLinkSig(pybind11::module_& m) {
@@ -96,6 +97,18 @@ void addLinkSig(pybind11::module_& m) {
             rdoc::encodeUnknot)
         .def_static("encode", &LinkSigCompact::encode, rdoc::encode)
         .def_static("length", &LinkSigCompact::length, rdoc::length)
+        ;
+    regina::python::no_eq_static(c);
+
+    RDOC_SCOPE_SWITCH(LinkSigPacked)
+
+    auto c = pybind11::class_<LinkSigPacked>(m, "LinkSigPacked", rdoc_scope)
+        .def_static("encodeEmpty", &LinkSigPacked::encodeEmpty,
+            rdoc::encodeEmpty)
+        .def_static("encodeUnknot", &LinkSigPacked::encodeUnknot,
+            rdoc::encodeUnknot)
+        .def_static("encode", &LinkSigPacked::encode, rdoc::encode)
+        .def_static("length", &LinkSigPacked::length, rdoc::length)
         ;
     regina::python::no_eq_static(c);
 

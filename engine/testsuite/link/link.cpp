@@ -44,6 +44,7 @@ using regina::GroupPresentation;
 using regina::InvalidArgument;
 using regina::Link;
 using regina::LinkSigCompact;
+using regina::LinkSigPacked;
 using regina::LinkSigPrintable;
 using regina::Triangulation;
 using regina::StrandRef;
@@ -3655,8 +3656,15 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
     SCOPED_TRACE_NUMERIC(reverse);
     SCOPED_TRACE_NUMERIC(rotate);
 
-    std::string sig = link.sig<Encoding>(reflect, reverse, rotate);
-    EXPECT_FALSE(sig.empty());
+    auto sig = link.sig<Encoding>(reflect, reverse, rotate);
+    if constexpr (std::same_as<typename Encoding::Signature, std::string>) {
+        // The string-based signatures are always non-empty.
+        EXPECT_FALSE(sig.empty());
+    } else {
+        // For byte-packed signatures we use the empty byte sequence to
+        // represent the empty link.
+        EXPECT_EQ(sig.empty(), link.isEmpty());
+    }
     #if 0
     // Here we can see how effective std::string::reserve() is.
     std::cerr << sig.size() << ' ' << sig.capacity() << ' '
@@ -3782,6 +3790,7 @@ static void verifySig(const Link& link, const char* name) {
 TEST_F(LinkTest, sig) {
     testManualCases(verifySig<LinkSigPrintable>);
     testManualCases(verifySig<LinkSigCompact>);
+    testManualCases(verifySig<LinkSigPacked>);
 
     // Test knots with 62, 63 and 64 crossings, where the base64 integer width
     // changes from 1 (not encoded) to 1 (encoded) and then to 2 (encoded).
@@ -3791,6 +3800,7 @@ TEST_F(LinkTest, sig) {
         EXPECT_EQ(link.countComponents(), 1);
         verifySig<LinkSigPrintable>(link, "Torus(3, 31)");
         verifySig<LinkSigCompact>(link, "Torus(3, 31)");
+        verifySig<LinkSigPacked>(link, "Torus(3, 31)");
     }
     {
         Link link = ExampleLink::torus(8, 9);
@@ -3798,6 +3808,7 @@ TEST_F(LinkTest, sig) {
         EXPECT_EQ(link.countComponents(), 1);
         verifySig<LinkSigPrintable>(link, "Torus(8, 9)");
         verifySig<LinkSigCompact>(link, "Torus(8, 9)");
+        verifySig<LinkSigPacked>(link, "Torus(8, 9)");
     }
     {
         Link link = ExampleLink::torus(5, 16);
@@ -3805,6 +3816,7 @@ TEST_F(LinkTest, sig) {
         EXPECT_EQ(link.countComponents(), 1);
         verifySig<LinkSigPrintable>(link, "Torus(5, 16)");
         verifySig<LinkSigCompact>(link, "Torus(5, 16)");
+        verifySig<LinkSigPacked>(link, "Torus(5, 16)");
     }
 
     // Unless specified otherwise, all _compact_ signatures below were computed

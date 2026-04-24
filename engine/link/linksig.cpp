@@ -418,6 +418,89 @@ std::string LinkSigCompact::encode(const LinkSigData& data) {
     return std::move(enc).str();
 }
 
+ByteSequence LinkSigPacked::encodeEmpty() {
+    return {};
+}
+
+ByteSequence LinkSigPacked::encodeUnknot() {
+    PackedSigEncoder enc;
+    enc.encodeSize(0);
+    return std::move(enc).bytes();
+}
+
+size_t LinkSigPacked::length(const LinkSigData& data) {
+    size_t ans;
+    if (data.size() < 0x10) {
+        // The integer width is 0, and does not need to be explicitly encoded.
+        // Moreover, we write the list of revisited crossings using two
+        // integers per byte.
+        ans = 1 + (data.sequence().size() - data.size() + 1) / 2;
+    } else if (data.size() < 0xff) {
+        // The integer width is 1, and does not need to be explicitly encoded.
+        ans = 1 + data.sequence().size() - data.size();
+    } else {
+        // We begin with two extra characters: 0xff (which acts as a marker that
+        // the link component is large), and the encoding of the integer width.
+        int width = PackedSigEncoder::integerWidth(data.size());
+        ans = 2 + (1 + data.sequence().size() - data.size()) * width;
+    }
+    return ans + (data.size() + 1) / 2;
+}
+
+ByteSequence LinkSigPacked::encode(const LinkSigData& data) {
+    // As with LinkSigCompact, we write:
+    // - the integer n;
+    // - 4n packed bits:
+    //   * 2n "first time seeing this crossing?" bits (in traversal order),
+    //   * n "first strand seen for this crossing" bits (in crossing order),
+    //   * n sign bits (in crossing order);
+    // - crossing indices for those crossings seen for the second time,
+    //   as well as sentinels separating link components (in traversal order).
+    //
+    // By minimality, we can assume that each crossing seen for the _first_
+    // time uses the next available crossing index.
+    //
+    // All 4n bits are written in a single pack (i.e., we don't artificially
+    // move to the next base64 character at the 2n mark and/or the 3n mark).
+
+    PackedSigEncoder enc;
+    enc.reserve(length(data));
+
+    int width = enc.encodeSize(data.size());
+
+    Bitmask bits(4 * data.size());
+    FixedArray<bool> seen(data.size(), false);
+    FixedArray<size_t> revisited(data.sequence().size() - data.size());
+
+    size_t pos = 0;
+    size_t nextRevisit = 0;
+    for (const auto& term : data.sequence()) {
+        if (term.crossing == data.size()) {
+            // This is a sentinel, and should have no presence in bits.
+            revisited[nextRevisit++] = data.size();
+        } else if (seen[term.crossing]) {
+            // This is a revisited crossing: the corresponding "first time?"
+            // bit should be false (which it already is).
+            revisited[nextRevisit++] = term.crossing;
+            ++pos;
+        } else {
+            // This is a new crossing: the corresponding "first time?" bit
+            // should be true, and the strand/sign bits should be set also.
+            bits.set(pos, true);
+            if (term.strand)
+                bits.set(data.size() * 2 + term.crossing, true);
+            if (term.sign > 0)
+                bits.set(data.size() * 3 + term.crossing, true);
+            seen[term.crossing] = true;
+            ++pos;
+        }
+    }
+
+    enc.encodeBits(4 * data.size(), bits);
+    enc.encodeInts(revisited, width);
+    return std::move(enc).bytes();
+}
+
 Link Link::fromSig(const std::string& sig) {
     Link ans;
 
@@ -639,6 +722,7 @@ Link Link::fromSig(const std::string& sig) {
 
 template std::string Link::sig<LinkSigPrintable>(bool, bool, bool) const;
 template std::string Link::sig<LinkSigCompact>(bool, bool, bool) const;
+template ByteSequence Link::sig<LinkSigPacked>(bool, bool, bool) const;
 
 } // namespace regina
 
