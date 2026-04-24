@@ -3891,10 +3891,10 @@ TEST_F(LinkTest, sig) {
         EXPECT_EQ(hopfNegative.sig(true, false), "cabcabjp");
         EXPECT_EQ(hopfNegative.sig(false, true), "cabcabjp");
         EXPECT_EQ(hopfNegative.sig(false, false), "cabcabja");
-        EXPECT_EQ(hopfNegative.sig<LinkSigCompact>(true, true), "ctdcab");
-        EXPECT_EQ(hopfNegative.sig<LinkSigCompact>(true, false), "ctdcab");
-        EXPECT_EQ(hopfNegative.sig<LinkSigCompact>(false, true), "ctdcab");
-        EXPECT_EQ(hopfNegative.sig<LinkSigCompact>(false, false), "ctacab");
+        EXPECT_EQ(hopfNegative.sig<LinkSigCompact>(true, true), "ctdcb");
+        EXPECT_EQ(hopfNegative.sig<LinkSigCompact>(true, false), "ctdcb");
+        EXPECT_EQ(hopfNegative.sig<LinkSigCompact>(false, true), "ctdcb");
+        EXPECT_EQ(hopfNegative.sig<LinkSigCompact>(false, false), "ctacb");
     }
 
     // The virtual trefoil is the same under rotation but not reflection.
@@ -4124,15 +4124,15 @@ TEST_F(LinkTest, sig) {
     EXPECT_EQ(rht_lht.link.sig<LinkSigCompact>(), "ghhThabcdef");
 
     EXPECT_EQ(empty.link.sig<LinkSigCompact>(), "_");
-    EXPECT_EQ(hopf.link.sig<LinkSigCompact>(), "ctdcab");
-    EXPECT_EQ(whitehead.link.sig<LinkSigCompact>(), "f3q7aafbced");
-    EXPECT_EQ(borromean.link.sig<LinkSigCompact>(), "gVc1Jgacgbfde");
-    EXPECT_EQ(trefoil_unknot_overlap.link.sig<LinkSigCompact>(), "fFWDdadefbc");
-    EXPECT_EQ(adams6_28.link.sig<LinkSigCompact>(), "g3bT-adgbcef");
+    EXPECT_EQ(hopf.link.sig<LinkSigCompact>(), "ctdcb");
+    EXPECT_EQ(whitehead.link.sig<LinkSigCompact>(), "f3q7aafced");
+    EXPECT_EQ(borromean.link.sig<LinkSigCompact>(), "gVc1Jgcgfde");
+    EXPECT_EQ(trefoil_unknot_overlap.link.sig<LinkSigCompact>(), "fFWDdadefc");
+    EXPECT_EQ(adams6_28.link.sig<LinkSigCompact>(), "g3bT-adgcef");
 
     EXPECT_EQ(unlink2_0.link.sig<LinkSigCompact>(), "aa");
     EXPECT_EQ(unlink3_0.link.sig<LinkSigCompact>(), "aaa");
-    EXPECT_EQ(unlink2_r2.link.sig<LinkSigCompact>(), "cZbcab");
+    EXPECT_EQ(unlink2_r2.link.sig<LinkSigCompact>(), "cZbcb");
     EXPECT_EQ(unlink2_r1r1.link.sig<LinkSigCompact>(), "bnabfa");
     EXPECT_EQ(trefoil_unknot0.link.sig<LinkSigCompact>(), "dh9abca");
     EXPECT_EQ(trefoil_unknot1.link.sig<LinkSigCompact>(), "dh9abcbfa");
@@ -4140,12 +4140,12 @@ TEST_F(LinkTest, sig) {
     EXPECT_EQ(virtualTrefoil.link.sig<LinkSigCompact>(), "cZdab");
     EXPECT_EQ(kishino.link.sig<LinkSigCompact>(), "eBCfacdb");
     EXPECT_EQ(gpv.link.sig<LinkSigCompact>(), "eBSpacdb");
-    EXPECT_EQ(virtualLink2.link.sig<LinkSigCompact>(), "bnba");
-    EXPECT_EQ(virtualLink3.link.sig<LinkSigCompact>(), "ctdcacb");
+    EXPECT_EQ(virtualLink2.link.sig<LinkSigCompact>(), "bnb");
+    EXPECT_EQ(virtualLink3.link.sig<LinkSigCompact>(), "ctdcc");
     EXPECT_EQ(virtualTrefoilx2.link.sig<LinkSigCompact>(),
-        "m33gaxPp8acmbdkijlefgh");
+        "m33gaxPp8acmdkijlefgh");
     EXPECT_EQ(virtualDisconnected.link.sig<LinkSigCompact>(),
-        "ctdcacbctdcabcZdab");
+        "ctdccctdcbcZdab");
 }
 
 static void verifyFromData(const Link& link, const char* name) {

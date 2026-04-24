@@ -354,12 +354,12 @@ size_t LinkSigCompact::length(const LinkSigData& data) {
     size_t ans;
     if (data.size() < 63) {
         // The integer width is 1, and does not need to be explicitly encoded.
-        ans = 1 + data.sequence().size() - data.size();
+        ans = 1 + data.size();
     } else {
         // We begin with two extra characters: 63 (which acts as a marker that
         // the link component is large), and the encoding of the integer width.
         int width = Base64SigEncoder::integerWidth(data.size());
-        ans = 2 + (1 + data.sequence().size() - data.size()) * width;
+        ans = 2 + (1 + data.size()) * width;
     }
     return ans + (2 * data.size() + 2) / 3;
 }
@@ -377,6 +377,10 @@ std::string LinkSigCompact::encode(const LinkSigData& data) {
     // By minimality, we can assume that each crossing seen for the _first_
     // time uses the next available crossing index.
     //
+    // By connectivity and minimality we can assume that each crossing that
+    // appears immediately after a sentinel uses the first index not yet
+    // revisited.
+    //
     // All 4n bits are written in a single pack (i.e., we don't artificially
     // move to the next base64 character at the 2n mark and/or the 3n mark).
 
@@ -387,18 +391,25 @@ std::string LinkSigCompact::encode(const LinkSigData& data) {
 
     Bitmask bits(4 * data.size());
     FixedArray<bool> seen(data.size(), false);
-    FixedArray<size_t> revisited(data.sequence().size() - data.size());
+    FixedArray<size_t> revisited(data.size());
 
     size_t pos = 0;
     size_t nextRevisit = 0;
+    bool skip = false;
     for (const auto& term : data.sequence()) {
         if (term.crossing == data.size()) {
             // This is a sentinel, and should have no presence in bits.
             revisited[nextRevisit++] = data.size();
+            skip = true;
         } else if (seen[term.crossing]) {
             // This is a revisited crossing: the corresponding "first time?"
             // bit should be false (which it already is).
-            revisited[nextRevisit++] = term.crossing;
+            if (skip) {
+                // This is the first crossing after a sentinel (which is always
+                // revisited, and whose index does not need to be written).
+                skip = false;
+            } else
+                revisited[nextRevisit++] = term.crossing;
             ++pos;
         } else {
             // This is a new crossing: the corresponding "first time?" bit
@@ -434,15 +445,15 @@ size_t LinkSigPacked::length(const LinkSigData& data) {
         // The integer width is 0, and does not need to be explicitly encoded.
         // Moreover, we write the list of revisited crossings using two
         // integers per byte.
-        ans = 1 + (data.sequence().size() - data.size() + 1) / 2;
+        ans = 1 + (data.size() + 1) / 2;
     } else if (data.size() < 0xff) {
         // The integer width is 1, and does not need to be explicitly encoded.
-        ans = 1 + data.sequence().size() - data.size();
+        ans = 1 + data.size();
     } else {
         // We begin with two extra characters: 0xff (which acts as a marker that
         // the link component is large), and the encoding of the integer width.
         int width = PackedSigEncoder::integerWidth(data.size());
-        ans = 2 + (1 + data.sequence().size() - data.size()) * width;
+        ans = 2 + (1 + data.size()) * width;
     }
     return ans + (data.size() + 1) / 2;
 }
@@ -460,6 +471,10 @@ ByteSequence LinkSigPacked::encode(const LinkSigData& data) {
     // By minimality, we can assume that each crossing seen for the _first_
     // time uses the next available crossing index.
     //
+    // By connectivity and minimality we can assume that each crossing that
+    // appears immediately after a sentinel uses the first index not yet
+    // revisited.
+    //
     // All 4n bits are written in a single pack (i.e., we don't artificially
     // move to the next base64 character at the 2n mark and/or the 3n mark).
 
@@ -470,18 +485,25 @@ ByteSequence LinkSigPacked::encode(const LinkSigData& data) {
 
     Bitmask bits(4 * data.size());
     FixedArray<bool> seen(data.size(), false);
-    FixedArray<size_t> revisited(data.sequence().size() - data.size());
+    FixedArray<size_t> revisited(data.size());
 
     size_t pos = 0;
     size_t nextRevisit = 0;
+    bool skip = false;
     for (const auto& term : data.sequence()) {
         if (term.crossing == data.size()) {
             // This is a sentinel, and should have no presence in bits.
             revisited[nextRevisit++] = data.size();
+            skip = true;
         } else if (seen[term.crossing]) {
             // This is a revisited crossing: the corresponding "first time?"
             // bit should be false (which it already is).
-            revisited[nextRevisit++] = term.crossing;
+            if (skip) {
+                // This is the first crossing after a sentinel (which is always
+                // revisited, and whose index does not need to be written).
+                skip = false;
+            } else
+                revisited[nextRevisit++] = term.crossing;
             ++pos;
         } else {
             // This is a new crossing: the corresponding "first time?" bit
@@ -558,19 +580,19 @@ Link Link::fromSig(const std::string& sig) {
                     ans.crossings_.push_back(
                         new Crossing(bits.get(3 * n + i) ? 1 : -1));
 
-                // Note: since the diagram component is connected and the
-                // labelling is canonical, sentinels (which separate
-                // topological link components) must always be followed by a
-                // revisited crossing.
-
                 FixedArray<bool> seen(n, false);
                 size_t nextIndex = 0;
+                size_t nextCompStart = 0;
                 StrandRef prev;
                 Crossing* c;
                 int strand;
                 for (size_t i = 0; i < 2 * n; ++i) {
                     bool firstVisit = bits.get(i);
                     if (firstVisit) {
+                        // Since the diagram component is connected and the
+                        // labelling is canonical, this cannot be the start of
+                        // a new topological link component (other than the
+                        // very first).
                         if (nextIndex == n)
                             throw InvalidArgument("fromSig(): "
                                 "too many first-time crossings");
@@ -587,7 +609,12 @@ Link Link::fromSig(const std::string& sig) {
                                 throw InvalidArgument("fromSig(): "
                                     "missing topological link component");
                             prev.reset();
-                            index = dec.decodeInt<size_t>(charsPerInt);
+                            // The first crossing of the new component can be
+                            // deduced: by connectivity and minimality, it
+                            // should be the first crossing not yet revisited.
+                            for ( ; seen[nextCompStart] ; ++nextCompStart)
+                                ;
+                            index = nextCompStart++;
                         }
                         if (index >= nextIndex)
                             throw InvalidArgument("fromSig(): "
@@ -744,19 +771,16 @@ Link Link::fromSig(const ByteSequence& sig) {
             // component with a positive number of crossings.
 
             Bitmask bits = dec.decodeBits<Bitmask>(4 * n);
-            auto revisited = dec.decodeInts<size_t>(n /* TODO */, width);
+            auto revisited = dec.decodeInts<size_t>(n, width);
 
             size_t base = ans.crossings_.size();
             for (size_t i = 0; i < n; ++i)
                 ans.crossings_.push_back(
                     new Crossing(bits.get(3 * n + i) ? 1 : -1));
 
-            // Note: since the diagram component is connected and the labelling
-            // is canonical, sentinels (which separate topological link
-            // components) must always be followed by a revisited crossing.
-
             FixedArray<bool> seen(n, false);
             size_t nextIndex = 0;
+            size_t nextCompStart = 0;
             auto nextRevisited = revisited.begin();
             StrandRef prev;
             Crossing* c;
@@ -764,6 +788,9 @@ Link Link::fromSig(const ByteSequence& sig) {
             for (size_t i = 0; i < 2 * n; ++i) {
                 bool firstVisit = bits.get(i);
                 if (firstVisit) {
+                    // Since the diagram component is connected and the
+                    // labelling is canonical, this cannot be the start of a new
+                    // topological link component (other than the very first).
                     if (nextIndex == n)
                         throw InvalidArgument("fromSig(): "
                             "too many first-time crossings");
@@ -780,7 +807,12 @@ Link Link::fromSig(const ByteSequence& sig) {
                             throw InvalidArgument("fromSig(): "
                                 "missing topological link component");
                         prev.reset();
-                        index = *nextRevisited++;
+                        // The first crossing of the new component can be
+                        // deduced: by connectivity and minimality, it should
+                        // be the first crossing not yet revisited.
+                        for ( ; seen[nextCompStart] ; ++nextCompStart)
+                            ;
+                        index = nextCompStart++;
                     }
                     if (index >= nextIndex)
                         throw InvalidArgument("fromSig(): "
