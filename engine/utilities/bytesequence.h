@@ -111,6 +111,21 @@ class ByteSequence {
          */
         ByteSequence(ByteSequence&&) noexcept = default;
         /**
+         * Moves the contents of the given string into this new byte sequence.
+         * This is a fast (constant time) operation.
+         *
+         * The string will be treated as a sequence of raw bytes (i.e., there
+         * is no assumption about printability, or character encodings).
+         *
+         * After the construction of this byte sequence, the string that was
+         * passed will no longer be usable.
+         *
+         * \param data a string holding the contents of this new byte sequence.
+         */
+        explicit ByteSequence(std::string&& data) noexcept :
+                data_(std::move(data)) {
+        }
+        /**
          * Sets this to be a deep copy of the given byte sequence.
          *
          * \return a reference to this byte sequence.

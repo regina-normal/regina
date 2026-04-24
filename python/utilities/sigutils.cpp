@@ -55,7 +55,6 @@ namespace regina::python {
     struct StringStorage {
         std::string str_;
         StringStorage(std::string&& str) : str_(std::move(str)) {}
-        StringStorage(const std::string_view& view) : str_(view) {}
     };
 
     class Base64SigDecoder_Copy : private StringStorage, public Base64Decoder {
@@ -69,7 +68,7 @@ namespace regina::python {
     class PackedSigDecoder_Copy : private StringStorage, public PackedDecoder {
         public:
             PackedSigDecoder_Copy(pybind11::bytes bytes) :
-                    StringStorage(std::string_view(bytes)),
+                    StringStorage(bytes),
                     PackedDecoder(str_.begin(), str_.end()) {
             }
     };

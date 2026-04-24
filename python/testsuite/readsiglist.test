@@ -71,7 +71,7 @@ except InvalidArgument:
     print('Caught exception')
 print()
 
-# While we're here... test signature encodings.
+# While we're here... test signature encodings and byte sequences.
 
 tri = Triangulation3.fromIsoSig('cPcbbbiht') # figure eight knot complement
 data = IsoSigData3(tri.component(0))
@@ -89,5 +89,20 @@ print(data.size())
 print([(s.crossing, s.strand, s.sign) for s in data.sequence()])
 print(LinkSigPrintable.encode(data))
 print(LinkSigCompact.encode(data))
+print(LinkSigPacked.encode(data))
+print(link.sig())
+print(link.sig_Compact())
+print(link.sig_Packed())
+print(Link.fromSig(link.sig()))
+print(Link.fromSig(link.sig_Compact()))
+print(Link.fromSig(link.sig_Packed()))
 print()
 
+enc = PackedSigEncoder()
+enc.encodeSize(1000)
+print(enc.bytes())
+dec = PackedSigDecoder(enc.bytes())
+print(dec.done())
+print(dec.decodeSize())
+print(dec.done())
+print()
