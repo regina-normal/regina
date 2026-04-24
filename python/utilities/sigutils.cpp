@@ -222,7 +222,6 @@ void addSigUtils(pybind11::module_& m) {
         .def_static("integerWidth", &PackedSigEncoder::integerWidth,
             rdoc::integerWidth)
         .def("encodeSize", &PackedSigEncoder::encodeSize, rdoc::encodeSize)
-        .def("encodeInt", &PackedSigEncoder::encodeInt<long>, rdoc::encodeInt)
         .def("encodeInts",
             pybind11::overload_cast<const std::vector<long>&, int>(
                 &PackedSigEncoder::encodeInts<const std::vector<long>&>),
@@ -246,14 +245,15 @@ void addSigUtils(pybind11::module_& m) {
         .def("remaining", &PackedDecoder::remaining, rdoc::remaining)
         .def("next", &PackedDecoder::next<long>, rdoc::next)
         .def("decodeSize", &PackedDecoder::decodeSize, rdoc::decodeSize)
-        .def("decodeInt", &PackedDecoder::decodeInt<long>, rdoc::decodeInt)
         .def("decodeInts", [](regina::python::PackedSigDecoder_Copy& dec,
                 size_t count, int nChars) {
-            // Reimplement this using decodeInt(), since the iterators for
-            // pybind11::list have the wrong value type.
+            // Again, the iterators for pybind11::list have the wrong value
+            // type.  Use an intermediate data structure, since we don't have
+            // decodeInt() to fall back on this time.
+            auto result = dec.decodeInts<long>(count, nChars);
             pybind11::list ans;
-            for (size_t i = 0; i < count; ++i)
-                ans.append(dec.decodeInt<long>(nChars));
+            for (auto i : result)
+                ans.append(i);
             return ans;
         })
         .def("decodeBits", &PackedDecoder::decodeBits<regina::Bitmask>,

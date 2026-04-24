@@ -123,7 +123,10 @@ TEST(Base64Test, sigEncoder) {
     EXPECT_EQ(regina::Base64SigEncoder::integerWidth(0xfff), 2);
     EXPECT_EQ(regina::Base64SigEncoder::integerWidth(0x1000), 3);
 
-    EXPECT_EQ(regina::PackedSigEncoder::integerWidth(0), 1);
+    EXPECT_EQ(regina::PackedSigEncoder::integerWidth(0), 0);
+    EXPECT_EQ(regina::PackedSigEncoder::integerWidth(1), 0);
+    EXPECT_EQ(regina::PackedSigEncoder::integerWidth(0x0f), 0);
+    EXPECT_EQ(regina::PackedSigEncoder::integerWidth(0x10), 1);
     EXPECT_EQ(regina::PackedSigEncoder::integerWidth(0xff), 1);
     EXPECT_EQ(regina::PackedSigEncoder::integerWidth(0x100), 2);
     EXPECT_EQ(regina::PackedSigEncoder::integerWidth(0xffff), 2);

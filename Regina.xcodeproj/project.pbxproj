@@ -586,6 +586,7 @@
 		0544BBAC2B0D6AD600FF26CD /* LinkPolynomials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0544BBA72B0D6AD500FF26CD /* LinkPolynomials.swift */; };
 		0544BBAD2B0D6AD600FF26CD /* LinkCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0544BBA82B0D6AD600FF26CD /* LinkCodes.swift */; };
 		0544BBAF2B102DC400FF26CD /* LinkCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0544BBAE2B102DC300FF26CD /* LinkCreator.swift */; };
+		0545A0122F9ADCE8008D3ADB /* bytesequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 0545A0112F9ADCE8008D3ADB /* bytesequence.h */; };
 		054C6A661DCC1FF3005373F0 /* example5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A4F1DCC1FE7005373F0 /* example5.cpp */; };
 		054C6A671DCC1FF3005373F0 /* example6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A501DCC1FE7005373F0 /* example6.cpp */; };
 		054C6A681DCC1FF3005373F0 /* example7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A511DCC1FE7005373F0 /* example7.cpp */; };
@@ -3058,6 +3059,7 @@
 		054535B819D8EA7100BED767 /* TextPopover.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextPopover.mm; sourceTree = "<group>"; };
 		054535BA19D90C3A00BED767 /* Skeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton.h; sourceTree = "<group>"; };
 		054535BB19D90C3A00BED767 /* Skeleton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Skeleton.mm; sourceTree = "<group>"; };
+		0545A0112F9ADCE8008D3ADB /* bytesequence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bytesequence.h; sourceTree = "<group>"; };
 		0549B4982907D38D00C911AF /* data-anon.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-anon.docbook"; sourceTree = "<group>"; };
 		0549B4992907D38E00C911AF /* data-tri.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tri.docbook"; sourceTree = "<group>"; };
 		0549B49A2907D38E00C911AF /* data-txi.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-txi.docbook"; sourceTree = "<group>"; };
@@ -6790,6 +6792,7 @@
 				052F9E69180600FB00FAE4DF /* bitmask.h */,
 				052F9E6A180600FB00FAE4DF /* boolset.cpp */,
 				052F9E6B180600FB00FAE4DF /* boolset.h */,
+				0545A0112F9ADCE8008D3ADB /* bytesequence.h */,
 				052F9E63180600FB00FAE4DF /* CMakeLists.txt */,
 				0598030A266EDDD5002D5D57 /* exception.h */,
 				051806AB2C2B9512001470F1 /* fixedarray.h */,
@@ -9004,6 +9007,7 @@
 				05F2033320A17C1E00FC74ED /* dt-impl.h in Headers */,
 				0591E7E31C4F750200793A9C /* normalhypersurfaces.h in Headers */,
 				052F9F77180600FB00FAE4DF /* covers.h in Headers */,
+				0545A0122F9ADCE8008D3ADB /* bytesequence.h in Headers */,
 				05431F661C40F3C9009BC072 /* cone_dual_mode.h in Headers */,
 				05F09FD41DBF01B600117BFC /* component2.h in Headers */,
 				05772ED0270CF9F900D26D8A /* fileformat.h in Headers */,

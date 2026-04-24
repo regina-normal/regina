@@ -30,6 +30,7 @@ if (${REGINA_INSTALL_DEV})
     bitmanip.h
     bitmask.h
     boolset.h
+    bytesequence.h
     exception.h
     fixedarray.h
     flags.h

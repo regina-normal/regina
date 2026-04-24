@@ -41,6 +41,7 @@
 #include "regina-core.h"
 #include "concepts/core.h"
 #include "utilities/boolset.h"
+#include "utilities/bytesequence.h"
 #include "utilities/fixedarray.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
@@ -398,7 +399,7 @@ class LinkSigPrintable {
          * Both LinkSigPrintable and LinkSigCompact return the same signature
          * `a` in this case.
          *
-         * \return the signature of the empty link.
+         * \return the signature of the zero-crossing unknot.
          */
         static Signature encodeUnknot();
 
@@ -478,7 +479,7 @@ class LinkSigCompact {
          * Both LinkSigPrintable and LinkSigCompact return the same signature
          * `a` in this case.
          *
-         * \return the signature of the empty link.
+         * \return the signature of the zero-crossing unknot.
          */
         static Signature encodeUnknot();
 
@@ -509,6 +510,83 @@ class LinkSigCompact {
 
         // Make this class non-constructible.
         LinkSigCompact() = delete;
+};
+
+/**
+ * A small-memory byte-based encoding for use with knot/link signatures.
+ *
+ * This uses a similar "compression" of the combinatorial link data as
+ * LinkSigCompact; however, it encodes this data in a byte sequence using all
+ * eight bits per byte (as opposed to LinkSigCompact, which only encodes six
+ * bits per byte but creates a printable string as a result).
+ *
+ * This encoding is intended for scenarios where memory use needs to be kept
+ * as small as possible.
+ *
+ * See the LinkSigEncoding concept documentation for general details on
+ * encodings for knot/link signatures.
+ *
+ * This class is designed to be used as a template parameter for Link::sig().
+ * Typical users would have no need to call any of its functions directly.
+ *
+ * \python Python does not support C++ templates.  To use this encoding in
+ * Python, you can call `Link::sig_Packed()`.
+ *
+ * \apinotfinal
+ *
+ * \ingroup link
+ */
+class LinkSigPacked {
+    public:
+        /**
+         * The data type that this encoding uses to hold the final signature.
+         */
+        using Signature = ByteSequence;
+
+        /**
+         * Encodes the signature of the empty link.
+         *
+         * For LinkSigPacked (unlike Regina's string-based encodings), this
+         * will simply be an empty sequence.
+         *
+         * \return the signature of the empty link.
+         */
+        static Signature encodeEmpty();
+
+        /**
+         * Encodes the signature of the zero-crossing unknot diagram.
+         *
+         * \return the signature of the zero-crossing unknot.
+         */
+        static Signature encodeUnknot();
+
+        /**
+         * Encodes a single connected diagram component.
+         *
+         * \pre The given diagram component has at least one crossing, and is
+         * minimal amongst all allowed relabellings of the underlying connected
+         * link diagram.
+         *
+         * \param data the data describing a connected diagram component.
+         * \return the given data encoded as a knot/link signature.
+         */
+        static Signature encode(const LinkSigData& data);
+
+        /**
+         * Precomputes the length of the signature that encodes the given
+         * connected diagram component.
+         *
+         * \pre The given diagram component has at least one crossing, and is
+         * minimal amongst all allowed relabellings of the underlying connected
+         * link diagram.
+         *
+         * \param data the data describing a connected diagram component.
+         * \return the length of the knot/link signature that encodes \a data.
+         */
+        static size_t length(const LinkSigData& data);
+
+        // Make this class non-constructible.
+        LinkSigPacked() = delete;
 };
 
 } // namespace regina

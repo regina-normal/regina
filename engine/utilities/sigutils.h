@@ -42,248 +42,15 @@
 #include <cstdint>
 #include <ranges>
 #include <string>
-#include "regina-core.h"
 #include "concepts/core.h"
 #include "concepts/iterator.h"
+#include "utilities/bytesequence.h"
 #include "utilities/exception.h"
 #include "utilities/fixedarray.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
-
-/**
- * A raw sequence of bytes.
- *
- * Such sequences are (for example) used in Regina for low-memory encodings of
- * isomorphism signatures and knot/link signatures.
- *
- * At present, the public interface for ByteSequence is very limited: it only
- * offers what Regina needs for its own functionality.  This interface may be
- * expanded in future versions of Regina.
- *
- * This class implements C++ move semantics and adheres to the C++ Swappable
- * requirement.  It is designed to avoid deep copies wherever possible,
- * even when passing or returning objects by value.
- *
- * \nopython Wherever a ByteSequence is pass into or returned from a function
- * in C++, the corresponding Python function will use a Python `bytes` object
- * instead.
- *
- * \ingroup utilities
- */
-class ByteSequence {
-    public:
-        /**
-         * A reference to an individual byte.
-         */
-        using reference = char&;
-        /**
-         * A constant reference to an individual byte.
-         */
-        using const_reference = char const&;
-        /**
-         * A random-access iterator that gives read-write access to the
-         * bytes in this sequence.
-         */
-        using iterator = std::string::iterator;
-        /**
-         * A random-access iterator that gives read-only access to the
-         * bytes in this sequence.
-         */
-        using const_iterator = std::string::const_iterator;
-        /**
-         * The type of an individual byte in this sequence.
-         */
-        using value_type = std::string::value_type;
-
-    private:
-        std::string data_;
-            /**< The byte sequence being held.  This will typically _not_ be a
-                 printable string, and may contain null characters. */
-
-    public:
-        /**
-         * Constructs a new empty byte sequence.
-         */
-        ByteSequence() = default;
-        /**
-         * Makes a new deep copy of the given byte sequence.
-         */
-        ByteSequence(const ByteSequence&) = default;
-        /**
-         * Moves the contents of the given byte sequence into this new
-         * sequence.  This is a fast (constant time) operation.
-         *
-         * The sequence that was passed will no longer be usable.
-         */
-        ByteSequence(ByteSequence&&) noexcept = default;
-        /**
-         * Sets this to be a deep copy of the given byte sequence.
-         *
-         * \return a reference to this byte sequence.
-         */
-        ByteSequence& operator = (const ByteSequence&) = default;
-        /**
-         * Moves the contents of the given byte sequence into this sequence.
-         * This is a fast (constant time) operation.
-         *
-         * The sequence that was passed will no longer be usable.
-         *
-         * \return a reference to this byte sequence.
-         */
-        ByteSequence& operator = (ByteSequence&&) = default;
-        /**
-         * Determines whether this and the given sequence are identical.
-         *
-         * \return \c true if and only if this and the given sequence are
-         * identical.
-         */
-        bool operator == (const ByteSequence&) const = default;
-        /**
-         * Compares two byte sequences lexigraphically.
-         *
-         * This operator generates all of the usual comparison operators,
-         * including `<`, `<=`, `>`, and `>=`.
-         *
-         * \return the result of the lexicographical comparison between this
-         * and the given sequence.
-         */
-        std::strong_ordering operator <=> (const ByteSequence&) const = default;
-
-        /**
-         * Determines whether this sequence is empty.
-         *
-         * \return `true` if and only if this sequence is empty.
-         */
-        bool empty() const {
-            return data_.empty();
-        }
-        /**
-         * Returns the number of bytes in this sequence.
-         *
-         * \return the length of this sequence.
-         */
-        size_t size() const {
-            return data_.size();
-        }
-        /**
-         * Returns a read-write random-access iterator pointing to the
-         * first byte in this sequence.
-         *
-         * \return a read-write begin iterator.
-         */
-        iterator begin() {
-            return data_.begin();
-        }
-        /**
-         * Returns a read-only random-access iterator pointing to the
-         * first byte in this sequence.
-         *
-         * \return a read-only begin iterator.
-         */
-        const_iterator begin() const {
-            return data_.begin();
-        }
-        /**
-         * Returns a read-write random-access iterator pointing beyond the
-         * last byte in this sequence.
-         *
-         * Note that, because this iterator is past-the-end, it must not be
-         * dereferenced.
-         *
-         * \return a read-write end iterator.
-         */
-        iterator end() {
-            return data_.end();
-        }
-        /**
-         * Returns a read-only random-access iterator pointing beyond the
-         * last byte in this sequence.
-         *
-         * Note that, because this iterator is past-the-end, it must not be
-         * dereferenced.
-         *
-         * \return a read-only end iterator.
-         */
-        const_iterator end() const {
-            return data_.end();
-        }
-
-        /**
-         * Appends the given byte to the end of this sequence.
-         *
-         * \param byte the byte to append.
-         */
-        void push_back(char byte) {
-            data_.push_back(byte);
-        }
-        /**
-         * Appends the given sequence to the end of this sequence.
-         *
-         * \param rhs the sequence to append.
-         * \return a reference to this sequence.
-         */
-        ByteSequence& operator += (const ByteSequence& rhs) {
-            data_ += rhs.data_;
-            return *this;
-        }
-        /**
-         * Swaps the contents of this and the given byte sequence.
-         *
-         * \param other the sequence whose contents are to be swapped with this.
-         */
-        void swap(ByteSequence& other) {
-            data_.swap(other.data_);
-        }
-        /**
-         * Increases the capacity of the internal data storage if necessary
-         * to allow for the given number of bytes.
-         *
-         * Internally, this calls `std::string::reserve(capacity)`.
-         * The intent is to avoid unnecessary reallocations as the sequence
-         * grows, and also to avoid allocating more memory than necessary.
-         *
-         * \warning Calling this function may invalide iterators as well as
-         * references to individual bytes.
-         *
-         * \param capacity the number of bytes that you anticipate storing.
-         */
-        void reserve(size_t capacity) {
-            data_.reserve(capacity);
-        }
-        /**
-         * Returns this byte sequence in the form of a C++ string.
-         *
-         * This returns a reference (not a deep copy), since ByteSequence uses
-         * `std::string` for its internal storage.
-         *
-         * \warning The string that is returned will typically not be printable,
-         * and may contain null characters.
-         *
-         * \return this sequence as a C++ string.
-         */
-        const std::string& asString() const {
-            return data_;
-        }
-};
-
-/**
- * Swaps the contents of the given byte sequences.
- *
- * This global routine simply calls ByteSequence::swap(); it is provided
- * so that ByteSequence meets the C++ Swappable requirements.
- *
- * \nopython
- *
- * \param a the first byte sequence whose contents should be swapped.
- * \param b the second byte sequence whose contents should be swapped.
- *
- * \ingroup utilities
- */
-inline void swap(ByteSequence& a, ByteSequence& b) noexcept {
-    a.swap(b);
-}
 
 /**
  * A deprecated set of helper tools for signatures that use base64 encodings.
@@ -1145,11 +912,9 @@ class Base64SigDecoder {
          *
          * This routine also returns the smallest integer \a b with the property
          * that any integer \a x between 0 and \a size inclusive can be encoded
-         * using \a b base64 characters.  Typically these \a x would be
-         * _indices_ into an object (e.g., top-dimensional simplex numbers, or
-         * crossing numbers).  More precisely, \a b is the same integer that
-         * was returned when \a size was encoded using encodeSize().
-         * Typically you would pass \a b to subsequent calls to decodeInt().
+         * using \a b base64 characters.  This \a b is the same integer that was
+         * returned when \a size was encoded using encodeSize(), and typically
+         * you would pass \a b to subsequent calls to decodeInt().
          *
          * The inverse to this routine is Base64SigEncoder::encodeSize().
          *
@@ -1436,7 +1201,7 @@ class PackedSigEncoder {
         }
 
         /**
-         * Moves the byte sesquence that has been constructed thus far
+         * Moves the byte sequence that has been constructed thus far
          * out of this encoder.
          *
          * After calling this function, this encoder object will be unusable.
@@ -1452,20 +1217,28 @@ class PackedSigEncoder {
 
         /**
          * Returns the smallest number of bytes required to encode any integer
-         * between 0 and \a size inclusive.
+         * between 0 and \a size inclusive.  As a special case, if any such
+         * integer can be encoded in _half_ a byte (i.e., we can happily pack
+         * two such integers into a single byte), then this routine will
+         * return zero.
          *
-         * For example, `integerWidth(255) == 1`, and `integerWidth(256) == 2`.
-         * In the special case `size = 0`, this function will return 1.
+         * For example, `integerWidth(15) == 0`, `integerWidth(16) == 1`,
+         * `integerWidth(255) == 1`, and `integerWidth(256) == 2`.
          *
-         * \return the number of bytes required.
+         * \return the number of bytes required, or zero if at most half a
+         * byte is required.
          */
         static constexpr int integerWidth(size_t size) {
-            int ans = 0;
-            do {
-                size >>= 8;
-                ++ans;
-            } while (size > 0);
-            return ans;
+            if (size < 16)
+                return 0;
+            else {
+                int ans = 0;
+                do {
+                    size >>= 8;
+                    ++ans;
+                } while (size > 0);
+                return ans;
+            }
         }
 
         /**
@@ -1477,19 +1250,22 @@ class PackedSigEncoder {
          * top-dimensional simplices in a triangulation, or the number of
          * crossings in a link diagram.
          *
-         * This routine also computes the smallest integer \a b with the
-         * property that any integer \a x between 0 and \a size inclusive can
-         * be encoded using \a b bytes.  In other words, any such \a x can be
-         * encoded by calling `encodeInt(x, b)`.  Typically these \a x would be
-         * _indices_ into an object (e.g., top-dimensional simplex numbers, or
-         * crossing numbers).  Note that encodeSize() itself might write more
-         * than \a b bytes.
+         * This routine also computes (and returns) the smallest number of bytes
+         * required to encode any integer \a x between 0 and \a size inclusive.
+         * In other words, it returns the smallest \a b for which any such \a x
+         * can be encoded by calling `encodeInt(x, b)`.  As a special case, if
+         * any such \a x can be encoded in _half_ a byte (i.e., we can happily
+         * pack two such integers into a single byte), then \a b will be zero;
+         * this follows the same behaviour as integerWidth().  Typically such
+         * an \a x would be an _index_ into an object (e.g., a top-dimensional
+         * simplex number, or a crossing index).  Note that encodeSize() itself
+         * might write more than \a b bytes.
          *
          * The inverse to this routine is PackedSigDecoder::decodeSize().
          *
          * \param size the non-negative integer to encode.
          * \return the number of bytes required to write any integer between
-         * 0 and \a size inclusive.
+         * 0 and \a size inclusive, or zero if at most half a byte is required.
          */
         int encodeSize(size_t size) {
             // There is a theoretical upper limit on \a size: the return value
@@ -1498,62 +1274,36 @@ class PackedSigEncoder {
             // problem for any native IntType.
 
             if (size < 0xff) {
-                // Keep it simple for small objects: 1 byte per integer.
+                // Keep it simple for small objects: either 1 nybble or 1 byte
+                // per integer, and we do not need to encode the integer width.
                 bytes_.push_back(size);
-                return 1;
+                return (size < 0x10 ? 0 : 1);
             } else {
                 // For large objects, start with a special marker followed by
-                // the number of bytes per integer.
+                // the integer width, and then encode size.
                 int width = integerWidth(size);
                 bytes_.push_back(0xff);
                 bytes_.push_back(width);
-                encodeInt(size, width);
+
+                size_t val = size;
+                for (int i = 0; i < width; ++i) {
+                    bytes_.push_back(static_cast<uint8_t>(val));
+                    val >>= 8;
+                }
+
                 return width;
             }
-        }
-
-        /**
-         * Encodes the given non-negative native C++ integer using a fixed
-         * number of bytes.
-         *
-         * The bytes will be encoded in order from lowest to highest
-         * significance.
-         *
-         * The inverse to this routine is PackedSigDecoder::decodeInt().
-         *
-         * \exception InvalidArgument The given integer \a val is negative,
-         * or requires more than the given number of bytes.
-         *
-         * \python The template argument \a IntType is taken to be a
-         * native C++ \c long.
-         *
-         * \param val the non-negative integer to encode.
-         * \param nBytes the number of bytes to use; typically this would be
-         * obtained through an earlier call to encodeSize().
-         */
-        template <CppInteger IntType>
-        void encodeInt(IntType val, int nBytes) {
-            if (val < 0)
-                throw InvalidArgument("PackedSigEncoder::encodeInt(): "
-                    "integer argument cannot be negative");
-
-            for ( ; nBytes > 0; --nBytes) {
-                bytes_.push_back(static_cast<uint8_t>(val));
-                val >>= 8;
-            }
-
-            if (val != 0)
-                throw InvalidArgument("PackedSigEncoder::encodeInt(): "
-                    "integer argument out of range");
         }
 
         /**
          * Encodes a sequence of non-negative native C++ integers (given by a
          * pair of iterators), each using a fixed number of bytes.
          *
-         * Each integer in the sequence will be encoded using encodeInt().
-         * That is, each integer will be broken into \a nBytes distinct bytes,
-         * which will be encoded in order from lowest to highest significance.
+         * Each integer in the sequence will be broken into \a nBytes distinct
+         * bytes, which will be encoded in order from lowest to highest
+         * significance.  In the special case where \a nBytes is zero, this
+         * indicates that each integer can be encoded in _half_ a byte,
+         * and so each byte will hold two integers from the sequence.
          *
          * The inverse to this routine is PackedSigDecoder::decodeInts().
          *
@@ -1565,23 +1315,65 @@ class PackedSigEncoder {
          * \param begin an iterator pointing to the first integer to encode.
          * \param end a past-the-end iterator pointing beyond the last integer
          * to encode.
-         * \param nBytes the number of bytes to use for each integer; typically
-         * this would be obtained through an earlier call to encodeSize().
+         * \param nBytes the number of bytes to use for each integer, or zero
+         * if only half a byte is required; typically \a nBytes would be
+         * obtained through an earlier call to encodeSize().
          */
         template <std::input_iterator Iterator>
         requires CppInteger<std::iter_value_t<Iterator>>
         void encodeInts(Iterator begin, Iterator end, int nBytes) {
-            for (auto it = begin; it != end; ++it)
-                encodeInt(*it, nBytes);
+            auto it = begin;
+            while (it != end) {
+                auto val = *it++;
+                if (val < 0)
+                    throw InvalidArgument("PackedSigEncoder::encodeInts(): "
+                        "integer argument cannot be negative");
+
+                if (nBytes == 0) {
+                    if (val > 0x0f)
+                        throw InvalidArgument("PackedSigEncoder::encodeInts(): "
+                            "integer argument out of range");
+                    if (it == end) {
+                        // That was the last integer in the sequence.
+                        // It gets a byte all on its own.
+                        bytes_.push_back(static_cast<uint8_t>(val));
+                    } else {
+                        // Pack val into the lower-order nybble, and then
+                        // fetch the next integer in the sequenc to pack into
+                        // the higher-order nybble.
+                        auto next = *it++;
+                        if (next < 0)
+                            throw InvalidArgument(
+                                "PackedSigEncoder::encodeInts(): "
+                                "integer argument cannot be negative");
+                        if (next > 0x0f)
+                            throw InvalidArgument(
+                                "PackedSigEncoder::encodeInts(): "
+                                "integer argument out of range");
+                        bytes_.push_back(static_cast<uint8_t>(next) << 4 |
+                            static_cast<uint8_t>(val));
+                    }
+                } else {
+                    for (int i = 0; i < nBytes; ++i) {
+                        bytes_.push_back(static_cast<uint8_t>(val));
+                        val >>= 8;
+                    }
+                    if (val != 0)
+                        throw InvalidArgument("PackedSigEncoder::encodeInts(): "
+                            "integer argument out of range");
+                }
+            }
         }
 
         /**
          * Encodes a sequence of non-negative native C++ integers (given by an
          * input range), each using a fixed number of bytes.
          *
-         * Each integer in the sequence will be encoded using encodeInt().
-         * That is, each integer will be broken into \a nBytes distinct bytes,
-         * which will be encoded in order from lowest to highest significance.
+         * Each integer in the sequence will be broken into \a nBytes distinct
+         * bytes, which will be encoded in order from lowest to highest
+         * significance.  In the special case where \a nBytes is zero, this
+         * indicates that each integer can be encoded in _half_ a byte,
+         * and so each byte will hold two integers from the sequence.
          *
          * The inverse to this routine is PackedSigDecoder::decodeInts().
          *
@@ -1592,14 +1384,15 @@ class PackedSigEncoder {
          * integers, each of which will be read as a native C++ `long`.
          *
          * \param sequence the sequence of integers to encode.
-         * \param nBytes the number of bytes to use for each integer; typically
-         * this would be obtained through an earlier call to encodeSize().
+         * \param nBytes the number of bytes to use for each integer, or zero
+         * if only half a byte is required; typically \a nBytes would be
+         * obtained through an earlier call to encodeSize().
          */
         template <std::ranges::input_range Range>
         requires CppInteger<std::ranges::range_value_t<Range>>
         void encodeInts(Range&& sequence, int nBytes) {
-            for (auto i : sequence)
-                encodeInt(i, nBytes);
+            encodeInts(std::ranges::begin(sequence),
+                std::ranges::end(sequence), nBytes);
         }
 
         /**
@@ -1842,11 +1635,12 @@ class PackedSigDecoder {
          *
          * This routine also returns the smallest integer \a b with the property
          * that any integer \a x between 0 and \a size inclusive can be encoded
-         * using \a b bytes.  Typically these \a x would be _indices_ into an
-         * object (e.g., top-dimensional simplex numbers, or crossing numbers).
-         * More precisely, \a b is the same integer that was returned when
-         * \a size was encoded using encodeSize().  Typically you would pass
-         * \a b to subsequent calls to decodeInt().
+         * using \a b bytes.  As a special case, if any such \a x can be
+         * encoded in _half_ a byte (i.e., we can pack two such integers into a
+         * single byte), then \a b will be zero; this follows the same
+         * behaviour as integerWidth().  This \a b is the same integer that was
+         * returned when \a size was encoded using encodeSize(), and typically
+         * you would pass \a b to subsequent calls to decodeInts().
          *
          * The inverse to this routine is PackedSigEncoder::encodeSize().
          *
@@ -1858,58 +1652,31 @@ class PackedSigDecoder {
          */
         std::pair<size_t, int> decodeSize() {
             int first = next<int>();
-            if (first < 255)
-                return { first, 1 };
-            else {
+            if (first < 0xff) {
+                return { first, (first < 0x10 ? 0 : 1) };
+            } else {
                 int width = next<int>();
-                size_t n = decodeInt<size_t>(width);
+
+                size_t n = 0;
+                for (int i = 0; i < width; ++i)
+                    n |= (next<size_t>() << (8 * i));
+
                 return { n, width };
             }
         }
 
         /**
-         * Decodes the next non-negative integer value, assuming this uses
-         * a fixed number of bytes.  This integer value would typically have
-         * been encoded using PackedSigEncoder::encodeInt(), using the same
-         * \a nBytes argument.
-         *
-         * Specifically, it will be assumed that the integer has been broken
-         * into \a nBytes bytes, in order from lowest to highest significance.
-         *
-         * The result will be assembled using the integer type \a IntType,
-         * via bitwise OR and bitwise shift lefts.  It is assumed that the
-         * programmer has chosen an integer type of size at least \a nBytes
-         * bytes.
-         *
-         * The inverse to this routine is PackedSigEncoder::encodeInt().
-         *
-         * \exception InvalidInput There are fewer than \a nBytes bytes
-         * available in the encoded byte sequence.
-         *
-         * \python The template argument \a IntType is taken to be a
-         * native C++ \c long.
-         *
-         * \param nBytes the number of bytes to read.
-         * \return the integer that was decoded.
-         */
-        template <CppInteger IntType>
-        IntType decodeInt(int nBytes) {
-            IntType ans = 0;
-            for (int i = 0; i < nBytes; ++i)
-                ans |= (next<IntType>() << (8 * i));
-            return ans;
-        }
-
-        /**
          * Decodes a sequence of non-negative integer values, assuming that
          * each individual value uses a fixed number of bytes, and returns
-         * these as native C++ integers via an output iterator.
-         * Each integer to be decoded would typically have been encoded using
-         * PackedSigEncoder::encodeInt() or PackedSigEncoder::encodeInts(),
-         * using the same \a nBytes argument.
+         * these as native C++ integers via an output iterator.  The integers
+         * to be decoded would typically have been encoded using
+         * PackedSigEncoder::encodeInts(), using the same \a nBytes argument.
          *
          * Specifically, it will be assumed that each integer has been broken
          * into \a nBytes bytes, in order from lowest to highest significance.
+         * In the special case where \a nBytes is zero, it will be assumed
+         * that each integer fits into half a byte, and that each byte to be
+         * decoded (except possibly the last) contains _two_ encoded integers.
          *
          * Each resulting integer will be assembled using the output iterator's
          * `value_type`, via bitwise OR and bitwise shift lefts.  It is assumed
@@ -1918,8 +1685,12 @@ class PackedSigDecoder {
          *
          * The inverse to this routine is PackedSigEncoder::encodeInts().
          *
-         * \exception InvalidInput There are fewer than `count × nBytes` bytes
-         * available in the encoded byte sequence.
+         * \exception InvalidInput Either there are not enough bytes remaining
+         * in the encoded byte sequence to hold \a count integers of the
+         * requested size, and/or this routine detects the special case where
+         * \a nBytes is zero, \a count is odd, and the final byte to be
+         * decoded has unexpect bits set in its higher-order nybble (since
+         * this nybble is not used and therefore should be zero).
          *
          * \nopython Instead you can use the variant of this routine that does
          * not take an output iterator, but instead returns the sequence of
@@ -1931,25 +1702,50 @@ class PackedSigDecoder {
          * It is assumed that this output iterator is able to accept \a count
          * values in this way.
          * \param count the number of integers to decode.
-         * \param nBytes the number of bytes to read for each integer.
+         * \param nBytes the number of bytes to read for each integer, or 0 if
+         * each integer uses only half a byte.
          */
         template <OutputIterator DestIterator>
         requires CppInteger<std::iter_value_t<DestIterator>>
         void decodeInts(DestIterator output, size_t count, int nBytes) {
-            for (size_t i = 0; i < count; ++i)
-                *output++ = decodeInt<std::iter_value_t<DestIterator>>(nBytes);
+            using IntType = std::iter_value_t<DestIterator>;
+            if (nBytes == 0) {
+                size_t i = 0;
+                while (i < count) {
+                    uint8_t byte = next();
+                    *output++ = (byte & 0x0f);
+                    ++i;
+                    if (i == count) {
+                        if (byte & 0xf0)
+                            throw InvalidInput("PackedSigDecoder: "
+                                "byte contains extraneous non-zero bits");
+                    } else {
+                        *output++ = (byte >> 4);
+                        ++i;
+                    }
+                }
+            } else {
+                for (size_t i = 0; i < count; ++i) {
+                    IntType ans = 0;
+                    for (int i = 0; i < nBytes; ++i)
+                        ans |= (next<IntType>() << (8 * i));
+                    *output++ = ans;
+                }
+            }
         }
 
         /**
          * Decodes a sequence of non-negative integer values, assuming that
          * each individual value uses a fixed number of bytes, and returns
-         * these as an array of native C++ integers.
-         * Each integer to be decoded would typically have been encoded using
-         * PackedSigEncoder::encodeInt() or PackedSigEncoder::encodeInts(),
-         * using the same \a nBytes argument.
+         * these as an array of native C++ integers.  The integers to be
+         * decoded would typically have been encoded using
+         * PackedSigEncoder::encodeInts(), using the same \a nBytes argument.
          *
          * Specifically, it will be assumed that each integer has been broken
          * into \a nBytes bytes, in order from lowest to highest significance.
+         * In the special case where \a nBytes is zero, it will be assumed
+         * that each integer fits into half a byte, and that each byte to be
+         * decoded (except possibly the last) contains _two_ encoded integers.
          *
          * Each resulting integer will be assembled using the integer type
          * \a IntType, via bitwise OR and bitwise shift lefts.  It is assumed
@@ -1958,21 +1754,25 @@ class PackedSigDecoder {
          *
          * The inverse to this routine is PackedSigEncoder::encodeInts().
          *
-         * \exception InvalidInput There are fewer than `count × nBytes` bytes
-         * available in the encoded byte sequence.
+         * \exception InvalidInput Either there are not enough bytes remaining
+         * in the encoded byte sequence to hold \a count integers of the
+         * requested size, and/or this routine detects the special case where
+         * \a nBytes is zero, \a count is odd, and the final byte to be
+         * decoded has unexpect bits set in its higher-order nybble (since
+         * this nybble is not used and therefore should be zero).
          *
          * \python The template argument \a IntType is taken to be a
          * native C++ \c long.  This routine returns a Python list of integers.
          *
          * \param count the number of integers to decode.
-         * \param nBytes the number of bytes to read for each integer.
+         * \param nBytes the number of bytes to read for each integer, or 0 if
+         * each integer uses only half a byte.
          * \return the sequence of integers that were decoded.
          */
         template <CppInteger IntType>
         FixedArray<IntType> decodeInts(size_t count, int nBytes) {
             FixedArray<IntType> ans(count);
-            for (auto it = ans.begin(); it != ans.end(); ++it)
-                *it = decodeInt<IntType>(nBytes);
+            decodeInts(ans.begin(), count, nBytes);
             return ans;
         }
 

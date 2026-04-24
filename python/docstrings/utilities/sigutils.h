@@ -295,11 +295,9 @@ in a link diagram.
 
 This routine also returns the smallest integer *b* with the property
 that any integer *x* between 0 and *size* inclusive can be encoded
-using *b* base64 characters. Typically these *x* would be _indices_
-into an object (e.g., top-dimensional simplex numbers, or crossing
-numbers). More precisely, *b* is the same integer that was returned
-when *size* was encoded using encodeSize(). Typically you would pass
-*b* to subsequent calls to decodeInt().
+using *b* base64 characters. This *b* is the same integer that was
+returned when *size* was encoded using encodeSize(), and typically you
+would pass *b* to subsequent calls to decodeInt().
 
 The inverse to this routine is Base64SigEncoder::encodeSize().
 
@@ -799,46 +797,19 @@ Parameter ``count``:
 Returns:
     a bitmask holding the bits that were decoded.)doc";
 
-// Docstring regina::python::doc::PackedSigDecoder_::decodeInt
-static const char *decodeInt =
-R"doc(Decodes the next non-negative integer value, assuming this uses a
-fixed number of bytes. This integer value would typically have been
-encoded using PackedSigEncoder::encodeInt(), using the same *nBytes*
-argument.
-
-Specifically, it will be assumed that the integer has been broken into
-*nBytes* bytes, in order from lowest to highest significance.
-
-The result will be assembled using the integer type *IntType*, via
-bitwise OR and bitwise shift lefts. It is assumed that the programmer
-has chosen an integer type of size at least *nBytes* bytes.
-
-The inverse to this routine is PackedSigEncoder::encodeInt().
-
-Exception ``InvalidInput``:
-    There are fewer than *nBytes* bytes available in the encoded byte
-    sequence.
-
-Python:
-    The template argument *IntType* is taken to be a native C++
-    ``long``.
-
-Parameter ``nBytes``:
-    the number of bytes to read.
-
-Returns:
-    the integer that was decoded.)doc";
-
 // Docstring regina::python::doc::PackedSigDecoder_::decodeInts
 static const char *decodeInts =
 R"doc(Decodes a sequence of non-negative integer values, assuming that each
 individual value uses a fixed number of bytes, and returns these as an
-array of native C++ integers. Each integer to be decoded would
-typically have been encoded using PackedSigEncoder::encodeInt() or
-PackedSigEncoder::encodeInts(), using the same *nBytes* argument.
+array of native C++ integers. The integers to be decoded would
+typically have been encoded using PackedSigEncoder::encodeInts(),
+using the same *nBytes* argument.
 
 Specifically, it will be assumed that each integer has been broken
-into *nBytes* bytes, in order from lowest to highest significance.
+into *nBytes* bytes, in order from lowest to highest significance. In
+the special case where *nBytes* is zero, it will be assumed that each
+integer fits into half a byte, and that each byte to be decoded
+(except possibly the last) contains _two_ encoded integers.
 
 Each resulting integer will be assembled using the integer type
 *IntType*, via bitwise OR and bitwise shift lefts. It is assumed that
@@ -848,8 +819,12 @@ bytes.
 The inverse to this routine is PackedSigEncoder::encodeInts().
 
 Exception ``InvalidInput``:
-    There are fewer than ``count × nBytes`` bytes available in the
-    encoded byte sequence.
+    Either there are not enough bytes remaining in the encoded byte
+    sequence to hold *count* integers of the requested size, and/or
+    this routine detects the special case where *nBytes* is zero,
+    *count* is odd, and the final byte to be decoded has unexpect bits
+    set in its higher-order nybble (since this nybble is not used and
+    therefore should be zero).
 
 Python:
     The template argument *IntType* is taken to be a native C++
@@ -859,7 +834,8 @@ Parameter ``count``:
     the number of integers to decode.
 
 Parameter ``nBytes``:
-    the number of bytes to read for each integer.
+    the number of bytes to read for each integer, or 0 if each integer
+    uses only half a byte.
 
 Returns:
     the sequence of integers that were decoded.)doc";
@@ -877,11 +853,12 @@ in a link diagram.
 
 This routine also returns the smallest integer *b* with the property
 that any integer *x* between 0 and *size* inclusive can be encoded
-using *b* bytes. Typically these *x* would be _indices_ into an object
-(e.g., top-dimensional simplex numbers, or crossing numbers). More
-precisely, *b* is the same integer that was returned when *size* was
-encoded using encodeSize(). Typically you would pass *b* to subsequent
-calls to decodeInt().
+using *b* bytes. As a special case, if any such *x* can be encoded in
+_half_ a byte (i.e., we can pack two such integers into a single
+byte), then *b* will be zero; this follows the same behaviour as
+integerWidth(). This *b* is the same integer that was returned when
+*size* was encoded using encodeSize(), and typically you would pass
+*b* to subsequent calls to decodeInts().
 
 The inverse to this routine is PackedSigEncoder::encodeSize().
 
@@ -982,39 +959,16 @@ Parameter ``bits``:
     a bitmask holding the bits to encode; this must be capable of
     holding at least *count* bits.)doc";
 
-// Docstring regina::python::doc::PackedSigEncoder_::encodeInt
-static const char *encodeInt =
-R"doc(Encodes the given non-negative native C++ integer using a fixed number
-of bytes.
-
-The bytes will be encoded in order from lowest to highest
-significance.
-
-The inverse to this routine is PackedSigDecoder::decodeInt().
-
-Exception ``InvalidArgument``:
-    The given integer *val* is negative, or requires more than the
-    given number of bytes.
-
-Python:
-    The template argument *IntType* is taken to be a native C++
-    ``long``.
-
-Parameter ``val``:
-    the non-negative integer to encode.
-
-Parameter ``nBytes``:
-    the number of bytes to use; typically this would be obtained
-    through an earlier call to encodeSize().)doc";
-
 // Docstring regina::python::doc::PackedSigEncoder_::encodeInts
 static const char *encodeInts =
 R"doc(Encodes a sequence of non-negative native C++ integers (given by an
 input range), each using a fixed number of bytes.
 
-Each integer in the sequence will be encoded using encodeInt(). That
-is, each integer will be broken into *nBytes* distinct bytes, which
-will be encoded in order from lowest to highest significance.
+Each integer in the sequence will be broken into *nBytes* distinct
+bytes, which will be encoded in order from lowest to highest
+significance. In the special case where *nBytes* is zero, this
+indicates that each integer can be encoded in _half_ a byte, and so
+each byte will hold two integers from the sequence.
 
 The inverse to this routine is PackedSigDecoder::decodeInts().
 
@@ -1030,8 +984,9 @@ Parameter ``sequence``:
     the sequence of integers to encode.
 
 Parameter ``nBytes``:
-    the number of bytes to use for each integer; typically this would
-    be obtained through an earlier call to encodeSize().)doc";
+    the number of bytes to use for each integer, or zero if only half
+    a byte is required; typically *nBytes* would be obtained through
+    an earlier call to encodeSize().)doc";
 
 // Docstring regina::python::doc::PackedSigEncoder_::encodeSize
 static const char *encodeSize =
@@ -1043,13 +998,16 @@ A typical use case would be where *size* represents the number of top-
 dimensional simplices in a triangulation, or the number of crossings
 in a link diagram.
 
-This routine also computes the smallest integer *b* with the property
-that any integer *x* between 0 and *size* inclusive can be encoded
-using *b* bytes. In other words, any such *x* can be encoded by
-calling ``encodeInt(x, b)``. Typically these *x* would be _indices_
-into an object (e.g., top-dimensional simplex numbers, or crossing
-numbers). Note that encodeSize() itself might write more than *b*
-bytes.
+This routine also computes (and returns) the smallest number of bytes
+required to encode any integer *x* between 0 and *size* inclusive. In
+other words, it returns the smallest *b* for which any such *x* can be
+encoded by calling ``encodeInt(x, b)``. As a special case, if any such
+*x* can be encoded in _half_ a byte (i.e., we can happily pack two
+such integers into a single byte), then *b* will be zero; this follows
+the same behaviour as integerWidth(). Typically such an *x* would be
+an _index_ into an object (e.g., a top-dimensional simplex number, or
+a crossing index). Note that encodeSize() itself might write more than
+*b* bytes.
 
 The inverse to this routine is PackedSigDecoder::decodeSize().
 
@@ -1058,7 +1016,7 @@ Parameter ``size``:
 
 Returns:
     the number of bytes required to write any integer between 0 and
-    *size* inclusive.)doc";
+    *size* inclusive, or zero if at most half a byte is required.)doc";
 
 // Docstring regina::python::doc::PackedSigEncoder_::encodeTrits
 static const char *encodeTrits =
@@ -1083,19 +1041,22 @@ Parameter ``trits``:
 // Docstring regina::python::doc::PackedSigEncoder_::integerWidth
 static const char *integerWidth =
 R"doc(Returns the smallest number of bytes required to encode any integer
-between 0 and *size* inclusive.
+between 0 and *size* inclusive. As a special case, if any such integer
+can be encoded in _half_ a byte (i.e., we can happily pack two such
+integers into a single byte), then this routine will return zero.
 
-For example, ``integerWidth(255) == 1``, and ``integerWidth(256) ==
-2``. In the special case ``size = 0``, this function will return 1.
+For example, ``integerWidth(15) == 0``, ``integerWidth(16) == 1``,
+``integerWidth(255) == 1``, and ``integerWidth(256) == 2``.
 
 Returns:
-    the number of bytes required.)doc";
+    the number of bytes required, or zero if at most half a byte is
+    required.)doc";
 
 // Docstring regina::python::doc::PackedSigEncoder_::reserve
 static const char *reserve =
 R"doc(Pre-allocates the given amount of space for the entire encoding.
 
-This calls ``std::string::reserve(capacity)``. The intent is to avoid
+This calls ``ByteSequence::reserve(capacity)``. The intent is to avoid
 unnecessary reallocations as the encoding is constructed, and also to
 avoid allocating more memory than is required.
 

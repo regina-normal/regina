@@ -177,11 +177,13 @@ Version 8.0  [ TODO ]
             - New routine parityProjection().
             - Routine sig() now supports different encodings, via a new
               template parameter.  In particular, sig<LinkSigCompact>() (or
-              sig_Compact() for Python users) gives significantly shorter
-              signatures than the default encoding (which is compatible with
-              older versions of Regina).  Likewise, fromSig() can now
-              reconstruct link diagrams from signatures made with the compact
-              encoding as well as the default encoding.
+              sig_Compact() in Python) gives significantly shorter signatures
+              than the default encoding (which is compatible with older versions
+              of Regina), and sig<LinkSigPacked>() (or sig_Packed() in Python)
+              gives even shorter signatures using byte sequences instead of
+              strings.  Likewise, fromSig() can now reconstruct link diagrams
+              from signatures made with the compact and packed encodings as well
+              as the default encoding.
             - All knows...() routines now take an optional boolean argument,
               indicating whether to consider trivial computations (the default),
               or to only check whether the value is already cached.
@@ -191,7 +193,7 @@ Version 8.0  [ TODO ]
             - The iterator-based variant of fromData() now has simpler
               requirements on the component sequences (in particular, iteration
               no longer needs to be random access).
-        Class LinkSigData, LinkSigPrintable, LinkSigCompact:
+        Class LinkSigData, LinkSigPrintable, LinkSigCompact, LinkSigPacked:
             - New types to support the generation of knot/link signatures.
         Class ListView<...>:
             - Deprecated and no longer used.  Wherever Regina used to return
