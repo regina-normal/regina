@@ -3764,7 +3764,9 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
     }
 
     // Verify the "magic" string constructor.
-    EXPECT_NO_THROW({ EXPECT_EQ(Link(sig), recon); });
+    if constexpr (std::same_as<typename Encoding::Signature, std::string>) {
+        EXPECT_NO_THROW({ EXPECT_EQ(Link(sig), recon); });
+    }
 }
 
 template <regina::LinkSigEncoding Encoding>

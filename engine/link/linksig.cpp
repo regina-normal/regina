@@ -720,6 +720,101 @@ Link Link::fromSig(const std::string& sig) {
     }
 }
 
+Link Link::fromSig(const ByteSequence& sig) {
+    Link ans;
+
+    PackedSigDecoder dec(sig.begin(), sig.end());
+
+    // Get the empty link out of the way first.
+    if (dec.done())
+        return ans;
+
+    try {
+        while (! dec.done()) {
+            // Read one connected component of the link diagram at a time.
+
+            auto [ n, width ] = dec.decodeSize();
+            if (n == 0) {
+                // Zero-crossing unknot.
+                ans.components_.emplace_back();
+                continue;
+            }
+
+            // We should have a packed signature for a single connected diagram
+            // component with a positive number of crossings.
+
+            Bitmask bits = dec.decodeBits<Bitmask>(4 * n);
+            auto revisited = dec.decodeInts<size_t>(n /* TODO */, width);
+
+            size_t base = ans.crossings_.size();
+            for (size_t i = 0; i < n; ++i)
+                ans.crossings_.push_back(
+                    new Crossing(bits.get(3 * n + i) ? 1 : -1));
+
+            // Note: since the diagram component is connected and the labelling
+            // is canonical, sentinels (which separate topological link
+            // components) must always be followed by a revisited crossing.
+
+            FixedArray<bool> seen(n, false);
+            size_t nextIndex = 0;
+            auto nextRevisited = revisited.begin();
+            StrandRef prev;
+            Crossing* c;
+            int strand;
+            for (size_t i = 0; i < 2 * n; ++i) {
+                bool firstVisit = bits.get(i);
+                if (firstVisit) {
+                    if (nextIndex == n)
+                        throw InvalidArgument("fromSig(): "
+                            "too many first-time crossings");
+                    strand = bits.get(2 * n + nextIndex) ? 1 : 0;
+                    c = ans.crossings_[base + nextIndex];
+                    ++nextIndex;
+                } else {
+                    size_t index = *nextRevisited++;
+                    if (index == n) {
+                        // We are starting a new topological link component.
+                        if (prev)
+                            ans.join(prev, ans.components_.back());
+                        else
+                            throw InvalidArgument("fromSig(): "
+                                "missing topological link component");
+                        prev.reset();
+                        index = *nextRevisited++;
+                    }
+                    if (index >= nextIndex)
+                        throw InvalidArgument("fromSig(): "
+                            "invalid revisited crossing");
+                    if (seen[index])
+                        throw InvalidArgument("fromSig(): "
+                            "multiply-revisited crossing");
+                    seen[index] = true;
+                    strand = bits.get(2 * n + index) ? 0 : 1;
+                    c = ans.crossings_[base + index];
+                }
+
+                StrandRef s(c, strand);
+                if (prev)
+                    ans.join(prev, s);
+                else
+                    ans.components_.push_back(s);
+                prev = s;
+            }
+            if (prev)
+                ans.join(prev, ans.components_.back());
+            else
+                throw InvalidArgument("fromSig(): "
+                    "missing topological link component");
+        }
+
+        return ans;
+    } catch (const InvalidInput&) {
+        // Any exception caught here was thrown by PackedSigDecoder.
+        throw InvalidArgument(
+            "fromSig(): incomplete or invalid byte sequence encoding");
+    }
+}
+
 template std::string Link::sig<LinkSigPrintable>(bool, bool, bool) const;
 template std::string Link::sig<LinkSigCompact>(bool, bool, bool) const;
 template ByteSequence Link::sig<LinkSigPacked>(bool, bool, bool) const;

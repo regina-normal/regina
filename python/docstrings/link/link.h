@@ -1754,22 +1754,45 @@ Returns:
 // Docstring regina::python::doc::Link_::fromKnotSig
 static const char *fromKnotSig =
 R"doc(Alias for fromSig(), to recover a classical or virtual link diagram
-from its knot/link signature.
+from a string-based knot/link signature.
 
 This alias fromKnotSig() has been kept to reflect the fact that, in
-older versions of Regina, these signatures were only available for
-single-component knots; moreover the old name "knot signatures" can
-still be found in the literature. While this routine is not
-deprecated, it is recommended to use fromSig() in new code.
+older versions of Regina, signatures were only available for single-
+component knots; moreover the old name "knot signatures" can still be
+found in the literature. While this routine is not deprecated, it is
+recommended to use fromSig() in new code.
 
 See fromSig() for further details.
 
 Exception ``InvalidArgument``:
-    The given string was not a valid knot/link signature.
+    The given string was not a valid string-based knot/link signature.
 
 Parameter ``sig``:
     the signature of the link diagram to construct. Note that
     signatures are case-sensitive.
+
+Returns:
+    the reconstructed link diagram.)doc";
+
+// Docstring regina::python::doc::Link_::fromKnotSig_2
+static const char *fromKnotSig_2 =
+R"doc(Alias for fromSig(), to recover a classical or virtual link diagram
+from a binary knot/link signature.
+
+This alias fromKnotSig() has been kept to reflect the fact that, in
+older versions of Regina, signatures were only available for single-
+component knots; moreover the old name "knot signatures" can still be
+found in the literature. While this routine is not deprecated, it is
+recommended to use fromSig() in new code.
+
+See fromSig() for further details.
+
+Exception ``InvalidArgument``:
+    The given byte sequence was not a valid binary knot/link
+    signature.
+
+Parameter ``sig``:
+    the signature of the link diagram to construct.
 
 Returns:
     the reconstructed link diagram.)doc";
@@ -2027,12 +2050,14 @@ Returns:
 
 // Docstring regina::python::doc::Link_::fromSig
 static const char *fromSig =
-R"doc(Recovers a classical or virtual link diagram from its knot/link
-signature. See sig() for more information on these signatures.
+R"doc(Recovers a classical or virtual link diagram from a string-based
+knot/link signature. See sig() for more information on signatures.
 
-This reconstruction will only work if the given signature uses either
-the default encoding LinkSigPrintable or the compact encoding
-LinkSigCompact.
+This reconstruction (from a string) will only work if the given
+signature uses either the default encoding LinkSigPrintable or the
+compact encoding LinkSigCompact. There is also a variant of fromSig()
+that takes a byte sequence, and which can work with the binary
+encoding LinkSigPacked.
 
 Calling sig() followed by fromSig() is not guaranteed to produce an
 _identical_ link diagram to the original, but it is guaranteed to
@@ -2042,11 +2067,39 @@ sig()) reflection of the diagram, rotation of the diagram, and/or
 reversal of individual link components.
 
 Exception ``InvalidArgument``:
-    The given string was not a valid knot/link signature.
+    The given string was not a valid string-based knot/link signature.
 
 Parameter ``sig``:
     the signature of the link diagram to construct. Note that
     signatures are case-sensitive.
+
+Returns:
+    the reconstructed link diagram.)doc";
+
+// Docstring regina::python::doc::Link_::fromSig_2
+static const char *fromSig_2 =
+R"doc(Recovers a classical or virtual link diagram from a binary knot/link
+signature. See sig() for more information on signatures.
+
+This reconstruction (from a byte sequence) will only work if the given
+signature uses the encoding LinkSigPacked. There is also a variant of
+fromSig() that takes a string argument, and which can work with the
+string-based encodings LinkSigPrintable (the default encoding for
+knot/link signatures) and LinkSigCompact.
+
+Calling sig() followed by fromSig() is not guaranteed to produce an
+_identical_ link diagram to the original, but it is guaranteed to
+produce one that is related by zero or more applications of
+relabelling, and (according to the arguments that were passed to
+sig()) reflection of the diagram, rotation of the diagram, and/or
+reversal of individual link components.
+
+Exception ``InvalidArgument``:
+    The given byte sequence was not a valid binary knot/link
+    signature.
+
+Parameter ``sig``:
+    the signature of the link diagram to construct.
 
 Returns:
     the reconstructed link diagram.)doc";
@@ -5435,18 +5488,22 @@ the template parameter *Encoding:*
   the length of LinkSigPrintable). This can be used when memory needs
   to be carefully conserved.
 
+* The encoding LinkSigPacked is even shorter again, but it achieves
+  this by returning a binary sequence of bytes (as opposed to a
+  printable string).
+
 * Other custom encodings are currently for internal use only, and the
   requirements for the *Encoding* parameter may change in future
   versions of Regina. See the LinkSigEncoding concept documentation
   for the current requirements.
 
 The routine fromSig() can be used to recover a link diagram from its
-signature (but only if the default encoding LinkSigPrintable or the
-compact encoding LinkSigCompact was used). The resulting diagram might
-not be identical to the original, but it will be related by zero or
-more applications of relabelling, and (according to the arguments)
-reflection of the diagram, rotation of the diagram, and/or reversal of
-individual link components.
+signature (but only if one of the officially supported encodings
+LinkSigPrintable, LinkSigCompact or LinkSigPacked was used). The
+resulting diagram might not be identical to the original, but it will
+be related by zero or more applications of relabelling, and (according
+to the arguments) reflection of the diagram, rotation of the diagram,
+and/or reversal of individual link components.
 
 The size of a signature is proportional to ``n log n``, where *n* is
 the number of crossings in the link diagram.
@@ -5465,7 +5522,9 @@ Python:
     default encoding, just call ``sig()``. To use a non-default
     encoding, add a suffix ``_Encoding`` where *Encoding* is an
     abbreviated version of the encoding type (e.g., ``sig_Compact()``
-    to use the encoding LinkSigCompact).
+    to use the encoding LinkSigCompact). If you call ``sig_Packed()``,
+    then the return value will be a Python ``bytes`` object (not a
+    ByteSequence).
 
 Parameter ``allowReflection``:
     ``True`` if reflecting the entire link diagram should preserve the

@@ -234,8 +234,18 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
             auto begin = std::addressof(c);
             return Link::fromData(s.begin(), s.end(), begin, begin + 1);
         }, pybind11::arg("signs"), pybind11::arg("component"), rdoc::fromData)
-        .def_static("fromKnotSig", &Link::fromKnotSig, rdoc::fromKnotSig)
-        .def_static("fromSig", &Link::fromSig, rdoc::fromSig)
+        .def_static("fromKnotSig",
+            overload_cast<const std::string&>(&Link::fromKnotSig),
+            rdoc::fromKnotSig)
+        .def_static("fromKnotSig",
+            overload_cast<const regina::ByteSequence&>(&Link::fromKnotSig),
+            rdoc::fromKnotSig_2)
+        .def_static("fromSig",
+            overload_cast<const std::string&>(&Link::fromSig),
+            rdoc::fromSig)
+        .def_static("fromSig",
+            overload_cast<const regina::ByteSequence&>(&Link::fromSig),
+            rdoc::fromSig_2)
         .def("swap", &Link::swap, rdoc::swap)
         .def("insertLink", overload_cast<const Link&>(&Link::insertLink),
             rdoc::insertLink)

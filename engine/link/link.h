@@ -5891,14 +5891,18 @@ class Link :
          *   half the length of LinkSigPrintable).  This can be used when
          *   memory needs to be carefully conserved.
          *
+         * - The encoding LinkSigPacked is even shorter again, but it achieves
+         *   this by returning a binary sequence of bytes (as opposed to a
+         *   printable string).
+         *
          * - Other custom encodings are currently for internal use only, and the
          *   requirements for the \a Encoding parameter may change in future
          *   versions of Regina.  See the LinkSigEncoding concept documentation
          *   for the current requirements.
          *
          * The routine fromSig() can be used to recover a link diagram from
-         * its signature (but only if the default encoding LinkSigPrintable or
-         * the compact encoding LinkSigCompact was used).
+         * its signature (but only if one of the officially supported encodings
+         * LinkSigPrintable, LinkSigCompact or LinkSigPacked was used).
          * The resulting diagram might not be identical to the original, but
          * it will be related by zero or more applications of relabelling, and
          * (according to the arguments) reflection of the diagram, rotation of
@@ -5921,7 +5925,8 @@ class Link :
          * default encoding, just call `sig()`.  To use a non-default encoding,
          * add a suffix `_Encoding` where \a Encoding is an abbreviated version
          * of the encoding type (e.g., `sig_Compact()` to use the encoding
-         * LinkSigCompact).
+         * LinkSigCompact).  If you call `sig_Packed()`, then the return value
+         * will be a Python `bytes` object (not a ByteSequence).
          *
          * \param allowReflection \c true if reflecting the entire link diagram
          * should preserve the signature, or \c false if the signature should
@@ -6180,12 +6185,14 @@ class Link :
             ComponentIterator beginComponents, ComponentIterator endComponents);
 
         /**
-         * Recovers a classical or virtual link diagram from its knot/link
-         * signature.  See sig() for more information on these signatures.
+         * Recovers a classical or virtual link diagram from a string-based
+         * knot/link signature.  See sig() for more information on signatures.
          *
-         * This reconstruction will only work if the given signature uses
-         * either the default encoding LinkSigPrintable or the compact encoding
-         * LinkSigCompact.
+         * This reconstruction (from a string) will only work if the
+         * given signature uses either the default encoding LinkSigPrintable
+         * or the compact encoding LinkSigCompact.  There is also a variant of
+         * fromSig() that takes a byte sequence, and which can work with the
+         * binary encoding LinkSigPacked.
          *
          * Calling sig() followed by fromSig() is not guaranteed to produce
          * an _identical_ link diagram to the original, but it is guaranteed
@@ -6195,7 +6202,7 @@ class Link :
          * and/or reversal of individual link components.
          *
          * \exception InvalidArgument The given string was not a valid
-         * knot/link signature.
+         * string-based knot/link signature.
          *
          * \param sig the signature of the link diagram to construct.
          * Note that signatures are case-sensitive.
@@ -6204,11 +6211,36 @@ class Link :
         static Link fromSig(const std::string& sig);
 
         /**
+         * Recovers a classical or virtual link diagram from a binary
+         * knot/link signature.  See sig() for more information on signatures.
+         *
+         * This reconstruction (from a byte sequence) will only work if the
+         * given signature uses the encoding LinkSigPacked.  There is also a
+         * variant of fromSig() that takes a string argument, and which can
+         * work with the string-based encodings LinkSigPrintable (the default
+         * encoding for knot/link signatures) and LinkSigCompact.
+         *
+         * Calling sig() followed by fromSig() is not guaranteed to produce
+         * an _identical_ link diagram to the original, but it is guaranteed
+         * to produce one that is related by zero or more applications of
+         * relabelling, and (according to the arguments that were passed
+         * to sig()) reflection of the diagram, rotation of the diagram,
+         * and/or reversal of individual link components.
+         *
+         * \exception InvalidArgument The given byte sequence was not a valid
+         * binary knot/link signature.
+         *
+         * \param sig the signature of the link diagram to construct.
+         * \return the reconstructed link diagram.
+         */
+        static Link fromSig(const ByteSequence& sig);
+
+        /**
          * Alias for fromSig(), to recover a classical or virtual link diagram
-         * from its knot/link signature.
+         * from a string-based knot/link signature.
          *
          * This alias fromKnotSig() has been kept to reflect the fact that, in
-         * older versions of Regina, these signatures were only available for
+         * older versions of Regina, signatures were only available for
          * single-component knots; moreover the old name "knot signatures" can
          * still be found in the literature.  While this routine is not
          * deprecated, it is recommended to use fromSig() in new code.
@@ -6216,13 +6248,33 @@ class Link :
          * See fromSig() for further details.
          *
          * \exception InvalidArgument The given string was not a valid
-         * knot/link signature.
+         * string-based knot/link signature.
          *
          * \param sig the signature of the link diagram to construct.
          * Note that signatures are case-sensitive.
          * \return the reconstructed link diagram.
          */
         static Link fromKnotSig(const std::string& sig);
+
+        /**
+         * Alias for fromSig(), to recover a classical or virtual link diagram
+         * from a binary knot/link signature.
+         *
+         * This alias fromKnotSig() has been kept to reflect the fact that, in
+         * older versions of Regina, signatures were only available for
+         * single-component knots; moreover the old name "knot signatures" can
+         * still be found in the literature.  While this routine is not
+         * deprecated, it is recommended to use fromSig() in new code.
+         *
+         * See fromSig() for further details.
+         *
+         * \exception InvalidArgument The given byte sequence was not a valid
+         * binary knot/link signature.
+         *
+         * \param sig the signature of the link diagram to construct.
+         * \return the reconstructed link diagram.
+         */
+        static Link fromKnotSig(const ByteSequence& sig);
 
         /**
          * Reconstructs a classical or virtual link from its given tight
@@ -8176,6 +8228,10 @@ inline std::string Link::knotSig(bool allowReflection, bool allowReversal,
 }
 
 inline Link Link::fromKnotSig(const std::string& sig) {
+    return Link::fromSig(sig);
+}
+
+inline Link Link::fromKnotSig(const ByteSequence& sig) {
     return Link::fromSig(sig);
 }
 
