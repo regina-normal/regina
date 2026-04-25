@@ -253,7 +253,7 @@ class HyperEncoding {
         /**
          * Returns the number of coordinates stored for each pentachoron.
          *
-         * \return The number of coordinates per pentachoron.
+         * \return the number of coordinates per pentachoron.
          */
         constexpr int block() const {
             return flags_ & SIZE_MASK;

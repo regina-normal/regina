@@ -502,7 +502,7 @@ class NormalEncoding {
         /**
          * Returns the number of coordinates stored for each tetrahedron.
          *
-         * \return The number of coordinates per tetrahedron.
+         * \return the number of coordinates per tetrahedron.
          */
         constexpr int block() const {
             return flags_ & SIZE_MASK;

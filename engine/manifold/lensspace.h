@@ -143,7 +143,7 @@ class LensSpace : public Manifold {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the other representation to compare this with.
-         * \return A result that indicates how this and the given lens space
+         * \return a result that indicates how this and the given lens space
          * representation should be ordered with respect to each other.
          */
         std::strong_ordering operator <=> (const LensSpace& rhs) const;

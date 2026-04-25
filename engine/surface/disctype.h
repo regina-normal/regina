@@ -140,7 +140,7 @@ struct DiscType {
      * \python This spaceship operator `x <=> y` is not available, but the
      * other comparison operators that it generates _are_ available.
      *
-     * \return The result of the comparison between this and the given
+     * \return the result of the comparison between this and the given
      * disc type.
      */
     constexpr std::strong_ordering operator <=> (const DiscType&) const =

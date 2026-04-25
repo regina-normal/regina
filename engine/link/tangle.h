@@ -600,7 +600,7 @@ class Tangle : public Output<Tangle> {
          * \param crossing identifies the crossing to be removed.
          * See Link::r1(Crossing*) for details on exactly how this will
          * be interpreted.
-         * \return The new tangle diagram obtained by performing the requested
+         * \return the new tangle diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Tangle> withR1(Crossing* crossing) const;
@@ -624,7 +624,7 @@ class Tangle : public Output<Tangle> {
          * \param arc identifies one of the arcs of the bigon about
          * which the move will be performed.  See Link::r2(StrandRef)
          * for details on exactly how this will be interpretered.
-         * \return The new tangle diagram obtained by performing the requested
+         * \return the new tangle diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Tangle> withR2(StrandRef arc) const;
@@ -649,7 +649,7 @@ class Tangle : public Output<Tangle> {
          * the "upper" arc that features in this move.
          * See Link::r2(Crossing*) for details on exactly how this will be
          * interpreted.
-         * \return The new tangle diagram obtained by performing the requested
+         * \return the new tangle diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Tangle> withR2(Crossing* crossing) const;

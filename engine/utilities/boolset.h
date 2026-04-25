@@ -178,7 +178,7 @@ class BoolSet {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the set to compare with this.
-         * \return The result of the subset comparison between this and the
+         * \return the result of the subset comparison between this and the
          * given set.
          */
         constexpr std::partial_ordering operator <=> (BoolSet rhs) const;

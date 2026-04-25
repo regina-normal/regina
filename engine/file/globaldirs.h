@@ -204,7 +204,7 @@ class GlobalDirs {
          * python module, or the empty string if the module has been
          * installed in python's standard site-packages directory;
          * this will be returned by pythonModule().
-         * \param censusDir The directory containing the large
+         * \param censusDir the directory containing the large
          * machine-encoded census data files; this will be returned
          * by census().
          */

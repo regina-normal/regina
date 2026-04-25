@@ -433,7 +433,7 @@ class Bitmask {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the bitmask to compare against this.
-         * \return The result of the subset comparison between this and the
+         * \return the result of the subset comparison between this and the
          * given bitmask.
          */
         std::partial_ordering operator <=> (const Bitmask& rhs) const;
@@ -849,7 +849,7 @@ class Bitmask1 {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the bitmask to compare against this.
-         * \return The result of the subset comparison between this and the
+         * \return the result of the subset comparison between this and the
          * given bitmask.
          */
         inline std::partial_ordering operator <=> (const Bitmask1& rhs)
@@ -1290,7 +1290,7 @@ class Bitmask2 {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the bitmask to compare against this.
-         * \return The result of the subset comparison between this and the
+         * \return the result of the subset comparison between this and the
          * given bitmask.
          */
         std::partial_ordering operator <=> (const Bitmask2& rhs) const {

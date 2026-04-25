@@ -447,7 +447,7 @@ class AbelianGroup :
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the group to compare this with.
-         * \return The result of the comparison between this and the given
+         * \return the result of the comparison between this and the given
          * group.
          */
         std::strong_ordering operator <=> (const AbelianGroup& rhs) const;

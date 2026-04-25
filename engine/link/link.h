@@ -1425,7 +1425,7 @@ class Link :
          * `auto` to collect the return value from this routine.  (For Python
          * users, the array will be converted into a Python list.)
          *
-         * \return A pair containing (i) the array as described above; and
+         * \return a pair containing (i) the array as described above; and
          * (ii) the total number of non-trivial diagram components (so again,
          * ignoring zero-crossing components).  Note that this latter number
          * may be different from countDiagramComponents(), which counts _all_
@@ -2535,7 +2535,7 @@ class Link :
          *
          * \param crossing identifies the crossing to be removed.  See
          * r1(Crossing*) for details on exactly how this will be interpreted.
-         * \return The new link diagram obtained by performing the requested
+         * \return the new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR1(Crossing* crossing) const;
@@ -2560,7 +2560,7 @@ class Link :
          * or 1 if the twist should be introduced on the right of the arc.
          * \param sign the sign of the new crossing that will be
          * introduced as part of the twist; this must be +1 or -1.
-         * \return The new link diagram obtained by performing the requested
+         * \return the new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR1(StrandRef arc, int side, int sign) const;
@@ -2580,7 +2580,7 @@ class Link :
          * \param arc identifies one of the arcs of the bigon about which the
          * move will be performed.  See r2(StrandRef) for details on exactly
          * how this will be interpreted.
-         * \return The new link diagram obtained by performing the requested
+         * \return the new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR2(StrandRef arc) const;
@@ -2600,7 +2600,7 @@ class Link :
          * \param crossing identifies the crossing at the beginning of the
          * "upper" arc that features in this move.  See r2(Crossing*) for
          * details on exactly how this will be interpreted.
-         * \return The new link diagram obtained by performing the requested
+         * \return the new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR2(Crossing* crossing) const;
@@ -2638,7 +2638,7 @@ class Link :
          * of \a lowerArc (when walking along \a lowerArc in the forward
          * direction), or 1 if the new overlap should take place on the right
          * of \a lowerArc.
-         * \return The new link diagram obtained by performing the requested
+         * \return the new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR2(StrandRef upperArc, int upperSide,
@@ -2678,7 +2678,7 @@ class Link :
          * of \a lowerArc (when walking along \a lowerArc in the forward
          * direction), or 1 if the new overlap should take place on the right
          * of \a lowerArc.
-         * \return The new link diagram obtained by performing the requested
+         * \return the new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR2Virtual(StrandRef upperArc, int upperSide,
@@ -2711,7 +2711,7 @@ class Link :
          * \param firstStrand 0 if the first portion of the arc should be
          * pushed under the second, or 1 if the first portion should be pushed
          * over the second.
-         * \return The new link diagram obtained by performing the requested
+         * \return the new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR2Virtual(StrandRef arc, int firstSide,
@@ -2736,7 +2736,7 @@ class Link :
          * the left of the arc (when walking along the arc in the forward
          * direction), or 1 if the third crossing is located on the right of
          * the arc.
-         * \return The new link diagram obtained by performing the requested
+         * \return the new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR3(StrandRef arc, int side) const;
@@ -2760,7 +2760,7 @@ class Link :
          * the left of the uppermost arc (when walking along the arc in the
          * forward direction), or 1 if the third crossing is located on the
          * right of the uppermost arc.
-         * \return The new link diagram obtained by performing the requested
+         * \return the new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR3(Crossing* crossing, int side) const;

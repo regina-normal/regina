@@ -125,7 +125,7 @@ struct SFSFibre {
      * \python This spaceship operator `x <=> y` is not available, but the
      * other comparison operators that it generates _are_ available.
      *
-     * \return The result of the comparison between this and the given fibre.
+     * \return the result of the comparison between this and the given fibre.
      */
     constexpr std::strong_ordering operator <=> (const SFSFibre&) const =
         default;
@@ -880,7 +880,7 @@ class SFSpace : public Manifold {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the other representation to compare this with.
-         * \return A result that indicates how this and the given Seifert
+         * \return a result that indicates how this and the given Seifert
          * fibred space representation should be ordered with respect to
          * each other.
          */

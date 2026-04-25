@@ -1115,7 +1115,7 @@ class FaceBase :
          * The reason this routine is non-const is because the triangle type
          * and subtype are cached when first computed.
          *
-         * \return The vertex or edge number (0, 1 or 2) that plays a special
+         * \return the vertex or edge number (0, 1 or 2) that plays a special
          * role, or -1 if this triangle's combinatorial type has no special
          * vertex or edge.
          */

@@ -206,7 +206,7 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
          * available for triangulations of all dimensions ≥ 3.
          * See triangleSubtype() for further information.
          *
-         * \return The vertex or edge number (0, 1 or 2) that plays a special
+         * \return the vertex or edge number (0, 1 or 2) that plays a special
          * role, or -1 if this triangle's combinatorial type has no special
          * vertex or edge.
          */

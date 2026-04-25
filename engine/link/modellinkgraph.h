@@ -479,7 +479,7 @@ class ModelLinkGraphNode : public MarkedElement,
          *   So, for a non-planar graph, the only guarantee we have at each
          *   node is that `0 ≤ monogons() ≤ loops() ≤ 2`.
          *
-         * \return The number of incident loops, which will be between 0 and 2
+         * \return the number of incident loops, which will be between 0 and 2
          * inclusive.
          */
         int loops() const;
@@ -500,7 +500,7 @@ class ModelLinkGraphNode : public MarkedElement,
          *   So, for a non-planar graph, the only guarantee we have at each
          *   node is that `0 ≤ monogons() ≤ loops() ≤ 2`.
          *
-         * \return The number of incident 1-gons, which will be between 0 and 2
+         * \return the number of incident 1-gons, which will be between 0 and 2
          * inclusive.
          */
         int monogons() const;
@@ -515,7 +515,7 @@ class ModelLinkGraphNode : public MarkedElement,
          * form two loops, each bounding its own 1-gon (which models a
          * 1-crossing unknot component of a link diagram).
          *
-         * \return The number of incident embedded bigons, which will be
+         * \return the number of incident embedded bigons, which will be
          * between 0 and 4 inclusive.
          */
         int bigons() const;
@@ -529,7 +529,7 @@ class ModelLinkGraphNode : public MarkedElement,
          * would imply that the underlying graph contains a loop bounding a
          * 1-gon (which models a trivial twist in a link diagram).
          *
-         * \return The number of incident embedded triangles, which will be
+         * \return the number of incident embedded triangles, which will be
          * between 0 and 4 inclusive.
          */
         int triangles() const;

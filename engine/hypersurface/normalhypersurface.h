@@ -1195,7 +1195,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the hypersurface to compare this hypersurface with.
-         * \return The result of the comparison between this and the given
+         * \return the result of the comparison between this and the given
          * hypersurface.  This is marked as a weak ordering (not a strong
          * ordering) to reflect the fact that (for example) hypersurfaces in
          * different triangulations or using different encodings could be

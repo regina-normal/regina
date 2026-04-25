@@ -2782,7 +2782,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \param axis indicates which axis of the enclosing octahedron the
          * four new tetrahedra should meet along; this must be 0 or 1.  See
          * move44() for details on exactly what this means.
-         * \return The new triangulation obtained by performing the requested
+         * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Triangulation<3>> with44(Edge<3>* e, int axis) const;
@@ -2803,7 +2803,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \param edgeEnd indicates at which end of the edge \a e the move
          * does _not_ involve the adjacent tetrahedron; this should be 0 or 1.
          * See move21() for details on exactly what this means.
-         * \return The new triangulation obtained by performing the requested
+         * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Triangulation<3>> with21(Edge<3>* e, int edgeEnd) const;
@@ -2828,7 +2828,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \param e1 another embedding of the edge \a e.
          * \param t1 indicates the other triangle about which to perform the
          * move, with respect to the edge embedding \a e1; this must be 2 or 3.
-         * \return The new triangulation obtained by performing the requested
+         * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          *
          * \author Alex He
@@ -2855,7 +2855,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * to perform the move.
          * \param t1 the number assigned to the other triangle about which
          * to perform the move.
-         * \return The new triangulation obtained by performing the requested
+         * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          *
          * \author Alex He
@@ -2882,7 +2882,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \param t1 the other triangle about which to perform the move.
          * \param e1 the edge at which \a t1 meets the other triangle \a t0;
          * this must be 0, 1 or 2.
-         * \return The new triangulation obtained by performing the requested
+         * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          *
          * \author Alex He
@@ -2903,7 +2903,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre The given triangle is a triangle of this triangulation.
          *
          * \param t the triangle about which to perform the move.
-         * \return The new triangulation obtained by performing the requested
+         * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Triangulation<3>> withOpenBook(Triangle<3>* t) const;
@@ -2921,7 +2921,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre The given edge is an edge of this triangulation.
          *
          * \param e the edge about which to perform the move.
-         * \return The new triangulation obtained by performing the requested
+         * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Triangulation<3>> withCloseBook(Edge<3>* e) const;
@@ -2939,7 +2939,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre The given edge is an edge of this triangulation.
          *
          * \param e the edge to collapse.
-         * \return The new triangulation obtained by performing the requested
+         * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Triangulation<3>> withCollapseEdge(Edge<3>* e) const;

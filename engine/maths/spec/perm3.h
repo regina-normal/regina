@@ -775,7 +775,7 @@ class Perm<3> {
          * \python This spaceship operator `x <=> y` is not available, but the
          * other comparison operators that it generates _are_ available.
          *
-         * \return The result that indicates which permutation appears earlier
+         * \return the result that indicates which permutation appears earlier
          * in \a Sn.
          */
         constexpr std::strong_ordering operator <=> (const Perm&) const =
@@ -956,7 +956,7 @@ class Perm<3> {
          * name __hash__().  This allows permutations to be used as keys in
          * Python dictionaries and sets.
          *
-         * \return The integer hash of this permutation.
+         * \return the integer hash of this permutation.
          */
         constexpr size_t hash() const;
 

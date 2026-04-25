@@ -1189,7 +1189,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \pre The given edge is an edge of this triangulation.
          *
          * \param e the edge about which to perform the move.
-         * \return The new triangulation obtained by performing the requested
+         * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Triangulation<4>> with44(Edge<4>* e) const;
@@ -1207,7 +1207,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \pre The given tetrahedron is a tetrahedron of this triangulation.
          *
          * \param t the tetrahedron about which to perform the move.
-         * \return The new triangulation obtained by performing the requested
+         * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Triangulation<4>> withOpenBook(Tetrahedron<4>* t) const;
@@ -1225,7 +1225,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \pre The given edge is an edge of this triangulation.
          *
          * \param e the edge to collapse.
-         * \return The new triangulation obtained by performing the requested
+         * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Triangulation<4>> withCollapseEdge(Edge<4>* e) const;
@@ -1242,7 +1242,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \pre The given edge is an edge of this triangulation.
          *
          * \param e the edge whose endpoints are to be snapped together.
-         * \return The new triangulation obtained by performing the requested
+         * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Triangulation<4>> withSnapEdge(Edge<4>* e) const;

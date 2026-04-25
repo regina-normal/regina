@@ -255,7 +255,7 @@ struct TightEncodable {
      * name __hash__().  This allows objects of this type to be used as
      * keys in Python dictionaries and sets.
      *
-     * \return The integer hash of this object.
+     * \return the integer hash of this object.
      */
     size_t hash() const {
         return std::hash<std::string>{}(tightEncoding());

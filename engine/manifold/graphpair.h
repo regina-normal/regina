@@ -239,7 +239,7 @@ class GraphPair : public Manifold {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the other representation to compare this with.
-         * \return A result that indicates how this and the given graph
+         * \return a result that indicates how this and the given graph
          * manifold representation should be ordered with respect to each other.
          */
         std::strong_ordering operator <=> (const GraphPair& rhs) const;

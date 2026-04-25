@@ -337,7 +337,7 @@ class Base64SigEncoder {
         /**
          * Returns the base64 encoding that has been constructed thus far.
          *
-         * \return The current base64 encoding.
+         * \return the current base64 encoding.
          */
         const std::string& str() const & {
             return base64_;
@@ -352,7 +352,7 @@ class Base64SigEncoder {
          * \nopython Instead use the variant of str() that returns its string
          * by constant reference.
          *
-         * \return The current base64 encoding.
+         * \return the current base64 encoding.
          */
         std::string&& str() && {
             return std::move(base64_);
@@ -1194,7 +1194,7 @@ class PackedSigEncoder {
          *
          * \python This routine returns a Python `bytes` object.
          *
-         * \return The current byte sequence.
+         * \return the current byte sequence.
          */
         const ByteSequence& bytes() const & {
             return bytes_;
@@ -1209,7 +1209,7 @@ class PackedSigEncoder {
          * \nopython Instead use the variant of bytes() that returns its byte
          * sequence by constant reference.
          *
-         * \return The current byte sequence.
+         * \return the current byte sequence.
          */
         ByteSequence&& bytes() && {
             return std::move(bytes_);

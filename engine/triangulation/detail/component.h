@@ -112,7 +112,7 @@ class ComponentBase :
          * Returns the number of top-dimensional simplices in this
          * component.
          *
-         * \return The number of top-dimensional simplices.
+         * \return the number of top-dimensional simplices.
          */
         size_t size() const;
         /**

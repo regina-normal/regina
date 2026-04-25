@@ -354,7 +354,7 @@ class LightweightSequence {
          * `<`, `<=`, `>`, and `>=`.
          *
          * \param rhs the sequence to compare this with.
-         * \return The result of the lexicographical comparison between this
+         * \return the result of the lexicographical comparison between this
          * and the given sequence.  This will be of the strongest possible
          * comparison category type for comparing objects of type \a T
          * (so, for example, the return type will be `std::strong_ordering`

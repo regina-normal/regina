@@ -688,7 +688,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the integer with which this will be compared.
-         * \return The result of the numerical comparison between this and
+         * \return the result of the numerical comparison between this and
          * the given integer.
          */
         template <bool rhsWithInfinity>
@@ -708,7 +708,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * It is assumed that the type \a IntType is \c long.
          *
          * \param rhs the integer with which this will be compared.
-         * \return The result of the numerical comparison between this and
+         * \return the result of the numerical comparison between this and
          * the given integer.
          */
         template <CppInteger IntType>
@@ -726,7 +726,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * available to Python users.
          *
          * \param rhs the integer with which this will be compared.
-         * \return The result of the numerical comparison between this and
+         * \return the result of the numerical comparison between this and
          * the given integer.
          */
         template <int bytes>
@@ -1407,7 +1407,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \pre This integer is not infinite.
          *
          * \param p the given odd prime.
-         * \return The Legendre symbol (0, 1 or -1) as described above.
+         * \return the Legendre symbol (0, 1 or -1) as described above.
          *
          * \author Ryan Budney
          */
@@ -1637,7 +1637,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * name __hash__().  This allows Regina's arbitrary-precision integers
          * to be used as keys in Python dictionaries and sets.
          *
-         * \return The hash of this arbitrary-precision integer.
+         * \return the hash of this arbitrary-precision integer.
          */
         size_t hash() const;
 
@@ -2014,7 +2014,7 @@ class NativeInteger {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the integer with which this will be compared.
-         * \return The result of the numerical comparison between this and
+         * \return the result of the numerical comparison between this and
          * the given integer.
          */
         constexpr std::strong_ordering operator <=> (const NativeInteger& rhs)
@@ -2032,7 +2032,7 @@ class NativeInteger {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the integer with which this will be compared.
-         * \return The result of the numerical comparison between this and
+         * \return the result of the numerical comparison between this and
          * the given integer.
          */
         constexpr std::strong_ordering operator <=> (Native rhs) const;

@@ -446,7 +446,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the angle structure to compare this structure with.
-         * \return The result of the comparison between this and the given
+         * \return the result of the comparison between this and the given
          * angle structure.  This is marked as a weak ordering (not a strong
          * ordering) to reflect the fact that angle structures in different
          * triangulations could be considered equal under this comparison.

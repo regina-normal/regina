@@ -441,7 +441,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the saturated block to compare this with.
-         * \return A result that indicates how this and the given block
+         * \return a result that indicates how this and the given block
          * should be ordered with respect to each other.
          */
         std::weak_ordering operator <=> (const SatBlock& rhs) const;

@@ -117,7 +117,7 @@ struct GroupExpressionTerm {
      * \python This spaceship operator `x <=> y` is not available, but the
      * other comparison operators that it generates _are_ available.
      *
-     * \return The result of the lexicographical comparison between this
+     * \return the result of the lexicographical comparison between this
      * and the given term.
      */
     std::strong_ordering operator <=> (const GroupExpressionTerm&) const =

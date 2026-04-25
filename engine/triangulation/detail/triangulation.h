@@ -314,7 +314,7 @@ class TriangulationBase :
          * Returns the number of top-dimensional simplices in the
          * triangulation.
          *
-         * \return The number of top-dimensional simplices.
+         * \return the number of top-dimensional simplices.
          */
         size_t size() const;
         /**
@@ -2426,7 +2426,7 @@ class TriangulationBase :
          * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the move.
-         * \return The new triangulation obtained by performing the requested
+         * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         template <int k> requires (k >= 0 && k <= dim)
@@ -2449,7 +2449,7 @@ class TriangulationBase :
          * \tparam k the dimension of the given face.
          *
          * \param f the <i>k</i>-face about which to perform the move.
-         * \return The new triangulation obtained by performing the requested
+         * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
@@ -2475,7 +2475,7 @@ class TriangulationBase :
          * \pre The given simplex is a simplex of this triangulation.
          *
          * \param s the top-dimensional simplex upon which to perform the move.
-         * \return The new triangulation obtained by performing the requested
+         * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Triangulation<dim>> withShellBoundary(Simplex<dim>* s)

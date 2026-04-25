@@ -1671,7 +1671,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the surface to compare this surface with.
-         * \return The result of the comparison between this and the given
+         * \return the result of the comparison between this and the given
          * surface.  This is marked as a weak ordering (not a strong
          * ordering) to reflect the fact that (for example) surfaces in
          * different triangulations or using different encodings could be

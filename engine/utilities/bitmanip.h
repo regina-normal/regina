@@ -323,7 +323,7 @@ class BitManipulator : public regina::detail::BitManipulatorByType<T> {
          *
          * \param x the first integer to examine.
          * \param y the second integer to examine.
-         * \return A three-way comparison result, indicating whether the bits
+         * \return a three-way comparison result, indicating whether the bits
          * of \a x are equal to, a strict subset of, a strict superset of,
          * or incomparable to the bits of \a y.  These outcomes are indicated
          * by the return values `equivalent`, `less`, `greater`, and

@@ -339,7 +339,7 @@ class Laurent2 :
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the polynomial to compare with this.
-         * \return The result of the comparison between this
+         * \return the result of the comparison between this
          * and the given polynomial.
          */
         std::strong_ordering operator <=> (const Laurent2<T>& rhs) const;
