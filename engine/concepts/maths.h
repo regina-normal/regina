@@ -101,7 +101,7 @@ concept SignatureType =
  * Examples of such types include `Triangulation<dim>` and Link.
  */
 template <typename T>
-concept SigReconstructible =
+concept SignatureReconstructible =
     requires(const T x, const std::string sig) {
         { x.sig() } -> std::same_as<std::string>;
         { T::fromSig(sig) } -> std::same_as<T>;

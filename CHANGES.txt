@@ -445,7 +445,7 @@ Version 8.0  [ TODO ]
                 RandomAccessIteratorFor, SelfSentinelInputIterator (defined in
                 concepts/iterator.h)
               + ArbitraryPrecisionIntegerVector, IntegerVector, SignatureType,
-                SigReconstructible (defined in concepts/maths.h)
+                SignatureReconstructible (defined in concepts/maths.h)
               + PacketClass, PacketHeldType, TextPacket, WrappedPacket
                 (defined in concepts/packet.h)
               + ArrayOf, ConstRefArrayOf (defined in concepts/array.h)

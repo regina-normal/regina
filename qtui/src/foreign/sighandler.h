@@ -58,7 +58,7 @@ namespace regina {
  *
  * \tparam PacketType Indicates which types of signatures to import.
  */
-template <regina::SigReconstructible PacketType>
+template <regina::SignatureReconstructible PacketType>
 class SigHandler : public PacketImporter {
     using PacketImporter::importData;
 
@@ -82,10 +82,10 @@ class SigHandler : public PacketImporter {
         SigHandler() = default;
 };
 
-template <regina::SigReconstructible PacketType>
+template <regina::SignatureReconstructible PacketType>
 const SigHandler<PacketType> SigHandler<PacketType>::instance;
 
-template <regina::SigReconstructible PacketType>
+template <regina::SignatureReconstructible PacketType>
 std::shared_ptr<regina::Packet> SigHandler<PacketType>::importData(
         const QString& fileName, ReginaMain* parentWidget) const {
     QString explnSuffix;

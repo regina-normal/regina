@@ -51,7 +51,7 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
-template <SigReconstructible ObjectType>
+template <SignatureReconstructible ObjectType>
 requires PacketHeldType<ObjectType>
 std::shared_ptr<Container> readSigList(const char *filename, int colSigs,
         int colLabels, size_t ignoreLines) {

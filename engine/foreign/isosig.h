@@ -107,7 +107,7 @@ class Container;
  *
  * \ingroup foreign
  */
-template <SigReconstructible ObjectType>
+template <SignatureReconstructible ObjectType>
 requires PacketHeldType<ObjectType>
 std::shared_ptr<Container> readSigList(const char *filename,
     int colSigs = 0, int colLabels = -1, size_t ignoreLines = 0);
