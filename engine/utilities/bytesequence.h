@@ -276,6 +276,18 @@ class ByteSequence {
             data_.reserve(capacity);
         }
         /**
+         * Returns the current capacity of the internal data storage.
+         * This indicates how long the sequence can grow before an automatic
+         * reallocation will take place.
+         *
+         * Intrnally, this returns `std::string::capacity()`.
+         *
+         * \return the capacity of the data storage.
+         */
+        size_t capacity() const {
+            return data_.capacity();
+        }
+        /**
          * Returns this byte sequence in the form of a C++ string.
          *
          * This returns a reference (not a deep copy), since ByteSequence uses
