@@ -39,6 +39,7 @@
 #endif
 
 #include <type_traits>
+#include <iostream>
 #include "concepts/core.h"
 #include "maths/forward.h"
 
@@ -81,7 +82,9 @@ concept IntegerVector =
  *
  * Important semantic requirements for this type are:
  * - the operation `x += y` must concatenate \a y to the end of \a x;
- * - the default constructor must create an empty signature.
+ * - the default constructor must create an empty signature;
+ * - the output operator should write printable characters (for example,
+ *   regina::ByteSequence writes its bytes in hexadecimal, not as raw bytes).
  *
  * Examples of such types include `std::string` and `regina::ByteSequence`.
  */
@@ -89,9 +92,10 @@ template <typename T>
 concept SignatureType =
     std::regular<T> &&
     std::totally_ordered<T> &&
-    requires(T x, const T y) {
+    requires(T x, const T y, std::ostream s) {
         { y.size() } -> std::same_as<size_t>;
         { x += y } -> std::same_as<T&>;
+        { s << y } -> std::same_as<std::ostream&>;
     };
 
 /**

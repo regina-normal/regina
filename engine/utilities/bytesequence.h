@@ -307,6 +307,19 @@ inline void swap(ByteSequence& a, ByteSequence& b) noexcept {
     a.swap(b);
 }
 
+/**
+ * Writes the bytes of the given sequence to the given output stream in a
+ * printable form.
+ *
+ * Each byte will be written using two hexadecimal digits, with bytes separated
+ * by colons.
+ *
+ * \param out the output stream to which to write.
+ * \param bytes the byte sequence to write.
+ * \return a reference to the given output stream.
+ */
+std::ostream& operator << (std::ostream& out, const ByteSequence& bytes);
+
 } // namespace regina
 
 #endif

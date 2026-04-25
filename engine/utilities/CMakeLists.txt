@@ -2,8 +2,9 @@
 
 # Files to compile
 SET ( FILES
-  boolset.cpp
   base64.cpp
+  boolset.cpp
+  bytesequence.cpp
   i18nutils.cpp
   memstream.cpp
   osutils.cpp

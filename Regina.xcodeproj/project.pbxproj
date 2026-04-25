@@ -587,6 +587,8 @@
 		0544BBAD2B0D6AD600FF26CD /* LinkCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0544BBA82B0D6AD600FF26CD /* LinkCodes.swift */; };
 		0544BBAF2B102DC400FF26CD /* LinkCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0544BBAE2B102DC300FF26CD /* LinkCreator.swift */; };
 		0545A0122F9ADCE8008D3ADB /* bytesequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 0545A0112F9ADCE8008D3ADB /* bytesequence.h */; };
+		0545A0152F9CD9A7008D3ADB /* bytesequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0142F9CD9A7008D3ADB /* bytesequence.cpp */; };
+		0545A0162F9CD9A7008D3ADB /* bytesequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0142F9CD9A7008D3ADB /* bytesequence.cpp */; };
 		054C6A661DCC1FF3005373F0 /* example5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A4F1DCC1FE7005373F0 /* example5.cpp */; };
 		054C6A671DCC1FF3005373F0 /* example6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A501DCC1FE7005373F0 /* example6.cpp */; };
 		054C6A681DCC1FF3005373F0 /* example7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A511DCC1FE7005373F0 /* example7.cpp */; };
@@ -3061,6 +3063,7 @@
 		054535BB19D90C3A00BED767 /* Skeleton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Skeleton.mm; sourceTree = "<group>"; };
 		0545A0112F9ADCE8008D3ADB /* bytesequence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bytesequence.h; sourceTree = "<group>"; };
 		0545A0132F9CB9A6008D3ADB /* bytesequence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bytesequence.h; sourceTree = "<group>"; };
+		0545A0142F9CD9A7008D3ADB /* bytesequence.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = bytesequence.cpp; sourceTree = "<group>"; };
 		0549B4982907D38D00C911AF /* data-anon.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-anon.docbook"; sourceTree = "<group>"; };
 		0549B4992907D38E00C911AF /* data-tri.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tri.docbook"; sourceTree = "<group>"; };
 		0549B49A2907D38E00C911AF /* data-txi.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-txi.docbook"; sourceTree = "<group>"; };
@@ -6793,6 +6796,7 @@
 				052F9E69180600FB00FAE4DF /* bitmask.h */,
 				052F9E6A180600FB00FAE4DF /* boolset.cpp */,
 				052F9E6B180600FB00FAE4DF /* boolset.h */,
+				0545A0142F9CD9A7008D3ADB /* bytesequence.cpp */,
 				0545A0112F9ADCE8008D3ADB /* bytesequence.h */,
 				052F9E63180600FB00FAE4DF /* CMakeLists.txt */,
 				0598030A266EDDD5002D5D57 /* exception.h */,
@@ -10198,6 +10202,7 @@
 				0553FB2B2AEBE73A00BE89A7 /* spiralsolidtorus.cpp in Sources */,
 				0553FADB2AEBE6B500BE89A7 /* gluingperms6.cpp in Sources */,
 				0553FAEA2AEBE6C400BE89A7 /* hilbertprimal.cpp in Sources */,
+				0545A0162F9CD9A7008D3ADB /* bytesequence.cpp in Sources */,
 				0553FB8C2AEBE86300BE89A7 /* cone.cpp in Sources */,
 				0553FAA52AEBE3BA00BE89A7 /* vertex4.cpp in Sources */,
 				0553FB142AEBE70800BE89A7 /* examplesnappea.cpp in Sources */,
@@ -10887,6 +10892,7 @@
 				05EDDA4D27E3102A001743C1 /* signed_dec.cpp in Sources */,
 				05C1BEB01DCA7CA9007C946B /* boundary8.cpp in Sources */,
 				05048A2226B274650088C978 /* perm6.cpp in Sources */,
+				0545A0152F9CD9A7008D3ADB /* bytesequence.cpp in Sources */,
 				05F0A0441DBF0B5E00117BFC /* simplify.cpp in Sources */,
 				05AF8FD327F66B4E00D3A383 /* hilbertprimal.cpp in Sources */,
 				05F0A0481DBF0B5E00117BFC /* subdivide.cpp in Sources */,

@@ -4184,6 +4184,18 @@ TEST_F(LinkTest, sig) {
         "m33gaxPp8acmdkijlefgh");
     EXPECT_EQ(virtualDisconnected.link.sig<LinkSigCompact>(),
         "ctdccctdcbcZdab");
+
+    // This seems as good a place as any to ensure that the ByteSequence
+    // output routines behave correctly.  The following packed signature was
+    // computed using Regina 8.0.
+    {
+        regina::ByteSequence seq = borromean.link.sig<LinkSigPacked>();
+        EXPECT_EQ(seq.asString(), "\x06\xafP\x8f&VC");
+
+        std::ostringstream out;
+        out << seq;
+        EXPECT_EQ(out.str(), "06:af:50:8f:26:56:43");
+    }
 }
 
 static void verifyFromData(const Link& link, const char* name) {

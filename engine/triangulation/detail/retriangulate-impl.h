@@ -227,7 +227,7 @@ class RetriangulateThreadSync<false> {
  *
  * \tparam backtrace \c true if and only if backtracing is enabled.
  */
-template <typename Signature, bool backtrace>
+template <SignatureType Signature, bool backtrace>
 class RetriangulateSigGraph;
 
 /**
@@ -236,7 +236,7 @@ class RetriangulateSigGraph;
  * were derived.  Seed signatures (the starting points of the search)
  * have associated values of the empty signature.
  */
-template <typename Signature>
+template <SignatureType Signature>
 class RetriangulateSigGraph<Signature, true> :
         private std::map<Signature, Signature> {
     public:
@@ -264,7 +264,7 @@ class RetriangulateSigGraph<Signature, true> :
         }
 };
 
-template <typename Signature>
+template <SignatureType Signature>
 class RetriangulateSigGraph<Signature, false> : private std::set<Signature> {
     public:
         using iterator = std::set<Signature>::iterator;
