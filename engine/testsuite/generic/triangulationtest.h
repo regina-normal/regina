@@ -1223,6 +1223,16 @@ class TriangulationTest : public testing::Test {
 
             ASSERT_FALSE(sig.empty());
 
+            #if 0
+            // Here we can see how effective Signature::reserve() is.  We only
+            // do this for IsoSigClassic since other signature types should
+            // give the same output - it is the encoding that matters here.
+            if constexpr (std::same_as<Type<dim>, regina::IsoSigClassic<dim>>) {
+                std::cerr << sig.size() << ' ' << sig.capacity() << ' '
+                    << tri.size() << ' ' << tri.countComponents() << std::endl;
+            }
+            #endif
+
             size_t sigSize = Triangulation<dim>::isoSigComponentSize(sig);
             if (tri.isEmpty()) {
                 EXPECT_EQ(sigSize, 0);

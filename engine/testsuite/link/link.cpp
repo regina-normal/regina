@@ -3666,7 +3666,7 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
         EXPECT_EQ(sig.empty(), link.isEmpty());
     }
     #if 0
-    // Here we can see how effective std::string::reserve() is.
+    // Here we can see how effective Signature::reserve() is.
     if (reflect && reverse && rotate) // to avoid the same output eight times
         std::cerr << sig.size() << ' ' << sig.capacity() << ' '
             << link.size() << ' ' << link.countComponents() << std::endl;
