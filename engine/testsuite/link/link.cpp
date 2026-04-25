@@ -3667,8 +3667,9 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
     }
     #if 0
     // Here we can see how effective std::string::reserve() is.
-    std::cerr << sig.size() << ' ' << sig.capacity() << ' '
-        << link.size() << ' ' << link.countComponents() << std::endl;
+    if (reflect && reverse && rotate) // to avoid the same output eight times
+        std::cerr << sig.size() << ' ' << sig.capacity() << ' '
+            << link.size() << ' ' << link.countComponents() << std::endl;
     #endif
 
     if (reflect) {
