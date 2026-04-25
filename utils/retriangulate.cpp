@@ -118,59 +118,47 @@ void process(const regina::Triangulation<dim>& tri) {
 }
 
 void process(const regina::Link& link) {
+    using Signature = regina::ByteSequence;
+
     size_t nSolns = 0;
     bool nonMinimal = false;
     std::string simpler;
 
-    std::function<bool(const std::string&, const regina::Link&)> action =
+    // Note: the code here is specifically tuned to the LinkSigPacked encoding
+    // (which is used by rewrite() and rewriteVirtual()), since it uses
+    // LinkSigPacked::asCompact() when writing signatures to output.
+    // If we ever change RetriangulateParams<Link> to use a different internal
+    // signature encoding, we will need to update this code also.
+
+    std::function<bool(const Signature&, const regina::Link&)> action =
             [&nSolns, &nonMinimal, &simpler, &link](
-            const std::string& sig, const regina::Link& k) {
+            const Signature& sig, const regina::Link& k) {
         if (k.size() > link.size()) {
             if (showAll) {
-                if (internalSig) {
-                    std::lock_guard<std::mutex> lock(mutex);
-                    std::cout << sig << std::endl;
-                    ++nSolns;
-                } else {
-                    // Recompute the signature using LinkSigPrintable.
-                    std::string classic = k.sig();
+                std::string outputSig = (internalSig ?
+                    regina::LinkSigPacked::asCompact(sig) : k.sig());
 
-                    std::lock_guard<std::mutex> lock(mutex);
-                    std::cout << classic << std::endl;
-                    ++nSolns;
-                }
+                std::lock_guard<std::mutex> lock(mutex);
+                std::cout << outputSig << std::endl;
+                ++nSolns;
             }
             return false;
         }
 
-        if (internalSig) {
-            std::lock_guard<std::mutex> lock(mutex);
-            std::cout << sig << std::endl;
+        std::string outputSig = (internalSig ?
+            regina::LinkSigPacked::asCompact(sig) : k.sig());
 
-            if (k.size() < link.size()) {
-                nonMinimal = true;
-                simpler = sig;
-                return true;
-            }
+        std::lock_guard<std::mutex> lock(mutex);
+        std::cout << outputSig << std::endl;
 
-            ++nSolns;
-            return false;
-        } else {
-            // Recompute the signature using LockSigPrintable.
-            std::string classic = k.sig();
-
-            std::lock_guard<std::mutex> lock(mutex);
-            std::cout << classic << std::endl;
-
-            if (k.size() < link.size()) {
-                nonMinimal = true;
-                simpler = std::move(classic);
-                return true;
-            }
-
-            ++nSolns;
-            return false;
+        if (k.size() < link.size()) {
+            nonMinimal = true;
+            simpler = std::move(outputSig);
+            return true;
         }
+
+        ++nSolns;
+        return false;
     };
 
     if (virtualMoves || ! (classicalMoves || link.isClassical()))

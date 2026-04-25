@@ -161,7 +161,7 @@ TEST(CallbacksTest, passByReference) {
 
         Arg d;
         regina::ExampleLink::trefoil().rewrite(2, 1, nullptr,
-                [](const std::string&, const regina::Link&, Arg& arg) {
+                [](const regina::ByteSequence&, const regina::Link&, Arg& arg) {
             arg.flag();
             return false;
         }, d);

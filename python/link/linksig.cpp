@@ -31,6 +31,7 @@
 #include "pybind11/pybind11.h"
 #include "link/link.h"
 #include "../helpers.h"
+#include "../helpers/bytesequence.h"
 #include "../docstrings/link/linksig.h"
 
 using regina::BoolSet;
@@ -103,18 +104,13 @@ void addLinkSig(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(LinkSigPacked)
 
     auto c = pybind11::class_<LinkSigPacked>(m, "LinkSigPacked", rdoc_scope)
-        // We have to manage conversions between regina::ByteSequence and
-        // pybind11::bytes in the bindings below.
-        .def_static("encodeEmpty", []() {
-            return pybind11::bytes(LinkSigPacked::encodeEmpty().asString());
-        }, rdoc::encodeEmpty)
-        .def_static("encodeUnknot", []() {
-            return pybind11::bytes(LinkSigPacked::encodeUnknot().asString());
-        }, rdoc::encodeUnknot)
-        .def_static("encode", [](const LinkSigData& data) {
-            return pybind11::bytes(LinkSigPacked::encode(data).asString());
-        }, rdoc::encode)
+        .def_static("encodeEmpty", &LinkSigPacked::encodeEmpty,
+            rdoc::encodeEmpty)
+        .def_static("encodeUnknot", &LinkSigPacked::encodeUnknot,
+            rdoc::encodeUnknot)
+        .def_static("encode", &LinkSigPacked::encode, rdoc::encode)
         .def_static("length", &LinkSigPacked::length, rdoc::length)
+        .def_static("asCompact", &LinkSigPacked::asCompact, rdoc::asCompact)
         ;
     regina::python::no_eq_static(c);
 

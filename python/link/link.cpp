@@ -40,11 +40,13 @@
 #include "maths/laurent2.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../helpers/bytesequence.h"
 #include "../helpers/packet.h"
 #include "../docstrings/link/link.h"
 
 using pybind11::overload_cast;
 using regina::python::GILCallbackManager;
+using regina::ByteSequence;
 using regina::Crossing;
 using regina::Framing;
 using regina::ProgressTracker;
@@ -234,19 +236,19 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
             auto begin = std::addressof(c);
             return Link::fromData(s.begin(), s.end(), begin, begin + 1);
         }, pybind11::arg("signs"), pybind11::arg("component"), rdoc::fromData)
-        // With fromSig() and fromKnotSig(), the pybind11::bytes variant _must_
+        // With fromSig() and fromKnotSig(), the byte sequence variant _must_
         // come first.  This is because pybind11 performs automatic conversion
         // from bytes to std::string, and so if the string variant appears first
         // then pybind11 will use it even with a pybind11::bytes argument.
-        .def_static("fromSig", [](pybind11::bytes b) {
-            return Link::fromSig(regina::ByteSequence(b));
-        }, rdoc::fromSig_2)
+        .def_static("fromSig",
+            overload_cast<const ByteSequence&>(&Link::fromSig),
+            rdoc::fromSig_2)
         .def_static("fromSig",
             overload_cast<const std::string&>(&Link::fromSig),
             rdoc::fromSig)
-        .def_static("fromKnotSig", [](pybind11::bytes b) {
-            return Link::fromKnotSig(regina::ByteSequence(b));
-        }, rdoc::fromKnotSig_2)
+        .def_static("fromKnotSig",
+            overload_cast<const ByteSequence&>(&Link::fromKnotSig),
+            rdoc::fromKnotSig_2)
         .def_static("fromKnotSig",
             overload_cast<const std::string&>(&Link::fromKnotSig),
             rdoc::fromKnotSig)
@@ -439,10 +441,8 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::arg("allowReversal") = true,
             pybind11::arg("allowRotation") = true,
             rdoc::sig)
-        .def("sig_Packed", [](const Link& link, bool ref, bool rev, bool rot) {
-            return pybind11::bytes(
-                link.sig<regina::LinkSigPacked>().asString());
-        }, pybind11::arg("allowReflection") = true,
+        .def("sig_Packed", &Link::sig<regina::LinkSigPacked>,
+            pybind11::arg("allowReflection") = true,
             pybind11::arg("allowReversal") = true,
             pybind11::arg("allowRotation") = true,
             rdoc::sig)
@@ -547,15 +547,15 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::simplifyExhaustive)
         .def("rewrite", [](const Link& link, int height, int threads,
-                const std::function<bool(const std::string&, Link&&)>& action) {
+                const std::function<bool(const ByteSequence&, Link&&)>& act) {
             if (threads == 1) {
-                return link.rewrite(height, 1, nullptr, action);
+                return link.rewrite(height, 1, nullptr, act);
             } else {
                 GILCallbackManager manager;
                 return link.rewrite(height, threads, nullptr,
-                    [&](const std::string& sig, Link&& link) -> bool {
+                    [&](const ByteSequence& sig, Link&& link) -> bool {
                         GILCallbackManager<>::ScopedAcquire acquire(manager);
-                        return action(sig, std::move(link));
+                        return act(sig, std::move(link));
                     });
             }
         }, pybind11::arg("height"),
@@ -563,15 +563,15 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::arg("action"),
             rdoc::rewrite)
         .def("rewriteVirtual", [](const Link& link, int height, int threads,
-                const std::function<bool(const std::string&, Link&&)>& action) {
+                const std::function<bool(const ByteSequence&, Link&&)>& act) {
             if (threads == 1) {
-                return link.rewriteVirtual(height, 1, nullptr, action);
+                return link.rewriteVirtual(height, 1, nullptr, act);
             } else {
                 GILCallbackManager manager;
                 return link.rewriteVirtual(height, threads, nullptr,
-                    [&](const std::string& sig, Link&& link) -> bool {
+                    [&](const ByteSequence& sig, Link&& link) -> bool {
                         GILCallbackManager<>::ScopedAcquire acquire(manager);
-                        return action(sig, std::move(link));
+                        return act(sig, std::move(link));
                     });
             }
         }, pybind11::arg("height"),

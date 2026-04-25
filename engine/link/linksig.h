@@ -585,6 +585,32 @@ class LinkSigPacked {
          */
         static size_t length(const LinkSigData& data);
 
+        /**
+         * Re-encodes the given packed signature using the LinkSigCompact
+         * encoding, which uses only printable characters from the 7-bit ASCII
+         * range.
+         *
+         * Calling `printable(sig)` is significantly more efficient than calling
+         * `Link::fromSig(sig).sig<LinkSigCompact>()`, and should give the same
+         * result.
+         *
+         * \pre The argument \a sig is indeed a knot/link signature, encoded
+         * using LinkSigPacked.  This will _not_ be checked thoroughly (though
+         * some minimal checks will be done).
+         *
+         * \exception InvalidArgument It was detected that \a sig was not a
+         * valid knot/link signature encoded using LinkSigPacked.  Again, this
+         * will not be checked thoroughly; this exception will only be thrown
+         * if the violation is sufficiently obvious that it is picked up during
+         * the re-encoding process.
+         *
+         * \param sig the signature of some link, encoded as a byte sequence
+         * using this LinkSigPacked encoding.
+         * \return the signature of the same link, encoded as a string using
+         * the LinkSigCompact encoding.
+         */
+        static std::string asCompact(const ByteSequence& sig);
+
         // Make this class non-constructible.
         LinkSigPacked() = delete;
 };

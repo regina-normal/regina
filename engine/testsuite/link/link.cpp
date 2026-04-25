@@ -3771,7 +3771,7 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
 
 template <regina::LinkSigEncoding Encoding>
 static void verifySig(const Link& link, const char* name) {
-    SCOPED_TRACE_CSTRING(name);
+    SCOPED_TRACE_TYPE(Encoding);
 
     verifySig<Encoding>(link, true, true, true);
     verifySig<Encoding>(link, true, false, true);
@@ -3789,10 +3789,20 @@ static void verifySig(const Link& link, const char* name) {
     }
 }
 
+static void verifySigAllEncodings(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    verifySig<LinkSigPrintable>(link, name);
+    verifySig<LinkSigCompact>(link, name);
+    verifySig<LinkSigPacked>(link, name);
+
+    // Also verify the signature re-encoding process.
+    EXPECT_EQ(LinkSigPacked::asCompact(link.sig<LinkSigPacked>()),
+        link.sig<LinkSigCompact>());
+}
+
 TEST_F(LinkTest, sig) {
-    testManualCases(verifySig<LinkSigPrintable>);
-    testManualCases(verifySig<LinkSigCompact>);
-    testManualCases(verifySig<LinkSigPacked>);
+    testManualCases(verifySigAllEncodings);
 
     // Test knots with 62, 63 and 64 crossings, where the base64 integer width
     // changes from 1 (not encoded) to 1 (encoded) and then to 2 (encoded).
@@ -3804,65 +3814,49 @@ TEST_F(LinkTest, sig) {
         Link link = ExampleLink::torus(4, 5);
         EXPECT_EQ(link.size(), 15);
         EXPECT_EQ(link.countComponents(), 1);
-        verifySig<LinkSigPrintable>(link, "Torus(4, 5)");
-        verifySig<LinkSigCompact>(link, "Torus(4, 5)");
-        verifySig<LinkSigPacked>(link, "Torus(4, 5)");
+        verifySigAllEncodings(link, "Torus(4, 5)");
     }
     {
         Link link = ExampleLink::torus(3, 8);
         EXPECT_EQ(link.size(), 16);
         EXPECT_EQ(link.countComponents(), 1);
-        verifySig<LinkSigPrintable>(link, "Torus(3, 8)");
-        verifySig<LinkSigCompact>(link, "Torus(3, 8)");
-        verifySig<LinkSigPacked>(link, "Torus(3, 8)");
+        verifySigAllEncodings(link, "Torus(3, 8)");
     }
     {
         Link link = ExampleLink::torus(3, 31);
         EXPECT_EQ(link.size(), 62);
         EXPECT_EQ(link.countComponents(), 1);
-        verifySig<LinkSigPrintable>(link, "Torus(3, 31)");
-        verifySig<LinkSigCompact>(link, "Torus(3, 31)");
-        verifySig<LinkSigPacked>(link, "Torus(3, 31)");
+        verifySigAllEncodings(link, "Torus(3, 31)");
     }
     {
         Link link = ExampleLink::torus(8, 9);
         EXPECT_EQ(link.size(), 63);
         EXPECT_EQ(link.countComponents(), 1);
-        verifySig<LinkSigPrintable>(link, "Torus(8, 9)");
-        verifySig<LinkSigCompact>(link, "Torus(8, 9)");
-        verifySig<LinkSigPacked>(link, "Torus(8, 9)");
+        verifySigAllEncodings(link, "Torus(8, 9)");
     }
     {
         Link link = ExampleLink::torus(5, 16);
         EXPECT_EQ(link.size(), 64);
         EXPECT_EQ(link.countComponents(), 1);
-        verifySig<LinkSigPrintable>(link, "Torus(5, 16)");
-        verifySig<LinkSigCompact>(link, "Torus(5, 16)");
-        verifySig<LinkSigPacked>(link, "Torus(5, 16)");
+        verifySigAllEncodings(link, "Torus(5, 16)");
     }
     {
         Link link = ExampleLink::torus(3, 127);
         EXPECT_EQ(link.size(), 254);
         EXPECT_EQ(link.countComponents(), 1);
-        verifySig<LinkSigPrintable>(link, "Torus(3, 127)");
-        verifySig<LinkSigCompact>(link, "Torus(3, 127)");
-        verifySig<LinkSigPacked>(link, "Torus(3, 127)");
+        verifySigAllEncodings(link, "Torus(3, 127)");
     }
     {
         Link link = ExampleLink::torus(16, 17);
         EXPECT_EQ(link.size(), 255);
         EXPECT_EQ(link.countComponents(), 1);
-        verifySig<LinkSigPrintable>(link, "Torus(16, 17)");
-        verifySig<LinkSigCompact>(link, "Torus(16, 17)");
-        verifySig<LinkSigPacked>(link, "Torus(16, 17)");
+        verifySigAllEncodings(link, "Torus(16, 17)");
     }
     {
         Link link = ExampleLink::torus(5, 64);
         EXPECT_EQ(link.size(), 256);
         EXPECT_EQ(link.countComponents(), 1);
-        verifySig<LinkSigPrintable>(link, "Torus(5, 64)");
-        verifySig<LinkSigCompact>(link, "Torus(5, 64)");
-        verifySig<LinkSigPacked>(link, "Torus(5, 64)");
+        verifySigAllEncodings(link, "Torus(5, 64)");
     }
 
     // Unless specified otherwise, all _compact_ signatures below were computed

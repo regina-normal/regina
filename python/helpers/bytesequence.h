@@ -28,39 +28,38 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file python/helpers.h
- *  \brief Various tools to assist with Python bindings for Regina.
+/*! \file python/helpers/concepts.h
+ *  \brief Conversions between `regina::ByteSequence` and Python `bytes`.
  *
- *  This file automatically includes the most commonly-used headers from
- *  python/helpers/, but not all of the headers in python/helpers/.
- *  Specifically, it excludes those headers that introduce non-trivial
- *  complexity to the code and whose use is not widespread across Regina's
- *  Python bindings.
+ *  This header is _not_ included automatically by python/helpers.h.
+ *  If you are binding any routines that take or return ByteSequence objects,
+ *  you will need to explicitly include this header yourself.
  */
 
-#ifndef __HELPERS_H
-#ifndef __DOXYGEN
-#define __HELPERS_H
-#endif
-
-// Include the core pybind11 headers, and make sure we're finding our own
-// patched versions and not some other system installation of pybind11.
 #include <pybind11/pybind11.h>
-#if !defined(REGINA_PYBIND11)
-#error "A system installation of pybind11 is being included instead of Regina's own patched version."
-#endif
+#include "utilities/bytesequence.h"
 
-// #include "helpers/bytesequence.h"
-#include "helpers/concepts.h"
-#include "helpers/docstrings.h"
-#include "helpers/equality.h"
-// #include "helpers/flags.h"
-#include "helpers/gil.h"
-#include "helpers/globals.h"
-#include "helpers/output.h"
-// #include "helpers/packet.h"
-// #include "helpers/tableview.h"
-#include "helpers/tightencoding.h"
-#include "helpers/view.h"
+namespace pybind11::detail {
 
-#endif
+template <>
+struct type_caster<regina::ByteSequence> {
+    PYBIND11_TYPE_CASTER(regina::ByteSequence, const_name("bytes"));
+
+    static pybind11::handle cast(const regina::ByteSequence& seq,
+            pybind11::return_value_policy, pybind11::handle /* parent */) {
+        return pybind11::bytes(seq.asString()).release();
+    }
+
+    bool load(pybind11::handle src, bool /* allow implicit conversions? */) {
+        // Check if handle is a Sequence
+        if (! pybind11::isinstance<pybind11::bytes>(src))
+            return false;
+
+        // Load the contents from pybind11::bytes via std::string.
+        value.load(pybind11::reinterpret_borrow<pybind11::bytes>(src));
+        return true;
+    }
+};
+
+} // namespace pybind11::detail
+

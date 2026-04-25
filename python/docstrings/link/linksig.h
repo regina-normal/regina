@@ -367,6 +367,36 @@ static const char *strand = R"doc(0 or 1 for the lower or upper strand respectiv
 
 namespace LinkSigPacked_ {
 
+// Docstring regina::python::doc::LinkSigPacked_::asCompact
+static const char *asCompact =
+R"doc(Re-encodes the given packed signature using the LinkSigCompact
+encoding, which uses only printable characters from the 7-bit ASCII
+range.
+
+Calling ``printable(sig)`` is significantly more efficient than
+calling ``Link::fromSig(sig).sig<LinkSigCompact>()``, and should give
+the same result.
+
+Precondition:
+    The argument *sig* is indeed a knot/link signature, encoded using
+    LinkSigPacked. This will _not_ be checked thoroughly (though some
+    minimal checks will be done).
+
+Exception ``InvalidArgument``:
+    It was detected that *sig* was not a valid knot/link signature
+    encoded using LinkSigPacked. Again, this will not be checked
+    thoroughly; this exception will only be thrown if the violation is
+    sufficiently obvious that it is picked up during the re-encoding
+    process.
+
+Parameter ``sig``:
+    the signature of some link, encoded as a byte sequence using this
+    LinkSigPacked encoding.
+
+Returns:
+    the signature of the same link, encoded as a string using the
+    LinkSigCompact encoding.)doc";
+
 // Docstring regina::python::doc::LinkSigPacked_::encode
 static const char *encode =
 R"doc(Encodes a single connected diagram component.

@@ -141,6 +141,21 @@ class ByteSequence {
          */
         ByteSequence& operator = (ByteSequence&&) = default;
         /**
+         * Loads the contents of the given string into this byte sequence.
+         * Any pre-existing contents of this sequence will be disposed of.
+         *
+         * The string will be treated as a sequence of raw bytes (i.e., there
+         * is no assumption about printability, or character encodings).
+         *
+         * This is a fast (constant time) operation.  After this operation,
+         * the string that was passed will no longer be usable.
+         *
+         * \param data a string holding the data to load.
+         */
+        void load(std::string&& data) noexcept {
+            data_ = std::move(data);
+        }
+        /**
          * Determines whether this and the given sequence are identical.
          *
          * \return \c true if and only if this and the given sequence are

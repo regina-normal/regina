@@ -523,6 +523,36 @@ ByteSequence LinkSigPacked::encode(const LinkSigData& data) {
     return std::move(enc).bytes();
 }
 
+std::string LinkSigPacked::asCompact(const ByteSequence& sig) {
+    // Get the empty link out of the way first.
+    if (sig.empty())
+        return LinkSigCompact::encodeEmpty();
+
+    try {
+        // Both LinkSigPacked and LinkSigCompact encode exactly the same
+        // combinatorial information; it is just a matter of converting between
+        // printable (6-bit) and byte-packed (8-bit) formats.
+        PackedSigDecoder dec(sig.begin(), sig.end());
+        Base64SigEncoder enc;
+        while (! dec.done()) {
+            // Re-encode one connected component of the link diagram at a time.
+            auto [ n, inputWidth ] = dec.decodeSize();
+            int outputWidth = enc.encodeSize(n);
+
+            if (n > 0) {
+                enc.encodeBits(4 * n, dec.decodeBits<Bitmask>(4 * n));
+                enc.encodeInts(dec.decodeInts<size_t>(n, inputWidth),
+                    outputWidth);
+            }
+        }
+        return std::move(enc).str();
+    } catch (const InvalidInput&) {
+        // Any exception caught here was thrown by PackedSigDecoder.
+        throw InvalidArgument(
+            "asCompact(): incomplete or invalid byte sequence encoding");
+    }
+}
+
 Link Link::fromSig(const std::string& sig) {
     Link ans;
 

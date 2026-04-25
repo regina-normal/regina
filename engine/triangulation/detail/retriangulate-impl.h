@@ -527,7 +527,7 @@ bool enumerateDetail(const Object& obj, bool rigid, int height, int nThreads,
         if constexpr (withSig) {
             // There is only one empty link diagram and/or triangulation, so
             // we can ignore the value of rigid_ here.
-            result = action(obj.sig(), Object(obj));
+            result = action(RetriangulateParams<Object>::sig(obj), Object(obj));
         } else {
             result = action(Object(obj));
         }

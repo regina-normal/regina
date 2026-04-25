@@ -3060,6 +3060,7 @@
 		054535BA19D90C3A00BED767 /* Skeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton.h; sourceTree = "<group>"; };
 		054535BB19D90C3A00BED767 /* Skeleton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Skeleton.mm; sourceTree = "<group>"; };
 		0545A0112F9ADCE8008D3ADB /* bytesequence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bytesequence.h; sourceTree = "<group>"; };
+		0545A0132F9CB9A6008D3ADB /* bytesequence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bytesequence.h; sourceTree = "<group>"; };
 		0549B4982907D38D00C911AF /* data-anon.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-anon.docbook"; sourceTree = "<group>"; };
 		0549B4992907D38E00C911AF /* data-tri.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tri.docbook"; sourceTree = "<group>"; };
 		0549B49A2907D38E00C911AF /* data-txi.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-txi.docbook"; sourceTree = "<group>"; };
@@ -7226,6 +7227,7 @@
 		05431FC71C40F5EE009BC072 /* helpers */ = {
 			isa = PBXGroup;
 			children = (
+				0545A0132F9CB9A6008D3ADB /* bytesequence.h */,
 				05CAA38F2F6A7D120059225D /* concepts.h */,
 				05098A6428EA891E005E4716 /* docstrings.h */,
 				05431FC81C40F607009BC072 /* equality.h */,

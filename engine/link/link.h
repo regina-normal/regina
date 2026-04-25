@@ -3281,12 +3281,12 @@ class Link :
          *   Either (a) the first argument must be a link (the precise type
          *   is discussed below), representing the link diagram that has been
          *   found; or else (b) the first two arguments must be of types
-         *   const std::string& followed by a link, representing both the
-         *   link diagram and its signature (as returned by sig()).
-         *   The second form is offered in order to avoid unnecessarily
-         *   recomputation within the \a action function.
-         *   If there are any additional arguments supplied in the list \a args,
-         *   then these will be passed as subsequent arguments to \a action.
+         *   `const ByteSequence&` followed by a link, representing both the
+         *   link diagram and its signature.  The signature will be a byte
+         *   sequence as returned by `sig<LinkSigPacked>()`; this second form
+         *   may help avoid unnecessarily recomputation within the \a action
+         *   function.  If there are additional arguments supplied in the list
+         *   \a args, these will be passed as subsequent arguments to \a action.
          *
          * - The link argument will be passed as an rvalue; a typical action
          *   could (for example) take it by const reference and query it,
@@ -3354,13 +3354,14 @@ class Link :
          *
          * \apinotfinal
          *
-         * \python This function is available in Python, and the
-         * \a action argument may be a pure Python function.  However, its
-         * form is more restricted: the arguments \a tracker and \a args are
-         * removed, so you simply call it as rewrite(height, threads, action).
-         * Moreover, \a action must take exactly two arguments
-         * (const std::string&, Link&&) representing the signature and
-         * the link diagram, as described in option (b) above.
+         * \python This function is available in Python, and the \a action
+         * argument may be a pure Python function.  However, its form is more
+         * restricted: the arguments \a tracker and \a args are removed,
+         * so you simply call it as `rewrite(height, threads, action)`.
+         * Moreover, \a action must take exactly two arguments `(bytes, Link&&)`
+         * representing the signature and the link diagram, as described in
+         * option (b) above; the signature will be passed as a Python `bytes`
+         * object.
          *
          * \param height the maximum number of _additional_ crossings to
          * allow beyond the number of crossings originally present in this
@@ -3380,7 +3381,7 @@ class Link :
         template <typename Action, typename... Args>
         requires
             TerminatingCallback<Action, Link&&, Args...> ||
-            TerminatingCallback<Action, const std::string&, Link&&, Args...>
+            TerminatingCallback<Action, const ByteSequence&, Link&&, Args...>
         bool rewrite(int height, int threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
@@ -3413,11 +3414,11 @@ class Link :
          *
          * \python This function is available in Python, and the \a action
          * argument may be a pure Python function.  However, its form is more
-         * restricted: the arguments \a tracker and \a args are removed, so you
-         * simply call it as rewriteVirtual(height, threads, action).
-         * Moreover, \a action must take exactly two arguments
-         * (const std::string&, Link&&) representing the signature and
-         * the link diagram, as described in option (b) above.
+         * restricted: the arguments \a tracker and \a args are removed,
+         * so you simply call it as `rewriteVirtual(height, threads, action)`.
+         * Moreover, \a action must take exactly two arguments `(bytes, Link&&)`
+         * representing the signature and the link diagram, as described in
+         * option (b) in the rewrite() documentation.
          *
          * \param height the maximum number of _additional_ crossings to
          * allow beyond the number of crossings originally present in this
@@ -3437,7 +3438,7 @@ class Link :
         template <typename Action, typename... Args>
         requires
             TerminatingCallback<Action, Link&&, Args...> ||
-            TerminatingCallback<Action, const std::string&, Link&&, Args...>
+            TerminatingCallback<Action, const ByteSequence&, Link&&, Args...>
         bool rewriteVirtual(int height, int threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
@@ -7536,16 +7537,16 @@ namespace regina {
 namespace detail {
     template <>
     struct RetriangulateParams<Link> {
-        using Signature = std::string;
+        using Signature = ByteSequence;
 
         static Signature sig(const Link& link) {
             // Choose a sig encoding that uses less memory.
-            return link.sig<LinkSigCompact>();
+            return link.sig<LinkSigPacked>();
         }
 
         static Signature rigidSig(const Link& link) {
             // Do not allow reflection, reversal and/or rotation.
-            return link.sig<LinkSigCompact>(false, false, false);
+            return link.sig<LinkSigPacked>(false, false, false);
         }
 
         static constexpr const char* progressStage = "Exploring diagrams";
@@ -8135,7 +8136,7 @@ inline bool Link::intelligentSimplify() {
 template <typename Action, typename... Args>
 requires
     TerminatingCallback<Action, Link&&, Args...> ||
-    TerminatingCallback<Action, const std::string&, Link&&, Args...>
+    TerminatingCallback<Action, const ByteSequence&, Link&&, Args...>
 inline bool Link::rewrite(int height, int threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (components_.size() >= 64) {
@@ -8160,7 +8161,7 @@ inline bool Link::rewrite(int height, int threads,
                 detail::RetriangulateDefault,
                 detail::PropagationOptions<Link>::ClassicalOnly>(
             *this, false /* rigid */, height, threads, tracker,
-            [&](const std::string& sig, Link&& obj) {
+            [&](const ByteSequence& sig, Link&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     }
@@ -8169,7 +8170,7 @@ inline bool Link::rewrite(int height, int threads,
 template <typename Action, typename... Args>
 requires
     TerminatingCallback<Action, Link&&, Args...> ||
-    TerminatingCallback<Action, const std::string&, Link&&, Args...>
+    TerminatingCallback<Action, const ByteSequence&, Link&&, Args...>
 inline bool Link::rewriteVirtual(int height, int threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (components_.size() >= 64) {
@@ -8194,7 +8195,7 @@ inline bool Link::rewriteVirtual(int height, int threads,
                 detail::RetriangulateDefault,
                 detail::PropagationOptions<Link>::ClassicalAndVirtual>(
             *this, false /* rigid */, height, threads, tracker,
-            [&](const std::string& sig, Link&& obj) {
+            [&](const ByteSequence& sig, Link&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     }

@@ -77,11 +77,10 @@ namespace detail {
  *   signature of a triangulation or link, used to identify the triangulation
  *   or link up to some appropriate notion of combinatorial equivalence;
  *
- * - a function `static Signature rigidSig(const Object&)`, which returns
- *   the same kind of signature, but without allowing reflection, reversal
- *   and/or rotation of link diagrams.  For triangulations, rigidity options
- *   are currently ignored and so rigidSig() should return the same signature
- *   as sig().
+ * - a function `static Signature rigidSig(const Object&)`, which returns the
+ *   same kind of signature but without allowing reflection, reversal and/or
+ *   rotation of link diagrams (for triangulations, rigidity options are
+ *   ignored and so this should return the same signature as sig()).
  *
  * The function `static void propagateFrom(sig, max, options, action)` takes
  * the following arguments:

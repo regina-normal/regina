@@ -33,6 +33,7 @@
 #include "utilities/bitmask.h"
 #include "utilities/sigutils.h"
 #include "../helpers.h"
+#include "../helpers/bytesequence.h"
 #include "../docstrings/utilities/sigutils.h"
 
 using regina::Base64SigEncoder;
@@ -215,9 +216,10 @@ void addSigUtils(pybind11::module_& m) {
     auto pe = pybind11::class_<PackedSigEncoder>(m, "PackedSigEncoder",
             rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
-        .def("bytes", [](const PackedSigEncoder& enc) {
-            return pybind11::bytes(enc.bytes().asString());
-        }, rdoc::bytes)
+        .def("bytes",
+            static_cast<const regina::ByteSequence&(PackedSigEncoder::*)()
+                const &>(&PackedSigEncoder::bytes),
+            rdoc::bytes)
         .def_static("integerWidth", &PackedSigEncoder::integerWidth,
             rdoc::integerWidth)
         .def("encodeSize", &PackedSigEncoder::encodeSize, rdoc::encodeSize)

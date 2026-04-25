@@ -96,6 +96,7 @@ print(link.sig_Packed())
 print(Link.fromSig(link.sig()))
 print(Link.fromSig(link.sig_Compact()))
 print(Link.fromSig(link.sig_Packed()))
+print(LinkSigPacked.asCompact(link.sig_Packed()))
 print()
 
 enc = PackedSigEncoder()

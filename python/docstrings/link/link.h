@@ -5207,12 +5207,13 @@ function or some other callable type).
 * *action* must take the following initial argument(s). Either (a) the
   first argument must be a link (the precise type is discussed below),
   representing the link diagram that has been found; or else (b) the
-  first two arguments must be of types const std::string& followed by
-  a link, representing both the link diagram and its signature (as
-  returned by sig()). The second form is offered in order to avoid
+  first two arguments must be of types ``const ByteSequence&``
+  followed by a link, representing both the link diagram and its
+  signature. The signature will be a byte sequence as returned by
+  ``sig<LinkSigPacked>()``; this second form may help avoid
   unnecessarily recomputation within the *action* function. If there
-  are any additional arguments supplied in the list *args*, then these
-  will be passed as subsequent arguments to *action*.
+  are additional arguments supplied in the list *args*, these will be
+  passed as subsequent arguments to *action*.
 
 * The link argument will be passed as an rvalue; a typical action
   could (for example) take it by const reference and query it, or take
@@ -5289,10 +5290,11 @@ Python:
     This function is available in Python, and the *action* argument
     may be a pure Python function. However, its form is more
     restricted: the arguments *tracker* and *args* are removed, so you
-    simply call it as rewrite(height, threads, action). Moreover,
-    *action* must take exactly two arguments (const std::string&,
-    Link&&) representing the signature and the link diagram, as
-    described in option (b) above.
+    simply call it as ``rewrite(height, threads, action)``. Moreover,
+    *action* must take exactly two arguments ``(bytes, Link&&)``
+    representing the signature and the link diagram, as described in
+    option (b) above; the signature will be passed as a Python
+    ``bytes`` object.
 
 Parameter ``height``:
     the maximum number of _additional_ crossings to allow beyond the
@@ -5358,10 +5360,10 @@ Python:
     This function is available in Python, and the *action* argument
     may be a pure Python function. However, its form is more
     restricted: the arguments *tracker* and *args* are removed, so you
-    simply call it as rewriteVirtual(height, threads, action).
-    Moreover, *action* must take exactly two arguments (const
-    std::string&, Link&&) representing the signature and the link
-    diagram, as described in option (b) above.
+    simply call it as ``rewriteVirtual(height, threads, action)``.
+    Moreover, *action* must take exactly two arguments ``(bytes,
+    Link&&)`` representing the signature and the link diagram, as
+    described in option (b) in the rewrite() documentation.
 
 Parameter ``height``:
     the maximum number of _additional_ crossings to allow beyond the

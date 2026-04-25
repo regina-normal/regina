@@ -184,6 +184,10 @@ Version 8.0  [ TODO ]
               strings.  Likewise, fromSig() can now reconstruct link diagrams
               from signatures made with the compact and packed encodings as well
               as the default encoding.
+            - For rewrite() and rewriteVirtual(), if you pass an action
+              argument that takes both a link and its signature, then the
+              signature will now be passed as a byte sequence (not a string)
+              using the LinkSigPacked encoding.
             - All knows...() routines now take an optional boolean argument,
               indicating whether to consider trivial computations (the default),
               or to only check whether the value is already cached.
