@@ -234,9 +234,16 @@ void GluingPermSearcher<3>::writeTextShort(std::ostream& out) const {
         out << ", orientable only";
     if (finiteOnly_)
         out << ", finite only";
-    if (purge_ != CensusPurge::None)
-        out << ", purge 0x" << std::hex << std::setw(2) << std::setfill('0')
+
+    if (purge_ != CensusPurge::None) {
+        auto prevFlags = out.flags();
+        char prevFill = out.fill();
+        out.fill('0');
+        out << ", purge 0x" << std::noshowbase << std::hex << std::setw(2)
             << purge_.baseValue();
+        out.flags(prevFlags);
+        out.fill(prevFill);
+    }
 
     out << ": stage " << orderElt << ", order:";
     for (size_t i = 0; i < orderSize; ++i)
