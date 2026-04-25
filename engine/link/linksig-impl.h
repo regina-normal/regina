@@ -146,10 +146,19 @@ typename Encoding::Signature Link::sig(bool allowReflection, bool allowReversal,
                 alt.swap(bits);
         }
 
+        // Precompute the entire length of the signature, so that we can
+        // reserve exactly the right amount of space.  Here we assume that the
+        // encoding of the zero-crossing unknot has length 1: this is true
+        // of all of regina's encodings, but it is not mandatory, and it is
+        // harmless if this assumption is wrong (the worst that happens is
+        // that the signature will be reallocated beyond our estimated
+        // capacity, thus wasting some time and space).
+        size_t length = nTrivial;
+        for (const auto& data : bits)
+            length += Encoding::length(data);
+
         typename Encoding::Signature sig;
-        // TODO: It might be nice to reserve the right amount of space here.
-        // This is already being done for connected diagrams by the individual
-        // encoding algorithms, directly within Encoding::encode().
+        sig.reserve(length);
         for (const auto& data : bits)
             sig += Encoding::encode(data);
         for (size_t i = 0; i < nTrivial; ++i)
