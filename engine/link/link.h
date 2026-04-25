@@ -7536,12 +7536,14 @@ namespace regina {
 namespace detail {
     template <>
     struct RetriangulateParams<Link> {
-        static std::string sig(const Link& link) {
+        using Signature = std::string;
+
+        static Signature sig(const Link& link) {
             // Choose a sig encoding that uses less memory.
             return link.sig<LinkSigCompact>();
         }
 
-        static std::string rigidSig(const Link& link) {
+        static Signature rigidSig(const Link& link) {
             // Do not allow reflection, reversal and/or rotation.
             return link.sig<LinkSigCompact>(false, false, false);
         }
@@ -7561,8 +7563,8 @@ namespace detail {
             ClassicalAndVirtual
         };
 
-        template <TerminatingCallback<Link&&, const std::string&> Action>
-        static void propagateFrom(const std::string& sig, size_t maxSize,
+        template <TerminatingCallback<Link&&, const Signature&> Action>
+        static void propagateFrom(const Signature& sig, size_t maxSize,
                 PropagationOptions options, Action&& candidateAction);
     };
 } // namespace detail

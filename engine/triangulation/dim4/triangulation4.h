@@ -1669,12 +1669,14 @@ namespace regina {
 namespace detail {
     template <>
     struct RetriangulateParams<Triangulation<4>> {
-        static std::string sig(const Triangulation<4>& tri) {
+        using Signature = std::string;
+
+        static Signature sig(const Triangulation<4>& tri) {
             // Choose a fast isosig type.
             return tri.isoSig<IsoSigDegrees<4, 2>>();
         }
 
-        static std::string rigidSig(const Triangulation<4>& tri) {
+        static Signature rigidSig(const Triangulation<4>& tri) {
             // Currently rigidity is not supported for triangulations.
             return tri.isoSig<IsoSigDegrees<4, 2>>();
         }
@@ -1683,9 +1685,9 @@ namespace detail {
 
         using PropagationOptions = NoPropagationOptions;
 
-        template <TerminatingCallback<Triangulation<4>&&, const std::string&>
+        template <TerminatingCallback<Triangulation<4>&&, const Signature&>
             Action>
-        static void propagateFrom(const std::string& sig, size_t maxSize,
+        static void propagateFrom(const Signature& sig, size_t maxSize,
                 PropagationOptions options, Action&& candidateAction);
     };
 } // namespace detail
