@@ -37,6 +37,7 @@
 #define __REGINA_BYTESEQUENCE_H
 #endif
 
+#include <cstdint>
 #include <string>
 #include "regina-core.h"
 
