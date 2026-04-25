@@ -332,13 +332,18 @@ inline void swap(LinkSigData& a, LinkSigData& b) noexcept {
  * - `encodeUnknot()`, which encodes the zero-crossing unknot diagram;
  *
  * - `encode(const LinkSigData&)`, which encodes the information describing a
- *   single connected diagram component.  This routine may assume that the
- *   given data set has at least one crossing, and is minimal amongst all
- *   allowed relabellings of the underlying connected link diagram.  (Here
- *   "allowed" accounts for the fact that reflection, reversal and/or rotation
- *   may or may not be permitted depending upon context.)
+ *   single connected diagram component;
  *
- * All three routines should return the type `Signature`.
+ * - `length(const LinkSigData&)`, which pre-computes the length of the
+ *   signature that encodes a single diagram component.
+ *
+ * All three encoding routines should return the type `Signature`.
+ *
+ * Both `encode()` and `length()` may assume that the given data set has at
+ * least one crossing, and is minimal amongst all allowed relabellings of the
+ * underlying connected link diagram.  (Here "allowed" accounts for the fact
+ * that reflection, reversal and/or rotation may or may not be permitted
+ * depending upon context.)
  *
  * \apinotfinal
  *
@@ -352,6 +357,7 @@ concept LinkSigEncoding =
         { T::encodeEmpty() } -> std::convertible_to<typename T::Signature>;
         { T::encodeUnknot() } -> std::convertible_to<typename T::Signature>;
         { T::encode(data) } -> std::convertible_to<typename T::Signature>;
+        { T::length(data) } -> std::same_as<size_t>;
     };
 
 /**
