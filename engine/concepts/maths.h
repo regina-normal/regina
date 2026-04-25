@@ -75,8 +75,28 @@ concept IntegerVector =
     ReginaInteger<typename T::value_type>;
 
 /**
+ * A type that can be used to hold signatures that identify mathematical
+ * objects uniquely up to combinatorial isomorphism.  Such signatures include
+ * isomorphism signatures of triangluations, and knot/link signatures.
+ *
+ * Important semantic requirements for this type are:
+ * - the operation `x += y` must concatenate \a y to the end of \a x;
+ * - the default constructor must create an empty signature.
+ *
+ * Examples of such types include `std::string` and `regina::ByteSequence`.
+ */
+template <typename T>
+concept SignatureType =
+    std::regular<T> &&
+    std::totally_ordered<T> &&
+    requires(T x, const T y) {
+        { y.size() } -> std::same_as<size_t>;
+        { x += y } -> std::same_as<T&>;
+    };
+
+/**
  * One of Regina's mathematical types that allows reconstruction from
- * signatures, up to combinatorial isomorphism.
+ * string-based signatures, up to combinatorial isomorphism.
  *
  * Examples of such types include `Triangulation<dim>` and Link.
  */

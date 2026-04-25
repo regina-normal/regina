@@ -427,11 +427,10 @@ Version 8.0  [ TODO ]
               the new type aliases Int128 and UInt128.
         Concepts:
             - Many new concepts:
-              + AssignableTo, CanConstruct, CoefficientDomain,
-                ConcatenableSequence, Domain, Field, IntegralDomain,
-                ReginaBitmask, ReginaQitmask, Ring, RingLike, SameModCVRef,
-                StrictWeakOrder, TerminatingCallback, VoidCallback (defined in
-                concepts/core.h)
+              + AssignableTo, CanConstruct, CoefficientDomain, Domain, Field,
+                IntegralDomain, ReginaBitmask, ReginaQitmask, Ring, RingLike,
+                SameModCVRef, StrictWeakOrder, TerminatingCallback, VoidCallback
+                (defined in concepts/core.h)
               + AnyInteger, ArbitraryPrecisionInteger, CppInteger,
                 IntegerComparable, IntegerCompatible, ReginaInteger,
                 StandardCppInteger, SignedCppInteger, UnsignedCppInteger
@@ -445,7 +444,7 @@ Version 8.0  [ TODO ]
                 PacketIterator, RandomAccessIterableFor,
                 RandomAccessIteratorFor, SelfSentinelInputIterator (defined in
                 concepts/iterator.h)
-              + ArbitraryPrecisionIntegerVector, IntegerVector,
+              + ArbitraryPrecisionIntegerVector, IntegerVector, SignatureType,
                 SigReconstructible (defined in concepts/maths.h)
               + PacketClass, PacketHeldType, TextPacket, WrappedPacket
                 (defined in concepts/packet.h)

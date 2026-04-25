@@ -39,7 +39,7 @@
 
 #include <string>
 #include "regina-core.h"
-#include "concepts/core.h"
+#include "concepts/maths.h"
 #include "utilities/boolset.h"
 #include "utilities/bytesequence.h"
 #include "utilities/fixedarray.h"
@@ -348,7 +348,7 @@ template <typename T>
 concept LinkSigEncoding =
     requires(const Link link, const LinkSigData data) {
         typename T::Signature;
-        requires ConcatenableSequence<typename T::Signature>;
+        requires SignatureType<typename T::Signature>;
         { T::encodeEmpty() } -> std::convertible_to<typename T::Signature>;
         { T::encodeUnknot() } -> std::convertible_to<typename T::Signature>;
         { T::encode(data) } -> std::convertible_to<typename T::Signature>;

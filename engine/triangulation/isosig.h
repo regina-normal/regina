@@ -40,6 +40,7 @@
 
 #include <array>
 #include "regina-core.h"
+#include "concepts/maths.h"
 #include "maths/perm.h"
 #include "triangulation/forward.h"
 #include "utilities/fixedarray.h"
@@ -415,7 +416,7 @@ template <typename T, int dim>
 concept IsoSigEncoding =
     requires(const IsoSigData<dim> data) {
         typename T::Signature;
-        requires ConcatenableSequence<typename T::Signature>;
+        requires SignatureType<typename T::Signature>;
         { T::encodeEmpty() } -> std::convertible_to<typename T::Signature>;
         { T::encode(data) } -> std::convertible_to<typename T::Signature>;
     };

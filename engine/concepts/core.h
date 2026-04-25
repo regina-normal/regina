@@ -194,27 +194,6 @@ concept ReginaQitmask =
     requires(T x) { { Qitmask2(x) } -> std::same_as<T>; };
 
 /**
- * A type that holds some ordered sequence of data, and that supports
- * concatenation.  An example of this is `std::string`.
- *
- * Important semantic requirements for this type are:
- *
- * - the operation `x += y` must concatenate \a y to the end of \a x;
- *
- * - the default constructor must create the empty sequence.
- *
- * \ingroup concepts
- */
-template <typename T>
-concept ConcatenableSequence =
-    std::regular<T> &&
-    std::totally_ordered<T> &&
-    requires(T x, const T y) {
-        { y.size() } -> std::same_as<size_t>;
-        { x += y } -> std::same_as<T&>;
-    };
-
-/**
  * A callable type that acts as a strict weak order on the given argument type.
  * Such an object could (for example) be used for comparisons during a sorting
  * operation.
