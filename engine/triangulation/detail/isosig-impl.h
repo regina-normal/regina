@@ -195,7 +195,6 @@ typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
     // We have a multiple-component triangulation.
     // Get a signature string for each connected component.
     size_t i;
-    typename Encoding::Signature curr;
 
     FixedArray<typename Encoding::Signature> comp(countComponents());
     auto it = components().begin();
@@ -206,7 +205,7 @@ typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
         IsoSigData data(*it);
         do {
             data.fillFrom((*it)->simplex(type.simplex()), type.perm(), nullptr);
-            curr = Encoding::encode(data);
+            typename Encoding::Signature curr = Encoding::encode(data);
             if (first || curr < comp[i]) {
                 comp[i].swap(curr);
                 first = false;
@@ -217,10 +216,16 @@ typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
     // Pack the components together.
     std::sort(comp.begin(), comp.end());
 
-    typename Encoding::Signature ans;
-    for (i = 0; i < countComponents(); ++i)
-        ans += comp[i];
+    // Precompute the entire length of the signature, so that we can
+    // reserve exactly the right amount of space.
+    size_t length = 0;
+    for (const auto& c : comp)
+        length += c.size();
 
+    typename Encoding::Signature ans;
+    ans.reserve(length);
+    for (const auto& c : comp)
+        ans += c;
     return ans;
 }
 
