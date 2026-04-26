@@ -173,8 +173,27 @@ typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
     if (isEmpty())
         return Encoding::encodeEmpty();
 
-    // The triangulation is non-empty.  Get a signature string for each
-    // connected component.
+    if (isConnected()) {
+        Component<dim>* c = components_.front();
+
+        typename Encoding::Signature best;
+        bool first = true;
+
+        Type type(*c);
+        IsoSigData data(c);
+        do {
+            data.fillFrom(c->simplex(type.simplex()), type.perm(), nullptr);
+            typename Encoding::Signature curr = Encoding::encode(data);
+            if (first || curr < best) {
+                best.swap(curr);
+                first = false;
+            }
+        } while (type.next());
+        return best;
+    }
+
+    // We have a multiple-component triangulation.
+    // Get a signature string for each connected component.
     size_t i;
     typename Encoding::Signature curr;
 
@@ -217,41 +236,26 @@ std::pair<typename Encoding::Signature, Isomorphism<dim>>
         throw FailedPrecondition(
             "isoSigDetail() requires a connected triangulation");
 
+    // The triangulation has exactly one connected component.
+    Component<dim>* c = components_.front();
+
     std::pair<typename Encoding::Signature, Isomorphism<dim>> ans(
-        std::piecewise_construct, std::forward_as_tuple(),
-        std::forward_as_tuple(size()));
+        std::piecewise_construct, std::tuple<>(), std::tuple(size()));
     Isomorphism<dim> currRelabelling(size());
+    bool first = true;
 
-    // The triangulation is non-empty.  Get a signature string for each
-    // connected component.
-    size_t i;
-    typename Encoding::Signature curr;
-
-    FixedArray<typename Encoding::Signature> comp(countComponents());
-    auto it = components().begin();
-    for (i = 0; it != components().end(); ++it, ++i) {
-        Type type(**it);
-        bool first = true;
-
-        IsoSigData data(*it);
-        do {
-            data.fillFrom((*it)->simplex(type.simplex()), type.perm(),
-                std::addressof(currRelabelling));
-            curr = Encoding::encode(data);
-            if (first || curr < comp[i]) {
-                comp[i].swap(curr);
-                ans.second.swap(currRelabelling);
-                first = false;
-            }
-        } while (type.next());
-    }
-
-    // Pack the components together.
-    std::sort(comp.begin(), comp.end());
-
-    for (i = 0; i < countComponents(); ++i)
-        ans.first += comp[i];
-
+    Type type(*c);
+    IsoSigData data(c);
+    do {
+        data.fillFrom(c->simplex(type.simplex()), type.perm(),
+            std::addressof(currRelabelling));
+        typename Encoding::Signature curr = Encoding::encode(data);
+        if (first || curr < ans.first) {
+            ans.first.swap(curr);
+            ans.second.swap(currRelabelling);
+            first = false;
+        }
+    } while (type.next());
     return ans;
 }
 
