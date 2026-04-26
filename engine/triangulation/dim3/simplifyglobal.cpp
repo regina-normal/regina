@@ -32,9 +32,6 @@
 #include "triangulation/dim3.h"
 #include "utilities/randutils.h"
 
-// Affects the number of random 4-4 moves attempted during simplification.
-#define COEFF_4_4 5
-
 // If you define PINCH_NOT_COLLAPSE, then simplify() will use
 // pinchEdge() instead of collapseEdge() to reduce the number of vertices.
 // This may *increase* the number of tetrahedra, and so it should be used with
@@ -250,6 +247,15 @@ bool Triangulation<3>::simplifyInternal() {
             }
 
             // Make random 4-4 moves.
+            int COEFF_4_4;
+            if constexpr ( context == SimplifyContext::UpDownDescent ) {
+                COEFF_4_4 = use->size() / 20;
+                if ( COEFF_4_4 < 5 ) {
+                    COEFF_4_4 = 5;
+                }
+            } else {
+                COEFF_4_4 = 5;
+            }
             fourFourAttempts = fourFourCap = 0;
             while (true) {
                 // Calculate the list of available 4-4 moves.
@@ -580,11 +586,14 @@ bool Triangulation<3>::simplifyUpDown(ssize_t max23, bool alwaysModify) {
         return false;
     }
 
+    //TODO Update documentation!
+    //TODO Add support for progress tracking.
+
     // For our default max23, we follow SnapPea and make it proportional to
     // size(). We also follow SnapPea in choosing the constant of
     // proportionality to be 4.
     if ( max23 < 0 ) {
-        max23 = 4 * size();
+        max23 = size();
     }
     size_t origSize = size();
 
@@ -593,17 +602,19 @@ bool Triangulation<3>::simplifyUpDown(ssize_t max23, bool alwaysModify) {
     Triangulation<3> working( *this, false, true );
 
     // Random 2-3 moves.
-    for ( ssize_t i = 0; i < max23; ++i ) {
-        // Pick a random triangle through which to do a 2-3 move.
-        Triangle<3>* triangle = working.triangle(
-                RandomEngine::rand( working.countTriangles() ) );
-        if ( not working.pachner(triangle) ) {
-            continue;
+    for ( ssize_t consec23 = 1; consec23 <= max23; ++consec23 ) {
+        // Attempt consec23 consecutive random 2-3 moves.
+        for ( ssize_t i = 0; i < consec23; ++i ) {
+            // Pick a random triangle through which to do a 2-3 move.
+            Triangle<3>* triangle = working.triangle(
+                    RandomEngine::rand( working.countTriangles() ) );
+            working.pachner(triangle);
         }
 
         // Use 2-0, 2-1 and 4-4 moves to try to force future 2-3 moves and the
         // eventual full simplification to go somewhere new.
         working.simplifyInternal<SimplifyContext::UpDownDescent>();
+        working.simplifyInternal<SimplifyContext::Best>();
         if ( working.size() < origSize ) {
             // We already simplified, so we might as well stop now.
             swap(working);
