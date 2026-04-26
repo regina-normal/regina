@@ -386,11 +386,16 @@ inline void swap(IsoSigData<dim>& a, IsoSigData<dim>& b) noexcept {
  *   triangulation;
  *
  * - `encode(const IsoSigData<dim>&)`, which encodes the gluings table for a
- *   single connected component of a <i>dim</i>-dimensional triangulation.
- *   This routine may assume that the component is non-empty, and that it uses
- *   a canonical labelling in the sense described in the IsoSigData class notes.
+ *   single connected component of a <i>dim</i>-dimensional triangulation;
  *
- * Both routines should return the type `Signature`.
+ * - `length(const IsoSigData<dim>&)`, which pre-computes the length of the
+ *   signature that encodes a single component.
+ *
+ * Both encoding routines should return the type `Signature`.
+ *
+ * Both `encode()` and `length()` may assume that the given component is
+ * non-empty, and that it uses a canonical labelling in the sense described in
+ * the IsoSigData class notes.
  *
  * Note that `encode()` can be economical about what information it writes:
  * although `data.size()` will need to be encoded, it is not necessary to
@@ -419,6 +424,7 @@ concept IsoSigEncoding =
         requires SignatureType<typename T::Signature>;
         { T::encodeEmpty() } -> std::convertible_to<typename T::Signature>;
         { T::encode(data) } -> std::convertible_to<typename T::Signature>;
+        { T::length(data) } -> std::same_as<size_t>;
     };
 
 /**
@@ -503,10 +509,11 @@ class IsoSigPrintable {
          */
         static Signature encode(const IsoSigData<dim>& data) {
             Base64SigEncoder enc;
+            enc.reserve(length(data));
 
-            int nChars = enc.encodeSize(data.size());
+            int intWidth = enc.encodeSize(data.size());
             enc.encodeTrits(data.facetTypes());
-            enc.encodeInts(data.adjacentSimplices(), nChars);
+            enc.encodeInts(data.adjacentSimplices(), intWidth);
             enc.encodeInts(data.adjacentGluings(), charsPerPerm);
             if constexpr (supportLocks) {
                 if (data.hasLocks()) {
@@ -529,6 +536,43 @@ class IsoSigPrintable {
             }
 
             return std::move(enc).str();
+        }
+
+        /**
+         * Precomputes the length of the signature that encodes the given
+         * connected component.
+         *
+         * \pre The given component is non-empty, and uses a canonical labelling
+         * in the sense described in the IsoSigData class notes.
+         *
+         * \param data the compressed gluings table for the component to encode.
+         * \return the length of the isomorphism signature that encodes \a data.
+         */
+        static size_t length(const IsoSigData<dim>& data) {
+            size_t ans;
+            if (data.size() < 63) {
+                // The integer width is 1, and does not need to be explicitly
+                // encoded.
+                ans = 1 + data.adjacentSimplices().size();
+            } else {
+                // We begin with two extra characters: 63 (a marker that the
+                // component is large), and the encoding of the integer width.
+                int width = Base64SigEncoder::integerWidth(data.size());
+                ans = 2 + (1 + data.adjacentSimplices().size()) * width;
+            }
+            ans += ((data.facetTypes().size() + 2) / 3);
+            ans += (data.adjacentGluings().size() * charsPerPerm);
+            if constexpr (supportLocks) {
+                if (data.hasLocks()) {
+                    if constexpr (dim <= 4)
+                        ans += (1 + data.locks().size());
+                    else if constexpr (dim <= 10)
+                        ans += (1 + data.locks().size() * 2);
+                    else
+                        ans += (1 + data.locks().size() * 3);
+                }
+            }
+            return ans;
         }
 
         // Make this class non-constructible.

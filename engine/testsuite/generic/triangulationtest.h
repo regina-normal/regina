@@ -1226,7 +1226,10 @@ class TriangulationTest : public testing::Test {
             #if 0
             // Here we can see how effective Signature::reserve() is.  We only
             // do this for IsoSigClassic since other signature types should
-            // give the same output - it is the encoding that matters here.
+            // produce the same length of signatures - it is the encoding that
+            // matters here.  (Also note: this output is not written during
+            // verifyIsomorphismSignatureWithLocks(), since that test
+            // exclusively uses IsoSigEdgeDegrees.)
             if constexpr (std::same_as<Type<dim>, regina::IsoSigClassic<dim>>) {
                 std::cerr << sig.size() << ' ' << sig.capacity() << ' '
                     << tri.size() << ' ' << tri.countComponents() << std::endl;
@@ -1299,6 +1302,14 @@ class TriangulationTest : public testing::Test {
 
             verifyIsomorphismSignatureUsing<regina::IsoSigClassic>(tri);
             verifyIsomorphismSignatureUsing<regina::IsoSigEdgeDegrees>(tri);
+
+            // Verify the precomputed length of the signature.
+            using Encoding = regina::IsoSigPrintable<dim>;
+            if (tri.countComponents() == 1) {
+                regina::IsoSigData data(tri.component(0));
+                EXPECT_EQ(Encoding::length(data),
+                    Encoding::encode(data).size());
+            }
         }
 
         static void verifyIsomorphismSignatureWithLocks(

@@ -160,6 +160,7 @@ Version 8.0  [ TODO ]
               encoding classes via the new type IsoSigData<dim>.  The old
               behaviour (passing C-style arrays) is no longer supported.
             - The routine emptySig() has been renamed to encodeEmpty().
+            - Encoding classes now have a new routine length().
         Struct IsReginaArbitraryPrecisionInteger<T>, IsReginaInteger<T>:
             - Now deprecated, in favour of the new concepts
               ArbitraryPrecisionInteger<T> and ReginaInteger<T>.
