@@ -3302,28 +3302,6 @@ class TriangulationBase :
         typename Encoding::Signature isoSig() const;
 
         /**
-         * Alias for isoSig(), which constructs the isomorphism signature of
-         * the given type for this triangulation.
-         *
-         * This alias sig() is provided to assist with generic code that can
-         * work with both triangulations and links.
-         *
-         * See isoSig() for further details.
-         *
-         * \python This alias is only available for the default signature type
-         * and encoding (i.e., the default C++ template arguments).
-         * If you wish to use a different signature type and/or encoding, you
-         * can instead use the variants provided with isoSig(); that is, you
-         * can call a function of the form isoSig_<i>Type</i>.  See the
-         * isoSig() documentation for further details.
-         *
-         * \return the isomorphism signature of this triangulation.
-         */
-        template <IsoSigType<dim> Type = IsoSigClassic<dim>,
-            IsoSigEncoding<dim> Encoding = IsoSigPrintable<dim>>
-        typename Encoding::Signature sig() const;
-
-        /**
          * Constructs the isomorphism signature for this triangulation, along
          * with the relabelling that will occur when the triangulation is
          * reconstructed from it.
@@ -5852,12 +5830,6 @@ inline void TriangulationBase<dim>::cloneBoundaryFaces(
     // C++17 fold expression.
     for (auto f : srcFaces)
         bc->push_back(clonedFace(f));
-}
-
-template <int dim> requires (supportedDim(dim))
-template <IsoSigType<dim> Type, IsoSigEncoding<dim> Encoding>
-inline typename Encoding::Signature TriangulationBase<dim>::sig() const {
-    return isoSig<Type, Encoding>();
 }
 
 template <int dim> requires (supportedDim(dim))

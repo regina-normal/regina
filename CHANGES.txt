@@ -313,6 +313,9 @@ Version 8.0  [ TODO ]
             - The interface for isomorphism signature encodings has changed;
               see the changelog for IsoSigPrintable / IsoSigPrintableLockFree
               for details.
+            - Remove the alias sig() that was recently introduced in Regina 7.4,
+              to avoid confusion as to whether it returns a first-generation
+              signature (isoSig()) or a second-generation signature (novaSig()).
             - Removed the Boost Graph Library (BGL) interface for triangulations
               (triangulation/graph.h).  This is because Regina has not used
               Boost since December 2021, and so this code is essentially

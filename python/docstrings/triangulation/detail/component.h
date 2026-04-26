@@ -264,7 +264,7 @@ constexpr const char *size =
 R"doc(Returns the number of top-dimensional simplices in this component.
 
 Returns:
-    The number of top-dimensional simplices.)doc";
+    the number of top-dimensional simplices.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::tetrahedra
 constexpr const char *tetrahedra =

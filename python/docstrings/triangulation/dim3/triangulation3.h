@@ -4473,7 +4473,7 @@ Parameter ``t1``:
     respect to the edge embedding *e1*; this must be 2 or 3.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.
 
 Author:
@@ -4508,7 +4508,7 @@ Parameter ``t1``:
     the move.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.
 
 Author:
@@ -4545,7 +4545,7 @@ Parameter ``e1``:
     0, 1 or 2.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.
 
 Author:
@@ -4575,7 +4575,7 @@ Parameter ``edgeEnd``:
     details on exactly what this means.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::with44
@@ -4602,7 +4602,7 @@ Parameter ``axis``:
     for details on exactly what this means.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::withCloseBook
@@ -4624,7 +4624,7 @@ Parameter ``e``:
     the edge about which to perform the move.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::withCollapseEdge
@@ -4646,7 +4646,7 @@ Parameter ``e``:
     the edge to collapse.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::withOpenBook
@@ -4668,7 +4668,7 @@ Parameter ``t``:
     the triangle about which to perform the move.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::zeroTwoMove

@@ -2605,27 +2605,6 @@ Parameter ``perform``:
 Returns:
     ``True`` if and only if the requested move could be performed.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::sig
-constexpr const char *sig =
-R"doc(Alias for isoSig(), which constructs the isomorphism signature of the
-given type for this triangulation.
-
-This alias sig() is provided to assist with generic code that can work
-with both triangulations and links.
-
-See isoSig() for further details.
-
-Python:
-    This alias is only available for the default signature type and
-    encoding (i.e., the default C++ template arguments). If you wish
-    to use a different signature type and/or encoding, you can instead
-    use the variants provided with isoSig(); that is, you can call a
-    function of the form isoSig_*Type*. See the isoSig() documentation
-    for further details.
-
-Returns:
-    the isomorphism signature of this triangulation.)doc";
-
 // Docstring regina::python::doc::detail::TriangulationBase_::simplex
 constexpr const char *simplex =
 R"doc(Returns the top-dimensional simplex at the given index in the
@@ -2711,7 +2690,7 @@ constexpr const char *size =
 R"doc(Returns the number of top-dimensional simplices in the triangulation.
 
 Returns:
-    The number of top-dimensional simplices.)doc";
+    the number of top-dimensional simplices.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::source
 constexpr const char *source =
@@ -3031,7 +3010,7 @@ Parameter ``f``:
     the *k*-face about which to perform the move.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::withPachner
@@ -3057,7 +3036,7 @@ Parameter ``f``:
     the *k*-face about which to perform the move.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::withShellBoundary
@@ -3085,7 +3064,7 @@ Parameter ``s``:
     the top-dimensional simplex upon which to perform the move.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
 }

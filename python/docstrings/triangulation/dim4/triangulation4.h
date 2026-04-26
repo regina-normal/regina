@@ -1272,7 +1272,7 @@ Parameter ``e``:
     the edge about which to perform the move.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::withCollapseEdge
@@ -1294,7 +1294,7 @@ Parameter ``e``:
     the edge to collapse.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::withOpenBook
@@ -1316,7 +1316,7 @@ Parameter ``t``:
     the tetrahedron about which to perform the move.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::withSnapEdge
@@ -1337,7 +1337,7 @@ Parameter ``e``:
     the edge whose endpoints are to be snapped together.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
 }

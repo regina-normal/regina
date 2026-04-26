@@ -29,7 +29,8 @@
  **************************************************************************/
 
 /*! \file foreign/isosig.h
- *  \brief Allows reading lists of isomorphism signatures and knot signatures.
+ *  \brief Allows reading lists of isomorphism signatures and knot/link
+ *  signatures.
  */
 
 #ifndef __REGINA_FOREIGN_ISOSIG_H

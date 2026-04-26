@@ -48,7 +48,7 @@ Python:
     other comparison operators that it generates _are_ available.
 
 Returns:
-    The result of the lexicographical comparison between this and the
+    the result of the lexicographical comparison between this and the
     given face pair.)doc";
 
 // Docstring regina::python::doc::FacePair_::__copy

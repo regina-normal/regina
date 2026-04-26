@@ -91,7 +91,7 @@ type.
     for further information.
 
 Returns:
-    The vertex or edge number (0, 1 or 2) that plays a special role,
+    the vertex or edge number (0, 1 or 2) that plays a special role,
     or -1 if this triangle's combinatorial type has no special vertex
     or edge.)doc";
 

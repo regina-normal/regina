@@ -723,7 +723,6 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
             rbase::insertTriangulation)
         .def("dehydrate", &Triangulation<3>::dehydrate, rdoc::dehydrate)
         .def_static("rehydrate", &Triangulation<3>::rehydrate, rdoc::rehydrate)
-        .def("sig", &Triangulation<3>::sig<>, rbase::sig)
         // Variants of isoSig() are handled through isosig_options() below.
         .def_static("fromGluings", [](size_t size, const std::vector<
                 std::tuple<size_t, int, size_t, regina::Perm<4>>>& g) {

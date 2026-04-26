@@ -106,8 +106,7 @@ concept SignatureType =
  */
 template <typename T>
 concept SignatureReconstructible =
-    requires(const T x, const std::string sig) {
-        { x.sig() } -> std::same_as<std::string>;
+    requires(const std::string sig) {
         { T::fromSig(sig) } -> std::same_as<T>;
     };
 

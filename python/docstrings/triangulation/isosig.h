@@ -536,6 +536,21 @@ this; instead it returns the non-empty string ``a``.
 Returns:
     the isomorphism signature of the empty triangulation.)doc";
 
+// Docstring regina::python::doc::IsoSigPrintable_::length
+static const char *length =
+R"doc(Precomputes the length of the signature that encodes the given
+connected component.
+
+Precondition:
+    The given component is non-empty, and uses a canonical labelling
+    in the sense described in the IsoSigData class notes.
+
+Parameter ``data``:
+    the compressed gluings table for the component to encode.
+
+Returns:
+    the length of the isomorphism signature that encodes *data*.)doc";
+
 }
 
 } // namespace regina::python::doc

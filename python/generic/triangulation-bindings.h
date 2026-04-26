@@ -292,7 +292,6 @@ void addTriangulation(pybind11::module_& m, pybind11::module_& internal,
             overload_cast<const Triangulation<dim>&>(
                 &Triangulation<dim>::insertTriangulation),
             rbase::insertTriangulation)
-        .def("sig", &Triangulation<dim>::template sig<>, rbase::sig)
         // Variants of isoSig() are handled through isosig_options() below.
         .def_static("fromIsoSig", &Triangulation<dim>::fromIsoSig,
             rbase::fromIsoSig)

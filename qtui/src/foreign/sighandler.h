@@ -29,7 +29,7 @@
  **************************************************************************/
 
 /*! \file sighandler.h
- *  \brief Allows interaction with knot and isomorphism signature lists.
+ *  \brief Allows interaction with knot/link and isomorphism signature lists.
  */
 
 #ifndef __SIGHANDLER_H
@@ -50,8 +50,8 @@ namespace regina {
 }
 
 /**
- * An object responsible for importing data from
- * knot signature or isomorphism signature lists.
+ * An object responsible for importing data from knot/link signature or
+ * isomorphism signature lists.
  *
  * Rather than creating new objects of this class, the globally
  * available object `SigHandler<PacketType>::instance` should always be used.
@@ -92,8 +92,8 @@ std::shared_ptr<regina::Packet> SigHandler<PacketType>::importData(
     QString signatures;
     if constexpr (std::is_same_v<PacketType, regina::Link>) {
         explnSuffix = QObject::tr("<p>The file should be a plain text file "
-            "containing one knot signature per line.</qt>");
-        signatures = QObject::tr("knot signatures");
+            "containing one knot/link signature per line.</qt>");
+        signatures = QObject::tr("knot/link signatures");
     } else {
         explnSuffix = QObject::tr("<p>The file should be a plain text file "
             "containing one %1-manifold isomorphism signature per line.  "

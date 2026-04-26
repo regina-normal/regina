@@ -384,7 +384,7 @@ R"doc(Returns the isomorphism from dualHomology(1) to homology(1) given by a
 cellular approximation to the identity map on the manifold.
 
 Returns:
-    The isomorphism from dualHomology(1) to homology(1) computed via a
+    the isomorphism from dualHomology(1) to homology(1) computed via a
     cellular approximation of the identity map from the first
     1-skeleton to the second.)doc";
 
