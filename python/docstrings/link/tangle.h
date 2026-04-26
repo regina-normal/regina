@@ -982,7 +982,7 @@ Parameter ``crossing``:
     details on exactly how this will be interpreted.
 
 Returns:
-    The new tangle diagram obtained by performing the requested move,
+    the new tangle diagram obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Tangle_::withR2
@@ -1010,7 +1010,7 @@ Parameter ``arc``:
     this will be interpretered.
 
 Returns:
-    The new tangle diagram obtained by performing the requested move,
+    the new tangle diagram obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Tangle_::withR2_2
@@ -1038,7 +1038,7 @@ Parameter ``crossing``:
     exactly how this will be interpreted.
 
 Returns:
-    The new tangle diagram obtained by performing the requested move,
+    the new tangle diagram obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
 }

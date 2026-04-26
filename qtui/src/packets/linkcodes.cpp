@@ -61,7 +61,7 @@ LinkCodesUI::LinkCodesUI(regina::PacketOf<regina::Link>* packet,
         "representation for prime knots (but introduces ambiguities "
         "for non-prime knots), and comes in both alphabetical and numerical "
         "variants.<p>"
-        "The <i>knot/link signature</i> is native to Regina, and identifies "
+        "The <i>knot/link signatures</i> are native to Regina, and identify "
         "a knot or link projection on the sphere uniquely up to various "
         "relabelling, reflection, rotation and/or reversal operations.<p>"
         "The <i>planar diagram code</i> is used in the Knot Atlas, "
@@ -73,7 +73,7 @@ LinkCodesUI::LinkCodesUI(regina::PacketOf<regina::Link>* packet,
     type = new QComboBox();
     type->addItem(tr("Gauss codes"));
     type->addItem(tr("Dowker-Thistlethwaite notation"));
-    type->addItem(tr("Knot/link signature"));
+    type->addItem(tr("Knot/link signatures"));
     type->addItem(tr("Planar diagram code"));
     type->addItem(tr("Jenkins format"));
     type->setWhatsThis(msg);
@@ -149,11 +149,17 @@ void LinkCodesUI::refresh() {
 
         code->setWordWrapMode(QTextOption::WordWrap);
     } else if (type->currentIndex() == 2) {
-        code->setWhatsThis("The knot/link signature of this link diagram.  "
+        code->setWhatsThis("The knot/link signatures of this link diagram.  "
             "Signatures are native to Regina, and identify a knot or link "
             "projection on the sphere uniquely up to relabelling, "
             "reflecting the entire diagram, rotating connected components "
             "of the diagram, and/or reversing individual link components.<p>"
+            "<i>First-generation</i> signatures were used in Regina ≤ 7.x, "
+            "and can be access through code by calling <tt>knotSig()</tt>.<p>"
+            "<i>Second-generation</i> signatures were introduced in "
+            "Regina 8.0, and can be accessed through code by calling "
+            "<tt>neoSig()</tt>. They are shorter, and are recommended for use "
+            "in new projects.<p>"
             "You can copy this text to the clipboard if you need to send it "
             "to some other application.");
         if (link->countComponents() >= 64) {
@@ -162,7 +168,8 @@ void LinkCodesUI::refresh() {
             code->setWordWrapMode(QTextOption::WordWrap);
             return;
         }
-        ans = link->sig().c_str();
+        ans = (std::string("2nd gen (neoSig):\n") + link->neoSig() +
+            "\n\n1st gen (knotSig):\n" + link->knotSig() + "\n").c_str();
 
         code->setWordWrapMode(QTextOption::WrapAnywhere);
     } else if (type->currentIndex() == 3) {

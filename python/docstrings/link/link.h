@@ -437,7 +437,8 @@ string as a link.
 At present, Regina understands the following types of strings (and
 attempts to parse them in the following order):
 
-* knot/link signatures, as used by fromSig();
+* knot/link signatures (both first and second generation), as used by
+  fromSig();
 
 * oriented Gauss codes, as used by fromOrientedGauss();
 
@@ -1110,7 +1111,7 @@ crossing) components entirely.
     the array will be converted into a Python list.)
 
 Returns:
-    A pair containing (i) the array as described above; and (ii) the
+    a pair containing (i) the array as described above; and (ii) the
     total number of non-trivial diagram components (so again, ignoring
     zero-crossing components). Note that this latter number may be
     different from countDiagramComponents(), which counts _all_
@@ -1753,14 +1754,11 @@ Returns:
 
 // Docstring regina::python::doc::Link_::fromKnotSig
 static const char *fromKnotSig =
-R"doc(Alias for fromSig(), to recover a classical or virtual link diagram
-from a string-based knot/link signature.
+R"doc(Deprecated alias for fromSig(), to recover a classical or virtual link
+diagram from a string-based knot/link signature.
 
-This alias fromKnotSig() has been kept to reflect the fact that, in
-older versions of Regina, signatures were only available for single-
-component knots; moreover the old name "knot signatures" can still be
-found in the literature. While this routine is not deprecated, it is
-recommended to use fromSig() in new code.
+.. deprecated::
+    You should call this as fromSig() instead.
 
 See fromSig() for further details.
 
@@ -1770,29 +1768,6 @@ Exception ``InvalidArgument``:
 Parameter ``sig``:
     the signature of the link diagram to construct. Note that
     signatures are case-sensitive.
-
-Returns:
-    the reconstructed link diagram.)doc";
-
-// Docstring regina::python::doc::Link_::fromKnotSig_2
-static const char *fromKnotSig_2 =
-R"doc(Alias for fromSig(), to recover a classical or virtual link diagram
-from a binary knot/link signature.
-
-This alias fromKnotSig() has been kept to reflect the fact that, in
-older versions of Regina, signatures were only available for single-
-component knots; moreover the old name "knot signatures" can still be
-found in the literature. While this routine is not deprecated, it is
-recommended to use fromSig() in new code.
-
-See fromSig() for further details.
-
-Exception ``InvalidArgument``:
-    The given byte sequence was not a valid binary knot/link
-    signature.
-
-Parameter ``sig``:
-    the signature of the link diagram to construct.
 
 Returns:
     the reconstructed link diagram.)doc";
@@ -2051,20 +2026,21 @@ Returns:
 // Docstring regina::python::doc::Link_::fromSig
 static const char *fromSig =
 R"doc(Recovers a classical or virtual link diagram from a string-based
-knot/link signature. See sig() for more information on signatures.
+knot/link signature. This may be either a first-generation signature
+(computed via ``knotSig()``), or a second-generation signature
+(computed via ``neoSig()``).
 
-This reconstruction (from a string) will only work if the given
-signature uses either the default encoding LinkSigPrintable or the
-compact encoding LinkSigCompact. There is also a variant of fromSig()
-that takes a byte sequence, and which can work with the binary
-encoding LinkSigPacked.
+See sig() for further details on knot/link signatures in general.
 
-Calling sig() followed by fromSig() is not guaranteed to produce an
-_identical_ link diagram to the original, but it is guaranteed to
-produce one that is related by zero or more applications of
-relabelling, and (according to the arguments that were passed to
-sig()) reflection of the diagram, rotation of the diagram, and/or
-reversal of individual link components.
+There is also a variant of fromSig() that takes a byte sequence, and
+which can work with binary second-generation signatures.
+
+Computing a signature and then calling fromSig() on the result is not
+guaranteed to produce an _identical_ link diagram to the original, but
+it _is_ guaranteed to produce one that is related by zero or more
+applications of relabelling, and (according to the arguments that were
+passed to the signature function) reflection of the diagram, rotation
+of the diagram, and/or reversal of individual link components.
 
 Exception ``InvalidArgument``:
     The given string was not a valid string-based knot/link signature.
@@ -2078,25 +2054,29 @@ Returns:
 
 // Docstring regina::python::doc::Link_::fromSig_2
 static const char *fromSig_2 =
-R"doc(Recovers a classical or virtual link diagram from a binary knot/link
-signature. See sig() for more information on signatures.
+R"doc(Recovers a classical or virtual link diagram from a binary second-
+generation knot/link signature. This signature would typically have
+been computed via ``neoSig<LinkSigBinary>()``.
 
-This reconstruction (from a byte sequence) will only work if the given
-signature uses the encoding LinkSigPacked. There is also a variant of
-fromSig() that takes a string argument, and which can work with the
-string-based encodings LinkSigPrintable (the default encoding for
-knot/link signatures) and LinkSigCompact.
+See sig() for further details on knot/link signatures in general.
 
-Calling sig() followed by fromSig() is not guaranteed to produce an
-_identical_ link diagram to the original, but it is guaranteed to
-produce one that is related by zero or more applications of
-relabelling, and (according to the arguments that were passed to
-sig()) reflection of the diagram, rotation of the diagram, and/or
-reversal of individual link components.
+There is also a variant of fromSig() that takes a string, and which
+can work with both first-generation and string-based second-generation
+signatures.
+
+Computing a signature and then calling fromSig() on the result is not
+guaranteed to produce an _identical_ link diagram to the original, but
+it _is_ guaranteed to produce one that is related by zero or more
+applications of relabelling, and (according to the arguments that were
+passed to the signature function) reflection of the diagram, rotation
+of the diagram, and/or reversal of individual link components.
+
+Python:
+    You should pass the signature as a Python ``bytes`` object.
 
 Exception ``InvalidArgument``:
-    The given byte sequence was not a valid binary knot/link
-    signature.
+    The given byte sequence was not a valid binary second-generation
+    knot/link signature.
 
 Parameter ``sig``:
     the signature of the link diagram to construct.
@@ -3548,20 +3528,20 @@ Returns:
 
 // Docstring regina::python::doc::Link_::knotSig
 static const char *knotSig =
-R"doc(Alias for sig(), which constructs the signature for this knot or link
-diagram.
+R"doc(Constructs the first-generation signature for this knot or link
+diagram. This is identical to calling ``sig<LinkSigGen1>()``.
 
-This alias knotSig() has been kept to reflect the fact that, in older
-versions of Regina, these signatures were only available for single-
-component knots; moreover the old name "knot signatures" can still be
-found in the literature. While this routine is not deprecated, it is
-recommended to use sig() in new code.
+First-generation signatures were used in Regina ≤ 7.x. The name
+knotSig() reflects the original implementation in Regina 5.1, which
+was for knots only; however, first-generation signatures do also
+support multiple-component links (this was introduced in Regina 7.4).
 
-This alias is only available for Regina's default signature encoding
-LinkSigPrintable. If you wish to use a non-default encoding, you will
-need to call sig() instead.
+For new code, it is strongly recommended to use second-generation
+signatures, as returned by neoSig(). Second-generation signatures are
+significantly shorter, and support both printable and binary
+encodings.
 
-See sig() for further details.
+See sig() for further details on knot/link signatures in general.
 
 Exception ``NotImplemented``:
     This link diagram has 64 or more link components.
@@ -3585,7 +3565,7 @@ Parameter ``allowRotation``:
     symmetry).
 
 Returns:
-    the signature for this link diagram.)doc";
+    the first-generation signature for this link diagram.)doc";
 
 // Docstring regina::python::doc::Link_::knowsAlexander
 static const char *knowsAlexander =
@@ -3885,6 +3865,58 @@ Precondition:
 
 Parameter ``dest``:
     the link into which the contents of this link should be moved.)doc";
+
+// Docstring regina::python::doc::Link_::neoSig
+static const char *neoSig =
+R"doc(Constructs the second-generation signature for this knot or link
+diagram. This is identical to calling ``sig<Encoding>()``.
+
+Second-generation signatures were introduced in Regina 8.0. They are
+significantly shorter than the first-generation signatures from Regina
+≤ 7.x, and they support both printable and binary encodings. It is
+strongly recommended to use second-generation signatures in new code.
+
+See sig() for further details on knot/link signatures in general.
+
+Exception ``NotImplemented``:
+    This link diagram has 64 or more link components.
+
+Python:
+    Python does not support C++ templates. To use the default string-
+    based encoding, call ``neoSig()``; this will return a Python
+    string. To use the binary encoding, call ``neoSig_binary()``; this
+    will return as a Python ``bytes`` object.
+
+Template parameter ``Encoding``:
+    indicates how the combinatorial link data should be encoded in
+    signature form. The default *LinkSigGen2* encodes the
+    combinatorial data as a printable ASCII ``std::string``, and
+    should be suitable for most users. If you need to conserve memory,
+    you may wish to use *LinkSigBinary* instead; this packs the data
+    into a ByteSequence, which is typically smaller but unprintable.
+
+Parameter ``allowReflection``:
+    ``True`` if reflecting the entire link diagram should preserve the
+    signature, or ``False`` if the signature should distinguish
+    between a diagram and its reflection (unless of course there is a
+    symmetry).
+
+Parameter ``allowReversal``:
+    ``True`` if reversing some or all link components should preserve
+    the signature, or ``False`` if the signature should distinguish
+    between different orientations (again, unless of course there are
+    symmetries).
+
+Parameter ``allowRotation``:
+    ``True`` if rotating the entire link diagram should preserve the
+    signature, or ``False`` if the signature should distinguish
+    between a diagram and its rotation (again, unless there is a
+    symmetry).
+
+Returns:
+    the second-generation signature for this link diagram. This will
+    be of type ``std::string`` for a string-based encoding (the
+    default), or ByteSequence for a binary encoding.)doc";
 
 // Docstring regina::python::doc::Link_::niceTreeDecomposition
 static const char *niceTreeDecomposition =
@@ -5209,8 +5241,8 @@ function or some other callable type).
   representing the link diagram that has been found; or else (b) the
   first two arguments must be of types ``const ByteSequence&``
   followed by a link, representing both the link diagram and its
-  signature. The signature will be a byte sequence as returned by
-  ``sig<LinkSigPacked>()``; this second form may help avoid
+  second-generation signature in binary form, as returned by
+  ``neoSig<LinkSigBinary>()``. This second form may help avoid
   unnecessarily recomputation within the *action* function. If there
   are additional arguments supplied in the list *args*, these will be
   passed as subsequent arguments to *action*.
@@ -5444,8 +5476,9 @@ Returns:
 static const char *sig =
 R"doc(Constructs the _signature_ for this knot or link diagram.
 
-A _signature_ is a compact text representation of a link diagram that
-uniquely determines the diagram up to any combination of:
+A _signature_ is a compact representation of a link diagram, typically
+(but not necessarily) in a readable text form, that uniquely
+determines the diagram up to any combination of:
 
 * relabelling;
 
@@ -5457,51 +5490,37 @@ uniquely determines the diagram up to any combination of:
 * (optionally) rotating the entire diagram, which preserves the sign
   of every crossing but switches the upper and lower strands.
 
-Signatures are now supported for all link diagrams with fewer than 64
-link components. Specifically:
+Signatures are supported for all link diagrams with fewer than 64 link
+components.
 
-* Regina 7.3 and earlier only offered signatures for knots. As of
-  Regina 7.4, signatures are now supported for arbitrary link diagrams
-  (but see the next point), and for knots the new signatures are
-  identical to the old.
+Regina supports _first-generation_ and _second-generation_ signatures:
 
-* The implementation uses bitmasks, and a side-effect of this is that
-  it can only support fewer than 64 link components. However, since
-  the running time is exponential in the number of components (if we
-  allow reversal, which is the default) then it would be completely
-  infeasible to use this routine in practice with _more_ components
-  than this. If there are 64 or more link components then this routine
-  will throw an exception.
+* First-generation signatures are the old knot/link signatures from
+  Regina ≤ 7.x, and are _not_ recommended for use in new code. They
+  encode a knot/link diagram as a printable ASCII string. You can
+  compute the first-generation signature by calling ``knotSig()``.
+  (Despite the legacy name, ``knotSig()`` does also support multiple-
+  component links.)
 
-Regina supports different _encodings_ for signatures, as determined by
-the template parameter *Encoding:*
+* Second-generation signatures are significantly shorter, and support
+  both printable encodings (as an ASCII string) and binary encodings
+  (as a raw byte sequence, which is even shorter but unprintable).
+  These are better to use in new code, but be aware that they are only
+  supported in Regina ≥ 8.0. You can compute the second-generation
+  signature in string form by calling ``neoSig()``, or in binary form
+  by calling ``neoSig<LinkSigBinary>()``.
 
-* An encoding controls how Regina packs the combinatorial information
-  into a final signature.
+* If you are not sure, just use the second-generation signature by
+  calling ``neoSig()``.
 
-* The default encoding LinkSigPrintable returns a ``std::string``
-  consisting entirely of printable characters in the 7-bit ASCII
-  range, and is consistent with the signatures that were produced in
-  Regina ≤ 7.x (before encodings were supported). For typical users,
-  this is all that you should ever need.
-
-* The encoding LinkSigCompact likewise returns a printable 7-bit ASCII
-  ``std::string``, but is significantly shorter (a little over half
-  the length of LinkSigPrintable). This can be used when memory needs
-  to be carefully conserved.
-
-* The encoding LinkSigPacked is even shorter again, but it achieves
-  this by returning a binary sequence of bytes (as opposed to a
-  printable string).
-
-* Other custom encodings are currently for internal use only, and the
-  requirements for the *Encoding* parameter may change in future
-  versions of Regina. See the LinkSigEncoding concept documentation
-  for the current requirements.
+* This routine ``sig()`` is a generic routine that allows you to
+  compute _either_ a first-generation or second-generation signature
+  by passing an appropriate template argument: ``sig<LinkSigGen1>()``,
+  ``sig<LinkSigGen2>()``, or ``sig<LinkSigBinary>()``.
 
 The routine fromSig() can be used to recover a link diagram from its
-signature (but only if one of the officially supported encodings
-LinkSigPrintable, LinkSigCompact or LinkSigPacked was used). The
+signature (it supports both first-generation and second-generation
+signatures, and supports both string and binary encodings). The
 resulting diagram might not be identical to the original, but it will
 be related by zero or more applications of relabelling, and (according
 to the arguments) reflection of the diagram, rotation of the diagram,
@@ -5519,14 +5538,22 @@ Exception ``NotImplemented``:
     This link diagram has 64 or more link components.
 
 Python:
-    Although this is a templated function, all of the encodings
-    supplied with Regina are available to Python users. To use the
-    default encoding, just call ``sig()``. To use a non-default
-    encoding, add a suffix ``_Encoding`` where *Encoding* is an
-    abbreviated version of the encoding type (e.g., ``sig_Compact()``
-    to use the encoding LinkSigCompact). If you call ``sig_Packed()``,
-    then the return value will be a Python ``bytes`` object (not a
-    ByteSequence).
+    Python does not support C++ templates. Instead, you should pass
+    the template argument as the first parameter at runtime. So, for
+    example, to generate a string-based second-generation signature,
+    you can call ``sig(LinkSigGen2)``, or to disallow reversal,
+    ``sig(LinkSigGen2, true, false, true)``. When generating binary
+    signatures (via ``LinkSigBinary``), the return value will be a
+    Python ``bytes`` object (not a ByteSequence).
+
+Template parameter ``Encoding``:
+    indicates how the combinatorial link data should be encoded in
+    signature form. See the discussion above on first-generation and
+    second-generation signatures. This should be ``LinkSigGen1`` for a
+    first-generation signature, ``LinkSigGen2`` for a string-based
+    second-generation signature, or ``LinkSigBinary`` for a binary
+    second-generation signature. If you are not sure, use
+    ``LinkSigGen2``.
 
 Parameter ``allowReflection``:
     ``True`` if reflecting the entire link diagram should preserve the
@@ -5547,7 +5574,9 @@ Parameter ``allowRotation``:
     symmetry).
 
 Returns:
-    the signature for this link diagram.)doc";
+    the signature for this link diagram. This will be of type
+    ``std::string`` for string-based encodings, or ByteSequence for
+    binary encodings.)doc";
 
 // Docstring regina::python::doc::Link_::signedGauss
 static const char *signedGauss =
@@ -6055,7 +6084,7 @@ Parameter ``crossing``:
     details on exactly how this will be interpreted.
 
 Returns:
-    The new link diagram obtained by performing the requested move, or
+    the new link diagram obtained by performing the requested move, or
     no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Link_::withR1_2
@@ -6088,7 +6117,7 @@ Parameter ``sign``:
     the twist; this must be +1 or -1.
 
 Returns:
-    The new link diagram obtained by performing the requested move, or
+    the new link diagram obtained by performing the requested move, or
     no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Link_::withR2
@@ -6112,7 +6141,7 @@ Parameter ``arc``:
     will be interpreted.
 
 Returns:
-    The new link diagram obtained by performing the requested move, or
+    the new link diagram obtained by performing the requested move, or
     no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Link_::withR2_2
@@ -6136,7 +6165,7 @@ Parameter ``crossing``:
     how this will be interpreted.
 
 Returns:
-    The new link diagram obtained by performing the requested move, or
+    the new link diagram obtained by performing the requested move, or
     no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Link_::withR2_3
@@ -6183,7 +6212,7 @@ Parameter ``lowerSide``:
     the new overlap should take place on the right of *lowerArc*.
 
 Returns:
-    The new link diagram obtained by performing the requested move, or
+    the new link diagram obtained by performing the requested move, or
     no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Link_::withR2Virtual
@@ -6229,7 +6258,7 @@ Parameter ``lowerSide``:
     the new overlap should take place on the right of *lowerArc*.
 
 Returns:
-    The new link diagram obtained by performing the requested move, or
+    the new link diagram obtained by performing the requested move, or
     no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Link_::withR2Virtual_2
@@ -6267,7 +6296,7 @@ Parameter ``firstStrand``:
     second.
 
 Returns:
-    The new link diagram obtained by performing the requested move, or
+    the new link diagram obtained by performing the requested move, or
     no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Link_::withR3
@@ -6296,7 +6325,7 @@ Parameter ``side``:
     1 if the third crossing is located on the right of the arc.
 
 Returns:
-    The new link diagram obtained by performing the requested move, or
+    the new link diagram obtained by performing the requested move, or
     no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Link_::withR3_2
@@ -6326,7 +6355,7 @@ Parameter ``side``:
     the uppermost arc.
 
 Returns:
-    The new link diagram obtained by performing the requested move, or
+    the new link diagram obtained by performing the requested move, or
     no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Link_::writhe

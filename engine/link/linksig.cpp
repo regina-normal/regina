@@ -264,17 +264,17 @@ LinkSigData::LinkSigData(const Link& link, BoolSet reflectionOptions,
 //     0-crossing unknot: instead we cheat and give the empty link a symbol
 //     that is not part of our usual base64 set (Base64SigEncoder::spare[0]).
 
-std::string LinkSigPrintable::encodeEmpty() {
+std::string LinkSigGen1::encodeEmpty() {
     return { Base64SigEncoder::spare[0] };
 }
 
-std::string LinkSigPrintable::encodeUnknot() {
+std::string LinkSigGen1::encodeUnknot() {
     Base64SigEncoder enc;
     enc.encodeSize(0);
     return std::move(enc).str();
 }
 
-size_t LinkSigPrintable::length(const LinkSigData& data) {
+size_t LinkSigGen1::length(const LinkSigData& data) {
     size_t ans;
     if (data.size() < 63) {
         // The integer width is 1, and does not need to be explicitly encoded.
@@ -288,7 +288,7 @@ size_t LinkSigPrintable::length(const LinkSigData& data) {
     return ans + 2 * ((data.size() + 2) / 3);
 }
 
-std::string LinkSigPrintable::encode(const LinkSigData& data) {
+std::string LinkSigGen1::encode(const LinkSigData& data) {
     // Text: n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
 
     Base64SigEncoder enc;
@@ -304,7 +304,7 @@ std::string LinkSigPrintable::encode(const LinkSigData& data) {
     // each, not 2n bits each (we are basically writing everything twice) -
     // however, the old knot signatures wrote 2n bits and it would be bad
     // to break compatibility with those.  Also, if memory is at a premium
-    // then you should be using LinkSigCompact (not LinkSigPrintable) anyway.
+    // then you should be using LinkSigGen2 (not LinkSigGen1) anyway.
     int val = 0, bit = 0;
 
     for (const auto& term : data.sequence()) {
@@ -340,17 +340,17 @@ std::string LinkSigPrintable::encode(const LinkSigData& data) {
     return std::move(enc).str();
 }
 
-std::string LinkSigCompact::encodeEmpty() {
+std::string LinkSigGen2::encodeEmpty() {
     return { Base64SigEncoder::spare[0] };
 }
 
-std::string LinkSigCompact::encodeUnknot() {
+std::string LinkSigGen2::encodeUnknot() {
     Base64SigEncoder enc;
     enc.encodeSize(0);
     return std::move(enc).str();
 }
 
-size_t LinkSigCompact::length(const LinkSigData& data) {
+size_t LinkSigGen2::length(const LinkSigData& data) {
     size_t ans;
     if (data.size() < 63) {
         // The integer width is 1, and does not need to be explicitly encoded.
@@ -364,7 +364,7 @@ size_t LinkSigCompact::length(const LinkSigData& data) {
     return ans + (2 * data.size() + 2) / 3;
 }
 
-std::string LinkSigCompact::encode(const LinkSigData& data) {
+std::string LinkSigGen2::encode(const LinkSigData& data) {
     // We write:
     // - the integer n;
     // - 4n packed bits:
@@ -429,17 +429,17 @@ std::string LinkSigCompact::encode(const LinkSigData& data) {
     return std::move(enc).str();
 }
 
-ByteSequence LinkSigPacked::encodeEmpty() {
+ByteSequence LinkSigBinary::encodeEmpty() {
     return {};
 }
 
-ByteSequence LinkSigPacked::encodeUnknot() {
+ByteSequence LinkSigBinary::encodeUnknot() {
     PackedSigEncoder enc;
     enc.encodeSize(0);
     return std::move(enc).bytes();
 }
 
-size_t LinkSigPacked::length(const LinkSigData& data) {
+size_t LinkSigBinary::length(const LinkSigData& data) {
     size_t ans;
     if (data.size() < 0x10) {
         // The integer width is 0, and does not need to be explicitly encoded.
@@ -458,8 +458,8 @@ size_t LinkSigPacked::length(const LinkSigData& data) {
     return ans + (data.size() + 1) / 2;
 }
 
-ByteSequence LinkSigPacked::encode(const LinkSigData& data) {
-    // As with LinkSigCompact, we write:
+ByteSequence LinkSigBinary::encode(const LinkSigData& data) {
+    // As with LinkSigGen2, we write:
     // - the integer n;
     // - 4n packed bits:
     //   * 2n "first time seeing this crossing?" bits (in traversal order),
@@ -523,13 +523,13 @@ ByteSequence LinkSigPacked::encode(const LinkSigData& data) {
     return std::move(enc).bytes();
 }
 
-std::string LinkSigPacked::asCompact(const ByteSequence& sig) {
+std::string LinkSigBinary::asString(const ByteSequence& sig) {
     // Get the empty link out of the way first.
     if (sig.empty())
-        return LinkSigCompact::encodeEmpty();
+        return LinkSigGen2::encodeEmpty();
 
     try {
-        // Both LinkSigPacked and LinkSigCompact encode exactly the same
+        // Both LinkSigBinary and LinkSigGen2 encode exactly the same
         // combinatorial information; it is just a matter of converting between
         // printable (6-bit) and byte-packed (8-bit) formats.
         PackedSigDecoder dec(sig.begin(), sig.end());
@@ -548,8 +548,8 @@ std::string LinkSigPacked::asCompact(const ByteSequence& sig) {
         return std::move(enc).str();
     } catch (const InvalidInput&) {
         // Any exception caught here was thrown by PackedSigDecoder.
-        throw InvalidArgument(
-            "asCompact(): incomplete or invalid byte sequence encoding");
+        throw InvalidArgument("LinkSigBinary::asString(): "
+            "incomplete or invalid byte sequence encoding");
     }
 }
 
@@ -877,9 +877,9 @@ Link Link::fromSig(const ByteSequence& sig) {
     }
 }
 
-template std::string Link::sig<LinkSigPrintable>(bool, bool, bool) const;
-template std::string Link::sig<LinkSigCompact>(bool, bool, bool) const;
-template ByteSequence Link::sig<LinkSigPacked>(bool, bool, bool) const;
+template std::string Link::sig<LinkSigGen1>(bool, bool, bool) const;
+template std::string Link::sig<LinkSigGen2>(bool, bool, bool) const;
+template ByteSequence Link::sig<LinkSigBinary>(bool, bool, bool) const;
 
 } // namespace regina
 

@@ -36,10 +36,10 @@
 
 using regina::BoolSet;
 using regina::Link;
-using regina::LinkSigCompact;
+using regina::LinkSigBinary;
 using regina::LinkSigData;
-using regina::LinkSigPacked;
-using regina::LinkSigPrintable;
+using regina::LinkSigGen1;
+using regina::LinkSigGen2;
 
 void addLinkSig(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LinkSigData)
@@ -76,41 +76,44 @@ void addLinkSig(pybind11::module_& m) {
     regina::python::add_cmp_operators(t, rdoc_inner::__cmp);
 
     RDOC_SCOPE_INNER_END
-    RDOC_SCOPE_SWITCH(LinkSigPrintable)
+    RDOC_SCOPE_SWITCH(LinkSigGen1)
 
-    auto c = pybind11::class_<LinkSigPrintable>(m, "LinkSigPrintable",
+    auto c = pybind11::class_<LinkSigGen1>(m, "LinkSigGen1",
             rdoc_scope)
-        .def_static("encodeEmpty", &LinkSigPrintable::encodeEmpty,
+        .def_readonly_static("generation", &LinkSigGen1::generation)
+        .def_static("encodeEmpty", &LinkSigGen1::encodeEmpty,
             rdoc::encodeEmpty)
-        .def_static("encodeUnknot", &LinkSigPrintable::encodeUnknot,
+        .def_static("encodeUnknot", &LinkSigGen1::encodeUnknot,
             rdoc::encodeUnknot)
-        .def_static("encode", &LinkSigPrintable::encode, rdoc::encode)
-        .def_static("length", &LinkSigPrintable::length, rdoc::length)
+        .def_static("encode", &LinkSigGen1::encode, rdoc::encode)
+        .def_static("length", &LinkSigGen1::length, rdoc::length)
         ;
     regina::python::no_eq_static(c);
 
-    RDOC_SCOPE_SWITCH(LinkSigCompact)
+    RDOC_SCOPE_SWITCH(LinkSigGen2)
 
-    auto c = pybind11::class_<LinkSigCompact>(m, "LinkSigCompact", rdoc_scope)
-        .def_static("encodeEmpty", &LinkSigCompact::encodeEmpty,
+    auto c = pybind11::class_<LinkSigGen2>(m, "LinkSigGen2", rdoc_scope)
+        .def_readonly_static("generation", &LinkSigGen2::generation)
+        .def_static("encodeEmpty", &LinkSigGen2::encodeEmpty,
             rdoc::encodeEmpty)
-        .def_static("encodeUnknot", &LinkSigCompact::encodeUnknot,
+        .def_static("encodeUnknot", &LinkSigGen2::encodeUnknot,
             rdoc::encodeUnknot)
-        .def_static("encode", &LinkSigCompact::encode, rdoc::encode)
-        .def_static("length", &LinkSigCompact::length, rdoc::length)
+        .def_static("encode", &LinkSigGen2::encode, rdoc::encode)
+        .def_static("length", &LinkSigGen2::length, rdoc::length)
         ;
     regina::python::no_eq_static(c);
 
-    RDOC_SCOPE_SWITCH(LinkSigPacked)
+    RDOC_SCOPE_SWITCH(LinkSigBinary)
 
-    auto c = pybind11::class_<LinkSigPacked>(m, "LinkSigPacked", rdoc_scope)
-        .def_static("encodeEmpty", &LinkSigPacked::encodeEmpty,
+    auto c = pybind11::class_<LinkSigBinary>(m, "LinkSigBinary", rdoc_scope)
+        .def_readonly_static("generation", &LinkSigBinary::generation)
+        .def_static("encodeEmpty", &LinkSigBinary::encodeEmpty,
             rdoc::encodeEmpty)
-        .def_static("encodeUnknot", &LinkSigPacked::encodeUnknot,
+        .def_static("encodeUnknot", &LinkSigBinary::encodeUnknot,
             rdoc::encodeUnknot)
-        .def_static("encode", &LinkSigPacked::encode, rdoc::encode)
-        .def_static("length", &LinkSigPacked::length, rdoc::length)
-        .def_static("asCompact", &LinkSigPacked::asCompact, rdoc::asCompact)
+        .def_static("encode", &LinkSigBinary::encode, rdoc::encode)
+        .def_static("length", &LinkSigBinary::length, rdoc::length)
+        .def_static("asString", &LinkSigBinary::asString, rdoc::asString)
         ;
     regina::python::no_eq_static(c);
 

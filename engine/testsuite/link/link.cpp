@@ -43,9 +43,9 @@ using regina::FailedPrecondition;
 using regina::GroupPresentation;
 using regina::InvalidArgument;
 using regina::Link;
-using regina::LinkSigCompact;
-using regina::LinkSigPacked;
-using regina::LinkSigPrintable;
+using regina::LinkSigBinary;
+using regina::LinkSigGen1;
+using regina::LinkSigGen2;
 using regina::Triangulation;
 using regina::StrandRef;
 
@@ -3639,8 +3639,8 @@ static void verifyGraft(const Link& link, const char* name) {
             Link undo(mod, false);
             undo.graft(undo.strand(i), undo.strand(j));
             EXPECT_TRUE(isConsistent(undo));
-            EXPECT_EQ(undo.sig(false, false, false),
-                link.sig(false, false, false));;
+            EXPECT_EQ(undo.neoSig(false, false, false),
+                link.neoSig(false, false, false));;
         }
     }
 }
@@ -3793,13 +3793,13 @@ static void verifySig(const Link& link, const char* name) {
 static void verifySigAllEncodings(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
-    verifySig<LinkSigPrintable>(link, name);
-    verifySig<LinkSigCompact>(link, name);
-    verifySig<LinkSigPacked>(link, name);
+    verifySig<LinkSigGen1>(link, name);
+    verifySig<LinkSigGen2>(link, name);
+    verifySig<LinkSigBinary>(link, name);
 
     // Also verify the signature re-encoding process.
-    EXPECT_EQ(LinkSigPacked::asCompact(link.sig<LinkSigPacked>()),
-        link.sig<LinkSigCompact>());
+    EXPECT_EQ(LinkSigBinary::asString(link.neoSig<LinkSigBinary>()),
+        link.neoSig());
 }
 
 TEST_F(LinkTest, sig) {
@@ -3860,80 +3860,80 @@ TEST_F(LinkTest, sig) {
         verifySigAllEncodings(link, "Torus(5, 64)");
     }
 
-    // Unless specified otherwise, all _compact_ signatures below were computed
-    // using Regina 8.0.
+    // Unless specified otherwise, all _second-generation_ signatures below
+    // were computed using Regina 8.0.
 
     // Test signatures that respect / ignore reflection:
-    EXPECT_EQ(trefoilRight.link.sig(true, true),  "dabcabcv-");
-    EXPECT_EQ(trefoilRight.link.sig(false, true), "dabcabcv-");
-    EXPECT_EQ(trefoilLeft.link.sig(true, true),   "dabcabcv-");
-    EXPECT_EQ(trefoilLeft.link.sig(false, true) , "dabcabcva");
+    EXPECT_EQ(trefoilRight.link.knotSig(true, true),  "dabcabcv-");
+    EXPECT_EQ(trefoilRight.link.knotSig(false, true), "dabcabcv-");
+    EXPECT_EQ(trefoilLeft.link.knotSig(true, true),   "dabcabcv-");
+    EXPECT_EQ(trefoilLeft.link.knotSig(false, true) , "dabcabcva");
 
-    EXPECT_EQ(trefoilRight.link.sig<LinkSigCompact>(true, true),  "dh9abc");
-    EXPECT_EQ(trefoilRight.link.sig<LinkSigCompact>(false, true), "dh9abc");
-    EXPECT_EQ(trefoilLeft.link.sig<LinkSigCompact>(true, true),   "dh9abc");
-    EXPECT_EQ(trefoilLeft.link.sig<LinkSigCompact>(false, true) , "dhfabc");
+    EXPECT_EQ(trefoilRight.link.neoSig(true, true),  "dh9abc");
+    EXPECT_EQ(trefoilRight.link.neoSig(false, true), "dh9abc");
+    EXPECT_EQ(trefoilLeft.link.neoSig(true, true),   "dh9abc");
+    EXPECT_EQ(trefoilLeft.link.neoSig(false, true) , "dhfabc");
 
     // Test that reflection applies to the entire diagram only, not individual
     // connected components:
     {
         Link l = ExampleLink::trefoilRight();
         l.insertLink(ExampleLink::trefoilRight());
-        EXPECT_EQ(l.sig(true, true), "dabcabcv-dabcabcv-");
-        EXPECT_EQ(l.sig(false, true), "dabcabcv-dabcabcv-");
-        EXPECT_EQ(l.sig<LinkSigCompact>(true, true), "dh9abcdh9abc");
-        EXPECT_EQ(l.sig<LinkSigCompact>(false, true), "dh9abcdh9abc");
+        EXPECT_EQ(l.knotSig(true, true), "dabcabcv-dabcabcv-");
+        EXPECT_EQ(l.knotSig(false, true), "dabcabcv-dabcabcv-");
+        EXPECT_EQ(l.neoSig(true, true), "dh9abcdh9abc");
+        EXPECT_EQ(l.neoSig(false, true), "dh9abcdh9abc");
     }
     {
         Link l = ExampleLink::trefoilRight();
         l.insertLink(ExampleLink::trefoilLeft());
-        EXPECT_EQ(l.sig(true, true), "dabcabcv-dabcabcva");
-        EXPECT_EQ(l.sig(false, true), "dabcabcv-dabcabcva");
-        EXPECT_EQ(l.sig<LinkSigCompact>(true, true), "dh9abcdhfabc");
-        EXPECT_EQ(l.sig<LinkSigCompact>(false, true), "dh9abcdhfabc");
+        EXPECT_EQ(l.knotSig(true, true), "dabcabcv-dabcabcva");
+        EXPECT_EQ(l.knotSig(false, true), "dabcabcv-dabcabcva");
+        EXPECT_EQ(l.neoSig(true, true), "dh9abcdhfabc");
+        EXPECT_EQ(l.neoSig(false, true), "dh9abcdhfabc");
     }
     {
         Link l = ExampleLink::trefoilLeft();
         l.insertLink(ExampleLink::trefoilRight());
-        EXPECT_EQ(l.sig(true, true), "dabcabcv-dabcabcva");
-        EXPECT_EQ(l.sig(false, true), "dabcabcv-dabcabcva");
-        EXPECT_EQ(l.sig<LinkSigCompact>(true, true), "dh9abcdhfabc");
-        EXPECT_EQ(l.sig<LinkSigCompact>(false, true), "dh9abcdhfabc");
+        EXPECT_EQ(l.knotSig(true, true), "dabcabcv-dabcabcva");
+        EXPECT_EQ(l.knotSig(false, true), "dabcabcv-dabcabcva");
+        EXPECT_EQ(l.neoSig(true, true), "dh9abcdhfabc");
+        EXPECT_EQ(l.neoSig(false, true), "dh9abcdhfabc");
     }
     {
         Link l = ExampleLink::trefoilLeft();
         l.insertLink(ExampleLink::trefoilLeft());
-        EXPECT_EQ(l.sig(true, true), "dabcabcv-dabcabcv-");
-        EXPECT_EQ(l.sig(false, true), "dabcabcvadabcabcva");
-        EXPECT_EQ(l.sig<LinkSigCompact>(true, true), "dh9abcdh9abc");
-        EXPECT_EQ(l.sig<LinkSigCompact>(false, true), "dhfabcdhfabc");
+        EXPECT_EQ(l.knotSig(true, true), "dabcabcv-dabcabcv-");
+        EXPECT_EQ(l.knotSig(false, true), "dabcabcvadabcabcva");
+        EXPECT_EQ(l.neoSig(true, true), "dh9abcdh9abc");
+        EXPECT_EQ(l.neoSig(false, true), "dhfabcdhfabc");
     }
 
     // A link where all four reflection/reversal options give different sigs:
     Link asymmetric = Link::fromOrientedGauss(
         "-<6 +>3 -<5 +>2 -<4 -<1 +>1 +>5 -<3 +>6 -<2 +>4");
-    EXPECT_EQ(asymmetric.sig(true, true),   "gaabcdefbcfedPQ--");
-    EXPECT_EQ(asymmetric.sig(true, false),  "gaabcdefdcbefPQ--");
-    EXPECT_EQ(asymmetric.sig(false, true),  "gaabcdefbcfedPQaa");
-    EXPECT_EQ(asymmetric.sig(false, false), "gaabcdefdcbefPQaa");
-    EXPECT_EQ(asymmetric.sig<LinkSigCompact>(true, true),   "g9bv-abcfed");
-    EXPECT_EQ(asymmetric.sig<LinkSigCompact>(true, false),  "g9bv-adcbef");
-    EXPECT_EQ(asymmetric.sig<LinkSigCompact>(false, true),  "g9bvaabcfed");
-    EXPECT_EQ(asymmetric.sig<LinkSigCompact>(false, false), "g9bvaadcbef");
+    EXPECT_EQ(asymmetric.knotSig(true, true),   "gaabcdefbcfedPQ--");
+    EXPECT_EQ(asymmetric.knotSig(true, false),  "gaabcdefdcbefPQ--");
+    EXPECT_EQ(asymmetric.knotSig(false, true),  "gaabcdefbcfedPQaa");
+    EXPECT_EQ(asymmetric.knotSig(false, false), "gaabcdefdcbefPQaa");
+    EXPECT_EQ(asymmetric.neoSig(true, true),   "g9bv-abcfed");
+    EXPECT_EQ(asymmetric.neoSig(true, false),  "g9bv-adcbef");
+    EXPECT_EQ(asymmetric.neoSig(false, true),  "g9bvaabcfed");
+    EXPECT_EQ(asymmetric.neoSig(false, false), "g9bvaadcbef");
 
     // For the Hopf link, reversing one component is the same as reflection.
     {
         Link hopfNegative = ExampleLink::hopf(); // positive crossings
         hopfNegative.reflect();
 
-        EXPECT_EQ(hopfNegative.sig(true, true), "cabcabjp");
-        EXPECT_EQ(hopfNegative.sig(true, false), "cabcabjp");
-        EXPECT_EQ(hopfNegative.sig(false, true), "cabcabjp");
-        EXPECT_EQ(hopfNegative.sig(false, false), "cabcabja");
-        EXPECT_EQ(hopfNegative.sig<LinkSigCompact>(true, true), "ctdcb");
-        EXPECT_EQ(hopfNegative.sig<LinkSigCompact>(true, false), "ctdcb");
-        EXPECT_EQ(hopfNegative.sig<LinkSigCompact>(false, true), "ctdcb");
-        EXPECT_EQ(hopfNegative.sig<LinkSigCompact>(false, false), "ctacb");
+        EXPECT_EQ(hopfNegative.knotSig(true, true), "cabcabjp");
+        EXPECT_EQ(hopfNegative.knotSig(true, false), "cabcabjp");
+        EXPECT_EQ(hopfNegative.knotSig(false, true), "cabcabjp");
+        EXPECT_EQ(hopfNegative.knotSig(false, false), "cabcabja");
+        EXPECT_EQ(hopfNegative.neoSig(true, true), "ctdcb");
+        EXPECT_EQ(hopfNegative.neoSig(true, false), "ctdcb");
+        EXPECT_EQ(hopfNegative.neoSig(false, true), "ctdcb");
+        EXPECT_EQ(hopfNegative.neoSig(false, false), "ctacb");
     }
 
     // The virtual trefoil is the same under rotation but not reflection.
@@ -3946,41 +3946,41 @@ TEST_F(LinkTest, sig) {
         Link both = rot;
         both.reflect();
 
-        EXPECT_EQ(link.sig(true, true, true), "cababdp");
-        EXPECT_EQ(rot.sig(true, true, true), "cababdp");
-        EXPECT_EQ(ref.sig(true, true, true), "cababdp");
-        EXPECT_EQ(both.sig(true, true, true), "cababdp");
-        EXPECT_EQ(link.sig<LinkSigCompact>(true, true, true), "cZdab");
-        EXPECT_EQ(rot.sig<LinkSigCompact>(true, true, true), "cZdab");
-        EXPECT_EQ(ref.sig<LinkSigCompact>(true, true, true), "cZdab");
-        EXPECT_EQ(both.sig<LinkSigCompact>(true, true, true), "cZdab");
+        EXPECT_EQ(link.knotSig(true, true, true), "cababdp");
+        EXPECT_EQ(rot.knotSig(true, true, true), "cababdp");
+        EXPECT_EQ(ref.knotSig(true, true, true), "cababdp");
+        EXPECT_EQ(both.knotSig(true, true, true), "cababdp");
+        EXPECT_EQ(link.neoSig(true, true, true), "cZdab");
+        EXPECT_EQ(rot.neoSig(true, true, true), "cZdab");
+        EXPECT_EQ(ref.neoSig(true, true, true), "cZdab");
+        EXPECT_EQ(both.neoSig(true, true, true), "cZdab");
 
-        EXPECT_EQ(link.sig(true, true, false), "cababdp");
-        EXPECT_EQ(rot.sig(true, true, false), "cababdp");
-        EXPECT_EQ(ref.sig(true, true, false), "cababdp");
-        EXPECT_EQ(both.sig(true, true, false), "cababdp");
-        EXPECT_EQ(link.sig<LinkSigCompact>(true, true, false), "cZdab");
-        EXPECT_EQ(rot.sig<LinkSigCompact>(true, true, false), "cZdab");
-        EXPECT_EQ(ref.sig<LinkSigCompact>(true, true, false), "cZdab");
-        EXPECT_EQ(both.sig<LinkSigCompact>(true, true, false), "cZdab");
+        EXPECT_EQ(link.knotSig(true, true, false), "cababdp");
+        EXPECT_EQ(rot.knotSig(true, true, false), "cababdp");
+        EXPECT_EQ(ref.knotSig(true, true, false), "cababdp");
+        EXPECT_EQ(both.knotSig(true, true, false), "cababdp");
+        EXPECT_EQ(link.neoSig(true, true, false), "cZdab");
+        EXPECT_EQ(rot.neoSig(true, true, false), "cZdab");
+        EXPECT_EQ(ref.neoSig(true, true, false), "cZdab");
+        EXPECT_EQ(both.neoSig(true, true, false), "cZdab");
 
-        EXPECT_EQ(link.sig(false, true, true), "cababdp");
-        EXPECT_EQ(rot.sig(false, true, true), "cababdp");
-        EXPECT_EQ(ref.sig(false, true, true), "cababda"); // different
-        EXPECT_EQ(both.sig(false, true, true), "cababda"); // different
-        EXPECT_EQ(link.sig<LinkSigCompact>(false, true, true), "cZdab");
-        EXPECT_EQ(rot.sig<LinkSigCompact>(false, true, true), "cZdab");
-        EXPECT_EQ(ref.sig<LinkSigCompact>(false, true, true), "cZaab"); // ≠
-        EXPECT_EQ(both.sig<LinkSigCompact>(false, true, true), "cZaab"); // ≠
+        EXPECT_EQ(link.knotSig(false, true, true), "cababdp");
+        EXPECT_EQ(rot.knotSig(false, true, true), "cababdp");
+        EXPECT_EQ(ref.knotSig(false, true, true), "cababda"); // ≠
+        EXPECT_EQ(both.knotSig(false, true, true), "cababda"); // ≠
+        EXPECT_EQ(link.neoSig(false, true, true), "cZdab");
+        EXPECT_EQ(rot.neoSig(false, true, true), "cZdab");
+        EXPECT_EQ(ref.neoSig(false, true, true), "cZaab"); // ≠
+        EXPECT_EQ(both.neoSig(false, true, true), "cZaab"); // ≠
 
-        EXPECT_EQ(link.sig(false, true, false), "cababdp");
-        EXPECT_EQ(rot.sig(false, true, false), "cababdp");
-        EXPECT_EQ(ref.sig(false, true, false), "cababda"); // different
-        EXPECT_EQ(both.sig(false, true, false), "cababda"); // different
-        EXPECT_EQ(link.sig<LinkSigCompact>(false, true, false), "cZdab");
-        EXPECT_EQ(rot.sig<LinkSigCompact>(false, true, false), "cZdab");
-        EXPECT_EQ(ref.sig<LinkSigCompact>(false, true, false), "cZaab"); // ≠
-        EXPECT_EQ(both.sig<LinkSigCompact>(false, true, false), "cZaab"); // ≠
+        EXPECT_EQ(link.knotSig(false, true, false), "cababdp");
+        EXPECT_EQ(rot.knotSig(false, true, false), "cababdp");
+        EXPECT_EQ(ref.knotSig(false, true, false), "cababda"); // ≠
+        EXPECT_EQ(both.knotSig(false, true, false), "cababda"); // ≠
+        EXPECT_EQ(link.neoSig(false, true, false), "cZdab");
+        EXPECT_EQ(rot.neoSig(false, true, false), "cZdab");
+        EXPECT_EQ(ref.neoSig(false, true, false), "cZaab"); // ≠
+        EXPECT_EQ(both.neoSig(false, true, false), "cZaab"); // ≠
     }
 
     // The GPV virtual knot gives four different sigs under all four
@@ -3994,42 +3994,42 @@ TEST_F(LinkTest, sig) {
         Link both = rot;
         both.reflect();
 
-        EXPECT_EQ(link.sig(true, true, true), "eabacdcdbZa-d");
-        EXPECT_EQ(rot.sig(true, true, true), "eabacdcdbZa-d");
-        EXPECT_EQ(ref.sig(true, true, true), "eabacdcdbZa-d");
-        EXPECT_EQ(both.sig(true, true, true), "eabacdcdbZa-d");
-        EXPECT_EQ(link.sig<LinkSigCompact>(true, true, true), "eBSpacdb");
-        EXPECT_EQ(rot.sig<LinkSigCompact>(true, true, true), "eBSpacdb");
-        EXPECT_EQ(ref.sig<LinkSigCompact>(true, true, true), "eBSpacdb");
-        EXPECT_EQ(both.sig<LinkSigCompact>(true, true, true), "eBSpacdb");
+        EXPECT_EQ(link.knotSig(true, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(rot.knotSig(true, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(ref.knotSig(true, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(both.knotSig(true, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(link.neoSig(true, true, true), "eBSpacdb");
+        EXPECT_EQ(rot.neoSig(true, true, true), "eBSpacdb");
+        EXPECT_EQ(ref.neoSig(true, true, true), "eBSpacdb");
+        EXPECT_EQ(both.neoSig(true, true, true), "eBSpacdb");
 
-        EXPECT_EQ(link.sig(true, true, false), "eabcbcdadZa-d"); // different
-        EXPECT_EQ(rot.sig(true, true, false), "eabacdcdbZa-d");
-        EXPECT_EQ(ref.sig(true, true, false), "eabcbcdadZa-d"); // different
-        EXPECT_EQ(both.sig(true, true, false), "eabacdcdbZa-d");
-        EXPECT_EQ(link.sig<LinkSigCompact>(true, true, false), "eNSpbcad"); // ≠
-        EXPECT_EQ(rot.sig<LinkSigCompact>(true, true, false), "eBSpacdb");
-        EXPECT_EQ(ref.sig<LinkSigCompact>(true, true, false), "eNSpbcad"); // ≠
-        EXPECT_EQ(both.sig<LinkSigCompact>(true, true, false), "eBSpacdb");
+        EXPECT_EQ(link.knotSig(true, true, false), "eabcbcdadZa-d"); // ≠
+        EXPECT_EQ(rot.knotSig(true, true, false), "eabacdcdbZa-d");
+        EXPECT_EQ(ref.knotSig(true, true, false), "eabcbcdadZa-d"); // ≠
+        EXPECT_EQ(both.knotSig(true, true, false), "eabacdcdbZa-d");
+        EXPECT_EQ(link.neoSig(true, true, false), "eNSpbcad"); // ≠
+        EXPECT_EQ(rot.neoSig(true, true, false), "eBSpacdb");
+        EXPECT_EQ(ref.neoSig(true, true, false), "eNSpbcad"); // ≠
+        EXPECT_EQ(both.neoSig(true, true, false), "eBSpacdb");
 
-        EXPECT_EQ(link.sig(false, true, true), "eabacdcdbZaaa"); // different
-        EXPECT_EQ(rot.sig(false, true, true), "eabacdcdbZaaa"); // different
-        EXPECT_EQ(ref.sig(false, true, true), "eabacdcdbZa-d");
-        EXPECT_EQ(both.sig(false, true, true), "eabacdcdbZa-d");
-        EXPECT_EQ(link.sig<LinkSigCompact>(false, true, true), "eBSaacdb"); // ≠
-        EXPECT_EQ(rot.sig<LinkSigCompact>(false, true, true), "eBSaacdb"); // ≠
-        EXPECT_EQ(ref.sig<LinkSigCompact>(false, true, true), "eBSpacdb");
-        EXPECT_EQ(both.sig<LinkSigCompact>(false, true, true), "eBSpacdb");
+        EXPECT_EQ(link.knotSig(false, true, true), "eabacdcdbZaaa"); // ≠
+        EXPECT_EQ(rot.knotSig(false, true, true), "eabacdcdbZaaa"); // ≠
+        EXPECT_EQ(ref.knotSig(false, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(both.knotSig(false, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(link.neoSig(false, true, true), "eBSaacdb"); // ≠
+        EXPECT_EQ(rot.neoSig(false, true, true), "eBSaacdb"); // ≠
+        EXPECT_EQ(ref.neoSig(false, true, true), "eBSpacdb");
+        EXPECT_EQ(both.neoSig(false, true, true), "eBSpacdb");
 
         // Four different signatures here:
-        EXPECT_EQ(link.sig(false, true, false), "eabcbcdadZaaa");
-        EXPECT_EQ(rot.sig(false, true, false), "eabacdcdbZaaa");
-        EXPECT_EQ(ref.sig(false, true, false), "eabcbcdadZa-d");
-        EXPECT_EQ(both.sig(false, true, false), "eabacdcdbZa-d");
-        EXPECT_EQ(link.sig<LinkSigCompact>(false, true, false), "eNSabcad");
-        EXPECT_EQ(rot.sig<LinkSigCompact>(false, true, false), "eBSaacdb");
-        EXPECT_EQ(ref.sig<LinkSigCompact>(false, true, false), "eNSpbcad");
-        EXPECT_EQ(both.sig<LinkSigCompact>(false, true, false), "eBSpacdb");
+        EXPECT_EQ(link.knotSig(false, true, false), "eabcbcdadZaaa");
+        EXPECT_EQ(rot.knotSig(false, true, false), "eabacdcdbZaaa");
+        EXPECT_EQ(ref.knotSig(false, true, false), "eabcbcdadZa-d");
+        EXPECT_EQ(both.knotSig(false, true, false), "eabacdcdbZa-d");
+        EXPECT_EQ(link.neoSig(false, true, false), "eNSabcad");
+        EXPECT_EQ(rot.neoSig(false, true, false), "eBSaacdb");
+        EXPECT_EQ(ref.neoSig(false, true, false), "eNSpbcad");
+        EXPECT_EQ(both.neoSig(false, true, false), "eBSpacdb");
     }
 
     // The Kishino knot is symmetric under both reflection and rotation, if we
@@ -4044,153 +4044,153 @@ TEST_F(LinkTest, sig) {
         Link both = rot;
         both.reflect();
 
-        EXPECT_EQ(link.sig(true, true, true), "eabacdcdblbTa");
-        EXPECT_EQ(rot.sig(true, true, true), "eabacdcdblbTa");
-        EXPECT_EQ(ref.sig(true, true, true), "eabacdcdblbTa");
-        EXPECT_EQ(both.sig(true, true, true), "eabacdcdblbTa");
-        EXPECT_EQ(link.sig<LinkSigCompact>(true, true, true), "eBCfacdb");
-        EXPECT_EQ(rot.sig<LinkSigCompact>(true, true, true), "eBCfacdb");
-        EXPECT_EQ(ref.sig<LinkSigCompact>(true, true, true), "eBCfacdb");
-        EXPECT_EQ(both.sig<LinkSigCompact>(true, true, true), "eBCfacdb");
+        EXPECT_EQ(link.knotSig(true, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(rot.knotSig(true, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(ref.knotSig(true, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(both.knotSig(true, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(link.neoSig(true, true, true), "eBCfacdb");
+        EXPECT_EQ(rot.neoSig(true, true, true), "eBCfacdb");
+        EXPECT_EQ(ref.neoSig(true, true, true), "eBCfacdb");
+        EXPECT_EQ(both.neoSig(true, true, true), "eBCfacdb");
 
-        EXPECT_EQ(link.sig(true, true, false), "eabacdcdblbTa");
-        EXPECT_EQ(rot.sig(true, true, false), "eabacdcdblbTa");
-        EXPECT_EQ(ref.sig(true, true, false), "eabacdcdblbTa");
-        EXPECT_EQ(both.sig(true, true, false), "eabacdcdblbTa");
-        EXPECT_EQ(link.sig<LinkSigCompact>(true, true, false), "eBCfacdb");
-        EXPECT_EQ(rot.sig<LinkSigCompact>(true, true, false), "eBCfacdb");
-        EXPECT_EQ(ref.sig<LinkSigCompact>(true, true, false), "eBCfacdb");
-        EXPECT_EQ(both.sig<LinkSigCompact>(true, true, false), "eBCfacdb");
+        EXPECT_EQ(link.knotSig(true, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(rot.knotSig(true, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(ref.knotSig(true, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(both.knotSig(true, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(link.neoSig(true, true, false), "eBCfacdb");
+        EXPECT_EQ(rot.neoSig(true, true, false), "eBCfacdb");
+        EXPECT_EQ(ref.neoSig(true, true, false), "eBCfacdb");
+        EXPECT_EQ(both.neoSig(true, true, false), "eBCfacdb");
 
-        EXPECT_EQ(link.sig(false, true, true), "eabacdcdblbTa");
-        EXPECT_EQ(rot.sig(false, true, true), "eabacdcdblbTa");
-        EXPECT_EQ(ref.sig(false, true, true), "eabacdcdblbTa");
-        EXPECT_EQ(both.sig(false, true, true), "eabacdcdblbTa");
-        EXPECT_EQ(link.sig<LinkSigCompact>(false, true, true), "eBCfacdb");
-        EXPECT_EQ(rot.sig<LinkSigCompact>(false, true, true), "eBCfacdb");
-        EXPECT_EQ(ref.sig<LinkSigCompact>(false, true, true), "eBCfacdb");
-        EXPECT_EQ(both.sig<LinkSigCompact>(false, true, true), "eBCfacdb");
+        EXPECT_EQ(link.knotSig(false, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(rot.knotSig(false, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(ref.knotSig(false, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(both.knotSig(false, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(link.neoSig(false, true, true), "eBCfacdb");
+        EXPECT_EQ(rot.neoSig(false, true, true), "eBCfacdb");
+        EXPECT_EQ(ref.neoSig(false, true, true), "eBCfacdb");
+        EXPECT_EQ(both.neoSig(false, true, true), "eBCfacdb");
 
-        EXPECT_EQ(link.sig(false, true, false), "eabacdcdblbTa");
-        EXPECT_EQ(rot.sig(false, true, false), "eabacdcdblbTa");
-        EXPECT_EQ(ref.sig(false, true, false), "eabacdcdblbTa");
-        EXPECT_EQ(both.sig(false, true, false), "eabacdcdblbTa");
-        EXPECT_EQ(link.sig<LinkSigCompact>(false, true, false), "eBCfacdb");
-        EXPECT_EQ(rot.sig<LinkSigCompact>(false, true, false), "eBCfacdb");
-        EXPECT_EQ(ref.sig<LinkSigCompact>(false, true, false), "eBCfacdb");
-        EXPECT_EQ(both.sig<LinkSigCompact>(false, true, false), "eBCfacdb");
+        EXPECT_EQ(link.knotSig(false, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(rot.knotSig(false, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(ref.knotSig(false, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(both.knotSig(false, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(link.neoSig(false, true, false), "eBCfacdb");
+        EXPECT_EQ(rot.neoSig(false, true, false), "eBCfacdb");
+        EXPECT_EQ(ref.neoSig(false, true, false), "eBCfacdb");
+        EXPECT_EQ(both.neoSig(false, true, false), "eBCfacdb");
 
-        EXPECT_EQ(link.sig(false, false, false), "eabcbcdadTalb"); // different
-        EXPECT_EQ(rot.sig(false, false, false), "eabacdcdblbTa");
-        EXPECT_EQ(ref.sig(false, false, false), "eabacdcdblbTa");
-        EXPECT_EQ(both.sig(false, false, false), "eabcbcdadTalb"); // different
-        EXPECT_EQ(link.sig<LinkSigCompact>(false, false, false), "eN0dbcad");
-        EXPECT_EQ(rot.sig<LinkSigCompact>(false, false, false), "eBCfacdb");
-        EXPECT_EQ(ref.sig<LinkSigCompact>(false, false, false), "eBCfacdb");
-        EXPECT_EQ(both.sig<LinkSigCompact>(false, false, false), "eN0dbcad");
+        EXPECT_EQ(link.knotSig(false, false, false), "eabcbcdadTalb"); // ≠
+        EXPECT_EQ(rot.knotSig(false, false, false), "eabacdcdblbTa");
+        EXPECT_EQ(ref.knotSig(false, false, false), "eabacdcdblbTa");
+        EXPECT_EQ(both.knotSig(false, false, false), "eabcbcdadTalb"); // ≠
+        EXPECT_EQ(link.neoSig(false, false, false), "eN0dbcad");
+        EXPECT_EQ(rot.neoSig(false, false, false), "eBCfacdb");
+        EXPECT_EQ(ref.neoSig(false, false, false), "eBCfacdb");
+        EXPECT_EQ(both.neoSig(false, false, false), "eN0dbcad");
     }
 
-    // Verify some standard signatures against actual hard-coded strings, to
-    // ensure that the single-component knot signature format from Regina ≤ 7.3
-    // matches the more general link signature format in Regina ≥ 7.4.
+    // Verify some first-generation signatures against actual hard-coded
+    // strings, to ensure that the single-component knot signature format from
+    // Regina ≤ 7.3 matches the more general link signature format in
+    // Regina ≥ 7.4.
     //
-    // The following knot signatures were all computed using Regina 7.3.
-    EXPECT_EQ(unknot0.link.sig(), "a");
-    EXPECT_EQ(unknot1.link.sig(), "baabd");
-    EXPECT_EQ(unknot3.link.sig(), "dabcabchT");
-    EXPECT_EQ(unknotMonster.link.sig(), "kabcdefghijbefgdcjahixfvbdwGd");
-    EXPECT_EQ(unknotGordian.link.sig(), "-cncaabacadaeafagahaiajakalamanaoapaqarasatauavawaxayazaAaBaCaDaEaFavaGataHaIaJapaoaKaLalaMaNaOahaPaQaeaRaSabaTaUaVaWaXajaNaYaZafaQa0a1a2aUa3auaGa4a5a6aza7aBa8a9a+a-aabbbcbdbebfbgbhbibjbkblbmbnbobpbqbrbdbsbtbubvbwbxbybzbAbBb+aEaCbDbxaEb4aFbGbqaJaHbIbJbLamaobKbLbMbNbObibPbxbQbRbSbTb-aSacaUb0aVbWbVaXbHaYbraGbZb0bmb1b2b3bMbfb4b5b6bub7bRbzb8b9bAbSb+b-bsb5bacgbNbbc2b1blbccZbnaKaJbdcXaecWbfc1aUbdaRaabgc+b7bvbhcPbjbicbc3bLbjcpbMakadcIbHbIaYbsaFbkc6ayaDbCbDalc8a9b8bybQbwbhc6btb-bcbmcqbjcKbnb0bcckbicObhbac4bebrbmcbbgcTbBb9alcCa7aAakc5aEbwaFaaaTa2afcVbPagaZaYaOaiaecWaXb3aVB3NNT3NVoYNthlfdnryeRZac44044idYmmqb5MT6MAwhJx3YEkl-T9wMNu-F+rMu86EgBAxURTr1DzB6E60Z-7pYJKn2T");
-    EXPECT_EQ(trefoilLeft.link.sig(), "dabcabcv-");
-    EXPECT_EQ(trefoilRight.link.sig(), "dabcabcv-");
-    EXPECT_EQ(trefoil_r1x2.link.sig(), "faabcdeebcd1eFo");
-    EXPECT_EQ(trefoil_r1x6.link.sig(), "jaabccdeefggbhhdiifnwo-KN");
-    EXPECT_EQ(figureEight.link.sig(), "eabcdbadcvbZa");
-    EXPECT_EQ(figureEight_r1x2.link.sig(), "gaabcdbeffdcevtBy");
-    EXPECT_EQ(conway.link.sig(), "labcdbefcdghiefjkgaijkhRswfFoWa");
-    EXPECT_EQ(kinoshitaTerasaka.link.sig(), "labcdefgahefhijbkdijckgBvQcndZl");
-    EXPECT_EQ(gst.link.sig(), "WabcdefghijklmnopqrsetuvinwxohvyazABCDEpguFbzGBHIJqftKcAGCHLsrMIDNOPQjmRNOSTklUSPVyFKdLMJExwRUTQVFyCHZX4sCdFzZe6yV7-D5cCbUGXTBhbG");
-    EXPECT_EQ(rht_rht.link.sig(), "gabcabcdefdefvv--");
-    EXPECT_EQ(rht_lht.link.sig(), "gabcabcdefdefvv-a");
+    // The following first-generation signatures were all computed using
+    // Regina 7.3.
+    EXPECT_EQ(unknot0.link.knotSig(), "a");
+    EXPECT_EQ(unknot1.link.knotSig(), "baabd");
+    EXPECT_EQ(unknot3.link.knotSig(), "dabcabchT");
+    EXPECT_EQ(unknotMonster.link.knotSig(), "kabcdefghijbefgdcjahixfvbdwGd");
+    EXPECT_EQ(unknotGordian.link.knotSig(), "-cncaabacadaeafagahaiajakalamanaoapaqarasatauavawaxayazaAaBaCaDaEaFavaGataHaIaJapaoaKaLalaMaNaOahaPaQaeaRaSabaTaUaVaWaXajaNaYaZafaQa0a1a2aUa3auaGa4a5a6aza7aBa8a9a+a-aabbbcbdbebfbgbhbibjbkblbmbnbobpbqbrbdbsbtbubvbwbxbybzbAbBb+aEaCbDbxaEb4aFbGbqaJaHbIbJbLamaobKbLbMbNbObibPbxbQbRbSbTb-aSacaUb0aVbWbVaXbHaYbraGbZb0bmb1b2b3bMbfb4b5b6bub7bRbzb8b9bAbSb+b-bsb5bacgbNbbc2b1blbccZbnaKaJbdcXaecWbfc1aUbdaRaabgc+b7bvbhcPbjbicbc3bLbjcpbMakadcIbHbIaYbsaFbkc6ayaDbCbDalc8a9b8bybQbwbhc6btb-bcbmcqbjcKbnb0bcckbicObhbac4bebrbmcbbgcTbBb9alcCa7aAakc5aEbwaFaaaTa2afcVbPagaZaYaOaiaecWaXb3aVB3NNT3NVoYNthlfdnryeRZac44044idYmmqb5MT6MAwhJx3YEkl-T9wMNu-F+rMu86EgBAxURTr1DzB6E60Z-7pYJKn2T");
+    EXPECT_EQ(trefoilLeft.link.knotSig(), "dabcabcv-");
+    EXPECT_EQ(trefoilRight.link.knotSig(), "dabcabcv-");
+    EXPECT_EQ(trefoil_r1x2.link.knotSig(), "faabcdeebcd1eFo");
+    EXPECT_EQ(trefoil_r1x6.link.knotSig(), "jaabccdeefggbhhdiifnwo-KN");
+    EXPECT_EQ(figureEight.link.knotSig(), "eabcdbadcvbZa");
+    EXPECT_EQ(figureEight_r1x2.link.knotSig(), "gaabcdbeffdcevtBy");
+    EXPECT_EQ(conway.link.knotSig(), "labcdbefcdghiefjkgaijkhRswfFoWa");
+    EXPECT_EQ(kinoshitaTerasaka.link.knotSig(), "labcdefgahefhijbkdijckgBvQcndZl");
+    EXPECT_EQ(gst.link.knotSig(), "WabcdefghijklmnopqrsetuvinwxohvyazABCDEpguFbzGBHIJqftKcAGCHLsrMIDNOPQjmRNOSTklUSPVyFKdLMJExwRUTQVFyCHZX4sCdFzZe6yV7-D5cCbUGXTBhbG");
+    EXPECT_EQ(rht_rht.link.knotSig(), "gabcabcdefdefvv--");
+    EXPECT_EQ(rht_lht.link.knotSig(), "gabcabcdefdefvv-a");
 
-    // Add some hard-coded standard signatures for classical links and virtual
-    // knots/links (both signature types are new to Regina 7.4), to ensure that
-    // nothing changes as we optimise the code in later releases.
+    // Add some hard-coded first-generation signatures for classical links and
+    // virtual knots/links (both signature types are new to Regina 7.4),
+    // to ensure that nothing changes as we optimise the code in later releases.
     // Unless indicated otherwise, all signatures below were computed using
     // Regina 7.4.
-    EXPECT_EQ(empty.link.sig(), "_"); // verified by hand
-    EXPECT_EQ(hopf.link.sig(), "cabcabjp"); // verified by hand
-    EXPECT_EQ(whitehead.link.sig(), "fabcadefbcedvfpd"); // verified by hand
-    EXPECT_EQ(borromean.link.sig(), "gabcdgaecfgbfdeLwto"); // verified by hand
-    EXPECT_EQ(trefoil_unknot_overlap.link.sig(), "fabcdeadefbcxb7h");
-    EXPECT_EQ(adams6_28.link.sig(), "gabcadefdgbcefvv--"); // verified by hand
+    EXPECT_EQ(empty.link.knotSig(), "_"); // hand-verified
+    EXPECT_EQ(hopf.link.knotSig(), "cabcabjp"); // hand-verified
+    EXPECT_EQ(whitehead.link.knotSig(), "fabcadefbcedvfpd"); // hand-verified
+    EXPECT_EQ(borromean.link.knotSig(), "gabcdgaecfgbfdeLwto"); // hand-verified
+    EXPECT_EQ(trefoil_unknot_overlap.link.knotSig(), "fabcdeadefbcxb7h");
+    EXPECT_EQ(adams6_28.link.knotSig(), "gabcadefdgbcefvv--"); // hand-verified
 
-    EXPECT_EQ(unlink2_0.link.sig(), "aa"); // verified by hand
-    EXPECT_EQ(unlink3_0.link.sig(), "aaa"); // verified by hand
-    EXPECT_EQ(unlink2_r2.link.sig(), "cabcabdf");
-    EXPECT_EQ(unlink2_r1r1.link.sig(), "baabdbaaba");
-    EXPECT_EQ(trefoil_unknot0.link.sig(), "dabcabcv-a");
-    EXPECT_EQ(trefoil_unknot1.link.sig(), "dabcabcv-baaba");
+    EXPECT_EQ(unlink2_0.link.knotSig(), "aa"); // hand-verified
+    EXPECT_EQ(unlink3_0.link.knotSig(), "aaa"); // hand-verified
+    EXPECT_EQ(unlink2_r2.link.knotSig(), "cabcabdf");
+    EXPECT_EQ(unlink2_r1r1.link.knotSig(), "baabdbaaba");
+    EXPECT_EQ(trefoil_unknot0.link.knotSig(), "dabcabcv-a");
+    EXPECT_EQ(trefoil_unknot1.link.knotSig(), "dabcabcv-baaba");
 
-    EXPECT_EQ(virtualTrefoil.link.sig(), "cababdp");
-    EXPECT_EQ(kishino.link.sig(), "eabacdcdblbTa");
-    EXPECT_EQ(gpv.link.sig(), "eabacdcdbZa-d");
-    EXPECT_EQ(virtualLink2.link.sig(), "bababd");
-    EXPECT_EQ(virtualLink3.link.sig(), "cabcacbjp");
-    EXPECT_EQ(virtualTrefoilx2.link.sig(),
+    EXPECT_EQ(virtualTrefoil.link.knotSig(), "cababdp");
+    EXPECT_EQ(kishino.link.knotSig(), "eabacdcdblbTa");
+    EXPECT_EQ(gpv.link.knotSig(), "eabacdcdbZa-d");
+    EXPECT_EQ(virtualLink2.link.knotSig(), "bababd");
+    EXPECT_EQ(virtualLink3.link.knotSig(), "cabcacbjp");
+    EXPECT_EQ(virtualTrefoilx2.link.knotSig(),
         "mabcadefghcijmbkldkijlefghNI8OF4-d");
-    EXPECT_EQ(virtualDisconnected.link.sig(), "cabcacbjpcabcabjpcababdp");
+    EXPECT_EQ(virtualDisconnected.link.knotSig(), "cabcacbjpcabcabjpcababdp");
 
-    // Likewise, verify some compact signatures against hard-coded strings to
-    // ensure that nothing changes in future releases.
+    // Likewise, verify some second-generation signatures against hard-coded
+    // strings to ensure that nothing changes in future releases.
     //
-    // The following compact signatures were all computed using Regina 8.0.
-    EXPECT_EQ(unknot0.link.sig<LinkSigCompact>(), "a");
-    EXPECT_EQ(unknot1.link.sig<LinkSigCompact>(), "bna");
-    EXPECT_EQ(unknot3.link.sig<LinkSigCompact>(), "dhVabc");
-    EXPECT_EQ(unknotMonster.link.sig<LinkSigCompact>(), "k-paCvdgbefgdcjahi");
-    EXPECT_EQ(unknotGordian.link.sig<LinkSigCompact>(), "-cnc-----RZUTpZLR---3-ZAo+6rRSZLzseQGiraiiaiaaaaaaaVB3NN9VV7FowkgnLvTrmBRm+w2tz5txSv-NFKLI-hNZ3xlLvatapaoalahaeabajaNafaQaUauaGazaBadb+aEaxa4aqaJaLamaobibxb-aSaca0aVaHaraGbmbMbfbubRbzbAbSbsb5bgbNb2b1blbZbnaKaJbXaWb1aUbdaRaab+b7bvbPbjbbc3bLbpbMakadcIbHbIaYbsaFb6ayaDbCbDa8a9b8bybQbwbhc6btb-bcbqbjcKbnb0bcckbicObhbac4bebrbmcbbgcTbBb9alcCa7aAakc5aEbwaFaaaTa2afcVbPagaZaYaOaiaecWaXb3a");
-    EXPECT_EQ(trefoilLeft.link.sig<LinkSigCompact>(), "dh9abc");
-    EXPECT_EQ(trefoilRight.link.sig<LinkSigCompact>(), "dh9abc");
-    EXPECT_EQ(trefoil_r1x2.link.sig<LinkSigCompact>(), "f9W+baebcd");
-    EXPECT_EQ(trefoil_r1x6.link.sig<LinkSigCompact>(), "jTnjN8vacegbhdif");
-    EXPECT_EQ(figureEight.link.sig<LinkSigCompact>(), "epudbadc");
-    EXPECT_EQ(figureEight_r1x2.link.sig<LinkSigCompact>(), "gDd7nabfdce");
-    EXPECT_EQ(conway.link.sig<LinkSigCompact>(), "lV5mWM6jabcdefgaijkh");
-    EXPECT_EQ(kinoshitaTerasaka.link.sig<LinkSigCompact>(),
-        "l-flW2UPbaefhbdijckg");
-    EXPECT_EQ(gst.link.sig<LinkSigCompact>(), "W---Dg9J0rqYtMeaaFyCrzkT2V7-paa4KeinohvapgubzBqftcAGCHsrIDjmNOklSPyFKdLMJExwRUTQV");
-    EXPECT_EQ(rht_rht.link.sig<LinkSigCompact>(), "ghhT-abcdef");
-    EXPECT_EQ(rht_lht.link.sig<LinkSigCompact>(), "ghhThabcdef");
+    // The following second-generation signatures were all computed using
+    // Regina 8.0.
+    EXPECT_EQ(unknot0.link.neoSig(), "a");
+    EXPECT_EQ(unknot1.link.neoSig(), "bna");
+    EXPECT_EQ(unknot3.link.neoSig(), "dhVabc");
+    EXPECT_EQ(unknotMonster.link.neoSig(), "k-paCvdgbefgdcjahi");
+    EXPECT_EQ(unknotGordian.link.neoSig(), "-cnc-----RZUTpZLR---3-ZAo+6rRSZLzseQGiraiiaiaaaaaaaVB3NN9VV7FowkgnLvTrmBRm+w2tz5txSv-NFKLI-hNZ3xlLvatapaoalahaeabajaNafaQaUauaGazaBadb+aEaxa4aqaJaLamaobibxb-aSaca0aVaHaraGbmbMbfbubRbzbAbSbsb5bgbNb2b1blbZbnaKaJbXaWb1aUbdaRaab+b7bvbPbjbbc3bLbpbMakadcIbHbIaYbsaFb6ayaDbCbDa8a9b8bybQbwbhc6btb-bcbqbjcKbnb0bcckbicObhbac4bebrbmcbbgcTbBb9alcCa7aAakc5aEbwaFaaaTa2afcVbPagaZaYaOaiaecWaXb3a");
+    EXPECT_EQ(trefoilLeft.link.neoSig(), "dh9abc");
+    EXPECT_EQ(trefoilRight.link.neoSig(), "dh9abc");
+    EXPECT_EQ(trefoil_r1x2.link.neoSig(), "f9W+baebcd");
+    EXPECT_EQ(trefoil_r1x6.link.neoSig(), "jTnjN8vacegbhdif");
+    EXPECT_EQ(figureEight.link.neoSig(), "epudbadc");
+    EXPECT_EQ(figureEight_r1x2.link.neoSig(), "gDd7nabfdce");
+    EXPECT_EQ(conway.link.neoSig(), "lV5mWM6jabcdefgaijkh");
+    EXPECT_EQ(kinoshitaTerasaka.link.neoSig(), "l-flW2UPbaefhbdijckg");
+    EXPECT_EQ(gst.link.neoSig(), "W---Dg9J0rqYtMeaaFyCrzkT2V7-paa4KeinohvapgubzBqftcAGCHsrIDjmNOklSPyFKdLMJExwRUTQV");
+    EXPECT_EQ(rht_rht.link.neoSig(), "ghhT-abcdef");
+    EXPECT_EQ(rht_lht.link.neoSig(), "ghhThabcdef");
 
-    EXPECT_EQ(empty.link.sig<LinkSigCompact>(), "_");
-    EXPECT_EQ(hopf.link.sig<LinkSigCompact>(), "ctdcb");
-    EXPECT_EQ(whitehead.link.sig<LinkSigCompact>(), "f3q7aafced");
-    EXPECT_EQ(borromean.link.sig<LinkSigCompact>(), "gVc1Jgcgfde");
-    EXPECT_EQ(trefoil_unknot_overlap.link.sig<LinkSigCompact>(), "fFWDdadefc");
-    EXPECT_EQ(adams6_28.link.sig<LinkSigCompact>(), "g3bT-adgcef");
+    EXPECT_EQ(empty.link.neoSig(), "_");
+    EXPECT_EQ(hopf.link.neoSig(), "ctdcb");
+    EXPECT_EQ(whitehead.link.neoSig(), "f3q7aafced");
+    EXPECT_EQ(borromean.link.neoSig(), "gVc1Jgcgfde");
+    EXPECT_EQ(trefoil_unknot_overlap.link.neoSig(), "fFWDdadefc");
+    EXPECT_EQ(adams6_28.link.neoSig(), "g3bT-adgcef");
 
-    EXPECT_EQ(unlink2_0.link.sig<LinkSigCompact>(), "aa");
-    EXPECT_EQ(unlink3_0.link.sig<LinkSigCompact>(), "aaa");
-    EXPECT_EQ(unlink2_r2.link.sig<LinkSigCompact>(), "cZbcb");
-    EXPECT_EQ(unlink2_r1r1.link.sig<LinkSigCompact>(), "bnabfa");
-    EXPECT_EQ(trefoil_unknot0.link.sig<LinkSigCompact>(), "dh9abca");
-    EXPECT_EQ(trefoil_unknot1.link.sig<LinkSigCompact>(), "dh9abcbfa");
+    EXPECT_EQ(unlink2_0.link.neoSig(), "aa");
+    EXPECT_EQ(unlink3_0.link.neoSig(), "aaa");
+    EXPECT_EQ(unlink2_r2.link.neoSig(), "cZbcb");
+    EXPECT_EQ(unlink2_r1r1.link.neoSig(), "bnabfa");
+    EXPECT_EQ(trefoil_unknot0.link.neoSig(), "dh9abca");
+    EXPECT_EQ(trefoil_unknot1.link.neoSig(), "dh9abcbfa");
 
-    EXPECT_EQ(virtualTrefoil.link.sig<LinkSigCompact>(), "cZdab");
-    EXPECT_EQ(kishino.link.sig<LinkSigCompact>(), "eBCfacdb");
-    EXPECT_EQ(gpv.link.sig<LinkSigCompact>(), "eBSpacdb");
-    EXPECT_EQ(virtualLink2.link.sig<LinkSigCompact>(), "bnb");
-    EXPECT_EQ(virtualLink3.link.sig<LinkSigCompact>(), "ctdcc");
-    EXPECT_EQ(virtualTrefoilx2.link.sig<LinkSigCompact>(),
-        "m33gaxPp8acmdkijlefgh");
-    EXPECT_EQ(virtualDisconnected.link.sig<LinkSigCompact>(),
-        "ctdccctdcbcZdab");
+    EXPECT_EQ(virtualTrefoil.link.neoSig(), "cZdab");
+    EXPECT_EQ(kishino.link.neoSig(), "eBCfacdb");
+    EXPECT_EQ(gpv.link.neoSig(), "eBSpacdb");
+    EXPECT_EQ(virtualLink2.link.neoSig(), "bnb");
+    EXPECT_EQ(virtualLink3.link.neoSig(), "ctdcc");
+    EXPECT_EQ(virtualTrefoilx2.link.neoSig(), "m33gaxPp8acmdkijlefgh");
+    EXPECT_EQ(virtualDisconnected.link.neoSig(), "ctdccctdcbcZdab");
 
     // This seems as good a place as any to ensure that the ByteSequence
-    // output routines behave correctly.  The following packed signature was
-    // computed using Regina 8.0.
+    // output routines behave correctly.  The following second-generation
+    // signature was computed using Regina 8.0.
     {
-        regina::ByteSequence seq = borromean.link.sig<LinkSigPacked>();
+        regina::ByteSequence seq = borromean.link.neoSig<LinkSigBinary>();
         EXPECT_EQ(seq.asString(), "\x06\xafP\x8f&VC");
 
         std::ostringstream out;
@@ -4265,7 +4265,7 @@ static void verifyGaussAndDT(const TestCase& test,
     // For "non-composite-like" knot diagrams, the only possible ambiguity
     // is reflection.  Use the reflection-distinguishing knot signature to
     // tell whether we reflected upon reconstruction.
-    std::string targetSig = test.link.sig(false);
+    std::string targetSig = test.link.neoSig(false);
 
     if (testGauss) {
         std::string code = test.link.gauss();
@@ -4286,10 +4286,10 @@ static void verifyGaussAndDT(const TestCase& test,
         EXPECT_NO_THROW({ EXPECT_EQ(Link(code), recon); });
 
         // If we reflected, undo this for our subsequent tests.
-        if (recon.sig(false) != targetSig)
+        if (recon.neoSig(false) != targetSig)
             recon.reflect();
 
-        EXPECT_EQ(recon.sig(false), targetSig);
+        EXPECT_EQ(recon.neoSig(false), targetSig);
         if (test.link.size() <= JONES_THRESHOLD)
             EXPECT_EQ(recon.jones(), test.link.jones());
     }
@@ -4326,10 +4326,10 @@ static void verifyGaussAndDT(const TestCase& test,
             });
 
             // If we reflected, undo this for our subsequent tests.
-            if (recon.sig(false) != targetSig)
+            if (recon.neoSig(false) != targetSig)
                 recon.reflect();
 
-            EXPECT_EQ(recon.sig(false), targetSig);
+            EXPECT_EQ(recon.neoSig(false), targetSig);
             if (test.link.size() <= JONES_THRESHOLD)
                 EXPECT_EQ(recon.jones(), test.link.jones());
         }

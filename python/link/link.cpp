@@ -236,21 +236,18 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
             auto begin = std::addressof(c);
             return Link::fromData(s.begin(), s.end(), begin, begin + 1);
         }, pybind11::arg("signs"), pybind11::arg("component"), rdoc::fromData)
-        // With fromSig() and fromKnotSig(), the byte sequence variant _must_
-        // come first.  This is because pybind11 performs automatic conversion
-        // from bytes to std::string, and so if the string variant appears first
-        // then pybind11 will use it even with a pybind11::bytes argument.
+        // With fromSig(), the byte sequence variant _must_ come first.
+        // This is because pybind11 performs automatic conversion from bytes
+        // to std::string, and so if the string variant appears first then
+        // pybind11 will use it even with a pybind11::bytes argument.
         .def_static("fromSig",
             overload_cast<const ByteSequence&>(&Link::fromSig),
             rdoc::fromSig_2)
         .def_static("fromSig",
             overload_cast<const std::string&>(&Link::fromSig),
             rdoc::fromSig)
-        .def_static("fromKnotSig",
-            overload_cast<const ByteSequence&>(&Link::fromKnotSig),
-            rdoc::fromKnotSig_2)
-        .def_static("fromKnotSig",
-            overload_cast<const std::string&>(&Link::fromKnotSig),
+        .def_static("fromKnotSig", // deprecated
+            overload_cast<const std::string&>(&Link::fromSig),
             rdoc::fromKnotSig)
         .def("swap", &Link::swap, rdoc::swap)
         .def("insertLink", overload_cast<const Link&>(&Link::insertLink),
@@ -431,21 +428,37 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::arg("allowReversal") = true,
             pybind11::arg("allowRotation") = true,
             rdoc::knotSig)
-        .def("sig", &Link::sig<>,
+        .def("sig", [](const Link& link, pybind11::type encoding,
+                bool allowReflection, bool allowReversal, bool allowRotation) {
+            using pytype = pybind11::type;
+            if (encoding.is(pytype::of<regina::LinkSigGen1>())) {
+                return pybind11::cast(link.sig<regina::LinkSigGen1>(
+                    allowReflection, allowReversal, allowRotation));
+            } else if (encoding.is(pytype::of<regina::LinkSigGen2>())) {
+                return pybind11::cast(link.sig<regina::LinkSigGen2>(
+                    allowReflection, allowReversal, allowRotation));
+            } else if (encoding.is(pytype::of<regina::LinkSigBinary>())) {
+                return pybind11::cast(link.sig<regina::LinkSigBinary>(
+                    allowReflection, allowReversal, allowRotation));
+            } else {
+                throw regina::InvalidArgument(
+                    "Not a supported knot/link signature encoding");
+            }
+        }, pybind11::arg("encoding"),
             pybind11::arg("allowReflection") = true,
             pybind11::arg("allowReversal") = true,
             pybind11::arg("allowRotation") = true,
             rdoc::sig)
-        .def("sig_Compact", &Link::sig<regina::LinkSigCompact>,
+        .def("neoSig", &Link::neoSig<>,
             pybind11::arg("allowReflection") = true,
             pybind11::arg("allowReversal") = true,
             pybind11::arg("allowRotation") = true,
-            rdoc::sig)
-        .def("sig_Packed", &Link::sig<regina::LinkSigPacked>,
+            rdoc::neoSig)
+        .def("neoSig_binary", &Link::neoSig<regina::LinkSigBinary>,
             pybind11::arg("allowReflection") = true,
             pybind11::arg("allowReversal") = true,
             pybind11::arg("allowRotation") = true,
-            rdoc::sig)
+            rdoc::neoSig)
         .def("source", &Link::source,
             // The default should be Language::Current, but in C++ that
             // evaluates to Language::Cxx.  We need it to evaluate to

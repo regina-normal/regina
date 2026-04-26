@@ -55,7 +55,8 @@ class Link;
  * of a link diagram.  This is a halfway point between link diagrams and
  * knot/link signatures: the data is purely numerical, making it easy to
  * minimise amongst all possible labellings, and also easy to encode or
- * decode in an appropriate signature form (e.g., a base64 string).
+ * decode in an appropriate signature form (e.g., a base64 string or a byte
+ * sequence).
  *
  * Specifically, this data consists of a sequence of integer triples
  * `(crossing_index, strand, crossing_sign)`, describing traversals along each
@@ -324,7 +325,9 @@ inline void swap(LinkSigData& a, LinkSigData& b) noexcept {
  * (such as a string) that is easily transported.
  *
  * An encoding should provide a type alias `Signature`, indicating the type
- * that holds the final knot/link signature (e.g., `std::string`).  In addition,
+ * that holds the final knot/link signature (e.g., `std::string`), and a class
+ * constant `generation` that is either 1 or 2, indicating whether this
+ * produces a first-generation or second-generation signature.  In addition,
  * it should provide the following static routines:
  *
  * - `encodeEmpty()`, which encodes the empty link;
@@ -354,6 +357,8 @@ concept LinkSigEncoding =
     requires(const Link link, const LinkSigData data) {
         typename T::Signature;
         requires SignatureType<typename T::Signature>;
+        { T::generation } -> std::convertible_to<int>;
+        requires (T::generation == 1 || T::generation == 2);
         { T::encodeEmpty() } -> std::convertible_to<typename T::Signature>;
         { T::encodeUnknot() } -> std::convertible_to<typename T::Signature>;
         { T::encode(data) } -> std::convertible_to<typename T::Signature>;
@@ -361,7 +366,7 @@ concept LinkSigEncoding =
     };
 
 /**
- * The default encoding to use for knot/link signatures.
+ * Encodes a first-generation knot/link signature as a printable string.
  *
  * This printable encoding is the one that was used for knot/link signatures
  * in Regina ≤ 7.x.  It represents a signature as a `std::string`, using only
@@ -371,17 +376,16 @@ concept LinkSigEncoding =
  * encodings for knot/link signatures.
  *
  * This class is designed to be used as a template parameter for Link::sig().
- * Typical users would have no need to call any of its functions directly.
+ * Typical users would not need to call any of its functions directly.
  *
  * \python Python does not support C++ templates.  To use this encoding in
- * Python, you can simply call `Link::sig()` (since this encoding is the
- * default).
+ * Python, you can simply call `Link::knotSig()`.
  *
  * \apinotfinal
  *
  * \ingroup link
  */
-class LinkSigPrintable {
+class LinkSigGen1 {
     public:
         /**
          * The data type that this encoding uses to hold the final signature.
@@ -389,11 +393,16 @@ class LinkSigPrintable {
         using Signature = std::string;
 
         /**
+         * Indicates that this encoding is for first-generation signatures.
+         */
+        static constexpr int generation = 1;
+
+        /**
          * Encodes the signature of the empty link.
          *
-         * Note that LinkSigPrintable and LinkSigCompact do _not_ return an
-         * empty signature for this; instead they both return the special
-         * string `_`.
+         * Note that LinkSigGen1 and LinkSigGen2 (which create printable
+         * string encodings) do _not_ return an empty signature for this;
+         * instead they both return the special string `_`.
          *
          * \return the signature of the empty link.
          */
@@ -402,8 +411,8 @@ class LinkSigPrintable {
         /**
          * Encodes the signature of the zero-crossing unknot diagram.
          *
-         * Both LinkSigPrintable and LinkSigCompact return the same signature
-         * `a` in this case.
+         * Both LinkSigGen1 and LinkSigGen2 return the same signature `a` in
+         * this case.
          *
          * \return the signature of the zero-crossing unknot.
          */
@@ -435,33 +444,32 @@ class LinkSigPrintable {
         static size_t length(const LinkSigData& data);
 
         // Make this class non-constructible.
-        LinkSigPrintable() = delete;
+        LinkSigGen1() = delete;
 };
 
 /**
- * A compact string-based encoding for use with knot/link signatures.
+ * Encodes a second-generation knot/link signature as a printable string.
  *
- * Like LinkSigPrintable, this encodes a signature as a `std::string` using
+ * Like LinkSigGen1, this encodes a signature as a `std::string` using
  * only printable characters from the 7-bit ASCII range.  However, the strings
- * it produces are significantly shorter (a little over half the length in
- * general).  These signatures are not compatible with the knot/link signatures
- * that were used in Regina ≤ 7.x; they are designed for scenarios where
- * memory usage needs to be kept as small as possible.
+ * it produces are significantly shorter than first-generation signatures
+ * (a little over half the length in general).
  *
  * See the LinkSigEncoding concept documentation for general details on
  * encodings for knot/link signatures.
  *
- * This class is designed to be used as a template parameter for Link::sig().
- * Typical users would have no need to call any of its functions directly.
+ * This class is designed to be used as a template parameter for Link::neoSig()
+ * or Link::sig().  Typical users would not need to call any of its functions
+ * directly.
  *
  * \python Python does not support C++ templates.  To use this encoding in
- * Python, you can call `Link::sig_Compact()`.
+ * Python, you can call `Link::neoSig()`.
  *
  * \apinotfinal
  *
  * \ingroup link
  */
-class LinkSigCompact {
+class LinkSigGen2 {
     public:
         /**
          * The data type that this encoding uses to hold the final signature.
@@ -469,11 +477,16 @@ class LinkSigCompact {
         using Signature = std::string;
 
         /**
+         * Indicates that this encoding is for second-generation signatures.
+         */
+        static constexpr int generation = 2;
+
+        /**
          * Encodes the signature of the empty link.
          *
-         * Note that LinkSigPrintable and LinkSigCompact do _not_ return an
-         * empty signature for this; instead they both return the special
-         * string `_`.
+         * Note that LinkSigGen1 and LinkSigGen2 (which create printable
+         * string encodings) do _not_ return an empty signature for this;
+         * instead they both return the special string `_`.
          *
          * \return the signature of the empty link.
          */
@@ -482,8 +495,8 @@ class LinkSigCompact {
         /**
          * Encodes the signature of the zero-crossing unknot diagram.
          *
-         * Both LinkSigPrintable and LinkSigCompact return the same signature
-         * `a` in this case.
+         * Both LinkSigGen1 and LinkSigGen2 return the same signature `a` in
+         * this case.
          *
          * \return the signature of the zero-crossing unknot.
          */
@@ -515,15 +528,16 @@ class LinkSigCompact {
         static size_t length(const LinkSigData& data);
 
         // Make this class non-constructible.
-        LinkSigCompact() = delete;
+        LinkSigGen2() = delete;
 };
 
 /**
- * A small-memory byte-based encoding for use with knot/link signatures.
+ * Encodes a second-generation knot/link signature using a small-memory
+ * byte-based encoding.
  *
  * This uses a similar "compression" of the combinatorial link data as
- * LinkSigCompact; however, it encodes this data in a byte sequence using all
- * eight bits per byte (as opposed to LinkSigCompact, which only encodes six
+ * LinkSigGen2; however, it encodes this data in a byte sequence using all
+ * eight bits per byte (as opposed to LinkSigGen2, which only encodes six
  * bits per byte but creates a printable string as a result).
  *
  * This encoding is intended for scenarios where memory use needs to be kept
@@ -532,17 +546,18 @@ class LinkSigCompact {
  * See the LinkSigEncoding concept documentation for general details on
  * encodings for knot/link signatures.
  *
- * This class is designed to be used as a template parameter for Link::sig().
- * Typical users would have no need to call any of its functions directly.
+ * This class is designed to be used as a template parameter for Link::neoSig()
+ * or Link::sig().  Typical users would not need to call any of its functions
+ * directly.
  *
  * \python Python does not support C++ templates.  To use this encoding in
- * Python, you can call `Link::sig_Packed()`.
+ * Python, you can call `Link::neoSig_binary()`.
  *
  * \apinotfinal
  *
  * \ingroup link
  */
-class LinkSigPacked {
+class LinkSigBinary {
     public:
         /**
          * The data type that this encoding uses to hold the final signature.
@@ -550,9 +565,14 @@ class LinkSigPacked {
         using Signature = ByteSequence;
 
         /**
+         * Indicates that this encoding is for second-generation signatures.
+         */
+        static constexpr int generation = 2;
+
+        /**
          * Encodes the signature of the empty link.
          *
-         * For LinkSigPacked (unlike Regina's string-based encodings), this
+         * For LinkSigBinary (unlike Regina's string-based encodings), this
          * will simply be an empty sequence.
          *
          * \return the signature of the empty link.
@@ -592,33 +612,32 @@ class LinkSigPacked {
         static size_t length(const LinkSigData& data);
 
         /**
-         * Re-encodes the given packed signature using the LinkSigCompact
-         * encoding, which uses only printable characters from the 7-bit ASCII
-         * range.
+         * Re-encodes the given binary signature as a string-based signature
+         * (using the LinkSigGen2 encoding), which uses only printable
+         * characters from the 7-bit ASCII range.
          *
          * Calling `printable(sig)` is significantly more efficient than calling
-         * `Link::fromSig(sig).sig<LinkSigCompact>()`, and should give the same
-         * result.
+         * `Link::fromSig(sig).neoSig()`, and should give the same result.
          *
-         * \pre The argument \a sig is indeed a knot/link signature, encoded
-         * using LinkSigPacked.  This will _not_ be checked thoroughly (though
-         * some minimal checks will be done).
+         * \pre The argument \a sig is indeed a second-generation knot/link
+         * signature, encoded via LinkSigBinary.  This will _not_ be checked
+         * thoroughly (though some minimal checks will be done).
          *
          * \exception InvalidArgument It was detected that \a sig was not a
-         * valid knot/link signature encoded using LinkSigPacked.  Again, this
-         * will not be checked thoroughly; this exception will only be thrown
-         * if the violation is sufficiently obvious that it is picked up during
-         * the re-encoding process.
+         * valid second-generation knot/link signature encoded via
+         * LinkSigBinary.  Again, this will not be checked thoroughly; this
+         * exception will only be thrown if the violation is sufficiently
+         * obvious that it is picked up during the re-encoding process.
          *
-         * \param sig the signature of some link, encoded as a byte sequence
-         * using this LinkSigPacked encoding.
-         * \return the signature of the same link, encoded as a string using
-         * the LinkSigCompact encoding.
+         * \param sig the second-generation signature of some link diagram,
+         * encoded as a byte sequence using the LinkSigBinary encoding.
+         * \return the second-generation signature of the same link diagram,
+         * encoded as a printable string using the LinkSigGen2 encoding.
          */
-        static std::string asCompact(const ByteSequence& sig);
+        static std::string asString(const ByteSequence& sig);
 
         // Make this class non-constructible.
-        LinkSigPacked() = delete;
+        LinkSigBinary() = delete;
 };
 
 } // namespace regina

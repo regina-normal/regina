@@ -4070,7 +4070,7 @@
 		059BEC0D276AAEA7006DC425 /* progress.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = progress.session; sourceTree = "<group>"; };
 		059D017925B6A715004150F7 /* shell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shell.cpp; sourceTree = "<group>"; };
 		059D01A325B6A72C004150F7 /* Timing */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Timing; sourceTree = BUILT_PRODUCTS_DIR; };
-		059D01F625B6AA94004150F7 /* Timing.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Timing.entitlements; path = Timing/Timing.entitlements; sourceTree = "<group>"; };
+		059D01F625B6AA94004150F7 /* Timing.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Timing.entitlements; path = timing/Timing.entitlements; sourceTree = "<group>"; };
 		059D023725BB08B6004150F7 /* retriangulate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = retriangulate.h; sourceTree = "<group>"; };
 		059D023825BB08B6004150F7 /* retriangulate-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "retriangulate-impl.h"; sourceTree = "<group>"; };
 		059D6168258866370011E905 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
@@ -12444,7 +12444,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
-				CODE_SIGN_ENTITLEMENTS = Timing/Timing.entitlements;
+				CODE_SIGN_ENTITLEMENTS = timing/Timing.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -12479,7 +12479,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
-				CODE_SIGN_ENTITLEMENTS = Timing/Timing.entitlements;
+				CODE_SIGN_ENTITLEMENTS = timing/Timing.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;

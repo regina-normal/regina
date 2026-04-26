@@ -49,7 +49,7 @@ enum {
     FLAVOUR_KNOT = 100
 } flavour = FLAVOUR_NONE;
 bool showAll = false;
-bool internalSig = false;
+bool secondGenSig = false;
 bool virtualMoves = false;
 bool classicalMoves = false;
 
@@ -64,7 +64,7 @@ void process(const regina::Triangulation<dim>& tri) {
                 const std::string& sig, const regina::Triangulation<dim>& t) {
             if (t.size() > tri.size()) {
                 if (showAll) {
-                    if (internalSig) {
+                    if (secondGenSig) {
                         std::lock_guard<std::mutex> lock(mutex);
                         std::cout << sig << std::endl;
                         ++nSolns;
@@ -80,7 +80,7 @@ void process(const regina::Triangulation<dim>& tri) {
                 return false;
             }
 
-            if (internalSig) {
+            if (secondGenSig) {
                 std::lock_guard<std::mutex> lock(mutex);
                 std::cout << sig << std::endl;
 
@@ -124,9 +124,9 @@ void process(const regina::Link& link) {
     bool nonMinimal = false;
     std::string simpler;
 
-    // Note: the code here is specifically tuned to the LinkSigPacked encoding
+    // Note: the code here is specifically tuned to the LinkSigBinary encoding
     // (which is used by rewrite() and rewriteVirtual()), since it uses
-    // LinkSigPacked::asCompact() when writing signatures to output.
+    // LinkSigBinary::asString() when writing signatures to output.
     // If we ever change RetriangulateParams<Link> to use a different internal
     // signature encoding, we will need to update this code also.
 
@@ -135,8 +135,8 @@ void process(const regina::Link& link) {
             const Signature& sig, const regina::Link& k) {
         if (k.size() > link.size()) {
             if (showAll) {
-                std::string outputSig = (internalSig ?
-                    regina::LinkSigPacked::asCompact(sig) : k.sig());
+                std::string outputSig = (secondGenSig ?
+                    regina::LinkSigBinary::asString(sig) : k.knotSig());
 
                 std::lock_guard<std::mutex> lock(mutex);
                 std::cout << outputSig << std::endl;
@@ -145,8 +145,8 @@ void process(const regina::Link& link) {
             return false;
         }
 
-        std::string outputSig = (internalSig ?
-            regina::LinkSigPacked::asCompact(sig) : k.sig());
+        std::string outputSig = (secondGenSig ?
+            regina::LinkSigBinary::asString(sig) : k.knotSig());
 
         std::lock_guard<std::mutex> lock(mutex);
         std::cout << outputSig << std::endl;
@@ -263,7 +263,7 @@ int main(int argc, char* argv[]) {
                 showAll = true;
                 break;
             case 'a':
-                internalSig = true;
+                secondGenSig = true;
                 break;
             case 'c':
                 classicalMoves = true;

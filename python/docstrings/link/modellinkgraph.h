@@ -608,7 +608,7 @@ loops, each bounding its own 1-gon (which models a 1-crossing unknot
 component of a link diagram).
 
 Returns:
-    The number of incident embedded bigons, which will be between 0
+    the number of incident embedded bigons, which will be between 0
     and 4 inclusive.)doc";
 
 // Docstring regina::python::doc::ModelLinkGraphNode_::index
@@ -641,7 +641,7 @@ Regarding loops versus 1-gons:
   ``0 ≤ monogons() ≤ loops() ≤ 2``.
 
 Returns:
-    The number of incident loops, which will be between 0 and 2
+    the number of incident loops, which will be between 0 and 2
     inclusive.)doc";
 
 // Docstring regina::python::doc::ModelLinkGraphNode_::monogons
@@ -662,7 +662,7 @@ Regarding loops versus 1-gons:
   ``0 ≤ monogons() ≤ loops() ≤ 2``.
 
 Returns:
-    The number of incident 1-gons, which will be between 0 and 2
+    the number of incident 1-gons, which will be between 0 and 2
     inclusive.)doc";
 
 // Docstring regina::python::doc::ModelLinkGraphNode_::triangles
@@ -676,7 +676,7 @@ would imply that the underlying graph contains a loop bounding a 1-gon
 (which models a trivial twist in a link diagram).
 
 Returns:
-    The number of incident embedded triangles, which will be between 0
+    the number of incident embedded triangles, which will be between 0
     and 4 inclusive.)doc";
 
 }
