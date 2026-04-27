@@ -602,23 +602,32 @@ bool Triangulation<3>::simplifyUpDown(ssize_t max23, bool alwaysModify) {
     Triangulation<3> working( *this, false, true );
 
     // Random 2-3 moves.
-    for ( ssize_t consec23 = 1; consec23 <= max23; ++consec23 ) {
-        // Attempt consec23 consecutive random 2-3 moves.
-        for ( ssize_t i = 0; i < consec23; ++i ) {
-            // Pick a random triangle through which to do a 2-3 move.
-            Triangle<3>* triangle = working.triangle(
-                    RandomEngine::rand( working.countTriangles() ) );
-            working.pachner(triangle);
-        }
+    for ( ssize_t consec23 = 1; consec23 < 2 * max23; consec23 *= 2 ) {
+        ssize_t perform23 = ( consec23 < max23 ) ? consec23 : max23;
 
-        // Use 2-0, 2-1 and 4-4 moves to try to force future 2-3 moves and the
-        // eventual full simplification to go somewhere new.
-        working.simplifyInternal<SimplifyContext::UpDownDescent>();
-        working.simplifyInternal<SimplifyContext::Best>();
-        if ( working.size() < origSize ) {
-            // We already simplified, so we might as well stop now.
-            swap(working);
-            return true;
+        int COEFF_REPS = 6;
+        for ( int rep = 0; rep < COEFF_REPS; ++rep ) {
+            // Attempt perform23 consecutive random 2-3 moves.
+            for ( ssize_t i = 0; i < perform23; ++i ) {
+                // Pick a random triangle through which to do a 2-3 move.
+                Triangle<3>* triangle = working.triangle(
+                        RandomEngine::rand( working.countTriangles() ) );
+                working.pachner(triangle);
+            }
+            std::cout << working.size() << std::endl;   //TODO
+
+            // Start by simplifying using only 2-0, 2-1 and 4-4 moves (in
+            // particular, no 3-2 moves, since we don't want to immediately undo
+            // all the random 2-3 moves we just did). This hopefully pushes
+            // subsequent moves to go somewhere new.
+            working.simplifyInternal<SimplifyContext::UpDownDescent>();
+            working.simplifyInternal<SimplifyContext::Best>();
+            std::cout << working.size() << std::endl;   //TODO
+            if ( working.size() < origSize ) {
+                // We already simplified, so we might as well stop now.
+                swap(working);
+                return true;
+            }
         }
     }
 
