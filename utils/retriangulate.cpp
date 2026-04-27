@@ -49,7 +49,7 @@ enum {
     FLAVOUR_KNOT = 100
 } flavour = FLAVOUR_NONE;
 bool showAll = false;
-bool secondGenSig = false;
+int sigGen = 2;
 bool virtualMoves = false;
 bool classicalMoves = false;
 
@@ -64,35 +64,23 @@ void process(const regina::Triangulation<dim>& tri) {
                 const std::string& sig, const regina::Triangulation<dim>& t) {
             if (t.size() > tri.size()) {
                 if (showAll) {
-                    if (secondGenSig) {
-                        std::lock_guard<std::mutex> lock(mutex);
-                        std::cout << sig << std::endl;
-                        ++nSolns;
-                    } else {
+                    if (sigGen == 1) {
                         // Recompute the signature using IsoSigClassic.
                         std::string classic = t.isoSig();
 
                         std::lock_guard<std::mutex> lock(mutex);
                         std::cout << classic << std::endl;
                         ++nSolns;
+                    } else {
+                        std::lock_guard<std::mutex> lock(mutex);
+                        std::cout << sig << std::endl;
+                        ++nSolns;
                     }
                 }
                 return false;
             }
 
-            if (secondGenSig) {
-                std::lock_guard<std::mutex> lock(mutex);
-                std::cout << sig << std::endl;
-
-                if (t.size() < tri.size()) {
-                    nonMinimal = true;
-                    simpler = sig;
-                    return true;
-                }
-
-                ++nSolns;
-                return false;
-            } else {
+            if (sigGen == 1) {
                 // Recompute the signature using IsoSigClassic.
                 std::string classic = t.isoSig();
 
@@ -102,6 +90,18 @@ void process(const regina::Triangulation<dim>& tri) {
                 if (t.size() < tri.size()) {
                     nonMinimal = true;
                     simpler = std::move(classic);
+                    return true;
+                }
+
+                ++nSolns;
+                return false;
+            } else {
+                std::lock_guard<std::mutex> lock(mutex);
+                std::cout << sig << std::endl;
+
+                if (t.size() < tri.size()) {
+                    nonMinimal = true;
+                    simpler = sig;
                     return true;
                 }
 
@@ -135,8 +135,8 @@ void process(const regina::Link& link) {
             const Signature& sig, const regina::Link& k) {
         if (k.size() > link.size()) {
             if (showAll) {
-                std::string outputSig = (secondGenSig ?
-                    regina::LinkSigBinary::asString(sig) : k.knotSig());
+                std::string outputSig = (sigGen == 1 ? k.knotSig() :
+                    regina::LinkSigBinary::asString(sig));
 
                 std::lock_guard<std::mutex> lock(mutex);
                 std::cout << outputSig << std::endl;
@@ -145,8 +145,8 @@ void process(const regina::Link& link) {
             return false;
         }
 
-        std::string outputSig = (secondGenSig ?
-            regina::LinkSigBinary::asString(sig) : k.knotSig());
+        std::string outputSig = (sigGen == 1 ? k.knotSig() :
+            regina::LinkSigBinary::asString(sig));
 
         std::lock_guard<std::mutex> lock(mutex);
         std::cout << outputSig << std::endl;
@@ -182,7 +182,9 @@ R"help(Usage: retriangulate <isosig>
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot/link signature
   -l, --all                   Output larger triangulations/links also
-  -a, --anysig                Output does not need to use classic signature(s)
+  -g, --gen=<gen_number>      Output first-generation signatures (--gen=1) or
+                              second-generation signatures (--gen=2, default)
+  -a, --anysig                Legacy alias for --gen=2 (default)
   -c, --classical             Never allow virtual type II moves (default for
                               classical link diagrams)
   -V, --virtual               Always allow virtual type II moves (default for
@@ -194,7 +196,7 @@ R"help(Usage: retriangulate <isosig>
 
 int main(int argc, char* argv[]) {
     // Parse the command-line arguments.
-    const char* shortOpt = ":h:t:34klacVv";
+    const char* shortOpt = ":h:t:g:34klacVv";
     struct option longOpt[] = {
         { "height", required_argument, nullptr, 'h' },
         { "threads", required_argument, nullptr, 't' },
@@ -202,6 +204,7 @@ int main(int argc, char* argv[]) {
         { "dim4", no_argument, nullptr, '4' },
         { "knot", no_argument, nullptr, 'k' },
         { "all", no_argument, nullptr, 'l' },
+        { "gen", required_argument, nullptr, 'g' },
         { "anysig", no_argument, nullptr, 'a' },
         { "classical", no_argument, nullptr, 'c' },
         { "virtual", no_argument, nullptr, 'V' },
@@ -262,8 +265,17 @@ int main(int argc, char* argv[]) {
             case 'l':
                 showAll = true;
                 break;
+            case 'g':
+                sigGen = strtol(optarg, &endptr, 10);
+                if (*endptr != 0 || ! (sigGen == 1 || sigGen != 2)) {
+                    std::cerr << "The signature generation must be 1 or 2.\n\n";
+                    help();
+                    return 1;
+                }
+                break;
             case 'a':
-                secondGenSig = true;
+                // Second-generation signatures are already the default.
+                // sigGen = 2;
                 break;
             case 'c':
                 classicalMoves = true;

@@ -10,7 +10,9 @@ Usage: retriangulate <isosig>
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot/link signature
   -l, --all                   Output larger triangulations/links also
-  -a, --anysig                Output does not need to use classic signature(s)
+  -g, --gen=<gen_number>      Output first-generation signatures (--gen=1) or
+                              second-generation signatures (--gen=2, default)
+  -a, --anysig                Legacy alias for --gen=2 (default)
   -c, --classical             Never allow virtual type II moves (default for
                               classical link diagrams)
   -V, --virtual               Always allow virtual type II moves (default for
@@ -31,7 +33,9 @@ Usage: retriangulate <isosig>
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot/link signature
   -l, --all                   Output larger triangulations/links also
-  -a, --anysig                Output does not need to use classic signature(s)
+  -g, --gen=<gen_number>      Output first-generation signatures (--gen=1) or
+                              second-generation signatures (--gen=2, default)
+  -a, --anysig                Legacy alias for --gen=2 (default)
   -c, --classical             Never allow virtual type II moves (default for
                               classical link diagrams)
   -V, --virtual               Always allow virtual type II moves (default for
@@ -52,7 +56,9 @@ Usage: retriangulate <isosig>
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot/link signature
   -l, --all                   Output larger triangulations/links also
-  -a, --anysig                Output does not need to use classic signature(s)
+  -g, --gen=<gen_number>      Output first-generation signatures (--gen=1) or
+                              second-generation signatures (--gen=2, default)
+  -a, --anysig                Legacy alias for --gen=2 (default)
   -c, --classical             Never allow virtual type II moves (default for
                               classical link diagrams)
   -V, --virtual               Always allow virtual type II moves (default for
@@ -73,7 +79,9 @@ Usage: retriangulate <isosig>
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot/link signature
   -l, --all                   Output larger triangulations/links also
-  -a, --anysig                Output does not need to use classic signature(s)
+  -g, --gen=<gen_number>      Output first-generation signatures (--gen=1) or
+                              second-generation signatures (--gen=2, default)
+  -a, --anysig                Legacy alias for --gen=2 (default)
   -c, --classical             Never allow virtual type II moves (default for
                               classical link diagrams)
   -V, --virtual               Always allow virtual type II moves (default for
@@ -94,7 +102,9 @@ Usage: retriangulate <isosig>
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot/link signature
   -l, --all                   Output larger triangulations/links also
-  -a, --anysig                Output does not need to use classic signature(s)
+  -g, --gen=<gen_number>      Output first-generation signatures (--gen=1) or
+                              second-generation signatures (--gen=2, default)
+  -a, --anysig                Legacy alias for --gen=2 (default)
   -c, --classical             Never allow virtual type II moves (default for
                               classical link diagrams)
   -V, --virtual               Always allow virtual type II moves (default for
@@ -115,7 +125,9 @@ Usage: retriangulate <isosig>
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot/link signature
   -l, --all                   Output larger triangulations/links also
-  -a, --anysig                Output does not need to use classic signature(s)
+  -g, --gen=<gen_number>      Output first-generation signatures (--gen=1) or
+                              second-generation signatures (--gen=2, default)
+  -a, --anysig                Legacy alias for --gen=2 (default)
   -c, --classical             Never allow virtual type II moves (default for
                               classical link diagrams)
   -V, --virtual               Always allow virtual type II moves (default for
@@ -137,7 +149,9 @@ Usage: retriangulate <isosig>
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot/link signature
   -l, --all                   Output larger triangulations/links also
-  -a, --anysig                Output does not need to use classic signature(s)
+  -g, --gen=<gen_number>      Output first-generation signatures (--gen=1) or
+                              second-generation signatures (--gen=2, default)
+  -a, --anysig                Legacy alias for --gen=2 (default)
   -c, --classical             Never allow virtual type II moves (default for
                               classical link diagrams)
   -V, --virtual               Always allow virtual type II moves (default for
@@ -147,28 +161,28 @@ Usage: retriangulate <isosig>
 --------------------
 Exit code: 1
 ============================================================
-TEST: retriangulate fLAMcbcbdeehhjqqs
+TEST: retriangulate -g1 fLAMcbcbdeehhjqqs
 --------------------
 fLAMcbcbdeehhjqqs
 Found 1 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate cPcbbbadu
+TEST: retriangulate -g1 cPcbbbadu
 --------------------
 cPcbbbadu
 Found 1 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -h 2 cPcbbbadu
+TEST: retriangulate -g1 -h 2 cPcbbbadu
 --------------------
 cPcbbbadu
 Found 1 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -h 3 cPcbbbadu
+TEST: retriangulate -g1 -h 3 cPcbbbadu
 --------------------
 cPcbbbadu
 cPcbbbadh
@@ -176,7 +190,7 @@ Found 2 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -h 3 -t 2 cPcbbbadu
+TEST: retriangulate -g1 -h 3 -t 2 cPcbbbadu
 --------------------
 cPcbbbadu
 cPcbbbadh
@@ -184,7 +198,7 @@ Found 2 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate gLLMQacdefefjkaknrr
+TEST: retriangulate -g1 gLLMQacdefefjkaknrr
 --------------------
 gLLMQacdefefjkaknrr
 gLLAQaceefefjkuxxnn
@@ -192,7 +206,7 @@ Found 2 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -h 2 -t 2 hLLAAkbdceefggdonxdjxn
+TEST: retriangulate -g1 -h 2 -t 2 hLLAAkbdceefggdonxdjxn
 --------------------
 hLLAAkbdceefggdonxdjxn
 hLALPkbcbefgfghxwnxark
@@ -200,7 +214,7 @@ Found 2 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -4 eLMQcbcddcddaaaa8a8a8a8a8a
+TEST: retriangulate -g1 -4 eLMQcbcddcddaaaa8a8a8a8a8a
 --------------------
 eLMQcbcddcddaaaa8a8a8a8a8a
 eLAQcbbbcdddOakbOaqbOaOaya
@@ -209,7 +223,7 @@ Found 3 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -k kabcdefghijbefgdcjahixfvbdwGd
+TEST: retriangulate -g1 -k kabcdefghijbefgdcjahixfvbdwGd
 --------------------
 kabcdefghijbefgdcjahixfvbdwGd
 kabcdefgahijcdebjihfgxfzbJp0d
@@ -220,7 +234,7 @@ Smaller link: iabcdeafghcdebfghxveJhp
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -ka kabcdefghijbefgdcjahixfvbdwGd
+TEST: retriangulate -k kabcdefghijbefgdcjahixfvbdwGd
 --------------------
 k-paCvdgbefgdcjahi
 k-DaCnJhacdebjihfg
@@ -231,7 +245,7 @@ Smaller link: iFhWTJdacdebfgh
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -l -k -h 2 a
+TEST: retriangulate -g1 -l -k -h 2 a
 --------------------
 a
 baabd
@@ -243,7 +257,7 @@ Found 6 link(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -l -k -V -h 2 a
+TEST: retriangulate -g1 -l -k -V -h 2 a
 --------------------
 a
 baabd
@@ -256,7 +270,7 @@ Found 7 link(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -l -k -h 2 aa
+TEST: retriangulate -g1 -l -k -h 2 aa
 --------------------
 aa
 baabda
@@ -270,7 +284,7 @@ Found 8 link(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -l -k -V -h 2 aa
+TEST: retriangulate -g1 -l -k -V -h 2 aa
 --------------------
 aa
 baabda
