@@ -35,7 +35,7 @@
 #ifndef __SIGHANDLER_H
 #define __SIGHANDLER_H
 
-#include "foreign/isosig.h"
+#include "foreign/siglist.h"
 #include "packetimporter.h"
 #include "reginamain.h"
 #include "reginasupport.h"

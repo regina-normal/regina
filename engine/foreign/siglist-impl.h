@@ -28,17 +28,17 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file foreign/fromsiglist-impl.h
+/*! \file foreign/siglist-impl.h
  *  \brief Contains implementation details for the template function
  *  fromSigList().
  *
- *  This file is automatically included from foreign/isosig.h, there is
+ *  This file is automatically included from foreign/siglist.h; there is
  *  no need for end users to include it explicitly.
  */
 
-#ifndef __REGINA_FROMSIGLIST_IMPL_H_DETAIL
+#ifndef __REGINA_SIGLIST_IMPL_H_DETAIL
 #ifndef __DOXYGEN
-#define __REGINA_FROMSIGLIST_IMPL_H_DETAIL
+#define __REGINA_SIGLIST_IMPL_H_DETAIL
 #endif
 
 #include <fstream>

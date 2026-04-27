@@ -132,7 +132,6 @@
 		050F5E571B9BAB9C00C1F681 /* gluingpermsearcher3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DC61B9BAB9C00C1F681 /* gluingpermsearcher3.cpp */; };
 		050F5E581B9BAB9C00C1F681 /* pycensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DC71B9BAB9C00C1F681 /* pycensus.cpp */; };
 		050F5E5A1B9BAB9C00C1F681 /* dehydration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DCB1B9BAB9C00C1F681 /* dehydration.cpp */; };
-		050F5E5B1B9BAB9C00C1F681 /* isosig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DCC1B9BAB9C00C1F681 /* isosig.cpp */; };
 		050F5E5C1B9BAB9C00C1F681 /* orb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DCD1B9BAB9C00C1F681 /* orb.cpp */; };
 		050F5E5E1B9BAB9C00C1F681 /* pyforeign.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DCF1B9BAB9C00C1F681 /* pyforeign.cpp */; };
 		050F5E621B9BAC5200C1F681 /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
@@ -589,6 +588,9 @@
 		0545A0122F9ADCE8008D3ADB /* bytesequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 0545A0112F9ADCE8008D3ADB /* bytesequence.h */; };
 		0545A0152F9CD9A7008D3ADB /* bytesequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0142F9CD9A7008D3ADB /* bytesequence.cpp */; };
 		0545A0162F9CD9A7008D3ADB /* bytesequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0142F9CD9A7008D3ADB /* bytesequence.cpp */; };
+		0545A0192F9F68AE008D3ADB /* siglist-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0545A0182F9F68AE008D3ADB /* siglist-impl.h */; };
+		0545A01A2F9F68AE008D3ADB /* siglist.h in Headers */ = {isa = PBXBuildFile; fileRef = 0545A0172F9F68AE008D3ADB /* siglist.h */; };
+		0545A01C2F9F696E008D3ADB /* siglist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A01B2F9F696E008D3ADB /* siglist.cpp */; };
 		054C6A661DCC1FF3005373F0 /* example5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A4F1DCC1FE7005373F0 /* example5.cpp */; };
 		054C6A671DCC1FF3005373F0 /* example6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A501DCC1FE7005373F0 /* example6.cpp */; };
 		054C6A681DCC1FF3005373F0 /* example7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A511DCC1FE7005373F0 /* example7.cpp */; };
@@ -908,7 +910,6 @@
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
 		055BC3E92653380600E5E34C /* sigutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 055BC3E82653380600E5E34C /* sigutils.h */; };
-		055BC3EB265338E800E5E34C /* fromsiglist-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 055BC3EA265338E800E5E34C /* fromsiglist-impl.h */; };
 		055BC3ED265338FC00E5E34C /* pd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055BC3EC265338FC00E5E34C /* pd.cpp */; };
 		055CD8F62A23605A0072F4B5 /* topologylock.h in Headers */ = {isa = PBXBuildFile; fileRef = 055CD8F52A23605A0072F4B5 /* topologylock.h */; };
 		055DDCF01808575300C973FB /* surfacefiltertype.h in Headers */ = {isa = PBXBuildFile; fileRef = 055DDCEE1808575300C973FB /* surfacefiltertype.h */; };
@@ -2511,7 +2512,6 @@
 		050F5DC71B9BAB9C00C1F681 /* pycensus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pycensus.cpp; sourceTree = "<group>"; };
 		050F5DC91B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5DCB1B9BAB9C00C1F681 /* dehydration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dehydration.cpp; sourceTree = "<group>"; };
-		050F5DCC1B9BAB9C00C1F681 /* isosig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = isosig.cpp; sourceTree = "<group>"; };
 		050F5DCD1B9BAB9C00C1F681 /* orb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = orb.cpp; sourceTree = "<group>"; };
 		050F5DCF1B9BAB9C00C1F681 /* pyforeign.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pyforeign.cpp; sourceTree = "<group>"; };
 		050F5E6B1B9BD30700C1F681 /* __init__.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = __init__.py; path = regina/__init__.py; sourceTree = "<group>"; };
@@ -3064,6 +3064,9 @@
 		0545A0112F9ADCE8008D3ADB /* bytesequence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bytesequence.h; sourceTree = "<group>"; };
 		0545A0132F9CB9A6008D3ADB /* bytesequence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bytesequence.h; sourceTree = "<group>"; };
 		0545A0142F9CD9A7008D3ADB /* bytesequence.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = bytesequence.cpp; sourceTree = "<group>"; };
+		0545A0172F9F68AE008D3ADB /* siglist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = siglist.h; sourceTree = "<group>"; };
+		0545A0182F9F68AE008D3ADB /* siglist-impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "siglist-impl.h"; sourceTree = "<group>"; };
+		0545A01B2F9F696E008D3ADB /* siglist.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = siglist.cpp; sourceTree = "<group>"; };
 		0549B4982907D38D00C911AF /* data-anon.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-anon.docbook"; sourceTree = "<group>"; };
 		0549B4992907D38E00C911AF /* data-tri.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tri.docbook"; sourceTree = "<group>"; };
 		0549B49A2907D38E00C911AF /* data-txi.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-txi.docbook"; sourceTree = "<group>"; };
@@ -3190,7 +3193,6 @@
 		055ABEA319B499DC00044C1B /* christy-knots-links.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "christy-knots-links.zsig"; sourceTree = "<group>"; };
 		055ABEA419B499DC00044C1B /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		055BC3E82653380600E5E34C /* sigutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sigutils.h; sourceTree = "<group>"; };
-		055BC3EA265338E800E5E34C /* fromsiglist-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "fromsiglist-impl.h"; sourceTree = "<group>"; };
 		055BC3EC265338FC00E5E34C /* pd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pd.cpp; sourceTree = "<group>"; };
 		055BC3EF2653392000E5E34C /* compact-lmdb.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "compact-lmdb.cpp"; sourceTree = "<group>"; };
 		055BC3F02653392000E5E34C /* optimise-lmdb.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "optimise-lmdb.cpp"; sourceTree = "<group>"; };
@@ -5975,9 +5977,9 @@
 			children = (
 				050F5DC91B9BAB9C00C1F681 /* CMakeLists.txt */,
 				050F5DCB1B9BAB9C00C1F681 /* dehydration.cpp */,
-				050F5DCC1B9BAB9C00C1F681 /* isosig.cpp */,
 				050F5DCD1B9BAB9C00C1F681 /* orb.cpp */,
 				050F5DCF1B9BAB9C00C1F681 /* pyforeign.cpp */,
+				0545A01B2F9F696E008D3ADB /* siglist.cpp */,
 			);
 			path = foreign;
 			sourceTree = "<group>";
@@ -6368,10 +6370,11 @@
 				052F9CA8180600FA00FAE4DF /* CMakeLists.txt */,
 				052F9CAB180600FA00FAE4DF /* dehydration.cpp */,
 				052F9CAC180600FA00FAE4DF /* dehydration.h */,
-				055BC3EA265338E800E5E34C /* fromsiglist-impl.h */,
 				052F9CAE180600FA00FAE4DF /* isosig.h */,
 				052F9CAF180600FA00FAE4DF /* orb.cpp */,
 				052F9CB0180600FA00FAE4DF /* orb.h */,
+				0545A0172F9F68AE008D3ADB /* siglist.h */,
+				0545A0182F9F68AE008D3ADB /* siglist-impl.h */,
 			);
 			path = foreign;
 			sourceTree = "<group>";
@@ -9031,7 +9034,6 @@
 				057FDB012EE967A3000C706E /* forward.h in Headers */,
 				0542087A1DF0D0B50018AB24 /* format.h in Headers */,
 				05431F801C40F3C9009BC072 /* reduction.h in Headers */,
-				055BC3EB265338E800E5E34C /* fromsiglist-impl.h in Headers */,
 				055114D51DCC71A700EC753C /* facetspec.h in Headers */,
 				052F9F4F180600FB00FAE4DF /* numbertheory.h in Headers */,
 				05B7002125AC2305003BAF5C /* nmz_nauty.h in Headers */,
@@ -9071,6 +9073,8 @@
 				054208861DF0D0B50018AB24 /* textstyledata_p.h in Headers */,
 				05199A5C25C63CCE0006B8FA /* listview.h in Headers */,
 				0541AF4C1B8BE2F5002E166B /* cyclotomic.h in Headers */,
+				0545A0192F9F68AE008D3ADB /* siglist-impl.h in Headers */,
+				0545A01A2F9F68AE008D3ADB /* siglist.h in Headers */,
 				05AC685D1DFE729100FF1A4C /* layeredtorusbundle.h in Headers */,
 				054208B81DF0D2740018AB24 /* handlebody.h in Headers */,
 				054208781DF0D0B50018AB24 /* format_p.h in Headers */,
@@ -9822,6 +9826,7 @@
 				057EE4C91C600A3600C4D155 /* triangulation6.cpp in Sources */,
 				050F5E321B9BAB9C00C1F681 /* disc.cpp in Sources */,
 				05772EE5270CFAD200D26D8A /* trieset.cpp in Sources */,
+				0545A01C2F9F696E008D3ADB /* siglist.cpp in Sources */,
 				05721F111F97162600A83FFC /* pylink.cpp in Sources */,
 				05CAE6922747E617007C93F3 /* treeconstraint.cpp in Sources */,
 				050F5DE81B9BAB9C00C1F681 /* pyfile.cpp in Sources */,
@@ -9925,7 +9930,6 @@
 				054209051DF0DA450018AB24 /* simplesurfacebundle.cpp in Sources */,
 				05CAE68827469131007C93F3 /* sigutils.cpp in Sources */,
 				0568743020C5D8D3001C435B /* tangle.cpp in Sources */,
-				050F5E5B1B9BAB9C00C1F681 /* isosig.cpp in Sources */,
 				057EE4DF1C600A3600C4D155 /* facetpairing4.cpp in Sources */,
 				050F5E011B9BAB9C00C1F681 /* numbertheory.cpp in Sources */,
 				050F5E341B9BAB9C00C1F681 /* normalsurface.cpp in Sources */,

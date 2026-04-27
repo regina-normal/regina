@@ -13,16 +13,28 @@ namespace regina::python::doc {
 
 // Docstring regina::python::doc::readSigList
 static const char *readSigList =
-R"doc(Reads a list of signatures (e.g., isomorphism signatures for
-triangulations, or knot/link signatures) from the given text file, and
-reconstructs the corresponding mathematical objects in a new packet
-tree. The file should contain one signature per line.
+R"doc(Reads a list of signatures of triangulations or link diagrams from the
+given text file, and reconstructs the corresponding mathematical
+objects in a new packet tree. The file should contain one signature
+per line.
+
+The signatures may be first-generation or second-generation, and the
+same file may contain a mix of both. For example, they could be:
+
+* first-generation isomorphism signatures of triangulations, as
+  returned by ``Triangulation<dim>::isoSig()``;
+
+* first-generation knot/link signatures, as returned by
+  ``Link::knotSig()``;
+
+* second-generation signatures, as returned by
+  ``Triangulation<dim>::neoSig()`` or ``Link::neoSig()``.
 
 All signatures should be for the same type of object, which is passed
 as the template parameter *ObjectType*. For example, they could all be
 knot/link signatures (if ObjectType is Link), or they could all be
-isomorphism signatures for triangulations of some fixed dimension
-*dim* (if ObjectType is ``Triangulation<dim>``).
+signatures for triangulations of some fixed dimension *dim* (if
+ObjectType is ``Triangulation<dim>``).
 
 A new container will be returned, and the reconstructed objects (e.g.,
 triangulations or links) will be inserted as children of this

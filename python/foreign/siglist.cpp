@@ -29,7 +29,7 @@
  **************************************************************************/
 
 #include <pybind11/pybind11.h>
-#include "foreign/isosig.h"
+#include "foreign/siglist.h"
 #include "link/link.h"
 #include "packet/container.h"
 #include "triangulation/dim2.h"
@@ -38,7 +38,7 @@
 #include "triangulation/generic.h"
 #include "utilities/typeutils.h"
 #include "../helpers.h"
-#include "../docstrings/foreign/isosig.h"
+#include "../docstrings/foreign/siglist.h"
 
 using pybind11::overload_cast;
 

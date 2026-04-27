@@ -464,6 +464,12 @@ Version 8.0  [ TODO ]
                 enumerate/treelp.h)
               + LinkSigEncoding (defined in link/linksig.h)
               + IsoSigEncoding, IsoSigType (defined in triangulation/isosig.h)
+        Header foreign/fromsiglist-impl.h:
+            - Renamed to foreign/siglist-impl.h.  The old header has been
+              removed completely, since end users do not need to include it.
+        Header foreign/isosig.h:
+            - Renamed to foreign/siglist.h.  The old header is kept but
+              deprecated.
         Header triangulation/isosigencoding.h, triangulation/isosigtype.h:
             - Merged into the new header triangulation/isosig.h.  The old
               headers are kept but deprecated.
