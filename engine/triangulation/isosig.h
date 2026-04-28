@@ -29,8 +29,8 @@
  **************************************************************************/
 
 /*! \file triangulation/isosig.h
- *  \brief Defines different encodings and signature types for
- *  isomorphism signatures.
+ *  \brief Defines different encodings and signature types for first-generation
+ *  signatures of triangulations (i.e., isomorphism signatures).
  */
 
 #ifndef __REGINA_ISOSIG_H
@@ -55,11 +55,13 @@ requires (dim >= 1 && dim <= maxDim() && subdim >= 0 && subdim < dim)
 class FaceNumbering;
 
 /**
- * Holds all of the data required to reconstruct a single non-empty connected
- * component of a <i>dim</i>-dimensional triangulation, up to relabelling.
- * This is a halfway point between isomorphism signatures and triangulations:
- * the data is small and uses simple numerical/combinatorial types, and is easy
- * to encode or decode in an appropriate signature form (e.g., a base64 string).
+ * Holds the combinatorial data required to reconstruct a single non-empty
+ * connected component of a <i>dim</i>-dimensional triangulation, up to
+ * relabelling, for use with first-generation signatures as returned by
+ * `Triangulation<dim>::isoSig()`.  This is a halfway point between signatures
+ * and triangulations: the data is small and uses simple numerical types, and
+ * is easy to encode or decode in an appropriate signature form (e.g., a
+ * base64 string).
  *
  * Specifically, this data encodes a "compressed" gluings table for a
  * "canonical" labelling of a triangulation component.  Both the notions of
@@ -70,13 +72,18 @@ class FaceNumbering;
  * have not yet stepped through, and some will be glued to "old" facets (i.e.,
  * we have already seen the same `(dim-1)`-face from the other side).
  *
- * To be _canonical_:
+ * The notion of "canonical" differs between first-generation signatures
+ * (`isoSig()`) and second-generation signatures (`neoSig()`).
+ * To be _canonical_ for first-generation signatures:
  *
  * _ We require that each time we see a new facet whose gluing partner comes
  *   from a previously-unseen simplex, then that partner simplex uses the next
  *   available simplex label and the gluing uses the identity permutation.
  *   So, for example, the first facet of simplex 0 that is glued to some
  *   _other_ simplex must be glued to simplex 1 using the identity permutation.
+ *   Note that, in constrast to second-generation signatures, if the component
+ *   has more than one top-dimensional simplex then this will never result in
+ *   an oriented labelling.
  *
  * - The condition above ensures that, once we have chosen which top-dimensional
  *   simplex will be simplex 0 and how its vertices `0,...,dim` will be
@@ -87,32 +94,36 @@ class FaceNumbering;
  *   choice of simplex 0 and its vertex labels; see the IsoSigType concept
  *   documentation for details.
  *
- * Given a canonical labelling, a _compressed_ gluings table holds the
- * following information:
+ * Given a canonical labelling, a _compressed_ gluings table for a
+ * first-generation signature holds the following information:
  *
  * - For each facet \a f that we step through in order, _ignoring_ those glued
  *   to "old" facets, we record whether \a f is: boundary (type 0); glued to a
  *   "new" facet of a previously-unseen simplex using the identity permutation
- *   (type 1); or glued to a "new" facet of a simplex that has been seen before
- *   (type 2).  This is stored in array whose length is the total number of
+ *   (type 1); or glued to a "new" facet of a simplex that has already been seen
+ *   (type 2).  This is stored in an array whose length is the total number of
  *   `(dim-1)`-faces in the triangulation component.
  *
  * - For each facet of type 2, we record the top-dimensional simplex number
  *   that it is glued to.  This is stored in an array whose length is the
  *   total number of facets of type 2.
  *
- * - For each facet of type 2, we record the ordered `S_n` index of the
- *   specific gluing permutation, again using an array whose length is the
- *   total number of facets of type 2.
+ * - For each facet of type 2, we record the ordered `S_n` index of the specific
+ *   gluing permutation, again using an array whose length is the total number
+ *   of facets of type 2.  Note that this is different from second-generation
+ *   signatures, which use the plain (not ordered) `S_n` index.
  *
  * - Finally, if (and only if) there are any simplex or facet locks in this
  *   triangulation component, we also record the lock masks of all
  *   top-dimensional simplices in order (simplex `0,1,2,...`).
  *
- * An isomorphism signature _encoding_ is responsible for encoding this data
- * in its final signature form (e.g., a base64 string), and the final
- * isomorphism signature will use the labelling that minimises this
- * encoding (under the inherent ordering of the resulting signature type).
+ * A first-generation signature _encoding_ is responsible for encoding this
+ * data in its final signature form (e.g., a base64 string); see the
+ * IsoSigEncoding concept documentation for details.  The final signature will
+ * use the labelling that minimises this encoding, under the inherent ordering
+ * of the resulting signature type (this is done differently from
+ * second-generation signatures, which minimise the compressed gluings table
+ * before it is encoded).
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -428,7 +439,7 @@ concept IsoSigEncoding =
     };
 
 /**
- * The default encoding to use for isomorphism signatures.
+ * The default encoding to use for first-generation isomorphism signatures.
  *
  * This printable encoding is consistent with the original isomorphism
  * signatures that were implemented in Regina 4.90.  It represents an
