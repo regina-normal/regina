@@ -72,7 +72,12 @@ void addBitmaskOpt(pybind11::module_& m, const char* name) {
         .def(pybind11::self ^= pybind11::self, rdoc::__ixor)
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
         .def("flip", &B::flip, rdoc::flip)
-        .def("lessThan", &B::lessThan, rdoc::lessThan)
+        .def("lessThan", [](const B& a, const B& b) { // deprecated
+            return a.numericalComp(b) < 0;
+        }, rdoc::lessThan)
+        .def("numericalLessThan", [](const B& a, const B& b) {
+            return a.numericalComp(b) < 0;
+        }, rdoc::numericalComp)
         .def("inUnion", &B::inUnion, rdoc::inUnion)
         .def("containsIntn", &B::containsIntn, rdoc::containsIntn)
         .def("bits", &B::bits, rdoc::bits)
@@ -120,7 +125,12 @@ void addBitmaskGeneric(pybind11::module_& m) {
         .def(pybind11::self ^= pybind11::self, rdoc::__ixor)
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
         .def("flip", &Bitmask::flip, rdoc::flip)
-        .def("lessThan", &Bitmask::lessThan, rdoc::lessThan)
+        .def("lessThan", [](const Bitmask& a, const Bitmask& b) { // deprecated
+            return a.numericalComp(b) < 0;
+        }, rdoc::lessThan)
+        .def("numericalLessThan", [](const Bitmask& a, const Bitmask& b) {
+            return a.numericalComp(b) < 0;
+        }, rdoc::numericalComp)
         .def("inUnion", &Bitmask::inUnion, rdoc::inUnion)
         .def("containsIntn", &Bitmask::containsIntn, rdoc::containsIntn)
         .def("bits", &Bitmask::bits, rdoc::bits)

@@ -81,7 +81,7 @@ Parameter ``rhs``:
     the set to compare with this.
 
 Returns:
-    The result of the subset comparison between this and the given
+    the result of the subset comparison between this and the given
     set.)doc";
 
 // Docstring regina::python::doc::BoolSet_::__copy

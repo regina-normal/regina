@@ -134,7 +134,7 @@ Parameter ``rhs``:
     the bitmask to compare against this.
 
 Returns:
-    The result of the subset comparison between this and the given
+    the result of the subset comparison between this and the given
     bitmask.)doc";
 
 // Docstring regina::python::doc::Bitmask1_::__copy
@@ -298,22 +298,46 @@ Returns:
 
 // Docstring regina::python::doc::Bitmask1_::lessThan
 static const char *lessThan =
-R"doc(Determines whether this bitmask appears strictly before the given
-bitmask when bitmasks are sorted in lexicographical order. Here the
-bit at index 0 is least significant, and the bit at index *length*-1
-is most significant.
+R"doc(Deprecated routine that determines whether this bitmask appears
+strictly before the given bitmask when bitmasks are sorted in "reverse
+lexicographical" order. Here the bit at index 0 is least significant,
+and the bit at index ``length-1`` is most significant.
+
+.. deprecated::
+    Instead use ``numericalComp(other)``, which has a clearer name and
+    which returns a three-way comparison.
+
+Parameter ``other``:
+    the bitmask to compare against this.
+
+Returns:
+    ``True`` if and only if this is "reverse lexicographically"
+    strictly smaller than the given bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask1_::numericalComp
+static const char *numericalComp =
+R"doc(Compares this against the given bitmask numerically, treating the
+bitmask as an unsigned integer written in binary. This is essentially
+a "reverse lexicographical" ordering: the bit at index 0 is least
+significant, and the bit at index *length*-1 is most significant.
 
 .. warning::
     We do not use < for this ordering, since the comparison operators
     (``<``, ``≤``, ``>``, ``≥``) work with the subset relation
     instead.
 
+Python:
+    Since Python does not support ``std::strong_ordering``, this
+    routine is called ``numericalLessThan()`` instead, and it returns
+    a boolean according to whether the comparison orders this bitmask
+    before *other*.
+
 Parameter ``other``:
     the bitmask to compare against this.
 
 Returns:
-    ``True`` if and only if this is lexicographically strictly smaller
-    than the given bitmask.)doc";
+    the result of the numerical comparison between this and the given
+    bitmask.)doc";
 
 // Docstring regina::python::doc::Bitmask1_::reset
 static const char *reset = R"doc(Sets all bits of this bitmask to ``False``.)doc";
@@ -426,7 +450,7 @@ Parameter ``rhs``:
     the bitmask to compare against this.
 
 Returns:
-    The result of the subset comparison between this and the given
+    the result of the subset comparison between this and the given
     bitmask.)doc";
 
 // Docstring regina::python::doc::Bitmask2_::__copy
@@ -590,22 +614,46 @@ Returns:
 
 // Docstring regina::python::doc::Bitmask2_::lessThan
 static const char *lessThan =
-R"doc(Determines whether this bitmask appears strictly before the given
-bitmask when bitmasks are sorted in lexicographical order. Here the
-bit at index 0 is least significant, and the bit at index *length*-1
-is most significant.
+R"doc(Deprecated routine that determines whether this bitmask appears
+strictly before the given bitmask when bitmasks are sorted in "reverse
+lexicographical" order. Here the bit at index 0 is least significant,
+and the bit at index ``length-1`` is most significant.
+
+.. deprecated::
+    Instead use ``numericalComp(other)``, which has a clearer name and
+    which returns a three-way comparison.
+
+Parameter ``other``:
+    the bitmask to compare against this.
+
+Returns:
+    ``True`` if and only if this is "reverse lexicographically"
+    strictly smaller than the given bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask2_::numericalComp
+static const char *numericalComp =
+R"doc(Compares this against the given bitmask numerically, treating the
+bitmask as an unsigned integer written in binary. This is essentially
+a "reverse lexicographical" ordering: the bit at index 0 is least
+significant, and the bit at index *length*-1 is most significant.
 
 .. warning::
     We do not use < for this ordering, since the comparison operators
     (``<``, ``≤``, ``>``, ``≥``) work with the subset relation
     instead.
 
+Python:
+    Since Python does not support ``std::strong_ordering``, this
+    routine is called ``numericalLessThan()`` instead, and it returns
+    a boolean according to whether the comparison orders this bitmask
+    before *other*.
+
 Parameter ``other``:
     the bitmask to compare against this.
 
 Returns:
-    ``True`` if and only if this is lexicographically strictly smaller
-    than the given bitmask.)doc";
+    the result of the numerical comparison between this and the given
+    bitmask.)doc";
 
 // Docstring regina::python::doc::Bitmask2_::reset
 static const char *reset = R"doc(Sets all bits of this bitmask to ``False``.)doc";
@@ -721,7 +769,7 @@ Parameter ``rhs``:
     the bitmask to compare against this.
 
 Returns:
-    The result of the subset comparison between this and the given
+    the result of the subset comparison between this and the given
     bitmask.)doc";
 
 // Docstring regina::python::doc::Bitmask_::__copy
@@ -949,10 +997,31 @@ Returns:
 
 // Docstring regina::python::doc::Bitmask_::lessThan
 static const char *lessThan =
-R"doc(Determines whether this bitmask appears strictly before the given
-bitmask when bitmasks are sorted in lexicographical order. Here the
-bit at index 0 is least significant, and the bit at index *length*-1
-is most significant.
+R"doc(Deprecated routine that determines whether this bitmask appears
+strictly before the given bitmask when bitmasks are sorted in "reverse
+lexicographical" order. Here the bit at index 0 is least significant,
+and the bit at index *length*-1 is most significant.
+
+.. deprecated::
+    Instead use ``numericalComp(other)``, which has a clearer name and
+    which returns a three-way comparison.
+
+Precondition:
+    This and the given bitmask have the same length.
+
+Parameter ``other``:
+    the bitmask to compare against this.
+
+Returns:
+    ``True`` if and only if this is "reverse lexicographically"
+    strictly smaller than the given bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask_::numericalComp
+static const char *numericalComp =
+R"doc(Compares this against the given bitmask numerically, treating the
+bitmask as an unsigned integer written in binary. This is essentially
+a "reverse lexicographical" ordering: the bit at index 0 is least
+significant, and the bit at index *length*-1 is most significant.
 
 Precondition:
     This and the given bitmask have the same length.
@@ -962,12 +1031,18 @@ Precondition:
     (``<``, ``≤``, ``>``, ``≥``) work with the subset relation
     instead.
 
+Python:
+    Since Python does not support ``std::strong_ordering``, this
+    routine is called ``numericalLessThan()`` instead, and it returns
+    a boolean according to whether the comparison orders this bitmask
+    before *other*.
+
 Parameter ``other``:
     the bitmask to compare against this.
 
 Returns:
-    ``True`` if and only if this is lexicographically strictly smaller
-    than the given bitmask.)doc";
+    the result of the numerical comparison between this and the given
+    bitmask.)doc";
 
 // Docstring regina::python::doc::Bitmask_::reset
 static const char *reset =

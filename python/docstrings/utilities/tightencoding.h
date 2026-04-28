@@ -164,7 +164,7 @@ Python:
     Python dictionaries and sets.
 
 Returns:
-    The integer hash of this object.)doc";
+    the integer hash of this object.)doc";
 
 // Docstring regina::python::doc::TightEncodable_::tightDecoding
 static const char *tightDecoding =

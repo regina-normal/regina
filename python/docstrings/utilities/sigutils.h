@@ -607,7 +607,7 @@ static const char *str =
 R"doc(Returns the base64 encoding that has been constructed thus far.
 
 Returns:
-    The current base64 encoding.)doc";
+    the current base64 encoding.)doc";
 
 }
 
@@ -936,7 +936,7 @@ Python:
     This routine returns a Python ``bytes`` object.
 
 Returns:
-    The current byte sequence.)doc";
+    the current byte sequence.)doc";
 
 // Docstring regina::python::doc::PackedSigEncoder_::encodeBits
 static const char *encodeBits =

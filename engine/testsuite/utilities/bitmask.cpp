@@ -228,7 +228,7 @@ TEST(BitmaskTest, truncate) {
 }
 
 template <regina::ReginaBitmask BitmaskType>
-static void testLexOrder(int length) {
+static void testNumericalOrder(int length) {
     SCOPED_TRACE_TYPE(BitmaskType);
     SCOPED_TRACE_NUMERIC(length);
 
@@ -245,32 +245,36 @@ static void testLexOrder(int length) {
     for (i = 0; i < 256; ++i) {
         SCOPED_TRACE(b[i]);
 
-        // Note: Bitmask uses lessThan() not <, since ≤ tests for subsets.
-        EXPECT_FALSE(b[i].lessThan(b[i]));
+        // Note: Bitmask uses numericalComp() not <=>, since <=> tests the
+        // subset relation.
+        EXPECT_EQ(b[i].numericalComp(b[i]), std::strong_ordering::equal);
         if (i > 0) {
-            EXPECT_TRUE(b[i - 1].lessThan(b[i]));
-            EXPECT_FALSE(b[i].lessThan(b[i - 1]));
+            EXPECT_EQ(b[i - 1].numericalComp(b[i]), std::strong_ordering::less);
+            EXPECT_EQ(b[i].numericalComp(b[i - 1]),
+                std::strong_ordering::greater);
         }
     }
 }
 
-TEST(BitmaskTest, lexOrder) {
+TEST(BitmaskTest, numericalOrder) {
     static constexpr int longBits = 8 * sizeof(unsigned long);
 
-    testLexOrder<regina::Bitmask1<uint8_t>>(8);
-    testLexOrder<regina::Bitmask1<uint16_t>>(16);
-    testLexOrder<regina::Bitmask1<uint32_t>>(32);
-    testLexOrder<regina::Bitmask1<uint64_t>>(64);
-    testLexOrder<regina::Bitmask1<unsigned char>>(8);
-    testLexOrder<regina::Bitmask1<unsigned long>>(longBits);
-    testLexOrder<regina::Bitmask2<unsigned char>>(16);
-    testLexOrder<regina::Bitmask2<unsigned long>>(2 * longBits);
-    testLexOrder<regina::Bitmask2<unsigned char, unsigned long>>(8 + longBits);
-    testLexOrder<regina::Bitmask2<unsigned long, unsigned char>>(8 + longBits);
-    testLexOrder<regina::Bitmask>(128);
+    testNumericalOrder<regina::Bitmask1<uint8_t>>(8);
+    testNumericalOrder<regina::Bitmask1<uint16_t>>(16);
+    testNumericalOrder<regina::Bitmask1<uint32_t>>(32);
+    testNumericalOrder<regina::Bitmask1<uint64_t>>(64);
+    testNumericalOrder<regina::Bitmask1<unsigned char>>(8);
+    testNumericalOrder<regina::Bitmask1<unsigned long>>(longBits);
+    testNumericalOrder<regina::Bitmask2<unsigned char>>(16);
+    testNumericalOrder<regina::Bitmask2<unsigned long>>(2 * longBits);
+    testNumericalOrder<regina::Bitmask2<unsigned char, unsigned long>>(
+        8 + longBits);
+    testNumericalOrder<regina::Bitmask2<unsigned long, unsigned char>>(
+        8 + longBits);
+    testNumericalOrder<regina::Bitmask>(128);
 #ifdef INT128_AVAILABLE
-    testLexOrder<regina::Bitmask1<regina::UInt128>>(128);
-    testLexOrder<regina::Bitmask2<regina::UInt128>>(256);
+    testNumericalOrder<regina::Bitmask1<regina::UInt128>>(128);
+    testNumericalOrder<regina::Bitmask2<regina::UInt128>>(256);
 #endif
 }
 

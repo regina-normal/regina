@@ -52,6 +52,10 @@ Version 8.0  [ TODO ]
               BitManipulator<...>.
         Class Bitmask:
             - This class now supports bitmasks of length zero.
+        Class Bitmask, Bitmask1, Bitmask2:
+            - New three-way comparison function numericalComp(), which replaces
+              the old boolean lessThan().  The function lessThan() is kept but
+              deprecated.
         Class BoolSet:
             - Regarding byte codes and string codes:
               + New type alias ByteCode.

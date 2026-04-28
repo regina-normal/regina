@@ -397,21 +397,44 @@ class Bitmask {
         bool operator == (const Bitmask& other) const;
 
         /**
-         * Determines whether this bitmask appears strictly before the given
-         * bitmask when bitmasks are sorted in lexicographical order.
-         * Here the bit at index 0 is least significant, and the bit at
-         * index \a length-1 is most significant.
+         * Deprecated routine that determines whether this bitmask appears
+         * strictly before the given bitmask when bitmasks are sorted in
+         * "reverse lexicographical" order.  Here the bit at index 0 is least
+         * significant, and the bit at index \a length-1 is most significant.
+         *
+         * \deprecated Instead use `numericalComp(other)`, which has a clearer
+         * name and which returns a three-way comparison.
+         *
+         * \pre This and the given bitmask have the same length.
+         *
+         * \param other the bitmask to compare against this.
+         * \return \c true if and only if this is "reverse lexicographically"
+         * strictly smaller than the given bitmask.
+         */
+        [[deprecated]] bool lessThan(const Bitmask& other) const;
+
+        /**
+         * Compares this against the given bitmask numerically, treating the
+         * bitmask as an unsigned integer written in binary.  This is
+         * essentially a "reverse lexicographical" ordering: the bit at index 0
+         * is least significant, and the bit at index \a length-1 is most
+         * significant.
          *
          * \pre This and the given bitmask have the same length.
          *
          * \warning We do not use \< for this ordering, since the comparison
          * operators (`<`, `≤`, `>`, `≥`) work with the subset relation instead.
          *
+         * \python Since Python does not support `std::strong_ordering`, this
+         * routine is called `numericalLessThan()` instead, and it returns a
+         * boolean according to whether the comparison orders this bitmask
+         * before \a other.
+         *
          * \param other the bitmask to compare against this.
-         * \return \c true if and only if this is lexicographically
-         * strictly smaller than the given bitmask.
+         * \return the result of the numerical comparison between this and
+         * the given bitmask.
          */
-        bool lessThan(const Bitmask& other) const;
+        std::strong_ordering numericalComp(const Bitmask& other) const;
 
         /**
          * Compares two bitmasks under the subset relation.
@@ -815,20 +838,43 @@ class Bitmask1 {
         bool operator == (const Bitmask1&) const = default;
 
         /**
-         * Determines whether this bitmask appears strictly before the given
-         * bitmask when bitmasks are sorted in lexicographical order.
-         * Here the bit at index 0 is least significant, and the bit at
-         * index \a length-1 is most significant.
+         * Deprecated routine that determines whether this bitmask appears
+         * strictly before the given bitmask when bitmasks are sorted in
+         * "reverse lexicographical" order.  Here the bit at index 0 is least
+         * significant, and the bit at index `length-1` is most significant.
+         *
+         * \deprecated Instead use `numericalComp(other)`, which has a clearer
+         * name and which returns a three-way comparison.
+         *
+         * \param other the bitmask to compare against this.
+         * \return \c true if and only if this is "reverse lexicographically"
+         * strictly smaller than the given bitmask.
+         */
+        [[deprecated]] inline bool lessThan(const Bitmask1& other) const {
+            return (mask < other.mask);
+        }
+
+        /**
+         * Compares this against the given bitmask numerically, treating the
+         * bitmask as an unsigned integer written in binary.  This is
+         * essentially a "reverse lexicographical" ordering: the bit at index 0
+         * is least significant, and the bit at index \a length-1 is most
+         * significant.
          *
          * \warning We do not use \< for this ordering, since the comparison
          * operators (`<`, `≤`, `>`, `≥`) work with the subset relation instead.
          *
+         * \python Since Python does not support `std::strong_ordering`, this
+         * routine is called `numericalLessThan()` instead, and it returns a
+         * boolean according to whether the comparison orders this bitmask
+         * before \a other.
+         *
          * \param other the bitmask to compare against this.
-         * \return \c true if and only if this is lexicographically
-         * strictly smaller than the given bitmask.
+         * \return the result of the numerical comparison between this and
+         * the given bitmask.
          */
-        inline bool lessThan(const Bitmask1& other) const {
-            return (mask < other.mask);
+        inline std::strong_ordering numericalComp(const Bitmask1& other) const {
+            return mask <=> other.mask;
         }
 
         /**
@@ -1255,21 +1301,46 @@ class Bitmask2 {
         bool operator == (const Bitmask2& other) const = default;
 
         /**
-         * Determines whether this bitmask appears strictly before the given
-         * bitmask when bitmasks are sorted in lexicographical order.
-         * Here the bit at index 0 is least significant, and the bit at
-         * index \a length-1 is most significant.
+         * Deprecated routine that determines whether this bitmask appears
+         * strictly before the given bitmask when bitmasks are sorted in
+         * "reverse lexicographical" order.  Here the bit at index 0 is least
+         * significant, and the bit at index `length-1` is most significant.
+         *
+         * \deprecated Instead use `numericalComp(other)`, which has a clearer
+         * name and which returns a three-way comparison.
+         *
+         * \param other the bitmask to compare against this.
+         * \return \c true if and only if this is "reverse lexicographically"
+         * strictly smaller than the given bitmask.
+         */
+        [[deprecated]] inline bool lessThan(const Bitmask2& other) const {
+            return (high < other.high ||
+                (high == other.high && low < other.low));
+        }
+
+        /**
+         * Compares this against the given bitmask numerically, treating the
+         * bitmask as an unsigned integer written in binary.  This is
+         * essentially a "reverse lexicographical" ordering: the bit at index 0
+         * is least significant, and the bit at index \a length-1 is most
+         * significant.
          *
          * \warning We do not use \< for this ordering, since the comparison
          * operators (`<`, `≤`, `>`, `≥`) work with the subset relation instead.
          *
+         * \python Since Python does not support `std::strong_ordering`, this
+         * routine is called `numericalLessThan()` instead, and it returns a
+         * boolean according to whether the comparison orders this bitmask
+         * before \a other.
+         *
          * \param other the bitmask to compare against this.
-         * \return \c true if and only if this is lexicographically
-         * strictly smaller than the given bitmask.
+         * \return the result of the numerical comparison between this and
+         * the given bitmask.
          */
-        inline bool lessThan(const Bitmask2& other) const {
-            return (high < other.high ||
-                (high == other.high && low < other.low));
+        inline std::strong_ordering numericalComp(const Bitmask2& other) const {
+            if (auto c = high <=> other.high; c != 0)
+                return c;
+            return low <=> other.low;
         }
 
         /**
@@ -1606,6 +1677,13 @@ inline bool Bitmask::lessThan(const Bitmask& other) const {
         else if (mask[i] > other.mask[i])
             return false;
     return false;
+}
+
+inline std::strong_ordering Bitmask::numericalComp(const Bitmask& other) const {
+    for (ssize_t i = pieces - 1; i >= 0; --i)
+        if (auto c = mask[i] <=> other.mask[i]; c != 0)
+            return c;
+    return std::strong_ordering::equal;
 }
 
 inline std::partial_ordering Bitmask::operator <=> (const Bitmask& rhs) const {
