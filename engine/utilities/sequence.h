@@ -586,21 +586,8 @@ inline bool LightweightSequence<T>::operator == (
 template <std::semiregular T>
 inline auto LightweightSequence<T>::operator <=> (
         const LightweightSequence& rhs) const {
-#if defined(LEXCMP_FOUND)
     return std::lexicographical_compare_three_way(
         data_, data_ + size_, rhs.data_, rhs.data_ + rhs.size_);
-#else
-    auto i = data_;
-    auto j = rhs.data_;
-    for ( ; i != data_ + size_ && j != rhs.data_ + rhs.size_; ++i, ++j)
-        if (auto c = (*i <=> *j); c != 0)
-            return c;
-    if (i != data_ + size_)
-        return std::strong_ordering::greater; // LHS is longer
-    if (j != rhs.data_ + rhs.size_)
-        return std::strong_ordering::less; // RHS is longer
-    return std::strong_ordering::equal; // sequences are identical
-#endif
 }
 
 template <std::semiregular T>
