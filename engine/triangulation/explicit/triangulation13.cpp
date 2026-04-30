@@ -42,8 +42,7 @@ template std::string TriangulationBase<13>::isoSig<
 template std::pair<std::string, Isomorphism<13>>
     TriangulationBase<13>::isoSigDetail<
     IsoSigClassic<13>, IsoSigPrintable<13>>() const;
-template Triangulation<13> TriangulationBase<13>::fromIsoSig(
-    const std::string&);
+template Triangulation<13> TriangulationBase<13>::fromSig(const std::string&);
 template size_t TriangulationBase<13>::isoSigComponentSize(const std::string&);
 
 template AbelianGroup TriangulationBase<13>::homology<1>() const;

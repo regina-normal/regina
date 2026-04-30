@@ -853,7 +853,7 @@ TEST_F(Dim4Test, shellBoundary) {
     };
     for (const auto& sig: sigs) {
         TriangulationTest<4>::verifyShellBoundary(
-            Triangulation<4>::fromIsoSig(sig), sig.c_str());
+            Triangulation<4>::fromSig(sig), sig.c_str());
     }
 }
 
@@ -1325,16 +1325,16 @@ TEST_F(Dim4Test, intersectionForm) {
 
     // Some larger examples:
     for (const char* sig : large_s2xs2)
-        verifyIntersectionForm({ Triangulation<4>::fromIsoSig(sig), sig },
+        verifyIntersectionForm({ Triangulation<4>::fromSig(sig), sig },
             2, 0, true);
     for (const char* sig : large_s2xs2Twisted)
-        verifyIntersectionForm({ Triangulation<4>::fromIsoSig(sig), sig },
+        verifyIntersectionForm({ Triangulation<4>::fromSig(sig), sig },
             2, 0, false);
     for (const char* sig : large_cp2)
-        verifyIntersectionForm({ Triangulation<4>::fromIsoSig(sig), sig },
+        verifyIntersectionForm({ Triangulation<4>::fromSig(sig), sig },
             1, 1, false);
     for (const char* sig : large_cp2_reflect)
-        verifyIntersectionForm({ Triangulation<4>::fromIsoSig(sig), sig },
+        verifyIntersectionForm({ Triangulation<4>::fromSig(sig), sig },
             1, -1, false);
 }
 

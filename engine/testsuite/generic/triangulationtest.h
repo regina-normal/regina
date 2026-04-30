@@ -1250,13 +1250,13 @@ class TriangulationTest : public testing::Test {
             }
 
             ASSERT_NO_THROW({
-                EXPECT_TRUE(regina::Triangulation<dim>::fromIsoSig(sig).
+                EXPECT_TRUE(regina::Triangulation<dim>::fromSig(sig).
                     isIsomorphicTo(tri));
             });
 
             // Does rebuilding still work if the signature has whitespace?
             EXPECT_NO_THROW({
-                EXPECT_TRUE(regina::Triangulation<dim>::fromIsoSig(
+                EXPECT_TRUE(regina::Triangulation<dim>::fromSig(
                     std::string("\t " + sig + "\t \n")).isIsomorphicTo(tri));
             });
 
@@ -1277,7 +1277,7 @@ class TriangulationTest : public testing::Test {
 
                 auto relabelled = detail.second(tri);
                 auto reconstructed =
-                    Triangulation<dim>::fromIsoSig(detail.first);
+                    Triangulation<dim>::fromSig(detail.first);
 
                 EXPECT_EQ(relabelled, reconstructed);
 

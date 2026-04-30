@@ -723,14 +723,24 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
             rbase::insertTriangulation)
         .def("dehydrate", &Triangulation<3>::dehydrate, rdoc::dehydrate)
         .def_static("rehydrate", &Triangulation<3>::rehydrate, rdoc::rehydrate)
-        // Variants of isoSig() are handled through isosig_options() below.
         .def_static("fromGluings", [](size_t size, const std::vector<
                 std::tuple<size_t, int, size_t, regina::Perm<4>>>& g) {
             return Triangulation<3>::fromGluings(size, g.begin(), g.end());
         }, pybind11::arg("size"), pybind11::arg("gluings"), rbase::fromGluings)
-        .def_static("fromIsoSig", &Triangulation<3>::fromIsoSig,
+        // Variants of isoSig() are handled through isosig_options() below.
+        // With fromSig(), the byte sequence variant _must_ come first.
+        // This is because pybind11 performs automatic conversion from bytes
+        // to std::string, and so if the string variant appears first then
+        // pybind11 will use it even with a pybind11::bytes argument.
+        .def_static("fromSig",
+            overload_cast<const ByteSequence&>(&Triangulation<3>::fromSig),
+            rbase::fromSig_2)
+        .def_static("fromSig",
+            overload_cast<const std::string&>(&Triangulation<3>::fromSig),
+            rbase::fromSig)
+        .def_static("fromIsoSig", // deprecated
+            overload_cast<const std::string&>(&Triangulation<3>::fromSig),
             rbase::fromIsoSig)
-        .def_static("fromSig", &Triangulation<3>::fromSig, rbase::fromSig)
         .def_static("isoSigComponentSize",
             &Triangulation<3>::isoSigComponentSize, rbase::isoSigComponentSize)
         .def("source", &Triangulation<3>::source,

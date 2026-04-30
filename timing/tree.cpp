@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
         // Process the next triangulation on the command line:
         Triangulation<3> t;
         try {
-            t = Triangulation<3>::fromIsoSig(argv[i]);
+            t = Triangulation<3>::fromSig(argv[i]);
         } catch (const regina::InvalidArgument&) {
             std::cerr << "ERROR: Could not reconstruct " << argv[i]
                 << std::endl;

@@ -41,7 +41,7 @@ namespace detail {
     void RetriangulateParams<Triangulation<4>>::propagateFrom(
             const std::string& sig, size_t maxSize,
             NoPropagationOptions, Action&& candidateAction) {
-        Triangulation<4> t = Triangulation<4>::fromIsoSig(sig);
+        Triangulation<4> t = Triangulation<4>::fromSig(sig);
         size_t i;
 
         for (i = 0; i < t.countVertices(); ++i)

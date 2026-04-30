@@ -379,7 +379,7 @@ int main(int argc, char* argv[]) {
         switch (flavour) {
             case FLAVOUR_DIM3: {
                 try {
-                    process(regina::Triangulation<3>::fromIsoSig(sig));
+                    process(regina::Triangulation<3>::fromSig(sig));
                 } catch (const regina::InvalidArgument&) {
                     std::cerr << "I could not interpret the given "
                         "3-manifold isomorphism signature.\n";
@@ -389,7 +389,7 @@ int main(int argc, char* argv[]) {
             }
             case FLAVOUR_DIM4: {
                 try {
-                    process(regina::Triangulation<4>::fromIsoSig(sig));
+                    process(regina::Triangulation<4>::fromSig(sig));
                 } catch (const regina::InvalidArgument&) {
                     std::cerr << "I could not interpret the given "
                         "4-manifold isomorphism signature.\n";

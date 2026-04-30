@@ -273,7 +273,7 @@ using Tri4Creator = regina::Triangulation<4>* (*)();
         return 0;
     }
     
-    regina::Triangulation<4>* t = regina::Triangulation<4>::fromIsoSig(sig);
+    regina::Triangulation<4>* t = regina::Triangulation<4>::fromSig(sig);
     if (! t) {
         UIAlertView* alert = [[UIAlertView alloc]
                               initWithTitle:@"Invalid Isomorphism Signature"

@@ -1680,7 +1680,7 @@ static void verifySimplifyExhaustive(const char* isoSig,
         int heightNeeded, int nThreads) {
     SCOPED_TRACE_CSTRING(isoSig);
 
-    Triangulation<3> t = Triangulation<3>::fromIsoSig(isoSig);
+    Triangulation<3> t = Triangulation<3>::fromSig(isoSig);
     size_t initSize = t.size();
 
     for (int height = 0; height < heightNeeded; ++height) {
@@ -1795,7 +1795,7 @@ TEST_F(Dim3Test, minimiseBoundary) {
     // close-book moves at the beginning (so a layering is required).
     {
         const char* sig = "gffjQafeefaaaa";
-        verifyMinimiseBoundary(Triangulation<3>::fromIsoSig(sig), sig);
+        verifyMinimiseBoundary(Triangulation<3>::fromSig(sig), sig);
     }
 }
 
@@ -1849,7 +1849,7 @@ TEST_F(Dim3Test, minimiseVertices) {
     // close-book moves at the beginning (so a layering is required).
     {
         const char* sig = "gffjQafeefaaaa";
-        verifyMinimiseVertices(Triangulation<3>::fromIsoSig(sig), sig);
+        verifyMinimiseVertices(Triangulation<3>::fromSig(sig), sig);
     }
 
     // Some disconnected triangulations where reductions are required.

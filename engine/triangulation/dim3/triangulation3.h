@@ -308,7 +308,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * At present, Regina understands the following types of strings
          * (and attempts to parse them in the following order):
          *
-         * - isomorphism signatures (see fromIsoSig());
+         * - isomorphism signatures (see fromSig());
          * - dehydration strings (see rehydrate());
          * - the filename or contents of a SnapPea data file (see
          *   fromSnapPea()).

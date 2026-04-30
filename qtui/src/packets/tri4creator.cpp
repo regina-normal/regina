@@ -338,7 +338,7 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
 
         std::string sig = match.captured(1).toUtf8().constData();
         try {
-            return regina::make_packet(Triangulation<4>::fromIsoSig(sig), sig);
+            return regina::make_packet(Triangulation<4>::fromSig(sig), sig);
         } catch (const regina::InvalidArgument&) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("I could not interpret the given "

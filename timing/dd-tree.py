@@ -22,7 +22,7 @@ def enum(t, coords, which, alg):
 
 for sig in sigs:
     print sig
-    t = Triangulation3.fromIsoSig(sig)
+    t = Triangulation3.fromSig(sig)
 
     enum(t, NormalCoords.Quad, NormalList.Vertex, NormalAlg.Default)
     enum(t, NormalCoords.Quad, NormalList.Vertex, NormalAlg.VertexDD)

@@ -55,8 +55,7 @@ TEST(BoundariesTest, countBoundaries) {
 
         // The expected boundary-counts for this example have been checked by
         // hand.
-        Triangulation<3> solidTorus = Triangulation<3>::fromIsoSig(
-                "bGaj" );
+        auto solidTorus = Triangulation<3>::fromSig("bGaj");
         compareBoundaryCounts(
             NormalSurfaces( solidTorus, NormalCoords::Quad ),
             { 1, 1, 2 } );
@@ -74,8 +73,7 @@ TEST(BoundariesTest, countBoundaries) {
         // independently calculated from the GCD of the normal arcs on the
         // boundary. The expected boundary-counts have been manually checked
         // to coincide with these GCDs.
-        Triangulation<3> extraVertex = Triangulation<3>::fromIsoSig(
-                "eLHkccddpvvo" );
+        auto extraVertex = Triangulation<3>::fromSig("eLHkccddpvvo");
         compareBoundaryCounts(
             NormalSurfaces( extraVertex, NormalCoords::Standard ),
             { 1, 1, 1, 1, 2, 1, 0, 1, 1, 2, 1, 2, 1, 2, 1, 1 } );
@@ -89,8 +87,7 @@ TEST(BoundariesTest, countBoundaries) {
         // The expected boundary-counts haven't been checked manually, but this
         // test at least ensures that countBoundaries() returns consistent
         // (presumably correct) answers even if the implementation is modified.
-        Triangulation<3> handle2 = Triangulation<3>::fromIsoSig(
-                "eHbKabdel" );
+        auto handle2 = Triangulation<3>::fromSig("eHbKabdel");
         compareBoundaryCounts(
             NormalSurfaces( handle2, NormalCoords::Quad ),
             { 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1 } );

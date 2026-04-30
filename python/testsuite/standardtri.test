@@ -245,7 +245,7 @@ def describe(t, name):
 				print(prefix(1) + msg)
 
 def describeSig(sig):
-	describe(Triangulation3.fromIsoSig(sig), sig)
+	describe(Triangulation3.fromSig(sig), sig)
 
 # The following isosigs are the complete output of tricensus -sNfit<n>:
 

@@ -41,7 +41,7 @@ namespace detail {
     void RetriangulateParams<Triangulation<3>>::propagateFrom(
             const std::string& sig, size_t maxSize,
             NoPropagationOptions, Action&& candidateAction) {
-        Triangulation<3> t = Triangulation<3>::fromIsoSig(sig);
+        Triangulation<3> t = Triangulation<3>::fromSig(sig);
         size_t i;
         for (i = 0; i < t.countEdges(); ++i)
             if (auto alt = t.withPachner(t.edge(i)))

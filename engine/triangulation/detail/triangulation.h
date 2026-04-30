@@ -3234,7 +3234,7 @@ class TriangulationBase :
          * 3-manifold dehydration strings are not unique up to isomorphism
          * (they depend on the particular labelling of tetrahedra).
          *
-         * The routine fromIsoSig() can be used to recover a triangulation
+         * The routine fromSig() can be used to recover a triangulation
          * from an isomorphism signature (only if the default encoding has
          * been used, but it does not matter which signature type was used).
          * The triangulation recovered might not be identical to the original,
@@ -3312,19 +3312,18 @@ class TriangulationBase :
          * isomorphism signatures as well as the support for different
          * signature types and encodings.
          *
-         * As described in the isoSig() notes, you can call fromIsoSig() to
+         * As described in the isoSig() notes, you can call fromSig() to
          * recover a triangulation from an isomorphism signature (assuming
          * the default encoding was used).  Whilst the triangulation that is
          * recovered will be combinatorially isomorphic to the original,
          * it might not be identical.  This routine returns not only the
          * isomorphism signature, but also an isomorphism that describes the
          * precise relationship between this triangulation and the
-         * reconstruction from fromIsoSig().
+         * reconstruction from fromSig().
          *
-         * Specifically, if this routine returns the pair
-         * (\a sig, \a relabelling), this means that the triangulation
-         * reconstructed from `fromIsoSig(sig)` will be identical to
-         * `relabelling(this)`.
+         * Specifically, if this routine returns the pair `(sig, relabelling)`,
+         * this means that the triangulation reconstructed from `fromSig(sig)`
+         * will be identical to `relabelling(this)`.
          *
          * \python Although this is a templated function, all of the variants
          * supplied with Regina are available to Python users.  To use the
@@ -3346,7 +3345,7 @@ class TriangulationBase :
          *
          * \return a pair containing (i) the isomorphism signature of this
          * triangulation, and (ii) the isomorphism between this triangulation
-         * and the triangulation that would be reconstructed from fromIsoSig().
+         * and the triangulation that would be reconstructed from fromSig().
          */
         template <IsoSigType<dim> Type = IsoSigClassic<dim>,
             IsoSigEncoding<dim> Encoding = IsoSigPrintable<dim>>
@@ -3589,103 +3588,142 @@ class TriangulationBase :
             Iterator beginGluings, Iterator endGluings);
 
         /**
-         * Recovers a full triangulation from an isomorphism signature.
+         * Recovers a full triangulation from a string-based isomorphism
+         * signature.  This may be either a first-generation signature
+         * (computed via `isoSig()`), or a second-generation signature
+         * (computed via `neoSig()`).
          *
-         * See isoSig() for more information on isomorphism signatures.
-         * It will be assumed that the signature describes a triangulation of
-         * dimension \a dim.
+         * See isoSig() and neoSig() for general information on first-generation
+         * and second-generation isomorphism signatures.
          *
-         * Currently this routine only supports isomorphism signatures
-         * that were created with the default encoding (i.e., there was
-         * no \a Encoding template parameter passed to isoSig()).
+         * There is also a variant of fromSig() that takes a byte sequence,
+         * and which can work with binary second-generation signatures.
          *
-         * Calling isoSig() followed by fromIsoSig() is not guaranteed to
-         * produce an _identical_ triangulation to the original, but it
-         * is guaranteed to produce a combinatorially _isomorphic_
-         * triangulation.  In other words, fromIsoSig() may reconstruct the
-         * triangulation with its simplices and/or vertices relabelled.
-         * The optional argument to isoSig() allows you to determine the
-         * precise relabelling that will be used, if you need to know it.
+         * Computing a signature via isoSig() or neoSig() and then calling
+         * fromSig() on the result is not guaranteed to produce an _identical_
+         * triangulation to the original, but it is guaranteed to produce a
+         * combinatorially _isomorphic_ triangulation (i.e., one whose simplices
+         * and/or vertices have been relabelled).  Moreover, if you began with
+         * an oriented triangulation and you computed an _oriented_
+         * second-generation signature via `neoSig(true)`, it is guaranteed
+         * that this relabelling will be orientation-preserving.  If you need
+         * to know the precise relabelling when computing a signature, you can
+         * call isoSigDetail() or neoSigDetail() instead.
          *
-         * For a full and precise description of the isomorphism signature
-         * format for 3-manifold triangulations, see _Simplification paths in
-         * the Pachner graphs of closed orientable 3-manifold triangulations_,
-         * Burton, 2011, `arXiv:1110.6080`.  The format for other dimensions is
-         * essentially the same, but with minor dimension-specific adjustments.
+         * For a full and precise description of the first-generation
+         * isomorphism signature format for 3-manifold triangulations, see
+         * _Simplification paths in the Pachner graphs of closed orientable
+         * 3-manifold triangulations_, Burton, 2011, `arXiv:1110.6080`.
+         * The format for second-generation signatures, and for other
+         * dimensions, is similar in nature but with minor adjustments.
          *
          * \warning Do not mix isomorphism signatures between dimensions!
-         * It is possible that the same string could corresponding to both a
+         * It is possible that the same string could describe both a
          * \a p-dimensional triangulation and a \a q-dimensional triangulation
          * for different dimensions \a p and \a q.
          *
          * \exception InvalidArgument The given string was not a valid
-         * <i>dim</i>-dimensional isomorphism signature created using
-         * the default encoding.
+         * string-based <i>dim</i>-dimensional isomorphism signature.
          *
-         * \param sig the isomorphism signature of the triangulation to
-         * construct.  Note that isomorphism signatures are case-sensitive
-         * (unlike, for example, dehydration strings for 3-manifolds).
-         * \return the reconstructed triangulation.
-         */
-        static Triangulation<dim> fromIsoSig(const std::string& sig);
-
-        /**
-         * Alias for fromIsoSig(), to recover a full triangulation from an
-         * isomorphism signature.
-         *
-         * This alias fromSig() is provided to assist with generic code
-         * that can work with both triangulations and links.
-         *
-         * See fromIsoSig() for further details.
-         *
-         * \exception InvalidArgument The given string was not a valid
-         * <i>dim</i>-dimensional isomorphism signature created using
-         * the default encoding.
-         *
-         * \param sig the isomorphism signature of the triangulation to
-         * construct.  Note that isomorphism signatures are case-sensitive
+         * \param sig the signature of the triangulation to construct.
+         * Note that isomorphism signatures are case-sensitive
          * (unlike, for example, dehydration strings for 3-manifolds).
          * \return the reconstructed triangulation.
          */
         static Triangulation<dim> fromSig(const std::string& sig);
 
         /**
-         * Deduces the number of top-dimensional simplices in a
-         * connected triangulation from its isomorphism signature.
+         * Recovers a full triangulation from a binary second-generation
+         * isomorphism signature.  This signature would typically have been
+         * computed via `neoSig<IsoSigBinary>()`.
          *
-         * See isoSig() for more information on isomorphism signatures.
-         * It will be assumed that the signature describes a triangulation of
-         * dimension \a dim.
+         * See neoSig() for general information on second-generation
+         * isomorphism signatures.
          *
-         * Currently this routine only supports isomorphism signatures
-         * that were created with the default encoding (i.e., there was
-         * no \a Encoding template parameter passed to isoSig()).
+         * There is also a variant of fromSig() that takes a string, and which
+         * can work with both first-generation and string-based
+         * second-generation signatures.
          *
-         * If the signature describes a connected triangulation, this
-         * routine will simply return the size of that triangulation
-         * (e.g., the number of tetrahedra in the case \a dim = 3).
-         * You can also pass an isomorphism signature that describes a
-         * disconnected triangulation; however, this routine will only
-         * return the number of top-dimensional simplices in the first
-         * connected component.  If you need the total size of a
-         * disconnected triangulation, you will need to reconstruct the
-         * full triangulation by calling fromIsoSig() instead.
-         *
-         * This routine is very fast, since it only examines the first
-         * few characters of the isomorphism signature (in which the size
-         * of the first component is encoded).  However, a side-effect
-         * of this is that it is possible to pass an _invalid_ isomorphism
-         * signature and still receive a positive result.  If you need to
-         * test whether a signature is valid or not, you must call fromIsoSig()
-         * instead, which will examine the entire signature in full.
+         * Computing a signature via `neoSig<IsoSigBinary>()` and then calling
+         * fromSig() on the result is not guaranteed to produce an _identical_
+         * triangulation to the original, but it is guaranteed to produce a
+         * combinatorially _isomorphic_ triangulation (i.e., one whose simplices
+         * and/or vertices have been relabelled).  Moreover, if you began with
+         * an oriented triangulation and you computed an _oriented_
+         * second-generation signature via `neoSig<IsoSigBinary>(true)`, it is
+         * guaranteed that this relabelling will be orientation-preserving.
+         * If you need to know the precise relabelling when computing a
+         * signature, you can call `neoSigDetail<IsoSigBinary>()` instead.
          *
          * \warning Do not mix isomorphism signatures between dimensions!
-         * It is possible that the same string could corresponding to both a
+         * It is possible that the same byte sequence could describe both a
          * \a p-dimensional triangulation and a \a q-dimensional triangulation
          * for different dimensions \a p and \a q.
          *
-         * \param sig the isomorphism signature of a <i>dim</i>-dimensional
-         * triangulation.  Note that isomorphism signature are case-sensitive
+         * \python You should pass the signature as a Python `bytes` object.
+         *
+         * \exception InvalidArgument The given byte sequence was not a valid
+         * binary second-generation signature for a <i>dim</i>-dimensional
+         * triangulation.
+         *
+         * \param sig the signature of the triangulation to construct.
+         * \return the reconstructed triangulation.
+         */
+        static Triangulation<dim> fromSig(const ByteSequence& sig);
+
+        /**
+         * Deprecated alias for fromSig(), to recover a full triangulation
+         * from a string-based isomorphism signature.
+         *
+         * \deprecated You should call this as fromSig() instead.
+         *
+         * See fromSig() for further details.
+         *
+         * \exception InvalidArgument The given string was not a valid
+         * string-based <i>dim</i>-dimensional isomorphism signature.
+         *
+         * \param sig the isomorphism signature of the triangulation to
+         * construct.  Note that isomorphism signatures are case-sensitive
+         * (unlike, for example, dehydration strings for 3-manifolds).
+         * \return the reconstructed triangulation.
+         */
+        [[deprecated]] static Triangulation<dim> fromIsoSig(
+            const std::string& sig);
+
+        /**
+         * Deduces the number of top-dimensional simplices in a connected
+         * triangulation from its string-based isomorphism signature.  This may
+         * be either a first-generation signature (computed via `isoSig()`),
+         * or a second-generation signature (computed via `neoSig()`).
+         *
+         * See isoSig() and neoSig() for general information on first-generation
+         * and second-generation isomorphism signatures.
+         *
+         * If the given signature describes a connected triangulation, this
+         * routine will simply return the size of that triangulation
+         * (i.e., the number of top-dimensional simplices).
+         *
+         * This routine is very fast, since it only examines the first few
+         * characters of the isomorphism signature (in which the size of the
+         * first component is encoded).  However, a side-effect of this is that
+         * it is possible to pass an _invalid_ isomorphism signature and still
+         * receive a positive result.  If you need to test whether a signature
+         * is valid or not, you must call fromSig() instead, which will examine
+         * the entire signature in full.
+         *
+         * \warning If you pass an isomorphism signature that describes a
+         * _disconnected_ triangulation, this routine will only return the
+         * size of the first connected component.  If you need the total size
+         * of a disconnected triangulation, you will need to reconstruct the
+         * full triangulation by calling fromSig() instead.
+         *
+         * \warning Do not mix isomorphism signatures between dimensions!
+         * It is possible that the same string could describe both a
+         * \a p-dimensional triangulation and a \a q-dimensional triangulation
+         * for different dimensions \a p and \a q.
+         *
+         * \param sig a signature of some <i>dim</i>-dimensional triangulation.
+         * Note that isomorphism signature are case-sensitive
          * (unlike, for example, dehydration strings for 3-manifolds).
          * \return the number of top-dimensional simplices in the first
          * connected component, or 0 if this could not be determined
@@ -5833,9 +5871,9 @@ inline void TriangulationBase<dim>::cloneBoundaryFaces(
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Triangulation<dim> TriangulationBase<dim>::fromSig(
+inline Triangulation<dim> TriangulationBase<dim>::fromIsoSig(
         const std::string& sig) {
-    return TriangulationBase<dim>::fromIsoSig(sig);
+    return TriangulationBase<dim>::fromSig(sig);
 }
 
 template <int dim> requires (supportedDim(dim))

@@ -105,7 +105,7 @@ TEST(AngleStructuresTest, loopC2) {
 
 static void verifyTaut(const char* isoSig, size_t nTaut) {
     SCOPED_TRACE_CSTRING(isoSig);
-    Triangulation<3> tri = Triangulation<3>::fromIsoSig(isoSig);
+    Triangulation<3> tri = Triangulation<3>::fromSig(isoSig);
 
     AngleStructures a(tri, true);
     EXPECT_EQ(a.size(), nTaut);

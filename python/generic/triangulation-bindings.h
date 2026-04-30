@@ -293,9 +293,19 @@ void addTriangulation(pybind11::module_& m, pybind11::module_& internal,
                 &Triangulation<dim>::insertTriangulation),
             rbase::insertTriangulation)
         // Variants of isoSig() are handled through isosig_options() below.
-        .def_static("fromIsoSig", &Triangulation<dim>::fromIsoSig,
+        // With fromSig(), the byte sequence variant _must_ come first.
+        // This is because pybind11 performs automatic conversion from bytes
+        // to std::string, and so if the string variant appears first then
+        // pybind11 will use it even with a pybind11::bytes argument.
+        .def_static("fromSig",
+            overload_cast<const ByteSequence&>(&Triangulation<dim>::fromSig),
+            rbase::fromSig_2)
+        .def_static("fromSig",
+            overload_cast<const std::string&>(&Triangulation<dim>::fromSig),
+            rbase::fromSig)
+        .def_static("fromIsoSig", // deprecated
+            overload_cast<const std::string&>(&Triangulation<dim>::fromSig),
             rbase::fromIsoSig)
-        .def_static("fromSig", &Triangulation<dim>::fromSig, rbase::fromSig)
         .def_static("isoSigComponentSize",
             &Triangulation<dim>::isoSigComponentSize,
             rbase::isoSigComponentSize)

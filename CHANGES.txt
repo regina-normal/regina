@@ -334,15 +334,18 @@ Version 8.0  [ TODO ]
               setGroupPresentation(), which now has ≤ 1 component as a new
               precondition.
             - New routines knowsHomology() and cachedGroup().
-            - The interfaces for isomorphism signature types and encodings have
-              changed; see the changelog for IsoSigClassic / IsoSigDegrees and
-              IsoSigPrintable / IsoSigPrintableLockFree for details.
-            - Remove the alias sig() that was recently introduced in Regina 7.4,
-              to avoid confusion as to whether it returns a first-generation
-              signature (isoSig()) or a second-generation signature (neoSig()).
+            - The alias sig() that was recently introduced in Regina 7.4 is now
+              removed, to avoid confusion around to whether it returns a
+              first-generation signature (isoSig()) or a second-generation
+              signature (neoSig()).
+            - The old routine fromIsoSig() is now deprecated, and simply calls
+              the string-based fromSig().
             - Python bindings of the form isoSig_Arg() or isoSigDetail_Arg()
               now begin their suffixes in lower-case, i.e., isoSig_arg() or
               isoSigDetail_arg().  The old names have been removed completely.
+            - The interfaces for isomorphism signature types and encodings have
+              changed; see the changelog for IsoSigClassic / IsoSigDegrees and
+              IsoSigPrintable / IsoSigPrintableLockFree for details.
             - Removed the Boost Graph Library (BGL) interface for triangulations
               (triangulation/graph.h).  This is because Regina has not used
               Boost since December 2021, and so this code is essentially

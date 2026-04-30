@@ -57,7 +57,7 @@ void testRecognitionSig(const char* isoSig,
     SCOPED_TRACE_CSTRING(triName);
 
     auto std = StandardTriangulation::recognise(
-        Triangulation<3>::fromIsoSig(isoSig));
+        Triangulation<3>::fromSig(isoSig));
     ASSERT_NE(std, nullptr);
     EXPECT_EQ(std->name(), triName);
 

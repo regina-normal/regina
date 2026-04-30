@@ -381,7 +381,7 @@ std::pair<typename Encoding::Signature, Isomorphism<dim>>
 }
 
 template <int dim> requires (supportedDim(dim))
-Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
+Triangulation<dim> TriangulationBase<dim>::fromSig(const std::string& sig) {
     Base64SigDecoder dec(sig.begin(), sig.end()); // strips whitespace
 
     try {
@@ -409,7 +409,7 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
                     if (nFacets == (dim+1) * nSimp) {
                         if (*(facetPos + j) != 0) {
                             throw InvalidArgument(
-                                "fromIsoSig(): extraneous facet actions");
+                                "fromSig(): extraneous facet actions");
                         }
                         continue;
                     }
@@ -427,10 +427,10 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
                             break;
                         default:
                             throw InvalidArgument(
-                                "fromIsoSig(): invalid facet action");
+                                "fromSig(): invalid facet action");
                     }
                     if (nFacets > (dim+1) * nSimp) {
-                        throw InvalidArgument("fromIsoSig(): facet actions "
+                        throw InvalidArgument("fromSig(): facet actions "
                             "do not match triangulation size");
                     }
                 }
@@ -466,7 +466,7 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
                         // Join to new simplex.
                         if (nextUnused >= nSimp) {
                             throw InvalidArgument(
-                                "fromIsoSig(): gluing to non-existent simplex");
+                                "fromSig(): gluing to non-existent simplex");
                         }
                         simp[pos]->join(j, simp[nextUnused++], Perm<dim+1>());
                     } else {
@@ -474,14 +474,14 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
                         if (joinGluing[joinPos] >= Perm<dim+1>::nPerms ||
                                 joinGluing[joinPos] < 0) {
                             throw InvalidArgument(
-                                "fromIsoSig(): invalid gluing permutation");
+                                "fromSig(): invalid gluing permutation");
                         }
                         gluing = Perm<dim+1>::orderedSn[joinGluing[joinPos]];
                         if (joinDest[joinPos] >= nextUnused ||
                                 simp[joinDest[joinPos]]->adjacentSimplex(
                                 gluing[j])) {
                             throw InvalidArgument(
-                                "fromIsoSig(): invalid gluing destination");
+                                "fromSig(): invalid gluing destination");
                         }
                         simp[pos]->join(j, simp[joinDest[joinPos]], gluing);
                         ++joinPos;
@@ -509,7 +509,7 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
                 for (size_t i = 0; i < nSimp; ++i) {
                     if (lockMasks[i] >> (dim + 2) != 0)
                         throw InvalidArgument(
-                            "fromIsoSig(): invalid lock mask");
+                            "fromSig(): invalid lock mask");
                     simp[i]->locks_ = lockMasks[i];
                 }
 
@@ -521,7 +521,7 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
                                 if (s->isFacetLocked(facet)) {
                                     auto adjFacet = s->adjacentFacet(facet);
                                     if (! adj->isFacetLocked(adjFacet))
-                                        throw InvalidArgument("fromIsoSig(): "
+                                        throw InvalidArgument("fromSig(): "
                                             "inconsistent lock masks");
                                 }
             }
@@ -531,7 +531,7 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
     } catch (const InvalidInput&) {
         // Any exception caught here was thrown by Base64SigDecoder.
         throw InvalidArgument(
-            "fromIsoSig(): incomplete or invalid base64 encoding");
+            "fromSig(): incomplete or invalid base64 encoding");
     }
 }
 

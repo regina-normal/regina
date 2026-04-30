@@ -153,7 +153,7 @@ else:
 
 print()
 
-t = Triangulation3.fromIsoSig('gHLLOcbcdeffafwfss') # Solid torus # RP^3
+t = Triangulation3.fromSig('gHLLOcbcdeffafwfss') # Solid torus # RP^3
 print(t.nonTrivialSphereOrDisc())
 tab = LPInitialTableaux(t, NormalCoords.Standard)
 sys = tab.system()

@@ -41,7 +41,7 @@ namespace regina {
 
 Triangulation<4>::Triangulation(const std::string& description) {
     try {
-        *this = fromIsoSig(description);
+        *this = fromSig(description);
         return;
     } catch (const InvalidArgument&) {
     }

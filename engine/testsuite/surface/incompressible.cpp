@@ -47,11 +47,11 @@ TEST(IncompressibleTest, isHaken) {
     EXPECT_FALSE(Example<3>::poincare().isHaken());
 
     // Some Haken Seifert fibred spaces and surface bundles:
-    Triangulation<3> sfsSphere = Triangulation<3>::fromIsoSig(
+    Triangulation<3> sfsSphere = Triangulation<3>::fromSig(
         "gLALQbccefffemkbemi"); // SFS [S2: (2,1) (2,1) (2,1) (2,-1)]
-    Triangulation<3> sfsTorus = Triangulation<3>::fromIsoSig(
+    Triangulation<3> sfsTorus = Triangulation<3>::fromSig(
         "gvLQQcdefeffnwnpkhe"); // SFS [T: (1,1)]
-    Triangulation<3> bundle = Triangulation<3>::fromIsoSig(
+    Triangulation<3> bundle = Triangulation<3>::fromSig(
         "gvLQQedfedffrwawrhh"); // T x S1
 
     EXPECT_TRUE(sfsSphere.isHaken());
@@ -89,11 +89,11 @@ TEST(IncompressibleTest, isIncompressible) {
     EXPECT_FALSE(hasIncompressibleSurface(Example<3>::poincare()));
 
     // Some Haken Seifert fibred spaces and surface bundles:
-    EXPECT_TRUE(hasIncompressibleSurface(Triangulation<3>::fromIsoSig(
+    EXPECT_TRUE(hasIncompressibleSurface(Triangulation<3>::fromSig(
         "gLALQbccefffemkbemi"))); // SFS [S2: (2,1) (2,1) (2,1) (2,-1)]
-    EXPECT_TRUE(hasIncompressibleSurface(Triangulation<3>::fromIsoSig(
+    EXPECT_TRUE(hasIncompressibleSurface(Triangulation<3>::fromSig(
         "gvLQQcdefeffnwnpkhe"))); // SFS [T: (1,1)]
-    EXPECT_TRUE(hasIncompressibleSurface(Triangulation<3>::fromIsoSig(
+    EXPECT_TRUE(hasIncompressibleSurface(Triangulation<3>::fromSig(
         "gvLQQedfedffrwawrhh"))); // T x S1
 }
 
@@ -123,9 +123,9 @@ TEST(IncompressibleTest, hasCompressingDisc) {
     // Orientable handlebodies:
     EXPECT_TRUE(Example<3>::lst(1, 2).hasCompressingDisc());
     EXPECT_TRUE(Example<3>::lst(3, 4).hasCompressingDisc());
-    EXPECT_TRUE(Triangulation<3>::fromIsoSig(
+    EXPECT_TRUE(Triangulation<3>::fromSig(
         "eHucabdhs").hasCompressingDisc()); // Genus 2
-    EXPECT_TRUE(Triangulation<3>::fromIsoSig(
+    EXPECT_TRUE(Triangulation<3>::fromSig(
         "tbLGburuGuqHbKgqGacdjmpqsrqbkltl").hasCompressingDisc()); // Genus 7
 
     // Hyperbolic manifolds:

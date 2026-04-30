@@ -119,7 +119,7 @@ TEST(LinkingSurfacesTest, edgeLinks) {
 
     // A case where several interesting things happen.
     {
-        Triangulation<3> tri = Triangulation<3>::fromIsoSig("dLQbcbcaefv");
+        Triangulation<3> tri = Triangulation<3>::fromSig("dLQbcbcaefv");
 
         // There are five edges.
         // - Edges 2, 3, 4 all have thin edge links.

@@ -50,7 +50,7 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) :
 
 Triangulation<3>::Triangulation(const std::string& description) {
     try {
-        *this = fromIsoSig(description);
+        *this = fromSig(description);
         return;
     } catch (const InvalidArgument&) {
     }
