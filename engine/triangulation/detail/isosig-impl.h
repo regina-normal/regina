@@ -541,8 +541,7 @@ size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
     try {
         return dec.decodeSize().first;
     } catch (const InvalidInput&) {
-        // The isosig was invalid.
-        return 0;
+        throw InvalidArgument("isoSigComponentSize(): invalid signature");
     }
 }
 

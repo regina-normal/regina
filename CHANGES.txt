@@ -343,6 +343,9 @@ Version 8.0  [ TODO ]
             - Python bindings of the form isoSig_Arg() or isoSigDetail_Arg()
               now begin their suffixes in lower-case, i.e., isoSig_arg() or
               isoSigDetail_arg().  The old names have been removed completely.
+            - The routine isoSigComponentSize() now throws an exception if the
+              signature is found to be invalid, and explicitly supports the
+              empty triangulation.
             - The interfaces for isomorphism signature types and encodings have
               changed; see the changelog for IsoSigClassic / IsoSigDegrees and
               IsoSigPrintable / IsoSigPrintableLockFree for details.

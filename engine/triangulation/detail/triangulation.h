@@ -3699,36 +3699,46 @@ class TriangulationBase :
          * See isoSig() and neoSig() for general information on first-generation
          * and second-generation isomorphism signatures.
          *
-         * If the given signature describes a connected triangulation, this
-         * routine will simply return the size of that triangulation
-         * (i.e., the number of top-dimensional simplices).
+         * Regarding connectivity and components:
+         *
+         * - If the given signature describes a connected triangulation, this
+         *   routine will return the size of that triangulation (i.e., the
+         *   number of top-dimensional simplices).  This is the intended
+         *   use case for this routine.
+         *
+         * - If the signature describes a _disconnected_ triangulation, this
+         *   routine will only return the size of the first component.
+         *   If you need the total size of a disconnected triangulation, you
+         *   will need to reconstruct the full triangulation by calling
+         *   fromSig() instead.
+         *
+         * - If the signature describes the empty triangulation, this routine
+         *   will return zero.
          *
          * This routine is very fast, since it only examines the first few
-         * characters of the isomorphism signature (in which the size of the
-         * first component is encoded).  However, a side-effect of this is that
+         * characters of the given signature (in which the size of the first
+         * component is encoded).  However, a side-effect of this is that
          * it is possible to pass an _invalid_ isomorphism signature and still
          * receive a positive result.  If you need to test whether a signature
          * is valid or not, you must call fromSig() instead, which will examine
          * the entire signature in full.
-         *
-         * \warning If you pass an isomorphism signature that describes a
-         * _disconnected_ triangulation, this routine will only return the
-         * size of the first connected component.  If you need the total size
-         * of a disconnected triangulation, you will need to reconstruct the
-         * full triangulation by calling fromSig() instead.
          *
          * \warning Do not mix isomorphism signatures between dimensions!
          * It is possible that the same string could describe both a
          * \a p-dimensional triangulation and a \a q-dimensional triangulation
          * for different dimensions \a p and \a q.
          *
+         * \exception InvalidArgument The given string was not a valid
+         * string-based <i>dim</i>-dimensional isomorphism signature.
+         * As described above, invalid signatures are not always detected;
+         * this exception will only be thrown if the error is so severe that
+         * the component size cannot be deduced from the first few characters.
+         *
          * \param sig a signature of some <i>dim</i>-dimensional triangulation.
          * Note that isomorphism signature are case-sensitive
          * (unlike, for example, dehydration strings for 3-manifolds).
-         * \return the number of top-dimensional simplices in the first
-         * connected component, or 0 if this could not be determined
-         * because the given string was not a valid isomorphism signature
-         * created using the default encoding.
+         * \return the size of the first connected component, or 0 if the
+         * given signature describes the empty triangulation.
          */
         static size_t isoSigComponentSize(const std::string& sig);
 
