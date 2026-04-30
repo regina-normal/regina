@@ -159,10 +159,20 @@ Version 8.0  [ TODO ]
         Class Isomorphism<dim>:
             - The increment operators are now available in all dimensions
               (not just dimensions ≤ 6).
-        Class IsoSigData, IsoSigPrintable, IsoSigPrintableLockFree:
-            - The data to encode for isomorphism signatures is now supplied to
-              encoding classes via the new type IsoSigData<dim>.  The old
-              behaviour (passing C-style arrays) is no longer supported.
+        Class IsoSigData:
+            - New type to support first-generation isomorphism signatures of
+              triangulations.
+        Class IsoSigClassic<dim>, IsoSigDegrees<dim, subdim>,
+                IsoSigEdgeDegree<dim>, IsoSigRidgeDegree<dim>:
+            - These signature type classes now support both oriented and
+              unoriented signatures, and so their constructors now require an
+              extra boolean argument (oriented vs unoriented).
+        Class IsoSigPrintable, IsoSigPrintableLockFree:
+            - These encoding classes now support both first-generation and
+              second-generation isomorphism signatures.
+            - The data to encode for first-generation isomorphism signatures is
+              now supplied to encoding classes via the new type IsoSigData<dim>.
+              The old behaviour (passing C-style arrays) is no longer supported.
             - The routine emptySig() has been renamed to encodeEmpty().
             - Encoding classes now have a new routine length().
         Struct IsReginaArbitraryPrecisionInteger<T>, IsReginaInteger<T>:
@@ -261,6 +271,9 @@ Version 8.0  [ TODO ]
               preconditions that require exact divisibiliy, just like their
               counterparts in the Integer and LargeInteger classes.
             - Almost everything in this class is now constexpr.
+        Class NeoSigData:
+            - New type to support second-generation isomorphism signatures of
+              triangulations.
         Class NormalSurface:
             - Routines components(), countBoundaries(), disjoint(),
               isCompressingDisc(), isConnected(), isIncompressible(),
@@ -321,12 +334,15 @@ Version 8.0  [ TODO ]
               setGroupPresentation(), which now has ≤ 1 component as a new
               precondition.
             - New routines knowsHomology() and cachedGroup().
-            - The interface for isomorphism signature encodings has changed;
-              see the changelog for IsoSigPrintable / IsoSigPrintableLockFree
-              for details.
+            - The interfaces for isomorphism signature types and encodings have
+              changed; see the changelog for IsoSigClassic / IsoSigDegrees and
+              IsoSigPrintable / IsoSigPrintableLockFree for details.
             - Remove the alias sig() that was recently introduced in Regina 7.4,
               to avoid confusion as to whether it returns a first-generation
               signature (isoSig()) or a second-generation signature (neoSig()).
+            - Python bindings of the form isoSig_Arg() or isoSigDetail_Arg()
+              now begin their suffixes in lower-case, i.e., isoSig_arg() or
+              isoSigDetail_arg().  The old names have been removed completely.
             - Removed the Boost Graph Library (BGL) interface for triangulations
               (triangulation/graph.h).  This is because Regina has not used
               Boost since December 2021, and so this code is essentially
@@ -467,7 +483,8 @@ Version 8.0  [ TODO ]
               + BanConstraint, LPConstraint, LPSubspace (defined in
                 enumerate/treelp.h)
               + LinkSigEncoding (defined in link/linksig.h)
-              + IsoSigEncoding, IsoSigType (defined in triangulation/isosig.h)
+              + IsoSigEncoding, IsoSigType, NeoSigEncoding (defined in
+                triangulation/isosig.h)
         Header foreign/fromsiglist-impl.h:
             - Renamed to foreign/siglist-impl.h.  The old header has been
               removed completely, since end users do not need to include it.

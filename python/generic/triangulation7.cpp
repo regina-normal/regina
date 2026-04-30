@@ -43,6 +43,7 @@ void addTriangulations7(pybind11::module_& m, pybind11::module_& internal) {
     addIsoSigEdgeDegrees<7>(m, "IsoSigEdgeDegrees7");
     addIsoSigRidgeDegrees<7>(m, "IsoSigRidgeDegrees7");
     addIsoSigData<7>(m, "IsoSigData7");
+    addNeoSigData<7>(m, "NeoSigData7");
     addIsoSigPrintable<7, true>(m, "IsoSigPrintable7");
     addIsoSigPrintable<7, false>(m, "IsoSigPrintableLockFree7");
 

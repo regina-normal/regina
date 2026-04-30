@@ -127,6 +127,9 @@ class LinkSigData {
              * This generates all of the usual comparison operators, including
              * `<`, `<=`, `>`, and `>=`.
              *
+             * \python This spaceship operator `x <=> y` is not available, but
+             * the other comparison operators that it generates _are_ available.
+             *
              * \param rhs the triple to compare with this.
              * \return the result of the comparison between this and the given
              * triple.
@@ -285,9 +288,11 @@ class LinkSigData {
          * This generates all of the usual comparison operators, including
          * `<`, `<=`, `>`, and `>=`.
          *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
          * \param rhs the component data to compare with this.
-         * \return the result of the comparison between this and the given
-         * data.
+         * \return the result of the comparison between this and the given data.
          */
         std::strong_ordering operator <=> (const LinkSigData& rhs) const {
             // More crossings first.

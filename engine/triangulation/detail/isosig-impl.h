@@ -165,6 +165,122 @@ void IsoSigData<dim>::fillFrom(const Simplex<dim>* simplex,
         }
 }
 
+template <int dim> requires (supportedDim(dim))
+void NeoSigData<dim>::fillFrom(const Simplex<dim>* simplex,
+        Perm<dim + 1> vertices, Isomorphism<dim>* relabelling) {
+    const auto* comp = simplex->component();
+    const auto& tri = simplex->triangulation();
+    size_t triSize = tri.size();
+    size_t simp = simplex->index();
+
+    // The image for each simplex and its vertices (mapping from the original
+    // triangulation to the canonical labelling):
+    FixedArray<ssize_t> image(triSize, -1);
+    FixedArray<Perm<dim+1>> vertexMap(triSize);
+
+    // The preimage for each simplex (mapping from the canonical labelling to
+    // the original triangulation):
+    FixedArray<ssize_t> preImage(size_, -1);
+
+    image[simp] = 0;
+    vertexMap[simp] = vertices.inverse();
+    preImage[0] = simp;
+
+    size_t facetPos = (((dim+1) * comp->size() +
+        comp->countBoundaryFacets()) / 2) - 1;
+    size_t simplexPos = 0, gluingPos = 0;
+    size_t nextUnusedSimp = 1;
+
+    // To obtain a canonical isomorphism, we must run through the
+    // simplices and their facets in image order, not preimage order.
+    //
+    // This main loop is guaranteed to exit when (and only when) we have
+    // exhausted the entire connected component containing the given simplex.
+    for (size_t simpImg = 0; simpImg < size_; ++simpImg) {
+        // We are guaranteed that preImage[simpImg] >= 0.
+        size_t simpSrc = preImage[simpImg];
+        const Simplex<dim>* s = tri.simplex(simpSrc);
+
+        if (! locks_.empty()) {
+            using Mask = typename Simplex<dim>::LockMask;
+            if (Mask mask = s->lockMask()) {
+                static constexpr Mask facetMask = (Mask(1) << (dim + 1)) - 1;
+                if (mask & facetMask) {
+                    // One or more facets of this simplex are locked.
+                    // We need to permute the bits of lockMask
+                    // according to vertexMap[simpSrc].
+                    Mask permuted = (mask & (Mask(1) << (dim + 1)));
+                    Mask bit = 1;
+                    for (int i = 0; i <= dim; ++i, bit <<= 1)
+                        if (mask & bit)
+                            permuted |= (Mask(1) << vertexMap[simpSrc][i]);
+                    mask = permuted;
+                }
+                locks_[simpImg] = mask;
+            } else {
+                locks_[simpImg] = 0;
+            }
+        }
+
+        for (int facetImg = 0; facetImg <= dim; ++facetImg) {
+            int facetSrc = vertexMap[simpSrc].pre(facetImg);
+
+            // INVARIANTS:
+            // - nextUnusedSimp > simpImg
+            // - image[simpSrc], preImage[image[simpSrc]] and
+            //   vertexMap[simpSrc] are already filled in.
+
+            // Work out what happens to our source facet.
+            if (auto adj = s->adjacentSimplex(facetSrc)) {
+                // Our source facet is internal, i.e., glued to something else.
+                size_t dest = adj->index();
+
+                if (image[dest] >= 0) {
+                    // We've seen the destination simplex before.
+                    if (image[dest] < image[simpSrc] ||
+                            (dest == simpSrc &&
+                             vertexMap[simpSrc][s->adjacentFacet(facetSrc)]
+                             < vertexMap[simpSrc][facetSrc])) {
+                        // We've already seen this gluing from the other side.
+                        // Skip this facet entirely.
+                    } else {
+                        // Record the full details of the gluing.
+                        adjSimplex_[simplexPos++] = image[dest];
+                        adjGluing_[gluingPos++] = (vertexMap[dest] *
+                                s->adjacentGluing(facetSrc) *
+                                vertexMap[simpSrc].inverse()).
+                            orderedSnIndex();
+
+                        facetType_.set(facetPos--, true);
+                    }
+                } else {
+                    // The destination simplex is thus-far unseen.
+                    // It must take the next available index, and the
+                    // corresponding gluing must be the identity.
+                    image[dest] = nextUnusedSimp++;
+                    preImage[image[dest]] = dest;
+                    vertexMap[dest] = vertexMap[simpSrc] *
+                        s->adjacentGluing(facetSrc).inverse();
+
+                    --facetPos; // leave the facet bit unset
+                }
+            } else {
+                // Our source facet lies on the boundary.
+                facetType_.set(facetPos--, true);
+                adjSimplex_[simplexPos++] = comp->size();
+            }
+        }
+    }
+
+    // Record the canonical isomorphism if required.
+    if (relabelling)
+        for (size_t i = 0; i < size_; ++i) {
+            size_t origIndex = preImage[i];
+            relabelling->simpImage(origIndex) = i; // image[origIndex]
+            relabelling->facetPerm(origIndex) = vertexMap[origIndex];
+        }
+}
+
 namespace detail {
 
 template <int dim> requires (supportedDim(dim))
@@ -179,7 +295,7 @@ typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
         typename Encoding::Signature best;
         bool first = true;
 
-        Type type(*c);
+        Type type(*c, false /* first-generation sigs are unoriented */);
         IsoSigData data(c);
         do {
             data.fillFrom(c->simplex(type.simplex()), type.perm(), nullptr);
@@ -199,7 +315,7 @@ typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
     FixedArray<typename Encoding::Signature> comp(countComponents());
     auto it = components().begin();
     for (i = 0; it != components().end(); ++it, ++i) {
-        Type type(**it);
+        Type type(**it, false /* first-generation sigs are unoriented */);
         bool first = true;
 
         IsoSigData data(*it);
@@ -249,7 +365,7 @@ std::pair<typename Encoding::Signature, Isomorphism<dim>>
     Isomorphism<dim> currRelabelling(size());
     bool first = true;
 
-    Type type(*c);
+    Type type(*c, false /* first-generation sigs are unoriented */);
     IsoSigData data(c);
     do {
         data.fillFrom(c->simplex(type.simplex()), type.perm(),

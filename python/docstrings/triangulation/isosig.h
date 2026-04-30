@@ -58,11 +58,12 @@ Python:
 
 // Docstring regina::python::doc::IsoSigData
 static const char *IsoSigData =
-R"doc(Holds all of the data required to reconstruct a single non-empty
-connected component of a *dim*-dimensional triangulation, up to
-relabelling. This is a halfway point between isomorphism signatures
-and triangulations: the data is small and uses simple
-numerical/combinatorial types, and is easy to encode or decode in an
+R"doc(Holds the combinatorial data required to reconstruct a single non-
+empty connected component of a *dim*-dimensional triangulation, up to
+relabelling, for use with first-generation isomorphism signatures as
+returned by ``Triangulation<dim>::isoSig()``. This is a halfway point
+between signatures and triangulations: the data is small and uses
+simple numerical types, and is easy to encode or decode in an
 appropriate signature form (e.g., a base64 string).
 
 Specifically, this data encodes a "compressed" gluings table for a
@@ -72,56 +73,67 @@ top-dimensional simplices in the usual order (simplex 0, facets
 ``0,...,dim``; then simplex 1, facets ``0,...,dim``; and so on). Some
 of these facets will be boundary (i.e., unglued), some will be glued
 to "new" facets that we have not yet stepped through, and some will be
-glued to "old" facets (i.e., we have already seen the same
-`(dim-1)`-face from the other side).
+glued to "old" facets (i.e., representing a `(dim-1)`-face of the
+triangulation that we have already seen from the other side).
 
-To be _canonical_:
+The notion of "canonical" differs between first-generation signatures
+(``isoSig()``) and second-generation signatures (``neoSig()``). To be
+_canonical_ for a first-generation signature:
 
-_ We require that each time we see a new facet whose gluing partner
-comes from a previously-unseen simplex, then that partner simplex uses
-the next available simplex label and the gluing uses the identity
-permutation. So, for example, the first facet of simplex 0 that is
-glued to some _other_ simplex must be glued to simplex 1 using the
-identity permutation.
-
-* The condition above ensures that, once we have chosen which top-
-  dimensional simplex will be simplex 0 and how its vertices
-  ``0,...,dim`` will be labelled, the labelling of the remaining
-  simplices and their vertices will be uniquely determined (and can be
-  computed in linear time).
+* As we step through the facets, if we reach a facet ``f`` that is
+  glued to a partner ``g`` belonging to a top-dimensional simplex that
+  we have not yet seen before, we require that the simplex containing
+  ``g`` uses the next available simplex label, and that the gluing
+  between ``f`` and ``g`` uses the identity permutation. So, for
+  example, the first facet of simplex 0 that is glued to some _other_
+  simplex must be glued to simplex 1 using the identity permutation.
+  Note that, in constrast to second-generation signatures, if the
+  component has more than one top-dimensional simplex then this will
+  never result in an oriented labelling.
 
 * Your chosen signature _type_ may impose further requirements on the
   choice of simplex 0 and its vertex labels; see the IsoSigType
   concept documentation for details.
 
-Given a canonical labelling, a _compressed_ gluings table holds the
-following information:
+The first condition above ensures that, once we have chosen which top-
+dimensional simplex will be simplex 0 and how its vertices
+``0,...,dim`` will be labelled, the labelling of the remaining
+simplices and their vertices will be uniquely determined (and can be
+computed in linear time).
+
+Given a canonical labelling, a _compressed gluings table_ for a first-
+generation signature holds the following information:
 
 * For each facet *f* that we step through in order, _ignoring_ those
   glued to "old" facets, we record whether *f* is: boundary (type 0);
   glued to a "new" facet of a previously-unseen simplex using the
   identity permutation (type 1); or glued to a "new" facet of a
-  simplex that has been seen before (type 2). This is stored in array
-  whose length is the total number of `(dim-1)`-faces in the
+  simplex that has already been seen (type 2). This is stored in an
+  array whose length is the total number of `(dim-1)`-faces in the
   triangulation component.
 
-* For each facet of type 2, we record the top-dimensional simplex
-  number that it is glued to. This is stored in an array whose length
-  is the total number of facets of type 2.
+* For each facet *f* of type 2, we record the top-dimensional simplex
+  number of the facet that *f* is glued to. This is stored in an array
+  whose length is the total number of facets of type 2.
 
-* For each facet of type 2, we record the ordered ``S_n`` index of the
-  specific gluing permutation, again using an array whose length is
-  the total number of facets of type 2.
+* For each facet *f* of type 2, we record the ordered ``S_n`` index of
+  the specific gluing permutation between *f* and its partner, again
+  using an array whose length is the total number of facets of type 2.
+  Note that this is different from second-generation signatures, which
+  use the plain (not ordered) ``S_n`` index.
 
 * Finally, if (and only if) there are any simplex or facet locks in
-  this triangulation component, we also record the lock masks of all
-  top-dimensional simplices in order (simplex ``0,1,2,...``).
+  this triangulation component, we record the lock masks of all top-
+  dimensional simplices in order (simplex ``0,1,2,...``).
 
-An isomorphism signature _encoding_ is responsible for encoding this
-data in its final signature form (e.g., a base64 string), and the
-final isomorphism signature will use the labelling that minimises this
-encoding (under the inherent ordering of the resulting signature
-type).
+A first-generation signature _encoding_ is responsible for encoding
+this data in its final signature form (e.g., a base64 string); see the
+IsoSigEncoding concept documentation for details. The final signature
+will use the labelling that minimises this encoding, under the
+inherent ordering of the resulting signature type (e.g., the inherent
+ordering on strings). Note that this works differently from second-
+generation signatures, which minimise the compressed gluings table
+_before_ it is encoded.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
@@ -175,42 +187,143 @@ Python:
 
 // Docstring regina::python::doc::IsoSigPrintable
 static const char *IsoSigPrintable =
-R"doc(The default encoding to use for isomorphism signatures.
+R"doc(Encodes both first-generation and second-generation isomorphism
+signatures as printable strings. This is the default encoding used by
+both ``Triangulation<dim>::isoSig()`` and
+``Triangulation<dim>::neoSig()``.
 
-This printable encoding is consistent with the original isomorphism
-signatures that were implemented in Regina 4.90. It represents an
-isomorphism signature as a ``std::string``, using only printable
-characters from the 7-bit ASCII range.
+This printable encoding represents an isomorphism signature as a
+``std::string``, using only printable characters from the 7-bit ASCII
+range. For first-generation signatures, it is consistent with the
+original isomorphism signatures implemented in Regina 4.90.
 
-As of Regina 7.4, if *supportLocks* is ``True`` (the default), then
-this encoding will also encode any simplex and/or facet locks into the
-isomorphism signature. If *supportLocks* is ``False``, and/or if the
-triangulation in question does not actually have any simplex and/or
-facet locks, then the resulting signature will be the same as produced
-by earlier versions of Regina, before locks were implemented.
+If the template parameter *supportLocks* is ``True`` (the default),
+_and_ if the triangulation in question has one or more simplex and/or
+facet locks, then the locks will be encoded as part of the isomorphism
+signature (they will appear at the end, after the encoded gluings
+table). If *supportLocks* is ``False`` or if the triangulation does
+not have any locks, then locks will not be encoded; in particular, the
+first-generation encoding will be the same as in earlier versions of
+Regina (before 7.4), before locks were implemented.
 
-See the IsoSigEncoding concept documentation for general details on
-encodings for isomorphism signatures.
+See the IsoSigEncoding and NeoSigEncoding concept documentation for
+general details on encodings for first-generation and second-
+generation isomorphism signatures respectively.
 
 This class is designed to be used as a template parameter for
-``Triangulation<dim>::isoSig()`` and
-``Triangulation<dim>::isoSigDetail()``. Typical users would have no
-need to call any of its functions directly.
+signature routines in the class ``Triangulation<dim>``, including
+``isoSig()``, ``neoSig()``, ``isoSigDetail()``, and
+``neoSigDetail()``. Typical users would have no need to call any
+functions from this encoding class directly.
 
 Python:
     Python does not support C++ templates. To _use_ this encoding in
     Python: if *supportLocks* is ``True`` (the default), call the
     relevant signature function with no extra suffix (e.g.,
-    ``Triangulation::isoSig()`` or ``Triangulation::isoSigDetail()``);
-    if *supportLocks* is ``False``, use an extra ``_LockFree`` suffix
+    ``Triangulation::isoSig()`` or ``Triangulation::neoSig()``); if
+    *supportLocks* is ``False``, use an extra ``_LockFree`` suffix
     (e.g., ``Triangulation::isoSig_LockFree()`` or
-    ``Triangulation::isoSigDetail_LockFree()``). To access this
-    encoding _class_ (which you would typically not need to do): if
+    ``Triangulation::neoSig_LockFree()``). To access this encoding
+    _class_ (which you would typically not need to do): if
     *supportLocks* is ``True``, append the dimension as a suffix
     (e.g., ``IsoSigPrintable2`` and ``IsoSigPrintable3`` for
     dimensions 2 and 3); if *supportLocks* is ``False``, use the type
     aliases ``IsoSigPrintableLockFree2``,
     ``IsoSigPrintableLockFree3``, and so on.
+
+.. warning::
+    The API for this class or function has not yet been finalised.
+    This means that the interface may change in new versions of
+    Regina, without maintaining backward compatibility. If you use
+    this class directly in your own code, please check the detailed
+    changelog with each new release to see if you need to make changes
+    to your code.)doc";
+
+// Docstring regina::python::doc::NeoSigData
+static const char *NeoSigData =
+R"doc(Holds the combinatorial data required to reconstruct a single non-
+empty connected component of a *dim*-dimensional triangulation, up to
+relabelling, for use with second-generation isomorphism signatures as
+returned by ``Triangulation<dim>::neoSig()``. This is a halfway point
+between signatures and triangulations: the data is small and uses
+simple numerical types, and is easy to encode or decode in an
+appropriate signature form (e.g., a base64 string).
+
+Specifically, this data encodes a "compressed" gluings table for a
+"canonical" labelling of a triangulation component. Both the notions
+of "compressed" and "canonical" involve stepping through the facets of
+top-dimensional simplices in the usual order (simplex 0, facets
+``0,...,dim``; then simplex 1, facets ``0,...,dim``; and so on). Some
+of these facets will be boundary (i.e., unglued), some will be glued
+to "new" facets that we have not yet stepped through, and some will be
+glued to "old" facets (i.e., representing a `(dim-1)`-face of the
+triangulation that we have already seen from the other side).
+
+The notion of "canonical" differs between first-generation signatures
+(``isoSig()``) and second-generation signatures (``neoSig()``). To be
+_canonical_ for a second-generation signature:
+
+* As we step through the facets, if we reach a facet ``f`` that is
+  glued to a partner ``g`` belonging to a top-dimensional simplex that
+  we have not yet seen before, we require that the simplex containing
+  ``g`` uses the next available simplex label, and that the gluing
+  between ``f`` and ``g`` uses the permutation that swaps 0 with 1.
+  So, for example, the first facet of simplex 0 that is glued to some
+  _other_ simplex must be glued to simplex 1 using the permutation
+  ``Perm<dim+1>(0,1)``. Note that, in contrast to first-generation
+  signatures, if the component is orientable then this will always
+  result in an oriented labelling.
+
+* Your chosen signature _type_ may impose further requirements on the
+  choice of simplex 0 and its vertex labels; see the NeoSigType
+  concept documentation for details.
+
+The first condition above ensures that, once we have chosen which top-
+dimensional simplex will be simplex 0 and how its vertices
+``0,...,dim`` will be labelled, the labelling of the remaining
+simplices and their vertices will be uniquely determined (and can be
+computed in linear time).
+
+Given a canonical labelling, a _compressed gluings table_ for a
+second-generation signature holds the following information:
+
+* For each facet *f* that we step through in order, _ignoring_ those
+  glued to "old" facets, we record whether *f* is: glued to a "new"
+  facet of a previously-unseen simplex using the permutation swapping
+  0 and 1 (type A); or either boundary or glued to a "new" facet of a
+  simplex that has already been seen (type B). This is stored in a
+  bitmask whose length is the total number of `(dim-1)`-faces in the
+  triangulation component. Comparing these types to the types used in
+  first-generation signatures: type A corresponds to the old type 1,
+  and type B combines the old types 0 and 2.
+
+* For each facet *f* of type B, we record the top-dimensional simplex
+  number of the facet that *f* is glued to; if *f* is boundary then
+  this number will be the total number of top-dimensional simplices in
+  the component. This is stored in an array whose length is the total
+  number of facets of type B.
+
+* For each non-boundary facet *f* of type B, we record the ``S_n``
+  index of the specific gluing permutation between *f* and its
+  partner, using an array whose length is the total number of non-
+  boundary facets of type B. Note that this is different from first-
+  generation signatures, which use the _ordered_ ``S_n`` index.
+
+* Finally, if (and only if) there are any simplex or facet locks in
+  this triangulation component, we record the lock masks of all top-
+  dimensional simplices in order (simplex ``0,1,2,...``).
+
+A second-generation signature _encoding_ is responsible for encoding
+this data in its final signature form (e.g., a base64 string); see the
+NeoSigEncoding concept documentation for details. The final signature
+will use the labelling that minimises the compressed gluings table,
+under the inherent ordering of NeoSigData. Note that this works
+differently from first-generation signatures, which minimise the
+_encoding_ (e.g., the base64 string).
+
+This class implements C++ move semantics and adheres to the C++
+Swappable requirement. It is designed to avoid deep copies wherever
+possible, even when passing or returning objects by value.
 
 .. warning::
     The API for this class or function has not yet been finalised.
@@ -300,11 +413,12 @@ R"doc(Gives read-only access to the array of gluing permutations, as
 described in the class notes.
 
 The length of this array will be the number of facets of top-
-dimensional simplices of type 2 (as described in the class notes, and
-as indicated by the facetTypes() array).
+dimensional simplices of type 2 (as described in the class notes).
 
 Each element of this array holds the ordered ``S_n`` index of the
-gluing permutation for the relevant facet.
+gluing permutation for the relevant facet. Note that, in constrast to
+second-generation signatures, here we used the ordered ``S_n`` index
+and not the plain ``S_n`` index.
 
 Python:
     This routine returns a deep copy (not a reference), in the form of
@@ -319,11 +433,11 @@ R"doc(Gives read-only access to the array of gluing destinations, as
 described in the class notes.
 
 The length of this array will be the number of facets of top-
-dimensional simplices of type 2 (as described in the class notes, and
-as indicated by the facetTypes() array).
+dimensional simplices of type 2 (as described in the class notes).
 
-Each element of this array indicates the index of the top-dimensional
-simplex to which the relevant facet is glued.
+Each element of this array corresponds to some facet *f* of type 2,
+and indicates the index of the top-dimensional simplex containing the
+partner facet to which *f* is glued.
 
 Python:
     This routine returns a deep copy (not a reference), in the form of
@@ -337,14 +451,17 @@ static const char *facetTypes =
 R"doc(Gives read-only access to the array of facet types, as described in
 the class notes.
 
-This will be an array of integers, each taking the value 0, 1 or 2,
-and each indicating whether a particular facet of a top-dimensional
-simplex is boundary (0), glued to a "new" facet of a previously-unseen
-simplex (1), or glued to a "new" facet of a simplex that has been seen
-before (2). Facets that are glued to "old" facets (i.e., facets that
-represent internal `(dim-1)`-faces of the triangulation and have
-already been seen from the other side) are not represented in this
-array.
+This will be an array of integers 0, 1 or 2, corresponding to the
+facets of top-dimensional simplices that we step through in order as
+described in the class notes. Facets that are glued to "old" partner
+facets (i.e., facets that represent internal `(dim-1)`-faces of the
+triangulation and have already been seen from the other side) are not
+represented at all in this array.
+
+Each integer in the array indicates whether a particular facet of a
+top-dimensional simplex is boundary (0), glued to a "new" partner
+facet of a previously-unseen simplex (1), or glued to a "new" partner
+facet belonging to a simplex that has already been seen before (2).
 
 The length of the array will be the total number of `(dim-1)`-faces in
 the triangulation component being encoded.
@@ -517,7 +634,7 @@ triangulation.
 
 Precondition:
     The given component is non-empty, and uses a canonical labelling
-    in the sense described in the IsoSigData class notes.
+    in the sense described in the NeoSigData class notes.
 
 Parameter ``data``:
     the compressed gluings table for the component to encode.
@@ -543,13 +660,229 @@ connected component.
 
 Precondition:
     The given component is non-empty, and uses a canonical labelling
-    in the sense described in the IsoSigData class notes.
+    in the sense described in the NeoSigData class notes.
 
 Parameter ``data``:
     the compressed gluings table for the component to encode.
 
 Returns:
     the length of the isomorphism signature that encodes *data*.)doc";
+
+}
+
+namespace NeoSigData_ {
+
+// Docstring regina::python::doc::NeoSigData_::__cmp
+static const char *__cmp =
+R"doc(Compares two sets of triangulation component data. Such comparisons
+are used by the signature algorithm when choosing a minimal canonical
+labelling, and also when choosing an ordering of components in
+disconnected triangulations.
+
+This generates all of the usual comparison operators, including ``<``,
+``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the component data to compare with this.
+
+Returns:
+    the result of the comparison between this and the given data.)doc";
+
+// Docstring regina::python::doc::NeoSigData_::__copy
+static const char *__copy = R"doc(Makes a new deep copy of the given data set.)doc";
+
+// Docstring regina::python::doc::NeoSigData_::__eq
+static const char *__eq =
+R"doc(Determines whether this and the given triangulation component data
+hold identical information.
+
+Returns:
+    ``True`` if and only if this and the given data are identical.)doc";
+
+// Docstring regina::python::doc::NeoSigData_::__init
+static const char *__init =
+R"doc(Allocates space for a data set for the given triangulation component.
+
+The bitmask included in this data set will be initialised with all
+bits off. All other arrays will be initialised to the correct sizes,
+but the individual array elements will be left uninitialised. You will
+need to call fillFrom() before this data set can be used (i.e., before
+any other methods are called).
+
+Parameter ``comp``:
+    the triangulation component that we intend to encode.)doc";
+
+// Docstring regina::python::doc::NeoSigData_::adjacentGluings
+static const char *adjacentGluings =
+R"doc(Gives read-only access to the array of gluing permutations, as
+described in the class notes.
+
+The length of this array will be the number of non-boundary facets of
+top-dimensional simplices of type B (as described in the class notes).
+
+Each element of this array holds the ``S_n`` index of the gluing
+permutation for the relevant facet. Note that, in contrast to first-
+generation signatures, here we use the plain ``S_n`` index and not the
+ordered ``S_n`` index.
+
+Python:
+    This routine returns a deep copy (not a reference), in the form of
+    a Python list.
+
+Returns:
+    a reference to the array of gluing permutations.)doc";
+
+// Docstring regina::python::doc::NeoSigData_::adjacentSimplices
+static const char *adjacentSimplices =
+R"doc(Gives read-only access to the array of gluing destinations, as
+described in the class notes.
+
+The length of this array will be the number of facets of top-
+dimensional simplices of type B (as described in the class notes).
+
+Each element of this array corresponds to some facet *f* of type B,
+and indicates the index of the top-dimensional simplex containing the
+partner facet to which *f* is glued, or ``size()`` if *f* is a
+boundary facet.
+
+Python:
+    This routine returns a deep copy (not a reference), in the form of
+    a Python list.
+
+Returns:
+    a reference to the array of gluing destinations.)doc";
+
+// Docstring regina::python::doc::NeoSigData_::facetTypes
+static const char *facetTypes =
+R"doc(Gives read-only access to the bitmask of facet types, as described in
+the class notes.
+
+The bits correspond to the facets of top-dimensional simplices that we
+step through as described in the class notes, but are stored in
+_reverse_ order; this ensures that ``Bitmask::numericalComp()`` treats
+the first facet (not the last) as most significant. Facets that are
+glued to "old" partner facets (i.e., facets that represent internal
+`(dim-1)`-faces of the triangulation and have already been seen from
+the other side) are not represented at all in this bitmask.
+
+Each bit is set if and only if the corresponding facet is of type B
+(i.e., either boundary, or glued to a "new" partner facet belonging to
+a simplex that has already been seen before).
+
+The length of the bitmask will be the total number of `(dim-1)`-faces
+in the triangulation component being described.
+
+Python:
+    This routine returns a deep copy (not a reference), in the form of
+    a Python list.
+
+Returns:
+    a reference to the bitmask of facet types.)doc";
+
+// Docstring regina::python::doc::NeoSigData_::fillFrom
+static const char *fillFrom =
+R"doc(Determines the (unique) canonical labelling of the triangulation
+component for a particular choice of simplex 0 and vertices
+``0,...,dim``, and fills this structure with the corresponding
+compressed gluings table.
+
+See the class notes for full details on canonical labellings. In the
+gluings table that we build here, *simplex* will be labelled as
+simplex 0, and its vertices ``vertices[0],...,vertices[dim]`` will be
+labelled as vertices ``0,...,dim``.
+
+This routine may be (and typically will be) called many times for
+different choices of *simplex* and *vertices*; this is perfectly safe,
+and each subsequent call to fillFrom() will overwrite the previously-
+stored gluings table.
+
+Precondition:
+    The given simplex belongs to the triangulation component that was
+    originally passed to the NeoSigData constructor.
+
+Precondition:
+    If the isomorphism *relabelling* is non-null, then it must have
+    been constructed for *size* top-dimensional simplices, where
+    *size* is the size of the entire _triangulation_, not just the
+    component being encoded.
+
+Parameter ``simplex``:
+    any top-dimensional simplex in the triangulation component being
+    encoded.
+
+Parameter ``vertices``:
+    any ordering of the vertices of the given simplex.
+
+Parameter ``relabelling``:
+    if non-null, this isomorphism will be filled with the isomorphism
+    from the original triangulation to the canonical labelling. If the
+    underlying triangulation has multiple components, then only the
+    information relating to this component will be changed; other
+    simplex/vertex images in *relabelling* will be left untouched.)doc";
+
+// Docstring regina::python::doc::NeoSigData_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given triangulation component data sets.
+
+This global routine simply calls ``NeoSigData<dim>::swap()``; it is
+provided so that NeoSigData meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first component data set whose contents should be swapped.
+
+Parameter ``b``:
+    the second component data set whose contents should be swapped.)doc";
+
+// Docstring regina::python::doc::NeoSigData_::hasLocks
+static const char *hasLocks =
+R"doc(Indicates whether the triangulation component being encoded has any
+simplex or facet locks.
+
+This will be ``True`` if and only if the array returned by locks() is
+non-empty.
+
+Returns:
+    a reference to the (possibly empty) array of lock masks.)doc";
+
+// Docstring regina::python::doc::NeoSigData_::locks
+static const char *locks =
+R"doc(Gives read-only access to the array of lock masks, as described in the
+class notes.
+
+If the triangulation component being encoded has no simplex or facet
+locks, then this will be an empty array. Otherwise it will be an array
+whose length is the total number of top-dimensional simplices in the
+component, and whose elements are the lock masks for the individual
+simplices (as indicated by `Simplex<dim>`::lockMask()`).
+
+Python:
+    This routine returns a deep copy (not a reference), in the form of
+    a Python list.
+
+Returns:
+    a reference to the array of lock masks.)doc";
+
+// Docstring regina::python::doc::NeoSigData_::size
+static const char *size =
+R"doc(Returns the total number of top-dimensional simplices in the connected
+triangulation component that this data set describes.
+
+Returns:
+    the total number of top-dimensional simplices.)doc";
+
+// Docstring regina::python::doc::NeoSigData_::swap
+static const char *swap =
+R"doc(Swaps the contents of this and the given triangulation component data.
+
+This routine will behave correctly if *other* is in fact this data
+set.
+
+Parameter ``other``:
+    the component data whose contents should be swapped with this.)doc";
 
 }
 

@@ -952,6 +952,7 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
     // IsoSigEdgeDegrees<3> and IsoSigRidgeDegrees<3> are the same type.
     m.attr("IsoSigRidgeDegrees3") = m.attr("IsoSigEdgeDegrees3");
     addIsoSigData<3>(m, "IsoSigData3");
+    addNeoSigData<3>(m, "NeoSigData3");
     addIsoSigPrintable<3, true>(m, "IsoSigPrintable3");
     addIsoSigPrintable<3, false>(m, "IsoSigPrintableLockFree3");
 }

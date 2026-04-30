@@ -62,23 +62,23 @@ void isosig_options(PythonClass& classWrapper) {
         .def("isoSig",
             &Triangulation<dim>::template isoSig<>,
             rbase::isoSig)
-        .def("isoSig_LockFree",
+        .def("isoSig_lockFree",
             &Triangulation<dim>::template isoSig<
                 regina::IsoSigClassic<dim>, LockFree>,
             rbase::isoSig)
-        .def("isoSig_EdgeDegrees",
+        .def("isoSig_edgeDegrees",
             &Triangulation<dim>::template isoSig<
                 regina::IsoSigEdgeDegrees<dim>>,
             rbase::isoSig)
-        .def("isoSig_EdgeDegrees_LockFree",
+        .def("isoSig_edgeDegrees_lockFree",
             &Triangulation<dim>::template isoSig<
                 regina::IsoSigEdgeDegrees<dim>, LockFree>,
             rbase::isoSig)
-        .def("isoSig_RidgeDegrees",
+        .def("isoSig_ridgeDegrees",
             &Triangulation<dim>::template isoSig<
                 regina::IsoSigRidgeDegrees<dim>>,
             rbase::isoSig)
-        .def("isoSig_RidgeDegrees_LockFree",
+        .def("isoSig_ridgeDegrees_lockFree",
             &Triangulation<dim>::template isoSig<
                 regina::IsoSigRidgeDegrees<dim>, LockFree>,
             rbase::isoSig)
@@ -86,23 +86,23 @@ void isosig_options(PythonClass& classWrapper) {
         .def("isoSigDetail",
             &Triangulation<dim>::template isoSigDetail<>,
             rbase::isoSigDetail)
-        .def("isoSigDetail_LockFree",
+        .def("isoSigDetail_lockFree",
             &Triangulation<dim>::template isoSigDetail<
                 regina::IsoSigClassic<dim>, LockFree>,
             rbase::isoSigDetail)
-        .def("isoSigDetail_EdgeDegrees",
+        .def("isoSigDetail_edgeDegrees",
             &Triangulation<dim>::template isoSigDetail<
                 regina::IsoSigEdgeDegrees<dim>>,
             rbase::isoSigDetail)
-        .def("isoSigDetail_EdgeDegrees_LockFree",
+        .def("isoSigDetail_edgeDegrees_lockFree",
             &Triangulation<dim>::template isoSigDetail<
                 regina::IsoSigEdgeDegrees<dim>, LockFree>,
             rbase::isoSigDetail)
-        .def("isoSigDetail_RidgeDegrees",
+        .def("isoSigDetail_ridgeDegrees",
             &Triangulation<dim>::template isoSigDetail<
                 regina::IsoSigRidgeDegrees<dim>>,
             rbase::isoSigDetail)
-        .def("isoSigDetail_RidgeDegrees_LockFree",
+        .def("isoSigDetail_ridgeDegrees_lockFree",
             &Triangulation<dim>::template isoSigDetail<
                 regina::IsoSigRidgeDegrees<dim>, LockFree>,
             rbase::isoSigDetail)
@@ -117,7 +117,8 @@ void addIsoSigClassic(pybind11::module_& m, const char* name) {
 
     using Type = regina::IsoSigClassic<dim>;
     auto s = pybind11::class_<Type>(m, name, rdoc_scope)
-        .def(pybind11::init<const regina::Component<dim>&>(), rdoc::__init)
+        .def(pybind11::init<const regina::Component<dim>&, bool>(),
+            rdoc::__init)
         .def("simplex", &Type::simplex, rdoc::simplex)
         .def("perm", &Type::perm, rdoc::perm)
         .def("next", &Type::next, rdoc::next)
@@ -133,7 +134,8 @@ void addIsoSigEdgeDegrees(pybind11::module_& m, const char* name) {
 
     using Type = regina::IsoSigEdgeDegrees<dim>;
     auto s = pybind11::class_<Type>(m, name, rdoc_scope)
-        .def(pybind11::init<const regina::Component<dim>&>(), rdoc::__init)
+        .def(pybind11::init<const regina::Component<dim>&, bool>(),
+            rdoc::__init)
         .def("simplex", &Type::simplex, rdoc::simplex)
         .def("perm", &Type::perm, rdoc::perm)
         .def("next", &Type::next, rdoc::next)
@@ -149,7 +151,8 @@ void addIsoSigRidgeDegrees(pybind11::module_& m, const char* name) {
 
     using Type = regina::IsoSigRidgeDegrees<dim>;
     auto s = pybind11::class_<Type>(m, name, rdoc_scope)
-        .def(pybind11::init<const regina::Component<dim>&>(), rdoc::__init)
+        .def(pybind11::init<const regina::Component<dim>&, bool>(),
+            rdoc::__init)
         .def("simplex", &Type::simplex, rdoc::simplex)
         .def("perm", &Type::perm, rdoc::perm)
         .def("next", &Type::next, rdoc::next)
@@ -201,6 +204,51 @@ void addIsoSigData(pybind11::module_& m, const char* name) {
         .def("swap", &Data::swap, rdoc::swap)
         ;
     regina::python::add_eq_operators(s, rdoc::__eq);
+
+    regina::python::add_global_swap<Data>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
+}
+
+template <int dim>
+requires (regina::supportedDim(dim))
+void addNeoSigData(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(NeoSigData)
+
+    using Data = regina::NeoSigData<dim>;
+    auto s = pybind11::class_<Data>(m, name, rdoc_scope)
+        .def(pybind11::init<regina::Component<dim>*>(), rdoc::__init)
+        .def(pybind11::init<const Data&>(), rdoc::__copy)
+        .def("size", &Data::size, rdoc::size)
+        .def("facetTypes", &Data::facetTypes,
+            pybind11::return_value_policy::copy, rdoc::facetTypes)
+        .def("adjacentSimplices", [](const Data& data) {
+            pybind11::list ans;
+            for (auto f : data.adjacentSimplices())
+                ans.append(f);
+            return ans;
+        }, rdoc::adjacentSimplices)
+        .def("adjacentGluings", [](const Data& data) {
+            pybind11::list ans;
+            for (auto f : data.adjacentGluings())
+                ans.append(f);
+            return ans;
+        }, rdoc::adjacentGluings)
+        .def("locks", [](const Data& data) {
+            pybind11::list ans;
+            for (auto f : data.locks())
+                ans.append(f);
+            return ans;
+        }, rdoc::locks)
+        .def("hasLocks", &Data::hasLocks, rdoc::hasLocks)
+        .def("fillFrom", &Data::fillFrom,
+            pybind11::arg("simplex"), pybind11::arg("vertices"),
+            pybind11::arg("relabelling") = nullptr,
+            rdoc::fillFrom)
+        .def("swap", &Data::swap, rdoc::swap)
+        ;
+    regina::python::add_eq_operators(s, rdoc::__eq);
+    regina::python::add_cmp_operators(s, rdoc::__cmp);
 
     regina::python::add_global_swap<Data>(m, rdoc::global_swap);
 

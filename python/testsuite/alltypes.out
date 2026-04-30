@@ -326,6 +326,13 @@ ModelLinkGraphArc : class -> EqualityType.ByValue
 ModelLinkGraphCells : class -> EqualityType.ByValue
 ModelLinkGraphNode : class -> EqualityType.ByReference
 NamedPermGroup : enum
+NeoSigData2 : class -> EqualityType.ByValue
+NeoSigData3 : class -> EqualityType.ByValue
+NeoSigData4 : class -> EqualityType.ByValue
+NeoSigData5 : class -> EqualityType.ByValue
+NeoSigData6 : class -> EqualityType.ByValue
+NeoSigData7 : class -> EqualityType.ByValue
+NeoSigData8 : class -> EqualityType.ByValue
 NiceType : enum
 NoSolution : exception
 NormalAlg : enum
