@@ -29,6 +29,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# ---------- Testing IsoSigData ----------
+
 tri = Triangulation3.fromSig('cPcbbbiht') # figure eight knot complement
 data = IsoSigData1_3(tri.component(0))
 data.fillFrom(tri.simplex(0), Perm4())
@@ -38,6 +40,41 @@ print(data.adjacentGluings())
 print(data.locks())
 print(IsoSigPrintable.encode(data))
 print()
+
+# ---------- Testing isomorphism signatures of triangulations ----------
+
+tri = Example3.weeks()
+tri.simplex(0).lock()
+print(tri.sig(1))
+print(tri.isoSig())
+print(tri.isoSig(IsoSigPrintableLockFree))
+print(tri.isoSig(IsoSigPrintable, IsoSigClassic3))
+print(tri.isoSig(IsoSigPrintable, IsoSigEdgeDegrees3))
+print(tri.sig(2))
+print(tri.neoSig())
+print(tri.neoSig(False, IsoSigPrintableLockFree))
+print(tri.neoSig(False, IsoSigPrintable, IsoSigClassic3))
+print(tri.neoSig(False, IsoSigPrintable, IsoSigEdgeDegrees3))
+print()
+
+# ---------- Testing oriented vs non-oriented signatures ----------
+
+tri = Example3.lens(3, 1)
+try:
+	print(tri.neoSig(True))
+except:
+	print('Caught exception')
+
+tri.orient()
+alt = Triangulation3(tri)
+alt.reflect()
+print(tri.neoSig())
+print(alt.neoSig())
+print(tri.neoSig(True))
+print(alt.neoSig(True))
+print()
+
+# ---------- Testing knot/link signatures ----------
 
 link = Link.fromSig('eabcdbadcvbZa') # figure eight knot
 data = LinkSigData(link, BoolSet(True, True), True, BoolSet(True, True))
@@ -57,6 +94,8 @@ print(Link.fromSig(link.neoSig()))
 print(Link.fromSig(link.neoSig_binary()))
 print(LinkSigBinary.asString(link.neoSig_binary()))
 print()
+
+# ---------- Testing "raw" encoders/decoders ----------
 
 enc = PackedSigEncoder()
 tmp = enc.encodeSize(1000)
