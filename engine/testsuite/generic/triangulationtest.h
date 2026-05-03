@@ -85,6 +85,7 @@ class TriangulationTest : public testing::Test {
         static void verifyComponentsDetail(const Triangulation<dim>& tri) {
             bool allOrbl = true;
             size_t totSize = 0;
+            size_t totFacets = 0;
             size_t totBdry = 0;
             size_t totBdryFacets = 0;
             for (auto c : tri.components()) {
@@ -94,6 +95,7 @@ class TriangulationTest : public testing::Test {
                 size_t doubleDualTree = 0;
 
                 totSize += c->size();
+                totFacets += c->countFacets();
                 for (auto s : c->simplices()) {
                     EXPECT_EQ(s->component(), c);
                     EXPECT_EQ(std::abs(s->orientation()), 1);
@@ -152,6 +154,7 @@ class TriangulationTest : public testing::Test {
             }
             EXPECT_EQ(tri.isOrientable(), allOrbl);
             EXPECT_EQ(tri.size(), totSize);
+            EXPECT_EQ(tri.template countFaces<dim-1>(), totFacets);
             EXPECT_EQ(tri.countBoundaryComponents(), totBdry);
             EXPECT_EQ(tri.countBoundaryFacets(), totBdryFacets);
         }
