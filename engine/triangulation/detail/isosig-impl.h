@@ -398,7 +398,30 @@ std::string IsoSigPrintable::encode(const IsoSigData<2, dim>& data) {
 
 template <int dim> requires (supportedDim(dim))
 size_t IsoSigPrintable::length(const IsoSigData<2, dim>& data) {
-    return 0;
+    size_t ans;
+    if (data.size() < 63) {
+        // The integer width is 1, and does not need to be explicitly
+        // encoded.
+        ans = 1 + data.adjacentSimplices().size();
+    } else {
+        // We begin with two extra characters: 63 (a marker that the
+        // component is large), and the encoding of the integer width.
+        int width = Base64SigEncoder::integerWidth(data.size());
+        ans = 2 + (1 + data.adjacentSimplices().size()) * width;
+    }
+    ans += ((data.countFacetBits() + 5) / 6);
+    ans += (data.adjacentGluings().size() * charsPerPerm<dim>);
+
+    if (data.hasLocks()) {
+        if constexpr (dim <= 4)
+            ans += (1 + data.locks().size());
+        else if constexpr (dim <= 10)
+            ans += (1 + data.locks().size() * 2);
+        else
+            ans += (1 + data.locks().size() * 3);
+    }
+
+    return ans;
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -445,7 +468,20 @@ std::string IsoSigPrintableLockFree::encode(const IsoSigData<2, dim>& data) {
 
 template <int dim> requires (supportedDim(dim))
 size_t IsoSigPrintableLockFree::length(const IsoSigData<2, dim>& data) {
-    return 0;
+    size_t ans;
+    if (data.size() < 63) {
+        // The integer width is 1, and does not need to be explicitly
+        // encoded.
+        ans = 1 + data.adjacentSimplices().size();
+    } else {
+        // We begin with two extra characters: 63 (a marker that the
+        // component is large), and the encoding of the integer width.
+        int width = Base64SigEncoder::integerWidth(data.size());
+        ans = 2 + (1 + data.adjacentSimplices().size()) * width;
+    }
+    ans += ((data.countFacetBits() + 5) / 6);
+    ans += (data.adjacentGluings().size() * charsPerPerm<dim>);
+    return ans;
 }
 
 namespace detail {

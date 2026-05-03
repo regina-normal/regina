@@ -1337,12 +1337,16 @@ class TriangulationTest : public testing::Test {
                     data.fillFrom(comp->simplex(0), {});
                     EXPECT_EQ(IsoSigPrintable::length(data),
                         IsoSigPrintable::encode(data).size());
+                    EXPECT_EQ(IsoSigPrintableLockFree::length(data),
+                        IsoSigPrintableLockFree::encode(data).size());
                 }
                 {
                     auto data = regina::IsoSigData<2, dim>::template minimal<
                         regina::IsoSigRidgeDegrees<dim>>(comp, false);
                     EXPECT_EQ(IsoSigPrintable::length(data),
                         IsoSigPrintable::encode(data).size());
+                    EXPECT_EQ(IsoSigPrintableLockFree::length(data),
+                        IsoSigPrintableLockFree::encode(data).size());
                 }
             }
         }
