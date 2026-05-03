@@ -49,11 +49,11 @@ void addTriangulations6(pybind11::module_& m, pybind11::module_& internal) {
 }
 
 // Instantiate templates for isomorphism signature encodings:
-template void regina::python::addEncodingFunctions<1, 6>(
+template void regina::python::add_isosig_encoding_functions<1, 6>(
     pybind11::class_<regina::IsoSigPrintable>&);
-template void regina::python::addEncodingFunctions<2, 6>(
+template void regina::python::add_isosig_encoding_functions<2, 6>(
     pybind11::class_<regina::IsoSigPrintable>&);
-template void regina::python::addEncodingFunctions<1, 6>(
+template void regina::python::add_isosig_encoding_functions<1, 6>(
     pybind11::class_<regina::IsoSigPrintableLockFree>&);
-template void regina::python::addEncodingFunctions<2, 6>(
+template void regina::python::add_isosig_encoding_functions<2, 6>(
     pybind11::class_<regina::IsoSigPrintableLockFree>&);

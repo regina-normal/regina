@@ -100,14 +100,14 @@ auto forIsoSigType(pybind11::type sigType, auto action) {
  * Adds the generation/dimension-specific functions to the python bindings for
  * the given encoding class.
  *
- * The type Encoding must conform to IsoSigEncoding<generation, dim>; however,
+ * The type Encoding must conform to `IsoSigEncoding<generation, dim>`; however,
  * we do not enforce it as a constraint because we do not want to instantiate
  * the full triangulation classes for all dimensions at once when binding an
  * encoding class.
  */
 template <int generation, int dim, typename Encoding>
 requires ((generation == 1 || generation == 2) && regina::supportedDim(dim))
-void addEncodingFunctions(pybind11::class_<Encoding>& c) {
+void add_isosig_encoding_functions(pybind11::class_<Encoding>& c) {
     static_assert(regina::IsoSigEncoding<Encoding, generation, dim>);
 
     c.def_static("encode",
@@ -123,7 +123,7 @@ void addEncodingFunctions(pybind11::class_<Encoding>& c) {
  * python bindings for a C++ triangulation class.
  *
  * To use this for the C++ class `Triangulation<dim>`, simply call
- * `regina::python::isosig_variants<dim>(c)`, where \a c is the
+ * `regina::python::add_isosig_variants<dim>(c)`, where \a c is the
  * `pybind11::class_` object that wraps `Triangulation<dim>`.
  */
 template <int dim, PythonClassWrapper PythonClass>
@@ -134,7 +134,7 @@ requires requires {
     requires (regina::supportedDim(dim));
     requires (std::same_as<typename PythonClass::type, Triangulation<dim>>);
 }
-void isosig_variants(PythonClass& classWrapper) {
+void add_isosig_variants(PythonClass& classWrapper) {
     RDOC_SCOPE_BASE(detail::TriangulationBase)
 
     // When encodings are passed as runtime options, we use pybind11::cast()

@@ -41,12 +41,13 @@ using regina::IsoSigPrintable;
 using regina::IsoSigPrintableLockFree;
 
 namespace regina::python {
-    // Here Encoding needs to conform to IsoSigEncoding<generation, dim>;
-    // however, we do not enforce it here because we do not want to instantiate
-    // all IsoSigData<generation, dim> classes in the same source file.
+    // This function is implemented in isosig-bindings.h.
+    // We do _not_ want to include its implementation here, because we do not
+    // want to inadvertently force the instantiation of the full triangulation
+    // classes for _all_ dimensions simultaneously in the same source file.
     template <int generation, int dim, typename Encoding>
     requires ((generation == 1 || generation == 2) && regina::supportedDim(dim))
-    void addEncodingFunctions(pybind11::class_<Encoding>&);
+    void add_isosig_encoding_functions(pybind11::class_<Encoding>&);
 }
 
 void addIsoSigEncodings(pybind11::module_& m) {
@@ -67,8 +68,8 @@ void addIsoSigEncodings(pybind11::module_& m) {
             rdoc::encodeEmpty)
         ;
     regina::for_constexpr<2, regina::maxDim() + 1>([&p](auto dim) {
-        regina::python::addEncodingFunctions<1, dim>(p);
-        regina::python::addEncodingFunctions<2, dim>(p);
+        regina::python::add_isosig_encoding_functions<1, dim>(p);
+        regina::python::add_isosig_encoding_functions<2, dim>(p);
     });
     regina::python::no_eq_static(p);
 
@@ -90,8 +91,8 @@ void addIsoSigEncodings(pybind11::module_& m) {
             rdoc::encodeEmpty)
         ;
     regina::for_constexpr<2, regina::maxDim() + 1>([&f](auto dim) {
-        regina::python::addEncodingFunctions<1, dim>(f);
-        regina::python::addEncodingFunctions<2, dim>(f);
+        regina::python::add_isosig_encoding_functions<1, dim>(f);
+        regina::python::add_isosig_encoding_functions<2, dim>(f);
     });
     regina::python::no_eq_static(f);
 

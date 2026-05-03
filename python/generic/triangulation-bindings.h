@@ -293,7 +293,7 @@ void addTriangulation(pybind11::module_& m, pybind11::module_& internal,
             overload_cast<const Triangulation<dim>&>(
                 &Triangulation<dim>::insertTriangulation),
             rbase::insertTriangulation)
-        // Variants of isoSig() are handled through isosig_variants() below.
+        // Variants of isoSig() are handled through add_isosig_variants() below.
         // With fromSig(), the byte sequence variant _must_ come first.
         // This is because pybind11 performs automatic conversion from bytes
         // to std::string, and so if the string variant appears first then
@@ -404,7 +404,7 @@ void addTriangulation(pybind11::module_& m, pybind11::module_& internal,
         #pragma GCC diagnostic pop
         #endif
     });
-    regina::python::isosig_variants<dim>(c);
+    regina::python::add_isosig_variants<dim>(c);
     regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);
     regina::python::packet_eq_operators(c, rbase::__eq);
