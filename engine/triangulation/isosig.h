@@ -984,6 +984,9 @@ class IsoSigPrintable {
          * The number of characters that we use in our encoding to
          * represent a single gluing permutation.
          * This must be large enough to encode an index into Perm<dim+1>::Sn.
+         *
+         * \python Since Python does not support C++ templates, this constant
+         * is accessible via a function `IsoSigPrintable.charsPerPerm(dim)`.
          */
         template <int dim> requires (supportedDim(dim))
         static constexpr int charsPerPerm =
@@ -1101,6 +1104,10 @@ class IsoSigPrintableLockFree {
          * The number of characters that we use in our encoding to
          * represent a single gluing permutation.
          * This must be large enough to encode an index into Perm<dim+1>::Sn.
+         *
+         * \python Since Python does not support C++ templates, this constant
+         * is accessible via a function
+         * `IsoSigPrintableLockFree.charsPerPerm(dim)`.
          */
         template <int dim> requires (supportedDim(dim))
         static constexpr int charsPerPerm = IsoSigPrintable::charsPerPerm<dim>;
