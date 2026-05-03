@@ -68,6 +68,10 @@ PRINT_LIST = [
     CursorKind.FIELD_DECL
 ]
 
+PRINT_BLACKLIST = [
+    CursorKind.TYPE_ALIAS_TEMPLATE_DECL
+]
+
 PREFIX_BLACKLIST = [
     CursorKind.TRANSLATION_UNIT
 ]
@@ -494,6 +498,20 @@ def extract(filename, node, namespace, output):
             # C++ docs tell us not to generate docstrings for it.
             return
 
+    generateDocstring = (node.kind in PRINT_LIST and \
+        (node.access_specifier not in ACCESS_BLACKLIST and \
+            node.availability not in AVAILABILITY_BLACKLIST and \
+            node.spelling not in MEMBER_BLACKLIST and \
+            node.spelling not in CLASS_BLACKLIST and \
+            (not node.is_move_constructor())))
+
+    if (not generateDocstring) and (node.kind not in PRINT_BLACKLIST) and \
+            '\\python' in node.raw_comment:
+        # This entity has Python-specific comments, so generate a docstring
+        # even though the node type is not in the print whitelist.
+        # print('Print override for node kind:', node.kind)
+        generateDocstring = True
+
     name = sanitize_name(d(node.spelling))
     if node.raw_comment:
         match = re.search(r'\\pyname{(\S+)}($|\s)', node.raw_comment)
@@ -522,12 +540,7 @@ def extract(filename, node, namespace, output):
                         sub_namespace += '_'
             for i in node.get_children():
                 extract(filename, i, sub_namespace, output)
-    if node.kind in PRINT_LIST and \
-            (node.access_specifier not in ACCESS_BLACKLIST and \
-                node.availability not in AVAILABILITY_BLACKLIST and \
-                node.spelling not in MEMBER_BLACKLIST and \
-                node.spelling not in CLASS_BLACKLIST and \
-                (not node.is_move_constructor())):
+    if generateDocstring:
         sub_namespace = namespace
         if len(node.spelling) > 0:
             # We are seeing functions with inline definitions and/or

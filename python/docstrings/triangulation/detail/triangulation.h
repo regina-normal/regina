@@ -1733,9 +1733,9 @@ signature of this triangulation, and *iso* is an isomorphism with the
 property that ``fromSig(sig) == iso(this)``.
 
 Precondition:
-    This triangulation must be non-empty and connected. The facility
-    to return a relabelling for disconnected triangulations may be
-    added to Regina in a later release.
+    This triangulation is non-empty and connected. The facility to
+    return a relabelling for disconnected triangulations may be added
+    to Regina in a later release.
 
 Python:
     You can pass the optional template arguments as runtime arguments:
@@ -2095,11 +2095,18 @@ See sig() for further details on isomorphism signatures in general.
     *p*-dimensional triangulation and a *q*-dimensional triangulation
     for different dimensions *p* and *q*.
 
+Precondition:
+    If *oriented* is ``True``, then this is an oriented triangulation.
+
 Python:
     You can pass the optional template arguments as additional runtime
     arguments: ``neoSig(oriented, Encoding, Type)``. So, for example,
     to use a binary encoding you can call ``neoSig(False,
     IsoSigBinary)``.
+
+Exception ``FailedPrecondition``:
+    An oriented signature was requested (i.e., *oriented* is
+    ``True``), but this triangulation is not oriented.
 
 Template parameter ``Encoding``:
     indicates the encoding to use, as discussed in detail in the
@@ -2155,9 +2162,12 @@ signature via ``neoSigDetail(true)``, it is guaranteed that the
 isomorphism that is returned will be orientation-preserving.
 
 Precondition:
-    This triangulation must be non-empty and connected. The facility
-    to return a relabelling for disconnected triangulations may be
-    added to Regina in a later release.
+    This triangulation is non-empty and connected. The facility to
+    return a relabelling for disconnected triangulations may be added
+    to Regina in a later release.
+
+Precondition:
+    If *oriented* is ``True``, then this is an oriented triangulation.
 
 Python:
     You can pass the optional template arguments as runtime arguments:
@@ -2166,7 +2176,9 @@ Python:
     ``neoSigDetail(False, IsoSigBinary)``.
 
 Exception ``FailedPrecondition``:
-    This triangulation is either empty or disconnected.
+    Either this triangulation is empty or disconnected, or an oriented
+    signature was requested (i.e., *oriented* is ``True``) but this
+    triangulation is not oriented.
 
 Template parameter ``Encoding``:
     indicates the encoding to use for the isomorphism signature, as
@@ -2898,6 +2910,9 @@ specific adjustments.
     *p*-dimensional triangulation and a *q*-dimensional triangulation
     for different dimensions *p* and *q*.
 
+Precondition:
+    If *oriented* is ``True``, then this is an oriented triangulation.
+
 Python:
     Python does not support C++ templates. Instead, you should pass
     the template arguments at runtime, using the argument order
@@ -2911,6 +2926,10 @@ Python:
 Exception ``InvalidArgument``:
     An oriented first-generation signature was requested. As discussed
     above, only second-generation signatures can be oriented.
+
+Exception ``FailedPrecondition``:
+    An oriented second-generation signature was requested (i.e.,
+    *oriented* is ``True``), but this triangulation is not oriented.
 
 Template parameter ``generation``:
     either 1 or 2, indicating whether to generate a first-generation

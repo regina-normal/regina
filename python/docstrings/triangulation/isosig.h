@@ -371,7 +371,7 @@ static const char *__init =
 R"doc(Initialises this "iterator" to the first candidate pair ``(s, p)`` for
 the given triangulation component.
 
-Parameter ``comp``:
+Parameter ``component``:
     the triangulation component that we are examining.
 
 Parameter ``oriented``:
@@ -439,7 +439,7 @@ correct sizes, but the individual array elements will be left
 uninitialised. You will need to call fillFrom() before this data set
 can be used (i.e., before any other methods are called).
 
-Parameter ``comp``:
+Parameter ``component``:
     the triangulation component that we intend to encode.)doc";
 
 // Docstring regina::python::doc::IsoSigData1_::adjacentGluings
@@ -748,11 +748,16 @@ that minimises the compressed gluings table.
 
 The minimisation will use the inherent ordering of IsoSigData.
 
+Python:
+    Python does not support C++ templates. Instead, you should pass
+    *Type* as the first runtime argument; that is, ``minimal(Type,
+    component, oriented, relabelling)``.
+
 Template parameter ``Type``:
     an isomorphism signature type, which will be used to determine
     which labellings are considered "canonical".
 
-Parameter ``comp``:
+Parameter ``component``:
     the triangulation component that this data set should represent.
 
 Parameter ``oriented``:
@@ -817,7 +822,7 @@ static const char *__init =
 R"doc(Initialises this "iterator" to the first candidate pair ``(s, p)`` for
 the given triangulation component.
 
-Parameter ``comp``:
+Parameter ``component``:
     the triangulation component that we are examining.
 
 Parameter ``oriented``:
@@ -864,6 +869,17 @@ Returns:
 }
 
 namespace IsoSigPrintableLockFree_ {
+
+// Docstring regina::python::doc::IsoSigPrintableLockFree_::charsPerPerm
+static const char *charsPerPerm =
+R"doc(The number of characters that we use in our encoding to represent a
+single gluing permutation. This must be large enough to encode an
+index into Perm<dim+1>::Sn.
+
+Python:
+    Since Python does not support C++ templates, this constant is
+    accessible via a function
+    ``IsoSigPrintableLockFree.charsPerPerm(dim)``.)doc";
 
 // Docstring regina::python::doc::IsoSigPrintableLockFree_::encode
 static const char *encode =
@@ -939,6 +955,16 @@ Returns:
 }
 
 namespace IsoSigPrintable_ {
+
+// Docstring regina::python::doc::IsoSigPrintable_::charsPerPerm
+static const char *charsPerPerm =
+R"doc(The number of characters that we use in our encoding to represent a
+single gluing permutation. This must be large enough to encode an
+index into Perm<dim+1>::Sn.
+
+Python:
+    Since Python does not support C++ templates, this constant is
+    accessible via a function ``IsoSigPrintable.charsPerPerm(dim)``.)doc";
 
 // Docstring regina::python::doc::IsoSigPrintable_::encode
 static const char *encode =
