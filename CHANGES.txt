@@ -78,7 +78,7 @@ Version 8.0  [ TODO ]
         Class Component<dim>:
             - Added variants of countFaces(), faces() and face() that take the
               face dimension as a runtime argument (not a template parameter).
-            - New routines triangulation() and hasLocks().
+            - New routines triangulation(), countFacets(), and hasLocks().
         Class Crossing:
             - New routine chordIndex().
         Class Cut:

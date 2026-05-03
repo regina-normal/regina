@@ -219,6 +219,17 @@ class ComponentBase :
             requires (standardDim(dim) && dim >= 4);
 
         /**
+         * Returns the number of `(dim-1)`-faces in this component.
+         *
+         * This is available (and constant time) for components in all
+         * dimensions, even though the list of `(dim-1)`-faces is only
+         * stored for components in Regina's standard dimensions.
+         *
+         * \return the number of `(dim-1)`-faces.
+         */
+        size_t countFacets() const;
+
+        /**
          * Returns the number of boundary components in this component.
          *
          * \return the number of boundary components.
@@ -492,6 +503,16 @@ template <int dim> requires (supportedDim(dim))
 inline size_t ComponentBase<dim>::countPentachora() const
         requires (standardDim(dim) && dim >= 4) {
     return static_cast<const Component<dim>*>(this)->template countFaces<4>();
+}
+
+template <int dim> requires (supportedDim(dim))
+inline size_t ComponentBase<dim>::countFacets() const {
+    if constexpr (standardDim(dim)) {
+        return static_cast<const Component<dim>*>(this)->
+            template countFaces<dim - 1>();
+    } else {
+        return ((dim + 1) * simplices_.size() + boundaryFacets_) / 2;
+    }
 }
 
 template <int dim> requires (supportedDim(dim))

@@ -54,6 +54,7 @@ void addComponent2(pybind11::module_& m, pybind11::module_& internal) {
         .def("countEdges", &Component<2>::countEdges, rbase::countEdges)
         .def("countVertices", &Component<2>::countVertices,
             rbase::countVertices)
+        .def("countFacets", &Component<2>::countFacets, rbase::countFacets)
         .def("countBoundaryComponents", &Component<2>::countBoundaryComponents,
             rbase::countBoundaryComponents)
         .def("simplices", &Component<2>::simplices, rbase::simplices)

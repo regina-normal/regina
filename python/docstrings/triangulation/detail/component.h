@@ -109,6 +109,17 @@ R"doc(A dimension-specific alias for countFaces<1>().
 
 See countFaces() for further information.)doc";
 
+// Docstring regina::python::doc::detail::ComponentBase_::countFacets
+constexpr const char *countFacets =
+R"doc(Returns the number of `(dim-1)`-faces in this component.
+
+This is available (and constant time) for components in all
+dimensions, even though the list of `(dim-1)`-faces is only stored for
+components in Regina's standard dimensions.
+
+Returns:
+    the number of `(dim-1)`-faces.)doc";
+
 // Docstring regina::python::doc::detail::ComponentBase_::countPentachora
 constexpr const char *countPentachora =
 R"doc(A dimension-specific alias for countFaces<4>().

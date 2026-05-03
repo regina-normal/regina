@@ -323,8 +323,7 @@ class IsoSigData<1, dim> {
          */
         IsoSigData(Component<dim>* component) :
                 size_(component->size()),
-                facetType_(((dim+1) * size_ +
-                    component->countBoundaryFacets()) / 2),
+                facetType_(component->countFacets()),
                 adjSimplex_(facetType_.size()
                     - component->countBoundaryFacets() - size_ + 1),
                 adjGluing_(adjSimplex_.size()),
@@ -916,11 +915,8 @@ class IsoSigData<2, dim> {
          */
         IsoSigData(Component<dim>* component) :
                 size_(component->size()),
-                facetType_(((dim+1) * size_
-                    + component->countBoundaryFacets()) / 2),
-                adjSimplex_(
-                    (((dim+1) * size_ + component->countBoundaryFacets()) / 2)
-                    - size_ + 1),
+                facetType_(component->countFacets()),
+                adjSimplex_(component->countFacets() - size_ + 1),
                 adjGluing_(adjSimplex_.size()
                     - component->countBoundaryFacets()),
                 locks_(component->hasLocks() ? size_ : 0) {

@@ -50,6 +50,7 @@ void addComponent(pybind11::module_& m, pybind11::module_& internal,
         .def("triangulation", &Component<dim>::triangulation,
             rbase::triangulation)
         .def("size", &Component<dim>::size, rbase::size)
+        .def("countFacets", &Component<dim>::countFacets, rbase::countFacets)
         .def("countBoundaryComponents",
             &Component<dim>::countBoundaryComponents,
             rbase::countBoundaryComponents)
