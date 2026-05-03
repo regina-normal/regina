@@ -39,6 +39,7 @@
 
 using regina::Isomorphism;
 using regina::IsoSigPrintable;
+using regina::IsoSigPrintableLockFree;
 using regina::Perm;
 using regina::Simplex;
 using regina::Triangulation;
@@ -1217,15 +1218,26 @@ class TriangulationTest : public testing::Test {
             }
         }
 
-        template <template <int> class Type>
+        template <int gen, regina::IsoSigEncoding<gen, dim> Encoding,
+            regina::IsoSigType<dim> Type>
+        requires (gen == 1 || gen == 2)
         static void verifyIsomorphismSignatureUsing(
                 const Triangulation<dim>& tri) {
-            SCOPED_TRACE_TYPE(Type<dim>);
+            SCOPED_TRACE_TYPE(Encoding);
+            SCOPED_TRACE_TYPE(Type);
 
-            auto sig = tri.template isoSig<IsoSigPrintable, Type<dim>>();
-            SCOPED_TRACE_STDSTRING(sig);
+            static constexpr bool stringBased = std::same_as<
+                typename Encoding::Signature, std::string>;
 
-            ASSERT_FALSE(sig.empty());
+            auto sig = tri.template sig<gen, Encoding, Type>();
+            if constexpr (stringBased) {
+                // The string-based signatures are always non-empty.
+                EXPECT_FALSE(sig.empty());
+            } else {
+                // For byte-packed signatures we use the empty byte sequence to
+                // represent the empty triangulation.
+                EXPECT_EQ(sig.empty(), tri.isEmpty());
+            }
 
             #if 0
             // Here we can see how effective Signature::reserve() is.  We only
@@ -1240,17 +1252,19 @@ class TriangulationTest : public testing::Test {
             }
             #endif
 
-            size_t sigSize = Triangulation<dim>::isoSigComponentSize(sig);
-            if (tri.isEmpty()) {
-                EXPECT_EQ(sigSize, 0);
-            } else {
-                size_t c;
-                for (c = 0; c < tri.countComponents(); ++c)
-                    if (sigSize == tri.component(c)->size())
-                        break;
-                if (c == tri.countComponents())
-                    ADD_FAILURE() << "isoSigComponentSize() does not "
-                        "match any component";
+            if constexpr (stringBased) {
+                size_t sigSize = Triangulation<dim>::isoSigComponentSize(sig);
+                if (tri.isEmpty()) {
+                    EXPECT_EQ(sigSize, 0);
+                } else {
+                    size_t c;
+                    for (c = 0; c < tri.countComponents(); ++c)
+                        if (sigSize == tri.component(c)->size())
+                            break;
+                    if (c == tri.countComponents())
+                        ADD_FAILURE() << "isoSigComponentSize() does not "
+                            "match any component";
+                }
             }
 
             ASSERT_NO_THROW({
@@ -1258,11 +1272,14 @@ class TriangulationTest : public testing::Test {
                     isIsomorphicTo(tri));
             });
 
-            // Does rebuilding still work if the signature has whitespace?
-            EXPECT_NO_THROW({
-                EXPECT_TRUE(regina::Triangulation<dim>::fromSig(
-                    std::string("\t " + sig + "\t \n")).isIsomorphicTo(tri));
-            });
+            if constexpr (stringBased) {
+                // Does rebuilding still work if the signature has whitespace?
+                EXPECT_NO_THROW({
+                    EXPECT_TRUE(regina::Triangulation<dim>::fromSig(
+                        std::string("\t " + sig + "\t \n")).
+                        isIsomorphicTo(tri));
+                });
+            }
 
             if (tri.isEmpty())
                 return;
@@ -1271,13 +1288,12 @@ class TriangulationTest : public testing::Test {
 
             for (int i = 0; i < trials; ++i) {
                 auto other = Isomorphism<dim>::random(tri.size())(tri).
-                    template isoSig<IsoSigPrintable, Type<dim>>();
+                    template sig<gen, Encoding, Type>();
                 EXPECT_EQ(other, sig);
             }
 
             if (tri.countComponents() == 1) {
-                auto detail = tri.template isoSigDetail<IsoSigPrintable,
-                    Type<dim>>();
+                auto detail = tri.template isoSigDetail<IsoSigPrintable, Type>();
 
                 EXPECT_EQ(detail.first, sig);
 
@@ -1294,26 +1310,40 @@ class TriangulationTest : public testing::Test {
                         reconstructed.simplex(i)->lockMask());
             }
 
-            std::string lockFree = tri.template isoSig<
-                regina::IsoSigPrintableLockFree, Type<dim>>();
-            if (tri.hasLocks())
-                EXPECT_NE(lockFree, sig);
-            else
-                EXPECT_EQ(lockFree, sig);
+            if constexpr (std::same_as<Encoding, IsoSigPrintable>) {
+                auto lockFree = tri.template sig<gen, IsoSigPrintableLockFree,
+                    Type>();
+                if (tri.hasLocks())
+                    EXPECT_NE(lockFree, sig);
+                else
+                    EXPECT_EQ(lockFree, sig);
+            }
         }
 
         static void verifyIsomorphismSignature(const Triangulation<dim>& tri,
                 const char* name) {
             SCOPED_TRACE_CSTRING(name);
 
-            verifyIsomorphismSignatureUsing<regina::IsoSigClassic>(tri);
-            verifyIsomorphismSignatureUsing<regina::IsoSigEdgeDegrees>(tri);
+            verifyIsomorphismSignatureUsing<1, IsoSigPrintable,
+                regina::IsoSigClassic<dim>>(tri);
+            verifyIsomorphismSignatureUsing<1, IsoSigPrintable,
+                regina::IsoSigEdgeDegrees<dim>>(tri);
 
             // Verify the precomputed length of the signature.
             if (tri.countComponents() == 1) {
-                regina::IsoSigData<1, dim> data(tri.component(0));
-                EXPECT_EQ(regina::IsoSigPrintable::length(data),
-                    regina::IsoSigPrintable::encode(data).size());
+                auto* comp = tri.component(0);
+                {
+                    regina::IsoSigData<1, dim> data(comp);
+                    data.fillFrom(comp->simplex(0), {});
+                    EXPECT_EQ(IsoSigPrintable::length(data),
+                        IsoSigPrintable::encode(data).size());
+                }
+                {
+                    auto data = regina::IsoSigData<2, dim>::template minimal<
+                        regina::IsoSigRidgeDegrees<dim>>(comp, false);
+                    EXPECT_EQ(IsoSigPrintable::length(data),
+                        IsoSigPrintable::encode(data).size());
+                }
             }
         }
 
@@ -1323,31 +1353,33 @@ class TriangulationTest : public testing::Test {
 
             Triangulation<dim> t = tri;
 
+            using Type = regina::IsoSigEdgeDegrees<dim>;
+
             // Lock one simplex.
             for (auto s : t.simplices()) {
                 s->lock();
-                verifyIsomorphismSignatureUsing<regina::IsoSigEdgeDegrees>(t);
+                verifyIsomorphismSignatureUsing<1, IsoSigPrintable, Type>(t);
                 s->unlock();
             }
 
             // Lock all simplices.
             for (auto s : t.simplices())
                 s->lock();
-            verifyIsomorphismSignatureUsing<regina::IsoSigEdgeDegrees>(t);
+            verifyIsomorphismSignatureUsing<1, IsoSigPrintable, Type>(t);
             for (auto s : t.simplices())
                 s->unlock();
 
             // Lock one facet.
             for (auto f : t.template faces<dim - 1>()) {
                 f->lock();
-                verifyIsomorphismSignatureUsing<regina::IsoSigEdgeDegrees>(t);
+                verifyIsomorphismSignatureUsing<1, IsoSigPrintable, Type>(t);
                 f->unlock();
             }
 
             // Lock all facets.
             for (auto f : t.template faces<dim - 1>())
                 f->lock();
-            verifyIsomorphismSignatureUsing<regina::IsoSigEdgeDegrees>(t);
+            verifyIsomorphismSignatureUsing<1, IsoSigPrintable, Type>(t);
             for (auto f : t.template faces<dim - 1>())
                 f->unlock();
 
@@ -1356,7 +1388,7 @@ class TriangulationTest : public testing::Test {
                 s->lock();
                 for (auto f : t.template faces<dim - 1>()) {
                     f->lock();
-                    verifyIsomorphismSignatureUsing<regina::IsoSigEdgeDegrees>(t);
+                    verifyIsomorphismSignatureUsing<1, IsoSigPrintable, Type>(t);
                     f->unlock();
                 }
                 s->unlock();
@@ -1367,7 +1399,7 @@ class TriangulationTest : public testing::Test {
                 s->lock();
             for (auto f : t.template faces<dim - 1>())
                 f->lock();
-            verifyIsomorphismSignatureUsing<regina::IsoSigEdgeDegrees>(t);
+            verifyIsomorphismSignatureUsing<1, IsoSigPrintable, Type>(t);
             for (auto f : t.template faces<dim - 1>())
                 f->unlock();
             for (auto s : t.simplices())
