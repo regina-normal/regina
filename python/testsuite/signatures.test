@@ -4,7 +4,7 @@
 # Copyright (c) 2013-2025, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Provides tests for readSigList().
+# Provides tests for isomorphism signatures and knot/link signatures.
 #
 # This file is a single component of Regina's python test suite.  To run
 # the python test suite, move to the main python directory in the source
@@ -29,45 +29,40 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import sys
-if (len(sys.argv) > 1):
-    testpath = sys.argv[1]
-else:
-    testpath = '.'
-
-def testLink():
-    print('Links')
-    ans = readSigList(0, testpath + '/sigs-links.txt')
-    for c in ans.children():
-        if c.type() == PacketType.Text:
-            print('Errors:\n' + c.text())
-        else:
-            print('->', c.knotSig())
-    print()
-
-def testTri(dim):
-    print('Dimension:', dim)
-    ans = readSigList(dim, testpath + '/sigs-dim' + str(dim) + '.txt')
-    for c in ans.children():
-        if c.type() == PacketType.Text:
-            print('Errors:\n' + c.text())
-        else:
-            print('->', c.isoSig())
-    print()
-
-testLink()
-for dim in range(2, 9):
-    testTri(dim)
-
-print('Non-existent file:')
-c = readSigList(3, '/no/such/file')
-print(c)
+tri = Triangulation3.fromSig('cPcbbbiht') # figure eight knot complement
+data = IsoSigData1_3(tri.component(0))
+data.fillFrom(tri.simplex(0), Perm4())
+print(data.facetTypes())
+print(data.adjacentSimplices())
+print(data.adjacentGluings())
+print(data.locks())
+print(IsoSigPrintable.encode(data))
 print()
 
-print('Bad dimension:')
-try:
-    c = readSigList(1, testpath + '/sigs-links.txt')
-except InvalidArgument:
-    print('Caught exception')
+link = Link.fromSig('eabcdbadcvbZa') # figure eight knot
+data = LinkSigData(link, BoolSet(True, True), True, BoolSet(True, True))
+print(data.size())
+print([(s.crossing, s.strand, s.sign) for s in data.sequence()])
+print(LinkSigGen1.encode(data))
+print(LinkSigGen2.encode(data))
+print(LinkSigBinary.encode(data))
+print(link.knotSig())
+print(link.neoSig())
+print(link.neoSig_binary())
+print(link.sig(LinkSigGen1))
+print(link.sig(LinkSigGen2))
+print(link.sig(LinkSigBinary))
+print(Link.fromSig(link.knotSig()))
+print(Link.fromSig(link.neoSig()))
+print(Link.fromSig(link.neoSig_binary()))
+print(LinkSigBinary.asString(link.neoSig_binary()))
 print()
 
+enc = PackedSigEncoder()
+tmp = enc.encodeSize(1000)
+print(enc.bytes())
+dec = PackedSigDecoder(enc.bytes())
+print(dec.done())
+print(dec.decodeSize())
+print(dec.done())
+print()
