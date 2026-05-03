@@ -62,7 +62,7 @@ void addIsoSigEncodings(pybind11::module_& m) {
             } catch (std::runtime_error&) {
                 throw regina::InvalidArgument("Not a supported dimension");
             }
-        })
+        }, rdoc::charsPerPerm)
         .def_static("encodeEmpty", &IsoSigPrintable::encodeEmpty,
             rdoc::encodeEmpty)
         ;
@@ -85,7 +85,7 @@ void addIsoSigEncodings(pybind11::module_& m) {
             } catch (std::runtime_error&) {
                 throw regina::InvalidArgument("Not a supported dimension");
             }
-        })
+        }, rdoc::charsPerPerm)
         .def_static("encodeEmpty", &IsoSigPrintableLockFree::encodeEmpty,
             rdoc::encodeEmpty)
         ;
