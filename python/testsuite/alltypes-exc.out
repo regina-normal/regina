@@ -230,6 +230,7 @@ IntegerOverflow : exception
 IntersectionForm : class -> EqualityType.ByValue
 InvalidArgument : exception
 InvalidInput : exception
+IsoSigBinary : class -> EqualityType.NeverInstantiated
 IsoSigClassic2 : class -> EqualityType.Disabled
 IsoSigClassic3 : class -> EqualityType.Disabled
 IsoSigClassic4 : class -> EqualityType.Disabled

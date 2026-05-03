@@ -484,6 +484,75 @@ size_t IsoSigPrintableLockFree::length(const IsoSigData<2, dim>& data) {
     return ans;
 }
 
+template <int dim> requires (supportedDim(dim))
+ByteSequence IsoSigBinary::encode(const IsoSigData<2, dim>& data) {
+    PackedSigEncoder enc;
+    enc.reserve(length(data));
+
+    static constexpr int permWidth = PackedSigEncoder::integerWidth(
+        Perm<dim+1>::nPerms - 1);
+
+    int intWidth = enc.encodeSize(data.size());
+    enc.encodeInts(data.adjacentSimplices(), intWidth);
+    enc.encodeBits(data.countFacetBits(), data.facetTypes());
+    enc.encodeInts(data.adjacentGluings(), permWidth);
+
+    if (data.hasLocks()) {
+        // Each lock mask holds dim+2 bits.
+        if constexpr (dim <= 6) {
+            // We can encode <= 8 bits with 1 byte.
+            enc.encodeInts(data.locks(), 1);
+        } else if constexpr (dim <= 14) {
+            // We can encode <= 16 bits with 2 bytes.
+            enc.encodeInts(data.locks(), 2);
+        } else {
+            static_assert(dim <= 22);
+            // We can encode <= 24 bits with 3 bytes.
+            enc.encodeInts(data.locks(), 3);
+        }
+    }
+
+    return std::move(enc).bytes();
+}
+
+template <int dim> requires (supportedDim(dim))
+size_t IsoSigBinary::length(const IsoSigData<2, dim>& data) {
+    static constexpr int permWidth = PackedSigEncoder::integerWidth(
+        Perm<dim+1>::nPerms - 1);
+
+    size_t ans;
+    if (data.size() < 0x10) {
+        // The integer width is 0, and does not need to be explicitly encoded.
+        // Moreover, we write the list of adjacent simplices using two integers
+        // per byte.
+        ans = 1 + (data.adjacentSimplices().size() + 1) / 2;
+    } else if (data.size() < 0xff) {
+        // The integer width is 1, and does not need to be explicitly encoded.
+        ans = 1 + data.adjacentSimplices().size();
+    } else {
+        // We begin with two extra characters: 0xff (which acts as a marker
+        // that the component is large), and the encoding of the integer width.
+        int intWidth = PackedSigEncoder::integerWidth(data.size());
+        ans = 2 + (1 + data.adjacentSimplices().size()) * intWidth;
+    }
+    ans += ((data.countFacetBits() + 7) / 8);
+    if (permWidth == 0)
+        ans += (data.adjacentGluings().size() + 1) / 2;
+    else
+        ans += (data.adjacentGluings().size() * permWidth);
+
+    if (data.hasLocks()) {
+        if constexpr (dim <= 6)
+            ans += (data.locks().size());
+        else if constexpr (dim <= 14)
+            ans += (data.locks().size() * 2);
+        else
+            ans += (data.locks().size() * 3);
+    }
+
+    return ans;
+}
+
 namespace detail {
 
 template <int dim> requires (supportedDim(dim))

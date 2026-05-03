@@ -33,9 +33,11 @@
 #include "triangulation/isosig.h"
 #include "utilities/typeutils.h"
 #include "../helpers.h"
+#include "../helpers/bytesequence.h"
 #include "../python/docstrings/triangulation/isosig.h"
 
 using pybind11::overload_cast;
+using regina::IsoSigBinary;
 using regina::IsoSigData;
 using regina::IsoSigPrintable;
 using regina::IsoSigPrintableLockFree;
@@ -95,6 +97,18 @@ void addIsoSigEncodings(pybind11::module_& m) {
         regina::python::add_isosig_encoding_functions<2, dim>(f);
     });
     regina::python::no_eq_static(f);
+
+    RDOC_SCOPE_SWITCH(IsoSigBinary)
+
+    auto b = pybind11::class_<IsoSigBinary>(m, "IsoSigBinary", rdoc_scope)
+        .def_static("encodeEmpty", &IsoSigBinary::encodeEmpty,
+            rdoc::encodeEmpty)
+        ;
+    regina::for_constexpr<2, regina::maxDim() + 1>([&b](auto dim) {
+        // This encoding is for second-generation signatures only.
+        regina::python::add_isosig_encoding_functions<2, dim>(b);
+    });
+    regina::python::no_eq_static(b);
 
     RDOC_SCOPE_END
 }

@@ -45,6 +45,7 @@
 #include "maths/perm.h"
 #include "triangulation/forward.h"
 #include "utilities/bitmask.h"
+#include "utilities/bytesequence.h"
 #include "utilities/fixedarray.h"
 #include "utilities/sigutils.h"
 
@@ -962,8 +963,7 @@ inline void swap(IsoSigData<generation, dim>& a, IsoSigData<generation, dim>& b)
  * IsoSigPrintableLockFree.
  *
  * See the IsoSigEncoding concept documentation for general details on
- * encodings for first-generation and second-generation isomorphism signatures
- * respectively.
+ * encodings for isomorphism signatures.
  *
  * This class is designed to be used as a template parameter for signature
  * routines in the class `Triangulation<dim>`, including `isoSig()`, `neoSig()`,
@@ -990,7 +990,7 @@ class IsoSigPrintable {
          */
         template <int dim> requires (supportedDim(dim))
         static constexpr int charsPerPerm =
-            ((regina::bitsRequired(Perm<(dim)+1>::nPerms) + 5) / 6);
+            ((regina::bitsRequired(Perm<dim+1>::nPerms) + 5) / 6);
 
         /**
          * The data type that this encoding uses to hold the final signature.
@@ -1082,8 +1082,7 @@ class IsoSigPrintable {
  * encoding that was used with Regina ≤ 7.3.x, before locks were implemented.
  *
  * See the IsoSigEncoding concept documentation for general details on
- * encodings for first-generation and second-generation isomorphism signatures
- * respectively.
+ * encodings for isomorphism signatures.
  *
  * This class is designed to be used as a template parameter for signature
  * routines in the class `Triangulation<dim>`, including `isoSig()`, `neoSig()`,
@@ -1190,6 +1189,85 @@ class IsoSigPrintableLockFree {
 
         // Make this class non-constructible.
         IsoSigPrintableLockFree() = delete;
+};
+
+/**
+ * Encodes isomorphism signatures using small-memory byte-based encodings.
+ * This encoding method is _only_ available for second-generation signatures,
+ * not first-generation signatures.
+ *
+ * This encoding algorithm is intended for scenarios where memory needs to be
+ * kept as small as possible.  It uses all eight bits per byte (as opposed to
+ * IsoSigPrintable, which only encodes six bits per byte but creates a
+ * printable string as a result).
+ *
+ * Any simplex and/or facet locks will be encoded as part of the signature.
+ *
+ * See the IsoSigEncoding concept documentation for general details on
+ * encodings for isomorphism signatures.
+ *
+ * This class is designed to be used as a template parameter for
+ * second-generation signature routines in the class `Triangulation<dim>`,
+ * including `neoSig()` and `neoSigDetail()`.  Typical users would have no need
+ * to call any functions from this encoding class directly.
+ *
+ * \python To use this encoding in Python, pass IsoSigBinary as a runtime
+ * argument to the relevant `Triangulation<dim>` signature function
+ * (e.g., `neoSig()` or `neoSigDetail()`).
+ *
+ * \apinotfinal
+ *
+ * \ingroup triangulation
+ */
+class IsoSigBinary {
+    public:
+        /**
+         * The data type that this encoding uses to hold the final signature.
+         */
+        using Signature = ByteSequence;
+
+        /**
+         * Encodes the isomorphism signature of the empty triangulation.
+         *
+         * For IsoSigBinary (unlike Regina's string-based encodings), this
+         * will simply be an empty sequence.
+         *
+         * \return the isomorphism signature of the empty triangulation.
+         */
+        static Signature encodeEmpty() {
+            return {};
+        }
+
+        /**
+         * Encodes a single connected component of a <i>dim</i>-dimensional
+         * triangulation as a second-generation isomorphism signature.
+         *
+         * \pre The given component is non-empty, and uses a canonical labelling
+         * in the sense described in the IsoSigData class notes.
+         *
+         * \param data the compressed gluings table for the component to encode.
+         * \return the given gluings table encoded as a second-generation
+         * signature.
+         */
+        template <int dim> requires (supportedDim(dim))
+        static Signature encode(const IsoSigData<2, dim>& data);
+
+        /**
+         * Precomputes the length of the second-generation isomorphism signature
+         * that encodes the given connected component.
+         *
+         * \pre The given component is non-empty, and uses a canonical labelling
+         * in the sense described in the IsoSigData class notes.
+         *
+         * \param data the compressed gluings table for the component to encode.
+         * \return the length of the second-generation signature that encodes
+         * \a data.
+         */
+        template <int dim> requires (supportedDim(dim))
+        static size_t length(const IsoSigData<2, dim>& data);
+
+        // Make this class non-constructible.
+        IsoSigBinary() = delete;
 };
 
 /**

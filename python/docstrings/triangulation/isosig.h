@@ -11,6 +11,41 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::IsoSigBinary
+static const char *IsoSigBinary =
+R"doc(Encodes isomorphism signatures using small-memory byte-based
+encodings. This encoding method is _only_ available for second-
+generation signatures, not first-generation signatures.
+
+This encoding algorithm is intended for scenarios where memory needs
+to be kept as small as possible. It uses all eight bits per byte (as
+opposed to IsoSigPrintable, which only encodes six bits per byte but
+creates a printable string as a result).
+
+Any simplex and/or facet locks will be encoded as part of the
+signature.
+
+See the IsoSigEncoding concept documentation for general details on
+encodings for isomorphism signatures.
+
+This class is designed to be used as a template parameter for second-
+generation signature routines in the class ``Triangulation<dim>``,
+including ``neoSig()`` and ``neoSigDetail()``. Typical users would
+have no need to call any functions from this encoding class directly.
+
+Python:
+    To use this encoding in Python, pass IsoSigBinary as a runtime
+    argument to the relevant ``Triangulation<dim>`` signature function
+    (e.g., ``neoSig()`` or ``neoSigDetail()``).
+
+.. warning::
+    The API for this class or function has not yet been finalised.
+    This means that the interface may change in new versions of
+    Regina, without maintaining backward compatibility. If you use
+    this class directly in your own code, please check the detailed
+    changelog with each new release to see if you need to make changes
+    to your code.)doc";
+
 // Docstring regina::python::doc::IsoSigClassic
 static const char *IsoSigClassic =
 R"doc(A slow isomorphism signature type that is consistent with the original
@@ -306,8 +341,7 @@ where locks are not encoded (e.g., for backward compatibility), then
 you can use the encoding IsoSigPrintableLockFree.
 
 See the IsoSigEncoding concept documentation for general details on
-encodings for first-generation and second-generation isomorphism
-signatures respectively.
+encodings for isomorphism signatures.
 
 This class is designed to be used as a template parameter for
 signature routines in the class ``Triangulation<dim>``, including
@@ -342,8 +376,7 @@ exactly the same as the printable encoding that was used with Regina ≤
 7.3.x, before locks were implemented.
 
 See the IsoSigEncoding concept documentation for general details on
-encodings for first-generation and second-generation isomorphism
-signatures respectively.
+encodings for isomorphism signatures.
 
 This class is designed to be used as a template parameter for
 signature routines in the class ``Triangulation<dim>``, including
@@ -363,6 +396,50 @@ Python:
     this class directly in your own code, please check the detailed
     changelog with each new release to see if you need to make changes
     to your code.)doc";
+
+namespace IsoSigBinary_ {
+
+// Docstring regina::python::doc::IsoSigBinary_::encode
+static const char *encode =
+R"doc(Encodes a single connected component of a *dim*-dimensional
+triangulation as a second-generation isomorphism signature.
+
+Precondition:
+    The given component is non-empty, and uses a canonical labelling
+    in the sense described in the IsoSigData class notes.
+
+Parameter ``data``:
+    the compressed gluings table for the component to encode.
+
+Returns:
+    the given gluings table encoded as a second-generation signature.)doc";
+
+// Docstring regina::python::doc::IsoSigBinary_::encodeEmpty
+static const char *encodeEmpty =
+R"doc(Encodes the isomorphism signature of the empty triangulation.
+
+For IsoSigBinary (unlike Regina's string-based encodings), this will
+simply be an empty sequence.
+
+Returns:
+    the isomorphism signature of the empty triangulation.)doc";
+
+// Docstring regina::python::doc::IsoSigBinary_::length
+static const char *length =
+R"doc(Precomputes the length of the second-generation isomorphism signature
+that encodes the given connected component.
+
+Precondition:
+    The given component is non-empty, and uses a canonical labelling
+    in the sense described in the IsoSigData class notes.
+
+Parameter ``data``:
+    the compressed gluings table for the component to encode.
+
+Returns:
+    the length of the second-generation signature that encodes *data*.)doc";
+
+}
 
 namespace IsoSigClassic_ {
 

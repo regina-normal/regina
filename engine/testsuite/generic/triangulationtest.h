@@ -38,6 +38,7 @@
 #include "utilities/tightencodingtest.h"
 
 using regina::Isomorphism;
+using regina::IsoSigBinary;
 using regina::IsoSigPrintable;
 using regina::IsoSigPrintableLockFree;
 using regina::Perm;
@@ -1347,6 +1348,8 @@ class TriangulationTest : public testing::Test {
                         IsoSigPrintable::encode(data).size());
                     EXPECT_EQ(IsoSigPrintableLockFree::length(data),
                         IsoSigPrintableLockFree::encode(data).size());
+                    EXPECT_EQ(IsoSigBinary::length(data),
+                        IsoSigBinary::encode(data).size());
                 }
             }
         }

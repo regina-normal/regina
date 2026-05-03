@@ -33,8 +33,10 @@
 #include "triangulation/isosig.h"
 #include "utilities/exception.h"
 #include "../helpers.h"
+#include "../helpers/bytesequence.h"
 #include "../docstrings/triangulation/isosig.h"
 
+using regina::IsoSigBinary;
 using regina::IsoSigPrintable;
 using regina::IsoSigPrintableLockFree;
 
@@ -64,8 +66,11 @@ auto forIsoSigEncoding(pybind11::type encoding, auto action) {
     using pytype = pybind11::type;
     if (encoding.is(pytype::of<IsoSigPrintable>()))
         return action.template operator()<IsoSigPrintable>();
-    else if (encoding.is(pytype::of<IsoSigPrintableLockFree>()))
+    if (encoding.is(pytype::of<IsoSigPrintableLockFree>()))
         return action.template operator()<IsoSigPrintableLockFree>();
+    if constexpr (generation > 1)
+        if (encoding.is(pytype::of<IsoSigBinary>()))
+            return action.template operator()<IsoSigBinary>();
     throw regina::InvalidArgument(
         "Not a supported isomorphism signature encoding");
 }
@@ -112,10 +117,10 @@ void add_isosig_encoding_functions(pybind11::class_<Encoding>& c) {
 
     c.def_static("encode",
         static_cast<typename Encoding::Signature (*)(
-            const IsoSigData<generation, dim>&)>(&IsoSigPrintable::encode));
+            const IsoSigData<generation, dim>&)>(&Encoding::encode));
     c.def_static("length",
         static_cast<size_t (*)(const IsoSigData<generation, dim>&)>(
-            &IsoSigPrintable::length));
+            &Encoding::length));
 }
 
 /**

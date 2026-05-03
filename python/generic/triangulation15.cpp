@@ -57,3 +57,5 @@ template void regina::python::add_isosig_encoding_functions<1, 15>(
     pybind11::class_<regina::IsoSigPrintableLockFree>&);
 template void regina::python::add_isosig_encoding_functions<2, 15>(
     pybind11::class_<regina::IsoSigPrintableLockFree>&);
+template void regina::python::add_isosig_encoding_functions<2, 15>(
+    pybind11::class_<regina::IsoSigBinary>&);

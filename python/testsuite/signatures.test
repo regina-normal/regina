@@ -55,6 +55,7 @@ print(tri.neoSig())
 print(tri.neoSig(False, IsoSigPrintableLockFree))
 print(tri.neoSig(False, IsoSigPrintable, IsoSigClassic3))
 print(tri.neoSig(False, IsoSigPrintable, IsoSigEdgeDegrees3))
+print(tri.neoSig(False, IsoSigBinary))
 print()
 
 # ---------- Testing oriented vs non-oriented signatures ----------

@@ -159,13 +159,16 @@ Version 8.0  [ TODO ]
         Class Isomorphism<dim>:
             - The increment operators are now available in all dimensions
               (not just dimensions ≤ 6).
-        Class IsoSigData<generation, dim>:
-            - New type to support isomorphism signatures of triangulations.
+        Class IsoSigBinary:
+            - New encoding class for second-generation isomorphism signatures
+              of triangulations.
         Class IsoSigClassic<dim>, IsoSigDegrees<dim, subdim>,
                 IsoSigEdgeDegree<dim>, IsoSigRidgeDegree<dim>:
             - These signature type classes now support both oriented and
               unoriented signatures, and so their constructors now require an
               extra boolean argument (oriented vs unoriented).
+        Class IsoSigData<generation, dim>:
+            - New data type to support isomorphism signatures of triangulations.
         Class IsoSigPrintable, IsoSigPrintableLockFree:
             - These encoding classes now support both first-generation and
               second-generation isomorphism signatures.
