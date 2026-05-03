@@ -1354,13 +1354,21 @@ class PackedSigEncoder {
                             static_cast<uint8_t>(val));
                     }
                 } else {
-                    for (int i = 0; i < nBytes; ++i) {
+                    if constexpr (sizeof(std::iter_value_t<Iterator>) == 1) {
+                        // We know that val will fit into a single byte.
                         bytes_.push_back(static_cast<uint8_t>(val));
-                        val >>= 8;
+                        for (int i = 1; i < nBytes; ++i)
+                            bytes_.push_back(0);
+                    } else {
+                        for (int i = 0; i < nBytes; ++i) {
+                            bytes_.push_back(static_cast<uint8_t>(val));
+                            val >>= 8;
+                        }
+                        if (val != 0)
+                            throw InvalidArgument(
+                                "PackedSigEncoder::encodeInts(): "
+                                "integer argument out of range");
                     }
-                    if (val != 0)
-                        throw InvalidArgument("PackedSigEncoder::encodeInts(): "
-                            "integer argument out of range");
                 }
             }
         }
