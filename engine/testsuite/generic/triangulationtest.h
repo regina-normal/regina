@@ -1245,7 +1245,7 @@ class TriangulationTest : public testing::Test {
             // produce the same length of signatures - it is the encoding that
             // matters here.  (Also note: this output is not written during
             // verifyIsomorphismSignatureWithLocks(), since that test
-            // exclusively uses IsoSigEdgeDegrees.)
+            // exclusively uses IsoSigRidgeDegrees.)
             if constexpr (std::same_as<Type<dim>, regina::IsoSigClassic<dim>>) {
                 std::cerr << sig.size() << ' ' << sig.capacity() << ' '
                     << tri.size() << ' ' << tri.countComponents() << std::endl;
@@ -1327,7 +1327,7 @@ class TriangulationTest : public testing::Test {
             verifyIsomorphismSignatureUsing<1, IsoSigPrintable,
                 regina::IsoSigClassic<dim>>(tri);
             verifyIsomorphismSignatureUsing<1, IsoSigPrintable,
-                regina::IsoSigEdgeDegrees<dim>>(tri);
+                regina::IsoSigRidgeDegrees<dim>>(tri);
 
             // Verify the precomputed length of the signature.
             if (tri.countComponents() == 1) {
@@ -1357,7 +1357,7 @@ class TriangulationTest : public testing::Test {
 
             Triangulation<dim> t = tri;
 
-            using Type = regina::IsoSigEdgeDegrees<dim>;
+            using Type = regina::IsoSigRidgeDegrees<dim>;
 
             // Lock one simplex.
             for (auto s : t.simplices()) {

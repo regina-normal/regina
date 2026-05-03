@@ -89,10 +89,10 @@ auto forIsoSigType(pybind11::type sigType, auto action) {
     using pytype = pybind11::type;
     if (sigType.is(pytype::of<IsoSigClassic<dim>>()))
         return action.template operator()<IsoSigClassic<dim>>();
-    if (sigType.is(pytype::of<IsoSigEdgeDegrees<dim>>()))
-        return action.template operator()<IsoSigEdgeDegrees<dim>>();
     if (sigType.is(pytype::of<IsoSigRidgeDegrees<dim>>()))
         return action.template operator()<IsoSigRidgeDegrees<dim>>();
+    if (sigType.is(pytype::of<IsoSigEdgeDegrees<dim>>()))
+        return action.template operator()<IsoSigEdgeDegrees<dim>>();
     throw regina::InvalidArgument("Not a supported isomorphism signature type");
 }
 
