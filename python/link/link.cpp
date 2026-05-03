@@ -430,6 +430,8 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
             rdoc::knotSig)
         .def("sig", [](const Link& link, pybind11::type encoding,
                 bool allowReflection, bool allowReversal, bool allowRotation) {
+            // We use pybind11::cast() on the return values, because different
+            // encodings give different return types.
             using pytype = pybind11::type;
             if (encoding.is(pytype::of<regina::LinkSigGen1>())) {
                 return pybind11::cast(link.sig<regina::LinkSigGen1>(

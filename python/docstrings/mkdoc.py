@@ -257,6 +257,7 @@ def process_comment(comment, preserveAmpersands):
     s = re.sub(r'\\headerfile\s(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
     s = re.sub(r'\\cpp\s(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
     s = re.sub(r'\\nocpp\s?(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
+    s = re.sub(r'\\pyname{\S+}', r'', s, flags=re.DOTALL)
     s = re.sub(r'\\swift\s?(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
 
     # Doxygen paragraphs that we will likewise ignore in Python:
@@ -493,6 +494,14 @@ def extract(filename, node, namespace, output):
             # C++ docs tell us not to generate docstrings for it.
             return
 
+    name = sanitize_name(d(node.spelling))
+    if node.raw_comment:
+        match = re.search(r'\\pyname{(\S+)}($|\s)', node.raw_comment)
+        if match:
+            newName = match.group(1)
+            print('Name override:', name, '->', newName)
+            name = newName
+
     if node.kind in RECURSE_LIST and \
             (node.access_specifier not in ACCESS_BLACKLIST and \
                 node.spelling not in CLASS_BLACKLIST and \
@@ -506,7 +515,7 @@ def extract(filename, node, namespace, output):
                         node.spelling == 'regina' and namespace == ''):
                     if len(namespace) > 0:
                         sub_namespace += '::'
-                    sub_namespace += sanitize_name(d(node.spelling))
+                    sub_namespace += name
                     # When delving into the class/struct/enum X, use the
                     # namespace X_ for the members of X.
                     if node.kind != CursorKind.NAMESPACE:
@@ -552,8 +561,6 @@ def extract(filename, node, namespace, output):
                     name = '__default'
                 else:
                     name = '__init'
-            else:
-                name = sanitize_name(d(node.spelling))
 
             fullname = 'regina::'
             if namespace:

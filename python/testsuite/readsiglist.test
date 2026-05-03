@@ -74,13 +74,13 @@ print()
 # While we're here... test signature encodings and byte sequences.
 
 tri = Triangulation3.fromSig('cPcbbbiht') # figure eight knot complement
-data = IsoSigData3(tri.component(0))
+data = IsoSigData1_3(tri.component(0))
 data.fillFrom(tri.simplex(0), Perm4())
 print(data.facetTypes())
 print(data.adjacentSimplices())
 print(data.adjacentGluings())
 print(data.locks())
-print(IsoSigPrintable3.encode(data))
+print(IsoSigPrintable.encode(data))
 print()
 
 link = Link.fromSig('eabcdbadcvbZa') # figure eight knot

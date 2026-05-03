@@ -3067,6 +3067,7 @@
 		0545A0172F9F68AE008D3ADB /* siglist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = siglist.h; sourceTree = "<group>"; };
 		0545A0182F9F68AE008D3ADB /* siglist-impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "siglist-impl.h"; sourceTree = "<group>"; };
 		0545A01B2F9F696E008D3ADB /* siglist.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = siglist.cpp; sourceTree = "<group>"; };
+		0545A01D2FA6C167008D3ADB /* isosig.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = isosig.cpp; sourceTree = "<group>"; };
 		0549B4982907D38D00C911AF /* data-anon.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-anon.docbook"; sourceTree = "<group>"; };
 		0549B4992907D38E00C911AF /* data-tri.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tri.docbook"; sourceTree = "<group>"; };
 		0549B49A2907D38E00C911AF /* data-txi.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-txi.docbook"; sourceTree = "<group>"; };
@@ -7212,6 +7213,7 @@
 				057EE4831C600A2400C4D155 /* isomorphism13.cpp */,
 				057EE4841C600A2400C4D155 /* isomorphism14.cpp */,
 				057EE4851C600A2400C4D155 /* isomorphism15.cpp */,
+				0545A01D2FA6C167008D3ADB /* isosig.cpp */,
 				05CAE6A2274B0FC2007C93F3 /* isosig-bindings.h */,
 				05431FB31C40F5CA009BC072 /* pygeneric.cpp */,
 				057EE4441C6009E600C4D155 /* simplex-bindings.h */,

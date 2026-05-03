@@ -109,6 +109,13 @@ class ComponentBase :
         size_t index() const;
 
         /**
+         * Returns the triangulation to which this component belongs.
+         *
+         * \return a reference to the triangulation containing this component.
+         */
+        Triangulation<dim>& triangulation() const;
+
+        /**
          * Returns the number of top-dimensional simplices in this
          * component.
          *
@@ -426,6 +433,12 @@ inline ComponentBase<dim>::ComponentBase() :
 template <int dim> requires (supportedDim(dim))
 inline size_t ComponentBase<dim>::index() const {
     return markedIndex();
+}
+
+template <int dim> requires (supportedDim(dim))
+inline Triangulation<dim>& ComponentBase<dim>::triangulation() const {
+    // This is a connected component, so simplices_ must be non-empty.
+    return simplices_.front()->triangulation();
 }
 
 template <int dim> requires (supportedDim(dim))

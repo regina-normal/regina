@@ -237,13 +237,20 @@ IsoSigClassic5 : class -> EqualityType.Disabled
 IsoSigClassic6 : class -> EqualityType.Disabled
 IsoSigClassic7 : class -> EqualityType.Disabled
 IsoSigClassic8 : class -> EqualityType.Disabled
-IsoSigData2 : class -> EqualityType.ByValue
-IsoSigData3 : class -> EqualityType.ByValue
-IsoSigData4 : class -> EqualityType.ByValue
-IsoSigData5 : class -> EqualityType.ByValue
-IsoSigData6 : class -> EqualityType.ByValue
-IsoSigData7 : class -> EqualityType.ByValue
-IsoSigData8 : class -> EqualityType.ByValue
+IsoSigData1_2 : class -> EqualityType.ByValue
+IsoSigData1_3 : class -> EqualityType.ByValue
+IsoSigData1_4 : class -> EqualityType.ByValue
+IsoSigData1_5 : class -> EqualityType.ByValue
+IsoSigData1_6 : class -> EqualityType.ByValue
+IsoSigData1_7 : class -> EqualityType.ByValue
+IsoSigData1_8 : class -> EqualityType.ByValue
+IsoSigData2_2 : class -> EqualityType.ByValue
+IsoSigData2_3 : class -> EqualityType.ByValue
+IsoSigData2_4 : class -> EqualityType.ByValue
+IsoSigData2_5 : class -> EqualityType.ByValue
+IsoSigData2_6 : class -> EqualityType.ByValue
+IsoSigData2_7 : class -> EqualityType.ByValue
+IsoSigData2_8 : class -> EqualityType.ByValue
 IsoSigEdgeDegrees2 : class -> EqualityType.Disabled
 IsoSigEdgeDegrees3 : class -> EqualityType.Disabled
 IsoSigEdgeDegrees4 : class -> EqualityType.Disabled
@@ -251,20 +258,8 @@ IsoSigEdgeDegrees5 : class -> EqualityType.Disabled
 IsoSigEdgeDegrees6 : class -> EqualityType.Disabled
 IsoSigEdgeDegrees7 : class -> EqualityType.Disabled
 IsoSigEdgeDegrees8 : class -> EqualityType.Disabled
-IsoSigPrintable2 : class -> EqualityType.NeverInstantiated
-IsoSigPrintable3 : class -> EqualityType.NeverInstantiated
-IsoSigPrintable4 : class -> EqualityType.NeverInstantiated
-IsoSigPrintable5 : class -> EqualityType.NeverInstantiated
-IsoSigPrintable6 : class -> EqualityType.NeverInstantiated
-IsoSigPrintable7 : class -> EqualityType.NeverInstantiated
-IsoSigPrintable8 : class -> EqualityType.NeverInstantiated
-IsoSigPrintableLockFree2 : class -> EqualityType.NeverInstantiated
-IsoSigPrintableLockFree3 : class -> EqualityType.NeverInstantiated
-IsoSigPrintableLockFree4 : class -> EqualityType.NeverInstantiated
-IsoSigPrintableLockFree5 : class -> EqualityType.NeverInstantiated
-IsoSigPrintableLockFree6 : class -> EqualityType.NeverInstantiated
-IsoSigPrintableLockFree7 : class -> EqualityType.NeverInstantiated
-IsoSigPrintableLockFree8 : class -> EqualityType.NeverInstantiated
+IsoSigPrintable : class -> EqualityType.NeverInstantiated
+IsoSigPrintableLockFree : class -> EqualityType.NeverInstantiated
 IsoSigRidgeDegrees2 : class -> EqualityType.Disabled
 IsoSigRidgeDegrees3 : alias -> IsoSigEdgeDegrees3
 IsoSigRidgeDegrees4 : class -> EqualityType.Disabled
@@ -326,13 +321,6 @@ ModelLinkGraphArc : class -> EqualityType.ByValue
 ModelLinkGraphCells : class -> EqualityType.ByValue
 ModelLinkGraphNode : class -> EqualityType.ByReference
 NamedPermGroup : enum
-NeoSigData2 : class -> EqualityType.ByValue
-NeoSigData3 : class -> EqualityType.ByValue
-NeoSigData4 : class -> EqualityType.ByValue
-NeoSigData5 : class -> EqualityType.ByValue
-NeoSigData6 : class -> EqualityType.ByValue
-NeoSigData7 : class -> EqualityType.ByValue
-NeoSigData8 : class -> EqualityType.ByValue
 NiceType : enum
 NoSolution : exception
 NormalAlg : enum

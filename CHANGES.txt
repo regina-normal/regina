@@ -78,7 +78,7 @@ Version 8.0  [ TODO ]
         Class Component<dim>:
             - Added variants of countFaces(), faces() and face() that take the
               face dimension as a runtime argument (not a template parameter).
-            - New routine hasLocks().
+            - New routines triangulation() and hasLocks().
         Class Crossing:
             - New routine chordIndex().
         Class Cut:
@@ -159,9 +159,8 @@ Version 8.0  [ TODO ]
         Class Isomorphism<dim>:
             - The increment operators are now available in all dimensions
               (not just dimensions ≤ 6).
-        Class IsoSigData:
-            - New type to support first-generation isomorphism signatures of
-              triangulations.
+        Class IsoSigData<generation, dim>:
+            - New type to support isomorphism signatures of triangulations.
         Class IsoSigClassic<dim>, IsoSigDegrees<dim, subdim>,
                 IsoSigEdgeDegree<dim>, IsoSigRidgeDegree<dim>:
             - These signature type classes now support both oriented and
@@ -170,11 +169,16 @@ Version 8.0  [ TODO ]
         Class IsoSigPrintable, IsoSigPrintableLockFree:
             - These encoding classes now support both first-generation and
               second-generation isomorphism signatures.
-            - The data to encode for first-generation isomorphism signatures is
-              now supplied to encoding classes via the new type IsoSigData<dim>.
+            - The data to encode for isomorphism signatures is now supplied to
+              encoding classes via the new type IsoSigData<generation, dim>.
               The old behaviour (passing C-style arrays) is no longer supported.
             - The routine emptySig() has been renamed to encodeEmpty().
             - Encoding classes now have a new routine length().
+            - These are no longer template classes.  The argument supportLocks
+              is gone (instead the two classes are defined independently).
+              The dimension now appears as a template parameter for the
+              relevant class constants and static functions, and in most cases
+              it can be deduced automatically.
         Struct IsReginaArbitraryPrecisionInteger<T>, IsReginaInteger<T>:
             - Now deprecated, in favour of the new concepts
               ArbitraryPrecisionInteger<T> and ReginaInteger<T>.
@@ -271,9 +275,6 @@ Version 8.0  [ TODO ]
               preconditions that require exact divisibiliy, just like their
               counterparts in the Integer and LargeInteger classes.
             - Almost everything in this class is now constexpr.
-        Class NeoSigData:
-            - New type to support second-generation isomorphism signatures of
-              triangulations.
         Class NormalSurface:
             - Routines components(), countBoundaries(), disjoint(),
               isCompressingDisc(), isConnected(), isIncompressible(),
@@ -334,15 +335,27 @@ Version 8.0  [ TODO ]
               setGroupPresentation(), which now has ≤ 1 component as a new
               precondition.
             - New routines knowsHomology() and cachedGroup().
-            - The alias sig() that was recently introduced in Regina 7.4 is now
-              removed, to avoid confusion around to whether it returns a
-              first-generation signature (isoSig()) or a second-generation
-              signature (neoSig()).
+            - Isomorphism signatures have been overhauled.  Regina-now supports:
+              + first-generation signatures, which are printable strings,
+                identical to the old signatures from Regina ≤ 7.x, and
+                accessible via the old routines isoSig() and isoSigDetail();
+              + second-generation signatures, which can be in printable form
+                (as a std::string) or binary form (as a ByteSequence), are
+                shorter and faster to compute than first-generation signatures,
+                support both oriented and unoriented variants, and are
+                accessible via the new routines neoSig() and neoSigDetail().
+            - The alias sig() that was recently introduced in Regina 7.4 is
+              still present, but it now takes a mandatory template argument
+              indicating whether to compute a first-generation or
+              second-generation signature.  To avoid confusion, you can simply
+              call isoSig() or neoSig() instead.
             - The old routine fromIsoSig() is now deprecated, and simply calls
               the string-based fromSig().
-            - Python bindings of the form isoSig_Arg() or isoSigDetail_Arg()
-              now begin their suffixes in lower-case, i.e., isoSig_arg() or
-              isoSigDetail_arg().  The old names have been removed completely.
+            - The first-generation signature routines isoSig() and
+              isoSigDetail() now take their template arguments in the reverse
+              order (Encoding, Type).  The Python bindings for these routines
+              now take the encoding and type as optional runtime arguments
+              (not suffixes to the function names).
             - The routine isoSigComponentSize() now throws an exception if the
               signature is found to be invalid, and explicitly supports the
               empty triangulation.
@@ -489,8 +502,7 @@ Version 8.0  [ TODO ]
               + BanConstraint, LPConstraint, LPSubspace (defined in
                 enumerate/treelp.h)
               + LinkSigEncoding (defined in link/linksig.h)
-              + IsoSigEncoding, IsoSigType, NeoSigEncoding (defined in
-                triangulation/isosig.h)
+              + IsoSigEncoding, IsoSigType (defined in triangulation/isosig.h)
         Header foreign/fromsiglist-impl.h:
             - Renamed to foreign/siglist-impl.h.  The old header has been
               removed completely, since end users do not need to include it.

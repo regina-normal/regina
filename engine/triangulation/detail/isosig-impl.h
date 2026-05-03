@@ -52,7 +52,7 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 namespace regina {
 
 template <int dim> requires (supportedDim(dim))
-void IsoSigData<dim>::fillFrom(const Simplex<dim>* simplex,
+void IsoSigData<1, dim>::fillFrom(const Simplex<dim>* simplex,
         Perm<dim + 1> vertices, Isomorphism<dim>* relabelling) {
     const auto& tri = simplex->triangulation();
     size_t triSize = tri.size();
@@ -166,125 +166,292 @@ void IsoSigData<dim>::fillFrom(const Simplex<dim>* simplex,
 }
 
 template <int dim> requires (supportedDim(dim))
-void NeoSigData<dim>::fillFrom(const Simplex<dim>* simplex,
-        Perm<dim + 1> vertices, Isomorphism<dim>* relabelling) {
-    const auto* comp = simplex->component();
-    const auto& tri = simplex->triangulation();
+template <IsoSigType<dim> Type>
+IsoSigData<2, dim> IsoSigData<2, dim>::minimal(Component<dim>* component,
+        bool oriented, Isomorphism<dim>* relabelling) {
+    // To help if/when we need to process facet (not simplex) locks:
+    using Mask = typename Simplex<dim>::LockMask;
+    static constexpr Mask facetMask = (Mask(1) << (dim + 1)) - 1;
+
+    const auto& tri = component->triangulation();
     size_t triSize = tri.size();
-    size_t simp = simplex->index();
+
+    IsoSigData best(component); // The minimal canonical labelling seen so far
+    IsoSigData curr(component); // The canonical labelling currently being built
 
     // The image for each simplex and its vertices (mapping from the original
     // triangulation to the canonical labelling):
-    FixedArray<ssize_t> image(triSize, -1);
+    FixedArray<ssize_t> image(triSize);
     FixedArray<Perm<dim+1>> vertexMap(triSize);
 
     // The preimage for each simplex (mapping from the canonical labelling to
     // the original triangulation):
-    FixedArray<ssize_t> preImage(size_, -1);
+    FixedArray<ssize_t> preImage(component->size());
 
-    image[simp] = 0;
-    vertexMap[simp] = vertices.inverse();
-    preImage[0] = simp;
+    Type type(*component, oriented);
+    bool first = true;
+    do {
+        // We need to fill curr with a canonical relabelling, starting from the
+        // current choice of simplex 0 and its vertices 0,...,dim.
+        std::fill(image.begin(), image.end(), -1);
+        std::fill(preImage.begin(), preImage.end(), -1);
 
-    size_t facetPos = (((dim+1) * comp->size() +
-        comp->countBoundaryFacets()) / 2) - 1;
-    size_t simplexPos = 0, gluingPos = 0;
-    size_t nextUnusedSimp = 1;
+        // Convert from component-based to triangulation-based indexing:
+        size_t simp = component->simplex(type.simplex())->index();
 
-    // To obtain a canonical isomorphism, we must run through the
-    // simplices and their facets in image order, not preimage order.
-    //
-    // This main loop is guaranteed to exit when (and only when) we have
-    // exhausted the entire connected component containing the given simplex.
-    for (size_t simpImg = 0; simpImg < size_; ++simpImg) {
-        // We are guaranteed that preImage[simpImg] >= 0.
-        size_t simpSrc = preImage[simpImg];
-        const Simplex<dim>* s = tri.simplex(simpSrc);
+        image[simp] = 0;
+        vertexMap[simp] = type.perm().inverse();
+        preImage[0] = simp;
 
-        if (! locks_.empty()) {
-            using Mask = typename Simplex<dim>::LockMask;
-            if (Mask mask = s->lockMask()) {
-                static constexpr Mask facetMask = (Mask(1) << (dim + 1)) - 1;
-                if (mask & facetMask) {
-                    // One or more facets of this simplex are locked.
-                    // We need to permute the bits of lockMask
-                    // according to vertexMap[simpSrc].
-                    Mask permuted = (mask & (Mask(1) << (dim + 1)));
-                    Mask bit = 1;
-                    for (int i = 0; i <= dim; ++i, bit <<= 1)
-                        if (mask & bit)
-                            permuted |= (Mask(1) << vertexMap[simpSrc][i]);
-                    mask = permuted;
+        size_t facetPos = curr.countFacetBits() - 1;
+        size_t simplexPos = 0, gluingPos = 0;
+        size_t nextUnusedSimp = 1;
+
+        // To obtain a canonical isomorphism, we must run through the
+        // simplices and their facets in image order, not preimage order.
+        //
+        // This main loop is guaranteed to exit when (and only when) we have
+        // exhausted the entire component containing the given simplex.
+        for (size_t simpImg = 0; simpImg < component->size(); ++simpImg) {
+            // We are guaranteed that preImage[simpImg] >= 0.
+            size_t simpSrc = preImage[simpImg];
+            const Simplex<dim>* s = tri.simplex(simpSrc);
+
+            if (! curr.locks_.empty()) {
+                if (Mask mask = s->lockMask()) {
+                    if (mask & facetMask) {
+                        // One or more facets of this simplex are locked.
+                        // We need to permute the bits of lockMask
+                        // according to vertexMap[simpSrc].
+                        Mask permuted = (mask & (Mask(1) << (dim + 1)));
+                        Mask bit = 1;
+                        for (int i = 0; i <= dim; ++i, bit <<= 1)
+                            if (mask & bit)
+                                permuted |= (Mask(1) << vertexMap[simpSrc][i]);
+                        mask = permuted;
+                    }
+                    curr.locks_[simpImg] = mask;
+                } else {
+                    curr.locks_[simpImg] = 0;
                 }
-                locks_[simpImg] = mask;
-            } else {
-                locks_[simpImg] = 0;
+            }
+
+            for (int facetImg = 0; facetImg <= dim; ++facetImg) {
+                int facetSrc = vertexMap[simpSrc].pre(facetImg);
+
+                // INVARIANTS:
+                // - nextUnusedSimp > simpImg
+                // - image[simpSrc], preImage[image[simpSrc]] and
+                //   vertexMap[simpSrc] are already filled in.
+
+                // Work out what happens to our source facet.
+                if (auto adj = s->adjacentSimplex(facetSrc)) {
+                    // Our source facet is internal.
+                    size_t dest = adj->index();
+
+                    if (image[dest] >= 0) {
+                        // We've seen the destination simplex before.
+                        if (image[dest] < image[simpSrc] ||
+                                (dest == simpSrc &&
+                                 vertexMap[simpSrc][s->adjacentFacet(facetSrc)]
+                                 < vertexMap[simpSrc][facetSrc])) {
+                            // We've already seen this facet from the other
+                            // side.  We should skip it entirely this time.
+                        } else {
+                            // Record the full details of the gluing.
+                            curr.adjSimplex_[simplexPos++] = image[dest];
+                            curr.adjGluing_[gluingPos++] = (vertexMap[dest] *
+                                    s->adjacentGluing(facetSrc) *
+                                    vertexMap[simpSrc].inverse()).
+                                orderedSnIndex();
+
+                            curr.facetType_.set(facetPos--, true);
+                        }
+                    } else {
+                        // The destination simplex is thus-far unseen.
+                        // It must take the next available index, and the
+                        // corresponding gluing must be the pair swap (0,1).
+                        image[dest] = nextUnusedSimp++;
+                        preImage[image[dest]] = dest;
+                        vertexMap[dest] = Perm<dim + 1>(0, 1) *
+                            vertexMap[simpSrc] *
+                            s->adjacentGluing(facetSrc).inverse();
+
+                        --facetPos; // leave the facet bit unset
+                    }
+                } else {
+                    // Our source facet lies on the boundary.
+                    curr.facetType_.set(facetPos--, true);
+                    curr.adjSimplex_[simplexPos++] = component->size();
+                }
             }
         }
 
-        for (int facetImg = 0; facetImg <= dim; ++facetImg) {
-            int facetSrc = vertexMap[simpSrc].pre(facetImg);
+        // Record the canonical isomorphism if required.
+        if (relabelling)
+            for (size_t i = 0; i < component->size(); ++i) {
+                size_t origIndex = preImage[i];
+                relabelling->simpImage(origIndex) = i; // image[origIndex]
+                relabelling->facetPerm(origIndex) = vertexMap[origIndex];
+            }
 
-            // INVARIANTS:
-            // - nextUnusedSimp > simpImg
-            // - image[simpSrc], preImage[image[simpSrc]] and
-            //   vertexMap[simpSrc] are already filled in.
+        // We are done building the canonical relabelling.
+        // Is this the best we've seen so far?
+        if (first || curr < best) {
+            best.swap(curr);
+            first = false;
+        }
+    } while (type.next());
 
-            // Work out what happens to our source facet.
-            if (auto adj = s->adjacentSimplex(facetSrc)) {
-                // Our source facet is internal, i.e., glued to something else.
-                size_t dest = adj->index();
+    return best;
+}
 
-                if (image[dest] >= 0) {
-                    // We've seen the destination simplex before.
-                    if (image[dest] < image[simpSrc] ||
-                            (dest == simpSrc &&
-                             vertexMap[simpSrc][s->adjacentFacet(facetSrc)]
-                             < vertexMap[simpSrc][facetSrc])) {
-                        // We've already seen this gluing from the other side.
-                        // Skip this facet entirely.
-                    } else {
-                        // Record the full details of the gluing.
-                        adjSimplex_[simplexPos++] = image[dest];
-                        adjGluing_[gluingPos++] = (vertexMap[dest] *
-                                s->adjacentGluing(facetSrc) *
-                                vertexMap[simpSrc].inverse()).
-                            orderedSnIndex();
+template <int dim> requires (supportedDim(dim))
+std::string IsoSigPrintable::encode(const IsoSigData<1, dim>& data) {
+    Base64SigEncoder enc;
+    enc.reserve(length(data));
 
-                        facetType_.set(facetPos--, true);
-                    }
-                } else {
-                    // The destination simplex is thus-far unseen.
-                    // It must take the next available index, and the
-                    // corresponding gluing must be the identity.
-                    image[dest] = nextUnusedSimp++;
-                    preImage[image[dest]] = dest;
-                    vertexMap[dest] = vertexMap[simpSrc] *
-                        s->adjacentGluing(facetSrc).inverse();
+    int intWidth = enc.encodeSize(data.size());
+    enc.encodeTrits(data.facetTypes());
+    enc.encodeInts(data.adjacentSimplices(), intWidth);
+    enc.encodeInts(data.adjacentGluings(), charsPerPerm<dim>);
 
-                    --facetPos; // leave the facet bit unset
-                }
+    if (data.hasLocks()) {
+        // Each lock mask holds dim+2 bits.
+        enc.append(Base64SigEncoder::spare[1]);
+        for (auto mask : data.locks()) {
+            if constexpr (dim <= 4) {
+                // We can encode <= 6 bits with 1 character.
+                enc.encodeSingle(mask);
+            } else if constexpr (dim <= 10) {
+                // We can encode <= 12 bits with 2 characters.
+                enc.encodeInt(mask, 2);
             } else {
-                // Our source facet lies on the boundary.
-                facetType_.set(facetPos--, true);
-                adjSimplex_[simplexPos++] = comp->size();
+                static_assert(dim <= 16);
+                // We can encode <= 18 bits with 3 characters.
+                enc.encodeInt(mask, 3);
             }
         }
     }
 
-    // Record the canonical isomorphism if required.
-    if (relabelling)
-        for (size_t i = 0; i < size_; ++i) {
-            size_t origIndex = preImage[i];
-            relabelling->simpImage(origIndex) = i; // image[origIndex]
-            relabelling->facetPerm(origIndex) = vertexMap[origIndex];
+    return std::move(enc).str();
+}
+
+template <int dim> requires (supportedDim(dim))
+size_t IsoSigPrintable::length(const IsoSigData<1, dim>& data) {
+    size_t ans;
+    if (data.size() < 63) {
+        // The integer width is 1, and does not need to be explicitly
+        // encoded.
+        ans = 1 + data.adjacentSimplices().size();
+    } else {
+        // We begin with two extra characters: 63 (a marker that the
+        // component is large), and the encoding of the integer width.
+        int width = Base64SigEncoder::integerWidth(data.size());
+        ans = 2 + (1 + data.adjacentSimplices().size()) * width;
+    }
+    ans += ((data.facetTypes().size() + 2) / 3);
+    ans += (data.adjacentGluings().size() * charsPerPerm<dim>);
+
+    if (data.hasLocks()) {
+        if constexpr (dim <= 4)
+            ans += (1 + data.locks().size());
+        else if constexpr (dim <= 10)
+            ans += (1 + data.locks().size() * 2);
+        else
+            ans += (1 + data.locks().size() * 3);
+    }
+
+    return ans;
+}
+
+template <int dim> requires (supportedDim(dim))
+std::string IsoSigPrintable::encode(const IsoSigData<2, dim>& data) {
+    Base64SigEncoder enc;
+    enc.reserve(length(data));
+
+    int intWidth = enc.encodeSize(data.size());
+    enc.encodeInts(data.adjacentSimplices(), intWidth);
+    enc.encodeBits(data.countFacetBits(), data.facetTypes());
+    enc.encodeInts(data.adjacentGluings(), charsPerPerm<dim>);
+
+    if (data.hasLocks()) {
+        // Each lock mask holds dim+2 bits.
+        enc.append(Base64SigEncoder::spare[1]);
+        for (auto mask : data.locks()) {
+            if constexpr (dim <= 4) {
+                // We can encode <= 6 bits with 1 character.
+                enc.encodeSingle(mask);
+            } else if constexpr (dim <= 10) {
+                // We can encode <= 12 bits with 2 characters.
+                enc.encodeInt(mask, 2);
+            } else {
+                static_assert(dim <= 16);
+                // We can encode <= 18 bits with 3 characters.
+                enc.encodeInt(mask, 3);
+            }
         }
+    }
+
+    return std::move(enc).str();
+}
+
+template <int dim> requires (supportedDim(dim))
+size_t IsoSigPrintable::length(const IsoSigData<2, dim>& data) {
+    return 0;
+}
+
+template <int dim> requires (supportedDim(dim))
+std::string IsoSigPrintableLockFree::encode(const IsoSigData<1, dim>& data) {
+    Base64SigEncoder enc;
+    enc.reserve(length(data));
+
+    int intWidth = enc.encodeSize(data.size());
+    enc.encodeTrits(data.facetTypes());
+    enc.encodeInts(data.adjacentSimplices(), intWidth);
+    enc.encodeInts(data.adjacentGluings(), charsPerPerm<dim>);
+    return std::move(enc).str();
+}
+
+template <int dim> requires (supportedDim(dim))
+size_t IsoSigPrintableLockFree::length(const IsoSigData<1, dim>& data) {
+    size_t ans;
+    if (data.size() < 63) {
+        // The integer width is 1, and does not need to be explicitly
+        // encoded.
+        ans = 1 + data.adjacentSimplices().size();
+    } else {
+        // We begin with two extra characters: 63 (a marker that the
+        // component is large), and the encoding of the integer width.
+        int width = Base64SigEncoder::integerWidth(data.size());
+        ans = 2 + (1 + data.adjacentSimplices().size()) * width;
+    }
+    ans += ((data.facetTypes().size() + 2) / 3);
+    ans += (data.adjacentGluings().size() * charsPerPerm<dim>);
+    return ans;
+}
+
+template <int dim> requires (supportedDim(dim))
+std::string IsoSigPrintableLockFree::encode(const IsoSigData<2, dim>& data) {
+    Base64SigEncoder enc;
+    enc.reserve(length(data));
+
+    int intWidth = enc.encodeSize(data.size());
+    enc.encodeInts(data.adjacentSimplices(), intWidth);
+    enc.encodeBits(data.countFacetBits(), data.facetTypes());
+    enc.encodeInts(data.adjacentGluings(), charsPerPerm<dim>);
+    return std::move(enc).str();
+}
+
+template <int dim> requires (supportedDim(dim))
+size_t IsoSigPrintableLockFree::length(const IsoSigData<2, dim>& data) {
+    return 0;
 }
 
 namespace detail {
 
 template <int dim> requires (supportedDim(dim))
-template <IsoSigType<dim> Type, IsoSigEncoding<dim> Encoding>
+template <IsoSigEncoding<1, dim> Encoding, IsoSigType<dim> Type>
 typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
     if (isEmpty())
         return Encoding::encodeEmpty();
@@ -296,7 +463,7 @@ typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
         bool first = true;
 
         Type type(*c, false /* first-generation sigs are unoriented */);
-        IsoSigData data(c);
+        IsoSigData<1, dim> data(c);
         do {
             data.fillFrom(c->simplex(type.simplex()), type.perm(), nullptr);
             typename Encoding::Signature curr = Encoding::encode(data);
@@ -318,7 +485,7 @@ typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
         Type type(**it, false /* first-generation sigs are unoriented */);
         bool first = true;
 
-        IsoSigData data(*it);
+        IsoSigData<1, dim> data(*it);
         do {
             data.fillFrom((*it)->simplex(type.simplex()), type.perm(), nullptr);
             typename Encoding::Signature curr = Encoding::encode(data);
@@ -346,7 +513,7 @@ typename Encoding::Signature TriangulationBase<dim>::isoSig() const {
 }
 
 template <int dim> requires (supportedDim(dim))
-template <IsoSigType<dim> Type, IsoSigEncoding<dim> Encoding>
+template <IsoSigEncoding<1, dim> Encoding, IsoSigType<dim> Type>
 std::pair<typename Encoding::Signature, Isomorphism<dim>>
         TriangulationBase<dim>::isoSigDetail() const {
     // Make sure the user is not trying to do something illegal.
@@ -366,7 +533,7 @@ std::pair<typename Encoding::Signature, Isomorphism<dim>>
     bool first = true;
 
     Type type(*c, false /* first-generation sigs are unoriented */);
-    IsoSigData data(c);
+    IsoSigData<1, dim> data(c);
     do {
         data.fillFrom(c->simplex(type.simplex()), type.perm(),
             std::addressof(currRelabelling));
@@ -378,6 +545,57 @@ std::pair<typename Encoding::Signature, Isomorphism<dim>>
         }
     } while (type.next());
     return ans;
+}
+
+template <int dim> requires (supportedDim(dim))
+template <IsoSigEncoding<2, dim> Encoding, IsoSigType<dim> Type>
+typename Encoding::Signature TriangulationBase<dim>::neoSig(bool oriented)
+        const {
+    if (isEmpty()) {
+        return Encoding::encodeEmpty();
+    } else if (isConnected()) {
+        Component<dim>* c = components_.front();
+        return Encoding::encode(IsoSigData<2, dim>::template minimal<Type>(
+            c, oriented));
+    } else {
+        std::vector<IsoSigData<2, dim>> bits;
+        for (auto c : components_)
+            bits.emplace_back(IsoSigData<2, dim>::template minimal<Type>(
+                c, oriented));
+        std::sort(bits.begin(), bits.end());
+
+        // Precompute the entire length of the signature, so that we can
+        // reserve exactly the right amount of space.
+        size_t length = 0;
+        for (const auto& data : bits)
+            length += Encoding::length(data);
+
+        typename Encoding::Signature sig;
+        sig.reserve(length);
+        for (const auto& data : bits)
+            sig += Encoding::encode(data);
+        return sig;
+    }
+}
+
+template <int dim> requires (supportedDim(dim))
+template <IsoSigEncoding<2, dim> Encoding, IsoSigType<dim> Type>
+std::pair<typename Encoding::Signature, Isomorphism<dim>>
+        TriangulationBase<dim>::neoSigDetail(bool oriented) const {
+    if (isEmpty()) {
+        throw FailedPrecondition(
+            "neoSigDetail() requires a non-empty triangulation");
+    } else if (countComponents() > 1) {
+        throw FailedPrecondition(
+            "neoSigDetail() requires a connected triangulation");
+    } else {
+        // The triangulation has exactly one connected component.
+        Component<dim>* c = components_.front();
+        Isomorphism<dim> relabelling(size());
+        auto sig = Encoding::encode(IsoSigData<2, dim>::template minimal<Type>(
+            c, oriented, std::addressof(relabelling)));
+        return { std::move(sig), std::move(relabelling) };
+    }
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -439,7 +657,7 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const std::string& sig) {
             auto joinDest = dec.template decodeInts<size_t>(nJoins, nChars);
             auto joinGluing =
                 dec.template decodeInts<typename Perm<dim+1>::Index>(
-                nJoins, IsoSigPrintable<dim>::charsPerPerm);
+                nJoins, IsoSigPrintable::charsPerPerm<dim>);
 
             // This ends the gluings for this component!
             //

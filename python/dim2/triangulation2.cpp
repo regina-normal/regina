@@ -45,6 +45,7 @@
 
 using pybind11::overload_cast;
 using regina::AbelianGroup;
+using regina::ByteSequence;
 using regina::Face;
 using regina::Isomorphism;
 using regina::MarkedAbelianGroup;
@@ -329,7 +330,7 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
             overload_cast<const Triangulation<2>&>(
                 &Triangulation<2>::insertTriangulation),
             rbase::insertTriangulation)
-        // Variants of isoSig() are handled through isosig_options() below.
+        // Variants of isoSig() are handled through isosig_variants() below.
         // With fromSig(), the byte sequence variant _must_ come first.
         // This is because pybind11 performs automatic conversion from bytes
         // to std::string, and so if the string variant appears first then
@@ -416,7 +417,7 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
     #if defined(__GNUC__)
     #pragma GCC diagnostic pop
     #endif
-    regina::python::isosig_options<2>(c);
+    regina::python::isosig_variants<2>(c);
     regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);
     regina::python::packet_eq_operators(c, rbase::__eq);
@@ -456,9 +457,16 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
     addIsoSigClassic<2>(m, "IsoSigClassic2");
     addIsoSigEdgeDegrees<2>(m, "IsoSigEdgeDegrees2");
     addIsoSigRidgeDegrees<2>(m, "IsoSigRidgeDegrees2");
-    addIsoSigData<2>(m, "IsoSigData2");
-    addNeoSigData<2>(m, "NeoSigData2");
-    addIsoSigPrintable<2, true>(m, "IsoSigPrintable2");
-    addIsoSigPrintable<2, false>(m, "IsoSigPrintableLockFree2");
+    addIsoSigData<1, 2>(m, "IsoSigData1_2");
+    addIsoSigData<2, 2>(m, "IsoSigData2_2");
 }
 
+// Instantiate templates for isomorphism signature encodings:
+template void regina::python::addEncodingFunctions<1, 2>(
+    pybind11::class_<regina::IsoSigPrintable>&);
+template void regina::python::addEncodingFunctions<2, 2>(
+    pybind11::class_<regina::IsoSigPrintable>&);
+template void regina::python::addEncodingFunctions<1, 2>(
+    pybind11::class_<regina::IsoSigPrintableLockFree>&);
+template void regina::python::addEncodingFunctions<2, 2>(
+    pybind11::class_<regina::IsoSigPrintableLockFree>&);

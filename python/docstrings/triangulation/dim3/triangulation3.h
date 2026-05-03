@@ -117,7 +117,7 @@ string as a triangulation.
 At present, Regina understands the following types of strings (and
 attempts to parse them in the following order):
 
-* isomorphism signatures (see fromIsoSig());
+* isomorphism signatures (see fromSig());
 
 * dehydration strings (see rehydrate());
 

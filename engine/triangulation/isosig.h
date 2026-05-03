@@ -56,6 +56,156 @@ template <int dim, int subdim>
 requires (dim >= 1 && dim <= maxDim() && subdim >= 0 && subdim < dim)
 class FaceNumbering;
 
+template <int generation, int dim>
+requires ((generation == 1 || generation == 2) && supportedDim(dim))
+class IsoSigData;
+
+/**
+ * Represents an encoding that can be used for the given generation of
+ * isomorphism signatures for triangulations.  Essentially, the job of an
+ * encoding algorithm is to pack the gluings table for a single triangulation
+ * component into a small piece of data (such as a string) that is easily
+ * transported.
+ *
+ * An encoding should provide a type alias `Signature`, indicating the type
+ * that holds the final signature (e.g., `std::string`).  In addition, it
+ * should provide the following static routines:
+ *
+ * - `encodeEmpty()`, which encodes the empty <i>dim</i>-dimensional
+ *   triangulation;
+ *
+ * - `encode(const IsoSigData<generation, dim>&)`, which encodes the gluings
+ *   table for a single connected component of a <i>dim</i>-dimensional
+ *   triangulation;
+ *
+ * - `length(const IsoSigData<generation, dim>&)`, which pre-computes the
+ *   length of the signature that encodes a single component.
+ *
+ * Both encoding routines should return the type `Signature`.
+ *
+ * Both `encode()` and `length()` may assume that the given component is
+ * non-empty, and that it uses a canonical labelling in the sense described in
+ * the IsoSigData class notes.
+ *
+ * Note that `encode()` can be economical about what information it writes:
+ * although `data.size()` will need to be encoded, it is typically not necessary
+ * to encode the sizes of the various supporting bitmasks/arrays, since their
+ * sizes are usually implied by their contents.
+ *
+ * \tparam generation the generation of signature to encode; this must be
+ * either 1 or 2.
+ * \tparam dim the dimension of triangulation for which we are building
+ * isomorphism signatures.
+ *
+ * \apinotfinal
+ *
+ * \ingroup triangulation
+ */
+template <typename T, int generation, int dim>
+concept IsoSigEncoding =
+    requires(const IsoSigData<generation, dim> data) {
+        typename T::Signature;
+        requires SignatureType<typename T::Signature>;
+        { T::encodeEmpty() } -> std::convertible_to<typename T::Signature>;
+        { T::encode(data) } -> std::convertible_to<typename T::Signature>;
+        { T::length(data) } -> std::same_as<size_t>;
+    };
+
+/**
+ * Represents a signature _type_ that can be used for isomorphism signatures of
+ * triangulations (both first-generation and second-generation).  Essentially,
+ * the job of a signature type is to help Regina determine which labelling of a
+ * triangulation is "canonical".  Different signature types will make different
+ * trade-offs between factors such as speed, accessibility, backward
+ * compatibility and so on, typically resulting in different notions of
+ * "canonical" as a consequence.
+ *
+ * More specifically, a signature type is described by a class (implementing
+ * this IsoSigType concept), which works with a single component \a c of a
+ * <i>dim</i>-dimenensional triangulation.  The sole task of this class is to
+ * iterate through a selection of combinations `(s, p)`, each of which
+ * identifies a "starting simplex" of \a c and a "starting labelling" of its
+ * vertices.  Here \a s is a top-dimensional simplex in \a c that will act as
+ * the "starting simplex", and \a p is a permutation that maps the vertices
+ * of \a s to the "starting labelling" `0,1,...,dim`.
+ *
+ * Second-generation signatures can be either _oriented_ or _unoriented_, and
+ * a signature type should support both variants.  When building an oriented
+ * signature, the permutation \a p must always be even (since the signature
+ * must preserve the orientation of the triangulation component).  When building
+ * an unoriented signature, any permutation \a p is allowed.
+ *
+ * Not all possible pairs `(s, p)` need to be offered during this iteration
+ * (indeed, it is the ability to prune the candidate pairs `(s, p)` that make
+ * some signature types faster than others).  However, we do require:
+ *
+ * - At least one candidate pair `(s, p)` must be offered.
+ *
+ * - Suppose we relabel the top-dimensional simplices of \a c and/or their
+ *   vertices (when building an oriented signature, we insist that such a
+ *   relabelling must be orientation-preserving).  Then the candidate pairs
+ *   `(s, p)` that are offered will be the _same set_ as before, just modified
+ *   according to this relabelling.  In other words, relabelling does not
+ *   change the set of candidate pairs in any way beyond the relabelling itself.
+ *
+ * An instance of a signature type class acts like an iterator: it holds a
+ * single candidate combination `(s, p)`.  In this sense, it must provide:
+ *
+ * - a class constructor `T(const Component<dim>&, bool)`, which sets the
+ *   "iterator" to the first candidate pair `(s, p)` for the given component,
+ *   and whose boolean argument indicates whether the signature being
+ *   constructed is oriented (`true`) or unoriented (`false`);
+ *
+ * - a query routine `size_t simplex() const`, which returns the index of the
+ *   current "starting simplex" \a s within the component \a c (this might
+ *   _not_ be the index of \a s within the overall triangulation);
+ *
+ * - a query routine `Perm<dim+1> perm() const`, which returns the current
+ *   "starting labelling" \a p (mapping the vertices of \a s to `0,1,...,dim`);
+ *
+ * - a routine `bool next()`, which advances this "iterator" to the next
+ *   candidate pair `(s, p)`, returning `true` if this successful or `false`
+ *   if there are no more candidate pairs.
+ *
+ * The routines `simplex()`, `perm()` and `next()` may all assume that the
+ * "iterator" is describing a valid candidate pair `(s, p)`; that is, `next()`
+ * has not yet returned `false`.
+ *
+ * \apinotfinal
+ *
+ * \ingroup triangulation
+ */
+template <typename T, int dim>
+concept IsoSigType =
+    std::constructible_from<T, const Component<dim>&, bool> &&
+    requires(T t, const T c) {
+        { c.simplex() } -> std::convertible_to<size_t>;
+        { c.perm() } -> std::convertible_to<Perm<dim + 1>>;
+        { t.next() } -> std::convertible_to<bool>;
+    };
+
+/**
+ * Holds the combinatorial data required to reconstruct a single non-empty
+ * connected component of a <i>dim</i>-dimensional triangulation, up to
+ * relabelling, for use with the given generation of isomorphism signatures.
+ *
+ * This class offers different interfaces for first-generation versus
+ * second-generation signatures, due to the differences in how these signatures
+ * are constructed.  See the specialisations `IsoSigData<1, dim>` and
+ * `IsoSigData<2, dim>` for further details.
+ *
+ * \tparam generation the generation of isomorphism signature that we are
+ * working with; this must be either 1 or 2.
+ * \tparam dim the dimension of triangulation with which we are working.
+ *
+ * \apinotfinal
+ *
+ * \ingroup triangulation
+ */
+template <int generation, int dim>
+requires ((generation == 1 || generation == 2) && supportedDim(dim))
+class IsoSigData;
+
 /**
  * Holds the combinatorial data required to reconstruct a single non-empty
  * connected component of a <i>dim</i>-dimensional triangulation, up to
@@ -134,12 +284,15 @@ class FaceNumbering;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
+ * \pyname{IsoSigData1}
+ *
  * \apinotfinal
  *
  * \ingroup triangulation
  */
-template <int dim> requires (supportedDim(dim))
-class IsoSigData {
+template <int dim>
+requires (supportedDim(dim))
+class IsoSigData<1, dim> {
     private:
         size_t size_;
             /**< The total number of top-dimensional simplices in this
@@ -165,15 +318,17 @@ class IsoSigData {
          * uninitialised.  You will need to call fillFrom() before this data
          * set can be used (i.e., before any other methods are called).
          *
-         * \param comp the triangulation component that we intend to encode.
+         * \param component the triangulation component that we intend to
+         * encode.
          */
-        IsoSigData(Component<dim>* comp) :
-                size_(comp->size()),
-                facetType_(((dim+1) * size_ + comp->countBoundaryFacets()) / 2),
-                adjSimplex_(facetType_.size() - comp->countBoundaryFacets()
-                    - size_ + 1),
+        IsoSigData(Component<dim>* component) :
+                size_(component->size()),
+                facetType_(((dim+1) * size_ +
+                    component->countBoundaryFacets()) / 2),
+                adjSimplex_(facetType_.size()
+                    - component->countBoundaryFacets() - size_ + 1),
                 adjGluing_(adjSimplex_.size()),
-                locks_(comp->hasLocks() ? size_ : 0) {
+                locks_(component->hasLocks() ? size_ : 0) {
         }
 
         /**
@@ -379,22 +534,6 @@ class IsoSigData {
 };
 
 /**
- * Swaps the contents of the given triangulation component data sets.
- *
- * This global routine simply calls `IsoSigData<dim>::swap()`; it is provided so
- * that IsoSigData meets the C++ Swappable requirements.
- *
- * \param a the first component data set whose contents should be swapped.
- * \param b the second component data set whose contents should be swapped.
- *
- * \ingroup triangulation
- */
-template <int dim> requires (supportedDim(dim))
-inline void swap(IsoSigData<dim>& a, IsoSigData<dim>& b) noexcept {
-    a.swap(b);
-};
-
-/**
  * Holds the combinatorial data required to reconstruct a single non-empty
  * connected component of a <i>dim</i>-dimensional triangulation, up to
  * relabelling, for use with second-generation isomorphism signatures as
@@ -428,7 +567,7 @@ inline void swap(IsoSigData<dim>& a, IsoSigData<dim>& b) noexcept {
  *   always result in an oriented labelling.
  *
  * - Your chosen signature _type_ may impose further requirements on the
- *   choice of simplex 0 and its vertex labels; see the NeoSigType concept
+ *   choice of simplex 0 and its vertex labels; see the IsoSigType concept
  *   documentation for details.
  *
  * The first condition above ensures that, once we have chosen which
@@ -466,22 +605,24 @@ inline void swap(IsoSigData<dim>& a, IsoSigData<dim>& b) noexcept {
  *
  * A second-generation signature _encoding_ is responsible for encoding this
  * data in its final signature form (e.g., a base64 string); see the
- * NeoSigEncoding concept documentation for details.  The final signature will
+ * IsoSigEncoding concept documentation for details.  The final signature will
  * use the labelling that minimises the compressed gluings table, under the
- * inherent ordering of NeoSigData.  Note that this works differently from
- * first-generation signatures, which minimise the _encoding_ (e.g., the base64
- * string).
+ * inherent ordering of `IsoSigData<2, dim>`.  Note that this works differently
+ * from first-generation signatures, which minimise the _encoding_ (e.g., the
+ * base64 string).
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \pyname{IsoSigData2}
  *
  * \apinotfinal
  *
  * \ingroup triangulation
  */
 template <int dim> requires (supportedDim(dim))
-class NeoSigData {
+class IsoSigData<2, dim> {
     private:
         size_t size_;
             /**< The total number of top-dimensional simplices in this
@@ -503,30 +644,40 @@ class NeoSigData {
 
     public:
         /**
-         * Allocates space for a data set for the given triangulation component.
+         * Chooses a canonical labelling for the given triangulation component
+         * that minimises the compressed gluings table.
          *
-         * The bitmask included in this data set will be initialised with all
-         * bits off.  All other arrays will be initialised to the correct sizes,
-         * but the individual array elements will be left uninitialised.
-         * You will need to call fillFrom() before this data set can be used
-         * (i.e., before any other methods are called).
+         * The minimisation will use the inherent ordering of IsoSigData.
          *
-         * \param comp the triangulation component that we intend to encode.
+         * \python Python does not support C++ templates.  Instead, you should
+         * pass \a Type as the first runtime argument; that is,
+         * `minimal(Type, component, oriented, relabelling)`.
+         *
+         * \tparam Type an isomorphism signature type, which will be used to
+         * determine which labellings are considered "canonical".
+         *
+         * \param component the triangulation component that this data set
+         * should represent.
+         * \param oriented indicates whether we are building an oriented
+         * isomorphism signature (`true`), or an unoriented signature (`false`).
+         * If this is `true` and if \a comp is oriented, then the relabelling
+         * that is chosen will be orientation-preserving.
+         * \param relabelling if non-null, this isomorphism will be filled with
+         * the isomorphism from the original triangulation to the chosen
+         * labelling.  If the underlying triangulation has multiple components,
+         * then only the information relating to this component will be changed;
+         * other simplex/vertex images in \a relabelling will be left untouched.
+         * \return the data set that describes the minimal labelling, as
+         * described above.
          */
-        NeoSigData(Component<dim>* comp) :
-                size_(comp->size()),
-                facetType_(((dim+1) * size_ + comp->countBoundaryFacets()) / 2),
-                adjSimplex_(
-                    (((dim+1) * size_ + comp->countBoundaryFacets()) / 2)
-                    - size_ + 1),
-                adjGluing_(adjSimplex_.size() - comp->countBoundaryFacets()),
-                locks_(comp->hasLocks() ? size_ : 0) {
-        }
+        template <IsoSigType<dim> Type>
+        static IsoSigData minimal(Component<dim>* component, bool oriented,
+            Isomorphism<dim>* relabelling = nullptr);
 
         /**
          * Makes a new deep copy of the given data set.
          */
-        NeoSigData(const NeoSigData&) = default;
+        IsoSigData(const IsoSigData&) = default;
 
         /**
          * Moves the contents of the given data set into this new data set.
@@ -534,7 +685,7 @@ class NeoSigData {
          *
          * The data set that was passed will no longer be usable.
          */
-        NeoSigData(NeoSigData&&) noexcept = default;
+        IsoSigData(IsoSigData&&) noexcept = default;
 
         /**
          * Returns the total number of top-dimensional simplices in the
@@ -571,6 +722,21 @@ class NeoSigData {
          */
         const Bitmask& facetTypes() const {
             return facetType_;
+        }
+        /**
+         * Returns the precise length of the bitmask of facet types, as
+         * returned by facetTypes().  This will be the total number of
+         * `(dim-1)`-faces in the underlying triangulation component, as
+         * described in the class notes.
+         *
+         * This routine is provided because IsoSigData does not keep a
+         * reference to the component itself, and because Bitmask does not
+         * encode its precise length.
+         *
+         * \return the length of the bitmask of facet types.
+         */
+        size_t countFacetBits() const {
+            return adjSimplex_.size() + size_ - 1;
         }
         /**
          * Gives read-only access to the array of gluing destinations, as
@@ -648,42 +814,6 @@ class NeoSigData {
         }
 
         /**
-         * Determines the (unique) canonical labelling of the triangulation
-         * component for a particular choice of simplex 0 and vertices
-         * `0,...,dim`, and fills this structure with the corresponding
-         * compressed gluings table.
-         *
-         * See the class notes for full details on canonical labellings.  In the
-         * gluings table that we build here, \a simplex will be labelled as
-         * simplex 0, and its vertices `vertices[0],...,vertices[dim]` will be
-         * labelled as vertices `0,...,dim`.
-         *
-         * This routine may be (and typically will be) called many times for
-         * different choices of \a simplex and \a vertices; this is perfectly
-         * safe, and each subsequent call to fillFrom() will overwrite the
-         * previously-stored gluings table.
-         *
-         * \pre The given simplex belongs to the triangulation component that
-         * was originally passed to the NeoSigData constructor.
-         *
-         * \pre If the isomorphism \a relabelling is non-null, then it must
-         * have been constructed for \a size top-dimensional simplices, where
-         * \a size is the size of the entire _triangulation_, not just the
-         * component being encoded.
-         *
-         * \param simplex any top-dimensional simplex in the triangulation
-         * component being encoded.
-         * \param vertices any ordering of the vertices of the given simplex.
-         * \param relabelling if non-null, this isomorphism will be filled with
-         * the isomorphism from the original triangulation to the canonical
-         * labelling.  If the underlying triangulation has multiple components,
-         * then only the information relating to this component will be changed;
-         * other simplex/vertex images in \a relabelling will be left untouched.
-         */
-        void fillFrom(const Simplex<dim>* simplex, Perm<dim + 1> vertices,
-            Isomorphism<dim>* relabelling = nullptr);
-
-        /**
          * Moves the contents of the given data set into this data set.
          *
          * It does not matter whether this and the given data set refer to
@@ -693,11 +823,11 @@ class NeoSigData {
          *
          * \return a reference to this data set.
          */
-        NeoSigData& operator = (NeoSigData&&) noexcept = default;
+        IsoSigData& operator = (IsoSigData&&) noexcept = default;
 
         // Disable copy assignment, since we do not want to worry about
         // reallocation if the triangulations have different sizes.
-        NeoSigData& operator = (const NeoSigData&) = delete;
+        IsoSigData& operator = (const IsoSigData&) = delete;
 
         /**
          * Swaps the contents of this and the given triangulation component
@@ -709,7 +839,7 @@ class NeoSigData {
          * \param other the component data whose contents should be swapped
          * with this.
          */
-        void swap(NeoSigData& other) noexcept {
+        void swap(IsoSigData& other) noexcept {
             std::swap(size_, other.size_);
             facetType_.swap(other.facetType_);
             adjSimplex_.swap(other.adjSimplex_);
@@ -723,7 +853,7 @@ class NeoSigData {
          *
          * \return \c true if and only if this and the given data are identical.
          */
-        bool operator == (const NeoSigData&) const = default;
+        bool operator == (const IsoSigData&) const = default;
 
         /**
          * Compares two sets of triangulation component data.  Such comparisons
@@ -740,7 +870,7 @@ class NeoSigData {
          * \param rhs the component data to compare with this.
          * \return the result of the comparison between this and the given data.
          */
-        std::strong_ordering operator <=> (const NeoSigData& rhs) const {
+        std::strong_ordering operator <=> (const IsoSigData& rhs) const {
             // We try to loosely follow the ordering used for first-gen
             // signatures.  However, we do _not_ want to do this precisely,
             // for several reasons:
@@ -772,133 +902,47 @@ class NeoSigData {
                 locks_.begin(), locks_.end(),
                 rhs.locks_.begin(), rhs.locks_.end());
         }
+
+    private:
+        /**
+         * Allocates space for a data set for the given triangulation component.
+         *
+         * The bitmask included in this data set will be initialised with all
+         * bits off.  All other arrays will be initialised to the correct sizes,
+         * but the individual array elements will be left uninitialised.
+         *
+         * \param component the triangulation component that we intend to
+         * encode.
+         */
+        IsoSigData(Component<dim>* component) :
+                size_(component->size()),
+                facetType_(((dim+1) * size_
+                    + component->countBoundaryFacets()) / 2),
+                adjSimplex_(
+                    (((dim+1) * size_ + component->countBoundaryFacets()) / 2)
+                    - size_ + 1),
+                adjGluing_(adjSimplex_.size()
+                    - component->countBoundaryFacets()),
+                locks_(component->hasLocks() ? size_ : 0) {
+        }
 };
 
 /**
  * Swaps the contents of the given triangulation component data sets.
  *
- * This global routine simply calls `NeoSigData<dim>::swap()`; it is provided so
- * that NeoSigData meets the C++ Swappable requirements.
+ * This global routine simply calls `IsoSigData<generation, dim>::swap()`;
+ * it is provided so that IsoSigData meets the C++ Swappable requirements.
  *
  * \param a the first component data set whose contents should be swapped.
  * \param b the second component data set whose contents should be swapped.
  *
  * \ingroup triangulation
  */
-template <int dim> requires (supportedDim(dim))
-inline void swap(NeoSigData<dim>& a, NeoSigData<dim>& b) noexcept {
+template <int generation, int dim>
+inline void swap(IsoSigData<generation, dim>& a, IsoSigData<generation, dim>& b)
+        noexcept {
     a.swap(b);
 };
-
-/**
- * Represents an encoding that can be used for first-generation isomorphism
- * signatures of triangulations.  Essentially, the job of an encoding algorithm
- * is to pack the gluings table for a single triangulation component into a
- * small piece of data (such as a string) that is easily transported.
- *
- * An encoding should provide a type alias `Signature`, indicating the type
- * that holds the final signature (e.g., `std::string`).  In addition, it
- * should provide the following static routines:
- *
- * - `encodeEmpty()`, which encodes the empty <i>dim</i>-dimensional
- *   triangulation;
- *
- * - `encode(const IsoSigData<dim>&)`, which encodes the gluings table for a
- *   single connected component of a <i>dim</i>-dimensional triangulation;
- *
- * - `length(const IsoSigData<dim>&)`, which pre-computes the length of the
- *   signature that encodes a single component.
- *
- * Both encoding routines should return the type `Signature`.
- *
- * Both `encode()` and `length()` may assume that the given component is
- * non-empty, and that it uses a canonical labelling in the sense described in
- * the IsoSigData class notes.
- *
- * Note that `encode()` can be economical about what information it writes:
- * although `data.size()` will need to be encoded, it is not necessary to
- * encode the sizes of the various supporting arrays, since their sizes are
- * implied by their contents.  Specifically:
- *
- * - by using `data.size()` and sequentially reading the contents of the array
- *   `data.facetTypes()`, it is possible for a reader to deduce the point at
- *    which the array ends;
- *
- * - by using `data.size()` and the contents of `data.facetTypes()`,
- *   it is possible for a reader to precompute the length of the arrays
- *   `data.adjacentSimplices()` and `data.adjacentGluings()`;
- *
- * - if the array `data.locks()` is non-empty, then its length will be
- *   `data.size()`.
- *
- * \apinotfinal
- *
- * \ingroup triangulation
- */
-template <typename T, int dim>
-concept IsoSigEncoding =
-    requires(const IsoSigData<dim> data) {
-        typename T::Signature;
-        requires SignatureType<typename T::Signature>;
-        { T::encodeEmpty() } -> std::convertible_to<typename T::Signature>;
-        { T::encode(data) } -> std::convertible_to<typename T::Signature>;
-        { T::length(data) } -> std::same_as<size_t>;
-    };
-
-/**
- * Represents an encoding that can be used for second-generation isomorphism
- * signatures of triangulations.  Essentially, the job of an encoding algorithm
- * is to pack the gluings table for a single triangulation component into a
- * small piece of data (such as a string) that is easily transported.
- *
- * An encoding should provide a type alias `Signature`, indicating the type
- * that holds the final signature (e.g., `std::string`).  In addition, it
- * should provide the following static routines:
- *
- * - `encodeEmpty()`, which encodes the empty <i>dim</i>-dimensional
- *   triangulation;
- *
- * - `encode(const NeoSigData<dim>&)`, which encodes the gluings table for a
- *   single connected component of a <i>dim</i>-dimensional triangulation;
- *
- * - `length(const NeoSigData<dim>&)`, which pre-computes the length of the
- *   signature that encodes a single component.
- *
- * Both encoding routines should return the type `Signature`.
- *
- * Both `encode()` and `length()` may assume that the given component is
- * non-empty, and that it uses a canonical labelling in the sense described in
- * the NeoSigData class notes.
- *
- * Note that `encode()` can be economical about what information it writes:
- * although `data.size()` will need to be encoded, it is not necessary to
- * encode the sizes of the various supporting arrays and bitmasks, since their
- * sizes are implied by their contents.  Specifically:
- *
- * - by using `data.size()` and sequentially reading the contents of the array
- *   `data.adjacentSimplices()`, it is possible for a reader to deduce the
- *   point at which the array ends;
- *
- * - by using `data.size()` and the contents of `data.adjacentSimplices()`,
- *   it is possible for a reader to precompute the length of the array
- *   `data.adjacentGluings()` and the bitmask `data.facetTypes()`;
- *
- * - if the array `data.locks()` is non-empty, then its length will be
- *   `data.size()`.
- *
- * \apinotfinal
- *
- * \ingroup triangulation
- */
-template <typename T, int dim>
-concept NeoSigEncoding =
-    requires(const NeoSigData<dim> data) {
-        typename T::Signature;
-        requires SignatureType<typename T::Signature>;
-        { T::encodeEmpty() } -> std::convertible_to<typename T::Signature>;
-        { T::encode(data) } -> std::convertible_to<typename T::Signature>;
-        { T::length(data) } -> std::same_as<size_t>;
-    };
 
 /**
  * Encodes both first-generation and second-generation isomorphism signatures
@@ -907,44 +951,37 @@ concept NeoSigEncoding =
  *
  * This printable encoding represents an isomorphism signature as a
  * `std::string`, using only printable characters from the 7-bit ASCII range.
- * For first-generation signatures, it is consistent with the original
- * isomorphism signatures implemented in Regina 4.90.
+ * For first-generation signatures of triangulations with no simplex or facet
+ * locks, this is the same encoding that was used for the original isomorphism
+ * signatures first introduced in Regina 4.90.
  *
- * If the template parameter \a supportLocks is `true` (the default), _and_ if
- * the triangulation in question has one or more simplex and/or facet locks,
- * then the locks will be encoded as part of the isomorphism signature (they
- * will appear at the end, after the encoded gluings table).  If \a supportLocks
- * is `false` or if the triangulation does not have any locks, then locks will
- * not be encoded; in particular, the first-generation encoding will be the same
- * as in earlier versions of Regina (before 7.4), before locks were implemented.
+ * If the triangulation does have one or more simplex and/or facet locks,
+ * then these locks will be encoded as part of the isomorphism signature (they
+ * will appear at the end, after the encoded gluings table).  This will break
+ * compatibility with signatures from Regina ≤ 7.3.1 (before locks were
+ * implemented).  If the triangulation does not have any locks then no lock
+ * data will encoded, and so the encoding will be remain compatible with all
+ * older versions of Regina.  If you need a signature where locks are not
+ * encoded (e.g., for backward compatibility), then you can use the encoding
+ * IsoSigPrintableLockFree.
  *
- * See the IsoSigEncoding and NeoSigEncoding concept documentation for general
- * details on encodings for first-generation and second-generation isomorphism
- * signatures respectively.
+ * See the IsoSigEncoding concept documentation for general details on
+ * encodings for first-generation and second-generation isomorphism signatures
+ * respectively.
  *
  * This class is designed to be used as a template parameter for signature
  * routines in the class `Triangulation<dim>`, including `isoSig()`, `neoSig()`,
  * `isoSigDetail()`, and `neoSigDetail()`.  Typical users would have no need
  * to call any functions from this encoding class directly.
  *
- * \python Python does not support C++ templates.  To _use_ this encoding in
- * Python: if \a supportLocks is `true` (the default), call the relevant
- * signature function with no extra suffix (e.g., `Triangulation::isoSig()` or
- * `Triangulation::neoSig()`); if \a supportLocks is `false`, use an extra
- * `_LockFree` suffix (e.g., `Triangulation::isoSig_LockFree()` or
- * `Triangulation::neoSig_LockFree()`).  To access this encoding _class_
- * (which you would typically not need to do): if \a supportLocks is `true`,
- * append the dimension as a suffix (e.g., `IsoSigPrintable2` and
- * `IsoSigPrintable3` for dimensions 2 and 3); if \a supportLocks is `false`,
- * use the type aliases `IsoSigPrintableLockFree2`, `IsoSigPrintableLockFree3`,
- * and so on.
+ * \python To use this encoding in Python, you can just call the relevant
+ * `Triangulation<dim>` signature function (e.g., `isoSig()` or `neoSig()`)
+ * with no extra encoding argument, since this encoding is the default.
  *
  * \apinotfinal
  *
  * \ingroup triangulation
  */
-template <int dim, bool supportLocks = true>
-requires (supportedDim(dim))
 class IsoSigPrintable {
     public:
         /**
@@ -952,6 +989,7 @@ class IsoSigPrintable {
          * represent a single gluing permutation.
          * This must be large enough to encode an index into Perm<dim+1>::Sn.
          */
+        template <int dim> requires (supportedDim(dim))
         static constexpr int charsPerPerm =
             ((regina::bitsRequired(Perm<(dim)+1>::nPerms) + 5) / 6);
 
@@ -977,191 +1015,179 @@ class IsoSigPrintable {
 
         /**
          * Encodes a single connected component of a <i>dim</i>-dimensional
-         * triangulation.
+         * triangulation as a first-generation isomorphism signature.
          *
          * \pre The given component is non-empty, and uses a canonical labelling
-         * in the sense described in the NeoSigData class notes.
+         * in the sense described in the IsoSigData class notes.
          *
          * \param data the compressed gluings table for the component to encode.
-         * \return the given gluings table encoded as an isomorphism signature.
+         * \return the given gluings table encoded as a first-generation
+         * signature.
          */
-        static Signature encode(const IsoSigData<dim>& data) {
-            Base64SigEncoder enc;
-            enc.reserve(length(data));
-
-            int intWidth = enc.encodeSize(data.size());
-            enc.encodeTrits(data.facetTypes());
-            enc.encodeInts(data.adjacentSimplices(), intWidth);
-            enc.encodeInts(data.adjacentGluings(), charsPerPerm);
-            if constexpr (supportLocks) {
-                if (data.hasLocks()) {
-                    // Each lock mask holds dim+2 bits.
-                    enc.append(Base64SigEncoder::spare[1]);
-                    for (auto mask : data.locks()) {
-                        if constexpr (dim <= 4) {
-                            // We can encode <= 6 bits with 1 character.
-                            enc.encodeSingle(mask);
-                        } else if constexpr (dim <= 10) {
-                            // We can encode <= 12 bits with 2 characters.
-                            enc.encodeInt(mask, 2);
-                        } else {
-                            static_assert(dim <= 16);
-                            // We can encode <= 18 bits with 3 characters.
-                            enc.encodeInt(mask, 3);
-                        }
-                    }
-                }
-            }
-
-            return std::move(enc).str();
-        }
+        template <int dim> requires (supportedDim(dim))
+        static Signature encode(const IsoSigData<1, dim>& data);
 
         /**
-         * Precomputes the length of the signature that encodes the given
-         * connected component.
+         * Precomputes the length of the first-generation isomorphism signature
+         * that encodes the given connected component.
          *
          * \pre The given component is non-empty, and uses a canonical labelling
-         * in the sense described in the NeoSigData class notes.
+         * in the sense described in the IsoSigData class notes.
          *
          * \param data the compressed gluings table for the component to encode.
-         * \return the length of the isomorphism signature that encodes \a data.
+         * \return the length of the first-generation signature that encodes
+         * \a data.
          */
-        static size_t length(const IsoSigData<dim>& data) {
-            size_t ans;
-            if (data.size() < 63) {
-                // The integer width is 1, and does not need to be explicitly
-                // encoded.
-                ans = 1 + data.adjacentSimplices().size();
-            } else {
-                // We begin with two extra characters: 63 (a marker that the
-                // component is large), and the encoding of the integer width.
-                int width = Base64SigEncoder::integerWidth(data.size());
-                ans = 2 + (1 + data.adjacentSimplices().size()) * width;
-            }
-            ans += ((data.facetTypes().size() + 2) / 3);
-            ans += (data.adjacentGluings().size() * charsPerPerm);
-            if constexpr (supportLocks) {
-                if (data.hasLocks()) {
-                    if constexpr (dim <= 4)
-                        ans += (1 + data.locks().size());
-                    else if constexpr (dim <= 10)
-                        ans += (1 + data.locks().size() * 2);
-                    else
-                        ans += (1 + data.locks().size() * 3);
-                }
-            }
-            return ans;
-        }
+        template <int dim> requires (supportedDim(dim))
+        static size_t length(const IsoSigData<1, dim>& data);
+
+        /**
+         * Encodes a single connected component of a <i>dim</i>-dimensional
+         * triangulation as a second-generation isomorphism signature.
+         *
+         * \pre The given component is non-empty, and uses a canonical labelling
+         * in the sense described in the IsoSigData class notes.
+         *
+         * \param data the compressed gluings table for the component to encode.
+         * \return the given gluings table encoded as a second-generation
+         * signature.
+         */
+        template <int dim> requires (supportedDim(dim))
+        static Signature encode(const IsoSigData<2, dim>& data);
+
+        /**
+         * Precomputes the length of the second-generation isomorphism signature
+         * that encodes the given connected component.
+         *
+         * \pre The given component is non-empty, and uses a canonical labelling
+         * in the sense described in the IsoSigData class notes.
+         *
+         * \param data the compressed gluings table for the component to encode.
+         * \return the length of the second-generation signature that encodes
+         * \a data.
+         */
+        template <int dim> requires (supportedDim(dim))
+        static size_t length(const IsoSigData<2, dim>& data);
 
         // Make this class non-constructible.
         IsoSigPrintable() = delete;
 };
 
 /**
- * An encoding for both first-generation and second-generation isomorphism
- * signatures that ignores simplex and facet locks.
+ * Encodes both first-generation and second-generation isomorphism signatures
+ * as printable strings, ignoring any simplex and/or facet locks.
  *
  * Like IsoSigPrintable, this encoding represents an isomorphism signature as a
  * `std::string` using only printable characters from the 7-bit ASCII range.
  * For first-generation signatures, this is exactly the same as the printable
  * encoding that was used with Regina ≤ 7.3.x, before locks were implemented.
  *
- * See the IsoSigEncoding and NeoSigEncoding concept documentation for general
- * details on encodings for first-generation and second-generation isomorphism
- * signatures respectively.
+ * See the IsoSigEncoding concept documentation for general details on
+ * encodings for first-generation and second-generation isomorphism signatures
+ * respectively.
  *
  * This class is designed to be used as a template parameter for signature
  * routines in the class `Triangulation<dim>`, including `isoSig()`, `neoSig()`,
  * `isoSigDetail()`, and `neoSigDetail()`.  Typical users would have no need
  * to call any functions from this encoding class directly.
  *
- * \python Python does not support C++ templates.  To _use_ this encoding in
- * Python, you should call the relevant signature function with an extra
- * `_LockFree` suffix (e.g., `Triangulation::isoSig_LockFree()` or
- * `Triangulation::neoSig_LockFree()`).  To access this encoding _class_
- * (which you would typically not need to do), append the dimension as a suffix
- * (e.g., `IsoSigPrintableLockFree2` and `IsoSigPrintableLockFree3` for
- * dimensions 2 and 3).
+ * \python To use this encoding in Python, pass IsoSigPrintableLockFree as a
+ * runtime argument to the relevant `Triangulation<dim>` signature function
+ * (e.g., `isoSig()` or `neoSig()`).
  *
  * \apinotfinal
  *
  * \ingroup triangulation
  */
-template <int dim> requires (supportedDim(dim))
-using IsoSigPrintableLockFree = IsoSigPrintable<dim, false>;
+class IsoSigPrintableLockFree {
+    public:
+        /**
+         * The number of characters that we use in our encoding to
+         * represent a single gluing permutation.
+         * This must be large enough to encode an index into Perm<dim+1>::Sn.
+         */
+        template <int dim> requires (supportedDim(dim))
+        static constexpr int charsPerPerm = IsoSigPrintable::charsPerPerm<dim>;
 
-/**
- * Represents a signature _type_ that can be used for isomorphism signatures of
- * triangulations (both first-generation and second-generation).  Essentially,
- * the job of a signature type is to help Regina determine which labelling of a
- * triangulation is "canonical".  Different signature types will make different
- * trade-offs between factors such as speed, accessibility, backward
- * compatibility and so on, typically resulting in different notions of
- * "canonical" as a consequence.
- *
- * More specifically, a signature type is described by a class (implementing
- * this IsoSigType concept), which works with a single component \a c of a
- * <i>dim</i>-dimenensional triangulation.  The sole task of this class is to
- * iterate through a selection of combinations `(s, p)`, each of which
- * identifies a "starting simplex" of \a c and a "starting labelling" of its
- * vertices.  Here \a s is a top-dimensional simplex in \a c that will act as
- * the "starting simplex", and \a p is a permutation that maps the vertices
- * of \a s to the "starting labelling" `0,1,...,dim`.
- *
- * Second-generation signatures can be either _oriented_ or _unoriented_, and
- * a signature type should support both variants.  When building an oriented
- * signature, the permutation \a p must always be even (since the signature
- * must preserve the orientation of the triangulation component).  When building
- * an unoriented signature, any permutation \a p is allowed.
- *
- * Not all possible pairs `(s, p)` need to be offered during this iteration
- * (indeed, it is the ability to prune the candidate pairs `(s, p)` that make
- * some signature types faster than others).  However, we do require:
- *
- * - At least one candidate pair `(s, p)` must be offered.
- *
- * - Suppose we relabel the top-dimensional simplices of \a c and/or their
- *   vertices (when building an oriented signature, we insist that such a
- *   relabelling must be orientation-preserving).  Then the candidate pairs
- *   `(s, p)` that are offered will be the _same set_ as before, just modified
- *   according to this relabelling.  In other words, relabelling does not
- *   change the set of candidate pairs in any way beyond the relabelling itself.
- *
- * An instance of a signature type class acts like an iterator: it holds a
- * single candidate combination `(s, p)`.  In this sense, it must provide:
- *
- * - a class constructor `T(const Component<dim>&, bool)`, which sets the
- *   "iterator" to the first candidate pair `(s, p)` for the given component,
- *   and whose boolean argument indicates whether the signature being
- *   constructed is oriented (`true`) or unoriented (`false`);
- *
- * - a query routine `size_t simplex() const`, which returns the index of the
- *   current "starting simplex" \a s within the component \a c (this might
- *   _not_ be the index of \a s within the overall triangulation);
- *
- * - a query routine `Perm<dim+1> perm() const`, which returns the current
- *   "starting labelling" \a p (mapping the vertices of \a s to `0,1,...,dim`);
- *
- * - a routine `bool next()`, which advances this "iterator" to the next
- *   candidate pair `(s, p)`, returning `true` if this successful or `false`
- *   if there are no more candidate pairs.
- *
- * The routines `simplex()`, `perm()` and `next()` may all assume that the
- * "iterator" is describing a valid candidate pair `(s, p)`; that is, `next()`
- * has not yet returned `false`.
- *
- * \apinotfinal
- *
- * \ingroup triangulation
- */
-template <typename T, int dim>
-concept IsoSigType =
-    std::constructible_from<T, const Component<dim>&, bool> &&
-    requires(T t, const T c) {
-        { c.simplex() } -> std::convertible_to<size_t>;
-        { c.perm() } -> std::convertible_to<Perm<dim + 1>>;
-        { t.next() } -> std::convertible_to<bool>;
-    };
+        /**
+         * The data type that this encoding uses to hold the final signature.
+         */
+        using Signature = std::string;
+
+        /**
+         * Encodes the isomorphism signature of the empty
+         * <i>dim</i>-dimensional triangulation.
+         *
+         * Like IsoSigPrintable, this does _not_ return an empty signature for
+         * this; instead it returns the non-empty string `a`.
+         *
+         * \return the isomorphism signature of the empty triangulation.
+         */
+        static Signature encodeEmpty() {
+            Base64SigEncoder enc;
+            enc.encodeSingle(0);
+            return std::move(enc).str();
+        }
+
+        /**
+         * Encodes a single connected component of a <i>dim</i>-dimensional
+         * triangulation as a first-generation isomorphism signature.
+         *
+         * \pre The given component is non-empty, and uses a canonical labelling
+         * in the sense described in the IsoSigData class notes.
+         *
+         * \param data the compressed gluings table for the component to encode.
+         * \return the given gluings table encoded as a first-generation
+         * signature.
+         */
+        template <int dim> requires (supportedDim(dim))
+        static Signature encode(const IsoSigData<1, dim>& data);
+
+        /**
+         * Precomputes the length of the first-generation isomorphism signature
+         * that encodes the given connected component.
+         *
+         * \pre The given component is non-empty, and uses a canonical labelling
+         * in the sense described in the IsoSigData class notes.
+         *
+         * \param data the compressed gluings table for the component to encode.
+         * \return the length of the first-generation signature that encodes
+         * \a data.
+         */
+        template <int dim> requires (supportedDim(dim))
+        static size_t length(const IsoSigData<1, dim>& data);
+
+        /**
+         * Encodes a single connected component of a <i>dim</i>-dimensional
+         * triangulation as a second-generation isomorphism signature.
+         *
+         * \pre The given component is non-empty, and uses a canonical labelling
+         * in the sense described in the IsoSigData class notes.
+         *
+         * \param data the compressed gluings table for the component to encode.
+         * \return the given gluings table encoded as a second-generation
+         * signature.
+         */
+        template <int dim> requires (supportedDim(dim))
+        static Signature encode(const IsoSigData<2, dim>& data);
+
+        /**
+         * Precomputes the length of the second-generation isomorphism signature
+         * that encodes the given connected component.
+         *
+         * \pre The given component is non-empty, and uses a canonical labelling
+         * in the sense described in the IsoSigData class notes.
+         *
+         * \param data the compressed gluings table for the component to encode.
+         * \return the length of the second-generation signature that encodes
+         * \a data.
+         */
+        template <int dim> requires (supportedDim(dim))
+        static size_t length(const IsoSigData<2, dim>& data);
+
+        // Make this class non-constructible.
+        IsoSigPrintableLockFree() = delete;
+};
 
 /**
  * A slow isomorphism signature type that is consistent with the original
@@ -1184,14 +1210,13 @@ concept IsoSigType =
  * `isoSigDetail()`, and `neoSigDetail()`.  Typical users would have no need
  * to create objects of this class or call any of its functions directly.
  *
- * \python Python does not support C++ templates.  To _use_ this signature
- * type in Python: for first-generation signatures this type is the default,
- * so just call the `Triangulation<dim>` signature function with no extra
- * suffix (e.g., `isoSig()` or `isoSigDetail()`); for second-generation
- * signatures, use an extra `_classic` suffix (e.g., `neoSig_classic()` or
- * `neoSigDetail_classic()`).  To access this type _class_ (which you would
- * typically not need to do), append the dimension as a suffix (e.g.,
- * IsoSigClassic2 and IsoSigClassic3 for dimensions 2 and 3).
+ * \python Python does not support C++ templates.  To access this class,
+ * append the dimension as a suffix (e.g., IsoSigClassic3 for dimension 3).
+ * To _use_ this signature type in Python: for first-generation signatures this
+ * type is the default, so just call the `Triangulation<dim>` signature function
+ * with no extra arguments (e.g., `isoSig()` or `isoSigDetail()`); for
+ * second-generation signatures, pass this class as a runtime argument (e.g.,
+ * `neoSig(False, IsoSigPrintable, IsoSigClassic3)`.
  *
  * \apinotfinal
  *
@@ -1220,12 +1245,13 @@ class IsoSigClassic {
          * Initialises this "iterator" to the first candidate pair `(s, p)`
          * for the given triangulation component.
          *
-         * \param comp the triangulation component that we are examining.
+         * \param component the triangulation component that we are examining.
          * \param oriented `true` if you are creating an oriented signature,
          * or `false` if you are creating an unoriented signature.
          */
-        IsoSigClassic(const Component<dim>& comp, bool oriented) :
-                oriented_(oriented), size_(comp.size()), simp_(0), perm_(0) {
+        IsoSigClassic(const Component<dim>& component, bool oriented) :
+                oriented_(oriented), size_(component.size()),
+                simp_(0), perm_(0) {
         }
 
         /**
@@ -1311,16 +1337,15 @@ class IsoSigClassic {
  * \python Python does not support C++ templates, and there are far too many of
  * these classes to wrap.  Currently Python supports only the cases where
  * \a subdim is 1 or `dim-2`, using the type aliases IsoSigEdgeDegrees and
- * IsoSigRidgeDegrees respectively (these cover all the variants that Regina
- * currently uses internally).  To _use_ the corresponding signature type in
- * Python, call the `Triangulation<dim>` signature function with an extra
- * `_edgeDegrees` or `_ridgeDegrees` suffix (e.g., `isoSig_ridgeDegrees()` or
- * `neoSig_edgeDegrees()`).  As an exception, if you are using
- * IsoSigRidgeDegrees with a second-generation signature (or IsoSigEdgeDegrees
- * in dimension three, which is the same type), you do not need any suffix since
- * this signature type is the default.  To access the corresponding signature
- * type _class_ (which you would typically not need to do), append the
- * dimension as a suffix to the type alias (e.g., `IsoSigEdgeDegrees3`).
+ * IsoSigRidgeDegrees respectively.  To access one of these classes, append the
+ * dimension as a suffix to the relevant type alias (e.g., IsoSigEdgeDegrees3,
+ * or IsoSigRidgeDegrees4).  To _use_ this signature type in Python, pass the
+ * type alias as a runtime argument to the `Triangulation<dim>` signature
+ * function (e.g., `neoSig(False, IsoSigPrintable, IsoSigEdgeDegrees4)`.
+ * As an exception, if you are building a second-generation signature and you
+ * wish to use IsoSigRidgeDegrees (or IsoSigEdgeDegrees in dimension three,
+ * which is the same type), you do not need any extra arguments since this
+ * signature type is the default.
  *
  * \ingroup triangulation
  */
@@ -1391,18 +1416,18 @@ class IsoSigDegrees {
          * Initialises this "iterator" to the first candidate pair `(s, p)`
          * for the given triangulation component.
          *
-         * \param comp the triangulation component that we are examining.
+         * \param component the triangulation component that we are examining.
          * \param oriented `true` if you are creating an oriented signature,
          * or `false` if you are creating an unoriented signature.
          */
-        IsoSigDegrees(const Component<dim>& comp, bool oriented) :
-                marks_(comp.size()), oriented_(oriented), perm_(0) {
+        IsoSigDegrees(const Component<dim>& component, bool oriented) :
+                marks_(component.size()), oriented_(oriented), perm_(0) {
             // We set smallest_ to the first simplex with minimal subdim-face
             // degrees (which will then be the initial choice of starting
             // simplex simp_).
             smallest_ = 0;
             for (size_t i = 0; i < marks_.size(); ++i) {
-                marks_[i].init(*(comp.simplex(i)));
+                marks_[i].init(*(component.simplex(i)));
                 if (i > 0 && marks_[i] < marks_[smallest_])
                     smallest_ = i;
             }
@@ -1473,14 +1498,11 @@ class IsoSigDegrees {
  * A faster isomorphism signature type based on edge degree sequences.
  * See IsoSigDegrees for further discussion.
  *
- * \python Python does not support C++ templates.  To _use_ this signature type,
- * call the `Triangulation<dim>` signature function with an extra `_edgeDegrees`
- * suffix (e.g., `isoSig_edgeDegrees()` or `neoSig_edgeDegrees()`).  As an
- * exception, if you are building a second-generation signature in dimension 3
- * then you do not need any suffix, since this signature type is the default.
- * To access this signature type _class_ (which you would typically not need to
- * do), append the dimension as a suffix to this type alias (e.g.,
- * `IsoSigEdgeDegrees3`).
+ * \python Python does not support C++ templates.  To access this type alias,
+ * append the dimension as a suffix (e.g., IsoSigEdgeDegrees4 for dimension 4).
+ * To _use_ this signature type in Python, pass this class as a runtime argument
+ * to the relevant `Triangulation<dim>` signature function (e.g.,
+ * `neoSig(False, IsoSigPrintable, IsoSigEdgeDegrees4)`.
  *
  * \ingroup triangulation
  */
@@ -1495,13 +1517,13 @@ using IsoSigEdgeDegrees = IsoSigDegrees<dim, 1>;
  * the second-generation signature routines `Triangulation<dim>::neoSig()` and
  * `Triangulation<dim>::neoSigDetail()`.
  *
- * \python Python does not support C++ templates.  To _use_ this signature type,
- * call the `Triangulation<dim>` signature function with an extra
- * `_ridgeDegrees` suffix (e.g., `isoSig_ridgeDegrees()`).  As an exception,
- * if you are building a second-generation signature then you do not need any
- * suffix, since this signature type is the default.  To access this signature
- * type _class_ (which you would typically not need to do), append the dimension
- * as a suffix to this type alias (e.g., `IsoSigRidgeDegrees3`).
+ * \python Python does not support C++ templates.  To access this type alias,
+ * append the dimension as a suffix (e.g., IsoSigRidgeDegrees4 for dimension 4).
+ * To _use_ this signature type in Python: for second-generation signatures this
+ * type is the default, so just call the `Triangulation<dim>` signature function
+ * with no extra arguments (e.g., `neoSig()` or `neoSigDetail()`); for
+ * first-generation signatures, pass this class as a runtime argument (e.g.,
+ * `isoSig(IsoSigPrintable, IsoSigRidgeDegrees4)`.
  *
  * \ingroup triangulation
  */

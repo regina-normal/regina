@@ -42,11 +42,18 @@ void addTriangulations8(pybind11::module_& m, pybind11::module_& internal) {
     addIsoSigClassic<8>(m, "IsoSigClassic8");
     addIsoSigEdgeDegrees<8>(m, "IsoSigEdgeDegrees8");
     addIsoSigRidgeDegrees<8>(m, "IsoSigRidgeDegrees8");
-    addIsoSigData<8>(m, "IsoSigData8");
-    addNeoSigData<8>(m, "NeoSigData8");
-    addIsoSigPrintable<8, true>(m, "IsoSigPrintable8");
-    addIsoSigPrintable<8, false>(m, "IsoSigPrintableLockFree8");
+    addIsoSigData<1, 8>(m, "IsoSigData1_8");
+    addIsoSigData<2, 8>(m, "IsoSigData2_8");
 
     m.attr("Face8_8") = m.attr("Simplex8");
 }
 
+// Instantiate templates for isomorphism signature encodings:
+template void regina::python::addEncodingFunctions<1, 8>(
+    pybind11::class_<regina::IsoSigPrintable>&);
+template void regina::python::addEncodingFunctions<2, 8>(
+    pybind11::class_<regina::IsoSigPrintable>&);
+template void regina::python::addEncodingFunctions<1, 8>(
+    pybind11::class_<regina::IsoSigPrintableLockFree>&);
+template void regina::python::addEncodingFunctions<2, 8>(
+    pybind11::class_<regina::IsoSigPrintableLockFree>&);

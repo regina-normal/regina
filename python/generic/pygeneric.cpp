@@ -70,6 +70,7 @@ void addIsomorphism12(pybind11::module_& m);
 void addIsomorphism13(pybind11::module_& m);
 void addIsomorphism14(pybind11::module_& m);
 void addIsomorphism15(pybind11::module_& m);
+void addIsoSigEncodings(pybind11::module_& m);
 void addFace5(pybind11::module_& m, pybind11::module_& internal);
 void addFace6(pybind11::module_& m, pybind11::module_& internal);
 void addFace7(pybind11::module_& m, pybind11::module_& internal);
@@ -119,6 +120,7 @@ void addGenericClasses(pybind11::module_& m, pybind11::module_& internal) {
     addExample8(m);
     addCut(m);
     addFaceNumbering(m);
+    addIsoSigEncodings(m);
 #ifdef REGINA_HIGHDIM
     addFacetPairing9(m);
     addFacetPairing10(m);

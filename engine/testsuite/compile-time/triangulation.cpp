@@ -38,8 +38,8 @@ static_assert(! regina::standardDim(5));
 static_assert(std::is_swappable_v<regina::Triangulation<3>>);
 
 // Number of base64 characters required to hold (dim+1)!
-static_assert(regina::IsoSigPrintable<3>::charsPerPerm == 1);
-static_assert(regina::IsoSigPrintable<4>::charsPerPerm == 2);
+static_assert(regina::IsoSigPrintable::charsPerPerm<3> == 1);
+static_assert(regina::IsoSigPrintable::charsPerPerm<4> == 2);
 #ifdef REGINA_HIGHDIM
-static_assert(regina::IsoSigPrintable<15>::charsPerPerm == 8);
+static_assert(regina::IsoSigPrintable::charsPerPerm<15> == 8);
 #endif

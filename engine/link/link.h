@@ -5847,6 +5847,12 @@ class Link :
         /**
          * Constructs the _signature_ for this knot or link diagram.
          *
+         * Most users will not need to use this routine, which is extremely
+         * customisable; instead just call knotSig() for a first-generation
+         * signature (if you need backward compatibility), or neoSig() for a
+         * second-generation signature (if you want better performance).
+         * Read on for the full details.
+         *
          * A _signature_ is a compact representation of a link diagram,
          * typically (but not necessarily) in a readable text form, that
          * uniquely determines the diagram up to any combination of:
@@ -5915,7 +5921,7 @@ class Link :
          * pass the template argument as the first parameter at runtime.
          * So, for example, to generate a string-based second-generation
          * signature, you can call `sig(LinkSigGen2)`, or to disallow reversal,
-         * `sig(LinkSigGen2, true, false, true)`.  When generating binary
+         * `sig(LinkSigGen2, True, False, True)`.  When generating binary
          * signatures (via `LinkSigBinary`), the return value will be a Python
          * `bytes` object (not a ByteSequence).
          *

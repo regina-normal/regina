@@ -21,6 +21,7 @@ SET ( FILES
   isomorphism6.cpp
   isomorphism7.cpp
   isomorphism8.cpp
+  isosig.cpp
   pygeneric.cpp
   triangulation5.cpp
   triangulation6.cpp

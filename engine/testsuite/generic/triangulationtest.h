@@ -38,6 +38,7 @@
 #include "utilities/tightencodingtest.h"
 
 using regina::Isomorphism;
+using regina::IsoSigPrintable;
 using regina::Perm;
 using regina::Simplex;
 using regina::Triangulation;
@@ -1218,7 +1219,7 @@ class TriangulationTest : public testing::Test {
                 const Triangulation<dim>& tri) {
             SCOPED_TRACE_TYPE(Type<dim>);
 
-            std::string sig = tri.template isoSig<Type<dim>>();
+            auto sig = tri.template isoSig<IsoSigPrintable, Type<dim>>();
             SCOPED_TRACE_STDSTRING(sig);
 
             ASSERT_FALSE(sig.empty());
@@ -1266,12 +1267,14 @@ class TriangulationTest : public testing::Test {
             static constexpr int trials = 5;
 
             for (int i = 0; i < trials; ++i) {
-                auto other = Isomorphism<dim>::random(tri.size())(tri);
-                EXPECT_EQ(other.template isoSig<Type<dim>>(), sig);
+                auto other = Isomorphism<dim>::random(tri.size())(tri).
+                    template isoSig<IsoSigPrintable, Type<dim>>();
+                EXPECT_EQ(other, sig);
             }
 
             if (tri.countComponents() == 1) {
-                auto detail = tri.template isoSigDetail<Type<dim>>();
+                auto detail = tri.template isoSigDetail<IsoSigPrintable,
+                    Type<dim>>();
 
                 EXPECT_EQ(detail.first, sig);
 
@@ -1288,8 +1291,8 @@ class TriangulationTest : public testing::Test {
                         reconstructed.simplex(i)->lockMask());
             }
 
-            std::string lockFree = tri.template isoSig<Type<dim>,
-                regina::IsoSigPrintableLockFree<dim>>();
+            std::string lockFree = tri.template isoSig<
+                regina::IsoSigPrintableLockFree, Type<dim>>();
             if (tri.hasLocks())
                 EXPECT_NE(lockFree, sig);
             else
@@ -1304,11 +1307,10 @@ class TriangulationTest : public testing::Test {
             verifyIsomorphismSignatureUsing<regina::IsoSigEdgeDegrees>(tri);
 
             // Verify the precomputed length of the signature.
-            using Encoding = regina::IsoSigPrintable<dim>;
             if (tri.countComponents() == 1) {
-                regina::IsoSigData data(tri.component(0));
-                EXPECT_EQ(Encoding::length(data),
-                    Encoding::encode(data).size());
+                regina::IsoSigData<1, dim> data(tri.component(0));
+                EXPECT_EQ(regina::IsoSigPrintable::length(data),
+                    regina::IsoSigPrintable::encode(data).size());
             }
         }
 

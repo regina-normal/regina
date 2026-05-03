@@ -1054,39 +1054,17 @@ Returns:
 
 // Docstring regina::python::doc::detail::TriangulationBase_::fromIsoSig
 constexpr const char *fromIsoSig =
-R"doc(Recovers a full triangulation from an isomorphism signature.
+R"doc(Deprecated alias for fromSig(), to recover a full triangulation from a
+string-based isomorphism signature.
 
-See isoSig() for more information on isomorphism signatures. It will
-be assumed that the signature describes a triangulation of dimension
-*dim*.
+.. deprecated::
+    You should call this as fromSig() instead.
 
-Currently this routine only supports isomorphism signatures that were
-created with the default encoding (i.e., there was no *Encoding*
-template parameter passed to isoSig()).
-
-Calling isoSig() followed by fromIsoSig() is not guaranteed to produce
-an _identical_ triangulation to the original, but it is guaranteed to
-produce a combinatorially _isomorphic_ triangulation. In other words,
-fromIsoSig() may reconstruct the triangulation with its simplices
-and/or vertices relabelled. The optional argument to isoSig() allows
-you to determine the precise relabelling that will be used, if you
-need to know it.
-
-For a full and precise description of the isomorphism signature format
-for 3-manifold triangulations, see _Simplification paths in the
-Pachner graphs of closed orientable 3-manifold triangulations_,
-Burton, 2011, ``arXiv:1110.6080``. The format for other dimensions is
-essentially the same, but with minor dimension-specific adjustments.
-
-.. warning::
-    Do not mix isomorphism signatures between dimensions! It is
-    possible that the same string could corresponding to both a
-    *p*-dimensional triangulation and a *q*-dimensional triangulation
-    for different dimensions *p* and *q*.
+See fromSig() for further details.
 
 Exception ``InvalidArgument``:
-    The given string was not a valid *dim*-dimensional isomorphism
-    signature created using the default encoding.
+    The given string was not a valid string-based *dim*-dimensional
+    isomorphism signature.
 
 Parameter ``sig``:
     the isomorphism signature of the triangulation to construct. Note
@@ -1098,22 +1076,92 @@ Returns:
 
 // Docstring regina::python::doc::detail::TriangulationBase_::fromSig
 constexpr const char *fromSig =
-R"doc(Alias for fromIsoSig(), to recover a full triangulation from an
-isomorphism signature.
+R"doc(Recovers a full triangulation from a string-based isomorphism
+signature. This may be either a first-generation signature (computed
+via ``isoSig()``), or a second-generation signature (computed via
+``neoSig()``).
 
-This alias fromSig() is provided to assist with generic code that can
-work with both triangulations and links.
+See isoSig() and neoSig() for general information on first-generation
+and second-generation isomorphism signatures.
 
-See fromIsoSig() for further details.
+There is also a variant of fromSig() that takes a byte sequence, and
+which can work with binary second-generation signatures.
+
+Computing a signature via isoSig() or neoSig() and then calling
+fromSig() on the result is not guaranteed to produce an _identical_
+triangulation to the original, but it is guaranteed to produce a
+combinatorially _isomorphic_ triangulation (i.e., one whose simplices
+and/or vertices have been relabelled). Moreover, if you began with an
+oriented triangulation and you computed an _oriented_ second-
+generation signature via ``neoSig(true)``, it is guaranteed that this
+relabelling will be orientation-preserving. If you need to know the
+precise relabelling when computing a signature, you can call
+isoSigDetail() or neoSigDetail() instead.
+
+For a full and precise description of the first-generation isomorphism
+signature format for 3-manifold triangulations, see _Simplification
+paths in the Pachner graphs of closed orientable 3-manifold
+triangulations_, Burton, 2011, ``arXiv:1110.6080``. The format for
+second-generation signatures, and for other dimensions, is similar in
+nature but with minor adjustments.
+
+.. warning::
+    Do not mix isomorphism signatures between dimensions! It is
+    possible that the same string could describe both a
+    *p*-dimensional triangulation and a *q*-dimensional triangulation
+    for different dimensions *p* and *q*.
 
 Exception ``InvalidArgument``:
-    The given string was not a valid *dim*-dimensional isomorphism
-    signature created using the default encoding.
+    The given string was not a valid string-based *dim*-dimensional
+    isomorphism signature.
 
 Parameter ``sig``:
-    the isomorphism signature of the triangulation to construct. Note
-    that isomorphism signatures are case-sensitive (unlike, for
-    example, dehydration strings for 3-manifolds).
+    the signature of the triangulation to construct. Note that
+    isomorphism signatures are case-sensitive (unlike, for example,
+    dehydration strings for 3-manifolds).
+
+Returns:
+    the reconstructed triangulation.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::fromSig_2
+constexpr const char *fromSig_2 =
+R"doc(Recovers a full triangulation from a binary second-generation
+isomorphism signature. This signature would typically have been
+computed via ``neoSig<IsoSigBinary>()``.
+
+See neoSig() for general information on second-generation isomorphism
+signatures.
+
+There is also a variant of fromSig() that takes a string, and which
+can work with both first-generation and string-based second-generation
+signatures.
+
+Computing a signature via ``neoSig<IsoSigBinary>()`` and then calling
+fromSig() on the result is not guaranteed to produce an _identical_
+triangulation to the original, but it is guaranteed to produce a
+combinatorially _isomorphic_ triangulation (i.e., one whose simplices
+and/or vertices have been relabelled). Moreover, if you began with an
+oriented triangulation and you computed an _oriented_ second-
+generation signature via ``neoSig<IsoSigBinary>(true)``, it is
+guaranteed that this relabelling will be orientation-preserving. If
+you need to know the precise relabelling when computing a signature,
+you can call ``neoSigDetail<IsoSigBinary>()`` instead.
+
+.. warning::
+    Do not mix isomorphism signatures between dimensions! It is
+    possible that the same byte sequence could describe both a
+    *p*-dimensional triangulation and a *q*-dimensional triangulation
+    for different dimensions *p* and *q*.
+
+Python:
+    You should pass the signature as a Python ``bytes`` object.
+
+Exception ``InvalidArgument``:
+    The given byte sequence was not a valid binary second-generation
+    signature for a *dim*-dimensional triangulation.
+
+Parameter ``sig``:
+    the signature of the triangulation to construct.
 
 Returns:
     the reconstructed triangulation.)doc";
@@ -1559,205 +1607,164 @@ Returns:
 
 // Docstring regina::python::doc::detail::TriangulationBase_::isoSig
 constexpr const char *isoSig =
-R"doc(Constructs the isomorphism signature of the given type for this
-triangulation. Support for different _types_ of signature is new to
-Regina 7.0 (see below for details); all isomorphism signatures created
-in Regina 6.0.1 or earlier are of the default type IsoSigClassic.
+R"doc(Constructs the first-generation isomorphism signature for this
+triangulation. This is identical to calling ``sig<1, ...>()``.
 
-An _isomorphism signature_ is a compact representation of a
-triangulation that uniquely determines the triangulation up to
-combinatorial isomorphism. That is, for any fixed signature type *T*,
-two triangulations of dimension *dim* are combinatorially isomorphic
-if and only if their isomorphism signatures of type *T* are the same.
+First-generation signatures are the older string-based signatures used
+in Regina ≤ 7.x.
 
-By default, isomorphism signatures support simplex and facet locks:
-this means that locks are encoded in the isomorphism signature, and
-the "combinatorial isomorphisms" mentioned above must respect not just
-the gluings between simplices but also any simplex and/or facet locks.
-You can change this behaviour by requesting a different encoding (such
-as IsoSigPrintableLockFree). Under the default encoding, if this
-triangulation does not have any simplex and/or facet locks then the
-isomorphism signature will look the same as it did in Regina 7.3.x and
-earlier, before locks were supported.
+For new code, it is strongly recommended to use second-generation
+signatures, as returned by neoSig(). Second-generation signatures are
+shorter and faster to compute, support both printable and binary
+encodings, and support both oriented and unoriented signatures.
 
-The length of an isomorphism signature is proportional to ``n log n``,
-where *n* is the number of top-dimenisonal simplices. The time
-required to construct it is worst-case ``O((dim!) n² log² n)``. Whilst
-this is fine for large triangulations, it becomes very slow for large
-_dimensions_; the main reason for introducing different signature
-types is that some alternative types can be much faster to compute in
-practice.
-
-Whilst the format of an isomorphism signature bears some similarity to
-dehydration strings for 3-manifolds, they are more general:
-isomorphism signatures can be used with any triangulations, including
-closed, bounded and/or disconnected triangulations, as well as
-triangulations with many simplices. Note also that 3-manifold
-dehydration strings are not unique up to isomorphism (they depend on
-the particular labelling of tetrahedra).
-
-The routine fromIsoSig() can be used to recover a triangulation from
-an isomorphism signature (only if the default encoding has been used,
-but it does not matter which signature type was used). The
-triangulation recovered might not be identical to the original, but it
-_will_ be combinatorially isomorphic. If you need the precise
-relabelling, you can call isoSigDetail() instead.
-
-Regina supports several different variants of isomorphism signatures,
-which are tailored to different computational needs; these are
-currently determined by the template parameters *Type* and *Encoding:*
-
-* The *Type* parameter identifies which signature type is to be
-  constructed. Essentially, different signature types use different
-  rules to determine which labelling of a triangulation is
-  "canonical". The default type IsoSigClassic is slow (it never does
-  better than the worst-case time described above); its main advantage
-  is that it is consistent with the original implementation of
-  isomorphism signatures in Regina 4.90.
-
-* The *Encoding* parameter controls how Regina packs a canonical
-  labelling into a final signature. The default encoding
-  IsoSigPrintable returns a std::string consisting entirely of
-  printable characters in the 7-bit ASCII range. Importantly, this
-  default encoding is currently the only encoding from which Regina
-  can _reconstruct_ a triangulation (including any simplex and/or
-  facet locks) from its isomorphism signature.
-
-You may instead pass your own type and/or encoding parameters as
-template arguments. Currently this facility is for internal use only,
-and the requirements for type and encoding parameters may change in
-future versions of Regina. See the IsoSigType and IsoSigEncoding
-concept documentation for the current requirements.
-
-Note that, if you wish to produce an isomorphism signature that
-ignores simplex and/or facet locks then you can use an encoding whose
-``encode()`` function ignores the final *locks* argument, such as
-IsoSigPrintableLockFree.
-
-For a full and precise description of the classic isomorphism
-signature format for 3-manifold triangulations, see _Simplification
-paths in the Pachner graphs of closed orientable 3-manifold
-triangulations_, Burton, 2011, ``arXiv:1110.6080``. The format for
-other dimensions is essentially the same, but with minor dimension-
-specific adjustments.
-
-Python:
-    Although this is a templated function, all of the variants
-    supplied with Regina are available to Python users. To use the
-    default signature type and encoding, just call ``isoSig()``. To
-    use a non-default signature type, add a suffix ``_Type`` where
-    *Type* is an abbreviated version of the signature type (e.g.,
-    ``isoSig_EdgeDegrees()`` for the signature type
-    IsoSigEdgeDegrees). To use the encoding IsoSigPrintableLockFree
-    (the only non-default encoding available at present), add another
-    suffix ``_LockFree`` (e.g., ``isoSig_LockFree()``, or
-    ``isoSig_EdgeDegrees_LockFree()``).
+See sig() for further details on isomorphism signatures in general.
 
 .. warning::
     Do not mix isomorphism signatures between dimensions! It is
-    possible that the same string could corresponding to both a
+    possible that the same string could describe both a
     *p*-dimensional triangulation and a *q*-dimensional triangulation
     for different dimensions *p* and *q*.
 
+Python:
+    You can pass the optional template arguments as runtime arguments:
+    ``isoSig(Encoding, Type)``. So, for example, to use the encoding
+    that omits simplex/facet locks, you can call
+    ``isoSig(IsoSigPrintableLockFree)``.
+
+Template parameter ``Encoding``:
+    indicates the encoding to use, as discussed in detail in the
+    documentation for sig(). The default encoding is consistent with
+    the isomorphism signatures from Regina ≤ 7.x. Note that Regina ≤
+    7.3.1 did not support simplex or facet locks; if you wish to omit
+    these from the signature, you can use the encoding
+    IsoSigPrintableLockFree.
+
+Template parameter ``Type``:
+    indicates the signature type, again as discussed in detail in the
+    documentation for sig(). The default signature type is consistent
+    with the isomorphism signatures from Regina ≤ 7.x.
+
 Returns:
-    the isomorphism signature of this triangulation.)doc";
+    the first-generation isomorphism signature. This will be of type
+    ``std::string`` for string-based encodings (which is all that
+    Regina offers for first-generation signatures).)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::isoSigComponentSize
 constexpr const char *isoSigComponentSize =
 R"doc(Deduces the number of top-dimensional simplices in a connected
-triangulation from its isomorphism signature.
+triangulation from its string-based isomorphism signature. This may be
+either a first-generation signature (computed via ``isoSig()``), or a
+second-generation signature (computed via ``neoSig()``).
 
-See isoSig() for more information on isomorphism signatures. It will
-be assumed that the signature describes a triangulation of dimension
-*dim*.
+See isoSig() and neoSig() for general information on first-generation
+and second-generation isomorphism signatures.
 
-Currently this routine only supports isomorphism signatures that were
-created with the default encoding (i.e., there was no *Encoding*
-template parameter passed to isoSig()).
+Regarding connectivity and components:
 
-If the signature describes a connected triangulation, this routine
-will simply return the size of that triangulation (e.g., the number of
-tetrahedra in the case *dim* = 3). You can also pass an isomorphism
-signature that describes a disconnected triangulation; however, this
-routine will only return the number of top-dimensional simplices in
-the first connected component. If you need the total size of a
-disconnected triangulation, you will need to reconstruct the full
-triangulation by calling fromIsoSig() instead.
+* If the given signature describes a connected triangulation, this
+  routine will return the size of that triangulation (i.e., the number
+  of top-dimensional simplices). This is the intended use case for
+  this routine.
+
+* If the signature describes a _disconnected_ triangulation, this
+  routine will only return the size of the first component. If you
+  need the total size of a disconnected triangulation, you will need
+  to reconstruct the full triangulation by calling fromSig() instead.
+
+* If the signature describes the empty triangulation, this routine
+  will return zero.
 
 This routine is very fast, since it only examines the first few
-characters of the isomorphism signature (in which the size of the
-first component is encoded). However, a side-effect of this is that it
-is possible to pass an _invalid_ isomorphism signature and still
-receive a positive result. If you need to test whether a signature is
-valid or not, you must call fromIsoSig() instead, which will examine
-the entire signature in full.
+characters of the given signature (in which the size of the first
+component is encoded). However, a side-effect of this is that it is
+possible to pass an _invalid_ isomorphism signature and still receive
+a positive result. If you need to test whether a signature is valid or
+not, you must call fromSig() instead, which will examine the entire
+signature in full.
 
 .. warning::
     Do not mix isomorphism signatures between dimensions! It is
-    possible that the same string could corresponding to both a
+    possible that the same string could describe both a
     *p*-dimensional triangulation and a *q*-dimensional triangulation
     for different dimensions *p* and *q*.
 
+Exception ``InvalidArgument``:
+    The given string was not a valid string-based *dim*-dimensional
+    isomorphism signature. As described above, invalid signatures are
+    not always detected; this exception will only be thrown if the
+    error is so severe that the component size cannot be deduced from
+    the first few characters.
+
 Parameter ``sig``:
-    the isomorphism signature of a *dim*-dimensional triangulation.
-    Note that isomorphism signature are case-sensitive (unlike, for
-    example, dehydration strings for 3-manifolds).
+    a signature of some *dim*-dimensional triangulation. Note that
+    isomorphism signature are case-sensitive (unlike, for example,
+    dehydration strings for 3-manifolds).
 
 Returns:
-    the number of top-dimensional simplices in the first connected
-    component, or 0 if this could not be determined because the given
-    string was not a valid isomorphism signature created using the
-    default encoding.)doc";
+    the size of the first connected component, or 0 if the given
+    signature describes the empty triangulation.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::isoSigDetail
 constexpr const char *isoSigDetail =
-R"doc(Constructs the isomorphism signature for this triangulation, along
-with the relabelling that will occur when the triangulation is
-reconstructed from it.
+R"doc(Constructs the first-generation isomorphism signature for this
+triangulation, along with the relabelling that will occur when the
+triangulation is reconstructed from it.
 
-Essentially, an isomorphism signature is a compact representation of a
-triangulation that uniquely determines the triangulation up to
-combinatorial isomorphism. See isoSig() for much more detail on
-isomorphism signatures as well as the support for different signature
-types and encodings.
+First-generation signatures are the older string-based signatures used
+in Regina ≤ 7.x, and are not recommended for new projects. Instead,
+for new projects it is recommended to use second-generation
+signatures, where the analogous routine to this is neoSigDetail().
 
-As described in the isoSig() notes, you can call fromIsoSig() to
-recover a triangulation from an isomorphism signature (assuming the
-default encoding was used). Whilst the triangulation that is recovered
-will be combinatorially isomorphic to the original, it might not be
-identical. This routine returns not only the isomorphism signature,
-but also an isomorphism that describes the precise relationship
-between this triangulation and the reconstruction from fromIsoSig().
+The documentation for sig() includes a thorough discussion on
+isomorphism signatures and their various parameters. In brief, an
+isomorphism signature is a compact representation of a triangulation
+that uniquely determines the triangulation up to combinatorial
+isomorphism. You can reconstruct a triangulation from its isomorphism
+signature by calling fromSig().
 
-Specifically, if this routine returns the pair (*sig*, *relabelling*),
-this means that the triangulation reconstructed from
-``fromIsoSig(sig)`` will be identical to ``relabelling(this)``.
-
-Python:
-    Although this is a templated function, all of the variants
-    supplied with Regina are available to Python users. To use the
-    default signature type and encoding, just call ``isoSigDetail()``.
-    To use a non-default signature type, add a suffix ``_Type`` where
-    *Type* is an abbreviated version of the signature type (e.g.,
-    ``isoSigDetail_EdgeDegrees()`` for the signature type
-    IsoSigEdgeDegrees). To use the encoding IsoSigPrintableLockFree
-    (the only non-default encoding available at present), add another
-    suffix ``_LockFree`` (e.g., ``isoSigDetail_LockFree()``, or
-    ``isoSigDetail_EdgeDegrees_LockFree()``).
+Although the triangulation that is recovered via fromSig() will be
+combinatorially isomorphic to the original, it might not use the same
+labelling. This routine returns not only the isomorphism signature,
+but also the precise relabelling that occurs between this
+triangulation and the reconstruction via fromSig(). Specifically, it
+returns a pair ``(sig, iso)``, where *sig* is the isomorphism
+signature of this triangulation, and *iso* is an isomorphism with the
+property that ``fromSig(sig) == iso(this)``.
 
 Precondition:
     This triangulation must be non-empty and connected. The facility
     to return a relabelling for disconnected triangulations may be
     added to Regina in a later release.
 
+Python:
+    You can pass the optional template arguments as runtime arguments:
+    ``isoSigDetail(Encoding, Type)``. So, for example, to use the
+    signature encoding that omits simplex/facet locks, you can call
+    ``isoSigDetail(IsoSigPrintableLockFree)``.
+
 Exception ``FailedPrecondition``:
     This triangulation is either empty or disconnected.
 
+Template parameter ``Encoding``:
+    indicates the encoding to use for the isomorphism signature, as
+    discussed in detail in the documentation for sig(). The default
+    encoding is consistent with the isomorphism signatures from Regina
+    ≤ 7.x. Note that Regina ≤ 7.3.1 did not support simplex or facet
+    locks; if you wish to omit these from the signature, you can use
+    the encoding IsoSigPrintableLockFree.
+
+Template parameter ``Type``:
+    indicates the signature type, again as discussed in detail in the
+    documentation for sig(). The default signature type is consistent
+    with the isomorphism signatures from Regina ≤ 7.x.
+
 Returns:
-    a pair containing (i) the isomorphism signature of this
-    triangulation, and (ii) the isomorphism between this triangulation
-    and the triangulation that would be reconstructed from
-    fromIsoSig().)doc";
+    a pair containing (i) the first-generation isomorphism signature
+    of this triangulation, and (ii) the isomorphism from this
+    triangulation to the reconstruction via fromSig(). The signature
+    will be of type ``std::string`` for string-based encodings (which
+    is all that Regina offers for first-generation signatures).)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::knowsHomology
 constexpr const char *knowsHomology =
@@ -2069,6 +2076,122 @@ Precondition:
 Parameter ``dest``:
     the triangulation into which the contents of this triangulation
     should be moved.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::neoSig
+constexpr const char *neoSig =
+R"doc(Constructs the second-generation isomorphism signature for this
+triangulation. This is identical to calling ``sig<2, ...>()``.
+
+Second-generation signatures are recommended for use in new projects.
+They are shorter and faster to compute than first-generation
+signatures, they support both printable and binary encodings, and they
+support both oriented and unoriented signatures.
+
+See sig() for further details on isomorphism signatures in general.
+
+.. warning::
+    Do not mix isomorphism signatures between dimensions! It is
+    possible that the same string could describe both a
+    *p*-dimensional triangulation and a *q*-dimensional triangulation
+    for different dimensions *p* and *q*.
+
+Python:
+    You can pass the optional template arguments as additional runtime
+    arguments: ``neoSig(oriented, Encoding, Type)``. So, for example,
+    to use a binary encoding you can call ``neoSig(False,
+    IsoSigBinary)``.
+
+Template parameter ``Encoding``:
+    indicates the encoding to use, as discussed in detail in the
+    documentation for sig(). For a printable string-based signature,
+    you can just use the default encoding. If you wish to omit simplex
+    and facet locks from the signature, you can use the encoding
+    IsoSigPrintableLockFree. If you need to conserve memory, you can
+    use the binary encoding IsoSigBinary.
+
+Template parameter ``Type``:
+    indicates the signature type, again as discussed in detail in the
+    documentation for sig(). The default signature type is recommended
+    here.
+
+Parameter ``oriented``:
+    indicates whether to generate an oriented signature (``True``), or
+    an unoriented signature (``False``).
+
+Returns:
+    the second-generation isomorphism signature. This will be of type
+    ``std::string`` for string-based encodings, or ByteSequence for
+    binary encodings.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::neoSigDetail
+constexpr const char *neoSigDetail =
+R"doc(Constructs the second-generation isomorphism signature for this
+triangulation, along with the relabelling that will occur when the
+triangulation is reconstructed from it.
+
+Second-generation signatures are recommended for use in new projects.
+They are shorter and faster to compute than first-generation
+signatures, they support both printable and binary encodings, and they
+support both oriented and unoriented signatures.
+
+The documentation for sig() includes a thorough discussion on
+isomorphism signatures and their various parameters. In brief, an
+isomorphism signature is a compact representation of a triangulation
+that uniquely determines the triangulation up to combinatorial
+isomorphism. You can reconstruct a triangulation from its isomorphism
+signature by calling fromSig().
+
+Although the triangulation that is recovered via fromSig() will be
+combinatorially isomorphic to the original, it might not use the same
+labelling. This routine returns not only the isomorphism signature,
+but also the precise relabelling that occurs between this
+triangulation and the reconstruction via fromSig(). Specifically, it
+returns a pair ``(sig, iso)``, where *sig* is the isomorphism
+signature of this triangulation, and *iso* is an isomorphism with the
+property that ``fromSig(sig) == iso(this)``.
+
+If this triangulation is oriented and you are generating an oriented
+signature via ``neoSigDetail(true)``, it is guaranteed that the
+isomorphism that is returned will be orientation-preserving.
+
+Precondition:
+    This triangulation must be non-empty and connected. The facility
+    to return a relabelling for disconnected triangulations may be
+    added to Regina in a later release.
+
+Python:
+    You can pass the optional template arguments as runtime arguments:
+    ``neoSigDetail(oriented, Encoding, Type)``. So, for example, to
+    use a binary signature encoding, you can call
+    ``neoSigDetail(False, IsoSigBinary)``.
+
+Exception ``FailedPrecondition``:
+    This triangulation is either empty or disconnected.
+
+Template parameter ``Encoding``:
+    indicates the encoding to use for the isomorphism signature, as
+    discussed in detail in the documentation for sig(). For a
+    printable string-based signature, you can just use the default
+    encoding. If you wish to omit simplex and facet locks from the
+    signature, you can use the encoding IsoSigPrintableLockFree. If
+    you need to conserve memory, you can use the binary encoding
+    IsoSigBinary.
+
+Template parameter ``Type``:
+    indicates the signature type, again as discussed in detail in the
+    documentation for sig(). The default signature type is recommended
+    here.
+
+Parameter ``oriented``:
+    indicates whether to generate an oriented signature (``True``), or
+    an unoriented signature (``False``).
+
+Returns:
+    a pair containing (i) the second-generation isomorphism signature
+    of this triangulation, and (ii) the isomorphism from this
+    triangulation to the reconstruction via fromSig(). The signature
+    will be of type ``std::string`` for string-based encodings, or
+    ByteSequence for binary encodings.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::newSimplex
 constexpr const char *newSimplex =
@@ -2604,6 +2727,210 @@ Parameter ``perform``:
 
 Returns:
     ``True`` if and only if the requested move could be performed.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::sig
+constexpr const char *sig =
+R"doc(Constructs an _isomorphism signature_ for this triangulation.
+
+Most users will not need to use this routine, which is extremely
+customisable; instead just call isoSig() for a first-generation
+signature (if you need backward compatibility), or neoSig() for a
+second-generation signature (if you want performance and/or if you
+need to preserve orientation). Read on for the full details.
+
+An _isomorphism signature_ is a compact representation of a
+triangulation, typically (but not necessarily) in a readable text
+form, that uniquely determines the triangulation up to combinatorial
+isomorphism. In other words, for any fixed choice of signature
+parameters, two triangulations of dimension *dim* will have the same
+signature if and only if they are related by a relabelling of the top-
+dimensional simplices and/or their vertices. Unless otherwise
+requested (see encodings below), this relabelling must also respect
+any simplex and/or facet locks.
+
+The signature _parameters_ include: whether the signature is first-
+generation or second-generation; whether it is oriented or unoriented;
+and a choice of signature _encoding_ and _type_. All of these
+parameters are explained in detail below; if this is too much
+information to digest all at once then you can jump to the summary of
+recommendations at the end.
+
+Regina supports _first-generation_ and _second-generation_ signatures:
+
+* First-generation signatures are the old isomorphism signatures from
+  Regina ≤ 7.x, and are _not_ recommended for use in new code. They
+  encode a triangulation as a printable ASCII string. You can compute
+  the first-generation signature by calling ``isoSig()``.
+
+* Second-generation signatures are typically shorter, faster to
+  compute, and support both printable encodings (as an ASCII string)
+  and binary encodings (as a raw byte sequence, which is even shorter
+  but unprintable). These are better to use in new code, but be aware
+  that they are only supported in Regina ≥ 8.0. You can compute the
+  second-generation signature in string form by calling ``neoSig()``,
+  or in binary form by calling ``neoSig<IsoSigBinary>()``.
+
+* If you are not sure, just use the second-generation signature by
+  calling ``neoSig()``.
+
+* This routine ``sig()`` is a generic routine that allows you to
+  compute _either_ a first-generation or second-generation signature
+  by passing appropriate template arguments: ``sig<1>()``,
+  ``sig<2>()``, or ``sig<2, IsoSigBinary>()``.
+
+Signatures can be _oriented_ or _unoriented_:
+
+* Unoriented signatures (the default) follow the general rules
+  described above: two triangulations have the same signature if and
+  only if they are related by a relabelling of top-dimensional
+  simplices and/or their vertices.
+
+* Oriented signatures follow slightly different rules: they can only
+  be computed for oriented triangulations; moreover, two oriented
+  triangulations will have the same signature if and only if they are
+  related by an _orientation-preserving_ relabelling.
+
+* Only second-generation signatures have the option of being oriented.
+  You control this via the boolean argument to neoSig() or sig():
+  calling ``neoSig()`` or ``sig<2>()`` with no arguments will compute
+  an unoriented second-generation signature, whereas calling
+  ``neoSig(true)`` or ``sig<2>(true)`` will compute an oriented
+  second-generation signature. First-generation signatures as computed
+  by ``isoSig()`` or ``sig<1>()`` are always unoriented.
+
+Signatures can use different _encodings_. The role of an encoding is
+to convert the combinatorial data into its final signature form (e.g.,
+a printable string, or a byte sequence); see the IsoSigEncoding
+concept for full details. Regina offers the following encodings:
+
+* The encoding IsoSigPrintable encodes the data as a ``std::string``
+  consisting entirely of printable characters in the 7-bit ASCII
+  range. This is the default encoding for both first-generation and
+  second-generation signatures.
+
+* The encoding IsoSigPrintableLockFree is like IsoSigPrintable, except
+  that it ignores (and therefore does not encode) any simplex and/or
+  facet locks.
+
+* The encoding IsoSigBinary encodes the data in binary, as a
+  ByteSequence. This is only available for second-generation
+  signatures. This binary encoding is typically shorter than the
+  printable string encoding, and is useful if memory usage needs to be
+  kept to a minimum.
+
+* Most users should only ever need the default encoding. To use a non-
+  default encoding, you should pass the encoding class as a template
+  argument to the relevant signature function (e.g., to isoSig(),
+  neoSig(), or sig()).
+
+Finally, signatures can be of different _types_. The type allows you
+to tailor the signature algorithm to different computational needs, by
+modifying what is meant by a "canonical labelling"; see the IsoSigType
+concept for full details. Regina offers the following types:
+
+* The type ``IsoSigClassic<dim>`` is slow; the main reason to use it
+  is that it is consistent with the original isomorphism signatures
+  first introduced in Regina 4.90. This is the default type for first-
+  generation signatures, and is not recommended for use in new
+  projects.
+
+* The type ``IsoSigDegrees<dim, subdim>`` aims to speed up the
+  computation by examining *subdim*-face degree sequences of top-
+  dimensional simplices. In particular, the type ``IsoSigDegrees<dim,
+  dim-2>`` is the default for second-generation signatures (this
+  default type is also known by the alias
+  ``IsoSigRidgeDegrees<dim>``).
+
+* Most users should only ever need the default signature type. To use
+  a non-default type, you should pass the type class as a template
+  argument to the relevant signature function (e.g., to isoSig(),
+  neoSig(), or sig()).
+
+So, in summary, the recommendations are:
+
+* If you need compatibility with isomorphism signatures from Regina ≤
+  7.x, create a first-generation signature by calling ``isoSig()``.
+  Furthermore, if you need to remove simplex/facet locks from the
+  signature (since these were not supported until Regina 7.4), call
+  ``isoSig<IsoSigPrintableLockFree>()``.
+
+* If you are starting a new project and want the best performance,
+  create a second-generation signature by calling ``neoSig()``. This
+  signature will only be compatible with Regina ≥ 8.0.
+
+* If you need an oriented signature, call ``neoSig(true)``.
+
+* All other options are intended for experts only.
+
+The length of an isomorphism signature is proportional to ``n log n``,
+where *n* is the number of top-dimenisonal simplices. The time
+required to construct it is worst-case ``O((dim!) n² log² n)``. Whilst
+this is fine for large triangulations, beware that it becomes very
+slow for large _dimensions_.
+
+Note that, whilst the format of an isomorphism signature bears some
+similarity to dehydration strings for 3-manifolds, they are more
+general: isomorphism signatures can be used with any triangulations,
+including closed, bounded and/or disconnected triangulations, as well
+as triangulations of arbitrary size. Moreover, 3-manifold dehydration
+strings are not unique up to isomorphism (they depend on the
+particular labelling of tetrahedra).
+
+The routine fromSig() can be used to recover a triangulation from an
+isomorphism signature (it supports both first-generation and second-
+generation signatures, and supports both string and binary encodings).
+The triangulation recovered might not be identical to the original,
+but it _will_ be combinatorially isomorphic (and, if you used an
+oriented signature, it will have the same orientation). If you need
+the precise relabelling, you can call isoSigDetail() or neoSigDetail()
+instead.
+
+For a full and precise description of the first-generation isomorphism
+signature format for 3-manifold triangulations, see _Simplification
+paths in the Pachner graphs of closed orientable 3-manifold
+triangulations_, Burton, 2011, ``arXiv:1110.6080``. The format for
+other dimensions is essentially the same, but with minor dimension-
+specific adjustments.
+
+.. warning::
+    Do not mix isomorphism signatures between dimensions! It is
+    possible that the same string could describe both a
+    *p*-dimensional triangulation and a *q*-dimensional triangulation
+    for different dimensions *p* and *q*.
+
+Python:
+    Python does not support C++ templates. Instead, you should pass
+    the template arguments at runtime, using the argument order
+    ``sig(generation, oriented, Encoding, Type)``. So, for example, to
+    generate a string-based second-generation signature, you can call
+    ``sig(2)``, or for a binary oriented signature, ``sig(2, True,
+    IsoSigBinary)``. When generating binary signatures (via
+    ``IsoSigBinary``), the return value will be a Python ``bytes``
+    object (not a ByteSequence).
+
+Exception ``InvalidArgument``:
+    An oriented first-generation signature was requested. As discussed
+    above, only second-generation signatures can be oriented.
+
+Template parameter ``generation``:
+    either 1 or 2, indicating whether to generate a first-generation
+    or second-generation signature.
+
+Template parameter ``Encoding``:
+    indicates the encoding to use, again as discussed in detail above.
+
+Template parameter ``Type``:
+    indicates the signature type, as discussed in detail above.
+
+Parameter ``oriented``:
+    indicates whether to generate an oriented signature (``True``), or
+    an unoriented signature (``False``). You can only pass ``True``
+    here when generating a second-generation signature.
+
+Returns:
+    the isomorphism signature of this triangulation. This will be of
+    type ``std::string`` for string-based encodings, or ByteSequence
+    for binary encodings.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::simplex
 constexpr const char *simplex =

@@ -5240,12 +5240,12 @@ namespace detail {
 
         static Signature sig(const Triangulation<3>& tri) {
             // Choose a fast isosig type.
-            return tri.isoSig<IsoSigEdgeDegrees<3>>();
+            return tri.isoSig<IsoSigPrintable, IsoSigRidgeDegrees<3>>();
         }
 
         static Signature rigidSig(const Triangulation<3>& tri) {
             // Currently rigidity is not supported for triangulations.
-            return tri.isoSig<IsoSigEdgeDegrees<3>>();
+            return tri.isoSig<IsoSigPrintable, IsoSigRidgeDegrees<3>>();
         }
 
         static constexpr const char* progressStage = "Exploring triangulations";

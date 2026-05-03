@@ -44,6 +44,8 @@ void addComponent2(pybind11::module_& m, pybind11::module_& internal) {
 
     auto c = pybind11::class_<Component<2>>(m, "Component2", rdoc_scope)
         .def("index", &Component<2>::index, rbase::index)
+        .def("triangulation", &Component<2>::triangulation,
+            rbase::triangulation)
         .def("size", &Component<2>::size, rbase::size)
         .def("countTriangles", &Component<2>::countTriangles,
             rbase::countTriangles)

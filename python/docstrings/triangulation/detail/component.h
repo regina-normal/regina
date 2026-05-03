@@ -292,6 +292,13 @@ in dimension *dim* = 2.
 
 See faces() for further information.)doc";
 
+// Docstring regina::python::doc::detail::ComponentBase_::triangulation
+constexpr const char *triangulation =
+R"doc(Returns the triangulation to which this component belongs.
+
+Returns:
+    a reference to the triangulation containing this component.)doc";
+
 // Docstring regina::python::doc::detail::ComponentBase_::vertex
 constexpr const char *vertex =
 R"doc(A dimension-specific alias for face<0>().
