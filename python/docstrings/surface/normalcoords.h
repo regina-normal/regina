@@ -304,7 +304,7 @@ static const char *block =
 R"doc(Returns the number of coordinates stored for each tetrahedron.
 
 Returns:
-    The number of coordinates per tetrahedron.)doc";
+    the number of coordinates per tetrahedron.)doc";
 
 // Docstring regina::python::doc::NormalEncoding_::couldBeNonCompact
 static const char *couldBeNonCompact =

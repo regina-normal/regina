@@ -140,7 +140,7 @@ static const char *block =
 R"doc(Returns the number of coordinates stored for each pentachoron.
 
 Returns:
-    The number of coordinates per pentachoron.)doc";
+    the number of coordinates per pentachoron.)doc";
 
 // Docstring regina::python::doc::HyperEncoding_::couldBeNonCompact
 static const char *couldBeNonCompact =

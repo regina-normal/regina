@@ -253,6 +253,10 @@ LinkSigData class notes.
 This generates all of the usual comparison operators, including ``<``,
 ``<=``, ``>``, and ``>=``.
 
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
 Parameter ``rhs``:
     the component data to compare with this.
 
@@ -354,6 +358,10 @@ LinkSigData class notes.
 
 This generates all of the usual comparison operators, including ``<``,
 ``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
 
 Parameter ``rhs``:
     the triple to compare with this.

@@ -69,6 +69,7 @@ PRINT_LIST = [
 ]
 
 PRINT_BLACKLIST = [
+    CursorKind.TYPE_ALIAS_DECL,
     CursorKind.TYPE_ALIAS_TEMPLATE_DECL
 ]
 

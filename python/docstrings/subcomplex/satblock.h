@@ -193,7 +193,7 @@ Parameter ``rhs``:
     the saturated block to compare this with.
 
 Returns:
-    A result that indicates how this and the given block should be
+    a result that indicates how this and the given block should be
     ordered with respect to each other.)doc";
 
 // Docstring regina::python::doc::SatBlock_::__eq

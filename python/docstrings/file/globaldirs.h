@@ -228,7 +228,7 @@ Parameter ``pythonDir``:
     packages directory; this will be returned by pythonModule().
 
 Parameter ``censusDir``:
-    The directory containing the large machine-encoded census data
+    the directory containing the large machine-encoded census data
     files; this will be returned by census().)doc";
 
 }

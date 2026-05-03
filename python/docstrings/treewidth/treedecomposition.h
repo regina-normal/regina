@@ -1081,15 +1081,15 @@ Template parameter ``T``:
     exception.
 
 Parameter ``costSame``:
-    An array of size() elements giving an estimated cost of preserving
+    an array of size() elements giving an estimated cost of preserving
     each child-parent connection;
 
 Parameter ``costReverse``:
-    An array of size() elements giving an estimated cost of reversing
+    an array of size() elements giving an estimated cost of reversing
     each child-parent connection;
 
 Parameter ``costRoot``:
-    An array of size() elements giving an additional estimated cost
+    an array of size() elements giving an additional estimated cost
     for each bag being the new root. This array may be ``None``.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::root

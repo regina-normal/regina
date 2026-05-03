@@ -67,7 +67,7 @@ Python:
     other comparison operators that it generates _are_ available.
 
 Returns:
-    The result of the numerical comparison between this and the given
+    the result of the numerical comparison between this and the given
     rational.)doc";
 
 // Docstring regina::python::doc::Rational_::__copy

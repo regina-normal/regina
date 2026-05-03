@@ -107,7 +107,7 @@ Python:
     other comparison operators that it generates _are_ available.
 
 Returns:
-    The result of the comparison between this and the given fibre.)doc";
+    the result of the comparison between this and the given fibre.)doc";
 
 // Docstring regina::python::doc::SFSFibre_::__copy
 static const char *__copy = R"doc(Creates a new exceptional fibre that is a clone of the given fibre.)doc";
@@ -172,7 +172,7 @@ Parameter ``rhs``:
     the other representation to compare this with.
 
 Returns:
-    A result that indicates how this and the given Seifert fibred
+    a result that indicates how this and the given Seifert fibred
     space representation should be ordered with respect to each other.)doc";
 
 // Docstring regina::python::doc::SFSpace_::__copy

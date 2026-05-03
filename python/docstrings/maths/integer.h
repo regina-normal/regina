@@ -147,7 +147,7 @@ Parameter ``rhs``:
     the integer with which this will be compared.
 
 Returns:
-    The result of the numerical comparison between this and the given
+    the result of the numerical comparison between this and the given
     integer.)doc";
 
 // Docstring regina::python::doc::IntegerBase_::__cmp_2
@@ -169,7 +169,7 @@ Parameter ``rhs``:
     the integer with which this will be compared.
 
 Returns:
-    The result of the numerical comparison between this and the given
+    the result of the numerical comparison between this and the given
     integer.)doc";
 
 // Docstring regina::python::doc::IntegerBase_::__copy
@@ -1027,7 +1027,7 @@ Python:
     be used as keys in Python dictionaries and sets.
 
 Returns:
-    The hash of this arbitrary-precision integer.)doc";
+    the hash of this arbitrary-precision integer.)doc";
 
 // Docstring regina::python::doc::IntegerBase_::isInfinite
 static const char *isInfinite =
@@ -1105,7 +1105,7 @@ Parameter ``p``:
     the given odd prime.
 
 Returns:
-    The Legendre symbol (0, 1 or -1) as described above.
+    the Legendre symbol (0, 1 or -1) as described above.
 
 Author:
     Ryan Budney)doc";

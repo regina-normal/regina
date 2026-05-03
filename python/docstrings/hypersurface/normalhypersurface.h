@@ -114,7 +114,7 @@ Parameter ``rhs``:
     the hypersurface to compare this hypersurface with.
 
 Returns:
-    The result of the comparison between this and the given
+    the result of the comparison between this and the given
     hypersurface. This is marked as a weak ordering (not a strong
     ordering) to reflect the fact that (for example) hypersurfaces in
     different triangulations or using different encodings could be

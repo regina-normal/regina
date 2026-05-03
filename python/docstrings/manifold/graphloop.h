@@ -78,7 +78,7 @@ Parameter ``rhs``:
     the other representation to compare this with.
 
 Returns:
-    A result that indicates how this and the given graph manifold
+    a result that indicates how this and the given graph manifold
     representation should be ordered with respect to each other.)doc";
 
 // Docstring regina::python::doc::GraphLoop_::__copy

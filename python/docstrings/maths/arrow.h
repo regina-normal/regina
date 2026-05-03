@@ -271,7 +271,7 @@ Parameter ``rhs``:
     the polynomial to compare with this.
 
 Returns:
-    The result of the comparison between this and the given
+    the result of the comparison between this and the given
     polynomial.)doc";
 
 // Docstring regina::python::doc::Arrow_::__copy

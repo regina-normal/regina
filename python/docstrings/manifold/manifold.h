@@ -72,7 +72,7 @@ Parameter ``rhs``:
     the 3-manifold representation to compare this with.
 
 Returns:
-    A result that indicates how this and the given 3-manifold
+    a result that indicates how this and the given 3-manifold
     representation should be ordered with respect to each other.)doc";
 
 // Docstring regina::python::doc::Manifold_::construct

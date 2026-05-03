@@ -121,7 +121,7 @@ Python:
     other comparison operators that it generates _are_ available.
 
 Returns:
-    The result that indicates which permutation appears earlier in
+    the result that indicates which permutation appears earlier in
     *Sn*.)doc";
 
 // Docstring regina::python::doc::Perm_::__copy
@@ -457,7 +457,7 @@ Python:
     dictionaries and sets.
 
 Returns:
-    The integer hash of this permutation.)doc";
+    the integer hash of this permutation.)doc";
 
 // Docstring regina::python::doc::Perm_::inverse
 static const char *inverse =

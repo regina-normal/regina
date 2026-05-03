@@ -67,7 +67,7 @@ Python:
     other comparison operators that it generates _are_ available.
 
 Returns:
-    The result of the lexicographical comparison between this and the
+    the result of the lexicographical comparison between this and the
     given term.)doc";
 
 // Docstring regina::python::doc::GroupExpressionTerm_::__copy

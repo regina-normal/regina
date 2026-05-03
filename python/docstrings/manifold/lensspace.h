@@ -58,7 +58,7 @@ Parameter ``rhs``:
     the other representation to compare this with.
 
 Returns:
-    A result that indicates how this and the given lens space
+    a result that indicates how this and the given lens space
     representation should be ordered with respect to each other.)doc";
 
 // Docstring regina::python::doc::LensSpace_::__copy

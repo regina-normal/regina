@@ -55,7 +55,7 @@ Parameter ``rhs``:
     the group to compare this with.
 
 Returns:
-    The result of the comparison between this and the given group.)doc";
+    the result of the comparison between this and the given group.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::__copy
 static const char *__copy = R"doc(Creates a clone of the given group.)doc";
