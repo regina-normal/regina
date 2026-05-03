@@ -551,6 +551,10 @@ template <int dim> requires (supportedDim(dim))
 template <IsoSigEncoding<2, dim> Encoding, IsoSigType<dim> Type>
 typename Encoding::Signature TriangulationBase<dim>::neoSig(bool oriented)
         const {
+    if (oriented && ! isOriented())
+        throw FailedPrecondition("An oriented isomorphism signature "
+            "requires an oriented triangulation");
+
     if (isEmpty()) {
         return Encoding::encodeEmpty();
     } else if (isConnected()) {
@@ -582,6 +586,10 @@ template <int dim> requires (supportedDim(dim))
 template <IsoSigEncoding<2, dim> Encoding, IsoSigType<dim> Type>
 std::pair<typename Encoding::Signature, Isomorphism<dim>>
         TriangulationBase<dim>::neoSigDetail(bool oriented) const {
+    if (oriented && ! isOriented())
+        throw FailedPrecondition("An oriented isomorphism signature "
+            "requires an oriented triangulation");
+
     if (isEmpty()) {
         throw FailedPrecondition(
             "neoSigDetail() requires a non-empty triangulation");

@@ -3366,6 +3366,9 @@ class TriangulationBase :
          * \a p-dimensional triangulation and a \a q-dimensional triangulation
          * for different dimensions \a p and \a q.
          *
+         * \pre If \a oriented is `true`, then this is an oriented
+         * triangulation.
+         *
          * \python Python does not support C++ templates.  Instead, you should
          * pass the template arguments at runtime, using the argument order
          * `sig(generation, oriented, Encoding, Type)`.
@@ -3378,6 +3381,10 @@ class TriangulationBase :
          * \exception InvalidArgument An oriented first-generation signature
          * was requested.  As discussed above, only second-generation signatures
          * can be oriented.
+         *
+         * \exception FailedPrecondition An oriented second-generation signature
+         * was requested (i.e., \a oriented is `true`), but this triangulation
+         * is not oriented.
          *
          * \tparam generation either 1 or 2, indicating whether to generate a
          * first-generation or second-generation signature.
@@ -3458,10 +3465,17 @@ class TriangulationBase :
          * \a p-dimensional triangulation and a \a q-dimensional triangulation
          * for different dimensions \a p and \a q.
          *
+         * \pre If \a oriented is `true`, then this is an oriented
+         * triangulation.
+         *
          * \python You can pass the optional template arguments as additional
          * runtime arguments: `neoSig(oriented, Encoding, Type)`.  So, for
          * example, to use a binary encoding you can call
          * `neoSig(False, IsoSigBinary)`.
+         *
+         * \exception FailedPrecondition An oriented signature was requested
+         * (i.e., \a oriented is `true`), but this triangulation is not
+         * oriented.
          *
          * \tparam Encoding indicates the encoding to use, as discussed in
          * detail in the documentation for sig().  For a printable
@@ -3509,9 +3523,9 @@ class TriangulationBase :
          * signature of this triangulation, and \a iso is an isomorphism with
          * the property that `fromSig(sig) == iso(this)`.
          *
-         * \pre This triangulation must be non-empty and connected.  The
-         * facility to return a relabelling for disconnected triangulations
-         * may be added to Regina in a later release.
+         * \pre This triangulation is non-empty and connected.  The facility
+         * to return a relabelling for disconnected triangulations may be
+         * added to Regina in a later release.
          *
          * \python You can pass the optional template arguments as runtime
          * arguments: `isoSigDetail(Encoding, Type)`.  So, for example, to use
@@ -3572,17 +3586,21 @@ class TriangulationBase :
          * oriented signature via `neoSigDetail(true)`, it is guaranteed that
          * the isomorphism that is returned will be orientation-preserving.
          *
-         * \pre This triangulation must be non-empty and connected.  The
-         * facility to return a relabelling for disconnected triangulations
-         * may be added to Regina in a later release.
+         * \pre This triangulation is non-empty and connected.  The facility
+         * to return a relabelling for disconnected triangulations may be
+         * added to Regina in a later release.
+         *
+         * \pre If \a oriented is `true`, then this is an oriented
+         * triangulation.
          *
          * \python You can pass the optional template arguments as runtime
          * arguments: `neoSigDetail(oriented, Encoding, Type)`.  So, for
          * example, to use a binary signature encoding, you can call
          * `neoSigDetail(False, IsoSigBinary)`.
          *
-         * \exception FailedPrecondition This triangulation is either
-         * empty or disconnected.
+         * \exception FailedPrecondition Either this triangulation is empty or
+         * disconnected, or an oriented signature was requested (i.e.,
+         * \a oriented is `true`) but this triangulation is not oriented.
          *
          * \tparam Encoding indicates the encoding to use for the isomorphism
          * signature, as discussed in detail in the documentation for sig().
