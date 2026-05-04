@@ -864,6 +864,17 @@ Parameter ``bits``:
     an integer holding the bits that were decoded. The bits will be
     stored in order from the least significant bit.)doc";
 
+// Docstring regina::python::doc::BitSigDecoder_::flushByte
+static const char *flushByte =
+R"doc(Skips past unread bits until we reach the next byte boundary.
+
+This routine will test that all bits that are skipped are off;
+otherwise it will throw an exception. The number of bits skipped will
+be between 0 and 7 inclusive.
+
+Exception ``InvalidInput``:
+    At least one of the bits that was skipped was set.)doc";
+
 // Docstring regina::python::doc::BitSigDecoder_::maybeDone
 static const char *maybeDone =
 R"doc(Determines if the current position _could_ have reached the end of the

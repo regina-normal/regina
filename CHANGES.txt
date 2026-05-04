@@ -355,6 +355,9 @@ Version 8.0  [ TODO ]
               indicating whether to compute a first-generation or
               second-generation signature.  To avoid confusion, you can simply
               call isoSig() or neoSig() instead.
+            - The routine fromSig() can now reconstruct a triangulation from
+              either a first-generation or second-generation signature, and
+              now has variants that accept either a string or a byte sequence.
             - The old routine fromIsoSig() is now deprecated, and simply calls
               the string-based fromSig().
             - The first-generation signature routines isoSig() and

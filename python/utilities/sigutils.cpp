@@ -349,6 +349,7 @@ void addSigUtils(pybind11::module_& m) {
             rdoc::decodeInt)
         .def("decodeBitmask", &BitDecoder::decodeBitmask<Bitmask>,
             rdoc::decodeBitmask)
+        .def("flushByte", &BitDecoder::flushByte, rdoc::flushByte)
     ;
     regina::python::add_eq_operators(td);
 

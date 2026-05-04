@@ -2228,6 +2228,26 @@ class BitSigDecoder {
             return bits;
         }
 
+        /**
+         * Skips past unread bits until we reach the next byte boundary.
+         *
+         * This routine will test that all bits that are skipped are off;
+         * otherwise it will throw an exception.  The number of bits skipped
+         * will be between 0 and 7 inclusive.
+         *
+         * \exception InvalidInput At least one of the bits that was skipped
+         * was set.
+         */
+        void flushByte() {
+            if (nQueued_) {
+                int readMask = (1 << (8 - nQueued_)) - 1;
+                if ((extracted_ & readMask) != extracted_)
+                    throw InvalidInput("BitSigDecoder: "
+                        "skipping past bits that are set");
+                nQueued_ = 0;
+            }
+        }
+
         BitSigDecoder(const BitSigDecoder&) = delete;
         BitSigDecoder& operator = (const BitSigDecoder&) = delete;
 };

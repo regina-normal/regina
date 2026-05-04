@@ -500,7 +500,10 @@ ByteSequence IsoSigBinary::encode(const IsoSigData<2, dim>& data) {
     int intWidth = bitsRequired(data.size() + 1);
     static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
     static constexpr int lockWidth = dim + 2;
-    using UnsignedPermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
+
+    // Get an unsigned type for the permutation index, since BitSigDecoder
+    // only reads/writes unsigned integer types.
+    using PermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
 
     bool oriented = data.isOriented();
 
@@ -516,14 +519,15 @@ ByteSequence IsoSigBinary::encode(const IsoSigData<2, dim>& data) {
     enc.encodeBit(oriented);
     enc.encodeBit(data.hasLocks());
 
+    enc.encodeInt(intWidth, data.size());
     for (auto s : data.adjacentSimplices())
         enc.encodeInt(intWidth, s);
     enc.encodeBitmask(data.countFacetBits(), data.facetTypes());
     if (oriented) {
-        for (UnsignedPermIndex g : data.adjacentGluings())
+        for (PermIndex g : data.adjacentGluings())
             enc.encodeInt(permWidth - 1, g >> 1);
     } else {
-        for (UnsignedPermIndex g : data.adjacentGluings())
+        for (PermIndex g : data.adjacentGluings())
             enc.encodeInt(permWidth, g);
     }
     for (auto m : data.locks())
@@ -539,7 +543,7 @@ size_t IsoSigBinary::length(const IsoSigData<2, dim>& data) {
     static constexpr int lockWidth = dim + 2;
     bool oriented = data.isOriented();
 
-    size_t bits = 8 + (intWidth * data.adjacentSimplices().size()) +
+    size_t bits = 8 + (intWidth * (data.adjacentSimplices().size() + 1)) +
         data.countFacetBits();
     if (oriented)
         bits += (permWidth - 1) * data.adjacentGluings().size();
@@ -870,6 +874,149 @@ size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
         return dec.decodeSize().first;
     } catch (const InvalidInput&) {
         throw InvalidArgument("isoSigComponentSize(): invalid signature");
+    }
+}
+
+template <int dim> requires (supportedDim(dim))
+Triangulation<dim> TriangulationBase<dim>::fromSig(const ByteSequence& sig) {
+    static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
+    static constexpr int lockWidth = dim + 2;
+
+    // Get an unsigned type for the permutation index, since BitSigDecoder
+    // only reads/writes unsigned integer types.
+    using PermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
+
+    BitSigDecoder dec(sig.begin(), sig.end());
+
+    try {
+        Triangulation<dim> ans;
+
+        while (! dec.noMoreBits()) {
+            // Read one component at a time.
+
+            unsigned intWidth = dec.decodeInt<unsigned>(6);
+            if (intWidth == 0)
+                throw InvalidArgument(
+                    "fromSig(): invalid integer width for binary encoding");
+            bool oriented = dec.decodeBit();
+            bool hasLocks = dec.decodeBit();
+
+            size_t nSimp = dec.decodeInt<size_t>(intWidth);
+            if (nSimp == 0)
+                throw InvalidArgument(
+                    "fromSig(): invalid component size for binary encoding");
+
+            size_t nBdry = 0;
+            size_t nDest = 2 * (nSimp - 1);
+            std::vector<size_t> adjSimplex;
+            adjSimplex.reserve((nSimp * (dim + 1) + 1) / 2); // a lower bound
+            while (nDest < nSimp * (dim + 1)) {
+                size_t dest = dec.decodeInt<size_t>(intWidth);
+                if (dest == nSimp) {
+                    ++nBdry;
+                    ++nDest;
+                } else {
+                    nDest += 2;
+                }
+                adjSimplex.push_back(dest);
+            }
+
+            size_t nFacets = (nDest + nBdry) / 2;
+            Bitmask facetType = dec.decodeBitmask(nFacets);
+
+            FixedArray<PermIndex> adjGluing(nFacets - nBdry + 1 - nSimp);
+            if (oriented) {
+                for (auto& index : adjGluing)
+                    index = dec.decodeInt<PermIndex>(permWidth - 1) * 2 + 1;
+            } else {
+                for (auto& index : adjGluing)
+                    index = dec.decodeInt<PermIndex>(permWidth);
+            }
+
+            // This ends the gluings for this component!
+            //
+            // We still need to read facet/simplex locks, if they are present.
+            // We will do this after constructing the triangulation.
+
+            FixedArray<Simplex<dim>*> simp(nSimp);
+            for (auto& s : simp)
+                s = ans.newSimplex();
+
+            size_t facetPos = nFacets - 1;
+            size_t nextUnused = 1;
+            auto destPos = adjSimplex.begin();
+            auto gluingPos = adjGluing.begin();
+            for (auto s : simp)
+                for (int f = 0; f <= dim; ++f) {
+                    // Already glued from the other side:
+                    if (s->adjacentSimplex(f))
+                        continue;
+
+                    if (facetType.get(facetPos--)) {
+                        size_t dest = *destPos++;
+
+                        if (dest != nSimp) {
+                            // A non-boundary facet, joined to a simplex we
+                            // have already seen.
+                            PermIndex index = *gluingPos++;
+                            if (index >= Perm<dim+1>::nPerms)
+                                throw InvalidArgument(
+                                    "fromSig(): invalid gluing permutation");
+                            Perm<dim+1> gluing = Perm<dim+1>::Sn[index];
+
+                            if (dest >= nextUnused ||
+                                    simp[dest]->adjacentSimplex(gluing[f])) {
+                                throw InvalidArgument(
+                                    "fromSig(): invalid gluing destination");
+                            }
+                            s->join(f, simp[dest], gluing);
+                        }
+                    } else {
+                        // Join to the next new simplex.
+                        if (nextUnused >= nSimp)
+                            throw InvalidArgument(
+                                "fromSig(): gluing to non-existent simplex");
+                        s->join(f, simp[nextUnused++], { 0, 1 });
+                    }
+                }
+
+            // Read simplex/facet locks, if these are present.
+            if (hasLocks) {
+                // We will set lock masks directly instead of using lock()
+                // functions.  This means we don't get change spans (but that
+                // is fine since we have computed nothing about the
+                // triangulation and nobody else has a reference to it yet).
+                // It also means that we need to run our own sanity checks,
+                // which we will do shortly.
+                for (auto s : simp) {
+                    auto mask = dec.decodeInt<typename Simplex<dim>::LockMask>(
+                        lockWidth);
+                    if (mask >> (dim + 2) != 0)
+                        throw InvalidArgument("fromSig(): invalid lock mask");
+                    s->locks_ = mask;
+                }
+
+                // Check facet locks for consistency.
+                for (auto s : simp)
+                    if (s->locks_)
+                        for (int facet = 0; facet <= dim; ++facet)
+                            if (auto adj = s->adjacentSimplex(facet))
+                                if (s->isFacetLocked(facet)) {
+                                    auto adjFacet = s->adjacentFacet(facet);
+                                    if (! adj->isFacetLocked(adjFacet))
+                                        throw InvalidArgument("fromSig(): "
+                                            "inconsistent lock masks");
+                                }
+            }
+
+            dec.flushByte();
+        }
+
+        return ans;
+    } catch (const InvalidInput&) {
+        // Any exception caught here was thrown by BitSigDecoder.
+        throw InvalidArgument(
+            "fromSig(): incomplete or invalid binary encoding");
     }
 }
 

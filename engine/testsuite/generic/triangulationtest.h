@@ -80,6 +80,16 @@ class TriangulationTest : public testing::Test {
             const char* name;
         };
 
+        template <int gen, regina::IsoSigEncoding<gen, dim> Encoding,
+            regina::IsoSigType<dim> Type>
+        requires (gen == 1 || gen == 2)
+        static auto sigDetail(const Triangulation<dim>& tri) {
+            if constexpr (gen == 1)
+                return tri.template isoSigDetail<Encoding, Type>();
+            else
+                return tri.template neoSigDetail<Encoding, Type>();
+        }
+
         /**
          * We make detailed skeletal tests public because we may wish to
          * access them from test suites in other dimensions.
@@ -1294,7 +1304,7 @@ class TriangulationTest : public testing::Test {
             }
 
             if (tri.countComponents() == 1) {
-                auto detail = tri.template isoSigDetail<IsoSigPrintable, Type>();
+                auto detail = sigDetail<gen, Encoding, Type>(tri);
 
                 EXPECT_EQ(detail.first, sig);
 
@@ -1327,7 +1337,7 @@ class TriangulationTest : public testing::Test {
 
             verifyIsomorphismSignatureUsing<1, IsoSigPrintable,
                 regina::IsoSigClassic<dim>>(tri);
-            verifyIsomorphismSignatureUsing<1, IsoSigPrintable,
+            verifyIsomorphismSignatureUsing<2, IsoSigBinary,
                 regina::IsoSigRidgeDegrees<dim>>(tri);
 
             // Verify the precomputed length of the signature.
