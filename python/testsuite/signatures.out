@@ -43,3 +43,6 @@ False
 (1000, 2)
 True
 
+b'\xb2\xab\x01'
+Caught exception
+Caught exception

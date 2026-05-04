@@ -106,3 +106,20 @@ print(dec.done())
 print(dec.decodeSize())
 print(dec.done())
 print()
+
+enc = BitSigEncoder()
+enc.encodeBits(3, 0x0002)
+enc.encodeBits(14, 0x3576)
+print(enc.bytes())
+try:
+	enc.encodeBit(True)
+except:
+	print('Caught exception')
+
+try:
+	enc = BitSigEncoder()
+	enc.encodeBits(3, 0x0002)
+	enc.encodeBits(3, 0x4576)
+except:
+	print('Caught exception')
+

@@ -56,6 +56,9 @@ Version 8.0  [ TODO ]
             - New three-way comparison function numericalComp(), which replaces
               the old boolean lessThan().  The function lessThan() is kept but
               deprecated.
+        Class BitSigEncoder, BitSigDecoder:
+            - New class to support signatures that use (unprintable) packed
+              sequences of bits.  See also PackedSig{Encoder,Decoder}.
         Class BoolSet:
             - Regarding byte codes and string codes:
               + New type alias ByteCode.
@@ -306,7 +309,7 @@ Version 8.0  [ TODO ]
             - Removed completely.
         Class PackedSigEncoder, PackedSigDecoder:
             - New class to support signatures that use (unprintable) packed
-              byte sequences.
+              byte sequences.  See also BitSig{Encoder,Decoder}.
         Class PermClass<n>:
             - Everything in this class is now constexpr.
         Class Polynomial<T>:

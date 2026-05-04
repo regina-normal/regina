@@ -591,6 +591,7 @@
 		0545A0192F9F68AE008D3ADB /* siglist-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0545A0182F9F68AE008D3ADB /* siglist-impl.h */; };
 		0545A01A2F9F68AE008D3ADB /* siglist.h in Headers */ = {isa = PBXBuildFile; fileRef = 0545A0172F9F68AE008D3ADB /* siglist.h */; };
 		0545A01C2F9F696E008D3ADB /* siglist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A01B2F9F696E008D3ADB /* siglist.cpp */; };
+		0545A01F2FA83E57008D3ADB /* sigutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A01E2FA83E57008D3ADB /* sigutils.cpp */; };
 		054C6A661DCC1FF3005373F0 /* example5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A4F1DCC1FE7005373F0 /* example5.cpp */; };
 		054C6A671DCC1FF3005373F0 /* example6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A501DCC1FE7005373F0 /* example6.cpp */; };
 		054C6A681DCC1FF3005373F0 /* example7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A511DCC1FE7005373F0 /* example7.cpp */; };
@@ -3068,6 +3069,7 @@
 		0545A0182F9F68AE008D3ADB /* siglist-impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "siglist-impl.h"; sourceTree = "<group>"; };
 		0545A01B2F9F696E008D3ADB /* siglist.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = siglist.cpp; sourceTree = "<group>"; };
 		0545A01D2FA6C167008D3ADB /* isosig.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = isosig.cpp; sourceTree = "<group>"; };
+		0545A01E2FA83E57008D3ADB /* sigutils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sigutils.cpp; sourceTree = "<group>"; };
 		0549B4982907D38D00C911AF /* data-anon.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-anon.docbook"; sourceTree = "<group>"; };
 		0549B4992907D38E00C911AF /* data-tri.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tri.docbook"; sourceTree = "<group>"; };
 		0549B49A2907D38E00C911AF /* data-txi.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-txi.docbook"; sourceTree = "<group>"; };
@@ -7824,6 +7826,7 @@
 				056AECF32A431AE200EAF4FA /* bitmask.cpp */,
 				05329E502F25548A0048C8C6 /* boolset.cpp */,
 				056AECF02A431AE200EAF4FA /* CMakeLists.txt */,
+				0545A01E2FA83E57008D3ADB /* sigutils.cpp */,
 				057FDAF22EE56488000C706E /* stringutils.cpp */,
 				056AECEF2A431AE200EAF4FA /* tightencoding.cpp */,
 				056AECF22A431AE200EAF4FA /* tightencodingtest.h */,
@@ -10476,6 +10479,7 @@
 				056AED642A431AE200EAF4FA /* normalsurfaces.cpp in Sources */,
 				056AED5E2A431AE200EAF4FA /* isomorphism2.cpp in Sources */,
 				056AED7E2A431AE200EAF4FA /* binom.cpp in Sources */,
+				0545A01F2FA83E57008D3ADB /* sigutils.cpp in Sources */,
 				056AED842A431AE200EAF4FA /* main.cpp in Sources */,
 				056AEDC42A4CFFDF00EAF4FA /* triangulation3.cpp in Sources */,
 				057FDAFB2EE86FE1000C706E /* concepts.cpp in Sources */,

@@ -1874,6 +1874,153 @@ class PackedSigDecoder {
         PackedSigDecoder& operator = (const PackedSigDecoder&) = delete;
 };
 
+/**
+ * A helper class for writing signatures that pack information as tightly as
+ * possible into bits, with no regard for boundaries between bytes in the
+ * final signature.
+ *
+ * To use this class: create a new BitSigEncoder, call one or more of its
+ * member functions to write values to the encoding, and then call bytes() to
+ * extract the resulting byte sequence.  Once you have called bytes(), the
+ * encoder will be unusable (and in particular, you cannot encode more bits
+ * and/or call bytes() again).
+ *
+ * Bit encoders are single-use objects: they cannot be copied, moved or
+ * swapped.
+ *
+ * \ingroup utilities
+ */
+class BitSigEncoder {
+    private:
+        ByteSequence bytes_;
+            /**< The byte sequence that has been constructed thus far.
+                 Within each byte, bits are stored in order from least
+                 significant (bit 0) to most significant (bit 7). */
+        uint8_t queued_ { 0 };
+            /**< Any bits that are still waiting to be written to \a bytes_.
+                 Such bits are queued here when the total number of bits
+                 encoded is not a multiple of 8 (and so the final byte is
+                 still under construction). */
+        int nQueued_ { 0 };
+            /**< The number of bits in \a queued_ waiting to be written.
+                 This will always be between 0 and 7 inclusive. */
+
+    public:
+        /**
+         * Creates a new encoder, with an empty byte sequence.
+         */
+        BitSigEncoder() = default;
+
+        /**
+         * Moves the byte sequence that has been constructed thus far
+         * out of this encoder.
+         *
+         * After calling this function, this encoder object will be unusable.
+         *
+         * \return the current byte sequence.
+         */
+        ByteSequence&& bytes() && {
+            if (nQueued_) {
+                bytes_.push_back(queued_);
+                // We don't bother resetting queued_ or nQueued_, since this
+                // encoder will be unusable after this function is called.
+            }
+            return std::move(bytes_);
+        }
+
+        /**
+         * Encodes the given boolean as a single bit.
+         *
+         * \param bit `true` if we should encode the bit 1, or `false` if we
+         * should encode the bit 0.
+         */
+        void encodeBit(bool bit) {
+            if (bit) {
+                if (nQueued_ == 7) {
+                    bytes_.push_back(queued_ | 0x80);
+                    queued_ = 0;
+                    nQueued_ = 0;
+                } else {
+                    queued_ |= (1 << (nQueued_++));
+                }
+            } else {
+                if (nQueued_ == 7) {
+                    bytes_.push_back(queued_);
+                    queued_ = 0;
+                    nQueued_ = 0;
+                } else {
+                    ++nQueued_;
+                }
+            }
+        }
+
+        /**
+         * Encodes a sequence of bits, all taken from a single native
+         * unsigned integer.
+         *
+         * \python The template argument \a IntType is taken to be
+         * `unsigned long`.
+         *
+         * \exception InvalidArgument The given integer has some bit set
+         * beyond bits `0,...,(count-1)`.
+         *
+         * \param count the total number of bits to encode; this must be
+         * non-negative.
+         * \param bits an integer holding the bits to encode; these will be
+         * stored in order from the least significant bit of the argument
+         * \a bits.
+         */
+        template <UnsignedCppInteger IntType>
+        void encodeBits(int count, IntType bits) {
+            for (int i = 0; i < count; ++i)
+                encodeBit(bits & (IntType(1) << i));
+            if (count < sizeof(IntType) * 8) {
+                IntType mask = (IntType(1) << count) - 1;
+                if (bits != (bits & mask))
+                    throw InvalidArgument(
+                        "BitSigEncoder::encodeBits(): "
+                        "integer argument out of range");
+            }
+        }
+
+        /**
+         * Encodes a sequence of bits, taken from the given bitmask.
+         *
+         * \python The template argument \a BitmaskType is taken to be Bitmask.
+         *
+         * \param count the total number of bits to encode.
+         * \param bits a bitmask holding the bits to encode; this bitmask must
+         * be capable of holding at least \a count bits.  The bits will be
+         * stored in order from bit 0 of the given bitmask.
+         */
+        template <ReginaBitmask BitmaskType>
+        void encodeBits(size_t count, const BitmaskType& bits) {
+            for (size_t i = 0; i < count; ++i)
+                encodeBit(bits.get(i));
+        }
+
+        /**
+         * Pre-allocates the given amount of space for the entire encoding.
+         *
+         * Internally, this calls `ByteSequence::reserve(...)`.  The intent is
+         * to avoid unnecessary reallocations as the encoding is constructed,
+         * and also to avoid allocating more memory than is required.
+         *
+         * It is harmless if \a capacity ends up being smaller or larger than
+         * the final bit length of the encoding; however, this routine will of
+         * course be more effective if \a capacity is accurate.
+         *
+         * \param capacity the expected total number of bits in the _entire_
+         * encoding (not just the portion that is not yet encoded).
+         */
+        void reserveBits(size_t capacity) {
+            bytes_.reserve((capacity + 7) / 8);
+        }
+
+        BitSigEncoder(const BitSigEncoder&) = delete;
+        BitSigEncoder& operator = (const BitSigEncoder&) = delete;
+};
+
 } // namespace regina
 
 #endif

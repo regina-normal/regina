@@ -4,6 +4,7 @@ SET ( FILES
   base64.cpp
   bitmask.cpp
   boolset.cpp
+  sigutils.cpp
   stringutils.cpp
   tightencoding.cpp
   )

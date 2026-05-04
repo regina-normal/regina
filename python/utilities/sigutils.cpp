@@ -38,10 +38,46 @@
 
 using regina::Base64SigEncoder;
 using regina::Base64SigEncoding;
+using regina::Bitmask;
+using regina::BitSigEncoder;
 using regina::PackedSigEncoder;
 
 using Base64Decoder = regina::Base64SigDecoder<std::string::const_iterator>;
 using PackedDecoder = regina::PackedSigDecoder<std::string::const_iterator>;
+
+namespace {
+    /**
+     * Keeps track of whether the encoder has been invalidated by calling
+     * bytes().  We use this to account for the fact that bytes() is an rvalue
+     * member function - in C++ the compiler will force you to use std::move()
+     * on the encoder, but there is AFAICT no way to enforce such things in
+     * the Python bindings.  We work around this in Python by keeping a
+     * separate validity flag alongside the encoder.
+     */
+    class SafeBitSigEncoder {
+        private:
+            regina::BitSigEncoder encoder_;
+            bool valid { true };
+
+        public:
+            SafeBitSigEncoder() = default;
+
+            regina::BitSigEncoder& encoder() {
+                if (valid)
+                    return encoder_;
+                else
+                    throw std::runtime_error(
+                        "This encoder has been invalidated - you cannot "
+                        "use it after calling bytes()");
+            }
+
+            auto bytes() {
+                auto ans = std::move(encoder()).bytes();
+                valid = false;
+                return ans;
+            }
+    };
+}
 
 namespace regina::python {
     // For Python (but not C++), we need Base64SigDecoder and PackedSigDecoder
@@ -144,7 +180,7 @@ void addSigUtils(pybind11::module_& m) {
             pybind11::overload_cast<const std::vector<long>&, int>(
                 &Base64SigEncoder::encodeInts<const std::vector<long>&>),
             rdoc::encodeInts)
-        .def("encodeBits", &Base64SigEncoder::encodeBits<regina::Bitmask>,
+        .def("encodeBits", &Base64SigEncoder::encodeBits<Bitmask>,
             rdoc::encodeBits)
         .def("encodeTrits",
             pybind11::overload_cast<const std::vector<uint8_t>&>(
@@ -184,7 +220,7 @@ void addSigUtils(pybind11::module_& m) {
                 ans.append(dec.decodeInt<long>(nChars));
             return ans;
         })
-        .def("decodeBits", &Base64Decoder::decodeBits<regina::Bitmask>,
+        .def("decodeBits", &Base64Decoder::decodeBits<Bitmask>,
             rdoc::decodeBits)
         // overload_cast cannot handle template vs non-template overloads.
         .def("decodeTrits",
@@ -227,7 +263,7 @@ void addSigUtils(pybind11::module_& m) {
             pybind11::overload_cast<const std::vector<long>&, int>(
                 &PackedSigEncoder::encodeInts<const std::vector<long>&>),
             rdoc::encodeInts)
-        .def("encodeBits", &PackedSigEncoder::encodeBits<regina::Bitmask>,
+        .def("encodeBits", &PackedSigEncoder::encodeBits<Bitmask>,
             rdoc::encodeBits)
         .def("encodeTrits",
             pybind11::overload_cast<const std::vector<uint8_t>&>(
@@ -257,7 +293,7 @@ void addSigUtils(pybind11::module_& m) {
                 ans.append(i);
             return ans;
         })
-        .def("decodeBits", &PackedDecoder::decodeBits<regina::Bitmask>,
+        .def("decodeBits", &PackedDecoder::decodeBits<Bitmask>,
             rdoc::decodeBits)
         // overload_cast cannot handle template vs non-template overloads.
         .def("decodeTrits",
@@ -266,6 +302,27 @@ void addSigUtils(pybind11::module_& m) {
             rdoc::decodeTrits)
     ;
     regina::python::add_eq_operators(pd);
+
+    RDOC_SCOPE_SWITCH(BitSigEncoder)
+
+    auto te = pybind11::class_<SafeBitSigEncoder>(m, "BitSigEncoder",
+            rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def("bytes", &SafeBitSigEncoder::bytes, rdoc::bytes)
+        .def("encodeBit", [](SafeBitSigEncoder& enc, bool bit) {
+            enc.encoder().encodeBit(bit);
+        }, rdoc::encodeBit)
+        .def("encodeBits", [](SafeBitSigEncoder& enc, int n, unsigned long b) {
+            enc.encoder().encodeBits(n, b);
+        }, rdoc::encodeBits)
+        .def("encodeBits", [](SafeBitSigEncoder& enc, int n, const Bitmask& b) {
+            enc.encoder().encodeBits(n, b);
+        }, rdoc::encodeBits_2)
+        .def("reserveBits", [](SafeBitSigEncoder& enc, size_t count) {
+            enc.encoder().reserveBits(count);
+        }, rdoc::reserveBits)
+    ;
+    regina::python::add_eq_operators(te);
 
     RDOC_SCOPE_END
 }
