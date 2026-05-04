@@ -798,7 +798,18 @@ This will be ``True`` if and only if the array returned by locks() is
 non-empty.
 
 Returns:
-    a reference to the (possibly empty) array of lock masks.)doc";
+    ``True`` if and only if there are simplex and/or facet locks.)doc";
+
+// Docstring regina::python::doc::IsoSigData2_::isOriented
+static const char *isOriented =
+R"doc(Determines whether the labelling that this data set encodes is
+oriented.
+
+This will be ``True`` if and only if all permutations in
+adjacentGluings() are odd.
+
+Returns:
+    ``True`` if and only if this labelling is oriented.)doc";
 
 // Docstring regina::python::doc::IsoSigData2_::locks
 static const char *locks =

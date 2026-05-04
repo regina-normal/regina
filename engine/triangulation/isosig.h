@@ -636,8 +636,8 @@ class IsoSigData<2, dim> {
             /**< For facets of type B, the simplex numbers that the facets are
                  glued to, or \a size_ for boundary facets. */
         FixedArray<typename Perm<dim + 1>::Index> adjGluing_;
-            /**< For non-boundary facets of type B, the corresponding gluing
-                 permutations. */
+            /**< For non-boundary facets of type B, the `S_n` indices of
+                 the corresponding gluing permutations. */
         FixedArray<typename Simplex<dim>::LockMask> locks_;
             /**< The lock masks of all top-dimensional simplices, or the empty
                  array if there are no simplex or facet locks. */
@@ -807,10 +807,25 @@ class IsoSigData<2, dim> {
          * This will be `true` if and only if the array returned by locks() is
          * non-empty.
          *
-         * \return a reference to the (possibly empty) array of lock masks.
+         * \return `true` if and only if there are simplex and/or facet locks.
          */
         bool hasLocks() const {
             return ! locks_.empty();
+        }
+        /**
+         * Determines whether the labelling that this data set encodes is
+         * oriented.
+         *
+         * This will be `true` if and only if all permutations in
+         * adjacentGluings() are odd.
+         *
+         * \return `true` if and only if this labelling is oriented.
+         */
+        bool isOriented() const {
+            for (auto g : adjGluing_)
+                if (! (g & 1))
+                    return false;
+            return true;
         }
 
         /**

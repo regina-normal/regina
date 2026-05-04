@@ -486,71 +486,68 @@ size_t IsoSigPrintableLockFree::length(const IsoSigData<2, dim>& data) {
 
 template <int dim> requires (supportedDim(dim))
 ByteSequence IsoSigBinary::encode(const IsoSigData<2, dim>& data) {
-    PackedSigEncoder enc;
-    enc.reserve(length(data));
+    // We begin with a single byte b, where:
+    //
+    // - the lower six bits of b encode the number of bits required to encode
+    //   any integer in the range [0..size] (note that this imposes the
+    //   restriction size < 2^64, but this is enormously more than enough for
+    //   any triangulation);
+    // - bit 6 is set if all gluings are orientation-preserving;
+    // - bit 7 is set if we need to encode locks.
+    //
+    // The encoding of the real data begins at the second byte.
 
-    static constexpr int permWidth = PackedSigEncoder::integerWidth(
-        Perm<dim+1>::nPerms - 1);
+    int intWidth = bitsRequired(data.size() + 1);
+    static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
+    static constexpr int lockWidth = dim + 2;
+    using UnsignedPermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
 
-    int intWidth = enc.encodeSize(data.size());
-    enc.encodeInts(data.adjacentSimplices(), intWidth);
+    bool oriented = data.isOriented();
+
+    BitSigEncoder enc;
+    enc.reserveBits(
+        8 + (intWidth * data.adjacentSimplices().size()) +
+        data.countFacetBits() +
+        (oriented ? (permWidth - 1) * data.adjacentGluings().size() :
+            permWidth * data.adjacentGluings().size()) +
+        lockWidth * data.locks().size());
+
+    enc.encodeBits(6, static_cast<unsigned>(intWidth));
+    enc.encodeBit(oriented);
+    enc.encodeBit(data.hasLocks());
+
+    for (auto s : data.adjacentSimplices())
+        enc.encodeBits(intWidth, s);
     enc.encodeBits(data.countFacetBits(), data.facetTypes());
-    enc.encodeInts(data.adjacentGluings(), permWidth);
-
-    if (data.hasLocks()) {
-        // Each lock mask holds dim+2 bits.
-        if constexpr (dim <= 6) {
-            // We can encode <= 8 bits with 1 byte.
-            enc.encodeInts(data.locks(), 1);
-        } else if constexpr (dim <= 14) {
-            // We can encode <= 16 bits with 2 bytes.
-            enc.encodeInts(data.locks(), 2);
-        } else {
-            static_assert(dim <= 22);
-            // We can encode <= 24 bits with 3 bytes.
-            enc.encodeInts(data.locks(), 3);
-        }
+    if (oriented) {
+        for (UnsignedPermIndex g : data.adjacentGluings())
+            enc.encodeBits(permWidth - 1, g >> 1);
+    } else {
+        for (UnsignedPermIndex g : data.adjacentGluings())
+            enc.encodeBits(permWidth, g);
     }
+    for (auto m : data.locks())
+        enc.encodeBits(lockWidth, m);
 
     return std::move(enc).bytes();
 }
 
 template <int dim> requires (supportedDim(dim))
 size_t IsoSigBinary::length(const IsoSigData<2, dim>& data) {
-    static constexpr int permWidth = PackedSigEncoder::integerWidth(
-        Perm<dim+1>::nPerms - 1);
+    int intWidth = bitsRequired(data.size() + 1);
+    static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
+    static constexpr int lockWidth = dim + 2;
+    bool oriented = data.isOriented();
 
-    size_t ans;
-    if (data.size() < 0x10) {
-        // The integer width is 0, and does not need to be explicitly encoded.
-        // Moreover, we write the list of adjacent simplices using two integers
-        // per byte.
-        ans = 1 + (data.adjacentSimplices().size() + 1) / 2;
-    } else if (data.size() < 0xff) {
-        // The integer width is 1, and does not need to be explicitly encoded.
-        ans = 1 + data.adjacentSimplices().size();
-    } else {
-        // We begin with two extra characters: 0xff (which acts as a marker
-        // that the component is large), and the encoding of the integer width.
-        int intWidth = PackedSigEncoder::integerWidth(data.size());
-        ans = 2 + (1 + data.adjacentSimplices().size()) * intWidth;
-    }
-    ans += ((data.countFacetBits() + 7) / 8);
-    if (permWidth == 0)
-        ans += (data.adjacentGluings().size() + 1) / 2;
+    size_t bits = 8 + (intWidth * data.adjacentSimplices().size()) +
+        data.countFacetBits();
+    if (oriented)
+        bits += (permWidth - 1) * data.adjacentGluings().size();
     else
-        ans += (data.adjacentGluings().size() * permWidth);
+        bits += permWidth * data.adjacentGluings().size();
+    bits += lockWidth * data.locks().size();
 
-    if (data.hasLocks()) {
-        if constexpr (dim <= 6)
-            ans += (data.locks().size());
-        else if constexpr (dim <= 14)
-            ans += (data.locks().size() * 2);
-        else
-            ans += (data.locks().size() * 3);
-    }
-
-    return ans;
+    return (bits + 7) / 8;
 }
 
 namespace detail {

@@ -14,7 +14,7 @@ namespace regina::python::doc {
 // Docstring regina::python::doc::Triangulation
 constexpr const char *Triangulation =
 R"doc(A *dim*-dimensional triangulation, built by gluing together
-*dim*-dimensional simplices along their (*dim*-1)-dimensional facets.
+*dim*-dimensional simplices along their `(dim-1)`-dimensional facets.
 Typically (but not necessarily) such triangulations are used to
 represent *dim*-manifolds.
 
@@ -26,15 +26,15 @@ complexes, for two reasons:
 
 * The only identifications that the user can explicitly specify are
   gluings between *dim*-dimensional simplices along their
-  (*dim*-1)-dimensional facets. All other identifications between
+  `(dim-1)`-dimensional facets. All other identifications between
   *k*-faces (for any *k*) are simply consequences of these
-  (*dim*-1)-dimensional gluings. In contrast, a simplicial complex
+  `(dim-1)`-dimensional gluings. In contrast, a simplicial complex
   allows explicit gluings between faces of any dimension.
 
-* There is no requirement for a *k*-face to have (*k*+1) distinct
+* There is no requirement for a *k*-face to have ``(k+1)`` distinct
   vertices (so, for example, edges may be loops). Many distinct
   *k*-faces of a top-dimensional simplex may be identified together as
-  a consequence of the (*dim*-1)-dimensional gluings, and indeed we
+  a consequence of the `(dim-1)`-dimensional gluings, and indeed we
   are even allowed to glue together two distinct facets of the same
   *dim*-simplex. In contrast, a simplicial complex does not allow any
   of these situations.
@@ -47,9 +47,9 @@ sufficiently large *dim*).
 
 You can construct a triangulation from scratch using routines such as
 ``newSimplex()`` and ``Simplex<dim>::join()``. There are also routines
-for exporting and importing triangulations in bulk, such as isoSig()
-and fromSig() (which use _isomorphism signatures_), or source() and
-fromGluings() (which use C++ or Python code).
+for exporting and importing triangulations in bulk, such as neoSig(),
+isoSig(), and fromSig() (which use _isomorphism signatures_), or
+source() and fromGluings() (which use C++ or Python code).
 
 Skeleta and components
 ======================
@@ -57,13 +57,13 @@ Skeleta and components
 In additional to top-dimensional simplices, this class also tracks:
 
 * connected components of the triangulation, as represented by the
-  class Component<dim>;
+  class ``Component<dim>``;
 
 * boundary components of the triangulation, as represented by the
-  class BoundaryComponent<dim>;
+  class ``BoundaryComponent<dim>``;
 
 * lower-dimensional faces of the triangulation, as represented by the
-  classes Face<dim, subdim> for *subdim* = 0,...,(*dim*-1).
+  classes ``Face<dim, subdim>`` for ``subdim = 0,...,(dim-1)``.
 
 Such objects are temporary: whenever the triangulation changes, they
 will be deleted and rebuilt, and any pointers to them will become
