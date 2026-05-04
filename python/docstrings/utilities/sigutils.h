@@ -95,7 +95,7 @@ To use this class: create a new BitSigEncoder, call one or more of its
 member functions to write values to the encoding, and then call
 bytes() to extract the resulting byte sequence. Once you have called
 bytes(), the encoder will be unusable (and in particular, you cannot
-call bytes() again).
+encode more bits and/or call bytes() again).
 
 Bit encoders are single-use objects: they cannot be copied, moved or
 swapped.)doc";
@@ -819,7 +819,8 @@ Parameter ``bits``:
 
 // Docstring regina::python::doc::BitSigEncoder_::reserveBits
 static const char *reserveBits =
-R"doc(Pre-allocates the given amount of space for the entire encoding.
+R"doc(Pre-allocates the given amount of space for the entire encoding, as
+measured in bits.
 
 Internally, this calls ``ByteSequence::reserve(...)``. The intent is
 to avoid unnecessary reallocations as the encoding is constructed, and
@@ -831,6 +832,23 @@ be more effective if *capacity* is accurate.
 
 Parameter ``capacity``:
     the expected total number of bits in the _entire_ encoding (not
+    just the portion that is not yet encoded).)doc";
+
+// Docstring regina::python::doc::BitSigEncoder_::reserveBytes
+static const char *reserveBytes =
+R"doc(Pre-allocates the given amount of space for the entire encoding, as
+measured in bytes.
+
+Internally, this calls ``ByteSequence::reserve(capacity)``. The intent
+is to avoid unnecessary reallocations as the encoding is constructed,
+and also to avoid allocating more memory than is required.
+
+It is harmless if *capacity* ends up being smaller or larger than the
+final byte length of the encoding; however, this routine will of
+course be more effective if *capacity* is accurate.
+
+Parameter ``capacity``:
+    the expected total number of bytes in the _entire_ encoding (not
     just the portion that is not yet encoded).)doc";
 
 }

@@ -321,6 +321,9 @@ void addSigUtils(pybind11::module_& m) {
         .def("reserveBits", [](SafeBitSigEncoder& enc, size_t count) {
             enc.encoder().reserveBits(count);
         }, rdoc::reserveBits)
+        .def("reserveBytes", [](SafeBitSigEncoder& enc, size_t count) {
+            enc.encoder().reserveBytes(count);
+        }, rdoc::reserveBytes)
     ;
     regina::python::add_eq_operators(te);
 

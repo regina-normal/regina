@@ -2000,7 +2000,8 @@ class BitSigEncoder {
         }
 
         /**
-         * Pre-allocates the given amount of space for the entire encoding.
+         * Pre-allocates the given amount of space for the entire encoding,
+         * as measured in bits.
          *
          * Internally, this calls `ByteSequence::reserve(...)`.  The intent is
          * to avoid unnecessary reallocations as the encoding is constructed,
@@ -2015,6 +2016,25 @@ class BitSigEncoder {
          */
         void reserveBits(size_t capacity) {
             bytes_.reserve((capacity + 7) / 8);
+        }
+
+        /**
+         * Pre-allocates the given amount of space for the entire encoding,
+         * as measured in bytes.
+         *
+         * Internally, this calls `ByteSequence::reserve(capacity)`.  The intent
+         * is to avoid unnecessary reallocations as the encoding is constructed,
+         * and also to avoid allocating more memory than is required.
+         *
+         * It is harmless if \a capacity ends up being smaller or larger than
+         * the final byte length of the encoding; however, this routine will of
+         * course be more effective if \a capacity is accurate.
+         *
+         * \param capacity the expected total number of bytes in the _entire_
+         * encoding (not just the portion that is not yet encoded).
+         */
+        void reserveBytes(size_t capacity) {
+            bytes_.reserve(capacity);
         }
 
         BitSigEncoder(const BitSigEncoder&) = delete;
