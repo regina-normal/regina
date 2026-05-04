@@ -277,7 +277,7 @@ IsoSigData<2, dim> IsoSigData<2, dim>::minimal(Component<dim>* component,
                             vertexMap[simpSrc] *
                             s->adjacentGluing(facetSrc).inverse();
 
-                        --facetPos; // leave the facet bit unset
+                        curr.facetType_.set(facetPos--, false);
                     }
                 } else {
                     // Our source facet lies on the boundary.
@@ -287,19 +287,19 @@ IsoSigData<2, dim> IsoSigData<2, dim>::minimal(Component<dim>* component,
             }
         }
 
-        // Record the canonical isomorphism if required.
-        if (relabelling)
-            for (size_t i = 0; i < component->size(); ++i) {
-                size_t origIndex = preImage[i];
-                relabelling->simpImage(origIndex) = i; // image[origIndex]
-                relabelling->facetPerm(origIndex) = vertexMap[origIndex];
-            }
-
         // We are done building the canonical relabelling.
         // Is this the best we've seen so far?
         if (first || curr < best) {
             best.swap(curr);
             first = false;
+
+            // Record the canonical isomorphism if required.
+            if (relabelling)
+                for (size_t i = 0; i < component->size(); ++i) {
+                    size_t origIndex = preImage[i];
+                    relabelling->simpImage(origIndex) = i; // image[origIndex]
+                    relabelling->facetPerm(origIndex) = vertexMap[origIndex];
+                }
         }
     } while (type.next());
 
