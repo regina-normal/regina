@@ -112,6 +112,14 @@ class ByteSequence {
          */
         ByteSequence(ByteSequence&&) noexcept = default;
         /**
+         * Fills this sequence with the given bytes.
+         *
+         * \param bytes the initial bytes to store in this sequence.
+         */
+        ByteSequence(std::initializer_list<uint8_t> bytes) :
+                data_(bytes.begin(), bytes.end()) {
+        }
+        /**
          * Moves the contents of the given string into this new byte sequence.
          * This is a fast (constant time) operation.
          *
