@@ -263,7 +263,7 @@ IsoSigData<2, dim> IsoSigData<2, dim>::minimal(Component<dim>* component,
                             curr.adjGluing_[gluingPos++] = (vertexMap[dest] *
                                     s->adjacentGluing(facetSrc) *
                                     vertexMap[simpSrc].inverse()).
-                                orderedSnIndex();
+                                SnIndex();
 
                             curr.facetType_.set(facetPos--, true);
                         }
