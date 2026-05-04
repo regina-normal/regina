@@ -35,44 +35,74 @@
 #include "testhelper.h"
 
 using regina::Bitmask;
+using regina::BitSigDecoder;
 using regina::BitSigEncoder;
 using regina::ByteSequence;
 
 TEST(SigUtilsTest, bitEncoder) {
     {
         BitSigEncoder enc;
-        EXPECT_EQ(std::move(enc).bytes(), ByteSequence());
+        auto bytes = std::move(enc).bytes();
+        EXPECT_EQ(bytes, ByteSequence());
+
+        BitSigDecoder dec(bytes.begin(), bytes.end());
+        EXPECT_TRUE(dec.noMoreBits());
     }
     {
         BitSigEncoder enc;
-        for (bool b : { false, true, false, true, true, false, false, true,
-                        true, false, false, true, true })
+        std::array write { false, true, false, true, true, false, false, true,
+                           true, false, false, true, true };
+        for (bool b : write)
             enc.encodeBit(b);
-        EXPECT_EQ(std::move(enc).bytes(), ByteSequence({ 0x9a, 0x19 }));
+        auto bytes = std::move(enc).bytes();
+        EXPECT_EQ(bytes, ByteSequence({ 0x9a, 0x19 }));
+
+        BitSigDecoder dec(bytes.begin(), bytes.end());
+        EXPECT_FALSE(dec.maybeDone());
+        std::array<bool, 13> read;
+        for (bool& b : read)
+            b = dec.decodeBit();
+        EXPECT_EQ(read, write);
+        EXPECT_TRUE(dec.maybeDone());
+        EXPECT_FALSE(dec.noMoreBits());
     }
     {
         BitSigEncoder enc;
-        enc.encodeBits(3, unsigned(0x0002));
-        enc.encodeBits(14, unsigned(0x3576)); // spans three encoded bytes
-        EXPECT_EQ(std::move(enc).bytes(),
-            ByteSequence({ 0xb2, 0xab, 0x01 }));
+        enc.encodeInt(3, unsigned(0x0002));
+        enc.encodeInt(14, unsigned(0x3576)); // spans three encoded bytes
+        auto bytes = std::move(enc).bytes();
+        EXPECT_EQ(bytes, ByteSequence({ 0xb2, 0xab, 0x01 }));
+
+        BitSigDecoder dec(bytes.begin(), bytes.end());
+        EXPECT_FALSE(dec.maybeDone());
+        EXPECT_EQ(dec.decodeInt<unsigned>(3), 0x0002);
+        EXPECT_EQ(dec.decodeInt<unsigned>(14), 0x3576);
+        EXPECT_TRUE(dec.maybeDone());
+        EXPECT_FALSE(dec.noMoreBits());
     }
     EXPECT_THROW({
         BitSigEncoder enc;
-        enc.encodeBits(3, unsigned(0x0002));
-        enc.encodeBits(14, unsigned(0x4576));
+        enc.encodeInt(3, unsigned(0x0002));
+        enc.encodeInt(14, unsigned(0x4576));
     }, regina::InvalidArgument);
     {
         BitSigEncoder enc;
-        enc.encodeBits(3, unsigned(0x0002));
-        {
-            Bitmask mask(14);
-            std::array indices { 1, 2, 4, 5, 6, 8, 10, 12, 13 };
-            mask.set(indices.begin(), indices.end(), true);
-            enc.encodeBits(14, mask);
-        }
-        EXPECT_EQ(std::move(enc).bytes(),
-            ByteSequence({ 0xb2, 0xab, 0x01 }));
+        enc.encodeInt(3, unsigned(0x0002));
+
+        Bitmask mask(14);
+        std::array indices { 1, 2, 4, 5, 6, 8, 10, 12, 13 };
+        mask.set(indices.begin(), indices.end(), true);
+        enc.encodeBitmask(14, mask);
+
+        auto bytes = std::move(enc).bytes();
+        EXPECT_EQ(bytes, ByteSequence({ 0xb2, 0xab, 0x01 }));
+
+        BitSigDecoder dec(bytes.begin(), bytes.end());
+        EXPECT_FALSE(dec.maybeDone());
+        EXPECT_EQ(dec.decodeInt<unsigned>(3), 0x0002);
+        EXPECT_EQ(dec.decodeBitmask(14), mask);
+        EXPECT_TRUE(dec.maybeDone());
+        EXPECT_FALSE(dec.noMoreBits());
     }
 }
 

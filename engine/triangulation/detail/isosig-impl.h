@@ -512,22 +512,22 @@ ByteSequence IsoSigBinary::encode(const IsoSigData<2, dim>& data) {
             permWidth * data.adjacentGluings().size()) +
         lockWidth * data.locks().size());
 
-    enc.encodeBits(6, static_cast<unsigned>(intWidth));
+    enc.encodeInt(6, static_cast<unsigned>(intWidth));
     enc.encodeBit(oriented);
     enc.encodeBit(data.hasLocks());
 
     for (auto s : data.adjacentSimplices())
-        enc.encodeBits(intWidth, s);
-    enc.encodeBits(data.countFacetBits(), data.facetTypes());
+        enc.encodeInt(intWidth, s);
+    enc.encodeBitmask(data.countFacetBits(), data.facetTypes());
     if (oriented) {
         for (UnsignedPermIndex g : data.adjacentGluings())
-            enc.encodeBits(permWidth - 1, g >> 1);
+            enc.encodeInt(permWidth - 1, g >> 1);
     } else {
         for (UnsignedPermIndex g : data.adjacentGluings())
-            enc.encodeBits(permWidth, g);
+            enc.encodeInt(permWidth, g);
     }
     for (auto m : data.locks())
-        enc.encodeBits(lockWidth, m);
+        enc.encodeInt(lockWidth, m);
 
     return std::move(enc).bytes();
 }

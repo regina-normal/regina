@@ -44,40 +44,7 @@ using regina::PackedSigEncoder;
 
 using Base64Decoder = regina::Base64SigDecoder<std::string::const_iterator>;
 using PackedDecoder = regina::PackedSigDecoder<std::string::const_iterator>;
-
-namespace {
-    /**
-     * Keeps track of whether the encoder has been invalidated by calling
-     * bytes().  We use this to account for the fact that bytes() is an rvalue
-     * member function - in C++ the compiler will force you to use std::move()
-     * on the encoder, but there is AFAICT no way to enforce such things in
-     * the Python bindings.  We work around this in Python by keeping a
-     * separate validity flag alongside the encoder.
-     */
-    class SafeBitSigEncoder {
-        private:
-            regina::BitSigEncoder encoder_;
-            bool valid { true };
-
-        public:
-            SafeBitSigEncoder() = default;
-
-            regina::BitSigEncoder& encoder() {
-                if (valid)
-                    return encoder_;
-                else
-                    throw std::runtime_error(
-                        "This encoder has been invalidated - you cannot "
-                        "use it after calling bytes()");
-            }
-
-            auto bytes() {
-                auto ans = std::move(encoder()).bytes();
-                valid = false;
-                return ans;
-            }
-    };
-}
+using BitDecoder = regina::BitSigDecoder<std::string::const_iterator>;
 
 namespace regina::python {
     // For Python (but not C++), we need Base64SigDecoder and PackedSigDecoder
@@ -107,6 +74,46 @@ namespace regina::python {
             PackedSigDecoder_Copy(pybind11::bytes bytes) :
                     StringStorage(bytes),
                     PackedDecoder(str_.begin(), str_.end()) {
+            }
+    };
+
+    class BitSigDecoder_Copy : private StringStorage, public BitDecoder {
+        public:
+            BitSigDecoder_Copy(pybind11::bytes bytes) :
+                    StringStorage(bytes),
+                    BitDecoder(str_.begin(), str_.end()) {
+            }
+    };
+
+    /**
+     * Keeps track of whether the encoder has been invalidated by calling
+     * bytes().  We use this to account for the fact that bytes() is an rvalue
+     * member function - in C++ the compiler will force you to use std::move()
+     * on the encoder, but there is AFAICT no way to enforce such things in
+     * the Python bindings.  We work around this in Python by keeping a
+     * separate validity flag alongside the encoder.
+     */
+    class SafeBitSigEncoder {
+        private:
+            regina::BitSigEncoder encoder_;
+            bool valid { true };
+
+        public:
+            SafeBitSigEncoder() = default;
+
+            regina::BitSigEncoder& encoder() {
+                if (valid)
+                    return encoder_;
+                else
+                    throw std::runtime_error(
+                        "This encoder has been invalidated - you cannot "
+                        "use it after calling bytes()");
+            }
+
+            auto bytes() {
+                auto ans = std::move(encoder()).bytes();
+                valid = false;
+                return ans;
             }
     };
 }
@@ -305,6 +312,7 @@ void addSigUtils(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(BitSigEncoder)
 
+    using regina::python::SafeBitSigEncoder;
     auto te = pybind11::class_<SafeBitSigEncoder>(m, "BitSigEncoder",
             rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
@@ -312,12 +320,13 @@ void addSigUtils(pybind11::module_& m) {
         .def("encodeBit", [](SafeBitSigEncoder& enc, bool bit) {
             enc.encoder().encodeBit(bit);
         }, rdoc::encodeBit)
-        .def("encodeBits", [](SafeBitSigEncoder& enc, int n, unsigned long b) {
-            enc.encoder().encodeBits(n, b);
-        }, rdoc::encodeBits)
-        .def("encodeBits", [](SafeBitSigEncoder& enc, int n, const Bitmask& b) {
-            enc.encoder().encodeBits(n, b);
-        }, rdoc::encodeBits_2)
+        .def("encodeInt", [](SafeBitSigEncoder& enc, int n, unsigned long b) {
+            enc.encoder().encodeInt(n, b);
+        }, rdoc::encodeInt)
+        .def("encodeBitmask", [](SafeBitSigEncoder& enc, int n,
+                const Bitmask& b) {
+            enc.encoder().encodeBitmask(n, b);
+        }, rdoc::encodeBitmask)
         .def("reserveBits", [](SafeBitSigEncoder& enc, size_t count) {
             enc.encoder().reserveBits(count);
         }, rdoc::reserveBits)
@@ -326,6 +335,22 @@ void addSigUtils(pybind11::module_& m) {
         }, rdoc::reserveBytes)
     ;
     regina::python::add_eq_operators(te);
+
+    RDOC_SCOPE_SWITCH(BitSigDecoder)
+
+    auto td = pybind11::class_<regina::python::BitSigDecoder_Copy>(m,
+            "BitSigDecoder", rdoc_scope)
+        .def(pybind11::init<pybind11::bytes>(), rdoc::__init)
+        .def("maybeDone", &BitDecoder::maybeDone, rdoc::maybeDone)
+        .def("noMoreBits", &BitDecoder::noMoreBits, rdoc::noMoreBits)
+        .def("remainingBits", &BitDecoder::remainingBits, rdoc::remainingBits)
+        .def("decodeBit", &BitDecoder::decodeBit, rdoc::decodeBit)
+        .def("decodeInt", &BitDecoder::decodeInt<unsigned long>,
+            rdoc::decodeInt)
+        .def("decodeBitmask", &BitDecoder::decodeBitmask<Bitmask>,
+            rdoc::decodeBitmask)
+    ;
+    regina::python::add_eq_operators(td);
 
     RDOC_SCOPE_END
 }

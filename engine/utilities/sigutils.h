@@ -1885,8 +1885,7 @@ class PackedSigDecoder {
  * encoder will be unusable (and in particular, you cannot encode more bits
  * and/or call bytes() again).
  *
- * Bit encoders are single-use objects: they cannot be copied, moved or
- * swapped.
+ * Bit encoders are single-use objects: they cannot be copied, moved or swapped.
  *
  * \ingroup utilities
  */
@@ -1967,18 +1966,17 @@ class BitSigEncoder {
          * \param count the total number of bits to encode; this must be
          * non-negative.
          * \param bits an integer holding the bits to encode; these will be
-         * stored in order from the least significant bit of the argument
+         * encoded in order from the least significant bit of the argument
          * \a bits.
          */
         template <UnsignedCppInteger IntType>
-        void encodeBits(int count, IntType bits) {
+        void encodeInt(int count, IntType bits) {
             for (int i = 0; i < count; ++i)
                 encodeBit(bits & (IntType(1) << i));
             if (count < sizeof(IntType) * 8) {
                 IntType mask = (IntType(1) << count) - 1;
                 if (bits != (bits & mask))
-                    throw InvalidArgument(
-                        "BitSigEncoder::encodeBits(): "
+                    throw InvalidArgument("BitSigEncoder::encodeInt(): "
                         "integer argument out of range");
             }
         }
@@ -1991,10 +1989,10 @@ class BitSigEncoder {
          * \param count the total number of bits to encode.
          * \param bits a bitmask holding the bits to encode; this bitmask must
          * be capable of holding at least \a count bits.  The bits will be
-         * stored in order from bit 0 of the given bitmask.
+         * encoded in order from bit 0 of the given bitmask.
          */
         template <ReginaBitmask BitmaskType>
-        void encodeBits(size_t count, const BitmaskType& bits) {
+        void encodeBitmask(size_t count, const BitmaskType& bits) {
             for (size_t i = 0; i < count; ++i)
                 encodeBit(bits.get(i));
         }
@@ -2039,6 +2037,199 @@ class BitSigEncoder {
 
         BitSigEncoder(const BitSigEncoder&) = delete;
         BitSigEncoder& operator = (const BitSigEncoder&) = delete;
+};
+
+/**
+ * A helper class for reading signatures that pack information as tightly as
+ * possible into bits, with no regard for boundaries between bytes in the
+ * final signature.
+ *
+ * To use this class: create a new BitSigDecoder by passing details of the
+ * encoded byte sequence to its constructor, and then call its `decode...()`
+ * member functions to read values sequentially from the encoding.
+ *
+ * This class will keep track of a current position in the encoded bit
+ * sequence (this position may be in the middle of a byte, where some bits of
+ * the byte have been read and some have not).  Each call to a `decode...()`
+ * member function will advance this position accordingly (but never beyond the
+ * end of the sequence).
+ *
+ * Bit decoders are single-use objects: they cannot be copied, moved or swapped.
+ *
+ * \python The type \a Iterator is an implementation detail, and is hidden
+ * from Python users.  Just use the unadorned type name `BitSigDecoder`.
+ *
+ * \ingroup utilities
+ */
+template <CharIterator Iterator>
+requires std::bidirectional_iterator<Iterator>
+class BitSigDecoder {
+    private:
+        Iterator next_;
+            /**< Points to the first unextracted byte from the encoded byte
+                 sequence. */
+        Iterator end_;
+            /**< Points to the end of the encoded byte sequence (this is a
+                 past-the-end location, as is usual for an iterator range). */
+        uint8_t extracted_ { 0 };
+            /**< A byte that has been extracted from the sequence but whose
+                 bits have not yet all been read. */
+        int nQueued_ { 0 };
+            /**< The number of bits from \a extracted_ that are waiting to be
+                 read.  This will always be between 0 and 7 inclusive. */
+
+    public:
+        /**
+         * Creates a new decoder for the given encoded byte sequence.
+         *
+         * The byte sequence should be passed as an iterator range.
+         * This iterator range must remain valid for the entire lifespan
+         * of this decoder.
+         *
+         * \python Instead of an iterator range, this constructor takes a
+         * Python `bytes` object.  In Python (but not C++), the decoder will
+         * also keep a deep copy of the byte sequence, to ensure the lifespan
+         * requirements.
+         *
+         * \param beginEncoding an iterator pointing to the beginning of the
+         * encoded byte sequence.
+         * \param endEncoding a past-the-end iterator that marks the end of the
+         * encoded byte sequence.
+         */
+        BitSigDecoder(Iterator beginEncoding, Iterator endEncoding) :
+                next_(beginEncoding), end_(endEncoding) {
+        }
+
+        /**
+         * Determines if the current position _could_ have reached the end of
+         * the encoded bit sequence.  The word "maybe" acknowledges that the
+         * precise end of the bit sequence is often unclear (since the sequence
+         * is presented in bytes, without knowing how many bits of the final
+         * byte were actually used).
+         *
+         * This will return `true` if:
+         *
+         * - there are no remaining _bytes_ that we have not read from at all;
+         *   and,
+         *
+         * - of the last byte that we did read from (if any), all of the _bits_
+         *   that have not yet been read are set to zero.
+         *
+         * \return \c true if and only if we could be at the end of the
+         * encoded bit sequence, as described above.
+         */
+        bool maybeDone() const {
+            if (next_ != end_)
+                return false;
+            if (nQueued_ == 0)
+                return true;
+            int readMask = (1 << (8 - nQueued_)) - 1;
+            return (extracted_ & readMask) == extracted_;
+        }
+
+        /**
+         * Determines if there are no more available bits to read.
+         *
+         * This will return `true` when we have already read all eight bits
+         * from every byte of the input sequence.
+         *
+         * \return \c true if and only if there are no more available bits.
+         */
+        bool noMoreBits() const {
+            return next_ == end_ && nQueued_ == 0;
+        }
+
+        /**
+         * Returns the number of bits that can still be read from the encoded
+         * sequence, counting from the current position onwards.
+         *
+         * The routine `noMoreBits()` will return `true` if and only if
+         * `remainingBits()` returns zero.
+         *
+         * \return the number of bits remaining.
+         */
+        size_t remainingBits() const
+                requires std::random_access_iterator<Iterator> {
+            return 8 * (end_ - next_) + nQueued_;
+        }
+
+        /**
+         * Returns the next bit in the encoded sequence.
+         *
+         * \exception InvalidInput There are no more bits remaining in the
+         * encoded sequence.
+         *
+         * \return `true` if the bit that was read is 1, or `false` if the
+         * bit that was read is 0.
+         */
+        bool decodeBit() {
+            if (nQueued_) {
+                return extracted_ & (1 << (8 - nQueued_--));
+            } else if (next_ == end_) {
+                throw InvalidInput("BitSigDecoder: "
+                    "unexpected end of encoded byte sequence");
+            } else {
+                extracted_ = *next_++;
+                nQueued_ = 7;
+                return (extracted_ & 1);
+            }
+        }
+
+        /**
+         * Decodes a sequence of bits, and returns them in the form of a
+         * native unsigned integer.
+         *
+         * \python The template argument \a IntType is taken to be
+         * `unsigned long`.
+         *
+         * \exception InvalidInput There are fewer than \a count bits available
+         * in the encoded sequence.
+         *
+         * \tparam IntType the unsigned integer type to return; this must be
+         * at least \a count bits in size.
+         *
+         * \param count the number of bits to decode.
+         * \param bits an integer holding the bits that were decoded.  The bits
+         * will be stored in order from the least significant bit.
+         */
+        template <UnsignedCppInteger IntType>
+        IntType decodeInt(int count) {
+            IntType ans = 0;
+            size_t i = 0;
+            IntType bit = 1;
+            for ( ; i < count; ++i, bit <<= 1)
+                if (decodeBit())
+                    ans |= bit;
+            return ans;
+        }
+
+        /**
+         * Decodes a sequence of bits, and returns them in the form of a
+         * bitmask.
+         *
+         * \python The template argument \a BitmaskType is taken to be Bitmask.
+         *
+         * \exception InvalidInput There are fewer than \a count bits available
+         * in the encoded sequence.
+         *
+         * \tparam BitmaskType the bitmask type to return; this must be
+         * capable of holding at least \a count bits.
+         *
+         * \param count the number of bits to decode.
+         * \return a bitmask holding the bits that were decoded.  The bits
+         * will be stored in the bitmask in order from bit 0.
+         */
+        template <ReginaBitmask BitmaskType = Bitmask>
+        BitmaskType decodeBitmask(size_t count) {
+            BitmaskType bits(count);
+            for (size_t i = 0; i < count; ++i)
+                if (decodeBit())
+                    bits.set(i, true);
+            return bits;
+        }
+
+        BitSigDecoder(const BitSigDecoder&) = delete;
+        BitSigDecoder& operator = (const BitSigDecoder&) = delete;
 };
 
 } // namespace regina
