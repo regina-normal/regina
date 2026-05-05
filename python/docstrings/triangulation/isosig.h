@@ -399,6 +399,48 @@ Python:
 
 namespace IsoSigBinary_ {
 
+// Docstring regina::python::doc::IsoSigBinary_::asString
+static const char *asString =
+R"doc(Re-encodes the given binary signature as a string-based signature
+(using the IsoSigPrintable encoding), which uses only printable
+characters from the 7-bit ASCII range.
+
+Calling ``printable(sig)`` is significantly more efficient than
+calling ``Triangulation<dim>::fromSig(sig).neoSig()`` (with an
+appropriate orientation argument if necessary), and should give the
+same result.
+
+If *sig* is an oriented signature, then this re-encoding will preserve
+the orientation.
+
+Precondition:
+    The argument *sig* is indeed a second-generation isomorphism
+    signature of a <i>dim</i/>-dimensional triangulation, encoded via
+    IsoSigBinary. This will _not_ be checked thoroughly (though some
+    minimal checks will be done).
+
+Python:
+    Python does not support C++ templates. Instead, the dimension
+    *dim* should be passed as a second runtime argument; for example,
+    ``IsoSigBinary.asString(sig, 3)``.
+
+Exception ``InvalidArgument``:
+    It was detected that *sig* was not a valid second-generation
+    isomorphism signature of a <i>dim</i/>-dimensional triangulation
+    encoded via IsoSigBinary. Again, this will not be checked
+    thoroughly; this exception will only be thrown if the violation is
+    sufficiently obvious that it is picked up during the re-encoding
+    process.
+
+Parameter ``sig``:
+    the second-generation signature of some <i>dim</i/>-dimensional
+    triangulation, encoded as a byte sequence using the IsoSigBinary
+    encoding.
+
+Returns:
+    the second-generation signature of the same triangulation, encoded
+    as a printable string using the IsoSigPrintable encoding.)doc";
+
 // Docstring regina::python::doc::IsoSigBinary_::encode
 static const char *encode =
 R"doc(Encodes a single connected component of a *dim*-dimensional

@@ -1298,6 +1298,10 @@ class IsoSigBinary {
          * IsoSigBinary.  This will _not_ be checked thoroughly (though some
          * minimal checks will be done).
          *
+         * \python Python does not support C++ templates.  Instead, the
+         * dimension \a dim should be passed as a second runtime argument;
+         * for example, `IsoSigBinary.asString(sig, 3)`.
+         *
          * \exception InvalidArgument It was detected that \a sig was not a
          * valid second-generation isomorphism signature of a
          * <i>dim</i/>-dimensional triangulation encoded via IsoSigBinary.

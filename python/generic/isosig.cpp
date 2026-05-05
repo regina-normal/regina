@@ -62,7 +62,7 @@ void addIsoSigEncodings(pybind11::module_& m) {
                         dim, [](auto d) {
                     return IsoSigPrintable::charsPerPerm<d>;
                 });
-            } catch (std::runtime_error&) {
+            } catch (const std::runtime_error&) {
                 throw regina::InvalidArgument("Not a supported dimension");
             }
         }, rdoc::charsPerPerm)
@@ -85,7 +85,7 @@ void addIsoSigEncodings(pybind11::module_& m) {
                         dim, [](auto d) {
                     return IsoSigPrintableLockFree::charsPerPerm<d>;
                 });
-            } catch (std::runtime_error&) {
+            } catch (const std::runtime_error&) {
                 throw regina::InvalidArgument("Not a supported dimension");
             }
         }, rdoc::charsPerPerm)
@@ -103,6 +103,18 @@ void addIsoSigEncodings(pybind11::module_& m) {
     auto b = pybind11::class_<IsoSigBinary>(m, "IsoSigBinary", rdoc_scope)
         .def_static("encodeEmpty", &IsoSigBinary::encodeEmpty,
             rdoc::encodeEmpty)
+        .def_static("asString", [](const regina::ByteSequence& sig, int dim) {
+            try {
+                return regina::select_constexpr<2, regina::maxDim() + 1,
+                        std::string>(dim, [&sig](auto d) {
+                    return IsoSigBinary::asString<d>(sig);
+                });
+            } catch (const regina::InvalidArgument& exc) {
+                throw exc;
+            } catch (const std::runtime_error&) {
+                throw regina::InvalidArgument("Not a supported dimension");
+            }
+        }, rdoc::asString)
         ;
     regina::for_constexpr<2, regina::maxDim() + 1>([&b](auto dim) {
         // This encoding is for second-generation signatures only.

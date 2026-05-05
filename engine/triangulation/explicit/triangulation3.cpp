@@ -35,7 +35,11 @@
 #include "triangulation/detail/triangulation-impl.h"
 #include "triangulation/dim3.h"
 
-namespace regina::detail {
+namespace regina {
+
+template std::string IsoSigBinary::asString<3>(const ByteSequence&);
+
+namespace detail {
 
 template std::string
     TriangulationBase<3>::isoSig<IsoSigPrintable, IsoSigClassic<3>>() const;
@@ -96,4 +100,4 @@ template bool TriangulationBase<3>::makeIdeal();
 template std::string TriangulationBase<3>::source(Language) const;
 template void TriangulationBase<3>::writeDot(std::ostream&, bool) const;
 
-} // namespace regina::detail
+} } // namespace regina::detail

@@ -554,6 +554,11 @@ size_t IsoSigBinary::length(const IsoSigData<2, dim>& data) {
     return (bits + 7) / 8;
 }
 
+template <int dim> requires (supportedDim(dim))
+std::string IsoSigBinary::asString(const ByteSequence& sig) {
+    return Triangulation<dim>::fromSig(sig).neoSig();
+}
+
 namespace detail {
 
 template <int dim> requires (supportedDim(dim))
