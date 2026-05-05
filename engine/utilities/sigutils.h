@@ -65,7 +65,7 @@ namespace regina {
  * signatures, and uses utilities/base64.h exclusively for encoding files.
  *
  * \deprecated This is now deprecated in favour of the new classes
- * Base64SigEncoder and Base64SigDecoder, which carry state and have better
+ * Base64Encoder and Base64Decoder, which carry state and have better
  * error handling.
  *
  * \ingroup utilities
@@ -292,7 +292,7 @@ struct [[deprecated]] Base64SigEncoding {
  * These are (in particular) used in the default encodings for Regina's
  * own isomorphism signatures and knot signatures.
  *
- * To use this class: create a new Base64SigEncoder, call one or more of its
+ * To use this class: create a new Base64Encoder, call one or more of its
  * member functions to write values to the encoding, and then call str() to
  * extract the resulting base64 string.
  *
@@ -308,11 +308,11 @@ struct [[deprecated]] Base64SigEncoding {
  *
  * \ingroup utilities
  */
-class Base64SigEncoder {
+class Base64Encoder {
     public:
         /**
          * A table of printable characters that are _not_ amongst the base64
-         * characters used by Base64SigEncoder and Base64SigDecoder.
+         * characters used by Base64Encoder and Base64Decoder.
          *
          * These characters could (for example) be used to mark the boundaries
          * of base64 blocks, or to indicate special cases.
@@ -332,7 +332,7 @@ class Base64SigEncoder {
         /**
          * Creates a new encoder, with an empty base64 string.
          */
-        Base64SigEncoder() = default;
+        Base64Encoder() = default;
 
         /**
          * Returns the base64 encoding that has been constructed thus far.
@@ -361,7 +361,7 @@ class Base64SigEncoder {
         /**
          * Encodes the given 6-bit integer using a single base64 character.
          *
-         * The inverse to this routine is Base64SigDecoder::decodeSingle().
+         * The inverse to this routine is Base64Decoder::decodeSingle().
          *
          * \exception InvalidArgument The given integer is not between
          * 0 and 63 inclusive.
@@ -374,7 +374,7 @@ class Base64SigEncoder {
         template <CppInteger IntType>
         void encodeSingle(IntType c) {
             if (c < 0)
-                throw InvalidArgument("Base64SigEncoder::encodeSingle(): "
+                throw InvalidArgument("Base64Encoder::encodeSingle(): "
                     "integer argument cannot be negative");
             else if (c < 26)
                 base64_ += (char(c) + 'a');
@@ -387,7 +387,7 @@ class Base64SigEncoder {
             else if (c == 63)
                 base64_ += '-';
             else
-                throw InvalidArgument("Base64SigEncoder::encodeSingle(): "
+                throw InvalidArgument("Base64Encoder::encodeSingle(): "
                     "integer argument out of range");
         }
 
@@ -426,7 +426,7 @@ class Base64SigEncoder {
          * a top-dimensional simplex number, or a crossing index).  Note that
          * encodeSize() itself might write more than \a b characters.
          *
-         * The inverse to this routine is Base64SigDecoder::decodeSize().
+         * The inverse to this routine is Base64Decoder::decodeSize().
          *
          * \param size the non-negative integer to encode.
          * \return the number of base64 characters required to write any
@@ -461,7 +461,7 @@ class Base64SigEncoder {
          * distinct 6-bit blocks, which will be encoded in order from lowest
          * to highest significance.
          *
-         * The inverse to this routine is Base64SigDecoder::decodeInt().
+         * The inverse to this routine is Base64Decoder::decodeInt().
          *
          * \exception InvalidArgument The given integer \a val is negative,
          * or requires more than `6 × nChars` bits.
@@ -476,7 +476,7 @@ class Base64SigEncoder {
         template <CppInteger IntType>
         void encodeInt(IntType val, int nChars) {
             if (val < 0)
-                throw InvalidArgument("Base64SigEncoder::encodeInt(): "
+                throw InvalidArgument("Base64Encoder::encodeInt(): "
                     "integer argument cannot be negative");
 
             for ( ; nChars > 0; --nChars) {
@@ -485,7 +485,7 @@ class Base64SigEncoder {
             }
 
             if (val != 0)
-                throw InvalidArgument("Base64SigEncoder::encodeInt(): "
+                throw InvalidArgument("Base64Encoder::encodeInt(): "
                     "integer argument out of range");
         }
 
@@ -498,7 +498,7 @@ class Base64SigEncoder {
          * 6-bit blocks, which will be encoded in order from lowest to highest
          * significance.
          *
-         * The inverse to this routine is Base64SigDecoder::decodeInts().
+         * The inverse to this routine is Base64Decoder::decodeInts().
          *
          * \exception InvalidArgument Some integer in the sequence is negative,
          * or requires more than `6 × nChars` bits.
@@ -528,7 +528,7 @@ class Base64SigEncoder {
          * 6-bit blocks, which will be encoded in order from lowest to highest
          * significance.
          *
-         * The inverse to this routine is Base64SigDecoder::decodeInts().
+         * The inverse to this routine is Base64Decoder::decodeInts().
          *
          * \exception InvalidArgument Some integer in the sequence is negative,
          * or requires more than `6 × nChars` bits.
@@ -557,7 +557,7 @@ class Base64SigEncoder {
          * significance.  (The last base64 character might of course encode
          * fewer than six bits instead.)
          *
-         * The inverse to this routine is Base64SigDecoder::decodeBits().
+         * The inverse to this routine is Base64Decoder::decodeBits().
          *
          * \python The template argument \a BitmaskType is taken to be Bitmask.
          *
@@ -597,7 +597,7 @@ class Base64SigEncoder {
          * Each trit will be obtained by dereferencing an iterator, which
          * (as noted above) must yield the value 0, 1 or 2.
          *
-         * The inverse to this routine is Base64SigDecoder::decodeTrits(),
+         * The inverse to this routine is Base64Decoder::decodeTrits(),
          * though that function only decodes three trits at a time.
          *
          * \nopython
@@ -635,7 +635,7 @@ class Base64SigEncoder {
          * significance.  (The last base64 character might of course encode
          * just one or two trits instead.)
          *
-         * The inverse to this routine is Base64SigDecoder::decodeTrits(),
+         * The inverse to this routine is Base64Decoder::decodeTrits(),
          * though that function only decodes three trits at a time.
          *
          * \python The argument \a trits should be a Python list.
@@ -679,8 +679,8 @@ class Base64SigEncoder {
             base64_.reserve(capacity);
         }
 
-        Base64SigEncoder(const Base64SigEncoder&) = delete;
-        Base64SigEncoder& operator = (const Base64SigEncoder&) = delete;
+        Base64Encoder(const Base64Encoder&) = delete;
+        Base64Encoder& operator = (const Base64Encoder&) = delete;
 };
 
 /**
@@ -688,7 +688,7 @@ class Base64SigEncoder {
  * These are (in particular) used in the default encodings for Regina's
  * own isomorphism signatures and knot signatures.
  *
- * To use this class: create a new Base64SigDecoder by passing details of the
+ * To use this class: create a new Base64Decoder by passing details of the
  * encoded string to its constructor, and then call its `decode...()` member
  * functions to read values sequentially from the encoding.
  *
@@ -707,13 +707,13 @@ class Base64SigEncoder {
  * signatures, and uses utilities/base64.h exclusively for encoding files.
  *
  * \python The type \a Iterator is an implementation detail, and is hidden
- * from Python users.  Just use the unadorned type name `Base64SigDecoder`.
+ * from Python users.  Just use the unadorned type name `Base64Decoder`.
  *
  * \ingroup utilities
  */
 template <CharIterator Iterator>
 requires std::bidirectional_iterator<Iterator>
-class Base64SigDecoder {
+class Base64Decoder {
     private:
         Iterator next_;
             /**< The current position in the encoded string. */
@@ -752,7 +752,7 @@ class Base64SigDecoder {
          * squeezed inwards to ignore whitespace at both the beginning and
          * the end of the encoded string.
          */
-        Base64SigDecoder(Iterator beginEncoding, Iterator endEncoding,
+        Base64Decoder(Iterator beginEncoding, Iterator endEncoding,
                 bool stripWhitespace = true) :
                 next_(beginEncoding), end_(endEncoding) {
             if (stripWhitespace) {
@@ -783,7 +783,7 @@ class Base64SigDecoder {
          * at the end of the string.  Now it simply tests whether we have
          * reached the end of the string.  However, combined with the changes
          * to the constructor, this yields the same default behaviour as before,
-         * since `Base64SigDecoder(beginEncoding, endEncoding)` will now by
+         * since `Base64Decoder(beginEncoding, endEncoding)` will now by
          * default move the endpoints of the string to ignore whitespace at both
          * ends of the string (not just the start).  Nevertheless, if you
          * passed an extra boolean argument to the constructor then beware:
@@ -867,7 +867,7 @@ class Base64SigDecoder {
          * Decodes the 6-bit integer value represented by the next single
          * base64 character.
          *
-         * The inverse to this routine is Base64SigEncoder::encodeSingle().
+         * The inverse to this routine is Base64Encoder::encodeSingle().
          *
          * \exception InvalidInput There are no more characters remaining in
          * the encoded string, or the next character is not a valid base64
@@ -882,7 +882,7 @@ class Base64SigDecoder {
         template <CppInteger IntType>
         IntType decodeSingle() {
             if (next_ == end_)
-                throw InvalidInput("Base64SigDecoder: "
+                throw InvalidInput("Base64Decoder: "
                     "unexpected end of encoded string");
 
             char c = *next_++;
@@ -896,7 +896,7 @@ class Base64SigDecoder {
                 return 62;
             if (c == '-')
                 return 63;
-            throw InvalidInput("Base64SigDecoder: "
+            throw InvalidInput("Base64Decoder: "
                 "invalid base64 character in encoded string");
         }
 
@@ -904,7 +904,7 @@ class Base64SigDecoder {
          * Decodes the next non-negative integer value (typically representing
          * the size of some object), without knowing in advance how many
          * base64 characters were used to encode it.  This integer value must
-         * have been encoded using Base64SigEncoder::encodeSize().
+         * have been encoded using Base64Encoder::encodeSize().
          *
          * A typical use case would be where \a size represents the number of
          * top-dimensional simplices in a triangulation, or the number of
@@ -916,7 +916,7 @@ class Base64SigDecoder {
          * returned when \a size was encoded using encodeSize(), and typically
          * you would pass \a b to subsequent calls to decodeInt().
          *
-         * The inverse to this routine is Base64SigEncoder::encodeSize().
+         * The inverse to this routine is Base64Encoder::encodeSize().
          *
          * \exception InvalidInput There are not enough characters available
          * in the encoded string, or a character was encountered that was not
@@ -940,7 +940,7 @@ class Base64SigDecoder {
         /**
          * Decodes the next non-negative integer value, assuming this uses
          * a fixed number of base64 characters.  This integer value would
-         * typically have been encoded using Base64SigEncoder::encodeInt(),
+         * typically have been encoded using Base64Encoder::encodeInt(),
          * using the same \a nChars argument.
          *
          * Specifically, it will be assumed that the integer has been broken
@@ -953,7 +953,7 @@ class Base64SigDecoder {
          * programmer has chosen an integer type large enough to contain
          * whatever values they expect to read.
          *
-         * The inverse to this routine is Base64SigEncoder::encodeInt().
+         * The inverse to this routine is Base64Encoder::encodeInt().
          *
          * \exception InvalidInput There are fewer than \a nChars characters
          * available in the encoded string, or a character was encountered
@@ -978,7 +978,7 @@ class Base64SigDecoder {
          * each individual value uses a fixed number of base64 characters,
          * and returns these as native C++ integers via an output iterator.
          * Each integer to be decoded would typically have been encoded using
-         * Base64SigEncoder::encodeInt() or Base64SigEncoder::encodeInts(),
+         * Base64Encoder::encodeInt() or Base64Encoder::encodeInts(),
          * using the same \a nChars argument.
          *
          * Specifically, it will be assumed that each integer has been broken
@@ -992,7 +992,7 @@ class Base64SigDecoder {
          * is large enough to contain whatever integer values they expect to
          * read.
          *
-         * The inverse to this routine is Base64SigEncoder::encodeInts().
+         * The inverse to this routine is Base64Encoder::encodeInts().
          *
          * \exception InvalidInput There are fewer than `count × nChars`
          * characters available in the encoded string, or a character was
@@ -1023,7 +1023,7 @@ class Base64SigDecoder {
          * each individual value uses a fixed number of base64 characters,
          * and returns these as an array of native C++ integers.
          * Each integer to be decoded would typically have been encoded using
-         * Base64SigEncoder::encodeInt() or Base64SigEncoder::encodeInts(),
+         * Base64Encoder::encodeInt() or Base64Encoder::encodeInts(),
          * using the same \a nChars argument.
          *
          * Specifically, it will be assumed that each integer has been broken
@@ -1036,7 +1036,7 @@ class Base64SigDecoder {
          * that the programmer has chosen an integer type large enough to
          * contain whatever values they expect to read.
          *
-         * The inverse to this routine is Base64SigEncoder::encodeInts().
+         * The inverse to this routine is Base64Encoder::encodeInts().
          *
          * \exception InvalidInput There are fewer than `count × nChars`
          * characters available in the encoded string, or a character was
@@ -1061,14 +1061,14 @@ class Base64SigDecoder {
         /**
          * Decodes a sequence of bits, and returns these in the form of a
          * bitmask.  The bits would typically have been encoded using
-         * Base64SigEncoder::encodeBits() with the same \a count argument.
+         * Base64Encoder::encodeBits() with the same \a count argument.
          *
          * Specifically, it will be assumed that the bits have been packed six
          * at a time into base64 characters, and that for each underlying 6-bit
          * integer, the bits are stored in order from lowest to highest
          * significance.
          *
-         * The inverse to this routine is Base64SigEncoder::encodeBits().
+         * The inverse to this routine is Base64Encoder::encodeBits().
          *
          * \exception InvalidInput There are not enough characters available in
          * the encoded string to hold the requested number of bits, and/or a
@@ -1104,7 +1104,7 @@ class Base64SigDecoder {
          * Decodes three trits from a single base64 character, and returns
          * these using an output iterator.  A _trit_ is either 0, 1 or 2.
          *
-         * The inverse to this routine is Base64SigEncoder::encodeTrits(); see
+         * The inverse to this routine is Base64Encoder::encodeTrits(); see
          * that routine for details of the encoding.
          *
          * \exception InvalidInput There are no more characters remaining in
@@ -1130,7 +1130,7 @@ class Base64SigDecoder {
          * Decodes three trits from a single base64 character, and returns
          * these as a fixed-size array.  A _trit_ is either 0, 1 or 2.
          *
-         * The inverse to this routine is Base64SigEncoder::encodeTrits(); see
+         * The inverse to this routine is Base64Encoder::encodeTrits(); see
          * that routine for details of the encoding.
          *
          * \exception InvalidInput There are no more characters remaining in
@@ -1159,8 +1159,8 @@ class Base64SigDecoder {
                 (c >= '0' && c <= '9') || c == '+' || c == '-');
         }
 
-        Base64SigDecoder(const Base64SigDecoder&) = delete;
-        Base64SigDecoder& operator = (const Base64SigDecoder&) = delete;
+        Base64Decoder(const Base64Decoder&) = delete;
+        Base64Decoder& operator = (const Base64Decoder&) = delete;
 };
 
 /**

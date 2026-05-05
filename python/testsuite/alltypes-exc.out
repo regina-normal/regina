@@ -12,8 +12,8 @@ BanBoundary : class -> EqualityType.ByValue
 BanEdge : class -> EqualityType.ByValue
 BanNone : class -> EqualityType.ByValue
 BanTorusBoundary : class -> EqualityType.ByValue
-Base64SigDecoder : class -> EqualityType.ByReference
-Base64SigEncoder : class -> EqualityType.ByReference
+Base64Decoder : class -> EqualityType.ByReference
+Base64Encoder : class -> EqualityType.ByReference
 Base64SigEncoding : class -> EqualityType.NeverInstantiated
 BitManipulator : class -> EqualityType.NeverInstantiated
 Bitmask : class -> EqualityType.ByValue

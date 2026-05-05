@@ -308,7 +308,7 @@ IsoSigData<2, dim> IsoSigData<2, dim>::minimal(Component<dim>* component,
 
 template <int dim> requires (supportedDim(dim))
 std::string IsoSigPrintable::encode(const IsoSigData<1, dim>& data) {
-    Base64SigEncoder enc;
+    Base64Encoder enc;
     enc.reserve(length(data));
 
     int intWidth = enc.encodeSize(data.size());
@@ -318,7 +318,7 @@ std::string IsoSigPrintable::encode(const IsoSigData<1, dim>& data) {
 
     if (data.hasLocks()) {
         // Each lock mask holds dim+2 bits.
-        enc.append(Base64SigEncoder::spare[1]);
+        enc.append(Base64Encoder::spare[1]);
         for (auto mask : data.locks()) {
             if constexpr (dim <= 4) {
                 // We can encode <= 6 bits with 1 character.
@@ -347,7 +347,7 @@ size_t IsoSigPrintable::length(const IsoSigData<1, dim>& data) {
     } else {
         // We begin with two extra characters: 63 (a marker that the
         // component is large), and the encoding of the integer width.
-        int width = Base64SigEncoder::integerWidth(data.size());
+        int width = Base64Encoder::integerWidth(data.size());
         ans = 2 + (1 + data.adjacentSimplices().size()) * width;
     }
     ans += ((data.facetTypes().size() + 2) / 3);
@@ -367,7 +367,7 @@ size_t IsoSigPrintable::length(const IsoSigData<1, dim>& data) {
 
 template <int dim> requires (supportedDim(dim))
 std::string IsoSigPrintable::encode(const IsoSigData<2, dim>& data) {
-    Base64SigEncoder enc;
+    Base64Encoder enc;
     enc.reserve(length(data));
 
     int intWidth = enc.encodeSize(data.size());
@@ -377,7 +377,7 @@ std::string IsoSigPrintable::encode(const IsoSigData<2, dim>& data) {
 
     if (data.hasLocks()) {
         // Each lock mask holds dim+2 bits.
-        enc.append(Base64SigEncoder::spare[1]);
+        enc.append(Base64Encoder::spare[1]);
         for (auto mask : data.locks()) {
             if constexpr (dim <= 4) {
                 // We can encode <= 6 bits with 1 character.
@@ -406,7 +406,7 @@ size_t IsoSigPrintable::length(const IsoSigData<2, dim>& data) {
     } else {
         // We begin with two extra characters: 63 (a marker that the
         // component is large), and the encoding of the integer width.
-        int width = Base64SigEncoder::integerWidth(data.size());
+        int width = Base64Encoder::integerWidth(data.size());
         ans = 2 + (1 + data.adjacentSimplices().size()) * width;
     }
     ans += ((data.countFacetBits() + 5) / 6);
@@ -426,7 +426,7 @@ size_t IsoSigPrintable::length(const IsoSigData<2, dim>& data) {
 
 template <int dim> requires (supportedDim(dim))
 std::string IsoSigPrintableLockFree::encode(const IsoSigData<1, dim>& data) {
-    Base64SigEncoder enc;
+    Base64Encoder enc;
     enc.reserve(length(data));
 
     int intWidth = enc.encodeSize(data.size());
@@ -446,7 +446,7 @@ size_t IsoSigPrintableLockFree::length(const IsoSigData<1, dim>& data) {
     } else {
         // We begin with two extra characters: 63 (a marker that the
         // component is large), and the encoding of the integer width.
-        int width = Base64SigEncoder::integerWidth(data.size());
+        int width = Base64Encoder::integerWidth(data.size());
         ans = 2 + (1 + data.adjacentSimplices().size()) * width;
     }
     ans += ((data.facetTypes().size() + 2) / 3);
@@ -456,7 +456,7 @@ size_t IsoSigPrintableLockFree::length(const IsoSigData<1, dim>& data) {
 
 template <int dim> requires (supportedDim(dim))
 std::string IsoSigPrintableLockFree::encode(const IsoSigData<2, dim>& data) {
-    Base64SigEncoder enc;
+    Base64Encoder enc;
     enc.reserve(length(data));
 
     int intWidth = enc.encodeSize(data.size());
@@ -476,7 +476,7 @@ size_t IsoSigPrintableLockFree::length(const IsoSigData<2, dim>& data) {
     } else {
         // We begin with two extra characters: 63 (a marker that the
         // component is large), and the encoding of the integer width.
-        int width = Base64SigEncoder::integerWidth(data.size());
+        int width = Base64Encoder::integerWidth(data.size());
         ans = 2 + (1 + data.adjacentSimplices().size()) * width;
     }
     ans += ((data.countFacetBits() + 5) / 6);
@@ -719,7 +719,7 @@ std::pair<typename Encoding::Signature, Isomorphism<dim>>
 
 template <int dim> requires (supportedDim(dim))
 Triangulation<dim> TriangulationBase<dim>::fromSig(const std::string& sig) {
-    Base64SigDecoder dec(sig.begin(), sig.end()); // strips whitespace
+    Base64Decoder dec(sig.begin(), sig.end()); // strips whitespace
 
     try {
         Triangulation<dim> ans;
@@ -828,7 +828,7 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const std::string& sig) {
                 }
 
             // Read simplex/facet locks, if these are present.
-            if (dec.peek() == Base64SigEncoder::spare[1]) {
+            if (dec.peek() == Base64Encoder::spare[1]) {
                 dec.skip();
 
                 using LockMask = typename Simplex<dim>::LockMask;
@@ -866,7 +866,7 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const std::string& sig) {
 
         return ans;
     } catch (const InvalidInput&) {
-        // Any exception caught here was thrown by Base64SigDecoder.
+        // Any exception caught here was thrown by Base64Decoder.
         throw InvalidArgument(
             "fromSig(): incomplete or invalid base64 encoding");
     }
@@ -874,7 +874,7 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const std::string& sig) {
 
 template <int dim> requires (supportedDim(dim))
 size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
-    Base64SigDecoder dec(sig.begin(), sig.end()); // strips whitespace
+    Base64Decoder dec(sig.begin(), sig.end()); // strips whitespace
     try {
         return dec.decodeSize().first;
     } catch (const InvalidInput&) {

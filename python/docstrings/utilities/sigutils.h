@@ -11,13 +11,13 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Base64SigDecoder
-static const char *Base64SigDecoder =
+// Docstring regina::python::doc::Base64Decoder
+static const char *Base64Decoder =
 R"doc(A helper class for reading signatures that use base64 encodings. These
 are (in particular) used in the default encodings for Regina's own
 isomorphism signatures and knot signatures.
 
-To use this class: create a new Base64SigDecoder by passing details of
+To use this class: create a new Base64Decoder by passing details of
 the encoded string to its constructor, and then call its
 ``decode...()`` member functions to read values sequentially from the
 encoding.
@@ -41,15 +41,15 @@ or swapped.
 Python:
     The type *Iterator* is an implementation detail, and is hidden
     from Python users. Just use the unadorned type name
-    ``Base64SigDecoder``.)doc";
+    ``Base64Decoder``.)doc";
 
-// Docstring regina::python::doc::Base64SigEncoder
-static const char *Base64SigEncoder =
+// Docstring regina::python::doc::Base64Encoder
+static const char *Base64Encoder =
 R"doc(A helper class for writing signatures that use base64 encodings. These
 are (in particular) used in the default encodings for Regina's own
 isomorphism signatures and knot signatures.
 
-To use this class: create a new Base64SigEncoder, call one or more of
+To use this class: create a new Base64Encoder, call one or more of
 its member functions to write values to the encoding, and then call
 str() to extract the resulting base64 string.
 
@@ -82,7 +82,7 @@ This base64 encoding uses the characters: ``a..zA..Z0..9+-``
 
 .. deprecated::
     This is now deprecated in favour of the new classes
-    Base64SigEncoder and Base64SigDecoder, which carry state and have
+    Base64Encoder and Base64Decoder, which carry state and have
     better error handling.)doc";
 
 // Docstring regina::python::doc::BitDecoder
@@ -162,9 +162,9 @@ bytes() to extract the resulting byte sequence.
 Packed encoders are single-use objects: they cannot be copied, moved
 or swapped.)doc";
 
-namespace Base64SigDecoder_ {
+namespace Base64Decoder_ {
 
-// Docstring regina::python::doc::Base64SigDecoder_::__init
+// Docstring regina::python::doc::Base64Decoder_::__init
 static const char *__init =
 R"doc(Creates a new decoder for the given encoded string.
 
@@ -200,18 +200,18 @@ Parameter ``stripWhitespace``:
     whitespace at both the beginning and the end of the encoded
     string.)doc";
 
-// Docstring regina::python::doc::Base64SigDecoder_::decodeBits
+// Docstring regina::python::doc::Base64Decoder_::decodeBits
 static const char *decodeBits =
 R"doc(Decodes a sequence of bits, and returns these in the form of a
 bitmask. The bits would typically have been encoded using
-Base64SigEncoder::encodeBits() with the same *count* argument.
+Base64Encoder::encodeBits() with the same *count* argument.
 
 Specifically, it will be assumed that the bits have been packed six at
 a time into base64 characters, and that for each underlying 6-bit
 integer, the bits are stored in order from lowest to highest
 significance.
 
-The inverse to this routine is Base64SigEncoder::encodeBits().
+The inverse to this routine is Base64Encoder::encodeBits().
 
 Exception ``InvalidInput``:
     There are not enough characters available in the encoded string to
@@ -231,11 +231,11 @@ Parameter ``count``:
 Returns:
     a bitmask holding the bits that were decoded.)doc";
 
-// Docstring regina::python::doc::Base64SigDecoder_::decodeInt
+// Docstring regina::python::doc::Base64Decoder_::decodeInt
 static const char *decodeInt =
 R"doc(Decodes the next non-negative integer value, assuming this uses a
 fixed number of base64 characters. This integer value would typically
-have been encoded using Base64SigEncoder::encodeInt(), using the same
+have been encoded using Base64Encoder::encodeInt(), using the same
 *nChars* argument.
 
 Specifically, it will be assumed that the integer has been broken into
@@ -248,7 +248,7 @@ bitwise OR and bitwise shift lefts. It is assumed that the programmer
 has chosen an integer type large enough to contain whatever values
 they expect to read.
 
-The inverse to this routine is Base64SigEncoder::encodeInt().
+The inverse to this routine is Base64Encoder::encodeInt().
 
 Exception ``InvalidInput``:
     There are fewer than *nChars* characters available in the encoded
@@ -265,13 +265,13 @@ Parameter ``nChars``:
 Returns:
     the integer that was decoded.)doc";
 
-// Docstring regina::python::doc::Base64SigDecoder_::decodeInts
+// Docstring regina::python::doc::Base64Decoder_::decodeInts
 static const char *decodeInts =
 R"doc(Decodes a sequence of non-negative integer values, assuming that each
 individual value uses a fixed number of base64 characters, and returns
 these as an array of native C++ integers. Each integer to be decoded
-would typically have been encoded using Base64SigEncoder::encodeInt()
-or Base64SigEncoder::encodeInts(), using the same *nChars* argument.
+would typically have been encoded using Base64Encoder::encodeInt()
+or Base64Encoder::encodeInts(), using the same *nChars* argument.
 
 Specifically, it will be assumed that each integer has been broken
 into *nChars* 6-bit blocks, with each block encoded as a single base64
@@ -283,7 +283,7 @@ Each resulting integer will be assembled using the integer type
 the programmer has chosen an integer type large enough to contain
 whatever values they expect to read.
 
-The inverse to this routine is Base64SigEncoder::encodeInts().
+The inverse to this routine is Base64Encoder::encodeInts().
 
 Exception ``InvalidInput``:
     There are fewer than ``count × nChars`` characters available in
@@ -303,12 +303,12 @@ Parameter ``nChars``:
 Returns:
     the sequence of integers that were decoded.)doc";
 
-// Docstring regina::python::doc::Base64SigDecoder_::decodeSingle
+// Docstring regina::python::doc::Base64Decoder_::decodeSingle
 static const char *decodeSingle =
 R"doc(Decodes the 6-bit integer value represented by the next single base64
 character.
 
-The inverse to this routine is Base64SigEncoder::encodeSingle().
+The inverse to this routine is Base64Encoder::encodeSingle().
 
 Exception ``InvalidInput``:
     There are no more characters remaining in the encoded string, or
@@ -322,12 +322,12 @@ Returns:
     the corresponding integer, which will be between 0 and 63
     inclusive.)doc";
 
-// Docstring regina::python::doc::Base64SigDecoder_::decodeSize
+// Docstring regina::python::doc::Base64Decoder_::decodeSize
 static const char *decodeSize =
 R"doc(Decodes the next non-negative integer value (typically representing
 the size of some object), without knowing in advance how many base64
 characters were used to encode it. This integer value must have been
-encoded using Base64SigEncoder::encodeSize().
+encoded using Base64Encoder::encodeSize().
 
 A typical use case would be where *size* represents the number of top-
 dimensional simplices in a triangulation, or the number of crossings
@@ -339,7 +339,7 @@ using *b* base64 characters. This *b* is the same integer that was
 returned when *size* was encoded using encodeSize(), and typically you
 would pass *b* to subsequent calls to decodeInt().
 
-The inverse to this routine is Base64SigEncoder::encodeSize().
+The inverse to this routine is Base64Encoder::encodeSize().
 
 Exception ``InvalidInput``:
     There are not enough characters available in the encoded string,
@@ -351,12 +351,12 @@ Returns:
     decoded, and *b* is the number of base64 characters described
     above.)doc";
 
-// Docstring regina::python::doc::Base64SigDecoder_::decodeTrits
+// Docstring regina::python::doc::Base64Decoder_::decodeTrits
 static const char *decodeTrits =
 R"doc(Decodes three trits from a single base64 character, and returns these
 as a fixed-size array. A _trit_ is either 0, 1 or 2.
 
-The inverse to this routine is Base64SigEncoder::encodeTrits(); see
+The inverse to this routine is Base64Encoder::encodeTrits(); see
 that routine for details of the encoding.
 
 Exception ``InvalidInput``:
@@ -366,7 +366,7 @@ Exception ``InvalidInput``:
 Returns:
     an array containing the three trits that were decoded.)doc";
 
-// Docstring regina::python::doc::Base64SigDecoder_::done
+// Docstring regina::python::doc::Base64Decoder_::done
 static const char *done =
 R"doc(Determines whether the current position has reached the end of the
 string.
@@ -377,7 +377,7 @@ string.
     the end of the string. Now it simply tests whether we have reached
     the end of the string. However, combined with the changes to the
     constructor, this yields the same default behaviour as before,
-    since ``Base64SigDecoder(beginEncoding, endEncoding)`` will now by
+    since ``Base64Decoder(beginEncoding, endEncoding)`` will now by
     default move the endpoints of the string to ignore whitespace at
     both ends of the string (not just the start). Nevertheless, if you
     passed an extra boolean argument to the constructor then beware:
@@ -387,7 +387,7 @@ Returns:
     ``True`` if and only if the current position is the end of the
     string.)doc";
 
-// Docstring regina::python::doc::Base64SigDecoder_::done_2
+// Docstring regina::python::doc::Base64Decoder_::done_2
 static const char *done_2 =
 R"doc(Deprecated routine that determines whether the current position has
 reached the end of the string, optionally ignoring any final
@@ -414,7 +414,7 @@ Returns:
     ``True`` if and only if the current position is the end of the
     string.)doc";
 
-// Docstring regina::python::doc::Base64SigDecoder_::isValid
+// Docstring regina::python::doc::Base64Decoder_::isValid
 static const char *isValid =
 R"doc(Is the given character one of the printable base64 characters
 recognised by this class?
@@ -426,7 +426,7 @@ Returns:
     ``True`` if and only if *c* is one of the 64 printable characters
     described in the class notes.)doc";
 
-// Docstring regina::python::doc::Base64SigDecoder_::peek
+// Docstring regina::python::doc::Base64Decoder_::peek
 static const char *peek =
 R"doc(Returns the character at the current position in the encoded string.
 The current position will not move.
@@ -435,7 +435,7 @@ Returns:
     the character at the current position, or 0 if there are no more
     characters available.)doc";
 
-// Docstring regina::python::doc::Base64SigDecoder_::remaining
+// Docstring regina::python::doc::Base64Decoder_::remaining
 static const char *remaining =
 R"doc(Returns the number of characters remaining in the encoded string,
 counting from the current position onwards.
@@ -446,14 +446,14 @@ The routine ``done()`` will return ``True`` if and only if
 Returns:
     the number of characters remaining.)doc";
 
-// Docstring regina::python::doc::Base64SigDecoder_::skip
+// Docstring regina::python::doc::Base64Decoder_::skip
 static const char *skip =
 R"doc(Advances to the next position in the encoded string.
 
 Precondition:
     The current position has not yet reached the end of the string.)doc";
 
-// Docstring regina::python::doc::Base64SigDecoder_::skipWhitespace
+// Docstring regina::python::doc::Base64Decoder_::skipWhitespace
 static const char *skipWhitespace =
 R"doc(Moves the current position past any whitespace.
 
@@ -462,12 +462,12 @@ or the end of the string.)doc";
 
 }
 
-namespace Base64SigEncoder_ {
+namespace Base64Encoder_ {
 
-// Docstring regina::python::doc::Base64SigEncoder_::__default
+// Docstring regina::python::doc::Base64Encoder_::__default
 static const char *__default = R"doc(Creates a new encoder, with an empty base64 string.)doc";
 
-// Docstring regina::python::doc::Base64SigEncoder_::append
+// Docstring regina::python::doc::Base64Encoder_::append
 static const char *append =
 R"doc(Appends the given character verbatim to this encoding.
 
@@ -476,7 +476,7 @@ Parameter ``c``:
     used in this base64 encoding; however, ideally it should be
     printable.)doc";
 
-// Docstring regina::python::doc::Base64SigEncoder_::encodeBits
+// Docstring regina::python::doc::Base64Encoder_::encodeBits
 static const char *encodeBits =
 R"doc(Encodes a sequence of bits.
 
@@ -486,7 +486,7 @@ underlying 6-bit integer in order from lowest to highest significance.
 (The last base64 character might of course encode fewer than six bits
 instead.)
 
-The inverse to this routine is Base64SigDecoder::decodeBits().
+The inverse to this routine is Base64Decoder::decodeBits().
 
 Python:
     The template argument *BitmaskType* is taken to be Bitmask.
@@ -498,7 +498,7 @@ Parameter ``bits``:
     a bitmask holding the bits to encode; this must be capable of
     holding at least *count* bits.)doc";
 
-// Docstring regina::python::doc::Base64SigEncoder_::encodeInt
+// Docstring regina::python::doc::Base64Encoder_::encodeInt
 static const char *encodeInt =
 R"doc(Encodes the given non-negative native C++ integer using a fixed number
 of base64 characters.
@@ -507,7 +507,7 @@ Specifically, the integer *val* will be broken into *nChars* distinct
 6-bit blocks, which will be encoded in order from lowest to highest
 significance.
 
-The inverse to this routine is Base64SigDecoder::decodeInt().
+The inverse to this routine is Base64Decoder::decodeInt().
 
 Exception ``InvalidArgument``:
     The given integer *val* is negative, or requires more than ``6 ×
@@ -524,7 +524,7 @@ Parameter ``nChars``:
     the number of base64 characters to use; typically this would be
     obtained through an earlier call to encodeSize().)doc";
 
-// Docstring regina::python::doc::Base64SigEncoder_::encodeInts
+// Docstring regina::python::doc::Base64Encoder_::encodeInts
 static const char *encodeInts =
 R"doc(Encodes a sequence of non-negative native C++ integers (given by an
 input range), each using a fixed number of base64 characters.
@@ -533,7 +533,7 @@ Each integer in the sequence will be encoded using encodeInt(). That
 is, each integer will be broken into *nChars* distinct 6-bit blocks,
 which will be encoded in order from lowest to highest significance.
 
-The inverse to this routine is Base64SigDecoder::decodeInts().
+The inverse to this routine is Base64Decoder::decodeInts().
 
 Exception ``InvalidArgument``:
     Some integer in the sequence is negative, or requires more than
@@ -550,11 +550,11 @@ Parameter ``nChars``:
     the number of base64 characters to use for each integer; typically
     this would be obtained through an earlier call to encodeSize().)doc";
 
-// Docstring regina::python::doc::Base64SigEncoder_::encodeSingle
+// Docstring regina::python::doc::Base64Encoder_::encodeSingle
 static const char *encodeSingle =
 R"doc(Encodes the given 6-bit integer using a single base64 character.
 
-The inverse to this routine is Base64SigDecoder::decodeSingle().
+The inverse to this routine is Base64Decoder::decodeSingle().
 
 Exception ``InvalidArgument``:
     The given integer is not between 0 and 63 inclusive.
@@ -566,7 +566,7 @@ Python:
 Parameter ``c``:
     an integer between 0 and 63 inclusive.)doc";
 
-// Docstring regina::python::doc::Base64SigEncoder_::encodeSize
+// Docstring regina::python::doc::Base64Encoder_::encodeSize
 static const char *encodeSize =
 R"doc(Encodes the given non-negative integer (typically representing the
 size of some object), without knowing in advance how many base64
@@ -584,7 +584,7 @@ an *x* would be an _index_ into an object (e.g., a top-dimensional
 simplex number, or a crossing index). Note that encodeSize() itself
 might write more than *b* characters.
 
-The inverse to this routine is Base64SigDecoder::decodeSize().
+The inverse to this routine is Base64Decoder::decodeSize().
 
 Parameter ``size``:
     the non-negative integer to encode.
@@ -593,7 +593,7 @@ Returns:
     the number of base64 characters required to write any integer
     between 0 and *size* inclusive.)doc";
 
-// Docstring regina::python::doc::Base64SigEncoder_::encodeTrits
+// Docstring regina::python::doc::Base64Encoder_::encodeTrits
 static const char *encodeTrits =
 R"doc(Encodes a sequence of trits (given by an input range). A _trit_ is
 either 0, 1 or 2.
@@ -604,7 +604,7 @@ underlying 6-bit integer in order from lowest to highest significance.
 (The last base64 character might of course encode just one or two
 trits instead.)
 
-The inverse to this routine is Base64SigDecoder::decodeTrits(), though
+The inverse to this routine is Base64Decoder::decodeTrits(), though
 that function only decodes three trits at a time.
 
 Python:
@@ -614,7 +614,7 @@ Parameter ``trits``:
     the sequence of trits to encode. Each element of this sequence
     must be 0, 1 or 2.)doc";
 
-// Docstring regina::python::doc::Base64SigEncoder_::integerWidth
+// Docstring regina::python::doc::Base64Encoder_::integerWidth
 static const char *integerWidth =
 R"doc(Returns the smallest number of base64 characters required to encode
 any integer between 0 and *size* inclusive.
@@ -625,7 +625,7 @@ In the special case ``size = 0``, this function will return 1.
 Returns:
     the number of base64 characters required.)doc";
 
-// Docstring regina::python::doc::Base64SigEncoder_::reserve
+// Docstring regina::python::doc::Base64Encoder_::reserve
 static const char *reserve =
 R"doc(Pre-allocates the given amount of space for the entire base64
 encoding.
@@ -642,7 +642,7 @@ Parameter ``capacity``:
     the expected length of the _entire_ base64 encoding (not just the
     portion that is not yet encoded).)doc";
 
-// Docstring regina::python::doc::Base64SigEncoder_::str
+// Docstring regina::python::doc::Base64Encoder_::str
 static const char *str =
 R"doc(Returns the base64 encoding that has been constructed thus far.
 

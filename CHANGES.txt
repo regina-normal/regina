@@ -39,7 +39,12 @@ Version 8.0  [ TODO ]
               arguments regarding the stripping of whitespace then individually
               these are changes in behaviour.  The variant of done() that
               skips final whitespace is now deprecated.
-        Class Base64SigEncoder:
+        Class Base64Decoder, Base64SigDecoder:
+            - Base64SigDecoder has been renamed to Base64Decoder.  The old name
+              is now a deprecated type alias.
+        Class Base64Encoder, Base64SigEncoder:
+            - Base64SigEncoder has been renamed to Base64Encoder.  The old name
+              is now a deprecated type alias.
             - New routine encodeBits().
             - New routine reserve().
             - New static routine integerWidth().

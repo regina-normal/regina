@@ -262,14 +262,14 @@ LinkSigData::LinkSigData(const Link& link, BoolSet reflectionOptions,
 //
 //   * We cannot encode the sequence [ 0 ] since this already represents the
 //     0-crossing unknot: instead we cheat and give the empty link a symbol
-//     that is not part of our usual base64 set (Base64SigEncoder::spare[0]).
+//     that is not part of our usual base64 set (Base64Encoder::spare[0]).
 
 std::string LinkSigGen1::encodeEmpty() {
-    return { Base64SigEncoder::spare[0] };
+    return { Base64Encoder::spare[0] };
 }
 
 std::string LinkSigGen1::encodeUnknot() {
-    Base64SigEncoder enc;
+    Base64Encoder enc;
     enc.encodeSize(0);
     return std::move(enc).str();
 }
@@ -282,7 +282,7 @@ size_t LinkSigGen1::length(const LinkSigData& data) {
     } else {
         // We begin with two extra characters: 63 (which acts as a marker that
         // the link component is large), and the encoding of the integer width.
-        int width = Base64SigEncoder::integerWidth(data.size());
+        int width = Base64Encoder::integerWidth(data.size());
         ans = 2 + (1 + data.sequence().size()) * width;
     }
     return ans + 2 * ((data.size() + 2) / 3);
@@ -291,7 +291,7 @@ size_t LinkSigGen1::length(const LinkSigData& data) {
 std::string LinkSigGen1::encode(const LinkSigData& data) {
     // Text: n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
 
-    Base64SigEncoder enc;
+    Base64Encoder enc;
     enc.reserve(length(data));
 
     // Output crossings in order.
@@ -341,11 +341,11 @@ std::string LinkSigGen1::encode(const LinkSigData& data) {
 }
 
 std::string LinkSigGen2::encodeEmpty() {
-    return { Base64SigEncoder::spare[0] };
+    return { Base64Encoder::spare[0] };
 }
 
 std::string LinkSigGen2::encodeUnknot() {
-    Base64SigEncoder enc;
+    Base64Encoder enc;
     enc.encodeSize(0);
     return std::move(enc).str();
 }
@@ -358,7 +358,7 @@ size_t LinkSigGen2::length(const LinkSigData& data) {
     } else {
         // We begin with two extra characters: 63 (which acts as a marker that
         // the link component is large), and the encoding of the integer width.
-        int width = Base64SigEncoder::integerWidth(data.size());
+        int width = Base64Encoder::integerWidth(data.size());
         ans = 2 + (1 + data.size()) * width;
     }
     return ans + (2 * data.size() + 2) / 3;
@@ -384,7 +384,7 @@ std::string LinkSigGen2::encode(const LinkSigData& data) {
     // All 4n bits are written in a single pack (i.e., we don't artificially
     // move to the next base64 character at the 2n mark and/or the 3n mark).
 
-    Base64SigEncoder enc;
+    Base64Encoder enc;
     enc.reserve(length(data));
 
     int charsPerInt = enc.encodeSize(data.size());
@@ -533,7 +533,7 @@ std::string LinkSigBinary::asString(const ByteSequence& sig) {
         // combinatorial information; it is just a matter of converting between
         // printable (6-bit) and byte-packed (8-bit) formats.
         PackedSigDecoder dec(sig.begin(), sig.end());
-        Base64SigEncoder enc;
+        Base64Encoder enc;
         while (! dec.done()) {
             // Re-encode one connected component of the link diagram at a time.
             auto [ n, inputWidth ] = dec.decodeSize();
@@ -556,11 +556,11 @@ std::string LinkSigBinary::asString(const ByteSequence& sig) {
 Link Link::fromSig(const std::string& sig) {
     Link ans;
 
-    Base64SigDecoder dec(sig.begin(), sig.end()); // strips whitespace
+    Base64Decoder dec(sig.begin(), sig.end()); // strips whitespace
 
     // Get the empty link out of the way first.
     switch (dec.peek()) {
-        case Base64SigEncoder::spare[0]:
+        case Base64Encoder::spare[0]:
             // This is the signature for the empty link.
             dec.skip();
             if (! dec.done())
@@ -771,7 +771,7 @@ Link Link::fromSig(const std::string& sig) {
 
         return ans;
     } catch (const InvalidInput&) {
-        // Any exception caught here was thrown by Base64SigDecoder.
+        // Any exception caught here was thrown by Base64Decoder.
         throw InvalidArgument(
             "fromSig(): incomplete or invalid base64 encoding");
     }

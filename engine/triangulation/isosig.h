@@ -1022,7 +1022,7 @@ class IsoSigPrintable {
          * \return the isomorphism signature of the empty triangulation.
          */
         static Signature encodeEmpty() {
-            Base64SigEncoder enc;
+            Base64Encoder enc;
             enc.encodeSingle(0);
             return std::move(enc).str();
         }
@@ -1141,7 +1141,7 @@ class IsoSigPrintableLockFree {
          * \return the isomorphism signature of the empty triangulation.
          */
         static Signature encodeEmpty() {
-            Base64SigEncoder enc;
+            Base64Encoder enc;
             enc.encodeSingle(0);
             return std::move(enc).str();
         }

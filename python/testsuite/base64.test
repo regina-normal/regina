@@ -29,9 +29,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-enc = Base64SigEncoder()
+enc = Base64Encoder()
 enc.encodeInts([2,3,4], 1)
 print(enc.str())
 
-dec = Base64SigDecoder('cdefg')
+dec = Base64Decoder('cdefg')
 print(dec.decodeInts(3, 1))
