@@ -66,11 +66,13 @@ namespace regina::python {
             using Base = MainDecoder<std::string::const_iterator>;
 
         public:
-            Decoder_Copy(std::string str, bool stripWhitespace) :
+            Decoder_Copy(std::string str, bool stripWhitespace)
+            requires std::same_as<typename Base::Encoding, std::string> :
                     StringStorage(std::move(str)),
                     Base(str_.begin(), str_.end(), stripWhitespace) {
             }
-            Decoder_Copy(pybind11::bytes bytes) :
+            Decoder_Copy(pybind11::bytes bytes)
+            requires std::same_as<typename Base::Encoding, ByteSequence> :
                     StringStorage(bytes),
                     Base(str_.begin(), str_.end()) {
             }

@@ -311,6 +311,11 @@ struct [[deprecated]] Base64SigEncoding {
 class Base64Encoder {
     public:
         /**
+         * The type of the final encoding that this class produces.
+         */
+        using Encoding = std::string;
+
+        /**
          * A table of printable characters that are _not_ amongst the base64
          * characters used by Base64Encoder and Base64Decoder.
          *
@@ -714,6 +719,18 @@ class Base64Encoder {
 template <CharIterator Iterator>
 requires std::bidirectional_iterator<Iterator>
 class Base64Decoder {
+    public:
+        /**
+         * The corresponding encoder class.
+         */
+        using Encoder = Base64Encoder;
+
+        /**
+         * The type of a typical encoding that this class would decode.
+         * This is the same type as `Encoder::Encoding`.
+         */
+        using Encoding = std::string;
+
     private:
         Iterator next_;
             /**< The current position in the encoded string. */
@@ -1164,6 +1181,28 @@ class Base64Decoder {
 };
 
 /**
+ * A deprecated type alias representing a helper class for writing signatures
+ * that use base64 encodings.
+ *
+ * \deprecated This class has been renamed `Base64Encoder`.
+ *
+ * \ingroup utilities
+ */
+using Base64SigEncoder [[deprecated]] = Base64Encoder;
+
+/**
+ * A deprecated type alias representing a helper class for reading signatures
+ * that use base64 encodings.
+ *
+ * \deprecated This class has been renamed `Base64Decoder<Iterator>`.
+ *
+ * \ingroup utilities
+ */
+template <CharIterator Iterator>
+requires std::bidirectional_iterator<Iterator>
+using Base64SigDecoder [[deprecated]] = Base64Decoder<Iterator>;
+
+/**
  * A helper class for writing signatures that pack information as tightly as
  * possible into byte sequences.  These signatures use `std::string` but are
  * typically _not_ printable, and indeed they may even contain null characters
@@ -1179,6 +1218,12 @@ class Base64Decoder {
  * \ingroup utilities
  */
 class PackedSigEncoder {
+    public:
+        /**
+         * The type of the final encoding that this class produces.
+         */
+        using Encoding = ByteSequence;
+
     private:
         ByteSequence bytes_;
             /**< The byte sequence that has been constructed thus far. */
@@ -1551,6 +1596,18 @@ class PackedSigEncoder {
 template <CharIterator Iterator>
 requires std::bidirectional_iterator<Iterator>
 class PackedSigDecoder {
+    public:
+        /**
+         * The corresponding encoder class.
+         */
+        using Encoder = PackedSigEncoder;
+
+        /**
+         * The type of a typical encoding that this class would decode.
+         * This is the same type as `Encoder::Encoding`.
+         */
+        using Encoding = ByteSequence;
+
     private:
         Iterator next_;
             /**< The current position in the encoded byte sequence. */
@@ -1890,6 +1947,12 @@ class PackedSigDecoder {
  * \ingroup utilities
  */
 class BitEncoder {
+    public:
+        /**
+         * The type of the final encoding that this class produces.
+         */
+        using Encoding = ByteSequence;
+
     private:
         ByteSequence bytes_;
             /**< The byte sequence that has been constructed thus far.
@@ -2064,6 +2127,18 @@ class BitEncoder {
 template <CharIterator Iterator>
 requires std::bidirectional_iterator<Iterator>
 class BitDecoder {
+    public:
+        /**
+         * The corresponding encoder class.
+         */
+        using Encoder = BitEncoder;
+
+        /**
+         * The type of a typical encoding that this class would decode.
+         * This is the same type as `Encoder::Encoding`.
+         */
+        using Encoding = ByteSequence;
+
     private:
         Iterator next_;
             /**< Points to the first unextracted byte from the encoded byte
