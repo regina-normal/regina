@@ -4265,7 +4265,7 @@ class TriangulationBase :
          * (the one exception is the copy assignment operator).
          * Typically clearBaseProperties() is only ever called by
          * Triangulation<dim>::clearAllProperties(), which in turn is called by
-         * "atomic" routines that change the triangluation (before firing
+         * "atomic" routines that change the triangulation (before firing
          * packet change events), as well as the Triangulation<dim> destructor.
          */
         void clearBaseProperties();

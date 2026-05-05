@@ -466,7 +466,7 @@ struct SatAnnulus {
     /**
      * Attaches a layered solid torus to the given saturated annulus.
      * Instead of passing a SatAnnulus (which only offers const access
-     * to the underlying triangluation), you must pass the individual
+     * to the underlying triangulation), you must pass the individual
      * tetrahedra and permutations that describe it.
      *
      * The layered solid torus will be attached so that the

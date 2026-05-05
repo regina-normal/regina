@@ -363,7 +363,7 @@ class Triangulation : public detail::TriangulationBase<dim> {
  * increasing degree.  This can (for instance) be used with std::sort().
  *
  * The template argument \a dim refers to the dimension of the overall
- * triangluation(s) with which you are working.  The template argument
+ * triangulation(s) with which you are working.  The template argument
  * \a subdim refers to the dimension of the faces that you are sorting.
  * So, for instance, to sort edges of a 3-manifold triangulation by
  * increasing edge degree, you would use DegreeLessThan<3, 1>.
@@ -430,7 +430,7 @@ class [[deprecated]] DegreeLessThan {
  * decreasing degree.  This can (for instance) be used with std::sort().
  *
  * The template argument \a dim refers to the dimension of the overall
- * triangluation(s) with which you are working.  The template argument
+ * triangulation(s) with which you are working.  The template argument
  * \a subdim refers to the dimension of the faces that you are sorting.
  * So, for instance, to sort edges of a 3-manifold triangulation by
  * decreasing edge degree, you would use DegreeGreaterThan<3, 1>.

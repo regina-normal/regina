@@ -78,7 +78,7 @@ concept IntegerVector =
 /**
  * A type that can be used to hold signatures that identify mathematical
  * objects uniquely up to combinatorial isomorphism.  Such signatures include
- * isomorphism signatures of triangluations, and knot/link signatures.
+ * isomorphism signatures of triangulations, and knot/link signatures.
  *
  * Important semantic requirements for this type are:
  * - the operation `x += y` must concatenate \a y to the end of \a x;

@@ -3674,7 +3674,7 @@ Version 7.0  [ 19 December, 2021 ]
               call summands(), which now formally guarantees 0-efficiency.
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
-              a full triangluation.  This function is now also available
+              a full triangulation.  This function is now also available
               through Python, and can take a pure Python function as its
               action argument.  It no longer runs in the background (even if a
               progress tracker is passed), and it now throws an exception
@@ -3734,7 +3734,7 @@ Version 7.0  [ 19 December, 2021 ]
             - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
-              a full triangluation.  This function is now also available
+              a full triangulation.  This function is now also available
               through Python, and can take a pure Python function as its
               action argument.  It no longer runs in the background (even if a
               progress tracker is passed), and it now throws an exception

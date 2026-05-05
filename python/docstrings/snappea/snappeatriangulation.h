@@ -598,7 +598,7 @@ Parameter ``tri``:
 
 Parameter ``ignored``:
     a legacy parameter that is now ignored. (This argument was once
-    required if you wanted to pass a closed triangluation to SnapPea.))doc";
+    required if you wanted to pass a closed triangulation to SnapPea.))doc";
 
 // Docstring regina::python::doc::SnapPeaTriangulation_::__init_3
 static const char *__init_3 =

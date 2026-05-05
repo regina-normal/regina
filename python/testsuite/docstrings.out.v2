@@ -247,7 +247,7 @@ embeddings(...)
 
     Returns an object that allows iteration through and random access to
     all of the ways in which this face appears within a top-dimensional
-    simplex of the underlying triangluation.
+    simplex of the underlying triangulation.
 
     The object that is returned is lightweight, and can be happily copied
     by value. The C++ type of the object is subject to change, so C++
@@ -298,7 +298,7 @@ embeddings(...)
 
     Returns an object that allows iteration through and random access to
     all of the ways in which this face appears within a top-dimensional
-    simplex of the underlying triangluation.
+    simplex of the underlying triangulation.
 
     The object that is returned is lightweight, and can be happily copied
     by value. The C++ type of the object is subject to change, so C++

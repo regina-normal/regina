@@ -289,7 +289,7 @@ using RetriangulateActionFunc = std::conditional_t<withSig,
  * functions.
  *
  * This routine performs exactly the task described by Link::rewrite() or
- * Triangluation<dim>::retriangulate() (for those dimensions where it is
+ * Triangulation<dim>::retriangulate() (for those dimensions where it is
  * defined), with the following differences:
  *
  * - This routine assumes any preconditions have already been checked, and
@@ -339,7 +339,7 @@ bool retriangulateInternal(const Object& obj, bool rigid, int height,
  * The common implementation of all exhaustive simplification functions.
  *
  * This routine performs exactly the task described by
- * Link::simplifyExhaustive() or Triangluation<dim>::simplifyExhaustive()
+ * Link::simplifyExhaustive() or Triangulation<dim>::simplifyExhaustive()
  * (for those dimensions where it is defined), with the following differences:
  *
  * - This routine assumes any preconditions have already been checked, and
@@ -399,7 +399,7 @@ bool simplifyExhaustiveInternal(Object& obj, int height,
  * to become one with a smaller-width greedy tree decomposition.
  *
  * This routine performs exactly the task described by
- * Link::improveTreewidth() or Triangluation<dim>::improveTreewidth()
+ * Link::improveTreewidth() or Triangulation<dim>::improveTreewidth()
  * (for those dimensions where it is defined), with the following differences:
  *
  * - This routine assumes any preconditions have already been checked, and

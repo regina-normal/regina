@@ -521,7 +521,7 @@ class FaceBase :
         size_t degree() const;
         /**
          * Returns one of the ways in which this face appears within a
-         * top-dimensional simplex of the underlying triangluation.
+         * top-dimensional simplex of the underlying triangulation.
          *
          * For convenience, you can also use begin() and end() to iterate
          * through all such appearances, or equivalently you can iterate
@@ -541,7 +541,7 @@ class FaceBase :
         /**
          * Returns an object that allows iteration through and random access
          * to all of the ways in which this face appears within a
-         * top-dimensional simplex of the underlying triangluation.
+         * top-dimensional simplex of the underlying triangulation.
          *
          * The object that is returned is lightweight, and can be happily
          * copied by value.  The C++ type of the object is subject to change,
@@ -701,7 +701,7 @@ class FaceBase :
 
         /**
          * Returns the first appearance of this face within a top-dimensional
-         * simplex of the underlying triangluation.
+         * simplex of the underlying triangulation.
          *
          * This is equivalent to calling `*begin()`, or
          * `embedding(0)`.
@@ -719,7 +719,7 @@ class FaceBase :
         const FaceEmbedding<dim, subdim>& front() const;
         /**
          * Returns the last appearance of this face within a top-dimensional
-         * simplex of the underlying triangluation.
+         * simplex of the underlying triangulation.
          *
          * This is equivalent to calling `embedding(degree()-1)`.
          *

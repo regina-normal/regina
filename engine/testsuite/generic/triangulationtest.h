@@ -2204,7 +2204,7 @@ class TriangulationTest : public testing::Test {
 
             // These tests use homology on the skeleton: invalid or empty
             // triangulations are explicitly disallowed, and ideal
-            // triangluations will give wrong answers (since the ideal
+            // triangulations will give wrong answers (since the ideal
             // vertices will not be considered as truncated).
             if (tri.isEmpty() || ! tri.isValid())
                 return;

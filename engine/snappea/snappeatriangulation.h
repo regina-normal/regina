@@ -975,7 +975,7 @@ class SnapPeaTriangulation :
          * \param tri the Regina triangulation to clone.
          * \param ignored a legacy parameter that is now ignored.
          * (This argument was once required if you wanted to pass a
-         * closed triangluation to SnapPea.)
+         * closed triangulation to SnapPea.)
          */
         SnapPeaTriangulation(const Triangulation<3>& tri, bool ignored = false);
 

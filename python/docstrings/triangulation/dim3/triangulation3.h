@@ -2283,7 +2283,7 @@ Precondition:
     boundary component is formed from two triangles.
 
 .. warning::
-    This routine may modify the triangluation, as explained above,
+    This routine may modify the triangulation, as explained above,
     which will have the side-effect of invalidating any existing
     Vertex, Edge or Triangle references.
 
@@ -2439,7 +2439,7 @@ Precondition:
     boundary component is formed from two triangles.
 
 .. warning::
-    This routine may modify the triangluation, as explained above,
+    This routine may modify the triangulation, as explained above,
     which will have the side-effect of invalidating any existing
     Vertex, Edge or Triangle references.
 
@@ -2514,7 +2514,7 @@ Precondition:
     boundary component is formed from two triangles.
 
 .. warning::
-    This routine may modify the triangluation, as explained above,
+    This routine may modify the triangulation, as explained above,
     which will have the side-effect of invalidating any existing
     Vertex, Edge or Triangle references.
 

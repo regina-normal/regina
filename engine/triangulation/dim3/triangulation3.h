@@ -1132,7 +1132,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre This triangulation has precisely one vertex, and its
          * (unique) boundary component is formed from two triangles.
          *
-         * \warning This routine may modify the triangluation, as
+         * \warning This routine may modify the triangulation, as
          * explained above, which will have the side-effect of
          * invalidating any existing Vertex, Edge or Triangle references.
          *
@@ -1200,7 +1200,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre This triangulation has precisely one vertex, and its
          * (unique) boundary component is formed from two triangles.
          *
-         * \warning This routine may modify the triangluation, as
+         * \warning This routine may modify the triangulation, as
          * explained above, which will have the side-effect of
          * invalidating any existing Vertex, Edge or Triangle references.
          *
@@ -1268,7 +1268,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre This triangulation has precisely one vertex, and its
          * (unique) boundary component is formed from two triangles.
          *
-         * \warning This routine may modify the triangluation, as
+         * \warning This routine may modify the triangulation, as
          * explained above, which will have the side-effect of
          * invalidating any existing Vertex, Edge or Triangle references.
          *

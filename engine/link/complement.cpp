@@ -62,7 +62,7 @@ Triangulation<3> Link::longComplement(StrandRef breakOpen, bool simplify)
 }
 
 Triangulation<3> Link::internalComplement(StrandRef breakOpen) const {
-    // This implementation produces an oriented triangluation.
+    // This implementation produces an oriented triangulation.
     // The orientation follows a right-hand rule, where the thumb points
     // from vertices 0 to 1, and the fingers point from vertice 2 to 3.
     //

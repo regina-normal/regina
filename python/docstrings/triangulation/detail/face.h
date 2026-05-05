@@ -163,7 +163,7 @@ Returns:
 // Docstring regina::python::doc::detail::FaceBase_::back
 constexpr const char *back =
 R"doc(Returns the last appearance of this face within a top-dimensional
-simplex of the underlying triangluation.
+simplex of the underlying triangulation.
 
 This is equivalent to calling ``embedding(degree()-1)``.
 
@@ -233,7 +233,7 @@ See faceMapping() for further information.)doc";
 // Docstring regina::python::doc::detail::FaceBase_::embedding
 constexpr const char *embedding =
 R"doc(Returns one of the ways in which this face appears within a top-
-dimensional simplex of the underlying triangluation.
+dimensional simplex of the underlying triangulation.
 
 For convenience, you can also use begin() and end() to iterate through
 all such appearances, or equivalently you can iterate over the
@@ -255,7 +255,7 @@ Returns:
 constexpr const char *embeddings =
 R"doc(Returns an object that allows iteration through and random access to
 all of the ways in which this face appears within a top-dimensional
-simplex of the underlying triangluation.
+simplex of the underlying triangulation.
 
 The object that is returned is lightweight, and can be happily copied
 by value. The C++ type of the object is subject to change, so C++
@@ -436,7 +436,7 @@ Returns:
 // Docstring regina::python::doc::detail::FaceBase_::front
 constexpr const char *front =
 R"doc(Returns the first appearance of this face within a top-dimensional
-simplex of the underlying triangluation.
+simplex of the underlying triangulation.
 
 This is equivalent to calling ``*begin()``, or ``embedding(0)``.
 
