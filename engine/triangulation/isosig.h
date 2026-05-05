@@ -1281,6 +1281,39 @@ class IsoSigBinary {
         template <int dim> requires (supportedDim(dim))
         static size_t length(const IsoSigData<2, dim>& data);
 
+        /**
+         * Re-encodes the given binary signature as a string-based signature
+         * (using the IsoSigPrintable encoding), which uses only printable
+         * characters from the 7-bit ASCII range.
+         *
+         * Calling `printable(sig)` is significantly more efficient than calling
+         * `Triangulation<dim>::fromSig(sig).neoSig()` (with an appropriate
+         * orientation argument if necessary), and should give the same result.
+         *
+         * If \a sig is an oriented signature, then this re-encoding will
+         * preserve the orientation.
+         *
+         * \pre The argument \a sig is indeed a second-generation isomorphism
+         * signature of a <i>dim</i/>-dimensional triangulation, encoded via
+         * IsoSigBinary.  This will _not_ be checked thoroughly (though some
+         * minimal checks will be done).
+         *
+         * \exception InvalidArgument It was detected that \a sig was not a
+         * valid second-generation isomorphism signature of a
+         * <i>dim</i/>-dimensional triangulation encoded via IsoSigBinary.
+         * Again, this will not be checked thoroughly; this exception will
+         * only be thrown if the violation is sufficiently obvious that it is
+         * picked up during the re-encoding process.
+         *
+         * \param sig the second-generation signature of some
+         * <i>dim</i/>-dimensional triangulation, encoded as a byte sequence
+         * using the IsoSigBinary encoding.
+         * \return the second-generation signature of the same triangulation,
+         * encoded as a printable string using the IsoSigPrintable encoding.
+         */
+        template <int dim> requires (supportedDim(dim))
+        static std::string asString(const ByteSequence& sig);
+
         // Make this class non-constructible.
         IsoSigBinary() = delete;
 };

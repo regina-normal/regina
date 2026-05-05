@@ -73,7 +73,7 @@ void process(const regina::Triangulation<dim>& tri) {
             if (t.size() > tri.size()) {
                 if (showAll) {
                     std::string outputSig = (sigGen == 1 ? t.isoSig() :
-                        regina::IsoSigBinary::asString(sig));
+                        regina::IsoSigBinary::asString<dim>(sig));
 
                     std::lock_guard<std::mutex> lock(mutex);
                     std::cout << sig << std::endl;
@@ -83,7 +83,7 @@ void process(const regina::Triangulation<dim>& tri) {
             }
 
             std::string outputSig = (sigGen == 1 ? t.isoSig() :
-                regina::IsoSigBinary::asString(sig));
+                regina::IsoSigBinary::asString<dim>(sig));
 
             std::lock_guard<std::mutex> lock(mutex);
             std::cout << outputSig << std::endl;
