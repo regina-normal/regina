@@ -85,13 +85,13 @@ This base64 encoding uses the characters: ``a..zA..Z0..9+-``
     Base64SigEncoder and Base64SigDecoder, which carry state and have
     better error handling.)doc";
 
-// Docstring regina::python::doc::BitSigDecoder
-static const char *BitSigDecoder =
+// Docstring regina::python::doc::BitDecoder
+static const char *BitDecoder =
 R"doc(A helper class for reading signatures that pack information as tightly
 as possible into bits, with no regard for boundaries between bytes in
 the final signature.
 
-To use this class: create a new BitSigDecoder by passing details of
+To use this class: create a new BitDecoder by passing details of
 the encoded byte sequence to its constructor, and then call its
 ``decode...()`` member functions to read values sequentially from the
 encoding.
@@ -108,15 +108,15 @@ swapped.
 Python:
     The type *Iterator* is an implementation detail, and is hidden
     from Python users. Just use the unadorned type name
-    ``BitSigDecoder``.)doc";
+    ``BitDecoder``.)doc";
 
-// Docstring regina::python::doc::BitSigEncoder
-static const char *BitSigEncoder =
+// Docstring regina::python::doc::BitEncoder
+static const char *BitEncoder =
 R"doc(A helper class for writing signatures that pack information as tightly
 as possible into bits, with no regard for boundaries between bytes in
 the final signature.
 
-To use this class: create a new BitSigEncoder, call one or more of its
+To use this class: create a new BitEncoder, call one or more of its
 member functions to write values to the encoding, and then call
 bytes() to extract the resulting byte sequence. Once you have called
 bytes(), the encoder will be unusable (and in particular, you cannot
@@ -785,9 +785,9 @@ Returns:
 
 }
 
-namespace BitSigDecoder_ {
+namespace BitDecoder_ {
 
-// Docstring regina::python::doc::BitSigDecoder_::__init
+// Docstring regina::python::doc::BitDecoder_::__init
 static const char *__init =
 R"doc(Creates a new decoder for the given encoded byte sequence.
 
@@ -808,7 +808,7 @@ Parameter ``endEncoding``:
     a past-the-end iterator that marks the end of the encoded byte
     sequence.)doc";
 
-// Docstring regina::python::doc::BitSigDecoder_::decodeBit
+// Docstring regina::python::doc::BitDecoder_::decodeBit
 static const char *decodeBit =
 R"doc(Returns the next bit in the encoded sequence.
 
@@ -819,7 +819,7 @@ Returns:
     ``True`` if the bit that was read is 1, or ``False`` if the bit
     that was read is 0.)doc";
 
-// Docstring regina::python::doc::BitSigDecoder_::decodeBitmask
+// Docstring regina::python::doc::BitDecoder_::decodeBitmask
 static const char *decodeBitmask =
 R"doc(Decodes a sequence of bits, and returns them in the form of a bitmask.
 
@@ -841,7 +841,7 @@ Returns:
     a bitmask holding the bits that were decoded. The bits will be
     stored in the bitmask in order from bit 0.)doc";
 
-// Docstring regina::python::doc::BitSigDecoder_::decodeInt
+// Docstring regina::python::doc::BitDecoder_::decodeInt
 static const char *decodeInt =
 R"doc(Decodes a sequence of bits, and returns them in the form of a native
 unsigned integer.
@@ -864,7 +864,7 @@ Parameter ``bits``:
     an integer holding the bits that were decoded. The bits will be
     stored in order from the least significant bit.)doc";
 
-// Docstring regina::python::doc::BitSigDecoder_::flushByte
+// Docstring regina::python::doc::BitDecoder_::flushByte
 static const char *flushByte =
 R"doc(Skips past unread bits until we reach the next byte boundary.
 
@@ -875,7 +875,7 @@ be between 0 and 7 inclusive.
 Exception ``InvalidInput``:
     At least one of the bits that was skipped was set.)doc";
 
-// Docstring regina::python::doc::BitSigDecoder_::maybeDone
+// Docstring regina::python::doc::BitDecoder_::maybeDone
 static const char *maybeDone =
 R"doc(Determines if the current position _could_ have reached the end of the
 encoded bit sequence. The word "maybe" acknowledges that the precise
@@ -895,7 +895,7 @@ Returns:
     ``True`` if and only if we could be at the end of the encoded bit
     sequence, as described above.)doc";
 
-// Docstring regina::python::doc::BitSigDecoder_::noMoreBits
+// Docstring regina::python::doc::BitDecoder_::noMoreBits
 static const char *noMoreBits =
 R"doc(Determines if there are no more available bits to read.
 
@@ -905,7 +905,7 @@ from every byte of the input sequence.
 Returns:
     ``True`` if and only if there are no more available bits.)doc";
 
-// Docstring regina::python::doc::BitSigDecoder_::remainingBits
+// Docstring regina::python::doc::BitDecoder_::remainingBits
 static const char *remainingBits =
 R"doc(Returns the number of bits that can still be read from the encoded
 sequence, counting from the current position onwards.
@@ -918,12 +918,12 @@ Returns:
 
 }
 
-namespace BitSigEncoder_ {
+namespace BitEncoder_ {
 
-// Docstring regina::python::doc::BitSigEncoder_::__default
+// Docstring regina::python::doc::BitEncoder_::__default
 static const char *__default = R"doc(Creates a new encoder, with an empty byte sequence.)doc";
 
-// Docstring regina::python::doc::BitSigEncoder_::bytes
+// Docstring regina::python::doc::BitEncoder_::bytes
 static const char *bytes =
 R"doc(Moves the byte sequence that has been constructed thus far out of this
 encoder.
@@ -933,7 +933,7 @@ After calling this function, this encoder object will be unusable.
 Returns:
     the current byte sequence.)doc";
 
-// Docstring regina::python::doc::BitSigEncoder_::encodeBit
+// Docstring regina::python::doc::BitEncoder_::encodeBit
 static const char *encodeBit =
 R"doc(Encodes the given boolean as a single bit.
 
@@ -941,7 +941,7 @@ Parameter ``bit``:
     ``True`` if we should encode the bit 1, or ``False`` if we should
     encode the bit 0.)doc";
 
-// Docstring regina::python::doc::BitSigEncoder_::encodeBitmask
+// Docstring regina::python::doc::BitEncoder_::encodeBitmask
 static const char *encodeBitmask =
 R"doc(Encodes a sequence of bits, taken from the given bitmask.
 
@@ -956,7 +956,7 @@ Parameter ``bits``:
     of holding at least *count* bits. The bits will be encoded in
     order from bit 0 of the given bitmask.)doc";
 
-// Docstring regina::python::doc::BitSigEncoder_::encodeInt
+// Docstring regina::python::doc::BitEncoder_::encodeInt
 static const char *encodeInt =
 R"doc(Encodes a sequence of bits, all taken from a single native unsigned
 integer.
@@ -975,7 +975,7 @@ Parameter ``bits``:
     an integer holding the bits to encode; these will be encoded in
     order from the least significant bit of the argument *bits*.)doc";
 
-// Docstring regina::python::doc::BitSigEncoder_::reserveBits
+// Docstring regina::python::doc::BitEncoder_::reserveBits
 static const char *reserveBits =
 R"doc(Pre-allocates the given amount of space for the entire encoding, as
 measured in bits.
@@ -992,7 +992,7 @@ Parameter ``capacity``:
     the expected total number of bits in the _entire_ encoding (not
     just the portion that is not yet encoded).)doc";
 
-// Docstring regina::python::doc::BitSigEncoder_::reserveBytes
+// Docstring regina::python::doc::BitEncoder_::reserveBytes
 static const char *reserveBytes =
 R"doc(Pre-allocates the given amount of space for the entire encoding, as
 measured in bytes.

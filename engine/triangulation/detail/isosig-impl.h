@@ -501,13 +501,13 @@ ByteSequence IsoSigBinary::encode(const IsoSigData<2, dim>& data) {
     static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
     static constexpr int lockWidth = dim + 2;
 
-    // Get an unsigned type for the permutation index, since BitSigDecoder
+    // Get an unsigned type for the permutation index, since BitDecoder
     // only reads/writes unsigned integer types.
     using PermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
 
     bool oriented = data.isOriented();
 
-    BitSigEncoder enc;
+    BitEncoder enc;
     enc.reserveBits(
         8 + (intWidth * data.adjacentSimplices().size()) +
         data.countFacetBits() +
@@ -887,11 +887,11 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const ByteSequence& sig) {
     static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
     static constexpr int lockWidth = dim + 2;
 
-    // Get an unsigned type for the permutation index, since BitSigDecoder
+    // Get an unsigned type for the permutation index, since BitDecoder
     // only reads/writes unsigned integer types.
     using PermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
 
-    BitSigDecoder dec(sig.begin(), sig.end());
+    BitDecoder dec(sig.begin(), sig.end());
 
     try {
         Triangulation<dim> ans;
@@ -1019,7 +1019,7 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const ByteSequence& sig) {
 
         return ans;
     } catch (const InvalidInput&) {
-        // Any exception caught here was thrown by BitSigDecoder.
+        // Any exception caught here was thrown by BitDecoder.
         throw InvalidArgument(
             "fromSig(): incomplete or invalid binary encoding");
     }

@@ -1879,7 +1879,7 @@ class PackedSigDecoder {
  * possible into bits, with no regard for boundaries between bytes in the
  * final signature.
  *
- * To use this class: create a new BitSigEncoder, call one or more of its
+ * To use this class: create a new BitEncoder, call one or more of its
  * member functions to write values to the encoding, and then call bytes() to
  * extract the resulting byte sequence.  Once you have called bytes(), the
  * encoder will be unusable (and in particular, you cannot encode more bits
@@ -1889,7 +1889,7 @@ class PackedSigDecoder {
  *
  * \ingroup utilities
  */
-class BitSigEncoder {
+class BitEncoder {
     private:
         ByteSequence bytes_;
             /**< The byte sequence that has been constructed thus far.
@@ -1908,7 +1908,7 @@ class BitSigEncoder {
         /**
          * Creates a new encoder, with an empty byte sequence.
          */
-        BitSigEncoder() = default;
+        BitEncoder() = default;
 
         /**
          * Moves the byte sequence that has been constructed thus far
@@ -1976,7 +1976,7 @@ class BitSigEncoder {
             if (count < sizeof(IntType) * 8) {
                 IntType mask = (IntType(1) << count) - 1;
                 if (bits != (bits & mask))
-                    throw InvalidArgument("BitSigEncoder::encodeInt(): "
+                    throw InvalidArgument("BitEncoder::encodeInt(): "
                         "integer argument out of range");
             }
         }
@@ -2035,8 +2035,8 @@ class BitSigEncoder {
             bytes_.reserve(capacity);
         }
 
-        BitSigEncoder(const BitSigEncoder&) = delete;
-        BitSigEncoder& operator = (const BitSigEncoder&) = delete;
+        BitEncoder(const BitEncoder&) = delete;
+        BitEncoder& operator = (const BitEncoder&) = delete;
 };
 
 /**
@@ -2044,7 +2044,7 @@ class BitSigEncoder {
  * possible into bits, with no regard for boundaries between bytes in the
  * final signature.
  *
- * To use this class: create a new BitSigDecoder by passing details of the
+ * To use this class: create a new BitDecoder by passing details of the
  * encoded byte sequence to its constructor, and then call its `decode...()`
  * member functions to read values sequentially from the encoding.
  *
@@ -2057,13 +2057,13 @@ class BitSigEncoder {
  * Bit decoders are single-use objects: they cannot be copied, moved or swapped.
  *
  * \python The type \a Iterator is an implementation detail, and is hidden
- * from Python users.  Just use the unadorned type name `BitSigDecoder`.
+ * from Python users.  Just use the unadorned type name `BitDecoder`.
  *
  * \ingroup utilities
  */
 template <CharIterator Iterator>
 requires std::bidirectional_iterator<Iterator>
-class BitSigDecoder {
+class BitDecoder {
     private:
         Iterator next_;
             /**< Points to the first unextracted byte from the encoded byte
@@ -2096,7 +2096,7 @@ class BitSigDecoder {
          * \param endEncoding a past-the-end iterator that marks the end of the
          * encoded byte sequence.
          */
-        BitSigDecoder(Iterator beginEncoding, Iterator endEncoding) :
+        BitDecoder(Iterator beginEncoding, Iterator endEncoding) :
                 next_(beginEncoding), end_(endEncoding) {
         }
 
@@ -2166,7 +2166,7 @@ class BitSigDecoder {
             if (nQueued_) {
                 return extracted_ & (1 << (8 - nQueued_--));
             } else if (next_ == end_) {
-                throw InvalidInput("BitSigDecoder: "
+                throw InvalidInput("BitDecoder: "
                     "unexpected end of encoded byte sequence");
             } else {
                 extracted_ = *next_++;
@@ -2242,14 +2242,14 @@ class BitSigDecoder {
             if (nQueued_) {
                 int readMask = (1 << (8 - nQueued_)) - 1;
                 if ((extracted_ & readMask) != extracted_)
-                    throw InvalidInput("BitSigDecoder: "
+                    throw InvalidInput("BitDecoder: "
                         "skipping past bits that are set");
                 nQueued_ = 0;
             }
         }
 
-        BitSigDecoder(const BitSigDecoder&) = delete;
-        BitSigDecoder& operator = (const BitSigDecoder&) = delete;
+        BitDecoder(const BitDecoder&) = delete;
+        BitDecoder& operator = (const BitDecoder&) = delete;
 };
 
 } // namespace regina

@@ -39,49 +39,40 @@
 using regina::Base64SigEncoder;
 using regina::Base64SigEncoding;
 using regina::Bitmask;
-using regina::BitSigEncoder;
+using regina::BitEncoder;
 using regina::PackedSigEncoder;
 
-using Base64Decoder = regina::Base64SigDecoder<std::string::const_iterator>;
-using PackedDecoder = regina::PackedSigDecoder<std::string::const_iterator>;
-using BitDecoder = regina::BitSigDecoder<std::string::const_iterator>;
-
 namespace regina::python {
-    // For Python (but not C++), we need Base64SigDecoder and PackedSigDecoder
-    // to keep a deep copy of the base64 string / byte sequence.
+    // For Python (but not C++), we need Base64SigDecoder and BitDecoder
+    // to keep a deep copy of the base64 string / byte sequence.  We define
+    // a wrapper class Decoder_Copy<T> here that manages this, where T should
+    // be one of the class templates Base64SigDecoder, BitDecoder, etc.
     //
     // Awkwardly, we need to copy the string _before_ passing its iterators to
     // the relevant decoder constructor, which means we can't just keep the
     // string as member variable (since base classes are initialised first).
     // Instead we use _another_ base class holding the string, which is
-    // initialised before Base64SigDecoder / PackedSigDecoder. Bleh.
+    // initialised before Base64SigDecoder / BitDecoder. Bleh.
 
     struct StringStorage {
         std::string str_;
         StringStorage(std::string&& str) : str_(std::move(str)) {}
     };
 
-    class Base64SigDecoder_Copy : private StringStorage, public Base64Decoder {
+    template <template <typename> class MainDecoder>
+    class Decoder_Copy : private StringStorage,
+            public MainDecoder<std::string::const_iterator> {
+        private:
+            using Base = MainDecoder<std::string::const_iterator>;
+
         public:
-            Base64SigDecoder_Copy(std::string str, bool stripWhitespace) :
+            Decoder_Copy(std::string str, bool stripWhitespace) :
                     StringStorage(std::move(str)),
-                    Base64Decoder(str_.begin(), str_.end(), stripWhitespace) {
+                    Base(str_.begin(), str_.end(), stripWhitespace) {
             }
-    };
-
-    class PackedSigDecoder_Copy : private StringStorage, public PackedDecoder {
-        public:
-            PackedSigDecoder_Copy(pybind11::bytes bytes) :
+            Decoder_Copy(pybind11::bytes bytes) :
                     StringStorage(bytes),
-                    PackedDecoder(str_.begin(), str_.end()) {
-            }
-    };
-
-    class BitSigDecoder_Copy : private StringStorage, public BitDecoder {
-        public:
-            BitSigDecoder_Copy(pybind11::bytes bytes) :
-                    StringStorage(bytes),
-                    BitDecoder(str_.begin(), str_.end()) {
+                    Base(str_.begin(), str_.end()) {
             }
     };
 
@@ -93,15 +84,15 @@ namespace regina::python {
      * the Python bindings.  We work around this in Python by keeping a
      * separate validity flag alongside the encoder.
      */
-    class SafeBitSigEncoder {
+    class SafeBitEncoder {
         private:
-            regina::BitSigEncoder encoder_;
+            regina::BitEncoder encoder_;
             bool valid { true };
 
         public:
-            SafeBitSigEncoder() = default;
+            SafeBitEncoder() = default;
 
-            regina::BitSigEncoder& encoder() {
+            regina::BitEncoder& encoder() {
                 if (valid)
                     return encoder_;
                 else
@@ -201,25 +192,23 @@ void addSigUtils(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(Base64SigDecoder)
 
-    auto bd = pybind11::class_<regina::python::Base64SigDecoder_Copy>(m,
-            "Base64SigDecoder", rdoc_scope)
+    using Decoder = regina::Base64SigDecoder<std::string::const_iterator>;
+    using Wrapper = regina::python::Decoder_Copy<regina::Base64SigDecoder>;
+    auto bd = pybind11::class_<Wrapper>(m, "Base64SigDecoder", rdoc_scope)
         .def(pybind11::init<const std::string&, bool>(),
             pybind11::arg(), pybind11::arg("skipInitialWhitespace") = true,
             rdoc::__init)
-        .def("skipWhitespace", &Base64Decoder::skipWhitespace,
-            rdoc::skipWhitespace)
+        .def("skipWhitespace", &Decoder::skipWhitespace, rdoc::skipWhitespace)
         .def("done",
-            pybind11::overload_cast<>(&Base64Decoder::done, pybind11::const_),
+            pybind11::overload_cast<>(&Decoder::done, pybind11::const_),
             rdoc::done)
-        .def("peek", &Base64Decoder::peek, rdoc::peek)
-        .def("remaining", &Base64Decoder::remaining, rdoc::remaining)
-        .def("skip", &Base64Decoder::skip, rdoc::skip)
-        .def("decodeSingle", &Base64Decoder::decodeSingle<long>,
-            rdoc::decodeSingle)
-        .def("decodeSize", &Base64Decoder::decodeSize, rdoc::decodeSize)
-        .def("decodeInt", &Base64Decoder::decodeInt<long>, rdoc::decodeInt)
-        .def("decodeInts", [](regina::python::Base64SigDecoder_Copy& dec,
-                size_t count, int nChars) {
+        .def("peek", &Decoder::peek, rdoc::peek)
+        .def("remaining", &Decoder::remaining, rdoc::remaining)
+        .def("skip", &Decoder::skip, rdoc::skip)
+        .def("decodeSingle", &Decoder::decodeSingle<long>, rdoc::decodeSingle)
+        .def("decodeSize", &Decoder::decodeSize, rdoc::decodeSize)
+        .def("decodeInt", &Decoder::decodeInt<long>, rdoc::decodeInt)
+        .def("decodeInts", [](Wrapper& dec, size_t count, int nChars) {
             // Reimplement this using decodeInt(), since the iterators for
             // pybind11::list have the wrong value type.
             pybind11::list ans;
@@ -227,14 +216,13 @@ void addSigUtils(pybind11::module_& m) {
                 ans.append(dec.decodeInt<long>(nChars));
             return ans;
         })
-        .def("decodeBits", &Base64Decoder::decodeBits<Bitmask>,
-            rdoc::decodeBits)
+        .def("decodeBits", &Decoder::decodeBits<Bitmask>, rdoc::decodeBits)
         // overload_cast cannot handle template vs non-template overloads.
         .def("decodeTrits",
-            static_cast<std::array<uint8_t, 3>(Base64Decoder::*)()>(
-                &Base64Decoder::decodeTrits),
+            static_cast<std::array<uint8_t, 3>(Decoder::*)()>(
+                &Decoder::decodeTrits),
             rdoc::decodeTrits)
-        .def_static("isValid", &Base64Decoder::isValid, rdoc::isValid)
+        .def_static("isValid", &Decoder::isValid, rdoc::isValid)
     ;
     #if defined(__GNUC__)
     // The routine done(bool) is deprecated, but we still need to bind it.
@@ -247,7 +235,7 @@ void addSigUtils(pybind11::module_& m) {
     #endif
     #endif
     bd.def("done",
-        pybind11::overload_cast<bool>(&Base64Decoder::done, pybind11::const_),
+        pybind11::overload_cast<bool>(&Decoder::done, pybind11::const_),
         rdoc::done_2); // deprecated
     #if defined(__GNUC__)
     #pragma GCC diagnostic pop
@@ -282,15 +270,15 @@ void addSigUtils(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(PackedSigDecoder)
 
-    auto pd = pybind11::class_<regina::python::PackedSigDecoder_Copy>(m,
-            "PackedSigDecoder", rdoc_scope)
+    using Decoder = regina::PackedSigDecoder<std::string::const_iterator>;
+    using Wrapper = regina::python::Decoder_Copy<regina::PackedSigDecoder>;
+    auto pd = pybind11::class_<Wrapper>(m, "PackedSigDecoder", rdoc_scope)
         .def(pybind11::init<pybind11::bytes>(), rdoc::__init)
-        .def("done", &PackedDecoder::done, rdoc::done)
-        .def("remaining", &PackedDecoder::remaining, rdoc::remaining)
-        .def("next", &PackedDecoder::next<long>, rdoc::next)
-        .def("decodeSize", &PackedDecoder::decodeSize, rdoc::decodeSize)
-        .def("decodeInts", [](regina::python::PackedSigDecoder_Copy& dec,
-                size_t count, int nChars) {
+        .def("done", &Decoder::done, rdoc::done)
+        .def("remaining", &Decoder::remaining, rdoc::remaining)
+        .def("next", &Decoder::next<long>, rdoc::next)
+        .def("decodeSize", &Decoder::decodeSize, rdoc::decodeSize)
+        .def("decodeInts", [](Wrapper& dec, size_t count, int nChars) {
             // Again, the iterators for pybind11::list have the wrong value
             // type.  Use an intermediate data structure, since we don't have
             // decodeInt() to fall back on this time.
@@ -300,56 +288,55 @@ void addSigUtils(pybind11::module_& m) {
                 ans.append(i);
             return ans;
         })
-        .def("decodeBits", &PackedDecoder::decodeBits<Bitmask>,
-            rdoc::decodeBits)
+        .def("decodeBits", &Decoder::decodeBits<Bitmask>, rdoc::decodeBits)
         // overload_cast cannot handle template vs non-template overloads.
         .def("decodeTrits",
-            static_cast<std::array<uint8_t, 4>(PackedDecoder::*)()>(
-                &PackedDecoder::decodeTrits),
+            static_cast<std::array<uint8_t, 4>(Decoder::*)()>(
+                &Decoder::decodeTrits),
             rdoc::decodeTrits)
     ;
     regina::python::add_eq_operators(pd);
 
-    RDOC_SCOPE_SWITCH(BitSigEncoder)
+    RDOC_SCOPE_SWITCH(BitEncoder)
 
-    using regina::python::SafeBitSigEncoder;
-    auto te = pybind11::class_<SafeBitSigEncoder>(m, "BitSigEncoder",
+    using regina::python::SafeBitEncoder;
+    auto te = pybind11::class_<SafeBitEncoder>(m, "BitEncoder",
             rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
-        .def("bytes", &SafeBitSigEncoder::bytes, rdoc::bytes)
-        .def("encodeBit", [](SafeBitSigEncoder& enc, bool bit) {
+        .def("bytes", &SafeBitEncoder::bytes, rdoc::bytes)
+        .def("encodeBit", [](SafeBitEncoder& enc, bool bit) {
             enc.encoder().encodeBit(bit);
         }, rdoc::encodeBit)
-        .def("encodeInt", [](SafeBitSigEncoder& enc, int n, unsigned long b) {
+        .def("encodeInt", [](SafeBitEncoder& enc, int n, unsigned long b) {
             enc.encoder().encodeInt(n, b);
         }, rdoc::encodeInt)
-        .def("encodeBitmask", [](SafeBitSigEncoder& enc, int n,
+        .def("encodeBitmask", [](SafeBitEncoder& enc, int n,
                 const Bitmask& b) {
             enc.encoder().encodeBitmask(n, b);
         }, rdoc::encodeBitmask)
-        .def("reserveBits", [](SafeBitSigEncoder& enc, size_t count) {
+        .def("reserveBits", [](SafeBitEncoder& enc, size_t count) {
             enc.encoder().reserveBits(count);
         }, rdoc::reserveBits)
-        .def("reserveBytes", [](SafeBitSigEncoder& enc, size_t count) {
+        .def("reserveBytes", [](SafeBitEncoder& enc, size_t count) {
             enc.encoder().reserveBytes(count);
         }, rdoc::reserveBytes)
     ;
     regina::python::add_eq_operators(te);
 
-    RDOC_SCOPE_SWITCH(BitSigDecoder)
+    RDOC_SCOPE_SWITCH(BitDecoder)
 
-    auto td = pybind11::class_<regina::python::BitSigDecoder_Copy>(m,
-            "BitSigDecoder", rdoc_scope)
+    using Decoder = regina::BitDecoder<std::string::const_iterator>;
+    using Wrapper = regina::python::Decoder_Copy<regina::BitDecoder>;
+    auto td = pybind11::class_<Wrapper>(m, "BitDecoder", rdoc_scope)
         .def(pybind11::init<pybind11::bytes>(), rdoc::__init)
-        .def("maybeDone", &BitDecoder::maybeDone, rdoc::maybeDone)
-        .def("noMoreBits", &BitDecoder::noMoreBits, rdoc::noMoreBits)
-        .def("remainingBits", &BitDecoder::remainingBits, rdoc::remainingBits)
-        .def("decodeBit", &BitDecoder::decodeBit, rdoc::decodeBit)
-        .def("decodeInt", &BitDecoder::decodeInt<unsigned long>,
-            rdoc::decodeInt)
-        .def("decodeBitmask", &BitDecoder::decodeBitmask<Bitmask>,
+        .def("maybeDone", &Decoder::maybeDone, rdoc::maybeDone)
+        .def("noMoreBits", &Decoder::noMoreBits, rdoc::noMoreBits)
+        .def("remainingBits", &Decoder::remainingBits, rdoc::remainingBits)
+        .def("decodeBit", &Decoder::decodeBit, rdoc::decodeBit)
+        .def("decodeInt", &Decoder::decodeInt<unsigned long>, rdoc::decodeInt)
+        .def("decodeBitmask", &Decoder::decodeBitmask<Bitmask>,
             rdoc::decodeBitmask)
-        .def("flushByte", &BitDecoder::flushByte, rdoc::flushByte)
+        .def("flushByte", &Decoder::flushByte, rdoc::flushByte)
     ;
     regina::python::add_eq_operators(td);
 
