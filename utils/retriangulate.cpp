@@ -55,59 +55,47 @@ bool classicalMoves = false;
 
 template <int dim> requires (dim == 3 || dim == 4)
 void process(const regina::Triangulation<dim>& tri) {
+    using Signature = regina::ByteSequence;
+
     size_t nSolns = 0;
     bool nonMinimal = false;
     std::string simpler;
 
+    // Note: the code here is specifically tuned to the IsoSigBinary encoding
+    // (which is used by retriangulate()), since it uses
+    // IsoSigBinary::asString() when writing signatures to output.
+    // If we ever change RetriangulateParams<...> to use a different internal
+    // signature encoding, we will need to update this code also.
+
     tri.retriangulate(height, threads, nullptr /* tracker */,
         [&nSolns, &nonMinimal, &simpler, &tri](
-                const std::string& sig, const regina::Triangulation<dim>& t) {
+                const Signature& sig, const regina::Triangulation<dim>& t) {
             if (t.size() > tri.size()) {
                 if (showAll) {
-                    if (sigGen == 1) {
-                        // Recompute the signature using IsoSigClassic.
-                        std::string classic = t.isoSig();
+                    std::string outputSig = (sigGen == 1 ? t.isoSig() :
+                        regina::IsoSigBinary::asString(sig));
 
-                        std::lock_guard<std::mutex> lock(mutex);
-                        std::cout << classic << std::endl;
-                        ++nSolns;
-                    } else {
-                        std::lock_guard<std::mutex> lock(mutex);
-                        std::cout << sig << std::endl;
-                        ++nSolns;
-                    }
+                    std::lock_guard<std::mutex> lock(mutex);
+                    std::cout << sig << std::endl;
+                    ++nSolns;
                 }
                 return false;
             }
 
-            if (sigGen == 1) {
-                // Recompute the signature using IsoSigClassic.
-                std::string classic = t.isoSig();
+            std::string outputSig = (sigGen == 1 ? t.isoSig() :
+                regina::IsoSigBinary::asString(sig));
 
-                std::lock_guard<std::mutex> lock(mutex);
-                std::cout << classic << std::endl;
+            std::lock_guard<std::mutex> lock(mutex);
+            std::cout << outputSig << std::endl;
 
-                if (t.size() < tri.size()) {
-                    nonMinimal = true;
-                    simpler = std::move(classic);
-                    return true;
-                }
-
-                ++nSolns;
-                return false;
-            } else {
-                std::lock_guard<std::mutex> lock(mutex);
-                std::cout << sig << std::endl;
-
-                if (t.size() < tri.size()) {
-                    nonMinimal = true;
-                    simpler = sig;
-                    return true;
-                }
-
-                ++nSolns;
-                return false;
+            if (t.size() < tri.size()) {
+                nonMinimal = true;
+                simpler = std::move(outputSig);
+                return true;
             }
+
+            ++nSolns;
+            return false;
         });
 
     if (nonMinimal) {
