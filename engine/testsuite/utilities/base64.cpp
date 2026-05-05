@@ -112,7 +112,7 @@ TEST(Base64Test, invalidEncodings) {
 
 TEST(Base64Test, sigEncoder) {
     // For now, we just test the Base64Encoder static functions (and also
-    // PackedSigEncoder while we're at it).
+    // PackedByteEncoder while we're at it).
     //
     // The full functionality of these encoder classes is implicitly tested
     // through the various isomorphism signature and knot/link signature tests.
@@ -123,13 +123,13 @@ TEST(Base64Test, sigEncoder) {
     EXPECT_EQ(regina::Base64Encoder::integerWidth(0xfff), 2);
     EXPECT_EQ(regina::Base64Encoder::integerWidth(0x1000), 3);
 
-    EXPECT_EQ(regina::PackedSigEncoder::integerWidth(0), 0);
-    EXPECT_EQ(regina::PackedSigEncoder::integerWidth(1), 0);
-    EXPECT_EQ(regina::PackedSigEncoder::integerWidth(0x0f), 0);
-    EXPECT_EQ(regina::PackedSigEncoder::integerWidth(0x10), 1);
-    EXPECT_EQ(regina::PackedSigEncoder::integerWidth(0xff), 1);
-    EXPECT_EQ(regina::PackedSigEncoder::integerWidth(0x100), 2);
-    EXPECT_EQ(regina::PackedSigEncoder::integerWidth(0xffff), 2);
-    EXPECT_EQ(regina::PackedSigEncoder::integerWidth(0x10000), 3);
+    EXPECT_EQ(regina::PackedByteEncoder::integerWidth(0), 0);
+    EXPECT_EQ(regina::PackedByteEncoder::integerWidth(1), 0);
+    EXPECT_EQ(regina::PackedByteEncoder::integerWidth(0x0f), 0);
+    EXPECT_EQ(regina::PackedByteEncoder::integerWidth(0x10), 1);
+    EXPECT_EQ(regina::PackedByteEncoder::integerWidth(0xff), 1);
+    EXPECT_EQ(regina::PackedByteEncoder::integerWidth(0x100), 2);
+    EXPECT_EQ(regina::PackedByteEncoder::integerWidth(0xffff), 2);
+    EXPECT_EQ(regina::PackedByteEncoder::integerWidth(0x10000), 3);
 };
 

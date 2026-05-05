@@ -434,7 +434,7 @@ ByteSequence LinkSigBinary::encodeEmpty() {
 }
 
 ByteSequence LinkSigBinary::encodeUnknot() {
-    PackedSigEncoder enc;
+    PackedByteEncoder enc;
     enc.encodeSize(0);
     return std::move(enc).bytes();
 }
@@ -452,7 +452,7 @@ size_t LinkSigBinary::length(const LinkSigData& data) {
     } else {
         // We begin with two extra characters: 0xff (which acts as a marker that
         // the link component is large), and the encoding of the integer width.
-        int width = PackedSigEncoder::integerWidth(data.size());
+        int width = PackedByteEncoder::integerWidth(data.size());
         ans = 2 + (1 + data.size()) * width;
     }
     return ans + (data.size() + 1) / 2;
@@ -478,7 +478,7 @@ ByteSequence LinkSigBinary::encode(const LinkSigData& data) {
     // All 4n bits are written in a single pack (i.e., we don't artificially
     // move to the next base64 character at the 2n mark and/or the 3n mark).
 
-    PackedSigEncoder enc;
+    PackedByteEncoder enc;
     enc.reserve(length(data));
 
     int width = enc.encodeSize(data.size());
@@ -532,7 +532,7 @@ std::string LinkSigBinary::asString(const ByteSequence& sig) {
         // Both LinkSigBinary and LinkSigGen2 encode exactly the same
         // combinatorial information; it is just a matter of converting between
         // printable (6-bit) and byte-packed (8-bit) formats.
-        PackedSigDecoder dec(sig.begin(), sig.end());
+        PackedByteDecoder dec(sig.begin(), sig.end());
         Base64Encoder enc;
         while (! dec.done()) {
             // Re-encode one connected component of the link diagram at a time.
@@ -547,7 +547,7 @@ std::string LinkSigBinary::asString(const ByteSequence& sig) {
         }
         return std::move(enc).str();
     } catch (const InvalidInput&) {
-        // Any exception caught here was thrown by PackedSigDecoder.
+        // Any exception caught here was thrown by PackedByteDecoder.
         throw InvalidArgument("LinkSigBinary::asString(): "
             "incomplete or invalid byte sequence encoding");
     }
@@ -780,7 +780,7 @@ Link Link::fromSig(const std::string& sig) {
 Link Link::fromSig(const ByteSequence& sig) {
     Link ans;
 
-    PackedSigDecoder dec(sig.begin(), sig.end());
+    PackedByteDecoder dec(sig.begin(), sig.end());
 
     // Get the empty link out of the way first.
     if (dec.done())
@@ -871,7 +871,7 @@ Link Link::fromSig(const ByteSequence& sig) {
 
         return ans;
     } catch (const InvalidInput&) {
-        // Any exception caught here was thrown by PackedSigDecoder.
+        // Any exception caught here was thrown by PackedByteDecoder.
         throw InvalidArgument(
             "fromSig(): incomplete or invalid byte sequence encoding");
     }

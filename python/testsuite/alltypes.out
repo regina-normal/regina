@@ -338,8 +338,8 @@ NormalSurfaces : class -> EqualityType.ByValue
 NormalTransform : enum
 NotImplemented : exception
 NumericalError : exception
-PackedSigDecoder : class -> EqualityType.ByReference
-PackedSigEncoder : class -> EqualityType.ByReference
+PackedByteDecoder : class -> EqualityType.ByReference
+PackedByteEncoder : class -> EqualityType.ByReference
 Packet : class -> EqualityType.NeverInstantiated
 PacketChildren : class -> EqualityType.ByValue
 PacketDescendants : class -> EqualityType.ByValue

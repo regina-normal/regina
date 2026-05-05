@@ -49,9 +49,9 @@ R"doc(A helper class for writing signatures that use base64 encodings. These
 are (in particular) used in the default encodings for Regina's own
 isomorphism signatures and knot signatures.
 
-To use this class: create a new Base64Encoder, call one or more of
-its member functions to write values to the encoding, and then call
-str() to extract the resulting base64 string.
+To use this class: create a new Base64Encoder, call one or more of its
+member functions to write values to the encoding, and then call str()
+to extract the resulting base64 string.
 
 This base64 encoding uses the characters: ``a..zA..Z0..9+-``
 
@@ -81,9 +81,9 @@ This base64 encoding uses the characters: ``a..zA..Z0..9+-``
     files.
 
 .. deprecated::
-    This is now deprecated in favour of the new classes
-    Base64Encoder and Base64Decoder, which carry state and have
-    better error handling.)doc";
+    This is now deprecated in favour of the new classes Base64Encoder
+    and Base64Decoder, which carry state and have better error
+    handling.)doc";
 
 // Docstring regina::python::doc::BitDecoder
 static const char *BitDecoder =
@@ -91,8 +91,8 @@ R"doc(A helper class for reading signatures that pack information as tightly
 as possible into bits, with no regard for boundaries between bytes in
 the final signature.
 
-To use this class: create a new BitDecoder by passing details of
-the encoded byte sequence to its constructor, and then call its
+To use this class: create a new BitDecoder by passing details of the
+encoded byte sequence to its constructor, and then call its
 ``decode...()`` member functions to read values sequentially from the
 encoding.
 
@@ -116,22 +116,28 @@ R"doc(A helper class for writing signatures that pack information as tightly
 as possible into bits, with no regard for boundaries between bytes in
 the final signature.
 
+This is more efficient than PackedByteEncoder, which will not write
+data across byte boundaries. Its main drawback is that bytes() is an
+rvalue member function: you can only call it once (after you have
+encoded everything that you need), and after this the encoder will be
+unusable.
+
 To use this class: create a new BitEncoder, call one or more of its
 member functions to write values to the encoding, and then call
-bytes() to extract the resulting byte sequence. Once you have called
-bytes(), the encoder will be unusable (and in particular, you cannot
-encode more bits and/or call bytes() again).
+bytes() to extract the resulting byte sequence. As noted above, this
+call to bytes() must be the last thing that you do with the encoder:
+you cannot encode more bits and/or call bytes() again.
 
 Bit encoders are single-use objects: they cannot be copied, moved or
 swapped.)doc";
 
-// Docstring regina::python::doc::PackedSigDecoder
-static const char *PackedSigDecoder =
+// Docstring regina::python::doc::PackedByteDecoder
+static const char *PackedByteDecoder =
 R"doc(A helper class for reading signatures that are encoded as packed byte
 sequences.
 
-To use this class: create a new PackedSigDecoder by passing details of
-the encoded byte sequence to its constructor, and then call its
+To use this class: create a new PackedByteDecoder by passing details
+of the encoded byte sequence to its constructor, and then call its
 ``decode...()`` member functions to read values sequentially from the
 encoding.
 
@@ -145,17 +151,21 @@ or swapped.
 Python:
     The type *Iterator* is an implementation detail, and is hidden
     from Python users. Just use the unadorned type name
-    ``PackedSigDecoder``.)doc";
+    ``PackedByteDecoder``.)doc";
 
-// Docstring regina::python::doc::PackedSigEncoder
-static const char *PackedSigEncoder =
+// Docstring regina::python::doc::PackedByteEncoder
+static const char *PackedByteEncoder =
 R"doc(A helper class for writing signatures that pack information as tightly
-as possible into byte sequences. These signatures use ``std::string``
-but are typically _not_ printable, and indeed they may even contain
-null characters (which means they are not convertible to C-style
-strings).
+as possible into byte sequences, whilst respecting byte boundaries.
 
-To use this class: create a new PackedSigEncoder, call one or more of
+This is not as efficient as BitEncoder, which writes data across byte
+boundaries. Its main advantage (if you need this) is that bytes() is a
+regular const member function, which means that the encoder remains
+valid after bytes() has been called (in particular, you can still
+encode more data and/or extract the byte sequence again after bytes()
+has been called).
+
+To use this class: create a new PackedByteEncoder, call one or more of
 its member functions to write values to the encoding, and then call
 bytes() to extract the resulting byte sequence.
 
@@ -270,8 +280,8 @@ static const char *decodeInts =
 R"doc(Decodes a sequence of non-negative integer values, assuming that each
 individual value uses a fixed number of base64 characters, and returns
 these as an array of native C++ integers. Each integer to be decoded
-would typically have been encoded using Base64Encoder::encodeInt()
-or Base64Encoder::encodeInts(), using the same *nChars* argument.
+would typically have been encoded using Base64Encoder::encodeInt() or
+Base64Encoder::encodeInts(), using the same *nChars* argument.
 
 Specifically, it will be assumed that each integer has been broken
 into *nChars* 6-bit blocks, with each block encoded as a single base64
@@ -356,8 +366,8 @@ static const char *decodeTrits =
 R"doc(Decodes three trits from a single base64 character, and returns these
 as a fixed-size array. A _trit_ is either 0, 1 or 2.
 
-The inverse to this routine is Base64Encoder::encodeTrits(); see
-that routine for details of the encoding.
+The inverse to this routine is Base64Encoder::encodeTrits(); see that
+routine for details of the encoding.
 
 Exception ``InvalidInput``:
     There are no more characters remaining in the encoded string, or
@@ -1011,9 +1021,9 @@ Parameter ``capacity``:
 
 }
 
-namespace PackedSigDecoder_ {
+namespace PackedByteDecoder_ {
 
-// Docstring regina::python::doc::PackedSigDecoder_::__init
+// Docstring regina::python::doc::PackedByteDecoder_::__init
 static const char *__init =
 R"doc(Creates a new decoder for the given encoded byte sequence.
 
@@ -1034,17 +1044,17 @@ Parameter ``endEncoding``:
     a past-the-end iterator that marks the end of the encoded byte
     sequence.)doc";
 
-// Docstring regina::python::doc::PackedSigDecoder_::decodeBits
+// Docstring regina::python::doc::PackedByteDecoder_::decodeBits
 static const char *decodeBits =
 R"doc(Decodes a sequence of bits, and returns these in the form of a
 bitmask. The bits would typically have been encoded using
-PackedSigEncoder::encodeBits() with the same *count* argument.
+PackedByteEncoder::encodeBits() with the same *count* argument.
 
 Specifically, it will be assumed that the bits have been packed eight
 at a time into bytes, and that within each byte the bits are stored in
 order from lowest to highest significance.
 
-The inverse to this routine is PackedSigEncoder::encodeBits().
+The inverse to this routine is PackedByteEncoder::encodeBits().
 
 Exception ``InvalidInput``:
     There are not enough bytes available in the encoded byte sequence
@@ -1063,12 +1073,12 @@ Parameter ``count``:
 Returns:
     a bitmask holding the bits that were decoded.)doc";
 
-// Docstring regina::python::doc::PackedSigDecoder_::decodeInts
+// Docstring regina::python::doc::PackedByteDecoder_::decodeInts
 static const char *decodeInts =
 R"doc(Decodes a sequence of non-negative integer values, assuming that each
 individual value uses a fixed number of bytes, and returns these as an
 array of native C++ integers. The integers to be decoded would
-typically have been encoded using PackedSigEncoder::encodeInts(),
+typically have been encoded using PackedByteEncoder::encodeInts(),
 using the same *nBytes* argument.
 
 Specifically, it will be assumed that each integer has been broken
@@ -1082,7 +1092,7 @@ Each resulting integer will be assembled using the integer type
 the programmer has chosen an integer type of size at least *nBytes*
 bytes.
 
-The inverse to this routine is PackedSigEncoder::encodeInts().
+The inverse to this routine is PackedByteEncoder::encodeInts().
 
 Exception ``InvalidInput``:
     Either there are not enough bytes remaining in the encoded byte
@@ -1106,12 +1116,12 @@ Parameter ``nBytes``:
 Returns:
     the sequence of integers that were decoded.)doc";
 
-// Docstring regina::python::doc::PackedSigDecoder_::decodeSize
+// Docstring regina::python::doc::PackedByteDecoder_::decodeSize
 static const char *decodeSize =
 R"doc(Decodes the next non-negative integer value (typically representing
 the size of some object), without knowing in advance how many bytes
 were used to encode it. This integer value must have been encoded
-using PackedSigEncoder::encodeSize().
+using PackedByteEncoder::encodeSize().
 
 A typical use case would be where *size* represents the number of top-
 dimensional simplices in a triangulation, or the number of crossings
@@ -1126,7 +1136,7 @@ integerWidth(). This *b* is the same integer that was returned when
 *size* was encoded using encodeSize(), and typically you would pass
 *b* to subsequent calls to decodeInts().
 
-The inverse to this routine is PackedSigEncoder::encodeSize().
+The inverse to this routine is PackedByteEncoder::encodeSize().
 
 Exception ``InvalidInput``:
     There are not enough bytes available in the encoded byte sequence.
@@ -1135,12 +1145,12 @@ Returns:
     a pair (*size*, *b*), where *size* is the integer that was
     decoded, and *b* is the number of bytes described above.)doc";
 
-// Docstring regina::python::doc::PackedSigDecoder_::decodeTrits
+// Docstring regina::python::doc::PackedByteDecoder_::decodeTrits
 static const char *decodeTrits =
 R"doc(Decodes four trits from a single byte, and returns these as a fixed-
 size array. A _trit_ is either 0, 1 or 2.
 
-The inverse to this routine is PackedSigEncoder::encodeTrits(); see
+The inverse to this routine is PackedByteEncoder::encodeTrits(); see
 that routine for details of the encoding.
 
 Exception ``InvalidInput``:
@@ -1149,7 +1159,7 @@ Exception ``InvalidInput``:
 Returns:
     an array containing the four trits that were decoded.)doc";
 
-// Docstring regina::python::doc::PackedSigDecoder_::done
+// Docstring regina::python::doc::PackedByteDecoder_::done
 static const char *done =
 R"doc(Determines whether the current position has reached the end of the
 byte sequence.
@@ -1158,7 +1168,7 @@ Returns:
     ``True`` if and only if the current position is the end of the
     byte sequence.)doc";
 
-// Docstring regina::python::doc::PackedSigDecoder_::next
+// Docstring regina::python::doc::PackedByteDecoder_::next
 static const char *next =
 R"doc(Returns the next byte in the encoded byte sequence.
 
@@ -1176,7 +1186,7 @@ Returns:
     the corresponding integer, which will be between 0 and 255
     inclusive.)doc";
 
-// Docstring regina::python::doc::PackedSigDecoder_::remaining
+// Docstring regina::python::doc::PackedByteDecoder_::remaining
 static const char *remaining =
 R"doc(Returns the number of bytes remaining in the encoded byte sequence,
 counting from the current position onwards.
@@ -1189,12 +1199,12 @@ Returns:
 
 }
 
-namespace PackedSigEncoder_ {
+namespace PackedByteEncoder_ {
 
-// Docstring regina::python::doc::PackedSigEncoder_::__default
+// Docstring regina::python::doc::PackedByteEncoder_::__default
 static const char *__default = R"doc(Creates a new encoder, with an empty byte sequence.)doc";
 
-// Docstring regina::python::doc::PackedSigEncoder_::bytes
+// Docstring regina::python::doc::PackedByteEncoder_::bytes
 static const char *bytes =
 R"doc(Returns the byte sequence that has been constructed thus far.
 
@@ -1204,7 +1214,7 @@ Python:
 Returns:
     the current byte sequence.)doc";
 
-// Docstring regina::python::doc::PackedSigEncoder_::encodeBits
+// Docstring regina::python::doc::PackedByteEncoder_::encodeBits
 static const char *encodeBits =
 R"doc(Encodes a sequence of bits.
 
@@ -1213,7 +1223,7 @@ individual byte, the eight bits will be stored in order from lowest to
 highest significance. (The last byte might of course hold fewer than
 eight bits.)
 
-The inverse to this routine is PackedSigDecoder::decodeBits().
+The inverse to this routine is PackedByteDecoder::decodeBits().
 
 Python:
     The template argument *BitmaskType* is taken to be Bitmask.
@@ -1225,7 +1235,7 @@ Parameter ``bits``:
     a bitmask holding the bits to encode; this must be capable of
     holding at least *count* bits.)doc";
 
-// Docstring regina::python::doc::PackedSigEncoder_::encodeInts
+// Docstring regina::python::doc::PackedByteEncoder_::encodeInts
 static const char *encodeInts =
 R"doc(Encodes a sequence of non-negative native C++ integers (given by an
 input range), each using a fixed number of bytes.
@@ -1236,7 +1246,7 @@ significance. In the special case where *nBytes* is zero, this
 indicates that each integer can be encoded in _half_ a byte, and so
 each byte will hold two integers from the sequence.
 
-The inverse to this routine is PackedSigDecoder::decodeInts().
+The inverse to this routine is PackedByteDecoder::decodeInts().
 
 Exception ``InvalidArgument``:
     Some integer in the sequence is negative, or requires more than
@@ -1254,7 +1264,7 @@ Parameter ``nBytes``:
     a byte is required; typically *nBytes* would be obtained through
     an earlier call to encodeSize().)doc";
 
-// Docstring regina::python::doc::PackedSigEncoder_::encodeSize
+// Docstring regina::python::doc::PackedByteEncoder_::encodeSize
 static const char *encodeSize =
 R"doc(Encodes the given non-negative integer (typically representing the
 size of some object), without knowing in advance how many bytes will
@@ -1275,7 +1285,7 @@ an _index_ into an object (e.g., a top-dimensional simplex number, or
 a crossing index). Note that encodeSize() itself might write more than
 *b* bytes.
 
-The inverse to this routine is PackedSigDecoder::decodeSize().
+The inverse to this routine is PackedByteDecoder::decodeSize().
 
 Parameter ``size``:
     the non-negative integer to encode.
@@ -1284,7 +1294,7 @@ Returns:
     the number of bytes required to write any integer between 0 and
     *size* inclusive, or zero if at most half a byte is required.)doc";
 
-// Docstring regina::python::doc::PackedSigEncoder_::encodeTrits
+// Docstring regina::python::doc::PackedByteEncoder_::encodeTrits
 static const char *encodeTrits =
 R"doc(Encodes a sequence of trits (given by an input range). A _trit_ is
 either 0, 1 or 2.
@@ -1294,8 +1304,8 @@ individual byte, the four trits will use bits in order from lowest to
 highest significance. (The last byte might of course hold fewer than
 four trits.)
 
-The inverse to this routine is PackedSigDecoder::decodeTrits(), though
-that function only decodes four trits at a time.
+The inverse to this routine is PackedByteDecoder::decodeTrits(),
+though that function only decodes four trits at a time.
 
 Python:
     The argument *trits* should be a Python list.
@@ -1304,7 +1314,7 @@ Parameter ``trits``:
     the sequence of trits to encode. Each element of this sequence
     must be 0, 1 or 2.)doc";
 
-// Docstring regina::python::doc::PackedSigEncoder_::integerWidth
+// Docstring regina::python::doc::PackedByteEncoder_::integerWidth
 static const char *integerWidth =
 R"doc(Returns the smallest number of bytes required to encode any integer
 between 0 and *size* inclusive. As a special case, if any such integer
@@ -1318,7 +1328,7 @@ Returns:
     the number of bytes required, or zero if at most half a byte is
     required.)doc";
 
-// Docstring regina::python::doc::PackedSigEncoder_::reserve
+// Docstring regina::python::doc::PackedByteEncoder_::reserve
 static const char *reserve =
 R"doc(Pre-allocates the given amount of space for the entire encoding.
 

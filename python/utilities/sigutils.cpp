@@ -40,7 +40,7 @@ using regina::Base64Encoder;
 using regina::Base64SigEncoding;
 using regina::Bitmask;
 using regina::BitEncoder;
-using regina::PackedSigEncoder;
+using regina::PackedByteEncoder;
 
 namespace regina::python {
     // For Python (but not C++), we need Base64Decoder and BitDecoder
@@ -243,37 +243,37 @@ void addSigUtils(pybind11::module_& m) {
     #endif
     regina::python::add_eq_operators(bd);
 
-    RDOC_SCOPE_SWITCH(PackedSigEncoder)
+    RDOC_SCOPE_SWITCH(PackedByteEncoder)
 
-    auto pe = pybind11::class_<PackedSigEncoder>(m, "PackedSigEncoder",
+    auto pe = pybind11::class_<PackedByteEncoder>(m, "PackedByteEncoder",
             rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
         .def("bytes",
-            static_cast<const regina::ByteSequence&(PackedSigEncoder::*)()
-                const &>(&PackedSigEncoder::bytes),
+            static_cast<const regina::ByteSequence&(PackedByteEncoder::*)()
+                const &>(&PackedByteEncoder::bytes),
             rdoc::bytes)
-        .def_static("integerWidth", &PackedSigEncoder::integerWidth,
+        .def_static("integerWidth", &PackedByteEncoder::integerWidth,
             rdoc::integerWidth)
-        .def("encodeSize", &PackedSigEncoder::encodeSize, rdoc::encodeSize)
+        .def("encodeSize", &PackedByteEncoder::encodeSize, rdoc::encodeSize)
         .def("encodeInts",
             pybind11::overload_cast<const std::vector<long>&, int>(
-                &PackedSigEncoder::encodeInts<const std::vector<long>&>),
+                &PackedByteEncoder::encodeInts<const std::vector<long>&>),
             rdoc::encodeInts)
-        .def("encodeBits", &PackedSigEncoder::encodeBits<Bitmask>,
+        .def("encodeBits", &PackedByteEncoder::encodeBits<Bitmask>,
             rdoc::encodeBits)
         .def("encodeTrits",
             pybind11::overload_cast<const std::vector<uint8_t>&>(
-                &PackedSigEncoder::encodeTrits<const std::vector<uint8_t>&>),
+                &PackedByteEncoder::encodeTrits<const std::vector<uint8_t>&>),
             rdoc::encodeTrits)
-        .def("reserve", &PackedSigEncoder::reserve, rdoc::reserve)
+        .def("reserve", &PackedByteEncoder::reserve, rdoc::reserve)
     ;
     regina::python::add_eq_operators(pe);
 
-    RDOC_SCOPE_SWITCH(PackedSigDecoder)
+    RDOC_SCOPE_SWITCH(PackedByteDecoder)
 
-    using Decoder = regina::PackedSigDecoder<std::string::const_iterator>;
-    using Wrapper = regina::python::Decoder_Copy<regina::PackedSigDecoder>;
-    auto pd = pybind11::class_<Wrapper>(m, "PackedSigDecoder", rdoc_scope)
+    using Decoder = regina::PackedByteDecoder<std::string::const_iterator>;
+    using Wrapper = regina::python::Decoder_Copy<regina::PackedByteDecoder>;
+    auto pd = pybind11::class_<Wrapper>(m, "PackedByteDecoder", rdoc_scope)
         .def(pybind11::init<pybind11::bytes>(), rdoc::__init)
         .def("done", &Decoder::done, rdoc::done)
         .def("remaining", &Decoder::remaining, rdoc::remaining)

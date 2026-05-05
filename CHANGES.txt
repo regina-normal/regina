@@ -314,7 +314,7 @@ Version 8.0  [ TODO ]
             - New exception class.
         Class OutputBase:
             - Removed completely.
-        Class PackedSigEncoder, PackedSigDecoder:
+        Class PackedByteEncoder, PackedByteDecoder:
             - New class to support signatures that use (unprintable) packed
               byte sequences.  See also BitSig{Encoder,Decoder}.
         Class PermClass<n>:

@@ -1204,11 +1204,15 @@ using Base64SigDecoder [[deprecated]] = Base64Decoder<Iterator>;
 
 /**
  * A helper class for writing signatures that pack information as tightly as
- * possible into byte sequences.  These signatures use `std::string` but are
- * typically _not_ printable, and indeed they may even contain null characters
- * (which means they are not convertible to C-style strings).
+ * possible into byte sequences, whilst respecting byte boundaries.
  *
- * To use this class: create a new PackedSigEncoder, call one or more of its
+ * This is not as efficient as BitEncoder, which writes data across byte
+ * boundaries.  Its main advantage (if you need this) is that bytes() is a
+ * regular const member function, which means that the encoder remains valid
+ * after bytes() has been called (in particular, you can still encode more
+ * data and/or extract the byte sequence again after bytes() has been called).
+ *
+ * To use this class: create a new PackedByteEncoder, call one or more of its
  * member functions to write values to the encoding, and then call bytes() to
  * extract the resulting byte sequence.
  *
@@ -1217,7 +1221,7 @@ using Base64SigDecoder [[deprecated]] = Base64Decoder<Iterator>;
  *
  * \ingroup utilities
  */
-class PackedSigEncoder {
+class PackedByteEncoder {
     public:
         /**
          * The type of the final encoding that this class produces.
@@ -1232,7 +1236,7 @@ class PackedSigEncoder {
         /**
          * Creates a new encoder, with an empty byte sequence.
          */
-        PackedSigEncoder() = default;
+        PackedByteEncoder() = default;
 
         /**
          * Returns the byte sequence that has been constructed thus far.
@@ -1306,7 +1310,7 @@ class PackedSigEncoder {
          * simplex number, or a crossing index).  Note that encodeSize() itself
          * might write more than \a b bytes.
          *
-         * The inverse to this routine is PackedSigDecoder::decodeSize().
+         * The inverse to this routine is PackedByteDecoder::decodeSize().
          *
          * \param size the non-negative integer to encode.
          * \return the number of bytes required to write any integer between
@@ -1350,7 +1354,7 @@ class PackedSigEncoder {
          * indicates that each integer can be encoded in _half_ a byte,
          * and so each byte will hold two integers from the sequence.
          *
-         * The inverse to this routine is PackedSigDecoder::decodeInts().
+         * The inverse to this routine is PackedByteDecoder::decodeInts().
          *
          * \exception InvalidArgument Some integer in the sequence is negative,
          * or requires more than the given number of bytes.
@@ -1371,12 +1375,12 @@ class PackedSigEncoder {
             while (it != end) {
                 auto val = *it++;
                 if (val < 0)
-                    throw InvalidArgument("PackedSigEncoder::encodeInts(): "
+                    throw InvalidArgument("PackedByteEncoder::encodeInts(): "
                         "integer argument cannot be negative");
 
                 if (nBytes == 0) {
                     if (val > 0x0f)
-                        throw InvalidArgument("PackedSigEncoder::encodeInts(): "
+                        throw InvalidArgument("PackedByteEncoder::encodeInts(): "
                             "integer argument out of range");
                     if (it == end) {
                         // That was the last integer in the sequence.
@@ -1389,11 +1393,11 @@ class PackedSigEncoder {
                         auto next = *it++;
                         if (next < 0)
                             throw InvalidArgument(
-                                "PackedSigEncoder::encodeInts(): "
+                                "PackedByteEncoder::encodeInts(): "
                                 "integer argument cannot be negative");
                         if (next > 0x0f)
                             throw InvalidArgument(
-                                "PackedSigEncoder::encodeInts(): "
+                                "PackedByteEncoder::encodeInts(): "
                                 "integer argument out of range");
                         bytes_.push_back(static_cast<uint8_t>(next) << 4 |
                             static_cast<uint8_t>(val));
@@ -1411,7 +1415,7 @@ class PackedSigEncoder {
                         }
                         if (val != 0)
                             throw InvalidArgument(
-                                "PackedSigEncoder::encodeInts(): "
+                                "PackedByteEncoder::encodeInts(): "
                                 "integer argument out of range");
                     }
                 }
@@ -1428,7 +1432,7 @@ class PackedSigEncoder {
          * indicates that each integer can be encoded in _half_ a byte,
          * and so each byte will hold two integers from the sequence.
          *
-         * The inverse to this routine is PackedSigDecoder::decodeInts().
+         * The inverse to this routine is PackedByteDecoder::decodeInts().
          *
          * \exception InvalidArgument Some integer in the sequence is negative,
          * or requires more than the given number of bytes.
@@ -1456,7 +1460,7 @@ class PackedSigEncoder {
          * to highest significance.  (The last byte might of course hold
          * fewer than eight bits.)
          *
-         * The inverse to this routine is PackedSigDecoder::decodeBits().
+         * The inverse to this routine is PackedByteDecoder::decodeBits().
          *
          * \python The template argument \a BitmaskType is taken to be Bitmask.
          *
@@ -1495,7 +1499,7 @@ class PackedSigEncoder {
          * Each trit will be obtained by dereferencing an iterator, which
          * (as noted above) must yield the value 0, 1 or 2.
          *
-         * The inverse to this routine is PackedSigDecoder::decodeTrits(),
+         * The inverse to this routine is PackedByteDecoder::decodeTrits(),
          * though that function only decodes four trits at a time.
          *
          * \nopython
@@ -1537,7 +1541,7 @@ class PackedSigEncoder {
          * to highest significance.  (The last byte might of course hold fewer
          * than four trits.)
          *
-         * The inverse to this routine is PackedSigDecoder::decodeTrits(),
+         * The inverse to this routine is PackedByteDecoder::decodeTrits(),
          * though that function only decodes four trits at a time.
          *
          * \python The argument \a trits should be a Python list.
@@ -1569,15 +1573,15 @@ class PackedSigEncoder {
             bytes_.reserve(capacity);
         }
 
-        PackedSigEncoder(const PackedSigEncoder&) = delete;
-        PackedSigEncoder& operator = (const PackedSigEncoder&) = delete;
+        PackedByteEncoder(const PackedByteEncoder&) = delete;
+        PackedByteEncoder& operator = (const PackedByteEncoder&) = delete;
 };
 
 /**
  * A helper class for reading signatures that are encoded as packed byte
  * sequences.
  *
- * To use this class: create a new PackedSigDecoder by passing details of the
+ * To use this class: create a new PackedByteDecoder by passing details of the
  * encoded byte sequence to its constructor, and then call its `decode...()`
  * member functions to read values sequentially from the encoding.
  *
@@ -1589,18 +1593,18 @@ class PackedSigEncoder {
  * swapped.
  *
  * \python The type \a Iterator is an implementation detail, and is hidden
- * from Python users.  Just use the unadorned type name `PackedSigDecoder`.
+ * from Python users.  Just use the unadorned type name `PackedByteDecoder`.
  *
  * \ingroup utilities
  */
 template <CharIterator Iterator>
 requires std::bidirectional_iterator<Iterator>
-class PackedSigDecoder {
+class PackedByteDecoder {
     public:
         /**
          * The corresponding encoder class.
          */
-        using Encoder = PackedSigEncoder;
+        using Encoder = PackedByteEncoder;
 
         /**
          * The type of a typical encoding that this class would decode.
@@ -1633,7 +1637,7 @@ class PackedSigDecoder {
          * \param endEncoding a past-the-end iterator that marks the end of the
          * encoded byte sequence.
          */
-        PackedSigDecoder(Iterator beginEncoding, Iterator endEncoding) :
+        PackedByteDecoder(Iterator beginEncoding, Iterator endEncoding) :
                 next_(beginEncoding), end_(endEncoding) {
         }
 
@@ -1680,7 +1684,7 @@ class PackedSigDecoder {
         template <CppInteger IntType = uint8_t>
         IntType next() {
             if (next_ == end_) {
-                throw InvalidInput("PackedSigDecoder: "
+                throw InvalidInput("PackedByteDecoder: "
                     "unexpected end of encoded byte sequence");
             } else {
                 // Cast the byte to uint8_t to enforce unsignedness.
@@ -1692,7 +1696,7 @@ class PackedSigDecoder {
          * Decodes the next non-negative integer value (typically representing
          * the size of some object), without knowing in advance how many bytes
          * were used to encode it.  This integer value must have been encoded
-         * using PackedSigEncoder::encodeSize().
+         * using PackedByteEncoder::encodeSize().
          *
          * A typical use case would be where \a size represents the number of
          * top-dimensional simplices in a triangulation, or the number of
@@ -1707,7 +1711,7 @@ class PackedSigDecoder {
          * returned when \a size was encoded using encodeSize(), and typically
          * you would pass \a b to subsequent calls to decodeInts().
          *
-         * The inverse to this routine is PackedSigEncoder::encodeSize().
+         * The inverse to this routine is PackedByteEncoder::encodeSize().
          *
          * \exception InvalidInput There are not enough bytes available in the
          * encoded byte sequence.
@@ -1735,7 +1739,7 @@ class PackedSigDecoder {
          * each individual value uses a fixed number of bytes, and returns
          * these as native C++ integers via an output iterator.  The integers
          * to be decoded would typically have been encoded using
-         * PackedSigEncoder::encodeInts(), using the same \a nBytes argument.
+         * PackedByteEncoder::encodeInts(), using the same \a nBytes argument.
          *
          * Specifically, it will be assumed that each integer has been broken
          * into \a nBytes bytes, in order from lowest to highest significance.
@@ -1748,7 +1752,7 @@ class PackedSigDecoder {
          * that the programmer has chosen an output iterator whose `value_type`
          * is at least \a nBytes bytes in size.
          *
-         * The inverse to this routine is PackedSigEncoder::encodeInts().
+         * The inverse to this routine is PackedByteEncoder::encodeInts().
          *
          * \exception InvalidInput Either there are not enough bytes remaining
          * in the encoded byte sequence to hold \a count integers of the
@@ -1782,7 +1786,7 @@ class PackedSigDecoder {
                     ++i;
                     if (i == count) {
                         if (byte & 0xf0)
-                            throw InvalidInput("PackedSigDecoder: "
+                            throw InvalidInput("PackedByteDecoder: "
                                 "byte contains extraneous non-zero bits");
                     } else {
                         *output++ = (byte >> 4);
@@ -1804,7 +1808,7 @@ class PackedSigDecoder {
          * each individual value uses a fixed number of bytes, and returns
          * these as an array of native C++ integers.  The integers to be
          * decoded would typically have been encoded using
-         * PackedSigEncoder::encodeInts(), using the same \a nBytes argument.
+         * PackedByteEncoder::encodeInts(), using the same \a nBytes argument.
          *
          * Specifically, it will be assumed that each integer has been broken
          * into \a nBytes bytes, in order from lowest to highest significance.
@@ -1817,7 +1821,7 @@ class PackedSigDecoder {
          * that the programmer has chosen an integer type of size at least
          * \a nBytes bytes.
          *
-         * The inverse to this routine is PackedSigEncoder::encodeInts().
+         * The inverse to this routine is PackedByteEncoder::encodeInts().
          *
          * \exception InvalidInput Either there are not enough bytes remaining
          * in the encoded byte sequence to hold \a count integers of the
@@ -1844,13 +1848,13 @@ class PackedSigDecoder {
         /**
          * Decodes a sequence of bits, and returns these in the form of a
          * bitmask.  The bits would typically have been encoded using
-         * PackedSigEncoder::encodeBits() with the same \a count argument.
+         * PackedByteEncoder::encodeBits() with the same \a count argument.
          *
          * Specifically, it will be assumed that the bits have been packed eight
          * at a time into bytes, and that within each byte the bits are stored
          * in order from lowest to highest significance.
          *
-         * The inverse to this routine is PackedSigEncoder::encodeBits().
+         * The inverse to this routine is PackedByteEncoder::encodeBits().
          *
          * \exception InvalidInput There are not enough bytes available in
          * the encoded byte sequence to hold the requested number of bits.
@@ -1885,7 +1889,7 @@ class PackedSigDecoder {
          * Decodes four trits from a single byte, and returns these using an
          * output iterator.  A _trit_ is either 0, 1 or 2.
          *
-         * The inverse to this routine is PackedSigEncoder::encodeTrits(); see
+         * The inverse to this routine is PackedByteEncoder::encodeTrits(); see
          * that routine for details of the encoding.
          *
          * \exception InvalidInput There are no more bytes remaining in
@@ -1911,7 +1915,7 @@ class PackedSigDecoder {
          * Decodes four trits from a single byte, and returns these as a
          * fixed-size array.  A _trit_ is either 0, 1 or 2.
          *
-         * The inverse to this routine is PackedSigEncoder::encodeTrits(); see
+         * The inverse to this routine is PackedByteEncoder::encodeTrits(); see
          * that routine for details of the encoding.
          *
          * \exception InvalidInput There are no more bytes remaining in
@@ -1927,8 +1931,8 @@ class PackedSigDecoder {
                      static_cast<uint8_t>((val >> 6) & 3) };
         }
 
-        PackedSigDecoder(const PackedSigDecoder&) = delete;
-        PackedSigDecoder& operator = (const PackedSigDecoder&) = delete;
+        PackedByteDecoder(const PackedByteDecoder&) = delete;
+        PackedByteDecoder& operator = (const PackedByteDecoder&) = delete;
 };
 
 /**
@@ -1936,11 +1940,16 @@ class PackedSigDecoder {
  * possible into bits, with no regard for boundaries between bytes in the
  * final signature.
  *
+ * This is more efficient than PackedByteEncoder, which will not write data
+ * across byte boundaries.  Its main drawback is that bytes() is an rvalue
+ * member function: you can only call it once (after you have encoded everything
+ * that you need), and after this the encoder will be unusable.
+ *
  * To use this class: create a new BitEncoder, call one or more of its
  * member functions to write values to the encoding, and then call bytes() to
- * extract the resulting byte sequence.  Once you have called bytes(), the
- * encoder will be unusable (and in particular, you cannot encode more bits
- * and/or call bytes() again).
+ * extract the resulting byte sequence.  As noted above, this call to bytes()
+ * must be the last thing that you do with the encoder: you cannot encode
+ * more bits and/or call bytes() again.
  *
  * Bit encoders are single-use objects: they cannot be copied, moved or swapped.
  *
