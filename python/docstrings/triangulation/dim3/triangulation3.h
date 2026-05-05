@@ -3571,16 +3571,15 @@ other callable type).
 
 * *action* must take the following initial argument(s). Either (a) the
   first argument must be a triangulation (the precise type is
-  discussed below), representing the triangluation that has been
-  found; or else (b) the first two arguments must be of types const
-  std::string& followed by a triangulation, representing both the
-  triangulation and _an_ isomorphism signature. The second form is
-  offered in order to avoid unnecessary recomputation within the
-  *action* function; however, note that the signature might not be of
-  the IsoSigClassic type (i.e., it might not match the output from the
-  default version of isoSig()). If there are any additional arguments
-  supplied in the list *args*, then these will be passed as subsequent
-  arguments to *action*.
+  discussed below), representing the triangulation that has been
+  found; or else (b) the first two arguments must be of types ``const
+  ByteSequence&`` followed by a triangulation, representing both the
+  triangulation and its second-generation isomorphism signature. The
+  signature will be a byte sequence as returned by
+  ``neoSig<IsoSigBinary>()``; this second form may help avoid
+  unnecessary recomputation within the *action* function. If there are
+  any additional arguments supplied in the list *args*, then these
+  will be passed as subsequent arguments to *action*.
 
 * The triangulation argument will be passed as an rvalue; a typical
   action could (for example) take it by const reference and query it,
@@ -3658,10 +3657,11 @@ Python:
     This function is available in Python, and the *action* argument
     may be a pure Python function. However, its form is more
     restricted: the arguments *tracker* and *args* are removed, so you
-    call it as retriangulate(height, threads, action). Moreover,
-    *action* must take exactly two arguments (const std::string&,
-    Triangulation<3>&&) representing a signature and the
-    triangulation, as described in option (b) above.
+    call it as ``retriangulate(height, threads, action)``. Moreover,
+    *action* must take exactly two arguments ``(bytes,
+    Triangulation<3>&&)`` representing a signature and the
+    triangulation, as described in option (b) above; the signature
+    will be passed as a Python ``bytes`` object.
 
 Parameter ``height``:
     the maximum number of _additional_ tetrahedra to allow beyond the

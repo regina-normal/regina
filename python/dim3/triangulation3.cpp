@@ -468,14 +468,14 @@ void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::simplifyExhaustive)
         .def("retriangulate", [](const Triangulation<3>& tri, int height,
-                int threads, const std::function<bool(const std::string&,
+                int threads, const std::function<bool(const ByteSequence&,
                     Triangulation<3>&&)>& action) {
             if (threads == 1) {
                 return tri.retriangulate(height, 1, nullptr, action);
             } else {
                 GILCallbackManager manager;
                 return tri.retriangulate(height, threads, nullptr,
-                    [&](const std::string& sig, Triangulation<3>&& t) -> bool {
+                    [&](const ByteSequence& sig, Triangulation<3>&& t) -> bool {
                         GILCallbackManager<>::ScopedAcquire acquire(manager);
                         return action(sig, std::move(t));
                     });

@@ -35,7 +35,7 @@
 
 def displayTri(sig, tri):
     # A callback that uses both sig and tri arguments.
-    print('    ' + sig, tri.size())
+    print('    ' + IsoSigBinary.asString(sig), tri.size())
     return False
 
 def displayLink(sig, link):
@@ -119,6 +119,7 @@ def testCollect(obj, name, height, threads):
         sigs = [ LinkSigBinary.asString(s) for s in sigs ]
     else:
         ans = obj.retriangulate(height, threads, collect)
+        sigs = [ IsoSigBinary.asString(s) for s in sigs ]
     sigs.sort()
     for i in sigs:
         print('    ' + i)

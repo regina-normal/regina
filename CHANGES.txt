@@ -371,6 +371,10 @@ Version 8.0  [ TODO ]
             - The interfaces for isomorphism signature types and encodings have
               changed; see the changelog for IsoSigClassic / IsoSigDegrees and
               IsoSigPrintable / IsoSigPrintableLockFree for details.
+            - For retriangulate() in dimensions 3/4, if you pass an action
+              argument that takes both a triangulation and its signature, the
+              signature will now be passed as a second-generation signature
+              using a binary encoding (so as a byte sequence, not a string).
             - Removed the Boost Graph Library (BGL) interface for triangulations
               (triangulation/graph.h).  This is because Regina has not used
               Boost since December 2021, and so this code is essentially

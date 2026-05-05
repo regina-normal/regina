@@ -794,14 +794,13 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * - \a action must take the following initial argument(s).
          *   Either (a) the first argument must be a triangulation (the precise
-         *   type is discussed below), representing the triangluation that has
+         *   type is discussed below), representing the triangulation that has
          *   been found; or else (b) the first two arguments must be of types
-         *   const std::string& followed by a triangulation, representing both
-         *   the triangulation and its isomorphism signature.
-         *   The second form is offered in order to avoid unnecessary
-         *   recomputation within the \a action function; however, note that
-         *   the signature might not be of the IsoSigClassic type (i.e., it
-         *   might not match the output from the default version of isoSig()).
+         *   `const ByteSequence&` followed by a triangulation, representing
+         *   both the triangulation and its second-generation isomorphism
+         *   signature.  The signature will be a byte sequence as returned by
+         *   `neoSig<IsoSigBinary>()`; this second form may help avoid
+         *   unnecessary recomputation within the \a action function.
          *   If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
          *
@@ -874,13 +873,14 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \apinotfinal
          *
-         * \python This function is available in Python, and the
-         * \a action argument may be a pure Python function.  However, its
-         * form is more restricted: the arguments \a tracker and \a args are
-         * removed, so you call it as retriangulate(height, threads, action).
+         * \python This function is available in Python, and the \a action
+         * argument may be a pure Python function.  However, its form is more
+         * restricted: the arguments \a tracker and \a args are removed,
+         * so you call it as `retriangulate(height, threads, action)`.
          * Moreover, \a action must take exactly two arguments
-         * (const std::string&, Triangulation<4>&&) representing a signature
-         * and the triangulation, as described in option (b) above.
+         * `(bytes, Triangulation<4>&&)` representing a signature and the
+         * triangulation, as described in option (b) above; the signature will
+         * be passed as a Python `bytes` object.
          *
          * \param height the maximum number of _additional_ pentachora to
          * allow beyond the number of pentachora originally present in the
@@ -900,7 +900,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         template <typename Action, typename... Args>
         requires
             TerminatingCallback<Action, Triangulation<4>&&, Args...> ||
-            TerminatingCallback<Action, const std::string&, Triangulation<4>&&,
+            TerminatingCallback<Action, const ByteSequence&, Triangulation<4>&&,
                 Args...>
         bool retriangulate(int height, int threads,
             ProgressTrackerOpen* tracker,
@@ -1669,16 +1669,16 @@ namespace regina {
 namespace detail {
     template <>
     struct RetriangulateParams<Triangulation<4>> {
-        using Signature = std::string;
+        using Signature = ByteSequence;
 
         static Signature sig(const Triangulation<4>& tri) {
-            // Choose a fast isosig type.
-            return tri.isoSig<IsoSigPrintable, IsoSigRidgeDegrees<4>>();
+            // Choose a fast and small signature type.
+            return tri.neoSig<IsoSigBinary>();
         }
 
         static Signature rigidSig(const Triangulation<4>& tri) {
             // Currently rigidity is not supported for triangulations.
-            return tri.isoSig<IsoSigPrintable, IsoSigRidgeDegrees<4>>();
+            return tri.neoSig<IsoSigBinary>();
         }
 
         static constexpr const char* progressStage = "Exploring triangulations";
@@ -1810,7 +1810,8 @@ inline bool Triangulation<4>::simplifyUpDown(ssize_t max24, ssize_t max33,
 template <typename Action, typename... Args>
 requires
     TerminatingCallback<Action, Triangulation<4>&&, Args...> ||
-    TerminatingCallback<Action, const std::string&, Triangulation<4>&&, Args...>
+    TerminatingCallback<Action, const ByteSequence&, Triangulation<4>&&,
+        Args...>
 inline bool Triangulation<4>::retriangulate(int height, int threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (countComponents() > 1) {
@@ -1831,7 +1832,7 @@ inline bool Triangulation<4>::retriangulate(int height, int threads,
         // Action takes both an isomorphism signature and a triangulation.
         return regina::detail::retriangulateInternal<Triangulation<4>, true>(
             *this, false /* rigid */, height, threads, tracker,
-            [&](const std::string& sig, Triangulation<4>&& obj) {
+            [&](const ByteSequence& sig, Triangulation<4>&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     }

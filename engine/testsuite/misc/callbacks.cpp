@@ -125,7 +125,7 @@ TEST(CallbacksTest, passByReference) {
 
         Arg d;
         regina::Example<3>::s2xs1().retriangulate(1, 1, nullptr,
-                [](const std::string&, const regina::Triangulation<3>&,
+                [](const regina::ByteSequence&, const regina::Triangulation<3>&,
                     Arg& arg) {
             arg.flag();
             return false;
@@ -143,7 +143,7 @@ TEST(CallbacksTest, passByReference) {
 
         Arg d;
         regina::Example<4>::rp4().retriangulate(2, 1, nullptr,
-                [](const std::string&, const regina::Triangulation<4>&,
+                [](const regina::ByteSequence&, const regina::Triangulation<4>&,
                     Arg& arg) {
             arg.flag();
             return false;
