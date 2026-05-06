@@ -2472,6 +2472,43 @@ class Base64BitEncoder : private Base64Encoder {
         }
 
         /**
+         * Encodes the given non-negative integer across some number of whole
+         * base64 characters, without knowing in advance how many characters
+         * will be required.
+         *
+         * This is intended to be called at the beginning of an encoding.
+         * It is possible to call it at other positions; however, if the
+         * current writing position is in the middle of a base64 character
+         * (i.e., some but not all of the six bits for that character have
+         * already been supplied), then this routine will throw an exception.
+         *
+         * This routine will write exactly the same base64 characters as
+         * `Base64Encoder::encodeSize(size)`.  It does not return an integer
+         * byte width, however, since subsequent data would typically be
+         * encoded on a bit-by-bit basis, not a character-by-character basis.
+         *
+         * When decoding the resulting string, you would typically need to use
+         * Base64BitEncoder::decodeSize().
+         *
+         * \pre This encoder is currently positioned at a character boundary.
+         * That is, it is _not_ in a state where some but not all of the six
+         * bits have been supplied for the next base64 character that will be
+         * written.
+         *
+         * \exception FailedPrecondition This encoder is not positioned at a
+         * character boundary, as described above.
+         *
+         * \param size the non-negative integer to encode.
+         */
+        void encodeSize(size_t size) {
+            if (nQueued_)
+                throw FailedPrecondition("Base64BitEncoder: encodeSize() "
+                    "can only be called when at a character boundary");
+
+            Base64Encoder::encodeSize(size);
+        }
+
+        /**
          * Pre-allocates the given amount of space for the entire encoding,
          * as measured in bits.
          *
@@ -2722,6 +2759,48 @@ class Base64BitDecoder : private Base64Decoder<Iterator> {
                 if (decodeBit())
                     bits.set(i, true);
             return bits;
+        }
+
+        /**
+         * Decodes a non-negative integer value that has been stored in some
+         * number of whole base64 characters, without knowing in advance how
+         * many base64 characters were used to encode it.  This integer value
+         * must have been encoded using Base64BitEncoder::encodeSize() (or the
+         * equivalent Base64Encoder::encodeSize()).
+         *
+         * Like the inverse routine Base64BitEncoder::encodeSize(), this is
+         * intended to be called at the beginning of an encoding.  It is
+         * possible to call it at other positions; however, if the current
+         * reading position is in the middle of a base64 character
+         * (i.e., some but not all of the six bits for that character have
+         * been read), then this routine will throw an exception.
+         *
+         * This routine will read the same characters and return the same
+         * decoded value as `Base64Decoder::decodeSize()`.  However, it only
+         * returns the decoded integer, and not an extra integer byte width,
+         * since subsequent data would typically be decoded on a bit-by-bit
+         * basis, not a character-by-character basis.
+         *
+         * \pre This decoder is currently positioned at a character boundary.
+         * That is, it is _not_ in a state where some but not all of the six
+         * bits have been read from the last base64 character that was
+         * extracted.
+         *
+         * \exception FailedPrecondition This decoder is not positioned at a
+         * character boundary, as described above.
+         *
+         * \exception InvalidInput There are not enough characters available
+         * in the encoded string, or a character was encountered that was not
+         * a valid base64 character.
+         *
+         * \return the integer that was decoded.
+         */
+        size_t decodeSize() {
+            if (nQueued_)
+                throw FailedPrecondition("Base64BitDecoder: decodeSize() "
+                    "can only be called when at a character boundary");
+
+            return Base64Decoder<Iterator>::decodeSize().first;
         }
 
         /**

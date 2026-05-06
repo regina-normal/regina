@@ -317,6 +317,44 @@ Parameter ``bits``:
     an integer holding the bits that were decoded. The bits will be
     stored in order from the least significant bit.)doc";
 
+// Docstring regina::python::doc::Base64BitDecoder_::decodeSize
+static const char *decodeSize =
+R"doc(Decodes a non-negative integer value that has been stored in some
+number of whole base64 characters, without knowing in advance how many
+base64 characters were used to encode it. This integer value must have
+been encoded using Base64BitEncoder::encodeSize() (or the equivalent
+Base64Encoder::encodeSize()).
+
+Like the inverse routine Base64BitEncoder::encodeSize(), this is
+intended to be called at the beginning of an encoding. It is possible
+to call it at other positions; however, if the current reading
+position is in the middle of a base64 character (i.e., some but not
+all of the six bits for that character have been read), then this
+routine will throw an exception.
+
+This routine will read the same characters and return the same decoded
+value as ``Base64Decoder::decodeSize()``. However, it only returns the
+decoded integer, and not an extra integer byte width, since subsequent
+data would typically be decoded on a bit-by-bit basis, not a
+character-by-character basis.
+
+Precondition:
+    This decoder is currently positioned at a character boundary. That
+    is, it is _not_ in a state where some but not all of the six bits
+    have been read from the last base64 character that was extracted.
+
+Exception ``FailedPrecondition``:
+    This decoder is not positioned at a character boundary, as
+    described above.
+
+Exception ``InvalidInput``:
+    There are not enough characters available in the encoded string,
+    or a character was encountered that was not a valid base64
+    character.
+
+Returns:
+    the integer that was decoded.)doc";
+
 // Docstring regina::python::doc::Base64BitDecoder_::flushChar
 static const char *flushChar =
 R"doc(Skips past unread bits until we reach the next base64 character
@@ -418,6 +456,39 @@ Parameter ``count``:
 Parameter ``bits``:
     an integer holding the bits to encode; these will be encoded in
     order from the least significant bit of the argument *bits*.)doc";
+
+// Docstring regina::python::doc::Base64BitEncoder_::encodeSize
+static const char *encodeSize =
+R"doc(Encodes the given non-negative integer across some number of whole
+base64 characters, without knowing in advance how many characters will
+be required.
+
+This is intended to be called at the beginning of an encoding. It is
+possible to call it at other positions; however, if the current
+writing position is in the middle of a base64 character (i.e., some
+but not all of the six bits for that character have already been
+supplied), then this routine will throw an exception.
+
+This routine will write exactly the same base64 characters as
+``Base64Encoder::encodeSize(size)``. It does not return an integer
+byte width, however, since subsequent data would typically be encoded
+on a bit-by-bit basis, not a character-by-character basis.
+
+When decoding the resulting string, you would typically need to use
+Base64BitEncoder::decodeSize().
+
+Precondition:
+    This encoder is currently positioned at a character boundary. That
+    is, it is _not_ in a state where some but not all of the six bits
+    have been supplied for the next base64 character that will be
+    written.
+
+Exception ``FailedPrecondition``:
+    This encoder is not positioned at a character boundary, as
+    described above.
+
+Parameter ``size``:
+    the non-negative integer to encode.)doc";
 
 // Docstring regina::python::doc::Base64BitEncoder_::reserveBits
 static const char *reserveBits =

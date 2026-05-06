@@ -368,6 +368,9 @@ void addSigUtils(pybind11::module_& m) {
         .def("encodeBitmask", [](Encoder& enc, int n, const Bitmask& b) {
             enc.encoder().encodeBitmask(n, b);
         }, rdoc::encodeBitmask)
+        .def("encodeSize", [](Encoder& enc, size_t s) {
+            enc.encoder().encodeSize(s);
+        }, rdoc::encodeSize)
         .def("reserveBits", [](Encoder& enc, size_t count) {
             enc.encoder().reserveBits(count);
         }, rdoc::reserveBits)
@@ -393,6 +396,7 @@ void addSigUtils(pybind11::module_& m) {
         .def("decodeInt", &Decoder::decodeInt<unsigned long>, rdoc::decodeInt)
         .def("decodeBitmask", &Decoder::decodeBitmask<Bitmask>,
             rdoc::decodeBitmask)
+        .def("decodeSize", &Decoder::decodeSize, rdoc::decodeSize)
         .def("flushChar", &Decoder::flushChar, rdoc::flushChar)
     ;
     regina::python::add_eq_operators(c);
