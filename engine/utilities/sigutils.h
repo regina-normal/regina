@@ -2534,6 +2534,25 @@ class Base64BitEncoder : private Base64Encoder {
         }
 
         /**
+         * Advances the position of the encoder to the next character boundary,
+         * if it is not at one already.
+         *
+         * If this encoder is already positioned at a character boundary, this
+         * routine will do nothing.  Otherwise - if some but not all of the six
+         * bits have been supplied for the next pending base64 character to be
+         * written - it will write that pending character immediately (as
+         * though the remaining bits were all zero).
+         *
+         */
+        void flushChar() {
+            if (nQueued_) {
+                Base64Encoder::encodeSingle(queued_);
+                queued_ = 0;
+                nQueued_ = 0;
+            }
+        }
+
+        /**
          * Advances the position of the encoder to the next character boundary
          * if necessary, and then appends the given character verbatim to the
          * encoded string.
@@ -2551,11 +2570,7 @@ class Base64BitEncoder : private Base64Encoder {
          * be printable.
          */
         void flushAndAppend(char c) {
-            if (nQueued_) {
-                Base64Encoder::encodeSingle(queued_);
-                queued_ = 0;
-                nQueued_ = 0;
-            }
+            flushChar();
             Base64Encoder::append(c);
         }
 
