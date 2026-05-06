@@ -237,6 +237,8 @@ void addSigUtils(pybind11::module_& m) {
             static_cast<std::array<uint8_t, 3>(Decoder::*)()>(
                 &Decoder::decodeTrits),
             rdoc::decodeTrits)
+        .def("unreadBitDecoder", &Decoder::unreadBitDecoder,
+            rdoc::unreadBitDecoder)
         .def_static("isValid", &Decoder::isValid, rdoc::isValid)
         .def_static("decode", &Decoder::decode, rdoc::decode)
     ;

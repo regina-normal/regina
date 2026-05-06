@@ -52,6 +52,10 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
+template <CharIterator Iterator>
+requires std::bidirectional_iterator<Iterator>
+class Base64BitDecoder;
+
 /**
  * A deprecated set of helper tools for signatures that use base64 encodings.
  * These are (in particular) used in the default encodings for Regina's
@@ -1161,6 +1165,29 @@ class Base64Decoder {
             return { static_cast<uint8_t>(val & 3),
                      static_cast<uint8_t>((val >> 2) & 3),
                      static_cast<uint8_t>((val >> 4) & 3) };
+        }
+
+        /**
+         * Returns a bitwise decoder for the range of base64 characters that
+         * this decoder has not yet read.
+         *
+         * This may be useful if, as a result of some runtime decision, you
+         * need to switch from character-by-character decoding to bit-by-bit
+         * decoding.
+         *
+         * The decoder that is returned will _only_ see those base64
+         * characters that this decoder has not yet read (here a call to
+         * peek() is not considered as having read the character).
+         *
+         * This base64 decoder will remain valid, and its own reading position
+         * will not change.
+         *
+         * \return a bitwise decoder for the characters not yet read.
+         */
+        Base64BitDecoder<Iterator> unreadBitDecoder() const {
+            // Don't ask Base64BitDecoder to skip whitespace: if we wanted
+            // this then we should have already done it ourselves.
+            return { next_, end_, false };
         }
 
         /**

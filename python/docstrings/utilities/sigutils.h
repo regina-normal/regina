@@ -878,6 +878,24 @@ R"doc(Moves the current position past any whitespace.
 The movement will stop upon reaching either a non-whitespace character
 or the end of the string.)doc";
 
+// Docstring regina::python::doc::Base64Decoder_::unreadBitDecoder
+static const char *unreadBitDecoder =
+R"doc(Returns a bitwise decoder for the range of base64 characters that this
+decoder has not yet read.
+
+This may be useful if, as a result of some runtime decision, you need
+to switch from character-by-character decoding to bit-by-bit decoding.
+
+The decoder that is returned will _only_ see those base64 characters
+that this decoder has not yet read (here a call to peek() is not
+considered as having read the character).
+
+This base64 decoder will remain valid, and its own reading position
+will not change.
+
+Returns:
+    a bitwise decoder for the characters not yet read.)doc";
+
 }
 
 namespace Base64Encoder_ {
