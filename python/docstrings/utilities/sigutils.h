@@ -11,12 +11,46 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::Base64BitDecoder
+static const char *Base64BitDecoder =
+R"doc(A helper class for reading signatures that use base64 encodings, but
+that pack information as tightly as possible into bits whilst ignoring
+boundaries between different base64 characters. See Base64BitEncoder
+for details on how this works.
+
+To use this class: create a new Base64BitDecoder by passing details of
+the encoded string to its constructor, and then call its
+``decode...()`` member functions to read values sequentially from the
+encoding.
+
+This class will keep track of a current position in the encoded bit
+sequence (this position may be in the middle of a base64 character,
+where some bits have been read from the character and some have not).
+Each call to a ``decode...()`` member function will advance this
+position accordingly (but never beyond the end of the string).
+
+This base64 encoding uses the characters: ``a..zA..Z0..9+-``
+
+These decoders are single-use objects: they cannot be copied, moved or
+swapped.
+
+.. warning::
+    Note that this base64 encoding uses a different set of printable
+    symbols from the encoding used in utilities/base64.h. This should
+    not be a problem: Regina uses this encoding exclusively for
+    signatures, and uses utilities/base64.h exclusively for encoding
+    files.
+
+Python:
+    The type *Iterator* is an implementation detail, and is hidden
+    from Python users. Just use the unadorned type name
+    ``Base64BitDecoder``.)doc";
+
 // Docstring regina::python::doc::Base64BitEncoder
 static const char *Base64BitEncoder =
-R"doc(A helper class for writing signatures that packs information as
-tightly as possible into bits whilst ignoring byte/character
-boundaries, but then writes its actual output as a printable base64
-string.
+R"doc(A helper class for writing signatures that pack information as tightly
+as possible into bits whilst ignoring byte/character boundaries, but
+then writes its actual output as a printable base64 string.
 
 This class is a hybrid between Base64Encoder and BitEncoder: it
 attempts to combine the readability of the former with the efficiency
@@ -30,14 +64,23 @@ BitEncoder::bytes(), this call to str() will invalidate the encoder,
 which means that after calling str() you cannot encode more data
 and/or call str() again.
 
+This base64 encoding uses the characters: ``a..zA..Z0..9+-``
+
 These encoders are single-use objects: they cannot be copied, moved or
-swapped.)doc";
+swapped.
+
+.. warning::
+    Note that this base64 encoding uses a different set of printable
+    symbols from the encoding used in utilities/base64.h. This should
+    not be a problem: Regina uses this encoding exclusively for
+    signatures, and uses utilities/base64.h exclusively for encoding
+    files.)doc";
 
 // Docstring regina::python::doc::Base64Decoder
 static const char *Base64Decoder =
 R"doc(A helper class for reading signatures that use base64 encodings. These
-are (in particular) used in the default encodings for Regina's own
-isomorphism signatures and knot signatures.
+are (in particular) used in the encodings for Regina's first-
+generation isomorphism signatures and knot signatures.
 
 To use this class: create a new Base64Decoder by passing details of
 the encoded string to its constructor, and then call its
@@ -68,8 +111,8 @@ Python:
 // Docstring regina::python::doc::Base64Encoder
 static const char *Base64Encoder =
 R"doc(A helper class for writing signatures that use base64 encodings. These
-are (in particular) used in the default encodings for Regina's own
-isomorphism signatures and knot signatures.
+are (in particular) used in the encodings for Regina's first-
+generation isomorphism signatures and knot signatures.
 
 To use this class: create a new Base64Encoder, call one or more of its
 member functions to write values to the encoding, and then call str()
@@ -193,6 +236,141 @@ bytes() to extract the resulting byte sequence.
 
 Packed encoders are single-use objects: they cannot be copied, moved
 or swapped.)doc";
+
+namespace Base64BitDecoder_ {
+
+// Docstring regina::python::doc::Base64BitDecoder_::__init
+static const char *__init =
+R"doc(Creates a new decoder for the given encoded string.
+
+The string itself should be passed as an iterator range. This iterator
+range must remain valid for the entire lifespan of this decoder.
+
+Python:
+    Instead of an iterator range, this constructor takes a Python
+    string. In Python (but not C++), the decoder will also keep a deep
+    copy of the string, to ensure the lifespan requirements.
+
+Parameter ``beginEncoding``:
+    an iterator pointing to the beginning of the encoded string.
+
+Parameter ``endEncoding``:
+    a past-the-end iterator that marks the end of the encoded string.
+
+Parameter ``stripWhitespace``:
+    ``True`` if the given bounds should be squeezed inwards to ignore
+    whitespace at both the beginning and the end of the encoded
+    string.)doc";
+
+// Docstring regina::python::doc::Base64BitDecoder_::decodeBit
+static const char *decodeBit =
+R"doc(Returns the next bit in the encoded sequence.
+
+Exception ``InvalidInput``:
+    There are no more bits remaining in the encoded sequence.
+
+Returns:
+    ``True`` if the bit that was read is 1, or ``False`` if the bit
+    that was read is 0.)doc";
+
+// Docstring regina::python::doc::Base64BitDecoder_::decodeBitmask
+static const char *decodeBitmask =
+R"doc(Decodes a sequence of bits, and returns them in the form of a bitmask.
+
+Python:
+    The template argument *BitmaskType* is taken to be Bitmask.
+
+Exception ``InvalidInput``:
+    There are fewer than *count* bits available in the encoded
+    sequence.
+
+Template parameter ``BitmaskType``:
+    the bitmask type to return; this must be capable of holding at
+    least *count* bits.
+
+Parameter ``count``:
+    the number of bits to decode.
+
+Returns:
+    a bitmask holding the bits that were decoded. The bits will be
+    stored in the bitmask in order from bit 0.)doc";
+
+// Docstring regina::python::doc::Base64BitDecoder_::decodeInt
+static const char *decodeInt =
+R"doc(Decodes a sequence of bits, and returns them in the form of a native
+unsigned integer.
+
+Python:
+    The template argument *IntType* is taken to be ``unsigned long``.
+
+Exception ``InvalidInput``:
+    There are fewer than *count* bits available in the encoded string.
+
+Template parameter ``IntType``:
+    the unsigned integer type to return; this must be at least *count*
+    bits in size.
+
+Parameter ``count``:
+    the number of bits to decode.
+
+Parameter ``bits``:
+    an integer holding the bits that were decoded. The bits will be
+    stored in order from the least significant bit.)doc";
+
+// Docstring regina::python::doc::Base64BitDecoder_::flushChar
+static const char *flushChar =
+R"doc(Skips past unread bits until we reach the next base64 character
+boundary.
+
+This routine will test that all bits that are skipped are off;
+otherwise it will throw an exception. The number of bits skipped will
+be between 0 and 5 inclusive.
+
+Exception ``InvalidInput``:
+    At least one of the bits that was skipped was set.)doc";
+
+// Docstring regina::python::doc::Base64BitDecoder_::maybeDone
+static const char *maybeDone =
+R"doc(Determines if the current position _could_ have reached the end of the
+encoded bit sequence. The word "maybe" acknowledges that the precise
+end of the bit sequence is often unclear (since the sequence is
+presented in base64 characters, without knowing how many bits of the
+final character were actually used).
+
+This will return ``True`` if:
+
+* there are no remaining base64 _characters_ that we have not read
+  from at all; and,
+
+* of the last character that we did read from (if any), all of the
+  _bits_ that have not yet been read are set to zero.
+
+Returns:
+    ``True`` if and only if we could be at the end of the encoded bit
+    sequence, as described above.)doc";
+
+// Docstring regina::python::doc::Base64BitDecoder_::noMoreBits
+static const char *noMoreBits =
+R"doc(Determines if there are no more available bits to read.
+
+This will return ``True`` when we have already read all six bits from
+every base64 character of the input string.
+
+Returns:
+    ``True`` if and only if there are no more available bits.)doc";
+
+// Docstring regina::python::doc::Base64BitDecoder_::remainingBits
+static const char *remainingBits =
+R"doc(Returns the number of bits that can still be read from the encoded
+string, counting from the current position onwards.
+
+The routine ``noMoreBits()`` will return ``True`` if and only if
+``remainingBits()`` returns zero.
+
+Returns:
+    the number of bits remaining.)doc";
+
+}
 
 namespace Base64BitEncoder_ {
 

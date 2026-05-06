@@ -44,7 +44,7 @@ using regina::PackedByteEncoder;
 namespace regina::python {
     // For Python (but not C++), we need Base64Decoder and BitDecoder
     // to keep a deep copy of the base64 string / byte sequence.  We define
-    // a wrapper class Decoder_Copy<T> here that manages this, where T should
+    // a wrapper class CachedDecoder<T> here that manages this, where T should
     // be one of the class templates Base64Decoder, BitDecoder, etc.
     //
     // Awkwardly, we need to copy the string _before_ passing its iterators to
@@ -59,18 +59,18 @@ namespace regina::python {
     };
 
     template <template <typename> class MainDecoder>
-    class Decoder_Copy : private StringStorage,
+    class CachedDecoder : private StringStorage,
             public MainDecoder<std::string::const_iterator> {
         private:
             using Base = MainDecoder<std::string::const_iterator>;
 
         public:
-            Decoder_Copy(std::string str, bool stripWhitespace)
+            CachedDecoder(std::string str, bool stripWhitespace)
             requires std::same_as<typename Base::Encoding, std::string> :
                     StringStorage(std::move(str)),
                     Base(str_.begin(), str_.end(), stripWhitespace) {
             }
-            Decoder_Copy(pybind11::bytes bytes)
+            CachedDecoder(pybind11::bytes bytes)
             requires std::same_as<typename Base::Encoding, ByteSequence> :
                     StringStorage(bytes),
                     Base(str_.begin(), str_.end()) {
@@ -207,10 +207,11 @@ void addSigUtils(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(Base64Decoder)
 
     using Decoder = regina::Base64Decoder<std::string::const_iterator>;
-    using Wrapper = regina::python::Decoder_Copy<regina::Base64Decoder>;
+    using Wrapper = regina::python::CachedDecoder<regina::Base64Decoder>;
     auto c = pybind11::class_<Wrapper>(m, "Base64Decoder", rdoc_scope)
         .def(pybind11::init<const std::string&, bool>(),
-            pybind11::arg(), pybind11::arg("skipInitialWhitespace") = true,
+            pybind11::arg("string"),
+            pybind11::arg("skipInitialWhitespace") = true,
             rdoc::__init)
         .def("skipWhitespace", &Decoder::skipWhitespace, rdoc::skipWhitespace)
         .def("done",
@@ -285,7 +286,7 @@ void addSigUtils(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(PackedByteDecoder)
 
     using Decoder = regina::PackedByteDecoder<std::string::const_iterator>;
-    using Wrapper = regina::python::Decoder_Copy<regina::PackedByteDecoder>;
+    using Wrapper = regina::python::CachedDecoder<regina::PackedByteDecoder>;
     auto c = pybind11::class_<Wrapper>(m, "PackedByteDecoder", rdoc_scope)
         .def(pybind11::init<pybind11::bytes>(), rdoc::__init)
         .def("done", &Decoder::done, rdoc::done)
@@ -338,7 +339,7 @@ void addSigUtils(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(BitDecoder)
 
     using Decoder = regina::BitDecoder<std::string::const_iterator>;
-    using Wrapper = regina::python::Decoder_Copy<regina::BitDecoder>;
+    using Wrapper = regina::python::CachedDecoder<regina::BitDecoder>;
     auto c = pybind11::class_<Wrapper>(m, "BitDecoder", rdoc_scope)
         .def(pybind11::init<pybind11::bytes>(), rdoc::__init)
         .def("maybeDone", &Decoder::maybeDone, rdoc::maybeDone)
@@ -375,6 +376,27 @@ void addSigUtils(pybind11::module_& m) {
         }, rdoc::reserveChars)
     ;
     regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_SWITCH(Base64BitDecoder)
+
+    using Decoder = regina::Base64BitDecoder<std::string::const_iterator>;
+    using Wrapper = regina::python::CachedDecoder<regina::Base64BitDecoder>;
+    auto c = pybind11::class_<Wrapper>(m, "Base64BitDecoder", rdoc_scope)
+        .def(pybind11::init<const std::string&, bool>(),
+            pybind11::arg("string"),
+            pybind11::arg("skipInitialWhitespace") = true,
+            rdoc::__init)
+        .def("maybeDone", &Decoder::maybeDone, rdoc::maybeDone)
+        .def("noMoreBits", &Decoder::noMoreBits, rdoc::noMoreBits)
+        .def("remainingBits", &Decoder::remainingBits, rdoc::remainingBits)
+        .def("decodeBit", &Decoder::decodeBit, rdoc::decodeBit)
+        .def("decodeInt", &Decoder::decodeInt<unsigned long>, rdoc::decodeInt)
+        .def("decodeBitmask", &Decoder::decodeBitmask<Bitmask>,
+            rdoc::decodeBitmask)
+        .def("flushChar", &Decoder::flushChar, rdoc::flushChar)
+    ;
+    regina::python::add_eq_operators(c);
+
 
     RDOC_SCOPE_END
 }

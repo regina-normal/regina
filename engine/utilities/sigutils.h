@@ -289,8 +289,8 @@ struct [[deprecated]] Base64SigEncoding {
 
 /**
  * A helper class for writing signatures that use base64 encodings.
- * These are (in particular) used in the default encodings for Regina's
- * own isomorphism signatures and knot signatures.
+ * These are (in particular) used in the encodings for Regina's
+ * first-generation isomorphism signatures and knot signatures.
  *
  * To use this class: create a new Base64Encoder, call one or more of its
  * member functions to write values to the encoding, and then call str() to
@@ -690,8 +690,8 @@ class Base64Encoder {
 
 /**
  * A helper class for reading signatures that use base64 encodings.
- * These are (in particular) used in the default encodings for Regina's
- * own isomorphism signatures and knot signatures.
+ * These are (in particular) used in the encodings for Regina's
+ * first-generation isomorphism signatures and knot signatures.
  *
  * To use this class: create a new Base64Decoder by passing details of the
  * encoded string to its constructor, and then call its `decode...()` member
@@ -2335,7 +2335,7 @@ class BitDecoder {
 };
 
 /**
- * A helper class for writing signatures that packs information as tightly as
+ * A helper class for writing signatures that pack information as tightly as
  * possible into bits whilst ignoring byte/character boundaries, but then
  * writes its actual output as a printable base64 string.
  *
@@ -2350,8 +2350,15 @@ class BitDecoder {
  * to str() will invalidate the encoder, which means that after calling str()
  * you cannot encode more data and/or call str() again.
  *
+ * This base64 encoding uses the characters: `a..zA..Z0..9+-`
+ *
  * These encoders are single-use objects: they cannot be copied, moved or
  * swapped.
+ *
+ * \warning Note that this base64 encoding uses a different set of
+ * printable symbols from the encoding used in utilities/base64.h.
+ * This should not be a problem: Regina uses this encoding exclusively for
+ * signatures, and uses utilities/base64.h exclusively for encoding files.
  *
  * \ingroup utilities
  */
@@ -2387,11 +2394,11 @@ class Base64BitEncoder : private Base64Encoder {
          */
         std::string&& str() && {
             if (nQueued_) {
-                encodeSingle(queued_);
+                Base64Encoder::encodeSingle(queued_);
                 // We don't bother resetting queued_ or nQueued_, since this
                 // encoder will be unusable after this function is called.
             }
-            return std::move(*this).str();
+            return std::move(*this).Base64Encoder::str();
         }
 
         /**
@@ -2403,7 +2410,7 @@ class Base64BitEncoder : private Base64Encoder {
         void encodeBit(bool bit) {
             if (bit) {
                 if (nQueued_ == 5) {
-                    encodeSingle(queued_ | 0x20);
+                    Base64Encoder::encodeSingle(queued_ | 0x20);
                     queued_ = 0;
                     nQueued_ = 0;
                 } else {
@@ -2504,6 +2511,242 @@ class Base64BitEncoder : private Base64Encoder {
 
         Base64BitEncoder(const Base64BitEncoder&) = delete;
         Base64BitEncoder& operator = (const Base64BitEncoder&) = delete;
+};
+
+/**
+ * A helper class for reading signatures that use base64 encodings, but that
+ * pack information as tightly as possible into bits whilst ignoring boundaries
+ * between different base64 characters.  See Base64BitEncoder for details on
+ * how this works.
+ *
+ * To use this class: create a new Base64BitDecoder by passing details of the
+ * encoded string to its constructor, and then call its `decode...()` member
+ * functions to read values sequentially from the encoding.
+ *
+ * This class will keep track of a current position in the encoded bit
+ * sequence (this position may be in the middle of a base64 character, where
+ * some bits have been read from the character and some have not).  Each call
+ * to a `decode...()` member function will advance this position accordingly
+ * (but never beyond the end of the string).
+ *
+ * This base64 encoding uses the characters: `a..zA..Z0..9+-`
+ *
+ * These decoders are single-use objects: they cannot be copied, moved or
+ * swapped.
+ *
+ * \warning Note that this base64 encoding uses a different set of
+ * printable symbols from the encoding used in utilities/base64.h.
+ * This should not be a problem: Regina uses this encoding exclusively for
+ * signatures, and uses utilities/base64.h exclusively for encoding files.
+ *
+ * \python The type \a Iterator is an implementation detail, and is hidden
+ * from Python users.  Just use the unadorned type name `Base64BitDecoder`.
+ *
+ * \ingroup utilities
+ */
+template <CharIterator Iterator>
+requires std::bidirectional_iterator<Iterator>
+class Base64BitDecoder : private Base64Decoder<Iterator> {
+    public:
+        /**
+         * The corresponding encoder class.
+         */
+        using Encoder = Base64BitEncoder;
+
+        /**
+         * The type of a typical encoding that this class would decode.
+         * This is the same type as `Encoder::Encoding`.
+         */
+        using Encoding = std::string;
+
+    private:
+        uint8_t extracted_ { 0 };
+            /**< A six-bit integer that has been extracted from a single
+                 base64 character of the input string, but whose bits have not
+                 yet all been read.  This integer will be in the range `0..63`
+                 (i.e., it will already have been decoded from base64). */
+        int nQueued_ { 0 };
+            /**< The number of bits from \a extracted_ that are waiting to be
+                 read.  This will always be between 0 and 5 inclusive. */
+
+    public:
+        /**
+         * Creates a new decoder for the given encoded string.
+         *
+         * The string itself should be passed as an iterator range.
+         * This iterator range must remain valid for the entire lifespan
+         * of this decoder.
+         *
+         * \python Instead of an iterator range, this constructor takes a
+         * Python string.  In Python (but not C++), the decoder will also keep
+         * a deep copy of the string, to ensure the lifespan requirements.
+         *
+         * \param beginEncoding an iterator pointing to the beginning of the
+         * encoded string.
+         * \param endEncoding a past-the-end iterator that marks the end of the
+         * encoded string.
+         * \param stripWhitespace \c true if the given bounds should be
+         * squeezed inwards to ignore whitespace at both the beginning and
+         * the end of the encoded string.
+         */
+        Base64BitDecoder(Iterator beginEncoding, Iterator endEncoding,
+                bool stripWhitespace = true) :
+                Base64Decoder<Iterator>(beginEncoding, endEncoding,
+                    stripWhitespace) {
+        }
+
+        /**
+         * Determines if the current position _could_ have reached the end of
+         * the encoded bit sequence.  The word "maybe" acknowledges that the
+         * precise end of the bit sequence is often unclear (since the sequence
+         * is presented in base64 characters, without knowing how many bits of
+         * the final character were actually used).
+         *
+         * This will return `true` if:
+         *
+         * - there are no remaining base64 _characters_ that we have not read
+         *   from at all; and,
+         *
+         * - of the last character that we did read from (if any), all of the
+         *   _bits_ that have not yet been read are set to zero.
+         *
+         * \return \c true if and only if we could be at the end of the
+         * encoded bit sequence, as described above.
+         */
+        bool maybeDone() const {
+            if (! Base64Decoder<Iterator>::done())
+                return false;
+            if (nQueued_ == 0)
+                return true;
+            int readMask = (1 << (6 - nQueued_)) - 1;
+            return (extracted_ & readMask) == extracted_;
+        }
+
+        /**
+         * Determines if there are no more available bits to read.
+         *
+         * This will return `true` when we have already read all six bits
+         * from every base64 character of the input string.
+         *
+         * \return \c true if and only if there are no more available bits.
+         */
+        bool noMoreBits() const {
+            return Base64Decoder<Iterator>::done() && nQueued_ == 0;
+        }
+
+        /**
+         * Returns the number of bits that can still be read from the encoded
+         * string, counting from the current position onwards.
+         *
+         * The routine `noMoreBits()` will return `true` if and only if
+         * `remainingBits()` returns zero.
+         *
+         * \return the number of bits remaining.
+         */
+        size_t remainingBits() const
+                requires std::random_access_iterator<Iterator> {
+            return 6 * Base64Decoder<Iterator>::remaining() + nQueued_;
+        }
+
+        /**
+         * Returns the next bit in the encoded sequence.
+         *
+         * \exception InvalidInput There are no more bits remaining in the
+         * encoded sequence.
+         *
+         * \return `true` if the bit that was read is 1, or `false` if the
+         * bit that was read is 0.
+         */
+        bool decodeBit() {
+            if (nQueued_) {
+                return extracted_ & (1 << (6 - nQueued_--));
+            } else if (Base64Decoder<Iterator>::done()) {
+                throw InvalidInput("Base64BitDecoder: "
+                    "unexpected end of encoded string");
+            } else {
+                extracted_ =
+                    Base64Decoder<Iterator>::template decodeSingle<uint8_t>();
+                nQueued_ = 5;
+                return (extracted_ & 1);
+            }
+        }
+
+        /**
+         * Decodes a sequence of bits, and returns them in the form of a
+         * native unsigned integer.
+         *
+         * \python The template argument \a IntType is taken to be
+         * `unsigned long`.
+         *
+         * \exception InvalidInput There are fewer than \a count bits available
+         * in the encoded string.
+         *
+         * \tparam IntType the unsigned integer type to return; this must be
+         * at least \a count bits in size.
+         *
+         * \param count the number of bits to decode.
+         * \param bits an integer holding the bits that were decoded.  The bits
+         * will be stored in order from the least significant bit.
+         */
+        template <UnsignedCppInteger IntType>
+        IntType decodeInt(int count) {
+            IntType ans = 0;
+            size_t i = 0;
+            IntType bit = 1;
+            for ( ; i < count; ++i, bit <<= 1)
+                if (decodeBit())
+                    ans |= bit;
+            return ans;
+        }
+
+        /**
+         * Decodes a sequence of bits, and returns them in the form of a
+         * bitmask.
+         *
+         * \python The template argument \a BitmaskType is taken to be Bitmask.
+         *
+         * \exception InvalidInput There are fewer than \a count bits available
+         * in the encoded sequence.
+         *
+         * \tparam BitmaskType the bitmask type to return; this must be
+         * capable of holding at least \a count bits.
+         *
+         * \param count the number of bits to decode.
+         * \return a bitmask holding the bits that were decoded.  The bits
+         * will be stored in the bitmask in order from bit 0.
+         */
+        template <ReginaBitmask BitmaskType = Bitmask>
+        BitmaskType decodeBitmask(size_t count) {
+            BitmaskType bits(count);
+            for (size_t i = 0; i < count; ++i)
+                if (decodeBit())
+                    bits.set(i, true);
+            return bits;
+        }
+
+        /**
+         * Skips past unread bits until we reach the next base64 character
+         * boundary.
+         *
+         * This routine will test that all bits that are skipped are off;
+         * otherwise it will throw an exception.  The number of bits skipped
+         * will be between 0 and 5 inclusive.
+         *
+         * \exception InvalidInput At least one of the bits that was skipped
+         * was set.
+         */
+        void flushChar() {
+            if (nQueued_) {
+                int readMask = (1 << (6 - nQueued_)) - 1;
+                if ((extracted_ & readMask) != extracted_)
+                    throw InvalidInput("Base64BitDecoder: "
+                        "skipping past bits that are set");
+                nQueued_ = 0;
+            }
+        }
+
+        Base64BitDecoder(const Base64BitDecoder&) = delete;
+        Base64BitDecoder& operator = (const Base64BitDecoder&) = delete;
 };
 
 } // namespace regina

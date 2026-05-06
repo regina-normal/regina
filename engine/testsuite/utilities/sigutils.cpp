@@ -34,6 +34,7 @@
 
 #include "testhelper.h"
 
+using regina::Base64BitDecoder;
 using regina::Base64BitEncoder;
 using regina::Bitmask;
 using regina::BitDecoder;
@@ -109,6 +110,9 @@ TEST(SigUtilsTest, bitEncoder) {
         Base64BitEncoder enc;
         auto str = std::move(enc).str();
         EXPECT_EQ(str, "");
+
+        Base64BitDecoder dec(str.begin(), str.end());
+        EXPECT_TRUE(dec.noMoreBits());
     }
     {
         Base64BitEncoder enc;
@@ -118,6 +122,15 @@ TEST(SigUtilsTest, bitEncoder) {
             enc.encodeBit(b);
         auto str = std::move(enc).str();
         EXPECT_EQ(str, "AMb");
+
+        Base64BitDecoder dec(str.begin(), str.end());
+        EXPECT_FALSE(dec.maybeDone());
+        std::array<bool, 13> read;
+        for (bool& b : read)
+            b = dec.decodeBit();
+        EXPECT_EQ(read, write);
+        EXPECT_TRUE(dec.maybeDone());
+        EXPECT_FALSE(dec.noMoreBits());
     }
     {
         Base64BitEncoder enc;
@@ -125,6 +138,13 @@ TEST(SigUtilsTest, bitEncoder) {
         enc.encodeInt(14, unsigned(0x3576)); // spans three encoded chars
         auto str = std::move(enc).str();
         EXPECT_EQ(str, "YUA");
+
+        Base64BitDecoder dec(str.begin(), str.end());
+        EXPECT_FALSE(dec.maybeDone());
+        EXPECT_EQ(dec.decodeInt<unsigned>(3), 0x0002);
+        EXPECT_EQ(dec.decodeInt<unsigned>(14), 0x3576);
+        EXPECT_TRUE(dec.maybeDone());
+        EXPECT_FALSE(dec.noMoreBits());
     }
     EXPECT_THROW({
         Base64BitEncoder enc;
@@ -142,6 +162,13 @@ TEST(SigUtilsTest, bitEncoder) {
 
         auto str = std::move(enc).str();
         EXPECT_EQ(str, "YUA");
+
+        Base64BitDecoder dec(str.begin(), str.end());
+        EXPECT_FALSE(dec.maybeDone());
+        EXPECT_EQ(dec.decodeInt<unsigned>(3), 0x0002);
+        EXPECT_EQ(dec.decodeBitmask(14), mask);
+        EXPECT_TRUE(dec.maybeDone());
+        EXPECT_FALSE(dec.noMoreBits());
     }
 }
 
