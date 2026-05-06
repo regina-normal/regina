@@ -618,18 +618,18 @@ Returns:
     the corresponding integer, which will be between 0 and 63
     inclusive.)doc";
 
-// Docstring regina::python::doc::Base64Decoder_::decodeBits
-static const char *decodeBits =
+// Docstring regina::python::doc::Base64Decoder_::decodeBitmask
+static const char *decodeBitmask =
 R"doc(Decodes a sequence of bits, and returns these in the form of a
 bitmask. The bits would typically have been encoded using
-Base64Encoder::encodeBits() with the same *count* argument.
+Base64Encoder::encodeBitmask() with the same *count* argument.
 
 Specifically, it will be assumed that the bits have been packed six at
 a time into base64 characters, and that for each underlying 6-bit
 integer, the bits are stored in order from lowest to highest
 significance.
 
-The inverse to this routine is Base64Encoder::encodeBits().
+The inverse to this routine is Base64Encoder::encodeBitmask().
 
 Exception ``InvalidInput``:
     There are not enough characters available in the encoded string to
@@ -894,8 +894,8 @@ Parameter ``c``:
     used in this base64 encoding; however, ideally it should be
     printable.)doc";
 
-// Docstring regina::python::doc::Base64Encoder_::encodeBits
-static const char *encodeBits =
+// Docstring regina::python::doc::Base64Encoder_::encodeBitmask
+static const char *encodeBitmask =
 R"doc(Encodes a sequence of bits.
 
 The bits will be packed into base64 characters, six at a time. For
@@ -904,7 +904,7 @@ underlying 6-bit integer in order from lowest to highest significance.
 (The last base64 character might of course encode fewer than six bits
 instead.)
 
-The inverse to this routine is Base64Decoder::decodeBits().
+The inverse to this routine is Base64Decoder::decodeBitmask().
 
 Python:
     The template argument *BitmaskType* is taken to be Bitmask.
@@ -1451,17 +1451,17 @@ Parameter ``endEncoding``:
     a past-the-end iterator that marks the end of the encoded byte
     sequence.)doc";
 
-// Docstring regina::python::doc::PackedByteDecoder_::decodeBits
-static const char *decodeBits =
+// Docstring regina::python::doc::PackedByteDecoder_::decodeBitmask
+static const char *decodeBitmask =
 R"doc(Decodes a sequence of bits, and returns these in the form of a
 bitmask. The bits would typically have been encoded using
-PackedByteEncoder::encodeBits() with the same *count* argument.
+PackedByteEncoder::encodeBitmask() with the same *count* argument.
 
 Specifically, it will be assumed that the bits have been packed eight
 at a time into bytes, and that within each byte the bits are stored in
 order from lowest to highest significance.
 
-The inverse to this routine is PackedByteEncoder::encodeBits().
+The inverse to this routine is PackedByteEncoder::encodeBitmask().
 
 Exception ``InvalidInput``:
     There are not enough bytes available in the encoded byte sequence
@@ -1621,8 +1621,8 @@ Python:
 Returns:
     the current byte sequence.)doc";
 
-// Docstring regina::python::doc::PackedByteEncoder_::encodeBits
-static const char *encodeBits =
+// Docstring regina::python::doc::PackedByteEncoder_::encodeBitmask
+static const char *encodeBitmask =
 R"doc(Encodes a sequence of bits.
 
 The bits will be packed into bytes, eight at a time. Within each
@@ -1630,7 +1630,7 @@ individual byte, the eight bits will be stored in order from lowest to
 highest significance. (The last byte might of course hold fewer than
 eight bits.)
 
-The inverse to this routine is PackedByteDecoder::decodeBits().
+The inverse to this routine is PackedByteDecoder::decodeBitmask().
 
 Python:
     The template argument *BitmaskType* is taken to be Bitmask.

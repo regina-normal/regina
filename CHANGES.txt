@@ -33,7 +33,7 @@ Version 8.0  [ TODO ]
             - Base64SigDecoder has been renamed to Base64Decoder.  The old name
               is now a deprecated type alias.
             - New type aliases Encoder and Encoding.
-            - New routines remaining() and decodeBits().
+            - New routines remaining() and decodeBitmask().
             - New static routine decode().
             - Now requires its underlying character iterator type to be
               bidirectional (not just a forward iterator).
@@ -49,7 +49,7 @@ Version 8.0  [ TODO ]
         Class Base64Encoder, Base64SigEncoder:
             - Base64SigEncoder has been renamed to Base64Encoder.  The old name
               is now a deprecated type alias.
-            - New routine encodeBits().
+            - New routine encodeBitmask().
             - New routine reserve().
             - New static routine integerWidth().
             - Added variants of encodeInts() and encodeTrits() that take an

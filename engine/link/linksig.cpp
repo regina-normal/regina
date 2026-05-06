@@ -424,7 +424,7 @@ std::string LinkSigGen2::encode(const LinkSigData& data) {
         }
     }
 
-    enc.encodeBits(4 * data.size(), bits);
+    enc.encodeBitmask(4 * data.size(), bits);
     enc.encodeInts(revisited, charsPerInt);
     return std::move(enc).str();
 }
@@ -518,7 +518,7 @@ ByteSequence LinkSigBinary::encode(const LinkSigData& data) {
         }
     }
 
-    enc.encodeBits(4 * data.size(), bits);
+    enc.encodeBitmask(4 * data.size(), bits);
     enc.encodeInts(revisited, width);
     return std::move(enc).bytes();
 }
@@ -540,7 +540,7 @@ std::string LinkSigBinary::asString(const ByteSequence& sig) {
             int outputWidth = enc.encodeSize(n);
 
             if (n > 0) {
-                enc.encodeBits(4 * n, dec.decodeBits<Bitmask>(4 * n));
+                enc.encodeBitmask(4 * n, dec.decodeBitmask(4 * n));
                 enc.encodeInts(dec.decodeInts<size_t>(n, inputWidth),
                     outputWidth);
             }
@@ -601,9 +601,9 @@ Link Link::fromSig(const std::string& sig) {
                 //
                 // Note: peek() above might have returned 0 (i.e., we already
                 // reached the end of the encoded string); however, this will
-                // be picked up in the call to decodeBits() immediately below.
+                // be picked up in the call to decodeBitmask() below.
 
-                Bitmask bits = dec.decodeBits<Bitmask>(4 * n);
+                Bitmask bits = dec.decodeBitmask(4 * n);
 
                 size_t base = ans.crossings_.size();
                 for (size_t i = 0; i < n; ++i)
@@ -800,7 +800,7 @@ Link Link::fromSig(const ByteSequence& sig) {
             // We should have a packed signature for a single connected diagram
             // component with a positive number of crossings.
 
-            Bitmask bits = dec.decodeBits<Bitmask>(4 * n);
+            Bitmask bits = dec.decodeBitmask(4 * n);
             auto revisited = dec.decodeInts<size_t>(n, width);
 
             size_t base = ans.crossings_.size();

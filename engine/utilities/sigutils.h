@@ -562,7 +562,7 @@ class Base64Encoder {
          * significance.  (The last base64 character might of course encode
          * fewer than six bits instead.)
          *
-         * The inverse to this routine is Base64Decoder::decodeBits().
+         * The inverse to this routine is Base64Decoder::decodeBitmask().
          *
          * \python The template argument \a BitmaskType is taken to be Bitmask.
          *
@@ -571,7 +571,7 @@ class Base64Encoder {
          * capable of holding at least \a count bits.
          */
         template <ReginaBitmask BitmaskType>
-        void encodeBits(size_t count, const BitmaskType& bits) {
+        void encodeBitmask(size_t count, const BitmaskType& bits) {
             if (count == 0)
                 return;
             size_t pos = 0;
@@ -1078,14 +1078,14 @@ class Base64Decoder {
         /**
          * Decodes a sequence of bits, and returns these in the form of a
          * bitmask.  The bits would typically have been encoded using
-         * Base64Encoder::encodeBits() with the same \a count argument.
+         * Base64Encoder::encodeBitmask() with the same \a count argument.
          *
          * Specifically, it will be assumed that the bits have been packed six
          * at a time into base64 characters, and that for each underlying 6-bit
          * integer, the bits are stored in order from lowest to highest
          * significance.
          *
-         * The inverse to this routine is Base64Encoder::encodeBits().
+         * The inverse to this routine is Base64Encoder::encodeBitmask().
          *
          * \exception InvalidInput There are not enough characters available in
          * the encoded string to hold the requested number of bits, and/or a
@@ -1099,8 +1099,8 @@ class Base64Decoder {
          * \param count the number of bits to decode.
          * \return a bitmask holding the bits that were decoded.
          */
-        template <ReginaBitmask BitmaskType>
-        BitmaskType decodeBits(size_t count) {
+        template <ReginaBitmask BitmaskType = Bitmask>
+        BitmaskType decodeBitmask(size_t count) {
             BitmaskType bits(count);
             if (count == 0)
                 return bits;
@@ -1484,7 +1484,7 @@ class PackedByteEncoder {
          * to highest significance.  (The last byte might of course hold
          * fewer than eight bits.)
          *
-         * The inverse to this routine is PackedByteDecoder::decodeBits().
+         * The inverse to this routine is PackedByteDecoder::decodeBitmask().
          *
          * \python The template argument \a BitmaskType is taken to be Bitmask.
          *
@@ -1493,7 +1493,7 @@ class PackedByteEncoder {
          * capable of holding at least \a count bits.
          */
         template <ReginaBitmask BitmaskType>
-        void encodeBits(size_t count, const BitmaskType& bits) {
+        void encodeBitmask(size_t count, const BitmaskType& bits) {
             if (count == 0)
                 return;
             size_t pos = 0;
@@ -1872,13 +1872,13 @@ class PackedByteDecoder {
         /**
          * Decodes a sequence of bits, and returns these in the form of a
          * bitmask.  The bits would typically have been encoded using
-         * PackedByteEncoder::encodeBits() with the same \a count argument.
+         * PackedByteEncoder::encodeBitmask() with the same \a count argument.
          *
          * Specifically, it will be assumed that the bits have been packed eight
          * at a time into bytes, and that within each byte the bits are stored
          * in order from lowest to highest significance.
          *
-         * The inverse to this routine is PackedByteEncoder::encodeBits().
+         * The inverse to this routine is PackedByteEncoder::encodeBitmask().
          *
          * \exception InvalidInput There are not enough bytes available in
          * the encoded byte sequence to hold the requested number of bits.
@@ -1891,8 +1891,8 @@ class PackedByteDecoder {
          * \param count the number of bits to decode.
          * \return a bitmask holding the bits that were decoded.
          */
-        template <ReginaBitmask BitmaskType>
-        BitmaskType decodeBits(size_t count) {
+        template <ReginaBitmask BitmaskType = Bitmask>
+        BitmaskType decodeBitmask(size_t count) {
             BitmaskType bits(count);
             if (count == 0)
                 return bits;
@@ -2302,7 +2302,7 @@ class BitDecoder {
         template <UnsignedCppInteger IntType>
         IntType decodeInt(int count) {
             IntType ans = 0;
-            size_t i = 0;
+            int i = 0;
             IntType bit = 1;
             for ( ; i < count; ++i, bit <<= 1)
                 if (decodeBit())

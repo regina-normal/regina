@@ -192,8 +192,8 @@ void addSigUtils(pybind11::module_& m) {
             pybind11::overload_cast<const std::vector<long>&, int>(
                 &Base64Encoder::encodeInts<const std::vector<long>&>),
             rdoc::encodeInts)
-        .def("encodeBits", &Base64Encoder::encodeBits<Bitmask>,
-            rdoc::encodeBits)
+        .def("encodeBitmask", &Base64Encoder::encodeBitmask<Bitmask>,
+            rdoc::encodeBitmask)
         .def("encodeTrits",
             pybind11::overload_cast<const std::vector<uint8_t>&>(
                 &Base64Encoder::encodeTrits<const std::vector<uint8_t>&>),
@@ -231,7 +231,7 @@ void addSigUtils(pybind11::module_& m) {
                 ans.append(dec.decodeInt<long>(nChars));
             return ans;
         })
-        .def("decodeBits", &Decoder::decodeBits<Bitmask>, rdoc::decodeBits)
+        .def("decodeBitmask", &Decoder::decodeBitmask<>, rdoc::decodeBitmask)
         // overload_cast cannot handle template vs non-template overloads.
         .def("decodeTrits",
             static_cast<std::array<uint8_t, 3>(Decoder::*)()>(
@@ -274,8 +274,8 @@ void addSigUtils(pybind11::module_& m) {
             pybind11::overload_cast<const std::vector<long>&, int>(
                 &PackedByteEncoder::encodeInts<const std::vector<long>&>),
             rdoc::encodeInts)
-        .def("encodeBits", &PackedByteEncoder::encodeBits<Bitmask>,
-            rdoc::encodeBits)
+        .def("encodeBitmask", &PackedByteEncoder::encodeBitmask<Bitmask>,
+            rdoc::encodeBitmask)
         .def("encodeTrits",
             pybind11::overload_cast<const std::vector<uint8_t>&>(
                 &PackedByteEncoder::encodeTrits<const std::vector<uint8_t>&>),
@@ -304,7 +304,7 @@ void addSigUtils(pybind11::module_& m) {
                 ans.append(i);
             return ans;
         })
-        .def("decodeBits", &Decoder::decodeBits<Bitmask>, rdoc::decodeBits)
+        .def("decodeBitmask", &Decoder::decodeBitmask<>, rdoc::decodeBitmask)
         // overload_cast cannot handle template vs non-template overloads.
         .def("decodeTrits",
             static_cast<std::array<uint8_t, 4>(Decoder::*)()>(
@@ -348,8 +348,7 @@ void addSigUtils(pybind11::module_& m) {
         .def("remainingBits", &Decoder::remainingBits, rdoc::remainingBits)
         .def("decodeBit", &Decoder::decodeBit, rdoc::decodeBit)
         .def("decodeInt", &Decoder::decodeInt<unsigned long>, rdoc::decodeInt)
-        .def("decodeBitmask", &Decoder::decodeBitmask<Bitmask>,
-            rdoc::decodeBitmask)
+        .def("decodeBitmask", &Decoder::decodeBitmask<>, rdoc::decodeBitmask)
         .def("flushByte", &Decoder::flushByte, rdoc::flushByte)
     ;
     regina::python::add_eq_operators(c);
@@ -401,8 +400,7 @@ void addSigUtils(pybind11::module_& m) {
         .def("remainingBits", &Decoder::remainingBits, rdoc::remainingBits)
         .def("decodeBit", &Decoder::decodeBit, rdoc::decodeBit)
         .def("decodeInt", &Decoder::decodeInt<unsigned long>, rdoc::decodeInt)
-        .def("decodeBitmask", &Decoder::decodeBitmask<Bitmask>,
-            rdoc::decodeBitmask)
+        .def("decodeBitmask", &Decoder::decodeBitmask<>, rdoc::decodeBitmask)
         .def("decodeSize", &Decoder::decodeSize, rdoc::decodeSize)
         .def("flushChar", &Decoder::flushChar, rdoc::flushChar)
     ;
