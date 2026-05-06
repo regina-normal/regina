@@ -490,6 +490,24 @@ Exception ``FailedPrecondition``:
 Parameter ``size``:
     the non-negative integer to encode.)doc";
 
+// Docstring regina::python::doc::Base64BitEncoder_::flushAndAppend
+static const char *flushAndAppend =
+R"doc(Advances the position of the encoder to the next character boundary if
+necessary, and then appends the given character verbatim to the
+encoded string.
+
+If this encoder is already positioned at a character boundary, this
+routine will simply append the character *c* to the encoded string.
+Otherwise - if some but not all of the six bits have been supplied for
+the next pending base64 character to be written - it will write that
+pending character immediately (as though the remaining bits were all
+zero) and _then_ append *c* as a separate character to the string.
+
+Parameter ``c``:
+    the character to append. This need not be one of the 64 characters
+    used in this base64 encoding; however, ideally it should be
+    printable.)doc";
+
 // Docstring regina::python::doc::Base64BitEncoder_::reserveBits
 static const char *reserveBits =
 R"doc(Pre-allocates the given amount of space for the entire encoding, as

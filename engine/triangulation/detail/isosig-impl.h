@@ -367,30 +367,49 @@ size_t IsoSigPrintable::length(const IsoSigData<1, dim>& data) {
 
 template <int dim> requires (supportedDim(dim))
 std::string IsoSigPrintable::encode(const IsoSigData<2, dim>& data) {
-    Base64Encoder enc;
-    enc.reserve(length(data));
+    Base64BitEncoder enc;
+    enc.reserveChars(length(data));
 
-    int intWidth = enc.encodeSize(data.size());
-    enc.encodeInts(data.adjacentSimplices(), intWidth);
-    enc.encodeBits(data.countFacetBits(), data.facetTypes());
-    enc.encodeInts(data.adjacentGluings(), charsPerPerm<dim>);
+    // Begin with the size, encoded in a way that is compatible with
+    // first-generation signatures.
+    enc.encodeSize(data.size());
 
+    // Continue with a bit-by-bit encoding.
+    // We will need an unsigned type for the permutation index, since
+    // the encoder only reads/writes unsigned integer types.
+    using PermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
+
+    int intWidth = bitsRequired(data.size() + 1);
+    static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
+    static constexpr int lockWidth = dim + 2;
+
+    bool oriented = data.isOriented();
+
+    // We begin by encoding the bits [11], which can never appear at the
+    // beginning of a first-generation signature.  This will allow fromSig()
+    // to determine which generation a given base64 signature is.
+    enc.encodeInt<unsigned>(2 /* encode two bits */, 3 /* the bits: 11 */);
+
+    enc.encodeBit(oriented);
+
+    for (auto s : data.adjacentSimplices())
+        enc.encodeInt(intWidth, s);
+    enc.encodeBitmask(data.countFacetBits(), data.facetTypes());
+    if (oriented) {
+        for (PermIndex g : data.adjacentGluings())
+            enc.encodeInt(permWidth - 1, g >> 1);
+    } else {
+        for (PermIndex g : data.adjacentGluings())
+            enc.encodeInt(permWidth, g);
+    }
     if (data.hasLocks()) {
-        // Each lock mask holds dim+2 bits.
-        enc.append(Base64Encoder::spare[1]);
-        for (auto mask : data.locks()) {
-            if constexpr (dim <= 4) {
-                // We can encode <= 6 bits with 1 character.
-                enc.encodeSingle(mask);
-            } else if constexpr (dim <= 10) {
-                // We can encode <= 12 bits with 2 characters.
-                enc.encodeInt(mask, 2);
-            } else {
-                static_assert(dim <= 16);
-                // We can encode <= 18 bits with 3 characters.
-                enc.encodeInt(mask, 3);
-            }
-        }
+        // Write locks using a visually obvious suffix, as we do with
+        // first-generation signatures.  This wastes ≤ 2 bytes, but it has the
+        // advantage that the corresponding lock-free signature is a
+        // _string prefix_ of the with-locks signature.
+        enc.flushAndAppend(Base64Encoder::spare[1]);
+        for (auto m : data.locks())
+            enc.encodeInt(lockWidth, m);
     }
 
     return std::move(enc).str();
@@ -398,27 +417,35 @@ std::string IsoSigPrintable::encode(const IsoSigData<2, dim>& data) {
 
 template <int dim> requires (supportedDim(dim))
 size_t IsoSigPrintable::length(const IsoSigData<2, dim>& data) {
+    // The size will be written in the same way as a first-generation signature.
     size_t ans;
     if (data.size() < 63) {
-        // The integer width is 1, and does not need to be explicitly
-        // encoded.
-        ans = 1 + data.adjacentSimplices().size();
+        // The integer width is 1, and is not explicitly encoded.
+        ans = 1;
     } else {
         // We begin with two extra characters: 63 (a marker that the
         // component is large), and the encoding of the integer width.
-        int width = Base64Encoder::integerWidth(data.size());
-        ans = 2 + (1 + data.adjacentSimplices().size()) * width;
+        ans = 2 + Base64Encoder::integerWidth(data.size());
     }
-    ans += ((data.countFacetBits() + 5) / 6);
-    ans += (data.adjacentGluings().size() * charsPerPerm<dim>);
+
+    // From here on the encoding is bit-by-bit.
+    int intWidth = bitsRequired(data.size() + 1);
+    static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
+    static constexpr int lockWidth = dim + 2;
+    bool oriented = data.isOriented();
+
+    // The constant 8 below includes:
+    // - 3 initial bits (11 marker, followed by oriented flag);
+    // - an extra +5 since we need to round up when dividing by 6.
+    ans += ((8 + (intWidth * data.adjacentSimplices().size()) +
+        data.countFacetBits() + (oriented ? permWidth - 1 : permWidth) *
+        data.adjacentGluings().size()) / 6);
 
     if (data.hasLocks()) {
-        if constexpr (dim <= 4)
-            ans += (1 + data.locks().size());
-        else if constexpr (dim <= 10)
-            ans += (1 + data.locks().size() * 2);
-        else
-            ans += (1 + data.locks().size() * 3);
+        // The constant 11 below includes:
+        // - 6 bits for the hard-coded "lock suffix" character;
+        // - an extra +5 again to round up when dividing by 6.
+        ans += (lockWidth * data.locks().size() + 11) / 6;
     }
 
     return ans;
@@ -501,8 +528,8 @@ ByteSequence IsoSigBinary::encode(const IsoSigData<2, dim>& data) {
     static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
     static constexpr int lockWidth = dim + 2;
 
-    // Get an unsigned type for the permutation index, since BitDecoder
-    // only reads/writes unsigned integer types.
+    // Get an unsigned type for the permutation index, since BitEncoder
+    // only writes unsigned integer types.
     using PermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
 
     bool oriented = data.isOriented();
@@ -888,7 +915,7 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const ByteSequence& sig) {
     static constexpr int lockWidth = dim + 2;
 
     // Get an unsigned type for the permutation index, since BitDecoder
-    // only reads/writes unsigned integer types.
+    // only reads into unsigned integer types.
     using PermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
 
     BitDecoder dec(sig.begin(), sig.end());

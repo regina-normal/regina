@@ -2534,6 +2534,32 @@ class Base64BitEncoder : private Base64Encoder {
         }
 
         /**
+         * Advances the position of the encoder to the next character boundary
+         * if necessary, and then appends the given character verbatim to the
+         * encoded string.
+         *
+         * If this encoder is already positioned at a character boundary, this
+         * routine will simply append the character \a c to the encoded string.
+         * Otherwise - if some but not all of the six bits have been supplied
+         * for the next pending base64 character to be written - it will write
+         * that pending character immediately (as though the remaining bits
+         * were all zero) and _then_ append \a c as a separate character to the
+         * string.
+         *
+         * \param c the character to append.  This need not be one of the 64
+         * characters used in this base64 encoding; however, ideally it should
+         * be printable.
+         */
+        void flushAndAppend(char c) {
+            if (nQueued_) {
+                Base64Encoder::encodeSingle(queued_);
+                queued_ = 0;
+                nQueued_ = 0;
+            }
+            Base64Encoder::append(c);
+        }
+
+        /**
          * Pre-allocates the given amount of space for the entire encoding,
          * as measured in bits.
          *
