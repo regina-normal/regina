@@ -372,6 +372,9 @@ void addSigUtils(pybind11::module_& m) {
         .def("encodeSize", [](Encoder& enc, size_t s) {
             enc.encoder().encodeSize(s);
         }, rdoc::encodeSize)
+        .def("flushChar", [](Encoder& enc) {
+            enc.encoder().flushChar();
+        }, rdoc::flushChar)
         .def("flushAndAppend", [](Encoder& enc, char c) {
             enc.encoder().flushAndAppend(c);
         }, rdoc::flushAndAppend)

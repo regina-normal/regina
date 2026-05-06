@@ -508,6 +508,17 @@ Parameter ``c``:
     used in this base64 encoding; however, ideally it should be
     printable.)doc";
 
+// Docstring regina::python::doc::Base64BitEncoder_::flushChar
+static const char *flushChar =
+R"doc(Advances the position of the encoder to the next character boundary,
+if it is not at one already.
+
+If this encoder is already positioned at a character boundary, this
+routine will do nothing. Otherwise - if some but not all of the six
+bits have been supplied for the next pending base64 character to be
+written - it will write that pending character immediately (as though
+the remaining bits were all zero).)doc";
+
 // Docstring regina::python::doc::Base64BitEncoder_::reserveBits
 static const char *reserveBits =
 R"doc(Pre-allocates the given amount of space for the entire encoding, as

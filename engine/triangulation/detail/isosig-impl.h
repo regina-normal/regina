@@ -483,31 +483,70 @@ size_t IsoSigPrintableLockFree::length(const IsoSigData<1, dim>& data) {
 
 template <int dim> requires (supportedDim(dim))
 std::string IsoSigPrintableLockFree::encode(const IsoSigData<2, dim>& data) {
-    Base64Encoder enc;
-    enc.reserve(length(data));
+    Base64BitEncoder enc;
+    enc.reserveChars(length(data));
 
-    int intWidth = enc.encodeSize(data.size());
-    enc.encodeInts(data.adjacentSimplices(), intWidth);
-    enc.encodeBits(data.countFacetBits(), data.facetTypes());
-    enc.encodeInts(data.adjacentGluings(), charsPerPerm<dim>);
+    // Begin with the size, encoded in a way that is compatible with
+    // first-generation signatures.
+    enc.encodeSize(data.size());
+
+    // Continue with a bit-by-bit encoding.
+    // We will need an unsigned type for the permutation index, since
+    // the encoder only reads/writes unsigned integer types.
+    using PermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
+
+    int intWidth = bitsRequired(data.size() + 1);
+    static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
+    static constexpr int lockWidth = dim + 2;
+
+    bool oriented = data.isOriented();
+
+    // We begin by encoding the bits [11], which can never appear at the
+    // beginning of a first-generation signature.  This will allow fromSig()
+    // to determine which generation a given base64 signature is.
+    enc.encodeInt<unsigned>(2 /* encode two bits */, 3 /* the bits: 11 */);
+
+    enc.encodeBit(oriented);
+
+    for (auto s : data.adjacentSimplices())
+        enc.encodeInt(intWidth, s);
+    enc.encodeBitmask(data.countFacetBits(), data.facetTypes());
+    if (oriented) {
+        for (PermIndex g : data.adjacentGluings())
+            enc.encodeInt(permWidth - 1, g >> 1);
+    } else {
+        for (PermIndex g : data.adjacentGluings())
+            enc.encodeInt(permWidth, g);
+    }
+
     return std::move(enc).str();
 }
 
 template <int dim> requires (supportedDim(dim))
 size_t IsoSigPrintableLockFree::length(const IsoSigData<2, dim>& data) {
+    // The size will be written in the same way as a first-generation signature.
     size_t ans;
     if (data.size() < 63) {
-        // The integer width is 1, and does not need to be explicitly
-        // encoded.
-        ans = 1 + data.adjacentSimplices().size();
+        // The integer width is 1, and is not explicitly encoded.
+        ans = 1;
     } else {
         // We begin with two extra characters: 63 (a marker that the
         // component is large), and the encoding of the integer width.
-        int width = Base64Encoder::integerWidth(data.size());
-        ans = 2 + (1 + data.adjacentSimplices().size()) * width;
+        ans = 2 + Base64Encoder::integerWidth(data.size());
     }
-    ans += ((data.countFacetBits() + 5) / 6);
-    ans += (data.adjacentGluings().size() * charsPerPerm<dim>);
+
+    // From here on the encoding is bit-by-bit.
+    int intWidth = bitsRequired(data.size() + 1);
+    static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
+    bool oriented = data.isOriented();
+
+    // The constant 8 below includes:
+    // - 3 initial bits (11 marker, followed by oriented flag);
+    // - an extra +5 since we need to round up when dividing by 6.
+    ans += ((8 + (intWidth * data.adjacentSimplices().size()) +
+        data.countFacetBits() + (oriented ? permWidth - 1 : permWidth) *
+        data.adjacentGluings().size()) / 6);
+
     return ans;
 }
 
@@ -583,7 +622,74 @@ size_t IsoSigBinary::length(const IsoSigData<2, dim>& data) {
 
 template <int dim> requires (supportedDim(dim))
 std::string IsoSigBinary::asString(const ByteSequence& sig) {
-    return Triangulation<dim>::fromSig(sig).neoSig();
+    // Get the empty triangulation out of the way first.
+    if (sig.empty())
+        return IsoSigPrintable::encodeEmpty();
+
+    using PermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
+    static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
+    static constexpr int lockWidth = dim + 2;
+
+    try {
+        // Both IsoSigPrintable and IsoSigBinary encode exactly the same
+        // combinatorial information for a second-generation signature; it is
+        // just a matter of converting between base64 and bit-packed formats.
+        BitDecoder dec(sig.begin(), sig.end());
+        Base64BitEncoder enc;
+        while (! dec.noMoreBits()) {
+            // Re-encode one component of the triangulation at a time.
+            unsigned intWidth = dec.decodeInt<unsigned>(6);
+            if (intWidth == 0)
+                throw InvalidArgument("IsoSigBinary::asString(): "
+                    "invalid integer width for binary encoding");
+            bool oriented = dec.decodeBit();
+            bool hasLocks = dec.decodeBit();
+
+            size_t nSimp = dec.decodeInt<size_t>(intWidth);
+            enc.encodeSize(nSimp);
+            if (nSimp == 0)
+                throw InvalidArgument("IsoSigBinary::asString(): "
+                    "invalid component size for binary encoding");
+
+            enc.encodeInt<unsigned>(2 /* two bits */, 3 /* the bits: 11 */);
+            enc.encodeBit(oriented);
+
+            size_t nBdry = 0;
+            size_t nDest = 2 * (nSimp - 1);
+            while (nDest < nSimp * (dim + 1)) {
+                size_t dest = dec.decodeInt<size_t>(intWidth);
+                enc.encodeInt(intWidth, dest);
+                if (dest == nSimp) {
+                    ++nBdry;
+                    ++nDest;
+                } else {
+                    nDest += 2;
+                }
+            }
+
+            size_t nFacets = (nDest + nBdry) / 2;
+            enc.encodeBitmask(nFacets, dec.decodeBitmask(nFacets));
+
+            int w = (oriented ? permWidth - 1 : permWidth);
+            for (size_t i = 0; i < nFacets - nBdry + 1 - nSimp; ++i)
+                enc.encodeInt(w, dec.decodeInt<PermIndex>(w));
+
+            if (hasLocks) {
+                enc.flushAndAppend(Base64Encoder::spare[1]);
+                for (size_t i = 0; i < nSimp; ++i)
+                    enc.encodeInt(lockWidth, dec.decodeInt<
+                        typename Simplex<dim>::LockMask>(lockWidth));
+            }
+
+            dec.flushByte();
+            enc.flushChar();
+        }
+        return std::move(enc).str();
+    } catch (const InvalidInput&) {
+        // Any exception caught here was thrown by BitDecoder.
+        throw InvalidArgument("IsoSigBinary::asString(): "
+            "incomplete or invalid encoding");
+    }
 }
 
 namespace detail {
