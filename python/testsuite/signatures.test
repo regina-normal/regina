@@ -43,7 +43,9 @@ print()
 
 # ---------- Testing isomorphism signatures of triangulations ----------
 
-tri = Example3.weeks()
+# Here we choose a case where IsoSigClassic vs IsoSigEdgeDegrees give
+# different canonical labellings.
+tri = Example3.smallClosedOrblHyperbolic()
 tri.simplex(0).lock()
 print(tri.sig(1))
 print(tri.isoSig())
@@ -56,9 +58,13 @@ print(tri.neoSig(False, IsoSigPrintableLockFree))
 print(tri.neoSig(False, IsoSigPrintable, IsoSigClassic3))
 print(tri.neoSig(False, IsoSigPrintable, IsoSigEdgeDegrees3))
 print(tri.neoSig(False, IsoSigBinary))
-print(Triangulation3.fromSig(tri.isoSig()))
-print(Triangulation3.fromSig(tri.neoSig(False, IsoSigBinary)))
 print(IsoSigBinary.asString(tri.neoSig(False, IsoSigBinary), 3))
+recon = Triangulation3.fromSig(tri.isoSig())
+print(recon.isIsomorphicTo(tri)); print(recon.source(Language.Cxx))
+recon = Triangulation3.fromSig(tri.neoSig())
+print(recon.isIsomorphicTo(tri)); print(recon.source(Language.Cxx))
+recon = Triangulation3.fromSig(tri.neoSig(False, IsoSigBinary))
+print(recon.isIsomorphicTo(tri)); print(recon.source(Language.Cxx))
 print()
 
 # ---------- Testing oriented vs non-oriented signatures ----------
@@ -93,10 +99,10 @@ print(link.neoSig_binary())
 print(link.sig(LinkSigGen1))
 print(link.sig(LinkSigGen2))
 print(link.sig(LinkSigBinary))
+print(LinkSigBinary.asString(link.neoSig_binary()))
 print(Link.fromSig(link.knotSig()))
 print(Link.fromSig(link.neoSig()))
 print(Link.fromSig(link.neoSig_binary()))
-print(LinkSigBinary.asString(link.neoSig_binary()))
 print()
 
 # ---------- Testing "raw" encoders/decoders ----------
