@@ -105,7 +105,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(
         else
             data_ = regina::snappea::read_triangulation(
                 filenameOrContents.c_str());
-    } catch (regina::SnapPeaFatalError& err) {
+    } catch (const regina::SnapPeaFatalError& err) {
         // data_ will be left as null.
     }
 
@@ -310,7 +310,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
             soln == regina::snappea::nongeometric_solution) {
         try {
             regina::snappea::install_shortest_bases(data_);
-        } catch (regina::SnapPeaFatalError& err) {
+        } catch (const regina::SnapPeaFatalError& err) {
             // Blurgh.  SnapPea says no.
         }
     }

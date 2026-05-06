@@ -1517,7 +1517,7 @@ void Tri3GluingsUI::connectedSumDecomposition() {
         std::vector<Triangulation<3>> ans;
         try {
             ans = tri->summands();
-        } catch (regina::UnsolvedCase&) {
+        } catch (const regina::UnsolvedCase&) {
             dlg.reset();
             ReginaSupport::sorry(ui,
                 tr("This manifold contains an embedded two-sided "

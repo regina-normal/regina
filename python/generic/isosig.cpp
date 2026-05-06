@@ -110,7 +110,7 @@ void addIsoSigEncodings(pybind11::module_& m) {
                     return IsoSigBinary::asString<d>(sig);
                 });
             } catch (const regina::InvalidArgument& exc) {
-                throw exc;
+                throw;
             } catch (const std::runtime_error&) {
                 throw regina::InvalidArgument("Not a supported dimension");
             }

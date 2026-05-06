@@ -198,7 +198,7 @@ bool Triangulation<3>::simplify() {
             Triangulation<3> tmp(*this, false, true);
             try {
                 tmp.minimiseVertices();
-            } catch (LockViolation&) {
+            } catch (const LockViolation&) {
                 // Calling minimiseVertices() could cause a lock violation if
                 // there are locked boundary triangles.  In this case it could
                 // still have performed some moves, and it guarantees that the
