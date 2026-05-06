@@ -1310,15 +1310,6 @@ class TriangulationTest : public testing::Test {
                     EXPECT_EQ(relabelled.simplex(i)->lockMask(),
                         reconstructed.simplex(i)->lockMask());
             }
-
-            if constexpr (std::same_as<Encoding, IsoSigPrintable>) {
-                auto lockFree =
-                    tri.template sig<gen, IsoSigPrintableLockFree>();
-                if (tri.hasLocks())
-                    EXPECT_NE(lockFree, sig);
-                else
-                    EXPECT_EQ(lockFree, sig);
-            }
         }
 
         static void verifyIsomorphismSignature(const Triangulation<dim>& tri,
@@ -1327,6 +1318,28 @@ class TriangulationTest : public testing::Test {
 
             verifyIsomorphismSignatureUsing<1, IsoSigPrintable>(tri);
             verifyIsomorphismSignatureUsing<2, IsoSigBinary>(tri);
+
+            EXPECT_EQ(tri.neoSig(), IsoSigBinary::asString<dim>(
+                tri.template neoSig<IsoSigBinary>()));
+
+            if (tri.hasLocks()) {
+                EXPECT_NE(tri.template isoSig<IsoSigPrintableLockFree>(),
+                    tri.isoSig());
+                EXPECT_NE(tri.template neoSig<IsoSigPrintableLockFree>(),
+                    tri.neoSig());
+
+                Triangulation<dim> unlocked(tri, false);
+                unlocked.unlockAll();
+                EXPECT_EQ(tri.template isoSig<IsoSigPrintableLockFree>(),
+                    unlocked.isoSig());
+                EXPECT_EQ(tri.template neoSig<IsoSigPrintableLockFree>(),
+                    unlocked.neoSig());
+            } else {
+                EXPECT_EQ(tri.template isoSig<IsoSigPrintableLockFree>(),
+                    tri.isoSig());
+                EXPECT_EQ(tri.template neoSig<IsoSigPrintableLockFree>(),
+                    tri.neoSig());
+            }
 
             // Verify the precomputed length of the signature.
             if (tri.countComponents() == 1) {
@@ -1361,28 +1374,28 @@ class TriangulationTest : public testing::Test {
             // Lock one simplex.
             for (auto s : t.simplices()) {
                 s->lock();
-                verifyIsomorphismSignatureUsing<1, IsoSigPrintable>(t);
+                verifyIsomorphismSignature(t, "One simplex locked");
                 s->unlock();
             }
 
             // Lock all simplices.
             for (auto s : t.simplices())
                 s->lock();
-            verifyIsomorphismSignatureUsing<1, IsoSigPrintable>(t);
+            verifyIsomorphismSignature(t, "All simplices locked");
             for (auto s : t.simplices())
                 s->unlock();
 
             // Lock one facet.
             for (auto f : t.template faces<dim - 1>()) {
                 f->lock();
-                verifyIsomorphismSignatureUsing<1, IsoSigPrintable>(t);
+                verifyIsomorphismSignature(t, "One facet locked");
                 f->unlock();
             }
 
             // Lock all facets.
             for (auto f : t.template faces<dim - 1>())
                 f->lock();
-            verifyIsomorphismSignatureUsing<1, IsoSigPrintable>(t);
+            verifyIsomorphismSignature(t, "All facets locked");
             for (auto f : t.template faces<dim - 1>())
                 f->unlock();
 
@@ -1391,7 +1404,7 @@ class TriangulationTest : public testing::Test {
                 s->lock();
                 for (auto f : t.template faces<dim - 1>()) {
                     f->lock();
-                    verifyIsomorphismSignatureUsing<1, IsoSigPrintable>(t);
+                    verifyIsomorphismSignature(t, "One simplex & facet locked");
                     f->unlock();
                 }
                 s->unlock();
@@ -1402,7 +1415,7 @@ class TriangulationTest : public testing::Test {
                 s->lock();
             for (auto f : t.template faces<dim - 1>())
                 f->lock();
-            verifyIsomorphismSignatureUsing<1, IsoSigPrintable>(t);
+            verifyIsomorphismSignature(t, "All simplices & facets locked");
             for (auto f : t.template faces<dim - 1>())
                 f->unlock();
             for (auto s : t.simplices())
