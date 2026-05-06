@@ -1250,15 +1250,14 @@ class PackedByteEncoder {
         }
 
         /**
-         * Moves the byte sequence that has been constructed thus far
-         * out of this encoder.
+         * Moves the final encoded byte sequence out of this encoder.
          *
          * After calling this function, this encoder object will be unusable.
          *
          * \nopython Instead use the variant of bytes() that returns its byte
          * sequence by constant reference.
          *
-         * \return the current byte sequence.
+         * \return the final encoded byte sequence.
          */
         ByteSequence&& bytes() && {
             return std::move(bytes_);
@@ -1983,12 +1982,11 @@ class BitEncoder {
         BitEncoder() = default;
 
         /**
-         * Moves the byte sequence that has been constructed thus far
-         * out of this encoder.
+         * Moves the final encoded byte sequence out of this encoder.
          *
          * After calling this function, this encoder object will be unusable.
          *
-         * \return the current byte sequence.
+         * \return the final encoded byte sequence.
          */
         ByteSequence&& bytes() && {
             if (nQueued_) {
@@ -2334,6 +2332,178 @@ class BitDecoder {
 
         BitDecoder(const BitDecoder&) = delete;
         BitDecoder& operator = (const BitDecoder&) = delete;
+};
+
+/**
+ * A helper class for writing signatures that packs information as tightly as
+ * possible into bits whilst ignoring byte/character boundaries, but then
+ * writes its actual output as a printable base64 string.
+ *
+ * This class is a hybrid between Base64Encoder and BitEncoder: it attempts to
+ * combine the readability of the former with the efficiency of the latter.
+ * (Of course it cannot be as efficient as BitEncoder, which is able to use
+ * all eight bits in each byte.)
+ *
+ * To use this class: create a new Base64BitEncoder, call one or more of its
+ * member functions to write values to the encoding, and then call str() to
+ * extract the resulting encoded string.  Like BitEncoder::bytes(), this call
+ * to str() will invalidate the encoder, which means that after calling str()
+ * you cannot encode more data and/or call str() again.
+ *
+ * These encoders are single-use objects: they cannot be copied, moved or
+ * swapped.
+ *
+ * \ingroup utilities
+ */
+class Base64BitEncoder : private Base64Encoder {
+    public:
+        /**
+         * The type of the final encoding that this class produces.
+         */
+        using Encoding = std::string;
+
+    private:
+        uint8_t queued_ { 0 };
+            /**< Any bits that are still waiting to be encoded into \a str_.
+                 Such bits are queued here when the total number of bits
+                 encoded is not a multiple of 6 (and so the final base64
+                 character is still under construction). */
+        int nQueued_ { 0 };
+            /**< The number of bits in \a queued_ waiting to be encoded.
+                 This will always be between 0 and 5 inclusive. */
+
+    public:
+        /**
+         * Creates a new encoder, with an empty base64 string.
+         */
+        Base64BitEncoder() = default;
+
+        /**
+         * Moves the final encoded base64 string out of this encoder.
+         *
+         * After calling this function, this encoder object will be unusable.
+         *
+         * \return the final base64 encoding.
+         */
+        std::string&& str() && {
+            if (nQueued_) {
+                encodeSingle(queued_);
+                // We don't bother resetting queued_ or nQueued_, since this
+                // encoder will be unusable after this function is called.
+            }
+            return std::move(*this).str();
+        }
+
+        /**
+         * Encodes the given boolean as a single bit.
+         *
+         * \param bit `true` if we should encode the bit 1, or `false` if we
+         * should encode the bit 0.
+         */
+        void encodeBit(bool bit) {
+            if (bit) {
+                if (nQueued_ == 5) {
+                    encodeSingle(queued_ | 0x20);
+                    queued_ = 0;
+                    nQueued_ = 0;
+                } else {
+                    queued_ |= (1 << (nQueued_++));
+                }
+            } else {
+                if (nQueued_ == 5) {
+                    encodeSingle(queued_);
+                    queued_ = 0;
+                    nQueued_ = 0;
+                } else {
+                    ++nQueued_;
+                }
+            }
+        }
+
+        /**
+         * Encodes a sequence of bits, all taken from a single native
+         * unsigned integer.
+         *
+         * \python The template argument \a IntType is taken to be
+         * `unsigned long`.
+         *
+         * \exception InvalidArgument The given integer has some bit set
+         * beyond bits `0,...,(count-1)`.
+         *
+         * \param count the total number of bits to encode; this must be
+         * non-negative.
+         * \param bits an integer holding the bits to encode; these will be
+         * encoded in order from the least significant bit of the argument
+         * \a bits.
+         */
+        template <UnsignedCppInteger IntType>
+        void encodeInt(int count, IntType bits) {
+            for (int i = 0; i < count; ++i)
+                encodeBit(bits & (IntType(1) << i));
+            if (count < sizeof(IntType) * 8) {
+                IntType mask = (IntType(1) << count) - 1;
+                if (bits != (bits & mask))
+                    throw InvalidArgument("Base64BitEncoder::encodeInt(): "
+                        "integer argument out of range");
+            }
+        }
+
+        /**
+         * Encodes a sequence of bits, taken from the given bitmask.
+         *
+         * \python The template argument \a BitmaskType is taken to be Bitmask.
+         *
+         * \param count the total number of bits to encode.
+         * \param bits a bitmask holding the bits to encode; this bitmask must
+         * be capable of holding at least \a count bits.  The bits will be
+         * encoded in order from bit 0 of the given bitmask.
+         */
+        template <ReginaBitmask BitmaskType>
+        void encodeBitmask(size_t count, const BitmaskType& bits) {
+            for (size_t i = 0; i < count; ++i)
+                encodeBit(bits.get(i));
+        }
+
+        /**
+         * Pre-allocates the given amount of space for the entire encoding,
+         * as measured in bits.
+         *
+         * Internally, this calls `std::string::reserve(...)`.  The intent is
+         * to avoid unnecessary reallocations as the encoding is constructed,
+         * and also to avoid allocating more memory than is required.
+         *
+         * It is harmless if \a capacity ends up being smaller or larger than
+         * the final bit length of the encoding; however, this routine will of
+         * course be more effective if \a capacity is accurate.
+         *
+         * \param capacity the expected total number of bits in the _entire_
+         * encoding (not just the portion that is not yet encoded).
+         */
+        void reserveBits(size_t capacity) {
+            Base64Encoder::reserve((capacity + 5) / 6);
+        }
+
+        /**
+         * Pre-allocates the given amount of space for the entire encoding,
+         * as measured in characters.
+         *
+         * Internally, this calls `std::string::reserve(capacity)`.  The intent
+         * is to avoid unnecessary reallocations as the encoding is constructed,
+         * and also to avoid allocating more memory than is required.
+         *
+         * It is harmless if \a capacity ends up being smaller or larger than
+         * the final byte length of the encoding; however, this routine will of
+         * course be more effective if \a capacity is accurate.
+         *
+         * \param capacity the expected string length of the _entire_ encoding
+         * (not just the portion that is not yet encoded).
+         */
+        void reserveChars(size_t capacity) {
+            Base64Encoder::reserve(capacity);
+        }
+
+        Base64BitEncoder(const Base64BitEncoder&) = delete;
+        Base64BitEncoder& operator = (const Base64BitEncoder&) = delete;
 };
 
 } // namespace regina

@@ -11,6 +11,28 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::Base64BitEncoder
+static const char *Base64BitEncoder =
+R"doc(A helper class for writing signatures that packs information as
+tightly as possible into bits whilst ignoring byte/character
+boundaries, but then writes its actual output as a printable base64
+string.
+
+This class is a hybrid between Base64Encoder and BitEncoder: it
+attempts to combine the readability of the former with the efficiency
+of the latter. (Of course it cannot be as efficient as BitEncoder,
+which is able to use all eight bits in each byte.)
+
+To use this class: create a new Base64BitEncoder, call one or more of
+its member functions to write values to the encoding, and then call
+str() to extract the resulting encoded string. Like
+BitEncoder::bytes(), this call to str() will invalidate the encoder,
+which means that after calling str() you cannot encode more data
+and/or call str() again.
+
+These encoders are single-use objects: they cannot be copied, moved or
+swapped.)doc";
+
 // Docstring regina::python::doc::Base64Decoder
 static const char *Base64Decoder =
 R"doc(A helper class for reading signatures that use base64 encodings. These
@@ -171,6 +193,98 @@ bytes() to extract the resulting byte sequence.
 
 Packed encoders are single-use objects: they cannot be copied, moved
 or swapped.)doc";
+
+namespace Base64BitEncoder_ {
+
+// Docstring regina::python::doc::Base64BitEncoder_::__default
+static const char *__default = R"doc(Creates a new encoder, with an empty base64 string.)doc";
+
+// Docstring regina::python::doc::Base64BitEncoder_::encodeBit
+static const char *encodeBit =
+R"doc(Encodes the given boolean as a single bit.
+
+Parameter ``bit``:
+    ``True`` if we should encode the bit 1, or ``False`` if we should
+    encode the bit 0.)doc";
+
+// Docstring regina::python::doc::Base64BitEncoder_::encodeBitmask
+static const char *encodeBitmask =
+R"doc(Encodes a sequence of bits, taken from the given bitmask.
+
+Python:
+    The template argument *BitmaskType* is taken to be Bitmask.
+
+Parameter ``count``:
+    the total number of bits to encode.
+
+Parameter ``bits``:
+    a bitmask holding the bits to encode; this bitmask must be capable
+    of holding at least *count* bits. The bits will be encoded in
+    order from bit 0 of the given bitmask.)doc";
+
+// Docstring regina::python::doc::Base64BitEncoder_::encodeInt
+static const char *encodeInt =
+R"doc(Encodes a sequence of bits, all taken from a single native unsigned
+integer.
+
+Python:
+    The template argument *IntType* is taken to be ``unsigned long``.
+
+Exception ``InvalidArgument``:
+    The given integer has some bit set beyond bits
+    ``0,...,(count-1)``.
+
+Parameter ``count``:
+    the total number of bits to encode; this must be non-negative.
+
+Parameter ``bits``:
+    an integer holding the bits to encode; these will be encoded in
+    order from the least significant bit of the argument *bits*.)doc";
+
+// Docstring regina::python::doc::Base64BitEncoder_::reserveBits
+static const char *reserveBits =
+R"doc(Pre-allocates the given amount of space for the entire encoding, as
+measured in bits.
+
+Internally, this calls ``std::string::reserve(...)``. The intent is to
+avoid unnecessary reallocations as the encoding is constructed, and
+also to avoid allocating more memory than is required.
+
+It is harmless if *capacity* ends up being smaller or larger than the
+final bit length of the encoding; however, this routine will of course
+be more effective if *capacity* is accurate.
+
+Parameter ``capacity``:
+    the expected total number of bits in the _entire_ encoding (not
+    just the portion that is not yet encoded).)doc";
+
+// Docstring regina::python::doc::Base64BitEncoder_::reserveChars
+static const char *reserveChars =
+R"doc(Pre-allocates the given amount of space for the entire encoding, as
+measured in characters.
+
+Internally, this calls ``std::string::reserve(capacity)``. The intent
+is to avoid unnecessary reallocations as the encoding is constructed,
+and also to avoid allocating more memory than is required.
+
+It is harmless if *capacity* ends up being smaller or larger than the
+final byte length of the encoding; however, this routine will of
+course be more effective if *capacity* is accurate.
+
+Parameter ``capacity``:
+    the expected string length of the _entire_ encoding (not just the
+    portion that is not yet encoded).)doc";
+
+// Docstring regina::python::doc::Base64BitEncoder_::str
+static const char *str =
+R"doc(Moves the final encoded base64 string out of this encoder.
+
+After calling this function, this encoder object will be unusable.
+
+Returns:
+    the final base64 encoding.)doc";
+
+}
 
 namespace Base64Decoder_ {
 
@@ -935,13 +1049,12 @@ static const char *__default = R"doc(Creates a new encoder, with an empty byte s
 
 // Docstring regina::python::doc::BitEncoder_::bytes
 static const char *bytes =
-R"doc(Moves the byte sequence that has been constructed thus far out of this
-encoder.
+R"doc(Moves the final encoded byte sequence out of this encoder.
 
 After calling this function, this encoder object will be unusable.
 
 Returns:
-    the current byte sequence.)doc";
+    the final encoded byte sequence.)doc";
 
 // Docstring regina::python::doc::BitEncoder_::encodeBit
 static const char *encodeBit =

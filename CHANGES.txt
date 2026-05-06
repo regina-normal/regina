@@ -26,7 +26,13 @@ Version 8.0  [ TODO ]
               but no longer needs to support rbegin() and rend()).
         Class AngleStructures:
             - New routines knowsSpansStrict() and knowsSpansTaut().
-        Class Base64SigDecoder:
+        Class Base64BitEncoder, Base64BitDecoder:
+            - New class to support signatures that pack bits into base64
+              strings, without worrying about byte/character boundaries.
+        Class Base64Decoder, Base64SigDecoder:
+            - Base64SigDecoder has been renamed to Base64Decoder.  The old name
+              is now a deprecated type alias.
+            - New type aliases Encoder and Encoding.
             - New routines remaining() and decodeBits().
             - Now requires its underlying character iterator type to be
               bidirectional (not just a forward iterator).
@@ -39,10 +45,6 @@ Version 8.0  [ TODO ]
               arguments regarding the stripping of whitespace then individually
               these are changes in behaviour.  The variant of done() that
               skips final whitespace is now deprecated.
-        Class Base64Decoder, Base64SigDecoder:
-            - Base64SigDecoder has been renamed to Base64Decoder.  The old name
-              is now a deprecated type alias.
-            - New type aliases Encoder and Encoding.
         Class Base64Encoder, Base64SigEncoder:
             - Base64SigEncoder has been renamed to Base64Encoder.  The old name
               is now a deprecated type alias.
@@ -65,7 +67,7 @@ Version 8.0  [ TODO ]
               deprecated.
         Class BitEncoder, BitDecoder:
             - New class to support signatures that use (unprintable) packed
-              sequences of bits.  See also PackedSig{Encoder,Decoder}.
+              sequences of bits, without regard for byte boundaries.
         Class BoolSet:
             - Regarding byte codes and string codes:
               + New type alias ByteCode.
@@ -316,7 +318,7 @@ Version 8.0  [ TODO ]
             - Removed completely.
         Class PackedByteEncoder, PackedByteDecoder:
             - New class to support signatures that use (unprintable) packed
-              byte sequences.  See also BitSig{Encoder,Decoder}.
+              sequences of bits, but with respect for byte boundaries.
         Class PermClass<n>:
             - Everything in this class is now constexpr.
         Class Polynomial<T>:

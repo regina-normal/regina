@@ -98,18 +98,18 @@ print()
 
 # ---------- Testing "raw" encoders/decoders ----------
 
-enc = PackedSigEncoder()
+enc = PackedByteEncoder()
 tmp = enc.encodeSize(1000)
 print(enc.bytes())
-dec = PackedSigDecoder(enc.bytes())
+dec = PackedByteDecoder(enc.bytes())
 print(dec.done())
 print(dec.decodeSize())
 print(dec.done())
 print()
 
-enc = BitSigEncoder()
-enc.encodeBits(3, 0x0002)
-enc.encodeBits(14, 0x3576)
+enc = BitEncoder()
+enc.encodeInt(3, 0x0002)
+enc.encodeInt(14, 0x3576)
 print(enc.bytes())
 try:
 	enc.encodeBit(True)
@@ -117,9 +117,29 @@ except:
 	print('Caught exception')
 
 try:
-	enc = BitSigEncoder()
+	enc = BitEncoder()
 	enc.encodeBits(3, 0x0002)
-	enc.encodeBits(3, 0x4576)
+	enc.encodeBits(14, 0x4576)
 except:
 	print('Caught exception')
+
+print()
+
+enc = Base64BitEncoder()
+enc.encodeInt(3, 0x0002)
+enc.encodeInt(14, 0x3576)
+print(enc.str())
+try:
+	enc.encodeBit(True)
+except:
+	print('Caught exception')
+
+try:
+	enc = Base64BitEncoder()
+	enc.encodeBits(3, 0x0002)
+	enc.encodeBits(14, 0x4576)
+except:
+	print('Caught exception')
+
+print()
 

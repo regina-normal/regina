@@ -34,6 +34,7 @@
 
 #include "testhelper.h"
 
+using regina::Base64BitEncoder;
 using regina::Bitmask;
 using regina::BitDecoder;
 using regina::BitEncoder;
@@ -103,6 +104,44 @@ TEST(SigUtilsTest, bitEncoder) {
         EXPECT_EQ(dec.decodeBitmask(14), mask);
         EXPECT_TRUE(dec.maybeDone());
         EXPECT_FALSE(dec.noMoreBits());
+    }
+    {
+        Base64BitEncoder enc;
+        auto str = std::move(enc).str();
+        EXPECT_EQ(str, "");
+    }
+    {
+        Base64BitEncoder enc;
+        std::array write { false, true, false, true, true, false, false, true,
+                           true, false, false, true, true };
+        for (bool b : write)
+            enc.encodeBit(b);
+        auto str = std::move(enc).str();
+        EXPECT_EQ(str, "AMb");
+    }
+    {
+        Base64BitEncoder enc;
+        enc.encodeInt(3, unsigned(0x0002));
+        enc.encodeInt(14, unsigned(0x3576)); // spans three encoded chars
+        auto str = std::move(enc).str();
+        EXPECT_EQ(str, "YUA");
+    }
+    EXPECT_THROW({
+        Base64BitEncoder enc;
+        enc.encodeInt(3, unsigned(0x0002));
+        enc.encodeInt(14, unsigned(0x4576));
+    }, regina::InvalidArgument);
+    {
+        Base64BitEncoder enc;
+        enc.encodeInt(3, unsigned(0x0002));
+
+        Bitmask mask(14);
+        std::array indices { 1, 2, 4, 5, 6, 8, 10, 12, 13 };
+        mask.set(indices.begin(), indices.end(), true);
+        enc.encodeBitmask(14, mask);
+
+        auto str = std::move(enc).str();
+        EXPECT_EQ(str, "YUA");
     }
 }
 

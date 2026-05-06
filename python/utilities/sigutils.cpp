@@ -39,7 +39,6 @@
 using regina::Base64Encoder;
 using regina::Base64SigEncoding;
 using regina::Bitmask;
-using regina::BitEncoder;
 using regina::PackedByteEncoder;
 
 namespace regina::python {
@@ -79,34 +78,48 @@ namespace regina::python {
     };
 
     /**
-     * Keeps track of whether the encoder has been invalidated by calling
-     * bytes().  We use this to account for the fact that bytes() is an rvalue
-     * member function - in C++ the compiler will force you to use std::move()
-     * on the encoder, but there is AFAICT no way to enforce such things in
-     * the Python bindings.  We work around this in Python by keeping a
+     * For Python, SafeEncoder<T> keeps track of whether an encoder of type T
+     * has been invalidated by calling its rvalue variant of str() or bytes().
+     * We use this because in C++ the compiler will force you to use std::move()
+     * on the encoder, but there is AFAICT no way to enforce such things in the
+     * Python bindings.  We therefore work around this in Python by keeping a
      * separate validity flag alongside the encoder.
      */
-    class SafeBitEncoder {
+    template <class MainEncoder>
+    class SafeEncoder {
         private:
-            regina::BitEncoder encoder_;
-            bool valid { true };
+            static constexpr bool stringBased =
+                std::same_as<typename MainEncoder::Encoding, std::string>;
+
+            MainEncoder encoder_;
+            bool valid_ { true };
 
         public:
-            SafeBitEncoder() = default;
+            SafeEncoder() = default;
 
-            regina::BitEncoder& encoder() {
-                if (valid)
+            MainEncoder& encoder() {
+                if (valid_)
                     return encoder_;
+                else if constexpr (stringBased)
+                    throw std::runtime_error(
+                        "This encoder has been invalidated - you cannot "
+                        "use it after calling str()");
                 else
                     throw std::runtime_error(
                         "This encoder has been invalidated - you cannot "
                         "use it after calling bytes()");
             }
 
-            auto bytes() {
-                auto ans = std::move(encoder()).bytes();
-                valid = false;
-                return ans;
+            auto extract() {
+                if constexpr (stringBased) {
+                    auto ans = std::move(encoder()).str();
+                    valid_ = false;
+                    return ans;
+                } else {
+                    auto ans = std::move(encoder()).bytes();
+                    valid_ = false;
+                    return ans;
+                }
             }
     };
 }
@@ -163,7 +176,7 @@ void addSigUtils(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(Base64Encoder)
 
-    auto be = pybind11::class_<Base64Encoder>(m, "Base64Encoder", rdoc_scope)
+    auto c = pybind11::class_<Base64Encoder>(m, "Base64Encoder", rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
         .def("str",
             static_cast<const std::string&(Base64Encoder::*)() const &>(
@@ -189,13 +202,13 @@ void addSigUtils(pybind11::module_& m) {
         .def("reserve", &Base64Encoder::reserve, rdoc::reserve)
         .def_readonly_static("spare", &Base64Encoder::spare)
     ;
-    regina::python::add_eq_operators(be);
+    regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_SWITCH(Base64Decoder)
 
     using Decoder = regina::Base64Decoder<std::string::const_iterator>;
     using Wrapper = regina::python::Decoder_Copy<regina::Base64Decoder>;
-    auto bd = pybind11::class_<Wrapper>(m, "Base64Decoder", rdoc_scope)
+    auto c = pybind11::class_<Wrapper>(m, "Base64Decoder", rdoc_scope)
         .def(pybind11::init<const std::string&, bool>(),
             pybind11::arg(), pybind11::arg("skipInitialWhitespace") = true,
             rdoc::__init)
@@ -235,17 +248,17 @@ void addSigUtils(pybind11::module_& m) {
     #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     #endif
     #endif
-    bd.def("done",
+    c.def("done",
         pybind11::overload_cast<bool>(&Decoder::done, pybind11::const_),
         rdoc::done_2); // deprecated
     #if defined(__GNUC__)
     #pragma GCC diagnostic pop
     #endif
-    regina::python::add_eq_operators(bd);
+    regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_SWITCH(PackedByteEncoder)
 
-    auto pe = pybind11::class_<PackedByteEncoder>(m, "PackedByteEncoder",
+    auto c = pybind11::class_<PackedByteEncoder>(m, "PackedByteEncoder",
             rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
         .def("bytes",
@@ -267,13 +280,13 @@ void addSigUtils(pybind11::module_& m) {
             rdoc::encodeTrits)
         .def("reserve", &PackedByteEncoder::reserve, rdoc::reserve)
     ;
-    regina::python::add_eq_operators(pe);
+    regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_SWITCH(PackedByteDecoder)
 
     using Decoder = regina::PackedByteDecoder<std::string::const_iterator>;
     using Wrapper = regina::python::Decoder_Copy<regina::PackedByteDecoder>;
-    auto pd = pybind11::class_<Wrapper>(m, "PackedByteDecoder", rdoc_scope)
+    auto c = pybind11::class_<Wrapper>(m, "PackedByteDecoder", rdoc_scope)
         .def(pybind11::init<pybind11::bytes>(), rdoc::__init)
         .def("done", &Decoder::done, rdoc::done)
         .def("remaining", &Decoder::remaining, rdoc::remaining)
@@ -296,37 +309,37 @@ void addSigUtils(pybind11::module_& m) {
                 &Decoder::decodeTrits),
             rdoc::decodeTrits)
     ;
-    regina::python::add_eq_operators(pd);
+    regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_SWITCH(BitEncoder)
 
-    using regina::python::SafeBitEncoder;
-    auto te = pybind11::class_<SafeBitEncoder>(m, "BitEncoder", rdoc_scope)
+    using Encoder = regina::python::SafeEncoder<regina::BitEncoder>;
+    auto c = pybind11::class_<Encoder>(m, "BitEncoder", rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
-        .def("bytes", &SafeBitEncoder::bytes, rdoc::bytes)
-        .def("encodeBit", [](SafeBitEncoder& enc, bool bit) {
+        .def("bytes", &Encoder::extract, rdoc::bytes)
+        .def("encodeBit", [](Encoder& enc, bool bit) {
             enc.encoder().encodeBit(bit);
         }, rdoc::encodeBit)
-        .def("encodeInt", [](SafeBitEncoder& enc, int n, unsigned long b) {
+        .def("encodeInt", [](Encoder& enc, int n, unsigned long b) {
             enc.encoder().encodeInt(n, b);
         }, rdoc::encodeInt)
-        .def("encodeBitmask", [](SafeBitEncoder& enc, int n, const Bitmask& b) {
+        .def("encodeBitmask", [](Encoder& enc, int n, const Bitmask& b) {
             enc.encoder().encodeBitmask(n, b);
         }, rdoc::encodeBitmask)
-        .def("reserveBits", [](SafeBitEncoder& enc, size_t count) {
+        .def("reserveBits", [](Encoder& enc, size_t count) {
             enc.encoder().reserveBits(count);
         }, rdoc::reserveBits)
-        .def("reserveBytes", [](SafeBitEncoder& enc, size_t count) {
+        .def("reserveBytes", [](Encoder& enc, size_t count) {
             enc.encoder().reserveBytes(count);
         }, rdoc::reserveBytes)
     ;
-    regina::python::add_eq_operators(te);
+    regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_SWITCH(BitDecoder)
 
     using Decoder = regina::BitDecoder<std::string::const_iterator>;
     using Wrapper = regina::python::Decoder_Copy<regina::BitDecoder>;
-    auto td = pybind11::class_<Wrapper>(m, "BitDecoder", rdoc_scope)
+    auto c = pybind11::class_<Wrapper>(m, "BitDecoder", rdoc_scope)
         .def(pybind11::init<pybind11::bytes>(), rdoc::__init)
         .def("maybeDone", &Decoder::maybeDone, rdoc::maybeDone)
         .def("noMoreBits", &Decoder::noMoreBits, rdoc::noMoreBits)
@@ -337,7 +350,31 @@ void addSigUtils(pybind11::module_& m) {
             rdoc::decodeBitmask)
         .def("flushByte", &Decoder::flushByte, rdoc::flushByte)
     ;
-    regina::python::add_eq_operators(td);
+    regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_SWITCH(Base64BitEncoder)
+
+    using Encoder = regina::python::SafeEncoder<regina::Base64BitEncoder>;
+    auto c = pybind11::class_<Encoder>(m, "Base64BitEncoder", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def("str", &Encoder::extract, rdoc::str)
+        .def("encodeBit", [](Encoder& enc, bool bit) {
+            enc.encoder().encodeBit(bit);
+        }, rdoc::encodeBit)
+        .def("encodeInt", [](Encoder& enc, int n, unsigned long b) {
+            enc.encoder().encodeInt(n, b);
+        }, rdoc::encodeInt)
+        .def("encodeBitmask", [](Encoder& enc, int n, const Bitmask& b) {
+            enc.encoder().encodeBitmask(n, b);
+        }, rdoc::encodeBitmask)
+        .def("reserveBits", [](Encoder& enc, size_t count) {
+            enc.encoder().reserveBits(count);
+        }, rdoc::reserveBits)
+        .def("reserveChars", [](Encoder& enc, size_t count) {
+            enc.encoder().reserveChars(count);
+        }, rdoc::reserveChars)
+    ;
+    regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_END
 }
