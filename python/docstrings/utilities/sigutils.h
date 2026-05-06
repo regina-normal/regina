@@ -573,6 +573,22 @@ Parameter ``stripWhitespace``:
     whitespace at both the beginning and the end of the encoded
     string.)doc";
 
+// Docstring regina::python::doc::Base64Decoder_::decode
+static const char *decode =
+R"doc(Converts a single base64 character into its corresponding 6-bit
+integer.
+
+Exception ``InvalidArgument``:
+    The given character is not one of the 64 printable base64
+    characters recognised by this class.
+
+Parameter ``c``:
+    a single base64 character.
+
+Returns:
+    the corresponding integer, which will be between 0 and 63
+    inclusive.)doc";
+
 // Docstring regina::python::doc::Base64Decoder_::decodeBits
 static const char *decodeBits =
 R"doc(Decodes a sequence of bits, and returns these in the form of a

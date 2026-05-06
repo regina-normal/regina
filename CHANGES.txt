@@ -34,6 +34,7 @@ Version 8.0  [ TODO ]
               is now a deprecated type alias.
             - New type aliases Encoder and Encoding.
             - New routines remaining() and decodeBits().
+            - New static routine decode().
             - Now requires its underlying character iterator type to be
               bidirectional (not just a forward iterator).
             - The constructor argument to strip whitespace (which defaults to

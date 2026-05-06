@@ -238,6 +238,7 @@ void addSigUtils(pybind11::module_& m) {
                 &Decoder::decodeTrits),
             rdoc::decodeTrits)
         .def_static("isValid", &Decoder::isValid, rdoc::isValid)
+        .def_static("decode", &Decoder::decode, rdoc::decode)
     ;
     #if defined(__GNUC__)
     // The routine done(bool) is deprecated, but we still need to bind it.

@@ -1176,6 +1176,31 @@ class Base64Decoder {
                 (c >= '0' && c <= '9') || c == '+' || c == '-');
         }
 
+        /**
+         * Converts a single base64 character into its corresponding 6-bit
+         * integer.
+         *
+         * \exception InvalidArgument The given character is not one of the
+         * 64 printable base64 characters recognised by this class.
+         *
+         * \param c a single base64 character.
+         * \return the corresponding integer, which will be between 0 and 63
+         * inclusive.
+         */
+        static constexpr int decode(char c) {
+            if (c >= 'a' && c <= 'z')
+                return (c - 'a');
+            if (c >= 'A' && c <= 'Z')
+                return (c - 'A' + 26);
+            if (c >= '0' && c <= '9')
+                return (c - '0' + 52);
+            if (c == '+')
+                return 62;
+            if (c == '-')
+                return 63;
+            throw InvalidArgument("Not a valid base64 character");
+        }
+
         Base64Decoder(const Base64Decoder&) = delete;
         Base64Decoder& operator = (const Base64Decoder&) = delete;
 };
