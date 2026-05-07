@@ -193,8 +193,8 @@ void add_isosig_variants(PythonClass& classWrapper) {
                         t.template neoSig<Encoding, Type>(oriented));
                 });
             });
-        }, pybind11::arg("oriented") = false, pybind11::arg("encoding"),
-            pybind11::arg("type"),
+        }, pybind11::arg("oriented") = false,
+            pybind11::arg("encoding"), pybind11::arg("type"),
             rbase::neoSig)
 
         .def("isoSigDetail", &Triangulation<dim>::template isoSigDetail<>,
@@ -240,8 +240,8 @@ void add_isosig_variants(PythonClass& classWrapper) {
                         t.template neoSigDetail<Encoding, Type>(oriented));
                 });
             });
-        }, pybind11::arg("oriented") = false, pybind11::arg("encoding"),
-            pybind11::arg("type"),
+        }, pybind11::arg("oriented") = false,
+            pybind11::arg("encoding"), pybind11::arg("type"),
             rbase::neoSigDetail)
 
         .def("sig", [](const Triangulation<dim>& t, int gen, bool oriented) {
@@ -300,9 +300,8 @@ void add_isosig_variants(PythonClass& classWrapper) {
                 throw regina::InvalidArgument(
                     "Not a supported generation of isomorphism signature");
             }
-        }, pybind11::arg("generation"),
-            pybind11::arg("oriented") = false, pybind11::arg("encoding"),
-            pybind11::arg("type"),
+        }, pybind11::arg("generation"), pybind11::arg("oriented") = false,
+            pybind11::arg("encoding"), pybind11::arg("type"),
             rbase::sig)
         ;
 }
@@ -421,7 +420,7 @@ void addIsoSigData(pybind11::module_& m, const char* name) {
                     return Data::template minimal<Type>(c, oriented, iso);
                 });
             },
-                pybind11::arg("Type"),
+                pybind11::arg("type"),
                 pybind11::arg("component"),
                 pybind11::arg("oriented"),
                 pybind11::arg("relabelling") = nullptr,

@@ -651,7 +651,7 @@ class IsoSigData<2, dim> {
          *
          * \python Python does not support C++ templates.  Instead, you should
          * pass \a Type as the first runtime argument; that is,
-         * `minimal(Type, component, oriented, relabelling)`.
+         * `minimal(type, component, oriented, relabelling)`.
          *
          * \tparam Type an isomorphism signature type, which will be used to
          * determine which labellings are considered "canonical".
