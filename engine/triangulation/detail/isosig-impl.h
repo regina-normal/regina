@@ -638,14 +638,14 @@ std::string IsoSigBinary::asString(const ByteSequence& sig) {
         Base64BitEncoder enc;
         while (! dec.noMoreBits()) {
             // Re-encode one component of the triangulation at a time.
-            unsigned intWidth = dec.decodeInt<unsigned>(6);
+            unsigned intWidth = dec.template decodeInt<unsigned>(6);
             if (intWidth == 0)
                 throw InvalidArgument("IsoSigBinary::asString(): "
                     "invalid integer width for binary encoding");
             bool oriented = dec.decodeBit();
             bool hasLocks = dec.decodeBit();
 
-            size_t nSimp = dec.decodeInt<size_t>(intWidth);
+            size_t nSimp = dec.template decodeInt<size_t>(intWidth);
             enc.encodeSize(nSimp);
             if (nSimp == 0)
                 throw InvalidArgument("IsoSigBinary::asString(): "
@@ -657,7 +657,7 @@ std::string IsoSigBinary::asString(const ByteSequence& sig) {
             size_t nBdry = 0;
             size_t nDest = 2 * (nSimp - 1);
             while (nDest < nSimp * (dim + 1)) {
-                size_t dest = dec.decodeInt<size_t>(intWidth);
+                size_t dest = dec.template decodeInt<size_t>(intWidth);
                 enc.encodeInt(intWidth, dest);
                 if (dest == nSimp) {
                     ++nBdry;
@@ -672,12 +672,12 @@ std::string IsoSigBinary::asString(const ByteSequence& sig) {
 
             int w = (oriented ? permWidth - 1 : permWidth);
             for (size_t i = 0; i < nFacets - nBdry + 1 - nSimp; ++i)
-                enc.encodeInt(w, dec.decodeInt<PermIndex>(w));
+                enc.encodeInt(w, dec.template decodeInt<PermIndex>(w));
 
             if (hasLocks) {
                 enc.flushAndAppend(Base64Encoder::spare[1]);
                 for (size_t i = 0; i < nSimp; ++i)
-                    enc.encodeInt(lockWidth, dec.decodeInt<
+                    enc.encodeInt(lockWidth, dec.template decodeInt<
                         typename Simplex<dim>::LockMask>(lockWidth));
             }
 
@@ -1182,14 +1182,14 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const ByteSequence& sig) {
         while (! dec.noMoreBits()) {
             // Read one component at a time.
 
-            unsigned intWidth = dec.decodeInt<unsigned>(6);
+            unsigned intWidth = dec.template decodeInt<unsigned>(6);
             if (intWidth == 0)
                 throw InvalidArgument(
                     "fromSig(): invalid integer width for binary encoding");
             bool oriented = dec.decodeBit();
             bool hasLocks = dec.decodeBit();
 
-            size_t nSimp = dec.decodeInt<size_t>(intWidth);
+            size_t nSimp = dec.template decodeInt<size_t>(intWidth);
             if (nSimp == 0)
                 throw InvalidArgument(
                     "fromSig(): invalid component size for binary encoding");
@@ -1199,7 +1199,7 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const ByteSequence& sig) {
             std::vector<size_t> adjSimplex;
             adjSimplex.reserve((nSimp * (dim + 1) + 1) / 2); // a lower bound
             while (nDest < nSimp * (dim + 1)) {
-                size_t dest = dec.decodeInt<size_t>(intWidth);
+                size_t dest = dec.template decodeInt<size_t>(intWidth);
                 if (dest == nSimp) {
                     ++nBdry;
                     ++nDest;
@@ -1215,10 +1215,11 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const ByteSequence& sig) {
             FixedArray<PermIndex> adjGluing(nFacets - nBdry + 1 - nSimp);
             if (oriented) {
                 for (auto& index : adjGluing)
-                    index = dec.decodeInt<PermIndex>(permWidth - 1) * 2 + 1;
+                    index = dec.template decodeInt<PermIndex>(permWidth - 1)
+                        * 2 + 1;
             } else {
                 for (auto& index : adjGluing)
-                    index = dec.decodeInt<PermIndex>(permWidth);
+                    index = dec.template decodeInt<PermIndex>(permWidth);
             }
 
             // This ends the gluings for this component!
@@ -1272,8 +1273,8 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const ByteSequence& sig) {
                 // We set lock masks directly instead of using lock() functions;
                 // see the first-gen decoding procedure for further explanation.
                 for (auto s : simp)
-                    s->locks_ = dec.decodeInt<typename Simplex<dim>::LockMask>(
-                        lockWidth);
+                    s->locks_ = dec.template decodeInt<
+                        typename Simplex<dim>::LockMask>(lockWidth);
 
                 verifyLockConsistency(simp);
             }
