@@ -72,6 +72,7 @@ void addIsomorphism2(pybind11::module_& m) {
         }, rbase::setEdgePerm)
         .def("__getitem__", &Isomorphism<2>::operator[], rdoc::__array)
         .def("isIdentity", &Isomorphism<2>::isIdentity, rdoc::isIdentity)
+        .def("isEven", &Isomorphism<2>::isEven, rdoc::isEven)
         .def("__call__", overload_cast<const regina::Triangulation<2>&>(
             &Isomorphism<2>::operator(), pybind11::const_), rdoc::__call)
         .def("__call__", overload_cast<const regina::FacetSpec<2>&>(
