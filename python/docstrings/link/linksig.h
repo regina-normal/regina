@@ -17,9 +17,10 @@ R"doc(Encodes a second-generation knot/link signature using a small-memory
 byte-based encoding.
 
 This uses a similar "compression" of the combinatorial link data as
-LinkSigGen2; however, it encodes this data in a byte sequence using
-all eight bits per byte (as opposed to LinkSigGen2, which only encodes
-six bits per byte but creates a printable string as a result).
+the second-generation encoding via LinkSigPrintable; however, it
+encodes this data in a byte sequence using all eight bits per byte (as
+opposed to LinkSigPrintable, which only encodes six bits per byte but
+creates a printable string as a result).
 
 This encoding is intended for scenarios where memory use needs to be
 kept as small as possible.
@@ -79,53 +80,28 @@ possible, even when passing or returning objects by value.
     changelog with each new release to see if you need to make changes
     to your code.)doc";
 
-// Docstring regina::python::doc::LinkSigGen1
-static const char *LinkSigGen1 =
-R"doc(Encodes a first-generation knot/link signature as a printable string.
+// Docstring regina::python::doc::LinkSigPrintable
+static const char *LinkSigPrintable =
+R"doc(Encodes both first-generation and second-generation knot/link
+signatures as printable strings.
 
-This printable encoding is the one that was used for knot/link
-signatures in Regina ≤ 7.x. It represents a signature as a
+This printable encoding represents a knot/link signature as a
 ``std::string``, using only printable characters from the 7-bit ASCII
-range.
+range. For first-generation signatures, this is the same encoding that
+was used in Regina ≤ 7.x.
 
 See the LinkSigEncoding concept documentation for general details on
 encodings for knot/link signatures.
 
 This class is designed to be used as a template parameter for
-Link::sig(). Typical users would not need to call any of its functions
-directly.
-
-Python:
-    Python does not support C++ templates. To use this encoding in
-    Python, you can simply call ``Link::knotSig()``.
-
-.. warning::
-    The API for this class or function has not yet been finalised.
-    This means that the interface may change in new versions of
-    Regina, without maintaining backward compatibility. If you use
-    this class directly in your own code, please check the detailed
-    changelog with each new release to see if you need to make changes
-    to your code.)doc";
-
-// Docstring regina::python::doc::LinkSigGen2
-static const char *LinkSigGen2 =
-R"doc(Encodes a second-generation knot/link signature as a printable string.
-
-Like LinkSigGen1, this encodes a signature as a ``std::string`` using
-only printable characters from the 7-bit ASCII range. However, the
-strings it produces are significantly shorter than first-generation
-signatures (a little over half the length in general).
-
-See the LinkSigEncoding concept documentation for general details on
-encodings for knot/link signatures.
-
-This class is designed to be used as a template parameter for
-Link::neoSig() or Link::sig(). Typical users would not need to call
+Link::sig() or Link::neoSig(). Typical users would not need to call
 any of its functions directly.
 
 Python:
-    Python does not support C++ templates. To use this encoding in
-    Python, you can call ``Link::neoSig()``.
+    To use this encoding in Python, you can just call the relevant
+    signature function (e.g., ``Link::isoSig()`` or
+    ``Link::neoSig()``) with no extra encoding argument, since this
+    encoding is the default.
 
 .. warning::
     The API for this class or function has not yet been finalised.
@@ -140,8 +116,8 @@ namespace LinkSigBinary_ {
 // Docstring regina::python::doc::LinkSigBinary_::asString
 static const char *asString =
 R"doc(Re-encodes the given binary signature as a string-based signature
-(using the LinkSigGen2 encoding), which uses only printable characters
-from the 7-bit ASCII range.
+(using the LinkSigPrintable encoding), which uses only printable
+characters from the 7-bit ASCII range.
 
 Calling ``printable(sig)`` is significantly more efficient than
 calling ``Link::fromSig(sig).neoSig()``, and should give the same
@@ -165,7 +141,7 @@ Parameter ``sig``:
 
 Returns:
     the second-generation signature of the same link diagram, encoded
-    as a printable string using the LinkSigGen2 encoding.)doc";
+    as a printable string using the LinkSigPrintable encoding.)doc";
 
 // Docstring regina::python::doc::LinkSigBinary_::encode
 static const char *encode =
@@ -397,9 +373,9 @@ static const char *strand = R"doc(0 or 1 for the lower or upper strand respectiv
 
 }
 
-namespace LinkSigGen1_ {
+namespace LinkSigPrintable_ {
 
-// Docstring regina::python::doc::LinkSigGen1_::encode
+// Docstring regina::python::doc::LinkSigPrintable_::encode
 static const char *encode =
 R"doc(Encodes a single connected diagram component.
 
@@ -412,30 +388,29 @@ Parameter ``data``:
     the data describing a connected diagram component.
 
 Returns:
-    the given data encoded as a knot/link signature.)doc";
+    the given data encoded as the requested generation of knot/link
+    signature.)doc";
 
-// Docstring regina::python::doc::LinkSigGen1_::encodeEmpty
+// Docstring regina::python::doc::LinkSigPrintable_::encodeEmpty
 static const char *encodeEmpty =
 R"doc(Encodes the signature of the empty link.
 
-Note that LinkSigGen1 and LinkSigGen2 (which create printable string
-encodings) do _not_ return an empty signature for this; instead they
-both return the special string ``_``.
+Note that LinkSigPrintable does _not_ return an empty signature for
+this; instead it returns the special string ``_``.
 
 Returns:
     the signature of the empty link.)doc";
 
-// Docstring regina::python::doc::LinkSigGen1_::encodeUnknot
+// Docstring regina::python::doc::LinkSigPrintable_::encodeUnknot
 static const char *encodeUnknot =
 R"doc(Encodes the signature of the zero-crossing unknot diagram.
 
-Both LinkSigGen1 and LinkSigGen2 return the same signature ``a`` in
-this case.
+LinkSigPrintable will return the signature ``a`` in this case.
 
 Returns:
     the signature of the zero-crossing unknot.)doc";
 
-// Docstring regina::python::doc::LinkSigGen1_::length
+// Docstring regina::python::doc::LinkSigPrintable_::length
 static const char *length =
 R"doc(Precomputes the length of the signature that encodes the given
 connected diagram component.
@@ -449,63 +424,8 @@ Parameter ``data``:
     the data describing a connected diagram component.
 
 Returns:
-    the length of the knot/link signature that encodes *data*.)doc";
-
-}
-
-namespace LinkSigGen2_ {
-
-// Docstring regina::python::doc::LinkSigGen2_::encode
-static const char *encode =
-R"doc(Encodes a single connected diagram component.
-
-Precondition:
-    The given diagram component has at least one crossing, and is
-    minimal amongst all allowed relabellings of the underlying
-    connected link diagram.
-
-Parameter ``data``:
-    the data describing a connected diagram component.
-
-Returns:
-    the given data encoded as a knot/link signature.)doc";
-
-// Docstring regina::python::doc::LinkSigGen2_::encodeEmpty
-static const char *encodeEmpty =
-R"doc(Encodes the signature of the empty link.
-
-Note that LinkSigGen1 and LinkSigGen2 (which create printable string
-encodings) do _not_ return an empty signature for this; instead they
-both return the special string ``_``.
-
-Returns:
-    the signature of the empty link.)doc";
-
-// Docstring regina::python::doc::LinkSigGen2_::encodeUnknot
-static const char *encodeUnknot =
-R"doc(Encodes the signature of the zero-crossing unknot diagram.
-
-Both LinkSigGen1 and LinkSigGen2 return the same signature ``a`` in
-this case.
-
-Returns:
-    the signature of the zero-crossing unknot.)doc";
-
-// Docstring regina::python::doc::LinkSigGen2_::length
-static const char *length =
-R"doc(Precomputes the length of the signature that encodes the given
-connected diagram component.
-
-Precondition:
-    The given diagram component has at least one crossing, and is
-    minimal amongst all allowed relabellings of the underlying
-    connected link diagram.
-
-Parameter ``data``:
-    the data describing a connected diagram component.
-
-Returns:
-    the length of the knot/link signature that encodes *data*.)doc";
+    the length of the given generation of knot/link signature that
+    encodes *data*.)doc";
 
 }
 

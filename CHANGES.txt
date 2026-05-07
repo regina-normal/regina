@@ -239,7 +239,7 @@ Version 8.0  [ TODO ]
             - The iterator-based variant of fromData() now has simpler
               requirements on the component sequences (in particular, iteration
               no longer needs to be random access).
-        Class LinkSigData, LinkSigGen1, LinkSigGen2, LinkSigBinary:
+        Class LinkSigData, LinkSigPrintable, LinkSigBinary:
             - New types to support the generation of knot/link signatures.
         Class ListView<...>:
             - Deprecated and no longer used.  Wherever Regina used to return

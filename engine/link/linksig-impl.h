@@ -63,7 +63,8 @@ namespace regina {
 // - If we allow reflection of the entire diagram, we do everything once without
 //   reflection and once with reflection, and take the smaller LinkSigData.
 
-template <LinkSigEncoding Encoding>
+template <int generation, LinkSigEncoding<generation> Encoding>
+requires (generation == 1 || generation == 2)
 typename Encoding::Signature Link::sig(bool allowReflection, bool allowReversal,
         bool allowRotation) const {
     if (components_.size() >= 64)
@@ -83,7 +84,7 @@ typename Encoding::Signature Link::sig(bool allowReflection, bool allowReversal,
     // We have at least one crossing, and therefore at least one component.
     if (isConnected()) {
         // This is the easy case.
-        return Encoding::encode(LinkSigData(*this,
+        return Encoding::template encode<generation>(LinkSigData(*this,
             allowReflection ? BoolSet(true, true) /* both options */ :
                 BoolSet(false) /* false only */,
             allowReversal,
@@ -155,12 +156,12 @@ typename Encoding::Signature Link::sig(bool allowReflection, bool allowReversal,
         // capacity, thus wasting some time and space).
         size_t length = nTrivial;
         for (const auto& data : bits)
-            length += Encoding::length(data);
+            length += Encoding::template length<generation>(data);
 
         typename Encoding::Signature sig;
         sig.reserve(length);
         for (const auto& data : bits)
-            sig += Encoding::encode(data);
+            sig += Encoding::template encode<generation>(data);
         for (size_t i = 0; i < nTrivial; ++i)
             sig += Encoding::encodeUnknot();
         return sig;

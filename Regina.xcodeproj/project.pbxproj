@@ -3070,6 +3070,8 @@
 		0545A01B2F9F696E008D3ADB /* siglist.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = siglist.cpp; sourceTree = "<group>"; };
 		0545A01D2FA6C167008D3ADB /* isosig.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = isosig.cpp; sourceTree = "<group>"; };
 		0545A01E2FA83E57008D3ADB /* sigutils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sigutils.cpp; sourceTree = "<group>"; };
+		0545A0202FAC6558008D3ADB /* signatures.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = signatures.out; sourceTree = "<group>"; };
+		0545A0212FAC6558008D3ADB /* signatures.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = signatures.test; sourceTree = "<group>"; };
 		0549B4982907D38D00C911AF /* data-anon.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-anon.docbook"; sourceTree = "<group>"; };
 		0549B4992907D38E00C911AF /* data-tri.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tri.docbook"; sourceTree = "<group>"; };
 		0549B49A2907D38E00C911AF /* data-txi.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-txi.docbook"; sourceTree = "<group>"; };
@@ -5845,6 +5847,8 @@
 				050F5D9F1B9BAB9C00C1F681 /* sample.pdf */,
 				05CAE60B27429B18007C93F3 /* sets.out */,
 				05CAE60E27429B19007C93F3 /* sets.test */,
+				0545A0202FAC6558008D3ADB /* signatures.out */,
+				0545A0212FAC6558008D3ADB /* signatures.test */,
 				056BEB662F5C28F9001AF328 /* sigs-dim2.txt */,
 				056BEB672F5C28F9001AF328 /* sigs-dim3.txt */,
 				056BEB682F5C28F9001AF328 /* sigs-dim4.txt */,

@@ -249,183 +249,168 @@ LinkSigData::LinkSigData(const Link& link, BoolSet reflectionOptions,
     }
 }
 
-// The string encoding used in Regina ≤ 7.x:
-//
-// - For a non-empty connected link diagram:
-//
-//   * n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
-//
-//   * Sentinels (n, 0, 0) in the LinkSigData sequence appear in the list of
-//     crossings but not in the strand/sign bits.
-//
-// - For the special case of the empty link:
-//
-//   * We cannot encode the sequence [ 0 ] since this already represents the
-//     0-crossing unknot: instead we cheat and give the empty link a symbol
-//     that is not part of our usual base64 set (Base64Encoder::spare[0]).
-
-std::string LinkSigGen1::encodeEmpty() {
+std::string LinkSigPrintable::encodeEmpty() {
+    // We cannot encode the sequence [ 0 ] since this already represents the
+    // 0-crossing unknot: instead we cheat and give the empty link a symbol
+    // that is not part of our usual base64 set (Base64Encoder::spare[0]).
     return { Base64Encoder::spare[0] };
 }
 
-std::string LinkSigGen1::encodeUnknot() {
+std::string LinkSigPrintable::encodeUnknot() {
     Base64Encoder enc;
     enc.encodeSize(0);
     return std::move(enc).str();
 }
 
-size_t LinkSigGen1::length(const LinkSigData& data) {
+template <int generation>
+requires (generation == 1 || generation == 2)
+size_t LinkSigPrintable::length(const LinkSigData& data) {
     size_t ans;
-    if (data.size() < 63) {
-        // The integer width is 1, and does not need to be explicitly encoded.
-        ans = 1 + data.sequence().size();
-    } else {
-        // We begin with two extra characters: 63 (which acts as a marker that
-        // the link component is large), and the encoding of the integer width.
-        int width = Base64Encoder::integerWidth(data.size());
-        ans = 2 + (1 + data.sequence().size()) * width;
-    }
-    return ans + 2 * ((data.size() + 2) / 3);
-}
-
-std::string LinkSigGen1::encode(const LinkSigData& data) {
-    // Text: n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
-
-    Base64Encoder enc;
-    enc.reserve(length(data));
-
-    // Output crossings in order.
-    int charsPerInt = enc.encodeSize(data.size());
-    for (const auto& term : data.sequence())
-        enc.encodeInt(term.crossing, charsPerInt);
-
-    // Output strands and signs, each as a packed sequence of bits.
-    // Note: both the strands and the signs could be written using n bits
-    // each, not 2n bits each (we are basically writing everything twice) -
-    // however, the old knot signatures wrote 2n bits and it would be bad
-    // to break compatibility with those.  Also, if memory is at a premium
-    // then you should be using LinkSigGen2 (not LinkSigGen1) anyway.
-    int val = 0, bit = 0;
-
-    for (const auto& term : data.sequence()) {
-        if (term.crossing == data.size())
-            continue; // this is a sentinel
-        if (term.strand)
-            val |= (1 << bit);
-        if (++bit == 6) {
-            enc.encodeSingle(val);
-            val = bit = 0;
-        }
-    }
-    if (bit) {
-        enc.encodeSingle(val);
-        val = bit = 0;
-    }
-
-    for (const auto& term : data.sequence()) {
-        if (term.crossing == data.size())
-            continue; // this is a sentinel
-        if (term.sign > 0)
-            val |= (1 << bit);
-        if (++bit == 6) {
-            enc.encodeSingle(val);
-            val = bit = 0;
-        }
-    }
-    if (bit) {
-        enc.encodeSingle(val);
-        val = bit = 0; // we could drop this, but it helps for readability.
-    }
-
-    return std::move(enc).str();
-}
-
-std::string LinkSigGen2::encodeEmpty() {
-    return { Base64Encoder::spare[0] };
-}
-
-std::string LinkSigGen2::encodeUnknot() {
-    Base64Encoder enc;
-    enc.encodeSize(0);
-    return std::move(enc).str();
-}
-
-size_t LinkSigGen2::length(const LinkSigData& data) {
-    size_t ans;
-    if (data.size() < 63) {
-        // The integer width is 1, and does not need to be explicitly encoded.
-        ans = 1 + data.size();
-    } else {
-        // We begin with two extra characters: 63 (which acts as a marker that
-        // the link component is large), and the encoding of the integer width.
-        int width = Base64Encoder::integerWidth(data.size());
-        ans = 2 + (1 + data.size()) * width;
-    }
-    return ans + (2 * data.size() + 2) / 3;
-}
-
-std::string LinkSigGen2::encode(const LinkSigData& data) {
-    // We write:
-    // - the integer n;
-    // - 4n packed bits:
-    //   * 2n "first time seeing this crossing?" bits (in traversal order),
-    //   * n "first strand seen for this crossing" bits (in crossing order),
-    //   * n sign bits (in crossing order);
-    // - crossing indices for those crossings seen for the second time,
-    //   as well as sentinels separating link components (in traversal order).
-    //
-    // By minimality, we can assume that each crossing seen for the _first_
-    // time uses the next available crossing index.
-    //
-    // By connectivity and minimality we can assume that each crossing that
-    // appears immediately after a sentinel uses the first index not yet
-    // revisited.
-    //
-    // All 4n bits are written in a single pack (i.e., we don't artificially
-    // move to the next base64 character at the 2n mark and/or the 3n mark).
-
-    Base64Encoder enc;
-    enc.reserve(length(data));
-
-    int charsPerInt = enc.encodeSize(data.size());
-
-    Bitmask bits(4 * data.size());
-    FixedArray<bool> seen(data.size(), false);
-    FixedArray<size_t> revisited(data.size());
-
-    size_t pos = 0;
-    size_t nextRevisit = 0;
-    bool skip = false;
-    for (const auto& term : data.sequence()) {
-        if (term.crossing == data.size()) {
-            // This is a sentinel, and should have no presence in bits.
-            revisited[nextRevisit++] = data.size();
-            skip = true;
-        } else if (seen[term.crossing]) {
-            // This is a revisited crossing: the corresponding "first time?"
-            // bit should be false (which it already is).
-            if (skip) {
-                // This is the first crossing after a sentinel (which is always
-                // revisited, and whose index does not need to be written).
-                skip = false;
-            } else
-                revisited[nextRevisit++] = term.crossing;
-            ++pos;
+    if constexpr (generation == 1) {
+        if (data.size() < 63) {
+            // The integer width is 1, and is not explicitly encoded.
+            ans = 1 + data.sequence().size();
         } else {
-            // This is a new crossing: the corresponding "first time?" bit
-            // should be true, and the strand/sign bits should be set also.
-            bits.set(pos, true);
-            if (term.strand)
-                bits.set(data.size() * 2 + term.crossing, true);
-            if (term.sign > 0)
-                bits.set(data.size() * 3 + term.crossing, true);
-            seen[term.crossing] = true;
-            ++pos;
+            // We begin with two extra characters: 63 (a marker that the link
+            // component is large), and the encoding of the integer width.
+            int width = Base64Encoder::integerWidth(data.size());
+            ans = 2 + (1 + data.sequence().size()) * width;
         }
+        return ans + 2 * ((data.size() + 2) / 3);
+    } else {
+        if (data.size() < 63) {
+            // The integer width is 1, and is not explicitly encoded.
+            ans = 1 + data.size();
+        } else {
+            // We begin with two extra characters: 63 (a marker that the link
+            // component is large), and the encoding of the integer width.
+            int width = Base64Encoder::integerWidth(data.size());
+            ans = 2 + (1 + data.size()) * width;
+        }
+        return ans + (2 * data.size() + 2) / 3;
+    }
+}
+
+template <int generation>
+requires (generation == 1 || generation == 2)
+std::string LinkSigPrintable::encode(const LinkSigData& data) {
+    Base64Encoder enc;
+    enc.reserve(length<generation>(data));
+
+    if constexpr (generation == 1) {
+        // The first-generation string encoding used in Regina ≤ 7.x:
+        //
+        // - For a non-empty connected link diagram:
+        //
+        //   * n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
+        //
+        //   * Sentinels (n, 0, 0) in the LinkSigData sequence appear in the
+        //     list of crossings but not in the strand/sign bits.
+        //
+
+        // Output crossings in order.
+        int charsPerInt = enc.encodeSize(data.size());
+        for (const auto& term : data.sequence())
+            enc.encodeInt(term.crossing, charsPerInt);
+
+        // Output strands and signs, each as a packed sequence of bits.
+        // Note: both the strands and the signs could be written using n bits
+        // each, not 2n bits each (we are basically writing everything twice) -
+        // however, the old knot signatures wrote 2n bits and it would be bad
+        // to break compatibility with those.  If memory is at a premium then
+        // you should be using second-generation signatures anyway.
+        int val = 0, bit = 0;
+
+        for (const auto& term : data.sequence()) {
+            if (term.crossing == data.size())
+                continue; // this is a sentinel
+            if (term.strand)
+                val |= (1 << bit);
+            if (++bit == 6) {
+                enc.encodeSingle(val);
+                val = bit = 0;
+            }
+        }
+        if (bit) {
+            enc.encodeSingle(val);
+            val = bit = 0;
+        }
+
+        for (const auto& term : data.sequence()) {
+            if (term.crossing == data.size())
+                continue; // this is a sentinel
+            if (term.sign > 0)
+                val |= (1 << bit);
+            if (++bit == 6) {
+                enc.encodeSingle(val);
+                val = bit = 0;
+            }
+        }
+        if (bit) {
+            enc.encodeSingle(val);
+            val = bit = 0; // we could drop this, but it helps for readability.
+        }
+    } else {
+        // We write:
+        // - the integer n;
+        // - 4n packed bits:
+        //   * 2n "first time seeing this crossing?" bits (in traversal order),
+        //   * n "first strand seen for this crossing" bits (in crossing order),
+        //   * n sign bits (in crossing order);
+        // - crossing indices for those crossings seen for the second time, as
+        //   well as sentinels separating link components (in traversal order).
+        //
+        // By minimality, we can assume that each crossing seen for the _first_
+        // time uses the next available crossing index.
+        //
+        // By connectivity and minimality we can assume that each crossing that
+        // appears immediately after a sentinel uses the first index not yet
+        // revisited.
+        //
+        // All 4n bits are written in a single pack (i.e., we don't artificially
+        // move to the next base64 character at the 2n mark and/or the 3n mark).
+
+        int charsPerInt = enc.encodeSize(data.size());
+
+        Bitmask bits(4 * data.size());
+        FixedArray<bool> seen(data.size(), false);
+        FixedArray<size_t> revisited(data.size());
+
+        size_t pos = 0;
+        size_t nextRevisit = 0;
+        bool skip = false;
+        for (const auto& term : data.sequence()) {
+            if (term.crossing == data.size()) {
+                // This is a sentinel, and should have no presence in bits.
+                revisited[nextRevisit++] = data.size();
+                skip = true;
+            } else if (seen[term.crossing]) {
+                // This is a revisited crossing: the corresponding "first time?"
+                // bit should be false (which it already is).
+                if (skip) {
+                    // This is the first crossing after a sentinel (which is
+                    // always revisited, and whose index need not be written).
+                    skip = false;
+                } else
+                    revisited[nextRevisit++] = term.crossing;
+                ++pos;
+            } else {
+                // This is a new crossing: the corresponding "first time?" bit
+                // should be true, and the strand/sign bits should be set also.
+                bits.set(pos, true);
+                if (term.strand)
+                    bits.set(data.size() * 2 + term.crossing, true);
+                if (term.sign > 0)
+                    bits.set(data.size() * 3 + term.crossing, true);
+                seen[term.crossing] = true;
+                ++pos;
+            }
+        }
+
+        enc.encodeBitmask(4 * data.size(), bits);
+        enc.encodeInts(revisited, charsPerInt);
     }
 
-    enc.encodeBitmask(4 * data.size(), bits);
-    enc.encodeInts(revisited, charsPerInt);
     return std::move(enc).str();
 }
 
@@ -439,6 +424,8 @@ ByteSequence LinkSigBinary::encodeUnknot() {
     return std::move(enc).bytes();
 }
 
+template <int generation>
+requires (generation == 2)
 size_t LinkSigBinary::length(const LinkSigData& data) {
     size_t ans;
     if (data.size() < 0x10) {
@@ -458,8 +445,10 @@ size_t LinkSigBinary::length(const LinkSigData& data) {
     return ans + (data.size() + 1) / 2;
 }
 
+template <int generation>
+requires (generation == 2)
 ByteSequence LinkSigBinary::encode(const LinkSigData& data) {
-    // As with LinkSigGen2, we write:
+    // As with the second-generation LinkSigPrintable encoding, we write:
     // - the integer n;
     // - 4n packed bits:
     //   * 2n "first time seeing this crossing?" bits (in traversal order),
@@ -479,7 +468,7 @@ ByteSequence LinkSigBinary::encode(const LinkSigData& data) {
     // move to the next base64 character at the 2n mark and/or the 3n mark).
 
     PackedByteEncoder enc;
-    enc.reserve(length(data));
+    enc.reserve(length<generation>(data));
 
     int width = enc.encodeSize(data.size());
 
@@ -526,12 +515,12 @@ ByteSequence LinkSigBinary::encode(const LinkSigData& data) {
 std::string LinkSigBinary::asString(const ByteSequence& sig) {
     // Get the empty link out of the way first.
     if (sig.empty())
-        return LinkSigGen2::encodeEmpty();
+        return LinkSigPrintable::encodeEmpty();
 
     try {
-        // Both LinkSigBinary and LinkSigGen2 encode exactly the same
-        // combinatorial information; it is just a matter of converting between
-        // printable (6-bit) and byte-packed (8-bit) formats.
+        // Both LinkSigBinary and second-generation LinkSigPrintable encode
+        // exactly the same combinatorial information; it is just a matter of
+        // converting between printable (6-bit) and byte-packed (8-bit) formats.
         PackedByteDecoder dec(sig.begin(), sig.end());
         Base64Encoder enc;
         while (! dec.done()) {
@@ -877,9 +866,17 @@ Link Link::fromSig(const ByteSequence& sig) {
     }
 }
 
-template std::string Link::sig<LinkSigGen1>(bool, bool, bool) const;
-template std::string Link::sig<LinkSigGen2>(bool, bool, bool) const;
-template ByteSequence Link::sig<LinkSigBinary>(bool, bool, bool) const;
+template std::string Link::sig<1, LinkSigPrintable>(bool, bool, bool) const;
+template std::string Link::sig<2, LinkSigPrintable>(bool, bool, bool) const;
+template ByteSequence Link::sig<2, LinkSigBinary>(bool, bool, bool) const;
+
+template std::string LinkSigPrintable::encode<1>(const LinkSigData&);
+template std::string LinkSigPrintable::encode<2>(const LinkSigData&);
+template ByteSequence LinkSigBinary::encode<2>(const LinkSigData&);
+
+template size_t LinkSigPrintable::length<1>(const LinkSigData&);
+template size_t LinkSigPrintable::length<2>(const LinkSigData&);
+template size_t LinkSigBinary::length<2>(const LinkSigData&);
 
 } // namespace regina
 

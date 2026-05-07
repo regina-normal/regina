@@ -5893,8 +5893,30 @@ class Link :
          *
          * - This routine `sig()` is a generic routine that allows you to
          *   compute _either_ a first-generation or second-generation signature
-         *   by passing an appropriate template argument: `sig<LinkSigGen1>()`,
-         *  `sig<LinkSigGen2>()`, or `sig<LinkSigBinary>()`.
+         *   by passing an appropriate template argument: `sig<1>()` or
+         *  `sig<2>()`.
+         *
+         * Signatures can also use different _encodings_.  The role of an
+         * encoding is to convert the combinatorial link data into its final
+         * signature form (e.g., a printable string, or a byte sequence); see
+         * the LinkSigEncoding concept for full details.  Regina offers the
+         * following encodings:
+         *
+         * - The encoding LinkSigPrintable encodes the data as a `std::string`
+         *   consisting entirely of printable characters in the 7-bit ASCII
+         *   range.  This is the default encoding for both first-generation and
+         *   second-generation signatures.
+         *
+         * - The encoding LinkSigBinary encodes the data in binary, as a
+         *   ByteSequence.  This is only available for second-generation
+         *   signatures.  This binary encoding is typically shorter than the
+         *   printable string encoding, and is useful if memory usage needs to
+         *   be kept to a minimum.
+         *
+         * - Most users should only ever need the default encoding.  To use
+         *   a non-default encoding, you should pass the encoding class as a
+         *   template argument to the relevant signature function (e.g., to
+         *   neoSig(), or to sig()).
          *
          * The routine fromSig() can be used to recover a link diagram from
          * its signature (it supports both first-generation and
@@ -5918,20 +5940,19 @@ class Link :
          * components.
          *
          * \python Python does not support C++ templates.  Instead, you should
-         * pass the template argument as the first parameter at runtime.
-         * So, for example, to generate a string-based second-generation
-         * signature, you can call `sig(LinkSigGen2)`, or to disallow reversal,
-         * `sig(LinkSigGen2, True, False, True)`.  When generating binary
-         * signatures (via `LinkSigBinary`), the return value will be a Python
-         * `bytes` object (not a ByteSequence).
+         * pass the template arguments at runtime, using the argument order
+         * `sig(generation, allowReflection, allowReversal, allowRotation,
+         * encoding)`.  So, for example, to generate a string-based
+         * second-generation signature, you can call `sig(2)`, or to disallow
+         * reversal, `sig(2, allowReversal = False)`.  For a binary signature,
+         * you can call `sig(2, encoding = LinkSigBinary)`.
+         * When generating binary signatures (via `LinkSigBinary`), the return
+         * value will be a Python `bytes` object (not a ByteSequence).
          *
-         * \tparam Encoding indicates how the combinatorial link data should
-         * be encoded in signature form.  See the discussion above on
-         * first-generation and second-generation signatures.  This should be
-         * `LinkSigGen1` for a first-generation signature, `LinkSigGen2` for a
-         * string-based second-generation signature, or `LinkSigBinary` for a
-         * binary second-generation signature.  If you are not sure, use
-         * `LinkSigGen2`.
+         * \tparam generation either 1 or 2, indicating whether to generate a
+         * first-generation or second-generation signature.
+         * \tparam Encoding indicates the encoding to use, as discussed in
+         * detail above.
          *
          * \param allowReflection \c true if reflecting the entire link diagram
          * should preserve the signature, or \c false if the signature should
@@ -5949,13 +5970,15 @@ class Link :
          * `std::string` for string-based encodings, or ByteSequence for
          * binary encodings.
          */
-        template <LinkSigEncoding Encoding>
+        template <int generation,
+            LinkSigEncoding<generation> Encoding = LinkSigPrintable>
+        requires (generation == 1 || generation == 2)
         typename Encoding::Signature sig(bool allowReflection = true,
             bool allowReversal = true, bool allowRotation = true) const;
 
         /**
          * Constructs the second-generation signature for this knot or link
-         * diagram.  This is identical to calling `sig<Encoding>()`.
+         * diagram.  This is identical to calling `sig<2, Encoding>()`.
          *
          * Second-generation signatures were introduced in Regina 8.0.
          * They are significantly shorter than the first-generation signatures
@@ -5968,13 +5991,16 @@ class Link :
          * \exception NotImplemented This link diagram has 64 or more link
          * components.
          *
-         * \python Python does not support C++ templates.  To use the default
-         * string-based encoding, call `neoSig()`; this will return a Python
-         * string.  To use the binary encoding, call `neoSig_binary()`; this
-         * will return as a Python `bytes` object.
+         * \python You can pass the optional template argument for the
+         * encoding as an additional runtime argument:
+         * `neoSig(allowReflection, allowReversal, allowRotation, encoding)`.
+         * So, for example, to use a binary encoding you can call
+         * `neoSig(encoding = LinkSigBinary)`.  When generating binary
+         * signatures (via `LinkSigBinary`), the return value will be a Python
+         * `bytes` object (not a ByteSequence).
          *
-         * \tparam Encoding indicates how the combinatorial link data should
-         * be encoded in signature form.  The default \a LinkSigGen2 encodes
+         * \tparam Encoding indicates how the combinatorial link data should be
+         * encoded in signature form.  The default \a LinkSigPrintable encodes
          * the combinatorial data as a printable ASCII `std::string`, and
          * should be suitable for most users.  If you need to conserve memory,
          * you may wish to use \a LinkSigBinary instead; this packs the data
@@ -5996,14 +6022,13 @@ class Link :
          * This will be of type `std::string` for a string-based encoding
          * (the default), or ByteSequence for a binary encoding.
          */
-        template <LinkSigEncoding Encoding = LinkSigGen2>
-        requires (Encoding::generation == 2)
+        template <LinkSigEncoding<2> Encoding = LinkSigPrintable>
         typename Encoding::Signature neoSig(bool allowReflection = true,
             bool allowReversal = true, bool allowRotation = true) const;
 
         /**
          * Constructs the first-generation signature for this knot or link
-         * diagram.  This is identical to calling `sig<LinkSigGen1>()`.
+         * diagram.  This is identical to calling `sig<1>()`.
          *
          * First-generation signatures were used in Regina ≤ 7.x.  The name
          * knotSig() reflects the original implementation in Regina 5.1, which
@@ -6016,6 +6041,11 @@ class Link :
          * encodings.
          *
          * See sig() for further details on knot/link signatures in general.
+         *
+         * Note that, unlike the other link signature functions, knotSig() does
+         * not take a template parameter for the encoding.  This is because
+         * first-generation signatures only support the encoding
+         * LinkSigPrintable.
          *
          * \exception NotImplemented This link diagram has 64 or more link
          * components.
@@ -7577,12 +7607,12 @@ namespace detail {
 
         static Signature sig(const Link& link) {
             // Choose a sig encoding that uses less memory.
-            return link.sig<LinkSigBinary>();
+            return link.sig<2, LinkSigBinary>();
         }
 
         static Signature rigidSig(const Link& link) {
             // Do not allow reflection, reversal and/or rotation.
-            return link.sig<LinkSigBinary>(false, false, false);
+            return link.sig<2, LinkSigBinary>(false, false, false);
         }
 
         static constexpr const char* progressStage = "Exploring diagrams";
@@ -8261,16 +8291,15 @@ inline void Link::join(const StrandRef& s, const StrandRef& t) {
     t.crossing_->prev_[t.strand_] = s;
 }
 
-template <LinkSigEncoding Encoding>
-requires (Encoding::generation == 2)
+template <LinkSigEncoding<2> Encoding>
 inline typename Encoding::Signature Link::neoSig(bool allowReflection,
         bool allowReversal, bool allowRotation) const {
-    return sig<Encoding>(allowReflection, allowReversal, allowRotation);
+    return sig<2, Encoding>(allowReflection, allowReversal, allowRotation);
 }
 
 inline std::string Link::knotSig(bool allowReflection, bool allowReversal,
         bool allowRotation) const {
-    return sig<LinkSigGen1>(allowReflection, allowReversal, allowRotation);
+    return sig<1>(allowReflection, allowReversal, allowRotation);
 }
 
 inline Link Link::fromKnotSig(const std::string& sig) {

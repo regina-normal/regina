@@ -161,7 +161,7 @@ void add_isosig_variants(PythonClass& classWrapper) {
                     [&t]<regina::IsoSigEncoding<1, dim> Encoding>() {
                 return pybind11::cast(t.template isoSig<Encoding>());
             });
-        }, pybind11::arg("Encoding"), rbase::isoSig)
+        }, pybind11::arg("encoding"), rbase::isoSig)
         .def("isoSig", [](const Triangulation<dim>& t,
                 pybind11::type encoding, pybind11::type sigType) {
             return regina::python::forIsoSigEncoding<1>(encoding,
@@ -171,7 +171,7 @@ void add_isosig_variants(PythonClass& classWrapper) {
                     return pybind11::cast(t.template isoSig<Encoding, Type>());
                 });
             });
-        }, pybind11::arg("Encoding"), pybind11::arg("Type"), rbase::isoSig)
+        }, pybind11::arg("encoding"), pybind11::arg("type"), rbase::isoSig)
 
         .def("neoSig", &Triangulation<dim>::template neoSig<>,
             pybind11::arg("oriented") = false, rbase::neoSig)
@@ -181,8 +181,7 @@ void add_isosig_variants(PythonClass& classWrapper) {
                     [&t, oriented]<regina::IsoSigEncoding<2, dim> Encoding>() {
                 return pybind11::cast(t.template neoSig<Encoding>(oriented));
             });
-        }, pybind11::arg("oriented"), // no default, since Encoding is required
-            pybind11::arg("Encoding"),
+        }, pybind11::arg("oriented") = false, pybind11::arg("encoding"),
             rbase::neoSig)
         .def("neoSig", [](const Triangulation<dim>& t, bool oriented,
                 pybind11::type encoding, pybind11::type sigType) {
@@ -194,9 +193,8 @@ void add_isosig_variants(PythonClass& classWrapper) {
                         t.template neoSig<Encoding, Type>(oriented));
                 });
             });
-        }, pybind11::arg("oriented"), // no default, since Encoding is required
-            pybind11::arg("Encoding"),
-            pybind11::arg("Type"),
+        }, pybind11::arg("oriented") = false, pybind11::arg("encoding"),
+            pybind11::arg("type"),
             rbase::neoSig)
 
         .def("isoSigDetail", &Triangulation<dim>::template isoSigDetail<>,
@@ -207,7 +205,7 @@ void add_isosig_variants(PythonClass& classWrapper) {
                     [&t]<regina::IsoSigEncoding<1, dim> Encoding>() {
                 return pybind11::cast(t.template isoSigDetail<Encoding>());
             });
-        }, pybind11::arg("Encoding"), rbase::isoSigDetail)
+        }, pybind11::arg("encoding"), rbase::isoSigDetail)
         .def("isoSigDetail", [](const Triangulation<dim>& t,
                 pybind11::type encoding, pybind11::type sigType) {
             return regina::python::forIsoSigEncoding<1>(encoding,
@@ -218,7 +216,7 @@ void add_isosig_variants(PythonClass& classWrapper) {
                         t.template isoSigDetail<Encoding, Type>());
                 });
             });
-        }, pybind11::arg("Encoding"), pybind11::arg("Type"),
+        }, pybind11::arg("encoding"), pybind11::arg("type"),
             rbase::isoSigDetail)
 
         .def("neoSigDetail", &Triangulation<dim>::template neoSigDetail<>,
@@ -230,8 +228,7 @@ void add_isosig_variants(PythonClass& classWrapper) {
                 return pybind11::cast(t.template neoSigDetail<Encoding>(
                     oriented));
             });
-        }, pybind11::arg("oriented"), // no default, since Encoding is required
-            pybind11::arg("Encoding"),
+        }, pybind11::arg("oriented") = false, pybind11::arg("encoding"),
             rbase::neoSigDetail)
         .def("neoSigDetail", [](const Triangulation<dim>& t, bool oriented,
                 pybind11::type encoding, pybind11::type sigType) {
@@ -243,9 +240,8 @@ void add_isosig_variants(PythonClass& classWrapper) {
                         t.template neoSigDetail<Encoding, Type>(oriented));
                 });
             });
-        }, pybind11::arg("oriented"), // no default, since Encoding is required
-            pybind11::arg("Encoding"),
-            pybind11::arg("Type"),
+        }, pybind11::arg("oriented") = false, pybind11::arg("encoding"),
+            pybind11::arg("type"),
             rbase::neoSigDetail)
 
         .def("sig", [](const Triangulation<dim>& t, int gen, bool oriented) {
@@ -278,8 +274,7 @@ void add_isosig_variants(PythonClass& classWrapper) {
                     "Not a supported generation of isomorphism signature");
             }
         }, pybind11::arg("generation"),
-            pybind11::arg("oriented"), // no default, since Encoding is required
-            pybind11::arg("Encoding"),
+            pybind11::arg("oriented") = false, pybind11::arg("encoding"),
             rbase::sig)
         .def("sig", [](const Triangulation<dim>& t, int gen, bool oriented,
                 pybind11::type encoding, pybind11::type sigType) {
@@ -306,9 +301,8 @@ void add_isosig_variants(PythonClass& classWrapper) {
                     "Not a supported generation of isomorphism signature");
             }
         }, pybind11::arg("generation"),
-            pybind11::arg("oriented"), // no default, since Encoding is required
-            pybind11::arg("Encoding"),
-            pybind11::arg("Type"),
+            pybind11::arg("oriented") = false, pybind11::arg("encoding"),
+            pybind11::arg("type"),
             rbase::sig)
         ;
 }

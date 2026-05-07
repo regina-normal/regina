@@ -3379,7 +3379,7 @@ class TriangulationBase :
          *
          * \python Python does not support C++ templates.  Instead, you should
          * pass the template arguments at runtime, using the argument order
-         * `sig(generation, oriented, Encoding, Type)`.
+         * `sig(generation, oriented, encoding, type)`.
          * So, for example, to generate a string-based second-generation
          * signature, you can call `sig(2)`, or for a binary oriented signature,
          * `sig(2, True, IsoSigBinary)`.  When generating binary signatures
@@ -3396,10 +3396,9 @@ class TriangulationBase :
          *
          * \tparam generation either 1 or 2, indicating whether to generate a
          * first-generation or second-generation signature.
-         * \tparam Encoding indicates the encoding to use, again as discussed
-         * in detail above.
-         * \tparam Type indicates the signature type, as discussed in detail
-         * above.
+         * \tparam Encoding indicates the encoding to use, as discussed in
+         * detail above.
+         * \tparam Type indicates the signature type, again as discussed above.
          *
          * \param oriented indicates whether to generate an oriented signature
          * (`true`), or an unoriented signature (`false`).  You can only pass
@@ -3435,7 +3434,7 @@ class TriangulationBase :
          * for different dimensions \a p and \a q.
          *
          * \python You can pass the optional template arguments as runtime
-         * arguments: `isoSig(Encoding, Type)`.  So, for example, to use the
+         * arguments: `isoSig(encoding, type)`.  So, for example, to use the
          * encoding that omits simplex/facet locks, you can call
          * `isoSig(IsoSigPrintableLockFree)`.
          *
@@ -3477,9 +3476,11 @@ class TriangulationBase :
          * triangulation.
          *
          * \python You can pass the optional template arguments as additional
-         * runtime arguments: `neoSig(oriented, Encoding, Type)`.  So, for
+         * runtime arguments: `neoSig(oriented, encoding, type)`.  So, for
          * example, to use a binary encoding you can call
-         * `neoSig(False, IsoSigBinary)`.
+         * `neoSig(encoding = IsoSigBinary)`.  When generating binary
+         * signatures (via `IsoSigBinary`), the return value will be a Python
+         * `bytes` object (not a ByteSequence).
          *
          * \exception FailedPrecondition An oriented signature was requested
          * (i.e., \a oriented is `true`), but this triangulation is not
@@ -3536,7 +3537,7 @@ class TriangulationBase :
          * added to Regina in a later release.
          *
          * \python You can pass the optional template arguments as runtime
-         * arguments: `isoSigDetail(Encoding, Type)`.  So, for example, to use
+         * arguments: `isoSigDetail(encoding, type)`.  So, for example, to use
          * the signature encoding that omits simplex/facet locks, you can call
          * `isoSigDetail(IsoSigPrintableLockFree)`.
          *
@@ -3602,9 +3603,9 @@ class TriangulationBase :
          * triangulation.
          *
          * \python You can pass the optional template arguments as runtime
-         * arguments: `neoSigDetail(oriented, Encoding, Type)`.  So, for
+         * arguments: `neoSigDetail(oriented, encoding, type)`.  So, for
          * example, to use a binary signature encoding, you can call
-         * `neoSigDetail(False, IsoSigBinary)`.
+         * `neoSigDetail(encoding = IsoSigBinary)`.
          *
          * \exception FailedPrecondition Either this triangulation is empty or
          * disconnected, or an oriented signature was requested (i.e.,

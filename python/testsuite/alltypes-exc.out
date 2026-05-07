@@ -309,8 +309,7 @@ LensSpace : class -> EqualityType.ByValue
 Link : class -> EqualityType.ByValue
 LinkSigBinary : class -> EqualityType.NeverInstantiated
 LinkSigData : class -> EqualityType.ByValue
-LinkSigGen1 : class -> EqualityType.NeverInstantiated
-LinkSigGen2 : class -> EqualityType.NeverInstantiated
+LinkSigPrintable : class -> EqualityType.NeverInstantiated
 Locale : class -> EqualityType.NeverInstantiated
 LockViolation : exception
 Manifold : class -> EqualityType.NeverInstantiated

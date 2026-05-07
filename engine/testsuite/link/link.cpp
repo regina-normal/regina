@@ -44,8 +44,7 @@ using regina::GroupPresentation;
 using regina::InvalidArgument;
 using regina::Link;
 using regina::LinkSigBinary;
-using regina::LinkSigGen1;
-using regina::LinkSigGen2;
+using regina::LinkSigPrintable;
 using regina::Triangulation;
 using regina::StrandRef;
 
@@ -3649,14 +3648,14 @@ TEST_F(LinkTest, graft) {
     testManualCases(verifyGraft, false /* gordian */);
 }
 
-template <regina::LinkSigEncoding Encoding>
+template <int generation, regina::LinkSigEncoding<generation> Encoding>
 static void verifySig(const Link& link, bool reflect, bool reverse,
         bool rotate) {
     SCOPED_TRACE_NUMERIC(reflect);
     SCOPED_TRACE_NUMERIC(reverse);
     SCOPED_TRACE_NUMERIC(rotate);
 
-    auto sig = link.sig<Encoding>(reflect, reverse, rotate);
+    auto sig = link.sig<generation, Encoding>(reflect, reverse, rotate);
     if constexpr (std::same_as<typename Encoding::Signature, std::string>) {
         // The string-based signatures are always non-empty.
         EXPECT_FALSE(sig.empty());
@@ -3675,49 +3674,58 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
     if (reflect) {
         Link alt(link, false);
         alt.reflect();
-        EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
+        auto altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+        EXPECT_EQ(altSig, sig);
     }
     if (reverse) {
         Link alt(link, false);
         alt.reverse();
-        EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
+        auto altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+        EXPECT_EQ(altSig, sig);
 
         for (size_t i = 1; i < alt.countComponents(); ++i) {
             alt.reverse(alt.component(i));
-            EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
+            altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+            EXPECT_EQ(altSig, sig);
         }
     }
     if (rotate) {
         Link alt(link, false);
         alt.rotate();
-        EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
+        auto altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+        EXPECT_EQ(altSig, sig);
     }
     if (reflect && rotate) {
         Link alt(link, false);
         alt.reflect();
         alt.rotate();
-        EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
+        auto altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+        EXPECT_EQ(altSig, sig);
     }
     if (reflect && reverse) {
         Link alt(link, false);
         alt.reflect();
         alt.reverse();
-        EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
+        auto altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+        EXPECT_EQ(altSig, sig);
 
         for (size_t i = 1; i < alt.countComponents(); ++i) {
             alt.reverse(alt.component(i));
-            EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
+            altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+            EXPECT_EQ(altSig, sig);
         }
     }
     if (rotate && reverse) {
         Link alt(link, false);
         alt.rotate();
         alt.reverse();
-        EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
+        auto altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+        EXPECT_EQ(altSig, sig);
 
         for (size_t i = 1; i < alt.countComponents(); ++i) {
             alt.reverse(alt.component(i));
-            EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
+            altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+            EXPECT_EQ(altSig, sig);
         }
     }
     if (reflect && rotate && reverse) {
@@ -3725,11 +3733,13 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
         alt.reflect();
         alt.rotate();
         alt.reverse();
-        EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
+        auto altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+        EXPECT_EQ(altSig, sig);
 
         for (size_t i = 1; i < alt.countComponents(); ++i) {
             alt.reverse(alt.component(i));
-            EXPECT_EQ(alt.sig<Encoding>(reflect, reverse, rotate), sig);
+            altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+            EXPECT_EQ(altSig, sig);
         }
     }
 
@@ -3746,7 +3756,8 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
         else
             EXPECT_EQ(recon.oddWrithe(), link.oddWrithe());
     }
-    EXPECT_EQ(recon.sig<Encoding>(reflect, reverse, rotate), sig);
+    auto reconSig = recon.sig<generation, Encoding>(reflect, reverse, rotate);
+    EXPECT_EQ(reconSig, sig);
     if (link.size() <= JONES_THRESHOLD) {
         if (reverse && link.countComponents() > 1) {
             // We could reverse some but not all components, which will do
@@ -3770,32 +3781,33 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
     }
 }
 
-template <regina::LinkSigEncoding Encoding>
+template <int generation, regina::LinkSigEncoding<generation> Encoding>
 static void verifySig(const Link& link, const char* name) {
     SCOPED_TRACE_TYPE(Encoding);
 
-    verifySig<Encoding>(link, true, true, true);
-    verifySig<Encoding>(link, true, false, true);
-    verifySig<Encoding>(link, false, true, true);
-    verifySig<Encoding>(link, false, false, true);
-    verifySig<Encoding>(link, true, true, false);
-    verifySig<Encoding>(link, true, false, false);
-    verifySig<Encoding>(link, false, true, false);
-    verifySig<Encoding>(link, false, false, false);
+    verifySig<generation, Encoding>(link, true, true, true);
+    verifySig<generation, Encoding>(link, true, false, true);
+    verifySig<generation, Encoding>(link, false, true, true);
+    verifySig<generation, Encoding>(link, false, false, true);
+    verifySig<generation, Encoding>(link, true, true, false);
+    verifySig<generation, Encoding>(link, true, false, false);
+    verifySig<generation, Encoding>(link, false, true, false);
+    verifySig<generation, Encoding>(link, false, false, false);
 
     // Verify the precomputed length of the signature.
     if (link.size() > 0 && link.isConnected()) {
         regina::LinkSigData data(link, false, false, false);
-        EXPECT_EQ(Encoding::length(data), Encoding::encode(data).size());
+        EXPECT_EQ(Encoding::template length<generation>(data),
+            Encoding::template encode<generation>(data).size());
     }
 }
 
 static void verifySigAllEncodings(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
-    verifySig<LinkSigGen1>(link, name);
-    verifySig<LinkSigGen2>(link, name);
-    verifySig<LinkSigBinary>(link, name);
+    verifySig<1, LinkSigPrintable>(link, name);
+    verifySig<2, LinkSigPrintable>(link, name);
+    verifySig<2, LinkSigBinary>(link, name);
 
     // Also verify the signature re-encoding process.
     EXPECT_EQ(LinkSigBinary::asString(link.neoSig<LinkSigBinary>()),
