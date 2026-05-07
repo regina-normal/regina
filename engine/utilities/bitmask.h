@@ -38,6 +38,7 @@
 #endif
 
 #include <algorithm>
+#include <bit>
 #include <iostream>
 
 #include "regina-core.h"
@@ -1729,7 +1730,7 @@ inline bool Bitmask::containsIntn(const Bitmask& x, const Bitmask& y) const {
 inline size_t Bitmask::bits() const {
     size_t ans = 0;
     for (size_t i = 0; i < pieces; ++i)
-        ans += BitManipulator<Piece>::bits(mask[i]);
+        ans += std::popcount(mask[i]);
     return ans;
 }
 
@@ -1752,7 +1753,7 @@ inline ssize_t Bitmask::lastBit() const {
 inline bool Bitmask::atMostOneBit() const {
     unsigned bits = 0;
     for (size_t i = 0; i < pieces; ++i) {
-        bits += BitManipulator<Piece>::bits(mask[i]);
+        bits += std::popcount(mask[i]);
         if (bits > 1)
             return false;
     }
