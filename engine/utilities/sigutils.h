@@ -852,7 +852,8 @@ class Base64Decoder {
 
         /**
          * Returns the character at the current position in the encoded string.
-         * The current position will not move.
+         * The current position will not move (i.e., the character that is
+         * returned will remain available to be read again later).
          *
          * \return the character at the current position, or 0 if there are no
          * more characters available.
@@ -2915,6 +2916,53 @@ class Base64BitDecoder : private Base64Decoder<Iterator> {
                         "skipping past bits that are set");
                 nQueued_ = 0;
             }
+        }
+
+        /**
+         * Returns the base64 character at the current position in the encoded
+         * string, assuming that this position is at a character boundary.
+         * The current position will not move (i.e., the character that is
+         * returned will remain available to be read from again later).
+         *
+         * \pre This decoder is currently positioned at a character boundary.
+         * That is, it is _not_ in a state where some but not all of the six
+         * bits have been read from the last base64 character that was
+         * extracted.
+         *
+         * \exception FailedPrecondition This decoder is not positioned at a
+         * character boundary, as described above.
+         *
+         * \return the character at the current position, or 0 if there are no
+         * more characters available.
+         */
+        char peek() {
+            if (nQueued_)
+                throw FailedPrecondition("Base64BitDecoder: peek() "
+                    "can only be called when at a character boundary");
+
+            return Base64Decoder<Iterator>::peek();
+        }
+
+        /**
+         * Advances to the next position in the encoded base64 string,
+         * assuming that the current position is at a character boundary.
+         *
+         * \pre This decoder is currently positioned at a character boundary.
+         * That is, it is _not_ in a state where some but not all of the six
+         * bits have been read from the last base64 character that was
+         * extracted.
+         *
+         * \exception FailedPrecondition This decoder is not positioned at a
+         * character boundary, as described above.
+         *
+         * \pre The current position has not yet reached the end of the string.
+         */
+        void skip() {
+            if (nQueued_)
+                throw FailedPrecondition("Base64BitDecoder: skip() "
+                    "can only be called when at a character boundary");
+
+            Base64Decoder<Iterator>::skip();
         }
 
         Base64BitDecoder(const Base64BitDecoder&) = delete;

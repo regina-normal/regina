@@ -405,6 +405,8 @@ void addSigUtils(pybind11::module_& m) {
         .def("decodeBitmask", &Decoder::decodeBitmask<>, rdoc::decodeBitmask)
         .def("decodeSize", &Decoder::decodeSize, rdoc::decodeSize)
         .def("flushChar", &Decoder::flushChar, rdoc::flushChar)
+        .def("peek", &Decoder::peek, rdoc::peek)
+        .def("skip", &Decoder::skip, rdoc::skip)
     ;
     regina::python::add_eq_operators(c);
 

@@ -1317,11 +1317,13 @@ class TriangulationTest : public testing::Test {
             SCOPED_TRACE_CSTRING(name);
 
             verifyIsomorphismSignatureUsing<1, IsoSigPrintable>(tri);
+            verifyIsomorphismSignatureUsing<2, IsoSigPrintable>(tri);
             verifyIsomorphismSignatureUsing<2, IsoSigBinary>(tri);
 
             EXPECT_EQ(tri.neoSig(), IsoSigBinary::asString<dim>(
                 tri.template neoSig<IsoSigBinary>()));
 
+            // Verify the lock-free encodings.
             if (tri.hasLocks()) {
                 EXPECT_NE(tri.template isoSig<IsoSigPrintableLockFree>(),
                     tri.isoSig());

@@ -397,6 +397,26 @@ every base64 character of the input string.
 Returns:
     ``True`` if and only if there are no more available bits.)doc";
 
+// Docstring regina::python::doc::Base64BitDecoder_::peek
+static const char *peek =
+R"doc(Returns the base64 character at the current position in the encoded
+string, assuming that this position is at a character boundary. The
+current position will not move (i.e., the character that is returned
+will remain available to be read from again later).
+
+Precondition:
+    This decoder is currently positioned at a character boundary. That
+    is, it is _not_ in a state where some but not all of the six bits
+    have been read from the last base64 character that was extracted.
+
+Exception ``FailedPrecondition``:
+    This decoder is not positioned at a character boundary, as
+    described above.
+
+Returns:
+    the character at the current position, or 0 if there are no more
+    characters available.)doc";
+
 // Docstring regina::python::doc::Base64BitDecoder_::remainingBits
 static const char *remainingBits =
 R"doc(Returns the number of bits that can still be read from the encoded
@@ -407,6 +427,23 @@ The routine ``noMoreBits()`` will return ``True`` if and only if
 
 Returns:
     the number of bits remaining.)doc";
+
+// Docstring regina::python::doc::Base64BitDecoder_::skip
+static const char *skip =
+R"doc(Advances to the next position in the encoded base64 string, assuming
+that the current position is at a character boundary.
+
+Precondition:
+    This decoder is currently positioned at a character boundary. That
+    is, it is _not_ in a state where some but not all of the six bits
+    have been read from the last base64 character that was extracted.
+
+Exception ``FailedPrecondition``:
+    This decoder is not positioned at a character boundary, as
+    described above.
+
+Precondition:
+    The current position has not yet reached the end of the string.)doc";
 
 }
 
@@ -847,7 +884,8 @@ Returns:
 // Docstring regina::python::doc::Base64Decoder_::peek
 static const char *peek =
 R"doc(Returns the character at the current position in the encoded string.
-The current position will not move.
+The current position will not move (i.e., the character that is
+returned will remain available to be read again later).
 
 Returns:
     the character at the current position, or 0 if there are no more

@@ -851,155 +851,305 @@ std::pair<typename Encoding::Signature, Isomorphism<dim>>
 }
 
 template <int dim> requires (supportedDim(dim))
-Triangulation<dim> TriangulationBase<dim>::fromSig(const std::string& sig) {
-    Base64Decoder dec(sig.begin(), sig.end()); // strips whitespace
+template <CharIterator Iterator>
+requires std::bidirectional_iterator<Iterator>
+void TriangulationBase<dim>::fillComponentFromSig1(
+        const FixedArray<Simplex<dim>*>& simplices,
+        Base64Decoder<Iterator>& decoder, int intWidth) {
+    FixedArray<uint8_t> facetAction((dim+1) * simplices.size() + 2);
+    size_t nFacets = 0;
+    auto facetPos = facetAction.begin();
+    size_t nJoins = 0;
 
-    try {
-        Triangulation<dim> ans;
-
-        while (! dec.done()) {
-            // Read one component at a time.
-            // Note: the call to dec.done() ignores whitespace, but if there
-            // is _internal_ whitespace between components then this will be
-            // caught by decodeSize() below.
-            auto [ nSimp, nChars ] = dec.decodeSize();
-            if (nSimp == 0)
-                continue; // empty component (this should not happen..?)
-
-            FixedArray<uint8_t> facetAction((dim+1) * nSimp + 2);
-            size_t nFacets = 0;
-            auto facetPos = facetAction.begin();
-            size_t nJoins = 0;
-
-            for ( ; nFacets < (dim+1) * nSimp; facetPos += 3) {
-                dec.decodeTrits(facetPos);
-                for (int j = 0; j < 3; ++j) {
-                    // If we're already finished, make sure the leftover trits
-                    // are zero.
-                    if (nFacets == (dim+1) * nSimp) {
-                        if (*(facetPos + j) != 0) {
-                            throw InvalidArgument(
-                                "fromSig(): extraneous facet actions");
-                        }
-                        continue;
-                    }
-
-                    switch (*(facetPos + j)) {
-                        case 0:
-                            ++nFacets;
-                            break;
-                        case 1:
-                            nFacets += 2;
-                            break;
-                        case 2:
-                            nFacets += 2;
-                            ++nJoins;
-                            break;
-                        default:
-                            throw InvalidArgument(
-                                "fromSig(): invalid facet action");
-                    }
-                    if (nFacets > (dim+1) * nSimp) {
-                        throw InvalidArgument("fromSig(): facet actions "
-                            "do not match triangulation size");
-                    }
+    for ( ; nFacets < (dim+1) * simplices.size(); facetPos += 3) {
+        decoder.decodeTrits(facetPos);
+        for (int j = 0; j < 3; ++j) {
+            // If we're already finished, make sure the leftover trits
+            // are zero.
+            if (nFacets == (dim+1) * simplices.size()) {
+                if (*(facetPos + j) != 0) {
+                    throw InvalidArgument(
+                        "fromSig(): extraneous facet actions");
                 }
+                continue;
             }
 
-            auto joinDest = dec.template decodeInts<size_t>(nJoins, nChars);
-            auto joinGluing =
-                dec.template decodeInts<typename Perm<dim+1>::Index>(
-                nJoins, IsoSigPrintable::charsPerPerm<dim>);
+            switch (*(facetPos + j)) {
+                case 0:
+                    ++nFacets;
+                    break;
+                case 1:
+                    nFacets += 2;
+                    break;
+                case 2:
+                    nFacets += 2;
+                    ++nJoins;
+                    break;
+                default:
+                    throw InvalidArgument(
+                        "fromSig(): invalid facet action");
+            }
+            if (nFacets > (dim+1) * simplices.size()) {
+                throw InvalidArgument("fromSig(): facet actions "
+                    "do not match triangulation size");
+            }
+        }
+    }
 
-            // This ends the gluings for this component!
-            //
-            // We still need to read facet/simplex locks, if they are present.
-            // We will do this after constructing the triangulation.
+    auto joinDest = decoder.template decodeInts<size_t>(nJoins, intWidth);
+    auto joinGluing =
+        decoder.template decodeInts<typename Perm<dim+1>::Index>(
+        nJoins, IsoSigPrintable::charsPerPerm<dim>);
 
-            FixedArray<Simplex<dim>*> simp(nSimp);
-            for (size_t pos = 0; pos < nSimp; ++pos)
-                simp[pos] = ans.newSimplex();
+    // This ends the gluings for this component!
+    //
+    // We still need to read facet/simplex locks, if they are present.
+    // We will do this after constructing the triangulation.
 
-            facetPos = facetAction.begin();
-            size_t nextUnused = 1;
-            size_t joinPos = 0;
-            Perm<dim+1> gluing;
-            for (size_t pos = 0; pos < nSimp; ++pos)
-                for (int j = 0; j <= dim; ++j) {
-                    // Already glued from the other side:
-                    if (simp[pos]->adjacentSimplex(j))
-                        continue;
+    facetPos = facetAction.begin();
+    size_t nextUnused = 1;
+    size_t joinPos = 0;
+    Perm<dim+1> gluing;
+    for (size_t pos = 0; pos < simplices.size(); ++pos)
+        for (int j = 0; j <= dim; ++j) {
+            // Already glued from the other side:
+            if (simplices[pos]->adjacentSimplex(j))
+                continue;
 
-                    if (*facetPos == 0) {
-                        // Boundary facet.
-                    } else if (*facetPos == 1) {
-                        // Join to new simplex.
-                        if (nextUnused >= nSimp) {
-                            throw InvalidArgument(
-                                "fromSig(): gluing to non-existent simplex");
-                        }
-                        simp[pos]->join(j, simp[nextUnused++], Perm<dim+1>());
-                    } else {
-                        // Join to existing simplex.
-                        if (joinGluing[joinPos] >= Perm<dim+1>::nPerms ||
-                                joinGluing[joinPos] < 0) {
-                            throw InvalidArgument(
-                                "fromSig(): invalid gluing permutation");
-                        }
-                        gluing = Perm<dim+1>::orderedSn[joinGluing[joinPos]];
-                        if (joinDest[joinPos] >= nextUnused ||
-                                simp[joinDest[joinPos]]->adjacentSimplex(
-                                gluing[j])) {
-                            throw InvalidArgument(
-                                "fromSig(): invalid gluing destination");
-                        }
-                        simp[pos]->join(j, simp[joinDest[joinPos]], gluing);
-                        ++joinPos;
-                    }
-
-                    ++facetPos;
+            if (*facetPos == 0) {
+                // Boundary facet.
+            } else if (*facetPos == 1) {
+                // Join to new simplex.
+                if (nextUnused >= simplices.size()) {
+                    throw InvalidArgument(
+                        "fromSig(): gluing to non-existent simplex");
                 }
+                simplices[pos]->join(j, simplices[nextUnused++], {});
+            } else {
+                // Join to existing simplex.
+                if (joinGluing[joinPos] >= Perm<dim+1>::nPerms ||
+                        joinGluing[joinPos] < 0) {
+                    throw InvalidArgument(
+                        "fromSig(): invalid gluing permutation");
+                }
+                gluing = Perm<dim+1>::orderedSn[joinGluing[joinPos]];
+                if (joinDest[joinPos] >= nextUnused ||
+                        simplices[joinDest[joinPos]]->adjacentSimplex(
+                        gluing[j])) {
+                    throw InvalidArgument(
+                        "fromSig(): invalid gluing destination");
+                }
+                simplices[pos]->join(j, simplices[joinDest[joinPos]], gluing);
+                ++joinPos;
+            }
 
-            // Read simplex/facet locks, if these are present.
-            if (dec.peek() == Base64Encoder::spare[1]) {
-                dec.skip();
+            ++facetPos;
+        }
 
-                using LockMask = typename Simplex<dim>::LockMask;
-                // Each lock mask encodes dim+2 bits.
-                static constexpr LockMask maskChars = (dim + 7) / 6;
-                auto lockMasks = dec.template decodeInts<LockMask>(
-                    nSimp, maskChars);
+    // Read simplex/facet locks, if these are present.
+    if (decoder.peek() == Base64Encoder::spare[1]) {
+        decoder.skip();
 
-                // We will set lock masks directly instead of using lock()
-                // functions.  This means we don't get change spans (but that
-                // is fine since we have computed nothing about the
-                // triangulation and nobody else has a reference to it yet).
-                // It also means that we need to run our own sanity checks,
-                // which we will do shortly.
-                for (size_t i = 0; i < nSimp; ++i) {
-                    if (lockMasks[i] >> (dim + 2) != 0)
+        using LockMask = typename Simplex<dim>::LockMask;
+        // Each lock mask encodes dim+2 bits.
+        static constexpr LockMask maskChars = (dim + 7) / 6;
+        auto lockMasks = decoder.template decodeInts<LockMask>(
+            simplices.size(), maskChars);
+
+        // We will set lock masks directly instead of using lock()
+        // functions.  This means we don't get change spans (but that
+        // is fine since we have computed nothing about the
+        // triangulation and nobody else has a reference to it yet).
+        // It also means that we need to run our own sanity checks,
+        // which we will do shortly.
+        for (size_t i = 0; i < simplices.size(); ++i) {
+            if (lockMasks[i] >> (dim + 2) != 0)
+                throw InvalidArgument(
+                    "fromSig(): invalid lock mask");
+            simplices[i]->locks_ = lockMasks[i];
+        }
+
+        verifyLockConsistency(simplices);
+    }
+}
+
+template <int dim> requires (supportedDim(dim))
+template <CharIterator Iterator>
+requires std::bidirectional_iterator<Iterator>
+void TriangulationBase<dim>::fillComponentFromSig2(
+        const FixedArray<Simplex<dim>*>& simplices,
+        Base64BitDecoder<Iterator>& decoder) {
+    using PermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
+    int intWidth = bitsRequired(simplices.size() + 1);
+    static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
+    static constexpr int lockWidth = dim + 2;
+
+    if (decoder.template decodeInt<unsigned>(2) != 3)
+        throw InvalidArgument("fromSig(): missing second-generation marker");
+    bool oriented = decoder.decodeBit();
+
+    size_t nBdry = 0;
+    size_t nDest = 2 * (simplices.size() - 1);
+    std::vector<size_t> adjSimplex;
+    adjSimplex.reserve((simplices.size() * (dim + 1) + 1) / 2); // a lower bound
+    while (nDest < simplices.size() * (dim + 1)) {
+        size_t dest = decoder.template decodeInt<size_t>(intWidth);
+        if (dest == simplices.size()) {
+            ++nBdry;
+            ++nDest;
+        } else {
+            nDest += 2;
+        }
+        adjSimplex.push_back(dest);
+    }
+
+    size_t nFacets = (nDest + nBdry) / 2;
+    Bitmask facetType = decoder.decodeBitmask(nFacets);
+
+    FixedArray<PermIndex> adjGluing(nFacets - nBdry + 1 - simplices.size());
+    if (oriented) {
+        for (auto& index : adjGluing)
+            index = decoder.template decodeInt<PermIndex>(permWidth-1) * 2 + 1;
+    } else {
+        for (auto& index : adjGluing)
+            index = decoder.template decodeInt<PermIndex>(permWidth);
+    }
+
+    // This ends the gluings for this component!
+    //
+    // We still need to read facet/simplex locks, if they are present.
+    // We will do this after constructing the triangulation.
+
+    size_t facetPos = nFacets - 1;
+    size_t nextUnused = 1;
+    auto destPos = adjSimplex.begin();
+    auto gluingPos = adjGluing.begin();
+    for (auto s : simplices)
+        for (int f = 0; f <= dim; ++f) {
+            // Already glued from the other side:
+            if (s->adjacentSimplex(f))
+                continue;
+
+            if (facetType.get(facetPos--)) {
+                size_t dest = *destPos++;
+
+                if (dest != simplices.size()) {
+                    // A non-boundary facet, joined to a simplex we
+                    // have already seen.
+                    PermIndex index = *gluingPos++;
+                    if (index >= Perm<dim+1>::nPerms)
                         throw InvalidArgument(
-                            "fromSig(): invalid lock mask");
-                    simp[i]->locks_ = lockMasks[i];
-                }
+                            "fromSig(): invalid gluing permutation");
+                    Perm<dim+1> gluing = Perm<dim+1>::Sn[index];
 
-                // Check facet locks for consistency.
-                for (auto s : simp)
-                    if (s->locks_)
-                        for (int facet = 0; facet <= dim; ++facet)
-                            if (auto adj = s->adjacentSimplex(facet))
-                                if (s->isFacetLocked(facet)) {
-                                    auto adjFacet = s->adjacentFacet(facet);
-                                    if (! adj->isFacetLocked(adjFacet))
-                                        throw InvalidArgument("fromSig(): "
-                                            "inconsistent lock masks");
-                                }
+                    if (dest >= nextUnused ||
+                            simplices[dest]->adjacentSimplex(gluing[f])) {
+                        throw InvalidArgument(
+                            "fromSig(): invalid gluing destination");
+                    }
+                    s->join(f, simplices[dest], gluing);
+                }
+            } else {
+                // Join to the next new simplex.
+                if (nextUnused >= simplices.size())
+                    throw InvalidArgument(
+                        "fromSig(): gluing to non-existent simplex");
+                s->join(f, simplices[nextUnused++], { 0, 1 });
             }
         }
 
-        return ans;
+    decoder.flushChar();
+    char next = decoder.peek();
+
+    // Read simplex/facet locks, if these are present.
+    if (next == Base64Encoder::spare[1]) {
+        decoder.skip();
+
+        // We will set lock masks directly instead of using lock() functions;
+        // see the first-generation decoding procedure for further explanation.
+        for (auto s : simplices)
+            s->locks_ = decoder.template decodeInt<
+                typename Simplex<dim>::LockMask>(lockWidth);
+
+        verifyLockConsistency(simplices);
+        decoder.flushChar();
+    }
+}
+
+template <int dim> requires (supportedDim(dim))
+void TriangulationBase<dim>::verifyLockConsistency(
+        const FixedArray<Simplex<dim>*>& simplices) {
+    for (auto s : simplices)
+        if (s->locks_)
+            for (int facet = 0; facet <= dim; ++facet)
+                if (auto adj = s->adjacentSimplex(facet))
+                    if (s->isFacetLocked(facet)) {
+                        auto adjFacet = s->adjacentFacet(facet);
+                        if (! adj->isFacetLocked(adjFacet))
+                            throw InvalidArgument("fromSig(): "
+                                "inconsistent lock masks");
+                    }
+}
+
+template <int dim> requires (supportedDim(dim))
+Triangulation<dim> TriangulationBase<dim>::fromSig(const std::string& sig) {
+    Base64Decoder dec(sig.begin(), sig.end()); // strips whitespace
+
+    Triangulation<dim> ans;
+
+    try {
+        // Read the size of the first component.
+        std::pair<size_t, int> sizeAndWidth = dec.decodeSize();
+        if (sizeAndWidth.first == 0)
+            return ans; // empty triangulation
+
+        // Look at the next character: this will tell us whether we have a
+        // first-generation or second-generation signature.
+        char next = dec.peek();
+        if (next == 0)
+            throw InvalidArgument("fromSig(): incomplete base64 encoding");
+        if ((dec.decode(next) & 3) == 3) {
+            // This is a second-generation signature: we see the marker bits 11.
+            // Switch to a bitwise decoder from here on.
+            auto bitwise = dec.unreadBitDecoder();
+            while (true) {
+                // Finish decoding this connected component.
+                FixedArray<Simplex<dim>*> simp(sizeAndWidth.first);
+                for (auto& s : simp)
+                    s = ans.newSimplex();
+
+                fillComponentFromSig2(simp, bitwise);
+
+                if (bitwise.noMoreBits())
+                    return ans;
+
+                // Prepare to read another component.
+                sizeAndWidth.first = bitwise.decodeSize();
+                if (sizeAndWidth.first == 0)
+                    throw InvalidArgument("fromSig(): invalid component size");
+            }
+        } else {
+            // This is a first-generation signature: the character we peeked at
+            // encodes one or more trits, and a trit cannot take the value 11.
+            while (true) {
+                // Finish decoding this connected component.
+                FixedArray<Simplex<dim>*> simp(sizeAndWidth.first);
+                for (auto& s : simp)
+                    s = ans.newSimplex();
+
+                fillComponentFromSig1(simp, dec, sizeAndWidth.second);
+
+                if (dec.done())
+                    return ans;
+
+                // Prepare to read another component.
+                sizeAndWidth = dec.decodeSize();
+                if (sizeAndWidth.first == 0)
+                    throw InvalidArgument("fromSig(): invalid component size");
+            }
+        }
     } catch (const InvalidInput&) {
-        // Any exception caught here was thrown by Base64Decoder.
+        // Any exception caught here was thrown by the decoder.
         throw InvalidArgument(
             "fromSig(): incomplete or invalid base64 encoding");
     }
@@ -1118,33 +1268,14 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const ByteSequence& sig) {
                     }
                 }
 
-            // Read simplex/facet locks, if these are present.
             if (hasLocks) {
-                // We will set lock masks directly instead of using lock()
-                // functions.  This means we don't get change spans (but that
-                // is fine since we have computed nothing about the
-                // triangulation and nobody else has a reference to it yet).
-                // It also means that we need to run our own sanity checks,
-                // which we will do shortly.
-                for (auto s : simp) {
-                    auto mask = dec.decodeInt<typename Simplex<dim>::LockMask>(
-                        lockWidth);
-                    if (mask >> (dim + 2) != 0)
-                        throw InvalidArgument("fromSig(): invalid lock mask");
-                    s->locks_ = mask;
-                }
-
-                // Check facet locks for consistency.
+                // We set lock masks directly instead of using lock() functions;
+                // see the first-gen decoding procedure for further explanation.
                 for (auto s : simp)
-                    if (s->locks_)
-                        for (int facet = 0; facet <= dim; ++facet)
-                            if (auto adj = s->adjacentSimplex(facet))
-                                if (s->isFacetLocked(facet)) {
-                                    auto adjFacet = s->adjacentFacet(facet);
-                                    if (! adj->isFacetLocked(adjFacet))
-                                        throw InvalidArgument("fromSig(): "
-                                            "inconsistent lock masks");
-                                }
+                    s->locks_ = dec.decodeInt<typename Simplex<dim>::LockMask>(
+                        lockWidth);
+
+                verifyLockConsistency(simp);
             }
 
             dec.flushByte();

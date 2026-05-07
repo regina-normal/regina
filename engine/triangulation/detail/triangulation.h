@@ -73,6 +73,14 @@ template <int dim> requires (supportedDim(dim)) class FacetPairing;
 template <int dim> requires (supportedDim(dim)) class XMLLegacySimplicesReader;
 template <int dim> requires (supportedDim(dim)) class XMLTriangulationReader;
 
+template <CharIterator Iterator>
+requires std::bidirectional_iterator<Iterator>
+class Base64Decoder;
+
+template <CharIterator Iterator>
+requires std::bidirectional_iterator<Iterator>
+class Base64BitDecoder;
+
 /**
  * Hides away implementation details, and also provides common functionality
  * for Regina's dimension-agnostic triangulation code.
@@ -4526,6 +4534,72 @@ class TriangulationBase :
         template <int subdim, InputIteratorFor<Face<dim, subdim>*> Iterator>
         requires (subdim >= 0 && subdim < dim)
         void reorderFaces(Iterator begin, Iterator end);
+
+        /**
+         * Internal to fromSig().
+         *
+         * This routine reads and constructs a single connected component from
+         * a first-generation isomorphism signature (via the given decoder).
+         *
+         * It is assumed that the size of the component and the character
+         * width of an arbitrary simplex index have already been read from
+         * the decoder (the latter is passed as the argument \a intWidth).
+         * The given array will contain the correct number of
+         * freshly-constructed isolated simplices, ready to be glued together.
+         * This routine is also responsible for any sanity checks (e.g., by
+         * calling verifyLockConsistency() if it sets raw simplex and/or
+         * facet locks).
+         *
+         * This routine will throw an InvalidArgument if it encounters any
+         * errors, since that is what fromSig() is expected to throw.
+         * Note that the decoder itself might throw an InvalidInput exception;
+         * however, fromSig() will take responsibility for converting this.
+         */
+        template <CharIterator Iterator>
+        requires std::bidirectional_iterator<Iterator>
+        static void fillComponentFromSig1(
+            const FixedArray<Simplex<dim>*>& simplices,
+            Base64Decoder<Iterator>& decoder,
+            int intWidth);
+
+        /**
+         * Internal to fromSig().
+         *
+         * This routine reads and constructs a single connected component from
+         * a second-generation isomorphism signature (via the given decoder).
+         *
+         * It is assumed that the size of the component and the character
+         * width of an arbitrary simplex index have already been read from
+         * the decoder (the latter is not actually needed, and can be safely
+         * ignored).  The given array will contain the correct number of
+         * freshly-constructed isolated simplices, ready to be glued together.
+         * This routine is also responsible for any sanity checks (e.g., by
+         * calling verifyLockConsistency() if it sets raw simplex and/or
+         * facet locks).
+         *
+         * This routine will throw an InvalidArgument if it encounters any
+         * errors, since that is what fromSig() is expected to throw.
+         * Note that the decoder itself might throw an InvalidInput exception;
+         * however, fromSig() will take responsibility for converting this.
+         */
+        template <CharIterator Iterator>
+        requires std::bidirectional_iterator<Iterator>
+        static void fillComponentFromSig2(
+            const FixedArray<Simplex<dim>*>& simplices,
+            Base64BitDecoder<Iterator>& decoder);
+
+        /**
+         * Internal to fromSig().
+         *
+         * Verifies that any facet locks on the given simplices are consistent
+         * (i.e., if an internal facet is locked from one side then it is
+         * locked from both sides).
+         *
+         * This will throw an InvalidArgument if an inconsistency is detected,
+         * since this is what fromSig() is expected to throw.
+         */
+        static void verifyLockConsistency(
+            const FixedArray<Simplex<dim>*>& simplices);
 
         /**
          * Tests whether this and the given triangulation have the same
