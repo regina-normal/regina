@@ -880,7 +880,7 @@ The minimisation will use the inherent ordering of IsoSigData.
 
 Python:
     Python does not support C++ templates. Instead, you should pass
-    *Type* as the first runtime argument; that is, ``minimal(Type,
+    *Type* as the first runtime argument; that is, ``minimal(type,
     component, oriented, relabelling)``.
 
 Template parameter ``Type``:

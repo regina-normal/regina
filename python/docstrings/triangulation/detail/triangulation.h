@@ -1628,7 +1628,7 @@ See sig() for further details on isomorphism signatures in general.
 
 Python:
     You can pass the optional template arguments as runtime arguments:
-    ``isoSig(Encoding, Type)``. So, for example, to use the encoding
+    ``isoSig(encoding, type)``. So, for example, to use the encoding
     that omits simplex/facet locks, you can call
     ``isoSig(IsoSigPrintableLockFree)``.
 
@@ -1739,7 +1739,7 @@ Precondition:
 
 Python:
     You can pass the optional template arguments as runtime arguments:
-    ``isoSigDetail(Encoding, Type)``. So, for example, to use the
+    ``isoSigDetail(encoding, type)``. So, for example, to use the
     signature encoding that omits simplex/facet locks, you can call
     ``isoSigDetail(IsoSigPrintableLockFree)``.
 
@@ -2100,9 +2100,11 @@ Precondition:
 
 Python:
     You can pass the optional template arguments as additional runtime
-    arguments: ``neoSig(oriented, Encoding, Type)``. So, for example,
-    to use a binary encoding you can call ``neoSig(False,
-    IsoSigBinary)``.
+    arguments: ``neoSig(oriented, encoding, type)``. So, for example,
+    to use a binary encoding you can call ``neoSig(encoding =
+    IsoSigBinary)``. When generating binary signatures (via
+    ``IsoSigBinary``), the return value will be a Python ``bytes``
+    object (not a ByteSequence).
 
 Exception ``FailedPrecondition``:
     An oriented signature was requested (i.e., *oriented* is
@@ -2171,9 +2173,9 @@ Precondition:
 
 Python:
     You can pass the optional template arguments as runtime arguments:
-    ``neoSigDetail(oriented, Encoding, Type)``. So, for example, to
+    ``neoSigDetail(oriented, encoding, type)``. So, for example, to
     use a binary signature encoding, you can call
-    ``neoSigDetail(False, IsoSigBinary)``.
+    ``neoSigDetail(encoding = IsoSigBinary)``.
 
 Exception ``FailedPrecondition``:
     Either this triangulation is empty or disconnected, or an oriented
@@ -2916,7 +2918,7 @@ Precondition:
 Python:
     Python does not support C++ templates. Instead, you should pass
     the template arguments at runtime, using the argument order
-    ``sig(generation, oriented, Encoding, Type)``. So, for example, to
+    ``sig(generation, oriented, encoding, type)``. So, for example, to
     generate a string-based second-generation signature, you can call
     ``sig(2)``, or for a binary oriented signature, ``sig(2, True,
     IsoSigBinary)``. When generating binary signatures (via
@@ -2936,10 +2938,10 @@ Template parameter ``generation``:
     or second-generation signature.
 
 Template parameter ``Encoding``:
-    indicates the encoding to use, again as discussed in detail above.
+    indicates the encoding to use, as discussed in detail above.
 
 Template parameter ``Type``:
-    indicates the signature type, as discussed in detail above.
+    indicates the signature type, again as discussed above.
 
 Parameter ``oriented``:
     indicates whether to generate an oriented signature (``True``), or

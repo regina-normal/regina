@@ -407,6 +407,17 @@ Precondition:
 Returns:
     the inverse isomorphism.)doc";
 
+// Docstring regina::python::doc::Isomorphism_::isEven
+constexpr const char *isEven =
+R"doc(Determines whether or not this is an even isomorphism.
+
+In an even isomorphism, every facet/vertex permutation is even.
+Applying an even isomorphism to an oriented triangulation *T* will
+result in an oriented relabelling of *T* with the same orientation.
+
+Returns:
+    ``True`` if this is an even isomorphism, or ``False`` otherwise.)doc";
+
 // Docstring regina::python::doc::Isomorphism_::isIdentity
 constexpr const char *isIdentity =
 R"doc(Determines whether or not this is an identity isomorphism.

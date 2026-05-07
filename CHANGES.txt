@@ -170,6 +170,7 @@ Version 8.0  [ TODO ]
         Class IntegerOverflow:
             - New exception class.
         Class Isomorphism<dim>:
+            - New routine isEven().
             - The increment operators are now available in all dimensions
               (not just dimensions ≤ 6).
         Class IsoSigBinary:

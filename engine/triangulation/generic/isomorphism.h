@@ -219,7 +219,7 @@ class Isomorphism :
          * this image through the dimension-specific alias triImage(),
          * tetImage() or pentImage() respectively.
          *
-         * This image is stored using type \c ssize_t, not \c size_t,
+         * This image is stored using type `ssize_t`, not `size_t`,
          * and so you can safely use the special value -1 as a marker for an
          * image that is unknown or not yet initialised.
          *
@@ -256,7 +256,7 @@ class Isomorphism :
          * this image through the dimension-specific alias setTriImage(),
          * setTetImage() or setPentImage() respectively.
          *
-         * Simplex images are stored using type \c ssize_t, not \c size_t,
+         * Simplex images are stored using type `ssize_t`, not `size_t`,
          * and so you can safely use the special value -1 as a marker for an
          * image that is unknown or not yet initialised.
          *
@@ -353,10 +353,21 @@ class Isomorphism :
          * and within each simplex the facet/vertex permutation is
          * the identity permutation.
          *
-         * \return \c true if this is an identity isomorphism, or
-         * \c false otherwise.
+         * \return `true` if this is an identity isomorphism, or
+         * `false` otherwise.
          */
         bool isIdentity() const;
+
+        /**
+         * Determines whether or not this is an even isomorphism.
+         *
+         * In an even isomorphism, every facet/vertex permutation is even.
+         * Applying an even isomorphism to an oriented triangulation \a T will
+         * result in an oriented relabelling of \a T with the same orientation.
+         *
+         * \return `true` if this is an even isomorphism, or `false` otherwise.
+         */
+        bool isEven() const;
 
         /**
          * Applies this isomorphism to the given triangulation, and
@@ -587,7 +598,7 @@ class Isomorphism :
          * classes, here inc() wraps the preincrement operator (not the
          * postincrement operator), since the postincrement operator is
          * significantly more expensive.  To avoid confusion, the python
-         * inc() function returns \c None (not this isomorphism).
+         * inc() function returns `None` (not this isomorphism).
          *
          * \return a reference to this isomorphism after the increment.
          */
@@ -693,10 +704,10 @@ class Isomorphism :
          * destination Simplex objects.
          *
          * It is safe to compare isomorphisms of different sizes (in
-         * which case this routine will return \c false).
+         * which case this routine will return `false`).
          *
          * \param other the isomorphism to compare with this.
-         * \return \c true if and only if this and the given isomorphism
+         * \return `true` if and only if this and the given isomorphism
          * are identical.
          */
         bool operator == (const Isomorphism& other) const;
@@ -726,7 +737,7 @@ class Isomorphism :
          *
          * \param nSimplices the number of simplices that the new
          * isomorphism should operate upon.
-         * \param even if \c true, then every simplex will have its
+         * \param even if `true`, then every simplex will have its
          * vertices permuted with an even permutation.  This means that,
          * if the random isomorphism is applied to an oriented triangulation,
          * it will preserve the orientation.
@@ -866,6 +877,14 @@ bool Isomorphism<dim>::isIdentity() const {
         if (! facetPerm_[p].isIdentity())
             return false;
     }
+    return true;
+}
+
+template <int dim> requires (supportedDim(dim))
+bool Isomorphism<dim>::isEven() const {
+    for (size_t p = 0; p < size_; ++p)
+        if (facetPerm_[p].sign() < 0)
+            return false;
     return true;
 }
 

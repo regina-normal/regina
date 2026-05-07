@@ -82,11 +82,11 @@ class TriangulationTest : public testing::Test {
 
         template <int gen, regina::IsoSigEncoding<gen, dim> Encoding>
         requires (gen == 1 || gen == 2)
-        static auto sigDetail(const Triangulation<dim>& tri) {
+        static auto sigDetail(const Triangulation<dim>& tri, bool oriented) {
             if constexpr (gen == 1)
                 return tri.template isoSigDetail<Encoding>();
             else
-                return tri.template neoSigDetail<Encoding>();
+                return tri.template neoSigDetail<Encoding>(oriented);
         }
 
         /**
@@ -1231,13 +1231,13 @@ class TriangulationTest : public testing::Test {
         template <int gen, regina::IsoSigEncoding<gen, dim> Encoding>
         requires (gen == 1 || gen == 2)
         static void verifyIsomorphismSignatureUsing(
-                const Triangulation<dim>& tri) {
+                const Triangulation<dim>& tri, bool oriented) {
             SCOPED_TRACE_TYPE(Encoding);
 
             static constexpr bool stringBased = std::same_as<
                 typename Encoding::Signature, std::string>;
 
-            auto sig = tri.template sig<gen, Encoding>();
+            auto sig = tri.template sig<gen, Encoding>(oriented);
             if constexpr (stringBased) {
                 // The string-based signatures are always non-empty.
                 EXPECT_FALSE(sig.empty());
@@ -1288,15 +1288,18 @@ class TriangulationTest : public testing::Test {
             static constexpr int trials = 5;
 
             for (int i = 0; i < trials; ++i) {
-                auto other = Isomorphism<dim>::random(tri.size())(tri).
-                    template sig<gen, Encoding>();
+                auto other =
+                    Isomorphism<dim>::random(tri.size(), oriented)(tri).
+                    template sig<gen, Encoding>(oriented);
                 EXPECT_EQ(other, sig);
             }
 
             if (tri.countComponents() == 1) {
-                auto detail = sigDetail<gen, Encoding>(tri);
+                auto detail = sigDetail<gen, Encoding>(tri, oriented);
 
                 EXPECT_EQ(detail.first, sig);
+                if (oriented)
+                    EXPECT_TRUE(detail.second.isEven());
 
                 auto relabelled = detail.second(tri);
                 auto reconstructed =
@@ -1316,12 +1319,25 @@ class TriangulationTest : public testing::Test {
                 const char* name) {
             SCOPED_TRACE_CSTRING(name);
 
-            verifyIsomorphismSignatureUsing<1, IsoSigPrintable>(tri);
-            verifyIsomorphismSignatureUsing<2, IsoSigPrintable>(tri);
-            verifyIsomorphismSignatureUsing<2, IsoSigBinary>(tri);
-
+            verifyIsomorphismSignatureUsing<1, IsoSigPrintable>(tri, false);
+            verifyIsomorphismSignatureUsing<2, IsoSigPrintable>(tri, false);
+            verifyIsomorphismSignatureUsing<2, IsoSigBinary>(tri, false);
             EXPECT_EQ(tri.neoSig(), IsoSigBinary::asString<dim>(
                 tri.template neoSig<IsoSigBinary>()));
+
+            // Verify oriented signatures (only allowed for second-generation).
+            if (tri.isOriented()) {
+                verifyIsomorphismSignatureUsing<2, IsoSigPrintable>(tri, true);
+                verifyIsomorphismSignatureUsing<2, IsoSigBinary>(tri, true);
+                EXPECT_EQ(tri.neoSig(true), IsoSigBinary::asString<dim>(
+                    tri.template neoSig<IsoSigBinary>(true)));
+            } else {
+                EXPECT_THROW({ tri.neoSig(true); }, regina::FailedPrecondition);
+                EXPECT_THROW({ tri.template neoSig<IsoSigBinary>(true); },
+                    regina::FailedPrecondition);
+            }
+            EXPECT_THROW({ tri.template sig<1>(true); },
+                regina::InvalidArgument);
 
             // Verify the lock-free encodings.
             if (tri.hasLocks()) {
