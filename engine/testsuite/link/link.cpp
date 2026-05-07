@@ -69,7 +69,7 @@ static bool isTrefoilComplement(const Triangulation<3>& tri) {
             "cPcbbbadh", "cPcbbbadu",
             "dLQbcbcdlcj", "dLQbcbcdlcn", "dLQabccbrwj", "dLQabccbrwn",
             "eLAkbbcddaikhc", "eLAkbbcddainqv", "eLAkbcbddducqn", "eLAkbcbdddmcxj",
-            "gLLMQaeefedfbaapgjr" })
+            "gLLMQaeefedfbaapgjr", "kLLLALQkbdedfhjjiijafergaxtron" })
         if (sig == s)
             return true;
 
