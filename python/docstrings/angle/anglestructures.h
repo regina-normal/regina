@@ -80,6 +80,10 @@ Parameter ``tri``:
 Returns:
     the resulting set of angle structure equations.)doc";
 
+// Make it build. This will be overwritten by gendocs.sh
+static const char *makeVanishingPeripheralAngleEquations =
+R"doc()doc";
+
 namespace AngleStructures_ {
 
 // Docstring regina::python::doc::AngleStructures_::__array

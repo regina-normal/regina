@@ -300,6 +300,15 @@ static void verifyGeneralAngleStructure(const Triangulation<3>& tri,
         const regina::VectorInt& vec = tri.generalAngleStructure().vector();
         ASSERT_EQ(vec.size(), m.columns());
         EXPECT_TRUE((m * vec).isZero());
+
+        // Also check the vanishing peripheral angle equations.
+        const regina::SnapPeaTriangulation* snappea = tri.isSnapPea();
+        if (snappea) {
+            regina::MatrixInt vpm =
+                regina::makeVanishingPeripheralAngleEquations(*snappea);
+            ASSERT_EQ( vec.size(), vpm.columns() );
+            //TODO
+        }
     }
 }
 

@@ -48,6 +48,8 @@ using regina::SnapPeaTriangulation;
 using regina::Tetrahedron;
 using regina::Triangulation;
 
+//TODO This may be the place to test vanishing peripheral angle structures.
+
 class SnapPeaTest : public testing::Test {
     protected:
         // Orientable manifolds from the Callahan-Hildebrand-Weeks census:
