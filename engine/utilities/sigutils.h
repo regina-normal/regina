@@ -2094,10 +2094,12 @@ class BitEncoder {
          */
         template <UnsignedCppInteger IntType>
         void encodeInt(int count, IntType bits) {
-            for (int i = 0; i < count; ++i)
-                encodeBit(bits & (IntType(1) << i));
+            IntType mask = 1;
+            for (int i = 0; i < count; ++i, mask <<= 1)
+                encodeBit(bits & mask);
             if (count < sizeof(IntType) * 8) {
-                IntType mask = (IntType(1) << count) - 1;
+                // Now mask == (1 << count).
+                mask -= 1;
                 if (bits != (bits & mask))
                     throw InvalidArgument("BitEncoder::encodeInt(): "
                         "integer argument out of range");
@@ -2498,10 +2500,12 @@ class Base64BitEncoder : private Base64Encoder {
          */
         template <UnsignedCppInteger IntType>
         void encodeInt(int count, IntType bits) {
-            for (int i = 0; i < count; ++i)
-                encodeBit(bits & (IntType(1) << i));
+            IntType mask = 1;
+            for (int i = 0; i < count; ++i, mask <<= 1)
+                encodeBit(bits & mask);
             if (count < sizeof(IntType) * 8) {
-                IntType mask = (IntType(1) << count) - 1;
+                // Now mask == (1 << count).
+                mask -= 1;
                 if (bits != (bits & mask))
                     throw InvalidArgument("Base64BitEncoder::encodeInt(): "
                         "integer argument out of range");
@@ -2822,7 +2826,7 @@ class Base64BitDecoder : private Base64Decoder<Iterator> {
         template <UnsignedCppInteger IntType>
         IntType decodeInt(int count) {
             IntType ans = 0;
-            size_t i = 0;
+            int i = 0;
             IntType bit = 1;
             for ( ; i < count; ++i, bit <<= 1)
                 if (decodeBit())
