@@ -303,6 +303,13 @@ IsoSigData<2, dim> IsoSigData<2, dim>::minimal(Component<dim>* component,
         }
     } while (type.next());
 
+    best.oriented_ = true;
+    for (auto g : best.adjGluing_)
+        if (! (g & 1)) {
+            best.oriented_ = false;
+            break;
+        }
+
     return best;
 }
 

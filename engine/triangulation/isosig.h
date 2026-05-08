@@ -652,6 +652,11 @@ class IsoSigData<2, dim> {
         size_t size_;
             /**< The total number of top-dimensional simplices in this
                  triangulation component. */
+        bool oriented_;
+            /**< Indicates whether the labelling that this data set encodes is
+                 oriented.  We cache this when we build our relabelling within
+                 minimal(), since oriented_ takes linear time to compute, and
+                 encoding classes may need to query it multiple times. */
         Bitmask facetType_;
             /**< The facet types, as described above.  The bits that are set
                  correspond to facets of type B; however, the bits are stored
@@ -847,10 +852,7 @@ class IsoSigData<2, dim> {
          * \return `true` if and only if this labelling is oriented.
          */
         bool isOriented() const {
-            for (auto g : adjGluing_)
-                if (! (g & 1))
-                    return false;
-            return true;
+            return oriented_;
         }
 
         /**
@@ -881,6 +883,7 @@ class IsoSigData<2, dim> {
          */
         void swap(IsoSigData& other) noexcept {
             std::swap(size_, other.size_);
+            std::swap(oriented_, other.oriented_);
             facetType_.swap(other.facetType_);
             adjSimplex_.swap(other.adjSimplex_);
             adjGluing_.swap(other.adjGluing_);
@@ -926,6 +929,10 @@ class IsoSigData<2, dim> {
             //   changing the sort order for the list of facet types when
             //   working with triangulations with boundary.
             //
+            // This comparison does not look at oriented_ at all, since what
+            // matters is the relabellings that it compares, not the original
+            // labelling of the component(s).
+            //
             if (auto c = size_ <=> rhs.size_; c != 0)
                 return c;
             if (auto c = facetType_.numericalComp(rhs.facetType_); c != 0)
@@ -948,8 +955,9 @@ class IsoSigData<2, dim> {
          * Allocates space for a data set for the given triangulation component.
          *
          * The bitmask included in this data set will be initialised with all
-         * bits off.  All other arrays will be initialised to the correct sizes,
-         * but the individual array elements will be left uninitialised.
+         * bits off.  All other arrays will be initialised to the correct sizes;
+         * however, the individual array elements, as well as the data member
+         * oriented_, will all be left uninitialised.
          *
          * \param component the triangulation component that we intend to
          * encode.
