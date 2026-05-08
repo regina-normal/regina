@@ -852,6 +852,36 @@ TEST_F(Dim3Test, isomorphismSignature) {
     verifyIsomorphismSignatureWithLocks(t3.tri, t3.name);
     verifyIsomorphismSignatureWithLocks(rp2xs1.tri, rp2xs1.name);
     verifyIsomorphismSignatureWithLocks(lst3_4_7.tri, lst3_4_7.name);
+
+    // Verify that we are getting the orientation optimisation from
+    // second-generation signatures.
+    //
+    // Triangulations a,b below are closed and orientable with 9 tetrahedra.
+    // Triangulation c is closed and non-orientable with 9 tetrahedra (it comes
+    // from the closed non-orientable census: SFS [RP2: (2,1) (5,1)] : #1.
+    auto a = Example<3>::weeks();
+    auto b = Example<3>::smallClosedOrblHyperbolic();
+    auto c = Triangulation<3>::fromSig("jLAvLQQbcbgfhihiihhjhqxhxqv");
+
+    EXPECT_EQ(a.size(), b.size());
+    EXPECT_EQ(b.size(), c.size());
+    {
+        std::array sig { a.isoSig(), b.isoSig(), c.isoSig() };
+        EXPECT_EQ(sig[0].size(), sig[1].size());
+        EXPECT_EQ(sig[1].size(), sig[2].size());
+    }
+    {
+        std::array sig { a.neoSig(), b.neoSig(), c.neoSig() };
+        EXPECT_EQ(sig[0].size(), sig[1].size());
+        EXPECT_LT(sig[1].size(), sig[2].size());
+    }
+    {
+        using regina::IsoSigBinary;
+        std::array sig { a.neoSig<IsoSigBinary>(), b.neoSig<IsoSigBinary>(),
+            c.neoSig<IsoSigBinary>() };
+        EXPECT_EQ(sig[0].size(), sig[1].size());
+        EXPECT_LT(sig[1].size(), sig[2].size());
+    }
 }
 
 TEST_F(Dim3Test, lockPropagation) {
