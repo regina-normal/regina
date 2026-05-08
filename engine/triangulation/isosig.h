@@ -623,6 +623,31 @@ class IsoSigData<1, dim> {
  */
 template <int dim> requires (supportedDim(dim))
 class IsoSigData<2, dim> {
+    public:
+        /**
+         * An unsigned integer type that can hold the index of a gluing
+         * permutation in a <i>dim</i>-dimensional triangulation.  This is
+         * provided to help with bitwise encodings, which read/write
+         * permutations via unsigned integers.
+         */
+        using UnsignedPermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
+
+        /**
+         * The number of bits needed to store the index of a gluing permutation
+         * in a <i>dim</i>-dimensional triangulation.  This is _not_ the
+         * bitwidth of `Perm<...>::Index`; instead it is the smallest number of
+         * bits required, given the maximum possible value of such an index.
+         */
+        static constexpr int permBits = bitsRequired(Perm<dim + 1>::nPerms);
+
+        /**
+         * The number of bits needed to store a lock mask, which encodes all
+         * simplex and/or facet locks for a single <i>dim</i>-dimensional
+         * simplex.  Again, this is the smallest number of bits required
+         * given the range of possible values.
+         */
+        static constexpr int lockBits = dim + 2;
+
     private:
         size_t size_;
             /**< The total number of top-dimensional simplices in this

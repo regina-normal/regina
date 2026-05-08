@@ -451,6 +451,8 @@ void addIsoSigData(pybind11::module_& m, const char* name) {
             .def("hasLocks", &Data::hasLocks, rdoc::hasLocks)
             .def("isOriented", &Data::isOriented, rdoc::isOriented)
             .def("swap", &Data::swap, rdoc::swap)
+            .def_readonly_static("permBits", &Data::permBits)
+            .def_readonly_static("lockBits", &Data::lockBits)
             ;
         regina::python::add_eq_operators(s, rdoc::__eq);
         regina::python::add_cmp_operators(s, rdoc::__cmp);

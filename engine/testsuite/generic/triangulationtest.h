@@ -1269,8 +1269,10 @@ class TriangulationTest : public testing::Test {
             }
 
             ASSERT_NO_THROW({
-                EXPECT_TRUE(regina::Triangulation<dim>::fromSig(sig).
-                    isIsomorphicTo(tri));
+                auto recon = regina::Triangulation<dim>::fromSig(sig);
+                EXPECT_TRUE(recon.isIsomorphicTo(tri));
+                if (oriented)
+                    EXPECT_TRUE(recon.isOriented());
             });
 
             if constexpr (stringBased) {
