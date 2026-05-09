@@ -419,38 +419,35 @@ ByteSequence LinkSigBinary::encodeEmpty() {
 }
 
 ByteSequence LinkSigBinary::encodeUnknot() {
-    PackedByteEncoder enc;
-    enc.encodeSize(0);
-    return std::move(enc).bytes();
+    // The encoding should just write the size (0) and nothing else.
+    return { 0 };
 }
 
 template <int generation>
 requires (generation == 2)
 size_t LinkSigBinary::length(const LinkSigData& data) {
-    size_t ans;
-    if (data.size() < 0x10) {
-        // The integer width is 0, and does not need to be explicitly encoded.
-        // Moreover, we write the list of revisited crossings using two
-        // integers per byte.
-        ans = 1 + (data.size() + 1) / 2;
-    } else if (data.size() < 0xff) {
-        // The integer width is 1, and does not need to be explicitly encoded.
-        ans = 1 + data.size();
+    int intBits = bitsRequired(data.size() + 1);
+
+    size_t prefixBits;
+    if (data.size() < 128) {
+        // The link size is written to the first byte, and the integer
+        // bitwidth is not encoded separately.
+        prefixBits = 8;
     } else {
-        // We begin with two extra characters: 0xff (which acts as a marker that
-        // the link component is large), and the encoding of the integer width.
-        int width = PackedByteEncoder::integerWidth(data.size());
-        ans = 2 + (1 + data.size()) * width;
+        // The integer bitwidth (and a marker) is written to the first byte,
+        // and the link size is written separately beginning at the second byte.
+        prefixBits = 8 + intBits;
     }
-    return ans + (data.size() + 1) / 2;
+
+    return (prefixBits + (4 + intBits) * data.size() + 7) / 8;
 }
 
 template <int generation>
 requires (generation == 2)
 ByteSequence LinkSigBinary::encode(const LinkSigData& data) {
     // As with the second-generation LinkSigPrintable encoding, we write:
-    // - the integer n;
-    // - 4n packed bits:
+    // - the integer n (see below for how this is done);
+    // - 4n bits:
     //   * 2n "first time seeing this crossing?" bits (in traversal order),
     //   * n "first strand seen for this crossing" bits (in crossing order),
     //   * n sign bits (in crossing order);
@@ -462,15 +459,31 @@ ByteSequence LinkSigBinary::encode(const LinkSigData& data) {
     //
     // By connectivity and minimality we can assume that each crossing that
     // appears immediately after a sentinel uses the first index not yet
-    // revisited.
+    // revisited, and so we do not write that revisited index to the encoding.
     //
-    // All 4n bits are written in a single pack (i.e., we don't artificially
-    // move to the next base64 character at the 2n mark and/or the 3n mark).
+    // To write the initial integer n:
+    // - if n < 128, we simply write n in the first byte;
+    // - if n ≥ 128, we set the highest-order bit of the first byte, use the
+    //   seven lower-order bits to encode the _number_ of bits b required for
+    //   any integer in the range [0..n], and then encode n using b bits
+    //   beginning at the second byte.
+    //
+    // This impose the restriction that n < 2^128, but this is wildly more
+    // than enough for any triangulation.
 
-    PackedByteEncoder enc;
-    enc.reserve(length<generation>(data));
+    BitEncoder enc;
+    enc.reserveBytes(length<generation>(data));
 
-    int width = enc.encodeSize(data.size());
+    int intBits = bitsRequired(data.size() + 1);
+    if (data.size() < 128) {
+        enc.encodeInt(8, data.size());
+    } else {
+        if (intBits > 127)
+            throw ImpossibleScenario("LinkSigBinary::encode(): "
+                "link has ≥ 2^127 crossings");
+        enc.encodeInt(8, static_cast<unsigned>(intBits | 128));
+        enc.encodeInt(intBits, data.size());
+    }
 
     Bitmask bits(4 * data.size());
     FixedArray<bool> seen(data.size(), false);
@@ -508,7 +521,8 @@ ByteSequence LinkSigBinary::encode(const LinkSigData& data) {
     }
 
     enc.encodeBitmask(4 * data.size(), bits);
-    enc.encodeInts(revisited, width);
+    for (auto c : revisited)
+        enc.encodeInt(intBits, c);
     return std::move(enc).bytes();
 }
 
@@ -521,22 +535,35 @@ std::string LinkSigBinary::asString(const ByteSequence& sig) {
         // Both LinkSigBinary and second-generation LinkSigPrintable encode
         // exactly the same combinatorial information; it is just a matter of
         // converting between printable (6-bit) and byte-packed (8-bit) formats.
-        PackedByteDecoder dec(sig.begin(), sig.end());
+        BitDecoder dec(sig.begin(), sig.end());
         Base64Encoder enc;
-        while (! dec.done()) {
+        while (! dec.noMoreBits()) {
             // Re-encode one connected component of the link diagram at a time.
-            auto [ n, inputWidth ] = dec.decodeSize();
+            size_t n = dec.decodeInt<size_t>(8);
+            int intBits;
+            if (n & 128) {
+                intBits = static_cast<int>(n ^ 128);
+                n = dec.decodeInt<size_t>(intBits);
+            } else {
+                intBits = bitsRequired(n + 1);
+            }
+
             int outputWidth = enc.encodeSize(n);
 
             if (n > 0) {
                 enc.encodeBitmask(4 * n, dec.decodeBitmask(4 * n));
-                enc.encodeInts(dec.decodeInts<size_t>(n, inputWidth),
-                    outputWidth);
+
+                FixedArray<size_t> revisited(n);
+                for (auto& c : revisited)
+                    c = dec.decodeInt<size_t>(intBits);
+                enc.encodeInts(revisited, outputWidth);
             }
+
+            dec.flushByte();
         }
         return std::move(enc).str();
     } catch (const InvalidInput&) {
-        // Any exception caught here was thrown by PackedByteDecoder.
+        // Any exception caught here was thrown by BitDecoder.
         throw InvalidArgument("LinkSigBinary::asString(): "
             "incomplete or invalid byte sequence encoding");
     }
@@ -769,28 +796,37 @@ Link Link::fromSig(const std::string& sig) {
 Link Link::fromSig(const ByteSequence& sig) {
     Link ans;
 
-    PackedByteDecoder dec(sig.begin(), sig.end());
+    BitDecoder dec(sig.begin(), sig.end());
 
     // Get the empty link out of the way first.
-    if (dec.done())
+    if (dec.noMoreBits())
         return ans;
 
     try {
-        while (! dec.done()) {
+        while (! dec.noMoreBits()) {
             // Read one connected component of the link diagram at a time.
 
-            auto [ n, width ] = dec.decodeSize();
-            if (n == 0) {
+            size_t n = dec.decodeInt<size_t>(8);
+            int intBits;
+            if (n & 128) {
+                intBits = static_cast<int>(n ^ 128);
+                n = dec.decodeInt<size_t>(intBits);
+            } else if (n == 0) {
                 // Zero-crossing unknot.
+                // We are already at a byte boundary; no need to flushByte().
                 ans.components_.emplace_back();
                 continue;
+            } else {
+                intBits = bitsRequired(n + 1);
             }
 
-            // We should have a packed signature for a single connected diagram
-            // component with a positive number of crossings.
+            // We should have a bit-packed signature for a single connected
+            // diagram component with a positive number of crossings.
 
             Bitmask bits = dec.decodeBitmask(4 * n);
-            auto revisited = dec.decodeInts<size_t>(n, width);
+            FixedArray<size_t> revisited(n);
+            for (auto& c : revisited)
+                c = dec.decodeInt<size_t>(intBits);
 
             size_t base = ans.crossings_.size();
             for (size_t i = 0; i < n; ++i)
@@ -856,11 +892,13 @@ Link Link::fromSig(const ByteSequence& sig) {
             else
                 throw InvalidArgument("fromSig(): "
                     "missing topological link component");
+
+            dec.flushByte();
         }
 
         return ans;
     } catch (const InvalidInput&) {
-        // Any exception caught here was thrown by PackedByteDecoder.
+        // Any exception caught here was thrown by BitDecoder.
         throw InvalidArgument(
             "fromSig(): incomplete or invalid byte sequence encoding");
     }

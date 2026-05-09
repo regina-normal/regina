@@ -4199,15 +4199,34 @@ TEST_F(LinkTest, sig) {
     EXPECT_EQ(virtualDisconnected.link.neoSig(), "ctdccctdcbcZdab");
 
     // This seems as good a place as any to ensure that the ByteSequence
-    // output routines behave correctly.  The following second-generation
-    // signature was computed using Regina 8.0.
+    // output routines behave correctly.  We test both trivial and non-trivial
+    // cases here.
     {
-        regina::ByteSequence seq = borromean.link.neoSig<LinkSigBinary>();
-        EXPECT_EQ(seq.asString(), "\x06\xafP\x8f&VC");
+        regina::ByteSequence seq = empty.link.neoSig<LinkSigBinary>();
+        EXPECT_EQ(seq.asString(), "");
 
         std::ostringstream out;
         out << seq;
-        EXPECT_EQ(out.str(), "06:af:50:8f:26:56:43");
+        EXPECT_EQ(out.str(), "");
+    }
+    {
+        // Note: for the 0-crossing unknot the binary encoding is "\0", which
+        // does not play well with routines that expect C-style strings.
+        regina::ByteSequence seq = unknot0.link.neoSig<LinkSigBinary>();
+        EXPECT_EQ(seq.asString(), std::string(1, 0) /* One copy of '\0' */);
+
+        std::ostringstream out;
+        out << seq;
+        EXPECT_EQ(out.str(), "00");
+    }
+    {
+        // This second-generation signature was computed using Regina 8.0.
+        regina::ByteSequence seq = borromean.link.neoSig<LinkSigBinary>();
+        EXPECT_EQ(seq.asString(), "\x06\xafP\x8f\x96;\x2");
+
+        std::ostringstream out;
+        out << seq;
+        EXPECT_EQ(out.str(), "06:af:50:8f:96:3b:02");
     }
 }
 

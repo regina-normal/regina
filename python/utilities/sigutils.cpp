@@ -39,7 +39,6 @@
 using regina::Base64Encoder;
 using regina::Base64SigEncoding;
 using regina::Bitmask;
-using regina::PackedByteEncoder;
 
 namespace regina::python {
     // For Python (but not C++), we need Base64Decoder and BitDecoder
@@ -258,61 +257,6 @@ void addSigUtils(pybind11::module_& m) {
     #if defined(__GNUC__)
     #pragma GCC diagnostic pop
     #endif
-    regina::python::add_eq_operators(c);
-
-    RDOC_SCOPE_SWITCH(PackedByteEncoder)
-
-    auto c = pybind11::class_<PackedByteEncoder>(m, "PackedByteEncoder",
-            rdoc_scope)
-        .def(pybind11::init<>(), rdoc::__default)
-        .def("bytes",
-            static_cast<const regina::ByteSequence&(PackedByteEncoder::*)()
-                const &>(&PackedByteEncoder::bytes),
-            rdoc::bytes)
-        .def_static("integerWidth", &PackedByteEncoder::integerWidth,
-            rdoc::integerWidth)
-        .def("encodeSize", &PackedByteEncoder::encodeSize, rdoc::encodeSize)
-        .def("encodeInts",
-            pybind11::overload_cast<const std::vector<long>&, int>(
-                &PackedByteEncoder::encodeInts<const std::vector<long>&>),
-            rdoc::encodeInts)
-        .def("encodeBitmask", &PackedByteEncoder::encodeBitmask<Bitmask>,
-            rdoc::encodeBitmask)
-        .def("encodeTrits",
-            pybind11::overload_cast<const std::vector<uint8_t>&>(
-                &PackedByteEncoder::encodeTrits<const std::vector<uint8_t>&>),
-            rdoc::encodeTrits)
-        .def("reserve", &PackedByteEncoder::reserve, rdoc::reserve)
-    ;
-    regina::python::add_eq_operators(c);
-
-    RDOC_SCOPE_SWITCH(PackedByteDecoder)
-
-    using Decoder = regina::PackedByteDecoder<std::string::const_iterator>;
-    using Wrapper = regina::python::CachedDecoder<regina::PackedByteDecoder>;
-    auto c = pybind11::class_<Wrapper>(m, "PackedByteDecoder", rdoc_scope)
-        .def(pybind11::init<pybind11::bytes>(), rdoc::__init)
-        .def("done", &Decoder::done, rdoc::done)
-        .def("remaining", &Decoder::remaining, rdoc::remaining)
-        .def("next", &Decoder::next<long>, rdoc::next)
-        .def("decodeSize", &Decoder::decodeSize, rdoc::decodeSize)
-        .def("decodeInts", [](Wrapper& dec, size_t count, int nChars) {
-            // Again, the iterators for pybind11::list have the wrong value
-            // type.  Use an intermediate data structure, since we don't have
-            // decodeInt() to fall back on this time.
-            auto result = dec.decodeInts<long>(count, nChars);
-            pybind11::list ans;
-            for (auto i : result)
-                ans.append(i);
-            return ans;
-        })
-        .def("decodeBitmask", &Decoder::decodeBitmask<>, rdoc::decodeBitmask)
-        // overload_cast cannot handle template vs non-template overloads.
-        .def("decodeTrits",
-            static_cast<std::array<uint8_t, 4>(Decoder::*)()>(
-                &Decoder::decodeTrits),
-            rdoc::decodeTrits)
-    ;
     regina::python::add_eq_operators(c);
 
     RDOC_SCOPE_SWITCH(BitEncoder)

@@ -107,15 +107,6 @@ print()
 
 # ---------- Testing "raw" encoders/decoders ----------
 
-enc = PackedByteEncoder()
-tmp = enc.encodeSize(1000)
-print(enc.bytes())
-dec = PackedByteDecoder(enc.bytes())
-print(dec.done())
-print(dec.decodeSize())
-print(dec.done())
-print()
-
 enc = BitEncoder()
 enc.encodeInt(3, 0x0002)
 enc.encodeInt(14, 0x3576)

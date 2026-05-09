@@ -27,7 +27,7 @@ Version 8.0  [ TODO ]
         Class AngleStructures:
             - New routines knowsSpansStrict() and knowsSpansTaut().
         Class Base64BitEncoder, Base64BitDecoder:
-            - New class to support signatures that pack bits into base64
+            - New classes to support signatures that pack bits into base64
               strings, without worrying about byte/character boundaries.
         Class Base64Decoder, Base64SigDecoder:
             - Base64SigDecoder has been renamed to Base64Decoder.  The old name
@@ -67,7 +67,7 @@ Version 8.0  [ TODO ]
               the old boolean lessThan().  The function lessThan() is kept but
               deprecated.
         Class BitEncoder, BitDecoder:
-            - New class to support signatures that use (unprintable) packed
+            - New classes to support signatures that use (unprintable) packed
               sequences of bits, without regard for byte boundaries.
         Class BoolSet:
             - Regarding byte codes and string codes:
@@ -318,9 +318,6 @@ Version 8.0  [ TODO ]
             - New exception class.
         Class OutputBase:
             - Removed completely.
-        Class PackedByteEncoder, PackedByteDecoder:
-            - New class to support signatures that use (unprintable) packed
-              sequences of bits, but with respect for byte boundaries.
         Class PermClass<n>:
             - Everything in this class is now constexpr.
         Class Polynomial<T>:
