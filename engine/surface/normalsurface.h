@@ -1011,13 +1011,21 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surfaces it will report a _larger_ number than it should since it
          * essentially counts each branch point as multiple vertices.
          *
+         * For spun-normal surfaces, eulerChar() computes the correct Euler
+         * characteristic provided this surface resides in a SnapPea
+         * triangulation.
+         *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
-         * \pre This normal surface is compact (has finitely many discs).
+         * \pre Either this normal surface is compact (has finitely many
+         * discs), or it resides in a triangulation that is held by a
+         * SnapPeaTriangulation.
          *
          * \return the Euler characteristic.
+         *
+         * \author B.B., Alex He
          */
         LargeInteger eulerChar() const;
         /**
@@ -1958,6 +1966,16 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          */
         void calculateEulerChar() const;
         /**
+         * Calculates the Euler characteristic of this spun-normal surface
+         * and stores it as a property.
+         *
+         * \pre This normal surface is non-compact, and resides in a
+         * triangulation that is held by a SnapPeaTriangulation.
+         *
+         * \author Alex He
+         */
+        void calculateSpunEulerChar() const;
+        /**
          * Calculates whether this surface is orientable, two-sided and/or
          * connected, and stores the results as properties.
          *
@@ -2158,8 +2176,21 @@ inline void NormalSurface::setName(const std::string& name) {
 }
 
 inline LargeInteger NormalSurface::eulerChar() const {
-    if (! eulerChar_.has_value())
-        calculateEulerChar();
+    if (! eulerChar_.has_value()) {
+        if ( isCompact() ) {
+            calculateEulerChar();
+        } else {
+            // If this surface resides in a SnapPeaTriangulation, then this
+            // will use combinatorial Gauss-Bonnet formula together with an
+            // angle structure with vanishing peripheral rotational holonomy.
+            //
+            // Otherwise, this will internally fall back on
+            // calculateEulerChar(). This gives infinity, but we aren't
+            // breaking any promises since this is a situation that violates
+            // the preconditions anyway.
+            calculateSpunEulerChar();
+        }
+    }
     return *eulerChar_;
 }
 

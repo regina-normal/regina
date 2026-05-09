@@ -335,6 +335,17 @@ void NormalSurface::calculateEulerChar() const {
     eulerChar_ = ans;
 }
 
+void NormalSurface::calculateSpunEulerChar() const {
+    const SnapPeaTriangulation* snapPea = triangulation().isSnapPea();
+    if (! snapPea) {
+        // Fall back on the old implementation.
+        calculateEulerChar();
+        return;
+    }
+
+    //TODO
+}
+
 void NormalSurface::calculateRealBoundary() const {
     if (triangulation_->isClosed()) {
         realBoundary_ = false;

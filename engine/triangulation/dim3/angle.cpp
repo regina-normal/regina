@@ -131,13 +131,24 @@ bool Triangulation<3>::hasGeneralAngleStructure() const {
         // thing if there is no solution).
     }
 
-    // We want *any* solution to the homogeneous angle structure equations
-    // where the final coordinate (representing the scaling factor) is non-zero.
+    // In general, we want *any* solution to the homogeneous angle structure
+    // equations where the final coordinate (representing the scaling factor)
+    // is non-zero.
     // The MatrixInt::rowEchelonForm() routine is enough for this: if there is
     // any solution where the final coordinate is non-zero, then the final
     // column will not appear as a leading coefficient in row echelon form.
+    //
+    // In the specific case where we have a SnapPeaTriangulation, we can
+    // always impose the additional condition that the angle structure has
+    // vanishing peripheral rotational holonomy.
 
-    MatrixInt eqns = regina::makeAngleEquations(*this);
+    MatrixInt eqns;
+    const SnapPeaTriangulation* snapPea = this->isSnapPea();
+    if (snapPea) {
+        eqns = regina::makeVanishingPeripheralAngleEquations(*snapPea);
+    } else {
+        eqns = regina::makeAngleEquations(*this);
+    }
     size_t rank = eqns.rowEchelonForm();
 
     // Note: the rank is always positive, since the triangulation is
