@@ -548,35 +548,40 @@ size_t IsoSigPrintableLockFree::length(const IsoSigData<2, dim>& data) {
 
 template <int dim> requires (supportedDim(dim))
 ByteSequence IsoSigBinary::encode(const IsoSigData<2, dim>& data) {
-    // We begin with a single byte b, where:
+    // We begin by encoding the integer n as follows:
+    // - if n < 128, we simply write n in the first byte;
+    // - if n ≥ 128, we set the highest-order bit of the first byte, use the
+    //   seven lower-order bits to encode the _number_ of bits b required for
+    //   any integer in the range [0..n], and then encode n using b bits
+    //   beginning at the second byte.
     //
-    // - the lower six bits of b encode the number of bits required to encode
-    //   any integer in the range [0..size] (note that this imposes the
-    //   restriction size < 2^64, but this is enormously more than enough for
-    //   any triangulation);
-    // - bit 6 is set if all gluings are orientation-preserving;
-    // - bit 7 is set if we need to encode locks.
+    // This impose the restriction that n < 2^128, but this is wildly more
+    // than enough for any triangulation.
     //
-    // The encoding of the real data begins at the second byte.
+    // Following this, we encode two flags:
+    // - whether all gluings are orientation-preserving;
+    // - whether we need to encode locks.
 
     int intBits = bitsRequired(data.size() + 1);
     bool oriented = data.isOriented();
 
     BitEncoder enc;
-    enc.reserveBits(
-        8 + (intBits * data.adjacentSimplices().size()) +
-        data.countFacetBits() +
-        (oriented ?
-            (IsoSigData<2, dim>::permBits - 1) * data.adjacentGluings().size() :
-            IsoSigData<2, dim>::permBits * data.adjacentGluings().size()) +
-        IsoSigData<2, dim>::lockBits * data.locks().size());
+    enc.reserveBytes(length(data));
 
-    enc.encodeInt(6, static_cast<unsigned>(intBits));
+    if (data.size() < 128) {
+        enc.encodeInt(8, data.size());
+    } else {
+        if (intBits > 127)
+            throw ImpossibleScenario("IsoSigBinary::encode(): "
+                "triangulation has ≥ 2^127 top-dimensional simplices");
+        enc.encodeInt(8, static_cast<unsigned>(intBits | 128));
+        enc.encodeInt(intBits, data.size());
+    }
+
     enc.encodeBit(oriented);
     enc.encodeBit(data.hasLocks());
 
     using UnsignedPermIndex = typename IsoSigData<2, dim>::UnsignedPermIndex;
-    enc.encodeInt(intBits, data.size());
     for (auto s : data.adjacentSimplices())
         enc.encodeInt(intBits, s);
     enc.encodeBitmask(data.countFacetBits(), data.facetTypes());
@@ -598,16 +603,22 @@ size_t IsoSigBinary::length(const IsoSigData<2, dim>& data) {
     int intBits = bitsRequired(data.size() + 1);
     bool oriented = data.isOriented();
 
-    size_t bits = 8 + (intBits * (data.adjacentSimplices().size() + 1)) +
-        data.countFacetBits();
-    if (oriented)
-        bits += (IsoSigData<2, dim>::permBits - 1) *
-            data.adjacentGluings().size();
-    else
-        bits += IsoSigData<2, dim>::permBits * data.adjacentGluings().size();
-    bits += IsoSigData<2, dim>::lockBits * data.locks().size();
+    size_t prefixBits;
+    if (data.size() < 128) {
+        // The size is written to the first byte, and the integer
+        // bitwidth is not encoded separately.
+        prefixBits = 8;
+    } else {
+        // The integer bitwidth (and a marker) is written to the first byte,
+        // and the size is written separately beginning at the second byte.
+        prefixBits = 8 + intBits;
+    }
 
-    return (bits + 7) / 8;
+    return (prefixBits + 2 + intBits * data.adjacentSimplices().size() +
+        data.countFacetBits() +
+        (oriented ? IsoSigData<2, dim>::permBits - 1 :
+            IsoSigData<2, dim>::permBits) * data.adjacentGluings().size() +
+        IsoSigData<2, dim>::lockBits * data.locks().size() + 7) / 8;
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -624,19 +635,25 @@ std::string IsoSigBinary::asString(const ByteSequence& sig) {
         Base64BitEncoder enc;
         while (! dec.noMoreBits()) {
             // Re-encode one component of the triangulation at a time.
-            unsigned intBits = dec.template decodeInt<unsigned>(6);
-            if (intBits == 0)
-                throw InvalidArgument("IsoSigBinary::asString(): "
-                    "invalid integer width for binary encoding");
+            size_t nSimp = dec.decodeInt<size_t>(8);
+            int intBits;
+            if (nSimp & 128) {
+                intBits = static_cast<int>(nSimp ^ 128);
+                if (intBits == 0)
+                    throw InvalidArgument(
+                        "IsoSigBinary::asString(): invalid integer bitwidth");
+                nSimp = dec.decodeInt<size_t>(intBits);
+            } else if (nSimp == 0) {
+                throw InvalidArgument(
+                    "IsoSigBinary::asString(): invalid component size");
+            } else {
+                intBits = bitsRequired(nSimp + 1);
+            }
+
             bool oriented = dec.decodeBit();
             bool hasLocks = dec.decodeBit();
 
-            size_t nSimp = dec.template decodeInt<size_t>(intBits);
             enc.encodeSize(nSimp);
-            if (nSimp == 0)
-                throw InvalidArgument("IsoSigBinary::asString(): "
-                    "invalid component size for binary encoding");
-
             enc.encodeInt<unsigned>(2 /* two bits */, 3 /* the bits: 11 */);
             enc.encodeBit(oriented);
 
@@ -1167,17 +1184,22 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const ByteSequence& sig) {
         while (! dec.noMoreBits()) {
             // Read one component at a time.
 
-            unsigned intBits = dec.template decodeInt<unsigned>(6);
-            if (intBits == 0)
-                throw InvalidArgument(
-                    "fromSig(): invalid integer width for binary encoding");
+            size_t nSimp = dec.decodeInt<size_t>(8);
+            int intBits;
+            if (nSimp & 128) {
+                intBits = static_cast<int>(nSimp ^ 128);
+                if (intBits == 0)
+                    throw InvalidArgument(
+                        "fromSig(): invalid integer bitwidth");
+                nSimp = dec.decodeInt<size_t>(intBits);
+            } else if (nSimp == 0) {
+                throw InvalidArgument("fromSig(): invalid component size");
+            } else {
+                intBits = bitsRequired(nSimp + 1);
+            }
+
             bool oriented = dec.decodeBit();
             bool hasLocks = dec.decodeBit();
-
-            size_t nSimp = dec.template decodeInt<size_t>(intBits);
-            if (nSimp == 0)
-                throw InvalidArgument(
-                    "fromSig(): invalid component size for binary encoding");
 
             size_t nBdry = 0;
             size_t nDest = 2 * (nSimp - 1);

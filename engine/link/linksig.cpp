@@ -469,7 +469,7 @@ ByteSequence LinkSigBinary::encode(const LinkSigData& data) {
     //   beginning at the second byte.
     //
     // This impose the restriction that n < 2^128, but this is wildly more
-    // than enough for any triangulation.
+    // than enough for any link diagram.
 
     BitEncoder enc;
     enc.reserveBytes(length<generation>(data));
@@ -543,6 +543,9 @@ std::string LinkSigBinary::asString(const ByteSequence& sig) {
             int intBits;
             if (n & 128) {
                 intBits = static_cast<int>(n ^ 128);
+                if (intBits == 0)
+                    throw InvalidArgument(
+                        "LinkSigBinary::asString(): invalid integer bitwidth");
                 n = dec.decodeInt<size_t>(intBits);
             } else {
                 intBits = bitsRequired(n + 1);
@@ -810,6 +813,9 @@ Link Link::fromSig(const ByteSequence& sig) {
             int intBits;
             if (n & 128) {
                 intBits = static_cast<int>(n ^ 128);
+                if (intBits == 0)
+                    throw InvalidArgument(
+                        "fromSig(): invalid integer bitwidth");
                 n = dec.decodeInt<size_t>(intBits);
             } else if (n == 0) {
                 // Zero-crossing unknot.
