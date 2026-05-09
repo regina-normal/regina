@@ -88,7 +88,7 @@ MatrixInt makeVanishingPeripheralAngleEquations(
     // equations per cusp. Our gluing equations include all of these, plus
     // one further equation per tetrahedron.
     MatrixInt gluEqns = tri.gluingEquations();
-    size_t rows = gluEqns.rows() + tri.size();
+    size_t rows = gluEqns.rows() + n;
     MatrixInt eqns(rows, cols);
 
     // Transfer coefficients for the edge and cusp equations from the gluing
@@ -96,7 +96,7 @@ MatrixInt makeVanishingPeripheralAngleEquations(
     size_t row;
     for ( row = 0; row < gluEqns.rows(); ++row ) {
         // Left-hand side.
-        for ( size_t col = 0; col < cols; ++col ) {
+        for ( size_t col = 0; col < cols - 1; ++col ) {
             eqns.entry(row, col) = gluEqns.entry(row, col);
         }
 
