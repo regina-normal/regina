@@ -7052,6 +7052,49 @@ class Link :
         std::vector<StrandRef>::iterator componentIterator(const StrandRef& s);
 
         /**
+         * Internal to fromSig().
+         *
+         * Reads and constructs a single connected diagram component from
+         * a first-generation knot/link signature (via the given decoder),
+         * and appends the resulting crossings and components to this link.
+         *
+         * It is assumed that the size of the component and the character
+         * width of an arbitrary crossing index have already been read from
+         * the decoder (these are passed as arguments to this routine).
+         *
+         * This routine will throw an InvalidArgument if it encounters any
+         * errors, since that is what fromSig() is expected to throw.
+         * Note that the decoder itself might throw an InvalidInput exception;
+         * however, fromSig() will take responsibility for converting this.
+         */
+        template <CharIterator Iterator>
+        requires std::bidirectional_iterator<Iterator>
+        void fillDiagramComponentFromSig1(size_t size, int intWidth,
+            Base64Decoder<Iterator>& decoder);
+
+        /**
+         * Internal to fromSig().
+         *
+         * Reads and constructs a single connected diagram component from
+         * a second-generation knot/link signature (via the given decoder),
+         * and appends the resulting crossings and components to this link.
+         *
+         * It is assumed that the size of the component and the character
+         * width of an arbitrary crossing index have already been read from
+         * the decoder (the size is passed as an argument to this routine,
+         * and the character width is not needed and can be safely ignored).
+         *
+         * This routine will throw an InvalidArgument if it encounters any
+         * errors, since that is what fromSig() is expected to throw.
+         * Note that the decoder itself might throw an InvalidInput exception;
+         * however, fromSig() will take responsibility for converting this.
+         */
+        template <CharIterator Iterator>
+        requires std::bidirectional_iterator<Iterator>
+        void fillDiagramComponentFromSig2(size_t size,
+            Base64BitDecoder<Iterator>& decoder);
+
+        /**
          * Used with fromEnhancedGauss() to indicate which kind of Gauss code
          * we are reconstructing a knot from.
          */

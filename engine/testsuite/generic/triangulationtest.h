@@ -1270,9 +1270,14 @@ class TriangulationTest : public testing::Test {
 
             ASSERT_NO_THROW({
                 auto recon = regina::Triangulation<dim>::fromSig(sig);
-                EXPECT_TRUE(recon.isIsomorphicTo(tri));
-                if (oriented)
+                auto iso = recon.isIsomorphicTo(tri);
+                EXPECT_TRUE(iso);
+                if (oriented) {
                     EXPECT_TRUE(recon.isOriented());
+                    // Note: even if this was an oriented signature, the
+                    // isomorphism might not be even - there could be many
+                    // isomorphisms and we might have just landed on an odd one.
+                }
             });
 
             if constexpr (stringBased) {
