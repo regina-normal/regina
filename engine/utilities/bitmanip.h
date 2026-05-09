@@ -193,7 +193,7 @@ class BitManipulatorByType<unsigned long long> {
  * \ingroup utilities
  */
 template <UnsignedCppInteger T>
-requires (std::popcount(sizeof(T)) == 1)
+requires (std::has_single_bit(sizeof(T)))
 class BitManipulator : public regina::detail::BitManipulatorByType<T> {
     public:
         /**
