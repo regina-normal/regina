@@ -14,7 +14,7 @@ jVodPZoe-pbGBZ8G5k.aiaaaaaa
 jVodPZoe-pbGBZ8G5k
 jNq0O6W7+pbkDa7Wlf.aaaaaqaa
 jVodPZoe-pbGBZ8G5k.aiaaaaaa
-b'\xc4YgHg\x87\xf8\x9f\x00\xdcf\x1e\xcc\x15\x80\x00\x00\x00\x00\x00'
+b"\t\xd7\x19\xd2\xd9!\xfe'\x00\xb7\x99\x07s\x05 \x00\x00\x00\x00\x00"
 jVodPZoe-pbGBZ8G5k.aiaaaaaa
 0 -> 5 (1023), 1 -> 8 (2013), 2 -> 3 (1203), 3 -> 4 (1032), 4 -> 1 (2103), 5 -> 0 (2310), 6 -> 2 (1302), 7 -> 6 (1023), 8 -> 7 (2310)
 Triangulation<3> tri = Triangulation<3>::fromGluings(9, {
