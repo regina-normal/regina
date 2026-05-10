@@ -337,7 +337,7 @@ void NormalSurface::calculateEulerChar() const {
 
 void NormalSurface::calculateSpunEulerChar() const {
     const SnapPeaTriangulation* snapPea = triangulation().isSnapPea();
-    if (! snapPea) {
+    if ( !snapPea || !triangulation().isOrientable() ) {
         // Fall back on the old implementation.
         calculateEulerChar();
         return;

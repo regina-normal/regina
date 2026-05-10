@@ -138,14 +138,13 @@ bool Triangulation<3>::hasGeneralAngleStructure() const {
     // any solution where the final coordinate is non-zero, then the final
     // column will not appear as a leading coefficient in row echelon form.
     //
-    // In the specific case where we have a SnapPeaTriangulation, we can
-    // always impose the additional condition that the angle structure has
-    // vanishing peripheral rotational holonomy.
+    // In the specific case where we have an orientable SnapPeaTriangulation,
+    // we can always impose the additional condition that the angle structure
+    // has vanishing peripheral rotational holonomy.
 
     MatrixInt eqns;
-    const SnapPeaTriangulation* snapPea = this->isSnapPea();
-    if (snapPea) {
-        eqns = regina::makeVanishingPeripheralAngleEquations(*snapPea);
+    if ( isSnapPea() && isOrientable() ) {
+        eqns = regina::makeVanishingPeripheralAngleEquations( *isSnapPea() );
     } else {
         eqns = regina::makeAngleEquations(*this);
     }

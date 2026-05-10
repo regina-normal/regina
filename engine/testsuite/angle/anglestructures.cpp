@@ -32,6 +32,7 @@
 #include "surface/normalsurface.h"
 #include "triangulation/dim3.h"
 #include "triangulation/example3.h"
+#include "snappea/snappeatriangulation.h"
 
 #include "testhelper.h"
 #include "testexhaustive.h"
@@ -301,13 +302,24 @@ static void verifyGeneralAngleStructure(const Triangulation<3>& tri,
         ASSERT_EQ(vec.size(), m.columns());
         EXPECT_TRUE((m * vec).isZero());
 
-        // Also check the vanishing peripheral angle equations.
-        const regina::SnapPeaTriangulation* snappea = tri.isSnapPea();
-        if (snappea) {
-            regina::MatrixInt vpm =
-                regina::makeVanishingPeripheralAngleEquations(*snappea);
-            ASSERT_EQ( vec.size(), vpm.columns() );
-            //TODO
+        // Verify the promise that for an orientable SnapPeaTriangulation,
+        // generalAngleStructure() always satisfies the vanishing peripheral
+        // angle equations.
+        const regina::SnapPeaTriangulation snapPea(tri);
+        if ( ! snapPea.isNull() ) {
+            // A general angle structure should always exist, regardless of
+            // whether the triangulation is orientable. We just don't make
+            // any promise about the peripheral rotational holonomy in the
+            // non-orientable case.
+            ASSERT_TRUE( snapPea.hasGeneralAngleStructure() );
+            if ( snapPea.isOrientable() ) {
+                const regina::VectorInt& vpVec =
+                    snapPea.generalAngleStructure().vector();
+                regina::MatrixInt vpm =
+                    regina::makeVanishingPeripheralAngleEquations(snapPea);
+                ASSERT_EQ( vec.size(), vpm.columns() );
+                EXPECT_TRUE( (vpm * vpVec).isZero() );
+            }
         }
     }
 }

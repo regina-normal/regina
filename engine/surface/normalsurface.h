@@ -1012,16 +1012,16 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * essentially counts each branch point as multiple vertices.
          *
          * For spun-normal surfaces, eulerChar() computes the correct Euler
-         * characteristic provided this surface resides in a SnapPea
-         * triangulation.
+         * characteristic provided this surface resides in an orientable
+         * SnapPea triangulation.
          *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
          * \pre Either this normal surface is compact (has finitely many
-         * discs), or it resides in a triangulation that is held by a
-         * SnapPeaTriangulation.
+         * discs), or it resides in an orientable triangulation that is held
+         * by a SnapPeaTriangulation.
          *
          * \return the Euler characteristic.
          *
@@ -1969,8 +1969,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Calculates the Euler characteristic of this spun-normal surface
          * and stores it as a property.
          *
-         * \pre This normal surface is non-compact, and resides in a
-         * triangulation that is held by a SnapPeaTriangulation.
+         * \pre This normal surface is non-compact, and resides in an
+         * orientable triangulation that is held by a SnapPeaTriangulation.
          *
          * \author Alex He
          */
@@ -2180,9 +2180,10 @@ inline LargeInteger NormalSurface::eulerChar() const {
         if ( isCompact() ) {
             calculateEulerChar();
         } else {
-            // If this surface resides in a SnapPeaTriangulation, then this
-            // will use combinatorial Gauss-Bonnet formula together with an
-            // angle structure with vanishing peripheral rotational holonomy.
+            // If this surface resides in an orientable SnapPeaTriangulation,
+            // then this will use the combinatorial Gauss-Bonnet formula
+            // together with an angle structure with vanishing peripheral
+            // rotational holonomy.
             //
             // Otherwise, this will internally fall back on
             // calculateEulerChar(). This gives infinity, but we aren't

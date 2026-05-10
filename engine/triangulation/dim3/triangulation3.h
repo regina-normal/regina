@@ -1564,15 +1564,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * The underlying algorithm simply solves a system of linear equations,
          * and so should be fast even for large triangulations.
          *
-         * In the specific case where this triangulation is held by a
-         * SnapPeaTriangulation, this routine solves additional linear
-         * equations to ensure that the returned generalised angle structure
-         * has vanishing peripheral rotational holonomy.
+         * In the specific case where this triangulation is orientable and is
+         * held by a SnapPeaTriangulation, this routine solves additional
+         * linear equations to ensure that the returned generalised angle
+         * structure has vanishing peripheral rotational holonomy.
          *
          * The result of this routine is cached internally: as long as
          * the triangulation does not change, multiple calls to
          * generalAngleStructure() will return identical angle structures,
-         * and every call after the first be essentially instantaneous.
+         * and every call after the first will be essentially instantaneous.
          *
          * If the triangulation does change, however, then the cached angle
          * structure will be deleted, and any reference that was returned
