@@ -635,14 +635,14 @@ std::string IsoSigBinary::asString(const ByteSequence& sig) {
         Base64BitEncoder enc;
         while (! dec.noMoreBits()) {
             // Re-encode one component of the triangulation at a time.
-            size_t nSimp = dec.decodeInt<size_t>(8);
+            size_t nSimp = dec.template decodeInt<size_t>(8);
             int intBits;
             if (nSimp & 128) {
                 intBits = static_cast<int>(nSimp ^ 128);
                 if (intBits == 0)
                     throw InvalidArgument(
                         "IsoSigBinary::asString(): invalid integer bitwidth");
-                nSimp = dec.decodeInt<size_t>(intBits);
+                nSimp = dec.template decodeInt<size_t>(intBits);
             } else if (nSimp == 0) {
                 throw InvalidArgument(
                     "IsoSigBinary::asString(): invalid component size");
@@ -1184,14 +1184,14 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const ByteSequence& sig) {
         while (! dec.noMoreBits()) {
             // Read one component at a time.
 
-            size_t nSimp = dec.decodeInt<size_t>(8);
+            size_t nSimp = dec.template decodeInt<size_t>(8);
             int intBits;
             if (nSimp & 128) {
                 intBits = static_cast<int>(nSimp ^ 128);
                 if (intBits == 0)
                     throw InvalidArgument(
                         "fromSig(): invalid integer bitwidth");
-                nSimp = dec.decodeInt<size_t>(intBits);
+                nSimp = dec.template decodeInt<size_t>(intBits);
             } else if (nSimp == 0) {
                 throw InvalidArgument("fromSig(): invalid component size");
             } else {
