@@ -68,6 +68,8 @@ void addIsoSigEncodings(pybind11::module_& m) {
         }, rdoc::charsPerPerm)
         .def_static("encodeEmpty", &IsoSigPrintable::encodeEmpty,
             rdoc::encodeEmpty)
+        .def_static("generation", &IsoSigPrintable::generation,
+            rdoc::generation)
         ;
     regina::for_constexpr<2, regina::maxDim() + 1>([&p](auto dim) {
         regina::python::add_isosig_encoding_functions<1, dim>(p);

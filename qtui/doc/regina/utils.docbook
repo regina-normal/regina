@@ -44,14 +44,20 @@
     signatures</firstterm>.  These are short text strings that identify
     the triangulation uniquely up to combinatorial isomorphism
     (i.e., up to relabellings of the tetrahedra and/or their vertices).
+    You can use first-generation signatures (as used by
+    &regina;&nbsp;&le;&nbsp;7.x) or second-generation signatures (as
+    introduced in &regina;&nbsp;8.0); either will be understood.
    </para>
    <para>
     From the graphical user interface, you can view the isomorphism signature
     of a triangulation by switching to the <guilabel>Composition</guilabel>
     tab in the triangulation viewer.  From &python; you can fetch the
-    isomorphism signature of the triangulation <userinput>x</userinput>
-    by calling <userinput>x.isoSig()</userinput>.
-    For a full and precise specification of isomorphism signatures, see
+    second-generation isomorphism signature of the triangulation
+    <userinput>x</userinput> by calling <userinput>x.neoSig()</userinput>
+    (if you need a first-generation signature for compatibility with older
+    versions of &regina;, call <userinput>x.isoSig()</userinput> instead).
+    For a full and precise specification of first-generation isomorphism
+    signatures, see
     <emphasis>Simplification paths in the Pachner graphs of closed
     orientable 3-manifold triangulations</emphasis>, Burton, 2011,
     arXiv:1110.6080.
@@ -98,6 +104,29 @@
 
   <refsect1>
    <title>Example</title>
+
+   <para>
+    The following example uses second-generation isomorphism signatures:
+   </para>
+
+<screen>
+    <prompt>example$</prompt> <userinput>censuslookup fFuC8hYTOTa dl1hXPzb cV6cqb</userinput>
+    fFuC8hYTOTa: 1 hit
+        SFS [S2: (2,1) (3,1) (5,-4)] : #1 -- Closed census (orientable)
+
+    dl1hXPzb: 0 hits
+
+    cV6cqb: 2 hits
+        m004 : #1 -- Cusped hyperbolic census (orientable)
+        L104001 -- Hyperbolic knot and link complements
+
+    <prompt>example$</prompt>
+</screen>
+
+   <para>
+    The next example describes the same triangulations as before, but this
+    time using first-generation isomorphism signatures:
+   </para>
 
 <screen>
     <prompt>example$</prompt> <userinput>censuslookup fvPQcdecedekrsnrs dLQbcccajqs cPcbbbiht</userinput>

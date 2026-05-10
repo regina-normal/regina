@@ -3888,8 +3888,8 @@ Exception ``NotImplemented``:
 Python:
     You can pass the optional template argument for the encoding as an
     additional runtime argument: ``neoSig(allowReflection,
-    allowReversal, allowRotation, Encoding)``. So, for example, to use
-    a binary encoding you can call ``neoSig(True, True, True,
+    allowReversal, allowRotation, encoding)``. So, for example, to use
+    a binary encoding you can call ``neoSig(encoding =
     LinkSigBinary)``. When generating binary signatures (via
     ``LinkSigBinary``), the return value will be a Python ``bytes``
     object (not a ByteSequence).
@@ -5576,10 +5576,10 @@ Python:
     Python does not support C++ templates. Instead, you should pass
     the template arguments at runtime, using the argument order
     ``sig(generation, allowReflection, allowReversal, allowRotation,
-    Encoding)``. So, for example, to generate a string-based second-
+    encoding)``. So, for example, to generate a string-based second-
     generation signature, you can call ``sig(2)``, or to disallow
-    reversal, ``sig(2, True, False, True)``. For a binary signature,
-    you can call ``sig(2, True, True, True, LinkSigBinary)``. When
+    reversal, ``sig(2, allowReversal = False)``. For a binary
+    signature, you can call ``sig(2, encoding = LinkSigBinary)``. When
     generating binary signatures (via ``LinkSigBinary``), the return
     value will be a Python ``bytes`` object (not a ByteSequence).
 

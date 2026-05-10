@@ -3671,6 +3671,13 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
             << link.size() << ' ' << link.countComponents() << std::endl;
     #endif
 
+    if constexpr (std::same_as<Encoding, LinkSigPrintable>) {
+        if (link.size() == 0)
+            EXPECT_EQ(LinkSigPrintable::generation(sig), 2);
+        else
+            EXPECT_EQ(LinkSigPrintable::generation(sig), generation);
+    }
+
     if (reflect) {
         Link alt(link, false);
         alt.reflect();

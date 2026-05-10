@@ -592,6 +592,8 @@
 		0545A01A2F9F68AE008D3ADB /* siglist.h in Headers */ = {isa = PBXBuildFile; fileRef = 0545A0172F9F68AE008D3ADB /* siglist.h */; };
 		0545A01C2F9F696E008D3ADB /* siglist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A01B2F9F696E008D3ADB /* siglist.cpp */; };
 		0545A01F2FA83E57008D3ADB /* sigutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A01E2FA83E57008D3ADB /* sigutils.cpp */; };
+		0545A0232FB131E1008D3ADB /* isosig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0222FB131E1008D3ADB /* isosig.cpp */; };
+		0545A0242FB131E1008D3ADB /* isosig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0222FB131E1008D3ADB /* isosig.cpp */; };
 		054C6A661DCC1FF3005373F0 /* example5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A4F1DCC1FE7005373F0 /* example5.cpp */; };
 		054C6A671DCC1FF3005373F0 /* example6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A501DCC1FE7005373F0 /* example6.cpp */; };
 		054C6A681DCC1FF3005373F0 /* example7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A511DCC1FE7005373F0 /* example7.cpp */; };
@@ -3072,6 +3074,7 @@
 		0545A01E2FA83E57008D3ADB /* sigutils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sigutils.cpp; sourceTree = "<group>"; };
 		0545A0202FAC6558008D3ADB /* signatures.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = signatures.out; sourceTree = "<group>"; };
 		0545A0212FAC6558008D3ADB /* signatures.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = signatures.test; sourceTree = "<group>"; };
+		0545A0222FB131E1008D3ADB /* isosig.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = isosig.cpp; sourceTree = "<group>"; };
 		0549B4982907D38D00C911AF /* data-anon.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-anon.docbook"; sourceTree = "<group>"; };
 		0549B4992907D38E00C911AF /* data-tri.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tri.docbook"; sourceTree = "<group>"; };
 		0549B49A2907D38E00C911AF /* data-txi.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-txi.docbook"; sourceTree = "<group>"; };
@@ -6788,6 +6791,7 @@
 				055114D11DCC71A700EC753C /* facetspec.h */,
 				058C305E1DCAF6F8006162D2 /* forward.h */,
 				058E398C1DCBC67C00D463A4 /* generic.h */,
+				0545A0222FB131E1008D3ADB /* isosig.cpp */,
 				050613562F8DA057009CF16A /* isosig.h */,
 				05CAE698274AA785007C93F3 /* isosigencoding.h */,
 				05CAE699274AA785007C93F3 /* isosigtype.h */,
@@ -10160,6 +10164,7 @@
 				05A628112AE91FA70049739E /* engine.cpp in Sources */,
 				0553FAFF2AEBE6ED00BE89A7 /* reidemeister-tangle.cpp in Sources */,
 				0553FA712AEBE30200BE89A7 /* packet.cpp in Sources */,
+				0545A0242FB131E1008D3ADB /* isosig.cpp in Sources */,
 				0553FAD32AEBE3E100BE89A7 /* example2.cpp in Sources */,
 				0553FA752AEBE36E00BE89A7 /* xmlpacketreaders.cpp in Sources */,
 				0553FAE32AEBE6B500BE89A7 /* gluingpermsearcher2.cpp in Sources */,
@@ -10796,6 +10801,7 @@
 				050C64871DA1249600C9420F /* globaldirs.cpp in Sources */,
 				052F9F3B180600FB00FAE4DF /* integer.cpp in Sources */,
 				0534FAE222DFDDA7000A96A3 /* memstream.cpp in Sources */,
+				0545A0232FB131E1008D3ADB /* isosig.cpp in Sources */,
 				05A0672E1DFA68190047872E /* satblocktypes.cpp in Sources */,
 				0594930A2920B1C300940F0D /* perm.cpp in Sources */,
 				05721EF11F97153E00A83FFC /* link.cpp in Sources */,

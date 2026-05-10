@@ -99,6 +99,8 @@ void addLinkSig(pybind11::module_& m) {
                     "Not a supported generation of knot/link signature");
             }
         }, rdoc::length)
+        .def_static("generation", &LinkSigPrintable::generation,
+            rdoc::generation)
         ;
     regina::python::no_eq_static(c);
 

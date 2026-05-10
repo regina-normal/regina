@@ -8,6 +8,7 @@ SET ( FILES
   example4.cpp
   facetpairing3.cpp
   facepair.cpp
+  isosig.cpp
   )
 
 # Prepend folder name

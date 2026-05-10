@@ -401,9 +401,9 @@ namespace IsoSigBinary_ {
 
 // Docstring regina::python::doc::IsoSigBinary_::asString
 static const char *asString =
-R"doc(Re-encodes the given binary signature as a string-based signature
-(using the IsoSigPrintable encoding), which uses only printable
-characters from the 7-bit ASCII range.
+R"doc(Re-encodes the given binary signature as a string-based second-
+generation signature (using the IsoSigPrintable encoding), which uses
+only printable characters from the 7-bit ASCII range.
 
 Calling ``printable(sig)`` is significantly more efficient than
 calling ``Triangulation<dim>::fromSig(sig).neoSig()`` (with an
@@ -1136,6 +1136,52 @@ this; instead it returns the non-empty string ``a``.
 
 Returns:
     the isomorphism signature of the empty triangulation.)doc";
+
+// Docstring regina::python::doc::IsoSigPrintable_::generation
+static const char *generation =
+R"doc(Identifies whether the given signature is a first-generation or
+second-generation signature, as encoded by IsoSigPrintable.
+
+This routine aims to be fast, and does not verify the entire
+signature; instead it reads just enough of the initial characters to
+make its decision. What this means is:
+
+* If the given signature _is_ a first-generation or second-generation
+  signature as encoded by IsoSigPrintable, this routine guarantees to
+  return 1 or 2 respectively.
+
+* Otherwise, there are no guarantees: this output _could_ return 0
+  (indicating that it identified *sig* as being neither of these), or
+  it could still return 1 or 2 (indicating that, whilst invalid, *sig*
+  nevertheless has a prefix that _looks_ like a first-generation or
+  second-generation signature).
+
+As a special case, for the empty triangulation, the first-generation
+and second-generation signatures are identical (both are the single
+letter ``a``). In this case, generation() will return 2.
+
+If you need to verify the _validity_ of a signature, this is not the
+correct routine to use - instead you should test whether
+``Triangulation<dim>::fromSig(sig)`` throws an exception.
+
+This routine will also recognise signatures encoded by
+IsoSigPrintableLockFree (since those are identical to signatures
+encoded by IsoSigPrintable for triangulations with no simplex/facet
+locks).
+
+This routine does not require knowledge of the triangulation
+dimension.
+
+Parameter ``sig``:
+    a printable isomorphism signature of some generation.
+
+Returns:
+    1 or 2 if *sig* is a first-generation or second-generation
+    signature respectively as encoded via IsoSigPrintable, or 0 if
+    *sig* was explicitly discovered to be neither of these. As
+    described above, if \s sig is _not_ a printable isomorphism
+    signature of any generation, this routine could return any of the
+    values 0, 1 or 2.)doc";
 
 // Docstring regina::python::doc::IsoSigPrintable_::length
 static const char *length =

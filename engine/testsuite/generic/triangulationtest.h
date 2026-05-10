@@ -1253,6 +1253,13 @@ class TriangulationTest : public testing::Test {
                 << tri.size() << ' ' << tri.countComponents() << std::endl;
             #endif
 
+            if constexpr (std::same_as<Encoding, IsoSigPrintable>) {
+                if (tri.size() == 0)
+                    EXPECT_EQ(IsoSigPrintable::generation(sig), 2);
+                else
+                    EXPECT_EQ(IsoSigPrintable::generation(sig), gen);
+            }
+
             if constexpr (stringBased) {
                 size_t sigSize = Triangulation<dim>::isoSigComponentSize(sig);
                 if (tri.isEmpty()) {
