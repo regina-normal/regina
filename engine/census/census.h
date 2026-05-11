@@ -60,17 +60,27 @@ class CensusHit;
  * databases.
  *
  * A census database stores a list of key-value pairs.  The keys are
- * isomorphism signatures of triangulations (as returned by
- * Triangulation<3>::isoSig(), for instance), and the values are
- * human-readable names (typically the names of the triangulations
- * and/or the names of the underlying manifolds).  An isomorphism
- * signature may appear multiple times (with different names)
- * within the same database.
+ * isomorphism signatures of triangulations (currently first-generation
+ * signatures as returned by `Triangulation<dim>::isoSig()`, but see the
+ * notes below).  The values are human-readable names (typically the names of
+ * the triangulations and/or the names of the underlying manifolds).
+ * A key may appear multiple times (associated with different human-readable
+ * names) within the same database.
  *
- * The format used to store census databases is an internal implementation
- * detail that may change in future releases of Regina.  End users
- * should only search census databases using high-level routines such as
- * Census::lookup() and CensusDB::lookup().
+ * Ordinary users should not need to interact with CensusDB directly;
+ * instead you would typically use one of the high-level Census::lookup()
+ * routines, which searches all of Regina's in-built databases using the
+ * correct type of search key(s).  There are two reasons for this:
+ *
+ * - The _keys_ used for census databases are subject to change in future
+ *   versions of Regina.  Currently these keys are first-generation
+ *   isomorphism signatures.
+ *
+ * - The _format_ used to store census databases is an internal implementation
+ *   detail, also subject to change in future releases of Regina.  Even if you
+ *   are accessing a specific database via CensusDB, you should only search a
+ *   database using the high-level routine CensusDB::lookupKey() and not
+ *   attempt to open the database file directly.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -92,7 +102,7 @@ class CensusDB {
          * This constructor will not run any checks (e.g., it will not
          * verify that the database exists, or that it is stored in the correct
          * format).  Note that even if the database does not exist, the
-         * lookup() routine will fail gracefully.
+         * lookupKey() routine will fail gracefully.
          *
          * \param filename the filename where the database is stored.
          * \param desc a human-readable description of the database.
@@ -132,7 +142,7 @@ class CensusDB {
         const std::string& desc() const;
 
         /**
-         * Searches for the given isomorphism signature in this database.
+         * Searches for the given key in this database.
          *
          * For each match that is found (if any), this routine will call
          * \a action (which must be a function or some other callable type).
@@ -140,14 +150,18 @@ class CensusDB {
          * passed as a prvalue (so the argument type for \a action could be
          * any of `CensusHit`, `const CensusHit&`, or `CensusHit&&`).
          * The return value of \a action will be ignored (typically \a action
-         * would return \c void).
+         * would return `void`).
          *
          * Note that the database will be opened and closed every time
          * this routine is called.
          *
-         * If the given isomorphism signature is empty then this routine will
-         * return \c true immediately (i.e., it will be treated as successful
-         * with no hits but it will not actually search the database).
+         * The argument \a key should be a <i>g</i>th-generation isomorphism
+         * signature, where \a g is passed as a template argument.  Only one
+         * value of \a g is allowed: the same generation of signature that the
+         * database uses internally for its keys.  This means that the way you
+         * call lookupKey() will change if/when the database key type changes;
+         * this is by design, since you will of course need to change what you
+         * pass as an argument also.
          *
          * If you are using this routine yourself, you will need to
          * include the extra header census/census-impl.h (which is _not_
@@ -155,19 +169,31 @@ class CensusDB {
          * end users can simply use the catch-all Census::lookup() routines
          * and will not need to call this more fine-grained routine.
          *
-         * \python This function is available in Python, and the
-         * \a action argument may be a pure Python function.
+         * \python This function is available in Python, and the \a action
+         * argument may be a pure Python function.  Since Python does not
+         * support C++ templates, the generation should be passed as an
+         * initial argument at runtime: `lookupKey(generation, isoSig, action)`.
+         * If \a generation does not match the one allowed value (i.e., the
+         * format used internally by the database), then this routine will
+         * throw an InvalidArgument exception.
          *
-         * \param isoSig the isomorphism signature to search for.
+         * \tparam generation the generation of isomorphism signature that you
+         * are passing in the argument \a isoSig.  Currently \a generation
+         * _must_ be 1, since Regina's databases currently use
+         * first-generation isomorphism signatures as their keys.
+         *
+         * \param isoSig the isomorphism signature to search for; this must be
+         * of the same generation that is passed as a template parameter.
          * \param action a function (or other callable type) that will
          * be called for each match in the database.
-         * \return \c true if the lookup was correctly performed, or \c false
+         * \return `true` if the lookup was correctly performed, or \c false
          * if some error occurred (e.g., the database could not be opened).
          * Note in particular that if there were no matches but no errors,
          * then the return value will be \c true.
          */
-        template <VoidCallback<CensusHit&&> Action>
-        bool lookup(const std::string& isoSig, Action&& action) const;
+        template <int generation, VoidCallback<CensusHit&&> Action>
+        requires (generation == 1)
+        bool lookupKey(const std::string& isoSig, Action&& action) const;
 
         /**
          * Sets this to be a clone of the given database reference.
@@ -376,7 +402,8 @@ class Census {
          * as opposed to fully fleshed-out triangulations.  If you already
          * have the isomorphism signature of the triangulation, then you
          * can call the variant lookup(const std::string&) instead, which
-         * will be faster since it avoids some extra overhead.
+         * (if your signature is of the right generation) will be faster since
+         * it avoids some extra overhead.
          *
          * Note that there may be many hits (possibly from multiple databases,
          * and in some cases possibly even within the same database).
@@ -385,7 +412,7 @@ class Census {
          * matches at all, a list will still be returned; you can call
          * empty() on this list to test whether any matches were found.
          *
-         * This routine is fast: it first computes the isomorphism
+         * This routine is fast: it first computes the relevant isomorphism
          * signature of the triangulation, and then performs a
          * logarithmic-time lookup in each database (here "logarithmic"
          * means logarithmic in the size of the database).
@@ -399,11 +426,30 @@ class Census {
          * in-built census databases.
          *
          * For this routine you specify the triangulation by giving its
-         * isomorphism signature, as returned by Triangulation<3>::isoSig().
-         * This is faster than the variant lookup(const Triangulation<3>&),
-         * since Regina's census databases store isomorphism signatures
-         * internally.  If you do not already know the isomorphism signature,
-         * it is fine to just call lookup(const Triangulation<3>&) instead.
+         * isomorphism signature.  This may be either second-generation (as
+         * returned by `Triangulation<dim>::neoSig()`), or first-generation
+         * (as returned by `Triangulation<dim>::isoSig()`); either form of
+         * signature will yield the same results.
+         *
+         * Calling lookup() on an isomorphism signature _may_ be faster than
+         * calling lookup() on the triangulation itself:
+         *
+         * - If the signature is of the same generation as is used internally
+         *   by the census databases, this will avoid some overhead (since the
+         *   triangulation variant must compute the signature to use as a
+         *   lookup key).
+         *
+         * - If the signature is of a different generation from the one used
+         *   internally by the census databases, then this will add overhead
+         *   (since this routine will need to reconstruct the triangulation
+         *   and then compute the generation of signature that it needs to
+         *   perform the internal database lookups).
+         *
+         * A general rule of thumb is this: if you already have an isomorphism
+         * signature, you should call this string-based routine (regardless of
+         * which generation of signature you have), since reconstruction is
+         * reasonably fast.  If you do not already have an isomorphism
+         * signature, just call the triangulation-based lookup routine.
          *
          * Note that there may be many hits (possibly from multiple databases,
          * and in some cases possibly even within the same database).
@@ -412,13 +458,15 @@ class Census {
          * matches at all, a list will still be returned; you can call
          * empty() on this list to test whether any matches were found.
          *
-         * This routine is fast: it first computes the isomorphism
-         * signature of the triangulation, and then performs a
-         * logarithmic-time lookup in each database (here "logarithmic"
-         * means logarithmic in the size of the database).
+         * This routine is fast: it first recomputes the generation of
+         * isomorphism signature that it needs (but only if the given signature
+         * is not already of the correct generation), and then it performs a
+         * logarithmic-time lookup in each database (where "logarithmic" means
+         * logarithmic in the size of the database).
          *
-         * \param isoSig the isomorphism signature of the triangulation
-         * that you wish to search for.
+         * \param isoSig the isomorphism signature of the triangulation that
+         * you wish to search for; this may be either first-generation or
+         * second-generation.
          * \return a list of all database matches.
          */
         static std::list<CensusHit> lookup(const std::string& isoSig);

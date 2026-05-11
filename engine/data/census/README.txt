@@ -11,7 +11,9 @@ Each *.zsig file in this directory is a gzipped text file in the form:
 ...
 <isosig> <manifold_name>
 
+All isomorphism signatures are first-generation.
+
 The extension .zsig is used (instead of something more sensible, like .sig.gz)
 so that ${INPUT_FILE_BASE} does the right thing in xcode's custom build rules.
 
- -- Ben Burton <bab@maths.uq.edu.au>, Mon,  1 Sep 2014 18:12:12 +1000
+ -- Ben Burton <bab@maths.uq.edu.au>, Mon, 11 May 2026 13:09:17 +1000

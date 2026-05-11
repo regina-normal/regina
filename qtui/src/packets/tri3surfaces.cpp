@@ -671,7 +671,7 @@ void Tri3SurfacesUI::refresh() {
     }
 
     if (tri_->size() <= MAX_CENSUS_TRIANGULATION_SIZE) {
-        hits = regina::Census::lookup(tri_->isoSig());
+        hits = regina::Census::lookup(*tri_);
         if (hits.empty()) {
             census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
         } else if (hits.size() == 1) {

@@ -67,8 +67,9 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
-template <VoidCallback<CensusHit&&> Action>
-bool CensusDB::lookup(const std::string& isoSig, Action&& action) const {
+template <int generation, VoidCallback<CensusHit&&> Action>
+requires (generation == 1)
+bool CensusDB::lookupKey(const std::string& isoSig, Action&& action) const {
     // On some platforms, looking up an empty key triggers the
     // error MDB_BAD_VALSIZE when using LMDB.
     if (isoSig.empty())

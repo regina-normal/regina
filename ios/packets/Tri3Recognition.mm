@@ -184,7 +184,7 @@
 
     // Display the results of a census lookup.
     if (self.packet->size() <= MAX_CENSUS_TRIANGULATION_SIZE) {
-        regina::CensusHits* hits = regina::Census::lookup(static_cast<regina::Triangulation<3>*>(self.packet)->isoSig());
+        regina::CensusHits* hits = regina::Census::lookup(*static_cast<regina::Triangulation<3>*>(self.packet));
         if (hits->count() == 0) {
             self.census.numberOfLines = 1;
             self.census.attributedText = [TextHelper dimString:@"Not found"];

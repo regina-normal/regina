@@ -84,6 +84,14 @@ Version 8.0  [ TODO ]
         Class CallableArg<...>:
             - This is now deprecated, since its implementation is drifting
               increasingly further away from modern C++ standards.
+        Class Census:
+            - The string-based lookup() can now take either a first-generation
+              or second-generation isomorphism signature.
+        Class CensusDB:
+            - Renamed lookup() to lookupKey<1>().  The template argument
+              indicates the generation of isomorphism signature that the
+              database uses for its keys, and is subject to change in future
+              versions of Regina.  The old lookup() is removed completely.
         Class ChildIterator<const_>:
             - The type std::iterator_traits<ChildIterator<...>>::value_type
               is now just Packet (without any const qualifiers), regardless of

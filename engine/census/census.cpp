@@ -46,7 +46,7 @@ CensusDB* Census::christy_ = nullptr;
 bool Census::dbInit_ = false;
 
 // Instantiate this template, which we use in the python bindings.
-template bool CensusDB::lookup<const std::function<void(CensusHit&&)>&>(
+template bool CensusDB::lookupKey<1, const std::function<void(CensusHit&&)>&>(
     const std::string&, const std::function<void(CensusHit&&)>&) const;
 
 std::list<CensusHit> Census::lookup(const Triangulation<3>& tri) {
@@ -54,6 +54,25 @@ std::list<CensusHit> Census::lookup(const Triangulation<3>& tri) {
 }
 
 std::list<CensusHit> Census::lookup(const std::string& isoSig) {
+    // For now, the census databases all store first-generation signatures.
+    switch (IsoSigPrintable::generation(isoSig)) {
+        case 1:
+            // Go ahead and perform the database lookups.
+            break;
+        case 2:
+            // We need to do the lookup with a first-generation signature.
+            // Note: "a" is both a first-generation and second-generation
+            // signature, so in that case we should fall through and treat it
+            // as first-generation (otherwise we will get an infinite loop).
+            if (isoSig != "a")
+                return lookup(Triangulation<3>::fromSig(isoSig).isoSig());
+            break;
+        default:
+            // The given string is not an isomorphism signature.
+            // There will be no hits.
+            return {};
+    }
+
     if (! dbInit_) {
         closedOr_ = standardDB("closed-or-census-11." REGINA_DB_EXT,
             "Closed census (orientable)");
@@ -76,12 +95,12 @@ std::list<CensusHit> Census::lookup(const std::string& isoSig) {
         hits.push_back(std::move(hit));
     };
 
-    closedOr_->lookup(isoSig, push);
-    closedNor_->lookup(isoSig, push);
-    closedHyp_->lookup(isoSig, push);
-    cuspedHypOr_->lookup(isoSig, push);
-    cuspedHypNor_->lookup(isoSig, push);
-    christy_->lookup(isoSig, push);
+    closedOr_->lookupKey<1>(isoSig, push);
+    closedNor_->lookupKey<1>(isoSig, push);
+    closedHyp_->lookupKey<1>(isoSig, push);
+    cuspedHypOr_->lookupKey<1>(isoSig, push);
+    cuspedHypNor_->lookupKey<1>(isoSig, push);
+    christy_->lookupKey<1>(isoSig, push);
 
     return hits;
 }

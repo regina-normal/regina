@@ -386,7 +386,7 @@ dump(SpiralSolidTorus.recognise(l.chain(0).top(), l.chain(0).topVertexRoles()))
 # census/
 # ----------------------------------------------------------------------
 
-h = Census.lookup('cPcbbbiht')[0]
+h = Census.lookup('cV6cqb')[0]
 dump(h)
 # Do not dump the CensusDB object, since the output is filesystem-dependent.
 # dump(h.db())

@@ -284,21 +284,34 @@ static void verifyLookup(const char* isoSig, const char* name1,
 }
 
 TEST_F(CensusTest, lookup) {
-    // Make sure that the database library is working, and that
-    // we can access all censuses.
+    // Make sure that the database library is working, and that we can access
+    // all censuses.  We test database lookups using both first-generation and
+    // second-generation signatures.
 
     verifyLookupNone("");
     verifyLookupNone("abcdefg");
+    // Closed orientable census:
+    verifyLookup("fFuC8hYTOTa",
+        "SFS [S2: (2,1) (3,1) (5,-4)] : #1");
     verifyLookup("fvPQcdecedekrsnrs",
-        "SFS [S2: (2,1) (3,1) (5,-4)] : #1"); // closed or
+        "SFS [S2: (2,1) (3,1) (5,-4)] : #1");
+    // Closed orientable & closed hyperbolic censuses:
+    verifyLookup("kFsYkeXlZ-pa2bpzGfLd",
+        "Hyp_1.28448530 (Z_6) : #12",
+        "1.2844853004683544 : m004(6, 1)");
     verifyLookup("kLLvLQQkcdjgjijhihihsfrovojgng",
         "Hyp_1.28448530 (Z_6) : #12",
-        "1.2844853004683544 : m004(6, 1)"); // closed or, closed hyp
-    verifyLookup("gvLQQcdefeffdwnplhe",
-        "T x I / [ 1,1 | 1,0 ] : #1"); // closed nor
-    verifyLookup("cPcbbbiht",
-        "m004 : #1", "L104001"); // cusped or, hyp knots & links
-    verifyLookup("bkaaid", "m000 : #1"); // cusped nor
-    verifyLookup("kLLPLLQkceefejjiijiiiatdmpamxt",
-        "L408001", "L410005"); // hyp knots & links, multiple times
+        "1.2844853004683544 : m004(6, 1)");
+    // Closed non-orientable census:
+    verifyLookup("gtJLT-bUykjdt", "T x I / [ 1,1 | 1,0 ] : #1");
+    verifyLookup("gvLQQcdefeffdwnplhe", "T x I / [ 1,1 | 1,0 ] : #1");
+    // Cusped orientable census, hyperbolic knots & links:
+    verifyLookup("cV6cqb", "m004 : #1", "L104001");
+    verifyLookup("cPcbbbiht", "m004 : #1", "L104001");
+    // Cusped non-orientable census:
+    verifyLookup("bJrc", "m000 : #1");
+    verifyLookup("bkaaid", "m000 : #1");
+    // Hyperbolic knots & links, multiple hits:
+    verifyLookup("k3WQS7WmZ7pbm6QZelNa", "L408001", "L410005");
+    verifyLookup("kLLPLLQkceefejjiijiiiatdmpamxt", "L408001", "L410005");
 }

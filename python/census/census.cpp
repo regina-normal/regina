@@ -52,8 +52,17 @@ void addCensus(pybind11::module_& m) {
         .def("filename", &CensusDB::filename, rdoc::filename)
         .def("desc", &CensusDB::desc, rdoc::desc)
         .def("swap", &CensusDB::swap, rdoc::swap)
-        .def("lookup", &CensusDB::lookup<const std::function<
-            void(CensusHit&&)>&>, rdoc::lookup)
+        .def("lookupKey", [](const CensusDB& db, int generation,
+                const std::string& isoSig,
+                const std::function<void(CensusHit&&)>& action) {
+            if (generation == 1)
+                return db.lookupKey<1>(isoSig, action);
+            else
+                throw regina::InvalidArgument("This generation of "
+                    "signature is not supported by CensusDB");
+        }, pybind11::arg("generation"), pybind11::arg("isoSig"),
+            pybind11::arg("action"),
+            rdoc::lookupKey)
     ;
     regina::python::add_output_custom(db,
             [](const CensusDB& db, std::ostream& s) {

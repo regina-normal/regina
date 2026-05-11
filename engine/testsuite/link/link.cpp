@@ -55,21 +55,20 @@ static constexpr int JONES_THRESHOLD = 20;
 static bool isFigureEightComplement(const Triangulation<3>& tri) {
     // True means yes, this is the figure eight knot complement.
     // False means we don't have a definitive answer.
-    return tri.isoSig() == "cPcbbbiht";
+    return tri.neoSig() == "cV6cqb";
 }
 
 static bool isTrefoilComplement(const Triangulation<3>& tri) {
     // True means yes, this is the trefoil complement.
     // False means we don't have a definitive answer.
-    std::string sig = tri.isoSig();
+    std::string sig = tri.neoSig();
 
     // Regina's simplification heuristics have been found to produce these
     // trefoil complements in practice:
     for (const char* s : {
-            "cPcbbbadh", "cPcbbbadu",
-            "dLQbcbcdlcj", "dLQbcbcdlcn", "dLQabccbrwj", "dLQabccbrwn",
-            "eLAkbbcddaikhc", "eLAkbbcddainqv", "eLAkbcbddducqn", "eLAkbcbdddmcxj",
-            "gLLMQaeefedfbaapgjr", "kLLLALQkbdedfhjjiijafergaxtron" })
+            "cV6Ika", "cV6IAa", "dN0Time", "dN0Timd", "dN0haxc", "dN0haxd",
+            "ehzBNfavf", "ehzBNfWuf", "ehrBRfHcj", "ehrBRfrTl", "ghCRSFjGnZKe",
+            "kFgXo7WmZV5iMHufbDVc" })
         if (sig == s)
             return true;
 
@@ -78,10 +77,9 @@ static bool isTrefoilComplement(const Triangulation<3>& tri) {
 
 static bool isCensusManifold(const Triangulation<3>& tri,
         const std::string& name) {
-    std::string sig = tri.isoSig();
     std::string altName = name + " : ";
 
-    auto hits = regina::Census::lookup(sig);
+    auto hits = regina::Census::lookup(tri);
     for (const auto& hit : hits)
         if (hit.name() == name ||
                 hit.name().substr(0, altName.size()) == altName)
@@ -1883,7 +1881,7 @@ static void verifyComplementTrefoilUnknot(const TestCase& test) {
                 foundSplit = true;
             else
                 ADD_FAILURE() << "Link splits into unexpected components: "
-                    << comp[0].isoSig() << ' ' << comp[1].isoSig();
+                    << comp[0].neoSig() << ' ' << comp[1].neoSig();
         }
     }
 
