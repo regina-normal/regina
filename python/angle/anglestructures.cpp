@@ -48,9 +48,9 @@ void addAngleStructures(pybind11::module_& m) {
 
     m.def("makeAngleEquations", regina::makeAngleEquations,
         rdoc::makeAngleEquations);
-    m.def("makeVanishingPeripheralAngleEquations",
-            regina::makeVanishingPeripheralAngleEquations,
-            rdoc::makeVanishingPeripheralAngleEquations);
+    m.def("makeBoundaryNullAngleEquations",
+            regina::makeBoundaryNullAngleEquations,
+            rdoc::makeBoundaryNullAngleEquations);
 
     RDOC_SCOPE_SWITCH(AngleStructures)
 

@@ -2182,8 +2182,8 @@ inline LargeInteger NormalSurface::eulerChar() const {
         } else {
             // If this surface resides in an orientable SnapPeaTriangulation,
             // then this will use the combinatorial Gauss-Bonnet formula
-            // together with an angle structure with vanishing peripheral
-            // rotational holonomy.
+            // together with a boundary-null angle structure (i.e., an angle
+            // structure with vanishing peripheral rotational holonomy).
             //
             // Otherwise, this will internally fall back on
             // calculateEulerChar(). This gives infinity, but we aren't

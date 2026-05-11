@@ -1567,7 +1567,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * In the specific case where this triangulation is orientable and is
          * held by a SnapPeaTriangulation, this routine solves additional
          * linear equations to ensure that the returned generalised angle
-         * structure has vanishing peripheral rotational holonomy.
+         * structure is boundary-null (i.e., has vanishing peripheral
+         * rotational holonomy).
          *
          * The result of this routine is cached internally: as long as
          * the triangulation does not change, multiple calls to

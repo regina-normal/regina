@@ -628,27 +628,26 @@ void swap(AngleStructures& lhs, AngleStructures& rhs);
 MatrixInt makeAngleEquations(const Triangulation<3>& tri);
 
 /**
- * Generates the set of vanishing peripheral angle structure equations for
- * the given triangulation.
+ * Generates the set of boundary-null angle structure equations for the given
+ * SnapPea triangulation.
  *
- * These are the equations that will be used to find an angle structure with
- * vanishing peripheral rotational holonomy.
+ * These are the equations that will be used to find a boundary-null angle
+ * structure (i.e., an angle structure with vanishing peripheral rotational
+ * holonomy).
  *
- * Each equation will be represented as a row of the resulting matrix, and each
- * column will represent a coordinate in the underlying coordinate system
- * (which is described in the notes for AngleStructure::vector()).
+ * Each equation will be represented as a row of the resulting matrix, and
+ * each column will represent a coordinate in the underlying coordinate
+ * system (which is described in the notes for AngleStructure::vector()).
  *
- * \param tri the triangulation upon which these vanishing peripheral angle
+ * \param tri the triangulation upon which these boundary-null angle
  * structure equations will be based.
- * \return the resulting set of vanishing peripheral angle structure
- * equations.
+ * \return the resulting set of boundary-null angle structure equations.
  *
  * \ingroup angle
  *
  * \author Alex He
  */
-MatrixInt makeVanishingPeripheralAngleEquations(
-        const SnapPeaTriangulation& tri );
+MatrixInt makeBoundaryNullAngleEquations(const SnapPeaTriangulation& tri);
 
 // Inline functions for AngleStructures
 

@@ -79,8 +79,7 @@ MatrixInt makeAngleEquations(const Triangulation<3>& tri) {
     return eqns;
 }
 
-MatrixInt makeVanishingPeripheralAngleEquations(
-        const SnapPeaTriangulation& tri ) {
+MatrixInt makeBoundaryNullAngleEquations(const SnapPeaTriangulation& tri) {
     size_t n = tri.size();
     size_t cols = 3 * n + 1;
 

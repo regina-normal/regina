@@ -303,8 +303,8 @@ static void verifyGeneralAngleStructure(const Triangulation<3>& tri,
         EXPECT_TRUE((m * vec).isZero());
 
         // Verify the promise that for an orientable SnapPeaTriangulation,
-        // generalAngleStructure() always satisfies the vanishing peripheral
-        // angle equations.
+        // generalAngleStructure() always satisfies the boundary-null angle
+        // equations.
         const regina::SnapPeaTriangulation snapPea(tri);
         if ( ! snapPea.isNull() ) {
             // A general angle structure should always exist, regardless of
@@ -316,7 +316,7 @@ static void verifyGeneralAngleStructure(const Triangulation<3>& tri,
                 const regina::VectorInt& vpVec =
                     snapPea.generalAngleStructure().vector();
                 regina::MatrixInt vpm =
-                    regina::makeVanishingPeripheralAngleEquations(snapPea);
+                    regina::makeBoundaryNullAngleEquations(snapPea);
                 ASSERT_EQ( vec.size(), vpm.columns() );
                 EXPECT_TRUE( (vpm * vpVec).isZero() );
             }

@@ -81,7 +81,7 @@ Returns:
     the resulting set of angle structure equations.)doc";
 
 // Make it build. This will be overwritten by gendocs.sh
-static const char *makeVanishingPeripheralAngleEquations =
+static const char *makeBoundaryNullAngleEquations =
 R"doc()doc";
 
 namespace AngleStructures_ {

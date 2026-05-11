@@ -140,11 +140,11 @@ bool Triangulation<3>::hasGeneralAngleStructure() const {
     //
     // In the specific case where we have an orientable SnapPeaTriangulation,
     // we can always impose the additional condition that the angle structure
-    // has vanishing peripheral rotational holonomy.
+    // is boundary-null (i.e., has vanishing peripheral rotational holonomy).
 
     MatrixInt eqns;
     if ( isSnapPea() && isOrientable() ) {
-        eqns = regina::makeVanishingPeripheralAngleEquations( *isSnapPea() );
+        eqns = regina::makeBoundaryNullAngleEquations( *isSnapPea() );
     } else {
         eqns = regina::makeAngleEquations(*this);
     }
