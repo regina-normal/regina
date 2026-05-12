@@ -255,7 +255,7 @@ int main(int argc, char* argv[]) {
                 break;
             case 'g':
                 sigGen = strtol(optarg, &endptr, 10);
-                if (*endptr != 0 || ! (sigGen == 1 || sigGen != 2)) {
+                if (*endptr != 0 || ! (sigGen == 1 || sigGen == 2)) {
                     std::cerr << "The signature generation must be 1 or 2.\n\n";
                     help();
                     return 1;
