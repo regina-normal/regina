@@ -1012,8 +1012,8 @@
     To view signatures in &regina;'s graphical user interface, visit the
     <guilabel>Composition</guilabel> tab in the triangulation viewer,
     or the <guilabel>Codes</guilabel> tab in the knot/link viewer.
-    In &python; you can call <userinput>x.neoSig()</userinput>
-    for a triangulation or link diagram <userinput>x</userinput>.
+    In &python; you can call <literal>x.neoSig()</literal>
+    for a triangulation or link diagram <literal>x</literal>.
    </para>
    <tip>
     <para>
