@@ -862,7 +862,7 @@ void usage(const char* progName, const std::string& error = std::string()) {
 int main(int argc, char* argv[]) {
     
     int dimFlag = 4; // Default to build a 4-manifold.
-    bool outputGraph = false; // Default to ouptut an isomorphism signature.
+    bool outputGraph = false; // Default to output an isomorphism signature.
     // bool realBdry = false; // Default to build closed/ideal triangulation.
     
     // Check for standard arguments:
@@ -1740,7 +1740,7 @@ int main(int argc, char* argv[]) {
             
             std::clog << "\r " << std::endl;
             std::clog << "\rHere is the isomorphism signature:\n" << std::flush;
-            std::cout << fourTri.isoSig() << "\n";
+            std::cout << fourTri.neoSig() << "\n";
         }
         else {
             std::clog << "\rHere is the edge list of the coloured graph:\n" << std::flush;
@@ -1767,7 +1767,7 @@ int main(int argc, char* argv[]) {
             
             std::clog << "\r " << std::endl;
             std::clog << "\rHere is the isomorphism signature:\n" << std::flush;
-            std::cout << threeTri.isoSig() << "\n";
+            std::cout << threeTri.neoSig() << "\n";
         }
         else {
             std::clog << "\rHere is the edge list of the coloured graph:\n" << std::flush;

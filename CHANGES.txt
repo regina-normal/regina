@@ -571,6 +571,9 @@ Version 8.0  [ TODO ]
           exception.  (Of course you can still test equality/inequality of the
           individual elements of these views.)
     UTILITIES:
+        katie:
+            - Now outputs second-generation isomorphism signatures (not
+              first-generation).
         retriangulate:
             - Now outputs second-generation signatures by default (for both
               triangulations and knots/links).  You can revert to the old

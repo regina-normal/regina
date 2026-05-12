@@ -256,6 +256,13 @@
     </para>
    </warning>
    <para>
+    &katie; will output the resulting triangulation as an
+    <firstterm>isomorphism signature</firstterm>
+    (unless you pass the option <option>--graph</option>).
+    This will be a second-generation signature, as introduced in
+    &regina;&nbsp;8.0.
+   </para>
+   <para>
     For more information, see the full &katie; manual, available from
     <ulink url='https://raburke.github.io/'></ulink>.
    </para>
