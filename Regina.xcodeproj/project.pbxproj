@@ -594,6 +594,11 @@
 		0545A01F2FA83E57008D3ADB /* sigutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A01E2FA83E57008D3ADB /* sigutils.cpp */; };
 		0545A0232FB131E1008D3ADB /* isosig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0222FB131E1008D3ADB /* isosig.cpp */; };
 		0545A0242FB131E1008D3ADB /* isosig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0222FB131E1008D3ADB /* isosig.cpp */; };
+		0545A02A2FB2F5FF008D3ADB /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
+		0545A02B2FB2F5FF008D3ADB /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
+		0545A02C2FB2F5FF008D3ADB /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
+		0545A0312FB2F61A008D3ADB /* sigconvert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0252FB2F5E6008D3ADB /* sigconvert.cpp */; };
+		0545A0342FB3015D008D3ADB /* sigconvert in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 0545A0302FB2F5FF008D3ADB /* sigconvert */; };
 		054C6A661DCC1FF3005373F0 /* example5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A4F1DCC1FE7005373F0 /* example5.cpp */; };
 		054C6A671DCC1FF3005373F0 /* example6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A501DCC1FE7005373F0 /* example6.cpp */; };
 		054C6A681DCC1FF3005373F0 /* example7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A511DCC1FE7005373F0 /* example7.cpp */; };
@@ -1801,6 +1806,13 @@
 			remoteGlobalIDString = 050F5CDC1B9BAAAA00C1F681;
 			remoteInfo = Python;
 		};
+		0545A0322FB2F676008D3ADB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0545A0262FB2F5FF008D3ADB;
+			remoteInfo = "Utils - SigConvert";
+		};
 		05617AF61D9DC0E000B1E33B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
@@ -1947,6 +1959,7 @@
 				05EBB41C259DB4A700362FA5 /* regfiletype in Copy Engine and Utilities */,
 				058FC8761FE18943006D04B4 /* retriangulate in Copy Engine and Utilities */,
 				05617B791D9DC72F00B1E33B /* sigcensus in Copy Engine and Utilities */,
+				0545A0342FB3015D008D3ADB /* sigconvert in Copy Engine and Utilities */,
 				05617AFC1D9DC33700B1E33B /* tricensus in Copy Engine and Utilities */,
 				05EBB41D259DB4AC00362FA5 /* trisetcmp in Copy Engine and Utilities */,
 				056AED972A43209D00EAF4FA /* regina-testsuite in Copy Engine and Utilities */,
@@ -3075,6 +3088,8 @@
 		0545A0202FAC6558008D3ADB /* signatures.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = signatures.out; sourceTree = "<group>"; };
 		0545A0212FAC6558008D3ADB /* signatures.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = signatures.test; sourceTree = "<group>"; };
 		0545A0222FB131E1008D3ADB /* isosig.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = isosig.cpp; sourceTree = "<group>"; };
+		0545A0252FB2F5E6008D3ADB /* sigconvert.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sigconvert.cpp; sourceTree = "<group>"; };
+		0545A0302FB2F5FF008D3ADB /* sigconvert */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sigconvert; sourceTree = BUILT_PRODUCTS_DIR; };
 		0549B4982907D38D00C911AF /* data-anon.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-anon.docbook"; sourceTree = "<group>"; };
 		0549B4992907D38E00C911AF /* data-tri.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tri.docbook"; sourceTree = "<group>"; };
 		0549B49A2907D38E00C911AF /* data-txi.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-txi.docbook"; sourceTree = "<group>"; };
@@ -4748,6 +4763,16 @@
 				052FA11F18060A4C00FAE4DF /* libregina-engine.dylib in Frameworks */,
 				057EDE8B2581F5B3004F0068 /* libgmp.xcframework in Frameworks */,
 				05E0F1912582427600965440 /* libxml2.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0545A0292FB2F5FF008D3ADB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0545A02A2FB2F5FF008D3ADB /* libregina-engine.dylib in Frameworks */,
+				0545A02B2FB2F5FF008D3ADB /* libgmp.xcframework in Frameworks */,
+				0545A02C2FB2F5FF008D3ADB /* libxml2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7316,6 +7341,7 @@
 				05617AE81D9DC02900B1E33B /* regfiletype.cpp */,
 				058FC8651FE18826006D04B4 /* retriangulate.cpp */,
 				05617AE91D9DC02900B1E33B /* sigcensus.cpp */,
+				0545A0252FB2F5E6008D3ADB /* sigconvert.cpp */,
 				05617AEA1D9DC02900B1E33B /* tricensus.cpp */,
 				05617AEB1D9DC02900B1E33B /* trisetcmp.cpp */,
 				05685FEE1F9713B000085B44 /* testsuite */,
@@ -8149,6 +8175,7 @@
 				05617B221D9DC53400B1E33B /* regfiledump */,
 				05617B2D1D9DC54500B1E33B /* regfiletype */,
 				05617B381D9DC55000B1E33B /* sigcensus */,
+				0545A0302FB2F5FF008D3ADB /* sigconvert */,
 				05617B431D9DC55B00B1E33B /* trisetcmp */,
 				058FC8721FE188A0006D04B4 /* retriangulate */,
 				059D01A325B6A72C004150F7 /* Timing */,
@@ -9245,6 +9272,22 @@
 			productReference = 052FA0C11806072900FAE4DF /* regina-testsuite */;
 			productType = "com.apple.product-type.tool";
 		};
+		0545A0262FB2F5FF008D3ADB /* Utils - SigConvert */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0545A02D2FB2F5FF008D3ADB /* Build configuration list for PBXNativeTarget "Utils - SigConvert" */;
+			buildPhases = (
+				0545A0272FB2F5FF008D3ADB /* Sources */,
+				0545A0292FB2F5FF008D3ADB /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Utils - SigConvert";
+			productName = "Utils - Retriangulate";
+			productReference = 0545A0302FB2F5FF008D3ADB /* sigconvert */;
+			productType = "com.apple.product-type.tool";
+		};
 		05617ADC1D9DBFBE00B1E33B /* Utils - TriCensus */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 05617AE11D9DBFBF00B1E33B /* Build configuration list for PBXNativeTarget "Utils - TriCensus" */;
@@ -9406,6 +9449,7 @@
 				0543AE921811DE96002758F8 /* PBXBuildRule */,
 			);
 			dependencies = (
+				0545A0332FB2F676008D3ADB /* PBXTargetDependency */,
 				05DADB0C2192599600DC80E1 /* PBXTargetDependency */,
 				05DADB0E2192599A00DC80E1 /* PBXTargetDependency */,
 				050F5E6F1B9BD3A000C1F681 /* PBXTargetDependency */,
@@ -9612,6 +9656,7 @@
 				05617B2C1D9DC54500B1E33B /* Utils - RegFileType */,
 				058FC8671FE188A0006D04B4 /* Utils - Retriangulate */,
 				05617B371D9DC55000B1E33B /* Utils - SigCensus */,
+				0545A0262FB2F5FF008D3ADB /* Utils - SigConvert */,
 				05617ADC1D9DBFBE00B1E33B /* Utils - TriCensus */,
 				05617B421D9DC55B00B1E33B /* Utils - TriSetCmp */,
 				059D019925B6A72C004150F7 /* Timing */,
@@ -9693,7 +9738,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in regina-testsuite censuslookup katie regconcat regconvert regfiledump regfiletype retriangulate sigcensus tricensus trisetcmp; do\n/usr/bin/codesign --force --options runtime --sign 'Apple Development:' --entitlements \"${SRCROOT}\"/utils/bundle/Utils.entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/MacOS/$i\ndone\n";
+			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in regina-testsuite censuslookup katie regconcat regconvert regfiledump regfiletype retriangulate sigcensus sigconvert tricensus trisetcmp; do\n/usr/bin/codesign --force --options runtime --sign 'Apple Development:' --entitlements \"${SRCROOT}\"/utils/bundle/Utils.entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/MacOS/$i\ndone\n";
 		};
 		052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -10500,6 +10545,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0545A0272FB2F5FF008D3ADB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0545A0312FB2F61A008D3ADB /* sigconvert.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		05617AD91D9DBFBE00B1E33B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -11155,6 +11208,11 @@
 			target = 050F5CDC1B9BAAAA00C1F681 /* Python */;
 			targetProxy = 050F5E6E1B9BD3A000C1F681 /* PBXContainerItemProxy */;
 		};
+		0545A0332FB2F676008D3ADB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0545A0262FB2F5FF008D3ADB /* Utils - SigConvert */;
+			targetProxy = 0545A0322FB2F676008D3ADB /* PBXContainerItemProxy */;
+		};
 		05617AF71D9DC0E000B1E33B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 05617ADC1D9DBFBE00B1E33B /* Utils - TriCensus */;
@@ -11578,6 +11636,70 @@
 					"$(SRCROOT)/utils/bundle/regina-testsuite.plist",
 				);
 				PRODUCT_NAME = "regina-testsuite";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		0545A02E2FB2F5FF008D3ADB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"REGINA_XCODE_BUNDLE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/utils/bundle/sigconvert.plist",
+				);
+				PRODUCT_NAME = sigconvert;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		0545A02F2FB2F5FF008D3ADB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/utils/bundle/sigconvert.plist",
+				);
+				PRODUCT_NAME = sigconvert;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -12401,7 +12523,6 @@
 				CODE_SIGN_IDENTITY = "-";
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -12436,7 +12557,6 @@
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -12633,6 +12753,15 @@
 			buildConfigurations = (
 				052FA0C71806072900FAE4DF /* Debug */,
 				052FA0C81806072900FAE4DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0545A02D2FB2F5FF008D3ADB /* Build configuration list for PBXNativeTarget "Utils - SigConvert" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0545A02E2FB2F5FF008D3ADB /* Debug */,
+				0545A02F2FB2F5FF008D3ADB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
