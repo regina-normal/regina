@@ -45,7 +45,7 @@ Usage: retriangulate <isosig>
 --------------------
 Exit code: 1
 ============================================================
-TEST: retriangulate cPcbbbadu hLLMAkacdefeggjkaknkxn
+TEST: retriangulate cV6IAa hpySU+lmKiSSIa
 --------------------
 Too many arguments.
 
@@ -68,7 +68,7 @@ Usage: retriangulate <isosig>
 --------------------
 Exit code: 1
 ============================================================
-TEST: retriangulate -h -1 cPcbbbadu
+TEST: retriangulate -h -1 cV6IAa
 --------------------
 The height cannot be negative.
 
@@ -91,7 +91,7 @@ Usage: retriangulate <isosig>
 --------------------
 Exit code: 1
 ============================================================
-TEST: retriangulate -t 0 cPcbbbadu
+TEST: retriangulate -t 0 cV6IAa
 --------------------
 The number of threads must be positive.
 
@@ -114,7 +114,7 @@ Usage: retriangulate <isosig>
 --------------------
 Exit code: 1
 ============================================================
-TEST: retriangulate -4 -h 3 eLMQcbcddcddaaaa8a8a8a8a8a
+TEST: retriangulate -4 -h 3 elAAB-rMm2TB3UD
 --------------------
 In four dimensions the height must be even.
 
@@ -161,7 +161,7 @@ Usage: retriangulate <isosig>
 --------------------
 Exit code: 1
 ============================================================
-TEST: retriangulate -g1 fLAMcbcbdeehhjqqs
+TEST: retriangulate -g1 fhrJC1iaWnb
 --------------------
 fLAMcbcbdeehhjqqs
 Found 1 triangulation(s).
@@ -175,14 +175,21 @@ Found 1 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -g1 -h 2 cPcbbbadu
+TEST: retriangulate -g1 cV6IAa
 --------------------
 cPcbbbadu
 Found 1 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -g1 -h 3 cPcbbbadu
+TEST: retriangulate -g1 -h 2 cV6IAa
+--------------------
+cPcbbbadu
+Found 1 triangulation(s).
+--------------------
+Exit code: 0
+============================================================
+TEST: retriangulate -g1 -h 3 cV6IAa
 --------------------
 cPcbbbadu
 cPcbbbadh
@@ -190,7 +197,7 @@ Found 2 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -g1 -h 3 -t 2 cPcbbbadu
+TEST: retriangulate -g1 -h 3 -t 2 cV6IAa
 --------------------
 cPcbbbadu
 cPcbbbadh
@@ -198,7 +205,7 @@ Found 2 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -g1 gLLMQacdefefjkaknrr
+TEST: retriangulate -g1 gxSBS-beHuTi
 --------------------
 gLLMQacdefefjkaknrr
 gLLAQaceefefjkuxxnn
@@ -206,7 +213,7 @@ Found 2 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -g1 -h 2 -t 2 hLLAAkbdceefggdonxdjxn
+TEST: retriangulate -g1 -h 2 -t 2 hpyS1+lmKi0Kdb
 --------------------
 hLLAAkbdceefggdonxdjxn
 hLALPkbcbefgfghxwnxark
@@ -214,7 +221,7 @@ Found 2 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -g1 -4 eLMQcbcddcddaaaa8a8a8a8a8a
+TEST: retriangulate -g1 -4 elAAB-rMm2TB3UD
 --------------------
 eLMQcbcddcddaaaa8a8a8a8a8a
 eLAQcbbbcdddOakbOaqbOaOaya
@@ -234,7 +241,7 @@ Smaller link: iabcdeafghcdebfghxveJhp
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -k kabcdefghijbefgdcjahixfvbdwGd
+TEST: retriangulate -k k-paCvdwqLnschc
 --------------------
 k-paCvdwqLnschc
 k-DaCnJhidfjELb

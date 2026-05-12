@@ -32,23 +32,24 @@
 # --- retriangulate with errors:
 retriangulate
 retriangulate foo
-retriangulate cPcbbbadu hLLMAkacdefeggjkaknkxn
-retriangulate -h -1 cPcbbbadu
-retriangulate -t 0 cPcbbbadu
-retriangulate -4 -h 3 eLMQcbcddcddaaaa8a8a8a8a8a
+retriangulate cV6IAa hpySU+lmKiSSIa
+retriangulate -h -1 cV6IAa
+retriangulate -t 0 cV6IAa
+retriangulate -4 -h 3 elAAB-rMm2TB3UD
 retriangulate -c -V a
 # --- retriangulate when successful:
-retriangulate -g1 fLAMcbcbdeehhjqqs
+retriangulate -g1 fhrJC1iaWnb
 retriangulate -g1 cPcbbbadu
-retriangulate -g1 -h 2 cPcbbbadu
-retriangulate -g1 -h 3 cPcbbbadu
-retriangulate -g1 -h 3 -t 2 cPcbbbadu
-retriangulate -g1 gLLMQacdefefjkaknrr
-retriangulate -g1 -h 2 -t 2 hLLAAkbdceefggdonxdjxn
-# testutil retriangulate -h 3 -t 2 hLLAAkbdceefggdonxdjxn
-retriangulate -g1 -4 eLMQcbcddcddaaaa8a8a8a8a8a
+retriangulate -g1 cV6IAa
+retriangulate -g1 -h 2 cV6IAa
+retriangulate -g1 -h 3 cV6IAa
+retriangulate -g1 -h 3 -t 2 cV6IAa
+retriangulate -g1 gxSBS-beHuTi
+retriangulate -g1 -h 2 -t 2 hpyS1+lmKi0Kdb
+# testutil retriangulate -h 3 -t 2 hpyS1+lmKi0Kdb
+retriangulate -g1 -4 elAAB-rMm2TB3UD
 retriangulate -g1 -k kabcdefghijbefgdcjahixfvbdwGd
-retriangulate -k kabcdefghijbefgdcjahixfvbdwGd
+retriangulate -k k-paCvdwqLnschc
 # --- showing all signatures visited:
 retriangulate -g1 -l -k -h 2 a
 retriangulate -g1 -l -k -V -h 2 a
