@@ -60,8 +60,8 @@ class CensusHit;
  * databases.
  *
  * A census database stores a list of key-value pairs.  The keys are
- * isomorphism signatures of triangulations (currently first-generation
- * signatures as returned by `Triangulation<dim>::isoSig()`, but see the
+ * isomorphism signatures of triangulations (currently second-generation
+ * signatures as returned by `Triangulation<dim>::neoSig()`, but see the
  * notes below).  The values are human-readable names (typically the names of
  * the triangulations and/or the names of the underlying manifolds).
  * A key may appear multiple times (associated with different human-readable
@@ -73,8 +73,8 @@ class CensusHit;
  * correct type of search key(s).  There are two reasons for this:
  *
  * - The _keys_ used for census databases are subject to change in future
- *   versions of Regina.  Currently these keys are first-generation
- *   isomorphism signatures.
+ *   versions of Regina.  Currently (as of Regina 8.0) these keys are
+ *   second-generation isomorphism signatures.
  *
  * - The _format_ used to store census databases is an internal implementation
  *   detail, also subject to change in future releases of Regina.  Even if you
@@ -179,8 +179,8 @@ class CensusDB {
          *
          * \tparam generation the generation of isomorphism signature that you
          * are passing in the argument \a isoSig.  Currently \a generation
-         * _must_ be 1, since Regina's databases currently use
-         * first-generation isomorphism signatures as their keys.
+         * _must_ be 2, since Regina's databases currently use
+         * second-generation isomorphism signatures as their keys.
          *
          * \param isoSig the isomorphism signature to search for; this must be
          * of the same generation that is passed as a template parameter.
@@ -192,7 +192,7 @@ class CensusDB {
          * then the return value will be \c true.
          */
         template <int generation, VoidCallback<CensusHit&&> Action>
-        requires (generation == 1)
+        requires (generation == 2)
         bool lookupKey(const std::string& isoSig, Action&& action) const;
 
         /**

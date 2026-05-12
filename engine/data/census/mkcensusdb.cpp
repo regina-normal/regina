@@ -160,7 +160,7 @@ int main(int argc, char* argv[]) {
     }
 #endif
 
-    unsigned long tot = 0;
+    size_t tot = 0;
 
     // The following try-catch block is to catch input decompression errors.
     try {

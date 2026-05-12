@@ -290,6 +290,7 @@ TEST_F(CensusTest, lookup) {
 
     verifyLookupNone("");
     verifyLookupNone("abcdefg");
+    verifyLookupNone("bfoo");
     // Closed orientable census:
     verifyLookup("fFuC8hYTOTa",
         "SFS [S2: (2,1) (3,1) (5,-4)] : #1");
