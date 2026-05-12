@@ -577,6 +577,9 @@ Version 8.0  [ TODO ]
               behaviour (first-generation signatures) by passing --gen=1.
             - The option --anysig is now an alias for --gen=2, and does nothing
               (since second-generation signatures are now the default).
+        tricensus:
+            - The option --sigs now outputs second-generation isomorphism
+              signatures (not first-generation).
         trisetcmp:
             - Now finds matches (or non-matches) in any dimension, not just
               dimensions 3 and 4.

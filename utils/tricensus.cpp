@@ -86,7 +86,7 @@ std::string outFile;
 
 // Variables used for a dump of face pairings.
 std::unique_ptr<std::ostream> dumpStream;
-unsigned long totPairings = 0;
+size_t totPairings = 0;
 
 // Variables used for output.
 size_t nSolns;
@@ -218,7 +218,7 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
     switch (outputType) {
         case OUTPUT_SIGS:
             {
-                std::string sig = tri.isoSig();
+                std::string sig = tri.neoSig();
                 if (threads > 1) {
                     std::unique_lock<std::mutex> lock(outputMutex);
                     sigStream << sig << std::endl;
@@ -231,7 +231,7 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
             break;
         case OUTPUT_SIGS_CANONICAL:
             {
-                auto [sig, iso] = tri.isoSigDetail();
+                auto [sig, iso] = tri.neoSigDetail();
                 std::string isoEnc = iso.inverse().tightEncoding();
                 if (threads > 1) {
                     std::unique_lock<std::mutex> lock(outputMutex);

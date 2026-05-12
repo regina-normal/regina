@@ -1800,7 +1800,9 @@
      <listitem>
       <para>
        Instead of writing a full &regina; data file, just output a list
-       of isomorphism signatures.
+       of isomorphism signatures.  As of &regina;&nbsp;8.0, these will be
+       <emphasis>second-generation</emphasis> signatures, as computed
+       in code by <literal>Triangulation::neoSig()</literal>.
       </para>
       <para>
        The output file will be a plain text file.  Each line will be a
@@ -1830,8 +1832,9 @@
       <para>
        The output file will be a plain text file.  Each line will
        contain two short strings, separated by a single space.
-       The first string will be the same isomorphism signature that is
-       output by <option>--sigs</option>.  The second string encodes an
+       The first string will be the same second-generation
+       isomorphism signature that is output by <option>--sigs</option>.
+       The second string encodes an
        isomorphism <replaceable>F</replaceable> with the property that,
        if we reconstruct a triangulation from the isomorphism signature
        and apply the isomorphism <replaceable>F</replaceable>, then
