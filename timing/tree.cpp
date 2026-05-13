@@ -59,6 +59,8 @@ void usage(const char* program) {
  * For each isomorphism signature passed on the command line, we build
  * the corresponding triangulation and then run away to perform the tree
  * traversal algorithm.
+ *
+ * Isomorphism signature can be either first-generation or second-generation.
  */
 int main(int argc, char* argv[]) {
     char mode = 0;

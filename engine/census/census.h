@@ -400,7 +400,7 @@ class Census {
          *
          * Internally, the census databases store isomorphism signatures
          * as opposed to fully fleshed-out triangulations.  If you already
-         * have the isomorphism signature of the triangulation, then you
+         * have an isomorphism signature for the triangulation, then you
          * can call the variant lookup(const std::string&) instead, which
          * (if your signature is of the right generation) will be faster since
          * it avoids some extra overhead.
