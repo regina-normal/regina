@@ -143,7 +143,7 @@ Tri2Creator::Tri2Creator(ReginaMain*) {
     hArea->setLayout(hLayout);
     expln = QObject::tr("<qt>The isomorphism signature "
         "from which the new triangulation will be created.  An example "
-        "isomorphism signature is <i>cPbbde</i>.<p>"
+        "isomorphism signature is <i>cVgc</i>.<p>"
         "Isomorphism signatures identify triangulations uniquely "
         "up to combinatorial isomorphism.  "
         "3-dimensional isomorphism signatures are described in "
@@ -292,7 +292,7 @@ std::shared_ptr<regina::Packet> Tri2Creator::createPacket(
                 QObject::tr("<qt>An isomorphism "
                 "signature must be a sequence of symbols, which may include "
                 "letters, digits, plus and/or minus but nothing else.  "
-                "An example isomorphism signature is <i>cPbbde</i>.<p>"
+                "An example isomorphism signature is <i>cVgc</i>.<p>"
                 "3-dimensional isomorphism signatures are described in "
                 "detail in <i>Simplification paths in the Pachner graphs "
                 "of closed orientable 3-manifold triangulations</i>, "
