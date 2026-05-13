@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "TRISETCMP" "1" "25 August 2025" "" "The Regina Handbook"
+.TH "TRISETCMP" "1" "13 May 2026" "" "The Regina Handbook"
 
 .SH NAME
 trisetcmp \- Compare triangulations between two Regina data files
@@ -32,11 +32,17 @@ This utility can also do subcomplex testing instead of full
 isomorphism testing.  See the option \fB-s\fR for
 details.
 .PP
-This utility compares both 3-manifold and 4-manifold triangulations
-(but no other dimensions at present).
-However, it will only compare triangulations of the same
-dimension - it will not test whether some 3-manifold triangulation
-appears as a subcomplex of some other 4-manifold triangulation.
+This utility now tests triangulations of all dimensions (as opposed to
+Regina\~<=\~7.4.1, where it only compared triangulations
+in dimensions 3 or 4).
+However, it will only ever try to match pairs of triangulations of the
+\fBsame\fR dimension - for example, it will not test
+whether a 3-manifold triangulation from \fIfile1\fR
+appears as a subcomplex of a 4-manifold triangulation from
+\fIfile2\fR\&.
+.PP
+In dimension\~3, this utility only looks at Regina's own native
+triangulations, and ignores any hybrid  triangulations.
 .SH "OPTIONS"
 .TP
 \fB-m (default)\fR

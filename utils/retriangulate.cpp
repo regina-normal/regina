@@ -166,11 +166,11 @@ void help() {
 R"help(Usage: retriangulate <isosig>
   -h, --height=<height>       Number of extra simplices/crossings (default = 1)
   -t, --threads=<threads>     Number of parallel threads (default = 1)
-  -3, --dim3                  Input is a 3-manifold signature (default)
-  -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot/link signature
+  -3, --dim3                  Input is a 3-D isomorphism signature (default)
+  -4, --dim4                  Input is a 4-D isomorphism signature
   -l, --all                   Output larger triangulations/links also
-  -g, --gen=<gen_number>      Output first-generation signatures (--gen=1) or
+  -g, --gen=<generation>      Output first-generation signatures (--gen=1) or
                               second-generation signatures (--gen=2, default)
   -a, --anysig                Legacy alias for --gen=2 (default)
   -c, --classical             Never allow virtual type II moves (default for
@@ -223,10 +223,19 @@ int main(int argc, char* argv[]) {
                     return 1;
                 }
                 break;
+            case 'k':
+                if (flavour && flavour != FLAVOUR_KNOT) {
+                    std::cerr << "You cannot pass more than one of "
+                        "--knot, --dim3, or --dim4.\n\n";
+                    help();
+                    return 1;
+                }
+                flavour = FLAVOUR_KNOT;
+                break;
             case '3':
                 if (flavour && flavour != FLAVOUR_DIM3) {
                     std::cerr << "You cannot pass more than one of "
-                        "--dim3, --dim4 or --knot.\n\n";
+                        "--knot, --dim3, or --dim4.\n\n";
                     help();
                     return 1;
                 }
@@ -235,20 +244,11 @@ int main(int argc, char* argv[]) {
             case '4':
                 if (flavour && flavour != FLAVOUR_DIM4) {
                     std::cerr << "You cannot pass more than one of "
-                        "--dim3, --dim4 or --knot.\n\n";
+                        "--knot, --dim3, or --dim4.\n\n";
                     help();
                     return 1;
                 }
                 flavour = FLAVOUR_DIM4;
-                break;
-            case 'k':
-                if (flavour && flavour != FLAVOUR_KNOT) {
-                    std::cerr << "You cannot pass more than one of "
-                        "--dim3, --dim4 or --knot.\n\n";
-                    help();
-                    return 1;
-                }
-                flavour = FLAVOUR_KNOT;
                 break;
             case 'l':
                 showAll = true;
