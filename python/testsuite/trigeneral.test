@@ -126,7 +126,7 @@ def vitalStats(tri, name):
 		print("Dehydration:", tri.dehydrate())
 	except NotImplemented:
 		print("Dehydration: (none)")
-	print("Isomorphism signature:", tri.isoSig())
+	print("Isomorphism signature:", tri.neoSig())
 	print("Result of splitIntoComponents:", len(tri.triangulateComponents()))
 	
 	if tri.detail() != old:

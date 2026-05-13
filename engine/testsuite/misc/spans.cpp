@@ -40,17 +40,17 @@ TEST(SpansTest, clearAllProperties) {
     // in fact do so.
     {
         regina::Triangulation<3> t = regina::Example<3>::weeks();
-        std::string sig = t.isoSig();
+        std::string sig = t.neoSig();
         regina::AbelianGroup hom = t.homology();
 
         t.insertLayeredSolidTorus(2, 3);
-        EXPECT_NE(t.isoSig(), sig); // ensure the triangulation changed
+        EXPECT_NE(t.neoSig(), sig); // ensure the triangulation changed
 
         EXPECT_NE(t.homology(), hom);
     }
     {
         regina::Triangulation<3> t = regina::Example<3>::weeks();
-        std::string sig = t.isoSig();
+        std::string sig = t.neoSig();
         regina::AbelianGroup hom = t.homology();
 
         EXPECT_FALSE(t.knowsIrreducible());
@@ -58,7 +58,7 @@ TEST(SpansTest, clearAllProperties) {
         EXPECT_TRUE(t.knowsIrreducible());
 
         t.connectedSumWith(regina::Example<3>::lens(3, 1));
-        EXPECT_NE(t.isoSig(), sig); // ensure the triangulation changed
+        EXPECT_NE(t.neoSig(), sig); // ensure the triangulation changed
 
         EXPECT_NE(t.homology(), hom);
         EXPECT_FALSE(t.knowsIrreducible());
@@ -101,7 +101,7 @@ TEST(SpansTest, preserveTopology) {
     // properties but clear all other cached properties in fact do so.
     {
         regina::Triangulation<3> t = regina::Example<3>::weeks();
-        std::string sig = t.isoSig();
+        std::string sig = t.neoSig();
         regina::AbelianGroup hom = t.homology();
 
         EXPECT_FALSE(t.knowsIrreducible());
@@ -109,7 +109,7 @@ TEST(SpansTest, preserveTopology) {
         EXPECT_TRUE(t.knowsIrreducible());
 
         EXPECT_TRUE(t.pachner(t.triangle(0)));
-        EXPECT_NE(t.isoSig(), sig); // ensure the triangulation changed
+        EXPECT_NE(t.neoSig(), sig); // ensure the triangulation changed
 
         EXPECT_TRUE(t.knowsIrreducible()); // should still be cached
         EXPECT_TRUE(t.isIrreducible());
@@ -117,7 +117,7 @@ TEST(SpansTest, preserveTopology) {
     }
     {
         regina::Triangulation<3> t = regina::Example<3>::weeks();
-        std::string sig = t.isoSig();
+        std::string sig = t.neoSig();
         regina::AbelianGroup hom = t.homology();
 
         EXPECT_FALSE(t.knowsIrreducible());
@@ -125,7 +125,7 @@ TEST(SpansTest, preserveTopology) {
         EXPECT_TRUE(t.knowsIrreducible());
 
         EXPECT_TRUE(t.move44(t.edge(0), 1));
-        EXPECT_NE(t.isoSig(), sig); // ensure the triangulation changed
+        EXPECT_NE(t.neoSig(), sig); // ensure the triangulation changed
 
         EXPECT_TRUE(t.knowsIrreducible()); // should still be cached
         EXPECT_TRUE(t.isIrreducible());
@@ -183,8 +183,8 @@ TEST(SpansTest, preserveAllProperties) {
     {
         regina::Triangulation<3> t = regina::Example<3>::lens(3, 1);
         regina::Triangulation<3> u = regina::Example<3>::lens(0, 1);
-        std::string tSig = t.isoSig();
-        std::string uSig = u.isoSig();
+        std::string tSig = t.neoSig();
+        std::string uSig = u.neoSig();
         EXPECT_NE(tSig, uSig);
 
         EXPECT_FALSE(t.knowsIrreducible());
@@ -195,8 +195,8 @@ TEST(SpansTest, preserveAllProperties) {
         EXPECT_TRUE(u.knowsIrreducible());
 
         t.swap(u);
-        EXPECT_EQ(t.isoSig(), uSig);
-        EXPECT_EQ(u.isoSig(), tSig);
+        EXPECT_EQ(t.neoSig(), uSig);
+        EXPECT_EQ(u.neoSig(), tSig);
 
         EXPECT_TRUE(t.knowsIrreducible()); // should still be cached
         EXPECT_TRUE(u.knowsIrreducible()); // should still be cached
@@ -233,7 +233,7 @@ TEST(SpansTest, clearTopologyLock) {
     // clears the topology lock when it is destroyed.
     {
         regina::Triangulation<3> t = regina::Example<3>::weeks();
-        std::string sig = t.isoSig();
+        std::string sig = t.neoSig();
         regina::AbelianGroup hom = t.homology();
 
         EXPECT_FALSE(t.knowsIrreducible());
@@ -241,7 +241,7 @@ TEST(SpansTest, clearTopologyLock) {
         EXPECT_TRUE(t.knowsIrreducible());
 
         EXPECT_TRUE(t.pachner(t.triangle(0))); // preserves topology
-        EXPECT_NE(t.isoSig(), sig); // ensure the triangulation changed
+        EXPECT_NE(t.neoSig(), sig); // ensure the triangulation changed
 
         EXPECT_TRUE(t.knowsIrreducible()); // should still be cached
         EXPECT_TRUE(t.isIrreducible());
@@ -251,7 +251,7 @@ TEST(SpansTest, clearTopologyLock) {
 
         EXPECT_FALSE(t.knowsIrreducible()); // should no longer be cached
         EXPECT_FALSE(t.isIrreducible());
-        EXPECT_NE(t.isoSig(), sig);
+        EXPECT_NE(t.neoSig(), sig);
         EXPECT_NE(t.homology(), hom);
     }
     {

@@ -119,13 +119,13 @@ TEST(LinkingSurfacesTest, edgeLinks) {
 
     // A case where several interesting things happen.
     {
-        Triangulation<3> tri = Triangulation<3>::fromSig("dLQbcbcaefv");
+        Triangulation<3> tri = Triangulation<3>::fromSig("dN0TySd");
 
         // There are five edges.
-        // - Edges 2, 3, 4 all have thin edge links.
+        // - Edges 1, 2, 4 all have thin edge links.
         // - Edge 0 has a thick edge link that is the same as the
         //   *thin* edge link from edge 4.
-        // - Edge 1 has a link that normalises away to nothing.
+        // - Edge 3 has a link that normalises away to nothing.
 
         // We unroll what should be a for loop here, since NormalSurface does
         // not have a default constructor.
@@ -139,10 +139,10 @@ TEST(LinkingSurfacesTest, edgeLinks) {
         EXPECT_FALSE(link[0].second);
         EXPECT_EQ(link[0].first, link[4].first);
 
-        EXPECT_FALSE(link[1].second);
-        EXPECT_TRUE(link[1].first.isEmpty());
+        EXPECT_FALSE(link[3].second);
+        EXPECT_TRUE(link[3].first.isEmpty());
 
-        for (int i = 2; i < 5; ++i) {
+        for (int i : { 1, 2, 4 }) {
             EXPECT_TRUE(link[i].second);
             EXPECT_EQ(link[i].first.isThinEdgeLink().first, tri.edge(i));
         }

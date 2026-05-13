@@ -653,8 +653,8 @@ Blocked SFS Loop [Tri, Tri, Tri, Mob(v), Layer]
 <regina.BlockedSFSLoop: Blocked SFS Loop [Tri, Tri, Tri, Mob(v), Layer]>
 
 BlockedSFSPair
-Blocked SFS Pair [Tri, Mob(v), Mob(v) | Tri, Layer]
-<regina.BlockedSFSPair: Blocked SFS Pair [Tri, Mob(v), Mob(v) | Tri, Layer]>
+Blocked SFS Pair [Tri, Layer | Tri, Mob(v), Mob(v)]
+<regina.BlockedSFSPair: Blocked SFS Pair [Tri, Layer | Tri, Mob(v), Mob(v)]>
 
 BlockedSFSTriple
 Blocked SFS Triple [Tri, LST(1, 2, 3), Mob(v) | Tri, Mob(v) | Tri, Mob(v), Mob(v)]
@@ -717,12 +717,12 @@ C(4,6)
 <regina.LayeredChainPair: C(4,6)>
 
 LayeredChain
-Chain(4), tetrahedra 3 (1302) .. 1 (0213)
-<regina.LayeredChain: Chain(4), tetrahedra 3 (1302) .. 1 (0213)>
+Chain(4), tetrahedra 6 (3120) .. 5 (2031)
+<regina.LayeredChain: Chain(4), tetrahedra 6 (3120) .. 5 (2031)>
 
 SpiralSolidTorus
-7-tetrahedron spiralled solid torus, tetrahedra 1 (0213), 0 (2130), 2 (0213), 6 (2130), 9 (0213), 8 (1302), 5 (3021)
-<regina.SpiralSolidTorus: 7-tetrahedron spiralled solid torus, tetrahedra 1 (0213), 0 (2130), 2 (0213), 6 (2130), 9 (0213), 8 (1302), 5 (3021)>
+7-tetrahedron spiralled solid torus, tetrahedra 5 (2031), 7 (2031), 4 (0213), 2 (2031), 0 (0213), 1 (2031), 3 (0213)
+<regina.SpiralSolidTorus: 7-tetrahedron spiralled solid torus, tetrahedra 5 (2031), 7 (2031), 4 (0213), 2 (2031), 0 (0213), 1 (2031), 3 (0213)>
 
 CensusHit
 m004 : #1 -- Cusped hyperbolic census (orientable)

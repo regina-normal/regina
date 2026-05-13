@@ -224,22 +224,16 @@ TEST_F(Dim3Test, magic) {
     testManualCases([](const Triangulation<3>& t, const char* name) {
         SCOPED_TRACE_CSTRING(name);
 
-        std::string sig = t.isoSig();
+        std::string sig = t.neoSig();
 
-        {
-            Triangulation<3> recon(sig);
-            EXPECT_EQ(recon.isoSig(), sig);
-        }
+        EXPECT_EQ(Triangulation<3>(sig).neoSig(), sig);
+        EXPECT_EQ(Triangulation<3>(t.isoSig()).neoSig(), sig);
 
-        if (t.isConnected() && t.size() <= 25 && ! t.hasBoundaryFacets()) {
-            Triangulation<3> recon(t.dehydrate());
-            EXPECT_EQ(recon.isoSig(), sig);
-        }
+        if (t.isConnected() && t.size() <= 25 && ! t.hasBoundaryFacets())
+            EXPECT_EQ(Triangulation<3>(t.dehydrate()).neoSig(), sig);
 
-        if ((! t.isEmpty()) && t.isValid() && ! t.hasBoundaryFacets()) {
-            Triangulation<3> recon(t.snapPea());
-            EXPECT_EQ(recon.isoSig(), sig);
-        }
+        if ((! t.isEmpty()) && t.isValid() && ! t.hasBoundaryFacets())
+            EXPECT_EQ(Triangulation<3>(t.snapPea()).neoSig(), sig);
     });
 
     EXPECT_THROW({
@@ -861,7 +855,7 @@ TEST_F(Dim3Test, isomorphismSignature) {
     // from the closed non-orientable census: SFS [RP2: (2,1) (5,1)] : #1.
     auto a = Example<3>::weeks();
     auto b = Example<3>::smallClosedOrblHyperbolic();
-    auto c = Triangulation<3>::fromSig("jLAvLQQbcbgfhihiihhjhqxhxqv");
+    auto c = Triangulation<3>::fromSig("jdcXQdpe-d0I3yicnqBb");
 
     EXPECT_EQ(a.size(), b.size());
     EXPECT_EQ(b.size(), c.size());
@@ -1590,7 +1584,7 @@ static void verifySimplificationName(const TriangulationTest<3>::TestCase& test,
         EXPECT_EQ(std->name(), expectName);
     else
         ADD_FAILURE() << "Simplified triangulation not recognised: "
-            << t.isoSig();
+            << t.neoSig();
 
     // Make sure it does not simplify any further.
     Triangulation<3> t2(t);
@@ -1599,7 +1593,7 @@ static void verifySimplificationName(const TriangulationTest<3>::TestCase& test,
 }
 
 static void verifySimplificationSig(
-        const TriangulationTest<3>::TestCase& test, const char* expectIsoSig) {
+        const TriangulationTest<3>::TestCase& test, const char* expectNeoSig) {
     SCOPED_TRACE_CSTRING(test.name);
 
     Triangulation<3> t(test.tri);
@@ -1608,7 +1602,7 @@ static void verifySimplificationSig(
 
     t.simplify();
 
-    EXPECT_EQ(t.isoSig(), expectIsoSig);
+    EXPECT_EQ(t.neoSig(), expectNeoSig);
     EXPECT_EQ(t.isOriented(), test.tri.isOrientable());
 
     // Make sure it does not simplify any further.
@@ -1633,7 +1627,7 @@ TEST_F(Dim3Test, simplification) {
     verifyNoSimplification(twistedSphereBundle);
     verifySimplificationName(ball, 1, "B3 (3-vtx)");
     verifySimplificationName(ballBundle, 1, "LST(1,2,3)");
-    verifySimplificationSig(twistedBallBundle, "cHcbban");
+    verifySimplificationSig(twistedBallBundle, "cR0Nqa");
 
     verifyNoSimplification(s3);
     verifyNoSimplification(rp3_1);
@@ -1674,30 +1668,30 @@ TEST_F(Dim3Test, simplification) {
     verifySimplificationName(figure8_bary, 2, "SnapPea m004");
 
     verifyNoSimplification(gieseking);
-    verifySimplificationSig(idealRP2xI, "cMcabbgci");
+    verifySimplificationSig(idealRP2xI, "cJ6gag");
 
-    verifySimplificationSig(pinchedSolidTorus, "cHcbbad");
-    verifySimplificationSig(pinchedSolidKB, "bGad");
+    verifySimplificationSig(pinchedSolidTorus, "cV0Ni");
+    verifySimplificationSig(pinchedSolidKB, "bZhb");
     verifyNoSimplification(invalidRP2xI);
 
     // Note: disjoint2 contains idealGenusTwoHandlebody, which has many, many
     // minimal triangulations.  This makes the resulting isosig unpredictable,
     // and so we exclude it from this test.
-    // verifySimplificationSig(disjoint2, "bkaaideLAkbccddapfeo");
-    verifySimplificationSig(disjoint3, "bGabcMcabbjajcPcbbbiht");
+    // verifySimplificationSig(disjoint2, "bJrcehABVarDh");
+    verifySimplificationSig(disjoint3, "b3FacN6OXacV6cqb");
 
     // A triangulation with two degree two projective plane cusps.
     // This has an internal vertex that should be removed,
     // but the two projective plane cusps should not be simplified away.
     verifySimplificationSig(
-        { Triangulation<3>::rehydrate("cabbbbxww"), "cabbbbxww" }, "cMcabbgci");
+        { Triangulation<3>::rehydrate("cabbbbxww"), "cabbbbxww" }, "cJ6gag");
 
     // A triangulation with an invalid edge that simplifies.
     // The invalid edge must not be simplified away.
     verifySimplificationSig({ Triangulation<3>::fromGluings(4, {
             { 0, 3, 2, {} }, { 0, 2, 1, {2,3} },
             { 3, 3, 2, {2,3} }, { 3, 2, 1, {1,0} }
-        }), "Invalid edge" }, "bGah");
+        }), "Invalid edge" }, "bZ3a");
 
     // A solid torus that long ago was incorrectly simplified to a ball.
     verifySimplificationName({ Triangulation<3>::fromGluings(3, {
@@ -1706,11 +1700,11 @@ TEST_F(Dim3Test, simplification) {
         }), "Custom solid torus" }, 1, "LST(1,2,3)");
 }
 
-static void verifySimplifyExhaustive(const char* isoSig,
+static void verifySimplifyExhaustive(const char* neoSig,
         int heightNeeded, int nThreads) {
-    SCOPED_TRACE_CSTRING(isoSig);
+    SCOPED_TRACE_CSTRING(neoSig);
 
-    Triangulation<3> t = Triangulation<3>::fromSig(isoSig);
+    Triangulation<3> t = Triangulation<3>::fromSig(neoSig);
     size_t initSize = t.size();
 
     for (int height = 0; height < heightNeeded; ++height) {
@@ -1724,8 +1718,8 @@ static void verifySimplifyExhaustive(const char* isoSig,
 }
 
 TEST_F(Dim3Test, simplifyExhaustive) {
-    verifySimplifyExhaustive("hLALPkbcbefgfghxwnxark", 3, 1);
-    verifySimplifyExhaustive("hLALPkbcbefgfghxwnxark", 3, 2);
+    verifySimplifyExhaustive("hhrSU+fnewBNLa", 3, 1);
+    verifySimplifyExhaustive("hhrSU+fnewBNLa", 3, 2);
 }
 
 static void verifyImproveTreewidth(const Triangulation<3>& tri,
@@ -1824,7 +1818,7 @@ TEST_F(Dim3Test, minimiseBoundary) {
     // The cone of a 6-triangle torus whose boundary has no
     // close-book moves at the beginning (so a layering is required).
     {
-        const char* sig = "gffjQafeefaaaa";
+        const char* sig = "g3U0L2+-eZmd";
         verifyMinimiseBoundary(Triangulation<3>::fromSig(sig), sig);
     }
 }
@@ -1878,7 +1872,7 @@ TEST_F(Dim3Test, minimiseVertices) {
     // The cone of a 6-triangle torus whose boundary has no
     // close-book moves at the beginning (so a layering is required).
     {
-        const char* sig = "gffjQafeefaaaa";
+        const char* sig = "g3U0L2+-eZmd";
         verifyMinimiseVertices(Triangulation<3>::fromSig(sig), sig);
     }
 
@@ -2693,40 +2687,40 @@ TEST_F(Dim3Test, sphereRecognition) {
     }
 
     // Homology spheres obtained from the hyperbolic census:
-    verifySphere("kLLLPLQkccfeghjiijjlnahgnqqadk", false);
-    verifySphere("lLLLLPMQcbcgfhhihjkkktsmgsojfldor", false);
-    verifySphere("lLvAvMQQcbefjjkiihkjklaljfxrkvufd", false);
-    verifySphere("lvLAAzMQcdefegihjkkjkjwarujwdaapj", false);
+    verifySphere("kFq6kmV8Y-NaWjN1OkYc", false);
+    verifySphere("l3OJsmVuv9Vpa2ktYIsHrb", false);
+    verifySphere("lpn7ktrmv9-laKXQYe4ojb", false);
+    verifySphere("lFYQUd1ut9Vpa2HWXwLOQa", false);
 
     // 3-sphere triangulations that are difficult to simplify
     // (taken from the 2013 Hyamfest paper on Regina).
     // We comment out every second one of these tests for speed.
-    verifySphere("jLLvQPQbeghfifiihxxaaxxjxar", true);
-    //verifySphere("jLLLAQPbeggfhhhiihhlhegbgdw", true);
-    verifySphere("jLLLPQPaegdehfgiibddbsabspr", true);
-    //verifySphere("jLLLPQPaegdehfgiibddbsabspk", true);
-    verifySphere("jLLLPQPaegdehfgiibddbsabwpr", true);
-    //verifySphere("jLLLPQPaegdehfgiibddbsabwpk", true);
-    verifySphere("jLLLPQPaegdehfgiibddbsabsdw", true);
-    //verifySphere("jLLLPQPaegdehfgiibddbsabsds", true);
-    verifySphere("kLAzwwQkbcbdehjihijhlwggliajgr", true);
-    //verifySphere("kLAzwwQkbcbdehjihijhlwggliajgk", true);
-    verifySphere("kLAzwwQkbcbdehjihijhlwggliawgr", true);
-    //verifySphere("kLAzwwQkbcbdehjihijhlwggliawgk", true);
-    verifySphere("kLAzwwQkbcbdehjihijhlwggllajgw", true);
-    //verifySphere("kLAzwwQkbcbdehjihijhlwggllajgj", true);
-    verifySphere("kLAzwwQkbcbdehjihijhlwggllawgw", true);
-    //verifySphere("kLAzwwQkbcbdehjihijhlwggllawgj", true);
-    verifySphere("kLAzwwQkbcbdehjihijhlwggiiargr", true);
-    //verifySphere("kLAzwwQkbcbdehjihijhlwggiiargk", true);
-    verifySphere("kLAzwwQkbcbdehjihijhlwggiiakgr", true);
-    //verifySphere("kLAzwwQkbcbdehjihijhlwggiiakgk", true);
-    verifySphere("kLAzwwQkbcbdehjihijhlwggilargw", true);
-    //verifySphere("kLAzwwQkbcbdehjihijhlwggilargj", true);
-    verifySphere("kLAzwwQkbcbdehjihijhlwggilakgw", true);
-    //verifySphere("kLAzwwQkbcbdehjihijhlwggilakgj", true);
-    verifySphere("kLLLAPPkbeggfihjiijhhlhehgdahw", true);
-    //verifySphere("kLLvQPPkbeghfifjhjjxxaaxxjxrvc", true);
+    verifySphere("jpKHkdVdFMAaaGzGPi", true);
+    //verifySphere("jpKIkdr8+LyaaOza7q", true);
+    verifySphere("jhiBORme3xsaYGAGLk", true);
+    //verifySphere("jhiBORme3xsaYGAGKk", true);
+    verifySphere("jhiBORme3xsaYGAGLq", true);
+    //verifySphere("jhiBORme3xsaYGAGKq", true);
+    verifySphere("jhiBORme3xsaIGAGIq", true);
+    //verifySphere("jhiBORme3xsaIGAGIk", true);
+    verifySphere("khiBWRSeZ7vsaYayGKqe", true);
+    //verifySphere("khiBWRSeZ7vsaYayGLqe", true);
+    verifySphere("khiBWRSeZ7vsaYayGKWc", true);
+    //verifySphere("khiBWRSeZ7vsaYayGLWc", true);
+    verifySphere("khiBWRSeZ7vsaIayGIqe", true);
+    //verifySphere("khiBWRSeZ7vsaIayaKqe", true);
+    verifySphere("khiBWRSeZ7vsaIayGIWc", true);
+    //verifySphere("khiBWRSeZ7vsaIayaKWc", true);
+    verifySphere("khiBWRSeZ7vsaYayG0We", true);
+    //verifySphere("khiBWRSeZ7vsaYayG1We", true);
+    verifySphere("khiBWRSeZ7vsaYayG0Wf", true);
+    //verifySphere("khiBWRSeZ7vsaYayG1Wf", true);
+    verifySphere("khiBORmmZ1xsaYGAGKae", true);
+    //verifySphere("khiBORmmZ1xsaYGAGLwc", true);
+    verifySphere("khiBORmmZ1xsaYGAGLae", true);
+    //verifySphere("khiBORmmZ1xsaYGAGKwc", true);
+    verifySphere("kpKHSdpmZ9IA2fXvYbfd", true);
+    //verifySphere("kpKHUlpeZVIA2fXvgbje", true);
 
     // An exhaustive census run:
     runCensusMinClosed(&verifySphere6);
@@ -2752,7 +2746,7 @@ TEST_F(Dim3Test, ballRecognition) {
     verifyBall(ballBundle, false);
     verifyBall(twistedBallBundle, false);
     verifyBall(lst3_4_7, false);
-    verifyBall("cMcabbgds", false); // Ideal solid torus
+    verifyBall("cN6Imb", false); // Ideal solid torus
     verifyBall(idealRP2xI, false);
     verifyBall(pinchedSolidTorus, false);
     verifyBall(pinchedSolidKB, false);
@@ -2817,7 +2811,7 @@ static void verifySolidTorus4(const Triangulation<3>& tri, const char* name) {
     //
     // In the bounded census, the only orientable triangulations with
     // torus boundary and homology Z with ≤ 4 tetrahedra that are _not_
-    // solid tori are isosigs eHLObcdddwun and eHLObcdddwuj, both representing
+    // solid tori are neosigs eNrB8h4wl and eNrB8h2wl, both representing
     // SFS [D: (2,1) (3,-2)].
 
     SCOPED_TRACE_CSTRING(name);
@@ -2835,9 +2829,9 @@ static void verifySolidTorus4(const Triangulation<3>& tri, const char* name) {
         if (tri.size() < 4) {
             EXPECT_TRUE(tri.isSolidTorus());
         } else {
-            std::string sig = tri.isoSig();
+            std::string sig = tri.neoSig();
             EXPECT_EQ(tri.isSolidTorus(),
-                (sig == "eHLObcdddwun" || sig == "eHLObcdddwuj"));
+                (sig == "eNrB8h4wl" || sig == "eNrB8h2wl"));
         }
     } else {
         EXPECT_FALSE(tri.isSolidTorus());
@@ -2891,7 +2885,7 @@ TEST_F(Dim3Test, solidTorusRecognition) {
     // Some simple cases that are solid tori:
     verifySolidTorus(ballBundle, true);
     verifySolidTorus(lst3_4_7, true);
-    verifySolidTorus("cMcabbgds", true); // Ideal solid torus
+    verifySolidTorus("cN6Imb", true); // Ideal solid torus
 
     // Some non-solid-tori with the right boundary and homology:
     verifySolidTorus(figure8, false);
@@ -2923,24 +2917,23 @@ TEST_F(Dim3Test, solidTorusRecognition) {
     verifySolidTorus(twistedBallBundle, false);
 
     // Some more non-trivial not complements, with real boundary:
-    verifySolidTorus("fHLykbcdeedwuqs", false);
-    verifySolidTorus("fLHPccdeeeqcieh", false);
-    verifySolidTorus("oLALzLwMPOcbcbefijklnlmnnxxjnxmitnmfbae", false);
-    verifySolidTorus("rLLLvKPjQvQMkacfkljmjlmlppopqqjkgtaxknokbmgwvij", false);
-    verifySolidTorus("uLLvMPvwMwAMQkcacfgihjmklnnrqstrqrtnkvjhavkbveekgjxfcvp",
-        false);
+    verifySolidTorus("fVuBL-IDRLa", false);
+    verifySolidTorus("fVIRK-cfk1a", false);
+    verifySolidTorus("o3RXl0WmvD5Uxp3ve5MGLrAhcqb", false);
+    verifySolidTorus("rpwoQyI1ApNJ9yRhe+3FjdiMjYkvshHklnc", false);
+    verifySolidTorus("uNoOKsAHyQLR5EqyukNZ9UNwufrz4jbSObvSZQvA", false);
 
     // Some Seifert fibred spaces with torus boundary and Z homology:
-    verifySolidTorus("eHLObcdddwun", false);
-    verifySolidTorus("eHLObcdddwuj", false);
+    verifySolidTorus("eNrB8h4wl", false);
+    verifySolidTorus("eNrB8h2wl", false);
 
     // The connected sum of the Poincare homology sphere and the solid torus:
-    verifySolidTorus("kLHKwvQQcceeijhjijakaawsnrsn", false);
+    verifySolidTorus("kxvrikXdZ8hQoMr0ztHj", false);
 
     // Some larger solid tori from the census:
-    verifySolidTorus("iHbfPPPbdfgfhhtbedbac", true);
-    verifySolidTorus("iHerzQPadgffhhbbiqbao", true);
-    verifySolidTorus("iLAvPQacbbgehfgdicdffnf", true);
+    verifySolidTorus("ihXaXPS6UDMUtZuMd", true);
+    verifySolidTorus("ihqeXPS6UTMT4ajMb", true);
+    verifySolidTorus("ihizoRq8+Xjajvava", true);
 
     // A disjoint union of two solid tori:
     {
@@ -3006,7 +2999,7 @@ TEST_F(Dim3Test, handlebodyRecognition) {
     verifyHandlebody(ballBundle, 1);
     verifyHandlebody(lst3_4_7, 1);
     verifyHandlebody(idealGenusTwoHandlebody, 2);
-    verifyHandlebody("cMcabbgds", 1); // Ideal solid torus
+    verifyHandlebody("cN6Imb", 1); // Ideal solid torus
 
     // Some non-handlebodies with the right boundary and homology:
     verifyHandlebody(figure8, -1);
@@ -3086,7 +3079,7 @@ static void verifyTxI(const char* stringRep, bool expected) {
 
 TEST_F(Dim3Test, TxIRecognition) {
     // An ideal TxI:
-    verifyTxI("eLAkbbcddadbdb", true);
+    verifyTxI("ehzBNfXCh", true);
 
     // TODO: Test a TxI with real boundary.
 
@@ -3099,18 +3092,18 @@ TEST_F(Dim3Test, TxIRecognition) {
     // Some homology-TxI manifolds, based on links from 4^2_1 thru 7^2_8
     // in Bailey and Roth's tables from Rolfsen's "Knots and Links"
     // (5^2_1 and 7^2_8 have the same exterior):
-    verifyTxI("eLPkbdcddabgbg", false);
-    verifyTxI("eLPkbdcddhgggb", false);
-    verifyTxI("eLMkbcdddaeeda", false);
-    verifyTxI("eLMkbcddddedde", false);
-    verifyTxI("gLLMQbcdefffmvftaog", false);
-    verifyTxI("fLLQcbecdeepuwsua", false);
-    verifyTxI("hLLAPkbcdefgggtsfxjjgb", false);
-    verifyTxI("hLLMPkbcdfggfgmvfafwkf", false);
-    verifyTxI("hLLzQkcdegffgguvuqpgvk", false);
-    verifyTxI("iLLLAQccdegfhhghdcltautwa", false);
-    verifyTxI("kLLLALQkceffehijjijiiealshealf", false);
-    verifyTxI("eLPkbdcddabobv", false);
+    verifyTxI("eptBFmWad", false);
+    verifyTxI("epABFGrek", false);
+    verifyTxI("epAB3mIkd", false);
+    verifyTxI("epAB3iIQd", false);
+    verifyTxI("gxDLS-brgkkk", false);
+    verifyTxI("fhAK8wmlPPa", false);
+    verifyTxI("hNJS2+FayqAMta", false);
+    verifyTxI("hxEK1+FGycu2Xa", false);
+    verifyTxI("hxEMT+FGyIvwDa", false);
+    verifyTxI("iVMIoZU7FbYiIrP5a", false);
+    verifyTxI("kVseZlT7W-paM5QCQiIa", false);
+    verifyTxI("eptBFmGab", false);
 
     // Finally, the connected sum of the Poincare homology sphere and TxI:
     verifyTxI("pLvwwLuPIIIkaddkomnjlllonobabtlqinfjwjnw", false);

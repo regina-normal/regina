@@ -38,7 +38,7 @@ def search(sig):
 	print()
 
 search('foo')
-search('cV6cqb')
-search('cPcbbbiht')
-search('nhpkp7wn5L5-YBairvzHzOOQc')
-search('nLLvLMPMQkcdijihjjmlklmmicgcvcbkihlfng')
+search('cV6cqb') # 2nd-gen
+search('cPcbbbiht') # 1st-gen
+search('nhpkp7wn5L5-YBairvzHzOOQc') # 2nd-gen
+search('nLLvLMPMQkcdijihjjmlklmmicgcvcbkihlfng') # 1st-gen

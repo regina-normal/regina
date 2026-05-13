@@ -219,9 +219,9 @@ TEST_F(Dim4Test, magic) {
     testManualCases([](const Triangulation<4>& t, const char* name) {
         SCOPED_TRACE_CSTRING(name);
 
-        std::string sig = t.isoSig();
-        Triangulation<4> recon(sig);
-        EXPECT_EQ(recon.isoSig(), sig);
+        std::string sig = t.neoSig();
+        EXPECT_EQ(Triangulation<4>(sig).neoSig(), sig);
+        EXPECT_EQ(Triangulation<4>(t.isoSig()).neoSig(), sig);
     });
 
     EXPECT_THROW({
@@ -491,9 +491,9 @@ static void verifyBoundaryManifolds(const TriangulationTest<4>::TestCase& test,
             if (auto mfd = std->manifold())
                 EXPECT_EQ(mfd->name(), *it);
             else
-                EXPECT_EQ(t.isoSig(), *it);
+                EXPECT_EQ(t.neoSig(), *it);
         } else
-            EXPECT_EQ(t.isoSig(), *it);
+            EXPECT_EQ(t.neoSig(), *it);
         ++it;
     }
 }
@@ -512,13 +512,13 @@ TEST_F(Dim4Test, boundaryManifolds) {
     verifyBoundaryManifolds(mixedPoincareProduct, { "S3/P120", "S3/P120" });
 
     verifyBoundaryManifolds(idealFigEightProduct,
-        { "dLQacccbjkg" /* ideal TxI */,
+        { "dh1hWYb" /* ideal TxI */,
           "Figure eight knot complement", "Figure eight knot complement" });
     verifyBoundaryManifolds(mixedFigEightProduct,
         { "Figure eight knot complement", "Figure eight knot complement" });
     // For pillow_twoCycle, both boundary components are RP2 x I with one ideal
     // vertex and one invald edge (whose midpoint becomes the second RP2 cusp).
-    verifyBoundaryManifolds(pillow_twoCycle, { "cPcbbbaac", "cPcbbbaac" });
+    verifyBoundaryManifolds(pillow_twoCycle, { "cR6mgd", "cR6mgd" });
     verifyBoundaryManifolds(pillow_threeCycle, { "L(3,1)" });
 
     verifyBoundaryManifolds(disjoint2, { "S3" });

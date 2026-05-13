@@ -79,7 +79,7 @@ class SnapPeaTest : public testing::Test {
         // the isosig gives the same triangulation with a different labelling,
         // which seems to prod SnapPea into finding a better solution instead.
         Triangulation<3> closedHypNor {
-            Triangulation<3>::fromSig("lLLLALAQccegffiijkikkkknawmhvwcls") };
+            Triangulation<3>::fromSig("llKRol1mv9RlyGqljwHq3Kva") };
 
         // The Weber-Seifert dodecahedral space:
         Triangulation<3> weberSeifert { Example<3>::weberSeifert() };
@@ -471,7 +471,7 @@ static bool looksIdentical(const SnapPeaTriangulation& a,
     if (a != b)
         return false;
 
-    if (a.isoSig() != b.isoSig())
+    if (a.neoSig() != b.neoSig())
         return false;
     if (a.snapPea() != b.snapPea())
         return false;

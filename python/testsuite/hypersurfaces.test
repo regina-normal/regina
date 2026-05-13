@@ -85,5 +85,5 @@ surfaceStats(regina.Example4.rp4(), 'Real projective 4-space')
 surfaceStats(regina.Example4.s3xs1(), 'S3 x S1')
 surfaceStats(regina.Example4.s3xs1Twisted(), 'S3 x~ S1')
 surfaceStats(regina.Example4.cappellShaneson(), 'Cappell-Shaneson knot complement')
-# L(8,3) x S1:
+# L(8,3) x S1, via a first-generation isosig:
 surfaceStats(regina.Triangulation4('kLLLzQMQQccefhihhgihijjijjKb9aGbKbebvbPadbaaebmb9aGasasamb'), 'L(8,3) x S1')

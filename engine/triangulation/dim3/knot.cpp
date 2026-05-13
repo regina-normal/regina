@@ -448,7 +448,7 @@ std::pair<Edge<3>*, Edge<3>*> Triangulation<3>::meridianLongitude() {
                 t.simplex(bdryTet[1]->index())->edge(bdryEdge[1]),
                 t.simplex(bdryTet[2]->index())->edge(bdryEdge[2]),
                 1, merCut, merCut + 1);
-            // std::cerr << "Filled: " << t.isoSig() << std::endl;
+            // std::cerr << "Filled: " << t.neoSig() << std::endl;
             if (fastSphere(t)) {
                 while (merCut > 0) {
                     // Layer over boundary edge 2.
@@ -472,7 +472,7 @@ std::pair<Edge<3>*, Edge<3>*> Triangulation<3>::meridianLongitude() {
                 t.simplex(bdryTet[1]->index())->edge(bdryEdge[1]),
                 t.simplex(bdryTet[2]->index())->edge(bdryEdge[2]),
                 1, merCut + 1, merCut);
-            // std::cerr << "Filled: " << t.isoSig() << std::endl;
+            // std::cerr << "Filled: " << t.neoSig() << std::endl;
             if (fastSphere(t)) {
                 while (merCut > 0) {
                     // Layer over boundary edge 1.

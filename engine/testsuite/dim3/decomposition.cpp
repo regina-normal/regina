@@ -57,10 +57,10 @@ static bool isZeroEfficientException(const Triangulation<3>& tri) {
     if (tri.size() != 2)
         return false;
 
-    std::string sig = tri.isoSig();
-    return (sig == "cMcabbgqw" /* RP3 */ ||
-            sig == "cMcabbjaj" /* S2xS1 */ ||
-            sig == "cPcbbbajs" /* S2x~S1 */);
+    std::string sig = tri.neoSig();
+    return (sig == "cN6cib" /* RP3 */ ||
+            sig == "cN6OXa" /* S2xS1 */ ||
+            sig == "cR6eIi" /* S2x~S1 */);
 }
 
 static void verifyDecomp(const Triangulation<3>& tri, const char* name,
@@ -113,9 +113,9 @@ static void verifyDecomp(const Triangulation<3>& tri, const char* name,
                         EXPECT_EQ(summand.homology(), stdMfd->homology());
                     });
                 } else
-                    foundManifolds.push_back(summand.isoSig());
+                    foundManifolds.push_back(summand.neoSig());
             } else
-                foundManifolds.push_back(summand.isoSig());
+                foundManifolds.push_back(summand.neoSig());
         }
 
         EXPECT_EQ(foundH1, tri.homology());

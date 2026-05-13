@@ -35,7 +35,7 @@ partial = None
 #######################################################################
 
 def foundGluings2(g):
-	print(g.triangulate().isoSig())
+	print(g.triangulate().neoSig())
 
 def auto2(p, isos):
 	print(p.str())
@@ -77,7 +77,7 @@ def foundGluings3(g):
 	# Note: simplify() might reduce vertices but keep the
 	# same number of tetrahedra.
 	if not t.simplify():
-		print(t.isoSig())
+		print(t.neoSig())
 
 def auto3(p, isos):
 	print(p.str())
@@ -117,7 +117,7 @@ print()
 #######################################################################
 
 def foundGluings4(g):
-	print(g.triangulate().isoSig())
+	print(g.triangulate().neoSig())
 
 def auto4(p, isos):
 	print(p.str())

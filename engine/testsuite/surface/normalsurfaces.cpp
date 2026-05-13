@@ -784,7 +784,7 @@ TEST(NormalSurfacesTest, fundDualVsCD) {
         Example<3>::lst(1, 4), "LST(1,4,5)",
         NormalAlg::HilbertDual, NormalAlg::HilbertCD);
     verifyFundAlgorithms<NormalCoords::Quad>(
-        Triangulation<3>::fromSig("dLQbccchhfo"), "m009",
+        Triangulation<3>::fromSig("dp1ha0a"), "m009",
         NormalAlg::HilbertDual, NormalAlg::HilbertCD);
 }
 

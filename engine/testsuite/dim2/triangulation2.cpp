@@ -78,9 +78,9 @@ class Dim2Test : public TriangulationTest<2> {
 TEST_F(Dim2Test, magic) {
     // Verify the "magic" string-based constructor.
     testManualCases([](const Triangulation<2>& t, const char* name) {
-        std::string sig = t.isoSig();
-        Triangulation<2> recon(sig);
-        EXPECT_EQ(recon.isoSig(), sig);
+        std::string sig = t.neoSig();
+        EXPECT_EQ(Triangulation<2>(sig).neoSig(), sig);
+        EXPECT_EQ(Triangulation<2>(t.isoSig()).neoSig(), sig);
     });
 
     EXPECT_THROW({

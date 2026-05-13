@@ -32,7 +32,7 @@
 def tri3From(*args):
 	try:
 		t = Triangulation3(*args)
-		print(t.size(), t.isoSig())
+		print(t.size(), t.neoSig())
 	except InvalidArgument:
 		print('Could not construct')
 	except TypeError:
@@ -55,8 +55,11 @@ tri3From(ExampleSnapPea.whiteheadLink())
 # Regina's SnapPeaTriangulation class, without cloning properties
 tri3From(ExampleSnapPea.whiteheadLink(), False)
 
-# Iso sig
+# Iso sig (1st gen)
 tri3From('cPcbbbiht')
+
+# Iso sig (2nd gen)
+tri3From('cV6cqb')
 
 # Dehydration string
 tri3From('cabbbbaei')
@@ -85,7 +88,7 @@ class MisbehavedSnapPyObject:
 		return 42
 
 class UncallableSnapPyObject:
-	_to_string = 'cPcbbbiht'
+	_to_string = 'cV6cqb'
 
 tri3From(SnapPyObject())
 tri3From(NotSnapPyObject())

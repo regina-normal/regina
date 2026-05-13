@@ -72,7 +72,7 @@ def describeSatRegion(r):
 
 def describe(t, name):
 	print(name + ':')
-	print(prefix(1) + 'IsoSig: ' + t.isoSig())
+	print(prefix(1) + 'NeoSig: ' + t.neoSig())
 	
 	std = StandardTriangulation.recognise(t)
 	if std:
@@ -246,6 +246,13 @@ def describe(t, name):
 
 def describeSig(sig):
 	describe(Triangulation3.fromSig(sig), sig)
+
+# All of the isosigs that appear below here are first-generation.
+# We will keep it that way for now, because switching to second-generation
+# causes relabellings that in turn change the output (and for some recognition
+# routines such as BlockedSFS.recognise(), in significant ways).
+# I am not eager to go through and manually verify the output changes that
+# appear across the hundreds of triangulations in this list.
 
 # The following isosigs are the complete output of tricensus -sNfit<n>:
 

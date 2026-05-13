@@ -99,7 +99,7 @@ v = t.vertex(0).buildLink()
 print('Step 3')
 t = None # destroys t1 but not v1
 print('Step 4')
-print(v.isoSig())
+print(v.neoSig())
 
 print('Vertex link #2')
 print('Step 1')

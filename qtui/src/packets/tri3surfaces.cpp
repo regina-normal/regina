@@ -691,7 +691,7 @@ void Tri3SurfacesUI::refresh() {
         hits.clear();
 
         // The triangulation is too large to be found in the census.
-        // Avoid the overhead of calling isoSig().
+        // Avoid the overhead of calling neoSig().
         census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
     }
 }

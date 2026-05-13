@@ -91,7 +91,7 @@ bool Triangulation<4>::internal44(Edge<4>* e, bool check, bool perform) {
 
         // The link of e should be a 2-2 move away from being combinatorially
         // isomorphic to the boundary of a tetrahedron.
-        if ( edgeLink.isoSig() != "eLPbddaaa" ) {
+        if ( edgeLink.isoSig() != "epBlv" ) {
             return false;
         }
     }

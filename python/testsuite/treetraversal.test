@@ -153,6 +153,10 @@ else:
 
 print()
 
+# For the next example we use a first-generation isosig.  Switching to a
+# second-generation isosig would change the way in which the LPs run (due to
+# the resulting relabelling), and would therefore require changing the
+# expected output for this test.
 t = Triangulation3.fromSig('gHLLOcbcdeffafwfss') # Solid torus # RP^3
 print(t.nonTrivialSphereOrDisc())
 tab = LPInitialTableaux(t, NormalCoords.Standard)

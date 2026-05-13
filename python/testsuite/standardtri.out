@@ -1,5 +1,5 @@
 bkaajj:
-  IsoSig: bkaajj
+  NeoSig: bNjc
   Standard: L(4,1) = L(4,1)
   Layered lens space: L(4,1)
     LST: 1 2 3
@@ -15,7 +15,7 @@ bkaajj:
   Spiral: 0/0321
   Spiral: 0/2103
 bkaajn:
-  IsoSig: bkaajn
+  NeoSig: bNjd
   Standard: L(5,2) = L(5,2)
   Layered lens space: L(5,2)
     LST: 1 2 3
@@ -28,7 +28,7 @@ bkaajn:
   Spiral: 0/0321
   Spiral: 0/2013
 bkaagb:
-  IsoSig: bkaagb
+  NeoSig: bNha
   Standard: C(1) = S3
   Layered loop: C(1)
     Untwisted, 1
@@ -37,7 +37,7 @@ bkaagb:
     Tet: 0
     Internal faces: 0 1
 bkaagj:
-  IsoSig: bkaagj
+  NeoSig: bNhc
   Standard: L(1,0) = S3
   Layered lens space: L(1,0)
     LST: 1 2 3
@@ -52,7 +52,7 @@ bkaagj:
     Internal faces: 0 1
   Spiral: 0/2103
 cMcabbjqw:
-  IsoSig: cMcabbjqw
+  NeoSig: cN6iyb
   Standard: L(7,2) = L(7,2)
   Layered lens space: L(7,2)
     LST: 2 3 5
@@ -71,7 +71,7 @@ cMcabbjqw:
   Spiral: 0/2103 1/1032
   Spiral: 1/0213
 cMcabbjxr:
-  IsoSig: cMcabbjxr
+  NeoSig: cN6iib
   Standard: L(5,1) = L(5,1)
   Layered lens space: L(5,1)
     LST: 1 3 4
@@ -90,7 +90,7 @@ cMcabbjxr:
   Spiral: 0/2013 1/0132
   Spiral: 1/1203
 cMcabbjaj:
-  IsoSig: cMcabbjaj
+  NeoSig: cN6OXa
   Standard: L(0,1) = S2 x S1
   Layered lens space: L(0,1)
     LST: 1 1 2
@@ -108,7 +108,7 @@ cMcabbjaj:
   Spiral: 0/0321
   Spiral: 1/0321
 cMcabbjak:
-  IsoSig: cMcabbjak
+  NeoSig: cN6Obb
   Standard: L(3,1) (2) = L(3,1)
   Layered lens space: L(3,1) (2)
     LST: 1 1 2
@@ -126,7 +126,7 @@ cMcabbjak:
   Spiral: 0/0321
   Spiral: 1/0231
 cMcabbjqs:
-  IsoSig: cMcabbjqs
+  NeoSig: cN6i0a
   Standard: L(8,3) = L(8,3)
   Layered lens space: L(8,3)
     LST: 2 3 5
@@ -145,7 +145,7 @@ cMcabbjqs:
   Spiral: 0/2103 1/1032
   Spiral: 1/0123
 cMcabbgqw:
-  IsoSig: cMcabbgqw
+  NeoSig: cN6cib
   Standard: L(2,1) = RP3
   Layered lens space: L(2,1)
     LST: 1 3 4
@@ -161,7 +161,7 @@ cMcabbgqw:
   Spiral: 0/2103 1/1032
   Spiral: 1/0213
 cMcabbgaj:
-  IsoSig: cMcabbgaj
+  NeoSig: cN6IXa
   Standard: L(3,1) (1) = L(3,1)
   Layered lens space: L(3,1) (1)
     LST: 1 1 2
@@ -176,13 +176,13 @@ cMcabbgaj:
     Internal faces: 0 1
   Spiral: 1/0321
 cPcbbbaaa:
-  IsoSig: cPcbbbaaa
+  NeoSig: cV6Mza
   Standard: S3 (4-vtx) = S3
 cPcbbbaai:
-  IsoSig: cPcbbbaai
+  NeoSig: cV6gza
   Standard: L'(3,1) = L(3,1)
 cPcbbbqxh:
-  IsoSig: cPcbbbqxh
+  NeoSig: cV6Wfa
   Standard: C~(2) = S3/Q8
   Layered chain pair: C(1,1)
     Chain lengths: 1 1
@@ -196,11 +196,11 @@ cPcbbbqxh:
   Spiral: 0/1302 1/1203
   Spiral: 0/2103 1/2301
 cPcbbbajs:
-  IsoSig: cPcbbbajs
+  NeoSig: cR6eIi
   Standard: N(2) = S2 x~ S1
   Spiral: 0/2103 1/2103
 cPcbbbahh:
-  IsoSig: cPcbbbahh
+  NeoSig: cV6gaa
   Standard: C(2) = RP3
   Layered loop: C(2)
     Untwisted, 2
@@ -210,7 +210,7 @@ cPcbbbahh:
   Spiral: 0/1203 1/2031
   Spiral: 0/1302 1/3021
 dLQbcbchhww:
-  IsoSig: dLQbcbchhww
+  NeoSig: dpZhaqe
   Standard: L(12,5) = L(12,5)
   Layered lens space: L(12,5)
     LST: 2 5 7
@@ -230,7 +230,7 @@ dLQbcbchhww:
   Spiral: 1/1302
   Spiral: 2/0213
 dLQbcbchxwn:
-  IsoSig: dLQbcbchxwn
+  NeoSig: dN0ncXc
   Standard: L(13,5) = L(13,5)
   Layered lens space: L(13,5)
     LST: 3 5 8
@@ -250,7 +250,7 @@ dLQbcbchxwn:
   Spiral: 1/1302
   Spiral: 2/2013
 dLQbcbchhjw:
-  IsoSig: dLQbcbchhjw
+  NeoSig: dN0ncGf
   Standard: L(9,2) = L(9,2)
   Layered lens space: L(9,2)
     LST: 1 4 5
@@ -270,7 +270,7 @@ dLQbcbchhjw:
   Spiral: 1/1032
   Spiral: 2/0213
 dLQbcbchxjn:
-  IsoSig: dLQbcbchxjn
+  NeoSig: dN0ncqd
   Standard: L(11,3) = L(11,3)
   Layered lens space: L(11,3)
     LST: 3 4 7
@@ -290,7 +290,7 @@ dLQbcbchxjn:
   Spiral: 1/1032
   Spiral: 2/2013
 dLQbcbchhjs:
-  IsoSig: dLQbcbchhjs
+  NeoSig: dpZhaSc
   Standard: L(6,1) = L(6,1)
   Layered lens space: L(6,1)
     LST: 1 4 5
@@ -310,7 +310,7 @@ dLQbcbchhjs:
   Spiral: 1/1032
   Spiral: 2/0123
 dLQbcbchxjj:
-  IsoSig: dLQbcbchxjj
+  NeoSig: dpZhynd
   Standard: L(10,3) = L(10,3)
   Layered lens space: L(10,3)
     LST: 3 4 7
@@ -330,7 +330,7 @@ dLQbcbchxjj:
   Spiral: 1/1032
   Spiral: 2/2103
 dLQbccchhrw:
-  IsoSig: dLQbccchhrw
+  NeoSig: dp1hawe
   Standard: C~(3) = S3/Q12
   Layered chain pair: C(1,2)
     Chain lengths: 1 2
@@ -343,7 +343,7 @@ dLQbccchhrw:
   Spiral: 0/1302 2/3021 1/3021
   Spiral: 1/1302 2/0213
 eLAkbcbddhhwhr:
-  IsoSig: eLAkbcbddhhwhr
+  NeoSig: epAA3aaGi
   Standard: L(16,7) = L(16,7)
   Layered lens space: L(16,7)
     LST: 2 7 9
@@ -364,7 +364,7 @@ eLAkbcbddhhwhr:
   Spiral: 2/0213 3/2130
   Spiral: 3/1203
 eLAkbcbddhhwqj:
-  IsoSig: eLAkbcbddhhwqj
+  NeoSig: ehrBRr4cl
   Standard: L(19,7) = L(19,7)
   Layered lens space: L(19,7)
     LST: 5 7 12
@@ -385,7 +385,7 @@ eLAkbcbddhhwqj:
   Spiral: 2/0123 3/1230
   Spiral: 3/2103
 eLAkbcbddhxwqs:
-  IsoSig: eLAkbcbddhxwqs
+  NeoSig: ehrBRrici
   Standard: L(21,8) = L(21,8)
   Layered lens space: L(21,8)
     LST: 5 8 13
@@ -406,7 +406,7 @@ eLAkbcbddhxwqs:
   Spiral: 2/2103 3/1032
   Spiral: 3/0123
 eLAkbcbddhhjhr:
-  IsoSig: eLAkbcbddhhjhr
+  NeoSig: ehrBRraal
   Standard: L(11,2) = L(11,2)
   Layered lens space: L(11,2)
     LST: 1 5 6
@@ -427,7 +427,7 @@ eLAkbcbddhhjhr:
   Spiral: 2/0213 3/2130
   Spiral: 3/1203
 eLAkbcbddhhjqj:
-  IsoSig: eLAkbcbddhhjqj
+  NeoSig: ehrBRraGg
   Standard: L(14,3) = L(14,3)
   Layered lens space: L(14,3)
     LST: 4 5 9
@@ -448,7 +448,7 @@ eLAkbcbddhhjqj:
   Spiral: 2/0123 3/1230
   Spiral: 3/2103
 eLAkbcbddhhwqn:
-  IsoSig: eLAkbcbddhhwqn
+  NeoSig: ehrBRraUj
   Standard: L(17,5) = L(17,5)
   Layered lens space: L(17,5)
     LST: 5 7 12
@@ -469,7 +469,7 @@ eLAkbcbddhhwqn:
   Spiral: 2/0123 3/1230
   Spiral: 3/2013
 eLAkbcbddhxjqs:
-  IsoSig: eLAkbcbddhxjqs
+  NeoSig: ehrBRraIf
   Standard: L(18,5) = L(18,5)
   Layered lens space: L(18,5)
     LST: 4 7 11
@@ -490,7 +490,7 @@ eLAkbcbddhxjqs:
   Spiral: 2/2103 3/1032
   Spiral: 3/0123
 eLAkbcbddhhjhk:
-  IsoSig: eLAkbcbddhhjhk
+  NeoSig: ehrBRraaj
   Standard: L(7,1) = L(7,1)
   Layered lens space: L(7,1)
     LST: 1 5 6
@@ -511,7 +511,7 @@ eLAkbcbddhhjhk:
   Spiral: 2/0213 3/2130
   Spiral: 3/1023
 eLAkbcbddhhjqn:
-  IsoSig: eLAkbcbddhhjqn
+  NeoSig: ehrBRraGe
   Standard: L(13,3) = L(13,3)
   Layered lens space: L(13,3)
     LST: 4 5 9
@@ -532,7 +532,7 @@ eLAkbcbddhhjqn:
   Spiral: 2/0123 3/1230
   Spiral: 3/2013
 eLAkbcbddhxjqw:
-  IsoSig: eLAkbcbddhxjqw
+  NeoSig: ehrBRraIi
   Standard: L(15,4) = L(15,4)
   Layered lens space: L(15,4)
     LST: 4 7 11
@@ -553,7 +553,7 @@ eLAkbcbddhxjqw:
   Spiral: 2/2103 3/1032
   Spiral: 3/0213
 eLAkbccddemkiw:
-  IsoSig: eLAkbccddemkiw
+  NeoSig: ehABVqwng
   Standard: A(3,-1) = S3/Q12
   Aug. tri. solid torus: A(3,-1)
     Core: 2 1 0
@@ -577,7 +577,7 @@ eLAkbccddemkiw:
   Spiral: 0/1032 2/0321 1/1302
   Spiral: 3/1302
 eLAkbccddemker:
-  IsoSig: eLAkbccddemker
+  NeoSig: ehABVqwmk
   Standard: A(1,-3) = L(12,5)
   Aug. tri. solid torus: A(1,-3)
     Core: 2 1 0
@@ -601,7 +601,7 @@ eLAkbccddemker:
   Spiral: 0/1032 2/0321 1/1302
   Spiral: 3/0312
 eLAkbccddrrhrr:
-  IsoSig: eLAkbccddrrhrr
+  NeoSig: elsBF4sWuc
   Standard: Blocked SFS [Tri, LST(1, 2, 3)] = SFS [RP2: (3,2)]
   Blocked SFS
     Region:
@@ -622,7 +622,7 @@ eLAkbccddrrhrr:
   Spiral: 0/1302 2/3021 1/1302
   Spiral: 3/0312
 eLAkbccddemkij:
-  IsoSig: eLAkbccddemkij
+  NeoSig: epsBFqKLl
   Standard: A(3,-2) = S3/D24
   Aug. tri. solid torus: A(3,-2)
     Core: 2 1 0
@@ -646,7 +646,7 @@ eLAkbccddemkij:
   Spiral: 0/1032 2/0321 1/1302
   Spiral: 3/1032
 eLAkbccddemken:
-  IsoSig: eLAkbccddemken
+  NeoSig: epsBFqKrf
   Standard: A(2,-3) = S3/Q8 x Z3
   Aug. tri. solid torus: A(2,-3)
     Core: 2 1 0
@@ -670,7 +670,7 @@ eLAkbccddemken:
   Spiral: 0/1032 2/0321 1/1302
   Spiral: 3/0132
 eLAkbccddrrhrn:
-  IsoSig: eLAkbccddrrhrn
+  NeoSig: elsB34iPtc
   Standard: Blocked SFS [Tri, LST(1, 2, 3)] = SFS [RP2: (3,1)]
   Blocked SFS
     Region:
@@ -691,7 +691,7 @@ eLAkbccddrrhrn:
   Spiral: 0/1302 2/3021 1/1302
   Spiral: 3/0132
 eLMkbcdddhhhqx:
-  IsoSig: eLMkbcdddhhhqx
+  NeoSig: epAB3aaSi
   Standard: C~(4) = S3/Q16
   Layered chain pair: C(1,3)
     Chain lengths: 1 3
@@ -703,7 +703,7 @@ eLMkbcdddhhhqx:
   Spiral: 1/1302 3/3021
   Spiral: 2/0213 3/0312
 eLPkbcdddhrrnk:
-  IsoSig: eLPkbcdddhrrnk
+  NeoSig: epABFaiwg
   Standard: C(2,2) = S3/P24
   Layered chain pair: C(2,2)
     Chain lengths: 2 2
@@ -714,7 +714,7 @@ eLPkbcdddhrrnk:
   Spiral: 1/1032 2/2013 3/1320
   Spiral: 2/0132 3/0132
 eLPkbcddddrwos:
-  IsoSig: eLPkbcddddrwos
+  NeoSig: epABFu4ke
   Standard: J(1 | 2,-1) = S3/D24
   Aug. tri. solid torus: J(1 | 2,-1)
     Core: 0 1 3
@@ -736,7 +736,7 @@ eLPkbcddddrwos:
   Spiral: 0/2103 1/2013 3/3210
   Spiral: 2/0132 3/1302
 fLAMcbcbdeehhwhhw:
-  IsoSig: fLAMcbcbdeehhwhhw
+  NeoSig: fpAC8Aaaaeb
   Standard: L(20,9) = L(20,9)
   Layered lens space: L(20,9)
     LST: 2 9 11
@@ -758,7 +758,7 @@ fLAMcbcbdeehhwhhw:
   Spiral: 3/1203 4/2031
   Spiral: 4/0213
 fLAMcbcbdeehhwqqs:
-  IsoSig: fLAMcbcbdeehhwqqs
+  NeoSig: fhrJC1iCbyb
   Standard: L(29,12) = L(29,12)
   Layered lens space: L(29,12)
     LST: 5 12 17
@@ -780,7 +780,7 @@ fLAMcbcbdeehhwqqs:
   Spiral: 3/2103 4/1032
   Spiral: 4/0123
 fLAMcbcbdeehhwhxn:
-  IsoSig: fLAMcbcbdeehhwhxn
+  NeoSig: fpAICBaaWLa
   Standard: L(25,9) = L(25,9)
   Layered lens space: L(25,9)
     LST: 7 9 16
@@ -802,7 +802,7 @@ fLAMcbcbdeehhwhxn:
   Spiral: 3/1023 4/0231
   Spiral: 4/2013
 fLAMcbcbdeehxwxhw:
-  IsoSig: fLAMcbcbdeehxwxhw
+  NeoSig: fhrJC1ie3nb
   Standard: L(30,11) = L(30,11)
   Layered lens space: L(30,11)
     LST: 8 11 19
@@ -824,7 +824,7 @@ fLAMcbcbdeehxwxhw:
   Spiral: 3/1203 4/2031
   Spiral: 4/0213
 fLAMcbcbdeehhwqxk:
-  IsoSig: fLAMcbcbdeehhwqxk
+  NeoSig: fhrJC1iCb0a
   Standard: L(31,12) = L(31,12)
   Layered lens space: L(31,12)
     LST: 7 12 19
@@ -846,7 +846,7 @@ fLAMcbcbdeehhwqxk:
   Spiral: 3/2013 4/0132
   Spiral: 4/1023
 fLAMcbcbdeehxwqhr:
-  IsoSig: fLAMcbcbdeehxwqhr
+  NeoSig: fhrJC1ieHLa
   Standard: L(34,13) = L(34,13)
   Layered lens space: L(34,13)
     LST: 8 13 21
@@ -868,7 +868,7 @@ fLAMcbcbdeehxwqhr:
   Spiral: 3/0213 4/2130
   Spiral: 4/1203
 fLAMcbcbdeehhjhhw:
-  IsoSig: fLAMcbcbdeehhjhhw
+  NeoSig: fhrJC1iaayb
   Standard: L(13,2) = L(13,2)
   Layered lens space: L(13,2)
     LST: 1 6 7
@@ -890,7 +890,7 @@ fLAMcbcbdeehhjhhw:
   Spiral: 3/1203 4/2031
   Spiral: 4/0213
 fLAMcbcbdeehhjhxn:
-  IsoSig: fLAMcbcbdeehhjhxn
+  NeoSig: fhrJC1iaa0a
   Standard: L(17,3) = L(17,3)
   Layered lens space: L(17,3)
     LST: 5 6 11
@@ -912,7 +912,7 @@ fLAMcbcbdeehhjhxn:
   Spiral: 3/1023 4/0231
   Spiral: 4/2013
 fLAMcbcbdeehhjqqs:
-  IsoSig: fLAMcbcbdeehhjqqs
+  NeoSig: fhrJC1iaWnb
   Standard: L(22,5) = L(22,5)
   Layered lens space: L(22,5)
     LST: 4 9 13
@@ -934,7 +934,7 @@ fLAMcbcbdeehhjqqs:
   Spiral: 3/2103 4/1032
   Spiral: 4/0123
 fLAMcbcbdeehhjqxk:
-  IsoSig: fLAMcbcbdeehhjqxk
+  NeoSig: fhrJC1iaqSa
   Standard: L(23,5) = L(23,5)
   Layered lens space: L(23,5)
     LST: 5 9 14
@@ -956,7 +956,7 @@ fLAMcbcbdeehhjqxk:
   Spiral: 3/2013 4/0132
   Spiral: 4/1023
 fLAMcbcbdeehhwhxj:
-  IsoSig: fLAMcbcbdeehhwhxj
+  NeoSig: fhrJC1iax0a
   Standard: L(23,7) = L(23,7)
   Layered lens space: L(23,7)
     LST: 7 9 16
@@ -978,7 +978,7 @@ fLAMcbcbdeehhwhxj:
   Spiral: 3/1023 4/0231
   Spiral: 4/2103
 fLAMcbcbdeehxjxhw:
-  IsoSig: fLAMcbcbdeehxjxhw
+  NeoSig: fhrJC1iaxyb
   Standard: L(27,8) = L(27,8)
   Layered lens space: L(27,8)
     LST: 7 10 17
@@ -1000,7 +1000,7 @@ fLAMcbcbdeehxjxhw:
   Spiral: 3/1203 4/2031
   Spiral: 4/0213
 fLAMcbcbdeehhwqxr:
-  IsoSig: fLAMcbcbdeehhwqxr
+  NeoSig: fhrJC1iaXLa
   Standard: L(26,7) = L(26,7)
   Layered lens space: L(26,7)
     LST: 7 12 19
@@ -1022,7 +1022,7 @@ fLAMcbcbdeehhwqxr:
   Spiral: 3/2013 4/0132
   Spiral: 4/1203
 fLAMcbcbdeehxjqhr:
-  IsoSig: fLAMcbcbdeehxjqhr
+  NeoSig: fhrJC1iarab
   Standard: L(29,8) = L(29,8)
   Layered lens space: L(29,8)
     LST: 7 11 18
@@ -1044,7 +1044,7 @@ fLAMcbcbdeehxjqhr:
   Spiral: 3/0213 4/2130
   Spiral: 4/1203
 fLAMcbcbdeehhjhhs:
-  IsoSig: fLAMcbcbdeehhjhhs
+  NeoSig: fhrJC1iaaib
   Standard: L(8,1) = L(8,1)
   Layered lens space: L(8,1)
     LST: 1 6 7
@@ -1066,7 +1066,7 @@ fLAMcbcbdeehhjhhs:
   Spiral: 3/1203 4/2031
   Spiral: 4/0123
 fLAMcbcbdeehhjqqw:
-  IsoSig: fLAMcbcbdeehhjqqw
+  NeoSig: fhrJC1iaWDb
   Standard: L(17,4) = L(17,4)
   Layered lens space: L(17,4)
     LST: 4 9 13
@@ -1088,7 +1088,7 @@ fLAMcbcbdeehhjqqw:
   Spiral: 3/2103 4/1032
   Spiral: 4/0213
 fLAMcbcbdeehhjhxj:
-  IsoSig: fLAMcbcbdeehhjhxj
+  NeoSig: fhrJC1iaaKa
   Standard: L(16,3) = L(16,3)
   Layered lens space: L(16,3)
     LST: 5 6 11
@@ -1110,7 +1110,7 @@ fLAMcbcbdeehhjhxj:
   Spiral: 3/1023 4/0231
   Spiral: 4/2103
 fLAMcbcbdeehxjxhs:
-  IsoSig: fLAMcbcbdeehxjxhs
+  NeoSig: fhrJC1iaxib
   Standard: L(24,7) = L(24,7)
   Layered lens space: L(24,7)
     LST: 7 10 17
@@ -1132,7 +1132,7 @@ fLAMcbcbdeehxjxhs:
   Spiral: 3/1203 4/2031
   Spiral: 4/0123
 fLAMcbcbdeehhjqxr:
-  IsoSig: fLAMcbcbdeehhjqxr
+  NeoSig: fhrJC1iaqeb
   Standard: L(19,4) = L(19,4)
   Layered lens space: L(19,4)
     LST: 5 9 14
@@ -1154,7 +1154,7 @@ fLAMcbcbdeehhjqxr:
   Spiral: 3/2013 4/0132
   Spiral: 4/1203
 fLAMcbcbdeehxjqhk:
-  IsoSig: fLAMcbcbdeehxjqhk
+  NeoSig: fhrJC1iarOa
   Standard: L(25,7) = L(25,7)
   Layered lens space: L(25,7)
     LST: 7 11 18
@@ -1176,7 +1176,7 @@ fLAMcbcbdeehxjqhk:
   Spiral: 3/0213 4/2130
   Spiral: 4/1023
 fLAMcbccdeeemkihr:
-  IsoSig: fLAMcbccdeeemkihr
+  NeoSig: fhzK8XQ1U9a
   Standard: A(5,-3) = S3/Q20 x Z3
   Aug. tri. solid torus: A(5,-3)
     Core: 2 1 0
@@ -1201,7 +1201,7 @@ fLAMcbccdeeemkihr:
   Spiral: 3/1302 4/3021
   Spiral: 4/0312
 fLAMcbccdeeemkehw:
-  IsoSig: fLAMcbccdeeemkehw
+  NeoSig: fhzK8XQ1OLa
   Standard: A(3,-5) = S3/Q12 x Z5
   Aug. tri. solid torus: A(3,-5)
     Core: 2 1 0
@@ -1226,7 +1226,7 @@ fLAMcbccdeeemkehw:
   Spiral: 3/0312 4/3120
   Spiral: 4/1302
 fLAMcbccdeerrhrhw:
-  IsoSig: fLAMcbccdeerrhrhw
+  NeoSig: flsJCBCK05ob
   Standard: Blocked SFS [Tri, LST(2, 3, 5)] = SFS [RP2: (5,2)]
   Blocked SFS
     Region:
@@ -1248,7 +1248,7 @@ fLAMcbccdeerrhrhw:
   Spiral: 3/0312 4/3120
   Spiral: 4/1302
 fLAMcbccdeeemkiqj:
-  IsoSig: fLAMcbccdeeemkiqj
+  NeoSig: fhzK8Xi0U9a
   Standard: A(5,-2) = S3/D40
   Aug. tri. solid torus: A(5,-2)
     Core: 2 1 0
@@ -1273,7 +1273,7 @@ fLAMcbccdeeemkiqj:
   Spiral: 3/1032 4/0321
   Spiral: 4/2103
 fLAMcbccdeeemkexn:
-  IsoSig: fLAMcbccdeeemkexn
+  NeoSig: fhzK8Xi0OLa
   Standard: A(2,-5) = S3/Q8 x Z5
   Aug. tri. solid torus: A(2,-5)
     Core: 2 1 0
@@ -1298,7 +1298,7 @@ fLAMcbccdeeemkexn:
   Spiral: 3/0132 4/1320
   Spiral: 4/2013
 fLAMcbccdeerrhrxn:
-  IsoSig: fLAMcbccdeerrhrxn
+  NeoSig: fdzK8XsXM76a
   Standard: Blocked SFS [Tri, LST(2, 3, 5)] = SFS [RP2: (5,3)]
   Blocked SFS
     Region:
@@ -1320,7 +1320,7 @@ fLAMcbccdeerrhrxn:
   Spiral: 3/0132 4/1320
   Spiral: 4/2013
 fLAMcbccdeeemkihn:
-  IsoSig: fLAMcbccdeeemkihn
+  NeoSig: fhzK8XW1U9a
   Standard: A(4,-3) = S3/Q16 x Z3
   Aug. tri. solid torus: A(4,-3)
     Core: 2 1 0
@@ -1345,7 +1345,7 @@ fLAMcbccdeeemkihn:
   Spiral: 3/1302 4/3021
   Spiral: 4/0132
 fLAMcbccdeeemkehj:
-  IsoSig: fLAMcbccdeeemkehj
+  NeoSig: fhzK8XW1OLa
   Standard: A(3,-4) = S3/D48
   Aug. tri. solid torus: A(3,-4)
     Core: 2 1 0
@@ -1370,7 +1370,7 @@ fLAMcbccdeeemkehj:
   Spiral: 3/0312 4/3120
   Spiral: 4/1032
 fLAMcbccdeerrhrhj:
-  IsoSig: fLAMcbccdeerrhrhj
+  NeoSig: fdzK8XI3M76a
   Standard: Blocked SFS [Tri, LST(1, 3, 4)] = SFS [RP2: (4,1)]
   Blocked SFS
     Region:
@@ -1392,7 +1392,7 @@ fLAMcbccdeerrhrhj:
   Spiral: 3/0312 4/3120
   Spiral: 4/1032
 fLAMcbccdeeemkiqn:
-  IsoSig: fLAMcbccdeeemkiqn
+  NeoSig: fhzK8XiOIyb
   Standard: A(4,-1) = S3/Q16
   Aug. tri. solid torus: A(4,-1)
     Core: 2 1 0
@@ -1417,7 +1417,7 @@ fLAMcbccdeeemkiqn:
   Spiral: 3/1032 4/0321
   Spiral: 4/2013
 fLAMcbccdeeemkexj:
-  IsoSig: fLAMcbccdeeemkexj
+  NeoSig: fhzK8XiOQAb
   Standard: A(1,-4) = L(16,7)
   Aug. tri. solid torus: A(1,-4)
     Core: 2 1 0
@@ -1442,7 +1442,7 @@ fLAMcbccdeeemkexj:
   Spiral: 3/0132 4/1320
   Spiral: 4/2103
 fLAMcbccdeerrhrxj:
-  IsoSig: fLAMcbccdeerrhrxj
+  NeoSig: fdzK8XsHfHCb
   Standard: Blocked SFS [Tri, LST(1, 3, 4)] = SFS [RP2: (4,3)]
   Blocked SFS
     Region:
@@ -1464,7 +1464,7 @@ fLAMcbccdeerrhrxj:
   Spiral: 3/0132 4/1320
   Spiral: 4/2103
 fLLQcacddeenkaikr:
-  IsoSig: fLLQcacddeenkaikr
+  NeoSig: fhAJ8tSCUcb
   Standard: A(1,-3 | 3,-2) = L(19,7)
   Aug. tri. solid torus: A(1,-3 | 3,-2)
     Core: 1 2 3
@@ -1499,7 +1499,7 @@ fLLQcacddeenkaikr:
   Spiral: 1/1023 3/0231 2/2310
   Spiral: 4/1203
 fLLQcacddeejkaink:
-  IsoSig: fLLQcacddeejkaink
+  NeoSig: fpAJ8hsSwCb
   Standard: A(1,-3 | 2,-3) = L(16,7)
   Aug. tri. solid torus: A(1,-3 | 2,-3)
     Core: 1 2 3
@@ -1534,7 +1534,7 @@ fLLQcacddeejkaink:
   Spiral: 1/1023 3/0231 2/2310
   Spiral: 4/0231
 fLLQcaceeedjkuxkn:
-  IsoSig: fLLQcaceeedjkuxkn
+  NeoSig: fhIK7tSSWIa
   Standard: A(3,-2 | 3,-1) = S3/P'72
   Aug. tri. solid torus: A(3,-2 | 3,-1)
     Core: 1 2 4
@@ -1569,7 +1569,7 @@ fLLQcaceeedjkuxkn:
   Spiral: 1/2013 4/0132 2/2013
   Spiral: 3/2013
 fLLQcacddeejkaikk:
-  IsoSig: fLLQcacddeejkaikk
+  NeoSig: fpAJ8hWTwKa
   Standard: A(2,-3 | 3,-1) = S3/D48
   Aug. tri. solid torus: A(2,-3 | 3,-1)
     Core: 1 2 3
@@ -1604,7 +1604,7 @@ fLLQcacddeejkaikk:
   Spiral: 1/1023 3/0231 2/2310
   Spiral: 4/1023
 fLLQcaceeedjkuxkj:
-  IsoSig: fLLQcaceeedjkuxkj
+  NeoSig: fpAJ8hST21a
   Standard: A(3,-2 | 3,-2) = S3/P24 x Z5
   Aug. tri. solid torus: A(3,-2 | 3,-2)
     Core: 1 2 4
@@ -1639,7 +1639,7 @@ fLLQcaceeedjkuxkj:
   Spiral: 1/2013 4/0132 2/2013
   Spiral: 3/2103
 fLLQcacddeejkaikr:
-  IsoSig: fLLQcacddeejkaikr
+  NeoSig: fpAJ8hSTwKa
   Standard: A(2,-3 | 3,-2) = S3/Q12 x Z5
   Aug. tri. solid torus: A(2,-3 | 3,-2)
     Core: 1 2 3
@@ -1674,7 +1674,7 @@ fLLQcacddeejkaikr:
   Spiral: 1/1023 3/0231 2/2310
   Spiral: 4/1203
 fLLQcacddeejkainj:
-  IsoSig: fLLQcacddeejkainj
+  NeoSig: fpAJ8hsSwKa
   Standard: A(2,-3 | 2,-3) = S3/Q8 x Z5
   Aug. tri. solid torus: A(2,-3 | 2,-3)
     Core: 1 2 3
@@ -1709,7 +1709,7 @@ fLLQcacddeejkainj:
   Spiral: 1/1023 3/0231 2/2310
   Spiral: 4/0321
 fLLQcacddeenkaink:
-  IsoSig: fLLQcacddeenkaink
+  NeoSig: fpAJ8hwSwCb
   Standard: A(1,-3 | 1,-3) = L(11,2)
   Aug. tri. solid torus: A(1,-3 | 1,-3)
     Core: 1 2 3
@@ -1744,7 +1744,7 @@ fLLQcacddeenkaink:
   Spiral: 1/1023 3/0231 2/2310
   Spiral: 4/0231
 fLLQcaceeednkuxkn:
-  IsoSig: fLLQcaceeednkuxkn
+  NeoSig: fpAJ8hWT2fb
   Standard: A(3,-1 | 3,-1) = S3/P24
   Aug. tri. solid torus: A(3,-1 | 3,-1)
     Core: 1 2 4
@@ -1779,7 +1779,7 @@ fLLQcaceeednkuxkn:
   Spiral: 1/2013 4/0132 2/2013
   Spiral: 3/2013
 fLLQcacddeenkaikk:
-  IsoSig: fLLQcacddeenkaikk
+  NeoSig: fpAJ8hWTwCb
   Standard: A(1,-3 | 3,-1) = L(17,5)
   Aug. tri. solid torus: A(1,-3 | 3,-1)
     Core: 1 2 3
@@ -1814,7 +1814,7 @@ fLLQcacddeenkaikk:
   Spiral: 1/1023 3/0231 2/2310
   Spiral: 4/1023
 fLLQcacdeeenkqxvn:
-  IsoSig: fLLQcacdeeenkqxvn
+  NeoSig: fpIJ8hWD2bb
   Standard: J(1 | 3,-1) = S3/Q16 x Z3
   Aug. tri. solid torus: J(1 | 3,-1)
     Core: 1 2 4
@@ -1842,7 +1842,7 @@ fLLQcacdeeenkqxvn:
   Spiral: 1/2013 4/0132 2/2013
   Spiral: 3/0123 4/1203
 fLLQcacdeeenkaqnv:
-  IsoSig: fLLQcacdeeenkaqnv
+  NeoSig: fpIJ8hWfhCa
   Standard: J(1 | 1,-3) = S3/Q16
   Aug. tri. solid torus: J(1 | 1,-3)
     Core: 1 2 3
@@ -1870,7 +1870,7 @@ fLLQcacdeeenkaqnv:
   Spiral: 1/1023 3/0231 2/2310
   Spiral: 3/2103 4/0213
 fLLQcacdeeejkqxvn:
-  IsoSig: fLLQcacdeeejkqxvn
+  NeoSig: fpIJ8hSD2bb
   Standard: J(1 | 3,-2) = S3/Q20 x Z3
   Aug. tri. solid torus: J(1 | 3,-2)
     Core: 1 2 4
@@ -1898,7 +1898,7 @@ fLLQcacdeeejkqxvn:
   Spiral: 1/2013 4/0132 2/2013
   Spiral: 3/0123 4/1203
 fLLQcacdeeejkaqnv:
-  IsoSig: fLLQcacdeeejkaqnv
+  NeoSig: fpIJ8hSfhCa
   Standard: J(1 | 2,-3) = S3/D40
   Aug. tri. solid torus: J(1 | 2,-3)
     Core: 1 2 3
@@ -1926,7 +1926,7 @@ fLLQcacdeeejkaqnv:
   Spiral: 1/1023 3/0231 2/2310
   Spiral: 3/2103 4/0213
 fLMPcbcdeeehhhhwr:
-  IsoSig: fLMPcbcdeeehhhhwr
+  NeoSig: fpAK8AaaGfb
   Standard: C~(5) = S3/Q20
   Layered chain pair: C(1,4)
     Chain lengths: 1 4
@@ -1941,7 +1941,7 @@ fLMPcbcdeeehhhhwr:
   Spiral: 2/0213 4/2130
   Spiral: 3/0312 4/1203
 fLLQcbeddeehhnkxx:
-  IsoSig: fLLQcbeddeehhnkxx
+  NeoSig: fpCC8laOwBb
   Standard: C(2,3) = S3/P48
   Layered chain pair: C(2,3)
     Chain lengths: 2 3
@@ -1951,7 +1951,7 @@ fLLQcbeddeehhnkxx:
   Spiral: 2/0132 3/0132
   Spiral: 2/2013 3/1320 4/0132
 fLLQcbededexxnxwx:
-  IsoSig: fLLQcbededexxnxwx
+  NeoSig: fpAK8zaygKa
   Spiral: 0/0132 1/1320
   Spiral: 0/0321 1/3210 4/1230 2/1032
   Spiral: 0/1023 2/0231 3/3102
@@ -1959,7 +1959,7 @@ fLLQcbededexxnxwx:
   Spiral: 0/2103 1/2301 4/3012 3/3210
   Spiral: 1/2013 4/0132
 fLLQcbededexxrxwx:
-  IsoSig: fLLQcbededexxrxwx
+  NeoSig: fpAK8zayMKa
   Spiral: 0/0132 1/1320
   Spiral: 0/0321 1/3210 4/1230 2/1032
   Spiral: 0/1203 2/2031 4/3021 3/3120
@@ -1967,7 +1967,7 @@ fLLQcbededexxrxwx:
   Spiral: 1/2013 4/0132
   Spiral: 2/0213 3/1302
 fLLQcbeddeehhokum:
-  IsoSig: fLLQcbeddeehhokum
+  NeoSig: fpIJ8zaiVeb
   Standard: J(2 | 2,-1) = S3/P'72
   Aug. tri. solid torus: J(2 | 2,-1)
     Core: 4 2 3
@@ -1976,7 +1976,7 @@ fLLQcbeddeehhokum:
   Spiral: 1/1302 4/3021
   Spiral: 2/0123 3/1032 4/2310
 fLLQcbcdeeehwkiiq:
-  IsoSig: fLLQcbcdeeehwkiiq
+  NeoSig: fxAK8hw0Qkb
   Standard: X(2 | 2,-1) = S3/D40
   Aug. tri. solid torus: X(2 | 2,-1)
     Core: 2 4 3
@@ -2002,7 +2002,7 @@ fLLQcbcdeeehwkiiq:
   Spiral: 0/0312 1/3120
   Spiral: 2/2013 3/1320 4/3012
 fvPQcdecedekrsnrs:
-  IsoSig: fvPQcdecedekrsnrs
+  NeoSig: fFuC8hYTOTa
   Standard: P(0) = S3/P120
   Plugged tri. solid torus: P(0)
     Core: 0 1 3
@@ -2027,7 +2027,7 @@ fvPQcdecedekrsnrs:
   Spiral: 1/2013 4/2301 2/2130
   Spiral: 2/0123 4/0312 3/0231
 fvPQcceddeerrnskr:
-  IsoSig: fvPQcceddeerrnskr
+  NeoSig: fxCJ8hWeRkb
   Standard: P'(0) = S3/P48
   Plugged tri. solid torus: P'(0)
     Core: 0 2 3
@@ -2040,7 +2040,7 @@ fvPQcceddeerrnskr:
   Spiral: 1/1032 2/2013 4/1320
   Spiral: 1/2013 4/2301 3/1320
 gLALQbcbefffxxnnmxm:
-  IsoSig: gLALQbcbefffxxnnmxm
+  NeoSig: ghrSTpAeUvel
   Standard: A(7,-5) = S3/Q28 x Z5
   Aug. tri. solid torus: A(7,-5)
     Core: 3 4 5
@@ -2072,7 +2072,7 @@ gLALQbcbefffxxnnmxm:
   Spiral: 3/0231 5/2310 4/0231
   Spiral: 3/1023 4/2310 5/3021
 gLALQbcbefffxxnndxd:
-  IsoSig: gLALQbcbefffxxnndxd
+  NeoSig: ghrSTpAeUvvl
   Standard: A(5,-7) = S3/Q20 x Z7
   Aug. tri. solid torus: A(5,-7)
     Core: 3 4 5
@@ -2098,7 +2098,7 @@ gLALQbcbefffxxnndxd:
   Spiral: 3/0231 5/2310 4/0231
   Spiral: 3/1023 4/2310 5/1203
 gLALQbcbefffxxnnnxn:
-  IsoSig: gLALQbcbefffxxnnnxn
+  NeoSig: gdrSTpAP4Drix
   Standard: Blocked SFS [Tri, LST(2, 5, 7)] = SFS [RP2: (7,2)]
   Blocked SFS
     Region:
@@ -2121,7 +2121,7 @@ gLALQbcbefffxxnnnxn:
   Spiral: 3/0231 5/2310 4/0231
   Spiral: 3/1023 4/2310 5/1023
 gLALQbcbefffhhwsmmq:
-  IsoSig: gLALQbcbefffhhwsmmq
+  NeoSig: ghrSTpAlavel
   Standard: A(7,-2) = S3/D56
   Aug. tri. solid torus: A(7,-2)
     Core: 3 4 5
@@ -2153,7 +2153,7 @@ gLALQbcbefffhhwsmmq:
   Spiral: 3/1032 5/0321 4/1032
   Spiral: 3/2103 4/0321 5/3102
 gLALQbcbefffhhwsuuq:
-  IsoSig: gLALQbcbefffhhwsuuq
+  NeoSig: ghrSTpAlavvl
   Standard: A(2,-7) = S3/Q8 x Z7
   Aug. tri. solid torus: A(2,-7)
     Core: 3 4 5
@@ -2179,7 +2179,7 @@ gLALQbcbefffhhwsuuq:
   Spiral: 3/1032 5/0321 4/1032
   Spiral: 3/2103 4/0321 5/2013
 gLALQbcbefffhhwsssq:
-  IsoSig: gLALQbcbefffhhwsssq
+  NeoSig: gdrSTpA3qyrix
   Standard: Blocked SFS [Tri, LST(2, 5, 7)] = SFS [RP2: (7,5)]
   Blocked SFS
     Region:
@@ -2202,7 +2202,7 @@ gLALQbcbefffhhwsssq:
   Spiral: 3/1032 5/0321 4/1032
   Spiral: 3/2103 4/0321 5/2103
 gLALQbcbefffhxwnmxm:
-  IsoSig: gLALQbcbefffhxwnmxm
+  NeoSig: ghrSTpAeI5Di
   Standard: A(8,-5) = S3/Q32 x Z5
   Aug. tri. solid torus: A(8,-5)
     Core: 3 4 5
@@ -2234,7 +2234,7 @@ gLALQbcbefffhxwnmxm:
   Spiral: 3/0231 5/2310 4/0231
   Spiral: 3/1023 4/2310 5/3021
 gLALQbcbefffhxwndxd:
-  IsoSig: gLALQbcbefffhxwndxd
+  NeoSig: ghrSTpAeIzMi
   Standard: A(5,-8) = S3/D160
   Aug. tri. solid torus: A(5,-8)
     Core: 3 4 5
@@ -2260,7 +2260,7 @@ gLALQbcbefffhxwndxd:
   Spiral: 3/0231 5/2310 4/0231
   Spiral: 3/1023 4/2310 5/1203
 gLALQbcbefffhxwnnxn:
-  IsoSig: gLALQbcbefffhxwnnxn
+  NeoSig: gdrSTpAPyCsPr
   Standard: Blocked SFS [Tri, LST(3, 5, 8)] = SFS [RP2: (8,3)]
   Blocked SFS
     Region:
@@ -2283,7 +2283,7 @@ gLALQbcbefffhxwnnxn:
   Spiral: 3/0231 5/2310 4/0231
   Spiral: 3/1023 4/2310 5/1023
 gLALQbcbefffxhnsmmq:
-  IsoSig: gLALQbcbefffxhnsmmq
+  NeoSig: ghrSTpAlG2Th
   Standard: A(8,-3) = S3/Q32 x Z3
   Aug. tri. solid torus: A(8,-3)
     Core: 3 4 5
@@ -2315,7 +2315,7 @@ gLALQbcbefffxhnsmmq:
   Spiral: 3/1032 5/0321 4/1032
   Spiral: 3/2103 4/0321 5/3102
 gLALQbcbefffxhnsuuq:
-  IsoSig: gLALQbcbefffxhnsuuq
+  NeoSig: ghrSTpAlGgTe
   Standard: A(3,-8) = S3/D96
   Aug. tri. solid torus: A(3,-8)
     Core: 3 4 5
@@ -2341,7 +2341,7 @@ gLALQbcbefffxhnsuuq:
   Spiral: 3/1032 5/0321 4/1032
   Spiral: 3/2103 4/0321 5/2013
 gLALQbcbefffxhnsssq:
-  IsoSig: gLALQbcbefffxhnsssq
+  NeoSig: gdrSTpA3qS5Uo
   Standard: Blocked SFS [Tri, LST(3, 5, 8)] = SFS [RP2: (8,5)]
   Blocked SFS
     Region:
@@ -2364,7 +2364,7 @@ gLALQbcbefffxhnsssq:
   Spiral: 3/1032 5/0321 4/1032
   Spiral: 3/2103 4/0321 5/2103
 gLALQbcbefffxxjnmxm:
-  IsoSig: gLALQbcbefffxxjnmxm
+  NeoSig: ghrSTpA4I5Di
   Standard: A(5,-4) = S3/D80
   Aug. tri. solid torus: A(5,-4)
     Core: 3 4 5
@@ -2396,7 +2396,7 @@ gLALQbcbefffxxjnmxm:
   Spiral: 3/0231 5/2310 4/0231
   Spiral: 3/1023 4/2310 5/3021
 gLALQbcbefffxxjndxd:
-  IsoSig: gLALQbcbefffxxjndxd
+  NeoSig: ghrSTpA4IzMi
   Standard: A(4,-5) = S3/Q16 x Z5
   Aug. tri. solid torus: A(4,-5)
     Core: 3 4 5
@@ -2422,7 +2422,7 @@ gLALQbcbefffxxjndxd:
   Spiral: 3/0231 5/2310 4/0231
   Spiral: 3/1023 4/2310 5/1203
 gLALQbcbefffxxjnnxn:
-  IsoSig: gLALQbcbefffxxjnnxn
+  NeoSig: gdrSTpAXBCsPr
   Standard: Blocked SFS [Tri, LST(1, 4, 5)] = SFS [RP2: (5,1)]
   Blocked SFS
     Region:
@@ -2445,7 +2445,7 @@ gLALQbcbefffxxjnnxn:
   Spiral: 3/0231 5/2310 4/0231
   Spiral: 3/1023 4/2310 5/1023
 gLALQbcbefffhhjsmmq:
-  IsoSig: gLALQbcbefffhhjsmmq
+  NeoSig: ghrSTpAeavel
   Standard: A(5,-1) = S3/Q20
   Aug. tri. solid torus: A(5,-1)
     Core: 3 4 5
@@ -2477,7 +2477,7 @@ gLALQbcbefffhhjsmmq:
   Spiral: 3/1032 5/0321 4/1032
   Spiral: 3/2103 4/0321 5/3102
 gLALQbcbefffhhjsuuq:
-  IsoSig: gLALQbcbefffhhjsuuq
+  NeoSig: ghrSTpAeavvl
   Standard: A(1,-5) = L(20,9)
   Aug. tri. solid torus: A(1,-5)
     Core: 3 4 5
@@ -2503,7 +2503,7 @@ gLALQbcbefffhhjsuuq:
   Spiral: 3/1032 5/0321 4/1032
   Spiral: 3/2103 4/0321 5/2013
 gLALQbcbefffhhjsssq:
-  IsoSig: gLALQbcbefffhhjsssq
+  NeoSig: gdrSTpAPqyrix
   Standard: Blocked SFS [Tri, LST(1, 4, 5)] = SFS [RP2: (5,4)]
   Blocked SFS
     Region:
@@ -2526,7 +2526,7 @@ gLALQbcbefffhhjsssq:
   Spiral: 3/1032 5/0321 4/1032
   Spiral: 3/2103 4/0321 5/2103
 gLALQbcbefffhxjnmxm:
-  IsoSig: gLALQbcbefffhxjnmxm
+  NeoSig: ghrSTpAfS2Th
   Standard: A(7,-4) = S3/D112
   Aug. tri. solid torus: A(7,-4)
     Core: 3 4 5
@@ -2558,7 +2558,7 @@ gLALQbcbefffhxjnmxm:
   Spiral: 3/0231 5/2310 4/0231
   Spiral: 3/1023 4/2310 5/3021
 gLALQbcbefffhxjndxd:
-  IsoSig: gLALQbcbefffhxjndxd
+  NeoSig: ghrSTpAfSgTe
   Standard: A(4,-7) = S3/Q16 x Z7
   Aug. tri. solid torus: A(4,-7)
     Core: 3 4 5
@@ -2584,7 +2584,7 @@ gLALQbcbefffhxjndxd:
   Spiral: 3/0231 5/2310 4/0231
   Spiral: 3/1023 4/2310 5/1203
 gLALQbcbefffhxjnnxn:
-  IsoSig: gLALQbcbefffhxjnnxn
+  NeoSig: gdrSTpARWT5Uo
   Standard: Blocked SFS [Tri, LST(3, 4, 7)] = SFS [RP2: (7,3)]
   Blocked SFS
     Region:
@@ -2607,7 +2607,7 @@ gLALQbcbefffhxjnnxn:
   Spiral: 3/0231 5/2310 4/0231
   Spiral: 3/1023 4/2310 5/1023
 gLALQbcbefffxhjsmmq:
-  IsoSig: gLALQbcbefffxhjsmmq
+  NeoSig: ghrSTpAeG2Th
   Standard: A(7,-3) = S3/Q28 x Z3
   Aug. tri. solid torus: A(7,-3)
     Core: 3 4 5
@@ -2639,7 +2639,7 @@ gLALQbcbefffxhjsmmq:
   Spiral: 3/1032 5/0321 4/1032
   Spiral: 3/2103 4/0321 5/3102
 gLALQbcbefffxhjsuuq:
-  IsoSig: gLALQbcbefffxhjsuuq
+  NeoSig: ghrSTpAeGgTe
   Standard: A(3,-7) = S3/Q12 x Z7
   Aug. tri. solid torus: A(3,-7)
     Core: 3 4 5
@@ -2665,7 +2665,7 @@ gLALQbcbefffxhjsuuq:
   Spiral: 3/1032 5/0321 4/1032
   Spiral: 3/2103 4/0321 5/2013
 gLALQbcbefffxhjsssq:
-  IsoSig: gLALQbcbefffxhjsssq
+  NeoSig: gdrSTpAPqS5Uo
   Standard: Blocked SFS [Tri, LST(3, 4, 7)] = SFS [RP2: (7,4)]
   Blocked SFS
     Region:
@@ -2688,7 +2688,7 @@ gLALQbcbefffxhjsssq:
   Spiral: 3/1032 5/0321 4/1032
   Spiral: 3/2103 4/0321 5/2103
 gLLAQaceefefjkuxxnn:
-  IsoSig: gLLAQaceefefjkuxxnn
+  NeoSig: gpyTLFyirtue
   Standard: A(3,-5 | 3,-2) = S3/P24 x Z11
   Aug. tri. solid torus: A(3,-5 | 3,-2)
     Core: 1 2 4
@@ -2724,7 +2724,7 @@ gLLAQaceefefjkuxxnn:
   Spiral: 3/0132 5/1320
   Spiral: 5/2013
 gLLAQbcedfeftsajqnj:
-  IsoSig: gLLAQbcedfeftsajqnj
+  NeoSig: gpyTSFyirtGg
   Standard: A(2,-3 | 3,-5) = S3/D96
   Aug. tri. solid torus: A(2,-3 | 3,-5)
     Core: 2 1 0
@@ -2760,7 +2760,7 @@ gLLAQbcedfeftsajqnj:
   Spiral: 4/2013
   Spiral: 5/2103
 gLLAQbcedfeftsqsqwj:
-  IsoSig: gLLAQbcedfeftsqsqwj
+  NeoSig: gpyKTFyircwi
   Standard: A(3,-2 | 5,-3) = S3/P120 x Z23
   Aug. tri. solid torus: A(3,-2 | 5,-3)
     Core: 1 2 0
@@ -2796,7 +2796,7 @@ gLLAQbcedfeftsqsqwj:
   Spiral: 4/0213
   Spiral: 5/1032
 gLLAQbcedfeftsasqnj:
-  IsoSig: gLLAQbcedfeftsasqnj
+  NeoSig: gpyKTFyircAe
   Standard: A(2,-3 | 5,-3) = S3/D160
   Aug. tri. solid torus: A(2,-3 | 5,-3)
     Core: 2 1 0
@@ -2832,7 +2832,7 @@ gLLAQbcedfeftsasqnj:
   Spiral: 4/2013
   Spiral: 5/1032
 gLLAQbcedfeftsqsxwk:
-  IsoSig: gLLAQbcedfeftsqsxwk
+  NeoSig: ghzKTFyiqcwi
   Standard: A(3,-2 | 5,-2) = S3/P120 x Z17
   Aug. tri. solid torus: A(3,-2 | 5,-2)
     Core: 1 2 0
@@ -2868,7 +2868,7 @@ gLLAQbcedfeftsqsxwk:
   Spiral: 4/0213
   Spiral: 5/1023
 gLLAQbcedfeftsasxnk:
-  IsoSig: gLLAQbcedfeftsasxnk
+  NeoSig: ghzKTFyiqcAe
   Standard: A(2,-3 | 5,-2) = S3/Q20 x Z7
   Aug. tri. solid torus: A(2,-3 | 5,-2)
     Core: 2 1 0
@@ -2904,7 +2904,7 @@ gLLAQbcedfeftsasxnk:
   Spiral: 4/2013
   Spiral: 5/1023
 gLLAQaceefefjkuxhnw:
-  IsoSig: gLLAQaceefefjkuxhnw
+  NeoSig: ghzTLFyiqtue
   Standard: A(2,-5 | 3,-2) = S3/D96
   Aug. tri. solid torus: A(2,-5 | 3,-2)
     Core: 1 2 4
@@ -2940,7 +2940,7 @@ gLLAQaceefefjkuxhnw:
   Spiral: 3/0312 5/3120
   Spiral: 5/1302
 gLLAQbcedfeftsajhnr:
-  IsoSig: gLLAQbcedfeftsajhnr
+  NeoSig: ghzTSFyiqtGg
   Standard: A(2,-5 | 2,-3) = S3/Q8 x Z7
   Aug. tri. solid torus: A(2,-5 | 2,-3)
     Core: 2 1 0
@@ -2976,7 +2976,7 @@ gLLAQbcedfeftsajhnr:
   Spiral: 4/2013
   Spiral: 5/0312
 gLLAQaceefefjkuxxnj:
-  IsoSig: gLLAQaceefefjkuxxnj
+  NeoSig: gpyTLFyOrtue
   Standard: A(3,-4 | 3,-2) = S3/P'216
   Aug. tri. solid torus: A(3,-4 | 3,-2)
     Core: 1 2 4
@@ -3012,7 +3012,7 @@ gLLAQaceefefjkuxxnj:
   Spiral: 3/0132 5/1320
   Spiral: 5/2103
 gLLAQbcedfeftsajqnn:
-  IsoSig: gLLAQbcedfeftsajqnn
+  NeoSig: gpyTSFyOrtGg
   Standard: A(2,-3 | 3,-4) = S3/Q12 x Z7
   Aug. tri. solid torus: A(2,-3 | 3,-4)
     Core: 2 1 0
@@ -3048,7 +3048,7 @@ gLLAQbcedfeftsajqnn:
   Spiral: 4/2013
   Spiral: 5/2013
 gLLAQbcedfeftsqsqww:
-  IsoSig: gLLAQbcedfeftsqsqww
+  NeoSig: gpyKTFyOrcwi
   Standard: A(3,-2 | 4,-3) = S3/P48 x Z11
   Aug. tri. solid torus: A(3,-2 | 4,-3)
     Core: 1 2 0
@@ -3084,7 +3084,7 @@ gLLAQbcedfeftsqsqww:
   Spiral: 4/0213
   Spiral: 5/1302
 gLLAQbcedfeftsasqnw:
-  IsoSig: gLLAQbcedfeftsasqnw
+  NeoSig: gpyKTFyOrcAe
   Standard: A(2,-3 | 4,-3) = S3/Q16 x Z7
   Aug. tri. solid torus: A(2,-3 | 4,-3)
     Core: 2 1 0
@@ -3120,7 +3120,7 @@ gLLAQbcedfeftsasqnw:
   Spiral: 4/2013
   Spiral: 5/1302
 gLLAQbcedfeftsqsxwr:
-  IsoSig: gLLAQbcedfeftsqsxwr
+  NeoSig: ghzKTFyfqcwi
   Standard: A(3,-2 | 4,-1) = S3/P48 x Z5
   Aug. tri. solid torus: A(3,-2 | 4,-1)
     Core: 1 2 0
@@ -3156,7 +3156,7 @@ gLLAQbcedfeftsqsxwr:
   Spiral: 4/0213
   Spiral: 5/1203
 gLLAQbcedfeftsasxnr:
-  IsoSig: gLLAQbcedfeftsasxnr
+  NeoSig: ghzKTFyfqcAe
   Standard: A(2,-3 | 4,-1) = S3/Q16 x Z5
   Aug. tri. solid torus: A(2,-3 | 4,-1)
     Core: 2 1 0
@@ -3192,7 +3192,7 @@ gLLAQbcedfeftsasxnr:
   Spiral: 4/2013
   Spiral: 5/1203
 gLLAQaceefefjkuxhnj:
-  IsoSig: gLLAQaceefefjkuxhnj
+  NeoSig: ghzTLFyfqtue
   Standard: A(1,-4 | 3,-2) = L(25,9)
   Aug. tri. solid torus: A(1,-4 | 3,-2)
     Core: 1 2 4
@@ -3228,7 +3228,7 @@ gLLAQaceefefjkuxhnj:
   Spiral: 3/0312 5/3120
   Spiral: 5/1032
 gLLAQbcedfeftsajhnn:
-  IsoSig: gLLAQbcedfeftsajhnn
+  NeoSig: ghzTSFyfqtGg
   Standard: A(1,-4 | 2,-3) = L(20,9)
   Aug. tri. solid torus: A(1,-4 | 2,-3)
     Core: 2 1 0
@@ -3264,7 +3264,7 @@ gLLAQbcedfeftsajhnn:
   Spiral: 4/2013
   Spiral: 5/0132
 gLLAQaceefefnkuxxnn:
-  IsoSig: gLLAQaceefefnkuxxnn
+  NeoSig: gpyTLFyirtug
   Standard: A(3,-5 | 3,-1) = S3/P'216
   Aug. tri. solid torus: A(3,-5 | 3,-1)
     Core: 1 2 4
@@ -3300,7 +3300,7 @@ gLLAQaceefefnkuxxnn:
   Spiral: 3/0132 5/1320
   Spiral: 5/2013
 gLLAQbcedfeftsajqjj:
-  IsoSig: gLLAQbcedfeftsajqjj
+  NeoSig: gpACT7fKrgbl
   Standard: A(1,-3 | 3,-5) = L(25,9)
   Aug. tri. solid torus: A(1,-3 | 3,-5)
     Core: 2 1 0
@@ -3336,7 +3336,7 @@ gLLAQbcedfeftsajqjj:
   Spiral: 4/2103
   Spiral: 5/2103
 gLLAQbcedfeftsqsqsj:
-  IsoSig: gLLAQbcedfeftsqsqsj
+  NeoSig: gpyKTFyircwf
   Standard: A(3,-1 | 5,-3) = S3/P120 x Z13
   Aug. tri. solid torus: A(3,-1 | 5,-3)
     Core: 1 2 0
@@ -3372,7 +3372,7 @@ gLLAQbcedfeftsqsqsj:
   Spiral: 4/0123
   Spiral: 5/1032
 gLLAQbcedfeftsasqjj:
-  IsoSig: gLLAQbcedfeftsasqjj
+  NeoSig: gpyKTFyircAf
   Standard: A(1,-3 | 5,-3) = L(31,12)
   Aug. tri. solid torus: A(1,-3 | 5,-3)
     Core: 2 1 0
@@ -3408,7 +3408,7 @@ gLLAQbcedfeftsasqjj:
   Spiral: 4/2103
   Spiral: 5/1032
 gLLAQbcedfeftsqsxsk:
-  IsoSig: gLLAQbcedfeftsqsxsk
+  NeoSig: ghzKTFyiqcwf
   Standard: A(3,-1 | 5,-2) = S3/P120 x Z7
   Aug. tri. solid torus: A(3,-1 | 5,-2)
     Core: 1 2 0
@@ -3444,7 +3444,7 @@ gLLAQbcedfeftsqsxsk:
   Spiral: 4/0123
   Spiral: 5/1023
 gLLAQbcedfeftsasxjk:
-  IsoSig: gLLAQbcedfeftsasxjk
+  NeoSig: ghzKTFyiqcAf
   Standard: A(1,-3 | 5,-2) = L(29,12)
   Aug. tri. solid torus: A(1,-3 | 5,-2)
     Core: 2 1 0
@@ -3480,7 +3480,7 @@ gLLAQbcedfeftsasxjk:
   Spiral: 4/2103
   Spiral: 5/1023
 gLLAQaceefefnkuxhnw:
-  IsoSig: gLLAQaceefefnkuxhnw
+  NeoSig: ghzTLFyiqtug
   Standard: A(2,-5 | 3,-1) = S3/Q12 x Z7
   Aug. tri. solid torus: A(2,-5 | 3,-1)
     Core: 1 2 4
@@ -3516,7 +3516,7 @@ gLLAQaceefefnkuxhnw:
   Spiral: 3/0312 5/3120
   Spiral: 5/1302
 gLLAQbcedfeftsajhjr:
-  IsoSig: gLLAQbcedfeftsajhjr
+  NeoSig: gxDJS-biwlUg
   Standard: A(1,-3 | 2,-5) = L(20,9)
   Aug. tri. solid torus: A(1,-3 | 2,-5)
     Core: 2 1 0
@@ -3552,7 +3552,7 @@ gLLAQbcedfeftsajhjr:
   Spiral: 4/2103
   Spiral: 5/0312
 gLLAQaceefefnkuxxnj:
-  IsoSig: gLLAQaceefefnkuxxnj
+  NeoSig: gpyTLFyOrtug
   Standard: A(3,-4 | 3,-1) = S3/P24 x Z7
   Aug. tri. solid torus: A(3,-4 | 3,-1)
     Core: 1 2 4
@@ -3588,7 +3588,7 @@ gLLAQaceefefnkuxxnj:
   Spiral: 3/0132 5/1320
   Spiral: 5/2103
 gLLAQbcedfeftsajqjn:
-  IsoSig: gLLAQbcedfeftsajqjn
+  NeoSig: gpyTSFyOrtyg
   Standard: A(1,-3 | 3,-4) = L(23,7)
   Aug. tri. solid torus: A(1,-3 | 3,-4)
     Core: 2 1 0
@@ -3624,7 +3624,7 @@ gLLAQbcedfeftsajqjn:
   Spiral: 4/2103
   Spiral: 5/2013
 gLLAQbcedfeftsqsqsw:
-  IsoSig: gLLAQbcedfeftsqsqsw
+  NeoSig: gpyKTFyOrcwf
   Standard: A(3,-1 | 4,-3) = S3/P48 x Z7
   Aug. tri. solid torus: A(3,-1 | 4,-3)
     Core: 1 2 0
@@ -3660,7 +3660,7 @@ gLLAQbcedfeftsqsqsw:
   Spiral: 4/0123
   Spiral: 5/1302
 gLLAQbcedfeftsasqjw:
-  IsoSig: gLLAQbcedfeftsasqjw
+  NeoSig: gpyKTFyOrcAf
   Standard: A(1,-3 | 4,-3) = L(26,7)
   Aug. tri. solid torus: A(1,-3 | 4,-3)
     Core: 2 1 0
@@ -3696,7 +3696,7 @@ gLLAQbcedfeftsasqjw:
   Spiral: 4/2103
   Spiral: 5/1302
 gLLAQbcedfeftsqsxsr:
-  IsoSig: gLLAQbcedfeftsqsxsr
+  NeoSig: ghzKTFyfqcwf
   Standard: A(3,-1 | 4,-1) = S3/P48
   Aug. tri. solid torus: A(3,-1 | 4,-1)
     Core: 1 2 0
@@ -3732,7 +3732,7 @@ gLLAQbcedfeftsqsxsr:
   Spiral: 4/0123
   Spiral: 5/1203
 gLLAQbcedfeftsasxjr:
-  IsoSig: gLLAQbcedfeftsasxjr
+  NeoSig: ghzKTFyfqcAf
   Standard: A(1,-3 | 4,-1) = L(22,5)
   Aug. tri. solid torus: A(1,-3 | 4,-1)
     Core: 2 1 0
@@ -3768,7 +3768,7 @@ gLLAQbcedfeftsasxjr:
   Spiral: 4/2103
   Spiral: 5/1203
 gLLAQaceefefnkuxhnj:
-  IsoSig: gLLAQaceefefnkuxhnj
+  NeoSig: ghzTLFyfqtug
   Standard: A(1,-4 | 3,-1) = L(23,7)
   Aug. tri. solid torus: A(1,-4 | 3,-1)
     Core: 1 2 4
@@ -3804,7 +3804,7 @@ gLLAQaceefefnkuxhnj:
   Spiral: 3/0312 5/3120
   Spiral: 5/1032
 gLLAQbcedfeftsajhjn:
-  IsoSig: gLLAQbcedfeftsajhjn
+  NeoSig: ghzTSFyfqtyg
   Standard: A(1,-4 | 1,-3) = L(13,2)
   Aug. tri. solid torus: A(1,-4 | 1,-3)
     Core: 2 1 0
@@ -3840,7 +3840,7 @@ gLLAQbcedfeftsajhjn:
   Spiral: 4/2103
   Spiral: 5/0132
 gLLPQcdcfeffqsjhqos:
-  IsoSig: gLLPQcdcfeffqsjhqos
+  NeoSig: gpyLTFyiraAk
   Standard: J(1 | 5,-3) = S3/Q32 x Z5
   Aug. tri. solid torus: J(1 | 5,-3)
     Core: 1 3 4
@@ -3869,7 +3869,7 @@ gLLPQcdcfeffqsjhqos:
   Spiral: 2/2103
   Spiral: 4/2013 5/2130
 gLLPQcdcfeffqsjahos:
-  IsoSig: gLLPQcdcfeffqsjahos
+  NeoSig: gxLJS-bim7Gl
   Standard: J(1 | 3,-5) = S3/Q32 x Z3
   Aug. tri. solid torus: J(1 | 3,-5)
     Core: 1 3 5
@@ -3898,7 +3898,7 @@ gLLPQcdcfeffqsjahos:
   Spiral: 2/2103
   Spiral: 4/0132 5/1302
 gLLPQcdcfeffhsrhqos:
-  IsoSig: gLLPQcdcfeffhsrhqos
+  NeoSig: ghzLTFyiqaAk
   Standard: J(1 | 5,-2) = S3/Q28 x Z5
   Aug. tri. solid torus: J(1 | 5,-2)
     Core: 1 3 4
@@ -3927,7 +3927,7 @@ gLLPQcdcfeffhsrhqos:
   Spiral: 2/0312
   Spiral: 4/2013 5/2130
 gLLPQcdcfeffhsrahos:
-  IsoSig: gLLPQcdcfeffhsrahos
+  NeoSig: gxLJS-bio7Gg
   Standard: J(1 | 2,-5) = S3/D56
   Aug. tri. solid torus: J(1 | 2,-5)
     Core: 1 3 5
@@ -3956,7 +3956,7 @@ gLLPQcdcfeffhsrahos:
   Spiral: 2/0312
   Spiral: 4/0132 5/1302
 gLLPQcdcfeffqsnhqos:
-  IsoSig: gLLPQcdcfeffqsnhqos
+  NeoSig: gpyLTFyOraAk
   Standard: J(1 | 4,-3) = S3/D112
   Aug. tri. solid torus: J(1 | 4,-3)
     Core: 1 3 4
@@ -3985,7 +3985,7 @@ gLLPQcdcfeffqsnhqos:
   Spiral: 2/2013
   Spiral: 4/2013 5/2130
 gLLPQcdcfeffqsnahos:
-  IsoSig: gLLPQcdcfeffqsnahos
+  NeoSig: gpyLTFyOrdOg
   Standard: J(1 | 3,-4) = S3/Q28 x Z3
   Aug. tri. solid torus: J(1 | 3,-4)
     Core: 1 3 5
@@ -4014,7 +4014,7 @@ gLLPQcdcfeffqsnahos:
   Spiral: 2/2013
   Spiral: 4/0132 5/1302
 gLLPQcdcfeffhsnhqos:
-  IsoSig: gLLPQcdcfeffhsnhqos
+  NeoSig: ghzLTFyfqaAk
   Standard: J(1 | 4,-1) = S3/D80
   Aug. tri. solid torus: J(1 | 4,-1)
     Core: 1 3 4
@@ -4043,7 +4043,7 @@ gLLPQcdcfeffhsnhqos:
   Spiral: 2/0132
   Spiral: 4/2013 5/2130
 gLLPQcdcfeffhsnahos:
-  IsoSig: gLLPQcdcfeffhsnahos
+  NeoSig: ghzLTFyfqdOg
   Standard: J(1 | 1,-4) = S3/Q20
   Aug. tri. solid torus: J(1 | 1,-4)
     Core: 1 3 5
@@ -4072,7 +4072,7 @@ gLLPQcdcfeffhsnahos:
   Spiral: 2/0132
   Spiral: 4/0132 5/1302
 gLLAQacdefffnkqxqlu:
-  IsoSig: gLLAQacdefffnkqxqlu
+  NeoSig: gpIJT3m7k3Sl
   Standard: J(2 | 3,-1) = S3/P48 x Z7
   Aug. tri. solid torus: J(2 | 3,-1)
     Core: 1 2 4
@@ -4087,7 +4087,7 @@ gLLAQacdefffnkqxqlu:
   Spiral: 3/0123 5/1230
   Spiral: 4/1203 5/2103
 gLLAQacdefffnkxxxxa:
-  IsoSig: gLLAQacdefffnkxxxxa
+  NeoSig: gpAKT3mamdcl
   Layered solid torus: LST(1,2,3)
     Base: 0
     Top: 0
@@ -4101,7 +4101,7 @@ gLLAQacdefffnkxxxxa:
   Spiral: 3/0132 5/1320
   Spiral: 4/1023 5/3102
 gLLAQacdefffnkaqqul:
-  IsoSig: gLLAQacdefffnkaqqul
+  NeoSig: ghAST3jwolMc
   Standard: J(2 | 1,-3) = S3/P48
   Aug. tri. solid torus: J(2 | 1,-3)
     Core: 1 2 3
@@ -4116,7 +4116,7 @@ gLLAQacdefffnkaqqul:
   Spiral: 3/2103 5/1032
   Spiral: 4/0213 5/0123
 gLLAQacdefffnkaaxxa:
-  IsoSig: gLLAQacdefffnkaaxxa
+  NeoSig: gxJSS-eaoWmi
   Layered solid torus: LST(1,2,3)
     Base: 0
     Top: 0
@@ -4131,7 +4131,7 @@ gLLAQacdefffnkaaxxa:
   Spiral: 3/2013 5/0132
   Spiral: 4/0231 5/1023
 gLLAQacdefffnbxxxxa:
-  IsoSig: gLLAQacdefffnbxxxxa
+  NeoSig: gpAKT3mamdbl
   Layered solid torus: LST(1,2,3)
     Base: 0
     Top: 0
@@ -4144,7 +4144,7 @@ gLLAQacdefffnbxxxxa:
   Spiral: 3/0132 5/1320
   Spiral: 4/1023 5/3102
 gLLAQacdefffnsaaxxa:
-  IsoSig: gLLAQacdefffnsaaxxa
+  NeoSig: gxJSS-eanWmi
   Layered solid torus: LST(1,2,3)
     Base: 0
     Top: 0
@@ -4159,7 +4159,7 @@ gLLAQacdefffnsaaxxa:
   Spiral: 3/2013 5/0132
   Spiral: 4/0231 5/1023
 gLLAQbedeeffxxrxxhj:
-  IsoSig: gLLAQbedeeffxxrxxhj
+  NeoSig: gpAKT3mamdHe
   Layered solid torus: LST(1,2,3)
     Base: 5
     Top: 5
@@ -4172,7 +4172,7 @@ gLLAQbedeeffxxrxxhj:
   Spiral: 1/2013 4/0132
   Spiral: 5/1032
 gLLAQbedeeffxxrxxhw:
-  IsoSig: gLLAQbedeeffxxrxxhw
+  NeoSig: gpAKT3mamdHf
   Layered solid torus: LST(1,2,3)
     Base: 5
     Top: 5
@@ -4185,7 +4185,7 @@ gLLAQbedeeffxxrxxhw:
   Spiral: 1/2013 4/0132
   Spiral: 5/1302
 gLLAQacdefffjkqxqlu:
-  IsoSig: gLLAQacdefffjkqxqlu
+  NeoSig: gpIJT3m7k3Sj
   Standard: J(2 | 3,-2) = S3/P120 x Z13
   Aug. tri. solid torus: J(2 | 3,-2)
     Core: 1 2 4
@@ -4200,7 +4200,7 @@ gLLAQacdefffjkqxqlu:
   Spiral: 3/0123 5/1230
   Spiral: 4/1203 5/2103
 gLLAQacdefffjkxxxxa:
-  IsoSig: gLLAQacdefffjkxxxxa
+  NeoSig: gpAKT3mamdcj
   Layered solid torus: LST(1,2,3)
     Base: 0
     Top: 0
@@ -4214,7 +4214,7 @@ gLLAQacdefffjkxxxxa:
   Spiral: 3/0132 5/1320
   Spiral: 4/1023 5/3102
 gLLAQacdefffjkaqqul:
-  IsoSig: gLLAQacdefffjkaqqul
+  NeoSig: gxJSS-els5Gf
   Standard: J(2 | 2,-3) = S3/P120 x Z7
   Aug. tri. solid torus: J(2 | 2,-3)
     Core: 1 2 3
@@ -4229,7 +4229,7 @@ gLLAQacdefffjkaqqul:
   Spiral: 3/2103 5/1032
   Spiral: 4/0213 5/0123
 gLLAQacdefffjkaaxxa:
-  IsoSig: gLLAQacdefffjkaaxxa
+  NeoSig: gpAKT3mamdof
   Layered solid torus: LST(1,2,3)
     Base: 0
     Top: 0
@@ -4244,7 +4244,7 @@ gLLAQacdefffjkaaxxa:
   Spiral: 3/2013 5/0132
   Spiral: 4/0231 5/1023
 gLLAQacdefffjbxxxxa:
-  IsoSig: gLLAQacdefffjbxxxxa
+  NeoSig: gpAKT3mamdbj
   Layered solid torus: LST(1,2,3)
     Base: 0
     Top: 0
@@ -4257,7 +4257,7 @@ gLLAQacdefffjbxxxxa:
   Spiral: 3/0132 5/1320
   Spiral: 4/1023 5/3102
 gLLAQacdefffjsaaxxa:
-  IsoSig: gLLAQacdefffjsaaxxa
+  NeoSig: gxJSS-eanWmf
   Layered solid torus: LST(1,2,3)
     Base: 0
     Top: 0
@@ -4272,7 +4272,7 @@ gLLAQacdefffjsaaxxa:
   Spiral: 3/2013 5/0132
   Spiral: 4/0231 5/1023
 gLLMQacdefefjkankjj:
-  IsoSig: gLLMQacdefefjkankjj
+  NeoSig: gxSBS-ben5Ue
   Standard: A(2,-3 | 2,-3 | 2,-3) = S3/Q8 x Z7
   Aug. tri. solid torus: A(2,-3 | 2,-3 | 2,-3)
     Core: 1 2 3
@@ -4314,7 +4314,7 @@ gLLMQacdefefjkankjj:
   Spiral: 4/0321
   Spiral: 5/0321
 gLLPQaceedffjkxkjnn:
-  IsoSig: gLLPQaceedffjkxkjnn
+  NeoSig: ghICTFjwIfze
   Standard: A(3,-2 | 3,-2 | 3,-1) = SFS [S2: (3,1) (3,2) (3,-1)]
   Aug. tri. solid torus: A(3,-2 | 3,-2 | 3,-1)
     Core: 1 2 4
@@ -4355,7 +4355,7 @@ gLLPQaceedffjkxkjnn:
   Spiral: 3/2103
   Spiral: 5/2013
 gLLMQacdefefjkaknkr:
-  IsoSig: gLLMQacdefefjkaknkr
+  NeoSig: gxSBS-beHeTi
   Standard: A(2,-3 | 3,-2 | 3,-1) = S3/P'216
   Aug. tri. solid torus: A(2,-3 | 3,-2 | 3,-1)
     Core: 1 2 3
@@ -4396,7 +4396,7 @@ gLLMQacdefefjkaknkr:
   Spiral: 4/1023
   Spiral: 5/0312
 gLLMQacdefefjkakkkj:
-  IsoSig: gLLMQacdefefjkakkkj
+  NeoSig: gxSBS-beneTe
   Standard: A(2,-3 | 2,-3 | 3,-1) = S3/Q12 x Z7
   Aug. tri. solid torus: A(2,-3 | 2,-3 | 3,-1)
     Core: 1 2 3
@@ -4437,7 +4437,7 @@ gLLMQacdefefjkakkkj:
   Spiral: 4/1023
   Spiral: 5/0321
 gLLMQacdefefnkaknrr:
-  IsoSig: gLLMQacdefefnkaknrr
+  NeoSig: ghASSVjwoLHi
   Standard: A(1,-3 | 3,-2 | 3,-2) = L(30,11)
   Aug. tri. solid torus: A(1,-3 | 3,-2 | 3,-2)
     Core: 1 2 3
@@ -4478,7 +4478,7 @@ gLLMQacdefefnkaknrr:
   Spiral: 4/1203
   Spiral: 5/0312
 gLLMQacdefefjkakkrk:
-  IsoSig: gLLMQacdefefjkakkrk
+  NeoSig: gxSBS-benure
   Standard: A(1,-3 | 2,-3 | 3,-2) = L(25,9)
   Aug. tri. solid torus: A(1,-3 | 2,-3 | 3,-2)
     Core: 1 2 3
@@ -4519,7 +4519,7 @@ gLLMQacdefefjkakkrk:
   Spiral: 4/1203
   Spiral: 5/0231
 gLLMQacdefefjkankjk:
-  IsoSig: gLLMQacdefefjkankjk
+  NeoSig: gxSBS-benzUe
   Standard: A(1,-3 | 2,-3 | 2,-3) = L(20,9)
   Aug. tri. solid torus: A(1,-3 | 2,-3 | 2,-3)
     Core: 1 2 3
@@ -4561,7 +4561,7 @@ gLLMQacdefefjkankjk:
   Spiral: 4/0321
   Spiral: 5/0231
 gLLPQaceedffjkxkjnj:
-  IsoSig: gLLPQaceedffjkxkjnj
+  NeoSig: gxSBS-buIuvi
   Standard: A(3,-2 | 3,-2 | 3,-2) = SFS [S2: (3,2) (3,2) (3,-1)]
   Aug. tri. solid torus: A(3,-2 | 3,-2 | 3,-2)
     Core: 1 2 4
@@ -4602,7 +4602,7 @@ gLLPQaceedffjkxkjnj:
   Spiral: 3/2103
   Spiral: 5/2103
 gLLMQacdefefjkaknrr:
-  IsoSig: gLLMQacdefefjkaknrr
+  NeoSig: gxSBS-beHuTi
   Standard: A(2,-3 | 3,-2 | 3,-2) = S3/P24 x Z11
   Aug. tri. solid torus: A(2,-3 | 3,-2 | 3,-2)
     Core: 1 2 3
@@ -4643,7 +4643,7 @@ gLLMQacdefefjkaknrr:
   Spiral: 4/1203
   Spiral: 5/0312
 gLLMQacdefefjkakkrj:
-  IsoSig: gLLMQacdefefjkakkrj
+  NeoSig: gxSBS-benuTe
   Standard: A(2,-3 | 2,-3 | 3,-2) = S3/D96
   Aug. tri. solid torus: A(2,-3 | 2,-3 | 3,-2)
     Core: 1 2 3
@@ -4684,7 +4684,7 @@ gLLMQacdefefjkakkrj:
   Spiral: 4/1203
   Spiral: 5/0321
 gLLPQaceedffjkxknnn:
-  IsoSig: gLLPQaceedffjkxknnn
+  NeoSig: gxSBS-buIeri
   Standard: A(3,-2 | 3,-1 | 3,-1) = SFS [S2: (3,1) (3,1) (3,-1)]
   Aug. tri. solid torus: A(3,-2 | 3,-1 | 3,-1)
     Core: 1 2 4
@@ -4725,7 +4725,7 @@ gLLPQaceedffjkxknnn:
   Spiral: 3/2013
   Spiral: 5/2013
 gLLMQacdefefnkaknkr:
-  IsoSig: gLLMQacdefefnkaknkr
+  NeoSig: gxSBS-beHeri
   Standard: A(1,-3 | 3,-2 | 3,-1) = L(27,8)
   Aug. tri. solid torus: A(1,-3 | 3,-2 | 3,-1)
     Core: 1 2 3
@@ -4766,7 +4766,7 @@ gLLMQacdefefnkaknkr:
   Spiral: 4/1023
   Spiral: 5/0312
 gLLMQacdefefjkakkkk:
-  IsoSig: gLLMQacdefefjkakkkk
+  NeoSig: gxSBS-benere
   Standard: A(1,-3 | 2,-3 | 3,-1) = L(23,7)
   Aug. tri. solid torus: A(1,-3 | 2,-3 | 3,-1)
     Core: 1 2 3
@@ -4807,7 +4807,7 @@ gLLMQacdefefjkakkkk:
   Spiral: 4/1023
   Spiral: 5/0231
 gLLMQacdefefnkakkrk:
-  IsoSig: gLLMQacdefefnkakkrk
+  NeoSig: gxSBS-beHzsi
   Standard: A(1,-3 | 1,-3 | 3,-2) = L(17,3)
   Aug. tri. solid torus: A(1,-3 | 1,-3 | 3,-2)
     Core: 1 2 3
@@ -4848,7 +4848,7 @@ gLLMQacdefefnkakkrk:
   Spiral: 4/1203
   Spiral: 5/0231
 gLLMQacdefefjkankkk:
-  IsoSig: gLLMQacdefefjkankkk
+  NeoSig: gxSBS-benzse
   Standard: A(1,-3 | 1,-3 | 2,-3) = L(13,2)
   Aug. tri. solid torus: A(1,-3 | 1,-3 | 2,-3)
     Core: 1 2 3
@@ -4890,7 +4890,7 @@ gLLMQacdefefjkankkk:
   Spiral: 4/0231
   Spiral: 5/0231
 gLLMQacdefefjkaknkn:
-  IsoSig: gLLMQacdefefjkaknkn
+  NeoSig: gxSBS-buoere
   Standard: A(2,-3 | 3,-1 | 3,-1) = S3/P24 x Z7
   Aug. tri. solid torus: A(2,-3 | 3,-1 | 3,-1)
     Core: 1 2 3
@@ -4931,7 +4931,7 @@ gLLMQacdefefjkaknkn:
   Spiral: 4/1023
   Spiral: 5/0132
 gLLPQaceedffnkxknnn:
-  IsoSig: gLLPQaceedffnkxknnn
+  NeoSig: gxSBS-buIerg
   Standard: A(3,-1 | 3,-1 | 3,-1) = T x I / [ -1,1 | -1,0 ]
   Aug. tri. solid torus: A(3,-1 | 3,-1 | 3,-1)
     Core: 1 2 4
@@ -4972,7 +4972,7 @@ gLLPQaceedffnkxknnn:
   Spiral: 3/2013
   Spiral: 5/2013
 gLLMQacdefefnkaknkn:
-  IsoSig: gLLMQacdefefnkaknkn
+  NeoSig: gxSBS-beHerg
   Standard: A(1,-3 | 3,-1 | 3,-1) = L(24,7)
   Aug. tri. solid torus: A(1,-3 | 3,-1 | 3,-1)
     Core: 1 2 3
@@ -5013,7 +5013,7 @@ gLLMQacdefefnkaknkn:
   Spiral: 4/1023
   Spiral: 5/0132
 gLLMQacdefefnkakkkk:
-  IsoSig: gLLMQacdefefnkakkkk
+  NeoSig: gxSBS-benerg
   Standard: A(1,-3 | 1,-3 | 3,-1) = L(16,3)
   Aug. tri. solid torus: A(1,-3 | 1,-3 | 3,-1)
     Core: 1 2 3
@@ -5054,7 +5054,7 @@ gLLMQacdefefnkakkkk:
   Spiral: 4/1023
   Spiral: 5/0231
 gLLMQacdefefnkankkk:
-  IsoSig: gLLMQacdefefnkankkk
+  NeoSig: gxSBS-benzsg
   Standard: A(1,-3 | 1,-3 | 1,-3) = L(8,1)
   Aug. tri. solid torus: A(1,-3 | 1,-3 | 1,-3)
     Core: 1 2 3
@@ -5096,7 +5096,7 @@ gLLMQacdefefnkankkk:
   Spiral: 4/0231
   Spiral: 5/0231
 gLLAQbcdeeffxkrllck:
-  IsoSig: gLLAQbcdeeffxkrllck
+  NeoSig: gxSBT-ben5gg
   Standard: X(2 | 2,-3) = S3/D56
   Aug. tri. solid torus: X(2 | 2,-3)
     Core: 3 4 2
@@ -5129,7 +5129,7 @@ gLLAQbcdeeffxkrllck:
   Spiral: 2/0213 3/1302 4/0123
   Spiral: 5/1023
 gLLAQbcdeeffxkrllkw:
-  IsoSig: gLLAQbcdeeffxkrllkw
+  NeoSig: gxSBT-benefg
   Standard: X(2 | 3,-1) = S3/Q28 x Z3
   Aug. tri. solid torus: X(2 | 3,-1)
     Core: 3 4 2
@@ -5161,7 +5161,7 @@ gLLAQbcdeeffxkrllkw:
   Spiral: 2/0213 3/1302 4/0123
   Spiral: 5/1302
 gLLAQbcdeeffxkrllcr:
-  IsoSig: gLLAQbcdeeffxkrllcr
+  NeoSig: gxSBT-benzgg
   Standard: X(2 | 1,-3) = S3/Q20
   Aug. tri. solid torus: X(2 | 1,-3)
     Core: 3 4 2
@@ -5194,7 +5194,7 @@ gLLAQbcdeeffxkrllcr:
   Spiral: 2/0213 3/1302 4/0123
   Spiral: 5/1203
 gLLAQbcdeeffxkrllkj:
-  IsoSig: gLLAQbcdeeffxkrllkj
+  NeoSig: gxSBT-benufg
   Standard: X(2 | 3,-2) = S3/Q32 x Z3
   Aug. tri. solid torus: X(2 | 3,-2)
     Core: 3 4 2
@@ -5226,7 +5226,7 @@ gLLAQbcdeeffxkrllkj:
   Spiral: 2/0213 3/1302 4/0123
   Spiral: 5/1032
 gLALQbccefffemkbtli:
-  IsoSig: gLALQbccefffemkbtli
+  NeoSig: gxDJT-eNuRri
   Standard: Blocked SFS [Tri, Tri, Mob(v), Mob(v)] = SFS [RP2/n2: (2,1) (2,1)]
   Blocked SFS
     Region:
@@ -5271,7 +5271,7 @@ gLALQbccefffemkbtli:
   Spiral: 3/0321 5/3210 4/1023
   Spiral: 3/1032 4/0231 5/2031
 gLALQbccefffemkbemi:
-  IsoSig: gLALQbccefffemkbemi
+  NeoSig: gxDJT-e3vRLi
   Standard: Blocked SFS [Tri, Tri, Mob(v), Mob(v), Mob(v), Mob(v)] = SFS [S2: (2,1) (2,1) (2,1) (2,-1)]
   Blocked SFS
     Region:
@@ -5318,7 +5318,7 @@ gLALQbccefffemkbemi:
   Spiral: 3/0321 5/3210 4/1023
   Spiral: 3/1032 4/0231 5/1302
 gLALQbccefffemkbsri:
-  IsoSig: gLALQbccefffemkbsri
+  NeoSig: glsLTpnosknpt
   Standard: Blocked SFS [Tri, Ref(1)] = M_/n2 x~ S1
   Blocked SFS
     Region:
@@ -5349,7 +5349,7 @@ gLALQbccefffemkbsri:
   Spiral: 3/0321 5/3210 4/1023
   Spiral: 3/1032 4/0231 5/1032
 gLALQbcceffflpkksuc:
-  IsoSig: gLALQbcceffflpkksuc
+  NeoSig: gtCRT-e0XYEMr
   Standard: Blocked SFS [Tri, Tri, Mob(v), Mob(v)] = SFS [RP2: (2,1) (2,1)]
   Blocked SFS
     Region:
@@ -5386,7 +5386,7 @@ gLALQbcceffflpkksuc:
   Spiral: 3/0321 5/3210 4/3120
   Spiral: 3/1032 4/1203 5/1032
 gLALQbcceffflpkkeux:
-  IsoSig: gLALQbcceffflpkkeux
+  NeoSig: gxCRT-exv7Kl
   Standard: Blocked SFS [Tri, Tri, Mob(v), Mob(v)] = SFS [RP2/n2: (2,1) (2,-1)]
   Blocked SFS
     Region:
@@ -5411,7 +5411,7 @@ gLALQbcceffflpkkeux:
   Spiral: 3/0321 5/3210 4/3120
   Spiral: 3/1032 4/1203 5/1302
 gLALQbcceffflpkktua:
-  IsoSig: gLALQbcceffflpkktua
+  NeoSig: gxCRT-exu7Ki
   Standard: Blocked SFS [Tri, Tri, Mob(v), Mob(v), Mob(v), Mob(v)] = KB/n2 x~ S1
   Blocked SFS
     Region:
@@ -5442,7 +5442,7 @@ gLALQbcceffflpkktua:
   Spiral: 3/0321 5/3210 4/3120
   Spiral: 3/1032 4/1203 5/2031
 gLALQbccfefflpkusue:
-  IsoSig: gLALQbccfefflpkusue
+  NeoSig: gxDJT-ePuOri
   Standard: Blocked SFS [Tri, Tri] = SFS [KB/n2: (1,1)]
   Blocked SFS
     Region:
@@ -5487,7 +5487,7 @@ gLALQbccfefflpkusue:
   Spiral: 3/0312 5/3120 4/1320
   Spiral: 3/1302 5/2301 4/1023
 gLALQbccefffrrhutwf:
-  IsoSig: gLALQbccefffrrhutwf
+  NeoSig: glsLTpnosQmpp
   Standard: Blocked SFS [Tri, Tri] = KB/n3 x~ S1
   Blocked SFS
     Region:
@@ -5526,7 +5526,7 @@ gLALQbccefffrrhutwf:
   Spiral: 3/0321 5/3210 4/1320
   Spiral: 3/1032 4/3201 5/2031
 gLALQbccefffrrhuswe:
-  IsoSig: gLALQbccefffrrhuswe
+  NeoSig: glsLTpnossmpu
   Standard: Blocked SFS [Tri, Ref(1)] = M_ x S1
   Blocked SFS
     Region:
@@ -5543,7 +5543,7 @@ gLALQbccefffrrhuswe:
   Spiral: 3/0321 5/3210 4/1320
   Spiral: 3/1032 4/3201 5/1032
 gLALQbccfeffrrhwhwa:
-  IsoSig: gLALQbccfeffrrhwhwa
+  NeoSig: gtCRT-euYYEMq
   Standard: Blocked SFS [Tri, Tri] = KB x S1
   Blocked SFS
     Region:
@@ -5562,7 +5562,7 @@ gLALQbccfeffrrhwhwa:
   Spiral: 3/0312 5/3120 4/3120
   Spiral: 3/1302 5/1302 4/3021
 gLALQbccfeffrrbwbwa:
-  IsoSig: gLALQbccfeffrrbwbwa
+  NeoSig: gtCRT-euIzCmp
   Standard: Blocked SFS [Ref~(1), Ref~(1)] = A=/o2 x~ S1
   Blocked SFS
     Region:
@@ -5573,7 +5573,7 @@ gLALQbccfeffrrbwbwa:
         Reflector(1, twisted) {3,5,4}
         Ann. 1/0 [3/012, 4/013] -> 0/0
 gLALQbccefffnknnkan:
-  IsoSig: gLALQbccefffnknnkan
+  NeoSig: gtCRT-ecxZEsq
   Standard: Blocked SFS [Ref(2), Mob(v), Mob(v)] = SFS [D_: (2,1) (2,1)]
   Blocked SFS
     Region:
@@ -5590,7 +5590,7 @@ gLALQbccefffnknnkan:
   Spiral: 0/0231 1/2310 3/3102 5/3102 4/3102 2/1023
   Spiral: 0/2013 1/2013 3/0132 5/1320 4/3201 2/2013
 gLMzQbcdefffhhhhhxq:
-  IsoSig: gLMzQbcdefffhhhhhxq
+  NeoSig: gpASTxnaaaSi
   Standard: C~(6) = S3/Q24
   Layered chain pair: C(1,5)
     Chain lengths: 1 5
@@ -5608,21 +5608,21 @@ gLMzQbcdefffhhhhhxq:
   Spiral: 3/0312 5/3120
   Spiral: 4/1203 5/1302
 gLLAQccedffflnxkxvc:
-  IsoSig: gLLAQccedffflnxkxvc
+  NeoSig: gpQSSFm7IKwk
   Spiral: 0/0231 1/2310 2/1023
   Spiral: 0/0213 1/2130 2/0123 3/3021
   Spiral: 1/1023 4/0231
   Spiral: 3/0132 5/1320
   Spiral: 4/2013 5/3102
 gLLAQccedfffhwxrxvc:
-  IsoSig: gLLAQccedfffhwxrxvc
+  NeoSig: gpQSSFm7IKMk
   Spiral: 0/0213 1/2130 2/2130 3/3021
   Spiral: 0/1302 2/3021
   Spiral: 1/1023 4/0231
   Spiral: 3/0132 5/1320
   Spiral: 4/2013 5/3102
 gLLAQbeddfffhhnkarw:
-  IsoSig: gLLAQbeddfffhhnkarw
+  NeoSig: gpQKTFm7IuAg
   Standard: C(2,4) = S3/P120
   Layered chain pair: C(2,4)
     Chain lengths: 2 4
@@ -5635,7 +5635,7 @@ gLLAQbeddfffhhnkarw:
   Spiral: 2/2013 3/1320 5/3201
   Spiral: 4/0312 5/0312
 gLLAQbeddfffhhokxjo:
-  IsoSig: gLLAQbeddfffhhokxjo
+  NeoSig: gpQKTFm7I0mi
   Standard: J(3 | 2,-1) = S3/P48 x Z5
   Aug. tri. solid torus: J(3 | 2,-1)
     Core: 5 2 3
@@ -5645,7 +5645,7 @@ gLLAQbeddfffhhokxjo:
   Spiral: 2/0123 3/1032 5/3012
   Spiral: 4/0312 5/0231
 gLLMQbeefffehhaxhqa:
-  IsoSig: gLLMQbeefffehhaxhqa
+  NeoSig: gpAST3mamdUa
   Spiral: 0/0123 1/1230 4/2301 3/3012
   Spiral: 0/0231 1/2310 4/2013 3/0132 5/0231 2/1023
   Spiral: 0/0312 1/3120
@@ -5656,7 +5656,7 @@ gLLMQbeefffehhaxhqa:
   Spiral: 2/2013 5/0132
   Spiral: 3/0231 5/3201
 gLLPQbefefefhhxxqxh:
-  IsoSig: gLLPQbefefefhhxxqxh
+  NeoSig: gxSLL-eaI7oa
   Standard: C(3,3) = T x I / [ 0,1 | -1,0 ]
   Layered chain pair: C(3,3)
     Chain lengths: 3 3
@@ -5665,7 +5665,7 @@ gLLPQbefefefhhxxqxh:
   Spiral: 2/0132 5/1320
   Spiral: 3/0132 5/3102
 gLLMQbeefffehhaqaqa:
-  IsoSig: gLLMQbeefffehhaqaqa
+  NeoSig: gxLSL-eWoWod
   Spiral: 0/0123 1/1230 4/2301 3/3012
   Spiral: 0/0231 1/2310 4/2013 3/0132 5/1320 2/1023
   Spiral: 0/0312 1/3120
@@ -5678,7 +5678,7 @@ gLLMQbeefffehhaqaqa:
   Spiral: 2/2103 5/1032
   Spiral: 3/0321 5/3210
 gLLPQbefefefjjjhhhf:
-  IsoSig: gLLPQbefefefjjjhhhf
+  NeoSig: gtSLL-ecxefpi
   Standard: Blocked SFS [Ref(2)] = M_/n2 x~ S1
   Blocked SFS
     Region:
@@ -5689,7 +5689,7 @@ gLLPQbefefefjjjhhhf:
   Spiral: 0/0123 1/1230 4/2301 2/2103 5/2103 3/3012
   Spiral: 0/2103 1/2103 4/2103 2/0123 5/1230 3/3210
 gLLPQbefefefjjjsqss:
-  IsoSig: gLLPQbefefefjjjsqss
+  NeoSig: gtSLL-ecN7Epe
   Standard: Blocked SFS [Ref(2)] = M_ x S1
   Blocked SFS
     Region:
@@ -5700,7 +5700,7 @@ gLLPQbefefefjjjsqss:
   Spiral: 0/0123 1/1230 4/2301 2/0123 5/1230 3/3012
   Spiral: 0/2103 1/2103 4/2103 2/2103 5/2103 3/3210
 gLLMQbeefffehharhra:
-  IsoSig: gLLMQbeefffehharhra
+  NeoSig: gtLSL-eb4jyph
   Spiral: 0/0123 1/1230 4/2301 3/3012
   Spiral: 0/0312 1/3120
   Spiral: 0/1032 2/0321 4/3210 1/3012
@@ -5708,7 +5708,7 @@ gLLMQbeefffehharhra:
   Spiral: 1/1302 4/3021
   Spiral: 2/0213 4/2130 3/1302 5/0213
 gLLAQbcedffftsajhos:
-  IsoSig: gLLAQbcedffftsajhos
+  NeoSig: gxDJT-biwlUa
   Standard: X(3 | 2,-1) = S3/D56
   Aug. tri. solid torus: X(3 | 2,-1)
     Core: 0 1 2
@@ -5740,24 +5740,24 @@ gLLAQbcedffftsajhos:
   Spiral: 3/1302 5/3021
   Spiral: 4/2013 5/2130
 gLLAQbdedfffdwqsujs:
-  IsoSig: gLLAQbdedfffdwqsujs
+  NeoSig: gxCRT-bywBCj
   Spiral: 0/2103 1/2013 3/3210
   Spiral: 2/0123 4/3012 5/3012
   Spiral: 4/0123 5/2301
 gLLAQbdedfffdraolrj:
-  IsoSig: gLLAQbdedfffdraolrj
+  NeoSig: gxRLS-bInxLh
   Spiral: 0/0213 1/2130 3/3021
   Spiral: 2/0213 4/2130 5/3021
 gLLAQbdedfffendolgn:
-  IsoSig: gLLAQbdedfffendolgn
+  NeoSig: gxAST-bqc0zh
   Spiral: 2/0213 4/3210 5/3021
 gLLMQbcefefftsamqqs:
-  IsoSig: gLLMQbcefefftsamqqs
+  NeoSig: gxRLS-bMnALl
   Spiral: 0/0321 1/3210 2/1032
   Spiral: 1/1203 4/2031 5/3201 2/2013
   Spiral: 3/1032 4/2103 5/0321
 gLLMQbcdfefftsommkw:
-  IsoSig: gLLMQbcdfefftsommkw
+  NeoSig: gxJST-bYqiwj
   Standard: Blocked SFS [Tri, Tri, Mob(v), Mob(v)] = SFS [RP2/n2: (2,1) (2,1)]
   Blocked SFS
     Region:
@@ -5781,7 +5781,7 @@ gLLMQbcdfefftsommkw:
   Spiral: 0/2013 1/3012 2/3012 5/0123 4/0312 3/3201
   Spiral: 3/0231 5/1302 4/0213
 gLLMQbcdfefftsmmriq:
-  IsoSig: gLLMQbcdfefftsmmriq
+  NeoSig: gtLTK-bULtiMl
   Standard: Blocked SFS [Tri, Tri, Mob(v), Mob(v)] = SFS [RP2: (2,1) (2,1)]
   Blocked SFS
     Region:
@@ -5805,7 +5805,7 @@ gLLMQbcdfefftsmmriq:
   Spiral: 0/2013 1/3012 2/3012 5/0123 4/3012 3/3201
   Spiral: 3/0231 5/1302 4/3210
 gLLAQbddefffdwpjapq:
-  IsoSig: gLLAQbddefffdwpjapq
+  NeoSig: gtJST-bkvkcjt
   Standard: Blocked SFS [Tri, Tri, Mob(v), Mob(v)] = SFS [RP2: (2,1) (2,1)]
   Blocked SFS
     Region:
@@ -5828,7 +5828,7 @@ gLLAQbddefffdwpjapq:
   Spiral: 0/2103 1/2013 3/3210
   Spiral: 2/2103 4/2103 5/3210
 gLLAQbddefffdwolaor:
-  IsoSig: gLLAQbddefffdwolaor
+  NeoSig: gxDLS-bAPrLb
   Standard: Blocked SFS [Tri, Tri, Mob(v), Mob(v)] = SFS [RP2/n2: (2,1) (2,-1)]
   Blocked SFS
     Region:
@@ -5851,21 +5851,21 @@ gLLAQbddefffdwolaor:
   Spiral: 0/2103 1/2013 3/3210
   Spiral: 2/2103 4/3102 5/3210
 gLLPQcdeffefhsxxatn:
-  IsoSig: gLLPQcdeffefhsxxatn
+  NeoSig: gxRJT-beo5Ia
   Spiral: 0/1302 2/3021
   Spiral: 1/1023 4/0231 5/3102
   Spiral: 1/2103 3/0321 5/3210
 gLLPQceeffefhlatdee:
-  IsoSig: gLLPQceeffefhlatdee
+  NeoSig: gpKLT-e3ONol
   Spiral: 0/1302 2/3021
 gLLPQceeffefhtatdee:
-  IsoSig: gLLPQceeffefhtatdee
+  NeoSig: gpKLT-eWiKEa
   Spiral: 0/1302 2/3021
 gLLPQceeffefhlataee:
-  IsoSig: gLLPQceeffefhlataee
+  NeoSig: gpKLT-eXONol
   Spiral: 0/1302 2/3021
 gvLQQcdfeeffbqaqghh:
-  IsoSig: gvLQQcdfeeffbqaqghh
+  NeoSig: gtRKT-bb7XEcb
   Standard: Blocked SFS [Cube] = SFS [KB/n3: (1,1)]
   Blocked SFS
     Region:
@@ -5876,7 +5876,7 @@ gvLQQcdfeeffbqaqghh:
         Ann. 0/2 [2/013, 3/320] -> 0/0 (ref, back)
         Ann. 0/3 [3/231, 1/013] -> 0/1 (ref)
 gvLQQcedffefqsqsqjs:
-  IsoSig: gvLQQcedffefqsqsqjs
+  NeoSig: gtCTS-b2LLCBe
   Standard: Blocked SFS [Cube, Mob(v), Mob(v)] = SFS [RP2: (2,1) (2,1)]
   Blocked SFS
     Region:
@@ -5895,7 +5895,7 @@ gvLQQcedffefqsqsqjs:
   Spiral: 0/0321 1/3210 4/1032 5/3210 3/0321 2/1032
   Spiral: 0/1032 2/0321 1/1032 5/0321 4/0321 3/2103
 gvLQQdefdeffrwawrhh:
-  IsoSig: gvLQQdefdeffrwawrhh
+  NeoSig: gFSJT-b4olca
   Standard: Blocked SFS [Cube, Mob(v), Mob(v), Mob(v), Mob(v)] = KB/n2 x~ S1
   Blocked SFS
     Region:
@@ -5918,7 +5918,7 @@ gvLQQdefdeffrwawrhh:
         Mobius(vert) {triangle 1}
         Ann. 4/0 [0/103, 3/013] -> 0/3
 gvLQQdefdeffrrawwhh:
-  IsoSig: gvLQQdefdeffrrawwhh
+  NeoSig: gFSJT-bio7ca
   Standard: Blocked SFS [Cube, Mob(v), Mob(v)] = SFS [RP2/n2: (2,1) (2,-1)]
   Blocked SFS
     Region:
@@ -5939,7 +5939,7 @@ gvLQQdefdeffrrawwhh:
   Spiral: 1/2103 3/3201 5/3102 4/0132
   Spiral: 2/2013 3/3210 5/3012 4/1032
 gvLQQdefdeffrqawxhh:
-  IsoSig: gvLQQdefdeffrqawxhh
+  NeoSig: gBSJT-bW4XEdb
   Standard: Blocked SFS [Cube, Mob(v), Mob(v)] = SFS [RP2: (2,1) (2,1)]
   Blocked SFS
     Region:
@@ -5956,7 +5956,7 @@ gvLQQdefdeffrqawxhh:
         Mobius(vert) {triangle 1}
         Ann. 2/0 [0/103, 3/013] -> 0/3
 gvLQQcdefeffjwnpjhe:
-  IsoSig: gvLQQcdefeffjwnpjhe
+  NeoSig: gxJTS-bKrMHj
   Standard: B(T6:1 | 0,-1 | 1,0) = T x I / [ 0,1 | -1,0 ]
   Blocked SFS Loop
     Region:
@@ -5976,7 +5976,7 @@ gvLQQcdefeffjwnpjhe:
   Spiral: 1/1203 5/2031 3/1203
   Spiral: 2/0132 4/0132 5/3210
 gvLQQcdfeeffhqaqhhh:
-  IsoSig: gvLQQcdfeeffhqaqhhh
+  NeoSig: gtRKT-bg7XAcb
   Standard: Blocked SFS [Cube] = KB/n3 x~ S1
   Blocked SFS
     Region:
@@ -5989,7 +5989,7 @@ gvLQQcdfeeffhqaqhhh:
   Spiral: 0/0213 1/2130 2/0213 5/2130 3/0213 4/3021
   Spiral: 0/1302 2/3021 1/1302 5/3021 4/1302 3/2130
 gvLQQcdeffefnxnnnxx:
-  IsoSig: gvLQQcdeffefnxnnnxx
+  NeoSig: gtJTS-bjysiGr
   Standard: Blocked SFS [Cube] = SFS [KB: (1,1)]
   Blocked SFS
     Region:
@@ -6019,7 +6019,7 @@ gvLQQcdeffefnxnnnxx:
   Spiral: 1/1023 5/0231 3/0231
   Spiral: 3/1023 5/2310 4/0231
 gvLQQdefdeffxqaqxhh:
-  IsoSig: gvLQQdefdeffxqaqxhh
+  NeoSig: gBSJT-bq7Xcdb
   Standard: Blocked SFS [Cube] = KB x S1
   Blocked SFS
     Region:
@@ -6030,7 +6030,7 @@ gvLQQdefdeffxqaqxhh:
         Ann. 0/2 [5/013, 3/013] -> 0/3
         Ann. 0/3 [3/102, 0/013] -> 0/2
 gvLQQdefedffxqawrgg:
-  IsoSig: gvLQQdefedffxqawrgg
+  NeoSig: gBSCT-bq7jEba
   Standard: Blocked SFS [Cube] = SFS [T/o2: (1,1)]
   Blocked SFS
     Region:
@@ -6058,7 +6058,7 @@ gvLQQdefedffxqawrgg:
   Spiral: 1/1203 5/2031 4/1302
   Spiral: 1/1302 5/3021 3/1203
 gvLQQcdefeffndnbejx:
-  IsoSig: gvLQQcdefeffndnbejx
+  NeoSig: gtRKT-bI4jYcb
   Standard: Blocked SFS [Tri, Tri] = SFS [KB: (1,1)]
   Blocked SFS
     Region:
@@ -6090,7 +6090,7 @@ gvLQQcdefeffndnbejx:
   Spiral: 1/1023 5/0231 3/1203
   Spiral: 3/0213 4/1320 5/0132
 gvLQQcdefeffpinjkje:
-  IsoSig: gvLQQcdefeffpinjkje
+  NeoSig: gJRCT-bO4jkcb
   Standard: Blocked SFS [Tri, Tri] = SFS [T/o2: (1,1)]
   Blocked SFS
     Region:
@@ -6122,7 +6122,7 @@ gvLQQcdefeffpinjkje:
   Spiral: 1/1203 5/2031 3/3201
   Spiral: 1/1302 5/3021 2/3102
 gvLQQcdefeffninjije:
-  IsoSig: gvLQQcdefeffninjije
+  NeoSig: gtJTS-bjwY5yt
   Standard: Blocked SFS [Tri, Tri] = KB x S1
   Blocked SFS
     Region:
@@ -6141,7 +6141,7 @@ gvLQQcdefeffninjije:
   Spiral: 1/1203 5/2031 3/3201
   Spiral: 3/0231 4/0321 5/2130
 gvLQQcdefeffbwnpghe:
-  IsoSig: gvLQQcdefeffbwnpghe
+  NeoSig: gxJLT-bas0aj
   Standard: Blocked SFS [Tri, Tri] = SFS [KB/n2: (1,1)]
   Blocked SFS
     Region:
@@ -6173,7 +6173,7 @@ gvLQQcdefeffbwnpghe:
   Spiral: 1/1203 5/2031 3/1203
   Spiral: 2/0132 4/0132 5/3210
 gvLQQcdefeffbwdpikk:
-  IsoSig: gvLQQcdefeffbwdpikk
+  NeoSig: gtJLT-bHOlXOu
   Standard: Blocked SFS [Tri, Tri] = KB/n3 x~ S1
   Blocked SFS
     Region:
@@ -6190,7 +6190,7 @@ gvLQQcdefeffbwdpikk:
   Spiral: 0/0312 1/3120 3/2031
   Spiral: 2/0132 4/2130 5/3210
 gvLQQcdefeffncnhchx:
-  IsoSig: gvLQQcdefeffncnhchx
+  NeoSig: gxJTS-b0raCi
   Standard: Blocked SFS [Tri, Tri] = KB/n2 x~ S1
   Blocked SFS
     Region:
@@ -6209,7 +6209,7 @@ gvLQQcdefeffncnhchx:
   Spiral: 1/1023 5/0231 3/3201
   Spiral: 3/0231 4/1320 5/0132
 gvLQQcdefeffncpjcjs:
-  IsoSig: gvLQQcdefeffncpjcjs
+  NeoSig: gtJTS-bIxkeEq
   Standard: Blocked SFS [Tri, Tri] = SFS [KB/n3: (1,1)]
   Blocked SFS
     Region:
@@ -6226,7 +6226,7 @@ gvLQQcdefeffncpjcjs:
   Spiral: 0/0231 1/2310 2/1023
   Spiral: 3/0231 4/1320 5/2130
 gvLQQcdefeffnwnpkhe:
-  IsoSig: gvLQQcdefeffnwnpkhe
+  NeoSig: gxJLT-besucj
   Standard: Blocked SFS [Tri, Tri] = SFS [T: (1,1)]
   Blocked SFS
     Region:
@@ -6262,7 +6262,7 @@ gvLQQcdefeffnwnpkhe:
   Spiral: 2/0132 4/0132 5/3210
   Spiral: 3/0213 4/0321 5/2130
 gvLQQedfedffrwawrhh:
-  IsoSig: gvLQQedfedffrwawrhh
+  NeoSig: gNRCT-blo4ca
   Standard: Blocked SFS [Tri, Tri] = T x S1
   Blocked SFS
     Region:
@@ -6285,7 +6285,7 @@ gvLQQedfedffrwawrhh:
   Spiral: 2/0213 5/2130 3/0213
   Spiral: 2/0312 5/3120 4/0312
 gvLQQcedffeffsfhqjh:
-  IsoSig: gvLQQcedffeffsfhqjh
+  NeoSig: gxCTS-bAPWAa
   Standard: Blocked SFS [Cube, Mob(v), Mob(v)] = SFS [RP2/n2: (2,1) (2,-1)]
   Blocked SFS
     Region:
@@ -6302,13 +6302,13 @@ gvLQQcedffeffsfhqjh:
         Mobius(vert) {triangle 7}
         Ann. 2/0 [5/130, 2/201] -> 0/2
 gvLQQcdefeffffjmfuu:
-  IsoSig: gvLQQcdefeffffjmfuu
+  NeoSig: gxRKT-bQoOca
 gvLQQcdefeffffomfum:
-  IsoSig: gvLQQcdefeffffomfum
+  NeoSig: gxJLT-bQgHwb
 gvLQQcdefeffffomfhm:
-  IsoSig: gvLQQcdefeffffomfhm
+  NeoSig: gxJLT-bQgHcb
 gvLQQcdfeeffjjassaa:
-  IsoSig: gvLQQcdfeeffjjassaa
+  NeoSig: gxRKT-bMnvnd
   Spiral: 0/0123 1/1230 5/2301 4/3012
   Spiral: 0/0132 1/1320 5/3201 3/2013
   Spiral: 0/0213 1/2130 2/2013 4/3021
@@ -6322,7 +6322,7 @@ gvLQQcdfeeffjjassaa:
   Spiral: 1/2103 2/2103 4/0321 3/0321
   Spiral: 2/0312 5/3120 3/1203 4/1320
 gvLQQcdefeffdwnplhe:
-  IsoSig: gvLQQcdefeffdwnplhe
+  NeoSig: gtJLT-bUykjdt
   Standard: B(T6:1 | 0,1 | 1,1) = T x I / [ 1,1 | 1,0 ]
   Blocked SFS Loop
     Region:
@@ -6342,7 +6342,7 @@ gvLQQcdefeffdwnplhe:
   Spiral: 1/1203 5/2031 3/1203
   Spiral: 2/0132 4/0132 5/3210
 gvLQQcdefeffnjndspx:
-  IsoSig: gvLQQcdefeffnjndspx
+  NeoSig: gxRKT-beoyca
   Standard: P(1) = T x I / [ 1,1 | -1,0 ]
   Plugged tri. solid torus: P(1)
     Core: 0 3 4
@@ -6372,7 +6372,7 @@ gvLQQcdefeffnjndspx:
   Spiral: 2/0312 4/1032 5/3012
   Spiral: 3/1203 4/1320 5/0132
 gvLQQcedffefvksidsi:
-  IsoSig: gvLQQcedffefvksidsi
+  NeoSig: gNRCT-bhoOaa
   Standard: B(T6* | 0,-1 | 1,-1) = T x I / [ -1,1 | -1,0 ]
   Blocked SFS Loop
     Region:
@@ -6392,7 +6392,7 @@ gvLQQcedffefvksidsi:
   Spiral: 1/1203 5/2031 4/2301
   Spiral: 1/1302 5/3021 2/2103
 hLALAkbcceffggrrhutwun:
-  IsoSig: hLALAkbcceffggrrhutwun
+  NeoSig: hdAR2+6K288QIhb
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 2, 3), Mob(v)] = SFS [D_: (2,1)]
   Blocked SFS
     Region:
@@ -6440,7 +6440,7 @@ hLALAkbcceffggrrhutwun:
   Spiral: 3/0321 5/3210 4/1320
   Spiral: 6/0132
 hLALAkbcceffggrrhutwdk:
-  IsoSig: hLALAkbcceffggrrhutwdk
+  NeoSig: hlsS1+JghjnpV1c
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 2, 3), Mob(v)] = SFS [D_: (2,1) (3,1)]
   Blocked SFS
     Region:
@@ -6488,7 +6488,7 @@ hLALAkbcceffggrrhutwdk:
   Spiral: 3/0321 5/3210 4/1320
   Spiral: 6/0231
 hLAwPkbccdgfggemkijjjq:
-  IsoSig: hLAwPkbccdgfggemkijjjq
+  NeoSig: hlsR2+XghjDAV7d
   Standard: Blocked SFS [Tri, Ref(1), Layer] = M_/n2 x~ S1
   Blocked SFS
     Region:
@@ -6529,7 +6529,7 @@ hLAwPkbccdgfggemkijjjq:
   Spiral: 4/0123 6/1230 5/0123
   Spiral: 4/2103 6/2103 5/0321
 hLAwMkbccdfgggemkiwrwa:
-  IsoSig: hLAwMkbccdfgggemkiwrwa
+  NeoSig: hlsZ1+XghjflPse
   Standard: Blocked SFS [Tri, Tri, Layer] = SFS [KB/n3: (1,1)]
   Blocked SFS
     Region:
@@ -6570,7 +6570,7 @@ hLAwMkbccdfgggemkiwrwa:
   Spiral: 4/0213 5/0213 6/0213
   Spiral: 4/0312 5/1203 6/2031
 hLAwPkbccdgfggrrhrnnnx:
-  IsoSig: hLAwPkbccdgfggrrhrnnnx
+  NeoSig: hlsR2+XghjDAURd
   Standard: Blocked SFS [Tri, Ref(1), Layer] = M_ x S1
   Blocked SFS
     Region:
@@ -6605,7 +6605,7 @@ hLAwPkbccdgfggrrhrnnnx:
   Spiral: 4/1023 6/0231 5/1023
   Spiral: 4/2013 6/2013 5/1320
 hLAwMkbccdfgggrrhrrwar:
-  IsoSig: hLAwMkbccdfgggrrhrrwar
+  NeoSig: hlsZ1+Xghjffjre
   Standard: Blocked SFS [Tri, Tri, Layer] = KB x S1
   Blocked SFS
     Region:
@@ -6640,7 +6640,7 @@ hLAwMkbccdfgggrrhrrwar:
   Spiral: 4/1203 5/1203 6/1203
   Spiral: 4/1302 5/0213 6/2130
 hLAwMkbccdfgggrrbrqwar:
-  IsoSig: hLAwMkbccdfgggrrbrqwar
+  NeoSig: hlsZ1+XghXefwre
   Standard: Blocked SFS [Ref~(1), Ref~(1), Layer] = A=/o2 x~ S1
   Blocked SFS
     Region:
@@ -6655,7 +6655,7 @@ hLAwMkbccdfgggrrbrqwar:
         Reflector(1, twisted) {4,6,5}
         Ann. 2/0 [4/321, 5/103] -> 1/1
 hLALPkbccefgggrrhuwrfs:
-  IsoSig: hLALPkbccefgggrrhuwrfs
+  NeoSig: hlsS2+Jghjnp3wf
   Standard: Blocked SFS [Tri, Ref(1), Layer] = M_/n2 x~ S1
   Blocked SFS
     Region:
@@ -6694,7 +6694,7 @@ hLALPkbccefgggrrhuwrfs:
   Spiral: 3/0321 5/3210 4/1320
   Spiral: 5/1302 6/1023
 hLALPkbccefgggrrhurgsf:
-  IsoSig: hLALPkbccefgggrrhurgsf
+  NeoSig: hRJJ2+FasPKMTje
   Standard: Blocked SFS [Tri, Tri, Layer] = SFS [KB/n3: (1,1)]
   Blocked SFS
     Region:
@@ -6735,7 +6735,7 @@ hLALPkbccefgggrrhurgsf:
   Spiral: 3/1032 4/3201 6/2103
   Spiral: 5/1203 6/1320
 hLAvQkbccefgggrrhhgrwb:
-  IsoSig: hLAvQkbccefgggrrhhgrwb
+  NeoSig: hRJK2+FaYASgNje
   Standard: Blocked SFS [Tri, Tri, Layer] = KB/n3 x~ S1
   Blocked SFS
     Region:
@@ -6776,7 +6776,7 @@ hLAvQkbccefgggrrhhgrwb:
   Spiral: 3/1302 6/3021 4/3021
   Spiral: 5/2103 6/2310
 hLLAPkbedegfggjjhqjxox:
-  IsoSig: hLLAPkbedegfggjjhqjxox
+  NeoSig: htzS2+ogRfcpq4b
   Standard: Blocked SFS [Ref(2), Layer] = M_ x S1
   Blocked SFS
     Region:
@@ -6791,7 +6791,7 @@ hLLAPkbedegfggjjhqjxox:
   Spiral: 0/0123 1/1230 4/2301 5/0321 6/3012 3/3012
   Spiral: 0/2103 1/2103 4/2103 5/2301 6/0321 3/3210
 hLLAPkbedegfggjjjqjsja:
-  IsoSig: hLLAPkbedegfggjjjqjsja
+  NeoSig: htzS2+ogRfgbq4b
   Standard: Blocked SFS [Ref(2), Layer] = M_/n2 x~ S1
   Blocked SFS
     Region:
@@ -6806,7 +6806,7 @@ hLLAPkbedegfggjjjqjsja:
   Spiral: 0/0123 1/1230 4/2301 5/2301 6/3012 3/3012
   Spiral: 0/2103 1/2103 4/2103 5/0321 6/0321 3/3210
 hLvAQkbefegfgghaxqahha:
-  IsoSig: hLvAQkbefegfgghaxqahha
+  NeoSig: hJTUM+FaZjCJh4f
   Standard: Blocked SFS [Cube, Layer] = KB/n3 x~ S1
   Blocked SFS
     Region:
@@ -6822,7 +6822,7 @@ hLvAQkbefegfgghaxqahha:
         Ann. 1/1 [1/132, 1/023] -> 0/3 (ref, back)
   Spiral: 0/0312 1/3120
 hLvAQkbefegfggjajqassa:
-  IsoSig: hLvAQkbefegfggjajqassa
+  NeoSig: hJTUM+FG1XDDN2f
   Standard: Blocked SFS [Cube, Layer] = KB/n3 x~ S1
   Blocked SFS
     Region:
@@ -6837,7 +6837,7 @@ hLvAQkbefegfggjajqassa:
         Ann. 1/0 [1/021, 1/130] -> 0/0
         Ann. 1/1 [1/312, 1/203] -> 0/3 (back)
 hLvAQkbefegfggjajqashf:
-  IsoSig: hLvAQkbefegfggjajqashf
+  NeoSig: hJTUM+FaZXDDh4f
   Standard: Blocked SFS [Cube, Layer] = SFS [KB: (1,1)]
   Blocked SFS
     Region:
@@ -6852,7 +6852,7 @@ hLvAQkbefegfggjajqashf:
         Ann. 1/0 [1/021, 1/130] -> 0/0
         Ann. 1/1 [1/312, 1/203] -> 0/3 (back)
 hvLPQkcdefggfgqhhvvaxq:
-  IsoSig: hvLPQkcdefggfgqhhvvaxq
+  NeoSig: ht1019FaZ5AoORe
   Standard: Blocked SFS [Cube, Layer] = SFS [KB/n3: (1,1)]
   Blocked SFS
     Region:
@@ -6867,7 +6867,7 @@ hvLPQkcdefggfgqhhvvaxq:
         Ann. 1/0 [3/301, 3/210] -> 0/0
         Ann. 1/1 [3/123, 3/032] -> 0/2 (back)
 hvLPQkcdefggfgqhhxaaxq:
-  IsoSig: hvLPQkcdefggfgqhhxaaxq
+  NeoSig: ht1019FaZ5AoN7b
   Standard: Blocked SFS [Cube, Layer] = KB/n3 x~ S1
   Blocked SFS
     Region:
@@ -6888,7 +6888,7 @@ hvLPQkcdefggfgqhhxaaxq:
   Spiral: 2/2013 3/1023 6/0231 4/2310
   Spiral: 2/2103 3/0123 5/2103 4/2301
 hvLPQkcdefgfggqqjqqjqq:
-  IsoSig: hvLPQkcdefgfggqqjqqjqq
+  NeoSig: ht1019FaZbAobBa
   Standard: Blocked SFS [Cube, Layer] = SFS [KB/n3: (1,1)]
   Blocked SFS
     Region:
@@ -6905,7 +6905,7 @@ hvLPQkcdefgfggqqjqqjqq:
   Spiral: 0/0321 1/3210 6/2103 5/3210 3/0321 2/1032
   Spiral: 0/1032 2/0321 1/1032 5/0321 6/1032 3/2103
 hvLPQkcdefgfggqqxwrrrq:
-  IsoSig: hvLPQkcdefgfggqqxwrrrq
+  NeoSig: ht1019FaZ5AoKRd
   Standard: Blocked SFS [Cube, Layer] = SFS [T/o2: (1,1)]
   Blocked SFS
     Region:
@@ -6920,7 +6920,7 @@ hvLPQkcdefgfggqqxwrrrq:
         Ann. 1/0 [1/230, 1/012] -> 0/1
         Ann. 1/1 [1/103, 1/321] -> 0/3 (ref)
 hvLPQkcdefgfggqqxqqxqq:
-  IsoSig: hvLPQkcdefgfggqqxqqxqq
+  NeoSig: ht1019FaZ5AoHBa
   Standard: Blocked SFS [Cube, Layer] = KB x S1
   Blocked SFS
     Region:
@@ -6937,7 +6937,7 @@ hvLPQkcdefgfggqqxqqxqq:
   Spiral: 0/0321 1/3210 6/2103 5/3210 3/0321 2/1032
   Spiral: 0/1032 2/0321 1/1032 5/0321 6/1032 3/2103
 hvLPQkcdefgfggdeiqqxqp:
-  IsoSig: hvLPQkcdefgfggdeiqqxqp
+  NeoSig: ht1019FaY5QoHBa
   Standard: Blocked SFS Loop [Cube, Layer] = A x S1 / [ 0,-1 | 1,1 ]
   Blocked SFS Loop
     Region:
@@ -6953,7 +6953,7 @@ hvLPQkcdefgfggdeiqqxqp:
         Ann. 1/1 [4/132, 4/023] -> 0/2
     Matching: [[ -1 -1 ] [ 1 0 ]]
 hvLPQkcedfggfgnnnvvaxn:
-  IsoSig: hvLPQkcedfggfgnnnvvaxn
+  NeoSig: ht1019FG15UoORe
   Standard: Blocked SFS [Tri, Tri, Layer] = T/o2 x~ S1
   Blocked SFS
     Region:
@@ -6989,7 +6989,7 @@ hvLPQkcedfggfgnnnvvaxn:
   Spiral: 1/1023 5/0231 6/3102
   Spiral: 4/0231 6/2310 5/2310
 hvLPQkcdefggfgtssdjkkw:
-  IsoSig: hvLPQkcdefggfgtssdjkkw
+  NeoSig: ht1SU+FG5rLiTxd
   Standard: B(T7:1 | -1,-1 | -1,0) = T x I / [ 2,1 | 1,0 ]
   Blocked SFS Loop
     Region:
@@ -7012,7 +7012,7 @@ hvLPQkcdefggfgtssdjkkw:
   Spiral: 0/1032 2/0321 3/2103
   Spiral: 1/1203 5/2031 6/3120
 hvLPQkcedfggfgpnnvvawn:
-  IsoSig: hvLPQkcedfggfgpnnvvawn
+  NeoSig: ht1019FaK1Uoikc
   Standard: Blocked SFS [Tri, Tri, Layer] = SFS [T/o2: (1,1)]
   Blocked SFS
     Region:
@@ -7033,7 +7033,7 @@ hvLPQkcedfggfgpnnvvawn:
   Spiral: 0/1023 2/0231 4/3102
   Spiral: 1/1023 5/0231 6/3102
 hvLPQkcdefgfggffxqqjqo:
-  IsoSig: hvLPQkcdefgfggffxqqjqo
+  NeoSig: ht1019FGWbEobBa
   Standard: Blocked SFS [Cube, Layer] = KB/n3 x~ S1
   Blocked SFS
     Region:
@@ -7048,7 +7048,7 @@ hvLPQkcdefgfggffxqqjqo:
         Ann. 1/0 [4/201, 4/310] -> 0/0
         Ann. 1/1 [4/132, 4/023] -> 0/2 (ref)
 hvLPQkcedfgfggnnkffeiw:
-  IsoSig: hvLPQkcedfgfggnnkffeiw
+  NeoSig: ht1M19FG15wNGga
   Standard: B(T6:1 | 0,1 | 1,2) = T x I / [ 2,1 | 1,0 ]
   Blocked SFS Loop
     Region:
@@ -7072,7 +7072,7 @@ hvLPQkcedfgfggnnkffeiw:
   Spiral: 1/1203 5/2031 6/3120
   Spiral: 4/0321 5/2130 6/2130
 hvLPQkcedfgfggnnkrweiw:
-  IsoSig: hvLPQkcedfgfggnnkrweiw
+  NeoSig: ht1LU+FG5j6Amcd
   Standard: B(T6:1 | -1,-1 | -2,-1) = T x I / [ 2,1 | 1,0 ]
   Blocked SFS Loop
     Region:
@@ -7096,7 +7096,7 @@ hvLPQkcedfgfggnnkrweiw:
   Spiral: 1/1203 5/2031 6/3120
   Spiral: 4/0321 5/2130 6/2130
 hvLPQkcedfgfggwwrwrrrr:
-  IsoSig: hvLPQkcedfgfggwwrwrrrr
+  NeoSig: ht1019FG15UoKRd
   Standard: Blocked SFS [Tri, Tri, Layer] = KB x S1
   Blocked SFS
     Region:
@@ -7132,7 +7132,7 @@ hvLPQkcedfgfggwwrwrrrr:
   Spiral: 3/1203 5/0312 6/0312
   Spiral: 4/1302 5/0213 6/1302
 hvLPQkcedfgfggwwrffsfk:
-  IsoSig: hvLPQkcedfgfggwwrffsfk
+  NeoSig: ht1019FG15UoGla
   Standard: B(T6* | -1,1 | -1,2) = T x I / [ 1,1 | 1,0 ]
   Blocked SFS Loop
     Region:
@@ -7156,7 +7156,7 @@ hvLPQkcedfgfggwwrffsfk:
   Spiral: 3/1203 5/2013 6/1320
   Spiral: 4/1302 5/2310 6/2310
 hvLPQkcedfgfggnpkkdrid:
-  IsoSig: hvLPQkcedfgfggnpkkdrid
+  NeoSig: ht1019FaK1UooQd
   Standard: Blocked SFS [Tri, Tri, Layer] = SFS [KB/n3: (1,1)]
   Blocked SFS
     Region:
@@ -7177,7 +7177,7 @@ hvLPQkcedfgfggnpkkdrid:
   Spiral: 0/0231 1/2310 2/1023
   Spiral: 4/0321 5/0132 6/2130
 hvLAQkcdfegfggjqajpmpt:
-  IsoSig: hvLAQkcdfegfggjqajpmpt
+  NeoSig: htZSU+Fak1Uw2vd
   Standard: Blocked SFS [Tri, Tri, Layer] = SFS [KB: (1,1)]
   Blocked SFS
     Region:
@@ -7198,7 +7198,7 @@ hvLAQkcdfegfggjqajpmpt:
   Spiral: 1/1032 5/0321 2/3210
   Spiral: 3/0123 4/2301 6/0213
 hvLAQkcdfegfggjqajooof:
-  IsoSig: hvLAQkcdfegfggjqajooof
+  NeoSig: ht0MT+FG37ENkvd
   Standard: Blocked SFS [Tri, Tri, Layer] = KB/n3 x~ S1
   Blocked SFS
     Region:
@@ -7219,7 +7219,7 @@ hvLAQkcdfegfggjqajooof:
   Spiral: 1/1032 5/0321 2/3210
   Spiral: 3/0123 4/2301 6/3210
 hvLAQkcdfegfggjdajpmpd:
-  IsoSig: hvLAQkcdfegfggjdajpmpd
+  NeoSig: htD01+FG5rKAVMd
   Standard: B(T7:1 | 1,1 | 1,0) = T x I / [ 2,1 | 1,0 ]
   Blocked SFS Loop
     Region:
@@ -7241,7 +7241,7 @@ hvLAQkcdfegfggjdajpmpd:
   Spiral: 1/1032 5/0321 2/3210
   Spiral: 3/0123 4/2301 6/0213
 hvLAQkcdegffggttncseas:
-  IsoSig: hvLAQkcdegffggttncseas
+  NeoSig: ht0MT+FaQZkNkvd
   Standard: Blocked SFS [Tri, Tri, Layer] = SFS [KB/n3: (1,1)]
   Blocked SFS
     Region:
@@ -7262,7 +7262,7 @@ hvLAQkcdegffggttncseas:
   Spiral: 0/1023 2/0231 4/3102
   Spiral: 1/1203 5/2031 3/1023
 iLALAMcbcceffghhrrhutwuxn:
-  IsoSig: iLALAMcbcceffghhrrhutwuxn
+  NeoSig: ilGPQZU75WIP0zaBMi
   Standard: Blocked SFS [Tri, Ref(1), LST(2, 3, 5), Mob(v)] = SFS [D_: (2,1) (3,1)]
   Blocked SFS
     Region:
@@ -7311,7 +7311,7 @@ iLALAMcbcceffghhrrhutwuxn:
   Spiral: 6/0132 7/1320
   Spiral: 7/2013
 iLALAMcbccfefghhrrhuhwhhw:
-  IsoSig: iLALAMcbccfefghhrrhuhwhhw
+  NeoSig: ilGPk7U75WIP0zqoti
   Standard: Blocked SFS [Tri, Tri, LST(2, 3, 5), Mob(v)] = SFS [RP2: (2,1) (3,1)]
   Blocked SFS
     Region:
@@ -7362,7 +7362,7 @@ iLALAMcbccfefghhrrhuhwhhw:
   Spiral: 6/0312 7/3120
   Spiral: 7/1302
 iLALMMcbcceffghhrrhuestxk:
-  IsoSig: iLALMMcbcceffghhrrhuestxk
+  NeoSig: ilGPk7U76WIP0ziMnl
   Standard: Blocked SFS [Tri, Tri, LST(2, 3, 5), Mob(v)] = SFS [RP2: (2,1) (3,1)]
   Blocked SFS
     Region:
@@ -7413,7 +7413,7 @@ iLALMMcbcceffghhrrhuestxk:
   Spiral: 6/2013 7/0132
   Spiral: 7/1023
 iLALAMcbcceffghhrrhutwdxk:
-  IsoSig: iLALAMcbcceffghhrrhutwdxk
+  NeoSig: ilGHi7U76WIPujwfpc
   Standard: Blocked SFS [Tri, Ref(1), LST(2, 3, 5), Mob(v)] = SFS [D_: (2,1) (5,2)]
   Blocked SFS
     Region:
@@ -7462,7 +7462,7 @@ iLALAMcbcceffghhrrhutwdxk:
   Spiral: 6/0231 7/2310
   Spiral: 7/1023
 iLALAMcbccfefghhrrhuhwahr:
-  IsoSig: iLALAMcbccfefghhrrhuhwahr
+  NeoSig: ilGHi7U75WIPujECWj
   Standard: Blocked SFS [Tri, Tri, LST(2, 3, 5), Mob(v)] = SFS [RP2: (2,1) (5,2)]
   Blocked SFS
     Region:
@@ -7513,7 +7513,7 @@ iLALAMcbccfefghhrrhuhwahr:
   Spiral: 6/0213 7/2130
   Spiral: 7/1203
 iLALMMcbcceffghhrrhuesexn:
-  IsoSig: iLALMMcbcceffghhrrhuesexn
+  NeoSig: ilGHOZU75WIPujclIj
   Standard: Blocked SFS [Tri, Tri, LST(2, 3, 5), Mob(v)] = SFS [RP2: (2,1) (5,2)]
   Blocked SFS
     Region:
@@ -7564,7 +7564,7 @@ iLALMMcbcceffghhrrhuesexn:
   Spiral: 6/1023 7/0231
   Spiral: 7/2013
 iLALAMcbcceffghhrrhutwdqj:
-  IsoSig: iLALAMcbcceffghhrrhutwdqj
+  NeoSig: idIHi7U76WIHujwfpc
   Standard: Blocked SFS [Tri, Ref(1), LST(2, 3, 5), Mob(v)] = SFS [D_: (2,1) (5,2)]
   Blocked SFS
     Region:
@@ -7613,7 +7613,7 @@ iLALAMcbcceffghhrrhutwdqj:
   Spiral: 6/0321 7/3210
   Spiral: 7/1032
 iLALAMcbccfefghhrrhuhwaqj:
-  IsoSig: iLALAMcbccfefghhrrhuhwaqj
+  NeoSig: idIHi7U75WIHujECWj
   Standard: Blocked SFS [Tri, Tri, LST(2, 3, 5), Mob(v)] = SFS [RP2: (2,1) (5,2)]
   Blocked SFS
     Region:
@@ -7664,7 +7664,7 @@ iLALAMcbccfefghhrrhuhwaqj:
   Spiral: 6/0123 7/1230
   Spiral: 7/2103
 iLALMMcbcceffghhrrhuesehw:
-  IsoSig: iLALMMcbcceffghhrrhuesehw
+  NeoSig: idIHOZU75WIHujclIj
   Standard: Blocked SFS [Tri, Tri, LST(2, 3, 5), Mob(v)] = SFS [RP2: (2,1) (5,2)]
   Blocked SFS
     Region:
@@ -7715,7 +7715,7 @@ iLALMMcbcceffghhrrhuesehw:
   Spiral: 6/1203 7/2031
   Spiral: 7/0213
 iLALAMcbcceffghhrrhutwuhw:
-  IsoSig: iLALAMcbcceffghhrrhutwuhw
+  NeoSig: idIPQZU75WIH0zaBMi
   Standard: Blocked SFS [Tri, Ref(1), LST(2, 3, 5), Mob(v)] = SFS [D_: (2,1) (2,1)]
   Blocked SFS
     Region:
@@ -7764,7 +7764,7 @@ iLALAMcbcceffghhrrhutwuhw:
   Spiral: 6/0312 7/3120
   Spiral: 7/1302
 iLALAMcbccfefghhrrhuhwhxn:
-  IsoSig: iLALAMcbccfefghhrrhuhwhxn
+  NeoSig: idIPk7U75WIH0zqoti
   Standard: Blocked SFS [Tri, Tri, LST(2, 3, 5), Mob(v)] = SFS [RP2: (2,1) (2,1)]
   Blocked SFS
     Region:
@@ -7815,7 +7815,7 @@ iLALAMcbccfefghhrrhuhwhxn:
   Spiral: 6/0132 7/1320
   Spiral: 7/2013
 iLALMMcbcceffghhrrhuestqs:
-  IsoSig: iLALMMcbcceffghhrrhuestqs
+  NeoSig: idIPk7U76WIH0ziMnl
   Standard: Blocked SFS [Tri, Tri, LST(2, 3, 5), Mob(v)] = SFS [RP2: (2,1) (2,1)]
   Blocked SFS
     Region:
@@ -7866,7 +7866,7 @@ iLALMMcbcceffghhrrhuestqs:
   Spiral: 6/2103 7/1032
   Spiral: 7/0123
 iLALAMcbcceffghhrrhutwuxj:
-  IsoSig: iLALAMcbcceffghhrrhutwuxj
+  NeoSig: ilGPQZU75WIT0zaBMi
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 3, 4), Mob(v)] = SFS [D_: (2,1) (3,1)]
   Blocked SFS
     Region:
@@ -7915,7 +7915,7 @@ iLALAMcbcceffghhrrhutwuxj:
   Spiral: 6/0132 7/1320
   Spiral: 7/2103
 iLALAMcbccfefghhrrhuhwhhj:
-  IsoSig: iLALAMcbccfefghhrrhuhwhhj
+  NeoSig: ilGPk7U75WIT0zqoti
   Standard: Blocked SFS [Tri, Tri, LST(1, 3, 4), Mob(v)] = SFS [RP2: (2,1) (3,1)]
   Blocked SFS
     Region:
@@ -7966,7 +7966,7 @@ iLALAMcbccfefghhrrhuhwhhj:
   Spiral: 6/0312 7/3120
   Spiral: 7/1032
 iLALMMcbcceffghhrrhuestxr:
-  IsoSig: iLALMMcbcceffghhrrhuestxr
+  NeoSig: ilGPk7U76WIT0ziMnl
   Standard: Blocked SFS [Tri, Tri, LST(1, 3, 4), Mob(v)] = SFS [RP2: (2,1) (3,1)]
   Blocked SFS
     Region:
@@ -8017,7 +8017,7 @@ iLALMMcbcceffghhrrhuestxr:
   Spiral: 6/2013 7/0132
   Spiral: 7/1203
 iLALAMcbcceffghhrrhutwdxr:
-  IsoSig: iLALAMcbcceffghhrrhutwdxr
+  NeoSig: ilGHi7U76WITujwfpc
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 3, 4), Mob(v)] = SFS [D_: (2,1) (4,1)]
   Blocked SFS
     Region:
@@ -8066,7 +8066,7 @@ iLALAMcbcceffghhrrhutwdxr:
   Spiral: 6/0231 7/2310
   Spiral: 7/1203
 iLALAMcbccfefghhrrhuhwahk:
-  IsoSig: iLALAMcbccfefghhrrhuhwahk
+  NeoSig: ilGHi7U75WITujECWj
   Standard: Blocked SFS [Tri, Tri, LST(1, 3, 4), Mob(v)] = SFS [RP2: (2,1) (4,1)]
   Blocked SFS
     Region:
@@ -8117,7 +8117,7 @@ iLALAMcbccfefghhrrhuhwahk:
   Spiral: 6/0213 7/2130
   Spiral: 7/1023
 iLALMMcbcceffghhrrhuesexj:
-  IsoSig: iLALMMcbcceffghhrrhuesexj
+  NeoSig: ilGHOZU75WITujclIj
   Standard: Blocked SFS [Tri, Tri, LST(1, 3, 4), Mob(v)] = SFS [RP2: (2,1) (4,1)]
   Blocked SFS
     Region:
@@ -8168,7 +8168,7 @@ iLALMMcbcceffghhrrhuesexj:
   Spiral: 6/1023 7/0231
   Spiral: 7/2103
 iLALAMcbcceffghhrrhutwdqw:
-  IsoSig: iLALAMcbcceffghhrrhutwdqw
+  NeoSig: idIHi7U76WwHujwfpc
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 3, 4), Mob(v)] = SFS [D_: (2,1) (4,1)]
   Blocked SFS
     Region:
@@ -8217,7 +8217,7 @@ iLALAMcbcceffghhrrhutwdqw:
   Spiral: 6/0321 7/3210
   Spiral: 7/1302
 iLALAMcbccfefghhrrhuhwaqn:
-  IsoSig: iLALAMcbccfefghhrrhuhwaqn
+  NeoSig: idIHi7U75WwHujECWj
   Standard: Blocked SFS [Tri, Tri, LST(1, 3, 4), Mob(v)] = SFS [RP2: (2,1) (4,1)]
   Blocked SFS
     Region:
@@ -8268,7 +8268,7 @@ iLALAMcbccfefghhrrhuhwaqn:
   Spiral: 6/0123 7/1230
   Spiral: 7/2013
 iLALMMcbcceffghhrrhuesehs:
-  IsoSig: iLALMMcbcceffghhrrhuesehs
+  NeoSig: idIHOZU75WwHujclIj
   Standard: Blocked SFS [Tri, Tri, LST(1, 3, 4), Mob(v)] = SFS [RP2: (2,1) (4,1)]
   Blocked SFS
     Region:
@@ -8319,7 +8319,7 @@ iLALMMcbcceffghhrrhuesehs:
   Spiral: 6/1203 7/2031
   Spiral: 7/0123
 iLALAMcbcceffghhrrhutwuhj:
-  IsoSig: iLALAMcbcceffghhrrhutwuhj
+  NeoSig: idIPQZU75WwH0zaBMi
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 3, 4), Mob(v)] = SFS [D_: (2,1)]
   Blocked SFS
     Region:
@@ -8368,7 +8368,7 @@ iLALAMcbcceffghhrrhutwuhj:
   Spiral: 6/0312 7/3120
   Spiral: 7/1032
 iLALAMcbccfefghhrrhuhwhxj:
-  IsoSig: iLALAMcbccfefghhrrhuhwhxj
+  NeoSig: idIPk7U75WwH0zqoti
   Standard: Blocked SFS [Tri, Tri, LST(1, 3, 4), Mob(v)] = SFS [RP2: (2,1)]
   Blocked SFS
     Region:
@@ -8419,7 +8419,7 @@ iLALAMcbccfefghhrrhuhwhxj:
   Spiral: 6/0132 7/1320
   Spiral: 7/2103
 iLALMMcbcceffghhrrhuestqw:
-  IsoSig: iLALMMcbcceffghhrrhuestqw
+  NeoSig: idIPk7U76WwH0ziMnl
   Standard: Blocked SFS [Tri, Tri, LST(1, 3, 4), Mob(v)] = SFS [RP2: (2,1)]
   Blocked SFS
     Region:
@@ -8470,7 +8470,7 @@ iLALMMcbcceffghhrrhuestqw:
   Spiral: 6/2103 7/1032
   Spiral: 7/0213
 iLAwLQcbccdfgghhrrhrntxnk:
-  IsoSig: iLAwLQcbccdfgghhrrhrntxnk
+  NeoSig: ilezkZU7fBCK0PDFPe
   Standard: Blocked SFS Pair [Tri | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1)] U/m M x S1, m = [ 5,2 | 2,1 ]
   Blocked SFS Pair
     Region 0:
@@ -8502,7 +8502,7 @@ iLAwLQcbccdfgghhrrhrntxnk:
   Spiral: 4/1023 6/0231 5/1023
   Spiral: 7/0231
 iLAwMMcbccdfgghhrrhwwlukr:
-  IsoSig: iLAwMMcbccdfgghhrrhwwlukr
+  NeoSig: ilezkZU7dBCKumvITf
   Standard: Blocked SFS Pair [Tri, Layer | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1)] U/m M x S1, m = [ 2,1 | 3,1 ]
   Blocked SFS Pair
     Region 0:
@@ -8538,7 +8538,7 @@ iLAwMMcbccdfgghhrrhwwlukr:
   Spiral: 4/0213 5/0213 6/0123
   Spiral: 7/0312
 iLAwLQcbccdfhhghrrhrnamnn:
-  IsoSig: iLAwLQcbccdfhhghrrhrnamnn
+  NeoSig: ilKHg7U7XlsTulTiKl
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 2, 3), Mob(v), Layer] = SFS [D_: (2,1)]
   Blocked SFS
     Region:
@@ -8590,7 +8590,7 @@ iLAwLQcbccdfhhghrrhrnamnn:
   Spiral: 4/2013 7/0132 5/1320
   Spiral: 6/0132
 iLAwMMcbccdfgghhrrhrriarr:
-  IsoSig: iLAwMMcbccdfgghhrrhrriarr
+  NeoSig: ilgzi7U7Xlw3uAUiKl
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), Mob(v), Layer] = SFS [RP2: (2,1)]
   Blocked SFS
     Region:
@@ -8644,7 +8644,7 @@ iLAwMMcbccdfgghhrrhrriarr:
   Spiral: 4/1302 5/0213 6/2130
   Spiral: 7/0312
 iLAwLQcbccdfgghhrrhrntxkk:
-  IsoSig: iLAwLQcbccdfgghhrrhrntxkk
+  NeoSig: ilezkZU7fBCK0PDFZe
   Standard: Blocked SFS Pair [Tri | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1) (3,1)] U/m M x S1, m = [ -1,2 | -1,1 ]
   Blocked SFS Pair
     Region 0:
@@ -8676,7 +8676,7 @@ iLAwLQcbccdfgghhrrhrntxkk:
   Spiral: 4/1023 6/0231 5/1023
   Spiral: 7/1023
 iLAwMMcbccdfgghhrrhwwlucw:
-  IsoSig: iLAwMMcbccdfgghhrrhwwlucw
+  NeoSig: ilezkZU7dBCKumvIRf
   Standard: Blocked SFS Pair [Tri, Layer | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1) (3,1)] U/m M x S1, m = [ -1,1 | 0,1 ]
   Blocked SFS Pair
     Region 0:
@@ -8712,7 +8712,7 @@ iLAwMMcbccdfgghhrrhwwlucw:
   Spiral: 4/0213 5/0213 6/0123
   Spiral: 7/0213
 iLAwLQcbccdfhhhgrrhrnamkn:
-  IsoSig: iLAwLQcbccdfhhhgrrhrnamkn
+  NeoSig: ilezQ7S7fBCK0P1oZj
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 2, 3), Mob(v), Layer] = SFS [D_: (2,1) (3,1)]
   Blocked SFS
     Region:
@@ -8764,7 +8764,7 @@ iLAwLQcbccdfhhhgrrhrnamkn:
   Spiral: 4/2013 7/0132 5/1320
   Spiral: 6/2013
 iLAwMMcbccdfgghhrrhrriaww:
-  IsoSig: iLAwMMcbccdfgghhrrhrriaww
+  NeoSig: ilezQ7o7dBCKumDgRg
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), Mob(v), Layer] = SFS [RP2: (2,1) (3,1)]
   Blocked SFS
     Region:
@@ -8818,7 +8818,7 @@ iLAwMMcbccdfgghhrrhrriaww:
   Spiral: 4/1302 5/0213 6/2130
   Spiral: 7/0213
 iLAwLQcbccdfgghhrrhrntxkr:
-  IsoSig: iLAwLQcbccdfgghhrrhrntxkr
+  NeoSig: ilezkZU7fBCK0PDFZf
   Standard: Blocked SFS Pair [Tri | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1) (3,2)] U/m M x S1, m = [ -1,2 | -1,1 ]
   Blocked SFS Pair
     Region 0:
@@ -8850,7 +8850,7 @@ iLAwLQcbccdfgghhrrhrntxkr:
   Spiral: 4/1023 6/0231 5/1023
   Spiral: 7/1203
 iLAwMMcbccdfgghhrrhwwlucs:
-  IsoSig: iLAwMMcbccdfgghhrrhwwlucs
+  NeoSig: ilezkZU7dBCKumvIRi
   Standard: Blocked SFS Pair [Tri, Layer | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1) (3,2)] U/m M x S1, m = [ -1,1 | 0,1 ]
   Blocked SFS Pair
     Region 0:
@@ -8886,7 +8886,7 @@ iLAwMMcbccdfgghhrrhwwlucs:
   Spiral: 4/0213 5/0213 6/0123
   Spiral: 7/0123
 iLAwLQcbccdfhhhgrrhrnamkj:
-  IsoSig: iLAwLQcbccdfhhhgrrhrnamkj
+  NeoSig: ilezQ7S7fBCK0P1o3j
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 2, 3), Mob(v), Layer] = SFS [D_: (2,1) (3,1)]
   Blocked SFS
     Region:
@@ -8938,7 +8938,7 @@ iLAwLQcbccdfhhhgrrhrnamkj:
   Spiral: 4/2013 7/0132 5/1320
   Spiral: 6/2103
 iLAwMMcbccdfgghhrrhrriaws:
-  IsoSig: iLAwMMcbccdfgghhrrhrriaws
+  NeoSig: ilezQ7o7dBCKumDgRe
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), Mob(v), Layer] = SFS [RP2: (2,1) (3,1)]
   Blocked SFS
     Region:
@@ -8992,7 +8992,7 @@ iLAwMMcbccdfgghhrrhrriaws:
   Spiral: 4/1302 5/0213 6/2130
   Spiral: 7/0123
 iLAwLQcbccdfgghhrrhrntxnj:
-  IsoSig: iLAwLQcbccdfgghhrrhrntxnj
+  NeoSig: ilezkZU7fBCK0PDFPl
   Standard: Blocked SFS Pair [Tri | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1) (2,1)] U/m M x S1, m = [ 1,2 | 0,1 ]
   Blocked SFS Pair
     Region 0:
@@ -9024,7 +9024,7 @@ iLAwLQcbccdfgghhrrhrntxnj:
   Spiral: 4/1023 6/0231 5/1023
   Spiral: 7/0321
 iLAwMMcbccdfgghhrrhwwlukn:
-  IsoSig: iLAwMMcbccdfgghhrrhwwlukn
+  NeoSig: ilezkZU7dBCKumvITe
   Standard: Blocked SFS Pair [Tri, Layer | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1) (2,1)] U/m M x S1, m = [ 0,1 | 1,1 ]
   Blocked SFS Pair
     Region 0:
@@ -9060,7 +9060,7 @@ iLAwMMcbccdfgghhrrhwwlukn:
   Spiral: 4/0213 5/0213 6/0123
   Spiral: 7/0132
 iLAwLQcbccdfhhghrrhrnamrn:
-  IsoSig: iLAwLQcbccdfhhghrrhrnamrn
+  NeoSig: ilezQ7o7fBCK0P1oPg
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 2, 3), Mob(v), Layer] = SFS [D_: (2,1) (2,1)]
   Blocked SFS
     Region:
@@ -9112,7 +9112,7 @@ iLAwLQcbccdfhhghrrhrnamrn:
   Spiral: 4/2013 7/0132 5/1320
   Spiral: 6/0312
 iLAwMMcbccdfgghhrrhrriarn:
-  IsoSig: iLAwMMcbccdfgghhrrhrriarn
+  NeoSig: ilezQ7S7dBCKumDgXg
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), Mob(v), Layer] = SFS [RP2: (2,1) (2,1)]
   Blocked SFS
     Region:
@@ -9166,7 +9166,7 @@ iLAwMMcbccdfgghhrrhrriarn:
   Spiral: 4/1302 5/0213 6/2130
   Spiral: 7/0132
 iLALzQcbccefhgghrrhuwuswr:
-  IsoSig: iLALzQcbccefhgghrrhuwuswr
+  NeoSig: iBUYi6o7FbIU152oKf
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 2, 3), LST(1, 2, 3)] = SFS [D_: (2,1) (2,1)]
   Blocked SFS
     Region:
@@ -9220,7 +9220,7 @@ iLALzQcbccefhgghrrhuwuswr:
   Spiral: 6/0213
   Spiral: 7/0312
 iLAvAQcbccefghghrrhhwwhsn:
-  IsoSig: iLAvAQcbccefghghrrhhwwhsn
+  NeoSig: iBQZi6o7VbIh752m3f
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (2,1) (2,1)]
   Blocked SFS
     Region:
@@ -9276,7 +9276,7 @@ iLAvAQcbccefghghrrhhwwhsn:
   Spiral: 6/0123
   Spiral: 7/0132
 iLALLQcbcceggfhhrrhugsnuj:
-  IsoSig: iLALLQcbcceggfhhrrhugsnuj
+  NeoSig: iBQZi6o7FbIj652oIf
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (2,1) (2,1)]
   Blocked SFS
     Region:
@@ -9332,7 +9332,7 @@ iLALLQcbcceggfhhrrhugsnuj:
   Spiral: 5/2013
   Spiral: 7/2103
 iLALzQcbccefhgghrrhuwdjjj:
-  IsoSig: iLALzQcbccefhgghrrhuwdjjj
+  NeoSig: ileHk7S7nACK08SARi
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 2, 3), LST(1, 2, 3)] = SFS [D_: (3,1) (3,2)]
   Blocked SFS
     Region:
@@ -9386,7 +9386,7 @@ iLALzQcbccefhgghrrhuwdjjj:
   Spiral: 6/0321
   Spiral: 7/0321
 iLAvAQcbccefghghrrhhwranw:
-  IsoSig: iLAvAQcbccefghghrrhhwranw
+  NeoSig: iBQZi6o7VbIhBiEn3j
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (3,1) (3,2)]
   Blocked SFS
     Region:
@@ -9442,7 +9442,7 @@ iLAvAQcbccefghghrrhhwranw:
   Spiral: 6/0132
   Spiral: 7/0213
 iLALLQcbccegfghhrrhugjjdr:
-  IsoSig: iLALLQcbccegfghhrrhugjjdr
+  NeoSig: ileHmRU7lACK0mUsTg
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (3,1) (3,1)]
   Blocked SFS
     Region:
@@ -9498,7 +9498,7 @@ iLALLQcbccegfghhrrhugjjdr:
   Spiral: 5/1032
   Spiral: 7/1203
 iLALzQcbccefhgghrrhuwdswk:
-  IsoSig: iLALzQcbccefhgghrrhuwdswk
+  NeoSig: ileHk7S7nACK08SwRe
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 2, 3), LST(1, 2, 3)] = SFS [D_: (2,1) (3,1)]
   Blocked SFS
     Region:
@@ -9552,7 +9552,7 @@ iLALzQcbccefhgghrrhuwdswk:
   Spiral: 6/0213
   Spiral: 7/0231
 iLAvAQcbccefghghrrhhwrhrn:
-  IsoSig: iLAvAQcbccefghghrrhhwrhrn
+  NeoSig: iBQZi6o7VbIh7jEn3f
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (2,1) (3,1)]
   Blocked SFS
     Region:
@@ -9608,7 +9608,7 @@ iLAvAQcbccefghghrrhhwrhrn:
   Spiral: 6/0312
   Spiral: 7/0132
 iLALLQcbccegfghhrrhugjjuj:
-  IsoSig: iLALLQcbccegfghhrrhugjjuj
+  NeoSig: iBQZi6o7FbIj6jEpIf
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (2,1) (3,1)]
   Blocked SFS
     Region:
@@ -9664,7 +9664,7 @@ iLALLQcbccegfghhrrhugjjuj:
   Spiral: 5/1032
   Spiral: 7/2103
 iLALzQcbccefhgghrrhuwdssj:
-  IsoSig: iLALzQcbccefhgghrrhuwdssj
+  NeoSig: idKPSRU7ntAZtRkIpc
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 2, 3), LST(1, 2, 3)] = SFS [D_: (3,1)]
   Blocked SFS
     Region:
@@ -9718,7 +9718,7 @@ iLALzQcbccefhgghrrhuwdssj:
   Spiral: 6/0123
   Spiral: 7/0321
 iLAvAQcbccefghghrrhhwrhnr:
-  IsoSig: iLAvAQcbccefghghrrhhwrhnr
+  NeoSig: iBQZi6o7VbIhB4gn3j
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (3,1)]
   Blocked SFS
     Region:
@@ -9774,7 +9774,7 @@ iLAvAQcbccefghghrrhhwrhnr:
   Spiral: 6/0132
   Spiral: 7/0312
 iLALLQcbccegfghhrrhugwjun:
-  IsoSig: iLALLQcbccegfghhrrhugwjun
+  NeoSig: idKPoRU7ltAZtdwIIj
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (3,2)]
   Blocked SFS
     Region:
@@ -9830,7 +9830,7 @@ iLALLQcbccegfghhrrhugwjun:
   Spiral: 5/1302
   Spiral: 7/2013
 iLALzQcbccefhgghrrhuwussr:
-  IsoSig: iLALzQcbccefhgghrrhuwussr
+  NeoSig: iBUYi6o7FbIU15gpKf
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 2, 3), LST(1, 2, 3)] = SFS [D_: (2,1)]
   Blocked SFS
     Region:
@@ -9884,7 +9884,7 @@ iLALzQcbccefhgghrrhuwussr:
   Spiral: 6/0123
   Spiral: 7/0312
 iLAvAQcbccefghghrrhhwwhsr:
-  IsoSig: iLAvAQcbccefghghrrhhwwhsr
+  NeoSig: iBQZi6o7VbIh75gn3f
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (2,1)]
   Blocked SFS
     Region:
@@ -9940,7 +9940,7 @@ iLAvAQcbccefghghrrhhwwhsr:
   Spiral: 6/0123
   Spiral: 7/0312
 iLALLQcbcceggfhhrrhugsjuj:
-  IsoSig: iLALLQcbcceggfhhrrhugsjuj
+  NeoSig: iBQZi6o7FbIj65gpIf
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (2,1)]
   Blocked SFS
     Region:
@@ -9996,7 +9996,7 @@ iLALLQcbcceggfhhrrhugsjuj:
   Spiral: 5/2103
   Spiral: 7/2103
 iLALzQcbccefhgghrrhuwdjkj:
-  IsoSig: iLALzQcbccefhgghrrhuwdjkj
+  NeoSig: ileHk7S7nACK08SAXi
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 2, 3), LST(1, 2, 3)] = SFS [D_: (3,1) (3,1)]
   Blocked SFS
     Region:
@@ -10050,7 +10050,7 @@ iLALzQcbccefhgghrrhuwdjkj:
   Spiral: 6/0231
   Spiral: 7/0321
 iLAvAQcbccefghghrrhhwrans:
-  IsoSig: iLAvAQcbccefghghrrhhwrans
+  NeoSig: iBOzQZS77iShZngIPj
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (3,1) (3,1)]
   Blocked SFS
     Region:
@@ -10106,7 +10106,7 @@ iLAvAQcbccefghghrrhhwrans:
   Spiral: 6/0132
   Spiral: 7/0123
 iLALLQcbccegfghhrrhugwjdr:
-  IsoSig: iLALLQcbccegfghhrrhugwjdr
+  NeoSig: ileHmRU7lACK0mUsTe
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (3,1) (3,2)]
   Blocked SFS
     Region:
@@ -10162,7 +10162,7 @@ iLALLQcbccegfghhrrhugwjdr:
   Spiral: 5/1302
   Spiral: 7/1203
 iLALzQcbccefhgghrrhuwdswj:
-  IsoSig: iLALzQcbccefhgghrrhuwdswj
+  NeoSig: ileHk7S7nACK08SwXe
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 2, 3), LST(1, 2, 3)] = SFS [D_: (2,1) (3,1)]
   Blocked SFS
     Region:
@@ -10216,7 +10216,7 @@ iLALzQcbccefhgghrrhuwdswj:
   Spiral: 6/0213
   Spiral: 7/0321
 iLAvAQcbccefghghrrhhwrhnn:
-  IsoSig: iLAvAQcbccefghghrrhhwrhnn
+  NeoSig: iBQZi6o7VbIhB42m3j
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (2,1) (3,1)]
   Blocked SFS
     Region:
@@ -10272,7 +10272,7 @@ iLAvAQcbccefghghrrhhwrhnn:
   Spiral: 6/0132
   Spiral: 7/0132
 iLALLQcbccegfghhrrhugwjuj:
-  IsoSig: iLALLQcbccegfghhrrhugwjuj
+  NeoSig: ileHSYU7lACK0mgBTe
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (2,1) (3,1)]
   Blocked SFS
     Region:
@@ -10328,7 +10328,7 @@ iLALLQcbccegfghhrrhugwjuj:
   Spiral: 5/1302
   Spiral: 7/2103
 iLALzQcbccefhgghrrhuwdjjk:
-  IsoSig: iLALzQcbccefhgghrrhuwdjjk
+  NeoSig: ileHk7S7nACK08SARg
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 2, 3), LST(1, 2, 3)] = SFS [D_: (3,1) (3,1)]
   Blocked SFS
     Region:
@@ -10382,7 +10382,7 @@ iLALzQcbccefhgghrrhuwdjjk:
   Spiral: 6/0321
   Spiral: 7/0231
 iLAvAQcbccefghghrrhhwrarw:
-  IsoSig: iLAvAQcbccefghghrrhhwrarw
+  NeoSig: iBQZi6o7VbIhBiEn3l
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (3,1) (3,1)]
   Blocked SFS
     Region:
@@ -10438,7 +10438,7 @@ iLAvAQcbccefghghrrhhwrarw:
   Spiral: 6/0312
   Spiral: 7/0213
 iLALLQcbccegfghhrrhugjjdk:
-  IsoSig: iLALLQcbccegfghhrrhugjjdk
+  NeoSig: itOzi7U7EdsZukDGMi
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (3,1) (3,2)]
   Blocked SFS
     Region:
@@ -10494,7 +10494,7 @@ iLALLQcbccegfghhrrhugjjdk:
   Spiral: 5/1032
   Spiral: 7/1023
 iLALzQcbccefhgghrrhuwdssk:
-  IsoSig: iLALzQcbccefhgghrrhuwdssk
+  NeoSig: itOzOZU7DdsPukjMhk
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 2, 3), LST(1, 2, 3)] = SFS [D_: (3,1)]
   Blocked SFS
     Region:
@@ -10548,7 +10548,7 @@ iLALzQcbccefhgghrrhuwdssk:
   Spiral: 6/0123
   Spiral: 7/0231
 iLAvAQcbccefghghrrhhwrhrr:
-  IsoSig: iLAvAQcbccefghghrrhhwrhrr
+  NeoSig: iBQZi6o7VbIhB4gn3l
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (3,2)]
   Blocked SFS
     Region:
@@ -10604,7 +10604,7 @@ iLAvAQcbccefghghrrhhwrhrr:
   Spiral: 6/0312
   Spiral: 7/0312
 iLALLQcbccegfghhrrhugjjun:
-  IsoSig: iLALLQcbccegfghhrrhugjjun
+  NeoSig: itOzi7U7EdsPukDGMi
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (3,1)]
   Blocked SFS
     Region:
@@ -10660,7 +10660,7 @@ iLALLQcbccegfghhrrhugjjun:
   Spiral: 5/1032
   Spiral: 7/2013
 iLALzQcbccefhgghrrhuwussn:
-  IsoSig: iLALzQcbccefhgghrrhuwussn
+  NeoSig: itOzOZU7DdsP5mjMhk
   Standard: Blocked SFS [Tri, Ref(1), LST(1, 2, 3), LST(1, 2, 3)] = D_ x S1
   Blocked SFS
     Region:
@@ -10714,7 +10714,7 @@ iLALzQcbccefhgghrrhuwussn:
   Spiral: 6/0123
   Spiral: 7/0132
 iLAvAQcbccefghghrrhhwwhwr:
-  IsoSig: iLAvAQcbccefghghrrhhwwhwr
+  NeoSig: iBQZi6o7VbIh75gn3i
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = RP2 x S1
   Blocked SFS
     Region:
@@ -10770,7 +10770,7 @@ iLAvAQcbccefghghrrhhwwhwr:
   Spiral: 6/0213
   Spiral: 7/0312
 iLALLQcbcceggfhhrrhugsjun:
-  IsoSig: iLALLQcbcceggfhhrrhugsjun
+  NeoSig: itOzi7U7EdsP5mDGMi
   Standard: Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 2, 3)] = SFS [RP2: (1,1)]
   Blocked SFS
     Region:
@@ -10826,7 +10826,7 @@ iLALLQcbcceggfhhrrhugsjun:
   Spiral: 5/2103
   Spiral: 7/2013
 iLLALQcadddhhghgjsajsaajn:
-  IsoSig: iLLALQcadddhhghgjsajsaajn
+  NeoSig: itIzmZU71ySw4ecp2i
   Standard: Blocked SFS [Ref(2), LST(1, 2, 3), LST(1, 2, 3)] = SFS [D_: (2,1)]
   Blocked SFS
     Region:
@@ -10855,7 +10855,7 @@ iLLALQcadddhhghgjsajsaajn:
   Spiral: 1/2103 4/1032 7/0321 5/3210 2/2103 3/2103
   Spiral: 6/2013
 iLLALQcadddhhghgjsajsaqjw:
-  IsoSig: iLLALQcadddhhghgjsajsaqjw
+  NeoSig: itIzmZU71ySw4ecpWl
   Standard: Blocked SFS [Ref(2), LST(1, 2, 3), LST(1, 2, 3)] = SFS [D_: (2,1)]
   Blocked SFS
     Region:
@@ -10884,7 +10884,7 @@ iLLALQcadddhhghgjsajsaqjw:
   Spiral: 1/2103 4/1032 7/0321 5/3210 2/2103 3/2103
   Spiral: 6/1302
 iLAMLPcbccdeghhhemkehwrwa:
-  IsoSig: iLAMLPcbccdeghhhemkehwrwa
+  NeoSig: ilezi7U7rBCK05UwRl
   Standard: Blocked SFS Pair [Tri | Ref(1)] = SFS [D: (2,1) (2,1)] U/m A_ x S1, m = [ 0,1 | 1,1 ]
   Blocked SFS Pair
     Region 0:
@@ -10904,7 +10904,7 @@ iLAMLPcbccdeghhhemkehwrwa:
   Spiral: 5/0213 6/0213 7/0213
   Spiral: 5/0312 6/1203 7/2031
 iLAMLPcbccdeghhhrrhwqjpqp:
-  IsoSig: iLAMLPcbccdeghhhrrhwqjpqp
+  NeoSig: ilezi7U7rBCK0joNZi
   Standard: Blocked SFS Pair [Tri, Layer, Layer | Tri] = SFS [D: (2,1) (2,1)] U/m M x S1, m = [ 0,1 | 1,1 ]
   Blocked SFS Pair
     Region 0:
@@ -10934,7 +10934,7 @@ iLAMLPcbccdeghhhrrhwqjpqp:
   Spiral: 5/0123 6/2301 7/0213
   Spiral: 5/0321 6/0321 7/1032
 iLAMLPcbccdeghhhlpkuhrwar:
-  IsoSig: iLAMLPcbccdeghhhlpkuhrwar
+  NeoSig: itczi7U7rBe01n2s3e
   Standard: Blocked SFS [Tri, Ref(1), Mob(v), Mob(v), Layer, Layer] = SFS [D_: (2,1) (2,1)]
   Blocked SFS
     Region:
@@ -10980,7 +10980,7 @@ iLAMLPcbccdeghhhlpkuhrwar:
   Spiral: 5/1203 6/1203 7/1203
   Spiral: 5/1302 6/0213 7/2130
 iLAMLPcbccdeghhhemkexjjqj:
-  IsoSig: iLAMLPcbccdeghhhemkexjjqj
+  NeoSig: ilezOZU7rBCKumKsPi
   Standard: Blocked SFS [Tri, Tri, Mob(v), Mob(v), Layer, Layer] = SFS [RP2: (2,1) (2,1)]
   Blocked SFS
     Region:
@@ -11026,7 +11026,7 @@ iLAMLPcbccdeghhhemkexjjqj:
   Spiral: 5/0123 6/2301 7/0123
   Spiral: 5/0321 6/0321 7/1032
 iLAMLPcbccdeghhhemkihrwar:
-  IsoSig: iLAMLPcbccdeghhhemkihrwar
+  NeoSig: ilezi7U7rBCK05UgJl
   Standard: Blocked SFS Pair [Tri, Layer | Ref(1)] = SFS [D: (2,1) (2,1)] U/m A_ x S1, m = [ 0,1 | -1,2 ]
   Blocked SFS Pair
     Region 0:
@@ -11050,7 +11050,7 @@ iLAMLPcbccdeghhhemkihrwar:
   Spiral: 5/1203 6/1203 7/1203
   Spiral: 5/1302 6/0213 7/2130
 iLAMLPcbccdeghhhlpklqwrwa:
-  IsoSig: iLAMLPcbccdeghhhlpklqwrwa
+  NeoSig: ilezi7U7rBCK0joFVi
   Standard: Blocked SFS Pair [Tri, Mob(v), Mob(v) | Tri] = SFS [D: (2,1) (2,1)] U/m M x S1, m = [ 0,1 | -1,2 ]
   Blocked SFS Pair
     Region 0:
@@ -11078,7 +11078,7 @@ iLAMLPcbccdeghhhlpklqwrwa:
   Spiral: 5/0213 6/0213 7/0213
   Spiral: 5/0312 6/1203 7/2031
 iLAMLPcbccdeghhhemkiqjjqj:
-  IsoSig: iLAMLPcbccdeghhhemkiqjjqj
+  NeoSig: itczi7U7rBe01n2E3h
   Standard: Blocked SFS [Tri, Ref(1), Layer, Layer] = M_/n2 x~ S1
   Blocked SFS
     Region:
@@ -11124,7 +11124,7 @@ iLAMLPcbccdeghhhemkiqjjqj:
   Spiral: 5/0123 6/2301 7/0123
   Spiral: 5/0321 6/0321 7/1032
 iLAMLPcbccdeghhhlpklxrrhr:
-  IsoSig: iLAMLPcbccdeghhhlpklxrrhr
+  NeoSig: ilezOZU7rBCKumusLi
   Standard: Blocked SFS [Tri, Tri, Layer, Layer] = KB/n3 x~ S1
   Blocked SFS
     Region:
@@ -11170,7 +11170,7 @@ iLAMLPcbccdeghhhlpklxrrhr:
   Spiral: 5/0213 6/1302 7/0213
   Spiral: 5/0312 6/0312 7/2031
 iLAMLPcbccdeghhhrrhrhwrwa:
-  IsoSig: iLAMLPcbccdeghhhrrhrhwrwa
+  NeoSig: ilezi7U7rBCK05UiKl
   Standard: Blocked SFS [Ref(1), Ref(1), Layer, Layer] = A= x S1
   Blocked SFS
     Region:
@@ -11206,7 +11206,7 @@ iLAMLPcbccdeghhhrrhrhwrwa:
   Spiral: 5/0213 6/0213 7/0213
   Spiral: 5/0312 6/1203 7/2031
 iLAMLPcbccdeghhhrrhwqjjqj:
-  IsoSig: iLAMLPcbccdeghhhrrhwqjjqj
+  NeoSig: itczi7U7rBe01n2Cxh
   Standard: Blocked SFS [Tri, Ref(1), Layer, Layer] = M_ x S1
   Blocked SFS
     Region:
@@ -11246,7 +11246,7 @@ iLAMLPcbccdeghhhrrhwqjjqj:
   Spiral: 5/0123 6/2301 7/0123
   Spiral: 5/0321 6/0321 7/1032
 iLAMLPcbccdeghhhrrhrxjjqj:
-  IsoSig: iLAMLPcbccdeghhhrrhrxjjqj
+  NeoSig: ilezOZU7rBCKumisIi
   Standard: Blocked SFS [Tri, Tri, Layer, Layer] = SFS [KB: (1,1)]
   Blocked SFS
     Region:
@@ -11286,7 +11286,7 @@ iLAMLPcbccdeghhhrrhrxjjqj:
   Spiral: 5/0123 6/2301 7/0123
   Spiral: 5/0321 6/0321 7/1032
 iLAMLPcbccdeghhhrrbrhxrwa:
-  IsoSig: iLAMLPcbccdeghhhrrbrhxrwa
+  NeoSig: ilezi7U7rBCeZ5cjKl
   Standard: Blocked SFS [Ref~(1), Ref~(1), Layer, Layer] = A=/o2 x~ S1
   Blocked SFS
     Region:
@@ -11306,7 +11306,7 @@ iLAMLPcbccdeghhhrrbrhxrwa:
         Ann. 3/0 [6/103, 5/230] -> 2/1
   Spiral: 3/0312 4/3120
 iLAwLQcbccdfhghhrrhrnhxnv:
-  IsoSig: iLAwLQcbccdfhghhrrhrnhxnv
+  NeoSig: ilezk7U7fBCK0PDJVe
   Standard: Blocked SFS Pair [Tri | Tri, Layer] = SFS [D: (2,1) (2,1)] U/m M x S1, m = [ -1,3 | 0,1 ]
   Blocked SFS Pair
     Region 0:
@@ -11331,7 +11331,7 @@ iLAwLQcbccdfhghhrrhrnhxnv:
   Spiral: 4/1023 6/0231 5/1023
   Spiral: 6/2103 7/0213
 iLAwLQcbccdfhghhrrhrnahvn:
-  IsoSig: iLAwLQcbccdfhghhrrhrnahvn
+  NeoSig: ilezk7U7fBCK0PfpPh
   Standard: Blocked SFS [Tri, Ref(1), Layer, Layer] = M_/n2 x~ S1
   Blocked SFS
     Region:
@@ -11374,7 +11374,7 @@ iLAwLQcbccdfhghhrrhrnahvn:
   Spiral: 4/2013 7/0132 5/1320
   Spiral: 6/0123 7/1203
 iLAwwQcbccdfghhhrrhrrxhgw:
-  IsoSig: iLAwwQcbccdfghhhrrhrrxhgw
+  NeoSig: ilezQZU7dBCKumfITk
   Standard: Blocked SFS Pair [Tri | Tri, Layer] = SFS [D: (2,1) (2,1)] U/m M x S1, m = [ -1,3 | -1,2 ]
   Blocked SFS Pair
     Region 0:
@@ -11399,7 +11399,7 @@ iLAwwQcbccdfghhhrrhrrxhgw:
   Spiral: 4/1203 5/1203 7/3120
   Spiral: 6/0231 7/2301
 iLAwwQcbccdfghhhrrhrraxgw:
-  IsoSig: iLAwwQcbccdfghhhrrhrraxgw
+  NeoSig: iBiAOZU79bAJ1yjsIi
   Standard: Blocked SFS [Tri, Tri, Layer, Layer] = KB/n3 x~ S1
   Blocked SFS
     Region:
@@ -11444,7 +11444,7 @@ iLAwwQcbccdfghhhrrhrraxgw:
   Spiral: 4/1302 5/0213 6/2130
   Spiral: 6/1023 7/1230
 iLALzQcbccefhghhrrhuwusqx:
-  IsoSig: iLALzQcbccefhghhrrhuwusqx
+  NeoSig: iBUYiZU7FbIU15whhc
   Standard: Blocked SFS [Tri, Ref(1), Layer, Layer] = M_/n2 x~ S1
   Blocked SFS
     Region:
@@ -11491,7 +11491,7 @@ iLALzQcbccefhghhrrhuwusqx:
   Spiral: 3/0321 5/3210 4/1320
   Spiral: 6/0213 7/0312
 iLALLQcbccegghhhrrhugstiu:
-  IsoSig: iLALLQcbccegghhhrrhugstiu
+  NeoSig: iBQZiZU7FbIj65whhb
   Standard: Blocked SFS [Tri, Tri, Layer, Layer] = KB/n3 x~ S1
   Blocked SFS
     Region:
@@ -11540,7 +11540,7 @@ iLALLQcbccegghhhrrhugstiu:
   Spiral: 3/1032 4/3201 6/2103
   Spiral: 5/2013 7/3012
 iLAvAQcbccefghhhrrhhwwhml:
-  IsoSig: iLAvAQcbccefghhhrrhhwwhml
+  NeoSig: iROJS7m7FbiRW6mgti
   Standard: Blocked SFS [Tri, Tri, Layer, Layer] = SFS [KB/n3: (1,1)]
   Blocked SFS
     Region:
@@ -11589,7 +11589,7 @@ iLAvAQcbccefghhhrrhhwwhml:
   Spiral: 3/0312 5/3120 4/3120
   Spiral: 6/0123 7/0132
 iLLLQPccegffghhhkknknknka:
-  IsoSig: iLLLQPccegffghhhkknknknka
+  NeoSig: itIXo7o7RySwyacHNd
   Standard: Blocked SFS [Ref(2), Layer, Layer] = M_ x S1
   Blocked SFS
     Region:
@@ -11609,7 +11609,7 @@ iLLLQPccegffghhhkknknknka:
   Spiral: 0/0231 1/2310 4/2310 7/3102 6/1023 2/1023
   Spiral: 3/0231 5/0231
 iLLLQPccegffghhhkknqhknna:
-  IsoSig: iLLLQPccegffghhhkknqhknna
+  NeoSig: itIXo7o7RySwyaEHha
   Standard: Blocked SFS [Ref(2), Layer, Layer] = M_/n2 x~ S1
   Blocked SFS
     Region:
@@ -11629,7 +11629,7 @@ iLLLQPccegffghhhkknqhknna:
   Spiral: 0/0231 1/2310 4/2310 7/3102 6/1023 2/1023
   Spiral: 3/0231 5/0132
 iLLvQQccdfeghghhhsaqllqxr:
-  IsoSig: iLLvQQccdfeghghhhsaqllqxr
+  NeoSig: iBOYQRU73bIPuiCMql
   Standard: B(T6:1 | -2,-3 | -1,-1) = T x I / [ 3,1 | 1,0 ]
   Blocked SFS Loop
     Region:
@@ -11650,7 +11650,7 @@ iLLvQQccdfeghghhhsaqllqxr:
   Spiral: 4/2013 6/1302 7/0213
   Spiral: 5/1302 6/1203 7/1203
 iLLvQQccdfehghghhsaquuahr:
-  IsoSig: iLLvQQccdfehghghhsaquuahr
+  NeoSig: iBOYQRU73bIPuiCMad
   Standard: B(T6:1 | 2,3 | 1,1) = T x I / [ 3,1 | 1,0 ]
   Blocked SFS Loop
     Region:
@@ -11671,7 +11671,7 @@ iLLvQQccdfehghghhsaquuahr:
   Spiral: 4/2013 7/3120 6/2031
   Spiral: 5/1302 7/3021 6/3021
 iLLvQQccdfeghghhhsaqxaiin:
-  IsoSig: iLLvQQccdfeghghhhsaqxaiin
+  NeoSig: iBOYQRU73bIP0jCMcf
   Standard: B(T6:1 | 3,1 | 1,0) = T x I / [ 3,1 | 1,0 ]
   Blocked SFS Loop
     Region:
@@ -11700,7 +11700,7 @@ iLLvQQccdfeghghhhsaqxaiin:
   Spiral: 4/2013 6/3201 7/3201
   Spiral: 5/1302 6/3102 7/0231
 iLLvQQccdfeghhghhsaqlllmn:
-  IsoSig: iLLvQQccdfeghhghhsaqlllmn
+  NeoSig: iBkYQRU73bINyiCcmf
   Standard: Blocked SFS [Tri, Tri, Layer, Layer] = SFS [T/o2: (1,1)]
   Blocked SFS
     Region:
@@ -11741,7 +11741,7 @@ iLLvQQccdfeghhghhsaqlllmn:
   Spiral: 4/2103 6/3102 7/0231
   Spiral: 5/1032 7/1023 6/1023
 iLLvQQccdfeghhghhsawlllsn:
-  IsoSig: iLLvQQccdfeghhghhsawlllsn
+  NeoSig: iBOQSRU73byjNZDMTk
   Standard: Blocked SFS [Tri, Tri, Layer, Layer] = T/o2 x~ S1
   Blocked SFS
     Region:
@@ -11767,7 +11767,7 @@ iLLvQQccdfeghhghhsawlllsn:
   Spiral: 1/2103 3/0321 5/3210
   Spiral: 4/2103 6/3102 7/0231
 iLLvQQccdfeghghhhsawvvodn:
-  IsoSig: iLLvQQccdfeghghhhsawvvodn
+  NeoSig: iBOQSRU73byjNZDMJf
   Standard: Blocked SFS [Tri, Tri, Layer, Layer] = KB/n3 x~ S1
   Blocked SFS
     Region:
@@ -11795,7 +11795,7 @@ iLLvQQccdfeghghhhsawvvodn:
   Spiral: 1/2103 3/0321 5/3210
   Spiral: 4/2013 6/3102 7/0231
 iLLvQQccdfeghhghhsanqqesn:
-  IsoSig: iLLvQQccdfeghhghhsanqqesn
+  NeoSig: itgYQZU79bwQwvgGKj
   Standard: B(T8:1 | -1,-1 | -1,0) = T x I / [ 3,1 | 1,0 ]
   Blocked SFS Loop
     Region:
@@ -11822,7 +11822,7 @@ iLLvQQccdfeghhghhsanqqesn:
   Spiral: 1/2103 3/0321 5/3210
   Spiral: 4/0132 6/3102 7/0231
 iLLvQQccdfeghhghhsaqptttr:
-  IsoSig: iLLvQQccdfeghhghhsaqptttr
+  NeoSig: iBkYQRU73bIN4jCcmk
   Standard: B(T6* | -3,2 | -1,1) = T x I / [ 2,1 | 1,0 ]
   Blocked SFS Loop
     Region:
@@ -11847,7 +11847,7 @@ iLLvQQccdfeghhghhsaqptttr:
   Spiral: 4/2103 6/1203 7/1203
   Spiral: 5/1032 7/3120 6/2031
 iLLvQQccdfehgghhhsaqeiiir:
-  IsoSig: iLLvQQccdfehgghhhsaqeiiir
+  NeoSig: iBkYQRU73bIN4jCccf
   Standard: B(T6* | 3,-2 | 1,-1) = T x I / [ 2,1 | 1,0 ]
   Blocked SFS Loop
     Region:
@@ -11872,7 +11872,7 @@ iLLvQQccdfehgghhhsaqeiiir:
   Spiral: 4/2103 7/3021 6/3021
   Spiral: 5/1032 6/1302 7/0213
 iLLvQQccdfeghhghqxaqhhhxh:
-  IsoSig: iLLvQQccdfeghhghqxaqhhhxh
+  NeoSig: iBkYQRU73bShBiCcql
   Standard: Blocked SFS [Cube, Layer, Layer] = T/o2 x~ S1
   Blocked SFS
     Region:
@@ -11892,7 +11892,7 @@ iLLvQQccdfeghhghqxaqhhhxh:
         Ann. 2/1 [0/310, 0/023] -> 1/1 (ref, back)
   Spiral: 0/1032 2/0321
 iLLvQQccdfehgghhqxaqaaaqh:
-  IsoSig: iLLvQQccdfehgghhqxaqaaaqh
+  NeoSig: iBkYQRU73bShBiCcad
   Standard: Blocked SFS [Cube, Layer, Layer] = KB/n3 x~ S1
   Blocked SFS
     Region:
@@ -11912,7 +11912,7 @@ iLLvQQccdfehgghhqxaqaaaqh:
         Ann. 2/1 [0/310, 0/023] -> 1/1
   Spiral: 0/1032 2/0321
 iLLvQQccdfeghhghqsaqhhhxj:
-  IsoSig: iLLvQQccdfeghhghqsaqhhhxj
+  NeoSig: iBkYQRU73bINyiCcql
   Standard: Blocked SFS [Cube, Layer, Layer] = SFS [T/o2: (1,1)]
   Blocked SFS
     Region:
@@ -11949,7 +11949,7 @@ iLLvQQccdfeghhghqsaqhhhxj:
   Spiral: 4/2103 6/0123 7/2301
   Spiral: 5/1032 7/1230 6/1230
 iLLLMQcceefghghhkkaakqqvq:
-  IsoSig: iLLLMQcceefghghhkkaakqqvq
+  NeoSig: iROHS6U7VbiJX4qmMh
   Pillow 2-sphere
     Triangles: 2 6
     Equator: 4 2 1
@@ -11957,7 +11957,7 @@ iLLLMQcceefghghhkkaakqqvq:
     Triangles: 6 2
     Equator: 4 2 1
 iLLLMQcceefghghhjjaajedve:
-  IsoSig: iLLLMQcceefghghhjjaajedve
+  NeoSig: iROHS6U7VbSJX4yLYh
   Pillow 2-sphere
     Triangles: 2 6
     Equator: 4 2 1
@@ -11965,7 +11965,7 @@ iLLLMQcceefghghhjjaajedve:
     Triangles: 6 2
     Equator: 4 2 1
 iLvMQPcbefgfehhhjaaaaaaas:
-  IsoSig: iLvMQPcbefgfehhhjaaaaaaas
+  NeoSig: iRk7SZU6-aoIZ5qpNd
   Pillow 2-sphere
     Triangles: 1 14
     Equator: 3 2 0
@@ -11986,7 +11986,7 @@ iLvMQPcbefgfehhhjaaaaaaas:
   Spiral: 3/0132 6/1320 7/3201 4/2013
   Spiral: 3/1032 5/0321 7/3210 4/2103
 jLALMLQbcceffhiiiemkbtilubc:
-  IsoSig: jLALMLQbcceffhiiiemkbtilubc
+  NeoSig: jpeHQ6qeVoAOKY504a
   Standard: Blocked SFS Triple [Tri | Tri, Mob(v) | Tri] = SFS [D: (2,1) (2,1)] U/m SFS [A: (2,1)] U/n SFS [D: (2,1) (2,1)], m = [ 0,1 | 1,0 ], n = [ 0,1 | 1,0 ]
   Blocked SFS Triple
     Central region:
@@ -12018,7 +12018,7 @@ jLALMLQbcceffhiiiemkbtilubc:
   Spiral: 6/1032 8/0321 7/2310
   Spiral: 6/2103 7/3102 8/2013
 jLALALQbccfefihiilpkusudego:
-  IsoSig: jLALALQbccfefihiilpkusudego
+  NeoSig: jxcHQ6qeVoAKJY5u7q
   Standard: Blocked SFS Triple [Tri, Mob(v), Mob(v) | Tri, Mob(v) | Tri, Mob(v), Mob(v)] = SFS [D: (2,1) (2,1)] U/m SFS [A: (2,1)] U/n SFS [D: (2,1) (2,1)], m = [ 0,1 | 1,0 ], n = [ 1,1 | 1,0 ]
   Blocked SFS Triple
     Central region:
@@ -12062,7 +12062,7 @@ jLALALQbccfefihiilpkusudego:
   Spiral: 6/0312 8/3120 7/1023
   Spiral: 6/1302 8/1032 7/1320
 jLALALQbccfefihiilpkusuuero:
-  IsoSig: jLALALQbccfefihiilpkusuuero
+  NeoSig: jpeHQ6qeVoAOKY5u7q
   Standard: Blocked SFS Triple [Tri | Tri, Mob(v) | Tri, Mob(v), Mob(v)] = SFS [D: (2,1) (2,1)] U/m SFS [A: (2,1)] U/n SFS [D: (2,1) (2,1)], m = [ 0,-1 | 1,0 ], n = [ 0,1 | 1,0 ]
   Blocked SFS Triple
     Central region:

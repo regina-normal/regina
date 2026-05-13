@@ -52,7 +52,7 @@ def testTri(dim):
         if c.type() == PacketType.Text:
             print('Errors:\n' + c.text())
         else:
-            print('->', c.isoSig())
+            print('->', c.neoSig())
     print()
 
 testLink()

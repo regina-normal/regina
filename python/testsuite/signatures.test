@@ -31,10 +31,17 @@
 
 # ---------- Testing IsoSigData ----------
 
-tri = Triangulation3.fromSig('cPcbbbiht') # figure eight knot complement
+tri = Triangulation3.fromSig('cV6cqb') # figure eight knot complement
 data = IsoSigData1_3(tri.component(0))
 data.fillFrom(tri.simplex(0), Perm4())
 print(data.facetTypes())
+print(data.adjacentSimplices())
+print(data.adjacentGluings())
+print(data.locks())
+print(IsoSigPrintable.encode(data))
+data = IsoSigData2_3.minimal(IsoSigRidgeDegrees3, tri.component(0), False)
+# Do not print data.facetTypes(), since the bitmask length depends on the
+# native integer size for the platform on which this test is run.
 print(data.adjacentSimplices())
 print(data.adjacentGluings())
 print(data.locks())
@@ -86,7 +93,7 @@ print()
 
 # ---------- Testing knot/link signatures ----------
 
-link = Link.fromSig('eabcdbadcvbZa') # figure eight knot
+link = Link.fromSig('eputWe') # figure eight knot
 data = LinkSigData(link, BoolSet(True, True), True, BoolSet(True, True))
 print(data.size())
 print([(s.crossing, s.strand, s.sign) for s in data.sequence()])

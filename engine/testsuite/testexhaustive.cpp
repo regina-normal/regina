@@ -100,7 +100,7 @@ namespace {
             false /* orientable only */,
             [f](const GluingPerms<2>& perms) {
                 Triangulation<2> tri = perms.triangulate();
-                f(tri, tri.isoSig().c_str());
+                f(tri, tri.neoSig().c_str());
             });
     }
 
@@ -115,7 +115,7 @@ namespace {
             [f, finite](const GluingPerms<3>& perms) {
                 Triangulation<3> tri = perms.triangulate();
                 if (tri.isValid() && finite.contains(! tri.isIdeal()))
-                    f(tri, tri.isoSig().c_str());
+                    f(tri, tri.neoSig().c_str());
             });
     }
 
@@ -128,7 +128,7 @@ namespace {
             [f, finite](const GluingPerms<4>& perms) {
                 Triangulation<4> tri = perms.triangulate();
                 if (tri.isValid() && finite.contains(! tri.isIdeal()))
-                    f(tri, tri.isoSig().c_str());
+                    f(tri, tri.neoSig().c_str());
             });
     }
 }
@@ -215,7 +215,7 @@ void runCensus(bool (*pairingFilter)(const FacetPairing<4>&),
                     [f](const GluingPerms<4>& perms) {
                         Triangulation<4> tri = perms.triangulate();
                         if (tri.isValid())
-                            f(tri, tri.isoSig().c_str());
+                            f(tri, tri.neoSig().c_str());
                     });
         });
 }

@@ -1469,7 +1469,7 @@ class TriangulationTest : public testing::Test {
             locked.simplex(0)->lock();
             locked.simplex(0)->lockFacet(dim);
             locked.simplex(locked.size() - 1)->lockFacet(dim - 1);
-            std::string lockedSig = locked.isoSig();
+            std::string lockedSig = locked.neoSig();
             EXPECT_NE(lockedSig.find_first_of('.'), std::string::npos);
 
             {
@@ -1477,14 +1477,14 @@ class TriangulationTest : public testing::Test {
                 Triangulation<dim> clone(locked, false, true);
                 EXPECT_EQ(clone, locked);
                 EXPECT_EQ(clone, tri); // a == b should ignore locks
-                EXPECT_EQ(clone.isoSig(), lockedSig);
+                EXPECT_EQ(clone.neoSig(), lockedSig);
 
                 SCOPED_TRACE("Propagating through move assignment");
                 Triangulation<dim> alt = regina::Example<dim>::sphere();
                 alt = std::move(clone);
                 EXPECT_EQ(alt, locked);
                 EXPECT_EQ(alt, tri); // a == b should ignore locks
-                EXPECT_EQ(alt.isoSig(), lockedSig);
+                EXPECT_EQ(alt.neoSig(), lockedSig);
             }
 
             {
@@ -1493,21 +1493,21 @@ class TriangulationTest : public testing::Test {
                 alt = locked;
                 EXPECT_EQ(alt, locked);
                 EXPECT_EQ(alt, tri); // a == b should ignore locks
-                EXPECT_EQ(alt.isoSig(), lockedSig);
+                EXPECT_EQ(alt.neoSig(), lockedSig);
             }
 
             for (int i = 0; i < trials; ++i) {
                 SCOPED_TRACE("Propagating through isomorphic copy");
                 Triangulation<dim> relabelled =
                     Isomorphism<dim>::random(locked.size())(locked);
-                EXPECT_EQ(relabelled.isoSig(), lockedSig);
+                EXPECT_EQ(relabelled.neoSig(), lockedSig);
 
                 {
                     SCOPED_TRACE("Propagating through reorderBFS()");
                     for (int j = 0; j < 2; ++j) {
                         Triangulation<dim> reordered(relabelled, false, true);
                         reordered.reorderBFS(j == 0);
-                        EXPECT_EQ(reordered.isoSig(), lockedSig);
+                        EXPECT_EQ(reordered.neoSig(), lockedSig);
                     }
                 }
 
@@ -1517,7 +1517,7 @@ class TriangulationTest : public testing::Test {
                     EXPECT_EQ(tri.isOrientable(), relabelled.isOrientable());
                     if (tri.isOrientable())
                         EXPECT_TRUE(relabelled.isOriented());
-                    EXPECT_EQ(relabelled.isoSig(), lockedSig);
+                    EXPECT_EQ(relabelled.neoSig(), lockedSig);
                 }
 
                 {
@@ -1526,7 +1526,7 @@ class TriangulationTest : public testing::Test {
                     EXPECT_EQ(tri.isOrientable(), relabelled.isOrientable());
                     if (tri.isOrientable())
                         EXPECT_TRUE(relabelled.isOriented());
-                    EXPECT_EQ(relabelled.isoSig(), lockedSig);
+                    EXPECT_EQ(relabelled.neoSig(), lockedSig);
                 }
 
                 {
@@ -1558,7 +1558,7 @@ class TriangulationTest : public testing::Test {
                         for (int i = 0; i < 2; ++i) {
                             Triangulation<dim> alt(locked, false, true);
                             alt.order(i == 0);
-                            EXPECT_EQ(alt.isoSig(), lockedSig);
+                            EXPECT_EQ(alt.neoSig(), lockedSig);
                         }
                     }
                 }
@@ -2421,7 +2421,7 @@ class TriangulationTest : public testing::Test {
             // Test isosigs only in smaller dimensions, since the
             // running time grows with (dim!).
             if constexpr (dim <= 6)
-                if (a.isoSig() != b.isoSig())
+                if (a.neoSig() != b.neoSig())
                     return false;
 
             return true;

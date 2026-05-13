@@ -392,7 +392,7 @@ inline void swap(LinkSigData& a, LinkSigData& b) noexcept {
  * functions directly.
  *
  * \python To use this encoding in Python, you can just call the relevant
- * signature function (e.g., `Link::isoSig()` or `Link::neoSig()`) with no
+ * signature function (e.g., `Link::knotSig()` or `Link::neoSig()`) with no
  * extra encoding argument, since this encoding is the default.
  *
  * \apinotfinal
