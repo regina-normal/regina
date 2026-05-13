@@ -37,22 +37,24 @@ else:
 
 def testLink():
     print('Links')
-    ans = readSigList(0, testpath + '/sigs-links.txt')
-    for c in ans.children():
-        if c.type() == PacketType.Text:
-            print('Errors:\n' + c.text())
-        else:
-            print('->', c.knotSig())
+    for gen in [ 'g1', 'g2' ]:
+        ans = readSigList(0, testpath + '/sigs-' + gen + '-links.txt')
+        for c in ans.children():
+            if c.type() == PacketType.Text:
+                print('Errors:\n' + c.text())
+            else:
+                print('->', c.knotSig())
     print()
 
 def testTri(dim):
     print('Dimension:', dim)
-    ans = readSigList(dim, testpath + '/sigs-dim' + str(dim) + '.txt')
-    for c in ans.children():
-        if c.type() == PacketType.Text:
-            print('Errors:\n' + c.text())
-        else:
-            print('->', c.neoSig())
+    for gen in [ 'g1', 'g2' ]:
+        ans = readSigList(dim, testpath + '/sigs-' + gen + '-dim' + str(dim) + '.txt')
+        for c in ans.children():
+            if c.type() == PacketType.Text:
+                print('Errors:\n' + c.text())
+            else:
+                print('->', c.neoSig())
     print()
 
 testLink()
