@@ -1,0 +1,65 @@
+#!/bin/bash
+#
+# Regina - Software for low-dimensional topology
+# Command-Line Utilities Test Suite
+#
+# Copyright (c) 2016-2025, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# Some multithreaded tests (-t 2) are currently disabled because these
+# are non-deterministic.  The ones that were kept only find one additional
+# triangulation each, so the output here should be well-defined.
+
+# --- sigconvert with errors:
+sigconvert
+sigconvert foo
+sigconvert -2 -3 cV6IAa
+sigconvert -k -3 cV6IAa
+sigconvert --dim=0 cV6IAa
+sigconvert --dim=1 cV6IAa
+sigconvert --dim=16 cV6IAa
+sigconvert -k cV6IAa
+sigconvert -2 cV6IAa
+sigconvert -4 cV6IAa
+sigconvert --dim=8 cV6IAa
+sigconvert cV6IAa -
+sigconvert - cV6IAa
+# --- sigconvert when successful:
+sigconvert cV6IAa cPcbbbiht
+sigconvert -g1 cV6IAa cPcbbbiht
+sigconvert -k gVc1JwUJ gabcdgaecfgbfdeLwto
+sigconvert -k -g1 gVc1JwUJ gabcdgaecfgbfdeLwto
+sigconvert -2 cRMe cPbbac
+sigconvert -2 -g1 cRMe cPbbac
+sigconvert -4 cNQhbWYl cMkabbb+aAa3blb
+sigconvert -4 -g1 cNQhbWYl cMkabbb+aAa3blb
+sigconvert --dim=8 bZ--XKwa bGaaa++1a
+sigconvert --dim=8 -g1 bZ--XKwa bGaaa++1a
+sigconvert a
+sigconvert -g1 a
+sigconvert -k a
+sigconvert -k -g1 a
+sigconvert -k aaa
+sigconvert -k -g1 aaa
+sigconvert -k _
+sigconvert -k -g1 _
+sigconvert - < @TESTDIR@/sigs.txt
