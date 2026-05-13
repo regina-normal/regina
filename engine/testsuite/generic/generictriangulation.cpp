@@ -85,6 +85,9 @@ TEST_F(Dim5Test, isomorphismSignature) {
     verifyIsomorphismSignatureWithLocks(
         TriangulationTest<5>::twistedBallBundle.tri,
         TriangulationTest<5>::twistedBallBundle.name);
+
+    EXPECT_NO_THROW({ Triangulation<5>::fromSig("a"); });
+    EXPECT_THROW({ Triangulation<5>::fromSig("aa"); }, regina::InvalidArgument);
 }
 TEST_F(Dim5Test, lockEnforcement) {
     testGenericCases(TriangulationTest<5>::verifyLockEnforcement);
@@ -165,6 +168,9 @@ TEST_F(Dim6Test, isomorphismSignature) {
     verifyIsomorphismSignatureWithLocks(
         TriangulationTest<6>::twistedBallBundle.tri,
         TriangulationTest<6>::twistedBallBundle.name);
+
+    EXPECT_NO_THROW({ Triangulation<6>::fromSig("a"); });
+    EXPECT_THROW({ Triangulation<6>::fromSig("aa"); }, regina::InvalidArgument);
 }
 TEST_F(Dim6Test, lockEnforcement) {
     testGenericCases(TriangulationTest<6>::verifyLockEnforcement);

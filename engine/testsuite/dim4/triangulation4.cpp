@@ -764,6 +764,9 @@ TEST_F(Dim4Test, isomorphismSignature) {
     verifyIsomorphismSignatureWithLocks(rp4.tri, rp4.name);
     verifyIsomorphismSignatureWithLocks(ball_layerAndFold.tri,
         ball_layerAndFold.name);
+
+    EXPECT_NO_THROW({ Triangulation<4>::fromSig("a"); });
+    EXPECT_THROW({ Triangulation<4>::fromSig("aa"); }, regina::InvalidArgument);
 }
 
 TEST_F(Dim4Test, lockPropagation) {

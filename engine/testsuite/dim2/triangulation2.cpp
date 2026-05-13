@@ -183,6 +183,9 @@ TEST_F(Dim2Test, isomorphismSignature) {
     verifyIsomorphismSignatureWithLocks(torus2.tri, torus2.name);
     verifyIsomorphismSignatureWithLocks(s2Oct.tri, s2Oct.name);
     verifyIsomorphismSignatureWithLocks(rp2.tri, rp2.name);
+
+    EXPECT_NO_THROW({ Triangulation<2>::fromSig("a"); });
+    EXPECT_THROW({ Triangulation<2>::fromSig("aa"); }, regina::InvalidArgument);
 }
 TEST_F(Dim2Test, lockPropagation) {
     testManualCases(TriangulationTest<2>::verifyLockPropagation);

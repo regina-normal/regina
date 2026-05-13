@@ -1109,8 +1109,13 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const std::string& sig) {
     try {
         // Read the size of the first component.
         std::pair<size_t, int> sizeAndWidth = dec.decodeSize();
-        if (sizeAndWidth.first == 0)
-            return ans; // empty triangulation
+        if (sizeAndWidth.first == 0) {
+            // This is the signature for the empty triangulation.
+            if (! dec.done())
+                throw InvalidArgument("fromSig(): "
+                    "unexpected additional characters");
+            return ans;
+        }
 
         // Look at the next character: this will tell us whether we have a
         // first-generation or second-generation signature.

@@ -847,6 +847,9 @@ TEST_F(Dim3Test, isomorphismSignature) {
     verifyIsomorphismSignatureWithLocks(rp2xs1.tri, rp2xs1.name);
     verifyIsomorphismSignatureWithLocks(lst3_4_7.tri, lst3_4_7.name);
 
+    EXPECT_NO_THROW({ Triangulation<3>::fromSig("a"); });
+    EXPECT_THROW({ Triangulation<3>::fromSig("aa"); }, regina::InvalidArgument);
+
     // Verify that we are getting the orientation optimisation from
     // second-generation signatures.
     //
