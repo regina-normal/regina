@@ -176,12 +176,18 @@ Tri3Creator::Tri3Creator(ReginaMain*) {
     hArea->setLayout(hLayout);
     expln = QObject::tr("<qt>The isomorphism signature "
         "from which the new triangulation will be created.  An example "
-        "isomorphism signature is <i>bNhc</i>.<p>"
+        "isomorphism signature is <tt>bNhc</tt>.<p>"
         "Isomorphism signatures identify triangulations uniquely "
-        "up to combinatorial isomorphism.  They are "
-        "described in detail in <i>Simplification paths in the Pachner graphs "
-        "of closed orientable 3-manifold triangulations</i>, Burton, "
-        "preprint, <tt>arXiv:1110.6080</tt>, October 2011.</qt>");
+        "up to combinatorial isomorphism.  "
+        "You can view the isomorphism signature of a triangulation in the "
+        "<i>Composition</i> tab of the triangulation viewer, or in Python "
+        "by calling <tt>tri.neoSig()</tt>.<p>"
+        "Both first-generation signatures (from Regina ≤ 7.x) and "
+        "second-generation signatures (from Regina ≥ 8.0) are accepted here.<p>"
+        "First-generation isomorphism signatures are described in "
+        "detail in <i>Simplification paths in the Pachner graphs "
+        "of closed orientable 3-manifold triangulations</i>, "
+        "Burton, 2011, <tt>arXiv:1110.6080</tt>.</qt>");
     label = new QLabel(QObject::tr("Isomorphism signature:"));
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
@@ -537,7 +543,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
                 QObject::tr("<qt>An isomorphism signature must be a sequence "
                     "of symbols, which may include letters, digits, plus "
                     "and/or minus but nothing else.  An example isomorphism "
-                    "signature is <i>bNhc</i>.</qt>"));
+                    "signature is <tt>bNhc</tt>.</qt>"));
             return nullptr;
         }
 
