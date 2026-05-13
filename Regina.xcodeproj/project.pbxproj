@@ -3418,7 +3418,6 @@
 		0564A5F51811D920002CC2AE /* shortrunner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shortrunner.cpp; sourceTree = "<group>"; };
 		0564A5F61811D920002CC2AE /* shortrunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shortrunner.h; sourceTree = "<group>"; };
 		0564A60D1811D920002CC2AE /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		0564A6151811D921002CC2AE /* tips */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tips; sourceTree = "<group>"; };
 		0564A6161811D921002CC2AE /* treenav.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = treenav.cpp; sourceTree = "<group>"; };
 		0564A6171811D921002CC2AE /* x-regina.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = "x-regina.ico"; sourceTree = "<group>"; };
 		0564A6181811D921002CC2AE /* TODO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.txt; sourceTree = "<group>"; };
@@ -7460,7 +7459,6 @@
 				0564A5F51811D920002CC2AE /* shortrunner.cpp */,
 				0564A5F61811D920002CC2AE /* shortrunner.h */,
 				0564A60C1811D920002CC2AE /* syntax */,
-				0564A6151811D921002CC2AE /* tips */,
 				0564A6161811D921002CC2AE /* treenav.cpp */,
 				0564A6171811D921002CC2AE /* x-regina.ico */,
 			);

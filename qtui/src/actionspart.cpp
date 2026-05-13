@@ -770,12 +770,6 @@ void ReginaMain::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(helpWhatsThis()));
     helpMenu->addAction(act);
 
-    // TODO: Tip of the day not implemented
-    //act = KStandardAction::tipOfDay(this, SLOT(helpTipOfDay()),
-    //    actionCollection());
-    //act->setWhatsThis(tr("View tips and hints on how to use Regina."));
-
-
     // --- Toolbars ---
 
     toolBarMain = addToolBar(tr("Main"));
