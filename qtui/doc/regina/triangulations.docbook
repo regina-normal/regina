@@ -187,7 +187,7 @@
     of letters, digits and/or punctuation that identifies a
     triangulation uniquely up to combinatorial isomorphism (i.e.,
     relabelling simplices and their vertices).  An example for 3-manifolds is
-    <literal>cPcbbbiht</literal> (which describes the figure eight knot
+    <literal>cV6cqb</literal> (which describes the figure eight knot
     complement).
    </para>
    <para>
@@ -2039,7 +2039,8 @@
      isomorphism signature <emphasis>without</emphasis> locks (e.g., for
      compatibility with &regina;&nbsp;7.3.1 or earlier), then simply use the
      part of the signature that appears before the period.  So, for example,
-     instead of <literal>cPcbbbiht.aq</literal> (the figure eight knot
+     instead of <literal>cPcbbbiht.aq</literal> (a first-generation signature
+     describing the figure eight knot
      complement with a locked tetrahedron), you would just use
      <literal>cPcbbbiht</literal> (which represents the figure eight knot
      complement with no locks at all).
@@ -4270,14 +4271,15 @@
       If a triangulation does <emphasis>not</emphasis> have any simplex or
       facet locks, its isomorphism signature will be the same as in
       &regina;&nbsp;7.3.1 or earlier.  For example,
-      <literal>cPcbbbiht</literal> is the isomorphism signature of the
-      two-tetrahedron figure eight knot complement with no locks.
+      <literal>cPcbbbiht</literal> is the first-generation isomorphism signature
+      of the two-tetrahedron figure eight knot complement with no locks.
      </para></listitem>
      <listitem><para>
       If a triangulation <emphasis>does</emphasis> have locks, then
       its isomorphism signature will be the unlocked signature followed by a
       period and some additional symbols encoding the locks.
-      For example, <literal>cPcbbbiht.aq</literal> encodes the
+      For example, <literal>cPcbbbiht.aq</literal> is a first-generation
+      signature that encodes the
       two-tetrahedron figure eight knot complement with one locked tetrahedron.
      </para></listitem>
      <listitem><para>

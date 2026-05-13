@@ -142,41 +142,43 @@ static void verifyTaut(const char* isoSig, size_t nTaut) {
 TEST(AngleStructuresTest, taut) {
     // The following taut angle structure counts were computed
     // using Regina 4.95, via the old double description method.
+    // (The signatures, however, have since been converted to
+    // second-generation isosigs.)
 
     // The trefoil:
-    verifyTaut("cPcbbbadu", 1);
+    verifyTaut("cV6IAa", 1);
 
     // Some small hyperbolic knots:
-    verifyTaut("cPcbbbiht", 3);
-    verifyTaut("dLQbcccdero", 4);
-    verifyTaut("gLLMQccefeffdfeqldg", 15);
-    verifyTaut("fLLQcbcdeeemgopdp", 7);
-    verifyTaut("eLPkbcddddcwjb", 4);
+    verifyTaut("cV6cqb", 3);
+    verifyTaut("dp1hrWa", 4);
+    verifyTaut("gpBLT-ePeICa", 15);
+    verifyTaut("fpAK8lsPk7a", 7);
+    verifyTaut("epABFu3we", 4);
 
     // Some larger hyperbolic knots:
-    verifyTaut("qLvALPzLMQMkbfefhhijmonmnoppppapmggfmgxjgjpeeo", 80);
-    verifyTaut("qLLLLAzzPPQkcefehikilmnpmnoppiitdsvivjvvukvunb", 189);
-    verifyTaut("qLLLLPzPwPQkcefehjkjljopppnooiitdvqiepdtidxfmi", 127);
-    verifyTaut("qLLzPvMzPAQkccdghhjjmlonnnppphgggcbagbvdatdasb", 206);
-    verifyTaut("rLLLMzwwPAMQccdfegihimlnompqqpqiceakanuandeuoamom", 145);
-    verifyTaut("rLvLvvQPAPQQccfimimliokqlqpqoppdejdvdaglcelsgsfgj", 97);
-    verifyTaut("vLLvLvMzAzMAQQQcehlnkilrqppootssututuiiiaiicimgggooabfaalll", 440);
-    verifyTaut("uLLvLLvMALQMQQcceihoijpsqnorqorsttrtiimriwfiiksokjovllxoj", 440);
-    verifyTaut("sLLvLLvLQAQQQceihimlqqmronpoprpriimrwlmmilifskbvlga", 396);
-    verifyTaut("qLvLLvPQLQQkbefhnlnkmolkpmoppmtmohhhuaautvbbkb", 62);
+    verifyTaut("q3OuP155sk2I9Cp3-h3badowe2mAgRnMb", 80);
+    verifyTaut("qFXyO0jTyRNQ9CU3F-UaaALZDxCHbYc5b", 189);
+    verifyTaut("q3uuk2Q1Cm2Z9EU2Fx3batnNIsDAoKcuc", 127);
+    verifyTaut("q3OwkKk1wU3I1AV3--ubaZyAKJoZeuaNa", 206);
+    verifyTaut("r3GuLuZ9uP169Gqh87F4dagyMBQAUaMqZCa", 145);
+    verifyTaut("r-yuhvs5wU2JbBWh83n5laQjRmNzYzIskPa", 97);
+    verifyTaut("vhziO1RXyXgvsHriuoN0-Vrh6cGAKIMHIXY1IqKaae", 440);
+    verifyTaut("uFLsi1sQERylcHt4ugN-FVIlaGk7CzOqagTsKPUg", 440);
+    verifyTaut("sxKykZjTypxZ9GVym+9A7equjDawvrroYqOL", 396);
+    verifyTaut("q3Guk0c1wRNR9CT3-D2baZn3iLOYcGgIc", 62);
 
     // Examples from Jonathan:
-    verifyTaut("hLvQAkcdcfeeggqjjqhnqj", 0);
-    verifyTaut("oLLLAAwzPQcbedgfhfilknmnnmxxnxhxjxxkxqaxw", 0);
-    verifyTaut("vvLLAvQvMwwQMQQcdheglkjpopsnstqsrutuuwrawwxhwxhclrmhaqwrrrr", 0);
-    verifyTaut("CLwvvwQAzAPwQLwLQzQkaciklmhjmonrqptspvuwxyzzyBAABjghqqhxxgaaaahaajaahaharwqqkn", 0);
-    verifyTaut("CLvzMzwQwwvzzQPQPPAkccfigkmiljkovqxustywyxzxAyABBqjqwfqqoaajvujaljladbrxwxwvxw", 4);
+    verifyTaut("hFDMS+3GfqaOfb", 0);
+    verifyTaut("oFQXi6WuxM7+MQEdwabGaaGb2La", 0);
+    verifyTaut("vNqigeujFmk9fNUzegPZ--vgssajj0gBMybaqDgIOe", 0);
+    verifyTaut("CNuiPK7Xulwe2AYjTAVzmoR369BpmZZFrga6szoZKjotKZmZGdwgIic", 0);
+    verifyTaut("CNCmVukUO3iokFW5SAR2S+I179+-2nZKHea6sZUvo4G4ygCiy1SMrWc", 4);
 
-    verifyTaut("JLwvvvwwLzwLQAQQPwvQLQQQcackhnsqpxtoyuwtzyrvBywGAzHIEDFHIGFGIngqxgabgaabqhqxhqxrarrabkbgcnnnkrrww", 0);
-    verifyTaut("JLwvvvwwLzwLMQQQPMzMPMQPcackhnsqpxovutwAzyrvByxuAEzCGDEHFGIHIjgqxgabgabqhxqxhqxrarrjwajwrwrqrrxjj", 0);
-    verifyTaut("JLwvvwMwzMLPzAAvMQLwQAQQcacikmhmqounrtpsyxvDwBCEFEFAHCGHGHFIIjghqhxgababhqxrabwabhahajoslfhahawgj", 0);
-    verifyTaut("JLvzMzwQwwvPAPwQwAPvPAMQcccfigkmiljkoutuwvutxtyzACBDEGFGFIHHIqjqwfqqoaajvqhlaallalaaaaaaqqajshhrr", 4);
-    verifyTaut("JLLLAAwzLLAwQwvvwMAQAAQMcbedgfhfilnnnpoqrstvCxEBDzFAFEGEFHHIIxxnxhxjxxxaxgvcxxafenatpkatbwqrrqfqr", 0);
+    verifyTaut("JNiIccZslItcZPYsYkCAIt7dCJtul7du0lmue8-7-BYpJeabaGzMbgagOqCXzOfpz3zOlLqUub", 0);
+    verifyTaut("JNGy5XIPbJcAkdAklkIYIttdd76R7ZRleeumu89R576FdyGbaaANbHbgCxChA3zxCObrC3frIa", 0);
+    verifyTaut("JN44PjbJrtcsIkkYRBAQkRZ7c07dKBdC7lmuu85-T-0VGWaja0DODYzgCQAMyp8eztvhtnfdDb", 0);
+    verifyTaut("J-Ga6XzzIsAj6kclslRYIBRYY6cRZ7de8tmmu8Zh+ZZ2C0bjaayMrNzkfayMrOzKlWDGbwCxIa", 4);
+    verifyTaut("JN4W4jjjAH6kcls6bAAQYQYktBJtRZ7Rdmmuu8MvR-TBMjdja0LMDRCWbXXm4qWQz3Lae3zZDb", 0);
 }
 
 static void verifyTautVsAllDetail(const Triangulation<3>& t) {
