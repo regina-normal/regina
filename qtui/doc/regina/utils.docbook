@@ -340,7 +340,7 @@
     Component 0: 2-handle, writhe 1
     
     Here is the isomorphism signature:
-    GLvvQvPvALvzMAQAvAQQQPccgfekjp...
+    GxOO5rAkYzAzPPsdBl76IlJdZQZ777...
     <prompt>example$</prompt>
 </screen>
 
@@ -355,7 +355,7 @@
     Component 0: 2-handle, writhe 1
     
     Here is the isomorphism signature:
-    mLvAwAQAPQQcfffhijgjgjkkklklll...
+    mpcIU60mtD3v3u-3tpmyyyyyyyyyyyyyyyyyyya
     <prompt>example$</prompt>
 </screen>
 
@@ -370,7 +370,7 @@
     Component 1: 2-handle, writhe 0
     
     Here is the isomorphism signature:
-    SLvAvAAwvvALMQQPvPvPMQwQAQMAvQ...
+    Spi44OOyzjcsskYXPYcdRRZR6s7kmm...
     <prompt>example$</prompt>
 </screen>
   </refsect1>
@@ -1249,17 +1249,17 @@
    </para>
 
 <screen>
-    <prompt>example$</prompt> <userinput>retriangulate -h2 hLLAAkbdceefggdonxdjxn</userinput>
-    hLLAAkbdceefggdonxdjxn
-    hLALPkbcbefgfghxwnxark
+    <prompt>example$</prompt> <userinput>retriangulate -h2 hpyS1+lmKi0Kdb</userinput>
+    hpyS1+lmKi0Kdb
+    hhrSU+fnewBNLa
     Found 2 triangulation(s).
-    <prompt>example$</prompt> <userinput>retriangulate -h3 hLLAAkbdceefggdonxdjxn</userinput>
-    hLLAAkbdceefggdonxdjxn
-    hLALPkbcbefgfghxwnxark
-    hLLMMkbcdfefgglcghtchj
-    gLLPQcdcefffqsjpunw
+    <prompt>example$</prompt> <userinput>retriangulate -h3 hpyS1+lmKi0Kdb</userinput>
+    hpyS1+lmKi0Kdb
+    hhrSU+fnewBNLa
+    hNI2T+FabR0Qsa
+    gxtJT7frusUe
     Triangulation is non-minimal!
-    Smaller triangulation: gLLPQcdcefffqsjpunw
+    Smaller triangulation: gxtJT7frusUe
     <prompt>example$</prompt>
 </screen>
 
@@ -1269,11 +1269,11 @@
    </para>
 
 <screen>
-    <prompt>example$</prompt> <userinput>retriangulate gLLPQcdcefffqsjpunw</userinput>
-    gLLPQcdcefffqsjpunw
-    fLAMcbbcdeedhwhxn
+    <prompt>example$</prompt> <userinput>retriangulate gxtJT7frusUe</userinput>
+    gxtJT7frusUe
+    fhrK80iePeb
     Triangulation is non-minimal!
-    Smaller triangulation: fLAMcbbcdeedhwhxn
+    Smaller triangulation: fhrK80iePeb
     <prompt>example$</prompt>
 </screen>
 
@@ -1282,8 +1282,8 @@
     manifold <literal>m112</literal>:
    </para>
 <screen>
-    <prompt>example$</prompt> <userinput>censuslookup fLAMcbbcdeedhwhxn</userinput>
-    fLAMcbbcdeedhwhxn: 1 hit
+    <prompt>example$</prompt> <userinput>censuslookup fhrK80iePeb</userinput>
+    fhrK80iePeb: 1 hit
         m112 : #2 -- Cusped hyperbolic census (orientable)
     
     <prompt>example$</prompt>
