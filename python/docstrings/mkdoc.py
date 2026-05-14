@@ -596,7 +596,7 @@ def extract(filename, node, namespace, output):
             # Sometimes we want them in full (e.g., Face<dim, dim>);
             # sometimes we do not want the class docs but we want its members
             # (e.g., the triangulation alias classes), and sometimes we
-            # do not want it at all (e.g., the ListView specialisations).
+            # do not want it at all (e.g., the old ListView specialisations).
             #
             # For now:
             #
