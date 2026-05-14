@@ -999,18 +999,21 @@
     All triangulations or link diagrams, both input and output, are described
     using <firstterm>signatures</firstterm>.  These are short text strings
     that identify a triangulation or link diagram uniquely up to
-    combinatorial isomorphism (which includes relabellings of
-    tetrahedra/pentachora/crossings, relabellings of the vertices of
-    tetrahedra/pentachora vertices, and various rotation/reflection/reversal
-    operations on link diagrams).
+    combinatorial isomorphism (this includes relabellings of
+    tetrahedra, pentachora or crossings; relabellings of individual
+    tetrahedron or pentachoron vertices; plus various
+    rotation/reflection/reversal operations on triangulations or link diagrams).
    </para>
    <para>
     By default, the program will output
-    <firstterm>second-generation</firstterm> signatures (which were introduced
+    <firstterm>second-generation</firstterm> signatures (as introduced
     in &regina;&nbsp;8.0); you can change this by passing
     <option>--gen=1</option>.
     Both second-generation and first-generation signatures are accepted as
     input, regardless of what type of output you request.
+    For triangulations, all output signatures will be unoriented
+    (which means that any specific orientation that might be encoded in your
+    input triangulation will be forgotten).
    </para>
    <para>
     To view signatures in &regina;'s graphical user interface, visit the
@@ -1524,6 +1527,14 @@
     signatures, or a mix of both.
    </para>
    <para>
+    Note that, although second-generation signatures can optionally encode
+    orientation, this tool will always output <emphasis>unoriented</emphasis>
+    signatures (since first-generation signatures did not encode orientation
+    at all).  A side-effect is that, if you need to &ldquo;unorient&rdquo; a
+    second-generation signature, you can simply run it through this tool
+    (as shown in the last example below).
+   </para>
+   <para>
     There are two ways to provide the input signatures.
     The simplest way is to pass them as command-line arguments.
     Alternatively (for example, if you have a large number of signatures to
@@ -1691,6 +1702,36 @@
     ehrBRr4cl
     ehrBRrici
     ...
+    <prompt>example$</prompt>
+</screen>
+
+   <para>
+    Our last example concerns orientation.  As discussed above,
+    second-generation signatures can optionally encode orientation; however,
+    <command>sigconvert</command> will always output unoriented signatures.
+    The example below illustrates: (i)&nbsp;creating two lens spaces in
+    &python; with opposite orientations, (ii)&nbsp;computing their oriented
+    signatures (<literal>bNjc</literal> and <literal>bNld</literal>),
+    and then (iii)&nbsp;using <command>sigconvert</command> to
+    &ldquo;unorient&rdquo; the signatures (whereupon the two signatures become
+    identical).
+   </para>
+<screen>
+    <prompt>example$</prompt> <userinput>regina-python</userinput>
+    Regina 8.0
+    Software for low-dimensional topology
+    Copyright (c) 1999-2025, The Regina development team
+    &gt;&gt;&gt; x = Example3.lens(4,1)
+    &gt;&gt;&gt; y = Example3.lens(4,1)
+    &gt;&gt;&gt; y.reflect()
+    &gt;&gt;&gt; print(x.neoSig(True)) # True -&gt; oriented signature
+    bNjc
+    &gt;&gt;&gt; print(y.neoSig(True)) # True -&gt; oriented signature
+    bNld
+    &gt;&gt;&gt;
+    <prompt>example$</prompt> <userinput>sigconvert bNjc bNld</userinput>
+    bNjc
+    bNjc
     <prompt>example$</prompt>
 </screen>
   </refsect1>
@@ -2108,6 +2149,7 @@
        of isomorphism signatures.  As of &regina;&nbsp;8.0, these will be
        <emphasis>second-generation</emphasis> signatures, as computed
        in code by <literal>Triangulation::neoSig()</literal>.
+       The signatures will be unoriented.
       </para>
       <para>
        The output file will be a plain text file.  Each line will be a

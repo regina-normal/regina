@@ -201,19 +201,19 @@
     Stated precisely: every triangulation has a unique isomorphism signature,
     and two triangulations have the same signature if and only if they
     are isomorphic.
-    Isomorphism signatures are introduced in the paper
-    <xref linkend="bib-burton-simps3"/>.
-    They are available in all of the dimensions
-    that &regina; supports, and for 3-manifolds the format is
+    The original isomorphism signatures for 3-manifolds were introduced in the
+    paper <xref linkend="bib-burton-simps3"/>; nowadays they are available
+    in all of the dimensions that &regina; supports, and they come in both
+    <firstterm>first-generation</firstterm> formats (compatible with
+    &regina;&nbsp;&le;&nbsp;7.x) and <firstterm>second-generation</firstterm>
+    formats (a smaller and faster format introduced in &regina;&nbsp;8.0).
+    The original first-generation format for 3-manifolds is
     explicitly described in <xref linkend="bib-burton-pachner-orprime"/>.
    </para>
    <para>
     If you already have a triangulation and you wish to view its
-    isomorphism signature: for 3-manifolds you can view it through the
-    <link linkend="tri-composition-isosig">triangulation composition</link>
-    tab, and in other dimensions you can access it through
-    <link linkend="python">&python; scripting</link>
-    or <link linkend="compiling">&cpp; programming</link>.
+    isomorphism signature, you can view it through the
+    <link linkend="tri-composition-isosig">triangulation composition</link> tab.
    </para>
    <caution><para>
     Isomorphism signatures are <emphasis>case sensitive</emphasis>!
@@ -2016,9 +2016,65 @@
      disconnected triangulations or triangulations with boundary).
      The main features of isomorphism signatures are that they are fast
      to compute, and that two triangulations have the same signature
-     <emphasis>if and only if</emphasis> they are combinatorially isomorphic.
-     See <xref linkend="bib-burton-simps3"/> and
-     <xref linkend="bib-burton-pachner-orprime"/> for details.
+     if and only if they are combinatorially isomorphic.
+    </para>
+    <para>
+     Isomorphism signatures come in two variants: the original
+     <firstterm>first-generation</firstterm> signatures, which were used in
+     &regina;&nbsp;&le;&nbsp;7.x; and the smaller and faster
+     <firstterm>second-generation</firstterm> signatures, which were introduced
+     in &regina;&nbsp;8.0 and which can optionally encode orientation.
+     Second-generation signatures are recommended for use in new projects.
+    </para>
+    <para>
+     Beside the signature is a drop-down box where you can choose which
+     variant you wish to see:
+    </para>
+    <para>
+     <glosslist>
+      <glossentry>
+       <glossterm><guilabel>2nd-gen</guilabel></glossterm>
+       <glossdef>
+        <para>
+         This indicates a second-generation signature, with no attempt to
+         encode orientation.  Reflecting a triangulation will not change
+         this signature.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>2nd-gen oriented</guilabel></glossterm>
+       <glossdef>
+        <para>
+         This indicates an <firstterm>oriented</firstterm> second-generation
+         signature.  This does encode orientation: specifically,
+         two triangulations will have the same oriented
+         signature if and only if they are related by an
+         <emphasis>orientation-preserving</emphasis> combinatorial isomorphism.
+        </para>
+        <para>
+         Oriented signatures are only available for
+         <link linkend="tri-proporient">oriented triangulations</link>.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm><guilabel>1st-gen</guilabel></glossterm>
+       <glossdef>
+        <para>
+         This indicates a first-generation signature.
+         This is the old signature format that was used in
+         &regina;&nbsp;&le;&nbsp;7.x, and it does not encode orientation.
+        </para>
+        <para>
+         You should only use first-generation signatures
+         if you need backward compatibility with older versions of &regina;.
+         For 3-manifolds, the first-generation format is described explicitly
+         in the paper <xref linkend="bib-burton-pachner-orprime"/>.
+        </para>
+       </glossdef>
+      </glossentry>
+     </glosslist>
     </para>
     <para>
      To convert an isomorphism signature back into a triangulation,
@@ -4268,19 +4324,24 @@
     Specifically:
     <itemizedlist>
      <listitem><para>
-      If a triangulation does <emphasis>not</emphasis> have any simplex or
-      facet locks, its isomorphism signature will be the same as in
-      &regina;&nbsp;7.3.1 or earlier.  For example,
-      <literal>cPcbbbiht</literal> is the first-generation isomorphism signature
-      of the two-tetrahedron figure eight knot complement with no locks.
-     </para></listitem>
-     <listitem><para>
       If a triangulation <emphasis>does</emphasis> have locks, then
       its isomorphism signature will be the unlocked signature followed by a
       period and some additional symbols encoding the locks.
-      For example, <literal>cPcbbbiht.aq</literal> is a first-generation
-      signature that encodes the
-      two-tetrahedron figure eight knot complement with one locked tetrahedron.
+      This is true for both first-generation and second-generation signatures.
+      For example, consider the two-tetrahedron figure eight knot complement.
+      This has first-generation signature <literal>cPcbbbiht</literal>
+      without locks, or first-generation signature
+      <literal>cPcbbbiht.aq</literal> with one locked tetrahedron.
+      This same triangulation has the second-generation signature
+      <literal>cV6cqb</literal> without locks, or
+      <literal>cV6cqb.ai</literal> with one locked tetrahedron.
+     </para></listitem>
+     <listitem><para>
+      If a triangulation does <emphasis>not</emphasis> have any simplex or
+      facet locks, its first-generation isomorphism signature will be the
+      same as in &regina;&nbsp;7.3.1 or earlier
+      (e.g., <literal>cPcbbbiht</literal> for the figure eight knot complement
+      discussed above).
      </para></listitem>
      <listitem><para>
       To remove locks from an isomorphism signature without opening &regina;,
