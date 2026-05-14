@@ -3109,6 +3109,8 @@
 		0545A0442FB51DE6008D3ADB /* sigs-g2-links.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sigs-g2-links.txt"; sourceTree = "<group>"; };
 		0545A0482FB5994E008D3ADB /* trisigchooser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = trisigchooser.h; sourceTree = "<group>"; };
 		0545A0492FB5994E008D3ADB /* trisigchooser.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = trisigchooser.cpp; sourceTree = "<group>"; };
+		0545A04B2FB5BD43008D3ADB /* sigconvert.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = sigconvert.out; sourceTree = "<group>"; };
+		0545A04C2FB5BD43008D3ADB /* sigconvert.test */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = sigconvert.test; sourceTree = "<group>"; };
 		0549B4982907D38D00C911AF /* data-anon.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-anon.docbook"; sourceTree = "<group>"; };
 		0549B4992907D38E00C911AF /* data-tri.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tri.docbook"; sourceTree = "<group>"; };
 		0549B49A2907D38E00C911AF /* data-txi.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-txi.docbook"; sourceTree = "<group>"; };
@@ -7752,6 +7754,8 @@
 				054DF94C28CABC8400EC3D81 /* runtest.sh */,
 				054DF95428CABC8500EC3D81 /* sigcensus.out */,
 				054DF94A28CABC8400EC3D81 /* sigcensus.test */,
+				0545A04B2FB5BD43008D3ADB /* sigconvert.out */,
+				0545A04C2FB5BD43008D3ADB /* sigconvert.test */,
 				054DF95728CABC8500EC3D81 /* testall.in */,
 				054DF94328CABC8300EC3D81 /* tricensus.filter */,
 				054DF94E28CABC8400EC3D81 /* tricensus.out */,
