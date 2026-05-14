@@ -297,27 +297,21 @@ struct SpatialLinkVolume: View {
         
         // Since the Link functions obtain internal pointers into link, we need to ensure the lifespan of link.
         withExtendedLifetime(link) {
-            // We use index-based loops here, since visionOS struggles with C++ bindings for regina::ListView and std::vector (though macOS and iOS seem fine).
-            for i in 0..<link.countComponents() {
-                let nodes = link.componentSize(i)
-                if nodes == 0 {
+            for c in link.__componentsUnsafe() {
+                if c.empty() {
                     continue
                 }
                 
                 var prev: regina.SpatialLink.Node?
-                
-                for j in 0..<nodes {
-                    let n = link.__nodeUnsafe(i, j).pointee
+                for n in c {
                     root.addChild(ball(n, material: material))
-                    
+
                     if let p = prev {
                         root.addChild(arc(p, n, material: material))
                     }
                     prev = n
                 }
-                
-                let n = link.__nodeUnsafe(i, 0).pointee
-                root.addChild(arc(prev!, n, material: material))
+                root.addChild(arc(prev!, c.__frontUnsafe().pointee, material: material))
             }
         }
         
