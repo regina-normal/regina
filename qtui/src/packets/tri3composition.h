@@ -43,6 +43,7 @@
 
 #include <memory>
 
+class GenChooser;
 class PacketChooser;
 class QMenu;
 class QPushButton;
@@ -91,6 +92,7 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         QPushButton* isoView;
         QLabel* standardTri;
         QLabel* isoSig;
+        GenChooser* isoSigGeneration;
         QTreeWidget* details;
         QTreeWidgetItem* lastComponent;
 
@@ -121,6 +123,11 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         void contextIsoSig(const QPoint& pos, QWidget* fromWidget);
 
     public slots:
+        /**
+         * Update the isomorphism signature.
+         */
+        void updateIsoSig();
+
         /**
          * Update the isomorphism test panel.
          */

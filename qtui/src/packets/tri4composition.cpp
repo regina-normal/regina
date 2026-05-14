@@ -33,6 +33,7 @@
 #include "../packetchooser.h"
 #include "../packetfilter.h"
 #include "reginasupport.h"
+#include "choosers/genchooser.h"
 
 #include <memory>
 #include <QApplication>
@@ -57,16 +58,16 @@ Tri4CompositionUI::Tri4CompositionUI(
     QBoxLayout* layout = new QVBoxLayout(ui);
 
     // Add the isomorphism signature.
-
     QBoxLayout* line = new QHBoxLayout();
     QString msg = tr("<qt>Displays the isomorphism signature "
         "of the triangulation.<p>"
         "This is a piece of text that identifies the triangulation uniquely "
-        "up to combinatorial isomorphism.  The analogue for 3-manifolds "
-        "is described in detail in "
-        "<i>Simplification paths in the Pachner graphs "
-        "of closed orientable 3-manifold triangulations</i>, Burton, "
-        "preprint, <tt>arXiv:1110.6080</tt>, October 2011.</qt>");
+        "up to combinatorial isomorphism.<p>"
+        "Using the drop-down box to the right, you can switch between "
+        "<i>first-generation</i> signatures (used in Regina ≤ 7.x), "
+        "and <i>second-generation</i> signatures (introduced in Regina 8.0). "
+        "Second-generation signatures are shorter and faster, and are "
+        "recommended for use in new projects.</qt>");
     auto* label = new QLabel(tr("<qt><b>Isomorphism signature:</b></qt>"), ui);
     label->setWhatsThis(msg);
     line->addWidget(label);
@@ -75,6 +76,11 @@ Tri4CompositionUI::Tri4CompositionUI(
     isoSig->setWordWrap(false);
     isoSig->setWhatsThis(msg);
     line->addWidget(isoSig, 1);
+    isoSigGeneration = new GenChooser(ui);
+    isoSigGeneration->setWhatsThis(msg);
+    connect(isoSigGeneration, SIGNAL(activated(int)), this,
+        SLOT(updateIsoSig()));
+    line->addWidget(isoSigGeneration);
     layout->addLayout(line);
 
     isoSig->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -164,17 +170,8 @@ QWidget* Tri4CompositionUI::getInterface() {
 }
 
 void Tri4CompositionUI::refresh() {
+    updateIsoSig();
     updateIsoPanel();
-
-    // Show the isomorphism signature.
-    isoSig->setText(tri_->isoSig().c_str());
-    /*
-    // If the signature is very long then add an ellipsis to the end.
-    // Update: don't do this, since we would like clipboard copy to
-    // capture the entire signature, not something with ... at the end.
-    isoSig->setText(QFontMetrics(isoSig->font()).elidedText(
-        tri_->isoSig().c_str(), Qt::ElideRight, isoSig->width()));
-    */
 }
 
 void Tri4CompositionUI::packetBeingDestroyed(regina::PacketShell) {
@@ -182,6 +179,21 @@ void Tri4CompositionUI::packetBeingDestroyed(regina::PacketShell) {
     isoTest->setCurrentIndex(0); // (i.e., None)
     compare_ = nullptr; // The packet destructor will handle the unlisten.
     updateIsoPanel();
+}
+
+void Tri4CompositionUI::updateIsoSig() {
+    // Show the isomorphism signature.
+    switch (isoSigGeneration->selected()) {
+        case 1: isoSig->setText(tri_->isoSig().c_str()); break;
+        default: isoSig->setText(tri_->neoSig().c_str()); break;
+    }
+    /*
+    // If the signature is very long then add an ellipsis to the end.
+    // Update: don't do this, since we would like clipboard copy to
+    // capture the entire signature, not something with ... at the end.
+    isoSig->setText(QFontMetrics(isoSig->font()).elidedText(
+        tri_->isoSig().c_str(), Qt::ElideRight, isoSig->width()));
+    */
 }
 
 void Tri4CompositionUI::updateIsoPanel() {

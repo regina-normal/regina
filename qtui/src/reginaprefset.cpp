@@ -84,6 +84,7 @@ ReginaPrefSet::ReginaPrefSet() :
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),
         pythonWordWrap(false),
+        sigGeneration(2),
         snapPeaCreationType(0),
         surfacesCompatThreshold(100),
         surfacesCreationCoords(regina::NormalCoords::Standard),
@@ -347,6 +348,7 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("Triangulation");
+    sigGeneration = settings.value("SigGeneration", 2).toInt();
     triDim2CreationType = settings.value("Dim2CreationTypeV2", 0).toInt();
     triDim3CreationType = settings.value("Dim3CreationTypeV2", 0).toInt();
     triDim4CreationType = settings.value("Dim4CreationTypeV2", 0).toInt();
@@ -515,6 +517,7 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 
     settings.beginGroup("Triangulation");
+    settings.setValue("SigGeneration", sigGeneration);
     settings.setValue("Dim2CreationTypeV2", triDim2CreationType);
     settings.setValue("Dim3CreationTypeV2", triDim3CreationType);
     settings.setValue("Dim4CreationTypeV2", triDim4CreationType);
