@@ -99,7 +99,7 @@ any of its functions directly.
 
 Python:
     To use this encoding in Python, you can just call the relevant
-    signature function (e.g., ``Link::isoSig()`` or
+    signature function (e.g., ``Link::knotSig()`` or
     ``Link::neoSig()``) with no extra encoding argument, since this
     encoding is the default.
 

@@ -341,6 +341,13 @@ Version 8.0  [ TODO ]
         Class safe_tuple_element<...>:
             - This is now deprecated, since its only purpose is to support
               CallableArg (which is also deprecated).
+        Class SpatialLink:
+            - New inner type NodeIterator, and new member functions
+              beginNodes() and endNodes().
+            - The default radius is now chosen more intelligently, by
+              identifying the closest non-adjacent pair of link nodes that are
+              connected in the relative neighbourhood graph.  Thanks to
+              Kate Turner for this suggestion.
         Class StrandRef:
             - New routine reset().
         Class SubtreeIterator<const_>:

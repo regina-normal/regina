@@ -219,7 +219,7 @@ class TableView {
          * from first to last.  See TableView::begin() for further details.
          *
          * This iterator is, in spirit, a bidirectional multipass iterator.
-         * However, we declare it using std::input_iterator_tag here because
+         * However, we declare it using `std::input_iterator_tag` here because
          * it does not necessarily return by reference (a requirement of
          * forward and bidirectional iterators in the C++ standard library).
          * In particular:
@@ -234,7 +234,7 @@ class TableView {
          *   \a reference is `const Element&`.
          *
          * For most iterator classes, Regina now uses specialisations of
-         * std::iterator_traits to provide access to their associated types
+         * `std::iterator_traits` to provide access to their associated types
          * (e.g., value_type).  However, this is not possible for
          * TableView::iterator since TableView is templated.  Therefore,
          * for TableView::iterator, we continue to provide these associated
@@ -243,7 +243,7 @@ class TableView {
          * Both \a iterator and \a const_iterator are the same type, since
          * TableView only offers read-only access to the underlying data.
          *
-         * \nopython TableView is an iterable type, but its __iter__()
+         * \nopython TableView is an iterable type, but its `__iter__()`
          * function returns an object of a different (hidden) iterator class.
          */
         class iterator {
@@ -299,6 +299,9 @@ class TableView {
                 /**
                  * The preincrement operator.
                  *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
+                 *
                  * \return a reference to this iterator after the increment.
                  */
                 constexpr iterator& operator ++ () {
@@ -307,6 +310,9 @@ class TableView {
                 }
                 /**
                  * The postincrement operator.
+                 *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
                  *
                  * \return a copy of this iterator before the increment took
                  * place.
@@ -319,6 +325,9 @@ class TableView {
                 /**
                  * The predecrement operator.
                  *
+                 * \pre This iterator is decrementable (in particular, it is
+                 * not the same as `TableView::begin()`).
+                 *
                  * \return a reference to this iterator after the decrement.
                  */
                 constexpr iterator& operator -- () {
@@ -327,6 +336,9 @@ class TableView {
                 }
                 /**
                  * The postdecrement operator.
+                 *
+                 * \pre This iterator is decrementable (in particular, it is
+                 * not the same as `TableView::begin()`).
                  *
                  * \return a copy of this iterator before the decrement took
                  * place.

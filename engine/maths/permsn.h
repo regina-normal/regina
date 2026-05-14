@@ -268,6 +268,9 @@ struct PermSn {
             /**
              * The preincrement operator.
              *
+             * \pre This iterator is dereferenceable (in particular,
+             * it is not past-the-end).
+             *
              * \nopython For Python users, this class implements the Python
              * iterator interface instead.  See __next__() for details.
              *
@@ -285,6 +288,9 @@ struct PermSn {
 
             /**
              * The postincrement operator.
+             *
+             * \pre This iterator is dereferenceable (in particular,
+             * it is not past-the-end).
              *
              * \nopython For Python users, this class implements the Python
              * iterator interface instead.  See __next__() for details.

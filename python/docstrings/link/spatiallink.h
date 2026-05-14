@@ -229,20 +229,19 @@ R"doc(Returns a sensible default radius to use when rendering the link.
 Specifically, this is the radius to use for the balls and cylinders
 used in the 3-D model.
 
-Currently this routine makes a "barely educated" decision: it looks
-only at the scale of the embedding, without studying the complexity of
-the knot or the closeness of the strands. Specifically, it chooses
-some fixed fraction of the minimum range amongst the *x*, *y* and *z*
-dimensions.
-
-Eventually this will be replaced with something intelligent that
-factors in how far apart the strands are, and will (as a result)
-guarantee that the renderings of no-adjacent strands will not collide.
+As of Regina 8.0, this routine chooses a radius by finding the closest
+non-adjacent pair of link nodes that are connected in the relative
+neighbourhood graph. Thanks to Kate Turner for this excellent
+suggestion. The current algorithm is best-case quadratic and worst-
+case cubic in the total number of nodes.
 
 This function is expensive to call the first time, but it caches its
 value and so subsesquent calls are essentially instantaneous (until
 the embedding of the link changes, at which point the cached value
 will be cleared).
+
+The choice of radius is subject to change in future versions of
+Regina.
 
 Returns:
     a sensible default radius to use for rendering.)doc";
@@ -350,6 +349,24 @@ Parameter ``componentIndex``:
 Parameter ``nodeIndex``:
     indicates which node to return from the given component; this must
     be between 0 and ``componentSize(componentIndex) - 1`` inclusive.)doc";
+
+// Docstring regina::python::doc::SpatialLink_::nodes
+static const char *nodes =
+R"doc(Returns a Python iterable object that iterates over all nodes in this
+link. For example:
+
+```
+link = SpatialLink(...)
+for n in link.nodes():
+    ...
+```
+
+The order of iteration will be: all of the nodes in the first
+component in order; then all of the nodes in the second component in
+order; and so on.
+
+Returns:
+    an iterator over all nodes in this link.)doc";
 
 // Docstring regina::python::doc::SpatialLink_::radius
 static const char *radius =

@@ -1078,12 +1078,18 @@ class NormalSurfaces :
                 /**
                  * The preincrement operator.
                  *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end)
+                 *
                  * \return a reference to this iterator after the increment.
                  */
                 VectorIterator& operator ++();
 
                 /**
                  * The postincrement operator.
+                 *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end)
                  *
                  * \return a copy of this iterator before the
                  * increment took place.
@@ -1093,12 +1099,18 @@ class NormalSurfaces :
                 /**
                  * The predecrement operator.
                  *
+                 * \pre This iterator is decrementable (in particular, it is
+                 * not the same as `NormalSurfaces::beginVectors()`).
+                 *
                  * \return a reference to this iterator after the decrement.
                  */
                 VectorIterator& operator --();
 
                 /**
                  * The postdecrement operator.
+                 *
+                 * \pre This iterator is decrementable (in particular, it is
+                 * not the same as `NormalSurfaces::beginVectors()`).
                  *
                  * \return a copy of this iterator before the
                  * decrement took place.

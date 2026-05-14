@@ -64,6 +64,10 @@ void addSpatialLink(pybind11::module_& m, pybind11::module_& internal) {
         .def("componentSize", &SpatialLink::componentSize, rdoc::componentSize)
         .def("node", &SpatialLink::node,
             pybind11::return_value_policy::reference_internal, rdoc::node)
+        .def("nodes", [](const SpatialLink& link) {
+            return pybind11::make_iterator(link.beginNodes(), link.endNodes());
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps list alive
+            rdoc::nodes)
         .def("range", &SpatialLink::range, rdoc::range)
         .def("radius", &SpatialLink::radius, rdoc::radius)
         .def("setRadius", &SpatialLink::setRadius, rdoc::setRadius)

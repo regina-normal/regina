@@ -38,6 +38,7 @@
 #define __REGINA_SPATIALLINK_H
 #endif
 
+#include <optional>
 #include <ranges>
 #include <vector>
 #include "concepts/iterator.h"
@@ -106,6 +107,8 @@ namespace regina {
  */
 class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
     public:
+        class NodeIterator;
+
         /**
          * Represents a single point on the path that a link component takes
          * through three-dimensional space.
@@ -351,6 +354,230 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
         const Node& node(size_t componentIndex, size_t nodeIndex) const;
 
         /**
+         * A C++ iterator that gives access to all of the nodes in this link,
+         * pointing to the first node.
+         *
+         * The order of iteration will be: all of the nodes in the first
+         * component in order; then all of the nodes in the second component
+         * in order; and so on.
+         *
+         * \nopython Use nodes() instead, which returns an iterable object
+         * for iterating over all nodes in this same order.
+         *
+         * \return an iterator pointing to the first node in this link.
+         */
+        NodeIterator beginNodes() const;
+
+        /**
+         * A C++ iterator that gives access to all of the nodes in this link,
+         * pointing beyond the last node.
+         *
+         * The order of iteration will be: all of the nodes in the first
+         * component in order; then all of the nodes in the second component
+         * in order; and so on.
+         *
+         * \nopython Use nodes() instead, which returns an iterable object
+         * for iterating over all nodes in this same order.
+         *
+         * \return an iterator pointing beyond the last node in this link.
+         */
+        NodeIterator endNodes() const;
+
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterable object that iterates over all nodes in
+         * this link.  For example:
+         *
+         * \code{.py}
+         * link = SpatialLink(...)
+         * for n in link.nodes():
+         *     ...
+         * \endcode
+         *
+         * The order of iteration will be: all of the nodes in the first
+         * component in order; then all of the nodes in the second component
+         * in order; and so on.
+         *
+         * \nocpp For C++ users, SpatialLink provides beginNodes() and
+         * endNodes() instead, which together define an iterator range
+         * over these same nodes.
+         *
+         * \return an iterator over all nodes in this link.
+         */
+        auto nodes() const;
+#endif
+
+        /**
+         * A bidirectional iterator that runs through all nodes in this link.
+         *
+         * \nopython Instead SpatialLink::nodes() returns an object of a
+         * different (hidden) class that supports the Python iterable/iterator
+         * interface.
+         */
+        class NodeIterator {
+            private:
+                std::vector<Component>::const_iterator comp_;
+                    /**< The component holding the current node, or \a end_
+                         if this iterator is past-the-end. */
+                std::vector<Component>::const_iterator end_;
+                    /**< A copy of `components_.end()`. */
+                std::optional<Component::const_iterator> node_;
+                    /**< A pointer to the current node, or `std::nullopt`
+                         if there is no current component. */
+
+            public:
+                /**
+                 * Creates a new uninitialised iterator.
+                 */
+                NodeIterator() = default;
+
+                /**
+                 * Creates a copy of the given iterator.
+                 */
+                NodeIterator(const NodeIterator&) = default;
+
+                /**
+                 * Makes this a copy of the given iterator.
+                 *
+                 * \return a reference to this iterator.
+                 */
+                NodeIterator& operator = (const NodeIterator&) = default;
+
+                /**
+                 * Compares this with the given iterator for equality.
+                 *
+                 * \param rhs the iterator to compare this to.
+                 * \return `true` if the iterators point to the same node
+                 * within the same link component, or `false` if they do not.
+                 */
+                bool operator == (const NodeIterator& rhs) const {
+                    // No need to compare end_.
+                    return comp_ == rhs.comp_ && node_ == rhs.node_;
+                }
+
+                /**
+                 * Returns the node that this iterator is currently pointing to.
+                 *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
+                 *
+                 * \return the corresponding node.
+                 */
+                const Node& operator *() const {
+                    return **node_;
+                }
+
+                /**
+                 * The preincrement operator.
+                 *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
+                 *
+                 * \return a reference to this iterator after the increment.
+                 */
+                NodeIterator& operator ++() {
+                    // Since we are deferenceable, we have comp_ != end_, and
+                    // node_ is both non-null and dereferenceable.
+                    if (++*node_ == comp_->end()) {
+                        if (++comp_ == end_)
+                            node_.reset();
+                        else
+                            node_ = comp_->begin();
+                    }
+                    return *this;
+                }
+
+                /**
+                 * The postincrement operator.
+                 *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
+                 *
+                 * \return a copy of this iterator before the
+                 * increment took place.
+                 */
+                NodeIterator operator ++(int) {
+                    NodeIterator ans = *this;
+                    ++(*this);
+                    return ans;
+                }
+
+                /**
+                 * The predecrement operator.
+                 *
+                 * \pre This iterator is decrementable (in particular, it is
+                 * not the same as `SpatialLink::beginNodes()`).
+                 *
+                 * \return a reference to this iterator after the decrement.
+                 */
+                NodeIterator& operator --() {
+                    if (node_ && *node_ != comp_->begin()) {
+                        // We can go backwards in the same component.
+                        --*node_;
+                    } else {
+                        // We are either past-the-end, or at the beginning of
+                        // a real component (which is not the first, since
+                        // this iterator is decrementable).
+                        // Either way, we must step to the end of the previous
+                        // component (which is guaranteed to be non-empty).
+                        --comp_;
+                        --*(node_ = comp_->end());
+                    }
+                    return *this;
+                }
+
+                /**
+                 * The postdecrement operator.
+                 *
+                 * \pre This iterator is decrementable (in particular, it is
+                 * not the same as `SpatialLink::beginNodes()`).
+                 *
+                 * \return a copy of this iterator before the
+                 * decrement took place.
+                 */
+                NodeIterator operator --(int) {
+                    NodeIterator ans = *this;
+                    --(*this);
+                    return ans;
+                }
+
+                /**
+                 * Determines whether this and the given iterator represent
+                 * adjacent nodes in the same link component.
+                 *
+                 * If this and \a it represent the first and last nodes in the
+                 * same link component (in either order), then this routine
+                 * will return `true` (in other words, we treat each component
+                 * as a loop of nodes, not a path).
+                 *
+                 * If this and \a it represent the same node then this routine
+                 * will return `false`.  If either this or the given iterator
+                 * is past-the-end, again this routine will return `false`.
+                 *
+                 * \pre This and \a it are both iterators over the same link.
+                 *
+                 * \param it the iterator to compare with this.
+                 * \return `true` if and only if this and the given iterator
+                 * represent adjacent nodes in the same link component.
+                 */
+                bool adjacent(const NodeIterator& it) const {
+                    if (comp_ != it.comp_ || comp_ == end_)
+                        return false;
+                    // Both this and it represent dereferenceable nodes in the
+                    // same link component.
+                    return
+                        *node_ == std::next(*it.node_) ||
+                        *it.node_ == std::next(*node_) ||
+                        (*node_ == comp_->begin() &&
+                            std::next(*it.node_) == comp_->end()) ||
+                        (*it.node_ == comp_->begin() &&
+                            std::next(*node_) == comp_->end());
+                }
+
+            friend class SpatialLink;
+        };
+
+        /**
          * Returns the radius that should be used when rendering this link.
          * Specifically, this is the radius to use for the balls and cylinders
          * used in the 3-D model.
@@ -397,21 +624,19 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          * Specifically, this is the radius to use for the balls and cylinders
          * used in the 3-D model.
          *
-         * Currently this routine makes a "barely educated" decision: it looks
-         * only at the scale of the embedding, without studying the complexity
-         * of the knot or the closeness of the strands.  Specifically, it
-         * chooses some fixed fraction of the minimum range amongst the
-         * \a x, \a y and \a z dimensions.
-         *
-         * Eventually this will be replaced with something intelligent that
-         * factors in how far apart the strands are, and will (as a result)
-         * guarantee that the renderings of no-adjacent strands will not
-         * collide.
+         * As of Regina 8.0, this routine chooses a radius by finding the
+         * closest non-adjacent pair of link nodes that are connected in the
+         * relative neighbourhood graph.  Thanks to Kate Turner for this
+         * excellent suggestion.  The current algorithm is best-case quadratic
+         * and worst-case cubic in the total number of nodes.
          *
          * This function is expensive to call the first time, but it caches
          * its value and so subsesquent calls are essentially instantaneous
          * (until the embedding of the link changes, at which point the cached
          * value will be cleared).
+         *
+         * The choice of radius is subject to change in future versions of
+         * Regina.
          *
          * \return a sensible default radius to use for rendering.
          */
@@ -778,6 +1003,20 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
  */
 void swap(SpatialLink& lhs, SpatialLink& rhs);
 
+#ifndef __APIDOCS
+} namespace std {
+    template <>
+    struct iterator_traits<regina::SpatialLink::NodeIterator> {
+        using value_type = regina::SpatialLink::Node;
+        using iterator_category = std::bidirectional_iterator_tag;
+        using difference_type = typename std::vector<
+            regina::SpatialLink::Node>::difference_type;
+        using pointer = const value_type*;
+        using reference = const value_type&;
+    };
+} namespace regina {
+#endif
+
 // Inline functions for SpatialLink
 
 template <std::input_iterator Iterator>
@@ -822,6 +1061,21 @@ inline size_t SpatialLink::componentSize(size_t componentIndex) const {
 inline const SpatialLink::Node& SpatialLink::node(size_t componentIndex,
         size_t nodeIndex) const {
     return components_[componentIndex][nodeIndex];
+}
+
+inline SpatialLink::NodeIterator SpatialLink::beginNodes() const {
+    SpatialLink::NodeIterator it;
+    it.comp_ = components_.begin();
+    it.end_ = components_.end();
+    if (it.comp_ != it.end_)
+        it.node_ = it.comp_->begin();
+    return it;
+}
+
+inline SpatialLink::NodeIterator SpatialLink::endNodes() const {
+    SpatialLink::NodeIterator it;
+    it.comp_ = it.end_ = components_.end();
+    return it;
 }
 
 inline double SpatialLink::radius() const {
