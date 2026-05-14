@@ -92,15 +92,17 @@ std::shared_ptr<regina::Packet> SigHandler<PacketType>::importData(
     QString signatures;
     if constexpr (std::is_same_v<PacketType, regina::Link>) {
         explnSuffix = QObject::tr("<p>The file should be a plain text file "
-            "containing one knot/link signature per line.</qt>");
+            "containing one knot/link signature per line. "
+            "Both first-generation signatures (from Regina ≤ 7.x) and "
+            "second-generation signatures (from Regina ≥ 8.0) are "
+            "accepted.</qt>");
         signatures = QObject::tr("knot/link signatures");
     } else {
         explnSuffix = QObject::tr("<p>The file should be a plain text file "
-            "containing one %1-manifold isomorphism signature per line.  "
-            "Isomorphism signatures are described in detail in "
-            "<i>Simplification paths in the Pachner graphs "
-            "of closed orientable 3-manifold triangulations</i>, "
-            "Burton, 2011, <tt>arXiv:1110.6080</tt>.</qt>")
+            "containing one %1-manifold isomorphism signature per line. "
+            "Both first-generation signatures (from Regina ≤ 7.x) and "
+            "second-generation signatures (from Regina ≥ 8.0) are "
+            "accepted.</qt>")
             .arg(PacketType::dimension);
         signatures = QObject::tr("isomorphism signatures");
     }
