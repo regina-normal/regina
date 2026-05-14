@@ -168,7 +168,7 @@ void LinkCodesUI::refresh() {
             code->setWordWrapMode(QTextOption::WordWrap);
             return;
         }
-        ans = (std::string("2nd-gen (Regina ≥ 8.0):\n") + link->neoSig() +
+        ans = (std::string("2nd-gen:\n") + link->neoSig() +
             "\n\n1st-gen (Regina ≤ 7.x):\n" + link->knotSig() + "\n").c_str();
 
         code->setWordWrapMode(QTextOption::WrapAnywhere);

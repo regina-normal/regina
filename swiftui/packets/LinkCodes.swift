@@ -138,7 +138,8 @@ struct LinkCodesView: View {
                 if link.countComponents() < 64 {
                     // TODO: Find a way to disable word wrap..?
                     // Not sure if SwiftUI makes this possible for Text.
-                    Text(String(link.sig(true, true)))
+                    Text("2nd-gen:\n").font(.headline) + Text(String(regina.neoSig(link)))
+                    (Text("1st-gen (Regina ≤ 7.x):\n").font(.headline) + Text(String(link.knotSig()))).padding(.top)
                 } else {
                     Spacer()
                     noSigs()

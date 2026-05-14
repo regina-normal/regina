@@ -44,7 +44,7 @@ namespace regina {
 
 std::string svgUsingDot(const std::string& dotFile) {
     char* svg;
-    unsigned svgLen;
+    size_t svgLen;
 
     // Manually specify our plugins to avoid on-demand loading.
     GVC_t* gvc = gvContextPlugins(link_lt_preloaded_symbols, 0);

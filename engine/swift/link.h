@@ -245,6 +245,13 @@ struct SharedLink {
         }
 };
 
+// Helper functions to work around the fact that Swift seems to struggle with
+// some templated C++ functions:
+
+inline std::string neoSig(const Link& link) {
+    return link.neoSig();
+}
+
 }
 
 #endif
