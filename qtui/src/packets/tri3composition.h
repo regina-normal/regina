@@ -43,7 +43,7 @@
 
 #include <memory>
 
-class GenChooser;
+class TriSigChooser;
 class PacketChooser;
 class QMenu;
 class QPushButton;
@@ -92,7 +92,7 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         QPushButton* isoView;
         QLabel* standardTri;
         QLabel* isoSig;
-        GenChooser* isoSigGeneration;
+        TriSigChooser* isoSigVariant;
         QTreeWidget* details;
         QTreeWidgetItem* lastComponent;
 

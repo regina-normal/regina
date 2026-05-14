@@ -108,6 +108,9 @@ class ReginaPrefSet : public QObject {
             /**< Available methods for simplifying group presentations. */
         enum class HomflyStyle { AZ, LM };
             /**< Possible flavours of the HOMFLY-PT polynomial to display. */
+        enum class TriSigVariant { Gen1, Gen2, Gen2Oriented };
+            /**< Variants of isomorphism signature that can be displayed
+                 for triangulations. */
         enum class LinkCode { Gauss, DowkerThistlethwaite, KnotSig, Jenkins,
             PlanarDiagram };
             /**< Possible export codes that can be displayed for links. */
@@ -163,9 +166,6 @@ class ReginaPrefSet : public QObject {
                  python console. */
         bool pythonWordWrap;
             /**< Should python consoles be word wrapped? */
-        int sigGeneration;
-            /**< The generation of isomorphism signature to first display to
-                 the user when opening a new triangulation viewer. */
         int snapPeaCreationType;
             /**< The initial option to select in the list of creation options
                  when creating a new SnapPea triangulation.  This is given as
@@ -256,6 +256,9 @@ class ReginaPrefSet : public QObject {
         TriGraph triInitialGraphType;
             /**< Indicates which graph to initially display in a
                  (2,3,4)-manifold graph viewer. */
+        TriSigVariant triSigVariant;
+            /**< The variant of isomorphism signature to first display to
+                 the user when opening a new triangulation viewer. */
         unsigned triSurfacePropsThreshold;
             /**< The maximum number of tetrahedra for which surface-related
                  properties of 3-manifold triangulations will be automatically

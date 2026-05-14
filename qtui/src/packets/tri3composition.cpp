@@ -59,7 +59,7 @@
 #include "../packeteditiface.h"
 #include "../packetfilter.h"
 #include "reginasupport.h"
-#include "choosers/genchooser.h"
+#include "choosers/trisigchooser.h"
 
 #include <memory>
 #include <QApplication>
@@ -136,11 +136,10 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* tri,
     isoSig->setWordWrap(false);
     isoSig->setWhatsThis(msg);
     line->addWidget(isoSig, 1);
-    isoSigGeneration = new GenChooser(ui);
-    isoSigGeneration->setWhatsThis(msg);
-    connect(isoSigGeneration, SIGNAL(activated(int)), this,
-        SLOT(updateIsoSig()));
-    line->addWidget(isoSigGeneration);
+    isoSigVariant = new TriSigChooser(ui);
+    isoSigVariant->setWhatsThis(msg);
+    connect(isoSigVariant, SIGNAL(activated(int)), this, SLOT(updateIsoSig()));
+    line->addWidget(isoSigVariant);
     /*
     auto* copy = new QPushButton(ReginaSupport::themeIcon("edit-copy"), {}, ui);
     copy->setFlat(true);
@@ -318,9 +317,21 @@ void Tri3CompositionUI::packetBeingDestroyed(regina::PacketShell) {
 
 void Tri3CompositionUI::updateIsoSig() {
     // Show the isomorphism signature.
-    switch (isoSigGeneration->selected()) {
-        case 1: isoSig->setText(tri_->isoSig().c_str()); break;
-        default: isoSig->setText(tri_->neoSig().c_str()); break;
+    switch (isoSigVariant->selected()) {
+        case ReginaPrefSet::TriSigVariant::Gen1:
+            isoSig->setText(tri_->isoSig().c_str());
+            break;
+        case ReginaPrefSet::TriSigVariant::Gen2Oriented:
+            if (! tri_->isOrientable())
+                isoSig->setText(tr("<i>Non-orientable triangulation</i>"));
+            else if (! tri_->isOriented())
+                isoSig->setText(tr("<i>Unoriented triangulation</i>"));
+            else
+                isoSig->setText(tri_->neoSig(true).c_str());
+            break;
+        default: // Gen2
+            isoSig->setText(tri_->neoSig().c_str());
+            break;
     }
     /*
     // If the signature is very long then add an ellipsis to the end.

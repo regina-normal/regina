@@ -28,24 +28,48 @@
  *                                                                        *
  **************************************************************************/
 
+/*! \file trisigchooser.h
+ *  \brief Provides a widget for selecting a variant of isomorphism
+ *  signature for triangulations.
+ */
+
+#ifndef __TRISIGCHOOSER_H
+#define __TRISIGCHOOSER_H
+
+#include <QComboBox>
 #include "reginaprefset.h"
-#include "choosers/genchooser.h"
 
-GenChooser::GenChooser(QWidget* parent) : QComboBox(parent) {
-    addItem("1st-gen (Regina ≤ 7.x)");
-    addItem("2nd-gen (Regina ≥ 8.0)");
+/**
+ * A widget through which the user can select a variant of isomorphism
+ * signature for triangulations.
+ *
+ * The connection with ReginaPrefSet::triSigVariant will be managed
+ * automatically by this class.
+ */
+class TriSigChooser : public QComboBox {
+    Q_OBJECT
 
-    select(ReginaPrefSet::global().sigGeneration);
+    public:
+        /**
+         * Constructor that fills the chooser with all available variants
+         * of isomorphism signature.
+         *
+         * The initial selection will be determined by
+         * `ReginaPrefSet::triSigVariant`.
+         */
+        TriSigChooser(QWidget* parent);
 
-    connect(this, &GenChooser::activated, this, [this]() {
-        ReginaPrefSet::global().sigGeneration = selected();
-    });
-}
+        /**
+         * Returns the currently selected variant.
+         */
+        ReginaPrefSet::TriSigVariant selected();
 
-void GenChooser::select(int generation) {
-    if (generation > 0 && generation <= count())
-        setCurrentIndex(generation - 1);
-    else
-        setCurrentIndex(count() - 1 /* newest generation */);
-}
+        /**
+         * Changes the selection to the given variant.
+         *
+         * The activated() signal will _not_ be emitted.
+         */
+        void select(ReginaPrefSet::TriSigVariant variant);
+};
 
+#endif

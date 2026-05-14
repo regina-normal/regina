@@ -599,7 +599,7 @@
 		0545A02C2FB2F5FF008D3ADB /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
 		0545A0312FB2F61A008D3ADB /* sigconvert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0252FB2F5E6008D3ADB /* sigconvert.cpp */; };
 		0545A0342FB3015D008D3ADB /* sigconvert in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 0545A0302FB2F5FF008D3ADB /* sigconvert */; };
-		0545A0472FB554DE008D3ADB /* genchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0462FB554DE008D3ADB /* genchooser.cpp */; };
+		0545A04A2FB5994E008D3ADB /* trisigchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0492FB5994E008D3ADB /* trisigchooser.cpp */; };
 		054C6A661DCC1FF3005373F0 /* example5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A4F1DCC1FE7005373F0 /* example5.cpp */; };
 		054C6A671DCC1FF3005373F0 /* example6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A501DCC1FE7005373F0 /* example6.cpp */; };
 		054C6A681DCC1FF3005373F0 /* example7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A511DCC1FE7005373F0 /* example7.cpp */; };
@@ -3107,8 +3107,8 @@
 		0545A0422FB51DE6008D3ADB /* sigs-g2-dim7.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sigs-g2-dim7.txt"; sourceTree = "<group>"; };
 		0545A0432FB51DE6008D3ADB /* sigs-g2-dim8.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sigs-g2-dim8.txt"; sourceTree = "<group>"; };
 		0545A0442FB51DE6008D3ADB /* sigs-g2-links.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sigs-g2-links.txt"; sourceTree = "<group>"; };
-		0545A0452FB545F2008D3ADB /* genchooser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = genchooser.h; sourceTree = "<group>"; };
-		0545A0462FB554DE008D3ADB /* genchooser.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = genchooser.cpp; sourceTree = "<group>"; };
+		0545A0482FB5994E008D3ADB /* trisigchooser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = trisigchooser.h; sourceTree = "<group>"; };
+		0545A0492FB5994E008D3ADB /* trisigchooser.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = trisigchooser.cpp; sourceTree = "<group>"; };
 		0549B4982907D38D00C911AF /* data-anon.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-anon.docbook"; sourceTree = "<group>"; };
 		0549B4992907D38E00C911AF /* data-tri.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tri.docbook"; sourceTree = "<group>"; };
 		0549B49A2907D38E00C911AF /* data-txi.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-txi.docbook"; sourceTree = "<group>"; };
@@ -7498,9 +7498,9 @@
 				0564A4131811D91E002CC2AE /* edgeintchooser.h */,
 				059AF9881C53BE4000FB1A14 /* facechooser.h */,
 				059AF9891C53BE4000FB1A14 /* facename.h */,
-				0545A0462FB554DE008D3ADB /* genchooser.cpp */,
-				0545A0452FB545F2008D3ADB /* genchooser.h */,
 				05E5312E1C53C48600ECEB72 /* simplexchooser.h */,
+				0545A0482FB5994E008D3ADB /* trisigchooser.h */,
+				0545A0492FB5994E008D3ADB /* trisigchooser.cpp */,
 			);
 			path = choosers;
 			sourceTree = "<group>";
@@ -10824,12 +10824,12 @@
 				0564A94E1811D921002CC2AE /* tri2gluings.cpp in Sources */,
 				0564A9771811D921002CC2AE /* pythonmanager.cpp in Sources */,
 				05A73CCC19B2F1AB0099C617 /* snappeacreator.cpp in Sources */,
-				0545A0472FB554DE008D3ADB /* genchooser.cpp in Sources */,
 				05B22D1522D543E80099008B /* pythoninterpreter.cpp in Sources */,
 				0564A80F1811D921002CC2AE /* pythonhandler.cpp in Sources */,
 				0564A9631811D921002CC2AE /* textui.cpp in Sources */,
 				0564A8051811D921002CC2AE /* examplesaction.cpp in Sources */,
 				0564A9471811D921002CC2AE /* packetcreator.cpp in Sources */,
+				0545A04A2FB5994E008D3ADB /* trisigchooser.cpp in Sources */,
 				0564A9411811D921002CC2AE /* main.cpp in Sources */,
 				0564A8031811D921002CC2AE /* coordinatechooser.cpp in Sources */,
 				05A73CD819B2F2180099C617 /* cuspchooser.cpp in Sources */,

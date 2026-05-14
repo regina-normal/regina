@@ -84,7 +84,6 @@ ReginaPrefSet::ReginaPrefSet() :
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),
         pythonWordWrap(false),
-        sigGeneration(2),
         snapPeaCreationType(0),
         surfacesCompatThreshold(100),
         surfacesCreationCoords(regina::NormalCoords::Standard),
@@ -113,6 +112,7 @@ ReginaPrefSet::ReginaPrefSet() :
         triGAPExec(defaultGAPExec),
         triGraphvizLabels(true),
         triInitialGraphType(TriGraph::DualGraph),
+        triSigVariant(TriSigVariant::Gen2),
         triSurfacePropsThreshold(6),
         warnOnNonEmbedded(true) {
 }
@@ -348,11 +348,18 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("Triangulation");
-    sigGeneration = settings.value("SigGeneration", 2).toInt();
     triDim2CreationType = settings.value("Dim2CreationTypeV2", 0).toInt();
     triDim3CreationType = settings.value("Dim3CreationTypeV2", 0).toInt();
     triDim4CreationType = settings.value("Dim4CreationTypeV2", 0).toInt();
     triGraphvizLabels = settings.value("GraphvizLabels", true).toBool();
+
+    str = settings.value("SigVariant").toString();
+    if (str == "1")
+        triSigVariant = ReginaPrefSet::TriSigVariant::Gen1;
+    else if (str == "2o")
+        triSigVariant = ReginaPrefSet::TriSigVariant::Gen2Oriented;
+    else // "2"
+        triSigVariant = ReginaPrefSet::TriSigVariant::Gen2; /* default */
 
     str = settings.value("InitialGraphType").toString();
     if (str == "Tree")
@@ -517,11 +524,18 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 
     settings.beginGroup("Triangulation");
-    settings.setValue("SigGeneration", sigGeneration);
     settings.setValue("Dim2CreationTypeV2", triDim2CreationType);
     settings.setValue("Dim3CreationTypeV2", triDim3CreationType);
     settings.setValue("Dim4CreationTypeV2", triDim4CreationType);
     settings.setValue("GraphvizLabels", triGraphvizLabels);
+    switch (triSigVariant) {
+        case ReginaPrefSet::TriSigVariant::Gen1:
+            settings.setValue("SigVariant", "1"); break;
+        case ReginaPrefSet::TriSigVariant::Gen2Oriented:
+            settings.setValue("SigVariant", "2o"); break;
+        default: // Gen2
+            settings.setValue("SigVariant", "2"); break;
+    }
     switch (triInitialGraphType) {
         case ReginaPrefSet::TriGraph::TreeDecomposition:
             settings.setValue("InitialGraphType", "Tree"); break;

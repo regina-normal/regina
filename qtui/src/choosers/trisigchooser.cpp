@@ -28,55 +28,39 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file genchooser.h
- *  \brief Provides a widget for selecting a generation of isomorphism
- *  signature or knot/link signature.
- */
+#include "choosers/trisigchooser.h"
 
-#ifndef __GENCHOOSER_H
-#define __GENCHOOSER_H
+TriSigChooser::TriSigChooser(QWidget* parent) : QComboBox(parent) {
+    addItem("2nd-gen");
+    addItem("2nd-gen oriented");
+    addItem("1st-gen (Regina ≤ 7.x)");
 
-#include <QComboBox>
+    select(ReginaPrefSet::global().triSigVariant);
 
-/**
- * A widget through which the user can select a generation of isomorphism
- * signature or knot/link signature.
- *
- * The connection with ReginaPrefSet::sigGeneration will be managed
- * automatically by this class.
- */
-class GenChooser : public QComboBox {
-    Q_OBJECT
-
-    public:
-        /**
-         * Constructor that fills the chooser with all available generations
-         * of signature.
-         *
-         * The initial selection will be determined by
-         * `ReginaPrefSet::sigGeneration`.
-         */
-        GenChooser(QWidget* parent);
-
-        /**
-         * Returns the currently selected generation.
-         */
-        int selected();
-
-        /**
-         * Changes the selection to the given generation.
-         *
-         * If the given generation is out of range, then the last entry
-         * in the chooser (i.e., the newest generation) will be selected.
-         *
-         * The activated() signal will _not_ be emitted.
-         */
-        void select(int generation);
-};
-
-inline int GenChooser::selected() {
-    int curr = currentIndex();
-    return (curr < 0 ? count() /* newest generation */ : curr + 1);
+    connect(this, &TriSigChooser::activated, this, [this]() {
+        ReginaPrefSet::global().triSigVariant = selected();
+    });
 }
 
-#endif
+ReginaPrefSet::TriSigVariant TriSigChooser::selected() {
+    switch (currentIndex()) {
+        case 1: return ReginaPrefSet::TriSigVariant::Gen2Oriented;
+        case 2: return ReginaPrefSet::TriSigVariant::Gen1;
+        default: return ReginaPrefSet::TriSigVariant::Gen2;
+    }
+}
+
+void TriSigChooser::select(ReginaPrefSet::TriSigVariant variant) {
+    switch (variant) {
+        case ReginaPrefSet::TriSigVariant::Gen2Oriented:
+            setCurrentIndex(1);
+            break;
+        case ReginaPrefSet::TriSigVariant::Gen1:
+            setCurrentIndex(2);
+            break;
+        default: // Gen2
+            setCurrentIndex(0);
+            break;
+    }
+}
+
