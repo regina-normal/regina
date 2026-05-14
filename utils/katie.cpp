@@ -4,7 +4,7 @@
  *  Builds a triangulation of a 3- or 4-manifold                          *
  *  from a decorated link diagram                                         *
  *                                                                        *
- *  Copyright (c) 2021-2025, Rhuaidi Antonio Burke                        *
+ *  Copyright (c) 2021-2026, Rhuaidi Antonio Burke                        *
  *  For further details contact Rhuaidi Burke (r.antonio.burke@gmail.com).*
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *

@@ -1720,7 +1720,7 @@
     <prompt>example$</prompt> <userinput>regina-python</userinput>
     Regina 8.0
     Software for low-dimensional topology
-    Copyright (c) 1999-2025, The Regina development team
+    Copyright (c) 1999-2026, The Regina development team
     &gt;&gt;&gt; x = Example3.lens(4,1)
     &gt;&gt;&gt; y = Example3.lens(4,1)
     &gt;&gt;&gt; y.reflect()
