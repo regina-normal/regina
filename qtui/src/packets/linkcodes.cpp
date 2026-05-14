@@ -168,8 +168,8 @@ void LinkCodesUI::refresh() {
             code->setWordWrapMode(QTextOption::WordWrap);
             return;
         }
-        ans = (std::string("2nd gen (neoSig):\n") + link->neoSig() +
-            "\n\n1st gen (knotSig):\n" + link->knotSig() + "\n").c_str();
+        ans = (std::string("2nd-gen (Regina ≥ 8.0):\n") + link->neoSig() +
+            "\n\n1st-gen (Regina ≤ 7.x):\n" + link->knotSig() + "\n").c_str();
 
         code->setWordWrapMode(QTextOption::WrapAnywhere);
     } else if (type->currentIndex() == 3) {

@@ -32,8 +32,8 @@
 #include "choosers/genchooser.h"
 
 GenChooser::GenChooser(QWidget* parent) : QComboBox(parent) {
-    addItem("1st gen (Regina ≤ 7.x)");
-    addItem("2nd gen (Regina ≥ 8.0)");
+    addItem("1st-gen (Regina ≤ 7.x)");
+    addItem("2nd-gen (Regina ≥ 8.0)");
 
     select(ReginaPrefSet::global().sigGeneration);
 
