@@ -600,6 +600,7 @@
 		0545A0312FB2F61A008D3ADB /* sigconvert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0252FB2F5E6008D3ADB /* sigconvert.cpp */; };
 		0545A0342FB3015D008D3ADB /* sigconvert in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 0545A0302FB2F5FF008D3ADB /* sigconvert */; };
 		0545A04A2FB5994E008D3ADB /* trisigchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0492FB5994E008D3ADB /* trisigchooser.cpp */; };
+		0545A04E2FB66FC5008D3ADB /* spatiallink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A04D2FB66FC5008D3ADB /* spatiallink.cpp */; };
 		054C6A661DCC1FF3005373F0 /* example5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A4F1DCC1FE7005373F0 /* example5.cpp */; };
 		054C6A671DCC1FF3005373F0 /* example6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A501DCC1FE7005373F0 /* example6.cpp */; };
 		054C6A681DCC1FF3005373F0 /* example7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A511DCC1FE7005373F0 /* example7.cpp */; };
@@ -3111,6 +3112,7 @@
 		0545A0492FB5994E008D3ADB /* trisigchooser.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = trisigchooser.cpp; sourceTree = "<group>"; };
 		0545A04B2FB5BD43008D3ADB /* sigconvert.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = sigconvert.out; sourceTree = "<group>"; };
 		0545A04C2FB5BD43008D3ADB /* sigconvert.test */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = sigconvert.test; sourceTree = "<group>"; };
+		0545A04D2FB66FC5008D3ADB /* spatiallink.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = spatiallink.cpp; sourceTree = "<group>"; };
 		0549B4982907D38D00C911AF /* data-anon.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-anon.docbook"; sourceTree = "<group>"; };
 		0549B4992907D38E00C911AF /* data-tri.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tri.docbook"; sourceTree = "<group>"; };
 		0549B49A2907D38E00C911AF /* data-txi.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-txi.docbook"; sourceTree = "<group>"; };
@@ -7984,6 +7986,7 @@
 				056AED242A431AE200EAF4FA /* CMakeLists.txt */,
 				056AED252A431AE200EAF4FA /* link.cpp */,
 				05FE04FB2DB84665001432AC /* modellinkgraph.cpp */,
+				0545A04D2FB66FC5008D3ADB /* spatiallink.cpp */,
 			);
 			path = link;
 			sourceTree = "<group>";
@@ -10561,6 +10564,7 @@
 				056AEDC42A4CFFDF00EAF4FA /* triangulation3.cpp in Sources */,
 				057FDAFB2EE86FE1000C706E /* concepts.cpp in Sources */,
 				056AED5D2A431AE200EAF4FA /* triangulation2.cpp in Sources */,
+				0545A04E2FB66FC5008D3ADB /* spatiallink.cpp in Sources */,
 				056AED572A431AE200EAF4FA /* isomorphism4.cpp in Sources */,
 				056AED8F2A431AE200EAF4FA /* covers.cpp in Sources */,
 				056AED612A431AE200EAF4FA /* anglestructures.cpp in Sources */,
