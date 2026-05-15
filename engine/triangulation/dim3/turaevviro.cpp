@@ -1365,7 +1365,7 @@ Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
     if (it != prop_.turaevViroCache_.end()) {
         if (tracker)
             tracker->setFinished();
-        return (*it).second;
+        return it->second;
     }
 #endif
 

@@ -45,12 +45,12 @@ static void verifyIteration(const SpatialLink& link, const char* name) {
     size_t found = 0;
     auto it = link.beginNodes();
     while (it != link.endNodes()) {
-        EXPECT_GE((*it).x, range.first.x);
-        EXPECT_GE((*it).y, range.first.y);
-        EXPECT_GE((*it).z, range.first.z);
-        EXPECT_LE((*it).x, range.second.x);
-        EXPECT_LE((*it).y, range.second.y);
-        EXPECT_LE((*it).z, range.second.z);
+        EXPECT_GE(it->x, range.first.x);
+        EXPECT_GE(it->y, range.first.y);
+        EXPECT_GE(it->z, range.first.z);
+        EXPECT_LE(it->x, range.second.x);
+        EXPECT_LE(it->y, range.second.y);
+        EXPECT_LE(it->z, range.second.z);
 
         ++found;
         ++it;
@@ -60,12 +60,12 @@ static void verifyIteration(const SpatialLink& link, const char* name) {
     found = 0;
     while (it != link.beginNodes()) {
         --it;
-        EXPECT_GE((*it).x, range.first.x);
-        EXPECT_GE((*it).y, range.first.y);
-        EXPECT_GE((*it).z, range.first.z);
-        EXPECT_LE((*it).x, range.second.x);
-        EXPECT_LE((*it).y, range.second.y);
-        EXPECT_LE((*it).z, range.second.z);
+        EXPECT_GE(it->x, range.first.x);
+        EXPECT_GE(it->y, range.first.y);
+        EXPECT_GE(it->z, range.first.z);
+        EXPECT_LE(it->x, range.second.x);
+        EXPECT_LE(it->y, range.second.y);
+        EXPECT_LE(it->z, range.second.z);
 
         ++found;
     }

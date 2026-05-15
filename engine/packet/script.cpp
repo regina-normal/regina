@@ -58,7 +58,7 @@ void Script::swap(Script& other) {
 const std::string& Script::variableName(size_t index) const {
     auto it = variables_.begin();
     advance(it, index);
-    return (*it).first;
+    return it->first;
 }
 
 std::shared_ptr<Packet> Script::variableValue(size_t index) const {

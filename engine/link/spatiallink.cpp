@@ -146,7 +146,7 @@ void SpatialLink::computeDefaultRadius() {
             if (a.adjacent(b))
                 continue;
 
-            auto dist = (*a).distance(*b);
+            auto dist = a->distance(*b);
             if (defaultRadius_ >= 0 && dist >= defaultRadius_)
                 continue;
 
@@ -156,7 +156,7 @@ void SpatialLink::computeDefaultRadius() {
             for (auto c = beginNodes(); c != endNodes(); ++c) {
                 if (c == a || c == b)
                     continue;
-                if ((*a).distance(*c) < dist && (*b).distance(*c) < dist) {
+                if (a->distance(*c) < dist && b->distance(*c) < dist) {
                     emptyLune = false;
                     break;
                 }

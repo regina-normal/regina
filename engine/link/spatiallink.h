@@ -468,6 +468,19 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
                 }
 
                 /**
+                 * Gives member access to the node that this iterator is
+                 * currently pointing to.
+                 *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
+                 *
+                 * \return member access to the corresponding node.
+                 */
+                const Node* operator ->() const {
+                    return node_->operator ->();
+                }
+
+                /**
                  * The preincrement operator.
                  *
                  * \pre This iterator is dereferenceable (in particular,

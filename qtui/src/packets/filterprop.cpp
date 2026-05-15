@@ -310,7 +310,7 @@ QString FilterPropUI::filterECList() {
         return QString();
 
     auto it = ecs.rbegin();
-    QString ans = (*it).stringValue().c_str();
+    QString ans = it->stringValue().c_str();
     for (++it; it != ecs.rend(); ++it) {
         ans.append(", ");
         ans.append(it->stringValue().c_str());

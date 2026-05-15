@@ -1909,8 +1909,8 @@ inline bool GroupExpression::isTrivial() const {
 inline size_t GroupExpression::wordLength() const {
     size_t retval(0);
     std::list<GroupExpressionTerm>::const_iterator it;
-    for (it = terms_.begin(); it!=terms_.end(); it++)
-        retval += labs((*it).exponent);
+    for (it = terms_.begin(); it != terms_.end(); it++)
+        retval += labs(it->exponent);
     return retval;
 }
 

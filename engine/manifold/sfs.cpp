@@ -530,12 +530,12 @@ void SFSpace::complementAllFibres() {
     while (it != fibres_.end()) {
         // INV: it points to the next block to be reversed.
         auto it2 = it;
-        for (it2++; it2 != fibres_.end() && (*it2).alpha == (*it).alpha; it2++)
+        for (++it2; it2 != fibres_.end() && it2->alpha == it->alpha; ++it2)
             ;
 
         // Now it2 points to the first element of the following block.
         auto next = it2;
-        it2--;
+        --it2;
 
         // Now it2 points to the last element of this block.
         // Reverse this block by swapping elements at each end and
@@ -545,10 +545,10 @@ void SFSpace::complementAllFibres() {
             (*it) = (*it2);
             (*it2) = tmpFibre;
 
-            it++;
+            ++it;
             if (it == it2)
                 break;
-            it2--;
+            --it2;
         }
 
         // Move on to the next block.

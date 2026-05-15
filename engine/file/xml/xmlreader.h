@@ -303,7 +303,7 @@ std::string xmlString(xmlChar* str, bool shouldFree = true);
 inline const std::string& XMLPropertyDict::lookup(const std::string& key)
         const {
     auto it = find(key);
-    return (it == end() ? empty_ : (*it).second);
+    return (it == end() ? empty_ : it->second);
 }
 
 // Inline functions for XMLParserCallback

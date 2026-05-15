@@ -99,7 +99,7 @@ bool GroupExpression::simplify(bool cyclic) {
     bool changed = false;
     for (auto next = terms_.begin(); next != terms_.end(); ) {
         // Take a look at merging next forwards.
-        if ((*next).exponent == 0) {
+        if (next->exponent == 0) {
             // Zero exponent.
             // Delete this term and step back to the previous term in
             // case we can now merge the previous and next terms.
@@ -527,7 +527,7 @@ std::string GroupPresentation::WordSubstitutionData::substitutionString(
     reducer.reserve( word_length );
     // splay word
     for (auto it = word.terms().begin(); it!=word.terms().end(); it++) {
-        for (long i=0; i<std::abs((*it).exponent); i++)
+        for (long i=0; i<std::abs(it->exponent); i++)
             reducer.emplace_back(it->generator, (it->exponent>0) ? 1 : -1);
     }
     // done splaying, produce inv_reducer
@@ -751,7 +751,7 @@ bool GroupPresentation::simplifyAndConjugate(GroupExpression &word) const {
             std::set<WordSubstitutionData> sub_list; // highest score is *first*
             dehnAlgorithmSubMetric( word, r, sub_list );
             if (! sub_list.empty())
-                if ( (*sub_list.begin()).score > 0 ) {
+                if ( sub_list.begin()->score > 0 ) {
                     applySubstitution( word, r, *sub_list.begin() );
                     if (word.isTrivial())
                         return true;
@@ -846,7 +846,7 @@ std::optional<HomGroupPresentation> GroupPresentation::smallCancellation() {
                     std::set<WordSubstitutionData> sub_list;
                     dehnAlgorithmSubMetric( *tit, *it, sub_list ); // take first valid sub
                     if (sub_list.size() != 0)
-                        if ( (*sub_list.begin()).score > 0 ) {
+                        if ( sub_list.begin()->score > 0 ) {
                             applySubstitution( *tit, *it, *sub_list.begin() );
                             we_value_iteration = true;
                             didSomething = true;
