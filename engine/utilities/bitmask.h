@@ -103,11 +103,14 @@ class Bitmask {
         using Piece = unsigned;
             /**< The types of the machine-native pieces into which this
                  bitmask is split. */
+        static constexpr int bitsPerPiece = 8 * sizeof(Piece);
+            /**< The number of bits that can fit into a single machine-native
+                 piece. */
         size_t pieces;
             /**< The number of machine-native pieces into which this bitmask
                  is split. */
         Piece* mask;
-            /**< The array of pieces, each of which stores 8 * sizeof(Piece)
+            /**< The array of pieces, each of which stores \a bitsPerPiece
                  individual bits. */
 
     public:
@@ -234,12 +237,12 @@ class Bitmask {
             size_t diff;
 
             for ( ; indexBegin != indexEnd; ++indexBegin) {
-                // INV: offset = (base - mask) * 8 * sizeof(Piece)
+                // INV: offset = (base - mask) * bitsPerPiece
                 // INV: *indexBegin >= offset
-                if (*indexBegin >= offset + (8 * sizeof(Piece))) {
-                    diff = ((*indexBegin - offset) / (8 * sizeof(Piece)));
+                if (*indexBegin >= offset + bitsPerPiece) {
+                    diff = (*indexBegin - offset) / bitsPerPiece;
                     base += diff;
-                    offset += (8 * sizeof(Piece) * diff);
+                    offset += (bitsPerPiece * diff);
                 }
 
                 *base |= (Piece(1) << (*indexBegin - offset));
@@ -1551,7 +1554,7 @@ inline Bitmask::Bitmask() : pieces(0), mask(nullptr) {
 }
 
 inline Bitmask::Bitmask(size_t length) :
-        pieces(length > 0 ? (length - 1) / (8 * sizeof(Piece)) + 1 : 0),
+        pieces(length > 0 ? (length - 1) / bitsPerPiece + 1 : 0),
         mask(new Piece[pieces]) {
     std::fill(mask, mask + pieces, 0);
 }
@@ -1577,7 +1580,7 @@ inline void Bitmask::reset() {
 inline void Bitmask::reset(size_t length) {
     delete[] mask;
 
-    pieces = (length > 0 ? (length - 1) / (8 * sizeof(Piece)) + 1 : 0);
+    pieces = (length > 0 ? (length - 1) / bitsPerPiece + 1 : 0);
     mask = new Piece[pieces];
 
     std::fill(mask, mask + pieces, 0);
@@ -1611,8 +1614,8 @@ inline void Bitmask::swap(Bitmask& other) noexcept {
 }
 
 inline void Bitmask::truncate(size_t numBits) {
-    size_t skip = numBits / (8 * sizeof(Piece));
-    numBits = numBits % (8 * sizeof(Piece));
+    size_t skip = numBits / bitsPerPiece;
+    numBits = numBits % bitsPerPiece;
 
     Piece* piece = mask + skip;
     if (piece < mask + pieces) {
@@ -1623,16 +1626,13 @@ inline void Bitmask::truncate(size_t numBits) {
 }
 
 inline bool Bitmask::get(size_t index) const {
-    return (mask[index / (8 * sizeof(Piece))] &
-        (Piece(1) << (index % (8 * sizeof(Piece)))));
+    return (mask[index / bitsPerPiece] & (Piece(1) << (index % bitsPerPiece)));
 }
 
 inline void Bitmask::set(size_t index, bool value) {
-    mask[index / (8 * sizeof(Piece))] |=
-        (Piece(1) << (index % (8 * sizeof(Piece))));
+    mask[index / bitsPerPiece] |= (Piece(1) << (index % bitsPerPiece));
     if (! value)
-        mask[index / (8 * sizeof(Piece))] ^=
-            (Piece(1) << (index % (8 * sizeof(Piece))));
+        mask[index / bitsPerPiece] ^= (Piece(1) << (index % bitsPerPiece));
 }
 
 inline Bitmask& Bitmask::operator &= (const Bitmask& other) {
@@ -1737,16 +1737,14 @@ inline size_t Bitmask::bits() const {
 inline ssize_t Bitmask::firstBit() const {
     for (size_t i = 0; i < pieces; ++i)
         if (mask[i])
-            return 8 * sizeof(Piece) * i +
-                BitManipulator<Piece>::firstBit(mask[i]);
+            return bitsPerPiece * i + BitManipulator<Piece>::firstBit(mask[i]);
     return -1;
 }
 
 inline ssize_t Bitmask::lastBit() const {
     for (ssize_t i = pieces - 1; i >= 0; --i)
         if (mask[i])
-            return 8 * sizeof(Piece) * i +
-                BitManipulator<Piece>::lastBit(mask[i]);
+            return bitsPerPiece * i + BitManipulator<Piece>::lastBit(mask[i]);
     return -1;
 }
 
