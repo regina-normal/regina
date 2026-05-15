@@ -33,6 +33,7 @@
 
 #include "testhelper.h"
 
+using regina::ExampleLink;
 using regina::SpatialLink;
 
 static void verifyIteration(const SpatialLink& link, const char* name) {
@@ -74,9 +75,24 @@ static void verifyIteration(const SpatialLink& link, const char* name) {
 
 TEST(SpatialLinkTest, iteration) {
     verifyIteration(SpatialLink(), "Empty link");
-    verifyIteration(regina::ExampleLink::cubicalUnknot(), "Cubical unknot");
-    verifyIteration(regina::ExampleLink::spatialTrefoil(), "Trefoil");
-    verifyIteration(regina::ExampleLink::spatialHopf(), "Hopf link");
-    verifyIteration(regina::ExampleLink::spatialBorromean(), "Borromean rings");
+    verifyIteration(ExampleLink::cubicalUnknot(), "Cubical unknot");
+    verifyIteration(ExampleLink::spatialTrefoil(), "Trefoil");
+    verifyIteration(ExampleLink::spatialHopf(), "Hopf link");
+    verifyIteration(ExampleLink::spatialBorromean(), "Borromean rings");
+}
+
+TEST(SpatialLinkTest, defaultRadius) {
+    // These three links use the RNG radius: the values here were computed
+    // using Regina 8.0.
+    EXPECT_NEAR(ExampleLink::spatialTrefoil().defaultRadius(), 0.2475, 0.001);
+    EXPECT_NEAR(ExampleLink::spatialHopf().defaultRadius(), 0.9186, 0.001);
+    EXPECT_NEAR(ExampleLink::spatialBorromean().defaultRadius(), 2.0810, 0.001);
+
+    // For this link, the RNG radius fails and we end up falling back to a
+    // simple heuristic using the bounding box.
+    EXPECT_DOUBLE_EQ(ExampleLink::cubicalUnknot().defaultRadius(), 0.35);
+
+    // For the empty link, the radius is irrelevant.  Regina returns 1.
+    EXPECT_DOUBLE_EQ(SpatialLink().defaultRadius(), 1.0);
 }
 
