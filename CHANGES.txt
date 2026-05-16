@@ -62,6 +62,10 @@ Version 8.0  [ TODO ]
               BitManipulator<...>.
         Class Bitmask:
             - This class now supports bitmasks of length zero.
+        Class Bitmask2:
+            - Now uses just one native C++ type, and therefore takes only one
+              template parameter.  The new class Bitmask2<T> is identical to
+              the old class Bitmask2<T, T>.
         Class Bitmask, Bitmask1, Bitmask2:
             - New three-way comparison function numericalComp(), which replaces
               the old boolean lessThan().  The function lessThan() is kept but
@@ -335,6 +339,10 @@ Version 8.0  [ TODO ]
             - The python-only routines primeDecompInt() and
               primePowerDecompInt() are now just overloads for primeDecomp()
               and primePowerDecomp().  The old names are kept but deprecated.
+        Class Qitmask2:
+            - Now uses just one native C++ type, and therefore takes only one
+              template parameter.  The new class Qitmask2<T> is identical to
+              the old class Qitmask2<T, T>.
         Class RingTraits:
             - Provides new compile-time constants zeroInitialised and
               zeroDivisors.

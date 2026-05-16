@@ -40,9 +40,9 @@ using regina::TrieSet;
 
 #ifdef INT128_AVAILABLE
 using Bitmask128 = Bitmask1<regina::UInt128>;
-using Bitmask256 = Bitmask2<regina::UInt128, regina::UInt128>;
+using Bitmask256 = Bitmask2<regina::UInt128>;
 #else
-using Bitmask128 = Bitmask2<uint64_t, uint64_t>;
+using Bitmask128 = Bitmask2<uint64_t>;
 #endif
 
 void addTrieSet(pybind11::module_& m) {

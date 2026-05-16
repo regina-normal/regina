@@ -156,9 +156,9 @@ void addBitmask(pybind11::module_& m) {
     addBitmaskOpt<Bitmask1<uint64_t>>(m, "Bitmask64");
     #ifdef INT128_AVAILABLE
     addBitmaskOpt<Bitmask1<regina::UInt128>>(m, "Bitmask128");
-    addBitmaskOpt<Bitmask2<regina::UInt128, regina::UInt128>>(m, "Bitmask256");
+    addBitmaskOpt<Bitmask2<regina::UInt128>>(m, "Bitmask256");
     #else
-    addBitmaskOpt<Bitmask2<uint64_t, uint64_t>>(m, "Bitmask128");
+    addBitmaskOpt<Bitmask2<uint64_t>>(m, "Bitmask128");
     #endif
 }
 

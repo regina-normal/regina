@@ -133,11 +133,8 @@ TEST(BitmaskTest, firstLastBit) {
     testFirstLastBit<regina::Bitmask1<uint64_t>>(64);
     testFirstLastBit<regina::Bitmask1<unsigned char>>(8);
     testFirstLastBit<regina::Bitmask1<unsigned long>>(longBits);
-    testFirstLastBit<regina::Bitmask2<unsigned char, unsigned char>>(16);
-    testFirstLastBit<regina::Bitmask2<unsigned char, unsigned long>>
-        (8 + longBits);
-    testFirstLastBit<regina::Bitmask2<unsigned long, unsigned char>>
-        (8 + longBits);
+    testFirstLastBit<regina::Bitmask2<unsigned char>>(16);
+    testFirstLastBit<regina::Bitmask2<unsigned long>>(2 * longBits);
     testFirstLastBit<regina::Bitmask>(128);
 #ifdef INT128_AVAILABLE
     testFirstLastBit<regina::Bitmask1<regina::UInt128>>(128);
@@ -176,8 +173,6 @@ TEST(BitmaskTest, bits) {
     testBits<regina::Bitmask1<unsigned long>>(longBits);
     testBits<regina::Bitmask2<unsigned char>>(16);
     testBits<regina::Bitmask2<unsigned long>>(2 * longBits);
-    testBits<regina::Bitmask2<unsigned char, unsigned long>>(8 + longBits);
-    testBits<regina::Bitmask2<unsigned long, unsigned char>>(8 + longBits);
     testBits<regina::Bitmask>(128);
 #ifdef INT128_AVAILABLE
     testBits<regina::Bitmask1<regina::UInt128>>(128);
@@ -218,8 +213,6 @@ TEST(BitmaskTest, truncate) {
     testTruncate<regina::Bitmask1<unsigned long>>(longBits);
     testTruncate<regina::Bitmask2<unsigned char>>(16);
     testTruncate<regina::Bitmask2<unsigned long>>(2 * longBits);
-    testTruncate<regina::Bitmask2<unsigned char, unsigned long>>(8 + longBits);
-    testTruncate<regina::Bitmask2<unsigned long, unsigned char>>(8 + longBits);
     testTruncate<regina::Bitmask>(128);
 #ifdef INT128_AVAILABLE
     testTruncate<regina::Bitmask1<regina::UInt128>>(128);
@@ -267,10 +260,6 @@ TEST(BitmaskTest, numericalOrder) {
     testNumericalOrder<regina::Bitmask1<unsigned long>>(longBits);
     testNumericalOrder<regina::Bitmask2<unsigned char>>(16);
     testNumericalOrder<regina::Bitmask2<unsigned long>>(2 * longBits);
-    testNumericalOrder<regina::Bitmask2<unsigned char, unsigned long>>(
-        8 + longBits);
-    testNumericalOrder<regina::Bitmask2<unsigned long, unsigned char>>(
-        8 + longBits);
     testNumericalOrder<regina::Bitmask>(128);
 #ifdef INT128_AVAILABLE
     testNumericalOrder<regina::Bitmask1<regina::UInt128>>(128);

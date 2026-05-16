@@ -45,9 +45,9 @@ namespace regina {
 
 class Bitmask;
 template <UnsignedCppInteger> class Bitmask1;
-template <UnsignedCppInteger, UnsignedCppInteger> class Bitmask2;
+template <UnsignedCppInteger> class Bitmask2;
 template <UnsignedCppInteger> class Qitmask1;
-template <UnsignedCppInteger, UnsignedCppInteger> class Qitmask2;
+template <UnsignedCppInteger> class Qitmask2;
 
 /**
  * \defgroup concepts Concepts
