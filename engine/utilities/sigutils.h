@@ -1598,6 +1598,7 @@ class BitDecoder {
          */
         template <UnsignedCppInteger IntType>
         IntType decodeInt(int count) {
+#if 0
             IntType ans = 0;
             int i = 0;
             IntType bit = 1;
@@ -1605,6 +1606,51 @@ class BitDecoder {
                 if (decodeBit())
                     ans |= bit;
             return ans;
+#else
+            if (count < nQueued_) {
+                IntType ans =
+                    (extracted_ >> (8 - nQueued_)) & ((1 << count) - 1);
+                nQueued_ -= count;
+                return ans;
+            } else if (count == nQueued_) {
+                nQueued_ = 0;
+                return extracted_ >> (8 - count);
+            } else {
+                IntType ans;
+                int nRead;
+                if (nQueued_) {
+                    ans = extracted_ >> (8 - nQueued_);
+                    nRead = nQueued_;
+                } else {
+                    ans = 0;
+                    nRead = 0;
+                }
+                while (nRead + 8 <= count) {
+                    if (next_ == end_)
+                        throw InvalidInput("BitDecoder: "
+                            "unexpected end of encoded byte sequence");
+                    // We need *next_++ to be an unsigned type before we widen
+                    // it, since (for example) we want 0xFF -> 0x00..00FF and
+                    // not 0xFF -> 0xFF..FFFF.
+                    ans |= (static_cast<IntType>(static_cast<uint8_t>(*next_++))
+                        << nRead);
+                    nRead += 8;
+                }
+                // We have < 8 bits remaining to read.
+                if (nRead == count) {
+                    nQueued_ = 0;
+                } else {
+                    if (next_ == end_)
+                        throw InvalidInput("BitDecoder: "
+                            "unexpected end of encoded byte sequence");
+                    extracted_ = *next_++;
+                    ans |= (static_cast<IntType>(extracted_ &
+                        ((1 << (count - nRead)) - 1)) << nRead);
+                    nQueued_ = 8 - (count - nRead);
+                }
+                return ans;
+            }
+#endif
         }
 
         /**
@@ -2062,9 +2108,6 @@ class Base64BitDecoder : private Base64Decoder<Iterator> {
         bool decodeBit() {
             if (nQueued_) {
                 return extracted_ & (1 << (6 - nQueued_--));
-            } else if (Base64Decoder<Iterator>::done()) {
-                throw InvalidInput("Base64BitDecoder: "
-                    "unexpected end of encoded string");
             } else {
                 extracted_ =
                     Base64Decoder<Iterator>::template decodeSingle<uint8_t>();
@@ -2092,6 +2135,7 @@ class Base64BitDecoder : private Base64Decoder<Iterator> {
          */
         template <UnsignedCppInteger IntType>
         IntType decodeInt(int count) {
+#if 0
             IntType ans = 0;
             int i = 0;
             IntType bit = 1;
@@ -2099,6 +2143,45 @@ class Base64BitDecoder : private Base64Decoder<Iterator> {
                 if (decodeBit())
                     ans |= bit;
             return ans;
+#else
+            if (count < nQueued_) {
+                IntType ans =
+                    (extracted_ >> (6 - nQueued_)) & ((1 << count) - 1);
+                nQueued_ -= count;
+                return ans;
+            } else if (count == nQueued_) {
+                nQueued_ = 0;
+                return extracted_ >> (6 - count);
+            } else {
+                IntType ans;
+                int nRead;
+                if (nQueued_) {
+                    ans = extracted_ >> (6 - nQueued_);
+                    nRead = nQueued_;
+                } else {
+                    ans = 0;
+                    nRead = 0;
+                }
+                // We are now at a byte boundary.
+                while (nRead + 6 <= count) {
+                    ans |= (static_cast<IntType>(
+                        Base64Decoder<Iterator>::template
+                        decodeSingle<uint8_t>()) << nRead);
+                    nRead += 6;
+                }
+                // We have < 6 bits remaining to read.
+                if (nRead == count) {
+                    nQueued_ = 0;
+                } else {
+                    extracted_ = Base64Decoder<Iterator>::template
+                        decodeSingle<uint8_t>();
+                    ans |= (static_cast<IntType>(extracted_ &
+                        ((1 << (count - nRead)) - 1)) << nRead);
+                    nQueued_ = 6 - (count - nRead);
+                }
+                return ans;
+            }
+#endif
         }
 
         /**
