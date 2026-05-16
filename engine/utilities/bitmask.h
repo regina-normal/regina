@@ -76,7 +76,7 @@ template <UnsignedCppInteger> class Bitmask2;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \todo \opt Insist that sizeof(Piece) is a power of two, and replace
+ * \todo \opt Insist that `sizeof(Block)` is a power of two, and replace
  * expensive division/mod operations with cheap bit operations.
  *
  * \warning Because this class may increase the length of the bitmask
@@ -99,18 +99,19 @@ class Bitmask {
          */
         static constexpr bool fixedSize = false;
 
+        using Block = unsigned int;
+            /**< The machine-native integer type that this class uses to pack
+                 bits together in internal storage. */
+
     private:
-        using Piece = unsigned;
-            /**< The types of the machine-native pieces into which this
-                 bitmask is split. */
-        static constexpr int bitsPerPiece = 8 * sizeof(Piece);
+        static constexpr int bitsPerBlock = 8 * sizeof(Block);
             /**< The number of bits that can fit into a single machine-native
-                 piece. */
+                 integer block. */
         size_t pieces;
             /**< The number of machine-native pieces into which this bitmask
                  is split. */
-        Piece* mask;
-            /**< The array of pieces, each of which stores \a bitsPerPiece
+        Block* mask;
+            /**< The array of pieces, each of which stores \a bitsPerBlock
                  individual bits. */
 
     public:
@@ -232,22 +233,22 @@ class Bitmask {
          */
         template <InputIteratorFor<size_t> Iterator>
         void set(Iterator indexBegin, Iterator indexEnd, bool value) {
-            Piece* base = mask;
+            Block* base = mask;
             size_t offset = 0;
             size_t diff;
 
             for ( ; indexBegin != indexEnd; ++indexBegin) {
-                // INV: offset = (base - mask) * bitsPerPiece
+                // INV: offset = (base - mask) * bitsPerBlock
                 // INV: *indexBegin >= offset
-                if (*indexBegin >= offset + bitsPerPiece) {
-                    diff = (*indexBegin - offset) / bitsPerPiece;
+                if (*indexBegin >= offset + bitsPerBlock) {
+                    diff = (*indexBegin - offset) / bitsPerBlock;
                     base += diff;
-                    offset += (bitsPerPiece * diff);
+                    offset += (bitsPerBlock * diff);
                 }
 
-                *base |= (Piece(1) << (*indexBegin - offset));
+                *base |= (Block(1) << (*indexBegin - offset));
                 if (! value)
-                    *base ^= (Piece(1) << (*indexBegin - offset));
+                    *base ^= (Block(1) << (*indexBegin - offset));
             }
         }
 
@@ -626,6 +627,11 @@ class Bitmask1 {
          * optimised Bitmask1 and Bitmask2 template classes, this is \c true.
          */
         static constexpr bool fixedSize = true;
+
+        using Block = T;
+            /**< The machine-native integer type that this class uses to pack
+                 bits together in internal storage.  For the class Bitmask1,
+                 only one such integer is used. */
 
     private:
         T mask;
@@ -1054,6 +1060,11 @@ class Bitmask2 {
          * optimised Bitmask1 and Bitmask2 template classes, this is \c true.
          */
         static constexpr bool fixedSize = true;
+
+        using Block = T;
+            /**< The machine-native integer type that this class uses to pack
+                 bits together in internal storage.  For the class Bitmask2,
+                 exactly two such integers are used. */
 
     private:
         T low;
@@ -1553,13 +1564,13 @@ inline Bitmask::Bitmask() : pieces(0), mask(nullptr) {
 }
 
 inline Bitmask::Bitmask(size_t length) :
-        pieces(length > 0 ? (length - 1) / bitsPerPiece + 1 : 0),
-        mask(new Piece[pieces]) {
+        pieces(length > 0 ? (length - 1) / bitsPerBlock + 1 : 0),
+        mask(new Block[pieces]) {
     std::fill(mask, mask + pieces, 0);
 }
 
 inline Bitmask::Bitmask(const Bitmask& src) :
-        pieces(src.pieces), mask(new Piece[src.pieces]) {
+        pieces(src.pieces), mask(new Block[src.pieces]) {
     std::copy(src.mask, src.mask + pieces, mask);
 }
 
@@ -1579,8 +1590,8 @@ inline void Bitmask::reset() {
 inline void Bitmask::reset(size_t length) {
     delete[] mask;
 
-    pieces = (length > 0 ? (length - 1) / bitsPerPiece + 1 : 0);
-    mask = new Piece[pieces];
+    pieces = (length > 0 ? (length - 1) / bitsPerBlock + 1 : 0);
+    mask = new Block[pieces];
 
     std::fill(mask, mask + pieces, 0);
 }
@@ -1593,7 +1604,7 @@ inline Bitmask& Bitmask::operator = (const Bitmask& other) {
     if (pieces != other.pieces) {
         delete[] mask;
         pieces = other.pieces;
-        mask = new Piece[pieces];
+        mask = new Block[pieces];
     }
     if (pieces)
         std::copy(other.mask, other.mask + pieces, mask);
@@ -1613,25 +1624,25 @@ inline void Bitmask::swap(Bitmask& other) noexcept {
 }
 
 inline void Bitmask::truncate(size_t numBits) {
-    size_t skip = numBits / bitsPerPiece;
-    numBits = numBits % bitsPerPiece;
+    size_t skip = numBits / bitsPerBlock;
+    numBits = numBits % bitsPerBlock;
 
-    Piece* piece = mask + skip;
-    if (piece < mask + pieces) {
-        (*piece) &= ((Piece(1) << numBits) - Piece(1));
-        for (++piece; piece < mask + pieces; ++piece)
-            *piece = 0;
+    Block* block = mask + skip;
+    if (block < mask + pieces) {
+        (*block) &= ((Block(1) << numBits) - Block(1));
+        for (++block; block < mask + pieces; ++block)
+            *block = 0;
     }
 }
 
 inline bool Bitmask::get(size_t index) const {
-    return (mask[index / bitsPerPiece] & (Piece(1) << (index % bitsPerPiece)));
+    return (mask[index / bitsPerBlock] & (Block(1) << (index % bitsPerBlock)));
 }
 
 inline void Bitmask::set(size_t index, bool value) {
-    mask[index / bitsPerPiece] |= (Piece(1) << (index % bitsPerPiece));
+    mask[index / bitsPerBlock] |= (Block(1) << (index % bitsPerBlock));
     if (! value)
-        mask[index / bitsPerPiece] ^= (Piece(1) << (index % bitsPerPiece));
+        mask[index / bitsPerBlock] ^= (Block(1) << (index % bitsPerBlock));
 }
 
 inline Bitmask& Bitmask::operator &= (const Bitmask& other) {
@@ -1691,7 +1702,7 @@ inline std::partial_ordering Bitmask::operator <=> (const Bitmask& rhs) const {
 
     for (size_t i = 0; i < pieces; ++i) {
         // INV: ans is equivalent, less, or greater (not unordered).
-        auto next = BitManipulator<Piece>::subsetComparison(
+        auto next = BitManipulator<Block>::subsetComparison(
             mask[i], rhs.mask[i]);
         if (next == std::partial_ordering::unordered)
             return next;
@@ -1736,14 +1747,14 @@ inline size_t Bitmask::bits() const {
 inline ssize_t Bitmask::firstBit() const {
     for (size_t i = 0; i < pieces; ++i)
         if (mask[i])
-            return bitsPerPiece * i + BitManipulator<Piece>::firstBit(mask[i]);
+            return bitsPerBlock * i + BitManipulator<Block>::firstBit(mask[i]);
     return -1;
 }
 
 inline ssize_t Bitmask::lastBit() const {
     for (ssize_t i = pieces - 1; i >= 0; --i)
         if (mask[i])
-            return bitsPerPiece * i + BitManipulator<Piece>::lastBit(mask[i]);
+            return bitsPerBlock * i + BitManipulator<Block>::lastBit(mask[i]);
     return -1;
 }
 
@@ -1762,7 +1773,7 @@ inline void swap(Bitmask& a, Bitmask& b) noexcept {
 }
 
 inline std::ostream& operator << (std::ostream& out, const Bitmask& mask) {
-    Bitmask::Piece bit;
+    Bitmask::Block bit;
     for (size_t i = 0; i < mask.pieces; ++i)
         for (bit = 1; bit; bit <<= 1)
             out << ((bit & mask.mask[i]) ? '1' : '0');

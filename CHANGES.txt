@@ -70,6 +70,7 @@ Version 8.0  [ TODO ]
             - New three-way comparison function numericalComp(), which replaces
               the old boolean lessThan().  The function lessThan() is kept but
               deprecated.
+            - New type alias Block.
         Class BitEncoder, BitDecoder:
             - New classes to support signatures that use (unprintable) packed
               sequences of bits, without regard for byte boundaries.
