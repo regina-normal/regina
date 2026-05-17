@@ -1348,10 +1348,11 @@ class BitEncoder {
          * encoded in order from the least significant bit of the argument
          * \a bits.
          * \param count the total number of bits to encode; this must be
-         * non-negative.
+         * strictly positive.
          */
         template <UnsignedCppInteger IntType>
         void encodeInt(IntType bits, int count) {
+#if 0
             IntType mask = 1;
             for (int i = 0; i < count; ++i, mask <<= 1)
                 encodeBit(bits & mask);
@@ -1362,6 +1363,34 @@ class BitEncoder {
                     throw InvalidArgument("BitEncoder::encodeInt(): "
                         "integer argument out of range");
             }
+#else
+            if (count < sizeof(IntType) * 8 && (bits >> count))
+                throw InvalidArgument("BitEncoder::encodeInt(): "
+                    "integer argument out of range");
+
+            // Now we know there are no extraneous bits in our integer argument.
+            if (nQueued_ + count < 8) {
+                queued_ |= (bits << nQueued_);
+                nQueued_ += count;
+            } else {
+                bytes_.push_back(queued_ |
+                    static_cast<uint8_t>(bits << nQueued_));
+                int written = 8 - nQueued_;
+                while (written + 8 <= count) {
+                    bytes_.push_back(bits >> written);
+                    written += 8;
+                }
+                if (written == count) {
+                    // In the special case where written == 8 * sizeof(IntType),
+                    // bits >> written is undefined.  Just set things directly.
+                    nQueued_ = 0;
+                    queued_ = 0;
+                } else {
+                    queued_ = bits >> written;
+                    nQueued_ = count - written;
+                }
+            }
+#endif
         }
 
         /**
@@ -1603,11 +1632,15 @@ class BitDecoder {
             return ans;
 #else
             if (count < nQueued_) {
+                // Note: if count == 0 and IntType == uint8_t, then we are
+                // shifting by 8 bits here and the result is undefined.
                 IntType ans =
                     (extracted_ >> (8 - nQueued_)) & ((1 << count) - 1);
                 nQueued_ -= count;
                 return ans;
             } else if (count == nQueued_) {
+                // Again, if count == 0 and IntType == uint8_t, we are
+                // shifting by 8 bits and the result is undefined.
                 nQueued_ = 0;
                 return extracted_ >> (8 - count);
             } else {
@@ -1804,10 +1837,11 @@ class Base64BitEncoder : private Base64Encoder {
          * encoded in order from the least significant bit of the argument
          * \a bits.
          * \param count the total number of bits to encode; this must be
-         * non-negative.
+         * strictly positive.
          */
         template <UnsignedCppInteger IntType>
         void encodeInt(IntType bits, int count) {
+#if 0
             IntType mask = 1;
             for (int i = 0; i < count; ++i, mask <<= 1)
                 encodeBit(bits & mask);
@@ -1818,6 +1852,35 @@ class Base64BitEncoder : private Base64Encoder {
                     throw InvalidArgument("Base64BitEncoder::encodeInt(): "
                         "integer argument out of range");
             }
+#else
+            if (count < sizeof(IntType) * 8 && (bits >> count))
+                throw InvalidArgument("Base64BitEncoder::encodeInt(): "
+                    "integer argument out of range");
+
+            // Now we know there are no extraneous bits in our integer argument.
+            if (nQueued_ + count < 6) {
+                queued_ |= (bits << nQueued_);
+                nQueued_ += count;
+            } else {
+                Base64Encoder::encodeSingle(static_cast<uint8_t>(queued_ |
+                    ((bits << nQueued_) & 0x3F)));
+                int written = 6 - nQueued_;
+                while (written + 6 <= count) {
+                    Base64Encoder::encodeSingle(static_cast<uint8_t>(
+                        (bits >> written) & 0x3F));
+                    written += 6;
+                }
+                if (written == count) {
+                    // In the special case where written == 8 * sizeof(IntType),
+                    // bits >> written is undefined.  Just set things directly.
+                    nQueued_ = 0;
+                    queued_ = 0;
+                } else {
+                    queued_ = bits >> written;
+                    nQueued_ = count - written;
+                }
+            }
+#endif
         }
 
         /**
