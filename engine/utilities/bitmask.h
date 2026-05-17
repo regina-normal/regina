@@ -104,11 +104,11 @@ class Bitmask {
             /**< The machine-native integer type that this class uses to pack
                  bits together in internal storage. */
 
-    private:
         static constexpr int bitsPerBlock = 8 * sizeof(Block);
             /**< The number of bits that can fit into a single machine-native
                  integer block. */
 
+    private:
         FixedArray<Block> blocks_;
             /**< The machine-native blocks into which this bitmask is split. */
 
@@ -240,6 +240,66 @@ class Bitmask {
                     *base ^= (Block(1) << (*indexBegin - offset));
             }
         }
+
+        /**
+         * A begin iterator that grants low-level read-only access to the
+         * machine-native integers that store the individual bits.
+         *
+         * The bits of this bitmask are stored in these integer blocks, in
+         * order from first block to last block, and within each integer block
+         * in order from least significant bit to most significant bit.
+         *
+         * \nopython If you need to read and/or write bits through Python, you
+         * will need to do this one bit at a time via get() and/or set().
+         *
+         * \return an iterator pointing to the first integer block.
+         */
+        typename FixedArray<Block>::const_iterator beginBlocks() const;
+
+        /**
+         * A begin iterator that grants low-level read-write access to the
+         * machine-native integers that store the individual bits.
+         *
+         * The bits of this bitmask are stored in these integer blocks, in
+         * order from first block to last block, and within each integer block
+         * in order from least significant bit to most significant bit.
+         *
+         * \nopython If you need to read and/or write bits through Python, you
+         * will need to do this one bit at a time via get() and/or set().
+         *
+         * \return an iterator pointing to the first integer block.
+         */
+        typename FixedArray<Block>::iterator beginBlocks();
+
+        /**
+         * An end iterator that grants low-level read-only access to the
+         * machine-native integers that store the individual bits.
+         *
+         * The bits of this bitmask are stored in these integer blocks, in
+         * order from first block to last block, and within each integer block
+         * in order from least significant bit to most significant bit.
+         *
+         * \nopython If you need to read and/or write bits through Python, you
+         * will need to do this one bit at a time via get() and/or set().
+         *
+         * \return an iterator pointing beyond the last integer block.
+         */
+        typename FixedArray<Block>::const_iterator endBlocks() const;
+
+        /**
+         * An end iterator that grants low-level read-write access to the
+         * machine-native integers that store the individual bits.
+         *
+         * The bits of this bitmask are stored in these integer blocks, in
+         * order from first block to last block, and within each integer block
+         * in order from least significant bit to most significant bit.
+         *
+         * \nopython If you need to read and/or write bits through Python, you
+         * will need to do this one bit at a time via get() and/or set().
+         *
+         * \return an iterator pointing beyond the last integer block.
+         */
+        typename FixedArray<Block>::iterator endBlocks();
 
         /**
          * Sets all bits of this bitmask to \c false.
@@ -619,6 +679,10 @@ class Bitmask1 {
             /**< The machine-native integer type that this class uses to pack
                  bits together in internal storage.  For the class Bitmask1,
                  only one such integer is used. */
+
+        static constexpr int bitsPerBlock = 8 * sizeof(Block);
+            /**< The number of bits that can fit into a single machine-native
+                 integer block. */
 
     private:
         T mask;
@@ -1052,6 +1116,10 @@ class Bitmask2 {
             /**< The machine-native integer type that this class uses to pack
                  bits together in internal storage.  For the class Bitmask2,
                  exactly two such integers are used. */
+
+        static constexpr int bitsPerBlock = 8 * sizeof(Block);
+            /**< The number of bits that can fit into a single machine-native
+                 integer block. */
 
     private:
         T low;
@@ -1599,6 +1667,24 @@ inline void Bitmask::set(size_t index, bool value) {
     blocks_[index / bitsPerBlock] |= (Block(1) << (index % bitsPerBlock));
     if (! value)
         blocks_[index / bitsPerBlock] ^= (Block(1) << (index % bitsPerBlock));
+}
+
+inline typename FixedArray<Bitmask::Block>::const_iterator
+        Bitmask::beginBlocks() const {
+    return blocks_.begin();
+}
+
+inline typename FixedArray<Bitmask::Block>::iterator Bitmask::beginBlocks() {
+    return blocks_.begin();
+}
+
+inline typename FixedArray<Bitmask::Block>::const_iterator Bitmask::endBlocks()
+        const {
+    return blocks_.end();
+}
+
+inline typename FixedArray<Bitmask::Block>::iterator Bitmask::endBlocks() {
+    return blocks_.end();
 }
 
 inline Bitmask& Bitmask::operator &= (const Bitmask& other) {

@@ -39,23 +39,23 @@ Python:
     Qitmask64, Qitmask128, and (if the machine supports 128-bit
     integers) Qitmask256. Each of these will be an optimised qitmask
     class that can hold the corresponding number of bits, and is
-    guaranteed to be an instance of either the C++ Qitmask1<T> class
-    (where possible) or the C++ Qitmask2<T,U> template class (if
-    necessary).)doc";
+    guaranteed to be an instance of either the C++ ``Qitmask1<T>``
+    class (where possible) or the C++ ``Qitmask2<T>`` template class
+    (if necessary).)doc";
 
 // Docstring regina::python::doc::Qitmask2
 static const char *Qitmask2 =
 R"doc(A small but extremely fast "base 4 bitmask" class that can store up to
-``8 * sizeof(T) + 8 * sizeof(U)`` "qits", each equal to 0, 1, 2 or 3.
+``16 * sizeof(T)`` "qits", each equal to 0, 1, 2 or 3.
 
-This qitmask packs all of the qits together into two variables of type
-*T* and two variables of type *U*. This means that operations on
-entire qitmasks are extremely fast, because all of the qits can be
-processed in just a few native CPU operations.
+This qitmask packs all of the qits together into four variables of
+type *T*. This means that operations on entire qitmasks are extremely
+fast, because all of the qits can be processed in just a few native
+CPU operations.
 
 The downside of course is that the number of qits that can be stored
-is limited to ``8 * sizeof(T) + 8 * sizeof(U)``, where *T* and *U* are
-some native unsigned C++ integer types.
+is limited to ``16 * sizeof(T)``, where *T* is some native unsigned
+C++ integer type.
 
 For an even faster qitmask class that can only store half as many
 qits, see Qitmask1. At present there is no qitmask class in Regina
@@ -71,9 +71,9 @@ Python:
     Qitmask64, Qitmask128, and (if the machine supports 128-bit
     integers) Qitmask256. Each of these will be an optimised qitmask
     class that can hold the corresponding number of bits, and is
-    guaranteed to be an instance of either the C++ Qitmask1<T> class
-    (where possible) or the C++ Qitmask2<T,U> template class (if
-    necessary).)doc";
+    guaranteed to be an instance of either the C++ ``Qitmask1<T>``
+    class (where possible) or the C++ ``Qitmask2<T>`` template class
+    (if necessary).)doc";
 
 namespace Qitmask1_ {
 
@@ -124,8 +124,8 @@ static const char *get =
 R"doc(Returns the value of the given qit in this qitmask.
 
 Parameter ``index``:
-    indicates which qit to query; this must be between 0 and (8 *
-    sizeof(*T*) - 1) inclusive.
+    indicates which qit to query; this must be between 0 and ``(8 *
+    sizeof(T) - 1)`` inclusive.
 
 Returns:
     the value of the (*index*)th qit; this will be either 0, 1, 2 or
@@ -172,8 +172,8 @@ static const char *set =
 R"doc(Sets the given qit of this qitmask to the given value.
 
 Parameter ``index``:
-    indicates which qit to set; this must be between 0 and (8 *
-    sizeof(*T*) - 1) inclusive.
+    indicates which qit to set; this must be between 0 and ``(8 *
+    sizeof(T) - 1)`` inclusive.
 
 Parameter ``value``:
     the value that will be assigned to the (*index*)th qit; this must
@@ -230,8 +230,8 @@ static const char *get =
 R"doc(Returns the value of the given qit in this qitmask.
 
 Parameter ``index``:
-    indicates which qit to query; this must be between 0 and (8 *
-    sizeof(*T*) + 8 * sizeof(*U*) - 1) inclusive.
+    indicates which qit to query; this must be between 0 and ``(16 *
+    sizeof(T) - 1)`` inclusive.
 
 Returns:
     the value of the (*index*)th qit; this will be either 0, 1, 2 or
@@ -278,8 +278,8 @@ static const char *set =
 R"doc(Sets the given qit of this qitmask to the given value.
 
 Parameter ``index``:
-    indicates which qit to set; this must be between 0 and (8 *
-    sizeof(*T*) + 8 * sizeof(*U*) - 1) inclusive.
+    indicates which qit to set; this must be between 0 and ``(16 *
+    sizeof(T) - 1)`` inclusive.
 
 Parameter ``value``:
     the value that will be assigned to the (*index*)th qit; this must

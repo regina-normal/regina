@@ -85,6 +85,7 @@ void addBitmaskOpt(pybind11::module_& m, const char* name) {
         .def("lastBit", &B::lastBit, rdoc::lastBit)
         .def("atMostOneBit", &B::atMostOneBit, rdoc::atMostOneBit)
         .def_readonly_static("fixedSize", &B::fixedSize)
+        .def_readonly_static("bitsPerBlock", &B::bitsPerBlock)
     ;
     regina::python::add_output_ostream(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
@@ -138,6 +139,7 @@ void addBitmaskGeneric(pybind11::module_& m) {
         .def("lastBit", &Bitmask::lastBit, rdoc::lastBit)
         .def("atMostOneBit", &Bitmask::atMostOneBit, rdoc::atMostOneBit)
         .def_readonly_static("fixedSize", &Bitmask::fixedSize)
+        .def_readonly_static("bitsPerBlock", &Bitmask::bitsPerBlock)
     ;
     regina::python::add_output_ostream(c);
     regina::python::add_eq_operators(c, rdoc::__eq);

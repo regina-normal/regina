@@ -72,23 +72,23 @@ Python:
     Bitmask64, Bitmask128, and (if the machine supports 128-bit
     integers) Bitmask256. Each of these will be an optimised bitmask
     class that can hold the corresponding number of bits, and is
-    guaranteed to be an instance of either the C++ Bitmask1<T> class
-    (where possible) or the C++ Bitmask2<T,U> template class (if
-    necessary).)doc";
+    guaranteed to be an instance of either the C++ ``Bitmask1<T>``
+    class (where possible) or the C++ ``Bitmask2<T>`` template class
+    (if necessary).)doc";
 
 // Docstring regina::python::doc::Bitmask2
 static const char *Bitmask2 =
-R"doc(A small but extremely fast bitmask class that can store up to ``8 *
-sizeof(T) + 8 * sizeof(U)`` true-or-false bits.
+R"doc(A small but extremely fast bitmask class that can store up to ``16 *
+sizeof(T)`` true-or-false bits.
 
-This bitmask packs all of the bits together into a single variable of
-type *T* and a single variable of type *U*. This means that operations
-on entire bitmasks are extremely fast, because all of the bits can be
-processed in just two "native" operations.
+This bitmask packs all of the bits together into two variables of type
+*T*. This means that operations on entire bitmasks are extremely fast,
+because all of the bits can be processed in just two "native"
+operations.
 
 The downside of course is that the number of bits that can be stored
-is limited to ``8 * sizeof(T) + 8 * sizeof(U)``, where *T* and *U* are
-some native unsigned C++ integer types.
+is limited to ``16 * sizeof(T)``, where *T* is some native unsigned
+C++ integer type.
 
 For an even faster bitmask class that can only store half as many
 bits, see Bitmask1. For a bitmask class that can store arbitrarily
@@ -104,9 +104,9 @@ Python:
     Bitmask64, Bitmask128, and (if the machine supports 128-bit
     integers) Bitmask256. Each of these will be an optimised bitmask
     class that can hold the corresponding number of bits, and is
-    guaranteed to be an instance of either the C++ Bitmask1<T> class
-    (where possible) or the C++ Bitmask2<T,U> template class (if
-    necessary).)doc";
+    guaranteed to be an instance of either the C++ ``Bitmask1<T>``
+    class (where possible) or the C++ ``Bitmask2<T>`` template class
+    (if necessary).)doc";
 
 namespace Bitmask1_ {
 
@@ -256,16 +256,16 @@ R"doc(Negates every bit in this bitmask. All ``True`` bits will be set to
 ``False`` and vice versa.
 
 Unlike the more generic Bitmask, this optimised bitmask class does not
-store a length. This means that all 8 * sizeof(*T*) possible bits will
-be negated.)doc";
+store a length. This means that all ``8 * sizeof(T)`` possible bits
+will be negated.)doc";
 
 // Docstring regina::python::doc::Bitmask1_::get
 static const char *get =
 R"doc(Returns the value of the given bit of this bitmask.
 
 Parameter ``index``:
-    indicates which bit to query; this must be between 0 and (8 *
-    sizeof(*T*) - 1) inclusive.
+    indicates which bit to query; this must be between 0 and ``(8 *
+    sizeof(T) - 1)`` inclusive.
 
 Returns:
     the value of the (*index*)th bit.)doc";
@@ -354,8 +354,8 @@ static const char *set =
 R"doc(Sets the given bit of this bitmask to the given value.
 
 Parameter ``index``:
-    indicates which bit to set; this must be between 0 and (8 *
-    sizeof(*T*) - 1) inclusive.
+    indicates which bit to set; this must be between 0 and ``(8 *
+    sizeof(T) - 1)`` inclusive.
 
 Parameter ``value``:
     the value that will be assigned to the (*index*)th bit.)doc";
@@ -392,8 +392,8 @@ Precondition:
     order. This is to allow optimisations for larger bitmask types.
 
 Precondition:
-    All indices in the given list are between 0 and (8 * sizeof(*T*) -
-    1) inclusive.
+    All indices in the given list are between 0 and ``(8 * sizeof(T) -
+    1)`` inclusive.
 
 Python:
     Instead of a pair of iterators, you should pass a Python list
@@ -572,16 +572,16 @@ R"doc(Negates every bit in this bitmask. All ``True`` bits will be set to
 ``False`` and vice versa.
 
 Unlike the more generic Bitmask, this optimised bitmask class does not
-store a length. This means that all 8 * sizeof(*T*) + 8 * sizeof(*U*)
-possible bits will be negated.)doc";
+store a length. This means that all ``16 * sizeof(T)`` possible bits
+will be negated.)doc";
 
 // Docstring regina::python::doc::Bitmask2_::get
 static const char *get =
 R"doc(Returns the value of the given bit of this bitmask.
 
 Parameter ``index``:
-    indicates which bit to query; this must be between 0 and (8 *
-    sizeof(*T*) + 8 * sizeof(*U*) - 1) inclusive.
+    indicates which bit to query; this must be between 0 and ``(16 *
+    sizeof(T) - 1)`` inclusive.
 
 Returns:
     the value of the (*index*)th bit.)doc";
@@ -670,8 +670,8 @@ static const char *set =
 R"doc(Sets the given bit of this bitmask to the given value.
 
 Parameter ``index``:
-    indicates which bit to set; this must be between 0 and (8 *
-    sizeof(*T*) + 8 * sizeof(*U*) - 1) inclusive.
+    indicates which bit to set; this must be between 0 and ``(16 *
+    sizeof(T) - 1)`` inclusive.
 
 Parameter ``value``:
     the value that will be assigned to the (*index*)th bit.)doc";
@@ -708,8 +708,8 @@ Precondition:
     order. This is to allow optimisations for larger bitmask types.
 
 Precondition:
-    All indices in the given list are between 0 and (8 * sizeof(*T*) +
-    8 * sizeof(*U*) - 1) inclusive.
+    All indices in the given list are between 0 and ``(16 * sizeof(T)
+    - 1)`` inclusive.
 
 Python:
     Instead of a pair of iterators, you should pass a Python list
@@ -778,10 +778,7 @@ R"doc(Creates a clone of the given bitmask.
 
 It is fine if the given bitmask is invalid (but in this case, the new
 bitmask will be invalid also). Invalid bitmasks must be assigned a
-length using reset(size_t) or the assignment operator.
-
-Parameter ``src``:
-    the bitmask to clone.)doc";
+length using reset(size_t) or the assignment operator.)doc";
 
 // Docstring regina::python::doc::Bitmask_::__default
 static const char *__default =
@@ -811,9 +808,6 @@ R"doc(Determines whether this and the given bitmask are identical.
     different lengths may still be considered equal if the two lengths
     round up to the same value _and_ the extra bits in the longer
     bitmask are all ``False``.
-
-Parameter ``other``:
-    the bitmask to compare against this.
 
 Returns:
     ``True`` if and only if this and the given bitmask are identical.)doc";
