@@ -222,12 +222,12 @@ void addSigUtils(pybind11::module_& m) {
         .def("decodeSingle", &Decoder::decodeSingle<long>, rdoc::decodeSingle)
         .def("decodeSize", &Decoder::decodeSize, rdoc::decodeSize)
         .def("decodeInt", &Decoder::decodeInt<long>, rdoc::decodeInt)
-        .def("decodeInts", [](Wrapper& dec, size_t count, int nChars) {
+        .def("decodeInts", [](Wrapper& dec, size_t count, int charsPerInt) {
             // Reimplement this using decodeInt(), since the iterators for
             // pybind11::list have the wrong value type.
             pybind11::list ans;
             for (size_t i = 0; i < count; ++i)
-                ans.append(dec.decodeInt<long>(nChars));
+                ans.append(dec.decodeInt<long>(charsPerInt));
             return ans;
         })
         .def("decodeBitmask", &Decoder::decodeBitmask, rdoc::decodeBitmask)

@@ -236,10 +236,10 @@ static const char *decodeBitmask =
 R"doc(Decodes a sequence of bits, and returns them in the form of a bitmask.
 
 Exception ``InvalidInput``:
-    There are fewer than *count* bits available in the encoded
+    There are fewer than *nBits* bits available in the encoded
     sequence.
 
-Parameter ``count``:
+Parameter ``nBits``:
     the number of bits to decode.
 
 Returns:
@@ -255,13 +255,13 @@ Python:
     The template argument *IntType* is taken to be ``unsigned long``.
 
 Exception ``InvalidInput``:
-    There are fewer than *count* bits available in the encoded string.
+    There are fewer than *nBits* bits available in the encoded string.
 
 Template parameter ``IntType``:
-    the unsigned integer type to return; this must be at least *count*
+    the unsigned integer type to return; this must be at least *nBits*
     bits in size.
 
-Parameter ``count``:
+Parameter ``nBits``:
     the number of bits to decode.
 
 Parameter ``bits``:
@@ -415,16 +415,13 @@ Parameter ``bit``:
 static const char *encodeBitmask =
 R"doc(Encodes a sequence of bits, taken from the given bitmask.
 
-Python:
-    The template argument *BitmaskType* is taken to be Bitmask.
-
-Parameter ``count``:
-    the total number of bits to encode.
-
 Parameter ``bits``:
     a bitmask holding the bits to encode; this bitmask must be capable
-    of holding at least *count* bits. The bits will be encoded in
-    order from bit 0 of the given bitmask.)doc";
+    of holding at least *nBits* bits. The bits will be encoded in
+    order from bit 0 of the given bitmask.
+
+Parameter ``nBits``:
+    the total number of bits to encode.)doc";
 
 // Docstring regina::python::doc::Base64BitEncoder_::encodeInt
 static const char *encodeInt =
@@ -436,14 +433,15 @@ Python:
 
 Exception ``InvalidArgument``:
     The given integer has some bit set beyond bits
-    ``0,...,(count-1)``.
-
-Parameter ``count``:
-    the total number of bits to encode; this must be non-negative.
+    ``0,...,(nBits-1)``.
 
 Parameter ``bits``:
     an integer holding the bits to encode; these will be encoded in
-    order from the least significant bit of the argument *bits*.)doc";
+    order from the least significant bit of the argument *bits*.
+
+Parameter ``nBits``:
+    the total number of bits to encode; this must be strictly
+    positive.)doc";
 
 // Docstring regina::python::doc::Base64BitEncoder_::encodeSize
 static const char *encodeSize =
@@ -610,7 +608,7 @@ Returns:
 static const char *decodeBitmask =
 R"doc(Decodes a sequence of bits, and returns these in the form of a
 bitmask. The bits would typically have been encoded using
-Base64Encoder::encodeBitmask() with the same *count* argument.
+Base64Encoder::encodeBitmask() with the same *nBits* argument.
 
 Specifically, it will be assumed that the bits have been packed six at
 a time into base64 characters, and that for each underlying 6-bit
@@ -624,7 +622,7 @@ Exception ``InvalidInput``:
     hold the requested number of bits, and/or a character was
     encountered that was not a valid base64 character.
 
-Parameter ``count``:
+Parameter ``nBits``:
     the number of bits to decode.
 
 Returns:
@@ -669,13 +667,13 @@ static const char *decodeInts =
 R"doc(Decodes a sequence of non-negative integer values, assuming that each
 individual value uses a fixed number of base64 characters, and returns
 these as an array of native C++ integers. Each integer to be decoded
-would typically have been encoded using Base64Encoder::encodeInt() or
-Base64Encoder::encodeInts(), using the same *nChars* argument.
+would typically have been encoded using Base64Encoder::encodeInts() or
+Base64Encoder::encodeInt(), using the same *charsPerInt* argument.
 
 Specifically, it will be assumed that each integer has been broken
-into *nChars* 6-bit blocks, with each block encoded as a single base64
-character, and with the blocks presented in order from lowest to
-highest significance.
+into *charsPerInt* 6-bit blocks, with each block encoded as a single
+base64 character, and with the blocks presented in order from lowest
+to highest significance.
 
 Each resulting integer will be assembled using the integer type
 *IntType*, via bitwise OR and bitwise shift lefts. It is assumed that
@@ -685,9 +683,9 @@ whatever values they expect to read.
 The inverse to this routine is Base64Encoder::encodeInts().
 
 Exception ``InvalidInput``:
-    There are fewer than ``count × nChars`` characters available in
-    the encoded string, or a character was encountered that was not a
-    valid base64 character.
+    There are fewer than ``count × charsPerInt`` characters available
+    in the encoded string, or a character was encountered that was not
+    a valid base64 character.
 
 Python:
     The template argument *IntType* is taken to be a native C++
@@ -696,7 +694,7 @@ Python:
 Parameter ``count``:
     the number of integers to decode.
 
-Parameter ``nChars``:
+Parameter ``charsPerInt``:
     the number of base64 characters to read for each integer.
 
 Returns:
@@ -906,15 +904,12 @@ instead.)
 
 The inverse to this routine is Base64Decoder::decodeBitmask().
 
-Python:
-    The template argument *BitmaskType* is taken to be Bitmask.
-
-Parameter ``count``:
-    the number of bits to encode.
-
 Parameter ``bits``:
     a bitmask holding the bits to encode; this must be capable of
-    holding at least *count* bits.)doc";
+    holding at least *nBits* bits.
+
+Parameter ``nBits``:
+    the number of bits to encode.)doc";
 
 // Docstring regina::python::doc::Base64Encoder_::encodeInt
 static const char *encodeInt =
@@ -948,14 +943,15 @@ R"doc(Encodes a sequence of non-negative native C++ integers (given by an
 input range), each using a fixed number of base64 characters.
 
 Each integer in the sequence will be encoded using encodeInt(). That
-is, each integer will be broken into *nChars* distinct 6-bit blocks,
-which will be encoded in order from lowest to highest significance.
+is, each integer will be broken into *charsPerInt* distinct 6-bit
+blocks, which will be encoded in order from lowest to highest
+significance.
 
 The inverse to this routine is Base64Decoder::decodeInts().
 
 Exception ``InvalidArgument``:
     Some integer in the sequence is negative, or requires more than
-    ``6 × nChars`` bits.
+    ``6 × charsPerInt`` bits.
 
 Python:
     The argument *sequence* should be a Python list of integers, each
@@ -964,7 +960,7 @@ Python:
 Parameter ``sequence``:
     the sequence of integers to encode.
 
-Parameter ``nChars``:
+Parameter ``charsPerInt``:
     the number of base64 characters to use for each integer; typically
     this would be obtained through an earlier call to encodeSize().)doc";
 
@@ -1242,10 +1238,10 @@ static const char *decodeBitmask =
 R"doc(Decodes a sequence of bits, and returns them in the form of a bitmask.
 
 Exception ``InvalidInput``:
-    There are fewer than *count* bits available in the encoded
+    There are fewer than *nBits* bits available in the encoded
     sequence.
 
-Parameter ``count``:
+Parameter ``nBits``:
     the number of bits to decode.
 
 Returns:
@@ -1261,14 +1257,14 @@ Python:
     The template argument *IntType* is taken to be ``unsigned long``.
 
 Exception ``InvalidInput``:
-    There are fewer than *count* bits available in the encoded
+    There are fewer than *nBits* bits available in the encoded
     sequence.
 
 Template parameter ``IntType``:
-    the unsigned integer type to return; this must be at least *count*
+    the unsigned integer type to return; this must be at least *nBits*
     bits in size.
 
-Parameter ``count``:
+Parameter ``nBits``:
     the number of bits to decode.
 
 Parameter ``bits``:
@@ -1355,16 +1351,13 @@ Parameter ``bit``:
 static const char *encodeBitmask =
 R"doc(Encodes a sequence of bits, taken from the given bitmask.
 
-Python:
-    The template argument *BitmaskType* is taken to be Bitmask.
-
-Parameter ``count``:
-    the total number of bits to encode.
-
 Parameter ``bits``:
     a bitmask holding the bits to encode; this bitmask must be capable
-    of holding at least *count* bits. The bits will be encoded in
-    order from bit 0 of the given bitmask.)doc";
+    of holding at least *nBits* bits. The bits will be encoded in
+    order from bit 0 of the given bitmask.
+
+Parameter ``nBits``:
+    the total number of bits to encode.)doc";
 
 // Docstring regina::python::doc::BitEncoder_::encodeInt
 static const char *encodeInt =
@@ -1376,14 +1369,15 @@ Python:
 
 Exception ``InvalidArgument``:
     The given integer has some bit set beyond bits
-    ``0,...,(count-1)``.
-
-Parameter ``count``:
-    the total number of bits to encode; this must be non-negative.
+    ``0,...,(nBits-1)``.
 
 Parameter ``bits``:
     an integer holding the bits to encode; these will be encoded in
-    order from the least significant bit of the argument *bits*.)doc";
+    order from the least significant bit of the argument *bits*.
+
+Parameter ``nBits``:
+    the total number of bits to encode; this must be strictly
+    positive.)doc";
 
 // Docstring regina::python::doc::BitEncoder_::reserveBits
 static const char *reserveBits =
