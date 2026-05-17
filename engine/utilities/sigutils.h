@@ -568,14 +568,11 @@ class Base64Encoder {
          *
          * The inverse to this routine is Base64Decoder::decodeBitmask().
          *
-         * \python The template argument \a BitmaskType is taken to be Bitmask.
-         *
          * \param count the number of bits to encode.
          * \param bits a bitmask holding the bits to encode; this must be
          * capable of holding at least \a count bits.
          */
-        template <ReginaBitmask BitmaskType>
-        void encodeBitmask(size_t count, const BitmaskType& bits) {
+        void encodeBitmask(size_t count, const Bitmask& bits) {
             if (count == 0)
                 return;
             size_t pos = 0;
@@ -1370,17 +1367,21 @@ class BitEncoder {
         /**
          * Encodes a sequence of bits, taken from the given bitmask.
          *
-         * \python The template argument \a BitmaskType is taken to be Bitmask.
-         *
          * \param count the total number of bits to encode.
          * \param bits a bitmask holding the bits to encode; this bitmask must
          * be capable of holding at least \a count bits.  The bits will be
          * encoded in order from bit 0 of the given bitmask.
          */
-        template <ReginaBitmask BitmaskType>
-        void encodeBitmask(size_t count, const BitmaskType& bits) {
-            for (size_t i = 0; i < count; ++i)
-                encodeBit(bits.get(i));
+        void encodeBitmask(size_t count, const Bitmask& bits) {
+            for (auto it = bits.beginBlocks(); it != bits.endBlocks(); ++it) {
+                if (count >= Bitmask::bitsPerBlock) {
+                    encodeInt(Bitmask::bitsPerBlock, *it);
+                    count -= Bitmask::bitsPerBlock;
+                } else {
+                    encodeInt(count, *it);
+                    // No need to set count = 0; the loop will exit anyway.
+                }
+            }
         }
 
         /**
@@ -1822,17 +1823,21 @@ class Base64BitEncoder : private Base64Encoder {
         /**
          * Encodes a sequence of bits, taken from the given bitmask.
          *
-         * \python The template argument \a BitmaskType is taken to be Bitmask.
-         *
          * \param count the total number of bits to encode.
          * \param bits a bitmask holding the bits to encode; this bitmask must
          * be capable of holding at least \a count bits.  The bits will be
          * encoded in order from bit 0 of the given bitmask.
          */
-        template <ReginaBitmask BitmaskType>
-        void encodeBitmask(size_t count, const BitmaskType& bits) {
-            for (size_t i = 0; i < count; ++i)
-                encodeBit(bits.get(i));
+        void encodeBitmask(size_t count, const Bitmask& bits) {
+            for (auto it = bits.beginBlocks(); it != bits.endBlocks(); ++it) {
+                if (count >= Bitmask::bitsPerBlock) {
+                    encodeInt(Bitmask::bitsPerBlock, *it);
+                    count -= Bitmask::bitsPerBlock;
+                } else {
+                    encodeInt(count, *it);
+                    // No need to set count = 0; the loop will exit anyway.
+                }
+            }
         }
 
         /**
