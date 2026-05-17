@@ -568,11 +568,11 @@ class Base64Encoder {
          *
          * The inverse to this routine is Base64Decoder::decodeBitmask().
          *
-         * \param count the number of bits to encode.
          * \param bits a bitmask holding the bits to encode; this must be
          * capable of holding at least \a count bits.
+         * \param count the number of bits to encode.
          */
-        void encodeBitmask(size_t count, const Bitmask& bits) {
+        void encodeBitmask(const Bitmask& bits, size_t count) {
             if (count == 0)
                 return;
             size_t pos = 0;
@@ -1344,14 +1344,14 @@ class BitEncoder {
          * \exception InvalidArgument The given integer has some bit set
          * beyond bits `0,...,(count-1)`.
          *
-         * \param count the total number of bits to encode; this must be
-         * non-negative.
          * \param bits an integer holding the bits to encode; these will be
          * encoded in order from the least significant bit of the argument
          * \a bits.
+         * \param count the total number of bits to encode; this must be
+         * non-negative.
          */
         template <UnsignedCppInteger IntType>
-        void encodeInt(int count, IntType bits) {
+        void encodeInt(IntType bits, int count) {
             IntType mask = 1;
             for (int i = 0; i < count; ++i, mask <<= 1)
                 encodeBit(bits & mask);
@@ -1367,18 +1367,18 @@ class BitEncoder {
         /**
          * Encodes a sequence of bits, taken from the given bitmask.
          *
-         * \param count the total number of bits to encode.
          * \param bits a bitmask holding the bits to encode; this bitmask must
          * be capable of holding at least \a count bits.  The bits will be
          * encoded in order from bit 0 of the given bitmask.
+         * \param count the total number of bits to encode.
          */
-        void encodeBitmask(size_t count, const Bitmask& bits) {
+        void encodeBitmask(const Bitmask& bits, size_t count) {
             for (auto it = bits.beginBlocks(); it != bits.endBlocks(); ++it) {
                 if (count >= Bitmask::bitsPerBlock) {
-                    encodeInt(Bitmask::bitsPerBlock, *it);
+                    encodeInt(*it, Bitmask::bitsPerBlock);
                     count -= Bitmask::bitsPerBlock;
                 } else {
-                    encodeInt(count, *it);
+                    encodeInt(*it, count);
                     // No need to set count = 0; the loop will exit anyway.
                 }
             }
@@ -1800,14 +1800,14 @@ class Base64BitEncoder : private Base64Encoder {
          * \exception InvalidArgument The given integer has some bit set
          * beyond bits `0,...,(count-1)`.
          *
-         * \param count the total number of bits to encode; this must be
-         * non-negative.
          * \param bits an integer holding the bits to encode; these will be
          * encoded in order from the least significant bit of the argument
          * \a bits.
+         * \param count the total number of bits to encode; this must be
+         * non-negative.
          */
         template <UnsignedCppInteger IntType>
-        void encodeInt(int count, IntType bits) {
+        void encodeInt(IntType bits, int count) {
             IntType mask = 1;
             for (int i = 0; i < count; ++i, mask <<= 1)
                 encodeBit(bits & mask);
@@ -1823,18 +1823,18 @@ class Base64BitEncoder : private Base64Encoder {
         /**
          * Encodes a sequence of bits, taken from the given bitmask.
          *
-         * \param count the total number of bits to encode.
          * \param bits a bitmask holding the bits to encode; this bitmask must
          * be capable of holding at least \a count bits.  The bits will be
          * encoded in order from bit 0 of the given bitmask.
+         * \param count the total number of bits to encode.
          */
-        void encodeBitmask(size_t count, const Bitmask& bits) {
+        void encodeBitmask(const Bitmask& bits, size_t count) {
             for (auto it = bits.beginBlocks(); it != bits.endBlocks(); ++it) {
                 if (count >= Bitmask::bitsPerBlock) {
-                    encodeInt(Bitmask::bitsPerBlock, *it);
+                    encodeInt(*it, Bitmask::bitsPerBlock);
                     count -= Bitmask::bitsPerBlock;
                 } else {
-                    encodeInt(count, *it);
+                    encodeInt(*it, count);
                     // No need to set count = 0; the loop will exit anyway.
                 }
             }

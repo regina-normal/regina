@@ -70,8 +70,8 @@ TEST(SigUtilsTest, bitEncoder) {
     }
     {
         BitEncoder enc;
-        enc.encodeInt(3, unsigned(0x0002));
-        enc.encodeInt(14, unsigned(0x3576)); // spans three encoded bytes
+        enc.encodeInt(unsigned(0x0002), 3);
+        enc.encodeInt(unsigned(0x3576), 14); // spans three encoded bytes
         auto bytes = std::move(enc).bytes();
         EXPECT_EQ(bytes, ByteSequence({ 0xb2, 0xab, 0x01 }));
 
@@ -84,17 +84,17 @@ TEST(SigUtilsTest, bitEncoder) {
     }
     EXPECT_THROW({
         BitEncoder enc;
-        enc.encodeInt(3, unsigned(0x0002));
-        enc.encodeInt(14, unsigned(0x4576));
+        enc.encodeInt(unsigned(0x0002), 3);
+        enc.encodeInt(unsigned(0x4576), 14);
     }, regina::InvalidArgument);
     {
         BitEncoder enc;
-        enc.encodeInt(3, unsigned(0x0002));
+        enc.encodeInt(unsigned(0x0002), 3);
 
         Bitmask mask(14);
         std::array indices { 1, 2, 4, 5, 6, 8, 10, 12, 13 };
         mask.set(indices.begin(), indices.end(), true);
-        enc.encodeBitmask(14, mask);
+        enc.encodeBitmask(mask, 14);
 
         auto bytes = std::move(enc).bytes();
         EXPECT_EQ(bytes, ByteSequence({ 0xb2, 0xab, 0x01 }));
@@ -134,8 +134,8 @@ TEST(SigUtilsTest, bitEncoder) {
     }
     {
         Base64BitEncoder enc;
-        enc.encodeInt(3, unsigned(0x0002));
-        enc.encodeInt(14, unsigned(0x3576)); // spans three encoded chars
+        enc.encodeInt(unsigned(0x0002), 3);
+        enc.encodeInt(unsigned(0x3576), 14); // spans three encoded chars
         auto str = std::move(enc).str();
         EXPECT_EQ(str, "YUA");
 
@@ -148,17 +148,17 @@ TEST(SigUtilsTest, bitEncoder) {
     }
     EXPECT_THROW({
         Base64BitEncoder enc;
-        enc.encodeInt(3, unsigned(0x0002));
-        enc.encodeInt(14, unsigned(0x4576));
+        enc.encodeInt(unsigned(0x0002), 3);
+        enc.encodeInt(unsigned(0x4576), 14);
     }, regina::InvalidArgument);
     {
         Base64BitEncoder enc;
-        enc.encodeInt(3, unsigned(0x0002));
+        enc.encodeInt(unsigned(0x0002), 3);
 
         Bitmask mask(14);
         std::array indices { 1, 2, 4, 5, 6, 8, 10, 12, 13 };
         mask.set(indices.begin(), indices.end(), true);
-        enc.encodeBitmask(14, mask);
+        enc.encodeBitmask(mask, 14);
 
         auto str = std::move(enc).str();
         EXPECT_EQ(str, "YUA");

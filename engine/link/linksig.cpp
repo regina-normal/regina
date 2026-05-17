@@ -407,9 +407,9 @@ std::string LinkSigPrintable::encode(const LinkSigData& data) {
         }
 
         int intBits = bitsRequired(data.size() + 1);
-        enc.encodeBitmask(4 * data.size(), bits);
+        enc.encodeBitmask(bits, 4 * data.size());
         for (auto c : revisited)
-            enc.encodeInt(intBits, c);
+            enc.encodeInt(c, intBits);
 
         return std::move(enc).str();
     }
@@ -507,13 +507,13 @@ ByteSequence LinkSigBinary::encode(const LinkSigData& data) {
 
     int intBits = bitsRequired(data.size() + 1);
     if (data.size() < 128) {
-        enc.encodeInt(8, data.size());
+        enc.encodeInt(data.size(), 8);
     } else {
         if (intBits > 127)
             throw ImpossibleScenario("LinkSigBinary::encode(): "
                 "link has ≥ 2^127 crossings");
-        enc.encodeInt(8, static_cast<unsigned>(intBits | 128));
-        enc.encodeInt(intBits, data.size());
+        enc.encodeInt(static_cast<unsigned>(intBits | 128), 8);
+        enc.encodeInt(data.size(), intBits);
     }
 
     Bitmask bits(4 * data.size());
@@ -551,9 +551,9 @@ ByteSequence LinkSigBinary::encode(const LinkSigData& data) {
         }
     }
 
-    enc.encodeBitmask(4 * data.size(), bits);
+    enc.encodeBitmask(bits, 4 * data.size());
     for (auto c : revisited)
-        enc.encodeInt(intBits, c);
+        enc.encodeInt(c, intBits);
     return std::move(enc).bytes();
 }
 
@@ -584,9 +584,9 @@ std::string LinkSigBinary::asString(const ByteSequence& sig) {
             enc.encodeSize(n);
 
             if (n > 0) {
-                enc.encodeBitmask(4 * n, dec.decodeBitmask(4 * n));
+                enc.encodeBitmask(dec.decodeBitmask(4 * n), 4 * n);
                 for (size_t i = 0; i < n; ++i)
-                    enc.encodeInt(intBits, dec.decodeInt<size_t>(intBits));
+                    enc.encodeInt(dec.decodeInt<size_t>(intBits), intBits);
             }
 
             dec.flushByte();

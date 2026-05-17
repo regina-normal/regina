@@ -191,7 +191,7 @@ void addSigUtils(pybind11::module_& m) {
             pybind11::overload_cast<const std::vector<long>&, int>(
                 &Base64Encoder::encodeInts<const std::vector<long>&>),
             rdoc::encodeInts)
-        .def("encodeBitmask", &Base64Encoder::encodeBitmask<Bitmask>,
+        .def("encodeBitmask", &Base64Encoder::encodeBitmask,
             rdoc::encodeBitmask)
         .def("encodeTrits",
             pybind11::overload_cast<const std::vector<uint8_t>&>(
@@ -268,11 +268,11 @@ void addSigUtils(pybind11::module_& m) {
         .def("encodeBit", [](Encoder& enc, bool bit) {
             enc.encoder().encodeBit(bit);
         }, rdoc::encodeBit)
-        .def("encodeInt", [](Encoder& enc, int n, unsigned long b) {
-            enc.encoder().encodeInt(n, b);
+        .def("encodeInt", [](Encoder& enc, unsigned long b, int n) {
+            enc.encoder().encodeInt(b, n);
         }, rdoc::encodeInt)
-        .def("encodeBitmask", [](Encoder& enc, int n, const Bitmask& b) {
-            enc.encoder().encodeBitmask(n, b);
+        .def("encodeBitmask", [](Encoder& enc, const Bitmask& b, int n) {
+            enc.encoder().encodeBitmask(b, n);
         }, rdoc::encodeBitmask)
         .def("reserveBits", [](Encoder& enc, size_t count) {
             enc.encoder().reserveBits(count);
@@ -308,11 +308,11 @@ void addSigUtils(pybind11::module_& m) {
         .def("encodeBit", [](Encoder& enc, bool bit) {
             enc.encoder().encodeBit(bit);
         }, rdoc::encodeBit)
-        .def("encodeInt", [](Encoder& enc, int n, unsigned long b) {
-            enc.encoder().encodeInt(n, b);
+        .def("encodeInt", [](Encoder& enc, unsigned long b, int n) {
+            enc.encoder().encodeInt(b, n);
         }, rdoc::encodeInt)
-        .def("encodeBitmask", [](Encoder& enc, int n, const Bitmask& b) {
-            enc.encoder().encodeBitmask(n, b);
+        .def("encodeBitmask", [](Encoder& enc, const Bitmask& b, int n) {
+            enc.encoder().encodeBitmask(b, n);
         }, rdoc::encodeBitmask)
         .def("encodeSize", [](Encoder& enc, size_t s) {
             enc.encoder().encodeSize(s);

@@ -115,8 +115,8 @@ print()
 # ---------- Testing "raw" encoders/decoders ----------
 
 enc = BitEncoder()
-enc.encodeInt(3, 0x0002)
-enc.encodeInt(14, 0x3576)
+enc.encodeInt(0x0002, 3)
+enc.encodeInt(0x3576, 14)
 print(enc.bytes())
 try:
 	enc.encodeBit(True)
@@ -133,8 +133,8 @@ except:
 print()
 
 enc = Base64BitEncoder()
-enc.encodeInt(3, 0x0002)
-enc.encodeInt(14, 0x3576)
+enc.encodeInt(0x0002, 3)
+enc.encodeInt(0x3576, 14)
 print(enc.str())
 try:
 	enc.encodeBit(True)
