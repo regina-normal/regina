@@ -44,9 +44,9 @@
 #include <string>
 #include "concepts/core.h"
 #include "concepts/iterator.h"
+#include "utilities/bitmask.h"
 #include "utilities/bytesequence.h"
 #include "utilities/exception.h"
-#include "utilities/fixedarray.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -1096,17 +1096,11 @@ class Base64Decoder {
          * the encoded string to hold the requested number of bits, and/or a
          * character was encountered that was not a valid base64 character.
          *
-         * \python The template argument \a BitmaskType is taken to be Bitmask.
-         *
-         * \tparam BitmaskType the bitmask type to return; this must be
-         * capable of holding at least \a count bits.
-         *
          * \param count the number of bits to decode.
          * \return a bitmask holding the bits that were decoded.
          */
-        template <ReginaBitmask BitmaskType = Bitmask>
-        BitmaskType decodeBitmask(size_t count) {
-            BitmaskType bits(count);
+        Bitmask decodeBitmask(size_t count) {
+            Bitmask bits(count);
             if (count == 0)
                 return bits;
 
@@ -1657,28 +1651,21 @@ class BitDecoder {
          * Decodes a sequence of bits, and returns them in the form of a
          * bitmask.
          *
-         * \python The template argument \a BitmaskType is taken to be Bitmask.
-         *
          * \exception InvalidInput There are fewer than \a count bits available
          * in the encoded sequence.
-         *
-         * \tparam BitmaskType the bitmask type to return; this must be
-         * capable of holding at least \a count bits.
          *
          * \param count the number of bits to decode.
          * \return a bitmask holding the bits that were decoded.  The bits
          * will be stored in the bitmask in order from bit 0.
          */
-        template <ReginaBitmask BitmaskType = Bitmask>
-        BitmaskType decodeBitmask(size_t count) {
-            using Block = typename BitmaskType::Block;
-            BitmaskType bits(count);
+        Bitmask decodeBitmask(size_t count) {
+            Bitmask bits(count);
             for (auto it = bits.beginBlocks(); it != bits.endBlocks(); ++it) {
-                if (count >= BitmaskType::bitsPerBlock) {
-                    *it = decodeInt<Block>(BitmaskType::bitsPerBlock);
-                    count -= BitmaskType::bitsPerBlock;
+                if (count >= Bitmask::bitsPerBlock) {
+                    *it = decodeInt<Bitmask::Block>(Bitmask::bitsPerBlock);
+                    count -= Bitmask::bitsPerBlock;
                 } else {
-                    *it = decodeInt<Block>(count);
+                    *it = decodeInt<Bitmask::Block>(count);
                     // No need to set count = 0; the loop will exit anyway.
                 }
             }
@@ -2195,28 +2182,21 @@ class Base64BitDecoder : private Base64Decoder<Iterator> {
          * Decodes a sequence of bits, and returns them in the form of a
          * bitmask.
          *
-         * \python The template argument \a BitmaskType is taken to be Bitmask.
-         *
          * \exception InvalidInput There are fewer than \a count bits available
          * in the encoded sequence.
-         *
-         * \tparam BitmaskType the bitmask type to return; this must be
-         * capable of holding at least \a count bits.
          *
          * \param count the number of bits to decode.
          * \return a bitmask holding the bits that were decoded.  The bits
          * will be stored in the bitmask in order from bit 0.
          */
-        template <ReginaBitmask BitmaskType = Bitmask>
-        BitmaskType decodeBitmask(size_t count) {
-            using Block = typename BitmaskType::Block;
-            BitmaskType bits(count);
+        Bitmask decodeBitmask(size_t count) {
+            Bitmask bits(count);
             for (auto it = bits.beginBlocks(); it != bits.endBlocks(); ++it) {
-                if (count >= BitmaskType::bitsPerBlock) {
-                    *it = decodeInt<Block>(BitmaskType::bitsPerBlock);
-                    count -= BitmaskType::bitsPerBlock;
+                if (count >= Bitmask::bitsPerBlock) {
+                    *it = decodeInt<Bitmask::Block>(Bitmask::bitsPerBlock);
+                    count -= Bitmask::bitsPerBlock;
                 } else {
-                    *it = decodeInt<Block>(count);
+                    *it = decodeInt<Bitmask::Block>(count);
                     // No need to set count = 0; the loop will exit anyway.
                 }
             }

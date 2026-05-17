@@ -235,16 +235,9 @@ Returns:
 static const char *decodeBitmask =
 R"doc(Decodes a sequence of bits, and returns them in the form of a bitmask.
 
-Python:
-    The template argument *BitmaskType* is taken to be Bitmask.
-
 Exception ``InvalidInput``:
     There are fewer than *count* bits available in the encoded
     sequence.
-
-Template parameter ``BitmaskType``:
-    the bitmask type to return; this must be capable of holding at
-    least *count* bits.
 
 Parameter ``count``:
     the number of bits to decode.
@@ -630,13 +623,6 @@ Exception ``InvalidInput``:
     There are not enough characters available in the encoded string to
     hold the requested number of bits, and/or a character was
     encountered that was not a valid base64 character.
-
-Python:
-    The template argument *BitmaskType* is taken to be Bitmask.
-
-Template parameter ``BitmaskType``:
-    the bitmask type to return; this must be capable of holding at
-    least *count* bits.
 
 Parameter ``count``:
     the number of bits to decode.
@@ -1255,16 +1241,9 @@ Returns:
 static const char *decodeBitmask =
 R"doc(Decodes a sequence of bits, and returns them in the form of a bitmask.
 
-Python:
-    The template argument *BitmaskType* is taken to be Bitmask.
-
 Exception ``InvalidInput``:
     There are fewer than *count* bits available in the encoded
     sequence.
-
-Template parameter ``BitmaskType``:
-    the bitmask type to return; this must be capable of holding at
-    least *count* bits.
 
 Parameter ``count``:
     the number of bits to decode.

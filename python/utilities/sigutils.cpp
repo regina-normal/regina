@@ -230,7 +230,7 @@ void addSigUtils(pybind11::module_& m) {
                 ans.append(dec.decodeInt<long>(nChars));
             return ans;
         })
-        .def("decodeBitmask", &Decoder::decodeBitmask<>, rdoc::decodeBitmask)
+        .def("decodeBitmask", &Decoder::decodeBitmask, rdoc::decodeBitmask)
         // overload_cast cannot handle template vs non-template overloads.
         .def("decodeTrits",
             static_cast<std::array<uint8_t, 3>(Decoder::*)()>(
@@ -294,7 +294,7 @@ void addSigUtils(pybind11::module_& m) {
         .def("remainingBits", &Decoder::remainingBits, rdoc::remainingBits)
         .def("decodeBit", &Decoder::decodeBit, rdoc::decodeBit)
         .def("decodeInt", &Decoder::decodeInt<unsigned long>, rdoc::decodeInt)
-        .def("decodeBitmask", &Decoder::decodeBitmask<>, rdoc::decodeBitmask)
+        .def("decodeBitmask", &Decoder::decodeBitmask, rdoc::decodeBitmask)
         .def("flushByte", &Decoder::flushByte, rdoc::flushByte)
     ;
     regina::python::add_eq_operators(c);
@@ -346,7 +346,7 @@ void addSigUtils(pybind11::module_& m) {
         .def("remainingBits", &Decoder::remainingBits, rdoc::remainingBits)
         .def("decodeBit", &Decoder::decodeBit, rdoc::decodeBit)
         .def("decodeInt", &Decoder::decodeInt<unsigned long>, rdoc::decodeInt)
-        .def("decodeBitmask", &Decoder::decodeBitmask<>, rdoc::decodeBitmask)
+        .def("decodeBitmask", &Decoder::decodeBitmask, rdoc::decodeBitmask)
         .def("decodeSize", &Decoder::decodeSize, rdoc::decodeSize)
         .def("flushChar", &Decoder::flushChar, rdoc::flushChar)
         .def("peek", &Decoder::peek, rdoc::peek)
