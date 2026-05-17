@@ -1672,13 +1672,11 @@ class BitDecoder {
         template <ReginaBitmask BitmaskType = Bitmask>
         BitmaskType decodeBitmask(size_t count) {
             using Block = typename BitmaskType::Block;
-            static constexpr int bitsPerBlock = 8 * sizeof(Block);
-
             BitmaskType bits(count);
             for (auto it = bits.beginBlocks(); it != bits.endBlocks(); ++it) {
-                if (count >= bitsPerBlock) {
-                    *it = decodeInt<Block>(bitsPerBlock);
-                    count -= bitsPerBlock;
+                if (count >= BitmaskType::bitsPerBlock) {
+                    *it = decodeInt<Block>(BitmaskType::bitsPerBlock);
+                    count -= BitmaskType::bitsPerBlock;
                 } else {
                     *it = decodeInt<Block>(count);
                     // No need to set count = 0; the loop will exit anyway.
@@ -2212,13 +2210,11 @@ class Base64BitDecoder : private Base64Decoder<Iterator> {
         template <ReginaBitmask BitmaskType = Bitmask>
         BitmaskType decodeBitmask(size_t count) {
             using Block = typename BitmaskType::Block;
-            static constexpr int bitsPerBlock = 8 * sizeof(Block);
-
             BitmaskType bits(count);
             for (auto it = bits.beginBlocks(); it != bits.endBlocks(); ++it) {
-                if (count >= bitsPerBlock) {
-                    *it = decodeInt<Block>(bitsPerBlock);
-                    count -= bitsPerBlock;
+                if (count >= BitmaskType::bitsPerBlock) {
+                    *it = decodeInt<Block>(BitmaskType::bitsPerBlock);
+                    count -= BitmaskType::bitsPerBlock;
                 } else {
                     *it = decodeInt<Block>(count);
                     // No need to set count = 0; the loop will exit anyway.
