@@ -32,6 +32,7 @@
 #include "tri4composition.h"
 #include "../packetchooser.h"
 #include "../packetfilter.h"
+#include "elidedlabel.h"
 #include "reginasupport.h"
 #include "choosers/trisigchooser.h"
 
@@ -71,9 +72,7 @@ Tri4CompositionUI::Tri4CompositionUI(
     auto* label = new QLabel(tr("<qt><b>Isomorphism signature:</b></qt>"), ui);
     label->setWhatsThis(msg);
     line->addWidget(label);
-    isoSig = new QLabel(ui);
-    isoSig->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
-    isoSig->setWordWrap(false);
+    isoSig = new ElidedLabel(ui);
     isoSig->setWhatsThis(msg);
     line->addWidget(isoSig, 1);
     isoSigVariant = new TriSigChooser(ui);
@@ -188,10 +187,10 @@ void Tri4CompositionUI::updateIsoSig() {
             break;
         case ReginaPrefSet::TriSigVariant::Gen2Oriented:
             if (! tri_->isOrientable()) {
-                isoSig->setText(tr("<i>Non-orientable triangulation</i>"));
+                isoSig->setText(tr("Non-orientable triangulation"));
                 sig_.clear();
             } else if (! tri_->isOriented()) {
-                isoSig->setText(tr("<i>Unoriented triangulation</i>"));
+                isoSig->setText(tr("Unoriented triangulation"));
                 sig_.clear();
             } else {
                 sig_ = tri_->neoSig(true);
@@ -202,11 +201,11 @@ void Tri4CompositionUI::updateIsoSig() {
             break;
     }
     if (sig_.empty()) {
+        isoSig->setEnabled(false);
         copyHint->hide();
     } else {
-        // If the signature is very long then add an ellipsis to the end.
-        isoSig->setText(QFontMetrics(isoSig->font()).elidedText(sig_.c_str(),
-            Qt::ElideRight, isoSig->width()));
+        isoSig->setText(sig_.c_str());
+        isoSig->setEnabled(true);
         copyHint->show();
     }
 }

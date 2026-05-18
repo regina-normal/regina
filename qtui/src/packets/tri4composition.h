@@ -43,6 +43,7 @@
 
 #include <memory>
 
+class ElidedLabel;
 class TriSigChooser;
 class PacketChooser;
 class QMenu;
@@ -79,7 +80,7 @@ class Tri4CompositionUI : public QObject, public PacketViewerTab,
         PacketChooser* isoTest;
         QLabel* isoResult;
         QPushButton* isoView;
-        QLabel* isoSig;
+        ElidedLabel* isoSig;
         TriSigChooser* isoSigVariant;
         QLabel* copyHint;
 

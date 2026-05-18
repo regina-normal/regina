@@ -47,7 +47,8 @@
  *
  * - the text is always elided to the right;
  * - the text is always centred vertically, and left-aligned horizontally;
- * - the size hint is always precisely the size of the full text.
+ * - the size hint is always precisely the size of the full text;
+ * - rich text is not supported at all.
  *
  * More functionality will be added if/when this becomes necessary.
  */

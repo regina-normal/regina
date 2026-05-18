@@ -43,6 +43,7 @@
 
 #include <memory>
 
+class ElidedLabel;
 class TriSigChooser;
 class PacketChooser;
 class QMenu;
@@ -92,7 +93,7 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         QLabel* isoResult;
         QPushButton* isoView;
         QLabel* standardTri;
-        QLabel* isoSig;
+        ElidedLabel* isoSig;
         TriSigChooser* isoSigVariant;
         QTreeWidget* details;
         QTreeWidgetItem* lastComponent;
