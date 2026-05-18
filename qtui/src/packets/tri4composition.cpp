@@ -93,10 +93,10 @@ Tri4CompositionUI::Tri4CompositionUI(
             contextIsoSig(p, label);
         });
 
-    label = new QLabel(tr("<qt><i>Hint: Right-click to copy "
+    copyHint = new QLabel(tr("<qt><i>Hint: Right-click to copy "
         "the isomorphism signature</i></qt>"));
-    label->setAlignment(Qt::AlignCenter);
-    layout->addWidget(label);
+    copyHint->setAlignment(Qt::AlignCenter);
+    layout->addWidget(copyHint);
 
     /*
     // Add a central divider.
@@ -184,27 +184,31 @@ void Tri4CompositionUI::updateIsoSig() {
     // Show the isomorphism signature.
     switch (isoSigVariant->selected()) {
         case ReginaPrefSet::TriSigVariant::Gen1:
-            isoSig->setText(tri_->isoSig().c_str());
+            sig_ = tri_->isoSig();
             break;
         case ReginaPrefSet::TriSigVariant::Gen2Oriented:
-            if (! tri_->isOrientable())
+            if (! tri_->isOrientable()) {
                 isoSig->setText(tr("<i>Non-orientable triangulation</i>"));
-            else if (! tri_->isOriented())
+                sig_.clear();
+            } else if (! tri_->isOriented()) {
                 isoSig->setText(tr("<i>Unoriented triangulation</i>"));
-            else
-                isoSig->setText(tri_->neoSig(true).c_str());
+                sig_.clear();
+            } else {
+                sig_ = tri_->neoSig(true);
+            }
             break;
         default: // Gen2
-            isoSig->setText(tri_->neoSig().c_str());
+            sig_ = tri_->neoSig();
             break;
     }
-    /*
-    // If the signature is very long then add an ellipsis to the end.
-    // Update: don't do this, since we would like clipboard copy to
-    // capture the entire signature, not something with ... at the end.
-    isoSig->setText(QFontMetrics(isoSig->font()).elidedText(
-        tri_->isoSig().c_str(), Qt::ElideRight, isoSig->width()));
-    */
+    if (sig_.empty()) {
+        copyHint->hide();
+    } else {
+        // If the signature is very long then add an ellipsis to the end.
+        isoSig->setText(QFontMetrics(isoSig->font()).elidedText(sig_.c_str(),
+            Qt::ElideRight, isoSig->width()));
+        copyHint->show();
+    }
 }
 
 void Tri4CompositionUI::updateIsoPanel() {
@@ -316,6 +320,9 @@ void Tri4CompositionUI::viewIsomorphism() {
 
 void Tri4CompositionUI::contextIsoSig(const QPoint& pos,
         QWidget* fromWidget) {
+    if (sig_.empty())
+        return;
+
     QMenu m(tr("Context menu"), fromWidget);
     QAction a("Copy isomorphism signature", fromWidget);
     connect(&a, SIGNAL(triggered()), this, SLOT(copyIsoSig()));
@@ -324,6 +331,7 @@ void Tri4CompositionUI::contextIsoSig(const QPoint& pos,
 }
 
 void Tri4CompositionUI::copyIsoSig() {
-    QApplication::clipboard()->setText(isoSig->text());
+    if (! sig_.empty())
+        QApplication::clipboard()->setText(sig_.c_str());
 }
 

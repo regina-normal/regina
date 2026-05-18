@@ -80,6 +80,7 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         regina::Packet* triAsPacket_;
         regina::Packet* compare_;
         std::unique_ptr<regina::StandardTriangulation> standard;
+        std::string sig_;
         std::optional<regina::Isomorphism<3>> isomorphism;
         IsomorphismType isoType;
 

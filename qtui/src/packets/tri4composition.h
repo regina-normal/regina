@@ -68,6 +68,7 @@ class Tri4CompositionUI : public QObject, public PacketViewerTab,
          */
         regina::PacketOf<regina::Triangulation<4>>* tri_;
         regina::PacketOf<regina::Triangulation<4>>* compare_;
+        std::string sig_;
         std::optional<regina::Isomorphism<4>> isomorphism;
         IsomorphismType isoType;
 
@@ -80,6 +81,7 @@ class Tri4CompositionUI : public QObject, public PacketViewerTab,
         QPushButton* isoView;
         QLabel* isoSig;
         TriSigChooser* isoSigVariant;
+        QLabel* copyHint;
 
     public:
         /**
