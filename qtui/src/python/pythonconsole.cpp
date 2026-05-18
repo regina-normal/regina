@@ -62,9 +62,6 @@
 #include <QTextStream>
 #include <QVBoxLayout>
 #include <QWhatsThis>
-#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
-#include <QTextCodec>
-#endif
 
 class GUICompleter : public regina::python::PrefixCompleter {
     public:
@@ -455,17 +452,9 @@ void PythonConsole::saveLog() {
                 arg(fileName.toHtmlEscaped()));
         else {
             QTextStream out(&f);
-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
             out.setEncoding(QStringConverter::Utf8);
-#else
-            out.setCodec(QTextCodec::codecForName("UTF-8"));
-#endif
             out << session->toPlainText();
-#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
             Qt::endl(out);
-#else
-            endl(out);
-#endif
         }
     }
 }

@@ -49,9 +49,6 @@
 #include <QDesktopServices>
 #include <QSettings>
 #include <QUrl>
-#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
-#include <QTextCodec>
-#endif
 
 namespace {
     const QString INACTIVE("## INACTIVE ##");
@@ -125,11 +122,7 @@ QFont ReginaPrefSet::fixedWidthFont() {
     ans.setFamily("monospace");
 #endif
     ans.setFixedPitch(true);
-#if (QT_VERSION >= QT_VERSION_CHECK(4, 7, 0))
     ans.setStyleHint(QFont::Monospace);
-#else
-    ans.setStyleHint(QFont::TypeWriter);
-#endif
     return ans;
 }
 
@@ -571,17 +564,10 @@ void ReginaPrefSet::saveInternal() const {
 }
 
 ReginaPrefSet::Codec ReginaPrefSet::importExportCodec() {
-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
     auto enc = QStringConverter::encodingForName(global().fileImportExportCodec);
     if (! enc)
         enc = QStringConverter::Utf8;
     return *enc;
-#else
-    QTextCodec* ans = QTextCodec::codecForName(global().fileImportExportCodec);
-    if (! ans)
-        ans = QTextCodec::codecForName("UTF-8");
-    return ans;
-#endif
 }
 
 int ReginaPrefSet::threads() {

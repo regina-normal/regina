@@ -52,11 +52,7 @@
 class QSettings;
 class QWidget;
 
-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 #include <QStringConverter> // for QStringConverter::Encoding
-#else
-class QTextCodec;
-#endif
 
 /**
  * A structure holding all Regina preferences.
@@ -87,11 +83,7 @@ class ReginaPrefSet : public QObject {
 
     public:
         // The type used to represent text encodings:
-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
         using Codec = QStringConverter::Encoding;
-#else
-        using Codec = QTextCodec*;
-#endif
 
         // Some defaults that other classes may need to access:
         static const char* defaultGAPExec;
