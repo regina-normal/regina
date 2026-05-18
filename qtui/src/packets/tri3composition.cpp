@@ -268,12 +268,10 @@ void Tri3CompositionUI::refresh() {
     standard = regina::StandardTriangulation::recognise(*tri_);
     if (standard) {
         standardTri->setText(standard->name().c_str());
-        standardTri->setStyleSheet(
-            "QLabel { color : black ; }");
+        standardTri->setEnabled(true);
     } else {
         standardTri->setText(tr("Not recognised"));
-        standardTri->setStyleSheet(
-            "QLabel { color : darkgrey ; }");
+        standardTri->setEnabled(false);
     }
 
     // Look for complete closed triangulations.
