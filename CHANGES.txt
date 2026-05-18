@@ -586,6 +586,9 @@ Version 8.0  [ TODO ]
           the views themselves are no longer supported and will now throw an
           exception.  (Of course you can still test equality/inequality of the
           individual elements of these views.)
+    USER INTERFACE:
+        - Added a composition viewer for 2-D triangulations, which gives easy
+          access to isomorphism signatures from the user interface.
     UTILITIES:
         katie:
             - Now outputs second-generation isomorphism signatures (not

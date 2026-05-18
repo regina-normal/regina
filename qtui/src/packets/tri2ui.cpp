@@ -32,9 +32,10 @@
 #include "triangulation/dim2.h"
 
 // UI includes:
-#include "tri2ui.h"
+#include "tri2composition.h"
 #include "tri2gluings.h"
 #include "tri2skeleton.h"
+#include "tri2ui.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
 #include "reginaprefset.h"
@@ -59,6 +60,7 @@ Tri2UI::Tri2UI(regina::PacketOf<regina::Triangulation<2>>* packet,
     addHeader(header);
     addTab(gluings, QObject::tr("&Gluings"));
     addTab(skeleton, QObject::tr("&Skeleton"));
+    addTab(new Tri2CompositionUI(packet, this), QObject::tr("&Composition"));
 
     connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
         this, SLOT(updatePreferences()));

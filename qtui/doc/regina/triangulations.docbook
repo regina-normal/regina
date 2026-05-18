@@ -1921,7 +1921,7 @@
   </sect2>
 
   <sect2 id="tri-composition">
-   <title>Combinatorial Composition (3-D and 4-D)</title>
+   <title>Combinatorial Composition (All Dimensions)</title>
    <para>
     For 3-manifold triangulations, the <guilabel>Composition</guilabel> tab
     offers more detailed information about the combinatorial
@@ -1935,7 +1935,7 @@
     it yields little or no useful information.
    </para>
    <para>
-    For 4-manifold triangulations, there is also a
+    In other dimensions, there is also a
     <guilabel>Composition</guilabel> tab but this is much more
     basic&mdash;currently it just offers the isomorphism signature and
     isomorphism testing.
@@ -2082,7 +2082,7 @@
      triangulation</link> from a signature, or
      <link linkend="import-isosiglist">import a list of
      isomorphism signatures</link>.  Be aware that the resulting
-     triangulation might not use the same tetrahedron and vertex
+     triangulation might not use the same simplex and vertex
      labels as the original.
     </para>
     <para>
@@ -2167,14 +2167,15 @@
      <itemizedlist>
       <listitem><para>
        whether this triangulation and <replaceable>T</replaceable>
-       are isomorphic (i.e., identical up to a relabelling of tetrahedra
-       and their vertices);
+       are isomorphic (i.e., identical up to a relabelling of top-dimensional
+       simplices and their vertices);
       </para></listitem>
       <listitem><para>
        whether this triangulation is isomorphic to a subcomplex of
        <replaceable>T</replaceable> (i.e., <replaceable>T</replaceable>
-       can be obtained from this triangulation by adding more tetrahedra
-       and/or gluing more faces together, again with a possible relabelling);
+       can be obtained from this triangulation by adding more top-dimensional
+       simplices and/or gluing more faces together,
+       again with a possible relabelling);
       </para></listitem>
       <listitem><para>
        whether <replaceable>T</replaceable> is isomorphic to a subcomplex of
@@ -2195,8 +2196,8 @@
      result of comparing a layered solid torus with a triangulated
      Seifert fibred space).  If a relationship is found,
      you can click on the <guibutton>Details</guibutton> button for
-     the precise relabelling (i.e., the mapping between tetrahedron
-     labels and between vertices in each tetrahedron).
+     the precise relabelling (i.e., the mapping between top-dimensional
+     simplices).
     </para>
     <para>
      The isomorphism and subcomplex tests here will ignore any

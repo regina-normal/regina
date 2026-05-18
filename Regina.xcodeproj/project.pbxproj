@@ -601,6 +601,7 @@
 		0545A0342FB3015D008D3ADB /* sigconvert in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 0545A0302FB2F5FF008D3ADB /* sigconvert */; };
 		0545A04A2FB5994E008D3ADB /* trisigchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0492FB5994E008D3ADB /* trisigchooser.cpp */; };
 		0545A04E2FB66FC5008D3ADB /* spatiallink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A04D2FB66FC5008D3ADB /* spatiallink.cpp */; };
+		0545A0512FBBCD71008D3ADB /* tri2composition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0502FBBCD71008D3ADB /* tri2composition.cpp */; };
 		054C6A661DCC1FF3005373F0 /* example5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A4F1DCC1FE7005373F0 /* example5.cpp */; };
 		054C6A671DCC1FF3005373F0 /* example6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A501DCC1FE7005373F0 /* example6.cpp */; };
 		054C6A681DCC1FF3005373F0 /* example7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A511DCC1FE7005373F0 /* example7.cpp */; };
@@ -3113,6 +3114,8 @@
 		0545A04B2FB5BD43008D3ADB /* sigconvert.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = sigconvert.out; sourceTree = "<group>"; };
 		0545A04C2FB5BD43008D3ADB /* sigconvert.test */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = sigconvert.test; sourceTree = "<group>"; };
 		0545A04D2FB66FC5008D3ADB /* spatiallink.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = spatiallink.cpp; sourceTree = "<group>"; };
+		0545A04F2FBBCD71008D3ADB /* tri2composition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tri2composition.h; sourceTree = "<group>"; };
+		0545A0502FBBCD71008D3ADB /* tri2composition.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tri2composition.cpp; sourceTree = "<group>"; };
 		0549B4982907D38D00C911AF /* data-anon.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-anon.docbook"; sourceTree = "<group>"; };
 		0549B4992907D38E00C911AF /* data-tri.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tri.docbook"; sourceTree = "<group>"; };
 		0549B49A2907D38E00C911AF /* data-txi.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-txi.docbook"; sourceTree = "<group>"; };
@@ -7638,6 +7641,8 @@
 				0564A5A11811D920002CC2AE /* surfacesui.h */,
 				0564A5B41811D920002CC2AE /* textui.cpp */,
 				0564A5B51811D920002CC2AE /* textui.h */,
+				0545A0502FBBCD71008D3ADB /* tri2composition.cpp */,
+				0545A04F2FBBCD71008D3ADB /* tri2composition.h */,
 				0564A5881811D920002CC2AE /* tri2creator.cpp */,
 				0564A5891811D920002CC2AE /* tri2creator.h */,
 				0564A58A1811D920002CC2AE /* tri2gluings.cpp */,
@@ -10841,6 +10846,7 @@
 				0564A9411811D921002CC2AE /* main.cpp in Sources */,
 				0564A8031811D921002CC2AE /* coordinatechooser.cpp in Sources */,
 				05A73CD819B2F2180099C617 /* cuspchooser.cpp in Sources */,
+				0545A0512FBBCD71008D3ADB /* tri2composition.cpp in Sources */,
 				05A73CCB19B2F1AB0099C617 /* snappeaalgebra.cpp in Sources */,
 				0564A9581811D921002CC2AE /* surfacescreator.cpp in Sources */,
 				0564A7F91811D921002CC2AE /* bigwidget.cpp in Sources */,

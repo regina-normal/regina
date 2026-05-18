@@ -29,7 +29,7 @@
  **************************************************************************/
 
 // UI includes:
-#include "tri4composition.h"
+#include "tri2composition.h"
 #include "../packetchooser.h"
 #include "../packetfilter.h"
 #include "elidedlabel.h"
@@ -49,8 +49,8 @@ using regina::Packet;
 using regina::Perm;
 using regina::Triangulation;
 
-Tri4CompositionUI::Tri4CompositionUI(
-        regina::PacketOf<regina::Triangulation<4>>* tri,
+Tri2CompositionUI::Tri2CompositionUI(
+        regina::PacketOf<regina::Triangulation<2>>* tri,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), tri_(tri), compare_(nullptr) {
     // Set up the UI.
@@ -133,7 +133,7 @@ Tri4CompositionUI::Tri4CompositionUI(
     label->setWhatsThis(msg);
     isoSelectArea->addWidget(label);
     isoTest = new PacketChooser(tri_->root(),
-        new SingleTypeFilter<regina::PacketOf<regina::Triangulation<4>>>(),
+        new SingleTypeFilter<regina::PacketOf<regina::Triangulation<2>>>(),
         PacketChooser::RootRole::Packet, true, nullptr, ui);
     isoTest->setAutoUpdate(true);
     isoTest->setWhatsThis(msg);
@@ -151,7 +151,7 @@ Tri4CompositionUI::Tri4CompositionUI(
     isoView->setToolTip(tr("View details of isomorphism"));
     isoView->setWhatsThis(tr("View the details of the isomorphism "
         "(if any) between this and the selected triangulation.  The precise "
-        "mapping between pentachora and pentachoron vertices will be "
+        "mapping between triangles and triangle vertices will be "
         "displayed in a separate window."));
     connect(isoView, SIGNAL(clicked()), this, SLOT(viewIsomorphism()));
     wideIsoArea->addWidget(isoView);
@@ -159,27 +159,27 @@ Tri4CompositionUI::Tri4CompositionUI(
     layout->addStretch(6);
 }
 
-regina::Packet* Tri4CompositionUI::getPacket() {
+regina::Packet* Tri2CompositionUI::getPacket() {
     return tri_;
 }
 
-QWidget* Tri4CompositionUI::getInterface() {
+QWidget* Tri2CompositionUI::getInterface() {
     return ui;
 }
 
-void Tri4CompositionUI::refresh() {
+void Tri2CompositionUI::refresh() {
     updateIsoSig();
     updateIsoPanel();
 }
 
-void Tri4CompositionUI::packetBeingDestroyed(regina::PacketShell) {
+void Tri2CompositionUI::packetBeingDestroyed(regina::PacketShell) {
     // Our current isomorphism test triangulation is being destroyed.
     isoTest->setCurrentIndex(0); // (i.e., None)
     compare_ = nullptr; // The packet destructor will handle the unlisten.
     updateIsoPanel();
 }
 
-void Tri4CompositionUI::updateIsoSig() {
+void Tri2CompositionUI::updateIsoSig() {
     // Show the isomorphism signature.
     switch (isoSigVariant->selected()) {
         case ReginaPrefSet::TriSigVariant::Gen1:
@@ -210,14 +210,14 @@ void Tri4CompositionUI::updateIsoSig() {
     }
 }
 
-void Tri4CompositionUI::updateIsoPanel() {
+void Tri2CompositionUI::updateIsoPanel() {
     // Update the packet chooser in case things have changed.
     isoTest->refreshContents();
 
     if (isoTest->selectedPacket().get() != compare_) {
         if (compare_)
             compare_->unlisten(this);
-        compare_ = static_cast<regina::PacketOf<regina::Triangulation<4>>*>(
+        compare_ = static_cast<regina::PacketOf<regina::Triangulation<2>>*>(
             isoTest->selectedPacket().get());
         if (compare_)
             compare_->listen(this);
@@ -255,7 +255,7 @@ void Tri4CompositionUI::updateIsoPanel() {
     isoView->setEnabled(isomorphism.has_value());
 }
 
-void Tri4CompositionUI::viewIsomorphism() {
+void Tri2CompositionUI::viewIsomorphism() {
     if (isoType == IsomorphismType::NoRelationship || ! compare_)
         return;
 
@@ -272,12 +272,11 @@ void Tri4CompositionUI::viewIsomorphism() {
         msg = tr("<qt>The left hand side refers to this "
             "triangulation; the right hand side refers to the selected "
             "triangulation <i>%1</i>.<p>"
-            "Each line represents a single pentachoron and its five "
-            "vertices.").
+            "Each line represents a single triangle and its three vertices.").
             arg(QString(compare_->humanLabel().c_str()).toHtmlEscaped());
 
         for (size_t i = 0; i < isomorphism->size(); i++)
-            isoDetails += QString("%1 (01234)  &rarr;  %2 (%3)").
+            isoDetails += QString("%1 (012)  &rarr;  %2 (%3)").
                 arg(i).
                 arg(isomorphism->simpImage(i)).
                 arg(isomorphism->facetPerm(i).str().c_str())
@@ -289,20 +288,19 @@ void Tri4CompositionUI::viewIsomorphism() {
             "hand side refers to this triangulation; the right hand side "
             "refers to the selected "
             "triangulation <i>%1</i>.<p>"
-            "Each line represents a single pentachoron and its five "
-            "vertices.").
+            "Each line represents a single triangle and its three vertices.").
             arg(QString(compare_->humanLabel().c_str()).toHtmlEscaped());
 
         if (isoType == IsomorphismType::IsSubcomplex)
             for (size_t i = 0; i < isomorphism->size(); i++)
-                isoDetails += QString("%1 (01234)  &rarr;  %2 (%3)").
+                isoDetails += QString("%1 (012)  &rarr;  %2 (%3)").
                     arg(i).
                     arg(isomorphism->simpImage(i)).
                     arg(isomorphism->facetPerm(i).str().c_str())
                     ;
         else
             for (size_t i = 0; i < isomorphism->size(); i++)
-                isoDetails += QString("%2 (%3)  &rarr;  %1 (01234)").
+                isoDetails += QString("%2 (%3)  &rarr;  %1 (012)").
                     arg(i).
                     arg(isomorphism->simpImage(i)).
                     arg(isomorphism->facetPerm(i).str().c_str())
@@ -310,14 +308,14 @@ void Tri4CompositionUI::viewIsomorphism() {
     }
 
     if (isoDetails.size() == 1)
-        isoDetails += tr("(no pentachora)");
+        isoDetails += tr("(no triangles)");
 
     // Redo this to actually display information as a list?
     ReginaSupport::info(ui,
         title, msg + "<p>" + isoDetails.join("<br>") + "<qt>");
 }
 
-void Tri4CompositionUI::contextIsoSig(const QPoint& pos,
+void Tri2CompositionUI::contextIsoSig(const QPoint& pos,
         QWidget* fromWidget) {
     if (sig_.empty())
         return;
@@ -329,7 +327,7 @@ void Tri4CompositionUI::contextIsoSig(const QPoint& pos,
     m.exec(fromWidget->mapToGlobal(pos));
 }
 
-void Tri4CompositionUI::copyIsoSig() {
+void Tri2CompositionUI::copyIsoSig() {
     if (! sig_.empty())
         QApplication::clipboard()->setText(sig_.c_str());
 }

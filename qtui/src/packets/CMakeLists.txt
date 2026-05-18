@@ -45,6 +45,7 @@ SET ( FILES
   surfacessummaryui.cpp
   surfacesui.cpp
   textui.cpp
+  tri2composition.cpp
   tri2creator.cpp
   tri2gluings.cpp
   tri2skeleton.cpp
