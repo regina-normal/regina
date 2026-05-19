@@ -1813,6 +1813,8 @@ void tightEncode(std::ostream& out, IntegerBase<withInfinity> value);
  * efficient if the integer argument is an rvalue reference (since the const
  * member function induces an extra deep copy).
  *
+ * \pyname{tightEncoding_ReginaInteger}
+ *
  * \param value the integer to encode.
  * \return the resulting encoded string.
  *
