@@ -32,6 +32,11 @@
  *  \brief Assists with wrapping equality and comparison operators in Python.
  */
 
+#ifndef __HELPERS_EQUALITY_H
+#ifndef __DOXYGEN
+#define __HELPERS_EQUALITY_H
+#endif
+
 #include <concepts>
 #include <sstream>
 #include <type_traits>
@@ -42,6 +47,113 @@ namespace regina {
 class Packet;
 
 namespace python {
+
+namespace doc::common {
+    // Note: docstrings should be wrapped at 70 characters per line;
+    // the hard maximum is 72.
+
+    inline constexpr const char neq_value[] =
+R"doc(Determines whether this and the given object have different values.
+This operator ``x != y`` is generated automatically, as the negation
+of ``x == y``.
+
+This test compares the _contents_ of the two objects (i.e., it
+compares by value, not by reference). See the documentation for the
+corresponding equality test (i.e., the member function ``__eq__``)
+for full details on how objects of this type will be compared.)doc";
+
+    inline constexpr const char eq_reference[] =
+R"doc(Determines whether this and the given Python wrapper refer to the same
+underlying object in Regina's calculation engine.
+
+Note that most of Regina's classes do **not** test equality in this
+way; instead they use value semantics (i.e., the == and != operators
+compare the *contents* of the two objects). This class is one of the
+few exceptions that uses reference semantics, as explained below.
+
+Regina's calculation engine is written in C++, not Python. It is
+therefore possible to have several different Python objects that are
+all thin wrappers around the same underlying C++ object (so changes to
+any one of these objects will be reflected in all of them). The
+operators == and != for this class will test for exactly this scenario.
+
+Essentially, these tests are similar in spirit to the Python test
+``x is y``, but instead of looking at the Python wrappers they look at
+the underlying C++ objects in the calculation engine.  In particular,
+as noted above, it is possible to have two different Python wrappers
+(so ``x is y`` is false) that refer to the same underlying C++ object
+(so ``x == y`` is true).)doc";
+
+    inline constexpr const char neq_reference[] =
+R"doc(Determines whether this and the given Python wrapper refer to different
+underlying objects in Regina's calculation engine.
+
+Note that most of Regina's classes do **not** test equality in this
+way; instead they use value semantics (i.e., the == and != operators
+compare the *contents* of the two objects). This class is one of the
+few exceptions that uses reference semantics, as explained below.
+
+Regina's calculation engine is written in C++, not Python. It is
+therefore possible to have several different Python objects that are
+all thin wrappers around the same underlying C++ object (so changes to
+any one of these objects will be reflected in all of them). The
+operators == and != for this class will test for exactly this scenario.
+
+Essentially, these tests are similar in spirit to the Python test
+``x is y``, but instead of looking at the Python wrappers they look at
+the underlying C++ objects in the calculation engine.  In particular,
+as noted above, it is possible to have two different Python wrappers
+(so ``x is y`` is false) that refer to the same underlying C++ object
+(so ``x == y`` is true).)doc";
+
+    inline constexpr const char eq_None[] =
+R"doc(Always returns ``False``, since an object of this type is never equal
+to ``None``.)doc";
+
+    inline constexpr const char neq_None[] =
+R"doc(Always returns ``True``, since an object of this type is never equal
+to ``None``.)doc";
+
+    inline constexpr const char eq_disabled[] =
+R"doc(Disabled for objects of this type.
+
+Objects of this type use value semantics, which means that the
+operators == and != should compare by value (i.e., they test whether
+two objects have the same contents). However, Regina does not
+currently implement such a test for objects of this type.)doc";
+
+    inline constexpr const char eq_packet_disabled[] =
+R"doc(Disabled for packets of this type.
+
+The operators == and != compare packet contents by value (i.e., they
+test whether two packets have the same contents). However, Regina does
+not currently implement such a test for packets of this type.
+
+To test whether two Python objects refer to the same underlying packet,
+use Packet.samePacket() instead.)doc";
+
+    inline constexpr const char eq_packet_invalid[] =
+R"doc(Disabled for packets of different types.
+
+The operators == and != compare packet contents by value, and therefore
+can only be used to compare two packets of the same type.
+
+To test whether two Python objects refer to the same underlying packet,
+use Packet.samePacket() instead.)doc";
+
+    inline constexpr const char eq_none_static[] =
+R"doc(Disabled in Regina.
+
+Objects of this type cannot be created, and so cannot be compared.)doc";
+
+    inline constexpr const char eq_none_abstract[] =
+R"doc(Disabled in Regina.
+
+This is an abstract base class, and so objects of this base class
+cannot be created directly. Instead its various subclasses are
+responsible for providing their own comparison operators == and !=.)doc";
+
+} // namespace doc::common
 
 /**
  * Indicates the different ways in which the equality (==) and inequality (!=)
@@ -401,3 +513,5 @@ void add_cmp_operators(pybind11::class_<T, options...>& c, const char* doc) {
 #endif // __DOCSTRINGS
 
 } } // namespace regina::python
+
+#endif

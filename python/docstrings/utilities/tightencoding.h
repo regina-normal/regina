@@ -112,8 +112,8 @@ Parameter ``enc``:
 Returns:
     the integer or boolean represented by the given tight encoding.)doc";
 
-// Docstring regina::python::doc::tightEncoding
-inline constexpr const char tightEncoding[] =
+// Docstring regina::python::doc::tightEncoding_CppInteger
+inline constexpr const char tightEncoding_CppInteger[] =
 R"doc(Returns the tight encoding of the given native C++ integer. See the
 page on tight encodings for details.
 
@@ -131,8 +131,8 @@ Parameter ``value``:
 Returns:
     the resulting encoded string.)doc";
 
-// Docstring regina::python::doc::tightEncoding_2
-inline constexpr const char tightEncoding_2[] =
+// Docstring regina::python::doc::tightEncoding_bool
+inline constexpr const char tightEncoding_bool[] =
 R"doc(Returns the tight encoding of the given boolean. See the page on tight
 encodings for details.
 

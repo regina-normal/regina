@@ -31,6 +31,7 @@
 #include <pybind11/pybind11.h>
 #include "packet/script.h"
 #include "../helpers.h"
+#include "../docstrings/packet/packet.h" // for Packet_::append
 #include "../docstrings/packet/script.h"
 
 using pybind11::overload_cast;
@@ -49,7 +50,7 @@ void addScript(pybind11::module_& m) {
         // We define Packet::append() again, since otherwise this is
         // hidden by the binding for Script::append().
         .def("append", &regina::Packet::append,
-            regina::python::doc::common::Packet_append)
+            regina::python::doc::Packet_::append)
         .def("append", &Script::append, rdoc::append)
         .def("countVariables", &Script::countVariables, rdoc::countVariables)
         .def("variableName", &Script::variableName, rdoc::variableName)

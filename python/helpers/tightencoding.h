@@ -32,6 +32,13 @@
  *  \brief Assists with wrapping Regina's tight encoding and decoding routines.
  */
 
+#ifndef __HELPERS_TIGHTENCODING_H
+#ifndef __DOXYGEN
+#define __HELPERS_TIGHTENCODING_H
+#endif
+
+#include "../docstrings/utilities/tightencoding.h"
+
 namespace regina {
 
 template <typename> struct TightEncodable;
@@ -76,11 +83,13 @@ template <regina::InherentlyTightEncodable C, typename... options>
 requires (std::derived_from<C, regina::TightEncodable<C>>)
 void add_tight_encoding(pybind11::class_<C, options...>& c) {
     c.def("tightEncoding", &C::tightEncoding,
-        regina::python::doc::common::TightEncodable_encoding);
+        regina::python::doc::TightEncodable_::tightEncoding);
     c.def("tightDecoding", &C::tightDecoding,
-        regina::python::doc::common::TightEncodable_decoding);
+        regina::python::doc::TightEncodable_::tightDecoding);
     c.def("__hash__", &C::hash,
-        regina::python::doc::common::TightEncodable_hash);
+        regina::python::doc::TightEncodable_::hash);
 }
 
 } } // namespace regina::python
+
+#endif

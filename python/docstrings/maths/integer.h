@@ -82,8 +82,8 @@ Parameter ``rhs``:
 Returns:
     the product *lhs* times *rhs*.)doc";
 
-// Docstring regina::python::doc::tightEncoding
-inline constexpr const char tightEncoding[] =
+// Docstring regina::python::doc::tightEncoding_ReginaInteger
+inline constexpr const char tightEncoding_ReginaInteger[] =
 R"doc(Returns the tight encoding of the given arbitrary precision integer.
 See the page on tight encodings for details.
 

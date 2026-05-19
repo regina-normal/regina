@@ -32,35 +32,10 @@
  *  \brief Assists with Python docstrings that are generated from the C++ docs.
  */
 
-// Docstrings that are generated once but used across many source files:
-namespace regina::python::doc::common {
-    extern const char* Packet_append;
-    extern const char* PacketData_anonID;
-    extern const char* PacketData_packet;
-    extern const char* PacketOf;
-    extern const char* PacketOf_copy;
-    extern const char* make_packet;
-    extern const char* make_packet_2;
-
-    extern const char* TightEncodable_encoding;
-    extern const char* TightEncodable_decoding;
-    extern const char* TightEncodable_hash;
-
-    extern const char* neq_value;
-    extern const char* eq_reference;
-    extern const char* neq_reference;
-    extern const char* eq_None;
-    extern const char* neq_None;
-    extern const char* eq_disabled;
-    extern const char* eq_packet_disabled;
-    extern const char* eq_packet_invalid;
-    extern const char* eq_none_static;
-    extern const char* eq_none_abstract;
-
-    extern const char* bool_enum_for_flags;
-
-    extern const char* todo;
-}
+#ifndef __HELPERS_DOCSTRINGS_H
+#ifndef __DOXYGEN
+#define __HELPERS_DOCSTRINGS_H
+#endif
 
 /**
  * To access docstrings, python binding code should be structured as:
@@ -141,3 +116,15 @@ namespace regina::python::doc::common {
 
 #define RDOC_TODO regina::python::doc::common::todo
 
+namespace regina::python::doc::common {
+    // Note: docstrings should be wrapped at 70 characters per line;
+    // the hard maximum is 72.
+
+    inline constexpr const char todo[] =
+R"doc(The Python documentation for this class or function has not yet been
+extracted from the C++ source code. Please inform the Regina developers
+about this omission.)doc";
+
+} // namespace regina::python::doc::common
+
+#endif

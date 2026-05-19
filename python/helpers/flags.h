@@ -35,6 +35,11 @@
  *  If you need it, you will need to include it yourself.
  */
 
+#ifndef __HELPERS_FLAGS_H
+#ifndef __DOXYGEN
+#define __HELPERS_FLAGS_H
+#endif
+
 #include "regina-config.h" // for REGINA_PYBIND11_VERSION
 #include <iomanip>
 #include <sstream>
@@ -48,6 +53,22 @@
 #include "../docstrings/utilities/flags.h"
 
 namespace regina::python {
+
+namespace doc::common {
+    // Note: docstrings should be wrapped at 70 characters per line;
+    // the hard maximum is 72.
+
+    inline constexpr const char bool_enum_for_flags[] =
+R"doc(Determines whether this flag has a non-zero numerical value.
+
+A zero flag will have no effect when it is combined with other flags
+using bitwise OR or XOR.
+
+Returns:
+    ``True`` if this is a non-zero flag, or ``False`` if this is a
+    zero flag.)doc";
+
+} // namespace doc::common
 
 /**
  * Adds Python bindings for a flag enumeration type, as well as a
@@ -163,3 +184,4 @@ void add_flags(pybind11::module_& m, const std::string& enumName,
 
 } // namespace regina::python
 
+#endif
